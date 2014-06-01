@@ -18,30 +18,66 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#ifndef __ZooLib_Dataspace_RelaterMUX_h__
+#define __ZooLib_Dataspace_RelaterMUX_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+#include "zoolib/dataspace/Relater.h"
 
-#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+#include <set>
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: -
+// MARK: - RelaterMUX
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+class RelaterMUX : public RelaterFactory
 	{
-	bool isSubsequent = false;
-	foreachi (ii, iSet)
-		{
-		if (sGetSet(isSubsequent, true))
-			w << ", ";
-		w << *ii;
-		}
-	return w;
-	}
+public:
+	enum { kDebug = 1 };
+
+	RelaterMUX(ZRef<Relater> iRelater);
+	virtual ~RelaterMUX();
+
+// From ZCounted via RelaterFactory (aka ZCallable<ZRef<Relater>()>)
+	virtual void Initialize();
+	virtual void Finalize();
+
+// From RelaterFactory
+	virtual ZQ<ZRef<Relater> > QCall();
+
+private:
+	class PQuery;
+	class ClientQuery;
+	class ClientRelater;
+	friend class ClientRelater;
+
+	bool pIntersects(ZRef<ClientRelater> iCR, const RelHead& iRelHead);
+
+	void pModifyRegistrations(ZRef<ClientRelater> iCR,
+		const AddedQuery* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount);
+
+	void pCollectResults(ZRef<ClientRelater> iCR,
+		std::vector<QueryResult>& oChanged);
+
+	void pResultsAvailable(ZRef<Relater> iRelater);
+
+	void pFinalizeClientRelater(ClientRelater* iCR);
+
+	ZMtxR fMtxR;
+
+	ZRef<Relater> fRelater;
+	bool fResultsAvailable;
+
+	int64 fNextPRefcon;
+
+	std::map<int64,std::pair<ClientRelater*,int64> > fPRefconToClient;
+	std::set<ClientRelater*> fClientRelaters;
+	};
 
 } // namespace ZDataspace
 } // namespace ZooLib
+
+#endif // __ZooLib_Dataspace_RelaterMUX_h__

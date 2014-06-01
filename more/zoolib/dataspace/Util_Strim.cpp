@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,65 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_Asyncify_h__
-#define __ZDataspace_Source_Asyncify_h__ 1
-#include "zconfig.h"
+#include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/ZUtil_Strim_Operators.h"
 
-#include "zoolib/ZStreamer.h"
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/dataspace/Util_Strim.h"
 
-#include <map>
-#include <set>
-#include <vector>
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: - Source_Asyncify
+// MARK: -
 
-class Source_Asyncify : public Source
+const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
 	{
-public:
-	Source_Asyncify(ZRef<Source> iSource);
-	virtual ~Source_Asyncify();
-
-// From ZCounted via Source
-	virtual void Initialize();
-	virtual void Finalize();
-
-// From Source
-	virtual bool Intersects(const RelHead& iRelHead);
-
-	virtual void ModifyRegistrations(
-		const AddedQuery* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount);
-
-	virtual void CollectResults(std::vector<QueryResult>& oChanged);
-
-// Our protocol
-	void CrankIt();
-	void Shutdown();
-
-private:
-	void pTrigger_Update();
-	void pUpdate();
-
-	void pResultsAvailable(ZRef<Source> iSource);
-
-	ZMtxR fMtxR;
-	ZCnd fCnd;
-	ZRef<Source> fSource;
-
-	bool fTriggered_Update;
-	bool fNeeds_SourceCollectResults;
-
-	std::map<int64,ZRef<RelationalAlgebra::Expr_Rel> > fPendingAdds;
-	std::set<int64> fPendingRemoves;
-	std::map<int64,QueryResult> fPendingResults;
-	};
+	bool isSubsequent = false;
+	foreachi (ii, iSet)
+		{
+		if (sGetSet(isSubsequent, true))
+			w << ", ";
+		w << *ii;
+		}
+	return w;
+	}
 
 } // namespace ZDataspace
 } // namespace ZooLib
-
-#endif // __ZDataspace_Source_Asyncify_h__

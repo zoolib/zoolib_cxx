@@ -18,66 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_SourceMUX_h__
-#define __ZDataspace_SourceMUX_h__ 1
+#ifndef __ZooLib_Dataspace_Util_Strim_h__
+#define __ZooLib_Dataspace_Util_Strim_h__
 #include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/ZStrim.h"
 
-#include <set>
+#include "zoolib/dataspace/Relater.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: - SourceMUX
+// MARK: -
 
-class SourceMUX : public SourceFactory
-	{
-public:
-	enum { kDebug = 1 };
-
-	SourceMUX(ZRef<Source> iSource);
-	virtual ~SourceMUX();
-
-// From ZCounted via SourceFactory (aka ZCallable<ZRef<Source>()>)
-	virtual void Initialize();
-	virtual void Finalize();
-
-// From SourceFactory
-	virtual ZQ<ZRef<Source> > QCall();
-
-private:
-	class PQuery;
-	class ClientQuery;
-	class ClientSource;
-	friend class ClientSource;
-
-	bool pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead);
-
-	void pModifyRegistrations(ZRef<ClientSource> iCS,
-		const AddedQuery* iAdded, size_t iAddedCount,
-		const int64* iRemoved, size_t iRemovedCount);
-
-	void pCollectResults(ZRef<ClientSource> iCS,
-		std::vector<QueryResult>& oChanged);
-
-	void pResultsAvailable(ZRef<Source> iSource);
-
-	void pFinalizeClientSource(ClientSource* iCS);
-
-	ZMtxR fMtxR;
-
-	ZRef<Source> fSource;
-	bool fResultsAvailable;
-
-	int64 fNextPRefcon;
-
-	std::map<int64,std::pair<ClientSource*,int64> > fPRefconToClient;
-	std::set<ClientSource*> fClientSources;
-	};
+const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet);
 
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_SourceMUX_h__
+#endif // __ZooLib_Dataspace_Util_Strim_h__

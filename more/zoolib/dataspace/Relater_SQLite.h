@@ -18,23 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Util_Strim_h__
-#define __ZDataspace_Util_Strim_h__
+#ifndef __ZooLib_Dataspace_Relater_SQLite_h__
+#define __ZooLib_Dataspace_Relater_SQLite_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-
 #include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/sqlite/ZSQLite.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: -
+// MARK: - Relater_SQLite
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet);
+class Relater_SQLite : public Relater
+	{
+public:
+	enum { kDebug = 1 };
+
+	Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock);
+	virtual ~Relater_SQLite();
+
+	virtual bool Intersects(const RelHead& iRelHead);
+
+	virtual void ModifyRegistrations(
+		const AddedQuery* iAdded, size_t iAddedCount,
+		const int64* iRemoved, size_t iRemovedCount);
+
+	virtual void CollectResults(std::vector<QueryResult>& oChanged);
+
+private:
+	ZRef<ZSQLite::DB> fDB;
+	ZRef<Clock> fClock;
+	std::map<string8, RelHead> fMap_Tables;
+
+	class DLink_ClientQuery_InPQuery;
+	class ClientQuery;
+	class PQuery;
+	std::map<int64, ClientQuery> fMap_RefconToClientQuery;
+
+	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
+		Map_Rel_PQuery;
+	Map_Rel_PQuery fMap_Rel_PQuery;
+	class PQuery;
+	};
 
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Util_Strim_h__
+#endif // __ZooLib_Dataspace_Relater_SQLite_h__

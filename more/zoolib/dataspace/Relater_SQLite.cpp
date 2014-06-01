@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
 
-#include "zoolib/dataspace/ZDataspace_Source_SQLite.h"
+#include "zoolib/dataspace/Relater_SQLite.h"
 
 #include "zoolib/RelationalAlgebra/AsSQL.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
@@ -43,14 +43,14 @@ using namespace ZUtil_STL;
 namespace RA = RelationalAlgebra;
 
 // =================================================================================================
-// MARK: - Source_SQLite::ClientQuery
+// MARK: - Relater_SQLite::ClientQuery
 
-class Source_SQLite::DLink_ClientQuery_InPQuery
+class Relater_SQLite::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
-class Source_SQLite::ClientQuery
-:	public Source_SQLite::DLink_ClientQuery_InPQuery
+class Relater_SQLite::ClientQuery
+:	public Relater_SQLite::DLink_ClientQuery_InPQuery
 	{
 public:
 	ClientQuery(int64 iRefcon, PQuery* iPQuery)
@@ -63,9 +63,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_SQLite::PQuery
+// MARK: - Relater_SQLite::PQuery
 
-class Source_SQLite::PQuery
+class Relater_SQLite::PQuery
 	{
 public:
 	PQuery(ZRef<RA::Expr_Rel> iRel)
@@ -79,9 +79,9 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_SQLite
+// MARK: - Relater_SQLite
 
-Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
+Relater_SQLite::Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 :	fDB(iDB)
 ,	fClock(iClock)
 	{
@@ -101,10 +101,10 @@ Source_SQLite::Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
 		}
 	}
 
-Source_SQLite::~Source_SQLite()
+Relater_SQLite::~Relater_SQLite()
 	{}
 
-bool Source_SQLite::Intersects(const RelHead& iRelHead)
+bool Relater_SQLite::Intersects(const RelHead& iRelHead)
 	{
 	foreachi (iterTables, fMap_Tables)
 		{
@@ -114,7 +114,7 @@ bool Source_SQLite::Intersects(const RelHead& iRelHead)
 	return false;
 	}
 
-void Source_SQLite::ModifyRegistrations(
+void Relater_SQLite::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
@@ -167,7 +167,7 @@ void Source_SQLite::ModifyRegistrations(
 		Source::pTriggerResultsAvailable();
 	}
 
-void Source_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
+void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
 	oChanged.clear();

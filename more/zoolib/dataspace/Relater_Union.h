@@ -18,33 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_Union_h__
-#define __ZDataspace_Source_Union_h__ 1
+#ifndef __ZooLib_Dataspace_Relater_Union_h__
+#define __ZooLib_Dataspace_Relater_Union_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/dataspace/Relater.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: - Source_Union
+// MARK: - Relater_Union
 
-class Source_Union : public Source
+class Relater_Union
+:	public Relater
 	{
 public:
 	enum { kDebug = 0 };
 
-	Source_Union();
-	virtual ~Source_Union();
+	Relater_Union();
+	virtual ~Relater_Union();
 
-// From ZCounted via Source
+// From ZCounted via Relater
 	virtual void Initialize();
 
-// From Source
+// From Relater
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
@@ -54,8 +55,8 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 // Our protocol
-	void InsertSource(ZRef<Source> iSource, const string8& iPrefix);
-	void EraseSource(ZRef<Source> iSource);
+	void InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix);
+	void EraseRelater(ZRef<Relater> iRelater);
 
 private:
 	ZMtxR fMtxR;
@@ -70,7 +71,7 @@ private:
 	typedef std::map<int64, PIP> Map_Refcon_PIP;
 
 	// -----
-	class PSource;
+	class PRelater;
 
 	class Proxy;
 	class Visitor_Proxy;
@@ -78,9 +79,9 @@ private:
 	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>,Proxy*> ProxyMap;
 	ProxyMap fProxyMap;
 
-	std::set<PSource*> pIdentifyPSources(const RelHead& iRelHead);
+	std::set<PRelater*> pIdentifyPRelaters(const RelHead& iRelHead);
 	ZRef<RelationalAlgebra::Expr_Rel> pGetProxy(PQuery* iPQuery,
-		const std::set<PSource*>& iPSources,
+		const std::set<PRelater*>& iPRelaters,
 		const RelHead& iRelHead,
 		ZRef<RelationalAlgebra::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
@@ -136,24 +137,24 @@ private:
 
 	// -----
 
-	class DLink_PSource_NeedsWork;
-	class DLink_PSource_CollectFrom;
-	DListHead<DLink_PSource_CollectFrom> fPSource_CollectFrom;
-	DListHead<DLink_PSource_NeedsWork> fPSource_NeedsWork;
+	class DLink_PRelater_NeedsWork;
+	class DLink_PRelater_CollectFrom;
+	DListHead<DLink_PRelater_CollectFrom> fPRelater_CollectFrom;
+	DListHead<DLink_PRelater_NeedsWork> fPRelater_NeedsWork;
 
-	typedef std::map<ZRef<Source>, PSource> Map_Source_PSource;
-	Map_Source_PSource fMap_Source_PSource;
+	typedef std::map<ZRef<Relater>, PRelater> Map_Relater_PRelater;
+	Map_Relater_PRelater fMap_Relater_PRelater;
 
 	// -----
 
 	ZRef<Event> fEvent;
-	ZRef<Source::Callable_ResultsAvailable> fCallable_ResultsAvailable;
+	ZRef<Relater::Callable_ResultsAvailable> fCallable_ResultsAvailable;
 
-	void pCollectFrom(PSource* iPSource);
-	void pResultsAvailable(ZRef<Source> iSource);
+	void pCollectFrom(PRelater* iPRelater);
+	void pResultsAvailable(ZRef<Relater> iRelater);
 	};
 
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Source_Union_h__
+#endif // __ZooLib_Dataspace_Relater_Union_h__

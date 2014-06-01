@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
-#include "zoolib/dataspace/ZDataspace_SourceMUX.h"
+#include "zoolib/dataspace/RelaterMUX.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -39,21 +39,21 @@ using namespace ZUtil_STL;
 typedef map<int64,pair<ZRef<QueryEngine::Result>,ZRef<Event> > > Map_Refcon_Result;
 
 // =================================================================================================
-// MARK: - SourceMUX::ClientSource
+// MARK: - RelaterMUX::ClientRelater
 
-class SourceMUX::ClientSource
-:	public Source
+class RelaterMUX::ClientRelater
+:	public Relater
 	{
 public:
-	ClientSource(ZRef<SourceMUX> iMUX)
+	ClientRelater(ZRef<RelaterMUX> iMUX)
 	:	fMUX(iMUX)
 		{}
 
-// From ZCounted via Source
+// From ZCounted via Relater
 	virtual void Finalize()
-		{ fMUX->pFinalizeClientSource(this); }
+		{ fMUX->pFinalizeClientRelater(this); }
 
-// From Source
+// From Relater
 	virtual bool Intersects(const RelHead& iRelHead)
 		{ return fMUX->pIntersects(this, iRelHead); }
 
@@ -70,52 +70,52 @@ public:
 
 // Our protocol
 	void ResultsAvailable()
-		{ Source::pTriggerResultsAvailable(); }
+		{ Relater::pTriggerResultsAvailable(); }
 
-	ZRef<SourceMUX> fMUX;
+	ZRef<RelaterMUX> fMUX;
 
 	map<int64,int64> fMap_ClientToPRefcon;
 	Map_Refcon_Result fResults;
 	};
 
 // =================================================================================================
-// MARK: - SourceMUX
+// MARK: - RelaterMUX
 
-SourceMUX::SourceMUX(ZRef<Source> iSource)
-:	fSource(iSource)
+RelaterMUX::RelaterMUX(ZRef<Relater> iRelater)
+:	fRelater(iRelater)
 ,	fResultsAvailable(false)
 ,	fNextPRefcon(1)
 	{}
 
-SourceMUX::~SourceMUX()
+RelaterMUX::~RelaterMUX()
 	{}
 
-void SourceMUX::Initialize()
+void RelaterMUX::Initialize()
 	{
-	SourceFactory::Initialize();
-	fSource->SetCallable_ResultsAvailable(
-		sCallable(sWeakRef(this), &SourceMUX::pResultsAvailable));
+	RelaterFactory::Initialize();
+	fRelater->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &RelaterMUX::pResultsAvailable));
 	}
 
-void SourceMUX::Finalize()
+void RelaterMUX::Finalize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);
-	SourceFactory::Finalize();
+	fRelater->SetCallable_ResultsAvailable(null);
+	RelaterFactory::Finalize();
 	}
 
-ZQ<ZRef<Source> > SourceMUX::QCall()
+ZQ<ZRef<Relater> > RelaterMUX::QCall()
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	ZRef<ClientSource> theCS = new ClientSource(this);
-	fClientSources.insert(theCS.Get());
-	return theCS;
+	ZRef<ClientRelater> theCR = new ClientRelater(this);
+	fClientRelaters.insert(theCR.Get());
+	return theCR;
 	}
 
-bool SourceMUX::pIntersects(ZRef<ClientSource> iCS, const RelHead& iRelHead)
-	{ return fSource->Intersects(iRelHead); }
+bool RelaterMUX::pIntersects(ZRef<ClientRelater> iCR, const RelHead& iRelHead)
+	{ return fRelater->Intersects(iRelHead); }
 
-void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
+void RelaterMUX::pModifyRegistrations(ZRef<ClientRelater> iCR,
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
@@ -129,10 +129,10 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 		const int64 thePRefcon = fNextPRefcon++;
 
 		sInsertMust(kDebug,
-			iCS->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
+			iCR->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
 
 		sInsertMust(kDebug,
-			fPRefconToClient, thePRefcon, make_pair(iCS.Get(), theClientRefcon));
+			fPRefconToClient, thePRefcon, make_pair(iCR.Get(), theClientRefcon));
 
 		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
 		}
@@ -140,16 +140,16 @@ void SourceMUX::pModifyRegistrations(ZRef<ClientSource> iCS,
 	vector<int64> removedQueries;
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
-		removedQueries.push_back(sGetEraseMust(kDebug, iCS->fMap_ClientToPRefcon, *iRemoved++));
+		removedQueries.push_back(sGetEraseMust(kDebug, iCR->fMap_ClientToPRefcon, *iRemoved++));
 
 	guard.Release();
 
-	fSource->ModifyRegistrations(
+	fRelater->ModifyRegistrations(
 		sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
-void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
+void RelaterMUX::pCollectResults(ZRef<ClientRelater> iCR,
 	vector<QueryResult>& oChanged)
 	{
 	ZGuardMtxR guard(fMtxR);
@@ -158,13 +158,13 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 	if (sGetSet(fResultsAvailable, false))
 		{
 		guard.Release();
-		fSource->CollectResults(changes);
+		fRelater->CollectResults(changes);
 		guard.Acquire();
 		}
 
 	foreachi (iterChanges, changes)
 		{
-		const pair<ClientSource*,int64>& thePair =
+		const pair<ClientRelater*,int64>& thePair =
 			sGetMust(kDebug, fPRefconToClient, iterChanges->GetRefcon());
 
 		thePair.first->fResults[thePair.second] =
@@ -172,41 +172,41 @@ void SourceMUX::pCollectResults(ZRef<ClientSource> iCS,
 		}
 
 	oChanged.clear();
-	oChanged.reserve(iCS->fResults.size());
-	foreachi (iter, iCS->fResults)
+	oChanged.reserve(iCR->fResults.size());
+	foreachi (iter, iCR->fResults)
 		oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second));
 
-	iCS->fResults.clear();
+	iCR->fResults.clear();
 	}
 
-void SourceMUX::pResultsAvailable(ZRef<Source> iSource)
+void RelaterMUX::pResultsAvailable(ZRef<Relater> iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
 	if (not sGetSet(fResultsAvailable, true))
 		{
-		foreachi (iter, fClientSources)
+		foreachi (iter, fClientRelaters)
 			(*iter)->ResultsAvailable();
 		}
 	}
 
-void SourceMUX::pFinalizeClientSource(ClientSource* iCS)
+void RelaterMUX::pFinalizeClientRelater(ClientRelater* iCR)
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	if (not iCS->FinishFinalize())
+	if (not iCR->FinishFinalize())
 		return;
 
 	vector<int64> removedQueries;
-	removedQueries.reserve(iCS->fMap_ClientToPRefcon.size());
-	foreachi (iter, iCS->fMap_ClientToPRefcon)
+	removedQueries.reserve(iCR->fMap_ClientToPRefcon.size());
+	foreachi (iter, iCR->fMap_ClientToPRefcon)
 		removedQueries.push_back(iter->second);
 
-	sEraseMust(fClientSources, iCS);
-	delete iCS;
+	sEraseMust(fClientRelaters, iCR);
+	delete iCR;
 
 	guard.Release();
 
-	fSource->ModifyRegistrations(
+	fRelater->ModifyRegistrations(
 		nullptr, 0,
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}

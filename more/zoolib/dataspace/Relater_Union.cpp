@@ -30,8 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 
-#include "zoolib/dataspace/ZDataspace_Source_Union.h"
-#include "zoolib/dataspace/ZDataspace_Util_Strim.h"
+#include "zoolib/dataspace/Relater_Union.h"
+#include "zoolib/dataspace/Util_Strim.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
@@ -98,23 +98,23 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iE
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Source_Union::PIP
+// MARK: - Relater_Union::PIP
 
-class Source_Union::DLink_PIP_InProxy
+class Relater_Union::DLink_PIP_InProxy
 :	public DListLink<PIP, DLink_PIP_InProxy, kDebug>
 	{};
 
-class Source_Union::DLink_PIP_NeedsWork
+class Relater_Union::DLink_PIP_NeedsWork
 :	public DListLink<PIP, DLink_PIP_NeedsWork, kDebug>
 	{};
 
-class Source_Union::PIP
+class Relater_Union::PIP
 :	public DLink_PIP_InProxy
 ,	public DLink_PIP_NeedsWork
 	{
 public:
 	Proxy* fProxy;
-	PSource* fPSource;
+	PRelater* fPRelater;
 	bool fNeedsAdd;
 	int64 fRefcon;
 	ZRef<QueryEngine::Result> fResult;
@@ -122,15 +122,15 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::Proxy declaration
+// MARK: - Relater_Union::Proxy declaration
 
-class Source_Union::Proxy
+class Relater_Union::Proxy
 :	public virtual RA::Expr_Rel
 ,	public virtual ZExpr_Op0_T<RA::Expr_Rel>
 	{
 	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	Proxy(Source_Union* iSource);
+	Proxy(Relater_Union* iRelater);
 
 // From ZCounted
 	virtual void Finalize();
@@ -147,19 +147,19 @@ public:
 // Our protocol
 	virtual void Accept_Proxy(Visitor_Proxy& iVisitor);
 
-	Source_Union* const fSource;
+	Relater_Union* const fRelater;
 	ZRef<RA::Expr_Rel> fRel;
 	RA::RelHead fResultRelHead;
 	set<PQuery*> fDependentPQueries;
 
-	// Something that ties this proxy to each Source.
+	// Something that ties this proxy to each Relater.
 	DListHead<DLink_PIP_InProxy> fPIP_InProxy;
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::Visitor_Proxy
+// MARK: - Relater_Union::Visitor_Proxy
 
-class Source_Union::Visitor_Proxy
+class Relater_Union::Visitor_Proxy
 :	public virtual ZVisitor_Expr_Op0_T<RA::Expr_Rel>
 	{
 public:
@@ -168,16 +168,16 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::Proxy definition
+// MARK: - Relater_Union::Proxy definition
 
-Source_Union::Proxy::Proxy(Source_Union* iSource)
-:	fSource(iSource)
+Relater_Union::Proxy::Proxy(Relater_Union* iRelater)
+:	fRelater(iRelater)
 	{}
 
-void Source_Union::Proxy::Finalize()
-	{ fSource->pFinalizeProxy(this); }
+void Relater_Union::Proxy::Finalize()
+	{ fRelater->pFinalizeProxy(this); }
 
-void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
+void Relater_Union::Proxy::Accept(const ZVisitor& iVisitor)
 	{
 	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
@@ -185,7 +185,7 @@ void Source_Union::Proxy::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
+void Relater_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
@@ -193,23 +193,23 @@ void Source_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVi
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<RA::Expr_Rel> Source_Union::Proxy::Self()
+ZRef<RA::Expr_Rel> Relater_Union::Proxy::Self()
 	{ return this; }
 
-ZRef<RA::Expr_Rel> Source_Union::Proxy::Clone()
+ZRef<RA::Expr_Rel> Relater_Union::Proxy::Clone()
 	{ return this; }
 
-void Source_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
+void Relater_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 	{ iVisitor.Visit_Proxy(this); }
 
 // =================================================================================================
-// MARK: - Source_Union::Walker_Proxy
+// MARK: - Relater_Union::Walker_Proxy
 
-class Source_Union::Walker_Proxy : public QueryEngine::Walker
+class Relater_Union::Walker_Proxy : public QueryEngine::Walker
 	{
 public:
-	Walker_Proxy(ZRef<Source_Union> iSource, ZRef<Proxy> iProxy)
-	:	fSource(iSource)
+	Walker_Proxy(ZRef<Relater_Union> iRelater, ZRef<Proxy> iProxy)
+	:	fRelater(iRelater)
 	,	fProxy(iProxy)
 	,	fIter_PIP(iProxy->fPIP_InProxy)
 		{}
@@ -218,21 +218,21 @@ public:
 		{}
 
 	virtual void Rewind()
-		{ fSource->pRewind(this); }
+		{ fRelater->pRewind(this); }
 
 	virtual ZRef<Walker> Prime(
 		const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
-		fSource->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
 		return this;
 		}
 
 	virtual bool QReadInc(ZVal_Any* ioResults)
-		{ return fSource->pReadInc(this, ioResults); }
+		{ return fRelater->pReadInc(this, ioResults); }
 
-	ZRef<Source_Union> const fSource;
+	ZRef<Relater_Union> const fRelater;
 	ZRef<Proxy> const fProxy;
 	size_t fBaseOffset;
 
@@ -242,17 +242,17 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::ClientQuery
+// MARK: - Relater_Union::ClientQuery
 
-class Source_Union::DLink_ClientQuery_NeedsWork
+class Relater_Union::DLink_ClientQuery_NeedsWork
 :	public DListLink<ClientQuery, DLink_ClientQuery_NeedsWork, kDebug>
 	{};
 
-class Source_Union::DLink_ClientQuery_InPQuery
+class Relater_Union::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
 	{};
 
-class Source_Union::ClientQuery
+class Relater_Union::ClientQuery
 :	public DLink_ClientQuery_NeedsWork
 ,	public DLink_ClientQuery_InPQuery
 	{
@@ -267,13 +267,13 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::PQuery
+// MARK: - Relater_Union::PQuery
 
-class Source_Union::DLink_PQuery_NeedsWork
+class Relater_Union::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
 	{};
 
-class Source_Union::PQuery
+class Relater_Union::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
@@ -290,37 +290,37 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::Visitor_DoMakeWalker
+// MARK: - Relater_Union::Visitor_DoMakeWalker
 
-class Source_Union::Visitor_DoMakeWalker
+class Relater_Union::Visitor_DoMakeWalker
 :	public virtual QueryEngine::Visitor_DoMakeWalker
 ,	public virtual RA::Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Proxy
 	{
 public:
-	Visitor_DoMakeWalker(ZRef<Source_Union> iSource)
-	:	fSource(iSource)
+	Visitor_DoMakeWalker(ZRef<Relater_Union> iRelater)
+	:	fRelater(iRelater)
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
 		{
 		// We'll never see a Concrete -- we're called only an a Rel that's been
 		// analyzed and where any concrete or expression incorporating a concrete
-		// will have been replaced with a Source_Union::Proxy;
+		// will have been replaced with a Relater_Union::Proxy;
 		ZUnimplemented();
 		}
 
 	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
-		{ this->pSetResult(fSource->pMakeWalker(iExpr)); }
+		{ this->pSetResult(fRelater->pMakeWalker(iExpr)); }
 
 private:
-	ZRef<Source_Union> const fSource;
+	ZRef<Relater_Union> const fRelater;
 	};
 
 // =================================================================================================
-// MARK: - Source_Union::Analyze
+// MARK: - Relater_Union::Analyze
 
-class Source_Union::Analyze
+class Relater_Union::Analyze
 :	public virtual ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
 ,	public virtual RA::Visitor_Expr_Rel_Calc
 ,	public virtual RA::Visitor_Expr_Rel_Embed
@@ -333,7 +333,7 @@ class Source_Union::Analyze
 ,	public virtual RA::Visitor_Expr_Rel_Union
 	{
 public:
-	Analyze(Source_Union* iSource_Union, PQuery* iPQuery);
+	Analyze(Relater_Union* iRelater_Union, PQuery* iPQuery);
 
 // From RA::Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr);
@@ -350,52 +350,52 @@ public:
 	ZRef<RA::Expr_Rel> TopLevelDo(ZRef<RA::Expr_Rel> iRel);
 
 private:
-	Source_Union* fSource_Union;
+	Relater_Union* fRelater_Union;
 	PQuery* fPQuery;
-	set<PSource*> fPSources;
+	set<PRelater*> fPRelaters;
 	RA::RelHead fResultRelHead;
 	};
 
-Source_Union::Analyze::Analyze(Source_Union* iSource_Union, PQuery* iPQuery)
-:	fSource_Union(iSource_Union)
+Relater_Union::Analyze::Analyze(Relater_Union* iRelater_Union, PQuery* iPQuery)
+:	fRelater_Union(iRelater_Union)
 ,	fPQuery(iPQuery)
 	{}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
 
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
 	{
 	ZAssertStop(kDebug, fResultRelHead.empty());
 
 	fResultRelHead = RA::sRelHead(iExpr->GetConcreteHead());
 
-	// Identify which PSources can service this concrete.
-	fPSources = fSource_Union->pIdentifyPSources(fResultRelHead);
+	// Identify which PRelaters can service this concrete.
+	fPRelaters = fRelater_Union->pIdentifyPRelaters(fResultRelHead);
 
-	if (fPSources.size() <= 1)
+	if (fPRelaters.size() <= 1)
 		this->pSetResult(iExpr);
 	else
-		this->pSetResult(fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, iExpr));
+		this->pSetResult(fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, iExpr));
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 	{
 	// Visit parent
 	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	// Remember which PSources it touches.
-	set<PSource*> leftPSources = fPSources;
+	// Remember which PRelaters it touches.
+	set<PRelater*> leftPRelaters = fPRelaters;
 
 	// And the relhead
 	RA::RelHead leftRelHead;
@@ -404,36 +404,36 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>&
 	// Visit embedee
 	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
-	// Remember its PSources.
-	set<PSource*> rightPSources;
-	rightPSources.swap(fPSources);
+	// Remember its PRelaters.
+	set<PRelater*> rightPRelaters;
+	rightPRelaters.swap(fPRelaters);
 	RA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = leftPSources | rightPSources;
+	fPRelaters = leftPRelaters | rightPRelaters;
 	fResultRelHead = leftRelHead | iExpr->GetColName();
 
-	if (leftPSources.size() <= 1)
+	if (leftPRelaters.size() <= 1)
 		{
-		// Our left branch is simple, it references zero or one source.
-		if (fPSources.size() <= 1)
+		// Our left branch is simple, it references zero or one Relater.
+		if (fPRelaters.size() <= 1)
 			{
-			// And with the addition of the right branch we still reference <= 1 source.
+			// And with the addition of the right branch we still reference <= 1 Relater.
 			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 			}
 		else
 			{
-			// With the addition of our right branch we *now* reference multiple sources.
+			// With the addition of our right branch we *now* reference multiple Relaters.
 			// We register a proxy for the left branch.
 			ZRef<RA::Expr_Rel> proxy0 =
-				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
-			if (rightPSources.size() <= 1)
+			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet. Will
 				// only happen if there's no restrict on the right branch.
 				ZRef<RA::Expr_Rel> proxy1 =
-					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -444,12 +444,12 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>&
 		}
 	else
 		{
-		// Our left branch itself references multiples sources.
-		if (rightPSources.size() <= 1)
+		// Our left branch itself references multiples Relaters.
+		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
 			ZRef<RA::Expr_Rel> proxy1 =
-				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -459,14 +459,14 @@ void Source_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>&
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
 	{
 	// Visit left branch
 	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	// Remember which PSources it touches.
-	set<PSource*> leftPSources;
-	leftPSources.swap(fPSources);
+	// Remember which PRelaters it touches.
+	set<PRelater*> leftPRelaters;
+	leftPRelaters.swap(fPRelaters);
 
 	// And the relhead
 	RA::RelHead leftRelHead;
@@ -475,35 +475,35 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Produ
 	// Visit right branch
 	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
-	// Remember its PSources.
-	set<PSource*> rightPSources;
-	rightPSources.swap(fPSources);
+	// Remember its PRelaters.
+	set<PRelater*> rightPRelaters;
+	rightPRelaters.swap(fPRelaters);
 	RA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = leftPSources | rightPSources;
+	fPRelaters = leftPRelaters | rightPRelaters;
 	fResultRelHead = leftRelHead | rightRelHead;
 
-	if (leftPSources.size() <= 1)
+	if (leftPRelaters.size() <= 1)
 		{
-		// Our left branch is simple, it references zero or one source.
-		if (fPSources.size() <= 1)
+		// Our left branch is simple, it references zero or one Relater.
+		if (fPRelaters.size() <= 1)
 			{
-			// And with the addition of the right branch we still reference <= 1 source.
+			// And with the addition of the right branch we still reference <= 1 Relater.
 			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 			}
 		else
 			{
 			// This is the interesting scenario. With the addition of our right branch
-			// we *now* reference multiple sources. We register a proxy for the left branch.
+			// we *now* reference multiple Relaters. We register a proxy for the left branch.
 			ZRef<RA::Expr_Rel> proxy0 =
-				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
-			if (rightPSources.size() <= 1)
+			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
 				ZRef<RA::Expr_Rel> proxy1 =
-					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -514,12 +514,12 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Produ
 		}
 	else
 		{
-		// Our left branch itself references multiples sources.
-		if (rightPSources.size() <= 1)
+		// Our left branch itself references multiples Relaters.
+		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
 			ZRef<RA::Expr_Rel> proxy1 =
-				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -529,14 +529,14 @@ void Source_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Produ
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
 
 	fResultRelHead &= iExpr->GetProjectRelHead();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 
@@ -544,29 +544,29 @@ void Source_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename
 		fResultRelHead |= iExpr->GetNew();
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
 	{
-	// If fPSources is not empty, then we're in an embed. Remember it.
-	set<PSource*> priorPSources = fPSources;
+	// If fPRelaters is not empty, then we're in an embed. Remember it.
+	set<PRelater*> priorPRelaters = fPRelaters;
 
 	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	if (fPSources.size() > 1)
+	if (fPRelaters.size() > 1)
 		{
 		// Child is complex, proxies will have been created already.
-		fPSources = fPSources | priorPSources;
+		fPRelaters = fPRelaters | priorPRelaters;
 		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
 	else
 		{
 		// Child is simple.
-		set<PSource*> combinedPSources = priorPSources | fPSources;
-		if (combinedPSources.size() > 1)
+		set<PRelater*> combinedPRelaters = priorPRelaters | fPRelaters;
+		if (combinedPRelaters.size() > 1)
 			{
-			// We're complex with the addition of our prior sources.
+			// We're complex with the addition of our prior Relaters.
 			// Create a proxy for the child.
 			ZRef<RA::Expr_Rel> proxy0 =
-				fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, newOp0);
+				fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, newOp0);
 			this->pSetResult(iExpr->Clone(proxy0));
 			}
 		else
@@ -574,18 +574,18 @@ void Source_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Rest
 			// We're still simple.
 			this->pSetResult(iExpr->SelfOrClone(newOp0));
 			}
-		fPSources.swap(combinedPSources);
+		fPRelaters.swap(combinedPRelaters);
 		}
 	}
 
-void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
 	{
 	// Visit left branch
 	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	// Remember which PSources it touches.
-	set<PSource*> leftPSources;
-	leftPSources.swap(fPSources);
+	// Remember which PRelaters it touches.
+	set<PRelater*> leftPRelaters;
+	leftPRelaters.swap(fPRelaters);
 
 	// And the relhead
 	RA::RelHead leftRelHead;
@@ -594,36 +594,36 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>&
 	// Visit right branch
 	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
-	// Remember its PSources.
-	set<PSource*> rightPSources;
-	rightPSources.swap(fPSources);
+	// Remember its PRelaters.
+	set<PRelater*> rightPRelaters;
+	rightPRelaters.swap(fPRelaters);
 	RA::RelHead rightRelHead;
 	rightRelHead.swap(fResultRelHead);
 
-	fPSources = leftPSources | rightPSources;
+	fPRelaters = leftPRelaters | rightPRelaters;
 	ZAssert(leftRelHead == rightRelHead);
 	fResultRelHead = leftRelHead;
 
-	if (leftPSources.size() <= 1)
+	if (leftPRelaters.size() <= 1)
 		{
-		// Our left branch is simple, it references zero or one source.
-		if (fPSources.size() <= 1)
+		// Our left branch is simple, it references zero or one Relater.
+		if (fPRelaters.size() <= 1)
 			{
-			// And with the addition of the right branch we still reference <= 1 source.
+			// And with the addition of the right branch we still reference <= 1 Relater.
 			this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 			}
 		else
 			{
 			// This is the interesting scenario. With the addition of our right branch
-			// we *now* reference multiple sources. We register a proxy for the left branch.
+			// we *now* reference multiple Relaters. We register a proxy for the left branch.
 			ZRef<RA::Expr_Rel> proxy0 =
-				fSource_Union->pGetProxy(fPQuery, leftPSources, leftRelHead, newOp0);
+				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
-			if (rightPSources.size() <= 1)
+			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
 				ZRef<RA::Expr_Rel> proxy1 =
-					fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
 			else
@@ -634,12 +634,12 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>&
 		}
 	else
 		{
-		// Our left branch itself references multiples sources.
-		if (rightPSources.size() <= 1)
+		// Our left branch itself references multiples Relaters.
+		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
 			ZRef<RA::Expr_Rel> proxy1 =
-				fSource_Union->pGetProxy(fPQuery, rightPSources, rightRelHead, newOp1);
+				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
 		else
@@ -649,36 +649,36 @@ void Source_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>&
 		}
 	}
 
-ZRef<RA::Expr_Rel> Source_Union::Analyze::TopLevelDo(ZRef<RA::Expr_Rel> iRel)
+ZRef<RA::Expr_Rel> Relater_Union::Analyze::TopLevelDo(ZRef<RA::Expr_Rel> iRel)
 	{
 	ZRef<RA::Expr_Rel> result = this->Do(iRel);
-	if (fPSources.size() <= 1)
-		return fSource_Union->pGetProxy(fPQuery, fPSources, fResultRelHead, result);
+	if (fPRelaters.size() <= 1)
+		return fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, result);
 	return result;
 	}
 
 // =================================================================================================
-// MARK: - Source_Union::PSource
+// MARK: - Relater_Union::PRelater
 
-class Source_Union::DLink_PSource_NeedsWork
-:	public DListLink<PSource, DLink_PSource_NeedsWork, kDebug>
+class Relater_Union::DLink_PRelater_NeedsWork
+:	public DListLink<PRelater, DLink_PRelater_NeedsWork, kDebug>
 	{};
 
-class Source_Union::DLink_PSource_CollectFrom
-:	public DListLink<PSource, DLink_PSource_CollectFrom, kDebug>
+class Relater_Union::DLink_PRelater_CollectFrom
+:	public DListLink<PRelater, DLink_PRelater_CollectFrom, kDebug>
 	{};
 
-class Source_Union::PSource
-:	public DLink_PSource_NeedsWork
-,	public DLink_PSource_CollectFrom
+class Relater_Union::PRelater
+:	public DLink_PRelater_NeedsWork
+,	public DLink_PRelater_CollectFrom
 	{
 public:
-	PSource(ZRef<Source> iSource, const string8& iPrefix);
+	PRelater(ZRef<Relater> iRelater, const string8& iPrefix);
 
 	bool Intersects(const RelHead& iRelHead);
 	ZRef<RA::Expr_Rel> UsableRel(ZRef<RA::Expr_Rel> iRel);
 
-	ZRef<Source> fSource;
+	ZRef<Relater> fRelater;
 	int64 fNextRefcon;
 
 	Map_Refcon_PIP fMap_Refcon_PIP;
@@ -688,23 +688,23 @@ private:
 	const string8 fPrefix;
 	};
 
-Source_Union::PSource::PSource(ZRef<Source> iSource, const string8& iPrefix)
-:	fSource(iSource)
+Relater_Union::PRelater::PRelater(ZRef<Relater> iRelater, const string8& iPrefix)
+:	fRelater(iRelater)
 ,	fNextRefcon(1)
 ,	fPrefix(iPrefix)
 	{}
 
-bool Source_Union::PSource::Intersects(const RelHead& iRelHead)
+bool Relater_Union::PRelater::Intersects(const RelHead& iRelHead)
 	{
 	if (fPrefix.empty())
-		return fSource->Intersects(iRelHead);
+		return fRelater->Intersects(iRelHead);
 	else if (RA::sHasPrefix(fPrefix, iRelHead))
-		return fSource->Intersects(RA::sPrefixErased(fPrefix, iRelHead));
+		return fRelater->Intersects(RA::sPrefixErased(fPrefix, iRelHead));
 
 	return false;
 	}
 
-ZRef<RA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<RA::Expr_Rel> iRel)
+ZRef<RA::Expr_Rel> Relater_Union::PRelater::UsableRel(ZRef<RA::Expr_Rel> iRel)
 	{
 	if (fPrefix.empty())
 		return iRel;
@@ -713,35 +713,35 @@ ZRef<RA::Expr_Rel> Source_Union::PSource::UsableRel(ZRef<RA::Expr_Rel> iRel)
 	}
 
 // =================================================================================================
-// MARK: - Source_Union
+// MARK: - Relater_Union
 
-Source_Union::Source_Union()
+Relater_Union::Relater_Union()
 :	fEvent(Event::sZero())
 	{}
 
-Source_Union::~Source_Union()
+Relater_Union::~Relater_Union()
 	{}
 
-void Source_Union::Initialize()
+void Relater_Union::Initialize()
 	{
-	Source::Initialize();
-	fCallable_ResultsAvailable = sCallable(sWeakRef(this), &Source_Union::pResultsAvailable);
+	Relater::Initialize();
+	fCallable_ResultsAvailable = sCallable(sWeakRef(this), &Relater_Union::pResultsAvailable);
 	}
 
-bool Source_Union::Intersects(const RelHead& iRelHead)
+bool Relater_Union::Intersects(const RelHead& iRelHead)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	foreachi (iterSource, fMap_Source_PSource)
+	foreachi (iterRelater, fMap_Relater_PRelater)
 		{
-		if (iterSource->first->Intersects(iRelHead))
+		if (iterRelater->first->Intersects(iRelHead))
 			return true;
 		}
 
 	return false;
 	}
 
-void Source_Union::ModifyRegistrations(
+void Relater_Union::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
@@ -779,9 +779,9 @@ void Source_Union::ModifyRegistrations(
 						eraserPIP = theProxy->fPIP_InProxy; eraserPIP; eraserPIP.Advance())
 						{
 						PIP* thePIP = eraserPIP.Current();
-						PSource* thePSource = thePIP->fPSource;
-						sQInsertBack(thePSource->fPIP_NeedsWork, thePIP);
-						sQInsertBack(fPSource_NeedsWork, thePSource);
+						PRelater* thePRelater = thePIP->fPRelater;
+						sQInsertBack(thePRelater->fPIP_NeedsWork, thePIP);
+						sQInsertBack(fPRelater_NeedsWork, thePRelater);
 						thePIP->fProxy = nullptr;
 						}
 					}
@@ -832,10 +832,10 @@ void Source_Union::ModifyRegistrations(
 		}
 
 	guard.Release();
-	Source::pTriggerResultsAvailable();
+	Relater::pTriggerResultsAvailable();
 	}
 
-void Source_Union::CollectResults(vector<QueryResult>& oChanged)
+void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 	{
 	this->pCollectResultsCalled();
 
@@ -843,14 +843,14 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----------------
 
-	for (DListEraser<PSource, DLink_PSource_NeedsWork>
-		eraserPSource = fPSource_NeedsWork; eraserPSource; eraserPSource.Advance())
+	for (DListEraser<PRelater, DLink_PRelater_NeedsWork>
+		eraserPRelater = fPRelater_NeedsWork; eraserPRelater; eraserPRelater.Advance())
 		{
-		PSource* thePSource = eraserPSource.Current();
+		PRelater* thePRelater = eraserPRelater.Current();
 		vector<AddedQuery> theAddedQueries;
 		vector<int64> theRemoves;
 		for (DListEraser<PIP, DLink_PIP_NeedsWork>
-			eraserPIP = thePSource->fPIP_NeedsWork; eraserPIP; eraserPIP.Advance())
+			eraserPIP = thePRelater->fPIP_NeedsWork; eraserPIP; eraserPIP.Advance())
 			{
 			PIP* thePIP = eraserPIP.Current();
 			if (thePIP->fProxy)
@@ -859,7 +859,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 					{
 					thePIP->fNeedsAdd = false;
 					theAddedQueries.push_back(
-						AddedQuery(thePIP->fRefcon, thePSource->UsableRel(thePIP->fProxy->fRel)));
+						AddedQuery(thePIP->fRefcon, thePRelater->UsableRel(thePIP->fProxy->fRel)));
 					}
 				}
 			else
@@ -867,21 +867,21 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 				if (not thePIP->fNeedsAdd)
 					{
 					theRemoves.push_back(thePIP->fRefcon);
-					thePSource->fMap_Refcon_PIP.erase(thePIP->fRefcon);
+					thePRelater->fMap_Refcon_PIP.erase(thePIP->fRefcon);
 					}
 				}
 			}
 
-		thePSource->fSource->ModifyRegistrations(
+		thePRelater->fRelater->ModifyRegistrations(
 			sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 			sFirstOrNil(theRemoves), theRemoves.size());
 		}
 
 	// -----------------
 
-	for (DListEraser<PSource, DLink_PSource_CollectFrom>
-		eraserPSource = fPSource_CollectFrom; eraserPSource; eraserPSource.Advance())
-		{ this->pCollectFrom(eraserPSource.Current()); }
+	for (DListEraser<PRelater, DLink_PRelater_CollectFrom>
+		eraserPRelater = fPRelater_CollectFrom; eraserPRelater; eraserPRelater.Advance())
+		{ this->pCollectFrom(eraserPRelater.Current()); }
 
 	// -----------------
 
@@ -928,7 +928,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 				const ZTime start = ZTime::sNow();
 
 				ZRef<QueryEngine::Walker> theWalker =
-					Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
+					Relater_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 				const ZTime afterMakeWalker = ZTime::sNow();
 
 				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
@@ -969,60 +969,60 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 		}
 	}
 
-void Source_Union::InsertSource(ZRef<Source> iSource, const string8& iPrefix)
+void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix)
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	// We can't add sources on the fly -- require that no queries exist yet.
+	// We can't add Relaters on the fly -- require that no queries exist yet.
 	ZAssertStop(kDebug, fMap_Refcon_ClientQuery.empty());
 
-	sInsertMust(kDebug, fMap_Source_PSource, iSource, PSource(iSource, iPrefix));
+	sInsertMust(kDebug, fMap_Relater_PRelater, iRelater, PRelater(iRelater, iPrefix));
 
-	iSource->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
+	iRelater->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
 	}
 
-void Source_Union::EraseSource(ZRef<Source> iSource)
+void Relater_Union::EraseRelater(ZRef<Relater> iRelater)
 	{
 	ZAcqMtxR acq(fMtxR);
-	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
-	PSource& thePSource = iterSource->second;
+	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
+	PRelater& thePRelater = iterRelater->second;
 	vector<int64> toRemove;
 	for (Map_Refcon_PIP::iterator
-		iterPIP = thePSource.fMap_Refcon_PIP.begin(),
-		endPIP = thePSource.fMap_Refcon_PIP.end();
+		iterPIP = thePRelater.fMap_Refcon_PIP.begin(),
+		endPIP = thePRelater.fMap_Refcon_PIP.end();
 		iterPIP != endPIP; ++iterPIP)
 		{
 		toRemove.push_back(iterPIP->first);
 		sEraseMust(iterPIP->second.fProxy->fPIP_InProxy, &iterPIP->second);
 		}
-	thePSource.fMap_Refcon_PIP.clear();
+	thePRelater.fMap_Refcon_PIP.clear();
 
-	iSource->ModifyRegistrations(nullptr, 0, sFirstOrNil(toRemove), toRemove.size());
+	iRelater->ModifyRegistrations(nullptr, 0, sFirstOrNil(toRemove), toRemove.size());
 
-	iSource->SetCallable_ResultsAvailable(null);
+	iRelater->SetCallable_ResultsAvailable(null);
 
-	fMap_Source_PSource.erase(iterSource);
+	fMap_Relater_PRelater.erase(iterRelater);
 	}
 
-set<Source_Union::PSource*> Source_Union::pIdentifyPSources(const RelHead& iRelHead)
+set<Relater_Union::PRelater*> Relater_Union::pIdentifyPRelaters(const RelHead& iRelHead)
 	{
-	set<PSource*> result;
-	for (Map_Source_PSource::iterator
-		iterSource = fMap_Source_PSource.begin(),
-		endSource = fMap_Source_PSource.end();
-		iterSource != endSource; ++iterSource)
+	set<PRelater*> result;
+	for (Map_Relater_PRelater::iterator
+		iterRelater = fMap_Relater_PRelater.begin(),
+		endRelater = fMap_Relater_PRelater.end();
+		iterRelater != endRelater; ++iterRelater)
 		{
-		PSource* thePSource = &iterSource->second;
-		if (thePSource->Intersects(iRelHead))
-			result.insert(thePSource);
+		PRelater* thePRelater = &iterRelater->second;
+		if (thePRelater->Intersects(iRelHead))
+			result.insert(thePRelater);
 		}
 	return result;
 	}
 
-ZRef<RA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
-	const set<PSource*>& iPSources, const RelHead& iRelHead, ZRef<RA::Expr_Rel> iRel)
+ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
+	const set<PRelater*>& iPRelaters, const RelHead& iRelHead, ZRef<RA::Expr_Rel> iRel)
 	{
-	if (iPSources.empty())
+	if (iPRelaters.empty())
 		return iRel;
 
 	ZRef<Proxy> theProxyRef;
@@ -1038,23 +1038,23 @@ ZRef<RA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 		theProxy->fRel = iRel;
 		theProxy->fResultRelHead = iRelHead;
 		sInsertMust(kDebug, fProxyMap, iRel, theProxy);
-		foreachi (iterPSources, iPSources)
+		foreachi (iterPRelaters, iPRelaters)
 			{
-			PSource* thePSource = *iterPSources;
+			PRelater* thePRelater = *iterPRelaters;
 
-			const int64 theRefcon = thePSource->fNextRefcon++;
+			const int64 theRefcon = thePRelater->fNextRefcon++;
 
-			PIP* thePIP = &thePSource->fMap_Refcon_PIP.insert(
+			PIP* thePIP = &thePRelater->fMap_Refcon_PIP.insert(
 				make_pair(theRefcon, PIP())).first->second;
 
 			thePIP->fNeedsAdd = true;
 			thePIP->fRefcon = theRefcon;
 			thePIP->fProxy = theProxy;
-			thePIP->fPSource = thePSource;
+			thePIP->fPRelater = thePRelater;
 			sInsertBackMust(theProxy->fPIP_InProxy, thePIP);
 
-			sInsertBackMust(thePSource->fPIP_NeedsWork, thePIP);
-			sQInsertBack(fPSource_NeedsWork, thePSource);
+			sInsertBackMust(thePRelater->fPIP_NeedsWork, thePIP);
+			sQInsertBack(fPRelater_NeedsWork, thePRelater);
 			}
 		}
 
@@ -1064,7 +1064,7 @@ ZRef<RA::Expr_Rel> Source_Union::pGetProxy(PQuery* iPQuery,
 	return theProxyRef;
 	}
 
-void Source_Union::pFinalizeProxy(Proxy* iProxy)
+void Relater_Union::pFinalizeProxy(Proxy* iProxy)
 	{
 	if (not iProxy->FinishFinalize())
 		return;
@@ -1076,19 +1076,19 @@ void Source_Union::pFinalizeProxy(Proxy* iProxy)
 	delete iProxy;
 	}
 
-ZRef<Source_Union::Walker_Proxy> Source_Union::pMakeWalker(ZRef<Proxy> iProxy)
+ZRef<Relater_Union::Walker_Proxy> Relater_Union::pMakeWalker(ZRef<Proxy> iProxy)
 	{
 	++fWalkerCount;
 	return new Walker_Proxy(this, iProxy);
 	}
 
-void Source_Union::pRewind(ZRef<Walker_Proxy> iWalker)
+void Relater_Union::pRewind(ZRef<Walker_Proxy> iWalker)
 	{
 	iWalker->fIter_PIP = iWalker->fProxy->fPIP_InProxy;
 	iWalker->fCurrentResult.Clear();
 	}
 
-void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
+void Relater_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -1098,7 +1098,7 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 		oOffsets[*ii] = ioBaseOffset++;
 	}
 
-bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
+bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
 	{
 	++fReadCount;
 	for (;;)
@@ -1140,16 +1140,16 @@ bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
 		}
 	}
 
-void Source_Union::pCollectFrom(PSource* iPSource)
+void Relater_Union::pCollectFrom(PRelater* iPRelater)
 	{
 	vector<QueryResult> theQueryResults;
-	iPSource->fSource->CollectResults(theQueryResults);
+	iPRelater->fRelater->CollectResults(theQueryResults);
 
 	foreachi (iterQueryResults, theQueryResults)
 		{
 		const int64 theRefcon = iterQueryResults->GetRefcon();
-		Map_Refcon_PIP::iterator iter = iPSource->fMap_Refcon_PIP.find(theRefcon);
-		if (iPSource->fMap_Refcon_PIP.end() != iter)
+		Map_Refcon_PIP::iterator iter = iPRelater->fMap_Refcon_PIP.find(theRefcon);
+		if (iPRelater->fMap_Refcon_PIP.end() != iter)
 			{
 			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterQueryResults->GetResult();
@@ -1160,13 +1160,13 @@ void Source_Union::pCollectFrom(PSource* iPSource)
 		}
 	}
 
-void Source_Union::pResultsAvailable(ZRef<Source> iSource)
+void Relater_Union::pResultsAvailable(ZRef<Relater> iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
-	Map_Source_PSource::iterator iterSource = fMap_Source_PSource.find(iSource);
-	sQInsertBack(fPSource_CollectFrom, &iterSource->second);
+	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
+	sQInsertBack(fPRelater_CollectFrom, &iterRelater->second);
 	guard.Release();
-	Source::pTriggerResultsAvailable();
+	Relater::pTriggerResultsAvailable();
 	}
 
 } // namespace ZDataspace

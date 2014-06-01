@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
-#include "zoolib/dataspace/ZDataspace_Source_Asyncify.h"
+#include "zoolib/dataspace/Relater_Asyncify.h"
 
 namespace ZooLib {
 namespace ZDataspace {
@@ -38,34 +38,34 @@ using std::vector;
 using namespace ZUtil_STL;
 
 // =================================================================================================
-// MARK: - Source_Asyncify
+// MARK: - Relater_Asyncify
 
-Source_Asyncify::Source_Asyncify(ZRef<Source> iSource)
-:	fSource(iSource)
+Relater_Asyncify::Relater_Asyncify(ZRef<Relater> iRelater)
+:	fRelater(iRelater)
 ,	fTriggered_Update(false)
-,	fNeeds_SourceCollectResults(false)
+,	fNeeds_RelaterCollectResults(false)
 	{}
 
-Source_Asyncify::~Source_Asyncify()
+Relater_Asyncify::~Relater_Asyncify()
 	{}
 
-void Source_Asyncify::Initialize()
+void Relater_Asyncify::Initialize()
 	{
-	Source::Initialize();
-	fSource->SetCallable_ResultsAvailable(
-		sCallable(sWeakRef(this), &Source_Asyncify::pResultsAvailable));
+	Relater::Initialize();
+	fRelater->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &Relater_Asyncify::pResultsAvailable));
 	}
 
-void Source_Asyncify::Finalize()
+void Relater_Asyncify::Finalize()
 	{
-	fSource->SetCallable_ResultsAvailable(null);
-	Source::Finalize();
+	fRelater->SetCallable_ResultsAvailable(null);
+	Relater::Finalize();
 	}
 
-bool Source_Asyncify::Intersects(const RelHead& iRelHead)
-	{ return fSource->Intersects(iRelHead); }
+bool Relater_Asyncify::Intersects(const RelHead& iRelHead)
+	{ return fRelater->Intersects(iRelHead); }
 
-void Source_Asyncify::ModifyRegistrations(
+void Relater_Asyncify::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
@@ -97,7 +97,7 @@ void Source_Asyncify::ModifyRegistrations(
 	this->pTrigger_Update();
 	}
 
-void Source_Asyncify::CollectResults(vector<QueryResult>& oChanged)
+void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
 	this->pCollectResultsCalled();
@@ -111,12 +111,12 @@ void Source_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	fPendingResults.clear();
 	}
 
-void Source_Asyncify::CrankIt()
+void Relater_Asyncify::CrankIt()
 	{
 	this->pUpdate();
 	}
 
-void Source_Asyncify::Shutdown()
+void Relater_Asyncify::Shutdown()
 	{
 	ZAcqMtxR acq(fMtxR);
 	while (fTriggered_Update)
@@ -125,16 +125,16 @@ void Source_Asyncify::Shutdown()
 	fTriggered_Update = true;
 	}
 
-void Source_Asyncify::pTrigger_Update()
+void Relater_Asyncify::pTrigger_Update()
 	{
 	ZAcqMtxR acq(fMtxR);
 	if (sGetSet(fTriggered_Update, true))
 		return;
 
-	sCallOnNewThread(sCallable(sRef(this), &Source_Asyncify::pUpdate));
+	sCallOnNewThread(sCallable(sRef(this), &Relater_Asyncify::pUpdate));
 	}
 
-void Source_Asyncify::pUpdate()
+void Relater_Asyncify::pUpdate()
 	{
 	ZGuardMtxR guard(fMtxR);
 
@@ -155,18 +155,18 @@ void Source_Asyncify::pUpdate()
 			{
 			guard.Release();
 			didAnything = true;
-			fSource->ModifyRegistrations(sFirstOrNil(theAdds), theAdds.size(),
+			fRelater->ModifyRegistrations(sFirstOrNil(theAdds), theAdds.size(),
 				sFirstOrNil(theRemoves), theRemoves.size());
 			guard.Acquire();
 			}
 
-		if (fNeeds_SourceCollectResults)
+		if (fNeeds_RelaterCollectResults)
 			{
-			fNeeds_SourceCollectResults = false;
+			fNeeds_RelaterCollectResults = false;
 			guard.Release();
 
 			vector<QueryResult> changes;
-			fSource->CollectResults(changes);
+			fRelater->CollectResults(changes);
 
 			if (changes.size())
 				{
@@ -177,7 +177,7 @@ void Source_Asyncify::pUpdate()
 					fPendingResults[iter->GetRefcon()] = *iter;
 
 				guard.Release();
-				Source::pTriggerResultsAvailable();
+				Relater::pTriggerResultsAvailable();
 				}
 			guard.Acquire();
 			}
@@ -189,10 +189,10 @@ void Source_Asyncify::pUpdate()
 	fCnd.Broadcast();
 	}
 
-void Source_Asyncify::pResultsAvailable(ZRef<Source> iSource)
+void Relater_Asyncify::pResultsAvailable(ZRef<Relater> iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
-	fNeeds_SourceCollectResults = true;
+	fNeeds_RelaterCollectResults = true;
 	this->pTrigger_Update();
 	}
 

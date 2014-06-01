@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,27 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDataspace_Source_SQLite_h__
-#define __ZDataspace_Source_SQLite_h__ 1
+#ifndef __ZooLib_Dataspace_Relater_Asyncify_h__
+#define __ZooLib_Dataspace_Relater_Asyncify_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
-#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/dataspace/Relater.h"
+
+#include <map>
+#include <set>
+#include <vector>
 
 namespace ZooLib {
 namespace ZDataspace {
 
 // =================================================================================================
-// MARK: - Source_SQLite
+// MARK: - Relater_Asyncify
 
-class Source_SQLite : public Source
+class Relater_Asyncify : public Relater
 	{
 public:
-	enum { kDebug = 1 };
+	Relater_Asyncify(ZRef<Relater> iRelater);
+	virtual ~Relater_Asyncify();
 
-	Source_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock);
-	virtual ~Source_SQLite();
+// From ZCounted via Relater
+	virtual void Initialize();
+	virtual void Finalize();
 
+// From Relater
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
@@ -47,23 +54,29 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
+// Our protocol
+	void CrankIt();
+	void Shutdown();
+
 private:
-	ZRef<ZSQLite::DB> fDB;
-	ZRef<Clock> fClock;
-	std::map<string8, RelHead> fMap_Tables;
+	void pTrigger_Update();
+	void pUpdate();
 
-	class DLink_ClientQuery_InPQuery;
-	class ClientQuery;
-	class PQuery;
-	std::map<int64, ClientQuery> fMap_RefconToClientQuery;
+	void pResultsAvailable(ZRef<Relater> iRelater);
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
-		Map_Rel_PQuery;
-	Map_Rel_PQuery fMap_Rel_PQuery;
-	class PQuery;
+	ZMtxR fMtxR;
+	ZCnd fCnd;
+	ZRef<Relater> fRelater;
+
+	bool fTriggered_Update;
+	bool fNeeds_RelaterCollectResults;
+
+	std::map<int64,ZRef<RelationalAlgebra::Expr_Rel> > fPendingAdds;
+	std::set<int64> fPendingRemoves;
+	std::map<int64,QueryResult> fPendingResults;
 	};
 
 } // namespace ZDataspace
 } // namespace ZooLib
 
-#endif // __ZDataspace_Source_SQLite_h__
+#endif // __ZooLib_Dataspace_Relater_Asyncify_h__
