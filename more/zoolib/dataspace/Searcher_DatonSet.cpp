@@ -292,7 +292,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 				iterPScanPair = fMap_PScan.insert(make_pair(theCH, PScan(theCH)));
 
 			PScan* thePScan = &iterPScanPair.first->second;
-
+			thePSearch->fPScan = thePScan;
 			sInsertBackMust(thePScan->fPSearch_InPScan, thePSearch);
 
 			if (iterPScanPair.second)
