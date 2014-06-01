@@ -81,11 +81,6 @@ private:
 	class Walker;
 	friend class Walker;
 
-	ZRef<QueryEngine::Walker> pMakeWalkerForPSearch(PSearch* iPSearch);
-
-	ZRef<QueryEngine::Walker> pMakeWalkerForConcreteHead(PSearch* iPSearch,
-		const ConcreteHead& iConcreteHead);
-
 	void pRewind(ZRef<Walker> iWalker);
 
 	void pPrime(ZRef<Walker> iWalker,
@@ -118,6 +113,7 @@ private:
 
 	// -----
 
+	class DLink_PSearch_InPScan;
 	class DLink_PSearch_NeedsWork;
 	typedef std::map<SearchSpec,PSearch> Map_SearchSpec_PSearch;
 	Map_SearchSpec_PSearch fMap_SearchSpec_PSearch;
@@ -129,7 +125,7 @@ private:
 	class DLink_PScan_NeedsWork;
 	class PScan;
 
-	typedef std::map<RelHead,PScan> Map_PScan;
+	typedef std::map<ConcreteHead,PScan> Map_PScan;
 	Map_PScan fMap_PScan;
 
 	DListHead<DLink_PScan_NeedsWork> fPScan_NeedsWork;

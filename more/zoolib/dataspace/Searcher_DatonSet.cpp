@@ -183,12 +183,17 @@ public:
 // =================================================================================================
 // MARK: - Searcher_DatonSet::PSearch
 
+class Searcher_DatonSet::DLink_PSearch_InPScan
+:	public DListLink<PSearch, DLink_PSearch_InPScan, kDebug>
+	{};
+
 class Searcher_DatonSet::DLink_PSearch_NeedsWork
 :	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
 	{};
 
 class Searcher_DatonSet::PSearch
-:	public DLink_PSearch_NeedsWork
+:	public DLink_PSearch_InPScan
+,	public DLink_PSearch_NeedsWork
 	{
 public:
 	PSearch(const SearchSpec& iSearchSpec)
@@ -196,8 +201,11 @@ public:
 		{}
 
 	const SearchSpec fSearchSpec;
+
 	DListHead<DLink_ClientSearch_InPSearch> fClientSearch_InPSearch;
-	set<PScan*> fPScan_Used;
+
+	PScan* fPScan;
+
 	ZRef<QE::Result> fResult;
 	};
 
@@ -212,10 +220,12 @@ class Searcher_DatonSet::PScan
 :	public DLink_PScan_NeedsWork
 	{
 public:
-	PScan() {}
+	PScan(const ConcreteHead& iConcreteHead)
+	:	fConcreteHead(iConcreteHead)
+		{}
 
-	RelHead fRelHead;
-	set<PSearch*> fPSearch_Using;
+	const ConcreteHead fConcreteHead;
+	DListHead<DLink_PSearch_InPScan> fPSearch_InPScan;
 	ZRef<QE::Result> fResult;
 	};
 
@@ -230,16 +240,20 @@ Searcher_DatonSet::Searcher_DatonSet(ZRef<DatonSet> iDatonSet)
 ,	fEvent(Event::sZero())
 	{}
 
-//Searcher_DatonSet::~Searcher_DatonSet()
-//	{
-//	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
-//		eraser; eraser.Advance())
-//		{}
-//
-//	for (DListEraser<ClientSearch,DLink_ClientSearch_NeedsWork> eraser = fClientSearch_NeedsWork;
-//		eraser; eraser.Advance())
-//		{}
-//	}
+Searcher_DatonSet::~Searcher_DatonSet()
+	{
+	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+
+	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+
+	for (DListEraser<ClientSearch,DLink_ClientSearch_NeedsWork> eraser = fClientSearch_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+	}
 
 bool Searcher_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
@@ -254,32 +268,51 @@ void Searcher_DatonSet::ModifyRegistrations(
 		{
 		const SearchSpec& theSearchSpec = iAdded->GetSearchSpec();
 
-		const pair<Map_SearchSpec_PSearch::iterator,bool> iterPSearchPair =
-			fMap_SearchSpec_PSearch.insert(make_pair(theSearchSpec, PSearch(theSearchSpec)));
+		const pair<Map_SearchSpec_PSearch::iterator,bool>
+			iterPSearchPair = fMap_SearchSpec_PSearch.insert(
+				make_pair(theSearchSpec, PSearch(theSearchSpec)));
 
-		const Map_SearchSpec_PSearch::iterator& iterPSearch = iterPSearchPair.first;
-		PSearch* thePSearch = &iterPSearch->second;
+		PSearch* thePSearch = &iterPSearchPair.first->second;
+
+		if (iterPSearchPair.second)
+			{
+			// It's a new PSearch, so we'll need to work on it
+			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
+
+			// and connect it to a PScan
+			RelHead theRH_Required, theRH_Optional;
+			RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
+
+			const RelHead theRH_Restriction = sGetNames(theSearchSpec.GetRestriction());
+
+			const ConcreteHead theCH = RA::sConcreteHead(
+				theRH_Required, theRH_Optional | theRH_Restriction);
+
+			const pair<Map_PScan::iterator,bool>
+				iterPScanPair = fMap_PScan.insert(make_pair(theCH, PScan(theCH)));
+
+			PScan* thePScan = &iterPScanPair.first->second;
+
+			sInsertBackMust(thePScan->fPSearch_InPScan, thePSearch);
+
+			if (iterPScanPair.second)
+				{
+				// It's a new PScan, so we'll need to work on it.
+				sInsertBackMust(fPScan_NeedsWork, thePScan);
+				}
+			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		const pair<map<int64,ClientSearch>::iterator,bool> iterClientSearchPair =
-			fMap_Refcon_ClientSearch.insert(
-			make_pair(theRefcon, ClientSearch(theRefcon, thePSearch)));
+		const pair<map<int64,ClientSearch>::iterator,bool>
+			iterClientSearchPair = fMap_Refcon_ClientSearch.insert(
+				make_pair(theRefcon, ClientSearch(theRefcon, thePSearch)));
 		ZAssert(iterClientSearchPair.second);
 
 		ClientSearch* theClientSearch = &iterClientSearchPair.first->second;
 		sInsertBackMust(thePSearch->fClientSearch_InPSearch, theClientSearch);
 
-		if (iterPSearchPair.second)
-			{
-			// It's a new PSearch, so we'll need to work on it.
-			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
-			}
-		else
-			{
-			// It's an existing PSearch, so the ClientSearch will need to be worked on.
-			sInsertBackMust(fClientSearch_NeedsWork, theClientSearch);
-			}
+		sInsertBackMust(fClientSearch_NeedsWork, theClientSearch);
 		}
 
 	while (iRemovedCount--)
@@ -297,16 +330,13 @@ void Searcher_DatonSet::ModifyRegistrations(
 		sEraseMust(thePSearch->fClientSearch_InPSearch, theClientSearch);
 		if (sIsEmpty(thePSearch->fClientSearch_InPSearch))
 			{
-			// Detach from any depended-upon PScan
-			for (set<PScan*>::iterator iterPScan = thePSearch->fPScan_Used.begin();
-				iterPScan != thePSearch->fPScan_Used.end(); ++iterPScan)
+			PScan* thePScan = thePSearch->fPScan;
+			sEraseMust(thePScan->fPSearch_InPScan, thePSearch);
+			if (sIsEmpty(thePScan->fPSearch_InPScan))
 				{
-				PScan* thePScan = *iterPScan;
-				sEraseMust(kDebug, thePScan->fPSearch_Using, thePSearch);
-				if (thePScan->fPSearch_Using.empty())
-					sQInsertBack(fPScan_NeedsWork, thePScan);
+				sQErase(fPScan_NeedsWork, thePScan);
+				sEraseMust(kDebug, fMap_PScan, thePScan->fConcreteHead);
 				}
-			thePSearch->fPScan_Used.clear();
 
 			sQErase(fPSearch_NeedsWork, thePSearch);
 			sEraseMust(kDebug, fMap_SearchSpec_PSearch, thePSearch->fSearchSpec);
@@ -316,7 +346,9 @@ void Searcher_DatonSet::ModifyRegistrations(
 		fMap_Refcon_ClientSearch.erase(iterClientSearch);
 		}
 
-	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
+	if (sNotEmpty(fClientSearch_NeedsWork)
+		|| sNotEmpty(fPSearch_NeedsWork)
+		|| sNotEmpty(fPScan_NeedsWork))
 		{
 		guard.Release();
 		Searcher::pTriggerResultsAvailable();
@@ -333,18 +365,64 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 	this->pPull();
 
+	// Go through the PScans that need work, and generate any result needed.
+
+	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
+		eraser; eraser.Advance())
+		{
+		PScan* thePScan = eraser.Current();
+		if (not thePScan->fResult)
+			{
+			ZRef<QE::Walker> theWalker = new Walker(this, thePScan->fConcreteHead);
+			thePScan->fResult = QE::sResultFromWalker(theWalker);
+
+			for (DListIterator<PSearch, DLink_PSearch_InPScan>
+				iter = thePScan->fPSearch_InPScan; iter; iter.Advance())
+				{
+				PSearch* thePSearch = iter.Current();
+				thePSearch->fResult.Clear();
+				sQInsertBack(fPSearch_NeedsWork, thePSearch);
+				}
+			}
+		}
+
 	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		PSearch* thePSearch = eraser.Current();
 
-		ZRef<QE::Walker> theWalker;// = Visitor_DoMakeWalker(this, thePSearch).Do(thePSearch->fRel);
+		if (not thePSearch->fResult)
+			{
+			PScan* thePScan = thePSearch->fPScan;
 
-		thePSearch->fResult = QE::sResultFromWalker(theWalker);
+			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
 
-		for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
-			iter = thePSearch->fClientSearch_InPSearch; iter; iter.Advance())
-			{ sQInsertBack(fClientSearch_NeedsWork, iter.Current()); }
+			const ZRef<ZExpr_Bool>& theRestriction = theSearchSpec.GetRestriction();
+
+			ZRef<QE::Walker> theWalker;
+			if (theRestriction && theRestriction != sTrue())
+				{
+				theWalker = new QE::Walker_Result(thePScan->fResult);
+				theWalker = new QE::Walker_Restrict(theWalker, theRestriction);
+				}
+
+			const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
+			if (theRH_Wanted != RA::sRelHead(thePScan->fConcreteHead))
+				{
+				if (not theWalker)
+					theWalker = new QE::Walker_Result(thePScan->fResult);
+				theWalker = new QE::Walker_Project(theWalker, theRH_Wanted);
+				}
+
+			if (not theWalker)
+				thePSearch->fResult = thePScan->fResult;
+			else
+				thePSearch->fResult = QE::sResultFromWalker(theWalker);
+
+			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
+				iter = thePSearch->fClientSearch_InPSearch; iter; iter.Advance())
+				{ sQInsertBack(fClientSearch_NeedsWork, iter.Current()); }
+			}
 		}
 
 	ZRef<Event> theEvent = fDatonSet->GetEvent();
@@ -359,14 +437,6 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult, theEvent));
 		}
 
-	// Remove any unused PScanes
-	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
-		eraser; eraser.Advance())
-		{
-		PScan* thePScan = eraser.Current();
-		if (thePScan->fPSearch_Using.empty())
-			sEraseMust(kDebug, fMap_PScan, thePScan->fRelHead);
-		}
 	}
 
 ZRef<ZDatonSet::DatonSet> Searcher_DatonSet::GetDatonSet()
@@ -456,7 +526,6 @@ void Searcher_DatonSet::pPull()
 	ZRef<Deltas> theDeltas;
 	fDatonSet->GetDeltas(fEvent, theDeltas, fEvent);
 	const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
-//##	if (sNotEmpty(theVector) && s)
 
 	foreachi (iterVector, theVector)
 		{
@@ -484,7 +553,6 @@ void Searcher_DatonSet::pPull()
 				{
 				const bool alb = sIsBefore(iterMap->second.first, theEvent);
 				//##const bool bla = sIsBefore(theEvent, iterMap->second.first);
-
 
 				if (alb)
 					{
@@ -552,38 +620,18 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= RA::ColName(theMap.NameOf(i));
 
+	// This is overkill -- we don't necessarily have to rework the whole PScan.
 	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
 		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
 		PScan* thePScan = &iterPScan->second;
-		if (sIncludes(theRH, thePScan->fRelHead))
+		if (sIncludes(theRH, RA::sRelHead(thePScan->fConcreteHead)))
 			{
-			for (set<PSearch*>::iterator iterPSearch = thePScan->fPSearch_Using.begin();
-				iterPSearch != thePScan->fPSearch_Using.end(); ++iterPSearch)
-				{
-				PSearch* thePSearch = *iterPSearch;
-				sQInsertBack(fPSearch_NeedsWork, thePSearch);
-				for (set<PScan*>::iterator iterPScan_Used =
-					thePSearch->fPScan_Used.begin();
-					iterPScan_Used != thePSearch->fPScan_Used.end();
-					++iterPScan_Used)
-					{
-					PScan* thePScan_Used = *iterPScan_Used;
-					if (thePScan_Used != thePScan)
-						{
-						sEraseMust(kDebug, thePScan_Used->fPSearch_Using, thePSearch);
-
-						if (thePScan_Used->fPSearch_Using.empty())
-							sQInsertBack(fPScan_NeedsWork, thePScan_Used);
-						}
-					}
-				thePSearch->fPScan_Used.clear();
-				}
-			thePScan->fPSearch_Using.clear();
 			thePScan->fResult.Clear();
 			sQInsertBack(fPScan_NeedsWork, thePScan);
 			}
 		}
+	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pChangedAll()
@@ -592,97 +640,10 @@ void Searcher_DatonSet::pChangedAll()
 		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
 		PScan* thePScan = &iterPScan->second;
-		for (set<PSearch*>::iterator iterPSearch = thePScan->fPSearch_Using.begin();
-			iterPSearch != thePScan->fPSearch_Using.end(); ++iterPSearch)
-			{
-			PSearch* thePSearch = *iterPSearch;
-			sQInsertBack(fPSearch_NeedsWork, thePSearch);
-			for (set<PScan*>::iterator iterPScan_Used =
-				thePSearch->fPScan_Used.begin();
-				iterPScan_Used != thePSearch->fPScan_Used.end();
-				++iterPScan_Used)
-				{
-				PScan* thePScan_Used = *iterPScan_Used;
-				if (thePScan_Used != thePScan)
-					{
-					sEraseMust(kDebug, thePScan_Used->fPSearch_Using, thePSearch);
-
-					if (thePScan_Used->fPSearch_Using.empty())
-						sQInsertBack(fPScan_NeedsWork, thePScan_Used);
-					}
-				}
-			thePSearch->fPScan_Used.clear();
-			}
-		thePScan->fPSearch_Using.clear();
 		thePScan->fResult.Clear();
 		sQInsertBack(fPScan_NeedsWork, thePScan);
 		}
-	}
-
-ZRef<QE::Walker> Searcher_DatonSet::pMakeWalkerForPSearch(PSearch* iPSearch)
-	{
-	const SearchSpec& theSearchSpec = iPSearch->fSearchSpec;
-
-	RA::RelHead theRH_Required, theRH_Optional;
-	RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
-
-	ZRef<QE::Walker> theWalker;
-	const ZRef<ZExpr_Bool>& theExpr_Bool = theSearchSpec.GetRestriction();
-	if (theExpr_Bool && theExpr_Bool != sTrue())
-		{
-		const RelHead augmented = theRH_Required | sGetNames(theExpr_Bool);
-
-		theWalker = this->pMakeWalkerForConcreteHead(iPSearch,
-			RA::sConcreteHead(augmented, theRH_Optional));
-
-		theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
-
-		if (augmented.size() != theRH_Required.size())
-			theWalker = new QE::Walker_Project(theWalker, theRH_Required);
-		}
-	else
-		{
-		theWalker = this->pMakeWalkerForConcreteHead(iPSearch,
-			RA::sConcreteHead(theRH_Required, theRH_Optional));
-		}
-
-//	for (RA::Rename::const_iterator iterRename = theRename.begin();
-//		iterRename != theRename.end(); ++iterRename)
-//		{
-//		if (iterRename->first != iterRename->second)
-//			theWalker = new QE::Walker_Rename(theWalker, iterRename->second, iterRename->first);
-//		}
-
-	return theWalker;
-	}
-
-ZRef<QueryEngine::Walker> Searcher_DatonSet::pMakeWalkerForConcreteHead(PSearch* iPSearch,
-	const ConcreteHead& iConcreteHead)
-	{
-	const RelHead theRelHead_Required = RelationalAlgebra::sRelHead_Required(iConcreteHead);
-
-	PScan* thePScan;
-	Map_PScan::iterator iterPScan = fMap_PScan.find(theRelHead_Required);
-	if (iterPScan != fMap_PScan.end())
-		{
-		thePScan = &iterPScan->second;
-		}
-	else
-		{
-		pair<Map_PScan::iterator,bool> inPScan =
-			fMap_PScan.insert(make_pair(theRelHead_Required, PScan()));
-
-		thePScan = &inPScan.first->second;
-		thePScan->fRelHead = theRelHead_Required;
-		}
-
-	sInsertMust(kDebug, iPSearch->fPScan_Used, thePScan);
-	sInsertMust(kDebug, thePScan->fPSearch_Using, iPSearch);
-
-	if (not thePScan->fResult)
-		thePScan->fResult = sResultFromWalker(new Walker(this, iConcreteHead));
-
-	return new QE::Walker_Result(thePScan->fResult);
+	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)
