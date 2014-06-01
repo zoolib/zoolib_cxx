@@ -59,6 +59,32 @@ private:
 	std::vector<ZVal_Any> fPackedRows;
 	};
 
+// =================================================================================================
+// MARK: - ResultDiffer
+
+class ResultDiffer
+	{
+public:
+	ResultDiffer(const RelationalAlgebra::RelHead& iIdentity,
+		const RelationalAlgebra::RelHead& iSignificant);
+
+	void Apply(const ZRef<Result>& iResult,
+		ZRef<Result>* oPrior,
+		std::vector<size_t>* oRemoved,
+		std::vector<size_t>* oAdded,
+		std::vector<size_t>* oChanged_Prior,
+		std::vector<size_t>* oChanged_New);
+
+private:
+	const RelationalAlgebra::RelHead fIdentity;
+	const RelationalAlgebra::RelHead fSignificant;
+
+	ZRef<Result> fResult_Prior;
+	std::vector<size_t> fSort_Prior;
+
+	std::vector<size_t> fPermute;
+	};
+
 } // namespace QueryEngine
 
 template <>

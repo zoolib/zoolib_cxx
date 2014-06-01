@@ -20,8 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_Ref.h"
 #include "zoolib/ZCompare_vector.h"
+
 #include "zoolib/QueryEngine/Result.h"
 
+using std::pair;
 using std::set;
 using std::vector;
 
@@ -86,6 +88,223 @@ int Result::Compare(const Result& iOther) const
 	if (int compare = sCompare_T(fRelHead, iOther.fRelHead))
 		return compare;
 	return sCompare_T(fPackedRows, iOther.fPackedRows);
+	}
+
+// =================================================================================================
+// MARK: - ResultDiffer
+
+namespace { // anonymous
+
+pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
+	const ZVal_Any* iVals_Left, const ZVal_Any* iVals_Right)
+	{
+	const size_t offsetsCount = iOffsets.size();
+	for (size_t yy = 0; yy < offsetsCount; ++yy)
+		{
+		const size_t theCol = iOffsets[yy];
+		if (int compare = sCompare_T(iVals_Left[theCol], iVals_Right[theCol]))
+			return pair<int,size_t>(compare, yy);
+		}
+	return pair<int,size_t>(0, offsetsCount);
+	}
+
+struct Comparer_t
+	{
+	Comparer_t(const vector<size_t>& iOffsets, const ZVal_Any* iVals)
+	:	fOffsets(iOffsets)
+	,	fVals(iVals)
+		{}
+
+	bool operator()(const size_t& iLeft, const size_t& iRight) const
+		{
+		return 0 > spCompare(fOffsets,
+			fVals + fOffsets.size() * iLeft,
+			fVals + fOffsets.size() * iRight).first;
+		}
+
+	const vector<size_t>& fOffsets;
+	const ZVal_Any* fVals;
+	};
+
+} // anonymous namespace
+
+ResultDiffer::ResultDiffer(const RelationalAlgebra::RelHead& iIdentity,
+	const RelationalAlgebra::RelHead& iSignificant)
+:	fIdentity(iIdentity)
+,	fSignificant(iSignificant)
+	{}
+
+// oRemoved and oChanged_Prior indices are reported relative to the prior list
+// oAdded and oChanged_New are relative to the new list. oChanged_Prior and oChanged_New
+// reference the same entries.
+// To mutate an external list you would erase every position in oRemoved,
+// insert everything in oAdded, and report changes on oChanged after both.
+// The sequence of offsets is in identity/significant sort order, but should
+// be applied in result order, so oRemoved and oAdded should each be sorted before being used.
+
+void ResultDiffer::Apply(const ZRef<Result>& iResult,
+	ZRef<Result>* oPrior,
+	vector<size_t>* oRemoved,
+	vector<size_t>* oAdded,
+	vector<size_t>* oChanged_Prior,
+	vector<size_t>* oChanged_New)
+	{
+	typedef RelationalAlgebra::RelHead RelHead;
+	const RelHead& theRH = iResult->GetRelHead();
+
+	ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
+
+	if (not fResult_Prior)
+		{
+		// This is the first time we get to see a query's relhead. Initialize fPermute so we
+		// know in which order to examine columns when we sort and compare result rows.
+
+		RelHead::const_iterator iter_Identity = fIdentity.begin();
+		size_t index_Identity = 0;
+
+		RelHead::const_iterator iter_Significant = fSignificant.begin();
+		size_t index_Significant = 0;
+
+		RelHead::const_iterator iter_RH = theRH.begin();
+		size_t index_Other = 0;
+
+		size_t index_RH = 0;
+
+		fPermute.resize(theRH.size());
+
+		for (const RelHead::const_iterator end_RH = theRH.end();
+			iter_RH != end_RH;
+			++iter_RH, ++index_RH)
+			{
+			if (*iter_RH == *iter_Identity)
+				{
+				fPermute[index_Identity] = index_RH;
+				++index_Identity;
+				++iter_Identity;
+				}
+			else if (*iter_RH == *iter_Significant)
+				{
+				fPermute[fIdentity.size() + index_Significant] = index_RH;
+				++index_Significant;
+				++iter_Significant;
+				}
+			else
+				{
+				fPermute[fIdentity.size() + fSignificant.size() + index_Other] = index_RH;
+				++index_Other;
+				}
+			}
+
+		ZAssert(iter_Identity == fIdentity.end());
+		ZAssert(index_Identity == fIdentity.size());
+
+		ZAssert(iter_Significant == fSignificant.end());
+		ZAssert(index_Significant == fSignificant.size());
+		}
+
+	const size_t theCount = iResult->Count();
+
+	vector<size_t> theSort_New;
+	theSort_New.reserve(theCount);
+	for (size_t xx = 0; xx < theCount; ++xx)
+		theSort_New.push_back(xx);
+
+	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, iResult->GetValsAt(0)));
+
+	if (not fResult_Prior)
+		{
+		// This is our first result, everything is an add.
+		if (oAdded)
+			*oAdded = theSort_New;
+		}
+	else
+		{
+		// We have a prior result, do the diff.
+
+		size_t theIndex_Prior = 0;
+		const size_t theCount_Prior = fSort_Prior.size();
+		const ZVal_Any* theVals_Prior = fResult_Prior->GetValsAt(0);
+
+		size_t theIndex_New = 0;
+		const size_t theCount_New = theSort_New.size();
+		const ZVal_Any* theVals_New = iResult->GetValsAt(0);
+
+		for (;;)
+			{
+			if (theIndex_New >= theCount_New)
+				{
+				// Anything remaining in old when new is exhausted is a removal.
+				if (oRemoved)
+					{
+					oRemoved->reserve(oRemoved->size() + theCount_Prior - theIndex_Prior);
+					while (theCount_Prior > theIndex_Prior)
+						oRemoved->push_back(fSort_Prior[theIndex_Prior++]);
+					}
+				break;
+				}
+
+			if (theIndex_Prior >= theCount_Prior)
+				{
+				// Anything remaining in new when old is exhausted is an addition.
+				if (oAdded)
+					{
+					oAdded->reserve(oAdded->size() + theCount_New - theIndex_New);
+					while (theCount_New > theIndex_New)
+						oAdded->push_back(theSort_New[theIndex_New++]);
+					}
+				break;
+				}
+
+			// Match current old against current new
+			const pair<int,size_t> result = spCompare(fPermute,
+				theVals_Prior + fPermute.size() * fSort_Prior[theIndex_Prior],
+				theVals_New + fPermute.size() * theSort_New[theIndex_New]);
+
+			if (result.second < fIdentity.size())
+				{
+				// Comparison was terminated in the 'identity' portion of the values,
+				// and so the values can't be equal.
+				ZAssert(result.first != 0);
+
+				if (result.first < 0)
+					{
+					// Old is less than new, so old is not in new, and this is a removal.
+					if (oRemoved)
+						oRemoved->push_back(fSort_Prior[theIndex_Prior]);
+					++theIndex_Prior;
+					}
+				else
+					{
+					// Contrariwise.
+					if (oAdded)
+						oAdded->push_back(theSort_New[theIndex_New]);
+					++theIndex_New;
+					}
+				}
+			else
+				{
+				 if (result.second < fIdentity.size() + fSignificant.size())
+					{
+					// Comparison was terminated in the 'significant' portion of the values. So
+					// they matched in the identity portion, and thus reference the same entity,
+					// but differ in the significant portion, thus this is a change.
+					if (oChanged_Prior)
+						oChanged_Prior->push_back(fSort_Prior[theIndex_Prior]);
+					if (oChanged_New)
+						oChanged_New->push_back(theSort_New[theIndex_New]);
+					}
+				++theIndex_New;
+				++theIndex_Prior;
+				}
+			}
+		}
+
+	if (oPrior)
+		*oPrior = fResult_Prior;
+
+	fResult_Prior = iResult;
+
+	fSort_Prior = theSort_New;
 	}
 
 } // namespace QueryEngine
