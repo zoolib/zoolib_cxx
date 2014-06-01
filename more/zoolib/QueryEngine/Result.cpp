@@ -39,7 +39,7 @@ ZMACRO_CompareRegistration_T(QueryEngine::Result)
 
 template <>
 int sCompare_T<ZRef<QueryEngine::Result> >(const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR)
-	{ return sCompareRef_T(iL, iR); }
+	{ return sCompare_Ref_T(iL, iR); }
 
 ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
 

@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class T>
-int sCompareRef_T(const ZRef<T>& iL, const ZRef<T>& iR)
+int sCompare_Ref_T(const ZRef<T>& iL, const ZRef<T>& iR)
 	{
 	if (const T* l = iL.Get())
 		{
@@ -53,7 +53,7 @@ int sCompareRef_T(const ZRef<T>& iL, const ZRef<T>& iR)
 
 template <class T>
 int sCompare_T(const ZRef<T>& iL, const ZRef<T>& iR)
-	{ return sCompareRef_T(iL, iR); }
+	{ return sCompare_Ref_T(iL, iR); }
 
 } // namespace ZooLib
 

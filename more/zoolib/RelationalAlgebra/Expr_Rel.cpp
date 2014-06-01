@@ -32,7 +32,7 @@ namespace ZooLib {
 
 template <>
 int sCompare_T<ZRef<RelationalAlgebra::Expr_Rel> >(const ZRef<RelationalAlgebra::Expr_Rel>& iL, const ZRef<RelationalAlgebra::Expr_Rel>& iR)
-	{ return sCompareRef_T(iL, iR); }
+	{ return sCompare_Ref_T(iL, iR); }
 
 ZMACRO_CompareRegistration_T(ZRef<RelationalAlgebra::Expr_Rel>)
 
