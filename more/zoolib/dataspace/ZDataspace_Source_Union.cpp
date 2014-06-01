@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 #include "zoolib/dataspace/ZDataspace_Util_Strim.h"
 
-#include "zoolib/QueryEngine/DoQuery.h"
+#include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -931,7 +931,7 @@ void Source_Union::CollectResults(vector<QueryResult>& oChanged)
 					Source_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 				const ZTime afterMakeWalker = ZTime::sNow();
 
-				thePQuery->fResult = QueryEngine::sDoQuery(theWalker);
+				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
 				thePQuery->fEvent = theEvent;
 				const ZTime afterDoQuery = ZTime::sNow();
 
@@ -1098,7 +1098,7 @@ void Source_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 		oOffsets[*ii] = ioBaseOffset++;
 	}
 
-bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker,ZVal_Any* ioResults)
+bool Source_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
 	{
 	++fReadCount;
 	for (;;)
