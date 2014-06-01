@@ -18,76 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
+#ifndef __ZooLib_QueryEngine_ResultFromWalker_h__
+#define __ZooLib_QueryEngine_ResultFromWalker_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/QueryEngine/DoQuery.h"
+#include "zoolib/QueryEngine/Result.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
 namespace QueryEngine {
 
-using std::map;
-using std::set;
-using std::vector;
-using RelationalAlgebra::RelHead;
-
 // =================================================================================================
 // MARK: - sQuery
 
-ZRef<Result> sDoQuery(ZRef<Walker> iWalker)
-	{
-	map<string8,size_t> offsets;
-	size_t baseOffset = 0;
-	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
-
-	ZLOGF(s, eDebug + 2);
-	if (s)
-		{
-		s << "\n";
-		foreachi (ii, offsets)
-			s << ii->first << ": " << ii->second << ", ";
-		s.Emit();
-		}
-
-	vector<ZVal_Any> thePackedRows;
-	vector<ZVal_Any> theRow(baseOffset);
-//	vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
-	if (iWalker)
-		{
-		for (;;)
-			{
-			if (not iWalker->QReadInc(&theRow[0]))
-				break;
-
-			foreachi (ii, offsets)
-				thePackedRows.push_back(theRow[ii->second]);
-
-			if (s)
-				{
-				s << "\n";
-				foreachi (ii, offsets)
-					{
-					//## ZYad_ZooLibStrim::sToStrim(sYadR(theRow[ii->second]), s);
-					s << ", ";
-					}
-				}
-			}
-		}
-
-	if (s)
-		{
-		s << "\n";
-		s.Emit();
-		}
-
-	RelHead theRelHead;
-	foreachi (ii, offsets)
-		theRelHead.insert(ii->first);
-
-	return new Result(theRelHead, &thePackedRows);
-	}
+ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker);
 
 } // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // __ZooLib_QueryEngine_ResultFromWalker_h__
