@@ -54,10 +54,11 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 protected:
-	void pChanged(const ZVal_Any& iVal);
-	void pChangedAll();
+	void pSearcherResultsAvailable(ZRef<Searcher>);
+
 
 	ZMtxR fMtxR;
+	ZCnd fCnd;
 
 	ZRef<Searcher> fSearcher;
 
@@ -65,20 +66,11 @@ protected:
 
 	// -----
 
-	class Walker_Searcher;
-	friend class Walker_Searcher;
+	class Visitor_DoMakeWalker;
+	friend class Visitor_DoMakeWalker;
 
-	ZRef<QueryEngine::Walker> pMakeWalker_Searcher(PQuery* iPQuery,
+	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery,
 		const ConcreteHead& iConcreteHead);
-
-	void pRewind_Searcher(ZRef<Walker_Searcher> iWalker);
-
-	void pPrime_Searcher(ZRef<Walker_Searcher> iWalker,
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	bool pReadInc_Searcher(ZRef<Walker_Searcher> iWalker, ZVal_Any* ioResults);
 
 	// -----
 
@@ -103,13 +95,17 @@ protected:
 
 	// -----
 
-	class DLink_PSearch_NeedsWork;
-	class PSearch;
+	class DLink_PRegSearch_NeedsWork;
+	class PRegSearch;
 
-	typedef std::map<RelHead,PSearch> Map_PSearch;
-	Map_PSearch fMap_PSearch;
+	int64 fNextRefcon;
+	typedef std::map<int64,PRegSearch> Map_Refcon_PRegSearch;
+	Map_Refcon_PRegSearch fMap_Refcon_PRegSearch;
 
-	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
+	typedef std::map<ConcreteHead,PRegSearch*> Map_ConcreteHead_PRegSearch;
+	Map_ConcreteHead_PRegSearch fMap_ConcreteHead_PRegSearch;
+
+	DListHead<DLink_PRegSearch_NeedsWork> fPRegSearch_NeedsWork;
 	};
 
 } // namespace ZDataspace

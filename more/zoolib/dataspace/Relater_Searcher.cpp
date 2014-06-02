@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/ZUtil_STL_vector.h"
 
 #include "zoolib/dataspace/Relater_Searcher.h"
 
@@ -51,43 +52,6 @@ namespace QE = QueryEngine;
 namespace RA = RelationalAlgebra;
 
 using namespace ZUtil_STL;
-
-// =================================================================================================
-// MARK: - Relater_Searcher::Walker_Concrete
-
-class Relater_Searcher::Walker_Concrete : public QE::Walker
-	{
-public:
-	Walker_Concrete(ZRef<Relater_Searcher> iSource, const ConcreteHead& iConcreteHead)
-	:	fSource(iSource)
-	,	fConcreteHead(iConcreteHead)
-		{}
-
-	virtual ~Walker_Concrete()
-		{}
-
-// From QE::Walker
-	virtual void Rewind()
-		{ fSource->pRewind_Concrete(this); }
-
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
-		map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset)
-		{
-		fSource->pPrime_Concrete(this, iOffsets, oOffsets, ioBaseOffset);
-		return this;
-		}
-
-	virtual bool QReadInc(ZVal_Any* ioResults)
-		{ return fSource->pReadInc_Concrete(this, ioResults); }
-
-	const ZRef<Relater_Searcher> fSource;
-	const ConcreteHead fConcreteHead;
-	size_t fBaseOffset;
-	Map_Main::const_iterator fCurrent_Main;
-	Map_Pending::const_iterator fCurrent_Pending;
-	std::set<std::vector<ZVal_Any> > fPriors;
-	};
 
 // =================================================================================================
 // MARK: - Relater_Searcher::ClientQuery
@@ -131,33 +95,61 @@ public:
 
 	const ZRef<RA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
-	set<PSearch*> fPSearch_Used;
+	set<PRegSearch*> fPRegSearch_Used;
 	ZRef<QE::Result> fResult;
 	};
 
 // =================================================================================================
-// MARK: - Relater_Searcher::PSearch
+// MARK: - Relater_Searcher::PRegSearch
 
-class Relater_Searcher::DLink_PSearch_NeedsWork
-:	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
+class Relater_Searcher::DLink_PRegSearch_NeedsWork
+:	public DListLink<PRegSearch, DLink_PRegSearch_NeedsWork, kDebug>
 	{};
 
-class Relater_Searcher::PSearch
-:	public DLink_PSearch_NeedsWork
+class Relater_Searcher::PRegSearch
+:	public DLink_PRegSearch_NeedsWork
 	{
 public:
-	PSearch() {}
+	PRegSearch() {}
 
-	RelHead fRelHead;
+	int64 fRefconInSearcher;
+	ConcreteHead fConcreteHead;
 	set<PQuery*> fPQuery_Using;
 	ZRef<QE::Result> fResult;
+	};
+
+// =================================================================================================
+// MARK: - Relater_Searcher::Visitor_DoMakeWalker
+
+class Relater_Searcher::Visitor_DoMakeWalker
+:	public virtual QE::Visitor_DoMakeWalker
+,	public virtual RA::Visitor_Expr_Rel_Concrete
+,	public virtual QE::Visitor_Expr_Rel_Search
+	{
+	typedef QE::Visitor_DoMakeWalker inherited;
+public:
+	Visitor_DoMakeWalker(ZRef<Relater_Searcher> iSearcher, PQuery* iPQuery)
+	:	fSearcher(iSearcher)
+	,	fPQuery(iPQuery)
+		{}
+
+	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+		{ this->pSetResult(fSearcher->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteHead())); }
+
+	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
+		{
+		ZUnimplemented();
+		}
+
+	ZRef<Relater_Searcher> const fSearcher;
+	PQuery* const fPQuery;
 	};
 
 // =================================================================================================
 // MARK: - Relater_Searcher
 
 void Relater_Searcher::ForceUpdate()
-	{ Source::pTriggerResultsAvailable(); }
+	{ Relater::pTriggerResultsAvailable(); }
 
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)
@@ -165,7 +157,7 @@ Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 
 Relater_Searcher::~Relater_Searcher()
 	{
-	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{}
 
@@ -230,16 +222,16 @@ void Relater_Searcher::ModifyRegistrations(
 		sEraseMust(thePQuery->fClientQuery_InPQuery, theClientQuery);
 		if (sIsEmpty(thePQuery->fClientQuery_InPQuery))
 			{
-			// Detach from any depended-upon PSearch
-			for (set<PSearch*>::iterator iterPSearch = thePQuery->fPSearch_Used.begin();
-				iterPSearch != thePQuery->fPSearch_Used.end(); ++iterPSearch)
+			// Detach from any depended-upon PRegSearch
+			for (set<PRegSearch*>::iterator iterPRegSearch = thePQuery->fPRegSearch_Used.begin();
+				iterPRegSearch != thePQuery->fPRegSearch_Used.end(); ++iterPRegSearch)
 				{
-				PSearch* thePSearch = *iterPSearch;
-				sEraseMust(kDebug, thePSearch->fPQuery_Using, thePQuery);
-				if (thePSearch->fPQuery_Using.empty())
-					sQInsertBack(fPSearch_NeedsWork, thePSearch);
+				PRegSearch* thePRegSearch = *iterPRegSearch;
+				sEraseMust(kDebug, thePRegSearch->fPQuery_Using, thePQuery);
+				if (thePRegSearch->fPQuery_Using.empty())
+					sQInsertBack(fPRegSearch_NeedsWork, thePRegSearch);
 				}
-			thePQuery->fPSearch_Used.clear();
+			thePQuery->fPRegSearch_Used.clear();
 
 			sQErase(fPQuery_NeedsWork, thePQuery);
 			sEraseMust(kDebug, fMap_Rel_PQuery, thePQuery->fRel);
@@ -252,28 +244,36 @@ void Relater_Searcher::ModifyRegistrations(
 	if (sNotEmpty(fClientQuery_NeedsWork) || sNotEmpty(fPQuery_NeedsWork))
 		{
 		guard.Release();
-		Source::pTriggerResultsAvailable();
+		Relater::pTriggerResultsAvailable();
 		}
 	}
 
 void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	{
-	this->pCollectResultsCalled();
-
-	ZAcqMtxR acq(fMtxR);
-
 	oChanged.clear();
 
-//	this->pPull();
+	this->pCollectResultsCalled();
+
+	// This is our "worker" -- the call to CollectResults is (indirectly) where we push
+	// registrations down into the Searcher, by driving Walkers that are needed to satisfy
+	// invalid PQueries (and thus ClientQueries). At the end of CollectResults
+	// we reap anything that's no longer needed.
+
+
+	ZGuardMtxR guard(fMtxR);
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		PQuery* thePQuery = eraser.Current();
 
+		guard.Release();
+
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
-		thePQuery->fResult = QE::sDoQuery(theWalker);
+		thePQuery->fResult = QE::sResultFromWalker(theWalker);
+
+		guard.Acquire();
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
@@ -285,293 +285,84 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		{
 		ClientQuery* theClientQuery = eraser.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, theEvent));
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, null));
 		}
 
-	// Remove any unused PSearches
-	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
+	// Remove any unused PRegSearches
+	vector<int64> toRemove;
+	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{
-		PSearch* thePSearch = eraser.Current();
-//##		if (thePSearch->fPQuery_Using.empty())
-//##			sEraseMust(kDebug, fMap_PSearch, thePSearch->fRelHead);
-		}
-	}
-
-void Relater_Searcher::pChanged(const ZVal_Any& iVal)
-	{
-	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
-	RelHead theRH;
-	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
-		theRH |= RA::ColName(theMap.NameOf(i));
-
-	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
-		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
-		{
-		PSearch* thePSearch = &iterPSearch->second;
-		if (sIncludes(theRH, thePSearch->fRelHead))
+		PRegSearch* thePRegSearch = eraser.Current();
+		if (thePRegSearch->fPQuery_Using.empty())
 			{
-			for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
-				iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
-				{
-				PQuery* thePQuery = *iterPQuery;
-				sQInsertBack(fPQuery_NeedsWork, thePQuery);
-				for (set<PSearch*>::iterator iterPSearch_Used =
-					thePQuery->fPSearch_Used.begin();
-					iterPSearch_Used != thePQuery->fPSearch_Used.end();
-					++iterPSearch_Used)
-					{
-					PSearch* thePSearch_Used = *iterPSearch_Used;
-					if (thePSearch_Used != thePSearch)
-						{
-						sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
-
-						if (thePSearch_Used->fPQuery_Using.empty())
-							sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
-						}
-					}
-				thePQuery->fPSearch_Used.clear();
-				}
-			thePSearch->fPQuery_Using.clear();
-			thePSearch->fResult.Clear();
-			sQInsertBack(fPSearch_NeedsWork, thePSearch);
+			toRemove.push_back(thePRegSearch->fRefconInSearcher);
+			sEraseMust(kDebug, fMap_ConcreteHead_PRegSearch, thePRegSearch->fConcreteHead);
+			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearch->fRefconInSearcher);
 			}
 		}
+	guard.Release();
+
+	if (sNotEmpty(toRemove))
+		fSearcher->ModifyRegistrations(nullptr, 0, &toRemove[0], toRemove.size());
 	}
 
-void Relater_Searcher::pChangedAll()
+void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 	{
-	for (Map_PSearch::iterator iterPSearch = fMap_PSearch.begin();
-		iterPSearch != fMap_PSearch.end(); ++iterPSearch)
-		{
-		PSearch* thePSearch = &iterPSearch->second;
-		for (set<PQuery*>::iterator iterPQuery = thePSearch->fPQuery_Using.begin();
-			iterPQuery != thePSearch->fPQuery_Using.end(); ++iterPQuery)
-			{
-			PQuery* thePQuery = *iterPQuery;
-			sQInsertBack(fPQuery_NeedsWork, thePQuery);
-			for (set<PSearch*>::iterator iterPSearch_Used =
-				thePQuery->fPSearch_Used.begin();
-				iterPSearch_Used != thePQuery->fPSearch_Used.end();
-				++iterPSearch_Used)
-				{
-				PSearch* thePSearch_Used = *iterPSearch_Used;
-				if (thePSearch_Used != thePSearch)
-					{
-					sEraseMust(kDebug, thePSearch_Used->fPQuery_Using, thePQuery);
+	vector<SearchResult> theSearchResults;
+	fSearcher->CollectResults(theSearchResults);
 
-					if (thePSearch_Used->fPQuery_Using.empty())
-						sQInsertBack(fPSearch_NeedsWork, thePSearch_Used);
-					}
-				}
-			thePQuery->fPSearch_Used.clear();
-			}
-		thePSearch->fPQuery_Using.clear();
-		thePSearch->fResult.Clear();
-		sQInsertBack(fPSearch_NeedsWork, thePSearch);
+	ZAcqMtxR acq(fMtxR);
+	for (vector<SearchResult>::const_iterator ii = theSearchResults.begin();
+		ii != theSearchResults.end(); ++ii)
+		{
+		if (PRegSearch* thePRS = sPMut(fMap_Refcon_PRegSearch, ii->GetRefcon()))
+			thePRS->fResult = ii->GetResult();
 		}
+	fCnd.Broadcast();
+
+	// We'll pick up the data in *our* owners call to CollectResults
+	// Actually, we're possibly blocked down in a call to CollectResults waiting for
+	// a registration's values to fill in. So, we should probably pull the data
+	// in here and allow anything that is blocked to wake up. Basically we want
+	// to shove values into fResult fields and broadcast a cnd.
+	Relater::pTriggerResultsAvailable();
 	}
 
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(
-	PQuery* iPQuery, const ConcreteHead& iConcreteHead)
+ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery,
+	const ConcreteHead& iConcreteHead)
 	{
-	const RelHead theRelHead_Required = RelationalAlgebra::sRelHead_Required(iConcreteHead);
+	ZGuardMtxR guard(fMtxR);
 
-	PSearch* thePSearch;
-	Map_PSearch::iterator iterPSearch = fMap_PSearch.find(theRelHead_Required);
-	if (iterPSearch != fMap_PSearch.end())
-		{
-		thePSearch = &iterPSearch->second;
-		}
+	PRegSearch* thePRegSearch = nullptr;
+	if (PRegSearch** thePRegSearchP = sPMut(fMap_ConcreteHead_PRegSearch, iConcreteHead))
+		{ thePRegSearch = *thePRegSearchP; }
 	else
 		{
-		pair<Map_PSearch::iterator,bool> inPSearch =
-			fMap_PSearch.insert(make_pair(theRelHead_Required, PSearch()));
+		pair<Map_Refcon_PRegSearch::iterator,bool> iterPair =
+			fMap_Refcon_PRegSearch.insert(make_pair(fNextRefcon++, PRegSearch()));
+		ZAssert(iterPair.second);
 
-		thePSearch = &inPSearch.first->second;
-		thePSearch->fRelHead = theRelHead_Required;
+		thePRegSearch = &iterPair.first->second;
+
+		sInsertMust(fMap_ConcreteHead_PRegSearch, iConcreteHead, thePRegSearch);
+
+		thePRegSearch->fConcreteHead = iConcreteHead;
+		thePRegSearch->fRefconInSearcher = iterPair.first->first;
+
+		const AddedSearch theAS(thePRegSearch->fRefconInSearcher, SearchSpec(iConcreteHead, null));
+
+		guard.Release();
+
+		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
+
+		while (not thePRegSearch->fResult)
+			fCnd.Wait(fMtxR);
 		}
 
-	sInsertMust(kDebug, iPQuery->fPSearch_Used, thePSearch);
-	sInsertMust(kDebug, thePSearch->fPQuery_Using, iPQuery);
+	ZAssert(thePRegSearch->fResult);
 
-	if (not thePSearch->fResult)
-		{
-		ZRef<QueryEngine::Walker> theWalker = new Walker_Concrete(this, iConcreteHead);
-		thePSearch->fResult = sDoQuery(theWalker);
-		}
-
-	return new QE::Walker_Result(thePSearch->fResult);
-	}
-
-//ZRef<QE::Walker> Relater_Searcher::pMakeWalker_Search(
-//	PQuery* iPQuery, const ZRef<QE::Expr_Rel_Search>& iRel)
-//	{
-//	// This is where we would be able to take advantage of indices. For the moment
-//	// just do it the dumb way.
-//
-//	const RA::Rename& theRename = iRel->GetRename();
-//	RA::RelHead theRH_Required;
-//	for (RA::Rename::const_iterator ii = theRename.begin(); ii != theRename.end(); ++ii)
-//		theRH_Required |= ii->first;
-//
-//	const RA::RelHead& theRH_Optional = iRel->GetRelHead_Optional();
-//
-//	ZRef<QE::Walker> theWalker;
-//	const ZRef<ZExpr_Bool>& theExpr_Bool = iRel->GetExpr_Bool();
-//	if (theExpr_Bool && theExpr_Bool != sTrue())
-//		{
-//		const RelHead augmented = theRH_Required | sGetNames(theExpr_Bool);
-//		theWalker = this->pMakeWalker_Concrete(iPQuery, RA::sConcreteHead(augmented, theRH_Optional));
-//		theWalker = new QE::Walker_Restrict(theWalker, theExpr_Bool);
-//
-//		if (augmented.size() != theRH_Required.size())
-//			theWalker = new QE::Walker_Project(theWalker, theRH_Required);
-//		}
-//	else
-//		{
-//		theWalker = this->pMakeWalker_Concrete(iPQuery, RA::sConcreteHead(theRH_Required, theRH_Optional));
-//		}
-//
-//	for (RA::Rename::const_iterator iterRename = theRename.begin();
-//		iterRename != theRename.end(); ++iterRename)
-//		{
-//		if (iterRename->first != iterRename->second)
-//			theWalker = new QE::Walker_Rename(theWalker, iterRename->second, iterRename->first);
-//		}
-//
-//	return theWalker;
-//	}
-//
-void Relater_Searcher::pRewind_Concrete(ZRef<Walker_Concrete> iWalker)
-	{
-//##	iWalker->fCurrent_Main = fMap.begin();
-//##	iWalker->fCurrent_Pending = fMap_Pending.begin();
-	}
-
-void Relater_Searcher::pPrime_Concrete(ZRef<Walker_Concrete> iWalker,
-	const map<string8,size_t>& iOffsets,
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
-	{
-//##	iWalker->fCurrent_Main = fMap.begin();
-//##	iWalker->fCurrent_Pending = fMap_Pending.begin();
-	iWalker->fBaseOffset = ioBaseOffset;
-	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
-	for (ConcreteHead::const_iterator ii =
-		theConcreteHead.begin(), end = theConcreteHead.end();
-		ii != end; ++ii)
-		{ oOffsets[ii->first] = ioBaseOffset++; }
-	}
-
-bool Relater_Searcher::pReadInc_Concrete(ZRef<Walker_Concrete> iWalker, ZVal_Any* ioResults)
-	{
-	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
-
-	while (iWalker->fCurrent_Main != fMap.end())
-		{
-		// Ignore anything that's in pending (for now).
-		if (fMap_Pending.end() == fMap_Pending.find(iWalker->fCurrent_Main->first))
-			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
-				{
-				bool gotAll = true;
-				vector<ZVal_Any> subset;
-				subset.reserve(theConcreteHead.size());
-				size_t offset = iWalker->fBaseOffset;
-				for (ConcreteHead::const_iterator
-					ii = theConcreteHead.begin(), end = theConcreteHead.end();
-					ii != end; ++ii, ++offset)
-					{
-					// Empty name indicates that we want the Daton itself.
-					const string8& theName = ii->first;
-					if (theName.empty())
-						{
-						const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
-						ioResults[offset] = theVal;
-						subset.push_back(theVal);
-						}
-					else if (const ZVal_Any* theVal = sPGet(*theMap, theName))
-						{
-						ioResults[offset] = *theVal;
-						subset.push_back(*theVal);
-						}
-					else if (not ii->second)
-						{
-						ioResults[offset] = Default_t();
-						subset.push_back(Default_t());
-						}
-					else
-						{
-						gotAll = false;
-						break;
-						}
-					}
-
-				if (gotAll && sQInsert(iWalker->fPriors, subset))
-					{
-					if (ZLOGF(s, eDebug + 2))
-						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
-					++iWalker->fCurrent_Main;
-					return true;
-					}
-				}
-			}
-		++iWalker->fCurrent_Main;
-		}
-
-	// Handle anything pending
-	while (iWalker->fCurrent_Pending != fMap_Pending.end())
-		{
-		if (iWalker->fCurrent_Pending->second.second)
-			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
-				{
-				bool gotAll = true;
-				vector<ZVal_Any> subset;
-				subset.reserve(theConcreteHead.size());
-				size_t offset = iWalker->fBaseOffset;
-				for (ConcreteHead::const_iterator
-					ii = theConcreteHead.begin(), end = theConcreteHead.end();
-					ii != end; ++ii, ++offset)
-					{
-					const string8& theName = ii->first;
-					if (theName.empty())
-						{
-						const ZVal_Any& theVal = iWalker->fCurrent_Pending->first;
-						ioResults[offset] = theVal;
-						subset.push_back(theVal);
-						}
-					else if (const ZVal_Any* theVal = theMap->PGet(theName))
-						{
-						ioResults[offset] = *theVal;
-						subset.push_back(*theVal);
-						}
-					else if (not ii->second)
-						{
-						ioResults[offset] = Default_t();
-						subset.push_back(Default_t());
-						}
-					else
-						{
-						gotAll = false;
-						break;
-						}
-					}
-
-				if (gotAll && sQInsert(iWalker->fPriors, subset))
-					{
-					if (ZLOGF(s, eDebug + 2))
-						ZYad_ZooLibStrim::sToStrim(sYadR(*theMap), s);
-					++iWalker->fCurrent_Pending;
-					return true;
-					}
-				}
-			}
-		++iWalker->fCurrent_Pending;
-		}
-
-	return false;
+	return new QE::Walker_Result(thePRegSearch->fResult);
 	}
 
 } // namespace ZDataspace
