@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
@@ -115,6 +116,7 @@ public:
 	int64 fRefconInSearcher;
 	ConcreteHead fConcreteHead;
 	set<PQuery*> fPQuery_Using;
+	ZRef<Event> fEvent;
 	ZRef<QE::Result> fResult;
 	};
 
@@ -148,9 +150,6 @@ public:
 // =================================================================================================
 // MARK: - Relater_Searcher
 
-void Relater_Searcher::ForceUpdate()
-	{ Relater::pTriggerResultsAvailable(); }
-
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)
 	{}
@@ -164,6 +163,13 @@ Relater_Searcher::~Relater_Searcher()
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{}
+	}
+
+void Relater_Searcher::Initialize()
+	{
+	Relater::Initialize();
+	fSearcher->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &Relater_Searcher::pSearcherResultsAvailable));
 	}
 
 bool Relater_Searcher::Intersects(const RelHead& iRelHead)
@@ -259,6 +265,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	// invalid PQueries (and thus ClientQueries). At the end of CollectResults
 	// we reap anything that's no longer needed.
 
+	this->pCollectResultsFromSearcher();
 
 	ZGuardMtxR guard(fMtxR);
 
@@ -285,7 +292,8 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		{
 		ClientQuery* theClientQuery = eraser.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, null));
+		ZRef<Event> theEvent;
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, theEvent));
 		}
 
 	// Remove any unused PRegSearches
@@ -307,25 +315,30 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		fSearcher->ModifyRegistrations(nullptr, 0, &toRemove[0], toRemove.size());
 	}
 
-void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
+void Relater_Searcher::ForceUpdate()
+	{ Relater::pTriggerResultsAvailable(); }
+
+void Relater_Searcher::pCollectResultsFromSearcher()
 	{
 	vector<SearchResult> theSearchResults;
 	fSearcher->CollectResults(theSearchResults);
-
 	ZAcqMtxR acq(fMtxR);
 	for (vector<SearchResult>::const_iterator ii = theSearchResults.begin();
 		ii != theSearchResults.end(); ++ii)
 		{
 		if (PRegSearch* thePRS = sPMut(fMap_Refcon_PRegSearch, ii->GetRefcon()))
+			{
 			thePRS->fResult = ii->GetResult();
+			foreacha (thePQuery, thePRS->fPQuery_Using)
+				sQInsertBack(fPQuery_NeedsWork, thePQuery);
+			}
 		}
 	fCnd.Broadcast();
+	}
 
-	// We'll pick up the data in *our* owners call to CollectResults
-	// Actually, we're possibly blocked down in a call to CollectResults waiting for
-	// a registration's values to fill in. So, we should probably pull the data
-	// in here and allow anything that is blocked to wake up. Basically we want
-	// to shove values into fResult fields and broadcast a cnd.
+void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
+	{
+	this->pCollectResultsFromSearcher();
 	Relater::pTriggerResultsAvailable();
 	}
 
@@ -359,6 +372,7 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 		while (not thePRegSearch->fResult)
 			fCnd.Wait(fMtxR);
 		}
+	sQInsert(thePRegSearch->fPQuery_Using, iPQuery);
 
 	ZAssert(thePRegSearch->fResult);
 

@@ -112,16 +112,16 @@ ZVal_Any spAsVal(const ZData_Any& iData)
 // =================================================================================================
 // MARK: - Daton/Val conversion.
 
-ZVal_Any sAsVal(const Daton& iDaton)
-	{ return spAsVal(iDaton.GetData()); }
-
-Daton sAsDaton(const ZVal_Any& iVal)
-	{
-	ZData_Any theData;
-	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
-		ZStrimW_StreamUTF8(sStreamRWPos_Data_T(theData)));
-	return theData;
-	}
+//ZVal_Any sAsVal(const Daton& iDaton)
+//	{ return spAsVal(iDaton.GetData()); }
+//
+//Daton sAsDaton(const ZVal_Any& iVal)
+//	{
+//	ZData_Any theData;
+//	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
+//		ZStrimW_StreamUTF8(sStreamRWPos_Data_T(theData)));
+//	return theData;
+//	}
 
 // =================================================================================================
 // MARK: - Source_DatonSet::Visitor_DoMakeWalker

@@ -357,13 +357,17 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 	{
-	Searcher::pCollectResultsCalled();
-
-	ZAcqMtxR acq(fMtxR);
-
-	oChanged.clear();
+	ZGuardMtxR guard(fMtxR);
 
 	this->pPull();
+
+	guard.Release();
+
+	Searcher::pCollectResultsCalled();
+
+	guard.Acquire();
+
+	oChanged.clear();
 
 	// Go through the PScans that need work, and generate any result needed.
 
@@ -611,6 +615,7 @@ void Searcher_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& 
 		fMap_Pending.erase(ii);
 		}
 	this->pChanged(iVal);
+	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
@@ -625,13 +630,12 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
 		PScan* thePScan = &iterPScan->second;
-		if (sIncludes(theRH, RA::sRelHead(thePScan->fConcreteHead)))
+		if (sIncludes(RA::sRelHead(thePScan->fConcreteHead), theRH))
 			{
 			thePScan->fResult.Clear();
 			sQInsertBack(fPScan_NeedsWork, thePScan);
 			}
 		}
-	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pChangedAll()
@@ -643,7 +647,6 @@ void Searcher_DatonSet::pChangedAll()
 		thePScan->fResult.Clear();
 		sQInsertBack(fPScan_NeedsWork, thePScan);
 		}
-	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)

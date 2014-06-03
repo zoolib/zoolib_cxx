@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Relater_Searcher_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/dataspace/Relater.h"
 #include "zoolib/dataspace/Searcher.h"
 
 #include "zoolib/QueryEngine/Walker.h"
@@ -34,7 +34,7 @@ namespace ZDataspace {
 // MARK: - Relater_Searcher
 
 class Relater_Searcher
-:	public Source
+:	public Relater
 	{
 public:
 	enum { kDebug = 1 };
@@ -42,7 +42,8 @@ public:
 	Relater_Searcher(ZRef<Searcher> iSearcher);
 	virtual ~Relater_Searcher();
 
-	void ForceUpdate();
+// From ZCounted via Relater
+	virtual void Initialize();
 
 // From Source
 	virtual bool Intersects(const RelHead& iRelHead);
@@ -53,9 +54,12 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
-protected:
-	void pSearcherResultsAvailable(ZRef<Searcher>);
+// Our protocol
+	void ForceUpdate();
 
+protected:
+	void pCollectResultsFromSearcher();
+	void pSearcherResultsAvailable(ZRef<Searcher>);
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
