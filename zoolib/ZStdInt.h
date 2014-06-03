@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #else // defined(ZProjectHeader_StdInt)
 
-	#if ZCONFIG(Compiler, MSVC)
+	#if ZCONFIG(Compiler, MSVC) and not (defined(ZMACRO_StdIntAvailable) and ZMACRO_StdIntAvailable)
 
 		#ifndef _INT8_T
 			#define _INT8_T
