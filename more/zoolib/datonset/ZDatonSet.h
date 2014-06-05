@@ -36,7 +36,6 @@ namespace ZDatonSet {
 
 typedef ZData_Any Data;
 
-//##using ZIntervalTreeClock::Clock;
 using ZIntervalTreeClock::Identity;
 using ZIntervalTreeClock::Event;
 
