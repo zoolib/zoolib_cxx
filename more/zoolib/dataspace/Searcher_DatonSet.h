@@ -34,7 +34,7 @@ ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
 ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
 
 // =================================================================================================
-// MARK: - Searcher
+// MARK: - Searcher_DatonSet
 
 class Searcher_DatonSet
 :	public Searcher
