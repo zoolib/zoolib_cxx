@@ -256,14 +256,7 @@ void Relater_Searcher::ModifyRegistrations(
 
 void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	{
-	oChanged.clear();
-
-	this->pCollectResultsCalled();
-
-	// This is our "worker" -- the call to CollectResults is (indirectly) where we push
-	// registrations down into the Searcher, by driving Walkers that are needed to satisfy
-	// invalid PQueries (and thus ClientQueries). At the end of CollectResults
-	// we reap anything that's no longer needed.
+	Relater::pCollectResultsCalled();
 
 	this->pCollectResultsFromSearcher();
 
@@ -286,6 +279,8 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
 			{ sQInsertBack(fClientQuery_NeedsWork, iter.Current()); }
 		}
+
+	oChanged.clear();
 
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
 		eraser; eraser.Advance())
@@ -322,6 +317,7 @@ void Relater_Searcher::pCollectResultsFromSearcher()
 	{
 	vector<SearchResult> theSearchResults;
 	fSearcher->CollectResults(theSearchResults);
+
 	ZAcqMtxR acq(fMtxR);
 	for (vector<SearchResult>::const_iterator ii = theSearchResults.begin();
 		ii != theSearchResults.end(); ++ii)
@@ -372,7 +368,11 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 		while (not thePRegSearch->fResult)
 			fCnd.Wait(fMtxR);
 		}
+
+	// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),
+	// so we sQInsert rather than sInsertMust.
 	sQInsert(thePRegSearch->fPQuery_Using, iPQuery);
+	sQInsert(iPQuery->fPRegSearch_Used, thePRegSearch);
 
 	ZAssert(thePRegSearch->fResult);
 
