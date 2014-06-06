@@ -39,19 +39,19 @@ using namespace ZUtil_STL;
 typedef map<int64,pair<ZRef<QueryEngine::Result>,ZRef<Event> > > Map_Refcon_Result;
 
 // =================================================================================================
-// MARK: - RelaterMUX::ClientRelater
+// MARK: - RelaterMUX::Relater_Client
 
-class RelaterMUX::ClientRelater
+class RelaterMUX::Relater_Client
 :	public Relater
 	{
 public:
-	ClientRelater(ZRef<RelaterMUX> iMUX)
+	Relater_Client(ZRef<RelaterMUX> iMUX)
 	:	fMUX(iMUX)
 		{}
 
 // From ZCounted via Relater
 	virtual void Finalize()
-		{ fMUX->pFinalizeClientRelater(this); }
+		{ fMUX->pFinalizeRelater_Client(this); }
 
 // From Relater
 	virtual bool Intersects(const RelHead& iRelHead)
@@ -107,15 +107,15 @@ ZQ<ZRef<Relater> > RelaterMUX::QCall()
 	{
 	ZAcqMtxR acq(fMtxR);
 
-	ZRef<ClientRelater> theCR = new ClientRelater(this);
-	fClientRelaters.insert(theCR.Get());
-	return theCR;
+	ZRef<Relater_Client> theRelater = new Relater_Client(this);
+	fRelater_Clients.insert(theRelater.Get());
+	return theRelater;
 	}
 
-bool RelaterMUX::pIntersects(ZRef<ClientRelater> iCR, const RelHead& iRelHead)
+bool RelaterMUX::pIntersects(ZRef<Relater_Client> iRelater, const RelHead& iRelHead)
 	{ return fRelater->Intersects(iRelHead); }
 
-void RelaterMUX::pModifyRegistrations(ZRef<ClientRelater> iCR,
+void RelaterMUX::pModifyRegistrations(ZRef<Relater_Client> iRelater,
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
@@ -129,10 +129,10 @@ void RelaterMUX::pModifyRegistrations(ZRef<ClientRelater> iCR,
 		const int64 thePRefcon = fNextPRefcon++;
 
 		sInsertMust(kDebug,
-			iCR->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
+			iRelater->fMap_ClientToPRefcon, theClientRefcon, thePRefcon);
 
 		sInsertMust(kDebug,
-			fPRefconToClient, thePRefcon, make_pair(iCR.Get(), theClientRefcon));
+			fPRefconToClient, thePRefcon, make_pair(iRelater.Get(), theClientRefcon));
 
 		theAddedQueries.push_back(AddedQuery(thePRefcon, iAdded->GetRel()));
 		}
@@ -140,7 +140,7 @@ void RelaterMUX::pModifyRegistrations(ZRef<ClientRelater> iCR,
 	vector<int64> removedQueries;
 	removedQueries.reserve(iRemovedCount);
 	while (iRemovedCount--)
-		removedQueries.push_back(sGetEraseMust(kDebug, iCR->fMap_ClientToPRefcon, *iRemoved++));
+		removedQueries.push_back(sGetEraseMust(kDebug, iRelater->fMap_ClientToPRefcon, *iRemoved++));
 
 	guard.Release();
 
@@ -149,7 +149,7 @@ void RelaterMUX::pModifyRegistrations(ZRef<ClientRelater> iCR,
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
-void RelaterMUX::pCollectResults(ZRef<ClientRelater> iCR,
+void RelaterMUX::pCollectResults(ZRef<Relater_Client> iRelater,
 	vector<QueryResult>& oChanged)
 	{
 	ZGuardMtxR guard(fMtxR);
@@ -164,7 +164,7 @@ void RelaterMUX::pCollectResults(ZRef<ClientRelater> iCR,
 
 	foreachi (iterChanges, changes)
 		{
-		const pair<ClientRelater*,int64>& thePair =
+		const pair<Relater_Client*,int64>& thePair =
 			sGetMust(kDebug, fPRefconToClient, iterChanges->GetRefcon());
 
 		thePair.first->fResults[thePair.second] =
@@ -172,11 +172,11 @@ void RelaterMUX::pCollectResults(ZRef<ClientRelater> iCR,
 		}
 
 	oChanged.clear();
-	oChanged.reserve(iCR->fResults.size());
-	foreachi (iter, iCR->fResults)
+	oChanged.reserve(iRelater->fResults.size());
+	foreachi (iter, iRelater->fResults)
 		oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second));
 
-	iCR->fResults.clear();
+	iRelater->fResults.clear();
 	}
 
 void RelaterMUX::pResultsAvailable(ZRef<Relater> iRelater)
@@ -184,25 +184,25 @@ void RelaterMUX::pResultsAvailable(ZRef<Relater> iRelater)
 	ZGuardMtxR guard(fMtxR);
 	if (not sGetSet(fResultsAvailable, true))
 		{
-		foreachi (iter, fClientRelaters)
+		foreachi (iter, fRelater_Clients)
 			(*iter)->ResultsAvailable();
 		}
 	}
 
-void RelaterMUX::pFinalizeClientRelater(ClientRelater* iCR)
+void RelaterMUX::pFinalizeRelater_Client(Relater_Client* iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	if (not iCR->FinishFinalize())
+	if (not iRelater->FinishFinalize())
 		return;
 
 	vector<int64> removedQueries;
-	removedQueries.reserve(iCR->fMap_ClientToPRefcon.size());
-	foreachi (iter, iCR->fMap_ClientToPRefcon)
+	removedQueries.reserve(iRelater->fMap_ClientToPRefcon.size());
+	foreachi (iter, iRelater->fMap_ClientToPRefcon)
 		removedQueries.push_back(iter->second);
 
-	sEraseMust(fClientRelaters, iCR);
-	delete iCR;
+	sEraseMust(fRelater_Clients, iRelater);
+	delete iRelater;
 
 	guard.Release();
 

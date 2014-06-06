@@ -76,8 +76,8 @@ private:
 	class Proxy;
 	class Visitor_Proxy;
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>,Proxy*> ProxyMap;
-	ProxyMap fProxyMap;
+	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>,Proxy*> Map_Rel_ProxyX;
+	Map_Rel_ProxyX fMap_Rel_ProxyX;
 
 	std::set<PRelater*> pIdentifyPRelaters(const RelHead& iRelHead);
 	ZRef<RelationalAlgebra::Expr_Rel> pGetProxy(PQuery* iPQuery,

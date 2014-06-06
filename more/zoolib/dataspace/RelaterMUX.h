@@ -50,21 +50,21 @@ public:
 private:
 	class PQuery;
 	class ClientQuery;
-	class ClientRelater;
-	friend class ClientRelater;
+	class Relater_Client;
+	friend class Relater_Client;
 
-	bool pIntersects(ZRef<ClientRelater> iCR, const RelHead& iRelHead);
+	bool pIntersects(ZRef<Relater_Client> iCR, const RelHead& iRelHead);
 
-	void pModifyRegistrations(ZRef<ClientRelater> iCR,
+	void pModifyRegistrations(ZRef<Relater_Client> iCR,
 		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	void pCollectResults(ZRef<ClientRelater> iCR,
+	void pCollectResults(ZRef<Relater_Client> iCR,
 		std::vector<QueryResult>& oChanged);
 
 	void pResultsAvailable(ZRef<Relater> iRelater);
 
-	void pFinalizeClientRelater(ClientRelater* iCR);
+	void pFinalizeRelater_Client(Relater_Client* iCR);
 
 	ZMtxR fMtxR;
 
@@ -73,8 +73,8 @@ private:
 
 	int64 fNextPRefcon;
 
-	std::map<int64,std::pair<ClientRelater*,int64> > fPRefconToClient;
-	std::set<ClientRelater*> fClientRelaters;
+	std::map<int64,std::pair<Relater_Client*,int64> > fPRefconToClient;
+	std::set<Relater_Client*> fRelater_Clients;
 	};
 
 } // namespace ZDataspace

@@ -1026,7 +1026,7 @@ ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
 		return iRel;
 
 	ZRef<Proxy> theProxyRef;
-	if (ZQ<Proxy*> theQ = sQGet(fProxyMap, iRel))
+	if (ZQ<Proxy*> theQ = sQGet(fMap_Rel_ProxyX, iRel))
 		{
 		theProxyRef = *theQ;
 		ZAssert(iRelHead == theProxyRef->fResultRelHead);
@@ -1037,7 +1037,7 @@ ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
 		theProxyRef = theProxy;
 		theProxy->fRel = iRel;
 		theProxy->fResultRelHead = iRelHead;
-		sInsertMust(kDebug, fProxyMap, iRel, theProxy);
+		sInsertMust(kDebug, fMap_Rel_ProxyX, iRel, theProxy);
 		foreachi (iterPRelaters, iPRelaters)
 			{
 			PRelater* thePRelater = *iterPRelaters;
@@ -1071,7 +1071,7 @@ void Relater_Union::pFinalizeProxy(Proxy* iProxy)
 
 	ZAssertStop(kDebug, iProxy->fPIP_InProxy.IsEmpty());
 
-	sEraseMust(kDebug, fProxyMap, iProxy->fRel);
+	sEraseMust(kDebug, fMap_Rel_ProxyX, iProxy->fRel);
 
 	delete iProxy;
 	}
