@@ -81,9 +81,10 @@ public:
 // =================================================================================================
 // MARK: - Relater_SQLite
 
-Relater_SQLite::Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Clock> iClock)
+Relater_SQLite::Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent)
 :	fDB(iDB)
-,	fClock(iClock)
+,	fIdentity(iIdentity)
+,	fEvent(iEvent)
 	{
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
@@ -172,7 +173,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	Relater::pCollectResultsCalled();
 	oChanged.clear();
 
-	ZRef<Event> theEvent = fClock->GetEvent();
+	ZRef<Event> theEvent = fEvent;
 	foreachi (iterPQuery, fMap_Rel_PQuery)
 		{
 		const PQuery* thePQuery = &iterPQuery->second;
