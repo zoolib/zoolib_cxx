@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Relater_SQLite_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/ZDataspace_Source.h"
+#include "zoolib/dataspace/Relater.h"
 #include "zoolib/sqlite/ZSQLite.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - Relater_SQLite
@@ -63,7 +63,7 @@ private:
 	class PQuery;
 	};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_Relater_SQLite_h__

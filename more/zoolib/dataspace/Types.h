@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using ZIntervalTreeClock::Event;
 using ZIntervalTreeClock::Identity;
@@ -40,7 +40,7 @@ using RelationalAlgebra::ConcreteHead;
 
 struct Default_t {};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_Types_h__

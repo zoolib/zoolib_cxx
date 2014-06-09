@@ -76,7 +76,7 @@ namespace ZDatonSet {
 class Delta : public ZCountedWithoutFinalize
 	{
 public:
-	typedef std::map<Daton, bool> Statements_t;
+	typedef std::map<Daton,bool> Statements_t;
 
 	Delta(const Statements_t& iStatements);
 
@@ -91,7 +91,7 @@ private:
 // =================================================================================================
 // MARK: - Vector_Event_Delta_t
 
-typedef std::vector<std::pair<ZRef<Event>, ZRef<Delta> > > Vector_Event_Delta_t;
+typedef std::vector<std::pair<ZRef<Event>,ZRef<Delta> > > Vector_Event_Delta_t;
 
 // =================================================================================================
 // MARK: - Deltas

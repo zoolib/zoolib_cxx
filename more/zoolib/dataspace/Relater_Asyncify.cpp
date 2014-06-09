@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/Relater_Asyncify.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using std::map;
 using std::set;
@@ -100,7 +100,7 @@ void Relater_Asyncify::ModifyRegistrations(
 void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
-	this->pCollectResultsCalled();
+	Relater::pCollectResultsCalled();
 
 	oChanged.reserve(fPendingResults.size());
 	foreachi (iter, fPendingResults)
@@ -196,5 +196,5 @@ void Relater_Asyncify::pResultsAvailable(ZRef<Relater> iRelater)
 	this->pTrigger_Update();
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

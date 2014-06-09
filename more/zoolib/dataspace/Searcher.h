@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Result.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - SearchSpec
@@ -131,10 +131,10 @@ private:
 	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 
-template <> struct RelopsTraits_HasEQ<ZDataspace::SearchSpec> : public RelopsTraits_Has {};
-template <> struct RelopsTraits_HasLT<ZDataspace::SearchSpec> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasEQ<Dataspace::SearchSpec> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<Dataspace::SearchSpec> : public RelopsTraits_Has {};
 
 } // namespace ZooLib
 

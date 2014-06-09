@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/RelaterMUX.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using std::make_pair;
 using std::map;
@@ -64,7 +64,7 @@ public:
 
 	virtual void CollectResults(vector<QueryResult>& oChanged)
 		{
-		this->pCollectResultsCalled();
+		Relater::pCollectResultsCalled();
 		fMUX->pCollectResults(this, oChanged);
 		}
 
@@ -211,5 +211,5 @@ void RelaterMUX::pFinalizeRelater_Client(Relater_Client* iRelater)
 		sFirstOrNil(removedQueries), removedQueries.size());
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

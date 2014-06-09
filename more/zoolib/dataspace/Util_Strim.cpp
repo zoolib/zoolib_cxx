@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: -
@@ -43,5 +43,5 @@ const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
 	return w;
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

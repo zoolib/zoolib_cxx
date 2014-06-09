@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
 ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
@@ -96,10 +96,10 @@ private:
 
 	// -----
 
-	typedef std::map<ZDatonSet::Daton, std::pair<ZRef<Event>, ZVal_Any> > Map_Main;
+	typedef std::map<ZDatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Main;
 	Map_Main fMap;
 
-	typedef std::map<ZDatonSet::Daton, std::pair<ZVal_Any, bool> > Map_Pending;
+	typedef std::map<ZDatonSet::Daton,std::pair<ZVal_Any,bool> > Map_Pending;
 	Map_Pending fMap_Pending;
 	std::vector<Map_Pending> fStack_Map_Pending;
 
@@ -131,7 +131,7 @@ private:
 	DListHead<DLink_PScan_NeedsWork> fPScan_NeedsWork;
 	};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_Searcher_DatonSet_h__

@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using std::make_pair;
 using std::map;
@@ -837,7 +837,7 @@ void Relater_Union::ModifyRegistrations(
 
 void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 	{
-	this->pCollectResultsCalled();
+	Relater::pCollectResultsCalled();
 
 	ZAcqMtxR acq(fMtxR);
 
@@ -1169,5 +1169,5 @@ void Relater_Union::pResultsAvailable(ZRef<Relater> iRelater)
 	Relater::pTriggerResultsAvailable();
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

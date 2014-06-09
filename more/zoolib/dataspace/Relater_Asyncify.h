@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - Relater_Asyncify
@@ -76,7 +76,7 @@ private:
 	std::map<int64,QueryResult> fPendingResults;
 	};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_Relater_Asyncify_h__

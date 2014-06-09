@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ZDataspace_Relater_h__
-#define __ZooLib_ZDataspace_Relater_h__ 1
+#ifndef __ZooLib_Dataspace_Relater_h__
+#define __ZooLib_Dataspace_Relater_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - AddedQuery
@@ -118,7 +118,7 @@ private:
 
 typedef ZCallable<ZRef<Relater>()> RelaterFactory;
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_ZDataspace_Relater_h__
+#endif // __ZooLib_Dataspace_Relater_h__

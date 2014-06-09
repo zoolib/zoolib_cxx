@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - SearchSpec
@@ -188,5 +188,5 @@ void Searcher::pTriggerResultsAvailable()
 		}
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

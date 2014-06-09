@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 // =================================================================================================
 // MARK: - RelaterMUX
@@ -77,7 +77,7 @@ private:
 	std::set<Relater_Client*> fRelater_Clients;
 	};
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_RelaterMUX_h__

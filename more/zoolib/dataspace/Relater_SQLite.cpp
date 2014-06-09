@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using std::make_pair;
 using std::map;
@@ -164,12 +164,12 @@ void Relater_SQLite::ModifyRegistrations(
 		}
 
 	if (trigger)
-		Source::pTriggerResultsAvailable();
+		Relater::pTriggerResultsAvailable();
 	}
 
 void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	{
-	this->pCollectResultsCalled();
+	Relater::pCollectResultsCalled();
 	oChanged.clear();
 
 	ZRef<Event> theEvent = fClock->GetEvent();
@@ -196,5 +196,5 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 		}
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

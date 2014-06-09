@@ -46,7 +46,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using ZDatonSet::DatonSet;
 using ZDatonSet::Daton;
@@ -776,5 +776,5 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 	return false;
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib

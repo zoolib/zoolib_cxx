@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
-namespace ZDataspace {
+namespace Dataspace {
 
 using std::make_pair;
 using std::map;
@@ -379,5 +379,5 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 	return new QE::Walker_Result(thePRegSearch->fResult);
 	}
 
-} // namespace ZDataspace
+} // namespace Dataspace
 } // namespace ZooLib
