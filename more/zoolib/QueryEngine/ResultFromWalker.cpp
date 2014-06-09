@@ -18,10 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 
@@ -42,44 +39,15 @@ ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
 
-	ZLOGF(s, eDebug + 2);
-	if (s)
-		{
-		s << "\n";
-		foreachi (ii, offsets)
-			s << ii->first << ": " << ii->second << ", ";
-		s.Emit();
-		}
-
 	vector<ZVal_Any> thePackedRows;
 	vector<ZVal_Any> theRow(baseOffset);
-//	vector<ZVal_Any> theRow(baseOffset, ZVal_Any());
-	if (iWalker)
+	for (;;)
 		{
-		for (;;)
-			{
-			if (not iWalker->QReadInc(&theRow[0]))
-				break;
+		if (not iWalker->QReadInc(&theRow[0]))
+			break;
 
-			foreachi (ii, offsets)
-				thePackedRows.push_back(theRow[ii->second]);
-
-			if (s)
-				{
-				s << "\n";
-				foreachi (ii, offsets)
-					{
-					//## ZYad_ZooLibStrim::sToStrim(sYadR(theRow[ii->second]), s);
-					s << ", ";
-					}
-				}
-			}
-		}
-
-	if (s)
-		{
-		s << "\n";
-		s.Emit();
+		foreachi (ii, offsets)
+			thePackedRows.push_back(theRow[ii->second]);
 		}
 
 	RelHead theRelHead;
