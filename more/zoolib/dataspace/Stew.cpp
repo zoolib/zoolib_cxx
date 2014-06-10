@@ -176,20 +176,8 @@ ZRef<Stew::Registration> Stew::Register(
 	return theR;
 	}
 
-ZRef<ZDatonSet::DatonSet> Stew::GetDatonSet_Active()
-	{
-	if (not fWorker->IsWorking())
-		{
-		if (ZLOGF(w, eDebug))
-			w << "We should probably be on the the worker's thread";
-		}
-	return fWDS->GetDatonSet_Active();
-	}
-
-ZRef<ZDatonSet::DatonSet> Stew::GetDatonSet_Committed()
-	{
-	return fWDS->GetDatonSet_Committed();
-	}
+ZRef<WrappedDatonSet> Stew::GetWrappedDatonSet()
+	{ return fWDS; }
 
 ZRef<ZCaller> Stew::GetCaller()
 	{ return fCaller; }

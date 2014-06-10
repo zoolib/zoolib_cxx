@@ -65,8 +65,7 @@ public:
 		const ZRef<Callable_RegistrationChanged>& iCallable,
 		const ZRef<Expr_Rel>& iRel);
 
-	ZRef<ZDatonSet::DatonSet> GetDatonSet_Active();
-	ZRef<ZDatonSet::DatonSet> GetDatonSet_Committed();
+	ZRef<WrappedDatonSet> GetWrappedDatonSet();
 
 	ZRef<ZCaller> GetCaller();
 
