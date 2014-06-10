@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Result.h"
 
 using std::pair;
-using std::set;
 using std::vector;
 
 namespace ZooLib {
@@ -40,7 +39,8 @@ int sCompare_T<QueryEngine::Result>(
 ZMACRO_CompareRegistration_T(QueryEngine::Result)
 
 template <>
-int sCompare_T<ZRef<QueryEngine::Result> >(const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR)
+int sCompare_T<ZRef<QueryEngine::Result> >(
+	const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
 ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
@@ -50,7 +50,9 @@ ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
 
 namespace QueryEngine {
 
-Result::Result(const RelationalAlgebra::RelHead& iRelHead,
+using RelationalAlgebra::RelHead;
+
+Result::Result(const RelHead& iRelHead,
 	vector<ZVal_Any>* ioPackedRows)
 :	fRelHead(iRelHead)
 	{
@@ -70,7 +72,7 @@ Result::Result(const ZRef<Result>& iOther, size_t iRow)
 Result::~Result()
 	{}
 
-const RelationalAlgebra::RelHead& Result::GetRelHead()
+const RelHead& Result::GetRelHead()
 	{ return fRelHead; }
 
 size_t Result::Count()
@@ -128,15 +130,15 @@ struct Comparer_t
 
 } // anonymous namespace
 
-ResultDiffer::ResultDiffer(const RelationalAlgebra::RelHead& iIdentity,
-	const RelationalAlgebra::RelHead& iSignificant)
+ResultDiffer::ResultDiffer(const RelHead& iIdentity,
+	const RelHead& iSignificant)
 :	fIdentity(iIdentity)
 ,	fSignificant(iSignificant)
 	{}
 
 // oRemoved and oChanged_Prior indices are reported relative to the prior list
-// oAdded and oChanged_New are relative to the new list. oChanged_Prior and oChanged_New
-// reference the same entries.
+// oAdded and oChanged_New are relative to the new list.
+// oChanged_Prior and oChanged_New reference the same entries.
 // To mutate an external list you would erase every position in oRemoved,
 // insert everything in oAdded, and report changes on oChanged after both.
 // The sequence of offsets is in identity/significant sort order, but should
@@ -149,7 +151,6 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	vector<size_t>* oChanged_Prior,
 	vector<size_t>* oChanged_New)
 	{
-	typedef RelationalAlgebra::RelHead RelHead;
 	const RelHead& theRH = iResult->GetRelHead();
 
 	ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
@@ -233,7 +234,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 			{
 			if (theIndex_New >= theCount_New)
 				{
-				// Anything remaining in old when new is exhausted is a removal.
+				// Anything remaining in prior when new is exhausted is a removal.
 				if (oRemoved)
 					{
 					oRemoved->reserve(oRemoved->size() + theCount_Prior - theIndex_Prior);
@@ -245,7 +246,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 
 			if (theIndex_Prior >= theCount_Prior)
 				{
-				// Anything remaining in new when old is exhausted is an addition.
+				// Anything remaining in new when prior is exhausted is an addition.
 				if (oAdded)
 					{
 					oAdded->reserve(oAdded->size() + theCount_New - theIndex_New);
@@ -255,7 +256,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 				break;
 				}
 
-			// Match current old against current new
+			// Match current prior against current new
 			const pair<int,size_t> result = spCompare(fPermute,
 				theVals_Prior + fPermute.size() * fSort_Prior[theIndex_Prior],
 				theVals_New + fPermute.size() * theSort_New[theIndex_New]);
@@ -268,7 +269,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 
 				if (result.first < 0)
 					{
-					// Old is less than new, so old is not in new, and this is a removal.
+					// Prior is less than new, so prior is not in new, and this is a removal.
 					if (oRemoved)
 						oRemoved->push_back(fSort_Prior[theIndex_Prior]);
 					++theIndex_Prior;
