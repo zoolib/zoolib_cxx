@@ -27,11 +27,11 @@ namespace ZooLib {
 // MARK: - sCompare_T
 
 template <>
-int sCompare_T(const Dataspace::Default_t& iL,
-	const Dataspace::Default_t& iR)
+int sCompare_T(const Dataspace::AbsentOptional_t& iL,
+	const Dataspace::AbsentOptional_t& iR)
 	{ return 0; }
 
-ZMACRO_CompareRegistration_T(Dataspace::Default_t)
+ZMACRO_CompareRegistration_T(Dataspace::AbsentOptional_t)
 
 namespace Dataspace {
 

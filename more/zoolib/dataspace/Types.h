@@ -29,6 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+// =================================================================================================
+// MARK: -
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -38,7 +41,7 @@ using ZIntervalTreeClock::Identity;
 using RelationalAlgebra::RelHead;
 using RelationalAlgebra::ConcreteHead;
 
-struct Default_t {};
+struct AbsentOptional_t {};
 
 } // namespace Dataspace
 } // namespace ZooLib

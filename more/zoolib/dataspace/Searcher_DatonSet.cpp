@@ -704,8 +704,8 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 						}
 					else if (not ii->second)
 						{
-						ioResults[offset] = Default_t();
-						subset.push_back(Default_t());
+						ioResults[offset] = AbsentOptional_t();
+						subset.push_back(AbsentOptional_t());
 						}
 					else
 						{
@@ -753,8 +753,8 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 						}
 					else if (not ii->second)
 						{
-						ioResults[offset] = Default_t();
-						subset.push_back(Default_t());
+						ioResults[offset] = AbsentOptional_t();
+						subset.push_back(AbsentOptional_t());
 						}
 					else
 						{
