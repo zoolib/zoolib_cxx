@@ -256,7 +256,7 @@ bool Stew::pWork(ZRef<ZWorker> iWorker)
 		guard.Release();
 
 		foreacha (rr, changes)
-			{ sCall(rr->fCallable, rr, rr->fResult, not rr->fHadResultPrior); }
+			{ sCall(rr->fCallable, rr, rr->fEvent, rr->fResult, not rr->fHadResultPrior); }
 		}
 
 	guard.Acquire();

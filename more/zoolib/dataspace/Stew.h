@@ -57,6 +57,7 @@ public:
 
 	typedef ZCallable<void(
 			const ZRef<Registration>& iRegistration,
+			const ZRef<Event>& iEvent,
 			const ZRef<QueryEngine::Result>& iResult,
 			bool iIsFirst)>
 		Callable_RegistrationChanged;
