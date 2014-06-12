@@ -46,7 +46,8 @@ const T sMax(const T& i0, const T& i1)
 template <class T>
 inline
 const T sMinMax(const T& iMin, const T& iVal, const T& iMax)
-	{ return std::min<T>(std::max<T>(iMin, iVal), iMax); }	
+	{ return iVal < iMin ? iMin : iMax < iVal ? iMax : iVal; }
+
 
 // =================================================================================================
 // MARK: - sGetSet
