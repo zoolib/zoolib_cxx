@@ -36,7 +36,7 @@ using namespace std;
 
 // =================================================================================================
 
-std::string sStringf(const std::string& iString, ...)
+std::string sStringf(std::string iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
@@ -85,17 +85,6 @@ string sStringf(const char* iString, std::va_list iArgs)
 			break;
 			}
 		}
-
-	return result;
-	}
-
-// Deprecated
-string ZStringf(const char* iString, ...)
-	{
-	va_list args;
-	va_start(args, iString);
-	string result = sStringf(iString, args);
-	va_end(args);
 
 	return result;
 	}
