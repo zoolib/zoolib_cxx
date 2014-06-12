@@ -65,6 +65,7 @@ public:
 private:
 	void pChanged(
 		const ZRef<Stew::Registration>& iReg,
+		const ZRef<Event>& iEvent,
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 
