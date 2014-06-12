@@ -75,8 +75,11 @@ ZRef<ZCallable_Bool> sCallable_Or(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCa
 		Callable(const ZRef<ZCallable_Bool>& i0, const ZRef<ZCallable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
-			if (const ZQ<bool> theQ0 = sQCall(f0) && *theQ0)
-				return true;
+			if (const ZQ<bool> theQ0 = sQCall(f0))
+				{
+				if (*theQ0)
+					return true;
+				}
 			return sQCall(f1);
 			}
 		const ZRef<ZCallable_Bool> f0, f1;
