@@ -67,9 +67,6 @@ static void spEncode(
 		}
 	}
 
-static const uint8 spBase64EncodeTable[] =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
 static const Encode spEncodeStd =
 	{
 	{
