@@ -467,7 +467,7 @@ ZRef<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZRef<Link
 
 class Visitor_Wrap
 :	public ZVisitor_Do_T<ZRef<ZYadR> >
-,	ZVisitor_Yad_PreferAt
+,	public ZVisitor_Yad_PreferAt
 	{
 public:
 	Visitor_Wrap(const ZRef<Link>& iLink)
