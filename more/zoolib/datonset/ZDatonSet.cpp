@@ -249,14 +249,16 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	return sNotEmpty(theDeltas->GetVector());
 	}
 
+namespace { // anonymous
+struct Accumulator_Join
+	{
+	void operator()(ZRef<Event>& io0, const ZRef<Event>& i1) const
+		{ io0 = io0 ? io0->Joined(i1) : i1; }
+	};
+} // anonymous namespace
+
 void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>& oEvent)
 	{
-	struct Accumulator_Join
-		{
-		void operator()(ZRef<Event>& io0, const ZRef<Event>& i1) const
-			{ io0 = io0 ? io0->Joined(i1) : i1; }
-		};
-
 	ZGuardMtx guard(fMtx);
 	this->pCommit();
 
