@@ -24,30 +24,19 @@ namespace ZooLib {
 namespace ZUtil_File {
 
 // =================================================================================================
-// MARK: - Helpers (anonymous)
-
-namespace { // anonymous
-
-} // anonymous namespace
-
-// =================================================================================================
 // MARK: - ZUtil_File
 
-ZFileSpec sEnsureBranch(const ZFileSpec& iFS)
+ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS)
 	{
 	if (iFS.IsDir())
 		return iFS;
 	
-	if (ZFileSpec newParent = sEnsureBranch(iFS.Parent()))
-		return newParent.Child(iFS.Name()).CreateDir();
+	if (ZQ<ZFileSpec> newParentQ = sQEnsureBranch(iFS.Parent()))
+		{
+		if (const ZFileSpec theFS = newParentQ->Child(iFS.Name()).CreateDir())
+			return theFS;
+		}
 
-	return sDefault();
-	}
-
-ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS)
-	{
-	if (ZFileSpec theFS = sEnsureBranch(iFS))
-		return theFS;
 	return null;
 	}
 

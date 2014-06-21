@@ -31,8 +31,6 @@ namespace ZUtil_File {
 // =================================================================================================
 // MARK: - ZUtil_File
 
-ZFileSpec sEnsureBranch(const ZFileSpec& iFS);
-
 ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS);
 
 bool sDeleteTree(const ZFileSpec& iFS);
