@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Bool.h"
 
 #include <map>
+#include <string>
 
 namespace ZooLib {
 namespace Util_Expr_Bool {
