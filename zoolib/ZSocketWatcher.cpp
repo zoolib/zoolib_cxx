@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZSocketWatcher.h"
 
+// We may want to override FD_SETSIZE, so we can handle > 1024 fds at once.
+
 // See comment in Solaris' /usr/include/sys/ioctl.h
 #if __sun__
 	#define BSD_COMP
@@ -30,6 +32,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/select.h>
 
 #include <set>
+
+#ifndef FD_COPY
+	#include "zoolib/ZMemory.h"
+	#define FD_COPY(a, b) sMemCopy(a, b, sizeof(fd_set))
+#endif
 
 namespace ZooLib {
 
