@@ -43,9 +43,6 @@ using std::replace;
 using std::string;
 using std::vector;
 
-static const char CR = '\r';
-static const char LF = '\n';
-
 // =================================================================================================
 // MARK: - Utility stuff
 
@@ -294,7 +291,7 @@ bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultM
 		char readChar;
 		if (not iStream.ReadChar(readChar))
 			break;
-		if (readChar == LF)
+		if (readChar == '\n')
 			break;
 		if (oResultMessage)
 			*oResultMessage += readChar;
