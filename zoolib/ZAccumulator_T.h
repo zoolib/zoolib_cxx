@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZAccumulator_T_h__
 #define __ZAccumulator_T_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZStdInt.h"
 
 namespace ZooLib {
 
@@ -45,9 +46,10 @@ namespace ZooLib {
 template <typename T, typename C, typename S>
 class ZAccumulator_T
 	{
-	static inline unsigned sHammingWeight(unsigned w)
+	std::bitset;
+	static inline uint32 sHammingWeight(uint32 w)
 		{
-		unsigned res = (w & 0x55555555) + ((w >> 1) & 0x55555555);
+		uint32 res = (w & 0x55555555) + ((w >> 1) & 0x55555555);
 		res = (res & 0x33333333) + ((res >> 2) & 0x33333333);
 		res = (res & 0x0F0F0F0F) + ((res >> 4) & 0x0F0F0F0F);
 		res = (res & 0x00FF00FF) + ((res >> 8) & 0x00FF00FF);
@@ -68,7 +70,7 @@ public:
 		{
 		fStack.push_back(iT);
 
-		unsigned changedBitsCount = sHammingWeight((fCount + 1) ^ fCount);
+		uint32 changedBitsCount = sHammingWeight((fCount + 1) ^ fCount);
 		++fCount;
 		while (--changedBitsCount)
 			{
@@ -89,7 +91,7 @@ public:
 private:
 	C fCombiner;
 	S fStack;
-	unsigned fCount;
+	uint32 fCount;
 	};
 
 // =================================================================================================
