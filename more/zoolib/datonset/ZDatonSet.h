@@ -146,6 +146,8 @@ public:
 
 	bool Join(ZRef<DatonSet>& ioOther);
 
+	bool IncorporateDeltas(ZRef<Deltas> iDeltas, ZRef<Event> iEvent);
+
 	void GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>& oEvent);
 
 	ZRef<DeltasChain> GetDeltasChain(ZRef<Event>* oEvent);

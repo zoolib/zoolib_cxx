@@ -249,6 +249,22 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	return sNotEmpty(theDeltas->GetVector());
 	}
 
+bool DatonSet::IncorporateDeltas(ZRef<Deltas> iDeltas, ZRef<Event> iEvent)
+	{
+	ZGuardMtx guard(fMtx);
+	this->pCommit();
+	ZRef<Event> theEvent = fEvent;
+
+	if (iDeltas && iDeltas->GetVector().size())
+		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
+
+	fEvent = fEvent->Joined(iEvent);
+
+	fEvent = fEvent->Advanced(fIdentity);
+
+	return sNotEmpty(iDeltas->GetVector());
+	}
+
 namespace { // anonymous
 struct Accumulator_Join
 	{
