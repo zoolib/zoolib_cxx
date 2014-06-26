@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZIntervalTreeClock.h"
 
-#include "zoolib/RelationalAlgebra/RelHead.h"
+#include "zoolib/QueryEngine/Result.h"
 
-#include <set>
-#include <vector>
+#include "zoolib/RelationalAlgebra/Expr_Rel.h"
+#include "zoolib/RelationalAlgebra/RelHead.h"
 
 // =================================================================================================
 // MARK: -
@@ -38,8 +38,15 @@ namespace Dataspace {
 using ZIntervalTreeClock::Event;
 using ZIntervalTreeClock::Identity;
 
-using RelationalAlgebra::RelHead;
+using QueryEngine::Result;
+
 using RelationalAlgebra::ConcreteHead;
+using RelationalAlgebra::sConcreteHead;
+
+using RelationalAlgebra::Expr_Rel;
+
+using RelationalAlgebra::RelHead;
+using RelationalAlgebra::sRelHead;
 
 struct AbsentOptional_t {};
 
