@@ -39,7 +39,6 @@ class Caller_OnNewThread
 public:
 	Caller_OnNewThread()
 	:	fKeepRunning(false)
-	,	fIsRunning(false)
 		{}
 
 	virtual ~Caller_OnNewThread()
@@ -51,12 +50,10 @@ public:
 		ZCounted::Initialize();
 		ZAcqMtxR acq(fMtxR);
 
-		ZAssert(not fKeepRunning and not fIsRunning);
+		ZAssert(not fKeepRunning);
 
 		fKeepRunning = true;
 		ZThread::sCreate_T<Caller_OnNewThread*>(&Caller_OnNewThread::spRun, this);
-		while (not fIsRunning)
-			fCnd.Wait(fMtxR);
 		}
 
 	virtual void Finalize()
@@ -65,14 +62,10 @@ public:
 		if (not this->FinishFinalize())
 			return;
 
-		ZAssert(fKeepRunning and fIsRunning);
+		ZAssert(fKeepRunning);
 
 		fKeepRunning = false;
 		fCnd.Broadcast();
-		while (fIsRunning)
-			fCnd.Wait(fMtxR);
-		guard.Release();
-		delete this;
 		}
 
 // From ZCaller
@@ -88,9 +81,6 @@ private:
 	void pRun()
 		{
 		ZGuardMtxR guard(fMtxR);
-		ZAssert(not fIsRunning);
-		fIsRunning = true;
-		fCnd.Broadcast();
 
 		while (fKeepRunning)
 			{
@@ -98,6 +88,8 @@ private:
 				{ fCnd.Wait(fMtxR); }
 			else
 				{
+				ZRef<ZCounted> self_ref = this;
+
 				vector<ZRef<ZCallable_Void> > calling;
 
 				fCallables.swap(calling);
@@ -114,9 +106,8 @@ private:
 				guard.Acquire();
 				}
 			}
-
-		fIsRunning = false;
-		fCnd.Broadcast();
+		guard.Release();
+		delete this;
 		}
 
 	static void spRun(Caller_OnNewThread* iCaller)
@@ -125,7 +116,6 @@ private:
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 	bool fKeepRunning;
-	bool fIsRunning;
 	std::vector<ZRef<ZCallable_Void> > fCallables;
 	};
 
