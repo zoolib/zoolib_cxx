@@ -73,4 +73,18 @@ void ZCaller_EventLoop::pDiscardPending()
 	fTriggered = false;
 	}
 
+// =================================================================================================
+// MARK: - ZCaller_EventLoop_CallableTrigger
+
+ZCaller_EventLoop_CallableTrigger::ZCaller_EventLoop_CallableTrigger(
+	const ZRef<Callable_Trigger>& iCallable_Trigger)
+:	fCallable_Trigger(iCallable_Trigger)
+	{}
+
+bool ZCaller_EventLoop_CallableTrigger::pTrigger()
+	{ return sDCall(false, fCallable_Trigger); }
+
+void ZCaller_EventLoop_CallableTrigger::DoCalls()
+	{ ZCaller_EventLoop::pCall(); }
+
 } // namespace ZooLib
