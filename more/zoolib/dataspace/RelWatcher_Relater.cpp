@@ -136,7 +136,6 @@ void RelWatcher_Relater::Update()
 		fRelater->ModifyRegistrations(
 			ZUtil_STL::sFirstOrNil(added), added.size(),
 			ZUtil_STL::sFirstOrNil(removed), removed.size());
-
 		}
 
 	// Pick up any results
