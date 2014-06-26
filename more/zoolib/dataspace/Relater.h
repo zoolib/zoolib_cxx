@@ -23,11 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZIntervalTreeClock.h"
-
-#include "zoolib/QueryEngine/Result.h"
-#include "zoolib/RelationalAlgebra/Expr_Rel.h"
-#include "zoolib/RelationalAlgebra/RelHead.h"
 
 #include "zoolib/dataspace/Types.h"
 
