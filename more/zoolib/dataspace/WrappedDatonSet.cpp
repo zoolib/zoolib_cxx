@@ -35,26 +35,10 @@ using std::swap;
 // =================================================================================================
 // MARK: - WrappedDatonSet
 
-WrappedDatonSet::WrappedDatonSet(
-	ZRef<DatonSet> iDatonSet,
-	ZRef<Callable_NeedsUpdate> iCallable_NeedsUpdate,
-	ZRef<Callable_PullSuggested> iCallable_PullSuggested_Parent)
+WrappedDatonSet::WrappedDatonSet(const ZRef<DatonSet>& iDatonSet)
 :	fDatonSet_Committed(iDatonSet)
 ,	fDatonSet_Active(fDatonSet_Committed->Fork())
 ,	fCalled_NeedsUpdate(false)
-,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
-	{
-	ZAssert(iCallable_PullSuggested_Parent);
-	sInsert(fCallables_PullSuggested, iCallable_PullSuggested_Parent);
-	}
-
-WrappedDatonSet::WrappedDatonSet(
-	ZRef<DatonSet> iDatonSet,
-	ZRef<Callable_NeedsUpdate> iCallable_NeedsUpdate)
-:	fDatonSet_Committed(iDatonSet)
-,	fDatonSet_Active(fDatonSet_Committed->Fork())
-,	fCalled_NeedsUpdate(false)
-,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
 	{}
 
 WrappedDatonSet::~WrappedDatonSet()
@@ -75,22 +59,31 @@ ZRef<DatonSet> WrappedDatonSet::GetDatonSet_Committed()
 	return fDatonSet_Committed;
 	}
 
+void WrappedDatonSet::SetCallable_NeedsUpdate(
+	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
+	{
+	ZAssert(not fCallable_NeedsUpdate);
+	fCallable_NeedsUpdate = iCallable_NeedsUpdate;
+	}
+
 void WrappedDatonSet::Update()
 	{
 	ZGuardMtxR guard(fMtxR);
 	fCalled_NeedsUpdate = false;
 
-	set<ZRef<WrappedDatonSet> > toPullFrom;
-	swap(toPullFrom, fPullFrom);
+	set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
+	swap(theCallables_PullFrom, fCallables_PullFrom);
 
 	guard.Release();
 
 	bool anyChange = false;
 
-	foreachv (ZRef<WrappedDatonSet> other, toPullFrom)
+	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
-		ZRef<DatonSet> otherDS = other->GetDatonSet_Committed()->Fork();
-		if (fDatonSet_Active->Join(otherDS))
+		ZRef<ZDatonSet::Deltas> theDeltas;
+		ZRef<Event> theEvent;
+		theCallable->Call(fDatonSet_Active->GetEvent(), theDeltas, theEvent);
+		if (fDatonSet_Active->IncorporateDeltas(theDeltas, theEvent))
 			anyChange = true;
 		}
 
@@ -110,37 +103,36 @@ void WrappedDatonSet::Update()
 		set<ZRef<Callable_PullSuggested> > toCall;
 		swap(toCall, fCallables_PullSuggested);
 
+		if (not fCallable_PullFrom_Self)
+			fCallable_PullFrom_Self = sCallable(sWeakRef(this), &WrappedDatonSet::pPullFrom);
+
 		guard.Release();
 
-		set<ZRef<Callable_PullSuggested> > preserved;
-		foreachv (ZRef<Callable_PullSuggested> theCallable, toCall)
+		for (set<ZRef<Callable_PullSuggested> >::iterator iter = toCall.begin();
+			/*no test*/; /*no inc*/)
 			{
-			if (sQCall(theCallable, ref_this))
-				sInsert(preserved, theCallable);
+			set<ZRef<Callable_PullSuggested> >::iterator iterNext = iter;
+			++iterNext;
+			if (not sQCall(*iter, fCallable_PullFrom_Self))
+				toCall.erase(iter);
+			if (iterNext == toCall.end())
+				break;
+			iter = iterNext;
 			}
 
 		guard.Acquire();
-		fCallables_PullSuggested.insert(preserved.begin(), preserved.end());
+		fCallables_PullSuggested.insert(toCall.begin(), toCall.end());
 		}
 	}
 
-ZRef<WrappedDatonSet> WrappedDatonSet::Spawn(ZRef<ZCallable_Void> iCallable_UpdateNeeded)
+void WrappedDatonSet::InsertCallable_PullSuggested(
+	ZRef<Callable_PullSuggested> iCallable_PullSuggested)
 	{
 	ZGuardMtxR guard(fMtxR);
-
-	ZRef<WrappedDatonSet> theWDS_Spawned = new WrappedDatonSet(
-		fDatonSet_Committed->Fork(),
-		iCallable_UpdateNeeded,
-		this->pGet_Callable_PullSuggested_Self());
-
-	// We have to get the spawned WDS' callable after it's constructed, because it
-	// simply cannot build the callable in its ctor (counted/weak lifetime rules).
-	sInsert(fCallables_PullSuggested, theWDS_Spawned->pGet_Callable_PullSuggested_Self());
-
-	return theWDS_Spawned;
+	sInsert(fCallables_PullSuggested, iCallable_PullSuggested);
 	}
 
-ZRef<WrappedDatonSet::Callable_PullSuggested> WrappedDatonSet::pGet_Callable_PullSuggested_Self()
+ZRef<Callable_PullSuggested> WrappedDatonSet::GetCallable_PullSuggested()
 	{
 	ZGuardMtxR guard(fMtxR);
 	if (not fCallable_PullSuggested_Self)
@@ -148,18 +140,43 @@ ZRef<WrappedDatonSet::Callable_PullSuggested> WrappedDatonSet::pGet_Callable_Pul
 	return fCallable_PullSuggested_Self;
 	}
 
-void WrappedDatonSet::pPullSuggested(ZRef<WrappedDatonSet> iOther)
+void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom)
 	{
 	ZGuardMtxR guard(fMtxR);
-	sInsert(fPullFrom, iOther);
+	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 
 	this->pTrigger_NeedsUpdate();
 	}
 
+void WrappedDatonSet::pPullFrom(
+	ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)
+	{
+	ZGuardMtxR guard(fMtxR);
+	fDatonSet_Committed->GetDeltas(iEvent, oDeltas, oEvent);
+	}
+
 void WrappedDatonSet::pTrigger_NeedsUpdate()
 	{
+	ZGuardMtxR guard(fMtxR);
 	if (not sGetSet(fCalled_NeedsUpdate, true))
+		{
+		guard.Release();
 		sCall(fCallable_NeedsUpdate);
+		}
+	}
+
+ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
+	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate)
+	{
+	ZRef<WrappedDatonSet> result =
+		new WrappedDatonSet(iParent->GetDatonSet_Committed()->Fork());
+
+	result->InsertCallable_PullSuggested(iParent->GetCallable_PullSuggested());
+	iParent->InsertCallable_PullSuggested(result->GetCallable_PullSuggested());
+
+	result->SetCallable_NeedsUpdate(iCallable_NeedsUpdate);
+
+	return result;
 	}
 
 } // namespace Dataspace

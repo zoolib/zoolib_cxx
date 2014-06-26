@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_RowBoat_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/Stew.h"
+#include "zoolib/dataspace/RelWatcher.h"
 #include "zoolib/dataspace/Types.h"
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
@@ -48,7 +48,7 @@ public:
 		ZRef<Callable_Row>(const PseudoMap&)
 		> Callable_Make_Callable_Row;
 
-	RowBoat(const ZRef<Stew>& iStew,
+	RowBoat(const ZRef<RelWatcher::Callable_Register>& iCallable_Register,
 		const ZRef<Expr_Rel>& iRel,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
@@ -64,17 +64,17 @@ public:
 
 private:
 	void pChanged(
-		const ZRef<Stew::Registration>& iReg,
+		const ZRef<ZCounted>& iRegistration,
 		const ZRef<Event>& iEvent,
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 
-	ZRef<Stew> fStew;
+	ZRef<RelWatcher::Callable_Register> fCallable_Register;
 	ZRef<Expr_Rel> fRel;
 	QueryEngine::ResultDiffer fResultDiffer;
 	ZRef<Callable_Make_Callable_Row> fCallable;
 
-	ZRef<Stew::Registration> fRegistration;
+	ZRef<ZCounted> fRegistration;
 	std::vector<ZRef<Callable_Row> > fRows;
 	std::map<string8,size_t> fBindings;
 	};

@@ -18,75 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_WrappedDatonSet_h__
-#define __ZooLib_Dataspace_WrappedDatonSet_h__ 1
+#ifndef __ZooLib_Dataspace_RelWatcher_Relater_h__
+#define __ZooLib_Dataspace_RelWatcher_Relater_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
-#include "zoolib/datonset/ZDatonSet.h"
-#include "zooLib/dataspace/Stuff.h"
+#include "zooLib/dataspace/RelWatcher.h"
+#include "zooLib/dataspace/Relater.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - WrappedDatonSet
+// MARK: - RelWatcher_Relater
 
-class WrappedDatonSet
-:	public ZCounted
+class RelWatcher_Relater
+:	public RelWatcher::Callable_Register
 	{
 public:
-	typedef ZDatonSet::DatonSet DatonSet;
-	typedef ZCallable_Void Callable_NeedsUpdate;
+	RelWatcher_Relater(const ZRef<Relater>& iRelater);
 
-	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet);
-
-	virtual ~WrappedDatonSet();
+// From ZCallable via Callable_Register
+	ZQ<ZRef<ZCounted> > QCall(
+		const ZRef<RelWatcher::Callable_Changed>& iCallable_Changed,
+		const ZRef<Expr_Rel>& iRel);
 
 // Our protocol
-	ZRef<DatonSet> GetDatonSet_Active();
-
-	ZRef<DatonSet> GetDatonSet_Committed();
-
+	typedef ZCallable_Void Callable_NeedsUpdate;
 	void SetCallable_NeedsUpdate(const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
-
 	void Update();
 
-	void InsertCallable_PullSuggested(ZRef<Callable_PullSuggested> iCallable_PullSuggested);
-
-	ZRef<Callable_PullSuggested> GetCallable_PullSuggested();
-
 private:
-	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
+	void pCallback_Relater(ZRef<Relater> iRelater);
 
-	void pPullFrom(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent);
-
-	void pTrigger_NeedsUpdate();
-
-	// ---
+	class Registration;
+	void pFinalize(Registration* iRegistration);
 
 	ZMtxR fMtxR;
-	ZCnd fCnd;
 
-	ZRef<DatonSet> fDatonSet_Committed;
-	ZRef<DatonSet> fDatonSet_Active;
+	ZRef<Relater> fRelater;
 
 	bool fCalled_NeedsUpdate;
 	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
 
-	ZRef<Callable_PullSuggested> fCallable_PullSuggested_Self;
+	int64 fNextRefcon;
 
-	std::set<ZRef<Callable_PullSuggested> > fCallables_PullSuggested;
+	typedef std::map<int64, Registration*> Map_RefconToRegistration;
+	Map_RefconToRegistration fMap_RefconToRegistration;
 
-	ZRef<Callable_PullFrom> fCallable_PullFrom_Self;
-
-	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
+	std::set<Registration*> fToAdd;
+	std::set<int64> fToRemove;
 	};
-
-ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
-	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
 } // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_WrappedDatonSet_h__
+#endif // __ZooLib_Dataspace_RelWatcher_Relater_h__

@@ -39,16 +39,16 @@ using namespace ZUtil_STL;
 using std::vector;
 
 using namespace RelationalAlgebra;
-using namespace QueryEngine;
+//using namespace QueryEngine;
 
 // =================================================================================================
 // MARK: - RowBoat
 
-RowBoat::RowBoat(const ZRef<Stew>& iStew,
+RowBoat::RowBoat(const ZRef<RelWatcher::Callable_Register>& iCallable_Register,
 	const ZRef<Expr_Rel>& iRel,
 	const RelHead& iIdentity, const RelHead& iSignificant,
 	const ZRef<Callable_Make_Callable_Row>& iCallable)
-:	fStew(iStew)
+:	fCallable_Register(iCallable_Register)
 ,	fRel(iRel)
 ,	fResultDiffer(iIdentity, iSignificant)
 ,	fCallable(iCallable)
@@ -60,17 +60,14 @@ RowBoat::~RowBoat()
 void RowBoat::Initialize()
 	{
 	ZCounted::Initialize();
-	fRegistration = fStew->Register(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
+	fRegistration = fCallable_Register->Call(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
 	}
 
 const vector<ZRef<RowBoat::Callable_Row> >& RowBoat::GetRows()
-	{
-	ZAssert(fStew->GetWorker()->IsWorking());
-	return fRows;
-	}
+	{ return fRows; }
 
 void RowBoat::pChanged(
-	const ZRef<Stew::Registration>& iReg,
+	const ZRef<ZCounted>& iRegistration,
 	const ZRef<Event>& iEvent,
 	const ZRef<Result>& iResult,
 	bool iIsFirst)
