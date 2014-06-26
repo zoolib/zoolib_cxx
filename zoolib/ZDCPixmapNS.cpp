@@ -1623,7 +1623,7 @@ void ZDCPixmapNS::PixvalIterW::Reset(void* iAddress, int iCoord)
 void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	if (fPixvals)
 		{
 		uint32* pixValsEnd = fPixvals + fCount;
@@ -1659,7 +1659,7 @@ uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsAlpha(uint32 iPixval) const
 void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	while (--localCount)
 		{
 		uint32 pixVal = *iPixvals++;
@@ -1677,7 +1677,7 @@ void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
 void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	while (--localCount)
 		{
 		uint32 pixVal = *iPixvals++;
@@ -1694,7 +1694,7 @@ void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBAs(const uint32* iPixvals,
 void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	if (fPixvals)
 		{
 		while (--localCount)
@@ -1724,7 +1724,7 @@ void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBA_POD* iColors,
 void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	while (--localCount)
 		{
 		uint32 theValue = ((uint32((uint32(iColors->red)
@@ -1744,7 +1744,7 @@ void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBA_POD* iColors,
 void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
-	register size_t localCount = iCount + 1;
+	size_t localCount = iCount + 1;
 	while (--localCount)
 		{
 		uint32 theValue = ((uint32(iColors->red) >> fShiftRightR) << fShiftLeftR);
