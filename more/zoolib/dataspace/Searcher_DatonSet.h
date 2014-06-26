@@ -23,14 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Searcher.h"
+#include "zoolib/dataspace/Stuff.h"
 #include "zoolib/datonset/ZDatonSet.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
 namespace Dataspace {
-
-ZVal_Any sAsVal(const ZDatonSet::Daton& iDaton);
-ZDatonSet::Daton sAsDaton(const ZVal_Any& iVal);
 
 // =================================================================================================
 // MARK: - Searcher_DatonSet
@@ -41,7 +39,7 @@ class Searcher_DatonSet
 public:
 	enum { kDebug = 1 };
 
-	Searcher_DatonSet(ZRef<ZDatonSet::DatonSet> iDatonSet);
+	Searcher_DatonSet();
 	virtual ~Searcher_DatonSet();
 
 // From Searcher
@@ -54,26 +52,20 @@ public:
 	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 // Our protocol
-	ZRef<ZDatonSet::DatonSet> GetDatonSet();
-
-	ZRef<Event> Insert(const ZDatonSet::Daton& iDaton);
-	ZRef<Event> Erase(const ZDatonSet::Daton& iDaton);
-	ZRef<Event> Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew);
-
-	size_t OpenTransaction();
-	void ClearTransaction(size_t iIndex);
-	void CloseTransaction(size_t iIndex);
+	ZRef<Callable_PullSuggested> GetCallable_PullSuggested();
 
 private:
 	ZMtxR fMtxR;
 
+	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
+	ZRef<Callable_PullSuggested> fCallable_PullSuggested_Self;
+
 	void pPull();
-	ZRef<Event> pConditionalPushDown();
-	void pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense);
 	void pChanged(const ZVal_Any& iVal);
-	void pChangedAll();
 
 	class PSearch;
+
+	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
 
 	// -----
 
@@ -89,18 +81,12 @@ private:
 
 	bool pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults);
 
-	ZRef<ZDatonSet::DatonSet> fDatonSet;
-	ZRef<ZDatonSet::DatonSet> fDatonSet_Temp;
 	ZRef<Event> fEvent;
 
 	// -----
 
 	typedef std::map<ZDatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Main;
 	Map_Main fMap;
-
-	typedef std::map<ZDatonSet::Daton,std::pair<ZVal_Any,bool> > Map_Pending;
-	Map_Pending fMap_Pending;
-	std::vector<Map_Pending> fStack_Map_Pending;
 
 	// -----
 

@@ -18,22 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZStream_Data_T.h"
-#include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZStrimU_StreamUTF8Buffered.h"
-#include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
+
+#include "zoolib/dataspace/Daton_Val.h"
 
 #include "zoolib/dataspace/Searcher_DatonSet.h"
 
@@ -77,47 +74,6 @@ static const ZStrimW& operator<<(const ZStrimW& w, const Daton& iDaton)
 	}
 
 // =================================================================================================
-// MARK: - spAsVal (anonymous)
-
-namespace { // anonymous
-
-ZVal_Any spAsVal(const ZData_Any& iData)
-	{
-	try
-		{
-		ZRef<ZStreamerR> theStreamerR =
-			new ZStreamerRPos_T<ZStreamRPos_Data_T<ZData_Any> >(iData);
-
-		ZRef<ZStrimmerU> theStrimmerU =
-			new ZStrimmerU_Streamer_T<ZStrimU_StreamUTF8Buffered>(1024, theStreamerR);
-
-		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theStrimmerU);
-
-		return sFromYadR(ZVal_Any(), theYadR);
-		}
-	catch (...)
-		{
-		return ZVal_Any();
-		}
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-// MARK: - Daton/Val conversion.
-
-ZVal_Any sAsVal(const Daton& iDaton)
-	{ return spAsVal(iDaton.GetData()); }
-
-Daton sAsDaton(const ZVal_Any& iVal)
-	{
-	ZData_Any theData;
-	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
-		ZStrimW_StreamUTF8(sStreamRWPos_Data_T(theData)));
-	return theData;
-	}
-
-// =================================================================================================
 // MARK: - Searcher_DatonSet::Walker
 
 class Searcher_DatonSet::Walker
@@ -151,7 +107,6 @@ public:
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Main::const_iterator fCurrent_Main;
-	Map_Pending::const_iterator fCurrent_Pending;
 	std::set<std::vector<ZVal_Any> > fPriors;
 	};
 
@@ -232,12 +187,8 @@ public:
 // =================================================================================================
 // MARK: - Searcher_DatonSet
 
-//void Searcher_DatonSet::ForceUpdate()
-//	{ Searcher::pTriggerResultsAvailable(); }
-
-Searcher_DatonSet::Searcher_DatonSet(ZRef<DatonSet> iDatonSet)
-:	fDatonSet(iDatonSet)
-,	fEvent(Event::sZero())
+Searcher_DatonSet::Searcher_DatonSet()
+:	fEvent(Event::sZero())
 	{}
 
 Searcher_DatonSet::~Searcher_DatonSet()
@@ -357,15 +308,11 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 	{
-	ZGuardMtxR guard(fMtxR);
+	Searcher::pCollectResultsCalled();
 
 	this->pPull();
 
-	guard.Release();
-
-	Searcher::pCollectResultsCalled();
-
-	guard.Acquire();
+	ZAcqMtxR acq(fMtxR);
 
 	oChanged.clear();
 
@@ -429,193 +376,91 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 			}
 		}
 
-	ZRef<Event> theEvent = fDatonSet->GetEvent();
-	if (fDatonSet_Temp)
-		theEvent = theEvent->Joined(fDatonSet_Temp->GetEvent());
-
 	for (DListEraser<ClientSearch,DLink_ClientSearch_NeedsWork> eraser = fClientSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		ClientSearch* theClientSearch = eraser.Current();
 		PSearch* thePSearch = theClientSearch->fPSearch;
-		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult, theEvent));
+		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult, fEvent));
 		}
 
 	}
 
-ZRef<ZDatonSet::DatonSet> Searcher_DatonSet::GetDatonSet()
-	{ return fDatonSet; }
-
-ZRef<Event> Searcher_DatonSet::Insert(const Daton& iDaton)
-	{
-	ZGuardMtxR guard(fMtxR);
-	this->pModify(iDaton, sAsVal(iDaton), true);
-	ZRef<Event> result = this->pConditionalPushDown();
-	guard.Release();
-
-	Searcher::pTriggerResultsAvailable();
-
-	return result;
-	}
-
-ZRef<Event> Searcher_DatonSet::Erase(const Daton& iDaton)
-	{
-	ZGuardMtxR guard(fMtxR);
-	this->pModify(iDaton, sAsVal(iDaton), false);
-	ZRef<Event> result = this->pConditionalPushDown();
-	guard.Release();
-
-	Searcher::pTriggerResultsAvailable();
-
-	return result;
-	}
-
-ZRef<Event> Searcher_DatonSet::Replace(const ZDatonSet::Daton& iOld, const ZDatonSet::Daton& iNew)
-	{
-	ZGuardMtxR guard(fMtxR);
-	this->pModify(iOld, sAsVal(iOld), false);
-	this->pModify(iNew, sAsVal(iNew), true);
-	ZRef<Event> result = this->pConditionalPushDown();
-	guard.Release();
-
-	Searcher::pTriggerResultsAvailable();
-
-	return result;
-	}
-
-size_t Searcher_DatonSet::OpenTransaction()
+ZRef<Callable_PullSuggested> Searcher_DatonSet::GetCallable_PullSuggested()
 	{
 	ZAcqMtxR acq(fMtxR);
-	if (fStack_Map_Pending.empty())
-		fDatonSet_Temp = fDatonSet->Fork();
-
-	fStack_Map_Pending.push_back(fMap_Pending);
-
-	return fStack_Map_Pending.size();
+	if (not fCallable_PullSuggested_Self)
+		fCallable_PullSuggested_Self = sCallable(sWeakRef(this), &Searcher_DatonSet::pPullSuggested);
+	return fCallable_PullSuggested_Self;
 	}
 
-void Searcher_DatonSet::ClearTransaction(size_t iIndex)
-	{
-	ZAcqMtxR acq(fMtxR);
-	ZAssert(iIndex == fStack_Map_Pending.size());
-
-	this->pChangedAll();
-
-	fMap_Pending = fStack_Map_Pending.back();
-	}
-
-void Searcher_DatonSet::CloseTransaction(size_t iIndex)
+void Searcher_DatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom)
 	{
 	ZGuardMtxR guard(fMtxR);
-
-	ZAssert(iIndex == fStack_Map_Pending.size());
-
-	this->pChangedAll();
-	fStack_Map_Pending.pop_back();
-	this->pConditionalPushDown();
-	if (fStack_Map_Pending.empty())
-		{
-		ZAssert(fDatonSet_Temp);
-		fDatonSet->Join(fDatonSet_Temp);
-		fDatonSet_Temp.Clear();
-		}
+	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 	guard.Release();
-
 	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pPull()
 	{
-	// Get our map in sync with fDatonSet
-	ZRef<Deltas> theDeltas;
-	fDatonSet->GetDeltas(fEvent, theDeltas, fEvent);
-	const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
+	ZGuardMtxR guard(fMtxR);
 
-	foreachi (iterVector, theVector)
+	set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
+	swap(theCallables_PullFrom, fCallables_PullFrom);
+
+	guard.Release();
+
+	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
-		const ZRef<Event>& theEvent = iterVector->first;
-		const map<Daton, bool>& theStatements = iterVector->second->GetStatements();
+		ZRef<ZDatonSet::Deltas> theDeltas;
+		ZRef<Event> theEvent;
+		theCallable->Call(fEvent, theDeltas, theEvent);
 
-		foreachi (iterStmts, theStatements)
+		guard.Acquire();
+
+		fEvent = fEvent->Joined(theEvent);
+
+		const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
+
+		foreachi (iterVector, theVector)
 			{
-			const Daton& theDaton = iterStmts->first;
+			const ZRef<Event>& theEvent = iterVector->first;
+			const map<Daton, bool>& theStatements = iterVector->second->GetStatements();
 
-			map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
-			if (iterMap == fMap.end() || iterMap->first != theDaton)
+			foreachi (iterStmts, theStatements)
 				{
-				if (iterStmts->second)
+				const Daton& theDaton = iterStmts->first;
+
+				map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
+				if (iterMap == fMap.end() || iterMap->first != theDaton)
 					{
-					const ZVal_Any theVal = sAsVal(theDaton);
-					this->pChanged(theVal);
-
-					fMap.insert(iterMap,
-						make_pair(theDaton,
-						pair<ZRef<Event>, ZVal_Any>(theEvent, theVal)));
-					}
-				}
-			else
-				{
-				const bool alb = sIsBefore(iterMap->second.first, theEvent);
-				//##const bool bla = sIsBefore(theEvent, iterMap->second.first);
-
-				if (alb)
-					{
-					// theNamedEvent is more recent than what we've got and thus supersedes it.
-
-					const ZVal_Any theVal = sAsVal(theDaton);
-					this->pChanged(theVal);
-
 					if (iterStmts->second)
-						iterMap->second = pair<ZRef<Event>, ZVal_Any>(theEvent, theVal);
-					else
-						fMap.erase(iterMap);
+						{
+						const ZVal_Any theVal = sAsVal(theDaton);
+						this->pChanged(theVal);
+
+						fMap.insert(iterMap,
+							make_pair(theDaton, make_pair(theEvent, theVal)));
+						}
+					}
+				else
+					{
+					if (sIsBefore(iterMap->second.first, theEvent))
+						{
+						const ZVal_Any theVal = sAsVal(theDaton);
+						this->pChanged(theVal);
+
+						if (iterStmts->second)
+							iterMap->second = make_pair(theEvent, theVal);
+						else
+							fMap.erase(iterMap);
+						}
 					}
 				}
 			}
+		guard.Release();
 		}
-	}
-
-ZRef<Event> Searcher_DatonSet::pConditionalPushDown()
-	{
-	if (sNotEmpty(fStack_Map_Pending))
-		{
-		ZAssert(fDatonSet_Temp);
-		return fDatonSet->GetEvent()->Joined(fDatonSet_Temp->TickleClock());
-		}
-	else
-		{
-		ZRef<DatonSet> theDS = fDatonSet_Temp ? fDatonSet_Temp : fDatonSet;
-		foreachi (ii, fMap_Pending)
-			{
-			if (ii->second.second)
-				theDS->Insert(ii->first);
-			else
-				theDS->Erase(ii->first);
-			}
-		fMap_Pending.clear();
-		return theDS->GetEvent();
-		}
-	}
-
-void Searcher_DatonSet::pModify(const ZDatonSet::Daton& iDaton, const ZVal_Any& iVal, bool iSense)
-	{
-	Map_Pending::iterator ii = fMap_Pending.find(iDaton);
-	if (fMap_Pending.end() == ii)
-		{
-		fMap_Pending.insert(make_pair(iDaton, make_pair(iVal, iSense)));
-		}
-	else if (ii->second.second == iSense)
-		{
-		if (ZLOGF(s, eDebug))
-			s << "\nDaton: " << iDaton;
-		ZDebugStop(0);
-		}
-	else
-		{
-		fMap_Pending.erase(ii);
-		}
-	this->pChanged(iVal);
-	Searcher::pTriggerResultsAvailable();
 	}
 
 void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
@@ -638,21 +483,9 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 		}
 	}
 
-void Searcher_DatonSet::pChangedAll()
-	{
-	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
-		iterPScan != fMap_PScan.end(); ++iterPScan)
-		{
-		PScan* thePScan = &iterPScan->second;
-		thePScan->fResult.Clear();
-		sQInsertBack(fPScan_NeedsWork, thePScan);
-		}
-	}
-
 void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)
 	{
 	iWalker->fCurrent_Main = fMap.begin();
-	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	}
 
 void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
@@ -661,7 +494,6 @@ void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
 	size_t& ioBaseOffset)
 	{
 	iWalker->fCurrent_Main = fMap.begin();
-	iWalker->fCurrent_Pending = fMap_Pending.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
 	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
 	for (ConcreteHead::const_iterator ii =
@@ -676,101 +508,48 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 
 	while (iWalker->fCurrent_Main != fMap.end())
 		{
-		// Ignore anything that's in pending (for now).
-		if (fMap_Pending.end() == fMap_Pending.find(iWalker->fCurrent_Main->first))
+		if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
 			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
+			bool gotAll = true;
+			vector<ZVal_Any> subset;
+			subset.reserve(theConcreteHead.size());
+			size_t offset = iWalker->fBaseOffset;
+			for (ConcreteHead::const_iterator
+				ii = theConcreteHead.begin(), end = theConcreteHead.end();
+				ii != end; ++ii, ++offset)
 				{
-				bool gotAll = true;
-				vector<ZVal_Any> subset;
-				subset.reserve(theConcreteHead.size());
-				size_t offset = iWalker->fBaseOffset;
-				for (ConcreteHead::const_iterator
-					ii = theConcreteHead.begin(), end = theConcreteHead.end();
-					ii != end; ++ii, ++offset)
+				// Empty name indicates that we want the Daton itself.
+				const string8& theName = ii->first;
+				if (theName.empty())
 					{
-					// Empty name indicates that we want the Daton itself.
-					const string8& theName = ii->first;
-					if (theName.empty())
-						{
-						const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
-						ioResults[offset] = theVal;
-						subset.push_back(theVal);
-						}
-					else if (const ZVal_Any* theVal = sPGet(*theMap, theName))
-						{
-						ioResults[offset] = *theVal;
-						subset.push_back(*theVal);
-						}
-					else if (not ii->second)
-						{
-						ioResults[offset] = AbsentOptional_t();
-						subset.push_back(AbsentOptional_t());
-						}
-					else
-						{
-						gotAll = false;
-						break;
-						}
+					const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
+					ioResults[offset] = theVal;
+					subset.push_back(theVal);
 					}
+				else if (const ZVal_Any* theVal = sPGet(*theMap, theName))
+					{
+					ioResults[offset] = *theVal;
+					subset.push_back(*theVal);
+					}
+				else if (not ii->second)
+					{
+					ioResults[offset] = AbsentOptional_t();
+					subset.push_back(AbsentOptional_t());
+					}
+				else
+					{
+					gotAll = false;
+					break;
+					}
+				}
 
-				if (gotAll && sQInsert(iWalker->fPriors, subset))
-					{
-					++iWalker->fCurrent_Main;
-					return true;
-					}
+			if (gotAll && sQInsert(iWalker->fPriors, subset))
+				{
+				++iWalker->fCurrent_Main;
+				return true;
 				}
 			}
 		++iWalker->fCurrent_Main;
-		}
-
-	// Handle anything pending
-	while (iWalker->fCurrent_Pending != fMap_Pending.end())
-		{
-		if (iWalker->fCurrent_Pending->second.second)
-			{
-			if (const ZMap_Any* theMap = iWalker->fCurrent_Pending->second.first.PGet<ZMap_Any>())
-				{
-				bool gotAll = true;
-				vector<ZVal_Any> subset;
-				subset.reserve(theConcreteHead.size());
-				size_t offset = iWalker->fBaseOffset;
-				for (ConcreteHead::const_iterator
-					ii = theConcreteHead.begin(), end = theConcreteHead.end();
-					ii != end; ++ii, ++offset)
-					{
-					const string8& theName = ii->first;
-					if (theName.empty())
-						{
-						const ZVal_Any& theVal = iWalker->fCurrent_Pending->first;
-						ioResults[offset] = theVal;
-						subset.push_back(theVal);
-						}
-					else if (const ZVal_Any* theVal = theMap->PGet(theName))
-						{
-						ioResults[offset] = *theVal;
-						subset.push_back(*theVal);
-						}
-					else if (not ii->second)
-						{
-						ioResults[offset] = AbsentOptional_t();
-						subset.push_back(AbsentOptional_t());
-						}
-					else
-						{
-						gotAll = false;
-						break;
-						}
-					}
-
-				if (gotAll && sQInsert(iWalker->fPriors, subset))
-					{
-					++iWalker->fCurrent_Pending;
-					return true;
-					}
-				}
-			}
-		++iWalker->fCurrent_Pending;
 		}
 
 	return false;
