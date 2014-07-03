@@ -58,7 +58,7 @@ public:
 	void ForceUpdate();
 
 protected:
-	void pCollectResultsFromSearcher();
+	bool pCollectResultsFromSearcher();
 	void pSearcherResultsAvailable(ZRef<Searcher>);
 
 	ZMtxR fMtxR;
