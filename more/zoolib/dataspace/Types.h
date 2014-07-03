@@ -33,24 +33,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: -
 
 namespace ZooLib {
-namespace Dataspace {
+
+namespace DataspaceTypes {
 
 using ZIntervalTreeClock::Event;
 using ZIntervalTreeClock::Identity;
 
 using QueryEngine::Result;
 
+using RelationalAlgebra::Expr_Rel;
+
+using RelationalAlgebra::ColName;
+
 using RelationalAlgebra::ConcreteHead;
 using RelationalAlgebra::sConcreteHead;
-
-using RelationalAlgebra::Expr_Rel;
 
 using RelationalAlgebra::RelHead;
 using RelationalAlgebra::sRelHead;
 
 struct AbsentOptional_t {};
 
+} // namespace DataspaceTypes
+
+namespace Dataspace {
+
+using namespace DataspaceTypes;
+
 } // namespace Dataspace
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Dataspace_Types_h__
