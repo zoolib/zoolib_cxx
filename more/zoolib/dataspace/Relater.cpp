@@ -86,7 +86,9 @@ QueryResult::QueryResult(
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 ,	fEvent(iEvent)
-	{}
+	{
+	ZAssert(iEvent);
+	}
 
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
