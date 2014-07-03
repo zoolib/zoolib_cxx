@@ -304,7 +304,7 @@ typename Type_p::Type_t::R sDCall(
 	const Type_p& iCallable)
 	{
 	if (iCallable)
-		return iCallable->DCall(iDefault);
+		return iCallable->QCall().DGet(iDefault);
 	return iDefault;
 	}
 
@@ -313,7 +313,7 @@ typename Type_p::Type_t::R sCall(
 	const Type_p& iCallable)
 	{
 	if (iCallable)
-		return iCallable->Call();
+		return iCallable->QCall().Get();
 	return sDefault<typename Type_p::Type_t::R>();
 	}
 
@@ -339,7 +339,7 @@ typename Type_p::Type_t::R sDCall( \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
-		return iCallable->DCall(iDefault, ZMACRO_Callable_i##X); \
+		return iCallable->QCall(ZMACRO_Callable_i##X).DGet(iDefault); \
 	return iDefault; \
 	} \
 \
@@ -349,7 +349,7 @@ typename Type_p::Type_t::R sCall( \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
 	if (iCallable) \
-		return iCallable->Call(ZMACRO_Callable_i##X); \
+		return iCallable->QCall(ZMACRO_Callable_i##X).Get(); \
 	return sDefault<typename Type_p::Type_t::R>(); \
 	}
 
