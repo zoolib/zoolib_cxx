@@ -61,8 +61,6 @@ private:
 
 	void pPullFrom(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent);
 
-	void pTrigger_NeedsUpdate();
-
 	// ---
 
 	ZMtxR fMtxR;

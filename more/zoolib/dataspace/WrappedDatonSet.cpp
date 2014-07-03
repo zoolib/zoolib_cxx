@@ -48,9 +48,14 @@ ZRef<DatonSet> WrappedDatonSet::GetDatonSet_Active()
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	// Assume something's going to munge it
-	this->pTrigger_NeedsUpdate();
-	return fDatonSet_Active;
+	ZRef<DatonSet> result = fDatonSet_Active;
+	if (not sGetSet(fCalled_NeedsUpdate, true))
+		{
+		guard.Release();
+		sCall(fCallable_NeedsUpdate);
+		}
+
+	return result;
 	}
 
 ZRef<DatonSet> WrappedDatonSet::GetDatonSet_Committed()
@@ -145,7 +150,11 @@ void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_Pu
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 
-	this->pTrigger_NeedsUpdate();
+	if (not sGetSet(fCalled_NeedsUpdate, true))
+		{
+		guard.Release();
+		sCall(fCallable_NeedsUpdate);
+		}
 	}
 
 void WrappedDatonSet::pPullFrom(
@@ -155,15 +164,6 @@ void WrappedDatonSet::pPullFrom(
 	fDatonSet_Committed->GetDeltas(iEvent, oDeltas, oEvent);
 	}
 
-void WrappedDatonSet::pTrigger_NeedsUpdate()
-	{
-	ZGuardMtxR guard(fMtxR);
-	if (not sGetSet(fCalled_NeedsUpdate, true))
-		{
-		guard.Release();
-		sCall(fCallable_NeedsUpdate);
-		}
-	}
 
 ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
 	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate)
