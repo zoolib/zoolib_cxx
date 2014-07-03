@@ -18,28 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_RelWatcher_Relater_h__
-#define __ZooLib_Dataspace_RelWatcher_Relater_h__ 1
+#ifndef __ZooLib_Dataspace_RelsWatcher_Relater_h__
+#define __ZooLib_Dataspace_RelsWatcher_Relater_h__ 1
 #include "zconfig.h"
 
-#include "zooLib/dataspace/RelWatcher.h"
 #include "zooLib/dataspace/Relater.h"
+#include "zooLib/dataspace/RelsWatcher.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - RelWatcher_Relater
+// MARK: - RelsWatcher_Relater
 
-class RelWatcher_Relater
-:	public RelWatcher::Callable_Register
+class RelsWatcher_Relater
+:	public RelsWatcher::Callable_Register
 	{
 public:
-	RelWatcher_Relater(const ZRef<Relater>& iRelater);
+	RelsWatcher_Relater(const ZRef<Relater>& iRelater);
 
 // From ZCallable via Callable_Register
 	ZQ<ZRef<ZCounted> > QCall(
-		const ZRef<RelWatcher::Callable_Changed>& iCallable_Changed,
+		const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel);
 
 // Our protocol
@@ -62,8 +62,8 @@ private:
 
 	int64 fNextRefcon;
 
-	typedef std::map<int64, Registration*> Map_RefconToRegistration;
-	Map_RefconToRegistration fMap_RefconToRegistration;
+	typedef std::map<int64, Registration*> Map_RefconToRegistrationX;
+	Map_RefconToRegistrationX fMap_RefconToRegistrationX;
 
 	std::set<Registration*> fToAdd;
 	std::set<int64> fToRemove;
@@ -72,4 +72,4 @@ private:
 } // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_RelWatcher_Relater_h__
+#endif // __ZooLib_Dataspace_RelsWatcher_Relater_h__

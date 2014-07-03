@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_RelWatcher_h__
-#define __ZooLib_Dataspace_RelWatcher_h__ 1
+#ifndef __ZooLib_Dataspace_RelsWatcher_h__
+#define __ZooLib_Dataspace_RelsWatcher_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Types.h"
@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace Dataspace {
-namespace RelWatcher {
+namespace RelsWatcher {
 
 typedef ZCallable<void(
 		const ZRef<ZCounted>& iRegistration,
@@ -43,8 +43,8 @@ typedef ZCallable<ZRef<ZCounted>(
 		const ZRef<Expr_Rel>& iRel)>
 	Callable_Register;
 
-} // namespace RelWatcher
+} // namespace RelsWatcher
 } // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_RelWatcher_h__
+#endif // __ZooLib_Dataspace_RelsWatcher_h__

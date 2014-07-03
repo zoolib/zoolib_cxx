@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCaller.h"
 #include "zoolib/ZMulti_T.h"
 
-#include "zooLib/dataspace/RelWatcher.h"
-#include "zoolib/dataspace/Types.h"
+#include "zooLib/dataspace/RelsWatcher.h"
 #include "zoolib/datonset/ZDatonSet.h"
 
 // =================================================================================================
@@ -36,11 +35,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-typedef ZCallable<void(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
+typedef ZCallable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
 	Callable_DatonSetUpdate;
 
 typedef ZMulti_T3<
-	ZRef<RelWatcher::Callable_Register>,
+	ZRef<RelsWatcher::Callable_Register>,
 	ZRef<Callable_DatonSetUpdate>,
 	ZRef<ZCaller>
 	> Melange_t;

@@ -19,11 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCallable_PMF.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
-#include "zooLib/dataspace/RelWatcher_Relater.h"
+#include "zooLib/dataspace/RelsWatcher_Relater.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -35,13 +36,13 @@ using std::vector;
 // =================================================================================================
 // MARK: - Registration
 
-class RelWatcher_Relater::Registration
+class RelsWatcher_Relater::Registration
 :	public ZCounted
 	{
 public:
 	Registration(
-		const ZRef<RelWatcher_Relater>& iRWR,
-		const ZRef<RelWatcher::Callable_Changed>& iCallable,
+		const ZRef<RelsWatcher_Relater>& iRWR,
+		const ZRef<RelsWatcher::Callable_Changed>& iCallable,
 		const ZRef<Expr_Rel>& iRel)
 	:	fRefcon(0)
 	,	fWeakRef_RWR(iRWR)
@@ -55,7 +56,7 @@ public:
 
 	void Finalize()
 		{
-		if (ZRef<RelWatcher_Relater> theRWR = fWeakRef_RWR)
+		if (ZRef<RelsWatcher_Relater> theRWR = fWeakRef_RWR)
 			theRWR->pFinalize(this);
 		else
 			ZCounted::Finalize();
@@ -63,8 +64,8 @@ public:
 
 	int64 fRefcon;
 
-	const ZWeakRef<RelWatcher_Relater> fWeakRef_RWR;
-	const ZRef<RelWatcher::Callable_Changed> fCallable;
+	const ZWeakRef<RelsWatcher_Relater> fWeakRef_RWR;
+	const ZRef<RelsWatcher::Callable_Changed> fCallable;
 	const ZRef<Expr_Rel> fRel;
 
 	bool fHadResultPrior;
@@ -74,15 +75,15 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - RelWatcher_Relater
+// MARK: - RelsWatcher_Relater
 
-RelWatcher_Relater::RelWatcher_Relater(const ZRef<Relater>& iRelater)
+RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater)
 :	fRelater(iRelater)
 ,	fCalled_NeedsUpdate(false)
 	{}
 
-ZQ<ZRef<ZCounted> > RelWatcher_Relater::QCall(
-	const ZRef<RelWatcher::Callable_Changed>& iCallable_Changed,
+ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
+	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZRef<Expr_Rel>& iRel)
 	{
 	ZRef<Registration> theR = new Registration(this, iCallable_Changed, iRel);
@@ -100,15 +101,16 @@ ZQ<ZRef<ZCounted> > RelWatcher_Relater::QCall(
 	return ZRef<ZCounted>(theR);
 	}
 
-void RelWatcher_Relater::SetCallable_NeedsUpdate(
+void RelsWatcher_Relater::SetCallable_NeedsUpdate(
 	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 	{
 	ZGuardMtxR guard(fMtxR);
 	fCallable_NeedsUpdate = iCallable_NeedsUpdate;
-	fRelater->SetCallable_ResultsAvailable(sCallable(sWeakRef(this), &RelWatcher_Relater::pCallback_Relater));
+	fRelater->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
 	}
 
-void RelWatcher_Relater::Update()
+void RelsWatcher_Relater::Update()
 	{
 	ZGuardMtxR guard(fMtxR);
 	fCalled_NeedsUpdate = false;
@@ -124,7 +126,7 @@ void RelWatcher_Relater::Update()
 			{
 			const int64 theRefcon = fNextRefcon++;
 			rr->fRefcon = theRefcon;
-			sSet(fMap_RefconToRegistration, theRefcon, rr);
+			sSet(fMap_RefconToRegistrationX, theRefcon, rr);
 			added.push_back(AddedQuery(theRefcon, rr->fRel));
 			}
 		fToAdd.clear();
@@ -150,16 +152,18 @@ void RelWatcher_Relater::Update()
 
 		foreachi (iterQueryResults, theQueryResults)
 			{
-			Map_RefconToRegistration::iterator iterRegistration =
-				fMap_RefconToRegistration.find(iterQueryResults->GetRefcon());
+			Map_RefconToRegistrationX::iterator iterRegistration =
+				fMap_RefconToRegistrationX.find(iterQueryResults->GetRefcon());
 
-			if (fMap_RefconToRegistration.end() == iterRegistration)
+			if (fMap_RefconToRegistrationX.end() == iterRegistration)
 				continue;
 
 			ZRef<Registration> theRegistration = iterRegistration->second;
 			theRegistration->fHadResultPrior = bool(theRegistration->fResult);
 			theRegistration->fResult = iterQueryResults->GetResult();
 			theRegistration->fEvent = iterQueryResults->GetEvent();
+			if (not theRegistration->fEvent)
+				ZLOGTRACE(eDebug);
 			changes.push_back(theRegistration);
 			}
 		guard.Release();
@@ -169,7 +173,7 @@ void RelWatcher_Relater::Update()
 		}
 	}
 
-void RelWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
+void RelsWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
 	if (not sGetSet(fCalled_NeedsUpdate, true))
@@ -179,7 +183,7 @@ void RelWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
 		}
 	}
 
-void RelWatcher_Relater::pFinalize(Registration* iRegistration)
+void RelsWatcher_Relater::pFinalize(Registration* iRegistration)
 	{
 	ZGuardMtxR guard(fMtxR);
 
@@ -194,7 +198,7 @@ void RelWatcher_Relater::pFinalize(Registration* iRegistration)
 		{
 		int64 const theRefcon = iRegistration->fRefcon;
 
-		sEraseMust(fMap_RefconToRegistration, theRefcon);
+		sEraseMust(fMap_RefconToRegistrationX, theRefcon);
 
 		sInsertMust(fToRemove, theRefcon);
 
