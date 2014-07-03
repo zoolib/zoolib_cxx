@@ -475,7 +475,7 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 		iterPScan != fMap_PScan.end(); ++iterPScan)
 		{
 		PScan* thePScan = &iterPScan->second;
-		if (sIncludes(RA::sRelHead(thePScan->fConcreteHead), theRH))
+		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
 			{
 			thePScan->fResult.Clear();
 			sQInsertBack(fPScan_NeedsWork, thePScan);
