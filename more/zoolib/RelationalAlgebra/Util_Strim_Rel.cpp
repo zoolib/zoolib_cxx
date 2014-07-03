@@ -50,45 +50,7 @@ void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 void Visitor::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << "Concrete(";
-
-	const ConcreteHead& theCH = iExpr->GetConcreteHead();
-
-	bool anyRequired = false;
-	for (ConcreteHead::const_iterator ii = theCH.begin(), end = theCH.end();
-		ii != end; ++ii)
-		{
-		if (ii->second)
-			{
-			if (sGetSet(anyRequired, true))
-				w.Write(", ");
-			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
-			}
-		}
-
-	bool anyOptional = false;
-	for (ConcreteHead::const_iterator ii = theCH.begin(), end = theCH.end();
-		ii != end; ++ii)
-		{
-		if (not ii->second)
-			{
-			if (sGetSet(anyOptional, true))
-				{
-				w.Write(", ");
-				}
-			else
-				{
-				if (anyRequired)
-					w.Write(", ");
-				w.Write("[");
-				}
-			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
-			}
-		}
-
-	if (anyOptional)
-		w.Write("]");
-	w << ")";
+	w << "Concrete(" << iExpr->GetConcreteHead() << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)

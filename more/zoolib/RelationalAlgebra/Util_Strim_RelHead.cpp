@@ -56,13 +56,15 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::RelHead& iRH)
+using namespace RelationalAlgebra;
+
+const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH)
 	{
-	RelationalAlgebra::Util_Strim_RelHead::sWrite_RelHead(iRH, w);
+	Util_Strim_RelHead::sWrite_RelHead(iRH, w);
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::Rename& iRename)
+const ZStrimW& operator<<(const ZStrimW& w, const Rename& iRename)
 	{
 	w << "[";
 	bool isFirst = true;
@@ -73,6 +75,46 @@ const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::Rename& iRe
 		w << ii->second << "<--" << ii->first;
 		}
 	w << "]";
+	return w;
+	}
+
+const ZStrimW& operator<<(const ZStrimW& w, const ConcreteHead& iCH)
+	{
+	bool anyRequired = false;
+	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
+		ii != end; ++ii)
+		{
+		if (ii->second)
+			{
+			if (sGetSet(anyRequired, true))
+				w.Write(", ");
+			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
+			}
+		}
+
+	bool anyOptional = false;
+	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
+		ii != end; ++ii)
+		{
+		if (not ii->second)
+			{
+			if (sGetSet(anyOptional, true))
+				{
+				w.Write(", ");
+				}
+			else
+				{
+				if (anyRequired)
+					w.Write(", ");
+				w.Write("[");
+				}
+			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
+			}
+		}
+
+	if (anyOptional)
+		w.Write("]");
+
 	return w;
 	}
 

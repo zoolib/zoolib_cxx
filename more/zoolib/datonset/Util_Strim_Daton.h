@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,30 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
-#define __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
+#ifndef __ZooLib_DatonSet_Util_Strim_Daton_h__
+#define __ZooLib_DatonSet_Util_Strim_Daton_h__
 #include "zconfig.h"
 
-#include "zoolib/RelationalAlgebra/RelHead.h"
 #include "zoolib/ZStrim.h"
+#include "zoolib/datonset/ZDatonSet.h"
 
 namespace ZooLib {
-namespace RelationalAlgebra {
-namespace Util_Strim_RelHead {
 
 // =================================================================================================
-// MARK: - ZUtil_Strim_RelHead
+// MARK: -
 
-void sWrite_PropName(const string8& iName, const ZStrimW& s);
-void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
-
-} // namespace Util_Strim_RelHead
-} // namespace RelationalAlgebra
-
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::RelHead& iRH);
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::Rename& iRename);
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::ConcreteHead& iRH);
+const ZStrimW& operator<<(const ZStrimW& w, const ZDatonSet::Daton& iDaton);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
+#endif // __ZooLib_DatonSet_Util_Strim_Daton_h__

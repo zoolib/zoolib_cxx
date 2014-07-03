@@ -31,7 +31,7 @@ namespace Dataspace {
 // =================================================================================================
 // MARK: -
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelHead>& iSet)
+const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelationalAlgebra::RelHead>& iSet)
 	{
 	bool isSubsequent = false;
 	foreachi (ii, iSet)
