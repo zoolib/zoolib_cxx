@@ -62,6 +62,8 @@ private:
 	const ZRef<Identity> fRight;
 	};
 
+ZRef<Identity> sSplit(ZRef<Identity>& ioIdentity);
+
 // =================================================================================================
 // MARK: - Event
 

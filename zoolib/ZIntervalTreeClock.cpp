@@ -167,6 +167,14 @@ ZRef<Identity> Identity::Summed(const ZRef<Identity>& iOther) const
 		}
 	}
 
+ZRef<Identity> sSplit(ZRef<Identity>& ioIdentity)
+	{
+	ZRef<Identity> left, right;
+	ioIdentity->Splitted(left, right);
+	ioIdentity = left;
+	return right;
+	}
+
 // =================================================================================================
 // MARK: - Event
 
