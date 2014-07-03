@@ -196,27 +196,16 @@ ZRef<Event> DatonSet::GetEvent()
 	return fEvent;
 	}
 
-ZRef<Event> DatonSet::TickleClock()
-	{
-	ZAcqMtx acq(fMtx);
-	if (fPendingStatements.empty())
-		fEvent = fEvent->Advanced(fIdentity);
-	else
-		this->pCommit();
-	return fEvent;
-	}
-
 ZRef<DatonSet> DatonSet::Fork()
 	{
 	ZAcqMtx acq(fMtx);
 	this->pCommit();
 
-	ZRef<Identity> newLeft, newRight;
-	fIdentity->Splitted(newLeft, newRight);
-	fIdentity = newLeft;
+	ZRef<Identity> newRight = sSplit(fIdentity);
+	fEvent = fEvent->Advanced(fIdentity);
 
 	ZRef<DatonSet> newDS = new DatonSet(newRight, fEvent->Advanced(newRight), fDeltasChain);
-	fEvent = fEvent->Advanced(fIdentity);
+
 	return newDS;
 	}
 
@@ -231,20 +220,24 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ZRef<Deltas> theDeltas;
 	ioOther->GetDeltas(theEvent, theDeltas, otherEvent);
 
-	guard.Acquire();
+	ZRef<Identity> otherIdentity = ioOther->fIdentity;
 
-	if (theDeltas && theDeltas->GetVector().size())
-		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
-	fEvent = fEvent->Joined(otherEvent);
-	fEvent = fEvent->Advanced(fIdentity);
-
-	fIdentity = fIdentity->Summed(ioOther->fIdentity);
-
+	// Now wipe out ioOther.
 	ioOther->fIdentity.Clear();
 	ioOther->fEvent.Clear();
 	ioOther->fPendingStatements.clear();
 	ioOther->fDeltasChain.Clear();
 	ioOther.Clear();
+
+	guard.Acquire();
+
+	if (theDeltas && theDeltas->GetVector().size())
+		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
+	fEvent = fEvent->Joined(otherEvent);
+
+	fIdentity = fIdentity->Summed(otherIdentity); //?? Check this
+
+	fEvent = fEvent->Advanced(fIdentity);
 
 	return sNotEmpty(theDeltas->GetVector());
 	}

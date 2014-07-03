@@ -140,8 +140,6 @@ public:
 
 	ZRef<Event> GetEvent();
 
-	ZRef<Event> TickleClock();
-
 	ZRef<DatonSet> Fork();
 
 	bool Join(ZRef<DatonSet>& ioOther);
