@@ -99,7 +99,7 @@ public:
 	const ZRef<Searcher_DatonSet> fSearcher;
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
-	Map_Main::const_iterator fCurrent_Main;
+	Map_Assert::const_iterator fCurrent;
 	std::set<std::vector<ZVal_Any> > fPriors;
 	};
 
@@ -402,10 +402,10 @@ void Searcher_DatonSet::pPull()
 	set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
 	swap(theCallables_PullFrom, fCallables_PullFrom);
 
-	guard.Release();
-
 	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
+		guard.Release();
+
 		ZRef<ZDatonSet::Deltas> theDeltas;
 		ZRef<Event> theEvent;
 		theCallable->Call(fEvent, theDeltas, theEvent);
@@ -425,34 +425,85 @@ void Searcher_DatonSet::pPull()
 				{
 				const Daton& theDaton = iterStmts->first;
 
-				map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator iterMap = fMap.lower_bound(theDaton);
-				if (iterMap == fMap.end() || iterMap->first != theDaton)
+				map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator lbAssert =
+					fMap_Assert.lower_bound(theDaton);
+
+				map<Daton, ZRef<Event>>::iterator lbRetract =
+					fMap_Retract.lower_bound(theDaton);
+
+				if (iterStmts->second)
 					{
-					if (iterStmts->second)
+					// It's an assert
+					if (lbAssert != fMap_Assert.end() and lbAssert->first == theDaton)
 						{
+						// It's in fMap_Assert.
+						ZAssert(lbRetract == fMap_Retract.end() || lbRetract->first != theDaton);
+						if (sIsBefore(lbAssert->second.first, theEvent))
+							{
+							// It's more recent.
+							const ZVal_Any theVal = sAsVal(theDaton);
+							this->pChanged(theVal);
+							lbAssert->second.first = theEvent;
+							lbAssert->second.second = theVal;
+							}
+						}
+					else if (lbRetract != fMap_Retract.end() and lbRetract->first == theDaton)
+						{
+						// It's in fMap_Retract.
+						if (sIsBefore(lbRetract->second, theEvent))
+							{
+							// It's more recent.
+							const ZVal_Any theVal = sAsVal(theDaton);
+							this->pChanged(theVal);
+
+							fMap_Retract.erase(lbRetract);
+							fMap_Assert.insert(lbAssert,
+								make_pair(theDaton, make_pair(theEvent, theVal)));
+							}
+						}
+					else
+						{
+						// It's not previously known.
 						const ZVal_Any theVal = sAsVal(theDaton);
 						this->pChanged(theVal);
 
-						fMap.insert(iterMap,
+						fMap_Assert.insert(lbAssert,
 							make_pair(theDaton, make_pair(theEvent, theVal)));
 						}
 					}
 				else
 					{
-					if (sIsBefore(iterMap->second.first, theEvent))
+					// It's a retract.
+					if (lbAssert != fMap_Assert.end() and lbAssert->first == theDaton)
 						{
-						const ZVal_Any theVal = sAsVal(theDaton);
-						this->pChanged(theVal);
+						// It's in fMap_Assert.
+						ZAssert(lbRetract == fMap_Retract.end() || lbRetract->first != theDaton);
+						if (sIsBefore(lbAssert->second.first, theEvent))
+							{
+							// It's more recent.
+							this->pChanged(lbAssert->second.second);
 
-						if (iterStmts->second)
-							iterMap->second = make_pair(theEvent, theVal);
-						else
-							fMap.erase(iterMap);
+							fMap_Assert.erase(lbAssert);
+							fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
+							}
+						}
+					else if (lbRetract != fMap_Retract.end() and lbRetract->first == theDaton)
+						{
+						// It's in fMap_Retract.
+						if (sIsBefore(lbRetract->second, theEvent))
+							{
+							// It's more recent.
+							lbAssert->second.first = theEvent;
+							}
+						}
+					else
+						{
+						// It's not previously known.
+						fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
 						}
 					}
 				}
 			}
-		guard.Release();
 		}
 	}
 
@@ -463,6 +514,9 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= RA::ColName(theMap.NameOf(i));
 
+	if (ZLOGF(w,eDebug))
+		w << "theRH: " << theRH;
+
 	// This is overkill -- we don't necessarily have to rework the whole PScan.
 	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
 		iterPScan != fMap_PScan.end(); ++iterPScan)
@@ -470,15 +524,22 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 		PScan* thePScan = &iterPScan->second;
 		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
 			{
+			if (ZLOGF(w,eDebug))
+				w << "Invalidating PScan: " << thePScan->fConcreteHead;
 			thePScan->fResult.Clear();
 			sQInsertBack(fPScan_NeedsWork, thePScan);
+			}
+		else
+			{
+			if (ZLOGF(w,eDebug))
+				w << "Not invalidating PScan: " << thePScan->fConcreteHead;
 			}
 		}
 	}
 
 void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)
 	{
-	iWalker->fCurrent_Main = fMap.begin();
+	iWalker->fCurrent = fMap_Assert.begin();
 	}
 
 void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
@@ -486,7 +547,7 @@ void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	iWalker->fCurrent_Main = fMap.begin();
+	iWalker->fCurrent = fMap_Assert.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
 	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
 	for (ConcreteHead::const_iterator ii =
@@ -499,9 +560,9 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 	{
 	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
 
-	while (iWalker->fCurrent_Main != fMap.end())
+	while (iWalker->fCurrent != fMap_Assert.end())
 		{
-		if (const ZMap_Any* theMap = iWalker->fCurrent_Main->second.second.PGet<ZMap_Any>())
+		if (const ZMap_Any* theMap = iWalker->fCurrent->second.second.PGet<ZMap_Any>())
 			{
 			bool gotAll = true;
 			vector<ZVal_Any> subset;
@@ -515,7 +576,7 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 				const string8& theName = ii->first;
 				if (theName.empty())
 					{
-					const ZVal_Any& theVal = iWalker->fCurrent_Main->first;
+					const ZVal_Any& theVal = iWalker->fCurrent->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
 					}
@@ -538,11 +599,11 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 
 			if (gotAll && sQInsert(iWalker->fPriors, subset))
 				{
-				++iWalker->fCurrent_Main;
+				++iWalker->fCurrent;
 				return true;
 				}
 			}
-		++iWalker->fCurrent_Main;
+		++iWalker->fCurrent;
 		}
 
 	return false;

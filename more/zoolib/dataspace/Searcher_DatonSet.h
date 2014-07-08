@@ -63,8 +63,6 @@ private:
 	void pPull();
 	void pChanged(const ZVal_Any& iVal);
 
-	class PSearch;
-
 	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
 
 	// -----
@@ -81,14 +79,19 @@ private:
 
 	bool pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults);
 
+	// -----
+
 	ZRef<Event> fEvent;
 
+	typedef std::map<ZDatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Assert;
+	Map_Assert fMap_Assert;
+
+	typedef std::map<ZDatonSet::Daton,ZRef<Event> > Map_Retract;
+	Map_Retract fMap_Retract;
+
 	// -----
 
-	typedef std::map<ZDatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Main;
-	Map_Main fMap;
-
-	// -----
+	class PSearch;
 
 	class DLink_ClientSearch_InPSearch;
 	class DLink_ClientSearch_NeedsWork;
