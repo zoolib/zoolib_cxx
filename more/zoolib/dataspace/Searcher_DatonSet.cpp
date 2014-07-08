@@ -493,7 +493,7 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbRetract->second, theEvent))
 							{
 							// It's more recent.
-							lbAssert->second.first = theEvent;
+							lbRetract->second = theEvent;
 							}
 						}
 					else
@@ -513,6 +513,9 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 	RelHead theRH;
 	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= RA::ColName(theMap.NameOf(i));
+
+	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
+	theRH.insert(string8());
 
 	if (ZLOGF(w,eDebug))
 		w << "theRH: " << theRH;
@@ -572,10 +575,10 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 				ii = theConcreteHead.begin(), end = theConcreteHead.end();
 				ii != end; ++ii, ++offset)
 				{
-				// Empty name indicates that we want the Daton itself.
 				const string8& theName = ii->first;
 				if (theName.empty())
 					{
+					// Empty name indicates that we want the Daton itself.
 					const ZVal_Any& theVal = iWalker->fCurrent->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
