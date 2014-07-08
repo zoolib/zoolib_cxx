@@ -66,13 +66,6 @@ Minimally, keep an index of property names in contents -- that way we can effici
 identify those entities that satisfy a RelHead.
 */
 
-static const ZStrimW& operator<<(const ZStrimW& w, const Daton& iDaton)
-	{
-	const ZData_Any& theData = iDaton.GetData();
-	w.Write(static_cast<const UTF8*>(theData.GetPtr()), theData.GetSize());
-	return w;
-	}
-
 // =================================================================================================
 // MARK: - Searcher_DatonSet::Walker
 
