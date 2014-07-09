@@ -87,12 +87,18 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iE
 	{
 	const RelHead& theRelHead = RA::sRelHead(iExpr->GetConcreteHead());
 
-	const RelHead newRelHead = RA::sPrefixErased(fPrefix, theRelHead);
-	ZRef<RA::Expr_Rel> theRel = RA::sConcrete(newRelHead);
-	foreachi (ii, newRelHead)
-		theRel = sRename(theRel, RA::sPrefixInserted(fPrefix, *ii), *ii);
+	if (const ZQ<RelHead> theQ = RA::sQPrefixErased(fPrefix, theRelHead))
+		{
+		ZRef<RA::Expr_Rel> theRel = RA::sConcrete(*theQ);
+		foreachi (ii, *theQ)
+			theRel = sRename(theRel, RA::sPrefixInserted(fPrefix, *ii), *ii);
 
-	this->pSetResult(theRel);
+		this->pSetResult(theRel);
+		}
+	else
+		{
+		// The prefix does not exist on every ColName, so we can't produce a valid Rel.
+		}
 	}
 
 } // anonymous namespace
@@ -601,7 +607,21 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 	rightRelHead.swap(fResultRelHead);
 
 	fPRelaters = leftPRelaters | rightPRelaters;
-	ZAssert(leftRelHead == rightRelHead);
+	if (leftRelHead != rightRelHead)
+		{
+		if (ZLOGF(w,eInfo))
+			{
+			w
+				<< "leftRelHead and rightRelHead don't match, newOp0 and newOp1 must be incompatible"
+				<< "\n" << "leftRelHead: " << leftRelHead
+				<< "\n" << "newOp0: " << newOp0
+				<< "\n" << "rightRelHead: " << rightRelHead
+				<< "\n" << "newOp1: " << newOp1
+			;
+			}
+		ZUnimplemented();
+		}
+
 	fResultRelHead = leftRelHead;
 
 	if (leftPRelaters.size() <= 1)
@@ -855,20 +875,16 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 			PIP* thePIP = eraserPIP.Current();
 			if (thePIP->fProxy)
 				{
-				if (thePIP->fNeedsAdd)
+				if (sGetSet(thePIP->fNeedsAdd, false))
 					{
-					thePIP->fNeedsAdd = false;
-					theAddedQueries.push_back(
-						AddedQuery(thePIP->fRefcon, thePRelater->UsableRel(thePIP->fProxy->fRel)));
+					if (ZRef<Expr_Rel> usableRel = thePRelater->UsableRel(thePIP->fProxy->fRel))
+						theAddedQueries.push_back(AddedQuery(thePIP->fRefcon, usableRel));
 					}
 				}
-			else
+			else if (not thePIP->fNeedsAdd)
 				{
-				if (not thePIP->fNeedsAdd)
-					{
-					theRemoves.push_back(thePIP->fRefcon);
-					thePRelater->fMap_Refcon_PIP.erase(thePIP->fRefcon);
-					}
+				theRemoves.push_back(thePIP->fRefcon);
+				thePRelater->fMap_Refcon_PIP.erase(thePIP->fRefcon);
 				}
 			}
 
@@ -896,7 +912,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 			{
 			PQuery* thePQuery = eraserPQuery.Current();
 			bool allOK = true;
-			ZRef<Event> theEvent;
+			ZRef<Event> theEvent = Event::sZero();
 			for (set<ZRef<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
 				allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
 				{
@@ -905,17 +921,10 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 					allOK && iterPIP; iterPIP.Advance())
 					{
 					PIP* thePIP = iterPIP.Current();
-					if (not thePIP->fResult)
-						{
-						allOK = false;
-						}
+					if (thePIP->fResult)
+						theEvent = theEvent->Joined(thePIP->fEvent);
 					else
-						{
-						if (theEvent)
-							theEvent = theEvent->Joined(thePIP->fEvent);
-						else
-							theEvent = thePIP->fEvent;
-						}
+						allOK = false;
 					}
 				}
 
