@@ -165,6 +165,13 @@ ColName sPrefixErased(const ColName& iPrefix, const ColName& iColName)
 	return iColName;
 	}
 
+ZQ<ColName> sQPrefixErased(const ColName& iPrefix, const ColName& iColName)
+	{
+	if (iColName.substr(0, iPrefix.size()) == iPrefix)
+		return iColName.substr(iPrefix.size(), ColName::npos);
+	return null;
+	}
+
 ColName sRenamed(const Rename& iRename, const ColName& iColName)
 	{
 	Rename::const_iterator iter = iRename.find(iColName);
@@ -207,6 +214,23 @@ RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead)
 	RelHead result;
 	foreachi (ii, iRelHead)
 		result.insert(sPrefixErased(iPrefix, *ii));
+
+	return result;
+	}
+
+ZQ<RelHead> sQPrefixErased(const ColName& iPrefix, const RelHead& iRelHead)
+	{
+	if (iPrefix.empty())
+		return iRelHead;
+
+	RelHead result;
+	foreachi (ii, iRelHead)
+		{
+		if (ZQ<ColName> theQ = sQPrefixErased(iPrefix, *ii))
+			result.insert(*theQ);
+		else
+			return null;
+		}
 
 	return result;
 	}

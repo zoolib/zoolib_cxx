@@ -138,11 +138,13 @@ inline RelHead& operator-=(RelHead& ioRelHead, const char* iElem)
 bool sHasPrefix(const ColName& iPrefix, const ColName& iColName);
 ColName sPrefixInserted(const ColName& iPrefix, const ColName& iColName);
 ColName sPrefixErased(const ColName& iPrefix, const ColName& iColName);
+ZQ<ColName> sQPrefixErased(const ColName& iPrefix, const ColName& iColName);
 ColName sRenamed(const Rename& iRename, const ColName& iColName);
 
 bool sHasPrefix(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
+ZQ<RelHead> sQPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
 
 // =================================================================================================
