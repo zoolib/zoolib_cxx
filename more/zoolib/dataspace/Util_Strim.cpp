@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
+#include "zoolib/ValueOnce.h"
 
 #include "zoolib/dataspace/Util_Strim.h"
 
@@ -33,10 +34,10 @@ namespace Dataspace {
 
 const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelationalAlgebra::RelHead>& iSet)
 	{
-	bool isSubsequent = false;
+	FalseOnce needsSeparator;
 	foreachi (ii, iSet)
 		{
-		if (sGetSet(isSubsequent, true))
+		if (needsSeparator())
 			w << ", ";
 		w << *ii;
 		}

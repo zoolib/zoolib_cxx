@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
+#include "zoolib/ValueOnce.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
@@ -43,10 +44,10 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
 	s.Write("[");
 
-	bool isFirst = true;
+	FalseOnce needsSeparator;
 	foreachi (ii, iRelHead)
 		{
-		if (not sGetSet(isFirst, false))
+		if (needsSeparator())
 			s.Write(", ");
 		sWrite_PropName(*ii, s);
 		}
@@ -67,10 +68,10 @@ const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH)
 const ZStrimW& operator<<(const ZStrimW& w, const Rename& iRename)
 	{
 	w << "[";
-	bool isFirst = true;
+	FalseOnce needsSeparator;
 	foreachi (ii, iRename)
 		{
-		if (not sGetSet(isFirst, false))
+		if (needsSeparator())
 			w << ", ";
 		w << ii->second << "<--" << ii->first;
 		}
@@ -80,40 +81,22 @@ const ZStrimW& operator<<(const ZStrimW& w, const Rename& iRename)
 
 const ZStrimW& operator<<(const ZStrimW& w, const ConcreteHead& iCH)
 	{
-	bool anyRequired = false;
+	w.Write("[");
+
+	FalseOnce needsSeparator;
 	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
 		ii != end; ++ii)
 		{
+		if (needsSeparator())
+			w.Write(", ");
 		if (ii->second)
-			{
-			if (sGetSet(anyRequired, true))
-				w.Write(", ");
-			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
-			}
+			w << "@";
+		else
+			w << "?";
+		ZYad_ZooLibStrim::sWrite_PropName(ii->first, w);
 		}
 
-	bool anyOptional = false;
-	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
-		ii != end; ++ii)
-		{
-		if (not ii->second)
-			{
-			if (sGetSet(anyOptional, true))
-				{
-				w.Write(", ");
-				}
-			else
-				{
-				if (anyRequired)
-					w.Write(", ");
-				w.Write("[");
-				}
-			Util_Strim_RelHead::sWrite_PropName(ii->first, w);
-			}
-		}
-
-	if (anyOptional)
-		w.Write("]");
+	w.Write("]");
 
 	return w;
 	}
