@@ -104,7 +104,11 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Ex
 		{
 		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
 			this->pSetResult(new Walker_Union(op0, op1));
+		else
+			this->pSetResult(op0);
 		}
+	else if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+		this->pSetResult(op1);
 	}
 
 } // namespace QueryEngine
