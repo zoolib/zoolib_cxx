@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZAccumulator_T.h"
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
@@ -27,6 +28,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/datonset/ZDatonSet.h"
 
 #include <queue>
+
+// =================================================================================================
+// MARK: - sCompare_T
+
+namespace ZooLib {
+
+template <>
+int sCompare_T<ZDatonSet::Daton>(const ZDatonSet::Daton& iL, const ZDatonSet::Daton& iR)
+	{ return sCompare_T(iL.GetData(), iR.GetData()); }
+
+ZMACRO_CompareRegistration_T(ZDatonSet::Daton)
+
+} // namespace ZooLib
 
 namespace ZooLib {
 namespace ZDatonSet {
