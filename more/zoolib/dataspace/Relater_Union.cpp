@@ -122,6 +122,7 @@ public:
 	Proxy* fProxy;
 	PRelater* fPRelater;
 	bool fNeedsAdd;
+	bool fWasAdded;
 	int64 fRefcon;
 	ZRef<QueryEngine::Result> fResult;
 	ZRef<Event> fEvent;
@@ -393,10 +394,14 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Con
 	// Identify which PRelaters can service this concrete.
 	fPRelaters = fRelater_Union->pIdentifyPRelaters(fResultRelHead);
 
-	if (fPRelaters.size() <= 1)
-		this->pSetResult(iExpr);
+	if (fPRelaters.size() == 0)
+		{
+		// There's no relater for this concrete, so there's no rel.
+		}
+	else if (fPRelaters.size() <= 1)
+		{ this->pSetResult(iExpr); }
 	else
-		this->pSetResult(fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, iExpr));
+		{ this->pSetResult(fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, iExpr)); }
 	}
 
 void Relater_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
@@ -622,7 +627,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 		if (ZLOGF(w,eInfo))
 			{
 			w
-				<< "leftRelHead and rightRelHead don't match, newOp0 and newOp1 must be incompatible"
+				<< "leftRelHead and rightRelHead don't match, newOp0 and newOp1 are incompatible"
 				<< "\n" << "leftRelHead: " << leftRelHead
 				<< "\n" << "newOp0: " << newOp0
 				<< "\n" << "rightRelHead: " << rightRelHead
@@ -634,7 +639,11 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 
 	fResultRelHead = leftRelHead;
 
-	if (leftPRelaters.size() <= 1)
+	if (not newOp0)
+		{ this->pSetResult(newOp1); }
+	else if (not newOp1)
+		{ this->pSetResult(newOp0); }
+	else if (leftPRelaters.size() <= 1)
 		{
 		// Our left branch is simple, it references zero or one Relater.
 		if (fPRelaters.size() <= 1)
@@ -887,14 +896,16 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				{
 				if (sGetSet(thePIP->fNeedsAdd, false))
 					{
-					if (ZRef<Expr_Rel> usableRel = thePRelater->UsableRel(thePIP->fProxy->fRel))
-						theAddedQueries.push_back(AddedQuery(thePIP->fRefcon, usableRel));
+					if (ZRef<Expr_Rel> theUsableRel = thePRelater->UsableRel(thePIP->fProxy->fRel))
+						{
+						theAddedQueries.push_back(AddedQuery(thePIP->fRefcon, theUsableRel));
+						thePIP->fWasAdded = true;
+						}
 					}
 				}
-			else if (not thePIP->fNeedsAdd)
+			else if (not thePIP->fNeedsAdd and thePIP->fWasAdded)
 				{
 				theRemoves.push_back(thePIP->fRefcon);
-				thePRelater->fMap_Refcon_PIP.erase(thePIP->fRefcon);
 				}
 			}
 
@@ -1067,6 +1078,7 @@ ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
 				make_pair(theRefcon, PIP())).first->second;
 
 			thePIP->fNeedsAdd = true;
+			thePIP->fWasAdded = false;
 			thePIP->fRefcon = theRefcon;
 			thePIP->fProxy = theProxy;
 			thePIP->fPRelater = thePRelater;
