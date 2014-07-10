@@ -65,6 +65,7 @@ class Visitor
 ,	public virtual QueryEngine::Visitor_Expr_Rel_Search
 	{
 public:
+	virtual void Visit_Expr(const ZRef<ZExpr>& iExpr);
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);

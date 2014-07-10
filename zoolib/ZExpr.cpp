@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr.h"
+#include "zoolib/ZStringf.h"
 
 namespace ZooLib {
 
@@ -35,6 +36,9 @@ void ZExpr::Accept(const ZVisitor& iVisitor)
 
 void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 	{ iVisitor.Visit_Expr(this); }
+
+std::string ZExpr::DebugDescription()
+	{ return sStringf("%p/", this) + typeid(*this).name(); }
 
 // =================================================================================================
 // MARK: - ZVisitor_Expr

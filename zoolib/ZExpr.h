@@ -39,6 +39,8 @@ public:
 
 // Our protocol
 	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
+
+	virtual std::string DebugDescription();
 	};
 
 // =================================================================================================

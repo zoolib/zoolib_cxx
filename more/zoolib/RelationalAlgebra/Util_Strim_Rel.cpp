@@ -35,6 +35,12 @@ using std::string;
 // =================================================================================================
 // MARK: - RelationalAlgebra::Util_Strim_Rel::Visitor
 
+void Visitor::Visit_Expr(const ZRef<ZExpr>& iExpr)
+	{
+	const ZStrimW& w = pStrimW();
+	w << iExpr->DebugDescription();
+	}
+
 void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
 	const ZStrimW& w = pStrimW();
