@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ValueOnce_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_algorithm.h"
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -52,7 +54,8 @@ private:
 // MARK: - FundamentalValueOnce
 
 // Type_p is not fundamental in the precise sense used by the standard, but it's close.
-// https://stackoverflow.com/questions/5687540/non-type-template-parameters
+// <http://en.cppreference.com/w/cpp/language/template_parameters#Non-type_template_parameters>
+// <https://stackoverflow.com/questions/5687540/non-type-template-parameters>
 
 template <class Type_p, Type_p first_p, Type_p subsequent_p>
 class FundamentalValueOnce
