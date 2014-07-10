@@ -48,7 +48,6 @@ inline
 const T sMinMax(const T& iMin, const T& iVal, const T& iMax)
 	{ return iVal < iMin ? iMin : iMax < iVal ? iMax : iVal; }
 
-
 // =================================================================================================
 // MARK: - sGetSet
 
