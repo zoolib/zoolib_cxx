@@ -45,7 +45,9 @@ namespace RelationalAlgebra {
 
 Expr_Rel_Union::Expr_Rel_Union(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
-	{}
+	{
+	ZAssert(iOp0 and iOp1);
+	}
 
 void Expr_Rel_Union::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
