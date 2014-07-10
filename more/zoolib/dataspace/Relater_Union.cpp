@@ -144,6 +144,9 @@ public:
 // From ZVisitee
 	virtual void Accept(const ZVisitor& iVisitor);
 
+// From ZExpr
+	virtual std::string DebugDescription();
+
 // From ZExpr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -189,6 +192,13 @@ void Relater_Union::Proxy::Accept(const ZVisitor& iVisitor)
 		this->Accept_Proxy(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
+	}
+
+std::string Relater_Union::Proxy::DebugDescription()
+	{
+	string8 result = "Proxy(";
+	ZStrimW_String<string8>(result) << fRel;
+	return result + ")";
 	}
 
 void Relater_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
