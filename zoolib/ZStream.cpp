@@ -280,7 +280,7 @@ void ZStreamR::Read(void* oDest, size_t iCount) const
 		}
 	}
 
-void ZStreamR::ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const
+void ZStreamR::ReadFully(void* oDest, size_t iCount, size_t* oCountRead) const
 	{
 	char* localDest = static_cast<char*>(oDest);
 	size_t countRemaining = iCount;

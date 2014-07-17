@@ -110,7 +110,7 @@ Read data from this stream into memory.
 */	//@{
 	void Read(void* oDest, size_t iCount) const;
 	void Read(void* oDest, size_t iCount, size_t* oCountRead) const;
-	void ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const;
+	void ReadFully(void* oDest, size_t iCount, size_t* oCountRead) const;
 	//@}
 
 
