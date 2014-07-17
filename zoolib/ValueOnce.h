@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ValueOnce_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h"
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -40,7 +38,14 @@ public:
 		{}
 
 	const T& operator()()
-		{ return sGetSet(fIsFirst, false) ? fFirst : fSubsequent; }
+		{
+		if (fIsFirst)
+			{
+			fIsFirst = false;
+			return fFirst;
+			}
+		return fSubsequent;
+		}
 
 	void Reset()
 		{ fIsFirst = true; }
@@ -66,7 +71,14 @@ public:
 		{}
 
 	const Type_p operator()()
-		{ return sGetSet(fIsFirst, false) ? first_p : subsequent_p; }
+		{
+		if (fIsFirst)
+			{
+			fIsFirst = false;
+			return first_p;
+			}
+		return subsequent_p;
+		}
 
 	void Reset()
 		{ fIsFirst = true; }
