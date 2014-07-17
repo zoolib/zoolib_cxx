@@ -428,7 +428,7 @@ void Searcher_DatonSet::pPull()
 				map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator lbAssert =
 					fMap_Assert.lower_bound(theDaton);
 
-				map<Daton, ZRef<Event>>::iterator lbRetract =
+				map<Daton, ZRef<Event> >::iterator lbRetract =
 					fMap_Retract.lower_bound(theDaton);
 
 				if (iterStmts->second)
