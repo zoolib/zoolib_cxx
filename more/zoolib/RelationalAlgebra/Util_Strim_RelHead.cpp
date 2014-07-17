@@ -83,12 +83,11 @@ const ZStrimW& operator<<(const ZStrimW& w, const ConcreteHead& iCH)
 	{
 	w.Write("[");
 
-	FalseOnce needsSeparator;
+	ValueOnce<std::string> separator("", ", ");
 	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
 		ii != end; ++ii)
 		{
-		if (needsSeparator())
-			w.Write(", ");
+		w << separator();
 		if (ii->second)
 			w << "@";
 		else
