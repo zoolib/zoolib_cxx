@@ -88,7 +88,7 @@ ZQ<LRESULT> ZCaller_WinMessageLoop::pWindowProc(
 	{
 	if (iMessage == spGetMSG())
 		{
-		ZCaller_EventLoop::pCall();
+		ZCaller_EventLoop::pInvokeClearQueue();
 		return 0;
 		}
 	else if (iMessage == WM_NCDESTROY)

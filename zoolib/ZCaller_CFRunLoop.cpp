@@ -94,7 +94,7 @@ void ZCaller_CFRunLoop::spCallback(
 	{
 	if (ZRef<ZCaller_CFRunLoop> theCaller =
 		ZWeakRef<ZCaller_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
-		{ theCaller->pCall(); }
+		{ theCaller->pInvokeClearQueue(); }
 	}
 
 } // namespace ZooLib

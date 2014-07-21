@@ -48,7 +48,7 @@ bool ZCaller_EventLoop::Enqueue(const ZRef<ZCallable_Void>& iCallable)
 	return false;
 	}
 
-void ZCaller_EventLoop::pCall()
+void ZCaller_EventLoop::pInvokeClearQueue()
 	{
 	vector<ZRef<ZCallable_Void> > calling;
 
@@ -84,7 +84,7 @@ ZCaller_EventLoop_CallableTrigger::ZCaller_EventLoop_CallableTrigger(
 bool ZCaller_EventLoop_CallableTrigger::pTrigger()
 	{ return sDCall(false, fCallable_Trigger); }
 
-void ZCaller_EventLoop_CallableTrigger::DoCalls()
-	{ ZCaller_EventLoop::pCall(); }
+void ZCaller_EventLoop_CallableTrigger::InvokeClearQueue()
+	{ ZCaller_EventLoop::pInvokeClearQueue(); }
 
 } // namespace ZooLib

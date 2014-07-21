@@ -44,7 +44,7 @@ public:
 
 protected:
 // Called by concrete subclass
-	void pCall();
+	void pInvokeClearQueue();
 
 	void pDiscardPending();
 
@@ -72,7 +72,7 @@ public:
 	virtual bool pTrigger();
 
 // Our protocol
-	void DoCalls();
+	void InvokeClearQueue();
 
 private:
 	ZRef<Callable_Trigger> fCallable_Trigger;

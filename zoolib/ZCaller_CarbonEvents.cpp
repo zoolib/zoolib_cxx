@@ -44,7 +44,7 @@ void ZCaller_CarbonEvents::spCallback(void* iRefcon)
 	if (ZRef<ZCaller_CarbonEvents> theCaller = static_cast<ZCaller_CarbonEvents*>(iRefcon))
 		{
 		theCaller->Release();
-		theCaller->pCall();
+		theCaller->pInvokeClearQueue();
 		}
 	}
 
