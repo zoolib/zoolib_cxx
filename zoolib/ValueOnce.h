@@ -49,6 +49,7 @@ public:
 
 	void Reset()
 		{ fIsFirst = true; }
+
 private:
 	const T fFirst;
 	const T fSubsequent;
