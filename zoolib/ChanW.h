@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanW_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZQ.h"
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -34,6 +32,9 @@ class ChanW
 	{
 	virtual size_t Write(const Val* iSource, size_t iCount)
 		{ return 0; }
+
+	virtual void Flush()
+		{}
 	};
 
 } // namespace ZooLib

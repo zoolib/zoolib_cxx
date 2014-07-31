@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanUTFR_h__
-#define __ZooLib_ChanUTFR_h__ 1
+#ifndef __ZooLib_ChanRUTFR_h__
+#define __ZooLib_ChanRUTFR_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
@@ -27,9 +27,69 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-typedef ChanR<UTF32> StrimR;
+typedef ChanR<UTF32> ChanRUTF32;
+
+Maybe we derive ChanRUTF8 from ChanRUTF32 -- the 32 bit one has is the ChanR interface,
+8 and 16 have the CP and CU limiting things.
 
 
+
+
+
+
+
+
+
+typedef ChanR<UTF16> ChanRUTF16;
+typedef ChanR<UTF8> ChanRUTF8;
+
+// =================================================================================================
+// MARK: -
+
+class ChanRUTF
+:	public ChanRUTF32
+,	public ChanRUTF16
+,	public ChanRUTF8
+	{}
+
+// =================================================================================================
+// MARK: -
+
+class ChanRUTF_Native32
+:	public ChanRUTF
+	{
+public:
+	virtual size_t Read(UTF32* oDest, size_t iCountCU) = 0;
+	virtual size_t Read(UTF16* oDest, size_t iCountCU);
+	virtual size_t Read(UTF8* oDest, size_t iCountCU);
+	}
+
+// =================================================================================================
+// MARK: -
+
+class ChanRUTF_Native16
+:	public ChanRUTF
+	{
+public:
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
+	virtual size_t Read(UTF16* oDest, size_t iCountCU) = 0;
+	virtual size_t Read(UTF8* oDest, size_t iCountCU);
+	}
+
+// =================================================================================================
+// MARK: -
+
+class ChanRUTF_Native8
+:	public ChanRUTFR
+	{
+public:
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
+	virtual size_t Read(UTF16* oDest, size_t iCountCU);
+	virtual size_t Read(UTF8* oDest, size_t iCountCU) = 0;
+	}
+
+// =================================================================================================
+// MARK: -
 
 // =================================================================================================
 // MARK: -
@@ -110,4 +170,4 @@ These methods must be overridden by subclasses.
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanUTFR_h__
+#endif // __ZooLib_ChanRUTFR_h__

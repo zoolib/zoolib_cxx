@@ -30,21 +30,23 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ChanR
 
-template <class Val>
+template <class Elmt_p>
 class ChanR
 	{
 public:
-	virtual size_t Read(Val* iDest, size_t iCount)
+	typedef Elmt_p Elmt;
+
+	virtual size_t Read(Elmt* iDest, size_t iCount)
 		{ return 0; }
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const uint64 kBufSize = 4096 / sizeof(Val);
-		Val scratch[kBufSize];
+		const uint64 kBufSize = 4096 / sizeof(Elmt);
+		Elmt scratch[kBufSize];
 		return this->Read(&scratch, std::min(iCount, kBufSize));
 		}
 
-	virtual uint64 Readable()
+	virtual size_t Readable()
 		{ return 0; }
 
 // For a golang-style select mechanism we'll need an API whereby we can efficiently
@@ -60,34 +62,34 @@ public:
 // =================================================================================================
 // MARK: -
 
-template <class Val>
-size_t sRead(const ChanR<Val>& iChanR, Val* iDest, size_t iCount)
-	{ return const_cast<ChanR<Val>&>(iChanR).Read(iDest, iCount); }
+template <class Elmt_p>
+size_t sRead(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
+	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Read(iDest, iCount); }
 
-template <class Val>
-uint64 sSkip(const ChanR<Val>& iChanR, uint64 iCount)
-	{ return const_cast<ChanR<Val>&>(iChanR).Skip(iCount); }
+template <class Elmt_p>
+uint64 sSkip(const ChanR<Elmt_p>& iChanR, uint64 iCount)
+	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Skip(iCount); }
 
-template <class Val>
-uint64 sReadable(const ChanR<Val>& iChanR)
-	{ return const_cast<ChanR<Val>&>(iChanR).Readable(); }
+template <class Elmt_p>
+size_t sReadable(const ChanR<Elmt_p>& iChanR)
+	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Readable(); }
 
 // =================================================================================================
 // MARK: -
 
-template <class Val>
-ZQ<Val> sQRead(const ChanR<Val>& iChanR)
+template <class Elmt_p>
+ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	{
-	Val buf;
+	Elmt_p buf;
 	if (not sRead(iChanR, &buf, 1))
 		return null;
 	return buf;
 	}
 
-template <class Val>
-size_t sReadFully(const ChanR<Val>& iChanR, Val* iDest, size_t iCount)
+template <class Elmt_p>
+size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
 	{
-	Val* localDest = iDest;
+	Elmt_p* localDest = iDest;
 	while (iCount)
 		{
 		if (const size_t countRead = sRead(iChanR, localDest, iCount))
@@ -101,8 +103,8 @@ size_t sReadFully(const ChanR<Val>& iChanR, Val* iDest, size_t iCount)
 	return localDest - iDest;
 	}
 
-template <class Val>
-uint64 sSkipFully(const ChanR<Val>& iChanR, uint64 iCount)
+template <class Elmt_p>
+uint64 sSkipFully(const ChanR<Elmt_p>& iChanR, uint64 iCount)
 	{
 	uint64 countRemaining = iCount;
 	while (countRemaining)
@@ -114,6 +116,13 @@ uint64 sSkipFully(const ChanR<Val>& iChanR, uint64 iCount)
 		}
 	return iCount - countRemaining;
 	}
+
+//template <class Elmt_p>
+//class ChannerR_Indirect<Elmt_p>
+//:	public ChannerR<Elmt_p
+//	{
+//
+//	};
 
 } // namespace ZooLib
 
