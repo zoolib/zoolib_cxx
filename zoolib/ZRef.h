@@ -39,7 +39,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZRef
 
-template <class T, bool Sense = true>
+template <class T, bool Sense_p = true>
 class ZRef
 	{
 	inline
@@ -52,19 +52,19 @@ class ZRef
 
 public:
 	#if defined(__OBJC__)
-		operator bool() const { return Sense == !!fP; }
+		operator bool() const { return Sense_p == !!fP; }
 		operator T*() const { return fP; }
 	#else
 		ZMACRO_operator_bool_T(ZRef, operator_bool) const
-			{ return operator_bool_gen::translate(Sense == !!fP); }
+			{ return operator_bool_gen::translate(Sense_p == !!fP); }
 	#endif
 
-	friend class ZRef<T,not Sense>;
+	friend class ZRef<T,not Sense_p>;
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	void swap(ZRef<O,OtherSense>& ioOther)
+	void swap(ZRef<O,OtherSense_p>& ioOther)
 		{
 		using std::swap;
 		swap(fP, ioOther.fP);
@@ -120,16 +120,16 @@ public:
 		return *this;
 		}
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	ZRef(const ZRef<O,OtherSense>& iOther)
+	ZRef(const ZRef<O,OtherSense_p>& iOther)
 	:	fP(iOther.Copy())
 		{}
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	inline
-	ZRef& operator=(const ZRef<O,OtherSense>& iOther)
+	ZRef& operator=(const ZRef<O,OtherSense_p>& iOther)
 		{
 		using std::swap;
 		T* otherP = iOther.Copy();
@@ -168,22 +168,22 @@ public:
 	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	bool operator==(const ZRef<O,OtherSense>& iOther) const
+	bool operator==(const ZRef<O,OtherSense_p>& iOther) const
 		{ return fP == iOther.Get(); }
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	bool operator!=(const ZRef<O,OtherSense>& iOther) const
+	bool operator!=(const ZRef<O,OtherSense_p>& iOther) const
 		{ return fP != iOther.Get(); }
 
-	template <class O, bool OtherSense>
+	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	bool operator<(const ZRef<O,OtherSense>& iOther) const
+	bool operator<(const ZRef<O,OtherSense_p>& iOther) const
 		{ return fP < iOther.Get(); }
 
 	ZMACRO_Attribute_NoThrow_Ref
@@ -302,17 +302,17 @@ void sRefCopy(void* oDest, T* iP)
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
 
-template <class T, bool Sense>
-class ZRef<T*,Sense>
+template <class T, bool Sense_p>
+class ZRef<T*,Sense_p>
 	{
 public:
-	operator bool() const { return Sense == !!fP; }
+	operator bool() const { return Sense_p == !!fP; }
 	operator T*() const { return fP; }
 
-	friend class ZRef<T,not Sense>;
+	friend class ZRef<T,not Sense_p>;
 
-	template <class O, bool OtherSense>
-	void swap(ZRef<O,OtherSense>& ioOther)
+	template <class O, bool OtherSense_p>
+	void swap(ZRef<O,OtherSense_p>& ioOther)
 		{
 		using std::swap;
 		swap(fP, ioOther.fP);
@@ -358,13 +358,13 @@ public:
 		return *this;
 		}
 
-	template <class O, bool OtherSense>
-	ZRef(const ZRef<O*,OtherSense>& iOther)
+	template <class O, bool OtherSense_p>
+	ZRef(const ZRef<O*,OtherSense_p>& iOther)
 	:	fP(iOther.Copy())
 		{}
 
-	template <class O, bool OtherSense>
-	ZRef& operator=(const ZRef<O*,OtherSense>& iOther)
+	template <class O, bool OtherSense_p>
+	ZRef& operator=(const ZRef<O*,OtherSense_p>& iOther)
 		{
 		using std::swap;
 		T* otherP = iOther.Copy();
@@ -396,16 +396,16 @@ public:
 	bool operator!=(O* iP) const
 		{ return fP != iP; }
 
-	template <class O, bool OtherSense>
-	bool operator==(const ZRef<O*,OtherSense>& iOther) const
+	template <class O, bool OtherSense_p>
+	bool operator==(const ZRef<O*,OtherSense_p>& iOther) const
 		{ return fP == iOther.Get(); }
 
-	template <class O, bool OtherSense>
-	bool operator!=(const ZRef<O*,OtherSense>& iOther) const
+	template <class O, bool OtherSense_p>
+	bool operator!=(const ZRef<O*,OtherSense_p>& iOther) const
 		{ return fP != iOther.Get(); }
 
-	template <class O, bool OtherSense>
-	bool operator<(const ZRef<O*,OtherSense>& iOther) const
+	template <class O, bool OtherSense_p>
+	bool operator<(const ZRef<O*,OtherSense_p>& iOther) const
 		{ return fP < iOther.Get(); }
 
 	T* Get() const
@@ -496,14 +496,14 @@ const struct
 	template <class T>
 	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(iP); }
 
-	template <class T, bool Sense>
-	ZRef<T,true> operator()(const ZRef<T,Sense>& iRef) const { return ZRef<T,true>(iRef); }
+	template <class T, bool Sense_p>
+	ZRef<T,true> operator()(const ZRef<T,Sense_p>& iRef) const { return ZRef<T,true>(iRef); }
 
 	template <class T>
 	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(iP); }
 
-	template <class T, bool Sense>
-	ZRef<T,true> operator&(const ZRef<T,Sense>& iRef) const { return ZRef<T,true>(iRef); }
+	template <class T, bool Sense_p>
+	ZRef<T,true> operator&(const ZRef<T,Sense_p>& iRef) const { return ZRef<T,true>(iRef); }
 	} sRef = {};
 
 // =================================================================================================
@@ -533,16 +533,16 @@ const struct
 // =================================================================================================
 // MARK: - swap
 
-template <class T, bool Sense>
+template <class T, bool Sense_p>
 ZMACRO_Attribute_NoThrow
 inline
-void swap(ZRef<T,Sense>& a, ZRef<T,Sense>& b)
+void swap(ZRef<T,Sense_p>& a, ZRef<T,Sense_p>& b)
 	{ a.swap(b); }
 
-template <class T, bool Sense>
+template <class T, bool Sense_p>
 ZMACRO_Attribute_NoThrow
 inline
-void swap(ZRef<T,Sense>& a, ZRef<T,not Sense>& b)
+void swap(ZRef<T,Sense_p>& a, ZRef<T,not Sense_p>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
