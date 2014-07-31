@@ -26,8 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread.h"
 
-#include "zoolib/ZCallable.h"
-
 #include <set>
 
 namespace ZooLib {
@@ -41,7 +39,11 @@ class ZSocketWatcher
 public:
 	ZSocketWatcher();
 
+	typedef std::pair<int,ZRef<ZCallable_Void> > Pair_t;
+
 // -----
+	bool QInsert(const Pair_t& iPair);
+	bool QErase(const Pair_t& iPair);
 
 	bool QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable);
 	bool QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable);
@@ -56,7 +58,7 @@ private:
 	ZCnd fCnd;
 
 	bool fThreadRunning;
-	typedef std::set<std::pair<int,ZRef<ZCallable_Void> > > Set_t;
+	typedef std::set<Pair_t> Set_t;
 	Set_t fSet;
 	};
 

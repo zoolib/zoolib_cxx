@@ -50,10 +50,10 @@ ZSocketWatcher::ZSocketWatcher()
 :	fThreadRunning(false)
 	{}
 
-bool ZSocketWatcher::QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QInsert(const Pair_t& iPair)
 	{
 	ZAcqMtx acq(fMtx);
-	if (not fSet.insert(pair<int,ZRef<ZCallable_Void> >(iSocket, iCallable)).second)
+	if (not fSet.insert(iPair).second)
 		return false;
 
 	if (not fThreadRunning)
@@ -65,11 +65,17 @@ bool ZSocketWatcher::QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable)
 	return true;
 	}
 
-bool ZSocketWatcher::QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QErase(const Pair_t& iPair)
 	{
 	ZAcqMtx acq(fMtx);
-	return fSet.erase(pair<int,ZRef<ZCallable_Void> >(iSocket, iCallable));
+	return fSet.erase(iPair);
 	}
+
+bool ZSocketWatcher::QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+	{ return this->QInsert(Pair_t(iSocket, iCallable)); }
+
+bool ZSocketWatcher::QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+	{ return this->QErase(Pair_t(iSocket, iCallable)); }
 
 void ZSocketWatcher::pRun()
 	{
@@ -135,8 +141,7 @@ void ZSocketWatcher::pRun()
 				else
 					continue;
 
-				const Set_t::iterator iterBegin =
-					fSet.lower_bound(pair<int,ZRef<ZCallable_Void> >(fd, null));
+				const Set_t::iterator iterBegin = fSet.lower_bound(Pair_t(fd, null));
 				Set_t::iterator iterEnd = iterBegin;
 				const Set_t::iterator SetEnd = fSet.end();
 				while (iterEnd->first == fd and iterEnd != SetEnd)
