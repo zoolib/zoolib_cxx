@@ -136,6 +136,8 @@ void Relater_Asyncify::pTrigger_Update()
 
 void Relater_Asyncify::pUpdate()
 	{
+	ZThread::sSleep(2);
+
 	ZGuardMtxR guard(fMtxR);
 
 	for (;;)
