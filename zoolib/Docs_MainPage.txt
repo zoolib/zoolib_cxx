@@ -3,7 +3,7 @@
 
 ZooLib is a C++ library that I've been developing and using since 1992, and which has been open source since 2000.
 
-As it's under active development you may want to subscribe to the zoolib-checkins mailing list at <https://lists.sourceforge.net/lists/listinfo/zoolib-checkins>.
+As it's under active development you may want to subscribe to the zoolib-checkins mailing list at (defunct).
 
 It has several purposes:
 - To extend the longevity of code I write, by providing some isolation from the inevitable compiler, library and operating system differences and changes.

@@ -1,5 +1,0 @@
-/**
-\defgroup ValueSemantics Value Semantics
-Generally ZooLib makes use of value semantics for those types used at the application level.
-
-*/
