@@ -18,47 +18,55 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanRBin_Stream_h__
-#define __ZooLib_ChanRBin_Stream_h__ 1
+#ifndef __ZooLib_ChanR_Bin_h__
+#define __ZooLib_ChanR_Bin_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRBin.h"
-#include "zoolib/ZStream.h"
+#include "zoolib/ChanR.h"
 
 namespace ZooLib {
 
+typedef uint8 byte;
+
+typedef ChanR<byte> ChanR_Bin;
+
 // =================================================================================================
-// MARK: - ChanRBin_Stream
+// MARK: -
 
-class ChanRBin_Stream
-:	public ChanRBin
+size_t sReadVoid(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return sRead(iChan, static_cast<uint8*>(oDest), iCount; }
+
+size_t sReadVoidFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return sReadFully(iChan, static_cast<uint8*>(oDest), iCount; }
+
+template <class T, bool Swapped>
+ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR);
+
+template <class T>
+ZQ<T> sQReadSwapped<T,true>(const ChanR_Bin& iChanR)
 	{
-public:
-	ChanRBin_Stream(const ZStreamR& iStreamR)
-	:	fStreamR(iStreamR)
-		{}
+	T buf;
+	if (sizeof T != sReadAll(iChanR, &buf, sizeof T))
+		return null;
 
-	virtual size_t Read(byte* iDest, size_t iCount)
-		{
-		size_t countRead = 0;
-		fStreamR->Read(iDest, iCount, &countRead);
-		return countRead;
-		}
+	sByteSwap<sizeof T>(&buf);
 
-	virtual uint64 Skip(uint64 iCount)
-		{
-		uint64 countSkipped;
-		fStreamR->Skip(iCount, &countSkipped);
-		return countSkipped;
-		}
+	return buf;
+	}
 
-	virtual size_t Readable()
-		{ return fStreamR->CountReadable(); }
+template <class T>
+ZQ<T> sQReadSwapped<T,false>(const ChanR_Bin& iChanR)
+	{
+	T buf;
+	if (sizeof T != sReadAll(iChanR, &buf, sizeof T))
+		return null;
+	return buf;
+	}
 
-private:
-	const ZStreamR& fStreamR;
-	};
+template <class T, bool BigEndian=true>
+ZQ<T> sQRead(const ChanR_Bin& iChanR)
+	{ return sQReadSwapped<T,BigEndian != (ZCONFIG_Endian == ZCONFIG_Endian_Big)>(iChanR); }
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanRBin_Stream_h__
+#endif // __ZooLib_ChanR_Bin_h__

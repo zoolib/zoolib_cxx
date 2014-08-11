@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanRUTFR_h__
-#define __ZooLib_ChanRUTFR_h__ 1
+#ifndef __ZooLib_ChanR_UTFR_h__
+#define __ZooLib_ChanR_UTFR_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
@@ -27,9 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-typedef ChanR<UTF32> ChanRUTF32;
+typedef ChanR<UTF32> ChanR_UTF32;
 
-Maybe we derive ChanRUTF8 from ChanRUTF32 -- the 32 bit one has is the ChanR interface,
+Maybe we derive ChanR_UTF8 from ChanR_UTF32 -- the 32 bit one has is the ChanR interface,
 8 and 16 have the CP and CU limiting things.
 
 
@@ -40,23 +40,23 @@ Maybe we derive ChanRUTF8 from ChanRUTF32 -- the 32 bit one has is the ChanR int
 
 
 
-typedef ChanR<UTF16> ChanRUTF16;
-typedef ChanR<UTF8> ChanRUTF8;
+typedef ChanR<UTF16> ChanR_UTF16;
+typedef ChanR<UTF8> ChanR_UTF8;
 
 // =================================================================================================
 // MARK: -
 
-class ChanRUTF
-:	public ChanRUTF32
-,	public ChanRUTF16
-,	public ChanRUTF8
+class ChanR_UTF
+:	public ChanR_UTF32
+,	public ChanR_UTF16
+,	public ChanR_UTF8
 	{}
 
 // =================================================================================================
 // MARK: -
 
-class ChanRUTF_Native32
-:	public ChanRUTF
+class ChanR_UTF_Native32
+:	public ChanR_UTF
 	{
 public:
 	virtual size_t Read(UTF32* oDest, size_t iCountCU) = 0;
@@ -67,8 +67,8 @@ public:
 // =================================================================================================
 // MARK: -
 
-class ChanRUTF_Native16
-:	public ChanRUTF
+class ChanR_UTF_Native16
+:	public ChanR_UTF
 	{
 public:
 	virtual size_t Read(UTF32* oDest, size_t iCountCU);
@@ -79,8 +79,8 @@ public:
 // =================================================================================================
 // MARK: -
 
-class ChanRUTF_Native8
-:	public ChanRUTFR
+class ChanR_UTF_Native8
+:	public ChanR_UTFR
 	{
 public:
 	virtual size_t Read(UTF32* oDest, size_t iCountCU);
@@ -170,4 +170,4 @@ These methods must be overridden by subclasses.
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanRUTFR_h__
+#endif // __ZooLib_ChanR_UTFR_h__
