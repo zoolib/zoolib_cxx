@@ -375,7 +375,7 @@ public:
 
 // -----------------
 
-	ZQ(void)
+	ZQ()
 	:	fHasValue(false)
 		{}
 
