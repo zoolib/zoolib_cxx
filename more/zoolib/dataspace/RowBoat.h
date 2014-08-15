@@ -40,6 +40,8 @@ public:
 	typedef RelationalAlgebra::Expr_Rel Expr_Rel;
 	typedef QueryEngine::Result Result;
 
+	typedef RelsWatcher::Callable_Register Callable_Register;
+
 	typedef ZCallable<
 		void(const PseudoMap* iOld, const PseudoMap* iNew)
 		> Callable_Row;
@@ -48,7 +50,7 @@ public:
 		ZRef<Callable_Row>(const PseudoMap&)
 		> Callable_Make_Callable_Row;
 
-	RowBoat(const ZRef<RelsWatcher::Callable_Register>& iCallable_Register,
+	RowBoat(const ZRef<Callable_Register>& iCallable_Register,
 		const ZRef<Expr_Rel>& iRel,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
@@ -69,7 +71,7 @@ private:
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 
-	ZRef<RelsWatcher::Callable_Register> fCallable_Register;
+	ZRef<Callable_Register> fCallable_Register;
 	ZRef<Expr_Rel> fRel;
 	QueryEngine::ResultDiffer fResultDiffer;
 	ZRef<Callable_Make_Callable_Row> fCallable;

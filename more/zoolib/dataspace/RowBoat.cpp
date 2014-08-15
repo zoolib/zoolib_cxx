@@ -41,7 +41,7 @@ using std::vector;
 // =================================================================================================
 // MARK: - RowBoat
 
-RowBoat::RowBoat(const ZRef<RelsWatcher::Callable_Register>& iCallable_Register,
+RowBoat::RowBoat(const ZRef<Callable_Register>& iCallable_Register,
 	const ZRef<Expr_Rel>& iRel,
 	const RelHead& iIdentity, const RelHead& iSignificant,
 	const ZRef<Callable_Make_Callable_Row>& iCallable)
