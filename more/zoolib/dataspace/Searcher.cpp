@@ -156,7 +156,6 @@ ZRef<Event> SearchResult::GetEvent() const
 // MARK: - Searcher
 
 Searcher::Searcher()
-:	fCalled_ResultsAvailable(false)
 	{}
 
 Searcher::~Searcher()
@@ -165,20 +164,20 @@ Searcher::~Searcher()
 void Searcher::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable = false;
+	fCalled_ResultsAvailable.Reset();
 	fCallable_ResultsAvailable = iCallable;
 	}
 
 void Searcher::pCollectResultsCalled()
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable = false;
+	fCalled_ResultsAvailable.Reset();
 	}
 
 void Searcher::pTriggerResultsAvailable()
 	{
 	ZGuardMtx guard(fMtx);
-	if (not sGetSet(fCalled_ResultsAvailable, true))
+	if (not fCalled_ResultsAvailable())
 		{
 		if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
 			{

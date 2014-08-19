@@ -79,7 +79,6 @@ public:
 
 RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater)
 :	fRelater(iRelater)
-,	fCalled_NeedsUpdate(false)
 	{}
 
 ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
@@ -92,7 +91,7 @@ ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 
 	sInsertMust(fToAdd, theR.Get());
 
-	if (not sGetSet(fCalled_NeedsUpdate, true))
+	if (not fCalled_NeedsUpdate())
 		{
 		guard.Release();
 		sCall(fCallable_NeedsUpdate);
@@ -113,7 +112,7 @@ void RelsWatcher_Relater::SetCallable_NeedsUpdate(
 void RelsWatcher_Relater::Update()
 	{
 	ZGuardMtxR guard(fMtxR);
-	fCalled_NeedsUpdate = false;
+	fCalled_NeedsUpdate.Reset();
 
 	if (sIsEmpty(fToAdd) && sIsEmpty(fToRemove))
 		{
@@ -176,7 +175,7 @@ void RelsWatcher_Relater::Update()
 void RelsWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
 	{
 	ZGuardMtxR guard(fMtxR);
-	if (not sGetSet(fCalled_NeedsUpdate, true))
+	if (not fCalled_NeedsUpdate())
 		{
 		guard.Release();
 		sCall(fCallable_NeedsUpdate);
@@ -202,7 +201,7 @@ void RelsWatcher_Relater::pFinalize(Registration* iRegistration)
 
 		sInsertMust(fToRemove, theRefcon);
 
-		if (not sGetSet(fCalled_NeedsUpdate, true))
+		if (not fCalled_NeedsUpdate())
 			{
 			guard.Release();
 			sCall(fCallable_NeedsUpdate);

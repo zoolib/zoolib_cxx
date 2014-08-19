@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Searcher_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ValueOnce.h"
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr_Bool.h"
 #include "zoolib/ZUtil_Relops.h"
@@ -127,7 +128,7 @@ protected:
 
 private:
 	ZMtx fMtx;
-	bool fCalled_ResultsAvailable;
+	FalseOnce fCalled_ResultsAvailable;
 	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
 	};
 

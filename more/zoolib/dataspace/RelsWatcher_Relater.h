@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_RelsWatcher_Relater_h__ 1
 #include "zconfig.h"
 
+#include "zooLib/ValueOnce.h"
+
 #include "zooLib/dataspace/Relater.h"
 #include "zooLib/dataspace/RelsWatcher.h"
 
@@ -57,7 +59,7 @@ private:
 
 	ZRef<Relater> fRelater;
 
-	bool fCalled_NeedsUpdate;
+	FalseOnce fCalled_NeedsUpdate;
 	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
 
 	int64 fNextRefcon;
