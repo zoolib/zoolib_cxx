@@ -38,10 +38,6 @@ namespace RelationalAlgebra {
 // =================================================================================================
 // MARK: - Expr_Rel_Concrete
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(const RelHead& iRequired)
-:	fConcreteHead(sConcreteHead(iRequired))
-	{}
-
 Expr_Rel_Concrete::Expr_Rel_Concrete(const ConcreteHead& iConcreteHead)
 :	fConcreteHead(iConcreteHead)
 	{}
@@ -84,7 +80,10 @@ void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Conc
 // MARK: - sConcrete
 
 ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
-	{ return new Expr_Rel_Concrete(iRelHead); }
+	{ return new Expr_Rel_Concrete(sConcreteHead(iRelHead)); }
+
+ZRef<Expr_Rel> sConcrete(const RelHead& iRequired, const RelHead& iOptional)
+	{ return new Expr_Rel_Concrete(sConcreteHead(iRequired, iOptional)); }
 
 ZRef<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead)
 	{ return new Expr_Rel_Concrete(iConcreteHead); }
