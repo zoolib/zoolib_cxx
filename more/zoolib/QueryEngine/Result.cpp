@@ -112,20 +112,20 @@ pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
 
 struct Comparer_t
 	{
-	Comparer_t(const vector<size_t>& iOffsets, const ZVal_Any* iVals)
+	Comparer_t(const vector<size_t>& iOffsets, const ZRef<Result>& iResult)
 	:	fOffsets(iOffsets)
-	,	fVals(iVals)
+	,	fResult(iResult)
 		{}
 
 	bool operator()(const size_t& iLeft, const size_t& iRight) const
 		{
 		return 0 > spCompare(fOffsets,
-			fVals + fOffsets.size() * iLeft,
-			fVals + fOffsets.size() * iRight).first;
+			fResult->GetValsAt(iLeft),
+			fResult->GetValsAt(iRight)).first;
 		}
 
 	const vector<size_t>& fOffsets;
-	const ZVal_Any* fVals;
+	ZRef<Result> fResult;
 	};
 
 } // anonymous namespace
@@ -136,20 +136,21 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 ,	fSignificant(iSignificant)
 	{}
 
-// oRemoved and oChanged_Prior indices are reported relative to the prior list
-// oAdded and oChanged_New are relative to the new list.
-// oChanged_Prior and oChanged_New reference the same entries.
+// * oRemoved indices are relative to the prior list.
+// * oAdded pairs have the index at which the entry should be inserted, and the corresponding
+// index of the value in iResult.
+// * oChanged triples have the index in the new list as the first field, the second field is
+// the index into the prior result (so the prior value is available) and the third field
+// is the index into iResult for the new value.
+
 // To mutate an external list you would erase every position in oRemoved,
-// insert everything in oAdded, and report changes on oChanged after both.
-// The sequence of offsets is in identity/significant sort order, but should
-// be applied in result order, so oRemoved and oAdded should each be sorted before being used.
+// insert everything in oAdded, and then apply changes in oChanged after both.
 
 void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	ZRef<Result>* oPrior,
 	vector<size_t>* oRemoved,
-	vector<size_t>* oAdded,
-	vector<size_t>* oChanged_Prior,
-	vector<size_t>* oChanged_New)
+	vector<pair<size_t,size_t> >* oAdded,
+	vector<ZMulti_T3<size_t,size_t,size_t> >* oChanged)
 	{
 	const RelHead& theRH = iResult->GetRelHead();
 
@@ -210,13 +211,16 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	for (size_t xx = 0; xx < theCount; ++xx)
 		theSort_New.push_back(xx);
 
-	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, iResult->GetValsAt(0)));
+	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, iResult));
 
 	if (not fResult_Prior)
 		{
 		// This is our first result, everything is an add.
 		if (oAdded)
-			*oAdded = theSort_New;
+			{
+			for (size_t yy = 0; yy < theSort_New.size(); ++yy)
+				oAdded->push_back(pair<size_t, size_t>(yy, theSort_New[yy]));
+			}
 		}
 	else
 		{
@@ -224,11 +228,9 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 
 		size_t theIndex_Prior = 0;
 		const size_t theCount_Prior = fSort_Prior.size();
-		const ZVal_Any* theVals_Prior = fResult_Prior->GetValsAt(0);
 
 		size_t theIndex_New = 0;
 		const size_t theCount_New = theSort_New.size();
-		const ZVal_Any* theVals_New = iResult->GetValsAt(0);
 
 		for (;;)
 			{
@@ -239,7 +241,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 					{
 					oRemoved->reserve(oRemoved->size() + theCount_Prior - theIndex_Prior);
 					while (theCount_Prior > theIndex_Prior)
-						oRemoved->push_back(fSort_Prior[theIndex_Prior++]);
+						oRemoved->push_back(theIndex_Prior++);
 					}
 				break;
 				}
@@ -251,15 +253,18 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 					{
 					oAdded->reserve(oAdded->size() + theCount_New - theIndex_New);
 					while (theCount_New > theIndex_New)
-						oAdded->push_back(theSort_New[theIndex_New++]);
+						{
+						oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
+						++theIndex_New;
+						}
 					}
 				break;
 				}
 
 			// Match current prior against current new
 			const pair<int,size_t> result = spCompare(fPermute,
-				theVals_Prior + fPermute.size() * fSort_Prior[theIndex_Prior],
-				theVals_New + fPermute.size() * theSort_New[theIndex_New]);
+				fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]),
+				iResult->GetValsAt(theSort_New[theIndex_New]));
 
 			if (result.second < fIdentity.size())
 				{
@@ -271,28 +276,28 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 					{
 					// Prior is less than new, so prior is not in new, and this is a removal.
 					if (oRemoved)
-						oRemoved->push_back(fSort_Prior[theIndex_Prior]);
+						oRemoved->push_back(theIndex_Prior);
 					++theIndex_Prior;
 					}
 				else
 					{
 					// Contrariwise.
 					if (oAdded)
-						oAdded->push_back(theSort_New[theIndex_New]);
+						oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
 					++theIndex_New;
 					}
 				}
 			else
 				{
-				 if (result.second < fIdentity.size() + fSignificant.size())
+				if (oChanged && result.second < fIdentity.size() + fSignificant.size())
 					{
-					// Comparison was terminated in the 'significant' portion of the values. So
-					// they matched in the identity portion, and thus reference the same entity,
-					// but differ in the significant portion, thus this is a change.
-					if (oChanged_Prior)
-						oChanged_Prior->push_back(fSort_Prior[theIndex_Prior]);
-					if (oChanged_New)
-						oChanged_New->push_back(theSort_New[theIndex_New]);
+					// We care about changes, and comparison was terminated in the 'significant'
+					// portion of the values. So they matched in the identity portion, and thus
+					// reference the same entity, but differ in the significant portion, thus
+					// this is a change.
+					oChanged->push_back(
+						ZMulti_T3<size_t,size_t,size_t>(
+							theIndex_New, fSort_Prior[theIndex_Prior], theSort_New[theIndex_New]));
 					}
 				++theIndex_New;
 				++theIndex_Prior;

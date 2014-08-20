@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCounted.h"
+#include "zoolib/ZMulti_T.h"
 #include "zoolib/ZVal_Any.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
@@ -71,9 +72,8 @@ public:
 	void Apply(const ZRef<Result>& iResult,
 		ZRef<Result>* oPrior,
 		std::vector<size_t>* oRemoved,
-		std::vector<size_t>* oAdded,
-		std::vector<size_t>* oChanged_Prior,
-		std::vector<size_t>* oChanged_New);
+		std::vector<std::pair<size_t,size_t> >* oAdded,
+		std::vector<ZMulti_T3<size_t,size_t,size_t> >* oChanged);
 
 private:
 	const RelationalAlgebra::RelHead fIdentity;

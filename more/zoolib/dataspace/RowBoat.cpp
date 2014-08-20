@@ -72,13 +72,11 @@ void RowBoat::pChanged(
 	ZRef<Result> priorResult;
 
 	vector<size_t> theRemoved;
-	vector<size_t> theAdded;
-	vector<size_t> theChanged_Prior;
-	vector<size_t> theChanged_New;
+	vector<std::pair<size_t,size_t> > theAdded;
+	vector<ZMulti_T3<size_t,size_t,size_t> > theChanged;
 
 	fResultDiffer.Apply(iResult, &priorResult,
-		&theRemoved, &theAdded,
-		&theChanged_Prior, &theChanged_New);
+		&theRemoved, &theAdded, &theChanged);
 
 	// We generate bindings the first time we're called, so they must
 	// be empty if there's no prior result.
@@ -86,14 +84,6 @@ void RowBoat::pChanged(
 
 	// RelHeads can't and mustn't change from one result to another.
 	ZAssert(not priorResult || priorResult->GetRelHead() == iResult->GetRelHead());
-
-	// Change indices are paired, so the vectors must be the same size.
-	ZAssert(theChanged_Prior.size() == theChanged_New.size());
-
-	// We need removed and added to be applied in result sequence (or reverse), so that
-	// we can trivially map between result and fRows.
-	sort(theRemoved.begin(), theRemoved.end());
-	sort(theAdded.begin(), theAdded.end());
 
 	if (not priorResult)
 		{
@@ -119,20 +109,20 @@ void RowBoat::pChanged(
 	// ...and a forward scan here.
 	foreacha (yy, theAdded)
 		{
-		ZAssert(yy <= fRows.size());
-		const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(yy));
+		ZAssert(yy.first <= fRows.size());
+		const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(yy.second));
 		ZRef<Callable_Row> theRow = fCallable->Call(thePM_New);
-		fRows.insert(fRows.begin() + yy, theRow);
+		fRows.insert(fRows.begin() + yy.first, theRow);
 		if (theRow)
 			theRow->Call(nullptr, &thePM_New);
 		}
 
-	for (size_t yy = 0, end = theChanged_Prior.size(); yy < end; ++yy)
+	foreacha (yy, theChanged)
 		{
-		if (ZRef<Callable_Row> theRow = fRows[theChanged_New[yy]])
+		if (ZRef<Callable_Row> theRow = fRows[yy.f0])
 			{
-			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(theChanged_Prior[yy]));
-			const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(theChanged_New[yy]));
+			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy.f1));
+			const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(yy.f2));
 			theRow->Call(&thePM_Prior, &thePM_New);
 			}
 		}
