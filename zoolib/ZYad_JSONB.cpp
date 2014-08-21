@@ -300,7 +300,7 @@ public:
 		for (;;)
 			{
 			size_t countRead;
-			r.ReadAll(&buffer[0], chunkSize, &countRead);
+			r.ReadFully(&buffer[0], chunkSize, &countRead);
 			fW.WriteCount(countRead);
 			if (!countRead)
 				break;
