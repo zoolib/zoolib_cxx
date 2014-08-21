@@ -134,7 +134,11 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 	const RelHead& iSignificant)
 :	fIdentity(iIdentity)
 ,	fSignificant(iSignificant)
-	{}
+	{
+	// If you don't have any identity or significant fields, then I'm
+	// not even sure what we're doing.
+	ZAssert(not fIdentity.empty() || not fSignificant.empty());
+	}
 
 // * oRemoved indices are relative to the prior list.
 // * oAdded pairs have the index at which the entry should be inserted, and the corresponding
@@ -178,13 +182,13 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 			iter_RH != end_RH;
 			++iter_RH, ++index_RH)
 			{
-			if (*iter_RH == *iter_Identity)
+			if (iter_Identity != fIdentity.end() && *iter_Identity == *iter_RH)
 				{
 				fPermute[index_Identity] = index_RH;
 				++index_Identity;
 				++iter_Identity;
 				}
-			else if (*iter_RH == *iter_Significant)
+			else if (iter_Significant != fSignificant.end() && *iter_Significant == *iter_RH)
 				{
 				fPermute[fIdentity.size() + index_Significant] = index_RH;
 				++index_Significant;
