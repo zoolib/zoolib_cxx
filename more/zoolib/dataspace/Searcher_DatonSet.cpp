@@ -517,7 +517,7 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
 	theRH.insert(string8());
 
-	if (ZLOGF(w,eDebug))
+	if (ZLOGPF(w, eDebug))
 		w << "theRH: " << theRH;
 
 	// This is overkill -- we don't necessarily have to rework the whole PScan.
