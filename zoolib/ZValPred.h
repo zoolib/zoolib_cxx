@@ -131,8 +131,19 @@ bool operator<(const ZValPred& iL, const ZValPred& iR);
 class ZValComparandPseudo
 :	public ZRef<ZValComparand>
 	{
+	typedef ZRef<ZValComparand> inherited;
 public:
-	ZValComparandPseudo(ZValComparand* iRep);
+	ZValComparandPseudo(ZValComparand* iRep)
+	:	inherited(iRep)
+		{}
+
+	ZValComparandPseudo(const ZRef<ZValComparand>& iOther)
+	:	inherited(iOther)
+		{}
+
+	ZValComparandPseudo(const ZValComparandPseudo& iOther)
+	:	inherited(iOther)
+		{}
 	};
 
 // =================================================================================================
@@ -143,12 +154,59 @@ ZValComparandPseudo CName(const std::string& iName);
 // =================================================================================================
 // MARK: - Comparison operators taking comparands and returning a condition
 
-ZValPred operator<(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
-ZValPred operator<=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
-ZValPred operator==(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
-ZValPred operator!=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
-ZValPred operator>=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
-ZValPred operator>(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS);
+inline ZValPred operator<(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLT), iRHS); }
+
+inline ZValPred operator<(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLT), iRHS); }
+
+inline ZValPred operator<(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLT), iRHS); }
+
+inline ZValPred operator<=(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLE), iRHS); }
+
+inline ZValPred operator<=(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLE), iRHS); }
+
+inline ZValPred operator<=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLE), iRHS); }
+
+inline ZValPred operator==(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eEQ), iRHS); }
+
+inline ZValPred operator==(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eEQ), iRHS); }
+
+inline ZValPred operator==(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eEQ), iRHS); }
+
+inline ZValPred operator!=(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eNE), iRHS); }
+
+inline ZValPred operator!=(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eNE), iRHS); }
+
+inline ZValPred operator!=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eNE), iRHS); }
+
+inline ZValPred operator>(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGT), iRHS); }
+
+inline ZValPred operator>(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGT), iRHS); }
+
+inline ZValPred operator>(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGT), iRHS); }
+
+inline ZValPred operator>=(const ZRef<ZValComparand>& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGE), iRHS); }
+
+inline ZValPred operator>=(const ZValComparandPseudo& iLHS, const ZRef<ZValComparand>& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGE), iRHS); }
+
+inline ZValPred operator>=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
+	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGE), iRHS); }
 
 } // namespace ZooLib
 

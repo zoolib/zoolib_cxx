@@ -135,38 +135,10 @@ bool operator<(const ZValPred& iL, const ZValPred& iR)
 	{ return sCompare_T(iL, iR) < 0; }
 
 // =================================================================================================
-// MARK: - ZValComparandPseudo
-
-ZValComparandPseudo::ZValComparandPseudo(ZValComparand* iRep)
-:	ZRef<ZValComparand>(iRep)
-	{}
-
-// =================================================================================================
 // MARK: - Comparand pseudo constructors
 
 ZValComparandPseudo CName(const std::string& iName)
 	{ return new ZValComparand_Name(iName); }
-
-// =================================================================================================
-// MARK: - Comparison operators taking comparands and returning a condition
-
-ZValPred operator<(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLT), iRHS); }
-
-ZValPred operator<=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eLE), iRHS); }
-
-ZValPred operator==(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eEQ), iRHS); }
-
-ZValPred operator!=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eNE), iRHS); }
-
-ZValPred operator>=(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGE), iRHS); }
-
-ZValPred operator>(const ZValComparandPseudo& iLHS, const ZValComparandPseudo& iRHS)
-	{ return ZValPred(iLHS, new ZValComparator_Simple(ZValComparator_Simple::eGT), iRHS); }
 
 } // namespace ZooLib
 
