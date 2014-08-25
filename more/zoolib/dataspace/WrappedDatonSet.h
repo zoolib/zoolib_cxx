@@ -55,9 +55,9 @@ public:
 
 	void Update();
 
-	void PokeThis(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested);
+	void SuggestPull(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested);
 
-	void InsertCallable_PullSuggested(ZRef<Callable_PullSuggested> iCallable_PullSuggested);
+	void InsertCallable_PullSuggested(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested);
 
 	ZRef<Callable_PullSuggested> GetCallable_PullSuggested();
 

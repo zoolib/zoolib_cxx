@@ -134,11 +134,11 @@ void WrappedDatonSet::Update()
 		}
 	}
 
-void WrappedDatonSet::PokeThis(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested)
+void WrappedDatonSet::SuggestPull(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested)
 	{ sCall(iCallable_PullSuggested, fCallable_PullFrom_Self); }
 
 void WrappedDatonSet::InsertCallable_PullSuggested(
-	ZRef<Callable_PullSuggested> iCallable_PullSuggested)
+	const ZRef<Callable_PullSuggested>& iCallable_PullSuggested)
 	{
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullSuggested, iCallable_PullSuggested);
@@ -170,7 +170,6 @@ void WrappedDatonSet::pPullFrom(
 	ZGuardMtxR guard(fMtxR);
 	fDatonSet_Committed->GetDeltas(iEvent, oDeltas, oEvent);
 	}
-
 
 ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
 	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate)
