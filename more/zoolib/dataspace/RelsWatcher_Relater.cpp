@@ -77,9 +77,19 @@ public:
 // =================================================================================================
 // MARK: - RelsWatcher_Relater
 
-RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater)
+RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater,
+	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 :	fRelater(iRelater)
+,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
 	{}
+
+void RelsWatcher_Relater::Initialize()
+	{
+	inherited::Initialize();
+
+	fRelater->SetCallable_ResultsAvailable(
+		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
+	}
 
 ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
@@ -98,15 +108,6 @@ ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 		}
 
 	return ZRef<ZCounted>(theR);
-	}
-
-void RelsWatcher_Relater::SetCallable_NeedsUpdate(
-	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
-	{
-	ZGuardMtxR guard(fMtxR);
-	fCallable_NeedsUpdate = iCallable_NeedsUpdate;
-	fRelater->SetCallable_ResultsAvailable(
-		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
 	}
 
 void RelsWatcher_Relater::Update()

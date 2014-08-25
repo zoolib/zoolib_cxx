@@ -36,8 +36,15 @@ namespace Dataspace {
 class RelsWatcher_Relater
 :	public RelsWatcher::Callable_Register
 	{
+	typedef RelsWatcher::Callable_Register inherited;
 public:
-	RelsWatcher_Relater(const ZRef<Relater>& iRelater);
+	typedef ZCallable_Void Callable_NeedsUpdate;
+
+	RelsWatcher_Relater(const ZRef<Relater>& iRelater,
+		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
+
+// From ZCounted via Callable_Register
+	virtual void Initialize();
 
 // From ZCallable via Callable_Register
 	ZQ<ZRef<ZCounted> > QCall(
@@ -45,8 +52,6 @@ public:
 		const ZRef<Expr_Rel>& iRel);
 
 // Our protocol
-	typedef ZCallable_Void Callable_NeedsUpdate;
-	void SetCallable_NeedsUpdate(const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 	void Update();
 
 private:
