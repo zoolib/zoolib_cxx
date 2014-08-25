@@ -43,6 +43,9 @@ public:
 
 	virtual ~WrappedDatonSet();
 
+// From ZCounted
+	virtual void Initialize();
+
 // Our protocol
 	ZRef<DatonSet> GetDatonSet_Active();
 
@@ -51,6 +54,8 @@ public:
 	void SetCallable_NeedsUpdate(const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
 	void Update();
+
+	void PokeThis(const ZRef<Callable_PullSuggested>& iCallable_PullSuggested);
 
 	void InsertCallable_PullSuggested(ZRef<Callable_PullSuggested> iCallable_PullSuggested);
 
