@@ -35,10 +35,11 @@ using std::swap;
 // =================================================================================================
 // MARK: - WrappedDatonSet
 
-WrappedDatonSet::WrappedDatonSet(const ZRef<DatonSet>& iDatonSet)
+WrappedDatonSet::WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
+	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 :	fDatonSet_Committed(iDatonSet)
 ,	fDatonSet_Active(fDatonSet_Committed->Fork())
-,	fCalled_NeedsUpdate(false)
+,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
 	{}
 
 WrappedDatonSet::~WrappedDatonSet()
@@ -56,7 +57,7 @@ ZRef<DatonSet> WrappedDatonSet::GetDatonSet_Active()
 	ZGuardMtxR guard(fMtxR);
 
 	ZRef<DatonSet> result = fDatonSet_Active;
-	if (not sGetSet(fCalled_NeedsUpdate, true))
+	if (not fCalled_NeedsUpdate())
 		{
 		guard.Release();
 		sCall(fCallable_NeedsUpdate);
@@ -71,17 +72,10 @@ ZRef<DatonSet> WrappedDatonSet::GetDatonSet_Committed()
 	return fDatonSet_Committed;
 	}
 
-void WrappedDatonSet::SetCallable_NeedsUpdate(
-	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
-	{
-	ZAssert(not fCallable_NeedsUpdate);
-	fCallable_NeedsUpdate = iCallable_NeedsUpdate;
-	}
-
 void WrappedDatonSet::Update()
 	{
 	ZGuardMtxR guard(fMtxR);
-	fCalled_NeedsUpdate = false;
+	fCalled_NeedsUpdate.Reset();
 
 	set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
 	swap(theCallables_PullFrom, fCallables_PullFrom);
@@ -157,7 +151,7 @@ void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_Pu
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 
-	if (not sGetSet(fCalled_NeedsUpdate, true))
+	if (not fCalled_NeedsUpdate())
 		{
 		guard.Release();
 		sCall(fCallable_NeedsUpdate);
@@ -175,12 +169,10 @@ ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
 	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 	{
 	ZRef<WrappedDatonSet> result =
-		new WrappedDatonSet(iParent->GetDatonSet_Committed()->Fork());
+		new WrappedDatonSet(iParent->GetDatonSet_Committed()->Fork(), iCallable_NeedsUpdate);
 
 	result->InsertCallable_PullSuggested(iParent->GetCallable_PullSuggested());
 	iParent->InsertCallable_PullSuggested(result->GetCallable_PullSuggested());
-
-	result->SetCallable_NeedsUpdate(iCallable_NeedsUpdate);
 
 	return result;
 	}

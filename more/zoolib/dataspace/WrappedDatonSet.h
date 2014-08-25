@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/ValueOnce.h"
+
 #include "zoolib/datonset/ZDatonSet.h"
 #include "zooLib/dataspace/Stuff.h"
 
@@ -39,7 +41,8 @@ public:
 	typedef ZDatonSet::DatonSet DatonSet;
 	typedef ZCallable_Void Callable_NeedsUpdate;
 
-	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet);
+	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
+		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
 	virtual ~WrappedDatonSet();
 
@@ -50,8 +53,6 @@ public:
 	ZRef<DatonSet> GetDatonSet_Active();
 
 	ZRef<DatonSet> GetDatonSet_Committed();
-
-	void SetCallable_NeedsUpdate(const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
 	void Update();
 
@@ -74,7 +75,7 @@ private:
 	ZRef<DatonSet> fDatonSet_Committed;
 	ZRef<DatonSet> fDatonSet_Active;
 
-	bool fCalled_NeedsUpdate;
+	FalseOnce fCalled_NeedsUpdate;
 	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
 
 	ZRef<Callable_PullSuggested> fCallable_PullSuggested_Self;
