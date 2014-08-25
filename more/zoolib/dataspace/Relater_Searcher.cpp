@@ -169,7 +169,7 @@ Relater_Searcher::~Relater_Searcher()
 void Relater_Searcher::Initialize()
 	{
 	Relater::Initialize();
-	fSearcher->SetCallable_ResultsAvailable(
+	fSearcher->SetCallable_SearcherResultsAvailable(
 		sCallable(sWeakRef(this), &Relater_Searcher::pSearcherResultsAvailable));
 	}
 
@@ -251,13 +251,13 @@ void Relater_Searcher::ModifyRegistrations(
 	if (sNotEmpty(fClientQuery_NeedsWork) || sNotEmpty(fPQuery_NeedsWork))
 		{
 		guard.Release();
-		Relater::pTriggerResultsAvailable();
+		Relater::pTrigger_RelaterResultsAvailable();
 		}
 	}
 
 void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	{
-	Relater::pCollectResultsCalled();
+	Relater::pCalled_RelaterCollectResults();
 
 	this->pCollectResultsFromSearcher();
 
@@ -317,7 +317,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	}
 
 void Relater_Searcher::ForceUpdate()
-	{ Relater::pTriggerResultsAvailable(); }
+	{ Relater::pTrigger_RelaterResultsAvailable(); }
 
 bool Relater_Searcher::pCollectResultsFromSearcher()
 	{
@@ -349,7 +349,7 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 	// *1* We must call pCollectResultsFromSearcher because we're possibly
 	// waiting on an fResult field at *2* below.
 	if (this->pCollectResultsFromSearcher())
-		Relater::pTriggerResultsAvailable();
+		Relater::pTrigger_RelaterResultsAvailable();
 	}
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery,

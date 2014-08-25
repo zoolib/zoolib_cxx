@@ -64,13 +64,13 @@ public:
 
 	virtual void CollectResults(vector<QueryResult>& oChanged)
 		{
-		Relater::pCollectResultsCalled();
+		Relater::pCalled_RelaterCollectResults();
 		fMUX->pCollectResults(this, oChanged);
 		}
 
 // Our protocol
 	void ResultsAvailable()
-		{ Relater::pTriggerResultsAvailable(); }
+		{ Relater::pTrigger_RelaterResultsAvailable(); }
 
 	ZRef<RelaterMUX> fMUX;
 
@@ -93,13 +93,13 @@ RelaterMUX::~RelaterMUX()
 void RelaterMUX::Initialize()
 	{
 	RelaterFactory::Initialize();
-	fRelater->SetCallable_ResultsAvailable(
+	fRelater->SetCallable_RelaterResultsAvailable(
 		sCallable(sWeakRef(this), &RelaterMUX::pResultsAvailable));
 	}
 
 void RelaterMUX::Finalize()
 	{
-	fRelater->SetCallable_ResultsAvailable(null);
+	fRelater->SetCallable_RelaterResultsAvailable(null);
 	RelaterFactory::Finalize();
 	}
 

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
+#include "zoolib/ValueOnce.h"
 
 #include "zoolib/dataspace/Types.h"
 
@@ -95,17 +96,17 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged) = 0;
 
-	typedef ZCallable<void(ZRef<Relater>)> Callable_ResultsAvailable;
-	void SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable);
+	typedef ZCallable<void(ZRef<Relater>)> Callable_RelaterResultsAvailable;
+	void SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable);
 
 protected:
-	void pCollectResultsCalled();
-	void pTriggerResultsAvailable();
+	void pCalled_RelaterCollectResults();
+	void pTrigger_RelaterResultsAvailable();
 
 private:
 	ZMtx fMtx;
-	bool fCalled_ResultsAvailable;
-	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
+	FalseOnce fCalled_RelaterResultsAvailable;
+	ZRef<Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
 	};
 
 // =================================================================================================

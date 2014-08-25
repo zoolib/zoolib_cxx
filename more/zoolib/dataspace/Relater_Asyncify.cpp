@@ -52,13 +52,13 @@ Relater_Asyncify::~Relater_Asyncify()
 void Relater_Asyncify::Initialize()
 	{
 	Relater::Initialize();
-	fRelater->SetCallable_ResultsAvailable(
+	fRelater->SetCallable_RelaterResultsAvailable(
 		sCallable(sWeakRef(this), &Relater_Asyncify::pResultsAvailable));
 	}
 
 void Relater_Asyncify::Finalize()
 	{
-	fRelater->SetCallable_ResultsAvailable(null);
+	fRelater->SetCallable_RelaterResultsAvailable(null);
 	Relater::Finalize();
 	}
 
@@ -100,7 +100,7 @@ void Relater_Asyncify::ModifyRegistrations(
 void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	{
 	ZAcqMtxR acq(fMtxR);
-	Relater::pCollectResultsCalled();
+	Relater::pCalled_RelaterCollectResults();
 
 	oChanged.reserve(fPendingResults.size());
 	foreachi (iter, fPendingResults)
@@ -179,7 +179,7 @@ void Relater_Asyncify::pUpdate()
 					fPendingResults[iter->GetRefcon()] = *iter;
 
 				guard.Release();
-				Relater::pTriggerResultsAvailable();
+				Relater::pTrigger_RelaterResultsAvailable();
 				}
 			guard.Acquire();
 			}

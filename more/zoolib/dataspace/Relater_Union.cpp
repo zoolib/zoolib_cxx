@@ -764,7 +764,7 @@ Relater_Union::~Relater_Union()
 void Relater_Union::Initialize()
 	{
 	Relater::Initialize();
-	fCallable_ResultsAvailable = sCallable(sWeakRef(this), &Relater_Union::pResultsAvailable);
+	fCallable_RelaterResultsAvailable = sCallable(sWeakRef(this), &Relater_Union::pResultsAvailable);
 	}
 
 bool Relater_Union::Intersects(const RelHead& iRelHead)
@@ -871,12 +871,12 @@ void Relater_Union::ModifyRegistrations(
 		}
 
 	guard.Release();
-	Relater::pTriggerResultsAvailable();
+	Relater::pTrigger_RelaterResultsAvailable();
 	}
 
 void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 	{
-	Relater::pCollectResultsCalled();
+	Relater::pCalled_RelaterCollectResults();
 
 	ZAcqMtxR acq(fMtxR);
 
@@ -1008,7 +1008,7 @@ void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix
 
 	sInsertMust(kDebug, fMap_Relater_PRelater, iRelater, PRelater(iRelater, iPrefix));
 
-	iRelater->SetCallable_ResultsAvailable(fCallable_ResultsAvailable);
+	iRelater->SetCallable_RelaterResultsAvailable(fCallable_RelaterResultsAvailable);
 	}
 
 void Relater_Union::EraseRelater(ZRef<Relater> iRelater)
@@ -1029,7 +1029,7 @@ void Relater_Union::EraseRelater(ZRef<Relater> iRelater)
 
 	iRelater->ModifyRegistrations(nullptr, 0, sFirstOrNil(toRemove), toRemove.size());
 
-	iRelater->SetCallable_ResultsAvailable(null);
+	iRelater->SetCallable_RelaterResultsAvailable(null);
 
 	fMap_Relater_PRelater.erase(iterRelater);
 	}
@@ -1197,7 +1197,7 @@ void Relater_Union::pResultsAvailable(ZRef<Relater> iRelater)
 	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
 	sQInsertBack(fPRelater_CollectFrom, &iterRelater->second);
 	guard.Release();
-	Relater::pTriggerResultsAvailable();
+	Relater::pTrigger_RelaterResultsAvailable();
 	}
 
 } // namespace Dataspace

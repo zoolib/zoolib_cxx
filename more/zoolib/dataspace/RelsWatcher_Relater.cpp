@@ -87,7 +87,7 @@ void RelsWatcher_Relater::Initialize()
 	{
 	inherited::Initialize();
 
-	fRelater->SetCallable_ResultsAvailable(
+	fRelater->SetCallable_RelaterResultsAvailable(
 		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
 	}
 

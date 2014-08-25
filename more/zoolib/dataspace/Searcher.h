@@ -119,17 +119,17 @@ public:
 
 	virtual void CollectResults(std::vector<SearchResult>& oChanged) = 0;
 
-	typedef ZCallable<void(ZRef<Searcher>)> Callable_ResultsAvailable;
-	void SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable);
+	typedef ZCallable<void(ZRef<Searcher>)> Callable_SearcherResultsAvailable;
+	void SetCallable_SearcherResultsAvailable(ZRef<Callable_SearcherResultsAvailable> iCallable);
 
 protected:
 	void pCollectResultsCalled();
-	void pTriggerResultsAvailable();
+	void pTriggerSearcherResultsAvailable();
 
 private:
 	ZMtx fMtx;
-	FalseOnce fCalled_ResultsAvailable;
-	ZRef<Callable_ResultsAvailable> fCallable_ResultsAvailable;
+	FalseOnce fCalled_SearcherResultsAvailable;
+	ZRef<Callable_SearcherResultsAvailable> fCallable_SearcherResultsAvailable;
 	};
 
 } // namespace Dataspace

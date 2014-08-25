@@ -161,25 +161,27 @@ Searcher::Searcher()
 Searcher::~Searcher()
 	{}
 
-void Searcher::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
+void Searcher::SetCallable_SearcherResultsAvailable(
+	ZRef<Callable_SearcherResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable.Reset();
-	fCallable_ResultsAvailable = iCallable;
+	fCalled_SearcherResultsAvailable.Reset();
+	fCallable_SearcherResultsAvailable = iCallable;
 	}
 
 void Searcher::pCollectResultsCalled()
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable.Reset();
+	fCalled_SearcherResultsAvailable.Reset();
 	}
 
-void Searcher::pTriggerResultsAvailable()
+void Searcher::pTriggerSearcherResultsAvailable()
 	{
 	ZGuardMtx guard(fMtx);
-	if (not fCalled_ResultsAvailable())
+	if (not fCalled_SearcherResultsAvailable())
 		{
-		if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
+		if (ZRef<Callable_SearcherResultsAvailable> theCallable =
+			fCallable_SearcherResultsAvailable)
 			{
 			guard.Release();
 			theCallable->Call(this);

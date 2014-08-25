@@ -148,7 +148,7 @@ private:
 	// -----
 
 	ZRef<Event> fEvent;
-	ZRef<Relater::Callable_ResultsAvailable> fCallable_ResultsAvailable;
+	ZRef<Relater::Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
 
 	void pCollectFrom(PRelater* iPRelater);
 	void pResultsAvailable(ZRef<Relater> iRelater);

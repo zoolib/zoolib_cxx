@@ -295,7 +295,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 		|| sNotEmpty(fPScan_NeedsWork))
 		{
 		guard.Release();
-		Searcher::pTriggerResultsAvailable();
+		Searcher::pTriggerSearcherResultsAvailable();
 		}
 	}
 
@@ -392,7 +392,7 @@ void Searcher_DatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 	guard.Release();
-	Searcher::pTriggerResultsAvailable();
+	Searcher::pTriggerSearcherResultsAvailable();
 	}
 
 void Searcher_DatonSet::pPull()

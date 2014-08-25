@@ -103,31 +103,30 @@ ZRef<Event> QueryResult::GetEvent() const
 // MARK: - Relater
 
 Relater::Relater()
-:	fCalled_ResultsAvailable(false)
 	{}
 
 Relater::~Relater()
 	{}
 
-void Relater::SetCallable_ResultsAvailable(ZRef<Callable_ResultsAvailable> iCallable)
+void Relater::SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable = false;
-	fCallable_ResultsAvailable = iCallable;
+	fCalled_RelaterResultsAvailable.Reset();
+	fCallable_RelaterResultsAvailable = iCallable;
 	}
 
-void Relater::pCollectResultsCalled()
+void Relater::pCalled_RelaterCollectResults()
 	{
 	ZAcqMtx acq(fMtx);
-	fCalled_ResultsAvailable = false;
+	fCalled_RelaterResultsAvailable.Reset();
 	}
 
-void Relater::pTriggerResultsAvailable()
+void Relater::pTrigger_RelaterResultsAvailable()
 	{
 	ZGuardMtx guard(fMtx);
-	if (not sGetSet(fCalled_ResultsAvailable, true))
+	if (not fCalled_RelaterResultsAvailable())
 		{
-		if (ZRef<Callable_ResultsAvailable> theCallable = fCallable_ResultsAvailable)
+		if (ZRef<Callable_RelaterResultsAvailable> theCallable = fCallable_RelaterResultsAvailable)
 			{
 			guard.Release();
 			theCallable->Call(this);
