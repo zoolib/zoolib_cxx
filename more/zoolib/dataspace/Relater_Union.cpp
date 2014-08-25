@@ -624,7 +624,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 	fPRelaters = leftPRelaters | rightPRelaters;
 	if (leftRelHead != rightRelHead)
 		{
-		if (ZLOGF(w,eInfo))
+		if (ZLOGPF(w,eInfo))
 			{
 			w
 				<< "leftRelHead and rightRelHead don't match, newOp0 and newOp1 are incompatible"

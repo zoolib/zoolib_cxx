@@ -517,7 +517,7 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
 	theRH.insert(string8());
 
-	if (ZLOGPF(w, eDebug))
+	if (ZLOGPF(w, eDebug + 1))
 		w << "theRH: " << theRH;
 
 	// This is overkill -- we don't necessarily have to rework the whole PScan.
@@ -527,14 +527,14 @@ void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
 		PScan* thePScan = &iterPScan->second;
 		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
 			{
-			if (ZLOGF(w,eDebug))
+			if (ZLOGPF(w,eDebug + 1))
 				w << "Invalidating PScan: " << thePScan->fConcreteHead;
 			thePScan->fResult.Clear();
 			sQInsertBack(fPScan_NeedsWork, thePScan);
 			}
 		else
 			{
-			if (ZLOGF(w,eDebug))
+			if (ZLOGPF(w,eDebug + 1))
 				w << "Not invalidating PScan: " << thePScan->fConcreteHead;
 			}
 		}

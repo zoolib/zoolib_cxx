@@ -107,7 +107,7 @@ void ZNatter::pRemove(Exchange* iExchange)
 
 	guard.Release();
 
-	if (ZLOGF(s, eDebug))
+	if (ZLOGPF(s, eDebug))
 		s << this << ", id: " << iExchange->fID;
 
 	try
@@ -154,7 +154,7 @@ ZQ<ZData_Any> ZNatter::pQSendReceive(ZRef<Exchange> iExchange, ZData_Any iData)
 
 	guard.Release();
 
-	if (ZLOGF(s, eDebug))
+	if (ZLOGPF(s, eDebug))
 		s << this << "id: " << iExchange->fID;
 
 	try
@@ -232,7 +232,7 @@ void ZNatter::pRead(ZGuardMtxR& iGuard)
 			}
 		else
 			{
-			if (ZLOGF(s, eDebug))
+			if (ZLOGPF(s, eDebug))
 				s << this << ", id: " << theID << ", type: " << theType;
 
 			if (theType == 0)
