@@ -18,68 +18,65 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSQLite_h__
-#define __ZSQLite_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZAny.h"
-#include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
-
-#include <sqlite3.h>
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZQLite/YadSeqR_Iter.h"
 
 namespace ZooLib {
-namespace ZSQLite {
+namespace SQLite {
 
 // =================================================================================================
-// MARK: - ZSQLite
+// MARK: - Anonymous YadMapR
 
-class DB : public ZCounted
+namespace { // anonymous
+
+class YadMapR : public ZYadMapR_Std
 	{
 public:
-	DB(const string8& iPath);
-	DB(sqlite3* iDB, bool iAdopt);
+	YadMapR(ZRef<Iter> iIter);
 
-	virtual ~DB();
-
-	sqlite3* GetDB();
+// From ZYadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	sqlite3* fDB;
-	bool fAdopted;
+	ZRef<Iter> fIter;
+	size_t fIndex;
 	};
+
+YadMapR::YadMapR(ZRef<Iter> iIter)
+:	fIter(iIter)
+,	fIndex(0)
+	{}
+
+void YadMapR::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
+	{
+	if (fIndex < fIter->Count())
+		{
+		oName = fIter->NameOf(fIndex);
+		oYadR = sYadR(fIter->Get(fIndex));
+		++fIndex;
+		}
+	}
+
+} // anonymous namespace
 
 // =================================================================================================
-// MARK: - Iter
+// MARK: - SQLite::YadSeqR_Iter
 
-class Iter : public ZCounted
+YadSeqR_Iter::YadSeqR_Iter(ZRef<Iter> iIter)
+:	fIter(iIter)
+	{}
+
+YadSeqR_Iter::~YadSeqR_Iter()
+	{}
+
+void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition);
+	if (not iIsFirst)
+		fIter->Advance();
 
-public:
-	Iter(ZRef<DB> iDB, const string8& iSQL);
-	virtual ~Iter();
+	if (fIter->HasValue())
+		oYadR = new YadMapR(fIter);
+	}
 
-	ZRef<Iter> Clone(bool iRewound);
-	void Rewind();
-	bool HasValue();
-	void Advance();
-
-	size_t Count();
-	string8 NameOf(size_t iIndex);
-	ZAny Get(size_t iIndex);
-
-private:
-	void pAdvance();
-
-	ZRef<DB> fDB;
-	const string8 fSQL;
-	sqlite3_stmt* fStmt;
-	bool fHasValue;
-	uint64 fPosition;
-	};
-
-} // namespace ZSQLite
+} // namespace SQLite
 } // namespace ZooLib
-
-#endif // __ZSQLite_h__

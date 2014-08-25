@@ -19,15 +19,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZData_Any.h"
-#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/sqlite/SQLite.h"
 
 #include <stdexcept>
 
 namespace ZooLib {
-namespace ZSQLite {
+namespace SQLite {
 
 // =================================================================================================
-// MARK: - ZSQLite
+// MARK: - SQLite
 
 DB::DB(const string8& iPath)
 :	fDB(nullptr)
@@ -201,5 +201,5 @@ void Iter::pAdvance()
 		}
 	}
 
-} // namespace ZSQLite
+} // namespace SQLite
 } // namespace ZooLib

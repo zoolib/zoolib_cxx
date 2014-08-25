@@ -18,18 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSQLite_YadSeqR_Iter_h__
-#define __ZSQLite_YadSeqR_Iter_h__ 1
+#ifndef __ZooLib_SQLite_YadSeqR_Iter_h__
+#define __ZooLib_SQLite_YadSeqR_Iter_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZYad_Std.h"
-#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/sqlite/SQLite.h"
 
 namespace ZooLib {
-namespace ZSQLite {
+namespace SQLite {
 
 // =================================================================================================
-// MARK: - ZSQLite::YadSeqR_Iter
+// MARK: - SQLite::YadSeqR_Iter
 
 class YadSeqR_Iter : public ZYadSeqR_Std
 	{
@@ -44,7 +44,7 @@ private:
 	ZRef<Iter> fIter;
 	};
 
-} // namespace ZSQLite
+} // namespace SQLite
 } // namespace ZooLib
 
-#endif // __ZSQLite_YadSeqR_Iter_h__
+#endif // __ZooLib_SQLite_YadSeqR_Iter_h__
