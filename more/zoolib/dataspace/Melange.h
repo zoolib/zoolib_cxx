@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_Stuff_h__
-#define __ZooLib_Dataspace_Stuff_h__ 1
+#ifndef __ZooLib_Dataspace_Melange_h__
+#define __ZooLib_Dataspace_Melange_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -54,4 +54,4 @@ typedef ZCallable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Calla
 } // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_Stuff_h__
+#endif // __ZooLib_Dataspace_Melange_h__
