@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValueOnce.h"
 
 #include "zoolib/datonset/ZDatonSet.h"
-#include "zooLib/dataspace/Stuff.h"
+#include "zooLib/dataspace/Melange.h"
 
 namespace ZooLib {
 namespace Dataspace {

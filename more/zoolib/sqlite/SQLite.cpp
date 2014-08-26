@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZData_Any.h"
-#include "zoolib/sqlite/SQLite.h"
+#include "zoolib/SQLite/SQLite.h"
 
 #include <stdexcept>
 
@@ -173,7 +173,8 @@ ZAny Iter::Get(size_t iIndex)
 				case SQLITE3_TEXT:
 					{
 					const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
-					return sAnyCounted<string8>((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex));
+					return sAnyCounted<string8>(
+						(const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex));
 					}
 				case SQLITE_BLOB:
 					{

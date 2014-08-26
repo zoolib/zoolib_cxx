@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZQLite/YadSeqR_Iter.h"
+#include "zoolib/SQLite/YadSeqR_Iter.h"
 
 namespace ZooLib {
 namespace SQLite {

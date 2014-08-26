@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Searcher.h"
-#include "zoolib/dataspace/Stuff.h"
+#include "zoolib/dataspace/Melange.h"
 #include "zoolib/datonset/ZDatonSet.h"
 #include "zoolib/QueryEngine/Walker.h"
 
