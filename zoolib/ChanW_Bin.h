@@ -18,74 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_h__
-#define __ZooLib_ChanW_h__ 1
+#ifndef __ZooLib_ChanW_Bin_h__
+#define __ZooLib_ChanW_Bin_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTypes.h" // For sNonConst
+#include "zoolib/ByteSwap.h"
+#include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: -
 
-template <class Elmt_p>
-class ChanW
-	{
-protected:
-/** \name Canonical Methods
-The canonical methods are protected, thus you cannot create, destroy or assign through a
-ChanW reference, you must work with some derived class.
-*/	//@{
-	ChanW() {}
-	virtual ~ChanW() {}
-	ChanW(const ChanW&) {}
-	ChanW& operator=(const ChanW&) { return *this; }
-	//@}
-
-public:
-	typedef Elmt_p Elmt_t;
-	typedef Elmt_p Elmt;
-
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
-		{ return 0; }
-
-	virtual void Flush()
-		{}
-	};
+typedef ChanW<uint8> ChanW_Bin;
 
 // =================================================================================================
 // MARK: -
 
-template <class Elmt_p>
-size_t sWrite(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
-	{ return sNonConst(iChanW).Write(iSource, iCount); }
+inline
+size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return sWrite(iChan, static_cast<const uint8*>(iSource), iCount); }
 
-template <class Elmt_p>
-void sFlush(const ChanW<Elmt_p>& iChanW)
-	{ sNonConst(iChanW).Flush(); }
-
-// =================================================================================================
-// MARK: -
-
-template <class Elmt_p>
-size_t sWriteFully(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
+template <class T>
+bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	{
-	Elmt_p* localSource = iSource;
-	while (iCount)
-		{
-		if (const size_t countWritten = sWrite(iChanW, localSource, iCount))
-			{
-			iCount -= countWritten;
-			localSource += countWritten;
-			}
-		else
-			{ break; }
-		}
-	return localSource - iSource;
+	T buf = iT;
+	sByteSwap<T>(&buf);
+	if (sizeof (T) != sWriteFully(iChanW, &buf, sizeof (T)))
+		return false;
+	return true;
 	}
 
+template <class T>
+bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
+	{
+	if (sizeof (T) != sWriteFully(iChanW, &iT, sizeof (T)))
+		return false;
+	return true;
+	}
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_h__
+#endif // __ZooLib_ChanW_Bin_h__

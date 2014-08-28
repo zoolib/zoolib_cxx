@@ -39,4 +39,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_h__
+#endif // __ZooLib_ChanPos_h__

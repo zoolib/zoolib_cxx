@@ -18,36 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanR_ML_h__
-#define __ZooLib_ChanR_ML_h__ 1
+#ifndef __ZooLib_ByteSwap_h__
+#define __ZooLib_ByteSwap_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR.h"
+#include "zoolib/ZByteSwap.h"
+
+// For now we're using the functions provided in ZByteSwap. Ultimately we'll migrate their
+// implementations to here, and probably those function will wrap the ones here.
 
 namespace ZooLib {
-
-class MLRep
-:	public ZCounted
-	{};
-
-
-
-class ML
-	{
-public:
-	bool IsBegin();
-	bool IsEnd();
-	bool IsEmpty();
-	bool IsTag();
-	string8 GetName();
-	};
-
-typedef ChanR<ML> ChanR_ML;
 
 // =================================================================================================
 // MARK: -
 
+template <size_t size>
+void sByteSwap(void* ioBuf);
+
+template <>
+void sByteSwap<2>(void* ioBuf)
+	{ ZByteSwap_16(ioBuf); }
+
+template <>
+void sByteSwap<4>(void* ioBuf)
+	{ ZByteSwap_32(ioBuf); }
+
+template <>
+void sByteSwap<8>(void* ioBuf)
+	{ ZByteSwap_64(ioBuf); }
+
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_ML_h__
+#endif // __ZooLib_ByteSwap_h__

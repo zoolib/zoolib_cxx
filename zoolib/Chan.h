@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_h__
-#define __ZooLib_ChanW_h__ 1
+#ifndef __ZooLib_Chan_h__
+#define __ZooLib_Chan_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTypes.h" // For sNonConst
+#include "zoolib/ZStdInt.h" // For uint8
 
 namespace ZooLib {
 
@@ -30,62 +30,23 @@ namespace ZooLib {
 // MARK: -
 
 template <class Elmt_p>
-class ChanW
+class ChanTraits
 	{
-protected:
-/** \name Canonical Methods
-The canonical methods are protected, thus you cannot create, destroy or assign through a
-ChanW reference, you must work with some derived class.
-*/	//@{
-	ChanW() {}
-	virtual ~ChanW() {}
-	ChanW(const ChanW&) {}
-	ChanW& operator=(const ChanW&) { return *this; }
-	//@}
-
 public:
-	typedef Elmt_p Elmt_t;
 	typedef Elmt_p Elmt;
-
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
-		{ return 0; }
-
-	virtual void Flush()
-		{}
+	typedef Elmt_p* Pointer;
+	typedef const Elmt_p* ConstPointer;
 	};
 
-// =================================================================================================
-// MARK: -
-
-template <class Elmt_p>
-size_t sWrite(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
-	{ return sNonConst(iChanW).Write(iSource, iCount); }
-
-template <class Elmt_p>
-void sFlush(const ChanW<Elmt_p>& iChanW)
-	{ sNonConst(iChanW).Flush(); }
-
-// =================================================================================================
-// MARK: -
-
-template <class Elmt_p>
-size_t sWriteFully(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
+template <>
+class ChanTraits<void>
 	{
-	Elmt_p* localSource = iSource;
-	while (iCount)
-		{
-		if (const size_t countWritten = sWrite(iChanW, localSource, iCount))
-			{
-			iCount -= countWritten;
-			localSource += countWritten;
-			}
-		else
-			{ break; }
-		}
-	return localSource - iSource;
-	}
-
+public:
+	typedef uint8 Elmt;
+	typedef void* Pointer;
+	typedef const void* ConstPointer;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_h__
+#endif // __ZooLib_Chan_h__

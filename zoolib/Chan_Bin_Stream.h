@@ -18,74 +18,75 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_h__
-#define __ZooLib_ChanW_h__ 1
+#ifndef __ZooLib_Chan_Bin_Stream_h__
+#define __ZooLib_Chan_Bin_Stream_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTypes.h" // For sNonConst
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/ZStream.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_Bin_Stream
 
-template <class Elmt_p>
-class ChanW
+class ChanR_Bin_Stream
+:	public ChanR_Bin
 	{
-protected:
-/** \name Canonical Methods
-The canonical methods are protected, thus you cannot create, destroy or assign through a
-ChanW reference, you must work with some derived class.
-*/	//@{
-	ChanW() {}
-	virtual ~ChanW() {}
-	ChanW(const ChanW&) {}
-	ChanW& operator=(const ChanW&) { return *this; }
-	//@}
-
 public:
-	typedef Elmt_p Elmt_t;
-	typedef Elmt_p Elmt;
-
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
-		{ return 0; }
-
-	virtual void Flush()
+	ChanR_Bin_Stream(const ZStreamR& iStreamR)
+	:	fStreamR(iStreamR)
 		{}
+
+// From ChanR
+	virtual size_t Read(Elmt* iDest, size_t iCount)
+		{
+		size_t countRead = 0;
+		fStreamR.Read(iDest, iCount, &countRead);
+		return countRead;
+		}
+
+	virtual uint64 Skip(uint64 iCount)
+		{
+		uint64 countSkipped;
+		fStreamR.Skip(iCount, &countSkipped);
+		return countSkipped;
+		}
+
+	virtual size_t Readable()
+		{ return fStreamR.CountReadable(); }
+
+private:
+	const ZStreamR& fStreamR;
 	};
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanW_Bin_Stream
 
-template <class Elmt_p>
-size_t sWrite(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
-	{ return sNonConst(iChanW).Write(iSource, iCount); }
-
-template <class Elmt_p>
-void sFlush(const ChanW<Elmt_p>& iChanW)
-	{ sNonConst(iChanW).Flush(); }
-
-// =================================================================================================
-// MARK: -
-
-template <class Elmt_p>
-size_t sWriteFully(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
+class ChanW_Bin_Stream
+:	public ChanW_Bin
 	{
-	Elmt_p* localSource = iSource;
-	while (iCount)
-		{
-		if (const size_t countWritten = sWrite(iChanW, localSource, iCount))
-			{
-			iCount -= countWritten;
-			localSource += countWritten;
-			}
-		else
-			{ break; }
-		}
-	return localSource - iSource;
-	}
+public:
+	ChanW_Bin_Stream(const ZStreamW& iStreamW)
+	:	fStreamW(iStreamW)
+		{}
 
+// From ChanW
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{
+		size_t countWritten = 0;
+		fStreamW.Write(iSource, iCount, &countWritten);
+		return countWritten;
+		}
+
+	virtual void Flush()
+		{ fStreamW.Flush(); }
+
+private:
+	const ZStreamW& fStreamW;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_h__
+#endif // __ZooLib_Chan_Bin_Stream_h__

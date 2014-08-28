@@ -22,8 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanR_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Chan.h"
+
 #include "zoolib/ZQ.h"
 #include "zoolib/ZStdInt.h" // For size_t, uint64
+#include "zoolib/ZTypes.h" // For sNonConst
 
 namespace ZooLib {
 
@@ -33,7 +36,19 @@ namespace ZooLib {
 template <class Elmt_p>
 class ChanR
 	{
+protected:
+/** \name Canonical Methods
+The canonical methods are protected, thus you cannot create, destroy or assign through a
+ChanR reference, you must work with some derived class.
+*/	//@{
+	ChanR() {}
+	virtual ~ChanR() {}
+	ChanR(const ChanR&) {}
+	ChanR& operator=(const ChanR&) { return *this; }
+	//@}
+
 public:
+	typedef Elmt_p Elmt_t;
 	typedef Elmt_p Elmt;
 
 	virtual size_t Read(Elmt* iDest, size_t iCount)
@@ -43,7 +58,7 @@ public:
 		{
 		const uint64 kBufSize = 4096 / sizeof(Elmt);
 		Elmt scratch[kBufSize];
-		return this->Read(&scratch, std::min(iCount, kBufSize));
+		return this->Read(scratch, std::min(iCount, kBufSize));
 		}
 
 	virtual size_t Readable()
@@ -63,16 +78,24 @@ public:
 // MARK: -
 
 template <class Elmt_p>
+class ChanR_Null
+:	public ChanR<Elmt_p>
+	{};
+
+// =================================================================================================
+// MARK: -
+
+template <class Elmt_p>
 size_t sRead(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
-	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Read(iDest, iCount); }
+	{ return sNonConst(iChanR).Read(iDest, iCount); }
 
 template <class Elmt_p>
 uint64 sSkip(const ChanR<Elmt_p>& iChanR, uint64 iCount)
-	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Skip(iCount); }
+	{ return sNonConst(iChanR).Skip(iCount); }
 
 template <class Elmt_p>
 size_t sReadable(const ChanR<Elmt_p>& iChanR)
-	{ return const_cast<ChanR<Elmt_p>&>(iChanR).Readable(); }
+	{ return sNonConst(iChanR).Readable(); }
 
 // =================================================================================================
 // MARK: -

@@ -18,47 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanR_Bin_Stream_h__
-#define __ZooLib_ChanR_Bin_Stream_h__ 1
+#ifndef __ZooLib_ChanClose_h__
+#define __ZooLib_ChanClose_h__ 1
 #include "zconfig.h"
-
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ZStream.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_Bin_Stream
+// MARK: - ChanClose
 
-class ChanR_Bin_Stream
-:	public ChanR_Bin
+class ChanClose
 	{
 public:
-	ChanR_Bin_Stream(const ZStreamR& iStreamR)
-	:	fStreamR(iStreamR)
-		{}
-
-	virtual size_t Read(byte* iDest, size_t iCount)
-		{
-		size_t countRead = 0;
-		fStreamR->Read(iDest, iCount, &countRead);
-		return countRead;
-		}
-
-	virtual uint64 Skip(uint64 iCount)
-		{
-		uint64 countSkipped;
-		fStreamR->Skip(iCount, &countSkipped);
-		return countSkipped;
-		}
-
-	virtual size_t Readable()
-		{ return fStreamR->CountReadable(); }
-
-private:
-	const ZStreamR& fStreamR;
+	virtual void Close(double iTimeout) = 0; // ??
+	virtual void Close() = 0;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_Bin_Stream_h__
+#endif // __ZooLib_ChanClose_h__

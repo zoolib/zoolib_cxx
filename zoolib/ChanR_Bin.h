@@ -22,50 +22,57 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanR_Bin_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ByteSwap.h"
 #include "zoolib/ChanR.h"
 
 namespace ZooLib {
 
-typedef uint8 byte;
+// =================================================================================================
+// MARK: -
 
-typedef ChanR<byte> ChanR_Bin;
+typedef ChanR<uint8> ChanR_Bin;
 
 // =================================================================================================
 // MARK: -
 
-size_t sReadVoid(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sRead(iChan, static_cast<uint8*>(oDest), iCount; }
+// Overloads of sRead that take void*, so a binary chan can read into any pointer.
 
-size_t sReadVoidFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sReadFully(iChan, static_cast<uint8*>(oDest), iCount; }
+inline
+size_t sRead(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return sRead(iChan, static_cast<uint8*>(oDest), iCount); }
 
-template <class T, bool Swapped>
-ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR);
+inline
+size_t sReadFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return sReadFully(iChan, static_cast<uint8*>(oDest), iCount); }
 
-template <class T>
-ZQ<T> sQReadSwapped<T,true>(const ChanR_Bin& iChanR)
-	{
-	T buf;
-	if (sizeof T != sReadAll(iChanR, &buf, sizeof T))
-		return null;
-
-	sByteSwap<sizeof T>(&buf);
-
-	return buf;
-	}
+// =================================================================================================
+// MARK: -
 
 template <class T>
-ZQ<T> sQReadSwapped<T,false>(const ChanR_Bin& iChanR)
+ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof T != sReadAll(iChanR, &buf, sizeof T))
+	if (sizeof (T) != sReadFully(iChanR, &buf, sizeof (T)))
 		return null;
 	return buf;
 	}
 
-template <class T, bool BigEndian=true>
+// Overload of sQRead, which returns an arbitrary type from a binary channel, byteswapped
+// if requested.  This replaces all the ReadInt32(), ReadInt64LE() stuff in ZStream.
+
+template <class T, bool BigEndian=false>
 ZQ<T> sQRead(const ChanR_Bin& iChanR)
-	{ return sQReadSwapped<T,BigEndian != (ZCONFIG_Endian == ZCONFIG_Endian_Big)>(iChanR); }
+	{
+	if (BigEndian != (ZCONFIG_Endian == ZCONFIG_Endian_Big))
+		return sQReadSwapped<T>(iChanR);
+
+	// This is an inline copy of source from sQRead<T> (version with no endian param), because
+	// otherwise
+	uint8 buf;
+	if (not sRead(iChanR, &buf, 1))
+		return null;
+	return buf;
+	}
 
 } // namespace ZooLib
 

@@ -18,36 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanR_ML_h__
-#define __ZooLib_ChanR_ML_h__ 1
+#ifndef __ZooLib_ChannerBin_h__
+#define __ZooLib_ChannerBin_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/Channer.h"
 
 namespace ZooLib {
-
-class MLRep
-:	public ZCounted
-	{};
-
-
-
-class ML
-	{
-public:
-	bool IsBegin();
-	bool IsEnd();
-	bool IsEmpty();
-	bool IsTag();
-	string8 GetName();
-	};
-
-typedef ChanR<ML> ChanR_ML;
 
 // =================================================================================================
 // MARK: -
 
+typedef ChannerR<uint8> ChannerR_Bin;
+typedef ChannerW<uint8> ChannerW_Bin;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_ML_h__
+#endif // __ZooLib_ChannerBin_h__
