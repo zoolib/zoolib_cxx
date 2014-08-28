@@ -41,8 +41,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZHTTP {
 
-using std::string;
-
 // =================================================================================================
 // MARK: - Helpers (anonymous)
 
@@ -65,29 +63,22 @@ static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader
 static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iScheme, const string& iHost, ip_port iPort)
 	{
-	if (false)
-		{}
-	else if (ZUtil_string::sEquali("http", iScheme))
-		{
-		if (not iPort)
-			iPort = 80;
-		}
-	else if (ZUtil_string::sEquali("https", iScheme))
-		{
-		if (not iPort)
-			iPort = 443;
-		}
-	else
-		{
-		return null;
-		}
+	const bool useSSL = ZUtil_string::sEquali("https", iScheme)
+		|| ZUtil_string::sEquali("wss", iScheme);
 
-	const bool useSSL = ZUtil_string::sEquali("https", iScheme);
+	ip_port thePort = iPort;
+	if (not thePort)
+		{
+		if (useSSL)
+			thePort = 443;
+		else
+			thePort = 80;
+		}
 
 	if (iCallable_Connect)
-		return iCallable_Connect->Call(iHost, iPort, useSSL);
+		return iCallable_Connect->Call(iHost, thePort, useSSL);
 	else
-		return sStreamerRWCon(iHost, iPort, useSSL);
+		return sStreamerRWCon(iHost, thePort, useSSL);
 	}
 
 } // anonymous namespace
@@ -138,11 +129,13 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 		}
 	}
 
-ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
-	const string& iMethod, string& ioURL, const Map* iHeader,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
+ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
+	const string& iMethod, const string& iURL, const Map* iHeader,
+	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	for (bool keepGoing = true; keepGoing; /*no inc*/)
+	string theURL = iURL;
+
+	for (;;)
 		{
 		if (oRawHeader)
 			oRawHeader->SetSize(0);
@@ -151,37 +144,39 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 		string theHost;
 		ip_port thePort;
 		string thePath;
-		if (sParseURL(ioURL, &theScheme, &theHost, &thePort, &thePath))
+		if (sParseURL(theURL, &theScheme, &theHost, &thePort, &thePath))
 			{
-			ZRef<ZStreamerRWCon> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort);
+			ZRef<ZStreamerRW> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort);
 			if (not theEP)
-				break;
+				return null;
 
 			int32 theResponseCode;
-			Map theHeader;
+			Map theResponseHeader;
 			if (not spRequest(
 				theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath, iHeader,
 				true,
-				&theResponseCode, &theHeader, oRawHeader))
-				{
-				break;
-				}
+				&theResponseCode, &theResponseHeader, oRawHeader))
+				{ return null; }
 
 			if (oResponseCode)
 				*oResponseCode = theResponseCode;
 
+			if (oHeader)
+				*oHeader = theResponseHeader;
+
 			switch (theResponseCode)
 				{
+				case 101:
+					{
+					return theEP;
+					}
 				case 200:
 					{
-					if (oHeader)
-						*oHeader = theHeader;
-
 					if ("HEAD" == iMethod)
 						return new ZStreamerR_T<ZStreamR_Null>;
 
-					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theHeader, theEP))
+					if (ZRef<ZStreamerR> theStreamerR = sMakeContentStreamer(theResponseHeader, theEP))
 						return theStreamerR;
 
 					return theEP;
@@ -190,25 +185,26 @@ ZRef<ZStreamerR> sRequest(ZRef<Callable_Connect> iCallable_Connect,
 				case 302:
 				case 303:
 					{
-					ioURL = sGetString0(theHeader.Get("location"));
+					theURL = sGetString0(theResponseHeader.Get("location"));
+					if (oURL)
+						*oURL = theURL;
 					break;
 					}
 				default:
 					{
-					keepGoing = false;
+					return null;
 					break;
 					}
 				}
 			}
 		}
-	return null;
 	}
 
 // =================================================================================================
 // MARK: - ZHTTP::sPOST
 
 static void spPOST_Prefix(const ZStreamW& w,
-	const std::string& iMethod,
+	const string& iMethod,
 	const string& iHost, const string& iPath, const Map* iHeader, bool iSendConnectionClose)
 	{
 	w << iMethod << " " << iPath << " HTTP/1.1\r\n" << "Host: " << iHost << "\r\n";
@@ -219,8 +215,8 @@ static void spPOST_Prefix(const ZStreamW& w,
 	}
 
 ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iMethod,
-	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody)
+	const string& iMethod,
+	const string& iURL, const Map* iHeader, const ZStreamR& iBody)
 	{
 	string theScheme;
 	string theHost;
@@ -228,7 +224,7 @@ ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	string thePath;
 	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		if (ZRef<ZStreamerRWCon> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort))
+		if (ZRef<ZStreamerRW> theEP = spConnect(iCallable_Connect, theScheme, theHost, thePort))
 			{
 			const ZStreamW& w = theEP->GetStreamW();
 
@@ -298,7 +294,7 @@ ZRef<ZStreamerR> sPOST_Receive(const ZRef<ZStreamerR>& iStreamerR,
 	}
 
 ZRef<ZStreamerR> sPOST(ZRef<Callable_Connect> iCallable_Connect,
-	const std::string& iURL, const Map* iHeader, const ZStreamR& iBody,
+	const string& iURL, const Map* iHeader, const ZStreamR& iBody,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (ZRef<ZStreamerR> theStreamerR = sPOST_Send(iCallable_Connect, "POST", iURL, iHeader, iBody))
