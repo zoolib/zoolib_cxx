@@ -44,7 +44,7 @@ public:
 		{ fStream = sNonConst(iStream); }
 
 	const Stream_p* GetSet(const Stream_p* iStream)
-		{ return GetSet(fStream, sNonConst(iStream)); }
+		{ return sGetSet(fStream, sNonConst(iStream)); }
 
 	bool CAS(const Stream_p* iPrior, const Stream_p* iNew)
 		{
