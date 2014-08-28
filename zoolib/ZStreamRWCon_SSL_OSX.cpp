@@ -145,7 +145,7 @@ OSStatus ZStreamRWCon_SSL_OSX::pRead(void* oDest, size_t* ioCount)
 			fStreamW.Flush();
 			}
 		size_t countRead;
-		fStreamR.ReadAll(oDest, countToRead, &countRead);
+		fStreamR.ReadFully(oDest, countToRead, &countRead);
 		*ioCount = countRead;
 		if (countRead)
 			return noErr;
