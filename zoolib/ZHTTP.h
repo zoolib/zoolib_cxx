@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZHTTP {
 
+using std::string;
+
 typedef ZData_Any Data;
 typedef ZVal_Any Val;
 typedef ZSeq_Any Seq;
@@ -50,19 +52,19 @@ public:
 	void SetVersion10();
 
 	void SetResult(int iResult);
-	void SetResult(int iResult, const std::string& iMessage);
+	void SetResult(int iResult, const string& iMessage);
 
-	void Set(const std::string& iName, const std::string& iValue);
-	void Set(const std::string& iName, int iValue);
-	void Set(const std::string& iName, uint64 iValue);
+	void Set(const string& iName, const string& iValue);
+	void Set(const string& iName, int iValue);
+	void Set(const string& iName, uint64 iValue);
 
 	void Send(const ZStreamW& iStreamW) const;
 
 private:
 	bool fIsVersion11;
-	std::vector<std::pair<std::string, std::string> > fHeaders;
+	std::vector<std::pair<string, string> > fHeaders;
 	int fResult;
-	std::string fMessage;
+	string fMessage;
 	};
 
 // =================================================================================================
@@ -72,9 +74,9 @@ bool sOrganizeRanges(size_t iSourceSize,
 	const Val& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
 
 bool sReadRequest(
-	const ZStreamR& iStreamR, std::string* oMethod, std::string* oURL, std::string* oErrorString);
+	const ZStreamR& iStreamR, string* oMethod, string* oURL, string* oErrorString);
 
-bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, std::string* oResultMessage);
+bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultMessage);
 
 bool sReadHeaderNoParsing(const ZStreamR& iStream, Map* oFields);
 bool sReadHeaderLineNoParsing(const ZStreamU& iStream, Map* ioFields);
@@ -82,17 +84,17 @@ bool sReadHeaderLineNoParsing(const ZStreamU& iStream, Map* ioFields);
 bool sReadHeader(const ZStreamR& iStream, Map* oFields);
 bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields);
 
-bool sParseQuery(const std::string& iString, Map& oTuple);
+bool sParseQuery(const string& iString, Map& oTuple);
 bool sParseQuery(const ZStreamU& iStream, Map& oTuple);
 
-bool sDecodeComponent(const ZStreamU& s, std::string& oComponent);
+bool sDecodeComponent(const ZStreamU& s, string& oComponent);
 ZTrail sDecodeTrail(const ZStreamU& s);
-ZTrail sDecodeTrail(const std::string& iURL);
+ZTrail sDecodeTrail(const string& iURL);
 
-std::string sEncodeComponent(const std::string& iString);
-std::string sEncodeTrail(const ZTrail& iTrail);
+string sEncodeComponent(const string& iString);
+string sEncodeTrail(const ZTrail& iTrail);
 
-std::string sGetString0(const Val& iVal);
+string sGetString0(const Val& iVal);
 
 ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR);
 
@@ -121,7 +123,7 @@ bool sRead_www_authenticate(const ZStreamU& iStream, Map* ioFields); // Not done
 // MARK: - Request or response headers
 
 bool sRead_transfer_encoding(const ZStreamU& iStream, Map* ioFields);
-bool sRead_transfer_encoding(const ZStreamU& iStream, std::string& oEncoding);
+bool sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding);
 
 // =================================================================================================
 // MARK: - Entity headers
@@ -143,39 +145,39 @@ bool sRead_content_range(const ZStreamU& iStream, int64& oBegin, int64& oEnd, in
 
 bool sRead_content_type(const ZStreamU& iStream, Map* ioFields);
 bool sRead_content_type(
-	const ZStreamU& iStream, std::string& oType, std::string& oSubType, Map& oParameters);
+	const ZStreamU& iStream, string& oType, string& oSubType, Map& oParameters);
 
 // =================================================================================================
 
 bool sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int32* oVersionMinor);
 
-bool sReadURI(const ZStreamU& iStream, std::string* oURI);
+bool sReadURI(const ZStreamU& iStream, string* oURI);
 
-bool sReadFieldName(const ZStreamU& iStream, std::string* oName, std::string* oNameExact);
+bool sReadFieldName(const ZStreamU& iStream, string* oName, string* oNameExact);
 
 bool sReadParameter(
-	const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
+	const ZStreamU& iStream, string* oName, string* oValue, string* oNameExact);
 
 bool sReadParameter_Cookie(
-	const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
+	const ZStreamU& iStream, string* oName, string* oValue, string* oNameExact);
 
 bool sReadMediaType(const ZStreamU& iStream,
-	std::string* oType, std::string* oSubtype, Map* oParameters,
-	std::string* oTypeExact, std::string* oSubtypeExact);
+	string* oType, string* oSubtype, Map* oParameters,
+	string* oTypeExact, string* oSubtypeExact);
 
-bool sReadLanguageTag(const ZStreamU& iStream, std::string* oLanguageTag);
+bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag);
 
 // =================================================================================================
 // MARK: - Lower level parsing
 
-bool sParseURL(const std::string& iURL,
-	std::string* oScheme, std::string* oHost, uint16* oPort, std::string* oPath);
+bool sParseURL(const string& iURL,
+	string* oScheme, string* oHost, uint16* oPort, string* oPath);
 
-bool sReadToken(const ZStreamU& iStream, std::string* oTokenLC, std::string* oTokenExact);
+bool sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact);
 
-bool sReadToken_Cookie(const ZStreamU& iStream, std::string* oTokenLC, std::string* oTokenExact);
+bool sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact);
 
-bool sReadQuotedString(const ZStreamU& iStream, std::string* oStringLC, std::string* oStringExact);
+bool sReadQuotedString(const ZStreamU& iStream, string* oStringLC, string* oStringExact);
 
 bool sReadChar(const ZStreamU& iStream, char iChar);
 
@@ -183,7 +185,7 @@ bool sReadChars(const ZStreamU& iStream, const char* iString);
 
 void sSkipLWS(const ZStreamU& iStream);
 
-bool sReadDecodedChars(const ZStreamU& iStream, std::string& ioString);
+bool sReadDecodedChars(const ZStreamU& iStream, string& ioString);
 
 // =================================================================================================
 // MARK: - Lexical classification
@@ -214,7 +216,7 @@ bool sIs_qdtext(char iChar);
 // =================================================================================================
 // MARK: - Writing
 
-void sWrite_HeaderLine(const ZStreamW& w, const std::string& iName, const std::string& iBody);
+void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody);
 void sWrite_Header(const ZStreamW& w, const Map& iHeader);
 void sWrite_MinimalResponse(const ZStreamW& w, int iResult);
 void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError);
