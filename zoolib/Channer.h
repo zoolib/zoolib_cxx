@@ -22,11 +22,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Channer_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanClose.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
 #include "zoolib/ZCounted.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+// MARK: - ChannerClose
+
+class ChannerClose
+:	public ZCounted
+	{
+public:
+// Our protocol
+	virtual const ChanClose& GetChanClose() = 0;
+	};
 
 // =================================================================================================
 // MARK: - ChannerR
