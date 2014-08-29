@@ -51,7 +51,7 @@ public:
 	typedef Elmt_p Elmt_t;
 	typedef Elmt_p Elmt;
 
-	virtual size_t Read(Elmt* iDest, size_t iCount)
+	virtual size_t Read(Elmt* oDest, size_t iCount)
 		{ return 0; }
 
 	virtual uint64 Skip(uint64 iCount)
@@ -86,8 +86,8 @@ class ChanR_Null
 // MARK: -
 
 template <class Elmt_p>
-size_t sRead(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
-	{ return sNonConst(iChanR).Read(iDest, iCount); }
+size_t sRead(const ChanR<Elmt_p>& iChanR, Elmt_p* oDest, size_t iCount)
+	{ return sNonConst(iChanR).Read(oDest, iCount); }
 
 template <class Elmt_p>
 uint64 sSkip(const ChanR<Elmt_p>& iChanR, uint64 iCount)
@@ -110,9 +110,9 @@ ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	}
 
 template <class Elmt_p>
-size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
+size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* oDest, size_t iCount)
 	{
-	Elmt_p* localDest = iDest;
+	Elmt_p* localDest = oDest;
 	while (iCount)
 		{
 		if (const size_t countRead = sRead(iChanR, localDest, iCount))
@@ -123,7 +123,7 @@ size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* iDest, size_t iCount)
 		else
 			{ break; }
 		}
-	return localDest - iDest;
+	return localDest - oDest;
 	}
 
 template <class Elmt_p>

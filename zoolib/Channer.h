@@ -56,8 +56,8 @@ public:
 		{}
 
 // From ChanR<Elmt_p>
-	virtual size_t Read(Elmt_p* iDest, size_t iCount)
-		{ return fChanner->GetChanR().Read(iDest, iCount); }
+	virtual size_t Read(Elmt_p* oDest, size_t iCount)
+		{ return fChanner->GetChanR().Read(oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return fChanner->GetChanR().Skip(iCount); }

@@ -40,10 +40,10 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* iDest, size_t iCount)
+	virtual size_t Read(Elmt* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
-		fStreamR.Read(iDest, iCount, &countRead);
+		fStreamR.Read(oDest, iCount, &countRead);
 		return countRead;
 		}
 
