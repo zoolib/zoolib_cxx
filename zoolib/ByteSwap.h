@@ -47,6 +47,12 @@ template <>
 void sByteSwap<8>(void* ioBuf)
 	{ ZByteSwap_64(ioBuf); }
 
+template <class T>
+T sByteSwapped(T iT)
+	{
+	sByteSwap<sizeof(T)>(&iT);
+	return iT;
+	}
 
 } // namespace ZooLib
 
