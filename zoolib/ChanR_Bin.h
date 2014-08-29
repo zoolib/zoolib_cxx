@@ -39,17 +39,17 @@ typedef ChanR<byte> ChanR_Bin;
 
 inline
 size_t sRead(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sRead(iChan, static_cast<uint8*>(oDest), iCount); }
+	{ return sRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
 size_t sReadFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sReadFully(iChan, static_cast<uint8*>(oDest), iCount); }
+	{ return sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 // =================================================================================================
 // MARK: -
 
 template <class T>
-ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
+ZQ<T> sQReadNative(const ChanR_Bin& iChanR)
 	{
 	T buf;
 	if (sizeof (T) != sReadFully(iChanR, &buf, sizeof (T)))
@@ -57,22 +57,40 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	return buf;
 	}
 
-// Overload of sQRead, which returns an arbitrary type from a binary channel, byteswapped
-// if requested.  This replaces all the ReadInt32(), ReadInt64LE() stuff in ZStream.
-
-template <class T, bool BigEndian=false>
-ZQ<T> sQRead(const ChanR_Bin& iChanR)
+template <class T>
+ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
-	if (BigEndian != (ZCONFIG_Endian == ZCONFIG_Endian_Big))
-		return sQReadSwapped<T>(iChanR);
-
-	// This is an inline copy of source from sQRead<T> (version with no endian param), because
-	// otherwise
-	uint8 buf;
-	if (not sRead(iChanR, &buf, 1))
+	T buf;
+	if (sizeof (T) != sReadFully(iChanR, &buf, sizeof (T)))
 		return null;
-	return buf;
+	return sByteSwapped(buf);
 	}
+
+#if ZCONFIG_Endian == ZCONFIG_Endian_Big
+
+	template <class T>
+	ZQ<T> sQReadBE(const ChanR_Bin& iChanR)
+		{ return sQReadNative<T>(iChanR); }
+
+	template <class T>
+	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
+		{ return sQReadSwapped<T>(iChanR); }
+
+#else
+
+	template <class T>
+	ZQ<T> sQReadBE(const ChanR_Bin& iChanR)
+		{ return sQReadSwapped<T>(iChanR); }
+
+	template <class T>
+	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
+		{ return sQReadNative<T>(iChanR); }
+
+#endif
+
+template <class T>
+ZQ<T> sQRead(const ChanR_Bin& iChanR)
+	{ return sQReadBE<T>(iChanR); }
 
 } // namespace ZooLib
 

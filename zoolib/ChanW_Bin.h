@@ -37,7 +37,7 @@ typedef ChanW<byte> ChanW_Bin;
 
 inline
 size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sWrite(iChan, static_cast<const uint8*>(iSource), iCount); }
+	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
 
 template <class T>
 bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
