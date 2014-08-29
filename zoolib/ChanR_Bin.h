@@ -52,7 +52,7 @@ template <class T>
 ZQ<T> sQReadNative(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof (T) != sReadFully(iChanR, &buf, sizeof (T)))
+	if (sizeof(T) != sReadFully(iChanR, &buf, sizeof(T)))
 		return null;
 	return buf;
 	}
@@ -61,7 +61,7 @@ template <class T>
 ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof (T) != sReadFully(iChanR, &buf, sizeof (T)))
+	if (sizeof(T) != sReadFully(iChanR, &buf, sizeof(T)))
 		return null;
 	return sByteSwapped(buf);
 	}
