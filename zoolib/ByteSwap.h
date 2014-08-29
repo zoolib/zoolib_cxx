@@ -36,6 +36,10 @@ template <size_t size>
 void sByteSwap(void* ioBuf);
 
 template <>
+void sByteSwap<1>(void* ioBuf)
+	{}
+
+template <>
 void sByteSwap<2>(void* ioBuf)
 	{ ZByteSwap_16(ioBuf); }
 
