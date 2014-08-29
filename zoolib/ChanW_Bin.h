@@ -40,22 +40,47 @@ size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
 
 template <class T>
-bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
+bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
 	{
-	T buf = iT;
-	sByteSwap<T>(&buf);
-	if (sizeof (T) != sWriteFully(iChanW, &buf, sizeof (T)))
+	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof (T)))
 		return false;
 	return true;
 	}
 
 template <class T>
-bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
+bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	{
-	if (sizeof (T) != sWriteFully(iChanW, &iT, sizeof (T)))
+	const T buf = sByteSwapped(iT);
+	if (sizeof(T) != sWriteFully(iChanW, &buf, sizeof(T)))
 		return false;
 	return true;
 	}
+
+#if ZCONFIG_Endian == ZCONFIG_Endian_Big
+
+	template <class T>
+	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteNative<T>(iChanW, iT); }
+
+	template <class T>
+	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteSwapped<T>(iChanW, iT); }
+
+#else
+
+	template <class T>
+	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteSwapped<T>(iChanW, iT); }
+
+	template <class T>
+	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteNative<T>(iChanW, iT); }
+
+#endif
+
+template <class T>
+bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
+	{ return sQWriteBE<T>(iChanW, iT); }
 
 } // namespace ZooLib
 
