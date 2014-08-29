@@ -139,6 +139,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+typedef signed char byte;
+
 // Pull the ZStdInt names into namespace ZooLib. If you'd like to use
 // these names unadorned, you can do 'using namespace ZooLib' or
 // 'using namespace ZStdInt', or indeed use the same explicit injection.

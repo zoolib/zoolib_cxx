@@ -31,8 +31,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-typedef ChannerR<uint8> ChannerR_Bin;
-typedef ChannerW<uint8> ChannerW_Bin;
+typedef ChannerR<byte> ChannerR_Bin;
+typedef ChannerW<byte> ChannerW_Bin;
 
 } // namespace ZooLib
 
