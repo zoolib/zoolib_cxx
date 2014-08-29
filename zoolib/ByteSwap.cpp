@@ -18,27 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ByteSwap_h__
-#define __ZooLib_ByteSwap_h__ 1
-#include "zconfig.h"
+#include "zoolib/ByteSwap.h"
+
+#include "zoolib/ZByteSwap.h"
+
+// For now we're using the functions provided in ZByteSwap. Ultimately we'll migrate their
+// implementations to here, and probably those function will wrap the ones here.
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: -
 
-template <size_t size>
-void sByteSwap(void* ioBuf);
+template <>
+void sByteSwap<size_t(1)>(void* ioBuf)
+	{}
 
-// Ideally we'd conditionalize this on enable_if<is_number<T> > or something.
+template <>
+void sByteSwap<size_t(2)>(void* ioBuf)
+	{ ZByteSwap_16(ioBuf); }
 
-template <class T>
-T sByteSwapped(T iT)
-	{
-	sByteSwap<sizeof(T)>(&iT);
-	return iT;
-	}
+template <>
+void sByteSwap<size_t(4)>(void* ioBuf)
+	{ ZByteSwap_32(ioBuf); }
+
+template <>
+void sByteSwap<size_t(8)>(void* ioBuf)
+	{ ZByteSwap_64(ioBuf); }
 
 } // namespace ZooLib
-
-#endif // __ZooLib_ByteSwap_h__
