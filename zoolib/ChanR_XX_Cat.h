@@ -66,6 +66,11 @@ public:
 			return sReadable(fChanR0);
 		return sReadable(fChanR1);
 		}
+
+protected:
+	const ChanR<XX>& fChanR0;
+	const ChanR<XX>& fChanR1;
+	bool fFirstIsLive;
 	};
 
 } // namespace ZooLib
