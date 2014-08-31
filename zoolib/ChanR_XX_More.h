@@ -18,23 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_Bin_h__
-#define __ZooLib_Channer_Bin_h__ 1
+#ifndef __ZooLib_ChanR_XX_More_h__
+#define __ZooLib_ChanR_XX_More_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanW_Bin.h"
-#include "zoolib/Channer.h"
+#include "zoolib/ChanR.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_XX_Null
 
-typedef ChannerR<byte> ChannerR_Bin;
-typedef ChannerU<byte> ChannerU_Bin;
-typedef ChannerW<byte> ChannerW_Bin;
+/// A read Chan with no content.
+
+template <class XX>
+class ChanR_XX_Null
+:	public ChanR<XX>
+	{};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Channer_Bin_h__
+#endif // __ZooLib_ChanR_XX_More_h__

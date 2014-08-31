@@ -18,70 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_Bin_h__
-#define __ZooLib_ChanW_Bin_h__ 1
+#ifndef __ZooLib_Util_Chan_h__
+#define __ZooLib_Util_Chan_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ByteSwap.h"
+#include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {
+namespace Util_Chan {
 
 // =================================================================================================
 // MARK: -
 
-typedef ChanW<byte> ChanW_Bin;
-
-// =================================================================================================
-// MARK: -
-
-inline
-size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
-
-template <class T>
-bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
+template <class Elmt>
+void sCopyFully(const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{
-	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
-		return false;
-	return true;
+	Elmt buf[sStackBufferSize];
+//	Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
+
+	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
+		{
+		if (const size_t countRead =
+			sRead(iChanR, buf, std::min<size_t>(countRemaining, countof(buf))))
+			{
+			const size_t countWritten = sWriteFully(iChanW, buf, countRead);
+
+			if (countWritten == countRead)
+				{
+				countRemaining -= countRead;
+				// Here's where we return to the beginning of the loop.
+				// In all other cases we exit.
+				continue;
+				}
+
+			if (oCountRead)
+				*oCountRead = iCount - countRemaining + countRead;
+
+			if (oCountWritten)
+				*oCountWritten = iCount - countRemaining + countWritten;
+			}
+		else
+			{
+			if (oCountRead)
+				*oCountRead = iCount - countRemaining;
+
+			if (oCountWritten)
+				*oCountWritten = iCount - countRemaining;
+			}
+		break;
+		}
 	}
 
-template <class T>
-bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
-	{
-	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sWriteFully(iChanW, &buf, sizeof(T)))
-		return false;
-	return true;
-	}
+} // namespace Util_Chan
 
-#if ZCONFIG_Endian == ZCONFIG_Endian_Big
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-#else
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-#endif
-
-template <class T>
-bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
-	{ return sQWriteBE<T>(iChanW, iT); }
+using namespace Util_Chan;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_Bin_h__
+#endif // __ZooLib_Util_Chan_h__

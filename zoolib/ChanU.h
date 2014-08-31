@@ -18,70 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_Bin_h__
-#define __ZooLib_ChanW_Bin_h__ 1
+#ifndef __ZooLib_ChanU_h__
+#define __ZooLib_ChanU_h__ 1
 #include "zconfig.h"
-
-#include "zoolib/ByteSwap.h"
-#include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanU
 
-typedef ChanW<byte> ChanW_Bin;
+template <class Elmt_p>
+class ChanU
+	{
+protected:
+	ChanU() {}
+	virtual ~ChanU() {}
+	ChanU(const ChanU&) {}
+	ChanU& operator=(const ChanU&) { return *this; }
+
+public:
+	typedef Elmt_p Elmt_t;
+	typedef Elmt_p Elmt;
+
+	virtual size_t Unread(const Elmt* iSource, size_t iCount)
+		{ return 0; }
+
+	virtual size_t UnreadableLimit() // ??
+		{ return 0; }
+	};
 
 // =================================================================================================
 // MARK: -
 
-inline
-size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
+template <class Elmt_p>
+size_t sUnread(const ChanU<Elmt_p>& iChanU, const Elmt_p* iSource, size_t iCount)
+	{ return sNonConst(iChanU).Unread(iSource, iCount); }
 
-template <class T>
-bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
-	{
-	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
-		return false;
-	return true;
-	}
+template <class Elmt_p>
+void sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
+	{ return sNonConst(iChanU).UnreadableLimit(); }
 
-template <class T>
-bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
-	{
-	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sWriteFully(iChanW, &buf, sizeof(T)))
-		return false;
-	return true;
-	}
+// =================================================================================================
+// MARK: -
 
-#if ZCONFIG_Endian == ZCONFIG_Endian_Big
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-#else
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-#endif
-
-template <class T>
-bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
-	{ return sQWriteBE<T>(iChanW, iT); }
+template <class Elmt_p>
+bool sQUnread(const ChanU<Elmt_p>& iChanU, const Elmt_p& iElmt)
+	{ return 1 == sNonConst(iChanU).Unread(&iElmt, 1); }
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_Bin_h__
+#endif // __ZooLib_ChanU_h__

@@ -18,11 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_Bin_h__
-#define __ZooLib_ChanW_Bin_h__ 1
+#ifndef __ZooLib_ChanW_XX_More_h__
+#define __ZooLib_ChanW_XX_More_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ByteSwap.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {
@@ -30,58 +29,28 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-typedef ChanW<byte> ChanW_Bin;
+/// A write Chan that accepts no data.
+
+template <class XX>
+class ChanW_XX_Null
+:	public ChanW<XX>
+	{};
 
 // =================================================================================================
 // MARK: -
 
-inline
-size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
+/// A write Chan that accepts and discards all data
 
-template <class T>
-bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
+template <class XX>
+class ChanW_XX_Discard
+:	public ChanW<XX>
 	{
-	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
-		return false;
-	return true;
-	}
-
-template <class T>
-bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
-	{
-	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sWriteFully(iChanW, &buf, sizeof(T)))
-		return false;
-	return true;
-	}
-
-#if ZCONFIG_Endian == ZCONFIG_Endian_Big
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-#else
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-#endif
-
-template <class T>
-bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
-	{ return sQWriteBE<T>(iChanW, iT); }
+public:
+	typedef XX Elmt;
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{ return iCount; }
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_Bin_h__
+#endif // __ZooLib_ChanW_XX_More_h__

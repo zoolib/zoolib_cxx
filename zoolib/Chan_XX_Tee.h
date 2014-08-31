@@ -48,13 +48,13 @@ public:
 		// what we read to fChanW, and oDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
 
-		Elmt buffer[sStackBufferSize / sizeof(Elmt)];
+		Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
 
-		if (const size_t countRead = sRead(fChanR, std::min(iCount, countof(buffer))))
+		if (const size_t countRead = sRead(fChanR, std::min(iCount, countof(buf))))
 			{
-			std::copy(oDest, buffer, countRead);
+			std::copy(buf, buf + countRead, oDest);
 
-			const size_t countWritten = sWriteFully(fChanW, buffer, countRead);
+			const size_t countWritten = sWriteFully(fChanW, buf, countRead);
 
 			if (countWritten != countRead)
 				{
@@ -75,7 +75,7 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanR_XX_Tee
+// MARK: - ChanW_XX_Tee
 
 template <class XX>
 class ChanW_XX_Tee

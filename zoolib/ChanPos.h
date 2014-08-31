@@ -32,9 +32,11 @@ namespace ZooLib {
 class ChanPos
 	{
 public:
-	virtual uint64 GetPos() = 0;
+	virtual uint64 GetPos()
+		{ return 0; }
 
-	virtual void SetPos(uint64 iPos) = 0;
+	virtual void SetPos(uint64 iPos)
+		{}
 	};
 
 } // namespace ZooLib

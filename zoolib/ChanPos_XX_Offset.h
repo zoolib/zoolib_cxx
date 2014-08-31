@@ -18,70 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_Bin_h__
-#define __ZooLib_ChanW_Bin_h__ 1
+#ifndef __ZooLib_ChanPos_XX_Offset_h__
+#define __ZooLib_ChanPos_XX_Offset_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ByteSwap.h"
+#include "zoolib/ChanSetLength.h"
+#include "zoolib/ChanPos.h"
+#include "zoolib/ChanR.h"
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
-
-typedef ChanW<byte> ChanW_Bin;
-
-// =================================================================================================
-// MARK: -
-
-inline
-size_t sWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sWrite(iChan, static_cast<const byte*>(iSource), iCount); }
-
-template <class T>
-bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
-	{
-	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
-		return false;
-	return true;
-	}
-
-template <class T>
-bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
-	{
-	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sWriteFully(iChanW, &buf, sizeof(T)))
-		return false;
-	return true;
-	}
-
-#if ZCONFIG_Endian == ZCONFIG_Endian_Big
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-#else
-
-	template <class T>
-	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteSwapped<T>(iChanW, iT); }
-
-	template <class T>
-	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
-		{ return sQWriteNative<T>(iChanW, iT); }
-
-#endif
-
-template <class T>
-bool sQWrite(const ChanW_Bin& iChanW, const T& iT)
-	{ return sQWriteBE<T>(iChanW, iT); }
+// MARK: - ChanPos_XX_Offset
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_Bin_h__
+#endif // __ZooLib_ChanPos_XX_Offset_h__

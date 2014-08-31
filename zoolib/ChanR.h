@@ -56,9 +56,8 @@ public:
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const uint64 kBufSize = 4096 / sizeof(Elmt);
-		Elmt scratch[kBufSize];
-		return this->Read(scratch, std::min(iCount, kBufSize));
+		Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
+		return this->Read(buf, std::min<size_t>(iCount, countof(buf)));
 		}
 
 	virtual size_t Readable()
@@ -73,14 +72,6 @@ public:
 //		return false;
 //		}
 	};
-
-// =================================================================================================
-// MARK: -
-
-template <class Elmt_p>
-class ChanR_Null
-:	public ChanR<Elmt_p>
-	{};
 
 // =================================================================================================
 // MARK: -
@@ -139,13 +130,6 @@ uint64 sSkipFully(const ChanR<Elmt_p>& iChanR, uint64 iCount)
 		}
 	return iCount - countRemaining;
 	}
-
-//template <class Elmt_p>
-//class ChannerR_Indirect<Elmt_p>
-//:	public ChannerR<Elmt_p
-//	{
-//
-//	};
 
 } // namespace ZooLib
 

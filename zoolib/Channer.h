@@ -23,7 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanClose.h"
+#include "zoolib/ChanPos.h"
 #include "zoolib/ChanR.h"
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
 #include "zoolib/ZCounted.h"
 
@@ -41,6 +43,17 @@ public:
 	};
 
 // =================================================================================================
+// MARK: - ChannerPos
+
+class ChannerPos
+:	public ZCounted
+	{
+public:
+// Our protocol
+	virtual const ChanPos& GetChanPos() = 0;
+	};
+
+// =================================================================================================
 // MARK: - ChannerR
 
 template <class Elmt_p>
@@ -55,30 +68,31 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ChanR_Channer
+// MARK: - ChannerU
 
 template <class Elmt_p>
-class ChanR_Channer
-:	public ZRef<ChannerR<Elmt_p> >
-,	public ChanR<Elmt_p>
+class ChannerU
+:	public ZCounted
 	{
 public:
-	ChanR_Channer(const ZRef<ChannerR<Elmt_p> >& iChanner)
-	:	fChanner(iChanner)
-		{}
+	typedef ChanU<Elmt_p> ChanU_t;
 
-// From ChanR<Elmt_p>
-	virtual size_t Read(Elmt_p* oDest, size_t iCount)
-		{ return fChanner->GetChanR().Read(oDest, iCount); }
+// Our protocol
+	virtual const ChanU_t& GetChanU() = 0;
+	};
 
-	virtual uint64 Skip(uint64 iCount)
-		{ return fChanner->GetChanR().Skip(iCount); }
+// =================================================================================================
+// MARK: - ChannerW
 
-	virtual size_t Readable()
-		{ return fChanner->GetChanR().Readable(); }
+template <class Elmt_p>
+class ChannerW
+:	public ZCounted
+	{
+public:
+	typedef ChanW<Elmt_p> ChanW_t;
 
-private:
-	const ZRef<ChannerR<Elmt_p> > fChanner;
+// Our protocol
+	virtual const ChanW_t& GetChanW() = 0;
 	};
 
 // =================================================================================================
@@ -175,44 +189,6 @@ public:
 protected:
 	ZRef<ChannerR_t> fChannerReal;
 	ChanR_Actual fChan;
-	};
-
-// =================================================================================================
-// MARK: - ChannerW
-
-template <class Elmt_p>
-class ChannerW
-:	public ZCounted
-	{
-public:
-	typedef ChanW<Elmt_p> ChanW_t;
-
-// Our protocol
-	virtual const ChanW_t& GetChanW() = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChanW_Channer
-
-template <class Elmt_p>
-class ChanW_Channer
-:	public ZRef<ChannerR<Elmt_p> >
-,	public ChanW<Elmt_p>
-	{
-public:
-	ChanW_Channer(const ZRef<ChannerW<Elmt_p> >& iChanner)
-	:	fChanner(iChanner)
-		{}
-
-// From ChanW<Elmt_p>
-	virtual size_t Write(const Elmt_p* iSource, size_t iCount)
-		{ return fChanner->GetChanW().Write(iSource, iCount); }
-
-	virtual void Flush()
-		{ fChanner->GetChanW().Flush(); }
-
-private:
-	const ZRef<ChannerW<Elmt_p> > fChanner;
 	};
 
 // =================================================================================================

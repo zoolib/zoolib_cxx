@@ -18,8 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanR.h"
+#ifndef __ZooLib_ChanSetLength_h__
+#define __ZooLib_ChanSetLength_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZStdInt.h" // For uint64
 
 namespace ZooLib {
 
+// =================================================================================================
+// MARK: - ChanSetLength
+
+class ChanSetLength
+	{
+public:
+	static void sThrowBadLength()
+		{ throw std::range_error("ChanSetLength"); }
+
+	virtual void SetLength(uint64 iLength)
+		{}
+	};
+
 } // namespace ZooLib
+
+#endif // __ZooLib_ChanSetLength_h__
