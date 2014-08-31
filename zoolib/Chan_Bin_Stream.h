@@ -62,6 +62,39 @@ private:
 	};
 
 // =================================================================================================
+// MARK: - ZStreamR_Chan
+
+class ZStreamR_Chan
+:	public ZStreamR
+	{
+public:
+	ZStreamR_Chan(const ChanR_Bin& iChanR)
+	:	fChanR(iChanR)
+		{}
+
+// From ZStreamR
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+		{
+		const size_t countRead = sRead(oDest, iCount, fChanR);
+		if (oCountRead)
+			*oCountRead = countRead;
+		}
+
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped)
+		{
+		const uint64 countSkipped = sSkip(iCount, fChanR);
+		if (oCountSkipped)
+			*oCountSkipped = countSkipped;
+		}
+
+	virtual size_t Imp_CountReadable()
+		{ return sReadable(fChanR); }
+
+private:
+	const ChanR_Bin& fChanR;
+	};
+
+// =================================================================================================
 // MARK: - ChanW_Bin_Stream
 
 class ChanW_Bin_Stream
@@ -85,6 +118,32 @@ public:
 
 private:
 	const ZStreamW& fStreamW;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamW_Chan
+
+class ZStreamW_Chan
+:	public ZStreamW
+	{
+public:
+	ZStreamW_Chan(const ChanW_Bin& iChanW)
+	:	fChanW(iChanW)
+		{}
+
+// From ZStreamW
+	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+		{
+		const size_t countWritten = sWrite(iSource, iCount, fChanW);
+		if (oCountWritten)
+			*oCountWritten = countWritten;
+		}
+
+	virtual void Imp_Flush()
+		{ sFlush(fChanW); }
+
+private:
+	const ChanW_Bin& fChanW;
 	};
 
 } // namespace ZooLib
