@@ -68,7 +68,7 @@ public:
 		{ return fCount; }
 
 // From ChanPos
-	virtual uint64 GetPos()
+	virtual uint64 Pos()
 		{ return fPosition; }
 
 	virtual void SetPos(uint64 iPos)

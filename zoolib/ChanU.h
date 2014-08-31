@@ -51,7 +51,7 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-size_t sUnread(const ChanU<Elmt_p>& iChanU, const Elmt_p* iSource, size_t iCount)
+size_t sUnread(const Elmt_p* iSource, size_t iCount, const ChanU<Elmt_p>& iChanU)
 	{ return sNonConst(iChanU).Unread(iSource, iCount); }
 
 template <class Elmt_p>
@@ -62,7 +62,7 @@ void sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
 // MARK: -
 
 template <class Elmt_p>
-bool sQUnread(const ChanU<Elmt_p>& iChanU, const Elmt_p& iElmt)
+bool sQUnread(const Elmt_p& iElmt, const ChanU<Elmt_p>& iChanU)
 	{ return 1 == sNonConst(iChanU).Unread(&iElmt, 1); }
 
 } // namespace ZooLib

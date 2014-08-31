@@ -77,11 +77,11 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-size_t sRead(const ChanR<Elmt_p>& iChanR, Elmt_p* oDest, size_t iCount)
+size_t sRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 	{ return sNonConst(iChanR).Read(oDest, iCount); }
 
 template <class Elmt_p>
-uint64 sSkip(const ChanR<Elmt_p>& iChanR, uint64 iCount)
+uint64 sSkip(uint64 iCount, const ChanR<Elmt_p>& iChanR)
 	{ return sNonConst(iChanR).Skip(iCount); }
 
 template <class Elmt_p>
@@ -101,12 +101,12 @@ ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	}
 
 template <class Elmt_p>
-size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* oDest, size_t iCount)
+size_t sReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p* localDest = oDest;
 	while (iCount)
 		{
-		if (const size_t countRead = sRead(iChanR, localDest, iCount))
+		if (const size_t countRead = sRead(localDest, iCount, iChanR))
 			{
 			iCount -= countRead;
 			localDest += countRead;
@@ -118,12 +118,12 @@ size_t sReadFully(const ChanR<Elmt_p>& iChanR, Elmt_p* oDest, size_t iCount)
 	}
 
 template <class Elmt_p>
-uint64 sSkipFully(const ChanR<Elmt_p>& iChanR, uint64 iCount)
+uint64 sSkipFully(uint64 iCount, const ChanR<Elmt_p>& iChanR)
 	{
 	uint64 countRemaining = iCount;
 	while (countRemaining)
 		{
-		if (const size_t countSkipped = sSkip(iChanR, countRemaining))
+		if (const size_t countSkipped = sSkip(countRemaining, iChanR))
 			{ countRemaining -= countSkipped; }
 		else
 			{ break; }

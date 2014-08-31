@@ -18,80 +18,81 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanR_Bin_h__
-#define __ZooLib_ChanR_Bin_h__ 1
+#ifndef __ZooLib_Chan_Offset_h__
+#define __ZooLib_Chan_Offset_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ByteSwap.h"
-#include "zoolib/ChanR.h"
+#include "zoolib/ChanCount.h"
+#include "zoolib/ChanCountSet.h"
+#include "zoolib/ChanPos.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanCount_Offset
 
-typedef ChanR<byte> ChanR_Bin;
+class ChanCount_Offset
+:	public ChanCount
+	{
+public:
+	ChanCount_Offset(uint64 iOffset, const ChanCount& iChanCount)
+	:	fChanCount(iChanCount)
+	,	fOffset(iOffset)
+		{}
+
+// From ChanCount
+	virtual uint64 Count()
+		{ return sCount(fChanCount) - fOffset; }
+
+private:
+	const ChanCount& fChanCount;
+	const uint64 iOffset;
+	};
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanCountSet_Offset
 
-// Overloads of sRead that take void*, so a binary chan can read into any pointer.
+class ChanCountSet_Offset
+:	public ChanCountSet
+	{
+public:
+	ChanCountSet_Offset(uint64 iOffset, const ChanCountSet& iChanCountSet)
+	:	fChanCountSet(iChanCountSet)
+	,	fOffset(iOffset)
+		{}
 
-inline
-size_t sRead(void* oDest, size_t iCount, const ChanR_Bin& iChan)
-	{ return sRead(static_cast<byte*>(oDest), iCount, iChan); }
+// From ChanCountSet
+	virtual void CountSet(uint64 iCount)
+		{ sCountSet(iCount + fOffset, fChanCountSet); }
 
-inline
-size_t sReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
-	{ return sReadFully(static_cast<byte*>(oDest), iCount, iChan); }
+private:
+	const ChanCountSet& fChanCountSet;
+	const uint64 iOffset;
+	};
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanPos_Offset
 
-template <class T>
-ZQ<T> sQReadNative(const ChanR_Bin& iChanR)
+class ChanPos_Offset
+:	public ChanPos
 	{
-	T buf;
-	if (sizeof(T) != sReadFully(iChanR, &buf, sizeof(T)))
-		return null;
-	return buf;
-	}
+public:
+	ChanPos_Offset(uint64 iOffset, const ChanPos& iChanPos)
+	:	fChanPos(iChanPos)
+	,	fOffset(iOffset)
+		{}
 
-template <class T>
-ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
-	{
-	T buf;
-	if (sizeof(T) != sReadFully(&buf, sizeof(T), iChanR))
-		return null;
-	return sByteSwapped(buf);
-	}
+	virtual uint64 Pos()
+		{ return sPos(fChanPos) - fOffset; }
 
-#if ZCONFIG_Endian == ZCONFIG_Endian_Big
+	virtual void SetPos(uint64 iPos)
+		{ sSetPos(iPos + fOffset, fChanPos); }
 
-	template <class T>
-	ZQ<T> sQReadBE(const ChanR_Bin& iChanR)
-		{ return sQReadNative<T>(iChanR); }
-
-	template <class T>
-	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
-		{ return sQReadSwapped<T>(iChanR); }
-
-#else
-
-	template <class T>
-	ZQ<T> sQReadBE(const ChanR_Bin& iChanR)
-		{ return sQReadSwapped<T>(iChanR); }
-
-	template <class T>
-	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
-		{ return sQReadNative<T>(iChanR); }
-
-#endif
-
-template <class T>
-ZQ<T> sQRead(const ChanR_Bin& iChanR)
-	{ return sQReadBE<T>(iChanR); }
+private:
+	const ChanPos& fChanPos;
+	const uint64 iOffset;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_Bin_h__
+#endif // __ZooLib_Chan_Offset_h__

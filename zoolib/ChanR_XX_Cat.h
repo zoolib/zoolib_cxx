@@ -46,18 +46,18 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (size_t countRead = sRead(fChanR0, oDest, iCount))
+			if (size_t countRead = sRead(oDest, iCount, fChanR0))
 				return countRead;
 			fFirstIsLive = false;
 			}
-		return sRead(fChanR1, oDest, iCount);
+		return sRead(oDest, iCount, fChanR1);
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
 		if (fFirstIsLive)
-			return sSkip(fChanR0, iCount);
-		return sSkip(fChanR1, iCount);
+			return sSkip(iCount, fChanR0);
+		return sSkip(iCount, fChanR1);
 		}
 
 	virtual size_t Readable()

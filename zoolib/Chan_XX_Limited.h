@@ -18,21 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanPos_XX_Offset_h__
-#define __ZooLib_ChanPos_XX_Offset_h__ 1
+#ifndef __ZooLib_Chan_XX_Limited_h__
+#define __ZooLib_Chan_XX_Limited_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanSetLength.h"
-#include "zoolib/ChanPos.h"
 #include "zoolib/ChanR.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanPos_XX_Offset
+// MARK: - ChanR_XX_Memory
+
+template <class XX>
+class ChanBase_XX_Limited
+:	public ChanR<XX>
+	{
+public:
+	typedef XX Elmt;
+
+	ChanR_XX_Limited(uint64 iLimit, const ChanR<XX>& iChanR)
+	:	fChanR(iChanR)
+	,	fLimit(iLimit)
+		{}
+
+// From ChanR
+	virtual size_t Read(Elmt* oDest, size_t iCount)
+		{
+		const size_t countRead = sRead(oDest, std::min<uint64>(fLimit, iCount), fChanR);
+		fLimit -= countRead;
+		return countRead;
+		}
+
+	virtual uint64 Skip(uint64 iCount)
+		{
+		const size_t countSkipped = sSkip(std::min<uint64>(fLimit, iCount), fChanR);
+		fLimit -= countSkipped;
+		return countSkipped;
+		}
+
+	virtual size_t Readable()
+		{ return std::min<uint64>(fLimit, fChanR->Readable()); }
+
+protected:
+	const ChanR<XX>& fChanR;
+	uint64 fLimit;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanPos_XX_Offset_h__
+#endif // __ZooLib_Chan_XX_Offset_h__

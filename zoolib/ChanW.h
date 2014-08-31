@@ -58,7 +58,7 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-size_t sWrite(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
+size_t sWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{ return sNonConst(iChanW).Write(iSource, iCount); }
 
 template <class Elmt_p>
@@ -69,12 +69,12 @@ void sFlush(const ChanW<Elmt_p>& iChanW)
 // MARK: -
 
 template <class Elmt_p>
-size_t sWriteFully(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iCount)
+size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{
 	const Elmt_p* localSource = iSource;
 	while (iCount)
 		{
-		if (const size_t countWritten = sWrite(iChanW, localSource, iCount))
+		if (const size_t countWritten = sWrite(localSource, iCount, iChanW))
 			{
 			iCount -= countWritten;
 			localSource += countWritten;
@@ -84,7 +84,6 @@ size_t sWriteFully(const ChanW<Elmt_p>& iChanW, const Elmt_p* iSource, size_t iC
 		}
 	return localSource - iSource;
 	}
-
 
 } // namespace ZooLib
 

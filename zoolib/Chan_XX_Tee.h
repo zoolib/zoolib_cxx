@@ -50,11 +50,11 @@ public:
 
 		Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
 
-		if (const size_t countRead = sRead(fChanR, std::min(iCount, countof(buf))))
+		if (const size_t countRead = sRead(std::min(iCount, countof(buf)), fChanR))
 			{
 			std::copy(buf, buf + countRead, oDest);
 
-			const size_t countWritten = sWriteFully(fChanW, buf, countRead);
+			const size_t countWritten = sWriteFully(buf, countRead, fChanW);
 
 			if (countWritten != countRead)
 				{
@@ -91,14 +91,14 @@ public:
 
 	virtual size_t Write(const Elmt* iSource, size_t iCount)
 		{
-		if (const size_t countWritten0 = sWrite(fChanW0, iSource, iCount))
+		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
 			{
-			sWriteFully(fChanW1, iSource, countWritten0);
+			sWriteFully(iSource, countWritten0, fChanW1);
 			return countWritten0;
 			}
 		else
 			{
-			return sWrite(fChanW1, iSource, iCount);
+			return sWrite(iSource, iCount, fChanW1);
 			}
 		}
 

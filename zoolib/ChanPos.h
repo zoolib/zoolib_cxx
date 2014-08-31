@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For uint64
+#include "zoolib/ZTypes.h" // For sNonConst
 
 namespace ZooLib {
 
@@ -32,12 +33,21 @@ namespace ZooLib {
 class ChanPos
 	{
 public:
-	virtual uint64 GetPos()
+	virtual uint64 Pos()
 		{ return 0; }
 
 	virtual void SetPos(uint64 iPos)
 		{}
 	};
+
+// =================================================================================================
+// MARK: -
+
+inline uint64 sPos(const ChanPos& iChanPos)
+	{ return sNonConst(iChanPos).Pos(); }
+
+inline void sSetPos(const ChanPos& iChanPos, uint64 iPos)
+	{ sNonConst(iChanPos).SetPos(iPos); }
 
 } // namespace ZooLib
 

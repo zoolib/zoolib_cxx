@@ -35,9 +35,15 @@ public:
 	static void sThrowBadCount()
 		{ throw std::range_error("ChanCountSet"); }
 
-	virtual void SetCount(uint64 iCount)
+	virtual void CountSet(uint64 iCount)
 		{}
 	};
+
+// =================================================================================================
+// MARK: -
+
+inline void sCountSet(uint64 iCount, const ChanCountSet& iChanCountSet)
+	{ return sNonConst(iChanCountSet).CountSet(iCount); }
 
 } // namespace ZooLib
 

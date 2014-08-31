@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For uint64
+#include "zoolib/ZTypes.h" // For sNonConst
 
 namespace ZooLib {
 
@@ -35,6 +36,12 @@ public:
 	virtual uint64 Count()
 		{ return 0; }
 	};
+
+// =================================================================================================
+// MARK: -
+
+inline uint64 sCount(const ChanCount& iChanCount)
+	{ return sNonConst(iChanCount).Count(); }
 
 } // namespace ZooLib
 
