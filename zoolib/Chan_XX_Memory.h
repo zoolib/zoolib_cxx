@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Memory_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanGetLength.h"
-#include "zoolib/ChanSetLength.h"
+#include "zoolib/ChanCount.h"
+#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanU.h"
@@ -37,15 +37,15 @@ namespace ZooLib {
 template <class XX>
 class ChanBase_XX_Memory
 :	public ChanR<XX>
-,	public ChanGetLength
+,	public ChanCount
 ,	public ChanPos
 	{
 public:
 	typedef XX Elmt;
 
-	ChanBase_XX_Memory(const void* iAddress, size_t iSize)
+	ChanBase_XX_Memory(const void* iAddress, size_t iCount)
 	:	fAddress(static_cast<const byte*>(iAddress))
-	,	fSize(iSize)
+	,	fCount(iCount)
 	,	fPosition(0)
 		{}
 
@@ -53,7 +53,7 @@ public:
 	virtual size_t Read(Elmt* oDest, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
-			fSize > fPosition ? fSize - fPosition : 0);
+			fCount > fPosition ? fCount - fPosition : 0);
 		const Elmt* source = static_cast<const Elmt*>(fAddress) + fPosition;
 		std::copy(source, source + countToCopy, oDest);
 		fPosition += countToCopy;
@@ -61,11 +61,11 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return fSize >= fPosition ? fSize - fPosition : 0; }
+		{ return fCount >= fPosition ? fCount - fPosition : 0; }
 
-// From ChanGetLength
-	virtual uint64 GetLength()
-		{ return fSize; }
+// From ChanGetCount
+	virtual uint64 Count()
+		{ return fCount; }
 
 // From ChanPos
 	virtual uint64 GetPos()
@@ -76,7 +76,7 @@ public:
 
 protected:
 	const void* fAddress;
-	size_t fSize;
+	size_t fCount;
 	uint64 fPosition;
 	};
 
@@ -91,8 +91,8 @@ class ChanRPos_XX_Memory
 public:
 	typedef XX Elmt;
 
-	ChanRPos_XX_Memory(const void* iAddress, size_t iSize)
-	:	ChanBase_XX_Memory<XX>(iAddress, iSize)
+	ChanRPos_XX_Memory(const void* iAddress, size_t iCount)
+	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
 		{}
 
 // From ChanU
@@ -133,13 +133,13 @@ class ChanRWPos_XX_Memory
 :	public ChanBase_XX_Memory<XX>
 ,	public ChanU<XX>
 ,	public ChanW<XX>
-,	public ChanSetLength
+,	public ChanCountSet
 	{
 public:
 	typedef XX Elmt;
 
-	ChanRWPos_XX_Memory(void* iAddress, size_t iSize, size_t iCapacity)
-	:	ChanBase_XX_Memory<XX>(iAddress, iSize)
+	ChanRWPos_XX_Memory(void* iAddress, size_t iCount, size_t iCapacity)
+	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
 	,	fCapacity(iCapacity)
 		{}
 
@@ -166,10 +166,10 @@ public:
 		{
 		Elmt* dest = static_cast<Elmt*>(sNonConst(this->fAddress)) + this->fPosition;
 
-		this->fSize = std::min(fCapacity, std::max<size_t>(this->fSize, this->fPosition + iCount));
+		this->fCount = std::min(fCapacity, std::max<size_t>(this->fCount, this->fPosition + iCount));
 
 		const size_t countToCopy = std::min<size_t>(iCount,
-			this->fSize > this->fPosition ? this->fSize - this->fPosition : 0);
+			this->fCount > this->fPosition ? this->fCount - this->fPosition : 0);
 
 		std::copy(iSource, iSource + countToCopy, dest);
 
@@ -178,12 +178,12 @@ public:
 		return countToCopy;
 		}
 
-// From ChanSetLength
-	virtual void SetLength(uint64 iLength)
+// From ChanCountSet
+	virtual void SetCount(uint64 iCount)
 		{
-		if (fCapacity < iLength)
-			sThrowBadLength();
-		this->fSize = iLength;
+		if (fCapacity < iCount)
+			sThrowBadCount();
+		this->fCount = iCount;
 		}
 
 protected:
