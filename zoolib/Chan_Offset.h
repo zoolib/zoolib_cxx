@@ -44,7 +44,7 @@ public:
 	virtual uint64 Count()
 		{ return sCount(fChanCount) - fOffset; }
 
-private:
+protected:
 	const ChanCount& fChanCount;
 	const uint64 iOffset;
 	};
@@ -65,7 +65,7 @@ public:
 	virtual void CountSet(uint64 iCount)
 		{ sCountSet(iCount + fOffset, fChanCountSet); }
 
-private:
+protected:
 	const ChanCountSet& fChanCountSet;
 	const uint64 iOffset;
 	};
@@ -88,7 +88,7 @@ public:
 	virtual void SetPos(uint64 iPos)
 		{ sSetPos(iPos + fOffset, fChanPos); }
 
-private:
+protected:
 	const ChanPos& fChanPos;
 	const uint64 iOffset;
 	};
