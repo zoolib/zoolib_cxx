@@ -40,10 +40,11 @@ void sCopyFully(const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW, uint64 iCo
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
-		if (const size_t countRead =
-			sRead(iChanR, buf, std::min<size_t>(countRemaining, countof(buf))))
+		if (const size_t countRead = sRead(
+			buf, std::min<size_t>(countRemaining, countof(buf)),
+			iChanR))
 			{
-			const size_t countWritten = sWriteFully(iChanW, buf, countRead);
+			const size_t countWritten = sWriteFully(buf, countRead, iChanW);
 
 			if (countWritten == countRead)
 				{
