@@ -22,30 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStdInt.h" // For uint8
-
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: -
-
-template <class Elmt_p>
-class ChanTraits
-	{
-public:
-	typedef Elmt_p Elmt;
-	typedef Elmt_p* Pointer;
-	typedef const Elmt_p* ConstPointer;
-	};
-
-template <>
-class ChanTraits<void>
-	{
-public:
-	typedef uint8 Elmt;
-	typedef void* Pointer;
-	typedef const void* ConstPointer;
-	};
 
 } // namespace ZooLib
 
