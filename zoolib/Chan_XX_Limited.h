@@ -23,14 +23,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
+#include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_XX_Memory
+// MARK: - ChanR_XX_Limited
 
 template <class XX>
-class ChanBase_XX_Limited
+class ChanR_XX_Limited
 :	public ChanR<XX>
 	{
 public:
@@ -57,10 +58,41 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return std::min<uint64>(fLimit, fChanR->Readable()); }
+		{ return std::min<uint64>(fLimit, sReadable(fChanR)); }
 
 protected:
 	const ChanR<XX>& fChanR;
+	uint64 fLimit;
+	};
+
+// =================================================================================================
+// MARK: - ChanW_XX_Limited
+
+template <class XX>
+class ChanW_XX_Limited
+:	public ChanW<XX>
+	{
+public:
+	typedef XX Elmt;
+
+	ChanW_XX_Limited(uint64 iLimit, const ChanW<XX>& iChanW)
+	:	fChanW(iChanW)
+	,	fLimit(iLimit)
+		{}
+
+// From ChanW
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{
+		const size_t countWritten = sWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
+		fLimit -= countWritten;
+		return countWritten;
+		}
+
+	virtual void Flush()
+		{ sFlush(fChanW); }
+
+protected:
+	const ChanW<XX>& fChanW;
 	uint64 fLimit;
 	};
 
