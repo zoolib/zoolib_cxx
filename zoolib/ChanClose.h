@@ -30,7 +30,7 @@ namespace ZooLib {
 class ChanClose
 	{
 public:
-	virtual void Close(double iTimeout) = 0; // ??
+//??	virtual void Close(double iTimeout) = 0; // ??
 	virtual void Close() = 0;
 	};
 
