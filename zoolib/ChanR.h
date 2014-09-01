@@ -131,6 +131,20 @@ uint64 sSkipFully(uint64 iCount, const ChanR<Elmt_p>& iChanR)
 	return iCount - countRemaining;
 	}
 
+template <class Elmt_p>
+uint64 sSkipAll(const ChanR<Elmt_p>& iChanR)
+	{
+	uint64 result = 0;
+	for (;;)
+		{
+		if (const uint64 countSkipped = sSkip(0x100000, iChanR))
+			{ result += countSkipped; }
+		else
+			{ break; }
+		}
+	return result;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanR_h__
