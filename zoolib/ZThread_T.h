@@ -95,7 +95,7 @@ public:
 	inline
 	~ZGuard_T()
 		{
-		while (fCount--)
+		if (fCount)
 			fMtx.Release();
 		}
 
@@ -103,16 +103,16 @@ public:
 	inline
 	void Release()
 		{
-		--fCount;
-		fMtx.Release();
+		if (0 == --fCount)
+			fMtx.Release();
 		}
 
 	ZMACRO_Attribute_NoThrow
 	inline
 	void Acquire()
 		{
-		fMtx.Acquire();
-		++fCount;
+		if (0 == fCount++)
+			fMtx.Acquire();
 		}
 
 private:
