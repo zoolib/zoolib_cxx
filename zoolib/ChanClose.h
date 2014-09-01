@@ -34,6 +34,12 @@ public:
 	virtual void Close() = 0;
 	};
 
+// =================================================================================================
+// MARK: -
+
+inline void sClose(const ChanClose& iChanClose)
+	{ return sNonConst(iChanClose).Close(); }
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanClose_h__
