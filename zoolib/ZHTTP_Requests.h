@@ -31,15 +31,16 @@ namespace ZHTTP {
 // =================================================================================================
 // MARK: - ZHTTP
 
-typedef ZCallable<ZRef<ZStreamerRWCon>(const string& iHost, uint16 iPort, bool iUseSSL)>
+typedef ZCallable<ZRef<ZStreamerRW>(const string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;
 
-ZRef<ZStreamerRWCon> sStreamerRWCon(const string& iHost, uint16 iPort, bool iUseSSL);
+ZRef<ZStreamerRW> sStreamerRW(const string& iHost, uint16 iPort, bool iUseSSL);
 
 // -----
 
 ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
+	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
 // -----

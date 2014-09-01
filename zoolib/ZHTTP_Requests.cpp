@@ -60,7 +60,7 @@ static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader
 	return true;
 	}
 
-static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
+static ZRef<ZStreamerRW> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iScheme, const string& iHost, ip_port iPort)
 	{
 	const bool useSSL = ZUtil_string::sEquali("https", iScheme)
@@ -78,7 +78,7 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	if (iCallable_Connect)
 		return iCallable_Connect->Call(iHost, thePort, useSSL);
 	else
-		return sStreamerRWCon(iHost, thePort, useSSL);
+		return sStreamerRW(iHost, thePort, useSSL);
 	}
 
 } // anonymous namespace
@@ -86,7 +86,7 @@ static ZRef<ZStreamerRWCon> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 // =================================================================================================
 // MARK: - ZHTTP::sStreamerRWCon
 
-ZRef<ZStreamerRWCon> sStreamerRWCon(const string& iHost, uint16 iPort, bool iUseSSL)
+ZRef<ZStreamerRW> sStreamerRW(const string& iHost, uint16 iPort, bool iUseSSL)
 	{
 	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
 		{
@@ -131,6 +131,7 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 
 ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
+	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	string theURL = iURL;
@@ -155,7 +156,7 @@ ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 			if (not spRequest(
 				theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath, iHeader,
-				true,
+				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
 				{ return null; }
 
