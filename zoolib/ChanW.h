@@ -47,8 +47,7 @@ public:
 	typedef Elmt_p Elmt_t;
 	typedef Elmt_p Elmt;
 
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
-		{ return 0; }
+	virtual size_t Write(const Elmt* iSource, size_t iCount) = 0;
 
 	virtual void Flush()
 		{}

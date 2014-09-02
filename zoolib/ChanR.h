@@ -51,8 +51,7 @@ public:
 	typedef Elmt_p Elmt_t;
 	typedef Elmt_p Elmt;
 
-	virtual size_t Read(Elmt* oDest, size_t iCount)
-		{ return 0; }
+	virtual size_t Read(Elmt* oDest, size_t iCount) = 0;
 
 	virtual uint64 Skip(uint64 iCount)
 		{

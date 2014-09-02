@@ -33,11 +33,9 @@ namespace ZooLib {
 class ChanPos
 	{
 public:
-	virtual uint64 Pos()
-		{ return 0; }
+	virtual uint64 Pos() = 0;
 
-	virtual void SetPos(uint64 iPos)
-		{}
+	virtual void SetPos(uint64 iPos) = 0;
 	};
 
 // =================================================================================================

@@ -34,7 +34,12 @@ namespace ZooLib {
 template <class XX>
 class ChanW_XX_Null
 :	public ChanW<XX>
-	{};
+	{
+public:
+	typedef XX Elmt;
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{ return 0; }
+	};
 
 // =================================================================================================
 // MARK: -

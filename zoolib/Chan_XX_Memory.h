@@ -179,7 +179,7 @@ public:
 		}
 
 // From ChanCountSet
-	virtual void SetCount(uint64 iCount)
+	virtual void CountSet(uint64 iCount)
 		{
 		if (fCapacity < iCount)
 			sThrowBadCount();

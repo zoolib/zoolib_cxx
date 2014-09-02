@@ -35,8 +35,7 @@ public:
 	static void sThrowBadCount()
 		{ throw std::range_error("ChanCountSet"); }
 
-	virtual void CountSet(uint64 iCount)
-		{}
+	virtual void CountSet(uint64 iCount) = 0;
 	};
 
 // =================================================================================================

@@ -33,8 +33,7 @@ namespace ZooLib {
 class ChanCount
 	{
 public:
-	virtual uint64 Count()
-		{ return 0; }
+	virtual uint64 Count() = 0;
 	};
 
 // =================================================================================================
