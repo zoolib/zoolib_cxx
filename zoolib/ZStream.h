@@ -22,6 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+
 #include "zoolib/ZTypes.h"
 
 #include "zoolib/ZCompat_algorithm.h"
@@ -89,6 +92,7 @@ protected:
 /// Base interface for read streams.
 
 class ZStreamR
+:	public ChanR_Bin
 	{
 protected:
 /** \name Canonical Methods
@@ -102,6 +106,25 @@ ZStreamR reference, you must work with some derived class.
 	//@}
 
 public:
+// From ChanR
+	virtual size_t Read(Elmt* oDest, size_t iCount)
+		{
+		size_t countRead = 0;
+		sNonConst(this)->Imp_Read(oDest, iCount, &countRead);
+		return countRead;
+		}
+
+	virtual uint64 Skip(uint64 iCount)
+		{
+		uint64 countSkipped;
+		sNonConst(this)->Imp_Skip(iCount, &countSkipped);
+		return countSkipped;
+		}
+
+	virtual size_t Readable()
+		{ return sNonConst(this)->Imp_CountReadable(); }
+
+// Our protocol
 	class ExEndOfStream;
 	static void sThrowEndOfStream();
 
@@ -349,6 +372,7 @@ inline uint64 ZStreamRPos::GetSize() const
 /// Base interface for write streams.
 
 class ZStreamW
+:	public ChanW_Bin
 	{
 protected:
 /** \name Canonical Methods
@@ -362,6 +386,18 @@ ZStreamW reference, you must work with some derived class.
 	//@}
 
 public:
+// From ChanW
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{
+		size_t countWritten = 0;
+		sNonConst(this)->Imp_Write(iSource, iCount, &countWritten);
+		return countWritten;
+		}
+
+	virtual void Flush()
+		{ sNonConst(this)->Imp_Flush(); }
+
+// Our protocol
 	class ExEndOfStream;
 	static void sThrowEndOfStream();
 
