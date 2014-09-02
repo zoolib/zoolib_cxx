@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamer_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Channer_Bin.h"
+
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZStream.h"
 
@@ -34,9 +36,13 @@ namespace ZooLib {
 \ingroup Streamer
 */
 
-class ZStreamerR : public ZCounted
+class ZStreamerR : public ChannerR_Bin
 	{
 public:
+// From ChannerR
+	virtual const ChanR_Bin& GetChanR() { return this->GetStreamR(); }
+
+// Our protocol
 	virtual const ZStreamR& GetStreamR() = 0;
 	};
 
@@ -101,9 +107,13 @@ public:
 \ingroup Streamer
 */
 
-class ZStreamerW : public ZCounted
+class ZStreamerW : public ChannerW_Bin
 	{
 public:
+// From ChannerW_Bin
+	virtual const ChanW_Bin& GetChanW() { return this->GetStreamW(); }
+
+// Our protocol
 	virtual const ZStreamW& GetStreamW() = 0;
 	};
 
