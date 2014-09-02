@@ -28,6 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 typedef ChanR<UTF32> ChanR_UTF32;
+typedef ChanR<UTF16> ChanR_UTF16;
+typedef ChanR<UTF8> ChanR_UTF8;
+
+#if 0
+
 
 //Maybe we derive ChanR_UTF8 from ChanR_UTF32 -- the 32 bit one has is the ChanR interface,
 //8 and 16 have the CP and CU limiting things.
@@ -44,9 +49,6 @@ typedef ChanR<UTF32> ChanR_UTF32;
 //,	public ChanR<UTF16>
 //	{};
 //
-
-typedef ChanR<UTF16> ChanR_UTF16;
-typedef ChanR<UTF8> ChanR_UTF8;
 
 // =================================================================================================
 // MARK: -
@@ -177,7 +179,7 @@ These methods must be overridden by subclasses.
 virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount) = 0;
 //@}
 
-
+#endif
 
 } // namespace ZooLib
 
