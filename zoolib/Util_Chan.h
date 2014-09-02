@@ -32,11 +32,10 @@ namespace Util_Chan {
 // MARK: -
 
 template <class Elmt>
-void sCopyFully(const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW, uint64 iCount,
-	uint64* oCountRead, uint64* oCountWritten)
+std::pair<uint64,uint64> sCopyFully(
+	const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW, uint64 iCount)
 	{
-	Elmt buf[sStackBufferSize];
-//	Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
+	Elmt buf[sStackBufferSize / sizeof(Elmt)];
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
@@ -54,21 +53,39 @@ void sCopyFully(const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW, uint64 iCo
 				continue;
 				}
 
-			if (oCountRead)
-				*oCountRead = iCount - countRemaining + countRead;
-
-			if (oCountWritten)
-				*oCountWritten = iCount - countRemaining + countWritten;
+			return std::pair<uint64,uint64>(
+				iCount - countRemaining + countRead,
+				iCount - countRemaining + countWritten);
 			}
-		else
+
+		return std::pair<uint64,uint64>(
+			iCount - countRemaining,
+			iCount - countRemaining);
+		}
+	}
+
+template <class Elmt>
+std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt>& iChanR, const ChanW<Elmt>& iChanW)
+	{
+	Elmt buf[sStackBufferSize / sizeof(Elmt)];
+
+	uint64 totalCopied = 0;
+	for (;;)
+		{
+		if (const size_t countRead = sRead(buf, countof(buf), iChanR))
 			{
-			if (oCountRead)
-				*oCountRead = iCount - countRemaining;
+			const size_t countWritten = sWriteFully(buf, countRead, iChanW);
 
-			if (oCountWritten)
-				*oCountWritten = iCount - countRemaining;
+			if (countWritten == countRead)
+				{
+				totalCopied += countRead;
+				continue;
+				}
+
+			return std::pair<uint64,uint64>(totalCopied + countRead, totalCopied + countWritten);
 			}
-		break;
+
+		return std::pair<uint64,uint64>(totalCopied, totalCopied);
 		}
 	}
 
