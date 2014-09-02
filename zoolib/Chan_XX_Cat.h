@@ -18,16 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanR_XX_Cat_h__
-#define __ZooLib_ChanR_XX_Cat_h__ 1
+#ifndef __ZooLib_Chan_XX_Cat_h__
+#define __ZooLib_Chan_XX_Cat_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
+#include "zoolib/ChanW.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR
+// MARK: - ChanR_XX_Cat
 
 template <class XX>
 class ChanR_XX_Cat
@@ -42,6 +43,7 @@ public:
 	,	fFirstIsLive(true)
 		{}
 
+// From ChanR
 	virtual size_t Read(Elmt* oDest, size_t iCount)
 		{
 		if (fFirstIsLive)
@@ -70,6 +72,49 @@ public:
 protected:
 	const ChanR<XX>& fChanR0;
 	const ChanR<XX>& fChanR1;
+	bool fFirstIsLive;
+	};
+
+// =================================================================================================
+// MARK: - ChanW_XX_Cat
+
+template <class XX>
+class ChanW_XX_Cat
+:	public ChanW<XX>
+	{
+public:
+	typedef XX Elmt;
+
+	ChanW_XX_Cat(const ChanW<XX>& iChanW0, const ChanW<XX>& iChanW1)
+	:	fChanW0(iChanW0)
+	,	fChanW1(iChanW1)
+	,	fFirstIsLive(true)
+		{}
+
+// From ChanW
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{
+		if (fFirstIsLive)
+			{
+			if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
+				return countWritten0;
+			fFirstIsLive = false;
+			}
+
+		return sWrite(iSource, iCount, fChanW1);
+		}
+
+	virtual void Flush()
+		{
+		if (fFirstIsLive)
+			sFlush(fChanW0);
+		else
+			sFlush(fChanW1);
+		}
+
+protected:
+	const ChanW<XX>& fChanW0;
+	const ChanW<XX>& fChanW1;
 	bool fFirstIsLive;
 	};
 
