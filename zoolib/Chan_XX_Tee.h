@@ -42,6 +42,7 @@ public:
 	,	fChanW(iChanW)
 		{}
 
+// From ChanR
 	virtual size_t Read(Elmt* oDest, size_t iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
@@ -89,6 +90,7 @@ public:
 	,	fChanW1(iChanW1)
 		{}
 
+// From ChanW
 	virtual size_t Write(const Elmt* iSource, size_t iCount)
 		{
 		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
