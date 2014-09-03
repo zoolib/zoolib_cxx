@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrim_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanW_UTF_More.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include <stdarg.h> // For va_list
@@ -48,6 +50,7 @@ protected:
 // MARK: - ZStrimR
 
 class ZStrimR
+:	public ChanR_UTF
 	{
 protected:
 /** \name Canonical Methods
@@ -62,6 +65,18 @@ ZStrimR reference, you must work with some derived class.
 
 
 public:
+// From ChanR_UTF
+	virtual size_t Read(Elmt* oDest, size_t iCount)
+		{
+		size_t countRead = 0;
+		sNonConst(this)->Imp_ReadUTF32(oDest, iCount, &countRead);
+		return countRead;
+		}
+
+	virtual size_t Readable()
+		{ return 0; }
+
+// Our protocol
 	class ExEndOfStrim;
 	static void sThrowEndOfStrim();
 
@@ -181,6 +196,7 @@ public:
 // MARK: - ZStrimW
 
 class ZStrimW
+:	public ChanW_UTF_Native32
 	{
 protected:
 /** \name Canonical Methods
@@ -195,6 +211,18 @@ ZStrimW reference, you must work with some derived class.
 
 
 public:
+// From ChanW_UTF_Native32
+	virtual size_t Write(const Elmt* iSource, size_t iCount)
+		{
+		size_t countWritten = 0;
+		sNonConst(this)->Imp_WriteUTF32(iSource, iCount, &countWritten);
+		return countWritten;
+		}
+
+	virtual void Flush()
+		{ sNonConst(this)->Imp_Flush(); }
+
+// Our protocol
 	class ExEndOfStrim;
 	static void sThrowEndOfStrim();
 

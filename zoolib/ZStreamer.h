@@ -40,7 +40,8 @@ class ZStreamerR : public ChannerR_Bin
 	{
 public:
 // From ChannerR
-	virtual const ChanR_Bin& GetChanR() { return this->GetStreamR(); }
+	virtual void GetChan(const ChanR_Bin*& oChanPtr)
+		{ oChanPtr = &this->GetStreamR(); }
 
 // Our protocol
 	virtual const ZStreamR& GetStreamR() = 0;
@@ -111,7 +112,8 @@ class ZStreamerW : public ChannerW_Bin
 	{
 public:
 // From ChannerW_Bin
-	virtual const ChanW_Bin& GetChanW() { return this->GetStreamW(); }
+	virtual void GetChan(const ChanW_Bin*& oChanPtr)
+		{ oChanPtr = &this->GetStreamW(); }
 
 // Our protocol
 	virtual const ZStreamW& GetStreamW() = 0;

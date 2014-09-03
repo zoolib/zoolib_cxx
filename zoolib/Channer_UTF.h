@@ -31,9 +31,8 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-typedef ChannerR<UTF8> ChannerR_UTF8;
-typedef ChannerU<UTF8> ChannerU_UTF8;
-typedef ChannerW<UTF8> ChannerW_UTF8;
+typedef Channer<ChanR_UTF> ChannerR_UTF;
+typedef Channer<ChanW_UTF> ChannerW_UTF;
 
 } // namespace ZooLib
 

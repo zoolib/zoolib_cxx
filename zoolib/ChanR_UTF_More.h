@@ -18,84 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_XX_Limited_h__
-#define __ZooLib_Chan_XX_Limited_h__ 1
+#ifndef __ZooLib_ChanR_UTF_More_h__
+#define __ZooLib_ChanR_UTF_More_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanW.h"
+#include "zoolib/ChanR_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_XX_Limited
+// MARK: - ChanR_UTF_Native32
 
-template <class XX>
-class ChanR_XX_Limited
-:	public ChanR<XX>
+class ChanR_UTF_Native32
+:	public ChanR_UTF
 	{
 public:
-	typedef XX Elmt;
+	virtual size_t Read(UTF32* oDest, size_t iCountCU) = 0;
 
-	ChanR_XX_Limited(uint64 iLimit, const ChanR<XX>& iChanR)
-	:	fChanR(iChanR)
-	,	fLimit(iLimit)
-		{}
+	virtual void ReadUTF16(UTF16* oDest,
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-// From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
-		{
-		const size_t countRead = sRead(oDest, std::min<uint64>(fLimit, iCount), fChanR);
-		fLimit -= countRead;
-		return countRead;
-		}
-
-	virtual uint64 Skip(uint64 iCount)
-		{
-		const size_t countSkipped = sSkip(std::min<uint64>(fLimit, iCount), fChanR);
-		fLimit -= countSkipped;
-		return countSkipped;
-		}
-
-	virtual size_t Readable()
-		{ return std::min<uint64>(fLimit, sReadable(fChanR)); }
-
-protected:
-	const ChanR<XX>& fChanR;
-	uint64 fLimit;
+	virtual void ReadUTF8(UTF8* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 	};
 
 // =================================================================================================
-// MARK: - ChanW_XX_Limited
+// MARK: - ChanR_UTF_Native16
 
-template <class XX>
-class ChanW_XX_Limited
-:	public ChanW<XX>
+class ChanR_UTF_Native16
+:	public ChanR_UTF
 	{
 public:
-	typedef XX Elmt;
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
-	ChanW_XX_Limited(uint64 iLimit, const ChanW<XX>& iChanW)
-	:	fChanW(iChanW)
-	,	fLimit(iLimit)
-		{}
+	virtual void ReadUTF16(UTF16* oDest,
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
 
-// From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
-		{
-		const size_t countWritten = sWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
-		fLimit -= countWritten;
-		return countWritten;
-		}
+	virtual void ReadUTF8(UTF8* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+	};
 
-	virtual void Flush()
-		{ sFlush(fChanW); }
+// =================================================================================================
+// MARK: - ChanR_UTF_Native8
 
-protected:
-	const ChanW<XX>& fChanW;
-	uint64 fLimit;
+class ChanR_UTF_Native8
+:	public ChanR_UTF
+	{
+public:
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
+
+	virtual void ReadUTF16(UTF16* oDest,
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+	virtual void ReadUTF8(UTF8* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_XX_Limited_h__
+#endif // __ZooLib_ChanR_UTF_More_h__

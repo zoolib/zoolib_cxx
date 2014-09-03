@@ -48,7 +48,7 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (size_t countRead = sRead(oDest, iCount, fChanR0))
+			if (const size_t countRead = sRead(oDest, iCount, fChanR0))
 				return countRead;
 			fFirstIsLive = false;
 			}
@@ -100,7 +100,6 @@ public:
 				return countWritten0;
 			fFirstIsLive = false;
 			}
-
 		return sWrite(iSource, iCount, fChanW1);
 		}
 
@@ -120,4 +119,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_XX_Cat_h__
+#endif // __ZooLib_Chan_XX_Cat_h__

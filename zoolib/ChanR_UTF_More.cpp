@@ -18,24 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_Bin_h__
-#define __ZooLib_Channer_Bin_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW_Bin.h"
-#include "zoolib/Channer.h"
+#include "zoolib/ChanR_UTF_More.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_UTF_Native32
 
-typedef Channer<ChanR_Bin> ChannerR_Bin;
-typedef Channer<ChanU<byte> > ChannerU_Bin;
-typedef Channer<ChanW_Bin> ChannerW_Bin;
+void ChanR_UTF_Native32::ReadUTF16(UTF16* oDest,
+	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	ZUnimplemented();
+	}
+
+void ChanR_UTF_Native32::ReadUTF8(UTF8* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+// MARK: - ChanR_UTF_Native16
+
+size_t ChanR_UTF_Native16::Read(UTF32* oDest, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
+
+void ChanR_UTF_Native16::ReadUTF8(UTF8* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+// MARK: - ChanR_UTF_Native8
+
+size_t ChanR_UTF_Native8::Read(UTF32* oDest, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
+
+void ChanR_UTF_Native8::ReadUTF16(UTF16* oDest,
+	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	ZUnimplemented();
+	}
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Channer_Bin_h__

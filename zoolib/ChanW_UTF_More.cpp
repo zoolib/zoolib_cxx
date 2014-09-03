@@ -18,24 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_Bin_h__
-#define __ZooLib_Channer_Bin_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW_Bin.h"
-#include "zoolib/Channer.h"
+#include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/ZDebug.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanW_UTF_Native32
 
-typedef Channer<ChanR_Bin> ChannerR_Bin;
-typedef Channer<ChanU<byte> > ChannerU_Bin;
-typedef Channer<ChanW_Bin> ChannerW_Bin;
+size_t ChanW_UTF_Native32::WriteUTF16(const UTF16* iSource, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
+
+size_t ChanW_UTF_Native32::WriteUTF8(const UTF8* iSource, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native16
+
+size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCount)
+	{
+	ZUnimplemented();
+	}
+
+size_t ChanW_UTF_Native16::WriteUTF8(const UTF8* iSource, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native8
+
+size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCount)
+	{
+	ZUnimplemented();
+	}
+
+size_t ChanW_UTF_Native8::WriteUTF16(const UTF16* iSource, size_t iCountCU)
+	{
+	ZUnimplemented();
+	}
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Channer_Bin_h__

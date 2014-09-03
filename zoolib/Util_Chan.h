@@ -40,7 +40,8 @@ std::pair<uint64,uint64> sCopyFully(
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
 		if (const size_t countRead = sRead(
-			buf, std::min<size_t>(countRemaining, countof(buf)),
+			buf,
+			std::min<size_t>(countRemaining, countof(buf)),
 			iChanR))
 			{
 			const size_t countWritten = sWriteFully(buf, countRead, iChanW);

@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanClose.h"
+#include "zoolib/ChanCount.h"
+#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanU.h"
@@ -32,117 +34,79 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChannerClose
+// MARK: -
 
-class ChannerClose
+template <class Chan_p>
+class Channer
 :	public ZCounted
 	{
 public:
-// Our protocol
-	virtual const ChanClose& GetChanClose() = 0;
-	};
+	typedef Chan_p Chan_t;
 
-// =================================================================================================
-// MARK: - ChannerPos
-
-class ChannerPos
-:	public ZCounted
-	{
-public:
-// Our protocol
-	virtual const ChanPos& GetChanPos() = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChannerR
-
-template <class Elmt_p>
-class ChannerR
-:	public ZCounted
-	{
-public:
-	typedef ChanR<Elmt_p> ChanR_t;
-
-// Our protocol
-	virtual const ChanR_t& GetChanR() = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChannerU
-
-template <class Elmt_p>
-class ChannerU
-:	public ZCounted
-	{
-public:
-	typedef ChanU<Elmt_p> ChanU_t;
-
-// Our protocol
-	virtual const ChanU_t& GetChanU() = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChannerW
-
-template <class Elmt_p>
-class ChannerW
-:	public ZCounted
-	{
-public:
-	typedef ChanW<Elmt_p> ChanW_t;
-
-// Our protocol
-	virtual const ChanW_t& GetChanW() = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChannerR_T
-
-template <class ChanR_p>
-class ChannerR_T
-:	public virtual ChannerR<typename ChanR_p::Elmt>
-	{
-protected:
-	typedef ChanR_p ChanR_Actual;
-
-	typedef typename ChanR_p::Elmt_t Elmt_t;
-
-	typedef ChanR<Elmt_t> ChanR_t;
-	typedef ChannerR<Elmt_t> ChannerR_t;
-
-public:
-	ChannerR_T() {}
-
-	virtual ~ChannerR_T() {}
-
-	template <class Param_p>
-	ChannerR_T(Param_p& iParam) : fChan(iParam) {}
-
-	template <class Param_p>
-	ChannerR_T(const Param_p& iParam) : fChan(iParam) {}
-
-// From ChannerR
-	virtual const ChanR_t& GetChanR() { return fChan; }
-
-// Our protocol
-	ChanR_Actual& GetChan() { return fChan; }
-
-protected:
-	ChanR_Actual fChan;
+	virtual void GetChan(const Chan_t*& oChanPtr) = 0;
 	};
 
 template <class Chan_p>
-ZRef<ChannerR<typename Chan_p::Elem_t> > sChannerR_T()
-	{ return new ChannerR_T<Chan_p>; }
+const Chan_p& sGetChan(const ZRef<Channer<Chan_p> >& iChanner)
+	{
+	const Chan_p* theChan_p;
+	iChanner->GetChan(theChan_p);
+	return *theChan_p;
+	}
+
+// =================================================================================================
+// MARK: -
+
+typedef Channer<ChanClose> ChannerClose;
+typedef Channer<ChanPos> ChannerPos;
+typedef Channer<ChanCount> ChannerCount;
+typedef Channer<ChanCountSet> ChannerCountSet;
+
+// =================================================================================================
+// MARK: - Channer_T
+
+template <class Chan_p>
+class Channer_T
+:	public virtual Channer<typename Chan_p::Chan_Base>
+	{
+protected:
+
+public:
+	typedef typename Chan_p::Chan_Base Chan_Base;
+
+	Channer_T() {}
+
+	virtual ~Channer_T() {}
+
+	template <class Param_p>
+	Channer_T(Param_p& iParam) : fChan(iParam) {}
+
+	template <class Param_p>
+	Channer_T(const Param_p& iParam) : fChan(iParam) {}
+
+// From Channer
+	virtual void GetChan(const Chan_Base*& oChanPtr) { oChanPtr = &fChan; }
+
+// Our protocol
+	Chan_p& GetChanActual() { return fChan; }
+
+protected:
+	Chan_p fChan;
+	};
+
+template <class Chan_p>
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T()
+	{ return new Channer_T<Chan_p>; }
 
 template <class Chan_p, class Param_p>
-ZRef<ChannerR<typename Chan_p::Elem_t> > sChannerR_T(Param_p& iParam)
-	{ return new ChannerR_T<Chan_p>(iParam); }
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(Param_p& iParam)
+	{ return new Channer_T<Chan_p>(iParam); }
 
 template <class Chan_p, class Param_p>
-ZRef<ChannerR<typename Chan_p::Elem_t> > sChannerR_T(const Param_p& iParam)
-	{ return new ChannerR_T<Chan_p>(iParam); }
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
+	{ return new Channer_T<Chan_p>(iParam); }
 
+#if 0
 // =================================================================================================
 // MARK: - ChannerR_FT
 
@@ -286,7 +250,7 @@ protected:
 	ZRef<ChannerW_t> fChannerReal;
 	ChanW_Actual fChan;
 	};
-
+#endif // 0
 } // namespace ZooLib
 
 #endif // __ZooLib_Channer_h__

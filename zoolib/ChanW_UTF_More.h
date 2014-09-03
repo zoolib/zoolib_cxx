@@ -18,24 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_Bin_h__
-#define __ZooLib_Channer_Bin_h__ 1
+#ifndef __ZooLib_ChanW_UTF_More_h__
+#define __ZooLib_ChanW_UTF_More_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW_Bin.h"
-#include "zoolib/Channer.h"
+#include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanW_UTF_Native32
 
-typedef Channer<ChanR_Bin> ChannerR_Bin;
-typedef Channer<ChanU<byte> > ChannerU_Bin;
-typedef Channer<ChanW_Bin> ChannerW_Bin;
+class ChanW_UTF_Native32
+:	public ChanW_UTF
+	{
+public:
+	virtual size_t Write(const UTF32* iSource, size_t iCount) = 0;
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
+	};
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native16
+
+class ChanW_UTF_Native16
+:	public ChanW_UTF
+	{
+public:
+	virtual size_t Write(const UTF32* iSource, size_t iCount);
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU) = 0;
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
+	};
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native8
+
+class ChanW_UTF_Native8
+:	public ChanW_UTF
+	{
+public:
+	virtual size_t Write(const UTF32* iSource, size_t iCount);
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU) = 0;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Channer_Bin_h__
+#endif // __ZooLib_ChanW_UTF_More_h__

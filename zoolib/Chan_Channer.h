@@ -41,13 +41,13 @@ public:
 
 // From ChanR<Elmt_p>
 	virtual size_t Read(Elmt_p* oDest, size_t iCount)
-		{ return sRead(oDest, iCount, fChanner->GetChanR()); }
+		{ return sRead(oDest, iCount, sGetChan(fChanner)); }
 
 	virtual uint64 Skip(uint64 iCount)
-		{ return sSkip(iCount, fChanner->GetChanR()); }
+		{ return sSkip(iCount, sGetChan(fChanner)); }
 
 	virtual size_t Readable()
-		{ return sReadable(fChanner->GetChanR()); }
+		{ return sReadable(sGetChan(fChanner)); }
 
 private:
 	const ZRef<ChannerR<Elmt_p> > fChanner;
@@ -68,10 +68,10 @@ public:
 
 // From ChanW<Elmt_p>
 	virtual size_t Write(const Elmt_p* iSource, size_t iCount)
-		{ return sWrite(iSource, iCount, fChanner->GetChanW()); }
+		{ return sWrite(iSource, iCount, sGetChan(fChanner)); }
 
 	virtual void Flush()
-		{ sFlush(fChanner->GetChanW()); }
+		{ sFlush(sGetChan(fChanner)); }
 
 private:
 	const ZRef<ChannerW<Elmt_p> > fChanner;
