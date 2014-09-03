@@ -64,14 +64,11 @@ public:
 	virtual size_t Readable()
 		{ return 0; }
 
-// For a golang-style select mechanism we'll need an API whereby we can efficiently
-// wait for readability on multiple channels at once.
-
-//	virtual bool WaitReadable(double iTimeout) // ??
-//		{
-//		ZThread::sSleep(iTimeout);
-//		return false;
-//		}
+// For a golang-style select mechanism we'll need something where we can register
+// a callable, or something, so that blocked entities can notify when they unblock.
+// Something like this perhaps:
+//	virtual void WhenReadable(const ZRef<ZCallable_Void>& iCallable)
+//		{}
 	};
 
 // =================================================================================================

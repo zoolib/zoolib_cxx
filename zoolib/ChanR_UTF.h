@@ -22,27 +22,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanR_UTF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h" // for std::pair
-
 #include "zoolib/ChanR.h"
-#include "zoolib/ZUnicode.h"
-
+#include "zoolib/ZUnicodeString.h"
 
 namespace ZooLib {
 
 using std::pair;
 
-// The big issue with UTF16 and UTF8 is that we do sometimes want to work in terms
-// of codepoints and/or code units. With UTF32 we elide the difference (there shouldn't
-// really be any).
+// =================================================================================================
+// MARK: - ChanR_UTF32
+
+typedef ChanR<UTF32> ChanR_UTF32;
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_UTF16
 
-class ChanR_UTF
-:	public ChanR<UTF32>
-,	public ChanR<UTF16>
-,	public ChanR<UTF8>
+class ChanR_UTF16
+:	public ChanR<UTF16>
 	{
 public:
 // From ChanR<UTF16>
@@ -53,6 +49,18 @@ public:
 		return countRead;
 		}
 
+// Our protocol
+	virtual void ReadUTF16(UTF16* oDest,
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
+	};
+
+// =================================================================================================
+// MARK: - ChanR_UTF8
+
+class ChanR_UTF8
+:	public ChanR<UTF8>
+	{
+public:
 // From ChanR<UTF8>
 	virtual size_t Read(UTF8* oDest, size_t iCount)
 		{
@@ -62,24 +70,33 @@ public:
 		}
 
 // Our protocol
-	virtual void ReadUTF16(UTF16* oDest,
-		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
 	virtual void ReadUTF8(UTF8* oDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
+	};
+
+// =================================================================================================
+// MARK: -
+
+class ChanR_UTF
+:	public ChanR_UTF32
+,	public ChanR_UTF16
+,	public ChanR_UTF8
+	{
+public:
+	static void sThrow_Exhausted();
 	};
 
 // =================================================================================================
 // MARK: -
 
 inline
-void ReadUTF16(UTF16* oDest,
+void sRead(UTF16* oDest,
 	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	 const ChanR_UTF& iChanR)
 	{ return sNonConst(iChanR).ReadUTF16(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
 
 inline
-void ReadUTF8(UTF8* oDest,
+void sRead(UTF8* oDest,
 	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	 const ChanR_UTF& iChanR)
 	{ return sNonConst(iChanR).ReadUTF8(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }

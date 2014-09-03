@@ -69,12 +69,20 @@ public:
 	virtual size_t Read(ChanR<UTF32>::Elmt* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
-		sNonConst(this)->Imp_ReadUTF32(oDest, iCount, &countRead);
+		this->Imp_ReadUTF32(oDest, iCount, &countRead);
 		return countRead;
 		}
 
 	virtual size_t Readable()
 		{ return 0; }
+
+	virtual void ReadUTF16(UTF16* oDest,
+		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+		 { this->Imp_ReadUTF16(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+
+	virtual void ReadUTF8(UTF8* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+		 { this->Imp_ReadUTF8(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
 
 // Our protocol
 	class ExEndOfStrim;
