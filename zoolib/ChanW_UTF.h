@@ -32,10 +32,10 @@ namespace ZooLib {
 
 class ChanW_UTF
 :	public ChanW<UTF32>
+,	public ChanW<UTF16>
+,	public ChanW<UTF8>
 	{
 public:
-	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU) = 0;
-	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU) = 0;
 	};
 
 // =================================================================================================
@@ -63,8 +63,8 @@ void sWrite(const UTF8* iSource,
 */	//@{
 // This next one is provided by ChanW<UTF32>
 // size_t sWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
-size_t sWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
-size_t sWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
+//size_t sWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
+//size_t sWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
 //@}
 
 

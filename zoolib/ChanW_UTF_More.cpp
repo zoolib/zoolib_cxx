@@ -26,12 +26,12 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ChanW_UTF_Native32
 
-size_t ChanW_UTF_Native32::WriteUTF16(const UTF16* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
 	{
 	ZUnimplemented();
 	}
 
-size_t ChanW_UTF_Native32::WriteUTF8(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
 	{
 	ZUnimplemented();
 	}
@@ -44,7 +44,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCount)
 	ZUnimplemented();
 	}
 
-size_t ChanW_UTF_Native16::WriteUTF8(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
 	{
 	ZUnimplemented();
 	}
@@ -57,7 +57,7 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCount)
 	ZUnimplemented();
 	}
 
-size_t ChanW_UTF_Native8::WriteUTF16(const UTF16* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native8::Write(const UTF16* iSource, size_t iCountCU)
 	{
 	ZUnimplemented();
 	}

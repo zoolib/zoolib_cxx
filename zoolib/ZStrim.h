@@ -66,7 +66,7 @@ ZStrimR reference, you must work with some derived class.
 
 public:
 // From ChanR_UTF
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(ChanR<UTF32>::Elmt* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
 		sNonConst(this)->Imp_ReadUTF32(oDest, iCount, &countRead);
@@ -196,7 +196,7 @@ public:
 // MARK: - ZStrimW
 
 class ZStrimW
-:	public ChanW_UTF_Native32
+:	public ChanW_UTF
 	{
 protected:
 /** \name Canonical Methods
@@ -211,11 +211,27 @@ ZStrimW reference, you must work with some derived class.
 
 
 public:
-// From ChanW_UTF_Native32
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+// From ChanW<UTF32> via ChanW_UTF
+	virtual size_t Write(const UTF32* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_WriteUTF32(iSource, iCount, &countWritten);
+		return countWritten;
+		}
+
+// From ChanW<UTF16> via ChanW_UTF
+	virtual size_t Write(const UTF16* iSource, size_t iCount)
+		{
+		size_t countWritten = 0;
+		sNonConst(this)->Imp_WriteUTF16(iSource, iCount, &countWritten);
+		return countWritten;
+		}
+
+// From ChanW<UTF8> via ChanW_UTF
+	virtual size_t Write(const UTF8* iSource, size_t iCount)
+		{
+		size_t countWritten = 0;
+		sNonConst(this)->Imp_WriteUTF8(iSource, iCount, &countWritten);
 		return countWritten;
 		}
 

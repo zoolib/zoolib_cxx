@@ -41,8 +41,27 @@ using std::pair;
 
 class ChanR_UTF
 :	public ChanR<UTF32>
+,	public ChanR<UTF16>
+,	public ChanR<UTF8>
 	{
 public:
+// From ChanR<UTF16>
+	virtual size_t Read(UTF16* oDest, size_t iCount)
+		{
+		size_t countRead;
+		this->ReadUTF16(oDest, iCount, &countRead, iCount, nullptr);
+		return countRead;
+		}
+
+// From ChanR<UTF8>
+	virtual size_t Read(UTF8* oDest, size_t iCount)
+		{
+		size_t countRead;
+		this->ReadUTF8(oDest, iCount, &countRead, iCount, nullptr);
+		return countRead;
+		}
+
+// Our protocol
 	virtual void ReadUTF16(UTF16* oDest,
 		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
