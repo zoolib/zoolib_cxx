@@ -130,8 +130,8 @@ public:
 	typedef XX Elmt;
 	typedef Data_p Data;
 
-	ChanRWPos_XX_Data(Data& ioData)
-	:	ChanBase_XX_Data<Data_p,XX>(&ioData)
+	ChanRWPos_XX_Data(Data* ioData)
+	:	ChanBase_XX_Data<Data_p,XX>(ioData)
 		{}
 
 // From ChanU
@@ -176,18 +176,10 @@ public:
 // MARK: - Data stream reading functions
 
 template <class Data_p, class XX>
-void sReadAll_T(Data_p& ioData, const ChanR<XX>& iChanR)
-	{ sCopyAll(iChanR, ChanRWPos_XX_Data<Data_p,XX>(ioData)); }
-
-template <class Data_p, class XX>
-void sRead_T(Data_p& ioData, const ChanR<XX>& iChanR, size_t iSize)
-	{ sCopyFully(iChanR, ChanRWPos_XX_Data<Data_p,XX>(ioData), iSize); }
-
-template <class Data_p, class XX>
 Data_p sReadAll_T(const ChanR<XX>& iChanR)
 	{
 	Data_p theData;
-	sReadAll_T<Data_p>(theData, iChanR);
+	sCopyAll(iChanR, ChanRWPos_XX_Data<Data_p,XX>(&theData));
 	return theData;
 	}
 
@@ -195,7 +187,7 @@ template <class Data_p, class XX>
 Data_p sRead_T(const ChanR<XX>& iChanR, size_t iSize)
 	{
 	Data_p theData;
-	sRead_T<Data_p>(theData, iChanR, iSize);
+	sCopyFully(iChanR, ChanRWPos_XX_Data<Data_p,XX>(&theData), iSize);
 	return theData;
 	}
 
