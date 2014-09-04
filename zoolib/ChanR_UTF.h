@@ -84,6 +84,13 @@ class ChanR_UTF
 	{
 public:
 	static void sThrow_Exhausted();
+
+	using ChanR_UTF32::Read;
+	using ChanR_UTF32::Skip;
+	using ChanR_UTF16::Read;
+	using ChanR_UTF16::Skip;
+	using ChanR_UTF8::Read;
+	using ChanR_UTF8::Skip;
 	};
 
 // =================================================================================================

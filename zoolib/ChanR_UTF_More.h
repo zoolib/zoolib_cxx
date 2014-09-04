@@ -33,6 +33,8 @@ class ChanR_UTF_Native32
 :	public ChanR_UTF
 	{
 public:
+	using ChanR_UTF::Read;
+
 	virtual size_t Read(UTF32* oDest, size_t iCountCU) = 0;
 
 	virtual void ReadUTF16(UTF16* oDest,
@@ -49,6 +51,8 @@ class ChanR_UTF_Native16
 :	public ChanR_UTF
 	{
 public:
+	using ChanR_UTF::Read;
+
 	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 	virtual void ReadUTF16(UTF16* oDest,
@@ -65,6 +69,8 @@ class ChanR_UTF_Native8
 :	public ChanR_UTF
 	{
 public:
+	using ChanR_UTF::Read;
+
 	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 	virtual void ReadUTF16(UTF16* oDest,

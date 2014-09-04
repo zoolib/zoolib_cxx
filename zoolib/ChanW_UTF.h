@@ -36,6 +36,12 @@ class ChanW_UTF
 ,	public ChanW<UTF8>
 	{
 public:
+	using ChanW<UTF32>::Write;
+	using ChanW<UTF32>::Flush;
+	using ChanW<UTF16>::Write;
+	using ChanW<UTF16>::Flush;
+	using ChanW<UTF8>::Write;
+	using ChanW<UTF8>::Flush;
 	};
 
 // =================================================================================================

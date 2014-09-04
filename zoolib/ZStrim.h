@@ -65,6 +65,9 @@ ZStrimR reference, you must work with some derived class.
 
 
 public:
+	using ChanR_UTF::Read;
+	using ChanR_UTF::Skip;
+
 // From ChanR_UTF
 	virtual size_t Read(ChanR<UTF32>::Elmt* oDest, size_t iCount)
 		{
@@ -219,6 +222,9 @@ ZStrimW reference, you must work with some derived class.
 
 
 public:
+	using ChanW_UTF::Write;
+	using ChanW_UTF::Flush;
+
 // From ChanW<UTF32> via ChanW_UTF
 	virtual size_t Write(const UTF32* iSource, size_t iCount)
 		{
@@ -442,7 +448,8 @@ template <class Base_t, class Self_t>
 class ZStrimW_T : public Base_t
 	{
 public:
-//	using Base_t::Write;
+	using Base_t::Write;
+	using Base_t::Flush;
 
 	const Self_t& Write(const UTF32* iString) const
 		{

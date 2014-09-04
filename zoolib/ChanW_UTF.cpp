@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZUnicode.h"
 
+#include <stdexcept> // for std::range_error
+
 namespace ZooLib {
 
 static void sThrowEndOfChanW()
