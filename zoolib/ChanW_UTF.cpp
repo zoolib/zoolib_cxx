@@ -209,7 +209,6 @@ void sWrite(const string8& iString, const ChanW_UTF& iChanW)
 		spWriteMust(iString.data(), countCU, iChanW);
 	}
 
-
 // -----
 
 void sWritef(const ChanW_UTF& iChanW, const UTF8* iString, ...);
