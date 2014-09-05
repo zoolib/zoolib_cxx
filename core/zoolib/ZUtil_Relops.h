@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Relops_h__
 #include "zconfig.h"
 
-#include "ZTypes.h"
+#include "ZTypes.h" // For EnableIfC
 
 namespace ZooLib {
 
