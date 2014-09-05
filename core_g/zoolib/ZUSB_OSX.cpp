@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
 
+#include <vector>
+
 namespace ZooLib {
 
 using std::exception;

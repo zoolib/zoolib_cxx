@@ -356,16 +356,16 @@ private:
 // MARK: - Link definition
 
 Link::Link(const ZRef<CountedString>& iProtoName, const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)
-:	fCheckedProto(false)
-,	fProtoName(iProtoName)
+:	fProtoName(iProtoName)
 ,	fYadMapAtRPos(iYadMapAtRPos)
+,	fCheckedProto(false)
 	{}
 
 Link::Link(const ZRef<Link>& iParent, const ZRef<ZYadMapAtRPos>& iYadMapAtRPos)
-:	fCheckedProto(false)
-,	fProtoName(iParent->fProtoName)
+:	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
 ,	fYadMapAtRPos(iYadMapAtRPos)
+,	fCheckedProto(false)
 	{}
 
 ZRef<ZYadMapAtRPos> Link::GetYadMapAtRPos()
