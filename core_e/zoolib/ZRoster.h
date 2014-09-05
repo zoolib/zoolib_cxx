@@ -104,4 +104,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZYad_h__
+#endif // __ZRoster_h__
