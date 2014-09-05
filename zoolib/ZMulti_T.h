@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMulti_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZUtil_Relops.h"
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -39,6 +41,17 @@ public:
 
 	T0 f0;
 	};
+
+template <class T0>
+bool operator<(const ZMulti_T1<T0>& iL, const ZMulti_T1<T0>& iR)
+	{
+	if (iL.f0 < iR.f0)
+		return true;
+	return false;
+	}
+
+template <class T0>
+class RelopsTraits_HasLT<ZMulti_T1<T0> > : public RelopsTraits_Has {};
 
 template <class T0>
 ZMulti_T1<T0> sMulti(const T0& i0)
@@ -61,6 +74,21 @@ public:
 	T0 f0;
 	T1 f1;
 	};
+
+template <class T0, class T1>
+bool operator<(const ZMulti_T2<T0,T1>& iL, const ZMulti_T2<T0,T1>& iR)
+	{
+	if (iL.f0 < iR.f0)
+		return true;
+	if (iR.f0 < iL.f0)
+		return false;
+	if (iL.f1 < iR.f1)
+		return true;
+	return false;
+	}
+
+template <class T0, class T1>
+class RelopsTraits_HasLT<ZMulti_T2<T0,T1> > : public RelopsTraits_Has {};
 
 template <class T0, class T1>
 ZMulti_T2<T0,T1> sMulti(const T0& i0, const T1& i1)
@@ -87,6 +115,25 @@ public:
 	};
 
 template <class T0, class T1, class T2>
+bool operator<(const ZMulti_T3<T0,T1,T2>& iL, const ZMulti_T3<T0,T1,T2>& iR)
+	{
+	if (iL.f0 < iR.f0)
+		return true;
+	if (iR.f0 < iL.f0)
+		return false;
+	if (iL.f1 < iR.f1)
+		return true;
+	if (iR.f1 < iL.f1)
+		return false;
+	if (iL.f2 < iR.f2)
+		return true;
+	return false;
+	}
+
+template <class T0, class T1, class T2>
+class RelopsTraits_HasLT<ZMulti_T3<T0,T1,T2> > : public RelopsTraits_Has {};
+
+template <class T0, class T1, class T2>
 ZMulti_T3<T0,T1,T2> sMulti(const T0& i0, const T1& i1, const T2& i2)
 	{ return ZMulti_T3<T0,T1,T2>(i0, i1, i2); }
 
@@ -111,6 +158,29 @@ public:
 	T2 f2;
 	T3 f3;
 	};
+
+template <class T0, class T1, class T2, class T3>
+bool operator<(const ZMulti_T4<T0,T1,T2,T3>& iL, const ZMulti_T4<T0,T1,T2,T3>& iR)
+	{
+	if (iL.f0 < iR.f0)
+		return true;
+	if (iR.f0 < iL.f0)
+		return false;
+	if (iL.f1 < iR.f1)
+		return true;
+	if (iR.f1 < iL.f1)
+		return false;
+	if (iL.f2 < iR.f2)
+		return true;
+	if (iR.f2 < iL.f2)
+		return false;
+	if (iL.f3 < iR.f3)
+		return true;
+	return false;
+	}
+
+template <class T0, class T1, class T2, class T3>
+class RelopsTraits_HasLT<ZMulti_T4<T0,T1,T2,T3> > : public RelopsTraits_Has {};
 
 template <class T0, class T1, class T2, class T3>
 ZMulti_T4<T0,T1,T2,T3> sMulti(const T0& i0, const T1& i1, const T2& i2, const T3& i3)
