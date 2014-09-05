@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanR_UTF.h"
-//#include "zoolib/ChanR_UTF_More.h"
 #include "zoolib/ZUnicode.h"
 
 #include <stdexcept> // for range_error

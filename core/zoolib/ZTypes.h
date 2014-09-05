@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTypes_h__
-#define __ZTypes_h__
+#ifndef __ZooLib_ZTypes_h__
+#define __ZooLib_ZTypes_h__
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -221,14 +221,10 @@ const struct
 // =================================================================================================
 // Availability of tr1 is still a bit patchy, use our own enable templates for now.
 
-template <bool B, class T = void>
-struct EnableIfC
-	{};
+template <bool B, class T = void> struct EnableIfC {};
 
-template <class T>
-struct EnableIfC<true, T>
-	{ typedef T type; };
+template <class T> struct EnableIfC<true, T> { typedef T type; };
 
 } // namespace ZooLib
 
-#endif // __ZTypes_h__
+#endif // __ZooLib_ZTypes_h__
