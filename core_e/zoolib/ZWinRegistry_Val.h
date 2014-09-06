@@ -25,12 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/TagVal.h"
+
 #include "zoolib/ZCompat_Win.h"
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_WinHANDLE.h"
-#include "zoolib/ZTagVal.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZVal_Any.h"
@@ -46,8 +47,8 @@ using namespace std;
 // =================================================================================================
 // MARK: - Types
 
-typedef ZTagVal<string16, struct Tag_Env> String_Env;
-typedef ZTagVal<string16, struct Tag_Link> String_Link;
+typedef TagVal<string16, struct Tag_Env> String_Env;
+typedef TagVal<string16, struct Tag_Link> String_Link;
 typedef vector<string16> StringList;
 typedef ZData_Any Data;
 class KeyRef;

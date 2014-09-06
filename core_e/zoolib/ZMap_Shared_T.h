@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMap_Shared_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/CountedVal.h"
+
 #include "zoolib/ZAny.h" // For sDefault
-#include "zoolib/ZCountedVal.h"
 #include "zoolib/ZQ.h"
 
 namespace ZooLib {
@@ -126,7 +127,7 @@ public:
 		{ return this->Get(iName); }
 
 protected:
-	ZRef<ZCountedVal<Map_t> > fRep;
+	ZRef<CountedVal<Map_t> > fRep;
 	};
 
 // =================================================================================================

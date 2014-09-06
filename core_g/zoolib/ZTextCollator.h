@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTextCollator_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/CountedWithoutFinalize.h"
+
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 
@@ -155,7 +156,7 @@ private:
 // =================================================================================================
 // MARK: - ZTextCollatorRep
 
-class ZTextCollatorRep : public ZCountedWithoutFinalize
+class ZTextCollatorRep : public CountedWithoutFinalize
 	{
 protected:
 	ZTextCollatorRep();

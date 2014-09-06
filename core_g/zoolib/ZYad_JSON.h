@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_JSON_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCountedVal.h"
+#include "zoolib/CountedVal.h"
+
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZStreamR_Boundary.h"
@@ -142,14 +143,14 @@ private:
 class YadSeqR : public ZYadSeqR_Std
 	{
 public:
-	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO);
+	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO);
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
-	const ZRef<ZCountedVal<ReadOptions> > fRO;
+	const ZRef<CountedVal<ReadOptions> > fRO;
 	};
 
 // =================================================================================================
@@ -158,14 +159,14 @@ private:
 class YadMapR : public ZYadMapR_Std
 	{
 public:
-	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO);
+	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;
-	const ZRef<ZCountedVal<ReadOptions> > fRO;
+	const ZRef<CountedVal<ReadOptions> > fRO;
 	};
 
 // =================================================================================================

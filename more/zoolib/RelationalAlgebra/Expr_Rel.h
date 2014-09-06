@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Safe.h"
+#include "zoolib/ThreadVal.h"
+
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr.h"
-#include "zoolib/ZSafe.h"
-#include "zoolib/ZThreadVal.h"
 #include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
@@ -58,11 +59,11 @@ typedef ZCallable<void(const string8& iMessage)> Callable_SemanticError;
 
 extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
 extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw;
-extern ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
+extern Safe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 
-typedef ZThreadVal<ZRef<Callable_SemanticError> > ThreadVal_SemanticError;
+typedef ThreadVal<ZRef<Callable_SemanticError> > ThreadVal_SemanticError;
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

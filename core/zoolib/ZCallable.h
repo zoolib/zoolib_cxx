@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_h__
-#define __ZCallable_h__ 1
+#ifndef __ZooLib_Callable_h__
+#define __ZooLib_Callable_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCounted.h"
@@ -134,29 +134,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_Callable_iF ZMACRO_Callable_iE,iF
 
 #define ZMACRO_Callable_VTV
-#define ZMACRO_Callable_VT0 typename ZCallableUtil::VT<P0_p>::P i0
-#define ZMACRO_Callable_VT1 ZMACRO_Callable_VT0,typename ZCallableUtil::VT<P1_p>::P i1
-#define ZMACRO_Callable_VT2 ZMACRO_Callable_VT1,typename ZCallableUtil::VT<P2_p>::P i2
-#define ZMACRO_Callable_VT3 ZMACRO_Callable_VT2,typename ZCallableUtil::VT<P3_p>::P i3
-#define ZMACRO_Callable_VT4 ZMACRO_Callable_VT3,typename ZCallableUtil::VT<P4_p>::P i4
-#define ZMACRO_Callable_VT5 ZMACRO_Callable_VT4,typename ZCallableUtil::VT<P5_p>::P i5
-#define ZMACRO_Callable_VT6 ZMACRO_Callable_VT5,typename ZCallableUtil::VT<P6_p>::P i6
-#define ZMACRO_Callable_VT7 ZMACRO_Callable_VT6,typename ZCallableUtil::VT<P7_p>::P i7
-#define ZMACRO_Callable_VT8 ZMACRO_Callable_VT7,typename ZCallableUtil::VT<P8_p>::P i8
-#define ZMACRO_Callable_VT9 ZMACRO_Callable_VT8,typename ZCallableUtil::VT<P9_p>::P i9
-#define ZMACRO_Callable_VTA ZMACRO_Callable_VT9,typename ZCallableUtil::VT<PA_p>::P iA
-#define ZMACRO_Callable_VTB ZMACRO_Callable_VTA,typename ZCallableUtil::VT<PB_p>::P iB
-#define ZMACRO_Callable_VTC ZMACRO_Callable_VTB,typename ZCallableUtil::VT<PC_p>::P iC
-#define ZMACRO_Callable_VTD ZMACRO_Callable_VTC,typename ZCallableUtil::VT<PD_p>::P iD
-#define ZMACRO_Callable_VTE ZMACRO_Callable_VTD,typename ZCallableUtil::VT<PE_p>::P iE
-#define ZMACRO_Callable_VTF ZMACRO_Callable_VTE,typename ZCallableUtil::VT<PF_p>::P iF
+#define ZMACRO_Callable_VT0 typename CallableUtil::VT<P0_p>::P i0
+#define ZMACRO_Callable_VT1 ZMACRO_Callable_VT0,typename CallableUtil::VT<P1_p>::P i1
+#define ZMACRO_Callable_VT2 ZMACRO_Callable_VT1,typename CallableUtil::VT<P2_p>::P i2
+#define ZMACRO_Callable_VT3 ZMACRO_Callable_VT2,typename CallableUtil::VT<P3_p>::P i3
+#define ZMACRO_Callable_VT4 ZMACRO_Callable_VT3,typename CallableUtil::VT<P4_p>::P i4
+#define ZMACRO_Callable_VT5 ZMACRO_Callable_VT4,typename CallableUtil::VT<P5_p>::P i5
+#define ZMACRO_Callable_VT6 ZMACRO_Callable_VT5,typename CallableUtil::VT<P6_p>::P i6
+#define ZMACRO_Callable_VT7 ZMACRO_Callable_VT6,typename CallableUtil::VT<P7_p>::P i7
+#define ZMACRO_Callable_VT8 ZMACRO_Callable_VT7,typename CallableUtil::VT<P8_p>::P i8
+#define ZMACRO_Callable_VT9 ZMACRO_Callable_VT8,typename CallableUtil::VT<P9_p>::P i9
+#define ZMACRO_Callable_VTA ZMACRO_Callable_VT9,typename CallableUtil::VT<PA_p>::P iA
+#define ZMACRO_Callable_VTB ZMACRO_Callable_VTA,typename CallableUtil::VT<PB_p>::P iB
+#define ZMACRO_Callable_VTC ZMACRO_Callable_VTB,typename CallableUtil::VT<PC_p>::P iC
+#define ZMACRO_Callable_VTD ZMACRO_Callable_VTC,typename CallableUtil::VT<PD_p>::P iD
+#define ZMACRO_Callable_VTE ZMACRO_Callable_VTD,typename CallableUtil::VT<PE_p>::P iE
+#define ZMACRO_Callable_VTF ZMACRO_Callable_VTE,typename CallableUtil::VT<PF_p>::P iF
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZCallableUtil
+// MARK: - CallableUtil
 
-namespace ZCallableUtil {
+namespace CallableUtil {
 
 template <class T> struct VT
 	{
@@ -185,7 +185,7 @@ template <class T> struct VT<T&>
 	typedef Param P;
 	};
 
-} // namespace ZCallableUtil
+} // namespace CallableUtil
 
 // =================================================================================================
 // MARK: - ZCallable
@@ -300,7 +300,7 @@ ZQ<typename Type_p::Type_t::R> sQCall(
 
 template <class Type_p>
 typename Type_p::Type_t::R sDCall(
-	typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
+	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
 	const Type_p& iCallable)
 	{
 	if (iCallable)
@@ -334,7 +334,7 @@ ZQ<typename Type_p::Type_t::R> sQCall( \
 \
 template <class Type_p, ZMACRO_Callable_Class_P##X> \
 typename Type_p::Type_t::R sDCall( \
-	typename ZCallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
+	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
 	const Type_p& iCallable, \
 	ZMACRO_Callable_ConstRef_Pi##X) \
 	{ \
@@ -400,20 +400,23 @@ void sCallVoid(ZRef<ZCallable<T(void)> > iCallable)
 typedef ZCallable<void(void)> ZCallable_Void;
 typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
 
-typedef ZCallable<bool(void)> ZCallable_Bool;
+typedef ZCallable<bool(void)> Callable_Bool;
 
 // =================================================================================================
-// MARK: - ZCallable_Null
+// MARK: - Callable_Null
 
-class ZCallable_Null
+class Callable_Null
 :	public ZCallable_Void
 	{
 public:
 // From ZCallable
 	virtual ZQ<void> QCall()
-		{ return notnull; }
+		{
+		// Ironically we return notnull.
+		return notnull;
+		}
 	};
 
 } // namespace ZooLib
 
-#endif // __ZCallable_h__
+#endif // __ZooLib_Callable_h__

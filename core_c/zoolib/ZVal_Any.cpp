@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Singleton.h"
+
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompare_vector.h"
-#include "zoolib/ZSingleton.h"
 #include "zoolib/ZVal_Any.h"
 
 using std::map;
@@ -272,7 +273,7 @@ void ZSeq_Any::pTouch()
 
 namespace {
 
-ZSafePtrStack_WithDestroyer<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep> spSafePtrStack_Map_Any_Rep;
+SafePtrStack_WithDestroyer<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep> spSafePtrStack_Map_Any_Rep;
 
 } // anonymous namespace
 

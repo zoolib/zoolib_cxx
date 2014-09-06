@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMulti_T_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUtil_Relops.h"
+#include "zoolib/Util_Relops.h"
 
 namespace ZooLib {
 

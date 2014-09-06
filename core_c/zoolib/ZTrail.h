@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTrail_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_Relops.h"
+
 #include "zoolib/ZName.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZUtil_Relops.h"
 
 #include <vector>
 

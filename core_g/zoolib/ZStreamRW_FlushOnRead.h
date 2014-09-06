@@ -63,7 +63,7 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	ZThreadSafe_t fLastWasWrite;
+	ThreadSafe_t fLastWasWrite;
 	ZMtx fMutex;
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;

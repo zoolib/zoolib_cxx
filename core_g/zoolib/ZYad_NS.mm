@@ -132,7 +132,7 @@ ZRef<ZYadR> ZYadMapAtRPos_NS::ReadAt(const ZName& iName)
 
 void ZYadMapAtRPos_NS::pSetupPosition()
 	{
-	if (fPosition != -1)
+	if (fPosition != uint64(-1))
 		return;
 
 	fPosition = 0;

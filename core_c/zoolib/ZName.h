@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZName_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/CountedVal.h"
+#include "zoolib/Util_Relops.h"
+
 #include "zoolib/ZCompare_T.h"
-#include "zoolib/ZCountedVal.h"
 #include "zoolib/ZUnicodeString.h" // For string8
-#include "zoolib/ZUtil_Relops.h"
 
 namespace ZooLib {
 
@@ -35,7 +36,7 @@ namespace ZooLib {
 class ZName
 	{
 public:
-	typedef ZCountedVal<string8> CountedString;
+	typedef CountedVal<string8> CountedString;
 	typedef ZRef<CountedString> RefCountedString;
 
 	inline

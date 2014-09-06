@@ -34,14 +34,14 @@ bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRef
 ZName sName(const string8& iString)
 	{
 	const ZRefCountedString theCountedString = sCountedVal<string8>(iString);
-	if (ZThreadVal_NameUniquer::Type_t* theUniquer = ZThreadVal_NameUniquer::sPMut())
+	if (ThreadVal_NameUniquer::Type_t* theUniquer = ThreadVal_NameUniquer::sPMut())
 		return ZName(theUniquer->Get(theCountedString));
 	return ZName(theCountedString);
 	}
 
 ZName sName(const ZRefCountedString& iCountedString)
 	{
-	if (ZThreadVal_NameUniquer::Type_t* theUniquer = ZThreadVal_NameUniquer::sPMut())
+	if (ThreadVal_NameUniquer::Type_t* theUniquer = ThreadVal_NameUniquer::sPMut())
 		return ZName(theUniquer->Get(iCountedString));
 	return ZName(iCountedString);
 	}

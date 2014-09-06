@@ -20,7 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
-#include "zoolib/ZSingleton.h"
+#include "zoolib/Singleton.h"
+
 #include "zoolib/ZUtil_STL_map.h"
 
 namespace ZooLib {

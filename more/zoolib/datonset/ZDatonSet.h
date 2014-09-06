@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDatonSet_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_Relops.h"
+
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZIntervalTreeClock.h"
 #include "zoolib/ZThread.h"
-#include "zoolib/ZUtil_Relops.h"
 
 #include <map>
 #include <set>
@@ -73,7 +74,7 @@ namespace ZDatonSet {
 // =================================================================================================
 // MARK: - Delta
 
-class Delta : public ZCountedWithoutFinalize
+class Delta : public CountedWithoutFinalize
 	{
 public:
 	typedef std::map<Daton,bool> Statements_t;
@@ -96,7 +97,7 @@ typedef std::vector<std::pair<ZRef<Event>,ZRef<Delta> > > Vector_Event_Delta_t;
 // =================================================================================================
 // MARK: - Deltas
 
-class Deltas : public ZCountedWithoutFinalize
+class Deltas : public CountedWithoutFinalize
 	{
 public:
 	Deltas(const Vector_Event_Delta_t& iVector);
@@ -111,7 +112,7 @@ private:
 // =================================================================================================
 // MARK: - DeltasChain
 
-class DeltasChain : public ZCountedWithoutFinalize
+class DeltasChain : public CountedWithoutFinalize
 	{
 public:
 	DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas);
@@ -130,7 +131,7 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
 // =================================================================================================
 // MARK: - DatonSet
 
-class DatonSet : public ZCountedWithoutFinalize
+class DatonSet : public CountedWithoutFinalize
 	{
 public:
 	DatonSet(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent);

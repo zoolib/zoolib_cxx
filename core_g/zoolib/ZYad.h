@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZName.h"
-#include "zoolib/ZSafePtrStack.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZVisitor.h"

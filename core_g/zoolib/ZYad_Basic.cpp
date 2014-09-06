@@ -94,7 +94,7 @@ public:
 
 		string theName;
 		if (!spRead_Until(theStrimU, fOptions.fSeparator_NameFromValue, theName))
-			spThrowParseException("Expected a member name, followed by " + fOptions.fSeparator_NameFromValue);
+			spThrowParseException("Expected a member name, followed by #Need UTF32->string8 converter or string8+UTF32 appender#");// + fOptions.fSeparator_NameFromValue);
 		oName = theName;
 
 		string theValue;

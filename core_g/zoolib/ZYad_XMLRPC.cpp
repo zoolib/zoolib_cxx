@@ -109,7 +109,7 @@ static void spThrowParseException(const string& iMessage)
 	throw ZYadParseException_XMLRPC(iMessage);
 	}
 
-void spSkipCruft(ZML::StrimU& r)
+static void spSkipCruft(ZML::StrimU& r)
 	{
 	// Ignore the leading text, ?xml, !DOCTYPE and plist tags
 	for (;;)

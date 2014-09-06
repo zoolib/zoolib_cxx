@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZFileFormat_QuickTime_Val_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTagVal.h"
+#include "zoolib/TagVal.h"
+
 #include "zoolib/ZVal_Any.h"
 
 namespace ZooLib {
@@ -32,10 +33,10 @@ namespace QuickTime {
 // =================================================================================================
 // MARK: - sAsVal
 
-typedef ZTagVal<ZData_Any,struct BMP> Data_BMP;
-typedef ZTagVal<ZData_Any,struct JPEG> Data_JPEG;
-typedef ZTagVal<ZData_Any,struct PNG> Data_PNG;
-typedef ZTagVal<ZData_Any,struct Meta> Data_Meta;
+typedef TagVal<ZData_Any,struct BMP> Data_BMP;
+typedef TagVal<ZData_Any,struct JPEG> Data_JPEG;
+typedef TagVal<ZData_Any,struct PNG> Data_PNG;
+typedef TagVal<ZData_Any,struct Meta> Data_Meta;
 
 ZQ<ZVal_Any> sQAsVal(const void* iSource, size_t iSize);
 ZQ<ZVal_Any> sQAsVal(const ZData_Any& iData);

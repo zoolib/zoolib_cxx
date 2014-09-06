@@ -253,7 +253,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	}
 
 static ZRef<ZYadR> spMakeYadR_JSON(
-	ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
+	ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
 	{
 	using namespace ZUtil_Strim;
 
@@ -405,7 +405,7 @@ const ZStrimR& YadStrimmerR::GetStrimR()
 // =================================================================================================
 // MARK: - YadSeqR
 
-YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
+YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
 :	fStrimmerU(iStrimmerU)
 ,	fRO(iRO)
 	{}
@@ -452,7 +452,7 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 // =================================================================================================
 // MARK: - YadMapR
 
-YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<ZCountedVal<ReadOptions> >& iRO)
+YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
 :	fStrimmerU(iStrimmerU)
 ,	fRO(iRO)
 	{}

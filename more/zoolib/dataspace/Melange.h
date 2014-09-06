@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Melange_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Caller.h"
+
 #include "zoolib/ZCallable.h"
-#include "zoolib/ZCaller.h"
 #include "zoolib/ZMulti_T.h"
 
 #include "zooLib/dataspace/RelsWatcher.h"
@@ -41,7 +42,7 @@ typedef ZCallable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDato
 typedef ZMulti_T3<
 	ZRef<RelsWatcher::Callable_Register>,
 	ZRef<Callable_DatonSetUpdate>,
-	ZRef<ZCaller>
+	ZRef<Caller>
 	> Melange_t;
 
 typedef ZCallable<Melange_t()> MelangeFactory;

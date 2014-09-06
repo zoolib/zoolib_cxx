@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCounted_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/CountedWithoutFinalize.h"
+
 #include "zoolib/ZAtomic.h"
-#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZThread.h" // For ZBen
@@ -83,7 +84,7 @@ class ZCounted : public virtual ZCountedBase
 // MARK: - ZCountedBase::WeakRefProxy
 
 class ZCountedBase::WeakRefProxy
-:	public ZCountedWithoutFinalize
+:	public CountedWithoutFinalize
 	{
 private:
 	WeakRefProxy(ZCountedBase* iCountedBase);

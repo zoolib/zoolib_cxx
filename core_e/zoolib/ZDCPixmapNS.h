@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapNS_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCountedWithoutFinalize.h"
+#include "zoolib/CountedWithoutFinalize.h"
+
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZRef.h"
@@ -554,7 +555,7 @@ protected:
 // =================================================================================================
 // MARK: - ZDCPixmapNS::PixelDescRep
 
-class ZDCPixmapNS::PixelDescRep : public ZCountedWithoutFinalize
+class ZDCPixmapNS::PixelDescRep : public CountedWithoutFinalize
 	{
 protected:
 	PixelDescRep();
@@ -582,8 +583,8 @@ public:
 		size_t iCount, uint32* oPixvals) const = 0;
 
 protected:
-	ZThreadSafe_t fChangeCount;
-	static ZThreadSafe_t sChangeCount;
+	ThreadSafe_t fChangeCount;
+	static ThreadSafe_t sChangeCount;
 	};
 
 // =================================================================================================

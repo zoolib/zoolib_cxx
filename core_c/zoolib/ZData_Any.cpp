@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/CountedWithoutFinalize.h"
+
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_vector.h"
-#include "zoolib/ZCountedWithoutFinalize.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_STL_vector.h"
@@ -36,7 +37,7 @@ ZMACRO_CompareRegistration_T(ZData_Any)
 // =================================================================================================
 // MARK: - ZData_Any::Rep
 
-class ZData_Any::Rep : public ZCountedWithoutFinalize
+class ZData_Any::Rep : public CountedWithoutFinalize
 	{
 public:
 	Rep();

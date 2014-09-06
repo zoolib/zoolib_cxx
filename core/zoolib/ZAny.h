@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny_h__
 #include "zconfig.h"
 
+#include "zoolib/CountedWithoutFinalize.h"
+
 #include "zoolib/ZCompat_type_traits.h" // for is_pod
-#include "zoolib/ZCountedWithoutFinalize.h"
-#include "zoolib/ZQ.h" 
+#include "zoolib/ZQ.h"
 #include "zoolib/ZRef.h"
 
 #include <typeinfo> // For std::type_info
@@ -250,7 +251,7 @@ private:
 
 // -----------------
 
-	class Reffed : public ZCountedWithoutFinalize
+	class Reffed : public CountedWithoutFinalize
 		{
 	public:
 		virtual const std::type_info& Type() const = 0;

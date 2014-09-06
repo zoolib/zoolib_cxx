@@ -227,7 +227,7 @@ protected:
 	size_t fCapacity_Extent;
 	size_t fCapacity_Data;
 
-	ZThreadSafe_t fStreamsInstantiated;
+	ThreadSafe_t fStreamsInstantiated;
 
 	ZMtx fMutex_Flush;
 	ZCnd fCondition_Flush;

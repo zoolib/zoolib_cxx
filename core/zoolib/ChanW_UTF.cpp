@@ -26,11 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-static void sThrowEndOfChanW()
-	{
-	throw std::range_error("sThrowEndOfChanW, UTF");
-	}
-
 // =================================================================================================
 // MARK: -
 
@@ -39,7 +34,7 @@ void spWriteMust(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	const size_t countWritten = sWriteFully(iSource, iCountCU, iChanW);
 	if (countWritten != iCountCU)
-		sThrowEndOfChanW();
+		ChanW_UTF::sThrow_Exhausted();
 	}
 
 static
@@ -52,7 +47,7 @@ void spWriteMust(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 			{
 			// See comments in the UTF-8 variant.
 			if (0 != ZUnicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
-				sThrowEndOfChanW();
+				ChanW_UTF::sThrow_Exhausted();
 			}
 		}
 	}
@@ -78,7 +73,7 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 			// code points then the short write must be because we've reached
 			// our end, and we throw the end of strim exception.
 			if (0 != ZUnicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
-				sThrowEndOfChanW();
+				ChanW_UTF::sThrow_Exhausted();
 			}
 		}
 	}

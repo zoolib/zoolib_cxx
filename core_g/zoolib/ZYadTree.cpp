@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCountedVal.h"
+#include "zoolib/CountedVal.h"
+
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUtil_STL_map.h"
@@ -35,7 +36,7 @@ namespace { // anonymous
 
 using namespace ZUtil_STL;
 
-typedef ZCountedVal<ZName> CountedString;
+typedef CountedVal<ZName> CountedString;
 
 class Link;
 class YadMapAtRPos;

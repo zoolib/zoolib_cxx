@@ -72,7 +72,7 @@ static void spLog(const string8& iMessage)
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);
 
-ZSafe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
+Safe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
 
 void sSemanticError(const string8& iMessage)
 	{

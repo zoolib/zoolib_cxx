@@ -18,12 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Debug.h"
-
 #include "zoolib/ZFile.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZSafe.h"
 #include "zoolib/ZStream_POSIX.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim_Stream.h"
@@ -32,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Debug.h"
 #include "zoolib/ZUtil_Time.h"
 
 #include "zoolib/ZCompat_cmath.h" // For fmod

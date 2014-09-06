@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZIntervalTreeClock_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/SafePtrStack.h"
+
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZSafePtrStack.h"
 
 namespace ZooLib {
 namespace ZIntervalTreeClock {
@@ -33,7 +34,7 @@ namespace ZIntervalTreeClock {
 // MARK: - Identity
 
 class Identity
-:	public ZCountedWithoutFinalize
+:	public CountedWithoutFinalize
 	{
 public:
 	static ZRef<Identity> sZero();
@@ -70,7 +71,7 @@ ZRef<Identity> sSplit(ZRef<Identity>& ioIdentity);
 class Event;
 
 class SafePtrStackLink_Event
-:	public ZSafePtrStackLink<Event,SafePtrStackLink_Event>
+:	public SafePtrStackLink<Event,SafePtrStackLink_Event>
 	{};
 
 class Event

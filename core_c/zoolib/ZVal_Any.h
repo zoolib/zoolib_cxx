@@ -22,13 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_Any_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/SafePtrStack.h"
+#include "zoolib/Util_Relops.h"
+
 #include "zoolib/ZCompat_unordered_map.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZCompare_string.h" // For FastComparator_String
 #include "zoolib/ZName.h"
-#include "zoolib/ZSafePtrStack.h"
-#include "zoolib/ZUtil_Relops.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZVal_T.h"
 
@@ -167,7 +168,7 @@ template <> struct RelopsTraits_HasLT<ZSeq_Any> : public RelopsTraits_Has {};
 // MARK: - ZSeq_Any::Rep
 
 class ZSeq_Any::Rep
-:	public ZCountedWithoutFinalize
+:	public CountedWithoutFinalize
 	{
 private:
 	Rep();
@@ -465,7 +466,7 @@ S& sSet(ZMap_Any& ioMap, const ZMap_Any::Name_t& iName, const S& iVal)
 // MARK: - ZMap_Any::Rep
 
 class SafePtrStackLink_Map_Any_Rep
-:	public ZSafePtrStackLink<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep>
+:	public SafePtrStackLink<ZMap_Any::Rep,SafePtrStackLink_Map_Any_Rep>
 	{};
 
 class ZMap_Any::Rep

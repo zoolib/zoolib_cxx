@@ -20,10 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
+#include "zoolib/Deleter.h"
+
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZDeleter.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -166,7 +167,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 		// Try to allocate and use an 8K heap-based buffer.
 		if (char* heapBuffer = new(nothrow) char[kBufSize])
 			{
-			ZDeleter<char[]> del(heapBuffer);
+			Deleter<char[]> del(heapBuffer);
 
 			spCopyReadToWrite(heapBuffer, kBufSize,
 				iStreamR, iStreamW, iCount,
@@ -197,7 +198,7 @@ static void spCopy(const ZStreamR& iStreamR,
 		{
 		if (char* heapBuffer = new(nothrow) char[iChunkSize])
 			{
-			ZDeleter<char[]> del(heapBuffer);
+			Deleter<char[]> del(heapBuffer);
 			iStreamR.Read(heapBuffer, iChunkSize, &oCountRead);
 			iStreamW.Write(heapBuffer, oCountRead, &oCountWritten);
 			return;

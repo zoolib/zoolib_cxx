@@ -47,7 +47,7 @@ public:
 // Our protocol
 	bool IsStarted();
 
-	void Start(ZRef<ZCaller> iCaller,
+	void Start(ZRef<Caller> iCaller,
 		ZRef<ZStreamerRWFactory> iFactory,
 		ZRef<Callable_Connection> iCallable_Connection);
 

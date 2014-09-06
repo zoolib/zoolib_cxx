@@ -22,15 +22,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanW_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Chan.h"
+
 #include "zoolib/ZTypes.h" // For sNonConst
+
+#include <stdexcept> // for range_error
+#include <string> // because range_error may require it
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanWBase
+
+class ChanWBase
+	{
+public:
+	static void sThrow_Exhausted()
+		{ throw std::range_error("ChanW::sThrow_Exhausted"); }
+	};
+
+// =================================================================================================
+// MARK: - ChanW
 
 template <class Elmt_p>
 class ChanW
+:	public ChanWBase
 	{
 protected:
 /** \name Canonical Methods

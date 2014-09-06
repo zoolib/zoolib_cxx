@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Deleter.h"
+
 #include "zoolib/ZDCPixmapCoder_GIF.h"
-#include "zoolib/ZDeleter.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Chunked.h"
 #include "zoolib/ZStream_LZW.h"
@@ -190,8 +191,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	ZStreamW_LZWEncode* theSLZW = nullptr;
 	ZStreamW_LZWEncodeNoPatent* theSLZWNP = nullptr;
 
-	ZDeleter<ZStreamW_LZWEncode> deleter1(theSLZW);
-	ZDeleter<ZStreamW_LZWEncodeNoPatent> deleter2(theSLZWNP);
+	Deleter<ZStreamW_LZWEncode> deleter1(theSLZW);
+	Deleter<ZStreamW_LZWEncodeNoPatent> deleter2(theSLZWNP);
 
 	ZStreamW* theStream;
 	if (fNoPatent)

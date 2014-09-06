@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Expr_Bool_CNF_h__
 #include "zconfig.h"
 
+#include "zoolib/TagVal.h"
+
 #include "zoolib/ZExpr_Bool.h"
-#include "zoolib/ZTagVal.h"
 
 #include <set>
 
@@ -36,7 +37,7 @@ namespace Util_Expr_Bool {
 // CNF == Conjunctive Normal Form
 // Clause is a disjunction of literals
 
-typedef std::set<ZTagVal<ZRef<ZExpr_Bool>,struct Tag_Clause> > Clause;
+typedef std::set<TagVal<ZRef<ZExpr_Bool>,struct Tag_Clause> > Clause;
 typedef std::set<Clause> CNF;
 
 ZRef<ZExpr_Bool> sFromCNF(const CNF& iCNF);

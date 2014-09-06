@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallScheduler.h"
-#include "zoolib/ZSingleton.h"
+#include "zoolib/CallScheduler.h"
+#include "zoolib/Singleton.h"
+
 #include "zoolib/ZWorker.h"
 
 namespace ZooLib {
@@ -109,7 +110,7 @@ ZQ<void> ZWorker::QCall()
 				{
 				if (fNextWake <= ZTime::sSystem())
 					continue;
-				sSingleton<ZCallScheduler>().NextCallAt(fNextWake, fCaller, this);
+				sSingleton<CallScheduler>().NextCallAt(fNextWake, fCaller, this);
 				}
 			return notnull;
 			}
@@ -143,7 +144,7 @@ bool ZWorker::IsAwake()
 		if (fWorking)
 			return fNextWake <= ZTime::sSystem();
 		else
-			return sSingleton<ZCallScheduler>().WillCall(fCaller, this);
+			return sSingleton<CallScheduler>().WillCall(fCaller, this);
 		}
 	return false;
 	}
@@ -151,7 +152,7 @@ bool ZWorker::IsAwake()
 bool ZWorker::IsWorking()
 	{ return ZThread::sID() == fWorking; }
 
-bool ZWorker::Attach(ZRef<ZCaller> iCaller)
+bool ZWorker::Attach(ZRef<Caller> iCaller)
 	{
 	ZGuardMtx guard(fMtx);
 	if (not fCaller)
@@ -196,7 +197,7 @@ void ZWorker::pWakeAt(ZTime iSystemTime)
 			}
 		else
 			{
-			sSingleton<ZCallScheduler>().NextCallAt(iSystemTime, fCaller, this);
+			sSingleton<CallScheduler>().NextCallAt(iSystemTime, fCaller, this);
 			}
 		}
 	}

@@ -1759,11 +1759,11 @@ void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBA_POD* iColors,
 // =================================================================================================
 // MARK: - ZDCPixmapNS::PixelDescRep
 
-ZThreadSafe_t ZDCPixmapNS::PixelDescRep::sChangeCount;
+ThreadSafe_t ZDCPixmapNS::PixelDescRep::sChangeCount;
 
 ZDCPixmapNS::PixelDescRep::PixelDescRep()
 	{
-	ZThreadSafe_Set(fChangeCount, ZThreadSafe_IncReturnOld(sChangeCount));
+	ZMACRO_ThreadSafe_Set(fChangeCount, ZMACRO_ThreadSafe_IncReturnOld(sChangeCount));
 	}
 
 ZDCPixmapNS::PixelDescRep::~PixelDescRep()
@@ -1771,12 +1771,12 @@ ZDCPixmapNS::PixelDescRep::~PixelDescRep()
 
 int ZDCPixmapNS::PixelDescRep::GetChangeCount() const
 	{
-	return ZThreadSafe_Get(fChangeCount);
+	return ZMACRO_ThreadSafe_Get(fChangeCount);
 	}
 
 int ZDCPixmapNS::PixelDescRep::MarkChanged()
 	{
-	return ZThreadSafe_Swap(fChangeCount, ZThreadSafe_IncReturnOld(sChangeCount));
+	return ZMACRO_ThreadSafe_Swap(fChangeCount, ZMACRO_ThreadSafe_IncReturnOld(sChangeCount));
 	}
 
 // =================================================================================================

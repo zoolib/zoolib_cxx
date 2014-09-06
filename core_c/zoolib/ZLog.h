@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZLog_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Safe.h"
+
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZSafe.h"
 #include "zoolib/ZUtil_Strim_Operators.h"
 
 #if ZCONFIG(Compiler, GCC)
@@ -159,7 +160,7 @@ public:
 	};
 
 extern ZRef<LogMeister> sLogMeister;
-//extern ZSafe<ZRef<LogMeister> > sLogMeister;
+//extern Safe<ZRef<LogMeister> > sLogMeister;
 
 void sLogIt(EPriority iPriority, const std::string& iName,
 	size_t iDepth, const std::string& iMessage);

@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/SafePtrStack.h"
+
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
@@ -429,10 +431,10 @@ namespace {
 class YadAtomR_Any;
 
 class SafeStackLink_YadAtomR_Any
-:	public ZSafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
+:	public SafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
 	{};
 
-ZSafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
+SafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
 
 class YadAtomR_Any
 :	public virtual ZYadAtomR

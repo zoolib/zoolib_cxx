@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Debug_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ThreadVal.h"
+
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStrimmer.h"
-#include "zoolib/ZThreadVal.h"
 
 namespace ZooLib {
 namespace ZUtil_Debug {
@@ -42,7 +43,7 @@ void sSetLogPriority(ZLog::EPriority iLogPriority);
 
 ZLog::EPriority sGetLogPriority();
 
-typedef ZThreadVal<ZLog::EPriority,struct Tag_LogPriorityPerThread> LogPriorityPerThread;
+typedef ThreadVal<ZLog::EPriority,struct Tag_LogPriorityPerThread> LogPriorityPerThread;
 
 } // namespace ZUtil_Debug
 } // namespace ZooLib

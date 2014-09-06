@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNameUniquer_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ThreadVal.h"
+
 #include "zoolib/ZName.h"
-#include "zoolib/ZThreadVal.h"
 #include "zoolib/ZUniquer.h"
 
 namespace ZooLib {
@@ -31,7 +32,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZCountedStringUniquer
 
-typedef ZCountedVal<string8> ZCountedString;
+typedef CountedVal<string8> ZCountedString;
 
 typedef ZRef<ZCountedString> ZRefCountedString;
 
@@ -41,9 +42,9 @@ struct Compare_RefCountedString
 typedef ZUniquer<ZRefCountedString,Compare_RefCountedString> ZCountedStringUniquer;
 
 // =================================================================================================
-// MARK: - ZThreadVal_NameUniquer
+// MARK: - ThreadVal_NameUniquer
 
-typedef ZThreadVal<ZCountedStringUniquer, struct Tag_NameUniquer> ZThreadVal_NameUniquer;
+typedef ThreadVal<ZCountedStringUniquer, struct Tag_NameUniquer> ThreadVal_NameUniquer;
 
 // =================================================================================================
 // MARK: - sName

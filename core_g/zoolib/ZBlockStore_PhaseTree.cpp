@@ -587,7 +587,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 	fFileRW(iFile),
 	fFileR(iFile)
 	{
-	ZThreadSafe_Set(fStreamsInstantiated, 0);
+	ZMACRO_ThreadSafe_Set(fStreamsInstantiated, 0);
 
 	ZStreamRWPos_FileRW theStream(fFileRW);
 
@@ -646,7 +646,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHe
 	fFileRW(iFile),
 	fFileR(iFile)
 	{
-	ZThreadSafe_Set(fStreamsInstantiated, 0);
+	ZMACRO_ThreadSafe_Set(fStreamsInstantiated, 0);
 
 	ZAssertStop(1, fFileRW);
 
@@ -732,7 +732,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHea
 	fUseFailures(0),
 	fFileR(iFile)
 	{
-	ZThreadSafe_Set(fStreamsInstantiated, 0);
+	ZMACRO_ThreadSafe_Set(fStreamsInstantiated, 0);
 
 	ZAssertStop(1, fFileR);
 
@@ -801,7 +801,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHea
 
 ZBlockStore_PhaseTree::~ZBlockStore_PhaseTree()
 	{
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, ZThreadSafe_Get(fStreamsInstantiated) == 0);
+	ZAssertStop(ZCONFIG_PhaseTree_Debug, ZMACRO_ThreadSafe_Get(fStreamsInstantiated) == 0);
 	this->Flush();
 
 	for (map<uint32, Slot*>::iterator i = fSlots_Cached.begin(); i != fSlots_Cached.end(); ++i)
@@ -1166,7 +1166,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::Create(BlockID& oBlockID)
 		this->WriteStart();
 		if (Slot* theBlockSlot = this->CreateBlockImp(1, oBlockID))
 			{
-			int oldCount = ZThreadSafe_IncReturnOld(fStreamsInstantiated);
+			int oldCount = ZMACRO_ThreadSafe_IncReturnOld(fStreamsInstantiated);
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, oldCount >= 0);
 
 			this->WriteFinish(theBlockSlot);
@@ -1184,7 +1184,7 @@ ZRef<ZStreamerRPos> ZBlockStore_PhaseTree::OpenRPos(BlockID iBlockID)
 		{
 		if (Slot* theBlockSlot = this->FindBlockSlot(iBlockID))
 			{
-			int oldCount = ZThreadSafe_IncReturnOld(fStreamsInstantiated);
+			int oldCount = ZMACRO_ThreadSafe_IncReturnOld(fStreamsInstantiated);
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, oldCount >= 0);
 
 			this->ReadFinish(theBlockSlot);
@@ -1203,7 +1203,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::OpenRWPos(BlockID iBlockID)
 		this->WriteStart();
 		if (Slot* theBlockSlot = this->FindBlockSlotForWrite(iBlockID))
 			{
-			int oldCount = ZThreadSafe_IncReturnOld(fStreamsInstantiated);
+			int oldCount = ZMACRO_ThreadSafe_IncReturnOld(fStreamsInstantiated);
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, oldCount >= 0);
 
 			this->WriteFinish(theBlockSlot);
@@ -1292,7 +1292,7 @@ ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID(
 		this->WriteStart();
 		if (Slot* theBlockSlot = this->CreateBlockImp(iDesiredBlockID, oActualBlockID))
 			{
-			int oldCount = ZThreadSafe_IncReturnOld(fStreamsInstantiated);
+			int oldCount = ZMACRO_ThreadSafe_IncReturnOld(fStreamsInstantiated);
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, oldCount >= 0);
 
 			this->WriteFinish(theBlockSlot);
@@ -1496,7 +1496,7 @@ void ZBlockStore_PhaseTree::StreamDisposing(Slot* iBlockSlot)
 			this->UnuseUnlockedSlot(iBlockSlot);
 			}
 		}
-	int newCount = ZThreadSafe_DecReturnNew(fStreamsInstantiated);
+	int newCount = ZMACRO_ThreadSafe_DecReturnNew(fStreamsInstantiated);
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, newCount >= 0);
 	}
 

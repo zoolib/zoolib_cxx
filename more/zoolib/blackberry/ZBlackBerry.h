@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Safe.h"
+
 #include "zoolib/ZCallable.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZSafe.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
@@ -66,7 +67,7 @@ protected:
 	void pChanged();
 
 private:
-	ZSafe<ZRef<CB_ManagerChanged> > fCallable;
+	Safe<ZRef<CB_ManagerChanged> > fCallable;
 	};
 
 // =================================================================================================
@@ -108,7 +109,7 @@ protected:
 	void pFinished();
 
 private:
-	ZSafe<ZRef<CB_DeviceFinished> > fCallable;
+	Safe<ZRef<CB_DeviceFinished> > fCallable;
 	};
 
 // =================================================================================================
