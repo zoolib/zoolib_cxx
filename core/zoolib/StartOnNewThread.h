@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_CallOnNewThread_h__
-#define __ZooLib_CallOnNewThread_h__ 1
+#ifndef __ZooLib_StartOnNewThread_h__
+#define __ZooLib_StartOnNewThread_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCallable.h"
@@ -28,16 +28,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCallOnNewThread
+// MARK: - sStartOnNewThread
 
 inline
-void sCallOnNewThread(const ZRef<ZCallable<void(void)> >& iCallable)
+void sStartOnNewThread(const ZRef<ZCallable<void(void)> >& iCallable)
 	{ ZThread::sCreate_T<ZRef<ZCallable<void(void)> > >(sCallVoid<void>, iCallable); }
 
 template <class T>
-void sCallOnNewThread(const ZRef<ZCallable<T(void)> >& iCallable)
+void sStartOnNewThread(const ZRef<ZCallable<T(void)> >& iCallable)
 	{ ZThread::sCreate_T<ZRef<ZCallable<T(void)> > >(sCallVoid<T>, iCallable); }
 
 } // namespace ZooLib
 
-#endif // __ZooLib_CallOnNewThread_h__
+#endif // __ZooLib_StartOnNewThread_h__
