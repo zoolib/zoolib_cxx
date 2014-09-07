@@ -221,5 +221,4 @@ ZName::CountedString* ZName::pGetIfCounted()
 	return nullptr;
 	}
 
-
 } // namespace ZooLib

@@ -215,5 +215,4 @@ void sWritev(const ChanW_UTF& iChanW, const UTF8* iString, va_list iArgs);
 void sWritev(const ChanW_UTF& iChanW, size_t* oCountCU, size_t* oWritten,
 	const UTF8* iString, va_list iArgs);
 
-
 } // namespace ZooLib

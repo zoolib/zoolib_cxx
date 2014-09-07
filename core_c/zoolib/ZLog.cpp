@@ -242,7 +242,6 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 		}
 	}
 
-
 FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName)
 :	fPriority(iPriority)
 ,	fFunctionName(iFunctionName)
