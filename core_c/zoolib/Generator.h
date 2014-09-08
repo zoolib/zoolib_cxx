@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Bind.h"
-#include "zoolib/CallOnNewThread.h"
+#include "zoolib/StartOnNewThread.h"
 
 #include "zoolib/ZCallable_Function.h"
 
@@ -383,7 +383,7 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<T1,T0>::Callable>
 	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
 
 	if (iCallable)
-		sCallOnNewThread(sBindR(iCallable, theCallable_Yield));
+		sStartOnNewThread(sBindR(iCallable, theCallable_Yield));
 
 	return theCallable_Gen;
 	}
@@ -437,7 +437,7 @@ sGenerator(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable)
 
 	if (iCallable)
 		{
-		sCallOnNewThread(
+		sStartOnNewThread(
 			sBindR(sCallable(sInstallYieldCall<T0,T1>), iCallable, theCallable_Yield));
 		}
 

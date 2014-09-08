@@ -18,9 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/CallOnNewThread.h"
-
 #include "zoolib/Caller_Thread.h"
+#include "zoolib/StartOnNewThread.h"
 
 namespace ZooLib {
 
@@ -34,7 +33,7 @@ bool Caller_Thread::Enqueue(const ZRef<ZCallable_Void>& iCallable)
 	{
 	if (iCallable)
 		{
-		sCallOnNewThread(iCallable);
+		sStartOnNewThread(iCallable);
 		return true;
 		}
 	return false;

@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/CallOnNewThread.h"
+#include "zoolib/StartOnNewThread.h"
 
 #include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZLog.h"
@@ -132,7 +132,7 @@ void Relater_Asyncify::pTrigger_Update()
 	if (sGetSet(fTriggered_Update, true))
 		return;
 
-	sCallOnNewThread(sCallable(sRef(this), &Relater_Asyncify::pUpdate));
+	sStartOnNewThread(sCallable(sRef(this), &Relater_Asyncify::pUpdate));
 	}
 
 void Relater_Asyncify::pUpdate()
