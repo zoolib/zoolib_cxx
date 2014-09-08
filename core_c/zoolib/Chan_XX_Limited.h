@@ -35,7 +35,7 @@ class ChanR_XX_Limited
 :	public ChanR<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanR_XX_Limited(uint64 iLimit, const ChanR<XX>& iChanR)
 	:	fChanR(iChanR)
@@ -43,7 +43,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		const size_t countRead = sRead(oDest, std::min<uint64>(fLimit, iCount), fChanR);
 		fLimit -= countRead;
@@ -73,7 +73,7 @@ class ChanW_XX_Limited
 :	public ChanW<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanW_XX_Limited(uint64 iLimit, const ChanW<XX>& iChanW)
 	:	fChanW(iChanW)
@@ -81,7 +81,7 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t countWritten = sWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
 		fLimit -= countWritten;

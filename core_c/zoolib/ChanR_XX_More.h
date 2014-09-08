@@ -36,8 +36,8 @@ class ChanR_XX_Null
 :	public ChanR<XX>
 	{
 public:
-	typedef XX Elmt;
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	typedef XX Elmt_t;
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{ return 0; }
 	};
 

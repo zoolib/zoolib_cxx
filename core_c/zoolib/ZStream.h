@@ -107,7 +107,7 @@ ZStreamR reference, you must work with some derived class.
 
 public:
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
 		sNonConst(this)->Imp_Read(oDest, iCount, &countRead);
@@ -387,7 +387,7 @@ ZStreamW reference, you must work with some derived class.
 
 public:
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_Write(iSource, iCount, &countWritten);

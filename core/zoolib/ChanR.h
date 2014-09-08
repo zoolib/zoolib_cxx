@@ -62,15 +62,13 @@ ChanR reference, you must work with some derived class.
 
 public:
 	typedef Elmt_p Elmt_t;
-	typedef Elmt_p Elmt;
 	typedef ChanR<Elmt_p> Chan_Base;
-	typedef ChanR<Elmt_p> ChanR_Base;
 
-	virtual size_t Read(Elmt* oDest, size_t iCount) = 0;
+	virtual size_t Read(Elmt_t* oDest, size_t iCount) = 0;
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
+		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
 		return this->Read(buf, std::min<size_t>(iCount, countof(buf)));
 		}
 

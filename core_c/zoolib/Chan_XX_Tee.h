@@ -35,7 +35,7 @@ class ChanR_XX_Tee
 :	public ChanR<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanR_XX_Tee(const ChanR<XX>& iChanR, const ChanW<XX>& iChanW)
 	:	fChanR(iChanR)
@@ -43,13 +43,13 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fChanW, and oDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
 
-		Elmt buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt))];
+		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
 
 		if (const size_t countRead = sRead(std::min(iCount, countof(buf)), fChanR))
 			{
@@ -83,7 +83,7 @@ class ChanW_XX_Tee
 :	public ChanW<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanW_XX_Tee(const ChanW<XX>& iChanW0, const ChanW<XX>& iChanW1)
 	:	fChanW0(iChanW0)
@@ -91,7 +91,7 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
 		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
 			{

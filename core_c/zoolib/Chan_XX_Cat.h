@@ -35,7 +35,7 @@ class ChanR_XX_Cat
 :	public ChanR<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanR_XX_Cat(const ChanR<XX>& iChanR0, const ChanR<XX>& iChanR1)
 	:	fChanR0(iChanR0)
@@ -44,7 +44,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{
@@ -83,7 +83,7 @@ class ChanW_XX_Cat
 :	public ChanW<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanW_XX_Cat(const ChanW<XX>& iChanW0, const ChanW<XX>& iChanW1)
 	:	fChanW0(iChanW0)
@@ -92,7 +92,7 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{

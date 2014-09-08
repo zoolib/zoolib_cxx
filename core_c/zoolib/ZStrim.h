@@ -69,7 +69,7 @@ public:
 	using ChanR_UTF::Skip;
 
 // From ChanR_UTF
-	virtual size_t Read(ChanR<UTF32>::Elmt* oDest, size_t iCount)
+	virtual size_t Read(ChanR<UTF32>::Elmt_t* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
 		this->Imp_ReadUTF32(oDest, iCount, &countRead);

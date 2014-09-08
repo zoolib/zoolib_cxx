@@ -106,151 +106,53 @@ template <class Chan_p, class Param_p>
 ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
 	{ return new Channer_T<Chan_p>(iParam); }
 
-#if 0
 // =================================================================================================
-// MARK: - ChannerR_FT
+// MARK: - Channer_FT
 
-template <class ChanR_p>
-class ChannerR_FT
-:	public virtual ChannerR<typename ChanR_p::Elmt>
+template <class Chan_p>
+class Channer_FT
+:	public virtual Channer<typename Chan_p::Chan_Base>
 	{
 protected:
-	typedef ChanR_p ChanR_Actual;
-
-	typedef typename ChanR_p::Elmt_t Elmt_t;
-
-	typedef ChanR<Elmt_t> ChanR_t;
-	typedef ChannerR<Elmt_t> ChannerR_t;
-
-	ChannerR_FT() {}
 
 public:
-	virtual ~ChannerR_FT() {}
+	typedef typename Chan_p::Chan_Base Chan_Base;
+
+	Channer_FT() {}
+
+	virtual ~Channer_FT() {}
 
 	template <class Param_p>
-	ChannerR_FT(Param_p& iParam, const ZRef<ChannerR_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, iChanner->GetChanR())
-		{}
+	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner) : fChan(iParam) {}
 
 	template <class Param_p>
-	ChannerR_FT(const Param_p& iParam, const ZRef<ChannerR_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, iChanner->GetChanR())
-		{}
+	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner) : fChan(iParam) {}
 
-	ChannerR_FT(const ZRef<ChannerR_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iChanner->GetChanR())
-		{}
-
-// From ChannerR
-	virtual const ChanR_t& GetChanR() { return fChan; }
+// From Channer
+	virtual void GetChan(const Chan_Base*& oChanPtr) { oChanPtr = &fChan; }
 
 // Our protocol
-	ChanR_Actual& GetChan() { return fChan; }
+	Chan_p& GetChanActual() { return fChan; }
 
 protected:
-	ZRef<ChannerR_t> fChannerReal;
-	ChanR_Actual fChan;
-	};
-
-// =================================================================================================
-// MARK: - ChannerW_T
-
-template <class ChanW_p>
-class ChannerW_T
-:	public virtual ChannerW<typename ChanW_p::Elmt>
-	{
-protected:
-	typedef ChanW_p ChanW_Actual;
-
-	typedef typename ChanW_p::Elmt_t Elmt_t;
-
-	typedef ChanW<Elmt_t> ChanW_t;
-	typedef ChannerW<Elmt_t> ChannerW_t;
-
-public:
-	ChannerW_T() {}
-
-	virtual ~ChannerW_T() {}
-
-	template <class Param_p>
-	ChannerW_T(Param_p& iParam) : fChan(iParam) {}
-
-	template <class Param_p>
-	ChannerW_T(const Param_p& iParam) : fChan(iParam) {}
-
-// From ChannerW
-	virtual const ChanW_t& GetChanW() { return fChan; }
-
-// Our protocol
-	ChanW_Actual& GetChan() { return fChan; }
-
-protected:
-	ChanW_Actual fChan;
+	Chan_p fChan;
 	};
 
 template <class Chan_p>
-ZRef<ChannerW<typename Chan_p::Elem_t> > sChannerW_T()
-	{ return new ChannerW_T<Chan_p>; }
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+	const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+	{ return new Channer_FT<Chan_p>; }
 
 template <class Chan_p, class Param_p>
-ZRef<ChannerW<typename Chan_p::Elem_t> > sChannerW_T(Param_p& iParam)
-	{ return new ChannerW_T<Chan_p>(iParam); }
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+	Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
 
 template <class Chan_p, class Param_p>
-ZRef<ChannerW<typename Chan_p::Elem_t> > sChannerW_T(const Param_p& iParam)
-	{ return new ChannerW_T<Chan_p>(iParam); }
+ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+	const Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
 
-// =================================================================================================
-// MARK: - ChannerW_FT
-
-template <class ChanW_p>
-class ChannerW_FT
-:	public virtual ChannerW<typename ChanW_p::Elmt>
-	{
-protected:
-	typedef ChanW_p ChanW_Actual;
-
-	typedef typename ChanW_p::Elmt_t Elmt_t;
-
-	typedef ChanW<Elmt_t> ChanW_t;
-	typedef ChannerW<Elmt_t> ChannerW_t;
-
-	ChannerW_FT() {}
-
-public:
-	virtual ~ChannerW_FT() {}
-
-	template <class Param_p>
-	ChannerW_FT(Param_p& iParam, const ZRef<ChannerW_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, iChanner->GetChanW())
-		{}
-
-	template <class Param_p>
-	ChannerW_FT(const Param_p& iParam, const ZRef<ChannerW_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, iChanner->GetChanW())
-		{}
-
-	ChannerW_FT(const ZRef<ChannerW_t>& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iChanner->GetChanW())
-		{}
-
-// From ChannerW
-	virtual const ChanW_t& GetChanW() { return fChan; }
-
-// Our protocol
-	ChanW_Actual& GetChan() { return fChan; }
-
-protected:
-	ZRef<ChannerW_t> fChannerReal;
-	ChanW_Actual fChan;
-	};
-#endif // 0
 } // namespace ZooLib
 
 #endif // __ZooLib_Channer_h__

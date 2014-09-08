@@ -41,7 +41,7 @@ class ChanBase_XX_Data
 ,	public ChanPos
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 	typedef Data_p Data;
 
 	ChanBase_XX_Data(Data* ioDataPtr)
@@ -50,7 +50,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		const size_t theSize = fDataPtr->GetSize();
 		const size_t countToCopy = std::min<size_t>(iCount,
@@ -91,7 +91,7 @@ class ChanRPos_XX_Data
 ,	public ChanU<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 	typedef Data_p Data;
 
 	ChanRPos_XX_Data(Data iData)
@@ -100,7 +100,7 @@ public:
 		{}
 
 // From ChanU
-	virtual size_t Unread(const Elmt* iSource, size_t iCount)
+	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min(iCount, this->fPosition);
 		this->fPosition -= countToCopy;
@@ -127,7 +127,7 @@ class ChanRWPos_XX_Data
 ,	public ChanCountSet
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 	typedef Data_p Data;
 
 	ChanRWPos_XX_Data(Data* ioData)
@@ -135,7 +135,7 @@ public:
 		{}
 
 // From ChanU
-	virtual size_t Unread(const Elmt* iSource, size_t iCount)
+	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
@@ -150,7 +150,7 @@ public:
 		{ return this->fPosition; }
 
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t newPosition = this->fPosition + iCount;
 		if (this->fDataPtr->GetSize() < newPosition)

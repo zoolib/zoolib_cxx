@@ -41,7 +41,7 @@ class ChanBase_XX_Memory
 ,	public ChanPos
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanBase_XX_Memory(const void* iAddress, size_t iCount)
 	:	fAddress(static_cast<const byte*>(iAddress))
@@ -50,11 +50,11 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt* oDest, size_t iCount)
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
 			fCount > fPosition ? fCount - fPosition : 0);
-		const Elmt* source = static_cast<const Elmt*>(fAddress) + fPosition;
+		const Elmt_t* source = static_cast<const Elmt_t*>(fAddress) + fPosition;
 		std::copy(source, source + countToCopy, oDest);
 		fPosition += countToCopy;
 		return countToCopy;
@@ -89,14 +89,14 @@ class ChanRPos_XX_Memory
 ,	public ChanU<XX>
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanRPos_XX_Memory(const void* iAddress, size_t iCount)
 	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
 		{}
 
 // From ChanU
-	virtual size_t Unread(const Elmt* iSource, size_t iCount)
+	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min(iCount, this->fPosition);
 
@@ -105,10 +105,10 @@ public:
 			// If this code is enabled, then we assert that what's being
 			// unread matches what was in here already.
 
-			const Elmt* dest = static_cast<const Elmt*>(this->fAddress)
+			const Elmt_t* dest = static_cast<const Elmt_t*>(this->fAddress)
 				+ this->fPosition - countToCopy;
 
-			for (const Elmt* last = iSource + countToCopy; iSource != last; /*no inc*/)
+			for (const Elmt_t* last = iSource + countToCopy; iSource != last; /*no inc*/)
 				{
 				ZAssert(*iSource == *dest);
 				++iSource;
@@ -136,7 +136,7 @@ class ChanRWPos_XX_Memory
 ,	public ChanCountSet
 	{
 public:
-	typedef XX Elmt;
+	typedef XX Elmt_t;
 
 	ChanRWPos_XX_Memory(void* iAddress, size_t iCount, size_t iCapacity)
 	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
@@ -144,11 +144,11 @@ public:
 		{}
 
 // From ChanU
-	virtual size_t Unread(const Elmt* iSource, size_t iCount)
+	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
-		Elmt* dest = static_cast<Elmt*>(sNonConst(this->fAddress))
+		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress))
 			+ this->fPosition - countToCopy;
 
 		std::copy(iSource, iSource + countToCopy, dest);
@@ -162,9 +162,9 @@ public:
 		{ return this->fPosition; }
 
 // From ChanW
-	virtual size_t Write(const Elmt* iSource, size_t iCount)
+	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
 		{
-		Elmt* dest = static_cast<Elmt*>(sNonConst(this->fAddress)) + this->fPosition;
+		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress)) + this->fPosition;
 
 		this->fCount = std::min(fCapacity, std::max<size_t>(this->fCount, this->fPosition + iCount));
 
