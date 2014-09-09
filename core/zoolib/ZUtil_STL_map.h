@@ -41,6 +41,11 @@ template <typename KBase, typename Value, typename Comparator>
 bool sNotEmpty(const std::map<KBase,Value,Comparator>& iMap)
 	{ return not sIsEmpty(iMap); }
 
+template <typename KBase, typename Value, typename Comparator>
+void
+sClear(std::map<KBase,Value,Comparator>& ioMap)
+	{ ioMap.clear(); }
+
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>

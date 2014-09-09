@@ -44,6 +44,11 @@ bool
 sNotEmpty(const std::set<T,Comparator>& iSet)
 	{ return not iSet.empty(); }
 
+template <typename T, typename Comparator>
+void
+sClear(std::set<T,Comparator>& ioSet)
+	{ ioSet.clear(); }
+
 // -----
 
 template <typename Base, typename Comparator, typename Derived>

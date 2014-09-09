@@ -52,6 +52,11 @@ template <class T>
 bool sNotEmpty(const std::vector<T>& iVec)
 	{ return not sIsEmpty(iVec); }
 
+template <class T>
+void
+sClear(std::vector<T>& ioVec)
+	{ ioVec.clear(); }
+
 // -----
 
 // =================================================================================================
