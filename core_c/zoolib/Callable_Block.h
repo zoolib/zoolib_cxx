@@ -53,7 +53,7 @@ public:
 	virtual ~Callable_Block()
 		{ Block_release(fBlockPtr); }
 
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall()
 		{
 		fBlockPtr();
@@ -83,7 +83,7 @@ public:
 	virtual ~Callable_Block()
 		{ Block_release(fBlockPtr); }
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{ return fBlockPtr(); }
 
@@ -98,7 +98,7 @@ private:
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 class Callable_Block<R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (^BlockPtr_t)(ZMACRO_Callable_P##X); \
@@ -140,7 +140,7 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable
 
 template <class R>
-ZRef<ZCallable<R(void)> >
+ZRef<Callable<R(void)> >
 sCallable(R(^iBlockPtr)())
 	{
 	if (iBlockPtr)
@@ -151,7 +151,7 @@ sCallable(R(^iBlockPtr)())
 #define ZMACRO_Callable_sCallable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-ZRef<ZCallable<R(ZMACRO_Callable_P##X)> > \
+ZRef<Callable<R(ZMACRO_Callable_P##X)> > \
 sCallable(R(^iBlockPtr)(ZMACRO_Callable_P##X)) \
 	{ \
 	if (iBlockPtr) \

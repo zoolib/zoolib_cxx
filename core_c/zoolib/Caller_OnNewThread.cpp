@@ -67,7 +67,7 @@ public:
 		}
 
 // From Caller
-	virtual bool Enqueue(const ZRef<ZCallable_Void>& iCallable)
+	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable)
 		{
 		ZGuardMtxR guard(fMtxR);
 		fCallables.push_back(iCallable);
@@ -88,13 +88,13 @@ private:
 				{
 				ZRef<ZCounted> self_ref = this;
 
-				vector<ZRef<ZCallable_Void> > calling;
+				vector<ZRef<Callable_Void> > calling;
 
 				fCallables.swap(calling);
 
 				guard.Release();
 
-				for (vector<ZRef<ZCallable_Void> >::iterator iter = calling.begin();
+				for (vector<ZRef<Callable_Void> >::iterator iter = calling.begin();
 					iter != calling.end(); ++iter)
 					{
 					try { (*iter)->Call(); }
@@ -114,7 +114,7 @@ private:
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 	bool fKeepRunning;
-	std::vector<ZRef<ZCallable_Void> > fCallables;
+	std::vector<ZRef<Callable_Void> > fCallables;
 	};
 
 // =================================================================================================

@@ -23,9 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/StartOnNewThread.h"
-
-#include "zoolib/ZCallable_Function.h"
 
 namespace ZooLib {
 namespace Generator {
@@ -188,14 +187,14 @@ public:
 
 template <class T0, class T1>
 class Callable_Gen
-:	public ZCallable<T0(T1)>
+:	public Callable<T0(T1)>
 	{
 public:
 	Callable_Gen(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via ZCallable
+// From ZCounted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -206,7 +205,7 @@ public:
 			}
 		}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<T0> QCall(T1 iT1)
 		{
 		if (fShelfPair->fShelf1.QPut(iT1))
@@ -223,14 +222,14 @@ private:
 
 template <class T>
 class Callable_Gen<T,void>
-:	public ZCallable<T()>
+:	public Callable<T()>
 	{
 public:
 	Callable_Gen(const ZRef<ShelfPair<T,void> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via ZCallable
+// From ZCounted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -241,7 +240,7 @@ public:
 			}
 		}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<T> QCall()
 		{
 		if (fShelfPair->fShelf1.QPut())
@@ -258,14 +257,14 @@ private:
 
 template <class T0, class T1>
 class Callable_Yield
-:	public ZCallable<T1(T0)>
+:	public Callable<T1(T0)>
 	{
 public:
 	Callable_Yield(const ZRef<ShelfPair<T0,T1> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via ZCallable
+// From ZCounted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -276,7 +275,7 @@ public:
 			}
 		}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<T1> QCall(T0 iT0)
 		{
 		if (ZQ<T1> theQ = fShelfPair->fShelf1.QTake())
@@ -296,14 +295,14 @@ private:
 
 template <class T>
 class Callable_Yield<void,T>
-:	public ZCallable<T()>
+:	public Callable<T()>
 	{
 public:
 	Callable_Yield(const ZRef<ShelfPair<void,T> >& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via ZCallable
+// From ZCounted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -314,7 +313,7 @@ public:
 			}
 		}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<T> QCall()
 		{
 		if (ZQ<T> theQ = fShelfPair->fShelf1.QTake())
@@ -338,7 +337,7 @@ template <class Sig_p>
 struct AsSigBase
 	{
 	typedef Sig_p Sig;
-	typedef ZCallable<Sig> Callable;
+	typedef Callable<Sig> Callable;
 	};
 
 template <class T0, class T1>
@@ -376,7 +375,7 @@ sCallablePair(
 
 template <class T0, class T1>
 ZRef<typename AsSig<T0,T1>::Callable>
-sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<T1,T0>::Callable>&)> >& iCallable)
+sGenerator(const ZRef<Callable<void(const ZRef<typename AsSig<T1,T0>::Callable>&)> >& iCallable)
 	{
 	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
 	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
@@ -389,13 +388,13 @@ sGenerator(const ZRef<ZCallable<void(const ZRef<typename AsSig<T1,T0>::Callable>
 	}
 
 template <class T>
-ZRef<ZCallable<T()> >
-sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<void(T)> >&)> >& iCallable)
+ZRef<Callable<T()> >
+sGenerator(const ZRef<Callable<void(const ZRef<Callable<void(T)> >&)> >& iCallable)
 	{ return sGenerator<T,void>(iCallable); }
 
 template <class T>
-ZRef<ZCallable<void(T)> >
-sGenerator(const ZRef<ZCallable<void(const ZRef<ZCallable<T()> >&)> >& iCallable)
+ZRef<Callable<void(T)> >
+sGenerator(const ZRef<Callable<void(const ZRef<Callable<T()> >&)> >& iCallable)
 	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
@@ -420,7 +419,7 @@ sYield(P iP)
 
 template <class T0, class T1>
 void
-sInstallYieldCall(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable,
+sInstallYieldCall(const ZRef<Callable<void(T0*,T1*)> >& iCallable,
 	const ZRef<typename AsSig<T1,T0>::Callable>& iCallable_Yield)
 	{
 	ThreadVal_Callable_Yield theTV(iCallable_Yield);
@@ -429,7 +428,7 @@ sInstallYieldCall(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable,
 
 template <class T0, class T1>
 ZRef<typename AsSig<T0,T1>::Callable>
-sGenerator(const ZRef<ZCallable<void(T0*,T1*)> >& iCallable)
+sGenerator(const ZRef<Callable<void(T0*,T1*)> >& iCallable)
 	{
 	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
 	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;

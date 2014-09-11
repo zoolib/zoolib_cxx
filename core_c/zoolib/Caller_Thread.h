@@ -36,7 +36,7 @@ public:
 	static ZRef<Caller_Thread> sGet();
 
 // From Caller
-	virtual bool Enqueue(const ZRef<ZCallable_Void>& iCallable);
+	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable);
 	};
 
 } // namespace ZooLib

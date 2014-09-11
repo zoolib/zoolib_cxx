@@ -32,7 +32,7 @@ namespace ZWinWND {
 // =================================================================================================
 // MARK: - ZWinWND, Callable <--> Dialog
 
-typedef ZCallable<INT_PTR(HWND,UINT,WPARAM,LPARAM)> Callable_Dialog;
+typedef Callable<INT_PTR(HWND,UINT,WPARAM,LPARAM)> Callable_Dialog;
 
 HWND sCreateDialog(LPCWSTR lpTemplate, LCID iLCID, HWND hWndParent, ZRef<Callable_Dialog> iCallable);
 HWND sCreateDialog(LPCWSTR lpTemplate, HWND hWndParent, ZRef<Callable_Dialog> iCallable);

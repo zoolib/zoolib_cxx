@@ -40,7 +40,7 @@ class CallScheduler
 public:
 	CallScheduler();
 
-	typedef std::pair<ZRef<Caller>,ZRef<ZCallable_Void> > Job;
+	typedef std::pair<ZRef<Caller>,ZRef<Callable_Void> > Job;
 
 // -----
 
@@ -54,15 +54,15 @@ public:
 
 // -----
 
-	bool Cancel(const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+	bool Cancel(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
 
 	void NextCallAt(ZTime iSystemTime,
-		const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+		const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
 
 	void NextCallIn(double iInterval,
-		const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+		const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
 
-	bool WillCall(const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable);
+	bool WillCall(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
 
 // -----
 

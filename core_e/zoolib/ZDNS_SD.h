@@ -143,7 +143,7 @@ class Browse
 :	public DNSService
 	{
 public:
-	typedef ZCallable<void(
+	typedef Callable<void(
 		bool iMoreComing,
 		bool iAdd,
 		const std::string& iServiceName,
@@ -179,7 +179,7 @@ class Resolve
 :	public DNSService
 	{
 public:
-	typedef ZCallable<void(
+	typedef Callable<void(
 		bool iMoreComing,
 		const std::string& iServiceName,
 		const std::string& iHostTarget,

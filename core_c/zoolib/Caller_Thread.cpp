@@ -29,7 +29,7 @@ namespace ZooLib {
 ZRef<Caller_Thread> Caller_Thread::sGet()
 	{ return ZRef<Caller_Thread>(sSingleton<ZRef_Counted<Caller_Thread> >()); }
 
-bool Caller_Thread::Enqueue(const ZRef<ZCallable_Void>& iCallable)
+bool Caller_Thread::Enqueue(const ZRef<Callable_Void>& iCallable)
 	{
 	if (iCallable)
 		{

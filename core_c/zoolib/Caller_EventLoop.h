@@ -41,7 +41,7 @@ public:
 	virtual ~Caller_EventLoop();
 
 // From Caller
-	virtual bool Enqueue(const ZRef<ZCallable_Void>& iCallable);
+	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable);
 
 protected:
 // Called by concrete subclass
@@ -55,7 +55,7 @@ protected:
 private:
 	ZMtx fMtx;
 	bool fTriggered;
-	std::vector<ZRef<ZCallable_Void> > fCallables;
+	std::vector<ZRef<Callable_Void> > fCallables;
 	};
 
 // =================================================================================================
@@ -65,7 +65,7 @@ class Caller_EventLoop_CallableTrigger
 :	public Caller_EventLoop
 	{
 public:
-	typedef ZCallable<bool()> Callable_Trigger;
+	typedef Callable<bool()> Callable_Trigger;
 
 	Caller_EventLoop_CallableTrigger(const ZRef<Callable_Trigger>& iCallable_Trigger);
 

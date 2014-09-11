@@ -416,17 +416,6 @@ public:
 		}
 	};
 
-// =================================================================================================
-// MARK: - Old names
-
-typedef Callable_Void ZCallable_Void;
-typedef ZRef<Callable_Void> ZRef_ZCallable_Void;
-
-#if ZCONFIG_CPP >= 2011
-	template <class Signature_p>
-	using ZCallable = Callable<Signature_p>;
-#endif
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Callable_h__

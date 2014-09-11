@@ -23,10 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Caller.h"
 #include "zoolib/Promise.h"
-
-#include "zoolib/ZCallable_Function.h"
 
 namespace ZooLib {
 
@@ -36,13 +35,13 @@ namespace ZooLib {
 template <class R>
 void spQCallWithPromise_T(
 	const ZRef<Promise<ZQ<R> > >& iPromise,
-	const ZRef<ZCallable<R(void)> >& iCallable)
+	const ZRef<Callable<R(void)> >& iCallable)
 	{ iPromise->Deliver(iCallable->QCall()); }
 
 template <class R>
 ZRef<Delivery<ZQ<R> > > sQCallByCaller(
 	const ZRef<Caller>& iCaller,
-	const ZRef<ZCallable<R(void)> >& iCallable)
+	const ZRef<Callable<R(void)> >& iCallable)
 	{
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >();
 	if (iCaller && iCallable)
@@ -63,14 +62,14 @@ ZRef<Delivery<ZQ<R> > > sQCallByCaller(
 template <class R, ZMACRO_Callable_Class_P##X> \
 void spQCallWithPromise_T( \
 	const ZRef<Promise<ZQ<R> > >& iPromise, \
-	const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, \
+	const ZRef<Callable<R(ZMACRO_Callable_P##X)> >& iCallable, \
 	ZMACRO_Callable_Pi##X) \
 	{ iPromise->Deliver(iCallable->QCall(ZMACRO_Callable_i##X)); } \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 ZRef<Delivery<ZQ<R> > > sQCallByCaller( \
 	const ZRef<Caller>& iCaller, \
-	const ZRef<ZCallable<R(ZMACRO_Callable_P##X)> >& iCallable, \
+	const ZRef<Callable<R(ZMACRO_Callable_P##X)> >& iCallable, \
 	ZMACRO_Callable_Pi##X) \
 	{ \
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >(); \

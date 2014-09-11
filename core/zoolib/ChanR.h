@@ -78,7 +78,7 @@ public:
 // For a golang-style select mechanism we'll need something where we can register
 // a callable, or something, so that blocked entities can notify when they unblock.
 // Something like this perhaps:
-//	virtual void WhenReadable(const ZRef<ZCallable_Void>& iCallable)
+//	virtual void WhenReadable(const ZRef<Callable_Void>& iCallable)
 //		{}
 	};
 

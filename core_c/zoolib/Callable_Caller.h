@@ -25,50 +25,49 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCallByCaller.h"
 
 namespace ZooLib {
-namespace Callable_Caller {
 
 // =================================================================================================
-// MARK: - Callable
+// MARK: - Callable_Caller
 
-template <class Signature> class Callable;
+template <class Signature> class Callable_Caller;
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params)
+// MARK: - Callable_Caller (specialization for 0 params)
 
 template <class R>
-class Callable<R(void)>
-:	public ZCallable<R(void)>
+class Callable_Caller<R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	typedef R (Signature)();
 
-	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
+	Callable_Caller(const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature> >& iCallable)
 	:	fCaller(iCaller)
 	,	fCallable(iCallable)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{ return sQCallByCaller(fCaller, fCallable)->QGet().Get(); }
 
 private:
-	const ZRef<ZCaller> fCaller;
-	const ZRef<ZCallable<Signature> > fCallable;
+	const ZRef<Caller> fCaller;
+	const ZRef<Callable<Signature> > fCallable;
 	};
 
 // =================================================================================================
-// MARK: - Callable variants
+// MARK: - Callable_Caller variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-class Callable<R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+class Callable_Caller<R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable(const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable) \
+	Callable_Caller(const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature> >& iCallable) \
 	:	fCaller(iCaller) \
 	,	fCallable(iCallable) \
 		{} \
@@ -78,7 +77,7 @@ public: \
 \
 private:\
 	const ZRef<ZCaller> fCaller; \
-	const ZRef<ZCallable<Signature> > fCallable;\
+	const ZRef<Callable<Signature> > fCallable;\
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -100,16 +99,14 @@ ZMACRO_Callable_Callable(F)
 
 #undef ZMACRO_Callable_Callable
 
-} // namespace Callable_Caller
-
 // =================================================================================================
 // MARK: - sCallable_Caller
 
-template <class Signature>
-ZRef<ZCallable<Signature> >
+template <class Signature_p>
+ZRef<Callable<Signature_p> >
 sCallable_Caller(
-	const ZRef<ZCaller>& iCaller, const ZRef<ZCallable<Signature> >& iCallable)
-	{ return new Callable_Caller::Callable<Signature>(iCaller, iCallable); }
+	const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature_p> >& iCallable)
+	{ return new Callable_Caller<Signature_p>(iCaller, iCallable); }
 
 } // namespace ZooLib
 

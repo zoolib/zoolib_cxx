@@ -36,7 +36,7 @@ class ZServer
 	{
 public:
 	typedef ZRef<ZRoster::Entry> ZRef_ZRoster_Entry; // CW7
-	typedef ZCallable<void(ZRef_ZRoster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
+	typedef Callable<void(ZRef_ZRoster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
 
 	ZServer();
 	virtual ~ZServer();

@@ -40,14 +40,14 @@ class ZSocketWatcher
 public:
 	ZSocketWatcher();
 
-	typedef std::pair<int,ZRef<ZCallable_Void> > Pair_t;
+	typedef std::pair<int,ZRef<Callable_Void> > Pair_t;
 
 // -----
 	bool QInsert(const Pair_t& iPair);
 	bool QErase(const Pair_t& iPair);
 
-	bool QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable);
-	bool QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable);
+	bool QInsert(int iSocket, const ZRef<Callable_Void>& iCallable);
+	bool QErase(int iSocket, const ZRef<Callable_Void>& iCallable);
 
 // -----
 

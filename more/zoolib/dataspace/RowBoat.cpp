@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/Callable_PMF.h"
+
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"

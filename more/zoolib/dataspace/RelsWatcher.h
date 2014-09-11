@@ -31,14 +31,14 @@ namespace ZooLib {
 namespace Dataspace {
 namespace RelsWatcher {
 
-typedef ZCallable<void(
+typedef Callable<void(
 		const ZRef<ZCounted>& iRegistration,
 		const ZRef<Event>& iEvent,
 		const ZRef<Result>& iResult,
 		bool iIsFirst)>
 	Callable_Changed;
 
-typedef ZCallable<ZRef<ZCounted>(
+typedef Callable<ZRef<ZCounted>(
 		const ZRef<Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel)>
 	Callable_Register;

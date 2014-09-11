@@ -32,7 +32,7 @@ namespace ZHTTP {
 // =================================================================================================
 // MARK: - ZHTTP
 
-typedef ZCallable<ZRef<ZStreamerRW>(const string& iHost, uint16 iPort, bool iUseSSL)>
+typedef Callable<ZRef<ZStreamerRW>(const string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;
 
 ZRef<ZStreamerRW> sStreamerRW(const string& iHost, uint16 iPort, bool iUseSSL);

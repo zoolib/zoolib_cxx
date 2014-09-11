@@ -188,7 +188,7 @@ class ZDelegate::Wrapper_T<R(P0)>
 	{
 	friend class ZDelegate;
 
-	typedef ZCallable<R(P0)> Callable_t;
+	typedef Callable<R(P0)> Callable_t;
 
 	Wrapper_T(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)

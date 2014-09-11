@@ -38,7 +38,7 @@ public:
 	RelaterMUX(ZRef<Relater> iRelater);
 	virtual ~RelaterMUX();
 
-// From ZCounted via RelaterFactory (aka ZCallable<ZRef<Relater>()>)
+// From ZCounted via RelaterFactory (aka Callable<ZRef<Relater>()>)
 	virtual void Initialize();
 	virtual void Finalize();
 

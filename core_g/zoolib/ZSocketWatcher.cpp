@@ -71,10 +71,10 @@ bool ZSocketWatcher::QErase(const Pair_t& iPair)
 	return fSet.erase(iPair);
 	}
 
-bool ZSocketWatcher::QInsert(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QInsert(int iSocket, const ZRef<Callable_Void>& iCallable)
 	{ return this->QInsert(Pair_t(iSocket, iCallable)); }
 
-bool ZSocketWatcher::QErase(int iSocket, const ZRef<ZCallable_Void>& iCallable)
+bool ZSocketWatcher::QErase(int iSocket, const ZRef<Callable_Void>& iCallable)
 	{ return this->QErase(Pair_t(iSocket, iCallable)); }
 
 void ZSocketWatcher::pRun()
@@ -126,7 +126,7 @@ void ZSocketWatcher::pRun()
 				}
 
 			// Gather the callables
-			set<ZRef<ZCallable_Void> > toCall;
+			set<ZRef<Callable_Void> > toCall;
 
 			for (int fd = 1; fd <= largest; ++fd)
 				{

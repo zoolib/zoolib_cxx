@@ -38,7 +38,7 @@ class RelsWatcher_Relater
 	{
 	typedef RelsWatcher::Callable_Register inherited;
 public:
-	typedef ZCallable_Void Callable_NeedsUpdate;
+	typedef Callable_Void Callable_NeedsUpdate;
 
 	RelsWatcher_Relater(const ZRef<Relater>& iRelater,
 		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
@@ -46,7 +46,7 @@ public:
 // From ZCounted via Callable_Register
 	virtual void Initialize();
 
-// From ZCallable via Callable_Register
+// From Callable via Callable_Register
 	ZQ<ZRef<ZCounted> > QCall(
 		const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel);

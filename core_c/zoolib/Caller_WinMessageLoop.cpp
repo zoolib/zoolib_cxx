@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZCallable_PMF.h"
+#include "zoolib/Callable_PMF.h"
+
 #include "zoolib/ZWinWND.h"
 
 namespace ZooLib {

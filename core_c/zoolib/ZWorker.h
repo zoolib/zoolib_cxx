@@ -33,14 +33,14 @@ namespace ZooLib {
 // MARK: - ZWorker
 
 class ZWorker
-:	public ZCallable_Void
+:	public Callable_Void
 	{
 public:
 	typedef ZRef<ZWorker> ZRef_ZWorker; // CW7 workaround
 
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Attached;
-	typedef ZCallable<bool(ZRef_ZWorker)> Callable_Work;
-	typedef ZCallable<void(ZRef_ZWorker)> Callable_Detached;
+	typedef Callable<void(ZRef_ZWorker)> Callable_Attached;
+	typedef Callable<bool(ZRef_ZWorker)> Callable_Work;
+	typedef Callable<void(ZRef_ZWorker)> Callable_Detached;
 
 	ZWorker(
 		const ZRef<Callable_Attached>& iCallable_Attached,
@@ -59,7 +59,7 @@ public:
 
 	ZWorker();
 
-// From ZCallable_Void
+// From Callable_Void
 	ZQ<void> QCall();
 
 // Our protocol

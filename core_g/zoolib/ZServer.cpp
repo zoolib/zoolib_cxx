@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
+#include "zoolib/Callable_PMF.h"
 
-#include "zoolib/ZCallable_Function.h"
-#include "zoolib/ZCallable_PMF.h"
 #include "zoolib/ZServer.h"
 
 namespace ZooLib {
@@ -175,7 +175,7 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 				guard.Release();
 				try
 					{
-					ZRef<ZCallable_Void> theCallable_Kill =
+					ZRef<Callable_Void> theCallable_Kill =
 						sBindR(sCallable(spKill), theSRW.DynamicCast<ZStreamerRWCon>());
 					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theSRW);
 					}

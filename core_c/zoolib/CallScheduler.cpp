@@ -66,18 +66,18 @@ bool CallScheduler::WillCall(const Job& iJob)
 	return false;
 	}
 
-bool CallScheduler::Cancel(const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+bool CallScheduler::Cancel(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
 	{ return this->Cancel(Job(iCaller, iCallable)); }
 
 void CallScheduler::NextCallAt(ZTime iSystemTime,
-	const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
 	{ this->pNextCallAt(iSystemTime, Job(iCaller, iCallable)); }
 
 void CallScheduler::NextCallIn(double iInterval,
-	const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+	const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
 	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
 
-bool CallScheduler::WillCall(const ZRef<Caller>& iCaller, const ZRef<ZCallable_Void>& iCallable)
+bool CallScheduler::WillCall(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
 	{ return this->WillCall(Job(iCaller, iCallable)); }
 
 void CallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
@@ -139,7 +139,7 @@ void CallScheduler::pRun()
 			else
 				{
 				ZRef<Caller> theCaller = begin->second.first;
-				ZRef<ZCallable_Void> theCallable = begin->second.second;
+				ZRef<Callable_Void> theCallable = begin->second.second;
 
 				sEraseMust(fJobTimes, JobTime(begin->second, begin->first));
 				fTimeJobs.erase(begin);

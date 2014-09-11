@@ -34,7 +34,7 @@ Caller_EventLoop::Caller_EventLoop()
 Caller_EventLoop::~Caller_EventLoop()
 	{}
 
-bool Caller_EventLoop::Enqueue(const ZRef<ZCallable_Void>& iCallable)
+bool Caller_EventLoop::Enqueue(const ZRef<Callable_Void>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	if (iCallable)
@@ -50,7 +50,7 @@ bool Caller_EventLoop::Enqueue(const ZRef<ZCallable_Void>& iCallable)
 
 void Caller_EventLoop::pInvokeClearQueue()
 	{
-	vector<ZRef<ZCallable_Void> > calling;
+	vector<ZRef<Callable_Void> > calling;
 
 	{
 	ZAcqMtx acq(fMtx);
@@ -58,7 +58,7 @@ void Caller_EventLoop::pInvokeClearQueue()
 	fCallables.swap(calling);
 	}
 
-	for (vector<ZRef<ZCallable_Void> >::iterator iter = calling.begin();
+	for (vector<ZRef<Callable_Void> >::iterator iter = calling.begin();
 		iter != calling.end(); ++iter)
 		{
 		try { (*iter)->Call(); }

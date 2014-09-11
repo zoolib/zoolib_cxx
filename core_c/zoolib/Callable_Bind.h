@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 
 namespace ZooLib {
-namespace Callable_Bind {
+namespace Callable_Bind_NS {
 
 using namespace CallableUtil;
 
@@ -1262,15 +1262,15 @@ struct STReturn<R,Ignore(P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,PA,PB,PC,PD,PE,PF)>
 
 template <class Signature_p>
 class Callable_L01
-:	public ZCallable<typename ST_T<Signature_p>::SL01>
+:	public Callable<typename ST_T<Signature_p>::SL01>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L01(
 		typename VT<typename ST::L0>::P i0,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0)
 	,	fCallable(iCallable)
 		{}
@@ -1349,7 +1349,7 @@ private:
 		{ return fCallable->QCall(f0, i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE); }
 
 	typename VT<typename ST::L0>::F f0;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1357,16 +1357,16 @@ private:
 
 template <class Signature_p>
 class Callable_L02
-:	public ZCallable<typename ST_T<Signature_p>::SL02>
+:	public Callable<typename ST_T<Signature_p>::SL02>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L02(
 		typename VT<typename ST::L0>::P i0,
 		typename VT<typename ST::L1>::P i1,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1)
 	,	fCallable(iCallable)
 		{}
@@ -1441,7 +1441,7 @@ private:
 
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1449,17 +1449,17 @@ private:
 
 template <class Signature_p>
 class Callable_L03
-:	public ZCallable<typename ST_T<Signature_p>::SL03>
+:	public Callable<typename ST_T<Signature_p>::SL03>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L03(
 		typename VT<typename ST::L0>::P i0,
 		typename VT<typename ST::L1>::P i1,
 		typename VT<typename ST::L2>::P i2,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2)
 	,	fCallable(iCallable)
 		{}
@@ -1530,7 +1530,7 @@ private:
 	typename VT<typename ST::L0>::F f0;
 	typename VT<typename ST::L1>::F f1;
 	typename VT<typename ST::L2>::F f2;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1538,10 +1538,10 @@ private:
 
 template <class Signature_p>
 class Callable_L04
-:	public ZCallable<typename ST_T<Signature_p>::SL04>
+:	public Callable<typename ST_T<Signature_p>::SL04>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L04(
@@ -1549,7 +1549,7 @@ public:
 		typename VT<typename ST::L1>::P i1,
 		typename VT<typename ST::L2>::P i2,
 		typename VT<typename ST::L3>::P i3,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3)
 	,	fCallable(iCallable)
 		{}
@@ -1616,7 +1616,7 @@ private:
 	typename VT<typename ST::L1>::F f1;
 	typename VT<typename ST::L2>::F f2;
 	typename VT<typename ST::L3>::F f3;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1624,10 +1624,10 @@ private:
 
 template <class Signature_p>
 class Callable_L05
-:	public ZCallable<typename ST_T<Signature_p>::SL05>
+:	public Callable<typename ST_T<Signature_p>::SL05>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L05(
@@ -1636,7 +1636,7 @@ public:
 		typename VT<typename ST::L2>::P i2,
 		typename VT<typename ST::L3>::P i3,
 		typename VT<typename ST::L4>::P i4,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4)
 	,	fCallable(iCallable)
 		{}
@@ -1699,7 +1699,7 @@ private:
 	typename VT<typename ST::L2>::F f2;
 	typename VT<typename ST::L3>::F f3;
 	typename VT<typename ST::L4>::F f4;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1707,10 +1707,10 @@ private:
 
 template <class Signature_p>
 class Callable_L06
-:	public ZCallable<typename ST_T<Signature_p>::SL06>
+:	public Callable<typename ST_T<Signature_p>::SL06>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L06(
@@ -1720,7 +1720,7 @@ public:
 		typename VT<typename ST::L3>::P i3,
 		typename VT<typename ST::L4>::P i4,
 		typename VT<typename ST::L5>::P i5,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5)
 	,	fCallable(iCallable)
 		{}
@@ -1779,7 +1779,7 @@ private:
 	typename VT<typename ST::L3>::F f3;
 	typename VT<typename ST::L4>::F f4;
 	typename VT<typename ST::L5>::F f5;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1787,10 +1787,10 @@ private:
 
 template <class Signature_p>
 class Callable_L07
-:	public ZCallable<typename ST_T<Signature_p>::SL07>
+:	public Callable<typename ST_T<Signature_p>::SL07>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L07(
@@ -1801,7 +1801,7 @@ public:
 		typename VT<typename ST::L4>::P i4,
 		typename VT<typename ST::L5>::P i5,
 		typename VT<typename ST::L6>::P i6,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6)
 	,	fCallable(iCallable)
 		{}
@@ -1856,7 +1856,7 @@ private:
 	typename VT<typename ST::L4>::F f4;
 	typename VT<typename ST::L5>::F f5;
 	typename VT<typename ST::L6>::F f6;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1864,10 +1864,10 @@ private:
 
 template <class Signature_p>
 class Callable_L08
-:	public ZCallable<typename ST_T<Signature_p>::SL08>
+:	public Callable<typename ST_T<Signature_p>::SL08>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L08(
@@ -1879,7 +1879,7 @@ public:
 		typename VT<typename ST::L5>::P i5,
 		typename VT<typename ST::L6>::P i6,
 		typename VT<typename ST::L7>::P i7,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	fCallable(iCallable)
 		{}
@@ -1930,7 +1930,7 @@ private:
 	typename VT<typename ST::L5>::F f5;
 	typename VT<typename ST::L6>::F f6;
 	typename VT<typename ST::L7>::F f7;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -1938,10 +1938,10 @@ private:
 
 template <class Signature_p>
 class Callable_L09
-:	public ZCallable<typename ST_T<Signature_p>::SL09>
+:	public Callable<typename ST_T<Signature_p>::SL09>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L09(
@@ -1954,7 +1954,7 @@ public:
 		typename VT<typename ST::L6>::P i6,
 		typename VT<typename ST::L7>::P i7,
 		typename VT<typename ST::L8>::P i8,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8)
 	,	fCallable(iCallable)
@@ -2003,7 +2003,7 @@ private:
 	typename VT<typename ST::L6>::F f6;
 	typename VT<typename ST::L7>::F f7;
 	typename VT<typename ST::L8>::F f8;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2011,10 +2011,10 @@ private:
 
 template <class Signature_p>
 class Callable_L10
-:	public ZCallable<typename ST_T<Signature_p>::SL10>
+:	public Callable<typename ST_T<Signature_p>::SL10>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L10(
@@ -2028,7 +2028,7 @@ public:
 		typename VT<typename ST::L7>::P i7,
 		typename VT<typename ST::L8>::P i8,
 		typename VT<typename ST::L9>::P i9,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9)
 	,	fCallable(iCallable)
@@ -2074,7 +2074,7 @@ private:
 	typename VT<typename ST::L7>::F f7;
 	typename VT<typename ST::L8>::F f8;
 	typename VT<typename ST::L9>::F f9;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2082,10 +2082,10 @@ private:
 
 template <class Signature_p>
 class Callable_L11
-:	public ZCallable<typename ST_T<Signature_p>::SL11>
+:	public Callable<typename ST_T<Signature_p>::SL11>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L11(
@@ -2100,7 +2100,7 @@ public:
 		typename VT<typename ST::L8>::P i8,
 		typename VT<typename ST::L9>::P i9,
 		typename VT<typename ST::LA>::P iA,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA)
 	,	fCallable(iCallable)
@@ -2143,7 +2143,7 @@ private:
 	typename VT<typename ST::L8>::F f8;
 	typename VT<typename ST::L9>::F f9;
 	typename VT<typename ST::LA>::F fA;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2151,10 +2151,10 @@ private:
 
 template <class Signature_p>
 class Callable_L12
-:	public ZCallable<typename ST_T<Signature_p>::SL12>
+:	public Callable<typename ST_T<Signature_p>::SL12>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L12(
@@ -2170,7 +2170,7 @@ public:
 		typename VT<typename ST::L9>::P i9,
 		typename VT<typename ST::LA>::P iA,
 		typename VT<typename ST::LB>::P iB,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB)
 	,	fCallable(iCallable)
@@ -2210,7 +2210,7 @@ private:
 	typename VT<typename ST::L9>::F f9;
 	typename VT<typename ST::LA>::F fA;
 	typename VT<typename ST::LB>::F fB;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2218,10 +2218,10 @@ private:
 
 template <class Signature_p>
 class Callable_L13
-:	public ZCallable<typename ST_T<Signature_p>::SL13>
+:	public Callable<typename ST_T<Signature_p>::SL13>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L13(
@@ -2238,7 +2238,7 @@ public:
 		typename VT<typename ST::LA>::P iA,
 		typename VT<typename ST::LB>::P iB,
 		typename VT<typename ST::LC>::P iC,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC)
 	,	fCallable(iCallable)
@@ -2275,7 +2275,7 @@ private:
 	typename VT<typename ST::LA>::F fA;
 	typename VT<typename ST::LB>::F fB;
 	typename VT<typename ST::LC>::F fC;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2283,10 +2283,10 @@ private:
 
 template <class Signature_p>
 class Callable_L14
-:	public ZCallable<typename ST_T<Signature_p>::SL14>
+:	public Callable<typename ST_T<Signature_p>::SL14>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L14(
@@ -2304,7 +2304,7 @@ public:
 		typename VT<typename ST::LB>::P iB,
 		typename VT<typename ST::LC>::P iC,
 		typename VT<typename ST::LD>::P iD,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD)
 	,	fCallable(iCallable)
@@ -2338,7 +2338,7 @@ private:
 	typename VT<typename ST::LB>::F fB;
 	typename VT<typename ST::LC>::F fC;
 	typename VT<typename ST::LD>::F fD;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2346,10 +2346,10 @@ private:
 
 template <class Signature_p>
 class Callable_L15
-:	public ZCallable<typename ST_T<Signature_p>::SL15>
+:	public Callable<typename ST_T<Signature_p>::SL15>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L15(
@@ -2368,7 +2368,7 @@ public:
 		typename VT<typename ST::LC>::P iC,
 		typename VT<typename ST::LD>::P iD,
 		typename VT<typename ST::LE>::P iE,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD), fE(iE)
 	,	fCallable(iCallable)
@@ -2399,7 +2399,7 @@ private:
 	typename VT<typename ST::LC>::F fC;
 	typename VT<typename ST::LD>::F fD;
 	typename VT<typename ST::LE>::F fE;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2407,10 +2407,10 @@ private:
 
 template <class Signature_p>
 class Callable_L16
-:	public ZCallable<typename ST_T<Signature_p>::SL16>
+:	public Callable<typename ST_T<Signature_p>::SL16>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_L16(
@@ -2430,7 +2430,7 @@ public:
 		typename VT<typename ST::LD>::P iD,
 		typename VT<typename ST::LE>::P iE,
 		typename VT<typename ST::LF>::P iF,
-		const ZRef<Callable>& iCallable)
+		const ZRef<Callable_t>& iCallable)
 	:	f0(i0), f1(i1), f2(i2), f3(i3), f4(i4), f5(i5), f6(i6), f7(i7)
 	,	f8(i8), f9(i9), fA(iA), fB(iB), fC(iC), fD(iD), fE(iE), fF(iF)
 	,	fCallable(iCallable)
@@ -2458,342 +2458,342 @@ private:
 	typename VT<typename ST::LD>::F fD;
 	typename VT<typename ST::LE>::F fE;
 	typename VT<typename ST::LF>::F fF;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
 // MARK: - sBindL
 
-template <class Callable>
-ZRef<ZCallable<typename Callable::Signature> >
+template <class Callable_p>
+ZRef<Callable<typename Callable_p::Signature> >
 sBindL(
-	const ZRef<Callable>& iCallable)
+	const ZRef<Callable_p>& iCallable)
 	{ return iCallable; }
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL01> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL01> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L01<typename Callable::Signature>(
+	return new Callable_L01<typename Callable_p::Signature>(
 		i0,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL02> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL02> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L02<typename Callable::Signature>(
+	return new Callable_L02<typename Callable_p::Signature>(
 		i0, i1,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL03> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL03> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L03<typename Callable::Signature>(
+	return new Callable_L03<typename Callable_p::Signature>(
 		i0, i1, i2,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL04> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL04> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L04<typename Callable::Signature>(
+	return new Callable_L04<typename Callable_p::Signature>(
 		i0, i1, i2, i3,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL05> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL05> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L05<typename Callable::Signature>(
+	return new Callable_L05<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL06> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL06> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L06<typename Callable::Signature>(
+	return new Callable_L06<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL07> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL07> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L07<typename Callable::Signature>(
+	return new Callable_L07<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL08> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL08> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L08<typename Callable::Signature>(
+	return new Callable_L08<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL09> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL09> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L09<typename Callable::Signature>(
+	return new Callable_L09<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL10> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL10> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L10<typename Callable::Signature>(
+	return new Callable_L10<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL11> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL11> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L11<typename Callable::Signature>(
+	return new Callable_L11<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL12> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL12> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LB>::P iB,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L12<typename Callable::Signature>(
+	return new Callable_L12<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL13> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL13> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::LC>::P iC,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LB>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LC>::P iC,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L13<typename Callable::Signature>(
+	return new Callable_L13<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL14> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL14> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::LC>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::LD>::P iD,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LB>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LC>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LD>::P iD,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L14<typename Callable::Signature>(
+	return new Callable_L14<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL15> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL15> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::LC>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::LD>::P iD,
-	typename VT<typename ST_T<typename Callable::Signature>::LE>::P iE,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LB>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LC>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LD>::P iD,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LE>::P iE,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L15<typename Callable::Signature>(
+	return new Callable_L15<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE,
 		iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SL16> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SL16> >
 sBindL(
-	typename VT<typename ST_T<typename Callable::Signature>::L0>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::L1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::L2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::L3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::L4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::L5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::L6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::L7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::L8>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::L9>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::LA>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::LB>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::LC>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::LD>::P iD,
-	typename VT<typename ST_T<typename Callable::Signature>::LE>::P iE,
-	typename VT<typename ST_T<typename Callable::Signature>::LF>::P iF,
-	const ZRef<Callable>& iCallable)
+	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L8>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::L9>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LA>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LB>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LC>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LD>::P iD,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LE>::P iE,
+	typename VT<typename ST_T<typename Callable_p::Signature>::LF>::P iF,
+	const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_L16<typename Callable::Signature>(
+	return new Callable_L16<typename Callable_p::Signature>(
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF,
 		iCallable);
 	}
@@ -2803,14 +2803,14 @@ sBindL(
 
 template <class Signature_p>
 class Callable_R01
-:	public ZCallable<typename ST_T<Signature_p>::SR01>
+:	public Callable<typename ST_T<Signature_p>::SR01>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R01(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R0>::P i0)
 	:	f0(i0)
 	,	fCallable(iCallable)
@@ -2890,7 +2890,7 @@ private:
 		{ return fCallable->QCall(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, f0); }
 
 	typename VT<typename ST::R0>::F f0;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2898,14 +2898,14 @@ private:
 
 template <class Signature_p>
 class Callable_R02
-:	public ZCallable<typename ST_T<Signature_p>::SR02>
+:	public Callable<typename ST_T<Signature_p>::SR02>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R02(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R1>::P i0,
 		typename VT<typename ST::R0>::P i1)
 	:	f0(i0), f1(i1)
@@ -2982,7 +2982,7 @@ private:
 
 	typename VT<typename ST::R1>::F f0;
 	typename VT<typename ST::R0>::F f1;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -2990,14 +2990,14 @@ private:
 
 template <class Signature_p>
 class Callable_R03
-:	public ZCallable<typename ST_T<Signature_p>::SR03>
+:	public Callable<typename ST_T<Signature_p>::SR03>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R03(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R2>::P i0,
 		typename VT<typename ST::R1>::P i1,
 		typename VT<typename ST::R0>::P i2)
@@ -3071,7 +3071,7 @@ private:
 	typename VT<typename ST::R2>::F f0;
 	typename VT<typename ST::R1>::F f1;
 	typename VT<typename ST::R0>::F f2;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3079,14 +3079,14 @@ private:
 
 template <class Signature_p>
 class Callable_R04
-:	public ZCallable<typename ST_T<Signature_p>::SR04>
+:	public Callable<typename ST_T<Signature_p>::SR04>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R04(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R3>::P i0,
 		typename VT<typename ST::R2>::P i1,
 		typename VT<typename ST::R1>::P i2,
@@ -3157,7 +3157,7 @@ private:
 	typename VT<typename ST::R2>::F f1;
 	typename VT<typename ST::R1>::F f2;
 	typename VT<typename ST::R0>::F f3;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3165,14 +3165,14 @@ private:
 
 template <class Signature_p>
 class Callable_R05
-:	public ZCallable<typename ST_T<Signature_p>::SR05>
+:	public Callable<typename ST_T<Signature_p>::SR05>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R05(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R4>::P i0,
 		typename VT<typename ST::R3>::P i1,
 		typename VT<typename ST::R2>::P i2,
@@ -3240,7 +3240,7 @@ private:
 	typename VT<typename ST::R2>::F f2;
 	typename VT<typename ST::R1>::F f3;
 	typename VT<typename ST::R0>::F f4;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3248,14 +3248,14 @@ private:
 
 template <class Signature_p>
 class Callable_R06
-:	public ZCallable<typename ST_T<Signature_p>::SR06>
+:	public Callable<typename ST_T<Signature_p>::SR06>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R06(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R5>::P i0,
 		typename VT<typename ST::R4>::P i1,
 		typename VT<typename ST::R3>::P i2,
@@ -3320,7 +3320,7 @@ private:
 	typename VT<typename ST::R2>::F f3;
 	typename VT<typename ST::R1>::F f4;
 	typename VT<typename ST::R0>::F f5;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3328,14 +3328,14 @@ private:
 
 template <class Signature_p>
 class Callable_R07
-:	public ZCallable<typename ST_T<Signature_p>::SR07>
+:	public Callable<typename ST_T<Signature_p>::SR07>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R07(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R6>::P i0,
 		typename VT<typename ST::R5>::P i1,
 		typename VT<typename ST::R4>::P i2,
@@ -3397,7 +3397,7 @@ private:
 	typename VT<typename ST::R2>::F f4;
 	typename VT<typename ST::R1>::F f5;
 	typename VT<typename ST::R0>::F f6;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3405,14 +3405,14 @@ private:
 
 template <class Signature_p>
 class Callable_R08
-:	public ZCallable<typename ST_T<Signature_p>::SR08>
+:	public Callable<typename ST_T<Signature_p>::SR08>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R08(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R7>::P i0,
 		typename VT<typename ST::R6>::P i1,
 		typename VT<typename ST::R5>::P i2,
@@ -3471,7 +3471,7 @@ private:
 	typename VT<typename ST::R2>::F f5;
 	typename VT<typename ST::R1>::F f6;
 	typename VT<typename ST::R0>::F f7;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3479,14 +3479,14 @@ private:
 
 template <class Signature_p>
 class Callable_R09
-:	public ZCallable<typename ST_T<Signature_p>::SR09>
+:	public Callable<typename ST_T<Signature_p>::SR09>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R09(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R8>::P i0,
 		typename VT<typename ST::R7>::P i1,
 		typename VT<typename ST::R6>::P i2,
@@ -3544,7 +3544,7 @@ private:
 	typename VT<typename ST::R2>::F f6;
 	typename VT<typename ST::R1>::F f7;
 	typename VT<typename ST::R0>::F f8;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3552,14 +3552,14 @@ private:
 
 template <class Signature_p>
 class Callable_R10
-:	public ZCallable<typename ST_T<Signature_p>::SR10>
+:	public Callable<typename ST_T<Signature_p>::SR10>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R10(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::R9>::P i0,
 		typename VT<typename ST::R8>::P i1,
 		typename VT<typename ST::R7>::P i2,
@@ -3615,7 +3615,7 @@ private:
 	typename VT<typename ST::R2>::F f7;
 	typename VT<typename ST::R1>::F f8;
 	typename VT<typename ST::R0>::F f9;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3623,14 +3623,14 @@ private:
 
 template <class Signature_p>
 class Callable_R11
-:	public ZCallable<typename ST_T<Signature_p>::SR11>
+:	public Callable<typename ST_T<Signature_p>::SR11>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R11(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RA>::P i0,
 		typename VT<typename ST::R9>::P i1,
 		typename VT<typename ST::R8>::P i2,
@@ -3684,7 +3684,7 @@ private:
 	typename VT<typename ST::R2>::F f8;
 	typename VT<typename ST::R1>::F f9;
 	typename VT<typename ST::R0>::F fA;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3692,14 +3692,14 @@ private:
 
 template <class Signature_p>
 class Callable_R12
-:	public ZCallable<typename ST_T<Signature_p>::SR12>
+:	public Callable<typename ST_T<Signature_p>::SR12>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R12(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RB>::P i0,
 		typename VT<typename ST::RA>::P i1,
 		typename VT<typename ST::R9>::P i2,
@@ -3751,7 +3751,7 @@ private:
 	typename VT<typename ST::R2>::F f9;
 	typename VT<typename ST::R1>::F fA;
 	typename VT<typename ST::R0>::F fB;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3759,14 +3759,14 @@ private:
 
 template <class Signature_p>
 class Callable_R13
-:	public ZCallable<typename ST_T<Signature_p>::SR13>
+:	public Callable<typename ST_T<Signature_p>::SR13>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R13(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RC>::P i0,
 		typename VT<typename ST::RB>::P i1,
 		typename VT<typename ST::RA>::P i2,
@@ -3816,7 +3816,7 @@ private:
 	typename VT<typename ST::R2>::F fA;
 	typename VT<typename ST::R1>::F fB;
 	typename VT<typename ST::R0>::F fC;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3824,14 +3824,14 @@ private:
 
 template <class Signature_p>
 class Callable_R14
-:	public ZCallable<typename ST_T<Signature_p>::SR14>
+:	public Callable<typename ST_T<Signature_p>::SR14>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R14(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RD>::P i0,
 		typename VT<typename ST::RC>::P i1,
 		typename VT<typename ST::RB>::P i2,
@@ -3879,7 +3879,7 @@ private:
 	typename VT<typename ST::R2>::F fB;
 	typename VT<typename ST::R1>::F fC;
 	typename VT<typename ST::R0>::F fD;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3887,14 +3887,14 @@ private:
 
 template <class Signature_p>
 class Callable_R15
-:	public ZCallable<typename ST_T<Signature_p>::SR15>
+:	public Callable<typename ST_T<Signature_p>::SR15>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R15(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RE>::P i0,
 		typename VT<typename ST::RD>::P i1,
 		typename VT<typename ST::RC>::P i2,
@@ -3940,7 +3940,7 @@ private:
 	typename VT<typename ST::R2>::F fC;
 	typename VT<typename ST::R1>::F fD;
 	typename VT<typename ST::R0>::F fE;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -3948,14 +3948,14 @@ private:
 
 template <class Signature_p>
 class Callable_R16
-:	public ZCallable<typename ST_T<Signature_p>::SR16>
+:	public Callable<typename ST_T<Signature_p>::SR16>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
 	Callable_R16(
-		const ZRef<Callable>& iCallable,
+		const ZRef<Callable_t>& iCallable,
 		typename VT<typename ST::RF>::P i0,
 		typename VT<typename ST::RE>::P i1,
 		typename VT<typename ST::RD>::P i2,
@@ -3999,342 +3999,342 @@ private:
 	typename VT<typename ST::R2>::F fD;
 	typename VT<typename ST::R1>::F fE;
 	typename VT<typename ST::R0>::F fF;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
 // MARK: - sBindR
 
-template <class Callable>
-ZRef<ZCallable<typename Callable::Signature> >
+template <class Callable_p>
+ZRef<Callable<typename Callable_p::Signature> >
 sBindR(
-	const ZRef<Callable>& iCallable)
+	const ZRef<Callable_p>& iCallable)
 	{ return iCallable; }
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR01> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR01> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i0)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i0)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R01<typename Callable::Signature>(
+	return new Callable_R01<typename Callable_p::Signature>(
 		iCallable,
 		i0);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR02> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR02> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i1)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i1)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R02<typename Callable::Signature>(
+	return new Callable_R02<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR03> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR03> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i2)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i2)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R03<typename Callable::Signature>(
+	return new Callable_R03<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR04> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR04> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i3)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i3)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R04<typename Callable::Signature>(
+	return new Callable_R04<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR05> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR05> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i4)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i4)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R05<typename Callable::Signature>(
+	return new Callable_R05<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR06> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR06> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i5)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i5)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R06<typename Callable::Signature>(
+	return new Callable_R06<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR07> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR07> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i6)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i6)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R07<typename Callable::Signature>(
+	return new Callable_R07<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR08> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR08> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i7)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i7)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R08<typename Callable::Signature>(
+	return new Callable_R08<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR09> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR09> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i8)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i8)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R09<typename Callable::Signature>(
+	return new Callable_R09<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR10> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR10> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P i9)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i9)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R10<typename Callable::Signature>(
+	return new Callable_R10<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR11> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR11> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iA)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iA)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R11<typename Callable::Signature>(
+	return new Callable_R11<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR12> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR12> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RB>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iB)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iB)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R12<typename Callable::Signature>(
+	return new Callable_R12<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR13> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR13> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RC>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::RB>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iC)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RC>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iC)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R13<typename Callable::Signature>(
+	return new Callable_R13<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR14> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR14> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RD>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::RC>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::RB>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iD)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RD>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RC>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iD)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R14<typename Callable::Signature>(
+	return new Callable_R14<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR15> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR15> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RE>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::RD>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::RC>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::RB>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iD,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iE)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RE>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RD>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RC>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P iD,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iE)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R15<typename Callable::Signature>(
+	return new Callable_R15<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename ST_T<typename Callable::Signature>::SR16> >
+template <class Callable_p>
+ZRef<Callable<typename ST_T<typename Callable_p::Signature>::SR16> >
 sBindR(
-	const ZRef<Callable>& iCallable,
-	typename VT<typename ST_T<typename Callable::Signature>::RF>::P i0,
-	typename VT<typename ST_T<typename Callable::Signature>::RE>::P i1,
-	typename VT<typename ST_T<typename Callable::Signature>::RD>::P i2,
-	typename VT<typename ST_T<typename Callable::Signature>::RC>::P i3,
-	typename VT<typename ST_T<typename Callable::Signature>::RB>::P i4,
-	typename VT<typename ST_T<typename Callable::Signature>::RA>::P i5,
-	typename VT<typename ST_T<typename Callable::Signature>::R9>::P i6,
-	typename VT<typename ST_T<typename Callable::Signature>::R8>::P i7,
-	typename VT<typename ST_T<typename Callable::Signature>::R7>::P i8,
-	typename VT<typename ST_T<typename Callable::Signature>::R6>::P i9,
-	typename VT<typename ST_T<typename Callable::Signature>::R5>::P iA,
-	typename VT<typename ST_T<typename Callable::Signature>::R4>::P iB,
-	typename VT<typename ST_T<typename Callable::Signature>::R3>::P iC,
-	typename VT<typename ST_T<typename Callable::Signature>::R2>::P iD,
-	typename VT<typename ST_T<typename Callable::Signature>::R1>::P iE,
-	typename VT<typename ST_T<typename Callable::Signature>::R0>::P iF)
+	const ZRef<Callable_p>& iCallable,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RF>::P i0,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RE>::P i1,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RD>::P i2,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RC>::P i3,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i4,
+	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i5,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i6,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i7,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i8,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i9,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P iA,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P iB,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P iC,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P iD,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P iE,
+	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P iF)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_R16<typename Callable::Signature>(
+	return new Callable_R16<typename Callable_p::Signature>(
 		iCallable,
 		i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, iA, iB, iC, iD, iE, iF);
 	}
@@ -4344,13 +4344,13 @@ sBindR(
 
 template <class Signature_p>
 class Callable_IgnoreParams
-:	public ZCallable<Signature_p>
+:	public Callable<Signature_p>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 
-	Callable_IgnoreParams(const ZRef<Callable>& iCallable)
+	Callable_IgnoreParams(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -4432,18 +4432,18 @@ private:
 		P8 i8, P9 i9, PA iA, PB iB, PC iC, PD iD, PE iE, PF iF)
 		{ return fCallable->QCall(fCallable); }
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
 // MARK: - sBind_IgnoreParams
 
-template <class Callable>
-ZRef<Callable> sBind_IgnoreParams(const ZRef<Callable>& iCallable)
+template <class Callable_p>
+ZRef<Callable_Void> sBind_IgnoreParams(const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_IgnoreParams<typename Callable::Signature>(iCallable);
+	return new Callable_IgnoreParams<typename Callable_p::Signature>(iCallable);
 	}
 
 // =================================================================================================
@@ -4451,14 +4451,14 @@ ZRef<Callable> sBind_IgnoreParams(const ZRef<Callable>& iCallable)
 
 template <class R_p, class Signature_p>
 class Callable_Return
-:	public ZCallable<typename STReturn<R_p, Signature_p>::Signature>
+:	public Callable<typename STReturn<R_p, Signature_p>::Signature>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 	typedef typename STReturn<R_p, Signature_p>::Signature Signature;
 
-	Callable_Return(typename VT<R_p>::P iR, const ZRef<Callable>& iCallable)
+	Callable_Return(typename VT<R_p>::P iR, const ZRef<Callable_t>& iCallable)
 	:	fR(iR)
 	,	fCallable(iCallable)
 		{}
@@ -4593,7 +4593,7 @@ private:
 		}
 
 	typename VT<R>::F fR;
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -4601,14 +4601,14 @@ private:
 
 template <class Signature_p>
 class Callable_Return<void, Signature_p>
-:	public ZCallable<typename STReturn<void, Signature_p>::Signature>
+:	public Callable<typename STReturn<void, Signature_p>::Signature>
 	{
 public:
-	typedef ZCallable<Signature_p> Callable;
+	typedef Callable<Signature_p> Callable_t;
 	typedef ST_T<Signature_p> ST;
 	typedef typename STReturn<void, Signature_p>::Signature Signature;
 
-	Callable_Return(const ZRef<Callable>& iCallable)
+	Callable_Return(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -4757,39 +4757,39 @@ private:
 		return null;
 		}
 
-	ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
 // MARK: - sBind_Return
 
-template <class R, class Callable>
-ZRef<ZCallable<typename STReturn<R, typename Callable::Signature>::Signature> >
-sBind_Return(R iR, const ZRef<Callable>& iCallable)
+template <class R, class Callable_p>
+ZRef<Callable<typename STReturn<R, typename Callable_p::Signature>::Signature> >
+sBind_Return(R iR, const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_Return<R, typename Callable::Signature>(iR, iCallable);
+	return new Callable_Return<R, typename Callable_p::Signature>(iR, iCallable);
 	}
 
-template <class Callable>
-ZRef<ZCallable<typename STReturn<void, typename Callable::Signature>::Signature> >
-sBind_ReturnVoid(const ZRef<Callable>& iCallable)
+template <class Callable_p>
+ZRef<Callable<typename STReturn<void, typename Callable_p::Signature>::Signature> >
+sBind_ReturnVoid(const ZRef<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;
-	return new Callable_Return<void, typename Callable::Signature>(iCallable);
+	return new Callable_Return<void, typename Callable_p::Signature>(iCallable);
 	}
 
-} // namespace Callable_Bind
+} // namespace Callable_Bind_NS
 
-using Callable_Bind::sBindL;
-using Callable_Bind::sBindR;
+using Callable_Bind_NS::sBindL;
+using Callable_Bind_NS::sBindR;
 
-using Callable_Bind::sBind_IgnoreParams;
+using Callable_Bind_NS::sBind_IgnoreParams;
 
-using Callable_Bind::sBind_Return;
-using Callable_Bind::sBind_ReturnVoid;
+using Callable_Bind_NS::sBind_Return;
+using Callable_Bind_NS::sBind_ReturnVoid;
 
 } // namespace ZooLib
 
