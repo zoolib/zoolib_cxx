@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_QueryEngine_Walker_Result_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/QueryEngine/Result.h"
 #include "zoolib/QueryEngine/Walker.h"
 

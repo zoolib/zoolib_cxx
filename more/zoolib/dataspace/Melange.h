@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Caller.h"
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/ZMulti_T.h"
 
 #include "zooLib/dataspace/RelsWatcher.h"
@@ -36,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-typedef ZCallable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
+typedef Callable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
 	Callable_DatonSetUpdate;
 
 typedef ZMulti_T3<
@@ -45,12 +44,12 @@ typedef ZMulti_T3<
 	ZRef<Caller>
 	> Melange_t;
 
-typedef ZCallable<Melange_t()> MelangeFactory;
+typedef Callable<Melange_t()> MelangeFactory;
 
-typedef ZCallable<void(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)>
+typedef Callable<void(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)>
 	Callable_PullFrom;
 
-typedef ZCallable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Callable_PullSuggested;
+typedef Callable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Callable_PullSuggested;
 
 } // namespace Dataspace
 } // namespace ZooLib

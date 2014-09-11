@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 #include <CoreFoundation/CFNotificationCenter.h>
 
@@ -40,10 +40,10 @@ class ZCFNotification
 :	public ZCounted
 	{
 public:
-	typedef ZCallable<void(ZRef<ZCFNotification>, CFDictionaryRef)> Callable;
+	typedef Callable<void(ZRef<ZCFNotification>, CFDictionaryRef)> Callable_Notification;
 
-	ZCFNotification(void* iObject, const std::string& iName, ZRef<Callable> iCallable);
-	ZCFNotification(void* iObject, CFStringRef iName, ZRef<Callable> iCallable);
+	ZCFNotification(void* iObject, const std::string& iName, ZRef<Callable_Notification> iCallable);
+	ZCFNotification(void* iObject, CFStringRef iName, ZRef<Callable_Notification> iCallable);
 
 	virtual ~ZCFNotification();
 
@@ -64,7 +64,7 @@ private:
 	void* fObject;
 	ZQ<std::string> fName_String;
 	ZRef<CFStringRef> fName_CFStringRef;
-	ZRef<Callable> fCallable;
+	ZRef<Callable_Notification> fCallable;
 	};
 
 } // namespace ZooLib

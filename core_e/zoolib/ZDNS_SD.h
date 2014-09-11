@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDNS_SD_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZNet_Internet.h" // For ip_port
 #include "zoolib/ZThread.h"
@@ -58,7 +59,7 @@ protected:
 
 	ZMtxR fMtxR;
 	DNSServiceRef fDNSServiceRef;
-	ZRef<ZCallable_Void> fCallable_SocketReadable;
+	ZRef<Callable_Void> fCallable_SocketReadable;
 	};
 
 // =================================================================================================
@@ -70,28 +71,28 @@ class Registration
 public:
 	typedef const unsigned char* ConstPString;
 
-	typedef ZCallable<void(ZRef<Registration>)> Callable;
+	typedef Callable<void(ZRef<Registration>)> Callable_t;
 
-	Registration(const ZRef<Callable>& iCallable,
+	Registration(const ZRef<Callable_t>& iCallable,
 		ip_port iPort,
 		const std::string& iName, const std::string& iRegType, const std::string& iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(const ZRef<Callable>& iCallable,
+	Registration(const ZRef<Callable_t>& iCallable,
 		ip_port iPort,
 		const std::string& iName, const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(const ZRef<Callable>& iCallable,
+	Registration(const ZRef<Callable_t>& iCallable,
 		ip_port iPort,
 		const std::string& iName, const std::string& iRegType);
 
-	Registration(const ZRef<Callable>& iCallable,
+	Registration(const ZRef<Callable_t>& iCallable,
 		ip_port iPort,
 		const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
-	Registration(const ZRef<Callable>& iCallable,
+	Registration(const ZRef<Callable_t>& iCallable,
 		ip_port iPort,
 		const std::string& iRegType);
 
@@ -125,7 +126,7 @@ private:
 		const char* domain,
 		void* context);
 
-	ZRef<Callable> fCallable;
+	ZRef<Callable_t> fCallable;
 
 	ip_port fPort;
 	std::string fName;
@@ -147,9 +148,9 @@ public:
 		bool iAdd,
 		const std::string& iServiceName,
 		const std::string& iRegType,
-		const std::string& iReplyDomain)> Callable;
+		const std::string& iReplyDomain)> Callable_t;
 
-	Browse(const ZRef<Callable>& iCallable, const std::string& iRegType);
+	Browse(const ZRef<Callable_t>& iCallable, const std::string& iRegType);
 
 // From ZCounted via DNSService
 	virtual void Initialize();
@@ -165,7 +166,7 @@ private:
 		const char* replyDomain,
 		void* context);
 
-	ZRef<Callable> fCallable;
+	ZRef<Callable_t> fCallable;
 
 	std::string fRegType;
 	std::string fDomain;
@@ -184,9 +185,9 @@ public:
 		const std::string& iHostTarget,
 		uint16_t port,
 		uint16_t txtLen,
-		const unsigned char* txtRecord)> Callable;
+		const unsigned char* txtRecord)> Callable_t;
 
-	Resolve(const ZRef<Callable>& iCallable,
+	Resolve(const ZRef<Callable_t>& iCallable,
 		const std::string& iName,
 		const std::string& iRegType,
 		const std::string& iDomain);
@@ -207,7 +208,7 @@ private:
 		const unsigned char* txtRecord,
 		void* context);
 
-	ZRef<Callable> fCallable;
+	ZRef<Callable_t> fCallable;
 
 	std::string fName;
 	std::string fRegType;

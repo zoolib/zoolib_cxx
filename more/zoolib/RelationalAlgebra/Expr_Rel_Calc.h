@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Calc_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVal_Any.h"
@@ -46,7 +47,7 @@ class Expr_Rel_Calc
 public:
 	typedef RelationalAlgebra::PseudoMap PseudoMap;
 
-	typedef ZCallable<ZVal_Any(const PseudoMap&)> Callable;
+	typedef Callable<ZVal_Any(const PseudoMap&)> Callable;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 		const ColName& iColName,

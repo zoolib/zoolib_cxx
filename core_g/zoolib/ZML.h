@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZML_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrimmer.h"
@@ -52,7 +53,7 @@ enum EToken
 typedef pair<string, string> Attr_t;
 typedef vector<Attr_t> Attrs_t;
 
-typedef ZCallable<string(string)> Callable_Entity;
+typedef Callable<string(string)> Callable_Entity;
 
 // =================================================================================================
 // MARK: - ZML::StrimU

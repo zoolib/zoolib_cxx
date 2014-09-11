@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Searcher_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Callable.h"
 #include "zoolib/Util_Relops.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/ZCallable.h"
 #include "zoolib/ZExpr_Bool.h"
 
 #include "zoolib/dataspace/Types.h"
@@ -120,7 +120,7 @@ public:
 
 	virtual void CollectResults(std::vector<SearchResult>& oChanged) = 0;
 
-	typedef ZCallable<void(ZRef<Searcher>)> Callable_SearcherResultsAvailable;
+	typedef Callable<void(ZRef<Searcher>)> Callable_SearcherResultsAvailable;
 	void SetCallable_SearcherResultsAvailable(ZRef<Callable_SearcherResultsAvailable> iCallable);
 
 protected:

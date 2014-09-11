@@ -104,7 +104,7 @@ static vector<uint8> spFillVector(Registration::ConstPString* iTXT, size_t iTXTC
 	return result;
 	}
 
-Registration::Registration(const ZRef<Callable>& iCallable,
+Registration::Registration(const ZRef<Callable_t>& iCallable,
 	ip_port iPort,
 	const string& iName, const string& iRegType, const string& iDomain,
 	ConstPString* iTXT, size_t iTXTCount)
@@ -116,7 +116,7 @@ Registration::Registration(const ZRef<Callable>& iCallable,
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(const ZRef<Callable>& iCallable,
+Registration::Registration(const ZRef<Callable_t>& iCallable,
 	ip_port iPort,
 	const string& iName, const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
@@ -127,7 +127,7 @@ Registration::Registration(const ZRef<Callable>& iCallable,
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(const ZRef<Callable>& iCallable,
+Registration::Registration(const ZRef<Callable_t>& iCallable,
 	ip_port iPort,
 	const string& iName, const string& iRegType)
 :	fCallable(iCallable)
@@ -136,7 +136,7 @@ Registration::Registration(const ZRef<Callable>& iCallable,
 ,	fRegType(iRegType)
 	{}
 
-Registration::Registration(const ZRef<Callable>& iCallable,
+Registration::Registration(const ZRef<Callable_t>& iCallable,
 	ip_port iPort,
 	const string& iRegType,
 	ConstPString* iTXT, size_t iTXTCount)
@@ -146,7 +146,7 @@ Registration::Registration(const ZRef<Callable>& iCallable,
 ,	fTXT(spFillVector(iTXT, iTXTCount))
 	{}
 
-Registration::Registration(const ZRef<Callable>& iCallable,
+Registration::Registration(const ZRef<Callable_t>& iCallable,
 	ip_port iPort,
 	const string& iRegType)
 :	fCallable(iCallable)
@@ -245,7 +245,7 @@ void Registration::spCallback(
 // =================================================================================================
 // MARK: - Browse
 
-Browse::Browse(const ZRef<Callable>& iCallable, const std::string& iRegType)
+Browse::Browse(const ZRef<Callable_t>& iCallable, const std::string& iRegType)
 :	fCallable(iCallable)
 ,	fRegType(iRegType)
 	{}
@@ -287,7 +287,7 @@ void Browse::spCallback(
 	{
 	if (ZRef<Browse> theOb = static_cast<Browse*>(context))
 		{
-		if (ZRef<Callable> theCallable = theOb->fCallable)
+		if (ZRef<Callable_t> theCallable = theOb->fCallable)
 			{
 			theCallable->Call(flags & kDNSServiceFlagsMoreComing, flags & kDNSServiceFlagsAdd,
 				serviceName, regtype, replyDomain);
@@ -298,7 +298,7 @@ void Browse::spCallback(
 // =================================================================================================
 // MARK: - Resolve
 
-Resolve::Resolve(const ZRef<Callable>& iCallable,
+Resolve::Resolve(const ZRef<Callable_t>& iCallable,
 	const std::string& iName,
 	const std::string& iRegType,
 	const std::string& iDomain)
@@ -348,7 +348,7 @@ void Resolve::spCallback(
 	{
 	if (ZRef<Resolve> theOb = static_cast<Resolve*>(context))
 		{
-		if (ZRef<Callable> theCallable = theOb->fCallable)
+		if (ZRef<Callable_t> theCallable = theOb->fCallable)
 			{
 			theCallable->Call(flags & kDNSServiceFlagsMoreComing,
 				fullname, hosttarget, ntohs(port), txtLen, txtRecord);

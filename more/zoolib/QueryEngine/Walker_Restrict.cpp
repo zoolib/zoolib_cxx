@@ -199,16 +199,16 @@ struct Functor_GT
 
 struct Functor_Callable
 	{
-	typedef ZValComparator_Callable_Any::Callable Callable;
+	typedef ZValComparator_Callable_Any::Callable_t Callable_t;
 
-	Functor_Callable(ZRef<Callable> iCallable)
+	Functor_Callable(ZRef<Callable_t> iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const
 		{ return fCallable->Call(l, r); }
 
-	ZRef<Callable> fCallable;
+	ZRef<Callable_t> fCallable;
 	};
 
 struct Functor_StringContains

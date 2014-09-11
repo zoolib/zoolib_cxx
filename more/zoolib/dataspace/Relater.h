@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Relater_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 #include "zoolib/ValueOnce.h"
 
 #include "zoolib/dataspace/Types.h"
@@ -96,7 +96,7 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged) = 0;
 
-	typedef ZCallable<void(ZRef<Relater>)> Callable_RelaterResultsAvailable;
+	typedef Callable<void(ZRef<Relater>)> Callable_RelaterResultsAvailable;
 	void SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable);
 
 protected:
@@ -112,7 +112,7 @@ private:
 // =================================================================================================
 // MARK: - RelaterFactory
 
-typedef ZCallable<ZRef<Relater>()> RelaterFactory;
+typedef Callable<ZRef<Relater>()> RelaterFactory;
 
 } // namespace Dataspace
 } // namespace ZooLib

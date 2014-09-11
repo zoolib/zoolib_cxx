@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYadFilter_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
@@ -30,7 +31,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZYadFilter
 
-typedef ZCallable<ZRef<ZYadR>(const ZRef<ZYadR>&)> Callable_YadFilter;
+typedef Callable<ZRef<ZYadR>(const ZRef<ZYadR>&)> Callable_YadFilter;
 
 ZRef<ZYadR> sYadFilter(
 	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<ZYadR>& iYadR);

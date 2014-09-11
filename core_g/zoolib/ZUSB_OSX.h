@@ -37,10 +37,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOKitLib.h> // For IONotificationPortRef
 #include <IOKit/usb/IOUSBLib.h>
 
+#include "zoolib/ZCounted.h"
 #include "zoolib/Safe.h"
 
-#include "zoolib/ZCallable.h"
-#include "zoolib/ZCounted.h"
+#include "zoolib/Callable.h"
 #include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
@@ -58,7 +58,7 @@ public:
 		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
-	typedef ZCallable<void(ZRef<ZUSBDevice>)> CB_DeviceAttached;
+	typedef Callable<void(ZRef<ZUSBDevice>)> CB_DeviceAttached;
 	void SetCallable(ZRef<CB_DeviceAttached> iCallable);
 
 private:
@@ -81,7 +81,7 @@ public:
 	ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice);
 	virtual ~ZUSBDevice();
 
-	typedef ZCallable<void(ZRef<ZUSBDevice>)> CB_DeviceDetached;
+	typedef Callable<void(ZRef<ZUSBDevice>)> CB_DeviceDetached;
 	void SetCallable(ZRef<CB_DeviceDetached> iCallable);
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();

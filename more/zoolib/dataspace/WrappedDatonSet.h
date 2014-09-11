@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_WrappedDatonSet_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 #include "zoolib/ValueOnce.h"
 
 #include "zoolib/datonset/ZDatonSet.h"
@@ -39,7 +39,7 @@ class WrappedDatonSet
 	{
 public:
 	typedef ZDatonSet::DatonSet DatonSet;
-	typedef ZCallable_Void Callable_NeedsUpdate;
+	typedef Callable_Void Callable_NeedsUpdate;
 
 	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
 		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);

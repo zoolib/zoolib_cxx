@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRoster_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
 
 #include <set>
@@ -41,8 +42,8 @@ public:
 
 	ZRoster();
 
-	ZRoster(const ZRef<ZCallable_Void>& iCallable_Change,
-		const ZRef<ZCallable_Void>& iCallable_Gone);
+	ZRoster(const ZRef<Callable_Void>& iCallable_Change,
+		const ZRef<Callable_Void>& iCallable_Gone);
 
 	virtual ~ZRoster();
 
@@ -52,8 +53,8 @@ public:
 // Our protocol
 	ZRef<Entry> MakeEntry();
 
-	ZRef<Entry> MakeEntry(const ZRef<ZCallable_Void>& iCallable_Broadcast,
-		const ZRef<ZCallable_Void>& iCallable_Gone);
+	ZRef<Entry> MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
+		const ZRef<Callable_Void>& iCallable_Gone);
 	
 	void Broadcast();
 
@@ -63,13 +64,13 @@ public:
 	bool WaitUntil(ZTime iDeadline, size_t iCount);
 
 private:
-	void pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone);
+	void pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 	std::set<Entry*> fEntries;
-	const ZRef<ZCallable_Void> fCallable_Change;
-	const ZRef<ZCallable_Void> fCallable_Gone;
+	const ZRef<Callable_Void> fCallable_Change;
+	const ZRef<Callable_Void> fCallable_Gone;
 
 	friend class Entry;
 	};
@@ -84,8 +85,8 @@ class ZRoster::Entry
 private:
 	Entry(
 		const ZRef<ZRoster>& iRoster,
-		const ZRef<ZCallable_Void>& iCallable_Broadcast,
-		const ZRef<ZCallable_Void>& iCallable_Gone);
+		const ZRef<Callable_Void>& iCallable_Broadcast,
+		const ZRef<Callable_Void>& iCallable_Gone);
 
 public:
 	virtual ~Entry();
@@ -96,8 +97,8 @@ public:
 private:
 	ZWeakRef<ZRoster> fRoster;
 
-	const ZRef<ZCallable_Void> fCallable_Broadcast;
-	const ZRef<ZCallable_Void> fCallable_Gone;
+	const ZRef<Callable_Void> fCallable_Broadcast;
+	const ZRef<Callable_Void> fCallable_Gone;
 
 	friend class ZRoster;
 	};

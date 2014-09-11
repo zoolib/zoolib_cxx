@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWinWND_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZCompat_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
@@ -64,7 +65,7 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 // =================================================================================================
 // MARK: - ZWinWND, Callable <--> Regular window
 
-typedef ZCallable<ZQ<LRESULT>(HWND,UINT,WPARAM,LPARAM)> Callable;
+typedef Callable<ZQ<LRESULT>(HWND,UINT,WPARAM,LPARAM)> Callable_t;
 
 HWND sCreate(
 	DWORD dwExStyle,
@@ -77,13 +78,13 @@ HWND sCreate(
 	HWND hWndParent,
 	HMENU hMenu,
 	WNDPROC iWNDPROC,
-	ZRef<Callable> iCallable);
+	ZRef<Callable_t> iCallable);
 
-HWND sCreate(HWND iParent, ZRef<Callable> iCallable);
+HWND sCreate(HWND iParent, ZRef<Callable_t> iCallable);
 
-bool sAttach(HWND iHWND, ZRef<Callable> iCallable);
+bool sAttach(HWND iHWND, ZRef<Callable_t> iCallable);
 
-ZRef<Callable> sGetCallable(HWND iHWND);
+ZRef<Callable_t> sGetCallable(HWND iHWND);
 
 // =================================================================================================
 // MARK: - Message pump

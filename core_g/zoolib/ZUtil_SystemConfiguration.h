@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(SystemConfiguration)
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZRef_CF.h"
 #include "zoolib/ZYad.h"
 
@@ -40,7 +41,7 @@ namespace ZUtil_SystemConfiguration {
 class Store : public ZCounted
 	{
 public:
-	typedef ZCallable<void(ZRef<Store>,CFArrayRef)> Callable;
+	typedef Callable<void(ZRef<Store>,CFArrayRef)> Callable;
 
 	Store(ZRef<Callable> iCallable);
 	virtual ~Store();

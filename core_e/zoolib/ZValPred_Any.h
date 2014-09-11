@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValPred_Any_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValPred.h"
 
@@ -52,15 +53,15 @@ int sCompare_T(const ZValComparand_Const_Any& iL, const ZValComparand_Const_Any&
 class ZValComparator_Callable_Any : public ZValComparator
 	{
 public:
-	typedef ZCallable<bool(const ZVal_Any& iLHS, const ZVal_Any& iRHS)> Callable;
+	typedef Callable<bool(const ZVal_Any& iLHS, const ZVal_Any& iRHS)> Callable_t;
 
-	ZValComparator_Callable_Any(ZRef<Callable> iCallable);
+	ZValComparator_Callable_Any(ZRef<Callable_t> iCallable);
 
 // Our protocol
-	const ZRef<Callable>& GetCallable() const;
+	const ZRef<Callable_t>& GetCallable() const;
 
 private:
-	ZRef<Callable> fCallable;
+	ZRef<Callable_t> fCallable;
 	};
 
 template <>

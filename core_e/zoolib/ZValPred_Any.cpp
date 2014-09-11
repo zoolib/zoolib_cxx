@@ -44,11 +44,11 @@ ZMACRO_CompareRegistration_T(ZValComparand_Const_Any)
 // =================================================================================================
 // MARK: - ZValComparator_Callable_Any
 
-ZValComparator_Callable_Any::ZValComparator_Callable_Any(ZRef<Callable> iCallable)
+ZValComparator_Callable_Any::ZValComparator_Callable_Any(ZRef<Callable_t> iCallable)
 :	fCallable(iCallable)
 	{}
 
-const ZRef<ZValComparator_Callable_Any::Callable>& ZValComparator_Callable_Any::GetCallable() const
+const ZRef<ZValComparator_Callable_Any::Callable_t>& ZValComparator_Callable_Any::GetCallable() const
 	{ return fCallable; }
 
 template <>
