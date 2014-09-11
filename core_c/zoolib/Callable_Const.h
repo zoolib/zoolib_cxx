@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Const_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
 
@@ -31,14 +31,14 @@ namespace ZooLib {
 
 template <class R>
 class Callable_Const
-:	public ZCallable<R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	Callable_Const(typename CallableUtil::VT<R>::Param iR)
 	:	fR(iR)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{ return fR; }
 
@@ -50,7 +50,7 @@ private:
 // MARK: - sCallable_Const
 
 template <class R>
-ZRef<ZCallable<R(void)> > sCallable_Const(R iR)
+ZRef<Callable<R(void)> > sCallable_Const(R iR)
 	{ return new Callable_Const<R>(iR); }
 
 } // namespace ZooLib

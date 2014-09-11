@@ -188,15 +188,15 @@ template <class T> struct VT<T&>
 } // namespace CallableUtil
 
 // =================================================================================================
-// MARK: - ZCallable
+// MARK: - Callable
 
-template <class Signature> class ZCallable;
+template <class Signature_p> class Callable;
 
 // =================================================================================================
-// MARK: - ZCallable (specialization for 0 params)
+// MARK: - Callable (specialization for 0 params)
 
 template <class R_p>
-class ZCallable<R_p(void)>
+class Callable<R_p(void)>
 :	public ZCounted
 	{
 public:
@@ -213,10 +213,10 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZCallable (specialization for 0 params, void return)
+// MARK: - Callable (specialization for 0 params, void return)
 
 template <>
-class ZCallable<void(void)>
+class Callable<void(void)>
 :	public ZCounted
 	{
 public:
@@ -230,12 +230,12 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZCallable variants
+// MARK: - Callable variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class R_p, ZMACRO_Callable_Class_P##X> \
-class ZCallable<R_p(ZMACRO_Callable_P##X)> \
+class Callable<R_p(ZMACRO_Callable_P##X)> \
 :	public ZCounted \
 	{ \
 public: \
@@ -253,7 +253,7 @@ public: \
 	}; \
 \
 template <ZMACRO_Callable_Class_P##X> \
-class ZCallable<void(ZMACRO_Callable_P##X)> \
+class Callable<void(ZMACRO_Callable_P##X)> \
 :	public ZCounted \
 	{ \
 public: \
@@ -375,47 +375,57 @@ ZMACRO_Callable_Call(F)
 // =================================================================================================
 // MARK: - sCallable
 
-template <class Signature>
-const ZRef<ZCallable<Signature> >& sCallable(const ZRef<ZCallable<Signature> >& iCallable)
+template <class Signature_p>
+const ZRef<Callable<Signature_p> >& sCallable(const ZRef<Callable<Signature_p> >& iCallable)
 	{ return iCallable; }
 
 template <class ZRef_p>
-const ZRef<ZCallable<typename ZRef_p::Type_t::Signature> >& sCallable(const ZRef_p& iCandidate)
-	{ return (const ZRef<ZCallable<typename ZRef_p::Type_t::Signature> >&)(iCandidate); }
+const ZRef<Callable<typename ZRef_p::Type_t::Signature> >& sCallable(const ZRef_p& iCandidate)
+	{ return (const ZRef<Callable<typename ZRef_p::Type_t::Signature> >&)(iCandidate); }
 
 template <class Callable_p>
-ZRef<ZCallable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
-	{ return ZRef<ZCallable<typename Callable_p::Signature> >(iCandidate); }
+ZRef<Callable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
+	{ return ZRef<Callable<typename Callable_p::Signature> >(iCandidate); }
 
 // =================================================================================================
 // MARK: - sCallVoid
 
 template <class T>
-void sCallVoid(ZRef<ZCallable<T(void)> > iCallable)
+void sCallVoid(ZRef<Callable<T(void)> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
 // MARK: - Useful typedefs
 
-typedef ZCallable<void(void)> ZCallable_Void;
-typedef ZRef<ZCallable_Void> ZRef_ZCallable_Void;
+typedef Callable<void(void)> Callable_Void;
 
-typedef ZCallable<bool(void)> Callable_Bool;
+typedef Callable<bool(void)> Callable_Bool;
 
 // =================================================================================================
 // MARK: - Callable_Null
 
 class Callable_Null
-:	public ZCallable_Void
+:	public Callable_Void
 	{
 public:
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall()
 		{
 		// Ironically we return notnull.
 		return notnull;
 		}
 	};
+
+// =================================================================================================
+// MARK: - Old names
+
+typedef Callable_Void ZCallable_Void;
+typedef ZRef<Callable_Void> ZRef_ZCallable_Void;
+
+#if ZCONFIG_CPP >= 2011
+	template <class Signature_p>
+	using ZCallable = Callable<Signature_p>;
+#endif
 
 } // namespace ZooLib
 

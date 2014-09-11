@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Safe.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
 
@@ -38,16 +38,16 @@ template <class Signature> class Callable_Indirect;
 
 template <class R>
 class Callable_Indirect<R(void)>
-:	public ZCallable<R(void)>
+:	public Callable<R(void)>
 	{
 public:
-	typedef ZCallable<R(void)> Callable;
+	typedef Callable<R(void)> Callable;
 
 	Callable_Indirect(const ZRef<Callable>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{ return sQCall(fCallable.Get()); }
 
@@ -72,10 +72,10 @@ private:
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 class Callable_Indirect<R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
-	typedef ZCallable<R(ZMACRO_Callable_P##X)> Callable; \
+	typedef Callable<R(ZMACRO_Callable_P##X)> Callable; \
 \
 	Callable_Indirect(const ZRef<Callable>& iCallable) \
 	:	fCallable(iCallable) \
@@ -120,7 +120,7 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable_Indirect
 
 template <class Sig>
-ZRef<Callable_Indirect<Sig> > sCallable_Indirect(const ZRef<ZCallable<Sig> >& iCallable)
+ZRef<Callable_Indirect<Sig> > sCallable_Indirect(const ZRef<Callable<Sig> >& iCallable)
 	{ return new Callable_Indirect<Sig>(iCallable); }
 
 template <class Sig>

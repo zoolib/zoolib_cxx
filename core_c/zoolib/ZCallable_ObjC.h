@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_ObjC_h__
-#define __ZCallable_ObjC_h__ 1
+#ifndef __ZooLib_Callable_ObjC_h__
+#define __ZooLib_Callable_ObjC_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 #ifdef __OBJC__
 
@@ -35,14 +35,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-namespace ZCallable_ObjC {
+
+// =================================================================================================
+// MARK: - Callable_ObjC_Util
+
+namespace Callable_ObjC_Util {
 
 #if defined(__arm__)
 	using namespace std::tr1;
 #endif
-
-// =================================================================================================
-// MARK: - Helpers
 
 enum
 	{
@@ -95,6 +96,8 @@ template <> struct Selector<void> { enum { value = eUse_normal }; };
 
 // -----------------
 
+// MsgSend templated structure, to give us partially-templated functions.
+
 template <class R, class FunctionPtr_t, int selector = Selector<R>::value>
 struct MsgSend;
 
@@ -112,30 +115,29 @@ struct MsgSend<R, FunctionPtr_t, eUse_fpret>
 	{ static FunctionPtr_t sMsgSend() { return (FunctionPtr_t)objc_msgSend_fpret; } };
 #endif // defined(__i386__) || defined(__x86_64__)
 
-// =================================================================================================
-// MARK: - Base
+} // namespace Callable_ObjC_Util
 
 // =================================================================================================
-// MARK: - Callable
+// MARK: - Callable_ObjC
 
-template <class Obj, class Signature> class Callable;
+template <class Obj, class Signature> class Callable_ObjC;
 
 // =================================================================================================
 // MARK: - Callable (specialization for 0 params)
 
 template <class Obj,
 	class R>
-class Callable<Obj,R(void)>
-:	public ZCallable<R(void)>
+class Callable_ObjC<Obj,R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	typedef R (*FunctionPtr_t)(id,SEL);
 
-	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
-		{ return MsgSend<R, FunctionPtr_t>::sMsgSend()(fObj, fSEL); }
+		{ return Callable_ObjC_Util::MsgSend<R, FunctionPtr_t>::sMsgSend()(fObj, fSEL); }
 
 private:
 	Obj fObj;
@@ -146,18 +148,18 @@ private:
 // MARK: - Callable (specialization for 0 params, void return)
 
 template <class Obj>
-class Callable<Obj,void(void)>
-:	public ZCallable<void(void)>
+class Callable_ObjC<Obj,void(void)>
+:	public Callable<void(void)>
 	{
 public:
 	typedef void (*FunctionPtr_t)(id,SEL);
 
-	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
+	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall()
 		{
-		MsgSend<void, FunctionPtr_t>::sMsgSend()(fObj, fSEL);
+		Callable_ObjC_Util::MsgSend<void, FunctionPtr_t>::sMsgSend()(fObj, fSEL);
 		return notnull;
 		}
 
@@ -172,16 +174,16 @@ private:
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class Obj, class R, ZMACRO_Callable_Class_P##X> \
-class Callable<Obj,R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+class Callable_ObjC<Obj,R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (*FunctionPtr_t)(id,SEL,ZMACRO_Callable_P##X); \
 \
-	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}\
+	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}\
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
-		{ return MsgSend<R, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); } \
+		{ return Callable_ObjC_Util::MsgSend<R, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); } \
 \
 private: \
 	Obj fObj; \
@@ -189,17 +191,17 @@ private: \
 	}; \
 \
 template <class Obj, ZMACRO_Callable_Class_P##X> \
-class Callable<Obj,void(ZMACRO_Callable_P##X)> \
-:	public ZCallable<void(ZMACRO_Callable_P##X)> \
+class Callable_ObjC<Obj,void(ZMACRO_Callable_P##X)> \
+:	public Callable<void(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef void (*FunctionPtr_t)(id,SEL,ZMACRO_Callable_P##X); \
 \
-	Callable(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {} \
+	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {} \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		MsgSend<void, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); \
+		Callable_ObjC_Util::MsgSend<void, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); \
 		return notnull; \
 		} \
 \
@@ -227,30 +229,28 @@ ZMACRO_Callable_Callable(F)
 
 #undef ZMACRO_Callable_Callable
 
-} // namespace ZCallable_ObjC
-
 // =================================================================================================
 // MARK: - sCallable
 
 template <class Signature>
-ZRef<ZCallable<Signature> >
+ZRef<Callable<Signature> >
 sCallable(id iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)
-		return new ZCallable_ObjC::Callable<id,Signature>(iObj, iSEL);
+		return new Callable_ObjC<id,Signature>(iObj, iSEL);
 	return null;
 	}
 
 template <class Signature,class T>
-ZRef<ZCallable<Signature> >
+ZRef<Callable<Signature> >
 sCallable(const ZRef<T>& iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)
-		return new ZCallable_ObjC::Callable<ZRef<NSObject>,Signature>(iObj, iSEL);
+		return new Callable_ObjC<ZRef<NSObject>,Signature>(iObj, iSEL);
 	return null;
 	}
 
 } // namespace ZooLib
 
 #endif // __OBJC__
-#endif // __ZCallable_ObjC_h__
+#endif // __ZooLib_Callable_ObjC_h__

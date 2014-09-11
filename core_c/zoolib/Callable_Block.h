@@ -22,36 +22,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Block_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 #if defined(__BLOCKS__)
 
 #include <Block.h>
 
 namespace ZooLib {
-namespace Callable_Block {
 
 // =================================================================================================
 // MARK: - Callable
 
-template <class Signature> class Callable;
+template <class Signature> class Callable_Block;
 
 // =================================================================================================
 // MARK: - Callable (specialization for 0 params, void return)
 // This is the only variant usable before Clang 2.0.
 
 template <>
-class Callable<void(void)>
-:	public ZCallable<void(void)>
+class Callable_Block<void(void)>
+:	public Callable<void(void)>
 	{
 public:
 	typedef void (^BlockPtr_t)();
 
-	Callable(BlockPtr_t iBlockPtr)
+	Callable_Block(BlockPtr_t iBlockPtr)
 	:	fBlockPtr(Block_copy(iBlockPtr))
 		{}
 
-	virtual ~Callable()
+	virtual ~Callable_Block()
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
@@ -71,17 +70,17 @@ private:
 // MARK: - Callable (specialization for 0 params)
 
 template <class R>
-class Callable<R(void)>
-:	public ZCallable<R(void)>
+class Callable_Block<R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	typedef R (^BlockPtr_t)();
 
-	Callable(BlockPtr_t iBlockPtr)
+	Callable_Block(BlockPtr_t iBlockPtr)
 	:	fBlockPtr(Block_copy(iBlockPtr))
 		{}
 
-	virtual ~Callable()
+	virtual ~Callable_Block()
 		{ Block_release(fBlockPtr); }
 
 // From ZCallable
@@ -98,17 +97,17 @@ private:
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-class Callable<R(ZMACRO_Callable_P##X)> \
+class Callable_Block<R(ZMACRO_Callable_P##X)> \
 :	public ZCallable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (^BlockPtr_t)(ZMACRO_Callable_P##X); \
 \
-	Callable(BlockPtr_t iBlockPtr) \
+	Callable_Block(BlockPtr_t iBlockPtr) \
 	:	fBlockPtr(Block_copy(iBlockPtr)) \
 		{} \
 \
-	virtual ~Callable() \
+	virtual ~Callable_Block() \
 		{ Block_release(fBlockPtr); } \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
@@ -145,7 +144,7 @@ ZRef<ZCallable<R(void)> >
 sCallable(R(^iBlockPtr)())
 	{
 	if (iBlockPtr)
-		return new Callable<R(void)>(iBlockPtr);
+		return new Callable_Block<R(void)>(iBlockPtr);
 	return null;
 	}
 
@@ -156,7 +155,7 @@ ZRef<ZCallable<R(ZMACRO_Callable_P##X)> > \
 sCallable(R(^iBlockPtr)(ZMACRO_Callable_P##X)) \
 	{ \
 	if (iBlockPtr) \
-		return new Callable<R(ZMACRO_Callable_P##X)>(iBlockPtr); \
+		return new Callable_Block<R(ZMACRO_Callable_P##X)>(iBlockPtr); \
 	return null; \
 	}
 
@@ -180,13 +179,6 @@ ZMACRO_Callable_sCallable(F)
 #undef ZMACRO_Callable_sCallable
 
 #endif // defined(__clang_major__) && __clang_major__ >= 2
-
-} // namespace Callable_Block
-
-// =================================================================================================
-// MARK: - sCallable
-
-using Callable_Block::sCallable;
 
 } // namespace ZooLib
 

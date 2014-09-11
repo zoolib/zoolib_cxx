@@ -18,35 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_Function_h__
-#define __ZCallable_Function_h__ 1
+#ifndef __ZooLib_Callable_Function_h__
+#define __ZooLib_Callable_Function_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
-namespace ZCallable_Function {
 
 // =================================================================================================
 // MARK: - Callable
 
-template <class Signature> class Callable;
+template <class Signature> class Callable_Function;
 
 // =================================================================================================
 // MARK: - Callable (specialization for 0 params)
 
 template <class R>
-class Callable<R(void)>
-:	public ZCallable<R(void)>
+class Callable_Function<R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	typedef R (*FunctionPtr_t)();
 
-	Callable(FunctionPtr_t iFunctionPtr)
+	Callable_Function(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{ return fFunctionPtr(); }
 
@@ -58,17 +57,17 @@ private:
 // MARK: - Callable (specialization for 0 params, void return)
 
 template <>
-class Callable<void(void)>
-:	public ZCallable<void(void)>
+class Callable_Function<void(void)>
+:	public Callable<void(void)>
 	{
 public:
 	typedef void (*FunctionPtr_t)();
 
-	Callable(FunctionPtr_t iFunctionPtr)
+	Callable_Function(FunctionPtr_t iFunctionPtr)
 	:	fFunctionPtr(iFunctionPtr)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall()
 		{
 		fFunctionPtr();
@@ -85,13 +84,13 @@ private:
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-class Callable<R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+class Callable_Function<R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (*FunctionPtr_t)(ZMACRO_Callable_P##X); \
 \
-	Callable(FunctionPtr_t iFunctionPtr) \
+	Callable_Function(FunctionPtr_t iFunctionPtr) \
 	:	fFunctionPtr(iFunctionPtr) \
 		{} \
 \
@@ -103,13 +102,13 @@ private: \
 	}; \
 \
 template <ZMACRO_Callable_Class_P##X> \
-class Callable<void(ZMACRO_Callable_P##X)> \
-:	public ZCallable<void(ZMACRO_Callable_P##X)> \
+class Callable_Function<void(ZMACRO_Callable_P##X)> \
+:	public Callable<void(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef void (*FunctionPtr_t)(ZMACRO_Callable_P##X); \
 \
-	Callable(FunctionPtr_t iFunctionPtr) \
+	Callable_Function(FunctionPtr_t iFunctionPtr) \
 	:	fFunctionPtr(iFunctionPtr) \
 		{} \
 \
@@ -146,23 +145,23 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable
 
 template <class R>
-ZRef<ZCallable<R(void)> >
+ZRef<Callable<R(void)> >
 sCallable(R (*iFunctionPtr)())
 	{
 	if (not iFunctionPtr)
 		return null;
-	return new Callable<R(void)>(iFunctionPtr);
+	return new Callable_Function<R(void)>(iFunctionPtr);
 	}
 
 #define ZMACRO_Callable_sCallable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-ZRef<ZCallable<R(ZMACRO_Callable_P##X)> > \
+ZRef<Callable<R(ZMACRO_Callable_P##X)> > \
 sCallable(R (*iFunctionPtr)(ZMACRO_Callable_P##X)) \
 	{ \
 	if (not iFunctionPtr) \
 		return null; \
-	return new Callable<R(ZMACRO_Callable_P##X)>(iFunctionPtr); \
+	return new Callable_Function<R(ZMACRO_Callable_P##X)>(iFunctionPtr); \
 	}
 
 ZMACRO_Callable_sCallable(0)
@@ -184,13 +183,6 @@ ZMACRO_Callable_sCallable(F)
 
 #undef ZMACRO_Callable_sCallable
 
-} // namespace ZCallable_Function
-
-// =================================================================================================
-// MARK: - sCallable
-
-using ZCallable_Function::sCallable;
-
 } // namespace ZooLib
 
-#endif // __ZCallable_Function_h__
+#endif // __ZooLib_Callable_Function_h__

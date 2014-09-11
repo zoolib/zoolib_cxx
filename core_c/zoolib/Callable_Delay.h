@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Delay_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -32,15 +33,15 @@ namespace ZooLib {
 
 template <class R>
 class Callable_DelayFor
-:	public ZCallable<R(void)>
+:	public Callable<R(void)>
 	{
 public:
-	Callable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
+	Callable_DelayFor(double iInterval, const ZRef<Callable<R(void)> >& iCallable)
 	:	fInterval(iInterval)
 	,	fCallable(iCallable)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{
 		const ZTime systemTime = ZTime::sSystem() + fInterval;
@@ -55,12 +56,12 @@ public:
 
 private:
 	const double fInterval;
-	const ZRef<ZCallable<R(void)> > fCallable;
+	const ZRef<Callable<R(void)> > fCallable;
 	};
 
 template <class R>
-ZRef<ZCallable<R(void)> >
-sCallable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
+ZRef<Callable<R(void)> >
+sCallable_DelayFor(double iInterval, const ZRef<Callable<R(void)> >& iCallable)
 	{ return new Callable_DelayFor<R>(iInterval, iCallable); }
 
 // =================================================================================================
@@ -68,15 +69,15 @@ sCallable_DelayFor(double iInterval, const ZRef<ZCallable<R(void)> >& iCallable)
 
 template <class R>
 class Callable_DelayUntil
-:	public ZCallable<R(void)>
+:	public Callable<R(void)>
 	{
 public:
-	Callable_DelayUntil(ZTime iSystemTime, const ZRef<ZCallable<R(void)> >& iCallable)
+	Callable_DelayUntil(ZTime iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
 	:	fSystemTime(iSystemTime)
 	,	fCallable(iCallable)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{
 		for (;;)
@@ -90,12 +91,12 @@ public:
 
 private:
 	const ZTime fSystemTime;
-	const ZRef<ZCallable<R(void)> > fCallable;
+	const ZRef<Callable<R(void)> > fCallable;
 	};
 
 template <class R>
-ZRef<ZCallable<R(void)> >
-sCallable_DelayUntil(ZTime iSystemTime, const ZRef<ZCallable<R(void)> >& iCallable)
+ZRef<Callable<R(void)> >
+sCallable_DelayUntil(ZTime iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
 	{ return new Callable_DelayUntil<R>(iSystemTime, iCallable); }
 
 } // namespace ZooLib

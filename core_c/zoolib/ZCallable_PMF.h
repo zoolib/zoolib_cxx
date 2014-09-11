@@ -18,17 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCallable_PMF_h__
-#define __ZCallable_PMF_h__ 1
+#ifndef __ZooLib_Callable_PMF_h__
+#define __ZooLib_Callable_PMF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
-namespace ZCallable_PMF {
 
 // =================================================================================================
-// MARK: - Traits
+// MARK: - Callable_PMF_Util::Traits
+
+namespace Callable_PMF_Util {
 
 template <class T> struct Traits
 	{};
@@ -54,31 +55,33 @@ template <class T> struct Traits<ZWeakRef<T> >
 	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
 	};
 
+} // namespace Callable_PMF_Util
+
 // =================================================================================================
 // MARK: - Callable
 
-template <class Class_p, class Object_p, class Signature> class Callable;
+template <class Class_p, class Object_p, class Signature> class Callable_PMF;
 
 // =================================================================================================
 // MARK: - Callable (specialization for 0 params)
 
 template <class Class_p, class Object_p, class R>
-class Callable<Class_p,Object_p,R(void)>
-:	public ZCallable<R(void)>
+class Callable_PMF<Class_p,Object_p,R(void)>
+:	public Callable<R(void)>
 	{
 public:
 	typedef R (Class_p::*Method_t)();
 
-	Callable(const Object_p& iObject, Method_t iMethod)
+	Callable_PMF(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{
-		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
-			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)();
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
+			return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
 		return null;
 		}
 
@@ -91,23 +94,23 @@ private:
 // MARK: - Callable (specialization for 0 params, void return)
 
 template <class Class_p, class Object_p>
-class Callable<Class_p,Object_p,void(void)>
-:	public ZCallable<void(void)>
+class Callable_PMF<Class_p,Object_p,void(void)>
+:	public Callable<void(void)>
 	{
 public:
 	typedef void (Class_p::*Method_t)();
 
-	Callable(const Object_p& iObject, Method_t iMethod)
+	Callable_PMF(const Object_p& iObject, Method_t iMethod)
 	:	fObject(iObject)
 	,	fMethod(iMethod)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall()
 		{
-		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject))
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
 			{
-			(Traits<Object_p>::sGetPtr(temp)->*fMethod)();
+			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
 			return notnull;
 			}
 		return null;
@@ -124,21 +127,21 @@ private:
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class Class_p, class Object_p, class R, ZMACRO_Callable_Class_P##X> \
-class Callable<Class_p,Object_p,R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+class Callable_PMF<Class_p,Object_p,R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (Class_p::*Method_t)(ZMACRO_Callable_P##X); \
 \
-	Callable(const Object_p& iObject, Method_t iMethod) \
+	Callable_PMF(const Object_p& iObject, Method_t iMethod) \
 	:	fObject(iObject) \
 	,	fMethod(iMethod) \
 		{} \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject)) \
-			return (Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
+			return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
 		return null; \
 		} \
 \
@@ -148,22 +151,22 @@ private: \
 	}; \
 \
 template <class Class_p, class Object_p, ZMACRO_Callable_Class_P##X> \
-class Callable<Class_p,Object_p,void(ZMACRO_Callable_P##X)> \
-:	public ZCallable<void(ZMACRO_Callable_P##X)> \
+class Callable_PMF<Class_p,Object_p,void(ZMACRO_Callable_P##X)> \
+:	public Callable<void(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef void (Class_p::*Method_t)(ZMACRO_Callable_P##X); \
 \
-	Callable(const Object_p& iObject, Method_t iMethod) \
+	Callable_PMF(const Object_p& iObject, Method_t iMethod) \
 	:	fObject(iObject) \
 	,	fMethod(iMethod) \
 		{} \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		if (typename Traits<Object_p>::Temp_t temp = Traits<Object_p>::sGetTemp(fObject)) \
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
 			{ \
-			(Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
+			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
 			return notnull; \
 			} \
 		return null; \
@@ -197,20 +200,20 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable
 
 template <class Class_p, class Object_p, class R>
-ZRef<ZCallable<R(void)> >
+ZRef<Callable<R(void)> >
 sCallable(
 	const Object_p& iObject,
 	R (Class_p::*iMethod)())
-	{ return new Callable<Class_p,Object_p,R(void)>(iObject, iMethod); }
+	{ return new Callable_PMF<Class_p,Object_p,R(void)>(iObject, iMethod); }
 
 #define ZMACRO_Callable_sCallable(X) \
 \
 template <class Class_p, class Object_p, class R, ZMACRO_Callable_Class_P##X> \
-ZRef<ZCallable<R(ZMACRO_Callable_P##X)> > \
+ZRef<Callable<R(ZMACRO_Callable_P##X)> > \
 sCallable( \
 	const Object_p& iObject, \
 	R (Class_p::*iMethod)(ZMACRO_Callable_P##X)) \
-	{ return new Callable<Class_p,Object_p,R(ZMACRO_Callable_P##X)>(iObject, iMethod); }
+	{ return new Callable_PMF<Class_p,Object_p,R(ZMACRO_Callable_P##X)>(iObject, iMethod); }
 
 ZMACRO_Callable_sCallable(0)
 ZMACRO_Callable_sCallable(1)
@@ -231,13 +234,6 @@ ZMACRO_Callable_sCallable(F)
 
 #undef ZMACRO_Callable_sCallable
 
-} // namespace ZCallable_PMF
-
-// =================================================================================================
-// MARK: - sCallable
-
-using ZCallable_PMF::sCallable;
-
 } // namespace ZooLib
 
-#endif // __ZCallable_PMF_h__
+#endif // __ZooLib_Callable_PMF_h__

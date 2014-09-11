@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Set_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Callable.h"
 #include "zoolib/SafeSet.h"
-
-#include "zoolib/ZCallable.h"
 
 namespace ZooLib {
 
@@ -38,13 +37,13 @@ template <class Signature> class Callable_Set;
 
 template <>
 class Callable_Set<void(void)>
-:	public ZCallable<void(void)>
-,	public SafeSet<ZRef<ZCallable<void(void)> > >
+:	public Callable<void(void)>
+,	public SafeSet<ZRef<Callable<void(void)> > >
 	{
 public:
-	typedef ZCallable<void(void)> Callable;
+	typedef Callable<void(void)> Callable;
 
-// From ZCallable
+// From Callable
 	ZQ<void> QCall()
 		{
 		for (SafeSetIterConst<ZRef<Callable> > iter = *this; /*no test*/; /*no inc*/)
@@ -68,11 +67,11 @@ public:
 \
 template <ZMACRO_Callable_Class_P##X> \
 class Callable_Set<void(ZMACRO_Callable_P##X)> \
-:	public ZCallable<void(ZMACRO_Callable_P##X)> \
-,	public SafeSet<ZRef<ZCallable<void(ZMACRO_Callable_P##X)> > > \
+:	public Callable<void(ZMACRO_Callable_P##X)> \
+,	public SafeSet<ZRef<Callable<void(ZMACRO_Callable_P##X)> > > \
 	{ \
 public: \
-	typedef ZCallable<void(ZMACRO_Callable_P##X)> Callable; \
+	typedef Callable<void(ZMACRO_Callable_P##X)> Callable; \
 \
 	ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \

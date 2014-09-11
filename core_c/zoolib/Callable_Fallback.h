@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Fallback_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
 
@@ -36,17 +36,17 @@ template <class Signature> class Callable_Fallback;
 
 template <class R>
 class Callable_Fallback<R(void)>
-:	public ZCallable<R(void)>
+:	public Callable<R(void)>
 	{
 public:
-	typedef ZCallable<R(void)> Callable;
+	typedef Callable<R(void)> Callable;
 
 	Callable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R> QCall()
 		{
 		if (const ZQ<R>& theQ = fCallable0->QCall())
@@ -66,10 +66,10 @@ private:
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 class Callable_Fallback<R(ZMACRO_Callable_P##X)> \
-:	public ZCallable<R(ZMACRO_Callable_P##X)> \
+:	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
-	typedef ZCallable<R(ZMACRO_Callable_P##X)> Callable; \
+	typedef Callable<R(ZMACRO_Callable_P##X)> Callable; \
 \
 	Callable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1) \
 	:	fCallable0(iCallable0) \
@@ -111,8 +111,8 @@ ZMACRO_Callable_Callable(F)
 // MARK: - sCallable_Fallback
 
 template <class Sig>
-ZRef<ZCallable<Sig> > sCallable_Fallback(
-	const ZRef<ZCallable<Sig> >& iCallable0, const ZRef<ZCallable<Sig> >& iCallable1)
+ZRef<Callable<Sig> > sCallable_Fallback(
+	const ZRef<Callable<Sig> >& iCallable0, const ZRef<Callable<Sig> >& iCallable1)
 	{
 	if (iCallable0)
 		{

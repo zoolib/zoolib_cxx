@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Lambda_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
 
 #include "zoolib/ZCompat_type_traits.h" // for std::remove_reference
 
@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // MARK: - Callable_Lambda
 
 namespace ZooLib {
-namespace Callable_Lambda {
+namespace Callable_Lambda_Util {
 
 // =================================================================================================
 // MARK: - RemoveClass_T
@@ -77,21 +77,23 @@ struct GetSigImpl_T<T, true>
 
 template<typename T> using GetSig_T = typename GetSigImpl_T<T,true>::type;
 
+} // namespace Callable_Lambda_Util
+
 // =================================================================================================
 // MARK: - Callable
 
-template <class Lambda, class Sig> class Callable;
+template <class Lambda, class Sig> class Callable_Lambda;
 
 template <typename Lambda_p, typename R_p, typename... A_p>
-class Callable<Lambda_p,R_p(A_p...)>
-:	public ZCallable<R_p(A_p...)>
+class Callable_Lambda<Lambda_p,R_p(A_p...)>
+:	public Callable<R_p(A_p...)>
 	{
 public:
-	Callable(const Lambda_p& iLambda)
+	Callable_Lambda(const Lambda_p& iLambda)
 	:	fLambda(iLambda)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<R_p> QCall(A_p... iParams)
 		{ return fLambda(iParams...); }
 
@@ -100,15 +102,15 @@ private:
 	};
 
 template <typename Lambda_p, typename... A_p>
-class Callable<Lambda_p,void(A_p...)>
-:	public ZCallable<void(A_p...)>
+class Callable_Lambda<Lambda_p,void(A_p...)>
+:	public Callable<void(A_p...)>
 	{
 public:
-	Callable(const Lambda_p& iLambda)
+	Callable_Lambda(const Lambda_p& iLambda)
 	:	fLambda(iLambda)
 		{}
 
-// From ZCallable
+// From Callable
 	virtual ZQ<void> QCall(A_p... iParams)
 		{
 		fLambda(iParams...);
@@ -120,23 +122,16 @@ private:
 	};
 
 template <typename Lambda_p>
-ZRef<ZCallable
-	<typename RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type>
+ZRef<Callable
+	<typename Callable_Lambda_Util::RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type>
 	>
 sCallable(const Lambda_p& iLambda)
 	{
-	typedef typename RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type
+	typedef typename Callable_Lambda_Util::RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type
 		Signature;
 
 	return new Callable<Lambda_p,Signature>(iLambda);
 	}
-
-} // namespace Callable_Lambda
-
-// =================================================================================================
-// MARK: - sCallable
-
-using Callable_Lambda::sCallable;
 
 } // namespace ZooLib
 
