@@ -58,7 +58,7 @@ public:
 	void Set(const string& iName, int iValue);
 	void Set(const string& iName, uint64 iValue);
 
-	void Send(const ZStreamW& iStreamW) const;
+	void Send(const ChanW_Bin& iChanW) const;
 
 private:
 	bool fIsVersion11;
@@ -216,10 +216,10 @@ bool sIs_qdtext(char iChar);
 // =================================================================================================
 // MARK: - Writing
 
-void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody);
-void sWrite_Header(const ZStreamW& w, const Map& iHeader);
-void sWrite_MinimalResponse(const ZStreamW& w, int iResult);
-void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError);
+void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW);
+void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW);
+void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW);
+void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW);
 
 // =================================================================================================
 // MARK: - StreamR_Chunked
@@ -247,7 +247,7 @@ private:
 class StreamW_Chunked : public ZStreamW
 	{
 public:
-	StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink);
+	StreamW_Chunked(size_t iBufferSize, const ChanW_Bin& iStreamSink);
 	StreamW_Chunked(const ZStreamW& iStreamSink);
 	~StreamW_Chunked();
 
@@ -258,7 +258,7 @@ public:
 private:
 	void pFlush();
 
-	const ZStreamW& fStreamSink;
+	const ChanW_Bin& fStreamSink;
 	std::vector<uint8> fBuffer;
 	size_t fBufferUsed;
 	};

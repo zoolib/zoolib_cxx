@@ -108,7 +108,7 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	w << iMethod << " " << iPath << " HTTP/1.1\r\n" << "Host: " << iHost << "\r\n";
 
 	if (iHeader)
-		sWrite_Header(w, *iHeader);
+		sWrite_Header(*iHeader, w);
 
 	if (iSendConnectionClose)
 		w << "Connection: close\r\n";
@@ -138,6 +138,9 @@ ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 
 	for (;;)
 		{
+		if (oURL)
+			*oURL = theURL;
+
 		if (oRawHeader)
 			oRawHeader->SetSize(0);
 
@@ -187,8 +190,6 @@ ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 				case 303:
 					{
 					theURL = sGetString0(theResponseHeader.Get("location"));
-					if (oURL)
-						*oURL = theURL;
 					break;
 					}
 				default:
@@ -212,7 +213,7 @@ static void spPOST_Prefix(const ZStreamW& w,
 	if (iSendConnectionClose)
 		w << "Connection: close\r\n";
 	if (iHeader)
-		sWrite_Header(w, *iHeader);
+		sWrite_Header(*iHeader, w);
 	}
 
 ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
@@ -234,7 +235,7 @@ ZRef<ZStreamerR> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
 				const uint64 theLength = bodyRPos->GetSize() - bodyRPos->GetPosition();
-				w.Writef("Content-Length: %lld\r\n", theLength);
+				sWritef(w, "Content-Length: %lld\r\n", theLength);
 				w << "\r\n";
 
 				w.CopyFrom(*bodyRPos, theLength);
@@ -316,7 +317,7 @@ bool sCONNECT(const ZStreamR& r, const ZStreamW& w,
 	w << "CONNECT " << iAddress << " HTTP/1.0\r\n";
 
 	if (iHeader)
-		sWrite_Header(w, *iHeader);
+		sWrite_Header(*iHeader, w);
 
 	w << "\r\n";
 

@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_Bin_More.h"
+
 #include "zoolib/ZHTTP.h"
 
 #include "zoolib/ZCompat_algorithm.h"
@@ -167,27 +169,28 @@ void Response::Set(const string& iName, uint64 iValue)
 	fHeaders.push_back(pair<string, string>(iName, sStringf("%lld", iValue)));
 	}
 
-void Response::Send(const ZStreamW& s) const
+void Response::Send(const ChanW_Bin& iChanW) const
 	{
 	ZAssert(fResult >= 100 && fResult <= 999);
 	if (fIsVersion11)
-		s.WriteString("HTTP/1.1 ");
+		sWrite("HTTP/1.1 ", iChanW);
 	else
-		s.WriteString("HTTP/1.0 ");
-	s.Writef("%d", fResult);
+		sWrite("HTTP/1.0 ", iChanW);
+
+	sWritef(iChanW, "%d", fResult);
 	if (not fMessage.empty())
 		{
-		s.WriteString(" ");
-		s.WriteString(fMessage);
+		sWrite(" ", iChanW);
+		sWrite(fMessage, iChanW);
 		}
 
-	s.WriteString("\r\n");
+	sWrite("\r\n", iChanW);
 
 	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
-		{ sWrite_HeaderLine(s, ii->first, ii->second); }
+		{ sWrite_HeaderLine(ii->first, ii->second, iChanW); }
 
-	s.WriteString("\r\n");
+	sWrite("\r\n", iChanW);
 	}
 
 // =================================================================================================
@@ -1633,15 +1636,15 @@ bool sIs_qdtext(char iChar)
 // =================================================================================================
 // MARK: - Writing
 
-void sWrite_HeaderLine(const ZStreamW& w, const string& iName, const string& iBody)
+void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW)
 	{
-	w.WriteString(iName);
-	w.WriteString(": ");
-	w.WriteString(iBody);
-	w.WriteString("\r\n");
+	sWrite(iName, iChanW);
+	sWrite(": ", iChanW);
+	sWrite(iBody, iChanW);
+	sWrite("\r\n", iChanW);
 	}
 
-void sWrite_Header(const ZStreamW& w, const Map& iHeader)
+void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
 	{
 	for (Map::Index_t ii = iHeader.Begin(); ii != iHeader.End(); ++ii)
 		{
@@ -1654,25 +1657,25 @@ void sWrite_Header(const ZStreamW& w, const Map& iHeader)
 			for (size_t xx = 0, count = asSeq.Count(); xx < count; ++xx)
 				{
 				if (ZQ<string> bodyQ = asSeq.QGet<string>(xx))
-					sWrite_HeaderLine(w, name, *bodyQ);
+					sWrite_HeaderLine(name, *bodyQ, iChanW);
 				}
 			}
 		else if (ZQ<string> asStringQ = theVal.QGet<string>())
 			{
-			sWrite_HeaderLine(w, name, *asStringQ);
+			sWrite_HeaderLine(name, *asStringQ, iChanW);
 			}
 		}
 	}
 
-void sWrite_MinimalResponse(const ZStreamW& w, int iResult)
-	{ w.Writef("HTTP/1.1 %d OK\r\n\r\n", iResult); }
+void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW)
+	{ sWritef(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
 
-void sWrite_MinimalResponse_ErrorInBody(const ZStreamW& w, int iError)
+void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	{
-	w.Writef("HTTP/1.1 %d ERROR\r\n", iError);
-	w.WriteString("Content-Type: text/plain\r\n");
-	w.WriteString("\r\n");
-	w.Writef("Error %d", iError);
+	sWritef(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
+	sWrite("Content-Type: text/plain\r\n", iChanW);
+	sWrite("\r\n", iChanW);
+	sWritef(iChanW, "Error %d", iError);
 	}
 
 // =================================================================================================
@@ -1766,7 +1769,7 @@ bool StreamR_Chunked::Imp_WaitReadable(double iTimeout)
 // =================================================================================================
 // MARK: - ZHTTP::StreamW_Chunked
 
-StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink)
+StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ChanW_Bin& iStreamSink)
 :	fStreamSink(iStreamSink),
 	fBuffer(max(size_t(64), iBufferSize), 0),
 	fBufferUsed(0)
@@ -1785,11 +1788,11 @@ StreamW_Chunked::~StreamW_Chunked()
 		this->pFlush();
 
 		// Terminating zero-length chunk
-		fStreamSink.WriteString("0\r\n");
+		sWrite("0\r\n", fStreamSink);
 
 		// There's supposed to be an additional CRLF at the end of all the data,
 		// after any trailer entity headers.
-		fStreamSink.WriteString("\r\n");
+		sWrite("\r\n", fStreamSink);
 		}
 	catch (...)
 		{}
@@ -1804,12 +1807,12 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 			{
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
-			fStreamSink.Writef("%X\r\n", fBufferUsed + iCount);
+			sWritef(fStreamSink, "%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
-			fStreamSink.Write(&fBuffer[0], fBufferUsed);
+			sWrite(&fBuffer[0], fBufferUsed, fStreamSink);
 			fBufferUsed = 0;
-			fStreamSink.Write(localSource, iCount);
-			fStreamSink.WriteString("\r\n");
+			sWrite(localSource, iCount, fStreamSink);
+			sWrite("\r\n", fStreamSink);
 			localSource += iCount;
 			iCount = 0;
 			}
@@ -1829,7 +1832,7 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 void StreamW_Chunked::Imp_Flush()
 	{
 	this->pFlush();
-	fStreamSink.Flush();
+	sFlush(fStreamSink);
 	}
 
 void StreamW_Chunked::pFlush()
@@ -1837,9 +1840,9 @@ void StreamW_Chunked::pFlush()
 	if (const size_t bufferUsed = fBufferUsed)
 		{
 		fBufferUsed = 0;
-		fStreamSink.Writef("%X\r\n", bufferUsed);
-		fStreamSink.Write(&fBuffer[0], bufferUsed);
-		fStreamSink.WriteString("\r\n");
+		sWritef(fStreamSink, "%X\r\n", bufferUsed);
+		sWrite(&fBuffer[0], bufferUsed, fStreamSink);
+		sWrite("\r\n", fStreamSink);
 		}
 	}
 
