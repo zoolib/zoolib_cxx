@@ -32,19 +32,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanBase_XX_Data
+// MARK: - ChanBase_Bin_Data
 
-template <class Data_p, class XX>
-class ChanBase_XX_Data
-:	public ChanR<XX>
+template <class Data_p>
+class ChanBase_Bin_Data
+:	public ChanR_Bin
 ,	public ChanCount
 ,	public ChanPos
 	{
 public:
-	typedef XX Elmt_t;
 	typedef Data_p Data;
 
-	ChanBase_XX_Data(Data* ioDataPtr)
+	ChanBase_Bin_Data(Data* ioDataPtr)
 	:	fDataPtr(ioDataPtr)
 	,	fPosition(0)
 		{}
@@ -83,19 +82,18 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanRPos_XX_Data
+// MARK: - ChanRPos_Bin_Data
 
-template <class Data_p, class XX>
-class ChanRPos_XX_Data
-:	public ChanBase_XX_Data<Data_p,XX>
-,	public ChanU<XX>
+template <class Data_p>
+class ChanRPos_Bin_Data
+:	public ChanBase_Bin_Data<Data_p>
+,	public ChanU<byte>
 	{
 public:
-	typedef XX Elmt_t;
 	typedef Data_p Data;
 
-	ChanRPos_XX_Data(Data iData)
-	:	ChanBase_XX_Data<Data_p,XX>(&fData)
+	ChanRPos_Bin_Data(Data iData)
+	:	ChanBase_Bin_Data<Data_p>(&fData)
 	,	fData(iData)
 		{}
 
@@ -117,21 +115,20 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ChanRWPos_XX_Data
+// MARK: - ChanRWPos_Bin_Data
 
-template <class Data_p, class XX>
-class ChanRWPos_XX_Data
-:	public ChanBase_XX_Data<Data_p,XX>
-,	public ChanU<XX>
-,	public ChanW<XX>
+template <class Data_p>
+class ChanRWPos_Bin_Data
+:	public ChanBase_Bin_Data<Data_p>
+,	public ChanU<byte>
+,	public ChanW_Bin
 ,	public ChanCountSet
 	{
 public:
-	typedef XX Elmt_t;
 	typedef Data_p Data;
 
-	ChanRWPos_XX_Data(Data* ioData)
-	:	ChanBase_XX_Data<Data_p,XX>(ioData)
+	ChanRWPos_Bin_Data(Data* ioData)
+	:	ChanBase_Bin_Data<Data_p>(ioData)
 		{}
 
 // From ChanU
@@ -175,19 +172,19 @@ public:
 // =================================================================================================
 // MARK: - Data stream reading functions
 
-template <class Data_p, class XX>
-Data_p sReadAll_T(const ChanR<XX>& iChanR)
+template <class Data_pBin>
+Data_p sReadAll_T(const ChanR_Bin& iChanR)
 	{
 	Data_p theData;
-	sCopyAll(iChanR, ChanRWPos_XX_Data<Data_p,XX>(&theData));
+	sCopyAll(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData));
 	return theData;
 	}
 
-template <class Data_p, class XX>
-Data_p sRead_T(const ChanR<XX>& iChanR, size_t iSize)
+template <class Data_pBin>
+Data_p sRead_T(const ChanR_Bin& iChanR, size_t iSize)
 	{
 	Data_p theData;
-	sCopyFully(iChanR, ChanRWPos_XX_Data<Data_p,XX>(&theData), iSize);
+	sCopyFully(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData), iSize);
 	return theData;
 	}
 
