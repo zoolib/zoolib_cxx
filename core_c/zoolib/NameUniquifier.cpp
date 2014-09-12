@@ -18,37 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUniquer_h__
-#define __ZUniquer_h__ 1
-#include "zconfig.h"
-
-#include <set>
+#include "zoolib/NameUniquifier.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZUniquer
+// MARK: - Compare_RefCountedString
 
-template <class Type_p, class Compare_p = typename std::set<Type_p>::key_compare>
-class ZUniquer
+bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
+	{ return l->Get() < r->Get(); }
+
+// =================================================================================================
+// MARK: - sName
+
+ZName sName(const string8& iString)
 	{
-public:
-	const Type_p& Get(const Type_p& iValue)
-		{
-		typename std::set<Type_p, Compare_p>::iterator iter = fSet.lower_bound(iValue);
-		if (iter != fSet.end()
-			&& not fSet.key_comp()(*iter, iValue)
-			&& not fSet.key_comp()(iValue, *iter))
-			{
-			return *iter;
-			}
-		return *fSet.insert(iter, iValue);
-		}
+	const ZRefCountedString theCountedString = sCountedVal<string8>(iString);
+	if (ThreadVal_NameUniquifier::Type_t* theUniquifier = ThreadVal_NameUniquifier::sPMut())
+		return ZName(theUniquifier->Get(theCountedString));
+	return ZName(theCountedString);
+	}
 
-private:
-	std::set<Type_p, Compare_p> fSet;
-	};
+ZName sName(const ZRefCountedString& iCountedString)
+	{
+	if (ThreadVal_NameUniquifier::Type_t* theUniquifier = ThreadVal_NameUniquifier::sPMut())
+		return ZName(theUniquifier->Get(iCountedString));
+	return ZName(iCountedString);
+	}
 
 } // namespace ZooLib
-
-#endif // __ZUniquer_h__

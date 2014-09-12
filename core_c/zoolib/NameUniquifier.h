@@ -18,33 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNameUniquer_h__
-#define __ZNameUniquer_h__ 1
+#ifndef __ZooLib_NameUniquifier_h__
+#define __ZooLib_NameUniquifier_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ThreadVal.h"
+#include "zoolib/Uniquifier.h"
 
 #include "zoolib/ZName.h"
-#include "zoolib/ZUniquer.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZCountedStringUniquer
+// MARK: - ZCountedStringUniquifier
 
-typedef CountedVal<string8> ZCountedString;
+typedef CountedVal<string8> CountedString;
 
-typedef ZRef<ZCountedString> ZRefCountedString;
+typedef ZRef<CountedString> ZRefCountedString;
 
 struct Compare_RefCountedString
 	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r); };
 
-typedef ZUniquer<ZRefCountedString,Compare_RefCountedString> ZCountedStringUniquer;
+typedef Uniquifier<ZRefCountedString,Compare_RefCountedString> CountedStringUniquifier;
 
 // =================================================================================================
-// MARK: - ThreadVal_NameUniquer
+// MARK: - ThreadVal_NameUniquifier
 
-typedef ThreadVal<ZCountedStringUniquer, struct Tag_NameUniquer> ThreadVal_NameUniquer;
+typedef ThreadVal<CountedStringUniquifier, struct Tag_NameUniquifier> ThreadVal_NameUniquifier;
 
 // =================================================================================================
 // MARK: - sName
@@ -58,4 +58,4 @@ ZName sName(const ZRefCountedString& iCountedString);
 
 } // namespace ZooLib
 
-#endif // __ZNameUniquer_h__
+#endif // __ZooLib_NameUniquifier_h__

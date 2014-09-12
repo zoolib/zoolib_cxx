@@ -18,32 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZNameUniquer.h"
+#ifndef __ZooLib_Uniquifier_h__
+#define __ZooLib_Uniquifier_h__ 1
+#include "zconfig.h"
+
+#include <set>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Compare_RefCountedString
+// MARK: - ZUniquer
 
-bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
-	{ return l->Get() < r->Get(); }
-
-// =================================================================================================
-// MARK: - sName
-
-ZName sName(const string8& iString)
+template <class Type_p, class Compare_p = typename std::set<Type_p>::key_compare>
+class Uniquifier
 	{
-	const ZRefCountedString theCountedString = sCountedVal<string8>(iString);
-	if (ThreadVal_NameUniquer::Type_t* theUniquer = ThreadVal_NameUniquer::sPMut())
-		return ZName(theUniquer->Get(theCountedString));
-	return ZName(theCountedString);
-	}
+public:
+	const Type_p& Get(const Type_p& iValue)
+		{
+		typename std::set<Type_p, Compare_p>::iterator iter = fSet.lower_bound(iValue);
+		if (iter != fSet.end()
+			&& not fSet.key_comp()(*iter, iValue)
+			&& not fSet.key_comp()(iValue, *iter))
+			{
+			return *iter;
+			}
+		return *fSet.insert(iter, iValue);
+		}
 
-ZName sName(const ZRefCountedString& iCountedString)
-	{
-	if (ThreadVal_NameUniquer::Type_t* theUniquer = ThreadVal_NameUniquer::sPMut())
-		return ZName(theUniquer->Get(iCountedString));
-	return ZName(iCountedString);
-	}
+private:
+	std::set<Type_p, Compare_p> fSet;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Uniquifier_h__
