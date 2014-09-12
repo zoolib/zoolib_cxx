@@ -1032,67 +1032,6 @@ May throw an end of write stream exception.
 void ZStreamW::WriteBool(bool iVal) const
 	{ this->WriteInt8(iVal ? 1 : 0); }
 
-/**
-Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
-May throw an end of write stream exception.
-*/
-void ZStreamW::WriteString(const char* iString) const
-	{
-	if (iString)
-		{
-		if (size_t length = strlen(iString))
-			this->Write(iString, length);
-		}
-	}
-
-/**
-Write the bytes contained in \a iString, with no terminating zero byte.
-May throw an end of write stream exception.
-*/
-void ZStreamW::WriteString(const string& iString) const
-	{
-	if (size_t length = iString.size())
-		this->Write(iString.data(), length);
-	}
-
-
-/**
-Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
-Standard printf-style parameter substitution is applied to the string before writing. The
-number of bytes successfully written is returned.
-*/
-size_t ZStreamW::Writef(const char* iString, ...) const
-	{
-	string buffer(512, ' ');
-	for (;;)
-		{
-		va_list args;
-		va_start(args, iString);
-
-		int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
-
-		va_end(args);
-
-		if (count < 0)
-			{
-			// Handle -ve result from glibc prior to version 2.1 by growing the string.
-			buffer.resize(buffer.size() * 2);
-			}
-		else if (size_t(count) > buffer.size())
-			{
-			// Handle C99 standard, where count indicates how much space would have been needed.
-			buffer.resize(count);
-			}
-		else
-			{
-			// The string fitted, we can now write it out.
-			buffer.resize(count);
-			this->WriteString(buffer);
-			return count;
-			}
-		}
-	}
-
 
 /**
 Write a single byte to the stream. If the stream

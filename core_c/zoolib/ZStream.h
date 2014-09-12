@@ -22,8 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanW_Bin.h"
+
+#include "zoolib/ChanW_Bin_More.h"
 
 #include "zoolib/ZTypes.h"
 
@@ -301,9 +304,23 @@ public:
 
 /// Base interface for read streams that can unread a single byte.
 
-class ZStreamU : public ZStreamR
+class ZStreamU
+:	public ZStreamR
+,	public ChanU<byte>
 	{
 public:
+// From ChanU<byte>
+	virtual size_t Unread(const byte* iSource, size_t iCount)
+		{
+		ZAssert(iCount == 1);
+		this->Imp_Unread();
+		return 1;
+		}
+
+	virtual size_t UnreadableLimit()
+		{ return 1; }
+
+// Our protocol
 	void Unread() const;
 
 	virtual void Imp_Unread() = 0;
@@ -451,10 +468,11 @@ Write data to the stream in standard formats.
 	void WriteUInt32LE(uint32 iVal) const { this->WriteInt32LE(int32(iVal)); }
 	void WriteUInt64LE(uint64 iVal) const { this->WriteInt64LE(int64(iVal)); }
 
-	void WriteString(const char* iString) const;
-	void WriteString(const std::string& iString) const;
+	void WriteString(const char* iString) const { sWrite(iString, *this); }
 
-	size_t Writef(const char* iString, ...) const;
+	void WriteString(const std::string& iString) const { sWrite(iString, *this); }
+
+//##	size_t Writef(const char* iString, ...) const;
 	//@}
 
 
