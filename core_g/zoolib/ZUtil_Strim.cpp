@@ -479,7 +479,7 @@ void sSkip_Line(const ZStrimR& iStrimR)
 string8 sRead_Line(const ZStrimR& iStrimR)
 	{
 	string8 result;
-	sCopy_Line(iStrimR, ZStrimW_String<string8>(result));
+	sCopy_Line(iStrimR, ZStrimW_String<string8>(&result));
 	return result;
 	}
 
@@ -504,7 +504,7 @@ bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
 string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
 	{
 	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(result));
+	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(&result));
 	return result;
 	}
 
@@ -524,7 +524,7 @@ bool sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 	{
 	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(result));
+	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(&result));
 	return result;
 	}
 
@@ -540,7 +540,7 @@ void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oSt
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	sCopy_EscapedString(iStrimU, iTerminator, ZStrimW_String<string8>(oString));
+	sCopy_EscapedString(iStrimU, iTerminator, ZStrimW_String<string8>(&oString));
 	}
 
 // -----------------
@@ -563,7 +563,7 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	return sTryCopy_EscapedString(iStrimU, iDelimiter, ZStrimW_String<string8>(oString));
+	return sTryCopy_EscapedString(iStrimU, iDelimiter, ZStrimW_String<string8>(&oString));
 	}
 
 // -----------------
@@ -603,7 +603,7 @@ bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	return sTryCopy_Identifier(iStrimU, ZStrimW_String<string8>(oString));
+	return sTryCopy_Identifier(iStrimU, ZStrimW_String<string8>(&oString));
 	}
 
 // -----------------

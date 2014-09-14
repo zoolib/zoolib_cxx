@@ -1750,7 +1750,7 @@ size_t ZStrimU_String16::Imp_UnreadableLimit()
 // =================================================================================================
 // MARK: - ZStrimU_String8Ref
 
-ZStrimU_String8Ref::ZStrimU_String8Ref(const string8& iString)
+ZStrimU_String8Ref::ZStrimU_String8Ref(const string8* iString)
 :	fString(iString),
 	fPosition(0)
 	{}
@@ -1760,7 +1760,7 @@ ZStrimU_String8Ref::~ZStrimU_String8Ref()
 
 void ZStrimU_String8Ref::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	const size_t theLength = fString.length();
+	const size_t theLength = fString->length();
 	if (fPosition >= theLength)
 		{
 		if (oCount)
@@ -1770,7 +1770,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 		{
 		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF32(
-			fString.data() + fPosition, theLength - fPosition,
+			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			oCount);
@@ -1781,7 +1781,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 void ZStrimU_String8Ref::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const size_t theLength = fString.length();
+	const size_t theLength = fString->length();
 	if (fPosition >= theLength)
 		{
 		if (oCountCP)
@@ -1793,7 +1793,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF16(UTF16* oDest,
 		{
 		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF16(
-			fString.data() + fPosition, theLength - fPosition,
+			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1805,7 +1805,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF16(UTF16* oDest,
 void ZStrimU_String8Ref::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const size_t theLength = fString.length();
+	const size_t theLength = fString->length();
 	if (fPosition >= theLength)
 		{
 		if (oCountCP)
@@ -1817,7 +1817,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF8(UTF8* oDest,
 		{
 		size_t countConsumed;
 		ZUnicode::sUTF8ToUTF8(
-			fString.data() + fPosition, theLength - fPosition,
+			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
 			oCountCU,
@@ -1828,9 +1828,9 @@ void ZStrimU_String8Ref::Imp_ReadUTF8(UTF8* oDest,
 
 void ZStrimU_String8Ref::Imp_Unread(UTF32 iCP)
 	{
-	if (size_t stringSize = fString.size())
+	if (size_t stringSize = fString->size())
 		{
-		string::const_iterator stringStart = fString.begin();
+		string::const_iterator stringStart = fString->begin();
 		string::const_iterator stringCurrent = stringStart + fPosition;
 		string::const_iterator stringEnd = stringStart + stringSize;
 
@@ -1850,7 +1850,7 @@ size_t ZStrimU_String8Ref::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
 const string8& ZStrimU_String8Ref::GetString8() const
-	{ return fString; }
+	{ return *fString; }
 
 // =================================================================================================
 // MARK: - ZStrimU_String8
@@ -1861,13 +1861,13 @@ ZStrimU_String8Helper::ZStrimU_String8Helper(const string8& iString)
 
 ZStrimU_String8::ZStrimU_String8(const string8& iString)
 :	ZStrimU_String8Helper(iString)
-,	ZStrimU_String8Ref(fStringStorage)
+,	ZStrimU_String8Ref(&fStringStorage)
 	{}
 
 // =================================================================================================
 // MARK: - ZStrimW_String
 
-ZStrimW_String<string32>::ZStrimW_String(string32& ioString)
+ZStrimW_String<string32>::ZStrimW_String(string32* ioString)
 :	fString(ioString)
 	{}
 
@@ -1879,7 +1879,7 @@ void ZStrimW_String<string32>::Imp_WriteUTF32(
 	{
 	try
 		{
-		fString.append(iSource, iCountCU);
+		fString->append(iSource, iCountCU);
 		if (oCountCU)
 			*oCountCU = iCountCU;
 		}
@@ -1887,7 +1887,7 @@ void ZStrimW_String<string32>::Imp_WriteUTF32(
 		{}
 	}
 
-ZStrimW_String<string16>::ZStrimW_String(string16& ioString)
+ZStrimW_String<string16>::ZStrimW_String(string16* ioString)
 :	fString(ioString)
 	{}
 
@@ -1899,7 +1899,7 @@ void ZStrimW_String<string16>::Imp_WriteUTF16(
 	{
 	try
 		{
-		fString.append(iSource, iCountCU);
+		fString->append(iSource, iCountCU);
 		if (oCountCU)
 			*oCountCU = iCountCU;
 		}
@@ -1907,7 +1907,7 @@ void ZStrimW_String<string16>::Imp_WriteUTF16(
 		{}
 	}
 
-ZStrimW_String<string8>::ZStrimW_String(string8& ioString)
+ZStrimW_String<string8>::ZStrimW_String(string8* ioString)
 :	fString(ioString)
 	{}
 
@@ -1918,7 +1918,7 @@ void ZStrimW_String<string8>::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU
 	{
 	try
 		{
-		fString.append(iSource, iCountCU);
+		fString->append(iSource, iCountCU);
 		if (oCountCU)
 			*oCountCU = iCountCU;
 		}

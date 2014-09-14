@@ -486,12 +486,12 @@ ZRef<ZYadAtomR> sMake_YadAtomR_Any(const ZAny& iAny)
 
 ZYadStrimmerU_String::ZYadStrimmerU_String(const ZAny& iAny)
 :	ZYadR_Any(iAny)
-,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
+,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.PGet<string8>())
 	{}
 
 ZYadStrimmerU_String::ZYadStrimmerU_String(const string& iString)
 :	ZYadR_Any(ZAny(iString))
-,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
+,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.PGet<string8>())
 	{}
 
 bool ZYadStrimmerU_String::IsSimple(const ZYadOptions& iOptions)

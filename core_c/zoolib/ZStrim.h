@@ -675,7 +675,7 @@ private:
 class ZStrimU_String8Ref : public ZStrimU
 	{
 public:
-	ZStrimU_String8Ref(const string8& iStringRef);
+	ZStrimU_String8Ref(const string8* iStringPtr);
 	~ZStrimU_String8Ref();
 
 // From ZStrimR via ZStrimU
@@ -695,7 +695,7 @@ public:
 	const string8& GetString8() const;
 
 private:
-	const string8& fString;
+	const string8* fString;
 	size_t fPosition;
 	};
 
@@ -731,13 +731,13 @@ class ZStrimW_String<string32>
 :	public ZStrimW_NativeUTF32
 	{
 public:
-	ZStrimW_String(string32& ioString);
+	ZStrimW_String(string32* ioString);
 	~ZStrimW_String();
 
 	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
 
 private:
-	string32& fString;
+	string32* fString;
 	};
 
 template <>
@@ -745,13 +745,13 @@ class ZStrimW_String<string16>
 :	public ZStrimW_NativeUTF16
 	{
 public:
-	ZStrimW_String(string16& ioString);
+	ZStrimW_String(string16* ioString);
 	~ZStrimW_String();
 
 	virtual void Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU);
 
 private:
-	string16& fString;
+	string16* fString;
 	};
 
 template <>
@@ -759,13 +759,13 @@ class ZStrimW_String<string8>
 :	public ZStrimW_NativeUTF8
 	{
 public:
-	ZStrimW_String(string8& ioString);
+	ZStrimW_String(string8* ioString);
 	~ZStrimW_String();
 
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 private:
-	string8& fString;
+	string8* fString;
 	};
 
 typedef ZStrimW_String<string32> ZStrimW_String32;

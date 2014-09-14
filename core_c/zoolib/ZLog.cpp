@@ -131,7 +131,7 @@ void StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(&sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -144,7 +144,7 @@ void StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCoun
 	{
 	try
 		{
-		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(&sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
@@ -157,7 +157,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 	{
 	try
 		{
-		ZStrimW_String8(sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
+		ZStrimW_String8(&sMut(fMessageQ)).Write(iSource, iCountCU, oCountCU);
 		}
 	catch (...)
 		{
