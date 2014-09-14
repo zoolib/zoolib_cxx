@@ -261,6 +261,29 @@ void sInsertMust(
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sInsertMust(const int iDebugLevel,
+	std::map<KBase,Value,Comparator>& ioMap,
+	const typename std::map<KBase,Value,Comparator>::iterator& iIter,
+	const KDerived& iKey, const VDerived& iValue)
+	{
+	const typename std::map<KBase,Value,Comparator>::iterator result =
+	ioMap.insert(
+		iIter,
+		typename std::map<KBase,Value,Comparator>::value_type(iKey, iValue));
+
+	ZAssertStop(iDebugLevel, result->second == iValue); // ??? Not sure about this
+	}
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
+void sInsertMust(
+	std::map<KBase,Value,Comparator>& ioMap,
+	const typename std::map<KBase,Value,Comparator>::iterator& iIter,
+	const KDerived& iKey, const VDerived& iValue)
+	{ sInsertMust(1, ioMap, iIter, iKey, iValue);}
+
+// -----
+
+template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 void sReplaceMust(const int iDebugLevel,
 	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const Value& iValue)
 	{
