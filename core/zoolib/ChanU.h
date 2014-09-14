@@ -53,7 +53,11 @@ size_t sUnread(const Elmt_p* iSource, size_t iCount, const ChanU<Elmt_p>& iChanU
 	{ return sNonConst(iChanU).Unread(iSource, iCount); }
 
 template <class Elmt_p>
-void sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
+bool sUnread(const Elmt_p& iElmt, const ChanU<Elmt_p>& iChanU)
+	{ return 1 == sUnread(&iElmt, 1, iChanU); }
+
+template <class Elmt_p>
+size_t sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
 	{ return sNonConst(iChanU).UnreadableLimit(); }
 
 // =================================================================================================
