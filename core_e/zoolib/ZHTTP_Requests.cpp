@@ -159,7 +159,7 @@ ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 			Map theResponseHeader;
 			if (not spRequest(
 				theEP->GetStreamW(), theEP->GetStreamR(),
-				iMethod, theHost + sStringf(":%d",int(uint16(thePort))), thePath, iHeader,
+				iMethod, theHost + sStringf(":%d", thePort), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
 				{ return null; }
