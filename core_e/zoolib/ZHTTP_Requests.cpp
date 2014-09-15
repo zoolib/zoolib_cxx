@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
+#include "zoolib/ZStringf.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZUtil_Stream_Operators.h"
 #include "zoolib/ZUtil_string.h"
@@ -158,7 +159,7 @@ ZRef<ZStreamerR> sRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 			Map theResponseHeader;
 			if (not spRequest(
 				theEP->GetStreamW(), theEP->GetStreamR(),
-				iMethod, theHost, thePath, iHeader,
+				iMethod, theHost + sStringf(":%d",int(uint16(thePort))), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
 				{ return null; }
