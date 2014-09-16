@@ -94,7 +94,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 // =================================================================================================
 // MARK: - ZStreamW_ASCIIStrim
 
-ZStreamW_ASCIIStrim::ZStreamW_ASCIIStrim(const ZStrimW& iStrimW)
+ZStreamW_ASCIIStrim::ZStreamW_ASCIIStrim(const ChanW_UTF& iStrimW)
 :	fStrimW(iStrimW)
 	{}
 
@@ -105,7 +105,7 @@ void ZStreamW_ASCIIStrim::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		{
 		UTF32 current = *localSource++;
 		if (int32(current) >= 0 && current <= 127)
-			fStrimW.WriteCP(current);
+			sWrite(current, fStrimW);
 		}
 	if (oCountWritten)
 		*oCountWritten = localSource - static_cast<const char*>(iSource);

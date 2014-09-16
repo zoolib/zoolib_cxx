@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class E, size_t C, size_t R, size_t Length_p>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrixArray<E,C,R,Length_p>& iArray)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrixArray<E,C,R,Length_p>& iArray)
 	{
 	w << "Array(" << Length_p << ")[";
 	for (size_t x = 0; x < Length_p; ++x)

@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ValueOnce.h"
 
 #include "zoolib/dataspace/Util_Strim.h"
@@ -32,7 +33,7 @@ namespace Dataspace {
 // =================================================================================================
 // MARK: -
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelationalAlgebra::RelHead>& iSet)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const std::set<RelationalAlgebra::RelHead>& iSet)
 	{
 	FalseOnce needsSeparator;
 	foreachi (ii, iSet)

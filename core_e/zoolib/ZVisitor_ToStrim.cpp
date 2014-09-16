@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZVisitor_ToStrim.h"
 
 #include <typeinfo>
@@ -63,10 +64,10 @@ void ZVisitor_ToStrim::Visit(const ZRef<ZVisitee>& iRep)
 	}
 
 void ZVisitor_ToStrim::ToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep)
+	const Options& iOptions, const ChanW_UTF& iStrimW, const ZRef<ZVisitee>& iRep)
 	{
 	ZSaveSetRestore_T<const Options*> ssr1(fOptions, &iOptions);
-	ZSaveSetRestore_T<const ZStrimW*> ssr2(fStrimW, &iStrimW);
+	ZSaveSetRestore_T<const ChanW_UTF*> ssr2(fStrimW, &iStrimW);
 	ZSaveSetRestore_T<size_t> ssr3(fIndent, iOptions.fInitialIndent);
 
 	this->pToStrim(iRep);
@@ -89,7 +90,7 @@ const ZVisitor_ToStrim::Options& ZVisitor_ToStrim::pOptions()
 	return *fOptions;
 	}
 
-const ZStrimW& ZVisitor_ToStrim::pStrimW()
+const ChanW_UTF& ZVisitor_ToStrim::pStrimW()
 	{
 	ZAssert(fStrimW);
 	return *fStrimW;
@@ -97,9 +98,9 @@ const ZStrimW& ZVisitor_ToStrim::pStrimW()
 
 void ZVisitor_ToStrim::pWriteLFIndent()
 	{
-	pStrimW().Write(pOptions().fEOLString);
+	pStrimW() << pOptions().fEOLString;
 	for (size_t xx = 0; xx < fIndent; ++xx)
-		pStrimW().Write(pOptions().fIndentString);
+		pStrimW() << pOptions().fIndentString;
 	}
 
 } // namespace ZooLib

@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_IntervalTreeClock_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF.h"
+
 #include "zoolib/ZIntervalTreeClock.h"
 
 namespace ZooLib {
@@ -31,8 +32,8 @@ namespace ZIntervalTreeClock {
 // =================================================================================================
 // MARK: - ZIntervalTreeClock
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Identity>& iIdentity);
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent);
 
 } // namespace ZIntervalTreeClock
 } // namespace ZooLib

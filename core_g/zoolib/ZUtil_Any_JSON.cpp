@@ -52,7 +52,7 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerR>& iSR)
 ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR)
 	{ return sQRead(ZRef<ZStrimmerR>(sStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iSR))); }
 
-void sWrite(const ZVal_Any& iVal, const ZStrimW& iStrimW)
+void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
 	{ ZYad_JSON::sToStrim(sYadR(iVal), iStrimW); }
 
 } // namespace ZUtil_Any_JSON

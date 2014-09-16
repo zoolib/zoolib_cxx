@@ -28,7 +28,7 @@ static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
 // =================================================================================================
 // MARK: - ZStreamW_HexStrim_Real
 
-ZStreamW_HexStrim_Real::ZStreamW_HexStrim_Real(bool iUseUnderscore, const ZStrimW& iStrimSink)
+ZStreamW_HexStrim_Real::ZStreamW_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink)
 	{
 	if (iUseUnderscore)
@@ -46,7 +46,7 @@ void ZStreamW_HexStrim_Real::Imp_Write(const void* iSource, size_t iCount, size_
 		UTF8 theHex[2];
 		theHex[0] = fHexDigits[((*localSource) >> 4) & 0x0F];
 		theHex[1] = fHexDigits[(*localSource) & 0x0F];
-		fStrimSink.Write(theHex, 2);
+		sWrite(theHex, 2, fStrimSink);
 		--iCount;
 		++localSource;
 		}
@@ -56,7 +56,7 @@ void ZStreamW_HexStrim_Real::Imp_Write(const void* iSource, size_t iCount, size_
 	}
 
 void ZStreamW_HexStrim_Real::Imp_Flush()
-	{ fStrimSink.Flush(); }
+	{ sFlush(fStrimSink); }
 
 // =================================================================================================
 // MARK: - ZStreamW_HexStrim
@@ -79,7 +79,7 @@ spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator
 ZStreamW_HexStrim::ZStreamW_HexStrim(
 	const std::string& iByteSeparator,
 	const std::string& iChunkSeparator, size_t iChunkSize,
-	const ZStrimW& iStrimSink)
+	const ChanW_UTF& iStrimSink)
 :	fStrim(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iStrimSink)
 ,	fStream(false, fStrim)
 	{}

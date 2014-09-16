@@ -88,14 +88,14 @@ private:
 
 typedef Visitor::Options Options;
 
-void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ZStrimW& iStrimW);
+void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
 
-void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ZStrimW& iStrimW);
+void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW);
 
 } // namespace Util_Strim_Rel
 } // namespace RelationalAlgebra
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<RelationalAlgebra::Expr_Rel>& iRel);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<RelationalAlgebra::Expr_Rel>& iRel);
 
 } // namespace ZooLib
 

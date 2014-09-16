@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrim_Escaped_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanW_UTF_More.h"
+
 #include "zoolib/ZStrim.h"
 
 namespace ZooLib {
@@ -48,7 +50,7 @@ protected:
 
 /// A write filter strim that inserts C-style escape sequences.
 
-class ZStrimW_Escaped : public ZStrimW_NativeUTF32
+class ZStrimW_Escaped : public ChanW_UTF_Native32
 	{
 public:
 	struct Options
@@ -60,15 +62,15 @@ public:
 		bool fEscapeHighUnicode;
 		};
 
-	ZStrimW_Escaped(const Options& iOptions, const ZStrimW& iStrimSink);
-	ZStrimW_Escaped(const ZStrimW& iStrimSink);
+	ZStrimW_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink);
+	ZStrimW_Escaped(const ChanW_UTF& iStrimSink);
 	~ZStrimW_Escaped();
 
-// From ZStrimW via ZStrimW_NativeUTF32
-	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
+// From ChanW_UTF_Native32
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
-	const ZStrimW& fStrimSink;
+	const ChanW_UTF& fStrimSink;
 	string8 fEOL;
 	bool fQuoteQuotes;
 	bool fEscapeHighUnicode;

@@ -176,7 +176,7 @@ class Visitor_Writer : public ZVisitor_Yad_PreferRPos
 	{
 public:
 	Visitor_Writer(
-		size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW);
+		size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iStrimW);
 
 // From ZVisitor_Yad
 	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
@@ -189,7 +189,7 @@ public:
 private:
 	size_t fIndent;
 	const WriteOptions fOptions;
-	const ZStrimW& fStrimW;
+	const ChanW_UTF& fStrimW;
 	bool fMayNeedInitialLF;
 	};
 
@@ -199,10 +199,10 @@ private:
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
 
-void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
+void sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s);
 
 void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ZStrimW& s);
+	ZRef<ZYadR> iYadR, const ChanW_UTF& s);
 
 } // namespace ZYad_JSON
 } // namespace ZooLib

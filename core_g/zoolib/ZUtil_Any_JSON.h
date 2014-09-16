@@ -38,7 +38,7 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerR>& iSR);
 
 ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR);
 
-void sWrite(const ZVal_Any& iVal, const ZStrimW& iStrimW);
+void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW);
 
 } // namespace ZUtil_Any_JSON
 } // namespace ZooLib

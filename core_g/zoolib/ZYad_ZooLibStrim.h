@@ -148,12 +148,12 @@ bool sRead_Identifier(
 
 ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
 
-void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
+void sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s);
 
 void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ZStrimW& s);
+	ZRef<ZYadR> iYadR, const ChanW_UTF& s);
 
-void sWrite_PropName(const std::string& iPropName, const ZStrimW& s);
+void sWrite_PropName(const std::string& iPropName, const ChanW_UTF& s);
 
 } // namespace ZYad_ZooLibStrim
 } // namespace ZooLib

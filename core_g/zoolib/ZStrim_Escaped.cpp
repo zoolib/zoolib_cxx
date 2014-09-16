@@ -155,7 +155,7 @@ ZStrimW_Escaped::Options::Options()
 // =================================================================================================
 // MARK: - ZStrimW_Escaped
 
-ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ZStrimW& iStrimSink)
+ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fEOL(iOptions.fEOL),
 	fQuoteQuotes(iOptions.fQuoteQuotes),
@@ -163,7 +163,7 @@ ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ZStrimW& iStrimS
 	fLastWasCR(false)
 	{}
 
-ZStrimW_Escaped::ZStrimW_Escaped(const ZStrimW& iStrimSink)
+ZStrimW_Escaped::ZStrimW_Escaped(const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fQuoteQuotes(true),
 	fEscapeHighUnicode(true),
@@ -176,8 +176,8 @@ ZStrimW_Escaped::~ZStrimW_Escaped()
 		{
 		if (fLastWasCR)
 			{
-			fStrimSink.Write("\\r");
-			fStrimSink.Write(fEOL);
+			sWrite("\\r", fStrimSink);
+			sWrite(fEOL, fStrimSink);
 			}
 		}
 	catch (...)
@@ -191,7 +191,7 @@ static UTF32 spAsHexCP(int inInt)
 	return inInt - 10 + 'A';
 	}
 
-void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+size_t ZStrimW_Escaped::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	size_t localCount = iCountCU + 1;
 	while (--localCount)
@@ -205,42 +205,42 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 				{
 				case '\t':
 					{
-					fStrimSink.Write("\\t");
+					sWrite("\\t", fStrimSink);
 					break;
 					}
 				case '\n':
 					{
 					if (lastWasCR)
-						fStrimSink.Write("\\r");
-					fStrimSink.Write("\\n");
-					fStrimSink.Write(fEOL);
+						sWrite("\\r", fStrimSink);
+					sWrite("\\n", fStrimSink);
+					sWrite(fEOL, fStrimSink);
 					break;
 					}
 				case '\r':
 					{
 					if (lastWasCR)
 						{
-						fStrimSink.Write("\\r");
-						fStrimSink.Write(fEOL);
+						sWrite("\\r", fStrimSink);
+						sWrite(fEOL, fStrimSink);
 						}
 					fLastWasCR = true;
 					break;
 					}
 				case '\b':
 					{
-					fStrimSink.Write("\\b");
+					sWrite("\\b", fStrimSink);
 					break;
 					}
 				case '\f':
 					{
-					fStrimSink.Write("\\f");
+					sWrite("\\f", fStrimSink);
 					break;
 					}
 				default:
 					{
-					fStrimSink.Write("\\x");
-					fStrimSink.WriteCP(spAsHexCP(theCP >> 4));
-					fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
+					sWrite("\\x", fStrimSink);
+					sWrite(spAsHexCP(theCP >> 4), fStrimSink);
+					sWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 					break;
 					}
 				}
@@ -248,37 +248,36 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 		else if (theCP < 0x80 || !fEscapeHighUnicode)
 			{
 			if (fQuoteQuotes && theCP == '\"')
-				fStrimSink.Write("\\\"");
+				sWrite("\\\"", fStrimSink);
 			else if (not fQuoteQuotes && theCP == '\'')
-				fStrimSink.Write("\\\'");
+				sWrite("\\\'", fStrimSink);
 			else if (theCP == '\\')
-				fStrimSink.Write("\\\\");
+				sWrite("\\\\", fStrimSink);
 			else
-				fStrimSink.WriteCP(theCP);
+				sWrite(theCP, fStrimSink);
 			}
 		else if (theCP < 0x10000)
 			{
-			fStrimSink.Write("\\u");
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 12) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 8) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 4) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
+			sWrite("\\u", fStrimSink);
+			sWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
+			sWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 			}
 		else
 			{
-			fStrimSink.Write("\\U");
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 28) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 24) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 20) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 16) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 12) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 8) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP((theCP >> 4) & 0xF));
-			fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
+			sWrite("\\U", fStrimSink);
+			sWrite(spAsHexCP((theCP >> 28) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 24) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 20) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 16) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
+			sWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
+			sWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 			}
 		}
-	if (oCountCU)
-		*oCountCU = iCountCU - localCount;
+	return iCountCU - localCount;
 	}
 
 } // namespace ZooLib

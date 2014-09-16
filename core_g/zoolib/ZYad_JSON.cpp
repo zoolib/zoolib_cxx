@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZCompat_algorithm.h" // ZSetRestore_T
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZStreamW_HexStrim.h"
@@ -26,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZYad_JSON.h"
 
 #if ZCONFIG(Compiler,GCC)
@@ -512,56 +513,56 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 // =================================================================================================
 // MARK: - Static writing functions
 
-static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ZStrimW& iStrimW)
+static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
 	{
 	while (iCount--)
-		iStrimW.Write(iOptions.fIndentString);
+		iStrimW << iOptions.fIndentString;
 	}
 
-static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ZStrimW& iStrimW)
+static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
 	{
-	iStrimW.Write(iOptions.fEOLString);
+	iStrimW << iOptions.fEOLString;
 	spWriteIndent(iCount, iOptions, iStrimW);
 	}
 
-static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ZStrimW& s)
+static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& s)
 	{
 	ZStrimW_Escaped::Options theOptions;
 	theOptions.fEscapeHighUnicode = false;
 
 	if (iPreferSingleQuotes)
 		{
-		s.Write("'");
+		s << "'";
 
 		theOptions.fQuoteQuotes = false;
 
-		ZStrimW_Escaped(theOptions, s).Write(iString);
+		ZStrimW_Escaped(theOptions, s) << iString;
 
-		s.Write("'");
+		s << "'";
 		}
 	else
 		{
-		s.Write("\"");
+		s << "\"";
 
 		theOptions.fQuoteQuotes = true;
 
-		ZStrimW_Escaped(theOptions, s).Write(iString);
+		ZStrimW_Escaped(theOptions, s) << iString;
 
-		s.Write("\"");
+		s << "\"";
 		}
 	}
 
-static void spWriteString(const ZStrimR& iStrimR, const ZStrimW& s)
+static void spWriteString(const ZStrimR& iStrimR, const ChanW_UTF& s)
 	{
-	s.Write("\"");
+	s << "\"";
 
 	ZStrimW_Escaped::Options theOptions;
 	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
 
-	ZStrimW_Escaped(theOptions, s).CopyAllFrom(iStrimR);
+	ZStrimW_Escaped(theOptions, s) << iStrimR;
 
-	s.Write("\"");
+	s << "\"";
 	}
 
 static bool spContainsProblemChars(const string& iString)
@@ -585,7 +586,7 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ZStrimW& s)
+static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& s)
 	{
 	if (spContainsProblemChars(iString))
 		spWriteString(iString, iUseSingleQuotes, s);
@@ -593,7 +594,7 @@ static void spWritePropName(const string& iString, bool iUseSingleQuotes, const 
 		s << iString;
 	}
 
-static void spToStrim_SimpleValue(const ZAny& iAny, const ZStrimW& s)
+static void spToStrim_SimpleValue(const ZAny& iAny, const ChanW_UTF& s)
 	{
 	if (false)
 		{}
@@ -614,15 +615,15 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const ZStrimW& s)
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		ZUtil_Strim::sWriteExact(s, *asFloat);
+		ZUtil_Strim::sWriteExact(*asFloat, s);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		ZUtil_Strim::sWriteExact(s, *asDouble);
+		ZUtil_Strim::sWriteExact(*asDouble, s);
 		}
 	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 		{
-		ZUtil_Strim::sWriteExact(s, asTime->fVal);
+		ZUtil_Strim::sWriteExact(asTime->fVal, s);
 		}
 	else
 		{
@@ -632,13 +633,13 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const ZStrimW& s)
 
 static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ZStrimW& s)
+	const ChanW_UTF& s)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
 	if (theSize == 0)
 		{
 		// we've got an empty Raw
-		s.Write("()");
+		s << "()";
 		}
 	else
 		{
@@ -651,10 +652,10 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			s.Writef("( // %lld bytes", theSize);
+			sWritef(s, "( // %lld bytes", theSize);
 
 			if (countRemaining < theSize)
-				s.Writef(" (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+				sWritef(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
 			spWriteLFIndent(iLevel, iOptions, s);
 			if (iOptions.fRawAsASCII)
@@ -678,20 +679,20 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 						while (extraSpaces--)
 							{
 							// Two spaces for the two nibbles
-							s.Write("  ");
+							s << "  ";
 							// And then the separator sequence
-							s.Write(iOptions.fRawByteSeparator);
+							s << iOptions.fRawByteSeparator;
 							}
 						}
 
-					s.Write(" // ");
+					s << " // ";
 					while (countCopied--)
 						{
-						char theChar = iStreamRPos.ReadInt8();
+						UTF32 theChar = iStreamRPos.ReadInt8();
 						if (theChar < 0x20 || theChar > 0x7E)
-							s.WriteCP('.');
+							sWrite('.', s);
 						else
-							s.WriteCP(theChar);
+							sWrite(theChar, s);
 						}
 					spWriteLFIndent(iLevel, iOptions, s);
 					}
@@ -708,11 +709,11 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 				spWriteLFIndent(iLevel, iOptions, s);
 				}
 
-			s.Write(")");
+			s << ")";
 			}
 		else
 			{
-			s.Write("(");
+			s << "(";
 
 			ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
 				.CopyAllFrom(iStreamRPos);
@@ -720,25 +721,25 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawAsASCII)
 				{
 				iStreamRPos.SetPosition(0);
-				s.Write(" /* ");
+				s << " /* ";
 				while (theSize--)
 					{
-					char theChar = iStreamRPos.ReadInt8();
+					UTF32 theChar = iStreamRPos.ReadInt8();
 					if (theChar < 0x20 || theChar > 0x7E)
-						s.WriteCP('.');
+						sWrite('.', s);
 					else
-						s.WriteCP(theChar);
+						sWrite(theChar, s);
 					}
-				s.Write(" */");
+				s << " */";
 				}
-			s.Write(")");
+			s << ")";
 			}
 		}
 	}
 
 static void spToStrim_Stream(const ZStreamR& iStreamR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ZStrimW& s)
+	const ChanW_UTF& s)
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
@@ -753,8 +754,8 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 
 	if (iOptions.fBinaryAsBase64.DGet(false))
 		{
-		s.Write("(");
-		s.Write("=");
+		s << "(";
+		s << "=";
 		
 		Base64::StreamW_Encode(
 			Base64::sEncode_Normal(),
@@ -762,7 +763,7 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 				ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
 		.CopyAllFrom(iStreamR);
 
-		s.Write(")");
+		s << ")";
 		}
 	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
@@ -770,12 +771,12 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 		}
 	else
 		{
-		s.Write("(");
+		s << "(";
 
 		ZStreamW_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, s)
 			.CopyAllFrom(iStreamR);
 
-		s.Write(")");
+		s << ")";
 		}
 	}
 
@@ -783,7 +784,7 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 // MARK: - Visitor_Writer
 
 Visitor_Writer::Visitor_Writer(
-	size_t iIndent, const WriteOptions& iOptions, const ZStrimW& iStrimW)
+	size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
 :	fIndent(iIndent),
 	fOptions(iOptions),
 	fStrimW(iStrimW),
@@ -836,7 +837,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
 
 		uint64 count = 0;
-		fStrimW.Write("[");
+		fStrimW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
@@ -847,12 +848,12 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 				{
 				spWriteLFIndent(fIndent, fOptions, fStrimW);
 				cur->Accept(*this);
-				fStrimW.Write(";");
+				fStrimW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW.Write(",");
+					fStrimW << ",";
 				spWriteLFIndent(fIndent, fOptions, fStrimW);
 				if (fOptions.fNumberSequences.DGet(false))
 					fStrimW << "/*" << count << "*/";
@@ -861,13 +862,13 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			++count;
 			}
 		spWriteLFIndent(fIndent, fOptions, fStrimW);
-		fStrimW.Write("]");
+		fStrimW << "]";
 		}
 	else
 		{
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
-		fStrimW.Write("[");
+		fStrimW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
@@ -877,22 +878,22 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && fOptions.fBreakStrings)
-					fStrimW.Write(" ");
+					fStrimW << " ";
 				cur->Accept(*this);
-				fStrimW.Write(";");
+				fStrimW << ";";
 				}
 			else
 				{
 				if (not isFirst)
 					{
-					fStrimW.Write(",");
+					fStrimW << ",";
 					if (fOptions.fBreakStrings)
-						fStrimW.Write(" ");
+						fStrimW << " ";
 					}
 				cur->Accept(*this);
 				}
 			}
-		fStrimW.Write("]");
+		fStrimW << "]";
 		}
 	}
 
@@ -915,7 +916,7 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 			spWriteLFIndent(fIndent, fOptions, fStrimW);
 			}
 
-		fStrimW.Write("{");
+		fStrimW << "{";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			ZName curName;
@@ -932,12 +933,12 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
 				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
-				fStrimW.Write(";");
+				fStrimW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW.Write(",");
+					fStrimW << ",";
 				spWriteLFIndent(fIndent, fOptions, fStrimW);
 				spWriteString(curName, useSingleQuotes, fStrimW);
 				fStrimW << ": ";
@@ -948,11 +949,11 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				}
 			}
 		spWriteLFIndent(fIndent, fOptions, fStrimW);
-		fStrimW.Write("}");
+		fStrimW << "}";
 		}
 	else
 		{
-		fStrimW.Write("{");
+		fStrimW << "{";
 		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
@@ -964,29 +965,29 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 			else if (fOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && fOptions.fBreakStrings)
-					fStrimW.Write(" ");
+					fStrimW << " ";
 
 				spWritePropName(curName, useSingleQuotes, fStrimW);
 				if (fOptions.fBreakStrings)
-					fStrimW.Write(" = ");
+					fStrimW << " = ";
 				else
-					fStrimW.Write("=");
+					fStrimW << "=";
 
 				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
 				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
-				fStrimW.Write(";");
+				fStrimW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW.Write(",");
+					fStrimW << ",";
 				if (fOptions.fBreakStrings)
-					fStrimW.Write(" ");
+					fStrimW << " ";
 				spWriteString(curName, useSingleQuotes, fStrimW);
-				fStrimW.Write(":");
+				fStrimW << ":";
 				if (fOptions.fBreakStrings)
-					fStrimW.Write(" ");
+					fStrimW << " ";
 
 				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
 				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
@@ -995,8 +996,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 			wroteAny = true;
 			}
 		if (wroteAny && fOptions.fBreakStrings)
-			fStrimW.Write(" ");
-		fStrimW.Write("}");
+			fStrimW << " ";
+		fStrimW << "}";
 		}
 	}
 
@@ -1017,11 +1018,11 @@ ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
 	return null;
 	}
 
-void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
+void sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s)
 	{ sToStrim(0, WriteOptions(), iYadR, s); }
 
 void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ZStrimW& s)
+	ZRef<ZYadR> iYadR, const ChanW_UTF& s)
 	{
 	if (iYadR)
 		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, s));

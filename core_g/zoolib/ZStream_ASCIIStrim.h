@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
+#include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
 
@@ -46,18 +47,16 @@ private:
 // =================================================================================================
 // MARK: - ZStreamW_ASCIIStrim
 
-class ZStrimW;
-
 /// A write filter stream that writes only the ASCII-range bytes to a strim.
 
 class ZStreamW_ASCIIStrim : public ZStreamW
 	{
 public:
-	ZStreamW_ASCIIStrim(const ZStrimW& iStrimW);
+	ZStreamW_ASCIIStrim(const ChanW_UTF& iStrimW);
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 private:
-	const ZStrimW& fStrimW;
+	const ChanW_UTF& fStrimW;
 	};
 
 } // namespace ZooLib

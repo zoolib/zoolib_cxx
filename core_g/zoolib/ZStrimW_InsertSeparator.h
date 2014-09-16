@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrimW_InsertSeparator_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF_More.h" // For ChanW_UTF_Native32
 
 #include <map>
 
@@ -32,20 +32,20 @@ namespace ZooLib {
 // MARK: - ZStrimW_InsertSeparator
 
 class ZStrimW_InsertSeparator
-:	public ZStrimW_NativeUTF32
+:	public ChanW_UTF_Native32
 	{
 public:
 	typedef std::map<size_t,string8> Spacings;
 
-	ZStrimW_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink);
+	ZStrimW_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink);
 
-	ZStrimW_InsertSeparator(const Spacings& iSpacings, const ZStrimW& iStrimSink);
+	ZStrimW_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iStrimSink);
 	
-// From ZStrimW_NativeUTF32
-	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
+// From ChanW<UTF32> via ChanW_UTF_Native32
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
-	const ZStrimW& fStrimSink;
+	const ChanW_UTF& fStrimSink;
 	Spacings fSpacings;	
 	uint64 fCount;
 	};

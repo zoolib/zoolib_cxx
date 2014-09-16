@@ -27,7 +27,7 @@ namespace ZooLib {
 // MARK: - ZStrimW_InsertSeparator
 
 ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
-	size_t iSpacing, const string8& iSeparator, const ZStrimW& iStrimSink)
+	size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fCount(0)
 	{
@@ -36,14 +36,13 @@ ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
 	}
 
 ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
-	const Spacings& iSpacings, const ZStrimW& iStrimSink)
+	const Spacings& iSpacings, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fSpacings(iSpacings)
 ,	fCount(0)
 	{}
 
-void ZStrimW_InsertSeparator::Imp_WriteUTF32(
-	const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+size_t ZStrimW_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;
@@ -65,7 +64,7 @@ void ZStrimW_InsertSeparator::Imp_WriteUTF32(
 						{
 						if (0 == (fCount % riter->first))
 							{
-							fStrimSink.Write(riter->second);
+							sWrite(riter->second, fStrimSink);
 							break;
 							}
 						}
@@ -87,8 +86,7 @@ void ZStrimW_InsertSeparator::Imp_WriteUTF32(
 				}
 			}
 
-		size_t countWritten;
-		fStrimSink.Write(localSource, countToWrite, &countWritten);
+		size_t countWritten = sWrite(localSource, countToWrite, fStrimSink);
 		if (countWritten == 0)
 			break;
 		
@@ -97,8 +95,7 @@ void ZStrimW_InsertSeparator::Imp_WriteUTF32(
 		fCount += countWritten;
 		}
 
-	if (oCountCU)
-		*oCountCU = localSource - iSource;
+	return localSource - iSource;
 	}
 
 } // namespace ZooLib

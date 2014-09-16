@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_ValPred_Any_h__
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF.h"
+
 #include "zoolib/ZValPred.h"
 
 #include <set>
@@ -33,11 +34,11 @@ namespace ZUtil_Strim_ValPred_Any {
 // =================================================================================================
 // MARK: - ZUtil_Strim_ValPred_Any
 
-void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
+void sToStrim(const ZValPred& iValPred, const ChanW_UTF& iStrimW);
 
 } // namespace ZUtil_Strim_ValPred_Any
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZValPred& iValPred);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZValPred& iValPred);
 
 } // namespace ZooLib
 

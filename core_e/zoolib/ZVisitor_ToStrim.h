@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_ToStrim_h__
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF.h"
+
 #include "zoolib/ZVisitor.h"
 
 namespace ZooLib {
@@ -50,19 +51,19 @@ public:
 	virtual void Visit(const ZRef<ZVisitee>& iRep);
 
 // Our protocol
-	void ToStrim(const Options& iOptions, const ZStrimW& iStrimW, const ZRef<ZVisitee>& iRep);
+	void ToStrim(const Options& iOptions, const ChanW_UTF& iStrimW, const ZRef<ZVisitee>& iRep);
 
 protected:
 	void pToStrim(const ZRef<ZVisitee>& iRep);
 
 	const Options& pOptions();
-	const ZStrimW& pStrimW();
+	const ChanW_UTF& pStrimW();
 
 	void pWriteLFIndent();
 
 private:
 	const Options* fOptions;
-	const ZStrimW* fStrimW;
+	const ChanW_UTF* fStrimW;
 protected:
 	size_t fIndent;
 	};

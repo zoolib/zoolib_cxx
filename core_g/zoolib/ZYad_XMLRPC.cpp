@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLRPC.h"
 
@@ -595,7 +596,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	else if (sQCoerceRat(iVal, asDouble))
 		{
 		s.Begin("double");
-			ZUtil_Strim::sWriteExact(s, asDouble);
+			ZUtil_Strim::sWriteExact(asDouble, s);
 		s.End("double");
 		}
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())

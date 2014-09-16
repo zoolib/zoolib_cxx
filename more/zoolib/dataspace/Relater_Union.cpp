@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
@@ -29,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValPred_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 
 #include "zoolib/dataspace/Relater_Union.h"
 #include "zoolib/dataspace/Util_Strim.h"

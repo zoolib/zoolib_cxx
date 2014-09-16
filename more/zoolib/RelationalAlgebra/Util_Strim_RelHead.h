@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
 #include "zconfig.h"
 
+#include "zoolib/ChanW_UTF.h"
+
 #include "zoolib/RelationalAlgebra/RelHead.h"
-#include "zoolib/ZStrim.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {
@@ -32,15 +33,15 @@ namespace Util_Strim_RelHead {
 // =================================================================================================
 // MARK: - ZUtil_Strim_RelHead
 
-void sWrite_PropName(const string8& iName, const ZStrimW& s);
-void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
+void sWrite_PropName(const string8& iName, const ChanW_UTF& s);
+void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s);
 
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::RelHead& iRH);
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::Rename& iRename);
-const ZStrimW& operator<<(const ZStrimW& w, const RelationalAlgebra::ConcreteHead& iRH);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::RelHead& iRH);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::Rename& iRename);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::ConcreteHead& iRH);
 
 } // namespace ZooLib
 

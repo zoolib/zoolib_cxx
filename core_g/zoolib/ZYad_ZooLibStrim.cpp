@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -578,22 +579,22 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>&
 // =================================================================================================
 // MARK: - Static writing functions
 
-static void spWriteIndent(const ZStrimW& iStrimW,
+static void spWriteIndent(const ChanW_UTF& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
 	while (iCount--)
-		iStrimW.Write(iOptions.fIndentString);
+		iStrimW << iOptions.fIndentString;
 	}
 
-static void spWriteLFIndent(const ZStrimW& iStrimW,
+static void spWriteLFIndent(const ChanW_UTF& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
-	iStrimW.Write(iOptions.fEOLString);
+	iStrimW << iOptions.fEOLString;
 	spWriteIndent(iStrimW, iCount, iOptions);
 	}
 
 static void spWriteString(
-	const ZStrimW& s, const ZYadOptions& iOptions, const string& iString)
+	const ChanW_UTF& s, const ZYadOptions& iOptions, const string& iString)
 	{
 	if (iOptions.fBreakStrings
 		&& iOptions.DoIndentation()
@@ -607,7 +608,7 @@ static void spWriteString(
 		ZStrimR_Boundary strim_Boundary("\"\"\"", strim_String);
 		for (;;)
 			{
-			s.CopyAllFrom(strim_Boundary);
+			s << strim_Boundary;
 			if (not strim_Boundary.HitBoundary())
 				{
 				// We've returned without having hit the boundary, so we're done.
@@ -645,26 +646,26 @@ static void spWriteString(
 			quoteQuotes = false;
 			}
 
-		s.Write(delimiter);
+		s << delimiter;
 
 		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = quoteQuotes;
 		theOptions.fEscapeHighUnicode = false;
 
-		ZStrimW_Escaped(theOptions, s).Write(iString);
+		ZStrimW_Escaped(theOptions, s) << iString;
 
-		s.Write(delimiter);
+		s << delimiter;
 		}
 	}
 
-static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
+static void spToStrim_Stream(const ChanW_UTF& s, const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
 	if (theSize == 0)
 		{
 		// we've got an empty Raw
-		s.Write("()");
+		s << "()";
 		}
 	else
 		{
@@ -677,10 +678,10 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			s.Writef("( // %lld bytes", theSize);
+			sWritef(s, "( // %lld bytes", theSize);
 
 			if (countRemaining < theSize)
-				s.Writef(" (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+				sWritef(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
 			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
@@ -704,20 +705,20 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 						while (extraSpaces--)
 							{
 							// Two spaces for the two nibbles
-							s.Write("  ");
+							s << "  ";
 							// And then the separator sequence
-							s.Write(iOptions.fRawByteSeparator);
+							s << iOptions.fRawByteSeparator;
 							}
 						}
 
-					s.Write(" // ");
+					s << " // ";
 					while (countCopied--)
 						{
-						char theChar = iStreamRPos.ReadInt8();
+						UTF32 theChar = iStreamRPos.ReadInt8();
 						if (theChar < 0x20 || theChar > 0x7E)
-							s.WriteCP('.');
+							sWrite('.', s);
 						else
-							s.WriteCP(theChar);
+							sWrite(theChar, s);
 						}
 					spWriteLFIndent(s, iLevel, iOptions);
 					}
@@ -734,11 +735,11 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 				spWriteLFIndent(s, iLevel, iOptions);
 				}
 
-			s.Write(")");
+			s << ")";
 			}
 		else
 			{
-			s.Write("(");
+			s << "(";
 
 			ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
 				.CopyAllFrom(iStreamRPos);
@@ -746,23 +747,23 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawAsASCII)
 				{
 				iStreamRPos.SetPosition(0);
-				s.Write(" /* ");
+				s << " /* ";
 				while (theSize--)
 					{
-					char theChar = iStreamRPos.ReadInt8();
+					UTF32 theChar = iStreamRPos.ReadInt8();
 					if (theChar < 0x20 || theChar > 0x7E)
-						s.WriteCP('.');
+						sWrite('.', s);
 					else
-						s.WriteCP(theChar);
+						sWrite(theChar, s);
 					}
-				s.Write(" */");
+				s << " */";
 				}
-			s.Write(")");
+			s << ")";
 			}
 		}
 	}
 
-static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
+static void spToStrim_Stream(const ChanW_UTF& s, const ZStreamR& iStreamR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
@@ -771,16 +772,16 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 		}
 	else
 		{
-		s.Write("(");
+		s << "(";
 
 		ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
 			.CopyAllFrom(iStreamR);
 
-		s.Write(")");
+		s << ")";
 		}
 	}
 
-static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
+static void spToStrim_Strim(const ChanW_UTF& s, const ZStrimR& iStrimR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (const ZStrimU_String8* theStrimU = dynamic_cast<const ZStrimU_String8*>(&iStrimR))
@@ -789,27 +790,26 @@ static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 		}
 	else
 		{
-		s.Write("\"");
+		s << "\"";
 
 		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = true;
 		theOptions.fEscapeHighUnicode = false;
 
-		ZStrimW_Escaped(theOptions, s)
-			.CopyAllFrom(iStrimR);
+		ZStrimW_Escaped(theOptions, s) << iStrimR;
 
-		s.Write("\"");
+		s << "\"";
 		}
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
+static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iVal,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (false)
 		{}
 	else if (iVal.Type() == typeid(void))
 		{
-		s.Write("Null");
+		s << "Null";
 		}
 #if 0
 	else if (const ZType* theValue = iVal.PGet<ZType>())
@@ -819,59 +819,59 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 #endif
 	else if (const uint64* theValue = iVal.PGet<uint64>())
 		{
-		s.Writef("ID(0x%0llX)", *theValue);
+		sWritef(s, "ID(0x%0llX)", *theValue);
 		}
 	else if (const char* theValue = iVal.PGet<char>())
 		{
-		s.Writef("int8(%d)", *theValue);
+		sWritef(s, "int8(%d)", *theValue);
 		}
 	else if (const unsigned char* theValue = iVal.PGet<unsigned char>())
 		{
-		s.Writef("int8(%d)", *theValue);
+		sWritef(s, "int8(%d)", *theValue);
 		}
 	else if (const signed char* theValue = iVal.PGet<signed char>())
 		{
-		s.Writef("int8(%d)", *theValue);
+		sWritef(s, "int8(%d)", *theValue);
 		}
 	else if (const short* theValue = iVal.PGet<short>())
 		{
-		s.Writef("int16(%d)", *theValue);
+		sWritef(s, "int16(%d)", *theValue);
 		}
 	else if (const unsigned short* theValue = iVal.PGet<unsigned short>())
 		{
-		s.Writef("int16(%d)", *theValue);
+		sWritef(s, "int16(%d)", *theValue);
 		}
 	else if (const int* theValue = iVal.PGet<int>())
 		{
 		if (ZIntIs32Bit)
-			s.Writef("int32(%d)", *theValue);
+			sWritef(s, "int32(%d)", *theValue);
 		else
-			s.Writef("int64(%lld)", int64(*theValue));
+			sWritef(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
 		if (ZIntIs32Bit)
-			s.Writef("int32(%d)", *theValue);
+			sWritef(s, "int32(%d)", *theValue);
 		else
-			s.Writef("int64(%lld)", int64(*theValue));
+			sWritef(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const long* theValue = iVal.PGet<long>())
 		{
 		if (ZLongIs32Bit)
-			s.Writef("int32(%ld)", *theValue);
+			sWritef(s, "int32(%ld)", *theValue);
 		else
-			s.Writef("int64(%lld)", int64(*theValue));
+			sWritef(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
 		if (ZLongIs32Bit)
-			s.Writef("int32(%ld)", long(*theValue));
+			sWritef(s, "int32(%ld)", long(*theValue));
 		else
-			s.Writef("int64(%lld)", int64(*theValue));
+			sWritef(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const int64* theValue = iVal.PGet<int64>())
 		{
-		s.Writef("int64(%lld)", *theValue);
+		sWritef(s, "int64(%lld)", *theValue);
 		}
 	else if (const bool* theValue = iVal.PGet<bool>())
 		{
@@ -883,36 +883,36 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 	else if (const float* theValue = iVal.PGet<float>())
 		{
 		s << "float(";
-		ZUtil_Strim::sWriteExact(s, *theValue);
+		ZUtil_Strim::sWriteExact(*theValue, s);
 		s << ")";
 		}
 	else if (const double* theValue = iVal.PGet<double>())
 		{
 		s << "double(";
-		ZUtil_Strim::sWriteExact(s, *theValue);
+		ZUtil_Strim::sWriteExact(*theValue, s);
 		s << ")";
 		}
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		if (*theValue)
 			{
-			s.Write("time(");
+			s << "time(";
 			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
-			s.Write(")");
+			s << ")";
 			}
 		else
 			{
 			// We're now allowing empty parens to represent invalid times.
-			s.Write("time()");
+			s << "time()";
 			}
 		}
 	else if (const VoidStar_t* theValue = iVal.PGet<VoidStar_t>())
 		{
-		s.Writef("pointer(%p)", *theValue);
+		sWritef(s, "pointer(%p)", *theValue);
 		}
 	else if (const ZRectPOD* theValue = iVal.PGet<ZRectPOD>())
 		{
-		s.Writef("Rect(%d, %d, %d, %d)",
+		sWritef(s, "Rect(%d, %d, %d, %d)",
 			theValue->left,
 			theValue->top,
 			theValue->right,
@@ -920,14 +920,14 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else if (const ZPointPOD* theValue = iVal.PGet<ZPointPOD>())
 		{
-		s.Writef("Point(%d, %d)",
+		sWritef(s, "Point(%d, %d)",
 			theValue->h,
 			theValue->v);
 		}
 	else if (const ZRef<ZCounted>* theValue =
 		iVal.PGet<ZRef<ZCounted> >())
 		{
-		s.Writef("RefCounted(%p)", theValue->Get());
+		sWritef(s, "RefCounted(%p)", theValue->Get());
 		}
 	else
 		{
@@ -935,10 +935,10 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	}
 
-static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
+static void spToStrim_Yad(const ChanW_UTF& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions, bool iMayNeedInitialLF);
 
-static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
+static void spToStrim_Seq(const ChanW_UTF& s, ZRef<ZYadSeqR> iYadSeqR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	bool needsIndentation = false;
@@ -962,7 +962,7 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 			spWriteLFIndent(s, iLevel, iOptions);
 			}
 
-		s.Write("[");
+		s << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
@@ -972,19 +972,19 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 			else
 				{
 				if (not isFirst)
-					s.Write(", ");
+					s << ", ";
 				spWriteLFIndent(s, iLevel, iOptions);
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
 				}
 			}
 		spWriteLFIndent(s, iLevel, iOptions);
-		s.Write("]");
+		s << "]";
 		}
 	else
 		{
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
-		s.Write("[");
+		s << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
@@ -994,15 +994,15 @@ static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 			else
 				{
 				if (not isFirst)
-					s.Write(", ");
+					s << ", ";
 				spToStrim_Yad(s, cur, iLevel, iOptions, false);
 				}
 			}
-		s.Write("]");
+		s << "]";
 		}
 	}
 
-static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
+static void spToStrim_Map(const ChanW_UTF& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	bool needsIndentation = false;
@@ -1020,7 +1020,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			spWriteLFIndent(s, iLevel, iOptions);
 			}
 
-		s.Write("{");
+		s << "{";
 		for (;;)
 			{
 			ZName curName;
@@ -1034,15 +1034,15 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
-				s.Write(";");
+				s << ";";
 				}
 			}
 		spWriteLFIndent(s, iLevel, iOptions);
-		s.Write("}");
+		s << "}";
 		}
 	else
 		{
-		s.Write("{");
+		s << "{";
 		for (;;)
 			{
 			ZName curName;
@@ -1052,18 +1052,18 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				}
 			else
 				{
-				s.Write(" ");
+				s << " ";
 				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
-				s.Write(";");
+				s << ";";
 				}
 			}
-		s.Write(" }");
+		s << " }";
 		}
 	}
 
-static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
+static void spToStrim_Yad(const ChanW_UTF& s, ZRef<ZYadR> iYadR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (not iYadR)
@@ -1134,11 +1134,11 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 ZRef<ZYadR> ZYad_ZooLibStrim::sYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_ZooLibStrim(iStrimmerU); }
 
-void ZYad_ZooLibStrim::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
+void ZYad_ZooLibStrim::sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s)
 	{ spToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
 void ZYad_ZooLibStrim::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ZStrimW& s)
+	ZRef<ZYadR> iYadR, const ChanW_UTF& s)
 	{ spToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
 
 static bool spContainsProblemChars(const string& iString)
@@ -1162,7 +1162,7 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-void ZYad_ZooLibStrim::sWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
+void ZYad_ZooLibStrim::sWrite_PropName(const string& iPropName, const ChanW_UTF& iStrimW)
 	{
 	if (spContainsProblemChars(iPropName))
 		{

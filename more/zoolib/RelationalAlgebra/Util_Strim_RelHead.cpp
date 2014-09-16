@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 #include "zoolib/ValueOnce.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -34,24 +35,24 @@ namespace Util_Strim_RelHead {
 
 using std::set;
 
-void sWrite_PropName(const string8& iName, const ZStrimW& s)
+void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{
-	s.Write("@");
+	s << "@";
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
+void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
 	{
-	s.Write("[");
+	s << "[";
 
 	FalseOnce needsSeparator;
 	foreachi (ii, iRelHead)
 		{
 		if (needsSeparator())
-			s.Write(", ");
+			s << ", ";
 		sWrite_PropName(*ii, s);
 		}
-	s.Write("]");
+	s << "]";
 	}
 
 } // namespace Util_Strim_RelHead
@@ -59,13 +60,13 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 
 using namespace RelationalAlgebra;
 
-const ZStrimW& operator<<(const ZStrimW& w, const RelHead& iRH)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelHead& iRH)
 	{
 	Util_Strim_RelHead::sWrite_RelHead(iRH, w);
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const Rename& iRename)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Rename& iRename)
 	{
 	w << "[";
 	FalseOnce needsSeparator;
@@ -79,9 +80,9 @@ const ZStrimW& operator<<(const ZStrimW& w, const Rename& iRename)
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const ConcreteHead& iCH)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
 	{
-	w.Write("[");
+	w << "[";
 
 	ValueOnce<std::string> separator("", ", ");
 	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
@@ -95,7 +96,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ConcreteHead& iCH)
 		ZYad_ZooLibStrim::sWrite_PropName(ii->first, w);
 		}
 
-	w.Write("]");
+	w << "]";
 
 	return w;
 	}

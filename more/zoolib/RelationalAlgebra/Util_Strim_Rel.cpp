@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_Operators.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZUtil_Strim_ValPred_Any.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
@@ -37,13 +38,13 @@ using std::string;
 
 void Visitor::Visit_Expr(const ZRef<ZExpr>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << iExpr->DebugDescription();
 	}
 
 void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Calc(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << " = /*Some function of*/";
@@ -55,13 +56,13 @@ void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Concrete(" << iExpr->GetConcreteHead() << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
@@ -80,7 +81,7 @@ void Visitor::Visit_Expr_Rel_Dum(const ZRef<Expr_Rel_Dum>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Embed(";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
@@ -103,7 +104,7 @@ void Visitor::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Project(" << iExpr->GetProjectRelHead() << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
@@ -112,7 +113,7 @@ void Visitor::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Rename(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetNew(), w);
 	w << "<--";
@@ -125,7 +126,7 @@ void Visitor::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Restrict(";
 	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ",";
@@ -139,7 +140,7 @@ void Visitor::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << "Search(";
 	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ",";
@@ -151,7 +152,7 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iE
 void Visitor::pWriteBinary(
 	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
 	{
-	const ZStrimW& w = pStrimW();
+	const ChanW_UTF& w = pStrimW();
 	w << iFunctionName << "(";
 
 	this->pWriteLFIndent();
@@ -165,7 +166,7 @@ void Visitor::pWriteBinary(
 // =================================================================================================
 // MARK: - ZRA_Util_Strim_Rel
 
-void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ZStrimW& iStrimW)
+void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
 	{
 	Options theOptions;
 	theOptions.fEOLString = "\n";
@@ -173,13 +174,13 @@ void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ZStrimW& iStr
 	sToStrim(iRel, theOptions, iStrimW);
 	}
 
-void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ZStrimW& iStrimW)
+void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW)
 	{ Visitor().ToStrim(iOptions, iStrimW, iRel); }
 
 } // namespace Util_Strim_Rel
 } // namespace RelationalAlgebra
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
 	{
 	RelationalAlgebra::Util_Strim_Rel::sToStrim(iRel, w);
 	return w;

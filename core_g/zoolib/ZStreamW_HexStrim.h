@@ -33,14 +33,14 @@ namespace ZooLib {
 class ZStreamW_HexStrim_Real : public ZStreamW
 	{
 public:
-	ZStreamW_HexStrim_Real(bool iUseUnderscore, const ZStrimW& iStrimSink);
+	ZStreamW_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iStrimSink);
 
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 	virtual void Imp_Flush();
 
 protected:
-	const ZStrimW& fStrimSink;
+	const ChanW_UTF& fStrimSink;
 	const char* fHexDigits;
 	};
 
@@ -51,11 +51,11 @@ class ZStreamW_HexStrim : public ZStreamW
 	{
 public:
 	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink);
+		const std::string& iChunkSeparator, size_t iChunkSize, const ChanW_UTF& iStrimSink);
 
 	ZStreamW_HexStrim(const std::string& iByteSeparator,
 		const std::string& iChunkSeparator, size_t iChunkSize,
-		bool iUseUnderscore, const ZStrimW& iStrimSink);
+		bool iUseUnderscore, const ChanW_UTF& iStrimSink);
 
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);

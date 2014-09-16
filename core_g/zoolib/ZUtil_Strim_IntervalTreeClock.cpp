@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 
 namespace ZooLib {
 namespace ZIntervalTreeClock {
@@ -27,7 +28,7 @@ namespace ZIntervalTreeClock {
 // =================================================================================================
 // MARK: - ZIntervalTreeClock
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Identity>& iIdentity)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity)
 	{
 	if (iIdentity->IsZero())
 		w << "-";
@@ -38,7 +39,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Identity>& iIdentity)
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZRef<Event>& iEvent)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent)
 	{
 	if (iEvent->IsLeaf())
 		{

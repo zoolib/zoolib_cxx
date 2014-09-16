@@ -22,13 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_Matrix_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include "zoolib/ZMatrix.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
 
 namespace ZooLib {
 
 template <class E, size_t R>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,1,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,1,R>& mat)
 	{
 	w << "C[";
 	for (size_t r = 0; r < R; ++r)
@@ -42,7 +43,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,1,R>& mat)
 	}
 
 template <class E, size_t C>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,1>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,1>& mat)
 	{
 	w << "R[";
 	for (size_t c = 0; c < C; ++c)
@@ -56,7 +57,7 @@ const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,1>& mat)
 	}
 
 template <class E, size_t C, size_t R>
-const ZStrimW& operator<<(const ZStrimW& w, const ZMatrix<E,C,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,R>& mat)
 	{
 	w << "[";
 	for (size_t r = 0; r < R; ++r)

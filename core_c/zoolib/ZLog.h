@@ -23,11 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Safe.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZUtil_Strim_Operators.h"
+#include "zoolib/ZStrim.h"
 
 #if ZCONFIG(Compiler, GCC)
 	#define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__

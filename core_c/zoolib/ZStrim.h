@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanW_UTF_More.h"
 #include "zoolib/ZUnicodeString.h"
 
@@ -193,9 +194,20 @@ public:
 // =================================================================================================
 // MARK: - ZStrimU
 
-class ZStrimU : public ZStrimR
+class ZStrimU
+:	public ZStrimR
+,	public ChanU<UTF32>
 	{
 public:
+// From ChanU<UTF32>
+	virtual size_t Unread(const UTF32* iSource, size_t iCount)
+		{
+		for (size_t count = 0; count < iCount; ++count)
+			this->Imp_Unread(*iSource++);
+		return iCount;
+		}
+
+// Our protocol
 	void Unread(UTF32 iCP) const;
 	size_t UnreadableLimit() const;
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Util_Strim_h__
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -32,7 +32,7 @@ namespace Dataspace {
 // =================================================================================================
 // MARK: -
 
-const ZStrimW& operator<<(const ZStrimW& w, const std::set<RelationalAlgebra::RelHead>& iSet);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const std::set<RelationalAlgebra::RelHead>& iSet);
 
 } // namespace Dataspace
 } // namespace ZooLib
