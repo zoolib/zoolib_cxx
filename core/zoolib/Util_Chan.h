@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
+#include "zoolib/ChanW_XX_More.h"
 
 namespace ZooLib {
 namespace Util_Chan {
@@ -89,6 +90,24 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 		return std::pair<uint64,uint64>(totalCopied, totalCopied);
 		}
 	}
+
+template <class Elmt_t>
+bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const Elmt_t& iTerminator)
+	{
+	for (;;)
+		{
+		if (ZQ<Elmt_t,false> theCPQ = sQRead(iChanR))
+			return false;
+		else if (iTerminator == *theCPQ)
+			return true;
+		else
+			sQWriteCP(*theCPQ, iChanW);
+		}
+	}
+
+template <class Elmt_t>
+bool sSkip_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator)
+	{ sCopy_Until(iChanR, ChanW_XX_Discard<Elmt_t>(), iTerminator); }
 
 } // namespace Util_Chan
 
