@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 
 // For now we're using the functions provided in ZByteSwap. Ultimately we'll migrate their
-// implementations to here, and probably those function will wrap the ones here.
+// implementations here, and those functions will then be wrappers for these.
 
 namespace ZooLib {
 
