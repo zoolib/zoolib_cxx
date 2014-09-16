@@ -33,11 +33,14 @@ ChanBase_Bin_string::ChanBase_Bin_string(std::string* ioStringPtr)
 size_t ChanBase_Bin_string::Read(byte* oDest, size_t iCount)
 	{
 	const size_t theSize = fStringPtr->size();
-	const size_t countToCopy = std::min<size_t>(iCount,
-		theSize > fPosition ? theSize - fPosition : 0);
-	std::copy(&fStringPtr->at(fPosition), &fStringPtr->at(fPosition + iCount), (char*)oDest);
-	fPosition += countToCopy;
-	return countToCopy;
+	if (const size_t countToCopy =
+		std::min<size_t>(iCount, theSize > fPosition ? theSize - fPosition : 0))
+		{
+		std::copy(&fStringPtr->at(fPosition), (&fStringPtr->at(fPosition)) + iCount, (char*)oDest);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
+	return 0;
 	}
 
 size_t ChanBase_Bin_string::Readable()
