@@ -81,7 +81,7 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 // =================================================================================================
 // MARK: -
 
-bool sQWriteCP(UTF32 iCP, const ChanW_UTF& iChanW)
+bool sQWriteCP(UTF32 iCP, const ChanW<UTF32>& iChanW)
 	{ return 1 == sWrite(&iCP, 1, iChanW); }
 
 void sWrite(const UTF32* iSource,
@@ -186,8 +186,8 @@ void sWrite(const UTF8* iString, const ChanW_UTF& iChanW)
 
 void sWrite(const string32& iString, const ChanW_UTF& iChanW)
 	{
-	// Some non-conformant string implementations (MS) hate it if you try to access the buffer
-	// underlying an empty string. They don't event return zero, they crash or throw an exception.
+	// Some non-conformant string implementations (MS) hate it if you access the buffer underlying
+	// an empty string. They don't even return null, they crash or throw an exception.
 	if (const size_t countCU = iString.size())
 		spWriteMust(iString.data(), countCU, iChanW);
 	}
@@ -206,13 +206,16 @@ void sWrite(const string8& iString, const ChanW_UTF& iChanW)
 
 // -----
 
-void sWritef(const ChanW_UTF& iChanW, const UTF8* iString, ...);
+void sWritef(const ChanW_UTF& iChanW,
+	const UTF8* iString, ...);
 
-void sWritef(const ChanW_UTF& iChanW, size_t* oCountCU, size_t* oWritten, const UTF8* iString, ...);
+void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+	const UTF8* iString, ...);
 
-void sWritev(const ChanW_UTF& iChanW, const UTF8* iString, va_list iArgs);
+void sWritev(const ChanW_UTF& iChanW,
+	const UTF8* iString, va_list iArgs);
 
-void sWritev(const ChanW_UTF& iChanW, size_t* oCountCU, size_t* oWritten,
+void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, va_list iArgs);
 
 } // namespace ZooLib

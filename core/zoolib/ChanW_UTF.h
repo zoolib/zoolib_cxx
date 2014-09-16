@@ -27,6 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+typedef ChanW<UTF32> ChanW_UTF32;
+typedef ChanW<UTF16> ChanW_UTF16;
+typedef ChanW<UTF8> ChanW_UTF8;
+
 // =================================================================================================
 // MARK: -
 
@@ -47,7 +51,7 @@ public:
 // =================================================================================================
 // MARK: -
 
-bool sQWriteCP(UTF32 iCP, const ChanW_UTF& iChanW);
+bool sQWriteCP(UTF32 iCP, const ChanW<UTF32>& iChanW);
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{
@@ -62,15 +66,6 @@ void sWrite(const UTF16* iSource,
 void sWrite(const UTF8* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW);
-//@}
-
-
-/** \name String buffers
-*/	//@{
-// This next one is provided by ChanW<UTF32>
-// size_t sWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
-//size_t sWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
-//size_t sWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW);
 //@}
 
 
@@ -92,18 +87,20 @@ void sWrite(const string8& iString, const ChanW_UTF& iChanW);
 
 /** \name Formatted strings
 */	//@{
-void sWritef(const ChanW_UTF& iChanW, const UTF8* iString, ...)
+void sWritef(const ChanW_UTF& iChanW,
+	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(2,3);
 
-void sWritef(const ChanW_UTF& iChanW, size_t* oCountCU, size_t* oWritten, const UTF8* iString, ...)
+void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(4,5);
 
-void sWritev(const ChanW_UTF& iChanW, const UTF8* iString, va_list iArgs);
+void sWritev(const ChanW_UTF& iChanW,
+	const UTF8* iString, va_list iArgs);
 
-void sWritev(const ChanW_UTF& iChanW, size_t* oCountCU, size_t* oWritten,
+void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, va_list iArgs);
 //@}
-
 
 } // namespace ZooLib
 
