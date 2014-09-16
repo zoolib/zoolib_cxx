@@ -83,7 +83,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF8* iString)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ChanR_UTF& r)
 	{
-	Util_Chan::sCopyAll(r, w);
+	sCopyAll(r, w);
 	return w;
 	}
 

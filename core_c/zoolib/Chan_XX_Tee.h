@@ -51,7 +51,7 @@ public:
 
 		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
 
-		if (const size_t countRead = sRead(std::min(iCount, countof(buf)), fChanR))
+		if (const size_t countRead = sRead(buf, std::min(iCount, countof(buf)), fChanR))
 			{
 			std::copy(buf, buf + countRead, oDest);
 

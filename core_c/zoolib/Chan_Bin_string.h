@@ -18,73 +18,90 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_UTF_string_h__
-#define __ZooLib_ChanW_UTF_string_h__ 1
+#ifndef __ZooLib_Chan_Bin_string_h__
+#define __ZooLib_Chan_Bin_string_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/ChanCount.h"
+#include "zoolib/ChanCountSet.h"
+#include "zoolib/ChanPos.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanU.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/Util_Chan.h" // For sCopyAll
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string
+// MARK: - ChanBase_Bin_string
 
-template <class UTF_t> class ChanW_UTF_string;
-
-// =================================================================================================
-// MARK: - ChanW_UTF_string<string32>
-
-template <>
-class ChanW_UTF_string<UTF32>
-:	public ChanW_UTF_Native32
+class ChanBase_Bin_string
+:	public ChanR_Bin
+,	public ChanCount
+,	public ChanPos
 	{
 public:
-	ChanW_UTF_string(string32* ioString);
+	ChanBase_Bin_string(std::string* ioStringPtr);
 
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
+// From ChanR
+	virtual size_t Read(byte* oDest, size_t iCount);
+
+	virtual size_t Readable();
+
+// From ChanGetCount
+	virtual uint64 Count();
+
+// From ChanPos
+	virtual uint64 Pos();
+
+	virtual void SetPos(uint64 iPos);
 
 protected:
-	string32* fStringPtr;
+	std::string* fStringPtr;
+	size_t fPosition;
 	};
-
-typedef ChanW_UTF_string<UTF32> ChanW_UTF_string32;
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<string16>
+// MARK: - ChanRPos_Bin_string
 
-template <>
-class ChanW_UTF_string<UTF16>
-:	public ChanW_UTF_Native16
+class ChanRPos_Bin_string
+:	public ChanBase_Bin_string
+,	public ChanU<byte>
 	{
 public:
-	ChanW_UTF_string(string16* ioString);
+	ChanRPos_Bin_string(const std::string& iString);
 
-	virtual size_t Write(const UTF16* iSource, size_t iCountCU);
+// From ChanU
+	virtual size_t Unread(const byte* iSource, size_t iCount);
+	virtual size_t UnreadableLimit();
 
-protected:
-	string16* fStringPtr;
+	const std::string fString;
 	};
-
-typedef ChanW_UTF_string<UTF16> ChanW_UTF_string16;
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<string8>
+// MARK: - ChanRWPos_Bin_string
 
-template <>
-class ChanW_UTF_string<UTF8>
-:	public ChanW_UTF_Native8
+class ChanRWPos_Bin_string
+:	public ChanBase_Bin_string
+,	public ChanU<byte>
+,	public ChanW_Bin
+,	public ChanCountSet
 	{
 public:
-	ChanW_UTF_string(string8* ioString);
+	ChanRWPos_Bin_string(std::string* ioStringPtr);
 
-	virtual size_t Write(const UTF8* iSource, size_t iCountCU);
+// From ChanU
+	virtual size_t Unread(const byte* iSource, size_t iCount);
 
-protected:
-	string8* fStringPtr;
+	virtual size_t UnreadableLimit();
+
+// From ChanW
+	virtual size_t Write(const byte* iSource, size_t iCount);
+
+// From ChanCountSet
+	virtual void CountSet(uint64 iCount);
 	};
-
-typedef ChanW_UTF_string<UTF8> ChanW_UTF_string8;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_UTF_string_h__
+#endif // __ZooLib_Chan_Bin_string_h__

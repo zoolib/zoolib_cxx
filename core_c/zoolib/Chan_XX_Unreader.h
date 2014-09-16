@@ -18,47 +18,75 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanW_UTF_string.h"
+#ifndef __ZooLib_Chan_XX_Unreader_h__
+#define __ZooLib_Chan_XX_Unreader_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ChanR.h"
+#include "zoolib/ChanU.h"
+
+#include <vector>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<UTF32>
+// MARK: - Chan_XX_Unreader
 
-ChanW_UTF_string<UTF32>::ChanW_UTF_string(string32* ioString)
-:	fStringPtr(ioString)
-	{}
-
-size_t ChanW_UTF_string<UTF32>::Write(const UTF32* iSource, size_t iCountCU)
+template <class XX>
+class Chan_XX_Unreader
+:	public ChanR<XX>
+,	public ChanU<XX>
 	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
+public:
+	typedef XX Elmt_t;
 
-// =================================================================================================
-// MARK: - ChanW_UTF_string<UTF16>
+	Chan_XX_Unreader(const ChanR<Elmt_t>& iChanR)
+	:	fChanR(iChanR)
+		{}
 
-ChanW_UTF_string<UTF16>::ChanW_UTF_string(string16* ioString)
-:	fStringPtr(ioString)
-	{}
+// From ChanR
+	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+		{
+		Elmt_t* localDest = oDest;
+		Elmt_t* localDestEnd = oDest + iCount;
+		while (localDest < localDestEnd)
+			{
+			if (fStack.empty())
+				{
+				size_t countRead = sRead(localDest, localDestEnd - localDest, fChanR);
+				if (countRead == 0)
+					break;
+				localDest += countRead;
+				}
+			else
+				{
+				*localDest++ = fStack.back();
+				fStack.pop_back();
+				}
+			}
 
-size_t ChanW_UTF_string<UTF16>::Write(const UTF16* iSource, size_t iCountCU)
-	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
+		return localDest - oDest;
+		}
 
-// =================================================================================================
-// MARK: - ChanW_UTF_string<UTF8>
+	virtual size_t Readable()
+		{ return fStack.size() + sReadable(fChanR); }
 
-ChanW_UTF_string<UTF8>::ChanW_UTF_string(string8* ioString)
-:	fStringPtr(ioString)
-	{}
+	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
+		{
+		const size_t theCount = iCount;
+		while (--iCount)
+			fStack.push_back(*iSource++);
+		return theCount;
+		}
 
-size_t ChanW_UTF_string<UTF8>::Write(const UTF8* iSource, size_t iCountCU)
-	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
+	virtual size_t UnreadableLimit()
+		{ return size_t(-1); }
+
+protected:
+	const ChanR<Elmt_t>& fChanR;
+	std::vector<Elmt_t> fStack;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Chan_XX_Memory_h__

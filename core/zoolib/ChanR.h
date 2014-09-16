@@ -104,8 +104,21 @@ template <class Elmt_p>
 ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p buf;
-	if (not sRead(&buf, 1, iChanR))
+	if (1 != sRead(&buf, 1, iChanR))
 		return null;
+	return buf;
+	}
+
+template <class Elmt_p>
+bool sQRead(Elmt_p& oElmt, const ChanR<Elmt_p>& iChanR)
+	{ return 1 == sRead(&oElmt, 1, iChanR); }
+
+template <class Elmt_p>
+Elmt_p sRead(const ChanR<Elmt_p>& iChanR)
+	{
+	Elmt_p buf;
+	if (1 != sRead(&buf, 1, iChanR))
+		ChanRBase::sThrow_Exhausted();
 	return buf;
 	}
 

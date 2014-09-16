@@ -33,6 +33,8 @@ namespace ZooLib {
 class ChanPos
 	{
 public:
+	typedef ChanPos Chan_Base;
+
 	virtual uint64 Pos() = 0;
 
 	virtual void SetPos(uint64 iPos) = 0;

@@ -58,7 +58,7 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	ZAssertStop(2, Unicode::sIsValid(iCP));
 
 	UTF32 theCP;
-	if (not sQReadCP(theCP, iStrimU))
+	if (not sQRead(theCP, iStrimU))
 		return false;
 
 	if (theCP == iCP)
@@ -86,7 +86,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 			}
 
 		UTF32 candidateCP;
-		if (not sQReadCP(candidateCP, iStrimU))
+		if (not sQRead(candidateCP, iStrimU))
 			{
 			// Exhausted strim.
 			break;
@@ -113,7 +113,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (not sQReadCP(theCP, iStrimU))
+	if (not sQRead(theCP, iStrimU))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -129,7 +129,7 @@ bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (not sQReadCP(theCP, iStrimU))
+	if (not sQRead(theCP, iStrimU))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -162,7 +162,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 	if (sTryRead_CP(iStrimU, '0'))
 		{
 		UTF32 theCP;
-		if (not sQReadCP(theCP, iStrimU))
+		if (not sQRead(theCP, iStrimU))
 			{
 			oInt64 = 0;
 			return true;
@@ -393,7 +393,7 @@ void sCopy_WS(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not sQReadCP(theCP, iStrimU))
+		if (not sQRead(theCP, iStrimU))
 			break;
 		if (not spIsWhitespace(theCP))
 			{
@@ -409,7 +409,7 @@ void sSkip_WS(const ZStrimU& iStrimU)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not sQReadCP(theCP, iStrimU))
+		if (not sQRead(theCP, iStrimU))
 			break;
 		if (not spIsWhitespace(theCP))
 			{
@@ -428,7 +428,7 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ChanW_UTF& oDest
 	for (;;)
 		{
 		UTF32 firstCP;
-		if (sQReadCP(firstCP, iStrimU))
+		if (sQRead(firstCP, iStrimU))
 			{
 			if (spIsWhitespace(firstCP))
 				{
@@ -525,7 +525,7 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	{
 	UTF32 theCP;
-	if (not sQReadCP(theCP, iStrimU))
+	if (not sQRead(theCP, iStrimU))
 		return false;
 
 	if (not Unicode::sIsAlpha(theCP) && theCP != '_')
@@ -539,7 +539,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not sQReadCP(theCP, iStrimU))
+		if (not sQRead(theCP, iStrimU))
 			break;
 
 		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')

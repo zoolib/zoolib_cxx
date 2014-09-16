@@ -33,6 +33,8 @@ namespace ZooLib {
 class ChanCount
 	{
 public:
+	typedef ChanCount Chan_Base;
+
 	virtual uint64 Count() = 0;
 	};
 

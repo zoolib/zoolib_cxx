@@ -80,4 +80,38 @@ void sWritef(const ChanW_Bin& iChanW, const char* iString, ...)
 		}
 	}
 
+// =================================================================================================
+// MARK: -
+
+const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const char* iString)
+	{
+	sWrite(iString, iChanW);
+	return iChanW;
+	}
+
+const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, char* iString)
+	{
+	sWrite(iString, iChanW);
+	return iChanW;
+	}
+
+const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
+	{
+	sWrite(iString, iChanW);
+	return iChanW;
+	}
+
+// =================================================================================================
+// MARK: - ChanW_Bin_string
+
+ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
+:	fStringPtr(ioString)
+	{}
+
+size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCountCU)
+	{
+	fStringPtr->append((char*)iSource, iCountCU);
+	return iCountCU;
+	}
+
 } // namespace ZooLib

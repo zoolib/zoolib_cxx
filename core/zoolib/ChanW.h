@@ -61,6 +61,7 @@ ChanW reference, you must work with some derived class.
 
 public:
 	typedef Elmt_p Elmt_t;
+	typedef ChanW<Elmt_p> Chan_Base;
 
 	virtual size_t Write(const Elmt_t* iSource, size_t iCount) = 0;
 
@@ -86,7 +87,7 @@ bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 template <class Elmt_p>
 void sWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	{
-	if (not sQWrite(iElmt, iChanW))
+	if (1 != sWrite(&iElmt, 1, iChanW))
 		ChanWBase::sThrow_Exhausted();
 	}
 

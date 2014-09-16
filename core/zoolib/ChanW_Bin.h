@@ -87,9 +87,9 @@ bool sQWriteSwapped(const T& iT, const ChanW_Bin& iChanW)
 
 #endif
 
-template <class T>
-bool sQWrite(const T& iT, const ChanW_Bin& iChanW)
-	{ return sQWriteBE<T>(iT, iChanW); }
+//##template <class T>
+//##bool sQWrite(const T& iT, const ChanW_Bin& iChanW)
+//##	{ return sQWriteBE<T>(iT, iChanW); }
 
 } // namespace ZooLib
 

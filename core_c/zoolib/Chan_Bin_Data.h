@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
 #include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll
 
@@ -132,7 +133,7 @@ public:
 		{}
 
 // From ChanU
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
+	virtual size_t Unread(const byte* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
@@ -147,7 +148,7 @@ public:
 		{ return this->fPosition; }
 
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t Write(const byte* iSource, size_t iCount)
 		{
 		const size_t newPosition = this->fPosition + iCount;
 		if (this->fDataPtr->GetSize() < newPosition)
@@ -172,7 +173,7 @@ public:
 // =================================================================================================
 // MARK: - Data stream reading functions
 
-template <class Data_pBin>
+template <class Data_p>
 Data_p sReadAll_T(const ChanR_Bin& iChanR)
 	{
 	Data_p theData;
@@ -180,7 +181,7 @@ Data_p sReadAll_T(const ChanR_Bin& iChanR)
 	return theData;
 	}
 
-template <class Data_pBin>
+template <class Data_p>
 Data_p sRead_T(const ChanR_Bin& iChanR, size_t iSize)
 	{
 	Data_p theData;

@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_XX_More.h"
 
 namespace ZooLib {
-namespace Util_Chan {
 
 // =================================================================================================
 // MARK: -
@@ -108,9 +107,8 @@ bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const
 
 template <class Elmt_t>
 bool sSkip_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator)
-	{ sCopy_Until(iChanR, ChanW_XX_Discard<Elmt_t>(), iTerminator); }
+	{ return sCopy_Until(iChanR, ChanW_XX_Discard<Elmt_t>(), iTerminator); }
 
-} // namespace Util_Chan
 } // namespace ZooLib
 
 #endif // __ZooLib_Util_Chan_h__

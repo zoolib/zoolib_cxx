@@ -52,6 +52,30 @@ May invoke ChanWBase::sThrow_Exhausted.
 */
 void sWritef(const ChanW_Bin& iChanW, const char* iString, ...);
 
+// =================================================================================================
+// MARK: -
+
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
+
+const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString);
+
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
+
+// =================================================================================================
+// MARK: - ChanW_Bin_string
+
+class ChanW_Bin_string
+:	public ChanW_Bin
+	{
+public:
+	ChanW_Bin_string(std::string* ioString);
+
+	virtual size_t Write(const byte* iSource, size_t iCountCU);
+
+protected:
+	std::string* fStringPtr;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanW_Bin_More_h__

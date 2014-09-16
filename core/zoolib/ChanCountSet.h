@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStdInt.h" // For uint64
 
+#include <stdexcept> // For range_error
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -32,6 +34,8 @@ namespace ZooLib {
 class ChanCountSet
 	{
 public:
+	typedef ChanCountSet Chan_Base;
+
 	static void sThrowBadCount()
 		{ throw std::range_error("ChanCountSet"); }
 
