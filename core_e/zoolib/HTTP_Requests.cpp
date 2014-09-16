@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanR_XX_More.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_XX_Unreader.h"
@@ -125,7 +126,7 @@ ZQ<Connection_t> sQChanner(const string& iHost, uint16 iPort, bool iUseSSL)
 	}
 
 // =================================================================================================
-// MARK: - ZHTTP::sRequest
+// MARK: - HTTP::sRequest
 
 static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 	const string& iMethod, const string& iHost, const string& iPath, const Map* iHeader,
@@ -206,11 +207,9 @@ ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 				case 200:
 					{
 					if ("HEAD" == iMethod)
-						theConnQ->f1 = sChanner_T<ChanW_XX_Null<byte> >();
+						theConnQ->f0 = sChanner_T<ChanR_XX_Null<byte> >();
 
-					if (ZRef<ChannerR_Bin> theChanner =
-						sMakeContentChanner(theResponseHeader, theConnQ->f0))
-						{ theConnQ->f0 = theChanner; }
+					theConnQ->f0 = sMakeContentChanner(theResponseHeader, theConnQ->f0);
 
 					return theConnQ;
 					}
@@ -231,7 +230,7 @@ ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 	}
 
 // =================================================================================================
-// MARK: - ZHTTP::sPOST
+// MARK: - HTTP::sPOST
 
 static void spPOST_Prefix(const ChanW_Bin& w,
 	const string& iMethod,

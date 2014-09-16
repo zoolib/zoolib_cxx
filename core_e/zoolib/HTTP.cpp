@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_Bin_string.h"
 #include "zoolib/ChanW_Bin_More.h"
+#include "zoolib/Chan_XX_Limited.h"
 #include "zoolib/Chan_XX_Unreader.h"
-
 #include "zoolib/HTTP.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Util_Chan.h"
@@ -29,14 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-//#include "zoolib/ZStreamR_Boundary.h"
-//#include "zoolib/ZStream_Limited.h"
-//#include "zoolib/ZStream_String.h"
-//#include "zoolib/ZStreamer.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_string.h"
-
-#include <ctype.h>
 
 namespace ZooLib {
 namespace HTTP {
@@ -522,7 +516,8 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 //	else if (fieldName == "expires")
 //	else if (fieldName == "last-modified")
 //---------------
-	else if (fieldName == "content-disposition") sQRead_content_disposition(iChanR, iChanU, ioFields);
+	else if (fieldName == "content-disposition")
+		{ sQRead_content_disposition(iChanR, iChanU, ioFields); }
 	else
 		{
 		sSkipLWS(iChanR, iChanU);
@@ -694,32 +689,30 @@ string sGetString0(const Val& iVal)
 	return string();
 	}
 
-#if 0
-static ZRef<ZStreamerR> spMakeStreamer_Transfer(
-	const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
+static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
+	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
 	if (ZUtil_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
-		return new ZStreamerR_FT<ChanR_Bin_Chunked>(iChanR, iChanUerR);
+		return new Channer_FT<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
-		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength.Get(), iStreamerR);
+		return new Channer_FT<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
 
-	return iStreamerR;
+	return iChannerR;
 	}
 
-ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
+ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iChannerR)
 	{
-	iStreamerR = spMakeStreamer_Transfer(iHeader, iStreamerR);
+	iChannerR = spMakeChanner_Transfer(iHeader, iChannerR);
 
 	// We could/should look for gzip Content-Encoding, and wrap a decoding filter around it.
 
-	return iStreamerR;
+	return iChannerR;
 	}
-#endif
 
 // =================================================================================================
 // MARK: - HTTP, request headers
@@ -1108,7 +1101,8 @@ bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
 	return true;
 	}
 
-bool sQReadFieldName(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oName, string* oNameExact)
+bool sQReadFieldName(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+	string* oName, string* oNameExact)
 	{
 	if (oName)
 		oName->resize(0);
@@ -1386,7 +1380,8 @@ bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	return gotAny;
 	}
 
-bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oTokenLC, string* oTokenExact)
+bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+	string* oTokenLC, string* oTokenExact)
 	{
 	if (oTokenLC)
 		oTokenLC->resize(0);
