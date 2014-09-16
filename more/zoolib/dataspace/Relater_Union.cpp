@@ -198,9 +198,9 @@ void Relater_Union::Proxy::Accept(const ZVisitor& iVisitor)
 
 std::string Relater_Union::Proxy::DebugDescription()
 	{
-	string8 result = "Proxy(";
-	ZStrimW_String<string8>(result) << fRel;
-	return result + ")";
+	string8 result;
+	ZStrimW_String<string8>(&result) << "Proxy(" << fRel << ")";
+	return result;
 	}
 
 void Relater_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
