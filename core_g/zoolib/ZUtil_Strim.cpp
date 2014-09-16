@@ -18,6 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_UTF_string.h"
+#include "zoolib/Util_Chan.h"
+
 #include "zoolib/ZUtil_Strim.h"
 
 #include "zoolib/ZCompat_cmath.h" // For pow, NAN and INFINITY
@@ -485,26 +488,10 @@ string8 sRead_Line(const ZStrimR& iStrimR)
 
 // -----------------
 
-bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (not iStrimR.ReadCP(theCP))
-			return false;
-		if (theCP == iTerminator)
-			return true;
-		oDest.WriteCP(theCP);
-		}
-	}
-
-bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
-	{ return sCopy_Until(iStrimR, iTerminator, ZStrimW_Null()); }
-
 string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
 	{
 	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(&result));
+	Util_Chan::sCopy_Until<UTF32>(iStrimR, ChanW_UTF_string8(&result), iTerminator);
 	return result;
 	}
 
@@ -525,8 +512,8 @@ string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 	{
 	string8 result;
 	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(&result));
-	return result;
-	}
+ 	return result;
+ 	}
 
 // -----------------
 

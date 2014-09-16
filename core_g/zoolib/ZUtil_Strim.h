@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_Chan_UTF.h"
+
 #include "zoolib/ZStrim.h"
 
 #include <stdexcept>
@@ -66,6 +68,7 @@ bool sTryRead_SignedDecimalNumber(const ZStrimU& iStrimU,
 bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble);
 bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble);
 
+// -----
 
 void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest);
 void sSkip_WS(const ZStrimU& iStrimU);
@@ -80,8 +83,6 @@ void sSkip_Line(const ZStrimR& iStrimR);
 string8 sRead_Line(const ZStrimR& iStrimR);
 
 
-bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest);
-bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator);
 string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator);
 
 
