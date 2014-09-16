@@ -74,7 +74,7 @@ public:
 	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t theCount = iCount;
-		while (--iCount)
+		while (iCount--)
 			fStack.push_back(*iSource++);
 		return theCount;
 		}
@@ -89,4 +89,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_XX_Memory_h__
+#endif // __ZooLib_Chan_XX_Unreader_h__
