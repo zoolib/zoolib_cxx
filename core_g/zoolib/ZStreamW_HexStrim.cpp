@@ -62,10 +62,10 @@ void ZStreamW_HexStrim_Real::Imp_Flush()
 // MARK: - ZStreamW_HexStrim
 
 static
-ZStrimW_InsertSeparator::Spacings
+ChanW_UTF_InsertSeparator::Spacings
 spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator, size_t iChunkSize)
 	{
-	ZStrimW_InsertSeparator::Spacings result;
+	ChanW_UTF_InsertSeparator::Spacings result;
 
 	if (iByteSeparator.size())
 		result[2] = iByteSeparator;

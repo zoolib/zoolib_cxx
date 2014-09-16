@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamW_HexStrim_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanW_UTF_InsertSeparator.h"
+
 #include "zoolib/ZStream.h"
-#include "zoolib/ZStrimW_InsertSeparator.h"
 
 namespace ZooLib {
 
@@ -62,7 +63,7 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	ZStrimW_InsertSeparator fStrim;
+	ChanW_UTF_InsertSeparator fStrim;
 	ZStreamW_HexStrim_Real fStream;
 	};
 

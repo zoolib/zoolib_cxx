@@ -18,15 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_UTF_InsertSeparator.h"
+
 #include "zoolib/ZCompat_algorithm.h"
-#include "zoolib/ZStrimW_InsertSeparator.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimW_InsertSeparator
+// MARK: - ChanW_UTF_InsertSeparator
 
-ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
+ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 	size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fCount(0)
@@ -35,14 +36,14 @@ ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
 		fSpacings[iSpacing] = iSeparator;
 	}
 
-ZStrimW_InsertSeparator::ZStrimW_InsertSeparator(
+ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 	const Spacings& iSpacings, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink)
 ,	fSpacings(iSpacings)
 ,	fCount(0)
 	{}
 
-size_t ZStrimW_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimW_InsertSeparator_h__
-#define __ZStrimW_InsertSeparator_h__ 1
+#ifndef __ChanW_UTF_InsertSeparator_h__
+#define __ChanW_UTF_InsertSeparator_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanW_UTF_More.h" // For ChanW_UTF_Native32
@@ -29,17 +29,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimW_InsertSeparator
+// MARK: - ChanW_UTF_InsertSeparator
 
-class ZStrimW_InsertSeparator
+class ChanW_UTF_InsertSeparator
 :	public ChanW_UTF_Native32
 	{
 public:
 	typedef std::map<size_t,string8> Spacings;
 
-	ZStrimW_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink);
+	ChanW_UTF_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink);
 
-	ZStrimW_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iStrimSink);
+	ChanW_UTF_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iStrimSink);
 	
 // From ChanW<UTF32> via ChanW_UTF_Native32
 	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
@@ -52,4 +52,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZStrimW_InsertSeparator_h__
+#endif // __ChanW_UTF_InsertSeparator_h__
