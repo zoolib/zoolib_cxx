@@ -83,6 +83,13 @@ template <class Elmt_p>
 bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	{ return 1 == sWrite(&iElmt, 1, iChanW); }
 
+template <class Elmt_p>
+void sWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+	{
+	if (not sQWrite(iElmt, iChanW))
+		ChanWBase::sThrow_Exhausted();
+	}
+
 // =================================================================================================
 // MARK: -
 
