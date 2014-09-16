@@ -85,9 +85,6 @@ public:
 // =================================================================================================
 // MARK: -
 
-// =================================================================================================
-// MARK: -
-
 template <class Elmt_p>
 size_t sRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 	{ return sNonConst(iChanR).Read(oDest, iCount); }
@@ -107,7 +104,7 @@ template <class Elmt_p>
 ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p buf;
-	if (not sRead(iChanR, &buf, 1))
+	if (not sRead(&buf, 1, iChanR))
 		return null;
 	return buf;
 	}
