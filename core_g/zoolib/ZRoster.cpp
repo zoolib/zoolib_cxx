@@ -36,8 +36,8 @@ using namespace ZUtil_STL;
 ZRoster::ZRoster()
 	{}
 
-ZRoster::ZRoster(const ZRef<ZCallable_Void>& iCallable_Change,
-	const ZRef<ZCallable_Void>& iCallable_Gone)
+ZRoster::ZRoster(const ZRef<Callable_Void>& iCallable_Change,
+	const ZRef<Callable_Void>& iCallable_Gone)
 :	fCallable_Change(iCallable_Change)
 ,	fCallable_Gone(iCallable_Gone)
 	{}
@@ -55,7 +55,7 @@ void ZRoster::Finalize()
 	for (set<Entry*>::const_iterator ii = fEntries.begin(); ii != fEntries.end(); ++ii)
 		(*ii)->fRoster.Clear();
 
-	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
+	ZRef<Callable_Void> theCallable = fCallable_Gone;
 
 	guard.Release();
 
@@ -67,8 +67,8 @@ void ZRoster::Finalize()
 ZRef<ZRoster::Entry> ZRoster::MakeEntry()
 	{ return this->MakeEntry(null, null); }
 
-ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<ZCallable_Void>& iCallable_Broadcast,
-	const ZRef<ZCallable_Void>& iCallable_Gone)
+ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
+	const ZRef<Callable_Void>& iCallable_Gone)
 	{
 	ZRef<Entry> theEntry = new Entry(this, iCallable_Broadcast, iCallable_Gone);
 
@@ -122,7 +122,7 @@ bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallable_Gone)
+void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone)
 	{
 	{
 	ZAcqMtx acq(fMtx);
@@ -144,8 +144,8 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<ZCallable_Void>& iCallabl
 
 ZRoster::Entry::Entry(
 	const ZRef<ZRoster>& iRoster,
-	const ZRef<ZCallable_Void>& iCallable_Broadcast,
-	const ZRef<ZCallable_Void>& iCallable_Gone)
+	const ZRef<Callable_Void>& iCallable_Broadcast,
+	const ZRef<Callable_Void>& iCallable_Gone)
 :	fRoster(iRoster)
 ,	fCallable_Broadcast(iCallable_Broadcast)
 ,	fCallable_Gone(iCallable_Gone)
@@ -156,7 +156,7 @@ ZRoster::Entry::~Entry()
 
 void ZRoster::Entry::Finalize()
 	{
-	ZRef<ZCallable_Void> theCallable = fCallable_Gone;
+	ZRef<Callable_Void> theCallable = fCallable_Gone;
 
 	if (ZRef<ZRoster> theRoster = fRoster)
 		{
