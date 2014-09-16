@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_NS.h"
 #include "zoolib/ZVal_Any.h"
 

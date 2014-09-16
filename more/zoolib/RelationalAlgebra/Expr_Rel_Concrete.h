@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Concrete_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/UnicodeString.h"
+
 #include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZUnicodeString.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/RelHead.h"
 

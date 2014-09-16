@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStrim_Limited.h"
+#include "zoolib/Unicode.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZStrim_Limited.h"
 
 using std::max;
 using std::min;
@@ -87,7 +87,7 @@ void ZStrimW_Limited::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 	{
 	size_t countCUWritten;
 	fSink.Write(iSource, min(uint64(iCountCU), fRemainingCP), &countCUWritten);
-	fRemainingCP -= ZUnicode::sCUToCP(iSource, countCUWritten);
+	fRemainingCP -= Unicode::sCUToCP(iSource, countCUWritten);
 	if (oCountCU)
 		*oCountCU = countCUWritten;
 	}

@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
@@ -455,7 +455,7 @@ void ZYadStrimmerR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount,
 					{
 					fQuotesSeen = 3;
 					UTF32 theCP = theStrimU.ReadCP();
-					if (not ZUnicode::sIsEOL(theCP))
+					if (not Unicode::sIsEOL(theCP))
 						theStrimU.Unread(theCP);
 					}
 				else
@@ -1115,7 +1115,7 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 		UTF32 theCP;
 		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -1124,7 +1124,7 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 		gotAny = true;
 
 		if (oStringLC)
-			*oStringLC += ZUnicode::sToLower(theCP);
+			*oStringLC += Unicode::sToLower(theCP);
 		if (oStringExact)
 			*oStringExact += theCP;
 		}
@@ -1153,9 +1153,9 @@ static bool spContainsProblemChars(const string& iString)
 	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
 		{
 		UTF32 theCP;
-		if (not ZUnicode::sReadInc(ii, end, theCP))
+		if (not Unicode::sReadInc(ii, end, theCP))
 			break;
-		if (not ZUnicode::sIsAlphaDigit(theCP) && '_' != theCP)
+		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
 			return true;
 		}
 

@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrimU_Std.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -50,7 +51,7 @@ void ZStrimU_Std::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 				break;
 			++fPos;
 
-			if (ZUnicode::sIsEOL(theCP))
+			if (Unicode::sIsEOL(theCP))
 				{
 				++fLine;
 				fColumn = 0;
@@ -94,7 +95,7 @@ int ZStrimU_Std::GetLine()
 	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
 		ii != rend; ++ii)
 		{
-		if (ZUnicode::sIsEOL(*ii))
+		if (Unicode::sIsEOL(*ii))
 			--line;
 		}
 	return line;
@@ -106,7 +107,7 @@ int ZStrimU_Std::GetColumn()
 	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
 		ii != rend; ++ii)
 		{
-		if (ZUnicode::sIsEOL(*ii))
+		if (Unicode::sIsEOL(*ii))
 			column = -1;
 		else
 			--column;

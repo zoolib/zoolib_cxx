@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Bencode.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -118,7 +119,7 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 	string::const_iterator end = theString.end();
 	size_t countSkipped = 0;
 	UTF32 dummyCP;
-	while (ZUnicode::sReadInc(current, end, dummyCP, countSkipped) && !countSkipped)
+	while (Unicode::sReadInc(current, end, dummyCP, countSkipped) && !countSkipped)
 		{}
 
 	if (countSkipped == 0)

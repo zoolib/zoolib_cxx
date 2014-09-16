@@ -23,10 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/CountedWithoutFinalize.h"
+#include "zoolib/UnicodeString.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZUnicodeString.h"
 
 namespace ZooLib {
 

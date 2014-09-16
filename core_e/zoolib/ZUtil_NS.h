@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // with Cocotron, otherwise va_list isn't appropriately visible to ObjC code.
 #include <Foundation/Foundation.h>
 
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/UnicodeString.h"
 
 // =================================================================================================
 // MARK: - ZUtil_NS

@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZTextCollator.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -277,189 +278,189 @@ ZRef<ZTextCollatorRep> ZTextCollatorRep::SafeCopy()
 // MARK: - ZTextCollatorRep_NativeUTF8
 
 bool ZTextCollatorRep_NativeUTF8::Equals(const string16& iLeft, const string16& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF8(iLeft), ZUnicode::sAsUTF8(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF8(iLeft), Unicode::sAsUTF8(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF8::Equals(const string32& iLeft, const string32& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF8(iLeft), ZUnicode::sAsUTF8(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF8(iLeft), Unicode::sAsUTF8(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF8::Equals(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF8(iLeft, iLeftLength),
-		ZUnicode::sAsUTF8(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF8(iLeft, iLeftLength),
+		Unicode::sAsUTF8(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF8::Equals(const UTF32* iLeft, size_t iLeftLength,
 	const UTF32* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF8(iLeft, iLeftLength),
-		ZUnicode::sAsUTF8(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF8(iLeft, iLeftLength),
+		Unicode::sAsUTF8(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF8::Compare(const string16& iLeft, const string16& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF8(iLeft), ZUnicode::sAsUTF8(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF8(iLeft), Unicode::sAsUTF8(iRight)); }
 
 int ZTextCollatorRep_NativeUTF8::Compare(const string32& iLeft, const string32& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF8(iLeft), ZUnicode::sAsUTF8(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF8(iLeft), Unicode::sAsUTF8(iRight)); }
 
 int ZTextCollatorRep_NativeUTF8::Compare(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF8(iLeft, iLeftLength),
-		ZUnicode::sAsUTF8(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF8(iLeft, iLeftLength),
+		Unicode::sAsUTF8(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF8::Compare(const UTF32* iLeft, size_t iLeftLength,
 	const UTF32* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF8(iLeft, iLeftLength),
-		ZUnicode::sAsUTF8(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF8(iLeft, iLeftLength),
+		Unicode::sAsUTF8(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF8::Contains(const string16& iPattern, const string16& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF8(iPattern), ZUnicode::sAsUTF8(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF8(iPattern), Unicode::sAsUTF8(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF8::Contains(const string32& iPattern, const string32& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF8(iPattern), ZUnicode::sAsUTF8(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF8(iPattern), Unicode::sAsUTF8(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF8::Contains(const UTF16* iPattern, size_t iPatternLength,
 	const UTF16* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF8(iPattern, iPatternLength),
-		ZUnicode::sAsUTF8(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF8(iPattern, iPatternLength),
+		Unicode::sAsUTF8(iTarget, iTargetLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF8::Contains(const UTF32* iPattern, size_t iPatternLength,
 	const UTF32* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF8(iPattern, iPatternLength),
-		ZUnicode::sAsUTF8(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF8(iPattern, iPatternLength),
+		Unicode::sAsUTF8(iTarget, iTargetLength));
 	}
 
 // =================================================================================================
 // MARK: - ZTextCollatorRep_NativeUTF16
 
 bool ZTextCollatorRep_NativeUTF16::Equals(const string8& iPattern, const string8& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF16(iPattern), ZUnicode::sAsUTF16(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF16(iPattern), Unicode::sAsUTF16(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF16::Equals(const string32& iPattern, const string32& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF16(iPattern), ZUnicode::sAsUTF16(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF16(iPattern), Unicode::sAsUTF16(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF16::Equals(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF16(iLeft, iLeftLength),
-		ZUnicode::sAsUTF16(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF16(iLeft, iLeftLength),
+		Unicode::sAsUTF16(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF16::Equals(const UTF32* iLeft, size_t iLeftLength,
 	const UTF32* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF16(iLeft, iLeftLength),
-		ZUnicode::sAsUTF16(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF16(iLeft, iLeftLength),
+		Unicode::sAsUTF16(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF16::Compare(const string8& iLeft, const string8& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF16(iLeft), ZUnicode::sAsUTF16(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF16(iLeft), Unicode::sAsUTF16(iRight)); }
 
 int ZTextCollatorRep_NativeUTF16::Compare(const string32& iLeft, const string32& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF16(iLeft), ZUnicode::sAsUTF16(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF16(iLeft), Unicode::sAsUTF16(iRight)); }
 
 int ZTextCollatorRep_NativeUTF16::Compare(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF16(iLeft, iLeftLength),
-		ZUnicode::sAsUTF16(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF16(iLeft, iLeftLength),
+		Unicode::sAsUTF16(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF16::Compare(const UTF32* iLeft, size_t iLeftLength,
 	const UTF32* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF16(iLeft, iLeftLength),
-		ZUnicode::sAsUTF16(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF16(iLeft, iLeftLength),
+		Unicode::sAsUTF16(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF16::Contains(const string8& iPattern, const string8& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF16(iPattern), ZUnicode::sAsUTF16(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF16(iPattern), Unicode::sAsUTF16(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF16::Contains(const string32& iPattern, const string32& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF16(iPattern), ZUnicode::sAsUTF16(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF16(iPattern), Unicode::sAsUTF16(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF16::Contains(const UTF8* iPattern, size_t iPatternLength,
 	const UTF8* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF16(iPattern, iPatternLength),
-		ZUnicode::sAsUTF16(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF16(iPattern, iPatternLength),
+		Unicode::sAsUTF16(iTarget, iTargetLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF16::Contains(const UTF32* iPattern, size_t iPatternLength,
 	const UTF32* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF16(iPattern, iPatternLength),
-		ZUnicode::sAsUTF16(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF16(iPattern, iPatternLength),
+		Unicode::sAsUTF16(iTarget, iTargetLength));
 	}
 
 // =================================================================================================
 // MARK: - ZTextCollatorRep_NativeUTF32
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const string8& iPattern, const string8& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF32(iPattern), ZUnicode::sAsUTF32(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF32(iPattern), Unicode::sAsUTF32(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const string16& iPattern, const string16& iRight)
-	{ return this->Equals(ZUnicode::sAsUTF32(iPattern), ZUnicode::sAsUTF32(iRight)); }
+	{ return this->Equals(Unicode::sAsUTF32(iPattern), Unicode::sAsUTF32(iRight)); }
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF32(iLeft, iLeftLength),
-		ZUnicode::sAsUTF32(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF32(iLeft, iLeftLength),
+		Unicode::sAsUTF32(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	return this->Equals(ZUnicode::sAsUTF32(iLeft, iLeftLength),
-		ZUnicode::sAsUTF32(iRight, iRightLength));
+	return this->Equals(Unicode::sAsUTF32(iLeft, iLeftLength),
+		Unicode::sAsUTF32(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF32::Compare(const string8& iLeft, const string8& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF32(iLeft), ZUnicode::sAsUTF32(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF32(iLeft), Unicode::sAsUTF32(iRight)); }
 
 int ZTextCollatorRep_NativeUTF32::Compare(const string16& iLeft, const string16& iRight)
-	{ return this->Compare(ZUnicode::sAsUTF32(iLeft), ZUnicode::sAsUTF32(iRight)); }
+	{ return this->Compare(Unicode::sAsUTF32(iLeft), Unicode::sAsUTF32(iRight)); }
 
 int ZTextCollatorRep_NativeUTF32::Compare(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF32(iLeft, iLeftLength),
-		ZUnicode::sAsUTF32(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF32(iLeft, iLeftLength),
+		Unicode::sAsUTF32(iRight, iRightLength));
 	}
 
 int ZTextCollatorRep_NativeUTF32::Compare(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
 	{
-	return this->Compare(ZUnicode::sAsUTF32(iLeft, iLeftLength),
-		ZUnicode::sAsUTF32(iRight, iRightLength));
+	return this->Compare(Unicode::sAsUTF32(iLeft, iLeftLength),
+		Unicode::sAsUTF32(iRight, iRightLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF32::Contains(const string8& iPattern, const string8& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF32(iPattern), ZUnicode::sAsUTF32(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF32(iPattern), Unicode::sAsUTF32(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF32::Contains(const string16& iPattern, const string16& iTarget)
-	{ return this->Contains(ZUnicode::sAsUTF32(iPattern), ZUnicode::sAsUTF32(iTarget)); }
+	{ return this->Contains(Unicode::sAsUTF32(iPattern), Unicode::sAsUTF32(iTarget)); }
 
 bool ZTextCollatorRep_NativeUTF32::Contains(const UTF8* iPattern, size_t iPatternLength,
 	const UTF8* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF32(iPattern, iPatternLength),
-		ZUnicode::sAsUTF32(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF32(iPattern, iPatternLength),
+		Unicode::sAsUTF32(iTarget, iTargetLength));
 	}
 
 bool ZTextCollatorRep_NativeUTF32::Contains(const UTF16* iPattern, size_t iPatternLength,
 	const UTF16* iTarget, size_t iTargetLength)
 	{
-	return this->Contains(ZUnicode::sAsUTF32(iPattern, iPatternLength),
-		ZUnicode::sAsUTF32(iTarget, iTargetLength));
+	return this->Contains(Unicode::sAsUTF32(iPattern, iPatternLength),
+		Unicode::sAsUTF32(iTarget, iTargetLength));
 	}
 
 // =================================================================================================

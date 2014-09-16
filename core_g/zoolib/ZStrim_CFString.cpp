@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRef_CF.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 using std::max;
@@ -58,7 +59,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
-			ZUnicode::sUTF16ToUTF32(
+			Unicode::sUTF16ToUTF32(
 				start + fPosition, countAvailable,
 				&countConsumed, nullptr,
 				oDest, iCount,
@@ -69,7 +70,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 			UTF16 buffer[kBufSize];
 			const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
-			ZUnicode::sUTF16ToUTF32(
+			Unicode::sUTF16ToUTF32(
 				buffer, cuToCopy,
 				&countConsumed, nullptr,
 				oDest, iCount,
@@ -96,7 +97,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* oDest,
 		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
-			ZUnicode::sUTF16ToUTF16(
+			Unicode::sUTF16ToUTF16(
 				start + fPosition, countAvailable,
 				&countConsumed, nullptr,
 				oDest, iCountCU,
@@ -108,7 +109,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* oDest,
 			UTF16 buffer[kBufSize];
 			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
-			ZUnicode::sUTF16ToUTF16(
+			Unicode::sUTF16ToUTF16(
 				buffer, cuToCopy,
 				&countConsumed, nullptr,
 				oDest, iCountCU,
@@ -136,7 +137,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* oDest,
 		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
-			ZUnicode::sUTF16ToUTF8(
+			Unicode::sUTF16ToUTF8(
 				start + fPosition, length - fPosition,
 				&countConsumed, nullptr,
 				oDest, iCountCU,
@@ -148,7 +149,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* oDest,
 			UTF16 buffer[kBufSize];
 			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
-			ZUnicode::sUTF16ToUTF8(
+			Unicode::sUTF16ToUTF8(
 				buffer, cuToCopy,
 				&countConsumed, nullptr,
 				oDest, iCountCU,
@@ -161,7 +162,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* oDest,
 
 bool ZStrimR_CFString::Imp_ReadCP(UTF32& oCP)
 	{
-	using namespace ZUnicode;
+	using namespace Unicode;
 	const size_t length = ::CFStringGetLength(fStringRef);
 	for (;;)
 		{

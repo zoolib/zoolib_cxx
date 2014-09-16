@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZRef_NS.h"
 
 using std::min;
@@ -60,7 +61,7 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 		const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 		const NSRange theRange = { fPosition, cuToCopy };
 		[fString.Get() getCharacters:(unichar*)buffer range:theRange];
-		ZUnicode::sUTF16ToUTF32(
+		Unicode::sUTF16ToUTF32(
 			buffer, cuToCopy,
 			&countConsumed, nullptr,
 			oDest, iCount,
@@ -71,7 +72,7 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 
 bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 	{
-	using namespace ZUnicode;
+	using namespace Unicode;
 	const size_t length = [fString.Get() length];
 	for (;;)
 		{

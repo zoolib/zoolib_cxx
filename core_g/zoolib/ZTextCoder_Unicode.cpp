@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 
 #include <string>
 
@@ -190,7 +191,7 @@ static bool spDecodeUTF32(
 			while (countToCopy--)
 				{
 				UTF32 theCP = *localSource++;
-				if (ZUnicode::sIsValid(theCP))
+				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				else
 					++skipped;
@@ -202,7 +203,7 @@ static bool spDecodeUTF32(
 			while (countToCopy--)
 				{
 				UTF32 theCP = *localSource++;
-				if (ZUnicode::sIsValid(theCP))
+				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				}
 			}
@@ -247,7 +248,7 @@ static bool spDecodeUTF32Swapped(
 			while (countToCopy--)
 				{
 				UTF32 theCP = ZByteSwap_Read32(localSource++);
-				if (ZUnicode::sIsValid(theCP))
+				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				else
 					++skipped;
@@ -259,7 +260,7 @@ static bool spDecodeUTF32Swapped(
 			while (countToCopy--)
 				{
 				UTF32 theCP = ZByteSwap_Read32(localSource++);
-				if (ZUnicode::sIsValid(theCP))
+				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				}
 			}
@@ -293,7 +294,7 @@ static bool spDecodeUTF16(
 		}
 	else
 		{
-		bool sourceComplete = ZUnicode::sUTF16ToUTF32(
+		bool sourceComplete = Unicode::sUTF16ToUTF32(
 			static_cast<const UTF16*>(iSource), iSourceBytes / 2,
 			oSourceBytes, oSourceBytesSkipped,
 			oDest, iDestCU,
@@ -356,7 +357,7 @@ static bool spDecodeUTF16Swapped(
 				size_t countConsumed;
 				size_t countSkipped;
 				size_t countGenerated;
-				sourceComplete = ZUnicode::sUTF16ToUTF32(
+				sourceComplete = Unicode::sUTF16ToUTF32(
 					buffer, countToMove,
 					&countConsumed, &countSkipped,
 					localDest, iDestCU,
@@ -387,7 +388,7 @@ static bool spDecodeUTF16Swapped(
 
 				size_t countConsumed;
 				size_t countGenerated;
-				sourceComplete = ZUnicode::sUTF16ToUTF32(
+				sourceComplete = Unicode::sUTF16ToUTF32(
 					buffer, countToMove,
 					&countConsumed, nullptr,
 					localDest, iDestCU,
@@ -416,7 +417,7 @@ static bool spDecodeUTF16Swapped(
 static void spEncodeUTF16(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
-	ZUnicode::sUTF32ToUTF16(
+	Unicode::sUTF32ToUTF16(
 		iSource, iSourceCU,
 		oSourceCU, nullptr,
 		static_cast<UTF16*>(oDest), iDestBytes / 2,
@@ -435,7 +436,7 @@ static void spEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t*
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	size_t countGenerated;
-	ZUnicode::sUTF32ToUTF16(
+	Unicode::sUTF32ToUTF16(
 		iSource, iSourceCU,
 		oSourceCU, nullptr,
 		static_cast<UTF16*>(oDest), iDestBytes / 2,
@@ -457,7 +458,7 @@ static bool spDecodeUTF8(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
-	return ZUnicode::sUTF8ToUTF32(
+	return Unicode::sUTF8ToUTF32(
 		static_cast<const UTF8*>(iSource), iSourceBytes,
 		oSourceBytes, oSourceBytesSkipped,
 		oDest, iDestCU,
@@ -467,7 +468,7 @@ static bool spDecodeUTF8(
 static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
-	ZUnicode::sUTF32ToUTF8(
+	Unicode::sUTF32ToUTF8(
 		iSource, iSourceCU,
 		oSourceCU, nullptr,
 		static_cast<UTF8*>(oDest), iDestBytes,

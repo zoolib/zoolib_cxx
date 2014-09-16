@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZTextCoder_Std.h"
+#include "zoolib/Unicode.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZTextCoder_Std.h"
 
 #include <string>
 
@@ -117,7 +117,7 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UTF32 theCP;
-		if (not ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
+		if (not Unicode::sReadInc(localSource, localSourceEnd, theCP))
 			break;
 		if (uint32(theCP) <= 0x7F)
 			*localDest++ = uint8(theCP);
@@ -167,7 +167,7 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UTF32 theCP;
-		if (not ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
+		if (not Unicode::sReadInc(localSource, localSourceEnd, theCP))
 			break;
 		if (uint32(theCP) <= 0xFF)
 			*localDest++ = theCP;
@@ -330,7 +330,7 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
 		UnicodeToMac_t codeLookup;
-		if (not ZUnicode::sReadInc(localSource, localSourceEnd, codeLookup.fUnicode))
+		if (not Unicode::sReadInc(localSource, localSourceEnd, codeLookup.fUnicode))
 			break;
 
 		const UnicodeToMac_t* iter = std::lower_bound(

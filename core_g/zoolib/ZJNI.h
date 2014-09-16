@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZJNI_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThreadVal.h"
+#include "zoolib/ThreadVal.h"
 
 #include <jni.h>
 
@@ -32,7 +32,7 @@ namespace ZJNI {
 // =================================================================================================
 // MARK: -
 
-typedef ZThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
+typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
 
 } // namespace ZJNI
 } // namespace ZooLib

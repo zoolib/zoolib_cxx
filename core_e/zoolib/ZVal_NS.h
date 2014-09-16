@@ -25,9 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#include "zoolib/UnicodeString.h"
+
 #include "zoolib/ZData_NS.h"
 #include "zoolib/ZRef_NS.h"
-#include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 #import <Foundation/NSArray.h>

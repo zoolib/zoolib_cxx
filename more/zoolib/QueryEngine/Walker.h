@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_QueryEngine_Walker_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/UnicodeString.h"
+
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 
 #include <set>

@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_string.h"
 
 #include <stdexcept>
@@ -82,7 +83,7 @@ static TextEncoding spLookupName(const string& iName)
 		return theTE;
 
 	// Try again, forcing lower case
-	ZUtil_string::sToPString(ZUnicode::sToLower(iName), theNameStr255, 255);
+	ZUtil_string::sToPString(Unicode::sToLower(iName), theNameStr255, 255);
 	if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 		return theTE;
 
@@ -91,7 +92,7 @@ static TextEncoding spLookupName(const string& iName)
 	ZTextCoder::sGetAliases(iName, aliases);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		ZUtil_string::sToPString(ZUnicode::sToLower(*ii), theNameStr255, 255);
+		ZUtil_string::sToPString(Unicode::sToLower(*ii), theNameStr255, 255);
 		if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 			return theTE;
 		}
@@ -140,7 +141,7 @@ bool ZTextDecoder_Mac::Decode(
 	ByteCount countOffsets;
 
 	// utf16Buffer is the target for calls to ConvertFromTextToUnicode,
-	// we use ZUnicode::sUTF16ToUTF32 to further transcribe the generated UTF-16
+	// we use Unicode::sUTF16ToUTF32 to further transcribe the generated UTF-16
 	// into the UTF-32 we need.
 	UniChar utf16Buffer[kBufSize];
 
@@ -242,7 +243,7 @@ bool ZTextDecoder_Mac::Decode(
 
 			size_t utf16Consumed;
 			size_t utf32Generated;
-			ZUnicode::sUTF16ToUTF32(
+			Unicode::sUTF16ToUTF32(
 				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
 				&utf16Consumed, nullptr,
 				localDest, iDestCU,
@@ -313,7 +314,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 					void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	// utf16Buffer is the source for calls to ConvertFromUnicodeToText, we use
-	// ZUnicode::sUTF32ToUTF16 to populate it from the UTF-32 we're passed.
+	// Unicode::sUTF32ToUTF16 to populate it from the UTF-32 we're passed.
 	UniChar utf16Buffer[kBufSize];
 
 	const UTF32* localSource = iSource;
@@ -332,7 +333,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			localSource, iSourceCU,
 			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
@@ -356,10 +357,10 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			// We were not able to consume all the intermediary UTF-16 that was generated.
 			// Turn the number of complete code points consumed back into the number of
 			// corresponding UTF-32 code units.
-			size_t codePoints = ZUnicode::sCUToCP(
+			size_t codePoints = Unicode::sCUToCP(
 				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Consumed);
 
-			utf32Consumed = ZUnicode::sCPToCU(localSource, codePoints);
+			utf32Consumed = Unicode::sCPToCU(localSource, codePoints);
 			}
 		localSource += utf32Consumed;
 		iSourceCU -= utf32Consumed;

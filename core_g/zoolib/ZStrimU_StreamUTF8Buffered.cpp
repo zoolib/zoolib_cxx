@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZStrimU_StreamUTF8Buffered.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 
@@ -47,7 +48,7 @@ static void spUTF8ToUTF32(
 	UTF32* oDest, size_t iDestCount,
 	size_t& oDestCount)
 	{
-	ZUnicode::sUTF8ToUTF32(
+	Unicode::sUTF8ToUTF32(
 		iStart, iCountCU,
 		nullptr, nullptr,
 		oDest, iDestCount,

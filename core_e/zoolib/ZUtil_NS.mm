@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZVal_Any.h"
 
 #import <Foundation/NSString.h>
@@ -124,7 +125,7 @@ string8 sAsUTF8(NSString* iNSString)
 string16 sAsUTF16(NSString* iNSString)
 	{
 	if (iNSString)
-		return ZUnicode::sAsUTF16([iNSString UTF8String]);
+		return Unicode::sAsUTF16([iNSString UTF8String]);
 	return string16();
 	}
 

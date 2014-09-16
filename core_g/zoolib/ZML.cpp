@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZML.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_string.h"
@@ -81,7 +82,7 @@ static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCall
 			if (theCP == ';')
 				break;
 
-			if (ZUnicode::sIsWhitespace(theCP))
+			if (Unicode::sIsWhitespace(theCP))
 				{
 				theEntity.clear();
 				break;
@@ -120,7 +121,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 	if (not s.ReadCP(curCP))
 		return false;
 
-	if (not ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+	if (not Unicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 		{
 		s.Unread(curCP);
 		return false;
@@ -134,7 +135,7 @@ static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 			{
 			break;
 			}
-		else if (not ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
+		else if (not Unicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 			{
 			s.Unread(curCP);
 			break;
@@ -212,7 +213,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 		}
 	else
 		{
-		if (not ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+		if (not Unicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 			{
 			s.Unread(curCP);
 			return false;
@@ -224,7 +225,7 @@ static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 			if (not s.ReadCP(curCP))
 				break;
 
-			if (not ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
+			if (not Unicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 				{
 				s.Unread(curCP);
 				break;
@@ -273,7 +274,7 @@ static bool spReadMLAttributeValue(
 				s.Unread(curCP);
 				break;
 				}
-			else if (ZUnicode::sIsWhitespace(curCP))
+			else if (Unicode::sIsWhitespace(curCP))
 				{
 				break;
 				}
@@ -353,7 +354,7 @@ void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 				else if (theCP == '&')
 					{
 					fBufferStart = 0;
-					fBuffer = ZUnicode::sAsUTF32(spReadReference(fStrim, fCallable));
+					fBuffer = Unicode::sAsUTF32(spReadReference(fStrim, fCallable));
 					}
 				else
 					{
@@ -465,7 +466,7 @@ static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 		/*no test*/;/*no inc*/)
 		{
 		UTF32 patternCP;
-		if (not ZUnicode::sReadInc(iter, iterEnd, patternCP))
+		if (not Unicode::sReadInc(iter, iterEnd, patternCP))
 			{
 			// Exhausted the pattern, we've matched everything.
 			return true;
@@ -908,7 +909,7 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 		do	{
 			priorToEntity = current;
 			UTF32 theCP;
-			if (not ZUnicode::sReadInc(current, localSourceEnd, theCP))
+			if (not Unicode::sReadInc(current, localSourceEnd, theCP))
 				break;
 
 			switch (theCP)
@@ -987,8 +988,8 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 		*oCountCU = localSource - iSource;
 
 	UTF32 theCP;
-	if (ZUnicode::sDecRead(iSource, localSource, localSourceEnd, theCP))
-		fLastWasEOL = ZUnicode::sIsEOL(theCP);
+	if (Unicode::sDecRead(iSource, localSource, localSourceEnd, theCP))
+		fLastWasEOL = Unicode::sIsEOL(theCP);
 	}
 
 void StrimW::Imp_Flush()
@@ -1111,7 +1112,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 		for (;;)
 			{
 			UTF32 theCP;
-			if (not ZUnicode::sReadInc(current, end, theCP))
+			if (not Unicode::sReadInc(current, end, theCP))
 				break;
 
 			if (newValue)
@@ -1166,7 +1167,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 				// so allocate newValue and copy the CPs *prior* to
 				// this CP into newValue. The entity CP itself will
 				// get re-read on the next iteration in the branch above.
-				ZUnicode::sDec(start, current, end);
+				Unicode::sDec(start, current, end);
 				newValue = new string8(start, current);
 				newValue->reserve(iValue.size());
 				}

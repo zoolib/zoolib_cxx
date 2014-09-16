@@ -25,9 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/UnicodeString.h"
+
 #include "zoolib/ZData_CF.h"
 #include "zoolib/ZRef_CF.h"
-#include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 namespace ZooLib {

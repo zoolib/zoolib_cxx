@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZStrim_CRLF.h"
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 
@@ -46,7 +47,7 @@ ZStrimR_CRLFRemove::ZStrimR_CRLFRemove(UTF32 iReplaceCP, const ZStrimR& iStrimSo
 :	fStrimSource(iStrimSource),
 	fReplaceCP(iReplaceCP)
 	{
-	ZAssertStop(2, ZUnicode::sIsValid(fReplaceCP));
+	ZAssertStop(2, Unicode::sIsValid(fReplaceCP));
 	}
 
 void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
@@ -67,7 +68,7 @@ void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 		for (;;)
 			{
 			UTF32 currCP;
-			if (not ZUnicode::sReadInc(readFrom, readFromEnd, currCP))
+			if (not Unicode::sReadInc(readFrom, readFromEnd, currCP))
 				break;
 
 			switch (currCP)
@@ -111,7 +112,7 @@ ZStrimW_CRLFRemove::ZStrimW_CRLFRemove(UTF32 iReplaceCP, const ZStrimW& iStrimSi
 :	fStrimSink(iStrimSink),
 	fReplaceCP(iReplaceCP)
 	{
-	ZAssertStop(2, ZUnicode::sIsValid(fReplaceCP));
+	ZAssertStop(2, Unicode::sIsValid(fReplaceCP));
 	}
 
 void ZStrimW_CRLFRemove::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)

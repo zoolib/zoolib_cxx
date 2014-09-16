@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCoder.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 using std::string;
@@ -478,7 +479,7 @@ state when first created, and can be returned to that state by calling ZTextDeco
 
 ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
 	{
-	const string charsetLC = ZUnicode::sToLower(iCharset);
+	const string charsetLC = Unicode::sToLower(iCharset);
 	return ZFunctionChain_T<ZTextDecoder*, const string&>::sInvoke(charsetLC);
 	}
 
@@ -622,7 +623,7 @@ UTF-32 code units and thus there is no need to deal with truncated source.
 
 ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
 	{
-	const string charsetLC = ZUnicode::sToLower(iCharset);
+	const string charsetLC = Unicode::sToLower(iCharset);
 	return ZFunctionChain_T<ZTextEncoder*, const string&>::sInvoke(charsetLC);
 	}
 

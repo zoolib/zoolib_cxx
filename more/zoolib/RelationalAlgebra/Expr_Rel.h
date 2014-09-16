@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 #include "zoolib/Safe.h"
 #include "zoolib/ThreadVal.h"
+#include "zoolib/UnicodeString.h"
 
 #include "zoolib/ZExpr.h"
-#include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 

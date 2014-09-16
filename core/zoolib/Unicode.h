@@ -52,7 +52,8 @@ const UTF32 kCPMaxUTF = 0x10FFFFul;
 /// The maximum CP that's representable in UCS-4 and UTF-8.
 const UTF32 kCPMaxUCS4 = 0x7FFFFFFFul;
 
-/// The CP to be emitted by a decoder when Unicode cannot represent the source CP.
+/** The CP to be emitted by a decoder when Unicode cannot represent the source CP.
+Not used/produced by ZooLib::Unicode */
 const UTF32 kCPReplacement = 0xFFFDul;
 
 /// UTF-16 surrogate pair ranges.
