@@ -78,16 +78,16 @@ than one code unit may be required.
 */
 
 /**
-\namespace ZooLib::ZUnicode
-\brief The ZUnicode namespace defines a collection of data types and functions for
+\namespace ZooLib::Unicode
+\brief The ZooLib::Unicode namespace defines a collection of data types and functions for
 working with Unicode data.
 \ingroup Unicode
 \sa Unicode
 
-ZUnicode does not directly address internationalization and localization issues, but it
+ZooLib::Unicode does not directly address internationalization and localization issues, but it
 is an important building block in support of such work.
 
-ZUnicode defines three integer types used to hold code units:
+ZooLib::Unicode defines three integer types used to hold code units:
 	- \c UTF32. A 32 bit integer. On platforms where \c wchar_t is 32 bits in size, \c UTF32 \e is
 a \c wchar_t, otherwise it is a \c uint32.
 	- \c UTF16. A 16 bit integer. On platforms where \c wchar_t is 16 bits in size, \c UTF16 \e is
@@ -133,7 +133,7 @@ and all code points of the form U+xxFFFF are illegal, but we don't filter them o
 
 The Unicode standard recommends that illegal code units are each decoded as U+FFFD, the
 replacement character. That's reasonable when decoding a body of material in
-one hit, but it's ambiguous when randomly accessing data in memory. ZUnicode's
+one hit, but it's ambiguous when randomly accessing data in memory. ZooLib::Unicode's
 convention is that illegal code units and code unit sequences are skipped.
 They contribute to any count of code units, but do not generate code points and do not
 contribute to any count of code points. So a pointer into a sequence of code units
@@ -189,10 +189,11 @@ by using <code>\#pragma ushort_wchar_t on</code>
 
 // =================================================================================================
 
+#include "zoolib/Unicode.h"
+#include "zoolib/UnicodePrivB.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUnicode.h"
-#include "zoolib/ZUnicodePrivB.h"
 
 #include <ctype.h>
 
@@ -220,29 +221,29 @@ ZAssertCompile(sizeof(UTF8) == 1);
 
 string16 operator+(UTF32 iCP, const string16& iString)
 	{
-	string16 temp = ZUnicode::sAsUTF16(&iCP, 1);
+	string16 temp = Unicode::sAsUTF16(&iCP, 1);
 	return temp += iString;
 	}
 
 string16& operator+=(string16& ioString, UTF32 iCP)
 	{
 	uint32 realCP = iCP;
-	if (realCP <= uint32(ZUnicode::kCPMaxUCS2))
+	if (realCP <= uint32(Unicode::kCPMaxUCS2))
 		{
 		ioString += UTF16(realCP);
 		}
 	else
 		{
 		realCP -= 0x10000;
-		ioString += UTF16((realCP / 0x400) + ZUnicode::kCPSurrogateHighBegin);
-		ioString += UTF16((realCP & 0x3FF) + ZUnicode::kCPSurrogateLowBegin);
+		ioString += UTF16((realCP / 0x400) + Unicode::kCPSurrogateHighBegin);
+		ioString += UTF16((realCP & 0x3FF) + Unicode::kCPSurrogateLowBegin);
 		}
 	return ioString;
 	}
 
 string8 operator+(UTF32 iCP, const string8& iString)
 	{
-	string8 temp = ZUnicode::sAsUTF8(&iCP, 1);
+	string8 temp = Unicode::sAsUTF8(&iCP, 1);
 	return temp += iString;
 	}
 
@@ -274,7 +275,7 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 			case 3:	*--iter = (realCP | byteMark) & byteMask; realCP >>= 6;
 			case 2:	*--iter = (realCP | byteMark) & byteMask; realCP >>= 6;
 			}
-		*--iter = realCP | ZUnicode::sUTF8StartByteMark[bytesToWrite];
+		*--iter = realCP | Unicode::sUTF8StartByteMark[bytesToWrite];
 		}
 	return ioString;
 	}
@@ -284,7 +285,7 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 // =================================================================================================
 
 namespace ZooLib {
-namespace ZUnicode {
+namespace Unicode {
 
 // =================================================================================================
 // MARK: - Helper inlines and lookup tables
@@ -843,5 +844,5 @@ string16 sAsUTF16(const string8& iString)
 	return result;
 	}
 
-} // namespace ZUnicode
+} // namespace Unicode
 } // namespace ZooLib

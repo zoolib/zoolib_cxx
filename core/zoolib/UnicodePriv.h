@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodePriv_h__
-#define __ZUnicodePriv_h__ 1
+#ifndef __ZooLib_UnicodePriv_h__
+#define __ZooLib_UnicodePriv_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/UnicodeString.h"
 
 namespace ZooLib {
 
@@ -56,15 +56,15 @@ inline string8 operator+(const string8& iString, UTF32 iCP)
 	return temp += iCP;
 	}
 
-namespace ZUnicode {
+namespace Unicode {
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_CountCU
+// MARK: - Unicode::Functions_CountCU
 
 // Functions_CountCU::sCountCU will call through to the standard
 // string length functions for pointers, and for other iterator
-// types there's a definition in ZUnicodePrivB.h and explicit
-// instantiations in ZUnicode.cpp
+// types there's a definition in UnicodePrivB.h and explicit
+// instantiations in Unicode.cpp
 
 template <class I>
 struct Functions_CountCU_T
@@ -169,7 +169,7 @@ struct Functions_CountCU_T<UTF8*>
 	};
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Count
+// MARK: - Unicode::Functions_Count
 
 template <class I>
 struct Functions_Count_T
@@ -186,7 +186,7 @@ struct Functions_Count_T
 	};
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Read
+// MARK: - Unicode::Functions_Read
 
 template <class I, typename C = typename std::iterator_traits<I>::value_type>
 struct Functions_Read_T
@@ -212,7 +212,7 @@ struct Functions_Read_T
 	};
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Write
+// MARK: - Unicode::Functions_Write
 
 template <class I, typename C = typename std::iterator_traits<I>::value_type>
 struct Functions_Write_T
@@ -222,7 +222,7 @@ struct Functions_Write_T
 	};
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Convert
+// MARK: - Unicode::Functions_Convert
 
 template <class I>
 struct Functions_Convert_T
@@ -240,7 +240,7 @@ struct Functions_Convert_T
 	static string8 sAsUTF8(I iSource, I iEnd);
 	};
 
-} // namespace ZUnicode
+} // namespace Unicode
 
 } // namespace ZooLib
 
@@ -387,4 +387,4 @@ inline typename std::char_traits<charT>::int_type std::char_traits<charT>::eof()
 
 #endif // defined(__GNUC__) && __GNUC__ >= 3 && __GNUC_MINOR__ >= 2
 
-#endif // __ZUnicodePriv_h__
+#endif // __ZooLib_UnicodePriv_h__

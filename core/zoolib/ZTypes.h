@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ZTypes_h__
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/UnicodeCU.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZStdInt.h"
-#include "zoolib/ZUnicodeCU.h"
 
 namespace ZooLib {
 

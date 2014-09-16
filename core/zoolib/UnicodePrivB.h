@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodePrivB_h__
-#define __ZUnicodePrivB_h__ 1
+#ifndef __ZooLib_UnicodePrivB_h__
+#define __ZooLib_UnicodePrivB_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicode.h"
+#include "zoolib/Unicode.h"
 
 namespace ZooLib {
-namespace ZUnicode {
+namespace Unicode {
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_CountCU
+// MARK: - Unicode::Functions_CountCU
 
 template <class I>
 size_t Functions_CountCU_T<I>::sCountCU(I iSource)
@@ -40,7 +40,7 @@ size_t Functions_CountCU_T<I>::sCountCU(I iSource)
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Count
+// MARK: - Unicode::Functions_Count
 
 template <class I>
 size_t Functions_Count_T<I>::sCountCP(I iSource)
@@ -153,7 +153,7 @@ size_t Functions_Count_T<I>::sCUToCP(I iSource, I iEnd)
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Read_T<I, UTF32>
+// MARK: - Unicode::Functions_Read_T<I, UTF32>
 
 template <class I>
 struct Functions_Read_T<I, UTF32>
@@ -346,7 +346,7 @@ bool Functions_Read_T<I, UTF32>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Write_T<I, UTF32>
+// MARK: - Unicode::Functions_Write_T<I, UTF32>
 
 template <class I>
 struct Functions_Write_T<I, UTF32>
@@ -374,7 +374,7 @@ bool Functions_Write_T<I, UTF32>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Read_T<I, UTF16>
+// MARK: - Unicode::Functions_Read_T<I, UTF16>
 
 template <class I>
 struct Functions_Read_T<I, UTF16>
@@ -817,7 +817,7 @@ bool Functions_Read_T<I, UTF16>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Write_T<I, UTF16>
+// MARK: - Unicode::Functions_Write_T<I, UTF16>
 
 template <class I>
 struct Functions_Write_T<I, UTF16>
@@ -860,7 +860,7 @@ bool Functions_Write_T<I, UTF16>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Read_T<I, UTF8>
+// MARK: - Unicode::Functions_Read_T<I, UTF8>
 
 template <class I>
 struct Functions_Read_T<I, UTF8>
@@ -1393,7 +1393,7 @@ bool Functions_Read_T<I, UTF8>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& 
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Write_T<I, UTF8>
+// MARK: - Unicode::Functions_Write_T<I, UTF8>
 
 template <class I>
 struct Functions_Write_T<I, UTF8>
@@ -1486,7 +1486,7 @@ bool Functions_Write_T<I, UTF8>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - ZUnicode::Functions_Convert
+// MARK: - Unicode::Functions_Convert
 
 template <class I>
 string32 Functions_Convert_T<I>::sAsUTF32(I iSource)
@@ -1561,15 +1561,15 @@ string16 Functions_Convert_T<I>::sAsUTF16(I iSource, size_t iCountCU)
 	for (UTF32 theCP; sReadInc(iSource, theEnd, theCP); /*no inc*/)
 		{
 		uint32 realCP = theCP;
-		if (realCP <= uint32(ZUnicode::kCPMaxUCS2))
+		if (realCP <= uint32(Unicode::kCPMaxUCS2))
 			{
 			*iter++ = UTF16(realCP);
 			}
 		else
 			{
 			realCP -= 0x10000;
-			*iter++ = UTF16((realCP / 0x400) + ZUnicode::kCPSurrogateHighBegin);
-			*iter++ += UTF16((realCP & 0x3FF) + ZUnicode::kCPSurrogateLowBegin);
+			*iter++ = UTF16((realCP / 0x400) + Unicode::kCPSurrogateHighBegin);
+			*iter++ += UTF16((realCP & 0x3FF) + Unicode::kCPSurrogateLowBegin);
 			}
 		}
 	result.resize(iter - result.begin());
@@ -1630,7 +1630,7 @@ string8 Functions_Convert_T<I>::sAsUTF8(I iSource, I iEnd)
 	return result;
 	}
 
-} // namespace ZUnicode
+} // namespace Unicode
 } // namespace ZooLib
 
-#endif // __ZUnicodePrivB_h__
+#endif // __ZooLib_UnicodePrivB_h__

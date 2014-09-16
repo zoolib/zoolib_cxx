@@ -18,20 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicode_h__
-#define __ZUnicode_h__ 1
+#ifndef __ZooLib_Unicode_h__
+#define __ZooLib_Unicode_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/UnicodePriv.h"
+
 #include "zoolib/ZTypes.h"
-#include "zoolib/ZUnicodePriv.h"
 
 #include <string>
 
 namespace ZooLib {
-namespace ZUnicode {
+namespace Unicode {
 
 // =================================================================================================
-// MARK: - ZUnicode, code unit stuff
+// MARK: - ZooLib::Unicode, code unit stuff
 
 /** \name Useful constants and lookup tables
 *///@{
@@ -39,7 +40,7 @@ extern const uint8 sUTF8SequenceLength[256];
 extern const uint8 sUTF8StartByteMark[7];
 extern const uint8 sUTF8StartByteMask[7];
 
-/// In-band indication of an end of stream. Not actually used by ZUnicode.
+/// In-band indication of an end of stream. Not actually used by ZooLib::Unicode.
 const UTF32 kCPEOF = UTF32(-1);
 
 /// The maximum CP that's valid and representable in UCS-2.
@@ -109,12 +110,12 @@ inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
 	{ ioCP = (ioCP << 6) + (iContinuation & 0x3F); }
 
 // =================================================================================================
-// MARK: - ZUnicode, counting and iterators
+// MARK: - ZooLib::Unicode, counting and iterators
 
 /* These are all template functions, they'll take anything that behaves like a string::iterator
 or a pointer. They call through to static member functions of template structs declared in
-ZUnicodePriv.h. The actual code for the three different code unit types is in ZUnicodePrivB.h,
-and we do explicit template instantiations of the structs in ZUnicode.cpp. So if you have a new
+UnicodePriv.h. The actual code for the three different code unit types is in UnicodePrivB.h,
+and we do explicit template instantiations of the structs in Unicode.cpp. So if you have a new
 kind of iterator you'll need to do something similar in your code. */
 
 /** \name Counting code units or code points, looking for zero terminator.
@@ -282,7 +283,7 @@ inline bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 //@}
 
 // =================================================================================================
-// MARK: - ZUnicode, string conversion
+// MARK: - ZooLib::Unicode, string conversion
 
 /** \name Converting strings to UTF32.
 *///@{
@@ -348,7 +349,7 @@ inline string16 sAsUTF16(const string16& iString)
 	{ return iString; }
 
 #if 1
-// This one has an optimized implementation in ZUnicode.cpp
+// This one has an optimized implementation in Unicode.cpp
 string16 sAsUTF16(const string8& iString);
 #else
 inline string16 sAsUTF16(const string8& iString)
@@ -401,7 +402,7 @@ inline string8 sAsUTF8(const string8& iString)
 //@}
 
 // =================================================================================================
-// MARK: - ZUnicode, buffer conversion
+// MARK: - ZooLib::Unicode, buffer conversion
 
 /** \name Converting buffers between UTF32, UTF16 and UTF8
 *///@{
@@ -470,7 +471,7 @@ bool sUTF8ToUTF8(
 //@}
 
 // =================================================================================================
-// MARK: - ZUnicode, wstring conversion
+// MARK: - ZooLib::Unicode, wstring conversion
 
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
@@ -495,7 +496,7 @@ bool sUTF8ToUTF8(
 //@}
 
 // =================================================================================================
-// MARK: - ZUnicode, characterization
+// MARK: - ZooLib::Unicode, characterization
 
 /** \name Simple characterization.
 *///@{
@@ -508,7 +509,7 @@ bool sIsEOL(UTF32 iCP);
 //@}
 
 // =================================================================================================
-// MARK: - ZUnicode, simple case conversion
+// MARK: - ZooLib::Unicode, simple case conversion
 
 /** \name Case and other conversions.
 *///@{
@@ -521,7 +522,7 @@ string8 sToLower(const string8& iString);
 int sHexValue(UTF32 iCP);
 //@}
 
-} // namespace ZUnicode
+} // namespace Unicode
 } // namespace ZooLib
 
-#endif // __ZUnicode_h__
+#endif // __ZooLib_Unicode_h__
