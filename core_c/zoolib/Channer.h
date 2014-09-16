@@ -69,8 +69,6 @@ template <class Chan_p>
 class Channer_T
 :	public virtual Channer<typename Chan_p::Chan_Base>
 	{
-protected:
-
 public:
 	typedef typename Chan_p::Chan_Base Chan_Base;
 
@@ -114,19 +112,29 @@ class Channer_FT
 :	public virtual Channer<typename Chan_p::Chan_Base>
 	{
 protected:
+	Channer_FT() {}
 
 public:
 	typedef typename Chan_p::Chan_Base Chan_Base;
 
-	Channer_FT() {}
-
 	virtual ~Channer_FT() {}
 
-	template <class Param_p>
-	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner) : fChan(iParam) {}
+	Channer_FT(const ZRef<Channer<Chan_Base> >& iChanner)
+	:	fChannerReal(iChanner)
+	,	fChan(sGetChan(fChannerReal))
+		{}
 
 	template <class Param_p>
-	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner) : fChan(iParam) {}
+	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner)
+	:	fChannerReal(iChanner)
+	,	fChan(iParam, sGetChan(fChannerReal))
+		{}
+
+	template <class Param_p>
+	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner)
+	:	fChannerReal(iChanner)
+	,	fChan(iParam, sGetChan(fChannerReal))
+		{}
 
 // From Channer
 	virtual void GetChan(const Chan_Base*& oChanPtr) { oChanPtr = &fChan; }
@@ -135,6 +143,7 @@ public:
 	Chan_p& GetChanActual() { return fChan; }
 
 protected:
+	ZRef<Channer<Chan_Base> > fChannerReal;
 	Chan_p fChan;
 	};
 
