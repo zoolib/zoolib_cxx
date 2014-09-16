@@ -91,17 +91,18 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 		}
 	}
 
+// Not sure about the XX_Until name -- it made sense in ZUtil_Strim, maybe not so much elsewhere.
 template <class Elmt_t>
 bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const Elmt_t& iTerminator)
 	{
 	for (;;)
 		{
-		if (ZQ<Elmt_t,false> theCPQ = sQRead(iChanR))
+		if (ZQ<Elmt_t,false> theQ = sQRead(iChanR))
 			return false;
-		else if (iTerminator == *theCPQ)
+		else if (iTerminator == *theQ)
 			return true;
 		else
-			sQWriteCP(*theCPQ, iChanW);
+			sQWrite(*theQ, iChanW);
 		}
 	}
 

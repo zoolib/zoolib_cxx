@@ -51,7 +51,8 @@ public:
 // =================================================================================================
 // MARK: -
 
-bool sQWriteCP(UTF32 iCP, const ChanW<UTF32>& iChanW);
+//inline bool sQWriteCP(UTF32 iCP, const ChanW<UTF32>& iChanW)
+//	{ return sQWrite(iCP, iChanW); }
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{

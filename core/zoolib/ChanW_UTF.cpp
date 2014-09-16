@@ -81,9 +81,6 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 // =================================================================================================
 // MARK: -
 
-bool sQWriteCP(UTF32 iCP, const ChanW<UTF32>& iChanW)
-	{ return 1 == sWrite(&iCP, 1, iChanW); }
-
 void sWrite(const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW)

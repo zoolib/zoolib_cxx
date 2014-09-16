@@ -79,6 +79,10 @@ template <class Elmt_p>
 void sFlush(const ChanW<Elmt_p>& iChanW)
 	{ sNonConst(iChanW).Flush(); }
 
+template <class Elmt_p>
+bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+	{ return 1 == sWrite(&iElmt, 1, iChanW); }
+
 // =================================================================================================
 // MARK: -
 

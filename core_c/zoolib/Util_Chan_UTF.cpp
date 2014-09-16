@@ -38,7 +38,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest)
 		else if (ZUnicode::sIsEOL(*theCPQ))
 			break;
 		else
-			sQWriteCP(*theCPQ, oDest);
+			sQWrite(*theCPQ, oDest);
 		}
 	}
 
