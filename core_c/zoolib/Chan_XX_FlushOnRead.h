@@ -92,23 +92,25 @@ class Channer_XX_FlushOnRead
 ,	public virtual Channer<ChanW<XX> >
 	{
 public:
-	Channer_XX_FlushOnRead(const ZRef<Channer<ChanR<XX> > >& iChannerR,
-		const ZRef<Channer<ChanW<XX> > >& iChannerW)
+	typedef XX Elmt_t;
+
+	Channer_XX_FlushOnRead(const ZRef<Channer<ChanR<Elmt_t> > >& iChannerR,
+		const ZRef<Channer<ChanW<Elmt_t> > >& iChannerW)
 	:	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
 	,	fChan(sGetChan(fChannerR), sGetChan(fChannerW))
 		{}
 
-	virtual void GetChan(const ChanR<XX>*& oChanPtr)
+	virtual void GetChan(const ChanR<Elmt_t>*& oChanPtr)
 		{ oChanPtr = &fChan; }
 
-	virtual void GetChan(const ChanW<XX>*& oChanPtr)
+	virtual void GetChan(const ChanW<Elmt_t>*& oChanPtr)
 		{ oChanPtr = &fChan; }
 
 private:
-	const ZRef<Channer<ChanR<XX> > > fChannerR;
-	const ZRef<Channer<ChanW<XX> > > fChannerW;
-	const Chan_XX_FlushOnRead<XX> fChan;
+	const ZRef<Channer<ChanR<Elmt_t> > > fChannerR;
+	const ZRef<Channer<ChanW<Elmt_t> > > fChannerW;
+	const Chan_XX_FlushOnRead<Elmt_t> fChan;
 	};
 
 template <class XX>
