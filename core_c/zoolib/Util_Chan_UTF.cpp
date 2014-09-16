@@ -20,9 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanW_XX_More.h" // For ChanW_XX_Discard
 #include "zoolib/ChanW_UTF_string.h" // For ChanW_UTF_string8
+#include "zoolib/Unicode.h" // For Unicode::sIsEOL
 #include "zoolib/Util_Chan_UTF.h"
-
-#include "zoolib/ZUnicode.h" // For ZUnicode::sIsEOL
 
 namespace ZooLib {
 namespace Util_Chan {
@@ -36,7 +35,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest)
 		{
 		if (ZQ<UTF32,false> theCPQ = sQRead<UTF32>(iSource))
 			break;
-		else if (ZUnicode::sIsEOL(*theCPQ))
+		else if (Unicode::sIsEOL(*theCPQ))
 			break;
 		else
 			sWrite(*theCPQ, oDest);

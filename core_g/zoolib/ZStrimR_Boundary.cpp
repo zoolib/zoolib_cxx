@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -37,7 +38,7 @@ returned as the result of calls to Imp_ReadUTF32.
 
 ZStrimR_Boundary::ZStrimR_Boundary(const string8& iBoundary, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
-	fBoundary(ZUnicode::sAsUTF32(iBoundary))
+	fBoundary(Unicode::sAsUTF32(iBoundary))
 	{
 	this->pInit();
 	}
@@ -45,7 +46,7 @@ ZStrimR_Boundary::ZStrimR_Boundary(const string8& iBoundary, const ZStrimR& iStr
 ZStrimR_Boundary::ZStrimR_Boundary(
 	const UTF8* iBoundary, size_t iBoundarySize, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
-	fBoundary(ZUnicode::sAsUTF32(iBoundary, iBoundarySize))
+	fBoundary(Unicode::sAsUTF32(iBoundary, iBoundarySize))
 	{
 	this->pInit();
 	}

@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZCompat_string.h" // For strncasecmp
 #include "zoolib/ZMemory.h" // For sMemCopy
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_string.h"
 
 #include <stdio.h>
@@ -166,7 +167,7 @@ bool sEquali(const string& iLeft, const string& iRight)
 
 bool sContainsi(const string& iPattern, const string& iTarget)
 	{
-	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iPattern));
+	return string::npos != Unicode::sToLower(iTarget).find(Unicode::sToLower(iPattern));
 	}
 
 ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget)

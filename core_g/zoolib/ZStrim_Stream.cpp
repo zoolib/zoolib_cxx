@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/Unicode.h"
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStream.h"
+#include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZTextCoder.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 using std::pair;
@@ -71,7 +71,7 @@ static void spReadUTF32_UTF16(const ZStreamR& iStreamR,
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32(
+		Unicode::sUTF16ToUTF32(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			oDest, localCount,
@@ -105,7 +105,7 @@ static void spReadUTF32_UTF16Swap(const ZStreamR& iStreamR,
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32(
+		Unicode::sUTF16ToUTF32(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			oDest, localCount,
@@ -136,7 +136,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 
 		gotByte = false;
 
-		size_t sequenceLength = ZUnicode::sUTF8SequenceLength[curByte];
+		size_t sequenceLength = Unicode::sUTF8SequenceLength[curByte];
 		if (sequenceLength == 0)
 			{
 			// It's a continuation or illegal, ignore it.
@@ -147,7 +147,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 			}
 		else
 			{
-			UTF32 theCP = curByte & ZUnicode::sUTF8StartByteMask[sequenceLength];
+			UTF32 theCP = curByte & Unicode::sUTF8StartByteMask[sequenceLength];
 			gotByte = false;
 			while (--sequenceLength)
 				{
@@ -191,7 +191,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 
 		gotByte = false;
 
-		size_t sequenceLength = ZUnicode::sUTF8SequenceLength[curByte];
+		size_t sequenceLength = Unicode::sUTF8SequenceLength[curByte];
 		if (sequenceLength == 0)
 			{
 			// It's a continuation or illegal, ignore it.

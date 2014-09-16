@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanW_UTF_string.h"
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan.h"
 
 #include "zoolib/ZUtil_Strim.h"
@@ -27,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrimR_Boundary.h"
-#include "zoolib/ZUnicode.h"
 
 #include <vector>
 
@@ -42,7 +42,7 @@ static void spThrowParseException(const std::string& iWhat)
 
 static bool spIsWhitespace(UTF32 iCP)
 	{
-	if (ZUnicode::sIsWhitespace(iCP))
+	if (Unicode::sIsWhitespace(iCP))
 		return true;
 
 	if (iCP == 0xFEFF)
@@ -55,7 +55,7 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	{
 	// Ensure that we only try to read a valid CP, one that
 	// can actually be returned by ReadCP.
-	ZAssertStop(2, ZUnicode::sIsValid(iCP));
+	ZAssertStop(2, Unicode::sIsValid(iCP));
 
 	UTF32 theCP;
 	if (not sQReadCP(theCP, iStrimU))
@@ -79,7 +79,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 	for (;;)
 		{
 		UTF32 targetCP;
-		if (not ZUnicode::sReadInc(targetIter, targetEnd, targetCP))
+		if (not Unicode::sReadInc(targetIter, targetEnd, targetCP))
 			{
 			// Exhausted target, and thus successful.
 			return true;
@@ -93,7 +93,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 			}
 		stack.push_back(candidateCP);
 
-		if (ZUnicode::sToLower(targetCP) != ZUnicode::sToLower(candidateCP))
+		if (Unicode::sToLower(targetCP) != Unicode::sToLower(candidateCP))
 			{
 			// Mismatched code points.
 			break;
@@ -180,7 +180,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 			}
 
 		sUnread(theCP, iStrimU);
-		if (not ZUnicode::sIsDigit(theCP))
+		if (not Unicode::sIsDigit(theCP))
 			{
 			oInt64 = 0;
 			return true;
@@ -528,7 +528,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	if (not sQReadCP(theCP, iStrimU))
 		return false;
 
-	if (not ZUnicode::sIsAlpha(theCP) && theCP != '_')
+	if (not Unicode::sIsAlpha(theCP) && theCP != '_')
 		{
 		sUnread(theCP, iStrimU);
 		return false;
@@ -542,7 +542,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 		if (not sQReadCP(theCP, iStrimU))
 			break;
 
-		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
 			sUnread(theCP, iStrimU);
 			break;

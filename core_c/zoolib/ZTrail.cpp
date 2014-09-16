@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZTrail.h"
-#include "zoolib/ZUnicode.h"
 
 #include <cstring> // For std::strlen
 
@@ -50,9 +51,9 @@ void sParseStringAndAppend_T(
 
 	size_t prevDiv = 0;
 
-	size_t separatorSize = ZUnicode::sCountCU(iSeparator);
-	size_t ignoreSize = ZUnicode::sCountCU(iIgnore);
-	size_t bounceSize = ZUnicode::sCountCU(iBounce);
+	size_t separatorSize = Unicode::sCountCU(iSeparator);
+	size_t ignoreSize = Unicode::sCountCU(iIgnore);
+	size_t bounceSize = Unicode::sCountCU(iBounce);
 
 	if (separatorSize <= iTrailSize
 		&& 0 == char_traits<C>::compare(iTrail, iSeparator, separatorSize))

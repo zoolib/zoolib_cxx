@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/UnicodeString.h" // For string8 etc.
 #include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompat_string.h" // For strcmp
 #include "zoolib/ZName.h"
-#include "zoolib/ZUnicodeString.h" // For string8 etc.
 #include "zoolib/ZVal_T.h"
 
 namespace ZooLib {

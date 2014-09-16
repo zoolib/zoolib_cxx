@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/Unicode.h"
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZStrim.h"
 
 #include <stdio.h>
 
@@ -191,7 +191,7 @@ string32 ZStrimR::ReadUTF32(size_t iCountCP) const
 		size_t cuRead;
 		UTF32* dest = const_cast<UTF32*>(result.data()) + destGenerated;
 		this->Read(dest, iCountCP, &cuRead);
-		size_t cpRead = ZUnicode::sCUToCP(dest, cuRead);
+		size_t cpRead = Unicode::sCUToCP(dest, cuRead);
 		if (cpRead == 0)
 			sThrowEndOfStrim();
 		iCountCP -= cpRead;
@@ -493,7 +493,7 @@ void ZStrimR::Imp_ReadUTF16(UTF16* oDest,
 		size_t utf32Consumed;
 		size_t utf16Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
@@ -530,7 +530,7 @@ void ZStrimR::Imp_ReadUTF8(UTF8* oDest,
 		size_t utf32Consumed;
 		size_t utf8Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF8(
+		Unicode::sUTF32ToUTF8(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
@@ -581,7 +581,7 @@ bool ZStrimR::Imp_ReadCP(UTF32& oCP)
 		this->Read(&oCP, 1, &countRead);
 		if (countRead == 0)
 			return false;
-		if (ZUnicode::sIsValid(oCP))
+		if (Unicode::sIsValid(oCP))
 			return true;
 		}
 	}
@@ -789,7 +789,7 @@ const ZStrimW& ZStrimW::Write(const UTF32* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	if (oCountCU || oCountCP)
@@ -799,7 +799,7 @@ const ZStrimW& ZStrimW::Write(const UTF32* iSource,
 		if (oCountCU)
 			*oCountCU = cuWritten;
 		if (oCountCP)
-			*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+			*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 		}
 	else
 		{
@@ -828,7 +828,7 @@ const ZStrimW& ZStrimW::Write(const UTF16* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	if (oCountCU || oCountCP)
@@ -838,7 +838,7 @@ const ZStrimW& ZStrimW::Write(const UTF16* iSource,
 		if (oCountCU)
 			*oCountCU = cuWritten;
 		if (oCountCP)
-			*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+			*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 		}
 	else
 		{
@@ -867,7 +867,7 @@ const ZStrimW& ZStrimW::Write(const UTF8* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	if (oCountCU || oCountCP)
@@ -877,7 +877,7 @@ const ZStrimW& ZStrimW::Write(const UTF8* iSource,
 		if (oCountCU)
 			*oCountCU = cuWritten;
 		if (oCountCP)
-			*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+			*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 		}
 	else
 		{
@@ -1042,19 +1042,19 @@ void ZStrimW::sThrowEndOfStrim()
 
 void ZStrimW::pWrite(const UTF32* iString) const
 	{
-	if (size_t length = ZUnicode::sCountCU(iString))
+	if (size_t length = Unicode::sCountCU(iString))
 		this->pWrite(iString, length);
 	}
 
 void ZStrimW::pWrite(const UTF16* iString) const
 	{
-	if (size_t length = ZUnicode::sCountCU(iString))
+	if (size_t length = Unicode::sCountCU(iString))
 		this->pWrite(iString, length);
 	}
 
 void ZStrimW::pWrite(const UTF8* iString) const
 	{
-	if (size_t length = ZUnicode::sCountCU(iString))
+	if (size_t length = Unicode::sCountCU(iString))
 		this->pWrite(iString, length);
 	}
 
@@ -1074,7 +1074,7 @@ void ZStrimW::pWrite(const string16& iString) const
 		if (length != cuConsumed)
 			{
 			// See comments in the UTF-8 variant.
-			if (0 != ZUnicode::sCUToCP(source + cuConsumed, source + length))
+			if (0 != Unicode::sCUToCP(source + cuConsumed, source + length))
 				sThrowEndOfStrim();
 			}
 		}
@@ -1101,7 +1101,7 @@ void ZStrimW::pWrite(const string8& iString) const
 			// end then we can just return. If there are one or more valid
 			// code points then the short write must be because we've reached
 			// our end, and we throw the end of strim exception.
-			if (0 != ZUnicode::sCUToCP(source + cuConsumed, source + length))
+			if (0 != Unicode::sCUToCP(source + cuConsumed, source + length))
 				sThrowEndOfStrim();
 			}
 		}
@@ -1206,7 +1206,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, 
 		UTF32 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF16ToUTF32(
+		if (not Unicode::sUTF16ToUTF32(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
@@ -1227,7 +1227,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, 
 			// It's a truncated write. We need to convert from utf32Consumed back into
 			// the number of utf16 code units.
 			if (oCountCU)
-				localSource += ZUnicode::sCPToCU(localSource, utf32Consumed);
+				localSource += Unicode::sCPToCU(localSource, utf32Consumed);
 			break;
 			}
 
@@ -1246,7 +1246,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF32 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF8ToUTF32(
+		if (not Unicode::sUTF8ToUTF32(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -1267,7 +1267,7 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 			// It's a truncated write. We need to convert from utf32Consumed back into
 			// the number of utf8 code units.
 			if (oCountCU)
-				localSource += ZUnicode::sCPToCU(localSource, utf32Consumed);
+				localSource += Unicode::sCPToCU(localSource, utf32Consumed);
 			break;
 			}
 
@@ -1290,7 +1290,7 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, 
 
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
@@ -1307,7 +1307,7 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, 
 			// It's a truncated write. We need to convert from utf16Consumed back into
 			// the number of code points, which is also the number of UTF32 code units.
 			if (oCountCU)
-				localSource += ZUnicode::sCUToCP(buffer, utf16Consumed);
+				localSource += Unicode::sCUToCP(buffer, utf16Consumed);
 			break;
 			}
 
@@ -1326,7 +1326,7 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF16 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf16Generated;
-		if (not ZUnicode::sUTF8ToUTF16(
+		if (not Unicode::sUTF8ToUTF16(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -1349,8 +1349,8 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 			// the number of utf8 code units.
 			if (oCountCU)
 				{
-				size_t codePoints = ZUnicode::sCUToCP(buffer, utf16Consumed);
-				localSource += ZUnicode::sCPToCU(localSource, codePoints);
+				size_t codePoints = Unicode::sCUToCP(buffer, utf16Consumed);
+				localSource += Unicode::sCPToCU(localSource, codePoints);
 				}
 			break;
 			}
@@ -1374,7 +1374,7 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 
 		size_t utf32Consumed;
 		size_t utf8Generated;
-		ZUnicode::sUTF32ToUTF8(
+		Unicode::sUTF32ToUTF8(
 			localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
@@ -1392,8 +1392,8 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 			// the number UTF32 code units..
 			if (oCountCU)
 				{
-				size_t codePoints = ZUnicode::sCUToCP(buffer, utf8Consumed);
-				localSource += ZUnicode::sCPToCU(localSource, codePoints);
+				size_t codePoints = Unicode::sCUToCP(buffer, utf8Consumed);
+				localSource += Unicode::sCPToCU(localSource, codePoints);
 				}
 			break;
 			}
@@ -1413,7 +1413,7 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 		UTF8 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf8Generated;
-		if (not ZUnicode::sUTF16ToUTF8(
+		if (not Unicode::sUTF16ToUTF8(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
@@ -1436,8 +1436,8 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 			// the number of utf16 code units.
 			if (oCountCU)
 				{
-				size_t codePoints = ZUnicode::sCUToCP(buffer, utf8Consumed);
-				localSource += ZUnicode::sCPToCU(localSource, codePoints);
+				size_t codePoints = Unicode::sCUToCP(buffer, utf8Consumed);
+				localSource += Unicode::sCPToCU(localSource, codePoints);
 				}
 			break;
 			}
@@ -1567,7 +1567,7 @@ void ZStrimU_String32::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF32(
+		Unicode::sUTF32ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
@@ -1590,7 +1590,7 @@ void ZStrimU_String32::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1614,7 +1614,7 @@ void ZStrimU_String32::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF32ToUTF8(
+		Unicode::sUTF32ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1630,7 +1630,7 @@ bool ZStrimU_String32::Imp_ReadCP(UTF32& oCP)
 	while (fPosition < theLength)
 		{
 		oCP = fString[fPosition++];
-		if (ZUnicode::sIsValidCP(oCP))
+		if (Unicode::sIsValidCP(oCP))
 			return true;
 		}
 	return false;
@@ -1667,7 +1667,7 @@ void ZStrimU_String16::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF32(
+		Unicode::sUTF16ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
@@ -1690,7 +1690,7 @@ void ZStrimU_String16::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF16(
+		Unicode::sUTF16ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1714,7 +1714,7 @@ void ZStrimU_String16::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF16ToUTF8(
+		Unicode::sUTF16ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1732,7 +1732,7 @@ void ZStrimU_String16::Imp_Unread(UTF32 iCP)
 		string16::const_iterator stringCurrent = stringStart + fPosition;
 		string16::const_iterator stringEnd = stringStart + stringSize;
 
-		if (ZUnicode::sDec(stringStart, stringCurrent, stringEnd))
+		if (Unicode::sDec(stringStart, stringCurrent, stringEnd))
 			{
 			fPosition = stringCurrent - stringStart;
 			return;
@@ -1769,7 +1769,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCou
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF32(
+		Unicode::sUTF8ToUTF32(
 			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
@@ -1792,7 +1792,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF16(UTF16* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF16(
+		Unicode::sUTF8ToUTF16(
 			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1816,7 +1816,7 @@ void ZStrimU_String8Ref::Imp_ReadUTF8(UTF8* oDest,
 	else
 		{
 		size_t countConsumed;
-		ZUnicode::sUTF8ToUTF8(
+		Unicode::sUTF8ToUTF8(
 			fString->data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCountCU,
@@ -1834,7 +1834,7 @@ void ZStrimU_String8Ref::Imp_Unread(UTF32 iCP)
 		string::const_iterator stringCurrent = stringStart + fPosition;
 		string::const_iterator stringEnd = stringStart + stringSize;
 
-		if (ZUnicode::sDec(stringStart, stringCurrent, stringEnd))
+		if (Unicode::sDec(stringStart, stringCurrent, stringEnd))
 			{
 			fPosition = stringCurrent - stringStart;
 			return;

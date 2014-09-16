@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanR_UTF.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/Unicode.h"
 
 namespace ZooLib {
 
@@ -35,7 +35,7 @@ string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 		result.resize(destGenerated + iCountCP);
 		UTF32* dest = sNonConst(result.data()) + destGenerated;
 		const size_t cuRead = sRead(dest, iCountCP, iChanR);
-		const size_t cpRead = ZUnicode::sCUToCP(dest, cuRead);
+		const size_t cpRead = Unicode::sCUToCP(dest, cuRead);
 		if (cpRead == 0)
 			ChanR_UTF::sThrow_Exhausted();
 		iCountCP -= cpRead;

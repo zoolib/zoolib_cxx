@@ -19,8 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -38,7 +39,7 @@ size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
 		UTF32 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF16ToUTF32(
+		if (not Unicode::sUTF16ToUTF32(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
@@ -57,7 +58,7 @@ size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf32Consumed back into
 			// the number of utf16 code units.
-			localSource += ZUnicode::sCPToCU(localSource, utf32Consumed);
+			localSource += Unicode::sCPToCU(localSource, utf32Consumed);
 			break;
 			}
 
@@ -75,7 +76,7 @@ size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
 		UTF32 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		if (not ZUnicode::sUTF8ToUTF32(
+		if (not Unicode::sUTF8ToUTF32(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -94,7 +95,7 @@ size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf32Consumed back into
 			// the number of utf8 code units.
-			localSource += ZUnicode::sCPToCU(localSource, utf32Consumed);
+			localSource += Unicode::sCPToCU(localSource, utf32Consumed);
 			break;
 			}
 
@@ -116,7 +117,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
@@ -131,7 +132,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf16Consumed back into
 			// the number of code points, which is also the number of UTF32 code units.
-			localSource += ZUnicode::sCUToCP(buffer, utf16Consumed);
+			localSource += Unicode::sCUToCP(buffer, utf16Consumed);
 			break;
 			}
 
@@ -149,7 +150,7 @@ size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
 		UTF16 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf16Generated;
-		if (not ZUnicode::sUTF8ToUTF16(
+		if (not Unicode::sUTF8ToUTF16(
 			localSource, iCountCU,
 			&utf8Consumed, nullptr,
 			buffer, kBufSize,
@@ -169,8 +170,8 @@ size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf16Consumed back into
 			// the number of utf8 code units.
-			const size_t codePoints = ZUnicode::sCUToCP(buffer, utf16Consumed);
-			localSource += ZUnicode::sCPToCU(localSource, codePoints);
+			const size_t codePoints = Unicode::sCUToCP(buffer, utf16Consumed);
+			localSource += Unicode::sCPToCU(localSource, codePoints);
 			break;
 			}
 
@@ -192,7 +193,7 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 
 		size_t utf32Consumed;
 		size_t utf8Generated;
-		ZUnicode::sUTF32ToUTF8(
+		Unicode::sUTF32ToUTF8(
 			localSource, iCountCU,
 			&utf32Consumed, nullptr,
 			buffer, kBufSize,
@@ -207,8 +208,8 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf8Consumed back into
 			// the number UTF32 code units..
-			const size_t codePoints = ZUnicode::sCUToCP(buffer, utf8Consumed);
-			localSource += ZUnicode::sCPToCU(localSource, codePoints);
+			const size_t codePoints = Unicode::sCUToCP(buffer, utf8Consumed);
+			localSource += Unicode::sCPToCU(localSource, codePoints);
 			break;
 			}
 
@@ -226,7 +227,7 @@ size_t ChanW_UTF_Native8::Write(const UTF16* iSource, size_t iCountCU)
 		UTF8 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf8Generated;
-		if (not ZUnicode::sUTF16ToUTF8(
+		if (not Unicode::sUTF16ToUTF8(
 			localSource, iCountCU,
 			&utf16Consumed, nullptr,
 			buffer, kBufSize,
@@ -246,8 +247,8 @@ size_t ChanW_UTF_Native8::Write(const UTF16* iSource, size_t iCountCU)
 			{
 			// It's a truncated write. We need to convert from utf8Consumed back into
 			// the number of utf16 code units.
-			const size_t codePoints = ZUnicode::sCUToCP(buffer, utf8Consumed);
-			localSource += ZUnicode::sCPToCU(localSource, codePoints);
+			const size_t codePoints = Unicode::sCUToCP(buffer, utf8Consumed);
+			localSource += Unicode::sCPToCU(localSource, codePoints);
 			break;
 			}
 

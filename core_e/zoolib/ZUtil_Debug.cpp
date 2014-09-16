@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_POSIX.h"
@@ -27,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStringf.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Debug.h"
 #include "zoolib/ZUtil_Time.h"
 
@@ -127,7 +128,7 @@ public:
 
 		const ZTime now = ZTime::sNow();
 
-		const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
+		const size_t curLength = Unicode::sCUToCP(iName.begin(), iName.end());
 		// Enabling this code will grow fExtraSpace when a long iName comes through.
 		// if (fExtraSpace < curLength)
 		//	fExtraSpace = curLength;

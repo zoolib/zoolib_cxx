@@ -19,8 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUnicode.h"
 
 #include <stdexcept> // for std::range_error
 
@@ -46,7 +47,7 @@ void spWriteMust(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 		if (cuConsumed != iCountCU)
 			{
 			// See comments in the UTF-8 variant.
-			if (0 != ZUnicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
+			if (0 != Unicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
 				ChanW_UTF::sThrow_Exhausted();
 			}
 		}
@@ -72,7 +73,7 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 			// end then we can just return. If there are one or more valid
 			// code points then the short write must be because we've reached
 			// our end, and we throw the end of strim exception.
-			if (0 != ZUnicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
+			if (0 != Unicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
 				ChanW_UTF::sThrow_Exhausted();
 			}
 		}
@@ -102,14 +103,14 @@ void sWrite(const UTF32* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = std::min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
-		*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+		*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 	}
 
 /** Write the UTF-16 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
@@ -133,14 +134,14 @@ void sWrite(const UTF16* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = std::min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
-		*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+		*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 	}
 
 /** Write the UTF-8 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
@@ -164,33 +165,33 @@ void sWrite(const UTF8* iSource,
 		{
 		// We're being asked to write fewer CPs than we have CUs. So we have to
 		// map from CPs to CUs.
-		actualCU = std::min(iCountCU, ZUnicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
+		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
 	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
-		*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
+		*oCountCP = Unicode::sCUToCP(iSource, cuWritten);
 	}
 
 // ---
 
 void sWrite(const UTF32* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = ZUnicode::sCountCU(iString))
+	if (size_t countCU = Unicode::sCountCU(iString))
 		spWriteMust(iString, countCU, iChanW);
 	}
 
 void sWrite(const UTF16* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = ZUnicode::sCountCU(iString))
+	if (size_t countCU = Unicode::sCountCU(iString))
 		spWriteMust(iString, countCU, iChanW);
 	}
 
 void sWrite(const UTF8* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = ZUnicode::sCountCU(iString))
+	if (size_t countCU = Unicode::sCountCU(iString))
 		spWriteMust(iString, countCU, iChanW);
 	}
 

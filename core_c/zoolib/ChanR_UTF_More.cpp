@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanR_UTF_More.h"
+#include "zoolib/Unicode.h"
 
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
@@ -52,7 +52,7 @@ void ChanR_UTF_Native32::ReadUTF16(UTF16* oDest,
 		size_t utf32Consumed;
 		size_t utf16Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF16(
+		Unicode::sUTF32ToUTF16(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
@@ -88,7 +88,7 @@ void ChanR_UTF_Native32::ReadUTF8(UTF8* oDest,
 		size_t utf32Consumed;
 		size_t utf8Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF8(
+		Unicode::sUTF32ToUTF8(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
 			localDest, iCountCU,
@@ -126,7 +126,7 @@ size_t ChanR_UTF_Native16::Read(UTF32* oDest, size_t iCountCU)
 
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF16ToUTF32(
+		Unicode::sUTF16ToUTF32(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			localDest, iCountCU,
@@ -160,7 +160,7 @@ void ChanR_UTF_Native16::ReadUTF8(UTF8* oDest,
 		size_t utf16Consumed;
 		size_t utf8Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF16ToUTF8(
+		Unicode::sUTF16ToUTF8(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
 			localDest, iCountCU,
@@ -200,7 +200,7 @@ size_t ChanR_UTF_Native8::Read(UTF32* oDest, size_t iCountCU)
 
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		ZUnicode::sUTF8ToUTF32(
+		Unicode::sUTF8ToUTF32(
 			utf8Buffer, utf8Read,
 			&utf8Consumed, nullptr,
 			localDest, iCountCU,
@@ -243,7 +243,7 @@ void ChanR_UTF_Native8::ReadUTF16(UTF16* oDest,
 		size_t utf8Consumed;
 		size_t utf16Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF8ToUTF16(
+		Unicode::sUTF8ToUTF16(
 			utf8Buffer, utf8Buffered,
 			&utf8Consumed, nullptr,
 			localDest, iCountCU,

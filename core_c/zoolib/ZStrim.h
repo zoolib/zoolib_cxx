@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW_UTF_More.h"
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/UnicodeString.h"
 
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error

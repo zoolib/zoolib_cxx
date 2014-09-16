@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
 
 namespace ZooLib {
@@ -54,7 +55,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 			break;
 			}
 
-		if (ZUnicode::sIsEOL(theCP))
+		if (Unicode::sIsEOL(theCP))
 			{
 			fStrimSource.Unread(theCP);
 			throw ParseException("Illegal end of line whilst parsing a string");

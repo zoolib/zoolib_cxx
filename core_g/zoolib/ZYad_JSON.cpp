@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZCompat_algorithm.h" // ZSetRestore_T
@@ -25,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
@@ -134,7 +134,7 @@ static bool spRead_Identifier(
 		UTF32 theCP;
 		if (not iStrimU.ReadCP(theCP))
 			break;
-		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
 			iStrimU.Unread(theCP);
 			break;
@@ -143,7 +143,7 @@ static bool spRead_Identifier(
 		gotAny = true;
 
 		if (oStringLC)
-			*oStringLC += ZUnicode::sToLower(theCP);
+			*oStringLC += Unicode::sToLower(theCP);
 		if (oStringExact)
 			*oStringExact += theCP;
 		}
@@ -577,9 +577,9 @@ static bool spContainsProblemChars(const string& iString)
 	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
 		{
 		UTF32 theCP;
-		if (not ZUnicode::sReadInc(ii, end, theCP))
+		if (not Unicode::sReadInc(ii, end, theCP))
 			break;
-		if (not ZUnicode::sIsAlphaDigit(theCP) && '_' != theCP)
+		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
 			return true;
 		}
 
@@ -760,7 +760,7 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 		Base64::StreamW_Encode(
 			Base64::sEncode_Normal(),
 			ZStreamW_ASCIIStrim(
-				ZStrimW_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
+				ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
 		.CopyAllFrom(iStreamR);
 
 		s << ")";
