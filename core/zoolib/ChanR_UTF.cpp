@@ -26,14 +26,6 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-ZQ<UTF32> sQReadCP(const ChanR_UTF& iChanR)
-	{
-	UTF32 result;
-	if (1 == sRead(&result, 1, iChanR))
-		return result;
-	return null;
-	}
-
 string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	string32 result;

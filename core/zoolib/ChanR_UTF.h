@@ -111,7 +111,18 @@ void sRead(UTF8* oDest,
 // =================================================================================================
 // MARK: -
 
-ZQ<UTF32> sQReadCP(const ChanR_UTF& iChanR);
+inline
+ZQ<UTF32> sQReadCP(const ChanR_UTF& iChanR)
+	{
+	UTF32 result;
+	if (1 == sRead(&result, 1, iChanR))
+		return result;
+	return null;
+	}
+
+inline
+bool sQReadCP(UTF32& oCP, const ChanR_UTF& iChanR)
+	{ return sRead(&oCP, 1, iChanR); }
 
 string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
 string16 sReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
