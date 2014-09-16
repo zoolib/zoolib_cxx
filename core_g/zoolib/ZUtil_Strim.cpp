@@ -58,13 +58,13 @@ bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	ZAssertStop(2, ZUnicode::sIsValid(iCP));
 
 	UTF32 theCP;
-	if (not iStrimU.ReadCP(theCP))
+	if (not sQReadCP(theCP, iStrimU))
 		return false;
 
 	if (theCP == iCP)
 		return true;
 
-	iStrimU.Unread(theCP);
+	sUnread(theCP, iStrimU);
 	return false;
 	}
 
@@ -86,7 +86,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 			}
 
 		UTF32 candidateCP;
-		if (not iStrimU.ReadCP(candidateCP))
+		if (not sQReadCP(candidateCP, iStrimU))
 			{
 			// Exhausted strim.
 			break;
@@ -113,7 +113,7 @@ bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
 bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (not iStrimU.ReadCP(theCP))
+	if (not sQReadCP(theCP, iStrimU))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -122,14 +122,14 @@ bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 		return true;
 		}
 
-	iStrimU.Unread(theCP);
+	sUnread(theCP, iStrimU);
 	return false;
 	}
 
 bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
-	if (not iStrimU.ReadCP(theCP))
+	if (not sQReadCP(theCP, iStrimU))
 		return false;
 
 	if (theCP >= '0' && theCP <= '9')
@@ -150,7 +150,7 @@ bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 		return true;
 		}
 
-	iStrimU.Unread(theCP);
+	sUnread(theCP, iStrimU);
 	return false;
 	}
 
@@ -162,7 +162,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 	if (sTryRead_CP(iStrimU, '0'))
 		{
 		UTF32 theCP;
-		if (not iStrimU.ReadCP(theCP))
+		if (not sQReadCP(theCP, iStrimU))
 			{
 			oInt64 = 0;
 			return true;
@@ -179,7 +179,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 			spThrowParseException("Expected a valid hex integer after '0x' prefix");
 			}
 
-		iStrimU.Unread(theCP);
+		sUnread(theCP, iStrimU);
 		if (not ZUnicode::sIsDigit(theCP))
 			{
 			oInt64 = 0;
@@ -388,19 +388,19 @@ bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
 
 // -----------------
 
-void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest)
+void sCopy_WS(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	{
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not iStrimU.ReadCP(theCP))
+		if (not sQReadCP(theCP, iStrimU))
 			break;
 		if (not spIsWhitespace(theCP))
 			{
-			iStrimU.Unread(theCP);
+			sUnread(theCP, iStrimU);
 			break;
 			}
-		oDest.WriteCP(theCP);
+		sWrite(theCP, oDest);
 		}
 	}
 
@@ -409,11 +409,11 @@ void sSkip_WS(const ZStrimU& iStrimU)
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not iStrimU.ReadCP(theCP))
+		if (not sQReadCP(theCP, iStrimU))
 			break;
 		if (not spIsWhitespace(theCP))
 			{
-			iStrimU.Unread(theCP);
+			sUnread(theCP, iStrimU);
 			break;
 			}
 		}
@@ -421,38 +421,38 @@ void sSkip_WS(const ZStrimU& iStrimU)
 
 // -----------------
 
-void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
+void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	{
 	ZAssert(iStrimU.UnreadableLimit() >= 2);
 
 	for (;;)
 		{
 		UTF32 firstCP;
-		if (iStrimU.ReadCP(firstCP))
+		if (sQReadCP(firstCP, iStrimU))
 			{
 			if (spIsWhitespace(firstCP))
 				{
-				oDest.WriteCP(firstCP);
+				sWrite(firstCP, oDest);
 				continue;
 				}
 			else if (firstCP == '/')
 				{
 				if (sTryRead_CP(iStrimU, '/'))
 					{
-					oDest.Write("//");
+					sWrite("//", oDest);
 					sCopy_Line(iStrimU, oDest);
 					continue;
 					}
 				else if (sTryRead_CP(iStrimU, '*'))
 					{
-					oDest.Write("/*");
+					sWrite("/*", oDest);
 					if (not sCopy_Until(iStrimU, "*/", oDest))
 						spThrowParseException("Unexpected end of data while parsing a /**/ comment");
-					oDest.Write("*/");
+					sWrite("*/", oDest);
 					continue;
 					}
 				}
-			iStrimU.Unread(firstCP);
+			sUnread(firstCP, iStrimU);
 			}
 		break;
 		}
@@ -461,47 +461,14 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 void sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU)
 	{ sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_Null()); }
 
-// -----------------
-
-void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (not iStrimR.ReadCP(theCP))
-			break;
-		if (ZUnicode::sIsEOL(theCP))
-			break;
-		oDest.WriteCP(theCP);
-		}
-	}
-
-void sSkip_Line(const ZStrimR& iStrimR)
-	{ sCopy_Line(iStrimR, ZStrimW_Null()); }
-
-string8 sRead_Line(const ZStrimR& iStrimR)
-	{
-	string8 result;
-	sCopy_Line(iStrimR, ZStrimW_String<string8>(&result));
-	return result;
-	}
-
-// -----------------
-
-string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
-	{
-	string8 result;
-	Util_Chan::sCopy_Until<UTF32>(iStrimR, ChanW_UTF_string8(&result), iTerminator);
-	return result;
-	}
 
 // -----------------
 
 bool sCopy_Until(const ZStrimR& iStrimR,
-	const string8& iTerminator, const ZStrimW& oDest)
+	const string8& iTerminator, const ChanW_UTF& oDest)
 	{
 	ZStrimR_Boundary theStrimBoundary(iTerminator, iStrimR);
-	theStrimBoundary.CopyAllTo(oDest);
+	sCopyAll(theStrimBoundary, oDest);
 	return theStrimBoundary.HitBoundary();
 	}
 
@@ -511,29 +478,29 @@ bool sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 	{
 	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String<string8>(&result));
+	sCopy_Until(iStrimR, iTerminator, ChanW_UTF_string8(&result));
  	return result;
  	}
 
 // -----------------
 
 void sCopy_EscapedString(
-	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest)
+	const ZStrimU& iStrimU, UTF32 iTerminator, const ChanW_UTF& oDest)
 	{
-	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(oDest);
+	sCopyAll(ZStrimR_Escaped(iStrimU, iTerminator), oDest);
 	}
 
 void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	sCopy_EscapedString(iStrimU, iTerminator, ZStrimW_String<string8>(&oString));
+	sCopy_EscapedString(iStrimU, iTerminator, ChanW_UTF_string8(&oString));
 	}
 
 // -----------------
 
 bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
-	UTF32 iDelimiter, const ZStrimW& oDest)
+	UTF32 iDelimiter, const ChanW_UTF& oDest)
 	{
 	if (not sTryRead_CP(iStrimU, iDelimiter))
 		return false;
@@ -550,37 +517,37 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	return sTryCopy_EscapedString(iStrimU, iDelimiter, ZStrimW_String<string8>(&oString));
+	return sTryCopy_EscapedString(iStrimU, iDelimiter, ChanW_UTF_string8(&oString));
 	}
 
 // -----------------
 
-bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
+bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 	{
 	UTF32 theCP;
-	if (not iStrimU.ReadCP(theCP))
+	if (not sQReadCP(theCP, iStrimU))
 		return false;
 
 	if (not ZUnicode::sIsAlpha(theCP) && theCP != '_')
 		{
-		iStrimU.Unread(theCP);
+		sUnread(theCP, iStrimU);
 		return false;
 		}
 
-	oDest.WriteCP(theCP);
+	sWrite(theCP, oDest);
 
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not iStrimU.ReadCP(theCP))
+		if (not sQReadCP(theCP, iStrimU))
 			break;
 
 		if (not ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
-			iStrimU.Unread(theCP);
+			sUnread(theCP, iStrimU);
 			break;
 			}
-		oDest.WriteCP(theCP);
+		sWrite(theCP, oDest);
 		}
 
 	return true;
@@ -590,24 +557,9 @@ bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	return sTryCopy_Identifier(iStrimU, ZStrimW_String<string8>(&oString));
+	return sTryCopy_Identifier(iStrimU, ChanW_UTF_string8(&oString));
 	}
 
-// -----------------
-
-void sWriteExact(const ZStrimW& iStrimW, float iFloat)
-	{
-	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
-	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
-	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	iStrimW.Writef("%.9g", iFloat);
-	}
-
-void sWriteExact(const ZStrimW& iStrimW, double iDouble)
-	{
-	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	iStrimW.Writef("%.17g", iDouble);
-	}
 
 } // namespace ZUtil_Strim
 } // namespace ZooLib

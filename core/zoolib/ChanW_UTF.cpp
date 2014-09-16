@@ -42,7 +42,7 @@ void spWriteMust(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
-		const size_t cuConsumed = sWrite(iSource, iCountCU, iChanW);
+		const size_t cuConsumed = sWriteFully(iSource, iCountCU, iChanW);
 		if (cuConsumed != iCountCU)
 			{
 			// See comments in the UTF-8 variant.
@@ -57,7 +57,7 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
-		const size_t cuConsumed = sWrite(iSource, iCountCU, iChanW);
+		const size_t cuConsumed = sWriteFully(iSource, iCountCU, iChanW);
 		if (cuConsumed != iCountCU)
 			{
 			// We weren't able to write the whole string.
@@ -81,6 +81,11 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 // =================================================================================================
 // MARK: -
 
+/** Write the UTF-32 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
+Do not write more code units than those required to represent \a iCountCP code points.
+Report the number of code units and code points successfully written in the optional output
+parameters \a oCountCU and \a oCountCP.
+*/
 void sWrite(const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW)
@@ -107,6 +112,11 @@ void sWrite(const UTF32* iSource,
 		*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
 	}
 
+/** Write the UTF-16 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
+Do not write more code units than those required to represent \a iCountCP code points.
+Report the number of code units and code points successfully written in the optional output
+parameters \a oCountCU and \a oCountCP.
+*/
 void sWrite(const UTF16* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW)
@@ -133,6 +143,11 @@ void sWrite(const UTF16* iSource,
 		*oCountCP = ZUnicode::sCUToCP(iSource, cuWritten);
 	}
 
+/** Write the UTF-8 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
+Do not write more code units than those required to represent \a iCountCP code points.
+Report the number of code units and code points successfully written in the optional output
+parameters \a oCountCU and \a oCountCP.
+*/
 void sWrite(const UTF8* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW)
@@ -203,16 +218,84 @@ void sWrite(const string8& iString, const ChanW_UTF& iChanW)
 
 // -----
 
+/** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
+substitution is applied to the string before writing.
+*/
 void sWritef(const ChanW_UTF& iChanW,
-	const UTF8* iString, ...);
+	const UTF8* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	size_t countCU_Produced, count_CUWritten;
+	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, args);
+	va_end(args);
+	if (count_CUWritten != countCU_Produced)
+		ChanWBase::sThrow_Exhausted();
+	}
 
+/** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
+substitution is applied to the string before writing. The number of UTF-8 code units produced
+is returned in \a oCount_CUProduced. The number of UTF-8 code units successfully written is
+returned in \a oCount_CUWritten.
+*/
 void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
-	const UTF8* iString, ...);
+	const UTF8* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	sWritev(iChanW, oCount_CUProduced, oCount_CUWritten, iString, args);
+	va_end(args);
+	}
 
 void sWritev(const ChanW_UTF& iChanW,
-	const UTF8* iString, va_list iArgs);
+	const UTF8* iString, va_list iArgs)
+	{
+	size_t countCU_Produced, count_CUWritten;
+	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, iArgs);
+	if (count_CUWritten != countCU_Produced)
+		ChanWBase::sThrow_Exhausted();
+	}
 
 void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
-	const UTF8* iString, va_list iArgs);
+	const UTF8* iString, va_list iArgs)
+	{
+	string8 buffer(512, ' ');
+	for (;;)
+		{
+		#if ZCONFIG(Compiler, MSVC)
+			va_list args = iArgs;
+			int count = _vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+		#else
+			va_list args;
+			#ifdef __va_copy
+				__va_copy(args, iArgs);
+			#else
+				va_copy(args, iArgs);
+			#endif
+			int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+		#endif
+
+		if (count < 0)
+			{
+			// Handle -ve result from glibc prior to version 2.1 by growing the string.
+			buffer.resize(buffer.size() * 2);
+			}
+		else if (size_t(count) > buffer.size())
+			{
+			// Handle C99 standard, where count indicates how much space would have been needed.
+			buffer.resize(count);
+			}
+		else
+			{
+			// The string fitted, we can now write it out.
+			const size_t countWritten = sWriteFully(buffer.data(), count, iChanW);
+			if (oCount_CUProduced)
+				*oCount_CUProduced = count;
+			if (oCount_CUWritten)
+				*oCount_CUWritten = countWritten;
+			break;
+			}
+		}
+	}
 
 } // namespace ZooLib

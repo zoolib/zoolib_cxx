@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/Util_Chan.h"
 
 namespace ZooLib {
 namespace Util_Chan {
@@ -34,6 +35,15 @@ namespace Util_Chan {
 void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest);
 void sSkip_Line(const ChanR_UTF& iSource);
 string8 sRead_Line(const ChanR_UTF& iSource);
+
+// -----------------
+
+string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
+
+// -----------------
+
+void sWriteExact(float iFloat, const ChanW_UTF& iChanW);
+void sWriteExact(double iDouble, const ChanW_UTF& iChanW);
 
 } // namespace Util_Chan
 } // namespace ZooLib

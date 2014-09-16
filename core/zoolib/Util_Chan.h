@@ -102,7 +102,7 @@ bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const
 		else if (iTerminator == *theQ)
 			return true;
 		else
-			sQWrite(*theQ, iChanW);
+			sWrite(*theQ, iChanW);
 		}
 	}
 
@@ -111,9 +111,6 @@ bool sSkip_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator)
 	{ sCopy_Until(iChanR, ChanW_XX_Discard<Elmt_t>(), iTerminator); }
 
 } // namespace Util_Chan
-
-using namespace Util_Chan;
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Util_Chan_h__

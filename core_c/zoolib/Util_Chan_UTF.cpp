@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/ChanW_XX_More.h" // For ChanW_XX_Discard
 #include "zoolib/ChanW_UTF_string.h" // For ChanW_UTF_string8
+#include "zoolib/Util_Chan_UTF.h"
+
 #include "zoolib/ZUnicode.h" // For ZUnicode::sIsEOL
 
 namespace ZooLib {
@@ -38,7 +39,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest)
 		else if (ZUnicode::sIsEOL(*theCPQ))
 			break;
 		else
-			sQWrite(*theCPQ, oDest);
+			sWrite(*theCPQ, oDest);
 		}
 	}
 
@@ -50,6 +51,31 @@ string8 sRead_Line(const ChanR_UTF& iSource)
 	string8 result;
 	sCopy_Line(iSource, ChanW_UTF_string8(&result));
 	return result;
+	}
+
+// -----------------
+
+string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
+	{
+	string8 result;
+	sCopy_Until<UTF32>(iSource, ChanW_UTF_string8(&result), iTerminator);
+	return result;
+	}
+
+// -----------------
+
+void sWriteExact(float iFloat, const ChanW_UTF& iChanW)
+	{
+	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
+	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
+	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
+	sWritef(iChanW, "%.9g", iFloat);
+	}
+
+void sWriteExact(double iDouble, const ChanW_UTF& iChanW)
+	{
+	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
+	sWritef(iChanW, "%.17g", iDouble);
 	}
 
 } // namespace Util_Chan
