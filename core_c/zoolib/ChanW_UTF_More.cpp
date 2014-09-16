@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanW_UTF_More.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/Zunicode.h"
+#include "zoolib/ZUnicode.h"
 
 namespace ZooLib {
 
