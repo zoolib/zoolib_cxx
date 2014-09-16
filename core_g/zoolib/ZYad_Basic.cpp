@@ -18,6 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_UTF_string.h"
+#include "zoolib/Util_Chan.h"
+
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_Basic.h"
 
@@ -37,7 +40,7 @@ void spThrowParseException(const string& iMessage)
 bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
-	return ZUtil_Strim::sCopy_Until(iStrimU, iTerminator, ZStrimW_String<string>(oString));
+	return Util_Chan::sCopy_Until<UTF32>(iStrimU, ChanW_UTF_string8(&oString), iTerminator);
 	}
 
 } // anonymous namespace
