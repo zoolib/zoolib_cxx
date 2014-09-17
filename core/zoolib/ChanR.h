@@ -33,21 +33,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanRBase
-
-class ChanRBase
-	{
-public:
-	static void sThrow_Exhausted()
-		{ throw std::range_error("ChanR::sThrow_Exhausted"); }
-	};
-
-// =================================================================================================
 // MARK: - ChanR
 
 template <class Elmt_p>
 class ChanR
-:	public ChanRBase
 	{
 protected:
 /** \name Canonical Methods
@@ -64,12 +53,12 @@ public:
 	typedef Elmt_p Elmt_t;
 	typedef ChanR<Elmt_p> Chan_Base;
 
-	virtual size_t Read(Elmt_t* oDest, size_t iCount) = 0;
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount) = 0;
 
 	virtual uint64 Skip(uint64 iCount)
 		{
 		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
-		return this->Read(buf, std::min<size_t>(iCount, countof(buf)));
+		return this->QRead(buf, std::min<size_t>(iCount, countof(buf)));
 		}
 
 	virtual size_t Readable()
@@ -86,8 +75,15 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-size_t sRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
-	{ return sNonConst(iChanR).Read(oDest, iCount); }
+bool sThrow_Exhausted(const ChanR<Elmt_p>& iChanR)
+	{
+	throw std::range_error("ChanR Exhausted");
+	return false;
+	}
+
+template <class Elmt_p>
+size_t sQRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
+	{ return sNonConst(iChanR).QRead(oDest, iCount); }
 
 template <class Elmt_p>
 uint64 sSkip(uint64 iCount, const ChanR<Elmt_p>& iChanR)
@@ -104,21 +100,21 @@ template <class Elmt_p>
 ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p buf;
-	if (1 != sRead(&buf, 1, iChanR))
+	if (1 != sQRead(&buf, 1, iChanR))
 		return null;
 	return buf;
 	}
 
 template <class Elmt_p>
 bool sQRead(Elmt_p& oElmt, const ChanR<Elmt_p>& iChanR)
-	{ return 1 == sRead(&oElmt, 1, iChanR); }
+	{ return 1 == sQRead(&oElmt, 1, iChanR); }
 
 template <class Elmt_p>
-Elmt_p sRead(const ChanR<Elmt_p>& iChanR)
+Elmt_p sReadMust(const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p buf;
-	if (1 != sRead(&buf, 1, iChanR))
-		ChanRBase::sThrow_Exhausted();
+	if (1 != sQRead(&buf, 1, iChanR))
+		sThrow_Exhausted(iChanR);
 	return buf;
 	}
 
@@ -128,7 +124,7 @@ size_t sReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 	Elmt_p* localDest = oDest;
 	while (iCount)
 		{
-		if (const size_t countRead = sRead(localDest, iCount, iChanR))
+		if (const size_t countRead = sQRead(localDest, iCount, iChanR))
 			{
 			iCount -= countRead;
 			localDest += countRead;

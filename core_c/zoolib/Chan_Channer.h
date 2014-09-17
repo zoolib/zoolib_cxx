@@ -40,8 +40,8 @@ public:
 		{}
 
 // From ChanR<Elmt_p>
-	virtual size_t Read(Elmt_p* oDest, size_t iCount)
-		{ return sRead(oDest, iCount, sGetChan(fChanner)); }
+	virtual size_t QRead(Elmt_p* oDest, size_t iCount)
+		{ return sQRead(oDest, iCount, sGetChan(fChanner)); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(iCount, sGetChan(fChanner)); }
@@ -67,8 +67,8 @@ public:
 		{}
 
 // From ChanW<Elmt_p>
-	virtual size_t Write(const Elmt_p* iSource, size_t iCount)
-		{ return sWrite(iSource, iCount, sGetChan(fChanner)); }
+	virtual size_t QWrite(const Elmt_p* iSource, size_t iCount)
+		{ return sQWrite(iSource, iCount, sGetChan(fChanner)); }
 
 	virtual void Flush()
 		{ sFlush(sGetChan(fChanner)); }

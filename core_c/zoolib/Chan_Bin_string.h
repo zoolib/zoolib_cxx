@@ -44,7 +44,7 @@ public:
 	ChanBase_Bin_string(std::string* ioStringPtr);
 
 // From ChanR
-	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual size_t QRead(byte* oDest, size_t iCount);
 
 	virtual size_t Readable();
 
@@ -96,7 +96,7 @@ public:
 	virtual size_t UnreadableLimit();
 
 // From ChanW
-	virtual size_t Write(const byte* iSource, size_t iCount);
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
 
 // From ChanCountSet
 	virtual void CountSet(uint64 iCount);

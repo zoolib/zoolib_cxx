@@ -43,7 +43,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fChanW, and oDest could reference memory that's
@@ -51,7 +51,7 @@ public:
 
 		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
 
-		if (const size_t countRead = sRead(buf, std::min(iCount, countof(buf)), fChanR))
+		if (const size_t countRead = sQRead(buf, std::min(iCount, countof(buf)), fChanR))
 			{
 			std::copy(buf, buf + countRead, oDest);
 
@@ -91,16 +91,16 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{
-		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
+		if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
 			{
 			sWriteFully(iSource, countWritten0, fChanW1);
 			return countWritten0;
 			}
 		else
 			{
-			return sWrite(iSource, iCount, fChanW1);
+			return sQWrite(iSource, iCount, fChanW1);
 			}
 		}
 

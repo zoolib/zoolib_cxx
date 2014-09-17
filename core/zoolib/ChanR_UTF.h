@@ -27,8 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using std::pair;
-
 // =================================================================================================
 // MARK: - ChanR_UTF32
 
@@ -42,7 +40,7 @@ class ChanR_UTF16
 	{
 public:
 // From ChanR<UTF16>
-	virtual size_t Read(UTF16* oDest, size_t iCount)
+	virtual size_t QRead(UTF16* oDest, size_t iCount)
 		{
 		size_t countRead;
 		this->ReadUTF16(oDest, iCount, &countRead, iCount, nullptr);
@@ -62,7 +60,7 @@ class ChanR_UTF8
 	{
 public:
 // From ChanR<UTF8>
-	virtual size_t Read(UTF8* oDest, size_t iCount)
+	virtual size_t QRead(UTF8* oDest, size_t iCount)
 		{
 		size_t countRead;
 		this->ReadUTF8(oDest, iCount, &countRead, iCount, nullptr);
@@ -83,13 +81,11 @@ class ChanR_UTF
 ,	public ChanR_UTF8
 	{
 public:
-	static void sThrow_Exhausted();
-
-	using ChanR_UTF32::Read;
+	using ChanR_UTF32::QRead;
 	using ChanR_UTF32::Skip;
-	using ChanR_UTF16::Read;
+	using ChanR_UTF16::QRead;
 	using ChanR_UTF16::Skip;
-	using ChanR_UTF8::Read;
+	using ChanR_UTF8::QRead;
 	using ChanR_UTF8::Skip;
 	};
 
@@ -111,9 +107,13 @@ void sRead(UTF8* oDest,
 // =================================================================================================
 // MARK: -
 
-string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
-string16 sReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
-string8 sReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
+ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
+ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+
+string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
+string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
+string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 
 } // namespace ZooLib
 

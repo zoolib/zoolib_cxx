@@ -37,15 +37,13 @@ bool sReadFieldName(const ChanR_Bin& iChanR, std::string* oName, std::string* oN
 
 //bool sReadFieldBody(const ChanR_Bin& iChanR, std::string& oFieldBody);
 
-class ChanR_Bin_Header;
-class ChanR_Bin_Line;
-
 // =================================================================================================
 // MARK: - MIME::ChanR_Bin_Header
 
-/// Takes a source stream and reads until it sees an LFLF sequence, at which
-/// point it appears to be empty.
-/** RFC822 mandates the use of CRLF as the line terminating sequence and allows
+/** 
+Takes a source stream and reads until it sees an LFLF sequence, at which
+point it appears to be empty.
+RFC822 mandates the use of CRLF as the line terminating sequence and allows
 bare LF and CR sequences within lines. However I'm unclear on how useful or important this is.
 So this class completely strips CRs from the source stream. It also unfolds LF LWS sequences,
 replacing them with LWS */
@@ -57,7 +55,7 @@ public:
 	ChanR_Bin_Header(const ChanR_Bin& iChanR);
 
 // From ChanR_Bin
-	virtual size_t Read(Elmt_t* oDest, size_t iCount);
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount);
 
 // Our protocol
 	void Reset();
@@ -89,7 +87,7 @@ public:
 	ChanR_Bin_Line(const ChanR_Bin& iChanR);
 
 // From ChanR_Bin
-	virtual size_t Read(Elmt_t* oDest, size_t iCount);
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount);
 
 // Our protocol
 	void Reset();

@@ -43,7 +43,7 @@ ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 ,	fCount(0)
 	{}
 
-size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_InsertSeparator::QWrite(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;
@@ -65,7 +65,7 @@ size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 						{
 						if (0 == (fCount % riter->first))
 							{
-							sWrite(riter->second, fStrimSink);
+							sWriteMust(riter->second, fStrimSink);
 							break;
 							}
 						}
@@ -87,7 +87,7 @@ size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 				}
 			}
 
-		size_t countWritten = sWrite(localSource, countToWrite, fStrimSink);
+		const size_t countWritten = sQWrite(localSource, countToWrite, fStrimSink);
 		if (countWritten == 0)
 			break;
 		

@@ -652,10 +652,10 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			sWritef(s, "( // %lld bytes", theSize);
+			sWriteMustf(s, "( // %lld bytes", theSize);
 
 			if (countRemaining < theSize)
-				sWritef(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+				sWriteMustf(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
 			spWriteLFIndent(iLevel, iOptions, s);
 			if (iOptions.fRawAsASCII)
@@ -690,9 +690,9 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 						{
 						UTF32 theChar = iStreamRPos.ReadInt8();
 						if (theChar < 0x20 || theChar > 0x7E)
-							sWrite('.', s);
+							sWriteMust('.', s);
 						else
-							sWrite(theChar, s);
+							sWriteMust(theChar, s);
 						}
 					spWriteLFIndent(iLevel, iOptions, s);
 					}
@@ -726,9 +726,9 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 					{
 					UTF32 theChar = iStreamRPos.ReadInt8();
 					if (theChar < 0x20 || theChar > 0x7E)
-						sWrite('.', s);
+						sWriteMust('.', s);
 					else
-						sWrite(theChar, s);
+						sWriteMust(theChar, s);
 					}
 				s << " */";
 				}

@@ -40,7 +40,7 @@ void spThrowParseException(const string& iMessage)
 bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
-	return Util_Chan::sCopy_Until<UTF32>(iStrimU, ChanW_UTF_string8(&oString), iTerminator);
+	return sCopy_Until<UTF32>(iStrimU, ChanW_UTF_string8(&oString), iTerminator);
 	}
 
 } // anonymous namespace

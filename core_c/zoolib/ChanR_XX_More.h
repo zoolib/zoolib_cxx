@@ -37,7 +37,7 @@ class ChanR_XX_Null
 	{
 public:
 	typedef XX Elmt_t;
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{ return 0; }
 	};
 

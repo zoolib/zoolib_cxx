@@ -38,7 +38,7 @@ namespace HTTP {
 using std::max;
 using std::min;
 using std::pair;
-using std::replace;
+//using std::replace;
 using std::vector;
 
 // =================================================================================================
@@ -174,24 +174,24 @@ void Response::Send(const ChanW_Bin& iChanW) const
 	{
 	ZAssert(fResult >= 100 && fResult <= 999);
 	if (fIsVersion11)
-		sWrite("HTTP/1.1 ", iChanW);
+		sWriteMust("HTTP/1.1 ", iChanW);
 	else
-		sWrite("HTTP/1.0 ", iChanW);
+		sWriteMust("HTTP/1.0 ", iChanW);
 
-	sWritef(iChanW, "%d", fResult);
+	sWriteMustf(iChanW, "%d", fResult);
 	if (not fMessage.empty())
 		{
-		sWrite(" ", iChanW);
-		sWrite(fMessage, iChanW);
+		sWriteMust(" ", iChanW);
+		sWriteMust(fMessage, iChanW);
 		}
 
-	sWrite("\r\n", iChanW);
+	sWriteMust("\r\n", iChanW);
 
 	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
 		{ sWrite_HeaderLine(ii->first, ii->second, iChanW); }
 
-	sWrite("\r\n", iChanW);
+	sWriteMust("\r\n", iChanW);
 	}
 
 // =================================================================================================
@@ -1652,10 +1652,10 @@ bool sIs_qdtext(char iChar)
 
 void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW)
 	{
-	sWrite(iName, iChanW);
-	sWrite(": ", iChanW);
-	sWrite(iBody, iChanW);
-	sWrite("\r\n", iChanW);
+	sWriteMust(iName, iChanW);
+	sWriteMust(": ", iChanW);
+	sWriteMust(iBody, iChanW);
+	sWriteMust("\r\n", iChanW);
 	}
 
 void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
@@ -1682,14 +1682,14 @@ void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
 	}
 
 void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW)
-	{ sWritef(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
+	{ sWriteMustf(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
 
 void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	{
-	sWritef(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
-	sWrite("Content-Type: text/plain\r\n", iChanW);
-	sWrite("\r\n", iChanW);
-	sWritef(iChanW, "Error %d", iError);
+	sWriteMustf(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
+	sWriteMust("Content-Type: text/plain\r\n", iChanW);
+	sWriteMust("\r\n", iChanW);
+	sWriteMustf(iChanW, "Error %d", iError);
 	}
 
 // =================================================================================================
@@ -1742,7 +1742,7 @@ ChanR_Bin_Chunked::ChanR_Bin_Chunked(const ChanR_Bin& iChanR)
 ChanR_Bin_Chunked::~ChanR_Bin_Chunked()
 	{}
 
-size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
+size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && !fHitEnd)
@@ -1750,7 +1750,7 @@ size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 		if (fChunkSize == 0)
 			{
 			// Read and discard the CRLF at the end of the chunk.
-			uint64 countSkipped = sSkip(2, fChanR);
+			const uint64 countSkipped = sSkip(2, fChanR);
 			if (countSkipped == 2)
 				fChunkSize = spReadChunkSize(fChanR);
 			if (fChunkSize == 0)
@@ -1758,7 +1758,7 @@ size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 			}
 		else
 			{
-			size_t countRead = sRead(
+			const size_t countRead = sQRead(
 				localDest, std::min<size_t>(iCount, fChunkSize), fChanR);
 
 			if (countRead == 0)
@@ -1799,17 +1799,17 @@ ChanW_Bin_Chunked::~ChanW_Bin_Chunked()
 		this->pFlush();
 
 		// Terminating zero-length chunk
-		sWrite("0\r\n", fChanW);
+		sWriteMust("0\r\n", fChanW);
 
 		// There's supposed to be an additional CRLF at the end of all the data,
 		// after any trailer entity headers.
-		sWrite("\r\n", fChanW);
+		sWriteMust("\r\n", fChanW);
 		}
 	catch (...)
 		{}
 	}
 
-size_t ChanW_Bin_Chunked::Write(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_Chunked::QWrite(const byte* iSource, size_t iCount)
 	{
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)
@@ -1818,12 +1818,12 @@ size_t ChanW_Bin_Chunked::Write(const byte* iSource, size_t iCount)
 			{
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
-			sWritef(fChanW, "%X\r\n", fBufferUsed + iCount);
+			sWriteMustf(fChanW, "%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
-			sWrite(&fBuffer[0], fBufferUsed, fChanW);
+			sWriteMust(&fBuffer[0], fBufferUsed, fChanW);
 			fBufferUsed = 0;
-			sWrite(localSource, iCount, fChanW);
-			sWrite("\r\n", fChanW);
+			sWriteMust(localSource, iCount, fChanW);
+			sWriteMust("\r\n", fChanW);
 			localSource += iCount;
 			iCount = 0;
 			}
@@ -1850,9 +1850,9 @@ void ChanW_Bin_Chunked::pFlush()
 	if (const size_t bufferUsed = fBufferUsed)
 		{
 		fBufferUsed = 0;
-		sWritef(fChanW, "%X\r\n", bufferUsed);
-		sWrite(&fBuffer[0], bufferUsed, fChanW);
-		sWrite("\r\n", fChanW);
+		sWriteMustf(fChanW, "%X\r\n", bufferUsed);
+		sWriteMust(&fBuffer[0], bufferUsed, fChanW);
+		sWriteMust("\r\n", fChanW);
 		}
 	}
 

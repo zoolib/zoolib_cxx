@@ -26,7 +26,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	string32 result;
 	size_t destGenerated = 0;
@@ -34,10 +34,11 @@ string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 		{
 		result.resize(destGenerated + iCountCP);
 		UTF32* dest = sNonConst(result.data()) + destGenerated;
-		const size_t cuRead = sRead(dest, iCountCP, iChanR);
+		const size_t cuRead = sQRead(dest, iCountCP, iChanR);
 		const size_t cpRead = Unicode::sCUToCP(dest, cuRead);
+
 		if (cpRead == 0)
-			ChanR_UTF::sThrow_Exhausted();
+			return null;
 		iCountCP -= cpRead;
 		destGenerated += cuRead;
 		}
@@ -45,7 +46,7 @@ string32 sReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	return result;
 	}
 
-string16 sReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	string16 result;
 	size_t destGenerated = 0;
@@ -57,7 +58,7 @@ string16 sReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 			iCountCP + 1, &cuRead, iCountCP, &cpRead, iChanR);
 
 		if (cpRead == 0)
-			ChanR_UTF::sThrow_Exhausted();
+			return null;
 		iCountCP -= cpRead;
 		destGenerated += cuRead;
 		}
@@ -65,7 +66,7 @@ string16 sReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 	return result;
 	}
 
-string8 sReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	string8 result;
 	size_t destGenerated = 0;
@@ -77,12 +78,38 @@ string8 sReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 			iCountCP + 5, &cuRead, iCountCP, &cpRead, iChanR);
 
 		if (cpRead == 0)
-			ChanR_UTF::sThrow_Exhausted();
+			return null;
 		iCountCP -= cpRead;
 		destGenerated += cuRead;
 		}
 	result.resize(destGenerated);
 	return result;
+	}
+
+// -----
+
+string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
+	{
+	const ZQ<string32> theQ = sQReadUTF32(iCountCP, iChanR);
+	if (not theQ)
+		sThrow_Exhausted(iChanR);
+	return *theQ;
+	}
+
+string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
+	{
+	const ZQ<string16> theQ = sQReadUTF16(iCountCP, iChanR);
+	if (not theQ)
+		sThrow_Exhausted(iChanR);
+	return *theQ;
+	}
+
+string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
+	{
+	const ZQ<string8> theQ = sQReadUTF8(iCountCP, iChanR);
+	if (not theQ)
+		sThrow_Exhausted(iChanR);
+	return *theQ;
 	}
 
 } // namespace ZooLib

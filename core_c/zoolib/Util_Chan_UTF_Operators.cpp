@@ -29,55 +29,55 @@ namespace Util_Chan_UTF_Operators {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string32& iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF32* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF32* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string16& iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF16* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF16* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string8& iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF8* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF8* iString)
 	{
-	sWrite(iString, w);
+	sWriteMust(iString, w);
 	return w;
 	}
 
@@ -89,110 +89,110 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ChanR_UTF& r)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, bool iVal)
 	{
-	sWrite(iVal ? "true" : "false", w);
+	sWriteMust(iVal ? "true" : "false", w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, char iVal)
 	{
-	sWritef(w, "%c", iVal);
+	sWriteMustf(w, "%c", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, unsigned char iVal)
 	{
-	sWritef(w, "%u", (unsigned int)iVal);
+	sWriteMustf(w, "%u", (unsigned int)iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, signed char iVal)
 	{
-	sWritef(w, "%d", int(iVal));
+	sWriteMustf(w, "%d", int(iVal));
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, __wchar_t iVal)
 	{
-	sWritef(w, "%lc", iVal);
+	sWriteMustf(w, "%lc", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, short iVal)
 	{
-	sWritef(w, "%d", iVal);
+	sWriteMustf(w, "%d", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, unsigned short iVal)
 	{
-	sWritef(w, "%u", iVal);
+	sWriteMustf(w, "%u", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, int iVal)
 	{
-	sWritef(w, "%d", iVal);
+	sWriteMustf(w, "%d", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, unsigned int iVal)
 	{
-	sWritef(w, "%u", iVal);
+	sWriteMustf(w, "%u", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, long iVal)
 	{
-	sWritef(w, "%ld", iVal);
+	sWriteMustf(w, "%ld", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, unsigned long iVal)
 	{
-	sWritef(w, "%lu", iVal);
+	sWriteMustf(w, "%lu", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, __int64 iVal)
 	{
-	sWritef(w, "%lld", iVal);
+	sWriteMustf(w, "%lld", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, __uint64 iVal)
 	{
-	sWritef(w, "%llu", iVal);
+	sWriteMustf(w, "%llu", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, float iVal)
 	{
-	sWritef(w, "%.9g", iVal);
+	sWriteMustf(w, "%.9g", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, double iVal)
 	{
-	sWritef(w, "%.17g", iVal);
+	sWriteMustf(w, "%.17g", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, long double iVal)
 	{
 	// This is a guess for now.
-	sWritef(w, "%.34Lg", iVal);
+	sWriteMustf(w, "%.34Lg", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const void* iVal)
 	{
-	sWritef(w, "%p", iVal);
+	sWriteMustf(w, "%p", iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, void* iVal)
 	{
-	sWritef(w, "%p", iVal);
+	sWriteMustf(w, "%p", iVal);
 	return w;
 	}
 

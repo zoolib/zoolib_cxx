@@ -34,15 +34,12 @@ namespace ZooLib {
 
 typedef ChanW<byte> ChanW_Bin;
 
-inline void sThrowEndOfChanW()
-	{ throw std::range_error("sThrowEndOfChanW"); }
-
 // =================================================================================================
 // MARK: -
 
 inline
-size_t sWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
-	{ return sWrite(static_cast<const byte*>(iSource), iCount, iChan); }
+size_t sQWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
+	{ return sQWrite(static_cast<const byte*>(iSource), iCount, iChan); }
 
 inline
 size_t sWriteFully(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
@@ -87,9 +84,19 @@ bool sQWriteSwapped(const T& iT, const ChanW_Bin& iChanW)
 
 #endif
 
-//##template <class T>
-//##bool sQWrite(const T& iT, const ChanW_Bin& iChanW)
-//##	{ return sQWriteBE<T>(iT, iChanW); }
+template <class T>
+void sWriteBE(const T& iT, const ChanW_Bin& iChanW)
+	{
+	if (not sQWriteBE<T>(iT, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
+
+template <class T>
+void sWriteLE(const T& iT, const ChanW_Bin& iChanW)
+	{
+	if (not sQWriteLE<T>(iT, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
 
 } // namespace ZooLib
 

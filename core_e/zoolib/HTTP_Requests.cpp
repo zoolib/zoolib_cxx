@@ -261,7 +261,7 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 
 			if (iBodyCountQ)
 				{
-				sWritef(theChanW, "Content-Length: %lld\r\n", *iBodyCountQ);
+				sWriteMustf(theChanW, "Content-Length: %lld\r\n", *iBodyCountQ);
 				theChanW << "\r\n";
 				sCopyFully(iBody, theChanW, *iBodyCountQ);
 				}

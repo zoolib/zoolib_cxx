@@ -37,7 +37,7 @@ class ChanW_XX_Null
 	{
 public:
 	typedef XX Elmt_t;
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{ return 0; }
 	};
 
@@ -52,7 +52,7 @@ class ChanW_XX_Discard
 	{
 public:
 	typedef XX Elmt_t;
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{ return iCount; }
 	};
 

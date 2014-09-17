@@ -42,7 +42,7 @@ public:
 	ChanW_UTF_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iStrimSink);
 	
 // From ChanW<UTF32> via ChanW_UTF_Native32
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
 
 private:
 	const ChanW_UTF& fStrimSink;

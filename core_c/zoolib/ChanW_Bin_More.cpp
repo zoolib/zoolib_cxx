@@ -27,38 +27,60 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-void sWrite(const char* iString, const ChanW_Bin& iChanW)
+bool sQWrite(const char* iString, const ChanW_Bin& iChanW)
 	{
 	if (iString)
 		{
 		if (const size_t length = strlen(iString))
 			{
-			if (length != sWrite(iString, length, iChanW))
-				ChanWBase::sThrow_Exhausted();
+			if (length != sQWrite(iString, length, iChanW))
+				return false;
 			}
 		}
+	return true;
 	}
 
-void sWrite(const std::string& iString, const ChanW_Bin& iChanW)
+void sWriteMust(const char* iString, const ChanW_Bin& iChanW)
+	{
+	if (not sQWrite(iString, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
+
+bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW)
 	{
 	if (const size_t length = iString.size())
 		{
 		if (length != sWriteFully(iString.data(), length, iChanW))
-			ChanWBase::sThrow_Exhausted();
+			return false;
 		}
+	return true;
 	}
 
-void sWritef(const ChanW_Bin& iChanW, const char* iString, ...)
+void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW)
+	{
+	if (not sQWrite(iString, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
+
+static
+bool spQWritev(const ChanW_Bin& iChanW,
+	const UTF8* iString, va_list iArgs)
 	{
 	std::vector<char> buffer(512, 0);
 	for (;;)
 		{
-		va_list args;
-		va_start(args, iString);
-
-		const int count = vsnprintf(const_cast<char*>(&buffer[0]), buffer.size(), iString, args);
-
-		va_end(args);
+		#if ZCONFIG(Compiler, MSVC)
+			va_list args = iArgs;
+			int count = _vsnprintf(const_cast<char*>(&buffer[0]), buffer.size(), iString, args);
+		#else
+			va_list args;
+			#ifdef __va_copy
+				__va_copy(args, iArgs);
+			#else
+				va_copy(args, iArgs);
+			#endif
+			int count = vsnprintf(const_cast<char*>(&buffer[0]), buffer.size(), iString, args);
+		#endif
 
 		if (count < 0)
 			{
@@ -70,14 +92,36 @@ void sWritef(const ChanW_Bin& iChanW, const char* iString, ...)
 			// Handle C99 standard, where count indicates how much space would have been needed.
 			buffer.resize(count);
 			}
+		else if (count == 0)
+			{
+			// The string fitted and is empty.
+			return true;
+			}
 		else
 			{
 			// The string fitted, we can now write it out.
-			if (count && size_t(count) != sWrite(buffer.data(), count, iChanW))
-				ChanWBase::sThrow_Exhausted();
-			return;
+			return size_t(count) == sWriteFully(&buffer[0], count, iChanW);
 			}
 		}
+	}
+
+bool sQWritef(const ChanW_Bin& iChanW, const char* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	const bool result = spQWritev(iChanW, iString, args);
+	va_end(args);
+	return result;
+	}
+
+void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	const bool result = spQWritev(iChanW, iString, args);
+	va_end(args);
+	if (not result)
+		sThrow_Exhausted(iChanW);
 	}
 
 // =================================================================================================
@@ -85,19 +129,19 @@ void sWritef(const ChanW_Bin& iChanW, const char* iString, ...)
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const char* iString)
 	{
-	sWrite(iString, iChanW);
+	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
 	return iChanW;
 	}
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, char* iString)
 	{
-	sWrite(iString, iChanW);
+	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
 	return iChanW;
 	}
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 	{
-	sWrite(iString, iChanW);
+	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
 	return iChanW;
 	}
 
@@ -108,7 +152,7 @@ ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
 :	fStringPtr(ioString)
 	{}
 
-size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCountCU)
+size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
 	{
 	fStringPtr->append((char*)iSource, iCountCU);
 	return iCountCU;

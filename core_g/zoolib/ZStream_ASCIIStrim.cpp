@@ -105,7 +105,10 @@ void ZStreamW_ASCIIStrim::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		{
 		UTF32 current = *localSource++;
 		if (int32(current) >= 0 && current <= 127)
-			sWrite(current, fStrimW);
+			{
+			if (not sQWrite(current, fStrimW))
+				break;
+			}
 		}
 	if (oCountWritten)
 		*oCountWritten = localSource - static_cast<const char*>(iSource);

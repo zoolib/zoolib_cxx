@@ -44,11 +44,11 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countRead = sRead(oDest, iCount, fChanR0))
+			if (const size_t countRead = sQRead(oDest, iCount, fChanR0))
 				return countRead;
 			fFirstIsLive = false;
 			}
@@ -92,11 +92,11 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
+			if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
 				return countWritten0;
 			fFirstIsLive = false;
 			}

@@ -38,7 +38,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest)
 		else if (Unicode::sIsEOL(*theCPQ))
 			break;
 		else
-			sWrite(*theCPQ, oDest);
+			sWriteMust(*theCPQ, oDest);
 		}
 	}
 
@@ -68,13 +68,13 @@ void sWriteExact(float iFloat, const ChanW_UTF& iChanW)
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	sWritef(iChanW, "%.9g", iFloat);
+	sWriteMustf(iChanW, "%.9g", iFloat);
 	}
 
 void sWriteExact(double iDouble, const ChanW_UTF& iChanW)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	sWritef(iChanW, "%.17g", iDouble);
+	sWriteMustf(iChanW, "%.17g", iDouble);
 	}
 
 } // namespace Util_Chan

@@ -34,13 +34,13 @@ class ChanW_UTF_Native32
 	{
 public:
 // From ChanW<UTF32> via ChanW_UTF
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU) = 0;
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU) = 0;
 
 // From ChanW<UTF16> via ChanW_UTF
-	virtual size_t Write(const UTF16* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF16* iSource, size_t iCountCU);
 
 // From ChanW<UTF8> via ChanW_UTF
-	virtual size_t Write(const UTF8* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF8* iSource, size_t iCountCU);
 	};
 
 // =================================================================================================
@@ -51,13 +51,13 @@ class ChanW_UTF_Native16
 	{
 public:
 // From ChanW<UTF32> via ChanW_UTF
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
 
 // From ChanW<UTF16> via ChanW_UTF
-	virtual size_t Write(const UTF16* iSource, size_t iCountCU) = 0;
+	virtual size_t QWrite(const UTF16* iSource, size_t iCountCU) = 0;
 
 // From ChanW<UTF8> via ChanW_UTF
-	virtual size_t Write(const UTF8* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF8* iSource, size_t iCountCU);
 	};
 
 // =================================================================================================
@@ -68,13 +68,13 @@ class ChanW_UTF_Native8
 	{
 public:
 // From ChanW<UTF32> via ChanW_UTF
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
 
 // From ChanW<UTF16> via ChanW_UTF
-	virtual size_t Write(const UTF16* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF16* iSource, size_t iCountCU);
 
 // From ChanW<UTF8> via ChanW_UTF
-	virtual size_t Write(const UTF8* iSource, size_t iCountCU) = 0;
+	virtual size_t QWrite(const UTF8* iSource, size_t iCountCU) = 0;
 	};
 
 } // namespace ZooLib

@@ -45,7 +45,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		Elmt_t* localDest = oDest;
 		Elmt_t* localDestEnd = oDest + iCount;
@@ -53,7 +53,7 @@ public:
 			{
 			if (fStack.empty())
 				{
-				size_t countRead = sRead(localDest, localDestEnd - localDest, fChanR);
+				size_t countRead = sQRead(localDest, localDestEnd - localDest, fChanR);
 				if (countRead == 0)
 					break;
 				localDest += countRead;

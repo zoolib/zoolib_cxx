@@ -50,7 +50,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
 			fCount > fPosition ? fCount - fPosition : 0);
@@ -162,7 +162,7 @@ public:
 		{ return this->fPosition; }
 
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{
 		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress)) + this->fPosition;
 

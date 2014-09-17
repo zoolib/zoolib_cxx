@@ -31,7 +31,7 @@ static const size_t kBufSize = sStackBufferSize;
 // =================================================================================================
 // MARK: - ChanW_UTF_Native32
 
-size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native32::QWrite(const UTF16* iSource, size_t iCountCU)
 	{
 	const UTF16* localSource = iSource;
 	while (iCountCU)
@@ -53,7 +53,7 @@ size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
 				}
 			}
 
-		size_t utf32Consumed = this->Write(buffer, utf32Generated);
+		size_t utf32Consumed = this->QWrite(buffer, utf32Generated);
 		if (utf32Consumed < utf32Generated)
 			{
 			// It's a truncated write. We need to convert from utf32Consumed back into
@@ -68,7 +68,7 @@ size_t ChanW_UTF_Native32::Write(const UTF16* iSource, size_t iCountCU)
 	return localSource - iSource;
 	}
 
-size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native32::QWrite(const UTF8* iSource, size_t iCountCU)
 	{
 	const UTF8* localSource = iSource;
 	while (iCountCU)
@@ -90,7 +90,7 @@ size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
 				}
 			}
 
-		size_t utf32Consumed = this->Write(buffer, utf32Generated);
+		size_t utf32Consumed = this->QWrite(buffer, utf32Generated);
 		if (utf32Consumed < utf32Generated)
 			{
 			// It's a truncated write. We need to convert from utf32Consumed back into
@@ -108,7 +108,7 @@ size_t ChanW_UTF_Native32::Write(const UTF8* iSource, size_t iCountCU)
 // =================================================================================================
 // MARK: - ChanW_UTF_Native16
 
-size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native16::QWrite(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	while (iCountCU)
@@ -127,7 +127,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 		ZAssertStop(kDebug_Strim, utf32Consumed <= iCountCU);
 		ZAssertStop(kDebug_Strim, utf16Generated <= kBufSize);
 
-		size_t utf16Consumed = this->Write(buffer, utf16Generated);
+		size_t utf16Consumed = this->QWrite(buffer, utf16Generated);
 		if (utf16Consumed < utf16Generated)
 			{
 			// It's a truncated write. We need to convert from utf16Consumed back into
@@ -142,7 +142,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 	return localSource - iSource;
 	}
 
-size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native16::QWrite(const UTF8* iSource, size_t iCountCU)
 	{
 	const UTF8* localSource = iSource;
 	while (iCountCU)
@@ -165,7 +165,7 @@ size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
 				}
 			}
 
-		size_t utf16Consumed = this->Write(buffer, utf16Generated);
+		size_t utf16Consumed = this->QWrite(buffer, utf16Generated);
 		if (utf16Consumed < utf16Generated)
 			{
 			// It's a truncated write. We need to convert from utf16Consumed back into
@@ -184,7 +184,7 @@ size_t ChanW_UTF_Native16::Write(const UTF8* iSource, size_t iCountCU)
 // =================================================================================================
 // MARK: - ChanW_UTF_Native8
 
-size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native8::QWrite(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	while (iCountCU)
@@ -203,7 +203,7 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 		ZAssertStop(kDebug_Strim, utf32Consumed <= iCountCU);
 		ZAssertStop(kDebug_Strim, utf8Generated <= kBufSize);
 
-		size_t utf8Consumed = this->Write(buffer, utf8Generated);
+		size_t utf8Consumed = this->QWrite(buffer, utf8Generated);
 		if (utf8Consumed < utf8Generated)
 			{
 			// It's a truncated write. We need to convert from utf8Consumed back into
@@ -219,7 +219,7 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 	return localSource - iSource;
 	}
 
-size_t ChanW_UTF_Native8::Write(const UTF16* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native8::QWrite(const UTF16* iSource, size_t iCountCU)
 	{
 	const UTF16* localSource = iSource;
 	while (iCountCU)
@@ -242,7 +242,7 @@ size_t ChanW_UTF_Native8::Write(const UTF16* iSource, size_t iCountCU)
 				}
 			}
 
-		size_t utf8Consumed = this->Write(buffer, utf8Generated);
+		size_t utf8Consumed = this->QWrite(buffer, utf8Generated);
 		if (utf8Consumed < utf8Generated)
 			{
 			// It's a truncated write. We need to convert from utf8Consumed back into

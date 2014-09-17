@@ -66,11 +66,11 @@ ZStrimR reference, you must work with some derived class.
 
 
 public:
-	using ChanR_UTF::Read;
+	using ChanR_UTF::QRead;
 	using ChanR_UTF::Skip;
 
 // From ChanR_UTF
-	virtual size_t Read(ChanR<UTF32>::Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(ChanR<UTF32>::Elmt_t* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
 		this->Imp_ReadUTF32(oDest, iCount, &countRead);
@@ -234,11 +234,11 @@ ZStrimW reference, you must work with some derived class.
 
 
 public:
-	using ChanW_UTF::Write;
+	using ChanW_UTF::QWrite;
 	using ChanW_UTF::Flush;
 
 // From ChanW<UTF32> via ChanW_UTF
-	virtual size_t Write(const UTF32* iSource, size_t iCount)
+	virtual size_t QWrite(const UTF32* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_WriteUTF32(iSource, iCount, &countWritten);
@@ -246,7 +246,7 @@ public:
 		}
 
 // From ChanW<UTF16> via ChanW_UTF
-	virtual size_t Write(const UTF16* iSource, size_t iCount)
+	virtual size_t QWrite(const UTF16* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_WriteUTF16(iSource, iCount, &countWritten);
@@ -254,7 +254,7 @@ public:
 		}
 
 // From ChanW<UTF8> via ChanW_UTF
-	virtual size_t Write(const UTF8* iSource, size_t iCount)
+	virtual size_t QWrite(const UTF8* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_WriteUTF8(iSource, iCount, &countWritten);

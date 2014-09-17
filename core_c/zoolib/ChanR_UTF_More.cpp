@@ -183,7 +183,7 @@ void ChanR_UTF_Native16::ReadUTF8(UTF8* oDest,
 // =================================================================================================
 // MARK: - ChanR_UTF_Native8
 
-size_t ChanR_UTF_Native8::Read(UTF32* oDest, size_t iCountCU)
+size_t ChanR_UTF_Native8::QRead(UTF32* oDest, size_t iCountCU)
 	{
 	UTF8 utf8Buffer[kBufSize];
 	size_t utf8Buffered = 0;
@@ -192,7 +192,7 @@ size_t ChanR_UTF_Native8::Read(UTF32* oDest, size_t iCountCU)
 
 	while (iCountCU)
 		{
-		const size_t utf8Read = this->Read(utf8Buffer, min(kBufSize - utf8Buffered, iCountCU));
+		const size_t utf8Read = this->QRead(utf8Buffer, min(kBufSize - utf8Buffered, iCountCU));
 		if (utf8Read == 0)
 			break;
 
@@ -232,7 +232,7 @@ void ChanR_UTF_Native8::ReadUTF16(UTF16* oDest,
 	while (iCountCU >= 2 && localCountCP)
 		{
 		// Top up the buffer as much as we can.
-		const size_t utf8Read = this->Read(utf8Buffer + utf8Buffered,
+		const size_t utf8Read = this->QRead(utf8Buffer + utf8Buffered,
 			min(kBufSize - utf8Buffered, min(localCountCP, iCountCU)));
 
 		if (utf8Read == 0)

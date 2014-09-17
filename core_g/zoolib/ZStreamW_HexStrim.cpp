@@ -46,7 +46,7 @@ void ZStreamW_HexStrim_Real::Imp_Write(const void* iSource, size_t iCount, size_
 		UTF8 theHex[2];
 		theHex[0] = fHexDigits[((*localSource) >> 4) & 0x0F];
 		theHex[1] = fHexDigits[(*localSource) & 0x0F];
-		sWrite(theHex, 2, fStrimSink);
+		sWriteMust(theHex, 2, fStrimSink);
 		--iCount;
 		++localSource;
 		}

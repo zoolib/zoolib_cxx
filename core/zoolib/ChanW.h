@@ -32,21 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanWBase
-
-class ChanWBase
-	{
-public:
-	static void sThrow_Exhausted()
-		{ throw std::range_error("ChanW::sThrow_Exhausted"); }
-	};
-
-// =================================================================================================
 // MARK: - ChanW
 
 template <class Elmt_p>
 class ChanW
-:	public ChanWBase
 	{
 protected:
 /** \name Canonical Methods
@@ -63,7 +52,7 @@ public:
 	typedef Elmt_p Elmt_t;
 	typedef ChanW<Elmt_p> Chan_Base;
 
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount) = 0;
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount) = 0;
 
 	virtual void Flush()
 		{}
@@ -73,26 +62,33 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-size_t sWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
-	{ return sNonConst(iChanW).Write(iSource, iCount); }
+bool sThrow_Exhausted(const ChanW<Elmt_p>& iChanW)
+	{
+	throw std::range_error("ChanW Exhausted");
+	return false;
+	}
+
+template <class Elmt_p>
+size_t sQWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
+	{ return sNonConst(iChanW).QWrite(iSource, iCount); }
 
 template <class Elmt_p>
 void sFlush(const ChanW<Elmt_p>& iChanW)
 	{ sNonConst(iChanW).Flush(); }
 
-template <class Elmt_p>
-bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
-	{ return 1 == sWrite(&iElmt, 1, iChanW); }
-
-template <class Elmt_p>
-void sWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
-	{
-	if (1 != sWrite(&iElmt, 1, iChanW))
-		ChanWBase::sThrow_Exhausted();
-	}
-
 // =================================================================================================
 // MARK: -
+
+template <class Elmt_p>
+bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+	{ return 1 == sQWrite(&iElmt, 1, iChanW); }
+
+template <class Elmt_p>
+void sWriteMust(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+	{
+	if (1 != sQWrite(&iElmt, 1, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
 
 template <class Elmt_p>
 size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
@@ -100,7 +96,7 @@ size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iC
 	const Elmt_p* localSource = iSource;
 	while (iCount)
 		{
-		if (const size_t countWritten = sWrite(localSource, iCount, iChanW))
+		if (const size_t countWritten = sQWrite(localSource, iCount, iChanW))
 			{
 			iCount -= countWritten;
 			localSource += countWritten;
@@ -109,6 +105,13 @@ size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iC
 			{ break; }
 		}
 	return localSource - iSource;
+	}
+
+template <class Elmt_p>
+void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
+	{
+	if (iCount != sWriteFully(iSource, iCount, iChanW))
+		sThrow_Exhausted(iChanW);
 	}
 
 } // namespace ZooLib

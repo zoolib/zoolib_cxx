@@ -31,15 +31,11 @@ namespace ZooLib {
 // MARK: -
 
 static
-void spWriteMust(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
-	{
-	const size_t countWritten = sWriteFully(iSource, iCountCU, iChanW);
-	if (countWritten != iCountCU)
-		ChanW_UTF::sThrow_Exhausted();
-	}
+bool spQWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+	{ return iCountCU == 0 || iCountCU == sWriteFully(iSource, iCountCU, iChanW); }
 
 static
-void spWriteMust(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+bool spQWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
@@ -48,13 +44,14 @@ void spWriteMust(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 			{
 			// See comments in the UTF-8 variant.
 			if (0 != Unicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
-				ChanW_UTF::sThrow_Exhausted();
+				return false;
 			}
 		}
+	return true;
 	}
 
 static
-void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+bool spQWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
@@ -74,9 +71,10 @@ void spWriteMust(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 			// code points then the short write must be because we've reached
 			// our end, and we throw the end of strim exception.
 			if (0 != Unicode::sCUToCP(iSource + cuConsumed, iSource + iCountCU))
-				ChanW_UTF::sThrow_Exhausted();
+				return false;
 			}
 		}
+	return true;
 	}
 
 // =================================================================================================
@@ -106,7 +104,7 @@ void sWrite(const UTF32* iSource,
 		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
-	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
+	const size_t cuWritten = sQWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
@@ -137,7 +135,7 @@ void sWrite(const UTF16* iSource,
 		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
-	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
+	const size_t cuWritten = sQWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
@@ -168,7 +166,7 @@ void sWrite(const UTF8* iSource,
 		actualCU = std::min(iCountCU, Unicode::sCPToCU(iSource, iCountCU, iCountCP, nullptr));
 		}
 
-	const size_t cuWritten = sWrite(iSource, actualCU, iChanW);
+	const size_t cuWritten = sQWrite(iSource, actualCU, iChanW);
 	if (oCountCU)
 		*oCountCU = cuWritten;
 	if (oCountCP)
@@ -177,44 +175,74 @@ void sWrite(const UTF8* iSource,
 
 // ---
 
-void sWrite(const UTF32* iString, const ChanW_UTF& iChanW)
+bool sQWrite(const UTF32* iString, const ChanW_UTF& iChanW)
+	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+
+bool sQWrite(const UTF16* iString, const ChanW_UTF& iChanW)
+	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+
+bool sQWrite(const UTF8* iString, const ChanW_UTF& iChanW)
+	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+
+void sWriteMust(const UTF32* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = Unicode::sCountCU(iString))
-		spWriteMust(iString, countCU, iChanW);
+	if (not spQWrite(iString, Unicode::sCountCU(iString), iChanW))
+		sThrow_Exhausted(iChanW);
 	}
 
-void sWrite(const UTF16* iString, const ChanW_UTF& iChanW)
+void sWriteMust(const UTF16* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = Unicode::sCountCU(iString))
-		spWriteMust(iString, countCU, iChanW);
+	if (not spQWrite(iString, Unicode::sCountCU(iString), iChanW))
+		sThrow_Exhausted(iChanW);
 	}
 
-void sWrite(const UTF8* iString, const ChanW_UTF& iChanW)
+void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW)
 	{
-	if (size_t countCU = Unicode::sCountCU(iString))
-		spWriteMust(iString, countCU, iChanW);
+	if (not spQWrite(iString, Unicode::sCountCU(iString), iChanW))
+		sThrow_Exhausted(iChanW);
 	}
 
 // ---
 
-void sWrite(const string32& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const string32& iString, const ChanW_UTF& iChanW)
 	{
 	// Some non-conformant string implementations (MS) hate it if you access the buffer underlying
 	// an empty string. They don't even return null, they crash or throw an exception.
 	if (const size_t countCU = iString.size())
-		spWriteMust(iString.data(), countCU, iChanW);
+		return spQWrite(iString.data(), countCU, iChanW);
+	return true;
 	}
 
-void sWrite(const string16& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const string16& iString, const ChanW_UTF& iChanW)
 	{
 	if (const size_t countCU = iString.size())
-		spWriteMust(iString.data(), countCU, iChanW);
+		return spQWrite(iString.data(), countCU, iChanW);
+	return true;
 	}
 
-void sWrite(const string8& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const string8& iString, const ChanW_UTF& iChanW)
 	{
 	if (const size_t countCU = iString.size())
-		spWriteMust(iString.data(), countCU, iChanW);
+		return spQWrite(iString.data(), countCU, iChanW);
+	return true;
+	}
+
+void sWriteMust(const string32& iString, const ChanW_UTF& iChanW)
+	{
+	if (not sQWrite(iString, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
+
+void sWriteMust(const string16& iString, const ChanW_UTF& iChanW)
+	{
+	if (not sQWrite(iString, iChanW))
+		sThrow_Exhausted(iChanW);
+	}
+
+void sWriteMust(const string8& iString, const ChanW_UTF& iChanW)
+	{
+	if (not sQWrite(iString, iChanW))
+		sThrow_Exhausted(iChanW);
 	}
 
 // -----
@@ -222,7 +250,7 @@ void sWrite(const string8& iString, const ChanW_UTF& iChanW)
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
 substitution is applied to the string before writing.
 */
-void sWritef(const ChanW_UTF& iChanW,
+void sWriteMustf(const ChanW_UTF& iChanW,
 	const UTF8* iString, ...)
 	{
 	va_list args;
@@ -231,7 +259,7 @@ void sWritef(const ChanW_UTF& iChanW,
 	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, args);
 	va_end(args);
 	if (count_CUWritten != countCU_Produced)
-		ChanWBase::sThrow_Exhausted();
+		sThrow_Exhausted(iChanW);
 	}
 
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
@@ -248,13 +276,13 @@ void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	va_end(args);
 	}
 
-void sWritev(const ChanW_UTF& iChanW,
+void sWriteMustv(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs)
 	{
 	size_t countCU_Produced, count_CUWritten;
 	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, iArgs);
 	if (count_CUWritten != countCU_Produced)
-		ChanWBase::sThrow_Exhausted();
+		sThrow_Exhausted(iChanW);
 	}
 
 void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,

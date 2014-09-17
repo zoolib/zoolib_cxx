@@ -400,7 +400,7 @@ void sCopy_WS(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 			sUnread(theCP, iStrimU);
 			break;
 			}
-		sWrite(theCP, oDest);
+		sWriteMust(theCP, oDest);
 		}
 	}
 
@@ -432,23 +432,23 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ChanW_UTF& oDest
 			{
 			if (spIsWhitespace(firstCP))
 				{
-				sWrite(firstCP, oDest);
+				sWriteMust(firstCP, oDest);
 				continue;
 				}
 			else if (firstCP == '/')
 				{
 				if (sTryRead_CP(iStrimU, '/'))
 					{
-					sWrite("//", oDest);
+					sWriteMust("//", oDest);
 					sCopy_Line(iStrimU, oDest);
 					continue;
 					}
 				else if (sTryRead_CP(iStrimU, '*'))
 					{
-					sWrite("/*", oDest);
+					sWriteMust("/*", oDest);
 					if (not sCopy_Until(iStrimU, "*/", oDest))
 						spThrowParseException("Unexpected end of data while parsing a /**/ comment");
-					sWrite("*/", oDest);
+					sWriteMust("*/", oDest);
 					continue;
 					}
 				}
@@ -534,7 +534,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 		return false;
 		}
 
-	sWrite(theCP, oDest);
+	sWriteMust(theCP, oDest);
 
 	for (;;)
 		{
@@ -547,7 +547,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ChanW_UTF& oDest)
 			sUnread(theCP, iStrimU);
 			break;
 			}
-		sWrite(theCP, oDest);
+		sWriteMust(theCP, oDest);
 		}
 
 	return true;

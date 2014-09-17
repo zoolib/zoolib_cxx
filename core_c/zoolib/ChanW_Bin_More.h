@@ -33,24 +33,41 @@ namespace ZooLib {
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
-May invoke ChanWBase::sThrow_Exhausted.
+Return true if completely written
 */
-void sWrite(const char* iString, const ChanW_Bin& iChanW);
+bool sQWrite(const char* iString, const ChanW_Bin& iChanW);
 
+/**
+Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
+May invoke sThrow_Exhausted.
+*/
+void sWriteMust(const char* iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes contained in \a iString, with no terminating zero byte.
-May invoke ChanWBase::sThrow_Exhausted.
+Return true if completely written
 */
-void sWrite(const std::string& iString, const ChanW_Bin& iChanW);
+bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW);
 
+/**
+Write the bytes contained in \a iString, with no terminating zero byte.
+May invoke sThrow_Exhausted.
+*/
+void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
 Standard printf-style parameter substitution is applied to the string before writing.
-May invoke ChanWBase::sThrow_Exhausted.
+Return true if completely written
 */
-void sWritef(const ChanW_Bin& iChanW, const char* iString, ...);
+bool sQWritef(const ChanW_Bin& iChanW, const char* iString, ...);
+
+/**
+Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
+Standard printf-style parameter substitution is applied to the string before writing.
+May invoke sThrow_Exhausted.
+*/
+void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...);
 
 // =================================================================================================
 // MARK: -
@@ -70,7 +87,7 @@ class ChanW_Bin_string
 public:
 	ChanW_Bin_string(std::string* ioString);
 
-	virtual size_t Write(const byte* iSource, size_t iCountCU);
+	virtual size_t QWrite(const byte* iSource, size_t iCountCU);
 
 protected:
 	std::string* fStringPtr;

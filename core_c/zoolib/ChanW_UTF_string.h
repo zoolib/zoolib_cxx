@@ -41,7 +41,7 @@ class ChanW_UTF_string<UTF32>
 public:
 	ChanW_UTF_string(string32* ioString);
 
-	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
 
 protected:
 	string32* fStringPtr;
@@ -59,7 +59,7 @@ class ChanW_UTF_string<UTF16>
 public:
 	ChanW_UTF_string(string16* ioString);
 
-	virtual size_t Write(const UTF16* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF16* iSource, size_t iCountCU);
 
 protected:
 	string16* fStringPtr;
@@ -77,7 +77,7 @@ class ChanW_UTF_string<UTF8>
 public:
 	ChanW_UTF_string(string8* ioString);
 
-	virtual size_t Write(const UTF8* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF8* iSource, size_t iCountCU);
 
 protected:
 	string8* fStringPtr;

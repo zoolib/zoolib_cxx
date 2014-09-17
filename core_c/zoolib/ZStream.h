@@ -110,7 +110,7 @@ ZStreamR reference, you must work with some derived class.
 
 public:
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		size_t countRead = 0;
 		sNonConst(this)->Imp_Read(oDest, iCount, &countRead);
@@ -404,7 +404,7 @@ ZStreamW reference, you must work with some derived class.
 
 public:
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{
 		size_t countWritten = 0;
 		sNonConst(this)->Imp_Write(iSource, iCount, &countWritten);
@@ -468,9 +468,9 @@ Write data to the stream in standard formats.
 	void WriteUInt32LE(uint32 iVal) const { this->WriteInt32LE(int32(iVal)); }
 	void WriteUInt64LE(uint64 iVal) const { this->WriteInt64LE(int64(iVal)); }
 
-	void WriteString(const char* iString) const { sWrite(iString, *this); }
+	void WriteString(const char* iString) const { sWriteMust(iString, *this); }
 
-	void WriteString(const std::string& iString) const { sWrite(iString, *this); }
+	void WriteString(const std::string& iString) const { sWriteMust(iString, *this); }
 
 //##	size_t Writef(const char* iString, ...) const;
 	//@}

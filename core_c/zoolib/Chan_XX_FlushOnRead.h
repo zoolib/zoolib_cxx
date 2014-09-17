@@ -48,7 +48,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		if (ZMACRO_ThreadSafe_Swap(fLastWasWrite, 0))
 			{
@@ -69,11 +69,11 @@ public:
 		}
 
 // From ChanW
-	virtual size_t Write(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
 		{
 		ZMACRO_ThreadSafe_Set(fLastWasWrite, 1);
 		ZAcqMtx acq(fMutex);
-		return sWrite(iSource, iCount, fChanW);
+		return sQWrite(iSource, iCount, fChanW);
 		}
 
 protected:

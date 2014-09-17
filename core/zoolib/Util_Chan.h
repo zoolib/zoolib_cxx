@@ -39,7 +39,7 @@ std::pair<uint64,uint64> sCopyFully(
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
-		if (const size_t countRead = sRead(
+		if (const size_t countRead = sQRead(
 			buf,
 			std::min<size_t>(countRemaining, countof(buf)),
 			iChanR))
@@ -73,7 +73,7 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 	uint64 totalCopied = 0;
 	for (;;)
 		{
-		if (const size_t countRead = sRead(buf, countof(buf), iChanR))
+		if (const size_t countRead = sQRead(buf, countof(buf), iChanR))
 			{
 			const size_t countWritten = sWriteFully(buf, countRead, iChanW);
 
@@ -101,7 +101,7 @@ bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const
 		else if (iTerminator == *theQ)
 			return true;
 		else
-			sWrite(*theQ, iChanW);
+			sWriteMust(*theQ, iChanW);
 		}
 	}
 
