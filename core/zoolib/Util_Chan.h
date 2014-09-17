@@ -44,7 +44,7 @@ std::pair<uint64,uint64> sCopyFully(
 			std::min<size_t>(countRemaining, countof(buf)),
 			iChanR))
 			{
-			const size_t countWritten = sWriteFully(buf, countRead, iChanW);
+			const size_t countWritten = sQWriteFully(buf, countRead, iChanW);
 
 			if (countWritten == countRead)
 				{
@@ -75,7 +75,7 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 		{
 		if (const size_t countRead = sQRead(buf, countof(buf), iChanR))
 			{
-			const size_t countWritten = sWriteFully(buf, countRead, iChanW);
+			const size_t countWritten = sQWriteFully(buf, countRead, iChanW);
 
 			if (countWritten == countRead)
 				{

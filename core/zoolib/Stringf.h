@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStringf_h__
-#define __ZStringf_h__ 1
+#ifndef __ZooLib_Stringf_h__
+#define __ZooLib_Stringf_h__ 1
 #include "zconfig.h"
 
 #include <cstdarg>
@@ -33,8 +33,8 @@ std::string sStringf(std::string iString, ...);
 
 std::string sStringf(const char* iString, ...) ZMACRO_Attribute_Format_Printf(1,2);
 
-std::string sStringf(const char* iString, std::va_list iArgs);
+std::string sStringv(const char* iString, std::va_list iArgs);
 
 } // namespace ZooLib
 
-#endif // __ZStringf_h__
+#endif // __ZooLib_Stringf_h__

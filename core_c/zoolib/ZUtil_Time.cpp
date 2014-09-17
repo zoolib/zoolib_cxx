@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Stringf.h"
+
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZCompat_cmath.h" // For fmod
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZBlockZero
 #include "zoolib/ZStream.h"
-#include "zoolib/ZStringf.h"
 
 #include <stdio.h>
 #include <time.h>

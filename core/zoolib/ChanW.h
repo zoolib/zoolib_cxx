@@ -91,7 +91,7 @@ void sWriteMust(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	}
 
 template <class Elmt_p>
-size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
+size_t sQWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{
 	const Elmt_p* localSource = iSource;
 	while (iCount)
@@ -110,7 +110,7 @@ size_t sWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iC
 template <class Elmt_p>
 void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{
-	if (iCount != sWriteFully(iSource, iCount, iChanW))
+	if (iCount != sQWriteFully(iSource, iCount, iChanW))
 		sThrow_Exhausted(iChanW);
 	}
 

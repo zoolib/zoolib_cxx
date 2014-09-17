@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Unicode.h"
 
+#include "zoolib/Stringf.h"
 #include "zoolib/ZDebug.h"
 
 #include <stdexcept> // for std::range_error
@@ -32,14 +33,14 @@ namespace ZooLib {
 
 static
 bool spQWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
-	{ return iCountCU == 0 || iCountCU == sWriteFully(iSource, iCountCU, iChanW); }
+	{ return iCountCU == 0 || iCountCU == sQWriteFully(iSource, iCountCU, iChanW); }
 
 static
 bool spQWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
-		const size_t cuConsumed = sWriteFully(iSource, iCountCU, iChanW);
+		const size_t cuConsumed = sQWriteFully(iSource, iCountCU, iChanW);
 		if (cuConsumed != iCountCU)
 			{
 			// See comments in the UTF-8 variant.
@@ -55,7 +56,7 @@ bool spQWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
 	if (iCountCU)
 		{
-		const size_t cuConsumed = sWriteFully(iSource, iCountCU, iChanW);
+		const size_t cuConsumed = sQWriteFully(iSource, iCountCU, iChanW);
 		if (cuConsumed != iCountCU)
 			{
 			// We weren't able to write the whole string.
@@ -288,42 +289,21 @@ void sWriteMustv(const ChanW_UTF& iChanW,
 void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, va_list iArgs)
 	{
-	string8 buffer(512, ' ');
-	for (;;)
+	const std::string theString = sStringv(iString, iArgs);
+	if (const size_t theCount = theString.size())
 		{
-		#if ZCONFIG(Compiler, MSVC)
-			va_list args = iArgs;
-			int count = _vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
-		#else
-			va_list args;
-			#ifdef __va_copy
-				__va_copy(args, iArgs);
-			#else
-				va_copy(args, iArgs);
-			#endif
-			int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
-		#endif
-
-		if (count < 0)
-			{
-			// Handle -ve result from glibc prior to version 2.1 by growing the string.
-			buffer.resize(buffer.size() * 2);
-			}
-		else if (size_t(count) > buffer.size())
-			{
-			// Handle C99 standard, where count indicates how much space would have been needed.
-			buffer.resize(count);
-			}
-		else
-			{
-			// The string fitted, we can now write it out.
-			const size_t countWritten = sWriteFully(buffer.data(), count, iChanW);
-			if (oCount_CUProduced)
-				*oCount_CUProduced = count;
-			if (oCount_CUWritten)
-				*oCount_CUWritten = countWritten;
-			break;
-			}
+		const size_t countWritten = sQWriteFully(theString.data(), theCount, iChanW);
+		if (oCount_CUProduced)
+			*oCount_CUProduced = theCount;
+		if (oCount_CUWritten)
+			*oCount_CUWritten = countWritten;
+		}
+	else
+		{
+		if (oCount_CUProduced)
+			*oCount_CUProduced = 0;
+		if (oCount_CUWritten)
+			*oCount_CUWritten = 0;
 		}
 	}
 

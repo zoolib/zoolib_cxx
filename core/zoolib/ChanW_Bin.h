@@ -42,8 +42,8 @@ size_t sQWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
 	{ return sQWrite(static_cast<const byte*>(iSource), iCount, iChan); }
 
 inline
-size_t sWriteFully(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
-	{ return sWriteFully(static_cast<const byte*>(iSource), iCount, iChan); }
+size_t sQWriteFully(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
+	{ return sQWriteFully(static_cast<const byte*>(iSource), iCount, iChan); }
 
 template <class T>
 bool sQWriteNative(const T& iT, const ChanW_Bin& iChanW)
@@ -57,7 +57,7 @@ template <class T>
 bool sQWriteSwapped(const T& iT, const ChanW_Bin& iChanW)
 	{
 	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sWriteFully(&buf, sizeof(T), iChanW))
+	if (sizeof(T) != sQWriteFully(&buf, sizeof(T), iChanW))
 		return false;
 	return true;
 	}

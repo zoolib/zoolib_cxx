@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanW_Bin_More.h"
+#include "zoolib/Stringf.h"
 
 #include <vector>
 
@@ -50,7 +51,7 @@ bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW)
 	{
 	if (const size_t length = iString.size())
 		{
-		if (length != sWriteFully(iString.data(), length, iChanW))
+		if (length != sQWriteFully(iString.data(), length, iChanW))
 			return false;
 		}
 	return true;
@@ -63,46 +64,12 @@ void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW)
 	}
 
 static
-bool spQWritev(const ChanW_Bin& iChanW,
-	const UTF8* iString, va_list iArgs)
+bool spQWritev(const ChanW_Bin& iChanW, const UTF8* iString, va_list iArgs)
 	{
-	std::vector<char> buffer(512, 0);
-	for (;;)
-		{
-		#if ZCONFIG(Compiler, MSVC)
-			va_list args = iArgs;
-			int count = _vsnprintf(const_cast<char*>(&buffer[0]), buffer.size(), iString, args);
-		#else
-			va_list args;
-			#ifdef __va_copy
-				__va_copy(args, iArgs);
-			#else
-				va_copy(args, iArgs);
-			#endif
-			int count = vsnprintf(const_cast<char*>(&buffer[0]), buffer.size(), iString, args);
-		#endif
-
-		if (count < 0)
-			{
-			// Handle -ve result from glibc prior to version 2.1 by growing the string.
-			buffer.resize(buffer.size() * 2);
-			}
-		else if (size_t(count) > buffer.size())
-			{
-			// Handle C99 standard, where count indicates how much space would have been needed.
-			buffer.resize(count);
-			}
-		else if (count == 0)
-			{
-			// The string fitted and is empty.
-			return true;
-			}
-		else
-			{
-			// The string fitted, we can now write it out.
-			return size_t(count) == sWriteFully(&buffer[0], count, iChanW);
-			}
-		}
+	const std::string theString = sStringv(iString, iArgs);
+	if (theString.size())
+		return theString.size() == sQWriteFully(theString.data(), theString.size(), iChanW);
+	return true;
 	}
 
 bool sQWritef(const ChanW_Bin& iChanW, const char* iString, ...)

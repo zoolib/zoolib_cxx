@@ -119,7 +119,7 @@ Elmt_p sReadMust(const ChanR<Elmt_p>& iChanR)
 	}
 
 template <class Elmt_p>
-size_t sReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
+size_t sQReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 	{
 	Elmt_p* localDest = oDest;
 	while (iCount)

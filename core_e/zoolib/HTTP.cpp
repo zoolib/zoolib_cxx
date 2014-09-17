@@ -24,12 +24,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_XX_Unreader.h"
 #include "zoolib/HTTP.h"
 #include "zoolib/MIME.h"
+#include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h"
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZStringf.h"
 #include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {

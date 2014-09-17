@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
 
 #include "zoolib/ZFunctionChain.h"
@@ -26,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZStringf.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Debug.h"

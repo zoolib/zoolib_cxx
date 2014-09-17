@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStringf.h"
+#include "zoolib/Stringf.h"
 
 #if ZCONFIG(Compiler, MSVC)
 	#define vsnprintf _vsnprintf
@@ -32,33 +32,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using namespace std;
-
 // =================================================================================================
 
 std::string sStringf(std::string iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	string result = sStringf(iString.c_str(), args);
+	const std::string result = sStringf(iString.c_str(), args);
 	va_end(args);
 
 	return result;
 	}
 
-string sStringf(const char* iString, ...)
+std::string sStringf(const char* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	string result = sStringf(iString, args);
+	const std::string result = sStringf(iString, args);
 	va_end(args);
 
 	return result;
 	}
 
-string sStringf(const char* iString, std::va_list iArgs)
+std::string sStringv(const char* iString, std::va_list iArgs)
 	{
-	string result(512, ' ');
+	std::string result(512, ' ');
 	while (true)
 		{
 		va_list localArgs;
@@ -82,11 +80,9 @@ string sStringf(const char* iString, std::va_list iArgs)
 			{
 			// The string fitted
 			result.resize(count);
-			break;
+			return result;
 			}
 		}
-
-	return result;
 	}
 
 } // namespace ZooLib

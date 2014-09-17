@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-
-#include "zoolib/ZStringf.h"
+#include "zoolib/Stringf.h"
 
 #include <typeinfo>
 
