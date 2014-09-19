@@ -83,6 +83,17 @@ private:
 	std::set<JobTime> fJobTimes;
 	};
 
+// =================================================================================================
+// MARK: - CallScheduler function interface
+
+bool sCancel(const CallScheduler::Job& iJob);
+
+void sNextCallAt(ZTime iSystemTime, const CallScheduler::Job& iJob);
+
+void sNextCallIn(double iInterval, const CallScheduler::Job& iJob);
+
+bool sWillCall(const CallScheduler::Job& iJob);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_CallScheduler_h__

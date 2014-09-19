@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/CallScheduler.h"
+#include "zoolib/Singleton.h"
 
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -161,5 +162,20 @@ void CallScheduler::spRun(CallScheduler* iCallScheduler)
 
 	iCallScheduler->pRun();
 	}
+
+// =================================================================================================
+// MARK: - CallScheduler function interface
+
+bool sCancel(const CallScheduler::Job& iJob)
+	{ return sSingleton<CallScheduler>().Cancel(iJob); }
+
+void sNextCallAt(ZTime iSystemTime, const CallScheduler::Job& iJob)
+	{ sSingleton<CallScheduler>().NextCallAt(iSystemTime, iJob); }
+
+void sNextCallIn(double iInterval, const CallScheduler::Job& iJob)
+	{ sSingleton<CallScheduler>().NextCallIn(iInterval, iJob); }
+
+bool sWillCall(const CallScheduler::Job& iJob)
+	{ return sSingleton<CallScheduler>().WillCall(iJob); }
 
 } // namespace ZooLib
