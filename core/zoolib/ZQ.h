@@ -526,6 +526,10 @@ T& sSet(ZQ<T,Sense>& ioQ, const T& iVal)
 // MARK: -
 
 template <class T, bool Sense>
+void sClear(ZQ<T,Sense>& ioQ)
+	{ ioQ.Clear(); }
+
+template <class T, bool Sense>
 T sGetClear(ZQ<T,Sense>& ioQ)
 	{
 	const T result = ioQ.Get();
