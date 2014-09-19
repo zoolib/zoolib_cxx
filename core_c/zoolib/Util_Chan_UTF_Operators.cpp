@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_Chan.h" // For sCopyAll
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 // =================================================================================================
@@ -167,20 +168,19 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, __uint64 iVal)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, float iVal)
 	{
-	sWriteMustf(w, "%.9g", iVal);
+	Util_Chan::sWriteExact(iVal, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, double iVal)
 	{
-	sWriteMustf(w, "%.17g", iVal);
+	Util_Chan::sWriteExact(iVal, w);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, long double iVal)
 	{
-	// This is a guess for now.
-	sWriteMustf(w, "%.34Lg", iVal);
+	Util_Chan::sWriteExact(iVal, w);
 	return w;
 	}
 

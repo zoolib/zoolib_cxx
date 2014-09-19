@@ -63,18 +63,24 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 
 // -----------------
 
-void sWriteExact(float iFloat, const ChanW_UTF& iChanW)
+void sWriteExact(float iVal, const ChanW_UTF& iChanW)
 	{
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	sWriteMustf(iChanW, "%.9g", iFloat);
+	sWriteMustf(iChanW, "%.9g", iVal);
 	}
 
-void sWriteExact(double iDouble, const ChanW_UTF& iChanW)
+void sWriteExact(double iVal, const ChanW_UTF& iChanW)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	sWriteMustf(iChanW, "%.17g", iDouble);
+	sWriteMustf(iChanW, "%.17g", iVal);
+	}
+
+void sWriteExact(long double iVal, const ChanW_UTF& iChanW)
+	{
+	// This is a guess for now.
+	sWriteMustf(iChanW, "%.34Lg", iVal);
 	}
 
 } // namespace Util_Chan

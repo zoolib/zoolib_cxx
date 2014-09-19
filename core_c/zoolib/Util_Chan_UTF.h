@@ -44,6 +44,7 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
 
 void sWriteExact(float iFloat, const ChanW_UTF& iChanW);
 void sWriteExact(double iDouble, const ChanW_UTF& iChanW);
+void sWriteExact(long double iVal, const ChanW_UTF& iChanW);
 
 } // namespace Util_Chan
 } // namespace ZooLib
