@@ -31,19 +31,19 @@ namespace ZooLib {
 // MARK: -
 
 template <>
-void sByteSwap<size_t(1)>(void* ioBuf)
+void sByteSwap<int(1)>(void* ioBuf)
 	{}
 
 template <>
-void sByteSwap<size_t(2)>(void* ioBuf)
+void sByteSwap<int(2)>(void* ioBuf)
 	{ ZByteSwap_16(ioBuf); }
 
 template <>
-void sByteSwap<size_t(4)>(void* ioBuf)
+void sByteSwap<int(4)>(void* ioBuf)
 	{ ZByteSwap_32(ioBuf); }
 
 template <>
-void sByteSwap<size_t(8)>(void* ioBuf)
+void sByteSwap<int(8)>(void* ioBuf)
 	{ ZByteSwap_64(ioBuf); }
 
 } // namespace ZooLib
