@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
-#include "zoolib/Util_Chan.h" // For sCopyAll
 
 namespace ZooLib {
 
