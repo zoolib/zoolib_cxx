@@ -55,7 +55,7 @@ public:
 			{
 			std::copy(buf, buf + countRead, oDest);
 
-			const size_t countWritten = sWriteFully(buf, countRead, fChanW);
+			const size_t countWritten = sQWriteFully(buf, countRead, fChanW);
 
 			if (countWritten != countRead)
 				{

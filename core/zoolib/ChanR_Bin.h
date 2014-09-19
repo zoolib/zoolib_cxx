@@ -42,8 +42,8 @@ size_t sQRead(void* oDest, size_t iCount, const ChanR_Bin& iChan)
 	{ return sQRead(static_cast<byte*>(oDest), iCount, iChan); }
 
 inline
-size_t sReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
-	{ return sReadFully(static_cast<byte*>(oDest), iCount, iChan); }
+size_t sQReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
+	{ return sQReadFully(static_cast<byte*>(oDest), iCount, iChan); }
 
 // =================================================================================================
 // MARK: -
@@ -61,7 +61,7 @@ template <class T>
 ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof(T) != sReadFully(&buf, sizeof(T), iChanR))
+	if (sizeof(T) != sQReadFully(&buf, sizeof(T), iChanR))
 		return null;
 	return sByteSwapped(buf);
 	}
