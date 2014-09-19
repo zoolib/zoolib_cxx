@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/Stringf.h"
 
 #include <typeinfo>
 
@@ -79,19 +78,19 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, P* iVal)
 	using Util_Chan_UTF_Operators::operator<<;
 #endif
 
-template <class P>
-std::string sObjPtrStr(const P* iVal)
-	{
-	return std::string("(const ") + typeid(P).name() + "*)"
-		+ sStringf("%p", reinterpret_cast<const void*>(iVal));
-	}
-
-template <class P>
-std::string sObjPtrStr(P* iVal)
-	{
-	return std::string("(") + typeid(P).name() + "*)"
-		+ sStringf("%p", reinterpret_cast<void*>(iVal));
-	}
+//template <class P>
+//std::string sObjPtrStr(const P* iVal)
+//	{
+//	return std::string("(const ") + typeid(P).name() + "*)"
+//		+ sStringf("%p", reinterpret_cast<const void*>(iVal));
+//	}
+//
+//template <class P>
+//std::string sObjPtrStr(P* iVal)
+//	{
+//	return std::string("(") + typeid(P).name() + "*)"
+//		+ sStringf("%p", reinterpret_cast<void*>(iVal));
+//	}
 
 } // namespace ZooLib
 
