@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_HTTP_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Channer_Bin.h"
-
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZVal_Any.h"
 
@@ -98,9 +96,8 @@ ZTrail sDecodeTrail(const string& iURL);
 string sEncodeComponent(const string& iString);
 string sEncodeTrail(const ZTrail& iTrail);
 
+ZQ<string> sQGetString0(const Val& iVal);
 string sGetString0(const Val& iVal);
-
-ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iChannerR);
 
 // =================================================================================================
 // MARK: - Request headers
@@ -230,47 +227,6 @@ void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin
 void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW);
 void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW);
 void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW);
-
-// =================================================================================================
-// MARK: - ChanR_Bin_Chunked
-
-class ChanR_Bin_Chunked : public ChanR_Bin
-	{
-public:
-	ChanR_Bin_Chunked(const ChanR_Bin& iChanR);
-	virtual ~ChanR_Bin_Chunked();
-
-// From ZStreamR
-	virtual size_t QRead(byte* oDest, size_t iCount);
-	virtual size_t Readable();
-
-private:
-	const ChanR_Bin& fChanR;
-	uint64 fChunkSize;
-	bool fHitEnd;
-	};
-
-// =================================================================================================
-// MARK: - ChanW_Bin_Chunked
-
-class ChanW_Bin_Chunked : public ChanW_Bin
-	{
-public:
-	ChanW_Bin_Chunked(size_t iBufferSize, const ChanW_Bin& iChanW);
-	ChanW_Bin_Chunked(const ChanW_Bin& iChanW);
-	virtual ~ChanW_Bin_Chunked();
-
-// From ZStreamW
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
-	virtual void Flush();
-
-private:
-	void pFlush();
-
-	const ChanW_Bin& fChanW;
-	std::vector<byte> fBuffer;
-	size_t fBufferUsed;
-	};
 
 } // namespace HTTP
 } // namespace ZooLib

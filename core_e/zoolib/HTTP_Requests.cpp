@@ -24,24 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_XX_Unreader.h"
 #include "zoolib/Chan_XX_Tee.h"
 #include "zoolib/HTTP_Requests.h"
+#include "zoolib/HTTP_Content.h" // For ChanW_Bin_Chunked.
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
 
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 #include "zoolib/ZUtil_string.h"
-
-//#include "zoolib/ZStream_String.h"
-//#include "zoolib/ZStreamR_Boundary.h"
-//#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
-//#include "zoolib/ZStrim_Stream.h"
-//#include "zoolib/ZStrimmer.h"
-//#include "zoolib/ZStrimmer_Stream.h"
-//#include "zoolib/ZStrimmer_Streamer.h"
-//#include "zoolib/ZTextCoder.h"
-//#include "zoolib/ZUtil_Stream_Operators.h"
-//
-//#include <ctype.h> // For isalnum
 
 namespace ZooLib {
 namespace HTTP {
@@ -64,7 +53,7 @@ static bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* 
 	}
 
 static
-ZQ<Connection_t> spQConnect(ZRef<Callable_Connect> iCallable_Connect,
+ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
 	const string& iScheme, const string& iHost, ip_port iPort)
 	{
 	const bool useSSL = ZUtil_string::sEquali("https", iScheme)
@@ -79,16 +68,16 @@ ZQ<Connection_t> spQConnect(ZRef<Callable_Connect> iCallable_Connect,
 			thePort = 80;
 		}
 
-	if (iCallable_Connect)
-		return iCallable_Connect->Call(iHost, thePort, useSSL);
+	if (iCallable_QConnect)
+		return iCallable_QConnect->Call(iHost, thePort, useSSL);
 
-	return sQChanner(iHost, thePort, useSSL);
+	return sQConnect(iHost, thePort, useSSL);
 	}
 
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - HTTP::sChanner
+// MARK: - HTTP::sQConnect
 
 class ChannerClose_RWCon
 :	public ChannerClose
@@ -112,15 +101,17 @@ static
 ZRef<ChannerClose> spChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
 	{ return new ChannerClose_RWCon(iSWCon); }
 
-ZQ<Connection_t> sQChanner(const string& iHost, uint16 iPort, bool iUseSSL)
+ZQ<Connection_t> sQConnect(const string& iHost, uint16 iPort, bool iUseSSL)
 	{
 	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
 		{
 		if (iUseSSL)
 			theEP = sStreamerRWCon_SSL(theEP, theEP);
 
-		Connection_t theC(ZRef<ChannerR_Bin>(theEP), ZRef<ChannerW_Bin>(theEP), spChannerClose_RWCon(theEP));
-		return theC;
+		return Connection_t(
+			ZRef<ChannerR_Bin>(theEP),
+			ZRef<ChannerW_Bin>(theEP),
+			spChannerClose_RWCon(theEP));
 		}
 	return null;
 	}
@@ -158,7 +149,8 @@ static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 	}
 
 
-ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
+bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
+	const ZRef<Callable_QConnect>& iCallable_QConnect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
 	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader)
@@ -179,18 +171,25 @@ ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 		string thePath;
 		if (sParseURL(theURL, &theScheme, &theHost, &thePort, &thePath))
 			{
-			ZQ<Connection_t> theConnQ = spQConnect(iCallable_Connect, theScheme, theHost, thePort);
-			if (not theConnQ)
-				return null;
+			// If ioConnectionQ is valid, we *assume* that it is a live connection
+			// to the server for theURL
+			if (not ioConnectionQ)
+				ioConnectionQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort);
+
+			if (not ioConnectionQ)
+				return false;
 
 			int32 theResponseCode;
 			Map theResponseHeader;
 			if (not spQRequest(
-				sGetChan(theConnQ->f0), sGetChan(theConnQ->f1),
+				sGetChan(ioConnectionQ->f0), sGetChan(ioConnectionQ->f1),
 				iMethod, theHost + sStringf(":%d", thePort), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
-				{ return null; }
+				{
+				sClear(ioConnectionQ);
+				return false;
+				}
 
 			if (oResponseCode)
 				*oResponseCode = theResponseCode;
@@ -200,19 +199,6 @@ ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 
 			switch (theResponseCode)
 				{
-				case 101:
-					{
-					return theConnQ;
-					}
-				case 200:
-					{
-					if ("HEAD" == iMethod)
-						theConnQ->f0 = sChanner_T<ChanR_XX_Null<byte> >();
-
-					theConnQ->f0 = sMakeContentChanner(theResponseHeader, theConnQ->f0);
-
-					return theConnQ;
-					}
 				case 301:
 				case 302:
 				case 303:
@@ -222,7 +208,7 @@ ZQ<Connection_t> sQRequest(const ZRef<Callable_Connect>& iCallable_Connect,
 					}
 				default:
 					{
-					return null;
+					return true;
 					}
 				}
 			}
@@ -243,7 +229,7 @@ static void spPOST_Prefix(const ChanW_Bin& w,
 		sWrite_Header(*iHeader, w);
 	}
 
-ZQ<Connection_t> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ)
 	{
@@ -253,7 +239,7 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	string thePath;
 	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		if (ZQ<Connection_t> theConnQ = spQConnect(iCallable_Connect, theScheme, theHost, thePort))
+		if (ZQ<Connection_t> theConnQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort))
 			{
 			const ChanW_Bin& theChanW = sGetChan(theConnQ->f1);
 
@@ -293,6 +279,9 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		}
 	}
 
+#if 0
+
+Need to decide if we're doing the sMakeContentChanner stuff in here.
 ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
@@ -324,17 +313,19 @@ ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 	return null;
 	}
 
-ZQ<Connection_t> sQPOST(ZRef<Callable_Connect> iCallable_Connect,
+ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZQ<Connection_t> theConnQ = sQPOST_Send(iCallable_Connect,
+	if (ZQ<Connection_t> theConnQ = sQPOST_Send(iCallable_QConnect,
 		"POST", iURL, iHeader, iBody, iBodyCountQ))
 		{
 		return sQPOST_Receive(theConnQ, oResponseCode, oHeader, oRawHeader);
 		}
 	return null;
 	}
+
+#endif
 
 // =================================================================================================
 // MARK: - sCONNECT
