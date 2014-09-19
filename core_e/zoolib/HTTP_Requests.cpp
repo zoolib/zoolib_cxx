@@ -18,18 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanR_XX_More.h"
-#include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_Bin_Data.h"
+#include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_XX_Unreader.h"
 #include "zoolib/Chan_XX_Tee.h"
-#include "zoolib/HTTP_Requests.h"
+#include "zoolib/HTTP.h"
 #include "zoolib/HTTP_Content.h" // For ChanW_Bin_Chunked.
+#include "zoolib/HTTP_Requests.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
 
-#include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZStreamerRWCon_SSL.h"
 #include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {
@@ -54,12 +52,12 @@ static bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* 
 
 static
 ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iScheme, const string& iHost, ip_port iPort)
+	const string& iScheme, const string& iHost, uint16 iPort)
 	{
 	const bool useSSL = ZUtil_string::sEquali("https", iScheme)
 		|| ZUtil_string::sEquali("wss", iScheme);
 
-	ip_port thePort = iPort;
+	uint16 thePort = iPort;
 	if (not thePort)
 		{
 		if (useSSL)
@@ -75,46 +73,6 @@ ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
 	}
 
 } // anonymous namespace
-
-// =================================================================================================
-// MARK: - HTTP::sQConnect
-
-class ChannerClose_RWCon
-:	public ChannerClose
-,	public ChanClose
-	{
-public:
-	ChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
-	:	fSWCon(iSWCon)
-		{}
-
-	virtual void GetChan(const ChanClose*& oChanPtr)
-		{ oChanPtr = this; }
-
-	virtual void Close()
-		{ fSWCon->GetStreamWCon().SendDisconnect(); }
-
-	const ZRef<ZStreamerWCon> fSWCon;
-	};
-
-static
-ZRef<ChannerClose> spChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
-	{ return new ChannerClose_RWCon(iSWCon); }
-
-ZQ<Connection_t> sQConnect(const string& iHost, uint16 iPort, bool iUseSSL)
-	{
-	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
-		{
-		if (iUseSSL)
-			theEP = sStreamerRWCon_SSL(theEP, theEP);
-
-		return Connection_t(
-			ZRef<ChannerR_Bin>(theEP),
-			ZRef<ChannerW_Bin>(theEP),
-			spChannerClose_RWCon(theEP));
-		}
-	return null;
-	}
 
 // =================================================================================================
 // MARK: - HTTP::sRequest
@@ -167,7 +125,7 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 
 		string theScheme;
 		string theHost;
-		ip_port thePort;
+		uint16 thePort;
 		string thePath;
 		if (sParseURL(theURL, &theScheme, &theHost, &thePort, &thePath))
 			{
@@ -235,7 +193,7 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 	{
 	string theScheme;
 	string theHost;
-	ip_port thePort;
+	uint16 thePort;
 	string thePath;
 	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{

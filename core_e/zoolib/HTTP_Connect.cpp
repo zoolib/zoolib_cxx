@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,47 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_HTTP_Requests_h__
-#define __ZooLib_HTTP_Requests_h__ 1
-#include "zconfig.h"
+#include "zoolib/HTTP_Connect.h"
 
-#include "zoolib/HTTP.h"
-#include "zoolib/HTTP_Connect.h" // For Connection_t and Callable_QConnect
+#include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZStreamerRWCon_SSL.h"
 
 namespace ZooLib {
 namespace HTTP {
 
 // =================================================================================================
-// MARK: - HTTP
+// MARK: - HTTP::sQConnect
 
-// -----
+// This all constitutes a slightly skanky bridge between Chan and Stream.
 
-bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
-	const ZRef<Callable_QConnect>& iCallable_QConnect,
-	const string& iMethod, const string& iURL, const Map* iHeader,
-	bool iConnectionClose,
-	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader);
+class ChannerClose_RWCon
+:	public ChannerClose
+,	public ChanClose
+	{
+public:
+	ChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
+	:	fSWCon(iSWCon)
+		{}
 
-// -----
+	virtual void GetChan(const ChanClose*& oChanPtr)
+		{ oChanPtr = this; }
 
-ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iMethod,
-	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ);
+	virtual void Close()
+		{ fSWCon->GetStreamWCon().SendDisconnect(); }
 
-ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
+	const ZRef<ZStreamerWCon> fSWCon;
+	};
 
-ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
+static
+ZRef<ChannerClose> spChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
+	{ return new ChannerClose_RWCon(iSWCon); }
 
-// -----
+ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
+	{
+	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+		{
+		if (iUseSSL)
+			theEP = sStreamerRWCon_SSL(theEP, theEP);
 
-bool sCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
-	const std::string& iAddress, const Map* iHeader,
-	int32* oResponseCode, Map* oHeader);
+		return Connection_t(theEP, theEP, spChannerClose_RWCon(theEP));
+		}
+	return null;
+	}
 
 } // namespace HTTP
 } // namespace ZooLib
-
-#endif // __ZooLib_HTTP_Requests_h__

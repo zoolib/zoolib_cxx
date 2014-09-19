@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,47 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_HTTP_Requests_h__
-#define __ZooLib_HTTP_Requests_h__ 1
+#ifndef __ZooLib_HTTP_Connect_h__
+#define __ZooLib_HTTP_Connect_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/HTTP.h"
-#include "zoolib/HTTP_Connect.h" // For Connection_t and Callable_QConnect
+#include "zoolib/Callable.h"
+#include "zoolib/Channer_Bin.h"
+
+#include "zoolib/ZMulti_T.h"
 
 namespace ZooLib {
 namespace HTTP {
 
+typedef ZMulti_T3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > Connection_t;
+
 // =================================================================================================
 // MARK: - HTTP
 
-// -----
+typedef Callable<ZQ<Connection_t>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
+	Callable_QConnect;
 
-bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
-	const ZRef<Callable_QConnect>& iCallable_QConnect,
-	const string& iMethod, const string& iURL, const Map* iHeader,
-	bool iConnectionClose,
-	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader);
-
-// -----
-
-ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iMethod,
-	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ);
-
-ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
-
-ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
-	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
-
-// -----
-
-bool sCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
-	const std::string& iAddress, const Map* iHeader,
-	int32* oResponseCode, Map* oHeader);
+ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
 
 } // namespace HTTP
 } // namespace ZooLib
 
-#endif // __ZooLib_HTTP_Requests_h__
+#endif // __ZooLib_HTTP_Connect_h__
