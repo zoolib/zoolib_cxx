@@ -78,6 +78,8 @@ public:
 private:
 	void pRun()
 		{
+		ZThread::sSetName("Caller_OnNewThread");
+
 		ZGuardMtxR guard(fMtxR);
 
 		while (fKeepRunning)
