@@ -38,7 +38,7 @@ std::string sStringf(std::string iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	const std::string result = sStringf(iString.c_str(), args);
+	const std::string result = sStringv(iString.c_str(), args);
 	va_end(args);
 
 	return result;
@@ -48,7 +48,7 @@ std::string sStringf(const char* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	const std::string result = sStringf(iString, args);
+	const std::string result = sStringv(iString, args);
 	va_end(args);
 
 	return result;
