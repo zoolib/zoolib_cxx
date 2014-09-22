@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrim_Escaped_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/ChanW_UTF.h"
 
 #include "zoolib/ZStrim.h"
 

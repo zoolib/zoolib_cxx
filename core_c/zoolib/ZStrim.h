@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanU.h"
-#include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/UnicodeString.h"
 
 #include <stdarg.h> // For va_list
@@ -67,7 +67,7 @@ ZStrimR reference, you must work with some derived class.
 
 public:
 	using ChanR_UTF::QRead;
-	using ChanR_UTF::Skip;
+//##	using ChanR_UTF::Skip;
 
 // From ChanR_UTF
 	virtual size_t QRead(ChanR<UTF32>::Elmt_t* oDest, size_t iCount)
@@ -235,7 +235,6 @@ ZStrimW reference, you must work with some derived class.
 
 public:
 	using ChanW_UTF::QWrite;
-	using ChanW_UTF::Flush;
 
 // From ChanW<UTF32> via ChanW_UTF
 	virtual size_t QWrite(const UTF32* iSource, size_t iCount)

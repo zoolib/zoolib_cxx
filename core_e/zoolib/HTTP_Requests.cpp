@@ -106,7 +106,6 @@ static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 		}
 	}
 
-
 bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 	const ZRef<Callable_QConnect>& iCallable_QConnect,
 	const string& iMethod, const string& iURL, const Map* iHeader,

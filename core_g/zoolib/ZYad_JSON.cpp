@@ -690,7 +690,7 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 						{
 						UTF32 theChar = iStreamRPos.ReadInt8();
 						if (theChar < 0x20 || theChar > 0x7E)
-							sWriteMust('.', s);
+							sWriteMust(UTF32('.'), s);
 						else
 							sWriteMust(theChar, s);
 						}
@@ -726,7 +726,7 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 					{
 					UTF32 theChar = iStreamRPos.ReadInt8();
 					if (theChar < 0x20 || theChar > 0x7E)
-						sWriteMust('.', s);
+						sWriteMust(UTF32('.'), s);
 					else
 						sWriteMust(theChar, s);
 					}
