@@ -1,0 +1,385 @@
+# ==================================================================================================
+# Grandfather-in old variable names
+
+PATHS ?=$(PROJECT_PATHS)
+SOURCES ?=$(PROJECT_SOURCES)
+SYS_PATHS ?=$(PROJECT_SYS_PATHS)
+LIB_PATHS ?=$(PROJECT_LIB_PATHS)
+LIBS ?=$(PROJECT_LIBS)
+
+OBJECTS_DIR_ROOT:=$(OBJECTS_DIR)
+
+OBJECTS_DIR:=$(OBJECTS_DIR)/4/3/2/1/0
+
+# ==================================================================================================
+# Set up the names of the compilers to use
+
+ZMAKE_ZAC ?=zac
+
+ifneq (,$(filter $(TARGET_PLATFORM),Win))
+	ZMAKE_CC ?=i386-mingw32-gcc
+	ZMAKE_CXX ?=i386-mingw32-g++
+	ZMAKE_LD ?=i386-mingw32-g++
+	ZMAKE_WINDRES ?=i386-mingw32-windres
+	ZMAKE_STRIP ?=i386-mingw32-strip
+else
+	ZMAKE_CC ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CC)
+	ZMAKE_CXX ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CXX)
+# When linking on 10.5 g++ cares about this value.
+	ZMAKE_LD ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(ZMAKE_CXX)
+	ZMAKE_STRIP ?=strip
+endif
+
+# ==================================================================================================
+# Set up the flags to be passed to the compilers. This is a little tricky, because although we're
+# assuming gcc it doesn't support the same suite of capabilities on all platforms.
+
+ZMAKE_CFLAGS ?=
+ZMAKE_LDFLAGS ?=
+
+ZMAKE_CFLAGS +=-pipe
+ZMAKE_LDFLAGS +=-dead_strip
+
+
+ifneq (,$(filter $(TARGET_PLATFORM),Darwin))
+	ZMAKE_CFLAGS +=-isysroot $(DARWIN_SYS_ROOT)
+	ZMAKE_LDFLAGS +=-Wl,-syslibroot,$(DARWIN_SYS_ROOT)
+	ZMAKE_LDFLAGS +=-Wl,-multiply_defined,suppress
+else
+#	ZMAKE_LDFLAGS +=--allow-multiple-definition
+endif
+
+
+ifneq (,$(filter $(TARGET_PLATFORM),Win))
+	ZMAKE_CFLAGS +=-DUNICODE
+else
+	ZMAKE_CFLAGS +=-D_REENTRANT
+endif
+
+
+ifneq (,$(filter $(CONFIGURATION),Debug))
+	ZMAKE_CFLAGS +=-g -DDEBUG
+else
+	ZMAKE_CFLAGS +=-Os
+	ZMAKE_LDFLAGS +=--strip-all
+endif
+
+
+# ZMAKE_ARCHFLAGS will contain '-arch ppc -arch i386'
+# if we're targetting darwin and a fat build is desired.
+ZMAKE_ARCHFLAGS ?=$(call ifplatform,Darwin,$(if $(FAT_DESIRED),-arch ppc -arch i386))
+
+# Append -static if STATIC_DESIRED and we're not targetting darwin
+ZMAKE_LDFLAGS +=$(if $(STATIC_DESIRED),$(call ifplatform,Darwin,,-static))
+
+ZMAKE_CXXFLAGS =$(ZMAKE_CFLAGS)
+
+# ==================================================================================================
+# Generate the list of the project's C, C++  and asset source files, including any explicit path
+CXX_SOURCES :=\
+	$(filter %.cpp, $(SOURCES))\
+	$(filter %.c, $(SOURCES))\
+	$(filter %.mm, $(SOURCES))\
+	$(filter %.m, $(SOURCES))
+ASSET_SOURCES :=$(filter %.zas, $(SOURCES))
+RC_SOURCES :=$(filter %.rc, $(SOURCES))
+DEF_SOURCES :=$(filter %.def, $(SOURCES))
+
+# Get the filename for each source file
+ASSET_FILENAMES :=$(foreach file, $(ASSET_SOURCES),  $(notdir $(file)))
+RC_FILENAMES :=$(foreach file, $(RC_SOURCES),  $(notdir $(file)))
+DEF_FILENAMES :=$(foreach file, $(DEF_SOURCES),  $(notdir $(file)))
+
+# the path for each object file
+CXX_OBJECTS :=$(addprefix $(OBJECTS_DIR)/, $(addsuffix .o,$(CXX_SOURCES)))
+
+ASSET_OBJECTS :=$(addprefix $(OBJECTS_DIR)/, $(addsuffix .o,$(ASSET_FILENAMES)))
+
+ifneq (,$(filter $(TARGET_PLATFORM),Win))
+	RC_OBJECTS :=$(addprefix $(OBJECTS_DIR)/, $(addsuffix .o,$(RC_FILENAMES)))
+	DEF_OBJECTS :=$(addprefix $(OBJECTS_DIR)/,$(DEF_FILENAMES))
+else
+	RC_OBJECTS :=
+	DEF_OBJECTS :=
+endif
+
+# and dependency file
+CXX_DEPENDS :=$(addprefix $(OBJECTS_DIR)/, $(addsuffix .d,$(CXX_SOURCES)))
+ASSET_DEPENDS :=$(addprefix $(OBJECTS_DIR)/, $(addsuffix .d,$(ASSET_FILENAMES)))
+
+
+# ==================================================================================================
+# SEARCHED_SOURCE_PATHS =$(PATHS)$(SOURCE_PATHS)
+# 
+# Force VPATH empty
+# VPATH :=
+# # and fill it with our source paths
+# VPATH +=$(addprefix :, $(subst ,:, $(filter-out $($(subst, :, ,$(VPATH))),$(SEARCHED_SOURCE_PATHS) )))
+
+
+# ==================================================================================================
+# SOURCE_INCLUDES is the set of directories to be searched for ""-delimited include statements.
+SOURCE_INCLUDES =$(foreach path, $(PATHS)$(HEADER_PATHS), $(addprefix -I, $(path)))
+
+# SYS_INCLUDES is the set of directories to be searched for "" _and_ <>-delimited include statements.
+SYS_INCLUDES =$(foreach path, $(SYS_PATHS), $(addprefix -I, $(path)))
+
+
+# ==================================================================================================
+# Clean up the library paths we've been passed
+
+LD_FLAGS_PATHS :=$(foreach path,$(LIB_PATHS),$(addprefix -L,$(path)))
+
+# If we're not on Darwin, add the -XLinker -R for each path
+XLINKER_PATHS :=$(foreach path, $(LIB_PATHS),$(addprefix -Xlinker -R, $(path)))
+LD_FLAGS_PATHS +=$(call ifplatform, Darwin,,$(XLINKER_PATHS))
+
+
+# Explicit libs are those with a .so or .a suffix, and are simply
+# added to the list of stuff to be linked.
+LIBS_EXPLICIT =$(filter %.so %.a %.lib _APP_ _KERNEL_, $(LIBS))
+
+# Searched libs are everything else, and are referenced by a -l entry for each
+LIBS_SEARCHED =$(filter-out %.so %.a %.lib _APP_ _KERNEL_, $(LIBS))
+
+LD_FLAGS_LIBS =$(LIBS_EXPLICIT)
+LD_FLAGS_LIBS +=$(foreach lib, $(LIBS_SEARCHED), $(addprefix -l,$(lib)))
+
+LD_FLAGS_LIBS +=$(call ifplatform, Darwin, $(foreach lib, $(FRAMEWORKS), $(addprefix -framework , $(lib))),)
+
+# ==================================================================================================
+# Rules to build the actual target, including the step to add any assets to the executeable.
+
+$(EXE_NAME): $(OBJECTS_DIR) $(CXX_OBJECTS) $(ASSET_OBJECTS) $(RC_OBJECTS) $(DEF_OBJECTS)
+	@rm -f $@
+	$(ZMAKE_LD) -o $@\
+		$(ZMAKE_LDFLAGS)\
+		$(ZMAKE_ARCHFLAGS)\
+		$(CXX_OBJECTS)\
+		$(RC_OBJECTS)\
+		$(DEF_OBJECTS)\
+		$(LD_FLAGS_PATHS)\
+		$(LD_FLAGS_LIBS)
+ifeq (,$(filter $(CONFIGURATION),Debug))
+	$(ZMAKE_STRIP) $@
+endif
+ifneq (,$(ASSET_OBJECTS))
+ifneq (,$(call ifplatform, Be))
+	rm -f resource.tmp.r
+	id=1;\
+	for i in $(ASSET_OBJECTS); do\
+		echo resource \(\'ZAO_\', $$id, \"$$i\"\) \{ read \(\"/$$i\" \) \} >> resource.tmp.r; \
+		id=$$(($$id+1));\
+	done
+	mwbres -o $@ resource.tmp.r
+	rm -f resource.tmp.r
+else
+	$(ZMAKE_ZAC) -o $@ -a $(ASSET_OBJECTS) || rm -f $@
+endif
+endif
+
+
+# ==================================================================================================
+# Compiling cpp, c, zas, rc and def files.
+
+$(OBJECTS_DIR)/%.cpp.o : %.cpp
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CXX) -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
+
+
+$(OBJECTS_DIR)/%.c.o : %.c
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CC) -o $@ -c $< $(ZMAKE_CFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
+
+
+$(OBJECTS_DIR)/%.mm.o : %.mm
+	$(ZMAKE_CXX) -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
+
+
+$(OBJECTS_DIR)/%.m.o : %.m
+	$(ZMAKE_CC) -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
+
+
+$(OBJECTS_DIR)/%.zas.o : %.zas
+	$(ZMAKE_ZAC) $< -o $@ -c $(SOURCE_INCLUDES)
+
+
+$(OBJECTS_DIR)/%.rc.o : %.rc
+	$(ZMAKE_WINDRES) $< -O coff -o $@
+
+
+$(OBJECTS_DIR)/%.def : %.def
+	cp $< $@
+
+# ==================================================================================================
+# Generate dependency files
+
+$(OBJECTS_DIR)/%.cpp.d : %.cpp
+ifeq ($(findstring s,$(MAKEFLAGS)),)
+	@echo "Making dependencies: "$@
+endif
+	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
+	@set -e; echo $(OBJECTS_DIR)/$*.cpp.o $(OBJECTS_DIR)/$*.cpp.d " :\\" > $@; \
+	$(ZMAKE_CXX) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CXXFLAGS) -c $< \
+	| sed 's/\($*\).o[ :]//g'>> $@; \
+	[ -s $@ ] || rm -f $@
+
+
+$(OBJECTS_DIR)/%.c.d : %.c
+ifeq ($(findstring s,$(MAKEFLAGS)),)
+	@echo "Making dependencies: "$@
+endif
+	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
+	@set -e; echo $(OBJECTS_DIR)/$*.c.o $(OBJECTS_DIR)/$*.c.d " :\\" > $@; \
+	$(ZMAKE_CC) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CFLAGS) -c $< \
+	| sed 's/\($*\).o[ :]//g'>> $@; \
+	[ -s $@ ] || rm -f $@
+
+
+$(OBJECTS_DIR)/%.mm.d : %.mm
+ifeq ($(findstring s,$(MAKEFLAGS)),)
+	@echo "Making dependencies: "$@
+endif
+	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
+	@set -e; echo $(OBJECTS_DIR)/$*.mm.o $(OBJECTS_DIR)/$*.mm.d " :\\" > $@; \
+	$(ZMAKE_CXX) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CXXFLAGS) -c $< \
+	| sed 's/\($*\).o[ :]//g'>> $@; \
+	[ -s $@ ] || rm -f $@
+
+
+$(OBJECTS_DIR)/%.m.d : %.m
+ifeq ($(findstring s,$(MAKEFLAGS)),)
+	@echo "Making dependencies: "$@
+endif
+	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
+	@set -e; echo $(OBJECTS_DIR)/$*.m.o $(OBJECTS_DIR)/$*.m.d " :\\" > $@; \
+	$(ZMAKE_CC) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CFLAGS) -c $< \
+	| sed 's/\($*\).o[ :]//g'>> $@; \
+	[ -s $@ ] || rm -f $@
+
+
+$(OBJECTS_DIR)/%.zas.d : %.zas
+ifeq ($(findstring s,$(MAKEFLAGS)),)
+	@echo "Making asset dependencies: " $@
+endif
+	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
+	@set -e; $(ZMAKE_ZAC) -M $(SOURCE_INCLUDES) $< > $@; \
+	[ -s $@ ] || rm -f $@
+
+
+# ==================================================================================================
+# Include any dependency files that may exist, but not if the target is 'clean'.
+
+ifneq (clean,$(MAKECMDGOALS))
+
+####-include $(OBJECTS_DIR)/*.d
+
+endif
+
+# ==================================================================================================
+# Default target is the debug version
+default: $(EXE_NAME)
+
+
+# ==================================================================================================
+# empty rule. Things that depend on this rule will always get triggered
+FORCE:
+
+
+# ==================================================================================================
+# The generic clean command. Delete everything in the object directories
+.PHONY : clean
+clean:
+	-rm -rf $(OBJECTS_DIR_ROOT) $(EXE_NAME)
+
+
+# ==================================================================================================
+# Create the object directory
+
+$(OBJECTS_DIR): FORCE
+	@[ -d $(OBJECTS_DIR) ] || mkdir -p $(OBJECTS_DIR) > /dev/null 2>&1
+
+
+# ==================================================================================================
+
+depend: $(CXX_DEPENDS) $(ASSET_DEPENDS)
+
+all: depend default
+
+DUMMYOBJ=$(join $(addsuffix ../obj/, $(dir $(CXX_SOURCES))), $(notdir $(CXX_SOURCES:.cpp=.o))) 
+
+
+.PHONY : showinfo
+showinfo:
+	
+	@echo "CXX_SOURCES: "$(CXX_SOURCES)
+	@echo
+	@echo "DUMMYOBJ: "$(DUMMYOBJ)
+	@echo
+	@echo "CXX_OBJECTS: "$(CXX_OBJECTS)
+	@echo
+	@echo "OBJECTS_DIR_ROOT: "$(OBJECTS_DIR_ROOT)
+	@echo "OBJECTS_DIR: "$(OBJECTS_DIR)
+	
+	
+# 	@echo "HOST_OS: "$(HOST_OS)
+# 	@echo
+# 	@echo "ZMake_TargetName: "$(ZMake_TargetName)
+# 	@echo "TARGET_NAME: "$(TARGET_NAME)
+# 	@echo
+# 	@echo "ZMAKE_BuildPlatform: "$(ZMAKE_BuildPlatform)
+# 	@echo "BUILD_PLATFORM: "$(BUILD_PLATFORM)
+# 	@echo
+# 	@echo "ZMAKE_TargetPlatform: "$(ZMAKE_TargetPlatform)
+# 	@echo "TARGET_PLATFORM: "$(TARGET_PLATFORM)
+# 	@echo
+# 	@echo "ZMAKE_Configuration: "$(ZMAKE_Configuration)
+# 	@echo "CONFIGURATION: "$(CONFIGURATION)
+# 	@echo
+# 	@echo "ZMAKE_FatDesired: "$(ZMAKE_FatDesired)
+# 	@echo "FAT_DESIRED: "$(FAT_DESIRED)
+# 	@echo
+# 	@echo "ZMAKE_StaticDesired: "$(ZMAKE_StaticDesired)
+# 	@echo "STATIC_DESIRED: "$(STATIC_DESIRED)
+# 	@echo
+# 	@echo "ZMAKE_Objects: "$(ZMAKE_Objects)
+# 	@echo "OBJECTS: "$(OBJECTS)
+# 	@echo
+# 	@echo "ZMAKE_ObjectsDir: "$(ZMAKE_ObjectsDir)
+# 	@echo "OBJECTS_DIR: "$(OBJECTS_DIR)
+# 	@echo
+# 	@echo "ZMake_ExeName: "$(ZMake_ExeName)
+# 	@echo "EXE_NAME: "$(EXE_NAME)
+# 	@echo
+# 	@echo "ZMAKE_CC: "$(ZMAKE_CC)
+# 	@echo "ZMAKE_CFLAGS: "$(ZMAKE_CFLAGS)
+# 	@echo "ZMAKE_CXX: "$(ZMAKE_CXX)
+# 	@echo "ZMAKE_CXXFLAGS: "$(ZMAKE_CXXFLAGS)
+# 	@echo "ZMAKE_LD: "$(ZMAKE_LD)
+# 	@echo "ZMAKE_LDFLAGS: "$(ZMAKE_LDFLAGS)
+# 	@echo "ZMAKE_WINDRES: "$(ZMAKE_WINDRES)
+# 	@echo
+# 	@echo "PATHS: "$(PATHS)
+# 	@echo
+# 	@echo "SOURCE_PATHS: "$(SOURCE_PATHS)
+# 	@echo
+# 	@echo "HEADER_PATHS: "$(HEADER_PATHS)
+# 	@echo
+# 	@echo "SOURCE_INCLUDES: "$(SOURCE_INCLUDES)
+# 	@echo
+# 	@echo "SYS_INCLUDES: "$(SYS_INCLUDES)
+# 	@echo
+#  	@echo "CXX_OBJECTS: "$(CXX_OBJECTS)
+#  	@echo
+# 	@echo "ASSET_OBJECTS: "$(ASSET_OBJECTS)
+# 	@echo
+# 	@echo "RC_OBJECTS: "$(RC_OBJECTS)
+# 	@echo
+# 	@echo "DEF_OBJECTS: "$(DEF_OBJECTS)
+# 	@echo
+# 	@echo "LIB_PATHS: "$(LIB_PATHS)
+# 	@echo
+# 	@echo "LD_FLAGS_LIBS: "$(LD_FLAGS_LIBS)
+# 	@echo
+# 	@echo "LD_FLAGS_PATHS: "$(LD_FLAGS_PATHS)
+

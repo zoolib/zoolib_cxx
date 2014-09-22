@@ -1,0 +1,63 @@
+ZOOLIB_CXX_DIR ?=$(ZOOLIB_DIR)
+
+##ZOOLIB_STANDARD_SOURCE_PATHS ?=$(ZOOLIB_CXX_DIR)/zoolib
+##ZOOLIB_STANDARD_HEADER_PATHS ?=$(ZOOLIB_CXX_DIR) $(ZOOLIB_CXX_DIR)/default_config
+
+HOST_OS=$(shell uname -s)
+
+ifeq (BeOS,$(HOST_OS))
+	ZMAKE_BuildPlatform ?=Be
+else
+	ifeq (Darwin,$(HOST_OS))
+		ZMAKE_BuildPlatform ?=Darwin
+	else
+		ifeq (Linux,$(HOST_OS))
+			ZMAKE_BuildPlatform ?=Linux
+		else
+			ifeq (SunOS,$(HOST_OS))
+				ZMAKE_BuildPlatform ?=SunOS
+			else
+				ifneq (,$(findstring MINGW32,$(HOST_OS)))
+					ZMAKE_BuildPlatform ?=Win
+				else
+					# Assume generic POSIX
+					ZMAKE_BuildPlatform ?=POSIX
+				endif
+			endif
+		endif
+	endif
+endif
+BUILD_PLATFORM ?=$(ZMAKE_BuildPlatform)
+
+ZMAKE_TargetPlatform ?=$(BUILD_PLATFORM)
+TARGET_PLATFORM ?=$(ZMAKE_TargetPlatform)
+
+DARWIN_SYS_ROOT ?= /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+
+ZMAKE_Configuration ?=Debug
+CONFIGURATION ?=$(ZMAKE_Configuration)
+
+ZMAKE_FatDesired ?=$(filter Release,$(CONFIGURATION))
+FAT_DESIRED ?=$(ZMAKE_FatDesired)
+
+ZMAKE_StaticDesired ?=
+STATIC_DESIRED ?=$(ZMAKE_StaticDesired)
+
+# Grandfather old PROJECT_TARGET_NAME
+ZMake_TargetName ?=$(PROJECT_TARGET_NAME)
+TARGET_NAME ?=$(ZMake_TargetName)
+
+ZMAKE_Objects ?=objects
+OBJECTS ?=$(ZMAKE_Objects)
+
+ZMAKE_ObjectsDir ?=$(OBJECTS)_$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)
+OBJECTS_DIR ?=$(ZMAKE_ObjectsDir)
+
+
+ZMake_ExeName ?=$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)$(if $(filter Win,$(TARGET_PLATFORM)),.exe)
+EXE_NAME ?=$(ZMake_ExeName)
+
+
+# Helper functions
+ifplatform =$(if $(filter $(1),$(TARGET_PLATFORM)),$(2),$(3))
+ifconfig =$(if $(filter $(1),$(CONFIGURATION)),$(2),$(3))
