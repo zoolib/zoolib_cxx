@@ -25,28 +25,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW.h"
 #include "zoolib/UnicodeString.h"
 
-namespace ZooLib {
+#include <cstdarg>
 
-typedef ChanW<UTF32> ChanW_UTF32;
-typedef ChanW<UTF16> ChanW_UTF16;
-typedef ChanW<UTF8> ChanW_UTF8;
+namespace ZooLib {
 
 // =================================================================================================
 // MARK: -
 
-class ChanW_UTF
-:	public ChanW<UTF32>
-,	public ChanW<UTF16>
-,	public ChanW<UTF8>
-	{
-public:
-	using ChanW<UTF32>::QWrite;
-	using ChanW<UTF32>::Flush;
-	using ChanW<UTF16>::QWrite;
-	using ChanW<UTF16>::Flush;
-	using ChanW<UTF8>::QWrite;
-	using ChanW<UTF8>::Flush;
-	};
+typedef ChanW<UTF32> ChanW_UTF;
 
 // =================================================================================================
 // MARK: -
@@ -66,6 +52,8 @@ void sWrite(const UTF8* iSource,
 	const ChanW_UTF& iChanW);
 //@}
 
+// =================================================================================================
+// MARK: -
 
 /** \name Zero-terminated strings
 */	//@{
@@ -78,6 +66,8 @@ void sWriteMust(const UTF16* iString, const ChanW_UTF& iChanW);
 void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW);
 //@}
 
+// =================================================================================================
+// MARK: -
 
 /** \name Standard library strings
 */	//@{
@@ -90,6 +80,8 @@ void sWriteMust(const string16& iString, const ChanW_UTF& iChanW);
 void sWriteMust(const string8& iString, const ChanW_UTF& iChanW);
 //@}
 
+// =================================================================================================
+// MARK: -
 
 /** \name Formatted strings
 */	//@{
@@ -108,6 +100,38 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	const UTF8* iString, va_list iArgs);
 //@}
 
+// =================================================================================================
+// MARK: - ChanW_UTF_Native32
+
+typedef ChanW_UTF ChanW_UTF_Native32;
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native16
+
+class ChanW_UTF_Native16
+:	public ChanW_UTF
+	{
+public:
+// From ChanW_UTF (aka ChanW<UTF32>)
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+
+// Our protocol
+	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU) = 0;
+	};
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Native8
+
+class ChanW_UTF_Native8
+:	public ChanW_UTF
+	{
+public:
+// From ChanW_UTF (aka ChanW<UTF32>)
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+
+// Our protocol
+	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU) = 0;
+	};
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanW_UTF_h__

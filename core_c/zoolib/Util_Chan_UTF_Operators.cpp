@@ -85,7 +85,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF8* iString)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ChanR_UTF& r)
 	{
-	sCopyAll(r, w);
+	sCopyAll<UTF32>(r, w);
 	return w;
 	}
 

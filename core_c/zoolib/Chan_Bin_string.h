@@ -32,6 +32,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
+// MARK: - ChanW_Bin_string
+
+class ChanW_Bin_string
+:	public ChanW_Bin
+	{
+public:
+	ChanW_Bin_string(std::string* ioString);
+
+	virtual size_t QWrite(const byte* iSource, size_t iCountCU);
+
+protected:
+	std::string* fStringPtr;
+	};
+
+// =================================================================================================
 // MARK: - ChanBase_Bin_string
 
 class ChanBase_Bin_string

@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Stringf.h"
 
-#include <vector>
+#include <string.h> // For strlen
 
 namespace ZooLib {
 
@@ -42,10 +42,7 @@ bool sQWrite(const char* iString, const ChanW_Bin& iChanW)
 	}
 
 void sWriteMust(const char* iString, const ChanW_Bin& iChanW)
-	{
-	if (not sQWrite(iString, iChanW))
-		sThrow_Exhausted(iChanW);
-	}
+	{ sQWrite(iString, iChanW) || sThrow_ExhaustedW(); }
 
 bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW)
 	{
@@ -58,10 +55,7 @@ bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW)
 	}
 
 void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW)
-	{
-	if (not sQWrite(iString, iChanW))
-		sThrow_Exhausted(iChanW);
-	}
+	{ sQWrite(iString, iChanW) || sThrow_ExhaustedW(); }
 
 static
 bool spQWritev(const ChanW_Bin& iChanW, const UTF8* iString, va_list iArgs)
@@ -88,7 +82,7 @@ void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...)
 	const bool result = spQWritev(iChanW, iString, args);
 	va_end(args);
 	if (not result)
-		sThrow_Exhausted(iChanW);
+		sThrow_ExhaustedW();
 	}
 
 // =================================================================================================
@@ -96,33 +90,20 @@ void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...)
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const char* iString)
 	{
-	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
+	sWriteMust(iString, iChanW);
 	return iChanW;
 	}
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, char* iString)
 	{
-	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
+	sWriteMust(iString, iChanW);
 	return iChanW;
 	}
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 	{
-	sQWrite(iString, iChanW) || sThrow_Exhausted(iChanW);
+	sWriteMust(iString, iChanW);
 	return iChanW;
-	}
-
-// =================================================================================================
-// MARK: - ChanW_Bin_string
-
-ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
-:	fStringPtr(ioString)
-	{}
-
-size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
-	{
-	fStringPtr->append((char*)iSource, iCountCU);
-	return iCountCU;
 	}
 
 } // namespace ZooLib

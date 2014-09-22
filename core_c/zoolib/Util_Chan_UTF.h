@@ -32,7 +32,7 @@ namespace Util_Chan {
 // =================================================================================================
 // MARK: -
 
-void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest);
+void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest);
 void sSkip_Line(const ChanR_UTF& iSource);
 string8 sRead_Line(const ChanR_UTF& iSource);
 

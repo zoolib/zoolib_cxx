@@ -88,14 +88,14 @@ template <class T>
 void sWriteBE(const T& iT, const ChanW_Bin& iChanW)
 	{
 	if (not sQWriteBE<T>(iT, iChanW))
-		sThrow_Exhausted(iChanW);
+		sThrow_ExhaustedW();
 	}
 
 template <class T>
 void sWriteLE(const T& iT, const ChanW_Bin& iChanW)
 	{
 	if (not sQWriteLE<T>(iT, iChanW))
-		sThrow_Exhausted(iChanW);
+		sThrow_ExhaustedW();
 	}
 
 } // namespace ZooLib

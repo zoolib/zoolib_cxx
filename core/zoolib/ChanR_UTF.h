@@ -28,81 +28,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_UTF32
-
-typedef ChanR<UTF32> ChanR_UTF32;
-
-// =================================================================================================
-// MARK: - ChanR_UTF16
-
-class ChanR_UTF16
-:	public ChanR<UTF16>
-	{
-public:
-// From ChanR<UTF16>
-	virtual size_t QRead(UTF16* oDest, size_t iCount)
-		{
-		size_t countRead;
-		this->ReadUTF16(oDest, iCount, &countRead, iCount, nullptr);
-		return countRead;
-		}
-
-// Our protocol
-	virtual void ReadUTF16(UTF16* oDest,
-		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
-	};
-
-// =================================================================================================
-// MARK: - ChanR_UTF8
-
-class ChanR_UTF8
-:	public ChanR<UTF8>
-	{
-public:
-// From ChanR<UTF8>
-	virtual size_t QRead(UTF8* oDest, size_t iCount)
-		{
-		size_t countRead;
-		this->ReadUTF8(oDest, iCount, &countRead, iCount, nullptr);
-		return countRead;
-		}
-
-// Our protocol
-	virtual void ReadUTF8(UTF8* oDest,
-		 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
-	};
-
-// =================================================================================================
 // MARK: - ChanR_UTF
 
-class ChanR_UTF
-:	public ChanR_UTF32
-,	public ChanR_UTF16
-,	public ChanR_UTF8
-	{
-public:
-	using ChanR_UTF32::QRead;
-	using ChanR_UTF32::Skip;
-	using ChanR_UTF16::QRead;
-	using ChanR_UTF16::Skip;
-	using ChanR_UTF8::QRead;
-	using ChanR_UTF8::Skip;
-	};
+typedef ChanR<UTF32> ChanR_UTF;
 
 // =================================================================================================
 // MARK: -
 
-inline
+void sRead(UTF32* oDest,
+	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	 const ChanR_UTF& iChanR);
+
 void sRead(UTF16* oDest,
 	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR)
-	{ return sNonConst(iChanR).ReadUTF16(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+	 const ChanR_UTF& iChanR);
 
-inline
 void sRead(UTF8* oDest,
 	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR)
-	{ return sNonConst(iChanR).ReadUTF8(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+	 const ChanR_UTF& iChanR);
 
 // =================================================================================================
 // MARK: -
@@ -114,6 +57,34 @@ ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
 string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
 string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+
+// =================================================================================================
+// MARK: - ChanR_UTF_Native16
+
+class ChanR_UTF_Native16
+:	public ChanR_UTF
+	{
+public:
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+
+	virtual void ReadUTF16(UTF16* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
+	};
+
+// =================================================================================================
+// MARK: - ChanR_UTF_Native8
+
+class ChanR_UTF_Native8
+:	public ChanR_UTF
+	{
+public:
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+
+	virtual void ReadUTF8(UTF8* oDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
+	};
 
 } // namespace ZooLib
 

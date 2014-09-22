@@ -31,6 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+inline bool sThrow_ExhaustedW()
+	{
+	throw std::range_error("ChanW Exhausted");
+	return false;
+	}
+
 // =================================================================================================
 // MARK: - ChanW
 
@@ -62,13 +68,6 @@ public:
 // MARK: -
 
 template <class Elmt_p>
-bool sThrow_Exhausted(const ChanW<Elmt_p>& iChanW)
-	{
-	throw std::range_error("ChanW Exhausted");
-	return false;
-	}
-
-template <class Elmt_p>
 size_t sQWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{ return sNonConst(iChanW).QWrite(iSource, iCount); }
 
@@ -81,13 +80,13 @@ void sFlush(const ChanW<Elmt_p>& iChanW)
 
 template <class Elmt_p>
 bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
-	{ return 1 == sQWrite(&iElmt, 1, iChanW); }
+	{ return 1 == sNonConst(iChanW).QWrite(&iElmt, 1); }
 
 template <class Elmt_p>
 void sWriteMust(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	{
 	if (1 != sQWrite(&iElmt, 1, iChanW))
-		sThrow_Exhausted(iChanW);
+		sThrow_ExhaustedW();
 	}
 
 template <class Elmt_p>
@@ -110,9 +109,39 @@ size_t sQWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& i
 template <class Elmt_p>
 void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
 	{
-	if (iCount != sQWriteFully(iSource, iCount, iChanW))
-		sThrow_Exhausted(iChanW);
+	if (iCount != sQWriteFully<Elmt_p>(iSource, iCount, iChanW))
+		sThrow_ExhaustedW();
 	}
+
+// =================================================================================================
+// MARK: -
+
+/// A write Chan that accepts no data.
+
+template <class XX>
+class ChanW_XX_Null
+:	public ChanW<XX>
+	{
+public:
+	typedef XX Elmt_t;
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+		{ return 0; }
+	};
+
+// =================================================================================================
+// MARK: -
+
+/// A write Chan that accepts and discards all data
+
+template <class XX>
+class ChanW_XX_Discard
+:	public ChanW<XX>
+	{
+public:
+	typedef XX Elmt_t;
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+		{ return iCount; }
+	};
 
 } // namespace ZooLib
 

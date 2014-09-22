@@ -412,7 +412,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		// It's being faked out by stuff in cstddef.
 		#define ZCONFIG_Has_nullptr 1
 	#endif
-
+#elif defined(__GXX_EXPERIMENTAL_CXX0X__)
+		#define ZCONFIG_Has_nullptr 1
 #endif
 
 #ifndef ZCONFIG_Has_nullptr

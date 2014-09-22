@@ -22,14 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanW_UTF_string_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanW_UTF_More.h"
+#include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: - ChanW_UTF_string
 
-template <class UTF_t> class ChanW_UTF_string;
+template <class UTF_p> class ChanW_UTF_string;
 
 // =================================================================================================
 // MARK: - ChanW_UTF_string<string32>
@@ -41,6 +41,7 @@ class ChanW_UTF_string<UTF32>
 public:
 	ChanW_UTF_string(string32* ioString);
 
+// From ChanW_UTF (aka ChanW_UTF_Native32)
 	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
 
 protected:
@@ -59,7 +60,8 @@ class ChanW_UTF_string<UTF16>
 public:
 	ChanW_UTF_string(string16* ioString);
 
-	virtual size_t QWrite(const UTF16* iSource, size_t iCountCU);
+// From ChanW_UTF_Native16
+	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU);
 
 protected:
 	string16* fStringPtr;
@@ -77,7 +79,8 @@ class ChanW_UTF_string<UTF8>
 public:
 	ChanW_UTF_string(string8* ioString);
 
-	virtual size_t QWrite(const UTF8* iSource, size_t iCountCU);
+// From ChanW_UTF_Native8
+	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU);
 
 protected:
 	string8* fStringPtr;

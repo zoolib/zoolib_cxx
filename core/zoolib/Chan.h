@@ -27,8 +27,6 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-// There isn't anything yet that is common across all Chan types.
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__

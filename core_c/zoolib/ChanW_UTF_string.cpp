@@ -42,7 +42,7 @@ ChanW_UTF_string<UTF16>::ChanW_UTF_string(string16* ioString)
 :	fStringPtr(ioString)
 	{}
 
-size_t ChanW_UTF_string<UTF16>::QWrite(const UTF16* iSource, size_t iCountCU)
+size_t ChanW_UTF_string<UTF16>::QWriteUTF16(const UTF16* iSource, size_t iCountCU)
 	{
 	fStringPtr->append(iSource, iCountCU);
 	return iCountCU;
@@ -55,7 +55,7 @@ ChanW_UTF_string<UTF8>::ChanW_UTF_string(string8* ioString)
 :	fStringPtr(ioString)
 	{}
 
-size_t ChanW_UTF_string<UTF8>::QWrite(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_string<UTF8>::QWriteUTF8(const UTF8* iSource, size_t iCountCU)
 	{
 	fStringPtr->append(iSource, iCountCU);
 	return iCountCU;

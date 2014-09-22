@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanW_XX_More.h" // For ChanW_XX_Discard
 #include "zoolib/ChanW_UTF_string.h" // For ChanW_UTF_string8
 #include "zoolib/Unicode.h" // For Unicode::sIsEOL
 #include "zoolib/Util_Chan_UTF.h"
@@ -29,11 +28,11 @@ namespace Util_Chan {
 // =================================================================================================
 // MARK: -
 
-void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF32& oDest)
+void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
 	for (;;)
 		{
-		if (ZQ<UTF32,false> theCPQ = sQRead<UTF32>(iSource))
+		if (ZQ<UTF32,false> theCPQ = sQRead(iSource))
 			break;
 		else if (Unicode::sIsEOL(*theCPQ))
 			break;

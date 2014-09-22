@@ -23,6 +23,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
+// MARK: - ChanW_Bin_string
+
+ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
+:	fStringPtr(ioString)
+	{}
+
+size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
+	{
+	fStringPtr->append((char*)iSource, iCountCU);
+	return iCountCU;
+	}
+
+// =================================================================================================
 // MARK: - ChanBase_Bin_string
 
 ChanBase_Bin_string::ChanBase_Bin_string(std::string* ioStringPtr)

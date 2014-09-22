@@ -32,6 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+inline bool sThrow_ExhaustedR()
+	{
+	throw std::range_error("ChanR Exhausted");
+	return false;
+	}
+
 // =================================================================================================
 // MARK: - ChanR
 
@@ -73,13 +79,6 @@ public:
 
 // =================================================================================================
 // MARK: -
-
-template <class Elmt_p>
-bool sThrow_Exhausted(const ChanR<Elmt_p>& iChanR)
-	{
-	throw std::range_error("ChanR Exhausted");
-	return false;
-	}
 
 template <class Elmt_p>
 size_t sQRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
@@ -162,6 +161,21 @@ uint64 sSkipAll(const ChanR<Elmt_p>& iChanR)
 		}
 	return result;
 	}
+
+// =================================================================================================
+// MARK: - ChanR_XX_Null
+
+/// A read Chan with no content.
+
+template <class XX>
+class ChanR_XX_Null
+:	public ChanR<XX>
+	{
+public:
+	typedef XX Elmt_t;
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+		{ return 0; }
+	};
 
 } // namespace ZooLib
 
