@@ -23,11 +23,18 @@ ifneq (,$(filter $(TARGET_PLATFORM),Win))
 	ZMAKE_WINDRES ?=i386-mingw32-windres
 	ZMAKE_STRIP ?=i386-mingw32-strip
 else
+ifneq (,$(filter $(TARGET_PLATFORM),Darwin))
 	ZMAKE_CC ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CC)
 	ZMAKE_CXX ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CXX)
-# When linking on 10.5 g++ cares about this value.
+	# When linking on 10.5 g++ cares about this value.
 	ZMAKE_LD ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(ZMAKE_CXX)
 	ZMAKE_STRIP ?=strip
+else
+	ZMAKE_CC ?=$(CC)
+	ZMAKE_CXX ?=$(CXX)
+	ZMAKE_LD ?=$(ZMAKE_CXX)
+	ZMAKE_STRIP ?=strip
+endif
 endif
 
 # ==================================================================================================
