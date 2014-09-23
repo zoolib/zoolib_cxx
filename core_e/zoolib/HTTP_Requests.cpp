@@ -238,7 +238,7 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 
 #if 0
 
-Need to decide if we're doing the sMakeContentChanner stuff in here.
+// Need to decide if we're doing the sMakeContentChanner stuff in here.
 ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
