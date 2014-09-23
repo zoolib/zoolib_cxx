@@ -193,10 +193,12 @@ $(OBJECTS_DIR)/%.c.o : %.c
 
 
 $(OBJECTS_DIR)/%.mm.o : %.mm
+	mkdir -p $(@D) > /dev/null 2>&1
 	$(ZMAKE_CXX) -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
 $(OBJECTS_DIR)/%.m.o : %.m
+	mkdir -p $(@D) > /dev/null 2>&1
 	$(ZMAKE_CC) -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
@@ -218,62 +220,45 @@ $(OBJECTS_DIR)/%.cpp.d : %.cpp
 ifeq ($(findstring s,$(MAKEFLAGS)),)
 	@echo "Making dependencies: "$@
 endif
-	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
-	@set -e; echo $(OBJECTS_DIR)/$*.cpp.o $(OBJECTS_DIR)/$*.cpp.d " :\\" > $@; \
-	$(ZMAKE_CXX) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CXXFLAGS) -c $< \
-	| sed 's/\($*\).o[ :]//g'>> $@; \
-	[ -s $@ ] || rm -f $@
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CXX) -MM -MT $(OBJECTS_DIR)/$<.o -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
 $(OBJECTS_DIR)/%.c.d : %.c
 ifeq ($(findstring s,$(MAKEFLAGS)),)
 	@echo "Making dependencies: "$@
 endif
-	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
-	@set -e; echo $(OBJECTS_DIR)/$*.c.o $(OBJECTS_DIR)/$*.c.d " :\\" > $@; \
-	$(ZMAKE_CC) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CFLAGS) -c $< \
-	| sed 's/\($*\).o[ :]//g'>> $@; \
-	[ -s $@ ] || rm -f $@
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CXX) -MM -MT $(OBJECTS_DIR)/$<.o -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
 $(OBJECTS_DIR)/%.mm.d : %.mm
 ifeq ($(findstring s,$(MAKEFLAGS)),)
 	@echo "Making dependencies: "$@
 endif
-	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
-	@set -e; echo $(OBJECTS_DIR)/$*.mm.o $(OBJECTS_DIR)/$*.mm.d " :\\" > $@; \
-	$(ZMAKE_CXX) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CXXFLAGS) -c $< \
-	| sed 's/\($*\).o[ :]//g'>> $@; \
-	[ -s $@ ] || rm -f $@
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CXX) -MM -MT $(OBJECTS_DIR)/$<.o -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
 $(OBJECTS_DIR)/%.m.d : %.m
 ifeq ($(findstring s,$(MAKEFLAGS)),)
 	@echo "Making dependencies: "$@
 endif
-	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
-	@set -e; echo $(OBJECTS_DIR)/$*.m.o $(OBJECTS_DIR)/$*.m.d " :\\" > $@; \
-	$(ZMAKE_CC) -MM $(SOURCE_INCLUDES) $(SYS_INCLUDES) $(ZMAKE_CFLAGS) -c $< \
-	| sed 's/\($*\).o[ :]//g'>> $@; \
-	[ -s $@ ] || rm -f $@
-
-
-$(OBJECTS_DIR)/%.zas.d : %.zas
-ifeq ($(findstring s,$(MAKEFLAGS)),)
-	@echo "Making asset dependencies: " $@
-endif
-	@[ -d $(OBJECTS_DIR) ] || mkdir $(OBJECTS_DIR) > /dev/null 2>&1
-	@set -e; $(ZMAKE_ZAC) -M $(SOURCE_INCLUDES) $< > $@; \
-	[ -s $@ ] || rm -f $@
+	mkdir -p $(@D) > /dev/null 2>&1
+	$(ZMAKE_CXX) -MM -MT $(OBJECTS_DIR)/$<.o -o $@ -c $< $(ZMAKE_CXXFLAGS) $(ZMAKE_ARCHFLAGS) $(SOURCE_INCLUDES) $(SYS_INCLUDES)
 
 
 # ==================================================================================================
 # Include any dependency files that may exist, but not if the target is 'clean'.
 
 ifneq (clean,$(MAKECMDGOALS))
-
-####-include $(OBJECTS_DIR)/*.d
-
+-include $(OBJECTS_DIR_ROOT)/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/*/*/*/*/*/*/*.d
 endif
 
 # ==================================================================================================
