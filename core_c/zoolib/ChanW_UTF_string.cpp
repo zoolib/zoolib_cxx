@@ -22,43 +22,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-// =================================================================================================
-// MARK: - ChanW_UTF_string<UTF32>
-
-ChanW_UTF_string<UTF32>::ChanW_UTF_string(string32* ioString)
-:	fStringPtr(ioString)
-	{}
-
-size_t ChanW_UTF_string<UTF32>::QWrite(const UTF32* iSource, size_t iCountCU)
-	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
-
-// =================================================================================================
-// MARK: - ChanW_UTF_string<UTF16>
-
-ChanW_UTF_string<UTF16>::ChanW_UTF_string(string16* ioString)
-:	fStringPtr(ioString)
-	{}
-
-size_t ChanW_UTF_string<UTF16>::QWriteUTF16(const UTF16* iSource, size_t iCountCU)
-	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
-
-// =================================================================================================
-// MARK: - ChanW_UTF_string<UTF8>
-
-ChanW_UTF_string<UTF8>::ChanW_UTF_string(string8* ioString)
-:	fStringPtr(ioString)
-	{}
-
-size_t ChanW_UTF_string<UTF8>::QWriteUTF8(const UTF8* iSource, size_t iCountCU)
-	{
-	fStringPtr->append(iSource, iCountCU);
-	return iCountCU;
-	}
-
 } // namespace ZooLib

@@ -39,10 +39,16 @@ class ChanW_UTF_string<UTF32>
 :	public ChanW_UTF_Native32
 	{
 public:
-	ChanW_UTF_string(string32* ioString);
+	ChanW_UTF_string(string32* ioString)
+	:	fStringPtr(ioString)
+		{}
 
 // From ChanW_UTF (aka ChanW_UTF_Native32)
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU)
+		{
+		fStringPtr->append(iSource, iCountCU);
+		return iCountCU;
+		}
 
 protected:
 	string32* fStringPtr;
@@ -58,10 +64,16 @@ class ChanW_UTF_string<UTF16>
 :	public ChanW_UTF_Native16
 	{
 public:
-	ChanW_UTF_string(string16* ioString);
+	ChanW_UTF_string(string16* ioString)
+	:	fStringPtr(ioString)
+		{}
 
 // From ChanW_UTF_Native16
-	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU);
+	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU)
+		{
+		fStringPtr->append(iSource, iCountCU);
+		return iCountCU;
+		}
 
 protected:
 	string16* fStringPtr;
@@ -77,10 +89,16 @@ class ChanW_UTF_string<UTF8>
 :	public ChanW_UTF_Native8
 	{
 public:
-	ChanW_UTF_string(string8* ioString);
+	ChanW_UTF_string(string8* ioString)
+	:	fStringPtr(ioString)
+		{}
 
 // From ChanW_UTF_Native8
-	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU);
+	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU)
+		{
+		fStringPtr->append(iSource, iCountCU);
+		return iCountCU;
+		}
 
 protected:
 	string8* fStringPtr;

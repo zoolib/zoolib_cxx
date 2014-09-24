@@ -27,6 +27,9 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
+// ChanR, ChanW, ChanClose, ChanPos, ChanCount and ChanCountSet do not yet have anything in common.
+// When they do, this will likely be its home.
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__
