@@ -58,27 +58,6 @@ private:
 	std::vector<ZRef<Callable_Void> > fCallables;
 	};
 
-// =================================================================================================
-// MARK: - Caller_EventLoop_CallableTrigger
-
-class Caller_EventLoop_CallableTrigger
-:	public Caller_EventLoopBase
-	{
-public:
-	typedef Callable<bool()> Callable_Trigger;
-
-	Caller_EventLoop_CallableTrigger(const ZRef<Callable_Trigger>& iCallable_Trigger);
-
-// From Caller_EventLoop
-	virtual bool pTrigger();
-
-// Our protocol
-	void InvokeClearQueue();
-
-private:
-	ZRef<Callable_Trigger> fCallable_Trigger;
-	};
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Caller_EventLoopBase_h__
