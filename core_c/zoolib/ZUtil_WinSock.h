@@ -41,6 +41,6 @@ size_t sCountReadable(SOCKET iSOCKET);
 } // namespace ZUtil_WinSock
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(POSIX)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZUtil_WinSock_h__
