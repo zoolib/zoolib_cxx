@@ -18,23 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_EventLoop.h"
+#include "zoolib/Caller_EventLoopBase.h"
 
 namespace ZooLib {
 
 using std::vector;
 
 // =================================================================================================
-// MARK: - Caller_EventLoop
+// MARK: - Caller_EventLoopBase
 
-Caller_EventLoop::Caller_EventLoop()
+Caller_EventLoopBase::Caller_EventLoopBase()
 :	fTriggered(false)
 	{}
 
-Caller_EventLoop::~Caller_EventLoop()
+Caller_EventLoopBase::~Caller_EventLoopBase()
 	{}
 
-bool Caller_EventLoop::Enqueue(const ZRef<Callable_Void>& iCallable)
+bool Caller_EventLoopBase::Enqueue(const ZRef<Callable_Void>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	if (iCallable)
@@ -48,7 +48,7 @@ bool Caller_EventLoop::Enqueue(const ZRef<Callable_Void>& iCallable)
 	return false;
 	}
 
-void Caller_EventLoop::pInvokeClearQueue()
+void Caller_EventLoopBase::pInvokeClearQueue()
 	{
 	vector<ZRef<Callable_Void> > calling;
 
@@ -66,7 +66,7 @@ void Caller_EventLoop::pInvokeClearQueue()
 		}
 	}
 
-void Caller_EventLoop::pDiscardPending()
+void Caller_EventLoopBase::pDiscardPending()
 	{
 	ZAcqMtx acq(fMtx);
 	fCallables.clear();
@@ -85,6 +85,6 @@ bool Caller_EventLoop_CallableTrigger::pTrigger()
 	{ return sDCall(false, fCallable_Trigger); }
 
 void Caller_EventLoop_CallableTrigger::InvokeClearQueue()
-	{ Caller_EventLoop::pInvokeClearQueue(); }
+	{ Caller_EventLoopBase::pInvokeClearQueue(); }
 
 } // namespace ZooLib

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_Thread_h__
-#define __ZooLib_Caller_Thread_h__ 1
+#ifndef __ZooLib_Caller_ThreadLoop_h__
+#define __ZooLib_Caller_ThreadLoop_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Caller.h"
@@ -27,18 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_Thread
+// MARK: - sCaller_ThreadLoop
 
-class Caller_Thread
-:	public Caller
-	{
-public:
-	static ZRef<Caller_Thread> sGet();
-
-// From Caller
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable);
-	};
+ZRef<Caller> sCaller_ThreadLoop();
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Caller_Thread_h__
+#endif // __ZooLib_Caller_ThreadLoop_h__

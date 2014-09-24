@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,19 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_OnNewThread_h__
-#define __ZooLib_Caller_OnNewThread_h__ 1
+#ifndef __ZooLib_Caller_EventLoopBase_h__
+#define __ZooLib_Caller_EventLoopBase_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Caller.h"
 
+#include "zoolib/ZThread.h"
+
+#include <vector>
+
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCaller_OnNewThread
+// MARK: - Caller_EventLoopBase
 
-ZRef<Caller> sCaller_OnNewThread();
+class Caller_EventLoopBase
+:	public Caller
+	{
+public:
+	Caller_EventLoopBase();
+	virtual ~Caller_EventLoopBase();
+
+// From Caller
+	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable);
+
+protected:
+// Called by concrete subclass
+	void pInvokeClearQueue();
+
+	void pDiscardPending();
+
+// Implemented by concrete subclass
+	virtual bool pTrigger() = 0;
+
+private:
+	ZMtx fMtx;
+	bool fTriggered;
+	std::vector<ZRef<Callable_Void> > fCallables;
+	};
+
+// =================================================================================================
+// MARK: - Caller_EventLoop_CallableTrigger
+
+class Caller_EventLoop_CallableTrigger
+:	public Caller_EventLoopBase
+	{
+public:
+	typedef Callable<bool()> Callable_Trigger;
+
+	Caller_EventLoop_CallableTrigger(const ZRef<Callable_Trigger>& iCallable_Trigger);
+
+// From Caller_EventLoop
+	virtual bool pTrigger();
+
+// Our protocol
+	void InvokeClearQueue();
+
+private:
+	ZRef<Callable_Trigger> fCallable_Trigger;
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Caller_OnNewThread_h__
+#endif // __ZooLib_Caller_EventLoopBase_h__

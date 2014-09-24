@@ -40,7 +40,7 @@ Caller_WinMessageLoop::~Caller_WinMessageLoop()
 
 void Caller_WinMessageLoop::Initialize()
 	{
-	Caller_EventLoop::Initialize();
+	Caller_EventLoopBase::Initialize();
 
 	fHWND = ZWinWND::sCreate(
 		HWND_MESSAGE, sCallable(sWeakRef(this), &Caller_WinMessageLoop::pWindowProc));
@@ -55,7 +55,7 @@ void Caller_WinMessageLoop::Finalize()
 		::DestroyWindow(fHWND);
 		ZAssert(not fHWND);
 		}
-	Caller_EventLoop::Finalize();
+	Caller_EventLoopBase::Finalize();
 	}
 
 void Caller_WinMessageLoop::Disable()
@@ -65,7 +65,7 @@ void Caller_WinMessageLoop::Disable()
 		::DestroyWindow(fHWND);
 		ZAssert(not fHWND);
 		}
-	Caller_EventLoop::pDiscardPending();
+	Caller_EventLoopBase::pDiscardPending();
 	}
 
 static UINT spGetMSG()
@@ -89,7 +89,7 @@ ZQ<LRESULT> Caller_WinMessageLoop::pWindowProc(
 	{
 	if (iMessage == spGetMSG())
 		{
-		Caller_EventLoop::pInvokeClearQueue();
+		Caller_EventLoopBase::pInvokeClearQueue();
 		return 0;
 		}
 	else if (iMessage == WM_NCDESTROY)

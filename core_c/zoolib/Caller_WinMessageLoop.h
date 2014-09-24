@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/Caller_EventLoop.h"
+#include "zoolib/Caller_EventLoopBase.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -35,13 +35,13 @@ namespace ZooLib {
 // MARK: - Caller_WinMessageLoop
 
 class Caller_WinMessageLoop
-:	public Caller_EventLoop
+:	public Caller_EventLoopBase
 	{
 public:
 	Caller_WinMessageLoop();
 	virtual ~Caller_WinMessageLoop();
 
-// From ZCounted via Caller
+// From ZCounted via Caller_EventLoopBase
 	virtual void Initialize();
 	virtual void Finalize();
 
@@ -49,7 +49,7 @@ public:
 	void Disable();
 
 protected:
-// From Caller_EventLoop
+// From Caller_EventLoopBase
 	virtual bool pTrigger();
 
 private:

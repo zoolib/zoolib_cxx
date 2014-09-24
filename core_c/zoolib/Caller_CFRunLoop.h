@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/Caller_EventLoop.h"
+#include "zoolib/Caller_EventLoopBase.h"
 
 // CFRunLoop is not available in CW's headers
 #ifndef ZCONFIG_API_Avail__Caller_CFRunLoop
@@ -51,7 +51,7 @@ namespace ZooLib {
 // MARK: - Caller_CFRunLoop
 
 class Caller_CFRunLoop
-:	public Caller_EventLoop
+:	public Caller_EventLoopBase
 	{
 public:
 	static ZRef<Caller_CFRunLoop> sMain();
@@ -59,7 +59,7 @@ public:
 	Caller_CFRunLoop(CFRunLoopRef iRunLoopRef);
 	virtual ~Caller_CFRunLoop();
 
-// From ZCounted via Caller
+// From ZCounted via Caller_EventLoopBase
 	virtual void Initialize();
 	virtual void Finalize();
 
@@ -67,7 +67,7 @@ public:
 	void AddMode(CFStringRef iMode);
 
 protected:
-// From Caller_EventLoop
+// From Caller_EventLoopBase
 	virtual bool pTrigger();
 
 private:

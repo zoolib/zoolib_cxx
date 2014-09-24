@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,67 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_EventLoop_h__
-#define __ZooLib_Caller_EventLoop_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/Caller.h"
-
-#include "zoolib/ZThread.h"
-
-#include <vector>
+#include "zoolib/Caller_EachOnNewThread.h"
+#include "zoolib/StartOnNewThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_EventLoop
+// MARK: - Caller_EachOnNewThread
 
-class Caller_EventLoop
+class Caller_EachOnNewThread
 :	public Caller
 	{
 public:
-	Caller_EventLoop();
-	virtual ~Caller_EventLoop();
-
 // From Caller
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable);
-
-protected:
-// Called by concrete subclass
-	void pInvokeClearQueue();
-
-	void pDiscardPending();
-
-// Implemented by concrete subclass
-	virtual bool pTrigger() = 0;
-
-private:
-	ZMtx fMtx;
-	bool fTriggered;
-	std::vector<ZRef<Callable_Void> > fCallables;
+	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable)
+		{
+		if (iCallable)
+			{
+			sStartOnNewThread(iCallable);
+			return true;
+			}
+		return false;
+		}
 	};
 
 // =================================================================================================
-// MARK: - Caller_EventLoop_CallableTrigger
+// MARK: - sCaller_EachOnNewThread
 
-class Caller_EventLoop_CallableTrigger
-:	public Caller_EventLoop
-	{
-public:
-	typedef Callable<bool()> Callable_Trigger;
-
-	Caller_EventLoop_CallableTrigger(const ZRef<Callable_Trigger>& iCallable_Trigger);
-
-// From Caller_EventLoop
-	virtual bool pTrigger();
-
-// Our protocol
-	void InvokeClearQueue();
-
-private:
-	ZRef<Callable_Trigger> fCallable_Trigger;
-	};
+ZRef<Caller> sCaller_EachOnNewThread()
+	{ return ZRef<Caller_EachOnNewThread>(sSingleton<ZRef_Counted<Caller_EachOnNewThread> >()); }
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Caller_EventLoop_h__

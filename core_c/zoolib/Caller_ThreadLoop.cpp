@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_OnNewThread.h"
+#include "zoolib/Caller_ThreadLoop.h"
 
 #include "zoolib/ZThread.h"
 
@@ -29,17 +29,17 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Caller_OnNewThread
+// MARK: - Caller_ThreadLoop
 
-class Caller_OnNewThread
+class Caller_ThreadLoop
 :	public Caller
 	{
 public:
-	Caller_OnNewThread()
+	Caller_ThreadLoop()
 	:	fKeepRunning(false)
 		{}
 
-	virtual ~Caller_OnNewThread()
+	virtual ~Caller_ThreadLoop()
 		{}
 
 // From ZCounted via Caller
@@ -51,7 +51,7 @@ public:
 		ZAssert(not fKeepRunning);
 
 		fKeepRunning = true;
-		ZThread::sCreate_T<Caller_OnNewThread*>(&Caller_OnNewThread::spRun, this);
+		ZThread::sCreate_T<Caller_ThreadLoop*>(&Caller_ThreadLoop::spRun, this);
 		}
 
 	virtual void Finalize()
@@ -78,7 +78,7 @@ public:
 private:
 	void pRun()
 		{
-		ZThread::sSetName("Caller_OnNewThread");
+		ZThread::sSetName("Caller_ThreadLoop");
 
 		ZGuardMtxR guard(fMtxR);
 
@@ -110,7 +110,7 @@ private:
 		delete this;
 		}
 
-	static void spRun(Caller_OnNewThread* iCaller)
+	static void spRun(Caller_ThreadLoop* iCaller)
 		{ iCaller->pRun(); }
 
 	ZMtxR fMtxR;
@@ -120,9 +120,9 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sCaller_OnNewThread
+// MARK: - sCaller_ThreadLoop
 
-ZRef<Caller> sCaller_OnNewThread()
-	{ return new Caller_OnNewThread; }
+ZRef<Caller> sCaller_ThreadLoop()
+	{ return new Caller_ThreadLoop; }
 
 } // namespace ZooLib

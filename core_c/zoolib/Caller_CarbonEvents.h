@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/Caller_EventLoop.h"
+#include "zoolib/Caller_EventLoopBase.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
@@ -33,12 +33,12 @@ namespace ZooLib {
 // MARK: - Caller_CarbonEvents
 
 class Caller_CarbonEvents
-:	public Caller_EventLoop
+:	public Caller_EventLoopBase
 	{
 protected:
 	static ZRef<Caller_CarbonEvents> sGet();
 
-// From Caller_EventLoop
+// From Caller_EventLoopBase
 	virtual bool pTrigger();
 
 private:
