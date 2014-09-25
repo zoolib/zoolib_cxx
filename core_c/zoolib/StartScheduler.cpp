@@ -122,7 +122,7 @@ void StartScheduler::pRun()
 
 				guard.Release();
 
-				try { theStarter->Start(theCallable); }
+				try { theStarter->QStart(theCallable); }
 				catch (...) {}
 
 				guard.Acquire();

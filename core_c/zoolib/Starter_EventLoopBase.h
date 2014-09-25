@@ -41,7 +41,7 @@ public:
 	virtual ~Starter_EventLoopBase();
 
 // From Starter
-	virtual bool Start(const ZRef<Callable_Void>& iCallable);
+	virtual bool QStart(const ZRef<Callable_Void>& iCallable);
 
 protected:
 // Called by concrete subclass

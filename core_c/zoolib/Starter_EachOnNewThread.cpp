@@ -31,7 +31,7 @@ class Starter_EachOnNewThread
 	{
 public:
 // From Starter
-	virtual bool Start(const ZRef<Callable_Void>& iCallable)
+	virtual bool QStart(const ZRef<Callable_Void>& iCallable)
 		{
 		if (iCallable)
 			{

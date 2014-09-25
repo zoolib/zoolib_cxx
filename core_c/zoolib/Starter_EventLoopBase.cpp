@@ -34,7 +34,7 @@ Starter_EventLoopBase::Starter_EventLoopBase()
 Starter_EventLoopBase::~Starter_EventLoopBase()
 	{}
 
-bool Starter_EventLoopBase::Start(const ZRef<Callable_Void>& iCallable)
+bool Starter_EventLoopBase::QStart(const ZRef<Callable_Void>& iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	if (iCallable)
