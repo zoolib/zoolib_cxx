@@ -80,8 +80,9 @@ public:
 // From Callable
 	virtual ZQ<R> QCall()
 		{
-		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
-			return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
+			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
+			{ return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(); }
 		return null;
 		}
 
@@ -108,9 +109,10 @@ public:
 // From Callable
 	virtual ZQ<void> QCall()
 		{
-		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
+			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
 			{
-			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
+			{ (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(); }
 			return notnull;
 			}
 		return null;
@@ -140,8 +142,12 @@ public: \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
-			return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = \
+			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
+			{ \
+			return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod) \
+				(ZMACRO_Callable_i##X); \
+			} \
 		return null; \
 		} \
 \
@@ -164,7 +170,8 @@ public: \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
+		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = \
+			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
 			{ \
 			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
 			return notnull; \
