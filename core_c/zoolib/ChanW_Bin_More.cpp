@@ -75,7 +75,7 @@ bool sQWritef(const ChanW_Bin& iChanW, const char* iString, ...)
 	return result;
 	}
 
-void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...)
+void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);

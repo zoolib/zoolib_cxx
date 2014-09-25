@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_CallScheduler_h__
-#define __ZooLib_CallScheduler_h__ 1
+#ifndef __ZooLib_StartScheduler_h__
+#define __ZooLib_StartScheduler_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Caller.h"
+#include "zoolib/Starter.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread.h"
@@ -32,45 +32,45 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - CallScheduler
+// MARK: - StartScheduler
 
-class CallScheduler
+class StartScheduler
 :	NonCopyable
 	{
 public:
-	CallScheduler();
+	StartScheduler();
 
-	typedef std::pair<ZRef<Caller>,ZRef<Callable_Void> > Job;
+	typedef std::pair<ZRef<Starter>,ZRef<Callable_Void> > Job;
 
 // -----
 
 	bool Cancel(const Job& iJob);
 
-	void NextCallAt(ZTime iSystemTime, const Job& iJob);
+	void NextStartAt(ZTime iSystemTime, const Job& iJob);
 
-	void NextCallIn(double iInterval, const Job& iJob);
+	void NextStartIn(double iInterval, const Job& iJob);
 
-	bool WillCall(const Job& iJob);
+	bool WillStart(const Job& iJob);
 
 // -----
 
-	bool Cancel(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
+	bool Cancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
-	void NextCallAt(ZTime iSystemTime,
-		const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
+	void NextStartAt(ZTime iSystemTime,
+		const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
-	void NextCallIn(double iInterval,
-		const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
+	void NextStartIn(double iInterval,
+		const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
-	bool WillCall(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable);
+	bool WillStart(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
 // -----
 
 private:
-	void pNextCallAt(ZTime iSystemTime, const Job& iJob);
+	void pNextStartAt(ZTime iSystemTime, const Job& iJob);
 
 	void pRun();
-	static void spRun(CallScheduler*);
+	static void spRun(StartScheduler*);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
@@ -84,16 +84,16 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - CallScheduler function interface
+// MARK: - StartScheduler function interface
 
-bool sCancel(const CallScheduler::Job& iJob);
+bool sCancel(const StartScheduler::Job& iJob);
 
-void sNextCallAt(ZTime iSystemTime, const CallScheduler::Job& iJob);
+void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob);
 
-void sNextCallIn(double iInterval, const CallScheduler::Job& iJob);
+void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
-bool sWillCall(const CallScheduler::Job& iJob);
+bool sWillStart(const StartScheduler::Job& iJob);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_CallScheduler_h__
+#endif // __ZooLib_StartScheduler_h__

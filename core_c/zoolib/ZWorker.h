@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWorker_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Caller.h"
+#include "zoolib/Starter.h"
 
 #include "zoolib/ZThread.h" // For ZThread::ID
 #include "zoolib/ZTime.h"
@@ -70,7 +70,7 @@ public:
 
 	bool IsWorking();
 
-	bool Attach(ZRef<Caller> iCaller);
+	bool Attach(ZRef<Starter> iStarter);
 	bool IsAttached();
 
 private:
@@ -78,7 +78,7 @@ private:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	ZRef<Caller> fCaller;
+	ZRef<Starter> fStarter;
 	ZThread::ID fWorking;
 	ZTime fNextWake;
 

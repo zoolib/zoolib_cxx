@@ -18,67 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_CFRunLoop_h__
-#define __ZooLib_Caller_CFRunLoop_h__ 1
+#ifndef __ZooLib_Starter_EventLoopBase_h__
+#define __ZooLib_Starter_EventLoopBase_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_API.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/Caller_EventLoopBase.h"
+#include "zoolib/Starter.h"
 
-// CFRunLoop is not available in CW's headers
-#ifndef ZCONFIG_API_Avail__Caller_CFRunLoop
-	#if ZCONFIG_SPI_Enabled(CoreFoundation) && !ZCONFIG(Compiler,CodeWarrior)
-		#define ZCONFIG_API_Avail__Caller_CFRunLoop 1
-	#endif
-#endif
+#include "zoolib/ZThread.h"
 
-#ifndef ZCONFIG_API_Avail__Caller_CFRunLoop
-	#define ZCONFIG_API_Avail__Caller_CFRunLoop 0
-#endif
-
-#ifndef ZCONFIG_API_Desired__Caller_CFRunLoop
-	#define ZCONFIG_API_Desired__Caller_CFRunLoop 1
-#endif
-
-#if ZCONFIG_API_Enabled(Caller_CFRunLoop)
-
-#include ZMACINCLUDE2(CoreFoundation,CFRunLoop.h)
+#include <vector>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_CFRunLoop
+// MARK: - Starter_EventLoopBase
 
-class Caller_CFRunLoop
-:	public Caller_EventLoopBase
+class Starter_EventLoopBase
+:	public Starter
 	{
 public:
-	static ZRef<Caller_CFRunLoop> sMain();
+	Starter_EventLoopBase();
+	virtual ~Starter_EventLoopBase();
 
-	Caller_CFRunLoop(CFRunLoopRef iRunLoopRef);
-	virtual ~Caller_CFRunLoop();
-
-// From ZCounted via Caller_EventLoopBase
-	virtual void Initialize();
-	virtual void Finalize();
-
-// Our protocol
-	void AddMode(CFStringRef iMode);
+// From Starter
+	virtual bool Start(const ZRef<Callable_Void>& iCallable);
 
 protected:
-// From Caller_EventLoopBase
-	virtual bool pTrigger();
+// Called by concrete subclass
+	void pInvokeClearQueue();
+
+	void pDiscardPending();
+
+// Implemented by concrete subclass
+	virtual bool pTrigger() = 0;
 
 private:
-	static void spCallback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info);
-
-	ZRef<CFRunLoopRef> fRunLoop;
-	ZRef<CFRunLoopObserverRef> fObserver;
+	ZMtx fMtx;
+	bool fTriggered;
+	std::vector<ZRef<Callable_Void> > fCallables;
 	};
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_API_Enabled(Caller_CFRunLoop)
-
-#endif // __ZooLib_Caller_CFRunLoop_h__
+#endif // __ZooLib_Starter_EventLoopBase_h__

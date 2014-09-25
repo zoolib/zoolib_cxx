@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_WinMessageLoop.h"
+#include "zoolib/Starter_WinMessageLoop.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -29,52 +29,52 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_WinMessageLoop
+// MARK: - Starter_WinMessageLoop
 
-Caller_WinMessageLoop::Caller_WinMessageLoop()
+Starter_WinMessageLoop::Starter_WinMessageLoop()
 :	fHWND(nullptr)
 	{}
 
-Caller_WinMessageLoop::~Caller_WinMessageLoop()
+Starter_WinMessageLoop::~Starter_WinMessageLoop()
 	{}
 
-void Caller_WinMessageLoop::Initialize()
+void Starter_WinMessageLoop::Initialize()
 	{
-	Caller_EventLoopBase::Initialize();
+	Starter_EventLoopBase::Initialize();
 
 	fHWND = ZWinWND::sCreate(
-		HWND_MESSAGE, sCallable(sWeakRef(this), &Caller_WinMessageLoop::pWindowProc));
+		HWND_MESSAGE, sCallable(sWeakRef(this), &Starter_WinMessageLoop::pWindowProc));
 
-	::SetWindowTextW(fHWND, L"Caller_WinMessageLoop::fHWND");
+	::SetWindowTextW(fHWND, L"Starter_WinMessageLoop::fHWND");
 	}
 
-void Caller_WinMessageLoop::Finalize()
+void Starter_WinMessageLoop::Finalize()
 	{
 	if (fHWND)
 		{
 		::DestroyWindow(fHWND);
 		ZAssert(not fHWND);
 		}
-	Caller_EventLoopBase::Finalize();
+	Starter_EventLoopBase::Finalize();
 	}
 
-void Caller_WinMessageLoop::Disable()
+void Starter_WinMessageLoop::Disable()
 	{
 	if (fHWND)
 		{
 		::DestroyWindow(fHWND);
 		ZAssert(not fHWND);
 		}
-	Caller_EventLoopBase::pDiscardPending();
+	Starter_EventLoopBase::pDiscardPending();
 	}
 
 static UINT spGetMSG()
 	{
-	static UINT spMSG = ::RegisterWindowMessageW(L"Caller_WinMessageLoop::Invoke");
+	static UINT spMSG = ::RegisterWindowMessageW(L"Starter_WinMessageLoop::Invoke");
 	return spMSG;
 	}
 
-bool Caller_WinMessageLoop::pTrigger()
+bool Starter_WinMessageLoop::pTrigger()
 	{
 	if (fHWND)
 		{
@@ -84,12 +84,12 @@ bool Caller_WinMessageLoop::pTrigger()
 	return false;
 	}
 
-ZQ<LRESULT> Caller_WinMessageLoop::pWindowProc(
+ZQ<LRESULT> Starter_WinMessageLoop::pWindowProc(
 	HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (iMessage == spGetMSG())
 		{
-		Caller_EventLoopBase::pInvokeClearQueue();
+		Starter_EventLoopBase::pInvokeClearQueue();
 		return 0;
 		}
 	else if (iMessage == WM_NCDESTROY)

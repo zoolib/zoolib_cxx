@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/CallScheduler.h"
 #include "zoolib/Singleton.h"
+#include "zoolib/StartScheduler.h"
 
 #include "zoolib/ZWorker.h"
 
@@ -42,6 +42,8 @@ namespace ZooLib {
 */
 
 static const ZTime kDistantFuture = 1000 * ZTime::kYear;
+
+typedef StartScheduler::Job Job;
 
 ZWorker::ZWorker(
 	const ZRef<Callable_Attached>& iCallable_Attached,
@@ -110,12 +112,12 @@ ZQ<void> ZWorker::QCall()
 				{
 				if (fNextWake <= ZTime::sSystem())
 					continue;
-				sSingleton<CallScheduler>().NextCallAt(fNextWake, fCaller, this);
+				sNextStartAt(fNextWake, Job(fStarter, this));
 				}
 			return notnull;
 			}
 
-		fCaller.Clear();
+		fStarter.Clear();
 		fCnd.Broadcast();
 
 		guard.Release();
@@ -139,12 +141,12 @@ void ZWorker::WakeAt(ZTime iSystemTime)
 bool ZWorker::IsAwake()
 	{
 	ZAcqMtx acq(fMtx);
-	if (fCaller)
+	if (fStarter)
 		{
 		if (fWorking)
 			return fNextWake <= ZTime::sSystem();
 		else
-			return sSingleton<CallScheduler>().WillCall(fCaller, this);
+			return sWillStart(Job(fStarter, this));
 		}
 	return false;
 	}
@@ -152,12 +154,12 @@ bool ZWorker::IsAwake()
 bool ZWorker::IsWorking()
 	{ return ZThread::sID() == fWorking; }
 
-bool ZWorker::Attach(ZRef<Caller> iCaller)
+bool ZWorker::Attach(ZRef<Starter> iStarter)
 	{
 	ZGuardMtx guard(fMtx);
-	if (not fCaller)
+	if (not fStarter)
 		{
-		fCaller = iCaller;
+		fStarter = iStarter;
 
 		guard.Release();
 		try
@@ -168,7 +170,7 @@ bool ZWorker::Attach(ZRef<Caller> iCaller)
 		catch (...) {}
 		guard.Acquire();
 
-		fCaller.Clear();
+		fStarter.Clear();
 		fCnd.Broadcast();
 
 		guard.Release();
@@ -182,13 +184,13 @@ bool ZWorker::Attach(ZRef<Caller> iCaller)
 bool ZWorker::IsAttached()
 	{
 	ZAcqMtx acq(fMtx);
-	return fCaller;
+	return fStarter;
 	}
 
 void ZWorker::pWakeAt(ZTime iSystemTime)
 	{
 	ZAcqMtx acq(fMtx);
-	if (fCaller)
+	if (fStarter)
 		{
 		if (fWorking)
 			{
@@ -197,7 +199,7 @@ void ZWorker::pWakeAt(ZTime iSystemTime)
 			}
 		else
 			{
-			sSingleton<CallScheduler>().NextCallAt(iSystemTime, fCaller, this);
+			sNextStartAt(iSystemTime, Job(fStarter, this));
 			}
 		}
 	}

@@ -18,47 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_CFRunLoop.h"
+#include "zoolib/Starter_CFRunLoop.h"
 
-#if ZCONFIG_API_Enabled(Caller_CFRunLoop)
+#if ZCONFIG_API_Enabled(Starter_CFRunLoop)
 
 #include "zoolib/ZUtil_CF_Context.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_CFRunLoop
+// MARK: - Starter_CFRunLoop
 
 // Usable pre 10.5
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
 	static CFRunLoopRef spRunLoopMain = ::CFRunLoopGetCurrent();
 #endif
 
-ZRef<Caller_CFRunLoop> Caller_CFRunLoop::sMain()
+ZRef<Starter_CFRunLoop> Starter_CFRunLoop::sMain()
 	{
-	static ZRef<Caller_CFRunLoop> spCaller;
-	if (not spCaller)
+	static ZRef<Starter_CFRunLoop> spStarter;
+	if (not spStarter)
 		{
 		#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
-			ZRef<Caller_CFRunLoop> theCaller = new Caller_CFRunLoop(spRunLoopMain);
+			ZRef<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(spRunLoopMain);
 		#else
-			ZRef<Caller_CFRunLoop> theCaller = new Caller_CFRunLoop(::CFRunLoopGetMain());
+			ZRef<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(::CFRunLoopGetMain());
 		#endif
-		spCaller.AtomicCAS(nullptr, theCaller.Get());
+		spStarter.AtomicCAS(nullptr, theStarter.Get());
 		}
-	return spCaller;
+	return spStarter;
 	}
 
-Caller_CFRunLoop::Caller_CFRunLoop(CFRunLoopRef iRunLoop)
+Starter_CFRunLoop::Starter_CFRunLoop(CFRunLoopRef iRunLoop)
 :	fRunLoop(iRunLoop)
 	{}
 
-Caller_CFRunLoop::~Caller_CFRunLoop()
+Starter_CFRunLoop::~Starter_CFRunLoop()
 	{}
 
-void Caller_CFRunLoop::Initialize()
+void Starter_CFRunLoop::Initialize()
 	{
-	Caller::Initialize();
+	Starter::Initialize();
 
 	fObserver = sAdopt& ::CFRunLoopObserverCreate(
 		nullptr, // allocator
@@ -71,32 +71,32 @@ void Caller_CFRunLoop::Initialize()
 	::CFRunLoopAddObserver(fRunLoop, fObserver, kCFRunLoopCommonModes);
 	}
 
-void Caller_CFRunLoop::Finalize()
+void Starter_CFRunLoop::Finalize()
 	{
 	::CFRunLoopObserverInvalidate(fObserver);
 
-	Caller::Finalize();
+	Starter::Finalize();
 	}
 
-void Caller_CFRunLoop::AddMode(CFStringRef iMode)
+void Starter_CFRunLoop::AddMode(CFStringRef iMode)
 	{
 	::CFRunLoopAddObserver(fRunLoop, fObserver, iMode);
 	}
 
-bool Caller_CFRunLoop::pTrigger()
+bool Starter_CFRunLoop::pTrigger()
 	{
 	::CFRunLoopWakeUp(fRunLoop);
 	return true;
 	}
 
-void Caller_CFRunLoop::spCallback(
+void Starter_CFRunLoop::spCallback(
 	CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
 	{
-	if (ZRef<Caller_CFRunLoop> theCaller =
-		ZWeakRef<Caller_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
-		{ theCaller->pInvokeClearQueue(); }
+	if (ZRef<Starter_CFRunLoop> theStarter =
+		ZWeakRef<Starter_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
+		{ theStarter->pInvokeClearQueue(); }
 	}
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_API_Enabled(Caller_CFRunLoop)
+#endif // ZCONFIG_API_Enabled(Starter_CFRunLoop)

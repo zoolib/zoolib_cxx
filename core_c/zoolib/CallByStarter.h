@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_CallByCaller_h__
-#define __ZooLib_CallByCaller_h__ 1
+#ifndef __ZooLib_CallByStarter_h__
+#define __ZooLib_CallByStarter_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
-#include "zoolib/Caller.h"
+#include "zoolib/Starter.h"
 #include "zoolib/Promise.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sQCallByCaller (specialization for 0 params)
+// MARK: - sQCallByStarter (specialization for 0 params)
 
 template <class R>
 void spQCallWithPromise_T(
@@ -39,14 +39,14 @@ void spQCallWithPromise_T(
 	{ iPromise->Deliver(iCallable->QCall()); }
 
 template <class R>
-ZRef<Delivery<ZQ<R> > > sQCallByCaller(
-	const ZRef<Caller>& iCaller,
+ZRef<Delivery<ZQ<R> > > sQCallByStarter(
+	const ZRef<Starter>& iStarter,
 	const ZRef<Callable<R(void)> >& iCallable)
 	{
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >();
-	if (iCaller && iCallable)
+	if (iStarter && iCallable)
 		{
-		iCaller->Enqueue(sBindR(
+		iStarter->Start(sBindR(
 			sCallable(spQCallWithPromise_T<R>),
 			thePromise,
 			iCallable));
@@ -55,9 +55,9 @@ ZRef<Delivery<ZQ<R> > > sQCallByCaller(
 	}
 
 // =================================================================================================
-// MARK: - sQCallByCaller variants
+// MARK: - sQCallByStarter variants
 
-#define ZMACRO_Callable_CallByCaller(X) \
+#define ZMACRO_Callable_CallByStarter(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 void spQCallWithPromise_T( \
@@ -67,15 +67,15 @@ void spQCallWithPromise_T( \
 	{ iPromise->Deliver(iCallable->QCall(ZMACRO_Callable_i##X)); } \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-ZRef<Delivery<ZQ<R> > > sQCallByCaller( \
-	const ZRef<Caller>& iCaller, \
+ZRef<Delivery<ZQ<R> > > sQCallByStarter( \
+	const ZRef<Starter>& iStarter, \
 	const ZRef<Callable<R(ZMACRO_Callable_P##X)> >& iCallable, \
 	ZMACRO_Callable_Pi##X) \
 	{ \
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >(); \
-	if (iCaller && iCallable) \
+	if (iStarter && iCallable) \
 		{ \
-		iCaller->Enqueue(sBindR( \
+		iStarter->Start(sBindR( \
 			sCallable(spQCallWithPromise_T<R,ZMACRO_Callable_P##X>), \
 			thePromise, \
 			iCallable, \
@@ -84,25 +84,25 @@ ZRef<Delivery<ZQ<R> > > sQCallByCaller( \
 	return thePromise->GetDelivery(); \
 	}
 
-ZMACRO_Callable_CallByCaller(0)
-ZMACRO_Callable_CallByCaller(1)
-ZMACRO_Callable_CallByCaller(2)
-ZMACRO_Callable_CallByCaller(3)
-ZMACRO_Callable_CallByCaller(4)
-ZMACRO_Callable_CallByCaller(5)
-ZMACRO_Callable_CallByCaller(6)
-ZMACRO_Callable_CallByCaller(7)
-ZMACRO_Callable_CallByCaller(8)
-ZMACRO_Callable_CallByCaller(9)
-ZMACRO_Callable_CallByCaller(A)
-ZMACRO_Callable_CallByCaller(B)
-ZMACRO_Callable_CallByCaller(C)
-ZMACRO_Callable_CallByCaller(D)
-ZMACRO_Callable_CallByCaller(E)
-ZMACRO_Callable_CallByCaller(F)
+ZMACRO_Callable_CallByStarter(0)
+ZMACRO_Callable_CallByStarter(1)
+ZMACRO_Callable_CallByStarter(2)
+ZMACRO_Callable_CallByStarter(3)
+ZMACRO_Callable_CallByStarter(4)
+ZMACRO_Callable_CallByStarter(5)
+ZMACRO_Callable_CallByStarter(6)
+ZMACRO_Callable_CallByStarter(7)
+ZMACRO_Callable_CallByStarter(8)
+ZMACRO_Callable_CallByStarter(9)
+ZMACRO_Callable_CallByStarter(A)
+ZMACRO_Callable_CallByStarter(B)
+ZMACRO_Callable_CallByStarter(C)
+ZMACRO_Callable_CallByStarter(D)
+ZMACRO_Callable_CallByStarter(E)
+ZMACRO_Callable_CallByStarter(F)
 
-#undef ZMACRO_Callable_CallByCaller
+#undef ZMACRO_Callable_CallByStarter
 
 } // namespace ZooLib
 
-#endif // __ZooLib_CallByCaller_h__
+#endif // __ZooLib_CallByStarter_h__

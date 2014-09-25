@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_ThreadLoop_h__
-#define __ZooLib_Caller_ThreadLoop_h__ 1
+#ifndef __ZooLib_Starter_ThreadLoop_h__
+#define __ZooLib_Starter_ThreadLoop_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Caller.h"
+#include "zoolib/Starter.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCaller_ThreadLoop
+// MARK: - sStarter_ThreadLoop
 
-ZRef<Caller> sCaller_ThreadLoop();
+ZRef<Starter> sStarter_ThreadLoop();
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Caller_ThreadLoop_h__
+#endif // __ZooLib_Starter_ThreadLoop_h__

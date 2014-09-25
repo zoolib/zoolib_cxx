@@ -39,7 +39,7 @@ bool sQWrite(const char* iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
-May invoke sThrow_Exhausted.
+May invoke sThrow_ExhaustedW.
 */
 void sWriteMust(const char* iString, const ChanW_Bin& iChanW);
 
@@ -51,7 +51,7 @@ bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes contained in \a iString, with no terminating zero byte.
-May invoke sThrow_Exhausted.
+May invoke sThrow_ExhaustedW.
 */
 void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW);
 
@@ -65,9 +65,9 @@ bool sQWritef(const ChanW_Bin& iChanW, const char* iString, ...);
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
 Standard printf-style parameter substitution is applied to the string before writing.
-May invoke sThrow_Exhausted.
+May invoke sThrow_ExhaustedW.
 */
-void sWriteMustf(const ChanW_Bin& iChanW, const char* iString, ...);
+void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...);
 
 // =================================================================================================
 // MARK: -

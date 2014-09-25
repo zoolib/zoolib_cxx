@@ -4,7 +4,7 @@ http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
+including without limitation the rights to use, copy, modify, merge,Publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,36 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_CarbonEvents.h"
+#ifndef __ZooLib_Starter_WinMessageLoop_h__
+#define __ZooLib_Starter_WinMessageLoop_h__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon64)
+#include "zoolib/Starter_EventLoopBase.h"
 
-#include "zoolib/ZUtil_CarbonEvents.h"
+#if ZCONFIG_SPI_Enabled(Win)
+
+#include "zoolib/ZCompat_Win.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_CarbonEvents
+// MARK: - Starter_WinMessageLoop
 
-ZRef<Caller_CarbonEvents> Caller_CarbonEvents::sGet()
-	{ return sSingleton<ZRef_Counted<Caller_CarbonEvents> >(); }
-
-bool Caller_CarbonEvents::pTrigger()
+class Starter_WinMessageLoop
+:	public Starter_EventLoopBase
 	{
-	this->Retain();
-	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
-	return true;
-	}
+public:
+	Starter_WinMessageLoop();
+	virtual ~Starter_WinMessageLoop();
 
-void Caller_CarbonEvents::spCallback(void* iRefcon)
-	{
-	if (ZRef<Caller_CarbonEvents> theCaller = static_cast<Caller_CarbonEvents*>(iRefcon))
-		{
-		theCaller->Release();
-		theCaller->pInvokeClearQueue();
-		}
-	}
+// From ZCounted via Starter_EventLoopBase
+	virtual void Initialize();
+	virtual void Finalize();
+
+// Our protocol
+	void Disable();
+
+protected:
+// From Starter_EventLoopBase
+	virtual bool pTrigger();
+
+private:
+	ZQ<LRESULT> pWindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
+
+	HWND fHWND;
+	};
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Carbon64)
+#endif // ZCONFIG_SPI_Enabled(Win)
+
+#endif // __ZooLib_Starter_WinMessageLoop_h__

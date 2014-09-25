@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/CallScheduler.h"
 #include "zoolib/Singleton.h"
+#include "zoolib/StartScheduler.h"
 
 #include "zoolib/ZUtil_STL_set.h"
 
@@ -30,13 +30,13 @@ using std::set;
 using namespace ZUtil_STL;
 
 // =================================================================================================
-// MARK: - CallScheduler
+// MARK: - StartScheduler
 
-CallScheduler::CallScheduler()
+StartScheduler::StartScheduler()
 :	fThreadRunning(false)
 	{}
 
-bool CallScheduler::Cancel(const Job& iJob)
+bool StartScheduler::Cancel(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -50,13 +50,13 @@ bool CallScheduler::Cancel(const Job& iJob)
 	return false;
 	}
 
-void CallScheduler::NextCallAt(ZTime iSystemTime, const Job& iJob)
-	{ this->pNextCallAt(iSystemTime, iJob); }
+void StartScheduler::NextStartAt(ZTime iSystemTime, const Job& iJob)
+	{ this->pNextStartAt(iSystemTime, iJob); }
 
-void CallScheduler::NextCallIn(double iInterval, const Job& iJob)
-	{ this->pNextCallAt(ZTime::sSystem() + iInterval, iJob); }
+void StartScheduler::NextStartIn(double iInterval, const Job& iJob)
+	{ this->pNextStartAt(ZTime::sSystem() + iInterval, iJob); }
 
-bool CallScheduler::WillCall(const Job& iJob)
+bool StartScheduler::WillStart(const Job& iJob)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -67,21 +67,21 @@ bool CallScheduler::WillCall(const Job& iJob)
 	return false;
 	}
 
-bool CallScheduler::Cancel(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
-	{ return this->Cancel(Job(iCaller, iCallable)); }
+bool StartScheduler::Cancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ return this->Cancel(Job(iStarter, iCallable)); }
 
-void CallScheduler::NextCallAt(ZTime iSystemTime,
-	const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
-	{ this->pNextCallAt(iSystemTime, Job(iCaller, iCallable)); }
+void StartScheduler::NextStartAt(ZTime iSystemTime,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ this->pNextStartAt(iSystemTime, Job(iStarter, iCallable)); }
 
-void CallScheduler::NextCallIn(double iInterval,
-	const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
-	{ this->pNextCallAt(ZTime::sSystem() + iInterval, Job(iCaller, iCallable)); }
+void StartScheduler::NextStartIn(double iInterval,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ this->pNextStartAt(ZTime::sSystem() + iInterval, Job(iStarter, iCallable)); }
 
-bool CallScheduler::WillCall(const ZRef<Caller>& iCaller, const ZRef<Callable_Void>& iCallable)
-	{ return this->WillCall(Job(iCaller, iCallable)); }
+bool StartScheduler::WillStart(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ return this->WillStart(Job(iStarter, iCallable)); }
 
-void CallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
+void StartScheduler::pNextStartAt(ZTime iSystemTime, const Job& iJob)
 	{
 	ZAssert(iJob.first);
 
@@ -107,13 +107,13 @@ void CallScheduler::pNextCallAt(ZTime iSystemTime, const Job& iJob)
 		if (not fThreadRunning)
 			{
 			fThreadRunning = true;
-			ZThread::sCreate_T<CallScheduler*>(spRun, this);
+			ZThread::sCreate_T<StartScheduler*>(spRun, this);
 			}
 		fCnd.Broadcast();
 		}
 	}
 
-void CallScheduler::pRun()
+void StartScheduler::pRun()
 	{
 	ZGuardMtx guard(fMtx);
 	for (;;)
@@ -139,7 +139,7 @@ void CallScheduler::pRun()
 				}
 			else
 				{
-				ZRef<Caller> theCaller = begin->second.first;
+				ZRef<Starter> theStarter = begin->second.first;
 				ZRef<Callable_Void> theCallable = begin->second.second;
 
 				sEraseMust(fJobTimes, JobTime(begin->second, begin->first));
@@ -147,7 +147,7 @@ void CallScheduler::pRun()
 
 				guard.Release();
 
-				try { theCaller->Enqueue(theCallable); }
+				try { theStarter->Start(theCallable); }
 				catch (...) {}
 
 				guard.Acquire();
@@ -156,26 +156,26 @@ void CallScheduler::pRun()
 		}
 	}
 
-void CallScheduler::spRun(CallScheduler* iCallScheduler)
+void StartScheduler::spRun(StartScheduler* iStartScheduler)
 	{
-	ZThread::sSetName("CallScheduler");
+	ZThread::sSetName("StartScheduler");
 
-	iCallScheduler->pRun();
+	iStartScheduler->pRun();
 	}
 
 // =================================================================================================
-// MARK: - CallScheduler function interface
+// MARK: - StartScheduler function interface
 
-bool sCancel(const CallScheduler::Job& iJob)
-	{ return sSingleton<CallScheduler>().Cancel(iJob); }
+bool sCancel(const StartScheduler::Job& iJob)
+	{ return sSingleton<StartScheduler>().Cancel(iJob); }
 
-void sNextCallAt(ZTime iSystemTime, const CallScheduler::Job& iJob)
-	{ sSingleton<CallScheduler>().NextCallAt(iSystemTime, iJob); }
+void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob)
+	{ sSingleton<StartScheduler>().NextStartAt(iSystemTime, iJob); }
 
-void sNextCallIn(double iInterval, const CallScheduler::Job& iJob)
-	{ sSingleton<CallScheduler>().NextCallIn(iInterval, iJob); }
+void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
+	{ sSingleton<StartScheduler>().NextStartIn(iInterval, iJob); }
 
-bool sWillCall(const CallScheduler::Job& iJob)
-	{ return sSingleton<CallScheduler>().WillCall(iJob); }
+bool sWillStart(const StartScheduler::Job& iJob)
+	{ return sSingleton<StartScheduler>().WillStart(iJob); }
 
 } // namespace ZooLib

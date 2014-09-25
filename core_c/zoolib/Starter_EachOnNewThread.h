@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2012 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,34 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_EachOnNewThread.h"
-#include "zoolib/StartOnNewThread.h"
+#ifndef __ZooLib_Starter_EachOnNewThread_h__
+#define __ZooLib_Starter_EachOnNewThread_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/Starter.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_EachOnNewThread
+// MARK: - sStarter_EachOnNewThread
 
-class Caller_EachOnNewThread
-:	public Caller
-	{
-public:
-// From Caller
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable)
-		{
-		if (iCallable)
-			{
-			sStartOnNewThread(iCallable);
-			return true;
-			}
-		return false;
-		}
-	};
-
-// =================================================================================================
-// MARK: - sCaller_EachOnNewThread
-
-ZRef<Caller> sCaller_EachOnNewThread()
-	{ return ZRef<Caller_EachOnNewThread>(sSingleton<ZRef_Counted<Caller_EachOnNewThread> >()); }
+ZRef<Starter> sStarter_EachOnNewThread();
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Starter_EachOnNewThread_h__

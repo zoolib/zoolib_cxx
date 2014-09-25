@@ -18,65 +18,65 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Callable_Caller_h__
-#define __ZooLib_Callable_Caller_h__ 1
+#ifndef __ZooLib_Callable_Starter_h__
+#define __ZooLib_Callable_Starter_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCallByCaller.h"
+#include "zoolib/CallByStarter.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable_Caller
+// MARK: - Callable_Starter
 
-template <class Signature> class Callable_Caller;
+template <class Signature> class Callable_Starter;
 
 // =================================================================================================
-// MARK: - Callable_Caller (specialization for 0 params)
+// MARK: - Callable_Starter (specialization for 0 params)
 
 template <class R>
-class Callable_Caller<R(void)>
+class Callable_Starter<R(void)>
 :	public Callable<R(void)>
 	{
 public:
 	typedef R (Signature)();
 
-	Callable_Caller(const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature> >& iCallable)
-	:	fCaller(iCaller)
+	Callable_Starter(const ZRef<ZStarter>& iStarter, const ZRef<Callable<Signature> >& iCallable)
+	:	fStarter(iStarter)
 	,	fCallable(iCallable)
 		{}
 
 // From Callable
 	virtual ZQ<R> QCall()
-		{ return sQCallByCaller(fCaller, fCallable)->QGet().Get(); }
+		{ return sQCallByStarter(fStarter, fCallable)->QGet().Get(); }
 
 private:
-	const ZRef<Caller> fCaller;
+	const ZRef<Starter> fStarter;
 	const ZRef<Callable<Signature> > fCallable;
 	};
 
 // =================================================================================================
-// MARK: - Callable_Caller variants
+// MARK: - Callable_Starter variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-class Callable_Caller<R(ZMACRO_Callable_P##X)> \
+class Callable_Starter<R(ZMACRO_Callable_P##X)> \
 :	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
 	typedef R (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable_Caller(const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature> >& iCallable) \
-	:	fCaller(iCaller) \
+	Callable_Starter(const ZRef<ZStarter>& iStarter, const ZRef<Callable<Signature> >& iCallable) \
+	:	fStarter(iStarter) \
 	,	fCallable(iCallable) \
 		{} \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
-		{ return sQCallByCaller(fCaller, fCallable, ZMACRO_Callable_i##X)->QGet().Get(); } \
+		{ return sQCallByStarter(fStarter, fCallable, ZMACRO_Callable_i##X)->QGet().Get(); } \
 \
 private:\
-	const ZRef<ZCaller> fCaller; \
+	const ZRef<ZStarter> fStarter; \
 	const ZRef<Callable<Signature> > fCallable;\
 	};
 
@@ -100,14 +100,14 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-// MARK: - sCallable_Caller
+// MARK: - sCallable_Starter
 
 template <class Signature_p>
 ZRef<Callable<Signature_p> >
-sCallable_Caller(
-	const ZRef<ZCaller>& iCaller, const ZRef<Callable<Signature_p> >& iCallable)
-	{ return new Callable_Caller<Signature_p>(iCaller, iCallable); }
+sCallable_Starter(
+	const ZRef<ZStarter>& iStarter, const ZRef<Callable<Signature_p> >& iCallable)
+	{ return new Callable_Starter<Signature_p>(iStarter, iCallable); }
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Callable_Caller_h__
+#endif // __ZooLib_Callable_Starter_h__

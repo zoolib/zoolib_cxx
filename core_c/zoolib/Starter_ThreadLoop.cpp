@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Caller_ThreadLoop.h"
+#include "zoolib/Starter_ThreadLoop.h"
 
 #include "zoolib/ZThread.h"
 
@@ -29,20 +29,20 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Caller_ThreadLoop
+// MARK: - Starter_ThreadLoop
 
-class Caller_ThreadLoop
-:	public Caller
+class Starter_ThreadLoop
+:	public Starter
 	{
 public:
-	Caller_ThreadLoop()
+	Starter_ThreadLoop()
 	:	fKeepRunning(false)
 		{}
 
-	virtual ~Caller_ThreadLoop()
+	virtual ~Starter_ThreadLoop()
 		{}
 
-// From ZCounted via Caller
+// From ZCounted via Starter
 	virtual void Initialize()
 		{
 		ZCounted::Initialize();
@@ -51,7 +51,7 @@ public:
 		ZAssert(not fKeepRunning);
 
 		fKeepRunning = true;
-		ZThread::sCreate_T<Caller_ThreadLoop*>(&Caller_ThreadLoop::spRun, this);
+		ZThread::sCreate_T<Starter_ThreadLoop*>(&Starter_ThreadLoop::spRun, this);
 		}
 
 	virtual void Finalize()
@@ -66,8 +66,8 @@ public:
 		fCnd.Broadcast();
 		}
 
-// From Caller
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable)
+// From Starter
+	virtual bool Start(const ZRef<Callable_Void>& iCallable)
 		{
 		ZGuardMtxR guard(fMtxR);
 		fCallables.push_back(iCallable);
@@ -78,7 +78,7 @@ public:
 private:
 	void pRun()
 		{
-		ZThread::sSetName("Caller_ThreadLoop");
+		ZThread::sSetName("Starter_ThreadLoop");
 
 		ZGuardMtxR guard(fMtxR);
 
@@ -110,8 +110,8 @@ private:
 		delete this;
 		}
 
-	static void spRun(Caller_ThreadLoop* iCaller)
-		{ iCaller->pRun(); }
+	static void spRun(Starter_ThreadLoop* iStarter)
+		{ iStarter->pRun(); }
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
@@ -120,9 +120,9 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sCaller_ThreadLoop
+// MARK: - sStarter_ThreadLoop
 
-ZRef<Caller> sCaller_ThreadLoop()
-	{ return new Caller_ThreadLoop; }
+ZRef<Starter> sStarter_ThreadLoop()
+	{ return new Starter_ThreadLoop; }
 
 } // namespace ZooLib

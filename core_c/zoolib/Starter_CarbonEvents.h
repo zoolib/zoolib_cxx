@@ -18,27 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_CarbonEvents_h__
-#define __ZooLib_Caller_CarbonEvents_h__ 1
+#ifndef __ZooLib_Starter_CarbonEvents_h__
+#define __ZooLib_Starter_CarbonEvents_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/Caller_EventLoopBase.h"
+#include "zoolib/Starter_EventLoopBase.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller_CarbonEvents
+// MARK: - Starter_CarbonEvents
 
-class Caller_CarbonEvents
-:	public Caller_EventLoopBase
+class Starter_CarbonEvents
+:	public Starter_EventLoopBase
 	{
 protected:
-	static ZRef<Caller_CarbonEvents> sGet();
+	static ZRef<Starter_CarbonEvents> sGet();
 
-// From Caller_EventLoopBase
+// From Starter_EventLoopBase
 	virtual bool pTrigger();
 
 private:
@@ -49,4 +49,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
 
-#endif // __ZooLib_Caller_CarbonEvents_h__
+#endif // __ZooLib_Starter_CarbonEvents_h__

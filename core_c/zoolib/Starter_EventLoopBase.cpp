@@ -4,7 +4,7 @@ http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,Publish, distribute,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,48 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_WinMessageLoop_h__
-#define __ZooLib_Caller_WinMessageLoop_h__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/Caller_EventLoopBase.h"
-
-#if ZCONFIG_SPI_Enabled(Win)
-
-#include "zoolib/ZCompat_Win.h"
+#include "zoolib/Starter_EventLoopBase.h"
 
 namespace ZooLib {
 
+using std::vector;
+
 // =================================================================================================
-// MARK: - Caller_WinMessageLoop
+// MARK: - Starter_EventLoopBase
 
-class Caller_WinMessageLoop
-:	public Caller_EventLoopBase
+Starter_EventLoopBase::Starter_EventLoopBase()
+:	fTriggered(false)
+	{}
+
+Starter_EventLoopBase::~Starter_EventLoopBase()
+	{}
+
+bool Starter_EventLoopBase::Start(const ZRef<Callable_Void>& iCallable)
 	{
-public:
-	Caller_WinMessageLoop();
-	virtual ~Caller_WinMessageLoop();
+	ZAcqMtx acq(fMtx);
+	if (iCallable)
+		{
+		if (fTriggered || (fTriggered = this->pTrigger()))
+			{
+			fCallables.push_back(iCallable);
+			return true;
+			}
+		}
+	return false;
+	}
 
-// From ZCounted via Caller_EventLoopBase
-	virtual void Initialize();
-	virtual void Finalize();
+void Starter_EventLoopBase::pInvokeClearQueue()
+	{
+	vector<ZRef<Callable_Void> > calling;
 
-// Our protocol
-	void Disable();
+	{
+	ZAcqMtx acq(fMtx);
+	fTriggered = false;
+	fCallables.swap(calling);
+	}
 
-protected:
-// From Caller_EventLoopBase
-	virtual bool pTrigger();
+	for (vector<ZRef<Callable_Void> >::iterator iter = calling.begin();
+		iter != calling.end(); ++iter)
+		{
+		try { (*iter)->Call(); }
+		catch (...) {}
+		}
+	}
 
-private:
-	ZQ<LRESULT> pWindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	HWND fHWND;
-	};
+void Starter_EventLoopBase::pDiscardPending()
+	{
+	ZAcqMtx acq(fMtx);
+	fCallables.clear();
+	fTriggered = false;
+	}
 
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(Win)
-
-#endif // __ZooLib_Caller_WinMessageLoop_h__

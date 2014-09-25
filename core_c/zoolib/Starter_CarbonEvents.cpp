@@ -4,7 +4,7 @@ http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,Publish, distribute,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,19 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_EachOnNewThread_h__
-#define __ZooLib_Caller_EachOnNewThread_h__ 1
-#include "zconfig.h"
+#include "zoolib/Starter_CarbonEvents.h"
 
-#include "zoolib/Caller.h"
+#if ZCONFIG_SPI_Enabled(Carbon64)
+
+#include "zoolib/ZUtil_CarbonEvents.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCaller_EachOnNewThread
+// MARK: - Starter_CarbonEvents
 
-ZRef<Caller> sCaller_EachOnNewThread();
+ZRef<Starter_CarbonEvents> Starter_CarbonEvents::sGet()
+	{ return sSingleton<ZRef_Counted<Starter_CarbonEvents> >(); }
+
+bool Starter_CarbonEvents::pTrigger()
+	{
+	this->Retain();
+	ZUtil_CarbonEvents::sInvokeOnMainThread(true, spCallback, this);
+	return true;
+	}
+
+void Starter_CarbonEvents::spCallback(void* iRefcon)
+	{
+	if (ZRef<Starter_CarbonEvents> theStarter = static_cast<Starter_CarbonEvents*>(iRefcon))
+		{
+		theStarter->Release();
+		theStarter->pInvokeClearQueue();
+		}
+	}
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Caller_EachOnNewThread_h__
+#endif // ZCONFIG_SPI_Enabled(Carbon64)

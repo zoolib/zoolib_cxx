@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,36 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Caller_h__
-#define __ZooLib_Caller_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/Callable.h"
+#include "zoolib/Starter_EachOnNewThread.h"
+#include "zoolib/StartOnNewThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Caller
+// MARK: - Starter_EachOnNewThread
 
-class Caller
-:	public ZCounted
+class Starter_EachOnNewThread
+:	public Starter
 	{
 public:
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable) = 0;
+// From Starter
+	virtual bool Start(const ZRef<Callable_Void>& iCallable)
+		{
+		if (iCallable)
+			{
+			sStartOnNewThread(iCallable);
+			return true;
+			}
+		return false;
+		}
 	};
 
 // =================================================================================================
-// MARK: - Caller_Trivial
+// MARK: - sStarter_EachOnNewThread
 
-class Caller_Trivial
-:	public Caller
-	{
-public:
-// From Caller
-	virtual bool Enqueue(const ZRef<Callable_Void>& iCallable)
-		{ return sQCall(iCallable); }
-	};
+ZRef<Starter> sStarter_EachOnNewThread()
+	{ return ZRef<Starter_EachOnNewThread>(sSingleton<ZRef_Counted<Starter_EachOnNewThread> >()); }
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Caller_h__
