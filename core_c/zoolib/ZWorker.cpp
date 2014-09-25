@@ -138,19 +138,6 @@ void ZWorker::WakeIn(double iInterval)
 void ZWorker::WakeAt(ZTime iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
-bool ZWorker::IsAwake()
-	{
-	ZAcqMtx acq(fMtx);
-	if (fStarter)
-		{
-		if (fWorking)
-			return fNextWake <= ZTime::sSystem();
-		else
-			return sWillStart(Job(fStarter, this));
-		}
-	return false;
-	}
-
 bool ZWorker::IsWorking()
 	{ return ZThread::sID() == fWorking; }
 

@@ -66,7 +66,6 @@ public:
 	void Wake();
 	void WakeAt(ZTime iSystemTime);
 	void WakeIn(double iInterval);
-	bool IsAwake();
 
 	bool IsWorking();
 

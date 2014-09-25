@@ -62,8 +62,6 @@ public:
 	void NextStartIn(double iInterval,
 		const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
-	bool WillStart(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
-
 // -----
 
 private:
@@ -92,7 +90,6 @@ void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob);
 
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
-bool sWillStart(const StartScheduler::Job& iJob);
 
 } // namespace ZooLib
 

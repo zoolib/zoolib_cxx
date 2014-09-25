@@ -56,17 +56,6 @@ void StartScheduler::NextStartAt(ZTime iSystemTime, const Job& iJob)
 void StartScheduler::NextStartIn(double iInterval, const Job& iJob)
 	{ this->pNextStartAt(ZTime::sSystem() + iInterval, iJob); }
 
-bool StartScheduler::WillStart(const Job& iJob)
-	{
-	ZAcqMtx acq(fMtx);
-
-	set<JobTime>::iterator iterJT = fJobTimes.lower_bound(JobTime(iJob, 0.0));
-	if (iterJT != fJobTimes.end() && iterJT->first == iJob)
-		return ZTime::sSystem() >= iterJT->second;
-
-	return false;
-	}
-
 bool StartScheduler::Cancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
 	{ return this->Cancel(Job(iStarter, iCallable)); }
 
@@ -175,7 +164,5 @@ void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob)
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
 	{ sSingleton<StartScheduler>().NextStartIn(iInterval, iJob); }
 
-bool sWillStart(const StartScheduler::Job& iJob)
-	{ return sSingleton<StartScheduler>().WillStart(iJob); }
 
 } // namespace ZooLib
