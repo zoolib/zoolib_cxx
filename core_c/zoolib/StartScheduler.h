@@ -42,27 +42,11 @@ public:
 
 	typedef std::pair<ZRef<Starter>,ZRef<Callable_Void> > Job;
 
-// -----
-
 	bool Cancel(const Job& iJob);
 
 	void NextStartAt(ZTime iSystemTime, const Job& iJob);
 
 	void NextStartIn(double iInterval, const Job& iJob);
-
-	bool WillStart(const Job& iJob);
-
-// -----
-
-	bool Cancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
-
-	void NextStartAt(ZTime iSystemTime,
-		const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
-
-	void NextStartIn(double iInterval,
-		const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
-
-// -----
 
 private:
 	void pNextStartAt(ZTime iSystemTime, const Job& iJob);
@@ -90,6 +74,15 @@ void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob);
 
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
+// -----
+
+bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
+
+void sNextStartAt(ZTime iSystemTime,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
+
+void sNextStartIn(double iInterval,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
 } // namespace ZooLib
 

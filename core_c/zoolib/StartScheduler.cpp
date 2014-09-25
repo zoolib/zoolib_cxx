@@ -56,20 +56,6 @@ void StartScheduler::NextStartAt(ZTime iSystemTime, const Job& iJob)
 void StartScheduler::NextStartIn(double iInterval, const Job& iJob)
 	{ this->pNextStartAt(ZTime::sSystem() + iInterval, iJob); }
 
-bool StartScheduler::Cancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
-	{ return this->Cancel(Job(iStarter, iCallable)); }
-
-void StartScheduler::NextStartAt(ZTime iSystemTime,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
-	{ this->pNextStartAt(iSystemTime, Job(iStarter, iCallable)); }
-
-void StartScheduler::NextStartIn(double iInterval,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
-	{ this->pNextStartAt(ZTime::sSystem() + iInterval, Job(iStarter, iCallable)); }
-
-bool StartScheduler::WillStart(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
-	{ return this->WillStart(Job(iStarter, iCallable)); }
-
 void StartScheduler::pNextStartAt(ZTime iSystemTime, const Job& iJob)
 	{
 	ZAssert(iJob.first);
@@ -164,5 +150,17 @@ void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob)
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
 	{ sSingleton<StartScheduler>().NextStartIn(iInterval, iJob); }
 
+// -----
+
+bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ return sCancel(StartScheduler::Job(iStarter, iCallable)); }
+
+void sNextStartAt(ZTime iSystemTime,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ sNextStartAt(iSystemTime, StartScheduler::Job(iStarter, iCallable)); }
+
+void sNextStartIn(double iInterval,
+	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	{ sNextStartIn(iInterval, StartScheduler::Job(iStarter, iCallable)); }
 
 } // namespace ZooLib
