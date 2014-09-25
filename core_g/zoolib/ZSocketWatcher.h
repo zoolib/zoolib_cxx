@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSocketWatcher_h__
 #include "zconfig.h"
 
-#include "zoolib/Caller.h"
+#include "zoolib/Callable.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread.h"

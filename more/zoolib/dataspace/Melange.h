@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Melange_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Caller.h"
+#include "zoolib/Starter.h"
 
 #include "zoolib/ZMulti_T.h"
 
@@ -41,7 +41,7 @@ typedef Callable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDaton
 typedef ZMulti_T3<
 	ZRef<RelsWatcher::Callable_Register>,
 	ZRef<Callable_DatonSetUpdate>,
-	ZRef<Caller>
+	ZRef<Starter>
 	> Melange_t;
 
 typedef Callable<Melange_t()> MelangeFactory;

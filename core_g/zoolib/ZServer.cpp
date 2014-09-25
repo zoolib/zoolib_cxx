@@ -53,11 +53,11 @@ bool ZServer::IsStarted()
 	return fFactory;
 	}
 
-void ZServer::Start(ZRef<Caller> iCaller,
+void ZServer::Start(ZRef<Starter> iStarter,
 	ZRef<ZStreamerRWFactory> iFactory,
 	ZRef<Callable_Connection> iCallable_Connection)
 	{
-	ZAssert(iCaller);
+	ZAssert(iStarter);
 	ZAssert(iFactory);
 
 	// Declared before the acq, so it goes out of scope after it, and any
@@ -80,7 +80,7 @@ void ZServer::Start(ZRef<Caller> iCaller,
 		sCallable(sWeakRef(this), &ZServer::pWork),
 		sCallable(sWeakRef(this), &ZServer::pWorkDetached));
 
-	fWorker->Attach(iCaller);
+	fWorker->Attach(iStarter);
 
 	fWorker->Wake();
 	}
