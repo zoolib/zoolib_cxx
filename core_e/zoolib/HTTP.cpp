@@ -178,7 +178,7 @@ void Response::Send(const ChanW_Bin& iChanW) const
 	else
 		sWriteMust("HTTP/1.0 ", iChanW);
 
-	sWriteMustf(iChanW, "%d", fResult);
+	sWritefMust(iChanW, "%d", fResult);
 	if (not fMessage.empty())
 		{
 		sWriteMust(" ", iChanW);
@@ -1270,7 +1270,7 @@ bool sParseURL(const string& iURL,
 		hostAndPort = iURL.substr(start, slashOffset - start);
 		if (oPath)
 			*oPath = iURL.substr(min(iURL.size(), slashOffset));
-		start = slashOffset;
+		// start = slashOffset;
 		}
 	else
 		{
@@ -1655,14 +1655,14 @@ void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
 	}
 
 void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW)
-	{ sWriteMustf(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
+	{ sWritefMust(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
 
 void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	{
-	sWriteMustf(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
+	sWritefMust(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
 	sWriteMust("Content-Type: text/plain\r\n", iChanW);
 	sWriteMust("\r\n", iChanW);
-	sWriteMustf(iChanW, "Error %d", iError);
+	sWritefMust(iChanW, "Error %d", iError);
 	}
 
 

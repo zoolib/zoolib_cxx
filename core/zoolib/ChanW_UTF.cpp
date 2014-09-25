@@ -224,7 +224,7 @@ void sWriteMust(const string8& iString, const ChanW_UTF& iChanW)
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
 substitution is applied to the string before writing.
 */
-void sWriteMustf(const ChanW_UTF& iChanW,
+void sWritefMust(const ChanW_UTF& iChanW,
 	const UTF8* iString, ...)
 	{
 	va_list args;
@@ -250,7 +250,7 @@ void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	va_end(args);
 	}
 
-void sWriteMustv(const ChanW_UTF& iChanW,
+void sWritevMust(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs)
 	{
 	size_t countCU_Produced, count_CUWritten;

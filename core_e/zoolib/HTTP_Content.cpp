@@ -166,7 +166,7 @@ size_t ChanW_Bin_Chunked::QWrite(const byte* iSource, size_t iCount)
 			{
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
-			sWriteMustf(fChanW, "%X\r\n", fBufferUsed + iCount);
+			sWritefMust(fChanW, "%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
 			sWriteMust(&fBuffer[0], fBufferUsed, fChanW);
 			fBufferUsed = 0;
@@ -198,7 +198,7 @@ void ChanW_Bin_Chunked::pFlush()
 	if (const size_t bufferUsed = fBufferUsed)
 		{
 		fBufferUsed = 0;
-		sWriteMustf(fChanW, "%X\r\n", bufferUsed);
+		sWritefMust(fChanW, "%X\r\n", bufferUsed);
 		sWriteMust(&fBuffer[0], bufferUsed, fChanW);
 		sWriteMust("\r\n", fChanW);
 		}

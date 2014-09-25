@@ -652,10 +652,10 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			sWriteMustf(s, "( // %lld bytes", theSize);
+			sWritefMust(s, "( // %lld bytes", theSize);
 
 			if (countRemaining < theSize)
-				sWriteMustf(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+				sWritefMust(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
 			spWriteLFIndent(iLevel, iOptions, s);
 			if (iOptions.fRawAsASCII)
