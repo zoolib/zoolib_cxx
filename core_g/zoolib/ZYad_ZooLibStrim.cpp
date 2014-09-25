@@ -678,10 +678,10 @@ static void spToStrim_Stream(const ChanW_UTF& s, const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			sWriteMustf(s, "( // %lld bytes", theSize);
+			sWritefMust(s, "( // %lld bytes", theSize);
 
 			if (countRemaining < theSize)
-				sWriteMustf(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
+				sWritefMust(s, " (truncated at %lld bytes)", iOptions.fRawSizeCap.Get());
 
 			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
@@ -819,59 +819,59 @@ static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iVal,
 #endif
 	else if (const uint64* theValue = iVal.PGet<uint64>())
 		{
-		sWriteMustf(s, "ID(0x%0llX)", *theValue);
+		sWritefMust(s, "ID(0x%0llX)", *theValue);
 		}
 	else if (const char* theValue = iVal.PGet<char>())
 		{
-		sWriteMustf(s, "int8(%d)", *theValue);
+		sWritefMust(s, "int8(%d)", *theValue);
 		}
 	else if (const unsigned char* theValue = iVal.PGet<unsigned char>())
 		{
-		sWriteMustf(s, "int8(%d)", *theValue);
+		sWritefMust(s, "int8(%d)", *theValue);
 		}
 	else if (const signed char* theValue = iVal.PGet<signed char>())
 		{
-		sWriteMustf(s, "int8(%d)", *theValue);
+		sWritefMust(s, "int8(%d)", *theValue);
 		}
 	else if (const short* theValue = iVal.PGet<short>())
 		{
-		sWriteMustf(s, "int16(%d)", *theValue);
+		sWritefMust(s, "int16(%d)", *theValue);
 		}
 	else if (const unsigned short* theValue = iVal.PGet<unsigned short>())
 		{
-		sWriteMustf(s, "int16(%d)", *theValue);
+		sWritefMust(s, "int16(%d)", *theValue);
 		}
 	else if (const int* theValue = iVal.PGet<int>())
 		{
 		if (ZIntIs32Bit)
-			sWriteMustf(s, "int32(%d)", *theValue);
+			sWritefMust(s, "int32(%d)", *theValue);
 		else
-			sWriteMustf(s, "int64(%lld)", int64(*theValue));
+			sWritefMust(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
 		if (ZIntIs32Bit)
-			sWriteMustf(s, "int32(%d)", *theValue);
+			sWritefMust(s, "int32(%d)", *theValue);
 		else
-			sWriteMustf(s, "int64(%lld)", int64(*theValue));
+			sWritefMust(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const long* theValue = iVal.PGet<long>())
 		{
 		if (ZLongIs32Bit)
-			sWriteMustf(s, "int32(%ld)", *theValue);
+			sWritefMust(s, "int32(%ld)", *theValue);
 		else
-			sWriteMustf(s, "int64(%lld)", int64(*theValue));
+			sWritefMust(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
 		if (ZLongIs32Bit)
-			sWriteMustf(s, "int32(%ld)", long(*theValue));
+			sWritefMust(s, "int32(%ld)", long(*theValue));
 		else
-			sWriteMustf(s, "int64(%lld)", int64(*theValue));
+			sWritefMust(s, "int64(%lld)", int64(*theValue));
 		}
 	else if (const int64* theValue = iVal.PGet<int64>())
 		{
-		sWriteMustf(s, "int64(%lld)", *theValue);
+		sWritefMust(s, "int64(%lld)", *theValue);
 		}
 	else if (const bool* theValue = iVal.PGet<bool>())
 		{
@@ -908,11 +908,11 @@ static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iVal,
 		}
 	else if (const VoidStar_t* theValue = iVal.PGet<VoidStar_t>())
 		{
-		sWriteMustf(s, "pointer(%p)", *theValue);
+		sWritefMust(s, "pointer(%p)", *theValue);
 		}
 	else if (const ZRectPOD* theValue = iVal.PGet<ZRectPOD>())
 		{
-		sWriteMustf(s, "Rect(%d, %d, %d, %d)",
+		sWritefMust(s, "Rect(%d, %d, %d, %d)",
 			theValue->left,
 			theValue->top,
 			theValue->right,
@@ -920,14 +920,14 @@ static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iVal,
 		}
 	else if (const ZPointPOD* theValue = iVal.PGet<ZPointPOD>())
 		{
-		sWriteMustf(s, "Point(%d, %d)",
+		sWritefMust(s, "Point(%d, %d)",
 			theValue->h,
 			theValue->v);
 		}
 	else if (const ZRef<ZCounted>* theValue =
 		iVal.PGet<ZRef<ZCounted> >())
 		{
-		sWriteMustf(s, "RefCounted(%p)", theValue->Get());
+		sWritefMust(s, "RefCounted(%p)", theValue->Get());
 		}
 	else
 		{
