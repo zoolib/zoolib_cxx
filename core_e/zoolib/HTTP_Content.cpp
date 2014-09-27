@@ -236,8 +236,17 @@ ZRef<ChannerR_Bin> sMakeContentChanner(
 	const std::string& iMethod, int iResponseCode,
 	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	if (iMethod == "HEAD" || (iMethod == "GET" && iResponseCode == 304))
+	if (iMethod == "HEAD")
 		return sChanner_T<ChanR_XX_Null<byte> >();
+
+	if (iMethod == "GET" && iResponseCode == 304)
+		{
+		// RFC 2616, section 10.3.5. 
+		// "The 304 response MUST NOT contain a message-body, and thus is
+		// always terminated by the first empty line after the header fields."
+		return sChanner_T<ChanR_XX_Null<byte> >();
+		}
+
 	return sMakeContentChanner(iHeader, iChannerR);
 	}
 
