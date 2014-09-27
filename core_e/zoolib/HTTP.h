@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_HTTP_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanU.h"
+#include "zoolib/ChanW_Bin.h"
+
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZVal_Any.h"
 
