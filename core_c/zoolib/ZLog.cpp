@@ -113,12 +113,14 @@ string sNameFromPriority(EPriority iPriority)
 StrimW::StrimW(EPriority iPriority, const string& iName_String)
 :	fPriority(iPriority)
 ,	fName_StringQ(iName_String)
+,	fLine(-1)
 ,	fOutdent(false)
 	{}
 
-StrimW::StrimW(EPriority iPriority, const char* iName_CharStar)
+StrimW::StrimW(EPriority iPriority, const char* iName_CharStar, int iLine)
 :	fPriority(iPriority)
 ,	fName_CharStarQ(iName_CharStar)
+,	fLine(iLine)
 ,	fOutdent(false)
 	{}
 
@@ -204,7 +206,10 @@ void StrimW::pEmit()
 	size_t theDepth = CallDepth::sCountActive();
 	if (fOutdent and theDepth > 0)
 		theDepth -= 1;
-	sLogIt(fPriority, *fName_StringQ, theDepth, *fMessageQ);
+	if (fLine <= 0)
+		sLogIt(fPriority, *fName_StringQ, theDepth, *fMessageQ);
+	else
+		sLogIt(fPriority, *fName_StringQ + sStringf(":%d", fLine), theDepth, *fMessageQ);
 	}
 
 // =================================================================================================

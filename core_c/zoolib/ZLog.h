@@ -46,10 +46,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // f == facility
 
 #define ZLOGPF(s, p) const ZooLib::ZLog::S& s = \
-	ZooLib::ZLog::S(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
+	ZooLib::ZLog::S(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION, __LINE__)
 
 #define ZLOGF(s, p) const ZooLib::ZLog::S& s = \
-	ZooLib::ZLog::S(ZooLib::ZLog::p, __FUNCTION__)
+	ZooLib::ZLog::S(ZooLib::ZLog::p, __FUNCTION__, __LINE__)
 
 #define ZLOG(s, p, f) const ZooLib::ZLog::S& s = \
 	ZooLib::ZLog::S(ZooLib::ZLog::p, f)
@@ -120,7 +120,7 @@ class StrimW : public ZStrimW
 	{
 public:
 	StrimW(EPriority iPriority, const std::string& iName_String);
-	StrimW(EPriority iPriority, const char* iName_CharStar);
+	StrimW(EPriority iPriority, const char* iName_CharStar, int iLine = -1);
 	~StrimW();
 
 // From ZStrimW
@@ -139,6 +139,7 @@ private:
 	const int fPriority;
 	mutable ZQ<std::string> fName_StringQ;
 	const ZQ<const char*> fName_CharStarQ;
+	const int fLine;
 	mutable ZQ<std::string> fMessageQ;
 
 public:
