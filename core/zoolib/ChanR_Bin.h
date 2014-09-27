@@ -89,8 +89,22 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 #endif
 
 template <class T>
-ZQ<T> sQRead(const ChanR_Bin& iChanR)
-	{ return sQReadBE<T>(iChanR); }
+T sReadBE(const ChanR_Bin& iChanR)
+	{
+	ZQ<T> theQ = sQReadBE<T>(iChanR);
+	if (not theQ)
+		sThrow_ExhaustedR();
+	return *theQ;
+	}
+
+template <class T>
+T sReadLE(const ChanR_Bin& iChanR)
+	{
+	ZQ<T> theQ = sQReadLE<T>(iChanR);
+	if (not theQ)
+		sThrow_ExhaustedR();
+	return *theQ;
+	}
 
 } // namespace ZooLib
 
