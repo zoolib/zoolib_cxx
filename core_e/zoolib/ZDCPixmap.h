@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmap_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Multi.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZDCPixmapNS.h"
-#include "zoolib/ZMulti_T.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
@@ -260,13 +261,13 @@ public:
 	static bool sCheckAccessEnabled() { return false; }
 
 // Factories
-	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZRectPOD, ZDCPixmapNS::PixelDesc>
+	typedef Multi3<ZRef<ZDCPixmapRaster>, ZRectPOD, ZDCPixmapNS::PixelDesc>
 		CreateRaster_t;
 
 	static ZRef<ZDCPixmapRep> sCreate(const ZRef<ZDCPixmapRaster>& iRaster,
 		const ZRectPOD& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
-	typedef ZMulti_T3<ZDCPixmapNS::RasterDesc, ZRectPOD, ZDCPixmapNS::PixelDesc>
+	typedef Multi3<ZDCPixmapNS::RasterDesc, ZRectPOD, ZDCPixmapNS::PixelDesc>
 		CreateRasterDesc_t;
 
 	static ZRef<ZDCPixmapRep> sCreate(const ZDCPixmapNS::RasterDesc& iRasterDesc,

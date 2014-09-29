@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Internet_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZMulti_T.h"
+#include "zoolib/Multi.h"
+
 #include "zoolib/ZNet.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZStdInt.h"
@@ -123,7 +124,7 @@ class ZNetName_Internet
 :	public ZNetName
 	{
 public:
-	typedef ZMulti_T3<std::string, ip_port, size_t> LookupParam_t;
+	typedef Multi3<std::string, ip_port, size_t> LookupParam_t;
 
 	ZNetName_Internet(const std::string& iName, ip_port iPort);
 	virtual ~ZNetName_Internet();
@@ -148,9 +149,9 @@ class ZNetListener_TCP
 :	public virtual ZNetListener
 	{
 public:
-	typedef ZMulti_T1<ip_port> MakeParam_t;
-	typedef ZMulti_T2<ip4_addr, ip_port> MakeParam4_t;
-	typedef ZMulti_T2<ip6_addr, ip_port> MakeParam6_t;
+	typedef Multi1<ip_port> MakeParam_t;
+	typedef Multi2<ip4_addr, ip_port> MakeParam4_t;
+	typedef Multi2<ip6_addr, ip_port> MakeParam6_t;
 
 	virtual ip_port GetPort() = 0;
 
@@ -166,8 +167,8 @@ class ZNetEndpoint_TCP
 :	public virtual ZNetEndpoint
 	{
 public:
-	typedef ZMulti_T2<ip4_addr, ip_port> MakeParam4_t;
-	typedef ZMulti_T2<ip6_addr, ip_port> MakeParam6_t;
+	typedef Multi2<ip4_addr, ip_port> MakeParam4_t;
+	typedef Multi2<ip6_addr, ip_port> MakeParam6_t;
 
 	static ZRef<ZNetEndpoint_TCP> sCreateConnected(ip4_addr iRemoteAddr, ip_port iRemotePort);
 	static ZRef<ZNetEndpoint_TCP> sCreateConnected(ip6_addr iRemoteAddr, ip_port iRemotePort);

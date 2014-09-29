@@ -74,7 +74,7 @@ void RowBoat::pChanged(
 
 	vector<size_t> theRemoved;
 	vector<std::pair<size_t,size_t> > theAdded;
-	vector<ZMulti_T3<size_t,size_t,size_t> > theChanged;
+	vector<Multi3<size_t,size_t,size_t> > theChanged;
 
 	fResultDiffer.Apply(iResult, &priorResult,
 		&theRemoved, &theAdded, &theChanged);

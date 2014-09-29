@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Local_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZMulti_T.h"
+#include "zoolib/Multi.h"
+
 #include "zoolib/ZNet.h"
 
 #include <string>
@@ -80,7 +81,7 @@ private:
 class ZNetListener_Local : public virtual ZNetListener
 	{
 public:
-	typedef ZMulti_T1<std::string> MakeParam_t;
+	typedef Multi1<std::string> MakeParam_t;
 
 	static ZRef<ZNetListener_Local> sCreate(
 		const std::string& iPath);
@@ -92,7 +93,7 @@ public:
 class ZNetEndpoint_Local : public virtual ZNetEndpoint
 	{
 public:
-	typedef ZMulti_T1<std::string> MakeParam_t;
+	typedef Multi1<std::string> MakeParam_t;
 
 	static ZRef<ZNetEndpoint_Local> sCreateConnected(const std::string& iPath);
 	};

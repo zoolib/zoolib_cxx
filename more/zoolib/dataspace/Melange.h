@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Melange_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Multi.h"
 #include "zoolib/Starter.h"
-
-#include "zoolib/ZMulti_T.h"
 
 #include "zooLib/dataspace/RelsWatcher.h"
 #include "zoolib/datonset/ZDatonSet.h"
@@ -38,7 +37,7 @@ namespace Dataspace {
 typedef Callable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
 	Callable_DatonSetUpdate;
 
-typedef ZMulti_T3<
+typedef Multi3<
 	ZRef<RelsWatcher::Callable_Register>,
 	ZRef<Callable_DatonSetUpdate>,
 	ZRef<Starter>

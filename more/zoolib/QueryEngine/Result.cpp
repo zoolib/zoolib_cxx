@@ -154,7 +154,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	ZRef<Result>* oPrior,
 	vector<size_t>* oRemoved,
 	vector<pair<size_t,size_t> >* oAdded,
-	vector<ZMulti_T3<size_t,size_t,size_t> >* oChanged)
+	vector<Multi3<size_t,size_t,size_t> >* oChanged)
 	{
 	const RelHead& theRH = iResult->GetRelHead();
 
@@ -300,7 +300,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 					// reference the same entity, but differ in the significant portion, thus
 					// this is a change.
 					oChanged->push_back(
-						ZMulti_T3<size_t,size_t,size_t>(
+						Multi3<size_t,size_t,size_t>(
 							theIndex_New, fSort_Prior[theIndex_Prior], theSort_New[theIndex_New]));
 					}
 				++theIndex_New;

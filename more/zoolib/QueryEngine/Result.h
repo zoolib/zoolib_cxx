@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define  __ZooLib_QueryEngine_Result_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Multi.h"
+
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZMulti_T.h"
 #include "zoolib/ZVal_Any.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
@@ -73,7 +74,7 @@ public:
 		ZRef<Result>* oPrior,
 		std::vector<size_t>* oRemoved,
 		std::vector<std::pair<size_t,size_t> >* oAdded,
-		std::vector<ZMulti_T3<size_t,size_t,size_t> >* oChanged);
+		std::vector<Multi3<size_t,size_t,size_t> >* oChanged);
 
 private:
 	const RelationalAlgebra::RelHead fIdentity;

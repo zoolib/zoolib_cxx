@@ -49,9 +49,12 @@ public:
 	const ZRef<ZStreamerWCon> fSWCon;
 	};
 
-static
-ZRef<ChannerClose> spChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
-	{ return new ChannerClose_RWCon(iSWCon); }
+ZQ<Connection_t> sAsConnectionQ(const ZRef<ZStreamerRWCon>& iSRWCon)
+	{
+	if (iSRWCon)
+		return Connection_t(iSRWCon, iSRWCon, new ChannerClose_RWCon(iSRWCon));
+	return null;
+	}
 
 ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
@@ -60,7 +63,7 @@ ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 		if (iUseSSL)
 			theEP = sStreamerRWCon_SSL(theEP, theEP);
 
-		return Connection_t(theEP, theEP, spChannerClose_RWCon(theEP));
+		return sAsConnectionQ(theEP);
 		}
 	return null;
 	}

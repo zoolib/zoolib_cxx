@@ -24,13 +24,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 #include "zoolib/Channer_Bin.h"
+#include "zoolib/Multi.h"
 
-#include "zoolib/ZMulti_T.h"
+#include "zoolib/ZStreamer.h"
 
 namespace ZooLib {
 namespace HTTP {
 
-typedef ZMulti_T3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > Connection_t;
+typedef Multi3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > Connection_t;
+
+ZQ<Connection_t> sAsConnectionQ(const ZRef<ZStreamerRWCon>& iSRWCon);
 
 // =================================================================================================
 // MARK: - HTTP
