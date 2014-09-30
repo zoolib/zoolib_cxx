@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_SafeSet_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/DList.h"
+
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZDList.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZThread.h"
 

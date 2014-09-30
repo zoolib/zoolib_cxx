@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Relater_Union_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZDList.h"
+#include "zoolib/DList.h"
 
 #include "zoolib/dataspace/Relater.h"
 #include "zoolib/QueryEngine/Walker.h"
