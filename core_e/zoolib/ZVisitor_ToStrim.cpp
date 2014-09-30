@@ -66,9 +66,9 @@ void ZVisitor_ToStrim::Visit(const ZRef<ZVisitee>& iRep)
 void ZVisitor_ToStrim::ToStrim(
 	const Options& iOptions, const ChanW_UTF& iStrimW, const ZRef<ZVisitee>& iRep)
 	{
-	ZSaveSetRestore_T<const Options*> ssr1(fOptions, &iOptions);
-	ZSaveSetRestore_T<const ChanW_UTF*> ssr2(fStrimW, &iStrimW);
-	ZSaveSetRestore_T<size_t> ssr3(fIndent, iOptions.fInitialIndent);
+	SaveSetRestore<const Options*> ssr1(fOptions, &iOptions);
+	SaveSetRestore<const ChanW_UTF*> ssr2(fStrimW, &iStrimW);
+	SaveSetRestore<size_t> ssr3(fIndent, iOptions.fInitialIndent);
 
 	this->pToStrim(iRep);
 	}
