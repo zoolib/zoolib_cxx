@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/SocketWatcher.h"
+
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZSocketWatcher.h"
 
 // We may want to override FD_SETSIZE, so we can handle > 1024 fds at once.
 
@@ -44,13 +45,13 @@ using std::pair;
 using std::set;
 
 // =================================================================================================
-// MARK: - ZSocketWatcher
+// MARK: - SocketWatcher
 
-ZSocketWatcher::ZSocketWatcher()
+SocketWatcher::SocketWatcher()
 :	fThreadRunning(false)
 	{}
 
-bool ZSocketWatcher::QInsert(const Pair_t& iPair)
+bool SocketWatcher::QInsert(const Pair_t& iPair)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not fSet.insert(iPair).second)
@@ -59,25 +60,25 @@ bool ZSocketWatcher::QInsert(const Pair_t& iPair)
 	if (not fThreadRunning)
 		{
 		fThreadRunning = true;
-		ZThread::sCreate_T<ZSocketWatcher*>(spRun, this);
+		ZThread::sCreate_T<SocketWatcher*>(spRun, this);
 		}
 	fCnd.Broadcast();
 	return true;
 	}
 
-bool ZSocketWatcher::QErase(const Pair_t& iPair)
+bool SocketWatcher::QErase(const Pair_t& iPair)
 	{
 	ZAcqMtx acq(fMtx);
 	return fSet.erase(iPair);
 	}
 
-bool ZSocketWatcher::QInsert(int iSocket, const ZRef<Callable_Void>& iCallable)
+bool SocketWatcher::QInsert(int iSocket, const ZRef<Callable_Void>& iCallable)
 	{ return this->QInsert(Pair_t(iSocket, iCallable)); }
 
-bool ZSocketWatcher::QErase(int iSocket, const ZRef<Callable_Void>& iCallable)
+bool SocketWatcher::QErase(int iSocket, const ZRef<Callable_Void>& iCallable)
 	{ return this->QErase(Pair_t(iSocket, iCallable)); }
 
-void ZSocketWatcher::pRun()
+void SocketWatcher::pRun()
 	{
 	ZGuardMtx guard(fMtx);
 	for (;;)
@@ -166,9 +167,9 @@ void ZSocketWatcher::pRun()
 		}
 	}
 
-void ZSocketWatcher::spRun(ZSocketWatcher* iSocketWatcher)
+void SocketWatcher::spRun(SocketWatcher* iSocketWatcher)
 	{
-	ZThread::sSetName("ZSocketWatcher");
+	ZThread::sSetName("SocketWatcher");
 
 	iSocketWatcher->pRun();
 	}

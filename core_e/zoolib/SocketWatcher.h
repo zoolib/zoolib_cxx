@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSocketWatcher_h__
-#define __ZSocketWatcher_h__
+#ifndef __ZooLib_SocketWatcher_h__
+#define __ZooLib_SocketWatcher_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
@@ -32,17 +32,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZSocketWatcher
+// MARK: - SocketWatcher
 
-class ZSocketWatcher
+class SocketWatcher
 :	NonCopyable
 	{
 public:
-	ZSocketWatcher();
+	SocketWatcher();
 
 	typedef std::pair<int,ZRef<Callable_Void> > Pair_t;
 
 // -----
+
 	bool QInsert(const Pair_t& iPair);
 	bool QErase(const Pair_t& iPair);
 
@@ -53,7 +54,7 @@ public:
 
 private:
 	void pRun();
-	static void spRun(ZSocketWatcher*);
+	static void spRun(SocketWatcher* iSocketWatcher);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
@@ -65,4 +66,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZSocketWatcher_h__
+#endif // __ZooLib_SocketWatcher_h__

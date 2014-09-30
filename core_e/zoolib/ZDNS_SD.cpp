@@ -20,10 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Singleton.h"
+#include "zoolib/SocketWatcher.h"
 
 #include "zoolib/ZDNS_SD.h"
 #include "zoolib/ZNet_Socket.h"
-#include "zoolib/ZSocketWatcher.h"
 
 #include "zoolib/ZLog.h"
 
@@ -54,7 +54,7 @@ void DNSService::Finalize()
 	ZGuardMtxR guard(fMtxR);
 	if (fDNSServiceRef)
 		{
-		sSingleton<ZSocketWatcher>().QErase(
+		sSingleton<SocketWatcher>().QErase(
 			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
 		::DNSServiceRefDeallocate(fDNSServiceRef);
 		fDNSServiceRef = nullptr;
@@ -84,7 +84,7 @@ void DNSService::pWatchSocket()
 	{
 	if (fDNSServiceRef)
 		{
-		sSingleton<ZSocketWatcher>().QInsert(
+		sSingleton<SocketWatcher>().QInsert(
 			DNSServiceRefSockFD(fDNSServiceRef), fCallable_SocketReadable);
 		}
 	}
