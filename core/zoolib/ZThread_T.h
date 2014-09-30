@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZThread_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/DList.h"
+
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZDList.h"
 #include "zoolib/ZTime.h"
 
 namespace ZooLib {

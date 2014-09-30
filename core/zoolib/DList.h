@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDList_h__
-#define __ZDList_h__
+#ifndef __ZooLib_DList_h__
+#define __ZooLib_DList_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
@@ -416,4 +416,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZDList_h__
+#endif // __ZooLib_DList_h__
