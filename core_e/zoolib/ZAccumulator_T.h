@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZAccumulator_T_h__
 #define __ZAccumulator_T_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZStdInt.h"
+#include "zoolib/ZStdInt.h" // For uint32
 
 namespace ZooLib {
 

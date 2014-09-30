@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-#include "zoolib/ZStdInt.h" // For size_t
+#include "zoolib/size_t.h" // For size_t
 
 namespace ZooLib {
 namespace ZUtil_POSIXFD {

@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Memory.h" // For sMemCompare
+#include "zoolib/size_t.h" // For size_t
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_string.h"
-#include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {
 

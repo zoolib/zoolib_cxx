@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/size_t.h" // For size_t
+
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZStdInt.h"
 
 #include <stdio.h>
 #include <stdlib.h> // For abort

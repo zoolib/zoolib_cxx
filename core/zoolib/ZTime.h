@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZStdInt.h"
 
 namespace ZooLib {
 
