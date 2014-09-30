@@ -470,10 +470,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#define ZMACRO_Stringify(a) #a
-
-// =================================================================================================
-
 #ifndef ZMACRO_Attribute_Format_Printf
 	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 		#define ZMACRO_Attribute_Format_Printf(m,n) __attribute__((format(printf,m,n)))

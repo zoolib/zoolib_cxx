@@ -24,8 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(Compiler, MSVC) || ZCONFIG(Compiler, CodeWarrior)
 
+	#define ZMACRO_WinCOM_Stringify(a) #a
+
 	#define ZMACRO_WinCOM_Class(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		MIDL_INTERFACE(ZMACRO_Stringify(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
+		MIDL_INTERFACE( \
+			ZMACRO_WinCOM_Stringify(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
 		className : public baseClass {
 
 	#define ZMACRO_WinCOM_Definition(className)
