@@ -197,5 +197,5 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, void* iVal)
 	return w;
 	}
 
-} // namespace ZUtil_Strim_Operators
+} // namespace Util_Chan_UTF_Operators
 } // namespace ZooLib
