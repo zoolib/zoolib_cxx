@@ -35,8 +35,13 @@ public:
 		{
 		if (iCallable)
 			{
-			sStartOnNewThread(iCallable);
-			return true;
+			try
+				{
+				sStartOnNewThread(iCallable);
+				return true;
+				}
+			catch (...)
+				{}
 			}
 		return false;
 		}
