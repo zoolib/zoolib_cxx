@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/UniSet.h"
+
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUniSet_T.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -123,7 +124,7 @@ class Transform_Search
 public:
 	Transform_Search()
 	:	fRestriction(sTrue())
-	,	fProjection(ZUniSet_T<ColName>::sUniversal())
+	,	fProjection(UniSet<ColName>::sUniversal())
 		{}
 
 	virtual void Visit(const ZRef<ZVisitee>& iRep)
@@ -139,8 +140,8 @@ public:
 
 		// Similarly with projection -- we don't know what names we'll be
 		// referencing from our descendants.
-		const ZUniSet_T<ColName> priorProjection = fProjection;
-		fProjection = ZUniSet_T<ColName>::sUniversal();
+		const UniSet<ColName> priorProjection = fProjection;
+		fProjection = UniSet<ColName>::sUniversal();
 
 		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		ZRef<RA::Expr_Rel> newCalc = new RA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
@@ -217,9 +218,9 @@ public:
 		ZRef<Expr_Rel> newOp1;
 
 		{
-		ZSaveSetRestore_T<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
-		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr1(fProjection, ZUniSet_T<ColName>::sUniversal());
-		ZSaveSetRestore_T<Rename> ssr2(fRename, Rename());
+		SaveSetRestore<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
+		SaveSetRestore<Rename> ssr2(fRename, Rename());
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
@@ -227,8 +228,8 @@ public:
 
 		ZRef<RA::Expr_Rel> newEmbed;
 		{
-		ZSaveSetRestore_T<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
-		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr1(fProjection, ZUniSet_T<ColName>::sUniversal());
+		SaveSetRestore<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
 		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
 		}
@@ -241,14 +242,14 @@ public:
 		{
 		// Remember curent state
 		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
-		const ZUniSet_T<ColName> priorProjection = fProjection;
+		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename = fRename;
 
 		// We leave rename in place to be used by children,
 		// but reset the restriction and projection -- children will see only any
 		// restriction/projection that exists on their own branch.
 		fRestriction = sTrue();
-		fProjection = ZUniSet_T<ColName>::sUniversal();
+		fProjection = UniSet<ColName>::sUniversal();
 
 		// Process the left branch.
 		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
@@ -258,7 +259,7 @@ public:
 		// Projection, rename and restriction may have been touched, so reset things
 		// to the same state for the right branch as for the left.
 		fRestriction = sTrue();
-		fProjection = ZUniSet_T<ColName>::sUniversal();
+		fProjection = UniSet<ColName>::sUniversal();
 		fRename = priorRename;
 
 		// Process the right branch.
@@ -282,7 +283,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
 		{
-		ZSaveSetRestore_T<ZUniSet_T<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
+		SaveSetRestore<UniSet<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
@@ -365,7 +366,7 @@ public:
 		}
 
 	ZRef<ZExpr_Bool> fRestriction;
-	ZUniSet_T<ColName> fProjection;
+	UniSet<ColName> fProjection;
 	Rename fRename;
 	ZQ<double> fLikelySize;
 	};

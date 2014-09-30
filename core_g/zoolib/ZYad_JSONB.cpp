@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/NameUniquifier.h" // For sName
 
-#include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZYad_Any.h"

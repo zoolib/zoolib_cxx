@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUniSet_T_h__
-#define __ZUniSet_T_h__ 1
+#ifndef __ZooLib_UniSet_h__
+#define __ZooLib_UniSet_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZUtil_STL_set.h"
@@ -27,67 +27,67 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZUniSet_T declaration
+// MARK: - UniSet declaration
 
 template <class T>
-class ZUniSet_T
+class UniSet
 	{
-	explicit ZUniSet_T(bool iUniversal, std::set<T>* ioElems);
+	explicit UniSet(bool iUniversal, std::set<T>* ioElems);
 
 public:
 	typedef T key_type;
 	typedef T value_type;
 
-	void swap(ZUniSet_T& iOther);
+	void swap(UniSet& iOther);
 
-	ZUniSet_T();
-	ZUniSet_T(const ZUniSet_T& iOther);
-	~ZUniSet_T();
-	ZUniSet_T& operator=(const ZUniSet_T& iOther);
+	UniSet();
+	UniSet(const UniSet& iOther);
+	~UniSet();
+	UniSet& operator=(const UniSet& iOther);
 
-	static ZUniSet_T sUniversal();
+	static UniSet sUniversal();
 
-	ZUniSet_T(const std::set<T>& iElems);
-	ZUniSet_T(bool iUniversal, const std::set<T>& iElems);
+	UniSet(const std::set<T>& iElems);
+	UniSet(bool iUniversal, const std::set<T>& iElems);
 
-	ZUniSet_T(const T& iElem);
+	UniSet(const T& iElem);
 
-	ZUniSet_T(const T& iElem1, const T& iElem2);
-
-	template <class Iterator>
-	ZUniSet_T(Iterator iBegin, Iterator iEnd);
+	UniSet(const T& iElem1, const T& iElem2);
 
 	template <class Iterator>
-	ZUniSet_T(Iterator iBegin, size_t iCount);
+	UniSet(Iterator iBegin, Iterator iEnd);
 
 	template <class Iterator>
-	ZUniSet_T(bool iUniversal, Iterator iBegin, Iterator iEnd);
+	UniSet(Iterator iBegin, size_t iCount);
 
 	template <class Iterator>
-	ZUniSet_T(bool iUniversal, Iterator iBegin, size_t count);
+	UniSet(bool iUniversal, Iterator iBegin, Iterator iEnd);
 
-	bool operator==(const ZUniSet_T& iOther) const;
-	bool operator!=(const ZUniSet_T& iOther) const;
+	template <class Iterator>
+	UniSet(bool iUniversal, Iterator iBegin, size_t count);
 
-	ZUniSet_T& operator&=(const ZUniSet_T& iOther);
-	ZUniSet_T operator&(const ZUniSet_T& iOther) const;
+	bool operator==(const UniSet& iOther) const;
+	bool operator!=(const UniSet& iOther) const;
 
-	ZUniSet_T& operator|=(const ZUniSet_T& iOther);
-	ZUniSet_T operator|(const ZUniSet_T& iOther) const;
+	UniSet& operator&=(const UniSet& iOther);
+	UniSet operator&(const UniSet& iOther) const;
 
-	ZUniSet_T& operator-=(const ZUniSet_T& iOther);
-	ZUniSet_T operator-(const ZUniSet_T& iOther) const;
+	UniSet& operator|=(const UniSet& iOther);
+	UniSet operator|(const UniSet& iOther) const;
 
-	ZUniSet_T& operator^=(const ZUniSet_T& iOther);
-	ZUniSet_T operator^(const ZUniSet_T& iOther) const;
+	UniSet& operator-=(const UniSet& iOther);
+	UniSet operator-(const UniSet& iOther) const;
 
-	bool Contains(const ZUniSet_T& iOther) const;
+	UniSet& operator^=(const UniSet& iOther);
+	UniSet operator^(const UniSet& iOther) const;
+
+	bool Contains(const UniSet& iOther) const;
 	bool Contains(const T& iElem) const;
 
-	ZUniSet_T& Insert(const T& iElem);
+	UniSet& Insert(const T& iElem);
 	bool QInsert(const T& iElem);
 
-	ZUniSet_T& Erase(const T& iElem);
+	UniSet& Erase(const T& iElem);
 	bool QErase(const T& iElem);
 
 	void GetElems(bool& oUniversal, std::set<T>& oElems) const;
@@ -99,16 +99,16 @@ private:
 	};
 
 template <class T>
-ZUniSet_T<T> operator|(const T& iElem, const ZUniSet_T<T>& iUniSet_T);
+UniSet<T> operator|(const T& iElem, const UniSet<T>& iUniSet_T);
 
 template <class T>
-ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T);
+UniSet<T> operator&(const T& iElem, const UniSet<T>& iUniSet_T);
 
 // =================================================================================================
-// MARK: - ZUniSet_T definition
+// MARK: - UniSet definition
 
 template <class T>
-void ZUniSet_T<T>::swap(ZUniSet_T& iOther)
+void UniSet<T>::swap(UniSet& iOther)
 	{
 	using std::swap;
 	swap(fUniversal, iOther.fUniversal);
@@ -116,7 +116,7 @@ void ZUniSet_T<T>::swap(ZUniSet_T& iOther)
 	}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal, std::set<T>* ioElems)
+UniSet<T>::UniSet(bool iUniversal, std::set<T>* ioElems)
 :	fUniversal(iUniversal)
 	{
 	if (ioElems)
@@ -124,22 +124,22 @@ ZUniSet_T<T>::ZUniSet_T(bool iUniversal, std::set<T>* ioElems)
 	}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T()
+UniSet<T>::UniSet()
 :	fUniversal(false)
 	{}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(const ZUniSet_T& iOther)
+UniSet<T>::UniSet(const UniSet& iOther)
 :	fUniversal(iOther.fUniversal)
 ,	fElems(iOther.fElems)
 	{}
 
 template <class T>
-ZUniSet_T<T>::~ZUniSet_T()
+UniSet<T>::~UniSet()
 	{}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::operator=(const ZUniSet_T& iOther)
+UniSet<T>& UniSet<T>::operator=(const UniSet& iOther)
 	{
 	fUniversal = iOther.fUniversal;
 	fElems = iOther.fElems;
@@ -147,29 +147,29 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator=(const ZUniSet_T& iOther)
 	}
 
 template <class T>
-ZUniSet_T<T> ZUniSet_T<T>::sUniversal()
-	{ return ZUniSet_T<T>(true, nullptr); }
+UniSet<T> UniSet<T>::sUniversal()
+	{ return UniSet<T>(true, nullptr); }
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(const std::set<T>& iElems)
+UniSet<T>::UniSet(const std::set<T>& iElems)
 :	fUniversal(false)
 ,	fElems(iElems)
 	{}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal, const std::set<T>& iElems)
+UniSet<T>::UniSet(bool iUniversal, const std::set<T>& iElems)
 :	fUniversal(iUniversal)
 ,	fElems(iElems)
 	{}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(const T& iElem)
+UniSet<T>::UniSet(const T& iElem)
 :	fUniversal(false)
 ,	fElems(&iElem, &iElem + 1)
 	{}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(const T& iElem1, const T& iElem2)
+UniSet<T>::UniSet(const T& iElem1, const T& iElem2)
 :	fUniversal(false)
 	{
 	fElems.insert(iElem1);
@@ -178,131 +178,131 @@ ZUniSet_T<T>::ZUniSet_T(const T& iElem1, const T& iElem2)
 
 template <class T>
 template <class Iterator>
-ZUniSet_T<T>::ZUniSet_T(Iterator iBegin, Iterator iEnd)
+UniSet<T>::UniSet(Iterator iBegin, Iterator iEnd)
 :	fUniversal(false)
 ,	fElems(iBegin, iEnd)
 	{}
 
 template <class T>
 template <class Iterator>
-ZUniSet_T<T>::ZUniSet_T(Iterator iBegin, size_t iCount)
+UniSet<T>::UniSet(Iterator iBegin, size_t iCount)
 :	fUniversal(false)
 ,	fElems(iBegin, iBegin + iCount)
 	{}
 
 template <class T>
 template <class Iterator>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal, Iterator iBegin, Iterator iEnd)
+UniSet<T>::UniSet(bool iUniversal, Iterator iBegin, Iterator iEnd)
 :	fUniversal(iUniversal)
 ,	fElems(iBegin, iEnd)
 	{}
 
 template <class T>
 template <class Iterator>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal, Iterator iBegin, size_t iCount)
+UniSet<T>::UniSet(bool iUniversal, Iterator iBegin, size_t iCount)
 :	fUniversal(iUniversal)
 ,	fElems(iBegin, iBegin + iCount)
 	{}
 
 template <class T>
-bool ZUniSet_T<T>::operator==(const ZUniSet_T& iOther) const
+bool UniSet<T>::operator==(const UniSet& iOther) const
 	{ return fUniversal == iOther.fUniversal && fElems == iOther.fElems; }
 
 template <class T>
-bool ZUniSet_T<T>::operator!=(const ZUniSet_T& iOther) const
+bool UniSet<T>::operator!=(const UniSet& iOther) const
 	{ return fUniversal != iOther.fUniversal || fElems != iOther.fElems; }
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::operator&=(const ZUniSet_T& iOther)
+UniSet<T>& UniSet<T>::operator&=(const UniSet& iOther)
 	{
 	*this = *this & iOther;
 	return *this;
 	}
 
 template <class T>
-ZUniSet_T<T> ZUniSet_T<T>::operator&(const ZUniSet_T& iOther) const
+UniSet<T> UniSet<T>::operator&(const UniSet& iOther) const
 	{
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(true, fElems | iOther.fElems);
+			return UniSet(true, fElems | iOther.fElems);
 		else
-			return ZUniSet_T(false, iOther.fElems - fElems);
+			return UniSet(false, iOther.fElems - fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(false, fElems - iOther.fElems);
+			return UniSet(false, fElems - iOther.fElems);
 		else
-			return ZUniSet_T(false, iOther.fElems & fElems);
+			return UniSet(false, iOther.fElems & fElems);
 		}
 	}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::operator|=(const ZUniSet_T& iOther)
+UniSet<T>& UniSet<T>::operator|=(const UniSet& iOther)
 	{
 	*this = *this | iOther;
 	return *this;
 	}
 
 template <class T>
-ZUniSet_T<T> ZUniSet_T<T>::operator|(const ZUniSet_T& iOther) const
+UniSet<T> UniSet<T>::operator|(const UniSet& iOther) const
 	{
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(true, fElems & iOther.fElems);
+			return UniSet(true, fElems & iOther.fElems);
 		else
-			return ZUniSet_T(true, fElems - iOther.fElems);
+			return UniSet(true, fElems - iOther.fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(true, iOther.fElems - fElems);
+			return UniSet(true, iOther.fElems - fElems);
 		else
-			return ZUniSet_T(false, fElems | iOther.fElems);
+			return UniSet(false, fElems | iOther.fElems);
 		}
 	}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::operator-=(const ZUniSet_T<T>& iOther)
+UniSet<T>& UniSet<T>::operator-=(const UniSet<T>& iOther)
 	{
 	*this = *this - iOther;
 	return *this;
 	}
 
 template <class T>
-ZUniSet_T<T> ZUniSet_T<T>::operator-(const ZUniSet_T& iOther) const
+UniSet<T> UniSet<T>::operator-(const UniSet& iOther) const
 	{
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(false, iOther.fElems - fElems);
+			return UniSet(false, iOther.fElems - fElems);
 		else
-			return ZUniSet_T(true, fElems | iOther.fElems);
+			return UniSet(true, fElems | iOther.fElems);
 		}
 	else
 		{
 		if (iOther.fUniversal)
-			return ZUniSet_T(false, fElems & iOther.fElems);
+			return UniSet(false, fElems & iOther.fElems);
 		else
-			return ZUniSet_T(false, fElems - iOther.fElems);
+			return UniSet(false, fElems - iOther.fElems);
 		}
 	}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::operator^=(const ZUniSet_T& iOther)
+UniSet<T>& UniSet<T>::operator^=(const UniSet& iOther)
 	{
 	*this = *this ^ iOther;
 	return *this;
 	}
 
 template <class T>
-ZUniSet_T<T> ZUniSet_T<T>::operator^(const ZUniSet_T& iOther) const
-	{ return ZUniSet_T(fUniversal ^ iOther.fUniversal, fElems ^ iOther.fElems); }
+UniSet<T> UniSet<T>::operator^(const UniSet& iOther) const
+	{ return UniSet(fUniversal ^ iOther.fUniversal, fElems ^ iOther.fElems); }
 
 template <class T>
-bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
+bool UniSet<T>::Contains(const UniSet& iOther) const
 	{
 	if (fUniversal)
 		{
@@ -321,11 +321,11 @@ bool ZUniSet_T<T>::Contains(const ZUniSet_T& iOther) const
 	}
 
 template <class T>
-bool ZUniSet_T<T>::Contains(const T& iElem) const
+bool UniSet<T>::Contains(const T& iElem) const
 	{ return fUniversal != (fElems.end() != fElems.find(iElem)); }
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::Insert(const T& iElem)
+UniSet<T>& UniSet<T>::Insert(const T& iElem)
 	{
 	if (fUniversal)
 		fElems.erase(iElem);
@@ -335,7 +335,7 @@ ZUniSet_T<T>& ZUniSet_T<T>::Insert(const T& iElem)
 	}
 
 template <class T>
-bool ZUniSet_T<T>::QInsert(const T& iElem)
+bool UniSet<T>::QInsert(const T& iElem)
 	{
 	if (fUniversal)
 		return fElems.erase(iElem);
@@ -344,7 +344,7 @@ bool ZUniSet_T<T>::QInsert(const T& iElem)
 	}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::Erase(const T& iElem)
+UniSet<T>& UniSet<T>::Erase(const T& iElem)
 	{
 	if (fUniversal)
 		fElems.insert(iElem);
@@ -354,7 +354,7 @@ ZUniSet_T<T>& ZUniSet_T<T>::Erase(const T& iElem)
 	}
 
 template <class T>
-bool ZUniSet_T<T>::QErase(const T& iElem)
+bool UniSet<T>::QErase(const T& iElem)
 	{
 	if (fUniversal)
 		return fElems.insert(iElem).second;
@@ -363,31 +363,31 @@ bool ZUniSet_T<T>::QErase(const T& iElem)
 	}
 
 template <class T>
-void ZUniSet_T<T>::GetElems(bool& oUniversal, std::set<T>& oElems) const
+void UniSet<T>::GetElems(bool& oUniversal, std::set<T>& oElems) const
 	{
 	oUniversal = fUniversal;
 	oElems = fElems;
 	}
 
 template <class T>
-const std::set<T>& ZUniSet_T<T>::GetElems(bool& oUniversal) const
+const std::set<T>& UniSet<T>::GetElems(bool& oUniversal) const
 	{
 	oUniversal = fUniversal;
 	return fElems;
 	}
 
 template <class T>
-ZUniSet_T<T> operator|(const T& iElem, const ZUniSet_T<T>& iUniSet_T)
+UniSet<T> operator|(const T& iElem, const UniSet<T>& iUniSet_T)
 	{ return iUniSet_T | iElem; }
 
 template <class T>
-ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T)
+UniSet<T> operator&(const T& iElem, const UniSet<T>& iUniSet_T)
 	{ return iUniSet_T & iElem; }
 
 template <class T>
-inline void swap(ZUniSet_T<T>& a, ZUniSet_T<T>& b)
+inline void swap(UniSet<T>& a, UniSet<T>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
 
-#endif // __ZUniSet_T_h__
+#endif // __ZooLib_UniSet_h__
