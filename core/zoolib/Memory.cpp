@@ -18,51 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMemory_h__
-#define __ZMemory_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include <cstddef> // For std::size_t
-#include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
-
-#if defined(__ANDROID__)
-	#include <strings.h> // For bzero on Android
-#endif
+#include "zoolib/Memory.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - memcmp, memcpy, memmove, memset, bzero wrappers.
+// MARK: -
 
-inline int sMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
-	{ return std::memcmp(iLHS, iRHS, iCount); }
-
-int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
-
-inline void sMemCopy(void* oDest, const void* iSource, std::size_t iCount)
-	{ std::memcpy(oDest, iSource, iCount); }
-
-inline void sMemMove(void* oDest, const void* iSource, std::size_t iCount)
-	{ std::memmove(oDest, iSource, iCount); }
-
-inline void sMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
-	{ std::memset(oDest, iValue, iCount); }
-
-inline void sMemZero(void* oDest, std::size_t iCount)
+int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR)
 	{
-	#if ZCONFIG_SPI_Enabled(POSIX)
-		::bzero(oDest, iCount);
-	#else
-		sMemSet(oDest, 0, iCount);
-	#endif
+	if (iCountL < iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountL))
+			return compare;
+		return -1;
+		}
+	else if (iCountL > iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountR))
+			return compare;
+		return 1;
+		}
+	else
+		{
+		return std::memcmp(iL, iR, iCountL);
+		}
 	}
 
-template <class T>
-void sMemZero_T(T& oT)
-	{ sMemZero(&oT, sizeof(oT)); }
-
 } // namespace ZooLib
-
-#endif // __ZMemory_h__

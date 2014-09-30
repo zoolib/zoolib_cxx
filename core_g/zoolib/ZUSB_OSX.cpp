@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(USB_OSX)
 
+#include "zoolib/Memory.h" // For sMemCopy
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
 #include "zoolib/ZVal_CF.h"

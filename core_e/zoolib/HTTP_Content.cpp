@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_XX_Limited.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/HTTP_Content.h"
+#include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Util_Chan.h"
 
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {

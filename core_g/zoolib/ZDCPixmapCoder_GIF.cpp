@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Deleter.h"
+#include "zoolib/Memory.h"
 
 #include "zoolib/ZDCPixmapCoder_GIF.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Chunked.h"
 #include "zoolib/ZStream_LZW.h"
 

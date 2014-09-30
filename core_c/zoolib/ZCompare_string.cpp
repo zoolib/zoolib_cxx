@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Memory.h" // For sMemCompare
+
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_string.h"
-#include "zoolib/ZMemory.h" // For ZMemCompare
 #include "zoolib/ZStdInt.h" // For size_t
 
 namespace ZooLib {

@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZRef_CF.h"
 
 using std::min;

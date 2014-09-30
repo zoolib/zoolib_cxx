@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_Socket)
 
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZMemory.h"
 
 #include <errno.h>
 #include <arpa/inet.h>

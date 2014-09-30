@@ -66,9 +66,10 @@ SOFTWARE.
 
 ************************************************************************/
 
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZBigRegion.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h"
 
 #include <limits> // For numeric_limits
 

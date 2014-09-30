@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZCompat_cmath.h" // For fmod
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h" // For ZBlockZero
 #include "zoolib/ZStream.h"
 
 #include <stdio.h>

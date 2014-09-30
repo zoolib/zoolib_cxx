@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Memory.h" // For sMemCopy
 #include "zoolib/Unicode.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZCompat_string.h" // For strncasecmp
-#include "zoolib/ZMemory.h" // For sMemCopy
 #include "zoolib/ZUtil_string.h"
 
 #include <stdio.h>

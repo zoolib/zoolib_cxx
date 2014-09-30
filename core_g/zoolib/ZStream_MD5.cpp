@@ -24,11 +24,11 @@ MD5 message-digest algorithm used here was written by Colin Plumb
 in 1993, for which no copyright is claimed.
 */
 
-#include "zoolib/ZStream_MD5.h"
+#include "zoolib/Memory.h"
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_MD5.h"
 
 #include <string.h> // Needed for memcpy and memset
 

@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_XX_Unreader.h"
 #include "zoolib/HTTP.h"
+#include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h"
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {

@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Memory.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
 
@@ -25,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_string.h"

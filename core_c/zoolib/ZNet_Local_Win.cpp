@@ -24,8 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
 
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"

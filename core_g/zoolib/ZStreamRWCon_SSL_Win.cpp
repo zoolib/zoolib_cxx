@@ -24,8 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_Win)
 
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 #include "zoolib/ZUtil_STL_vector.h"
 

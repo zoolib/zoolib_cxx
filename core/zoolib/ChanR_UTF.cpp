@@ -19,9 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanR_UTF.h"
+#include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
-
-#include "zoolib/ZMemory.h"
 
 namespace ZooLib {
 

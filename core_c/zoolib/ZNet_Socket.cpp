@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Socket)
 
-#include "zoolib/ZMemory.h"
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_POSIXFD.h"
 

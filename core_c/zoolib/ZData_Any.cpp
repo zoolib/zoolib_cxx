@@ -19,11 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/CountedWithoutFinalize.h"
+#include "zoolib/Memory.h"
 
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_vector.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
 #include <vector>
