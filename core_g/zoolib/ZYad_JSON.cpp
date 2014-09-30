@@ -834,7 +834,7 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			spWriteLFIndent(fIndent, fOptions, fStrimW);
 			}
 
-		ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
+		SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
 
 		uint64 count = 0;
 		fStrimW << "[";
@@ -930,8 +930,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				spWritePropName(curName, useSingleQuotes, fStrimW);
 				fStrimW << " = ";
 
-				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
-				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				fStrimW << ";";
 				}
@@ -943,8 +943,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				spWriteString(curName, useSingleQuotes, fStrimW);
 				fStrimW << ": ";
 
-				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
-				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				}
 			}
@@ -973,8 +973,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				else
 					fStrimW << "=";
 
-				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
-				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				fStrimW << ";";
 				}
@@ -989,8 +989,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 				if (fOptions.fBreakStrings)
 					fStrimW << " ";
 
-				ZSaveSetRestore_T<size_t> ssr_Indent(fIndent, fIndent + 1);
-				ZSaveSetRestore_T<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				}
 			wroteAny = true;

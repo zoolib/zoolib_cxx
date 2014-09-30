@@ -99,18 +99,18 @@ bool sCAS(T& ioLoc, const S& iOldVal, const R& iNewVal)
 	}
 
 // =================================================================================================
-// MARK: - ZSaveSetRestore_T
+// MARK: - SaveSetRestore
 
 template <class T>
-class ZSaveSetRestore_T
+class SaveSetRestore
 	{
 public:
-	ZSaveSetRestore_T(T& ioRef)
+	SaveSetRestore(T& ioRef)
 	:	fRef(ioRef)
 	,	fValPrior(ioRef)
 		{}
 
-	ZSaveSetRestore_T(T& ioRef, const T& iVal)
+	SaveSetRestore(T& ioRef, const T& iVal)
 	:	fRef(ioRef)
 	,	fValPrior(iVal)
 		{
@@ -118,7 +118,7 @@ public:
 		swap(fRef, fValPrior);
 		}
 
-	~ZSaveSetRestore_T()
+	~SaveSetRestore()
 		{
 		using std::swap;
 		swap(fRef, fValPrior);
@@ -139,8 +139,8 @@ protected:
 	};
 
 template <class T>
-struct ZSaveRestore_T : public ZSaveSetRestore_T<T>
-	{ ZSaveRestore_T(T& ioRef) : ZSaveSetRestore_T<T>(ioRef) {} };
+struct SaveRestore : public SaveSetRestore<T>
+	{ SaveRestore(T& ioRef) : SaveSetRestore<T>(ioRef) {} };
 
 } // namespace ZooLib
 
