@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_size_t_h__ 1
 #include "zconfig.h"
 
-#include <cstddef> // For std::size_t
+#include <stddef.h> // For ::size_t
 
 namespace ZooLib {
 
-using std::size_t;
+using ::size_t;
 
 } // namespace ZooLib
 
