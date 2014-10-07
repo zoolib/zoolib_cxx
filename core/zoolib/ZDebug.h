@@ -24,8 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_FileFunctionLine.h"
 
+#include "zoolib/size_t.h" // For size_t
+
 #include <cstdarg> // For std::va_list
-#include <cstddef> // For std::size_t
 
 #ifdef __clang_analyzer__
 	#include <assert.h>
@@ -52,7 +53,7 @@ extern void sInvoke(int iLevel, bool iStop,
 	const ZFileFunctionLine& iFFL,
 	const char* iConditionMessage, const char* iUserMessage, ...);
 
-std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
+size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
 
 #ifndef ZMACRO_Debug
 	#ifdef __clang_analyzer__

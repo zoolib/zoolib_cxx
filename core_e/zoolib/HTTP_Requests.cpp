@@ -285,9 +285,9 @@ ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
 #endif
 
 // =================================================================================================
-// MARK: - sCONNECT
+// MARK: - sQCONNECT
 
-bool sCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
+bool sQCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
 	const std::string& iAddress, const Map* iHeader,
 	int32* oResponseCode, Map* oHeader)
 	{

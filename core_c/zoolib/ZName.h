@@ -94,7 +94,7 @@ public:
 
 	void Clear();
 
-	std::size_t Hash() const;
+	size_t Hash() const;
 
 private:
 	CountedString* pGetIfCounted();
@@ -139,7 +139,7 @@ bool sNotEmpty(const ZName& iName)
 
 	template <>
 	struct hash<ZooLib::ZName>
-		{ public: std::size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
+		{ public: size_t operator()(const ZooLib::ZName& iName) const { return iName.Hash(); } };
 
 	ZMACRO_namespace_tr1_end
 

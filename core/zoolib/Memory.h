@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include <cstddef> // For std::size_t
+
 #include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
 
 #if defined(__ANDROID__)
@@ -36,21 +36,21 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - memcmp, memcpy, memmove, memset, bzero wrappers.
 
-inline int sMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
+inline int sMemCompare(const void* iLHS, const void* iRHS, size_t iCount)
 	{ return std::memcmp(iLHS, iRHS, iCount); }
 
-int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
+int sMemCompare(const void* iL, size_t iCountL, const void* iR, size_t iCountR);
 
-inline void sMemCopy(void* oDest, const void* iSource, std::size_t iCount)
+inline void sMemCopy(void* oDest, const void* iSource, size_t iCount)
 	{ std::memcpy(oDest, iSource, iCount); }
 
-inline void sMemMove(void* oDest, const void* iSource, std::size_t iCount)
+inline void sMemMove(void* oDest, const void* iSource, size_t iCount)
 	{ std::memmove(oDest, iSource, iCount); }
 
-inline void sMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
+inline void sMemSet(void* oDest, unsigned char iValue, size_t iCount)
 	{ std::memset(oDest, iValue, iCount); }
 
-inline void sMemZero(void* oDest, std::size_t iCount)
+inline void sMemZero(void* oDest, size_t iCount)
 	{
 	#if ZCONFIG_SPI_Enabled(POSIX)
 		::bzero(oDest, iCount);

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStdInt_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/size_t.h" // Brings std::size_t into namespace ZooLib
+#include "zoolib/size_t.h" // Brings ::size_t and/or std::size_t into namespace ZooLib
 
 // Macros for 64 bit integer constants
 #if ZCONFIG(Compiler, MSVC)

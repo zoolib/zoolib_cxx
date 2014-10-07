@@ -25,7 +25,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-int sMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR)
+int sMemCompare(const void* iL, size_t iCountL, const void* iR, size_t iCountR)
 	{
 	if (iCountL < iCountR)
 		{

@@ -180,7 +180,7 @@ void ZName::Clear()
 	#endif
 	}
 
-std::size_t ZName::Hash() const
+size_t ZName::Hash() const
 	{
 	size_t result = 0;
 	if (const char* i = this->pAsCharStar())
