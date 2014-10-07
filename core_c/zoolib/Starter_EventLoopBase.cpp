@@ -34,14 +34,14 @@ Starter_EventLoopBase::Starter_EventLoopBase()
 Starter_EventLoopBase::~Starter_EventLoopBase()
 	{}
 
-bool Starter_EventLoopBase::QStart(const ZRef<Callable_Void>& iCallable)
+bool Starter_EventLoopBase::QStart(const ZRef<Startable>& iStartable)
 	{
 	ZAcqMtx acq(fMtx);
-	if (iCallable)
+	if (iStartable)
 		{
 		if (fTriggered || (fTriggered = this->pTrigger()))
 			{
-			fCallables.push_back(iCallable);
+			fStartables.push_back(iStartable);
 			return true;
 			}
 		}
@@ -50,16 +50,16 @@ bool Starter_EventLoopBase::QStart(const ZRef<Callable_Void>& iCallable)
 
 void Starter_EventLoopBase::pInvokeClearQueue()
 	{
-	vector<ZRef<Callable_Void> > calling;
+	vector<ZRef<Startable> > toStart;
 
 	{
 	ZAcqMtx acq(fMtx);
 	fTriggered = false;
-	fCallables.swap(calling);
+	fStartables.swap(toStart);
 	}
 
-	for (vector<ZRef<Callable_Void> >::iterator iter = calling.begin();
-		iter != calling.end(); ++iter)
+	for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
+		iter != toStart.end(); ++iter)
 		{
 		try { (*iter)->Call(); }
 		catch (...) {}
@@ -69,7 +69,7 @@ void Starter_EventLoopBase::pInvokeClearQueue()
 void Starter_EventLoopBase::pDiscardPending()
 	{
 	ZAcqMtx acq(fMtx);
-	fCallables.clear();
+	fStartables.clear();
 	fTriggered = false;
 	}
 

@@ -67,11 +67,14 @@ public:
 		}
 
 // From Starter
-	virtual bool QStart(const ZRef<Callable_Void>& iCallable)
+	virtual bool QStart(const ZRef<Startable>& iStartable)
 		{
-		ZGuardMtxR guard(fMtxR);
-		fCallables.push_back(iCallable);
-		fCnd.Broadcast();
+		if (iStartable)
+			{
+			ZGuardMtxR guard(fMtxR);
+			fStartables.push_back(iStartable);
+			fCnd.Broadcast();
+			}
 		return true;
 		}
 
@@ -84,20 +87,20 @@ private:
 
 		while (fKeepRunning)
 			{
-			if (fCallables.empty())
+			if (fStartables.empty())
 				{ fCnd.Wait(fMtxR); }
 			else
 				{
 				ZRef<ZCounted> self_ref = this;
 
-				vector<ZRef<Callable_Void> > calling;
+				vector<ZRef<Startable> > toStart;
 
-				fCallables.swap(calling);
+				fStartables.swap(toStart);
 
 				guard.Release();
 
-				for (vector<ZRef<Callable_Void> >::iterator iter = calling.begin();
-					iter != calling.end(); ++iter)
+				for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
+					iter != toStart.end(); ++iter)
 					{
 					try { (*iter)->Call(); }
 					catch (...) {}
@@ -116,7 +119,7 @@ private:
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 	bool fKeepRunning;
-	std::vector<ZRef<Callable_Void> > fCallables;
+	std::vector<ZRef<Startable> > fStartables;
 	};
 
 // =================================================================================================

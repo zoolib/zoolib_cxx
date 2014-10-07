@@ -31,13 +31,13 @@ class Starter_EachOnNewThread
 	{
 public:
 // From Starter
-	virtual bool QStart(const ZRef<Callable_Void>& iCallable)
+	virtual bool QStart(const ZRef<Startable>& iStartable)
 		{
-		if (iCallable)
+		if (iStartable)
 			{
 			try
 				{
-				sStartOnNewThread(iCallable);
+				sStartOnNewThread(iStartable);
 				return true;
 				}
 			catch (...)
@@ -51,6 +51,6 @@ public:
 // MARK: - sStarter_EachOnNewThread
 
 ZRef<Starter> sStarter_EachOnNewThread()
-	{ return ZRef<Starter_EachOnNewThread>(sSingleton<ZRef_Counted<Starter_EachOnNewThread> >()); }
+	{ return sSingleton<ZRef_Counted<Starter_EachOnNewThread> >(); }
 
 } // namespace ZooLib

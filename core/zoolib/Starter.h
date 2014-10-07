@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+typedef Callable<void()> Startable;
+
 // =================================================================================================
 // MARK: - Starter
 
@@ -33,7 +35,7 @@ class Starter
 :	public ZCounted
 	{
 public:
-	virtual bool QStart(const ZRef<Callable_Void>& iCallable) = 0;
+	virtual bool QStart(const ZRef<Startable>& iStartable) = 0;
 	};
 
 // =================================================================================================
