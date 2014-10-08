@@ -45,6 +45,7 @@ public:
 
 // From ZCounted via Callable_Register
 	virtual void Initialize();
+	virtual void Finalize();
 
 // From Callable via Callable_Register
 	ZQ<ZRef<ZCounted> > QCall(

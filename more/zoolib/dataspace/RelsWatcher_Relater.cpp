@@ -92,6 +92,15 @@ void RelsWatcher_Relater::Initialize()
 		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
 	}
 
+void RelsWatcher_Relater::Finalize()
+	{
+	// Push pending changes into our relater. We may actually need to do more, either
+	// registrations keeping us alive, or forcibly disconnecting extant registrations.
+	this->Update();
+
+	inherited::Finalize();
+	}
+
 ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZRef<Expr_Rel>& iRel)
