@@ -56,7 +56,7 @@ using std::map;
 
 Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Callable>& iCallable)
+	const ZRef<Callable_t>& iCallable)
 :	inherited(iOp0)
 ,	fColName(iColName)
 ,	fCallable(iCallable)
@@ -93,7 +93,7 @@ void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 const ColName& Expr_Rel_Calc::GetColName() const
 	{ return fColName; }
 
-const ZRef<Expr_Rel_Calc::Callable>& Expr_Rel_Calc::GetCallable() const
+const ZRef<Expr_Rel_Calc::Callable_t>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
 
 // =================================================================================================
@@ -107,7 +107,7 @@ void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Expr_Rel_Calc::Callable>& iCallable)
+	const ZRef<Expr_Rel_Calc::Callable_t>& iCallable)
 	{
 	return new Expr_Rel_Calc(iOp0, iColName, iCallable);
 	}

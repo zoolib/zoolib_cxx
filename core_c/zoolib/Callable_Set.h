@@ -41,14 +41,14 @@ class Callable_Set<void(void)>
 ,	public SafeSet<ZRef<Callable<void(void)> > >
 	{
 public:
-	typedef Callable<void(void)> Callable;
+	typedef Callable<void(void)> Callable_t;
 
 // From Callable
 	ZQ<void> QCall()
 		{
-		for (SafeSetIterConst<ZRef<Callable> > iter = *this; /*no test*/; /*no inc*/)
+		for (SafeSetIterConst<ZRef<Callable_t> > iter = *this; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc())
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				sCall(*theQ);
 			else
 				return notnull;
@@ -56,7 +56,7 @@ public:
 		}
 
 // Our protocol
-	SafeSet<ZRef<Callable> >& GetCallables()
+	SafeSet<ZRef<Callable_t> >& GetCallables()
 		{ return *this; }
 	};
 
@@ -71,20 +71,20 @@ class Callable_Set<void(ZMACRO_Callable_P##X)> \
 ,	public SafeSet<ZRef<Callable<void(ZMACRO_Callable_P##X)> > > \
 	{ \
 public: \
-	typedef Callable<void(ZMACRO_Callable_P##X)> Callable; \
+	typedef Callable<void(ZMACRO_Callable_P##X)> Callable_t; \
 \
 	ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		for (SafeSetIterConst<ZRef<Callable> > iter = *this; /*no test*/; /*no inc*/) \
+		for (SafeSetIterConst<ZRef<Callable_t> > iter = *this; /*no test*/; /*no inc*/) \
 			{ \
-			if (ZQ<ZRef<Callable> > theQ = iter.QReadInc()) \
+			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc()) \
 				sCall(*theQ, ZMACRO_Callable_i##X); \
 			else \
 				return notnull; \
 			} \
 		} \
 \
-	SafeSet<ZRef<Callable> >& GetCallables() \
+	SafeSet<ZRef<Callable_t> >& GetCallables() \
 		{ return *this; } \
 	};
 

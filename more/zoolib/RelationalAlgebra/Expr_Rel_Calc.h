@@ -47,11 +47,11 @@ class Expr_Rel_Calc
 public:
 	typedef RelationalAlgebra::PseudoMap PseudoMap;
 
-	typedef Callable<ZVal_Any(const PseudoMap&)> Callable;
+	typedef Callable<ZVal_Any(const PseudoMap&)> Callable_t;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 		const ColName& iColName,
-		const ZRef<Callable>& iCallable);
+		const ZRef<Callable_t>& iCallable);
 
 	virtual ~Expr_Rel_Calc();
 
@@ -68,11 +68,11 @@ public:
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
 	const ColName& GetColName() const;
-	const ZRef<Callable>& GetCallable() const;
+	const ZRef<Callable_t>& GetCallable() const;
 
 private:
 	const ColName fColName;
-	const ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -90,7 +90,7 @@ public:
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Expr_Rel_Calc::Callable>& iCallable);
+	const ZRef<Expr_Rel_Calc::Callable_t>& iCallable);
 
 } // namespace RelationalAlgebra
 

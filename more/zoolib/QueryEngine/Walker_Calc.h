@@ -35,12 +35,12 @@ namespace QueryEngine {
 class Walker_Calc : public Walker_Unary
 	{
 public:
-	typedef RelationalAlgebra::Expr_Rel_Calc::Callable Callable;
+	typedef RelationalAlgebra::Expr_Rel_Calc::Callable_t Callable_t;
 	typedef RelationalAlgebra::Expr_Rel_Calc::PseudoMap PseudoMap;
 
 	Walker_Calc(const ZRef<Walker>& iWalker,
 		const string8& iColName,
-		const ZRef<Callable>& iCallable);
+		const ZRef<Callable_t>& iCallable);
 
 	virtual ~Walker_Calc();
 
@@ -54,7 +54,7 @@ public:
 
 private:
 	const string8 fColName;
-	const ZRef<Callable> fCallable;
+	const ZRef<Callable_t> fCallable;
 	size_t fOutputOffset;
 	std::map<string8,size_t> fBindings;
 	};

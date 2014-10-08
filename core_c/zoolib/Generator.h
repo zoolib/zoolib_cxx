@@ -336,8 +336,8 @@ private:
 template <class Sig_p>
 struct AsSigBase
 	{
-	typedef Sig_p Sig;
-	typedef Callable<Sig> Callable;
+	typedef Sig_p Sig_t;
+	typedef Callable<Sig_t> Callable_t;
 	};
 
 template <class T0, class T1>
@@ -362,8 +362,8 @@ struct AsSig<void,void> : public AsSigBase<void()>
 template <class T0, class T1>
 void
 sCallablePair(
-	ZRef<typename AsSig<T0,T1>::Callable>& oCallable_Gen,
-	ZRef<typename AsSig<T1,T0>::Callable>& oCallable_Yield)
+	ZRef<typename AsSig<T0,T1>::Callable_t>& oCallable_Gen,
+	ZRef<typename AsSig<T1,T0>::Callable_t>& oCallable_Yield)
 	{
 	ZRef<ShelfPair<T0,T1> > theShelfPair = new ShelfPair<T0,T1>;
 	oCallable_Gen = new Callable_Gen<T0,T1>(theShelfPair);
@@ -374,11 +374,11 @@ sCallablePair(
 // MARK: - sGenerator, function is passed a yield callable
 
 template <class T0, class T1>
-ZRef<typename AsSig<T0,T1>::Callable>
-sGenerator(const ZRef<Callable<void(const ZRef<typename AsSig<T1,T0>::Callable>&)> >& iCallable)
+ZRef<typename AsSig<T0,T1>::Callable_t>
+sGenerator(const ZRef<Callable<void(const ZRef<typename AsSig<T1,T0>::Callable_t>&)> >& iCallable)
 	{
-	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
-	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
+	ZRef<typename AsSig<T0,T1>::Callable_t> theCallable_Gen;
+	ZRef<typename AsSig<T1,T0>::Callable_t> theCallable_Yield;
 	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
 
 	if (iCallable)
@@ -406,7 +406,7 @@ template <class R, class P>
 ZQ<R>
 sQYield(P iP)
 	{
-	typedef typename AsSig<R,P>::Callable Callable;
+	typedef typename AsSig<R,P>::Callable_t Callable;
 	if (ZRef<Callable> theCallable = ThreadVal_Callable_Yield::sGet().DynamicCast<Callable>())
 		return theCallable->QCall(iP);
 	return null;
@@ -420,18 +420,18 @@ sYield(P iP)
 template <class T0, class T1>
 void
 sInstallYieldCall(const ZRef<Callable<void(T0*,T1*)> >& iCallable,
-	const ZRef<typename AsSig<T1,T0>::Callable>& iCallable_Yield)
+	const ZRef<typename AsSig<T1,T0>::Callable_t>& iCallable_Yield)
 	{
 	ThreadVal_Callable_Yield theTV(iCallable_Yield);
 	iCallable->Call(nullptr, nullptr);
 	}
 
 template <class T0, class T1>
-ZRef<typename AsSig<T0,T1>::Callable>
+ZRef<typename AsSig<T0,T1>::Callable_t>
 sGenerator(const ZRef<Callable<void(T0*,T1*)> >& iCallable)
 	{
-	ZRef<typename AsSig<T0,T1>::Callable> theCallable_Gen;
-	ZRef<typename AsSig<T1,T0>::Callable> theCallable_Yield;
+	ZRef<typename AsSig<T0,T1>::Callable_t> theCallable_Gen;
+	ZRef<typename AsSig<T1,T0>::Callable_t> theCallable_Yield;
 	sCallablePair<T0,T1>(theCallable_Gen, theCallable_Yield);
 
 	if (iCallable)

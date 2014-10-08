@@ -32,7 +32,7 @@ using std::vector;
 
 Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
 	const string8& iColName,
-	const ZRef<Callable>& iCallable)
+	const ZRef<Callable_t>& iCallable)
 :	Walker_Unary(iWalker)
 ,	fColName(iColName)
 ,	fCallable(iCallable)
