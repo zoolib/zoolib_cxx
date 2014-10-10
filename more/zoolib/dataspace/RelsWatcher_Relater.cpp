@@ -52,7 +52,7 @@ public:
 	,	fHadResultPrior(false)
 		{}
 
-	~Registration()
+	virtual ~Registration()
 		{}
 
 	void Finalize()

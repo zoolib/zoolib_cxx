@@ -48,7 +48,7 @@ public:
 	:	inherited(iOther)
 		{}
 
-	~ZCog()
+	virtual ~ZCog()
 		{}
 
 	ZCog& operator=(const ZCog& iOther)
