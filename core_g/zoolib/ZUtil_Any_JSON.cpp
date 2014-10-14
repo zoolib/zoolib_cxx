@@ -41,6 +41,7 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerU>& iSU)
 		theRO.fAllowSemiColons = true;
 		theRO.fAllowTerminators = true;
 		theRO.fLooseSeparators = true;
+		theRO.fAllowBinary = true;
 		return ZYad_Any::sQFromYadR(sYadR(iSU, theRO));
 		}
 	return null;
