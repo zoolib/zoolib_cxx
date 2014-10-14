@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDatonSet_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/IntervalTreeClock.h"
 #include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZIntervalTreeClock.h"
 #include "zoolib/ZThread.h"
 
 #include <map>
@@ -37,8 +37,8 @@ namespace ZDatonSet {
 
 typedef ZData_Any Data;
 
-using ZIntervalTreeClock::Identity;
-using ZIntervalTreeClock::Event;
+using IntervalTreeClock::Identity;
+using IntervalTreeClock::Event;
 
 // =================================================================================================
 // MARK: - Daton
@@ -92,7 +92,8 @@ private:
 // =================================================================================================
 // MARK: - Vector_Event_Delta_t
 
-typedef std::vector<std::pair<ZRef<Event>,ZRef<Delta> > > Vector_Event_Delta_t;
+typedef std::pair<ZRef<Event>,ZRef<Delta> > Event_Delta_t;
+typedef std::vector<Event_Delta_t> Vector_Event_Delta_t;
 
 // =================================================================================================
 // MARK: - Deltas

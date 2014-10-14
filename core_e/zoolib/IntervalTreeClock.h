@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZIntervalTreeClock_h__
-#define __ZIntervalTreeClock_h__ 1
+#ifndef __ZooLib_IntervalTreeClock_h__
+#define __ZooLib_IntervalTreeClock_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/SafePtrStack.h"
@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {
-namespace ZIntervalTreeClock {
+namespace IntervalTreeClock {
 
 // =================================================================================================
 // MARK: - Identity
@@ -64,6 +64,10 @@ private:
 	};
 
 ZRef<Identity> sSplit(ZRef<Identity>& ioIdentity);
+
+ZRef<Identity> sSplittedLeft(const ZRef<Identity>& iIdentity);
+
+ZRef<Identity> sSplittedRight(const ZRef<Identity>& iIdentity);
 
 // =================================================================================================
 // MARK: - Event
@@ -129,7 +133,7 @@ bool sIsAfter(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 bool sIsConcurrent(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 bool sIsSame(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 
-} // namespace ZIntervalTreeClock
+} // namespace IntervalTreeClock
 } // namespace ZooLib
 
-#endif // __ZIntervalTreeClock_h__
+#endif // __ZooLib_IntervalTreeClock_h__

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // for std::min/std::max
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZIntervalTreeClock.h"
+#include "zoolib/IntervalTreeClock.h"
 
 #include "zoolib/ZLog.h"
 
@@ -37,7 +37,7 @@ The project page itself indicates that the code is licensed under the LGPL.
 */
 
 namespace ZooLib {
-namespace ZIntervalTreeClock {
+namespace IntervalTreeClock {
 
 using std::min;
 using std::max;
@@ -173,6 +173,20 @@ ZRef<Identity> sSplit(ZRef<Identity>& ioIdentity)
 	ZRef<Identity> left, right;
 	ioIdentity->Splitted(left, right);
 	ioIdentity = left;
+	return right;
+	}
+
+ZRef<Identity> sSplittedLeft(const ZRef<Identity>& iIdentity)
+	{
+	ZRef<Identity> left, right;
+	iIdentity->Splitted(left, right);
+	return left;
+	}
+
+ZRef<Identity> sSplittedRight(const ZRef<Identity>& iIdentity)
+	{
+	ZRef<Identity> left, right;
+	iIdentity->Splitted(left, right);
 	return right;
 	}
 
@@ -478,5 +492,5 @@ bool sIsConcurrent(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 bool sIsSame(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 	{ return iLeft->LessEqual(iRight) && iRight->LessEqual(iLeft); }
 
-} // namespace ZIntervalTreeClock
+} // namespace IntervalTreeClock
 } // namespace ZooLib

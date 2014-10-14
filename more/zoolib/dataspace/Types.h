@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Types_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZIntervalTreeClock.h"
+#include "zoolib/IntervalTreeClock.h"
 
 #include "zoolib/QueryEngine/Result.h"
 
@@ -36,8 +36,8 @@ namespace ZooLib {
 
 namespace DataspaceTypes {
 
-using ZIntervalTreeClock::Event;
-using ZIntervalTreeClock::Identity;
+using IntervalTreeClock::Event;
+using IntervalTreeClock::Identity;
 
 using QueryEngine::Result;
 

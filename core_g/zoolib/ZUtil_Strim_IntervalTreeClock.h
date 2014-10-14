@@ -24,18 +24,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanW_UTF.h"
 
-#include "zoolib/ZIntervalTreeClock.h"
+#include "zoolib/IntervalTreeClock.h"
 
 namespace ZooLib {
-namespace ZIntervalTreeClock {
+namespace IntervalTreeClock {
 
 // =================================================================================================
-// MARK: - ZIntervalTreeClock
+// MARK: - IntervalTreeClock
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity);
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent);
 
-} // namespace ZIntervalTreeClock
+} // namespace IntervalTreeClock
 } // namespace ZooLib
 
 #endif // __ZUtil_Strim_IntervalTreeClock_h__
