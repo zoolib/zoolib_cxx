@@ -18,30 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_HTTP_Connect_h__
-#define __ZooLib_HTTP_Connect_h__ 1
+#ifndef __ZooLib_Connection_h__
+#define __ZooLib_Connection_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Connection.h"
-
-#include "zoolib/ZStreamer.h"
+#include "zoolib/Callable.h"
+#include "zoolib/Channer_Bin.h"
+#include "zoolib/Multi.h"
 
 namespace ZooLib {
-namespace HTTP {
-
-typedef ZooLib::Connection Connection_t;
-
-ZQ<Connection_t> sAsConnectionQ(const ZRef<ZStreamerRWCon>& iSRWCon);
 
 // =================================================================================================
-// MARK: - HTTP
+// MARK: -
 
-typedef Callable<ZQ<Connection_t>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
-	Callable_QConnect;
+typedef Multi2<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin> > ChannerRW;
 
-ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
+typedef Callable<ZQ<ChannerRW>()> ChannerRWFactory;
 
-} // namespace HTTP
+
+typedef Multi3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > Connection;
+
+typedef Callable<ZQ<Connection>()> ConnectionFactory;
+
 } // namespace ZooLib
 
-#endif // __ZooLib_HTTP_Connect_h__
+#endif // __ZooLib_Chan_Channer_h__
