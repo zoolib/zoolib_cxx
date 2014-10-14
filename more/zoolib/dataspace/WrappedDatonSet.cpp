@@ -50,6 +50,7 @@ void WrappedDatonSet::Initialize()
 	{
 	ZCounted::Initialize();
 
+	fCallable_PullSuggested_Self = sCallable(sWeakRef(this), &WrappedDatonSet::pPullSuggested);
 	fCallable_PullFrom_Self = sCallable(sWeakRef(this), &WrappedDatonSet::pPullFrom);
 	}
 
@@ -140,12 +141,7 @@ void WrappedDatonSet::InsertCallable_PullSuggested(
 	}
 
 ZRef<Callable_PullSuggested> WrappedDatonSet::GetCallable_PullSuggested()
-	{
-	ZGuardMtxR guard(fMtxR);
-	if (not fCallable_PullSuggested_Self)
-		fCallable_PullSuggested_Self = sCallable(sWeakRef(this), &WrappedDatonSet::pPullSuggested);
-	return fCallable_PullSuggested_Self;
-	}
+	{ return fCallable_PullSuggested_Self; }
 
 void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom)
 	{
