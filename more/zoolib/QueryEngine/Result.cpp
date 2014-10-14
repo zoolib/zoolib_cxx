@@ -201,9 +201,11 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 				}
 			}
 
+		// We must have consumed the entirety of our identity relhead
 		ZAssert(iter_Identity == fIdentity.end());
 		ZAssert(index_Identity == fIdentity.size());
 
+		// And significant
 		ZAssert(iter_Significant == fSignificant.end());
 		ZAssert(index_Significant == fSignificant.size());
 		}
