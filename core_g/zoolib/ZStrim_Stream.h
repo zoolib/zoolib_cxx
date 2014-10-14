@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrim_Stream_h__ 1
 
 #include "zoolib/ZStrim.h"
+#include "zoolib/ZStream.h"
 
 namespace ZooLib {
 
@@ -198,14 +199,14 @@ private:
 class ZStrimW_StreamUTF8 : public ZStrimW_NativeUTF8
 	{
 public:
-	ZStrimW_StreamUTF8(const ZStreamW& iStreamW);
+	ZStrimW_StreamUTF8(const ChanW_Bin& iStreamW);
 
 // From ZStrimW via ZStrimW_NativeUTF8
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 	virtual void Imp_Flush();
 
 private:
-	const ZStreamW& fStreamW;
+	const ChanW_Bin& fStreamW;
 	};
 
 // =================================================================================================

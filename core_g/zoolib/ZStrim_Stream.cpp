@@ -493,15 +493,19 @@ void ZStrimW_StreamUTF16LE::Imp_Flush()
 // =================================================================================================
 // MARK: - ZStrimW_StreamUTF8
 
-ZStrimW_StreamUTF8::ZStrimW_StreamUTF8(const ZStreamW& iStreamW)
+ZStrimW_StreamUTF8::ZStrimW_StreamUTF8(const ChanW_Bin& iStreamW)
 :	fStreamW(iStreamW)
 	{}
 
 void ZStrimW_StreamUTF8::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
-	{ fStreamW.Write(iSource, iCountCU, oCountCU); }
+	{
+	size_t countCU = sQWrite(iSource, iCountCU, fStreamW);
+	if (oCountCU)
+		*oCountCU = countCU;
+	}
 
 void ZStrimW_StreamUTF8::Imp_Flush()
-	{ fStreamW.Flush(); }
+	{ sFlush(fStreamW); }
 
 // =================================================================================================
 // MARK: - ZStrimR_StreamDecoder
