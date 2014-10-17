@@ -139,7 +139,7 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 			int32 theResponseCode;
 			Map theResponseHeader;
 			if (not spQRequest(
-				sGetChan(ioConnectionQ->f0), sGetChan(ioConnectionQ->f1),
+				sGetChan(ioConnectionQ->GetR()), sGetChan(ioConnectionQ->GetW()),
 				iMethod, theHost + sStringf(":%d", thePort), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
@@ -198,7 +198,7 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 		{
 		if (ZQ<Connection_t> theConnQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort))
 			{
-			const ChanW_Bin& theChanW = sGetChan(theConnQ->f1);
+			const ChanW_Bin& theChanW = sGetChan(theConnQ->GetW());
 
 			spPOST_Prefix(theChanW, iMethod, theHost, thePath, iHeader, true);
 

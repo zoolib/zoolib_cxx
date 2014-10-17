@@ -45,9 +45,11 @@ using std::swap;
 /*
 Three messages, and maybe a keepalive.
 
-X When our fCallable_PullSuggested_Self is invoked, we send a "PullSuggested" message to the other side.
+X When our fCallable_PullSuggested_Self is invoked, we send a "PullSuggested" message to
+  the other side.
 
-X When we receive a "PullSuggested" message we call fCallable_PullSuggested, passing our fCallable_PullFrom_Self.
+X When we receive a "PullSuggested" message we call fCallable_PullSuggested_Other, passing
+  our fCallable_PullFrom_Self.
 
 X When our fCallable_PullFrom_Self is invoked, we send a "PullFrom" message to the other side,
   and XXX block waiting for our reader to do its thing with "PullFromResponse". I think we can
@@ -56,15 +58,15 @@ X When our fCallable_PullFrom_Self is invoked, we send a "PullFrom" message to t
 X When we receive a "PullFrom" message, we invoke each of the fCallable_PullFroms with the Event,
   and send the info back over the wire in a "PullFromResponse".
 
-X When we get a "PullFromResponse" message, we get that data across to the writer thread at XXX. If we
-  don't have an XXX, do nothing.
+X When we get a "PullFromResponse" message, we get that data across to the writer thread
+  at XXX (above). If we don't have an XXX, do nothing.
 
 If we feel like it, send a ping.
 
 If we haven't heard anything in a while, drop the connection.
 
-We can decouple received PullSuggested and sends of "PullFrom", so callers aren't blocked by network
-latency.
+We could decouple received PullSuggested and sends of "PullFrom", so callers aren't
+blocked by network latency.
 */
 
 static void spSendMessage(const ZMap_Any& iMessage, const ChanW_Bin& iChanW)
@@ -72,6 +74,7 @@ static void spSendMessage(const ZMap_Any& iMessage, const ChanW_Bin& iChanW)
 	if (ZLOGF(w, eDebug))
 		{
 		w << "Send: ";
+//		w << iMessage.Get<string8>("What");
 		ZUtil_Any_JSON::sWrite(iMessage, w);
 		}
 	ZUtil_Any_JSON::sWrite(iMessage, ZStrimW_StreamUTF8(iChanW));
@@ -85,6 +88,7 @@ static ZMap_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	if (ZLOGF(w, eDebug))
 		{
 		w << "Received: ";
+//		w << result.Get<string8>("What");
 		ZUtil_Any_JSON::sWrite(result, w);
 		}
 	return result;
@@ -114,25 +118,53 @@ static ZSeq_Any spSeqFromEvent(const ZRef<Event>& iEvent)
 	return theSeq;
 	}
 
+static ZRef<ZDatonSet::Delta> spDeltaFromSeq(const ZSeq_Any& iSeq)
+	{
+	using namespace ZDatonSet;
+	Delta::Statements_t theStatements_t;
+	foreachi (iter, iSeq)
+		{
+		const ZSeq_Any& theStatementSeq = iter->Get<ZSeq_Any>();
+		const bool theBool = theStatementSeq[0].Get<bool>();
+		const Daton& theDaton = theStatementSeq[1].Get<ZData_Any>();
+		sInsertMust(theStatements_t, theDaton, theBool);
+		}
+	return new Delta(*&theStatements_t);
+	}
+
+static ZSeq_Any spSeqFromDelta(const ZRef<ZDatonSet::Delta>& iDelta)
+	{
+	using namespace ZDatonSet;
+	ZSeq_Any theSeq;
+
+	foreachi (iter, iDelta->GetStatements())
+		{
+		ZSeq_Any& theStatementSeq = theSeq.Mut<ZSeq_Any>(theSeq.Count());
+		theStatementSeq.Append(iter->second);
+		theStatementSeq.Append(iter->first.GetData());
+		}
+	return theSeq;
+	}
+
 // =================================================================================================
 // MARK: - WrappedDatonSetRemoter
 
 WrappedDatonSetRemoter::WrappedDatonSetRemoter(
-	const ZRef<ChannerRWFactory>& iChannerRWFactory,
+	const ZRef<ChannerComboFactoryRW_Bin>& iChannerComboFactory,
 	const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other)
-:	fChannerRWFactory(iChannerRWFactory)
+:	fChannerComboFactory(iChannerComboFactory)
 ,	fCallable_PullSuggested_Other(iCallable_PullSuggested_Other)
 ,	fConnectionBusy(false)
 ,	fPullFromPointer(nullptr)
 	{
-	ZAssert(fChannerRWFactory);
+	ZAssert(fChannerComboFactory);
 	}
 
 WrappedDatonSetRemoter::WrappedDatonSetRemoter(
-	const ChannerRW& iChannerRW,
+	const ChannerComboRW_Bin& iChannerComboRW,
 	const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other)
 :	fCallable_PullSuggested_Other(iCallable_PullSuggested_Other)
-,	fChannerRWQ(iChannerRW)
+,	fChannerComboQ(iChannerComboRW)
 ,	fConnectionBusy(false)
 ,	fPullFromPointer(nullptr)
 	{}
@@ -141,8 +173,11 @@ void WrappedDatonSetRemoter::Initialize()
 	{
 	ZCounted::Initialize();
 
-	fCallable_PullSuggested_Self = sCallable(sWeakRef(this), &WrappedDatonSetRemoter::pPullSuggested);
-	fCallable_PullFrom_Self = sCallable(sWeakRef(this), &WrappedDatonSetRemoter::pPullFrom);
+	fCallable_PullSuggested_Self =
+		sCallable(sWeakRef(this), &WrappedDatonSetRemoter::pPullSuggested);
+
+	fCallable_PullFrom_Self =
+		sCallable(sWeakRef(this), &WrappedDatonSetRemoter::pPullFrom);
 
 	ZThread::sCreate_T<ZRef<WrappedDatonSetRemoter> >(&WrappedDatonSetRemoter::spRead, this);
 	}
@@ -152,6 +187,8 @@ ZRef<Callable_PullSuggested> WrappedDatonSetRemoter::GetCallable_PullSuggested()
 
 void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom)
 	{
+	// iCallable_PullFrom will be the counterpart to fCallable_PullSuggested_Other.
+
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
 
@@ -160,13 +197,13 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 		try
 			{
 			guard.Release();
-			ZQ<ChannerRW> theChannerRWQ = this->pQEnsureChannerRW();
+			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
 			guard.Acquire();
 
-			if (not theChannerRWQ)
+			if (not theChannerComboQ)
 				break;
 
-			const ChanW_Bin& theChanW = sGetChan(theChannerRWQ->f1);
+			const ChanW_Bin& theChanW = sGetChan(theChannerComboQ->GetW());
 
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
@@ -186,7 +223,7 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 			}
 		catch (...)
 			{
-			sClear(fChannerRWQ);
+			sClear(fChannerComboQ);
 			}
 		}
 
@@ -195,23 +232,21 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 	fCnd.Broadcast();
 	}
 
-void WrappedDatonSetRemoter::pPullFrom(
-	ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)
+ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 	{
-	ZGuardMtxR guard(fMtxR);
-
 	for (;;)
 		{
 		try
 			{
-			guard.Release();
-			ZQ<ChannerRW> theChannerRWQ = this->pQEnsureChannerRW();
+			ZGuardMtxR guard(fMtxR, false);
+
+			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
 			guard.Acquire();
 
-			if (not theChannerRWQ)
+			if (not theChannerComboQ)
 				break;
 
-			const ChanW_Bin& theChanW = sGetChan(theChannerRWQ->f1);
+			const ChanW_Bin& theChanW = sGetChan(theChannerComboQ->GetW());
 
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
@@ -222,123 +257,93 @@ void WrappedDatonSetRemoter::pPullFrom(
 			theMessage.Set("What", "PullFrom");
 			theMessage.Set("Event", spSeqFromEvent(iEvent));
 
-			PullFrom_t thePullFrom;
-			fPullFromPointer = &thePullFrom;
+			ZRef<ZDatonSet::Deltas> theDeltas;
+			fPullFromPointer = &theDeltas;
 
-			ZRelMtxR rel(fMtxR);
-			// Send a "PullFrom" message to the other side over theChanW, include iEvent.
+			guard.Release();
+
 			spSendMessage(theMessage, theChanW);
 
-			ZAcqMtxR acq(fMtxR);
+			guard.Acquire();
 
 			// Wait till a PullFromResponse has come in (any PullfromResponse?), and
 			while (fPullFromPointer)
 				fCnd.Wait(fMtxR);
 
-			oDeltas = thePullFrom.f0;
-			oEvent = thePullFrom.f1;
-
-			// write the info into oDeltas and oEvent.
-			break;
+			return theDeltas;
 			}
 		catch (...)
 			{
-			sClear(fChannerRWQ);
+			ZGuardMtxR guard(fMtxR);
+			sClear(fChannerComboQ);
 			}
 		}
-
-	}
-
-static ZRef<ZDatonSet::Delta> spDeltaFromSeq(const ZSeq_Any& iSeq)
-	{
-	using namespace ZDatonSet;
-	Delta::Statements_t theStatements_t;
-	foreachi (iter, iSeq)
-		{
-		const ZSeq_Any& theStatementSeq = iter->Get<ZSeq_Any>();
-		const Daton& theDaton = theStatementSeq[0].Get<ZData_Any>();
-		const bool theBool = theStatementSeq[1].Get<bool>();
-		sInsertMust(theStatements_t, theDaton, theBool);
-		}
-	return new Delta(*&theStatements_t);
-	}
-
-static ZSeq_Any spSeqFromDelta(const ZRef<ZDatonSet::Delta>& iDelta)
-	{
-	using namespace ZDatonSet;
-	ZSeq_Any theSeq;
-
-	foreachi (iter, iDelta->GetStatements())
-		{
-		ZSeq_Any& theStatementSeq = theSeq.Mut<ZSeq_Any>(theSeq.Count());
-		theStatementSeq.Append(iter->first.GetData());
-		theStatementSeq.Append(iter->second);
-		}
-	return theSeq;
+	// Never get here.
+	return null;
 	}
 
 void WrappedDatonSetRemoter::pRead()
 	{
 	ZThread::sSetName("WrappedDatonSetRemoter");
 
-	ZGuardMtxR guard(fMtxR);
-
 	for (;;)
 		{
-		guard.Release();
-		ZQ<ChannerRW> theChannerRWQ = this->pQEnsureChannerRW();
-		guard.Acquire();
-
-		if (not theChannerRWQ)
+		try
 			{
-			// No Channer was available
-			if (fChannerRWFactory)
-				continue;
-			// There's no factory to make one, bail
-			break;
-			}
+			ZGuardMtxR guard(fMtxR);
 
-		guard.Release();
-
-		const ZMap_Any theMessage = spReadMessage(theChannerRWQ->f0);
-		const string8& theWhat = theMessage.Get<string8>("What");
-
-		if (false)
-			{}
-		else if (theWhat == "PullSuggested")
-			{
-			try { sCall(fCallable_PullSuggested_Other, fCallable_PullFrom_Self); }
-			catch (...) {}
-			}
-		else if (theWhat == "PullFrom")
-			{
-			using namespace ZDatonSet;
-			// We need the Event from theMessage
-			ZRef<Event> theEvent = spEventFromSeq(theMessage.Get<ZSeq_Any>("Event"));
-			// Gather the information from all our pullfroms (if any) and send it over the wire.
-
+			guard.Release();
+			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
 			guard.Acquire();
 
-			set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
-			swap(theCallables_PullFrom, fCallables_PullFrom);
+			if (not theChannerComboQ)
+				{
+				// No Channer was available
+				if (fChannerComboFactory)
+					continue;
+				// There's no factory to make one, bail
+				break;
+				}
 
 			guard.Release();
 
-			foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
+			const ZMap_Any theMessage = spReadMessage(theChannerComboQ->GetR());
+			const string8& theWhat = theMessage.Get<string8>("What");
+
+			if (false)
+				{}
+			else if (theWhat == "PullSuggested")
 				{
-				ZRef<ZDatonSet::Deltas> theDeltas;
-				ZRef<Event> resultEvent;
-				theCallable->Call(theEvent, theDeltas, resultEvent);
+				try { sCall(fCallable_PullSuggested_Other, fCallable_PullFrom_Self); }
+				catch (...) {}
+				}
+			else if (theWhat == "PullFrom")
+				{
+				using namespace ZDatonSet;
+
+				ZRef<Event> theEvent = spEventFromSeq(theMessage.Get<ZSeq_Any>("Event"));
+
+				guard.Acquire();
+
+				set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
+				swap(theCallables_PullFrom, fCallables_PullFrom);
+
+				guard.Release();
 
 				ZMap_Any theMessage;
 				theMessage.Set("What", "PullFromResponse");
-				theMessage.Set("Event", spSeqFromEvent(resultEvent));
 				ZSeq_Any& theDeltasSeq = theMessage.Mut<ZSeq_Any>("Deltas");
-				foreachi (iterDelta, theDeltas->GetVector())
+
+				foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 					{
-					ZMap_Any& theEntry = theDeltasSeq.Mut<ZMap_Any>(theDeltasSeq.Count());
-					theEntry.Set("Event", spSeqFromEvent(iterDelta->first));
-					theEntry.Set("Delta", spSeqFromDelta(iterDelta->second));
+					ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(theEvent);
+
+					foreachi (iterDelta, theDeltas->GetVector())
+						{
+						ZMap_Any& theEntry = theDeltasSeq.Mut<ZMap_Any>(theDeltasSeq.Count());
+						theEntry.Set("Event", spSeqFromEvent(iterDelta->first));
+						theEntry.Set("Delta", spSeqFromDelta(iterDelta->second));
+						}
 					}
 
 				guard.Acquire();
@@ -347,66 +352,57 @@ void WrappedDatonSetRemoter::pRead()
 					fCnd.Wait(fMtxR);
 
 				SaveSetRestore<bool> theSSR(fConnectionBusy, true);
-				// Send the gathered information, as a PullFromResponse message
 
 				guard.Release();
-				spSendMessage(theMessage, sGetChan(theChannerRWQ->f1));
-				// Do the one and only
-				break;
-				}
-			}
-		else if (theWhat == "PullFromResponse")
-			{
-			using namespace ZDatonSet;
-			// We should be blocked up in pPullFrom, get the data across from here to there
-			const ZRef<Event> theEvent = spEventFromSeq(theMessage.Get<ZSeq_Any>("Event"));
-			Vector_Event_Delta_t theVED;
-			foreachi (iter, theMessage.Get<ZSeq_Any>("Deltas"))
-				{
-				const ZMap_Any theEntry = iter->Get<ZMap_Any>();
-				ZRef<Event> anEvent = spEventFromSeq(theEntry.Get<ZSeq_Any>("Event"));
-				ZRef<Delta> aDelta = spDeltaFromSeq(theEntry.Get<ZSeq_Any>("Delta"));
-				theVED.push_back(Event_Delta_t(anEvent, aDelta));
-				}
-			ZAcqMtxR acq2(fMtxR);
-			if (fPullFromPointer)
-				{
-				fPullFromPointer->f0 = new Deltas(*&theVED);
-				fPullFromPointer->f1 = theEvent;
-				fPullFromPointer = nullptr;
-				fCnd.Broadcast();
-				}
-			}
 
-		guard.Acquire();
+				spSendMessage(theMessage, sGetChan(theChannerComboQ->GetW()));
+				}
+			else if (theWhat == "PullFromResponse")
+				{
+				using namespace ZDatonSet;
+				// We should be blocked up in pPullFrom, get the data across from here to there
+				Vector_Event_Delta_t theVED;
+				foreachi (iter, theMessage.Get<ZSeq_Any>("Deltas"))
+					{
+					const ZMap_Any theEntry = iter->Get<ZMap_Any>();
+					ZRef<Event> anEvent = spEventFromSeq(theEntry.Get<ZSeq_Any>("Event"));
+					ZRef<Delta> aDelta = spDeltaFromSeq(theEntry.Get<ZSeq_Any>("Delta"));
+					theVED.push_back(Event_Delta_t(anEvent, aDelta));
+					}
+				guard.Acquire();
+				if (fPullFromPointer)
+					{
+					*fPullFromPointer = new Deltas(*&theVED);
+					fPullFromPointer = nullptr;
+					fCnd.Broadcast();
+					}
+				}
+
+			guard.Acquire();
+			}
+		catch (std::exception& ex)
+			{
+			ZGuardMtxR guard(fMtxR);
+			sClear(fChannerComboQ);
+			}
 		}
 	}
 
 void WrappedDatonSetRemoter::spRead(ZRef<WrappedDatonSetRemoter> iWDSR)
-	{
-	try
-		{
-		iWDSR->pRead();
-		}
-	catch (std::exception& ex)
-		{
-		if (ZLOGF(w, eDebug))
-			w << "Caught: " << ex.what();
-		}
-	}
+	{ iWDSR->pRead(); }
 
-ZQ<ChannerRW> WrappedDatonSetRemoter::pQEnsureChannerRW()
+ZQ<ChannerComboRW_Bin> WrappedDatonSetRemoter::pQEnsureChannerCombo()
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	if (not fChannerRWQ)
+	if (not fChannerComboQ)
 		{
 		guard.Release();
-		ZQ<ChannerRW> theChannerRWQ = sCall(fChannerRWFactory);
+		ZQ<ChannerComboRW_Bin> theChannerComboQ = sCall(fChannerComboFactory);
 		guard.Acquire();
-		fChannerRWQ = theChannerRWQ;
+		fChannerComboQ = theChannerComboQ;
 		}
-	return fChannerRWQ;
+	return fChannerComboQ;
 	}
 
 } // namespace Dataspace

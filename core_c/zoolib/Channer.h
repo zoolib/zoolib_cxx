@@ -162,6 +162,76 @@ ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
 	const Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
 	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
 
+// =================================================================================================
+// MARK: - ChannerComboRW
+
+template <class Elmt_p>
+class ChannerComboRW
+	{
+public:
+	ChannerComboRW(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
+	:	fChannerR(iChannerR)
+	,	fChannerW(iChannerW)
+		{}
+
+	const ZRef<Channer<ChanR<Elmt_p> > >& GetR() const
+		{ return fChannerR; }
+
+	void SetR(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR)
+		{ fChannerR = iChannerR; }
+
+	const ZRef<Channer<ChanW<Elmt_p> > >& GetW() const
+		{ return fChannerW; }
+
+	void SetW(const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
+		{ fChannerW = iChannerW; }
+
+protected:
+	ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
+	ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
+	};
+
+// =================================================================================================
+// MARK: - ChannerComboRWClose
+
+template <class Elmt_p>
+class ChannerComboRWClose
+	{
+public:
+	ChannerComboRWClose(
+		const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW,
+		const ZRef<Channer<ChanClose> >& iChannerClose)
+	:	fChannerR(iChannerR)
+	,	fChannerW(iChannerW)
+	,	fChannerClose(iChannerClose)
+		{}
+
+	const ZRef<Channer<ChanR<Elmt_p> > >& GetR() const
+		{ return fChannerR; }
+
+	void SetR(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR)
+		{ fChannerR = iChannerR; }
+
+	const ZRef<Channer<ChanW<Elmt_p> > >& GetW() const
+		{ return fChannerW; }
+
+	void SetW(const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
+		{ fChannerW = iChannerW; }
+
+	const ZRef<Channer<ChanClose> >& GetClose() const
+		{ return fChannerClose; }
+
+	void SetClose(const ZRef<Channer<ChanClose> >& iChannerClose)
+		{ fChannerClose = iChannerClose; }
+
+protected:
+	ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
+	ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
+	ZRef<Channer<ChanClose> > fChannerClose;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Channer_h__

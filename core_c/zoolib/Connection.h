@@ -28,17 +28,41 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-// =================================================================================================
-// MARK: -
+typedef ChannerComboRW<byte> ChannerComboRW_Bin;
 
-typedef Multi2<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin> > ChannerRW;
+typedef Callable<ZQ<ChannerComboRW_Bin>()> ChannerComboFactoryRW_Bin;
 
-typedef Callable<ZQ<ChannerRW>()> ChannerRWFactory;
+typedef ChannerComboRWClose<byte> ChannerComboRWClose_Bin;
 
+typedef Callable<ZQ<ChannerComboRWClose_Bin>()> ChannerComboFactoryRWClose_Bin;
 
-typedef Multi3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > Connection;
+// ---
 
-typedef Callable<ZQ<Connection>()> ConnectionFactory;
+//typedef Multi3<ZRef<ChannerR_Bin>,ZRef<ChannerW_Bin>,ZRef<ChannerClose> > ChannerRWClose;
+//
+//typedef Callable<ZQ<ChannerRWClose>()> ChannerRWCloseFactory;
+//
+//typedef ChannerRWClose Connection;
+
+// ---
+
+typedef Multi4<
+		ZRef<ChannerR_Bin>,
+		ZRef<ChannerU_Bin>,
+		ZRef<ChannerPos>,
+		ZRef<ChannerCount> >
+	ChannerRPos;
+
+typedef Multi6<
+		ZRef<ChannerR_Bin>,
+		ZRef<ChannerU_Bin>,
+		ZRef<ChannerW_Bin>,
+		ZRef<ChannerPos>,
+		ZRef<ChannerCount>,
+		ZRef<ChannerCountSet> >
+	ChannerRWPosCountSet;
+
+// ---
 
 } // namespace ZooLib
 

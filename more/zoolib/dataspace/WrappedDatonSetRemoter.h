@@ -39,12 +39,12 @@ class WrappedDatonSetRemoter
 public:
 	// Client ctor
 	WrappedDatonSetRemoter(
-		const ZRef<ChannerRWFactory>& iChannerRWFactory,
+		const ZRef<ChannerComboFactoryRW_Bin>& iChannerComboFactory,
 		const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other);
 
 	// Server ctor
 	WrappedDatonSetRemoter(
-		const ChannerRW& iChannerRW,
+		const ChannerComboRW_Bin& iChannerComboRW,
 		const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other);
 
 // From ZCounted
@@ -56,14 +56,14 @@ public:
 private:
 	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
 
-	void pPullFrom(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent);
+	ZRef<ZDatonSet::Deltas> pPullFrom(ZRef<Event> iEvent);
 
 	void pRead();
 	static void spRead(ZRef<WrappedDatonSetRemoter> iWDSR);
 
-	ZQ<ChannerRW> pQEnsureChannerRW();
+	ZQ<ChannerComboRW_Bin> pQEnsureChannerCombo();
 
-	const ZRef<ChannerRWFactory> fChannerRWFactory;
+	const ZRef<ChannerComboFactoryRW_Bin> fChannerComboFactory;
 
 	const ZRef<Callable_PullSuggested> fCallable_PullSuggested_Other;
 
@@ -76,12 +76,11 @@ private:
 
 	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
 
-	ZQ<ChannerRW> fChannerRWQ;
+	ZQ<ChannerComboRW_Bin> fChannerComboQ;
 
 	bool fConnectionBusy;
 
-	typedef Multi2<ZRef<ZDatonSet::Deltas>, ZRef<Event>> PullFrom_t;
-	PullFrom_t* fPullFromPointer;
+	ZRef<ZDatonSet::Deltas>* fPullFromPointer;
 	};
 
 } // namespace Dataspace
