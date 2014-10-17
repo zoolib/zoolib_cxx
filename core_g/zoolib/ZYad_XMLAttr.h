@@ -43,6 +43,9 @@ public:
 
 ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU);
 
+ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU,
+	const std::string& iOuterName, const ZML::Attrs_t& iAttrs);
+
 //void sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
 
 } // namespace ZYad_XMLAttr

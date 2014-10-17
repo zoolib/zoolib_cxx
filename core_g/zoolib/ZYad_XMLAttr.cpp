@@ -192,5 +192,9 @@ ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	return null;
 	}
 
+ZRef<ZYadR> sYadR(ZRef<ZML::StrimmerU> iStrimmerU,
+	const string& iOuterName, const ZML::Attrs_t& iAttrs)
+	{ return new YadMapR(iStrimmerU, iOuterName, iAttrs); }
+
 } // namespace ZYad_XMLAttr
 } // namespace ZooLib
