@@ -70,7 +70,8 @@ SOFTWARE.
 #define __ZBigRegion_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZAccumulator_T.h"
+#include "zoolib/Accumulator_T.h"
+
 #include "zoolib/ZGeomPOD.h"
 
 #include <vector>
@@ -242,7 +243,7 @@ public:
 		{ ioRgn |= iOther; }
 	};
 
-typedef ZAccumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
+typedef Accumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
 	ZBigRegionAccumulator;
 
 } // namespace ZooLib

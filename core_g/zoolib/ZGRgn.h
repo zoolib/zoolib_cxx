@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGRgn_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZAccumulator_T.h"
+#include "zoolib/Accumulator_T.h"
+
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZGeomPOD.h"
 
@@ -264,7 +265,7 @@ public:
 		{ ioRgn.Include(iOther); }
 	};
 
-typedef ZAccumulator_T<ZGRgn, ZGRgnUnioner_t, std::vector<ZGRgn> > ZGRgnAccumulator;
+typedef Accumulator_T<ZGRgn, ZGRgnUnioner_t, std::vector<ZGRgn> > ZGRgnAccumulator;
 
 } // namespace ZooLib
 

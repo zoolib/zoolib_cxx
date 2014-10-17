@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAccumulator_T_h__
-#define __ZAccumulator_T_h__ 1
+#ifndef __ZooLib_Accumulator_T_h__
+#define __ZooLib_Accumulator_T_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZStdInt.h" // For uint32
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZAccumulator_T
+// MARK: - Accumulator_T
 
 // AG 2000-02-17. If we assume that unioning a rectangle into a region requires a linear search
 // through the target region, then a region built out of n rectangles will take (n^2)/2 operations.
@@ -44,7 +44,7 @@ namespace ZooLib {
 // S is a stack-like container of T (vector, list or deque are all fine).
 
 template <typename T, typename C, typename S>
-class ZAccumulator_T
+class Accumulator_T
 	{
 	static inline uint32 sHammingWeight(uint32 n)
 		{
@@ -59,11 +59,11 @@ class ZAccumulator_T
 		}
 
 public:
-	ZAccumulator_T()
+	Accumulator_T()
 	:	fCount(0)
 		{}
 
-	ZAccumulator_T(const T& iT)
+	Accumulator_T(const T& iT)
 	:	fStack(1, iT)
 	,	fCount(1)
 		{}
@@ -100,4 +100,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZAccumulator_T_h__
+#endif // __ZooLib_Accumulator_T_h__
