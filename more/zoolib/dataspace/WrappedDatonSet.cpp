@@ -88,10 +88,8 @@ void WrappedDatonSet::Update()
 
 	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
-		ZRef<ZDatonSet::Deltas> theDeltas;
-		ZRef<Event> theEvent;
-		theCallable->Call(fDatonSet_Active->GetEvent(), theDeltas, theEvent);
-		if (fDatonSet_Active->IncorporateDeltas(theDeltas, theEvent))
+		ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(fDatonSet_Active->GetEvent());
+		if (fDatonSet_Active->IncorporateDeltas(theDeltas))
 			anyChange = true;
 		}
 
@@ -155,11 +153,10 @@ void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_Pu
 		}
 	}
 
-void WrappedDatonSet::pPullFrom(
-	ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)
+ZRef<ZDatonSet::Deltas> WrappedDatonSet::pPullFrom(ZRef<Event> iEvent)
 	{
 	ZGuardMtxR guard(fMtxR);
-	fDatonSet_Committed->GetDeltas(iEvent, oDeltas, oEvent);
+	return fDatonSet_Committed->GetDeltas(iEvent);
 	}
 
 ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,

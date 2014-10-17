@@ -65,7 +65,7 @@ public:
 private:
 	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
 
-	void pPullFrom(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent);
+	ZRef<ZDatonSet::Deltas> pPullFrom(ZRef<Event> iEvent);
 
 	// ---
 

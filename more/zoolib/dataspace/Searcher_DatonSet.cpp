@@ -407,13 +407,12 @@ void Searcher_DatonSet::pPull()
 		{
 		guard.Release();
 
-		ZRef<ZDatonSet::Deltas> theDeltas;
-		ZRef<Event> theEvent;
-		theCallable->Call(fEvent, theDeltas, theEvent);
+		ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(fEvent);
 
 		guard.Acquire();
 
-		fEvent = fEvent->Joined(theEvent);
+		foreachi (iter, theDeltas->GetVector())
+			fEvent = fEvent->Joined(iter->first);
 
 		const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
 

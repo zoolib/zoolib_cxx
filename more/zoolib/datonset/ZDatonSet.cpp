@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
@@ -230,9 +229,7 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	ZRef<Event> theEvent = fEvent;
 	guard.Release();
 
-	ZRef<Event> otherEvent;
-	ZRef<Deltas> theDeltas;
-	ioOther->GetDeltas(theEvent, theDeltas, otherEvent);
+	ZRef<Deltas> theDeltas = ioOther->GetDeltas(theEvent);
 
 	ZRef<Identity> otherIdentity = ioOther->fIdentity;
 
@@ -246,8 +243,11 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	guard.Acquire();
 
 	if (theDeltas && theDeltas->GetVector().size())
+		{
+		foreachi (iter, theDeltas->GetVector())
+			fEvent = fEvent->Joined(iter->first);
 		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
-	fEvent = fEvent->Joined(otherEvent);
+		}
 
 	fIdentity = fIdentity->Summed(otherIdentity); //?? Check this
 
@@ -256,16 +256,18 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	return sNotEmpty(theDeltas->GetVector());
 	}
 
-bool DatonSet::IncorporateDeltas(ZRef<Deltas> iDeltas, ZRef<Event> iEvent)
+bool DatonSet::IncorporateDeltas(ZRef<Deltas> iDeltas)
 	{
 	ZGuardMtx guard(fMtx);
 	this->pCommit();
 	ZRef<Event> theEvent = fEvent;
 
 	if (iDeltas && iDeltas->GetVector().size())
+		{
+		foreachi (iter, iDeltas->GetVector())
+			fEvent = fEvent->Joined(iter->first);
 		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
-
-	fEvent = fEvent->Joined(iEvent);
+		}
 
 	fEvent = fEvent->Advanced(fIdentity);
 
@@ -280,12 +282,10 @@ struct Accumulator_Join
 	};
 } // anonymous namespace
 
-void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>& oEvent)
+ZRef<Deltas> DatonSet::GetDeltas(ZRef<Event> iEvent)
 	{
 	ZGuardMtx guard(fMtx);
 	this->pCommit();
-
-	ZAccumulator_T<ZRef<Event>,Accumulator_Join,vector<ZRef<Event> > > theAcc(iEvent);
 
 	Vector_Event_Delta_t resultVector;
 	ZRef<DeltasChain> current = fDeltasChain;
@@ -304,12 +304,10 @@ void DatonSet::GetDeltas(ZRef<Event> iEvent, ZRef<Deltas>& oDeltas, ZRef<Event>&
 				{
 				// ii->first is after iEvent, or is concurrent with it.
 				resultVector.push_back(*ii);
-				theAcc.Include(ii->first);
 				}
 			}
 		}
-	oDeltas = new Deltas(&resultVector);
-	oEvent = theAcc.Get();
+	return new Deltas(&resultVector);
 	}
 
 ZRef<DeltasChain> DatonSet::GetDeltasChain(ZRef<Event>* oEvent)

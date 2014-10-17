@@ -45,8 +45,7 @@ typedef Multi3<
 
 typedef Callable<Melange_t()> MelangeFactory;
 
-typedef Callable<void(ZRef<Event> iEvent, ZRef<ZDatonSet::Deltas>& oDeltas, ZRef<Event>& oEvent)>
-	Callable_PullFrom;
+typedef Callable<ZRef<ZDatonSet::Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;
 
 typedef Callable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Callable_PullSuggested;
 
