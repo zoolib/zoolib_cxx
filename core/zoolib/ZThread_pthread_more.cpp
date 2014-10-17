@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_pthread)
 
+#include "zoolib/Memory.h" // For sMemZero
+
 namespace ZooLib {
 namespace ZThread_pthread {
 
@@ -58,6 +60,30 @@ SaveSetRestoreName::~SaveSetRestoreName()
 	if (fQPrior)
 		sSetName(fQPrior->c_str());
 	}
+
+// =================================================================================================
+// MARK: - SaveSetRestorePriority
+
+SaveSetRestorePriority::SaveSetRestorePriority(int iPriority)
+	{
+	pthread_getschedparam(pthread_self(), &fPolicyPrior, &fSchedPrior);
+	struct sched_param schedNew;
+	sMemZero_T(schedNew);
+	schedNew.sched_priority = iPriority;
+	pthread_setschedparam(pthread_self(), SCHED_RR, &schedNew);
+	}
+
+SaveSetRestorePriority::~SaveSetRestorePriority()
+	{
+	pthread_setschedparam(pthread_self(), fPolicyPrior, &fSchedPrior);
+	}
+
+// =================================================================================================
+// MARK: - SaveSetRestorePriority_Max
+
+SaveSetRestorePriority_Max::SaveSetRestorePriority_Max()
+:	SaveSetRestorePriority(sched_get_priority_max(SCHED_RR))
+	{}
 
 } // namespace ZThread_pthread
 } // namespace ZooLib

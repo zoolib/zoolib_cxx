@@ -52,6 +52,30 @@ private:
 	const ZQ<std::string> fQPrior;
 	};
 
+// =================================================================================================
+// MARK: - SaveSetRestorePriority
+
+class SaveSetRestorePriority
+	{
+public:
+	SaveSetRestorePriority(int iPriority);
+	~SaveSetRestorePriority();
+
+private:
+	struct sched_param fSchedPrior;
+	int fPolicyPrior;
+	};
+
+// =================================================================================================
+// MARK: - SaveSetRestorePriority_Max
+
+class SaveSetRestorePriority_Max
+:	public SaveSetRestorePriority
+	{
+public:
+	SaveSetRestorePriority_Max();
+	};
+
 } // namespace ZThread_pthread
 } // namespace ZooLib
 
