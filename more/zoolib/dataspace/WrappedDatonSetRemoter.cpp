@@ -1,3 +1,5 @@
+
+
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
@@ -189,16 +191,18 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 	{
 	// iCallable_PullFrom will be the counterpart to fCallable_PullSuggested_Other.
 
+	{
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
+	}
 
 	for (;;)
 		{
 		try
 			{
-			guard.Release();
 			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
-			guard.Acquire();
+
+			ZGuardMtxR guard(fMtxR);
 
 			if (not theChannerComboQ)
 				break;
@@ -208,26 +212,25 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
 
-			SaveSetRestore<bool> theSSR(fConnectionBusy, true);
-
-			guard.Release();
-
 			ZMap_Any theMessage;
 			theMessage.Set("What", "PullSuggested");
+
+			{
+			SaveSetRestore<bool> theSSR(fConnectionBusy, true);
+			ZRelGuardR rel2(guard);
+
 			spSendMessage(theMessage, theChanW);
+			}
 
-			guard.Acquire();
-
-			// Update state
+			fCnd.Broadcast();
 			break;
 			}
 		catch (...)
 			{
+			ZGuardMtxR guard(fMtxR);
 			sClear(fChannerComboQ);
 			}
 		}
-
-	fConnectionBusy = false;
 
 	fCnd.Broadcast();
 	}
@@ -238,10 +241,9 @@ ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 		{
 		try
 			{
-			ZGuardMtxR guard(fMtxR, false);
-
 			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
-			guard.Acquire();
+
+			ZGuardMtxR guard(fMtxR);
 
 			if (not theChannerComboQ)
 				break;
@@ -251,8 +253,6 @@ ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
 
-			SaveSetRestore<bool> theSSR(fConnectionBusy, true);
-
 			ZMap_Any theMessage;
 			theMessage.Set("What", "PullFrom");
 			theMessage.Set("Event", spSeqFromEvent(iEvent));
@@ -260,11 +260,14 @@ ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 			ZRef<ZDatonSet::Deltas> theDeltas;
 			fPullFromPointer = &theDeltas;
 
-			guard.Release();
+			{
+			SaveSetRestore<bool> theSSR(fConnectionBusy, true);
+			ZRelGuardR rel(guard);
 
 			spSendMessage(theMessage, theChanW);
+			}
 
-			guard.Acquire();
+			fCnd.Broadcast();
 
 			// Wait till a PullFromResponse has come in (any PullfromResponse?), and
 			while (fPullFromPointer)
@@ -290,11 +293,9 @@ void WrappedDatonSetRemoter::pRead()
 		{
 		try
 			{
-			ZGuardMtxR guard(fMtxR);
-
-			guard.Release();
 			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
-			guard.Acquire();
+
+			ZGuardMtxR guard(fMtxR);
 
 			if (not theChannerComboQ)
 				{
@@ -305,7 +306,7 @@ void WrappedDatonSetRemoter::pRead()
 				break;
 				}
 
-			guard.Release();
+			ZRelGuardR rel(guard);
 
 			const ZMap_Any theMessage = spReadMessage(theChannerComboQ->GetR());
 			const string8& theWhat = theMessage.Get<string8>("What");
@@ -323,12 +324,12 @@ void WrappedDatonSetRemoter::pRead()
 
 				ZRef<Event> theEvent = spEventFromSeq(theMessage.Get<ZSeq_Any>("Event"));
 
-				guard.Acquire();
+				ZAcqGuardR acq(guard);
 
 				set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
 				swap(theCallables_PullFrom, fCallables_PullFrom);
 
-				guard.Release();
+				ZRelGuardR rel(guard);
 
 				ZMap_Any theMessage;
 				theMessage.Set("What", "PullFromResponse");
@@ -346,16 +347,19 @@ void WrappedDatonSetRemoter::pRead()
 						}
 					}
 
-				guard.Acquire();
+				ZAcqGuardR acq2(guard);
 
 				while (fConnectionBusy)
 					fCnd.Wait(fMtxR);
 
+				{
 				SaveSetRestore<bool> theSSR(fConnectionBusy, true);
-
-				guard.Release();
+				ZRelGuardR rel2(guard);
 
 				spSendMessage(theMessage, sGetChan(theChannerComboQ->GetW()));
+				}
+
+				fCnd.Broadcast();
 				}
 			else if (theWhat == "PullFromResponse")
 				{
@@ -369,7 +373,8 @@ void WrappedDatonSetRemoter::pRead()
 					ZRef<Delta> aDelta = spDeltaFromSeq(theEntry.Get<ZSeq_Any>("Delta"));
 					theVED.push_back(Event_Delta_t(anEvent, aDelta));
 					}
-				guard.Acquire();
+
+				ZAcqGuardR acq(guard);
 				if (fPullFromPointer)
 					{
 					*fPullFromPointer = new Deltas(*&theVED);
@@ -377,8 +382,6 @@ void WrappedDatonSetRemoter::pRead()
 					fCnd.Broadcast();
 					}
 				}
-
-			guard.Acquire();
 			}
 		catch (std::exception& ex)
 			{
