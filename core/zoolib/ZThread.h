@@ -114,6 +114,9 @@ typedef ZGuard_T<ZMtxR> ZGuardMtxR;
 typedef ZAcquirer_T<ZBen> ZAcqBen;
 typedef ZGuard_T<ZBenR> ZGuardBenR;
 
+typedef ZAcquirer_T<ZGuardMtxR> ZAcqGuardR;
+typedef ZReleaser_T<ZGuardMtxR> ZRelGuardR;
+
 // =================================================================================================
 // MARK: - ZThread
 
