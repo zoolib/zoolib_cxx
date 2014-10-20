@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace HTTP {
 
-typedef ChannerComboRWClose<byte> Connection_t;
+typedef ChannerComboRWClose_Bin Connection_t;
 
 ZQ<Connection_t> sAsConnectionQ(const ZRef<ZStreamerRWCon>& iSRWCon);
 
