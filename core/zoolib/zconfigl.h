@@ -76,6 +76,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			#define ZCONFIG_Processor ZCONFIG_Processor_ARM
 		#elif defined(__arm64__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_ARM_64
+		#elif defined(__mips__)
+			#define ZCONFIG_Processor ZCONFIG_Processor_MIPS
 		#endif
 	#elif defined(_MSC_VER)
 		#if 0
@@ -107,6 +109,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#elif ZCONFIG(Processor, x86_64)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
 	#elif ZCONFIG(Processor, ARM)
+		#define ZCONFIG_Endian ZCONFIG_Endian_Little
+	#elif ZCONFIG(Processor, MIPS)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
 	#endif
 #endif
