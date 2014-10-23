@@ -32,10 +32,12 @@ namespace ZThread_pthread {
 
 ZQ<std::string> sQGetName()
 	{
-	char buffer[256];
-	if (0 != ::pthread_getname_np(pthread_self(), buffer, countof(buffer)))
-		return null;
-	return std::string(buffer);
+	#if not defined(__ANDROID_API__)
+		char buffer[256];
+		if (0 == ::pthread_getname_np(pthread_self(), buffer, countof(buffer)))
+			return std::string(buffer);
+	#endif
+	return null;
 	}
 
 // =================================================================================================

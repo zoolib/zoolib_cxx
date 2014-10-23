@@ -50,7 +50,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif ZCONFIG_SPI_Enabled(iPhone)
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(iName); }
-#else
+#elif not defined(__ANDROID_API__)
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(::pthread_self(), iName); }
 #endif
@@ -118,7 +118,7 @@ bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 	if (iTimeout <= 0)
 		return false;
 
-	#if defined(__APPLE__) || defined(__ANDROID__)
+	#if defined(__APPLE__) || (defined(__ANDROID__) and (HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE))
 		const timespec the_timespec = { time_t(iTimeout), long(1e9 * fmod(iTimeout, 1.0)) };
 		return 0 == ::pthread_cond_timedwait_relative_np(
 			&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
