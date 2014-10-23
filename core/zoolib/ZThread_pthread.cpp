@@ -53,6 +53,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif not defined(__ANDROID_API__)
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(::pthread_self(), iName); }
+#else
+	void ZooLib::ZThread_pthread::sSetName(const char* iName)
+		{ /* no-op */ }
 #endif
 
 namespace ZooLib {
