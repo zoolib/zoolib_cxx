@@ -124,7 +124,7 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 	UTF32* localDest = oDest;
 	UTF32* localDestEnd = oDest + iCount;
 
-	uint8 curByte;
+	uint8 curByte = 0;
 	bool gotByte = false;
 	while (localDest < localDestEnd)
 		{
@@ -179,7 +179,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 	UTF8* localDest = oDest;
 	UTF8* localDestEnd = oDest + iCountCU;
 
-	uint8 curByte;
+	uint8 curByte = 0;
 	bool gotByte = false;
 	while (localDest < localDestEnd && localCountCP)
 		{
