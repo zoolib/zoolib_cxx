@@ -27,7 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef va_copy
-	#define va_copy(dest, src) dest = src
+	#if defined __va_copy
+		#define va_copy __va_copy
+	#else
+		#define va_copy(dest, src) dest = src
+	#endif
 #endif
 
 namespace ZooLib {
