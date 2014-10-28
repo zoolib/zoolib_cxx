@@ -112,7 +112,7 @@ public:
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
 			{
-			{ (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(); }
+			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
 			return notnull;
 			}
 		return null;
