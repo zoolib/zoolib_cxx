@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZFunctionChain_h__
-#define __ZFunctionChain_h__ 1
+#ifndef __ZooLib_FunctionChain_h__
+#define __ZooLib_FunctionChain_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_MSVCStaticLib.h"
@@ -35,24 +35,24 @@ more discussion and suggested workarounds.
 */
 
 // =================================================================================================
-// MARK: - ZFunctionChain_T
+// MARK: - FunctionChain
 
 template <class Result, class Param>
-class ZFunctionChain_T
+class FunctionChain
 	{
 public:
-	typedef ZFunctionChain_T Base_t;
+	typedef FunctionChain Base_t;
 	typedef Result Result_t;
 	typedef Param Param_t;
 
 	static bool sInvoke(Result& oResult, Param iParam)
 		{
-		ZFunctionChain_T* head = spHead();
+		FunctionChain* head = spHead();
 
 		// Try preferred first, then non-preferred
 		for (int xx = 0; xx < 2; ++xx)
 			{
-			for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
+			for (FunctionChain* iter = head; iter; iter = iter->fNext)
 				{
 				try
 					{
@@ -76,38 +76,38 @@ public:
 		}
 
 protected:
-	ZFunctionChain_T()
+	FunctionChain()
 	:	fIsPreferred(true)
 		{
-		ZFunctionChain_T*& theHead = spHead();
+		FunctionChain*& theHead = spHead();
 		fNext = theHead;
 		theHead = this;
 		}
 
-	ZFunctionChain_T(bool iPreferred)
+	FunctionChain(bool iPreferred)
 	:	fIsPreferred(iPreferred)
 		{
-		ZFunctionChain_T*& theHead = spHead();
+		FunctionChain*& theHead = spHead();
 		fNext = theHead;
 		theHead = this;
 		}
 
-	virtual ~ZFunctionChain_T()
+	virtual ~FunctionChain()
 		{}
 
 	virtual bool Invoke(Result& oResult, Param iParam) = 0;
 
 private:
-	static ZFunctionChain_T*& spHead()
+	static FunctionChain*& spHead()
 		{
-		static ZFunctionChain_T* spHead;
+		static FunctionChain* spHead;
 		return spHead;
 		}
 
-	ZFunctionChain_T* fNext;
+	FunctionChain* fNext;
 	const bool fIsPreferred;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZFunctionChain_h__
+#endif // __ZooLib_FunctionChain_h__
