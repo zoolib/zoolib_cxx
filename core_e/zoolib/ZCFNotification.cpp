@@ -34,14 +34,14 @@ namespace ZooLib {
 // MARK: - ZCFNotification
 
 ZCFNotification::ZCFNotification(
-	void* iObject, const std::string& iName, ZRef<Callable_Notification> iCallable)
+	void* iObject, const std::string& iName, ZRef<Callable_t> iCallable)
 :	fObject(iObject)
 ,	fName_String(iName)
 ,	fCallable(iCallable)
 	{}
 
 ZCFNotification::ZCFNotification(
-	void* iObject, CFStringRef iName, ZRef<Callable_Notification> iCallable)
+	void* iObject, CFStringRef iName, ZRef<Callable_t> iCallable)
 :	fObject(iObject)
 ,	fName_CFStringRef(iName)
 ,	fCallable(iCallable)
