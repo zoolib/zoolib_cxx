@@ -30,7 +30,6 @@ ZMACRO_MSVCStaticLib_cpp(Net_Internet_WinSock)
 
 #include "zoolib/Memory.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_WinSock.h"
 
@@ -44,7 +43,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_NameLookup
-:	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
+:	public FunctionChain<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -55,7 +54,7 @@ class Make_NameLookup
 
 
 class Make_Listener
-:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam4_t>
+:	public FunctionChain<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -66,7 +65,7 @@ class Make_Listener
 
 
 class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>
+:	public FunctionChain<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

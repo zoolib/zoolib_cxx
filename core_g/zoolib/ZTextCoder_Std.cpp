@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Unicode.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZTextCoder_Std.h"
 
 #include <string>
@@ -38,7 +37,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_Decoder
-:	public ZFunctionChain_T<ZTextDecoder*, const string&>
+:	public FunctionChain<ZTextDecoder*, const string&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -56,7 +55,7 @@ class Make_Decoder
 	} sMaker0;
 
 class Make_Encoder
-:	public ZFunctionChain_T<ZTextEncoder*, const string&>
+:	public FunctionChain<ZTextEncoder*, const string&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

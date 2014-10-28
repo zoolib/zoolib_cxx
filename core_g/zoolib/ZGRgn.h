@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Accumulator_T.h"
+#include "zoolib/FunctionChain.h"
 
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZGeomPOD.h"
 
 #include <vector>

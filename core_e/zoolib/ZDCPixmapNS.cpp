@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/FunctionChain.h"
 #include "zoolib/Memory.h" // For sMemCopy
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFunctionChain.h"
 
 #include <vector>
 
@@ -285,7 +285,7 @@ int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
 	{
 	EFormatStandard result;
-	if (ZFunctionChain_T<EFormatStandard, EFormatEfficient>::sInvoke(result, iFormat))
+	if (FunctionChain<EFormatStandard, EFormatEfficient>::sInvoke(result, iFormat))
 		{
 		return result;
 		}

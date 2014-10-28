@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(File_Win)
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
 #include "zoolib/ZUtil_WinFile.h"
@@ -50,7 +49,7 @@ If fBase is empty then fComps must also be empty and we represent the root.
 namespace { // anonymous
 
 class Make_FileLoc
-:	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
+:	public FunctionChain<ZRef<ZFileLoc>, ZFileLoc::ELoc>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

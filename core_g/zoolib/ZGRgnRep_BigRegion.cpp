@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZGRgnRep_BigRegion.h"
 
-#include "zoolib/ZFunctionChain.h"
-
 ZMACRO_MSVCStaticLib_cpp(GRgnRep_BigRegion)
 
 namespace ZooLib {
@@ -64,7 +62,7 @@ ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
+:	public FunctionChain<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 public:
 	Make_Rect() : Base_t(false) {}

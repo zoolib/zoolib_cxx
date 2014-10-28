@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/FunctionChain.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_POSIX.h"
 #include "zoolib/ZStreamer.h"
@@ -79,7 +79,7 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	}
 
 class DebugFunction
-:	public ZFunctionChain_T<ZDebug::Function_t, const ZDebug::Params_t&>
+:	public FunctionChain<ZDebug::Function_t, const ZDebug::Params_t&>
 	{
 public:
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)

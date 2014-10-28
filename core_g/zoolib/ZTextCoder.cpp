@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCoder.h"
 
@@ -480,7 +479,7 @@ state when first created, and can be returned to that state by calling ZTextDeco
 ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
 	{
 	const string charsetLC = Unicode::sToLower(iCharset);
-	return ZFunctionChain_T<ZTextDecoder*, const string&>::sInvoke(charsetLC);
+	return FunctionChain<ZTextDecoder*, const string&>::sInvoke(charsetLC);
 	}
 
 /**
@@ -624,7 +623,7 @@ UTF-32 code units and thus there is no need to deal with truncated source.
 ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
 	{
 	const string charsetLC = Unicode::sToLower(iCharset);
-	return ZFunctionChain_T<ZTextEncoder*, const string&>::sInvoke(charsetLC);
+	return FunctionChain<ZTextEncoder*, const string&>::sInvoke(charsetLC);
 	}
 
 /**

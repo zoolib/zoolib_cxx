@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Memory.h"
 
-#include "zoolib/ZFunctionChain.h"
-
 #include <errno.h>
 #include <sys/socket.h>
 #include <sys/stat.h> // For chmod
@@ -48,7 +46,7 @@ using std::string;
 namespace { // anonymous
 
 class Make_NameLookup
-:	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
+:	public FunctionChain<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -58,7 +56,7 @@ class Make_NameLookup
 	} sMaker0;
 
 class Make_Listener
-:	public ZFunctionChain_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
+:	public FunctionChain<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -68,7 +66,7 @@ class Make_Listener
 	} sMaker1;
 
 class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
+:	public FunctionChain<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

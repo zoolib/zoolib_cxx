@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_RFCOMM.h"
-#include "zoolib/ZFunctionChain.h"
 
 namespace ZooLib {
 

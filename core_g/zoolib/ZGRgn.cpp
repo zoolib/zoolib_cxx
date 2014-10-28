@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZGRgn.h"
-#include "zoolib/ZFunctionChain.h"
 
 namespace ZooLib {
 
@@ -28,7 +27,7 @@ namespace ZooLib {
 
 static ZRef<ZGRgnRep> spMake(const ZRectPOD& iBounds)
 	{
-	return ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
+	return FunctionChain<ZRef<ZGRgnRep>, const ZRectPOD&>
 		::sInvoke(iBounds);
 	}
 

@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/FunctionChain.h"
 #include "zoolib/Memory.h" // For sMemCopy
 
 #include "zoolib/ZDCPixmap.h"
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream.h"
 
 #include <vector>
@@ -530,7 +530,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>
+	if (FunctionChain<ZRef<ZDCPixmapRep>, const CreateRaster_t&>
 		::sInvoke(result, CreateRaster_t(iRaster, iBounds, iPixelDesc)))
 		{
 		return result;
@@ -544,7 +544,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>
+	if (FunctionChain<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>
 		::sInvoke(result, CreateRasterDesc_t(iRasterDesc, iBounds, iPixelDesc)))
 		{
 		return result;

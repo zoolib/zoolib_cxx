@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/FunctionChain.h"
 #include "zoolib/size_t.h" // For size_t
 
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFunctionChain.h"
 
 #include <stdio.h>
 #include <stdlib.h> // For abort
@@ -58,7 +58,7 @@ extern void sInvoke(int iLevel, bool iStop,
 	theParams.fUserMessage = iUserMessage;
 
 	Function_t theFunction;
-	if (ZFunctionChain_T<Function_t, const Params_t&>::sInvoke(theFunction, theParams))
+	if (FunctionChain<Function_t, const Params_t&>::sInvoke(theFunction, theParams))
 		{
 		va_list args;
 		va_start(args, iUserMessage);
@@ -124,7 +124,7 @@ static void spHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	}
 
 class DebugFunction_POSIX
-:	public ZFunctionChain_T<Function_t, const Params_t&>
+:	public FunctionChain<Function_t, const Params_t&>
 	{
 public:
 	DebugFunction_POSIX() : Base_t(false) {}
@@ -186,7 +186,7 @@ static void spHandleDebug_Android(const Params_t& iParams, va_list iArgs)
 	}
 
 class DebugFunction_Android
-:	public ZFunctionChain_T<Function_t, const Params_t&>
+:	public FunctionChain<Function_t, const Params_t&>
 	{
 public:
 	DebugFunction_Android() : Base_t(false) {}
@@ -296,7 +296,7 @@ static void spHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 	}
 
 class DebugFunction_Win
-:	public ZFunctionChain_T<Function_t, const Params_t&>
+:	public FunctionChain<Function_t, const Params_t&>
 	{
 public:
 	DebugFunction_Win() : Base_t(false) {}

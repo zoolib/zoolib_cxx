@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_algorithm.h" // For std::find
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZFile.h"
 #include "zoolib/ZTrail.h"
 
@@ -108,7 +107,7 @@ what it considers to be the current working directory.
 ZFileSpec ZFileSpec::sCWD()
 	{
 	ZRef<ZFileLoc> theLoc =
-		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_CWD);
+		FunctionChain<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_CWD);
 	return ZFileSpec(theLoc);
 	}
 
@@ -116,7 +115,7 @@ ZFileSpec ZFileSpec::sCWD()
 ZFileSpec ZFileSpec::sRoot()
 	{
 	ZRef<ZFileLoc> theLoc =
-		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_Root);
+		FunctionChain<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_Root);
 	return ZFileSpec(theLoc);
 	}
 
@@ -129,7 +128,7 @@ of the application that's hosting the plugin.
 ZFileSpec ZFileSpec::sApp()
 	{
 	ZRef<ZFileLoc> theLoc =
-		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_App);
+		FunctionChain<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_App);
 	return ZFileSpec(theLoc);
 	}
 

@@ -29,8 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
-#include "zoolib/ZCONFIG_SPI.h"
-
 #if ZCONFIG_SPI_Enabled(BeOS) || defined (__ANDROID__)
 	#define ZCONFIG_File_AtAPISupported 0
 #else
@@ -38,7 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFunctionChain.h"
 
 #include <cstring>
 #include <vector>
@@ -76,7 +73,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_FileLoc
-:	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
+:	public FunctionChain<ZRef<ZFileLoc>, ZFileLoc::ELoc>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

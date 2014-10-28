@@ -21,8 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZFile_h__
 #define __ZFile_h__ 1
 
+#include "zoolib/FunctionChain.h"
+
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"

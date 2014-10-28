@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_Local.h"
-#include "zoolib/ZFunctionChain.h"
 
 namespace ZooLib {
 
@@ -70,7 +69,7 @@ string ZNetName_Local::AsString() const
 
 ZRef<ZNetNameLookup> ZNetName_Local::CreateLookup(size_t iMaxAddresses) const
 	{
-	return ZFunctionChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
+	return FunctionChain<ZRef<ZNetNameLookup>, LookupParam_t>
 		::sInvoke(LookupParam_t(fPath, iMaxAddresses));
 	}
 
@@ -82,7 +81,7 @@ const string& ZNetName_Local::GetPath() const
 
 ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(const string& iPath)
 	{
-	return ZFunctionChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
+	return FunctionChain<ZRef<ZNetListener_Local>, MakeParam_t>
 		::sInvoke(MakeParam_t(iPath));
 	}
 
@@ -91,7 +90,7 @@ ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(const string& iPath)
 
 ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPath)
 	{
-	return ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
+	return FunctionChain<ZRef<ZNetEndpoint_Local>, MakeParam_t>
 		::sInvoke(MakeParam_t(iPath));
 	}
 

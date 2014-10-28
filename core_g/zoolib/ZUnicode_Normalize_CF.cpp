@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(Unicode_Normalize_CF)
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUtil_CF.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
@@ -69,7 +68,7 @@ namespace { // anonymous
 #endif
 
 class Function
-:	public ZFunctionChain_T<string16, const Param_Normalize&>
+:	public FunctionChain<string16, const Param_Normalize&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

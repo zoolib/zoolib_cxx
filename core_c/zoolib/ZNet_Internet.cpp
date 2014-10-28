@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Stringf.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZNet_Internet.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
@@ -119,7 +118,7 @@ string ZNetName_Internet::AsString() const
 
 ZRef<ZNetNameLookup> ZNetName_Internet::CreateLookup(size_t iMaxAddresses) const
 	{
-	return ZFunctionChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
+	return FunctionChain<ZRef<ZNetNameLookup>, LookupParam_t>
 		::sInvoke(LookupParam_t(fName, fPort, iMaxAddresses));
 	}
 
@@ -134,21 +133,21 @@ ip_port ZNetName_Internet::GetPort() const
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+	return FunctionChain<ZRef<ZNetListener_TCP>, MakeParam_t>
 		::sInvoke(MakeParam_t(iPort));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 	ip4_addr iAddress, ip_port iPort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam4_t>
+	return FunctionChain<ZRef<ZNetListener_TCP>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iAddress, iPort));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 	ip6_addr iAddress, ip_port iPort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam6_t>
+	return FunctionChain<ZRef<ZNetListener_TCP>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iAddress, iPort));
 	}
 
@@ -158,14 +157,14 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
 	ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam4_t>
+	return FunctionChain<ZRef<ZNetEndpoint_TCP>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
 	}
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
 	ip6_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam6_t>
+	return FunctionChain<ZRef<ZNetEndpoint_TCP>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));
 	}
 

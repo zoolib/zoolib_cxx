@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZMACRO_MSVCStaticLib_cpp(TextCollator_ICU)
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFunctionChain.h"
 
 #include <stdexcept>
 
@@ -46,7 +45,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_Collator
-:	public ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
+:	public FunctionChain<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

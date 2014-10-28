@@ -26,7 +26,6 @@ ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
 
 #include "zoolib/Memory.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"
@@ -49,7 +48,7 @@ using std::string;
 namespace { // anonymous
 
 class Make_NameLookup
-:	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
+:	public FunctionChain<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -60,7 +59,7 @@ class Make_NameLookup
 
 
 class Make_Listener
-:	public ZFunctionChain_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
+:	public FunctionChain<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -71,7 +70,7 @@ class Make_Listener
 
 
 class Make_Endpoint
-:	public ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
+:	public FunctionChain<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

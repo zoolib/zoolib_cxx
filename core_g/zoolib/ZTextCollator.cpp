@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZTextCollator.h"
 
 namespace ZooLib {
@@ -28,7 +27,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - Factories
 
-typedef ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
+typedef FunctionChain<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
 
 // =================================================================================================
 /**

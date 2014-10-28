@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUnicode_Normalize.h"
-#include "zoolib/ZFunctionChain.h"
 
 namespace ZooLib {
 namespace ZUnicode {
@@ -28,7 +27,7 @@ namespace ZUnicode {
 // MARK: - ZUnicode, normalization -- very incomplete for now
 
 bool sNormalized(string16& oResult, const Param_Normalize& iParam)
-	{ return ZFunctionChain_T<string16, Param_Normalize>::sInvoke(oResult, iParam); }
+	{ return FunctionChain<string16, Param_Normalize>::sInvoke(oResult, iParam); }
 
 bool sNormalized(const string16& iString, ENormForm iNormForm, string16& oResult)
 	{ return sNormalized(oResult, Param_Normalize(iString, iNormForm)); }

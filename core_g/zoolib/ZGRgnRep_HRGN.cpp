@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(GRgnRep_HRGN)
 
-#include "zoolib/ZFunctionChain.h"
-
 #include <vector>
 
 namespace ZooLib {
@@ -101,7 +99,7 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
+:	public FunctionChain<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
