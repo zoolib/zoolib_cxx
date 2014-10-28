@@ -1,7 +1,5 @@
+# By default, take ZOOLIB_CXX_DIR from the env var.
 ZOOLIB_CXX_DIR ?=$(ZOOLIB_DIR)
-
-##ZOOLIB_STANDARD_SOURCE_PATHS ?=$(ZOOLIB_CXX_DIR)/zoolib
-##ZOOLIB_STANDARD_HEADER_PATHS ?=$(ZOOLIB_CXX_DIR) $(ZOOLIB_CXX_DIR)/default_config
 
 HOST_OS=$(shell uname -s)
 
@@ -32,20 +30,18 @@ BUILD_PLATFORM ?=$(ZMAKE_BuildPlatform)
 ZMAKE_TargetPlatform ?=$(BUILD_PLATFORM)
 TARGET_PLATFORM ?=$(ZMAKE_TargetPlatform)
 
-DARWIN_SYS_ROOT ?= /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+##DARWIN_SYS_ROOT ?=/
+DARWIN_SYS_ROOT ?=
 
 ZMAKE_Configuration ?=Debug
 CONFIGURATION ?=$(ZMAKE_Configuration)
-
-ZMAKE_FatDesired ?=$(filter Release,$(CONFIGURATION))
-FAT_DESIRED ?=$(ZMAKE_FatDesired)
 
 ZMAKE_StaticDesired ?=
 STATIC_DESIRED ?=$(ZMAKE_StaticDesired)
 
 # Grandfather old PROJECT_TARGET_NAME
-ZMake_TargetName ?=$(PROJECT_TARGET_NAME)
-TARGET_NAME ?=$(ZMake_TargetName)
+ZMAKE_TargetName ?=$(PROJECT_TARGET_NAME)
+TARGET_NAME ?=$(ZMAKE_TargetName)
 
 ZMAKE_Objects ?=objects
 OBJECTS ?=$(ZMAKE_Objects)
@@ -53,10 +49,8 @@ OBJECTS ?=$(ZMAKE_Objects)
 ZMAKE_ObjectsDir ?=$(OBJECTS)_$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)
 OBJECTS_DIR ?=$(ZMAKE_ObjectsDir)
 
-
-ZMake_ExeName ?=$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)$(if $(filter Win,$(TARGET_PLATFORM)),.exe)
-EXE_NAME ?=$(ZMake_ExeName)
-
+ZMAKE_ExeName ?=$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)$(if $(filter Win,$(TARGET_PLATFORM)),.exe)
+EXE_NAME ?=$(ZMAKE_ExeName)
 
 # Helper functions
 ifplatform =$(if $(filter $(1),$(TARGET_PLATFORM)),$(2),$(3))
