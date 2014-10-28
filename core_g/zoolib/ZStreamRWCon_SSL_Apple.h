@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/FunctionChain.h"
 
-ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_Apple);
+ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_Apple)
 
 #include <Security/SecureTransport.h>
 
