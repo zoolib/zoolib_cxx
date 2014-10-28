@@ -104,11 +104,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZCONFIG_Endian ZCONFIG_Endian_Big
 	#elif ZCONFIG(Processor, 68K)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Big
+
 	#elif ZCONFIG(Processor, x86)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
 	#elif ZCONFIG(Processor, x86_64)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
 	#elif ZCONFIG(Processor, ARM)
+		#define ZCONFIG_Endian ZCONFIG_Endian_Little
+	#elif ZCONFIG(Processor, ARM_64)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
 	#elif ZCONFIG(Processor, MIPS)
 		#define ZCONFIG_Endian ZCONFIG_Endian_Little
