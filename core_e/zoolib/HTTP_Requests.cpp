@@ -221,6 +221,8 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 	return null;
 	}
 
+#if 0
+
 static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
@@ -235,8 +237,6 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		return spQReadResponse(iChanR, oResponseCode, oHeader);
 		}
 	}
-
-#if 0
 
 // Need to decide if we're doing the sMakeContentChanner stuff in here.
 ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
