@@ -77,43 +77,35 @@ used in \c ZCONFIG_API_XXX macros.
 To ensure that your executable or library does not strip these entities, simply \#include
 the appropriate header file from known referenced code in your including entity. This will
 cause a non-executing reference to occur, and things will work as expected.
+
+2014-10-28. This problem also occurs with gcc/clang static libs on iOS.
 */
 
 // =================================================================================================
 // MARK: - ZCompat_MSVCStaticLib
 
-#if ZCONFIG(Compiler, MSVC)
-
-#define ZMACRO_MSVCStaticLib_Reference(a) \
-	namespace ZooLib { \
-	namespace MSVCStaticLib { \
-	namespace a { \
-	extern const int DummyInteger; \
-	namespace /* anonymous */ { \
-	int ReferenceDummyInteger(); \
-	int ReferenceDummyInteger() { return DummyInteger; } \
-	} /* anonymous namespace*/ \
-	} /* namespace a */ \
-	} /* namespace MSVCStaticLib */ \
-	} /* namespace ZooLib */
-
-#define ZMACRO_MSVCStaticLib_cpp(a) \
-	namespace ZooLib { \
-	namespace MSVCStaticLib { \
-	namespace a { \
-	const int DummyInteger = 0; \
-	} /* namespace a */ \
-	} /* namespace MSVCStaticLib */ \
-	} /* namespace ZooLib */
-
-#endif // ZCONFIG(Compiler, MSVC)
-
-#if !defined(ZMACRO_MSVCStaticLib_Reference)
-	#define ZMACRO_MSVCStaticLib_Reference(a)
+#if not defined(ZMACRO_MSVCStaticLib_Reference)
+	#define ZMACRO_MSVCStaticLib_Reference(distinguisher_p) \
+		namespace ZooLib { \
+		namespace MSVCStaticLib { \
+		namespace distinguisher_p { \
+		void sDummyFunction(); \
+		static struct DummyClass \
+			{ DummyClass() { sDummyFunction();} } sDummyClass; \
+		} /* namespace distinguisher_p */ \
+		} /* namespace MSVCStaticLib */ \
+		} /* namespace ZooLib */
 #endif
 
-#if !defined(ZMACRO_MSVCStaticLib_cpp)
-	#define ZMACRO_MSVCStaticLib_cpp(a)
+#if not defined(ZMACRO_MSVCStaticLib_cpp)
+	#define ZMACRO_MSVCStaticLib_cpp(distinguisher_p) \
+		namespace ZooLib { \
+		namespace MSVCStaticLib { \
+		namespace distinguisher_p { \
+		void sDummyFunction() {} \
+		} /* namespace distinguisher_p */ \
+		} /* namespace MSVCStaticLib */ \
+		} /* namespace ZooLib */
 #endif
 
 #endif // __ZCompat_MSVCStaticLib_h__

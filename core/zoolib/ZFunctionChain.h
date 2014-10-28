@@ -22,12 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZFunctionChain_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+
 namespace ZooLib {
 
 /**
 \file
-If you're using the MSVC linker and putting a factory in a static library, be aware that
-the statically-initialized factory will not be considered active code unless some other
+If you're using the MSVC or other linkers and putting a factory in a static library, be aware
+that the statically-initialized factory may will not be considered active code unless some other
 part of the containing translation unit is active. See ZCompat_MSVCStaticLib.h for
 more discussion and suggested workarounds.
 */
@@ -47,18 +49,19 @@ public:
 		{
 		ZFunctionChain_T* head = spHead();
 
-		// Try preferred first
-		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
+		// Try preferred first, then non-preferred
+		for (int xx = 0; xx < 2; ++xx)
 			{
-			if (iter->pInvoke(true, oResult, iParam))
-				return true;
-			}
-
-		// then non-preferred
-		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
-			{
-			if (iter->pInvoke(false, oResult, iParam))
-				return true;
+			for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
+				{
+				try
+					{
+					if (((xx == 0) == iter->fIsPreferred) && iter->Invoke(oResult, iParam))
+						return true;
+					}
+				catch (...)
+					{}
+				}
 			}
 
 		return false;
@@ -92,20 +95,9 @@ protected:
 	virtual ~ZFunctionChain_T()
 		{}
 
-	virtual bool Invoke(Result& oResult, Param iParam)
-		{ return false; }
+	virtual bool Invoke(Result& oResult, Param iParam) = 0;
 
 private:
-	bool pInvoke(bool iIsPreferred, Result& oResult, Param iParam)
-		{
-		if (iIsPreferred == fIsPreferred)
-			{
-			try { return this->Invoke(oResult, iParam); }
-			catch (...) {}
-			}
-		return false;
-		}
-
 	static ZFunctionChain_T*& spHead()
 		{
 		static ZFunctionChain_T* spHead;
