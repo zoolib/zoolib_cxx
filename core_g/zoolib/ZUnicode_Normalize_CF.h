@@ -21,6 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUnicode_Normalize_CF_h__
 #define __ZUnicode_Normalize_CF_h__ 1
 #include "zconfig.h"
-#include "ZUnicode_Normalize.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ZUnicode_Normalize.h"
+
+#if ZCONFIG_SPI_Enabled(CFType)
+
+ZMACRO_MSVCStaticLib_Reference(Unicode_Normalize_CF)
+
+#endif // ZCONFIG_SPI_Enabled(CFType)
 
 #endif // __ZUnicode_Normalize_CF_h__

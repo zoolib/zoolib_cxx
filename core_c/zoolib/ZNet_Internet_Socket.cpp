@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_Socket)
 
+ZMACRO_MSVCStaticLib_cpp(Net_Internet_Socket)
+
 #include "zoolib/Memory.h"
 
 #include "zoolib/ZFunctionChain.h"

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZFile_h__ 1
 
 #include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"

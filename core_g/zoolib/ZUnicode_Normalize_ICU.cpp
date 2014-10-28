@@ -19,9 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUnicode_Normalize_ICU.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(ICU)
+
+ZMACRO_MSVCStaticLib_cpp(Unicode_Normalize_ICU)
 
 #include "zoolib/ZFunctionChain.h"
 

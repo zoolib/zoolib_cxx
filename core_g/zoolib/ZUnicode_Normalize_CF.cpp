@@ -19,9 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUnicode_Normalize_CF.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
+
+ZMACRO_MSVCStaticLib_cpp(Unicode_Normalize_CF)
 
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUtil_CF.h"

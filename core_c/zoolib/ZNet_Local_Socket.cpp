@@ -36,6 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define SOCK_MAXADDRLEN (255)
 #endif
 
+ZMACRO_MSVCStaticLib_cpp(Net_Local_Socket)
+
 namespace ZooLib {
 
 using std::string;

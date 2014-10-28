@@ -37,6 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_XRegion)
 
+ZMACRO_MSVCStaticLib_Reference(GRgnRep_XRegion)
+
 #include "zoolib/ZCompat_Xlib.h"
 #include <X11/Xutil.h>
 

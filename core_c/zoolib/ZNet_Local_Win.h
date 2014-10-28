@@ -41,7 +41,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Local_Win)
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(Net_Local_Win)
 
 #include "zoolib/ZCompat_Win.h"

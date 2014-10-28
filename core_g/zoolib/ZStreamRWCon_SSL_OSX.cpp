@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 
+ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_OSX)
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 

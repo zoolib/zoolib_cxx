@@ -21,13 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStreamRWCon_SSL_Win_h__
 #define __ZStreamRWCon_SSL_Win_h__ 1
 #include "zconfig.h"
-#include "ZConfig_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZStreamer.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_Win)
 
 #include "zoolib/ZCompat_Win.h"

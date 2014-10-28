@@ -40,7 +40,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(Net_Internet_WinSock)
 
 #include <vector>

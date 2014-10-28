@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 
+ZMACRO_MSVCStaticLib_cpp(GRgnRep_BigRegion)
+
 namespace ZooLib {
 
 // =================================================================================================

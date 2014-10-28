@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
-#include "zoolib/ZFile.h"
+ZMACRO_MSVCStaticLib_Reference(File_Win)
 
 namespace ZooLib {
 

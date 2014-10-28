@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/UnicodeString.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {

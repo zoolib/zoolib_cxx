@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZBigRegion.h"
 #include "zoolib/ZGRgn.h"
 
+ZMACRO_MSVCStaticLib_Reference(GRgnRep_BigRegion)
+
 namespace ZooLib {
 
 // =================================================================================================

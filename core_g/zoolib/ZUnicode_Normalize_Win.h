@@ -21,9 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUnicode_Normalize_Win_h__
 #define __ZUnicode_Normalize_Win_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 #include "ZUnicode_Normalize.h"
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
+#if ZCONFIG_SPI_Enabled(Win)
+
 ZMACRO_MSVCStaticLib_Reference(Unicode_Normalize_Win)
+
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZUnicode_Normalize_Win_h__

@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
+ZMACRO_MSVCStaticLib_cpp(StreamRWCon_OpenSSL)
+
 namespace ZooLib {
 
 // =================================================================================================

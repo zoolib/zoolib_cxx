@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCollator_ICU)
 
+ZMACRO_MSVCStaticLib_cpp(TextCollator_ICU)
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Multi.h"
 
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZNet.h"
 
 #include <string>

@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
+ZMACRO_MSVCStaticLib_Reference(TextCoder_Mac)
+
 #include ZMACINCLUDE3(CoreServices,CarbonCore,UnicodeConverter.h)
 
 namespace ZooLib {

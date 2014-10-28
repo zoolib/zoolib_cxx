@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder.h"
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(TextCoder_Unicode)
 
 namespace ZooLib {

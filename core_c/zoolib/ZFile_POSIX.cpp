@@ -66,6 +66,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
+ZMACRO_MSVCStaticLib_cpp(File_Win)
+
 namespace ZooLib {
 
 // =================================================================================================

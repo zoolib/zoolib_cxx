@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCollator.h"
 
+ZMACRO_MSVCStaticLib_Reference(TextCollator_ASCII)
+
 namespace ZooLib {
 
 // =================================================================================================

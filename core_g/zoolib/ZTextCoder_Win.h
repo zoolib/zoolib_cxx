@@ -36,7 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
 ZMACRO_MSVCStaticLib_Reference(TextCoder_Win)
 
 #include "zoolib/ZCompat_Win.h"

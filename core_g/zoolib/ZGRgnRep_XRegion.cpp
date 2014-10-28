@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_XRegion)
 
+ZMACRO_MSVCStaticLib_cpp(GRgnRep_XRegion)
+
 #include "zoolib/ZFunctionChain.h"
 
 namespace ZooLib {

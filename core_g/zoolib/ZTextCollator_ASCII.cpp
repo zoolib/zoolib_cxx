@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 
+ZMACRO_MSVCStaticLib_cpp(TextCollator_ASCII)
+
 using std::min;
 
 namespace ZooLib {

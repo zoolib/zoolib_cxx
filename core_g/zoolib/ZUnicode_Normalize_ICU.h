@@ -22,5 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUnicode_Normalize_ICU_h__ 1
 #include "zconfig.h"
 #include "ZUnicode_Normalize.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(ICU)
+
+ZMACRO_MSVCStaticLib_Reference(Unicode_Normalize_ICU)
+
+#endif // ZCONFIG_SPI_Enabled(ICU)
 
 #endif // __ZUnicode_Normalize_ICU_h__

@@ -32,13 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_API_Desired__File_Win 1
 #endif
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
-ZMACRO_MSVCStaticLib_Reference(File_Win)
-
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZFile.h"
 
 #if ZCONFIG_API_Enabled(File_Win)
+
+ZMACRO_MSVCStaticLib_Reference(File_Win)
 
 namespace ZooLib {
 
