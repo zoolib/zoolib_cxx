@@ -138,9 +138,9 @@ void SocketWatcher::pRun()
 						--count;
 					}
 				else if (FD_ISSET(fd, &exceptSet))
-					--count;
+					{ --count; }
 				else
-					continue;
+					{ continue; }
 
 				const Set_t::iterator iterBegin = fSet.lower_bound(Pair_t(fd, null));
 				Set_t::iterator iterEnd = iterBegin;
