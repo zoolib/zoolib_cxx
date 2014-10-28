@@ -20,11 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamRWCon_SSL_OSX.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_SPI_Enabled(MacOSX) or ZCONFIG_SPI_Enabled(iPhone)
 
 ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_OSX)
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h) // For ioErr
@@ -37,7 +36,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_SSL
-:	public ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>
+:	public FunctionChain<ZRef<ZStreamerRWCon>, MakeSSLParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -217,4 +216,4 @@ ZStreamRWCon_SSL_OSX& ZStreamerRWCon_SSL_OSX::GetStream()
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX) or ZCONFIG_SPI_Enabled(iPhone)

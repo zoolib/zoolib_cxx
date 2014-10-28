@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_SPI_Enabled(MacOSX) or ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/ZFunctionChain.h"
+#include "zoolib/FunctionChain.h"
 
 ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_OSX);
 
@@ -103,6 +103,6 @@ private:
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX) or ZCONFIG_SPI_Enabled(iPhone)
 
 #endif // __ZStreamRWCon_SSL_OSX_h__

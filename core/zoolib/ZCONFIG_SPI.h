@@ -352,7 +352,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // MARK: - iPhone
 
-
 #ifndef ZCONFIG_SPI_Avail__iPhone
 	#if ZMACRO_IOS
 		#define ZCONFIG_SPI_Avail__iPhone 1
