@@ -25,9 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/ZCallable.h"
+#include "zoolib/Callable.h"
+#include "zoolib/UnicodeString.h"
+
 #include "zoolib/ZQ.h"
-#include "zoolib/ZUnicodeString.h"
 
 #import <UIKit/UITableView.h>
 
@@ -145,11 +146,11 @@ public:
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex) = 0;
 
-	typedef ZCallable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
+	typedef Callable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
 
-	typedef ZCallable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
+	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
 
-	typedef ZCallable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
+	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
 	};
 
 // =================================================================================================
@@ -398,7 +399,7 @@ private:
 @interface UITableView_WithSections : UITableView
 	{
 @public
-	ZooLib::ZRef<ZooLib::ZCallable<void()> > fCallable_NeedsUpdate;
+	ZooLib::ZRef<ZooLib::Callable<void()> > fCallable_NeedsUpdate;
 	ZooLib::ZRef<UITVHandler_WithSections> fHandler;
 	};
 

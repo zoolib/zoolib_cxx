@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/ZCallable_ObjC.h"
+#include "zoolib/Callable_ObjC.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZRef_NS.h"
