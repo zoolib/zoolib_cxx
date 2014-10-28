@@ -2,6 +2,7 @@
 ZOOLIB_CXX_DIR ?=$(ZOOLIB_DIR)
 
 HOST_OS=$(shell uname -s)
+HOST_PROCESSOR=$(shell uname -p)
 
 ifeq (BeOS,$(HOST_OS))
 	ZMAKE_BuildPlatform ?=Be
@@ -27,6 +28,13 @@ else
 endif
 BUILD_PLATFORM ?=$(ZMAKE_BuildPlatform)
 
+ifeq (x86_64,$(HOST_PROCESSOR))
+	ZMAKE_BuildProcessor ?=x86_64
+else
+	ZMAKE_BuildProcessor ?=default
+endif
+
+
 ZMAKE_TargetPlatform ?=$(BUILD_PLATFORM)
 TARGET_PLATFORM ?=$(ZMAKE_TargetPlatform)
 
@@ -46,7 +54,7 @@ TARGET_NAME ?=$(ZMAKE_TargetName)
 ZMAKE_Objects ?=objects
 OBJECTS ?=$(ZMAKE_Objects)
 
-ZMAKE_ObjectsDir ?=$(OBJECTS)_$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)
+ZMAKE_ObjectsDir ?=$(OBJECTS)_$(TARGET_NAME)_$(TARGET_PLATFORM)_$(ZMAKE_BuildProcessor)_$(CONFIGURATION)
 OBJECTS_DIR ?=$(ZMAKE_ObjectsDir)
 
 ZMAKE_ExeName ?=$(TARGET_NAME)_$(TARGET_PLATFORM)_$(CONFIGURATION)$(if $(filter Win,$(TARGET_PLATFORM)),.exe)
