@@ -25,10 +25,10 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-const ZStrimW& operator<<(const ZStrimW& w, const ZDatonSet::Daton& iDaton)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZDatonSet::Daton& iDaton)
 	{
 	const ZData_Any& theData = iDaton.GetData();
-	w.Write((const UTF8*)theData.GetPtr(), theData.GetSize());
+	sWrite((const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr, w);
 	return w;
 	}
 
