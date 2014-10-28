@@ -67,7 +67,7 @@ ZStrimR reference, you must work with some derived class.
 
 public:
 	using ChanR_UTF::QRead;
-//##	using ChanR_UTF::Skip;
+	using ChanR_UTF::Skip;
 
 // From ChanR_UTF
 	virtual size_t QRead(ChanR<UTF32>::Elmt_t* oDest, size_t iCount)
@@ -206,6 +206,8 @@ public:
 			this->Imp_Unread(*iSource++);
 		return iCount;
 		}
+
+	using ChanU<UTF32>::UnreadableLimit;
 
 // Our protocol
 	void Unread(UTF32 iCP) const;
