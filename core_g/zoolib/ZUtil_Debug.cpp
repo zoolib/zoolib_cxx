@@ -145,9 +145,9 @@ public:
 				theStrimW << sStringf(" %5x", ((int)mach_thread_self()));
 			#else
 				if (sizeof(ZThread::ID) > 4)
-					theStrimW << sStringf(" %016llX", (uint64)ZThread::sID());
+					theStrimW << sStringf(" %016llX", (unsigned long long)ZThread::sID());
 				else
-					theStrimW << sStringf(" %08llX", (uint64)ZThread::sID());
+					theStrimW << sStringf(" %08llX", (unsigned long long)ZThread::sID());
 			#endif
 			}
 		else
@@ -161,9 +161,9 @@ public:
 				theStrimW << " 0x";
 			#endif
 			if (sizeof(ZThread::ID) > 4)
-				theStrimW << sStringf("%016llX", (uint64)ZThread::sID());
+				theStrimW << sStringf("%016llX", (unsigned long long)ZThread::sID());
 			else
-				theStrimW << sStringf("%08llX", (uint64)ZThread::sID());
+				theStrimW << sStringf("%08llX", (unsigned long long)ZThread::sID());
 			}
 
 		theStrimW

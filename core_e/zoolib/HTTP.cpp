@@ -167,7 +167,7 @@ void Response::Set(const string& iName, int iValue)
 
 void Response::Set(const string& iName, uint64 iValue)
 	{
-	fHeaders.push_back(pair<string, string>(iName, sStringf("%lld", iValue)));
+	fHeaders.push_back(pair<string, string>(iName, sStringf("%lld", (long long)iValue)));
 	}
 
 void Response::Send(const ChanW_Bin& iChanW) const
