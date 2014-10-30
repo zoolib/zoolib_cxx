@@ -150,8 +150,6 @@ public:
 
 	ZRef<Deltas> GetDeltas(ZRef<Event> iEvent);
 
-	ZRef<DeltasChain> GetDeltasChain(ZRef<Event>* oEvent);
-
 private:
 	DatonSet(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent,
 		const ZRef<DeltasChain>& iDeltasChain);

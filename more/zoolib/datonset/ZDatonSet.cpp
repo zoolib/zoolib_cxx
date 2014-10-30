@@ -310,17 +310,6 @@ ZRef<Deltas> DatonSet::GetDeltas(ZRef<Event> iEvent)
 	return new Deltas(&resultVector);
 	}
 
-ZRef<DeltasChain> DatonSet::GetDeltasChain(ZRef<Event>* oEvent)
-	{
-	ZAcqMtx acq(fMtx);
-	this->pCommit();
-
-	if (oEvent)
-		*oEvent = fEvent;
-
-	return fDeltasChain;
-	}
-
 void DatonSet::pCommit()
 	{
 	if (fPendingStatements.empty())
