@@ -57,7 +57,6 @@ void sWaitTillAllThreadsExit()
 		if (0 == count)
 			break;
 		}
-
 	}
 
 static ZAtomic_t spInitCount;

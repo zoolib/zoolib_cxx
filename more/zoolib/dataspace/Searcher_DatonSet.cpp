@@ -377,7 +377,6 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 		PSearch* thePSearch = theClientSearch->fPSearch;
 		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult, fEvent));
 		}
-
 	}
 
 ZRef<Callable_PullSuggested> Searcher_DatonSet::GetCallable_PullSuggested()
