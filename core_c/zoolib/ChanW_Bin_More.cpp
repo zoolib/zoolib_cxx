@@ -106,4 +106,24 @@ const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 	return iChanW;
 	}
 
+// =================================================================================================
+// MARK: -
+
+bool sQWriteCount(uint64 iValue, const ChanW_Bin& w)
+	{
+	if (iValue < 253)
+		return sQWrite<uint8>(iValue, w);
+
+	if (iValue <= 0xFFFFU)
+		return sQWrite<uint8>(253, w) && sQWriteBE<uint16>(iValue, w);
+
+	if (iValue <= 0xFFFFFFFFU)
+		return sQWrite<uint8>(254, w) && sQWriteBE<uint32>(iValue, w);
+
+	return sQWrite<uint8>(255, w) && sQWriteBE<uint64>(iValue, w);
+	}
+
+void sWriteCountMust(uint64 iValue, const ChanW_Bin& w)
+	{ sQWriteCount(iValue, w) || sThrow_ExhaustedW(); }
+
 } // namespace ZooLib

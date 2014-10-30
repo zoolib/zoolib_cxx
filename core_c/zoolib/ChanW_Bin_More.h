@@ -78,6 +78,10 @@ const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString);
 
 const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
 
+bool sQWriteCount(uint64 iValue, const ChanW_Bin& w);
+
+void sWriteCountMust(uint64 iValue, const ChanW_Bin& w);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanW_Bin_More_h__
