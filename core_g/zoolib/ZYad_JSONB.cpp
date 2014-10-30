@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanR_Bin_More.h"
+#include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/NameUniquifier.h" // For sName
 
 #include "zoolib/ZStrim_Stream.h"
@@ -48,7 +50,7 @@ namespace { // anonymous
 
 ZName spNameFromStream(const ZStreamR& r)
 	{
-	if (size_t theCount = r.ReadCount())
+	if (size_t theCount = sReadCount(r))
 		return sName(r.ReadString(theCount));
 	return ZName();
 	}
@@ -58,17 +60,20 @@ ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR);
 // =================================================================================================
 // MARK: - String to/from stream
 
-void spToStream(const string& iString, const ZStreamW& w)
+void spToChan(const string& iString, const ChanW_Bin& w)
 	{
 	const size_t theLength = iString.length();
-	w.WriteCount(theLength);
+	sWriteCountMust(theLength, w);
 	if (theLength)
-		w.Write(iString.data(), theLength);
+		{
+		if (theLength != sQWriteFully(iString.data(), theLength, w))
+			sThrow_ExhaustedW();
+		}
 	}
 
 ZAny spStringFromStream(const ZStreamR& r)
 	{
-	if (const size_t theLength = r.ReadCount())
+	if (const size_t theLength = sReadCount(r))
 		{
 		ZAny theAny = sAny<string>(theLength, 0);
 		string* theP = sPMut<string>(theAny);
@@ -126,7 +131,7 @@ void YadStreamerR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		{
 		if (fChunkSize == 0)
 			{
-			fChunkSize = r.ReadCount();
+			fChunkSize = sReadCount(r);
 			if (fChunkSize == 0)
 				fHitEnd = true;
 			}
@@ -159,7 +164,7 @@ void YadStreamerR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 		{
 		if (fChunkSize == 0)
 			{
-			fChunkSize = r.ReadCount();
+			fChunkSize = sReadCount(r);
 			if (fChunkSize == 0)
 				fHitEnd = true;
 			}
@@ -246,14 +251,14 @@ ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR)
 	}
 
 // =================================================================================================
-// MARK: - Visitor_ToStream
+// MARK: - Visitor_ToChan
 
-class Visitor_ToStream
+class Visitor_ToChan
 :	public ZVisitor_Yad_PreferRPos
 	{
 public:
-	Visitor_ToStream(const ZStreamW& iStreamW)
-	:	fW(iStreamW)
+	Visitor_ToChan(const ChanW_Bin& iChanW)
+	:	fW(iChanW)
 		{}
 
 // From ZVisitor_Yad
@@ -271,74 +276,74 @@ public:
 		else if (const bool* p = theVal.PGet<bool>())
 			{
 			if (*p)
-				fW.WriteUInt8(3);
+				sWriteBE<uint8>(3, fW);
 			else
-				fW.WriteUInt8(2);
+				sWriteBE<uint8>(2, fW);
 			}
 		else if (ZQ<int64> theQ = sQCoerceInt(theVal))
 			{
-			fW.WriteUInt8(4);
-			fW.WriteInt64(*theQ);
+			sWriteBE<uint8>(4, fW);
+			sWriteBE<int64>(*theQ, fW);
 			}
 		else if (ZQ<double> theQ = sQCoerceRat(theVal))
 			{
-			fW.WriteUInt8(5);
-			fW.WriteDouble(*theQ);
+			sWriteBE<uint8>(5, fW);
+			sWriteBE<double>(*theQ, fW);
 			}
 		else
 			{
-			fW.WriteUInt8(1);
+			sWriteBE<uint8>(1, fW);
 			}
 		}
 
 	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
 		{
 		const ZStreamR& r = iYadStreamerR->GetStreamR();
-		fW.WriteUInt8(7);
+		sWriteBE<uint8>(7, fW);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
 		for (;;)
 			{
 			size_t countRead;
 			r.ReadFully(&buffer[0], chunkSize, &countRead);
-			fW.WriteCount(countRead);
+			sWriteCountMust(countRead, fW);
 			if (!countRead)
 				break;
-			fW.Write(&buffer[0], countRead);
+			sWriteMust(&buffer[0], countRead, fW);
 			}
 		}
 
 	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
 		{
 		const string8 theString8 = iYadStrimmerR->GetStrimR().ReadAll8();
-		fW.WriteUInt8(8);
-		fW.WriteCount(theString8.size());
-		fW.WriteString(theString8);
+		sWriteBE<uint8>(8, fW);
+		sWriteCountMust(theString8.size(), fW);
+		sWriteMust(theString8, fW);
 		}
 
 	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 		{
-		fW.WriteUInt8(11);
+		sWriteBE<uint8>(11, fW);
 		while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
 			theChild->Accept(*this);
-		fW.WriteByte(0xFF); // Terminator
+		sWriteBE<uint8>(0xFF, fW);  // Terminator
 		}
 
 	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 		{
-		fW.WriteUInt8(13);
+		sWriteBE<uint8>(13, fW);
 		ZName theName;
 		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 			{
-			spToStream(theName, fW);
+			spToChan(theName, fW);
 			theChild->Accept(*this);
 			}
-		fW.WriteByte(0); // Empty name
-		fW.WriteByte(0xFF); // Terminator
+		sWriteBE<uint8>(0, fW); // Empty name
+		sWriteBE<uint8>(0xFF, fW);  // Terminator
 		}
 
 private:
-	const ZStreamW& fW;
+	const ChanW_Bin& fW;
 	};
 
 } // anonymous namespace
@@ -346,8 +351,8 @@ private:
 ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
 	{ return spMakeYadR(iStreamerR); }
 
-void sToStream(ZRef<ZYadR> iYadR, const ZStreamW& w)
-	{ iYadR->Accept(Visitor_ToStream(w)); }
+void sToChan(ZRef<ZYadR> iYadR, const ChanW_Bin& w)
+	{ iYadR->Accept(Visitor_ToChan(w)); }
 
 } // namespace ZYad_JSONB
 } // namespace ZooLib

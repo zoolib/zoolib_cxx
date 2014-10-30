@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_PMF.h"
 
+#include "zoolib/Stringf.h"
+
 #include "zoolib/datonset/ZDatonSet.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
@@ -33,6 +35,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Any_JSON.h"
 #include "zoolib/ZVal_Any.h"
+
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_JSONB.h"
 
 #include "zoolib/dataspace/WrappedDatonSetRemoter.h"
 
@@ -73,23 +78,30 @@ blocked by network latency.
 
 static void spSendMessage(const ZMap_Any& iMessage, const ChanW_Bin& iChanW)
 	{
+	const ZTime start = ZTime::sSystem();
+	ZYad_JSONB::sToChan(sYadR(iMessage), iChanW);
+//	ZUtil_Any_JSON::sWrite(iMessage, ZStrimW_StreamUTF8(iChanW));
+	sFlush(iChanW);
 	if (ZLOGF(w, eDebug))
 		{
-		w << "Send: ";
+		w << "Sent in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
 //		w << iMessage.Get<string8>("What");
 		ZUtil_Any_JSON::sWrite(iMessage, w);
 		}
-	ZUtil_Any_JSON::sWrite(iMessage, ZStrimW_StreamUTF8(iChanW));
-	sFlush(iChanW);
 	}
 
 static ZMap_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	ZRef<ZStreamerR> theSR = iChannerR.DynamicCast<ZStreamerR>();
-	ZMap_Any result = ZUtil_Any_JSON::sQRead(theSR).Get().Get<ZMap_Any>();
+	const ZTime start = ZTime::sSystem();
+	ZQ<ZVal_Any> theQ = ZYad_Any::sQFromYadR(ZYad_JSONB::sYadR(theSR));
+	if (not theQ)
+		sThrow_ExhaustedR();
+
+	const ZMap_Any result = theQ->Get<ZMap_Any>();
 	if (ZLOGF(w, eDebug))
 		{
-		w << "Received: ";
+		w << "Received in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
 //		w << result.Get<string8>("What");
 		ZUtil_Any_JSON::sWrite(result, w);
 		}

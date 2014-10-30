@@ -33,7 +33,7 @@ namespace ZYad_JSONB {
 
 ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR);
 
-void sToStream(ZRef<ZYadR> iYadR, const ZStreamW& w);
+void sToChan(ZRef<ZYadR> iYadR, const ChanW_Bin& w);
 
 } // namespace ZYad_JSONB
 } // namespace ZooLib
