@@ -216,6 +216,7 @@ ZRef<DatonSet> DatonSet::Fork()
 
 	ZRef<Identity> newRight = sSplit(fIdentity);
 	fEvent = fEvent->Advanced(fIdentity);
+	ZAssert(fEvent);
 
 	ZRef<DatonSet> newDS = new DatonSet(newRight, fEvent->Advanced(newRight), fDeltasChain);
 
@@ -245,13 +246,17 @@ bool DatonSet::Join(ZRef<DatonSet>& ioOther)
 	if (theDeltas && theDeltas->GetVector().size())
 		{
 		foreachi (iter, theDeltas->GetVector())
+			{
 			fEvent = fEvent->Joined(iter->first);
+			ZAssert(fEvent);
+			}
 		fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
 		}
 
 	fIdentity = fIdentity->Summed(otherIdentity); //?? Check this
 
 	fEvent = fEvent->Advanced(fIdentity);
+	ZAssert(fEvent);
 
 	return sNotEmpty(theDeltas->GetVector());
 	}
@@ -260,16 +265,19 @@ bool DatonSet::IncorporateDeltas(ZRef<Deltas> iDeltas)
 	{
 	ZGuardMtx guard(fMtx);
 	this->pCommit();
-	ZRef<Event> theEvent = fEvent;
-
 	if (iDeltas && iDeltas->GetVector().size())
 		{
 		foreachi (iter, iDeltas->GetVector())
+			{
 			fEvent = fEvent->Joined(iter->first);
+			ZAssert(fEvent);
+			}
 		fDeltasChain = new DeltasChain(fDeltasChain, iDeltas);
 		}
 
 	fEvent = fEvent->Advanced(fIdentity);
+
+	ZAssert(fEvent);
 
 	return sNotEmpty(iDeltas->GetVector());
 	}
@@ -317,6 +325,8 @@ void DatonSet::pCommit()
 
 	fEvent = fEvent->Advanced(fIdentity);
 
+	ZAssert(fEvent);
+
 	const ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
 	Vector_Event_Delta_t theVector;
@@ -327,6 +337,8 @@ void DatonSet::pCommit()
 	fDeltasChain = new DeltasChain(fDeltasChain, theDeltas);
 
 	fEvent = fEvent->Advanced(fIdentity);
+
+	ZAssert(fEvent);
 	}
 
 } // namespace ZDatonSet
