@@ -87,7 +87,7 @@ spEntryVoid(ProcVoid_t iProc)
 	return 0;
 	}
 
-void sCreateVoid(ProcVoid_t iProcVoid)
+void sStartVoid(ProcVoid_t iProcVoid)
 	{
 	union
 		{
@@ -97,7 +97,7 @@ void sCreateVoid(ProcVoid_t iProcVoid)
 
 	theConverter.fAsProc = iProcVoid;
 
-	sCreateRaw(0, (ProcRaw_t)spEntryVoid, theConverter.fAsPointer);
+	sStartRaw(0, (ProcRaw_t)spEntryVoid, theConverter.fAsPointer);
 	}
 
 } // namespace ZThread

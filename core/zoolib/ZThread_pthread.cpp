@@ -65,7 +65,7 @@ namespace ZooLib {
 
 namespace ZThread_pthread {
 
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
+void sStartRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	pthread_attr_t threadAttr;
 	::pthread_attr_init(&threadAttr);

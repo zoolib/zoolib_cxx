@@ -32,7 +32,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZThread_Win
 
-void ZThread_Win::sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
+void ZThread_Win::sStartRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	ID theID;
 	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);

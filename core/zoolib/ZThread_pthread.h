@@ -66,7 +66,7 @@ typedef ProcResult_t (*ProcRaw_t)(ProcParam_t iParam);
 
 typedef pthread_t ID;
 
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
+void sStartRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
 
 ZMACRO_Attribute_NoThrow
 inline

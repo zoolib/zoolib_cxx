@@ -33,11 +33,11 @@ namespace ZooLib {
 
 inline
 void sStartOnNewThread(const ZRef<Callable<void(void)> >& iCallable)
-	{ ZThread::sCreate_T<ZRef<Callable<void(void)> > >(sCallVoid<void>, iCallable); }
+	{ ZThread::sStart_T<ZRef<Callable<void(void)> > >(sCallVoid<void>, iCallable); }
 
 template <class T>
 void sStartOnNewThread(const ZRef<Callable<T(void)> >& iCallable)
-	{ ZThread::sCreate_T<ZRef<Callable<T(void)> > >(sCallVoid<T>, iCallable); }
+	{ ZThread::sStart_T<ZRef<Callable<T(void)> > >(sCallVoid<T>, iCallable); }
 
 } // namespace ZooLib
 

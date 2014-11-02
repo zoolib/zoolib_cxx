@@ -60,7 +60,7 @@ bool SocketWatcher::QInsert(const Pair_t& iPair)
 	if (not fThreadRunning)
 		{
 		fThreadRunning = true;
-		ZThread::sCreate_T<SocketWatcher*>(spRun, this);
+		ZThread::sStart_T<SocketWatcher*>(spRun, this);
 		}
 	fCnd.Broadcast();
 	return true;

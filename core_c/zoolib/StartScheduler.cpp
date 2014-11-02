@@ -82,7 +82,7 @@ void StartScheduler::pNextStartAt(ZTime iSystemTime, const Job& iJob)
 		if (not fThreadRunning)
 			{
 			fThreadRunning = true;
-			ZThread::sCreate_T<StartScheduler*>(spRun, this);
+			ZThread::sStart_T<StartScheduler*>(spRun, this);
 			}
 		fCnd.Broadcast();
 		}

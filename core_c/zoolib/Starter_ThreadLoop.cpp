@@ -51,7 +51,7 @@ public:
 		ZAssert(not fKeepRunning);
 
 		fKeepRunning = true;
-		ZThread::sCreate_T<Starter_ThreadLoop*>(&Starter_ThreadLoop::spRun, this);
+		ZThread::sStart_T<Starter_ThreadLoop*>(&Starter_ThreadLoop::spRun, this);
 		}
 
 	virtual void Finalize()

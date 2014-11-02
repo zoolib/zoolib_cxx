@@ -62,7 +62,7 @@ typedef ProcResult_t (__stdcall *ProcRaw_t)(ProcParam_t iParam);
 
 typedef unsigned int ID;
 
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
+void sStartRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
 ID sID();
 void sSleep(double iDuration);
 

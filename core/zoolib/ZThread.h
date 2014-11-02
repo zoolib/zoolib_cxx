@@ -183,12 +183,12 @@ private:
 		}
 
 public:
-	static void sCreate(Proc iProc, T iParam)
+	static void sStart(Proc iProc, T iParam)
 		{
 		ProxyParam* thePP = new ProxyParam(iProc, iParam);
 		try
 			{
-			sCreateRaw(0, (ProcRaw_t)sEntry, thePP);
+			sStartRaw(0, (ProcRaw_t)sEntry, thePP);
 			}
 		catch (...)
 			{
@@ -199,11 +199,11 @@ public:
 	};
 
 template <class T>
-void sCreate_T(typename Starter_T<T>::Proc iProc, T iParam)
-	{ Starter_T<T>::sCreate(iProc, iParam); }
+void sStart_T(typename Starter_T<T>::Proc iProc, T iParam)
+	{ Starter_T<T>::sStart(iProc, iParam); }
 
 typedef void (*ProcVoid_t)();
-void sCreateVoid(ProcVoid_t iProcVoid);
+void sStartVoid(ProcVoid_t iProcVoid);
 
 } // namespace ZThread
 
