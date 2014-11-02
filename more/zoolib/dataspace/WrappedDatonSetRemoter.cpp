@@ -193,7 +193,7 @@ void WrappedDatonSetRemoter::Initialize()
 	fCallable_PullFrom_Self =
 		sCallable(sWeakRef(this), &WrappedDatonSetRemoter::pPullFrom);
 
-	ZThread::sCreate_T<ZRef<WrappedDatonSetRemoter> >(&WrappedDatonSetRemoter::spRead, this);
+	ZThread::sStart_T<ZRef<WrappedDatonSetRemoter> >(&WrappedDatonSetRemoter::spRead, this);
 	}
 
 ZRef<Callable_PullSuggested> WrappedDatonSetRemoter::GetCallable_PullSuggested()
