@@ -24,15 +24,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_Bin.h"
 
+#include <string>
+
 namespace ZooLib {
 
 // =================================================================================================
 // MARK: -
 
+ZQ<std::string> sQReadString(size_t iCount, const ChanR_Bin& iChanR);
+
+std::string sReadString(size_t iCount, const ChanR_Bin& iChanR);
+
 ZQ<uint64> sQReadCount(const ChanR_Bin& r);
 
 uint64 sReadCount(const ChanR_Bin& r);
-
 
 } // namespace ZooLib
 

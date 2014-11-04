@@ -63,7 +63,7 @@ public:
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
+		Elmt_t buf[sStackBufferSize + sizeof(Elmt_t) - 1 / sizeof(Elmt_t)];
 		return this->QRead(buf, std::min<size_t>(iCount, countof(buf)));
 		}
 

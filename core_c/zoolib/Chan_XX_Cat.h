@@ -52,7 +52,7 @@ public:
 				return countRead;
 			fFirstIsLive = false;
 			}
-		return sRead(oDest, iCount, fChanR1);
+		return sQRead(oDest, iCount, fChanR1);
 		}
 
 	virtual uint64 Skip(uint64 iCount)
@@ -100,7 +100,7 @@ public:
 				return countWritten0;
 			fFirstIsLive = false;
 			}
-		return sWrite(iSource, iCount, fChanW1);
+		return sQWrite(iSource, iCount, fChanW1);
 		}
 
 	virtual void Flush()
