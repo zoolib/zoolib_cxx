@@ -38,6 +38,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include <mach/mach_init.h> // For mach_thread_self
 #endif
 
+#if defined(__ANDROID__)
+	#include <android/log.h>
+#endif
+
 namespace ZooLib {
 namespace ZUtil_Debug {
 
@@ -88,6 +92,32 @@ public:
 		return true;
 		}
 	};
+
+#if defined(__ANDROID__)
+
+class LogMeister_Android
+:	public ZLog::LogMeister
+	{
+public:
+	virtual void LogIt(
+		ZLog::EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
+		{
+		int theLevel = ANDROID_LOG_UNKNOWN;
+		if (false)
+			{}
+		else if (iPriority < ZLog::ePriority_Debug) theLevel = ANDROID_LOG_VERBOSE;
+		else if (iPriority <= ZLog::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
+		else if (iPriority <= ZLog::ePriority_Info) theLevel = ANDROID_LOG_INFO;
+		else if (iPriority <= ZLog::ePriority_Warning) theLevel = ANDROID_LOG_WARN;
+		else if (iPriority <= ZLog::ePriority_Err) theLevel = ANDROID_LOG_ERROR;
+		else theLevel = ANDROID_LOG_FATAL;
+
+		__android_log_print(theLevel, iName.c_str(), "%s", iMessage.c_str());
+		}
+
+	};
+
+#endif // defined(__ANDROID__)
 
 } // anonymous namespace
 
@@ -217,13 +247,17 @@ void sInstall()
 		static DebugFunction theDF;
 		}
 
-	ZRef<LogMeister> theLM = new LogMeister;
+	#if defined(__ANDROID__)
+		ZLog::sLogMeister = new LogMeister_Android;
+	#else
+		ZRef<LogMeister> theLM = new LogMeister;
 
-	FILE* theStdOut = stdout; // Workaround for VC++
-	theLM->SetStrimmer(
-		sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
+		FILE* theStdOut = stdout; // Workaround for VC++
+		theLM->SetStrimmer(
+			sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
 
-	ZLog::sLogMeister = theLM;
+		ZLog::sLogMeister = theLM;
+	#endif
 	}
 
 void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
