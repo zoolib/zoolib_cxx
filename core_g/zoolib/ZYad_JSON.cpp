@@ -594,7 +594,7 @@ static void spWritePropName(const string& iString, bool iUseSingleQuotes, const 
 		s << iString;
 	}
 
-static void spToStrim_SimpleValue(const ZAny& iAny, const ChanW_UTF& s)
+static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions, const ChanW_UTF& s)
 	{
 	if (false)
 		{}
@@ -611,7 +611,10 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const ChanW_UTF& s)
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		s << *theQ;
+		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
+			sWritefMust(s, "0x%016llX", *theQ);
+		else
+			s << *theQ;
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
@@ -803,7 +806,7 @@ void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
 	}
 
 void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
-	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fStrimW); }
+	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fStrimW); }
 
 void Visitor_Writer::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
 	{ spToStrim_Stream(iYadStreamerR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF, fStrimW); }
