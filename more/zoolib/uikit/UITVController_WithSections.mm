@@ -34,8 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <QuartzCore/CATransaction.h>
 
-extern void sUpdatePopovers();
-
 namespace ZooLib {
 namespace UIKit {
 
@@ -46,6 +44,13 @@ using std::vector;
 
 // =================================================================================================
 // MARK: - Helpers
+
+static void spUpdatePopovers()
+	{
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName:@"UIPopoverControllerShouldMove"
+		object:nil];
+	}
 
 NSArray* sMakeNSIndexPathArray(size_t iSectionIndex, size_t iBaseRowIndex, size_t iCount)
 	{
@@ -75,8 +80,8 @@ static bool spIsVersion4OrLater()
 // MARK: - Section
 
 Section::Section(ZRef<SectionBody> iBody)
-:	fBody(iBody)
-,	fHideWhenEmpty(false)
+:	fHideWhenEmpty(false)
+,	fBody(iBody)
 	{}
 
 ZRef<SectionBody> Section::GetBody()
@@ -196,9 +201,9 @@ bool SectionBody::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 // MARK: - SectionBody_Concrete
 
 SectionBody_Concrete::SectionBody_Concrete()
-:	fRowAnimation_Insert(UITableViewRowAnimationRight)
+:	fRowAnimation_Reload(UITableViewRowAnimationNone)
+,	fRowAnimation_Insert(UITableViewRowAnimationRight)
 ,	fRowAnimation_Delete(UITableViewRowAnimationRight)
-,	fRowAnimation_Reload(UITableViewRowAnimationNone)
 ,	fApplyAccessory(true)
 	{}
 
@@ -1020,7 +1025,8 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		thePosition = UACellBackgroundViewPositionSingle;
 		}
 
-	[ioCell setPosition:thePosition];
+	if ([ioCell respondsToSelector:@selector(applyPosition:)])
+		[ioCell applyPosition:thePosition];
 	}
 
 - (void)pApplyPositionToVisibleCells:(UITableView*)tableView
@@ -1277,7 +1283,7 @@ static void spInsertSections(UITableView* iTableView,
 	fUpdateInFlight = false;
 
 	[self pApplyPositionToVisibleCells:tableView];
-	sUpdatePopovers();
+	spUpdatePopovers();
 	if (fNeedsUpdate)
 		[self pEnqueueCheckForUpdate:tableView];
 	}
