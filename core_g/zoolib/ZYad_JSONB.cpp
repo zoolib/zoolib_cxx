@@ -48,14 +48,14 @@ namespace { // anonymous
 // =================================================================================================
 // MARK: - Uniqued ZNames
 
-ZName spNameFromStream(const ZStreamR& r)
+ZName spNameFromChan(const ChanR_Bin& r)
 	{
 	if (size_t theCount = sReadCount(r))
-		return sName(r.ReadString(theCount));
+		return sName(sReadString(theCount, r));
 	return ZName();
 	}
 
-ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR);
+ZRef<ZYadR> spMakeYadR(const ZRef<ChannerR_Bin>& iChannerR_Bin);
 
 // =================================================================================================
 // MARK: - String to/from stream
@@ -71,15 +71,10 @@ void spToChan(const string& iString, const ChanW_Bin& w)
 		}
 	}
 
-ZAny spStringFromStream(const ZStreamR& r)
+ZAny spStringFromChan(const ChanR_Bin& r)
 	{
-	if (const size_t theLength = sReadCount(r))
-		{
-		ZAny theAny = sAny<string>(theLength, 0);
-		string* theP = sPMut<string>(theAny);
-		r.Read(&(*theP)[0], theLength);
-		return theAny;
-		}
+	if (size_t theCount = sReadCount(r))
+		return ZAny(sReadString(theCount, r));
 	return sAny<string>();
 	}
 
@@ -91,7 +86,7 @@ class YadStreamerR
 ,	private ZStreamR
 	{
 public:
-	YadStreamerR(ZRef<ZStreamerR> iStreamerR);
+	YadStreamerR(ZRef<ChannerR_Bin> iChannerR_Bin);
 
 // From ZYadR
 	virtual void Finish();
@@ -105,13 +100,13 @@ public:
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
-	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ChannerR_Bin> fChannerR_Bin;
 	size_t fChunkSize;
 	bool fHitEnd;
 	};
 
-YadStreamerR::YadStreamerR(ZRef<ZStreamerR> iStreamerR)
-:	fStreamerR(iStreamerR)
+YadStreamerR::YadStreamerR(ZRef<ChannerR_Bin> iChannerR_Bin)
+:	fChannerR_Bin(iChannerR_Bin)
 ,	fChunkSize(0)
 ,	fHitEnd(false)
 	{}
@@ -124,7 +119,7 @@ const ZStreamR& YadStreamerR::GetStreamR()
 
 void YadStreamerR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	const ZStreamR& r = fStreamerR->GetStreamR();
+	const ChanR_Bin& r = sGetChan(fChannerR_Bin);
 
 	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && !fHitEnd)
@@ -137,8 +132,7 @@ void YadStreamerR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			}
 		else
 			{
-			size_t countRead;
-			r.Read(localDest, min(iCount, fChunkSize), &countRead);
+			const size_t countRead = sQReadFully(localDest, min(iCount, fChunkSize), r);
 			localDest += countRead;
 			iCount -= countRead;
 			fChunkSize -= countRead;
@@ -149,15 +143,11 @@ void YadStreamerR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	}
 
 size_t YadStreamerR::Imp_CountReadable()
-	{
-	const ZStreamR& r = fStreamerR->GetStreamR();
-
-	return min(fChunkSize, r.CountReadable());
-	}
+	{ return min(fChunkSize, sReadable(sGetChan(fChannerR_Bin))); }
 
 void YadStreamerR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	const ZStreamR& r = fStreamerR->GetStreamR();
+	const ChanR_Bin& r = sGetChan(fChannerR_Bin);
 
 	uint64 countRemaining = iCount;
 	while (countRemaining && !fHitEnd)
@@ -170,8 +160,7 @@ void YadStreamerR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 			}
 		else
 			{
-			uint64 countSkipped;
-			r.Skip(min(countRemaining, uint64(fChunkSize)), &countSkipped);
+			const uint64 countSkipped = sSkip(min(countRemaining, uint64(fChunkSize)), r);
 			countRemaining -= countSkipped;
 			fChunkSize -= countSkipped;
 			}
@@ -187,16 +176,16 @@ void YadStreamerR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 class YadSeqR : public ZYadSeqR_Std
 	{
 public:
-	YadSeqR(const ZRef<ZStreamerR>& iStreamerR)
-	:	fStreamerR(iStreamerR)
+	YadSeqR(const ZRef<ChannerR_Bin>& iChannerR_Bin)
+	:	fChannerR_Bin(iChannerR_Bin)
 		{}
 
 // From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
-		{ oYadR = spMakeYadR(fStreamerR); }
+		{ oYadR = spMakeYadR(fChannerR_Bin); }
 
 private:
-	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ChannerR_Bin> fChannerR_Bin;
 	};
 
 // =================================================================================================
@@ -205,44 +194,42 @@ private:
 class YadMapR : public ZYadMapR_Std
 	{
 public:
-	YadMapR(const ZRef<ZStreamerR>& iStreamerR)
-	:	fStreamerR(iStreamerR)
+	YadMapR(const ZRef<ChannerR_Bin>& iChannerR_Bin)
+	:	fChannerR_Bin(iChannerR_Bin)
 		{}
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
 		{
-		oName = spNameFromStream(fStreamerR->GetStreamR());
-		oYadR = spMakeYadR(fStreamerR);
+		oName = spNameFromChan(sGetChan(fChannerR_Bin));
+		oYadR = spMakeYadR(fChannerR_Bin);
 		}
 
 private:
-	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ChannerR_Bin> fChannerR_Bin;
 	};
 
 // =================================================================================================
 // MARK: - Yad
 
-ZRef<ZYadR> spMakeYadR(const ZRef<ZStreamerR>& iStreamerR)
+ZRef<ZYadR> spMakeYadR(const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	{
-	const ZStreamR& r = iStreamerR->GetStreamR();
+	const ChanR_Bin& r = sGetChan(iChannerR_Bin);
 
-	uint8 theType;
-	size_t countRead;
-	r.Read(&theType, 1, &countRead);
-	if (countRead && theType != 0xFF)
+	if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
 		{
-		switch (theType)
+		switch (*theTypeQ)
 			{
 			case 1: return sYadR(ZAny());
 			case 2: return sYadR(ZAny(false));
 			case 3: return sYadR(ZAny(true));
-			case 4: return sYadR(ZAny(r.ReadInt64()));
-			case 5: return sYadR(ZAny(r.ReadDouble()));
-			case 7: return new YadStreamerR(iStreamerR);
-			case 8: return new ZYadStrimmerU_String(spStringFromStream(r));
-			case 11: return new YadSeqR(iStreamerR);
-			case 13: return new YadMapR(iStreamerR);
+			case 4: return sYadR(ZAny(sReadBE<int64>(r)));
+			case 5: return sYadR(ZAny(sReadBE<double>(r)));
+			case 7: return new YadStreamerR(iChannerR_Bin);
+			case 8: return new ZYadStrimmerU_String(spStringFromChan(r));
+			case 11: return new YadSeqR(iChannerR_Bin);
+			case 13: return new YadMapR(iChannerR_Bin);
+			case 255: return null;
 			}
 		ZUnimplemented();
 		}
@@ -348,8 +335,8 @@ private:
 
 } // anonymous namespace
 
-ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR)
-	{ return spMakeYadR(iStreamerR); }
+ZRef<ZYadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin)
+	{ return spMakeYadR(iChannerR_Bin); }
 
 void sToChan(ZRef<ZYadR> iYadR, const ChanW_Bin& w)
 	{ iYadR->Accept(Visitor_ToChan(w)); }

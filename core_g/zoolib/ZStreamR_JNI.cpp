@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Memory.h"
+
 #include "zoolib/ZCompat_algorithm.h" // For sMin
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamR_JNI.h"
 
 namespace ZooLib {

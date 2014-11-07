@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 
 #include "zoolib/ZStreamW_HexStrim.h"
-#include "zoolib/ZStream_Memory.h"
+//###include "zoolib/ZStream_Memory.h"
 #include "zoolib/ZUtil_Strim_Data.h"
 
 namespace ZooLib {

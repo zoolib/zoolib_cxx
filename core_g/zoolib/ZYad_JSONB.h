@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_JSONB_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamer.h"
+#include "zoolib/Channer_Bin.h"
 #include "zoolib/ZYad.h"
 
 namespace ZooLib {
@@ -31,7 +31,7 @@ namespace ZYad_JSONB {
 // =================================================================================================
 // MARK: -
 
-ZRef<ZYadR> sYadR(ZRef<ZStreamerR> iStreamerR);
+ZRef<ZYadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin);
 
 void sToChan(ZRef<ZYadR> iYadR, const ChanW_Bin& w);
 

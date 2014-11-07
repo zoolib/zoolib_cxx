@@ -37,7 +37,7 @@ using std::pair;
 using std::set;
 using std::vector;
 
-using namespace ZSQLite;
+using namespace SQLite;
 using namespace ZUtil_STL;
 
 namespace RA = RelationalAlgebra;
@@ -81,7 +81,7 @@ public:
 // =================================================================================================
 // MARK: - Relater_SQLite
 
-Relater_SQLite::Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent)
+Relater_SQLite::Relater_SQLite(ZRef<SQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent)
 :	fDB(iDB)
 ,	fIdentity(iIdentity)
 ,	fEvent(iEvent)
@@ -132,7 +132,7 @@ void Relater_SQLite::ModifyRegistrations(
 
 		if (iterPQueryPair.second)
 			{
-			RA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String<string8>(thePQuery->fSQL));
+			RA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String8(&thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 
@@ -165,12 +165,12 @@ void Relater_SQLite::ModifyRegistrations(
 		}
 
 	if (trigger)
-		Relater::pTriggerResultsAvailable();
+		Relater::pTrigger_RelaterResultsAvailable();
 	}
 
 void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	{
-	Relater::pCollectResultsCalled();
+	Relater::pCalled_RelaterCollectResults();
 	oChanged.clear();
 
 	ZRef<Event> theEvent = fEvent;

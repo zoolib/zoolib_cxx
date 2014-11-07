@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Relater.h"
-#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/sqlite/SQLite.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -36,7 +36,7 @@ class Relater_SQLite : public Relater
 public:
 	enum { kDebug = 1 };
 
-	Relater_SQLite(ZRef<ZSQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent);
+	Relater_SQLite(ZRef<SQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent);
 	virtual ~Relater_SQLite();
 
 	virtual bool Intersects(const RelHead& iRelHead);
@@ -48,7 +48,7 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 private:
-	ZRef<ZSQLite::DB> fDB;
+	ZRef<SQLite::DB> fDB;
 	ZRef<Identity> fIdentity;
 	ZRef<Event> fEvent;
 	std::map<string8, RelHead> fMap_Tables;

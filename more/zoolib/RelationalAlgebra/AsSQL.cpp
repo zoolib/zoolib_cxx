@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_Chan_UTF.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
@@ -112,7 +113,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	bool allOK = true;
 	Analysis resultAnalysis;
 	resultAnalysis.fCondition = sTrue();
-	ZAssertCompile(false); // NDY
+//##	ZAssertCompile(false); // NDY
 	ZQ<map<string8,RelHead>::const_iterator> found;
 	RelHead theDefault;
 	foreachi (iter, fTables)
@@ -348,7 +349,7 @@ void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 		}
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
+static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iAny)
 	{
 	if (false)
 		{}
@@ -362,31 +363,31 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		theOptions.fQuoteQuotes = true;
 		theOptions.fEscapeHighUnicode = false;
 		s << "'";
-		ZStrimW_Escaped(theOptions, s).Write(*theValue);
+		ZStrimW_Escaped(theOptions, s) << *theValue;
 		s << "'";
 		}
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		if (*theValue)
-			s.Write("1");
+			s << "1";
 		else
-			s.Write("0");
+			s << "0";
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		s.Writef("%lld", *theQ);
+		sWritefMust(s, "%lld", *theQ);
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		ZUtil_Strim::sWriteExact(s, *asFloat);
+		Util_Chan::sWriteExact(*asFloat, s);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		ZUtil_Strim::sWriteExact(s, *asDouble);
+		Util_Chan::sWriteExact(*asDouble, s);
 		}
 	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 		{
-		ZUtil_Strim::sWriteExact(s, asTime->fVal);
+		Util_Chan::sWriteExact(asTime->fVal, s);
 		}
 	else
 		{
@@ -394,10 +395,10 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		}
 	}
 
-static void spWrite_PropName(const string8& iName, const ZStrimW& s)
+static void spWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{ s << iName; }
 
-static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValComparand>& iComparand, const ChanW_UTF& s)
 	{
 	if (not iComparand)
 		{
@@ -418,7 +419,7 @@ static void spToStrim(const ZRef<ZValComparand>& iComparand, const ZStrimW& s)
 		}
 	}
 
-void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
+void spToStrim(const ZValPred& iValPred, const ChanW_UTF& s)
 	{
 	if (ZRef<ZValComparator_Simple> asSimple =
 		iValPred.GetComparator().DynamicCast<ZValComparator_Simple>())
@@ -475,7 +476,7 @@ void spToStrim(const ZValPred& iValPred, const ZStrimW& s)
 					theOptions.fQuoteQuotes = true;
 					theOptions.fEscapeHighUnicode = false;
 					s << "'%";
-					ZStrimW_Escaped(theOptions, s).Write(*asString);
+					ZStrimW_Escaped(theOptions, s) << *asString;
 					s << "%'";
 					return;
 					}
