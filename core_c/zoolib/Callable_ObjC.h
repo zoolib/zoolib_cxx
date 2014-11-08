@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __OBJC__
 
 #include "zoolib/ZCompat_NSObject.h"
+#include "zoolib/ZRef_NS.h"
 
 #include <objc/message.h>
 

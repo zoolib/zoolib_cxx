@@ -76,7 +76,6 @@ ZQ<ZRef<ZCounted> > MelangeCombo::QCall(
 ZQ<ZRef<Event> > MelangeCombo::QCall(
 	const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)
 	{
-	// Need to push
 	ZRef<ZDatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
 
 	if (iPrior)
