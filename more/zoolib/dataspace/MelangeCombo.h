@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter_EventLoopBase.h"
 #include "zoolib/StartScheduler.h"
 
-#include "zooLib/dataspace/MelangeCombo.h"
 #include "zooLib/dataspace/RelsWatcher_Relater.h"
 #include "zoolib/dataspace/WrappedDatonSet.h"
 
