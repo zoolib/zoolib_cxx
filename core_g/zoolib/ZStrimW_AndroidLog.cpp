@@ -40,7 +40,7 @@ void ZStrimW_AndroidLog::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, siz
 void ZStrimW_AndroidLog::Imp_Flush()
 	{
 	ZAcqMtx acq(fMtx);
-	__android_log_print(ANDROID_LOG_INFO, "ZooLib", fBuffer.c_str());
+	__android_log_print(ANDROID_LOG_INFO, "ZooLib", "%s", fBuffer.c_str());
 	fBuffer.clear();
 	}
 
