@@ -270,6 +270,32 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 
 #if defined(__ANDROID__)
 
+#include <android/api-level.h>
+
+#if __ANDROID_API__ >= 21
+
+#include <stdatomic.h>
+
+namespace ZooLib {
+
+// -----------------------------------------------
+#if !defined(DEFINED_sAtomic_CAS)
+#define DEFINED_sAtomic_CAS 1
+
+bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
+	{
+	// A major point of ZAtomic_t was to be able to have it be an alias for whatever
+	// the standard ended up being. This ugliness I hope will be temporary.
+	typedef _Atomic(int) atomic_int;
+	return atomic_compare_exchange_strong((atomic_int*)&iAtomic->fValue, &iOldValue, iNewValue);
+	}
+
+#endif
+
+} // namespace ZooLib
+
+#else // __ANDROID_API__ >= 21
+
 #include <sys/atomics.h>
 
 namespace ZooLib {
@@ -285,6 +311,7 @@ bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 
 } // namespace ZooLib
 
+#endif // __ANDROID_API__ >= 21
 #endif // defined(__ANDROID__)
 
 // =================================================================================================

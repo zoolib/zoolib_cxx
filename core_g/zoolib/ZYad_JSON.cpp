@@ -612,7 +612,7 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
 		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
-			sWritefMust(s, "0x%016llX", *theQ);
+			sWritefMust(s, "0x%016llX", (unsigned long long)*theQ);
 		else
 			s << *theQ;
 		}
@@ -655,7 +655,7 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			if (iOptions.fRawSizeCap)
 				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
 
-			sWritefMust(s, "( // %lld bytes", theSize);
+			sWritefMust(s, "( // %lld bytes", (unsigned long long)theSize);
 
 			if (countRemaining < theSize)
 				sWritefMust(s, " (truncated at %lld bytes)", (long long)iOptions.fRawSizeCap.Get());

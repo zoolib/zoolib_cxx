@@ -74,7 +74,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			#define ZCONFIG_Processor ZCONFIG_Processor_PPC_64
 		#elif defined(__arm__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_ARM
-		#elif defined(__arm64__)
+		#elif defined(__aarch64__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_ARM_64
 		#elif defined(__mips__)
 			#define ZCONFIG_Processor ZCONFIG_Processor_MIPS
