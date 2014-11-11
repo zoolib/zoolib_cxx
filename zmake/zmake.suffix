@@ -11,6 +11,8 @@ OBJECTS_DIR_ROOT:=$(OBJECTS_DIR)
 
 OBJECTS_DIR:=$(OBJECTS_DIR)/4/3/2/1/0
 
+DEFAULT_TARGET?=$(EXE_NAME)
+
 # ==================================================================================================
 # Set up the names of the compilers to use
 
@@ -137,6 +139,11 @@ LDFLAGS_LIBS +=$(foreach lib, $(LIBS_SEARCHED), $(addprefix -l,$(lib)))
 
 LDFLAGS_LIBS +=$(call ifplatform, Darwin, $(foreach lib, $(FRAMEWORKS), $(addprefix -framework , $(lib))),)
 
+
+# ==================================================================================================
+# Default (first) target
+default: $(DEFAULT_TARGET)
+
 # ==================================================================================================
 # Rules to build the actual target, including the step to add any assets to the executeable.
 
@@ -236,10 +243,6 @@ ifneq (clean,$(MAKECMDGOALS))
 -include $(OBJECTS_DIR_ROOT)/*/*/*/*/*/*/*.d
 endif
 
-# ==================================================================================================
-# Default target is the debug version
-default: $(EXE_NAME)
-
 
 # ==================================================================================================
 # empty rule. Things that depend on this rule will always get triggered
@@ -250,7 +253,7 @@ FORCE:
 # The generic clean command. Delete everything in the object directories
 .PHONY : clean
 clean:
-	-rm -rf $(OBJECTS_DIR_ROOT) $(EXE_NAME)
+	-rm -rf $(OBJECTS_DIR_ROOT) $(EXE_NAME) $(DEFAULT_TARGET)
 
 
 # ==================================================================================================
