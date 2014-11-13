@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter.h"
 
 #include "zooLib/dataspace/RelsWatcher.h"
-#include "zoolib/datonset/ZDatonSet.h"
+#include "zoolib/datonset/DatonSet.h"
 
 // =================================================================================================
 // MARK: -
@@ -34,20 +34,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-typedef Callable<ZRef<Event>(const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)>
-	Callable_DatonSetUpdate;
+using RelsWatcher::Callable_Register;
+using DatonSet::Callable_DatonSetUpdate;
 
 typedef Multi3<
-	ZRef<RelsWatcher::Callable_Register>,
+	ZRef<Callable_Register>,
 	ZRef<Callable_DatonSetUpdate>,
 	ZRef<Starter>
 	> Melange_t;
 
 typedef Callable<Melange_t()> MelangeFactory;
-
-typedef Callable<ZRef<ZDatonSet::Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;
-
-typedef Callable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Callable_PullSuggested;
 
 } // namespace Dataspace
 } // namespace ZooLib

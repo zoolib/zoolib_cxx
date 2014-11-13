@@ -18,18 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_WrappedDatonSet_h__
-#define __ZooLib_Dataspace_WrappedDatonSet_h__ 1
+#ifndef __ZooLib_DatonSet_WrappedDatonSet_h__
+#define __ZooLib_DatonSet_WrappedDatonSet_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/datonset/ZDatonSet.h"
-#include "zooLib/dataspace/Melange.h"
+#include "zoolib/datonset/DatonSet.h"
 
 namespace ZooLib {
-namespace Dataspace {
+namespace DatonSet {
 
 // =================================================================================================
 // MARK: - WrappedDatonSet
@@ -38,8 +37,10 @@ class WrappedDatonSet
 :	public ZCounted
 	{
 public:
-	typedef ZDatonSet::DatonSet DatonSet;
 	typedef Callable_Void Callable_NeedsUpdate;
+
+	typedef Callable_PullSuggested Callable_PullSuggested;
+	typedef Callable_PullFrom Callable_PullFrom;
 
 	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
 		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
@@ -65,7 +66,7 @@ public:
 private:
 	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
 
-	ZRef<ZDatonSet::Deltas> pPullFrom(ZRef<Event> iEvent);
+	ZRef<Deltas> pPullFrom(ZRef<Event> iEvent);
 
 	// ---
 
@@ -90,7 +91,7 @@ private:
 ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
 	const ZRef<WrappedDatonSet::Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
-} // namespace Dataspace
+} // namespace DatonSet
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_WrappedDatonSet_h__
+#endif // __ZooLib_DatonSet_WrappedDatonSet_h__

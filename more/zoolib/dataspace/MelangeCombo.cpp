@@ -30,18 +30,19 @@ namespace Dataspace {
 // =================================================================================================
 // MARK: - MelangeRoot
 
-MelangeRoot::MelangeRoot(const ZRef<ZDatonSet::DatonSet>& iDS)
+MelangeRoot::MelangeRoot(const ZRef<DatonSet::DatonSet>& iDS)
 :	fDS(iDS)
 	{}
 
 void MelangeRoot::Initialize()
 	{
 	ZCounted::Initialize();
-	fWDS = new WrappedDatonSet(fDS, sCallable(sWeakRef(this), &MelangeRoot::pNeedsUpdate));
+	fWDS = new DatonSet::WrappedDatonSet(fDS,
+		sCallable(sWeakRef(this), &MelangeRoot::pNeedsUpdate));
 	fDS.Clear();
 	}
 
-ZRef<WrappedDatonSet> MelangeRoot::GetWrappedDatonSet()
+ZRef<DatonSet::WrappedDatonSet> MelangeRoot::GetWrappedDatonSet()
 	{ return fWDS; }
 
 void MelangeRoot::Start(ZRef<Starter> iStarter)
@@ -64,7 +65,7 @@ void MelangeRoot::pWork()
 // =================================================================================================
 // MARK: - MelangeCombo
 
-MelangeCombo::MelangeCombo(const ZRef<WrappedDatonSet>& iWDS_Parent)
+MelangeCombo::MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent)
 :	fWDS_Parent(iWDS_Parent)
 	{}
 
@@ -74,9 +75,9 @@ ZQ<ZRef<ZCounted> > MelangeCombo::QCall(
 	{ return fRelsWatcher_Relater->QCall(iCallable_Changed, iRel); }
 
 ZQ<ZRef<Event> > MelangeCombo::QCall(
-	const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew)
+	const ZQ<DatonSet::Daton>& iPrior, const ZQ<DatonSet::Daton>& iNew)
 	{
-	ZRef<ZDatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
+	ZRef<DatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
 
 	if (iPrior)
 		theDS->Erase(*iPrior);

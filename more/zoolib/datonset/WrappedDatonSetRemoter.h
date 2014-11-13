@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_WrappedDatonSetRemoter_h__
-#define __ZooLib_Dataspace_WrappedDatonSetRemoter_h__ 1
+#ifndef __ZooLib_DatonSet_WrappedDatonSetRemoter_h__
+#define __ZooLib_DatonSet_WrappedDatonSetRemoter_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Connection.h"
 #include "zoolib/Multi.h"
 
-#include "zoolib/dataspace/WrappedDatonSet.h"
+#include "zoolib/datonset/WrappedDatonSet.h"
 
 namespace ZooLib {
-namespace Dataspace {
+namespace DatonSet {
 
 // =================================================================================================
 // MARK: - WrappedDatonSetRemoter
@@ -56,7 +56,7 @@ public:
 private:
 	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
 
-	ZRef<ZDatonSet::Deltas> pPullFrom(ZRef<Event> iEvent);
+	ZRef<Deltas> pPullFrom(ZRef<Event> iEvent);
 
 	void pRead();
 	static void spRead(ZRef<WrappedDatonSetRemoter> iWDSR);
@@ -80,10 +80,10 @@ private:
 
 	bool fConnectionBusy;
 
-	ZRef<ZDatonSet::Deltas>* fPullFromPointer;
+	ZRef<Deltas>* fPullFromPointer;
 	};
 
-} // namespace Dataspace
+} // namespace DatonSet
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_WrappedDatonSetRemoter_h__
+#endif // __ZooLib_DatonSet_WrappedDatonSetRemoter_h__

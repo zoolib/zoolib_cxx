@@ -25,7 +25,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZDatonSet::Daton& iDaton)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const DatonSet::Daton& iDaton)
 	{
 	const ZData_Any& theData = iDaton.GetData();
 	sWrite((const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr, w);

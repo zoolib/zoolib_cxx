@@ -24,7 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/dataspace/Searcher.h"
 #include "zoolib/dataspace/Melange.h"
-#include "zoolib/datonset/ZDatonSet.h"
+
+#include "zoolib/datonset/DatonSet.h"
+
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
@@ -52,18 +54,18 @@ public:
 	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 // Our protocol
-	ZRef<Callable_PullSuggested> GetCallable_PullSuggested();
+	ZRef<DatonSet::Callable_PullSuggested> GetCallable_PullSuggested();
 
 private:
 	ZMtxR fMtxR;
 
-	void pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom);
-	ZRef<Callable_PullSuggested> fCallable_PullSuggested_Self;
+	void pPullSuggested(const ZRef<DatonSet::Callable_PullFrom>& iCallable_PullFrom);
+	ZRef<DatonSet::Callable_PullSuggested> fCallable_PullSuggested_Self;
 
 	void pPull();
 	void pChanged(const ZVal_Any& iVal);
 
-	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
+	std::set<ZRef<DatonSet::Callable_PullFrom> > fCallables_PullFrom;
 
 	// -----
 
@@ -83,10 +85,10 @@ private:
 
 	ZRef<Event> fEvent;
 
-	typedef std::map<ZDatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Assert;
+	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Assert;
 	Map_Assert fMap_Assert;
 
-	typedef std::map<ZDatonSet::Daton,ZRef<Event> > Map_Retract;
+	typedef std::map<DatonSet::Daton,ZRef<Event> > Map_Retract;
 	Map_Retract fMap_Retract;
 
 	// -----

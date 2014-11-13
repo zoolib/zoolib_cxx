@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDatonSet_h__
-#define __ZDatonSet_h__ 1
+#ifndef __ZooLib_DatonSet_DatonSet_h__
+#define __ZooLib_DatonSet_DatonSet_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Callable.h"
 #include "zoolib/IntervalTreeClock.h"
 #include "zoolib/Util_Relops.h"
 
@@ -33,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
-namespace ZDatonSet {
+namespace DatonSet {
 
 typedef ZData_Any Data;
 
@@ -64,12 +65,12 @@ private:
 	Data fData;
 	};
 
-} // namespace ZDatonSet
+} // namespace DatonSet
 
-template <> struct RelopsTraits_HasEQ<ZDatonSet::Daton> : public RelopsTraits_Has {};
-template <> struct RelopsTraits_HasLT<ZDatonSet::Daton> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasEQ<DatonSet::Daton> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<DatonSet::Daton> : public RelopsTraits_Has {};
 
-namespace ZDatonSet {
+namespace DatonSet {
 
 // =================================================================================================
 // MARK: - Delta
@@ -163,7 +164,17 @@ private:
 	ZRef<DeltasChain> fDeltasChain;
 	};
 
-} // namespace ZDatonSet
+// =================================================================================================
+// MARK: - Callables
+
+typedef Callable<ZRef<Event>(const ZQ<Daton>& iPrior, const ZQ<Daton>& iNew)>
+	Callable_DatonSetUpdate;
+
+typedef Callable<ZRef<Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;
+
+typedef Callable<void(const ZRef<Callable_PullFrom>& iCallable_PullFrom)> Callable_PullSuggested;
+
+} // namespace DatonSet
 } // namespace ZooLib
 
-#endif // __ZDatonSet_h__
+#endif // __ZooLib_DatonSet_DatonSet_h__

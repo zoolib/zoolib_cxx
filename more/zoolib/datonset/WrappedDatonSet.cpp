@@ -23,13 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_set.h"
 
-#include "zoolib/dataspace/WrappedDatonSet.h"
+#include "zoolib/datonset/WrappedDatonSet.h"
 
 namespace ZooLib {
-namespace Dataspace {
+namespace DatonSet {
 
 using namespace ZUtil_STL;
-using ZDatonSet::DatonSet;
 using std::set;
 using std::swap;
 
@@ -88,7 +87,7 @@ void WrappedDatonSet::Update()
 
 	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
-		ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(fDatonSet_Active->GetEvent());
+		ZRef<Deltas> theDeltas = theCallable->Call(fDatonSet_Active->GetEvent());
 		if (fDatonSet_Active->IncorporateDeltas(theDeltas))
 			anyChange = true;
 		}
@@ -153,7 +152,7 @@ void WrappedDatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_Pu
 		}
 	}
 
-ZRef<ZDatonSet::Deltas> WrappedDatonSet::pPullFrom(ZRef<Event> iEvent)
+ZRef<Deltas> WrappedDatonSet::pPullFrom(ZRef<Event> iEvent)
 	{
 	ZGuardMtxR guard(fMtxR);
 	return fDatonSet_Committed->GetDeltas(iEvent);
@@ -171,5 +170,5 @@ ZRef<WrappedDatonSet> sSpawned(const ZRef<WrappedDatonSet>& iParent,
 	return result;
 	}
 
-} // namespace Dataspace
+} // namespace DatonSet
 } // namespace ZooLib

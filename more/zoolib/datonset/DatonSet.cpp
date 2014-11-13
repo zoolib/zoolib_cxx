@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZUtil_STL_vector.h"
 
-#include "zoolib/datonset/ZDatonSet.h"
+#include "zoolib/datonset/DatonSet.h"
 
 #include <queue>
 
@@ -34,15 +34,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T<ZDatonSet::Daton>(const ZDatonSet::Daton& iL, const ZDatonSet::Daton& iR)
+int sCompare_T<DatonSet::Daton>(const DatonSet::Daton& iL, const DatonSet::Daton& iR)
 	{ return sCompare_T(iL.GetData(), iR.GetData()); }
 
-ZMACRO_CompareRegistration_T(ZDatonSet::Daton)
+ZMACRO_CompareRegistration_T(DatonSet::Daton)
 
 } // namespace ZooLib
 
 namespace ZooLib {
-namespace ZDatonSet {
+namespace DatonSet {
 
 using namespace std;
 using namespace ZUtil_STL;
@@ -341,5 +341,5 @@ void DatonSet::pCommit()
 	ZAssert(fEvent);
 	}
 
-} // namespace ZDatonSet
+} // namespace DatonSet
 } // namespace ZooLib

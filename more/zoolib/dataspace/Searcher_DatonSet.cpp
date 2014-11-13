@@ -46,10 +46,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-using ZDatonSet::DatonSet;
-using ZDatonSet::Daton;
-using ZDatonSet::Deltas;
-using ZDatonSet::Vector_Event_Delta_t;
+using DatonSet::Daton;
+using DatonSet::Deltas;
+using DatonSet::Vector_Event_Delta_t;
 
 using namespace ZUtil_STL;
 
@@ -379,7 +378,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 		}
 	}
 
-ZRef<Callable_PullSuggested> Searcher_DatonSet::GetCallable_PullSuggested()
+ZRef<DatonSet::Callable_PullSuggested> Searcher_DatonSet::GetCallable_PullSuggested()
 	{
 	ZAcqMtxR acq(fMtxR);
 	if (not fCallable_PullSuggested_Self)
@@ -387,7 +386,7 @@ ZRef<Callable_PullSuggested> Searcher_DatonSet::GetCallable_PullSuggested()
 	return fCallable_PullSuggested_Self;
 	}
 
-void Searcher_DatonSet::pPullSuggested(const ZRef<Callable_PullFrom>& iCallable_PullFrom)
+void Searcher_DatonSet::pPullSuggested(const ZRef<DatonSet::Callable_PullFrom>& iCallable_PullFrom)
 	{
 	ZGuardMtxR guard(fMtxR);
 	sInsert(fCallables_PullFrom, iCallable_PullFrom);
@@ -399,14 +398,14 @@ void Searcher_DatonSet::pPull()
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	set<ZRef<Callable_PullFrom> > theCallables_PullFrom;
+	set<ZRef<DatonSet::Callable_PullFrom> > theCallables_PullFrom;
 	swap(theCallables_PullFrom, fCallables_PullFrom);
 
-	foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
+	foreachv (ZRef<DatonSet::Callable_PullFrom> theCallable, theCallables_PullFrom)
 		{
 		guard.Release();
 
-		ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(fEvent);
+		ZRef<DatonSet::Deltas> theDeltas = theCallable->Call(fEvent);
 
 		guard.Acquire();
 

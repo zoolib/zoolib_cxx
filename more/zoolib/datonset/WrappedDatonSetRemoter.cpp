@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Stringf.h"
 
-#include "zoolib/datonset/ZDatonSet.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZUtil_STL_set.h"
@@ -39,13 +38,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_JSONB.h"
 
-#include "zoolib/dataspace/WrappedDatonSetRemoter.h"
+#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/datonset/WrappedDatonSetRemoter.h"
 
 namespace ZooLib {
-namespace Dataspace {
+namespace DatonSet {
 
 using namespace ZUtil_STL;
-using ZDatonSet::DatonSet;
 using std::set;
 using std::swap;
 
@@ -132,9 +131,8 @@ static ZSeq_Any spSeqFromEvent(const ZRef<Event>& iEvent)
 	return theSeq;
 	}
 
-static ZRef<ZDatonSet::Delta> spDeltaFromSeq(const ZSeq_Any& iSeq)
+static ZRef<Delta> spDeltaFromSeq(const ZSeq_Any& iSeq)
 	{
-	using namespace ZDatonSet;
 	Delta::Statements_t theStatements_t;
 	foreachi (iter, iSeq)
 		{
@@ -146,9 +144,8 @@ static ZRef<ZDatonSet::Delta> spDeltaFromSeq(const ZSeq_Any& iSeq)
 	return new Delta(*&theStatements_t);
 	}
 
-static ZSeq_Any spSeqFromDelta(const ZRef<ZDatonSet::Delta>& iDelta)
+static ZSeq_Any spSeqFromDelta(const ZRef<Delta>& iDelta)
 	{
-	using namespace ZDatonSet;
 	ZSeq_Any theSeq;
 
 	foreachi (iter, iDelta->GetStatements())
@@ -247,7 +244,7 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 	fCnd.Broadcast();
 	}
 
-ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
+ZRef<Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 	{
 	for (;;)
 		{
@@ -269,7 +266,7 @@ ZRef<ZDatonSet::Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 			theMessage.Set("What", "PullFrom");
 			theMessage.Set("Event", spSeqFromEvent(iEvent));
 
-			ZRef<ZDatonSet::Deltas> theDeltas;
+			ZRef<Deltas> theDeltas;
 			fPullFromPointer = &theDeltas;
 
 			{
@@ -332,7 +329,7 @@ void WrappedDatonSetRemoter::pRead()
 				}
 			else if (theWhat == "PullFrom")
 				{
-				using namespace ZDatonSet;
+				using namespace DatonSet;
 
 				ZRef<Event> theEvent = spEventFromSeq(theMessage.Get<ZSeq_Any>("Event"));
 
@@ -349,7 +346,7 @@ void WrappedDatonSetRemoter::pRead()
 
 				foreachv (ZRef<Callable_PullFrom> theCallable, theCallables_PullFrom)
 					{
-					ZRef<ZDatonSet::Deltas> theDeltas = theCallable->Call(theEvent);
+					ZRef<Deltas> theDeltas = theCallable->Call(theEvent);
 
 					foreachi (iterDelta, theDeltas->GetVector())
 						{
@@ -375,7 +372,7 @@ void WrappedDatonSetRemoter::pRead()
 				}
 			else if (theWhat == "PullFromResponse")
 				{
-				using namespace ZDatonSet;
+				using namespace DatonSet;
 				// We should be blocked up in pPullFrom, get the data across from here to there
 				Vector_Event_Delta_t theVED;
 				foreachi (iter, theMessage.Get<ZSeq_Any>("Deltas"))
@@ -420,5 +417,5 @@ ZQ<ChannerComboRW_Bin> WrappedDatonSetRemoter::pQEnsureChannerCombo()
 	return fChannerComboQ;
 	}
 
-} // namespace Dataspace
+} // namespace DatonSet
 } // namespace ZooLib

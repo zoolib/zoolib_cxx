@@ -25,8 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter_EventLoopBase.h"
 #include "zoolib/StartScheduler.h"
 
+#include "zooLib/dataspace/Melange.h"
 #include "zooLib/dataspace/RelsWatcher_Relater.h"
-#include "zoolib/dataspace/WrappedDatonSet.h"
+#include "zoolib/datonset/WrappedDatonSet.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -38,11 +39,11 @@ class MelangeRoot
 :	public ZCounted
 	{
 public:
-	MelangeRoot(const ZRef<ZDatonSet::DatonSet>& iDS);
+	MelangeRoot(const ZRef<DatonSet::DatonSet>& iDS);
 
 	virtual void Initialize();
 
-	ZRef<WrappedDatonSet> GetWrappedDatonSet();
+	ZRef<DatonSet::WrappedDatonSet> GetWrappedDatonSet();
 
 	void Start(ZRef<Starter> iStarter);
 
@@ -51,9 +52,9 @@ private:
 
 	void pWork();
 
-	ZRef<ZDatonSet::DatonSet> fDS;
+	ZRef<DatonSet::DatonSet> fDS;
 	StartScheduler::Job fJob;
-	ZRef<WrappedDatonSet> fWDS;
+	ZRef<DatonSet::WrappedDatonSet> fWDS;
 	};
 
 // =================================================================================================
@@ -65,7 +66,7 @@ class MelangeCombo
 ,	public Starter_EventLoopBase
 	{
 public:
-	MelangeCombo(const ZRef<WrappedDatonSet>& iWDS_Parent);
+	MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -74,7 +75,7 @@ public:
 
 // From Callable via Callable_DatonSetUpdate
 	virtual ZQ<ZRef<Event> > QCall(
-		const ZQ<ZDatonSet::Daton>& iPrior, const ZQ<ZDatonSet::Daton>& iNew);
+		const ZQ<DatonSet::Daton>& iPrior, const ZQ<DatonSet::Daton>& iNew);
 
 // From Starter_EventLoopBase
 	virtual bool pTrigger();
@@ -87,8 +88,8 @@ private:
 
 	void pWork();
 
-	ZRef<WrappedDatonSet> fWDS_Parent;
-	ZRef<WrappedDatonSet> fWDS;
+	ZRef<DatonSet::WrappedDatonSet> fWDS_Parent;
+	ZRef<DatonSet::WrappedDatonSet> fWDS;
 
 	StartScheduler::Job fJob;
 	ZRef<RelsWatcher_Relater> fRelsWatcher_Relater;
@@ -97,9 +98,9 @@ private:
 // =================================================================================================
 // MARK: -
 
-Melange_t sMelange(const ZRef<WrappedDatonSet>& iWDS_Parent);
+Melange_t sMelange(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
 
-ZRef<MelangeFactory> sMelangeFactory(const ZRef<WrappedDatonSet>& iWDS_Parent);
+ZRef<MelangeFactory> sMelangeFactory(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
 
 } // namespace Dataspace
 } // namespace ZooLib

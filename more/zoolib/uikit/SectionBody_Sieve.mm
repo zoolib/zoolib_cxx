@@ -436,8 +436,8 @@ bool SectionBody_Sieve::CommitEditingStyle(UITableViewCellEditingStyle iStyle, s
 		{
 		if (fDatonColNameQ)
 			{
-			if (ZQ<ZDatonSet::Daton> theDatonQ =
-				fRows[iRowIndex].QGet<ZDatonSet::Daton>(*fDatonColNameQ))
+			if (ZQ<DatonSet::Daton> theDatonQ =
+				fRows[iRowIndex].QGet<DatonSet::Daton>(*fDatonColNameQ))
 				{
 				sCall(fCallable_DatonSetUpdate, *theDatonQ, null);
 				}
@@ -481,7 +481,7 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	if (fRel == iRel)
 		return;
 
-	if (ZLOGPF(s, eDebug + 1))
+	if (ZLOGPF(s, eDebug))
 		s << "\n" << iRel;
 
 	fRel = iRel;
