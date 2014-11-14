@@ -86,6 +86,7 @@ class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 public:
 	typedef ZooLib::Dataspace::Callable_DatonSetUpdate Callable_DatonSetUpdate;
 	typedef Callable<ZRef<UITableViewCell>(UITableView*,ZMap_Any)> Callable_GetCellForMap;
+	typedef Callable<bool(ZMap_Any)> Callable_CanSelectForMap;
 	typedef Callable<void()> Callable_NeedsUpdate;
 	typedef ZMap_Any Entry;
 	typedef Callable<void(std::vector<Entry> &)> Callable_PostProcess;
@@ -152,6 +153,7 @@ public:
 
 	ZTextCollator fTextCollators[4];
 	ZRef<Callable_GetCellForMap> fCallable_GetCellForMap;
+	ZRef<Callable_CanSelectForMap> fCallable_CanSelectForMap;
 	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
 	ZRef<Callable_PostProcess> fCallable_PostProcess;
 

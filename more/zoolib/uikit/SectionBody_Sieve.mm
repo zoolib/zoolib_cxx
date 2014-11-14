@@ -35,6 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
+#include "zoolib/ZUtil_Any_JSON.h"
+
 // =================================================================================================
 // MARK: - sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
 
@@ -178,6 +180,7 @@ void SectionBody_Sieve::PreUpdate()
 	fIsLoading = true;
 	if (fRegistration)
 		{
+		ZLOGF(w, eDebug);
 		vector<Entry> theRows;
 		if (ZRef<Result> theResult = fResult)
 			{
@@ -188,6 +191,8 @@ void SectionBody_Sieve::PreUpdate()
 				theRows.push_back(
 					RelationalAlgebra::PseudoMap_RelHead(theRelHead, theResult->GetValsAt(xx))
 					.AsMap());
+				w << "\n" << xx << ": ";
+				ZUtil_Any_JSON::sWrite(theRows.back(), w);
 				}
 			}
 
@@ -450,6 +455,10 @@ ZQ<bool> SectionBody_Sieve::CanSelect(bool iEditing, size_t iRowIndex)
 	{
 	if (fShowLoading && fIsLoading)
 		return false;
+
+	if (fCallable_CanSelectForMap)
+		return fCallable_CanSelectForMap->Call(fRows[iRowIndex]);
+
 	return SectionBody_Concrete::CanSelect(iEditing, iRowIndex);
 	}
 
