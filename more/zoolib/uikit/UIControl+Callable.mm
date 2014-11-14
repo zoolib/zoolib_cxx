@@ -42,10 +42,7 @@ using namespace ZooLib;
 @end // implementation ZooLib_UIControl_Callable_Proxy
 
 // =================================================================================================
-// MARK: - UIControl+Callable
-
-// This is a neat way to get a unique void* for use as a key.
-// static void* spKey = &spKey;
+// MARK: - UIControl (Callable)
 
 @implementation UIControl (Callable)
 
@@ -57,6 +54,8 @@ using namespace ZooLib;
 	ZooLib_UIControl_Callable_Proxy* theProxy = [[ZooLib_UIControl_Callable_Proxy alloc] init];
 	theProxy->fCallable = callable;
 
+	// Associate theProxy under its own address, which allows unlimited
+	// callables to be safely attached and released when self is itelf disposed.
 	objc_setAssociatedObject(self, theProxy, theProxy, OBJC_ASSOCIATION_RETAIN);
 
 	[theProxy release];
@@ -64,7 +63,8 @@ using namespace ZooLib;
 	[self
 		addTarget:theProxy
 		action:@selector(selector_void)
-		forControlEvents:controlEvents];
+		forControlEvents:controlEvents
+	];
 	}
 
 @end // implementation UIControl (Callable)
