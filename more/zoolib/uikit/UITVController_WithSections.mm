@@ -91,31 +91,31 @@ bool Section::HideWhenEmpty()
 	{ return fHideWhenEmpty; }
 
 ZQ<CGFloat> Section::QHeaderHeight()
-	{ return fHeaderHeight; }
+	{ return fHeaderHeightQ; }
 
 ZQ<CGFloat> Section::QFooterHeight()
-	{ return fFooterHeight; }
+	{ return fFooterHeightQ; }
 
 ZQ<string8> Section::QHeaderTitle()
-	{ return fHeaderTitle; }
+	{ return fHeaderTitleQ; }
 
 ZQ<string8> Section::QFooterTitle()
-	{ return fFooterTitle; }
+	{ return fFooterTitleQ; }
 
 ZRef<UIView> Section::QHeaderView()
-	{ return fHeaderView; }
+	{ return fHeaderViewQ; }
 
 ZRef<UIView> Section::QFooterView()
-	{ return fFooterView; }
+	{ return fFooterViewQ; }
 
 ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Insert()
-	{ return fSectionAnimation_Insert; }
+	{ return fSectionAnimation_InsertQ; }
 
 ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Delete()
-	{ return fSectionAnimation_Delete; }
+	{ return fSectionAnimation_DeleteQ; }
 
 ZQ<UITableViewRowAnimation> Section::QSectionAnimation_Reload()
-	{ return fSectionAnimation_Reload; }
+	{ return fSectionAnimation_ReloadQ; }
 
 UITableViewRowAnimation Section::SectionAnimation_Insert()
 	{
@@ -201,9 +201,9 @@ bool SectionBody::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 // MARK: - SectionBody_Concrete
 
 SectionBody_Concrete::SectionBody_Concrete()
-:	fRowAnimation_Reload(UITableViewRowAnimationNone)
-,	fRowAnimation_Insert(UITableViewRowAnimationRight)
+:	fRowAnimation_Insert(UITableViewRowAnimationRight)
 ,	fRowAnimation_Delete(UITableViewRowAnimationRight)
+,	fRowAnimation_Reload(UITableViewRowAnimationNone)
 ,	fApplyAccessory(true)
 	{}
 
@@ -227,6 +227,10 @@ void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell
 		{
 		[ioCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 		}
+	else
+		{
+		[ioCell setAccessoryType:UITableViewCellAccessoryNone];
+		}
 
 	if ([ioCell editingAccessoryView])
 		{}
@@ -238,22 +242,26 @@ void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell
 		{
 		[ioCell setEditingAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 		}
+	else
+		{
+		[ioCell setEditingAccessoryType:UITableViewCellAccessoryNone];
+		}
 	}
 
 ZQ<UITableViewCellEditingStyle> SectionBody_Concrete::QEditingStyle(size_t iRowIndex)
-	{ return fEditingStyle; }
+	{ return fEditingStyleQ; }
 
 bool SectionBody_Concrete::CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex)
 	{ return false; }
 
 ZQ<bool> SectionBody_Concrete::QShouldIndentWhileEditing(size_t iRowIndex)
-	{ return fShouldIndentWhileEditing; }
+	{ return fShouldIndentWhileEditingQ; }
 
 ZQ<CGFloat> SectionBody_Concrete::QRowHeight(size_t iRowIndex)
-	{ return fRowHeight; }
+	{ return fRowHeightQ; }
 
 ZQ<NSInteger> SectionBody_Concrete::QIndentationLevel(size_t iRowIndex)
-	{ return fIndentationLevel; }
+	{ return fIndentationLevelQ; }
 
 bool SectionBody_Concrete::ButtonTapped(UITVHandler_WithSections* iTVC,
 	UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex)

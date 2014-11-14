@@ -84,8 +84,8 @@ ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty)
 	theSection->fHideWhenEmpty = iHideWhenEmpty;
 	if (iHideWhenEmpty)
 		{
-		theSection->fSectionAnimation_Insert = UITableViewRowAnimationFade;
-		theSection->fSectionAnimation_Delete = UITableViewRowAnimationFade;
+		theSection->fSectionAnimation_InsertQ = UITableViewRowAnimationFade;
+		theSection->fSectionAnimation_DeleteQ = UITableViewRowAnimationFade;
 		}
 	return theSection;
 	}
@@ -100,8 +100,8 @@ ZRef<Section> sMakeSectionWithTitle(
 	ZRef<ZooLib_UIKit_SectionHeader> theSH = [ZooLib_UIKit_SectionHeader sMake];
 
 	[theSH->fLabel setText:iTitle];
-	theSection->fHeaderView = theSH;
-	theSection->fHeaderHeight = 40;
+	theSection->fHeaderViewQ = theSH;
+	theSection->fHeaderHeightQ = 40;
 	return theSection;
 	}
 
@@ -115,7 +115,7 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	ZRef<SectionBody_SingleRow> theSB = new SectionBody_SingleRow(null);
 	if (iParent)
 		iParent->fBodies_Pending.push_back(theSB);
-	theSB->fShouldIndentWhileEditing = false;
+	theSB->fShouldIndentWhileEditingQ = false;
 	theSB->fCallable_RowSelected_Editing = iCallable_RowSelected;
 	theSB->fCallable_ButtonTapped = iCallable_ButtonTapped;
 	theSB->fRowAnimation_Insert = UITableViewRowAnimationNone;

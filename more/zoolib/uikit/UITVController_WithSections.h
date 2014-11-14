@@ -59,31 +59,31 @@ public:
 	bool fHideWhenEmpty;
 	virtual bool HideWhenEmpty();
 
-	ZQ<CGFloat> fHeaderHeight;
+	ZQ<CGFloat> fHeaderHeightQ;
 	virtual ZQ<CGFloat> QHeaderHeight();
 
-	ZQ<CGFloat> fFooterHeight;
+	ZQ<CGFloat> fFooterHeightQ;
 	virtual ZQ<CGFloat> QFooterHeight();
 
-	ZQ<string8> fHeaderTitle;
+	ZQ<string8> fHeaderTitleQ;
 	virtual ZQ<string8> QHeaderTitle();
 
-	ZQ<string8> fFooterTitle;
+	ZQ<string8> fFooterTitleQ;
 	virtual ZQ<string8> QFooterTitle();
 
-	ZRef<UIView> fHeaderView;
+	ZRef<UIView> fHeaderViewQ;
 	virtual ZRef<UIView> QHeaderView();
 
-	ZRef<UIView> fFooterView;
+	ZRef<UIView> fFooterViewQ;
 	virtual ZRef<UIView> QFooterView();
 
-	ZQ<UITableViewRowAnimation> fSectionAnimation_Insert;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_InsertQ;
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
 
-	ZQ<UITableViewRowAnimation> fSectionAnimation_Delete;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_DeleteQ;
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Delete();
 
-	ZQ<UITableViewRowAnimation> fSectionAnimation_Reload;
+	ZQ<UITableViewRowAnimation> fSectionAnimation_ReloadQ;
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Reload();
 
 // -----
@@ -212,10 +212,10 @@ public:
 	bool fApplyAccessory;
 	void ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell);
 
-	ZQ<UITableViewCellEditingStyle> fEditingStyle;
-	ZQ<bool> fShouldIndentWhileEditing;
-	ZQ<CGFloat> fRowHeight;
-	ZQ<NSInteger> fIndentationLevel;
+	ZQ<UITableViewCellEditingStyle> fEditingStyleQ;
+	ZQ<bool> fShouldIndentWhileEditingQ;
+	ZQ<CGFloat> fRowHeightQ;
+	ZQ<NSInteger> fIndentationLevelQ;
 
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped;
 	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
