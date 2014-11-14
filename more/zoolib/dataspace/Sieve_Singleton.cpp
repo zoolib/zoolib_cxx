@@ -87,6 +87,13 @@ void Sieve_Singleton::Deactivate()
 	fResult.Clear();
 	}
 
+ZQ<bool> Sieve_Singleton::QIsLoaded()
+	{
+	if (fRegistration and fResult)
+		return 0 != fResult->Count();
+	return null;
+	}
+
 bool Sieve_Singleton::IsLoaded()
 	{ return fRegistration && fResult && fResult->Count(); }
 

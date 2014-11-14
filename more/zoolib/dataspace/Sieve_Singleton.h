@@ -53,6 +53,8 @@ public:
 	void Activate();
 	void Deactivate();
 
+	ZQ<bool> QIsLoaded();
+
 	bool IsLoaded();
 
 	ZMap_Any GetMap();
