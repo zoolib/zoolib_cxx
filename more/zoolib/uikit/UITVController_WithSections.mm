@@ -741,6 +741,17 @@ using namespace ZooLib::UIKit;
 		theSection->GetBody()->CommitEditingStyle(editingStyle, indexPath.row);
 	}
 
+- (BOOL)tableView:(UITableView *)tableView
+shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+	{
+	if (ZRef<Section> theSection = [self pGetSection:indexPath.section])
+		{
+		if (ZQ<bool> theQ = theSection->GetBody()->CanSelect([tableView isEditing], indexPath.row))
+			{ return *theQ; }
+		}
+	return false;
+	}
+
 - (NSIndexPath*)tableView:(UITableView*)tableView
 	willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 	{
