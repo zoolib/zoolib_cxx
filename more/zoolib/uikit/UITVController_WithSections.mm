@@ -778,10 +778,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 			theSection->GetBody()->UITableViewCellForRow(tableView, indexPath.row, isPreceded, isSucceeded))
 			{
 			if ([tableView style] != UITableViewStylePlain)
-				{
-				if ([theCell respondsToSelector:@selector(setPosition:)])
-					spApplyPosition(theCell, isPreceded, isSucceeded);
-				}
+				spApplyPosition(theCell, isPreceded, isSucceeded);
 			return [theCell.Orphan() autorelease];
 			}
 		}
@@ -1062,7 +1059,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		{
 		NSIndexPath* thePath = [paths objectAtIndex:xx];
 		UITableViewCell* cell = [tableView cellForRowAtIndexPath:thePath];
-		if ([cell respondsToSelector:@selector(setPosition:)])
+		if ([cell respondsToSelector:@selector(applyPosition:)])
 			{
 			const int section = thePath.section;
 
