@@ -181,6 +181,8 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 bool sParseURL(const string& iURL,
 	string* oScheme, string* oHost, uint16* oPort, string* oPath);
 
+string sAbsoluteURI(const string& iBase, const string& iOther);
+
 bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	string* oTokenLC, string* oTokenExact);
 

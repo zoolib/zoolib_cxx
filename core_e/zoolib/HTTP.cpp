@@ -1304,6 +1304,66 @@ bool sParseURL(const string& iURL,
 	return true;
 	}
 
+string sAbsoluteURI(const string& iBase, const string& iOther)
+	{
+	string baseScheme;
+	string baseHost;
+	uint16 basePort;
+	string basePath;
+	const bool baseResult = HTTP::sParseURL(iBase, &baseScheme, &baseHost, &basePort, &basePath);
+	ZAssert(baseResult);
+
+	string otherScheme;
+	string otherHost;
+	uint16 otherPort;
+	string otherPath;
+	const bool otherResult = HTTP::sParseURL(iOther, &otherScheme, &otherHost, &otherPort, &otherPath);
+	ZAssert(otherResult);
+
+	string result;
+	if (sNotEmpty(otherScheme))
+		{
+		result += otherScheme;
+		result += "://";
+		}
+	else if (sNotEmpty(baseScheme))
+		{
+		result += baseScheme;
+		result += "://";
+		}
+
+	if (sNotEmpty(otherHost))
+		{
+		result += otherHost;
+		if (0 != otherPort)
+			result += sStringf(":%d", otherPort);
+		}
+	else if (sNotEmpty(baseScheme))
+		{
+		result += baseHost;
+		if (0 != basePort)
+			result += sStringf(":%d", basePort);
+		}
+
+	if (sNotEmpty(otherPath) && otherPath[0] == '/')
+		{
+		result += otherPath;
+		}
+	else
+		{
+		if (sNotEmpty(basePath))
+			{
+			if (basePath[0] != '/')
+				result += '/';
+			}
+		result += basePath;
+		if (sIsEmpty(basePath) || basePath.at(basePath.size() - 1) != '/')
+			result += '/';
+		result += otherPath;
+		}
+	return result;
+	}
+
 bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	string* oTokenLC, string* oTokenExact)
 	{

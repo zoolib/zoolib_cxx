@@ -160,7 +160,13 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 				case 302:
 				case 303:
 					{
-					theURL = sGetString0(theResponseHeader.Get("location"));
+					theURL = sAbsoluteURI(theURL, sGetString0(theResponseHeader.Get("location")));
+					// Read and discard the body
+					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
+						iMethod, theResponseCode, theResponseHeader, ioConnectionQ->GetR()))
+						{
+						sSkipAll(sGetChan(theChannerR_Content));
+						}
 					break;
 					}
 				default:
