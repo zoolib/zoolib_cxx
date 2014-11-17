@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/HTTP_Connect.h"
 
 #include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZStream_Buffered.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
 namespace ZooLib {
@@ -60,10 +61,13 @@ ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
 	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
 		{
-		if (iUseSSL)
-			theEP = sStreamerRWCon_SSL(theEP, theEP);
+		ZRef<ZStreamerW> theSW = new ZStreamerW_Buffered(4096, theEP);
 
-		return sAsConnectionQ(theEP);
+		if (not iUseSSL)
+			return Connection_t(theEP, theSW, new ChannerClose_RWCon(theEP));
+
+		if (ZRef<ZStreamerRWCon> wrapped = sStreamerRWCon_SSL(theEP, theSW))
+			return Connection_t(wrapped, wrapped, new ChannerClose_RWCon(wrapped));
 		}
 	return null;
 	}
