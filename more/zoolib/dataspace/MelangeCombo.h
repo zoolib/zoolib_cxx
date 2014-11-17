@@ -74,8 +74,7 @@ public:
 		const ZRef<Expr_Rel>& iRel);
 
 // From Callable via Callable_DatonSetUpdate
-	virtual ZQ<ZRef<Event> > QCall(
-		const ZQ<DatonSet::Daton>& iPrior, const ZQ<DatonSet::Daton>& iNew);
+	virtual ZQ<ZRef<Event> > QCall(const DatonSet::Daton& iDaton, bool iTrue);
 
 // From Starter_EventLoopBase
 	virtual bool pTrigger();

@@ -147,9 +147,9 @@ void Sieve_Singleton::Set(const ZMap_Any& iMap)
 
 	fMapQ.Clear();
 
-	const Daton newDaton = Dataspace::sAsDaton(fMapInDaton);
-	fEvent = fCallable_DatonSetUpdate->Call(fDaton, newDaton);
-	fDaton = newDaton;
+	fCallable_DatonSetUpdate->Call(fDaton, false);
+	fDaton = Dataspace::sAsDaton(fMapInDaton);
+	fEvent = fCallable_DatonSetUpdate->Call(fDaton, true);
 
 	fCallable_Changed->Call(this, false);
 	}

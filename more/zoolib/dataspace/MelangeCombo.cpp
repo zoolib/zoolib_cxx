@@ -74,17 +74,13 @@ ZQ<ZRef<ZCounted> > MelangeCombo::QCall(
 	const ZRef<Expr_Rel>& iRel)
 	{ return fRelsWatcher_Relater->QCall(iCallable_Changed, iRel); }
 
-ZQ<ZRef<Event> > MelangeCombo::QCall(
-	const ZQ<DatonSet::Daton>& iPrior, const ZQ<DatonSet::Daton>& iNew)
+ZQ<ZRef<Event> > MelangeCombo::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	{
 	ZRef<DatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
-
-	if (iPrior)
-		theDS->Erase(*iPrior);
-
-	if (iNew)
-		theDS->Insert(*iNew);
-
+	if (iTrue)
+		theDS->Insert(iDaton);
+	else
+		theDS->Erase(iDaton);
 	return theDS->GetEvent();
 	}
 
