@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {
@@ -119,6 +120,12 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 		if (oURL)
 			*oURL = theURL;
 
+		if (oResponseCode)
+			*oResponseCode = 0;
+
+		if (oHeader)
+			oHeader->Clear();
+
 		if (oRawHeader)
 			oRawHeader->SetSize(0);
 
@@ -130,11 +137,15 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 			{
 			// If ioConnectionQ is valid, we *assume* that it is a live connection
 			// to the server for theURL
-			if (not ioConnectionQ)
+			const bool wasExtantConnection = bool(ioConnectionQ);
+			if (not wasExtantConnection)
 				ioConnectionQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort);
 
 			if (not ioConnectionQ)
+				{
+				// We have no physical connection, our caller can do any retry it desires.
 				return false;
+				}
 
 			int32 theResponseCode;
 			Map theResponseHeader;
@@ -144,7 +155,21 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
 				{
+				// We failed to interpret the response. We've thus lost track of our position in any
+				// request/response sequence and the connection cannot (continue to) be reused.
 				sClear(ioConnectionQ);
+
+				if (wasExtantConnection)
+					{
+					// The connection was reused, so a prior request had worked. Assume something
+					// minor messed up and go around. If the same error recurs wasExtantConnection
+					// will be false and we won't enter this branch, so we get one retry for
+					// each physical connection.
+					if (ZLOGF(w, eDebug))
+						w << "Request failed on reused connection, retrying once: " << theURL;
+					continue;
+					}
+				// The connection was fresh, assume the problem is real.
 				return false;
 				}
 
@@ -164,9 +189,7 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 					// Read and discard the body
 					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
 						iMethod, theResponseCode, theResponseHeader, ioConnectionQ->GetR()))
-						{
-						sSkipAll(sGetChan(theChannerR_Content));
-						}
+						{ sSkipAll(sGetChan(theChannerR_Content)); }
 					break;
 					}
 				default:
