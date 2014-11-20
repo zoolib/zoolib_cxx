@@ -320,7 +320,7 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Insert()
 	{ return fRowAnimation_Insert; }
 
 UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Delete()
-	{ return fRowAnimation_Insert; }
+	{ return fRowAnimation_Delete; }
 
 UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 	{ return fRowAnimation_Reload; }
