@@ -83,7 +83,11 @@ size_t Result::Count()
 	}
 
 const ZVal_Any* Result::GetValsAt(size_t iIndex)
-	{ return &fPackedRows[fRelHead.size() * iIndex]; }
+	{
+	const size_t theOffset = fRelHead.size() * iIndex;
+	ZAssert(theOffset < fPackedRows.size() + fRelHead.size());
+	return &fPackedRows[theOffset];
+	}
 
 int Result::Compare(const Result& iOther) const
 	{
@@ -93,7 +97,7 @@ int Result::Compare(const Result& iOther) const
 	}
 
 // =================================================================================================
-// MARK: - ResultDiffer
+// MARK: - Comparer_t (anonymous)
 
 namespace { // anonymous
 
@@ -129,6 +133,9 @@ struct Comparer_t
 	};
 
 } // anonymous namespace
+
+// =================================================================================================
+// MARK: - ResultDiffer
 
 ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 	const RelHead& iSignificant)
@@ -316,7 +323,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 
 	fResult_Prior = iResult;
 
-	fSort_Prior = theSort_New;
+	swap(fSort_Prior, theSort_New);
 	}
 
 } // namespace QueryEngine
