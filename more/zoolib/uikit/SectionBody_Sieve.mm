@@ -180,7 +180,7 @@ void SectionBody_Sieve::PreUpdate()
 	fIsLoading = true;
 	if (fRegistration)
 		{
-		ZLOGF(w, eDebug);
+		ZLOGF(w, eDebug + 1);
 		vector<Entry> theRows;
 		if (ZRef<Result> theResult = fResult)
 			{
