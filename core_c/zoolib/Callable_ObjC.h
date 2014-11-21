@@ -27,13 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __OBJC__
 
 #include "zoolib/ZCompat_NSObject.h"
+#include "zoolib/ZCompat_type_traits.h"
 #include "zoolib/ZRef_NS.h"
 
 #include <objc/message.h>
-
-#if defined(__arm__)
-	#include <tr1/type_traits>
-#endif
 
 namespace ZooLib {
 
@@ -41,10 +38,6 @@ namespace ZooLib {
 // MARK: - Callable_ObjC_Util
 
 namespace Callable_ObjC_Util {
-
-#if defined(__arm__)
-	using namespace std::tr1;
-#endif
 
 enum
 	{
