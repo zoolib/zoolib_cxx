@@ -94,13 +94,6 @@ private:
 	ZRef<RelsWatcher_Relater> fRelsWatcher_Relater;
 	};
 
-// =================================================================================================
-// MARK: -
-
-Melange_t sMelange(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
-
-ZRef<MelangeFactory> sMelangeFactory(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
-
 } // namespace Dataspace
 } // namespace ZooLib
 

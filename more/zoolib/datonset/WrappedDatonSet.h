@@ -39,9 +39,6 @@ class WrappedDatonSet
 public:
 	typedef Callable_Void Callable_NeedsUpdate;
 
-	typedef Callable_PullSuggested Callable_PullSuggested;
-	typedef Callable_PullFrom Callable_PullFrom;
-
 	WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
 		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
