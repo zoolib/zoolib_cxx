@@ -67,7 +67,6 @@ public:
 private:
 	void pChanged(
 		const ZRef<ZCounted>& iRegistration,
-		const ZRef<Event>& iEvent,
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 

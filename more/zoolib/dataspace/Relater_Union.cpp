@@ -126,7 +126,6 @@ public:
 	bool fWasAdded;
 	int64 fRefcon;
 	ZRef<QueryEngine::Result> fResult;
-	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
@@ -304,7 +303,6 @@ public:
 	set<ZRef<Proxy> > fProxiesDependedUpon;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	ZRef<QueryEngine::Result> fResult;
-	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================
@@ -756,7 +754,6 @@ ZRef<RA::Expr_Rel> Relater_Union::PRelater::UsableRel(ZRef<RA::Expr_Rel> iRel)
 // MARK: - Relater_Union
 
 Relater_Union::Relater_Union()
-:	fEvent(Event::sZero())
 	{}
 
 Relater_Union::~Relater_Union()
@@ -934,7 +931,6 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 			{
 			PQuery* thePQuery = eraserPQuery.Current();
 			bool allOK = true;
-			ZRef<Event> theEvent = Event::sZero();
 			for (set<ZRef<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
 				allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
 				{
@@ -943,9 +939,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 					allOK && iterPIP; iterPIP.Advance())
 					{
 					PIP* thePIP = iterPIP.Current();
-					if (thePIP->fResult)
-						theEvent = theEvent->Joined(thePIP->fEvent);
-					else
+					if (not thePIP->fResult)
 						allOK = false;
 					}
 				}
@@ -963,7 +957,6 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				const ZTime afterMakeWalker = ZTime::sNow();
 
 				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
-				thePQuery->fEvent = theEvent;
 				const ZTime afterDoQuery = ZTime::sNow();
 
 				if (s)
@@ -996,7 +989,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 		ClientQuery* theClientQuery = eraserClientQuery.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		oChanged.push_back(
-			QueryResult(theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fEvent));
+			QueryResult(theClientQuery->fRefcon, thePQuery->fResult));
 		}
 	}
 
@@ -1185,7 +1178,6 @@ void Relater_Union::pCollectFrom(PRelater* iPRelater)
 			{
 			PIP* thePIP = &iter->second;
 			thePIP->fResult = iterQueryResults->GetResult();
-			thePIP->fEvent = iterQueryResults->GetEvent();
 			foreachi (ii, thePIP->fProxy->fDependentPQueries)
 				sQInsertBack(fPQuery_NeedsWork, *ii);
 			}

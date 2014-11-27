@@ -36,7 +36,7 @@ class Relater_SQLite : public Relater
 public:
 	enum { kDebug = 1 };
 
-	Relater_SQLite(ZRef<SQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent);
+	Relater_SQLite(ZRef<SQLite::DB> iDB);
 	virtual ~Relater_SQLite();
 
 	virtual bool Intersects(const RelHead& iRelHead);
@@ -49,8 +49,6 @@ public:
 
 private:
 	ZRef<SQLite::DB> fDB;
-	ZRef<Identity> fIdentity;
-	ZRef<Event> fEvent;
 	std::map<string8, RelHead> fMap_Tables;
 
 	class DLink_ClientQuery_InPQuery;

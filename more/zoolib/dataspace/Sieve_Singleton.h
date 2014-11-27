@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Daton_Val.h"
+#include "zoolib/dataspace/Melange.h" // For Callable_DatonSetUpdate et al
 #include "zooLib/dataspace/RelsWatcher_Relater.h"
 #include "zoolib/dataspace/Searcher_DatonSet.h"
 
@@ -39,7 +40,7 @@ public:
 	typedef Callable<void(ZRef<Sieve_Singleton> iSieve, bool)> Callable_Changed;
 	typedef Callable_Changed::Signature Signature;
 
-	Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_Register,
+	Sieve_Singleton(ZRef<Callable_Register> iCallable_Register,
 		const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate,
 		const ZRef<Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel,
@@ -65,7 +66,6 @@ public:
 
 private:
 	void pChanged(const ZRef<ZCounted>& iRegistration,
-		const ZRef<Event>& iEvent,
 		const ZRef<QueryEngine::Result>& iResult,
 		bool iIsFirst);
 
@@ -78,8 +78,6 @@ private:
 
 	ZRef<ZCounted> fRegistration;
 	ZRef<QueryEngine::Result> fResult;
-
-	ZRef<Event> fEvent;
 
 	ZQ<ZMap_Any> fMapQ;
 	ZMap_Any fMapInDaton;

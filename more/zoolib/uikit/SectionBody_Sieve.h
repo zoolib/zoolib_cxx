@@ -147,7 +147,6 @@ public:
 	void pCreateOrDestroySieve(bool iShowing);
 
 	void pChanged(const ZRef<ZCounted>& iRegistration,
-		const ZRef<Dataspace::Event>& iEvent,
 		const ZRef<QueryEngine::Result>& iResult,
 		bool iIsFirst);
 

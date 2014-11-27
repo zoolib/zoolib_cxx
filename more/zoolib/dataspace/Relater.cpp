@@ -67,7 +67,6 @@ QueryResult::QueryResult()
 QueryResult::QueryResult(const QueryResult& iOther)
 :	fRefcon(iOther.fRefcon)
 ,	fResult(iOther.fResult)
-,	fEvent(iOther.fEvent)
 	{}
 
 QueryResult::~QueryResult()
@@ -77,27 +76,19 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	{
 	fRefcon = iOther.fRefcon;
 	fResult = iOther.fResult;
-	fEvent = iOther.fEvent;
 	return *this;
 	}
 
-QueryResult::QueryResult(
-	int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<Event>& iEvent)
+QueryResult::QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
-,	fEvent(iEvent)
-	{
-	ZAssert(iEvent);
-	}
+	{}
 
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
 ZRef<QueryEngine::Result> QueryResult::GetResult() const
 	{ return fResult; }
-
-ZRef<Event> QueryResult::GetEvent() const
-	{ return fEvent; }
 
 // =================================================================================================
 // MARK: - Relater

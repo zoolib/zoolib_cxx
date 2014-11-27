@@ -71,7 +71,6 @@ public:
 
 	bool fHadResultPrior;
 
-	ZRef<Event> fEvent;
 	ZRef<QueryEngine::Result> fResult;
 	};
 
@@ -171,15 +170,12 @@ void RelsWatcher_Relater::Update()
 			ZRef<Registration> theRegistration = iterRegistration->second;
 			theRegistration->fHadResultPrior = bool(theRegistration->fResult);
 			theRegistration->fResult = iterQueryResults->GetResult();
-			theRegistration->fEvent = iterQueryResults->GetEvent();
-			if (not theRegistration->fEvent)
-				ZLOGTRACE(eDebug);
 			changes.push_back(theRegistration);
 			}
 		guard.Release();
 
 		foreacha (rr, changes)
-			{ sCall(rr->fCallable, rr, rr->fEvent, rr->fResult, not rr->fHadResultPrior); }
+			{ sCall(rr->fCallable, rr, rr->fResult, not rr->fHadResultPrior); }
 		}
 	}
 

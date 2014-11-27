@@ -167,7 +167,7 @@ private:
 // =================================================================================================
 // MARK: - Callables
 
-typedef Callable<ZRef<Event>(const Daton& iDaton, bool iTrue)>
+typedef Callable<void(const Daton& iDaton, bool iTrue)>
 	Callable_DatonSetUpdate;
 
 typedef Callable<ZRef<Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;

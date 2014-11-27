@@ -66,7 +66,6 @@ const vector<ZRef<RowBoat::Callable_Row> >& RowBoat::GetRows()
 
 void RowBoat::pChanged(
 	const ZRef<ZCounted>& iRegistration,
-	const ZRef<Event>& iEvent,
 	const ZRef<Result>& iResult,
 	bool iIsFirst)
 	{

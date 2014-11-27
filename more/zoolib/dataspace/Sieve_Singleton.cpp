@@ -149,37 +149,32 @@ void Sieve_Singleton::Set(const ZMap_Any& iMap)
 
 	fCallable_DatonSetUpdate->Call(fDaton, false);
 	fDaton = Dataspace::sAsDaton(fMapInDaton);
-	fEvent = fCallable_DatonSetUpdate->Call(fDaton, true);
+	fCallable_DatonSetUpdate->Call(fDaton, true);
 
 	fCallable_Changed->Call(this, false);
 	}
 
 void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
-	const ZRef<Event>& iEvent,
 	const ZRef<QueryEngine::Result>& iResult,
 	bool iIsFirst)
 	{
-	if (not fEvent || fEvent->LessEqual(iEvent))
+	fMapQ.Clear();
+	fResult = iResult;
+	fMapInDaton.Clear();
+	if (iResult->Count() && sNotEmpty(fEditableRelHead))
 		{
-		fMapQ.Clear();
-		fResult = iResult;
-		fEvent = iEvent;
-		fMapInDaton.Clear();
-		if (iResult->Count() && sNotEmpty(fEditableRelHead))
+		PseudoMap_RelHead thePM(iResult->GetRelHead(), iResult->GetValsAt(0));
+		if (ZQ<Daton> theDatonQ = thePM.QGet<DatonSet::Daton>(fDatonColName))
+			{ fDaton = *theDatonQ; }
+		else
 			{
-			PseudoMap_RelHead thePM(iResult->GetRelHead(), iResult->GetValsAt(0));
-			if (ZQ<Daton> theDatonQ = thePM.QGet<DatonSet::Daton>(fDatonColName))
-				{ fDaton = *theDatonQ; }
-			else
-				{
-				if (ZLOGF(w, eDebug))
-					w << "fDatonColName: " << fDatonColName << "\n" << fRel;
-				ZUnimplemented();
-				}
-			fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<ZMap_Any>();
+			if (ZLOGF(w, eDebug))
+				w << "fDatonColName: " << fDatonColName << "\n" << fRel;
+			ZUnimplemented();
 			}
-		fCallable_Changed->Call(this, iIsFirst);
+		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<ZMap_Any>();
 		}
+	fCallable_Changed->Call(this, iIsFirst);
 	}
 
 } // namespace Dataspace

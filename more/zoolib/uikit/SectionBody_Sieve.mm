@@ -540,7 +540,6 @@ void SectionBody_Sieve::pCreateOrDestroySieve(bool iShowing)
 	}
 
 void SectionBody_Sieve::pChanged(const ZRef<ZCounted>& iRegistration,
-	const ZRef<Dataspace::Event>& iEvent,
 	const ZRef<QueryEngine::Result>& iResult,
 	bool iIsFirst)
 	{

@@ -81,7 +81,7 @@ static void spSendMessage(const ZMap_Any& iMessage, const ChanW_Bin& iChanW)
 	ZYad_JSONB::sToChan(sYadR(iMessage), iChanW);
 //	ZUtil_Any_JSON::sWrite(iMessage, ZStrimW_StreamUTF8(iChanW));
 	sFlush(iChanW);
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eDebug+1))
 		{
 		w << "Sent in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
 //		w << iMessage.Get<string8>("What");
@@ -98,7 +98,7 @@ static ZMap_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 		sThrow_ExhaustedR();
 
 	const ZMap_Any result = theQ->Get<ZMap_Any>();
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eDebug+1))
 		{
 		w << "Received in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
 //		w << result.Get<string8>("What");

@@ -98,7 +98,6 @@ public:
 	const ZRef<RA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PRegSearch*> fPRegSearch_Used;
-	ZRef<Event> fEvent;
 	ZRef<QE::Result> fResult;
 	};
 
@@ -118,7 +117,6 @@ public:
 	int64 fRefconInSearcher;
 	ConcreteHead fConcreteHead;
 	set<PQuery*> fPQuery_Using;
-	ZRef<Event> fEvent;
 	ZRef<QE::Result> fResult;
 	};
 
@@ -271,10 +269,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 
 		guard.Release();
 
-		ZAssert(not thePQuery->fEvent);
 		ZAssert(not thePQuery->fResult);
-
-		thePQuery->fEvent = Event::sZero();
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
@@ -294,8 +289,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		{
 		ClientQuery* theClientQuery = eraser.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back(QueryResult(
-			theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fEvent));
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult));
 		}
 
 	// Remove any unused PRegSearches
@@ -331,12 +325,10 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 		{
 		if (PRegSearch* thePRS = sPMut(fMap_Refcon_PRegSearch, ii->GetRefcon()))
 			{
-			thePRS->fEvent = ii->GetEvent();
 			thePRS->fResult = ii->GetResult();
 			foreacha (thePQuery, thePRS->fPQuery_Using)
 				{
 				sQInsertBack(fPQuery_NeedsWork, thePQuery);
-				thePQuery->fEvent.Clear();
 				thePQuery->fResult.Clear();
 				}
 			}
@@ -388,10 +380,6 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 	// so we sQInsert rather than sInsertMust.
 	sQInsert(thePRegSearch->fPQuery_Using, iPQuery);
 	sQInsert(iPQuery->fPRegSearch_Used, thePRegSearch);
-
-	ZAssert(thePRegSearch->fEvent);
-
-	iPQuery->fEvent = iPQuery->fEvent->Joined(thePRegSearch->fEvent);
 
 	ZAssert(thePRegSearch->fResult);
 

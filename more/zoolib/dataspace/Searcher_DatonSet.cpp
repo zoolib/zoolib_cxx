@@ -374,7 +374,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 		{
 		ClientSearch* theClientSearch = eraser.Current();
 		PSearch* thePSearch = theClientSearch->fPSearch;
-		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult, fEvent));
+		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult));
 		}
 	}
 

@@ -90,16 +90,14 @@ public:
 	~SearchResult();
 	SearchResult& operator=(const SearchResult& iOther);
 
-	SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<Event>& iEvent);
+	SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult);
 
 	int64 GetRefcon() const;
 	ZRef<QueryEngine::Result> GetResult() const;
-	ZRef<Event> GetEvent() const;
 
 private:
 	int64 fRefcon;
 	ZRef<QueryEngine::Result> fResult;
-	ZRef<Event> fEvent;
 	};
 
 // =================================================================================================

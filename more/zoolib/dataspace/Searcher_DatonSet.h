@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/dataspace/Searcher.h"
-#include "zoolib/dataspace/Melange.h"
 
 #include "zoolib/datonset/DatonSet.h"
 
@@ -82,6 +81,8 @@ private:
 	bool pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults);
 
 	// -----
+
+	typedef DatonSet::Event Event;
 
 	ZRef<Event> fEvent;
 

@@ -81,10 +81,8 @@ public:
 // =================================================================================================
 // MARK: - Relater_SQLite
 
-Relater_SQLite::Relater_SQLite(ZRef<SQLite::DB> iDB, ZRef<Identity> iIdentity, ZRef<Event> iEvent)
+Relater_SQLite::Relater_SQLite(ZRef<SQLite::DB> iDB)
 :	fDB(iDB)
-,	fIdentity(iIdentity)
-,	fEvent(iEvent)
 	{
 	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
@@ -173,7 +171,6 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	Relater::pCalled_RelaterCollectResults();
 	oChanged.clear();
 
-	ZRef<Event> theEvent = fEvent;
 	foreachi (iterPQuery, fMap_Rel_PQuery)
 		{
 		const PQuery* thePQuery = &iterPQuery->second;
@@ -192,7 +189,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 			{
-			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult, theEvent));
+			oChanged.push_back(QueryResult(iterCS.Current()->fRefcon, theResult));
 			}
 		}
 	}

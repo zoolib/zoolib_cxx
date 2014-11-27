@@ -122,7 +122,6 @@ SearchResult::SearchResult()
 SearchResult::SearchResult(const SearchResult& iOther)
 :	fRefcon(iOther.fRefcon)
 ,	fResult(iOther.fResult)
-,	fEvent(iOther.fEvent)
 	{}
 
 SearchResult::~SearchResult()
@@ -132,15 +131,13 @@ SearchResult& SearchResult::operator=(const SearchResult& iOther)
 	{
 	fRefcon = iOther.fRefcon;
 	fResult = iOther.fResult;
-	fEvent = iOther.fEvent;
 	return *this;
 	}
 
 SearchResult::SearchResult(
-	int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<Event>& iEvent)
+	int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
-,	fEvent(iEvent)
 	{}
 
 int64 SearchResult::GetRefcon() const
@@ -148,9 +145,6 @@ int64 SearchResult::GetRefcon() const
 
 ZRef<QueryEngine::Result> SearchResult::GetResult() const
 	{ return fResult; }
-
-ZRef<Event> SearchResult::GetEvent() const
-	{ return fEvent; }
 
 // =================================================================================================
 // MARK: - Searcher

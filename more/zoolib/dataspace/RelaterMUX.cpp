@@ -37,7 +37,7 @@ using std::vector;
 
 using namespace ZUtil_STL;
 
-typedef map<int64,pair<ZRef<QueryEngine::Result>,ZRef<Event> > > Map_Refcon_Result;
+typedef map<int64,ZRef<QueryEngine::Result> > Map_Refcon_Result;
 
 // =================================================================================================
 // MARK: - RelaterMUX::Relater_Client
@@ -168,14 +168,13 @@ void RelaterMUX::pCollectResults(ZRef<Relater_Client> iRelater,
 		const pair<Relater_Client*,int64>& thePair =
 			sGetMust(kDebug, fPRefconToClient, iterChanges->GetRefcon());
 
-		thePair.first->fResults[thePair.second] =
-			make_pair(iterChanges->GetResult(), iterChanges->GetEvent());
+		thePair.first->fResults[thePair.second] = iterChanges->GetResult();
 		}
 
 	oChanged.clear();
 	oChanged.reserve(iRelater->fResults.size());
 	foreachi (iter, iRelater->fResults)
-		oChanged.push_back(QueryResult(iter->first, iter->second.first, iter->second.second));
+		oChanged.push_back(QueryResult(iter->first, iter->second));
 
 	iRelater->fResults.clear();
 	}
