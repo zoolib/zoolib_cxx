@@ -66,7 +66,7 @@ Daton& Daton::operator=(const Daton& iOther)
 	return *this;
 	}
 
-Daton::Daton(Data iData)
+Daton::Daton(ZData_Any iData)
 :	fData(iData)
 	{}
 
@@ -76,7 +76,7 @@ bool Daton::operator==(const Daton& iOther) const
 bool Daton::operator<(const Daton& iOther) const
 	{ return fData < iOther.fData; }
 
-Data Daton::GetData() const
+ZData_Any Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================

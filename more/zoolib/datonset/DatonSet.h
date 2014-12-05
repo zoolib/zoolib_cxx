@@ -36,8 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace DatonSet {
 
-typedef ZData_Any Data;
-
 using IntervalTreeClock::Identity;
 using IntervalTreeClock::Event;
 
@@ -54,15 +52,15 @@ public:
 	~Daton();
 	Daton& operator=(const Daton& iOther);
 
-	Daton(Data iData);
+	Daton(ZData_Any iData);
 
 	bool operator==(const Daton& iOther) const;
 	bool operator<(const Daton& iOther) const;
 
-	Data GetData() const;
+	ZData_Any GetData() const;
 
 private:
-	Data fData;
+	ZData_Any fData;
 	};
 
 } // namespace DatonSet
@@ -167,8 +165,7 @@ private:
 // =================================================================================================
 // MARK: - Callables
 
-typedef Callable<void(const Daton& iDaton, bool iTrue)>
-	Callable_DatonSetUpdate;
+typedef Callable<void(const Daton& iDaton, bool iTrue)> Callable_DatonSetUpdate;
 
 typedef Callable<ZRef<Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;
 
