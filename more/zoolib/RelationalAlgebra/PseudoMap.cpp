@@ -21,8 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
 #include "zoolib/Singleton.h"
-
-#include "zoolib/ZUtil_STL_map.h"
+#include "zoolib/Util_STL_map.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {
@@ -37,7 +36,7 @@ PseudoMap::PseudoMap(const std::map<string8,size_t>* iBindings, const ZVal_Any* 
 
 const ZVal_Any* PseudoMap::PGet(const string8& iName) const
 	{
-	if (ZQ<size_t> theOffsetQ = ZUtil_STL::sQGet(*fBindings, iName))
+	if (ZQ<size_t> theOffsetQ = Util_STL::sQGet(*fBindings, iName))
 		return fVals + *theOffsetQ;
 	return nullptr;
 	}

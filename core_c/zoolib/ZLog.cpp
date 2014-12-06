@@ -19,11 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_string.h"
 
 #include "zoolib/ZCompat_string.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
-#include "zoolib/ZUtil_string.h"
 
 using std::string;
 
@@ -90,7 +90,7 @@ EPriority sPriorityFromName(const string& iString)
 	{
 	for (int priority = 0; priority <= eDebug; ++priority)
 		{
-		if (0 == ZUtil_string::sEquali(iString, spNames[priority]))
+		if (0 == Util_string::sEquali(iString, spNames[priority]))
 			return priority;
 		}
 	return -1;

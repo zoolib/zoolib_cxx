@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(SystemConfiguration)
 
-#include "zoolib/ZCompare_T.h"
+#include "zoolib/Compare_T.h"
+
 #include "zoolib/ZUtil_CF.h"
 #include "zoolib/ZUtil_CF_Context.h"
 #include "zoolib/ZYad_CF.h"

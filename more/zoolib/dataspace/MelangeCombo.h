@@ -61,7 +61,7 @@ private:
 // MARK: - MelangeCombo
 
 class MelangeCombo
-:	public RelsWatcher::Callable_Register
+:	public Dataspace::Callable_Register
 ,	public Callable_DatonSetUpdate
 ,	public Starter_EventLoopBase
 	{

@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_RelHead_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
-
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Compare.h"
+#include "zoolib/Util_STL_set.h"
 
 #include "zoolib/RelationalAlgebra/ColName.h"
 
@@ -85,19 +84,19 @@ RelHead sRelHead(
 // =================================================================================================
 // MARK: - RelHead operators
 
-// Incorporate set operators from ZUtil_STL
+// Incorporate set operators from Util_STL
 
-using ZUtil_STL::operator&;
-using ZUtil_STL::operator&=;
+using Util_STL::operator&;
+using Util_STL::operator&=;
 
-using ZUtil_STL::operator|;
-using ZUtil_STL::operator|=;
+using Util_STL::operator|;
+using Util_STL::operator|=;
 
-using ZUtil_STL::operator^;
-using ZUtil_STL::operator^=;
+using Util_STL::operator^;
+using Util_STL::operator^=;
 
-using ZUtil_STL::operator-;
-using ZUtil_STL::operator-=;
+using Util_STL::operator-;
+using Util_STL::operator-=;
 
 inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead & RelHead::key_type(iElem); }

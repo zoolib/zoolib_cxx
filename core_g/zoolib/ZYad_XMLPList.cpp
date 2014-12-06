@@ -19,11 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_Any.h"
+#include "zoolib/Util_Time.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLPList.h"
 
 namespace ZooLib {
@@ -89,7 +89,7 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 		}
 	else if (tagName == "date")
 		{
-		oVal = ZUtil_Time::sFromString_ISO8601(r.ReadAll8());
+		oVal = Util_Time::sFromString_ISO8601(r.ReadAll8());
 		}
 	else
 		{
@@ -388,7 +388,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	else if (const ZTime* theValue = iVal.PGet<ZTime>())
 		{
 		s.Begin("date");
-			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
+			s << Util_Time::sAsString_ISO8601(*theValue, true);
 		s.End("date");
 		}
 	else

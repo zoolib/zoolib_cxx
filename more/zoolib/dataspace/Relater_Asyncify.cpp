@@ -20,12 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/StartOnNewThread.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
-#include "zoolib/ZUtil_STL_vector.h"
 
 #include "zoolib/dataspace/Relater_Asyncify.h"
 
@@ -36,7 +36,7 @@ using std::map;
 using std::set;
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - Relater_Asyncify

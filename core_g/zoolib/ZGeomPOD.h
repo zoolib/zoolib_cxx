@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGeomPOD_h__
 #include "zconfig.h"
 
-#include "zoolib/ZCartesian.h"
+#include "zoolib/Cartesian.h"
+
 #include "zoolib/ZStdInt.h" // For int32
 
 namespace ZooLib {
@@ -71,9 +72,9 @@ inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
 // =================================================================================================
-// MARK: - ZCartesian::PointTraits<ZPointPOD>
+// MARK: - Cartesian::PointTraits<ZPointPOD>
 
-namespace ZCartesian {
+namespace Cartesian {
 
 template <>
 struct PointTraits<ZPointPOD>
@@ -83,12 +84,12 @@ struct PointTraits<ZPointPOD>
 		{ return sPointPOD(iX, iY); }
 	};
 
-} // namespace ZCartesian
+} // namespace Cartesian
 
 // =================================================================================================
-// MARK: - ZCartesian::RectTraits<ZRectPOD>
+// MARK: - Cartesian::RectTraits<ZRectPOD>
 
-namespace ZCartesian {
+namespace Cartesian {
 
 template <>
 struct RectTraits<ZRectPOD>
@@ -98,7 +99,7 @@ struct RectTraits<ZRectPOD>
 		{ return sRectPOD(iL, iT, iR, iB); }
 	};
 
-} // namespace ZCartesian
+} // namespace Cartesian
 
 } // namespace ZooLib
 

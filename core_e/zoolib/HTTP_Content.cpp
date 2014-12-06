@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Util_Chan.h"
-
-#include "zoolib/ZUtil_string.h"
+#include "zoolib/Util_string.h"
 
 namespace ZooLib {
 namespace HTTP {
@@ -214,7 +213,7 @@ static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
-	if (ZUtil_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
+	if (Util_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
 		return new Channer_FT<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))

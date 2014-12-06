@@ -40,7 +40,19 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR);
 
 void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW);
 
+void sWrite(bool iPrettyPrint, const ZVal_Any& iVal, const ChanW_UTF& iStrimW);
+
 } // namespace ZUtil_Any_JSON
+
+namespace Operators_Any_JSON {
+
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZVal_Any& iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZMap_Any& iMap);
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZSeq_Any& iSeq);
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZData_Any& iData);
+
+} // namespace Operators_Any_JSON
+
 } // namespace ZooLib
 
 #endif // __ZUtil_JSON_Any_h__

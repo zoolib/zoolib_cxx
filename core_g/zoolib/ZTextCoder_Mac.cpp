@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZMACRO_MSVCStaticLib_cpp(TextCoder_Mac)
 
 #include "zoolib/Unicode.h"
+#include "zoolib/Util_string.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUtil_string.h"
 
 #include <stdexcept>
 
@@ -79,12 +79,12 @@ static TextEncoding spLookupName(const string& iName)
 	{
 	TextEncoding theTE;
 	Str255 theNameStr255;
-	ZUtil_string::sToPString(iName, theNameStr255, 255);
+	Util_string::sToPString(iName, theNameStr255, 255);
 	if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 		return theTE;
 
 	// Try again, forcing lower case
-	ZUtil_string::sToPString(Unicode::sToLower(iName), theNameStr255, 255);
+	Util_string::sToPString(Unicode::sToLower(iName), theNameStr255, 255);
 	if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 		return theTE;
 
@@ -93,7 +93,7 @@ static TextEncoding spLookupName(const string& iName)
 	ZTextCoder::sGetAliases(iName, aliases);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
-		ZUtil_string::sToPString(Unicode::sToLower(*ii), theNameStr255, 255);
+		Util_string::sToPString(Unicode::sToLower(*ii), theNameStr255, 255);
 		if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 			return theTE;
 		}

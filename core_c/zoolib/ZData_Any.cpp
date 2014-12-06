@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Compare.h"
+#include "zoolib/Compare_vector.h"
 #include "zoolib/CountedWithoutFinalize.h"
 #include "zoolib/Memory.h"
+#include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ZCompare.h"
-#include "zoolib/ZCompare_vector.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZUtil_STL_vector.h"
 
 #include <vector>
 
@@ -139,12 +139,12 @@ void ZData_Any::SetSize(size_t iSize)
 	}
 
 const void* ZData_Any::GetPtr() const
-	{ return ZUtil_STL::sFirstOrNil(fRep->fVector); }
+	{ return Util_STL::sFirstOrNil(fRep->fVector); }
 
 void* ZData_Any::GetPtrMutable()
 	{
 	this->pTouch();
-	return ZUtil_STL::sFirstOrNil(fRep->fVector);
+	return Util_STL::sFirstOrNil(fRep->fVector);
 	}
 
 void ZData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)

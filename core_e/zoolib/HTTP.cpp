@@ -26,10 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h"
+#include "zoolib/Util_string.h"
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {
 namespace HTTP {
@@ -1282,7 +1282,7 @@ bool sParseURL(const string& iURL,
 	const size_t colonOffset = hostAndPort.find(':');
 	if (string::npos != colonOffset)
 		{
-		if (ZQ<int64> theQ = ZUtil_string::sQInt64(hostAndPort.substr(colonOffset + 1)))
+		if (ZQ<int64> theQ = Util_string::sQInt64(hostAndPort.substr(colonOffset + 1)))
 			{
 			if (oPort)
 				*oPort = *theQ;

@@ -18,15 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
 
 #include "zoolib/dataspace/Relater_SQLite.h"
 
 #include "zoolib/RelationalAlgebra/AsSQL.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
+
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 namespace Dataspace {

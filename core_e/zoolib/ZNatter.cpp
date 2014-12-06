@@ -18,15 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
+
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNatter.h"
 #include "zoolib/ZStream_Data_T.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
 
 namespace ZooLib {
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 using std::pair;
 

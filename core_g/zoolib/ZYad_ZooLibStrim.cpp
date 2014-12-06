@@ -20,13 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_Time.h"
 
 #include "zoolib/ZGeomPOD.h"
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 #include <vector>
@@ -235,7 +235,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 
 				// Read up till the closing paren, if any.
 				const string8 theContent = sRead_Until(iStrimU, ')');
-				if (const ZTime theTime = ZUtil_Time::sFromString_ISO8601(theContent))
+				if (const ZTime theTime = Util_Time::sFromString_ISO8601(theContent))
 					{
 					oVal = theTime;
 					return true;
@@ -897,7 +897,7 @@ static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iVal,
 		if (*theValue)
 			{
 			s << "time(";
-			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
+			s << Util_Time::sAsString_ISO8601(*theValue, true);
 			s << ")";
 			}
 		else

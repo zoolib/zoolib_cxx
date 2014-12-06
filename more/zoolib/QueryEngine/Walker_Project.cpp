@@ -18,9 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/Util_STL_set.h"
 
 #include "zoolib/QueryEngine/Walker_Project.h"
+
+#include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -28,8 +30,6 @@ namespace QueryEngine {
 using std::map;
 using std::set;
 using std::vector;
-
-using namespace ZUtil_STL;
 
 // =================================================================================================
 // MARK: - Walker_Project
@@ -83,7 +83,7 @@ bool Walker_Project::QReadInc(ZVal_Any* ioResults)
 		for (size_t xx = 0; xx < count; ++xx)
 			subset.push_back(ioResults[fChildMapping[xx]]);
 
-		if (sQInsert(fPriors, subset))
+		if (Util_STL::sQInsert(fPriors, subset))
 			return true;
 		}
 	}

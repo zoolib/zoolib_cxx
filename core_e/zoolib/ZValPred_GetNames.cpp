@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Util_STL_set.h"
+
 #include "zoolib/ZValPred_GetNames.h"
 
 namespace ZooLib {
@@ -26,7 +27,7 @@ namespace ZooLib {
 using std::set;
 using std::string;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - ZValPred, sGetNames

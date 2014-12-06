@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_string.h"
+#include "zoolib/Util_string.h"
+
 #include "zoolib/ZUtil_Yad.h"
 
 namespace ZooLib {
@@ -53,7 +54,7 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 		}
 	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
 		{
-		if (ZQ<int64> theQ = ZUtil_string::sQInt64(iName))
+		if (ZQ<int64> theQ = Util_string::sQInt64(iName))
 			{
 			int64 theIntIndex = *theQ;
 			if (theIntIndex >= 0)

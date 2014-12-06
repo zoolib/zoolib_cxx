@@ -21,20 +21,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
-
 #include "zoolib/Stringf.h"
-
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Util_Any.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Any_JSON.h"
 #include "zoolib/ZVal_Any.h"
-
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_JSONB.h"
 
@@ -44,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace DatonSet {
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 using std::set;
 using std::swap;
 
@@ -392,7 +389,7 @@ void WrappedDatonSetRemoter::pRead()
 					}
 				}
 			}
-		catch (std::exception& ex)
+		catch (...)
 			{
 			ZGuardMtxR guard(fMtxR);
 			sClear(fChannerComboQ);

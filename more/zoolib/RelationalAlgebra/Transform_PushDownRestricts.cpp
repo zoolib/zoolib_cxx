@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_STL_set.h"
+
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
@@ -29,7 +31,7 @@ namespace RelationalAlgebra {
 
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - Transform_PushDownRestricts

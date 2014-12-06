@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_string.h"
+#include "zoolib/Util_string.h"
+
 #include "zoolib/ZVal.h"
 
 namespace ZooLib {
@@ -133,6 +134,6 @@ implemented as a vector<char>.
 // MARK: - sEquali
 
 bool sEquali(const std::string& iLeft, const std::string& iRight)
-	{ return ZUtil_string::sEquali(iLeft, iRight); }
+	{ return Util_string::sEquali(iLeft, iRight); }
 
 } // namespace ZooLib

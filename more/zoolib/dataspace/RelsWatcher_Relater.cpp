@@ -19,18 +19,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_vector.h"
 
 #include "zooLib/dataspace/RelsWatcher_Relater.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 using std::vector;
 
@@ -145,8 +145,8 @@ void RelsWatcher_Relater::Update()
 		guard.Release();
 
 		fRelater->ModifyRegistrations(
-			ZUtil_STL::sFirstOrNil(added), added.size(),
-			ZUtil_STL::sFirstOrNil(removed), removed.size());
+			sFirstOrNil(added), added.size(),
+			sFirstOrNil(removed), removed.size());
 		}
 
 	// Pick up any results

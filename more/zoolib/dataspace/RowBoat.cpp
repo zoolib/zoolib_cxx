@@ -19,12 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
-#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_Any.h"
 
 #include "zoolib/dataspace/RowBoat.h"
@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 using std::vector;
 

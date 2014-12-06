@@ -27,9 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/HTTP_Requests.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_string.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZUtil_string.h"
 
 namespace ZooLib {
 namespace HTTP {
@@ -55,8 +55,8 @@ static
 ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
 	const string& iScheme, const string& iHost, uint16 iPort)
 	{
-	const bool useSSL = ZUtil_string::sEquali("https", iScheme)
-		|| ZUtil_string::sEquali("wss", iScheme);
+	const bool useSSL = Util_string::sEquali("https", iScheme)
+		|| Util_string::sEquali("wss", iScheme);
 
 	uint16 thePort = iPort;
 	if (not thePort)

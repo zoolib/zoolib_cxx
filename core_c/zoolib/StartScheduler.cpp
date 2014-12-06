@@ -20,14 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Singleton.h"
 #include "zoolib/StartScheduler.h"
-
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Util_STL_set.h"
 
 namespace ZooLib {
 
 using std::set;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - StartScheduler

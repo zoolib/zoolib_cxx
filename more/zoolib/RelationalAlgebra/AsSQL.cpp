@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan_UTF.h"
+#include "zoolib/Util_STL_map.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
@@ -27,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -46,7 +46,7 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 using std::map;
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - Analysis (anonymous)

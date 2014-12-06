@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define  __ZooLib_QueryEngine_Result_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compare_T.h"
 #include "zoolib/Multi.h"
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZVal_Any.h"
 

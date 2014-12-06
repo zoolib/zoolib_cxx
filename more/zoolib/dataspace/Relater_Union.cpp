@@ -21,12 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -57,7 +57,7 @@ using std::pair;
 using std::set;
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 namespace RA = RelationalAlgebra;
 

@@ -56,5 +56,42 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR)
 void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
 	{ ZYad_JSON::sToStrim(sYadR(iVal), iStrimW); }
 
+void sWrite(bool iPrettyPrint, const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
+	{
+	if (iPrettyPrint)
+		ZYad_JSON::sToStrim(0, ZYadOptions(true), sYadR(iVal), iStrimW);
+	else
+		ZYad_JSON::sToStrim(sYadR(iVal), iStrimW);
+	}
+
 } // namespace ZUtil_Any_JSON
+
+namespace Operators_Any_JSON {
+
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZVal_Any& iVal)
+	{
+	ZUtil_Any_JSON::sWrite(iVal, iChanW);
+	return iChanW;
+	}
+
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZMap_Any& iMap)
+	{
+	ZUtil_Any_JSON::sWrite(iMap, iChanW);
+	return iChanW;
+	}
+
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZSeq_Any& iSeq)
+	{
+	ZUtil_Any_JSON::sWrite(iSeq, iChanW);
+	return iChanW;
+	}
+
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZData_Any& iData)
+	{
+	ZUtil_Any_JSON::sWrite(iData, iChanW);
+	return iChanW;
+	}
+
+} // namespace Operators_Any_JSON
+
 } // namespace ZooLib

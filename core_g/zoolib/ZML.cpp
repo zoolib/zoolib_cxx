@@ -21,14 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
+#include "zoolib/Util_STL.h"
+#include "zoolib/Util_STL_vector.h"
+#include "zoolib/Util_string.h"
+#include "zoolib/Util_Time.h"
 
 #include "zoolib/ZML.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_Time.h"
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZUtil_STL_vector.h"
-#include "zoolib/ZUtil_string.h"
 
 #include <stdio.h> // For sprintf
 
@@ -42,7 +42,7 @@ using std::pair;
 using std::string;
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - Static helper functions

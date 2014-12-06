@@ -19,13 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Compare.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ZCompare.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 
@@ -50,7 +50,7 @@ using DatonSet::Daton;
 using DatonSet::Deltas;
 using DatonSet::Vector_Event_Delta_t;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 using std::make_pair;
 using std::map;

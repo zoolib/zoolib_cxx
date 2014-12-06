@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
+#include "zoolib/Util_Time.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream_POSIX.h"
@@ -30,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Debug.h"
-#include "zoolib/ZUtil_Time.h"
 
 #include "zoolib/ZCompat_cmath.h" // For fmod
 
@@ -169,7 +169,7 @@ public:
 
 		if (sCompact)
 			{
-			theStrimW << ZUtil_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now.fVal, 60));
+			theStrimW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now.fVal, 60));
 
 			#if __MACH__
 				theStrimW << sStringf(" %5x", ((int)mach_thread_self()));
@@ -182,7 +182,7 @@ public:
 			}
 		else
 			{
-			theStrimW << ZUtil_Time::sAsString_ISO8601_us(now, false);
+			theStrimW << Util_Time::sAsString_ISO8601_us(now, false);
 
 			#if __MACH__
 				// GDB on Mac uses the mach thread ID for the systag.

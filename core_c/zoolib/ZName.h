@@ -22,11 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZName_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compare_T.h"
 #include "zoolib/CountedVal.h"
 #include "zoolib/UnicodeString.h" // For string8
 #include "zoolib/Util_Relops.h"
-
-#include "zoolib/ZCompare_T.h"
 
 namespace ZooLib {
 

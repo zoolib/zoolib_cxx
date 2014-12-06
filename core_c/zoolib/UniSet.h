@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_UniSet_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUtil_STL_set.h"
+#include "zoolib/Util_STL_set.h"
 
 namespace ZooLib {
 
@@ -307,7 +307,7 @@ bool UniSet<T>::Contains(const UniSet& iOther) const
 	if (fUniversal)
 		{
 		if (iOther.fUniversal)
-			return ZUtil_STL::sIncludes(iOther.fElems, fElems);
+			return Util_STL::sIncludes(iOther.fElems, fElems);
 		else
 			return (fElems & iOther.fElems).empty();
 		}
@@ -316,7 +316,7 @@ bool UniSet<T>::Contains(const UniSet& iOther) const
 		if (iOther.fUniversal)
 			return false;
 		else
-			return ZUtil_STL::sIncludes(fElems, iOther.fElems);
+			return Util_STL::sIncludes(fElems, iOther.fElems);
 		}
 	}
 

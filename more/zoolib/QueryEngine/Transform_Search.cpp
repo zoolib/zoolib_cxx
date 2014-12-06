@@ -19,12 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/UniSet.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
 
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZUtil_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
 #include "zoolib/ZValPred_Any.h"
 #include "zoolib/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ZVisitor_Expr_Op_Do_Transform_T.h"
@@ -56,7 +56,7 @@ using RA::Rename;
 
 using std::set;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - HasConst (anonymous)

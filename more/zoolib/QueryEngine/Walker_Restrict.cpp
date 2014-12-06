@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
+
 #include "zoolib/ZExpr_Bool.h"
 #include "zoolib/ZExpr_Bool_ValPred.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTextCollator.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_vector.h"
 #include "zoolib/ZValPred_Any.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
@@ -36,7 +37,7 @@ using std::map;
 using std::set;
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 // =================================================================================================
 // MARK: - Walker_Restrict::Exec
@@ -438,7 +439,7 @@ ZRef<Walker> Walker_Restrict::Prime(
 
 bool Walker_Restrict::QReadInc(ZVal_Any* ioResults)
 	{
-	const ZVal_Any* theConsts = ZUtil_STL::sFirstOrNil(fConsts);
+	const ZVal_Any* theConsts = sFirstOrNil(fConsts);
 
 	for (;;)
 		{

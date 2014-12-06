@@ -19,12 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
-
-#include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_vector.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/dataspace/RelaterMUX.h"
+
+#include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -35,7 +35,7 @@ using std::pair;
 using std::set;
 using std::vector;
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 typedef map<int64,ZRef<QueryEngine::Result> > Map_Refcon_Result;
 

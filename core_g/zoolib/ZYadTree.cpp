@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/CountedVal.h"
+#include "zoolib/Util_STL_map.h"
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTrail.h"
-#include "zoolib/ZUtil_STL_map.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZYadTree.h"
 
@@ -34,7 +34,7 @@ namespace ZooLib {
 namespace YadTree {
 namespace { // anonymous
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 typedef CountedVal<ZName> CountedString;
 

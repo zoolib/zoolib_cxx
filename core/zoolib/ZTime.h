@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTime_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compare_T.h"
 #include "zoolib/Util_Relops.h"
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompat_operator_bool.h"
 
 namespace ZooLib {
