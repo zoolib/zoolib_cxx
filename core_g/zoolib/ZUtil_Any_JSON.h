@@ -42,6 +42,10 @@ void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW);
 
 void sWrite(bool iPrettyPrint, const ZVal_Any& iVal, const ChanW_UTF& iStrimW);
 
+string8 sAsJSON(const ZVal_Any& iVal);
+
+const ZVal_Any sFromJSON(const string8& iString);
+
 } // namespace ZUtil_Any_JSON
 
 namespace Operators_Any_JSON {

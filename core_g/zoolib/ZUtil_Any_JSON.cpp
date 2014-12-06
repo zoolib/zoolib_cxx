@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_UTF_string.h"
+
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimU_Unreader.h"
@@ -53,8 +55,8 @@ ZQ<ZVal_Any> sQRead(const ZRef<ZStrimmerR>& iSR)
 ZQ<ZVal_Any> sQRead(const ZRef<ZStreamerR>& iSR)
 	{ return sQRead(ZRef<ZStrimmerR>(sStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iSR))); }
 
-void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
-	{ ZYad_JSON::sToStrim(sYadR(iVal), iStrimW); }
+void sWrite(const ZVal_Any& iVal, const ChanW_UTF& iChanW)
+	{ ZYad_JSON::sToStrim(sYadR(iVal), iChanW); }
 
 void sWrite(bool iPrettyPrint, const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
 	{
@@ -62,6 +64,20 @@ void sWrite(bool iPrettyPrint, const ZVal_Any& iVal, const ChanW_UTF& iStrimW)
 		ZYad_JSON::sToStrim(0, ZYadOptions(true), sYadR(iVal), iStrimW);
 	else
 		ZYad_JSON::sToStrim(sYadR(iVal), iStrimW);
+	}
+
+string8 sAsJSON(const ZVal_Any& iVal)
+	{
+	string8 result;
+	ZUtil_Any_JSON::sWrite(iVal, ChanW_UTF_string8(&result));
+//	ZUtil_Any_JSON::sWrite(iVal, ZStrimW_String8(&result));
+	return result;
+	}
+
+const ZVal_Any sFromJSON(const string8& iString)
+	{
+	ZRef<ZStrimmerU> theStrimmerU = new ZStrimmerU_T<ZStrimU_String>(iString);
+	return ZUtil_Any_JSON::sQRead(theStrimmerU).Get();
 	}
 
 } // namespace ZUtil_Any_JSON
