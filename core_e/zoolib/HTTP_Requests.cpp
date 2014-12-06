@@ -250,8 +250,6 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 	return null;
 	}
 
-#if 0
-
 static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
@@ -267,7 +265,6 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		}
 	}
 
-// Need to decide if we're doing the sMakeContentChanner stuff in here.
 ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
@@ -275,22 +272,21 @@ ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 		{
 		int32 theResponseCode;
 		Map theResponseHeader;
-		if (spQPOST_Suffix(sGetChan(iConnQ->f0),
+		if (spQPOST_Suffix(sGetChan(iConnQ->GetR()),
 			&theResponseCode, &theResponseHeader, oRawHeader))
 			{
 			if (oResponseCode)
 				*oResponseCode = theResponseCode;
 
-			if (200 == theResponseCode)
+			if (theResponseCode >= 200 && theResponseCode < 300)
 				{
 				if (oHeader)
 					*oHeader = theResponseHeader;
 
-
 				ZQ<Connection_t> theConnQ = iConnQ;
 				if (ZRef<ChannerR_Bin> theChanner =
-					sMakeContentChanner(theResponseHeader, theConnQ->f0))
-					{ theConnQ->f0 = theChanner; }
+					sMakeContentChanner(theResponseHeader, theConnQ->GetR()))
+					{ theConnQ->SetR(theChanner); }
 
 				return theConnQ;
 				}
@@ -310,8 +306,6 @@ ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
 		}
 	return null;
 	}
-
-#endif
 
 // =================================================================================================
 // MARK: - sQCONNECT
