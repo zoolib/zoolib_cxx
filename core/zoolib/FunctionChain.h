@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_FunctionChain_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_MSVCStaticLib.h"
+#include "zoolib/Compat_MSVCStaticLib.h"
 
 namespace ZooLib {
 

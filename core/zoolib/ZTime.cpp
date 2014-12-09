@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare.h"
+#include "zoolib/Compat_cmath.h" // For NAN and isnan
 
 #include "zoolib/ZAtomic.h"
-#include "zoolib/ZCompat_cmath.h" // For NAN and isnan
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTypes.h" // For countof

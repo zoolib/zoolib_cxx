@@ -21,7 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/FunctionChain.h"
 #include "zoolib/size_t.h" // For size_t
 
-#include "zoolib/ZCompat_Win.h"
+#include "zoolib/Win/ZCompat_Win.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
 

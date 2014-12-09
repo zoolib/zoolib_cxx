@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_pthread_Debug 0
 #endif
 
-#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/ZThread_T.h"
 
 #include <errno.h> // For EINTR

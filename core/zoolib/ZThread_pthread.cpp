@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_pthread)
 
-#include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/Compat_cmath.h" // For fmod
 
 #include <sys/time.h> // For gettimeofday
 #include <unistd.h> // For usleep

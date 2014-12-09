@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare.h"
+#include "zoolib/Compat_string.h"
 #include "zoolib/Singleton.h"
 #include "zoolib/Util_STL_map.h"
 
-#include "zoolib/ZCompat_string.h"
 #include "zoolib/ZDebug.h"
 
 namespace ZooLib {

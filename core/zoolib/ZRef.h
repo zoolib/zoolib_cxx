@@ -23,11 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #if not defined(__OBJC__)
-	#include "zoolib/ZCompat_operator_bool.h"
+	#include "zoolib/Compat_operator_bool.h"
 #endif
 
+#include "zoolib/Compat_algorithm.h" // For std::swap
+
 #include "zoolib/ZAtomic.h" // For sAtomic_CASPtr
-#include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZTypes.h" // For Adopt_T
 
 #ifndef ZMACRO_Attribute_NoThrow_Ref
