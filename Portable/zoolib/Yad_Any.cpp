@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Visitor_Do_T.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_Std.h"
@@ -116,7 +117,11 @@ public:
 		{ this->pSetResult(sReadAll_T<Data_Any>(sGetChan<ChanR_Bin>(iYadStreamerR))); }
 
 	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
-		{ this->pSetResult(sReadAll8(sGetChan<ChanR_UTF>(iYadStrimmerR))); }
+		{
+		string8 theString;
+		sCopyAll(sGetChan<ChanR_UTF>(iYadStrimmerR), ChanW_UTF_string8(&theString));
+		this->pSetResult(theString);
+		}
 
 	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{

@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Compat_algorithm.h" // ZSetRestore_T
 #include "zoolib/Compat_cmath.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Any.h"
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Yad_JSON.h"
 
 //#include "zoolib/ZStreamW_HexStrim.h"
-//#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUtil_Strim.h"
 
 #if ZCONFIG(Compiler,GCC)
 	#include <cxxabi.h>
@@ -36,22 +36,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-namespace ZYad_JSON {
+namespace Yad_JSON {
 
 using std::min;
 using std::string;
 
-/*! \namespace ZooLib::ZYad_JSON
+/*! \namespace ZooLib::Yad_JSON
 JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.html>.
 
-ZYad_JSON provides Yad facilities to read and write JSON source.
+Yad_JSON provides Yad facilities to read and write JSON source.
 
 ZMap is isomorphic to JSON's object, ZSeq to JSON's array, and strings, booleans
 and null translate back and forth without trouble. JSON's only other primitive is
 the number, whereas ZVal explicitly stores and retrieves integers of different sizes,
 floats and doubles, raw bytes and other composite types.
 
-ZYad_JSON writes all ZVal number types as JSON numbers. When reading, JSON numbers
+Yad_JSON writes all ZVal number types as JSON numbers. When reading, JSON numbers
 are stored as int64s, unless the mantissa has a fractional component or exceeds 2^64,
 or if there is an exponent,in which case a double is used.
 
@@ -114,13 +114,8 @@ static string spPrettyName(const std::type_info& iTI)
 	return iTI.name();
 	}
 
-static void spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	}
-
-static bool spRead_Identifier(
-	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
+static bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string* oStringLC, string* oStringExact)
 	{
 	if (oStringExact)
 		oStringExact->reserve(32);
@@ -131,12 +126,13 @@ static bool spRead_Identifier(
 	bool gotAny = false;
 	for (;;)
 		{
-		UTF32 theCP;
-		if (not iStrimU.ReadCP(theCP))
+		const ZQ<UTF32> theCPQ = sQRead(iChanR);
+		if (theCPQ)
 			break;
+		const UTF32 theCP = *theCPQ;
 		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
-			iStrimU.Unread(theCP);
+			sUnread(theCP, iChanU);
 			break;
 			}
 
@@ -150,45 +146,46 @@ static bool spRead_Identifier(
 	return gotAny;
 	}
 
-static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
+static bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string& oString)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
-	if (sTryRead_CP(s, '"'))
+	if (sTryRead_CP('"', iChanR, iChanU))
 		{
 		// We've got a string, delimited by ".
 		for (;;)
 			{
 			string tempString;
-			sRead_EscapedString(s, '"', tempString);
+			sRead_EscapedString('"', iChanR, iChanU, tempString);
 
-			if (not sTryRead_CP(s, '"'))
+			if (not sTryRead_CP('"', iChanR, iChanU))
 				throw ParseException("Expected '\"' to close a string");
 
 			oString += tempString;
 
-			sSkip_WSAndCPlusPlusComments(s);
+			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
-			if (not sTryRead_CP(s, '"'))
+			if (not sTryRead_CP('"', iChanR, iChanU))
 				return true;
 			}
 		}
-	else if (sTryRead_CP(s, '\''))
+	else if (sTryRead_CP('\'', iChanR, iChanU))
 		{
 		// We've got a string, delimited by '.
 		for (;;)
 			{
 			string tempString;
-			sRead_EscapedString(s, '\'', tempString);
+			sRead_EscapedString( '\'', iChanR, iChanU, tempString);
 
-			if (not sTryRead_CP(s, '\''))
+			if (not sTryRead_CP('\'', iChanR, iChanU))
 				throw ParseException("Expected \"'\" to close a string");
 
 			oString += tempString;
 
-			sSkip_WSAndCPlusPlusComments(s);
+			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
-			if (not sTryRead_CP(s, '\''))
+			if (not sTryRead_CP('\'', iChanR, iChanU))
 				return true;
 			}
 		}
@@ -196,25 +193,26 @@ static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
-static bool spTryRead_PropertyName(const ZStrimU& iStrimU, string& oName, bool iAllowUnquoted)
+static bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string& oName, bool iAllowUnquoted)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
-	if (sTryRead_EscapedString(iStrimU, '"', oName))
+	if (sTryRead_EscapedString('"', iChanR, iChanU, oName))
 		return true;
 
-	if (sTryRead_EscapedString(iStrimU, '\'', oName))
+	if (sTryRead_EscapedString('\'', iChanR, iChanU, oName))
 		return true;
 
-	if (iAllowUnquoted && spRead_Identifier(iStrimU, nullptr, &oName))
+	if (iAllowUnquoted && spRead_Identifier(iChanR, iChanU, nullptr, &oName))
 		return true;
 
 	return false;
 	}
 
-static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
+static ZQ<ZAny> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
 	string theString;
 
@@ -222,77 +220,75 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	double asDouble;
 	bool isDouble;
 
-	if (spTryRead_JSONString(iStrimU, theString))
+	if (spTryRead_JSONString(iChanR, iChanU, theString))
 		{
-		oVal = theString;
+		return theString;
 		}
-	else if (sTryRead_SignedDecimalNumber(iStrimU, asInt64, asDouble, isDouble))
+	else if (sTryRead_SignedDecimalNumber(iChanR, iChanU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
-			oVal = asDouble;
+			return asDouble;
 		else
-			oVal = asInt64;
+			return asInt64;
 		}
-	else if (sTryRead_CaselessString(iStrimU, "null"))
+	else if (sTryRead_CaselessString("null", iChanR, iChanU))
 		{
-		oVal = null; //## Watch this
+		return null; //## Watch this
 		}
-	else if (sTryRead_CaselessString(iStrimU, "false"))
+	else if (sTryRead_CaselessString("false", iChanR, iChanU))
 		{
-		oVal = false;
+		return false;
 		}
-	else if (sTryRead_CaselessString(iStrimU, "true"))
+	else if (sTryRead_CaselessString("true", iChanR, iChanU))
 		{
-		oVal = true;
-		}
-	else
-		{
-		spThrowParseException("Expected number, string or keyword");
+		return true;
 		}
 
-	return true;
+	throw ParseException("Expected number, string or keyword");
+
+	return null;
 	}
 
-static ZRef<ZYadR> spMakeYadR_JSON(
-	ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
+static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
-	const ZStrimU& theStrimU = iStrimmerU->GetStrimU();
+	const ChanR_UTF& theChanR = sGetChan(iChannerR);
+	const ChanU_UTF& theChanU = sGetChan(iChannerU);
 
-	sSkip_WSAndCPlusPlusComments(theStrimU);
+	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-	if (sTryRead_CP(theStrimU, '['))
+	if (sTryRead_CP('[', theChanR, theChanU))
 		{
-		return new YadSeqR(iStrimmerU, iRO);
+		return new YadSeqR_JSON(iRO, iChannerR, iChannerU);
 		}
-	else if (sTryRead_CP(theStrimU, '{'))
+	else if (sTryRead_CP('{', theChanR, theChanU))
 		{
-		return new YadMapR(iStrimmerU, iRO);
+		return new YadMapR_JSON(iRO, iChannerR, iChannerU);
 		}
-	else if (sTryRead_CP(theStrimU, '"'))
+	else if (sTryRead_CP('"', theChanR, theChanU))
 		{
-		return new YadStrimmerR(iStrimmerU);
+		return new YadStrimmerR_JSON(iChannerR, iChannerU);
 		}
-	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP(theStrimU, '('))
+	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP('(', theChanR, theChanU))
 		{
-		sSkip_WSAndCPlusPlusComments(theStrimU);
-		if (sTryRead_CP(theStrimU, '='))
+		sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
+		if (sTryRead_CP('=', theChanR, theChanU))
 			{
 			// It's Base64
-			return new YadStreamerR_Base64(Base64::sDecode_Normal(), iStrimmerU);
+			return new YadStreamerR_Base64(Base64::sDecode_Normal(), iChannerR, iChannerU);
 			}
 		else
 			{
 			// It's Hex
-			return new YadStreamerR_Hex(iStrimmerU);
+			return new YadStreamerR_Hex(iChannerR, iChannerU);
 			}
 		}
 	else
 		{
-		ZAny theVal;
-		if (spFromStrim_Value(theStrimU, theVal))
-			return sMake_YadAtomR_Any(theVal);
+		if (ZQ<ZAny> theQ = spQFromChan_Val(theChanR, theChanU))
+			return sMake_YadAtomR_Any(*theQ);
 		}
 
 	return null;
@@ -318,15 +314,15 @@ ReadOptions sReadOptions_Extended()
 // MARK: - WriteOptions
 
 WriteOptions::WriteOptions()
-:	ZYadOptions()
+:	YadOptions()
 	{}
 
-WriteOptions::WriteOptions(const ZYadOptions& iOther)
-:	ZYadOptions(iOther)
+WriteOptions::WriteOptions(const YadOptions& iOther)
+:	YadOptions(iOther)
 	{}
 
 WriteOptions::WriteOptions(const WriteOptions& iOther)
-:	ZYadOptions(iOther)
+:	YadOptions(iOther)
 ,	fUseExtendedNotation(iOther.fUseExtendedNotation)
 ,	fBinaryAsBase64(iOther.fBinaryAsBase64)
 ,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
@@ -337,89 +333,96 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 // MARK: - ParseException
 
 ParseException::ParseException(const string& iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 ParseException::ParseException(const char* iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
 // MARK: - YadStreamerR_Hex
 
-YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ZStrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU)
-,	fStreamR(iStrimmerU->GetStrimU())
+YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
+:	fChannerR(iChannerR)
+,	fChannerU(iChannerU)
+,	fChanR(sGetChan(iChannerR), sGetChan(iChannerU))
 	{}
 
 void YadStreamerR_Hex::Finish()
 	{
-	using namespace ZUtil_Strim;
-	fStreamR.SkipAll();
-	if (not sTryRead_CP(fStrimmerU->GetStrimU(), ')'))
-		spThrowParseException("Expected ')' to close a binary data");	
+	using namespace Util_Chan;
+	sSkipAll(fChanR);
+	if (not sTryRead_CP(')', sGetChan(fChannerR), sGetChan(fChannerU)))
+		throw ParseException("Expected ')' to close a binary data");
 	}
 
-const ZStreamR& YadStreamerR_Hex::GetStreamR()
-	{ return fStreamR; }
+void YadStreamerR_Hex::GetChan(const ChanR_Bin*& oChanPtr)
+	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
 // MARK: - YadStreamerR_Base64
 
-YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode, ZRef<ZStrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU)
-,	fStreamR_ASCIIStrim(iStrimmerU->GetStrimU())
-,	fStreamR_Boundary(")", fStreamR_ASCIIStrim)
-,	fStreamR(fStreamR_Boundary)
+YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
+:	fChannerR(iChannerR)
+,	fChannerU(iChannerU)
+,	fChanR_Bin_ASCIIStrim(sGetChan(iChannerR))
+,	fChanR_Bin_Boundary(')', fChanR_Bin_ASCIIStrim)
+,	fChanR(iDecode, fChanR_Bin_Boundary)
 	{}
 
 void YadStreamerR_Base64::Finish()
 	{
-	using namespace ZUtil_Strim;
-	fStreamR.SkipAll();
-	if (not fStreamR_Boundary.HitBoundary())
-		spThrowParseException("Expected ')' to close a binary data");	
+	using namespace Util_Chan;
+	sSkipAll(fChanR);
+	if (not fChanR_Bin_Boundary.HitTerminator())
+		throw ParseException("Expected ')' to close a binary data");
 	}
 
-const ZStreamR& YadStreamerR_Base64::GetStreamR()
-	{ return fStreamR; }
+void YadStreamerR_Base64::GetChan(const ChanR_Bin*& oChanPtr)
+	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
 // MARK: - YadStrimmerR
 
-YadStrimmerR::YadStrimmerR(ZRef<ZStrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU),
-	fStrimR(iStrimmerU->GetStrimU(), '"')
+YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
+:	fChannerR(iChannerR)
+,	fChannerU(iChannerU)
+,	fChanR('"', sGetChan(iChannerR), sGetChan(iChannerU))
 	{}
 
-void YadStrimmerR::Finish()
+void YadStrimmerR_JSON::Finish()
 	{
-	using namespace ZUtil_Strim;
-	fStrimR.SkipAll();
-	if (not sTryRead_CP(fStrimmerU->GetStrimU(), '"'))
+	using namespace Util_Chan;
+	sSkipAll(fChanR);
+	if (not sTryRead_CP('"', sGetChan(fChannerR), sGetChan(fChannerU)))
 		throw ParseException("Missing string delimiter");
 	}
 
-const ZStrimR& YadStrimmerR::GetStrimR()
-	{ return fStrimR; }
+void YadStrimmerR_JSON::GetChan(const ChanR_UTF*& oChanPtr)
+	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
 // MARK: - YadSeqR
 
-YadSeqR::YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
-:	fStrimmerU(iStrimmerU)
-,	fRO(iRO)
+YadSeqR_JSON::YadSeqR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
+:	fRO(iRO)
+,	fChannerR(iChannerR)
+,	fChannerU(iChannerU)
 	{}
 
-void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void YadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
-	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+	const ChanR_UTF& theChanR = sGetChan(fChannerR);
+	const ChanU_UTF& theChanU = sGetChan(fChannerU);
 
-	sSkip_WSAndCPlusPlusComments(theStrimU);
+	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-	if (sTryRead_CP(theStrimU, ']'))
+	if (sTryRead_CP(']', theChanR, theChanU))
 		{
 		// Reached end.
 		return;
@@ -428,45 +431,49 @@ void YadSeqR::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	if (not iIsFirst)
 		{
 		// Must read a separator
-		if (not sTryRead_CP(theStrimU, ','))
+		if (not sTryRead_CP(',', theChanR, theChanU))
 			{
-			if (not fRO->Get().fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
+			if (not fRO->Get().fAllowSemiColons.DGet(false)
+				|| not sTryRead_CP(';', theChanR, theChanU))
 				{
 				if (not fRO->Get().fLooseSeparators.DGet(false))
-					spThrowParseException("Require ',' to separate array elements");
+					throw ParseException("Require ',' to separate array elements");
 				}
 			}
 
-		sSkip_WSAndCPlusPlusComments(theStrimU);
+		sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, ']'))
+		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP(']', theChanR, theChanU))
 			{
 			// The separator was actually a terminator, and we're done.
 			return;
 			}
 		}
 
-	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fRO)))
-		spThrowParseException("Expected a value");
+	if (not (oYadR = spMakeYadR_JSON(fRO, fChannerR, fChannerU)))
+		throw ParseException("Expected a value");
 	}
 
 // =================================================================================================
-// MARK: - YadMapR
+// MARK: - YadMapR_JSON
 
-YadMapR::YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO)
-:	fStrimmerU(iStrimmerU)
-,	fRO(iRO)
+YadMapR_JSON::YadMapR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
+:	fRO(iRO)
+,	fChannerR(iChannerR)
+,	fChannerU(iChannerU)
 	{}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
+void YadMapR_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
-	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+	const ChanR_UTF& theChanR = sGetChan(fChannerR);
+	const ChanU_UTF& theChanU = sGetChan(fChannerU);
 
-	sSkip_WSAndCPlusPlusComments(theStrimU);
+	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-	if (sTryRead_CP(theStrimU, '}'))
+	if (sTryRead_CP('}', theChanR, theChanU))
 		{
 		// Reached end, with no terminator
 		return;
@@ -475,18 +482,19 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
 	if (not iIsFirst)
 		{
 		// Must read a separator
-		if (not sTryRead_CP(theStrimU, ','))
+		if (not sTryRead_CP(',', theChanR, theChanU))
 			{
-			if (not fRO->Get().fAllowSemiColons.DGet(false) || not sTryRead_CP(theStrimU, ';'))
+			if (not fRO->Get().fAllowSemiColons.DGet(false)
+				|| not sTryRead_CP(';', theChanR, theChanU))
 				{
 				if (not fRO->Get().fLooseSeparators.DGet(false))
-					spThrowParseException("Require ',' to separate object elements");
+					throw ParseException("Require ',' to separate object elements");
 				}
 			}
 
-		sSkip_WSAndCPlusPlusComments(theStrimU);
+		sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP(theStrimU, '}'))
+		if (fRO->Get().fAllowTerminators.DGet(false) && sTryRead_CP('}', theChanR, theChanU))
 			{
 			// The separator was actually a terminator, and we're done.
 			return;
@@ -494,75 +502,76 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
 		}
 
 	string theName;
-	if (not spTryRead_PropertyName(theStrimU, theName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
-		spThrowParseException("Expected a member name");
+	if (not spTryRead_PropertyName(theChanR, theChanU,
+		theName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
+		{ throw ParseException("Expected a member name"); }
 	oName = theName;
 
-	sSkip_WSAndCPlusPlusComments(theStrimU);
+	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
-	if (not sTryRead_CP(theStrimU, ':'))
+	if (not sTryRead_CP(':', theChanR, theChanU))
 		{
-		if (not fRO->Get().fAllowEquals.DGet(false) || not sTryRead_CP(theStrimU, '='))
-			spThrowParseException("Expected ':' after a member name");
+		if (not fRO->Get().fAllowEquals.DGet(false) || not sTryRead_CP('=', theChanR, theChanU))
+			throw ParseException("Expected ':' after a member name");
 		}
 
-	if (not (oYadR = spMakeYadR_JSON(fStrimmerU, fRO)))
-		spThrowParseException("Expected value after ':'");
+	if (not (oYadR = spMakeYadR_JSON(fRO, fChannerR, fChannerU)))
+		throw ParseException("Expected value after ':'");
 	}
 
 // =================================================================================================
 // MARK: - Static writing functions
 
-static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
+static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	while (iCount--)
-		iStrimW << iOptions.fIndentString;
+		iChanW << iOptions.fIndentString;
 	}
 
-static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
+static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
-	iStrimW << iOptions.fEOLString;
-	spWriteIndent(iCount, iOptions, iStrimW);
+	iChanW << iOptions.fEOLString;
+	spWriteIndent(iCount, iOptions, iChanW);
 	}
 
-static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& s)
+static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW)
 	{
-	ZStrimW_Escaped::Options theOptions;
+	ChanW_UTF_Escaped::Options theOptions;
 	theOptions.fEscapeHighUnicode = false;
 
 	if (iPreferSingleQuotes)
 		{
-		s << "'";
+		iChanW << "'";
 
 		theOptions.fQuoteQuotes = false;
 
-		ZStrimW_Escaped(theOptions, s) << iString;
+		ChanW_UTF_Escaped(theOptions, iChanW) << iString;
 
-		s << "'";
+		iChanW << "'";
 		}
 	else
 		{
-		s << "\"";
+		iChanW << "\"";
 
 		theOptions.fQuoteQuotes = true;
 
-		ZStrimW_Escaped(theOptions, s) << iString;
+		ChanW_UTF_Escaped(theOptions, iChanW) << iString;
 
-		s << "\"";
+		iChanW << "\"";
 		}
 	}
 
-static void spWriteString(const ZStrimR& iStrimR, const ChanW_UTF& s)
+static void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
 	{
-	s << "\"";
+	iChanW << "\"";
 
-	ZStrimW_Escaped::Options theOptions;
+	ChanW_UTF_Escaped::Options theOptions;
 	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
 
-	ZStrimW_Escaped(theOptions, s) << iStrimR;
+	ChanW_UTF_Escaped(theOptions, iChanW) << iChanR;
 
-	s << "\"";
+	iChanW << "\"";
 	}
 
 static bool spContainsProblemChars(const string& iString)
@@ -618,21 +627,23 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		ZUtil_Strim::sWriteExact(*asFloat, s);
+		Util_Chan::sWriteExact(*asFloat, s);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		ZUtil_Strim::sWriteExact(*asDouble, s);
+		Util_Chan::sWriteExact(*asDouble, s);
 		}
 	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 		{
-		ZUtil_Strim::sWriteExact(asTime->fVal, s);
+		Util_Chan::sWriteExact(asTime->fVal, s);
 		}
 	else
 		{
 		s << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
+
+#if 0
 
 static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
@@ -739,10 +750,11 @@ static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 			}
 		}
 	}
+#endif
 
-static void spToStrim_Stream(const ZStreamR& iStreamR,
+static void spToStrim_Stream(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanW_UTF& s)
+	const ChanW_UTF& w)
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
@@ -757,29 +769,29 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 
 	if (iOptions.fBinaryAsBase64.DGet(false))
 		{
-		s << "(";
-		s << "=";
-		
-		Base64::StreamW_Encode(
-			Base64::sEncode_Normal(),
-			ZStreamW_ASCIIStrim(
-				ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, s)))
-		.CopyAllFrom(iStreamR);
+		w << "(";
+		w << "=";
 
-		s << ")";
+		sCopyAll(iChanR,
+			ChanW_Bin_Base64Encode(
+				Base64::sEncode_Normal(),
+				ChanW_Bin_ASCIIStrim(
+					ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))));
+
+		w << ")";
 		}
-	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
-		{
-		spToStrim_Stream(*theStreamRPos, iLevel, iOptions, iMayNeedInitialLF, s);
-		}
+//	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
+//		{
+//		spToStrim_Stream(*theStreamRPos, iLevel, iOptions, iMayNeedInitialLF, s);
+//		}
 	else
 		{
-		s << "(";
+		w << "(";
 
-		ZStreamW_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, s)
-			.CopyAllFrom(iStreamR);
+		sCopyAll(iChanR,
+			ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, w));
 
-		s << ")";
+		w << ")";
 		}
 	}
 
@@ -787,34 +799,37 @@ static void spToStrim_Stream(const ZStreamR& iStreamR,
 // MARK: - Visitor_Writer
 
 Visitor_Writer::Visitor_Writer(
-	size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iStrimW)
-:	fIndent(iIndent),
-	fOptions(iOptions),
-	fStrimW(iStrimW),
-	fMayNeedInitialLF(false)
+	size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+:	fIndent(iIndent)
+,	fOptions(iOptions)
+,	fChanW(iChanW)
+,	fMayNeedInitialLF(false)
 	{}
 
-void Visitor_Writer::Visit_YadR(const ZRef<ZYadR>& iYadR)
+void Visitor_Writer::Visit_YadR(const ZRef<YadR>& iYadR)
 	{
-	fStrimW << "null";
+	fChanW << "null";
 	if (fOptions.fBreakStrings)
 		{
-		fStrimW << " /*!! Unhandled yad: "
+		fChanW << " /*!! Unhandled yad: "
 			<< spPrettyName(typeid(*iYadR.Get()))
 			<< " !!*/";
 		}
 	}
 
-void Visitor_Writer::Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR)
-	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fStrimW); }
+void Visitor_Writer::Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
+	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
 
-void Visitor_Writer::Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR)
-	{ spToStrim_Stream(iYadStreamerR->GetStreamR(), fIndent, fOptions, fMayNeedInitialLF, fStrimW); }
+void Visitor_Writer::Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
+	{
+	spToStrim_Stream(sGetChan<ChanR_Bin>(iYadStreamerR),
+		fIndent, fOptions, fMayNeedInitialLF, fChanW);
+	}
 
-void Visitor_Writer::Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR)
-	{ spWriteString(iYadStrimmerR->GetStrimR(), fStrimW); }
+void Visitor_Writer::Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR)
+	{ spWriteString(sGetChan<ChanR_UTF>(iYadStrimmerR), fChanW); }
 
-void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
+void Visitor_Writer::Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -834,73 +849,73 @@ void Visitor_Writer::Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR)
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			spWriteLFIndent(fIndent, fOptions, fStrimW);
+			spWriteLFIndent(fIndent, fOptions, fChanW);
 			}
 
 		SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
 
 		uint64 count = 0;
-		fStrimW << "[";
+		fChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+			if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
 				{
 				break;
 				}
 			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(fIndent, fOptions, fStrimW);
+				spWriteLFIndent(fIndent, fOptions, fChanW);
 				cur->Accept(*this);
-				fStrimW << ";";
+				fChanW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW << ",";
-				spWriteLFIndent(fIndent, fOptions, fStrimW);
+					fChanW << ",";
+				spWriteLFIndent(fIndent, fOptions, fChanW);
 				if (fOptions.fNumberSequences.DGet(false))
-					fStrimW << "/*" << count << "*/";
+					fChanW << "/*" << count << "*/";
 				cur->Accept(*this);
 				}
 			++count;
 			}
-		spWriteLFIndent(fIndent, fOptions, fStrimW);
-		fStrimW << "]";
+		spWriteLFIndent(fIndent, fOptions, fChanW);
+		fChanW << "]";
 		}
 	else
 		{
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
-		fStrimW << "[";
+		fChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR,false> cur = iYadSeqR->ReadInc())
+			if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
 				{
 				break;
 				}
 			else if (false && fOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && fOptions.fBreakStrings)
-					fStrimW << " ";
+					fChanW << " ";
 				cur->Accept(*this);
-				fStrimW << ";";
+				fChanW << ";";
 				}
 			else
 				{
 				if (not isFirst)
 					{
-					fStrimW << ",";
+					fChanW << ",";
 					if (fOptions.fBreakStrings)
-						fStrimW << " ";
+						fChanW << " ";
 					}
 				cur->Accept(*this);
 				}
 			}
-		fStrimW << "]";
+		fChanW << "]";
 		}
 	}
 
-void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
+void Visitor_Writer::Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -916,81 +931,81 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			spWriteLFIndent(fIndent, fOptions, fStrimW);
+			spWriteLFIndent(fIndent, fOptions, fChanW);
 			}
 
-		fStrimW << "{";
+		fChanW << "{";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			Name curName;
-			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;
 				}
 			else if (fOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(fIndent, fOptions, fStrimW);
-				spWritePropName(curName, useSingleQuotes, fStrimW);
-				fStrimW << " = ";
+				spWriteLFIndent(fIndent, fOptions, fChanW);
+				spWritePropName(curName, useSingleQuotes, fChanW);
+				fChanW << " = ";
 
 				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
 				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
-				fStrimW << ";";
+				fChanW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW << ",";
-				spWriteLFIndent(fIndent, fOptions, fStrimW);
-				spWriteString(curName, useSingleQuotes, fStrimW);
-				fStrimW << ": ";
+					fChanW << ",";
+				spWriteLFIndent(fIndent, fOptions, fChanW);
+				spWriteString(curName, useSingleQuotes, fChanW);
+				fChanW << ": ";
 
 				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
 				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
 				}
 			}
-		spWriteLFIndent(fIndent, fOptions, fStrimW);
-		fStrimW << "}";
+		spWriteLFIndent(fIndent, fOptions, fChanW);
+		fChanW << "}";
 		}
 	else
 		{
-		fStrimW << "{";
+		fChanW << "{";
 		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			Name curName;
-			if (ZRef<ZYadR,false> cur = iYadMapR->ReadInc(curName))
+			if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
 				{
 				break;
 				}
 			else if (fOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && fOptions.fBreakStrings)
-					fStrimW << " ";
+					fChanW << " ";
 
-				spWritePropName(curName, useSingleQuotes, fStrimW);
+				spWritePropName(curName, useSingleQuotes, fChanW);
 				if (fOptions.fBreakStrings)
-					fStrimW << " = ";
+					fChanW << " = ";
 				else
-					fStrimW << "=";
+					fChanW << "=";
 
 				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
 				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
 				cur->Accept(*this);
-				fStrimW << ";";
+				fChanW << ";";
 				}
 			else
 				{
 				if (not isFirst)
-					fStrimW << ",";
+					fChanW << ",";
 				if (fOptions.fBreakStrings)
-					fStrimW << " ";
-				spWriteString(curName, useSingleQuotes, fStrimW);
-				fStrimW << ":";
+					fChanW << " ";
+				spWriteString(curName, useSingleQuotes, fChanW);
+				fChanW << ":";
 				if (fOptions.fBreakStrings)
-					fStrimW << " ";
+					fChanW << " ";
 
 				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
 				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
@@ -999,37 +1014,38 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR)
 			wroteAny = true;
 			}
 		if (wroteAny && fOptions.fBreakStrings)
-			fStrimW << " ";
-		fStrimW << "}";
+			fChanW << " ";
+		fChanW << "}";
 		}
 	}
 
 // =================================================================================================
-// MARK: - sYadR and sToStrim
+// MARK: - sYadR and sToChan
 
-ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU)
+ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 	{
-	if (iStrimmerU)
-		return spMakeYadR_JSON(iStrimmerU, sCountedVal(ReadOptions()));
+	if (iChannerR && iChannerU)
+		return spMakeYadR_JSON(sCountedVal<ReadOptions>(), iChannerR, iChannerU);
 	return null;
 	}
 
-ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions)
+ZRef<YadR> sYadR(const ReadOptions& iReadOptions,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 	{
-	if (iStrimmerU)
-		return spMakeYadR_JSON(iStrimmerU, sCountedVal(iReadOptions));
+	if (iChannerR && iChannerU)
+		return spMakeYadR_JSON(sCountedVal(iReadOptions), iChannerR, iChannerU);
 	return null;
 	}
 
-void sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s)
-	{ sToStrim(0, WriteOptions(), iYadR, s); }
+void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& s)
+	{ sToChan(0, WriteOptions(), iYadR, s); }
 
-void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ChanW_UTF& s)
+void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
+	ZRef<YadR> iYadR, const ChanW_UTF& s)
 	{
 	if (iYadR)
 		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, s));
 	}
 
-} // namespace ZYad_JSON
+} // namespace Yad_JSON
 } // namespace ZooLib

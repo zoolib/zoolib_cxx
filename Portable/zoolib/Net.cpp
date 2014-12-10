@@ -66,6 +66,21 @@ NetName::~NetName()
 ZQ<ZQ<ChannerComboRWClose_Bin> > NetName::QCall()
 	{ return this->Connect(); }
 
+ZQ<ChannerComboRWClose_Bin> NetName::Connect()
+	{
+	if (ZRef<NetNameLookup> theLookup = this->MakeLookup(10))
+		{
+		theLookup->Start();
+		while (not theLookup->Finished())
+			{
+			if (ZQ<ChannerComboRWClose_Bin> theQ = sCall(theLookup->CurrentAddress()))
+				return theQ;
+			theLookup->Advance();
+			}
+		}
+	return null;
+	}
+
 // =================================================================================================
 // MARK: - NetNameLookup
 
@@ -83,6 +98,9 @@ NetListener::NetListener()
 
 NetListener::~NetListener()
 	{}
+
+ZQ<ZQ<ChannerComboRWClose_Bin> > NetListener::QCall()
+	{ return this->Listen(); }
 
 ZRef<NetAddress> NetListener::GetAddress()
 	{ return null; }

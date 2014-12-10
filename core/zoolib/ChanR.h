@@ -43,6 +43,7 @@ inline bool sThrow_ExhaustedR()
 
 template <class Elmt_p>
 class ChanR
+:	public virtual Chan<Elmt_p>
 	{
 protected:
 /** \name Canonical Methods

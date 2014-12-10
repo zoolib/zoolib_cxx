@@ -18,19 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_ASCIIStrim.h"
-#include "zoolib/ZStrim.h"
+#include "zoolib/Chan_Bin_ASCIIStrim.h"
+#include "zoolib/Util_Chan_UTF.h"
+
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_ASCIIStrim
+// MARK: - ChanR_Bin_ASCIIStrim
 
-ZStreamR_ASCIIStrim::ZStreamR_ASCIIStrim(const ZStrimR& iStrimR)
-:	fStrimR(iStrimR)
+ChanR_Bin_ASCIIStrim::ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR)
+:	fChanR_UTF(iChanR)
 	{}
 
-void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+size_t ChanR_Bin_ASCIIStrim::QRead(byte* oDest, size_t iCount)
 	{
 	UTF8* localDest = reinterpret_cast<UTF8*>(oDest);
 
@@ -42,7 +43,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 			{
 			size_t countCURead;
 			size_t countCPRead;
-			fStrimR.Read(buffer, 6, &countCURead, iCount, &countCPRead);
+			sRead(buffer, 6, &countCURead, iCount, &countCPRead, fChanR_UTF);
 			if (countCURead == 0)
 				break;
 
@@ -63,7 +64,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 			{
 			// Top up our buffer with UTF8 code points.
 			size_t countRead;
-			fStrimR.Read(localDest, iCount, &countRead);
+			sRead(localDest, iCount, &countRead, iCount, nullptr, fChanR_UTF);
 			if (countRead == 0)
 				break;
 
@@ -87,31 +88,29 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRea
 			}
 		}
 
-	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<UTF8*>(oDest);
+	return localDest - reinterpret_cast<UTF8*>(oDest);
 	}
 
 // =================================================================================================
-// MARK: - ZStreamW_ASCIIStrim
+// MARK: - ChanW_Bin_ASCIIStrim
 
-ZStreamW_ASCIIStrim::ZStreamW_ASCIIStrim(const ChanW_UTF& iStrimW)
-:	fStrimW(iStrimW)
+ChanW_Bin_ASCIIStrim::ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW)
+:	fChanW_UTF(iChanW)
 	{}
 
-void ZStreamW_ASCIIStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+size_t ChanW_Bin_ASCIIStrim::QWrite(const byte* iSource, size_t iCount)
 	{
-	const char* localSource = static_cast<const char*>(iSource);
+	const byte* localSource = iSource;
 	while (iCount--)
 		{
 		UTF32 current = *localSource++;
 		if (int32(current) >= 0 && current <= 127)
 			{
-			if (not sQWrite(current, fStrimW))
+			if (not sQWrite(current, fChanW_UTF))
 				break;
 			}
 		}
-	if (oCountWritten)
-		*oCountWritten = localSource - static_cast<const char*>(iSource);
+	return localSource - iSource;
 	}
 
 } // namespace ZooLib

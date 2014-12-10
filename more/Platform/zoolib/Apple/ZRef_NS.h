@@ -17,14 +17,14 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZRef_NS_h__
-#define __ZRef_NS_h__ 1
+#ifndef __ZooLib_Apple_ZRef_NS_h__
+#define __ZooLib_Apple_ZRef_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#include "zoolib/Apple/ZCompat_NSObject.h"
+#include "zoolib/Apple/Compat_NSObject.h"
 
 #include "zoolib/ZRef.h"
 
@@ -42,4 +42,4 @@ void sCheck(NSObject*);
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZRef_NS_h__
+#endif // __ZooLib_Apple_ZRef_NS_h__

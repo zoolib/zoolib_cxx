@@ -20,16 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/Chan_Bin_FILE.h"
+#include "zoolib/Chan_UTF_Chan_Bin.h"
+#include "zoolib/Channer_Channer.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Debug.h"
 #include "zoolib/Util_Time.h"
 
-//#include "zoolib/ZStream_POSIX.h"
-//#include "zoolib/ZStreamer.h"
-//#include "zoolib/ZStrim_Stream.h"
-//#include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 
@@ -252,8 +251,15 @@ void sInstall()
 		ZRef<LogMeister> theLM = new LogMeister;
 
 		FILE* theStdOut = stdout; // Workaround for VC++
-		theLM->SetChanner(
-			sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
+		ZRef<Channer<ChanW_UTF> > theChannerW_UTF =
+			new Channer_Channer<ChanW_UTF_Chan_Bin_UTF8,ChanW_Bin>(
+				new Channer_T<ChanW_Bin_FILE>(theStdOut));
+
+//		theLM->SetChanner(
+//			sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
+
+		theLM->SetChanner(theChannerW_UTF);
+
 
 		Log::sLogMeister = theLM;
 	#endif

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_h__
-#define __ZooLib_Chan_h__ 1
+#ifndef __ZooLib_Apple_Compat_NSObject_h__
+#define __ZooLib_Apple_Compat_NSObject_h__ 1
 #include "zconfig.h"
 
-namespace ZooLib {
+#include "zoolib/Apple/ObjC.h"
 
-// =================================================================================================
-// MARK: -
+ZMACRO_ObjCClass(NSObject);
 
-// ChanR, ChanW, ChanClose, ChanPos, ChanCount and ChanCountSet do not yet have anything in common.
-// When they do, this will likely be its home.
-
-template <class Elmt_p>
-class Chan
-	{
-public:
-	typedef Elmt_p CommonElmt_t;
-	};
-
-} // namespace ZooLib
-
-#endif // __ZooLib_Chan_h__
+#endif // __ZooLib_Apple_Compat_NSObject_h__

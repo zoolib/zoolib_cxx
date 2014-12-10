@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/Multi.h"
 
 namespace ZooLib {
 
@@ -32,13 +31,15 @@ namespace ZooLib {
 
 typedef ChannerComboRW<byte> ChannerComboRW_Bin;
 
-typedef Callable<ZQ<ChannerComboRW_Bin>()> ChannerComboFactoryRW_Bin;
+//typedef Callable<ZQ<ChannerComboRW_Bin>()> ChannerComboFactoryRW_Bin;
+typedef Callable<ZQ<ChannerComboRW_Bin>()> Factory_ChannerComboRW_Bin;
 
 // ---
 
 typedef ChannerComboRWClose<byte> ChannerComboRWClose_Bin;
 
-typedef Callable<ZQ<ChannerComboRWClose_Bin>()> ChannerComboFactoryRWClose_Bin;
+//typedef Callable<ZQ<ChannerComboRWClose_Bin>()> ChannerComboFactoryRWClose_Bin;
+typedef Callable<ZQ<ChannerComboRWClose_Bin>()> Factory_ChannerComboRWClose_Bin;
 
 // ---
 

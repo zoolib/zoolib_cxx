@@ -18,54 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Unicode.h"
+#include "zoolib/Util_Chan.h"
+#include "zoolib/Util_Chan_UTF.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZUtil_Strim.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimR_Escaped
+// MARK: - ChanR_UTF_Escaped
 
-ZStrimR_Escaped::ZStrimR_Escaped(const ZStrimU& iStrimSource, UTF32 iDelimiter)
-:	fStrimSource(iStrimSource),
-	fDelimiter(iDelimiter)
+ChanR_UTF_Escaped::ChanR_UTF_Escaped(UTF32 iDelimiter,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+:	fDelimiter(iDelimiter)
+,	fChanR(iChanR)
+,	fChanU(iChanU)
 	{}
 
-ZStrimR_Escaped::~ZStrimR_Escaped()
+ChanR_UTF_Escaped::~ChanR_UTF_Escaped()
 	{}
 
-void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 	{
-	using namespace ZUtil_Strim;
+	using namespace Util_Chan;
 
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCount;
+	UTF32* localDestEnd = oDest + iCountCU;
 	while (localDestEnd > localDest)
 		{
-		UTF32 theCP;
-		if (not fStrimSource.ReadCP(theCP))
+		ZQ<UTF32> theCPQ = sQRead(fChanR);
+		if (not theCPQ)
 			throw ParseException("Unexpected end of strim whilst parsing a string");
+		UTF32 theCP = *theCPQ;
 
 		if (theCP == fDelimiter)
 			{
-			fStrimSource.Unread(theCP);
+			sUnread(theCP, fChanU);
 			break;
 			}
 
 		if (Unicode::sIsEOL(theCP))
 			{
-			fStrimSource.Unread(theCP);
+			sUnread(theCP, fChanU);
 			throw ParseException("Illegal end of line whilst parsing a string");
 			}
 
 		if (theCP == '\\')
 			{
-			if (not fStrimSource.ReadCP(theCP))
+			ZQ<UTF32> theCPQ = sQRead(fChanR);
+			if (not theCPQ)
 				throw ParseException("Unexpected end of strim whilst parsing a string");
 
+			UTF32 theCP = *theCPQ;
 			switch (theCP)
 				{
 				case '\\':
@@ -97,14 +103,16 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 					break;
 				case 'x':
 					{
-					int curDigit;
-					if (not sTryRead_HexDigit(fStrimSource, curDigit))
+					if (ZQ<int,false> theQ = sQRead_HexDigit(fChanR, fChanU))
+						{
 						throw ParseException("Illegal non-hex digit following \"\\x\"");
-
-					theCP = curDigit;
-
-					if (sTryRead_HexDigit(fStrimSource, curDigit))
-						theCP = (curDigit << 4) + curDigit;
+						}
+					else
+						{
+						theCP = *theQ;
+						while (ZQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
+							theCP = (theCP << 4) + *theQ;
+						}
 					break;
 					}
 				case 'u':
@@ -117,14 +125,15 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 					UTF32 resultCP = 0;
 					while (requiredChars--)
 						{
-						int curDigit;
-						if (not sTryRead_HexDigit(fStrimSource, curDigit))
+						if (ZQ<int,false> theQ = sQRead_HexDigit(fChanR, fChanU))
 							{
 							throw ParseException(string8("Illegal non-hex digit in \"\\")
 								+ char(theCP) + "\" escape sequence");
 							}
-
-						resultCP = (resultCP << 4) + curDigit;
+						else
+							{
+							resultCP = (resultCP << 4) + *theQ;
+							}
 						}
 					theCP = resultCP;
 					break;
@@ -141,22 +150,21 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 		*localDest++ = theCP;
 		}
 
-	if (oCount)
-		*oCount = localDest - oDest;
+	return localDest - oDest;
 	}
 
 // =================================================================================================
-// MARK: - ZStrimW_Escaped::Options
+// MARK: - ChanW_UTF_Escaped::Options
 
-ZStrimW_Escaped::Options::Options()
-:	fQuoteQuotes(true),
-	fEscapeHighUnicode(true)
+ChanW_UTF_Escaped::Options::Options()
+:	fQuoteQuotes(true)
+,	fEscapeHighUnicode(true)
 	{}
 
 // =================================================================================================
-// MARK: - ZStrimW_Escaped
+// MARK: - ChanW_UTF_Escaped
 
-ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink)
+ChanW_UTF_Escaped::ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fEOL(iOptions.fEOL),
 	fQuoteQuotes(iOptions.fQuoteQuotes),
@@ -164,14 +172,14 @@ ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ChanW_UTF& iStri
 	fLastWasCR(false)
 	{}
 
-ZStrimW_Escaped::ZStrimW_Escaped(const ChanW_UTF& iStrimSink)
+ChanW_UTF_Escaped::ChanW_UTF_Escaped(const ChanW_UTF& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fQuoteQuotes(true),
 	fEscapeHighUnicode(true),
 	fLastWasCR(false)
 	{}
 
-ZStrimW_Escaped::~ZStrimW_Escaped()
+ChanW_UTF_Escaped::~ChanW_UTF_Escaped()
 	{
 	try
 		{
@@ -192,7 +200,7 @@ static UTF32 spAsHexCP(int inInt)
 	return inInt - 10 + 'A';
 	}
 
-size_t ZStrimW_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
 	{
 	size_t localCount = iCountCU + 1;
 	while (--localCount)

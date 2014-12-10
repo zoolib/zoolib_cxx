@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2006 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanW_UTF_string.h"
+#ifndef __ZooLib_Chan_Bin_ASCIIStrim_h__
+#define __ZooLib_Chan_Bin_ASCIIStrim_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
 
+// =================================================================================================
+// MARK: - ChanR_Bin_ASCIIStrim
+
+/// A read filter stream that reads only the ASCII-range code points from a strim.
+
+class ChanR_Bin_ASCIIStrim
+:	public ChanR_Bin
+	{
+public:
+	ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR);
+	virtual size_t QRead(byte* oDest, size_t iCount);
+
+private:
+	const ChanR_UTF& fChanR_UTF;
+	};
+
+// =================================================================================================
+// MARK: - ChanW_Bin_ASCIIStrim
+
+/// A write filter stream that writes only the ASCII-range bytes to a strim.
+
+class ChanW_Bin_ASCIIStrim
+:	public ChanW_Bin
+	{
+public:
+	ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW);
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+
+private:
+	const ChanW_UTF& fChanW_UTF;
+	};
+
 } // namespace ZooLib
+
+#endif // __ZooLib_Chan_Bin_ASCIIStrim_h__

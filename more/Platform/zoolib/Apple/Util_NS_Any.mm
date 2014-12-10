@@ -18,15 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_NS_Any.h"
+#include "zoolib/Apple/Util_NS_Any.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
+#include "zoolib/Apple/Util_NS.h"
+
 #include "zoolib/Unicode.h"
+#include "zoolib/Val_Any.h"
 
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUtil_NS.h"
-#include "zoolib/ZVal_Any.h"
 
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
@@ -36,10 +37,10 @@ using std::vector;
 using namespace ZooLib;
 
 namespace ZooLib {
-namespace ZUtil_NS {
+namespace Util_NS {
 
 // =================================================================================================
-// MARK: - ZUtil_NS
+// MARK: - Util_NS
 
 ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal)
 	{
@@ -77,24 +78,24 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		else
 			return sData();
 		}
-	else if (const ZData_Any* theValue = iVal.PGet<ZData_Any>())
+	else if (const Data_Any* theValue = iVal.PGet<Data_Any>())
 		{
 		if (size_t theSize = theValue->GetSize())
 			return sData(theValue->GetPtr(), theSize);
 		else
 			return sData();
 		}
-	else if (const ZSeq_Any* theValue = iVal.PGet<ZSeq_Any>())
+	else if (const Seq_Any* theValue = iVal.PGet<Seq_Any>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
 			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
 		return theArray;
 		}
-	else if (const ZMap_Any* theValue = iVal.PGet<ZMap_Any>())
+	else if (const Map_Any* theValue = iVal.PGet<Map_Any>())
 		{
 		NSMutableDictionary* theDictionary = sDictionaryMutable();
-		for (ZMap_Any::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
+		for (Map_Any::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
 			{
 			[theDictionary
 				setObject:sDAsNSObject(iDefault, theValue->Get(ii))
@@ -173,7 +174,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 NSObject* sAsNSObject(const ZAny& iVal)
 	{ return sDAsNSObject([NSNull null], iVal); }
 
-} // namespace ZUtil_NS
+} // namespace Util_NS
 } // namespace ZooLib
 
 // =================================================================================================
@@ -209,10 +210,10 @@ NSObject* sAsNSObject(const ZAny& iVal)
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
-	ZMap_Any result;
+	Map_Any result;
 	for (id theKey, ii = [self keyEnumerator]; (theKey = [ii nextObject]); /*no inc*/)
 		{
-		const string8 theName = ZUtil_NS::sAsUTF8((NSString*)theKey);
+		const string8 theName = Util_NS::sAsUTF8((NSString*)theKey);
 		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
 		result.Set(theName, theVal);
 		}
@@ -230,7 +231,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
-	ZSeq_Any result;
+	Seq_Any result;
 	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
 		result.Append([theValue asAnyWithDefault:iDefault]);
 	return ZAny(result);
@@ -246,7 +247,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 @implementation NSData (ZAny_Additions)
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(ZData_Any([self bytes], [self length])); }
+	{ return ZAny(Data_Any([self bytes], [self length])); }
 
 @end
 

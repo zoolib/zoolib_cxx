@@ -18,14 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Chan_UTF_Chan_Bin.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Chan_XX_Unreader.h"
-#include "zoolib/ChanW_UTF_string.h"
+#include "zoolib/Channer_Channer.h"
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
 
-//#include "zoolib/ZStrimmer_Streamer.h"
-//#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/Chan_Bin_string.h"
 
 // =================================================================================================
 // MARK: -
@@ -33,43 +34,42 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
-//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU)
-//	{
-//	if (iSU)
-//		{
-//		ZYad_JSON::ReadOptions theRO;
-//		theRO.fAllowUnquotedPropertyNames = true;
-//		theRO.fAllowEquals = true;
-//		theRO.fAllowSemiColons = true;
-//		theRO.fAllowTerminators = true;
-//		theRO.fLooseSeparators = true;
-//		theRO.fAllowBinary = true;
-//		return ZYad_Any::sQFromYadR(sYadR(iChannerR, iChannerU, theRO));
-//		}
-//	return null;
-//	}
+ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU)
+	{
+	if (iChannerR and iChannerU)
+		{
+		Yad_JSON::ReadOptions theRO;
+		theRO.fAllowUnquotedPropertyNames = true;
+		theRO.fAllowEquals = true;
+		theRO.fAllowSemiColons = true;
+		theRO.fAllowTerminators = true;
+		theRO.fLooseSeparators = true;
+		theRO.fAllowBinary = true;
+		return Yad_Any::sQFromYadR(sYadR(theRO, iChannerR, iChannerU));
+		}
+	return null;
+	}
 
 ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR)
 	{
-	ZRef<Channer_FT<Chan_XX_Unreader<UTF32> > > theChanner =
-		new Channer_FT<Chan_XX_Unreader<UTF32> >(iChannerR);
+	ZRef<Channer_XX_Unreader<UTF32> > theChanner = new Channer_XX_Unreader<UTF32>(iChannerR);
 	return sQRead(theChanner, theChanner);
 	}
 
 ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	return sQRead(ZRef<ZStrimmerR>(sStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iSR)));
+	return sQRead(new Channer_Channer<ChanR_UTF_Chan_Bin_UTF8,ChanR_Bin>(iChannerR));
 	}
 
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
-	{ ZYad_JSON::sToStrim(sYadR(iVal), iChanW); }
+	{ Yad_JSON::sToChan(sYadR(iVal), iChanW); }
 
 void sWrite(bool iPrettyPrint, const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{
 	if (iPrettyPrint)
-		ZYad_JSON::sToStrim(0, ZYadOptions(true), sYadR(iVal), iChanW);
+		Yad_JSON::sToChan(0, YadOptions(true), sYadR(iVal), iChanW);
 	else
-		ZYad_JSON::sToStrim(sYadR(iVal), iChanW);
+		Yad_JSON::sToChan(sYadR(iVal), iChanW);
 	}
 
 string8 sAsJSON(const Val_Any& iVal)
@@ -79,12 +79,122 @@ string8 sAsJSON(const Val_Any& iVal)
 	return result;
 	}
 
-const ZVal_Any sFromJSON(const string8& iString)
+//// =================================================================================================
+//// MARK: - ChannerRW_T
+//
+//template <class Chan_p, class Elmt_p>
+//class ChannerRW_T
+//:	public Channer<ChanR<Elmt_p> >
+//,	public Channer<ChanW<Elmt_p> >
+//	{
+//public:
+//	ChannerRW_T()
+//		{}
+//
+//	template <class P>
+//	ChannerRW_T(P& iParam)
+//	:	fChan(iParam)
+//		{}
+//
+//	template <class P>
+//	ChannerRW_T(const P& iParam)
+//	:	fChan(iParam)
+//		{}
+//
+//	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
+//		{ oChanPtr = &fChan; }
+//
+//	virtual void GetChan(const ChanW<Elmt_p>*& oChanPtr)
+//		{ oChanPtr = &fChan; }
+//
+//	Chan_p fChan;
+//	};
+
+#if 1
+
+// =================================================================================================
+// MARK: - ChannerRU_T
+
+template <class Chan_p>
+class ChannerRU_T
+:	public Channer<ChanR<typename Chan_p::CommonElmt_t> >
+,	public Channer<ChanU<typename Chan_p::CommonElmt_t> >
 	{
-	ZRef<ZStrimmerU> theStrimmerU = new ZStrimmerU_T<ZStrimU_String>(iString);
-	return sQRead(theStrimmerU).Get();
+public:
+	ChannerRU_T()
+		{}
+
+	template <class P>
+	ChannerRU_T(P& iParam)
+	:	fChan(iParam)
+		{}
+
+	template <class P>
+	ChannerRU_T(const P& iParam)
+	:	fChan(iParam)
+		{}
+
+	virtual void GetChan(const ChanR<typename Chan_p::CommonElmt_t>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+	virtual void GetChan(const ChanU<typename Chan_p::CommonElmt_t>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+	Chan_p fChan;
+	};
+
+// =================================================================================================
+// MARK: -
+
+const Val_Any sFromJSON(const string8& iString)
+	{
+	ZRef<ChannerRU_T<ChanRU_UTF_string8> > theChanner =
+		new ChannerRU_T<ChanRU_UTF_string8>(iString);
+	return sQRead(theChanner, theChanner).Get();
 	}
 
+#else
+// =================================================================================================
+// MARK: - ChannerRU_T
+
+template <class Chan_p, class Elmt_p>
+class ChannerRU_T
+:	public Channer<ChanR<Elmt_p> >
+,	public Channer<ChanU<Elmt_p> >
+	{
+public:
+	ChannerRU_T()
+		{}
+
+	template <class P>
+	ChannerRU_T(P& iParam)
+	:	fChan(iParam)
+		{}
+
+	template <class P>
+	ChannerRU_T(const P& iParam)
+	:	fChan(iParam)
+		{}
+
+	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+	virtual void GetChan(const ChanU<Elmt_p>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+	Chan_p fChan;
+	};
+
+// =================================================================================================
+// MARK: -
+
+const Val_Any sFromJSON(const string8& iString)
+	{
+	ZRef<ChannerRU_T<ChanRU_UTF_string8,UTF32> > theChanner =
+		new ChannerRU_T<ChanRU_UTF_string8,UTF32>(iString);
+	return sQRead(theChanner, theChanner).Get();
+	}
+#endif
 } // namespace Util_Any_JSON
 
 namespace Operators_Any_JSON {

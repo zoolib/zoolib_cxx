@@ -18,22 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_JSON_h__
-#define __ZYad_JSON_h__ 1
+#ifndef __ZooLib_Yad_JSON_h__
+#define __ZooLib_Yad_JSON_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Chan_UTF_Escaped.h"
+#include "zoolib/Chan_XX_Terminated.h"
+#include "zoolib/Chan_Bin_AsciiStrim.h"
+#include "zoolib/Chan_Bin_Base64.h"
+#include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/CountedVal.h"
-
-#include "zoolib/ZStream_ASCIIStrim.h"
-#include "zoolib/ZStream_Base64.h"
-#include "zoolib/ZStreamR_Boundary.h"
-#include "zoolib/ZStreamR_HexStrim.h"
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
-namespace ZYad_JSON {
+namespace Yad_JSON {
 
 // =================================================================================================
 // MARK: - ReadOptions
@@ -53,10 +51,10 @@ ReadOptions sReadOptions_Extended();
 // =================================================================================================
 // MARK: - WriteOptions
 
-struct WriteOptions : ZYadOptions
+struct WriteOptions : YadOptions
 	{
 	WriteOptions();
-	WriteOptions(const ZYadOptions& iOther);
+	WriteOptions(const YadOptions& iOther);
 	WriteOptions(const WriteOptions& iOther);
 
 	ZQ<bool> fUseExtendedNotation;
@@ -68,7 +66,7 @@ struct WriteOptions : ZYadOptions
 // =================================================================================================
 // MARK: - ParseException
 
-class ParseException : public ZYadParseException_Std
+class ParseException : public YadParseException_Std
 	{
 public:
 	ParseException(const std::string& iWhat);
@@ -79,132 +77,144 @@ public:
 // MARK: - YadStreamerR_Hex
 
 class YadStreamerR_Hex
-:	public ZYadStreamerR
+:	public YadStreamerR
 	{
 public:
-	YadStreamerR_Hex(ZRef<ZStrimmerU> iStrimmerU);
+	YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From ZYadR
+// From YadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamerR
-	const ZStreamR& GetStreamR();
+// From ChannerR via YadStreamerR
+	virtual void GetChan(const ChanR_Bin*& oChanPtr);
 
 private:
-	ZRef<ZStrimmerU> fStrimmerU;
-	ZStreamR_HexStrim fStreamR;
+	ZRef<ChannerR_UTF> fChannerR;
+	ZRef<ChannerU_UTF> fChannerU;
+	ChanR_Bin_HexStrim fChanR;
 	};
 
 // =================================================================================================
 // MARK: - YadStreamerR_Base64
 
 class YadStreamerR_Base64
-:	public ZYadStreamerR
+:	public YadStreamerR
 	{
 public:
-	YadStreamerR_Base64(const Base64::Decode& iDecode, ZRef<ZStrimmerU> iStrimmerU);
+	YadStreamerR_Base64(const Base64::Decode& iDecode,
+		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From ZYadR
+// From YadR
 	virtual void Finish();
 
-// From ZStreamerR via ZYadStreamerR
-	const ZStreamR& GetStreamR();
+// From ChannerR via YadStreamerR
+	virtual void GetChan(const ChanR_Bin*& oChanPtr);
 
 private:
-	ZRef<ZStrimmerU> fStrimmerU;
-	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
-	ZStreamR_Boundary fStreamR_Boundary;
-	Base64::StreamR_Decode fStreamR;
+	ZRef<ChannerR_UTF> fChannerR;
+	ZRef<ChannerU_UTF> fChannerU;
+	ChanR_Bin_ASCIIStrim fChanR_Bin_ASCIIStrim;
+	ChanR_XX_Terminated<byte> fChanR_Bin_Boundary;
+	ChanR_Bin_Base64Decode fChanR;
 	};
 
 // =================================================================================================
-// MARK: - YadStrimmerR
+// MARK: - YadStrimmerR_JSON
 
-class YadStrimmerR
-:	public ZYadStrimmerR
+class YadStrimmerR_JSON
+:	public ZooLib::YadStrimmerR
 	{
 public:
-	YadStrimmerR(ZRef<ZStrimmerU> iStrimmerU);
+	YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From ZYadR
+// From YadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimmerR
-	const ZStrimR& GetStrimR();
+// From ChannerR via YadStrimmerR
+	virtual void GetChan(const ChanR_UTF*& oChanPtr);
 
 private:
-	ZRef<ZStrimmerU> fStrimmerU;
-	ZStrimR_Escaped fStrimR;
+	ZRef<ChannerR_UTF> fChannerR;
+	ZRef<ChannerU_UTF> fChannerU;
+	ChanR_UTF_Escaped fChanR;
 	};
 
 // =================================================================================================
-// MARK: - YadSeqR
+// MARK: - YadSeqR_JSON
 
-class YadSeqR : public ZYadSeqR_Std
+class YadSeqR_JSON
+:	public YadSeqR_Std
 	{
 public:
-	YadSeqR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO);
+	YadSeqR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From ZYadSeqR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
+// From YadSeqR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZStrimmerU> fStrimmerU;
 	const ZRef<CountedVal<ReadOptions> > fRO;
+	ZRef<ChannerR_UTF> fChannerR;
+	ZRef<ChannerU_UTF> fChannerU;
 	};
 
 // =================================================================================================
-// MARK: - YadMapR
+// MARK: - YadMapR_JSON
 
-class YadMapR : public ZYadMapR_Std
+class YadMapR_JSON
+:	public YadMapR_Std
 	{
 public:
-	YadMapR(ZRef<ZStrimmerU> iStrimmerU, const ZRef<CountedVal<ReadOptions> >& iRO);
+	YadMapR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR);
+// From YadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZStrimmerU> fStrimmerU;
 	const ZRef<CountedVal<ReadOptions> > fRO;
+	ZRef<ChannerR_UTF> fChannerR;
+	ZRef<ChannerU_UTF> fChannerU;
 	};
 
 // =================================================================================================
 // MARK: - Visitor_Writer
 
-class Visitor_Writer : public ZVisitor_Yad_PreferRPos
+class Visitor_Writer : public Visitor_Yad
 	{
 public:
 	Visitor_Writer(
 		size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iStrimW);
 
 // From ZVisitor_Yad
-	virtual void Visit_YadR(const ZRef<ZYadR>& iYadR);
-	virtual void Visit_YadAtomR(const ZRef<ZYadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamerR(const ZRef<ZYadStreamerR>& iYadStreamerR);
-	virtual void Visit_YadStrimmerR(const ZRef<ZYadStrimmerR>& iYadStrimmerR);
-	virtual void Visit_YadSeqR(const ZRef<ZYadSeqR>& iYadSeqR);
-	virtual void Visit_YadMapR(const ZRef<ZYadMapR>& iYadMapR);
+	virtual void Visit_YadR(const ZRef<ZooLib::YadR>& iYadR);
+	virtual void Visit_YadAtomR(const ZRef<ZooLib::YadAtomR>& iYadAtomR);
+	virtual void Visit_YadStreamerR(const ZRef<ZooLib::YadStreamerR>& iYadStreamerR);
+	virtual void Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR);
+	virtual void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR);
+	virtual void Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR);
 
 private:
 	size_t fIndent;
 	const WriteOptions fOptions;
-	const ChanW_UTF& fStrimW;
+	const ChanW_UTF& fChanW;
 	bool fMayNeedInitialLF;
 	};
 
 // =================================================================================================
 // MARK: - sYadR and sToStrim
 
-ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU);
-ZRef<ZYadR> sYadR(ZRef<ZStrimmerU> iStrimmerU, const ReadOptions& iReadOptions);
+ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-void sToStrim(ZRef<ZYadR> iYadR, const ChanW_UTF& s);
+ZRef<YadR> sYadR(const ReadOptions& iReadOptions,
+	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-void sToStrim(size_t iInitialIndent, const WriteOptions& iOptions,
-	ZRef<ZYadR> iYadR, const ChanW_UTF& s);
+void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& w);
 
-} // namespace ZYad_JSON
+void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
+	ZRef<YadR> iYadR, const ChanW_UTF& w);
+
+} // namespace Yad_JSON
 } // namespace ZooLib
 
-#endif // __ZYad_JSON_h__
+#endif // __ZooLib_Yad_JSON_h__

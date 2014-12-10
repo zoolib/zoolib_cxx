@@ -18,25 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_h__
-#define __ZooLib_Chan_h__ 1
+#ifndef __ZooLib_Chan_XX_Terminated_h__
+#define __ZooLib_Chan_XX_Terminated_h__ 1
 #include "zconfig.h"
+
+#include "zoolib/ChanR.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_XX_Tee
 
-// ChanR, ChanW, ChanClose, ChanPos, ChanCount and ChanCountSet do not yet have anything in common.
-// When they do, this will likely be its home.
-
-template <class Elmt_p>
-class Chan
+template <class XX>
+class ChanR_XX_Terminated
+:	public ChanR<XX>
 	{
 public:
-	typedef Elmt_p CommonElmt_t;
+	typedef XX Elmt_t;
+
+	ChanR_XX_Terminated(Elmt_t iTerminator, const ChanR<XX>& iChanR)
+	:	fTerminator(iTerminator)
+	,	fChanR(iChanR)
+	,	fHitTerminator(false)
+		{}
+
+// From ChanR
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+		{
+		size_t countRemaining = iCount;
+		while (countRemaining)
+			{
+			if (ZQ<Elmt_t,false> theQ = sQRead(fChanR))
+				{
+				break;
+				}
+			else
+				{
+				if (*theQ == fTerminator)
+					{
+					fHitTerminator = true;
+					break;
+					}
+				*oDest++ = *theQ;
+				--countRemaining;
+				}
+			}
+		return iCount - countRemaining;
+		}
+
+	virtual size_t Readable()
+		{ return sReadable(fChanR); }
+
+// Our protocol
+	bool HitTerminator()
+		{ return fHitTerminator; }
+
+protected:
+	const Elmt_t fTerminator;
+	const ChanR<XX>& fChanR;
+	bool fHitTerminator;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_h__
+#endif // __ZooLib_Chan_XX_Terminated_h__

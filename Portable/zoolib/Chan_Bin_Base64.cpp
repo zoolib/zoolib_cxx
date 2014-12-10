@@ -18,8 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_Base64.h"
-#include "zoolib/ZDebug.h"
+#include "zoolib/Chan_Bin_Base64.h"
 
 namespace ZooLib {
 namespace Base64 {
@@ -126,30 +125,30 @@ Decode sDecode_Normal()
 Encode sEncode_Normal()
 	{ return sEncode('+', '/', '='); }
 
+} // namespace Base64
+
 // =================================================================================================
-// MARK: - StreamR_Decode
+// MARK: - ChanR_Bin_Base64Decode
 
-StreamR_Decode::StreamR_Decode(const ZStreamR& iStreamSource)
-:	fDecode(sDecode_Normal())
-,	fStreamSource(iStreamSource)
+ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR)
+:	fDecode(Base64::sDecode_Normal())
+,	fChanR(iChanR)
 ,	fSinkCount(3)
 	{}
 
-StreamR_Decode::StreamR_Decode(const Decode& iDecode, const ZStreamR& iStreamSource)
+ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(
+	const Base64::Decode& iDecode, const ChanR_Bin& iChanR)
 :	fDecode(iDecode)
-,	fStreamSource(iStreamSource)
+,	fChanR(iChanR)
 ,	fSinkCount(3)
 	{}
 
-StreamR_Decode::~StreamR_Decode()
+ChanR_Bin_Base64Decode::~ChanR_Bin_Base64Decode()
 	{}
 
-void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+size_t ChanR_Bin_Base64Decode::QRead(byte* oDest, size_t iCount)
 	{
-	if (oCountRead)
-		*oCountRead = 0;
-
-	uint8* localDest = reinterpret_cast<uint8*>(oDest);
+	byte* localDest = oDest;
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
@@ -159,8 +158,6 @@ void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			*localDest++ = fSinkBuf[fSinkCount];
 			--countRemaining;
 			++fSinkCount;
-			if (oCountRead)
-				++*oCountRead;
 			}
 
 		if (countRemaining)
@@ -169,11 +166,11 @@ void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			uint32 source = 0;
 			while (sourceCount < 4)
 				{
-				uint8 currChar;
-				if (not fStreamSource.ReadByte(currChar))
+				ZQ<byte> curByteQ = sQRead(fChanR);
+				if (not curByteQ)
 					break;
 
-				const uint8 c = fDecode.fTable[currChar];
+				const uint8 c = fDecode.fTable[*curByteQ];
 				if (c == 0xFF)
 					{
 					// Ignore
@@ -195,7 +192,7 @@ void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 
 			if (sourceCount != 4)
 				{
-				ZDebugLogf(1, ("StreamR_Decode::Imp_Read, base64 stream was truncated"));
+				ZDebugLogf(1, ("ChanR_Bin_Base64Decode::Imp_Read, base64 stream was truncated"));
 				break;
 				}
 
@@ -205,41 +202,39 @@ void StreamR_Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			fSinkCount = 0;
 			}
 		}
+	return localDest - oDest;
 	}
 
 // =================================================================================================
-// MARK: - StreamW_Encode
+// MARK: - ChanW_Bin_Base64Encode
 
-StreamW_Encode::StreamW_Encode(const ZStreamW& iStreamSink)
-:	fEncode(sEncode_Normal())
-,	fStreamSink(iStreamSink)
+ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW)
+:	fEncode(Base64::sEncode_Normal())
+,	fChanW(iChanW)
 ,	fSourceCount(0)
 	{}
 
-StreamW_Encode::StreamW_Encode(const Encode& iEncode, const ZStreamW& iStreamSink)
+ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(
+	const Base64::Encode& iEncode, const ChanW_Bin& iChanW)
 :	fEncode(iEncode)
-,	fStreamSink(iStreamSink)
+,	fChanW(iChanW)
 ,	fSourceCount(0)
 	{}
 
-StreamW_Encode::~StreamW_Encode()
+ChanW_Bin_Base64Encode::~ChanW_Bin_Base64Encode()
 	{
 	if (fSourceCount > 0)
 		{
 		uint8 sinkBuf[4];
-		spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
-		size_t countWritten;
-		fStreamSink.Write(sinkBuf, 4, &countWritten);
+		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
+		sQWrite(sinkBuf, 4, fChanW);
 		fSourceCount = 0;
 		}
 	}
 
-void StreamW_Encode::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+size_t ChanW_Bin_Base64Encode::QWrite(const byte* iSource, size_t iCount)
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
-
-	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
+	const byte* localSource = iSource;
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
@@ -248,32 +243,29 @@ void StreamW_Encode::Imp_Write(const void* iSource, size_t iCount, size_t* oCoun
 			fSourceBuf[fSourceCount] = *localSource++;
 			++fSourceCount;
 			--countRemaining;
-			if (oCountWritten)
-				++*oCountWritten;
 			}
 
 		if (fSourceCount == 3)
 			{
 			uint8 sinkBuf[4];
-			spEncode(fEncode, fSourceBuf, 3, sinkBuf);
+			Base64::spEncode(fEncode, fSourceBuf, 3, sinkBuf);
+			sQWrite(sinkBuf, 4, fChanW);
 			fSourceCount = 0;
-			size_t countWritten;
-			fStreamSink.Write(sinkBuf, 4, &countWritten);
 			}
 		}
+	return localSource - iSource;
 	}
 
-void StreamW_Encode::Imp_Flush()
+void ChanW_Bin_Base64Encode::Flush()
 	{
 	if (fSourceCount > 0)
 		{
 		uint8 sinkBuf[4];
-		spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
+		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
+		sQWrite(sinkBuf, 4, fChanW);
 		fSourceCount = 0;
-		fStreamSink.Write(sinkBuf, 4);
 		}
-	fStreamSink.Flush();
+	sFlush(fChanW);
 	}
 
-} // namespace Base64
 } // namespace ZooLib

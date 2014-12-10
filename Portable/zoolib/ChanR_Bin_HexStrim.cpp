@@ -18,55 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamW_HexStrim_h__
-#define __ZStreamW_HexStrim_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ChanW_UTF_InsertSeparator.h"
-
-#include "zoolib/ZStream.h"
+#include "zoolib/ChanR_Bin_HexStrim.h"
+#include "zoolib/Util_Chan_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamW_HexStrim_Real
+// MARK: - ChanR_Bin_HexStrim
 
-class ZStreamW_HexStrim_Real : public ZStreamW
+ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+:	fChanR(iChanR)
+,	fChanU(iChanU)
+,	fAllowUnderscore(false)
+	{}
+
+ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+:	fChanR(iChanR)
+,	fChanU(iChanU)
+,	fAllowUnderscore(iAllowUnderscore)
+	{}
+
+ChanR_Bin_HexStrim::~ChanR_Bin_HexStrim()
+	{}
+
+size_t ChanR_Bin_HexStrim::QRead(byte* oDest, size_t iCount)
 	{
-public:
-	ZStreamW_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iStrimSink);
+	using namespace Util_Chan;
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+	byte* localDest = oDest;
 
-protected:
-	const ChanW_UTF& fStrimSink;
-	const char* fHexDigits;
-	};
+	while (iCount)
+		{
+		sSkip_WSAndCPlusPlusComments(fChanR, fChanU);
 
-// =================================================================================================
-// MARK: - ZStreamW_HexStrim
+		ZQ<int> firstDigitQ = sQRead_HexDigit(fChanR, fChanU);
+		if (not firstDigitQ)
+			{
+			if (not fAllowUnderscore || not sTryRead_CP('_', fChanR, fChanU))
+				break;
+			firstDigitQ = 0;
+			}
 
-class ZStreamW_HexStrim : public ZStreamW
-	{
-public:
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize, const ChanW_UTF& iStrimSink);
+		sSkip_WSAndCPlusPlusComments(fChanR, fChanU);
 
-	ZStreamW_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize,
-		bool iUseUnderscore, const ChanW_UTF& iStrimSink);
+		ZQ<int> secondDigitQ = sQRead_HexDigit(fChanR, fChanU);
+		if (not secondDigitQ)
+			{
+			if (not fAllowUnderscore || not sTryRead_CP('_', fChanR, fChanU))
+				throw ParseException("Could not read second nibble of byte");
+			secondDigitQ = 0;
+			}
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+		*localDest++ = *firstDigitQ * 16 + *secondDigitQ;
+		--iCount;
+		}
 
-protected:
-	ChanW_UTF_InsertSeparator fStrim;
-	ZStreamW_HexStrim_Real fStream;
-	};
+	return localDest - oDest;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZStreamW_HexStrim_h__

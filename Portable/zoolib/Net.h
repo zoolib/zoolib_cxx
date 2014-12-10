@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Net_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compat_NonCopyable.h"
-#include "zoolib/Connection.h" // For ChannerComboFactoryRWClose_Bin
+//###include "zoolib/Compat_NonCopyable.h"
+#include "zoolib/Connection.h" // For Factory_ChannerComboRWClose_Bin
 
 #include <string>
 #include <stdexcept> // For runtime_error
@@ -73,7 +73,7 @@ private:
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
-:	public ChannerComboFactoryRWClose_Bin
+:	public Factory_ChannerComboRWClose_Bin
 	{
 protected:
 	NetAddress();
@@ -81,7 +81,7 @@ protected:
 public:
 	virtual ~NetAddress();
 
-// From ChannerComboFactoryRWClose_Bin
+// From Factory_ChannerComboRWClose_Bin
 	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
 
 // Our protocol
@@ -117,7 +117,7 @@ public:
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
-:	public ChannerComboFactoryRWClose_Bin
+:	public Factory_ChannerComboRWClose_Bin
 	{
 protected:
 	NetName();
@@ -125,11 +125,11 @@ protected:
 public:
 	virtual ~NetName();
 
-// From ChannerComboFactoryRWClose_Bin
+// From Factory_ChannerComboRWClose_Bin
 	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
 
 // Our protocol
-	virtual ZQ<ChannerComboRWClose_Bin> Connect() = 0;
+	virtual ZQ<ChannerComboRWClose_Bin> Connect();
 
 	virtual std::string AsString() = 0;
 
@@ -164,7 +164,7 @@ public:
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener
-:	public ChannerComboFactoryRWClose_Bin
+:	public Factory_ChannerComboRWClose_Bin
 	{
 protected:
 	NetListener();
@@ -172,7 +172,7 @@ protected:
 public:
 	virtual ~NetListener();
 
-// From ChannerComboFactoryRWClose_Bin
+// From Factory_ChannerComboRWClose_Bin
 	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
 
 // Our protocol

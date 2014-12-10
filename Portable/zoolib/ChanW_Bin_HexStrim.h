@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2006 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,47 +18,56 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_ASCIIStrim_h__
-#define __ZStream_ASCIIStrim_h__ 1
+#ifndef __ZooLib_ChanW_Bin_HexStrim_h__
+#define __ZooLib_ChanW_Bin_HexStrim_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
-#include "zoolib/ChanW_UTF.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/ChanW_UTF_InsertSeparator.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_ASCIIStrim
+// MARK: - ChanW_Bin_HexStrim_Real
 
-class ZStrimR;
-
-/// A read filter stream that reads only the ASCII-range code points from a strim.
-
-class ZStreamR_ASCIIStrim : public ZStreamR
+class ChanW_Bin_HexStrim_Real
+:	public ChanW_Bin
 	{
 public:
-	ZStreamR_ASCIIStrim(const ZStrimR& iStrimR);
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+	ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF);
 
-private:
-	const ZStrimR& fStrimR;
+// From ChanW_Bin
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual void Flush();
+
+protected:
+	const ChanW_UTF& fChanW_UTF;
+	const char* fHexDigits;
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_ASCIIStrim
+// MARK: - ChanW_Bin_HexStrim
 
-/// A write filter stream that writes only the ASCII-range bytes to a strim.
-
-class ZStreamW_ASCIIStrim : public ZStreamW
+class ChanW_Bin_HexStrim
+:	public ChanW_Bin
 	{
 public:
-	ZStreamW_ASCIIStrim(const ChanW_UTF& iStrimW);
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	ChanW_Bin_HexStrim(const std::string& iByteSeparator,
+		const std::string& iChunkSeparator, size_t iChunkSize, const ChanW_UTF& iChanW_UTF);
 
-private:
-	const ChanW_UTF& fStrimW;
+	ChanW_Bin_HexStrim(const std::string& iByteSeparator,
+		const std::string& iChunkSeparator, size_t iChunkSize,
+		bool iUseUnderscore, const ChanW_UTF& iStrimSink);
+
+// From ChanW_Bin
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual void Flush();
+
+protected:
+	ChanW_UTF_InsertSeparator fChanW_UTF;
+	ChanW_Bin_HexStrim_Real fChanW_Bin;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZStream_ASCIIStrim_h__
+#endif // __ZooLib_ChanW_Bin_HexStrim_h__

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanU.h"
+#include "zoolib/Channer.h"
 
 #include <vector>
 
@@ -86,6 +87,33 @@ protected:
 	const ChanR<Elmt_t>& fChanR;
 	std::vector<Elmt_t> fStack;
 	};
+
+// =================================================================================================
+// MARK: - Channer_XX_Unreader
+
+template <class XX>
+class Channer_XX_Unreader
+:	public Channer<ChanR<XX> >
+,	public Channer<ChanU<XX> >
+	{
+public:
+	Channer_XX_Unreader(const ZRef<Channer<ChanR<XX> > >& iChannerR)
+	:	fChannerR(iChannerR)
+	,	fChan(sGetChan(iChannerR))
+		{}
+
+// From Channer<ChanR<XX> >
+	virtual void GetChan(const ChanR<XX>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+// From Channer<ChanU<XX> >
+	virtual void GetChan(const ChanU<XX>*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+	ZRef<Channer<ChanR<XX> > > fChannerR;
+	Chan_XX_Unreader<XX> fChan;
+	};
+
 
 } // namespace ZooLib
 

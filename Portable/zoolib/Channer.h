@@ -65,13 +65,11 @@ typedef Channer<ChanCountSet> ChannerCountSet;
 // =================================================================================================
 // MARK: - Channer_T
 
-template <class Chan_p, class Chan_Base_p = typename Chan_p::Chan_Base>
+template <class Chan_p, class Chan_Self_p = typename Chan_p::Chan_Base>
 class Channer_T
-:	public virtual Channer<Chan_Base_p>
+:	public virtual Channer<Chan_Self_p>
 	{
 public:
-	typedef Chan_Base_p Chan_Base;
-
 	Channer_T() {}
 	virtual ~Channer_T() {}
 
@@ -82,7 +80,7 @@ public:
 	Channer_T(const Param_p& iParam) : fChan(iParam) {}
 
 // From Channer
-	virtual void GetChan(const Chan_Base*& oChanPtr) { oChanPtr = &fChan; }
+	virtual void GetChan(const Chan_Self_p*& oChanPtr) { oChanPtr = &fChan; }
 
 // Our protocol
 	Chan_p& GetChanActual() { return fChan; }
@@ -103,63 +101,63 @@ template <class Chan_p, class Param_p>
 ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
 	{ return new Channer_T<Chan_p>(iParam); }
 
-// =================================================================================================
-// MARK: - Channer_FT
 
-template <class Chan_p, class Chan_Base_p = typename Chan_p::Chan_Base>
-class Channer_FT
-:	public virtual Channer<Chan_Base_p>
-	{
-protected:
-	Channer_FT() {}
-
-public:
-	typedef Chan_Base_p Chan_Base;
-
-	virtual ~Channer_FT() {}
-
-	Channer_FT(const ZRef<Channer<Chan_Base> >& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(sGetChan(fChannerReal))
-		{}
-
-	template <class Param_p>
-	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, sGetChan(fChannerReal))
-		{}
-
-	template <class Param_p>
-	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Base> >& iChanner)
-	:	fChannerReal(iChanner)
-	,	fChan(iParam, sGetChan(fChannerReal))
-		{}
-
-// From Channer
-	virtual void GetChan(const Chan_Base*& oChanPtr) { oChanPtr = &fChan; }
-
-// Our protocol
-	Chan_p& GetChanActual() { return fChan; }
-
-protected:
-	ZRef<Channer<Chan_Base> > fChannerReal;
-	Chan_p fChan;
-	};
-
-template <class Chan_p>
-ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-	const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-	{ return new Channer_FT<Chan_p>; }
-
-template <class Chan_p, class Param_p>
-ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-	Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
-
-template <class Chan_p, class Param_p>
-ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-	const Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
+// See Channer_Channer for a (I think) more general version of Channer_FT
+//// =================================================================================================
+//// MARK: - Channer_FT
+//
+//template <class Chan_p, class Chan_Self_p = typename Chan_p::Chan_Base>
+//class Channer_FT
+//:	public virtual Channer<Chan_Self_p>
+//	{
+//protected:
+//	Channer_FT() {}
+//
+//public:
+//	virtual ~Channer_FT() {}
+//
+//	Channer_FT(const ZRef<Channer<Chan_Self_p> >& iChanner)
+//	:	fChannerReal(iChanner)
+//	,	fChan(sGetChan(fChannerReal))
+//		{}
+//
+//	template <class Param_p>
+//	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Self_p> >& iChanner)
+//	:	fChannerReal(iChanner)
+//	,	fChan(iParam, sGetChan(fChannerReal))
+//		{}
+//
+//	template <class Param_p>
+//	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Self_p> >& iChanner)
+//	:	fChannerReal(iChanner)
+//	,	fChan(iParam, sGetChan(fChannerReal))
+//		{}
+//
+//// From Channer
+//	virtual void GetChan(const Chan_Self_p*& oChanPtr) { oChanPtr = &fChan; }
+//
+//// Our protocol
+//	Chan_p& GetChanActual() { return fChan; }
+//
+//protected:
+//	ZRef<Channer<Chan_Self_p> > fChannerReal;
+//	Chan_p fChan;
+//	};
+//
+//template <class Chan_p>
+//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+//	const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+//	{ return new Channer_FT<Chan_p>; }
+//
+//template <class Chan_p, class Param_p>
+//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+//	Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+//	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
+//
+//template <class Chan_p, class Param_p>
+//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
+//	const Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
+//	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
 
 // =================================================================================================
 // MARK: - ChannerComboRW

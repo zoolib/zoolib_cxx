@@ -18,24 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_POSIX_h__
-#define __ZStream_POSIX_h__ 1
+#ifndef __ZooLib_Chan_Bin_FILE_h__
+#define __ZooLib_Chan_Bin_FILE_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamer.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
 
 #include <stdio.h>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStream_FILE
+// MARK: - Chan_FILE
 
-class ZStream_FILE
+class Chan_FILE
 	{
 public:
-	ZStream_FILE(FILE* iFILE, bool iAdopt);
-	~ZStream_FILE();
+	Chan_FILE(FILE* iFILE, bool iAdopt);
+	~Chan_FILE();
 
 	FILE* GetFILE();
 	FILE* OrphanFILE();
@@ -46,74 +47,74 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamR_FILE
+// MARK: - ChanR_Bin_FILE
 
 /// A read stream that wraps a POSIX FILE*.
 
-class ZStreamR_FILE
-:	public ZStreamR
-,	public ZStream_FILE
+class ChanR_Bin_FILE
+:	public ChanR_Bin
+,	public Chan_FILE
 	{
 public:
-	ZStreamR_FILE(FILE* iFILE);
-	ZStreamR_FILE(FILE* iFILE, bool iAdopt);
+	ChanR_Bin_FILE(FILE* iFILE);
+	ChanR_Bin_FILE(FILE* iFILE, bool iAdopt);
 
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+// From ChanR_Bin
+	virtual size_t QRead(byte* oDest, size_t iCount);
 	};
 
+//// =================================================================================================
+//// MARK: - ZStreamRPos_FILE
+//
+///// A positionable read stream that wraps a POSIX FILE*.
+//
+//class ZStreamRPos_FILE
+//:	public ZStreamRPos
+//,	public Chan_FILE
+//	{
+//public:
+//	ZStreamRPos_FILE(FILE* iFILE);
+//	ZStreamRPos_FILE(FILE* iFILE, bool iAdopt);
+//
+//// From ZStreamR
+//	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+//
+//// From ZStreamRPos
+//	virtual uint64 Imp_GetPosition();
+//	virtual void Imp_SetPosition(uint64 iPosition);
+//
+//	virtual uint64 Imp_GetSize();
+//	};
+
 // =================================================================================================
-// MARK: - ZStreamRPos_FILE
-
-/// A positionable read stream that wraps a POSIX FILE*.
-
-class ZStreamRPos_FILE
-:	public ZStreamRPos
-,	public ZStream_FILE
-	{
-public:
-	ZStreamRPos_FILE(FILE* iFILE);
-	ZStreamRPos_FILE(FILE* iFILE, bool iAdopt);
-
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-
-// From ZStreamRPos
-	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 iPosition);
-
-	virtual uint64 Imp_GetSize();
-	};
-
-// =================================================================================================
-// MARK: - ZStreamW_FILE
+// MARK: - ChanW_Bin_FILE
 
 /// A write stream that wraps a POSIX FILE*.
 
-class ZStreamW_FILE
-:	public ZStreamW
-,	public ZStream_FILE
+class ChanW_Bin_FILE
+:	public ChanW_Bin
+,	public Chan_FILE
 	{
 public:
-	ZStreamW_FILE(FILE* iFILE);
-	ZStreamW_FILE(FILE* iFILE, bool iAdopt);
+	ChanW_Bin_FILE(FILE* iFILE);
+	ChanW_Bin_FILE(FILE* iFILE, bool iAdopt);
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+// From ChanW_Bin
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual void Flush();
 	};
 
-// =================================================================================================
-// MARK: - FILE backed by a ZStream or ZStreamer
-
-FILE* sStreamOpen(const ZStreamR& iStreamR);
-FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);
-FILE* sStreamOpen(const ZStreamW& iStreamW);
-
-FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR);
-FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos);
-FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW);
+//// =================================================================================================
+//// MARK: - FILE backed by a ZStream or ZStreamer
+//
+//FILE* sStreamOpen(const ZStreamR& iStreamR);
+//FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);
+//FILE* sStreamOpen(const ZStreamW& iStreamW);
+//
+//FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR);
+//FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos);
+//FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW);
 
 } // namespace ZooLib
 
-#endif // __ZStream_POSIX_h__
+#endif // __ZooLib_Chan_Bin_FILE_h__

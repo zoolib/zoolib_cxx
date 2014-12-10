@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Util_Chan.h"
 
@@ -32,15 +33,83 @@ namespace Util_Chan {
 // =================================================================================================
 // MARK: -
 
+class ParseException : public std::runtime_error
+	{
+public:
+	ParseException(const char* iWhat) : runtime_error(iWhat) {}
+	ParseException(const std::string& iWhat) : runtime_error(iWhat.c_str()) {}
+	};
+
+// =================================================================================================
+// MARK: -
+
+string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
+
+// -----------------
+
+bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+
+// -----------------
+
+ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+
+// -----------------
+
+bool sTryRead_CaselessString(const string8& iTarget,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+
+bool sTryRead_SignedGenericInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+
+bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+
+bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative);
+bool sTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble);
+
+bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+
+bool sTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble);
+
+bool sTryRead_SignedDecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble);
+
+bool sTryRead_Double(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble);
+bool sTryRead_SignedDouble(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble);
+
+// -----------------
+
 void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest);
 void sSkip_Line(const ChanR_UTF& iSource);
 string8 sRead_Line(const ChanR_UTF& iSource);
 
 // -----------------
 
-string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
+void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ChanW_UTF& oDest);
+
+void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 // -----------------
+
+void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ChanW_UTF& oDest);
+
+void sRead_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string8& oString);
+
+// -----------------
+
+bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ChanW_UTF& oDest);
+
+bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string8& oString);
+
+// =================================================================================================
+// MARK: -
 
 void sWriteExact(float iFloat, const ChanW_UTF& iChanW);
 void sWriteExact(double iDouble, const ChanW_UTF& iChanW);

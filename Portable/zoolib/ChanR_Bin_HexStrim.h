@@ -18,67 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_Escaped_h__
-#define __ZStrim_Escaped_h__ 1
+#ifndef __ZooLib_ChanR_Bin_HexStrim_h__
+#define __ZooLib_ChanR_Bin_HexStrim_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanW_UTF.h"
-
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimR_Escaped
+// MARK: - ChanR_Bin_HexStrim
 
-class ZStrimR_Escaped : public ZStrimR
+/// A read filter stream that reads byte values from a strim, where they're encoded as hex digits.
+
+class ChanR_Bin_HexStrim
+:	public ChanR_Bin
 	{
 public:
-	ZStrimR_Escaped(const ZStrimU& iStrimSource, UTF32 iDelimiter);
-	~ZStrimR_Escaped();
+	ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	~ChanR_Bin_HexStrim();
 
-// From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
-
-protected:
-	const ZStrimU& fStrimSource;
-	UTF32 fDelimiter;
-	};
-
-// =================================================================================================
-// MARK: - ZStrimW_Escaped
-
-/// A write filter strim that inserts C-style escape sequences.
-
-class ZStrimW_Escaped : public ChanW_UTF_Native32
-	{
-public:
-	struct Options
-		{
-		Options();
-
-		string8 fEOL;
-		bool fQuoteQuotes;
-		bool fEscapeHighUnicode;
-		};
-
-	ZStrimW_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink);
-	ZStrimW_Escaped(const ChanW_UTF& iStrimSink);
-	~ZStrimW_Escaped();
-
-// From ChanW_UTF_Native32
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+	virtual size_t QRead(byte* oDest, size_t iCount);
 
 private:
-	const ChanW_UTF& fStrimSink;
-	string8 fEOL;
-	bool fQuoteQuotes;
-	bool fEscapeHighUnicode;
-	bool fLastWasCR;
+	const ChanR_UTF& fChanR;
+	const ChanU_UTF& fChanU;
+	bool fAllowUnderscore;
 	};
-
-// =================================================================================================
 
 } // namespace ZooLib
 
-#endif // __ZStrim_Escaped_h__
+#endif // __ZooLib_ChanR_Bin_HexStrim_h__

@@ -18,14 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_Base64_h__
-#define __ZStream_Base64_h__ 1
+#ifndef __ZooLib_Chan_Bin_Base64_h__
+#define __ZooLib_Chan_Bin_Base64_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZQ.h"
-#include "zoolib/ZStream.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+// MARK: - Base64
+
 namespace Base64 {
 
 struct Decode
@@ -45,60 +49,57 @@ Encode sEncode_Normal();
 Decode sDecode(uint8 i62, uint8 i63);
 Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding);
 
+} // namespace Base64
+
 // =================================================================================================
-// MARK: - StreamR_Decode
+// MARK: - ChanR_Bin_Base64Decode
 
 /** A read filter stream that converts base64 data from
 the source stream into binary data on the fly.*/
 
-class StreamR_Decode : public ZStreamR
+class ChanR_Bin_Base64Decode
+:	public ChanR_Bin
 	{
 public:
-	StreamR_Decode(const ZStreamR& iStreamSource);
-	StreamR_Decode(const Decode& iDecode, const ZStreamR& iStreamSource);
-	~StreamR_Decode();
+	ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR);
+	ChanR_Bin_Base64Decode(const Base64::Decode& iDecode, const ChanR_Bin& iChanR);
+	~ChanR_Bin_Base64Decode();
 
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+// From ChanR_Bin
+	virtual size_t QRead(byte* oDest, size_t iCount);
 
 protected:
-	const Decode fDecode;
-	const ZStreamR& fStreamSource;
+	const Base64::Decode fDecode;
+	const ChanR_Bin& fChanR;
 	uint8 fSinkBuf[3];
 	size_t fSinkCount;
 	};
 
 // =================================================================================================
-// MARK: - StreamW_Encode
+// MARK: - ChanW_Bin_Base64Encode
 
 /** A write filter stream that writes to the destination stream the base64
 equivalent of binary data written to it. */
 
-class StreamW_Encode : public ZStreamW
+class ChanW_Bin_Base64Encode
+:	public ChanW_Bin
 	{
 public:
-	StreamW_Encode(const ZStreamW& iStreamSink);
-	StreamW_Encode(const Encode& iEncode, const ZStreamW& iStreamSink);
-	~StreamW_Encode();
+	ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW);
+	ChanW_Bin_Base64Encode(const Base64::Encode& iEncode, const ChanW_Bin& iChanW);
+	~ChanW_Bin_Base64Encode();
 
 // From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual void Flush();
 
 protected:
-	const Encode fEncode;
-	const ZStreamW& fStreamSink;
+	const Base64::Encode fEncode;
+	const ChanW_Bin& fChanW;
 	uint8 fSourceBuf[3];
 	size_t fSourceCount;
 	};
 
-// =================================================================================================
-
-} // namespace Base64
-
-typedef Base64::StreamR_Decode ZStreamR_Base64Decode;
-typedef Base64::StreamW_Encode ZStreamW_Base64Encode;
-
 } // namespace ZooLib
 
-#endif // __ZStream_Base64_h__
+#endif // __ZooLib_Chan_Bin_Base64_h__

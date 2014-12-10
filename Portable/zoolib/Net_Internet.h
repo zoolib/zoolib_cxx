@@ -134,7 +134,6 @@ public:
 	virtual ~NetName_Internet();
 
 // From NetName
-	virtual ZQ<ChannerComboRWClose_Bin> Connect();
 	virtual std::string AsString();
 	virtual ZRef<NetNameLookup> MakeLookup(size_t iMaxAddresses);
 

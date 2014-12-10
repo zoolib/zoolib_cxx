@@ -18,13 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanW_UTF_string_h__
-#define __ZooLib_ChanW_UTF_string_h__ 1
+#ifndef __ZooLib_Chan_UTF_string_h__
+#define __ZooLib_Chan_UTF_string_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
+
+// =================================================================================================
+// MARK: - ChanRU_UTF_string8Ref
+
+class ChanRU_UTF_string8Ref
+:	public ChanR_UTF
+,	public ChanU_UTF
+	{
+public:
+	ChanRU_UTF_string8Ref(const string8* iStringPtr);
+	~ChanRU_UTF_string8Ref();
+
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCount);
+
+// From ChanU_UTF
+	virtual size_t Unread(const UTF32* iSource, size_t iCount);
+
+	virtual size_t UnreadableLimit();
+
+// Our protocol
+	const string8& GetString8() const;
+
+private:
+	const string8* fString;
+	size_t fPosition;
+	};
+
+// =================================================================================================
+// MARK: - ChanRU_UTF_string8
+
+/// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
+
+struct ChanRU_string8Helper
+	{
+	ChanRU_string8Helper(const string8& iString);
+	const string8 fStringStorage;
+	};
+
+class ChanRU_UTF_string8
+:	public ChanRU_string8Helper
+,	public ChanRU_UTF_string8Ref
+	{
+public:
+	ChanRU_UTF_string8(const string8& iString);
+	};
 
 // =================================================================================================
 // MARK: - ChanW_UTF_string
@@ -43,7 +91,7 @@ public:
 	:	fStringPtr(ioString)
 		{}
 
-// From ChanW_UTF (aka ChanW_UTF_Native32)
+// From ChanW_UTF_Native32 (aka ChanW_UTF)
 	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU)
 		{
 		fStringPtr->append(iSource, iCountCU);
@@ -108,4 +156,4 @@ typedef ChanW_UTF_string<UTF8> ChanW_UTF_string8;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanW_UTF_string_h__
+#endif // __ZooLib_Chan_UTF_string_h__

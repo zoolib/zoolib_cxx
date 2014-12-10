@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,35 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamR_HexStrim_h__
-#define __ZStreamR_HexStrim_h__ 1
+#ifndef __ZooLib_Apple_Util_NS_Any_h__
+#define __ZooLib_Apple_Util_NS_Any_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZStream.h"
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
+
+#include "zoolib/Val_Any.h"
+
+#import <Foundation/NSObject.h>
 
 namespace ZooLib {
+namespace Util_NS {
 
 // =================================================================================================
-// MARK: - ZStreamR_HexStrim
+// MARK: - Util_NS
 
-class ZStrimU;
+ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal);
+ZAny sAsAny(NSObject* iVal);
 
-/// A read filter stream that reads byte values from a strim, where they're encoded as hex digits.
+NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
+NSObject* sAsNSObject(const ZAny& iVal);
 
-class ZStreamR_HexStrim : public ZStreamR
-	{
-public:
-	ZStreamR_HexStrim(const ZStrimU& iStrimU);
-	ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStrimU);
-
-	virtual ~ZStreamR_HexStrim();
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-
-private:
-	const ZStrimU& fStrimU;
-	bool fAllowUnderscore;
-	};
-
+} // namespace Util_NS
 } // namespace ZooLib
 
-#endif // __ZStream_HexStrim_h__
+// =================================================================================================
+// MARK: - asAnyWithDefault
+
+@interface NSObject (ZAny_Additions)
+-(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
+@end
+
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
+
+#endif // __ZooLib_Apple_Util_NS_Any_h__

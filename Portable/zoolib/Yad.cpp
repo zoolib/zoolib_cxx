@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Yad.h"
 
 namespace ZooLib {
@@ -308,26 +309,39 @@ ZRef<YadAtomR> sMake_YadAtomR_Any(const ZAny& iAny)
 	}
 
 // =================================================================================================
-// MARK: - YadStrimmerU_String
+// MARK: - YadStrimmerR_string
 
-//YadStrimmerU_String::YadStrimmerU_String(const ZAny& iAny)
-//:	YadR_Any(iAny)
-//,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
-//	{}
-//
-//YadStrimmerU_String::YadStrimmerU_String(const string& iString)
-//:	YadR_Any(ZAny(iString))
-//,	ZStrimmerU_T<ZStrimU_String8Ref>(fAny.Get<string8>())
-//	{}
-//
-//bool YadStrimmerU_String::IsSimple(const YadOptions& iOptions)
-//	{ return true; }
+class YadStrimmerR_string
+:	public virtual YadStrimmerR
+,	public virtual YadR_Any
+,	public virtual Channer_T<ChanRU_UTF_string8Ref>
+	{
+public:
+	YadStrimmerR_string(const ZAny& iAny);
+	YadStrimmerR_string(const std::string& iString);
+
+// From YadR
+	virtual bool IsSimple(const YadOptions& iOptions);
+	};
+
+YadStrimmerR_string::YadStrimmerR_string(const ZAny& iAny)
+:	YadR_Any(iAny)
+,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
+	{}
+
+YadStrimmerR_string::YadStrimmerR_string(const std::string& iString)
+:	YadR_Any(ZAny(iString))
+,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
+	{}
+
+bool YadStrimmerR_string::IsSimple(const YadOptions& iOptions)
+	{ return true; }
 
 // =================================================================================================
 // MARK: - sYadR
 
-//ZRef<YadR> sYadR(const string& iVal)
-//	{ return new YadStrimmerU_String(iVal); }
+ZRef<YadR> sYadR(const string& iVal)
+	{ return new YadStrimmerR_string(iVal); }
 
 // =================================================================================================
 // MARK: - YadMapR_WithFirst

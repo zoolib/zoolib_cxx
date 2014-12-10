@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2006 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,39 +18,55 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_NS_Any_h__
-#define __ZUtil_NS_Any_h__ 1
+#ifndef __ZooLib_Channer_Channer_h__
+#define __ZooLib_Channer_Channer_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CocoaFoundation)
-
-#include "zoolib/ZVal_Any.h"
-
-#import <Foundation/NSObject.h>
+#include "zoolib/Channer.h"
 
 namespace ZooLib {
-namespace ZUtil_NS {
 
 // =================================================================================================
-// MARK: - ZUtil_NS
+// MARK: - Channer_Channer
 
-ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal);
-ZAny sAsAny(NSObject* iVal);
+template <class Chan_p,
+	class Chan_Other_p = typename Chan_p::Chan_Base,
+	class Chan_Self_p = typename Chan_p::Chan_Base>
+class Channer_Channer
+:	public Channer<Chan_Self_p>
+	{
+protected:
+	Channer_Channer() {}
 
-NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
-NSObject* sAsNSObject(const ZAny& iVal);
+public:
+	virtual ~Channer_Channer() {}
 
-} // namespace ZUtil_NS
+	template <class P>
+	Channer_Channer(P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(iParam, sGetChan(iChannerOther))
+		{}
+
+	template <class P>
+	Channer_Channer(const P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(iParam, sGetChan(iChannerOther))
+		{}
+
+	Channer_Channer(const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(sGetChan(iChannerOther))
+		{}
+
+// From Channer
+	virtual void GetChan(const Chan_Self_p*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+protected:
+	const ZRef<Channer<Chan_Other_p> > fChannerOther;
+	Chan_p fChan;
+	};
+
 } // namespace ZooLib
 
-// =================================================================================================
-// MARK: - asAnyWithDefault
-
-@interface NSObject (ZAny_Additions)
--(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
-@end
-
-#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
-
-#endif // __ZUtil_CF_Any_h__
+#endif // __ZooLib_Channer_Channer_h__

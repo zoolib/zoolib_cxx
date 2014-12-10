@@ -206,21 +206,6 @@ protected:
 ZRef<YadAtomR> sMake_YadAtomR_Any(const ZAny& iAny);
 
 // =================================================================================================
-// MARK: - YadStrimmerR_string
-
-class YadStrimmerR_string
-:	public virtual YadStrimmerR
-,	public virtual YadR_Any
-	{
-public:
-	YadStrimmerR_string(const ZAny& iAny);
-	YadStrimmerR_string(const std::string& iString);
-
-// From YadR
-	virtual bool IsSimple(const YadOptions& iOptions);
-	};
-
-// =================================================================================================
 // MARK: - sYadR
 
 ZRef<YadR> sYadR(const std::string& iVal);

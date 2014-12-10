@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamW_HexStrim.h"
+#include "zoolib/ChanW_Bin_HexStrim.h"
 
 namespace ZooLib {
 
@@ -26,10 +26,10 @@ static const UTF8 spHexDigits[] = "0123456789ABCDEF";
 static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
 
 // =================================================================================================
-// MARK: - ZStreamW_HexStrim_Real
+// MARK: - ChanW_Bin_HexStrim_Real
 
-ZStreamW_HexStrim_Real::ZStreamW_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iStrimSink)
-:	fStrimSink(iStrimSink)
+ChanW_Bin_HexStrim_Real::ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF)
+:	fChanW_UTF(iChanW_UTF)
 	{
 	if (iUseUnderscore)
 		fHexDigits = spHexDigitsWithUnderscore;
@@ -37,29 +37,28 @@ ZStreamW_HexStrim_Real::ZStreamW_HexStrim_Real(bool iUseUnderscore, const ChanW_
 		fHexDigits = spHexDigits;
 	}
 
-void ZStreamW_HexStrim_Real::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+size_t ChanW_Bin_HexStrim_Real::QWrite(const byte* iSource, size_t iCount)
 	{
-	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
+	const byte* localSource = iSource;
 
 	while (iCount)
 		{
 		UTF32 theHex[2];
 		theHex[0] = fHexDigits[((*localSource) >> 4) & 0x0F];
 		theHex[1] = fHexDigits[(*localSource) & 0x0F];
-		sWriteMust(theHex, 2, fStrimSink);
+		sWriteMust(theHex, 2, fChanW_UTF);
 		--iCount;
 		++localSource;
 		}
 
-	if (oCountWritten)
-		*oCountWritten = localSource - reinterpret_cast<const uint8*>(iSource);
+	return localSource - iSource;
 	}
 
-void ZStreamW_HexStrim_Real::Imp_Flush()
-	{ sFlush(fStrimSink); }
+void ChanW_Bin_HexStrim_Real::Flush()
+	{ sFlush(fChanW_UTF); }
 
 // =================================================================================================
-// MARK: - ZStreamW_HexStrim
+// MARK: - ChanW_Bin_HexStrim
 
 static
 ChanW_UTF_InsertSeparator::Spacings
@@ -76,18 +75,18 @@ spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator
 	return result;
 	}
 
-ZStreamW_HexStrim::ZStreamW_HexStrim(
+ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(
 	const std::string& iByteSeparator,
 	const std::string& iChunkSeparator, size_t iChunkSize,
-	const ChanW_UTF& iStrimSink)
-:	fStrim(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iStrimSink)
-,	fStream(false, fStrim)
+	const ChanW_UTF& iChanW_UTF)
+:	fChanW_UTF(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iChanW_UTF)
+,	fChanW_Bin(false, fChanW_UTF)
 	{}
 
-void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ fStream.Write(iSource, iCount, oCountWritten); }
+size_t ChanW_Bin_HexStrim::QWrite(const byte* iSource, size_t iCount)
+	{ return sQWrite(iSource, iCount, fChanW_Bin); }
 
-void ZStreamW_HexStrim::Imp_Flush()
-	{ fStream.Flush(); }
+void ChanW_Bin_HexStrim::Flush()
+	{ fChanW_Bin.Flush(); }
 
 } // namespace ZooLib

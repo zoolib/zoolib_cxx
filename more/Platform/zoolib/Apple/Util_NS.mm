@@ -18,24 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_NS.h"
+#include "zoolib/Apple/Util_NS.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #include "zoolib/Unicode.h"
+#include "zoolib/Val_Any.h"
 
 #include "zoolib/ZTime.h"
-#include "zoolib/ZVal_Any.h"
 
 #import <Foundation/NSString.h>
 
 using namespace ZooLib;
 
 // =================================================================================================
-// MARK: - ZUtil_NS
+// MARK: - Util_NS
 
 namespace ZooLib {
-namespace ZUtil_NS {
+namespace Util_NS {
 
 NSString* sString()
 	{ return [NSString string]; }
@@ -113,7 +113,7 @@ NSMutableData* sDataMutable(NSData* iNSData)
 	{ return [NSMutableData dataWithData:iNSData]; }
 
 // =================================================================================================
-// MARK: - ZUtil_NS, conversions
+// MARK: - Util_NS, conversions
 
 string8 sAsUTF8(NSString* iNSString)
 	{
@@ -130,7 +130,7 @@ string16 sAsUTF16(NSString* iNSString)
 	}
 
 
-} // namespace ZUtil_NS
+} // namespace Util_NS
 } // namespace ZooLib
 
 

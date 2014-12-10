@@ -53,7 +53,6 @@ public:
 		Elmt_t* localDest = oDest;
 		while (iCount)
 			{
-			const size_t countInBuffer = fEnd - fBegin;
 			if (fEnd > fBegin)
 				{
 				// We have some data in our buffer, use it up first.
@@ -69,9 +68,10 @@ public:
 				const size_t countReadable = sReadable(fChanR);
 				if (iCount >= fBuffer.size() || iCount >= countReadable)
 					{
-					// Either we're asking for more data than would fit in our buffer, or we're asking
-					// for more data than the stream will be able to provide without blocking. In
-					// either case we bypass the buffer and read straight into our read destination
+					// Either we're asking for more data than would fit in our buffer, or we're
+					// asking for more data than the stream will be able to provide without
+					// blocking. In either case we bypass the buffer and read straight into our
+					// read destination
 					const size_t countRead = sQRead(localDest, iCount, fChanR);
 					if (countRead == 0)
 						break;
@@ -80,9 +80,9 @@ public:
 					}
 				else
 					{
-					// We're asking for less data than the stream guarantees it could provide without
-					// blocking, in which case we fill up as much of our buffer as we can, so some
-					// later request will be able to be satisfied straight from our buffer.
+					// We're asking for less data than the stream guarantees it could provide
+					// without blocking, in which case we fill up as much of our buffer as we can,
+					// so some later request will be able to be satisfied straight from our buffer.
 					const size_t countRead = sQRead(&fBuffer[0],
 						min(fBuffer.size(), countReadable),
 						fChanR);
@@ -97,7 +97,7 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return fBuffer.size() + sReadable(fChanR); }
+		{ return fEnd - fBegin + sReadable(fChanR); }
 
 protected:
 	const ChanR<XX>& fChanR;

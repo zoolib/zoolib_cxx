@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,63 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamR_HexStrim.h"
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZUtil_Strim.h"
+#ifndef __ZooLib_ChanU_UTF_h__
+#define __ZooLib_ChanU_UTF_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ChanU.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_HexStrim
+// MARK: - ChanU_UTF
 
-ZStreamR_HexStrim::ZStreamR_HexStrim(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fAllowUnderscore(false)
-	{}
-
-ZStreamR_HexStrim::ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fAllowUnderscore(iAllowUnderscore)
-	{}
-
-ZStreamR_HexStrim::~ZStreamR_HexStrim()
-	{}
-
-void ZStreamR_HexStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
-	{
-	using namespace ZUtil_Strim;
-
-	uint8* localDest = reinterpret_cast<uint8*>(oDest);
-
-	while (iCount)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		int firstDigit;
-		if (not sTryRead_HexDigit(fStrimU, firstDigit))
-			{
-			if (not fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
-				break;
-			firstDigit = 0;
-			}
-
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		int secondDigit;
-		if (not sTryRead_HexDigit(fStrimU, secondDigit))
-			{
-			if (not fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
-				{
-				throw ParseException("Could not read second nibble of byte");
-				break;
-				}
-			secondDigit = 0;
-			}
-
-		*localDest++ = firstDigit * 16 + secondDigit;
-		--iCount;
-		}
-
-	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
-	}
+typedef ChanU<UTF32> ChanU_UTF;
 
 } // namespace ZooLib
+
+#endif // __ZooLib_ChanR_UTF_h__

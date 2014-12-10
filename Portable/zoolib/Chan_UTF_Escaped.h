@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,70 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_h__
-#define __ZooLib_Chan_h__ 1
+#ifndef __ZooLib_Chan_UTF_Escaped_h__
+#define __ZooLib_Chan_UTF_Escaped_h__ 1
 #include "zconfig.h"
+
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+// MARK: - ChanR_UTF_Escaped
 
-// ChanR, ChanW, ChanClose, ChanPos, ChanCount and ChanCountSet do not yet have anything in common.
-// When they do, this will likely be its home.
-
-template <class Elmt_p>
-class Chan
+class ChanR_UTF_Escaped
+:	public ChanR_UTF
 	{
 public:
-	typedef Elmt_p CommonElmt_t;
+	ChanR_UTF_Escaped(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	~ChanR_UTF_Escaped();
+
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+
+protected:
+	const UTF32 fDelimiter;
+	const ChanR_UTF& fChanR;
+	const ChanU_UTF& fChanU;
 	};
+
+// =================================================================================================
+// MARK: - ChanW_UTF_Escaped
+
+/// A write filter strim that inserts C-style escape sequences.
+
+class ChanW_UTF_Escaped
+:	public ChanW_UTF_Native32
+	{
+public:
+	struct Options
+		{
+		Options();
+
+		string8 fEOL;
+		bool fQuoteQuotes;
+		bool fEscapeHighUnicode;
+		};
+
+	ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink);
+	ChanW_UTF_Escaped(const ChanW_UTF& iStrimSink);
+	~ChanW_UTF_Escaped();
+
+// From ChanW_UTF_Native32
+	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+
+private:
+	const ChanW_UTF& fStrimSink;
+	string8 fEOL;
+	bool fQuoteQuotes;
+	bool fEscapeHighUnicode;
+	bool fLastWasCR;
+	};
+
+// =================================================================================================
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_h__
+#endif // __ZooLib_Chan_UTF_Escaped_h__

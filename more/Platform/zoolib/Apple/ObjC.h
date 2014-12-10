@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ObjC_h__
-#define __ZooLib_ObjC_h__ 1
+#ifndef __ZooLib_Apple_ObjC_h__
+#define __ZooLib_Apple_ObjC_h__ 1
 #include "zconfig.h"
 
 #ifdef __OBJC__
@@ -33,4 +33,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACRO_ObjCClass(p) typedef struct objc_##p p
 #endif
 
-#endif // __ZooLib_ObjC_h__
+#endif // __ZooLib_Apple_ObjC_h__
