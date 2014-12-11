@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Yad_JSON.h"
 
-//#include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZTime.h"
 
 #if ZCONFIG(Compiler,GCC)
@@ -233,7 +232,7 @@ static ZQ<ZAny> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 		}
 	else if (sTryRead_CaselessString("null", iChanR, iChanU))
 		{
-		return null; //## Watch this
+		return ZAny(null); //## Watch this
 		}
 	else if (sTryRead_CaselessString("false", iChanR, iChanU))
 		{
