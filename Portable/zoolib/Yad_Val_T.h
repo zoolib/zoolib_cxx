@@ -64,11 +64,11 @@ protected:
 template <class Data_p>
 class YadStreamerRPos_Val_T
 :	public virtual YadStreamerR
-,	public virtual Channer_T<ChanRPos_Bin_Data<Data_p>, ChanR_Bin>
+,	public virtual Channer_T<ChanRPos_Bin_Data<Data_p>,ChanR_Bin>
 	{
 public:
 	YadStreamerRPos_Val_T(const Data_p& iData)
-	:	Channer_T<ChanRPos_Bin_Data<Data_p>, ChanR_Bin>(iData)
+	:	Channer_T<ChanRPos_Bin_Data<Data_p>,ChanR_Bin>(iData)
 		{}
 
 // From YadR

@@ -110,8 +110,6 @@ string8 sAsJSON(const Val_Any& iVal)
 //	Chan_p fChan;
 //	};
 
-#if 1
-
 // =================================================================================================
 // MARK: - ChannerRU_T
 
@@ -153,48 +151,6 @@ const Val_Any sFromJSON(const string8& iString)
 	return sQRead(theChanner, theChanner).Get();
 	}
 
-#else
-// =================================================================================================
-// MARK: - ChannerRU_T
-
-template <class Chan_p, class Elmt_p>
-class ChannerRU_T
-:	public Channer<ChanR<Elmt_p> >
-,	public Channer<ChanU<Elmt_p> >
-	{
-public:
-	ChannerRU_T()
-		{}
-
-	template <class P>
-	ChannerRU_T(P& iParam)
-	:	fChan(iParam)
-		{}
-
-	template <class P>
-	ChannerRU_T(const P& iParam)
-	:	fChan(iParam)
-		{}
-
-	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	virtual void GetChan(const ChanU<Elmt_p>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	Chan_p fChan;
-	};
-
-// =================================================================================================
-// MARK: -
-
-const Val_Any sFromJSON(const string8& iString)
-	{
-	ZRef<ChannerRU_T<ChanRU_UTF_string8,UTF32> > theChanner =
-		new ChannerRU_T<ChanRU_UTF_string8,UTF32>(iString);
-	return sQRead(theChanner, theChanner).Get();
-	}
-#endif
 } // namespace Util_Any_JSON
 
 namespace Operators_Any_JSON {

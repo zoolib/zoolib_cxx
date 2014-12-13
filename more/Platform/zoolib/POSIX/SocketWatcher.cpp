@@ -143,12 +143,12 @@ void SocketWatcher::pRun()
 					{ continue; }
 
 				const Set_t::iterator iterBegin = fSet.lower_bound(Pair_t(fd, null));
-				Set_t::iterator iterEnd = iterBegin;
-				const Set_t::iterator SetEnd = fSet.end();
-				while (iterEnd->first == fd and iterEnd != SetEnd)
+				Set_t::iterator iter = iterBegin;
+				const Set_t::iterator iterEnd = fSet.end();
+				while (iter->first == fd and iter != iterEnd)
 					{
-					toCall.insert(iterEnd->second);
-					++iterEnd;
+					toCall.insert(iter->second);
+					++iter;
 					}
 				fSet.erase(iterBegin, iterEnd);
 

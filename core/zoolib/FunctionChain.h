@@ -29,8 +29,8 @@ namespace ZooLib {
 /**
 \file
 If you're using the MSVC or other linkers and putting a factory in a static library, be aware
-that the statically-initialized factory may will not be considered active code unless some other
-part of the containing translation unit is active. See ZCompat_MSVCStaticLib.h for
+that the statically-initialized factory may not be considered active code unless some other
+part of the containing translation unit is active. See Compat_MSVCStaticLib.h for
 more discussion and suggested workarounds.
 */
 

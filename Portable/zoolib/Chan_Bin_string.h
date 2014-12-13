@@ -49,6 +49,9 @@ protected:
 // =================================================================================================
 // MARK: - ChanBase_Bin_string
 
+// This looks like a ChanRPos, except it doesn't implement ChanU. We derive a real ChanRPos and
+// ChanRWPos from this class, because each has a different Unread strategy.
+
 class ChanBase_Bin_string
 :	public ChanR_Bin
 ,	public ChanCount
@@ -89,6 +92,7 @@ public:
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 	virtual size_t UnreadableLimit();
 
+protected:
 	const std::string fString;
 	};
 

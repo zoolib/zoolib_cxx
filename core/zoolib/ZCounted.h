@@ -187,7 +187,10 @@ public:
 	template <class O,bool Sense>
 	ZWeakRef(const ZRef<O,Sense>& iRef)
 	:	ZWeakRefBase(iRef ? iRef->GetWeakRefProxy() : null)
-		{ (void)static_cast<T*>(static_cast<O*>(0)); }
+		{
+		// Ensures that O* converts to T*
+		(void)static_cast<T*>(static_cast<O*>(0));
+		}
 
 	template <class O,bool Sense>
 	ZWeakRef& operator=(const ZRef<O,Sense>& iRef)
@@ -248,14 +251,16 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 // Useful in situations where we want the default ctor of a ZRef<X> to default create an X.
 // e.g. sStarter_EachOnNewThread and its use of sSingleton/ZRef_Counted
 
-template <class Counted_t>
+template <class Counted_p>
 class ZRef_Counted
-:	public ZRef<Counted_t>
+:	public ZRef<Counted_p>
 	{
-	typedef ZRef<Counted_t> inherited;
+	typedef ZRef<Counted_p> inherited;
 public:
+	typedef Counted_p Counted_t;
+
 	ZRef_Counted()
-	:	inherited(new Counted_t)
+	:	inherited(new Counted_p)
 		{}
 
 	ZRef_Counted(const ZRef_Counted& iOther)
