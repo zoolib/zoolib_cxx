@@ -18,35 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_File.h"
+#ifndef __ZooLib_Util_File_h__
+#define __ZooLib_Util_File_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/File.h"
+#include "zoolib/ZQ.h"
 
 namespace ZooLib {
-namespace ZUtil_File {
+namespace Util_File {
 
 // =================================================================================================
-// MARK: - ZUtil_File
+// MARK: - Util_File
 
-ZQ<ZFileSpec> sQEnsureBranch(const ZFileSpec& iFS)
-	{
-	if (iFS.IsDir())
-		return iFS;
-	
-	if (ZQ<ZFileSpec> newParentQ = sQEnsureBranch(iFS.Parent()))
-		{
-		if (const ZFileSpec theFS = newParentQ->Child(iFS.Name()).CreateDir())
-			return theFS;
-		}
+ZQ<FileSpec> sQEnsureBranch(const FileSpec& iFS);
 
-	return null;
-	}
+bool sDeleteTree(const FileSpec& iFS);
 
-bool sDeleteTree(const ZFileSpec& iFS)
-	{
-	for (ZFileIter iter = iFS; iter; iter.Advance())
-		sDeleteTree(iter.Current());
-	return iFS.Delete();
-	}
-
-} // namespace ZUtil_File
+} // namespace Util_File
 } // namespace ZooLib
 
+#endif // __ZooLib_Util_File_h__

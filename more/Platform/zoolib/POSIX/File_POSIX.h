@@ -1,0 +1,274 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2002 Andrew Green and Learning in Motion, Inc.
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#ifndef __ZooLib_POSIX_File_POSIX_h__
+#define __ZooLib_POSIX_File_POSIX_h__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ChanCount.h"
+#include "zoolib/ChanCountSet.h"
+#include "zoolib/ChanPos.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanU.h"
+#include "zoolib/ChanW_Bin.h"
+#include "zoolib/File.h"
+
+#ifndef ZCONFIG_API_Avail__File_POSIX
+	#define ZCONFIG_API_Avail__File_POSIX ZCONFIG_SPI_Enabled(POSIX)
+#endif
+
+#ifndef ZCONFIG_API_Desired__File_POSIX
+	#define ZCONFIG_API_Desired__File_POSIX 1
+#endif
+
+#if ZCONFIG_API_Enabled(File_POSIX)
+
+ZMACRO_MSVCStaticLib_Reference(File_POSIX)
+
+namespace ZooLib {
+
+// =================================================================================================
+// MARK: - FileLoc_POSIX
+
+class FileLoc_POSIX : public FileLoc
+	{
+public:
+	static ZRef<FileLoc_POSIX> sGet_CWD();
+	static ZRef<FileLoc_POSIX> sGet_Root();
+	static ZRef<FileLoc_POSIX> sGet_App();
+
+	FileLoc_POSIX(bool iIsAtRoot);
+	FileLoc_POSIX(bool iIsAtRoot, const std::vector<std::string>& iComps);
+	FileLoc_POSIX(bool iIsAtRoot, const std::string* iComps, size_t iCount);
+	FileLoc_POSIX(bool iIsAtRoot, std::vector<std::string>* ioComps, const IKnowWhatIAmDoing_t&);
+	virtual ~FileLoc_POSIX();
+
+// From FileLoc
+	virtual ZRef<FileIterRep> CreateIterRep();
+
+	virtual std::string GetName() const;
+	virtual ZQ<Trail> TrailTo(ZRef<FileLoc> oDest) const;
+
+	virtual ZRef<FileLoc> GetParent();
+	virtual ZRef<FileLoc> GetDescendant(
+		const std::string* iComps, size_t iCount);
+
+	virtual bool IsRoot();
+
+	virtual ZRef<FileLoc> Follow();
+
+	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
+	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
+
+	virtual File::Kind Kind();
+	virtual uint64 Size();
+	virtual ZTime TimeCreated();
+	virtual ZTime TimeModified();
+
+	virtual ZRef<FileLoc> CreateDir();
+
+	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest);
+	virtual bool Delete();
+
+//	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+//	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
+//	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+//
+//	virtual ZRef<ChannerWPos_Bin> CreateWPos(
+//		bool iOpenExisting, bool iPreventWriters);
+//	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(
+//		bool iOpenExisting, bool iPreventWriters);
+
+	std::string pGetPath();
+
+private:
+	bool fIsAtRoot;
+	std::vector<std::string> fComps;
+	};
+
+// =================================================================================================
+// MARK: - Chan_File_POSIX
+
+class Chan_File_POSIX
+	{
+public:
+	Chan_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	~Chan_File_POSIX();
+
+// Our protocol
+	int GetFD() const;
+
+protected:
+	int fFD;
+	bool fCloseWhenFinalized;
+	};
+
+// =================================================================================================
+// MARK: - ChanRPos_File_POSIX
+
+class ChanRPos_File_POSIX
+:	protected Chan_File_POSIX
+,	public ChanR_Bin
+,	public ChanU<byte>
+,	public ChanCount
+,	public ChanPos
+	{
+public:
+	ChanRPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	~ChanRPos_File_POSIX();
+
+// From ChanR
+	virtual size_t QRead(byte* oDest, size_t iCount);
+
+	virtual size_t Readable();
+
+// From ChanGetCount
+	virtual uint64 Count();
+
+// From ChanPos
+	virtual uint64 Pos();
+
+	virtual void SetPos(uint64 iPos);
+
+// From ChanU
+	virtual size_t Unread(const byte* iSource, size_t iCount);
+	virtual size_t UnreadableLimit();
+	};
+
+//// =================================================================================================
+//// MARK: - ZStreamerRPos_File_POSIX
+//
+//class ZStreamerRPos_File_POSIX : public ZStreamerRPos
+//	{
+//public:
+//	ZStreamerRPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+//	virtual ~ZStreamerRPos_File_POSIX();
+//
+//// From ZStreamerRPos
+//	virtual const ZStreamRPos& GetStreamRPos();
+//
+//private:
+//	ZStreamRPos_File_POSIX fStream;
+//	};
+
+//// =================================================================================================
+//// MARK: - ZStreamWPos_File_POSIX
+//
+//class ZStreamWPos_File_POSIX : public ZStreamWPos
+//	{
+//public:
+//	ZStreamWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+//	~ZStreamWPos_File_POSIX();
+//
+//// From ZStreamW via ZStreamWPos
+//	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+//	virtual void Imp_Flush();
+//
+//// From ZStreamWPos
+//	virtual uint64 Imp_GetPosition();
+//	virtual void Imp_SetPosition(uint64 iPosition);
+//
+//	virtual uint64 Imp_GetSize();
+//	virtual void Imp_SetSize(uint64 iSize);
+//
+//// Our protocol
+//	int GetFD() const { return fFD; }
+//
+//private:
+//	int fFD;
+//	bool fCloseWhenFinalized;
+//	};
+//
+//// =================================================================================================
+//// MARK: - ZStreamerWPos_File_POSIX
+//
+//class ZStreamerWPos_File_POSIX : public ZStreamerWPos
+//	{
+//public:
+//	ZStreamerWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+//	virtual ~ZStreamerWPos_File_POSIX();
+//
+//// From ZStreamerWPos
+//	virtual const ZStreamWPos& GetStreamWPos();
+//
+//private:
+//	ZStreamWPos_File_POSIX fStream;
+//	};
+
+// =================================================================================================
+// MARK: - ZStreamRWPos_File_POSIX
+
+class ChanRWPos_File_POSIX
+:	public ChanRPos_File_POSIX
+,	public ChanU<byte>
+,	public ChanW_Bin,
+	public ChanCountSet
+	{
+public:
+	ChanRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	~ChanRWPos_File_POSIX();
+
+//// From ZStreamR via ZStreamRWPos
+//	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+//
+//// From ZStreamW via ZStreamRWPos
+//	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+//	virtual void Imp_Flush();
+//
+//// From ZStreamRPos/ZStreamWPos via ZStreamRWPos
+//	virtual uint64 Imp_GetPosition();
+//	virtual void Imp_SetPosition(uint64 iPosition);
+//
+//	virtual uint64 Imp_GetSize();
+//
+//// From ZStreamWPos via ZStreamRWPos
+//	virtual void Imp_SetSize(uint64 iSize);
+//
+//// Our protocol
+//	int GetFD() const { return fFD; }
+
+private:
+	int fFD;
+	bool fCloseWhenFinalized;
+	};
+
+// =================================================================================================
+// MARK: - ZStreamerRWPos_File_POSIX
+
+//class ZStreamerRWPos_File_POSIX : public ZStreamerRWPos
+//	{
+//public:
+//	ZStreamerRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+//	virtual ~ZStreamerRWPos_File_POSIX();
+//
+//// From ZStreamerRWPos
+//	virtual const ZStreamRWPos& GetStreamRWPos();
+//
+//private:
+//	ZStreamRWPos_File_POSIX fStream;
+//	};
+
+} // namespace ZooLib
+
+#endif // ZCONFIG_API_Enabled(File_POSIX)
+
+#endif // __ZooLib_POSIX_File_POSIX_h__
