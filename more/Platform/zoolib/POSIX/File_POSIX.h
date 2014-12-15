@@ -89,14 +89,12 @@ public:
 	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest);
 	virtual bool Delete();
 
-//	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
-//	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
-//	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
-//
-//	virtual ZRef<ChannerWPos_Bin> CreateWPos(
-//		bool iOpenExisting, bool iPreventWriters);
-//	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(
-//		bool iOpenExisting, bool iPreventWriters);
+	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
+	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+
+	virtual ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
 
 	std::string pGetPath();
 
@@ -111,7 +109,8 @@ private:
 class Chan_File_POSIX
 	{
 public:
-	Chan_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	typedef std::pair<int,bool> Init_t;
+	Chan_File_POSIX(const Init_t& iInit);
 	~Chan_File_POSIX();
 
 // Our protocol
@@ -133,7 +132,7 @@ class ChanRPos_File_POSIX
 ,	public ChanPos
 	{
 public:
-	ChanRPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	ChanRPos_File_POSIX(const Init_t& iInit);
 	~ChanRPos_File_POSIX();
 
 // From ChanR
@@ -154,118 +153,25 @@ public:
 	virtual size_t UnreadableLimit();
 	};
 
-//// =================================================================================================
-//// MARK: - ZStreamerRPos_File_POSIX
-//
-//class ZStreamerRPos_File_POSIX : public ZStreamerRPos
-//	{
-//public:
-//	ZStreamerRPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
-//	virtual ~ZStreamerRPos_File_POSIX();
-//
-//// From ZStreamerRPos
-//	virtual const ZStreamRPos& GetStreamRPos();
-//
-//private:
-//	ZStreamRPos_File_POSIX fStream;
-//	};
-
-//// =================================================================================================
-//// MARK: - ZStreamWPos_File_POSIX
-//
-//class ZStreamWPos_File_POSIX : public ZStreamWPos
-//	{
-//public:
-//	ZStreamWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
-//	~ZStreamWPos_File_POSIX();
-//
-//// From ZStreamW via ZStreamWPos
-//	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-//	virtual void Imp_Flush();
-//
-//// From ZStreamWPos
-//	virtual uint64 Imp_GetPosition();
-//	virtual void Imp_SetPosition(uint64 iPosition);
-//
-//	virtual uint64 Imp_GetSize();
-//	virtual void Imp_SetSize(uint64 iSize);
-//
-//// Our protocol
-//	int GetFD() const { return fFD; }
-//
-//private:
-//	int fFD;
-//	bool fCloseWhenFinalized;
-//	};
-//
-//// =================================================================================================
-//// MARK: - ZStreamerWPos_File_POSIX
-//
-//class ZStreamerWPos_File_POSIX : public ZStreamerWPos
-//	{
-//public:
-//	ZStreamerWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
-//	virtual ~ZStreamerWPos_File_POSIX();
-//
-//// From ZStreamerWPos
-//	virtual const ZStreamWPos& GetStreamWPos();
-//
-//private:
-//	ZStreamWPos_File_POSIX fStream;
-//	};
-
 // =================================================================================================
 // MARK: - ZStreamRWPos_File_POSIX
 
 class ChanRWPos_File_POSIX
 :	public ChanRPos_File_POSIX
-,	public ChanU<byte>
-,	public ChanW_Bin,
-	public ChanCountSet
+,	public ChanW_Bin
+,	public ChanCountSet
 	{
 public:
-	ChanRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
+	ChanRWPos_File_POSIX(const Init_t& iInit);
 	~ChanRWPos_File_POSIX();
-
-//// From ZStreamR via ZStreamRWPos
-//	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-//
-//// From ZStreamW via ZStreamRWPos
-//	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-//	virtual void Imp_Flush();
-//
-//// From ZStreamRPos/ZStreamWPos via ZStreamRWPos
-//	virtual uint64 Imp_GetPosition();
-//	virtual void Imp_SetPosition(uint64 iPosition);
-//
-//	virtual uint64 Imp_GetSize();
-//
-//// From ZStreamWPos via ZStreamRWPos
-//	virtual void Imp_SetSize(uint64 iSize);
-//
-//// Our protocol
-//	int GetFD() const { return fFD; }
-
 private:
-	int fFD;
-	bool fCloseWhenFinalized;
+
+// From ChanW_Bin
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+
+// From ChanCountSet
+	virtual void CountSet(uint64 iCount);
 	};
-
-// =================================================================================================
-// MARK: - ZStreamerRWPos_File_POSIX
-
-//class ZStreamerRWPos_File_POSIX : public ZStreamerRWPos
-//	{
-//public:
-//	ZStreamerRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized);
-//	virtual ~ZStreamerRWPos_File_POSIX();
-//
-//// From ZStreamerRWPos
-//	virtual const ZStreamRWPos& GetStreamRWPos();
-//
-//private:
-//	ZStreamRWPos_File_POSIX fStream;
-//	};
 
 } // namespace ZooLib
 

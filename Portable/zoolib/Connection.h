@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 #include "zoolib/Channer_Bin.h"
+#include "zoolib/ChannerCombo.h"
 
 namespace ZooLib {
 

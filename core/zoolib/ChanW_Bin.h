@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ByteSwap.h"
 #include "zoolib/ChanW.h"
 
-#include <stdexcept> // For std::range_error
-
 namespace ZooLib {
 
 // =================================================================================================

@@ -445,15 +445,14 @@ bool FileSpec::Delete() const
 	return false;
 	}
 
-#if 0
 /// Return a new ZStreamerR backed by the contents of the file referenced by the file spec.
-ZRef<ZStreamerR> FileSpec::OpenR(bool iPreventWriters) const
+ZRef<ChannerR_Bin> FileSpec::OpenR(bool iPreventWriters) const
 	{
 	return this->OpenRPos(iPreventWriters);
 	}
 
 /// Return a new ZStreamerRPos backed by the contents of the file referenced by the file spec.
-ZRef<ZStreamerRPos> FileSpec::OpenRPos(bool iPreventWriters) const
+ZRef<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
@@ -464,13 +463,13 @@ ZRef<ZStreamerRPos> FileSpec::OpenRPos(bool iPreventWriters) const
 	}
 
 /// Return a new ZStreamerW backed by the contents of the file referenced by the file spec.
-ZRef<ZStreamerW> FileSpec::OpenW(bool iPreventWriters) const
+ZRef<ChannerW_Bin> FileSpec::OpenW(bool iPreventWriters) const
 	{
 	return this->OpenWPos(iPreventWriters);
 	}
 
 /// Return a new ZStreamerWPos backed by the contents of the file referenced by the file spec.
-ZRef<ZStreamerWPos> FileSpec::OpenWPos(bool iPreventWriters) const
+ZRef<ChannerWPos_Bin> FileSpec::OpenWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
@@ -481,7 +480,7 @@ ZRef<ZStreamerWPos> FileSpec::OpenWPos(bool iPreventWriters) const
 	}
 
 /// Return a new ZStreamerRWPos backed by the contents of the file referenced by the file spec.
-ZRef<ZStreamerRWPos> FileSpec::OpenRWPos(bool iPreventWriters) const
+ZRef<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
@@ -497,7 +496,7 @@ ZRef<ZStreamerRWPos> FileSpec::OpenRWPos(bool iPreventWriters) const
 be opened (if it is accessible). If the file already exists and \a iOpenExisiting is false
 then an invalid ZStreamerWPos is returned.
 */
-ZRef<ZStreamerWPos> FileSpec::CreateWPos(
+ZRef<ChannerWPos_Bin> FileSpec::CreateWPos(
 	bool iOpenExisting, bool iPreventWriters) const
 	{
 	if (fLoc)
@@ -508,7 +507,7 @@ ZRef<ZStreamerWPos> FileSpec::CreateWPos(
 	return null;
 	}
 
-ZRef<ZStreamerRWPos> FileSpec::CreateRWPos(
+ZRef<ChannerRWPos_Bin> FileSpec::CreateRWPos(
 	bool iOpenExisting, bool iPreventWriters) const
 	{
 	if (fLoc)
@@ -518,7 +517,6 @@ ZRef<ZStreamerRWPos> FileSpec::CreateRWPos(
 		}
 	return null;
 	}
-#endif
 
 ZRef<FileLoc> FileSpec::GetFileLoc() const
 	{ return this->pPhysicalLoc(); }
@@ -720,34 +718,21 @@ ZRef<FileLoc> FileLoc::Follow()
 bool FileLoc::SetCreatorAndType(uint32 iCreator, uint32 iType)
 	{ return false; }
 
-#if 0
-ZRef<ZStreamerRPos> FileLoc::OpenRPos(bool iPreventWriters)
-	{
-	return null;
-	}
+ZRef<ChannerRPos_Bin> FileLoc::OpenRPos(bool iPreventWriters)
+	{ return null; }
 
-ZRef<ZStreamerWPos> FileLoc::OpenWPos(bool iPreventWriters)
-	{
-	return null;
-	}
+ZRef<ChannerWPos_Bin> FileLoc::OpenWPos(bool iPreventWriters)
+	{ return null; }
 
-ZRef<ZStreamerRWPos> FileLoc::OpenRWPos(bool iPreventWriters)
-	{
-	return null;
-	}
+ZRef<ChannerRWPos_Bin> FileLoc::OpenRWPos(bool iPreventWriters)
+	{ return null; }
 
-ZRef<ZStreamerWPos> FileLoc::CreateWPos(
-	bool iOpenExisting, bool iPreventWriters)
-	{
-	return null;
-	}
+ZRef<ChannerWPos_Bin> FileLoc::CreateWPos(bool iOpenExisting, bool iPreventWriters)
+	{ return null; }
 
-ZRef<ZStreamerRWPos> FileLoc::CreateRWPos(
-	bool iOpenExisting, bool iPreventWriters)
-	{
-	return null;
-	}
-#endif
+ZRef<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
+	{ return null; }
+
 // =================================================================================================
 // MARK: - FileIterRep
 

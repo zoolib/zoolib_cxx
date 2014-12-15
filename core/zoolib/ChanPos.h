@@ -46,7 +46,7 @@ public:
 inline uint64 sPos(const ChanPos& iChanPos)
 	{ return sNonConst(iChanPos).Pos(); }
 
-inline void sSetPos(const ChanPos& iChanPos, uint64 iPos)
+inline void sSetPos(uint64 iPos, const ChanPos& iChanPos)
 	{ sNonConst(iChanPos).SetPos(iPos); }
 
 } // namespace ZooLib

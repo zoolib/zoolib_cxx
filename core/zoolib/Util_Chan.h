@@ -24,8 +24,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
+#include "zoolib/ChanPos.h"
+#include "zoolib/ChanCountSet.h"
 
 namespace ZooLib {
+
+inline void sTruncate(const ChanCountSet& iChanCountSet, const ChanPos& iChanPos)
+	{
+	sCountSet(0, iChanCountSet);
+	sSetPos(0, iChanPos);
+	}
 
 // =================================================================================================
 // MARK: -

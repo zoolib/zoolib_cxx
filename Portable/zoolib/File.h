@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/Channer_Bin.h"
+#include "zoolib/ChannerXX.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Trail.h"
 
@@ -140,15 +141,13 @@ public:
 
 	// Open/create with stream API (stateful).
 	ZRef<ChannerR_Bin> OpenR(bool iPreventWriters = false) const;
-//	ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters = false) const;
+	ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters = false) const;
 	ZRef<ChannerW_Bin> OpenW(bool iPreventWriters = true) const;
-//	ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters = true) const;
-//	ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters = true) const;
+	ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters = true) const;
+	ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters = true) const;
 
-//	ZRef<ChannerWPos_Bin> CreateWPos(
-//		bool iOpenExisting, bool iPreventWriters = true) const;
-//	ZRef<ChannerRWPos_Bin> CreateRWPos(
-//		bool iOpenExisting, bool iPreventWriters = true) const;
+	ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters = true) const;
+	ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters = true) const;
 
 	// As ever, do not abuse...
 	ZRef<FileLoc> GetFileLoc() const;
@@ -248,14 +247,12 @@ public:
 	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest) = 0;
 	virtual bool Delete() = 0;
 
-//	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
-//	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
-//	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
+	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
 
-//	virtual ZRef<ChannerWPos_Bin> CreateWPos(
-//		bool iOpenExisting, bool iPreventWriters);
-//	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(
-//		bool iOpenExisting, bool iPreventWriters);
+	virtual ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
 	};
 
 // =================================================================================================

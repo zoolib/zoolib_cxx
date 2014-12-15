@@ -22,13 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Channer_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanClose.h"
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW.h"
 #include "zoolib/ZCounted.h"
 
 namespace ZooLib {
@@ -53,14 +46,6 @@ const Chan_p& sGetChan(const ZRef<Channer<Chan_p> >& iChanner)
 	iChanner->GetChan(theChan_p);
 	return *theChan_p;
 	}
-
-// =================================================================================================
-// MARK: -
-
-typedef Channer<ChanClose> ChannerClose;
-typedef Channer<ChanPos> ChannerPos;
-typedef Channer<ChanCount> ChannerCount;
-typedef Channer<ChanCountSet> ChannerCountSet;
 
 // =================================================================================================
 // MARK: - Channer_T
@@ -100,134 +85,6 @@ ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(Param_p& iParam)
 template <class Chan_p, class Param_p>
 ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
 	{ return new Channer_T<Chan_p>(iParam); }
-
-
-// See Channer_Channer for a (I think) more general version of Channer_FT
-//// =================================================================================================
-//// MARK: - Channer_FT
-//
-//template <class Chan_p, class Chan_Self_p = typename Chan_p::Chan_Base>
-//class Channer_FT
-//:	public virtual Channer<Chan_Self_p>
-//	{
-//protected:
-//	Channer_FT() {}
-//
-//public:
-//	virtual ~Channer_FT() {}
-//
-//	Channer_FT(const ZRef<Channer<Chan_Self_p> >& iChanner)
-//	:	fChannerReal(iChanner)
-//	,	fChan(sGetChan(fChannerReal))
-//		{}
-//
-//	template <class Param_p>
-//	Channer_FT(Param_p& iParam, const ZRef<Channer<Chan_Self_p> >& iChanner)
-//	:	fChannerReal(iChanner)
-//	,	fChan(iParam, sGetChan(fChannerReal))
-//		{}
-//
-//	template <class Param_p>
-//	Channer_FT(const Param_p& iParam, const ZRef<Channer<Chan_Self_p> >& iChanner)
-//	:	fChannerReal(iChanner)
-//	,	fChan(iParam, sGetChan(fChannerReal))
-//		{}
-//
-//// From Channer
-//	virtual void GetChan(const Chan_Self_p*& oChanPtr) { oChanPtr = &fChan; }
-//
-//// Our protocol
-//	Chan_p& GetChanActual() { return fChan; }
-//
-//protected:
-//	ZRef<Channer<Chan_Self_p> > fChannerReal;
-//	Chan_p fChan;
-//	};
-//
-//template <class Chan_p>
-//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-//	const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-//	{ return new Channer_FT<Chan_p>; }
-//
-//template <class Chan_p, class Param_p>
-//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-//	Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-//	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
-//
-//template <class Chan_p, class Param_p>
-//ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_FT(
-//	const Param_p& iParam, const ZRef<Channer<typename Chan_p::Chan_Base> >& iChanner)
-//	{ return new Channer_FT<Chan_p>(iParam, iChanner); }
-
-// =================================================================================================
-// MARK: - ChannerComboRW
-
-template <class Elmt_p>
-class ChannerComboRW
-	{
-public:
-	ChannerComboRW(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
-		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
-	:	fChannerR(iChannerR)
-	,	fChannerW(iChannerW)
-		{}
-
-	const ZRef<Channer<ChanR<Elmt_p> > >& GetR() const
-		{ return fChannerR; }
-
-	void SetR(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR)
-		{ fChannerR = iChannerR; }
-
-	const ZRef<Channer<ChanW<Elmt_p> > >& GetW() const
-		{ return fChannerW; }
-
-	void SetW(const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
-		{ fChannerW = iChannerW; }
-
-protected:
-	ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
-	ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
-	};
-
-// =================================================================================================
-// MARK: - ChannerComboRWClose
-
-template <class Elmt_p>
-class ChannerComboRWClose
-	{
-public:
-	ChannerComboRWClose(
-		const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
-		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW,
-		const ZRef<Channer<ChanClose> >& iChannerClose)
-	:	fChannerR(iChannerR)
-	,	fChannerW(iChannerW)
-	,	fChannerClose(iChannerClose)
-		{}
-
-	const ZRef<Channer<ChanR<Elmt_p> > >& GetR() const
-		{ return fChannerR; }
-
-	void SetR(const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR)
-		{ fChannerR = iChannerR; }
-
-	const ZRef<Channer<ChanW<Elmt_p> > >& GetW() const
-		{ return fChannerW; }
-
-	void SetW(const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
-		{ fChannerW = iChannerW; }
-
-	const ZRef<Channer<ChanClose> >& GetClose() const
-		{ return fChannerClose; }
-
-	void SetClose(const ZRef<Channer<ChanClose> >& iChannerClose)
-		{ fChannerClose = iChannerClose; }
-
-protected:
-	ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
-	ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
-	ZRef<Channer<ChanClose> > fChannerClose;
-	};
 
 } // namespace ZooLib
 

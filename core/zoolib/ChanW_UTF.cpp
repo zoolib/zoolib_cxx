@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Stringf.h"
 #include "zoolib/ZDebug.h"
 
-#include <stdexcept> // for std::range_error
-
 namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;

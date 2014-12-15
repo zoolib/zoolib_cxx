@@ -1068,56 +1068,29 @@ bool FileLoc_POSIX::Delete()
 	return true;
 	}
 
-#if 0
+ZRef<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
+	{ return this->OpenRWPos(iPreventWriters); }
 
-ZRef<ZStreamerRPos> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
+ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
+	{ return this->OpenRWPos(iPreventWriters); }
+
+ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	{
-	int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
+	ZUnimplemented();
+	}
+
+ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
+	{ return this->CreateRWPos(iOpenExisting, iPreventWriters); }
+
+ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
+	{
+	File::Error err;
+	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, &err);
 	if (theFD < 0)
 		return null;
 
-	return new ZStreamerRWPos_File_POSIX(theFD, true);
+	return new ChannerRWPos_T<ChanRWPos_File_POSIX>(Chan_File_POSIX::Init_t(theFD, true));
 	}
-
-ZRef<ZStreamerWPos> FileLoc_POSIX::OpenWPos(bool iPreventWriters, File::Error* oErr)
-	{
-	int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
-	if (theFD < 0)
-		return null;
-
-	return new ZStreamerWPos_File_POSIX(theFD, true);
-	}
-
-ZRef<ZStreamerRWPos> FileLoc_POSIX::OpenRWPos(bool iPreventWriters, File::Error* oErr)
-	{
-	int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
-	if (theFD < 0)
-		return null;
-
-	return new ZStreamerRWPos_File_POSIX(theFD, true);
-	}
-
-ZRef<ZStreamerWPos> FileLoc_POSIX::CreateWPos(
-	bool iOpenExisting, bool iPreventWriters, File::Error* oErr)
-	{
-	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
-	if (theFD < 0)
-		return null;
-
-	return new ZStreamerWPos_File_POSIX(theFD, true);
-	}
-
-ZRef<ZStreamerRWPos> FileLoc_POSIX::CreateRWPos(
-	bool iOpenExisting, bool iPreventWriters, File::Error* oErr)
-	{
-	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
-	if (theFD < 0)
-		return null;
-
-	return new ZStreamerRWPos_File_POSIX(theFD, true);
-	}
-
-#endif
 
 string FileLoc_POSIX::pGetPath()
 	{
@@ -1142,9 +1115,9 @@ string FileLoc_POSIX::pGetPath()
 // =================================================================================================
 // MARK: - Chan_File_POSIX
 
-Chan_File_POSIX::Chan_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	fFD(iFD)
-,	fCloseWhenFinalized(iCloseWhenFinalized)
+Chan_File_POSIX::Chan_File_POSIX(const Init_t& iInit)
+:	fFD(iInit.first)
+,	fCloseWhenFinalized(iInit.second)
 	{}
 
 Chan_File_POSIX::~Chan_File_POSIX()
@@ -1159,8 +1132,8 @@ int Chan_File_POSIX::GetFD() const
 // =================================================================================================
 // MARK: - ChanRPos_File_POSIX
 
-ChanRPos_File_POSIX::ChanRPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	Chan_File_POSIX(iFD, iCloseWhenFinalized)
+ChanRPos_File_POSIX::ChanRPos_File_POSIX(const Init_t& iInit)
+:	Chan_File_POSIX(iInit)
 	{}
 
 ChanRPos_File_POSIX::~ChanRPos_File_POSIX()
@@ -1225,129 +1198,26 @@ size_t ChanRPos_File_POSIX::UnreadableLimit()
 	return 0;
 	}
 
-
-#if 0
-
-// =================================================================================================
-// MARK: - ZStreamWPos_File_POSIX
-
-ZStreamWPos_File_POSIX::ZStreamWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	fFD(iFD),
-	fCloseWhenFinalized(iCloseWhenFinalized)
-	{}
-
-ZStreamWPos_File_POSIX::~ZStreamWPos_File_POSIX()
-	{
-	if (fCloseWhenFinalized)
-		spClose(fFD);
-	}
-
-void ZStreamWPos_File_POSIX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ spWrite(fFD, iSource, iCount, oCountWritten); }
-
-void ZStreamWPos_File_POSIX::Imp_Flush()
-	{ spFlush(fFD); }
-
-uint64 ZStreamWPos_File_POSIX::Imp_GetPosition()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
-
-void ZStreamWPos_File_POSIX::Imp_SetPosition(uint64 iPosition)
-	{ spSetPosition(fFD, iPosition); }
-
-uint64 ZStreamWPos_File_POSIX::Imp_GetSize()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
-void ZStreamWPos_File_POSIX::Imp_SetSize(uint64 iSize)
-	{
-	if (File::errorNone != spSetSize(fFD, iSize))
-		sThrowBadSize();
-	}
-
-// =================================================================================================
-// MARK: - ZStreamerWPos_File_POSIX
-
-ZStreamerWPos_File_POSIX::ZStreamerWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	fStream(iFD, iCloseWhenFinalized)
-	{}
-
-ZStreamerWPos_File_POSIX::~ZStreamerWPos_File_POSIX()
-	{}
-
-const ZStreamWPos& ZStreamerWPos_File_POSIX::GetStreamWPos()
-	{ return fStream; }
-
 // =================================================================================================
 // MARK: - ZStreamRWPos_File_POSIX
 
-ZStreamRWPos_File_POSIX::ZStreamRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	fFD(iFD),
-	fCloseWhenFinalized(iCloseWhenFinalized)
+ChanRWPos_File_POSIX::ChanRWPos_File_POSIX(const Init_t& iInit)
+:	ChanRPos_File_POSIX(iInit)
 	{}
 
-ZStreamRWPos_File_POSIX::~ZStreamRWPos_File_POSIX()
+ChanRWPos_File_POSIX::~ChanRWPos_File_POSIX()
+	{}
+
+size_t ChanRWPos_File_POSIX::QWrite(const byte* iSource, size_t iCount)
 	{
-	if (fCloseWhenFinalized)
-		spClose(fFD);
-	}
-
-void ZStreamRWPos_File_POSIX::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
-	{ spRead(fFD, oDest, iCount, oCountRead); }
-
-void ZStreamRWPos_File_POSIX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ spWrite(fFD, iSource, iCount, oCountWritten); }
-
-void ZStreamRWPos_File_POSIX::Imp_Flush()
-	{ spFlush(fFD); }
-
-uint64 ZStreamRWPos_File_POSIX::Imp_GetPosition()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
+	size_t countWritten;
+	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
+		return countWritten;
 	return 0;
 	}
 
-void ZStreamRWPos_File_POSIX::Imp_SetPosition(uint64 iPosition)
-	{ spSetPosition(fFD, iPosition); }
-
-uint64 ZStreamRWPos_File_POSIX::Imp_GetSize()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
-void ZStreamRWPos_File_POSIX::Imp_SetSize(uint64 iSize)
-	{
-	if (File::errorNone != spSetSize(fFD, iSize))
-		sThrowBadSize();
-	}
-
-// =================================================================================================
-// MARK: - ZStreamerRWPos_File_POSIX
-
-ZStreamerRWPos_File_POSIX::ZStreamerRWPos_File_POSIX(int iFD, bool iCloseWhenFinalized)
-:	fStream(iFD, iCloseWhenFinalized)
-	{}
-
-ZStreamerRWPos_File_POSIX::~ZStreamerRWPos_File_POSIX()
-	{}
-
-const ZStreamRWPos& ZStreamerRWPos_File_POSIX::GetStreamRWPos()
-	{ return fStream; }
-
-#endif
+void ChanRWPos_File_POSIX::CountSet(uint64 iCount)
+	{ spSetPosition(fFD, iCount); }
 
 } // namespace ZooLib
 
