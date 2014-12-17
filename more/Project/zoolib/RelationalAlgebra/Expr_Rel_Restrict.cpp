@@ -43,7 +43,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 // MARK: - Expr_Rel_Restrict
 
-Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool)
+Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool)
 :	inherited(iOp0)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
@@ -51,7 +51,7 @@ Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExp
 Expr_Rel_Restrict::~Expr_Rel_Restrict()
 	{}
 
-void Expr_Rel_Restrict::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Restrict::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Restrict* theVisitor = sDynNonConst<Visitor_Expr_Rel_Restrict>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
@@ -59,7 +59,7 @@ void Expr_Rel_Restrict::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Restrict::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Restrict::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Restrict* theVisitor = sDynNonConst<Visitor_Expr_Rel_Restrict>(&iVisitor))
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
@@ -76,7 +76,7 @@ ZRef<Expr_Rel> Expr_Rel_Restrict::Clone(const ZRef<Expr_Rel>& iOp0)
 void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict( Visitor_Expr_Rel_Restrict& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
-const ZRef<ZExpr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
+const ZRef<Expr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
@@ -86,7 +86,7 @@ void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Rest
 	{
 	this->Visit_Expr_Op1(iExpr);
 
-	if (const ZRef<ZExpr_Bool>& theExpr_Bool = iExpr->GetExpr_Bool())
+	if (const ZRef<Expr_Bool>& theExpr_Bool = iExpr->GetExpr_Bool())
 		theExpr_Bool->Accept(*this);
 	}
 
@@ -94,7 +94,7 @@ void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Rest
 // MARK: - Relational operators
 
 ZRef<Expr_Rel_Restrict> sRestrict(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
 	{
 	if (iExpr_Rel && iExpr_Bool)
 		return new Expr_Rel_Restrict(iExpr_Rel, iExpr_Bool);
@@ -103,14 +103,14 @@ ZRef<Expr_Rel_Restrict> sRestrict(
 	}
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
+	const ZRef<Expr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool)
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
 	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
 
 } // namespace RelationalAlgebra

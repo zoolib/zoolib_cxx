@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Relater_Searcher_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/Relater.h"
-#include "zoolib/dataspace/Searcher.h"
+#include "zooLib/Dataspace/Relater.h"
+#include "zooLib/Dataspace/Searcher.h"
 
 #include "zoolib/QueryEngine/Walker.h"
 

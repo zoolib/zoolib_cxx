@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Starter_CFRunLoop.h"
+#include "zoolib/Apple/Starter_CFRunLoop.h"
 
 #if ZCONFIG_API_Enabled(Starter_CFRunLoop)
 
-#include "zoolib/ZUtil_CF_Context.h"
+#include "zoolib/Apple/Util_CF_Context.h"
 
 namespace ZooLib {
 
@@ -66,7 +66,7 @@ void Starter_CFRunLoop::Initialize()
 		true, // repeats
 		0, // order
 		spCallback,
-		ZUtil_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()));
+		Util_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()));
 
 	::CFRunLoopAddObserver(fRunLoop, fObserver, kCFRunLoopCommonModes);
 	}

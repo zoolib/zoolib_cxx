@@ -23,11 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-//#include "zoolib/Util_STL_map.h"
+#include "zoolib/Val_Any.h"
 
-#include "zoolib/ZVal_Any.h"
-
-#include "zoolib/Expr/ZExpr_Op_T.h"
+#include "zoolib/Expr/Expr_Op_T.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
@@ -42,13 +40,13 @@ class Visitor_Expr_Rel_Calc;
 
 class Expr_Rel_Calc
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+,	public virtual Expr_Op1_T<Expr_Rel>
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
 	typedef RelationalAlgebra::PseudoMap PseudoMap;
 
-	typedef Callable<ZVal_Any(const PseudoMap&)> Callable_t;
+	typedef Callable<Val_Any(const PseudoMap&)> Callable_t;
 
 	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
 		const ColName& iColName,
@@ -56,11 +54,11 @@ public:
 
 	virtual ~Expr_Rel_Calc();
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr_Op1_T<Expr_Rel>
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+// From Expr_Op1_T<Expr_Rel>
+	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
@@ -80,7 +78,7 @@ private:
 // MARK: - Visitor_Expr_Rel_Calc
 
 class Visitor_Expr_Rel_Calc
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);

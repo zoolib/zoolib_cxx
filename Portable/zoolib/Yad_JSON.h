@@ -214,6 +214,9 @@ void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& w);
 void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
 	ZRef<YadR> iYadR, const ChanW_UTF& w);
 
+
+void sWrite_PropName(const string8& iPropName, const ChanW_UTF& w);
+
 } // namespace Yad_JSON
 } // namespace ZooLib
 

@@ -33,7 +33,7 @@ namespace QueryEngine {
 class Walker_Const : public Walker
 	{
 public:
-	Walker_Const(const string8& iColName, const ZVal_Any& iVal);
+	Walker_Const(const string8& iColName, const Val_Any& iVal);
 	virtual ~Walker_Const();
 
 // From QueryEngine::Walker
@@ -44,13 +44,13 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(ZVal_Any* ioResults);
+	virtual bool QReadInc(Val_Any* ioResults);
 
 private:
 	bool fExhausted;
 	const string8 fColName;
 	size_t fOutputOffset;
-	const ZVal_Any fVal;
+	const Val_Any fVal;
 	};
 
 } // namespace QueryEngine

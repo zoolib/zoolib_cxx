@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter.h"
 
 #include "zooLib/dataspace/RelsWatcher.h"
-#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/DatonSet/DatonSet.h"
 
 // =================================================================================================
 // MARK: -

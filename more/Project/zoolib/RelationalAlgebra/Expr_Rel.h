@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ThreadVal.h"
 #include "zoolib/UnicodeString.h"
 
-#include "zoolib/Expr/ZExpr.h"
+#include "zoolib/Expr/Expr.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -40,7 +40,7 @@ namespace RelationalAlgebra {
 // MARK: - Expr_Rel
 
 class Expr_Rel
-:	public virtual ZExpr
+:	public virtual Expr
 	{
 protected:
 	Expr_Rel();

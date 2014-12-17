@@ -49,7 +49,7 @@ Expr_Rel_Union::Expr_Rel_Union(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>&
 	ZAssert(iOp0 and iOp1);
 	}
 
-void Expr_Rel_Union::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Union::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Union* theVisitor = sDynNonConst<Visitor_Expr_Rel_Union>(&iVisitor))
 		this->Accept_Expr_Rel_Union(*theVisitor);

@@ -105,7 +105,7 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 // -----------------
 
-bool sTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+static bool sTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
 	{
 	if (ZQ<int> theQ = sQRead_Digit(iChanR, iChanU))
 		{
@@ -115,7 +115,7 @@ bool sTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigi
 	return false;
 	}
 
-bool sTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+static bool sTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
 	{
 	if (ZQ<int> theQ = sQRead_HexDigit(iChanR, iChanU))
 		{

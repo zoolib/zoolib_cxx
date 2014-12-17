@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_SQLite_YadSeqR_Iter_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/Yad_Std.h"
 #include "zoolib/SQLite/SQLite.h"
 
 namespace ZooLib {
@@ -31,14 +31,14 @@ namespace SQLite {
 // =================================================================================================
 // MARK: - SQLite::YadSeqR_Iter
 
-class YadSeqR_Iter : public ZYadSeqR_Std
+class YadSeqR_Iter : public YadSeqR_Std
 	{
 public:
 	YadSeqR_Iter(ZRef<Iter> iIter);
 	virtual ~YadSeqR_Iter();
 
-// From ZYadSeqR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
+// From YadSeqR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
 	ZRef<Iter> fIter;

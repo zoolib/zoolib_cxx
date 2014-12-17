@@ -19,13 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare.h"
+#include "zoolib/Log.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/DatonSet/ZUtil_Strim_IntervalTreeClock.h"
-#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/DatonSet/DatonSet.h"
 
 #include <queue>
 
@@ -67,7 +67,7 @@ Daton& Daton::operator=(const Daton& iOther)
 	return *this;
 	}
 
-Daton::Daton(ZData_Any iData)
+Daton::Daton(Data_Any iData)
 :	fData(iData)
 	{}
 
@@ -77,7 +77,7 @@ bool Daton::operator==(const Daton& iOther) const
 bool Daton::operator<(const Daton& iOther) const
 	{ return fData < iOther.fData; }
 
-ZData_Any Daton::GetData() const
+Data_Any Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================

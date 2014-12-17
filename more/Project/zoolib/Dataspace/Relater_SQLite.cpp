@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 
-#include "zoolib/dataspace/Relater_SQLite.h"
+#include "zooLib/Dataspace/Relater_SQLite.h"
 
 #include "zoolib/RelationalAlgebra/AsSQL.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
@@ -175,7 +175,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	foreachi (iterPQuery, fMap_Rel_PQuery)
 		{
 		const PQuery* thePQuery = &iterPQuery->second;
-		vector<ZVal_Any> thePackedRows;
+		vector<Val_Any> thePackedRows;
 		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
 			{

@@ -44,7 +44,7 @@ Expr_Rel_Dee::Expr_Rel_Dee()
 Expr_Rel_Dee::~Expr_Rel_Dee()
 	{}
 
-void Expr_Rel_Dee::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Dee::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Dee* theVisitor = sDynNonConst<Visitor_Expr_Rel_Dee>(&iVisitor))
 		this->Accept_Expr_Rel_Dee(*theVisitor);
@@ -52,7 +52,7 @@ void Expr_Rel_Dee::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Dee::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Dee::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Dee* theVisitor = sDynNonConst<Visitor_Expr_Rel_Dee>(&iVisitor))
 		this->Accept_Expr_Rel_Dee(*theVisitor);

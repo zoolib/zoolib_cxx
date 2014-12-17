@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_PseudoMap_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h"
+#include "zoolib/Val_Any.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -35,17 +35,17 @@ namespace RelationalAlgebra {
 class PseudoMap
 	{
 public:
-	PseudoMap(const std::map<string8,size_t>* iBindings, const ZVal_Any* iVals);
+	PseudoMap(const std::map<string8,size_t>* iBindings, const Val_Any* iVals);
 
-	const ZVal_Any* PGet(const string8& iName) const;
-	const ZQ<ZVal_Any> QGet(const string8& iName) const;
-	const ZVal_Any& DGet(const ZVal_Any& iDefault, const string8& iName) const;
-	const ZVal_Any& Get(const string8& iName) const;
+	const Val_Any* PGet(const string8& iName) const;
+	const ZQ<Val_Any> QGet(const string8& iName) const;
+	const Val_Any& DGet(const Val_Any& iDefault, const string8& iName) const;
+	const Val_Any& Get(const string8& iName) const;
 
 	template <class S>
 	const S* PGet(const string8& iName) const
 		{
-		if (const ZVal_Any* theVal = this->PGet(iName))
+		if (const Val_Any* theVal = this->PGet(iName))
 			return theVal->PGet<S>();
 		return nullptr;
 		}
@@ -53,7 +53,7 @@ public:
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
 		{
-		if (const ZVal_Any* theVal = this->PGet(iName))
+		if (const Val_Any* theVal = this->PGet(iName))
 			return theVal->QGet<S>();
 		return null;
 		}
@@ -74,11 +74,11 @@ public:
 		return S();
 		}
 
-	ZMap_Any AsMap() const;
+	Map_Any AsMap() const;
 
 protected:
 	const std::map<string8,size_t>* fBindings;
-	const ZVal_Any* fVals;
+	const Val_Any* fVals;
 	};
 
 // =================================================================================================
@@ -88,7 +88,7 @@ class PseudoMap_RelHead
 :	public PseudoMap
 	{
 public:
-	PseudoMap_RelHead(const RelHead& iRH, const ZVal_Any* iVals);
+	PseudoMap_RelHead(const RelHead& iRH, const Val_Any* iVals);
 
 private:
 	std::map<string8,size_t> fBindings_Storage;

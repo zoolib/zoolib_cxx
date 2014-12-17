@@ -58,7 +58,7 @@ ZRef<Walker> Walker_Rename::Prime(
 	return fWalker;
 	}
 
-bool Walker_Rename::QReadInc(ZVal_Any* ioResults)
+bool Walker_Rename::QReadInc(Val_Any* ioResults)
 	{ return fWalker->QReadInc(ioResults); }
 
 } // namespace QueryEngine

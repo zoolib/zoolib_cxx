@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Util_Strim_Rel_h__
 #include "zconfig.h"
 
-#include "zoolib/ValPred/ZVisitor_Expr_Bool_ValPred_Any_ToStrim.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 
@@ -48,7 +48,7 @@ namespace Util_Strim_Rel {
 // MARK: - RelationalAlgebra::Util_Strim_Rel::Visitor
 
 class Visitor
-:	public virtual ZVisitor_Expr_Bool_ValPred_Any_ToStrim
+:	public virtual Visitor_Expr_Bool_ValPred_Any_ToStrim
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
@@ -65,7 +65,7 @@ class Visitor
 ,	public virtual QueryEngine::Visitor_Expr_Rel_Search
 	{
 public:
-	virtual void Visit_Expr(const ZRef<ZExpr>& iExpr);
+	virtual void Visit_Expr(const ZRef<Expr>& iExpr);
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
@@ -83,7 +83,7 @@ public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iExpr);
 
 private:
-	void pWriteBinary(const std::string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr);
+	void pWriteBinary(const std::string& iFunctionName, const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr);
 	};
 
 typedef Visitor::Options Options;

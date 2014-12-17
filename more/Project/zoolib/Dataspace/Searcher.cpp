@@ -19,11 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare_Ref.h"
+#include "zoolib/Log.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/dataspace/Searcher.h"
+#include "zooLib/Dataspace/Searcher.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
@@ -51,7 +51,7 @@ SearchSpec SearchSpec::operator=(const SearchSpec& iOther)
 	return *this;
 	}
 
-SearchSpec::SearchSpec(const ConcreteHead& iConcreteHead, const ZRef<ZExpr_Bool>& iRestriction)
+SearchSpec::SearchSpec(const ConcreteHead& iConcreteHead, const ZRef<Expr_Bool>& iRestriction)
 :	fConcreteHead(iConcreteHead)
 ,	fRestriction(iRestriction)
 	{}
@@ -76,7 +76,7 @@ bool SearchSpec::operator<(const SearchSpec& iOther) const
 const ConcreteHead& SearchSpec::GetConcreteHead() const
 	{ return fConcreteHead; }
 
-const ZRef<ZExpr_Bool>& SearchSpec::GetRestriction() const
+const ZRef<Expr_Bool>& SearchSpec::GetRestriction() const
 	{ return fRestriction; }
 
 // =================================================================================================

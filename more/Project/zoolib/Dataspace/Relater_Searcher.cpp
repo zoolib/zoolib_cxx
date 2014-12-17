@@ -19,14 +19,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Log.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/dataspace/Relater_Searcher.h"
+#include "zooLib/Dataspace/Relater_Searcher.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"

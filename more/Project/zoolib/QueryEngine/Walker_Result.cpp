@@ -53,13 +53,13 @@ ZRef<Walker> Walker_Result::Prime(
 	return this;
 	}
 
-bool Walker_Result::QReadInc(ZVal_Any* oResults)
+bool Walker_Result::QReadInc(Val_Any* oResults)
 	{
 	if (fIndex >= fResult->Count())
 		return false;
 
 	size_t theOffset = fBaseOffset;
-	const ZVal_Any* theVals = fResult->GetValsAt(fIndex);
+	const Val_Any* theVals = fResult->GetValsAt(fIndex);
 	foreachi (ii, fResult->GetRelHead())
 		oResults[theOffset++] = *theVals++;
 

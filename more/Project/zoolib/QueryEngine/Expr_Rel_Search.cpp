@@ -47,13 +47,13 @@ namespace QueryEngine {
 
 Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::Rename& iRename,
 	const RelationalAlgebra::RelHead& iRelHead_Optional,
-	const ZRef<ZExpr_Bool>& iExpr_Bool)
+	const ZRef<Expr_Bool>& iExpr_Bool)
 :	fRename(iRename)
 ,	fRelHead_Optional(iRelHead_Optional)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
 
-void Expr_Rel_Search::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Search::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Search* theVisitor = sDynNonConst<Visitor_Expr_Rel_Search>(&iVisitor))
 		this->Accept_Expr_Rel_Search(*theVisitor);
@@ -61,7 +61,7 @@ void Expr_Rel_Search::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Search::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>& iVisitor)
+void Expr_Rel_Search::Accept_Expr_Op0(Visitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Search* theVisitor = sDynNonConst<Visitor_Expr_Rel_Search>(&iVisitor))
 		this->Accept_Expr_Rel_Search(*theVisitor);
@@ -84,7 +84,7 @@ const RelationalAlgebra::Rename& Expr_Rel_Search::GetRename() const
 const RelationalAlgebra::RelHead& Expr_Rel_Search::GetRelHead_Optional() const
 	{ return fRelHead_Optional; }
 
-const ZRef<ZExpr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
+const ZRef<Expr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================

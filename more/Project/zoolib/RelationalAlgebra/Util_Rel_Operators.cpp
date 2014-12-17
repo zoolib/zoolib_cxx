@@ -37,10 +37,10 @@ ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const NameVal& iNameVal)
 
 // -----
 
-static ZRef<Expr_Rel> spConst(const ZMap_Any& iMap)
+static ZRef<Expr_Rel> spConst(const Map_Any& iMap)
 	{
 	ZRef<Expr_Rel> result;
-	for (ZMap_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
+	for (Map_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
 		ZRef<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
 		if (not result)
@@ -51,7 +51,7 @@ static ZRef<Expr_Rel> spConst(const ZMap_Any& iMap)
 	return result;
 	}
 
-ZRef<Expr_Rel> sConst(const ZMap_Any& iMap)
+ZRef<Expr_Rel> sConst(const Map_Any& iMap)
 	{
 	if (ZRef<Expr_Rel> result = spConst(iMap))
 		return result;
@@ -59,21 +59,21 @@ ZRef<Expr_Rel> sConst(const ZMap_Any& iMap)
 	return sDee();
 	}
 
-ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel)
+ZRef<Expr_Rel> operator*(const Map_Any& iMap, const ZRef<Expr_Rel>& iRel)
 	{
 	if (ZRef<Expr_Rel> asRel = spConst(iMap))
 		return asRel * iRel;
 	return iRel;
 	}
 
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap)
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const Map_Any& iMap)
 	{
 	if (ZRef<Expr_Rel> asRel = spConst(iMap))
 		return iRel * asRel;
 	return iRel;
 	}
 
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const Map_Any& iMap)
 	{
 	if (ZRef<Expr_Rel> asRel = spConst(iMap))
 		ioRel = ioRel * asRel;
@@ -82,13 +82,13 @@ ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap)
 
 // -----
 
-ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred)
-	{ return new Expr_Rel_Restrict(iExpr_Rel, new ZExpr_Bool_ValPred(iValPred)); }
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ValPred& iValPred)
+	{ return new Expr_Rel_Restrict(iExpr_Rel, new Expr_Bool_ValPred(iValPred)); }
 
-ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Restrict(iExpr_Rel, new ZExpr_Bool_ValPred(iValPred)); }
+ZRef<Expr_Rel> operator&(const ValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return new Expr_Rel_Restrict(iExpr_Rel, new Expr_Bool_ValPred(iValPred)); }
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred)
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred)
 	{ return ioExpr_Rel = ioExpr_Rel & iValPred; }
 
 } // namespace RelationalAlgebra

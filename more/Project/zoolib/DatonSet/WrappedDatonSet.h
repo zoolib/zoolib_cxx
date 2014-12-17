@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/DatonSet/DatonSet.h"
 
 namespace ZooLib {
 namespace DatonSet {

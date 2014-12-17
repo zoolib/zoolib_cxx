@@ -20,8 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Compare_Ref.h"
-
-#include "zoolib/ZLog.h"
+#include "zoolib/Log.h"
 #include "zoolib/ZThread.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
@@ -32,7 +31,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T<ZRef<RelationalAlgebra::Expr_Rel> >(const ZRef<RelationalAlgebra::Expr_Rel>& iL, const ZRef<RelationalAlgebra::Expr_Rel>& iR)
+int sCompare_T<ZRef<RelationalAlgebra::Expr_Rel> >(
+	const ZRef<RelationalAlgebra::Expr_Rel>& iL,
+	const ZRef<RelationalAlgebra::Expr_Rel>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
 ZMACRO_CompareRegistration_T(ZRef<RelationalAlgebra::Expr_Rel>)

@@ -29,42 +29,42 @@ namespace RelationalAlgebra {
 // =================================================================================================
 // MARK: - PseudoMap
 
-PseudoMap::PseudoMap(const std::map<string8,size_t>* iBindings, const ZVal_Any* iVals)
+PseudoMap::PseudoMap(const std::map<string8,size_t>* iBindings, const Val_Any* iVals)
 :	fBindings(iBindings)
 ,	fVals(iVals)
 	{}
 
-const ZVal_Any* PseudoMap::PGet(const string8& iName) const
+const Val_Any* PseudoMap::PGet(const string8& iName) const
 	{
 	if (ZQ<size_t> theOffsetQ = Util_STL::sQGet(*fBindings, iName))
 		return fVals + *theOffsetQ;
 	return nullptr;
 	}
 
-const ZQ<ZVal_Any> PseudoMap::QGet(const string8& iName) const
+const ZQ<Val_Any> PseudoMap::QGet(const string8& iName) const
 	{
-	if (const ZVal_Any* theVal = this->PGet(iName))
+	if (const Val_Any* theVal = this->PGet(iName))
 		return *theVal;
 	return null;
 	}
 
-const ZVal_Any& PseudoMap::DGet(const ZVal_Any& iDefault, const string8& iName) const
+const Val_Any& PseudoMap::DGet(const Val_Any& iDefault, const string8& iName) const
 	{
-	if (const ZVal_Any* theVal = this->PGet(iName))
+	if (const Val_Any* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Any& PseudoMap::Get(const string8& iName) const
+const Val_Any& PseudoMap::Get(const string8& iName) const
 	{
-	if (const ZVal_Any* theVal = this->PGet(iName))
+	if (const Val_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return sSingleton<ZVal_Any>();
+	return sSingleton<Val_Any>();
 	}
 
-ZMap_Any PseudoMap::AsMap() const
+Map_Any PseudoMap::AsMap() const
 	{
-	ZMap_Any result;
+	Map_Any result;
 	for (std::map<string8,size_t>::const_iterator ii = fBindings->begin(), end = fBindings->end();
 		ii != end; ++ii)
 		{ result.Set(ii->first, fVals[ii->second]); }
@@ -75,7 +75,7 @@ ZMap_Any PseudoMap::AsMap() const
 // =================================================================================================
 // MARK: - PseudoMap_RelHead
 
-PseudoMap_RelHead::PseudoMap_RelHead(const RelHead& iRH, const ZVal_Any* iVals)
+PseudoMap_RelHead::PseudoMap_RelHead(const RelHead& iRH, const Val_Any* iVals)
 :	PseudoMap(&fBindings_Storage, iVals)
 	{
 	size_t index = 0;

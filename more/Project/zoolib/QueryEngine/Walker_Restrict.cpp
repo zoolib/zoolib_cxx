@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Log.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
+#include "zoolib/Visitor_Do_T.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZTextCollator.h"
-#include "zoolib/ZVisitor_Do_T.h"
 
-#include "zoolib/Expr/ZExpr_Bool.h"
+#include "zoolib/Expr/Expr_Bool.h"
 
 #include "zoolib/QueryEngine/Walker_Restrict.h"
 
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h"
-#include "zoolib/ValPred/ZValPred_Any.h"
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/ValPred_Any.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -50,7 +50,7 @@ public:
 	Exec() {};
 	virtual ~Exec() {}
 
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts) = 0;
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts) = 0;
 	};
 
 // =================================================================================================
@@ -61,14 +61,14 @@ namespace { // anonymous
 class Exec_False : public Walker_Restrict::Exec
 	{
 public:
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{ return false; }
 	};
 
 class Exec_True : public Walker_Restrict::Exec
 	{
 public:
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{ return true; }
 	};
 
@@ -82,7 +82,7 @@ public:
 	virtual ~Exec_Not()
 		{ delete fExec; }
 
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{ return !fExec->Call(iVars, iConsts); }
 
 	Exec* fExec;
@@ -102,7 +102,7 @@ public:
 		delete fRight;
 		}
 
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{ return fLeft->Call(iVars, iConsts) && fRight->Call(iVars, iConsts); }
 
 	Exec* fLeft;
@@ -123,7 +123,7 @@ public:
 		delete fRight;
 		}
 
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{ return fLeft->Call(iVars, iConsts) || fRight->Call(iVars, iConsts); }
 
 	Exec* fLeft;
@@ -140,7 +140,7 @@ public:
 	,	fOffsetRight(iOffsetRight)
 		{}
 
-	virtual bool Call(const ZVal_Any* iVars, const ZVal_Any* iConsts)
+	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
 		{
 		if (UseLeftVar_p)
 			{
@@ -172,32 +172,32 @@ namespace { // anonymous
 
 struct Functor_LT
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) < 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) < 0; }
 	};
 
 struct Functor_LE
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) <= 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) <= 0; }
 	};
 
 struct Functor_EQ
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) == 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) == 0; }
 	};
 
 struct Functor_NE
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) != 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) != 0; }
 	};
 
 struct Functor_GE
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) >= 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) >= 0; }
 	};
 
 struct Functor_GT
 	{
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const { return sCompare_T(l, r) > 0; }
+	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) > 0; }
 	};
 
 struct Functor_Callable
@@ -208,7 +208,7 @@ struct Functor_Callable
 	:	fCallable(iCallable)
 		{}
 
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const
+	bool operator()(const Val_Any& l, const Val_Any& r) const
 		{ return fCallable->Call(l, r); }
 
 	ZRef<Callable_t> fCallable;
@@ -220,7 +220,7 @@ struct Functor_StringContains
 	:	fStrength(iStrength)
 		{}
 
-	bool operator()(const ZVal_Any& l, const ZVal_Any& r) const
+	bool operator()(const Val_Any& l, const Val_Any& r) const
 		{
 		if (const string8* target = l.PGet<string8>())
 			{
@@ -241,38 +241,38 @@ struct Functor_StringContains
 namespace { // anonymous
 
 class AsExec
-:	public virtual ZVisitor_Do_T<Walker_Restrict::Exec*>
-,	public virtual ZVisitor_Expr_Bool_True
-,	public virtual ZVisitor_Expr_Bool_False
-,	public virtual ZVisitor_Expr_Bool_Not
-,	public virtual ZVisitor_Expr_Bool_And
-,	public virtual ZVisitor_Expr_Bool_Or
-,	public virtual ZVisitor_Expr_Bool_ValPred
+:	public virtual Visitor_Do_T<Walker_Restrict::Exec*>
+,	public virtual Visitor_Expr_Bool_True
+,	public virtual Visitor_Expr_Bool_False
+,	public virtual Visitor_Expr_Bool_Not
+,	public virtual Visitor_Expr_Bool_And
+,	public virtual Visitor_Expr_Bool_Or
+,	public virtual Visitor_Expr_Bool_ValPred
 	{
 public:
-	AsExec(const map<string8,size_t>& iVars, vector<ZVal_Any>& ioConsts)
+	AsExec(const map<string8,size_t>& iVars, vector<Val_Any>& ioConsts)
 	:	fVars(iVars)
 	,	fConsts(ioConsts)
 		{}
 
-// From ZVisitor_Expr_Bool_XXX
-	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
+// From Visitor_Expr_Bool_XXX
+	virtual void Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
 		{ this->pSetResult(new Exec_True); }
 
-	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
+	virtual void Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iRep)
 		{ this->pSetResult(new Exec_False); }
 
-	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
+	virtual void Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iRep)
 		{ this->pSetResult(new Exec_Not(this->Do(iRep->GetOp0()))); }
 
-	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
+	virtual void Visit_Expr_Bool_And(const ZRef<Expr_Bool_And>& iRep)
 		{ this->pSetResult(new Exec_And(this->Do(iRep->GetOp0()), this->Do(iRep->GetOp1()))); }
 
-	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
+	virtual void Visit_Expr_Bool_Or(const ZRef<Expr_Bool_Or>& iRep)
 		{ this->pSetResult(new Exec_Or(this->Do(iRep->GetOp0()), this->Do(iRep->GetOp1()))); }
 
-// From ZVisitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr);
+// From Visitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
 
 // Our protocol
 	Walker_Restrict::Exec* pMakeExec(const ZValPred& iValPred);
@@ -283,10 +283,10 @@ public:
 		const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS);
 
 	const map<string8,size_t>& fVars;
-	vector<ZVal_Any>& fConsts;
+	vector<Val_Any>& fConsts;
 	};
 
-void AsExec::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+void AsExec::Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(this->pMakeExec(iExpr->GetValPred())); }
 
 template <class Functor_p>
@@ -413,7 +413,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 // =================================================================================================
 // MARK: - Walker_Restrict
 
-Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool)
+Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)
 ,	fExpr_Bool(iExpr_Bool)
 ,	fExec(nullptr)
@@ -439,9 +439,9 @@ ZRef<Walker> Walker_Restrict::Prime(
 	return this;
 	}
 
-bool Walker_Restrict::QReadInc(ZVal_Any* ioResults)
+bool Walker_Restrict::QReadInc(Val_Any* ioResults)
 	{
-	const ZVal_Any* theConsts = sFirstOrNil(fConsts);
+	const Val_Any* theConsts = sFirstOrNil(fConsts);
 
 	for (;;)
 		{

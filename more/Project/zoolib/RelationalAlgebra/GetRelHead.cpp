@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Do_T.h"
+#include "zoolib/Visitor_Do_T.h"
+
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Difference.h"
@@ -39,7 +40,7 @@ using namespace Util_STL;
 namespace { // anonymous
 
 class Visitor_GetRelHead
-:	public virtual ZVisitor_Do_T<RelHead>
+:	public virtual Visitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
@@ -48,10 +49,10 @@ class Visitor_GetRelHead
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 	{
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Rel> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Util_Rel_Operators_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h" // For ValPred/Bool operators
+#include "zoolib/ValPred/Expr_Bool_ValPred.h" // For ValPred/Bool operators
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -47,15 +47,15 @@ ZRef<Expr_Rel> operator*(const NameVal& iNameVal, const ZRef<Expr_Rel>& iRel);
 ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const NameVal& iNameVal);
 ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const NameVal& iNameVal);
 
-ZRef<Expr_Rel> sConst(const ZMap_Any& iMap);
+ZRef<Expr_Rel> sConst(const Map_Any& iMap);
 
-ZRef<Expr_Rel> operator*(const ZMap_Any& iMap, const ZRef<Expr_Rel>& iRel);
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const ZMap_Any& iMap);
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const ZMap_Any& iMap);
+ZRef<Expr_Rel> operator*(const Map_Any& iMap, const ZRef<Expr_Rel>& iRel);
+ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const Map_Any& iMap);
+ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const Map_Any& iMap);
 
-ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred& iValPred);
-ZRef<Expr_Rel> operator&(const ZValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZValPred& iValPred);
+ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ValPred& iValPred);
+ZRef<Expr_Rel> operator&(const ValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred);
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

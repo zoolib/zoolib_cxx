@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_string.h"
-#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
+#include "zoolib/Log.h"
 
-#include "zoolib/ZLog.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 
 using std::string;
 
@@ -61,7 +61,7 @@ Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
 Expr_Rel_Rename::~Expr_Rel_Rename()
 	{}
 
-void Expr_Rel_Rename::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Rename::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Rename* theVisitor = sDynNonConst<Visitor_Expr_Rel_Rename>(&iVisitor))
 		this->Accept_Expr_Rel_Rename(*theVisitor);
@@ -69,7 +69,7 @@ void Expr_Rel_Rename::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Rename::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Rename::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Rename* theVisitor = sDynNonConst<Visitor_Expr_Rel_Rename>(&iVisitor))
 		this->Accept_Expr_Rel_Rename(*theVisitor);

@@ -26,9 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Relops.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/Expr/ZExpr_Bool.h"
+#include "zoolib/Expr/Expr_Bool.h"
 
-#include "zoolib/dataspace/Types.h"
+#include "zoolib/Dataspace/Types.h"
 #include "zoolib/QueryEngine/Result.h"
 
 namespace ZooLib {
@@ -45,17 +45,17 @@ public:
 	~SearchSpec();
 	SearchSpec operator=(const SearchSpec& iOther);
 
-	SearchSpec(const ConcreteHead& iConcreteHead, const ZRef<ZExpr_Bool>& iRestriction);
+	SearchSpec(const ConcreteHead& iConcreteHead, const ZRef<Expr_Bool>& iRestriction);
 
 	bool operator==(const SearchSpec& iOther) const;
 	bool operator<(const SearchSpec& iOther) const;
 
 	const ConcreteHead& GetConcreteHead() const;
-	const ZRef<ZExpr_Bool>& GetRestriction() const;
+	const ZRef<Expr_Bool>& GetRestriction() const;
 
 private:
 	ConcreteHead fConcreteHead;
-	ZRef<ZExpr_Bool> fRestriction;
+	ZRef<Expr_Bool> fRestriction;
 	};
 
 // =================================================================================================

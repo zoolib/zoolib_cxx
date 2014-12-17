@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_QueryEngine_Expr_Rel_Search_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Expr/ZExpr_Bool.h"
+#include "zoolib/Expr/Expr_Bool.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
@@ -35,19 +35,19 @@ class Visitor_Expr_Rel_Search;
 
 class Expr_Rel_Search
 :	public virtual RelationalAlgebra::Expr_Rel
-,	public virtual ZExpr_Op0_T<RelationalAlgebra::Expr_Rel>
+,	public virtual Expr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
+	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
 	Expr_Rel_Search(const RelationalAlgebra::Rename& iRename,
 		const RelationalAlgebra::RelHead& iRelHead_Optional,
-		const ZRef<ZExpr_Bool>& iExpr_Bool);
+		const ZRef<Expr_Bool>& iExpr_Bool);
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+// From Expr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<RelationalAlgebra::Expr_Rel> Self();
 	virtual ZRef<RelationalAlgebra::Expr_Rel> Clone();
@@ -57,19 +57,19 @@ public:
 
 	const RelationalAlgebra::Rename& GetRename() const;
 	const RelationalAlgebra::RelHead& GetRelHead_Optional() const;
-	const ZRef<ZExpr_Bool>& GetExpr_Bool() const;
+	const ZRef<Expr_Bool>& GetExpr_Bool() const;
 
 private:
 	const RelationalAlgebra::Rename fRename;
 	const RelationalAlgebra::RelHead fRelHead_Optional;
-	const ZRef<ZExpr_Bool> fExpr_Bool;
+	const ZRef<Expr_Bool> fExpr_Bool;
 	};
 
 // =================================================================================================
 // MARK: - Visitor_Expr_Rel_Search
 
 class Visitor_Expr_Rel_Search
-:	public virtual ZVisitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>
+:	public virtual Visitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<Expr_Rel_Search>& iExpr);

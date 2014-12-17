@@ -19,7 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/Expr/ZUtil_Expr_Bool_CNF.h"
+
+#include "zoolib/Expr/Util_Expr_Bool_CNF.h"
 
 #include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
 
@@ -37,7 +38,7 @@ void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_R
 
 	foreachi (ii, Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool()))
 		{
-		ZRef<ZExpr_Bool> newBool;
+		ZRef<Expr_Bool> newBool;
 		foreachi (jj, *ii)
 			newBool |= jj->Get();
 		theRel &= newBool;

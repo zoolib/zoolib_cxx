@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_QueryEngine_Walker_Restrict_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Expr/ZExpr_Bool.h"
+#include "zoolib/Expr/Expr_Bool.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
@@ -34,7 +34,7 @@ namespace QueryEngine {
 class Walker_Restrict : public Walker_Unary
 	{
 public:
-	Walker_Restrict(ZRef<Walker> iWalker, ZRef<ZExpr_Bool> iExpr_Bool);
+	Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool);
 	virtual ~Walker_Restrict();
 
 // From QueryEngine::Walker
@@ -43,15 +43,15 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(ZVal_Any* ioResults);
+	virtual bool QReadInc(Val_Any* ioResults);
 
 	class Exec;
 
 private:
-	const ZRef<ZExpr_Bool> fExpr_Bool;
+	const ZRef<Expr_Bool> fExpr_Bool;
 	std::map<string8,size_t> fChildOffsets;
 
-	std::vector<ZVal_Any> fConsts;
+	std::vector<Val_Any> fConsts;
 	Exec* fExec;
 	};
 

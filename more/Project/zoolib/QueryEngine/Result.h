@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compare_T.h"
 #include "zoolib/Multi.h"
+#include "zoolib/Val_Any.h"
 
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZVal_Any.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -43,7 +43,7 @@ class Result : public ZCounted
 	{
 public:
 	Result(const RelationalAlgebra::RelHead& iRelHead,
-		std::vector<ZVal_Any>* ioPackedRows);
+		std::vector<Val_Any>* ioPackedRows);
 
 	Result(const ZRef<Result>& iOther, size_t iRow);
 
@@ -52,13 +52,13 @@ public:
 	const RelationalAlgebra::RelHead& GetRelHead();
 
 	size_t Count();
-	const ZVal_Any* GetValsAt(size_t iIndex);
+	const Val_Any* GetValsAt(size_t iIndex);
 
 	int Compare(const Result& iOther) const;
 
 private:
 	RelationalAlgebra::RelHead fRelHead;
-	std::vector<ZVal_Any> fPackedRows;
+	std::vector<Val_Any> fPackedRows;
 	};
 
 // =================================================================================================

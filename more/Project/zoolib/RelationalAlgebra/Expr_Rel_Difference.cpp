@@ -47,7 +47,7 @@ Expr_Rel_Difference::Expr_Rel_Difference(const ZRef<Expr_Rel>& iOp0, const ZRef<
 :	inherited(iOp0, iOp1)
 	{}
 
-void Expr_Rel_Difference::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Difference::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Difference* theVisitor =
 		sDynNonConst<Visitor_Expr_Rel_Difference>(&iVisitor))

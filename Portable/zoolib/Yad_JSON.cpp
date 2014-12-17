@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Compat_algorithm.h" // ZSetRestore_T
 #include "zoolib/Compat_cmath.h"
@@ -594,51 +595,51 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& s)
+static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w)
 	{
 	if (spContainsProblemChars(iString))
-		spWriteString(iString, iUseSingleQuotes, s);
+		spWriteString(iString, iUseSingleQuotes, w);
 	else
-		s << iString;
+		w << iString;
 	}
 
-static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions, const ChanW_UTF& s)
+static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
 	{
 	if (false)
 		{}
 	else if (iAny.IsNull())
 		{
-		s << "null";
+		w << "null";
 		}
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		if (*theValue)
-			s << "true";
+			w << "true";
 		else
-			s << "false";
+			w << "false";
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
 		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
-			sWritefMust(s, "0x%016llX", (unsigned long long)*theQ);
+			sWritefMust(w, "0x%016llX", (unsigned long long)*theQ);
 		else
-			s << *theQ;
+			w << *theQ;
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		Util_Chan::sWriteExact(*asFloat, s);
+		Util_Chan::sWriteExact(*asFloat, w);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		Util_Chan::sWriteExact(*asDouble, s);
+		Util_Chan::sWriteExact(*asDouble, w);
 		}
 	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 		{
-		Util_Chan::sWriteExact(asTime->fVal, s);
+		Util_Chan::sWriteExact(asTime->fVal, w);
 		}
 	else
 		{
-		s << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
+		w << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
@@ -646,7 +647,7 @@ static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions
 
 static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanW_UTF& s)
+	const ChanW_UTF& w)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
 	if (theSize == 0)
@@ -1036,14 +1037,28 @@ ZRef<YadR> sYadR(const ReadOptions& iReadOptions,
 	return null;
 	}
 
-void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& s)
-	{ sToChan(0, WriteOptions(), iYadR, s); }
+void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& w)
+	{ sToChan(0, WriteOptions(), iYadR, w); }
 
 void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
-	ZRef<YadR> iYadR, const ChanW_UTF& s)
+	ZRef<YadR> iYadR, const ChanW_UTF& w)
 	{
 	if (iYadR)
-		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, s));
+		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, w));
+	}
+
+void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
+	{
+	if (spContainsProblemChars(iPropName))
+		{
+		w << "\"";
+		ChanW_UTF_Escaped(w) << iPropName;
+		w << "\"";
+		}
+	else
+		{
+		iStrimW << iPropName;
+		}
 	}
 
 } // namespace Yad_JSON

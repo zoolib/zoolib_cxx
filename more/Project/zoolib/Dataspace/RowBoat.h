@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_RowBoat_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/RelsWatcher.h"
-#include "zoolib/dataspace/Types.h"
+#include "zooLib/Dataspace/RelsWatcher.h"
+#include "zooLib/Dataspace/Types.h"
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
 namespace ZooLib {

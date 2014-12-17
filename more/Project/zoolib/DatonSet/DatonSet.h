@@ -23,11 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
+#include "zoolib/Data_Any.h"
 #include "zoolib/Util_Relops.h"
+#include "zoolib/ZThread.h"
 
 #include "zoolib/DatonSet/IntervalTreeClock.h"
-#include "zoolib/ZData_Any.h"
-#include "zoolib/ZThread.h"
 
 #include <map>
 #include <set>
@@ -52,15 +52,15 @@ public:
 	~Daton();
 	Daton& operator=(const Daton& iOther);
 
-	Daton(ZData_Any iData);
+	Daton(Data_Any iData);
 
 	bool operator==(const Daton& iOther) const;
 	bool operator<(const Daton& iOther) const;
 
-	ZData_Any GetData() const;
+	Data_Any GetData() const;
 
 private:
-	ZData_Any fData;
+	Data_Any fData;
 	};
 
 } // namespace DatonSet

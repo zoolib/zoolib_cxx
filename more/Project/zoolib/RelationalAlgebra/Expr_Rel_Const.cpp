@@ -43,7 +43,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 // MARK: - Expr_Rel_Const
 
-Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const ZVal_Any& iVal)
+Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const Val_Any& iVal)
 :	fColName(iColName)
 ,	fVal(iVal)
 	{}
@@ -51,7 +51,7 @@ Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const ZVal_Any& iVal)
 Expr_Rel_Const::~Expr_Rel_Const()
 	{}
 
-void Expr_Rel_Const::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Const::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Const* theVisitor = sDynNonConst<Visitor_Expr_Rel_Const>(&iVisitor))
 		this->Accept_Expr_Rel_Const(*theVisitor);
@@ -59,7 +59,7 @@ void Expr_Rel_Const::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Const::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Const::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Const* theVisitor = sDynNonConst<Visitor_Expr_Rel_Const>(&iVisitor))
 		this->Accept_Expr_Rel_Const(*theVisitor);
@@ -79,7 +79,7 @@ void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
 const ColName& Expr_Rel_Const::GetColName() const
 	{ return fColName; }
 
-const ZVal_Any& Expr_Rel_Const::GetVal() const
+const Val_Any& Expr_Rel_Const::GetVal() const
 	{ return fVal; }
 
 // =================================================================================================
@@ -91,7 +91,7 @@ void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iE
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel> sConst(const ColName& iColName, const ZVal_Any& iVal)
+ZRef<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal)
 	{ return new Expr_Rel_Const(iColName, iVal); }
 
 } // namespace RelationalAlgebra

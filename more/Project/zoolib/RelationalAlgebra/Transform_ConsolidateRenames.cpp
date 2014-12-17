@@ -30,19 +30,19 @@ using namespace Util_STL;
 // =================================================================================================
 // MARK: - Transform_ConsolidateRenames
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<ZExpr_Op0_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename, Rename());
 	inherited::Visit_Expr_Op0(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename, Rename());
 	inherited::Visit_Expr_Op1(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename, Rename());
 	inherited::Visit_Expr_Op2(iExpr);

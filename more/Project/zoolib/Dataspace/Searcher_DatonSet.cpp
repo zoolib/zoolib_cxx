@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Compare.h"
+#include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Dataspace/Daton_Val.h"
@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zoolib/ValPred/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -93,14 +93,14 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(ZVal_Any* ioResults)
+	virtual bool QReadInc(Val_Any* ioResults)
 		{ return fSearcher->pReadInc(this, ioResults); }
 
 	const ZRef<Searcher_DatonSet> fSearcher;
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Assert::const_iterator fCurrent;
-	std::set<std::vector<ZVal_Any> > fPriors;
+	std::set<std::vector<Val_Any> > fPriors;
 	};
 
 // =================================================================================================
@@ -341,7 +341,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
 
-			const ZRef<ZExpr_Bool>& theRestriction = theSearchSpec.GetRestriction();
+			const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
 
 			ZRef<QE::Walker> theWalker;
 			if (theRestriction && theRestriction != sTrue())
@@ -423,7 +423,7 @@ void Searcher_DatonSet::pPull()
 				{
 				const Daton& theDaton = iterStmts->first;
 
-				map<Daton, pair<ZRef<Event>, ZVal_Any> >::iterator lbAssert =
+				map<Daton, pair<ZRef<Event>, Val_Any> >::iterator lbAssert =
 					fMap_Assert.lower_bound(theDaton);
 
 				map<Daton, ZRef<Event> >::iterator lbRetract =
@@ -439,7 +439,7 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbAssert->second.first, theEvent))
 							{
 							// It's more recent.
-							const ZVal_Any theVal = sAsVal(theDaton);
+							const Val_Any theVal = sAsVal(theDaton);
 							this->pChanged(theVal);
 							lbAssert->second.first = theEvent;
 							lbAssert->second.second = theVal;
@@ -451,7 +451,7 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbRetract->second, theEvent))
 							{
 							// It's more recent.
-							const ZVal_Any theVal = sAsVal(theDaton);
+							const Val_Any theVal = sAsVal(theDaton);
 							this->pChanged(theVal);
 
 							fMap_Retract.erase(lbRetract);
@@ -462,7 +462,7 @@ void Searcher_DatonSet::pPull()
 					else
 						{
 						// It's not previously known.
-						const ZVal_Any theVal = sAsVal(theDaton);
+						const Val_Any theVal = sAsVal(theDaton);
 						this->pChanged(theVal);
 
 						fMap_Assert.insert(lbAssert,
@@ -505,11 +505,11 @@ void Searcher_DatonSet::pPull()
 		}
 	}
 
-void Searcher_DatonSet::pChanged(const ZVal_Any& iVal)
+void Searcher_DatonSet::pChanged(const Val_Any& iVal)
 	{
-	const ZMap_Any theMap = iVal.Get<ZMap_Any>();
+	const Map_Any theMap = iVal.Get<Map_Any>();
 	RelHead theRH;
-	for (ZMap_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
+	for (Map_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
 		theRH |= RA::ColName(theMap.NameOf(i));
 
 	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
@@ -557,16 +557,16 @@ void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
 		{ oOffsets[ii->first] = ioBaseOffset++; }
 	}
 
-bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
+bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults)
 	{
 	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
 
 	while (iWalker->fCurrent != fMap_Assert.end())
 		{
-		if (const ZMap_Any* theMap = iWalker->fCurrent->second.second.PGet<ZMap_Any>())
+		if (const Map_Any* theMap = iWalker->fCurrent->second.second.PGet<Map_Any>())
 			{
 			bool gotAll = true;
-			vector<ZVal_Any> subset;
+			vector<Val_Any> subset;
 			subset.reserve(theConcreteHead.size());
 			size_t offset = iWalker->fBaseOffset;
 			for (ConcreteHead::const_iterator
@@ -577,11 +577,11 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults)
 				if (theName.empty())
 					{
 					// Empty name indicates that we want the Daton itself.
-					const ZVal_Any& theVal = iWalker->fCurrent->first;
+					const Val_Any& theVal = iWalker->fCurrent->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
 					}
-				else if (const ZVal_Any* theVal = sPGet(*theMap, theName))
+				else if (const Val_Any* theVal = sPGet(*theMap, theName))
 					{
 					ioResults[offset] = *theVal;
 					subset.push_back(*theVal);

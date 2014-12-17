@@ -42,7 +42,7 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(const ConcreteHead& iConcreteHead)
 :	fConcreteHead(iConcreteHead)
 	{}
 
-void Expr_Rel_Concrete::Accept(const ZVisitor& iVisitor)
+void Expr_Rel_Concrete::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Concrete* theVisitor = sDynNonConst<Visitor_Expr_Rel_Concrete>(&iVisitor))
 		this->Accept_Expr_Rel_Concrete(*theVisitor);
@@ -50,7 +50,7 @@ void Expr_Rel_Concrete::Accept(const ZVisitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
-void Expr_Rel_Concrete::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
+void Expr_Rel_Concrete::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Concrete* theVisitor = sDynNonConst<Visitor_Expr_Rel_Concrete>(&iVisitor))
 		this->Accept_Expr_Rel_Concrete(*theVisitor);

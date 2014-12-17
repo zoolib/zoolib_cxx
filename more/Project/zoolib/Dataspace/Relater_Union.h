@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/DList.h"
 
-#include "zoolib/dataspace/Relater.h"
+#include "zooLib/Dataspace/Relater.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
@@ -99,7 +99,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults);
+	bool pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults);
 
 	size_t fWalkerCount;
 	size_t fReadCount;

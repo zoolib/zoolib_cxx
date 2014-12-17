@@ -18,7 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_Any.h"
+#include "zoolib/Yad_Any.h"
+
 #include "zoolib/SQLite/YadSeqR_Iter.h"
 
 namespace ZooLib {
@@ -29,13 +30,13 @@ namespace SQLite {
 
 namespace { // anonymous
 
-class YadMapR : public ZYadMapR_Std
+class YadMapR : public YadMapR_Std
 	{
 public:
 	YadMapR(ZRef<Iter> iIter);
 
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR);
+// From YadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
 	ZRef<Iter> fIter;
@@ -47,7 +48,7 @@ YadMapR::YadMapR(ZRef<Iter> iIter)
 ,	fIndex(0)
 	{}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
+void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
 	if (fIndex < fIter->Count())
 		{
@@ -69,7 +70,7 @@ YadSeqR_Iter::YadSeqR_Iter(ZRef<Iter> iIter)
 YadSeqR_Iter::~YadSeqR_Iter()
 	{}
 
-void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	if (not iIsFirst)
 		fIter->Advance();

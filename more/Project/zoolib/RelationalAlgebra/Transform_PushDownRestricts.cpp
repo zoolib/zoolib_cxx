@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_STL_set.h"
-
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ValPred/ZUtil_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
+
+#include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 #include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 

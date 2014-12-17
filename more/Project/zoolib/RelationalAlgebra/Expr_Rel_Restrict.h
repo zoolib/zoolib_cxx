@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Expr/ZExpr_Bool.h"
-#include "zoolib/Expr/ZExpr_Op_T.h"
+#include "zoolib/Expr/Expr_Bool.h"
+#include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
@@ -36,18 +36,18 @@ class Visitor_Expr_Rel_Restrict;
 
 class Expr_Rel_Restrict
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op1_T<Expr_Rel>
+,	public virtual Expr_Op1_T<Expr_Rel>
 	{
-	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<ZExpr_Bool>& iExpr_Bool);
+	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool);
 	virtual ~Expr_Rel_Restrict();
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr_Op1_T<Expr_Rel>
-	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
+// From Expr_Op1_T<Expr_Rel>
+	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
@@ -55,17 +55,17 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
 
-	const ZRef<ZExpr_Bool>& GetExpr_Bool() const;
+	const ZRef<Expr_Bool>& GetExpr_Bool() const;
 
 private:
-	const ZRef<ZExpr_Bool> fExpr_Bool;
+	const ZRef<Expr_Bool> fExpr_Bool;
 	};
 
 // =================================================================================================
 // MARK: - Visitor_Expr_Rel_Restrict
 
 class Visitor_Expr_Rel_Restrict
-:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
@@ -76,15 +76,15 @@ public:
 
 // The order of parameters here differs from that in sRestrict precisely to keep them distinct.
 ZRef<Expr_Rel_Restrict> sRestrict(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Rel> operator&(
-	const ZRef<ZExpr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
+	const ZRef<Expr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<ZExpr_Bool>& iExpr_Bool);
+ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
 
 } // namespace RelationalAlgebra
 

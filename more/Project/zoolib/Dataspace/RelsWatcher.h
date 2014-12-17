@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_RelsWatcher_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/Types.h"
+#include "zooLib/Dataspace/Types.h"
 
 // =================================================================================================
 // MARK: -

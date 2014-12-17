@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/datonset/WrappedDatonSet.h"
+#include "zoolib/DatonSet/WrappedDatonSet.h"
 
 namespace ZooLib {
 namespace DatonSet {

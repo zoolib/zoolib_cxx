@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Connection.h"
 #include "zoolib/Multi.h"
 
-#include "zoolib/datonset/WrappedDatonSet.h"
+#include "zoolib/DatonSet/WrappedDatonSet.h"
 
 namespace ZooLib {
 namespace DatonSet {

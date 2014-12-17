@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/dataspace/Util_Strim.h"
+#include "zooLib/Dataspace/Util_Strim.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 

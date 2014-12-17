@@ -88,13 +88,13 @@ ZRef<Walker> Walker_Union::Prime(
 	return this;
 	}
 
-bool Walker_Union::QReadInc(ZVal_Any* ioResults)
+bool Walker_Union::QReadInc(Val_Any* ioResults)
 	{
 	const size_t count = fMapping_Left.size();
 
 	for (;;)
 		{
-		vector<ZVal_Any> subset;
+		vector<Val_Any> subset;
 		subset.reserve(count);
 		if (not fExhaustedLeft)
 			{

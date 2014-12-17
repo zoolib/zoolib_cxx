@@ -57,7 +57,7 @@ ZRef<Walker> Walker_Calc::Prime(
 	return this;
 	}
 
-bool Walker_Calc::QReadInc(ZVal_Any* ioResults)
+bool Walker_Calc::QReadInc(Val_Any* ioResults)
 	{
 	if (not fWalker->QReadInc(ioResults))
 		return false;

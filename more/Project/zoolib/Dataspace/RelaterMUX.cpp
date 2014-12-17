@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/dataspace/RelaterMUX.h"
+#include "zooLib/Dataspace/RelaterMUX.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 

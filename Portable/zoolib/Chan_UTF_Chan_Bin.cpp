@@ -30,7 +30,7 @@ using std::pair;
 
 namespace ZooLib {
 
-static const size_t kBufSize = sStackBufferSize;
+//static const size_t kBufSize = sStackBufferSize;
 
 #define kDebug_Strim 2
 

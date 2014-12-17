@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Searcher_DatonSet_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/Searcher.h"
+#include "zooLib/Dataspace/Searcher.h"
 
-#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/DatonSet/DatonSet.h"
 
 #include "zoolib/QueryEngine/Walker.h"
 
@@ -62,7 +62,7 @@ private:
 	ZRef<DatonSet::Callable_PullSuggested> fCallable_PullSuggested_Self;
 
 	void pPull();
-	void pChanged(const ZVal_Any& iVal);
+	void pChanged(const Val_Any& iVal);
 
 	std::set<ZRef<DatonSet::Callable_PullFrom> > fCallables_PullFrom;
 
@@ -78,7 +78,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker> iWalker, ZVal_Any* ioResults);
+	bool pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults);
 
 	// -----
 
@@ -86,7 +86,7 @@ private:
 
 	ZRef<Event> fEvent;
 
-	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,ZVal_Any> > Map_Assert;
+	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
 	Map_Assert fMap_Assert;
 
 	typedef std::map<DatonSet::Daton,ZRef<Event> > Map_Retract;

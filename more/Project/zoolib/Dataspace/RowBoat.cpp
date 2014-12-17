@@ -22,14 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_STL_vector.h"
-
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h"
-
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/ValPred/ZValPred_Any.h"
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/ValPred_Any.h"
 
-#include "zoolib/dataspace/RowBoat.h"
+#include "zooLib/Dataspace/RowBoat.h"
 
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 #include "zoolib/RelationalAlgebra/Util_Rel_Operators.h"

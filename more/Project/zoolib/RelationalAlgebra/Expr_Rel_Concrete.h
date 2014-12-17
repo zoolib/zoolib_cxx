@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/UnicodeString.h"
 
-#include "zoolib/Expr/ZExpr_Op_T.h"
+#include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -38,17 +38,17 @@ class Visitor_Expr_Rel_Concrete;
 
 class Expr_Rel_Concrete
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op0_T<Expr_Rel>
+,	public virtual Expr_Op0_T<Expr_Rel>
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
+	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
 	Expr_Rel_Concrete(const ConcreteHead& iConcrete);
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+// From Expr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone();
@@ -66,7 +66,7 @@ private:
 // MARK: - Visitor_Expr_Rel_Concrete
 
 class Visitor_Expr_Rel_Concrete
-:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op0_T<Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);

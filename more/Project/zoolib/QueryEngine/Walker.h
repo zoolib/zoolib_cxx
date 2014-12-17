@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/UnicodeString.h"
+#include "zoolib/Val_Any.h"
 
 #include "zoolib/ZCounted.h"
-#include "zoolib/ZVal_Any.h"
 
 #include <set>
 
@@ -51,7 +51,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset) = 0;
 
-	virtual bool QReadInc(ZVal_Any* ioResults) = 0;
+	virtual bool QReadInc(Val_Any* ioResults) = 0;
 	};
 
 // =================================================================================================

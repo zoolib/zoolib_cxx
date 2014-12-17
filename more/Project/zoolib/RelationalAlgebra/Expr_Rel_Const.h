@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Const_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h"
+#include "zoolib/Val_Any.h"
 
-#include "zoolib/Expr/ZExpr_Op_T.h"
+#include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
@@ -37,19 +37,19 @@ class Visitor_Expr_Rel_Const;
 
 class Expr_Rel_Const
 :	public virtual Expr_Rel
-,	public virtual ZExpr_Op0_T<Expr_Rel>
+,	public virtual Expr_Op0_T<Expr_Rel>
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
+	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Const(const ColName& iColName, const ZVal_Any& iVal);
+	Expr_Rel_Const(const ColName& iColName, const Val_Any& iVal);
 
 	virtual ~Expr_Rel_Const();
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+// From Expr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone();
@@ -58,18 +58,18 @@ public:
 	virtual void Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor);
 
 	const ColName& GetColName() const;
-	const ZVal_Any& GetVal() const;
+	const Val_Any& GetVal() const;
 
 private:
 	const ColName fColName;
-	const ZVal_Any fVal;
+	const Val_Any fVal;
 	};
 
 // =================================================================================================
 // MARK: - Visitor_Expr_Rel_Const
 
 class Visitor_Expr_Rel_Const
-:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op0_T<Expr_Rel>
 	{
 public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
@@ -78,7 +78,7 @@ public:
 // =================================================================================================
 // MARK: - Relational operators
 
-ZRef<Expr_Rel> sConst(const ColName& iColName, const ZVal_Any& iVal);
+ZRef<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal);
 
 } // namespace RelationalAlgebra
 

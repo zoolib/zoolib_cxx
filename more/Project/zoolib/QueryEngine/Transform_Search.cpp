@@ -22,14 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h"
-#include "zoolib/ValPred/ZUtil_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/ZValPred_Any.h"
-#include "zoolib/ValPred/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
-
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/Expr/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
+#include "zoolib/ValPred/ValPred_Any.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
+
+#include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
@@ -65,33 +65,33 @@ using namespace Util_STL;
 
 namespace { // anonymous
 
-bool spHasConst(const ZRef<ZValComparand>& iComparand)
+bool spHasConst(const ZRef<ValComparand>& iComparand)
 	{
-	if (iComparand.DynamicCast<ZValComparand_Const_Any>())
+	if (iComparand.DynamicCast<ValComparand_Const_Any>())
 		return true;
 	return false;
 	}
 
-bool spHasConst(const ZValPred& iValPred)
+bool spHasConst(const ValPred& iValPred)
 	{ return spHasConst(iValPred.GetLHS()) || spHasConst(iValPred.GetRHS()); }
 
 class HasConst
-:	public virtual ZVisitor_Do_T<bool>
-,	public virtual ZVisitor_Expr_Bool_ValPred
-,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Bool>
-,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Bool>
+:	public virtual Visitor_Do_T<bool>
+,	public virtual Visitor_Expr_Bool_ValPred
+,	public virtual Visitor_Expr_Op1_T<Expr_Bool>
+,	public virtual Visitor_Expr_Op2_T<Expr_Bool>
 	{
 public:
-// From ZVisitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iExpr)
+// From Visitor_Expr_Bool_ValPred
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
 		{ this->pSetResult(spHasConst(iExpr->GetValPred())); }
 
-// From ZVisitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZRef<ZExpr_Op1_T<ZExpr_Bool> >& iExpr)
+// From Visitor_Expr_Op1_T
+	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Bool> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-// From ZVisitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZRef<ZExpr_Op2_T<ZExpr_Bool> >& iExpr)
+// From Visitor_Expr_Op2_T
+	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Bool> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) || this->Do(iExpr->GetOp1())); }
 	};
 
@@ -110,7 +110,7 @@ is encountered instead return a search incorporating the accumulated info.
 */
 
 class Transform_Search
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
+:	public virtual Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
 ,	public virtual RA::Visitor_Expr_Rel_Calc
 ,	public virtual RA::Visitor_Expr_Rel_Concrete
 ,	public virtual RA::Visitor_Expr_Rel_Const
@@ -122,14 +122,14 @@ class Transform_Search
 ,	public virtual RA::Visitor_Expr_Rel_Rename
 ,	public virtual RA::Visitor_Expr_Rel_Restrict
 	{
-	typedef ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
+	typedef Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
 public:
 	Transform_Search()
 	:	fRestriction(sTrue())
 	,	fProjection(UniSet<ColName>::sUniversal())
 		{}
 
-	virtual void Visit(const ZRef<ZVisitee>& iRep)
+	virtual void Visit(const ZRef<Visitee>& iRep)
 		{ ZUnimplemented(); }
 
 	virtual void Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
@@ -137,7 +137,7 @@ public:
 		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
 
 		// The restriction may reference the name we introduce, so don't pass it down the tree.
-		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
+		const ZRef<Expr_Bool> priorRestriction = fRestriction;
 		fRestriction = sTrue();
 
 		// Similarly with projection -- we don't know what names we'll be
@@ -220,7 +220,7 @@ public:
 		ZRef<Expr_Rel> newOp1;
 
 		{
-		SaveSetRestore<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
 		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
 		SaveSetRestore<Rename> ssr2(fRename, Rename());
 		newOp1 = this->Do(iExpr->GetOp1());
@@ -230,7 +230,7 @@ public:
 
 		ZRef<RA::Expr_Rel> newEmbed;
 		{
-		SaveSetRestore<ZRef<ZExpr_Bool> > ssr0(fRestriction, sTrue());
+		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
 		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
 		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
@@ -243,7 +243,7 @@ public:
 	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
 		{
 		// Remember curent state
-		const ZRef<ZExpr_Bool> priorRestriction = fRestriction;
+		const ZRef<Expr_Bool> priorRestriction = fRestriction;
 		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename = fRename;
 
@@ -312,7 +312,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
 		{
-		ZRef<ZExpr_Bool> theRestriction = iExpr->GetExpr_Bool();
+		ZRef<Expr_Bool> theRestriction = iExpr->GetExpr_Bool();
 		if (theRestriction != sTrue())
 			{
 			if (fRestriction != sTrue())
@@ -367,7 +367,7 @@ public:
 		this->pSetResult(iRel);
 		}
 
-	ZRef<ZExpr_Bool> fRestriction;
+	ZRef<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
 	Rename fRename;
 	ZQ<double> fLikelySize;

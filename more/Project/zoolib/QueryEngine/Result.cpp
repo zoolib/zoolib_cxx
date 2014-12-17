@@ -53,7 +53,7 @@ namespace QueryEngine {
 using RelationalAlgebra::RelHead;
 
 Result::Result(const RelHead& iRelHead,
-	vector<ZVal_Any>* ioPackedRows)
+	vector<Val_Any>* ioPackedRows)
 :	fRelHead(iRelHead)
 	{
 	ioPackedRows->swap(fPackedRows);
@@ -64,7 +64,7 @@ Result::Result(const ZRef<Result>& iOther, size_t iRow)
 	{
 	if (iRow < iOther->Count())
 		{
-		const ZVal_Any* theVals = iOther->GetValsAt(iRow);
+		const Val_Any* theVals = iOther->GetValsAt(iRow);
 		fPackedRows.insert(fPackedRows.end(), theVals, theVals + fRelHead.size());
 		}
 	}
@@ -82,7 +82,7 @@ size_t Result::Count()
 	return 0;
 	}
 
-const ZVal_Any* Result::GetValsAt(size_t iIndex)
+const Val_Any* Result::GetValsAt(size_t iIndex)
 	{
 	const size_t theOffset = fRelHead.size() * iIndex;
 	ZAssert(theOffset < fPackedRows.size() + fRelHead.size());
@@ -102,7 +102,7 @@ int Result::Compare(const Result& iOther) const
 namespace { // anonymous
 
 pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
-	const ZVal_Any* iVals_Left, const ZVal_Any* iVals_Right)
+	const Val_Any* iVals_Left, const Val_Any* iVals_Right)
 	{
 	const size_t offsetsCount = iOffsets.size();
 	for (size_t yy = 0; yy < offsetsCount; ++yy)

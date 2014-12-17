@@ -74,7 +74,7 @@ ZRef<Walker> Walker_Embed::Prime(
 	return this;
 	}
 
-bool Walker_Embed::QReadInc(ZVal_Any* ioResults)
+bool Walker_Embed::QReadInc(Val_Any* ioResults)
 	{
 	if (not fWalker_Parent->QReadInc(ioResults))
 		return false;
@@ -83,7 +83,7 @@ bool Walker_Embed::QReadInc(ZVal_Any* ioResults)
 		{
 		fWalker_Embedee->Rewind();
 
-		vector<ZVal_Any> thePackedRows;
+		vector<Val_Any> thePackedRows;
 		for (;;)
 			{
 			if (not fWalker_Embedee->QReadInc(ioResults))

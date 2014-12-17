@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_QueryEngine_Visitor_DoMakeWalker_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Do_T.h"
+#include "zoolib/Visitor_Do_T.h"
 
 #include "zoolib/QueryEngine/Walker.h"
 
@@ -44,7 +44,7 @@ namespace QueryEngine {
 // MARK: - Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
-:	public virtual ZVisitor_Do_T<ZRef<Walker> >
+:	public virtual Visitor_Do_T<ZRef<Walker> >
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dee
@@ -57,8 +57,8 @@ class Visitor_DoMakeWalker
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Union
 	{
 public:
-// From ZVisitor
-	virtual void Visit(const ZRef<ZVisitee>& iRep);
+// From Visitor
+	virtual void Visit(const ZRef<Visitee>& iRep);
 
 // From Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr);

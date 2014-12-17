@@ -29,7 +29,7 @@ using std::set;
 // =================================================================================================
 // MARK: - Walker_Const
 
-Walker_Const::Walker_Const(const string8& iColName, const ZVal_Any& iVal)
+Walker_Const::Walker_Const(const string8& iColName, const Val_Any& iVal)
 :	fExhausted(false)
 ,	fColName(iColName)
 ,	fVal(iVal)
@@ -51,7 +51,7 @@ ZRef<Walker> Walker_Const::Prime(
 	return this;
 	}
 
-bool Walker_Const::QReadInc(ZVal_Any* ioResults)
+bool Walker_Const::QReadInc(Val_Any* ioResults)
 	{
 	if (sGetSet(fExhausted, true))
 		return false;

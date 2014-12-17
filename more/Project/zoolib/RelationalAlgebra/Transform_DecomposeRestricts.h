@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Transform_DecomposeRestricts_h__
 #include "zconfig.h"
 
-#include "zoolib/Expr/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
 
 namespace ZooLib {
@@ -32,7 +32,7 @@ namespace RelationalAlgebra {
 // MARK: - RelationalAlgebra::Transform_DecomposeRestricts
 
 class Transform_DecomposeRestricts
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>
 ,	public virtual Visitor_Expr_Rel_Restrict
 	{
 public:

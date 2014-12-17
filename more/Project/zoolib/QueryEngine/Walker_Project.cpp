@@ -69,7 +69,7 @@ ZRef<Walker> Walker_Project::Prime(
 	return this;
 	}
 
-bool Walker_Project::QReadInc(ZVal_Any* ioResults)
+bool Walker_Project::QReadInc(Val_Any* ioResults)
 	{
 	const size_t count = fRelHead.size();
 
@@ -78,7 +78,7 @@ bool Walker_Project::QReadInc(ZVal_Any* ioResults)
 		if (not fWalker->QReadInc(ioResults))
 			return false;
 
-		vector<ZVal_Any> subset;
+		vector<Val_Any> subset;
 		subset.reserve(count);
 		for (size_t xx = 0; xx < count; ++xx)
 			subset.push_back(ioResults[fChildMapping[xx]]);

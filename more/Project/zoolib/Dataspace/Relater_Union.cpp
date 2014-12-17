@@ -19,22 +19,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h"
-#include "zoolib/ValPred/ZVisitor_Expr_Bool_ValPred_Do_GetNames.h"
-#include "zoolib/ValPred/ZValPred_GetNames.h"
-
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/Expr/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/ValPred_GetNames.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
-#include "zoolib/dataspace/Relater_Union.h"
-#include "zoolib/dataspace/Util_Strim.h"
+#include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
+
+#include "zooLib/Dataspace/Relater_Union.h"
+#include "zooLib/Dataspace/Util_Strim.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
@@ -69,7 +69,7 @@ namespace RA = RelationalAlgebra;
 namespace { // anonymous
 
 class InsertPrefix
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
+:	public virtual Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
 ,	public virtual RA::Visitor_Expr_Rel_Concrete
 	{
 public:
@@ -135,23 +135,23 @@ public:
 
 class Relater_Union::Proxy
 :	public virtual RA::Expr_Rel
-,	public virtual ZExpr_Op0_T<RA::Expr_Rel>
+,	public virtual Expr_Op0_T<RA::Expr_Rel>
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
+	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
 	Proxy(Relater_Union* iRelater);
 
 // From ZCounted
 	virtual void Finalize();
 
-// From ZVisitee
-	virtual void Accept(const ZVisitor& iVisitor);
+// From Visitee
+	virtual void Accept(const Visitor& iVisitor);
 
-// From ZExpr
+// From Expr
 	virtual std::string DebugDescription();
 
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+// From Expr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
 	virtual ZRef<RA::Expr_Rel> Self();
 	virtual ZRef<RA::Expr_Rel> Clone();
@@ -172,7 +172,7 @@ public:
 // MARK: - Relater_Union::Visitor_Proxy
 
 class Relater_Union::Visitor_Proxy
-:	public virtual ZVisitor_Expr_Op0_T<RA::Expr_Rel>
+:	public virtual Visitor_Expr_Op0_T<RA::Expr_Rel>
 	{
 public:
 	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
@@ -189,7 +189,7 @@ Relater_Union::Proxy::Proxy(Relater_Union* iRelater)
 void Relater_Union::Proxy::Finalize()
 	{ fRelater->pFinalizeProxy(this); }
 
-void Relater_Union::Proxy::Accept(const ZVisitor& iVisitor)
+void Relater_Union::Proxy::Accept(const Visitor& iVisitor)
 	{
 	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
@@ -204,7 +204,7 @@ std::string Relater_Union::Proxy::DebugDescription()
 	return result;
 	}
 
-void Relater_Union::Proxy::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
+void Relater_Union::Proxy::Accept_Expr_Op0(Visitor_Expr_Op0_T<RA::Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Proxy* theVisitor = sDynNonConst<Visitor_Proxy>(&iVisitor))
 		this->Accept_Proxy(*theVisitor);
@@ -248,7 +248,7 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(ZVal_Any* ioResults)
+	virtual bool QReadInc(Val_Any* ioResults)
 		{ return fRelater->pReadInc(this, ioResults); }
 
 	ZRef<Relater_Union> const fRelater;
@@ -339,7 +339,7 @@ private:
 // MARK: - Relater_Union::Analyze
 
 class Relater_Union::Analyze
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
+:	public virtual Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
 ,	public virtual RA::Visitor_Expr_Rel_Calc
 ,	public virtual RA::Visitor_Expr_Rel_Embed
 ,	public virtual RA::Visitor_Expr_Rel_Concrete
@@ -1125,7 +1125,7 @@ void Relater_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 		oOffsets[*ii] = ioBaseOffset++;
 	}
 
-bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
+bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
 	{
 	++fReadCount;
 	for (;;)
@@ -1159,7 +1159,7 @@ bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, ZVal_Any* ioResults)
 			ZDebugStop(0);
 			}
 		size_t theOffset = iWalker->fBaseOffset;
-		const ZVal_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
+		const Val_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
 		foreachi (ii, theRH)
 			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;

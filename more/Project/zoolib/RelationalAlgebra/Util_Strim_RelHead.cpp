@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/ValueOnce.h"
+#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ValueOnce.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
@@ -38,7 +38,7 @@ using std::set;
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{
 	s << "@";
-	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
+	ZYad_JSON::sWrite_PropName(iName, s);
 	}
 
 void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)

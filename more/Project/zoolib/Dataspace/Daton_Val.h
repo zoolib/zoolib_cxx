@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Daton_Val_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h"
+#include "zoolib/Val_Any.h"
 
-#include "zoolib/datonset/DatonSet.h"
+#include "zoolib/DatonSet/DatonSet.h"
 
 // =================================================================================================
 // MARK: -
@@ -32,8 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-ZVal_Any sAsVal(const DatonSet::Daton& iDaton);
-DatonSet::Daton sAsDaton(const ZVal_Any& iVal);
+Val_Any sAsVal(const DatonSet::Daton& iDaton);
+DatonSet::Daton sAsDaton(const Val_Any& iVal);
 
 } // namespace Dataspace
 } // namespace ZooLib

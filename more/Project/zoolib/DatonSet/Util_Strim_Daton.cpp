@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/datonset/Util_Strim_Daton.h"
+#include "zoolib/DatonSet/Util_Strim_Daton.h"
 
 namespace ZooLib {
 
@@ -27,7 +27,7 @@ namespace ZooLib {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const DatonSet::Daton& iDaton)
 	{
-	const ZData_Any& theData = iDaton.GetData();
+	const Data_Any& theData = iDaton.GetData();
 	sWrite((const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr, w);
 	return w;
 	}

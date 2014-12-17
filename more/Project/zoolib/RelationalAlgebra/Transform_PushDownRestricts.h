@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Transform_PushDownRestricts_h__
 #include "zconfig.h"
 
-#include "zoolib/Expr/ZVisitor_Expr_Op_Do_Transform_T.h"
+#include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -41,7 +41,7 @@ namespace RelationalAlgebra {
 // MARK: - RelationalAlgebra::Transform_PushDownRestricts
 
 class Transform_PushDownRestricts
-:	public virtual ZVisitor_Expr_Op_Do_Transform_T<Expr_Rel>
+:	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
@@ -65,7 +65,7 @@ protected:
 
 	struct Restrict
 		{
-		ZRef<ZExpr_Bool> fExpr_Bool;
+		ZRef<Expr_Bool> fExpr_Bool;
 		size_t fCountTouching;
 		size_t fCountSubsuming;
 		};

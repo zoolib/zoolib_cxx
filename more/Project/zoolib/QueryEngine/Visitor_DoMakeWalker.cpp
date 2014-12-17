@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ValPred/ZExpr_Bool_ValPred.h"
-#include "zoolib/ZLog.h"
+#include "zoolib/Log.h"
+
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
 
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 #include "zoolib/QueryEngine/Walker_Calc.h"
@@ -39,7 +40,7 @@ namespace QueryEngine {
 // =================================================================================================
 // MARK: - Visitor_DoMakeWalker
 
-void Visitor_DoMakeWalker::Visit(const ZRef<ZVisitee>& iRep)
+void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	{
 	if (ZLOGPF(w, eDebug))
 		w << "Unimplemented for visitee: " << typeid(*iRep.Get()).name();

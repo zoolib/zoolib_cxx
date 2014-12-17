@@ -20,9 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zoolib/ValPred/ZUtil_Strim_ValPred_Any.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
+#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
+
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_JSON.h"
+
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
@@ -36,7 +38,7 @@ using std::string;
 // =================================================================================================
 // MARK: - RelationalAlgebra::Util_Strim_Rel::Visitor
 
-void Visitor::Visit_Expr(const ZRef<ZExpr>& iExpr)
+void Visitor::Visit_Expr(const ZRef<Expr>& iExpr)
 	{
 	const ChanW_UTF& w = pStrimW();
 	w << iExpr->DebugDescription();
@@ -66,7 +68,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
-	ZYad_ZooLibStrim::sToStrim(sYadR(iExpr->GetVal()), w);
+	Yad_JSON::sToChan(sYadR(iExpr->GetVal()), w);
 	w << ")";
 	}
 
@@ -150,7 +152,7 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iE
 	}
 
 void Visitor::pWriteBinary(
-	const string& iFunctionName, const ZRef<ZExpr_Op2_T<Expr_Rel> >& iExpr)
+	const string& iFunctionName, const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	const ChanW_UTF& w = pStrimW();
 	w << iFunctionName << "(";

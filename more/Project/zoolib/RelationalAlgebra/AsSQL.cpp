@@ -245,7 +245,7 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 		{
 		ZMap_Any::Index_t theIndex = theAnalysis.fConstValues.IndexOf(oldName);
 		ZAssert(theIndex != theAnalysis.fConstValues.End());
-		const ZVal_Any theVal = theAnalysis.fConstValues.Get(theIndex);
+		const Val_Any theVal = theAnalysis.fConstValues.Get(theIndex);
 		theAnalysis.fConstValues.Erase(theIndex);
 		theAnalysis.fConstValues.Set(newName, theVal);
 		}

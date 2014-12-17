@@ -45,12 +45,12 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(ZVal_Any* ioResults);
+	virtual bool QReadInc(Val_Any* ioResults);
 
 private:
 	const RelationalAlgebra::RelHead fRelHead;
 	std::vector<size_t> fChildMapping;
-	std::set<std::vector<ZVal_Any> > fPriors;
+	std::set<std::vector<Val_Any> > fPriors;
 	};
 
 } // namespace QueryEngine
