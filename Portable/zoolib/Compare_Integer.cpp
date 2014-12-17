@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Compare_Integer.h"
 
+ZMACRO_MSVCStaticLib_cpp(Compare_Integer)
+
 namespace ZooLib {
 
 ZMACRO_CompareRegistration_T(bool)

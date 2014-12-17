@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h" // For sMemCompare
 #include "zoolib/size_t.h" // For size_t
 
+ZMACRO_MSVCStaticLib_cpp(Compare_string)
+
 namespace ZooLib {
 
 ZMACRO_CompareRegistration_T(std::string)

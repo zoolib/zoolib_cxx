@@ -23,8 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
+#include "zoolib/Compat_MSVCStaticLib.h"
 
 #include <string>
+
+ZMACRO_MSVCStaticLib_Reference(Compare_string)
 
 namespace ZooLib {
 

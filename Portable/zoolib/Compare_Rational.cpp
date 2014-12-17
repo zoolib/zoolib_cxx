@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare_Rational.h"
 #include "zoolib/Compat_cmath.h"
 
+ZMACRO_MSVCStaticLib_cpp(Compare_Rational)
+
 namespace ZooLib {
 
 // To provide stable ordering between floating point values we
