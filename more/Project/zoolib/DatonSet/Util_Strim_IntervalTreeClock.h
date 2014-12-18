@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2006 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,55 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_Channer_h__
-#define __ZooLib_Channer_Channer_h__ 1
+#ifndef __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__
+#define __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Channer.h"
+#include "zoolib/ChanW_UTF.h"
+
+#include "zoolib/DatonSet/IntervalTreeClock.h"
 
 namespace ZooLib {
+namespace IntervalTreeClock {
 
 // =================================================================================================
-// MARK: - Channer_Channer
+// MARK: - IntervalTreeClock
 
-template <class Chan_p,
-	class Chan_Other_p = typename Chan_p::Chan_Base,
-	class Chan_Self_p = typename Chan_p::Chan_Base>
-class Channer_Channer
-:	public Channer<Chan_Self_p>
-	{
-protected:
-	Channer_Channer() {}
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent);
 
-public:
-	virtual ~Channer_Channer() {}
-
-	template <class P>
-	Channer_Channer(P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
-	:	fChannerOther(iChannerOther),
-		fChan(iParam, sGetChan(iChannerOther))
-		{}
-
-	template <class P>
-	Channer_Channer(const P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
-	:	fChannerOther(iChannerOther),
-		fChan(iParam, sGetChan(iChannerOther))
-		{}
-
-	Channer_Channer(const ZRef<Channer<Chan_Other_p> >& iChannerOther)
-	:	fChannerOther(iChannerOther),
-		fChan(sGetChan(iChannerOther))
-		{}
-
-// From Channer
-	virtual void GetChan(const Chan_Self_p*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-protected:
-	const ZRef<Channer<Chan_Other_p> > fChannerOther;
-	Chan_p fChan;
-	};
-
+} // namespace IntervalTreeClock
 } // namespace ZooLib
 
-#endif // __ZooLib_Channer_Channer_h__
+#endif // __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_XX_Unreader_h__
-#define __ZooLib_Chan_XX_Unreader_h__ 1
+#ifndef __ZooLib_ChanRU_XX_Unreader_h__
+#define __ZooLib_ChanRU_XX_Unreader_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
@@ -31,17 +31,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Chan_XX_Unreader
+// MARK: - ChanRU_XX_Unreader
 
 template <class XX>
-class Chan_XX_Unreader
+class ChanRU_XX_Unreader
 :	public ChanR<XX>
 ,	public ChanU<XX>
 	{
 public:
 	typedef XX Elmt_t;
 
-	Chan_XX_Unreader(const ChanR<Elmt_t>& iChanR)
+	ChanRU_XX_Unreader(const ChanR<Elmt_t>& iChanR)
 	:	fChanR(iChanR)
 		{}
 
@@ -89,15 +89,17 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - Channer_XX_Unreader
+// MARK: - ChannerRU_XX_Unreader
+
+// See ChannerRU_T??
 
 template <class XX>
-class Channer_XX_Unreader
+class ChannerRU_XX_Unreader
 :	public Channer<ChanR<XX> >
 ,	public Channer<ChanU<XX> >
 	{
 public:
-	Channer_XX_Unreader(const ZRef<Channer<ChanR<XX> > >& iChannerR)
+	ChannerRU_XX_Unreader(const ZRef<Channer<ChanR<XX> > >& iChannerR)
 	:	fChannerR(iChannerR)
 	,	fChan(sGetChan(iChannerR))
 		{}
@@ -111,10 +113,10 @@ public:
 		{ oChanPtr = &fChan; }
 
 	ZRef<Channer<ChanR<XX> > > fChannerR;
-	Chan_XX_Unreader<XX> fChan;
+	ChanRU_XX_Unreader<XX> fChan;
 	};
 
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_XX_Unreader_h__
+#endif // __ZooLib_ChanRU_XX_Unreader_h__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_Bin_string.h"
 #include "zoolib/ChanW_Bin_More.h"
-#include "zoolib/Chan_XX_Unreader.h"
+#include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Compat_algorithm.h"
 #include "zoolib/HTTP.h"
 #include "zoolib/Memory.h"
@@ -233,7 +233,7 @@ bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 bool sQReadRequest(const ChanR_Bin& iChanR, string* oMethod, string* oURL, string* oError)
 	{
 	MIME::ChanR_Bin_Line theSIL(iChanR);
-	Chan_XX_Unreader<byte> theChanU(theSIL);
+	ChanRU_XX_Unreader<byte> theChanRU(theSIL);
 
 	if (oMethod)
 		oMethod->resize(0);
@@ -242,33 +242,33 @@ bool sQReadRequest(const ChanR_Bin& iChanR, string* oMethod, string* oURL, strin
 	if (oError)
 		oError->resize(0);
 
-	if (not sQReadToken(theChanU, theChanU, nullptr, oMethod))
+	if (not sQReadToken(theChanRU, theChanRU, nullptr, oMethod))
 		{
 		if (oError)
 			*oError = "Failed to read method";
 		return false;
 		}
 
-	sSkipLWS(theChanU, theChanU);
+	sSkipLWS(theChanRU, theChanRU);
 
-	if (not sQReadURI(theChanU, theChanU, oURL))
+	if (not sQReadURI(theChanRU, theChanRU, oURL))
 		{
 		if (oError)
 			*oError = "Failed to read URI";
 		return false;
 		}
 
-	sSkipLWS(theChanU, theChanU);
+	sSkipLWS(theChanRU, theChanRU);
 
 	int32 major, minor;
-	if (not sQReadHTTPVersion(theChanU, theChanU, &major, &minor))
+	if (not sQReadHTTPVersion(theChanRU, theChanRU, &major, &minor))
 		{
 		if (oError)
 			*oError = "Failed to read version";
 		return false;
 		}
 
-	sSkipAll(theChanU);
+	sSkipAll(theChanRU);
 	return true;
 	}
 
@@ -312,9 +312,9 @@ bool sQReadHeaderNoParsing(const ChanR_Bin& iChanR, Map* oFields)
 	for (;;)
 		{
 		MIME::ChanR_Bin_Line theSIL(iChanR);
-		Chan_XX_Unreader<byte> theChanU(theSIL);
-		const bool gotOne = sQReadHeaderLineNoParsing(theChanU, theChanU, oFields);
-		sSkipAll(theChanU);
+		ChanRU_XX_Unreader<byte> theChanRU(theSIL);
+		const bool gotOne = sQReadHeaderLineNoParsing(theChanRU, theChanRU, oFields);
+		sSkipAll(theChanRU);
 		if (not gotOne)
 			return true;
 		}
@@ -346,9 +346,9 @@ bool sQReadHeader(const ChanR_Bin& iChanR, Map* oFields)
 	for (;;)
 		{
 		MIME::ChanR_Bin_Line theSIL(iChanR);
-		Chan_XX_Unreader<byte> theChanU(theSIL);
-		const bool gotOne = sQReadHeaderLine(theChanU, theChanU, oFields);
-		sSkipAll(theChanU);
+		ChanRU_XX_Unreader<byte> theChanRU(theSIL);
+		const bool gotOne = sQReadHeaderLine(theChanRU, theChanRU, oFields);
+		sSkipAll(theChanRU);
 		if (not gotOne)
 			return true;
 		}

@@ -180,7 +180,7 @@ ZAny Iter::Get(size_t iIndex)
 				case SQLITE_BLOB:
 					{
 					const void* theData = ::sqlite3_column_blob(fStmt, iIndex);
-					return sAny<ZData_Any>(theData, ::sqlite3_column_bytes(fStmt, iIndex));
+					return sAny<Data_Any>(theData, ::sqlite3_column_bytes(fStmt, iIndex));
 					}
 				}
 			}

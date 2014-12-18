@@ -86,6 +86,47 @@ template <class Chan_p, class Param_p>
 ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
 	{ return new Channer_T<Chan_p>(iParam); }
 
+// =================================================================================================
+// MARK: - Channer_Channer_T
+
+template <class Chan_p,
+	class Chan_Other_p = typename Chan_p::Chan_Base,
+	class Chan_Self_p = typename Chan_p::Chan_Base>
+class Channer_Channer_T
+:	public virtual Channer<Chan_Self_p>
+	{
+protected:
+	Channer_Channer_T() {}
+
+public:
+	virtual ~Channer_Channer_T() {}
+
+	template <class P>
+	Channer_Channer_T(P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(iParam, sGetChan(iChannerOther))
+		{}
+
+	template <class P>
+	Channer_Channer_T(const P& iParam, const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(iParam, sGetChan(iChannerOther))
+		{}
+
+	Channer_Channer_T(const ZRef<Channer<Chan_Other_p> >& iChannerOther)
+	:	fChannerOther(iChannerOther),
+		fChan(sGetChan(iChannerOther))
+		{}
+
+// From Channer
+	virtual void GetChan(const Chan_Self_p*& oChanPtr)
+		{ oChanPtr = &fChan; }
+
+protected:
+	const ZRef<Channer<Chan_Other_p> > fChannerOther;
+	Chan_p fChan;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Channer_h__

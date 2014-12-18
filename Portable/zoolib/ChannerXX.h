@@ -60,13 +60,30 @@ struct Channers
 	};
 
 // =================================================================================================
+// MARK: - ChannerRW
+
+template <class Elmt_p>
+class ChannerRW
+:	public virtual ChannerR<Elmt_p>
+,	public virtual ChannerW<Elmt_p>
+	{};
+
+// =================================================================================================
 // MARK: - ChannerRWClose
 
 template <class Elmt_p>
 class ChannerRWClose
-:	public virtual ChannerR<Elmt_p>
-,	public virtual ChannerW<Elmt_p>
+:	public virtual ChannerRW<Elmt_p>
 ,	public virtual ChannerClose
+	{};
+
+// =================================================================================================
+// MARK: - ChannerRU
+
+template <class Elmt_p>
+class ChannerRU
+:	public virtual ChannerR<Elmt_p>
+,	public virtual ChannerU<Elmt_p>
 	{};
 
 // =================================================================================================

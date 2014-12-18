@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Dataspace/Daton_Val.h"
 #include "zoolib/Dataspace/Searcher_DatonSet.h"
 
-#include "zoolib/DatonSet/ZUtil_Strim_IntervalTreeClock.h"
+#include "zoolib/DatonSet/Util_Strim_IntervalTreeClock.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Walker_Project.h"

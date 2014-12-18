@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/ChanW_Bin_More.h"
-#include "zoolib/Chan_XX_Unreader.h"
 #include "zoolib/Chan_XX_Tee.h"
+#include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/HTTP.h"
 #include "zoolib/HTTP_Content.h" // For ChanW_Bin_Chunked.
 #include "zoolib/HTTP_Requests.h"
@@ -41,13 +41,13 @@ namespace { // anonymous
 static bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* oHeader)
 	{
 	MIME::ChanR_Bin_Header theSIH_Server(iChanR);
-	Chan_XX_Unreader<byte> theChanU(theSIH_Server);
+	ChanRU_XX_Unreader<byte> theChanRU(theSIH_Server);
 
 	string serverResultMessage;
-	if (not sQReadResponse(theChanU, theChanU, oResponseCode, nullptr))
+	if (not sQReadResponse(theChanRU, theChanRU, oResponseCode, nullptr))
 		return false;
 
-	return sQReadHeader(theChanU, oHeader);
+	return sQReadHeader(theChanRU, oHeader);
 	}
 
 static
@@ -326,8 +326,8 @@ bool sQCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
 	sFlush(w);
 
 	int32 serverResponseCode;
-	Chan_XX_Unreader<byte> theChanU(r);
-	if (sQReadResponse(theChanU, theChanU, &serverResponseCode, nullptr))
+	ChanRU_XX_Unreader<byte> theChanRU(r);
+	if (sQReadResponse(theChanRU, theChanRU, &serverResponseCode, nullptr))
 		{
 		if (oResponseCode)
 			*oResponseCode = serverResponseCode;

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zoolib/DatonSet/ZUtil_Strim_IntervalTreeClock.h"
+#include "zoolib/DatonSet/Util_Strim_IntervalTreeClock.h"
 
 namespace ZooLib {
 namespace IntervalTreeClock {

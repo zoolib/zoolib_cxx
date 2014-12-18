@@ -137,7 +137,7 @@ void sToStrim(const ValPred& iValPred, const ChanW_UTF& s)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ValPred& iValPred)
 	{
-	ZUtil_Strim_ValPred_Any::sToStrim(iValPred, w);
+	Util_Strim_ValPred_Any::sToStrim(iValPred, w);
 	return w;
 	}
 

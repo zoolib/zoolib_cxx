@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_XX_Limited.h"
 #include "zoolib/ChanW_Bin_More.h"
-#include "zoolib/Channer_Channer.h"
 #include "zoolib/HTTP_Content.h"
 #include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
@@ -215,12 +214,10 @@ static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
 	if (Util_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
-		return new Channer_Channer<ChanR_Bin_Chunked>(iChannerR);
-//		return new Channer_FT<ChanR_Bin_Chunked>(iChannerR);
+		return new Channer_Channer_T<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
-		return new Channer_Channer<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
-//		return new Channer_FT<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
+		return new Channer_Channer_T<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
 
 	return iChannerR;
 	}

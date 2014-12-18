@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Chan_Bin_FILE.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"
-#include "zoolib/Channer_Channer.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
@@ -252,11 +251,8 @@ void sInstall()
 
 		FILE* theStdOut = stdout; // Workaround for VC++
 		ZRef<Channer<ChanW_UTF> > theChannerW_UTF =
-			new Channer_Channer<ChanW_UTF_Chan_Bin_UTF8,ChanW_Bin>(
+			new Channer_Channer_T<ChanW_UTF_Chan_Bin_UTF8,ChanW_Bin>(
 				new Channer_T<ChanW_Bin_FILE>(theStdOut));
-
-//		theLM->SetChanner(
-//			sStrimmerW_Streamer_T<ZStrimW_StreamUTF8>(sStreamerW_T<ZStreamW_FILE>(theStdOut)));
 
 		theLM->SetChanner(theChannerW_UTF);
 

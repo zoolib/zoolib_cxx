@@ -38,7 +38,7 @@ using std::set;
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{
 	s << "@";
-	ZYad_JSON::sWrite_PropName(iName, s);
+	Yad_JSON::sWrite_PropName(iName, s);
 	}
 
 void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
@@ -93,7 +93,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
 			w << "@";
 		else
 			w << "?";
-		ZYad_ZooLibStrim::sWrite_PropName(ii->first, w);
+		Yad_JSON::sWrite_PropName(ii->first, w);
 		}
 
 	w << "]";

@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/DatonSet/ZUtil_Strim_IntervalTreeClock.h"
 #include "zoolib/DatonSet/DatonSet.h"
+#include "zoolib/DatonSet/Util_Strim_IntervalTreeClock.h"
 
 #include <queue>
 

@@ -1057,7 +1057,7 @@ void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
 		}
 	else
 		{
-		iStrimW << iPropName;
+		w << iPropName;
 		}
 	}
 
