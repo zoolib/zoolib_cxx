@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/UIKit/UIControl+Callable.h"
+#include "zoolib/iOS/UIControl+Callable.h"
 
 #include "objc/runtime.h"
 
@@ -47,24 +47,35 @@ using namespace ZooLib;
 @implementation UIControl (Callable)
 
 - (void)addCallable:(ZRef<Callable_Void>)callable forControlEvents:(UIControlEvents)controlEvents
+	{ sAddCallable(self, callable, controlEvents); }
+
+@end // implementation UIControl (Callable)
+
+// =================================================================================================
+// MARK: - ZooLib
+
+namespace ZooLib {
+
+void sAddCallable(UIControl* iUIControl,
+	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents)
 	{
-	if (not callable)
+	if (not iCallable)
 		return;
 
 	ZooLib_UIControl_Callable_Proxy* theProxy = [[ZooLib_UIControl_Callable_Proxy alloc] init];
-	theProxy->fCallable = callable;
+	theProxy->fCallable = iCallable;
 
 	// Associate theProxy under its own address, which allows unlimited
 	// callables to be safely attached and released when self is itelf disposed.
-	objc_setAssociatedObject(self, theProxy, theProxy, OBJC_ASSOCIATION_RETAIN);
+	objc_setAssociatedObject(iUIControl, theProxy, theProxy, OBJC_ASSOCIATION_RETAIN);
 
 	[theProxy release];
 
-	[self
+	[iUIControl
 		addTarget:theProxy
 		action:@selector(selector_void)
-		forControlEvents:controlEvents
+		forControlEvents:iControlEvents
 	];
 	}
 
-@end // implementation UIControl (Callable)
+} // namespace ZooLib

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_UIKit_UIControl_Callable_h__
-#define __ZooLib_UIKit_UIControl_Callable_h__ 1
+#ifndef __ZooLib_iOS_UIControl_Callable_h__
+#define __ZooLib_iOS_UIControl_Callable_h__ 1
 #include "zconfig.h"
 
 #import <UIKit/UIControl.h>
@@ -36,4 +36,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @end // interface UIControl (Callable)
 
-#endif // __ZooLib_UIKit_UIControl_Callable_h__
+// =================================================================================================
+// MARK: - ZooLib
+
+namespace ZooLib {
+
+void sAddCallable(UIControl* iUIControl,
+	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents);
+
+} // namespace ZooLib
+
+#endif // __ZooLib_iOS_UIControl_Callable_h__
