@@ -46,7 +46,7 @@ ZRef<Delivery<ZQ<R> > > sQCallByStarter(
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >();
 	if (iStarter && iCallable)
 		{
-		iStarter->Start(sBindR(
+		iStarter->QStart(sBindR(
 			sCallable(spQCallWithPromise_T<R>),
 			thePromise,
 			iCallable));
@@ -75,7 +75,7 @@ ZRef<Delivery<ZQ<R> > > sQCallByStarter( \
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >(); \
 	if (iStarter && iCallable) \
 		{ \
-		iStarter->Start(sBindR( \
+		iStarter->QStart(sBindR( \
 			sCallable(spQCallWithPromise_T<R,ZMACRO_Callable_P##X>), \
 			thePromise, \
 			iCallable, \

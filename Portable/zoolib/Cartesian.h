@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Cartesian_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h" // For std::min, std::max
+#include "zoolib/Compat_algorithm.h" // For std::min, std::max
+
 #include "zoolib/ZStdInt.h" // For int64
 #include "zoolib/ZTypes.h" // For EnableIfC
 
