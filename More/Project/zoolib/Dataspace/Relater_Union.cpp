@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
@@ -200,7 +201,7 @@ void Relater_Union::Proxy::Accept(const Visitor& iVisitor)
 std::string Relater_Union::Proxy::DebugDescription()
 	{
 	string8 result;
-	ZStrimW_String<string8>(&result) << "Proxy(" << fRel << ")";
+	ChanW_UTF_string8(&result) << "Proxy(" << fRel << ")";
 	return result;
 	}
 
