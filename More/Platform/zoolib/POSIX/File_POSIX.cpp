@@ -1159,7 +1159,7 @@ size_t ChanRPos_File_POSIX::Readable()
 	return 0;
 	}
 
-uint64 ChanRPos_File_POSIX::Count()
+uint64 ChanRPos_File_POSIX::Size()
 	{
 	uint64 theSize;
 	if (File::errorNone == spGetSize(fFD, theSize))
@@ -1216,8 +1216,8 @@ size_t ChanRWPos_File_POSIX::QWrite(const byte* iSource, size_t iCount)
 	return 0;
 	}
 
-void ChanRWPos_File_POSIX::CountSet(uint64 iCount)
-	{ spSetPosition(fFD, iCount); }
+void ChanRWPos_File_POSIX::SizeSet(uint64 iSize)
+	{ spSetSize(fFD, iSize); }
 
 } // namespace ZooLib
 

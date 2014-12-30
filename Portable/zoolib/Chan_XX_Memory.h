@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Memory_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
@@ -37,15 +37,15 @@ namespace ZooLib {
 template <class XX>
 class ChanBase_XX_Memory
 :	public ChanR<XX>
-,	public ChanCount
 ,	public ChanPos
+,	public ChanSize
 	{
 public:
 	typedef XX Elmt_t;
 
-	ChanBase_XX_Memory(const void* iAddress, size_t iCount)
+	ChanBase_XX_Memory(const void* iAddress, size_t iSize)
 	:	fAddress(static_cast<const byte*>(iAddress))
-	,	fCount(iCount)
+	,	fSize(iSize)
 	,	fPosition(0)
 		{}
 
@@ -53,7 +53,7 @@ public:
 	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
-			fCount > fPosition ? fCount - fPosition : 0);
+			fSize > fPosition ? fSize - fPosition : 0);
 		const Elmt_t* source = static_cast<const Elmt_t*>(fAddress) + fPosition;
 		std::copy(source, source + countToCopy, oDest);
 		fPosition += countToCopy;
@@ -61,11 +61,7 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return fCount >= fPosition ? fCount - fPosition : 0; }
-
-// From ChanGetCount
-	virtual uint64 Count()
-		{ return fCount; }
+		{ return fSize >= fPosition ? fSize - fPosition : 0; }
 
 // From ChanPos
 	virtual uint64 Pos()
@@ -74,9 +70,13 @@ public:
 	virtual void SetPos(uint64 iPos)
 		{ fPosition = iPos; }
 
+// From ChanSize
+	virtual uint64 Size()
+		{ return fSize; }
+
 protected:
 	const void* fAddress;
-	size_t fCount;
+	size_t fSize;
 	uint64 fPosition;
 	};
 
@@ -133,13 +133,13 @@ class ChanRWPos_XX_Memory
 :	public ChanBase_XX_Memory<XX>
 ,	public ChanU<XX>
 ,	public ChanW<XX>
-,	public ChanCountSet
+,	public ChanSizeSet
 	{
 public:
 	typedef XX Elmt_t;
 
-	ChanRWPos_XX_Memory(void* iAddress, size_t iCount, size_t iCapacity)
-	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
+	ChanRWPos_XX_Memory(void* iAddress, size_t iSize, size_t iCapacity)
+	:	ChanBase_XX_Memory<XX>(iAddress, iSize)
 	,	fCapacity(iCapacity)
 		{}
 
@@ -178,12 +178,12 @@ public:
 		return countToCopy;
 		}
 
-// From ChanCountSet
-	virtual void CountSet(uint64 iCount)
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
 		{
-		if (fCapacity < iCount)
-			sThrowBadCount();
-		this->fCount = iCount;
+		if (fCapacity < iSize)
+			sThrowBadSize();
+		this->fSize = iSize;
 		}
 
 protected:

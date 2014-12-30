@@ -62,7 +62,7 @@ size_t ChanBase_Bin_string::Readable()
 	return theSize >= fPosition ? theSize - fPosition : 0;
 	}
 
-uint64 ChanBase_Bin_string::Count()
+uint64 ChanBase_Bin_string::Size()
 	{ return fStringPtr->size(); }
 
 uint64 ChanBase_Bin_string::Pos()
@@ -126,11 +126,11 @@ size_t ChanRWPos_Bin_string::QWrite(const byte* iSource, size_t iCount)
 	return iCount;
 	}
 
-void ChanRWPos_Bin_string::CountSet(uint64 iCount)
+void ChanRWPos_Bin_string::SizeSet(uint64 iSize)
 	{
-	if (this->fPosition > iCount)
-		this->fPosition = iCount;
-	this->fStringPtr->resize(iCount);
+	if (this->fPosition > iSize)
+		this->fPosition = iSize;
+	this->fStringPtr->resize(iSize);
 	}
 
 } // namespace ZooLib

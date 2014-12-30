@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Bin_string_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
@@ -54,8 +54,8 @@ protected:
 
 class ChanBase_Bin_string
 :	public ChanR_Bin
-,	public ChanCount
 ,	public ChanPos
+,	public ChanSize
 	{
 public:
 	ChanBase_Bin_string(std::string* ioStringPtr);
@@ -65,13 +65,13 @@ public:
 
 	virtual size_t Readable();
 
-// From ChanGetCount
-	virtual uint64 Count();
-
 // From ChanPos
 	virtual uint64 Pos();
 
 	virtual void SetPos(uint64 iPos);
+
+// From ChanSize
+	virtual uint64 Size();
 
 protected:
 	std::string* fStringPtr;
@@ -103,7 +103,7 @@ class ChanRWPos_Bin_string
 :	public ChanBase_Bin_string
 ,	public ChanU<byte>
 ,	public ChanW_Bin
-,	public ChanCountSet
+,	public ChanSizeSet
 	{
 public:
 	ChanRWPos_Bin_string(std::string* ioStringPtr);
@@ -116,8 +116,8 @@ public:
 // From ChanW
 	virtual size_t QWrite(const byte* iSource, size_t iCount);
 
-// From ChanCountSet
-	virtual void CountSet(uint64 iCount);
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize);
 	};
 
 } // namespace ZooLib

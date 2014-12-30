@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Bin_Data_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
@@ -38,8 +38,8 @@ namespace ZooLib {
 template <class Data_p>
 class ChanBase_Bin_Data
 :	public ChanR_Bin
-,	public ChanCount
 ,	public ChanPos
+,	public ChanSize
 	{
 public:
 	typedef Data_p Data;
@@ -66,8 +66,8 @@ public:
 		return theSize >= fPosition ? theSize - fPosition : 0;
 		}
 
-// From ChanGetCount
-	virtual uint64 Count()
+// From ChanSize
+	virtual uint64 Size()
 		{ return fDataPtr->GetSize(); }
 
 // From ChanPos
@@ -127,7 +127,7 @@ class ChanRWPos_Bin_Data
 :	public ChanBase_Bin_Data<Data_p>
 ,	public ChanU<byte>
 ,	public ChanW_Bin
-,	public ChanCountSet
+,	public ChanSizeSet
 	{
 public:
 	typedef Data_p Data;
@@ -165,12 +165,12 @@ public:
 		return iCount;
 		}
 
-// From ChanCountSet
-	virtual void CountSet(uint64 iCount)
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
 		{
-		if (this->fPosition > iCount)
-			this->fPosition = iCount;
-		this->fDataPtr->SetSize(iCount);
+		if (this->fPosition > iSize)
+			this->fPosition = iSize;
+		this->fDataPtr->SetSize(iSize);
 		}
 	};
 

@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
@@ -128,8 +128,8 @@ class ChanRPos_File_POSIX
 :	protected Chan_File_POSIX
 ,	public ChanR_Bin
 ,	public ChanU<byte>
-,	public ChanCount
 ,	public ChanPos
+,	public ChanSize
 	{
 public:
 	ChanRPos_File_POSIX(const Init_t& iInit);
@@ -140,8 +140,8 @@ public:
 
 	virtual size_t Readable();
 
-// From ChanGetCount
-	virtual uint64 Count();
+// From ChanSize
+	virtual uint64 Size();
 
 // From ChanPos
 	virtual uint64 Pos();
@@ -159,7 +159,7 @@ public:
 class ChanRWPos_File_POSIX
 :	public ChanRPos_File_POSIX
 ,	public ChanW_Bin
-,	public ChanCountSet
+,	public ChanSizeSet
 	{
 public:
 	ChanRWPos_File_POSIX(const Init_t& iInit);
@@ -169,8 +169,8 @@ private:
 // From ChanW_Bin
 	virtual size_t QWrite(const byte* iSource, size_t iCount);
 
-// From ChanCountSet
-	virtual void CountSet(uint64 iCount);
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize);
 	};
 
 } // namespace ZooLib

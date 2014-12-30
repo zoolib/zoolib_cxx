@@ -22,53 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Offset_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-// MARK: - ChanCount_Offset
-
-class ChanCount_Offset
-:	public ChanCount
-	{
-public:
-	ChanCount_Offset(uint64 iOffset, const ChanCount& iChanCount)
-	:	fChanCount(iChanCount)
-	,	fOffset(iOffset)
-		{}
-
-// From ChanCount
-	virtual uint64 Count()
-		{ return sCount(fChanCount) - fOffset; }
-
-protected:
-	const ChanCount& fChanCount;
-	const uint64 iOffset;
-	};
-
-// =================================================================================================
-// MARK: - ChanCountSet_Offset
-
-class ChanCountSet_Offset
-:	public ChanCountSet
-	{
-public:
-	ChanCountSet_Offset(uint64 iOffset, const ChanCountSet& iChanCountSet)
-	:	fChanCountSet(iChanCountSet)
-	,	fOffset(iOffset)
-		{}
-
-// From ChanCountSet
-	virtual void CountSet(uint64 iCount)
-		{ sCountSet(iCount + fOffset, fChanCountSet); }
-
-protected:
-	const ChanCountSet& fChanCountSet;
-	const uint64 iOffset;
-	};
 
 // =================================================================================================
 // MARK: - ChanPos_Offset
@@ -90,6 +48,48 @@ public:
 
 protected:
 	const ChanPos& fChanPos;
+	const uint64 iOffset;
+	};
+
+// =================================================================================================
+// MARK: - ChanSize_Offset
+
+class ChanSize_Offset
+:	public ChanSize
+	{
+public:
+	ChanSize_Offset(uint64 iOffset, const ChanSize& iChanSize)
+	:	fChanSize(iChanSize)
+	,	fOffset(iOffset)
+		{}
+
+// From ChanSize
+	virtual uint64 Size()
+		{ return sSize(fChanSize) - fOffset; }
+
+protected:
+	const ChanSize& fChanSize;
+	const uint64 iOffset;
+	};
+
+// =================================================================================================
+// MARK: - ChanSizeSet_Offset
+
+class ChanSizeSet_Offset
+:	public ChanSizeSet
+	{
+public:
+	ChanSizeSet_Offset(uint64 iOffset, const ChanSizeSet& iChanSizeSet)
+	:	fChanSizeSet(iChanSizeSet)
+	,	fOffset(iOffset)
+		{}
+
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
+		{ sSizeSet(iSize + fOffset, fChanSizeSet); }
+
+protected:
+	const ChanSizeSet& fChanSizeSet;
 	const uint64 iOffset;
 	};
 

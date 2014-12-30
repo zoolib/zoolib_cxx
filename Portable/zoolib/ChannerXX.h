@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer.h"
 
 #include "zoolib/ChanClose.h"
-#include "zoolib/ChanCount.h"
-#include "zoolib/ChanCountSet.h"
 #include "zoolib/ChanPos.h"
+#include "zoolib/ChanSize.h"
+#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
@@ -39,8 +39,8 @@ namespace ZooLib {
 
 typedef Channer<ChanClose> ChannerClose;
 typedef Channer<ChanPos> ChannerPos;
-typedef Channer<ChanCount> ChannerCount;
-typedef Channer<ChanCountSet> ChannerCountSet;
+typedef Channer<ChanSize> ChannerSize;
+typedef Channer<ChanSizeSet> ChannerSizeSet;
 
 // =================================================================================================
 // MARK: - ChannerR, ChannerU, ChannerW
@@ -94,7 +94,7 @@ class ChannerRPos
 :	public virtual ChannerR<Elmt_p>
 ,	public virtual ChannerU<Elmt_p>
 ,	public virtual ChannerPos
-,	public virtual ChannerCount
+,	public virtual ChannerSize
 	{};
 
 // =================================================================================================
@@ -104,8 +104,8 @@ template <class Elmt_p>
 class ChannerWPos
 :	public virtual ChannerW<Elmt_p>
 ,	public virtual ChannerPos
-,	public virtual ChannerCount
-,	public virtual ChannerCountSet
+,	public virtual ChannerSize
+,	public virtual ChannerSizeSet
 	{};
 
 // =================================================================================================
@@ -148,11 +148,11 @@ public:
 // From ChannerPos
 	virtual void GetChan(const ChanPos*& oChanPtr) { oChanPtr = &fChan; }
 
-// From ChannerCount
-	virtual void GetChan(const ChanCount*& oChanPtr) { oChanPtr = &fChan; }
+// From ChannerSize
+	virtual void GetChan(const ChanSize*& oChanPtr) { oChanPtr = &fChan; }
 
-// From ChannerCountSet
-	virtual void GetChan(const ChanCountSet*& oChanPtr) { oChanPtr = &fChan; }
+// From ChannerSizeSet
+	virtual void GetChan(const ChanSizeSet*& oChanPtr) { oChanPtr = &fChan; }
 
 // Our protocol
 	Chan_p& GetChanActual() { return fChan; }
