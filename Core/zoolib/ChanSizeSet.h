@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanCountSet_h__
-#define __ZooLib_ChanCountSet_h__ 1
+#ifndef __ZooLib_ChanSizeSet_h__
+#define __ZooLib_ChanSizeSet_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStdInt.h" // For uint64
@@ -29,25 +29,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanCountSet
+// MARK: - ChanSizeSet
 
-class ChanCountSet
+class ChanSizeSet
 	{
 public:
-	typedef ChanCountSet Chan_Base;
+	typedef ChanSizeSet Chan_Base;
 
-	static void sThrowBadCount()
-		{ throw std::range_error("ChanCountSet"); }
+	static void sThrowBadSize()
+		{ throw std::range_error("ChanSizeSet"); }
 
-	virtual void CountSet(uint64 iCount) = 0;
+	virtual void SizeSet(uint64 iSize) = 0;
 	};
 
 // =================================================================================================
 // MARK: -
 
-inline void sCountSet(uint64 iCount, const ChanCountSet& iChanCountSet)
-	{ return sNonConst(iChanCountSet).CountSet(iCount); }
+inline void sSizeSet(uint64 iSize, const ChanSizeSet& iChanSizeSet)
+	{ return sNonConst(iChanSizeSet).SizeSet(iSize); }
+
+inline void sSetSize(uint64 iSize, const ChanSizeSet& iChanSizeSet)
+	{ return sNonConst(iChanSizeSet).SizeSet(iSize); }
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanCountSet_h__
+#endif // __ZooLib_ChanSizeSet_h__

@@ -27,7 +27,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: -
 
-// ChanR, ChanW, ChanClose, ChanPos, ChanCount and ChanCountSet do not yet have anything in common.
+// ChanR, ChanW, ChanClose, ChanPos, ChanSize and ChanSizeSet do not yet have anything in common.
 // When they do, this will likely be its home.
 
 template <class Elmt_p>
