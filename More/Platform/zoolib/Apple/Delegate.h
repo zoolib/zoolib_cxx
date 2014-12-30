@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Delegate_h__
-#define __ZooLib_Delegate_h__ 1
+#ifndef __ZooLib_Apple_Delegate_h__
+#define __ZooLib_Apple_Delegate_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -795,4 +795,4 @@ void Delegate::Set(SEL iSEL, const ZRef<Callable_p>& iCallable)
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
-#endif // __ZooLib_Delegate_h__
+#endif // __ZooLib_Apple_Delegate_h__
