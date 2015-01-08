@@ -18,24 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_JSONB_h__
-#define __ZYad_JSONB_h__ 1
+#ifndef __ZooLib_Yad_JSONB_h__
+#define __ZooLib_Yad_JSONB_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/Yad.h"
 
 namespace ZooLib {
-namespace ZYad_JSONB {
+namespace Yad_JSONB {
 
 // =================================================================================================
 // MARK: -
 
-ZRef<ZYadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin);
+ZRef<YadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin);
 
-void sToChan(ZRef<ZYadR> iYadR, const ChanW_Bin& w);
+void sToChan(ZRef<YadR> iYadR, const ChanW_Bin& w);
 
-} // namespace ZYad_JSONB
+} // namespace Yad_JSONB
 } // namespace ZooLib
 
-#endif // __ZYad_JSONB_h__
+#endif // __ZooLib_Yad_JSONB_h__
