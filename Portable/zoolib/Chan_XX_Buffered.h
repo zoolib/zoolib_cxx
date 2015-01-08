@@ -56,7 +56,7 @@ public:
 			if (fEnd > fBegin)
 				{
 				// We have some data in our buffer, use it up first.
-				const size_t countToMove = min(fEnd - fBegin, iCount);
+				const size_t countToMove = std::min(fEnd - fBegin, iCount);
 				std::copy(localDest, &fBuffer[fBegin], countToMove);
 				fBegin += countToMove;
 				localDest += countToMove;
