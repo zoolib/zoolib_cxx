@@ -240,14 +240,14 @@ void Visitor_Yad::Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 // =================================================================================================
 // MARK: - YadR_Any
 
-YadR_Any::YadR_Any(const ZAny& iAny)
+YadR_Any::YadR_Any(const Any& iAny)
 :	fAny(iAny)
 	{}
 
 YadR_Any::~YadR_Any()
 	{}
 
-const ZAny& YadR_Any::GetAny()
+const Any& YadR_Any::GetAny()
 	{ return fAny; }
 
 // =================================================================================================
@@ -269,7 +269,7 @@ class YadAtomR_Any
 ,	public SafeStackLink_YadAtomR_Any
 	{
 public:
-	YadAtomR_Any(const ZAny& iAny)
+	YadAtomR_Any(const Any& iAny)
 	:	YadR_Any(iAny)
 		{}
 
@@ -288,17 +288,17 @@ public:
 		}
 
 // From YadAtomR
-	virtual ZAny AsAny()
+	virtual Any AsAny()
 		{ return this->GetAny(); }
 
 // Our protocol
-	void SetAny(const ZAny& iAny)
+	void SetAny(const Any& iAny)
 		{ fAny = iAny; }
 	};
 
 } // anonymous namespace
 
-ZRef<YadAtomR> sMake_YadAtomR_Any(const ZAny& iAny)
+ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
 	{
 	if (YadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<YadAtomR_Any>())
 		{
@@ -317,20 +317,20 @@ class YadStrimmerR_string
 ,	public virtual Channer_T<ChanRU_UTF_string8Ref>
 	{
 public:
-	YadStrimmerR_string(const ZAny& iAny);
+	YadStrimmerR_string(const Any& iAny);
 	YadStrimmerR_string(const std::string& iString);
 
 // From YadR
 	virtual bool IsSimple(const YadOptions& iOptions);
 	};
 
-YadStrimmerR_string::YadStrimmerR_string(const ZAny& iAny)
+YadStrimmerR_string::YadStrimmerR_string(const Any& iAny)
 :	YadR_Any(iAny)
 ,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
 	{}
 
 YadStrimmerR_string::YadStrimmerR_string(const std::string& iString)
-:	YadR_Any(ZAny(iString))
+:	YadR_Any(Any(iString))
 ,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
 	{}
 

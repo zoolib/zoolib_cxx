@@ -18,34 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZAny.h"
+#include "zoolib/Any.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZAny
+// MARK: - Any
 
 static inline 
 const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
 inline
-ZAny::InPlace& ZAny::pAsInPlace()
+Any::InPlace& Any::pAsInPlace()
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-const ZAny::InPlace& ZAny::pAsInPlace() const
+const Any::InPlace& Any::pAsInPlace() const
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-ZRef<ZAny::Reffed>& ZAny::pAsReffed()
+ZRef<Any::Reffed>& Any::pAsReffed()
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
 inline
-const ZRef<ZAny::Reffed>& ZAny::pAsReffed() const
+const ZRef<Any::Reffed>& Any::pAsReffed() const
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
-const std::type_info& ZAny::Type() const
+const std::type_info& Any::Type() const
 	{
 	if (fDistinguisher)
 		{
@@ -63,7 +63,7 @@ const std::type_info& ZAny::Type() const
 		}
 	}
 
-void* ZAny::MutableVoidStar()
+void* Any::MutableVoidStar()
 	{
 	if (fDistinguisher)
 		{
@@ -81,7 +81,7 @@ void* ZAny::MutableVoidStar()
 		}
 	}
 
-const void* ZAny::ConstVoidStar() const
+const void* Any::ConstVoidStar() const
 	{
 	if (fDistinguisher)
 		{
@@ -99,12 +99,12 @@ const void* ZAny::ConstVoidStar() const
 		}
 	}
 
-void ZAny::swap(ZAny& ioOther)
+void Any::swap(Any& ioOther)
 	{
 	if (fDistinguisher || ioOther.fDistinguisher)
 		{
 		// Trivial implementation for now
-		const ZAny temp = *this;
+		const Any temp = *this;
 		*this = ioOther;
 		ioOther = temp;
 		}
@@ -114,10 +114,10 @@ void ZAny::swap(ZAny& ioOther)
 		}
 	}
 
-bool ZAny::IsNull() const
+bool Any::IsNull() const
 	{ return not fDistinguisher && not fPayload.fAsPtr; }
 
-void ZAny::Clear()
+void Any::Clear()
 	{
 	if (fDistinguisher)
 		{
@@ -132,7 +132,7 @@ void ZAny::Clear()
 	fPayload.fAsPtr = 0;
 	}
 
-const void* ZAny::pFetchConst(const std::type_info& iTypeInfo) const
+const void* Any::pFetchConst(const std::type_info& iTypeInfo) const
 	{
 	if (fDistinguisher)
 		{
@@ -154,7 +154,7 @@ const void* ZAny::pFetchConst(const std::type_info& iTypeInfo) const
 	return 0;
 	}
 
-void* ZAny::pFetchMutable(const std::type_info& iTypeInfo)
+void* Any::pFetchMutable(const std::type_info& iTypeInfo)
 	{
 	if (fDistinguisher)
 		{
@@ -176,7 +176,7 @@ void* ZAny::pFetchMutable(const std::type_info& iTypeInfo)
 	return 0;
 	}
 
-void ZAny::pCtor_NonPOD(const ZAny& iOther)
+void Any::pCtor_NonPOD(const Any& iOther)
 	{
 	if (iOther.fDistinguisher)
 		{
@@ -189,7 +189,7 @@ void ZAny::pCtor_NonPOD(const ZAny& iOther)
 		}
 	}
 
-void ZAny::pDtor_NonPOD()
+void Any::pDtor_NonPOD()
 	{
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);

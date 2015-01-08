@@ -349,7 +349,7 @@ void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
 		}
 	}
 
-static void spToStrim_SimpleValue(const ChanW_UTF& s, const ZAny& iAny)
+static void spToStrim_SimpleValue(const ChanW_UTF& s, const Any& iAny)
 	{
 	if (false)
 		{}

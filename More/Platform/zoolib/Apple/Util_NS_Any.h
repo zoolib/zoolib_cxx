@@ -35,11 +35,11 @@ namespace Util_NS {
 // =================================================================================================
 // MARK: - Util_NS
 
-ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal);
-ZAny sAsAny(NSObject* iVal);
+Any sDAsAny(const Any& iDefault, NSObject* iVal);
+Any sAsAny(NSObject* iVal);
 
-NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
-NSObject* sAsNSObject(const ZAny& iVal);
+NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal);
+NSObject* sAsNSObject(const Any& iVal);
 
 } // namespace Util_NS
 } // namespace ZooLib
@@ -47,8 +47,8 @@ NSObject* sAsNSObject(const ZAny& iVal);
 // =================================================================================================
 // MARK: - asAnyWithDefault
 
-@interface NSObject (ZAny_Additions)
--(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
+@interface NSObject (ZooLib_Any_Additions)
+-(ZooLib::Any)asAnyWithDefault:(const ZooLib::Any&)iDefault;
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)

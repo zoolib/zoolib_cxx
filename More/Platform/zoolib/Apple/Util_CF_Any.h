@@ -35,14 +35,14 @@ namespace Util_CF {
 // =================================================================================================
 // MARK: - Util_CF
 
-ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal);
-ZAny sAsAny(CFTypeRef iVal);
+Any sDAsAny(const Any& iDefault, CFTypeRef iVal);
+Any sAsAny(CFTypeRef iVal);
 
-ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal);
-ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
+ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal);
+ZRef<CFTypeRef> sAsCFType(const Any& iVal);
 
-Seq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray);
-Map_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary);
+Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray);
+Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary);
 
 } // namespace Util_CF
 } // namespace ZooLib

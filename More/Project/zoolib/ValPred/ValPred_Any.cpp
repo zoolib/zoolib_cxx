@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Compare_Integer.h"
 
-#include "zoolib/ZTextCollator.h"
+//###include "zoolib/ZTextCollator.h"
 
 #include "zoolib/ValPred/ValPred_Any.h"
 
@@ -91,7 +91,7 @@ Val_Any spGetVal(const ZRef<ValComparand>& iComparand, const Val_Any& iVal)
 	if (ZRef<ValComparand_Name> asName =
 		iComparand.DynamicCast<ValComparand_Name>())
 		{
-		return iVal.Get<ZMap_Any>().Get(asName->GetName());
+		return iVal.Get<Map_Any>().Get(asName->GetName());
 		}
 	else if (ZRef<ValComparand_Const_Any> asConst =
 		iComparand.DynamicCast<ValComparand_Const_Any>())
@@ -126,11 +126,12 @@ bool spDoCompare(const Val_Any& iL, const ZRef<ValComparator>& iComparator, cons
 	else if (ZRef<ValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ValComparator_StringContains>())
 		{
-		if (const string8* target = iL.PGet<string8>())
-			{
-			if (const string8* pattern = iR.PGet<string8>())
-				return ZTextCollator(asStringContains->GetStrength()).Contains(*pattern, *target);
-			}
+		ZUnimplemented();
+//##		if (const string8* target = iL.PGet<string8>())
+//			{
+//			if (const string8* pattern = iR.PGet<string8>())
+//				return ZTextCollator(asStringContains->GetStrength()).Contains(*pattern, *target);
+//			}
 		return false;
 		}
 	ZUnimplemented();

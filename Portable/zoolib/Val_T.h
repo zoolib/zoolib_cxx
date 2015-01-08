@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Val_T_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/Compare.h"
 #include "zoolib/Compat_string.h" // For strcmp
 #include "zoolib/Name.h"
@@ -29,12 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Relops.h"
 #include "zoolib/Val_T.h"
 
-#include "zoolib/ZAny.h"
-
 namespace ZooLib {
 
 template <>
-struct ZAnyTraits<string8>
+struct AnyTraits<string8>
 	{
 	enum { eAllowInPlace = 0 };
 	};
@@ -44,7 +43,7 @@ struct ZAnyTraits<string8>
 
 template <class Map_p, class Seq_p>
 class Val_T
-:	public ZAny
+:	public Any
 	{
 // private and unimplemented, to catch the common mistake of passing a ZQ.
 	template <class S> Val_T(const ZQ<S>&);
@@ -57,7 +56,7 @@ public:
 		{}
 
 	Val_T(const Val_T& iOther)
-	:	ZAny(iOther.AsAny())
+	:	Any(iOther.AsAny())
 		{}
 
 	~Val_T()
@@ -65,73 +64,73 @@ public:
 
 	Val_T& operator=(const Val_T& iOther)
 		{
-		ZAny::operator=((const ZAny&)(iOther));
+		Any::operator=((const Any&)(iOther));
 		return *this;
 		}
 
-// Overload, so we don't pack a ZAny inside a ZAny
-	Val_T(const ZAny& iOther)
-	:	ZAny(iOther)
+// Overload, so we don't pack a Any inside a Any
+	Val_T(const Any& iOther)
+	:	Any(iOther)
 		{}
 
-	Val_T& operator=(const ZAny& rhs)
+	Val_T& operator=(const Any& rhs)
 		{
-		ZAny::operator=(rhs);
+		Any::operator=(rhs);
 		return *this;
 		}
 
 // Overload, so a null becomes a Val_T
 	Val_T(const null_t&)
-	:	ZAny()
+	:	Any()
 		{}
 
 	Val_T& operator=(const null_t&)
 		{
-		ZAny::Clear();
+		Any::Clear();
 		return *this;
 		}
 
 // Overload, so we can init/assign from a string constant
 	Val_T(const UTF8* iVal)
-	:	ZAny(sAny<string8>(iVal))
+	:	Any(sAny<string8>(iVal))
 		{}
 
 	Val_T& operator=(const UTF8* iVal)
 		{
-		ZAny::operator=(sAny<string8>(iVal));
+		Any::operator=(sAny<string8>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF16* iVal)
-	:	ZAny(sAny<string16>(iVal))
+	:	Any(sAny<string16>(iVal))
 		{}
 
 	Val_T& operator=(const UTF16* iVal)
 		{
-		ZAny::operator=(sAny<string16>(iVal));
+		Any::operator=(sAny<string16>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF32* iVal)
-	:	ZAny(string32(iVal))
+	:	Any(string32(iVal))
 		{}
 
 	Val_T& operator=(const UTF32* iVal)
 		{
-		ZAny::operator=(sAny<string32>(iVal));
+		Any::operator=(sAny<string32>(iVal));
 		return *this;
 		}
 
-// Overload, as ZAny's templated constructor is explicit.
+// Overload, as Any's templated constructor is explicit.
 	template <class S>
 	Val_T(const S& iVal)
-	:	ZAny(iVal)
+	:	Any(iVal)
 		{}
 
 	template <class S>
 	Val_T& operator=(const S& iVal)
 		{
-		ZAny::operator=(iVal);
+		Any::operator=(iVal);
 		return *this;
 		}
 
@@ -143,13 +142,13 @@ public:
 		return Comparer::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
 		}
 	
-	using ZAny::PGet;
-	using ZAny::QGet;
-	using ZAny::DGet;
-	using ZAny::PMut;
-	using ZAny::Mut;
-	using ZAny::Get;
-	using ZAny::Set;
+	using Any::PGet;
+	using Any::QGet;
+	using Any::DGet;
+	using Any::PMut;
+	using Any::Mut;
+	using Any::Get;
+	using Any::Set;
 
 // Shortcut access to values in an enclosed Seq.
 	const Val_T* PGet(size_t iIndex) const

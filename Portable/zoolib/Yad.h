@@ -22,13 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Yad_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Name.h"
 #include "zoolib/SafePtrStack.h"
 #include "zoolib/Visitor.h"
-
-#include "zoolib/ZAny.h"
 
 #include <string>
 
@@ -103,7 +102,7 @@ public:
 	virtual bool IsSimple(const YadOptions& iOptions);
 
 // Our protocol
-	virtual ZAny AsAny() = 0;
+	virtual Any AsAny() = 0;
 	};
 
 // =================================================================================================
@@ -190,20 +189,20 @@ class YadR_Any
 :	public virtual YadR
 	{
 public:
-	YadR_Any(const ZAny& iAny);
+	YadR_Any(const Any& iAny);
 	virtual ~YadR_Any();
 
 // Our protocol
-	const ZAny& GetAny();
+	const Any& GetAny();
 
 protected:
-	ZAny fAny;
+	Any fAny;
 	};
 
 // =================================================================================================
 // MARK: - YadAtomR_Any
 
-ZRef<YadAtomR> sMake_YadAtomR_Any(const ZAny& iAny);
+ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny);
 
 // =================================================================================================
 // MARK: - sYadR

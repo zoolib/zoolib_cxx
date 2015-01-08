@@ -42,7 +42,7 @@ namespace Util_NS {
 // =================================================================================================
 // MARK: - Util_NS
 
-ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal)
+Any sDAsAny(const Any& iDefault, NSObject* iVal)
 	{
 	if (iVal)
 		{
@@ -56,10 +56,10 @@ ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal)
 	return iDefault;
 	}
 
-ZAny sAsAny(NSObject* iVal)
-	{ return sDAsAny(ZAny(), iVal); }
+Any sAsAny(NSObject* iVal)
+	{ return sDAsAny(Any(), iVal); }
 
-NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
+NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 	{
 	if (false)
 		{}
@@ -171,119 +171,119 @@ NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	return iDefault;
 	}
 
-NSObject* sAsNSObject(const ZAny& iVal)
+NSObject* sAsNSObject(const Any& iVal)
 	{ return sDAsNSObject([NSNull null], iVal); }
 
 } // namespace Util_NS
 } // namespace ZooLib
 
 // =================================================================================================
-@implementation NSObject (ZAny_Additions)
+@implementation NSObject (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+-(Any)asAnyWithDefault:(const Any&)iDefault
 	{
 	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZAny_Additions) asAnyWithDefault called"));
+	ZDebugLogf(0, ("NSObject (ZooLib_Any_Additions) asAnyWithDefault called"));
 	return iDefault;
 	}
 
 @end
 
 // =================================================================================================
-@interface NSNull (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSNull (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSNull (ZAny_Additions)
+@implementation NSNull (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(); }
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(); }
 
 @end
 
 // =================================================================================================
-@interface NSDictionary (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSDictionary (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSDictionary (ZAny_Additions)
+@implementation NSDictionary (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+-(Any)asAnyWithDefault:(const Any&)iDefault
 	{
 	Map_Any result;
 	for (id theKey, ii = [self keyEnumerator]; (theKey = [ii nextObject]); /*no inc*/)
 		{
 		const string8 theName = Util_NS::sAsUTF8((NSString*)theKey);
-		const ZAny theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
+		const Any theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
 		result.Set(theName, theVal);
 		}
-	return ZAny(result);
+	return Any(result);
 	}
 
 @end
 
 // =================================================================================================
-@interface NSArray (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSArray (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSArray (ZAny_Additions)
+@implementation NSArray (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+-(Any)asAnyWithDefault:(const Any&)iDefault
 	{
 	Seq_Any result;
 	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
 		result.Append([theValue asAnyWithDefault:iDefault]);
-	return ZAny(result);
+	return Any(result);
 	}
 
 @end
 
 // =================================================================================================
-@interface NSData (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSData (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSData (ZAny_Additions)
+@implementation NSData (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(Data_Any([self bytes], [self length])); }
-
-@end
-
-// =================================================================================================
-@interface NSString (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
-@end
-
-@implementation NSString (ZAny_Additions)
-
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(string8([self UTF8String])); }
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(Data_Any([self bytes], [self length])); }
 
 @end
 
 // =================================================================================================
-@interface NSNumber (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSString (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSNumber (ZAny_Additions)
+@implementation NSString (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(int64([self longLongValue])); }
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(string8([self UTF8String])); }
 
 @end
 
 // =================================================================================================
-@interface NSDate (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@interface NSNumber (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
 @end
 
-@implementation NSDate (ZAny_Additions)
+@implementation NSNumber (ZooLib_Any_Additions)
 
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault
-	{ return ZAny(ZTime([self timeIntervalSince1970])); }
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(int64([self longLongValue])); }
+
+@end
+
+// =================================================================================================
+@interface NSDate (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
+@end
+
+@implementation NSDate (ZooLib_Any_Additions)
+
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(ZTime([self timeIntervalSince1970])); }
 
 @end
 

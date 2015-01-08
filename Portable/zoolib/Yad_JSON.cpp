@@ -210,7 +210,7 @@ static bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iCh
 	return false;
 	}
 
-static ZQ<ZAny> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
 	using namespace Util_Chan;
 
@@ -233,7 +233,7 @@ static ZQ<ZAny> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 		}
 	else if (sTryRead_CaselessString("null", iChanR, iChanU))
 		{
-		return ZAny(null); //## Watch this
+		return Any(null); //## Watch this
 		}
 	else if (sTryRead_CaselessString("false", iChanR, iChanU))
 		{
@@ -287,7 +287,7 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 		}
 	else
 		{
-		if (ZQ<ZAny> theQ = spQFromChan_Val(theChanR, theChanU))
+		if (ZQ<Any> theQ = spQFromChan_Val(theChanR, theChanU))
 			return sMake_YadAtomR_Any(*theQ);
 		}
 
@@ -603,7 +603,7 @@ static void spWritePropName(const string& iString, bool iUseSingleQuotes, const 
 		w << iString;
 	}
 
-static void spToStrim_SimpleValue(const ZAny& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
+static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
 	{
 	if (false)
 		{}

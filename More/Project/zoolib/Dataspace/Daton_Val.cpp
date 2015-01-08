@@ -19,13 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zooLib/dataspace/Daton_Val.h"
-#include "zoolib/Yad_Any.h"
 
-#include "zoolib/ZStream_Data_T.h"
-#include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZStrimU_StreamUTF8Buffered.h"
-#include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
+#include "zoolib/Chan_Bin_Data.h"
+#include "zoolib/Chan_UTF_Chan_Bin.h"
+#include "zoolib/Util_Any_JSON.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -35,24 +32,11 @@ namespace Dataspace {
 
 namespace { // anonymous
 
-Val_Any spAsVal(const Data_Any& iData)
+ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 	{
-	try
-		{
-		ZRef<ZStreamerR> theStreamerR =
-			new ZStreamerRPos_T<ZStreamRPos_Data_T<Data_Any> >(iData);
-
-		ZRef<ZStrimmerU> theStrimmerU =
-			new ZStrimmerU_Streamer_T<ZStrimU_StreamUTF8Buffered>(1024, theStreamerR);
-
-		ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sYadR(theStrimmerU);
-
-		return sFromYadR(Val_Any(), theYadR);
-		}
-	catch (...)
-		{
-		return Val_Any();
-		}
+	try { return Util_Any_JSON::sQRead(new Channer_T<ChanRPos_Bin_Data<Data_Any>,ChanR_Bin>); }
+	catch (...) {}
+	return null;
 	}
 
 } // anonymous namespace
@@ -61,13 +45,12 @@ Val_Any spAsVal(const Data_Any& iData)
 // MARK: - Daton/Val conversion.
 
 Val_Any sAsVal(const DatonSet::Daton& iDaton)
-	{ return spAsVal(iDaton.GetData()); }
+	{ return spQAsVal(iDaton.GetData()).Get(); }
 
 DatonSet::Daton sAsDaton(const Val_Any& iVal)
 	{
 	Data_Any theData;
-	ZYad_ZooLibStrim::sToStrim(sYadR(iVal),
-		ZStrimW_StreamUTF8(sStreamRWPos_Data_T(theData)));
+	Util_Any_JSON::sWrite(iVal, ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_Any>(&theData)));
 	return theData;
 	}
 

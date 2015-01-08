@@ -120,7 +120,7 @@ Val and an \c Index_t that referring to the position just past the end of the ma
 
 Where possible Val, Seq and Map are type-compatible with the appropriate native type. For example,
 a ZWinCOM::Variant can be used where a VARIANT would be expected. In other cases the native
-API itself does not have an equivalent of Val, so our Val is a subclass of ZAny, and we
+API itself does not have an equivalent of Val, so our Val is a subclass of Any, and we
 do appropriate marshalling at the Map and Seq level.
 
 There is one more set of ZooLib types that are conceptually part of the Val API. Data_XXX is

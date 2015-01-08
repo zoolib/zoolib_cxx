@@ -22,27 +22,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_Any_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZAny.h"
+#include "zoolib/Any.h"
 
 // =================================================================================================
-// MARK: - ZAny coercion
+// MARK: - Any coercion
 
 namespace ZooLib {
 
-ZQ<bool> sQCoerceBool(const ZAny& iAny);
-bool sQCoerceBool(const ZAny& iAny, bool& oVal);
-bool sDCoerceBool(bool iDefault, const ZAny& iAny);
-bool sCoerceBool(const ZAny& iAny);
+ZQ<bool> sQCoerceBool(const Any& iAny);
+bool sQCoerceBool(const Any& iAny, bool& oVal);
+bool sDCoerceBool(bool iDefault, const Any& iAny);
+bool sCoerceBool(const Any& iAny);
 
-ZQ<__int64> sQCoerceInt(const ZAny& iAny);
-bool sQCoerceInt(const ZAny& iAny, __int64& oVal);
-__int64 sDCoerceInt(__int64 iDefault, const ZAny& iAny);
-__int64 sCoerceInt(const ZAny& iAny);
+ZQ<__int64> sQCoerceInt(const Any& iAny);
+bool sQCoerceInt(const Any& iAny, __int64& oVal);
+__int64 sDCoerceInt(__int64 iDefault, const Any& iAny);
+__int64 sCoerceInt(const Any& iAny);
 
-ZQ<double> sQCoerceRat(const ZAny& iAny);
-bool sQCoerceRat(const ZAny& iAny, double& oVal);
-double sDCoerceRat(double iDefault, const ZAny& iAny);
-double sCoerceRat(const ZAny& iAny);
+ZQ<double> sQCoerceRat(const Any& iAny);
+bool sQCoerceRat(const Any& iAny, double& oVal);
+double sDCoerceRat(double iDefault, const Any& iAny);
+double sCoerceRat(const Any& iAny);
 
 } // namespace ZooLib
 

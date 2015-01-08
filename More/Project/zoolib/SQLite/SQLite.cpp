@@ -152,7 +152,7 @@ string8 Iter::NameOf(size_t iIndex)
 	return string8();
 	}
 
-ZAny Iter::Get(size_t iIndex)
+Any Iter::Get(size_t iIndex)
 	{
 	if (fStmt)
 		{
@@ -185,7 +185,7 @@ ZAny Iter::Get(size_t iIndex)
 				}
 			}
 		}
-	return ZAny();
+	return Any();
 	}
 
 void Iter::pAdvance()

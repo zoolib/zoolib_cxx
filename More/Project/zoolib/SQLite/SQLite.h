@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_SQLite_SQLite_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/UnicodeString.h"
 
-#include "zoolib/ZAny.h"
 #include "zoolib/ZCounted.h"
 
 #include <sqlite3.h>
@@ -68,7 +68,7 @@ public:
 
 	size_t Count();
 	string8 NameOf(size_t iIndex);
-	ZAny Get(size_t iIndex);
+	Any Get(size_t iIndex);
 
 private:
 	void pAdvance();

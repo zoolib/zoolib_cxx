@@ -129,9 +129,7 @@ string16 sAsUTF16(NSString* iNSString)
 	return string16();
 	}
 
-
 } // namespace Util_NS
 } // namespace ZooLib
-
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)

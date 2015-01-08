@@ -49,7 +49,7 @@ static Data_Any spAsData_Any(CFDataRef iCFData)
 	return Data_Any();
 	}
 
-Seq_Any sAsSeq_Any(const ZAny& iDefault, CFArrayRef iCFArray)
+Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray)
 	{
 	Seq_Any theSeq;
 
@@ -64,53 +64,53 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	CFStringRef theKey = static_cast<CFStringRef>(iKey);
 	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
 
-	pair<const ZAny*,Map_Any*>* thePair =
-		static_cast<pair<const ZAny*,Map_Any*>*>(iRefcon);
+	pair<const Any*,Map_Any*>* thePair =
+		static_cast<pair<const Any*,Map_Any*>*>(iRefcon);
 
 	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue));
 	}
 
-Map_Any sAsMap_Any(const ZAny& iDefault, CFDictionaryRef iCFDictionary)
+Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary)
 	{
 	Map_Any theMap;
-	pair<const ZAny*, Map_Any*> thePair(&iDefault, &theMap);
+	pair<const Any*, Map_Any*> thePair(&iDefault, &theMap);
 	::CFDictionaryApplyFunction(iCFDictionary, spGatherContents, &thePair);
 	return theMap;
 	}
 
-ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal)
+Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
 	{
 	if (not iVal)
-		return ZAny();
+		return iDefault;
 
 	const CFTypeID theTypeID = ::CFGetTypeID(iVal);
 
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
 		&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
 		if (theTypeID == ::CFNullGetTypeID())
-			return ZAny();
+			return Any();
 	#endif
 
 	if (theTypeID == ::CFStringGetTypeID())
-		return ZAny(sAsUTF8((CFStringRef)iVal));
+		return Any(sAsUTF8((CFStringRef)iVal));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return ZAny(sAsMap_Any(iDefault, (CFDictionaryRef)iVal));
+		return Any(sAsMap_Any(iDefault, (CFDictionaryRef)iVal));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return ZAny(sAsSeq_Any(iDefault, (CFArrayRef)iVal));
+		return Any(sAsSeq_Any(iDefault, (CFArrayRef)iVal));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
-		return ZAny(bool(::CFBooleanGetValue((CFBooleanRef)iVal)));
+		return Any(bool(::CFBooleanGetValue((CFBooleanRef)iVal)));
 
 	if (theTypeID == ::CFDateGetTypeID())
 		{
-		return ZAny(ZTime(kCFAbsoluteTimeIntervalSince1970
+		return Any(ZTime(kCFAbsoluteTimeIntervalSince1970
 			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
 		}
 
 	if (theTypeID == ::CFDataGetTypeID())
-		return ZAny(spAsData_Any((CFDataRef)iVal));
+		return Any(spAsData_Any((CFDataRef)iVal));
 
 	if (theTypeID == ::CFNumberGetTypeID())
 		{
@@ -122,42 +122,42 @@ ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal)
 				{
 				int8 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			case kCFNumberSInt16Type:
 			case kCFNumberShortType:
 				{
 				int16 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			case kCFNumberSInt32Type:
 			case kCFNumberIntType:
 				{
 				int32 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			case kCFNumberSInt64Type:
 			case kCFNumberLongLongType:
 				{
 				int64 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			case kCFNumberFloat32Type:
 			case kCFNumberFloatType:
 				{
 				float theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			case kCFNumberFloat64Type:
 			case kCFNumberDoubleType:
 				{
 				double theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
-				return ZAny(theValue);
+				return Any(theValue);
 				}
 			default:
 				break;
@@ -167,13 +167,13 @@ ZAny sDAsAny(const ZAny& iDefault, CFTypeRef iVal)
 	return iDefault;
 	}
 
-ZAny sAsAny(CFTypeRef iVal)
-	{ return sDAsAny(ZAny(), iVal); }
+Any sAsAny(CFTypeRef iVal)
+	{ return sDAsAny(Any(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return sAdopt& ::CFNumberCreate(nullptr, iType, iVal); }
 
-ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
+ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 	{
 	if (false)
 		{}
@@ -301,7 +301,7 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const ZAny& iVal)
 	return iDefault;
 	}
 
-ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
+ZRef<CFTypeRef> sAsCFType(const Any& iVal)
 	{ return sDAsCFType(nullptr, iVal); }
 
 } // namespace Util_CF

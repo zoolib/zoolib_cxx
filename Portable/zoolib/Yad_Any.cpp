@@ -33,7 +33,7 @@ class YadStreamerRPos_Any
 public:
 	YadStreamerRPos_Any(const Data_Any& iData)
 	:	YadStreamerRPos_Val_T<Data_Any>(iData)
-	,	YadR_Any(ZAny(iData))
+	,	YadR_Any(Any(iData))
 		{}
 	};
 
@@ -44,7 +44,7 @@ class YadSeqR_Any
 public:
 	YadSeqR_Any(const Seq_Any& iSeq)
 	:	YadSeqR_Val_T<Seq_Any>(iSeq)
-	,	YadR_Any(ZAny(iSeq))
+	,	YadR_Any(Any(iSeq))
 		{}
 	};
 
@@ -55,14 +55,14 @@ class YadMapR_Any
 public:
 	YadMapR_Any(const Map_Any& iMap)
 	:	YadMapR_Val_T<Map_Any>(iMap)
-	,	YadR_Any(ZAny(iMap))
+	,	YadR_Any(Any(iMap))
 		{}
 	};
 
 // =================================================================================================
 // MARK: - sYadR
 
-ZRef<YadR> sYadR(const ZAny& iVal)
+ZRef<YadR> sYadR(const Any& iVal)
 	{
 	if (const string8* theVal = iVal.PGet<string8>())
 		return sYadR(*theVal);

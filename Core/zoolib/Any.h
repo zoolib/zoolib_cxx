@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZAny_h__
-#define __ZAny_h__
+#ifndef __ZooLib_Any_h__
+#define __ZooLib_Any_h__
 #include "zconfig.h"
 
 #include "zoolib/Compat_type_traits.h" // for is_pod
@@ -31,38 +31,38 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <typeinfo> // For std::type_info
 
 // =================================================================================================
-// MARK: - ZAny
+// MARK: - Any
 
 namespace ZooLib {
 
 template <class S>
-struct ZAnyTraits
+struct AnyTraits
 	{
 	enum { eAllowInPlace = 1 };
 	};
 
-class ZAny
+class Any
 	{
 public:
-	const ZAny& AsAny() const
+	const Any& AsAny() const
 		{ return *this; }
 
-	ZAny& AsAny()
+	Any& AsAny()
 		{ return *this; }
 
-	ZAny()
+	Any()
 		{
 		fDistinguisher = 0;
 		fPayload.fAsPtr = 0;
 		}
 
-	ZAny(const ZAny& iOther)
+	Any(const Any& iOther)
 		{ pCtor(iOther); }
 
-	~ZAny()
+	~Any()
 		{ pDtor(); }
 
-	ZAny& operator=(const ZAny& iOther)
+	Any& operator=(const Any& iOther)
 		{
 		if (this != &iOther)
 			{
@@ -72,24 +72,24 @@ public:
 		return *this;
 		}
 
-	ZAny(const null_t&)
+	Any(const null_t&)
 		{
 		fDistinguisher = 0;
 		fPayload.fAsPtr = 0;
 		}
 
-	ZAny& operator=(const null_t&)
+	Any& operator=(const null_t&)
 		{
 		this->Clear();
 		return *this;
 		}
 
 	template <class S>
-	explicit ZAny(const S& iVal)
+	explicit Any(const S& iVal)
 		{ pCtor_T<S>(iVal); }
 
 	template <class S>
-	ZAny& operator=(const S& iVal)
+	Any& operator=(const S& iVal)
 		{
 		pDtor();
 		pCtor_T<S>(iVal);
@@ -102,7 +102,7 @@ public:
 	const void* ConstVoidStar() const;
 
 // ZVal protocol, generally for use by ZVal derivatives
-	void swap(ZAny& ioOther);
+	void swap(Any& ioOther);
 
 	bool IsNull() const;
 
@@ -174,19 +174,19 @@ public:
 
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S, class P0>
-	ZAny(const S* dummy, const P0& iP0)
+	Any(const S* dummy, const P0& iP0)
 		{ pCtor_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
-	ZAny(const S* dummy, const P0& iP0, const P1& iP1)
+	Any(const S* dummy, const P0& iP0, const P1& iP1)
 		{ pCtor_T<S>(iP0, iP1); }
 
 	template <class S, class P0>
-	ZAny(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
+	Any(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
-	ZAny(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+	Any(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(iP0, iP1); }
 
 private:
@@ -333,7 +333,7 @@ private:
 	const void* pFetchConst(const std::type_info& iTypeInfo) const;
 	void* pFetchMutable(const std::type_info& iTypeInfo);
 
-	void pCtor(const ZAny& iOther)
+	void pCtor(const Any& iOther)
 		{
 		if (spNotPOD(iOther.fDistinguisher))
 			{
@@ -346,7 +346,7 @@ private:
 			}
 		}
 
-	void pCtor_NonPOD(const ZAny& iOther);
+	void pCtor_NonPOD(const Any& iOther);
 
 	void pDtor()
 		{
@@ -367,7 +367,7 @@ private:
 	template <class S, class P0, class P1>
 	void pCtor_T(const P0& iP0, const P1& iP1)
 		{
-		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0, iP1);
 			}
@@ -388,7 +388,7 @@ private:
 	template <class S, class P0>
 	void pCtor_T(const P0& iP0)
 		{
-		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			if (false)
 				{}
@@ -423,7 +423,7 @@ private:
 	template <class S, class P0>
 	S& pCtorRet_T(const P0& iP0)
 		{
-		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			if (false)
 				{}
@@ -451,7 +451,7 @@ private:
 	template <class S>
 	S& pCtorRet_T()
 		{
-		if (ZAnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
 			if (false)
 				{}
@@ -479,7 +479,7 @@ private:
 // -----------------
 	// There are three situations indicated by the value in fDistinguisher.
 	// 1. It's zero. fPayload.fAsPtr points to an instance of a Reffed subclass. If
-	//    fPayload.fAsPtr is also null then the ZAny is itself a null object.
+	//    fPayload.fAsPtr is also null then the Any is itself a null object.
 	// 2. LSB is one. It points one byte past a typeid, and fPayload holds a POD value.
 	// 3. LSB is zero. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
@@ -508,63 +508,63 @@ private:
 // MARK: - Accessor functions
 
 template <class S>
-const S* sPGet(const ZAny& iAny)
+const S* sPGet(const Any& iAny)
 	{ return iAny.PGet<S>(); }
 
 template <class S>
-const ZQ<S> sQGet(const ZAny& iAny)
+const ZQ<S> sQGet(const Any& iAny)
 	{ return iAny.QGet<S>(); }
 
 template <class S>
-const S& sDGet(const S& iDefault, const ZAny& iAny)
+const S& sDGet(const S& iDefault, const Any& iAny)
 	{ return iAny.DGet<S>(iDefault); }
 
 template <class S>
-const S& sGet(const ZAny& iAny)
+const S& sGet(const Any& iAny)
 	{ return iAny.Get<S>(); }
 
 template <class S>
-S* sPMut(ZAny& ioAny)
+S* sPMut(Any& ioAny)
 	{ return ioAny.PMut<S>(); }
 
 template <class S>
-S& sDMut(const S& iDefault, ZAny& ioAny)
+S& sDMut(const S& iDefault, Any& ioAny)
 	{ return ioAny.DMut<S>(iDefault); }
 
 template <class S>
-S& sMut(ZAny& ioAny)
+S& sMut(Any& ioAny)
 	{ return ioAny.Mut<S>(); }
 
 template <class S>
-S& sSet(ZAny& ioAny, const S& iVal)
+S& sSet(Any& ioAny, const S& iVal)
 	{ return ioAny.Set<S>(iVal); }
 
 // =================================================================================================
-// MARK: - ZAny, swap and pseudo-constructors
+// MARK: - Any, swap and pseudo-constructors
 
-inline void swap(ZAny& a, ZAny& b)
+inline void swap(Any& a, Any& b)
 	{ a.swap(b); }
 
 template <class S>
-ZAny sAny()
-	{ return ZAny(static_cast<S*>(0)); }
+Any sAny()
+	{ return Any(static_cast<S*>(0)); }
 
 template <class S, class P0>
-ZAny sAny(const P0& iP0)
-	{ return ZAny(static_cast<S*>(0), iP0); }
+Any sAny(const P0& iP0)
+	{ return Any(static_cast<S*>(0), iP0); }
 
 template <class S, class P0, class P1>
-ZAny sAny(const P0& iP0, const P1& iP1)
-	{ return ZAny(static_cast<S*>(0), iP0, iP1); }
+Any sAny(const P0& iP0, const P1& iP1)
+	{ return Any(static_cast<S*>(0), iP0, iP1); }
 
 template <class S, class P0>
-ZAny sAnyCounted(const P0& iP0)
-	{ return ZAny(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
+Any sAnyCounted(const P0& iP0)
+	{ return Any(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
 
 template <class S, class P0, class P1>
-ZAny sAnyCounted(const P0& iP0, const P1& iP1)
-	{ return ZAny(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
+Any sAnyCounted(const P0& iP0, const P1& iP1)
+	{ return Any(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
 
 } // namespace ZooLib
 
-#endif // __ZAny_h__
+#endif // __ZooLib_Any_h__

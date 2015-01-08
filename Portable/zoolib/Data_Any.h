@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Data_Any_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/Compare_T.h"
 #include "zoolib/Util_Relops.h"
 
-#include "zoolib/ZAny.h"
 #include "zoolib/ZRef.h"
 
 namespace ZooLib {

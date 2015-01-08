@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - sYadR
 
-ZRef<YadR> sYadR(const ZAny& iVal);
+ZRef<YadR> sYadR(const Any& iVal);
 
 ZRef<YadStreamerR> sYadR(const Data_Any& iData);
 

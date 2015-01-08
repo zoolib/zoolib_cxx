@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Yad_Std_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/Yad.h"
-
-#include "zoolib/ZAny.h"
 
 namespace ZooLib {
 
