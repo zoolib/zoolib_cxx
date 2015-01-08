@@ -122,6 +122,9 @@ public:
 	virtual void GetChan(const Chan_Self_p*& oChanPtr)
 		{ oChanPtr = &fChan; }
 
+// Our protocol
+	Chan_p& GetChanActual() { return fChan; }
+
 protected:
 	const ZRef<Channer<Chan_Other_p> > fChannerOther;
 	Chan_p fChan;
