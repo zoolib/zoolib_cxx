@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
+#include "zoolib/ChannerXX.h"
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
@@ -75,68 +76,6 @@ string8 sAsJSON(const Val_Any& iVal)
 	sWrite(iVal, ChanW_UTF_string8(&result));
 	return result;
 	}
-
-//// =================================================================================================
-//// MARK: - ChannerRW_T
-//
-//template <class Chan_p, class Elmt_p>
-//class ChannerRW_T
-//:	public Channer<ChanR<Elmt_p> >
-//,	public Channer<ChanW<Elmt_p> >
-//	{
-//public:
-//	ChannerRW_T()
-//		{}
-//
-//	template <class P>
-//	ChannerRW_T(P& iParam)
-//	:	fChan(iParam)
-//		{}
-//
-//	template <class P>
-//	ChannerRW_T(const P& iParam)
-//	:	fChan(iParam)
-//		{}
-//
-//	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
-//		{ oChanPtr = &fChan; }
-//
-//	virtual void GetChan(const ChanW<Elmt_p>*& oChanPtr)
-//		{ oChanPtr = &fChan; }
-//
-//	Chan_p fChan;
-//	};
-
-// =================================================================================================
-// MARK: - ChannerRU_T
-
-template <class Chan_p>
-class ChannerRU_T
-:	public Channer<ChanR<typename Chan_p::CommonElmt_t> >
-,	public Channer<ChanU<typename Chan_p::CommonElmt_t> >
-	{
-public:
-	ChannerRU_T()
-		{}
-
-	template <class P>
-	ChannerRU_T(P& iParam)
-	:	fChan(iParam)
-		{}
-
-	template <class P>
-	ChannerRU_T(const P& iParam)
-	:	fChan(iParam)
-		{}
-
-	virtual void GetChan(const ChanR<typename Chan_p::CommonElmt_t>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	virtual void GetChan(const ChanU<typename Chan_p::CommonElmt_t>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	Chan_p fChan;
-	};
 
 // =================================================================================================
 // MARK: -

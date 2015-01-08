@@ -32,14 +32,12 @@ namespace ZooLib {
 
 typedef ChannerComboRW<byte> ChannerComboRW_Bin;
 
-//typedef Callable<ZQ<ChannerComboRW_Bin>()> ChannerComboFactoryRW_Bin;
 typedef Callable<ZQ<ChannerComboRW_Bin>()> Factory_ChannerComboRW_Bin;
 
 // ---
 
 typedef ChannerComboRWClose<byte> ChannerComboRWClose_Bin;
 
-//typedef Callable<ZQ<ChannerComboRWClose_Bin>()> ChannerComboFactoryRWClose_Bin;
 typedef Callable<ZQ<ChannerComboRWClose_Bin>()> Factory_ChannerComboRWClose_Bin;
 
 // ---
