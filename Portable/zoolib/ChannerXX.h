@@ -45,19 +45,18 @@ typedef Channer<ChanSizeSet> ChannerSizeSet;
 // =================================================================================================
 // MARK: - ChannerR, ChannerU, ChannerW
 
-// C++11
+#if ZCONFIG_CPP >= 2011
 template <class Elmt_p> using ChannerR = Channer<ChanR<Elmt_p> >;
 template <class Elmt_p> using ChannerU = Channer<ChanU<Elmt_p> >;
 template <class Elmt_p> using ChannerW = Channer<ChanW<Elmt_p> >;
 
-// Workaround
-template <class Elmt_p>
-struct Channers
-	{
-	typedef Channer<ChanR<Elmt_p> > ChannerR;
-	typedef Channer<ChanU<Elmt_p> > ChannerU;
-	typedef Channer<ChanW<Elmt_p> > ChannerW;
-	};
+#else // ZCONFIG_CPP >= 2011
+
+template <class Elmt_p> class ChannerR : public Channer<ChanR<Elmt_p> > {};
+template <class Elmt_p> class ChannerU : public Channer<ChanU<Elmt_p> > {};
+template <class Elmt_p> class ChannerW : public Channer<ChanW<Elmt_p> > {};
+
+#endif // ZCONFIG_CPP >= 2011
 
 // =================================================================================================
 // MARK: - ChannerRW
@@ -91,8 +90,7 @@ class ChannerRU
 
 template <class Elmt_p>
 class ChannerRPos
-:	public virtual ChannerR<Elmt_p>
-,	public virtual ChannerU<Elmt_p>
+:	public virtual ChannerRU<Elmt_p>
 ,	public virtual ChannerPos
 ,	public virtual ChannerSize
 	{};
@@ -118,11 +116,44 @@ class ChannerRWPos
 	{};
 
 // =================================================================================================
+// MARK: - ChannerRU_T
+
+template <class Chan_p>
+class ChannerRU_T
+:	public virtual ChannerRU<typename Chan_p::CommonElmt_t>
+	{
+public:
+	typedef typename Chan_p::CommonElmt_t CommonElmt_t;
+
+	ChannerRU_T()
+		{}
+
+	template <class P>
+	ChannerRU_T(P& iParam)
+	:	fChan(iParam)
+		{}
+
+	template <class P>
+	ChannerRU_T(const P& iParam)
+	:	fChan(iParam)
+		{}
+
+// From ChannerR
+	virtual void GetChan(const ChanR<CommonElmt_t>*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerU
+	virtual void GetChan(const ChanU<CommonElmt_t>*& oChanPtr) { oChanPtr = &fChan; }
+
+protected:
+	Chan_p fChan;
+	};
+
+// =================================================================================================
 // MARK: - ChannerRWPos_T
 
 template <class Chan_p>
 class ChannerRWPos_T
-:	public ChannerRWPos<typename Chan_p::CommonElmt_t>
+:	public virtual ChannerRWPos<typename Chan_p::CommonElmt_t>
 	{
 public:
 	typedef typename Chan_p::CommonElmt_t CommonElmt_t;
