@@ -58,6 +58,8 @@ string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
 string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
 string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 
+string8 sReadAllUTF8(const ChanR_UTF& iChanR);
+
 // =================================================================================================
 // MARK: - ChanR_UTF_Native16
 

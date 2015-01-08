@@ -210,6 +210,27 @@ string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 	return *theQ;
 	}
 
+// -----
+
+string8 sReadAllUTF8(const ChanR_UTF& iChanR)
+	{
+	string8 result;
+	size_t destGenerated = 0;
+	for (;;)
+		{
+		result.resize(destGenerated + 1024);
+		size_t cuRead;
+		sRead(sNonConst(result.data()) + destGenerated,
+			1024, &cuRead, 1024, nullptr, iChanR);
+
+		if (cuRead == 0)
+			break;
+		destGenerated += cuRead;
+		}
+	result.resize(destGenerated);
+	return result;
+	}
+
 // =================================================================================================
 // MARK: - ChanR_UTF_Native16
 
