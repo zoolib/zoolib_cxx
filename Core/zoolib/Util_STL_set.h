@@ -69,12 +69,9 @@ template <typename T, typename Comparator>
 typename std::set<T,Comparator>::iterator
 sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterator iter)
 	{
-	if (ioSet.end() == iter)
-		return iter;
-
-	const T theVal = *iter;
-	ioSet.erase(iter);
-	return ioSet.lower_bound(theVal);
+	if (ioSet.end() != iter)
+		ioSet.erase(iter++);
+	return iter;
 	}
 
 // -----
