@@ -20,32 +20,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Singleton.h"
 #include "zoolib/StartScheduler.h"
-
-#include "zoolib/ZWorker.h"
+#include "zoolib/Worker.h"
 
 namespace ZooLib {
 
 /**
 \defgroup Worker
 
-\brief ZWorker provides a disciplined lifecycle for long-lived repetitive jobs.
+\brief Worker provides a disciplined lifecycle for long-lived repetitive jobs.
 
 */
 
 // =================================================================================================
-// MARK: - ZWorker
+// MARK: - Worker
 
 /**
-\class ZWorker
-\ingroup Worker
-\sa Worker
+\class Worker
 */
 
 static const ZTime kDistantFuture = 1000 * ZTime::kYear;
 
 typedef StartScheduler::Job Job;
 
-ZWorker::ZWorker(
+Worker::Worker(
 	const ZRef<Callable_Attached>& iCallable_Attached,
 	const ZRef<Callable_Work>& iCallable_Work,
 	const ZRef<Callable_Detached>& iCallable_Detached)
@@ -57,7 +54,7 @@ ZWorker::ZWorker(
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker(
+Worker::Worker(
 	const ZRef<Callable_Attached>& iCallable_Attached,
 	const ZRef<Callable_Work>& iCallable_Work)
 :	fWorking(0)
@@ -67,7 +64,7 @@ ZWorker::ZWorker(
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker(
+Worker::Worker(
 	const ZRef<Callable_Work>& iCallable_Work,
 	const ZRef<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
@@ -77,18 +74,18 @@ ZWorker::ZWorker(
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker(const ZRef<Callable_Work>& iCallable_Work)
+Worker::Worker(const ZRef<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 	{
 	ZAssert(fCallable_Work);
 	}
 
-ZWorker::ZWorker()
+Worker::Worker()
 :	fWorking(0)
 	{}
 
-ZQ<void> ZWorker::QCall()
+ZQ<void> Worker::QCall()
 	{
 	ZGuardMtx guard(fMtx);
 
@@ -129,19 +126,19 @@ ZQ<void> ZWorker::QCall()
 		}
 	}
 
-void ZWorker::Wake()
+void Worker::Wake()
 	{ this->pWakeAt(ZTime::sSystem()); }
 
-void ZWorker::WakeIn(double iInterval)
+void Worker::WakeIn(double iInterval)
 	{ this->pWakeAt(ZTime::sSystem() + iInterval); }
 
-void ZWorker::WakeAt(ZTime iSystemTime)
+void Worker::WakeAt(ZTime iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
-bool ZWorker::IsWorking()
+bool Worker::IsWorking()
 	{ return ZThread::sID() == fWorking; }
 
-bool ZWorker::Attach(ZRef<Starter> iStarter)
+bool Worker::Attach(ZRef<Starter> iStarter)
 	{
 	ZGuardMtx guard(fMtx);
 	if (not fStarter)
@@ -168,13 +165,13 @@ bool ZWorker::Attach(ZRef<Starter> iStarter)
 	return false;
 	}
 
-bool ZWorker::IsAttached()
+bool Worker::IsAttached()
 	{
 	ZAcqMtx acq(fMtx);
 	return fStarter;
 	}
 
-void ZWorker::pWakeAt(ZTime iSystemTime)
+void Worker::pWakeAt(ZTime iSystemTime)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fStarter)

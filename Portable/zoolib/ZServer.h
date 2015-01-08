@@ -18,28 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZServer_h__
-#define __ZServer_h__ 1
+#ifndef __ZooLib_Server_h__
+#define __ZooLib_Server_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRoster.h"
-#include "zoolib/ZStreamer.h"
-#include "zoolib/ZWorker.h"
+#include "zoolib/Roster.h"
+//#include "zoolib/Channer.h"
+#include "zoolib/Connection.h"
+#include "zoolib/Worker.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZServer
+// MARK: - Server
 
-class ZServer
+class Server
 :	public ZCounted
 	{
 public:
-	typedef ZRef<ZRoster::Entry> ZRef_ZRoster_Entry; // CW7
-	typedef Callable<void(ZRef_ZRoster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
+	typedef ZRef<Roster::Entry> ZRef_Roster_Entry; // CW7
+	typedef Callable<void(ZRef_Roster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
 
-	ZServer();
-	virtual ~ZServer();
+	Server();
+	virtual ~Server();
 
 // From ZCounted
 	virtual void Finalize();
@@ -70,11 +71,11 @@ private:
 
 	ZRef<ZStreamerRWFactory> fFactory;
 	ZRef<Callable_Connection> fCallable_Connection;
-	ZRef<ZRoster> fRoster;
+	ZRef<Roster> fRoster;
 
 	ZRef<ZWorker> fWorker;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZServer_h__
+#endif // __ZooLib_Server_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker_h__
-#define __ZWorker_h__ 1
+#ifndef __ZooLib_Worker_h__
+#define __ZooLib_Worker_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Starter.h"
@@ -30,34 +30,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZWorker
+// MARK: - Worker
 
-class ZWorker
+class Worker
 :	public Callable_Void
 	{
 public:
-	typedef ZRef<ZWorker> ZRef_ZWorker; // CW7 workaround
+	typedef ZRef<Worker> ZRef_Worker; // CW7 workaround
 
-	typedef Callable<void(ZRef_ZWorker)> Callable_Attached;
-	typedef Callable<bool(ZRef_ZWorker)> Callable_Work;
-	typedef Callable<void(ZRef_ZWorker)> Callable_Detached;
+	typedef Callable<void(ZRef_Worker)> Callable_Attached;
+	typedef Callable<bool(ZRef_Worker)> Callable_Work;
+	typedef Callable<void(ZRef_Worker)> Callable_Detached;
 
-	ZWorker(
+	Worker(
 		const ZRef<Callable_Attached>& iCallable_Attached,
 		const ZRef<Callable_Work>& iCallable_Work,
 		const ZRef<Callable_Detached>& iCallable_Detached);
 
-	ZWorker(
+	Worker(
 		const ZRef<Callable_Attached>& iCallable_Attached,
 		const ZRef<Callable_Work>& iCallable_Work);
 
-	ZWorker(
+	Worker(
 		const ZRef<Callable_Work>& iCallable_Work,
 		const ZRef<Callable_Detached>& iCallable_Detached);
 
-	ZWorker(const ZRef<Callable_Work>& iCallable_Work);
+	Worker(const ZRef<Callable_Work>& iCallable_Work);
 
-	ZWorker();
+	Worker();
 
 // From Callable_Void
 	ZQ<void> QCall();
@@ -88,4 +88,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZWorker_h__
+#endif // __ZooLib_Worker_h__

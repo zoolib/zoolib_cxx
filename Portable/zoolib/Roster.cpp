@@ -18,9 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Roster.h"
 #include "zoolib/Util_STL_set.h"
-
-#include "zoolib/ZRoster.h"
 
 #include <vector>
 
@@ -32,21 +31,21 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - ZRoster
+// MARK: - Roster
 
-ZRoster::ZRoster()
+Roster::Roster()
 	{}
 
-ZRoster::ZRoster(const ZRef<Callable_Void>& iCallable_Change,
+Roster::Roster(const ZRef<Callable_Void>& iCallable_Change,
 	const ZRef<Callable_Void>& iCallable_Gone)
 :	fCallable_Change(iCallable_Change)
 ,	fCallable_Gone(iCallable_Gone)
 	{}
 
-ZRoster::~ZRoster()
+Roster::~Roster()
 	{}
 
-void ZRoster::Finalize()
+void Roster::Finalize()
 	{
 	ZGuardMtx guard(fMtx);
 
@@ -65,10 +64,10 @@ void ZRoster::Finalize()
 	sCall(theCallable);
 	}
 
-ZRef<ZRoster::Entry> ZRoster::MakeEntry()
+ZRef<Roster::Entry> Roster::MakeEntry()
 	{ return this->MakeEntry(null, null); }
 
-ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
+ZRef<Roster::Entry> Roster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
 	const ZRef<Callable_Void>& iCallable_Gone)
 	{
 	ZRef<Entry> theEntry = new Entry(this, iCallable_Broadcast, iCallable_Gone);
@@ -84,7 +83,7 @@ ZRef<ZRoster::Entry> ZRoster::MakeEntry(const ZRef<Callable_Void>& iCallable_Bro
 	return theEntry;
 	}
 
-void ZRoster::Broadcast()
+void Roster::Broadcast()
 	{
 	ZGuardMtx guard(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
@@ -94,20 +93,20 @@ void ZRoster::Broadcast()
 		sCall((*ii)->fCallable_Broadcast);
 	}
 
-size_t ZRoster::Count()
+size_t Roster::Count()
 	{
 	ZAcqMtx acq(fMtx);
 	return fEntries.size();
 	}
 
-void ZRoster::Wait(size_t iCount)
+void Roster::Wait(size_t iCount)
 	{
 	ZAcqMtx acq(fMtx);
 	while (fEntries.size() == iCount)
 		fCnd.Wait(fMtx);
 	}
 
-bool ZRoster::WaitFor(double iTimeout, size_t iCount)
+bool Roster::WaitFor(double iTimeout, size_t iCount)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() == iCount)
@@ -115,7 +114,7 @@ bool ZRoster::WaitFor(double iTimeout, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
+bool Roster::WaitUntil(ZTime iDeadline, size_t iCount)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() == iCount)
@@ -123,7 +122,7 @@ bool ZRoster::WaitUntil(ZTime iDeadline, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone)
+void Roster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone)
 	{
 	{
 	ZAcqMtx acq(fMtx);
@@ -141,10 +140,10 @@ void ZRoster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable
 	}
 
 // =================================================================================================
-// MARK: - ZRoster::Entry
+// MARK: - Roster::Entry
 
-ZRoster::Entry::Entry(
-	const ZRef<ZRoster>& iRoster,
+Roster::Entry::Entry(
+	const ZRef<Roster>& iRoster,
 	const ZRef<Callable_Void>& iCallable_Broadcast,
 	const ZRef<Callable_Void>& iCallable_Gone)
 :	fRoster(iRoster)
@@ -152,14 +151,14 @@ ZRoster::Entry::Entry(
 ,	fCallable_Gone(iCallable_Gone)
 	{}
 
-ZRoster::Entry::~Entry()
+Roster::Entry::~Entry()
 	{}
 
-void ZRoster::Entry::Finalize()
+void Roster::Entry::Finalize()
 	{
 	ZRef<Callable_Void> theCallable = fCallable_Gone;
 
-	if (ZRef<ZRoster> theRoster = fRoster)
+	if (ZRef<Roster> theRoster = fRoster)
 		{
 		theRoster->pFinalizeEntry(this, theCallable);
 		}

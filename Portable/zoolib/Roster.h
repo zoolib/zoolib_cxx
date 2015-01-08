@@ -18,34 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRoster_h__
-#define __ZRoster_h__ 1
+#ifndef __ZooLib_Roster_h__
+#define __ZooLib_Roster_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-
-#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/Compat_NonCopyable.h"
 
 #include <set>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZRoster
+// MARK: - Roster
 
-class ZRoster
+class Roster
 :	public ZCounted
 ,	NonCopyable
 	{
 public:
 	class Entry;
 
-	ZRoster();
+	Roster();
 
-	ZRoster(const ZRef<Callable_Void>& iCallable_Change,
+	Roster(const ZRef<Callable_Void>& iCallable_Change,
 		const ZRef<Callable_Void>& iCallable_Gone);
 
-	virtual ~ZRoster();
+	virtual ~Roster();
 
 // From ZCounted
 	virtual void Finalize();
@@ -76,15 +75,15 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZRoster::Entry
+// MARK: - Roster::Entry
 
-class ZRoster::Entry
+class Roster::Entry
 :	public ZCounted
 ,	NonCopyable
 	{
 private:
 	Entry(
-		const ZRef<ZRoster>& iRoster,
+		const ZRef<Roster>& iRoster,
 		const ZRef<Callable_Void>& iCallable_Broadcast,
 		const ZRef<Callable_Void>& iCallable_Gone);
 
@@ -95,14 +94,14 @@ public:
 	virtual void Finalize();
 
 private:
-	ZWeakRef<ZRoster> fRoster;
+	ZWeakRef<Roster> fRoster;
 
 	const ZRef<Callable_Void> fCallable_Broadcast;
 	const ZRef<Callable_Void> fCallable_Gone;
 
-	friend class ZRoster;
+	friend class Roster;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZRoster_h__
+#endif // __ZooLib_Roster_h__
