@@ -46,6 +46,7 @@ typedef Channer<ChanSizeSet> ChannerSizeSet;
 // MARK: - ChannerR, ChannerU, ChannerW
 
 #if ZCONFIG_CPP >= 2011
+
 template <class Elmt_p> using ChannerR = Channer<ChanR<Elmt_p> >;
 template <class Elmt_p> using ChannerU = Channer<ChanU<Elmt_p> >;
 template <class Elmt_p> using ChannerW = Channer<ChanW<Elmt_p> >;
@@ -191,7 +192,6 @@ public:
 protected:
 	Chan_p fChan;
 	};
-
 
 } // namespace ZooLib
 
