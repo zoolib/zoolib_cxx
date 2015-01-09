@@ -99,17 +99,16 @@ public:
 	virtual void LogIt(
 		Log::EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
 		{
-		int theLevel = ANDROID_LOG_UNKNOWN;
+		int theLevel = ANDROID_LOG_VERBOSE;
 		if (false)
 			{}
-		else if (iPriority < Log::ePriority_Debug) theLevel = ANDROID_LOG_VERBOSE;
-		else if (iPriority <= Log::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
-		else if (iPriority <= Log::ePriority_Info) theLevel = ANDROID_LOG_INFO;
-		else if (iPriority <= Log::ePriority_Warning) theLevel = ANDROID_LOG_WARN;
+		else if (iPriority < Log::ePriority_Err) theLevel = ANDROID_LOG_FATAL;
 		else if (iPriority <= Log::ePriority_Err) theLevel = ANDROID_LOG_ERROR;
-		else theLevel = ANDROID_LOG_FATAL;
+		else if (iPriority <= Log::ePriority_Warning) theLevel = ANDROID_LOG_WARN;
+		else if (iPriority <= Log::ePriority_Info) theLevel = ANDROID_LOG_INFO;
+		else if (iPriority <= Log::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
 
-		__android_log_print(theLevel, iName.c_str(), "%s", iMessage.c_str());
+		__android_log_print(theLevel, iName.c_str(), "%d %s", theLevel, iMessage.c_str());
 		}
 
 	};
