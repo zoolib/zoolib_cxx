@@ -33,26 +33,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace HTTP {
 
+using std::pair;
+
 // =================================================================================================
 // MARK: - Helpers (anonymous)
 
 namespace { // anonymous
 
-static bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* oHeader)
+bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* oHeader)
 	{
 	MIME::ChanR_Bin_Header theSIH_Server(iChanR);
 	ChanRU_XX_Unreader<byte> theChanRU(theSIH_Server);
 
-	string serverResultMessage;
 	if (not sQReadResponse(theChanRU, theChanRU, oResponseCode, nullptr))
 		return false;
 
 	return sQReadHeader(theChanRU, oHeader);
 	}
 
-static
-ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
-	const string& iScheme, const string& iHost, uint16 iPort)
+pair<uint16,bool> spGetPortAndSSL(const string& iScheme, const string& iHost, uint16 iPort)
 	{
 	const bool useSSL = Util_string::sEquali("https", iScheme)
 		|| Util_string::sEquali("wss", iScheme);
@@ -65,11 +64,18 @@ ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
 		else
 			thePort = 80;
 		}
+	return pair<uint16,bool>(thePort, useSSL);
+	}
+
+ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
+	const string& iScheme, const string& iHost, uint16 iPort)
+	{
+	const pair<uint16,bool> thePortAndSSL = spGetPortAndSSL(iScheme, iHost, iPort);
 
 	if (iCallable_QConnect)
-		return iCallable_QConnect->Call(iHost, thePort, useSSL);
+		return iCallable_QConnect->Call(iHost, thePortAndSSL.first, thePortAndSSL.second);
 
-	return sQConnect(iHost, thePort, useSSL);
+	return sQConnect(iHost, thePortAndSSL.first, thePortAndSSL.second);
 	}
 
 } // anonymous namespace
@@ -136,9 +142,17 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 			{
 			// If ioConnectionQ is valid, we *assume* that it is a live connection
 			// to the server for theURL
+			const pair<uint16,bool> thePortAndSSL = spGetPortAndSSL(theScheme, theHost, thePort);
+			thePort = thePortAndSSL.first;
+
 			const bool wasExtantConnection = bool(ioConnectionQ);
 			if (not wasExtantConnection)
-				ioConnectionQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort);
+				{
+				if (iCallable_QConnect)
+					ioConnectionQ = iCallable_QConnect->Call(theHost, thePort, thePortAndSSL.second);
+				else
+					ioConnectionQ = sQConnect(theHost, thePort, thePortAndSSL.second);
+				}
 
 			if (not ioConnectionQ)
 				{
@@ -189,6 +203,19 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
 						iMethod, theResponseCode, theResponseHeader, ioConnectionQ->GetR()))
 						{ sSkipAll(sGetChan(theChannerR_Content)); }
+
+					string newScheme;
+					string newHost;
+					uint16 newPort;
+					string newPath;
+					if (sParseURL(theURL, &newScheme, &newHost, &newPort, &newPath))
+						{
+						// If newScheme, newHost and newPort match the prior values, then assume
+						// we can keep the connection alive, otherwise we drop it.
+						if (newScheme == theScheme and newHost == theHost and newPort == thePort)
+							break;
+						}
+					sClear(ioConnectionQ);
 					break;
 					}
 				default:
