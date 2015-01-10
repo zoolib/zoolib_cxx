@@ -26,9 +26,9 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
-// MARK: - JNI::AttachToCurrentThread
+// MARK: - JNI::EnsureAttachedToCurrentThread
 
-AttachToCurrentThread::AttachToCurrentThread(JavaVM* iJavaVM)
+EnsureAttachedToCurrentThread::EnsureAttachedToCurrentThread(JavaVM* iJavaVM)
 :	fJavaVM(iJavaVM)
 ,	fNeedsDetach(false)
 	{
@@ -50,14 +50,14 @@ AttachToCurrentThread::AttachToCurrentThread(JavaVM* iJavaVM)
 			args.group = nullptr;
 			if (0 != fJavaVM->AttachCurrentThread(&env, &args))
 				{
-				throw std::runtime_error("AttachToCurrentThread failed, couldn't attach");
+				throw std::runtime_error("EnsureAttachedToCurrentThread failed, couldn't attach");
 				}
 			fNeedsDetach = true;
 			break;
 			}
 		default:
 			{
-			throw std::runtime_error("AttachToCurrentThread failed, other");
+			throw std::runtime_error("EnsureAttachedToCurrentThread failed, other");
 			}
 		}
 
@@ -66,7 +66,7 @@ AttachToCurrentThread::AttachToCurrentThread(JavaVM* iJavaVM)
 	fEnv.Set(env);
 	}
 
-AttachToCurrentThread::~AttachToCurrentThread()
+EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
 	{
 	if (fNeedsDetach)
 		fJavaVM->DetachCurrentThread();

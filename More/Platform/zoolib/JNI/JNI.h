@@ -35,13 +35,13 @@ namespace JNI {
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
 
 // =================================================================================================
-// MARK: - JNI::AttachToCurrentThread
+// MARK: - JNI::EnsureAttachedToCurrentThread
 
-class AttachToCurrentThread
+class EnsureAttachedToCurrentThread
 	{
 public:
-	AttachToCurrentThread(JavaVM* iJavaVM);
-	~AttachToCurrentThread();
+	EnsureAttachedToCurrentThread(JavaVM* iJavaVM);
+	~EnsureAttachedToCurrentThread();
 
 private:
 	JavaVM* fJavaVM;
