@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZJNI_h__
-#define __ZJNI_h__ 1
+#ifndef __ZooLib_JNI_JNI_h__
+#define __ZooLib_JNI_JNI_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ThreadVal.h"
@@ -27,14 +27,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <jni.h>
 
 namespace ZooLib {
-namespace ZJNI {
+namespace JNI {
 
 // =================================================================================================
-// MARK: -
+// MARK: - JNI::Env
 
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
 
-} // namespace ZJNI
+// =================================================================================================
+// MARK: - JNI::AttachToCurrentThread
+
+class AttachToCurrentThread
+	{
+public:
+	AttachToCurrentThread(JavaVM* iJavaVM);
+	~AttachToCurrentThread();
+
+private:
+	JavaVM* fJavaVM;
+	bool fNeedsDetach;
+	Env fEnv;
+	};
+
+} // namespace JNI
 } // namespace ZooLib
 
-#endif // __ZJNI_h__
+#endif // __ZooLib_JNI_JNI_h__

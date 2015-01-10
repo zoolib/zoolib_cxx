@@ -90,45 +90,19 @@ public:
 		}
 	};
 
-#if defined(__ANDROID__)
-
-class LogMeister_Android
-:	public Log::LogMeister
-	{
-public:
-	virtual void LogIt(
-		Log::EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
-		{
-		int theLevel = ANDROID_LOG_VERBOSE;
-		if (false)
-			{}
-		else if (iPriority < Log::ePriority_Err) theLevel = ANDROID_LOG_FATAL;
-		else if (iPriority <= Log::ePriority_Err) theLevel = ANDROID_LOG_ERROR;
-		else if (iPriority <= Log::ePriority_Warning) theLevel = ANDROID_LOG_WARN;
-		else if (iPriority <= Log::ePriority_Info) theLevel = ANDROID_LOG_INFO;
-		else if (iPriority <= Log::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
-
-		__android_log_print(theLevel, iName.c_str(), "%d %s", theLevel, iMessage.c_str());
-		}
-
-	};
-
-#endif // defined(__ANDROID__)
-
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - LogMeister (anonymous)
+// MARK: - LogMeister_Base (anonymous)
 
 namespace { // anonymous
 
-class LogMeister
+class LogMeister_Base
 :	public Log::LogMeister
 	{
 public:
-	LogMeister()
+	LogMeister_Base()
 	:	fLogPriority(Log::ePriority_Notice)
-	,	fExtraSpace(20)
 		{}
 
 // From Log::LogMeister
@@ -138,8 +112,79 @@ public:
 	virtual bool Enabled(Log::EPriority iPriority, const char* iName)
 		{ return iPriority <= this->pGetLogPriority(); }
 
-	virtual void LogIt(
-		Log::EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
+// Our protocol
+	void SetLogPriority(Log::EPriority iLogPriority)
+		{ fLogPriority = iLogPriority; }
+
+	Log::EPriority GetLogPriority()
+		{ return fLogPriority; }
+
+	Log::EPriority pGetLogPriority()
+		{
+		if (const Log::EPriority* thePriorityP = LogPriorityPerThread::sPGet())
+			return *thePriorityP;
+		return fLogPriority;
+		}
+
+protected:
+	ZMtx fMtx;
+
+private:
+	Log::EPriority fLogPriority;
+	};
+
+} // anonymous namespace
+
+// =================================================================================================
+// MARK: - LogMeister_Android (anonymous)
+
+namespace { // anonymous
+
+#if defined(__ANDROID__)
+
+class LogMeister_Android
+:	public LogMeister_Base
+	{
+public:
+	virtual void LogIt(Log::EPriority iPriority,
+		const std::string& iName, size_t iDepth, const std::string& iMessage)
+		{
+		if (iPriority > this->pGetLogPriority())
+			return;
+
+		int theLevel = ANDROID_LOG_VERBOSE;
+
+		if (false) {}
+		else if (iPriority < Log::ePriority_Err) theLevel = ANDROID_LOG_FATAL;
+		else if (iPriority <= Log::ePriority_Err) theLevel = ANDROID_LOG_ERROR;
+		else if (iPriority <= Log::ePriority_Warning) theLevel = ANDROID_LOG_WARN;
+		else if (iPriority <= Log::ePriority_Info) theLevel = ANDROID_LOG_INFO;
+		else if (iPriority <= Log::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
+
+		__android_log_print(theLevel, iName.c_str(), "%s", iMessage.c_str());
+		}
+
+	};
+
+#endif // defined(__ANDROID__)
+
+} // anonymous namespace
+
+// =================================================================================================
+// MARK: - LogMeister_Default (anonymous)
+
+namespace { // anonymous
+
+class LogMeister_Default
+:	public LogMeister_Base
+	{
+public:
+	LogMeister_Default()
+	:	fExtraSpace(20)
+		{}
+
+	virtual void LogIt(Log::EPriority iPriority,
+		const std::string& iName, size_t iDepth, const std::string& iMessage)
 		{
 		if (iPriority > this->pGetLogPriority())
 			return;
@@ -211,23 +256,8 @@ public:
 		fChannerW = iChannerW;
 		}
 
-	void SetLogPriority(Log::EPriority iLogPriority)
-		{ fLogPriority = iLogPriority; }
-
-	Log::EPriority GetLogPriority()
-		{ return fLogPriority; }
-
-	Log::EPriority pGetLogPriority()
-		{
-		if (const Log::EPriority* thePriorityP = LogPriorityPerThread::sPGet())
-			return *thePriorityP;
-		return fLogPriority;
-		}
-
 private:
-	ZMtx fMtx;
 	ZRef<ChannerW_UTF> fChannerW;
-	Log::EPriority fLogPriority;
 	size_t fExtraSpace;
 	};
 
@@ -246,7 +276,7 @@ void sInstall()
 	#if defined(__ANDROID__)
 		Log::sLogMeister = new LogMeister_Android;
 	#else
-		ZRef<LogMeister> theLM = new LogMeister;
+		ZRef<LogMeister_Default> theLM = new LogMeister_Default;
 
 		FILE* theStdOut = stdout; // Workaround for VC++
 		ZRef<Channer<ChanW_UTF> > theChannerW_UTF =
@@ -264,7 +294,7 @@ void sSetChanner(ZRef<ChannerW_UTF> iChannerW)
 	{
 	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+		if (ZRef<LogMeister_Default> theLM = theLM1.DynamicCast<LogMeister_Default>())
 			theLM->SetChanner(iChannerW);
 		}
 	}
@@ -273,7 +303,7 @@ void sSetLogPriority(Log::EPriority iLogPriority)
 	{
 	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+		if (ZRef<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
 			theLM->SetLogPriority(iLogPriority);
 		}
 	}
@@ -282,7 +312,7 @@ Log::EPriority sGetLogPriority()
 	{
 	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister> theLM = theLM1.DynamicCast<LogMeister>())
+		if (ZRef<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
 			return theLM->GetLogPriority();
 		}
 	return 0xFF;
