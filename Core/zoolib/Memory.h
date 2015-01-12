@@ -24,13 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-
 #include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
 
 #if defined(__ANDROID__)
-	// On Android we get bzero from strings.h. Note that it is not always a function,
-	// it may be a macro, so we must not namespace-qualify it.
-	#include <strings.h> // For bzero on Android. Note that
+	// On Android we get bzero from strings.h.
+	#include <strings.h>
 #endif
 
 namespace ZooLib {
@@ -55,6 +53,7 @@ inline void sMemSet(void* oDest, unsigned char iValue, size_t iCount)
 inline void sMemZero(void* oDest, size_t iCount)
 	{
 	#if ZCONFIG_SPI_Enabled(POSIX)
+		// bzero is not always a function, it may be a macro, so we must not namespace-qualify it.
 		bzero(oDest, iCount);
 	#else
 		sMemSet(oDest, 0, iCount);
