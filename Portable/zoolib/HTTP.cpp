@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_string.h"
 
@@ -200,30 +201,30 @@ void Response::Send(const ChanW_Bin& iChanW) const
 // This method should look at all the range entries in iRangeParam
 // and turn them into a list of ascending, non overlapping start/finish
 // pairs in oRanges.
-bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
-	vector<pair<size_t, size_t> >& oRanges)
+bool sOrganizeRanges(int64 iSourceSize, const Val& iRangeParam,
+	vector<pair<int64,int64> >& oRanges)
 	{
 	const Map asMap = iRangeParam.Get<Map>();
-	if (ZQ<int64> reqBegin = asMap.QGet<int64>("begin"))
+	if (ZQ<int64> reqBeginQ = sQCoerceInt(asMap.Get("begin")))
 		{
-		if (reqBegin.Get() <= iSourceSize)
+		if (*reqBeginQ <= iSourceSize)
 			{
-			if (ZQ<int64> reqEnd = asMap.QGet<int64>("end"))
+			if (ZQ<int64> reqEndQ = sQCoerceInt(asMap.Get("end")))
 				{
-				if (reqEnd.Get() < reqBegin.Get())
+				if (*reqEndQ < *reqBeginQ)
 					return false;
-				if (reqEnd.Get() > iSourceSize)
+				if (*reqEndQ > iSourceSize)
 					return false;
-				oRanges.push_back(pair<size_t, size_t>(reqBegin.Get(), reqEnd.Get() + 1));
+				oRanges.push_back(pair<int64,int64>(*reqBeginQ, *reqEndQ + 1));
 				return true;
 				}
 			}
 		}
-	else if (ZQ<int64> reqLast = asMap.QGet<int64>("last"))
+	else if (ZQ<int64> reqLastQ = sQCoerceInt(asMap.Get("last")))
 		{
-		if (reqLast.Get() <= iSourceSize)
+		if (*reqLastQ <= iSourceSize)
 			{
-			oRanges.push_back(pair<size_t, size_t>(iSourceSize - reqLast.Get(), iSourceSize));
+			oRanges.push_back(pair<int64,int64>(iSourceSize - *reqLastQ, iSourceSize));
 			return true;
 			}
 		}

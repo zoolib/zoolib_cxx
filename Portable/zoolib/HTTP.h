@@ -74,8 +74,8 @@ private:
 // =================================================================================================
 // MARK: - Higher level parsing
 
-bool sOrganizeRanges(size_t iSourceSize,
-	const Val& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
+bool sOrganizeRanges(int64 iSourceSize,
+	const Val& iRangeParam, std::vector<std::pair<int64,int64> >& oRanges);
 
 bool sQReadRequest(
 	const ChanR_Bin& iChanR, string* oMethod, string* oURL, string* oErrorString);
