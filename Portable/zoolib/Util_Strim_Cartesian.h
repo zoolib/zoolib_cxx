@@ -18,26 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_Cartesian_h__
-#define __ZUtil_Strim_Cartesian_h__ 1
+#ifndef __ZooLib_Util_Strim_Cartesian_h__
+#define __ZooLib_Util_Strim_Cartesian_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Cartesian.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
-
-#include "zoolib/ZCartesian.h"
 
 namespace ZooLib {
 
 template <class Point_p>
-typename EnableIfC<ZCartesian::PointTraits<Point_p>::value,const ChanW_UTF&>::type
+typename EnableIfC<Cartesian::PointTraits<Point_p>::value,const ChanW_UTF&>::type
 operator<<(const ChanW_UTF& w, const Point_p& iPoint)
 	{ return w << "(" << X(iPoint) << "," << Y(iPoint) << ")"; }
 
 template <class Rect_p>
-typename EnableIfC<ZCartesian::RectTraits<Rect_p>::value,const ChanW_UTF&>::type
+typename EnableIfC<Cartesian::RectTraits<Rect_p>::value,const ChanW_UTF&>::type
 operator<<(const ChanW_UTF& w, const Rect_p& iRect)
 	{ return w << "(" << L(iRect) << "," << T(iRect) << "," << R(iRect) << "," << B(iRect) << ")"; }
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_Cartesian_h__
+#endif // __ZooLib_Util_Strim_Cartesian_h__
