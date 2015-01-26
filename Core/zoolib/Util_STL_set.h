@@ -278,7 +278,9 @@ std::set<T,C> operator-(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
 template <class T, class C>
 std::set<T,C>& operator-=(std::set<T,C>& ioLHS, const std::set<T,C>& iRHS)
 	{
-	ioLHS.erase(iRHS.begin(), iRHS.end());
+	for (typename std::set<T,C>::const_iterator ii = iRHS.begin(), end = iRHS.end();
+		ii != end; ++ii)
+		{ ioLHS.erase(*ii); }
 	return ioLHS;
 	}
 
