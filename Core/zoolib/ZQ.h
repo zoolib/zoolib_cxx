@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/CtorDtor.h" // For placement ctor/copy/dtor/assign
 #include "zoolib/Singleton.h" // For sDefault
+#include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For null
@@ -363,6 +364,12 @@ bool operator<(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
 		}
 	return iR.HasValue();
 	}
+
+template <class T, bool Sense>
+struct RelopsTraits_HasEQ<ZQ<T,Sense> > : public RelopsTraits_Has {};
+
+template <class T, bool Sense>
+struct RelopsTraits_HasLT<ZQ<T,Sense> > : public RelopsTraits_Has {};
 
 // =================================================================================================
 // MARK: - ZQ (specialized for void)
