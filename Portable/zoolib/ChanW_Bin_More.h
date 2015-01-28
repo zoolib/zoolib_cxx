@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
@@ -70,7 +71,8 @@ May invoke sThrow_ExhaustedW.
 void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...);
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
 

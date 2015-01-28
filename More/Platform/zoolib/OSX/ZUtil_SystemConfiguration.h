@@ -36,7 +36,8 @@ namespace ZooLib {
 namespace ZUtil_SystemConfiguration {
 
 // =================================================================================================
-// MARK: - Store
+#pragma mark -
+#pragma mark Store
 
 class Store : public ZCounted
 	{
@@ -60,7 +61,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sYadMapRPos
+#pragma mark -
+#pragma mark sYadMapRPos
 
 ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys);
 ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, const std::string& iPattern);

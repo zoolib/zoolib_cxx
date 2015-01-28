@@ -25,7 +25,8 @@ namespace ZooLib {
 using std::min;
 
 // =================================================================================================
-// MARK: - ZStreamRW_FIFO
+#pragma mark -
+#pragma mark ZStreamRW_FIFO
 
 ZStreamRW_FIFO::ZStreamRW_FIFO()
 :	fClosed(false),

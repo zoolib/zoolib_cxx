@@ -43,7 +43,8 @@ ZAssertCompile(sizeof(WCHAR) == sizeof(UTF16));
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -70,7 +71,8 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Helper functions
+#pragma mark -
+#pragma mark Helper functions
 
 namespace { // anonymous
 struct NameToCodePage_t
@@ -243,7 +245,8 @@ static UINT spLookupName(const string& iName)
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_Win
+#pragma mark -
+#pragma mark ZTextDecoder_Win
 
 ZTextDecoder_Win::ZTextDecoder_Win(const char* iName)
 	{
@@ -427,7 +430,8 @@ void ZTextDecoder_Win::Init(UINT iSourceCodePage)
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_Win
+#pragma mark -
+#pragma mark ZTextEncoder_Win
 
 ZTextEncoder_Win::ZTextEncoder_Win(const char* iName)
 	{

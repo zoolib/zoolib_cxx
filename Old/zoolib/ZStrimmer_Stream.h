@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimmerR_StreamR_T
+#pragma mark -
+#pragma mark ZStrimmerR_StreamR_T
 
 template <class Strim_t>
 class ZStrimmerR_StreamR_T : public ZStrimmerR

@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimR
+#pragma mark -
+#pragma mark ZStrimmerFromStrimR
 
 class ZStrimmerFromStrimR::Strimmer : public ZStrimmerR, public ZStrimR_Indirect
 	{
@@ -44,7 +45,8 @@ ZStrimmerFromStrimR::operator ZRef<ZStrimmerR>()
 	{ return fStrimmer; }
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimU
+#pragma mark -
+#pragma mark ZStrimmerFromStrimU
 
 class ZStrimmerFromStrimU::Strimmer : public ZStrimmerU, public ZStrimU_Indirect
 	{
@@ -64,7 +66,8 @@ ZStrimmerFromStrimU::operator ZRef<ZStrimmerU>()
 	{ return fStrimmer; }
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimW
+#pragma mark -
+#pragma mark ZStrimmerFromStrimW
 
 class ZStrimmerFromStrimW::Strimmer : public ZStrimmerW, public ZStrimW_Indirect
 	{

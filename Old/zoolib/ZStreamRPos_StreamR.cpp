@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRPos_StreamR
+#pragma mark -
+#pragma mark ZStreamRPos_StreamR
 
 /**
 ZStreamRPos_StreamR takes a source ZStreamR, and a ZStreamRWPos to use as a buffer. Its

@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace ZWinRegistry {
 
 // =================================================================================================
-// MARK: - ZWinRegistry
+#pragma mark -
+#pragma mark ZWinRegistry
 
 static bool spCount(const ZRef<HKEY>& iHKEY,
 	DWORD* oCountKeys, DWORD* oMaxLengthKeyName,
@@ -185,7 +186,8 @@ static string8 spValueName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthValueName, s
 	}
 
 // =================================================================================================
-// MARK: - ZWinRegistry::Val
+#pragma mark -
+#pragma mark ZWinRegistry::Val
 
 /**
 \class ZWinRegistry::Val
@@ -273,7 +275,8 @@ ZMACRO_ZValAccessors_Def_Get(Val, Data, Data)
 ZMACRO_ZValAccessors_Def_Get(Val, KeyRef, KeyRef)
 
 // =================================================================================================
-// MARK: - ZWinRegistry::KeyRef
+#pragma mark -
+#pragma mark ZWinRegistry::KeyRef
 
 /**
 \class ZWinRegistry::KeyRef

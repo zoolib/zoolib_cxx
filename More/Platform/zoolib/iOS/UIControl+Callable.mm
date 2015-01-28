@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ZooLib;
 
 // =================================================================================================
-// MARK: - ZooLib_UIControl_Callable_Proxy
+#pragma mark -
+#pragma mark ZooLib_UIControl_Callable_Proxy
 
 @interface ZooLib_UIControl_Callable_Proxy : NSObject
 	{
@@ -42,7 +43,8 @@ using namespace ZooLib;
 @end // implementation ZooLib_UIControl_Callable_Proxy
 
 // =================================================================================================
-// MARK: - UIControl (Callable)
+#pragma mark -
+#pragma mark UIControl (Callable)
 
 @implementation UIControl (Callable)
 
@@ -52,7 +54,8 @@ using namespace ZooLib;
 @end // implementation UIControl (Callable)
 
 // =================================================================================================
-// MARK: - ZooLib
+#pragma mark -
+#pragma mark ZooLib
 
 namespace ZooLib {
 

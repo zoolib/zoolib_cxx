@@ -35,7 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable_ObjC_Util
+#pragma mark -
+#pragma mark Callable_ObjC_Util
 
 namespace Callable_ObjC_Util {
 
@@ -112,12 +113,14 @@ struct MsgSend<R, FunctionPtr_t, eUse_fpret>
 } // namespace Callable_ObjC_Util
 
 // =================================================================================================
-// MARK: - Callable_ObjC
+#pragma mark -
+#pragma mark Callable_ObjC
 
 template <class Obj, class Signature> class Callable_ObjC;
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params)
 
 template <class Obj,
 	class R>
@@ -139,7 +142,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params, void return)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params, void return)
 
 template <class Obj>
 class Callable_ObjC<Obj,void(void)>
@@ -163,7 +167,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable variants
+#pragma mark -
+#pragma mark Callable variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -224,7 +229,8 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-// MARK: - sCallable
+#pragma mark -
+#pragma mark sCallable
 
 template <class Signature>
 ZRef<Callable<Signature> >

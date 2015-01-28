@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimW_AndroidLog
+#pragma mark -
+#pragma mark ZStrimW_AndroidLog
 
 class ZStrimW_AndroidLog : public ZStrimW_NativeUTF8
 	{

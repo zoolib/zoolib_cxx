@@ -28,12 +28,14 @@ namespace ZooLib {
 namespace ZYad_Simple {
 
 // =================================================================================================
-// MARK: - ParseException
+#pragma mark -
+#pragma mark ParseException
 
 typedef ZYad_Basic::ParseException ParseException;
 
 // =================================================================================================
-// MARK: - ZYad_Simple
+#pragma mark -
+#pragma mark ZYad_Simple
 
 inline
 ZRef<ZYadMapR> sYadR(ZRef<ZStrimmerU> iStrimmerU)

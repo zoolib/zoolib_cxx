@@ -28,7 +28,8 @@ namespace ZooLib {
 // Prioritize armv7, over armv6, over generic.
 
 // =================================================================================================
-// MARK: - armv7
+#pragma mark -
+#pragma mark armv7
 
 #if ZCONFIG_API_Enabled(Matrix_armv7)
 
@@ -47,7 +48,8 @@ namespace ZooLib {
 #endif // ZCONFIG_API_Enabled(Matrix_armv7)
 
 // =================================================================================================
-// MARK: - armv6
+#pragma mark -
+#pragma mark armv6
 
 #if ZCONFIG_API_Enabled(Matrix_armv6)
 
@@ -82,7 +84,8 @@ namespace ZooLib {
 #endif // ZCONFIG_API_Enabled(Matrix_armv6)
 
 // =================================================================================================
-// MARK: - Generic
+#pragma mark -
+#pragma mark Generic
 
 #if not IMPLEMENTED_sInverseMat4
 	#define IMPLEMENTED_sInverseMat4 1

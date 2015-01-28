@@ -40,7 +40,8 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -60,7 +61,8 @@ class Make_Collator
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_ICU
+#pragma mark -
+#pragma mark ZTextCollatorRep_ICU
 
 ZAssertCompile(UCOL_EQUAL == 0);
 ZAssertCompile(UCOL_GREATER > 0);

@@ -30,12 +30,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 typedef ChanW<UTF32> ChanW_UTF;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{
@@ -53,7 +55,8 @@ void sWrite(const UTF8* iSource,
 //@}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /** \name Zero-terminated strings
 */	//@{
@@ -67,7 +70,8 @@ void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW);
 //@}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /** \name Standard library strings
 */	//@{
@@ -81,7 +85,8 @@ void sWriteMust(const string8& iString, const ChanW_UTF& iChanW);
 //@}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /** \name Formatted strings
 */	//@{

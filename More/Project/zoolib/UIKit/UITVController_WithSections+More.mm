@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ZooLib;
 
 // =================================================================================================
-// MARK: - ZooLib_UIKit_SectionHeader
+#pragma mark -
+#pragma mark ZooLib_UIKit_SectionHeader
 
 @implementation ZooLib_UIKit_SectionHeader
 
@@ -73,7 +74,8 @@ using namespace ZooLib;
 @end // implementation ZooLib_UIKit_SectionHeader
 
 // =================================================================================================
-// MARK: - ZooLib::UIKit
+#pragma mark -
+#pragma mark ZooLib::UIKit
 
 namespace ZooLib {
 namespace UIKit {

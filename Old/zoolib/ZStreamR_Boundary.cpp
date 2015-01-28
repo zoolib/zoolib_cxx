@@ -29,7 +29,8 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Boundary
+#pragma mark -
+#pragma mark ZStreamR_Boundary
 
 /**
 \class ZStreamR_Boundary
@@ -205,7 +206,8 @@ void ZStreamR_Boundary::pInit()
 	}
 
 // =================================================================================================
-// MARK: - sFindBoundary
+#pragma mark -
+#pragma mark sFindBoundary
 
 bool sFindBoundary(const std::string& iBoundary, const ZStreamR& iStreamSource)
 	{
@@ -222,7 +224,8 @@ bool sFindBoundary(const void* iBoundary, size_t iBoundarySize, const ZStreamR& 
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerR_Boundary
+#pragma mark -
+#pragma mark ZStreamerR_Boundary
 
 ZStreamerR_Boundary::ZStreamerR_Boundary(const string& iBoundary, ZRef<ZStreamerR> iStreamerSource)
 :	fStreamerSource(iStreamerSource),

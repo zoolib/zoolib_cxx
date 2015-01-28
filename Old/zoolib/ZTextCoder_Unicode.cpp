@@ -37,7 +37,8 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -145,7 +146,8 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Utility functions
+#pragma mark -
+#pragma mark Utility functions
 
 static void spCopyUTF32(const void* iSource, void* oDest, size_t iCount)
 	{ sMemCopy(oDest, iSource, iCount * sizeof(UTF32)); }
@@ -476,7 +478,8 @@ static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF32BE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF32BE
 
 bool ZTextDecoder_UTF32BE::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -495,7 +498,8 @@ bool ZTextDecoder_UTF32BE::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF32BE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF32BE
 
 void ZTextEncoder_UTF32BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -514,7 +518,8 @@ void ZTextEncoder_UTF32BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF32LE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF32LE
 
 bool ZTextDecoder_UTF32LE::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -533,7 +538,8 @@ bool ZTextDecoder_UTF32LE::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF32LE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF32LE
 
 void ZTextEncoder_UTF32LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -552,7 +558,8 @@ void ZTextEncoder_UTF32LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF16BE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF16BE
 
 bool ZTextDecoder_UTF16BE::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -571,7 +578,8 @@ bool ZTextDecoder_UTF16BE::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF16BE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF16BE
 
 void ZTextEncoder_UTF16BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -583,7 +591,8 @@ void ZTextEncoder_UTF16BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF16LE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF16LE
 
 bool ZTextDecoder_UTF16LE::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -602,7 +611,8 @@ bool ZTextDecoder_UTF16LE::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF16LE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF16LE
 
 void ZTextEncoder_UTF16LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -614,7 +624,8 @@ void ZTextEncoder_UTF16LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF8
+#pragma mark -
+#pragma mark ZTextDecoder_UTF8
 
 bool ZTextDecoder_UTF8::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -625,7 +636,8 @@ bool ZTextDecoder_UTF8::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF8
+#pragma mark -
+#pragma mark ZTextEncoder_UTF8
 
 void ZTextEncoder_UTF8::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -634,7 +646,8 @@ void ZTextEncoder_UTF8::Encode(const UTF32* iSource, size_t iSourceCU, size_t* o
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_Unicode_AutoDetect
+#pragma mark -
+#pragma mark ZTextDecoder_Unicode_AutoDetect
 
 ZTextDecoder_Unicode_AutoDetect::ZTextDecoder_Unicode_AutoDetect()
 :	fType(eFresh)

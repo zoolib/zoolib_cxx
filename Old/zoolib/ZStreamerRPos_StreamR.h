@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_StreamR
+#pragma mark -
+#pragma mark ZStreamerRPos_StreamR
 
 class ZStreamerRPos_StreamR : public ZStreamerRPos
 	{

@@ -41,7 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Net_Socket
+#pragma mark -
+#pragma mark Net_Socket
 
 class Net_Socket
 	{
@@ -54,7 +55,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - NetListener_Socket
+#pragma mark -
+#pragma mark NetListener_Socket
 
 class NetListener_Socket
 :	public virtual NetListener
@@ -82,7 +84,8 @@ protected:
 ZRef<NetListener_Socket> sNetListener_Socket(int iFD);
 
 // =================================================================================================
-// MARK: - NetEndpoint_Socket
+#pragma mark -
+#pragma mark NetEndpoint_Socket
 
 class NetEndpoint_Socket
 :	public ChannerR_Bin

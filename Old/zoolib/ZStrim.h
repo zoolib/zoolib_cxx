@@ -35,7 +35,8 @@ namespace ZooLib {
 class ZStrimW;
 
 // =================================================================================================
-// MARK: - ZStrim
+#pragma mark -
+#pragma mark ZStrim
 
 namespace ZStrim {
 
@@ -48,7 +49,8 @@ protected:
 } // namespace ZStrim
 
 // =================================================================================================
-// MARK: - ZStrimR
+#pragma mark -
+#pragma mark ZStrimR
 
 class ZStrimR
 :	public ChanR_UTF
@@ -183,7 +185,8 @@ but particular subclasses may have more efficient implementations available.
 	};
 
 // =================================================================================================
-// MARK: - ZStrimR::ExEndOfStrim
+#pragma mark -
+#pragma mark ZStrimR::ExEndOfStrim
 
 class ZStrimR::ExEndOfStrim : public ZStrim::ExEndOfStrim
 	{
@@ -192,7 +195,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU
+#pragma mark -
+#pragma mark ZStrimU
 
 class ZStrimU
 :	public ZStrimR
@@ -218,7 +222,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW
+#pragma mark -
+#pragma mark ZStrimW
 
 class ZStrimW
 :	public ChanW_UTF
@@ -395,7 +400,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW::ExEndOfStrim
+#pragma mark -
+#pragma mark ZStrimW::ExEndOfStrim
 
 class ZStrimW::ExEndOfStrim : public ZStrim::ExEndOfStrim
 	{
@@ -404,7 +410,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_NativeUTF32
+#pragma mark -
+#pragma mark ZStrimW_NativeUTF32
 
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF16 and
@@ -421,7 +428,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_NativeUTF16
+#pragma mark -
+#pragma mark ZStrimW_NativeUTF16
 
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF32 and
@@ -438,7 +446,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_NativeUTF8
+#pragma mark -
+#pragma mark ZStrimW_NativeUTF8
 
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF32 and
@@ -455,7 +464,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_T
+#pragma mark -
+#pragma mark ZStrimW_T
 
 template <class Base_t, class Self_t>
 class ZStrimW_T : public Base_t
@@ -577,7 +587,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimR_Null
+#pragma mark -
+#pragma mark ZStrimR_Null
 
 /// A derivation of ZStrimR that is empty
 
@@ -602,7 +613,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_Null
+#pragma mark -
+#pragma mark ZStrimW_Null
 
 /// A derivation of ZStrimW that discards without error any code points written to it.
 
@@ -623,7 +635,8 @@ public:
 typedef ZStrimW_Null ZStrimW_Sink; // Old name.
 
 // =================================================================================================
-// MARK: - ZStrimU_String
+#pragma mark -
+#pragma mark ZStrimU_String
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-32 code units.
 
@@ -654,7 +667,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU_String16
+#pragma mark -
+#pragma mark ZStrimU_String16
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-16 code units.
 
@@ -683,7 +697,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU_String8Ref
+#pragma mark -
+#pragma mark ZStrimU_String8Ref
 
 class ZStrimU_String8Ref : public ZStrimU
 	{
@@ -713,7 +728,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU_String8
+#pragma mark -
+#pragma mark ZStrimU_String8
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
 
@@ -734,7 +750,8 @@ public:
 typedef ZStrimU_String8 ZStrimU_String;
 
 // =================================================================================================
-// MARK: - ZStrimW_String
+#pragma mark -
+#pragma mark ZStrimW_String
 
 template <class T>
 class ZStrimW_String;

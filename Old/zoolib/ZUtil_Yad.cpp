@@ -27,7 +27,8 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-// MARK: - Static helpers
+#pragma mark -
+#pragma mark Static helpers
 
 static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	{
@@ -82,7 +83,8 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	}
 
 // =================================================================================================
-// MARK: - ZUtil_Yad
+#pragma mark -
+#pragma mark ZUtil_Yad
 
 ZRef<ZYadR> ZUtil_Yad::sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail)
 	{

@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Filter
+#pragma mark -
+#pragma mark ZStreamR_Filter
 
 ZStreamR_Filter::ZStreamR_Filter(const ZStreamR& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -56,7 +57,8 @@ void ZStreamR_Filter::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	{ const_cast<ZStreamR&>(fStreamReal).Imp_CopyTo(iStreamW, iCount, oCountRead, oCountWritten); }
 
 // =================================================================================================
-// MARK: - ZStreamRCon_Filter
+#pragma mark -
+#pragma mark ZStreamRCon_Filter
 
 ZStreamRCon_Filter::ZStreamRCon_Filter(const ZStreamRCon& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -84,7 +86,8 @@ void ZStreamRCon_Filter::Imp_Abort()
 	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Abort(); }
 
 // =================================================================================================
-// MARK: - ZStreamU_Filter
+#pragma mark -
+#pragma mark ZStreamU_Filter
 
 ZStreamU_Filter::ZStreamU_Filter(const ZStreamU& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -109,7 +112,8 @@ void ZStreamU_Filter::Imp_Unread()
 	{ const_cast<ZStreamU&>(fStreamReal).Imp_Unread(); }
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Filter
+#pragma mark -
+#pragma mark ZStreamRPos_Filter
 
 ZStreamRPos_Filter::ZStreamRPos_Filter(const ZStreamRPos& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -137,7 +141,8 @@ uint64 ZStreamRPos_Filter::Imp_GetSize()
 	{ return const_cast<ZStreamRPos&>(fStreamReal).Imp_GetSize(); }
 
 // =================================================================================================
-// MARK: - ZStreamW_Filter
+#pragma mark -
+#pragma mark ZStreamW_Filter
 
 ZStreamW_Filter::ZStreamW_Filter(const ZStreamW& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -153,7 +158,8 @@ void ZStreamW_Filter::Imp_Flush()
 	{ const_cast<ZStreamW&>(fStreamReal).Imp_Flush(); }
 
 // =================================================================================================
-// MARK: - ZStreamWCon_Filter
+#pragma mark -
+#pragma mark ZStreamWCon_Filter
 
 ZStreamWCon_Filter::ZStreamWCon_Filter(const ZStreamWCon& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -175,7 +181,8 @@ void ZStreamWCon_Filter::Imp_Abort()
 	{ const_cast<ZStreamWCon&>(fStreamReal).Imp_Abort(); }
 
 // =================================================================================================
-// MARK: - ZStreamWPos_Filter
+#pragma mark -
+#pragma mark ZStreamWPos_Filter
 
 ZStreamWPos_Filter::ZStreamWPos_Filter(const ZStreamWPos& iStreamReal)
 :	fStreamReal(iStreamReal)
@@ -203,7 +210,8 @@ void ZStreamWPos_Filter::Imp_SetSize(uint64 iSize)
 	{ return const_cast<ZStreamWPos&>(fStreamReal).Imp_SetSize(iSize); }
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_Filter
+#pragma mark -
+#pragma mark ZStreamRWPos_Filter
 
 ZStreamRWPos_Filter::ZStreamRWPos_Filter(const ZStreamRWPos& iStreamReal)
 :	fStreamReal(iStreamReal)

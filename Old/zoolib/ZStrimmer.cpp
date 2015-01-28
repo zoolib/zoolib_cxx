@@ -36,7 +36,8 @@ the lifetime of the ZStrimmerXX that returned it.
 */
 
 // =================================================================================================
-// MARK: - ZStrimmerU
+#pragma mark -
+#pragma mark ZStrimmerU
 
 const ZStrimR& ZStrimmerU::GetStrimR()
 	{ return this->GetStrimU(); }

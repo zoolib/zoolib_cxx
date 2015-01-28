@@ -32,7 +32,8 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -75,7 +76,8 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZTextDecoder_ASCII
+#pragma mark -
+#pragma mark ZTextDecoder_ASCII
 
 bool ZTextDecoder_ASCII::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -103,7 +105,8 @@ bool ZTextDecoder_ASCII::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_ASCII
+#pragma mark -
+#pragma mark ZTextEncoder_ASCII
 
 void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -129,7 +132,8 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_ISO8859_1
+#pragma mark -
+#pragma mark ZTextDecoder_ISO8859_1
 
 bool ZTextDecoder_ISO8859_1::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -153,7 +157,8 @@ bool ZTextDecoder_ISO8859_1::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_ISO8859_1
+#pragma mark -
+#pragma mark ZTextEncoder_ISO8859_1
 
 void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -179,7 +184,8 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_MacRoman
+#pragma mark -
+#pragma mark ZTextDecoder_MacRoman
 
 static const UTF32 spMacToUnicode[256] =
 	{
@@ -239,7 +245,8 @@ bool ZTextDecoder_MacRoman::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_MacRoman
+#pragma mark -
+#pragma mark ZTextEncoder_MacRoman
 
 struct UnicodeToMac_t
 	{
@@ -346,7 +353,8 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_CP1252
+#pragma mark -
+#pragma mark ZTextDecoder_CP1252
 
 // CP1252 is also known as Latin1. It's a superset of ISO-8859-1, but has various
 // dingbat characters in CL and CR
@@ -389,7 +397,8 @@ bool ZTextDecoder_CP1252::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_CP1252
+#pragma mark -
+#pragma mark ZTextEncoder_CP1252
 
 static const uint8 spCP1252_Page01[72] =
 	{
@@ -447,7 +456,8 @@ void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t*
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_CP850
+#pragma mark -
+#pragma mark ZTextDecoder_CP850
 
 static const UTF32 spCP850ToUnicode[128] =
 	{
@@ -487,7 +497,8 @@ bool ZTextDecoder_CP850::Decode(
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_CP850
+#pragma mark -
+#pragma mark ZTextEncoder_CP850
 
 static const unsigned char spCP850_Page00[96] =
 	{

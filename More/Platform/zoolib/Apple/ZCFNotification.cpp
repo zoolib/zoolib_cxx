@@ -31,7 +31,8 @@ namespace ZooLib {
 // on which notifications are delivered, you may wish to rethink things.
 
 // =================================================================================================
-// MARK: - ZCFNotification
+#pragma mark -
+#pragma mark ZCFNotification
 
 ZCFNotification::ZCFNotification(
 	void* iObject, const std::string& iName, ZRef<Callable_t> iCallable)

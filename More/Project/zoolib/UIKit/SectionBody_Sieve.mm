@@ -38,7 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Any_JSON.h"
 
 // =================================================================================================
-// MARK: - sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
+#pragma mark -
+#pragma mark sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
 
 namespace ZooLib {
 
@@ -63,7 +64,8 @@ using std::pair;
 using std::vector;
 
 // =================================================================================================
-// MARK: - CompareEntries (anonymous)
+#pragma mark -
+#pragma mark CompareEntries (anonymous)
 
 namespace { // anonymous
 
@@ -155,7 +157,8 @@ inline bool CompareEntries::operator()(
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - SectionBody_Sieve
+#pragma mark -
+#pragma mark SectionBody_Sieve
 
 SectionBody_Sieve::SectionBody_Sieve()
 :	fNeedsUpdate(false)

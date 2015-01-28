@@ -31,12 +31,14 @@ namespace ZooLib {
 namespace ZUtil_Python {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 ZQ<std::string> sQAsString(PyObject* iObject);
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 class ThreadStateReleaser
 	{
@@ -52,7 +54,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 class GILStateEnsurer
 	{
@@ -65,7 +68,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args);
 

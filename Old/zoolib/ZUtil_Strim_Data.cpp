@@ -30,7 +30,8 @@ using std::min;
 using std::string;
 
 // =================================================================================================
-// MARK: - Helper functions
+#pragma mark -
+#pragma mark Helper functions
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s)
 	{ sDumpData(iStreamRPos, s, ZUINT64_C(0xFFFFFFFFFFFFFFFF)); }

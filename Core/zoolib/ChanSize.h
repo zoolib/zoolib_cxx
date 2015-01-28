@@ -40,7 +40,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 inline uint64 sSize(const ChanSize& iChanSize)
 	{ return sNonConst(iChanSize).Size(); }

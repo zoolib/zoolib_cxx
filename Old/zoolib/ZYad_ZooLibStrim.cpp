@@ -38,7 +38,8 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Static parsing functions
+#pragma mark -
+#pragma mark Static parsing functions
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -335,7 +336,8 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 	}
 
 // =================================================================================================
-// MARK: - ZYadParseException_ZooLibStrim
+#pragma mark -
+#pragma mark ZYadParseException_ZooLibStrim
 
 ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const string& iWhat)
 :	ZYadParseException_Std(iWhat)
@@ -346,7 +348,8 @@ ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStreamerR_ZooLibStrim
+#pragma mark -
+#pragma mark ZYadStreamerR_ZooLibStrim
 
 ZYadStreamerR_ZooLibStrim::ZYadStreamerR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
 :	fStrimmerU(iStrimmerU),
@@ -373,7 +376,8 @@ const ZStreamR& ZYadStreamerR_ZooLibStrim::GetStreamR()
 	{ return fStreamR; }
 
 // =================================================================================================
-// MARK: - ZYadStrimmerR_ZooLibStrim_Apos
+#pragma mark -
+#pragma mark ZYadStrimmerR_ZooLibStrim_Apos
 
 ZYadStrimmerR_ZooLibStrim_Apos::ZYadStrimmerR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
@@ -392,7 +396,8 @@ const ZStrimR& ZYadStrimmerR_ZooLibStrim_Apos::GetStrimR()
 	{ return fStrimR; }
 
 // =================================================================================================
-// MARK: - ZYadStrimmerR_ZooLibStrim_Quote
+#pragma mark -
+#pragma mark ZYadStrimmerR_ZooLibStrim_Quote
 
 ZYadStrimmerR_ZooLibStrim_Quote::ZYadStrimmerR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU),
@@ -490,7 +495,8 @@ void ZYadStrimmerR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount,
 	}
 
 // =================================================================================================
-// MARK: - ZYadSeqR_ZooLibStrim
+#pragma mark -
+#pragma mark ZYadSeqR_ZooLibStrim
 
 ZYadSeqR_ZooLibStrim::ZYadSeqR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
 :	fStrimmerU(iStrimmerU),
@@ -532,7 +538,8 @@ void ZYadSeqR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 // =================================================================================================
-// MARK: - ZYadMapR_ZooLibStrim
+#pragma mark -
+#pragma mark ZYadMapR_ZooLibStrim
 
 ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
 :	fStrimmerU(iStrimmerU),
@@ -577,7 +584,8 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& 
 	}
 
 // =================================================================================================
-// MARK: - Static writing functions
+#pragma mark -
+#pragma mark Static writing functions
 
 static void spWriteIndent(const ChanW_UTF& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
@@ -1098,7 +1106,8 @@ static void spToStrim_Yad(const ChanW_UTF& s, ZRef<ZYadR> iYadR,
 	}
 
 // =================================================================================================
-// MARK: - ZYad_ZooLibStrim
+#pragma mark -
+#pragma mark ZYad_ZooLibStrim
 
 bool ZYad_ZooLibStrim::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)

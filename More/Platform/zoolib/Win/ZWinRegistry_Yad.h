@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace ZWinRegistry {
 
 // =================================================================================================
-// MARK: - ZWinRegistry
+#pragma mark -
+#pragma mark ZWinRegistry
 
 ZRef<ZYadR> sYadR(const Val& iVal);
 

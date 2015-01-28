@@ -42,7 +42,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 inline uint64 sPos(const ChanPos& iChanPos)
 	{ return sNonConst(iChanPos).Pos(); }

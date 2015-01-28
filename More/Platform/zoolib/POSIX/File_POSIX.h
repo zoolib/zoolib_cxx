@@ -47,7 +47,8 @@ ZMACRO_MSVCStaticLib_Reference(File_POSIX)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - FileLoc_POSIX
+#pragma mark -
+#pragma mark FileLoc_POSIX
 
 class FileLoc_POSIX : public FileLoc
 	{
@@ -104,7 +105,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Chan_File_POSIX
+#pragma mark -
+#pragma mark Chan_File_POSIX
 
 class Chan_File_POSIX
 	{
@@ -122,7 +124,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanRPos_File_POSIX
+#pragma mark -
+#pragma mark ChanRPos_File_POSIX
 
 class ChanRPos_File_POSIX
 :	protected Chan_File_POSIX
@@ -154,7 +157,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_File_POSIX
+#pragma mark -
+#pragma mark ZStreamRWPos_File_POSIX
 
 class ChanRWPos_File_POSIX
 :	public ChanRPos_File_POSIX

@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factories
+#pragma mark -
+#pragma mark Factories
 
 typedef FunctionChain<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
 
@@ -49,7 +50,8 @@ Instances of ZTextCollator provide text collation facilities to ZooLib and appli
 */
 
 // =================================================================================================
-// MARK: - ZTextCollator
+#pragma mark -
+#pragma mark ZTextCollator
 
 /**
 \class ZTextCollator
@@ -250,7 +252,8 @@ void ZTextCollator::pMakeSafe() const
 	}
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep
+#pragma mark -
+#pragma mark ZTextCollatorRep
 
 ZTextCollatorRep::ZTextCollatorRep()
 	{}
@@ -274,7 +277,8 @@ ZRef<ZTextCollatorRep> ZTextCollatorRep::SafeCopy()
 	{ return this->Clone(); }
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_NativeUTF8
+#pragma mark -
+#pragma mark ZTextCollatorRep_NativeUTF8
 
 bool ZTextCollatorRep_NativeUTF8::Equals(const string16& iLeft, const string16& iRight)
 	{ return this->Equals(Unicode::sAsUTF8(iLeft), Unicode::sAsUTF8(iRight)); }
@@ -337,7 +341,8 @@ bool ZTextCollatorRep_NativeUTF8::Contains(const UTF32* iPattern, size_t iPatter
 	}
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_NativeUTF16
+#pragma mark -
+#pragma mark ZTextCollatorRep_NativeUTF16
 
 bool ZTextCollatorRep_NativeUTF16::Equals(const string8& iPattern, const string8& iRight)
 	{ return this->Equals(Unicode::sAsUTF16(iPattern), Unicode::sAsUTF16(iRight)); }
@@ -400,7 +405,8 @@ bool ZTextCollatorRep_NativeUTF16::Contains(const UTF32* iPattern, size_t iPatte
 	}
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_NativeUTF32
+#pragma mark -
+#pragma mark ZTextCollatorRep_NativeUTF32
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const string8& iPattern, const string8& iRight)
 	{ return this->Equals(Unicode::sAsUTF32(iPattern), Unicode::sAsUTF32(iRight)); }

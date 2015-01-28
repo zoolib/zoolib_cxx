@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace ZYad_Basic {
 
 // =================================================================================================
-// MARK: - ParseException
+#pragma mark -
+#pragma mark ParseException
 
 class ParseException : public ZYadParseException_Std
 	{
@@ -39,7 +40,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYad_Basic
+#pragma mark -
+#pragma mark ZYad_Basic
 
 struct Options
 	{

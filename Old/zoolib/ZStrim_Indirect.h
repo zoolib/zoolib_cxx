@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrim_Indirect
+#pragma mark -
+#pragma mark ZStrim_Indirect
 
 template <class Strim_p>
 class ZStrim_Indirect
@@ -62,7 +63,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimR_Indirect
+#pragma mark -
+#pragma mark ZStrimR_Indirect
 
 class ZStrimR_Indirect
 :	public ZStrimR
@@ -93,7 +95,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimU_Indirect
+#pragma mark -
+#pragma mark ZStrimU_Indirect
 
 class ZStrimU_Indirect
 :	public ZStrimU
@@ -128,7 +131,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimW_Indirect
+#pragma mark -
+#pragma mark ZStrimW_Indirect
 
 class ZStrimW_Indirect
 :	public ZStrimW

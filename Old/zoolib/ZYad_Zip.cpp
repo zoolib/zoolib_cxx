@@ -35,7 +35,8 @@ using namespace ZUtil_STL;
 namespace { // anonymous
 
 // =================================================================================================
-// MARK: - Node
+#pragma mark -
+#pragma mark Node
 
 class Node;
 
@@ -49,7 +50,8 @@ struct Node
 	};
 
 // =================================================================================================
-// MARK: - ZipHolder
+#pragma mark -
+#pragma mark ZipHolder
 
 struct ZipHolder
 :	public ZCounted
@@ -98,7 +100,8 @@ struct ZipHolder
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR
+#pragma mark -
+#pragma mark YadStreamerR
 
 struct YadStreamerR
 :	public ZYadStreamerR
@@ -134,7 +137,8 @@ struct YadStreamerR
 	};
 
 // =================================================================================================
-// MARK: - YadMapAtRPos
+#pragma mark -
+#pragma mark YadMapAtRPos
 
 struct YadMapAtRPos
 :	public ZYadMapAtRPos
@@ -208,7 +212,8 @@ struct YadMapAtRPos
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<ZYadMapAtRPos> sYadR(const char* iFilePath)
 	{

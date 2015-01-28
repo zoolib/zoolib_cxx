@@ -45,7 +45,8 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_Mac)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextDecoder_Mac
+#pragma mark -
+#pragma mark ZTextDecoder_Mac
 
 class ZTextDecoder_Mac : public ZTextDecoder
 	{
@@ -69,7 +70,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_Mac
+#pragma mark -
+#pragma mark ZTextEncoder_Mac
 
 class ZTextEncoder_Mac : public ZTextEncoder
 	{

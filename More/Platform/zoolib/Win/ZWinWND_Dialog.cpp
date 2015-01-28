@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-// MARK: - Callable <--> Dialog
+#pragma mark -
+#pragma mark Callable <--> Dialog
 
 static
 INT_PTR CALLBACK spDialogProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)

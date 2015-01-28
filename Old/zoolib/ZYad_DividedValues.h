@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace ZYad_DividedValues {
 
 // =================================================================================================
-// MARK: - ParseException
+#pragma mark -
+#pragma mark ParseException
 
 class ParseException : public ZYadParseException
 	{
@@ -39,7 +40,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
 

@@ -29,7 +29,8 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_Unicode)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF32BE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF32BE
 
 class ZTextDecoder_UTF32BE : public ZTextDecoder
 	{
@@ -42,7 +43,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF32BE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF32BE
 
 class ZTextEncoder_UTF32BE : public ZTextEncoder
 	{
@@ -54,7 +56,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF32LE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF32LE
 
 class ZTextDecoder_UTF32LE : public ZTextDecoder
 	{
@@ -67,7 +70,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF32LE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF32LE
 
 class ZTextEncoder_UTF32LE : public ZTextEncoder
 	{
@@ -79,7 +83,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF16BE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF16BE
 
 class ZTextDecoder_UTF16BE : public ZTextDecoder
 	{
@@ -92,7 +97,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF16BE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF16BE
 
 class ZTextEncoder_UTF16BE : public ZTextEncoder
 	{
@@ -104,7 +110,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF16LE
+#pragma mark -
+#pragma mark ZTextDecoder_UTF16LE
 
 class ZTextDecoder_UTF16LE : public ZTextDecoder
 	{
@@ -117,7 +124,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF16LE
+#pragma mark -
+#pragma mark ZTextEncoder_UTF16LE
 
 class ZTextEncoder_UTF16LE : public ZTextEncoder
 	{
@@ -129,7 +137,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_UTF8
+#pragma mark -
+#pragma mark ZTextDecoder_UTF8
 
 class ZTextDecoder_UTF8 : public ZTextDecoder
 	{
@@ -142,7 +151,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_UTF8
+#pragma mark -
+#pragma mark ZTextEncoder_UTF8
 
 class ZTextEncoder_UTF8 : public ZTextEncoder
 	{
@@ -154,7 +164,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_Unicode_AutoDetect
+#pragma mark -
+#pragma mark ZTextDecoder_Unicode_AutoDetect
 
 /** \brief A ZTextDecoder that treats the source data as being UTF-8, UTF-16BE or UTF-16LE based
 on the detection of a BOM (Byte Order Mark) at the beginning of the data. */

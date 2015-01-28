@@ -58,7 +58,8 @@ namespace ZooLib {
 namespace Cartesian {
 
 // =================================================================================================
-// MARK: - PointTraits<NSPoint>
+#pragma mark -
+#pragma mark PointTraits<NSPoint>
 
 template <>
 struct PointTraits<NSPoint>
@@ -72,7 +73,8 @@ struct PointTraits<NSPoint>
 	};
 
 // =================================================================================================
-// MARK: - PointTraits<NSSize>
+#pragma mark -
+#pragma mark PointTraits<NSSize>
 
 template <>
 struct PointTraits<NSSize>
@@ -86,7 +88,8 @@ struct PointTraits<NSSize>
 	};
 
 // =================================================================================================
-// MARK: - RectTraits<NSRect>
+#pragma mark -
+#pragma mark RectTraits<NSRect>
 
 template <>
 struct RectTraits<NSRect>

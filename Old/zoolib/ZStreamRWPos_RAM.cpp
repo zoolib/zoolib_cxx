@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_RAM
+#pragma mark -
+#pragma mark ZStreamRWPos_RAM
 
 /**
 \class ZStreamRWPos_RAM

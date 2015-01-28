@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Boundary
+#pragma mark -
+#pragma mark ZStreamR_Boundary
 
 /// A read filter stream that reads from another stream until a boundary sequence is encountered.
 
@@ -65,7 +66,8 @@ bool sFindBoundary(const std::string& iBoundary, const ZStreamR& iStreamSource);
 bool sFindBoundary(const void* iBoundary, size_t iBoundarySize, const ZStreamR& iStreamSource);
 
 // =================================================================================================
-// MARK: - ZStreamerR_Boundary
+#pragma mark -
+#pragma mark ZStreamerR_Boundary
 
 /// A read filter streamer encapsulating a ZStreamR_Boundary.
 

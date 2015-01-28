@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimmerR
+#pragma mark -
+#pragma mark ZStrimmerR
 
 /** A refcounted entity that provides access to a ZStrimR.
 \ingroup Strimmer
@@ -43,7 +44,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerU
+#pragma mark -
+#pragma mark ZStrimmerU
 
 /** A refcounted entity that provides access to a ZStrimU.
 \ingroup Strimmer
@@ -60,7 +62,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerW
+#pragma mark -
+#pragma mark ZStrimmerW
 
 /** A refcounted entity that provides access to a ZStrimW.
 \ingroup Strimmer
@@ -73,7 +76,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerR_T
+#pragma mark -
+#pragma mark ZStrimmerR_T
 
 template <class Strim_p>
 class ZStrimmerR_T : public virtual ZStrimmerR
@@ -100,7 +104,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerR_FT
+#pragma mark -
+#pragma mark ZStrimmerR_FT
 
 template <class Strim_p>
 class ZStrimmerR_FT : public virtual ZStrimmerR
@@ -156,7 +161,8 @@ ZRef<ZStrimmerR> sStrimmerR_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iS
 	}
 
 // =================================================================================================
-// MARK: - ZStrimmerU_T
+#pragma mark -
+#pragma mark ZStrimmerU_T
 
 template <class Strim_p>
 class ZStrimmerU_T : public virtual ZStrimmerU
@@ -183,7 +189,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerU_FT
+#pragma mark -
+#pragma mark ZStrimmerU_FT
 
 template <class Strim_p>
 class ZStrimmerU_FT : public virtual ZStrimmerU
@@ -247,7 +254,8 @@ ZRef<ZStrimmerU> sStrimmerU_FT(const Param_p& iParam, const ZRef<Strimmer_p>& iS
 	}
 
 // =================================================================================================
-// MARK: - ZStrimmerW_T
+#pragma mark -
+#pragma mark ZStrimmerW_T
 
 template <class Strim_p>
 class ZStrimmerW_T : public virtual ZStrimmerW
@@ -274,7 +282,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerW_FT
+#pragma mark -
+#pragma mark ZStrimmerW_FT
 
 template <class Strim_p>
 class ZStrimmerW_FT : public virtual ZStrimmerW

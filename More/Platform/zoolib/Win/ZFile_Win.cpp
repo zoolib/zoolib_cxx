@@ -44,7 +44,8 @@ If fBase is empty then fComps must also be empty and we represent the root.
 */
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -78,7 +79,8 @@ class Make_FileLoc
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Shared implementation details
+#pragma mark -
+#pragma mark Shared implementation details
 
 static const uint64 kInvalidPos = ZUINT64_C(0xFFFFFFFFFFFFFFFF);
 
@@ -384,7 +386,8 @@ static ZTime spAsZTime(const FILETIME& iFT)
 	}
 
 // =================================================================================================
-// MARK: - ZFile_Win
+#pragma mark -
+#pragma mark ZFile_Win
 
 namespace ZFile_Win {
 
@@ -437,7 +440,8 @@ ZRef<ZStreamerRPos> sStreamerRPos(const UTF16* iPath, bool iPreventWriters)
 } // namespace ZFile_Win
 
 // =================================================================================================
-// MARK: - RealRep_Win
+#pragma mark -
+#pragma mark RealRep_Win
 
 namespace { // anonymous
 
@@ -549,7 +553,8 @@ string RealRep_Win::GetName(size_t iIndex)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZFileLoc_Win
+#pragma mark -
+#pragma mark ZFileLoc_Win
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_CWD()
 	{ return spGetCWD(nullptr); }
@@ -1030,7 +1035,8 @@ string ZFileLoc_Win::pGetPath()
 	}
 
 // =================================================================================================
-// MARK: - RealRep_WinNT
+#pragma mark -
+#pragma mark RealRep_WinNT
 
 namespace { // anonymous
 
@@ -1142,7 +1148,8 @@ string RealRep_WinNT::GetName(size_t iIndex)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZFileLoc_WinNT
+#pragma mark -
+#pragma mark ZFileLoc_WinNT
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_CWD()
 	{ return spGetCWDNT(nullptr); }
@@ -1641,7 +1648,8 @@ string16 ZFileLoc_WinNT::pGetPath()
 	}
 
 // =================================================================================================
-// MARK: - ZFileR_Win
+#pragma mark -
+#pragma mark ZFileR_Win
 
 ZFileR_Win::ZFileR_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fPosition(kInvalidPos),
@@ -1689,7 +1697,8 @@ ZFile::Error ZFileR_Win::GetSize(uint64& oSize)
 	{ return spGetSize(fFileHANDLE, oSize); }
 
 // =================================================================================================
-// MARK: - ZFileR_WinNT
+#pragma mark -
+#pragma mark ZFileR_WinNT
 
 ZFileR_WinNT::ZFileR_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -1709,7 +1718,8 @@ ZFile::Error ZFileR_WinNT::GetSize(uint64& oSize)
 	{ return spGetSize(fFileHANDLE, oSize); }
 
 // =================================================================================================
-// MARK: - ZFileW_Win
+#pragma mark -
+#pragma mark ZFileW_Win
 
 ZFileW_Win::ZFileW_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fPosition(kInvalidPos),
@@ -1777,7 +1787,8 @@ ZFile::Error ZFileW_Win::FlushVolume()
 	}
 
 // =================================================================================================
-// MARK: - ZFileW_WinNT
+#pragma mark -
+#pragma mark ZFileW_WinNT
 
 ZFileW_WinNT::ZFileW_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -1807,7 +1818,8 @@ ZFile::Error ZFileW_WinNT::FlushVolume()
 	{ return spFlushVolume(fFileHANDLE); }
 
 // =================================================================================================
-// MARK: - ZFileRW_Win
+#pragma mark -
+#pragma mark ZFileRW_Win
 
 ZFileRW_Win::ZFileRW_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fPosition(kInvalidPos),
@@ -1905,7 +1917,8 @@ ZFile::Error ZFileRW_Win::FlushVolume()
 	}
 
 // =================================================================================================
-// MARK: - ZFileRW_WinNT
+#pragma mark -
+#pragma mark ZFileRW_WinNT
 
 ZFileRW_WinNT::ZFileRW_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -1938,7 +1951,8 @@ ZFile::Error ZFileRW_WinNT::FlushVolume()
 	{ return spFlushVolume(fFileHANDLE); }
 
 // =================================================================================================
-// MARK: - ZStreamRPos_File_Win
+#pragma mark -
+#pragma mark ZStreamRPos_File_Win
 
 ZStreamRPos_File_Win::ZStreamRPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -1974,7 +1988,8 @@ uint64 ZStreamRPos_File_Win::Imp_GetSize()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerRPos_File_Win
 
 ZStreamerRPos_File_Win::ZStreamerRPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fStream(iFileHANDLE, iCloseWhenFinalized)
@@ -1987,7 +2002,8 @@ const ZStreamRPos& ZStreamerRPos_File_Win::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-// MARK: - ZStreamWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamWPos_File_Win
 
 ZStreamWPos_File_Win::ZStreamWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -2035,7 +2051,8 @@ void ZStreamWPos_File_Win::Imp_Truncate()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerWPos_File_Win
 
 ZStreamerWPos_File_Win::ZStreamerWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fStream(iFileHANDLE, iCloseWhenFinalized)
@@ -2048,7 +2065,8 @@ const ZStreamWPos& ZStreamerWPos_File_Win::GetStreamWPos()
 	{ return fStream; }
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamRWPos_File_Win
 
 ZStreamRWPos_File_Win::ZStreamRWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fFileHANDLE(iFileHANDLE),
@@ -2093,7 +2111,8 @@ void ZStreamRWPos_File_Win::Imp_SetSize(uint64 iSize)
 	{ spSetSize(fFileHANDLE, iSize); }
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerRWPos_File_Win
 
 ZStreamerRWPos_File_Win::ZStreamerRWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 :	fStream(iFileHANDLE, iCloseWhenFinalized)

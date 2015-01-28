@@ -28,7 +28,8 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamRPos_PageBuffered
 
 struct ZStreamRPos_PageBuffered::Buffer
 	{
@@ -180,7 +181,8 @@ uint64 ZStreamRPos_PageBuffered::Imp_GetSize()
 	{ return fStreamReal.GetSize(); }
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamerRPos_PageBuffered
 
 ZStreamerRPos_PageBuffered::ZStreamerRPos_PageBuffered(
 	size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRPos> iStreamerSource)
@@ -195,7 +197,8 @@ const ZStreamRPos& ZStreamerRPos_PageBuffered::GetStreamRPos()
 	{ return fStream; }
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamRWPos_PageBuffered
 
 struct ZStreamRWPos_PageBuffered::Buffer
 	{
@@ -484,7 +487,8 @@ void ZStreamRWPos_PageBuffered::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamerRWPos_PageBuffered
 
 ZStreamerRWPos_PageBuffered::ZStreamerRWPos_PageBuffered(
 	size_t iBufferCount, size_t iBufferSize, ZRef<ZStreamerRWPos> iStreamerReal)

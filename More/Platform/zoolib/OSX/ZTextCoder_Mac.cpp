@@ -46,7 +46,8 @@ ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -73,7 +74,8 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZTextCoder_Mac
+#pragma mark -
+#pragma mark ZTextCoder_Mac
 
 static TextEncoding spLookupName(const string& iName)
 	{
@@ -102,7 +104,8 @@ static TextEncoding spLookupName(const string& iName)
 	}
 
 // =================================================================================================
-// MARK: - ZTextDecoder_Mac
+#pragma mark -
+#pragma mark ZTextDecoder_Mac
 
 ZTextDecoder_Mac::ZTextDecoder_Mac(const char* iName)
 	{
@@ -289,7 +292,8 @@ void ZTextDecoder_Mac::Init(TextEncoding iSourceEncoding)
 	}
 
 // =================================================================================================
-// MARK: - ZTextEncoder_Mac
+#pragma mark -
+#pragma mark ZTextEncoder_Mac
 
 ZTextEncoder_Mac::ZTextEncoder_Mac(const char* iName)
 	{

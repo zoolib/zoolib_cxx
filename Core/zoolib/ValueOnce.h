@@ -91,7 +91,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 typedef FundamentalValueOnce<bool,true,false> TrueOnce;
 

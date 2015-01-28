@@ -49,7 +49,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class Elmt_p>
 size_t sUnread(const Elmt_p* iSource, size_t iCount, const ChanU<Elmt_p>& iChanU)
@@ -64,7 +65,8 @@ size_t sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
 	{ return sNonConst(iChanU).UnreadableLimit(); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class Elmt_p>
 bool sQUnread(const Elmt_p& iElmt, const ChanU<Elmt_p>& iChanU)

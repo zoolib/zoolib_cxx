@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - RateLimiter
+#pragma mark -
+#pragma mark RateLimiter
 
 class RateLimiter
 	{
@@ -47,7 +48,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamR_RateCapped
+#pragma mark -
+#pragma mark ZStreamR_RateCapped
 
 class ZStreamR_RateCapped : public ZStreamR_Filter
 	{
@@ -65,7 +67,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerR_RateCapped
+#pragma mark -
+#pragma mark ZStreamerR_RateCapped
 
 class ZStreamerR_RateCapped : public ZStreamerR
 	{
@@ -83,7 +86,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamU_RateCapped
+#pragma mark -
+#pragma mark ZStreamU_RateCapped
 
 class ZStreamU_RateCapped : public ZStreamU_Filter
 	{
@@ -101,7 +105,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerU_RateCapped
+#pragma mark -
+#pragma mark ZStreamerU_RateCapped
 
 class ZStreamerU_RateCapped : public ZStreamerU
 	{
@@ -119,7 +124,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRPos_RateCapped
+#pragma mark -
+#pragma mark ZStreamRPos_RateCapped
 
 class ZStreamRPos_RateCapped : public ZStreamRPos_Filter
 	{
@@ -137,7 +143,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_RateCapped
+#pragma mark -
+#pragma mark ZStreamerRPos_RateCapped
 
 class ZStreamerRPos_RateCapped : public ZStreamerRPos
 	{
@@ -155,7 +162,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_RateCapped
+#pragma mark -
+#pragma mark ZStreamW_RateCapped
 
 class ZStreamW_RateCapped : public ZStreamW_Filter
 	{
@@ -173,7 +181,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerW_RateCapped
+#pragma mark -
+#pragma mark ZStreamerW_RateCapped
 
 class ZStreamerW_RateCapped : public ZStreamerW
 	{
@@ -191,7 +200,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamWPos_RateCapped
+#pragma mark -
+#pragma mark ZStreamWPos_RateCapped
 
 class ZStreamWPos_RateCapped : public ZStreamWPos_Filter
 	{
@@ -209,7 +219,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWPos_RateCapped
+#pragma mark -
+#pragma mark ZStreamerWPos_RateCapped
 
 class ZStreamerWPos_RateCapped : public ZStreamerWPos
 	{

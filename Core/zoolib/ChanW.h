@@ -67,7 +67,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class Elmt_p>
 size_t sQWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
@@ -78,7 +79,8 @@ void sFlush(const ChanW<Elmt_p>& iChanW)
 	{ sNonConst(iChanW).Flush(); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class Elmt_p>
 bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
@@ -116,7 +118,8 @@ void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChan
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /// A write Chan that accepts no data.
 
@@ -131,7 +134,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 /// A write Chan that accepts and discards all data
 

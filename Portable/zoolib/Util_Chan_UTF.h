@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Util_Chan {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 class ParseException : public std::runtime_error
 	{
@@ -41,7 +42,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
 
@@ -109,7 +111,8 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const Cha
 	string8& oString);
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 void sWriteExact(float iFloat, const ChanW_UTF& iChanW);
 void sWriteExact(double iDouble, const ChanW_UTF& iChanW);

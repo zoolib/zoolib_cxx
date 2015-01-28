@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Starter_CarbonEvents
+#pragma mark -
+#pragma mark Starter_CarbonEvents
 
 class Starter_CarbonEvents
 :	public Starter_EventLoopBase

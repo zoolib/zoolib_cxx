@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamRPos_PageBuffered
 
 /** A positionable read filter stream that buffers a fixed number of fixed size chunks
 which are read in preference to accessing the source stream. Chunks are recycled in
@@ -66,7 +67,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamerRPos_PageBuffered
 
 /// A positionable read filter streamer wrapping a ZStreamRPos_PageBuffered.
 
@@ -87,7 +89,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamRWPos_PageBuffered
 
 /** A positionable read/write filter stream that buffers a fixed number of fixed size chunks
 which are read and written to in preference to accessing the real stream. Chunks are recycled in
@@ -131,7 +134,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_PageBuffered
+#pragma mark -
+#pragma mark ZStreamerRWPos_PageBuffered
 
 /// A positionable read/write filter streamer wrapping a ZStreamRWPos_PageBuffered.
 

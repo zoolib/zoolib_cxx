@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace Cartesian {
 
 // =================================================================================================
-// MARK: - PointTraits<ZMatrix<Ord_p,1,2> > (point)
+#pragma mark -
+#pragma mark PointTraits<ZMatrix<Ord_p,1,2> > (point)
 
 template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,2> >
@@ -62,7 +63,8 @@ struct PointTraits<ZMatrix<Ord_p,1,2> >
 	};
 
 // =================================================================================================
-// MARK: - PointTraits<ZMatrix<Ord_p,1,3> > (CVec3 used as a 2D point)
+#pragma mark -
+#pragma mark PointTraits<ZMatrix<Ord_p,1,3> > (CVec3 used as a 2D point)
 
 template <class Ord_p>
 struct PointTraits<ZMatrix<Ord_p,1,3> >
@@ -94,7 +96,8 @@ struct PointTraits<ZMatrix<Ord_p,1,3> >
 	};
 
 // =================================================================================================
-// MARK: - RectTraits<ZMatrixArray<Ord,1,2,2> > (rectangle)
+#pragma mark -
+#pragma mark RectTraits<ZMatrixArray<Ord,1,2,2> > (rectangle)
 
 template <class Ord_p>
 struct RectTraits<ZMatrixArray<Ord_p,1,2,2> >

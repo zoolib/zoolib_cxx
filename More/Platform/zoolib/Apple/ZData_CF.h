@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZData_CF
+#pragma mark -
+#pragma mark ZData_CF
 
 class ZData_CF
 :	public ZRef<CFDataRef>

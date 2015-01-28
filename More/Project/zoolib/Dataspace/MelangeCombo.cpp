@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - MelangeRoot
+#pragma mark -
+#pragma mark MelangeRoot
 
 MelangeRoot::MelangeRoot(const ZRef<DatonSet::DatonSet>& iDS)
 :	fDS(iDS)
@@ -63,7 +64,8 @@ void MelangeRoot::pWork()
 	}
 
 // =================================================================================================
-// MARK: - MelangeCombo
+#pragma mark -
+#pragma mark MelangeCombo
 
 MelangeCombo::MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent)
 :	fWDS_Parent(iWDS_Parent)

@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_string.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 namespace ZooLib {
 namespace Util_Any_JSON {
@@ -78,7 +79,8 @@ string8 sAsJSON(const Val_Any& iVal)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 const Val_Any sFromJSON(const string8& iString)
 	{

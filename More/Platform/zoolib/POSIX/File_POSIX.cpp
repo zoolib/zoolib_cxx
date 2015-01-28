@@ -68,7 +68,8 @@ ZMACRO_MSVCStaticLib_cpp(File_POSIX)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -90,7 +91,8 @@ class Make_FileLoc
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Shared implementation details
+#pragma mark -
+#pragma mark Shared implementation details
 
 static File::Error spTranslateError(int iNativeError)
 	{
@@ -560,7 +562,8 @@ static void spGetCWD(vector<string8>& oComps)
 	}
 
 // =================================================================================================
-// MARK: - RealRep
+#pragma mark -
+#pragma mark RealRep
 
 namespace { // anonymous
 
@@ -661,7 +664,8 @@ string RealRep_POSIX::GetName(size_t iIndex)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - FileLoc_POSIX
+#pragma mark -
+#pragma mark FileLoc_POSIX
 
 ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_CWD()
 	{ return new FileLoc_POSIX(false); }
@@ -1113,7 +1117,8 @@ string FileLoc_POSIX::pGetPath()
 	}
 
 // =================================================================================================
-// MARK: - Chan_File_POSIX
+#pragma mark -
+#pragma mark Chan_File_POSIX
 
 Chan_File_POSIX::Chan_File_POSIX(const Init_t& iInit)
 :	fFD(iInit.first)
@@ -1130,7 +1135,8 @@ int Chan_File_POSIX::GetFD() const
 	{ return fFD; }
 
 // =================================================================================================
-// MARK: - ChanRPos_File_POSIX
+#pragma mark -
+#pragma mark ChanRPos_File_POSIX
 
 ChanRPos_File_POSIX::ChanRPos_File_POSIX(const Init_t& iInit)
 :	Chan_File_POSIX(iInit)
@@ -1199,7 +1205,8 @@ size_t ChanRPos_File_POSIX::UnreadableLimit()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_File_POSIX
+#pragma mark -
+#pragma mark ZStreamRWPos_File_POSIX
 
 ChanRWPos_File_POSIX::ChanRWPos_File_POSIX(const Init_t& iInit)
 :	ChanRPos_File_POSIX(iInit)

@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZYadParseException_Bencode
+#pragma mark -
+#pragma mark ZYadParseException_Bencode
 
 class ZYadParseException_Bencode : public ZYadParseException_Std
 	{
@@ -38,7 +39,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSeqR_Bencode
+#pragma mark -
+#pragma mark ZYadSeqR_Bencode
 
 class ZYadSeqR_Bencode : public ZYadSeqR_Std
 	{
@@ -53,7 +55,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMapR_Bencode
+#pragma mark -
+#pragma mark ZYadMapR_Bencode
 
 class ZYadMapR_Bencode : public ZYadMapR_Std
 	{
@@ -68,7 +71,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZYad_Bencode
+#pragma mark -
+#pragma mark ZYad_Bencode
 
 namespace ZYad_Bencode {
 

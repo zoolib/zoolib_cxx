@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const DatonSet::Daton& iDaton);
 

@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZMap_CFPreferences
+#pragma mark -
+#pragma mark ZMap_CFPreferences
 
 class ZMap_CFPreferences
 	{

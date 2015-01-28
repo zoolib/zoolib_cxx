@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimW_WinDebug
+#pragma mark -
+#pragma mark ZStrimW_WinDebug
 
 class ZStrimW_WinDebug : public ZStrimW_NativeUTF8
 	{

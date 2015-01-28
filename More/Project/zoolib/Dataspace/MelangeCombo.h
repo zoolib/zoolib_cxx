@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - MelangeRoot
+#pragma mark -
+#pragma mark MelangeRoot
 
 class MelangeRoot
 :	public ZCounted
@@ -58,7 +59,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - MelangeCombo
+#pragma mark -
+#pragma mark MelangeCombo
 
 class MelangeCombo
 :	public Dataspace::Callable_Register

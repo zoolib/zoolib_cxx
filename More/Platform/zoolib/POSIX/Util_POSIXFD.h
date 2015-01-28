@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Util_POSIXFD {
 
 // =================================================================================================
-// MARK: - Util_POSIXFD
+#pragma mark -
+#pragma mark Util_POSIXFD
 
 bool sWaitReadable(int iFD, double iTimeout);
 void sWaitWriteable(int iFD);

@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef.h"
 
 // =================================================================================================
-// MARK: - id and NSObject, sRetain and sRelease
+#pragma mark -
+#pragma mark id and NSObject, sRetain and sRelease
 
 void sRetain(struct objc_object& iOb);
 void sRetain(NSObject& iNSObject);

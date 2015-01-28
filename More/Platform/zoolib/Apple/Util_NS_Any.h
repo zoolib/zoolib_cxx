@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace Util_NS {
 
 // =================================================================================================
-// MARK: - Util_NS
+#pragma mark -
+#pragma mark Util_NS
 
 Any sDAsAny(const Any& iDefault, NSObject* iVal);
 Any sAsAny(NSObject* iVal);
@@ -45,7 +46,8 @@ NSObject* sAsNSObject(const Any& iVal);
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - asAnyWithDefault
+#pragma mark -
+#pragma mark asAnyWithDefault
 
 @interface NSObject (ZooLib_Any_Additions)
 -(ZooLib::Any)asAnyWithDefault:(const ZooLib::Any&)iDefault;

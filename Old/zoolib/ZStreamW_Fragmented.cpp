@@ -25,7 +25,8 @@ using std::max;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamW_Fragmented
+#pragma mark -
+#pragma mark ZStreamW_Fragmented
 
 /**
 \class ZStreamW_Fragmented

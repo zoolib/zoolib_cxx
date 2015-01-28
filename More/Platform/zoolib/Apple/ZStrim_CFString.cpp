@@ -35,7 +35,8 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-// MARK: - ZStrimR_CFString
+#pragma mark -
+#pragma mark ZStrimR_CFString
 
 ZStrimR_CFString::ZStrimR_CFString(CFStringRef iStringRef)
 :	fStringRef(iStringRef),
@@ -210,7 +211,8 @@ bool ZStrimR_CFString::Imp_ReadCP(UTF32& oCP)
 	}
 
 // =================================================================================================
-// MARK: - ZStrimW_CFString
+#pragma mark -
+#pragma mark ZStrimW_CFString
 
 ZStrimW_CFString::ZStrimW_CFString(CFMutableStringRef iStringRef)
 :	fStringRef(iStringRef)

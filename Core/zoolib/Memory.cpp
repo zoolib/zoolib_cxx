@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 int sMemCompare(const void* iL, size_t iCountL, const void* iR, size_t iCountR)
 	{

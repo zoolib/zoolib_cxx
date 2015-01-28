@@ -38,7 +38,8 @@ static void spThrowParseException(const std::string& iWhat)
 	{ throw ParseException(iWhat); }
 
 // =================================================================================================
-// MARK: - ZUtil_Strim
+#pragma mark -
+#pragma mark ZUtil_Strim
 
 static bool spIsWhitespace(UTF32 iCP)
 	{

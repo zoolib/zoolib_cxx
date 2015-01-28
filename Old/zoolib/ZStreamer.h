@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerR
+#pragma mark -
+#pragma mark ZStreamerR
 
 /** A refcounted entity that provides access to a ZStreamR.
 \ingroup Streamer
@@ -48,7 +49,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRCon
+#pragma mark -
+#pragma mark ZStreamerRCon
 
 /** A refcounted entity that provides access to a ZStreamRCon.
 \ingroup Streamer
@@ -65,7 +67,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerU
+#pragma mark -
+#pragma mark ZStreamerU
 
 /** A refcounted entity that provides access to a ZStreamU.
 \ingroup Streamer
@@ -82,7 +85,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos
+#pragma mark -
+#pragma mark ZStreamerRPos
 
 /** A refcounted entity that provides access to a ZStreamRPos.
 \ingroup Streamer
@@ -102,7 +106,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerW
+#pragma mark -
+#pragma mark ZStreamerW
 
 /** A refcounted entity that provides access to a ZStreamW.
 \ingroup Streamer
@@ -120,7 +125,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWCon
+#pragma mark -
+#pragma mark ZStreamerWCon
 
 /** A refcounted entity that provides access to a ZStreamWCon.
 \ingroup Streamer
@@ -137,7 +143,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWPos
+#pragma mark -
+#pragma mark ZStreamerWPos
 
 /** A refcounted entity that provides access to a ZStreamWPos.
 \ingroup Streamer
@@ -154,7 +161,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos
+#pragma mark -
+#pragma mark ZStreamerRWPos
 
 /** A refcounted entity that provides access to a ZStreamRWPos.
 \ingroup Streamer
@@ -185,7 +193,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRW
+#pragma mark -
+#pragma mark ZStreamerRW
 
 /** A refcounted entity that implements both ZStreamerR and ZStreamerW interfaces, and
 thus provides access to a ZStreamR and a ZStreamW.
@@ -199,7 +208,8 @@ class ZStreamerRW
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWCon
+#pragma mark -
+#pragma mark ZStreamerRWCon
 
 /** A refcounted entity that implements both ZStreamerRCon and ZStreamerWCon interfaces, and
 thus provides access to a ZStreamRCon and a ZStreamWCon.
@@ -218,7 +228,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerR_T
+#pragma mark -
+#pragma mark ZStreamerR_T
 
 template <class Stream_p>
 class ZStreamerR_T : public ZStreamerR
@@ -253,7 +264,8 @@ ZRef<ZStreamerR> sStreamerR_T(Param_p& iParam)
 	{ return new ZStreamerR_T<Stream_p>(iParam); }
 
 // =================================================================================================
-// MARK: - ZStreamerR_FT
+#pragma mark -
+#pragma mark ZStreamerR_FT
 
 template <class Stream_p>
 class ZStreamerR_FT : public ZStreamerR
@@ -293,7 +305,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRCon_T
+#pragma mark -
+#pragma mark ZStreamerRCon_T
 
 template <class Stream_p>
 class ZStreamerRCon_T : public ZStreamerRCon
@@ -323,7 +336,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRCon_FT
+#pragma mark -
+#pragma mark ZStreamerRCon_FT
 
 template <class Stream_p>
 class ZStreamerRCon_FT : public ZStreamerRCon
@@ -366,7 +380,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerU_T
+#pragma mark -
+#pragma mark ZStreamerU_T
 
 template <class Stream_p>
 class ZStreamerU_T : public ZStreamerU
@@ -396,7 +411,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerU_FT
+#pragma mark -
+#pragma mark ZStreamerU_FT
 
 template <class Stream_p>
 class ZStreamerU_FT : public ZStreamerU
@@ -456,7 +472,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_T
+#pragma mark -
+#pragma mark ZStreamerRPos_T
 
 template <class Stream_p>
 class ZStreamerRPos_T : public ZStreamerRPos
@@ -489,7 +506,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_FT
+#pragma mark -
+#pragma mark ZStreamerRPos_FT
 
 template <class Stream_p>
 class ZStreamerRPos_FT : public ZStreamerU
@@ -535,7 +553,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerW_T
+#pragma mark -
+#pragma mark ZStreamerW_T
 
 template <class Stream_p>
 class ZStreamerW_T : public ZStreamerW
@@ -570,7 +589,8 @@ ZRef<ZStreamerW> sStreamerW_T(Param_p& iParam)
 	{ return new ZStreamerW_T<Stream_p>(iParam); }
 
 // =================================================================================================
-// MARK: - ZStreamerW_FT
+#pragma mark -
+#pragma mark ZStreamerW_FT
 
 template <class Stream_p>
 class ZStreamerW_FT : public ZStreamerW
@@ -610,7 +630,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWCon_T
+#pragma mark -
+#pragma mark ZStreamerWCon_T
 
 template <class Stream_p>
 class ZStreamerWCon_T : public ZStreamerWCon
@@ -640,7 +661,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWCon_FT
+#pragma mark -
+#pragma mark ZStreamerWCon_FT
 
 template <class Stream_p>
 class ZStreamerWCon_FT : public ZStreamerWCon
@@ -683,7 +705,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWPos_T
+#pragma mark -
+#pragma mark ZStreamerWPos_T
 
 template <class Stream_p>
 class ZStreamerWPos_T : public ZStreamerWPos
@@ -713,7 +736,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWPos_FT
+#pragma mark -
+#pragma mark ZStreamerWPos_FT
 
 template <class Stream_p>
 class ZStreamerWPos_FT : public ZStreamerWPos
@@ -756,7 +780,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_T
+#pragma mark -
+#pragma mark ZStreamerRWPos_T
 
 template <class Stream_p>
 class ZStreamerRWPos_T : public ZStreamerRWPos
@@ -798,7 +823,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_FT
+#pragma mark -
+#pragma mark ZStreamerRWPos_FT
 
 template <class Stream_p>
 class ZStreamerRWPos_FT : public ZStreamerRWPos
@@ -853,7 +879,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRW_T
+#pragma mark -
+#pragma mark ZStreamerRW_T
 
 template <class Stream_p>
 class ZStreamerRW_T : public ZStreamerRW
@@ -883,7 +910,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamR_Streamer
+#pragma mark -
+#pragma mark ZStreamR_Streamer
 
 class ZStreamR_Streamer : public ZStreamR
 	{
@@ -907,7 +935,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamU_Streamer
+#pragma mark -
+#pragma mark ZStreamU_Streamer
 
 class ZStreamU_Streamer : public ZStreamU
 	{
@@ -934,7 +963,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Streamer
+#pragma mark -
+#pragma mark ZStreamRPos_Streamer
 
 class ZStreamRPos_Streamer : public ZStreamRPos
 	{
@@ -964,7 +994,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_Streamer
+#pragma mark -
+#pragma mark ZStreamW_Streamer
 
 class ZStreamW_Streamer : public ZStreamW
 	{
@@ -988,7 +1019,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamWPos_Streamer
+#pragma mark -
+#pragma mark ZStreamWPos_Streamer
 
 class ZStreamWPos_Streamer : public ZStreamWPos
 	{
@@ -1019,7 +1051,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_Streamer
+#pragma mark -
+#pragma mark ZStreamRWPos_Streamer
 
 class ZStreamRWPos_Streamer : public ZStreamRWPos
 	{
@@ -1068,7 +1101,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRW_Wrapper
+#pragma mark -
+#pragma mark ZStreamerRW_Wrapper
 
 /// A RW streamer that wraps a ZStreamerR and a ZStreamerW into a single entity.
 
@@ -1096,7 +1130,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRFactory
+#pragma mark -
+#pragma mark ZStreamerRFactory
 
 class ZStreamerRFactory : public ZCounted
 	{
@@ -1110,7 +1145,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRConFactory
+#pragma mark -
+#pragma mark ZStreamerRConFactory
 
 class ZStreamerRConFactory : public virtual ZStreamerRFactory
 	{
@@ -1127,7 +1163,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWFactory
+#pragma mark -
+#pragma mark ZStreamerWFactory
 
 class ZStreamerWFactory : public ZCounted
 	{
@@ -1141,7 +1178,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWConFactory
+#pragma mark -
+#pragma mark ZStreamerWConFactory
 
 class ZStreamerWConFactory : public virtual ZStreamerWFactory
 	{
@@ -1158,7 +1196,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWFactory
+#pragma mark -
+#pragma mark ZStreamerRWFactory
 
 class ZStreamerRWFactory
 :	public virtual ZStreamerRFactory,
@@ -1183,7 +1222,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWConFactory
+#pragma mark -
+#pragma mark ZStreamerRWConFactory
 
 class ZStreamerRWConFactory
 :	public ZStreamerRConFactory,

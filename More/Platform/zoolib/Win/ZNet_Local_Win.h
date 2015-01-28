@@ -49,7 +49,8 @@ ZMACRO_MSVCStaticLib_Reference(Net_Local_Win)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZNetNameLookup_Local_Win
+#pragma mark -
+#pragma mark ZNetNameLookup_Local_Win
 
 class ZNetNameLookup_Local_Win : public ZNetNameLookup
 	{
@@ -71,7 +72,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZNetListener_Local_Win
+#pragma mark -
+#pragma mark ZNetListener_Local_Win
 
 class ZNetListener_Local_Win
 :	public ZNetListener_Local
@@ -93,7 +95,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZNetEndpoint_Local_Win
+#pragma mark -
+#pragma mark ZNetEndpoint_Local_Win
 
 class ZNetEndpoint_Local_Win
 :	public ZNetEndpoint_Local

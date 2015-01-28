@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-// MARK: - sScale3
+#pragma mark -
+#pragma mark sScale3
 
 template <class Val>
 ZMatrix<Val,4,4> sScale3(Val x, Val y, Val z)
@@ -58,7 +59,8 @@ ZMatrix<Val,4,4> sScale3(const ZMatrix<Val,1,3>& iCVec3)
 	{ return sScale(iCVec3); }
 
 // =================================================================================================
-// MARK: - sTranslate3
+#pragma mark -
+#pragma mark sTranslate3
 
 template <class Val>
 ZMatrix<Val,4,4> sTranslate3(Val x, Val y, Val z)
@@ -87,7 +89,8 @@ ZMatrix<Val,4,4> sTranslate3(const ZMatrix<Val,1,3>& iCVec3)
 	{ return sTranslate<Val>(iCVec3); }
 
 // =================================================================================================
-// MARK: - sRotate3X
+#pragma mark -
+#pragma mark sRotate3X
 
 template <class Val>
 ZMatrix<Val,4,4> sRotate3X(Val radians)
@@ -105,7 +108,8 @@ ZMatrix<Val,4,4> sRotate3X(Val radians)
 	}
 
 // =================================================================================================
-// MARK: - sRotate3Y
+#pragma mark -
+#pragma mark sRotate3Y
 
 template <class Val>
 ZMatrix<Val,4,4> sRotate3Y(Val radians)
@@ -123,7 +127,8 @@ ZMatrix<Val,4,4> sRotate3Y(Val radians)
 	}
 
 // =================================================================================================
-// MARK: - sRotate3Z
+#pragma mark -
+#pragma mark sRotate3Z
 
 template <class Val>
 ZMatrix<Val,4,4> sRotate3Z(Val radians)
@@ -141,7 +146,8 @@ ZMatrix<Val,4,4> sRotate3Z(Val radians)
 	}
 
 // =================================================================================================
-// MARK: - sShear3
+#pragma mark -
+#pragma mark sShear3
 
 template <class Val>
 ZMatrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
@@ -170,7 +176,8 @@ ZMatrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 	}
 
 // =================================================================================================
-// MARK: - Extraction of coordinate subsets
+#pragma mark -
+#pragma mark Extraction of coordinate subsets
 
 template <class Val>
 ZMatrix<Val,1,2> sXY(const ZMatrix<Val,1,3>& iMat)

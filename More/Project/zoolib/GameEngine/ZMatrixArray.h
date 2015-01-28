@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class E, size_t C, size_t R, size_t Length_p>
 class ZMatrixArray
@@ -46,7 +47,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
 ZMatrixArray<E,C,R,Length_p> operator*(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
@@ -66,7 +68,8 @@ ZMatrixArray<E,C,R,Length_p>& operator*=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
 ZMatrixArray<E,C,R,Length_p> operator/(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
@@ -86,7 +89,8 @@ ZMatrixArray<E,C,R,Length_p>& operator/=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
 ZMatrixArray<E,C,R,Length_p> operator+(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
@@ -106,7 +110,8 @@ ZMatrixArray<E,C,R,Length_p>& operator+=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
 ZMatrixArray<E,C,R,Length_p> operator-(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)

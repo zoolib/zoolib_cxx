@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/UnicodeString.h"
 
 // =================================================================================================
-// MARK: - Util_NS
+#pragma mark -
+#pragma mark Util_NS
 
 namespace ZooLib {
 namespace Util_NS {

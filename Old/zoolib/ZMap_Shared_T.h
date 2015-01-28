@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZMap_Shared_T
+#pragma mark -
+#pragma mark ZMap_Shared_T
 
 template <class Map_p, class Val_p = typename Map_p::Val_t, class Name_p = typename Map_p::Name_t>
 class ZMap_Shared_T
@@ -131,7 +132,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZMap_Shared_Mutable_T
+#pragma mark -
+#pragma mark ZMap_Shared_Mutable_T
 
 template <class Map_p, class Val_p = typename Map_p::Val_t, class Name_p = typename Map_p::Name_t>
 class ZMap_Shared_Mutable_T

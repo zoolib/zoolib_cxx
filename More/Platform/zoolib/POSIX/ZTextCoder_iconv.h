@@ -50,7 +50,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextDecoder_iconv
+#pragma mark -
+#pragma mark ZTextDecoder_iconv
 
 /// Puts a ZTextDecoder interface over the \a iconv library.
 
@@ -74,7 +75,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_iconv
+#pragma mark -
+#pragma mark ZTextEncoder_iconv
 
 /// Puts a ZTextEncoder interface over the \a iconv library.
 

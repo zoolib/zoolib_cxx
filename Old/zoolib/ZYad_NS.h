@@ -36,12 +36,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZYadR_NS
+#pragma mark -
+#pragma mark ZYadR_NS
 
 typedef ZYadR_Val_T<ZRef<NSObject> > ZYadR_NS;
 
 // =================================================================================================
-// MARK: - ZYadAtomR_NS
+#pragma mark -
+#pragma mark ZYadAtomR_NS
 
 class ZYadAtomR_NS
 :	public ZYadR_NS
@@ -55,7 +57,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStreamerRPos_NS
+#pragma mark -
+#pragma mark ZYadStreamerRPos_NS
 
 typedef ZStreamerRPos_T<ZStreamRPos_NSData> ZStreamerRPos_NS;
 
@@ -73,7 +76,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadStrimmerR_NS
+#pragma mark -
+#pragma mark ZYadStrimmerR_NS
 
 typedef ZStrimmerR_T<ZStrimR_NSString> ZStrimmerR_NSString;
 
@@ -87,7 +91,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadSeqAtRPos_NS
+#pragma mark -
+#pragma mark ZYadSeqAtRPos_NS
 
 class ZYadSeqAtRPos_NS
 :	public ZYadR_NS
@@ -99,7 +104,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZYadMapAtRPos_NS
+#pragma mark -
+#pragma mark ZYadMapAtRPos_NS
 
 class ZYadMapAtRPos_NS
 :	public ZYadR_NS
@@ -135,7 +141,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<ZYadR> sYadR(NSObject* iVal);
 
@@ -152,7 +159,8 @@ ZRef<ZYadMapAtRPos> sYadR(NSMutableDictionary* iDictionary);
 ZRef<ZYadMapAtRPos> sYadR(NSDictionary* iDictionary);
 
 // =================================================================================================
-// MARK: - sFromYadR
+#pragma mark -
+#pragma mark sFromYadR
 
 ZRef<NSObject> sFromYadR(NSObject* iDefault, ZRef<ZYadR> iYadR);
 

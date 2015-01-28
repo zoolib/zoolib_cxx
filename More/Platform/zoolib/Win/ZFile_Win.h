@@ -42,7 +42,8 @@ ZMACRO_MSVCStaticLib_Reference(File_Win)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZFile_Win
+#pragma mark -
+#pragma mark ZFile_Win
 
 namespace ZFile_Win {
 
@@ -56,7 +57,8 @@ ZRef<ZStreamerRPos> sStreamerRPos(const UTF16* iPath, bool iPreventWriters);
 } // namespace ZFile_Win
 
 // =================================================================================================
-// MARK: - ZFileLoc_Win
+#pragma mark -
+#pragma mark ZFileLoc_Win
 
 class ZFileLoc_Win : public ZFileLoc
 	{
@@ -125,7 +127,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileLoc_WinNT
+#pragma mark -
+#pragma mark ZFileLoc_WinNT
 
 class ZFileLoc_WinNT : public ZFileLoc
 	{
@@ -194,7 +197,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileR_Win
+#pragma mark -
+#pragma mark ZFileR_Win
 
 class ZFileR_Win : public ZFileR
 	{
@@ -215,7 +219,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileR_WinNT
+#pragma mark -
+#pragma mark ZFileR_WinNT
 
 class ZFileR_WinNT : public ZFileR
 	{
@@ -234,7 +239,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileW_Win
+#pragma mark -
+#pragma mark ZFileW_Win
 
 class ZFileW_Win : public ZFileW
 	{
@@ -260,7 +266,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileW_WinNT
+#pragma mark -
+#pragma mark ZFileW_WinNT
 
 class ZFileW_WinNT : public ZFileW
 	{
@@ -284,7 +291,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileRW_Win
+#pragma mark -
+#pragma mark ZFileRW_Win
 
 class ZFileRW_Win : public ZFileRW
 	{
@@ -311,7 +319,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZFileRW_WinNT
+#pragma mark -
+#pragma mark ZFileRW_WinNT
 
 class ZFileRW_WinNT : public ZFileRW
 	{
@@ -336,7 +345,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRPos_File_Win
+#pragma mark -
+#pragma mark ZStreamRPos_File_Win
 
 class ZStreamRPos_File_Win : public ZStreamRPos
 	{
@@ -359,7 +369,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerRPos_File_Win
 
 class ZStreamerRPos_File_Win : public ZStreamerRPos
 	{
@@ -375,7 +386,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamWPos_File_Win
 
 class ZStreamWPos_File_Win : public ZStreamWPos
 	{
@@ -402,7 +414,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerWPos_File_Win
 
 class ZStreamerWPos_File_Win : public ZStreamerWPos
 	{
@@ -418,7 +431,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamRWPos_File_Win
 
 class ZStreamRWPos_File_Win : public ZStreamRWPos
 	{
@@ -448,7 +462,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWPos_File_Win
+#pragma mark -
+#pragma mark ZStreamerRWPos_File_Win
 
 class ZStreamerRWPos_File_Win : public ZStreamerRWPos
 	{

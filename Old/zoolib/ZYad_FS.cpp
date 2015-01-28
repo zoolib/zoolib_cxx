@@ -29,7 +29,8 @@ namespace ZYad_FS {
 namespace { // anonymous
 
 // =================================================================================================
-// MARK: - YadStreamerRPos
+#pragma mark -
+#pragma mark YadStreamerRPos
 
 class YadStreamerRPos
 :	public virtual ZYadStreamerR
@@ -69,7 +70,8 @@ const ZStreamRPos& YadStreamerRPos::GetStreamRPos()
 	}
 
 // =================================================================================================
-// MARK: - YadMapAtRPos
+#pragma mark -
+#pragma mark YadMapAtRPos
 
 class YadMapAtRPos
 :	public ZYadMapAtRPos
@@ -140,7 +142,8 @@ ZRef<ZYadR> YadMapAtRPos::ReadAt(const Name& iName)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZYad_FS::sYadR
+#pragma mark -
+#pragma mark ZYad_FS::sYadR
 
 ZRef<ZYadR> sYadR(const ZFileSpec& iFS)
 	{

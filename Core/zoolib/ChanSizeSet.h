@@ -44,7 +44,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 inline void sSizeSet(uint64 iSize, const ChanSizeSet& iChanSizeSet)
 	{ return sNonConst(iChanSizeSet).SizeSet(iSize); }

@@ -37,7 +37,8 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Win_MultiResource
+#pragma mark -
+#pragma mark ZStreamRPos_Win_MultiResource
 
 static HRSRC spFindResource(HMODULE iHMODULE, const string& iName, const string& iType)
 	{
@@ -178,7 +179,8 @@ uint64 ZStreamRPos_Win_MultiResource::Imp_GetSize()
 	{ return fVector_Ends.back(); }
 
 // =================================================================================================
-// MARK: - ZStreamerRPos_Win_MultiResource
+#pragma mark -
+#pragma mark ZStreamerRPos_Win_MultiResource
 
 ZStreamerRPos_Win_MultiResource::ZStreamerRPos_Win_MultiResource(
 	HMODULE iHMODULE, const string& iType, const string& iName)

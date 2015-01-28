@@ -141,7 +141,8 @@ static pthread_key_t spRecursiveCheck(
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 static void spRegister_Fast(UFC* fc)
 	{
@@ -183,7 +184,8 @@ static void spRegister_Initial(UFC* fc)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 void _Unwind_SjLj_Register(UFC* fc)
 	{ spRegister(fc); }

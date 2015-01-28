@@ -43,7 +43,8 @@ struct UConverter;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextDecoder_ICU
+#pragma mark -
+#pragma mark ZTextDecoder_ICU
 
 /// Puts a ZTextDecoder interface over the \a ICU library.
 
@@ -68,7 +69,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_ICU
+#pragma mark -
+#pragma mark ZTextEncoder_ICU
 
 /// Puts a ZTextEncoder interface over the \a ICU library.
 

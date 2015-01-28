@@ -29,7 +29,8 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_Std)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextDecoder_ASCII
+#pragma mark -
+#pragma mark ZTextDecoder_ASCII
 
 class ZTextDecoder_ASCII : public ZTextDecoder
 	{
@@ -42,7 +43,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_ASCII
+#pragma mark -
+#pragma mark ZTextEncoder_ASCII
 
 class ZTextEncoder_ASCII : public ZTextEncoder
 	{
@@ -54,7 +56,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_ISO8859_1
+#pragma mark -
+#pragma mark ZTextDecoder_ISO8859_1
 
 class ZTextDecoder_ISO8859_1 : public ZTextDecoder
 	{
@@ -67,7 +70,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_ISO8859_1
+#pragma mark -
+#pragma mark ZTextEncoder_ISO8859_1
 
 class ZTextEncoder_ISO8859_1 : public ZTextEncoder
 	{
@@ -79,7 +83,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_MacRoman
+#pragma mark -
+#pragma mark ZTextDecoder_MacRoman
 
 class ZTextDecoder_MacRoman : public ZTextDecoder
 	{
@@ -92,7 +97,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_MacRoman
+#pragma mark -
+#pragma mark ZTextEncoder_MacRoman
 
 class ZTextEncoder_MacRoman : public ZTextEncoder
 	{
@@ -104,7 +110,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_CP1252
+#pragma mark -
+#pragma mark ZTextDecoder_CP1252
 
 class ZTextDecoder_CP1252 : public ZTextDecoder
 	{
@@ -117,7 +124,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_CP1252
+#pragma mark -
+#pragma mark ZTextEncoder_CP1252
 
 class ZTextEncoder_CP1252 : public ZTextEncoder
 	{
@@ -129,7 +137,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextDecoder_CP850
+#pragma mark -
+#pragma mark ZTextDecoder_CP850
 
 class ZTextDecoder_CP850 : public ZTextDecoder
 	{
@@ -142,7 +151,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZTextEncoder_CP850
+#pragma mark -
+#pragma mark ZTextEncoder_CP850
 
 class ZTextEncoder_CP850 : public ZTextEncoder
 	{

@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - SocketWatcher
+#pragma mark -
+#pragma mark SocketWatcher
 
 class SocketWatcher
 :	NonCopyable

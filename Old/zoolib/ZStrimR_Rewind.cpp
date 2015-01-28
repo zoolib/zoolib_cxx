@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimR_Rewind
+#pragma mark -
+#pragma mark ZStrimR_Rewind
 
 /**
 \class ZStrimR_Rewind

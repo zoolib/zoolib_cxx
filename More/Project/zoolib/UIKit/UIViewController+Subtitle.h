@@ -5,7 +5,8 @@
 #import <UIKit/UIViewController.h>
 
 // =================================================================================================
-// MARK: - UIViewController+Subtitle
+#pragma mark -
+#pragma mark UIViewController+Subtitle
 
 @interface UIViewController (Subtitle)
 

@@ -36,7 +36,8 @@ namespace ZooLib {
 #define kDebug_ZLib 2
 
 // =================================================================================================
-// MARK: - ZStreamR_ZLibDecode
+#pragma mark -
+#pragma mark ZStreamR_ZLibDecode
 
 /**
 \class ZStreamR_ZLibDecode
@@ -150,7 +151,8 @@ void ZStreamR_ZLibDecode::pInit(ZStream_ZLib::EFormatR iFormatR, size_t iBufferS
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerR_ZLibDecode
+#pragma mark -
+#pragma mark ZStreamerR_ZLibDecode
 
 /// A read filter streamer that zlib-decompresses (inflates) a source stream.
 
@@ -173,7 +175,8 @@ const ZStreamR& ZStreamerR_ZLibDecode::GetStreamR()
 	{ return fStream; }
 
 // =================================================================================================
-// MARK: - ZStreamW_ZLibEncode
+#pragma mark -
+#pragma mark ZStreamW_ZLibEncode
 
 /**
 \class ZStreamW_ZLibEncode
@@ -337,7 +340,8 @@ void ZStreamW_ZLibEncode::pFlush()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerW_ZLibEncode
+#pragma mark -
+#pragma mark ZStreamerW_ZLibEncode
 
 ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),

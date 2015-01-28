@@ -51,7 +51,8 @@ namespace ZooLib {
 namespace ZMatrix_armv6 {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 void Matrix4Mul(const float* src_mat_1, const float* src_mat_2, float* dst_mat);
 

@@ -25,7 +25,8 @@ namespace ZooLib {
 namespace ZUtil_Python {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 ZQ<std::string> sQAsString(PyObject* iObject)
 	{
@@ -35,7 +36,8 @@ ZQ<std::string> sQAsString(PyObject* iObject)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 ThreadStateReleaser::ThreadStateReleaser()
 :	fState(PyEval_SaveThread())
@@ -61,7 +63,8 @@ void ThreadStateReleaser::Release()
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 GILStateEnsurer::GILStateEnsurer()
 :	fState(PyGILState_Ensure())
@@ -71,7 +74,8 @@ GILStateEnsurer::~GILStateEnsurer()
 	{ PyGILState_Release(fState); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args)
 	{

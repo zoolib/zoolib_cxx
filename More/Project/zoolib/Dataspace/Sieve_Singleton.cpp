@@ -41,7 +41,8 @@ using DatonSet::Daton;
 using namespace ZooLib::RelationalAlgebra;
 
 // =================================================================================================
-// MARK: - Sieve_Singleton
+#pragma mark -
+#pragma mark Sieve_Singleton
 
 Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_Register,
 	const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate,

@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ZooLib;
 
 // =================================================================================================
-// MARK: - Util_NS
+#pragma mark -
+#pragma mark Util_NS
 
 namespace ZooLib {
 namespace Util_NS {
@@ -113,7 +114,8 @@ NSMutableData* sDataMutable(NSData* iNSData)
 	{ return [NSMutableData dataWithData:iNSData]; }
 
 // =================================================================================================
-// MARK: - Util_NS, conversions
+#pragma mark -
+#pragma mark Util_NS, conversions
 
 string8 sAsUTF8(NSString* iNSString)
 	{

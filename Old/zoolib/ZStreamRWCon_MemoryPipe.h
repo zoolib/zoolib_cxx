@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_MemoryPipe
+#pragma mark -
+#pragma mark ZStreamRWCon_MemoryPipe
 
 /** A connected RW stream that transfers data directly from a writer's source
 buffer to a reader's destination buffer. Note that read and write must therefore
@@ -94,7 +95,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWCon_MemoryPipe
+#pragma mark -
+#pragma mark ZStreamerRWCon_MemoryPipe
 
 class ZStreamerRWCon_MemoryPipe : public ZStreamerRWCon
 	{

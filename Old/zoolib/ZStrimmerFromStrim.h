@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimR
+#pragma mark -
+#pragma mark ZStrimmerFromStrimR
 
 class ZStrimmerFromStrimR
 	{
@@ -44,7 +45,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimU
+#pragma mark -
+#pragma mark ZStrimmerFromStrimU
 
 class ZStrimmerFromStrimU
 	{
@@ -60,7 +62,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStrimmerFromStrimW
+#pragma mark -
+#pragma mark ZStrimmerFromStrimW
 
 class ZStrimmerFromStrimW
 	{

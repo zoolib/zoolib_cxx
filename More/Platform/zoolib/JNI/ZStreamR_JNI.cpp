@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_JNI
+#pragma mark -
+#pragma mark ZStreamR_JNI
 
 ZStreamR_JNI::ZStreamR_JNI(jobject iJavaStream)
 :	fJavaStream(iJavaStream)

@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Buffered
+#pragma mark -
+#pragma mark ZStreamR_Buffered
 
 /// A read filter stream that tries to pre-read data in chunks as large as its buffer size.
 
@@ -58,7 +59,8 @@ protected:
 typedef ZStreamerR_FT<ZStreamR_Buffered> ZStreamerR_Buffered;
 
 // =================================================================================================
-// MARK: - ZStreamW_Buffered
+#pragma mark -
+#pragma mark ZStreamW_Buffered
 
 /// A write filter stream that buffers data written to it.
 
@@ -86,7 +88,8 @@ protected:
 typedef ZStreamerW_FT<ZStreamW_Buffered> ZStreamerW_Buffered;
 
 // =================================================================================================
-// MARK: - ZStreamR_DynamicBuffered
+#pragma mark -
+#pragma mark ZStreamR_DynamicBuffered
 
 /// A read filter stream that can rewind a read stream by copying read data into a ZStreamRWPos.
 
@@ -112,7 +115,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerR_DynamicBuffered
+#pragma mark -
+#pragma mark ZStreamerR_DynamicBuffered
 
 /// A read filter streamer encapsulating a ZStreamR_DynamicBuffered.
 
@@ -137,7 +141,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_DynamicBuffered
+#pragma mark -
+#pragma mark ZStreamW_DynamicBuffered
 
 /// A write filter stream that buffers all data written to it until it's flushed.
 
@@ -166,7 +171,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerW_DynamicBuffered
+#pragma mark -
+#pragma mark ZStreamerW_DynamicBuffered
 
 /// A write filter streamer encapsulating a ZStreamW_DynamicBuffered.
 

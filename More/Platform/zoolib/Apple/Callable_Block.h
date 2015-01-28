@@ -31,12 +31,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable
+#pragma mark -
+#pragma mark Callable
 
 template <class Signature> class Callable_Block;
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params, void return)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params, void return)
 // This is the only variant usable before Clang 2.0.
 
 template <>
@@ -67,7 +69,8 @@ private:
 #if defined(__clang_major__) && __clang_major__ >= 2
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params)
 
 template <class R>
 class Callable_Block<R(void)>
@@ -92,7 +95,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable (specialization for 1 param)
+#pragma mark -
+#pragma mark Callable (specialization for 1 param)
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -137,7 +141,8 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-// MARK: - sCallable
+#pragma mark -
+#pragma mark sCallable
 
 template <class R>
 ZRef<Callable<R(void)> >

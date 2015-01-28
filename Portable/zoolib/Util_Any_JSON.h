@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Val_Any.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 namespace ZooLib {
 namespace Util_Any_JSON {

@@ -45,7 +45,8 @@ namespace ZWinRegistry {
 using namespace std;
 
 // =================================================================================================
-// MARK: - Types
+#pragma mark -
+#pragma mark Types
 
 typedef TagVal<string16, struct Tag_Env> String_Env;
 typedef TagVal<string16, struct Tag_Link> String_Link;
@@ -54,7 +55,8 @@ typedef ZData_Any Data;
 class KeyRef;
 
 // =================================================================================================
-// MARK: - ZWinRegistry::Val
+#pragma mark -
+#pragma mark ZWinRegistry::Val
 
 class Val : public ZAny
 	{
@@ -93,7 +95,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZWinRegistry::KeyRef
+#pragma mark -
+#pragma mark ZWinRegistry::KeyRef
 
 class KeyRef
 :	public ZRef<HKEY>

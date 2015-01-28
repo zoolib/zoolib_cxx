@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimR_Indirect
+#pragma mark -
+#pragma mark ZStrimR_Indirect
 
 ZStrimR_Indirect::ZStrimR_Indirect(const ZStrimR* iStrim)
 :	ZStrim_Indirect<ZStrimR>(iStrim)
@@ -120,7 +121,8 @@ void ZStrimR_Indirect::Imp_Skip(uint64 iCountCP, uint64* oCountCPSkipped)
 	}
 
 // =================================================================================================
-// MARK: - ZStrimU_Indirect
+#pragma mark -
+#pragma mark ZStrimU_Indirect
 
 ZStrimU_Indirect::ZStrimU_Indirect(const ZStrimU* iStrim)
 :	ZStrim_Indirect<ZStrimU>(iStrim)
@@ -230,7 +232,8 @@ size_t ZStrimU_Indirect::Imp_UnreadableLimit()
 	}
 
 // =================================================================================================
-// MARK: - ZStrimW_Indirect
+#pragma mark -
+#pragma mark ZStrimW_Indirect
 
 ZStrimW_Indirect::ZStrimW_Indirect(const ZStrimW* iStrim)
 :	ZStrim_Indirect<ZStrimW>(iStrim)

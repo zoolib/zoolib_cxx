@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Chunked
+#pragma mark -
+#pragma mark ZStreamR_Chunked
 
 class ZStreamR_Chunked : public ZStreamR
 	{
@@ -48,7 +49,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_Chunked
+#pragma mark -
+#pragma mark ZStreamW_Chunked
 
 class ZStreamW_Chunked : public ZStreamW
 	{

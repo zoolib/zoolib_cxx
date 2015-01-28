@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Starter_WinMessageLoop
+#pragma mark -
+#pragma mark Starter_WinMessageLoop
 
 Starter_WinMessageLoop::Starter_WinMessageLoop()
 :	fHWND(nullptr)

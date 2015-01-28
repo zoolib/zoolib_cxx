@@ -29,7 +29,8 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -50,7 +51,8 @@ class Make_Collator
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Helper functions
+#pragma mark -
+#pragma mark Helper functions
 
 static int spCompare_CaseSensitive(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
@@ -105,7 +107,8 @@ static bool spContains(int iStrength, const UTF8* iPattern, size_t iPatternLengt
 	}
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_ASCII
+#pragma mark -
+#pragma mark ZTextCollatorRep_ASCII
 
 ZTextCollatorRep_ASCII::ZTextCollatorRep_ASCII(int iStrength)
 	{ fStrength = iStrength; }

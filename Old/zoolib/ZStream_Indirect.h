@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStream_Indirect
+#pragma mark -
+#pragma mark ZStream_Indirect
 
 template <class Stream_p>
 class ZStream_Indirect
@@ -61,7 +62,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamR_Indirect
+#pragma mark -
+#pragma mark ZStreamR_Indirect
 
 class ZStreamR_Indirect
 :	public ZStreamR
@@ -85,7 +87,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRCon_Indirect
+#pragma mark -
+#pragma mark ZStreamRCon_Indirect
 
 class ZStreamRCon_Indirect
 :	public ZStreamRCon
@@ -107,7 +110,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamU_Indirect
+#pragma mark -
+#pragma mark ZStreamU_Indirect
 
 class ZStreamU_Indirect
 :	public ZStreamU
@@ -128,7 +132,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Indirect
+#pragma mark -
+#pragma mark ZStreamRPos_Indirect
 
 class ZStreamRPos_Indirect
 :	public ZStreamRPos
@@ -151,7 +156,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_Indirect
+#pragma mark -
+#pragma mark ZStreamW_Indirect
 
 class ZStreamW_Indirect
 :	public ZStreamW
@@ -167,7 +173,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamWCon_Indirect
+#pragma mark -
+#pragma mark ZStreamWCon_Indirect
 
 class ZStreamWCon_Indirect
 :	public ZStreamWCon
@@ -187,7 +194,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamWPos_Indirect
+#pragma mark -
+#pragma mark ZStreamWPos_Indirect
 
 class ZStreamWPos_Indirect
 :	public ZStreamWPos
@@ -210,7 +218,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_Indirect
+#pragma mark -
+#pragma mark ZStreamRWPos_Indirect
 
 class ZStreamRWPos_Indirect
 :	public ZStreamRWPos

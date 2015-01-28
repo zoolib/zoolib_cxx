@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // ================================================================================================
-// MARK: - MelangeServer
+#pragma mark -
+#pragma mark MelangeServer
 
 class MelangeServer
 :	public ZCounted
@@ -61,7 +62,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Melange_Client
+#pragma mark -
+#pragma mark Melange_Client
 
 class Melange_Client
 :	public Callable_Register

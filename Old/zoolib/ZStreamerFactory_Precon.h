@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerRWFactory_Precon
+#pragma mark -
+#pragma mark ZStreamerRWFactory_Precon
 
 class ZStreamerRWFactory_Precon : public ZStreamerRWFactory
 	{
@@ -44,7 +45,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerRWConFactory_Precon
+#pragma mark -
+#pragma mark ZStreamerRWConFactory_Precon
 
 class ZStreamerRWConFactory_Precon : public ZStreamerRWConFactory
 	{

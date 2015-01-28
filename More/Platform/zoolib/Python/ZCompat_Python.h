@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // =================================================================================================
-// MARK: - defined(ZProjectHeader_Python)
+#pragma mark -
+#pragma mark defined(ZProjectHeader_Python)
 
 #if defined(ZProjectHeader_Python)
 
@@ -32,7 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif // defined(ZProjectHeader_Python)
 
 // =================================================================================================
-// MARK: - not defined(ZProjectHeader_Python)
+#pragma mark -
+#pragma mark not defined(ZProjectHeader_Python)
 
 #if not defined(ZProjectHeader_Python)
 

@@ -37,7 +37,8 @@ class ZSeq_CF;
 class ZMap_CF;
 
 // =================================================================================================
-// MARK: - ZVal_CF
+#pragma mark -
+#pragma mark ZVal_CF
 
 class ZVal_CF
 :	public ZRef<CFTypeRef>
@@ -141,7 +142,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZSeq_CF
+#pragma mark -
+#pragma mark ZSeq_CF
 
 class ZSeq_CF
 :	public ZRef<CFArrayRef>
@@ -207,7 +209,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZMap_CF
+#pragma mark -
+#pragma mark ZMap_CF
 
 class ZMap_CF
 :	public ZRef<CFDictionaryRef>

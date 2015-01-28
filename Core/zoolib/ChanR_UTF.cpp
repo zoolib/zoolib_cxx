@@ -29,7 +29,8 @@ static const size_t kBufSize = sStackBufferSize;
 using std::min;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 void sRead(UTF32* oDest,
 	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
@@ -122,7 +123,8 @@ void sRead(UTF8* oDest,
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	{

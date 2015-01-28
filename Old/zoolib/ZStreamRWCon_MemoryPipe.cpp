@@ -28,7 +28,8 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_MemoryPipe
+#pragma mark -
+#pragma mark ZStreamRWCon_MemoryPipe
 
 ZStreamRWCon_MemoryPipe::ZStreamRWCon_MemoryPipe()
 	{
@@ -348,7 +349,8 @@ void ZStreamRWCon_MemoryPipe::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	}
 
 // =================================================================================================
-// MARK: - ZStreamerRWCon_MemoryPipe
+#pragma mark -
+#pragma mark ZStreamerRWCon_MemoryPipe
 
 ZStreamerRWCon_MemoryPipe::ZStreamerRWCon_MemoryPipe()
 	{}

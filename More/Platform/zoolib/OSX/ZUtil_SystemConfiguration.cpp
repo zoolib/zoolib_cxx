@@ -34,7 +34,8 @@ namespace ZUtil_SystemConfiguration {
 using namespace ZUtil_CF;
 
 // =================================================================================================
-// MARK: - ZUtil_SystemConfiguration::Store
+#pragma mark -
+#pragma mark ZUtil_SystemConfiguration::Store
 
 Store::Store(ZRef<Callable> iCallable)
 :	fCallable(iCallable)
@@ -63,7 +64,8 @@ void Store::spCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 	}
 
 // =================================================================================================
-// MARK: - YadMapRPos (anonymous)
+#pragma mark -
+#pragma mark YadMapRPos (anonymous)
 
 namespace { // anonymous 
 
@@ -126,7 +128,8 @@ private:
 } // anonymous namespace 
 
 // =================================================================================================
-// MARK: - sYadMapRPos
+#pragma mark -
+#pragma mark sYadMapRPos
 
 ZRef<ZYadMapRPos> sYadMapRPos(SCDynamicStoreRef iStoreRef, CFArrayRef iKeys)
 	{ return new YadMapRPos(iStoreRef, iKeys); }

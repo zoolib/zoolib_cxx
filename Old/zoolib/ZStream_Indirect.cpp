@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_Indirect
+#pragma mark -
+#pragma mark ZStreamR_Indirect
 
 ZStreamR_Indirect::ZStreamR_Indirect(const ZStreamR* iStream)
 :	ZStream_Indirect<ZStreamR>(iStream)
@@ -96,7 +97,8 @@ void ZStreamR_Indirect::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRCon_Indirect
+#pragma mark -
+#pragma mark ZStreamRCon_Indirect
 
 ZStreamRCon_Indirect::ZStreamRCon_Indirect(const ZStreamRCon* iStream)
 :	ZStream_Indirect<ZStreamRCon>(iStream)
@@ -150,7 +152,8 @@ void ZStreamRCon_Indirect::Imp_Abort()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamU_Indirect
+#pragma mark -
+#pragma mark ZStreamU_Indirect
 
 ZStreamU_Indirect::ZStreamU_Indirect(const ZStreamU* iStream)
 :	ZStream_Indirect<ZStreamU>(iStream)
@@ -197,7 +200,8 @@ void ZStreamU_Indirect::Imp_Unread()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Indirect
+#pragma mark -
+#pragma mark ZStreamRPos_Indirect
 
 ZStreamRPos_Indirect::ZStreamRPos_Indirect(const ZStreamRPos* iStream)
 :	ZStream_Indirect<ZStreamRPos>(iStream)
@@ -251,7 +255,8 @@ uint64 ZStreamRPos_Indirect::Imp_GetSize()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamW_Indirect
+#pragma mark -
+#pragma mark ZStreamW_Indirect
 
 ZStreamW_Indirect::ZStreamW_Indirect(const ZStreamW* iStream)
 :	ZStream_Indirect<ZStreamW>(iStream)
@@ -275,7 +280,8 @@ void ZStreamW_Indirect::Imp_Flush()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamWCon_Indirect
+#pragma mark -
+#pragma mark ZStreamWCon_Indirect
 
 ZStreamWCon_Indirect::ZStreamWCon_Indirect(const ZStreamWCon* iStream)
 :	ZStream_Indirect<ZStreamWCon>(iStream)
@@ -311,7 +317,8 @@ void ZStreamWCon_Indirect::Imp_Abort()
 	}
 
 // =================================================================================================
-// MARK: - ZStreamWPos_Indirect
+#pragma mark -
+#pragma mark ZStreamWPos_Indirect
 
 ZStreamWPos_Indirect::ZStreamWPos_Indirect(const ZStreamWPos* iStream)
 :	ZStream_Indirect<ZStreamWPos>(iStream)
@@ -361,7 +368,8 @@ void ZStreamWPos_Indirect::Imp_SetSize(uint64 iSize)
 	}
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_Indirect
+#pragma mark -
+#pragma mark ZStreamRWPos_Indirect
 
 ZStreamRWPos_Indirect::ZStreamRWPos_Indirect(const ZStreamRWPos* iStream)
 :	ZStream_Indirect<ZStreamRWPos>(iStream)

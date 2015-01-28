@@ -26,7 +26,8 @@ namespace ZooLib {
 namespace ZUtil_WinFile {
 
 // =================================================================================================
-// MARK: - ZUtil_WinFile
+#pragma mark -
+#pragma mark ZUtil_WinFile
 
 DWORD sFlush(HANDLE iHANDLE)
 	{

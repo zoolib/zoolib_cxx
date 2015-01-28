@@ -32,7 +32,8 @@ namespace ZooLib {
 namespace ZUtil_Strim {
 
 // =================================================================================================
-// MARK: - ZUtil_Strim
+#pragma mark -
+#pragma mark ZUtil_Strim
 
 class ParseException : public std::runtime_error
 	{

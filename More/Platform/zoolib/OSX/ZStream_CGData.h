@@ -39,7 +39,8 @@ namespace ZooLib {
 namespace ZStream_CGData {
 
 // =================================================================================================
-// MARK: - ZStream_CGData
+#pragma mark -
+#pragma mark ZStream_CGData
 
 ZRef<CGDataProviderRef> sProvider(ZRef<ZStreamerR> iStreamer);
 

@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZUtil_Strim_string
+#pragma mark -
+#pragma mark ZUtil_Strim_string
 
 template <class Val_p>
 string32 operator<<(const string32& iString, const Val_p& iVal)

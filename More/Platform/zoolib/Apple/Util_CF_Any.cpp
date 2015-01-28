@@ -40,7 +40,8 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-// MARK: - Util_CF
+#pragma mark -
+#pragma mark Util_CF
 
 static Data_Any spAsData_Any(CFDataRef iCFData)
 	{

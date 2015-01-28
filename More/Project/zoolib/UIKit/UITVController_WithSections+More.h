@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(iPhone)
 
 // =================================================================================================
-// MARK: - ZooLib_UIKit_SectionHeader
+#pragma mark -
+#pragma mark ZooLib_UIKit_SectionHeader
 
 @interface ZooLib_UIKit_SectionHeader : UIView
 	{
@@ -40,7 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @end // interface MMSectionHeader
 
 // =================================================================================================
-// MARK: - ZooLib::UIKit
+#pragma mark -
+#pragma mark ZooLib::UIKit
 
 namespace ZooLib {
 namespace UIKit {

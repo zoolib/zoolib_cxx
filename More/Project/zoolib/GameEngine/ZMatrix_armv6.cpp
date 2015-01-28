@@ -52,7 +52,8 @@ namespace ZooLib {
 namespace ZMatrix_armv6 {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 #if __thumb__
 	#warning "Compiling in Thumb Mode. Mode switches activated."

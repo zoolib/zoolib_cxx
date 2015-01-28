@@ -38,7 +38,8 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Factory functions
+#pragma mark -
+#pragma mark Factory functions
 
 namespace { // anonymous
 
@@ -77,7 +78,8 @@ class Make_Endpoint
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - InitializeWinSock
+#pragma mark -
+#pragma mark InitializeWinSock
 
 namespace { // anonymous
 
@@ -102,7 +104,8 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZNet_Internet_WinSock
+#pragma mark -
+#pragma mark ZNet_Internet_WinSock
 
 ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
 	{
@@ -121,7 +124,8 @@ ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
 	}
 
 // =================================================================================================
-// MARK: - ZNetNameLookup_Internet_WinSock
+#pragma mark -
+#pragma mark ZNetNameLookup_Internet_WinSock
 
 ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(
 	const string& inName, ip_port inPort, size_t inMaxAddresses)
@@ -202,7 +206,8 @@ ZRef<ZNetName> ZNetNameLookup_Internet_WinSock::CurrentName()
 	{ return new ZNetName_Internet(fName, fPort); }
 
 // =================================================================================================
-// MARK: - ZNetListener_TCP_WinSock
+#pragma mark -
+#pragma mark ZNetListener_TCP_WinSock
 
 ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort)
 	{
@@ -328,7 +333,8 @@ void ZNetListener_TCP_WinSock::pInit(
 	}
 
 // =================================================================================================
-// MARK: - ZNetEndpoint_TCP_WinSock
+#pragma mark -
+#pragma mark ZNetEndpoint_TCP_WinSock
 
 ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(SOCKET iSOCKET)
 	{

@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace ZUtil_Strim_Data {
 
 // =================================================================================================
-// MARK: - ZUtil_Strim_Data
+#pragma mark -
+#pragma mark ZUtil_Strim_Data
 
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s);
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax);

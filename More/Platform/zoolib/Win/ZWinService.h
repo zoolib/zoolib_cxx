@@ -33,7 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZWinService
+#pragma mark -
+#pragma mark ZWinService
 
 class ZWinService
 	{
@@ -76,7 +77,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZWinService_T
+#pragma mark -
+#pragma mark ZWinService_T
 
 template <class T>
 class ZWinService_T : public ZWinService

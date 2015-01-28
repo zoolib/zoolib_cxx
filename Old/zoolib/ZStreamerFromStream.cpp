@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamR
+#pragma mark -
+#pragma mark ZStreamerFromStreamR
 
 class ZStreamerFromStreamR::Streamer : public ZStreamerR, public ZStreamR_Indirect
 	{
@@ -44,7 +45,8 @@ ZStreamerFromStreamR::operator ZRef<ZStreamerR>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamRCon
 
 class ZStreamerFromStreamRCon::Streamer : public ZStreamerRCon, public ZStreamRCon_Indirect
 	{
@@ -64,7 +66,8 @@ ZStreamerFromStreamRCon::operator ZRef<ZStreamerRCon>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamU
+#pragma mark -
+#pragma mark ZStreamerFromStreamU
 
 class ZStreamerFromStreamU::Streamer : public ZStreamerU, public ZStreamU_Indirect
 	{
@@ -84,7 +87,8 @@ ZStreamerFromStreamU::operator ZRef<ZStreamerU>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamRPos
 
 class ZStreamerFromStreamRPos::Streamer : public ZStreamerRPos, public ZStreamRPos_Indirect
 	{
@@ -104,7 +108,8 @@ ZStreamerFromStreamRPos::operator ZRef<ZStreamerRPos>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamW
+#pragma mark -
+#pragma mark ZStreamerFromStreamW
 
 class ZStreamerFromStreamW::Streamer : public ZStreamerW, public ZStreamW_Indirect
 	{
@@ -124,7 +129,8 @@ ZStreamerFromStreamW::operator ZRef<ZStreamerW>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamWCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamWCon
 
 class ZStreamerFromStreamWCon::Streamer : public ZStreamerWCon, public ZStreamWCon_Indirect
 	{
@@ -144,7 +150,8 @@ ZStreamerFromStreamWCon::operator ZRef<ZStreamerWCon>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamWPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamWPos
 
 class ZStreamerFromStreamWPos::Streamer : public ZStreamerWPos, public ZStreamWPos_Indirect
 	{
@@ -164,7 +171,8 @@ ZStreamerFromStreamWPos::operator ZRef<ZStreamerWPos>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRWCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamRWCon
 
 class ZStreamerFromStreamRWCon::Streamer
 :	public ZStreamerRWCon
@@ -194,7 +202,8 @@ ZStreamerFromStreamRWCon::operator ZRef<ZStreamerRWCon>()
 	{ return fStreamer; }
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRWPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamRWPos
 
 class ZStreamerFromStreamRWPos::Streamer : public ZStreamerRWPos, public ZStreamRWPos_Indirect
 	{

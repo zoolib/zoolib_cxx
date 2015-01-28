@@ -36,7 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStream_SHA1
+#pragma mark -
+#pragma mark ZStream_SHA1
 
 namespace ZStream_SHA1 {
 
@@ -69,7 +70,8 @@ void sTest();
 } // namespace ZStream_SHA1
 
 // =================================================================================================
-// MARK: - ZStreamR_SHA1
+#pragma mark -
+#pragma mark ZStreamR_SHA1
 
 /// A read filter stream that SHA1 hashes data read through it.
 
@@ -93,7 +95,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamW_SHA1
+#pragma mark -
+#pragma mark ZStreamW_SHA1
 
 /// A write filter stream that SHA1 hashes data written through it.
 

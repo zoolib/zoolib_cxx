@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-// MARK: - Util_CF
+#pragma mark -
+#pragma mark Util_CF
 
 Any sDAsAny(const Any& iDefault, CFTypeRef iVal);
 Any sAsAny(CFTypeRef iVal);

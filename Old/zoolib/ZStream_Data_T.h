@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRPos_Data_T
+#pragma mark -
+#pragma mark ZStreamRPos_Data_T
 
 template <class T>
 class ZStreamRPos_Data_T : public ZStreamRPos
@@ -84,7 +85,8 @@ ZStreamRPos_Data_T<T> sStreamRPos_Data_T(const T& iData)
 	{ return ZStreamRPos_Data_T<T>(iData); }
 
 // =================================================================================================
-// MARK: - ZStreamRWPos_Data_T
+#pragma mark -
+#pragma mark ZStreamRWPos_Data_T
 
 template <class T>
 class ZStreamRWPos_Data_T : public ZStreamRWPos
@@ -204,7 +206,8 @@ ZStreamRWPos_Data_T<T> sStreamRWPos_Data_T(T& iData)
 	{ return ZStreamRWPos_Data_T<T>(iData); }
 
 // =================================================================================================
-// MARK: - Data stream reading functions
+#pragma mark -
+#pragma mark Data stream reading functions
 
 template <class T>
 void sReadAll_T(T& ioData, const ZStreamR& iStreamR)

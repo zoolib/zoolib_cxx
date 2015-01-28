@@ -34,7 +34,8 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-// MARK: - ClassRegistration
+#pragma mark -
+#pragma mark ClassRegistration
 
 ClassRegistration::ClassRegistration(WNDPROC iWNDPROC, const WCHAR* iClassName, size_t iWndExtra)
 	{ this->pInit(iWNDPROC, iClassName, iWndExtra); }
@@ -74,7 +75,8 @@ const WCHAR* ClassRegistration::GetClassName() const
 	{ return fClassName; }
 
 // =================================================================================================
-// MARK: - sCreate_DefWindowProc
+#pragma mark -
+#pragma mark sCreate_DefWindowProc
 
 HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{ return sCreate_DefWindowProc(iParent, iStyle, 0, iCreateParam); }
@@ -99,7 +101,8 @@ HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCr
 	}
 
 // =================================================================================================
-// MARK: - sCreate_DefDlgProc
+#pragma mark -
+#pragma mark sCreate_DefDlgProc
 
 HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{ return sCreate_DefDlgProc(iParent, iStyle, 0, iCreateParam); }
@@ -124,7 +127,8 @@ HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreat
 	}
 
 // =================================================================================================
-// MARK: - Callable_WithWNDPROC (anonymous)
+#pragma mark -
+#pragma mark Callable_WithWNDPROC (anonymous)
 
 namespace { // anonymous
 
@@ -152,7 +156,8 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Callable <--> Regular window
+#pragma mark -
+#pragma mark Callable <--> Regular window
 
 LRESULT CALLBACK spWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
@@ -278,7 +283,8 @@ ZRef<Callable> sGetCallable(HWND iHWND)
 	{ return (Callable*)::GetPropW(iHWND, L"ZWinWND Callable"); }
 
 // =================================================================================================
-// MARK: - Message pump
+#pragma mark -
+#pragma mark Message pump
 
 static ZTSS::Key spKey_ActiveHWND()
 	{

@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimR_Boundary
+#pragma mark -
+#pragma mark ZStrimR_Boundary
 
 /**
 \class ZStrimR_Boundary
@@ -207,7 +208,8 @@ void ZStrimR_Boundary::pInit()
 	}
 
 // =================================================================================================
-// MARK: - ZStrimmerR_Boundary
+#pragma mark -
+#pragma mark ZStrimmerR_Boundary
 
 ZStrimmerR_Boundary::ZStrimmerR_Boundary(const string8& iBoundary, ZRef<ZStrimmerR> iStrimmerSource)
 :	fStrimmerSource(iStrimmerSource),

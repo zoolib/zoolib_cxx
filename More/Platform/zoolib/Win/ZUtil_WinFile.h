@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace ZUtil_WinFile {
 
 // =================================================================================================
-// MARK: - ZUtil_WinFile
+#pragma mark -
+#pragma mark ZUtil_WinFile
 
 #if 0
 bool sWaitReadable(HANDLE iHANDLE, double iTimeout);

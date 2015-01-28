@@ -95,7 +95,8 @@ int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_Strin
 ValComparandPseudo CConst(const Val_Any& iVal);
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 bool sMatches(const ValPred& iValPred, const Val_Any& iVal);
 

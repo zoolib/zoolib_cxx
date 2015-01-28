@@ -25,7 +25,8 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-// MARK: - ZStreamerRWFactory_Fallback
+#pragma mark -
+#pragma mark ZStreamerRWFactory_Fallback
 
 ZStreamerRWFactory_Fallback::ZStreamerRWFactory_Fallback()
 	{}

@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-// MARK: - Util_CF
+#pragma mark -
+#pragma mark Util_CF
 
 static CFStringRef spEmptyCFString = CFSTR("");
 
@@ -120,7 +121,8 @@ ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData)
 	{ return sAdopt& ::CFDataCreateMutableCopy(nullptr, 0, iCFData); }
 
 // =================================================================================================
-// MARK: - Util_CF
+#pragma mark -
+#pragma mark Util_CF
 
 string8 sAsUTF8(CFStringRef iCFString)
 	{
@@ -165,7 +167,8 @@ string16 sAsUTF16(CFStringRef iCFString)
 	}
 
 // =================================================================================================
-// MARK: - Util_CF
+#pragma mark -
+#pragma mark Util_CF
 
 CFTypeRef sIfIs(CFTypeID iTypeID, CFTypeRef iTypeRef)
 	{

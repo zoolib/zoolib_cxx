@@ -38,7 +38,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 inline void sClose(const ChanClose& iChanClose)
 	{ return sNonConst(iChanClose).Close(); }

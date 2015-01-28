@@ -58,7 +58,8 @@ namespace ZooLib {
 namespace ZUtil_CarbonEvents {
 
 // =================================================================================================
-// MARK: - ZUtil_CarbonEvents
+#pragma mark -
+#pragma mark ZUtil_CarbonEvents
 
 bool sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer);

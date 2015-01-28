@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamR_CFStream
+#pragma mark -
+#pragma mark ZStreamR_CFStream
 
 class ZStreamR_CFStream : public ZStreamR
 	{
@@ -51,7 +52,8 @@ private:
 typedef ZStreamerR_T<ZStreamR_CFStream> ZStreamerR_CFStream;
 
 // =================================================================================================
-// MARK: - ZStreamW_CFStream
+#pragma mark -
+#pragma mark ZStreamW_CFStream
 
 class ZStreamW_CFStream : public ZStreamW
 	{

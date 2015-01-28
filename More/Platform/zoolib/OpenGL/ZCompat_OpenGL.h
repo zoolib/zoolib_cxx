@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // =================================================================================================
-// MARK: - defined(ZProjectHeader_OpenGL)
+#pragma mark -
+#pragma mark defined(ZProjectHeader_OpenGL)
 
 #if defined(ZProjectHeader_OpenGL)
 
@@ -32,7 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif // defined(ZProjectHeader_OpenGL)
 
 // =================================================================================================
-// MARK: - not defined(ZProjectHeader_OpenGL)
+#pragma mark -
+#pragma mark not defined(ZProjectHeader_OpenGL)
 
 #if not defined(ZProjectHeader_OpenGL)
 

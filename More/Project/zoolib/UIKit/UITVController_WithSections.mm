@@ -43,7 +43,8 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark -
+#pragma mark Helpers
 
 static void spUpdatePopovers()
 	{
@@ -77,7 +78,8 @@ static bool spIsVersion4OrLater()
 	}
 
 // =================================================================================================
-// MARK: - Section
+#pragma mark -
+#pragma mark Section
 
 Section::Section(ZRef<SectionBody> iBody)
 :	fHideWhenEmpty(false)
@@ -139,7 +141,8 @@ UITableViewRowAnimation Section::SectionAnimation_Reload()
 	}
 
 // =================================================================================================
-// MARK: - SectionBody::RowMeta
+#pragma mark -
+#pragma mark SectionBody::RowMeta
 
 SectionBody::RowMeta::RowMeta()
 :	fBase(0)
@@ -153,7 +156,8 @@ void SectionBody::RowMeta::UpdateCount(size_t iCount)
 	}
 
 // =================================================================================================
-// MARK: - SectionBody::RowUpdate
+#pragma mark -
+#pragma mark SectionBody::RowUpdate
 
 SectionBody::RowUpdate::RowUpdate(
 	RowMeta& ioRowMeta, std::map<size_t, UITableViewRowAnimation>& ioMap)
@@ -180,7 +184,8 @@ void SectionBody::RowUpdate::AddRange(
 	}
 
 // =================================================================================================
-// MARK: - SectionBody
+#pragma mark -
+#pragma mark SectionBody
 
 void SectionBody::ViewWillAppear(UITableView* iTV)
 	{}
@@ -198,7 +203,8 @@ bool SectionBody::FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow)
 	{ return iSB == this; }
 
 // =================================================================================================
-// MARK: - SectionBody_Concrete
+#pragma mark -
+#pragma mark SectionBody_Concrete
 
 SectionBody_Concrete::SectionBody_Concrete()
 :	fRowAnimation_Insert(UITableViewRowAnimationRight)
@@ -326,7 +332,8 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 	{ return fRowAnimation_Reload; }
 
 // =================================================================================================
-// MARK: - SectionBody_SingleRow
+#pragma mark -
+#pragma mark SectionBody_SingleRow
 
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 :	fCell_Pending(iCell)
@@ -415,7 +422,8 @@ ZRef<UITableViewCell> SectionBody_SingleRow::UITableViewCellForRow(
 	}
 
 // =================================================================================================
-// MARK: - SectionBody_Multi
+#pragma mark -
+#pragma mark SectionBody_Multi
 
 size_t SectionBody_Multi::NumberOfRows()
 	{
@@ -692,7 +700,8 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t& oIndex, size_t 
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - UITVHandler_WithSections
+#pragma mark -
+#pragma mark UITVHandler_WithSections
 
 using namespace ZooLib;
 using namespace ZooLib::UIKit;
@@ -1314,7 +1323,8 @@ static void spInsertSections(UITableView* iTableView,
 @end // implementation UITVHandler_WithSections
 
 // =================================================================================================
-// MARK: - UITVHandler_WithSections_VariableRowHeight
+#pragma mark -
+#pragma mark UITVHandler_WithSections_VariableRowHeight
 
 @implementation UITVHandler_WithSections_VariableRowHeight
 
@@ -1331,7 +1341,8 @@ static void spInsertSections(UITableView* iTableView,
 @end // implementation UITVHandler_WithSections_VariableRowHeight
 
 // =================================================================================================
-// MARK: - UIGestureRecognizer_TableViewWithSections
+#pragma mark -
+#pragma mark UIGestureRecognizer_TableViewWithSections
 
 @interface UIGestureRecognizer_TableViewWithSections : UIGestureRecognizer
 	{
@@ -1391,7 +1402,8 @@ static void spInsertSections(UITableView* iTableView,
 @end // UIGestureRecognizer_TableViewWithSections
 
 // =================================================================================================
-// MARK: - UITableView_WithSections
+#pragma mark -
+#pragma mark UITableView_WithSections
 
 @implementation UITableView_WithSections
 

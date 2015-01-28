@@ -128,7 +128,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 bool sIsBefore(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);
 bool sIsAfter(const ZRef<Event>& iLeft, const ZRef<Event>& iRight);

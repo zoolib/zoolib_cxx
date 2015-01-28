@@ -43,7 +43,8 @@ struct UCollator;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZTextCollatorRep_ICU
+#pragma mark -
+#pragma mark ZTextCollatorRep_ICU
 
 class ZTextCollatorRep_ICU : public ZTextCollatorRep_NativeUTF16
 	{

@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerRWFactory_Buffered
+#pragma mark -
+#pragma mark ZStreamerRWFactory_Buffered
 
 ZStreamerRWFactory_Buffered::ZStreamerRWFactory_Buffered(
 	ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iReadBufferSize, size_t iWriteBufferSize)

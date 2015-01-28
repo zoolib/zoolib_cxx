@@ -40,7 +40,8 @@ ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_Win)
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_SSL_Win
+#pragma mark -
+#pragma mark ZStreamRWCon_SSL_Win
 
 class ZStreamRWCon_SSL_Win
 :	public ZStreamRCon
@@ -85,7 +86,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamRWCon_SSL_Win
+#pragma mark -
+#pragma mark ZStreamRWCon_SSL_Win
 
 class ZStreamerRWCon_SSL_Win
 :	public ZStreamerRWCon

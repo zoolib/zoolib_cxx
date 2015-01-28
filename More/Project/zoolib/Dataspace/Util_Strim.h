@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const std::set<RelationalAlgebra::RelHead>& iSet);
 

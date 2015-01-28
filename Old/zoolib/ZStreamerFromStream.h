@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamR
+#pragma mark -
+#pragma mark ZStreamerFromStreamR
 
 class ZStreamerFromStreamR
 	{
@@ -43,7 +44,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamRCon
 
 class ZStreamerFromStreamRCon
 	{
@@ -59,7 +61,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamU
+#pragma mark -
+#pragma mark ZStreamerFromStreamU
 
 class ZStreamerFromStreamU
 	{
@@ -75,7 +78,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamRPos
 
 class ZStreamerFromStreamRPos
 	{
@@ -91,7 +95,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamW
+#pragma mark -
+#pragma mark ZStreamerFromStreamW
 
 class ZStreamerFromStreamW
 	{
@@ -107,7 +112,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamWCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamWCon
 
 class ZStreamerFromStreamWCon
 	{
@@ -123,7 +129,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamWPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamWPos
 
 class ZStreamerFromStreamWPos
 	{
@@ -139,7 +146,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRWCon
+#pragma mark -
+#pragma mark ZStreamerFromStreamRWCon
 
 class ZStreamerFromStreamRWCon
 	{
@@ -155,7 +163,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZStreamerFromStreamRWPos
+#pragma mark -
+#pragma mark ZStreamerFromStreamRWPos
 
 class ZStreamerFromStreamRWPos
 	{

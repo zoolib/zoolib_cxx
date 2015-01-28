@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace Cartesian {
 
 // =================================================================================================
-// MARK: - PointTraits<QPoint>
+#pragma mark -
+#pragma mark PointTraits<QPoint>
 
 template <>
 struct PointTraits<QPoint>
@@ -50,7 +51,8 @@ struct PointTraits<QPoint>
 	};
 
 // =================================================================================================
-// MARK: - PointTraits<QSize>
+#pragma mark -
+#pragma mark PointTraits<QSize>
 
 template <>
 struct PointTraits<QSize>
@@ -70,7 +72,8 @@ struct PointTraits<QSize>
 	};
 
 // =================================================================================================
-// MARK: - RectTraits<QRect>
+#pragma mark -
+#pragma mark RectTraits<QRect>
 
 template <>
 struct RectTraits<QRect>
@@ -116,7 +119,8 @@ struct RectTraits<QRect>
 	};
 
 // =================================================================================================
-// MARK: - PointTraits<QPointF>
+#pragma mark -
+#pragma mark PointTraits<QPointF>
 
 template <>
 struct PointTraits<QPointF>
@@ -136,7 +140,8 @@ struct PointTraits<QPointF>
 	};
 
 // =================================================================================================
-// MARK: - RectTraits<QRectF>
+#pragma mark -
+#pragma mark RectTraits<QRectF>
 
 template <>
 struct RectTraits<QRectF>

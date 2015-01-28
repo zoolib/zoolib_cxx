@@ -175,7 +175,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
+#pragma mark 
 
 template <typename L>
 bool sIsEmpty(const DListHead<L>& iDListHead)
