@@ -24,7 +24,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 ZQ<std::string> sQReadString(size_t iCount, const ChanR_Bin& iChanR)
 	{

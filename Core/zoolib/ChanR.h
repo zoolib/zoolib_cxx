@@ -82,7 +82,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Elmt_p>
 size_t sQRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
@@ -98,7 +97,6 @@ size_t sReadable(const ChanR<Elmt_p>& iChanR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Elmt_p>
 ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)

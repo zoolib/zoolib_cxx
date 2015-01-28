@@ -31,7 +31,6 @@ namespace Util_Chan {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 static bool spIsWhitespace(UTF32 iCP)
 	{
@@ -525,7 +524,6 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const Cha
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 void sWriteExact(float iVal, const ChanW_UTF& iChanW)
 	{

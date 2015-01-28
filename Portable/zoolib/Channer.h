@@ -28,7 +28,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Chan_p>
 class Channer

@@ -87,7 +87,6 @@ ValComparandPseudo CConst(const Val_Any& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 namespace { // anonymous
 

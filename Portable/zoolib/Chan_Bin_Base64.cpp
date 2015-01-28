@@ -102,7 +102,6 @@ static const Decode spDecodeStd =
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 Decode sDecode(uint8 i62, uint8 i63)
 	{

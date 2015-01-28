@@ -26,7 +26,6 @@ namespace ZUtil_Python {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 ZQ<std::string> sQAsString(PyObject* iObject)
 	{
@@ -37,7 +36,6 @@ ZQ<std::string> sQAsString(PyObject* iObject)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 ThreadStateReleaser::ThreadStateReleaser()
 :	fState(PyEval_SaveThread())
@@ -64,7 +62,6 @@ void ThreadStateReleaser::Release()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 GILStateEnsurer::GILStateEnsurer()
 :	fState(PyGILState_Ensure())
@@ -75,7 +72,6 @@ GILStateEnsurer::~GILStateEnsurer()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args)
 	{

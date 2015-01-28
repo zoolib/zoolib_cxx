@@ -24,7 +24,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const DatonSet::Daton& iDaton)
 	{

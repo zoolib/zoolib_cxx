@@ -29,13 +29,11 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 typedef ChanW<byte> ChanW_Bin;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 inline
 size_t sQWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)

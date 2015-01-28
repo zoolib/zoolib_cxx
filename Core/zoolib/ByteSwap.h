@@ -26,7 +26,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <int size>
 void sByteSwap(void* ioBuf);

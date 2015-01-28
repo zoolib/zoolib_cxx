@@ -32,13 +32,11 @@ namespace ZUtil_Python {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 ZQ<std::string> sQAsString(PyObject* iObject);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 class ThreadStateReleaser
 	{
@@ -55,7 +53,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 class GILStateEnsurer
 	{
@@ -69,7 +66,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args);
 

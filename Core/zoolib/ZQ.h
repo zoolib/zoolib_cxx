@@ -535,7 +535,6 @@ T& sSet(ZQ<T,Sense>& ioQ, const T& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class T, bool Sense>
 void sClear(ZQ<T,Sense>& ioQ)

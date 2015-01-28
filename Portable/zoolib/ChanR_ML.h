@@ -30,8 +30,6 @@ class MLRep
 :	public ZCounted
 	{};
 
-
-
 class ML
 	{
 public:
@@ -46,8 +44,6 @@ typedef ChanR<ML> ChanR_ML;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
-
 
 } // namespace ZooLib
 

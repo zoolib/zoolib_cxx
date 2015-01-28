@@ -95,7 +95,6 @@ static void** sVoidPtr(ZRef<T>& ioRef)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Target_p, class Source_p>
 ZRef<Target_p> sQueryInterface(Source_p* iSource)

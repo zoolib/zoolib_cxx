@@ -26,7 +26,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Elmt_p>
 class Chan

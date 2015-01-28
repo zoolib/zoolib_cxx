@@ -30,7 +30,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 Name& Name::operator=(const Name& iOther)
 	{

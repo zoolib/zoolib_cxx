@@ -96,7 +96,6 @@ ValComparandPseudo CConst(const Val_Any& iVal);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 bool sMatches(const ValPred& iValPred, const Val_Any& iVal);
 

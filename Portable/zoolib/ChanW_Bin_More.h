@@ -30,7 +30,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
@@ -72,7 +71,6 @@ void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
 

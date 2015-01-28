@@ -481,7 +481,6 @@ size_t Event::pHeight() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 bool sIsBefore(const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 	{ return iLeft->LessEqual(iRight) && not iRight->LessEqual(iLeft); }

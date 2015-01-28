@@ -37,7 +37,6 @@ inline void sTruncate(const ChanSizeSet& iChanSizeSet, const ChanPos& iChanPos)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class Elmt_t>
 std::pair<uint64,uint64> sCopyFully(

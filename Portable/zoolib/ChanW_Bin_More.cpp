@@ -27,7 +27,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 bool sQWrite(const char* iString, const ChanW_Bin& iChanW)
 	{
@@ -88,7 +87,6 @@ void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const char* iString)
 	{
@@ -110,7 +108,6 @@ const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 bool sQWriteCount(uint64 iValue, const ChanW_Bin& w)
 	{

@@ -35,7 +35,6 @@ typedef ChanR<byte> ChanR_Bin;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 // Overloads of sRead that take void*, so a binary chan can read into any pointer.
 
@@ -49,7 +48,6 @@ size_t sQReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark 
 
 template <class T>
 ZQ<T> sQReadNative(const ChanR_Bin& iChanR)
