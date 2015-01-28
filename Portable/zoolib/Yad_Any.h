@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<YadR> sYadR(const Any& iVal);
 
@@ -39,7 +40,8 @@ ZRef<YadSeqR> sYadR(const Seq_Any& iSeq);
 ZRef<YadMapR> sYadR(const Map_Any& iMap);
 
 // =================================================================================================
-// MARK: - Yad_Any
+#pragma mark -
+#pragma mark Yad_Any
 
 namespace Yad_Any {
 
@@ -50,7 +52,8 @@ ZQ<Val_Any> sQFromYadR(bool iRepeatedPropsAsSeq, ZRef<YadR> iYadR);
 } // namespace Yad_Any
 
 // =================================================================================================
-// MARK: - sFromYadR
+#pragma mark -
+#pragma mark sFromYadR
 
 inline
 Val_Any sFromYadR(const Val_Any& iDefault, ZRef<YadR> iYadR)

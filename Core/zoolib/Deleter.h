@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Deleter
+#pragma mark -
+#pragma mark Deleter
 
 template <class T>
 class Deleter
@@ -39,7 +40,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Deleter specialized for arrays.
+#pragma mark -
+#pragma mark Deleter specialized for arrays.
 
 template <class T>
 class Deleter<T[]>

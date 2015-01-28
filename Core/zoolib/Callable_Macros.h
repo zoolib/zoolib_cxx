@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // =================================================================================================
-// MARK: - ZooLib::CallableUtil
+#pragma mark -
+#pragma mark ZooLib::CallableUtil
 
 namespace ZooLib {
 namespace CallableUtil {
@@ -65,7 +66,8 @@ template <class T> struct VT<T&>
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - ZooLib::Callable_Macros
+#pragma mark -
+#pragma mark ZooLib::Callable_Macros
 
 
 #define ZMACRO_Callable_typedef_V

@@ -44,7 +44,8 @@ using namespace ZUtil_STL;
 namespace RA = RelationalAlgebra;
 
 // =================================================================================================
-// MARK: - Relater_SQLite::ClientQuery
+#pragma mark -
+#pragma mark Relater_SQLite::ClientQuery
 
 class Relater_SQLite::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
@@ -64,7 +65,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_SQLite::PQuery
+#pragma mark -
+#pragma mark Relater_SQLite::PQuery
 
 class Relater_SQLite::PQuery
 	{
@@ -80,7 +82,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_SQLite
+#pragma mark -
+#pragma mark Relater_SQLite
 
 Relater_SQLite::Relater_SQLite(ZRef<SQLite::DB> iDB)
 :	fDB(iDB)

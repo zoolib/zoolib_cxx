@@ -25,13 +25,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Expr_Bool
+#pragma mark -
+#pragma mark Expr_Bool
 
 Expr_Bool::Expr_Bool()
 	{}
 
 // =================================================================================================
-// MARK: - Expr_Bool_True
+#pragma mark -
+#pragma mark Expr_Bool_True
 
 Expr_Bool_True::Expr_Bool_True()
 	{}
@@ -74,13 +76,15 @@ int sCompare_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR)
 ZMACRO_CompareRegistration_T(Expr_Bool_True)
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_True
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_True
 
 void Visitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-// MARK: - Expr_Bool_False
+#pragma mark -
+#pragma mark Expr_Bool_False
 
 Expr_Bool_False::Expr_Bool_False()
 	{}
@@ -123,13 +127,15 @@ int sCompare_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR)
 ZMACRO_CompareRegistration_T(Expr_Bool_False)
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_False
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_False
 
 void Visitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-// MARK: - Expr_Bool_Not
+#pragma mark -
+#pragma mark Expr_Bool_Not
 
 Expr_Bool_Not::Expr_Bool_Not(const ZRef<Expr_Bool>& iOp0)
 :	inherited(iOp0)
@@ -167,13 +173,15 @@ int sCompare_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR)
 ZMACRO_CompareRegistration_T(Expr_Bool_Not)
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_Not
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_Not
 
 void Visitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
-// MARK: - Expr_Bool_And
+#pragma mark -
+#pragma mark Expr_Bool_And
 
 Expr_Bool_And::Expr_Bool_And(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
@@ -215,13 +223,15 @@ int sCompare_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR)
 ZMACRO_CompareRegistration_T(Expr_Bool_And)
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_And
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_And
 
 void Visitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZRef<Expr_Bool_And>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-// MARK: - Expr_Bool_Or
+#pragma mark -
+#pragma mark Expr_Bool_Or
 
 Expr_Bool_Or::Expr_Bool_Or(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
@@ -263,13 +273,15 @@ int sCompare_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR)
 ZMACRO_CompareRegistration_T(Expr_Bool_Or)
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_Or
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_Or
 
 void Visitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZRef<Expr_Bool_Or>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-// MARK: - Operators
+#pragma mark -
+#pragma mark Operators
 
 ZRef<Expr_Bool> sTrue()
 	{ return Expr_Bool_True::sTrue(); }

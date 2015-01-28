@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - sGetRelHead
+#pragma mark -
+#pragma mark sGetRelHead
 
 RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel);
 

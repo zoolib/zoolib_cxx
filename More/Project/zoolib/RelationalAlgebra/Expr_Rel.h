@@ -37,7 +37,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Expr_Rel
+#pragma mark -
+#pragma mark Expr_Rel
 
 class Expr_Rel
 :	public virtual Expr
@@ -47,7 +48,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - SemanticError
+#pragma mark -
+#pragma mark SemanticError
 
 class SemanticError : public std::runtime_error
 	{

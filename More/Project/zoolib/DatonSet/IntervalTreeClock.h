@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace IntervalTreeClock {
 
 // =================================================================================================
-// MARK: - Identity
+#pragma mark -
+#pragma mark Identity
 
 class Identity
 :	public CountedWithoutFinalize
@@ -70,7 +71,8 @@ ZRef<Identity> sSplittedLeft(const ZRef<Identity>& iIdentity);
 ZRef<Identity> sSplittedRight(const ZRef<Identity>& iIdentity);
 
 // =================================================================================================
-// MARK: - Event
+#pragma mark -
+#pragma mark Event
 
 class Event;
 

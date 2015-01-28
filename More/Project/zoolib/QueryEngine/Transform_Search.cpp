@@ -61,7 +61,8 @@ using std::set;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - HasConst (anonymous)
+#pragma mark -
+#pragma mark HasConst (anonymous)
 
 namespace { // anonymous
 
@@ -98,7 +99,8 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Transform_Search (anonymous)
+#pragma mark -
+#pragma mark Transform_Search (anonymous)
 
 namespace { // anonymous
 

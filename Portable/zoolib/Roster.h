@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Roster
+#pragma mark -
+#pragma mark Roster
 
 class Roster
 :	public ZCounted
@@ -75,7 +76,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Roster::Entry
+#pragma mark -
+#pragma mark Roster::Entry
 
 class Roster::Entry
 :	public ZCounted

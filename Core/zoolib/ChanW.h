@@ -38,7 +38,8 @@ inline bool sThrow_ExhaustedW()
 	}
 
 // =================================================================================================
-// MARK: - ChanW
+#pragma mark -
+#pragma mark ChanW
 
 template <class Elmt_p>
 class ChanW

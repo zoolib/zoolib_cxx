@@ -67,7 +67,8 @@ identify those entities that satisfy a RelHead.
 */
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet::Walker
+#pragma mark -
+#pragma mark Searcher_DatonSet::Walker
 
 class Searcher_DatonSet::Walker
 :	public QE::Walker
@@ -104,7 +105,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet::ClientSearch
+#pragma mark -
+#pragma mark Searcher_DatonSet::ClientSearch
 
 class Searcher_DatonSet::DLink_ClientSearch_InPSearch
 :	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
@@ -129,7 +131,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet::PSearch
+#pragma mark -
+#pragma mark Searcher_DatonSet::PSearch
 
 class Searcher_DatonSet::DLink_PSearch_InPScan
 :	public DListLink<PSearch, DLink_PSearch_InPScan, kDebug>
@@ -158,7 +161,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet::PScan
+#pragma mark -
+#pragma mark Searcher_DatonSet::PScan
 
 class Searcher_DatonSet::DLink_PScan_NeedsWork
 :	public DListLink<PScan, DLink_PScan_NeedsWork, kDebug>
@@ -178,7 +182,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet
+#pragma mark -
+#pragma mark Searcher_DatonSet
 
 Searcher_DatonSet::Searcher_DatonSet()
 :	fEvent(Event::sZero())

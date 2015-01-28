@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-// MARK: - Walker
+#pragma mark -
+#pragma mark Walker
 
 class Walker : public ZCounted
 	{
@@ -55,7 +56,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Walker_Unary
+#pragma mark -
+#pragma mark Walker_Unary
 
 class Walker_Unary : public Walker
 	{

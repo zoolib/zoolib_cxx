@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto)
 
 // =================================================================================================
-// MARK: - ZMACRO_foreach helpers
+#pragma mark -
+#pragma mark ZMACRO_foreach helpers
 
 namespace ZooLib {
 
@@ -97,7 +98,8 @@ struct ForEachWrapper_Reverse_T
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - ZMACRO_foreachi
+#pragma mark -
+#pragma mark ZMACRO_foreachi
 
 #ifndef ZMACRO_foreachi
 	#define ZMACRO_foreachi(iter, container) \
@@ -106,7 +108,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - ZMACRO_foreachri
+#pragma mark -
+#pragma mark ZMACRO_foreachri
 
 #ifndef ZMACRO_foreachri
 	#define ZMACRO_foreachri(iter, container) \
@@ -115,7 +118,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - ZMACRO_foreachv
+#pragma mark -
+#pragma mark ZMACRO_foreachv
 
 #ifndef ZMACRO_foreachv
 	#define ZMACRO_foreachv(vardecl, container) \
@@ -124,7 +128,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - ZMACRO_foreachrv
+#pragma mark -
+#pragma mark ZMACRO_foreachrv
 
 #ifndef ZMACRO_foreachrv
 	#define ZMACRO_foreachrv(vardecl, container) \
@@ -133,7 +138,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - ZMACRO_foreacha
+#pragma mark -
+#pragma mark ZMACRO_foreacha
 
 #ifndef ZMACRO_foreacha
 	#define ZMACRO_foreacha(varname, container) \
@@ -142,7 +148,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - ZMACRO_foreachra
+#pragma mark -
+#pragma mark ZMACRO_foreachra
 
 #ifndef ZMACRO_foreachra
 	#define ZMACRO_foreachra(varname, container) \
@@ -153,7 +160,8 @@ struct ForEachWrapper_Reverse_T
 #endif // ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto)
 
 // =================================================================================================
-// MARK: - Failure-marking macros
+#pragma mark -
+#pragma mark Failure-marking macros
 
 #ifndef ZMACRO_foreach_unsupported
 	#define ZMACRO_foreach_unsupported (%ZMACRO_foreach_unsupported%)
@@ -184,7 +192,8 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 // =================================================================================================
-// MARK: - foreachXX macros
+#pragma mark -
+#pragma mark foreachXX macros
 
 #ifndef foreachi
 	#define foreachi ZMACRO_foreachi

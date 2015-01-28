@@ -33,7 +33,8 @@ namespace ZooLib {
 
 #if 0
 // =================================================================================================
-// MARK: - API synopsis
+#pragma mark -
+#pragma mark API synopsis
 
 // We define processor-specific versions of these calls below.
 int16 ZByteSwap_16(int16 iValue);
@@ -140,7 +141,8 @@ void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue);
 
 // =================================================================================================
 #if ZCONFIG(Processor, 68K)
-// MARK: - Processor is 68K
+#pragma mark -
+#pragma mark Processor is 68K
 
 #define ZByteSwap_EndianBig 1
 
@@ -210,7 +212,8 @@ asm inline void ZByteSwap_Write32(volatile void* ioValueAddress : __A0, int32 iV
 #endif // ZCONFIG(Processor, 68K)
 
 // =================================================================================================
-// MARK: - Processor is PPC
+#pragma mark -
+#pragma mark Processor is PPC
 
 #if ZCONFIG(Processor, PPC)
 
@@ -322,7 +325,8 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 #endif // ZCONFIG(Processor, PPC)
 
 // =================================================================================================
-// MARK: - Processor is x86
+#pragma mark -
+#pragma mark Processor is x86
 
 #if ZCONFIG(Processor, x86)
 
@@ -531,7 +535,8 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 #endif // ZCONFIG(Processor, x86)
 
 // =================================================================================================
-// MARK: - Dumb C version
+#pragma mark -
+#pragma mark Dumb C version
 
 #if !defined(ZByteSwap_EndianBig)
 
@@ -568,7 +573,8 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 #endif // ZByteSwap_EndianBig
 
 // =================================================================================================
-// MARK: - 64 bit stuff
+#pragma mark -
+#pragma mark 64 bit stuff
 
 inline uint64 ZByteSwap_64(uint64 iValue)
 	{
@@ -617,7 +623,8 @@ inline void ZByteSwap_Write64(volatile void* oValueAddress, int64 iValue)
 	{ *static_cast<volatile int64*>(oValueAddress) = ZByteSwap_64(iValue); }
 
 // =================================================================================================
-// MARK: - The Real Calls
+#pragma mark -
+#pragma mark The Real Calls
 
 
 #if ZByteSwap_EndianBig

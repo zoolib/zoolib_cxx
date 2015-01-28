@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanRU_XX_Unreader
+#pragma mark -
+#pragma mark ChanRU_XX_Unreader
 
 template <class XX>
 class ChanRU_XX_Unreader
@@ -89,7 +90,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChannerRU_XX_Unreader
+#pragma mark -
+#pragma mark ChannerRU_XX_Unreader
 
 // See ChannerRU_T??
 

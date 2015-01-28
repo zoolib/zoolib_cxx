@@ -28,7 +28,8 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Walker_Union
+#pragma mark -
+#pragma mark Walker_Union
 
 Walker_Union::Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)

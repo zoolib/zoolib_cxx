@@ -232,7 +232,8 @@ string8 sReadAllUTF8(const ChanR_UTF& iChanR)
 	}
 
 // =================================================================================================
-// MARK: - ChanR_UTF_Native16
+#pragma mark -
+#pragma mark ChanR_UTF_Native16
 
 size_t ChanR_UTF_Native16::QRead(UTF32* oDest, size_t iCountCU)
 	{
@@ -274,7 +275,8 @@ size_t ChanR_UTF_Native16::QRead(UTF32* oDest, size_t iCountCU)
 	}
 
 // =================================================================================================
-// MARK: - ChanR_UTF_Native8
+#pragma mark -
+#pragma mark ChanR_UTF_Native8
 
 size_t ChanR_UTF_Native8::QRead(UTF32* oDest, size_t iCountCU)
 	{

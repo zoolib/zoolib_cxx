@@ -29,7 +29,8 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Starter_ThreadLoop
+#pragma mark -
+#pragma mark Starter_ThreadLoop
 
 class Starter_ThreadLoop
 :	public Starter
@@ -123,7 +124,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sStarter_ThreadLoop
+#pragma mark -
+#pragma mark sStarter_ThreadLoop
 
 ZRef<Starter> sStarter_ThreadLoop()
 	{ return new Starter_ThreadLoop; }

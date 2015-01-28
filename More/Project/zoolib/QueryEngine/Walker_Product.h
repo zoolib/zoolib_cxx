@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-// MARK: - Walker_Product
+#pragma mark -
+#pragma mark Walker_Product
 
 class Walker_Product : public Walker
 	{

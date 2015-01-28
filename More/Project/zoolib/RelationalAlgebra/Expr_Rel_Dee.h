@@ -33,7 +33,8 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Dee;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Dee
+#pragma mark -
+#pragma mark Expr_Rel_Dee
 
 class Expr_Rel_Dee
 :	public virtual Expr_Rel
@@ -59,7 +60,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Dee
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Dee
 
 class Visitor_Expr_Rel_Dee
 :	public virtual Visitor_Expr_Op0_T<Expr_Rel>
@@ -69,7 +71,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel> sDee();
 

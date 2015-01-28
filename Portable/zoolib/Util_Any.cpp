@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 // =================================================================================================
-// MARK: - Coercion
+#pragma mark -
+#pragma mark Coercion
 
 namespace ZooLib {
 

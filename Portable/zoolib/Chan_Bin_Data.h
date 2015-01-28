@@ -33,7 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanBase_Bin_Data
+#pragma mark -
+#pragma mark ChanBase_Bin_Data
 
 template <class Data_p>
 class ChanBase_Bin_Data
@@ -83,7 +84,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanRPos_Bin_Data
+#pragma mark -
+#pragma mark ChanRPos_Bin_Data
 
 template <class Data_p>
 class ChanRPos_Bin_Data
@@ -120,7 +122,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ChanRWPos_Bin_Data
+#pragma mark -
+#pragma mark ChanRWPos_Bin_Data
 
 template <class Data_p>
 class ChanRWPos_Bin_Data
@@ -175,7 +178,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Data stream reading functions
+#pragma mark -
+#pragma mark Data stream reading functions
 
 template <class Data_p>
 Data_p sReadAll_T(const ChanR_Bin& iChanR)

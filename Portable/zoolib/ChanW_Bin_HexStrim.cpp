@@ -26,7 +26,8 @@ static const UTF8 spHexDigits[] = "0123456789ABCDEF";
 static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
 
 // =================================================================================================
-// MARK: - ChanW_Bin_HexStrim_Real
+#pragma mark -
+#pragma mark ChanW_Bin_HexStrim_Real
 
 ChanW_Bin_HexStrim_Real::ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF)
 :	fChanW_UTF(iChanW_UTF)
@@ -58,7 +59,8 @@ void ChanW_Bin_HexStrim_Real::Flush()
 	{ sFlush(fChanW_UTF); }
 
 // =================================================================================================
-// MARK: - ChanW_Bin_HexStrim
+#pragma mark -
+#pragma mark ChanW_Bin_HexStrim
 
 static
 ChanW_UTF_InsertSeparator::Spacings

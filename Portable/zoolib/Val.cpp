@@ -130,7 +130,8 @@ implemented as a vector<char>.
 */
 
 // =================================================================================================
-// MARK: - sEquali
+#pragma mark -
+#pragma mark sEquali
 
 bool sEquali(const std::string& iLeft, const std::string& iRight)
 	{ return Util_string::sEquali(iLeft, iRight); }

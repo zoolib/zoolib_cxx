@@ -48,7 +48,8 @@ using std::min;
 using std::string;
 
 // =================================================================================================
-// MARK: - ZDebug and ZAssert handler (anonymous)
+#pragma mark -
+#pragma mark ZDebug and ZAssert handler (anonymous)
 
 namespace { // anonymous
 
@@ -93,7 +94,8 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - LogMeister_Base (anonymous)
+#pragma mark -
+#pragma mark LogMeister_Base (anonymous)
 
 namespace { // anonymous
 
@@ -136,7 +138,8 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - LogMeister_Android (anonymous)
+#pragma mark -
+#pragma mark LogMeister_Android (anonymous)
 
 namespace { // anonymous
 
@@ -171,7 +174,8 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - LogMeister_Default (anonymous)
+#pragma mark -
+#pragma mark LogMeister_Default (anonymous)
 
 namespace { // anonymous
 
@@ -264,7 +268,8 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Util_Debug
+#pragma mark -
+#pragma mark Util_Debug
 
 void sInstall()
 	{

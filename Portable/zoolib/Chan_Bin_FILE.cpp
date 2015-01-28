@@ -131,7 +131,8 @@ static uint64 spGetSize(FILE* iFILE)
 using std::range_error;
 
 // =================================================================================================
-// MARK: - Chan_FILE
+#pragma mark -
+#pragma mark Chan_FILE
 
 Chan_FILE::Chan_FILE(FILE* iFILE, bool iAdopt)
 :	fFILE(iFILE)
@@ -151,7 +152,8 @@ FILE* Chan_FILE::OrphanFILE()
 	{ FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
 
 // =================================================================================================
-// MARK: - ChanR_Bin_FILE
+#pragma mark -
+#pragma mark ChanR_Bin_FILE
 
 ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE)
 :	Chan_FILE(iFILE, false)
@@ -165,7 +167,8 @@ size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
 	{ return spRead(fFILE, oDest, iCount); }
 
 //// =================================================================================================
-//// MARK: - ZStreamRPos_FILE
+//#pragma mark -
+#pragma mark ZStreamRPos_FILE
 //
 //ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE)
 //:	Chan_FILE(iFILE, false)
@@ -191,7 +194,8 @@ size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
 //	{ return spGetSize(fFILE); }
 
 // =================================================================================================
-// MARK: - ChanW_Bin_FILE
+#pragma mark -
+#pragma mark ChanW_Bin_FILE
 
 ChanW_Bin_FILE::ChanW_Bin_FILE(FILE* iFILE)
 :	Chan_FILE(iFILE, false)
@@ -208,7 +212,8 @@ void ChanW_Bin_FILE::Flush()
 	{ fflush(fFILE); }
 
 //// =================================================================================================
-//// MARK: - FILE backed by a ZStream
+//#pragma mark -
+#pragma mark FILE backed by a ZStream
 //
 //#if defined(__USE_GNU)
 //

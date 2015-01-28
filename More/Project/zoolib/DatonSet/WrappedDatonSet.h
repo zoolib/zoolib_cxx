@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace DatonSet {
 
 // =================================================================================================
-// MARK: - WrappedDatonSet
+#pragma mark -
+#pragma mark WrappedDatonSet
 
 class WrappedDatonSet
 :	public ZCounted

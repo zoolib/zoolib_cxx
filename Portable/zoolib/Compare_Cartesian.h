@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T, point
+#pragma mark -
+#pragma mark sCompare_T, point
 
 template <class Point_p>
 typename EnableIfC<PointTraits<Point_p>::value,int>::type
@@ -40,7 +41,8 @@ sCompare_T(const Point_p& iLHS, const Point_p& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - sCompare_T, rect
+#pragma mark -
+#pragma mark sCompare_T, rect
 
 template <class Rect_p>
 typename EnableIfC<RectTraits<Rect_p>::value,int>::type

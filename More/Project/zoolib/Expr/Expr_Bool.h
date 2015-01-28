@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Expr_Bool
+#pragma mark -
+#pragma mark Expr_Bool
 
 class Expr_Bool
 :	public virtual Expr
@@ -37,7 +38,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Bool_True
+#pragma mark -
+#pragma mark Expr_Bool_True
 
 class Visitor_Expr_Bool_True;
 
@@ -69,7 +71,8 @@ template <>
 int sCompare_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR);
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_True
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_True
 
 class Visitor_Expr_Bool_True
 :	public virtual Visitor_Expr_Op0_T<Expr_Bool>
@@ -79,7 +82,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Bool_False
+#pragma mark -
+#pragma mark Expr_Bool_False
 
 class Visitor_Expr_Bool_False;
 
@@ -112,7 +116,8 @@ template <>
 int sCompare_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR);
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_False
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_False
 
 class Visitor_Expr_Bool_False
 :	public virtual Visitor_Expr_Op0_T<Expr_Bool>
@@ -122,7 +127,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Bool_Not
+#pragma mark -
+#pragma mark Expr_Bool_Not
 
 class Visitor_Expr_Bool_Not;
 
@@ -151,7 +157,8 @@ template <>
 int sCompare_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR);
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_Not
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_Not
 
 class Visitor_Expr_Bool_Not
 :	public virtual Visitor_Expr_Op1_T<Expr_Bool>
@@ -161,7 +168,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Bool_And
+#pragma mark -
+#pragma mark Expr_Bool_And
 
 class Visitor_Expr_Bool_And;
 
@@ -190,7 +198,8 @@ template <>
 int sCompare_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR);
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_And
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_And
 
 class Visitor_Expr_Bool_And
 :	public virtual Visitor_Expr_Op2_T<Expr_Bool>
@@ -200,7 +209,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Bool_Or
+#pragma mark -
+#pragma mark Expr_Bool_Or
 
 class Visitor_Expr_Bool_Or;
 
@@ -229,7 +239,8 @@ template <>
 int sCompare_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR);
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_Or
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_Or
 
 class Visitor_Expr_Bool_Or
 :	public virtual Visitor_Expr_Op2_T<Expr_Bool>
@@ -239,7 +250,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Operators
+#pragma mark -
+#pragma mark Operators
 
 ZRef<Expr_Bool> sTrue();
 ZRef<Expr_Bool> sFalse();

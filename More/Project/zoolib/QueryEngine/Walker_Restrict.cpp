@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/Visitor_Do_T.h"
 
-#include "zoolib/ZTextCollator.h"
+//###include "zoolib/ZTextCollator.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
 
@@ -42,7 +42,8 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Walker_Restrict::Exec
+#pragma mark -
+#pragma mark Walker_Restrict::Exec
 
 class Walker_Restrict::Exec
 	{
@@ -54,7 +55,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Exec variants (anonymous)
+#pragma mark -
+#pragma mark Exec variants (anonymous)
 
 namespace { // anonymous
 
@@ -166,7 +168,8 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Functors (anonymous)
+#pragma mark -
+#pragma mark Functors (anonymous)
 
 namespace { // anonymous
 
@@ -202,7 +205,7 @@ struct Functor_GT
 
 struct Functor_Callable
 	{
-	typedef ZValComparator_Callable_Any::Callable_t Callable_t;
+	typedef ValComparator_Callable_Any::Callable_t Callable_t;
 
 	Functor_Callable(ZRef<Callable_t> iCallable)
 	:	fCallable(iCallable)
@@ -218,14 +221,16 @@ struct Functor_StringContains
 	{
 	Functor_StringContains(int iStrength)
 	:	fStrength(iStrength)
-		{}
+		{
+		ZUnimplemented();
+		}
 
 	bool operator()(const Val_Any& l, const Val_Any& r) const
 		{
 		if (const string8* target = l.PGet<string8>())
 			{
-			if (const string8* pattern = r.PGet<string8>())
-				return ZTextCollator(fStrength).Contains(*pattern, *target);
+//##			if (const string8* pattern = r.PGet<string8>())
+//##				return ZTextCollator(fStrength).Contains(*pattern, *target);
 			}
 		return false;
 		}
@@ -236,7 +241,8 @@ struct Functor_StringContains
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - AsExec (anonymous)
+#pragma mark -
+#pragma mark AsExec (anonymous)
 
 namespace { // anonymous
 
@@ -275,12 +281,12 @@ public:
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
 
 // Our protocol
-	Walker_Restrict::Exec* pMakeExec(const ZValPred& iValPred);
+	Walker_Restrict::Exec* pMakeExec(const ValPred& iValPred);
 
 	template <class Functor_p>
 	Walker_Restrict::Exec* pMakeExec_T(
 		const Functor_p& iFunctor,
-		const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS);
+		const ZRef<ValComparand>& iLHS, const ZRef<ValComparand>& iRHS);
 
 	const map<string8,size_t>& fVars;
 	vector<Val_Any>& fConsts;
@@ -292,20 +298,20 @@ void AsExec::Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
 template <class Functor_p>
 Walker_Restrict::Exec* AsExec::pMakeExec_T(
 	const Functor_p& iFunctor,
-	const ZRef<ZValComparand>& iLHS, const ZRef<ZValComparand>& iRHS)
+	const ZRef<ValComparand>& iLHS, const ZRef<ValComparand>& iRHS)
 	{
-	if (ZRef<ZValComparand_Name> asNameL =
-		iLHS.DynamicCast<ZValComparand_Name>())
+	if (ZRef<ValComparand_Name> asNameL =
+		iLHS.DynamicCast<ValComparand_Name>())
 		{
 		const size_t theOffsetL = sGetMust(fVars, asNameL->GetName());
-		if (ZRef<ZValComparand_Name> asNameR =
-			iRHS.DynamicCast<ZValComparand_Name>())
+		if (ZRef<ValComparand_Name> asNameR =
+			iRHS.DynamicCast<ValComparand_Name>())
 			{
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, true, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZRef<ZValComparand_Const_Any> asConstR =
-			iRHS.DynamicCast<ZValComparand_Const_Any>())
+		else if (ZRef<ValComparand_Const_Any> asConstR =
+			iRHS.DynamicCast<ValComparand_Const_Any>())
 			{
 			const size_t theOffsetR = fConsts.size();
 			fConsts.push_back(asConstR->GetVal());
@@ -316,19 +322,19 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			ZUnimplemented();
 			}
 		}
-	else if (ZRef<ZValComparand_Const_Any> asConstL =
-		iLHS.DynamicCast<ZValComparand_Const_Any>())
+	else if (ZRef<ValComparand_Const_Any> asConstL =
+		iLHS.DynamicCast<ValComparand_Const_Any>())
 		{
 		const size_t theOffsetL = fConsts.size();
 		fConsts.push_back(asConstL->GetVal());
-		if (ZRef<ZValComparand_Name> asNameR =
-			iRHS.DynamicCast<ZValComparand_Name>())
+		if (ZRef<ValComparand_Name> asNameR =
+			iRHS.DynamicCast<ValComparand_Name>())
 			{
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, false, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZRef<ZValComparand_Const_Any> asConstR =
-			iRHS.DynamicCast<ZValComparand_Const_Any>())
+		else if (ZRef<ValComparand_Const_Any> asConstR =
+			iRHS.DynamicCast<ValComparand_Const_Any>())
 			{
 			const size_t theOffsetR = fConsts.size();
 			fConsts.push_back(asConstR->GetVal());
@@ -342,46 +348,46 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 	return nullptr;
 	}
 
-Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
+Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 	{
-	const ZRef<ZValComparator>& theComparator = iValPred.GetComparator();
+	const ZRef<ValComparator>& theComparator = iValPred.GetComparator();
 
-	if (ZRef<ZValComparator_Simple> asSimple =
-		theComparator.DynamicCast<ZValComparator_Simple>())
+	if (ZRef<ValComparator_Simple> asSimple =
+		theComparator.DynamicCast<ValComparator_Simple>())
 		{
 		switch (asSimple->GetEComparator())
 			{
-			case ZValComparator_Simple::eLT:
+			case ValComparator_Simple::eLT:
 				{
 				return pMakeExec_T<>(
 					Functor_LT(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
-			case ZValComparator_Simple::eLE:
+			case ValComparator_Simple::eLE:
 				{
 				return pMakeExec_T<>(
 					Functor_LE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
-			case ZValComparator_Simple::eEQ:
+			case ValComparator_Simple::eEQ:
 				{
 				return pMakeExec_T<>(
 					Functor_EQ(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
-			case ZValComparator_Simple::eNE:
+			case ValComparator_Simple::eNE:
 				{
 				return pMakeExec_T<>(
 					Functor_NE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
-			case ZValComparator_Simple::eGE:
+			case ValComparator_Simple::eGE:
 				{
 				return pMakeExec_T<>(
 					Functor_GE(),
 					iValPred.GetLHS(), iValPred.GetRHS());
 				}
-			case ZValComparator_Simple::eGT:
+			case ValComparator_Simple::eGT:
 				{
 				return pMakeExec_T<>(
 					Functor_GT(),
@@ -389,15 +395,15 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 				}
 			}
 		}
-	else if (ZRef<ZValComparator_Callable_Any> asCallable =
-		theComparator.DynamicCast<ZValComparator_Callable_Any>())
+	else if (ZRef<ValComparator_Callable_Any> asCallable =
+		theComparator.DynamicCast<ValComparator_Callable_Any>())
 		{
 		return pMakeExec_T<>(
 			Functor_Callable(asCallable->GetCallable()),
 			iValPred.GetLHS(), iValPred.GetRHS());
 		}
-	else if (ZRef<ZValComparator_StringContains> asStringContains =
-		theComparator.DynamicCast<ZValComparator_StringContains>())
+	else if (ZRef<ValComparator_StringContains> asStringContains =
+		theComparator.DynamicCast<ValComparator_StringContains>())
 		{
 		return pMakeExec_T<>(
 			Functor_StringContains(asStringContains->GetStrength()),
@@ -411,7 +417,8 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ZValPred& iValPred)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Walker_Restrict
+#pragma mark -
+#pragma mark Walker_Restrict
 
 Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)

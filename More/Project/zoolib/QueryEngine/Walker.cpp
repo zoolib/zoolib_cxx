@@ -24,7 +24,8 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-// MARK: - Walker
+#pragma mark -
+#pragma mark Walker
 
 Walker::Walker()
 	{}
@@ -33,7 +34,8 @@ Walker::~Walker()
 	{}
 
 // =================================================================================================
-// MARK: - Walker_Unary
+#pragma mark -
+#pragma mark Walker_Unary
 
 Walker_Unary::Walker_Unary(const ZRef<Walker>& iWalker)
 :	fWalker(iWalker)

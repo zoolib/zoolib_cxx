@@ -55,7 +55,8 @@ typedef Multi2<ip4_addr, ip_port> MakeParam4_t;
 typedef Multi2<ip6_addr, ip_port> MakeParam6_t;
 
 // =================================================================================================
-// MARK: - NetAddress_Internet
+#pragma mark -
+#pragma mark NetAddress_Internet
 
 class NetAddress_Internet
 :	public NetAddress
@@ -72,7 +73,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - NetAddress_IP4
+#pragma mark -
+#pragma mark NetAddress_IP4
 
 class NetAddress_IP4
 :	public NetAddress_Internet
@@ -100,7 +102,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - NetAddress_IP6
+#pragma mark -
+#pragma mark NetAddress_IP6
 
 class NetAddress_IP6
 :	public NetAddress_Internet
@@ -122,7 +125,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - NetName_Internet
+#pragma mark -
+#pragma mark NetName_Internet
 
 class NetName_Internet
 :	public NetName
@@ -147,7 +151,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - NetListener_TCP
+#pragma mark -
+#pragma mark NetListener_TCP
 
 class NetListener_TCP
 :	public virtual NetListener
@@ -161,7 +166,8 @@ ZRef<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort);
 ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
 
 // =================================================================================================
-// MARK: - sQConnect_TCP
+#pragma mark -
+#pragma mark sQConnect_TCP
 
 ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
 ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);

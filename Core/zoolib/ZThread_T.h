@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZAcquirer_T
+#pragma mark -
+#pragma mark ZAcquirer_T
 
 template <class Mtx>
 class ZAcquirer_T : NonCopyable
@@ -54,7 +55,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZReleaser_T
+#pragma mark -
+#pragma mark ZReleaser_T
 
 template <class Mtx>
 class ZReleaser_T : NonCopyable
@@ -77,7 +79,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZGuard_T
+#pragma mark -
+#pragma mark ZGuard_T
 
 template <class Mtx>
 class ZGuard_T : NonCopyable
@@ -136,7 +139,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZCndBase_T
+#pragma mark -
+#pragma mark ZCndBase_T
 
 /*
 "Implementing Condition Variables with Semaphores",
@@ -242,7 +246,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZCndR_T
+#pragma mark -
+#pragma mark ZCndR_T
 
 template <class MtxR, class Cnd>
 class ZCndR_T : public Cnd
@@ -271,7 +276,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZMtx_T
+#pragma mark -
+#pragma mark ZMtx_T
 
 template <class Sem>
 class ZMtx_T : NonCopyable
@@ -298,7 +304,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZMtxR_T
+#pragma mark -
+#pragma mark ZMtxR_T
 
 template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZMtxR_T : NonCopyable
@@ -395,7 +402,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZSem_T
+#pragma mark -
+#pragma mark ZSem_T
 
 template <class Mtx, class Cnd>
 class ZSem_T : NonCopyable
@@ -536,7 +544,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZBen_T (benaphore)
+#pragma mark -
+#pragma mark ZBen_T (benaphore)
 
 template <class Sem>
 class ZBen_T
@@ -570,7 +579,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZBenR_T (recursive benaphore)
+#pragma mark -
+#pragma mark ZBenR_T (recursive benaphore)
 
 template <class Ben, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZBenR_T : NonCopyable

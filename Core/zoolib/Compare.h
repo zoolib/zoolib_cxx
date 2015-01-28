@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Comparer
+#pragma mark -
+#pragma mark Comparer
 
 class Comparer
 	{
@@ -45,7 +46,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ComparerRegistration_T
+#pragma mark -
+#pragma mark ComparerRegistration_T
 
 #if defined(__MWERKS__) && (__MWERKS__ <= 0x2406)
 
@@ -94,7 +96,8 @@ public:
 #endif
 
 // =================================================================================================
-// MARK: - Macros
+#pragma mark -
+#pragma mark Macros
 
 #define ZMACRO_CompareRegistration_T(t) \
 	ZMACRO_CompareRegistration_T_Real(t, \

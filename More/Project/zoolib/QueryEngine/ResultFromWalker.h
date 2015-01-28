@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-// MARK: - sQuery
+#pragma mark -
+#pragma mark sQuery
 
 ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker);
 

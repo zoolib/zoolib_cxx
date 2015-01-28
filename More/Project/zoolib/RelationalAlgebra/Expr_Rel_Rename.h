@@ -33,7 +33,8 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Rename;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Rename
+#pragma mark -
+#pragma mark Expr_Rel_Rename
 
 class Expr_Rel_Rename
 :	public virtual Expr_Rel
@@ -65,7 +66,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Rename
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Rename
 
 class Visitor_Expr_Rel_Rename
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
@@ -75,7 +77,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
 	const ColName& iNewPropName, const ColName& iOldPropName);

@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_Bin_ASCIIStrim
+#pragma mark -
+#pragma mark ChanR_Bin_ASCIIStrim
 
 ChanR_Bin_ASCIIStrim::ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR)
 :	fChanR_UTF(iChanR)
@@ -92,7 +93,8 @@ size_t ChanR_Bin_ASCIIStrim::QRead(byte* oDest, size_t iCount)
 	}
 
 // =================================================================================================
-// MARK: - ChanW_Bin_ASCIIStrim
+#pragma mark -
+#pragma mark ChanW_Bin_ASCIIStrim
 
 ChanW_Bin_ASCIIStrim::ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW)
 :	fChanW_UTF(iChanW)

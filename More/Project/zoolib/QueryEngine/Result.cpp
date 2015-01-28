@@ -29,7 +29,8 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T
+#pragma mark -
+#pragma mark sCompare_T
 
 template <>
 int sCompare_T<QueryEngine::Result>(
@@ -46,7 +47,8 @@ int sCompare_T<ZRef<QueryEngine::Result> >(
 ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
 
 // =================================================================================================
-// MARK: - QueryEngine::Result
+#pragma mark -
+#pragma mark QueryEngine::Result
 
 namespace QueryEngine {
 
@@ -97,7 +99,8 @@ int Result::Compare(const Result& iOther) const
 	}
 
 // =================================================================================================
-// MARK: - Comparer_t (anonymous)
+#pragma mark -
+#pragma mark Comparer_t (anonymous)
 
 namespace { // anonymous
 
@@ -135,7 +138,8 @@ struct Comparer_t
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ResultDiffer
+#pragma mark -
+#pragma mark ResultDiffer
 
 ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 	const RelHead& iSignificant)

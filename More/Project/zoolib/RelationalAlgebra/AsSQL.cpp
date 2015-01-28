@@ -49,7 +49,8 @@ using std::map;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Analysis (anonymous)
+#pragma mark -
+#pragma mark Analysis (anonymous)
 
 namespace { // anonymous
 
@@ -65,7 +66,8 @@ struct Analysis
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Analyzer (anonymous)
+#pragma mark -
+#pragma mark Analyzer (anonymous)
 
 namespace { // anonymous
 
@@ -256,7 +258,8 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ToStrim_SQL (anonymous)
+#pragma mark -
+#pragma mark ToStrim_SQL (anonymous)
 
 namespace { // anonymous
 
@@ -496,7 +499,8 @@ void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::sWriteAsSQL
+#pragma mark -
+#pragma mark RelationalAlgebra::sWriteAsSQL
 
 bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
 	{

@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace Util_Time {
 
 // =================================================================================================
-// MARK: - ZUtil_Time
+#pragma mark -
+#pragma mark ZUtil_Time
 
 std::string sAsStringUTC(ZTime iTime, const std::string& iFormat);
 std::string sAsStringLocal(ZTime iTime, const std::string& iFormat);

@@ -39,7 +39,8 @@ class FileLoc;
 class FileSpec;
 
 // =================================================================================================
-// MARK: - File
+#pragma mark -
+#pragma mark File
 
 namespace File {
 
@@ -68,7 +69,8 @@ enum Kind
 } // namespace File
 
 // =================================================================================================
-// MARK: - FileSpec
+#pragma mark -
+#pragma mark FileSpec
 
 /// Represents a node in the file system.
 
@@ -160,7 +162,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - FileIter
+#pragma mark -
+#pragma mark FileIter
 
 /// An iterator that provides access to the children of a directory.
 
@@ -183,7 +186,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - FileTreeIter
+#pragma mark -
+#pragma mark FileTreeIter
 
 /// An iterator that provides access to every node descending from a FileSpec.
 
@@ -207,7 +211,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - FileLoc
+#pragma mark -
+#pragma mark FileLoc
 
 class FileLoc : public ZCounted
 	{
@@ -256,7 +261,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - FileIterRep
+#pragma mark -
+#pragma mark FileIterRep
 
 class FileIterRep : public ZCounted
 	{
@@ -275,7 +281,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - FileIterRep_Std
+#pragma mark -
+#pragma mark FileIterRep_Std
 
 class FileIterRep_Std : public FileIterRep
 	{
@@ -299,7 +306,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - FileIterRep_Std::RealRep
+#pragma mark -
+#pragma mark FileIterRep_Std::RealRep
 
 class FileIterRep_Std::RealRep : public ZCounted
 	{

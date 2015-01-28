@@ -43,7 +43,8 @@ class Map_Any;
 typedef Val_T<Map_Any,Seq_Any> Val_Any;
 
 // =================================================================================================
-// MARK: - Seq_Any
+#pragma mark -
+#pragma mark Seq_Any
 
 class Seq_Any
 	{
@@ -164,7 +165,8 @@ template <> struct RelopsTraits_HasEQ<Seq_Any> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Seq_Any> : public RelopsTraits_Has {};
 
 // =================================================================================================
-// MARK: - Seq_Any::Rep
+#pragma mark -
+#pragma mark Seq_Any::Rep
 
 class Seq_Any::Rep
 :	public CountedWithoutFinalize
@@ -185,7 +187,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Seq_Any, inline templated constructor
+#pragma mark -
+#pragma mark Seq_Any, inline templated constructor
 
 template <class Iterator>
 Seq_Any::Seq_Any(Iterator begin, Iterator end)
@@ -193,12 +196,14 @@ Seq_Any::Seq_Any(Iterator begin, Iterator end)
 	{}
 
 // =================================================================================================
-// MARK: - NameVal
+#pragma mark -
+#pragma mark NameVal
 
 typedef std::pair<Name, Val_Any> NameVal;
 
 // =================================================================================================
-// MARK: - Map_Any
+#pragma mark -
+#pragma mark Map_Any
 
 class Map_Any
 	{
@@ -462,7 +467,8 @@ S& sSet(Map_Any& ioMap, const Map_Any::Name_t& iName, const S& iVal)
 	{ return ioMap.Set<S>(iName, iVal); }
 
 // =================================================================================================
-// MARK: - Map_Any::Rep
+#pragma mark -
+#pragma mark Map_Any::Rep
 
 class SafePtrStackLink_Map_Any_Rep
 :	public SafePtrStackLink<Map_Any::Rep,SafePtrStackLink_Map_Any_Rep>
@@ -492,7 +498,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - 
+#pragma mark -
+#pragma mark 
 
 Map_Any sAugmented(const Map_Any& iUnder, const Map_Any& iOver);
 

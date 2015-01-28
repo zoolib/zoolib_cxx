@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_Bin_ASCIIStrim
+#pragma mark -
+#pragma mark ChanR_Bin_ASCIIStrim
 
 /// A read filter stream that reads only the ASCII-range code points from a strim.
 
@@ -46,7 +47,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ChanW_Bin_ASCIIStrim
+#pragma mark -
+#pragma mark ChanW_Bin_ASCIIStrim
 
 /// A write filter stream that writes only the ASCII-range bytes to a strim.
 

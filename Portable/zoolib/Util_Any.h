@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Any.h"
 
 // =================================================================================================
-// MARK: - Any coercion
+#pragma mark -
+#pragma mark Any coercion
 
 namespace ZooLib {
 

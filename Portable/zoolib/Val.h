@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sPGeti, case-insensitive get
+#pragma mark -
+#pragma mark sPGeti, case-insensitive get
 
 bool sEquali(const std::string& iLeft, const std::string& iRight);
 

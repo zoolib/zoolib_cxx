@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - Relater_Searcher
+#pragma mark -
+#pragma mark Relater_Searcher
 
 class Relater_Searcher
 :	public Relater

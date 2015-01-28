@@ -40,7 +40,8 @@ using IntervalTreeClock::Identity;
 using IntervalTreeClock::Event;
 
 // =================================================================================================
-// MARK: - Daton
+#pragma mark -
+#pragma mark Daton
 
 //! A trivial implementation till I get the signing stuff figured out
 
@@ -71,7 +72,8 @@ template <> struct RelopsTraits_HasLT<DatonSet::Daton> : public RelopsTraits_Has
 namespace DatonSet {
 
 // =================================================================================================
-// MARK: - Delta
+#pragma mark -
+#pragma mark Delta
 
 class Delta : public CountedWithoutFinalize
 	{
@@ -89,13 +91,15 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Vector_Event_Delta_t
+#pragma mark -
+#pragma mark Vector_Event_Delta_t
 
 typedef std::pair<ZRef<Event>,ZRef<Delta> > Event_Delta_t;
 typedef std::vector<Event_Delta_t> Vector_Event_Delta_t;
 
 // =================================================================================================
-// MARK: - Deltas
+#pragma mark -
+#pragma mark Deltas
 
 class Deltas : public CountedWithoutFinalize
 	{
@@ -110,7 +114,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - DeltasChain
+#pragma mark -
+#pragma mark DeltasChain
 
 class DeltasChain : public CountedWithoutFinalize
 	{
@@ -129,7 +134,8 @@ private:
 void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed);
 
 // =================================================================================================
-// MARK: - DatonSet
+#pragma mark -
+#pragma mark DatonSet
 
 class DatonSet : public CountedWithoutFinalize
 	{
@@ -163,7 +169,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callables
+#pragma mark -
+#pragma mark Callables
 
 typedef Callable<void(const Daton& iDaton, bool iTrue)> Callable_DatonSetUpdate;
 

@@ -64,7 +64,8 @@ namespace ZooLib {
 ZMACRO_CompareRegistration_T(ZTime)
 
 // =================================================================================================
-// MARK: - ZTime
+#pragma mark -
+#pragma mark ZTime
 
 ZTime::ZTime()
 :	fVal(NAN)

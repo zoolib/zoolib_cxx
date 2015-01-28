@@ -23,13 +23,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Compare_RefCountedString
+#pragma mark -
+#pragma mark Compare_RefCountedString
 
 bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
 	{ return l->Get() < r->Get(); }
 
 // =================================================================================================
-// MARK: - sName
+#pragma mark -
+#pragma mark sName
 
 Name sName(const string8& iString)
 	{

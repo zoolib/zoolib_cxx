@@ -32,7 +32,8 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-// MARK: - Util_Expr_Bool
+#pragma mark -
+#pragma mark Util_Expr_Bool
 
 // CNF == Conjunctive Normal Form
 // Clause is a disjunction of literals

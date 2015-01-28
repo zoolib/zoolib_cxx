@@ -42,7 +42,8 @@ using std::pair;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Utility stuff
+#pragma mark -
+#pragma mark Utility stuff
 
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{ ioFields.Set(iName, Seq(ioFields.Get<Seq>(iName)).Append(iValue)); }
@@ -122,7 +123,8 @@ static bool spQReadInt64(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int64
 	}
 
 // =================================================================================================
-// MARK: - HTTP::Response
+#pragma mark -
+#pragma mark HTTP::Response
 
 Response::Response()
 	{
@@ -196,7 +198,8 @@ void Response::Send(const ChanW_Bin& iChanW) const
 	}
 
 // =================================================================================================
-// MARK: - HTTP, high level parsing
+#pragma mark -
+#pragma mark HTTP, high level parsing
 
 // This method should look at all the range entries in iRangeParam
 // and turn them into a list of ascending, non overlapping start/finish
@@ -689,7 +692,8 @@ string sGetString0(const Val& iVal)
 	{ return sQGetString0(iVal).Get(); }
 
 // =================================================================================================
-// MARK: - HTTP, request headers
+#pragma mark -
+#pragma mark HTTP, request headers
 
 /// Extracts type and subtype into properties named 'type' and 'subtype' of ioFields.
 /**
@@ -853,12 +857,14 @@ bool sQRead_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oRange)
 //bool sQRead_referer(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 
 // =================================================================================================
-// MARK: - HTTP, response headers
+#pragma mark -
+#pragma mark HTTP, response headers
 
 bool sQRead_www_authenticate(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 
 // =================================================================================================
-// MARK: - HTTP, request or response headers
+#pragma mark -
+#pragma mark HTTP, request or response headers
 
 bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
 	{
@@ -883,7 +889,8 @@ bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, 
 	}
 
 // =================================================================================================
-// MARK: - HTTP, entity headers
+#pragma mark -
+#pragma mark HTTP, entity headers
 
 bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
 	{
@@ -1238,7 +1245,8 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 	}
 
 // =================================================================================================
-// MARK: - HTTP, Lower level parsing
+#pragma mark -
+#pragma mark HTTP, Lower level parsing
 
 bool sParseURL(const string& iURL,
 	string* oScheme, string* oHost, uint16* oPort, string* oPath)
@@ -1584,7 +1592,8 @@ bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string
 	}
 
 // =================================================================================================
-// MARK: - HTTP, Lexical classification
+#pragma mark -
+#pragma mark HTTP, Lexical classification
 
 bool sIs_CHAR(char iChar)
 	{
@@ -1682,7 +1691,8 @@ bool sIs_qdtext(char iChar)
 	}
 
 // =================================================================================================
-// MARK: - Writing
+#pragma mark -
+#pragma mark Writing
 
 void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW)
 	{

@@ -29,13 +29,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(type_traits) && ZCONFIG_CPP >= 2011
 
 // =================================================================================================
-// MARK: - Callable_Lambda
+#pragma mark -
+#pragma mark Callable_Lambda
 
 namespace ZooLib {
 namespace Callable_Lambda_Util {
 
 // =================================================================================================
-// MARK: - RemoveClass_T
+#pragma mark -
+#pragma mark RemoveClass_T
 
 template<typename T> struct RemoveClass_T {};
 
@@ -56,7 +58,8 @@ struct RemoveClass_T<R_p(C::*)(A_p...) const volatile>
 	{ using type = R_p(A_p...); };
 
 // =================================================================================================
-// MARK: - GetSig_T
+#pragma mark -
+#pragma mark GetSig_T
 
 template<typename T, bool> struct GetSigImpl_T {};
 
@@ -80,7 +83,8 @@ template<typename T> using GetSig_T = typename GetSigImpl_T<T,true>::type;
 } // namespace Callable_Lambda_Util
 
 // =================================================================================================
-// MARK: - Callable
+#pragma mark -
+#pragma mark Callable
 
 template <class Lambda, class Sig> class Callable_Lambda;
 

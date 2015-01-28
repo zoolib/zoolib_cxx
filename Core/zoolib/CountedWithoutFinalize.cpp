@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - CountedWithoutFinalize
+#pragma mark -
+#pragma mark CountedWithoutFinalize
 
 CountedWithoutFinalize::CountedWithoutFinalize()
 :	fRefCount(0)

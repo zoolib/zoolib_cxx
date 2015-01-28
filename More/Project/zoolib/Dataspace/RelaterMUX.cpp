@@ -40,7 +40,8 @@ using namespace Util_STL;
 typedef map<int64,ZRef<QueryEngine::Result> > Map_Refcon_Result;
 
 // =================================================================================================
-// MARK: - RelaterMUX::Relater_Client
+#pragma mark -
+#pragma mark RelaterMUX::Relater_Client
 
 class RelaterMUX::Relater_Client
 :	public Relater
@@ -80,7 +81,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - RelaterMUX
+#pragma mark -
+#pragma mark RelaterMUX
 
 RelaterMUX::RelaterMUX(ZRef<Relater> iRelater)
 :	fRelater(iRelater)

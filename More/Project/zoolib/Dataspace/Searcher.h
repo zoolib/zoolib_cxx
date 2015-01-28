@@ -35,7 +35,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - SearchSpec
+#pragma mark -
+#pragma mark SearchSpec
 
 class SearchSpec
 	{
@@ -59,7 +60,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - AddedSearch
+#pragma mark -
+#pragma mark AddedSearch
 
 class AddedSearch
 	{
@@ -80,7 +82,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SearchResult
+#pragma mark -
+#pragma mark SearchResult
 
 class SearchResult
 	{
@@ -101,7 +104,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Searcher
+#pragma mark -
+#pragma mark Searcher
 
 class Searcher
 :	public ZCounted

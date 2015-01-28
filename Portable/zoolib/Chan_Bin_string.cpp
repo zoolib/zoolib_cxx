@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanW_Bin_string
+#pragma mark -
+#pragma mark ChanW_Bin_string
 
 ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
 :	fStringPtr(ioString)
@@ -36,7 +37,8 @@ size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
 	}
 
 // =================================================================================================
-// MARK: - ChanBase_Bin_string
+#pragma mark -
+#pragma mark ChanBase_Bin_string
 
 ChanBase_Bin_string::ChanBase_Bin_string(std::string* ioStringPtr)
 :	fStringPtr(ioStringPtr)
@@ -72,7 +74,8 @@ void ChanBase_Bin_string::SetPos(uint64 iPos)
 	{ fPosition = iPos; }
 
 // =================================================================================================
-// MARK: - ChanRPos_Bin_string
+#pragma mark -
+#pragma mark ChanRPos_Bin_string
 
 ChanRPos_Bin_string::ChanRPos_Bin_string(const std::string& iString)
 :	ChanBase_Bin_string(const_cast<std::string*>(&fString))
@@ -93,7 +96,8 @@ size_t ChanRPos_Bin_string::UnreadableLimit()
 	{ return this->fPosition; }
 
 // =================================================================================================
-// MARK: - ChanRWPos_Bin_string
+#pragma mark -
+#pragma mark ChanRWPos_Bin_string
 
 ChanRWPos_Bin_string::ChanRWPos_Bin_string(std::string* ioStringPtr)
 :	ChanBase_Bin_string(ioStringPtr)

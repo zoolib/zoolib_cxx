@@ -36,7 +36,8 @@ namespace Util_Strim_Rel {
 using std::string;
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::Util_Strim_Rel::Visitor
+#pragma mark -
+#pragma mark RelationalAlgebra::Util_Strim_Rel::Visitor
 
 void Visitor::Visit_Expr(const ZRef<Expr>& iExpr)
 	{
@@ -166,7 +167,8 @@ void Visitor::pWriteBinary(
 	}
 
 // =================================================================================================
-// MARK: - ZRA_Util_Strim_Rel
+#pragma mark -
+#pragma mark ZRA_Util_Strim_Rel
 
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
 	{

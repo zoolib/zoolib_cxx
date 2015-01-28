@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanRU_UTF_string8Ref
+#pragma mark -
+#pragma mark ChanRU_UTF_string8Ref
 
 class ChanRU_UTF_string8Ref
 :	public ChanR_UTF
@@ -56,7 +57,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ChanRU_UTF_string8
+#pragma mark -
+#pragma mark ChanRU_UTF_string8
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
 
@@ -75,12 +77,14 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string
+#pragma mark -
+#pragma mark ChanW_UTF_string
 
 template <class UTF_p> class ChanW_UTF_string;
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<string32>
+#pragma mark -
+#pragma mark ChanW_UTF_string<string32>
 
 template <>
 class ChanW_UTF_string<UTF32>
@@ -105,7 +109,8 @@ protected:
 typedef ChanW_UTF_string<UTF32> ChanW_UTF_string32;
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<string16>
+#pragma mark -
+#pragma mark ChanW_UTF_string<string16>
 
 template <>
 class ChanW_UTF_string<UTF16>
@@ -130,7 +135,8 @@ protected:
 typedef ChanW_UTF_string<UTF16> ChanW_UTF_string16;
 
 // =================================================================================================
-// MARK: - ChanW_UTF_string<string8>
+#pragma mark -
+#pragma mark ChanW_UTF_string<string8>
 
 template <>
 class ChanW_UTF_string<UTF8>

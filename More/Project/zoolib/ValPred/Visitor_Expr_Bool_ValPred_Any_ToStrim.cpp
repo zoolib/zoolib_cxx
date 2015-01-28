@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_ValPred_ToStrim
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_ValPred_ToStrim
 
 void Visitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
 	const ZRef<Expr_Bool_ValPred>& iRep)

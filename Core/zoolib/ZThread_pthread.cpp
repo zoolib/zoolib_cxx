@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <new> // For std::bad_alloc
 
 // =================================================================================================
-// MARK: - ZThread_pthread::sSetName
+#pragma mark -
+#pragma mark ZThread_pthread::sSetName
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
@@ -61,7 +62,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZThread_pthread
+#pragma mark -
+#pragma mark ZThread_pthread
 
 namespace ZThread_pthread {
 
@@ -97,7 +99,8 @@ void sSleep(double iDuration)
 } // namespace ZThread_pthread
 
 // =================================================================================================
-// MARK: - ZTSS_pthread
+#pragma mark -
+#pragma mark ZTSS_pthread
 
 namespace ZTSS_pthread {
 
@@ -114,7 +117,8 @@ void sFree(Key iKey)
 } // namespace ZTSS_pthread
 
 // =================================================================================================
-// MARK: - ZCnd_pthread
+#pragma mark -
+#pragma mark ZCnd_pthread
 
 bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 	{
@@ -137,7 +141,8 @@ bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, ZTime iDeadline)
 	}
 
 // =================================================================================================
-// MARK: - ~ZMtx_pthread_base
+#pragma mark -
+#pragma mark ~ZMtx_pthread_base
 
 #if ZCONFIG_pthread_Debug
 
@@ -162,7 +167,8 @@ void ZMtx_pthread_base::Release()
 #endif // ZCONFIG_pthread_Debug
 
 // =================================================================================================
-// MARK: - ZMtx_pthread
+#pragma mark -
+#pragma mark ZMtx_pthread
 
 #if ZCONFIG_pthread_Debug
 
@@ -178,7 +184,8 @@ ZMtx_pthread::ZMtx_pthread()
 #endif // ZCONFIG_pthread_Debug
 
 // =================================================================================================
-// MARK: - ZMtxR_pthread
+#pragma mark -
+#pragma mark ZMtxR_pthread
 
 ZMtxR_pthread::ZMtxR_pthread()
 	{

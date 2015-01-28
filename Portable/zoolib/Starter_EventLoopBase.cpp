@@ -25,7 +25,8 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Starter_EventLoopBase
+#pragma mark -
+#pragma mark Starter_EventLoopBase
 
 Starter_EventLoopBase::Starter_EventLoopBase()
 :	fTriggered(false)

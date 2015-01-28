@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable_PMF_Util::Traits
+#pragma mark -
+#pragma mark Callable_PMF_Util::Traits
 
 namespace Callable_PMF_Util {
 
@@ -58,12 +59,14 @@ template <class T> struct Traits<ZWeakRef<T> >
 } // namespace Callable_PMF_Util
 
 // =================================================================================================
-// MARK: - Callable
+#pragma mark -
+#pragma mark Callable
 
 template <class Class_p, class Object_p, class Signature> class Callable_PMF;
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params)
 
 template <class Class_p, class Object_p, class R>
 class Callable_PMF<Class_p,Object_p,R(void)>
@@ -92,7 +95,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params, void return)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params, void return)
 
 template <class Class_p, class Object_p>
 class Callable_PMF<Class_p,Object_p,void(void)>
@@ -124,7 +128,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Callable variants
+#pragma mark -
+#pragma mark Callable variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -204,7 +209,8 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-// MARK: - sCallable
+#pragma mark -
+#pragma mark sCallable
 
 template <class Class_p, class Object_p, class R>
 ZRef<Callable<R(void)> >

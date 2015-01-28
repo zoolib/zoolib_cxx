@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::Transform_ConsolidateRenames
+#pragma mark -
+#pragma mark RelationalAlgebra::Transform_ConsolidateRenames
 
 class Transform_ConsolidateRenames
 :	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>

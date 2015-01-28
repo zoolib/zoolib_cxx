@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanU_UTF
+#pragma mark -
+#pragma mark ChanU_UTF
 
 typedef ChanU<UTF32> ChanU_UTF;
 

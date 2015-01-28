@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare
+#pragma mark -
+#pragma mark sCompare
 
 template <>
 int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR)
@@ -52,7 +53,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Rename
+#pragma mark -
+#pragma mark Rename
 
 Rename sInverted(const Rename& iRename)
 	{
@@ -63,7 +65,8 @@ Rename sInverted(const Rename& iRename)
 	}
 
 // =================================================================================================
-// MARK: - sRelHead
+#pragma mark -
+#pragma mark sRelHead
 
 RelHead sRelHead(const ColName& i0, const ColName& i1)
 	{
@@ -150,7 +153,8 @@ RelHead sRelHead(
 	}
 
 // =================================================================================================
-// MARK: - Prefix
+#pragma mark -
+#pragma mark Prefix
 
 bool sHasPrefix(const ColName& iPrefix, const ColName& iColName)
 	{ return iColName.substr(0, iPrefix.size()) == iPrefix; }
@@ -248,7 +252,8 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 	}
 
 // =================================================================================================
-// MARK: - ConcreteHead
+#pragma mark -
+#pragma mark ConcreteHead
 
 ConcreteHead sConcreteHead(const RelHead& iRequired)
 	{

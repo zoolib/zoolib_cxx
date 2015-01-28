@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ValComparator
+#pragma mark -
+#pragma mark ValComparator
 
 class ValComparator : public ZCounted
 	{
@@ -41,7 +42,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ValComparator_Simple
+#pragma mark -
+#pragma mark ValComparator_Simple
 
 class ValComparator_Simple : public ValComparator
 	{
@@ -61,7 +63,8 @@ template <>
 int sCompare_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR);
 
 // =================================================================================================
-// MARK: - ValComparand
+#pragma mark -
+#pragma mark ValComparand
 
 class ValComparand : public ZCounted
 	{
@@ -73,7 +76,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ValComparand_Name
+#pragma mark -
+#pragma mark ValComparand_Name
 
 class ValComparand_Name : public ValComparand
 	{
@@ -91,7 +95,8 @@ template <>
 int sCompare_T(const ValComparand_Name& iL, const ValComparand_Name& iR);
 
 // =================================================================================================
-// MARK: - ValPred
+#pragma mark -
+#pragma mark ValPred
 
 class ValPred
 	{
@@ -123,7 +128,8 @@ int sCompare_T(const ValPred& iL, const ValPred& iR);
 bool operator<(const ValPred& iL, const ValPred& iR);
 
 // =================================================================================================
-// MARK: - ValComparandPseudo
+#pragma mark -
+#pragma mark ValComparandPseudo
 
 // This subclass of ZRef<ValComparand> is returned by the C-prefixed pseudo constructor
 // functions so we can more easily use overloaded operators to construct a ValPred.
@@ -147,12 +153,14 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Comparand pseudo constructors
+#pragma mark -
+#pragma mark Comparand pseudo constructors
 
 ValComparandPseudo CName(const std::string& iName);
 
 // =================================================================================================
-// MARK: - Comparison operators taking comparands and returning a condition
+#pragma mark -
+#pragma mark Comparison operators taking comparands and returning a condition
 
 inline ValPred operator<(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLT), iRHS); }

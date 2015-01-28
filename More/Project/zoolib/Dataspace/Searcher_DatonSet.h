@@ -32,7 +32,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - Searcher_DatonSet
+#pragma mark -
+#pragma mark Searcher_DatonSet
 
 class Searcher_DatonSet
 :	public Searcher

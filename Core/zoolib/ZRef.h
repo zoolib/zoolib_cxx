@@ -38,7 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZRef
+#pragma mark -
+#pragma mark ZRef
 
 template <class T, bool Sense_p = true>
 class ZRef
@@ -298,7 +299,8 @@ void sRefCopy(void* oDest, T* iP)
 	}
 
 // =================================================================================================
-// MARK: - ZRef partially specialized for pointer types
+#pragma mark -
+#pragma mark ZRef partially specialized for pointer types
 
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
@@ -490,7 +492,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sRef
+#pragma mark -
+#pragma mark sRef
 
 const struct
 	{
@@ -508,7 +511,8 @@ const struct
 	} sRef = {};
 
 // =================================================================================================
-// MARK: - sTempRef
+#pragma mark -
+#pragma mark sTempRef
 
 const struct
 	{
@@ -520,7 +524,8 @@ const struct
 	} sTempRef = {};
 
 // =================================================================================================
-// MARK: - sTempPtrRef
+#pragma mark -
+#pragma mark sTempPtrRef
 
 const struct
 	{
@@ -532,7 +537,8 @@ const struct
 	} sTempPtrRef = {};
 
 // =================================================================================================
-// MARK: - swap
+#pragma mark -
+#pragma mark swap
 
 template <class T, bool Sense_p>
 ZMACRO_Attribute_NoThrow

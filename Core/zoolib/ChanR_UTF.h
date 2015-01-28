@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_UTF
+#pragma mark -
+#pragma mark ChanR_UTF
 
 typedef ChanR<UTF32> ChanR_UTF;
 
@@ -61,7 +62,8 @@ string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 string8 sReadAllUTF8(const ChanR_UTF& iChanR);
 
 // =================================================================================================
-// MARK: - ChanR_UTF_Native16
+#pragma mark -
+#pragma mark ChanR_UTF_Native16
 
 class ChanR_UTF_Native16
 :	public ChanR_UTF
@@ -75,7 +77,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ChanR_UTF_Native8
+#pragma mark -
+#pragma mark ChanR_UTF_Native8
 
 class ChanR_UTF_Native8
 :	public ChanR_UTF

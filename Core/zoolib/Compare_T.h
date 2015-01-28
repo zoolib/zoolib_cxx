@@ -28,12 +28,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T declaration
+#pragma mark -
+#pragma mark sCompare_T declaration
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
 // =================================================================================================
-// MARK: - sCompare_T specialized for void pointers
+#pragma mark -
+#pragma mark sCompare_T specialized for void pointers
 
 typedef void* VoidStar_t;
 
@@ -46,7 +48,8 @@ template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 // =================================================================================================
-// MARK: - sCompare_T specialized for std::pair
+#pragma mark -
+#pragma mark sCompare_T specialized for std::pair
 
 template <class S, class T>
 inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
@@ -57,7 +60,8 @@ inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	}
 
 // =================================================================================================
-// MARK: - Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
+#pragma mark -
+#pragma mark Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
 
 template <class T>
 struct Less_Compare_T : public std::binary_function<T,T,bool>
@@ -67,7 +71,8 @@ struct Less_Compare_T : public std::binary_function<T,T,bool>
 	};
 
 // =================================================================================================
-// MARK: - sCompareIterators_T
+#pragma mark -
+#pragma mark sCompareIterators_T
 
 template <class InputIterator>
 inline int sCompareIterators_T(

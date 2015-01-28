@@ -30,7 +30,8 @@ namespace HTTP {
 typedef ChannerComboRWClose_Bin Connection_t;
 
 // =================================================================================================
-// MARK: - HTTP
+#pragma mark -
+#pragma mark HTTP
 
 typedef Callable<ZQ<Connection_t>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_QConnect;

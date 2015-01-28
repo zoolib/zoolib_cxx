@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZCnd_boost
+#pragma mark -
+#pragma mark ZCnd_boost
 
 ZCnd_boost::ZCnd_boost()
 	{}
@@ -54,7 +55,8 @@ void ZCnd_boost::Broadcast()
 	{ condition_variable::notify_all(); }
 
 // =================================================================================================
-// MARK: - ZMtx_boost
+#pragma mark -
+#pragma mark ZMtx_boost
 
 ZMtx_boost::ZMtx_boost()
 	{}

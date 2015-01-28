@@ -27,7 +27,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - PseudoMap
+#pragma mark -
+#pragma mark PseudoMap
 
 PseudoMap::PseudoMap(const std::map<string8,size_t>* iBindings, const Val_Any* iVals)
 :	fBindings(iBindings)
@@ -73,7 +74,8 @@ Map_Any PseudoMap::AsMap() const
 	}
 
 // =================================================================================================
-// MARK: - PseudoMap_RelHead
+#pragma mark -
+#pragma mark PseudoMap_RelHead
 
 PseudoMap_RelHead::PseudoMap_RelHead(const RelHead& iRH, const Val_Any* iVals)
 :	PseudoMap(&fBindings_Storage, iVals)

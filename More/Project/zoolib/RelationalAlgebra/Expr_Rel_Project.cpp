@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T
+#pragma mark -
+#pragma mark sCompare_T
 
 template <>
 int sCompare_T(const RelationalAlgebra::Expr_Rel_Project& iL,
@@ -41,7 +42,8 @@ ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Project)
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Expr_Rel_Project
+#pragma mark -
+#pragma mark Expr_Rel_Project
 
 Expr_Rel_Project::Expr_Rel_Project(const ZRef<Expr_Rel>& iOp0, const RelHead& iRelHead)
 :	inherited(iOp0)
@@ -80,13 +82,15 @@ const RelHead& Expr_Rel_Project::GetProjectRelHead() const
 	{ return fRelHead; }
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Project
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Project
 
 void Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
 	{

@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T
+#pragma mark -
+#pragma mark sCompare_T
 
 template <>
 int sCompare_T(const Dataspace::AbsentOptional_t& iL,

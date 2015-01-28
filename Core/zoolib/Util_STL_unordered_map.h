@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace Util_STL {
 
 // =================================================================================================
-// MARK: - Util_STL
+#pragma mark -
+#pragma mark Util_STL
 
 template <typename KBase, typename Value>
 bool sIsEmpty(const unordered_map<KBase,Value>& iMap)
@@ -186,7 +187,8 @@ Value sGetErase(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 	}
 
 // =================================================================================================
-// MARK: - sXXXMust
+#pragma mark -
+#pragma mark sXXXMust
 
 template <typename KBase, typename Value, typename KDerived>
 void sEraseMust(const int iDebugLevel,

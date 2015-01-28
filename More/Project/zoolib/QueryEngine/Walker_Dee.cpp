@@ -27,7 +27,8 @@ using std::map;
 using std::set;
 
 // =================================================================================================
-// MARK: - Walker_Dee
+#pragma mark -
+#pragma mark Walker_Dee
 
 Walker_Dee::Walker_Dee()
 :	fExhausted(false)

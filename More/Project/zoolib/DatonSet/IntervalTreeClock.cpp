@@ -43,7 +43,8 @@ using std::min;
 using std::max;
 
 // =================================================================================================
-// MARK: - Identity
+#pragma mark -
+#pragma mark Identity
 
 ZRef<Identity> Identity::sZero()
 	{
@@ -191,7 +192,8 @@ ZRef<Identity> sSplittedRight(const ZRef<Identity>& iIdentity)
 	}
 
 // =================================================================================================
-// MARK: - Event
+#pragma mark -
+#pragma mark Event
 
 namespace {
 

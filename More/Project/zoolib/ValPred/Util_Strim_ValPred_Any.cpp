@@ -32,7 +32,8 @@ using std::set;
 using std::string;
 
 // =================================================================================================
-// MARK: - Helper functions (anonymous)
+#pragma mark -
+#pragma mark Helper functions (anonymous)
 
 namespace { // anonymous
 
@@ -124,7 +125,8 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& s)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Util_Strim_ValPred_Any
+#pragma mark -
+#pragma mark Util_Strim_ValPred_Any
 
 void sToStrim(const ValPred& iValPred, const ChanW_UTF& s)
 	{

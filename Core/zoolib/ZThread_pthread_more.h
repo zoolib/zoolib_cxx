@@ -34,12 +34,14 @@ namespace ZooLib {
 namespace ZThread_pthread {
 
 // =================================================================================================
-// MARK: - sQGetName
+#pragma mark -
+#pragma mark sQGetName
 
 ZQ<std::string> sQGetName();
 
 // =================================================================================================
-// MARK: - SaveSetRestoreName
+#pragma mark -
+#pragma mark SaveSetRestoreName
 
 class SaveSetRestoreName
 	{
@@ -53,7 +55,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestorePriority
+#pragma mark -
+#pragma mark SaveSetRestorePriority
 
 class SaveSetRestorePriority
 	{
@@ -67,7 +70,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestorePriority_Max
+#pragma mark -
+#pragma mark SaveSetRestorePriority_Max
 
 class SaveSetRestorePriority_Max
 :	public SaveSetRestorePriority

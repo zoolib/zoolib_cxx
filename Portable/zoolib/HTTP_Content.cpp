@@ -33,14 +33,16 @@ using std::max;
 using std::min;
 
 // =================================================================================================
-// MARK: - Helpers (anonymous)
+#pragma mark -
+#pragma mark Helpers (anonymous)
 
 namespace { // anonymous
 
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - HTTP::ChanR_Bin_Chunked
+#pragma mark -
+#pragma mark HTTP::ChanR_Bin_Chunked
 
 static uint64 spReadChunkSize(const ChanR_Bin& iChanR)
 	{
@@ -125,7 +127,8 @@ size_t ChanR_Bin_Chunked::Readable()
 //	{ return fStreamSource.WaitReadable(iTimeout); }
 
 // =================================================================================================
-// MARK: - HTTP::ChanW_Bin_Chunked
+#pragma mark -
+#pragma mark HTTP::ChanW_Bin_Chunked
 
 ChanW_Bin_Chunked::ChanW_Bin_Chunked(size_t iBufferSize, const ChanW_Bin& iChanW)
 :	fChanW(iChanW),
@@ -204,7 +207,8 @@ void ChanW_Bin_Chunked::pFlush()
 	}
 
 // =================================================================================================
-// MARK: - HTTP::sMakeContentChanner
+#pragma mark -
+#pragma mark HTTP::sMakeContentChanner
 
 static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)

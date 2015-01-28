@@ -24,7 +24,8 @@ namespace ZooLib {
 namespace Base64 {
 
 // =================================================================================================
-// MARK: - Internal (anonymous)
+#pragma mark -
+#pragma mark Internal (anonymous)
 
 namespace { // anonymous
 
@@ -128,7 +129,8 @@ Encode sEncode_Normal()
 } // namespace Base64
 
 // =================================================================================================
-// MARK: - ChanR_Bin_Base64Decode
+#pragma mark -
+#pragma mark ChanR_Bin_Base64Decode
 
 ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR)
 :	fDecode(Base64::sDecode_Normal())
@@ -206,7 +208,8 @@ size_t ChanR_Bin_Base64Decode::QRead(byte* oDest, size_t iCount)
 	}
 
 // =================================================================================================
-// MARK: - ChanW_Bin_Base64Encode
+#pragma mark -
+#pragma mark ChanW_Bin_Base64Encode
 
 ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW)
 :	fEncode(Base64::sEncode_Normal())

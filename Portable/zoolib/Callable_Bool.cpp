@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Ctors
+#pragma mark -
+#pragma mark Ctors
 
 ZRef<Callable_Bool> sCallable_True()
 	{ return sCallable_Const(true); }

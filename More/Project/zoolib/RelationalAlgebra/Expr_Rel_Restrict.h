@@ -32,7 +32,8 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Restrict;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Restrict
+#pragma mark -
+#pragma mark Expr_Rel_Restrict
 
 class Expr_Rel_Restrict
 :	public virtual Expr_Rel
@@ -62,7 +63,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Restrict
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Restrict
 
 class Visitor_Expr_Rel_Restrict
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
@@ -72,7 +74,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 // The order of parameters here differs from that in sRestrict precisely to keep them distinct.
 ZRef<Expr_Rel_Restrict> sRestrict(

@@ -29,7 +29,8 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark -
+#pragma mark Helpers
 
 static bool spQWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
 	{
@@ -53,7 +54,8 @@ static bool spQWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iCha
 	}
 
 // =================================================================================================
-// MARK: - String buffers, limiting and reporting both CU and CP
+#pragma mark -
+#pragma mark String buffers, limiting and reporting both CU and CP
 
 void sWrite(const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
@@ -155,7 +157,8 @@ void sWrite(const UTF8* iSource,
 	}
 
 // =================================================================================================
-// MARK: - Zero-terminated strings
+#pragma mark -
+#pragma mark Zero-terminated strings
 
 bool sQWrite(const UTF32* iString, const ChanW_UTF& iChanW)
 	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
@@ -176,7 +179,8 @@ void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW)
 	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
-// MARK: - Standard library strings
+#pragma mark -
+#pragma mark Standard library strings
 
 bool sQWrite(const string32& iString, const ChanW_UTF& iChanW)
 	{
@@ -217,7 +221,8 @@ void sWriteMust(const string8& iString, const ChanW_UTF& iChanW)
 	}
 
 // =================================================================================================
-// MARK: - Formatted strings
+#pragma mark -
+#pragma mark Formatted strings
 
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
 substitution is applied to the string before writing.
@@ -280,7 +285,8 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	}
 
 // =================================================================================================
-// MARK: - ChanW_UTF_Native16
+#pragma mark -
+#pragma mark ChanW_UTF_Native16
 
 size_t ChanW_UTF_Native16::QWrite(const UTF32* iSource, size_t iCountCU)
 	{
@@ -317,7 +323,8 @@ size_t ChanW_UTF_Native16::QWrite(const UTF32* iSource, size_t iCountCU)
 	}
 
 // =================================================================================================
-// MARK: - ChanW_UTF_Native8
+#pragma mark -
+#pragma mark ChanW_UTF_Native8
 
 size_t ChanW_UTF_Native8::QWrite(const UTF32* iSource, size_t iCountCU)
 	{

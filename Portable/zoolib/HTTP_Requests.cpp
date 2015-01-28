@@ -36,7 +36,8 @@ namespace HTTP {
 using std::pair;
 
 // =================================================================================================
-// MARK: - Helpers (anonymous)
+#pragma mark -
+#pragma mark Helpers (anonymous)
 
 namespace { // anonymous
 
@@ -81,7 +82,8 @@ ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - HTTP::sRequest
+#pragma mark -
+#pragma mark HTTP::sRequest
 
 static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 	const string& iMethod, const string& iHost, const string& iPath, const Map* iHeader,
@@ -228,7 +230,8 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 	}
 
 // =================================================================================================
-// MARK: - HTTP::sPOST
+#pragma mark -
+#pragma mark HTTP::sPOST
 
 static void spPOST_Prefix(const ChanW_Bin& w,
 	const string& iMethod,
@@ -334,7 +337,8 @@ ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
 	}
 
 // =================================================================================================
-// MARK: - sQCONNECT
+#pragma mark -
+#pragma mark sQCONNECT
 
 bool sQCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
 	const std::string& iAddress, const Map* iHeader,

@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Multi
+#pragma mark -
+#pragma mark Multi
 
 template <class P0_p>
 class Multi1
@@ -76,7 +77,8 @@ Multi1<P0_p> sMulti(typename CallableUtil::VT<P0_p>::P i0)
 	{ return Multi1<P0_p>(i0); }
 
 // =================================================================================================
-// MARK: - Multi
+#pragma mark -
+#pragma mark Multi
 
 #define ZMACRO_Multi(X_2,X_1,X) \
 template <ZMACRO_Callable_Class_P##X_1> \
@@ -133,7 +135,8 @@ Multi##X<ZMACRO_Callable_P##X_1> sMulti(ZMACRO_Callable_VT##X_1) \
 	{ return Multi##X<ZMACRO_Callable_P##X_1>(ZMACRO_Callable_i##X_1); } \
 
 // =================================================================================================
-// MARK: - Multi
+#pragma mark -
+#pragma mark Multi
 
 ZMACRO_Multi(0,1,2)
 ZMACRO_Multi(1,2,3)

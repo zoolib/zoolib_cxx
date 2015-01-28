@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Chan_FILE
+#pragma mark -
+#pragma mark Chan_FILE
 
 class Chan_FILE
 	{
@@ -47,7 +48,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanR_Bin_FILE
+#pragma mark -
+#pragma mark ChanR_Bin_FILE
 
 /// A read stream that wraps a POSIX FILE*.
 
@@ -64,7 +66,8 @@ public:
 	};
 
 //// =================================================================================================
-//// MARK: - ZStreamRPos_FILE
+//#pragma mark -
+#pragma mark ZStreamRPos_FILE
 //
 ///// A positionable read stream that wraps a POSIX FILE*.
 //
@@ -87,7 +90,8 @@ public:
 //	};
 
 // =================================================================================================
-// MARK: - ChanW_Bin_FILE
+#pragma mark -
+#pragma mark ChanW_Bin_FILE
 
 /// A write stream that wraps a POSIX FILE*.
 
@@ -105,7 +109,8 @@ public:
 	};
 
 //// =================================================================================================
-//// MARK: - FILE backed by a ZStream or ZStreamer
+//#pragma mark -
+#pragma mark FILE backed by a ZStream or ZStreamer
 //
 //FILE* sStreamOpen(const ZStreamR& iStreamR);
 //FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);

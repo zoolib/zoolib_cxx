@@ -34,7 +34,8 @@ namespace ZooLib {
 namespace Yad_JSON {
 
 // =================================================================================================
-// MARK: - ReadOptions
+#pragma mark -
+#pragma mark ReadOptions
 
 struct ReadOptions
 	{
@@ -49,7 +50,8 @@ struct ReadOptions
 ReadOptions sReadOptions_Extended();
 
 // =================================================================================================
-// MARK: - WriteOptions
+#pragma mark -
+#pragma mark WriteOptions
 
 struct WriteOptions : YadOptions
 	{
@@ -64,7 +66,8 @@ struct WriteOptions : YadOptions
 	};
 
 // =================================================================================================
-// MARK: - ParseException
+#pragma mark -
+#pragma mark ParseException
 
 class ParseException : public YadParseException_Std
 	{
@@ -74,7 +77,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR_Hex
+#pragma mark -
+#pragma mark YadStreamerR_Hex
 
 class YadStreamerR_Hex
 :	public YadStreamerR
@@ -95,7 +99,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR_Base64
+#pragma mark -
+#pragma mark YadStreamerR_Base64
 
 class YadStreamerR_Base64
 :	public YadStreamerR
@@ -119,7 +124,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadStrimmerR_JSON
+#pragma mark -
+#pragma mark YadStrimmerR_JSON
 
 class YadStrimmerR_JSON
 :	public ZooLib::YadStrimmerR
@@ -140,7 +146,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadSeqR_JSON
+#pragma mark -
+#pragma mark YadSeqR_JSON
 
 class YadSeqR_JSON
 :	public YadSeqR_Std
@@ -159,7 +166,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadMapR_JSON
+#pragma mark -
+#pragma mark YadMapR_JSON
 
 class YadMapR_JSON
 :	public YadMapR_Std
@@ -178,7 +186,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Writer
+#pragma mark -
+#pragma mark Visitor_Writer
 
 class Visitor_Writer : public Visitor_Yad
 	{
@@ -202,7 +211,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sYadR and sToStrim
+#pragma mark -
+#pragma mark sYadR and sToStrim
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 

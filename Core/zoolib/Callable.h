@@ -30,12 +30,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable
+#pragma mark -
+#pragma mark Callable
 
 template <class Signature_p> class Callable;
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params)
 
 template <class R_p>
 class Callable<R_p(void)>
@@ -55,7 +57,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Callable (specialization for 0 params, void return)
+#pragma mark -
+#pragma mark Callable (specialization for 0 params, void return)
 
 template <>
 class Callable<void(void)>
@@ -72,7 +75,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Callable variants
+#pragma mark -
+#pragma mark Callable variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -129,7 +133,8 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-// MARK: - sCall variants (specialization for 0 params)
+#pragma mark -
+#pragma mark sCall variants (specialization for 0 params)
 
 template <class Type_p>
 ZQ<typename Type_p::Type_t::R> sQCall(
@@ -160,7 +165,8 @@ typename Type_p::Type_t::R sCall(
 	}
 
 // =================================================================================================
-// MARK: - sCall variants
+#pragma mark -
+#pragma mark sCall variants
 
 #define ZMACRO_Callable_Call(X) \
 \
@@ -215,7 +221,8 @@ ZMACRO_Callable_Call(F)
 #undef ZMACRO_Callable_Call
 
 // =================================================================================================
-// MARK: - sCallable
+#pragma mark -
+#pragma mark sCallable
 
 template <class Signature_p>
 const ZRef<Callable<Signature_p> >& sCallable(const ZRef<Callable<Signature_p> >& iCallable)
@@ -230,21 +237,24 @@ ZRef<Callable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
 	{ return ZRef<Callable<typename Callable_p::Signature> >(iCandidate); }
 
 // =================================================================================================
-// MARK: - sCallVoid
+#pragma mark -
+#pragma mark sCallVoid
 
 template <class T>
 void sCallVoid(ZRef<Callable<T(void)> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
-// MARK: - Useful typedefs
+#pragma mark -
+#pragma mark Useful typedefs
 
 typedef Callable<void(void)> Callable_Void;
 
 typedef Callable<bool(void)> Callable_Bool;
 
 // =================================================================================================
-// MARK: - Callable_Null
+#pragma mark -
+#pragma mark Callable_Null
 
 class Callable_Null
 :	public Callable_Void

@@ -50,7 +50,8 @@ using std::vector;
 namespace { // anonymous
 
 // =================================================================================================
-// MARK: - Uniqued Names
+#pragma mark -
+#pragma mark Uniqued Names
 
 Name spNameFromChan(const ChanR_Bin& r)
 	{
@@ -62,7 +63,8 @@ Name spNameFromChan(const ChanR_Bin& r)
 ZRef<YadR> spMakeYadR(const ZRef<ChannerR_Bin>& iChannerR_Bin);
 
 // =================================================================================================
-// MARK: - String to/from stream
+#pragma mark -
+#pragma mark String to/from stream
 
 void spToChan(const string& iString, const ChanW_Bin& w)
 	{
@@ -83,7 +85,8 @@ string spStringFromChan(const ChanR_Bin& r)
 	}
 
 // =================================================================================================
-// MARK: - YadStreamerR_JSONB
+#pragma mark -
+#pragma mark YadStreamerR_JSONB
 
 class YadStreamerR_JSONB
 :	public YadStreamerR
@@ -173,7 +176,8 @@ uint64 YadStreamerR_JSONB::QSkip(uint64 iCount)
 	}
 
 // =================================================================================================
-// MARK: - YadSeqR_JSONB
+#pragma mark -
+#pragma mark YadSeqR_JSONB
 
 class YadSeqR_JSONB : public YadSeqR_Std
 	{
@@ -191,7 +195,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - YadMapR_JSONB
+#pragma mark -
+#pragma mark YadMapR_JSONB
 
 class YadMapR_JSONB : public YadMapR_Std
 	{
@@ -212,7 +217,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Yad
+#pragma mark -
+#pragma mark Yad
 
 ZRef<YadR> spMakeYadR(const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	{
@@ -240,7 +246,8 @@ ZRef<YadR> spMakeYadR(const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	}
 
 // =================================================================================================
-// MARK: - Visitor_ToChan
+#pragma mark -
+#pragma mark Visitor_ToChan
 
 class Visitor_ToChan
 :	public Visitor_Yad

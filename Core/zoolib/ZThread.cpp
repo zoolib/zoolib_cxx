@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZThread
+#pragma mark -
+#pragma mark ZThread
 
 namespace ZThread {
 
@@ -103,7 +104,8 @@ void sStartVoid(ProcVoid_t iProcVoid)
 } // namespace ZThread
 
 // =================================================================================================
-// MARK: - ZTSS
+#pragma mark -
+#pragma mark ZTSS
 
 namespace ZTSS {
 

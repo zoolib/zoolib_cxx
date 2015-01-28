@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - StartScheduler
+#pragma mark -
+#pragma mark StartScheduler
 
 class StartScheduler
 :	NonCopyable
@@ -66,7 +67,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - StartScheduler function interface
+#pragma mark -
+#pragma mark StartScheduler function interface
 
 bool sCancel(const StartScheduler::Job& iJob);
 

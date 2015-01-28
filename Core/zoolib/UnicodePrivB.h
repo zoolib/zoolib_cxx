@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace Unicode {
 
 // =================================================================================================
-// MARK: - Unicode::Functions_CountCU
+#pragma mark -
+#pragma mark Unicode::Functions_CountCU
 
 template <class I>
 size_t Functions_CountCU_T<I>::sCountCU(I iSource)
@@ -40,7 +41,8 @@ size_t Functions_CountCU_T<I>::sCountCU(I iSource)
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Count
+#pragma mark -
+#pragma mark Unicode::Functions_Count
 
 template <class I>
 size_t Functions_Count_T<I>::sCountCP(I iSource)
@@ -153,7 +155,8 @@ size_t Functions_Count_T<I>::sCUToCP(I iSource, I iEnd)
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Read_T<I, UTF32>
+#pragma mark -
+#pragma mark Unicode::Functions_Read_T<I, UTF32>
 
 template <class I>
 struct Functions_Read_T<I, UTF32>
@@ -346,7 +349,8 @@ bool Functions_Read_T<I, UTF32>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Write_T<I, UTF32>
+#pragma mark -
+#pragma mark Unicode::Functions_Write_T<I, UTF32>
 
 template <class I>
 struct Functions_Write_T<I, UTF32>
@@ -374,7 +378,8 @@ bool Functions_Write_T<I, UTF32>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Read_T<I, UTF16>
+#pragma mark -
+#pragma mark Unicode::Functions_Read_T<I, UTF16>
 
 template <class I>
 struct Functions_Read_T<I, UTF16>
@@ -817,7 +822,8 @@ bool Functions_Read_T<I, UTF16>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Write_T<I, UTF16>
+#pragma mark -
+#pragma mark Unicode::Functions_Write_T<I, UTF16>
 
 template <class I>
 struct Functions_Write_T<I, UTF16>
@@ -860,7 +866,8 @@ bool Functions_Write_T<I, UTF16>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Read_T<I, UTF8>
+#pragma mark -
+#pragma mark Unicode::Functions_Read_T<I, UTF8>
 
 template <class I>
 struct Functions_Read_T<I, UTF8>
@@ -1393,7 +1400,8 @@ bool Functions_Read_T<I, UTF8>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& 
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Write_T<I, UTF8>
+#pragma mark -
+#pragma mark Unicode::Functions_Write_T<I, UTF8>
 
 template <class I>
 struct Functions_Write_T<I, UTF8>
@@ -1486,7 +1494,8 @@ bool Functions_Write_T<I, UTF8>::sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	}
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Convert
+#pragma mark -
+#pragma mark Unicode::Functions_Convert
 
 template <class I>
 string32 Functions_Convert_T<I>::sAsUTF32(I iSource)

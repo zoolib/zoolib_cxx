@@ -31,7 +31,8 @@ namespace QueryEngine {
 class Visitor_Expr_Rel_Search;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Search
+#pragma mark -
+#pragma mark Expr_Rel_Search
 
 class Expr_Rel_Search
 :	public virtual RelationalAlgebra::Expr_Rel
@@ -66,7 +67,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Search
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Search
 
 class Visitor_Expr_Rel_Search
 :	public virtual Visitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>

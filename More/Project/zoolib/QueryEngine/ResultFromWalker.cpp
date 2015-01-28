@@ -31,7 +31,8 @@ using std::vector;
 using RelationalAlgebra::RelHead;
 
 // =================================================================================================
-// MARK: - sQuery
+#pragma mark -
+#pragma mark sQuery
 
 ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
 	{

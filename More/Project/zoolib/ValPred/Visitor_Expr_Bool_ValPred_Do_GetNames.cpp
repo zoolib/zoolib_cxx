@@ -28,7 +28,8 @@ namespace ZooLib {
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_ValPred_Do_GetNames
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_ValPred_Do_GetNames
 
 void Visitor_Expr_Bool_ValPred_Do_GetNames::Visit_Expr_Bool_ValPred(
 	const ZRef<Expr_Bool_ValPred>& iExpr)

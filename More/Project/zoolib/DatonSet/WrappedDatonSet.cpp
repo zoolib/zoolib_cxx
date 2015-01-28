@@ -33,7 +33,8 @@ using std::set;
 using std::swap;
 
 // =================================================================================================
-// MARK: - WrappedDatonSet
+#pragma mark -
+#pragma mark WrappedDatonSet
 
 WrappedDatonSet::WrappedDatonSet(const ZRef<DatonSet>& iDatonSet,
 	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)

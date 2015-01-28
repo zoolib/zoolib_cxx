@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sCompare_T
+#pragma mark -
+#pragma mark sCompare_T
 
 template <>
 int sCompare_T(const RelationalAlgebra::Expr_Rel_Const& iL,
@@ -41,7 +42,8 @@ ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Const)
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Expr_Rel_Const
+#pragma mark -
+#pragma mark Expr_Rel_Const
 
 Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const Val_Any& iVal)
 :	fColName(iColName)
@@ -83,13 +85,15 @@ const Val_Any& Expr_Rel_Const::GetVal() const
 	{ return fVal; }
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Const
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Const
 
 void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal)
 	{ return new Expr_Rel_Const(iColName, iVal); }

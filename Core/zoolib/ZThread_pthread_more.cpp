@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace ZThread_pthread {
 
 // =================================================================================================
-// MARK: - sQGetName
+#pragma mark -
+#pragma mark sQGetName
 
 ZQ<std::string> sQGetName()
 	{
@@ -41,7 +42,8 @@ ZQ<std::string> sQGetName()
 	}
 
 // =================================================================================================
-// MARK: - SaveSetRestoreName
+#pragma mark -
+#pragma mark SaveSetRestoreName
 
 SaveSetRestoreName::SaveSetRestoreName(const std::string& iName)
 :	fQPrior(sQGetName())
@@ -64,7 +66,8 @@ SaveSetRestoreName::~SaveSetRestoreName()
 	}
 
 // =================================================================================================
-// MARK: - SaveSetRestorePriority
+#pragma mark -
+#pragma mark SaveSetRestorePriority
 
 SaveSetRestorePriority::SaveSetRestorePriority(int iPriority)
 	{
@@ -81,7 +84,8 @@ SaveSetRestorePriority::~SaveSetRestorePriority()
 	}
 
 // =================================================================================================
-// MARK: - SaveSetRestorePriority_Max
+#pragma mark -
+#pragma mark SaveSetRestorePriority_Max
 
 SaveSetRestorePriority_Max::SaveSetRestorePriority_Max()
 :	SaveSetRestorePriority(sched_get_priority_max(SCHED_RR))

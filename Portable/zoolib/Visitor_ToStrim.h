@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Visitor_ToStrim
+#pragma mark -
+#pragma mark Visitor_ToStrim
 
 class Visitor_ToStrim
 :	public virtual Visitor

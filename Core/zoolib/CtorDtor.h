@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Placement construction/destruction
+#pragma mark -
+#pragma mark Placement construction/destruction
 
 template <class T>
 inline T* sCtor_T(void* oBytes)
@@ -79,7 +80,8 @@ inline T& sAssignFromVoidStar_T(void* ioBytes, const void* iBytes)
 	{ return *static_cast<T*>(ioBytes) = *static_cast<const T*>(iBytes); }
 
 // =================================================================================================
-// MARK: - Access
+#pragma mark -
+#pragma mark Access
 
 template <class T>
 inline const T* sFetch_T(const void* iBytes)

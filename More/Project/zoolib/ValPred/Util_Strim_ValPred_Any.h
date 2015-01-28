@@ -32,7 +32,8 @@ namespace ZooLib {
 namespace Util_Strim_ValPred_Any {
 
 // =================================================================================================
-// MARK: - Util_Strim_ValPred_Any
+#pragma mark -
+#pragma mark Util_Strim_ValPred_Any
 
 void sToStrim(const ValPred& iValPred, const ChanW_UTF& iStrimW);
 

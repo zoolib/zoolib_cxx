@@ -28,7 +28,8 @@ namespace RelationalAlgebra {
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Transform_ConsolidateRenames
+#pragma mark -
+#pragma mark Transform_ConsolidateRenames
 
 void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Rel> >& iExpr)
 	{

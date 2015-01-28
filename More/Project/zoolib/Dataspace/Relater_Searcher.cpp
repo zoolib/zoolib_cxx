@@ -56,7 +56,8 @@ namespace RA = RelationalAlgebra;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Relater_Searcher::ClientQuery
+#pragma mark -
+#pragma mark Relater_Searcher::ClientQuery
 
 class Relater_Searcher::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
@@ -81,7 +82,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Searcher::PQuery
+#pragma mark -
+#pragma mark Relater_Searcher::PQuery
 
 class Relater_Searcher::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
@@ -102,7 +104,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Searcher::PRegSearch
+#pragma mark -
+#pragma mark Relater_Searcher::PRegSearch
 
 class Relater_Searcher::DLink_PRegSearch_NeedsWork
 :	public DListLink<PRegSearch, DLink_PRegSearch_NeedsWork, kDebug>
@@ -121,7 +124,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Searcher::Visitor_DoMakeWalker
+#pragma mark -
+#pragma mark Relater_Searcher::Visitor_DoMakeWalker
 
 class Relater_Searcher::Visitor_DoMakeWalker
 :	public virtual QE::Visitor_DoMakeWalker
@@ -148,7 +152,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Searcher
+#pragma mark -
+#pragma mark Relater_Searcher
 
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)

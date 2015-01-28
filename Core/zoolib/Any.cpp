@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Any
+#pragma mark -
+#pragma mark Any
 
 static inline 
 const std::type_info* spPODTypeInfo(const void* iPtr)

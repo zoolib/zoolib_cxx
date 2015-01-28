@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <queue>
 
 // =================================================================================================
-// MARK: - sCompare_T
+#pragma mark -
+#pragma mark sCompare_T
 
 namespace ZooLib {
 
@@ -49,7 +50,8 @@ using namespace std;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Daton
+#pragma mark -
+#pragma mark Daton
 
 Daton::Daton()
 	{}
@@ -81,7 +83,8 @@ Data_Any Daton::GetData() const
 	{ return fData; }
 
 // =================================================================================================
-// MARK: - Delta
+#pragma mark -
+#pragma mark Delta
 
 Delta::Delta(const Statements_t& iStatements)
 :	fStatements(iStatements)
@@ -94,7 +97,8 @@ const Delta::Statements_t& Delta::GetStatements() const
 	{ return fStatements; }
 
 // =================================================================================================
-// MARK: - Deltas
+#pragma mark -
+#pragma mark Deltas
 
 Deltas::Deltas(const Vector_Event_Delta_t& iVector)
 :	fVector(iVector)
@@ -107,7 +111,8 @@ const Vector_Event_Delta_t& Deltas::GetVector() const
 	{ return fVector; }
 
 // =================================================================================================
-// MARK: - DeltasChain
+#pragma mark -
+#pragma mark DeltasChain
 
 DeltasChain::DeltasChain(const ZRef<DeltasChain>& iParent, const ZRef<Deltas>& iDeltas)
 :	fParent(iParent)
@@ -176,7 +181,8 @@ void sGetComposed(ZRef<DeltasChain> iDeltasChain, std::set<Daton>& oComposed)
 	}
 
 // =================================================================================================
-// MARK: - DatonSet
+#pragma mark -
+#pragma mark DatonSet
 
 DatonSet::DatonSet(const ZRef<Identity>& iIdentity, const ZRef<Event>& iEvent, const ZRef<DeltasChain>& iDeltasChain)
 :	fIdentity(iIdentity)

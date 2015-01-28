@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChannerComboRW
+#pragma mark -
+#pragma mark ChannerComboRW
 
 template <class Elmt_p>
 class ChannerComboRW
@@ -57,7 +58,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChannerComboRWClose
+#pragma mark -
+#pragma mark ChannerComboRWClose
 
 template <class Elmt_p>
 class ChannerComboRWClose

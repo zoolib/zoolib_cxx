@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ValueOnce
+#pragma mark -
+#pragma mark ValueOnce
 
 template <class T>
 class ValueOnce
@@ -57,7 +58,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - FundamentalValueOnce
+#pragma mark -
+#pragma mark FundamentalValueOnce
 
 // Type_p is not fundamental in the precise sense used by the standard, but it's close.
 // <http://en.cppreference.com/w/cpp/language/template_parameters#Non-type_template_parameters>

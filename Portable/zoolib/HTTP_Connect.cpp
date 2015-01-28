@@ -28,7 +28,8 @@ namespace ZooLib {
 namespace HTTP {
 
 // =================================================================================================
-// MARK: - HTTP::sQConnect
+#pragma mark -
+#pragma mark HTTP::sQConnect
 
 // This all constitutes a slightly skanky bridge between Chan and Stream.
 
@@ -61,7 +62,7 @@ ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
 	if (ZQ<ChannerComboRWClose_Bin> theComboQ = sCall(sRef(new NetName_Internet(iHost, iPort))))
 		{
-//##		theComboQ->SetW(new ChanW_Buffered<byte>(theCombo.GetW()))
+//##		theComboQ->SetW(new ChanW_XX_Buffered<byte>(theComboQ->GetW()))
 
 		if (not iUseSSL)
 			return theComboQ;

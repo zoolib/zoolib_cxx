@@ -38,7 +38,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::Transform_PushDownRestricts
+#pragma mark -
+#pragma mark RelationalAlgebra::Transform_PushDownRestricts
 
 class Transform_PushDownRestricts
 :	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>

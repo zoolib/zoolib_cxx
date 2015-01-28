@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - SearchSpec
+#pragma mark -
+#pragma mark SearchSpec
 
 SearchSpec::SearchSpec()
 	{}
@@ -80,7 +81,8 @@ const ZRef<Expr_Bool>& SearchSpec::GetRestriction() const
 	{ return fRestriction; }
 
 // =================================================================================================
-// MARK: - AddedSearch
+#pragma mark -
+#pragma mark AddedSearch
 
 AddedSearch::AddedSearch()
 	{}
@@ -112,7 +114,8 @@ const SearchSpec& AddedSearch::GetSearchSpec() const
 	{ return fSearchSpec; }
 
 // =================================================================================================
-// MARK: - SearchResult
+#pragma mark -
+#pragma mark SearchResult
 
 SearchResult::SearchResult()
 :	fRefcon(0)
@@ -146,7 +149,8 @@ ZRef<QueryEngine::Result> SearchResult::GetResult() const
 	{ return fResult; }
 
 // =================================================================================================
-// MARK: - Searcher
+#pragma mark -
+#pragma mark Searcher
 
 Searcher::Searcher()
 	{}

@@ -26,7 +26,8 @@ namespace ZooLib {
 namespace SQLite {
 
 // =================================================================================================
-// MARK: - Anonymous YadMapR
+#pragma mark -
+#pragma mark Anonymous YadMapR
 
 namespace { // anonymous
 
@@ -61,7 +62,8 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - SQLite::YadSeqR_Iter
+#pragma mark -
+#pragma mark SQLite::YadSeqR_Iter
 
 YadSeqR_Iter::YadSeqR_Iter(ZRef<Iter> iIter)
 :	fIter(iIter)

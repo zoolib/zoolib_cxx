@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Accumulator_T
+#pragma mark -
+#pragma mark Accumulator_T
 
 // AG 2000-02-17. If we assume that unioning a rectangle into a region requires a linear search
 // through the target region, then a region built out of n rectangles will take (n^2)/2 operations.

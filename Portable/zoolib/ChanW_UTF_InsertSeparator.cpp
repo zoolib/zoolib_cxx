@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanW_UTF_InsertSeparator
+#pragma mark -
+#pragma mark ChanW_UTF_InsertSeparator
 
 ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 	size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink)

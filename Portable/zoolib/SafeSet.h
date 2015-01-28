@@ -43,7 +43,8 @@ class DLink_SafeSetIterConst
 	{};
 
 // =================================================================================================
-// MARK: - SafeSetRep
+#pragma mark -
+#pragma mark SafeSetRep
 
 template <class T>
 class SafeSetRep
@@ -220,7 +221,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SafeSet
+#pragma mark -
+#pragma mark SafeSet
 
 template <class T>
 class SafeSet
@@ -274,7 +276,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SafeSetIterConst
+#pragma mark -
+#pragma mark SafeSetIterConst
 
 template <class T>
 class SafeSetIterConst : public DLink_SafeSetIterConst<T>
@@ -354,7 +357,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SafeSetIter
+#pragma mark -
+#pragma mark SafeSetIter
 
 template <class T>
 class SafeSetIter : public SafeSetIterConst<T>
@@ -401,7 +405,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - SafeSetRep methods that reference details of iterators
+#pragma mark -
+#pragma mark SafeSetRep methods that reference details of iterators
 
 template <class T>
 bool SafeSetRep<T>::pReadInc(SafeSetIterConst<T>& ioIter, T& oValue)

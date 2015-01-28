@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - Transform_DecomposeRestricts
+#pragma mark -
+#pragma mark Transform_DecomposeRestricts
 
 void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{

@@ -38,7 +38,8 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-// MARK: - Visitor_DoMakeWalker
+#pragma mark -
+#pragma mark Visitor_DoMakeWalker
 
 void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	{

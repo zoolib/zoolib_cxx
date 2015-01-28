@@ -30,7 +30,8 @@ using std::string;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - ValPred, sGetNames
+#pragma mark -
+#pragma mark ValPred, sGetNames
 
 namespace { // anonymous
 

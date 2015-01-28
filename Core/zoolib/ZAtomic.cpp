@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 
 // =================================================================================================
-// MARK: - CodeWarrior/PPC
+#pragma mark -
+#pragma mark CodeWarrior/PPC
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
@@ -79,7 +80,8 @@ noGood:
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
 // =================================================================================================
-// MARK: - CodeWarrior/x86
+#pragma mark -
+#pragma mark CodeWarrior/x86
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
@@ -188,7 +190,8 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-// MARK: - Windows
+#pragma mark -
+#pragma mark Windows
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -266,7 +269,8 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
-// MARK: - Android
+#pragma mark -
+#pragma mark Android
 
 #if defined(__ANDROID__)
 
@@ -315,7 +319,8 @@ bool sAtomic_CAS(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
 #endif // defined(__ANDROID__)
 
 // =================================================================================================
-// MARK: - GCC
+#pragma mark -
+#pragma mark GCC
 
 namespace ZooLib {
 
@@ -344,14 +349,16 @@ bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - A real CompareAndSet must be defined by now
+#pragma mark -
+#pragma mark A real CompareAndSet must be defined by now
 
 #if !defined(DEFINED_sAtomic_CAS)
 	#error No CompareAndSet available
 #endif
 
 // =================================================================================================
-// MARK: - Default implementations that depend on CAS or sAtomic_Add.
+#pragma mark -
+#pragma mark Default implementations that depend on CAS or sAtomic_Add.
 
 namespace ZooLib {
 

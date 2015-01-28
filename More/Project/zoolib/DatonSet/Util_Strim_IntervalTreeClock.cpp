@@ -26,7 +26,8 @@ namespace ZooLib {
 namespace IntervalTreeClock {
 
 // =================================================================================================
-// MARK: - IntervalTreeClock
+#pragma mark -
+#pragma mark IntervalTreeClock
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity)
 	{

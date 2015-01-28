@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Ctors
+#pragma mark -
+#pragma mark Ctors
 
 ZRef<Callable_Bool> sCallable_True();
 ZRef<Callable_Bool> sCallable_False();
@@ -37,7 +38,8 @@ ZRef<Callable_Bool> sCallable_Or(const ZRef<Callable_Bool>& i0, const ZRef<Calla
 ZRef<Callable_Bool> sCallable_Xor(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1);
 
 // =================================================================================================
-// MARK: - Concise Ctors
+#pragma mark -
+#pragma mark Concise Ctors
 
 inline ZRef<Callable_Bool> sNot(const ZRef<Callable_Bool>& iCallable)
 	{ return sCallable_Not(iCallable); }
@@ -52,7 +54,8 @@ inline ZRef<Callable_Bool> sXor(const ZRef<Callable_Bool>& i0, const ZRef<Callab
 	{ return sCallable_Xor(i0, i1); }
 
 // =================================================================================================
-// MARK: - Infix notation
+#pragma mark -
+#pragma mark Infix notation
 
 inline
 ZRef<Callable_Bool> operator~(const ZRef<Callable_Bool>& iCallable)

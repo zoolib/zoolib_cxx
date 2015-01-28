@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark -
+#pragma mark Helpers
 
 namespace { // anonymous
 
@@ -75,7 +76,8 @@ bool spIsFalse(const CNF& iCNF)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Visitor_AsCNF (anonymous)
+#pragma mark -
+#pragma mark Visitor_AsCNF (anonymous)
 
 namespace { // anonymous
 
@@ -179,7 +181,8 @@ protected:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Util_Expr_Bool
+#pragma mark -
+#pragma mark Util_Expr_Bool
 
 static ZRef<Expr_Bool> spFromClause(
 	const Clause& iClause,

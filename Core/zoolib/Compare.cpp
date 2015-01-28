@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Functor_CompareCharStars (anonymous)
+#pragma mark -
+#pragma mark Functor_CompareCharStars (anonymous)
 
 namespace { // anonymous
 
@@ -44,7 +45,8 @@ typedef std::map<const char*, Comparer*, Functor_CompareCharStars> ComparerMap;
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Comparer
+#pragma mark -
+#pragma mark Comparer
 
 Comparer::Comparer(const char* iTypeName)
 :	fTypeName(iTypeName)
@@ -69,7 +71,8 @@ int Comparer::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	}
 
 // =================================================================================================
-// MARK: - CompareRegistration_Void (anonymous)
+#pragma mark -
+#pragma mark CompareRegistration_Void (anonymous)
 
 namespace { // anonymous
 

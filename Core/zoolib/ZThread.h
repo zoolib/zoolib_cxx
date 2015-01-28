@@ -34,7 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZThread, ZTSS etc.
+#pragma mark -
+#pragma mark ZThread, ZTSS etc.
 
 #if 0
 
@@ -85,7 +86,8 @@ namespace ZooLib {
 #endif
 
 // =================================================================================================
-// MARK: - ZTSS
+#pragma mark -
+#pragma mark ZTSS
 
 namespace ZTSS {
 
@@ -94,13 +96,15 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
 } // namespace ZTSS
 
 // =================================================================================================
-// MARK: - ZBen (benaphore)
+#pragma mark -
+#pragma mark ZBen (benaphore)
 
 typedef ZBen_T<ZSemNoTimeout> ZBen;
 typedef ZBenR_T<ZBen,ZThread::ID,ZThread::sID> ZBenR;
 
 // =================================================================================================
-// MARK: - Acquirer, Releaser, Guard
+#pragma mark -
+#pragma mark Acquirer, Releaser, Guard
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
 typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
@@ -118,7 +122,8 @@ typedef ZAcquirer_T<ZGuardMtxR> ZAcqGuardR;
 typedef ZReleaser_T<ZGuardMtxR> ZRelGuardR;
 
 // =================================================================================================
-// MARK: - ZThread
+#pragma mark -
+#pragma mark ZThread
 
 namespace ZThread {
 

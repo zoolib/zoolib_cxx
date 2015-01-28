@@ -35,7 +35,8 @@ namespace ZooLib {
 #define kDebug_Strim 2
 
 // =================================================================================================
-// MARK: - Static helpers
+#pragma mark -
+#pragma mark Static helpers
 
 //static void spReadUTF32_UTF32(const ZStreamR& iStreamR, UTF32* oDest, size_t iCount, size_t* oCount)
 //	{ iStreamR.Read(oDest, iCount, oCount); }
@@ -238,7 +239,8 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 //	}
 
 //// =================================================================================================
-//// MARK: - ZStrimR_StreamUTF32BE
+//#pragma mark -
+#pragma mark ZStrimR_StreamUTF32BE
 //
 //ZStrimR_StreamUTF32BE::ZStrimR_StreamUTF32BE(const ZStreamR& iStreamR)
 //:	fStreamR(iStreamR)
@@ -253,7 +255,8 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 //	}
 //
 //// =================================================================================================
-//// MARK: - ZStrimR_StreamUTF32LE
+//#pragma mark -
+#pragma mark ZStrimR_StreamUTF32LE
 //
 //ZStrimR_StreamUTF32LE::ZStrimR_StreamUTF32LE(const ZStreamR& iStreamR)
 //:	fStreamR(iStreamR)
@@ -268,7 +271,8 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 //	}
 //
 //// =================================================================================================
-//// MARK: - ZStrimR_StreamUTF16BE
+//#pragma mark -
+#pragma mark ZStrimR_StreamUTF16BE
 //
 //ZStrimR_StreamUTF16BE::ZStrimR_StreamUTF16BE(const ZStreamR& iStreamR)
 //:	fStreamR(iStreamR)
@@ -283,7 +287,8 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 //	}
 //
 //// =================================================================================================
-//// MARK: - ZStrimR_StreamUTF16LE
+//#pragma mark -
+#pragma mark ZStrimR_StreamUTF16LE
 //
 //ZStrimR_StreamUTF16LE::ZStrimR_StreamUTF16LE(const ZStreamR& iStreamR)
 //:	fStreamR(iStreamR)
@@ -298,7 +303,8 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 //	}
 
 // =================================================================================================
-// MARK: - ZStrimR_StreamUTF8
+#pragma mark -
+#pragma mark ZStrimR_StreamUTF8
 
 ChanR_UTF_Chan_Bin_UTF8::ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin)
 :	fChanR_Bin(iChanR_Bin)
@@ -308,7 +314,8 @@ size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
 	{ return spReadUTF32_UTF8(oDest, iCount, fChanR_Bin); }
 
 //// =================================================================================================
-//// MARK: - ZStrimW_StreamUTF32BE
+//#pragma mark -
+#pragma mark ZStrimW_StreamUTF32BE
 //
 //ZStrimW_StreamUTF32BE::ZStrimW_StreamUTF32BE(const ZStreamW& iStreamW)
 //:	fStreamW(iStreamW)
@@ -353,7 +360,8 @@ size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
 //	{ fStreamW.Flush(); }
 //
 //// =================================================================================================
-//// MARK: - ZStrimW_StreamUTF32LE
+//#pragma mark -
+#pragma mark ZStrimW_StreamUTF32LE
 //
 //ZStrimW_StreamUTF32LE::ZStrimW_StreamUTF32LE(const ZStreamW& iStreamW)
 //:	fStreamW(iStreamW)
@@ -398,7 +406,8 @@ size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
 //	{ fStreamW.Flush(); }
 //
 //// =================================================================================================
-//// MARK: - ZStrimW_StreamUTF16BE
+//#pragma mark -
+#pragma mark ZStrimW_StreamUTF16BE
 //
 //ZStrimW_StreamUTF16BE::ZStrimW_StreamUTF16BE(const ZStreamW& iStreamW)
 //:	fStreamW(iStreamW)
@@ -443,7 +452,8 @@ size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
 //	{ fStreamW.Flush(); }
 //
 //// =================================================================================================
-//// MARK: - ZStrimW_StreamUTF16LE
+//#pragma mark -
+#pragma mark ZStrimW_StreamUTF16LE
 //
 //ZStrimW_StreamUTF16LE::ZStrimW_StreamUTF16LE(const ZStreamW& iStreamW)
 //:	fStreamW(iStreamW)
@@ -488,7 +498,8 @@ size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
 //	{ fStreamW.Flush(); }
 
 // =================================================================================================
-// MARK: - ChanW_UTF_Chan_Bin_UTF8
+#pragma mark -
+#pragma mark ChanW_UTF_Chan_Bin_UTF8
 
 ChanW_UTF_Chan_Bin_UTF8::ChanW_UTF_Chan_Bin_UTF8(const ChanW_Bin& iChanW_Bin)
 :	fChanW_Bin(iChanW_Bin)
@@ -501,7 +512,8 @@ void ChanW_UTF_Chan_Bin_UTF8::Flush()
 	{ sFlush(fChanW_Bin); }
 
 //// =================================================================================================
-//// MARK: - ZStrimR_StreamDecoder
+//#pragma mark -
+#pragma mark ZStrimR_StreamDecoder
 //
 //ZStrimR_StreamDecoder::ZStrimR_StreamDecoder(ZTextDecoder* iDecoder, const ZStreamR& iStreamR)
 //:	fStreamR(iStreamR),
@@ -537,7 +549,8 @@ void ChanW_UTF_Chan_Bin_UTF8::Flush()
 //	}
 //
 //// =================================================================================================
-//// MARK: - ZStrimW_StreamEncoder
+//#pragma mark -
+#pragma mark ZStrimW_StreamEncoder
 //
 //ZStrimW_StreamEncoder::ZStrimW_StreamEncoder(ZTextEncoder* iEncoder, const ZStreamW& iStreamW)
 //:	fStreamW(iStreamW),

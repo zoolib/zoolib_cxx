@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_Bin_HexStrim
+#pragma mark -
+#pragma mark ChanR_Bin_HexStrim
 
 /// A read filter stream that reads byte values from a strim, where they're encoded as hex digits.
 

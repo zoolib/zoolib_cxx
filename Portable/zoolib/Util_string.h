@@ -33,7 +33,8 @@ namespace Util_string {
 using std::string;
 
 // =================================================================================================
-// MARK: - Util_string
+#pragma mark -
+#pragma mark Util_string
 
 ZQ<__int64> sQInt64(const string& iString);
 __int64 sDInt64(__int64 iDefault, const string& iString);

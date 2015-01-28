@@ -30,7 +30,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - PseudoMap
+#pragma mark -
+#pragma mark PseudoMap
 
 class PseudoMap
 	{
@@ -82,7 +83,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - PseudoMap_RelHead
+#pragma mark -
+#pragma mark PseudoMap_RelHead
 
 class PseudoMap_RelHead
 :	public PseudoMap

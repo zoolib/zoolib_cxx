@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Bool_Do_Eval
+#pragma mark -
+#pragma mark Visitor_Expr_Bool_Do_Eval
 
 class Visitor_Expr_Bool_Do_Eval
 :	public virtual Visitor_Do_T<bool>

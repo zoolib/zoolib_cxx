@@ -36,7 +36,8 @@ inline int sCompare_T(const std::string& iL, const std::string& iR)
 	{ return iL.compare(iR); }
 
 // =================================================================================================
-// MARK: - FastComparator_String
+#pragma mark -
+#pragma mark FastComparator_String
 
 struct FastComparator_String : public std::binary_function<std::string,std::string,bool>
 	{

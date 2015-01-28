@@ -28,12 +28,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Callable_Set
+#pragma mark -
+#pragma mark Callable_Set
 
 template <class Signature> class Callable_Set;
 
 // =================================================================================================
-// MARK: - Callable_Set (specialization for 0 params)
+#pragma mark -
+#pragma mark Callable_Set (specialization for 0 params)
 
 template <>
 class Callable_Set<void(void)>
@@ -61,7 +63,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Callable_Set variants
+#pragma mark -
+#pragma mark Callable_Set variants
 
 #define ZMACRO_Callable_Callable(X) \
 \

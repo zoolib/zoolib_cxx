@@ -32,7 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanW_Bin_string
+#pragma mark -
+#pragma mark ChanW_Bin_string
 
 class ChanW_Bin_string
 :	public ChanW_Bin
@@ -47,7 +48,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanBase_Bin_string
+#pragma mark -
+#pragma mark ChanBase_Bin_string
 
 // This looks like a ChanRPos, except it doesn't implement ChanU. We derive a real ChanRPos and
 // ChanRWPos from this class, because each has a different Unread strategy.
@@ -79,7 +81,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanRPos_Bin_string
+#pragma mark -
+#pragma mark ChanRPos_Bin_string
 
 class ChanRPos_Bin_string
 :	public ChanBase_Bin_string
@@ -97,7 +100,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanRWPos_Bin_string
+#pragma mark -
+#pragma mark ChanRWPos_Bin_string
 
 class ChanRWPos_Bin_string
 :	public ChanBase_Bin_string

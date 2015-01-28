@@ -31,7 +31,8 @@ namespace ZooLib {
 class Visitor_Expr;
 
 // =================================================================================================
-// MARK: - Expr
+#pragma mark -
+#pragma mark Expr
 
 class Expr : public Visitee
 	{
@@ -46,7 +47,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr
+#pragma mark -
+#pragma mark Visitor_Expr
 
 class Visitor_Expr
 :	public virtual Visitor

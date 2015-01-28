@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - CountedVal
+#pragma mark -
+#pragma mark CountedVal
 
 template <class Type_p, class Tag_p = Type_p>
 class CountedVal
@@ -72,7 +73,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - sCountedVal
+#pragma mark -
+#pragma mark sCountedVal
 
 template <class T>
 ZRef<CountedVal<T> > sCountedVal()
@@ -93,7 +95,8 @@ ZRef<CountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
 	{ return new CountedVal<T>(i0, i1); }
 
 // =================================================================================================
-// MARK: - Accessors
+#pragma mark -
+#pragma mark Accessors
 
 template <class Type_p, class Tag_p>
 const Type_p* sPGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)

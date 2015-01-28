@@ -45,7 +45,8 @@ namespace RelationalAlgebra {
 namespace Util_Strim_Rel {
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::Util_Strim_Rel::Visitor
+#pragma mark -
+#pragma mark RelationalAlgebra::Util_Strim_Rel::Visitor
 
 class Visitor
 :	public virtual Visitor_Expr_Bool_ValPred_Any_ToStrim

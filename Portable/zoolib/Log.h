@@ -67,7 +67,8 @@ namespace ZooLib {
 namespace Log {
 
 // =================================================================================================
-// MARK: - Log::CallDepth
+#pragma mark -
+#pragma mark Log::CallDepth
 
 class CallDepth
 	{
@@ -84,7 +85,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - EPriority
+#pragma mark -
+#pragma mark EPriority
 
 enum
 	{
@@ -108,13 +110,15 @@ enum
 typedef int EPriority;
 
 // =================================================================================================
-// MARK: - String/integer mapping
+#pragma mark -
+#pragma mark String/integer mapping
 
 EPriority sPriorityFromName(const std::string& iString);
 std::string sNameFromPriority(EPriority iPriority);
 
 // =================================================================================================
-// MARK: - Log::StrimW
+#pragma mark -
+#pragma mark Log::StrimW
 
 class ChanW : public ChanW_UTF_Native8
 	{
@@ -147,7 +151,8 @@ public:
 typedef ChanW S;
 
 // =================================================================================================
-// MARK: - Log::LogMeister
+#pragma mark -
+#pragma mark Log::LogMeister
 
 class LogMeister
 :	public ZCounted
@@ -167,7 +172,8 @@ void sLogIt(EPriority iPriority, const std::string& iName,
 
 
 // =================================================================================================
-// MARK: - Log::FunctionEntryExit
+#pragma mark -
+#pragma mark Log::FunctionEntryExit
 
 class FunctionEntryExit
 	{
@@ -183,7 +189,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Log::sLogTrace
+#pragma mark -
+#pragma mark Log::sLogTrace
 
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 

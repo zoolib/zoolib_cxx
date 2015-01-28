@@ -44,7 +44,8 @@ typedef Seq_Any Seq;
 typedef Map_Any Map;
 
 // =================================================================================================
-// MARK: - Response
+#pragma mark -
+#pragma mark Response
 
 class Response
 	{
@@ -72,7 +73,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Higher level parsing
+#pragma mark -
+#pragma mark Higher level parsing
 
 bool sOrganizeRanges(int64 iSourceSize,
 	const Val& iRangeParam, std::vector<std::pair<int64,int64> >& oRanges);
@@ -103,7 +105,8 @@ ZQ<string> sQGetString0(const Val& iVal);
 string sGetString0(const Val& iVal);
 
 // =================================================================================================
-// MARK: - Request headers
+#pragma mark -
+#pragma mark Request headers
 
 bool sQRead_accept(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 //bool sQRead_accept_charset(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
@@ -119,18 +122,21 @@ bool sQRead_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oRange)
 //bool sQRead_referer(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 
 // =================================================================================================
-// MARK: - Response headers
+#pragma mark -
+#pragma mark Response headers
 
 //bool sQRead_www_authenticate(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 
 // =================================================================================================
-// MARK: - Request or response headers
+#pragma mark -
+#pragma mark Request or response headers
 
 bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& oEncoding);
 
 // =================================================================================================
-// MARK: - Entity headers
+#pragma mark -
+#pragma mark Entity headers
 
 bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
 bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple);
@@ -175,7 +181,8 @@ bool sQReadMediaType(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oLanguageTag);
 
 // =================================================================================================
-// MARK: - Lower level parsing
+#pragma mark -
+#pragma mark Lower level parsing
 
 bool sParseURL(const string& iURL,
 	string* oScheme, string* oHost, uint16* oPort, string* oPath);
@@ -200,7 +207,8 @@ void sSkipLWS(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU);
 bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& ioString);
 
 // =================================================================================================
-// MARK: - Lexical classification
+#pragma mark -
+#pragma mark Lexical classification
 
 bool sIs_CHAR(char iChar);
 bool sIs_UPALPHA(char iChar);
@@ -226,7 +234,8 @@ bool sIs_ctext(char iChar);
 bool sIs_qdtext(char iChar);
 
 // =================================================================================================
-// MARK: - Writing
+#pragma mark -
+#pragma mark Writing
 
 void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW);
 void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW);

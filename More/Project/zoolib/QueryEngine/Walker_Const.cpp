@@ -27,7 +27,8 @@ using std::map;
 using std::set;
 
 // =================================================================================================
-// MARK: - Walker_Const
+#pragma mark -
+#pragma mark Walker_Const
 
 Walker_Const::Walker_Const(const string8& iColName, const Val_Any& iVal)
 :	fExhausted(false)

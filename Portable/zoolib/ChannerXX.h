@@ -43,7 +43,8 @@ typedef Channer<ChanSize> ChannerSize;
 typedef Channer<ChanSizeSet> ChannerSizeSet;
 
 // =================================================================================================
-// MARK: - ChannerR, ChannerU, ChannerW
+#pragma mark -
+#pragma mark ChannerR, ChannerU, ChannerW
 
 #if ZCONFIG_CPP >= 2011
 
@@ -60,7 +61,8 @@ template <class Elmt_p> class ChannerW : public Channer<ChanW<Elmt_p> > {};
 #endif // ZCONFIG_CPP >= 2011
 
 // =================================================================================================
-// MARK: - ChannerRW
+#pragma mark -
+#pragma mark ChannerRW
 
 template <class Elmt_p>
 class ChannerRW
@@ -69,7 +71,8 @@ class ChannerRW
 	{};
 
 // =================================================================================================
-// MARK: - ChannerRWClose
+#pragma mark -
+#pragma mark ChannerRWClose
 
 template <class Elmt_p>
 class ChannerRWClose
@@ -78,7 +81,8 @@ class ChannerRWClose
 	{};
 
 // =================================================================================================
-// MARK: - ChannerRU
+#pragma mark -
+#pragma mark ChannerRU
 
 template <class Elmt_p>
 class ChannerRU
@@ -87,7 +91,8 @@ class ChannerRU
 	{};
 
 // =================================================================================================
-// MARK: - ChannerRPos
+#pragma mark -
+#pragma mark ChannerRPos
 
 template <class Elmt_p>
 class ChannerRPos
@@ -97,7 +102,8 @@ class ChannerRPos
 	{};
 
 // =================================================================================================
-// MARK: - ChannerWPos
+#pragma mark -
+#pragma mark ChannerWPos
 
 template <class Elmt_p>
 class ChannerWPos
@@ -108,7 +114,8 @@ class ChannerWPos
 	{};
 
 // =================================================================================================
-// MARK: - ChannerRWPos
+#pragma mark -
+#pragma mark ChannerRWPos
 
 template <class Elmt_p>
 class ChannerRWPos
@@ -117,7 +124,8 @@ class ChannerRWPos
 	{};
 
 // =================================================================================================
-// MARK: - ChannerRU_T
+#pragma mark -
+#pragma mark ChannerRU_T
 
 template <class Chan_p>
 class ChannerRU_T
@@ -150,7 +158,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChannerRWPos_T
+#pragma mark -
+#pragma mark ChannerRWPos_T
 
 template <class Chan_p>
 class ChannerRWPos_T

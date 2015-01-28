@@ -36,7 +36,8 @@ namespace ZooLib {
 class Visitor_Yad;
 
 // =================================================================================================
-// MARK: - YadOptions
+#pragma mark -
+#pragma mark YadOptions
 
 struct YadOptions
 	{
@@ -61,7 +62,8 @@ struct YadOptions
 	};
 
 // =================================================================================================
-// MARK: - YadParseException
+#pragma mark -
+#pragma mark YadParseException
 
 class YadParseException : public std::runtime_error
 	{
@@ -71,7 +73,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadR
+#pragma mark -
+#pragma mark YadR
 
 class YadR
 :	public Visitee
@@ -91,7 +94,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadAtomR
+#pragma mark -
+#pragma mark YadAtomR
 
 class YadAtomR
 :	public virtual YadR
@@ -106,7 +110,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR
+#pragma mark -
+#pragma mark YadStreamerR
 
 class YadStreamerR
 :	public virtual YadR
@@ -119,7 +124,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadStrimmerR
+#pragma mark -
+#pragma mark YadStrimmerR
 
 class YadStrimmerR
 :	public virtual YadR
@@ -131,7 +137,8 @@ class YadStrimmerR
 	};
 
 // =================================================================================================
-// MARK: - YadSeqR
+#pragma mark -
+#pragma mark YadSeqR
 
 class YadSeqR
 :	public virtual YadR
@@ -149,7 +156,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadMapR
+#pragma mark -
+#pragma mark YadMapR
 
 class YadMapR
 :	public virtual YadR
@@ -166,7 +174,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Yad
+#pragma mark -
+#pragma mark Visitor_Yad
 
 class Visitor_Yad
 :	public virtual Visitor
@@ -183,7 +192,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - YadR_Any
+#pragma mark -
+#pragma mark YadR_Any
 
 class YadR_Any
 :	public virtual YadR
@@ -200,17 +210,20 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - YadAtomR_Any
+#pragma mark -
+#pragma mark YadAtomR_Any
 
 ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny);
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<YadR> sYadR(const std::string& iVal);
 
 // =================================================================================================
-// MARK: - YadMapR_WithFirst
+#pragma mark -
+#pragma mark YadMapR_WithFirst
 
 class YadMapR_WithFirst
 :	public YadMapR

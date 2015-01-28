@@ -31,7 +31,8 @@ namespace ZooLib {
 // parameter naming scheme to make it intelligible.
 
 // =================================================================================================
-// MARK: - sCallable_Apply (specialization for 0 params)
+#pragma mark -
+#pragma mark sCallable_Apply (specialization for 0 params)
 
 template <class R0, class P0, class R1>
 class Callable_Apply_0
@@ -63,7 +64,8 @@ sCallable_Apply(const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1(vo
 	{ return new Callable_Apply_0<R0,P0,R1>(iApply, iCallable); }
 
 // =================================================================================================
-// MARK: - sCallable_Apply (specialization for 1 param)
+#pragma mark -
+#pragma mark sCallable_Apply (specialization for 1 param)
 
 template <class R0, class P0, class R1, class P1>
 class Callable_Apply_1
@@ -95,7 +97,8 @@ sCallable_Apply(const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1(P1
 	{ return new Callable_Apply_1<R0,P0,R1,P1>(iApply, iCallable); }
 
 // =================================================================================================
-// MARK: - sCallable_Seq
+#pragma mark -
+#pragma mark sCallable_Seq
 
 template <class R0, class R1>
 class Callable_Seq
@@ -125,7 +128,8 @@ sCallable_Seq(const ZRef<Callable<R0(void)> >& i0, const ZRef<Callable<R1(void)>
 	{ return new Callable_Seq<R0,R1>(i0, i1); }
 
 // =================================================================================================
-// MARK: - sCallable_For
+#pragma mark -
+#pragma mark sCallable_For
 
 template <class R_Init, class R_Inc>
 class Callable_For
@@ -161,7 +165,8 @@ ZRef<Callable_Void> sCallable_For(const ZRef<Callable<R_Init(void)> >& iInit,
 	{ return new Callable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
 
 // =================================================================================================
-// MARK: - sCallable_If
+#pragma mark -
+#pragma mark sCallable_If
 
 template <class R>
 class Callable_If
@@ -200,7 +205,8 @@ ZRef<Callable<R(void)> > sCallable_If(const ZRef<Callable_Bool>& iCondition,
 	{ return new Callable_If<R>(iCondition, i0, i1); }
 
 // =================================================================================================
-// MARK: - sCallable_Repeat
+#pragma mark -
+#pragma mark sCallable_Repeat
 
 template <class R>
 class Callable_Repeat
@@ -234,7 +240,8 @@ ZRef<Callable_Void> sCallable_Repeat(size_t iCount, const ZRef<Callable<R(void)>
 	{ return new Callable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
-// MARK: - sCallable_While
+#pragma mark -
+#pragma mark sCallable_While
 
 template <class R>
 class Callable_While

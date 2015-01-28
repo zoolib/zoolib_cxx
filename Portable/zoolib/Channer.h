@@ -48,7 +48,8 @@ const Chan_p& sGetChan(const ZRef<Channer<Chan_p> >& iChanner)
 	}
 
 // =================================================================================================
-// MARK: - Channer_T
+#pragma mark -
+#pragma mark Channer_T
 
 template <class Chan_p, class Chan_Self_p = typename Chan_p::Chan_Base>
 class Channer_T
@@ -87,7 +88,8 @@ ZRef<Channer<typename Chan_p::Chan_Base> > sChanner_T(const Param_p& iParam)
 	{ return new Channer_T<Chan_p>(iParam); }
 
 // =================================================================================================
-// MARK: - Channer_Channer_T
+#pragma mark -
+#pragma mark Channer_Channer_T
 
 template <class Chan_p,
 	class Chan_Other_p = typename Chan_p::Chan_Base,

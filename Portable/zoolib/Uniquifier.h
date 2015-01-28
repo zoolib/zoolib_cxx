@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Uniquifier
+#pragma mark -
+#pragma mark Uniquifier
 
 template <class Type_p, class Compare_p = typename std::set<Type_p>::key_compare>
 class Uniquifier

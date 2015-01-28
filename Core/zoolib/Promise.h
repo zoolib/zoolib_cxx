@@ -33,7 +33,8 @@ namespace ZooLib {
 template <class T> class Promise;
 
 // =================================================================================================
-// MARK: - Delivery
+#pragma mark -
+#pragma mark Delivery
 
 template <class T>
 class Delivery
@@ -95,7 +96,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Promise
+#pragma mark -
+#pragma mark Promise
 
 template <class T = void>
 class Promise
@@ -143,7 +145,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Promise<void>
+#pragma mark -
+#pragma mark Promise<void>
 
 template <>
 class Promise<void>
@@ -191,7 +194,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - sPromise
+#pragma mark -
+#pragma mark sPromise
 
 inline
 ZRef<Promise<void> > sPromise()
@@ -202,7 +206,8 @@ ZRef<Promise<T> > sPromise()
 	{ return new Promise<T>; }
 
 // =================================================================================================
-// MARK: - sGetDeliveryClearPromise
+#pragma mark -
+#pragma mark sGetDeliveryClearPromise
 
 template <class T>
 ZRef<Delivery<T> > sGetDeliveryClearPromise(ZRef<Promise<T> >& ioPromise)

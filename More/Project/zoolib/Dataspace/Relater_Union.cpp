@@ -65,7 +65,8 @@ using namespace Util_STL;
 namespace RA = RelationalAlgebra;
 
 // =================================================================================================
-// MARK: - InsertPrefix (anonymous)
+#pragma mark -
+#pragma mark InsertPrefix (anonymous)
 
 namespace { // anonymous
 
@@ -108,7 +109,8 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iE
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Relater_Union::PIP
+#pragma mark -
+#pragma mark Relater_Union::PIP
 
 class Relater_Union::DLink_PIP_InProxy
 :	public DListLink<PIP, DLink_PIP_InProxy, kDebug>
@@ -132,7 +134,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::Proxy declaration
+#pragma mark -
+#pragma mark Relater_Union::Proxy declaration
 
 class Relater_Union::Proxy
 :	public virtual RA::Expr_Rel
@@ -170,7 +173,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::Visitor_Proxy
+#pragma mark -
+#pragma mark Relater_Union::Visitor_Proxy
 
 class Relater_Union::Visitor_Proxy
 :	public virtual Visitor_Expr_Op0_T<RA::Expr_Rel>
@@ -181,7 +185,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::Proxy definition
+#pragma mark -
+#pragma mark Relater_Union::Proxy definition
 
 Relater_Union::Proxy::Proxy(Relater_Union* iRelater)
 :	fRelater(iRelater)
@@ -223,7 +228,8 @@ void Relater_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 	{ iVisitor.Visit_Proxy(this); }
 
 // =================================================================================================
-// MARK: - Relater_Union::Walker_Proxy
+#pragma mark -
+#pragma mark Relater_Union::Walker_Proxy
 
 class Relater_Union::Walker_Proxy : public QueryEngine::Walker
 	{
@@ -262,7 +268,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::ClientQuery
+#pragma mark -
+#pragma mark Relater_Union::ClientQuery
 
 class Relater_Union::DLink_ClientQuery_NeedsWork
 :	public DListLink<ClientQuery, DLink_ClientQuery_NeedsWork, kDebug>
@@ -287,7 +294,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::PQuery
+#pragma mark -
+#pragma mark Relater_Union::PQuery
 
 class Relater_Union::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
@@ -309,7 +317,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::Visitor_DoMakeWalker
+#pragma mark -
+#pragma mark Relater_Union::Visitor_DoMakeWalker
 
 class Relater_Union::Visitor_DoMakeWalker
 :	public virtual QueryEngine::Visitor_DoMakeWalker
@@ -337,7 +346,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Relater_Union::Analyze
+#pragma mark -
+#pragma mark Relater_Union::Analyze
 
 class Relater_Union::Analyze
 :	public virtual Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel>
@@ -699,7 +709,8 @@ ZRef<RA::Expr_Rel> Relater_Union::Analyze::TopLevelDo(ZRef<RA::Expr_Rel> iRel)
 	}
 
 // =================================================================================================
-// MARK: - Relater_Union::PRelater
+#pragma mark -
+#pragma mark Relater_Union::PRelater
 
 class Relater_Union::DLink_PRelater_NeedsWork
 :	public DListLink<PRelater, DLink_PRelater_NeedsWork, kDebug>
@@ -754,7 +765,8 @@ ZRef<RA::Expr_Rel> Relater_Union::PRelater::UsableRel(ZRef<RA::Expr_Rel> iRel)
 	}
 
 // =================================================================================================
-// MARK: - Relater_Union
+#pragma mark -
+#pragma mark Relater_Union
 
 Relater_Union::Relater_Union()
 	{}

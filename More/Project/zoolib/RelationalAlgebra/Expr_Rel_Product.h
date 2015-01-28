@@ -31,7 +31,8 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Product;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Product
+#pragma mark -
+#pragma mark Expr_Rel_Product
 
 class Expr_Rel_Product
 :	public virtual Expr_Rel
@@ -55,7 +56,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Product
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Product
 
 class Visitor_Expr_Rel_Product
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
@@ -65,7 +67,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel> sProduct(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 

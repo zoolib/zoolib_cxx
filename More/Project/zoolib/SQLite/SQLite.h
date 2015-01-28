@@ -33,7 +33,8 @@ namespace ZooLib {
 namespace SQLite {
 
 // =================================================================================================
-// MARK: - SQLite
+#pragma mark -
+#pragma mark SQLite
 
 class DB : public ZCounted
 	{
@@ -51,7 +52,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Iter
+#pragma mark -
+#pragma mark Iter
 
 class Iter : public ZCounted
 	{

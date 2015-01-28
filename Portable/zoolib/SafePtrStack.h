@@ -30,7 +30,8 @@ namespace ZooLib {
 // In these templates, P is Pointer and L is Link.
 
 // =================================================================================================
-// MARK: - SafePtrStack
+#pragma mark -
+#pragma mark SafePtrStack
 
 template <class L>
 class SafePtrStack
@@ -87,7 +88,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - SafePtrStack_WithDestroyer
+#pragma mark -
+#pragma mark SafePtrStack_WithDestroyer
 
 template <typename P, typename L = P>
 class SafePtrStack_WithDestroyer
@@ -102,7 +104,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - SafePtrStackLink
+#pragma mark -
+#pragma mark SafePtrStackLink
 
 template <typename P, typename L = P, int kDebug_T = 1>
 class SafePtrStackLink

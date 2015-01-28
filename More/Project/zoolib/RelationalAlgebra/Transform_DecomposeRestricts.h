@@ -29,7 +29,8 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-// MARK: - RelationalAlgebra::Transform_DecomposeRestricts
+#pragma mark -
+#pragma mark RelationalAlgebra::Transform_DecomposeRestricts
 
 class Transform_DecomposeRestricts
 :	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>

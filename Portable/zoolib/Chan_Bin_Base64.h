@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Base64
+#pragma mark -
+#pragma mark Base64
 
 namespace Base64 {
 
@@ -52,7 +53,8 @@ Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding);
 } // namespace Base64
 
 // =================================================================================================
-// MARK: - ChanR_Bin_Base64Decode
+#pragma mark -
+#pragma mark ChanR_Bin_Base64Decode
 
 /** A read filter stream that converts base64 data from
 the source stream into binary data on the fly.*/
@@ -76,7 +78,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanW_Bin_Base64Encode
+#pragma mark -
+#pragma mark ChanW_Bin_Base64Encode
 
 /** A write filter stream that writes to the destination stream the base64
 equivalent of binary data written to it. */

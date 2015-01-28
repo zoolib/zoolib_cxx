@@ -55,7 +55,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZThread_pthread
+#pragma mark -
+#pragma mark ZThread_pthread
 
 namespace ZThread_pthread {
 
@@ -81,7 +82,8 @@ void sSetName(const char* iName);
 } // namespace ZThread_pthread
 
 // =================================================================================================
-// MARK: - ZTSS_pthread
+#pragma mark -
+#pragma mark ZTSS_pthread
 
 namespace ZTSS_pthread {
 
@@ -104,7 +106,8 @@ Value sGet(Key iKey)
 } // namespace ZTSS_pthread
 
 // =================================================================================================
-// MARK: - ZMtx_pthread_base
+#pragma mark -
+#pragma mark ZMtx_pthread_base
 
 class ZCnd_pthread;
 
@@ -140,7 +143,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZCnd_pthread
+#pragma mark -
+#pragma mark ZCnd_pthread
 
 class ZCnd_pthread
 :	NonCopyable
@@ -188,7 +192,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZMtx_pthread
+#pragma mark -
+#pragma mark ZMtx_pthread
 
 class ZMtx_pthread : public ZMtx_pthread_base
 	{
@@ -207,7 +212,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZMtxR_pthread
+#pragma mark -
+#pragma mark ZMtxR_pthread
 
 class ZMtxR_pthread : public ZMtx_pthread_base
 	{
@@ -217,12 +223,14 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZSem_pthread
+#pragma mark -
+#pragma mark ZSem_pthread
 
 typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
 
 // =================================================================================================
-// MARK: - ZSemNoTimeout_pthread
+#pragma mark -
+#pragma mark ZSemNoTimeout_pthread
 
 class ZSemNoTimeout_pthread : NonCopyable
 	{

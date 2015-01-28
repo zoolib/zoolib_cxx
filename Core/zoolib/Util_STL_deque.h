@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace Util_STL {
 
 // =================================================================================================
-// MARK: - Util_STL
+#pragma mark -
+#pragma mark Util_STL
 
 // -----
 
@@ -46,7 +47,8 @@ bool sNotEmpty(const std::deque<T>& iVec)
 // -----
 
 // =================================================================================================
-// MARK: - Util_STL
+#pragma mark -
+#pragma mark Util_STL
 
 template <typename Base, typename Derived>
 bool sContains(const std::deque<Base>& iVec, const Derived& iElement)
@@ -115,7 +117,8 @@ ZQ<Base> sQPopFront(std::deque<Base>& ioCont)
 	}
 
 // =================================================================================================
-// MARK: - Util_STL, sXXXMust
+#pragma mark -
+#pragma mark Util_STL, sXXXMust
 
 template <typename Base, typename Derived>
 void sEraseMust(const int iDebugLevel,

@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Expr_Op0
+#pragma mark -
+#pragma mark Expr_Op0
 
 template <class T>
 class Visitor_Expr_Op0_T;
@@ -80,7 +81,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Op0
+#pragma mark -
+#pragma mark Visitor_Expr_Op0
 
 template <class T>
 class Visitor_Expr_Op0_T
@@ -93,7 +95,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Op1_T
+#pragma mark -
+#pragma mark Expr_Op1_T
 
 template <class T>
 class Visitor_Expr_Op1_T;
@@ -151,7 +154,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Op1_T
+#pragma mark -
+#pragma mark Visitor_Expr_Op1_T
 
 template <class T>
 class Visitor_Expr_Op1_T
@@ -164,7 +168,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_Op2_T
+#pragma mark -
+#pragma mark Expr_Op2_T
 
 template <class T>
 class Visitor_Expr_Op2_T;
@@ -227,7 +232,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Op2_T
+#pragma mark -
+#pragma mark Visitor_Expr_Op2_T
 
 template <class T>
 class Visitor_Expr_Op2_T
@@ -240,7 +246,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Expr_OpN_T
+#pragma mark -
+#pragma mark Expr_OpN_T
 
 template <class T>
 class Visitor_Expr_OpN_T;
@@ -298,7 +305,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_OpN_T
+#pragma mark -
+#pragma mark Visitor_Expr_OpN_T
 
 template <class T>
 class Visitor_Expr_OpN_T

@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanR_XX_Limited
+#pragma mark -
+#pragma mark ChanR_XX_Limited
 
 template <class XX>
 class ChanR_XX_Limited
@@ -66,7 +67,8 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ChanW_XX_Limited
+#pragma mark -
+#pragma mark ChanW_XX_Limited
 
 template <class XX>
 class ChanW_XX_Limited

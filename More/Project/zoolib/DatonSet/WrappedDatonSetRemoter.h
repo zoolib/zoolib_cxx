@@ -31,7 +31,8 @@ namespace ZooLib {
 namespace DatonSet {
 
 // =================================================================================================
-// MARK: - WrappedDatonSetRemoter
+#pragma mark -
+#pragma mark WrappedDatonSetRemoter
 
 class WrappedDatonSetRemoter
 :	public ZCounted
@@ -39,7 +40,7 @@ class WrappedDatonSetRemoter
 public:
 	// Client ctor
 	WrappedDatonSetRemoter(
-		const ZRef<ChannerComboFactoryRW_Bin>& iChannerComboFactory,
+		const ZRef<Factory_ChannerComboRW_Bin>& iFactory,
 		const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other);
 
 	// Server ctor
@@ -63,7 +64,7 @@ private:
 
 	ZQ<ChannerComboRW_Bin> pQEnsureChannerCombo();
 
-	const ZRef<ChannerComboFactoryRW_Bin> fChannerComboFactory;
+	const ZRef<Factory_ChannerComboRW_Bin> fFactory;
 
 	const ZRef<Callable_PullSuggested> fCallable_PullSuggested_Other;
 

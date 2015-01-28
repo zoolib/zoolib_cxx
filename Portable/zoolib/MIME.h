@@ -38,7 +38,8 @@ bool sReadFieldName(const ChanR_Bin& iChanR, std::string* oName, std::string* oN
 //bool sReadFieldBody(const ChanR_Bin& iChanR, std::string& oFieldBody);
 
 // =================================================================================================
-// MARK: - MIME::ChanR_Bin_Header
+#pragma mark -
+#pragma mark MIME::ChanR_Bin_Header
 
 /** 
 Takes a source stream and reads until it sees an LFLF sequence, at which
@@ -76,7 +77,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZMIME::ChanR_Bin_Line
+#pragma mark -
+#pragma mark ZMIME::ChanR_Bin_Line
 
 /// Returns bytes from the real stream until an end of line is detected.
 

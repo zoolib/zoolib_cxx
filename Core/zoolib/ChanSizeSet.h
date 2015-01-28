@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ChanSizeSet
+#pragma mark -
+#pragma mark ChanSizeSet
 
 class ChanSizeSet
 	{

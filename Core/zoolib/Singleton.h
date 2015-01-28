@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sSingleton
+#pragma mark -
+#pragma mark sSingleton
 
 template <class Type_p, class Tag_p>
 Type_p& sSingleton()
@@ -56,7 +57,8 @@ Type_p& sSingleton()
 	{ return sSingleton<Type_p,Type_p>(); }
 
 // =================================================================================================
-// MARK: - sDefault<Type_p>()
+#pragma mark -
+#pragma mark sDefault<Type_p>()
 
 template <class Type_p> struct DefaultTraits { typedef const Type_p& Return_t; };
 
@@ -73,7 +75,8 @@ inline DefaultTraits<void>::Return_t sDefault<void>()
 	{}
 
 // =================================================================================================
-// MARK: - sDefault()
+#pragma mark -
+#pragma mark sDefault()
 
 struct Default_t { template <class T> operator const T&() { return sSingleton<T,Tag_Default>(); } };
 

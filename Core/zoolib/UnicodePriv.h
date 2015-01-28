@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - Unicode string operations
+#pragma mark -
+#pragma mark Unicode string operations
 
 /// Prepend a UTF32 code point to a UTF16 standard library string.
 string16 operator+(UTF32 iCP, const string16& iString);
@@ -59,7 +60,8 @@ inline string8 operator+(const string8& iString, UTF32 iCP)
 namespace Unicode {
 
 // =================================================================================================
-// MARK: - Unicode::Functions_CountCU
+#pragma mark -
+#pragma mark Unicode::Functions_CountCU
 
 // Functions_CountCU::sCountCU will call through to the standard
 // string length functions for pointers, and for other iterator
@@ -169,7 +171,8 @@ struct Functions_CountCU_T<UTF8*>
 	};
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Count
+#pragma mark -
+#pragma mark Unicode::Functions_Count
 
 template <class I>
 struct Functions_Count_T
@@ -186,7 +189,8 @@ struct Functions_Count_T
 	};
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Read
+#pragma mark -
+#pragma mark Unicode::Functions_Read
 
 template <class I, typename C = typename std::iterator_traits<I>::value_type>
 struct Functions_Read_T
@@ -212,7 +216,8 @@ struct Functions_Read_T
 	};
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Write
+#pragma mark -
+#pragma mark Unicode::Functions_Write
 
 template <class I, typename C = typename std::iterator_traits<I>::value_type>
 struct Functions_Write_T
@@ -222,7 +227,8 @@ struct Functions_Write_T
 	};
 
 // =================================================================================================
-// MARK: - Unicode::Functions_Convert
+#pragma mark -
+#pragma mark Unicode::Functions_Convert
 
 template <class I>
 struct Functions_Convert_T
@@ -245,7 +251,8 @@ struct Functions_Convert_T
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - GCC workaround
+#pragma mark -
+#pragma mark GCC workaround
 
 #if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 2 && __GNUC_MINOR__ < 4
 // AG 2002-10-07. Workaround for the gcc 3.2+ STL's lack of a definition

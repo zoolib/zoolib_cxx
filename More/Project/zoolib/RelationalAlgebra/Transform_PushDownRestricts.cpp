@@ -34,7 +34,8 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Transform_PushDownRestricts
+#pragma mark -
+#pragma mark Transform_PushDownRestricts
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }

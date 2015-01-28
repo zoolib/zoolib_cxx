@@ -27,7 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - RelopsTraits
+#pragma mark -
+#pragma mark RelopsTraits
 
 struct RelopsTraits_Has
 	{ enum { Yes = 1, No = 0 }; };
@@ -40,7 +41,8 @@ template <class S> struct RelopsTraits_HasLE { enum { No = 1 }; };
 template <class S> struct RelopsTraits_HasGE { enum { No = 1 }; };
 
 // =================================================================================================
-// MARK: - Free relational operators, with conditionalized availability
+#pragma mark -
+#pragma mark Free relational operators, with conditionalized availability
 
 template <class T>
 typename EnableIfC

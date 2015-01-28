@@ -34,7 +34,8 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-// MARK: - AddedQuery
+#pragma mark -
+#pragma mark AddedQuery
 
 class AddedQuery
 	{
@@ -55,7 +56,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - QueryResult
+#pragma mark -
+#pragma mark QueryResult
 
 class QueryResult
 	{
@@ -76,7 +78,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Relater
+#pragma mark -
+#pragma mark Relater
 
 class Relater : public ZCounted
 	{
@@ -108,7 +111,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - RelaterFactory
+#pragma mark -
+#pragma mark RelaterFactory
 
 typedef Callable<ZRef<Relater>()> RelaterFactory;
 

@@ -49,7 +49,8 @@ access to them allows code to be applied to any of them.
 */
 
 // =================================================================================================
-// MARK: - YadOptions
+#pragma mark -
+#pragma mark YadOptions
 
 YadOptions::YadOptions(bool iDoIndentation)
 :	fRawChunkSize(16),
@@ -68,7 +69,8 @@ YadOptions::YadOptions(bool iDoIndentation)
 	}
 
 // =================================================================================================
-// MARK: - YadParseException
+#pragma mark -
+#pragma mark YadParseException
 
 YadParseException::YadParseException(const string& iWhat)
 :	runtime_error(iWhat)
@@ -79,7 +81,8 @@ YadParseException::YadParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - YadR
+#pragma mark -
+#pragma mark YadR
 
 /**
 \class YadR
@@ -109,7 +112,8 @@ void YadR::Accept_Yad(Visitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
-// MARK: - YadAtomR
+#pragma mark -
+#pragma mark YadAtomR
 
 /**
 \class YadAtomR
@@ -125,7 +129,8 @@ bool YadAtomR::IsSimple(const YadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
-// MARK: - YadStreamerR
+#pragma mark -
+#pragma mark YadStreamerR
 
 /**
 \class YadStreamerR
@@ -141,7 +146,8 @@ bool YadStreamerR::IsSimple(const YadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
-// MARK: - YadStrimmerR
+#pragma mark -
+#pragma mark YadStrimmerR
 
 /**
 \class YadStrimmerR
@@ -157,7 +163,8 @@ bool YadStrimmerR::IsSimple(const YadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
-// MARK: - YadSeqR
+#pragma mark -
+#pragma mark YadSeqR
 
 /**
 \class YadSeqR
@@ -182,7 +189,8 @@ void YadSeqR::SkipAll()
 	}
 
 // =================================================================================================
-// MARK: - YadMapR
+#pragma mark -
+#pragma mark YadMapR
 
 /**
 \class YadMapR
@@ -210,7 +218,8 @@ void YadMapR::SkipAll()
 	}
 
 // =================================================================================================
-// MARK: - Visitor_Yad
+#pragma mark -
+#pragma mark Visitor_Yad
 
 /**
 \class Visitor_Yad
@@ -238,7 +247,8 @@ void Visitor_Yad::Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 	{ this->Visit_YadR(iYadMapR); }
 
 // =================================================================================================
-// MARK: - YadR_Any
+#pragma mark -
+#pragma mark YadR_Any
 
 YadR_Any::YadR_Any(const Any& iAny)
 :	fAny(iAny)
@@ -251,7 +261,8 @@ const Any& YadR_Any::GetAny()
 	{ return fAny; }
 
 // =================================================================================================
-// MARK: - YadAtomR_Any
+#pragma mark -
+#pragma mark YadAtomR_Any
 
 namespace {
 
@@ -309,7 +320,8 @@ ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
 	}
 
 // =================================================================================================
-// MARK: - YadStrimmerR_string
+#pragma mark -
+#pragma mark YadStrimmerR_string
 
 class YadStrimmerR_string
 :	public virtual YadStrimmerR
@@ -338,13 +350,15 @@ bool YadStrimmerR_string::IsSimple(const YadOptions& iOptions)
 	{ return true; }
 
 // =================================================================================================
-// MARK: - sYadR
+#pragma mark -
+#pragma mark sYadR
 
 ZRef<YadR> sYadR(const string& iVal)
 	{ return new YadStrimmerR_string(iVal); }
 
 // =================================================================================================
-// MARK: - YadMapR_WithFirst
+#pragma mark -
+#pragma mark YadMapR_WithFirst
 
 YadMapR_WithFirst::YadMapR_WithFirst(const ZRef<YadR>& iFirst, const Name& iFirstName,
 	const ZRef<YadMapR>& iRemainder)

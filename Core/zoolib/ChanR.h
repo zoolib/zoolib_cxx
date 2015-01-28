@@ -39,7 +39,8 @@ inline bool sThrow_ExhaustedR()
 	}
 
 // =================================================================================================
-// MARK: - ChanR
+#pragma mark -
+#pragma mark ChanR
 
 template <class Elmt_p>
 class ChanR
@@ -165,7 +166,8 @@ uint64 sSkipAll(const ChanR<Elmt_p>& iChanR)
 	}
 
 // =================================================================================================
-// MARK: - ChanR_XX_Null
+#pragma mark -
+#pragma mark ChanR_XX_Null
 
 /// A read Chan with no content.
 

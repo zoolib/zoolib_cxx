@@ -35,7 +35,8 @@ class NetName;
 class NetNameLookup;
 
 // =================================================================================================
-// MARK: - Net
+#pragma mark -
+#pragma mark Net
 
 namespace Net {
 
@@ -54,7 +55,8 @@ enum Error
 } // namespace Net
 
 // =================================================================================================
-// MARK: - NetEx
+#pragma mark -
+#pragma mark NetEx
 
 class NetEx
 :	public std::runtime_error
@@ -69,7 +71,8 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - NetAddress
+#pragma mark -
+#pragma mark NetAddress
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
@@ -91,7 +94,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - NetAddressLookup
+#pragma mark -
+#pragma mark NetAddressLookup
 
 /// Subclasses of this are returned by NetAddress instances when
 /// NetAddress::MakeLookup is called. It's an iterator that returns zero or
@@ -113,7 +117,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - NetName
+#pragma mark -
+#pragma mark NetName
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
@@ -137,7 +142,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - NetNameLookup
+#pragma mark -
+#pragma mark NetNameLookup
 
 /// Subclasses of this are returned by NetName instances when
 /// NetName::MakeLookup is called. It's an iterator that returns zero or
@@ -160,7 +166,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - NetListener
+#pragma mark -
+#pragma mark NetListener
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener

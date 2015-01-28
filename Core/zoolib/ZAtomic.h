@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZAtomic
+#pragma mark -
+#pragma mark ZAtomic
 
 struct ZAtomic_t
 	{
@@ -73,7 +74,8 @@ void sAtomic_Barrier();
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - "CodeWarrior/68K"
+#pragma mark -
+#pragma mark "CodeWarrior/68K"
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
@@ -100,7 +102,8 @@ inline asm bool sAtomic_CAS(ZAtomic_t* iAtomic : __A0,
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
 // =================================================================================================
-// MARK: - GCC/PPC
+#pragma mark -
+#pragma mark GCC/PPC
 
 #if ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, PPC)
 
@@ -171,7 +174,8 @@ inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, PPC)
 
 // =================================================================================================
-// MARK: - GCC/x86
+#pragma mark -
+#pragma mark GCC/x86
 
 #if ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, x86)
 
@@ -285,7 +289,8 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-// MARK: - MSVC/x86
+#pragma mark -
+#pragma mark MSVC/x86
 
 #if ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 
@@ -396,7 +401,8 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-// MARK: - Mach (OSX/iPhone)
+#pragma mark -
+#pragma mark Mach (OSX/iPhone)
 
 #if defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
 

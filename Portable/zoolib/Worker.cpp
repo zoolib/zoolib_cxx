@@ -32,7 +32,8 @@ namespace ZooLib {
 */
 
 // =================================================================================================
-// MARK: - Worker
+#pragma mark -
+#pragma mark Worker
 
 /**
 \class Worker

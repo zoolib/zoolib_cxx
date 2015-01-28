@@ -40,7 +40,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-// MARK: - ZDebug
+#pragma mark -
+#pragma mark ZDebug
 
 namespace ZooLib {
 namespace ZDebug {
@@ -97,7 +98,8 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 	}
 
 // =================================================================================================
-// MARK: - POSIX
+#pragma mark -
+#pragma mark POSIX
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
@@ -174,7 +176,8 @@ void OutputDebugString(const char *restrict fmt, ...)
 #endif
 
 // =================================================================================================
-// MARK: - Android
+#pragma mark -
+#pragma mark Android
 
 #if defined(__ANDROID__)
 
@@ -202,7 +205,8 @@ public:
 #endif // defined(__ANDROID__)
 
 // =================================================================================================
-// MARK: - Win
+#pragma mark -
+#pragma mark Win
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -315,7 +319,8 @@ public:
 } // namespace ZooLib
 
 // =================================================================================================
-// MARK: - ZUnimplemented
+#pragma mark -
+#pragma mark ZUnimplemented
 
 namespace ZooLib {
 

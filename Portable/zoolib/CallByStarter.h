@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - sQCallByStarter (specialization for 0 params)
+#pragma mark -
+#pragma mark sQCallByStarter (specialization for 0 params)
 
 template <class R>
 void spQCallWithPromise_T(
@@ -55,7 +56,8 @@ ZRef<Delivery<ZQ<R> > > sQCallByStarter(
 	}
 
 // =================================================================================================
-// MARK: - sQCallByStarter variants
+#pragma mark -
+#pragma mark sQCallByStarter variants
 
 #define ZMACRO_Callable_CallByStarter(X) \
 \

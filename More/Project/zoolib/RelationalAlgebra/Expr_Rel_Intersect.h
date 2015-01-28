@@ -31,7 +31,8 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Intersect;
 
 // =================================================================================================
-// MARK: - Expr_Rel_Intersect
+#pragma mark -
+#pragma mark Expr_Rel_Intersect
 
 class Expr_Rel_Intersect
 :	public virtual Expr_Rel
@@ -52,7 +53,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Expr_Rel_Intersect
+#pragma mark -
+#pragma mark Visitor_Expr_Rel_Intersect
 
 class Visitor_Expr_Rel_Intersect
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
@@ -62,7 +64,8 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Relational operators
+#pragma mark -
+#pragma mark Relational operators
 
 ZRef<Expr_Rel_Intersect> sIntersect(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);

@@ -98,7 +98,8 @@ type             -
 */
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark -
+#pragma mark Helpers
 
 static string spPrettyName(const std::type_info& iTI)
 	{
@@ -295,7 +296,8 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	}
 
 // =================================================================================================
-// MARK: - ReadOptions
+#pragma mark -
+#pragma mark ReadOptions
 
 ReadOptions sReadOptions_Extended()
 	{
@@ -311,7 +313,8 @@ ReadOptions sReadOptions_Extended()
 	}
 
 // =================================================================================================
-// MARK: - WriteOptions
+#pragma mark -
+#pragma mark WriteOptions
 
 WriteOptions::WriteOptions()
 :	YadOptions()
@@ -330,7 +333,8 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 	{}
 
 // =================================================================================================
-// MARK: - ParseException
+#pragma mark -
+#pragma mark ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	YadParseException_Std(iWhat)
@@ -341,7 +345,8 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - YadStreamerR_Hex
+#pragma mark -
+#pragma mark YadStreamerR_Hex
 
 YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
@@ -361,7 +366,8 @@ void YadStreamerR_Hex::GetChan(const ChanR_Bin*& oChanPtr)
 	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
-// MARK: - YadStreamerR_Base64
+#pragma mark -
+#pragma mark YadStreamerR_Base64
 
 YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -384,7 +390,8 @@ void YadStreamerR_Base64::GetChan(const ChanR_Bin*& oChanPtr)
 	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
-// MARK: - YadStrimmerR
+#pragma mark -
+#pragma mark YadStrimmerR
 
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
@@ -404,7 +411,8 @@ void YadStrimmerR_JSON::GetChan(const ChanR_UTF*& oChanPtr)
 	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
-// MARK: - YadSeqR
+#pragma mark -
+#pragma mark YadSeqR
 
 YadSeqR_JSON::YadSeqR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -455,7 +463,8 @@ void YadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-// MARK: - YadMapR_JSON
+#pragma mark -
+#pragma mark YadMapR_JSON
 
 YadMapR_JSON::YadMapR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -520,7 +529,8 @@ void YadMapR_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-// MARK: - Static writing functions
+#pragma mark -
+#pragma mark Static writing functions
 
 static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
@@ -796,7 +806,8 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 	}
 
 // =================================================================================================
-// MARK: - Visitor_Writer
+#pragma mark -
+#pragma mark Visitor_Writer
 
 Visitor_Writer::Visitor_Writer(
 	size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
@@ -1020,7 +1031,8 @@ void Visitor_Writer::Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR)
 	}
 
 // =================================================================================================
-// MARK: - sYadR and sToChan
+#pragma mark -
+#pragma mark sYadR and sToChan
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 	{
