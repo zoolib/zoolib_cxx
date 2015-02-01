@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_STL_deque_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h" // find
+#include "zoolib/Compat_algorithm.h" // find
+
 #include "zoolib/ZDebug.h"
 
 #include <deque>
@@ -37,12 +38,12 @@ namespace Util_STL {
 // -----
 
 template <class T>
-bool sIsEmpty(const std::deque<T>& iVec)
-	{ return iVec.empty(); }
+bool sIsEmpty(const std::deque<T>& iCont)
+	{ return iCont.empty(); }
 
 template <class T>
-bool sNotEmpty(const std::deque<T>& iVec)
-	{ return not sIsEmpty(iVec); }
+bool sNotEmpty(const std::deque<T>& iCont)
+	{ return not sIsEmpty(iCont); }
 
 // -----
 
@@ -51,8 +52,10 @@ bool sNotEmpty(const std::deque<T>& iVec)
 #pragma mark Util_STL
 
 template <typename Base, typename Derived>
-bool sContains(const std::deque<Base>& iVec, const Derived& iElement)
-	{ return iVec.end() != std::find(iVec.begin(), iVec.end(), iElement); }
+bool sContains(const std::deque<Base>& iCont, const Derived& iElement)
+	{ return iCont.end() != std::find(iCont.begin(), iCont.end(), iElement); }
+
+// -----
 
 template <typename Base, typename Derived>
 bool sQErase(std::deque<Base>& ioCont, const Derived& iElement)
@@ -67,6 +70,17 @@ bool sQErase(std::deque<Base>& ioCont, const Derived& iElement)
 template <typename Base, typename Derived>
 void sErase(std::deque<Base>& ioCont, const Derived& iElement)
 	{ sQErase(ioCont, iElement); }
+
+template <typename Base>
+typename std::deque<Base>::iterator
+sEraseInc(std::deque<Base>& ioCont, typename std::deque<Base>::iterator iter)
+	{
+	if (ioCont.end() != iter)
+		return ioCont.erase(iter);
+	return iter;
+	}
+
+// -----
 
 template <typename Base, typename Derived>
 void sPushBack(std::deque<Base>& ioCont, const Derived& iElement)
@@ -91,6 +105,8 @@ ZQ<Base> sQPopBack(std::deque<Base>& ioCont)
 	ioCont.pop_back();
 	return result;
 	}
+
+// -----
 
 template <typename Base, typename Derived>
 void sPushFront(std::deque<Base>& ioCont, const Derived& iElement)
