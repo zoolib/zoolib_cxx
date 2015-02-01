@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChannerXX.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Trail.h"
+#include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZQ.h"
 #include "zoolib/ZThread.h"
@@ -155,11 +156,18 @@ public:
 	ZRef<FileLoc> GetFileLoc() const;
 
 private:
+	// It's not generally possible to relate FileSpecs to one another. Disable it.
+	void operator<(const FileSpec& iOther);
+
 	ZRef<FileLoc> pPhysicalLoc() const;
 
 	ZRef<FileLoc> fLoc;
 	std::vector<std::string> fComps;
 	};
+
+// Disable other relops.
+template <>
+struct RelopsTraits_HasLT<FileSpec> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark -
