@@ -172,23 +172,23 @@ struct ForEachWrapper_Reverse_T
 #endif
 
 #ifndef ZMACRO_foreachri
-	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+	#define ZMACRO_foreachri ZMACRO_foreach_unsupported
 #endif
 
 #ifndef ZMACRO_foreachv
-	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+	#define ZMACRO_foreachv ZMACRO_foreach_unsupported
 #endif
 
 #ifndef ZMACRO_foreachrv
-	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+	#define ZMACRO_foreachrv ZMACRO_foreach_unsupported
 #endif
 
 #ifndef ZMACRO_foreacha
-	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+	#define ZMACRO_foreacha ZMACRO_foreach_unsupported
 #endif
 
 #ifndef ZMACRO_foreachra
-	#define ZMACRO_foreachi ZMACRO_foreach_unsupported
+	#define ZMACRO_foreachra ZMACRO_foreach_unsupported
 #endif
 
 // =================================================================================================
