@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Connection_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Factory.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/ChannerXX.h"
+#include "zoolib/Factory.h"
 
 namespace ZooLib {
 
@@ -44,4 +44,4 @@ typedef Factory<ZRef<ChannerRWClose_Bin> > Factory_ChannerRWClose_Bin;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_Channer_h__
+#endif // __ZooLib_Connection_h__
