@@ -538,6 +538,15 @@ const struct
 
 // =================================================================================================
 #pragma mark -
+#pragma mark sClear
+
+template <class T, bool Sense_p>
+inline
+void sClear(ZRef<T,Sense_p>& ioRef)
+	{ ioRef.Clear(); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark swap
 
 template <class T, bool Sense_p>
