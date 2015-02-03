@@ -40,12 +40,12 @@ class WrappedDatonSetRemoter
 public:
 	// Client ctor
 	WrappedDatonSetRemoter(
-		const ZRef<Factory_ChannerComboRW_Bin>& iFactory,
+		const ZRef<Factory_ChannerRW_Bin>& iFactory,
 		const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other);
 
 	// Server ctor
 	WrappedDatonSetRemoter(
-		const ChannerComboRW_Bin& iChannerComboRW,
+		const ZRef<ChannerRW_Bin>& iChannerRW,
 		const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other);
 
 // From ZCounted
@@ -62,9 +62,9 @@ private:
 	void pRead();
 	static void spRead(ZRef<WrappedDatonSetRemoter> iWDSR);
 
-	ZQ<ChannerComboRW_Bin> pQEnsureChannerCombo();
+	ZRef<ChannerRW_Bin> pEnsureChanner();
 
-	const ZRef<Factory_ChannerComboRW_Bin> fFactory;
+	const ZRef<Factory_ChannerRW_Bin> fFactory;
 
 	const ZRef<Callable_PullSuggested> fCallable_PullSuggested_Other;
 
@@ -77,7 +77,7 @@ private:
 
 	std::set<ZRef<Callable_PullFrom> > fCallables_PullFrom;
 
-	ZQ<ChannerComboRW_Bin> fChannerComboQ;
+	ZRef<ChannerRW_Bin> fChanner;
 
 	bool fConnectionBusy;
 

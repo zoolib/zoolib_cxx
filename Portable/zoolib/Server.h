@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Server_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Roster.h"
-//#include "zoolib/Channer.h"
 #include "zoolib/Connection.h"
+#include "zoolib/Roster.h"
 #include "zoolib/Worker.h"
 
 namespace ZooLib {
@@ -38,7 +37,7 @@ class Server
 	{
 public:
 	typedef ZRef<Roster::Entry> ZRef_Roster_Entry; // CW7
-	typedef Callable<void(ZRef_Roster_Entry,ZRef<ZStreamerRW>)> Callable_Connection;
+	typedef Callable<void(ZRef_Roster_Entry,ZRef<ChannerRW<byte>>)> Callable_Connection;
 
 	Server();
 	virtual ~Server();
@@ -50,7 +49,7 @@ public:
 	bool IsStarted();
 
 	void Start(ZRef<Starter> iStarter,
-		ZRef<ZStreamerRWFactory> iFactory,
+		ZRef<Factory_ChannerRW_Bin> iFactory,
 		ZRef<Callable_Connection> iCallable_Connection);
 
 	void Stop();
@@ -59,22 +58,22 @@ public:
 	void KillConnections();
 	void KillConnectionsWait();
 
-	ZRef<ZStreamerRWFactory> GetFactory();
+	ZRef<Factory_ChannerRW_Bin> GetFactory();
 
 	ZRef<Callable_Connection> GetCallable_Connection();
 
 private:
-	bool pWork(ZRef<ZWorker> iWorker);
-	void pWorkDetached(ZRef<ZWorker> iWorker);
+	bool pWork(ZRef<Worker> iWorker);
+	void pWorkDetached(ZRef<Worker> iWorker);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	ZRef<ZStreamerRWFactory> fFactory;
+	ZRef<Factory_ChannerRW_Bin> fFactory;
 	ZRef<Callable_Connection> fCallable_Connection;
 	ZRef<Roster> fRoster;
 
-	ZRef<ZWorker> fWorker;
+	ZRef<Worker> fWorker;
 	};
 
 } // namespace ZooLib

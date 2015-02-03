@@ -21,22 +21,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
-
-#include "zoolib/ZServer.h"
+#include "zoolib/Server.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZServer
+#pragma mark Server
 
-ZServer::ZServer()
+Server::Server()
 	{}
 
-ZServer::~ZServer()
+Server::~Server()
 	{}
 
-void ZServer::Finalize()
+void Server::Finalize()
 	{
 	ZGuardMtx guard(fMtx);
 	ZAssert(not fWorker);
@@ -48,22 +47,22 @@ void ZServer::Finalize()
 	ZCounted::Finalize();
 	}
 
-bool ZServer::IsStarted()
+bool Server::IsStarted()
 	{
 	ZGuardMtx guard(fMtx);
 	return fFactory;
 	}
 
-void ZServer::Start(ZRef<Starter> iStarter,
-	ZRef<ZStreamerRWFactory> iFactory,
-	ZRef<Callable_Connection> iCallable_Connection)
+void Server::Start(ZRef<Starter> iStarter,
+		ZRef<Factory_ChannerRW_Bin> iFactory,
+		ZRef<Callable_Connection> iCallable_Connection)
 	{
 	ZAssert(iStarter);
 	ZAssert(iFactory);
 
 	// Declared before the acq, so it goes out of scope after it, and any
 	// callable on the roster is invoked with our mutex released.
-	ZRef<ZRoster> priorRoster;
+	ZRef<Roster> priorRoster;
 
 	ZAcqMtx acq(fMtx);
 
@@ -72,24 +71,24 @@ void ZServer::Start(ZRef<Starter> iStarter,
 	ZAssert(not fCallable_Connection);
 
 	priorRoster = fRoster;
-	fRoster = new ZRoster;
+	fRoster = new Roster;
 
 	fFactory = iFactory;
 	fCallable_Connection = iCallable_Connection;
 
-	fWorker = new ZWorker(
-		sCallable(sWeakRef(this), &ZServer::pWork),
-		sCallable(sWeakRef(this), &ZServer::pWorkDetached));
+	fWorker = new Worker(
+		sCallable(sWeakRef(this), &Server::pWork),
+		sCallable(sWeakRef(this), &Server::pWorkDetached));
 
 	fWorker->Attach(iStarter);
 
 	fWorker->Wake();
 	}
 
-void ZServer::Stop()
+void Server::Stop()
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
 		theFactory->Cancel();
@@ -98,11 +97,11 @@ void ZServer::Stop()
 	fCnd.Broadcast();
 	}
 
-void ZServer::StopWait()
+void Server::StopWait()
 	{
 	ZAcqMtx acq(fMtx);
 
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
 		theFactory->Cancel();
@@ -116,20 +115,20 @@ void ZServer::StopWait()
 		}
 	}
 
-void ZServer::KillConnections()
+void Server::KillConnections()
 	{
 	ZGuardMtx guard(fMtx);
-	if (ZRef<ZRoster> theRoster = fRoster)
+	if (ZRef<Roster> theRoster = fRoster)
 		{
 		guard.Release();
 		theRoster->Broadcast();
 		}
 	}
 
-void ZServer::KillConnectionsWait()
+void Server::KillConnectionsWait()
 	{
 	ZGuardMtx guard(fMtx);
-	if (ZRef<ZRoster> theRoster = fRoster)
+	if (ZRef<Roster> theRoster = fRoster)
 		{
 		guard.Release();
 		theRoster->Broadcast();
@@ -143,32 +142,32 @@ void ZServer::KillConnectionsWait()
 		}
 	}
 
-ZRef<ZStreamerRWFactory> ZServer::GetFactory()
+ZRef<Factory_ChannerRW_Bin> Server::GetFactory()
 	{
 	ZAcqMtx acq(fMtx);
 	return fFactory;
 	}
 
-ZRef<ZServer::Callable_Connection> ZServer::GetCallable_Connection()
+ZRef<Server::Callable_Connection> Server::GetCallable_Connection()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCallable_Connection;
 	}
 
-static void spKill(ZRef<ZStreamerRWCon> iSRWCon)
+static void spKill(ZRef<ChannerClose> iChannerClose)
 	{
-	if (iSRWCon)
-		iSRWCon->Abort();
+	if (iChannerClose)
+		sClose(sGetChan(iChannerClose));
 	}
 
-bool ZServer::pWork(ZRef<ZWorker> iWorker)
+bool Server::pWork(ZRef<Worker> iWorker)
 	{
 	ZGuardMtx guard(fMtx);
 
-	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		guard.Release();
-		if (ZRef<ZStreamerRW> theSRW = theFactory->MakeStreamerRW())
+		if (ZRef<ChannerRW_Bin> theChanner = sCall(theFactory))
 			{
 			guard.Acquire();
 			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
@@ -177,8 +176,8 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 				try
 					{
 					ZRef<Callable_Void> theCallable_Kill =
-						sBindR(sCallable(spKill), theSRW.DynamicCast<ZStreamerRWCon>());
-					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theSRW);
+						sBindR(sCallable(spKill), sRef(theChanner.DynamicCast<ChannerClose>()));
+					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theChanner);
 					}
 				catch (...)
 					{}
@@ -190,7 +189,7 @@ bool ZServer::pWork(ZRef<ZWorker> iWorker)
 	return false;
 	}
 
-void ZServer::pWorkDetached(ZRef<ZWorker> iWorker)
+void Server::pWorkDetached(ZRef<Worker> iWorker)
 	{
 	ZAcqMtx acq(fMtx);
 	fWorker.Clear();

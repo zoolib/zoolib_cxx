@@ -157,7 +157,7 @@ static Seq_Any spSeqFromDelta(const ZRef<Delta>& iDelta)
 #pragma mark WrappedDatonSetRemoter
 
 WrappedDatonSetRemoter::WrappedDatonSetRemoter(
-	const ZRef<Factory_ChannerComboRW_Bin>& iFactory,
+	const ZRef<Factory_ChannerRW_Bin>& iFactory,
 	const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other)
 :	fFactory(iFactory)
 ,	fCallable_PullSuggested_Other(iCallable_PullSuggested_Other)
@@ -168,10 +168,10 @@ WrappedDatonSetRemoter::WrappedDatonSetRemoter(
 	}
 
 WrappedDatonSetRemoter::WrappedDatonSetRemoter(
-	const ChannerComboRW_Bin& iChannerComboRW,
+	const ZRef<ChannerRW_Bin>& iChanner,
 	const ZRef<Callable_PullSuggested>& iCallable_PullSuggested_Other)
 :	fCallable_PullSuggested_Other(iCallable_PullSuggested_Other)
-,	fChannerComboQ(iChannerComboRW)
+,	fChanner(iChanner)
 ,	fConnectionBusy(false)
 ,	fPullFromPointer(nullptr)
 	{}
@@ -205,14 +205,14 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 		{
 		try
 			{
-			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
+			ZRef<ChannerRW_Bin> theChanner = this->pEnsureChanner();
 
 			ZGuardMtxR guard(fMtxR);
 
-			if (not theChannerComboQ)
+			if (not theChanner)
 				break;
 
-			const ChanW_Bin& theChanW = sGetChan(theChannerComboQ->GetW());
+			const ChanW_Bin& theChanW = sGetChan<ChanW_Bin>(theChanner);
 
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
@@ -233,7 +233,7 @@ void WrappedDatonSetRemoter::pPullSuggested(const ZRef<Callable_PullFrom>& iCall
 		catch (...)
 			{
 			ZGuardMtxR guard(fMtxR);
-			sClear(fChannerComboQ);
+			fChanner.Clear();
 			}
 		}
 
@@ -246,14 +246,14 @@ ZRef<Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 		{
 		try
 			{
-			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
+			ZRef<ChannerRW_Bin> theChanner = this->pEnsureChanner();
 
 			ZGuardMtxR guard(fMtxR);
 
-			if (not theChannerComboQ)
+			if (not theChanner)
 				break;
 
-			const ChanW_Bin& theChanW = sGetChan(theChannerComboQ->GetW());
+			const ChanW_Bin& theChanW = sGetChan<ChanW_Bin>(theChanner);
 
 			while (fConnectionBusy)
 				fCnd.Wait(fMtxR);
@@ -283,7 +283,7 @@ ZRef<Deltas> WrappedDatonSetRemoter::pPullFrom(ZRef<Event> iEvent)
 		catch (...)
 			{
 			ZGuardMtxR guard(fMtxR);
-			sClear(fChannerComboQ);
+			fChanner.Clear();
 			}
 		}
 	// Never get here.
@@ -298,11 +298,11 @@ void WrappedDatonSetRemoter::pRead()
 		{
 		try
 			{
-			ZQ<ChannerComboRW_Bin> theChannerComboQ = this->pQEnsureChannerCombo();
+			ZRef<ChannerRW_Bin> theChanner = this->pEnsureChanner();
 
 			ZGuardMtxR guard(fMtxR);
 
-			if (not theChannerComboQ)
+			if (not theChanner)
 				{
 				// No Channer was available
 				if (fFactory)
@@ -313,7 +313,7 @@ void WrappedDatonSetRemoter::pRead()
 
 			ZRelGuardR rel(guard);
 
-			const Map_Any theMessage = spReadMessage(theChannerComboQ->GetR());
+			const Map_Any theMessage = spReadMessage(sGetChanner<ChanR_Bin>(theChanner));
 			const string8& theWhat = theMessage.Get<string8>("What");
 
 			if (false)
@@ -361,7 +361,7 @@ void WrappedDatonSetRemoter::pRead()
 				SaveSetRestore<bool> theSSR(fConnectionBusy, true);
 				ZRelGuardR rel2(guard);
 
-				spSendMessage(theMessage, sGetChan(theChannerComboQ->GetW()));
+				spSendMessage(theMessage, sGetChan<ChanW_Bin>(theChanner));
 				}
 
 				fCnd.Broadcast();
@@ -391,7 +391,7 @@ void WrappedDatonSetRemoter::pRead()
 		catch (...)
 			{
 			ZGuardMtxR guard(fMtxR);
-			sClear(fChannerComboQ);
+			fChanner.Clear();
 			}
 		}
 	}
@@ -399,18 +399,18 @@ void WrappedDatonSetRemoter::pRead()
 void WrappedDatonSetRemoter::spRead(ZRef<WrappedDatonSetRemoter> iWDSR)
 	{ iWDSR->pRead(); }
 
-ZQ<ChannerComboRW_Bin> WrappedDatonSetRemoter::pQEnsureChannerCombo()
+ZRef<ChannerRW_Bin> WrappedDatonSetRemoter::pEnsureChanner()
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	if (not fChannerComboQ)
+	if (not fChanner)
 		{
 		guard.Release();
-		ZQ<ChannerComboRW_Bin> theChannerComboQ = sCall(fFactory);
+		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
 		guard.Acquire();
-		fChannerComboQ = theChannerComboQ;
+		fChanner = theChanner;
 		}
-	return fChannerComboQ;
+	return fChanner;
 	}
 
 } // namespace DatonSet
