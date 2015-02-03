@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include "zoolib/Net.h"
+#include "zoolib/ChannerXX.h"
 
 #if ZCONFIG_API_Enabled(Net_Socket)
 
@@ -65,8 +66,8 @@ protected:
 	NetListener_Socket(int iSocketFD);
 	virtual ~NetListener_Socket();
 
-// From ZNetListener
-	virtual ZQ<ChannerComboRWClose_Bin> Listen();
+// From Factory_ChannerRWClose_Bin via NetListener
+	virtual ZRef<ChannerRWClose_Bin> Make();
 	virtual void Cancel();
 
 // Our protocol
@@ -88,9 +89,7 @@ ZRef<NetListener_Socket> sNetListener_Socket(int iFD);
 #pragma mark NetEndpoint_Socket
 
 class NetEndpoint_Socket
-:	public ChannerR_Bin
-,	public ChannerW_Bin
-,	public ChannerClose
+:	public ChannerRWClose_Bin
 ,	private ChanR_Bin
 ,	private ChanW_Bin
 ,	private ChanClose

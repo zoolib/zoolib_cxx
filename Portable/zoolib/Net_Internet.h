@@ -83,8 +83,8 @@ public:
 	NetAddress_IP4(ip4_addr iAddr, ip_port iPort);
 	NetAddress_IP4(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort);
 
-// From NetAddress
-	virtual ZQ<ChannerComboRWClose_Bin> Connect();
+// From Factory_ChannerRWClose_Bin via NetAddress_Internet
+	virtual ZRef<ChannerRWClose_Bin> Make();
 
 // Our protocol
 	ip4_addr GetAddr();
@@ -111,8 +111,8 @@ class NetAddress_IP6
 public:
 	NetAddress_IP6(ip_port iPort, ip6_addr iAddr);
 
-// From NetAddress
-	virtual ZQ<ChannerComboRWClose_Bin> Connect();
+// From Factory_ChannerRWClose_Bin via NetAddress_Internet
+	virtual ZRef<ChannerRWClose_Bin> Make();
 
 // Our protocol
 	ip6_addr GetAddr();
@@ -169,8 +169,8 @@ ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
 #pragma mark -
 #pragma mark sQConnect_TCP
 
-ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
-ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
+ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
+ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
 
 } // namespace ZooLib
 

@@ -41,9 +41,6 @@ NetAddress::NetAddress()
 NetAddress::~NetAddress()
 	{}
 
-ZQ<ZQ<ChannerComboRWClose_Bin> > NetAddress::QCall()
-	{ return this->Connect(); }
-
 ZRef<NetAddressLookup> NetAddress::MakeLookup(size_t iMaxNames)
 	{ return null; }
 
@@ -67,17 +64,14 @@ NetName::NetName()
 NetName::~NetName()
 	{}
 
-ZQ<ZQ<ChannerComboRWClose_Bin> > NetName::QCall()
-	{ return this->Connect(); }
-
-ZQ<ChannerComboRWClose_Bin> NetName::Connect()
+ZRef<ChannerRWClose_Bin> NetName::Make()
 	{
 	if (ZRef<NetNameLookup> theLookup = this->MakeLookup(10))
 		{
 		theLookup->Start();
 		while (not theLookup->Finished())
 			{
-			if (ZQ<ChannerComboRWClose_Bin> theQ = sCall(theLookup->CurrentAddress()))
+			if (ZRef<ChannerRWClose_Bin> theQ = sCall(theLookup->CurrentAddress()))
 				return theQ;
 			theLookup->Advance();
 			}
@@ -105,13 +99,7 @@ NetListener::NetListener()
 NetListener::~NetListener()
 	{}
 
-ZQ<ZQ<ChannerComboRWClose_Bin> > NetListener::QCall()
-	{ return this->Listen(); }
-
 ZRef<NetAddress> NetListener::GetAddress()
 	{ return null; }
-
-void NetListener::Cancel()
-	{}
 
 } // namespace ZooLib

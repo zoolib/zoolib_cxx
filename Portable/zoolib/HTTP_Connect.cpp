@@ -31,41 +31,14 @@ namespace HTTP {
 #pragma mark -
 #pragma mark HTTP::sQConnect
 
-// This all constitutes a slightly skanky bridge between Chan and Stream.
-
-//class ChannerClose_RWCon
-//:	public ChannerClose
-//,	public ChanClose
-//	{
-//public:
-//	ChannerClose_RWCon(const ZRef<ZStreamerWCon>& iSWCon)
-//	:	fSWCon(iSWCon)
-//		{}
-//
-//	virtual void GetChan(const ChanClose*& oChanPtr)
-//		{ oChanPtr = this; }
-//
-//	virtual void Close()
-//		{ fSWCon->GetStreamWCon().SendDisconnect(); }
-//
-//	const ZRef<ZStreamerWCon> fSWCon;
-//	};
-//
-//ZQ<Connection_t> sAsConnectionQ(const ZRef<ZStreamerRWCon>& iSRWCon)
-//	{
-//	if (iSRWCon)
-//		return Connection_t(iSRWCon, iSRWCon, new ChannerClose_RWCon(iSRWCon));
-//	return null;
-//	}
-//
-ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
+ZRef<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
-	if (ZQ<ChannerComboRWClose_Bin> theComboQ = sCall(sRef(new NetName_Internet(iHost, iPort))))
+	if (ZRef<ChannerRWClose_Bin> theSR = sCall(sRef(new NetName_Internet(iHost, iPort))))
 		{
 //##		theComboQ->SetW(new ChanW_XX_Buffered<byte>(theComboQ->GetW()))
 
 		if (not iUseSSL)
-			return theComboQ;
+			return theSR;
 
 //##		if (ZRef<ZStreamerRWCon> wrapped = sStreamerRWCon_SSL(theEP, theSW))
 //##			return Connection_t(wrapped, wrapped, new ChannerClose_RWCon(wrapped));

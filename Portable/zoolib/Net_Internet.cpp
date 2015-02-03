@@ -57,7 +57,7 @@ NetAddress_IP4::NetAddress_IP4(
 ,	fAddr(sAddr(iAddr0, iAddr1, iAddr2, iAddr3))
 	{}
 
-ZQ<ChannerComboRWClose_Bin> NetAddress_IP4::Connect()
+ZRef<ChannerRWClose_Bin> NetAddress_IP4::Make()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip4_addr NetAddress_IP4::GetAddr()
@@ -92,7 +92,7 @@ NetAddress_IP6::NetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 ,	fAddr(iAddr)
 	{}
 
-ZQ<ChannerComboRWClose_Bin> NetAddress_IP6::Connect()
+ZRef<ChannerRWClose_Bin> NetAddress_IP6::Make()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip6_addr NetAddress_IP6::GetAddr()
@@ -157,15 +157,15 @@ ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort)
 #pragma mark -
 #pragma mark NetEndpoint_TCP
 
-ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
+ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return FunctionChain<ZQ<ChannerComboRWClose_Bin>, MakeParam4_t>
+	return FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
 	}
 
-ZQ<ChannerComboRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
+ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return FunctionChain<ZQ<ChannerComboRWClose_Bin>, MakeParam6_t>
+	return FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));
 	}
 

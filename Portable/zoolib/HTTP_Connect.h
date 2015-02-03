@@ -27,16 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace HTTP {
 
-typedef ChannerComboRWClose_Bin Connection_t;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark HTTP
 
-typedef Callable<ZQ<Connection_t>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
-	Callable_QConnect;
+typedef Callable<ZRef<ChannerRWClose_Bin>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
+	Callable_Connect;
 
-ZQ<Connection_t> sQConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
+ZRef<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
 
 } // namespace HTTP
 } // namespace ZooLib

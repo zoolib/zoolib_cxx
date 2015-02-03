@@ -68,15 +68,15 @@ pair<uint16,bool> spGetPortAndSSL(const string& iScheme, const string& iHost, ui
 	return pair<uint16,bool>(thePort, useSSL);
 	}
 
-ZQ<Connection_t> spQConnect(ZRef<Callable_QConnect> iCallable_QConnect,
+ZRef<ChannerRWClose_Bin> spConnect(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iScheme, const string& iHost, uint16 iPort)
 	{
 	const pair<uint16,bool> thePortAndSSL = spGetPortAndSSL(iScheme, iHost, iPort);
 
-	if (iCallable_QConnect)
-		return iCallable_QConnect->Call(iHost, thePortAndSSL.first, thePortAndSSL.second);
+	if (iCallable_Connect)
+		return iCallable_Connect->Call(iHost, thePortAndSSL.first, thePortAndSSL.second);
 
-	return sQConnect(iHost, thePortAndSSL.first, thePortAndSSL.second);
+	return sConnect(iHost, thePortAndSSL.first, thePortAndSSL.second);
 	}
 
 } // anonymous namespace
@@ -114,8 +114,8 @@ static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 		}
 	}
 
-bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
-	const ZRef<Callable_QConnect>& iCallable_QConnect,
+bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
+	ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
 	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader)
@@ -142,21 +142,21 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 		string thePath;
 		if (sParseURL(theURL, &theScheme, &theHost, &thePort, &thePath))
 			{
-			// If ioConnectionQ is valid, we *assume* that it is a live connection
+			// If ioConnection is valid, we *assume* that it is a live connection
 			// to the server for theURL
 			const pair<uint16,bool> thePortAndSSL = spGetPortAndSSL(theScheme, theHost, thePort);
 			thePort = thePortAndSSL.first;
 
-			const bool wasExtantConnection = bool(ioConnectionQ);
+			const bool wasExtantConnection = bool(ioConnection);
 			if (not wasExtantConnection)
 				{
-				if (iCallable_QConnect)
-					ioConnectionQ = iCallable_QConnect->Call(theHost, thePort, thePortAndSSL.second);
+				if (iCallable_Connect)
+					ioConnection = iCallable_Connect->Call(theHost, thePort, thePortAndSSL.second);
 				else
-					ioConnectionQ = sQConnect(theHost, thePort, thePortAndSSL.second);
+					ioConnection = sConnect(theHost, thePort, thePortAndSSL.second);
 				}
 
-			if (not ioConnectionQ)
+			if (not ioConnection)
 				{
 				// We have no physical connection, our caller can do any retry it desires.
 				return false;
@@ -165,14 +165,14 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 			int32 theResponseCode;
 			Map theResponseHeader;
 			if (not spQRequest(
-				sGetChan(ioConnectionQ->GetR()), sGetChan(ioConnectionQ->GetW()),
+				sGetChan<ChanR_Bin>(ioConnection), sGetChan<ChanW_Bin>(ioConnection),
 				iMethod, theHost + sStringf(":%d", thePort), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
 				{
 				// We failed to interpret the response. We've thus lost track of our position in any
 				// request/response sequence and the connection cannot (continue to) be reused.
-				sClear(ioConnectionQ);
+				sClear(ioConnection);
 
 				if (wasExtantConnection)
 					{
@@ -203,7 +203,8 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 					theURL = sAbsoluteURI(theURL, sGetString0(theResponseHeader.Get("location")));
 					// Read and discard the body
 					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
-						iMethod, theResponseCode, theResponseHeader, ioConnectionQ->GetR()))
+						iMethod, theResponseCode, theResponseHeader,
+						sGetChanner<ChanR_Bin>(ioConnection)))
 						{ sSkipAll(sGetChan(theChannerR_Content)); }
 
 					string newScheme;
@@ -217,7 +218,7 @@ bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
 						if (newScheme == theScheme and newHost == theHost and newPort == thePort)
 							break;
 						}
-					sClear(ioConnectionQ);
+					sClear(ioConnection);
 					break;
 					}
 				default:
@@ -244,7 +245,7 @@ static void spPOST_Prefix(const ChanW_Bin& w,
 		sWrite_Header(*iHeader, w);
 	}
 
-ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
+ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ)
 	{
@@ -254,9 +255,9 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 	string thePath;
 	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		if (ZQ<Connection_t> theConnQ = spQConnect(iCallable_QConnect, theScheme, theHost, thePort))
+		if (ZRef<ChannerRWClose_Bin> theConn = spConnect(iCallable_Connect, theScheme, theHost, thePort))
 			{
-			const ChanW_Bin& theChanW = sGetChan(theConnQ->GetW());
+			const ChanW_Bin& theChanW = sGetChan<ChanW_Bin>(theConn);
 
 			spPOST_Prefix(theChanW, iMethod, theHost, thePath, iHeader, true);
 
@@ -273,7 +274,7 @@ ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
 				sCopyAll(iBody, ChanW_Bin_Chunked(16 *1024, theChanW));
 				}
 			sFlush(theChanW);
-			return theConnQ;
+			return theConn;
 			}
 		}
 	return null;
@@ -294,14 +295,14 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		}
 	}
 
-ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
+ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (iConnQ)
+	if (iConn)
 		{
 		int32 theResponseCode;
 		Map theResponseHeader;
-		if (spQPOST_Suffix(sGetChan(iConnQ->GetR()),
+		if (spQPOST_Suffix(sGetChan<ChanR_Bin>(iConn),
 			&theResponseCode, &theResponseHeader, oRawHeader))
 			{
 			if (oResponseCode)
@@ -312,33 +313,34 @@ ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
 				if (oHeader)
 					*oHeader = theResponseHeader;
 
-				ZQ<Connection_t> theConnQ = iConnQ;
 				if (ZRef<ChannerR_Bin> theChanner =
-					sMakeContentChanner(theResponseHeader, theConnQ->GetR()))
-					{ theConnQ->SetR(theChanner); }
+					sMakeContentChanner(theResponseHeader, iConn))
+					{
+					return sChanner_Wrapper<byte>(theChanner, iConn, iConn);
+					}
 
-				return theConnQ;
+				return iConn;
 				}
 			}
 		}
 	return null;
 	}
 
-ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
+ZRef<ChannerRWClose_Bin> sQPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZQ<Connection_t> theConnQ = sQPOST_Send(iCallable_QConnect,
+	if (ZRef<ChannerRWClose_Bin> theConn = sQPOST_Send(iCallable_Connect,
 		"POST", iURL, iHeader, iBody, iBodyCountQ))
 		{
-		return sQPOST_Receive(theConnQ, oResponseCode, oHeader, oRawHeader);
+		return sQPOST_Receive(theConn, oResponseCode, oHeader, oRawHeader);
 		}
 	return null;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark sQCONNECT
+#pragma mark sConnect
 
 bool sQCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
 	const std::string& iAddress, const Map* iHeader,

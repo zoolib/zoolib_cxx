@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Net_h__ 1
 #include "zconfig.h"
 
-//###include "zoolib/Compat_NonCopyable.h"
-#include "zoolib/Connection.h" // For Factory_ChannerComboRWClose_Bin
+#include "zoolib/Connection.h" // For Factory_ChannerRWClose_Bin
 
 #include <string>
 #include <stdexcept> // For runtime_error
@@ -76,19 +75,13 @@ private:
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
-:	public Factory_ChannerComboRWClose_Bin
+:	public Factory_ChannerRWClose_Bin
 	{
 protected:
 	NetAddress();
 
 public:
 	virtual ~NetAddress();
-
-// From Factory_ChannerComboRWClose_Bin
-	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
-
-// Our protocol
-	virtual ZQ<ChannerComboRWClose_Bin> Connect() = 0;
 
 	virtual ZRef<NetAddressLookup> MakeLookup(size_t iMaxNames);
 	};
@@ -122,7 +115,7 @@ public:
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
-:	public Factory_ChannerComboRWClose_Bin
+:	public Factory_ChannerRWClose_Bin
 	{
 protected:
 	NetName();
@@ -130,12 +123,10 @@ protected:
 public:
 	virtual ~NetName();
 
-// From Factory_ChannerComboRWClose_Bin
-	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
+// From Factory_ChannerRWClose_Bin
+	virtual ZRef<ChannerRWClose_Bin> Make();
 
 // Our protocol
-	virtual ZQ<ChannerComboRWClose_Bin> Connect();
-
 	virtual std::string AsString() = 0;
 
 	virtual ZRef<NetNameLookup> MakeLookup(size_t iMaxAddresses) = 0;
@@ -171,7 +162,7 @@ public:
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener
-:	public Factory_ChannerComboRWClose_Bin
+:	public Factory_ChannerRWClose_Bin
 	{
 protected:
 	NetListener();
@@ -179,13 +170,7 @@ protected:
 public:
 	virtual ~NetListener();
 
-// From Factory_ChannerComboRWClose_Bin
-	virtual ZQ<ZQ<ChannerComboRWClose_Bin> > QCall();
-
-// Our protocol
-	virtual ZQ<ChannerComboRWClose_Bin> Listen() = 0;
 	virtual ZRef<NetAddress> GetAddress();
-	virtual void Cancel();
 	};
 
 } // namespace ZooLib

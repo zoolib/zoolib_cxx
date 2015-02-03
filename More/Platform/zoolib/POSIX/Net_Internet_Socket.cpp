@@ -156,27 +156,27 @@ class Make_Listener6
 	} sMaker2;
 
 class Make_Endpoint4
-:	public FunctionChain<ZQ<ChannerComboRWClose_Bin>, MakeParam4_t>
+:	public FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		const int theSocketFD = spConnect4(0, 0, iParam.f0, iParam.f1);
 		spSetSocketOptions(theSocketFD);
 		ZRef<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
-		oResult = ChannerComboRWClose_Bin(theEP, theEP, theEP);
+		oResult = theEP;
 		return true;
 		}
 	} sMaker3;
 
 class Make_Endpoint6
-:	public FunctionChain<ZQ<ChannerComboRWClose_Bin>, MakeParam6_t>
+:	public FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam6_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		const int theSocketFD = spConnect6(iParam.f0, iParam.f1);
 		spSetSocketOptions(theSocketFD);
 		ZRef<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
-		oResult = ChannerComboRWClose_Bin(theEP, theEP, theEP);
+		oResult = theEP;
 		return true;
 		}
 	} sMaker4;

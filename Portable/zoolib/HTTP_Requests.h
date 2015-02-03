@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/HTTP.h"
-#include "zoolib/HTTP_Connect.h" // For Connection_t and Callable_QConnect
+#include "zoolib/HTTP_Connect.h" // For Callable_Connect
 
 namespace ZooLib {
 namespace HTTP {
@@ -34,22 +34,22 @@ namespace HTTP {
 
 // -----
 
-bool sQRequest(ZQ<Connection_t>& ioConnectionQ,
-	const ZRef<Callable_QConnect>& iCallable_QConnect,
+bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
+	ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
 	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
 // -----
 
-ZQ<Connection_t> sQPOST_Send(ZRef<Callable_QConnect> iCallable_QConnect,
+ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ);
 
-ZQ<Connection_t> sQPOST_Receive(const ZQ<Connection_t>& iConnQ,
+ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
-ZQ<Connection_t> sQPOST(ZRef<Callable_QConnect> iCallable_QConnect,
+ZRef<ChannerRWClose_Bin> sQPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 

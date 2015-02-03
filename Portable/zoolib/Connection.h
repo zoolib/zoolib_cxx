@@ -22,23 +22,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Connection_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
+#include "zoolib/Factory.h"
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/ChannerCombo.h"
+#include "zoolib/ChannerXX.h"
 
 namespace ZooLib {
 
 // ---
 
-typedef ChannerComboRW<byte> ChannerComboRW_Bin;
+typedef ChannerRW<byte> ChannerRW_Bin;
 
-typedef Callable<ZQ<ChannerComboRW_Bin>()> Factory_ChannerComboRW_Bin;
+typedef Factory<ZRef<ChannerRW_Bin> > Factory_ChannerRW_Bin;
 
 // ---
 
-typedef ChannerComboRWClose<byte> ChannerComboRWClose_Bin;
+typedef ChannerRWClose<byte> ChannerRWClose_Bin;
 
-typedef Callable<ZQ<ChannerComboRWClose_Bin>()> Factory_ChannerComboRWClose_Bin;
+typedef Factory<ZRef<ChannerRWClose_Bin> > Factory_ChannerRWClose_Bin;
 
 // ---
 

@@ -205,7 +205,7 @@ NetListener_Socket::NetListener_Socket(int iSocketFD)
 NetListener_Socket::~NetListener_Socket()
 	{ ::close(fSocketFD); }
 
-ZQ<ChannerComboRWClose_Bin> NetListener_Socket::Listen()
+ZRef<ChannerRWClose_Bin> NetListener_Socket::Make()
 	{
 	fMtx.Acquire();
 	while (fThreadID_Listening)
@@ -233,10 +233,7 @@ ZQ<ChannerComboRWClose_Bin> NetListener_Socket::Listen()
 	fMtx.Release();
 
 	if (result > 0)
-		{
-		ZRef<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(result);
-		return ChannerComboRWClose_Bin(theEP, theEP, theEP);
-		}
+		return new NetEndpoint_Socket(result);
 
 	return null;
 	}
