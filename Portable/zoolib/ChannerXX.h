@@ -202,6 +202,99 @@ protected:
 	Chan_p fChan;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark ChannerRW_Wrapper
+
+template <class Elmt_p>
+class ChannerRW_Wrapper
+:	public virtual ChannerRW<Elmt_p>
+	{
+public:
+	ChannerRW_Wrapper(
+		const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
+	:	fChannerR(sGetChanner(iChannerR))
+	,	fChannerW(sGetChanner(iChannerW))
+		{}
+
+// From ChannerR
+	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
+		{ fChannerR->GetChan(oChanPtr); }
+
+	virtual void GetChanner(ZRef<Channer<ChanR<Elmt_p> > >& oChanner)
+		{ oChanner = fChannerR; }
+
+// From ChannerW
+	virtual void GetChan(const ChanW<Elmt_p>*& oChanPtr)
+		{ fChannerW->GetChan(oChanPtr); }
+
+	virtual void GetChanner(ZRef<Channer<ChanW<Elmt_p> > >& oChanner)
+		{ oChanner = fChannerW; }
+
+private:
+	const ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
+	const ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
+	};
+
+template <class Elmt_p>
+ZRef<ChannerRW<Elmt_p> > sChanner_Wrapper(
+	const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+	const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW)
+	{ return new ChannerRW_Wrapper<Elmt_p>(iChannerR, iChannerW); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChannerRWClose_Wrapper
+
+template <class Elmt_p>
+class ChannerRWClose_Wrapper
+:	public virtual ChannerRWClose<Elmt_p>
+	{
+public:
+	ChannerRWClose_Wrapper(
+		const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+		const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW,
+		const ZRef<ChannerClose>& iChannerClose)
+	:	fChannerR(sGetChanner(iChannerR))
+	,	fChannerW(sGetChanner(iChannerW))
+	,	fChannerClose(sGetChanner(iChannerClose))
+		{}
+
+// From ChannerR
+	virtual void GetChan(const ChanR<Elmt_p>*& oChanPtr)
+		{ fChannerR->GetChan(oChanPtr); }
+
+	virtual void GetChanner(ZRef<Channer<ChanR<Elmt_p> > >& oChanner)
+		{ oChanner = fChannerR; }
+
+// From ChannerW
+	virtual void GetChan(const ChanW<Elmt_p>*& oChanPtr)
+		{ fChannerW->GetChan(oChanPtr); }
+
+	virtual void GetChanner(ZRef<Channer<ChanW<Elmt_p> > >& oChanner)
+		{ oChanner = fChannerW; }
+
+// From ChannerClose
+	virtual void GetChan(const ChanClose*& oChanPtr)
+		{ fChannerClose->GetChan(oChanPtr); }
+
+	virtual void GetChanner(ZRef<ChannerClose>& oChanner)
+		{ oChanner = fChannerClose; }
+
+private:
+	const ZRef<Channer<ChanR<Elmt_p> > > fChannerR;
+	const ZRef<Channer<ChanW<Elmt_p> > > fChannerW;
+	const ZRef<ChannerClose> fChannerClose;
+	};
+
+template <class Elmt_p>
+ZRef<ChannerRWClose<Elmt_p> > sChanner_Wrapper(
+	const ZRef<Channer<ChanR<Elmt_p> > >& iChannerR,
+	const ZRef<Channer<ChanW<Elmt_p> > >& iChannerW,
+	const ZRef<ChannerClose>& iChannerClose)
+	{ return new ChannerRWClose_Wrapper<Elmt_p>(iChannerR, iChannerW, iChannerClose); }
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChannerXX_h__
