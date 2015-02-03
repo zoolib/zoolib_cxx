@@ -37,6 +37,9 @@ public:
 	typedef Chan_p Chan_t;
 
 	virtual void GetChan(const Chan_t*& oChanPtr) = 0;
+
+	virtual void GetChanner(ZRef<Channer<Chan_t> >& oChanner)
+		{ oChanner = this; }
 	};
 
 template <class Chan_p>
@@ -45,6 +48,14 @@ const Chan_p& sGetChan(const ZRef<Channer<Chan_p> >& iChanner)
 	const Chan_p* theChan_p;
 	iChanner->GetChan(theChan_p);
 	return *theChan_p;
+	}
+
+template <class Chan_p>
+ZRef<Channer<Chan_p> > sGetChanner(const ZRef<Channer<Chan_p> >& iChanner)
+	{
+	ZRef<Channer<Chan_p> > theChanner;
+	iChanner->GetChanner(theChanner);
+	return theChanner;
 	}
 
 // =================================================================================================
