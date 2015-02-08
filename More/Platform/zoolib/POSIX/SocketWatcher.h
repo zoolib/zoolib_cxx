@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
+#include "zoolib/Compat_NonCopyable.h"
 
-#include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread.h"
 
 #include <set>
