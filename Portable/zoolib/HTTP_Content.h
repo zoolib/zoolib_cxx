@@ -38,7 +38,7 @@ public:
 	ChanR_Bin_Chunked(const ChanR_Bin& iChanR);
 	virtual ~ChanR_Bin_Chunked();
 
-// From ZStreamR
+// From ChanR_Bin
 	virtual size_t QRead(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
@@ -59,7 +59,7 @@ public:
 	ChanW_Bin_Chunked(const ChanW_Bin& iChanW);
 	virtual ~ChanW_Bin_Chunked();
 
-// From ZStreamW
+// From ChanW_Bin
 	virtual size_t QWrite(const byte* iSource, size_t iCount);
 	virtual void Flush();
 
