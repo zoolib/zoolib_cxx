@@ -128,7 +128,7 @@ static bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	for (;;)
 		{
 		const ZQ<UTF32> theCPQ = sQRead(iChanR);
-		if (theCPQ)
+		if (not theCPQ)
 			break;
 		const UTF32 theCP = *theCPQ;
 		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
@@ -245,8 +245,7 @@ static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		return true;
 		}
 
-	throw ParseException("Expected number, string or keyword");
-
+//##	throw ParseException("Expected number, string or keyword");
 	return null;
 	}
 
