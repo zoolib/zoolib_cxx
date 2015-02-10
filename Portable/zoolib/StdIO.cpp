@@ -13,7 +13,7 @@ static ChanR_UTF_Chan_Bin_UTF8 spChanR_UTF_In(spChanR_Bin_In);
 static ChanW_UTF_Chan_Bin_UTF8 spChanW_UTF_Out(spChanW_Bin_Out);
 static ChanW_UTF_Chan_Bin_UTF8 spChanW_UTF_Err(spChanW_Bin_Err);
 
-namespace ZStdIO {
+namespace StdIO {
 
 const ChanR_Bin& sChan_Bin_In = spChanR_Bin_In;
 const ChanW_Bin& sChan_Bin_Out = spChanW_Bin_Out;
