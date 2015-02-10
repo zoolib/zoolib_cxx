@@ -66,8 +66,10 @@ protected:
 	NetListener_Socket(int iSocketFD);
 	virtual ~NetListener_Socket();
 
-// From Factory_ChannerRWClose_Bin via NetListener
-	virtual ZRef<ChannerRWClose_Bin> Make();
+// From NetListener
+	virtual ZRef<ChannerRWClose_Bin> Listen();
+
+// From Cancellable via NetListener
 	virtual void Cancel();
 
 // Our protocol

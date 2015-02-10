@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Server_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Cancellable.h"
 #include "zoolib/Connection.h"
 #include "zoolib/Roster.h"
 #include "zoolib/Worker.h"
@@ -37,7 +38,7 @@ class Server
 	{
 public:
 	typedef ZRef<Roster::Entry> ZRef_Roster_Entry; // CW7
-	typedef Callable<void(ZRef_Roster_Entry,ZRef<ChannerRW<byte>>)> Callable_Connection;
+	typedef Callable<void(ZRef_Roster_Entry,ZRef<ChannerRW<byte> >)> Callable_Connection;
 
 	Server();
 	virtual ~Server();
@@ -50,6 +51,7 @@ public:
 
 	void Start(ZRef<Starter> iStarter,
 		ZRef<Factory_ChannerRW_Bin> iFactory,
+		ZRef<Cancellable> iCancellable,
 		ZRef<Callable_Connection> iCallable_Connection);
 
 	void Stop();
@@ -71,6 +73,7 @@ private:
 
 	ZRef<Factory_ChannerRW_Bin> fFactory;
 	ZRef<Callable_Connection> fCallable_Connection;
+	ZRef<Cancellable> fCancellable;
 	ZRef<Roster> fRoster;
 
 	ZRef<Worker> fWorker;

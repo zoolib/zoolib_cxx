@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Net_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Cancellable.h"
 #include "zoolib/Connection.h" // For Factory_ChannerRWClose_Bin
 
 #include <string>
@@ -75,13 +76,19 @@ private:
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
-:	public Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWClose_Bin
 	{
 protected:
 	NetAddress();
 
 public:
 	virtual ~NetAddress();
+
+// From Factory_ChannerRWClose_Bin
+	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+
+// Our protocol
+	virtual ZRef<ChannerRWClose_Bin> Connect() = 0;
 
 	virtual ZRef<NetAddressLookup> MakeLookup(size_t iMaxNames);
 	};
@@ -115,7 +122,7 @@ public:
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
-:	public Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWClose_Bin
 	{
 protected:
 	NetName();
@@ -124,9 +131,12 @@ public:
 	virtual ~NetName();
 
 // From Factory_ChannerRWClose_Bin
-	virtual ZRef<ChannerRWClose_Bin> Make();
+	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+
 
 // Our protocol
+	virtual ZRef<ChannerRWClose_Bin> Connect();
+
 	virtual std::string AsString() = 0;
 
 	virtual ZRef<NetNameLookup> MakeLookup(size_t iMaxAddresses) = 0;
@@ -162,13 +172,20 @@ public:
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener
-:	public Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWClose_Bin
+,	public virtual Cancellable
 	{
 protected:
 	NetListener();
 
 public:
 	virtual ~NetListener();
+
+// From Factory_ChannerRWClose_Bin
+	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+
+// Our protocol
+	virtual ZRef<ChannerRWClose_Bin> Listen() = 0;
 
 	virtual ZRef<NetAddress> GetAddress();
 	};

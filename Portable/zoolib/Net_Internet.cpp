@@ -57,7 +57,7 @@ NetAddress_IP4::NetAddress_IP4(
 ,	fAddr(sAddr(iAddr0, iAddr1, iAddr2, iAddr3))
 	{}
 
-ZRef<ChannerRWClose_Bin> NetAddress_IP4::Make()
+ZRef<ChannerRWClose_Bin> NetAddress_IP4::Connect()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip4_addr NetAddress_IP4::GetAddr()
@@ -92,7 +92,7 @@ NetAddress_IP6::NetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 ,	fAddr(iAddr)
 	{}
 
-ZRef<ChannerRWClose_Bin> NetAddress_IP6::Make()
+ZRef<ChannerRWClose_Bin> NetAddress_IP6::Connect()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip6_addr NetAddress_IP6::GetAddr()

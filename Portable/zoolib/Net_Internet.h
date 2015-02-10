@@ -83,8 +83,8 @@ public:
 	NetAddress_IP4(ip4_addr iAddr, ip_port iPort);
 	NetAddress_IP4(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort);
 
-// From Factory_ChannerRWClose_Bin via NetAddress_Internet
-	virtual ZRef<ChannerRWClose_Bin> Make();
+// From NetAddress
+	virtual ZRef<ChannerRWClose_Bin> Connect();
 
 // Our protocol
 	ip4_addr GetAddr();
@@ -111,8 +111,8 @@ class NetAddress_IP6
 public:
 	NetAddress_IP6(ip_port iPort, ip6_addr iAddr);
 
-// From Factory_ChannerRWClose_Bin via NetAddress_Internet
-	virtual ZRef<ChannerRWClose_Bin> Make();
+// From NetAddress
+	virtual ZRef<ChannerRWClose_Bin> Connect();
 
 // Our protocol
 	ip6_addr GetAddr();

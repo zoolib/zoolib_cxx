@@ -55,6 +55,7 @@ bool Server::IsStarted()
 
 void Server::Start(ZRef<Starter> iStarter,
 		ZRef<Factory_ChannerRW_Bin> iFactory,
+		ZRef<Cancellable> iCancellable,
 		ZRef<Callable_Connection> iCallable_Connection)
 	{
 	ZAssert(iStarter);
@@ -75,6 +76,7 @@ void Server::Start(ZRef<Starter> iStarter,
 
 	fFactory = iFactory;
 	fCallable_Connection = iCallable_Connection;
+	fCancellable = iCancellable;
 
 	fWorker = new Worker(
 		sCallable(sWeakRef(this), &Server::pWork),
@@ -91,7 +93,9 @@ void Server::Stop()
 	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
-		theFactory->Cancel();
+		if (fCancellable)
+			fCancellable->Cancel();
+		fCancellable.Clear();
 		}
 	fCallable_Connection.Clear();
 	fCnd.Broadcast();
@@ -104,7 +108,9 @@ void Server::StopWait()
 	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
-		theFactory->Cancel();
+		if (fCancellable)
+			fCancellable->Cancel();
+		fCancellable.Clear();
 		}
 
 	if (fWorker)

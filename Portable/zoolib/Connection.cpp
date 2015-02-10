@@ -18,34 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Factory_h__
-#define __ZooLib_Factory_h__ 1
-#include "zconfig.h"
-
 #include "zoolib/Callable.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
+#include "zoolib/Connection.h"
+#include "zoolib/Channer_Bin.h"
+#include "zoolib/ChannerXX.h"
 
 namespace ZooLib {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark Factory
+#pragma mark
 
-template <class Product_p>
-class Factory
-:	public Callable<Product_p()>
+static ZRef<ChannerRW_Bin> spMake(const ZRef<Factory_ChannerRWClose_Bin>& iFactory)
+	{ return sCall(iFactory); }
+
+ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
+	const ZRef<Factory_ChannerRWClose_Bin>& iFactory)
 	{
-public:
-// From Callable
-	virtual ZQ<Product_p> QCall()
-		{ return this->Make(); }
-
-// Our protocol
-	virtual Product_p Make() = 0;
-
-	virtual void Cancel()
-		{}
-	};
+	if (iFactory)
+		return sBindR(sCallable(spMake), iFactory);
+	return null;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Factory_h__

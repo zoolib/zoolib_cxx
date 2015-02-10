@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2015 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,33 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Connection_h__
-#define __ZooLib_Connection_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/Callable.h"
-#include "zoolib/Channer_Bin.h"
-#include "zoolib/ChannerXX.h"
+#include "zoolib/Cancellable.h"
 
 namespace ZooLib {
 
-// ---
+// =================================================================================================
+#pragma mark -
+#pragma mark Cancellable_Callable
 
-typedef ChannerRWClose<byte> ChannerRWClose_Bin;
+class Cancellable_Callable
+:	public Cancellable
+	{
+public:
+	Cancellable_Callable(const ZRef<Callable_Void>& iCallable)
+	:	fCallable(iCallable)
+		{}
 
-typedef Callable<ZRef<ChannerRWClose_Bin>()> Factory_ChannerRWClose_Bin;
+	virtual void Cancel()
+		{ sCall(fCallable); }
 
-// ---
+	const ZRef<Callable_Void> fCallable;
+	};
 
-typedef ChannerRW<byte> ChannerRW_Bin;
+// =================================================================================================
+#pragma mark -
+#pragma mark sCancellable
 
-typedef Callable<ZRef<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
-
-ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
-	const ZRef<Factory_ChannerRWClose_Bin>& iFactory);
-
-// ---
+ZRef<Cancellable> sCancellable(const ZRef<Callable_Void>& iCallable)
+	{
+	if (iCallable)
+		return new Cancellable_Callable(iCallable);
+	return null;
+	}
 
 } // namespace ZooLib
-
-#endif // __ZooLib_Connection_h__
