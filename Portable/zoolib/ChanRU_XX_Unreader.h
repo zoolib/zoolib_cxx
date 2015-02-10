@@ -22,9 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanRU_XX_Unreader_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/Channer.h"
+#include "zoolib/ChannerXX.h"
 
 #include <vector>
 
@@ -70,6 +68,7 @@ public:
 		return localDest - oDest;
 		}
 
+// From ChanU
 	virtual size_t Readable()
 		{ return fStack.size() + sReadable(fChanR); }
 
@@ -97,8 +96,7 @@ protected:
 
 template <class XX>
 class ChannerRU_XX_Unreader
-:	public Channer<ChanR<XX> >
-,	public Channer<ChanU<XX> >
+:	public ChannerRU<XX>
 	{
 public:
 	ChannerRU_XX_Unreader(const ZRef<Channer<ChanR<XX> > >& iChannerR)
