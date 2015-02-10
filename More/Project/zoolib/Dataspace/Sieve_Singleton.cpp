@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Log.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
@@ -31,12 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/Searcher_DatonSet.h"
 #include "zoolib/dataspace/Sieve_Singleton.h"
 
-#include "zoolib/ZLog.h"
-
 namespace ZooLib {
 namespace Dataspace {
 
-using namespace ZUtil_STL;
+using namespace Util_STL;
 using DatonSet::Daton;
 using namespace ZooLib::RelationalAlgebra;
 
@@ -98,7 +97,7 @@ ZQ<bool> Sieve_Singleton::QIsLoaded()
 bool Sieve_Singleton::IsLoaded()
 	{ return fRegistration && fResult && fResult->Count(); }
 
-ZMap_Any Sieve_Singleton::GetMap()
+Map_Any Sieve_Singleton::GetMap()
 	{
 	if (not fMapQ)
 		{
@@ -108,10 +107,10 @@ ZMap_Any Sieve_Singleton::GetMap()
 			{
 			// Put anything that's in our Result under what's in fMapInDaton.
 			const RelHead theRelHead = fResult->GetRelHead();
-			const ZVal_Any* theVals = fResult->GetValsAt(0);
+			const Val_Any* theVals = fResult->GetValsAt(0);
 			foreachv (const string8& theName, theRelHead)
 				{
-				const ZVal_Any& theVal = *theVals++;
+				const Val_Any& theVal = *theVals++;
 				if (not fMapQ->PGet(theName))
 					fMapQ->Set(theName, theVal);
 				}
@@ -121,23 +120,23 @@ ZMap_Any Sieve_Singleton::GetMap()
 	return *fMapQ;
 	}
 
-ZVal_Any Sieve_Singleton::Get(const string8& iName)
+Val_Any Sieve_Singleton::Get(const string8& iName)
 	{ return this->GetMap().Get(iName); }
 
-void Sieve_Singleton::Set(const string8& iName, const ZVal_Any& iVal)
-	{ this->Set(ZNameVal(iName, iVal)); }
+void Sieve_Singleton::Set(const string8& iName, const Val_Any& iVal)
+	{ this->Set(NameVal(iName, iVal)); }
 
-void Sieve_Singleton::Set(const ZMap_Any& iMap)
+void Sieve_Singleton::Set(const Map_Any& iMap)
 	{
 	ZAssert(this->IsLoaded());
 
 	bool anyChange = false;
-	for (ZMap_Any::Index_t iter = iMap.Begin(); iter != iMap.End(); ++iter)
+	for (Map_Any::Index_t iter = iMap.Begin(); iter != iMap.End(); ++iter)
 		{
 		const string8& theName = iMap.NameOf(iter);
 		if (sContains(fEditableRelHead, theName))
 			{
-			const ZVal_Any& theVal = iMap.Get(iter);
+			const Val_Any& theVal = iMap.Get(iter);
 			fMapInDaton.Set(theName, theVal);
 			anyChange = true;
 			}
@@ -173,7 +172,7 @@ void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 				w << "fDatonColName: " << fDatonColName << "\n" << fRel;
 			ZUnimplemented();
 			}
-		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<ZMap_Any>();
+		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<Map_Any>();
 		}
 	fCallable_Changed->Call(this, iIsFirst);
 	}

@@ -59,11 +59,11 @@ public:
 
 	bool IsLoaded();
 
-	ZMap_Any GetMap();
-	ZVal_Any Get(const string8& iName);
+	Map_Any GetMap();
+	Val_Any Get(const string8& iName);
 
-	void Set(const string8& iName, const ZVal_Any& iVal);
-	void Set(const ZMap_Any& iMap);
+	void Set(const string8& iName, const Val_Any& iVal);
+	void Set(const Map_Any& iMap);
 
 private:
 	void pChanged(const ZRef<ZCounted>& iRegistration,
@@ -80,8 +80,8 @@ private:
 	ZRef<ZCounted> fRegistration;
 	ZRef<QueryEngine::Result> fResult;
 
-	ZQ<ZMap_Any> fMapQ;
-	ZMap_Any fMapInDaton;
+	ZQ<Map_Any> fMapQ;
+	Map_Any fMapInDaton;
 	DatonSet::Daton fDaton;
 	};
 
