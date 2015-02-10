@@ -472,8 +472,8 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 					}
 				}
 			sUnread(*firstCPQ, iChanU);
-			break;
 			}
+		break;
 		}
 	}
 
