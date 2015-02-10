@@ -159,6 +159,84 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark ChannerRPos_T
+
+template <class Chan_p>
+class ChannerRPos_T
+:	public virtual ChannerRPos<typename Chan_p::CommonElmt_t>
+	{
+public:
+	typedef typename Chan_p::CommonElmt_t CommonElmt_t;
+
+	ChannerRPos_T() {}
+	virtual ~ChannerRPos_T() {}
+
+	template <class Param_p>
+	ChannerRPos_T(Param_p& iParam) : fChan(iParam) {}
+
+	template <class Param_p>
+	ChannerRPos_T(const Param_p& iParam) : fChan(iParam) {}
+
+// From ChannerR
+	virtual void GetChan(const ChanR<CommonElmt_t>*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerU
+	virtual void GetChan(const ChanU<CommonElmt_t>*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerPos
+	virtual void GetChan(const ChanPos*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerSize
+	virtual void GetChan(const ChanSize*& oChanPtr) { oChanPtr = &fChan; }
+
+// Our protocol
+	Chan_p& GetChanActual() { return fChan; }
+
+protected:
+	Chan_p fChan;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChannerWPos_T
+
+template <class Chan_p>
+class ChannerWPos_T
+:	public virtual ChannerWPos<typename Chan_p::CommonElmt_t>
+	{
+public:
+	typedef typename Chan_p::CommonElmt_t CommonElmt_t;
+
+	ChannerWPos_T() {}
+	virtual ~ChannerWPos_T() {}
+
+	template <class Param_p>
+	ChannerWPos_T(Param_p& iParam) : fChan(iParam) {}
+
+	template <class Param_p>
+	ChannerWPos_T(const Param_p& iParam) : fChan(iParam) {}
+
+// From ChannerW
+	virtual void GetChan(const ChanW<CommonElmt_t>*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerPos
+	virtual void GetChan(const ChanPos*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerSize
+	virtual void GetChan(const ChanSize*& oChanPtr) { oChanPtr = &fChan; }
+
+// From ChannerSizeSet
+	virtual void GetChan(const ChanSizeSet*& oChanPtr) { oChanPtr = &fChan; }
+
+// Our protocol
+	Chan_p& GetChanActual() { return fChan; }
+
+protected:
+	Chan_p fChan;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark ChannerRWPos_T
 
 template <class Chan_p>
