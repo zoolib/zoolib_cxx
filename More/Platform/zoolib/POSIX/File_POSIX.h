@@ -128,7 +128,7 @@ protected:
 #pragma mark ChanRPos_File_POSIX
 
 class ChanRPos_File_POSIX
-:	protected Chan_File_POSIX
+:	public Chan_File_POSIX
 ,	public ChanR_Bin
 ,	public ChanU<byte>
 ,	public ChanPos
@@ -143,13 +143,13 @@ public:
 
 	virtual size_t Readable();
 
-// From ChanSize
-	virtual uint64 Size();
-
 // From ChanPos
 	virtual uint64 Pos();
 
 	virtual void SetPos(uint64 iPos);
+
+// From ChanSize
+	virtual uint64 Size();
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount);
@@ -158,7 +158,37 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamRWPos_File_POSIX
+#pragma mark ChanWPos_File_POSIX
+
+class ChanWPos_File_POSIX
+:	public Chan_File_POSIX
+,	public ChanW_Bin
+,	public ChanPos
+,	public ChanSize
+,	public ChanSizeSet
+	{
+public:
+	ChanWPos_File_POSIX(const Init_t& iInit);
+	~ChanWPos_File_POSIX();
+
+// From ChanW_Bin
+	virtual size_t QWrite(const byte* iSource, size_t iCount);
+
+// From ChanPos
+	virtual uint64 Pos();
+
+	virtual void SetPos(uint64 iPos);
+
+// From ChanSize
+	virtual uint64 Size();
+
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanRWPos_File_POSIX
 
 class ChanRWPos_File_POSIX
 :	public ChanRPos_File_POSIX
@@ -168,7 +198,6 @@ class ChanRWPos_File_POSIX
 public:
 	ChanRWPos_File_POSIX(const Init_t& iInit);
 	~ChanRWPos_File_POSIX();
-private:
 
 // From ChanW_Bin
 	virtual size_t QWrite(const byte* iSource, size_t iCount);

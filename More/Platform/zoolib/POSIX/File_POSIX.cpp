@@ -1073,23 +1073,49 @@ bool FileLoc_POSIX::Delete()
 	}
 
 ZRef<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
-	{ return this->OpenRWPos(iPreventWriters); }
+	{
+	File::Error err;
+	const int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, &err);
+	if (theFD < 0)
+		return null;
+
+	return new ChannerRPos_T<ChanRPos_File_POSIX>(ChanRPos_File_POSIX::Init_t(theFD, true));
+	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
-	{ return this->OpenRWPos(iPreventWriters); }
+	{
+	File::Error err;
+	const int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, &err);
+	if (theFD < 0)
+		return null;
+
+	return new ChannerWPos_T<ChanWPos_File_POSIX>(ChanWPos_File_POSIX::Init_t(theFD, true));
+	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	{
-	ZUnimplemented();
+	File::Error err;
+	const int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, &err);
+	if (theFD < 0)
+		return null;
+
+	return new ChannerRWPos_T<ChanRWPos_File_POSIX>(ChanRPos_File_POSIX::Init_t(theFD, true));
 	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
-	{ return this->CreateRWPos(iOpenExisting, iPreventWriters); }
+	{
+	File::Error err;
+	const int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, &err);
+	if (theFD < 0)
+		return null;
+
+	return new ChannerWPos_T<ChanWPos_File_POSIX>(Chan_File_POSIX::Init_t(theFD, true));
+	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{
 	File::Error err;
-	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, &err);
+	const int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, &err);
 	if (theFD < 0)
 		return null;
 
@@ -1165,14 +1191,6 @@ size_t ChanRPos_File_POSIX::Readable()
 	return 0;
 	}
 
-uint64 ChanRPos_File_POSIX::Size()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
 uint64 ChanRPos_File_POSIX::Pos()
 	{
 	uint64 pos;
@@ -1183,6 +1201,14 @@ uint64 ChanRPos_File_POSIX::Pos()
 
 void ChanRPos_File_POSIX::SetPos(uint64 iPos)
 	{ spSetPosition(fFD, iPos); }
+
+uint64 ChanRPos_File_POSIX::Size()
+	{
+	uint64 theSize;
+	if (File::errorNone == spGetSize(fFD, theSize))
+		return theSize;
+	return 0;
+	}
 
 size_t ChanRPos_File_POSIX::Unread(const byte* iSource, size_t iCount)
 	{
@@ -1204,9 +1230,51 @@ size_t ChanRPos_File_POSIX::UnreadableLimit()
 	return 0;
 	}
 
+
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamRWPos_File_POSIX
+#pragma mark ChanWPos_File_POSIX
+
+ChanWPos_File_POSIX::ChanWPos_File_POSIX(const Init_t& iInit)
+:	Chan_File_POSIX(iInit)
+	{}
+
+ChanWPos_File_POSIX::~ChanWPos_File_POSIX()
+	{}
+
+size_t ChanWPos_File_POSIX::QWrite(const byte* iSource, size_t iCount)
+	{
+	size_t countWritten;
+	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
+		return countWritten;
+	return 0;
+	}
+
+uint64 ChanWPos_File_POSIX::Pos()
+	{
+	uint64 pos;
+	if (File::errorNone == spGetPosition(fFD, pos))
+		return pos;
+	return 0;
+	}
+
+void ChanWPos_File_POSIX::SetPos(uint64 iPos)
+	{ spSetPosition(fFD, iPos); }
+
+uint64 ChanWPos_File_POSIX::Size()
+	{
+	uint64 theSize;
+	if (File::errorNone == spGetSize(fFD, theSize))
+		return theSize;
+	return 0;
+	}
+
+void ChanWPos_File_POSIX::SizeSet(uint64 iSize)
+	{ spSetSize(fFD, iSize); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanRWPos_File_POSIX
 
 ChanRWPos_File_POSIX::ChanRWPos_File_POSIX(const Init_t& iInit)
 :	ChanRPos_File_POSIX(iInit)
