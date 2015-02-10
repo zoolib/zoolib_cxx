@@ -35,6 +35,7 @@ namespace ZooLib {
 typedef Channer<ChanR_Bin> ChannerR_Bin;
 typedef Channer<ChanU<byte> > ChannerU_Bin;
 typedef Channer<ChanW_Bin> ChannerW_Bin;
+
 typedef ChannerRPos<byte> ChannerRPos_Bin;
 typedef ChannerWPos<byte> ChannerWPos_Bin;
 typedef ChannerRWPos<byte> ChannerRWPos_Bin;
