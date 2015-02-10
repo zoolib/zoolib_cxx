@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Channer_UTF8_h__
-#define __ZooLib_Channer_UTF8_h__ 1
+#ifndef __ZooLib_Channer_UTF_h__
+#define __ZooLib_Channer_UTF_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR_UTF.h"
@@ -35,6 +35,8 @@ typedef Channer<ChanR_UTF> ChannerR_UTF;
 typedef Channer<ChanU<UTF32> > ChannerU_UTF;
 typedef Channer<ChanW_UTF> ChannerW_UTF;
 
+typedef ChannerRU<UTF32> ChannerRU_UTF;
+
 } // namespace ZooLib
 
-#endif // __ZooLib_Channer_UTF8_h__
+#endif // __ZooLib_Channer_UTF_h__
