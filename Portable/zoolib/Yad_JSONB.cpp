@@ -101,7 +101,7 @@ public:
 // From ChannerR via YadStreamerR
 	virtual void GetChan(const ChanR_Bin*& oChanPtr);
 
-// From ZStreamR
+// From ChanR
 	virtual size_t QRead(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 	virtual uint64 QSkip(uint64 iCount);
