@@ -49,7 +49,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		Elmt_t* localDest = oDest;
 		while (iCount)
@@ -58,7 +58,7 @@ public:
 				{
 				// We have some data in our buffer, use it up first.
 				const size_t countToMove = std::min(fEnd - fBegin, iCount);
-				std::copy(localDest, &fBuffer[fBegin], countToMove);
+				std::copy(&fBuffer[fBegin], &fBuffer[fBegin + countToMove], localDest);
 				fBegin += countToMove;
 				localDest += countToMove;
 				iCount -= countToMove;
@@ -85,7 +85,7 @@ public:
 					// without blocking, in which case we fill up as much of our buffer as we can,
 					// so some later request will be able to be satisfied straight from our buffer.
 					const size_t countRead = sQRead(&fBuffer[0],
-						min(fBuffer.size(), countReadable),
+						std::min(fBuffer.size(), countReadable),
 						fChanR);
 					if (countRead == 0)
 						break;
