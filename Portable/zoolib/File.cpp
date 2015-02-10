@@ -446,13 +446,13 @@ bool FileSpec::Delete() const
 	return false;
 	}
 
-/// Return a new ZStreamerR backed by the contents of the file referenced by the file spec.
+/// Return a new ChannerR backed by the contents of the file referenced by the file spec.
 ZRef<ChannerR_Bin> FileSpec::OpenR(bool iPreventWriters) const
 	{
 	return this->OpenRPos(iPreventWriters);
 	}
 
-/// Return a new ZStreamerRPos backed by the contents of the file referenced by the file spec.
+/// Return a new ChannerRPos backed by the contents of the file referenced by the file spec.
 ZRef<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
 	{
 	if (fLoc)
@@ -463,13 +463,13 @@ ZRef<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
 	return null;
 	}
 
-/// Return a new ZStreamerW backed by the contents of the file referenced by the file spec.
+/// Return a new ChannerW backed by the contents of the file referenced by the file spec.
 ZRef<ChannerW_Bin> FileSpec::OpenW(bool iPreventWriters) const
 	{
 	return this->OpenWPos(iPreventWriters);
 	}
 
-/// Return a new ZStreamerWPos backed by the contents of the file referenced by the file spec.
+/// Return a new ChannerWPos backed by the contents of the file referenced by the file spec.
 ZRef<ChannerWPos_Bin> FileSpec::OpenWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
@@ -480,7 +480,7 @@ ZRef<ChannerWPos_Bin> FileSpec::OpenWPos(bool iPreventWriters) const
 	return null;
 	}
 
-/// Return a new ZStreamerRWPos backed by the contents of the file referenced by the file spec.
+/// Return a new ChannerRWPos backed by the contents of the file referenced by the file spec.
 ZRef<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
@@ -491,11 +491,11 @@ ZRef<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
 	return null;
 	}
 
-/// Create a new file in the file system and return a ZStreamerWPos that provides access to it.
+/// Create a new file in the file system and return a ChannerWPos that provides access to it.
 /**
 \param iOpenExisting If the file already exists and \a iOpenExisting is true then it will
 be opened (if it is accessible). If the file already exists and \a iOpenExisiting is false
-then an invalid ZStreamerWPos is returned.
+then an invalid ChannerWPos is returned.
 */
 ZRef<ChannerWPos_Bin> FileSpec::CreateWPos(
 	bool iOpenExisting, bool iPreventWriters) const
