@@ -35,7 +35,7 @@ namespace { // anonymous
 
 ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 	{
-	try { return Util_Any_JSON::sQRead(new Channer_T<ChanRPos_Bin_Data<Data_Any>,ChanR_Bin>); }
+	try { return Util_Any_JSON::sQRead(new Channer_T<ChanRPos_Bin_Data<Data_Any>,ChanR_Bin>(iData)); }
 	catch (...) {}
 	return null;
 	}
