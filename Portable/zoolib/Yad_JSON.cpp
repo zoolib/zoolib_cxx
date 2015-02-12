@@ -225,7 +225,7 @@ static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{
 		return theString;
 		}
-	else if (sTryRead_SignedDecimalNumber(iChanR, iChanU, asInt64, asDouble, isDouble))
+	else if (sTryRead_SignedGenericNumber(iChanR, iChanU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
 			return asDouble;

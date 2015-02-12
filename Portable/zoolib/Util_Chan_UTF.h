@@ -59,25 +59,10 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 bool sTryRead_CaselessString(const string8& iTarget,
 	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
-bool sTryRead_SignedGenericInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
-
-bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
-
 bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative);
-bool sTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+
+bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble);
-
-bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
-bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
-
-bool sTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64, double& oDouble, bool& oIsDouble);
-
-bool sTryRead_SignedDecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64, double& oDouble, bool& oIsDouble);
-
-bool sTryRead_Double(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble);
-bool sTryRead_SignedDouble(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble);
 
 // -----------------
 

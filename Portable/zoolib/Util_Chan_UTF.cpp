@@ -32,6 +32,50 @@ namespace Util_Chan {
 // =================================================================================================
 #pragma mark -
 
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+
+static bool spTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+	{
+	if (ZQ<int> theQ = sQRead_Digit(iChanR, iChanU))
+		{
+		oDigit = *theQ;
+		return true;
+		}
+	return false;
+	}
+
+static bool spTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+	{
+	if (ZQ<int> theQ = sQRead_HexDigit(iChanR, iChanU))
+		{
+		oDigit = *theQ;
+		return true;
+		}
+	return false;
+	}
+
+static bool sQRead(UTF32& oCP, ChanR_UTF& iChanR)
+	{
+	if (ZQ<UTF32> theQ = sQRead(iChanR))
+		{
+		oCP = *theQ;
+		return true;
+		}
+	return false;
+	}
+
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+// -----------------
+
 static bool spIsWhitespace(UTF32 iCP)
 	{
 	if (Unicode::sIsWhitespace(iCP))
@@ -105,272 +149,6 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 // -----------------
 
-static bool sTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
-	{
-	if (ZQ<int> theQ = sQRead_Digit(iChanR, iChanU))
-		{
-		oDigit = *theQ;
-		return true;
-		}
-	return false;
-	}
-
-static bool sTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
-	{
-	if (ZQ<int> theQ = sQRead_HexDigit(iChanR, iChanU))
-		{
-		oDigit = *theQ;
-		return true;
-		}
-	return false;
-	}
-
-static bool sQRead(UTF32& oCP, ChanR_UTF& iChanR)
-	{
-	if (ZQ<UTF32> theQ = sQRead(iChanR))
-		{
-		oCP = *theQ;
-		return true;
-		}
-	return false;
-	}
-
-bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative)
-	{
-	if (sTryRead_CP( '-', iChanR, iChanU))
-		{
-		oIsNegative = true;
-		return true;
-		}
-	else if (sTryRead_CP('+', iChanR, iChanU))
-		{
-		oIsNegative = false;
-		return true;
-		}
-	return false;
-	}
-
-bool sTryRead_SignedGenericInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
-	{
-	bool isNegative = false;
-	bool hadPrefix = sTryRead_Sign(iChanR, iChanU, isNegative);
-
-	if (sTryRead_CP('0', iChanR, iChanU))
-		{
-		UTF32 theCP;
-		if (not sQRead(theCP, iChanR))
-			{
-			oInt64 = 0;
-			return true;
-			}
-
-		if (theCP == 'X' || theCP == 'x')
-			{
-			if (sTryRead_HexInteger(iChanR, iChanU, oInt64))
-				{
-				if (isNegative)
-					oInt64 = -oInt64;
-				return true;
-				}
-			throw ParseException("Expected a valid hex integer after '0x' prefix");
-			}
-
-		sUnread(theCP, iChanU);
-		if (not Unicode::sIsDigit(theCP))
-			{
-			oInt64 = 0;
-			return true;
-			}
-
-		/*bool readDecimal = */sTryRead_DecimalInteger(iChanR, iChanU, oInt64);
-		// We know that the first CP to be read is a digit, so sTryRead_DecimalInteger can't fail.
-		if (isNegative)
-			oInt64 = -oInt64;
-		return true;
-		}
-
-	if (sTryRead_DecimalInteger(iChanR, iChanU, oInt64))
-		{
-		if (isNegative)
-			oInt64 = -oInt64;
-		return true;
-		}
-
-	if (hadPrefix)
-		{
-		// We've already absorbed a plus or minus sign, hence we have a parse exception.
-		if (isNegative)
-			throw ParseException("Expected a valid integer after '-' prefix");
-		else
-			throw ParseException("Expected a valid integer after '+' prefix");
-		}
-
-	return false;
-	}
-
-bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
-	{
-	oInt64 = 0;
-	for (bool gotAny = false; /*no test*/; gotAny = true)
-		{
-		int curDigit;
-		if (not sTryRead_HexDigit(iChanR, iChanU, curDigit))
-			return gotAny;
-		oInt64 *= 16;
-		oInt64 += curDigit;
-		}
-	}
-
-bool sTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64, double& oDouble, bool& oIsDouble)
-	{
-	using namespace Util_Chan;
-
-	oInt64 = 0;
-	oDouble = 0;
-	oIsDouble = false;
-
-	for (bool gotAny = false; /*no test*/; gotAny = true)
-		{
-		int curDigit;
-		if (not sTryRead_Digit(iChanR, iChanU, curDigit))
-			return gotAny;
-
-		if (not oIsDouble)
-			{
-			int64 priorInt64 = oInt64;
-			oInt64 *= 10;
-			oInt64 += curDigit;
-			if (oInt64 < priorInt64)
-				{
-				// We've overflowed.
-				oIsDouble = true;
-				}
-			}
-		oDouble *= 10;
-		oDouble += curDigit;
-		}
-	}
-
-bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
-	{
-	oInt64 = 0;
-	for (bool gotAny = false; /*no test*/; gotAny = true)
-		{
-		int curDigit;
-		if (not sTryRead_Digit(iChanR, iChanU, curDigit))
-			return gotAny;
-		oInt64 *= 10;
-		oInt64 += curDigit;
-		}
-	}
-
-bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
-	{
-	bool isNegative = false;
-	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
-	if (sTryRead_DecimalInteger(iChanR, iChanU, oInt64))
-		{
-		if (isNegative)
-			oInt64 = -oInt64;
-		return true;
-		}
-
-	if (hadSign)
-		throw ParseException("Expected a valid integer after sign prefix");
-
-	return false;
-	}
-
-bool sTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64, double& oDouble, bool& oIsDouble)
-	{
-	using namespace Util_Chan;
-
-	if (sTryRead_CaselessString("nan", iChanR, iChanU))
-		{
-		oIsDouble = true;
-		oDouble = NAN;
-		return true;
-		}
-
-	if (sTryRead_CaselessString("inf", iChanR, iChanU))
-		{
-		oIsDouble = true;
-		oDouble = INFINITY;
-		return true;
-		}
-
-	if (not sTryRead_Mantissa(iChanR, iChanU, oInt64, oDouble, oIsDouble))
-		return false;
-
-	if (sTryRead_CP('.', iChanR, iChanU))
-		{
-		oIsDouble = true;
-		double fracPart = 0.0;
-		double divisor = 1.0;
-
-		for (;;)
-			{
-			int curDigit;
-			if (not sTryRead_Digit(iChanR, iChanU, curDigit))
-				break;
-			divisor *= 10;
-			fracPart *= 10;
-			fracPart += curDigit;
-			}
-		oDouble += fracPart / divisor;
-		}
-
-	if (sTryRead_CP('e', iChanR, iChanU) || sTryRead_CP('E', iChanR, iChanU))
-		{
-		oIsDouble = true;
-		int64 exponent;
-		if (not sTryRead_SignedDecimalInteger(iChanR, iChanU, exponent))
-			throw ParseException("Expected a valid exponent after 'e'");
-		oDouble = oDouble * pow(10.0, int(exponent));
-		}
-
-	return true;
-	}
-
-bool sTryRead_SignedDecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64, double& oDouble, bool& oIsDouble)
-	{
-	bool isNegative = false;
-	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
-	if (sTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
-		{
-		if (isNegative)
-			{
-			oInt64 = -oInt64;
-			oDouble = -oDouble;
-			}
-		return true;
-		}
-
-	if (hadSign)
-		throw ParseException("Expected a valid number after sign prefix");
-
-	return false;
-	}
-
-bool sTryRead_Double(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble)
-	{
-	int64 dummyInt64;
-	bool isDouble;
-	return sTryRead_DecimalNumber(iChanR, iChanU, dummyInt64, oDouble, isDouble);
-	}
-
-bool sTryRead_SignedDouble(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, double& oDouble)
-	{
-	int64 dummyInt64;
-	bool isDouble;
-	return sTryRead_SignedDecimalNumber(iChanR, iChanU, dummyInt64, oDouble, isDouble);
-	}
-
-// -----------------
-
 bool sTryRead_CaselessString(const string8& iTarget,
 	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
@@ -411,6 +189,205 @@ bool sTryRead_CaselessString(const string8& iTarget,
 	return false;
 	}
 
+// -----------------
+
+bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative)
+	{
+	if (sTryRead_CP( '-', iChanR, iChanU))
+		{
+		oIsNegative = true;
+		return true;
+		}
+	else if (sTryRead_CP('+', iChanR, iChanU))
+		{
+		oIsNegative = false;
+		return true;
+		}
+	return false;
+	}
+
+static bool spTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
+	{
+	oInt64 = 0;
+	for (bool gotAny = false; /*no test*/; gotAny = true)
+		{
+		int curDigit;
+		if (not spTryRead_HexDigit(iChanR, iChanU, curDigit))
+			return gotAny;
+		oInt64 *= 16;
+		oInt64 += curDigit;
+		}
+	}
+
+static bool spTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble)
+	{
+	using namespace Util_Chan;
+
+	oInt64 = 0;
+	oDouble = 0;
+	oIsDouble = false;
+
+	for (bool gotAny = false; /*no test*/; gotAny = true)
+		{
+		int curDigit;
+		if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+			return gotAny;
+
+		if (not oIsDouble)
+			{
+			int64 priorInt64 = oInt64;
+			oInt64 *= 10;
+			oInt64 += curDigit;
+			if (oInt64 < priorInt64)
+				{
+				// We've overflowed.
+				oIsDouble = true;
+				}
+			}
+		oDouble *= 10;
+		oDouble += curDigit;
+		}
+	}
+
+static bool spTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64)
+	{
+	oInt64 = 0;
+	for (bool gotAny = false; /*no test*/; gotAny = true)
+		{
+		int curDigit;
+		if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+			return gotAny;
+		oInt64 *= 10;
+		oInt64 += curDigit;
+		}
+	}
+
+
+static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64)
+	{
+	bool isNegative = false;
+	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
+	if (spTryRead_DecimalInteger(iChanR, iChanU, oInt64))
+		{
+		if (isNegative)
+			oInt64 = -oInt64;
+		return true;
+		}
+
+	if (hadSign)
+		throw ParseException("Expected a valid integer after sign prefix");
+
+	return false;
+	}
+
+
+static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble)
+	{
+	using namespace Util_Chan;
+
+	if (sTryRead_CaselessString("nan", iChanR, iChanU))
+		{
+		oIsDouble = true;
+		oDouble = NAN;
+		return true;
+		}
+
+	if (sTryRead_CaselessString("inf", iChanR, iChanU))
+		{
+		oIsDouble = true;
+		oDouble = INFINITY;
+		return true;
+		}
+
+	if (not spTryRead_Mantissa(iChanR, iChanU, oInt64, oDouble, oIsDouble))
+		return false;
+
+	if (sTryRead_CP('.', iChanR, iChanU))
+		{
+		oIsDouble = true;
+		double fracPart = 0.0;
+		double divisor = 1.0;
+
+		for (;;)
+			{
+			int curDigit;
+			if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+				break;
+			divisor *= 10;
+			fracPart *= 10;
+			fracPart += curDigit;
+			}
+		oDouble += fracPart / divisor;
+		}
+
+	if (sTryRead_CP('e', iChanR, iChanU) || sTryRead_CP('E', iChanR, iChanU))
+		{
+		oIsDouble = true;
+		int64 exponent;
+		if (not spTryRead_SignedDecimalInteger(iChanR, iChanU, exponent))
+			throw ParseException("Expected a valid exponent after 'e'");
+		oDouble = oDouble * pow(10.0, int(exponent));
+		}
+
+	return true;
+	}
+
+bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64, double& oDouble, bool& oIsDouble)
+	{
+	oIsDouble = false;
+	bool isNegative = false;
+	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
+	if (sTryRead_CP('0', iChanR, iChanU))
+		{
+		UTF32 theCP;
+		if (not sQRead(theCP, iChanR))
+			{
+			oInt64 = 0;
+			return true;
+			}
+
+		if (theCP == 'X' || theCP == 'x')
+			{
+			if (spTryRead_HexInteger(iChanR, iChanU, oInt64))
+				{
+				if (isNegative)
+					oInt64 = -oInt64;
+				return true;
+				}
+			throw ParseException("Expected a valid hex integer after '0x' prefix");
+			}
+
+		sUnread(theCP, iChanU);
+		if (not Unicode::sIsDigit(theCP))
+			{
+			oInt64 = 0;
+			return true;
+			}
+		}
+
+	if (spTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
+		{
+		if (isNegative)
+			oInt64 = -oInt64;
+		return true;
+		}
+
+	if (hadSign)
+		{
+		// We've already absorbed a plus or minus sign, hence we have a parse exception.
+		if (isNegative)
+			throw ParseException("Expected a valid number after '-' prefix");
+		else
+			throw ParseException("Expected a valid number after '+' prefix");
+		}
+
+	return false;
+	}
 
 // -----------------
 
