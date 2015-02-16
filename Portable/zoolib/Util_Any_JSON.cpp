@@ -26,8 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
 
-#include "zoolib/Chan_Bin_string.h"
-
 // =================================================================================================
 #pragma mark -
 
