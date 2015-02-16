@@ -46,7 +46,7 @@ string8 sAsJSON(const Val_Any& iVal);
 
 const Val_Any sFromJSON(const string8& iString);
 
-} // namespace ZUtil_Any_JSON
+} // namespace Util_Any_JSON
 
 namespace Operators_Any_JSON {
 

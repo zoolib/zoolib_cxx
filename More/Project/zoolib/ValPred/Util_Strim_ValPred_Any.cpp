@@ -135,7 +135,7 @@ void sToStrim(const ValPred& iValPred, const ChanW_UTF& s)
 	spToStrim(iValPred.GetRHS(), s);
 	}
 
-} // namespace ZUtil_Strim_ValPred_Any
+} // namespace Util_Strim_ValPred_Any
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const ValPred& iValPred)
 	{

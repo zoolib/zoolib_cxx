@@ -31,7 +31,7 @@ namespace Util_Time {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZUtil_Time
+#pragma mark Util_Time
 
 std::string sAsStringUTC(ZTime iTime, const std::string& iFormat);
 std::string sAsStringLocal(ZTime iTime, const std::string& iFormat);

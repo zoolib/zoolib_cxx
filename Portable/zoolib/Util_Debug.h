@@ -31,7 +31,7 @@ namespace Util_Debug {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZUtil_Debug
+#pragma mark Util_Debug
 
 extern bool sCompact;
 
@@ -45,7 +45,7 @@ Log::EPriority sGetLogPriority();
 
 typedef ThreadVal<Log::EPriority,struct Tag_LogPriorityPerThread> LogPriorityPerThread;
 
-} // namespace ZUtil_Debug
-} // namespace ooLib
+} // namespace Util_Debug
+} // namespace ZooLib
 
 #endif // __ZooLib_Util_Debug_h__
