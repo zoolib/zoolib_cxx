@@ -23,12 +23,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Connection.h"
+#include "zoolib/StartScheduler.h"
+
 #include "zoolib/Starter_EventLoopBase.h"
+#include "zoolib/ValueOnce.h"
 
 #include "zoolib/Dataspace/Melange.h"
 
 namespace ZooLib {
 namespace Dataspace {
+
+using std::vector;
 
 // ================================================================================================
 #pragma mark -
@@ -38,27 +43,36 @@ class MelangeServer
 :	public ZCounted
 	{
 public:
-	MelangeServer(const Melange_t& iMelange);
+	MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW);
 
 // From ZCounted
 	virtual void Initialize();
 
-// Our protocol
-	void Run(const ChannerComboRW_Bin& iChannerComboRW);
-
 private:
+	void pRead();
+	void pWrite();
+
+	void pWork();
+	StartScheduler::Job fJob;
+
 	void pChanged(
 		const ZRef<ZCounted>& iRegistration,
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
 
-	void pRead();
-	static void spRead(ZRef<MelangeServer> iMS);
-
 	const Melange_t fMelange;
+	ZRef<ChannerR_Bin> fChannerR;
+	ZRef<ChannerW_Bin> fChannerW;
 
-	std::map<int64,ZRef<ZCounted> > fMap_Registrations;
+	ZMtxR fMtxR;
+	ZCnd fCnd;
+	vector<Map_Any> fQueue_Read;
+	vector<Map_Any> fQueue_ToWrite;
+	FalseOnce fFalseOnce_WriteRunning;
+
+	std::map<int64,ZRef<ZCounted> > fMap_Refcon2Reg;
+	std::map<ZRef<ZCounted>,int64> fMap_Reg2Refcon;
 	};
 
 // =================================================================================================
@@ -70,7 +84,7 @@ class Melange_Client
 ,	public Callable_DatonSetUpdate
 ,	public Starter_EventLoopBase
 	{
-	Melange_Client(const ZRef<ChannerComboFactoryRW_Bin>& iChannerComboFactory);
+	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -90,14 +104,14 @@ private:
 	void pRead();
 	static void spRead(ZRef<Melange_Client> iMC);
 
-	ZQ<ChannerComboRW_Bin> pQEnsureChannerCombo();
+	ZRef<ChannerRW_Bin> pEnsureChanner();
 
-	const ZRef<ChannerComboFactoryRW_Bin> fChannerComboFactory;
+	const ZRef<Factory_ChannerRW_Bin> fFactory;
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 
-	ZQ<ChannerComboRW_Bin> fChannerComboQ;
+	ZRef<ChannerRW_Bin> fChannerRW;
 	ZRef<Starter> fStarter;
 	};
 

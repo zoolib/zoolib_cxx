@@ -18,159 +18,220 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Log.h"
+#include "zoolib/StartOnNewThread.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Any.h"
+#include "zoolib/Util_Any_JSONB.h"
 #include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/dataspace/MelangeRemoter.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZUtil_Any_JSON.h"
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_JSONB.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
 using namespace Util_STL;
 
-static void spSendMessage(const ZMap_Any& iMessage, const ChanW_Bin& iChanW)
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 	{
-	const ZTime start = ZTime::sSystem();
-	ZYad_JSONB::sToChan(sYadR(iMessage), iChanW);
-//	ZUtil_Any_JSON::sWrite(iMessage, ZStrimW_StreamUTF8(iChanW));
+	Util_Any_JSONB::sWrite(iMessage, iChanW);
 	sFlush(iChanW);
-	if (ZLOGF(w, eDebug+1))
-		{
-		w << "Sent in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
-//		w << iMessage.Get<string8>("What");
-		ZUtil_Any_JSON::sWrite(iMessage, w);
-		}
 	}
 
-static ZMap_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
+static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	ZRef<ZStreamerR> theSR = iChannerR.DynamicCast<ZStreamerR>();
-	const ZTime start = ZTime::sSystem();
-	ZQ<ZVal_Any> theQ = ZYad_Any::sQFromYadR(ZYad_JSONB::sYadR(theSR));
+	ZQ<Val_Any> theQ = Util_Any_JSONB::sQRead(iChannerR);
 	if (not theQ)
 		sThrow_ExhaustedR();
 
-	const ZMap_Any result = theQ->Get<ZMap_Any>();
-	if (ZLOGF(w, eDebug+1))
-		{
-		w << "Received in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
-//		w << result.Get<string8>("What");
-		ZUtil_Any_JSON::sWrite(result, w);
-		}
-	return result;
+	return theQ->Get<Map_Any>();
 	}
 
-ZRef<Expr_Rel> spAsRel(const ZVal_Any& iVal);
+ZRef<Expr_Rel> spAsRel(const Val_Any& iVal);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark MelangeServer
 
-MelangeServer::MelangeServer(const Melange_t& iMelange)
+MelangeServer::MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW)
 :	fMelange(iMelange)
-	{
-	}
+,	fChannerR(iChannerRW)
+,	fChannerW(iChannerRW)
+	{}
 
 void MelangeServer::Initialize()
 	{
 	ZCounted::Initialize();
 
+	fJob = StartScheduler::Job(fMelange.f2, sCallable(sWeakRef(this), &MelangeServer::pWork));
+
 	fCallable_Changed = sCallable(sWeakRef(this), &MelangeServer::pChanged);
 
-	ZThread::sStart_T<ZRef<MelangeServer> >(&MelangeServer::spRead, this);
-	}
-
-void MelangeServer::Run(const ChannerComboRW_Bin& iChannerComboRW)
-	{
-	for (;;)
-		{
-		const ZSeq_Any theMessages = spReadMessage(iChannerComboRW.GetR()).Get<ZSeq_Any>("Messages");
-		foreachi (ii, theMessages)
-			{
-			const ZMap_Any theMessage = ii->Get<ZMap_Any>();
-
-			const string8& theWhat = theMessage.Get<string8>("What");
-
-			if (false)
-				{}
-			else if (theWhat == "Register")
-				{
-				foreachi (ii, theMessage.Get<ZSeq_Any>("Registrations"))
-					{
-					if (ZQ<ZMap_Any> theMapQ = ii->Get<ZMap_Any>())
-						{
-						if (ZQ<int64> theRefconQ = sQCoerceInt(theMapQ->Get("Refcon")))
-							{
-							if (ZRef<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
-								{
-								ZRef<ZCounted> theRegistration =
-									sCall(fMelange.f0, fCallable_Changed, theRel);
-								sInsertMust(fMap_Registrations, *theRefconQ, theRegistration);
-								}
-							}
-						}
-					}
-				}
-			else if (theWhat == "Unregister")
-				{
-				foreachi (ii, theMessage.Get<ZSeq_Any>("Registrations"))
-					{
-					if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
-						sEraseMust(fMap_Registrations, *theRefconQ);
-					}
-				}
-			else if (theWhat == "Update")
-				{
-				foreachi (ii, theMessage.Get<ZSeq_Any>("Updates"))
-					{
-					if (ZQ<ZMap_Any> theMapQ = ii->Get<ZMap_Any>())
-						{
-						if (ZQ<bool> theBoolQ = sQCoerceInt(theMapQ->Get("True")))
-							{
-							if (ZQ<ZData_Any> theDataQ = theMapQ->QGet<ZData_Any>("Daton"))
-								sCall(fMelange.f1, *theDataQ, *theBoolQ);
-							}
-						}
-					}
-				}
-
-			// Read daton writes
-			// Read registration requests
-	//		Qeuue them up for application in the writer thread.
-	//		Push them across to be invoked by the starter
-			}
-		}
+	sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pRead));
 	}
 
 void MelangeServer::pRead()
 	{
+	ZGuardMtxR guard(fMtxR);
 	for (;;)
 		{
-		// Read daton writes
-		// Read registration requests
-//		Qeuue them up for application in the writer thread.
-//		Push them across to be invoked by the starter
+		if (not fChannerR)
+			break;
+
+		ZRef<ChannerR_Bin> theChannerR = fChannerR;
+
+		guard.Release();
+
+		const Map_Any theMap = spReadMessage(theChannerR);
+
+		guard.Acquire();
+		fQueue_Read.push_back(theMap);
+		sNextStartIn(0, fJob);
 		}
 	}
 
-void MelangeServer::spRead(ZRef<MelangeServer> iMS)
-	{ iMS->pRead(); }
+void MelangeServer::pWrite()
+	{
+	ZGuardMtxR guard(fMtxR);
+	for (;;)
+		{
+		if (not fChannerW)
+			break;
+
+		if (sIsEmpty(fQueue_ToWrite))
+			{
+			fCnd.WaitFor(fMtxR, 1);
+			if (sIsEmpty(fQueue_ToWrite))
+				break;
+			}
+
+		if (not fChannerW)
+			break;
+
+		ZRef<ChannerW_Bin> theChannerW = fChannerW;
+
+		vector<Map_Any> toWrite;
+		swap(toWrite, fQueue_ToWrite);
+
+		guard.Release();
+
+		vector<Map_Any> theMessages;
+		swap(fQueue_ToWrite, theMessages);
+		guard.Release();
+
+		foreachi (ii, theMessages)
+			spWriteMessage(*ii, sGetChan(theChannerW));
+		}
+	fFalseOnce_WriteRunning.Reset();
+	}
+
+void MelangeServer::pWork()
+	{
+	ZGuardMtxR guard(fMtxR);
+
+	// Pull stuff from fQueue_Read
+	vector<Map_Any> theMessages;
+	swap(fQueue_Read, theMessages);
+
+	// Act on messages
+	foreachv (Map_Any theMessage, theMessages)
+		{
+		const string8& theWhat = theMessage.Get<string8>("What");
+
+		if (false)
+			{}
+		else if (theWhat == "Register")
+			{
+			foreachi (ii, theMessage.Get<Seq_Any>("Registrations"))
+				{
+				if (ZQ<Map_Any> theMapQ = ii->Get<Map_Any>())
+					{
+					if (ZQ<int64> theRefconQ = sQCoerceInt(theMapQ->Get("Refcon")))
+						{
+						if (ZRef<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
+							{
+							ZRef<ZCounted> theRegistration =
+								sCall(fMelange.f0, fCallable_Changed, theRel);
+							sInsertMust(fMap_Refcon2Reg, *theRefconQ, theRegistration);
+							sInsertMust(fMap_Reg2Refcon, theRegistration, *theRefconQ);
+							}
+						}
+					}
+				}
+			}
+		else if (theWhat == "Unregister")
+			{
+			foreachi (ii, theMessage.Get<Seq_Any>("Registrations"))
+				{
+				if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
+					{
+					const ZRef<ZCounted> theRegistration =
+						sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
+
+					const int64 theRefcon =
+						sGetEraseMust(fMap_Reg2Refcon, theRegistration);
+
+					ZAssert(theRefcon == *theRefconQ);
+					}
+				}
+			}
+		else if (theWhat == "Update")
+			{
+			foreachi (ii, theMessage.Get<Seq_Any>("Updates"))
+				{
+				if (ZQ<Map_Any> theMapQ = ii->Get<Map_Any>())
+					{
+					if (ZQ<bool> theBoolQ = sQCoerceBool(theMapQ->Get("True")))
+						{
+						if (ZQ<Data_Any> theDataQ = theMapQ->QGet<Data_Any>("Daton"))
+							sCall(fMelange.f1, *theDataQ, *theBoolQ);
+						}
+					}
+				}
+			}
+		}
+
+	if (sNotEmpty(fQueue_ToWrite))
+		{
+		if (not fFalseOnce_WriteRunning())
+			sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pWrite));
+		fCnd.Broadcast();
+		}
+	}
+
+void MelangeServer::pChanged(
+	const ZRef<ZCounted>& iRegistration,
+	const ZRef<Result>& iResult,
+	bool iIsFirst)
+	{
+	// We're almost certainly on the same thread that our job will be running on.
+
+	ZGuardMtxR guard(fMtxR);
+	// Push onto the to write queue, and wake our starter.
+	Map_any theMap;
+
+	const int64 theRefcon = sGetMust(fMap_Reg2Refcon, iRegistration);
+	theMap.Set("Refcon", sGetMust(fMap_Reg2Refcon, iRegistration));
+	
+
+	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark Melange_Client
 
-Melange_Client::Melange_Client(const ZRef<ChannerComboFactoryRW_Bin>& iChannerComboFactory)
-:	fChannerComboFactory(iChannerComboFactory)
+Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory)
+:	fFactory(iFactory)
 	{
 	}
 
