@@ -112,14 +112,6 @@ const Value& sGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& 
 	return sDefault<Value>();
 	}
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sGetMust(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	const Value* theP = sPGet(iMap, iKey);
-	ZAssert(theP);
-	return *theP;
-	}
-
 // -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
@@ -205,16 +197,6 @@ Value sGetErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
 	if (ioMap.end() == ii)
 		return sDefault<Value>();
-	const Value result = ii->second;
-	ioMap.erase(ii);
-	return result;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value sGetEraseMust(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{
-	typename std::map<KBase,Value,Comparator>::iterator ii = ioMap.find(iKey);
-	ZAssert(ioMap.end() != ii);
 	const Value result = ii->second;
 	ioMap.erase(ii);
 	return result;
