@@ -91,7 +91,7 @@ public:
 				return false;
 
 			fCnd.Wait(fMtx);
-			}		
+			}
 		}
 
 	ZQ<T> QTake()
@@ -410,9 +410,11 @@ sGenerator(const ZRef<Callable<void(const ZRef<Callable<T()> >&)> >& iCallable)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark sGenerator, yield is installed as a thread value. The signature of the Generator's
-// root function, the thing that's called, is void(T0*, T1*) -- two null pointers are
-// passed, they're just there to distinguish it from the generator that is passed a yield callable.
+#pragma mark sGenerator, yield is installed as a thread value.
+
+// The signature of the Generator's root function, the thing that's called,
+// is void(T0*, T1*) -- two null pointers are passed, they're just there to
+// distinguish it from the generator that is passed a yield callable.
 
 typedef ThreadVal<ZRef<ZCounted>, struct Tag_Callable_Yield> ThreadVal_Callable_Yield;
 
