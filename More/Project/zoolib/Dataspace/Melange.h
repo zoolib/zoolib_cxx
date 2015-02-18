@@ -43,7 +43,7 @@ typedef Multi3<
 	ZRef<Starter>
 	> Melange_t;
 
-typedef Callable<Melange_t()> MelangeFactory;
+typedef Callable<Melange_t()> Factory_Melange;
 
 } // namespace Dataspace
 } // namespace ZooLib
