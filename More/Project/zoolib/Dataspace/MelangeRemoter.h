@@ -52,6 +52,7 @@ private:
 	void pRead();
 	void pWrite();
 
+	void pWake();
 	void pWork();
 	StartScheduler::Job fJob;
 
@@ -62,14 +63,16 @@ private:
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
 
 	const Melange_t fMelange;
-	ZRef<ChannerR_Bin> fChannerR;
-	ZRef<ChannerW_Bin> fChannerW;
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
+
+	ZRef<ChannerR_Bin> fChannerR;
+	ZRef<ChannerW_Bin> fChannerW;
+
 	vector<Map_Any> fQueue_Read;
 	vector<Map_Any> fQueue_ToWrite;
-	FalseOnce fFalseOnce_WriteRunning;
+	TrueOnce fTrueOnce_WriteNeedsStart;
 
 	std::map<int64,ZRef<ZCounted> > fMap_Refcon2Reg;
 	std::map<ZRef<ZCounted>,int64> fMap_Reg2Refcon;
@@ -84,6 +87,7 @@ class Melange_Client
 ,	public Callable_DatonSetUpdate
 ,	public Starter_EventLoopBase
 	{
+public:
 	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory);
 
 // From Callable via Callable_Register
@@ -101,18 +105,40 @@ class Melange_Client
 	void Start(ZRef<Starter> iStarter);
 
 private:
+	class Registration;
+	friend class Registration;
+
 	void pRead();
-	static void spRead(ZRef<Melange_Client> iMC);
+	void pWrite();
+	bool pWrite_Inner();
+
+	void pWake();
+	void pWork();
+	StartScheduler::Job fJob;
 
 	ZRef<ChannerRW_Bin> pEnsureChanner();
+
+	void pFinalize(Registration* iRegistration);
 
 	const ZRef<Factory_ChannerRW_Bin> fFactory;
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 
-	ZRef<ChannerRW_Bin> fChannerRW;
-	ZRef<Starter> fStarter;
+	ZRef<ChannerRW_Bin> fChanner;
+
+	typedef DatonSet::Daton Daton;
+
+	int64 fNextRefcon;
+	std::set<ZRef<Registration> > fPending_Registrations;
+	std::set<int64> fPending_Unregistrations;
+	std::map<Daton,bool> fPending_Updates;
+	TrueOnce fTrueOnce_WriteNeedsStart;
+
+	std::map<int64,Registration*> fMap_Refcon2Reg;
+	std::map<Registration*,int64> fMap_Reg2Refcon;
+
+	vector<Map_Any> fQueue_Read;
 	};
 
 } // namespace Dataspace
