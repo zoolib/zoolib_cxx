@@ -93,7 +93,6 @@ void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << " = ";
 	++fIndent;
-//	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp1());
 	--fIndent;
 	w << ")";
@@ -168,7 +167,7 @@ void Visitor::pWriteBinary(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZRA_Util_Strim_Rel
+#pragma mark RelationalAlgebra::Util_Strim_Rel::sToStrim
 
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
 	{
