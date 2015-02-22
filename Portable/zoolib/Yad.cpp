@@ -326,7 +326,7 @@ ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
 class YadStrimmerR_string
 :	public virtual YadStrimmerR
 ,	public virtual YadR_Any
-,	public virtual Channer_T<ChanRU_UTF_string8Ref>
+,	public virtual ChannerRU_T<ChanRU_UTF_string8Ref>
 	{
 public:
 	YadStrimmerR_string(const Any& iAny);
@@ -338,12 +338,12 @@ public:
 
 YadStrimmerR_string::YadStrimmerR_string(const Any& iAny)
 :	YadR_Any(iAny)
-,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
+,	ChannerRU_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
 	{}
 
 YadStrimmerR_string::YadStrimmerR_string(const std::string& iString)
 :	YadR_Any(Any(iString))
-,	Channer_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
+,	ChannerRU_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
 	{}
 
 bool YadStrimmerR_string::IsSimple(const YadOptions& iOptions)

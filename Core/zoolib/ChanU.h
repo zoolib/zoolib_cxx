@@ -41,6 +41,7 @@ protected:
 
 public:
 	typedef Elmt_p Elmt_t;
+	typedef ChanU<Elmt_p> Chan_Base;
 
 	virtual size_t Unread(const Elmt_t* iSource, size_t iCount) = 0;
 
