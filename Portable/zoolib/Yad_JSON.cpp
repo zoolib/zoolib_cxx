@@ -1058,6 +1058,14 @@ void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
 		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, w));
 	}
 
+ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	string8 theString8;
+	if (not spTryRead_PropertyName(iChanR, iChanU, theString8, true))
+		return null;
+	return theString8;
+	}
+
 void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
 	{
 	if (spContainsProblemChars(iPropName))

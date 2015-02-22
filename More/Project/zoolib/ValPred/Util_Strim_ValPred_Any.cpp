@@ -18,12 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Channer_Chan.h"
+#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 #include "zoolib/ValPred/ValPred_Any.h"
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSON.h"
 
 namespace ZooLib {
 namespace Util_Strim_ValPred_Any {
@@ -37,37 +40,37 @@ using std::string;
 
 namespace { // anonymous
 
-void spWrite_PropName(const string& iName, const ChanW_UTF& s)
+void spWrite_PropName(const string& iName, const ChanW_UTF& iChanW)
 	{
-	s << "@";
-	Yad_JSON::sWrite_PropName(iName, s);
+	iChanW << "@";
+	Yad_JSON::sWrite_PropName(iName, iChanW);
 	}
 
-void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& s)
+void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 	{
 	if (not iComparand)
 		{
-		s << "/*Null Comparand*/";
+		iChanW << "/*Null Comparand*/";
 		}
 	else if (ZRef<ValComparand_Name> cr = iComparand.DynamicCast<ValComparand_Name>())
 		{
-		spWrite_PropName(cr->GetName(), s);
+		spWrite_PropName(cr->GetName(), iChanW);
 		}
 	else if (ZRef<ValComparand_Const_Any> cr = iComparand.DynamicCast<ValComparand_Const_Any>())
 		{
-		Yad_JSON::sToChan(sYadR(cr->GetVal()), s);
+		Yad_JSON::sToChan(sYadR(cr->GetVal()), iChanW);
 		}
 	else
 		{
-		s << "/*Unknown Comparand*/";
+		iChanW << "/*Unknown Comparand*/";
 		}
 	}
 
-void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& s)
+void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& iChanW)
 	{
 	if (not iComparator)
 		{
-		s << "/*Null Comparator*/";
+		iChanW << "/*Null Comparator*/";
 		}
 	else if (ZRef<ValComparator_Simple> asSimple =
 		iComparator.DynamicCast<ValComparator_Simple>())
@@ -76,37 +79,37 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& s)
 			{
 			case ValComparator_Simple::eLT:
 				{
-				s << " < ";
+				iChanW << " < ";
 				break;
 				}
 			case ValComparator_Simple::eLE:
 				{
-				s << " <= ";
+				iChanW << " <= ";
 				break;
 				}
 			case ValComparator_Simple::eEQ:
 				{
-				s << " == ";
+				iChanW << " == ";
 				break;
 				}
 			case ValComparator_Simple::eNE:
 				{
-				s << " != ";
+				iChanW << " != ";
 				break;
 				}
 			case ValComparator_Simple::eGE:
 				{
-				s << " >= ";
+				iChanW << " >= ";
 				break;
 				}
 			case ValComparator_Simple::eGT:
 				{
-				s << " > ";
+				iChanW << " > ";
 				break;
 				}
 			default:
 				{
-				s << "/*Unknown Simple Comparator*/";
+				iChanW << "/*Unknown Simple Comparator*/";
 				break;
 				}
 			}
@@ -114,11 +117,67 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& s)
 	else if (ZRef<ValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ValComparator_StringContains>())
 		{
-		s << " contains ";
+		iChanW << " contains ";
 		}
 	else
 		{
-		s << "/*Unknown Comparator*/";
+		iChanW << "/*Unknown Comparator*/";
+		}
+	}
+
+ZRef<ValComparand> spQRead_ValComparand(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+	if (sTryRead_CP('@', iChanR, iChanU))
+		{
+		if (ZQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+			return new ValComparand_Name(*theQ);
+		throw ParseException("Expected Name after @");
+		}
+
+	ZRef<ChannerR_UTF> theChannerR = sChanner_Chan(iChanR);
+	ZRef<ChannerU_UTF> theChannerU = sChanner_Chan(iChanU);
+
+	if (ZQ<Val_Any> theQ = Util_Any_JSON::sQRead(theChannerR, theChannerU))
+		return new ValComparand_Const_Any(*theQ);
+
+	return null;
+	}
+
+ZRef<ValComparator> spQRead_ValComparator(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using Util_Chan::sTryRead_CP;
+
+	if (ZQ<UTF32,false> theQ = sQRead(iChanR))
+		{
+		return null;
+		}
+	else
+		{
+		if (*theQ == '<')
+			{
+			if (sTryRead_CP('=', iChanR, iChanU))
+				return new ValComparator_Simple(ValComparator_Simple::eLE);
+			return new ValComparator_Simple(ValComparator_Simple::eLT);
+			}
+		else if (*theQ == '>')
+			{
+			if (sTryRead_CP('=', iChanR, iChanU))
+				return new ValComparator_Simple(ValComparator_Simple::eGE);
+			return new ValComparator_Simple(ValComparator_Simple::eGT);
+			}
+		else if (*theQ == '=')
+			{
+			if (sTryRead_CP('=', iChanR, iChanU))
+				return new ValComparator_Simple(ValComparator_Simple::eEQ);
+			}
+		else if (*theQ == '!')
+			{
+			if (sTryRead_CP('=', iChanR, iChanU))
+				return new ValComparator_Simple(ValComparator_Simple::eNE);
+			}
+		sUnread(*theQ, iChanU);
+		return null;
 		}
 	}
 
@@ -128,19 +187,49 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& s)
 #pragma mark -
 #pragma mark Util_Strim_ValPred_Any
 
-void sToStrim(const ValPred& iValPred, const ChanW_UTF& s)
+void sToStrim(const ValPred& iValPred, const ChanW_UTF& iChanW)
 	{
-	spToStrim(iValPred.GetLHS(), s);
-	spToStrim(iValPred.GetComparator(), s);
-	spToStrim(iValPred.GetRHS(), s);
+	spToStrim(iValPred.GetLHS(), iChanW);
+	spToStrim(iValPred.GetComparator(), iChanW);
+	spToStrim(iValPred.GetRHS(), iChanW);
+	}
+
+ZQ<ValPred> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+
+	if (ZRef<ValComparand,false> theComparandL = spQRead_ValComparand(iChanR, iChanU))
+		{
+		return null;
+		}
+	else
+		{
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		if (ZRef<ValComparator,false> theComparator = spQRead_ValComparator(iChanR, iChanU))
+			{
+			throw ParseException("Expected Comparator after Comparand");
+			}
+		else
+			{
+			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			if (ZRef<ValComparand,false> theComparandR = spQRead_ValComparand(iChanR, iChanU))
+				{
+				throw ParseException("Expected Comparand after Comparator");
+				}
+			else
+				{
+				return ValPred(theComparandL, theComparator, theComparandR);
+				}
+			}
+		}
 	}
 
 } // namespace Util_Strim_ValPred_Any
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ValPred& iValPred)
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ValPred& iValPred)
 	{
-	Util_Strim_ValPred_Any::sToStrim(iValPred, w);
-	return w;
+	Util_Strim_ValPred_Any::sToStrim(iValPred, iChanW);
+	return iChanW;
 	}
 
 } // namespace ZooLib
