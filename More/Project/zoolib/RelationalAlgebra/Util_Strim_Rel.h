@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Util_Strim_Rel_h__
 #include "zconfig.h"
 
+#include "zoolib/ChanU_UTF.h"
+
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
@@ -92,6 +94,8 @@ typedef Visitor::Options Options;
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
 
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW);
+
+ZRef<Expr_Rel> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 } // namespace Util_Strim_Rel
 } // namespace RelationalAlgebra

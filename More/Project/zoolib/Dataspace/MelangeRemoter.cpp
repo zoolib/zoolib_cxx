@@ -57,17 +57,57 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	return theQ->Get<Map_Any>();
 	}
 
-// namespace { // anonymous
+namespace { // anonymous
 
-ZRef<Expr_Rel> spAsRel(const Val_Any& iVal);
+ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
+	{
 
-static Val_Any spAsVal(ZRef<Expr_Rel> iRel);
+	}
 
-static ZRef<Result> spAsResult(const Val_Any& iVal);
+Val_Any spAsVal(ZRef<Expr_Rel> iRel)
+	{
+	}
 
-static Val_Any spAsVal(ZRef<Result> iResult);
+ZRef<Result> spAsResult(const Val_Any& iVal)
+	{
+	RelHead theRH;
+	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("RelHead"))
+		sInsert(theRH, theVal.Get<string8>());
 
-// } // anonymous namespace
+	std::vector<Val_Any> thePackedRows;
+
+	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("Vals"))
+		sPushBack(thePackedRows, theVal);
+
+	return new Result(theRH, &thePackedRows);
+	}
+
+Val_Any spAsVal(ZRef<Result> iResult)
+	{
+	Map_Any result;
+
+	const RelHead& theRH = iResult->GetRelHead();
+
+	Seq_Any& theSeq_RH = result.Mut<Seq_Any>("RelHead");
+	foreachi (ii, theRH)
+		theSeq_RH.Append(*ii);
+
+	const size_t theCount = iResult->Count();
+	result.Set("Count", int64(theCount));
+
+	Seq_Any& theSeq_Vals = result.Mut<Seq_Any>("Vals");
+
+	for (size_t yy = 0; yy < theCount; ++yy)
+		{
+		const Val_Any* theRow = iResult->GetValsAt(yy);
+		for (size_t xx = 0; xx < theRH.size(); ++xx)
+			theSeq_Vals.Append(theRow[xx]);
+		}
+
+	return result;
+	}
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
