@@ -8,6 +8,8 @@ We've got parameters, local and instance variables, and class, file and namespac
 distinguish. ZooLib uses name prefixes to make distinct the scope in which a name is defined.
 
 - `f` instance variables. (f is an abbreviation of 'field', cf MacApp/Taligent/Object Pascal).
+	They're almost always private.
+- `p` private functions and methods.
 - `s` static variables and functions. These are class or namespace static, and
 	are publicly accessible.
 - `sp` static private variables and functions. If file static then obviously they're not
