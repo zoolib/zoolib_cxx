@@ -334,7 +334,11 @@ public:
 
 private:
 	#if ZCONFIG_CPP >= 2011
-		alignas(T) char fBytes[sizeof(T)];
+	union
+		{
+		T fAsT;
+		char fBytes[1];
+		};
 	#else
 		char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
 	#endif
@@ -480,6 +484,89 @@ bool operator==(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
 template <bool SenseL, bool SenseR>
 bool operator<(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
 	{ return not iL.HasValue() && iR.HasValue(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark NotQ
+
+#if ZCONFIG_CPP >= 2011
+
+template <class T> using NotQ = ZQ<T,false>;
+
+#else // ZCONFIG_CPP >= 2011
+
+template <class T>
+class NotQ : public ZQ<T,false>
+	{
+	typedef ZQ<T,false> inherited;
+public:
+	NotQ()
+		{}
+
+	NotQ(const NotQ& iOther)
+	:	inherited((const inherited&)iOther)
+		{}
+
+	~NotQ()
+		{}
+
+	NotQ& operator=(const NotQ& iOther)
+		{
+		inherited::operator=(iOther);
+		return *this;
+		}
+
+// -----------------
+
+	template <class OtherT, bool OtherSense>
+	NotQ(const ZQ<OtherT,OtherSense>& iOther)
+	:	inherited(iOther)
+		{}
+
+	template <class OtherT, bool OtherSense>
+	NotQ& operator=(const ZQ<OtherT,OtherSense>& iOther)
+		{
+		inherited::operator=(iOther);
+		return *this;
+		}
+
+// -----------------
+
+	NotQ(const null_t& iNull)
+	:	inherited(iNull)
+		{}
+
+	NotQ& operator=(const null_t& iNull)
+		{
+		inherited::operator=(iNull);
+		return *this;
+		}
+
+// -----------------
+
+	template <class P0>
+	NotQ(const P0& i0)
+	:	inherited(i0)
+		{}
+
+	template <class P0>
+	NotQ& operator=(const P0& iValue)
+		{
+		inherited::operator=(iValue);
+		return *this;
+		}
+
+// -----------------
+
+	template <class P0, class P1>
+	NotQ(const P0& i0, const P1& i1)
+	:	inherited(i0, i1)
+		{}
+
+// -----------------
+	};
+
+#endif // ZCONFIG_CPP >= 2011
 
 // =================================================================================================
 #pragma mark -
