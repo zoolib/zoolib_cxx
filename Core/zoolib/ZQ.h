@@ -45,8 +45,6 @@ namespace ZooLib {
 template <class T, bool Sense = true>
 class ZQ
 	{
-	friend class ZQ<T,not Sense>;
-
 	template <bool SenseNoValue, bool SenseHasValue>
 	static
 	void spSwap(ZQ<T,SenseNoValue>& ioNoValue, ZQ<T,SenseHasValue>& ioHasValue)
@@ -344,6 +342,8 @@ private:
 	#endif
 
 	bool fHasValue;
+
+	friend class ZQ<T,not Sense>;
 	};
 
 template <class T, bool SenseL, bool SenseR>
@@ -470,7 +470,7 @@ public:
 private:
 	bool fHasValue;
 
-	friend class ZQ<void, !Sense>;
+	friend class ZQ<void, not Sense>;
 	};
 
 template <bool SenseL, bool SenseR>
