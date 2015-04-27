@@ -43,7 +43,14 @@ ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>
 		theRO.fAllowTerminators = true;
 		theRO.fLooseSeparators = true;
 		theRO.fAllowBinary = true;
-		return Yad_Any::sQFromYadR(sYadR(theRO, iChannerR, iChannerU));
+		if (ZRef<YadR> theYad = sYadR(theRO, iChannerR, iChannerU))
+			{
+			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
+				{
+				theYad->Finish();
+				return resultQ;
+				}
+			}
 		}
 	return null;
 	}
