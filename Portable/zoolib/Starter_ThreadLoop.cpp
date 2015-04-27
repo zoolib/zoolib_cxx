@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::string;
 using std::vector;
 
 // =================================================================================================
@@ -36,8 +37,9 @@ class Starter_ThreadLoop
 :	public Starter
 	{
 public:
-	Starter_ThreadLoop()
+	Starter_ThreadLoop(const ZQ<string>& iNameQ)
 	:	fKeepRunning(false)
+	,	fNameQ(iNameQ)
 		{}
 
 	virtual ~Starter_ThreadLoop()
@@ -82,7 +84,10 @@ public:
 private:
 	void pRun()
 		{
-		ZThread::sSetName("Starter_ThreadLoop");
+		if (fNameQ)
+			ZThread::sSetName(fNameQ->c_str());
+		else
+			ZThread::sSetName("Starter_ThreadLoop");
 
 		ZGuardMtxR guard(fMtxR);
 
@@ -121,13 +126,17 @@ private:
 	ZCnd fCnd;
 	bool fKeepRunning;
 	std::vector<ZRef<Startable> > fStartables;
+	const ZQ<string> fNameQ;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sStarter_ThreadLoop
 
+ZRef<Starter> sStarter_ThreadLoop(const string& iName)
+	{ return new Starter_ThreadLoop(iName); }
+
 ZRef<Starter> sStarter_ThreadLoop()
-	{ return new Starter_ThreadLoop; }
+	{ return new Starter_ThreadLoop(null); }
 
 } // namespace ZooLib

@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Starter_ThreadLoop_h__ 1
 #include "zconfig.h"
 
+#include <string>
+
 #include "zoolib/Starter.h"
 
 namespace ZooLib {
@@ -29,6 +31,8 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 #pragma mark sStarter_ThreadLoop
+
+ZRef<Starter> sStarter_ThreadLoop(const std::string& iName);
 
 ZRef<Starter> sStarter_ThreadLoop();
 
