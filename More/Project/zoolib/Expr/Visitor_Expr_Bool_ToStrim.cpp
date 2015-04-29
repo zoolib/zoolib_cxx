@@ -29,10 +29,10 @@ namespace ZooLib {
 #pragma mark Visitor_Expr_Bool_ToStrim
 
 void Visitor_Expr_Bool_ToStrim::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
-	{ this->pStrimW() << "true"; }
+	{ this->pStrimW() << "TRUE"; }
 
 void Visitor_Expr_Bool_ToStrim::Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iRep)
-	{ this->pStrimW() << "false"; }
+	{ this->pStrimW() << "FALSE"; }
 
 void Visitor_Expr_Bool_ToStrim::Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iRep)
 	{
