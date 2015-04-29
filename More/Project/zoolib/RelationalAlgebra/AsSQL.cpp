@@ -152,7 +152,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 					}
 
 //##				uuuuurrrrrggggghhhhh ... with optional and required columns it's now
-//##				possible for more than table to satisfy the concrete, so we'll need
+//##				possible for more than one table to satisfy the concrete, so we'll need
 //##				to construct a term *here*, and union it with others.
 
 				}
