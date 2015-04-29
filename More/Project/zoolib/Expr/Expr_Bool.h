@@ -256,9 +256,12 @@ public:
 ZRef<Expr_Bool> sTrue();
 ZRef<Expr_Bool> sFalse();
 
-ZRef<Expr_Bool> operator~(const ZRef<Expr_Bool>& iExpr_Bool);
-
 ZRef<Expr_Bool> sNot(const ZRef<Expr_Bool>& iExpr_Bool);
+
+ZRef<Expr_Bool> sAnd(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS);
+ZRef<Expr_Bool> sOr(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS);
+
+ZRef<Expr_Bool> operator~(const ZRef<Expr_Bool>& iExpr_Bool);
 
 ZRef<Expr_Bool> operator&(bool iBool, const ZRef<Expr_Bool>& iExpr_Bool);
 ZRef<Expr_Bool> operator&(const ZRef<Expr_Bool>& iExpr_Bool, bool iBool);

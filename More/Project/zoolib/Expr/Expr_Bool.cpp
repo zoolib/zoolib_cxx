@@ -295,6 +295,16 @@ ZRef<Expr_Bool> operator~(const ZRef<Expr_Bool>& iExpr_Bool)
 ZRef<Expr_Bool> sNot(const ZRef<Expr_Bool>& iExpr_Bool)
 	{ return new Expr_Bool_Not(iExpr_Bool); }
 
+ZRef<Expr_Bool> sAnd(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+	{ return iLHS & iRHS; }
+
+ZRef<Expr_Bool> sOr(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+	{ return iLHS | iRHS; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Operators
+
 ZRef<Expr_Bool> operator&(bool iBool, const ZRef<Expr_Bool>& iExpr_Bool)
 	{
 	if (iBool)
