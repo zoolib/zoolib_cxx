@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zooLib/dataspace/Daton_Val.h"
+#include "zooLib/Dataspace/Daton_Val.h"
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"

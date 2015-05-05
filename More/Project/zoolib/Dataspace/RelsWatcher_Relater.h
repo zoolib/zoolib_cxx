@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zooLib/ValueOnce.h"
 
-#include "zooLib/dataspace/Relater.h"
-#include "zooLib/dataspace/RelsWatcher.h"
+#include "zooLib/Dataspace/Relater.h"
+#include "zooLib/Dataspace/RelsWatcher.h"
 
 namespace ZooLib {
 namespace Dataspace {
