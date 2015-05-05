@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/ValueOnce.h"
 #include "zoolib/Yad_JSON.h"
@@ -56,6 +57,110 @@ void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
 	s << "]";
 	}
 
+ZQ<ColName> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+
+	if (not sTryRead_CP('@', iChanR, iChanU))
+		return null;
+
+	if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+		throw ParseException("Expected PropName after '@'");
+	else
+		return *theQ;
+	}
+
+ZQ<RelHead> sQFromStrim_RelHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+
+	if (not sTryRead_CP('[', iChanR, iChanU))
+		return null;
+
+	RelHead result;
+
+	for (;;)
+		{
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+
+		if (NotQ<string8> theQ = sQRead_PropName(iChanR, iChanU))
+			throw ParseException("Expected PropName");
+		else
+			result |= *theQ;
+
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		if (not sTryRead_CP(',', iChanR, iChanU))
+			break;
+		}
+
+	if (not sTryRead_CP(']', iChanR, iChanU))
+			throw ParseException("Expected ']'");
+	return result;
+	}
+
+ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+
+	if (NotQ<string8> theQ0 = sQRead_PropName(iChanR, iChanU))
+		{ return null; }
+	else
+		{
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+
+		if (not sTryRead_String("<--", iChanR, iChanU))
+			throw ParseException("Expected <-- after first PropName");
+
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+
+		if (NotQ<string8> theQ1 = sQRead_PropName(iChanR, iChanU))
+			throw ParseException("Expected second PropName after <--");
+		else
+			return std::pair<ColName,ColName>(*theQ0, *theQ1);
+		}
+	}
+
+ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	using namespace Util_Chan;
+
+	if (not sTryRead_CP('[', iChanR, iChanU))
+		return null;
+
+	ConcreteHead result;
+
+	for (;;)
+		{
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		if (sTryRead_CP('@', iChanR, iChanU))
+			{
+			if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+				throw ParseException("Expected PropName after '@'");
+			else
+				result[*theQ] = true;
+			}
+		else if (sTryRead_CP('?', iChanR, iChanU))
+			{
+			if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+				throw ParseException("Expected PropName after '?'");
+			else
+				result[*theQ] = false;
+			}
+		else
+			{
+			throw ParseException("Expected PropName");
+			}
+		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		if (not sTryRead_CP(',', iChanR, iChanU))
+			break;
+		}
+
+	if (not sTryRead_CP(']', iChanR, iChanU))
+			throw ParseException("Expected ']'");
+	return result;
+	}
+
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 
@@ -70,13 +175,9 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelHead& iRH)
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Rename& iRename)
 	{
 	w << "[";
-	FalseOnce needsSeparator;
+	ValueOnce<std::string> separator("", ", ");
 	foreachi (ii, iRename)
-		{
-		if (needsSeparator())
-			w << ", ";
-		w << ii->second << "<--" << ii->first;
-		}
+		w << separator() << ii->second << "<--" << ii->first;
 	w << "]";
 	return w;
 	}

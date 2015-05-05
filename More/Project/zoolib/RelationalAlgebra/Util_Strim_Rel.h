@@ -93,7 +93,11 @@ typedef Visitor::Options Options;
 
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
 
+void sToStrim_Parseable(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
+
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW);
+
+ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 ZRef<Expr_Rel> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
