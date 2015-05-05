@@ -271,7 +271,7 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 		{
 		return new YadStrimmerR_JSON(iChannerR, iChannerU);
 		}
-	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP('(', theChanR, theChanU))
+	else if (iRO->Get().fAllowBinary.DGet(false) && sTryRead_CP('<', theChanR, theChanU))
 		{
 		sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 		if (sTryRead_CP('=', theChanR, theChanU))
@@ -357,8 +357,8 @@ void YadStreamerR_Hex::Finish()
 	{
 	using namespace Util_Chan;
 	sSkipAll(fChanR);
-	if (not sTryRead_CP(')', sGetChan(fChannerR), sGetChan(fChannerU)))
-		throw ParseException("Expected ')' to close a binary data");
+	if (not sTryRead_CP('>', sGetChan(fChannerR), sGetChan(fChannerU)))
+		throw ParseException("Expected '>' to close a binary data");
 	}
 
 void YadStreamerR_Hex::GetChan(const ChanR_Bin*& oChanPtr)
@@ -373,7 +373,7 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 ,	fChanR_Bin_ASCIIStrim(sGetChan(iChannerR))
-,	fChanR_Bin_Boundary(')', fChanR_Bin_ASCIIStrim)
+,	fChanR_Bin_Boundary('>', fChanR_Bin_ASCIIStrim)
 ,	fChanR(iDecode, fChanR_Bin_Boundary)
 	{}
 
@@ -382,7 +382,7 @@ void YadStreamerR_Base64::Finish()
 	using namespace Util_Chan;
 	sSkipAll(fChanR);
 	if (not fChanR_Bin_Boundary.HitTerminator())
-		throw ParseException("Expected ')' to close a binary data");
+		throw ParseException("Expected '>' to close a base64 data");
 	}
 
 void YadStreamerR_Base64::GetChan(const ChanR_Bin*& oChanPtr)
@@ -652,115 +652,6 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 		}
 	}
 
-#if 0
-
-static void spToStrim_Stream(const ZStreamRPos& iStreamRPos,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanW_UTF& w)
-	{
-	uint64 theSize = iStreamRPos.GetSize();
-	if (theSize == 0)
-		{
-		// we've got an empty Raw
-		s << "()";
-		}
-	else
-		{
-		if (iOptions.DoIndentation() && theSize > iOptions.fRawChunkSize)
-			{
-			if (iMayNeedInitialLF)
-				spWriteLFIndent(iLevel, iOptions, s);
-
-			uint64 countRemaining = theSize;
-			if (iOptions.fRawSizeCap)
-				countRemaining = min(countRemaining, iOptions.fRawSizeCap.Get());
-
-			sWritefMust(s, "( // %lld bytes", (unsigned long long)theSize);
-
-			if (countRemaining < theSize)
-				sWritefMust(s, " (truncated at %lld bytes)", (long long)iOptions.fRawSizeCap.Get());
-
-			spWriteLFIndent(iLevel, iOptions, s);
-			if (iOptions.fRawAsASCII)
-				{
-				for (;;)
-					{
-					uint64 lastPos = iStreamRPos.GetPosition();
-					const size_t countToCopy =
-						min(iOptions.fRawChunkSize, ZStream::sClampedSize(countRemaining));
-					uint64 countCopied;
-					ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
-						.CopyFrom(iStreamRPos, countToCopy, &countCopied, nullptr);
-					countRemaining -= countCopied;
-					if (countCopied == 0)
-						break;
-
-					iStreamRPos.SetPosition(lastPos);
-					if (size_t extraSpaces = iOptions.fRawChunkSize - countCopied)
-						{
-						// We didn't write a complete line of bytes, so pad it out.
-						while (extraSpaces--)
-							{
-							// Two spaces for the two nibbles
-							s << "  ";
-							// And then the separator sequence
-							s << iOptions.fRawByteSeparator;
-							}
-						}
-
-					s << " // ";
-					while (countCopied--)
-						{
-						UTF32 theChar = iStreamRPos.ReadInt8();
-						if (theChar < 0x20 || theChar > 0x7E)
-							sWriteMust(UTF32('.'), s);
-						else
-							sWriteMust(theChar, s);
-						}
-					spWriteLFIndent(iLevel, iOptions, s);
-					}
-				}
-			else
-				{
-				string eol = iOptions.fEOLString;
-				for (size_t xx = 0; xx < iLevel; ++xx)
-					eol += iOptions.fIndentString;
-
-				ZStreamW_HexStrim(iOptions.fRawByteSeparator,
-					eol, iOptions.fRawChunkSize, s).CopyAllFrom(iStreamRPos);
-
-				spWriteLFIndent(iLevel, iOptions, s);
-				}
-
-			s << ")";
-			}
-		else
-			{
-			s << "(";
-
-			ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
-				.CopyAllFrom(iStreamRPos);
-
-			if (iOptions.fRawAsASCII)
-				{
-				iStreamRPos.SetPosition(0);
-				s << " /* ";
-				while (theSize--)
-					{
-					UTF32 theChar = iStreamRPos.ReadInt8();
-					if (theChar < 0x20 || theChar > 0x7E)
-						sWriteMust(UTF32('.'), s);
-					else
-						sWriteMust(theChar, s);
-					}
-				s << " */";
-				}
-			s << ")";
-			}
-		}
-	}
-#endif
-
 static void spToStrim_Stream(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w)
@@ -778,7 +669,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 
 	if (iOptions.fBinaryAsBase64.DGet(false))
 		{
-		w << "(";
+		w << "<";
 		w << "=";
 
 		sCopyAll(iChanR,
@@ -787,20 +678,16 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 				ChanW_Bin_ASCIIStrim(
 					ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))));
 
-		w << ")";
+		w << ">";
 		}
-//	else if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
-//		{
-//		spToStrim_Stream(*theStreamRPos, iLevel, iOptions, iMayNeedInitialLF, s);
-//		}
 	else
 		{
-		w << "(";
+		w << "<";
 
 		sCopyAll(iChanR,
 			ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, w));
 
-		w << ")";
+		w << ">";
 		}
 	}
 
