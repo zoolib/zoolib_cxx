@@ -28,7 +28,7 @@ namespace ZooLib {
 
 class YadStreamerRPos_Any
 :	public virtual YadStreamerRPos_Val_T<Data_Any>
-,	public YadR_Any
+,	public virtual YadR_Any
 	{
 public:
 	YadStreamerRPos_Any(const Data_Any& iData)
@@ -38,8 +38,8 @@ public:
 	};
 
 class YadSeqR_Any
-:	public YadSeqR_Val_T<Seq_Any>
-,	public YadR_Any
+:	public virtual YadSeqR_Val_T<Seq_Any>
+,	public virtual YadR_Any
 	{
 public:
 	YadSeqR_Any(const Seq_Any& iSeq)
@@ -49,8 +49,8 @@ public:
 	};
 
 class YadMapR_Any
-:	public YadMapR_Val_T<Map_Any>
-,	public YadR_Any
+:	public virtual YadMapR_Val_T<Map_Any>
+,	public virtual YadR_Any
 	{
 public:
 	YadMapR_Any(const Map_Any& iMap)

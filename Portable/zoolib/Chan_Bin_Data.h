@@ -42,13 +42,19 @@ class ChanBase_Bin_Data
 ,	public ChanPos
 ,	public ChanSize
 	{
+protected:
+	ChanBase_Bin_Data()
+		{}
+
 public:
 	typedef Data_p Data;
 
 	ChanBase_Bin_Data(Data* ioDataPtr)
 	:	fDataPtr(ioDataPtr)
 	,	fPosition(0)
-		{}
+		{
+		ZAssert(fDataPtr);
+		}
 
 // From ChanR
 	virtual size_t QRead(Elmt_t* oDest, size_t iCount)

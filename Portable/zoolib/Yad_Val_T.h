@@ -33,7 +33,7 @@ namespace ZooLib {
 
 template <class Val_p>
 class YadR_Val_T
-:	public virtual YadR
+:	public /*virtual*/ YadR
 	{
 public:
 	typedef YadR_Val_T YadBase_t;
@@ -65,17 +65,26 @@ protected:
 
 template <class Data_p>
 class YadStreamerRPos_Val_T
-:	public virtual YadStreamerR
-,	public virtual Channer_T<ChanRPos_Bin_Data<Data_p>,ChanR_Bin>
+:	public /*virtual*/ YadStreamerR
 	{
+protected:
+	YadStreamerRPos_Val_T() {}
+
 public:
 	YadStreamerRPos_Val_T(const Data_p& iData)
-	:	Channer_T<ChanRPos_Bin_Data<Data_p>,ChanR_Bin>(iData)
+	:	fChan(iData)
 		{}
+
+// From ChannerR_Bin, via YadStreamerR
+	virtual void GetChan(const Chan_t*& oChanPtr)
+		{ 	oChanPtr = &fChan; }
 
 // From YadR
 	bool IsSimple(const YadOptions& iOptions)
 		{ return false; }
+
+protected:
+	ChanRPos_Bin_Data<Data_p> fChan;
 	};
 
 // =================================================================================================
