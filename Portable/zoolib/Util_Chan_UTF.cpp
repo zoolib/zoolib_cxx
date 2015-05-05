@@ -104,7 +104,7 @@ bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	// can actually be returned by ReadCP.
 	ZAssertStop(2, Unicode::sIsValid(iCP));
 
-	if (ZQ<UTF32,false> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 		{ return false; }
 	else if (*theCPQ == iCP)
 		{ return true; }
@@ -119,7 +119,7 @@ bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
-	if (ZQ<UTF32,false> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 		{ return null; }
 	else if (*theCPQ >= '0' && *theCPQ <= '9')
 		{ return *theCPQ - '0'; }
@@ -132,7 +132,7 @@ ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
-	if (ZQ<UTF32,false> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 		{ return null; }
 	else if (*theCPQ >= '0' && *theCPQ <= '9')
 		{ return *theCPQ - '0'; }
@@ -145,6 +145,48 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		sUnread(*theCPQ, iChanU);
 		return null;
 		}
+	}
+
+// -----------------
+
+bool sTryRead_String(const string8& iTarget,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	string8::const_iterator targetIter = iTarget.begin();
+	string8::const_iterator targetEnd = iTarget.end();
+
+	std::vector<UTF32> stack;
+	for (;;)
+		{
+		UTF32 targetCP;
+		if (not Unicode::sReadInc(targetIter, targetEnd, targetCP))
+			{
+			// Exhausted target, and thus successful.
+			return true;
+			}
+
+		if (NotQ<UTF32> candidateCPQ = sQRead(iChanR))
+			{
+			// Exhausted strim.
+			break;
+			}
+		else
+			{
+			stack.push_back(*candidateCPQ);
+			if (targetCP != *candidateCPQ)
+				{
+				// Mismatched code points.
+				break;
+				}
+			}
+		}
+
+	while (not stack.empty())
+		{
+		sUnread(stack.back(), iChanU);
+		stack.pop_back();
+		}
+	return false;
 	}
 
 // -----------------
@@ -165,7 +207,7 @@ bool sTryRead_CaselessString(const string8& iTarget,
 			return true;
 			}
 
-		if (ZQ<UTF32,false> candidateCPQ = sQRead(iChanR))
+		if (NotQ<UTF32> candidateCPQ = sQRead(iChanR))
 			{
 			// Exhausted strim.
 			break;
@@ -395,7 +437,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
 	for (;;)
 		{
-		if (ZQ<UTF32,false> theCPQ = sQRead(iSource))
+		if (NotQ<UTF32> theCPQ = sQRead(iSource))
 			break;
 		else if (Unicode::sIsEOL(*theCPQ))
 			break;

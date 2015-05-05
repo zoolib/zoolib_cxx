@@ -56,6 +56,9 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 // -----------------
 
+bool sTryRead_String(const string8& iTarget,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+
 bool sTryRead_CaselessString(const string8& iTarget,
 	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 

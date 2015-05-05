@@ -129,7 +129,7 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 		{
 		if (not gotByte)
 			{
-			if (ZQ<byte,false> theQ = sQRead(iChanR_Bin))
+			if (NotQ<byte> theQ = sQRead(iChanR_Bin))
 				break;
 			else
 				curByte = *theQ;
