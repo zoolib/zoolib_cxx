@@ -125,6 +125,7 @@ private:
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 
+	bool fGettingChanner;
 	ZRef<ChannerRW_Bin> fChanner;
 
 	typedef DatonSet::Daton Daton;

@@ -21,22 +21,165 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
+#include "zoolib/Chan_UTF_string.h"
+#include "zoolib/ChanR_Bin_More.h"
+#include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Log.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Any.h"
-#include "zoolib/Util_Any_JSONB.h"
+#include "zoolib/Util_Any_JSON.h"
+//###include "zoolib/Util_Any_JSONB.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_JSONB.h"
 
 #include "zoolib/dataspace/MelangeRemoter.h"
+
+#include "zoolib/QueryEngine/Result.h"
+
+#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
+using namespace Operators_Any_JSON;
 using namespace Util_STL;
+
+using QueryEngine::Result;
+using DatonSet::Daton;
+
+// =================================================================================================
+#pragma mark -
+
+static void spToChan(const string8& iString, const ChanW_Bin& w)
+	{
+	const size_t theLength = iString.length();
+	sWriteCountMust(theLength, w);
+	if (theLength)
+		{
+		if (theLength != sQWriteFully(iString.data(), theLength, w))
+			sThrow_ExhaustedW();
+		}
+	}
+
+static string8 spStringFromChan(const ChanR_Bin& r)
+	{
+	if (size_t theCount = sReadCount(r))
+		return sReadString(theCount, r);
+	return string8();
+	}
+
+// =================================================================================================
+#pragma mark -
+
+class ReadFilter_Result
+:	public Yad_JSONB::ReadFilter
+	{
+public:
+	virtual ZQ<Any> QRead(const ZRef<ChannerR_Bin>& iChannerR_Bin)
+		{
+		const ChanR_Bin& r = sGetChan(iChannerR_Bin);
+
+		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
+			{
+			switch (*theTypeQ)
+				{
+				case 100:
+					{
+					// We're at the beginning of a QE::Result. So read the RelHead to start with.
+					RelHead theRelHead;
+					for (size_t theCount = sReadCount(r); theCount; --theCount)
+						theRelHead |= spStringFromChan(r);
+
+					// Now the vals
+					vector<Val_Any> packedRows;
+					for (size_t theCount = sReadCount(r) * theRelHead.size(); theCount; --theCount)
+						{
+						if (ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(this, iChannerR_Bin)))
+							packedRows.push_back(*theQ);
+						else
+							ZUnimplemented(); // return null;
+						}
+
+					return sRef(new Result(theRelHead, &packedRows));
+					}
+				case 101:
+					{
+					Data_Any theData(sReadCount(r));
+					sReadMust(theData.GetPtrMutable(), theData.GetSize(), r);
+					return Daton(theData);
+					}
+				}
+
+			if (ZLOGF(w, eDebug))
+				w << *theTypeQ;
+			ZUnimplemented();
+			}
+		return null;
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+
+class WriteFilter_Result
+:	public Yad_JSONB::WriteFilter
+	{
+public:
+	virtual bool QWrite(const Any& iAny, const ChanW_Bin& w)
+		{
+		if (false)
+			{}
+		else if (const ZRef<Result>* theResultP = iAny.PGet<ZRef<Result> >())
+			{
+			sWriteBE<uint8>(100, w);
+
+			const ZRef<Result> theResult = *theResultP;
+
+			const RelHead& theRH = theResult->GetRelHead();
+			const size_t theRHCount = theRH.size();
+
+			sWriteCountMust(theRHCount, w);
+
+			foreachi (ii, theRH)
+				spToChan(*ii, w);
+
+			const size_t theRowCount = theResult->Count();
+
+			sWriteCountMust(theRowCount, w);
+
+			for (size_t yy = 0; yy < theRowCount; ++yy)
+				{
+				const Val_Any* theRow = theResult->GetValsAt(yy);
+				for (size_t xx = 0; xx < theRHCount; ++xx)
+					Yad_JSONB::sToChan(this, sYadR(theRow[xx]),w);
+				}
+			return true;
+			}
+		else if (const Daton* theDatonP = iAny.PGet<Daton>())
+			{
+			sWriteBE<uint8>(101, w);
+
+			const Data_Any& theData = theDatonP->GetData();
+
+			sWriteCountMust(theData.GetSize(), w);
+			sWriteMust(theData.GetPtr(), theData.GetSize(), w);
+			return true;
+			}
+		else
+			{
+			if (ZLOGF(w, eDebug))
+				w << iAny.Type().name();
+			ZUnimplemented();
+			}
+		return false;
+		}
+
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -44,28 +187,53 @@ using namespace Util_STL;
 
 static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 	{
-	Util_Any_JSONB::sWrite(iMessage, iChanW);
+	if (ZLOGF(w, eDebug))
+		w << iMessage;
+
+	Yad_JSONB::sToChan(sSingleton<ZRef_Counted<WriteFilter_Result> >(), sYadR(iMessage), iChanW);
+
 	sFlush(iChanW);
 	}
 
 static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	ZQ<Val_Any> theQ = Util_Any_JSONB::sQRead(iChannerR);
+	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sSingleton<ZRef_Counted<ReadFilter_Result> >(), iChannerR));
 	if (not theQ)
 		sThrow_ExhaustedR();
 
-	return theQ->Get<Map_Any>();
+	const Map_Any theMessage = theQ->Get<Map_Any>();
+	if (ZLOGF(w, eDebug))
+		w << theMessage;
+
+	return theMessage;
 	}
 
 namespace { // anonymous
 
 ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
 	{
-
+	if (NotQ<string8> theStringQ = iVal.QGet<string8>())
+		{
+		return null;
+		}
+	else
+		{
+		if (ZLOGF(w, eDebug))
+			w << "\n" << *theStringQ;
+		ChanRU_UTF_string8 theChan(*theStringQ);
+		return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(theChan, theChan);
+		}
 	}
 
 Val_Any spAsVal(ZRef<Expr_Rel> iRel)
 	{
+	string8 theString;
+	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(iRel, ChanW_UTF_string8(&theString));
+
+	if (ZLOGF(w,eDebug + 1))
+		w << "\n" << theString;
+
+	return theString;
 	}
 
 ZRef<Result> spAsResult(const Val_Any& iVal)
@@ -132,6 +300,8 @@ void MelangeServer::Initialize()
 
 void MelangeServer::pRead()
 	{
+	ZThread::sSetName("MelangeServer::pRead");
+
 	ZGuardMtxR guard(fMtxR);
 	while (fChannerR)
 		{
@@ -292,10 +462,10 @@ public:
 
 Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory)
 :	fFactory(iFactory)
+,	fGettingChanner(false)
 ,	fNextRefcon(1)
 	{}
 
-// From Callable_Register
 ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZRef<Expr_Rel>& iRel)
@@ -314,7 +484,6 @@ ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 	return theRegistration;
 	}
 
-// From Callable_DatonSetUpdate
 ZQ<void> Melange_Client::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	{
 	std::map<Daton,bool>::iterator iter = fPending_Updates.lower_bound(iDaton);
@@ -332,7 +501,6 @@ ZQ<void> Melange_Client::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	return notnull;
 	}
 
-// From Starter_EventLoopBase
 bool Melange_Client::pTrigger()
 	{
 	this->pWake();
@@ -364,7 +532,7 @@ void Melange_Client::pWork()
 		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
 			{
 			// Get the registration and call its callable
-			if (ZQ<bool> theIsFirst = sQCoerceInt(theMessage.Get("IsFirst")))
+			if (ZQ<bool> theIsFirst = sQCoerceBool(theMessage.Get("IsFirst")))
 				{
 				if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
 					{
@@ -392,6 +560,7 @@ void Melange_Client::pWork()
 
 void Melange_Client::pRead()
 	{
+	ZThread::sSetName("Melange_Client::pRead");
 	for (;;)
 		{
 		try
@@ -441,6 +610,8 @@ void Melange_Client::pWrite()
 	// The write failed in some fashion, clean up and trigger pWork.
 
 	ZGuardMtxR guard(fMtxR);
+
+	fChanner.Clear();
 
 	// Registrations become pending, but writes are discarded -- we'll get replacement
 	// values when we reconnect, and our caller can reapply their work, if appropriate.
@@ -520,13 +691,21 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 	{
 	ZGuardMtxR guard(fMtxR);
 
+	while (fGettingChanner)
+		fCnd.WaitFor(fMtxR, 5);
+
 	if (not fChanner)
 		{
+		SaveSetRestore<bool> theSSR(fGettingChanner, true);
+
 		guard.Release();
 		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
 		guard.Acquire();
+
 		fChanner = theChanner;
+		fCnd.Broadcast();
 		}
+
 	return fChanner;
 	}
 
@@ -536,21 +715,22 @@ void Melange_Client::pFinalize(Registration* iRegistration)
 	if (not iRegistration->FinishFinalize())
 		return;
 
-	if (not sQErase(fPending_Registrations, iRegistration))
-		{
-		// This wasn't a pending registration, so we'll have assigned it a refcon, need to
-		// clear it from our maps, and to tell the server.
-		const int64 theRefcon =
-			sGetEraseMust(fMap_Reg2Refcon, iRegistration);
-
-		sEraseMust(fMap_Refcon2Reg, theRefcon);
-		sInsert(fPending_Unregistrations, theRefcon);
-
+  if (ZQ<int64> theRefconQ = sQGetErase(fMap_Reg2Refcon, iRegistration))
+    {
+    sEraseMust(fMap_Refcon2Reg, *theRefconQ);
+    sInsert(fPending_Unregistrations, *theRefconQ);
 		this->pWake();
-		}
+    }
 
 	delete iRegistration;
 	}
 
 } // namespace Dataspace
+
+//ZRef<RelationalAlgebra::Expr_Rel> sTestRel(const std::string& iString)
+//	{
+//	ChanRU_UTF_string8 theChan(iString);
+//	return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(theChan, theChan);
+//	}
+
 } // namespace ZooLib
