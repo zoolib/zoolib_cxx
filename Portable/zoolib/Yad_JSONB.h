@@ -31,7 +31,31 @@ namespace Yad_JSONB {
 // =================================================================================================
 #pragma mark -
 
+class ReadFilter
+:	public ZCounted
+	{
+public:
+	virtual ZQ<Any> QRead(const ZRef<ChannerR_Bin>& iChannerR_Bin) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+
+class WriteFilter
+:	public ZCounted
+	{
+public:
+	virtual bool QWrite(const Any& iAny, const ChanW_Bin& w) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+
+ZRef<YadR> sYadR(ZRef<ReadFilter> iReadFilter, ZRef<ChannerR_Bin> iChannerR_Bin);
+
 ZRef<YadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin);
+
+void sToChan(ZRef<WriteFilter> iWriteFilter, ZRef<YadR> iYadR, const ChanW_Bin& w);
 
 void sToChan(ZRef<YadR> iYadR, const ChanW_Bin& w);
 
