@@ -46,6 +46,10 @@ inline
 size_t sQReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
 	{ return sQReadFully(static_cast<byte*>(oDest), iCount, iChan); }
 
+inline
+void sReadMust(void* oDest, size_t iCount, const ChanR_Bin& iChan)
+	{ return sReadMust(static_cast<byte*>(oDest), iCount, iChan); }
+
 // =================================================================================================
 #pragma mark -
 

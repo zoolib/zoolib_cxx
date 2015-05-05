@@ -43,6 +43,10 @@ inline
 size_t sQWriteFully(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
 	{ return sQWriteFully(static_cast<const byte*>(iSource), iCount, iChan); }
 
+inline
+void sWriteMust(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
+	{ return sWriteMust(static_cast<const byte*>(iSource), iCount, iChan); }
+
 template <class T>
 bool sQWriteNative(const T& iT, const ChanW_Bin& iChanW)
 	{

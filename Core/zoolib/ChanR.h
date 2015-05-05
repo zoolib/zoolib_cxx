@@ -107,6 +107,7 @@ ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
 	return buf;
 	}
 
+// This is still used in HTTP and Util_Chan_UTF
 template <class Elmt_p>
 bool sQRead(Elmt_p& oElmt, const ChanR<Elmt_p>& iChanR)
 	{ return 1 == sQRead(&oElmt, 1, iChanR); }
@@ -163,6 +164,13 @@ uint64 sSkipAll(const ChanR<Elmt_p>& iChanR)
 			{ break; }
 		}
 	return result;
+	}
+
+template <class Elmt_p>
+void sReadMust(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
+	{
+	if (iCount != sQReadFully<Elmt_p>(oDest, iCount, iChanR))
+		sThrow_ExhaustedR();
 	}
 
 // =================================================================================================
