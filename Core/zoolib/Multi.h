@@ -118,7 +118,7 @@ public: \
 			return result; \
 		else if (f##X_1 < iOther.f##X_1) \
 			return -1; \
-		else  if (iOther.f##X_1 < f##X_1) \
+		else if (iOther.f##X_1 < f##X_1) \
 			return 1; \
 		else \
 			return 0; \
