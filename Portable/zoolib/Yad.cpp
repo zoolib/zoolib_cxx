@@ -340,9 +340,6 @@ public:
 
 	virtual void GetChan(const ChanU_UTF*& oChanPtr)
 		{ return ChannerRU_T<ChanRU_UTF_string8Ref>::GetChan(oChanPtr); }
-
-//	using ChannerRU_T<ChanRU_UTF_string8Ref>::GetChan;
-//	using ChannerRU_T<ChanRU_UTF_string8Ref>::GetChan;
 	};
 
 YadStrimmerR_string::YadStrimmerR_string(const Any& iAny)
