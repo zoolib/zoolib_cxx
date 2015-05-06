@@ -594,6 +594,8 @@ void Melange_Client::pRead()
 
 void Melange_Client::pWrite()
 	{
+	ZThread::sSetName("Melange_Client::pWrite");
+
 	fTrueOnce_WriteNeedsStart.Reset();
 
 	try
@@ -630,6 +632,7 @@ void Melange_Client::pWrite()
 
 bool Melange_Client::pWrite_Inner()
 	{
+	
 	ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
 
 	ZGuardMtxR guard(fMtxR);
@@ -715,12 +718,12 @@ void Melange_Client::pFinalize(Registration* iRegistration)
 	if (not iRegistration->FinishFinalize())
 		return;
 
-  if (ZQ<int64> theRefconQ = sQGetErase(fMap_Reg2Refcon, iRegistration))
-    {
-    sEraseMust(fMap_Refcon2Reg, *theRefconQ);
-    sInsert(fPending_Unregistrations, *theRefconQ);
+	if (ZQ<int64> theRefconQ = sQGetErase(fMap_Reg2Refcon, iRegistration))
+		{
+		sEraseMust(fMap_Refcon2Reg, *theRefconQ);
+		sInsert(fPending_Unregistrations, *theRefconQ);
 		this->pWake();
-    }
+		}
 
 	delete iRegistration;
 	}
