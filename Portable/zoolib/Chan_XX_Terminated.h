@@ -28,7 +28,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR_XX_Tee
+#pragma mark ChanR_XX_Terminated
 
 template <class XX>
 class ChanR_XX_Terminated
@@ -47,9 +47,9 @@ public:
 	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
 		{
 		size_t countRemaining = iCount;
-		while (countRemaining)
+		while (not fHitTerminator && countRemaining)
 			{
-			if (ZQ<Elmt_t,false> theQ = sQRead(fChanR))
+			if (NotQ<Elmt_t> theQ = sQRead(fChanR))
 				{
 				break;
 				}
@@ -73,6 +73,9 @@ public:
 // Our protocol
 	bool HitTerminator()
 		{ return fHitTerminator; }
+
+	void Reset()
+		{ fHitTerminator = false; }
 
 protected:
 	const Elmt_t fTerminator;
