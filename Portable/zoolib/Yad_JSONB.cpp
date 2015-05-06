@@ -349,7 +349,7 @@ public:
 		sWriteBE<uint8>(11, fW);
 		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
 			theChild->Accept(*this);
-		sWriteBE<uint8>(0xFF, fW);  // Terminator
+		sWriteBE<uint8>(0xFF, fW); // Terminator
 		}
 
 	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
@@ -362,7 +362,7 @@ public:
 			theChild->Accept(*this);
 			}
 		sWriteBE<uint8>(0, fW); // Empty name
-		sWriteBE<uint8>(0xFF, fW);  // Terminator
+		sWriteBE<uint8>(0xFF, fW); // Terminator
 		}
 
 private:

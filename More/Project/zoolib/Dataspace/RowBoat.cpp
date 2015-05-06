@@ -79,15 +79,17 @@ void RowBoat::pChanged(
 	fResultDiffer.Apply(iResult, &priorResult,
 		&theRemoved, &theAdded, &theChanged);
 
-	// We generate bindings the first time we're called, so they must
-	// be empty if there's no prior result.
-	ZAssert(sNotEmpty(fBindings) == bool(priorResult));
-
-	// RelHeads can't and mustn't change from one result to another.
-	ZAssert(not priorResult || priorResult->GetRelHead() == iResult->GetRelHead());
-
-	if (not priorResult)
+	if (priorResult)
 		{
+		// We generate bindings the first time we're called, so they must be non-empty at this point.
+		ZAssert(sNotEmpty(fBindings));
+
+		// RelHeads can't and mustn't change from one result to another.
+		ZAssert(priorResult->GetRelHead() == iResult->GetRelHead());
+		}
+	else
+		{
+		ZAssert(sIsEmpty(fBindings));
 		// Build fBindings the first time we get a result.
 		const RelHead& theRH = iResult->GetRelHead();
 		size_t index = 0;
