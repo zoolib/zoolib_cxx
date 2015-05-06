@@ -42,50 +42,6 @@ bool sIs_LWS(char iChar)
 	return iChar == ' ' || iChar == '\t';
 	}
 
-bool sReadFieldName(const ChanR_Bin& iChanR, std::string* oName, std::string* oNameExact)
-	{
-	if (oName)
-		oName->resize(0);
-	if (oNameExact)
-		oNameExact->resize(0);
-
-	bool gotAny = false;
-
-	for (;;)
-		{
-		byte readChar;
-		if (not sQRead(readChar, iChanR))
-			return gotAny;
-
-		gotAny = true;
-
-		if ((readChar >= 0 && readChar <= 32) || readChar == 127)
-			{
-			// Control characters, space and DEL (127) are illegal and make for a
-			// malformed field name. We return true to indicate that the line was
-			// not completely empty, but resize oNameXX to indicate that a
-			// well-formed field name was not found.
-			if (oName)
-				oName->resize(0);
-			if (oNameExact)
-				oNameExact->resize(0);
-			return true;
-			}
-
-		if (readChar == ':')
-			{
-			// ':' terminates a field name. Should we suck up the space that always seems
-			// to follow? Or is that considered part of the field body, as RFC822 indicates?
-			return true;
-			}
-
-		if (oName)
-			oName->append(1, char(tolower(readChar)));
-		if (oNameExact)
-			oNameExact->append(1, readChar);
-		}
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark ChanR_Bin_Header

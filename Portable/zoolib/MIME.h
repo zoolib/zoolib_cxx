@@ -30,13 +30,6 @@ namespace MIME {
 // Character classification.
 bool sIs_LWS(char iChar);
 
-// These methods expect a ChanR_Bin that encompasses exactly a single header line. Most likely
-// it will be the top of a stack of streams that handle line unfolding, encoded-word decoding etc.
-
-bool sReadFieldName(const ChanR_Bin& iChanR, std::string* oName, std::string* oNameExact);
-
-//bool sReadFieldBody(const ChanR_Bin& iChanR, std::string& oFieldBody);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark MIME::ChanR_Bin_Header
