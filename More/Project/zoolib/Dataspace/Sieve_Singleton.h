@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Sieve_Singleton_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/dataspace/Daton_Val.h"
-#include "zoolib/dataspace/Melange.h" // For Callable_DatonSetUpdate et al
+#include "zoolib/Dataspace/Daton_Val.h"
+#include "zoolib/Dataspace/Melange.h" // For Callable_DatonSetUpdate et al
 #include "zooLib/Dataspace/RelsWatcher_Relater.h"
-#include "zoolib/dataspace/Searcher_DatonSet.h"
+#include "zoolib/Dataspace/Searcher_DatonSet.h"
 
 namespace ZooLib {
 namespace Dataspace {
