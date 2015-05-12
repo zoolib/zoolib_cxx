@@ -125,6 +125,8 @@ private:
 	ZRef<Event> fLeft;
 	ZRef<Event> fRight;
 	size_t fValue;
+	ZRef<Event> fLiftedLeft;
+	ZRef<Event> fLiftedRight;
 	};
 
 // =================================================================================================

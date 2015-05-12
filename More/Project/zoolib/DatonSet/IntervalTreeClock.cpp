@@ -210,9 +210,35 @@ ZRef<Event> Event::sMake(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Eve
 	if (not result)
 		result = new Event;
 
-	result->fValue = iValue;
-	result->fLeft = iLeft;
-	result->fRight = iRight;
+	ZAssert(not (result->fLeft || result->fRight || result->fLiftedLeft || result->fLiftedRight));
+
+	if (iValue)
+		{
+		result->fValue = iValue;
+
+		if (iLeft)
+			{
+			result->fLeft = iLeft;
+			result->fRight = iRight;
+
+			result->fLiftedLeft = iLeft->pLifted(iValue);
+			result->fLiftedRight = iRight->pLifted(iValue);
+			}
+		else
+			{
+			ZAssert(not iRight);
+			}
+		}
+	else
+		{
+		result->fValue = iValue;
+
+		result->fLeft = iLeft;
+		result->fRight = iRight;
+
+		result->fLiftedLeft = iLeft;
+		result->fLiftedRight = iRight;
+		}
 
 	return result;
 	}
@@ -230,6 +256,8 @@ void Event::Finalize()
 	fValue = 0;
 	fLeft.Clear();
 	fRight.Clear();
+	fLiftedLeft.Clear();
+	fLiftedRight.Clear();
 
 	spSafePtrStack_Event.Push(this);
 	}
@@ -256,23 +284,23 @@ bool Event::LessEqual(const ZRef<Event>& iOther) const
 		if (fValue > iOther->fValue)
 			return false;
 
-		ZRef<Event> xl1 = fLeft->pLifted(fValue);
+		const ZRef<Event>& xl1 = fLiftedLeft;
 		if (iOther->fLeft)
 			{
-			ZRef<Event> xl2 = iOther->fLeft->pLifted(iOther->fValue);
+			const ZRef<Event>& xl2 = iOther->fLiftedLeft;
 			if (not xl1->LessEqual(xl2))
 				return false;
 
-			ZRef<Event> xr1 = fRight->pLifted(fValue);
+			const ZRef<Event>& xr1 = fLiftedRight;//
 
-			ZRef<Event> xr2 = iOther->fRight->pLifted(iOther->fValue);
+			const ZRef<Event>& xr2 = iOther->fLiftedRight;
 			return xr1->LessEqual(xr2);
 			}
 		else
 			{
 			if (not xl1->LessEqual(iOther))
 				return false;
-			ZRef<Event> xr1 = fRight->pLifted(fValue);
+			const ZRef<Event>& xr1 = fLiftedRight;
 			return xr1->LessEqual(iOther);
 			}
 		}
