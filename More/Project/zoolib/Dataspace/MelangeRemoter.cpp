@@ -113,6 +113,10 @@ public:
 					sReadMust(theData.GetPtrMutable(), theData.GetSize(), r);
 					return Daton(theData);
 					}
+				case 102:
+					{
+					return AbsentOptional_t();
+					}
 				}
 
 			if (ZLOGF(w, eDebug))
@@ -170,9 +174,14 @@ public:
 			sWriteMust(theData.GetPtr(), theData.GetSize(), w);
 			return true;
 			}
+		else if (iAny.PGet<AbsentOptional_t>())
+			{
+			sWriteBE<uint8>(102, w);
+			return true;
+			}
 		else
 			{
-			if (ZLOGF(w, eDebug))
+			if (ZLOGPF(w, eDebug))
 				w << iAny.Type().name();
 			ZUnimplemented();
 			}
@@ -570,10 +579,7 @@ void Melange_Client::pRead()
 			ZGuardMtxR guard(fMtxR);
 
 			if (not theChanner)
-				{
-				// No Channer was available
 				continue;
-				}
 
 			Map_Any theMap;
 			{
@@ -612,22 +618,7 @@ void Melange_Client::pWrite()
 	// The write failed in some fashion, clean up and trigger pWork.
 
 	ZGuardMtxR guard(fMtxR);
-
 	fChanner.Clear();
-
-	// Registrations become pending, but writes are discarded -- we'll get replacement
-	// values when we reconnect, and our caller can reapply their work, if appropriate.
-
-	foreachi (ii, fMap_Reg2Refcon)
-		sInsertMust(fPending_Registrations, ii->first);
-
-	sClear(fPending_Unregistrations);
-	sClear(fPending_Updates);
-	sClear(fMap_Refcon2Reg);
-	sClear(fMap_Reg2Refcon);
-	sClear(fQueue_Read);
-
-	this->pWake();
 	}
 
 bool Melange_Client::pWrite_Inner()
@@ -699,10 +690,30 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 
 	if (not fChanner)
 		{
+		// Registrations become pending, but writes are discarded -- we'll get replacement
+		// values when we reconnect, and our caller can reapply their work, if appropriate.
+
+		foreachi (ii, fMap_Reg2Refcon)
+			sInsertMust(fPending_Registrations, ii->first);
+
+		sClear(fPending_Unregistrations);
+		sClear(fPending_Updates);
+		sClear(fMap_Refcon2Reg);
+		sClear(fMap_Reg2Refcon);
+		sClear(fQueue_Read);
+
+		this->pWake();
+
 		SaveSetRestore<bool> theSSR(fGettingChanner, true);
 
 		guard.Release();
 		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
+		if (not theChanner)
+			{
+			// No Channer was available, pause for 1s;
+			ZThread::sSleep(1);
+			}
+
 		guard.Acquire();
 
 		fChanner = theChanner;
