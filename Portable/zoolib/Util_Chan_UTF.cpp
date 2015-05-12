@@ -405,11 +405,14 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			}
 
 		sUnread(theCP, iChanU);
-		if (not Unicode::sIsDigit(theCP))
+
+		if (theCP != '.' and not Unicode::sIsDigit(theCP))
 			{
 			oInt64 = 0;
 			return true;
 			}
+
+		sUnread(UTF32('0'), iChanU);
 		}
 
 	if (spTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
