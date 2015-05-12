@@ -49,10 +49,9 @@ size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 	UTF32* localDestEnd = oDest + iCountCU;
 	while (localDestEnd > localDest)
 		{
-		ZQ<UTF32> theCPQ = sQRead(fChanR);
-		if (not theCPQ)
+		UTF32 theCP;
+		if (not sQRead(theCP, fChanR))
 			throw ParseException("Unexpected end of strim whilst parsing a string");
-		UTF32 theCP = *theCPQ;
 
 		if (theCP == fDelimiter)
 			{
@@ -68,11 +67,9 @@ size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 
 		if (theCP == '\\')
 			{
-			ZQ<UTF32> theCPQ = sQRead(fChanR);
-			if (not theCPQ)
+			if (not sQRead(theCP, fChanR))
 				throw ParseException("Unexpected end of strim whilst parsing a string");
 
-			UTF32 theCP = *theCPQ;
 			switch (theCP)
 				{
 				case '\\':
