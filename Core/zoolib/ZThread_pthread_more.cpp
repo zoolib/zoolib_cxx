@@ -72,8 +72,11 @@ SaveSetRestoreName::~SaveSetRestoreName()
 SaveSetRestorePriority::SaveSetRestorePriority(int iPriority)
 	{
 	pthread_getschedparam(pthread_self(), &fPolicyPrior, &fSchedPrior);
+
+	// Can't use = {0} here
 	struct sched_param schedNew;
 	sMemZero_T(schedNew);
+
 	schedNew.sched_priority = iPriority;
 	pthread_setschedparam(pthread_self(), SCHED_RR, &schedNew);
 	}
