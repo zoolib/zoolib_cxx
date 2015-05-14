@@ -116,6 +116,77 @@ template <class XX>
 class ChanW_XX_Buffered
 :	public ChanW<XX>
 	{
+public:
+	typedef XX Elmt_t;
+
+	ChanW_XX_Buffered(size_t iBufferSize, const ChanW<XX>& iChanW)
+	:	fChanW(iChanW)
+	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
+	,	fOffset(0)
+		{}
+
+	~ChanW_XX_Buffered()
+		{
+		try
+			{
+			this->pFlush();
+			}
+		catch (...)
+			{
+			ZDebugLogf(1, ("~ChanW_XX_Buffered, unable to flush entire buffer"));
+			}
+		}
+
+	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+		{
+		const Elmt_t* localSource = iSource;
+		while (iCount)
+			{
+			if (fOffset == 0 && fBuffer.size() <= iCount)
+				{
+				// We have an empty buffer *and* we have more data to send than would fit in the buffer.
+				const size_t countWritten = sQWrite(localSource, iCount, fChanW);
+				if (countWritten == 0)
+					break;
+				localSource += countWritten;
+				iCount -= countWritten;
+				}
+			else
+				{
+				// Either we already have data in the buffer, or we have an empty buffer
+				// and less than a buffer's worth to send.
+				const size_t countToCopy = std::min(iCount, fBuffer.size() - fOffset);
+				std::copy(localSource, localSource + countToCopy, &fBuffer[fOffset]);
+				fOffset += countToCopy;
+				localSource += countToCopy;
+				iCount -= countToCopy;
+				if (fOffset == fBuffer.size())
+					{
+					// The buffer's completely full.
+					this->pFlush();
+					}
+				}
+			}
+
+		return localSource - iSource;
+		}
+
+	virtual void Flush()
+		{
+		this->pFlush();
+		sFlush(fChanW);
+		}
+
+protected:
+	void pFlush()
+		{
+		if (size_t used = sGetSet(fOffset, 0))
+			sWriteMust(&fBuffer[0], used, fChanW);
+		}
+
+	const ChanW<XX>& fChanW;
+	std::vector<XX> fBuffer;
+	size_t fOffset;
 	};
 
 } // namespace ZooLib
