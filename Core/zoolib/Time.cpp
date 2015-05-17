@@ -20,10 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compare.h"
 #include "zoolib/Compat_cmath.h" // For NAN and isnan
+#include "zoolib/Time.h"
 
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZTime.h"
 #include "zoolib/ZTypes.h" // For countof
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -60,30 +60,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-
-ZMACRO_CompareRegistration_T(ZTime)
+namespace Time {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTime
+#pragma mark Time
 
-ZTime::ZTime()
-:	fVal(NAN)
-	{}
-
-ZTime::operator operator_bool() const
-	{ return operator_bool_gen::translate(!isnan(fVal)); }
-
-bool ZTime::operator==(const ZTime& iOther) const
-	{ return sCompare_T(fVal, iOther.fVal) == 0; }
-
-bool ZTime::operator<(const ZTime& iOther) const
-	{ return sCompare_T(fVal, iOther.fVal) < 0; }
-
-int ZTime::Compare(const ZTime& iOther) const
-	{ return sCompare_T(fVal, iOther.fVal); }
-
-ZTime ZTime::sNow()
+double sNow()
 	{
 #if 0
 #elif ZCONFIG_SPI_Enabled(POSIX)
@@ -131,7 +114,7 @@ ZTime ZTime::sNow()
 #endif
 	}
 
-ZTime ZTime::sSystem()
+double sSystem()
 	{
 #if 0
 #elif defined(__MACH__)
@@ -221,7 +204,7 @@ ZTime ZTime::sSystem()
 #endif
 	}
 
-ZTime ZTime::sBoot()
+double sBoot()
 	{
 #if ZCONFIG_SPI_Enabled(BSD)
 
@@ -233,7 +216,7 @@ ZTime ZTime::sBoot()
 		if (theLen == sizeof(theTimeVal))
 			return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
 		}
-	return ZTime();
+	return 0;
 
 #else
 
@@ -242,7 +225,7 @@ ZTime ZTime::sBoot()
 #endif
 	}
 
-double ZTime::sSinceBoot()
+double sSinceBoot()
 	{
 #if ZCONFIG_SPI_Enabled(Linux)
 
@@ -276,4 +259,5 @@ double ZTime::sSinceBoot()
 #endif
 	}
 
+} // namespace Time
 } // namespace ZooLib
