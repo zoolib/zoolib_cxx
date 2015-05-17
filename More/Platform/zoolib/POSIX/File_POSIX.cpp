@@ -1007,33 +1007,33 @@ uint64 FileLoc_POSIX::Size()
 	return theStat.st_size;
 	}
 
-ZTime FileLoc_POSIX::TimeCreated()
+double FileLoc_POSIX::TimeCreated()
 	{
 	struct stat theStat;
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
-		return ZTime();
+		return 0;
 
 	#if __MACH__ && !defined(_POSIX_SOURCE)
-		return ZTime(theStat.st_ctimespec.tv_sec + (theStat.st_ctimespec.tv_nsec / 1000000000.0));
+		return double(theStat.st_ctimespec.tv_sec + (theStat.st_ctimespec.tv_nsec / 1000000000.0));
 	#elif defined(__USE_MISC) || defined(__sun__)
-		return ZTime(theStat.st_ctim.tv_sec + (theStat.st_ctim.tv_nsec / 1000000000.0));
+		return double(theStat.st_ctim.tv_sec + (theStat.st_ctim.tv_nsec / 1000000000.0));
 	#else
-		return ZTime(theStat.st_ctime + (theStat.st_ctimensec / 1000000000.0));
+		return double(theStat.st_ctime + (theStat.st_ctimensec / 1000000000.0));
 	#endif
 	}
 
-ZTime FileLoc_POSIX::TimeModified()
+double FileLoc_POSIX::TimeModified()
 	{
 	struct stat theStat;
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
-		return ZTime();
+		return 0;
 
 	#if __MACH__ && !defined(_POSIX_SOURCE)
-		return ZTime(theStat.st_mtimespec.tv_sec + (theStat.st_mtimespec.tv_nsec / 1000000000.0));
+		return double(theStat.st_mtimespec.tv_sec + (theStat.st_mtimespec.tv_nsec / 1000000000.0));
 	#elif defined(__USE_MISC) || defined(__sun__)
-		return ZTime(theStat.st_mtim.tv_sec + (theStat.st_mtim.tv_nsec / 1000000000.0));
+		return double(theStat.st_mtim.tv_sec + (theStat.st_mtim.tv_nsec / 1000000000.0));
 	#else
-		return ZTime(theStat.st_mtime + (theStat.st_mtimensec / 1000000000.0));
+		return double(theStat.st_mtime + (theStat.st_mtimensec / 1000000000.0));
 	#endif
 	}
 

@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Expr_Expr_Bool_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compare_T.h"
+
 #include "zoolib/Expr/Expr_Op_T.h"
 
 namespace ZooLib {

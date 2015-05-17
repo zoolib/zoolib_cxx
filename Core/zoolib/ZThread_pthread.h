@@ -170,7 +170,7 @@ public:
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitUntil(ZMtx_pthread_base& iMtx, ZTime iDeadline)
+	bool WaitUntil(ZMtx_pthread_base& iMtx, double iDeadline)
 		{ return this->pWaitUntil(iMtx, iDeadline); }
 
 	ZMACRO_Attribute_NoThrow
@@ -186,7 +186,7 @@ protected:
 	bool pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout);
 
 	ZMACRO_Attribute_NoThrow
-	bool pWaitUntil(ZMtx_pthread_base& iMtx, ZTime iDeadline);
+	bool pWaitUntil(ZMtx_pthread_base& iMtx, double iDeadline);
 
 	pthread_cond_t f_pthread_cond_t;
 	};

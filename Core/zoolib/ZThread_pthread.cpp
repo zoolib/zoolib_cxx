@@ -24,10 +24,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_cmath.h" // For fmod
 
+#include "zoolib/ZTypes.h" // For countof
+
+#include <stdio.h> // For snprintf
 #include <sys/time.h> // For gettimeofday
 #include <unistd.h> // For usleep
 
 #include <new> // For std::bad_alloc
+
+#if __MACH__
+	#include <mach/mach_init.h> // For mach_thread_self
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -37,7 +44,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
 		#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_10_6 <= MAC_OS_X_VERSION_MIN_REQUIRED
 			void ZooLib::ZThread_pthread::sSetName(const char* iName)
-				{ ::pthread_setname_np(iName); }
+				{
+				char buffer[256];
+				snprintf(buffer, countof(buffer), "%4x:%s", ((int)mach_thread_self()), iName);
+				::pthread_setname_np(buffer);
+				}
 		#else
 			extern int pthread_setname_np(const char*) __attribute__((weak_import));
 
@@ -58,6 +69,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ /* no-op */ }
 #endif
+
 
 namespace ZooLib {
 
@@ -130,13 +142,13 @@ bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 		return 0 == ::pthread_cond_timedwait_relative_np(
 			&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
 	#else
-		return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
+		return this->pWaitUntil(iMtx, Time::sSystem() + iTimeout);
 	#endif
 	}
 
-bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, ZTime iDeadline)
+bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, double iDeadline)
 	{
-	const timespec the_timespec = { time_t(iDeadline.fVal), long(1e9 * fmod(iDeadline.fVal, 1.0)) };
+	const timespec the_timespec = { time_t(iDeadline), long(1e9 * fmod(iDeadline, 1.0)) };
 	return 0 == ::pthread_cond_timedwait(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
 	}
 

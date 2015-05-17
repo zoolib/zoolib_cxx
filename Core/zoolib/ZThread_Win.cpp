@@ -132,8 +132,8 @@ void ZSem_Win::Procure()
 bool ZSem_Win::TryProcureFor(double iTimeout)
 	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
 
-bool ZSem_Win::TryProcureUntil(ZTime iDeadline)
-	{ return this->TryProcureFor(iDeadline - ZTime::sSystem()); }
+bool ZSem_Win::TryProcureUntil(double iDeadline)
+	{ return this->TryProcureFor(iDeadline - Time::sSystem()); }
 
 void ZSem_Win::Vacate()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }

@@ -115,7 +115,7 @@ bool Roster::WaitFor(double iTimeout, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-bool Roster::WaitUntil(ZTime iDeadline, size_t iCount)
+bool Roster::WaitUntil(double iDeadline, size_t iCount)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fEntries.size() == iCount)

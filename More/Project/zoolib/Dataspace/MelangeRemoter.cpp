@@ -43,6 +43,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
+#include "zoolib/ChanRU_XX_Unreader.h"
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -196,23 +198,38 @@ public:
 
 static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 	{
-	if (ZLOGF(w, eDebug))
-		w << iMessage;
+	const double start = Time::sSystem();
 
 	Yad_JSONB::sToChan(sSingleton<ZRef_Counted<WriteFilter_Result> >(), sYadR(iMessage), iChanW);
-
 	sFlush(iChanW);
+
+	const double finish = Time::sSystem();
+
+	if (ZLOGF(w, eDebug))
+		w << 1e3 * (finish - start) << "ms\n" << iMessage;
 	}
 
 static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sSingleton<ZRef_Counted<ReadFilter_Result> >(), iChannerR));
+	ZRef<ChannerRU_XX_Unreader<byte> > theChannerRU = new ChannerRU_XX_Unreader<byte>(iChannerR);
+
+	ZQ<byte> theByteQ = sQRead(sGetChan<ChanR_Bin>(theChannerRU));
+	if (not theByteQ)
+		sThrow_ExhaustedR();
+
+	sUnread(*theByteQ, sGetChan<ChanU<byte> >(theChannerRU));
+
+	const double start = Time::sSystem();
+
+	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sSingleton<ZRef_Counted<ReadFilter_Result> >(), theChannerRU));
 	if (not theQ)
 		sThrow_ExhaustedR();
 
+	const double finish = Time::sSystem();
+
 	const Map_Any theMessage = theQ->Get<Map_Any>();
 	if (ZLOGF(w, eDebug))
-		w << theMessage;
+		w << 1e3 * (finish - start) << "ms\n" << theMessage;
 
 	return theMessage;
 	}

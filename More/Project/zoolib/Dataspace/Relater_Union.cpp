@@ -939,7 +939,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 		{
 		ZLOGPF(s, eDebug+1);
 
-		const ZTime start = ZTime::sNow();
+		const double start = Time::sNow();
 
 		for (DListEraser<PQuery, DLink_PQuery_NeedsWork>
 			eraserPQuery = fPQuery_NeedsWork; eraserPQuery; eraserPQuery.Advance())
@@ -965,14 +965,14 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				fReadCount = 0;
 				fStepCount = 0;
 
-				const ZTime start = ZTime::sNow();
+				const double start = Time::sNow();
 
 				ZRef<QueryEngine::Walker> theWalker =
 					Relater_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
-				const ZTime afterMakeWalker = ZTime::sNow();
+				const double afterMakeWalker = Time::sNow();
 
 				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
-				const ZTime afterDoQuery = ZTime::sNow();
+				const double afterDoQuery = Time::sNow();
 
 				if (s)
 					{
@@ -990,7 +990,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				}
 			}
 
-		const ZTime afterCollect = ZTime::sNow();
+		const double afterCollect = Time::sNow();
 
 		if (s)
 			{

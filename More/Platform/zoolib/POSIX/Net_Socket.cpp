@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
 #include "zoolib/Memory.h"
-#include "zoolib/ZTime.h"
 
 #include <errno.h>
 #include <fcntl.h>

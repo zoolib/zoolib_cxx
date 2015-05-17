@@ -24,12 +24,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Time.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Debug.h"
 #include "zoolib/Util_Time.h"
 
 #include "zoolib/ZThread.h"
-#include "zoolib/ZTime.h"
 
 #if __MACH__
 	#include <mach/mach_init.h> // For mach_thread_self
@@ -201,7 +201,7 @@ public:
 
 		ZAcqMtx acq(fMtx);
 
-		const ZTime now = ZTime::sNow();
+		const double now = Time::sNow();
 
 		const size_t curLength = Unicode::sCUToCP(iName.begin(), iName.end());
 		// Enabling this code will grow fExtraSpace when a long iName comes through.
@@ -214,7 +214,7 @@ public:
 
 		if (sCompact)
 			{
-			theStrimW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now.fVal, 60));
+			theStrimW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now, 60));
 
 			#if __MACH__
 				theStrimW << sStringf(" %5x", ((int)mach_thread_self()));

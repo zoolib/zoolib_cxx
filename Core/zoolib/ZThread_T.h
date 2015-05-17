@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/DList.h"
+#include "zoolib/Time.h"
 
 #include "zoolib/ZAtomic.h"
-#include "zoolib/ZTime.h"
 
 namespace ZooLib {
 
@@ -192,7 +192,7 @@ public:
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitUntil(Mtx& iMtx, ZTime iDeadline)
+	bool WaitUntil(Mtx& iMtx, double iDeadline)
 		{
 		sAtomic_Inc(&fWaitingThreads);
 
@@ -265,7 +265,7 @@ public:
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitUntil(MtxR& iMtxR, ZTime iDeadline)
+	bool WaitUntil(MtxR& iMtxR, double iDeadline)
 		{ return iMtxR.pWaitUntil(*this, iDeadline); }
 
 	using Cnd::Wait;
@@ -382,7 +382,7 @@ private:
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool pWaitUntil(Cnd& iCnd, ZTime iDeadline)
+	bool pWaitUntil(Cnd& iCnd, double iDeadline)
 		{
 		const ThreadID current = GetThreadIDProc();
 		ZAssert(fOwner == current);
@@ -448,11 +448,11 @@ public:
 	ZMACRO_Attribute_NoThrow
 	inline
 	bool TryProcureFor(double iTimeout)
-		{ return this->pTryProcureUntil(1, ZTime::sSystem() + iTimeout); }
+		{ return this->pTryProcureUntil(1, Time::sSystem() + iTimeout); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool TryProcureUntil(ZTime iDeadline)
+	bool TryProcureUntil(double iDeadline)
 		{ return this->pTryProcureUntil(1, iDeadline); }
 
 	ZMACRO_Attribute_NoThrow
@@ -482,7 +482,7 @@ public:
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool pTryProcureUntil(int iCount, ZTime iDeadline)
+	bool pTryProcureUntil(int iCount, double iDeadline)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 

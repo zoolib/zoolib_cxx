@@ -114,7 +114,7 @@ private:
 		return fList.size() != iCount;
 		}
 
-	bool pWaitUntil(ZTime iDeadline, size_t iCount)
+	bool pWaitUntil(double iDeadline, size_t iCount)
 		{
 		ZAcqMtx acq(fMtx);
 		if (fList.size() == iCount)
@@ -265,7 +265,7 @@ public:
 	bool WaitFor(double iTimeout, size_t iCount)
 		{ return fRep->pWaitFor(iTimeout, iCount); }
 
-	bool WaitUntil(ZTime iDeadline, size_t iCount)
+	bool WaitUntil(double iDeadline, size_t iCount)
 		{ return fRep->pWaitUntil(iDeadline, iCount); }
 
 	ZRef<SafeSetRep<T> > GetRep() const

@@ -82,8 +82,8 @@ public:
 
 	virtual File::Kind Kind();
 	virtual uint64 Size();
-	virtual ZTime TimeCreated();
-	virtual ZTime TimeModified();
+	virtual double TimeCreated();
+	virtual double TimeModified();
 
 	virtual ZRef<FileLoc> CreateDir();
 

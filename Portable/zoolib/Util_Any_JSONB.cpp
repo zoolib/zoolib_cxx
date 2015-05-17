@@ -34,14 +34,14 @@ namespace Util_Any_JSONB {
 
 ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	const ZTime start = ZTime::sSystem();
+	const double start = Time::sSystem();
 	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(iChannerR));
 	if (not theQ)
 		return null;
 
 	if (ZLOGF(w, eDebug+1))
 		{
-		w << "Received in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
+		w << "Received in " << sStringf("%.3gms: ", (Time::sSystem() - start) * 1e3);
 		Util_Any_JSON::sWrite(*theQ, w);
 		}
 	return theQ;
@@ -49,11 +49,11 @@ ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
 
 void sWrite(const Val_Any& iVal, const ChanW_Bin& iChanW)
 	{
-	const ZTime start = ZTime::sSystem();
+	const double start = Time::sSystem();
 	Yad_JSONB::sToChan(sYadR(iVal), iChanW);
 	if (ZLOGF(w, eDebug+1))
 		{
-		w << "Sent in " << sStringf("%.3gms: ", (ZTime::sSystem() - start) * 1e3);
+		w << "Sent in " << sStringf("%.3gms: ", (Time::sSystem() - start) * 1e3);
 		Util_Any_JSON::sWrite(iVal, w);
 		}
 	}

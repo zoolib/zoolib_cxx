@@ -61,7 +61,7 @@ public:
 	size_t Count();
 	void Wait(size_t iCount);
 	bool WaitFor(double iTimeout, size_t iCount);
-	bool WaitUntil(ZTime iDeadline, size_t iCount);
+	bool WaitUntil(double iDeadline, size_t iCount);
 
 private:
 	void pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone);

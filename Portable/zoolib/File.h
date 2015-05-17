@@ -26,12 +26,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/ChannerXX.h"
 #include "zoolib/FunctionChain.h"
+#include "zoolib/Time.h"
 #include "zoolib/Trail.h"
 #include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZQ.h"
 #include "zoolib/ZThread.h"
-#include "zoolib/ZTime.h"
 
 namespace ZooLib {
 
@@ -132,8 +132,8 @@ public:
 	bool Exists() const;
 
 	uint64 Size() const;
-	ZTime TimeCreated() const;
-	ZTime TimeModified() const;
+	double TimeCreated() const;
+	double TimeModified() const;
 
 	bool SetCreatorAndType(uint32 iCreator, uint32 iType) const;
 
@@ -250,8 +250,8 @@ public:
 
 	virtual File::Kind Kind() = 0;
 	virtual uint64 Size() = 0;
-	virtual ZTime TimeCreated() = 0;
-	virtual ZTime TimeModified() = 0;
+	virtual double TimeCreated() = 0;
+	virtual double TimeModified() = 0;
 
 	virtual bool SetCreatorAndType(uint32 iCreator, uint32 iType);
 

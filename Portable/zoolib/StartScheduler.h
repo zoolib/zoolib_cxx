@@ -45,12 +45,12 @@ public:
 
 	bool Cancel(const Job& iJob);
 
-	void NextStartAt(ZTime iSystemTime, const Job& iJob);
+	void NextStartAt(double iSystemTime, const Job& iJob);
 
 	void NextStartIn(double iInterval, const Job& iJob);
 
 private:
-	void pNextStartAt(ZTime iSystemTime, const Job& iJob);
+	void pNextStartAt(double iSystemTime, const Job& iJob);
 
 	void pRun();
 	static void spRun(StartScheduler*);
@@ -60,8 +60,8 @@ private:
 
 	bool fThreadRunning;
 
-	typedef std::pair<ZTime,Job> TimeJob;
-	typedef std::pair<Job,ZTime> JobTime;
+	typedef std::pair<double,Job> TimeJob;
+	typedef std::pair<Job,double> JobTime;
 	std::set<TimeJob> fTimeJobs;
 	std::set<JobTime> fJobTimes;
 	};
@@ -72,7 +72,7 @@ private:
 
 bool sCancel(const StartScheduler::Job& iJob);
 
-void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob);
+void sNextStartAt(double iSystemTime, const StartScheduler::Job& iJob);
 
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
@@ -80,7 +80,7 @@ void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
 bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
-void sNextStartAt(ZTime iSystemTime,
+void sNextStartAt(double iSystemTime,
 	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
 
 void sNextStartIn(double iInterval,

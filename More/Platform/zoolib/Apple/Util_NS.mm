@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Unicode.h"
 #include "zoolib/Val_Any.h"
 
-#include "zoolib/ZTime.h"
-
 #import <Foundation/NSString.h>
 
 using namespace ZooLib;

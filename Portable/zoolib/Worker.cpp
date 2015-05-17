@@ -39,7 +39,7 @@ namespace ZooLib {
 \class Worker
 */
 
-static const ZTime kDistantFuture = 1000 * ZTime::kYear;
+static const double kDistantFuture = 1000 * Time::kYear;
 
 typedef StartScheduler::Job Job;
 
@@ -108,7 +108,7 @@ ZQ<void> Worker::QCall()
 			{
 			if (fNextWake < kDistantFuture)
 				{
-				if (fNextWake <= ZTime::sSystem())
+				if (fNextWake <= Time::sSystem())
 					continue;
 				sNextStartAt(fNextWake, Job(fStarter, this));
 				}
@@ -128,12 +128,12 @@ ZQ<void> Worker::QCall()
 	}
 
 void Worker::Wake()
-	{ this->pWakeAt(ZTime::sSystem()); }
+	{ this->pWakeAt(Time::sSystem()); }
 
 void Worker::WakeIn(double iInterval)
-	{ this->pWakeAt(ZTime::sSystem() + iInterval); }
+	{ this->pWakeAt(Time::sSystem() + iInterval); }
 
-void Worker::WakeAt(ZTime iSystemTime)
+void Worker::WakeAt(double iSystemTime)
 	{ this->pWakeAt(iSystemTime); }
 
 bool Worker::IsWorking()
@@ -172,7 +172,7 @@ bool Worker::IsAttached()
 	return fStarter;
 	}
 
-void Worker::pWakeAt(ZTime iSystemTime)
+void Worker::pWakeAt(double iSystemTime)
 	{
 	ZAcqMtx acq(fMtx);
 	if (fStarter)

@@ -65,7 +65,7 @@ public:
 
 	void Wait(boost::mutex& iMtx);
 	bool WaitFor(boost::mutex& iMtx, double iTimeout);
-	bool WaitUntil(boost::mutex& iMtx, ZTime iDeadline);
+	bool WaitUntil(boost::mutex& iMtx, double iDeadline);
 
 	void Signal();
 	void Broadcast();

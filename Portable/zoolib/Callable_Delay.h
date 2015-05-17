@@ -45,10 +45,10 @@ public:
 // From Callable
 	virtual ZQ<R> QCall()
 		{
-		const ZTime systemTime = ZTime::sSystem() + fInterval;
+		const double systemTime = Time::sSystem() + fInterval;
 		for (;;)
 			{
-			const double delta = systemTime - ZTime::sSystem();
+			const double delta = systemTime - Time::sSystem();
 			if (delta <= 0)
 				return sQCall(fCallable);
 			ZThread::sSleep(delta);
@@ -74,7 +74,7 @@ class Callable_DelayUntil
 :	public Callable<R(void)>
 	{
 public:
-	Callable_DelayUntil(ZTime iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
+	Callable_DelayUntil(double iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
 	:	fSystemTime(iSystemTime)
 	,	fCallable(iCallable)
 		{}
@@ -84,7 +84,7 @@ public:
 		{
 		for (;;)
 			{
-			const double delta = fSystemTime - ZTime::sSystem();
+			const double delta = fSystemTime - Time::sSystem();
 			if (delta <= 0)
 				return sQCall(fCallable);
 			ZThread::sSleep(delta);
@@ -92,13 +92,13 @@ public:
 		}
 
 private:
-	const ZTime fSystemTime;
+	const double fSystemTime;
 	const ZRef<Callable<R(void)> > fCallable;
 	};
 
 template <class R>
 ZRef<Callable<R(void)> >
-sCallable_DelayUntil(ZTime iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
+sCallable_DelayUntil(double iSystemTime, const ZRef<Callable<R(void)> >& iCallable)
 	{ return new Callable_DelayUntil<R>(iSystemTime, iCallable); }
 
 } // namespace ZooLib

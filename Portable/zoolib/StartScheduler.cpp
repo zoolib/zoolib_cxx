@@ -50,13 +50,13 @@ bool StartScheduler::Cancel(const Job& iJob)
 	return false;
 	}
 
-void StartScheduler::NextStartAt(ZTime iSystemTime, const Job& iJob)
+void StartScheduler::NextStartAt(double iSystemTime, const Job& iJob)
 	{ this->pNextStartAt(iSystemTime, iJob); }
 
 void StartScheduler::NextStartIn(double iInterval, const Job& iJob)
-	{ this->pNextStartAt(ZTime::sSystem() + iInterval, iJob); }
+	{ this->pNextStartAt(Time::sSystem() + iInterval, iJob); }
 
-void StartScheduler::pNextStartAt(ZTime iSystemTime, const Job& iJob)
+void StartScheduler::pNextStartAt(double iSystemTime, const Job& iJob)
 	{
 	ZAssert(iJob.first);
 
@@ -107,7 +107,7 @@ void StartScheduler::pRun()
 		else
 			{
 			const set<TimeJob>::iterator& begin = fTimeJobs.begin();
-			const double delta = begin->first - ZTime::sSystem();
+			const double delta = begin->first - Time::sSystem();
 			if (delta > 0)
 				{
 				fCnd.WaitFor(fMtx, delta);
@@ -145,7 +145,7 @@ void StartScheduler::spRun(StartScheduler* iStartScheduler)
 bool sCancel(const StartScheduler::Job& iJob)
 	{ return sSingleton<StartScheduler>().Cancel(iJob); }
 
-void sNextStartAt(ZTime iSystemTime, const StartScheduler::Job& iJob)
+void sNextStartAt(double iSystemTime, const StartScheduler::Job& iJob)
 	{ sSingleton<StartScheduler>().NextStartAt(iSystemTime, iJob); }
 
 void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
@@ -156,7 +156,7 @@ void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
 bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
 	{ return sCancel(StartScheduler::Job(iStarter, iCallable)); }
 
-void sNextStartAt(ZTime iSystemTime,
+void sNextStartAt(double iSystemTime,
 	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
 	{ sNextStartAt(iSystemTime, StartScheduler::Job(iStarter, iCallable)); }
 

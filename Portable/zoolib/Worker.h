@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter.h"
 
 #include "zoolib/ZThread.h" // For ZThread::ID
-#include "zoolib/ZTime.h"
 
 namespace ZooLib {
 
@@ -65,7 +64,7 @@ public:
 
 // Our protocol
 	void Wake();
-	void WakeAt(ZTime iSystemTime);
+	void WakeAt(double iSystemTime);
 	void WakeIn(double iInterval);
 
 	bool IsWorking();
@@ -74,13 +73,13 @@ public:
 	bool IsAttached();
 
 private:
-	void pWakeAt(ZTime iSystemTime);
+	void pWakeAt(double iSystemTime);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 	ZRef<Starter> fStarter;
 	ZThread::ID fWorking;
-	ZTime fNextWake;
+	double fNextWake;
 
 	const ZRef<Callable_Attached> fCallable_Attached;
 	const ZRef<Callable_Work> fCallable_Work;

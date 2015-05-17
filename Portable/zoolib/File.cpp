@@ -380,20 +380,20 @@ uint64 FileSpec::Size() const
 	return 0;
 	}
 
-ZTime FileSpec::TimeCreated() const
+double FileSpec::TimeCreated() const
 	{
 	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->TimeCreated();
 
-	return ZTime();
+	return 0;
 	}
 
-ZTime FileSpec::TimeModified() const
+double FileSpec::TimeModified() const
 	{
 	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->TimeModified();
 
-	return ZTime();
+	return 0;
 	}
 
 /// On MacOS sets the creator and type appropriately. On other platforms, does nothing.

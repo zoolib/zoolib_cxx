@@ -102,7 +102,7 @@ static void spTimeToTM(time_t iTime_t, struct tm& oTM)
 		// just do the work ourselves.
 
 		// iTime_t is 1970-based, so convert to 1900-based.
-		uint32 timeSince1900 = iTime_t + ZTime::kEpochDelta_1900_To_1970;
+		uint32 timeSince1900 = iTime_t + Time::kEpochDelta_1900_To_1970;
 
 		uint32 days = uint32(timeSince1900) / kSecondsPerDay;
 		uint32 seconds = uint32(timeSince1900) % kSecondsPerDay;
@@ -286,13 +286,13 @@ static string spFormatTimeLocal(const struct tm& iTM, const string& iFormat, int
 
 /** iTime is assumed to be UTC-based, return a textual version
 of the date/time in UTC. */
-string Util_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
+string Util_Time::sAsStringUTC(double iTime, const string& iFormat)
 	{
 	if (not iTime)
 		return "invalid";
 
 	struct tm theTM;
-	spTimeToTM(time_t(iTime.fVal), theTM);
+	spTimeToTM(time_t(iTime), theTM);
 
 	#if DO_IT_OURSELVES
 
@@ -381,7 +381,7 @@ static int spUTCToLocalDelta()
 
 /** iTime is assumed to be UTC-based, return a textual version
 of the date/time in the local time zone. */
-string Util_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
+string Util_Time::sAsStringLocal(double iTime, const string& iFormat)
 	{
 	if (not iTime)
 		return "invalid";
@@ -391,13 +391,13 @@ string Util_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 	#if DO_IT_OURSELVES
 
 		int delta = spUTCToLocalDelta();
-		time_t localTime = time_t(iTime.fVal + delta);
+		time_t localTime = time_t(iTime + delta);
 		spTimeToTM(localTime, theTM);
 		return spFormatTimeLocal(theTM, iFormat, delta);
 
 	#else
 
-		time_t theTimeT = time_t(iTime.fVal);
+		time_t theTimeT = time_t(iTime);
 		::localtime_r(&theTimeT, &theTM);
 
 		char buf[256];
@@ -407,7 +407,7 @@ string Util_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 	#endif
 	}
 
-static string spYmdHM(ZTime iTime, bool iIncludeT)
+static string spYmdHM(double iTime, bool iIncludeT)
 	{
 	if (iIncludeT)
 		return Util_Time::sAsStringUTC(iTime, "%Y-%m-%dT%H:%M:");
@@ -415,7 +415,7 @@ static string spYmdHM(ZTime iTime, bool iIncludeT)
 		return Util_Time::sAsStringUTC(iTime, "%Y-%m-%d %H:%M:");
 	}
 
-string Util_Time::sAsString_ISO8601(ZTime iTime, bool iIncludeT)
+string Util_Time::sAsString_ISO8601(double iTime, bool iIncludeT)
 	{
 	// We've got about 10 significant digits in year (-9,999 to +9,999),
 	// month, day, hour, minutes, and seconds, and no more than 17 in a double.
@@ -423,10 +423,10 @@ string Util_Time::sAsString_ISO8601(ZTime iTime, bool iIncludeT)
 	// to the count of seconds, so to get up to 7 digits in the fraction we
 	// need to allow ten digits overall.
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + sStringf("%.10g", 100.0 + fmod(iTime.fVal, 60)).substr(1);
+	return YmdHM + sStringf("%.10g", 100.0 + fmod(iTime, 60)).substr(1);
 	}
 
-string Util_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
+string Util_Time::sAsString_ISO8601_s(double iTime, bool iIncludeT)
 	{
 	if (iIncludeT)
 		return Util_Time::sAsStringUTC(iTime, "%Y-%m-%dT%H:%M:%S");
@@ -434,19 +434,19 @@ string Util_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
 		return Util_Time::sAsStringUTC(iTime, "%Y-%m-%d %H:%M:%S");
 	}
 
-string Util_Time::sAsString_ISO8601_ms(ZTime iTime, bool iIncludeT)
+string Util_Time::sAsString_ISO8601_ms(double iTime, bool iIncludeT)
 	{
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + sStringf("%06.3f", fmod(iTime.fVal, 60));
+	return YmdHM + sStringf("%06.3f", fmod(iTime, 60));
 	}
 
-string Util_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
+string Util_Time::sAsString_ISO8601_us(double iTime, bool iIncludeT)
 	{
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + sStringf("%09.6f", fmod(iTime.fVal, 60));
+	return YmdHM + sStringf("%09.6f", fmod(iTime, 60));
 	}
 
- ZTime Util_Time::sFromString_ISO8601(const string& iString)
+ double Util_Time::sFromString_ISO8601(const string& iString)
  	{
  	const char* theCString = iString.c_str();
 	struct tm theTM = {};
@@ -475,7 +475,7 @@ string Util_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 		time_t theTime = spTMToTime(theTM);
 		return seconds + theTime;
 		}
-	return ZTime();
+	return 0;
 	}
 
 } // namespace ZooLib

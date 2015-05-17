@@ -147,7 +147,7 @@ public:
 
 	void Procure();
 	bool TryProcureFor(double iTimeout);
-	bool TryProcureUntil(ZTime iDeadline);
+	bool TryProcureUntil(double iDeadline);
 	void Vacate();
 
 protected:

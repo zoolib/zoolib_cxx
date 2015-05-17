@@ -28,8 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Yad_JSON.h"
 
-#include "zoolib/ZTime.h"
-
 #if ZCONFIG(Compiler,GCC)
 	#include <cxxabi.h>
 	#include <stdlib.h> // For free
@@ -642,13 +640,14 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 		{
 		Util_Chan::sWriteExact(*asDouble, w);
 		}
-	else if (const ZTime* asTime = iAny.PGet<ZTime>())
-		{
-		Util_Chan::sWriteExact(asTime->fVal, w);
-		}
+//	else if (const ZTime* asTime = iAny.PGet<ZTime>())
+//		{
+//		Util_Chan::sWriteExact(asTime->fVal, w);
+//		}
 	else
 		{
-		w << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
+		w << "null";
+//##		" /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
