@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Callable_Block_h__
-#define __ZooLib_Callable_Block_h__ 1
+#ifndef __ZooLib_Apple_Callable_Block_h__
+#define __ZooLib_Apple_Callable_Block_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
@@ -189,4 +189,4 @@ ZMACRO_Callable_sCallable(F)
 
 #endif // defined(__BLOCKS__)
 
-#endif // __ZooLib_Callable_Block_h__
+#endif // __ZooLib_Apple_Callable_Block_h__

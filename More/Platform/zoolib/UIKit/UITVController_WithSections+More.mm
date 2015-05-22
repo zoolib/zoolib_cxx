@@ -18,14 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/uikit/UITVController_WithSections+More.h"
+#include "zoolib/UIKit/UITVController_WithSections+More.h"
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/Callable_Objc.h"
-
-#include "zoolib/ZCartesian_CG.h"
-#include "zoolib/ZUtil_NS.h"
+#include "zoolib/Apple/Callable_Objc.h"
+#include "zoolib/Apple/Cartesian_CG.h"
+#include "zoolib/Apple/Util_NS.h"
 
 #import <UIKit/UIKit.h>
 

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Cartesian_NS_h__
-#define __ZooLib_Cartesian_NS_h__ 1
+#ifndef __ZooLib_Apple_Cartesian_NS_h__
+#define __ZooLib_Apple_Cartesian_NS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -107,4 +107,4 @@ struct RectTraits<NSRect>
 
 #endif // not ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
 #endif // ZCONFIG_SPI_Enabled(Cocoa) && ZCONFIG_SPI_Enabled(MacOSX)
-#endif // __ZooLib_Cartesian_NS_h__
+#endif // __ZooLib_Apple_Cartesian_NS_h__

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Apple/ZRef_NS.h"
+
 #include "zoolib/ZDebug.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)

@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZData_Any.h"
-#include "zoolib/ZData_CF.h"
-#include "zoolib/ZUtil_CF.h"
+#include "zoolib/Data_Any.h"
+
+#include "zoolib/Apple/Data_CF.h"
+#include "zoolib/Apple/Util_CF.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
@@ -28,114 +29,114 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using ZUtil_CF::sData;
-using ZUtil_CF::sDataMutable;
+using Util_CF::sData;
+using Util_CF::sDataMutable;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZData_CF
+#pragma mark Data_CF
 
-ZData_CF::ZData_CF()
+Data_CF::Data_CF()
 :	inherited(sDataMutable())
 	{}
 
-ZData_CF::ZData_CF(const ZData_CF& iOther)
+Data_CF::Data_CF(const Data_CF& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZData_CF::~ZData_CF()
+Data_CF::~Data_CF()
 	{}
 
-ZData_CF& ZData_CF::operator=(const ZData_CF& iOther)
+Data_CF& Data_CF::operator=(const Data_CF& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZData_CF::ZData_CF(CFMutableDataRef iOther)
+Data_CF::Data_CF(CFMutableDataRef iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZData_CF::ZData_CF(CFDataRef iOther)
+Data_CF::Data_CF(CFDataRef iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZData_CF::ZData_CF(const Adopt_T<CFMutableDataRef>& iOther)
+Data_CF::Data_CF(const Adopt_T<CFMutableDataRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZData_CF::ZData_CF(const Adopt_T<CFDataRef>& iOther)
+Data_CF::Data_CF(const Adopt_T<CFDataRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZData_CF& ZData_CF::operator=(CFMutableDataRef iOther)
+Data_CF& Data_CF::operator=(CFMutableDataRef iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZData_CF& ZData_CF::operator=(CFDataRef iOther)
+Data_CF& Data_CF::operator=(CFDataRef iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZData_CF& ZData_CF::operator=(const Adopt_T<CFMutableDataRef>& iOther)
+Data_CF& Data_CF::operator=(const Adopt_T<CFMutableDataRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZData_CF& ZData_CF::operator=(const Adopt_T<CFDataRef>& iOther)
+Data_CF& Data_CF::operator=(const Adopt_T<CFDataRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZData_CF::ZData_CF(size_t iSize)
+Data_CF::Data_CF(size_t iSize)
 :	inherited(sDataMutable(iSize))
 ,	fMutable(true)
 	{}
 
-ZData_CF::ZData_CF(const void* iSource, size_t iSize)
+Data_CF::Data_CF(const void* iSource, size_t iSize)
 :	inherited(sData(iSource, iSize))
 ,	fMutable(false)
 	{}
 
-size_t ZData_CF::GetSize() const
+size_t Data_CF::GetSize() const
 	{
 	if (CFDataRef theData = this->pData())
 		return ::CFDataGetLength(theData);
 	return 0;
 	}
 
-void ZData_CF::SetSize(size_t iSize)
+void Data_CF::SetSize(size_t iSize)
 	{
 	if (this->GetSize() != iSize)
 		::CFDataSetLength(this->pTouch(), iSize);
 	}
 
-const void* ZData_CF::GetPtr() const
+const void* Data_CF::GetPtr() const
 	{
 	if (CFDataRef theData = this->pData())
 		return ::CFDataGetBytePtr(theData);
 	return nullptr;
 	}
 
-void* ZData_CF::GetPtrMutable()
+void* Data_CF::GetPtrMutable()
 	{ return ::CFDataGetMutableBytePtr(this->pTouch()); }
 
-void ZData_CF::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
+void Data_CF::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	if (iCount)
 		{
@@ -144,10 +145,10 @@ void ZData_CF::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 		}
 	}
 
-void ZData_CF::CopyFrom(const void* iSource, size_t iCount)
+void Data_CF::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZData_CF::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
+void Data_CF::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	{
 	if (iCount)
 		{
@@ -158,13 +159,13 @@ void ZData_CF::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 		}
 	}
 
-void ZData_CF::CopyTo(void* oDest, size_t iCount) const
+void Data_CF::CopyTo(void* oDest, size_t iCount) const
 	{ this->CopyTo(0, oDest, iCount); }
 
-CFDataRef ZData_CF::pData() const
+CFDataRef Data_CF::pData() const
 	{ return inherited::Get(); }
 
-CFMutableDataRef ZData_CF::pTouch()
+CFMutableDataRef Data_CF::pTouch()
 	{
 	ZRef<CFMutableDataRef> theMutableData;
 	if (CFDataRef theData = this->pData())

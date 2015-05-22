@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Cartesian_CG_h__
-#define __ZooLib_Cartesian_CG_h__ 1
+#ifndef __ZooLib_Apple_Cartesian_CG_h__
+#define __ZooLib_Apple_Cartesian_CG_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -80,4 +80,4 @@ struct RectTraits<CGRect>
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
-#endif // __ZooLib_Cartesian_CG_h__
+#endif // __ZooLib_Apple_Cartesian_CG_h__

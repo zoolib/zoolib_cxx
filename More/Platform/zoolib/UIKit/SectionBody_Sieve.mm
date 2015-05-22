@@ -18,14 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/uikit/SectionBody_Sieve.h"
+#include "zoolib/UIKit/SectionBody_Sieve.h"
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
-
-#include "zoolib/ZCompare_T.h"
-#include "zoolib/ZLog.h"
+#include "zoolib/Compare_T.h"
+#include "zoolib/Log.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/QueryEngine/Result.h"
@@ -35,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zoolib/ZUtil_Any_JSON.h"
+//###include "zoolib/ZUtil_Any_JSON.h"
 
 // =================================================================================================
 #pragma mark -
@@ -67,6 +66,8 @@ using std::vector;
 #pragma mark -
 #pragma mark CompareEntries (anonymous)
 
+typedef void ZTextCollator;
+
 namespace { // anonymous
 
 struct CompareEntries
@@ -79,33 +80,33 @@ struct CompareEntries
 	ZTextCollator* fTextCollators;
 	const vector<SortSpec>& fSort;
 
-	typedef ZMap_Any first_argument_type;
-	typedef ZMap_Any second_argument_type;
+	typedef Map_Any first_argument_type;
+	typedef Map_Any second_argument_type;
 	typedef bool result_type;
 	};
 
 int spCompare(int iStrength, ZTextCollator* ioTextCollators,
-	const ZVal_Any& iLeft, const ZVal_Any& iRight)
+	const Val_Any& iLeft, const Val_Any& iRight)
 	{
-	if (iStrength != 0)
-		{
-		if (const string8* l = iLeft.PGet<string8>())
-			{
-			if (const string8* r = iRight.PGet<string8>())
-				{
-				if (iStrength <= 4)
-					{
-					if (not ioTextCollators[iStrength - 1])
-						ioTextCollators[iStrength - 1] = ZTextCollator(iStrength);
-					return ioTextCollators[iStrength - 1].Compare(*l, *r);
-					}
-				else
-					{
-					return ZTextCollator(iStrength).Compare(*l, *r);
-					}				
-				}
-			}
-		}
+//	if (iStrength != 0)
+//		{
+//		if (const string8* l = iLeft.PGet<string8>())
+//			{
+//			if (const string8* r = iRight.PGet<string8>())
+//				{
+//				if (iStrength <= 4)
+//					{
+//					if (not ioTextCollators[iStrength - 1])
+//						ioTextCollators[iStrength - 1] = ZTextCollator(iStrength);
+//					return ioTextCollators[iStrength - 1].Compare(*l, *r);
+//					}
+//				else
+//					{
+//					return ZTextCollator(iStrength).Compare(*l, *r);
+//					}				
+//				}
+//			}
+//		}
 	return sCompare_T(iLeft, iRight);
 	}
 
@@ -114,17 +115,17 @@ CompareEntries::CompareEntries(ZTextCollator* ioTextCollators, const vector<Sort
 ,	fSort(iSort)
 	{}
 
-const ZVal_Any* spPGet(const ZTrail& iTrail, const ZMap_Any& iMap)
+const Val_Any* spPGet(const Trail& iTrail, const Map_Any& iMap)
 	{
-	const ZMap_Any* theMap = &iMap;
+	const Map_Any* theMap = &iMap;
 	for (size_t xx = 0, count = iTrail.Count(); xx < count && theMap; ++xx)
 		{
-		const ZVal_Any* theVal = theMap->PGet(iTrail.At(xx));
+		const Val_Any* theVal = theMap->PGet(iTrail.At(xx));
 		if (xx == count - 1)
 			return theVal;
 		if (not theVal)
 			break;
-		theMap = theVal->PGet<ZMap_Any>();
+		theMap = theVal->PGet<Map_Any>();
 		}
 	return nullptr;
 	}
@@ -134,9 +135,9 @@ inline bool CompareEntries::operator()(
 	{
 	for (size_t xx = 0, count = fSort.size(); xx < count; ++xx)
 		{
-		if (const ZVal_Any* l = spPGet(fSort[xx].fPropTrail, iLeft))
+		if (const Val_Any* l = spPGet(fSort[xx].fPropTrail, iLeft))
 			{
-			if (const ZVal_Any* r = spPGet(fSort[xx].fPropTrail, iRight))
+			if (const Val_Any* r = spPGet(fSort[xx].fPropTrail, iRight))
 				{
 				if (int compare = spCompare(fSort[xx].fStrength, fTextCollators, *l, *r))
 					return fSort[xx].fAscending == (compare < 0);
@@ -195,7 +196,7 @@ void SectionBody_Sieve::PreUpdate()
 					RelationalAlgebra::PseudoMap_RelHead(theRelHead, theResult->GetValsAt(xx))
 					.AsMap());
 				w << "\n" << xx << ": ";
-				ZUtil_Any_JSON::sWrite(theRows.back(), w);
+//##				ZUtil_Any_JSON::sWrite(theRows.back(), w);
 				}
 			}
 
@@ -203,7 +204,8 @@ void SectionBody_Sieve::PreUpdate()
 			fCallable_PostProcess->Call(theRows);
 
 		if (fSortSpecs.size())
-			sort(theRows.begin(), theRows.end(), CompareEntries(fTextCollators, fSortSpecs));
+			sort(theRows.begin(), theRows.end(), CompareEntries(nullptr, fSortSpecs));
+//##			sort(theRows.begin(), theRows.end(), CompareEntries(fTextCollators, fSortSpecs));
 		fRows_Pending.swap(theRows);
 		}
 	}
@@ -237,7 +239,7 @@ static size_t spFind(const RelHead& iIdentity, const SectionBody_Sieve::Entry& i
 	return iEnd;
 	}
 
-static bool spSame(const ZMap_Any& l, const RelHead& iRelHead, const ZMap_Any& r)
+static bool spSame(const Map_Any& l, const RelHead& iRelHead, const Map_Any& r)
 	{
 	if (iRelHead.empty())
 		return false;
@@ -509,14 +511,14 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	ZAssert(not iDatonColNameQ || iCallable_DatonSetUpdate);
 
 	if (fDatonColNameQ && fRel)
-		ZAssert(ZUtil_STL::sContains(sGetRelHead(fRel), *fDatonColNameQ));
+		ZAssert(Util_STL::sContains(sGetRelHead(fRel), *fDatonColNameQ));
 
 	fRegistration.Clear();
 
 	this->pCreateOrDestroySieve(true);
 	}
 
-ZQ<ZMap_Any> SectionBody_Sieve::QGet(size_t iRowIndex)
+ZQ<Map_Any> SectionBody_Sieve::QGet(size_t iRowIndex)
 	{
 	if (iRowIndex < fRows.size())
 		return fRows[iRowIndex];

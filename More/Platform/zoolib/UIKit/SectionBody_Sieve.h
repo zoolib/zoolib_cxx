@@ -27,15 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZooLib/Dataspace/RelsWatcher.h"
 
-#include "zoolib/ZTextCollator.h"
-#include "zoolib/ZTrail.h"
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/ZVal_NS.h"
+//###include "zoolib/ZTextCollator.h"
+
+#include "zoolib/Trail.h"
+#include "zoolib/Val_Any.h"
+
+#include "zoolib/Apple/Val_NS.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
-#include "zoolib/uikit/UITVController_WithSections.h"
+#include "zoolib/UIKit/UITVController_WithSections.h"
 
 #include "zoolib/QueryEngine/Result.h"
 
@@ -62,19 +64,19 @@ private:
 	SortSpec();
 
 public:
-	SortSpec(const ZTrail& iPropTrail)
+	SortSpec(const Trail& iPropTrail)
 	:	fPropTrail(iPropTrail), fAscending(true), fStrength(0)
 		{}
 
-	SortSpec(const ZTrail& iPropTrail, bool iAscending)
+	SortSpec(const Trail& iPropTrail, bool iAscending)
 	:	fPropTrail(iPropTrail), fAscending(iAscending), fStrength(0)
 		{}
 
-	SortSpec(const ZTrail& iPropTrail, bool iAscending, int iStrength)
+	SortSpec(const Trail& iPropTrail, bool iAscending, int iStrength)
 	:	fPropTrail(iPropTrail), fAscending(iAscending), fStrength(iStrength)
 		{}
 
-	ZTrail fPropTrail;
+	Trail fPropTrail;
 	bool fAscending;
 	int fStrength;
 	};
@@ -87,10 +89,10 @@ class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 	{
 public:
 	typedef ZooLib::Dataspace::Callable_DatonSetUpdate Callable_DatonSetUpdate;
-	typedef Callable<ZRef<UITableViewCell>(UITableView*,ZMap_Any)> Callable_GetCellForMap;
-	typedef Callable<bool(ZMap_Any)> Callable_CanSelectForMap;
+	typedef Callable<ZRef<UITableViewCell>(UITableView*,Map_Any)> Callable_GetCellForMap;
+	typedef Callable<bool(Map_Any)> Callable_CanSelectForMap;
 	typedef Callable<void()> Callable_NeedsUpdate;
-	typedef ZMap_Any Entry;
+	typedef Map_Any Entry;
 	typedef Callable<void(std::vector<Entry> &)> Callable_PostProcess;
 
 	SectionBody_Sieve();
@@ -144,7 +146,7 @@ public:
 		const ZQ<ColName>& iDatonColNameQ,
 		const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate);
 
-	ZQ<ZMap_Any> QGet(size_t iRowIndex);
+	ZQ<Map_Any> QGet(size_t iRowIndex);
 
 	void pCreateOrDestroySieve(bool iShowing);
 
@@ -152,7 +154,7 @@ public:
 		const ZRef<QueryEngine::Result>& iResult,
 		bool iIsFirst);
 
-	ZTextCollator fTextCollators[4];
+//##	ZTextCollator fTextCollators[4];
 	ZRef<Callable_GetCellForMap> fCallable_GetCellForMap;
 	ZRef<Callable_CanSelectForMap> fCallable_CanSelectForMap;
 	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;

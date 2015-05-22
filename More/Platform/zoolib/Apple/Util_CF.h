@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Util_CF_h__
-#define __ZooLib_Util_CF_h__ 1
+#ifndef __ZooLib_Apple_Util_CF_h__
+#define __ZooLib_Apple_Util_CF_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -95,4 +95,4 @@ Ref_p sStaticCastIf(CFTypeID iTypeID, CFTypeRef iTypeRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZooLib_Util_CF_h__
+#endif // __ZooLib_Apple_Util_CF_h__

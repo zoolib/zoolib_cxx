@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCFNotification_h__
-#define __ZCFNotification_h__ 1
+#ifndef __ZooLib_Apple_CFNotification_h__
+#define __ZooLib_Apple_CFNotification_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -35,18 +35,18 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCFNotification
+#pragma mark CFNotification
 
-class ZCFNotification
+class CFNotification
 :	public ZCounted
 	{
 public:
-	typedef Callable<void(ZRef<ZCFNotification>, CFDictionaryRef)> Callable_t;
+	typedef Callable<void(ZRef<CFNotification>, CFDictionaryRef)> Callable_t;
 
-	ZCFNotification(void* iObject, const std::string& iName, ZRef<Callable_t> iCallable);
-	ZCFNotification(void* iObject, CFStringRef iName, ZRef<Callable_t> iCallable);
+	CFNotification(void* iObject, const std::string& iName, ZRef<Callable_t> iCallable);
+	CFNotification(void* iObject, CFStringRef iName, ZRef<Callable_t> iCallable);
 
-	virtual ~ZCFNotification();
+	virtual ~CFNotification();
 
 // From ZCounted
 	virtual void Initialize();
@@ -71,4 +71,4 @@ private:
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-#endif // __ZCFNotification_h__
+#endif // __ZooLib_Apple_CFNotification_h__

@@ -1,10 +1,10 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
+including without limitation the rights to use, copy, modify, merge,Publish, distribute,
 sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
 is furnished to do so, subject to the following conditions:
 
@@ -18,34 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_iOS_UIControl_Callable_h__
-#define __ZooLib_iOS_UIControl_Callable_h__ 1
+#ifndef __ZooLib_OSX_Starter_CarbonEvents_h__
+#define __ZooLib_OSX_Starter_CarbonEvents_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#import <UIKit/UIControl.h>
+#include "zoolib/Starter_EventLoopBase.h"
 
-#include "zoolib/Callable.h"
-
-// =================================================================================================
-#pragma mark -
-#pragma mark UIControl (Callable)
-
-@interface UIControl (Callable)
-
-- (void)addCallable:(ZooLib::ZRef<ZooLib::Callable_Void>)callable
-	forControlEvents:(UIControlEvents)controlEvents;
-
-@end // interface UIControl (Callable)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZooLib
+#if ZCONFIG_SPI_Enabled(Carbon64)
 
 namespace ZooLib {
 
-void sAddCallable(UIControl* iUIControl,
-	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents);
+// =================================================================================================
+#pragma mark -
+#pragma mark Starter_CarbonEvents
+
+class Starter_CarbonEvents
+:	public Starter_EventLoopBase
+	{
+protected:
+	static ZRef<Starter_CarbonEvents> sGet();
+
+// From Starter_EventLoopBase
+	virtual bool pTrigger();
+
+private:
+	static void spCallback(void* iRefcon);
+	};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_iOS_UIControl_Callable_h__
+#endif // ZCONFIG_SPI_Enabled(Carbon64)
+
+#endif // __ZooLib_OSX_Starter_CarbonEvents_h__

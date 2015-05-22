@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Starter_CFRunLoop_h__
-#define __ZooLib_Starter_CFRunLoop_h__ 1
+#ifndef __ZooLib_Apple_Starter_CFRunLoop_h__
+#define __ZooLib_Apple_Starter_CFRunLoop_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -82,4 +82,4 @@ private:
 
 #endif // ZCONFIG_API_Enabled(Starter_CFRunLoop)
 
-#endif // __ZooLib_Starter_CFRunLoop_h__
+#endif // __ZooLib_Apple_Starter_CFRunLoop_h__

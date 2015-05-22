@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,58 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_UITVC_WithSections_More__
-#define __ZooLib_UITVC_WithSections_More__ 1
-#include "zconfig.h"
+#include "zoolib/UIKit/UIControl+Callable.h"
 
-#include "zoolib/uikit/UITVController_WithSections.h"
+#include "objc/runtime.h"
 
-#if ZCONFIG_SPI_Enabled(iPhone)
+using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZooLib_UIKit_SectionHeader
+#pragma mark ZooLib_UIControl_Callable_Proxy
 
-@interface ZooLib_UIKit_SectionHeader : UIView
+@interface ZooLib_UIControl_Callable_Proxy : NSObject
 	{
 @public
-	ZooLib::ZRef<UILabel> fLabel;
-	}
+	ZRef<Callable_Void> fCallable;
+	};
+@end // interface ZooLib_UIControl_Callable_Proxy
 
-+ (ZooLib_UIKit_SectionHeader*)sMake;
+@implementation ZooLib_UIControl_Callable_Proxy
 
-@end // interface MMSectionHeader
+- (void)selector_void
+	{ fCallable->QCall(); }
+
+@end // implementation ZooLib_UIControl_Callable_Proxy
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZooLib::UIKit
+#pragma mark UIControl (Callable)
+
+@implementation UIControl (Callable)
+
+- (void)addCallable:(ZRef<Callable_Void>)callable forControlEvents:(UIControlEvents)controlEvents
+	{ sAddCallable(self, callable, controlEvents); }
+
+@end // implementation UIControl (Callable)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ZooLib
 
 namespace ZooLib {
-namespace UIKit {
 
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty);
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody);
+void sAddCallable(UIControl* iUIControl,
+	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents)
+	{
+	if (not iCallable)
+		return;
 
-ZRef<Section> sMakeSectionWithTitle
-	(ZRef<SectionBody> iBody, NSString* iTitle, bool iHideWhenEmpty);
+	ZooLib_UIControl_Callable_Proxy* theProxy = [[ZooLib_UIControl_Callable_Proxy alloc] init];
+	theProxy->fCallable = iCallable;
 
-ZRef<Section> sMakeSectionWithTitle(ZRef<SectionBody> iBody, NSString* iTitle);
+	// Associate theProxy under its own address, which allows unlimited
+	// callables to be safely attached and released when self is itelf disposed.
+	objc_setAssociatedObject(iUIControl, theProxy, theProxy, OBJC_ASSOCIATION_RETAIN);
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
-	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected = null,
-	ZRef<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped = null);
+	[theProxy release];
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
-	id iDelegate, SEL iSEL);
+	[iUIControl
+		addTarget:theProxy
+		action:@selector(selector_void)
+		forControlEvents:iControlEvents
+	];
+	}
 
-UIColor* sColor_Text();
-UIColor* sColor_Text_Shadow();
-
-ZRef<UILabel> sMakeUILabel();
-
-} // namespace UIKit
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(iPhone)
-
-#endif // __ZooLib_UITVC_WithSections_More__

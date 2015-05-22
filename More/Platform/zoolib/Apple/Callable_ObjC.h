@@ -18,17 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Callable_ObjC_h__
-#define __ZooLib_Callable_ObjC_h__ 1
+#ifndef __ZooLib_Apple_Callable_ObjC_h__
+#define __ZooLib_Apple_Callable_ObjC_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
 
 #ifdef __OBJC__
 
-#include "zoolib/ZCompat_NSObject.h"
-#include "zoolib/ZCompat_type_traits.h"
-#include "zoolib/ZRef_NS.h"
+#include "zoolib/Compat_type_traits.h"
+
+#include "zoolib/Apple/Compat_NSObject.h"
+#include "zoolib/Apple/ZRef_NS.h"
 
 #include <objc/message.h>
 
@@ -253,4 +254,4 @@ sCallable(const ZRef<T>& iObj, SEL iSEL)
 } // namespace ZooLib
 
 #endif // __OBJC__
-#endif // __ZooLib_Callable_ObjC_h__
+#endif // __ZooLib_Apple_Callable_ObjC_h__

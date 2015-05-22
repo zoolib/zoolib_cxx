@@ -18,86 +18,86 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMap_CFPreferences.h"
+#include "zoolib/Apple/Map_CFPreferences.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#include "zoolib/ZUtil_CF.h"
+#include "zoolib/Apple/Util_CF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMap_CFPreferences
+#pragma mark Map_CFPreferences
 
-ZMap_CFPreferences::ZMap_CFPreferences()
+Map_CFPreferences::Map_CFPreferences()
 :	fApplicationID(kCFPreferencesCurrentApplication)
 	{}
 
-ZMap_CFPreferences::ZMap_CFPreferences(const ZMap_CFPreferences& iOther)
+Map_CFPreferences::Map_CFPreferences(const Map_CFPreferences& iOther)
 :	fApplicationID(iOther.fApplicationID)
 	{}
 
-ZMap_CFPreferences::~ZMap_CFPreferences()
+Map_CFPreferences::~Map_CFPreferences()
 	{ ::CFPreferencesAppSynchronize(fApplicationID); }
 
-ZMap_CFPreferences& ZMap_CFPreferences::operator=(const ZMap_CFPreferences& iOther)
+Map_CFPreferences& Map_CFPreferences::operator=(const Map_CFPreferences& iOther)
 	{
 	fApplicationID = iOther.fApplicationID;
 	return *this;
 	}
 
-ZMap_CFPreferences::ZMap_CFPreferences(const string8& iApplicationID)
-:	fApplicationID(ZUtil_CF::sString(iApplicationID))
+Map_CFPreferences::Map_CFPreferences(const string8& iApplicationID)
+:	fApplicationID(Util_CF::sString(iApplicationID))
 	{}
 
-ZMap_CFPreferences::ZMap_CFPreferences(CFStringRef iApplicationID)
+Map_CFPreferences::Map_CFPreferences(CFStringRef iApplicationID)
 :	fApplicationID(iApplicationID)
 	{}
 
-const ZQ<ZVal_CF> ZMap_CFPreferences::QGet(const string8& iName) const
-	{ return this->QGet(ZUtil_CF::sString(iName)); }
+const ZQ<Val_CF> Map_CFPreferences::QGet(const string8& iName) const
+	{ return this->QGet(Util_CF::sString(iName)); }
 
-const ZQ<ZVal_CF> ZMap_CFPreferences::QGet(CFStringRef iName) const
+const ZQ<Val_CF> Map_CFPreferences::QGet(CFStringRef iName) const
 	{
 	if (ZRef<CFPropertyListRef> theVal = sAdopt& ::CFPreferencesCopyAppValue(iName, fApplicationID))
 		return theVal;
 	return null;
 	}
 
-const ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, const string8& iName) const
-	{ return this->DGet(iDefault, ZUtil_CF::sString(iName)); }
+const Val_CF Map_CFPreferences::DGet(const Val_CF& iDefault, const string8& iName) const
+	{ return this->DGet(iDefault, Util_CF::sString(iName)); }
 
-const ZVal_CF ZMap_CFPreferences::DGet(const ZVal_CF& iDefault, CFStringRef iName) const
+const Val_CF Map_CFPreferences::DGet(const Val_CF& iDefault, CFStringRef iName) const
 	{
-	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
+	if (ZQ<Val_CF> theQ = this->QGet(iName))
 		return *theQ;
 	return iDefault;
 	}
 
-const ZVal_CF ZMap_CFPreferences::Get(const string8& iName) const
-	{ return this->Get(ZUtil_CF::sString(iName)); }
+const Val_CF Map_CFPreferences::Get(const string8& iName) const
+	{ return this->Get(Util_CF::sString(iName)); }
 
-const ZVal_CF ZMap_CFPreferences::Get(CFStringRef iName) const
+const Val_CF Map_CFPreferences::Get(CFStringRef iName) const
 	{
-	if (ZQ<ZVal_CF> theQ = this->QGet(iName))
+	if (ZQ<Val_CF> theQ = this->QGet(iName))
 		return *theQ;
-	return ZVal_CF();
+	return Val_CF();
 	}
 
-ZMap_CFPreferences& ZMap_CFPreferences::Set(const string8& iName, const ZVal_CF& iVal)
-	{ return this->Set(ZUtil_CF::sString(iName), iVal); }
+Map_CFPreferences& Map_CFPreferences::Set(const string8& iName, const Val_CF& iVal)
+	{ return this->Set(Util_CF::sString(iName), iVal); }
 
-ZMap_CFPreferences& ZMap_CFPreferences::Set(CFStringRef iName, const ZVal_CF& iVal)
+Map_CFPreferences& Map_CFPreferences::Set(CFStringRef iName, const Val_CF& iVal)
 	{
 	::CFPreferencesSetAppValue(iName, iVal, fApplicationID);
 	return *this;
 	}
 
-ZMap_CFPreferences& ZMap_CFPreferences::Erase(const string8& iName)
-	{ return this->Erase(ZUtil_CF::sString(iName)); }
+Map_CFPreferences& Map_CFPreferences::Erase(const string8& iName)
+	{ return this->Erase(Util_CF::sString(iName)); }
 
-ZMap_CFPreferences& ZMap_CFPreferences::Erase(CFStringRef iName)
+Map_CFPreferences& Map_CFPreferences::Erase(CFStringRef iName)
 	{
 	::CFPreferencesSetAppValue(iName, nullptr, fApplicationID);
 	return *this;

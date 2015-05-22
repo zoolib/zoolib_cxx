@@ -1,7 +1,7 @@
 #include "UIViewController+Subtitle.h"
 
-#include "zoolib/ZCartesian_CG.h"
-#include "zoolib/ZRef_NS.h"
+#include "zoolib/Apple/Cartesian_CG.h"
+#include "zoolib/Apple/ZRef_NS.h"
 
 #import <Foundation/NSInvocation.h>
 #import <UIKit/UIKit.h>

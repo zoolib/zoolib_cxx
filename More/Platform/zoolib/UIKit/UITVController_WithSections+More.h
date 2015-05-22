@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,73 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZData_NS_h__
-#define __ZData_NS_h__ 1
+#ifndef __ZooLib_UITVC_WithSections_More__
+#define __ZooLib_UITVC_WithSections_More__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Cocoa)
+#include "zoolib/UIKit/UITVController_WithSections.h"
 
-#include "zoolib/ZAny.h"
-#include "zoolib/ZRef_NS.h"
-
-#import <Foundation/NSData.h>
-
-namespace ZooLib {
+#if ZCONFIG_SPI_Enabled(iPhone)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZData_NS
+#pragma mark ZooLib_UIKit_SectionHeader
 
-class ZData_NS
-:	public ZRef<NSData>
+@interface ZooLib_UIKit_SectionHeader : UIView
 	{
-	typedef ZRef<NSData> inherited;
+@public
+	ZooLib::ZRef<UILabel> fLabel;
+	}
 
-	class Rep;
++ (ZooLib_UIKit_SectionHeader*)sMake;
 
-public:
-	ZData_NS();
-	ZData_NS(const ZData_NS& iOther);
-	~ZData_NS();
-	ZData_NS& operator=(const ZData_NS& iOther);
+@end // interface MMSectionHeader
 
-	ZData_NS(NSMutableData* iOther);
-	ZData_NS(NSData* iOther);
+// =================================================================================================
+#pragma mark -
+#pragma mark ZooLib::UIKit
 
-	ZData_NS(const Adopt_T<NSMutableData>& iOther);
-	ZData_NS(const Adopt_T<NSData>& iOther);
+namespace ZooLib {
+namespace UIKit {
 
-	ZData_NS& operator=(NSMutableData* iOther);
-	ZData_NS& operator=(NSData* iOther);
+ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty);
+ZRef<Section> sMakeSection(ZRef<SectionBody> iBody);
 
-	ZData_NS& operator=(const Adopt_T<NSMutableData>& iOther);
-	ZData_NS& operator=(const Adopt_T<NSData>& iOther);
+ZRef<Section> sMakeSectionWithTitle
+	(ZRef<SectionBody> iBody, NSString* iTitle, bool iHideWhenEmpty);
 
-	ZData_NS(size_t iSize);
-	ZData_NS(const void* iSource, size_t iSize);
+ZRef<Section> sMakeSectionWithTitle(ZRef<SectionBody> iBody, NSString* iTitle);
 
-// ZData protocol
-	size_t GetSize() const;
-	void SetSize(size_t iSize);
+ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
+	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected = null,
+	ZRef<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped = null);
 
-	const void* GetPtr() const;
-	void* GetPtrMutable();
+ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
+	id iDelegate, SEL iSEL);
 
-	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
-	void CopyFrom(const void* iSource, size_t iCount);
+UIColor* sColor_Text();
+UIColor* sColor_Text_Shadow();
 
-	void CopyTo(size_t iOffset, void* oDest, size_t iCount) const;
-	void CopyTo(void* oDest, size_t iCount) const;
+ZRef<UILabel> sMakeUILabel();
 
-private:
-	NSData* pData() const;
-	NSMutableData* pTouch();
-	bool fMutable;
-	};
-
+} // namespace UIKit
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Cocoa)
+#endif // ZCONFIG_SPI_Enabled(iPhone)
 
-#endif // __ZData_NS_h__
+#endif // __ZooLib_UITVC_WithSections_More__

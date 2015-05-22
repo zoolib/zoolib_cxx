@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_NS_h__
-#define __ZVal_NS_h__ 1
+#ifndef __ZooLib_Apple_Val_NS_h__
+#define __ZooLib_Apple_Val_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -27,9 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/UnicodeString.h"
 
-#include "zoolib/ZData_NS.h"
-#include "zoolib/ZRef_NS.h"
-#include "zoolib/ZValAccessors_Std.h"
+#include "zoolib/Apple/Data_NS.h"
+#include "zoolib/Apple/ZRef_NS.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
@@ -39,82 +38,82 @@ typedef const struct __CFString * CFStringRef;
 
 namespace ZooLib {
 
-class ZVal_NS;
-class ZSeq_NS;
-class ZMap_NS;
+class Val_NS;
+class Seq_NS;
+class Map_NS;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZVal_NS
+#pragma mark Val_NS
 
-class ZVal_NS
+class Val_NS
 :	public ZRef<NSObject>
 	{
 	typedef ZRef<NSObject> inherited;
 public:
 	operator bool() const;
 
-	ZVal_NS();
-	ZVal_NS(const ZVal_NS& iOther);
-	~ZVal_NS();
-	ZVal_NS& operator=(const ZVal_NS& iOther);
+	Val_NS();
+	Val_NS(const Val_NS& iOther);
+	~Val_NS();
+	Val_NS& operator=(const Val_NS& iOther);
 
-	ZVal_NS(NSObject* iVal)
+	Val_NS(NSObject* iVal)
 	:	inherited(iVal)
 		{}
 
 	template <class S>
-	ZVal_NS(const ZRef<S>& iVal)
+	Val_NS(const ZRef<S>& iVal)
 	:	inherited(iVal)
 		{}
 
 	template <class S>
-	ZVal_NS(const Adopt_T<S>& iVal)
+	Val_NS(const Adopt_T<S>& iVal)
 	:	inherited(Adopt_T<NSObject*>(iVal.Get()))
 		{}
 
-	ZVal_NS(char iVal);
-	ZVal_NS(signed char iVal);
-	ZVal_NS(unsigned char iVal);
-	ZVal_NS(wchar_t iVal);
-	ZVal_NS(short iVal);
-	ZVal_NS(unsigned short iVal);
-	ZVal_NS(int iVal);
-	ZVal_NS(unsigned int iVal);
-	ZVal_NS(long iVal);
-	ZVal_NS(unsigned long iVal);
-	ZVal_NS(long long iVal);
-	ZVal_NS(unsigned long long iVal);
-	ZVal_NS(bool iVal);
-	ZVal_NS(float iVal);
-	ZVal_NS(double iVal);
-	ZVal_NS(long double iVal);
-	ZVal_NS(const char* iVal);
-	ZVal_NS(const string8& iVal);
-	ZVal_NS(const string16& iVal);
-	ZVal_NS(CFStringRef iVal);
+	Val_NS(char iVal);
+	Val_NS(signed char iVal);
+	Val_NS(unsigned char iVal);
+	Val_NS(wchar_t iVal);
+	Val_NS(short iVal);
+	Val_NS(unsigned short iVal);
+	Val_NS(int iVal);
+	Val_NS(unsigned int iVal);
+	Val_NS(long iVal);
+	Val_NS(unsigned long iVal);
+	Val_NS(long long iVal);
+	Val_NS(unsigned long long iVal);
+	Val_NS(bool iVal);
+	Val_NS(float iVal);
+	Val_NS(double iVal);
+	Val_NS(long double iVal);
+	Val_NS(const char* iVal);
+	Val_NS(const string8& iVal);
+	Val_NS(const string16& iVal);
+	Val_NS(CFStringRef iVal);
 
-	ZVal_NS& operator=(id iVal)
+	Val_NS& operator=(id iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZVal_NS& operator=(const ZRef<S>& iVal)
+	Val_NS& operator=(const ZRef<S>& iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZVal_NS& operator=(const Adopt_T<S>& iVal)
+	Val_NS& operator=(const Adopt_T<S>& iVal)
 		{
 		inherited::operator=(Adopt_T<NSObject*>(iVal.Get()));
 		return *this;
 		}
 
-// ZVal protocol
+// Val protocol
 	using inherited::Clear;
 	using inherited::Get;
 
@@ -140,24 +139,16 @@ public:
 	template <class S>
 	void Set(const S& iVal);
 
-	const ZVal_NS Get(const string8& iName) const;
-	const ZVal_NS Get(NSString* iName) const;
-	const ZVal_NS Get(size_t iIndex) const;
+	const Val_NS Get(const string8& iName) const;
+	const Val_NS Get(NSString* iName) const;
+	const Val_NS Get(size_t iIndex) const;
 
-// Typename accessors
-/// \cond DoxygenIgnore
-	typedef NSString* NSStringPtr;
 
-	ZMACRO_ZValAccessors_Decl_Std(ZVal_NS)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, NSString, NSStringPtr)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Data, ZData_NS)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Seq, ZSeq_NS)
-	ZMACRO_ZValAccessors_Decl_GetSet(ZVal_NS, Map, ZMap_NS)
-/// \endcond DoxygenIgnore
+  typedef NSString* NSStringPtr;
 	};
 
 template <class S>
-const ZQ<S> ZVal_NS::QGet() const
+const ZQ<S> Val_NS::QGet() const
 	{
 	ZQ<S> result;
 	if (NSObject* theNSObject = inherited::Get())
@@ -173,9 +164,9 @@ const ZQ<S> ZVal_NS::QGet() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZSeq_NS
+#pragma mark Seq_NS
 
-class ZSeq_NS
+class Seq_NS
 :	public ZRef<NSArray>
 	{
 	typedef ZRef<NSArray> inherited;
@@ -183,22 +174,22 @@ class ZSeq_NS
 public:
 	operator bool() const;
 
-	ZSeq_NS();
-	ZSeq_NS(const ZSeq_NS& iOther);
-	~ZSeq_NS();
-	ZSeq_NS& operator=(const ZSeq_NS& iOther);
+	Seq_NS();
+	Seq_NS(const Seq_NS& iOther);
+	~Seq_NS();
+	Seq_NS& operator=(const Seq_NS& iOther);
 
-	ZSeq_NS(NSMutableArray* iOther);
-	ZSeq_NS(NSArray* iOther);
+	Seq_NS(NSMutableArray* iOther);
+	Seq_NS(NSArray* iOther);
 
-	ZSeq_NS(const Adopt_T<NSMutableArray*>& iOther);
-	ZSeq_NS(const Adopt_T<NSArray*>& iOther);
+	Seq_NS(const Adopt_T<NSMutableArray*>& iOther);
+	Seq_NS(const Adopt_T<NSArray*>& iOther);
 
-	ZSeq_NS& operator=(NSMutableArray* iOther);
-	ZSeq_NS& operator=(NSArray* iOther);
+	Seq_NS& operator=(NSMutableArray* iOther);
+	Seq_NS& operator=(NSArray* iOther);
 
-	ZSeq_NS& operator=(const Adopt_T<NSMutableArray*>& iOther);
-	ZSeq_NS& operator=(const Adopt_T<NSArray*>& iOther);
+	Seq_NS& operator=(const Adopt_T<NSMutableArray*>& iOther);
+	Seq_NS& operator=(const Adopt_T<NSArray*>& iOther);
 
 // ZSeq protocol
 	size_t Count() const;
@@ -206,9 +197,9 @@ public:
 	using inherited::Clear;
 	using inherited::Get;
 
-	const ZQ<ZVal_NS> QGet(size_t iIndex) const;
-	const ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
-	const ZVal_NS Get(size_t iIndex) const;
+	const ZQ<Val_NS> QGet(size_t iIndex) const;
+	const Val_NS DGet(const Val_NS& iDefault, size_t iIndex) const;
+	const Val_NS Get(size_t iIndex) const;
 
 	template <class S>
 	const ZQ<S> QGet(size_t iIndex) const
@@ -222,13 +213,13 @@ public:
 	const S Get(size_t iIndex) const
 		{ return this->Get(iIndex).Get<S>(); }
 
-	ZSeq_NS& Set(size_t iIndex, const ZVal_NS& iVal);
+	Seq_NS& Set(size_t iIndex, const Val_NS& iVal);
 
-	ZSeq_NS& Erase(size_t iIndex);
+	Seq_NS& Erase(size_t iIndex);
 
-	ZSeq_NS& Insert(size_t iIndex, const ZVal_NS& iVal);
+	Seq_NS& Insert(size_t iIndex, const Val_NS& iVal);
 
-	ZSeq_NS& Append(const ZVal_NS& iVal);
+	Seq_NS& Append(const Val_NS& iVal);
 
 private:
 	NSArray* pArray() const;
@@ -238,9 +229,9 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMap_NS
+#pragma mark Map_NS
 
-class ZMap_NS
+class Map_NS
 :	public ZRef<NSDictionary>
 	{
 	typedef ZRef<NSDictionary> inherited;
@@ -248,38 +239,38 @@ class ZMap_NS
 public:
 	operator bool() const;
 
-	ZMap_NS();
-	ZMap_NS(const ZMap_NS& iOther);
-	~ZMap_NS();
-	ZMap_NS& operator=(const ZMap_NS& iOther);
+	Map_NS();
+	Map_NS(const Map_NS& iOther);
+	~Map_NS();
+	Map_NS& operator=(const Map_NS& iOther);
 
-	ZMap_NS(NSMutableDictionary* iOther);
-	ZMap_NS(NSDictionary* iOther);
+	Map_NS(NSMutableDictionary* iOther);
+	Map_NS(NSDictionary* iOther);
 
-	ZMap_NS(const Adopt_T<NSMutableDictionary*>& iOther);
-	ZMap_NS(const Adopt_T<NSDictionary*>& iOther);
+	Map_NS(const Adopt_T<NSMutableDictionary*>& iOther);
+	Map_NS(const Adopt_T<NSDictionary*>& iOther);
 
-	ZMap_NS& operator=(NSMutableDictionary* iOther);
-	ZMap_NS& operator=(NSDictionary* iOther);
+	Map_NS& operator=(NSMutableDictionary* iOther);
+	Map_NS& operator=(NSDictionary* iOther);
 
-	ZMap_NS& operator=(const Adopt_T<NSMutableDictionary*>& iOther);
-	ZMap_NS& operator=(const Adopt_T<NSDictionary*>& iOther);
+	Map_NS& operator=(const Adopt_T<NSMutableDictionary*>& iOther);
+	Map_NS& operator=(const Adopt_T<NSDictionary*>& iOther);
 
 // ZMap protocol
 	using inherited::Clear;
 	using inherited::Get;
 
-	const ZQ<ZVal_NS> QGet(const string8& iName) const;
-	const ZQ<ZVal_NS> QGet(NSString* iName) const;
-	const ZQ<ZVal_NS> QGet(CFStringRef iName) const;
+	const ZQ<Val_NS> QGet(const string8& iName) const;
+	const ZQ<Val_NS> QGet(NSString* iName) const;
+	const ZQ<Val_NS> QGet(CFStringRef iName) const;
 
-	const ZVal_NS DGet(const ZVal_NS& iDefault, const string8& iName) const;
-	const ZVal_NS DGet(const ZVal_NS& iDefault, NSString* iName) const;
-	const ZVal_NS DGet(const ZVal_NS& iDefault, CFStringRef iName) const;
+	const Val_NS DGet(const Val_NS& iDefault, const string8& iName) const;
+	const Val_NS DGet(const Val_NS& iDefault, NSString* iName) const;
+	const Val_NS DGet(const Val_NS& iDefault, CFStringRef iName) const;
 
-	const ZVal_NS Get(const string8& iName) const;
-	const ZVal_NS Get(NSString* iName) const;
-	const ZVal_NS Get(CFStringRef iName) const;
+	const Val_NS Get(const string8& iName) const;
+	const Val_NS Get(NSString* iName) const;
+	const Val_NS Get(CFStringRef iName) const;
 
 	template <class S>
 	const ZQ<S> QGet(const string8& iName) const
@@ -317,25 +308,25 @@ public:
 	const S Get(CFStringRef iName) const
 		{ return this->Get(iName).Get<S>(); }
 
-	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal);
-	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal);
-	ZMap_NS& Set(CFStringRef iName, const ZVal_NS& iVal);
+	Map_NS& Set(const string8& iName, const Val_NS& iVal);
+	Map_NS& Set(NSString* iName, const Val_NS& iVal);
+	Map_NS& Set(CFStringRef iName, const Val_NS& iVal);
 
 	template <class S>
-	ZMap_NS& Set(const string8& iName, const S& iVal)
-		{ return this->Set(iName, ZVal_NS(iVal)); }
+	Map_NS& Set(const string8& iName, const S& iVal)
+		{ return this->Set(iName, Val_NS(iVal)); }
 
 	template <class S>
-	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal)
-		{ return this->Set(iName, ZVal_NS(iVal)); }
+	Map_NS& Set(NSString* iName, const Val_NS& iVal)
+		{ return this->Set(iName, Val_NS(iVal)); }
 
 	template <class S>
-	ZMap_NS& Set(CFStringRef iName, const S& iVal)
-		{ return this->Set(iName, ZVal_NS(iVal)); }
+	Map_NS& Set(CFStringRef iName, const S& iVal)
+		{ return this->Set(iName, Val_NS(iVal)); }
 
-	ZMap_NS& Erase(const string8& iName);
-	ZMap_NS& Erase(NSString* iName);
-	ZMap_NS& Erase(CFStringRef iName);
+	Map_NS& Erase(const string8& iName);
+	Map_NS& Erase(NSString* iName);
+	Map_NS& Erase(CFStringRef iName);
 
 private:
 	NSDictionary* pDictionary() const;
@@ -347,4 +338,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
-#endif // __ZVal_NS_h__
+#endif // __ZooLib_Apple_Val_NS_h__

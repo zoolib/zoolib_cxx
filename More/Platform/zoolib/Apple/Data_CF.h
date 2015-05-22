@@ -18,23 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZData_CF_h__
-#define __ZData_CF_h__ 1
+#ifndef __ZooLib_Apple_Data_CF_h__
+#define __ZooLib_Apple_Data_CF_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZAny.h"
-#include "zoolib/ZRef_CF.h"
+#include "zoolib/Any.h"
+
+#include "zoolib/Apple/ZRef_CF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZData_CF
+#pragma mark Data_CF
 
-class ZData_CF
+class Data_CF
 :	public ZRef<CFDataRef>
 	{
 	typedef ZRef<CFDataRef> inherited;
@@ -42,25 +43,25 @@ class ZData_CF
 	class Rep;
 
 public:
-	ZData_CF();
-	ZData_CF(const ZData_CF& iOther);
-	~ZData_CF();
-	ZData_CF& operator=(const ZData_CF& iOther);
+	Data_CF();
+	Data_CF(const Data_CF& iOther);
+	~Data_CF();
+	Data_CF& operator=(const Data_CF& iOther);
 
-	ZData_CF(CFMutableDataRef iOther);
-	ZData_CF(CFDataRef iOther);
+	Data_CF(CFMutableDataRef iOther);
+	Data_CF(CFDataRef iOther);
 
-	ZData_CF(const Adopt_T<CFMutableDataRef>& iOther);
-	ZData_CF(const Adopt_T<CFDataRef>& iOther);
+	Data_CF(const Adopt_T<CFMutableDataRef>& iOther);
+	Data_CF(const Adopt_T<CFDataRef>& iOther);
 
-	ZData_CF& operator=(CFMutableDataRef iOther);
-	ZData_CF& operator=(CFDataRef iOther);
+	Data_CF& operator=(CFMutableDataRef iOther);
+	Data_CF& operator=(CFDataRef iOther);
 
-	ZData_CF& operator=(const Adopt_T<CFMutableDataRef>& iOther);
-	ZData_CF& operator=(const Adopt_T<CFDataRef>& iOther);
+	Data_CF& operator=(const Adopt_T<CFMutableDataRef>& iOther);
+	Data_CF& operator=(const Adopt_T<CFDataRef>& iOther);
 
-	ZData_CF(size_t iSize);
-	ZData_CF(const void* iSource, size_t iSize);
+	Data_CF(size_t iSize);
+	Data_CF(const void* iSource, size_t iSize);
 
 // ZData protocol
 	size_t GetSize() const;
@@ -85,4 +86,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZData_CF_h__
+#endif // __ZooLib_Apple_Data_CF_h__

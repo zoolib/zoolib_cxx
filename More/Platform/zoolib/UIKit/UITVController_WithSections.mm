@@ -17,17 +17,19 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#include "zoolib/uikit/UITVController_WithSections.h"
+#include "zoolib/UIKit/UITVController_WithSections.h"
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/Callable_ObjC.h"
-#include "zoolib/ZLog.h"
+#include "zoolib/Apple/Callable_ObjC.h"
+
+#include "zoolib/Log.h"
+#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZRef_NS.h"
-#include "zoolib/ZUtil_NS.h"
-#include "zoolib/ZUtil_STL_map.h"
-#include "zoolib/ZUtil_STL_set.h"
+
+#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/Util_NS.h"
 
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
@@ -179,7 +181,7 @@ void SectionBody::RowUpdate::AddRange(
 		{
 		ZAssert(iStart + iCount <= fRowMeta.fLimit);
 		while (iCount--)
-			ZUtil_STL::sInsertMust(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
+			Util_STL::sInsertMust(0, fMap, fRowMeta.fBase + iStart++, iRowAnimation);
 		}
 	}
 
@@ -832,7 +834,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QHeaderTitle())
-			return ZUtil_NS::sString(*theQ);
+			return Util_NS::sString(*theQ);
 		}
 	return nullptr;
 	}
@@ -842,7 +844,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	if (ZRef<Section> theSection = [self pGetSection:section])
 		{
 		if (ZQ<string8> theQ = theSection->QFooterTitle())
-			return ZUtil_NS::sString(*theQ);
+			return Util_NS::sString(*theQ);
 		}
 	return nullptr;
 	}
@@ -1217,7 +1219,7 @@ static void spInsertSections(UITableView* iTableView,
 	bool anyChanges = false;
 	for (size_t xx = 0; xx < fSections_Shown.size(); ++xx)
 		{
-		if (not ZUtil_STL::sContains(fSections_ToIgnore, fSections_Shown[xx]))
+		if (not Util_STL::sContains(fSections_ToIgnore, fSections_Shown[xx]))
 			{
 			SectionBody::RowMeta theRowMeta_Old;
 			SectionBody::RowMeta theRowMeta_New;

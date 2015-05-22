@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Util_CF_Any_h__
-#define __ZooLib_Util_CF_Any_h__ 1
+#ifndef __ZooLib_Apple_Util_CF_Any_h__
+#define __ZooLib_Apple_Util_CF_Any_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -50,4 +50,4 @@ Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary);
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZooLib_Util_CF_Any_h__
+#endif // __ZooLib_Apple_Util_CF_Any_h__

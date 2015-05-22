@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRef_xpc_h__
-#define __ZRef_xpc_h__ 1
+#ifndef __ZooLib_Apple_Ref_xpc_h__
+#define __ZooLib_Apple_Ref_xpc_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZRef.h"
@@ -67,4 +67,4 @@ inline void sRelease_T(xpc_object_t iRef)
 
 #endif // ZCONFIG_SPI_Enabled(xpc)
 
-#endif // __ZRef_xpc_h__
+#endif // __ZooLib_Apple_Ref_xpc_h__

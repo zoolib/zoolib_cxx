@@ -18,49 +18,74 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrimU_Std_h__
-#define __ZStrimU_Std_h__ 1
+#ifndef __ZooLib_Apple_Data_NS_h__
+#define __ZooLib_Apple_Data_NS_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZStrim_CRLF.h" // For ZStrimR_CRLFRemove
-#include "zoolib/ZStrim_Stream.h" // For ZStrimR_StreamDecoder
+#if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include <vector>
+#include "zoolib/Any.h"
+
+#include "zoolib/Apple/ZRef_NS.h"
+
+#import <Foundation/NSData.h>
 
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZStrimU_Std
+#pragma mark -
+#pragma mark Data_NS
 
-class ZStrimU_Std : public ZStrimU
+class Data_NS
+:	public ZRef<NSData>
 	{
+	typedef ZRef<NSData> inherited;
+
+	class Rep;
+
 public:
-	ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR);
+	Data_NS();
+	Data_NS(const Data_NS& iOther);
+	~Data_NS();
+	Data_NS& operator=(const Data_NS& iOther);
 
-// From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
+	Data_NS(NSMutableData* iOther);
+	Data_NS(NSData* iOther);
 
-// From ZStrimU
-	virtual void Imp_Unread(UTF32 iCP);
-	virtual size_t Imp_UnreadableLimit();
+	Data_NS(const Adopt_T<NSMutableData>& iOther);
+	Data_NS(const Adopt_T<NSData>& iOther);
 
-// Our protocol
-	void SetDecoder(ZTextDecoder* iDecoder);
-	ZTextDecoder* GetSetDecoder(ZTextDecoder* iDecoder);
+	Data_NS& operator=(NSMutableData* iOther);
+	Data_NS& operator=(NSData* iOther);
 
-	int GetPos();
-	int GetLine();
-	int GetColumn();
+	Data_NS& operator=(const Adopt_T<NSMutableData>& iOther);
+	Data_NS& operator=(const Adopt_T<NSData>& iOther);
+
+	Data_NS(size_t iSize);
+	Data_NS(const void* iSource, size_t iSize);
+
+// ZData protocol
+	size_t GetSize() const;
+	void SetSize(size_t iSize);
+
+	const void* GetPtr() const;
+	void* GetPtrMutable();
+
+	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
+	void CopyFrom(const void* iSource, size_t iCount);
+
+	void CopyTo(size_t iOffset, void* oDest, size_t iCount) const;
+	void CopyTo(void* oDest, size_t iCount) const;
 
 private:
-	ZStrimR_StreamDecoder fStrimR_StreamDecoder;
-	ZStrimR_CRLFRemove fStrimR_CRLFRemove;
-	std::vector<UTF32> fStack;
-	size_t fPos;
-	size_t fLine;
-	size_t fColumn;
+	NSData* pData() const;
+	NSMutableData* pTouch();
+	bool fMutable;
 	};
 
 } // namespace ZooLib
 
-#endif // __ZStrimU_Std_h__
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
+
+#endif // __ZooLib_Apple_Data_NS_h__

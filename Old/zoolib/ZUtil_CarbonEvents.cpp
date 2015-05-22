@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_CarbonEvents.h"
+#include "zoolib/OSX/Util_CarbonEvents.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
 
@@ -40,16 +40,16 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZUtil_CarbonEvents
+#pragma mark Util_CarbonEvents
 
-bool ZUtil_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
+bool Util_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer)
 	{
 	return noErr == ::GetEventParameter(
 		iEventRef, iName, iType, nullptr, iBufferSize, nullptr, oBuffer);
 	}
 
-size_t ZUtil_CarbonEvents::sGetParamLength(
+size_t Util_CarbonEvents::sGetParamLength(
 	EventRef iEventRef, EventParamName iName, EventParamType iType)
 	{
 	ByteCount theLength;
@@ -58,7 +58,7 @@ size_t ZUtil_CarbonEvents::sGetParamLength(
 	return 0;
 	}
 
-void ZUtil_CarbonEvents::sSetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
+void Util_CarbonEvents::sSetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, const void* iBuffer)
 	{
 	::SetEventParameter(iEventRef, iName, iType, iBufferSize, iBuffer);
@@ -70,7 +70,7 @@ void ZUtil_CarbonEvents::sSetParam(EventRef iEventRef, EventParamName iName, Eve
 
 namespace { // anonymous
 
-using namespace ZUtil_CarbonEvents;
+using namespace Util_CarbonEvents;
 
 static const UInt32 kEventClassID_ZooLib = 'ZooL';
 static const UInt32 kEventKindID_Call = 'Call';
@@ -195,18 +195,18 @@ Handler spHandler;
 
 } // anonymous namespace
 
-void ZUtil_CarbonEvents::sInvokeOnMainThread(
+void Util_CarbonEvents::sInvokeOnMainThread(
 	bool iAlwaysDelayed, CallbackProc_t iCallback, void* iRefcon)
 	{ spHandler.InvokeOnMainThread(iAlwaysDelayed, iCallback, iRefcon); }
 
-void ZUtil_CarbonEvents::sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon)
+void Util_CarbonEvents::sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon)
 	{ spHandler.InvokeOnMainThread(false, iCallback, iRefcon); }
 
 #define CLASSONLY(a) case a: theClass = #a; break
 #define CLASS(a) case a: theClass = #a
 #define KIND(a) case a: theKind = #a; break
 
-string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
+string Util_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 	{
 	string theClass;
 	string theKind;
@@ -502,7 +502,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 
 #define EVENT(a) case a: return #a
 
-string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
+string Util_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 	{
 	switch (iEventType)
 		{
