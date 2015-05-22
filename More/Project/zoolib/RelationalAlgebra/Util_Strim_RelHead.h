@@ -49,6 +49,10 @@ ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(
 
 ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
+void sWrite_RenameWithOptional(
+	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional,
+	const ChanW_UTF& w);
+
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 

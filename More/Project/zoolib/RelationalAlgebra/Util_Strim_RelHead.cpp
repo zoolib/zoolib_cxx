@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_STL_set.h"
 #include "zoolib/ValueOnce.h"
 #include "zoolib/Yad_JSON.h"
 
@@ -35,6 +36,7 @@ namespace Util_Strim_RelHead {
 #pragma mark -
 #pragma mark Util_Strim_RelHead
 
+using namespace Util_STL;
 using std::set;
 
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
@@ -161,6 +163,23 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_U
 	return result;
 	}
 
+void sWrite_RenameWithOptional(
+	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional,
+	const ChanW_UTF& w)
+	{
+	w << "[";
+	ValueOnce<std::string> separator("", ", ");
+	foreachi (ii, iRename)
+		{
+		const ColName& theName = ii->first;
+		if (sContains(iOptional, theName))
+			w << separator() << "?" << ii->second << "<--" << ii->first;
+		else
+			w << separator() << "@" << ii->second << "<--" << ii->first;
+		}
+	w << "]";
+	}
+
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 
@@ -174,11 +193,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelHead& iRH)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Rename& iRename)
 	{
-	w << "[";
-	ValueOnce<std::string> separator("", ", ");
-	foreachi (ii, iRename)
-		w << separator() << ii->second << "<--" << ii->first;
-	w << "]";
+	Util_Strim_RelHead::sWrite_RenameWithOptional(iRename, sDefault(), w);
 	return w;
 	}
 

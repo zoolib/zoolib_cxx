@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Channer_Chan.h"
+#include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_string.h"
@@ -150,7 +152,8 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iE
 	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ",";
 	this->pWriteLFIndent();
-	w << iExpr->GetRename();
+	Util_Strim_RelHead::sWrite_RenameWithOptional(
+		iExpr->GetRename(), iExpr->GetRelHead_Optional(), w);
 	w << ")";
 	}
 
@@ -175,8 +178,8 @@ void Visitor::pWriteBinary(
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
 	{
 	Options theOptions;
-	theOptions.fEOLString = "\n";
-	theOptions.fIndentString = "|\t";
+//	theOptions.fEOLString = "\n";
+//	theOptions.fIndentString = "|\t";
 	sToStrim(iRel, theOptions, iStrimW);
 	}
 
@@ -263,7 +266,18 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 			}
 		else if (sEquali(*theNameQ, "Const"))
 			{
-			ZAssert(false);
+			if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanR, iChanU))
+				throw ParseException("Expected ColName as first param in Const");
+			 else
+				{
+				ZRef<ChannerR_UTF> theChannerR = sChanner_Chan(iChanR);
+				ZRef<ChannerU_UTF> theChannerU = sChanner_Chan(iChanU);
+					spRead_WSComma(iChanR, iChanU, " after ColName in Const");
+				if (NotQ<Val_Any> theValQ = Util_Any_JSON::sQRead(theChannerR, theChannerU))
+					throw ParseException("Expected value as second param in Const");
+				else
+					result = sConst(*theColNameQ, *theValQ);
+				}
 			}
 		else if (sEquali(*theNameQ, "Dee"))
 			{
@@ -361,7 +375,10 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 			}
 		else if (sEquali(*theNameQ, "Union"))
 			{
-			ZAssert(false);
+			if (NotQ<RelPair> theQ = spQReadPair(iChanR, iChanU, "in Union"))
+				throw ParseException("Expected Rel params to Union");
+			else
+				result = sUnion(theQ->first, theQ->second);
 			}
 		else if (sEquali(*theNameQ, "Search"))
 			{
