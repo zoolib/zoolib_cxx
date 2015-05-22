@@ -35,8 +35,8 @@ namespace Util_Strim_Expr_Bool_ValPred {
 
 static ZRef<Expr_Bool> spQReadValPred(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
-  if (ZQ<ValPred> theQ = Util_Strim_ValPred_Any::sQFromStrim(iChanR, iChanU))
-    return sExpr_Bool(*theQ);
+	if (ZQ<ValPred> theQ = Util_Strim_ValPred_Any::sQFromStrim(iChanR, iChanU))
+		return sExpr_Bool(*theQ);
 	return null;
 	}
 
