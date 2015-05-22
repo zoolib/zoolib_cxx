@@ -83,6 +83,7 @@ RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater,
 	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 :	fRelater(iRelater)
 ,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
+,	fNextRefcon(1000)
 	{}
 
 void RelsWatcher_Relater::Initialize()
