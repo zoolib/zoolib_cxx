@@ -254,7 +254,7 @@ double sSinceBoot()
 #else
 
 	// Assume that sSystem is returning elapsed time since boot.
-	return sSystem().fVal;
+	return sSystem();
 
 #endif
 	}
