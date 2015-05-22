@@ -88,7 +88,10 @@ class Melange_Client
 ,	public Starter_EventLoopBase
 	{
 public:
-	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory);
+	typedef Callable<void(bool)> Callable_Status;
+
+	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
+		const ZRef<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -121,6 +124,7 @@ private:
 	void pFinalize(Registration* iRegistration);
 
 	const ZRef<Factory_ChannerRW_Bin> fFactory;
+	const ZRef<Callable_Status> fCallable_Status;
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;

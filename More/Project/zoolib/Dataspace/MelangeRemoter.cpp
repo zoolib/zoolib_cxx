@@ -29,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Any.h"
 #include "zoolib/Util_Any_JSON.h"
-//###include "zoolib/Util_Any_JSONB.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/Yad_Any.h"
@@ -486,8 +485,10 @@ public:
 #pragma mark -
 #pragma mark Melange_Client
 
-Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory)
+Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
+  const ZRef<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
+, fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
 ,	fNextRefcon(1)
 	{}
@@ -619,8 +620,6 @@ void Melange_Client::pWrite()
 	{
 	ZThread::sSetName("Melange_Client::pWrite");
 
-	fTrueOnce_WriteNeedsStart.Reset();
-
 	try
 		{
 		if (this->pWrite_Inner())
@@ -632,18 +631,20 @@ void Melange_Client::pWrite()
 	catch (...)
 		{}
 
-	// The write failed in some fashion, clean up and trigger pWork.
+	// The write failed in some fashion, ditch the channer (if any).
 
 	ZGuardMtxR guard(fMtxR);
+
 	fChanner.Clear();
 	}
 
 bool Melange_Client::pWrite_Inner()
 	{
-	
 	ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
 
 	ZGuardMtxR guard(fMtxR);
+
+	fTrueOnce_WriteNeedsStart.Reset();
 
 	if (not theChannerW)
 		{
@@ -724,12 +725,27 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 		SaveSetRestore<bool> theSSR(fGettingChanner, true);
 
 		guard.Release();
+
+    if (ZLOGF(w, eDebug))
+      w << "No Channer";
+
+    sCall(fCallable_Status, false);
+
 		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
 		if (not theChanner)
 			{
 			// No Channer was available, pause for 1s;
+      if (ZLOGF(w, eDebug))
+        w << "Still no Channer";
 			ZThread::sSleep(1);
 			}
+    else
+      {
+      if (ZLOGF(w, eDebug))
+        w << "Has Channer";
+
+      sCall(fCallable_Status, true);
+      }
 
 		guard.Acquire();
 
