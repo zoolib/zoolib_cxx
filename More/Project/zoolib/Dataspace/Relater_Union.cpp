@@ -47,10 +47,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zoolib/RelationalAlgebra/Transform_ConsolidateRenames.h"
-#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
-#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
-
 namespace ZooLib {
 namespace Dataspace {
 
