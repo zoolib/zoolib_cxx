@@ -45,7 +45,7 @@ public:
 	typedef Type_p Type_t;
 
 	TagVal()
-	:	fVal(Type_p())
+	:	fVal()
 		{}
 
 	TagVal(const TagVal& iOther)
