@@ -108,7 +108,9 @@ class Expr_Op1_T
 protected:
 	Expr_Op1_T(const ZRef<T>& iOp0)
 	:	fOp0(iOp0)
-		{}
+		{
+		ZAssert(fOp0);
+		}
 
 public:
 	virtual ~Expr_Op1_T()
@@ -182,7 +184,9 @@ protected:
 	Expr_Op2_T(const ZRef<T>& iOp0, const ZRef<T>& iOp1)
 	:	fOp0(iOp0)
 	,	fOp1(iOp1)
-		{}
+		{
+		ZAssert(fOp0 && fOp1);
+		}
 
 public:
 	virtual ~Expr_Op2_T()
