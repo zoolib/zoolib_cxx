@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Log.h"
 #include "zoolib/UniSet.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
@@ -126,10 +127,14 @@ class Transform_Search
 	{
 	typedef Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
 public:
-	Transform_Search()
+	Transform_Search(bool* oEncounteredEmbed)
 	:	fRestriction(sTrue())
 	,	fProjection(UniSet<ColName>::sUniversal())
-		{}
+	,	fEncounteredEmbed(oEncounteredEmbed)
+		{
+		if (fEncounteredEmbed)
+			*fEncounteredEmbed = false;
+		}
 
 	virtual void Visit(const ZRef<Visitee>& iRep)
 		{ ZUnimplemented(); }
@@ -219,6 +224,15 @@ public:
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 		{
+		if (ZLOGF(w, eDebug))
+			 w << "Encountered embed";
+
+		if (fEncounteredEmbed)
+			*fEncounteredEmbed = true;
+
+		RA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
+		return;
+
 		ZRef<Expr_Rel> newOp1;
 
 		{
@@ -371,6 +385,7 @@ public:
 
 	ZRef<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
+	bool* fEncounteredEmbed;
 	Rename fRename;
 	ZQ<double> fLikelySize;
 	};
@@ -378,7 +393,15 @@ public:
 } // anonymous namespace
 
 ZRef<RA::Expr_Rel> sTransform_Search(const ZRef<RA::Expr_Rel>& iExpr)
-	{ return Transform_Search().Do(iExpr); }
+	{
+	bool encounteredEmbed;
+	if (ZRef<RA::Expr_Rel> result = Transform_Search(&encounteredEmbed).Do(iExpr))
+		{
+		if (not encounteredEmbed)
+			return result;
+		}
+	return iExpr;
+	}
 
 } // namespace QueryEngine
 } // namespace ZooLib
