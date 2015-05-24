@@ -41,6 +41,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
+#include "zoolib/RelationalAlgebra/Transform_ConsolidateRenames.h"
+#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -118,7 +122,7 @@ public:
 	PRegSearch() {}
 
 	int64 fRefconInSearcher;
-	ConcreteHead fConcreteHead;
+	SearchSpec fSearchSpec;
 	set<PQuery*> fPQuery_Using;
 	ZRef<QE::Result> fResult;
 	};
@@ -144,7 +148,11 @@ public:
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		ZUnimplemented();
+		if (ZLOGF(w, eDebug))
+			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
+
+		this->pSetResult(fSearcher->pMakeWalker_Search(fPQuery,
+			iExpr->GetRename(), iExpr->GetRelHead_Optional(), iExpr->GetExpr_Bool()));
 		}
 
 	ZRef<Relater_Searcher> const fSearcher;
@@ -190,6 +198,13 @@ void Relater_Searcher::ModifyRegistrations(
 		{
 		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
 
+//##		theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
+// This next one needs some work doing with Embeds
+//##		theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
+
+		// As does this one:
+		theRel = QueryEngine::sTransform_Search(theRel);
+
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
 
@@ -234,8 +249,7 @@ void Relater_Searcher::ModifyRegistrations(
 		if (sIsEmpty(thePQuery->fClientQuery_InPQuery))
 			{
 			// Detach from any depended-upon PRegSearch
-			for (set<PRegSearch*>::iterator iterPRegSearch = thePQuery->fPRegSearch_Used.begin();
-				iterPRegSearch != thePQuery->fPRegSearch_Used.end(); ++iterPRegSearch)
+			foreachi (iterPRegSearch, thePQuery->fPRegSearch_Used)
 				{
 				PRegSearch* thePRegSearch = *iterPRegSearch;
 				sEraseMust(kDebug, thePRegSearch->fPQuery_Using, thePQuery);
@@ -277,8 +291,25 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		ZAssert(not thePQuery->fResult);
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		if (not theWalker)
+			{
+			if (ZLOGF(w, eDebug))
+				w << thePQuery->fRel;
+			theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+			}
 
+		const double start = Time::sSystem();
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
+		const double elapsed = Time::sSystem() - start;
+
+		if (elapsed > 0.25)
+			{
+			if (ZLOGF(w, eDebug))
+				{
+				w << "Slow query, " << elapsed << "s\n";
+				w << thePQuery->fRel;
+				}
+			}
 
 		guard.Acquire();
 
@@ -306,7 +337,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		if (thePRegSearch->fPQuery_Using.empty())
 			{
 			toRemove.push_back(thePRegSearch->fRefconInSearcher);
-			sEraseMust(kDebug, fMap_ConcreteHead_PRegSearch, thePRegSearch->fConcreteHead);
+			sEraseMust(kDebug, fMap_SearchSpec_PRegSearchStar, thePRegSearch->fSearchSpec);
 			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearch->fRefconInSearcher);
 			}
 		}
@@ -352,11 +383,44 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery,
 	const ConcreteHead& iConcreteHead)
+	{ return this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(iConcreteHead, null)); }
+
+ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
+	const RelationalAlgebra::Rename& iRename,
+	const RelHead& iRelHead_Optional,
+	const ZRef<Expr_Bool>& iExpr_Bool)
+	{
+	ZGuardMtxR guard(fMtxR);
+
+	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
+	RelationalAlgebra::Rename finalRename;
+	ConcreteHead theConcreteHead;
+	foreachi (iter, iRename)
+		{
+		const string8& source = iter->first;
+		const string8& target = iter->second;
+		if (target != source)
+			finalRename[target] = source;
+
+		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
+		}
+
+	ZRef<QueryEngine::Walker> theWalker =
+		this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(theConcreteHead, iExpr_Bool));
+
+	foreachi (iter, finalRename)
+		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->first, iter->second);
+
+	return theWalker;
+	}
+
+ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQuery,
+	const SearchSpec& iSearchSpec)
 	{
 	ZGuardMtxR guard(fMtxR);
 
 	PRegSearch* thePRegSearch = nullptr;
-	if (PRegSearch** thePRegSearchP = sPMut(fMap_ConcreteHead_PRegSearch, iConcreteHead))
+	if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, iSearchSpec))
 		{ thePRegSearch = *thePRegSearchP; }
 	else
 		{
@@ -366,12 +430,12 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 
 		thePRegSearch = &iterPair.first->second;
 
-		sInsertMust(fMap_ConcreteHead_PRegSearch, iConcreteHead, thePRegSearch);
+		sInsertMust(fMap_SearchSpec_PRegSearchStar, iSearchSpec, thePRegSearch);
 
-		thePRegSearch->fConcreteHead = iConcreteHead;
+		thePRegSearch->fSearchSpec = iSearchSpec;
 		thePRegSearch->fRefconInSearcher = iterPair.first->first;
 
-		const AddedSearch theAS(thePRegSearch->fRefconInSearcher, SearchSpec(iConcreteHead, null));
+		const AddedSearch theAS(thePRegSearch->fRefconInSearcher, iSearchSpec);
 
 		guard.Release();
 

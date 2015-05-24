@@ -77,6 +77,14 @@ protected:
 	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery,
 		const ConcreteHead& iConcreteHead);
 
+	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery,
+		const RelationalAlgebra::Rename& iRename,
+		const RelHead& iRelHead_Optional,
+		const ZRef<Expr_Bool>& iExpr_Bool);
+
+	ZRef<QueryEngine::Walker> pMakeWalker_SearchSpec(PQuery* iPQuery,
+    const SearchSpec& iSearchSpec);
+
 	// -----
 
 	class DLink_ClientQuery_InPQuery;
@@ -107,8 +115,8 @@ protected:
 	typedef std::map<int64,PRegSearch> Map_Refcon_PRegSearch;
 	Map_Refcon_PRegSearch fMap_Refcon_PRegSearch;
 
-	typedef std::map<ConcreteHead,PRegSearch*> Map_ConcreteHead_PRegSearch;
-	Map_ConcreteHead_PRegSearch fMap_ConcreteHead_PRegSearch;
+	typedef std::map<SearchSpec,PRegSearch*> Map_SearchSpec_PRegSearchStar;
+	Map_SearchSpec_PRegSearchStar fMap_SearchSpec_PRegSearchStar;
 
 	DListHead<DLink_PRegSearch_NeedsWork> fPRegSearch_NeedsWork;
 	};
