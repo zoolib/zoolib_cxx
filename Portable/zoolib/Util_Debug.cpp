@@ -44,7 +44,6 @@ namespace Util_Debug {
 
 bool sCompact;
 
-using std::min;
 using std::string;
 
 // =================================================================================================
@@ -210,7 +209,7 @@ public:
 
 		// extraSpace will ensure that the message text from multiple calls lines
 		// up, so long as iName is 20 CPs or less in length.
-		const string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
+		const string extraSpace(fExtraSpace - std::min(fExtraSpace, curLength), ' ');
 
 		if (sCompact)
 			{
