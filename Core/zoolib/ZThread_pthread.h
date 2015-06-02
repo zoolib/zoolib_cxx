@@ -232,12 +232,15 @@ typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
 #pragma mark -
 #pragma mark ZSemNoTimeout_pthread
 
+#if !defined(__MACH__)
+// Unnamed semaphores are not supported on OSX (or I presume on iOS).
+
 class ZSemNoTimeout_pthread : NonCopyable
 	{
 public:
 	ZMACRO_Attribute_NoThrow
 	inline
-	ZSemNoTimeout_pthread() { ::sem_init(&f_sem_t, 0, 0); }
+	ZSemNoTimeout_pthread() { ZEnsure(0 == ::sem_init(&f_sem_t, 0, 0)); }
 
 	ZMACRO_Attribute_NoThrow
 	inline 
@@ -261,6 +264,7 @@ public:
 protected:
 	sem_t f_sem_t;
 	};
+#endif // !defined(__MACH__)
 
 } // namespace ZooLib
 

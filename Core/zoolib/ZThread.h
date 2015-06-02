@@ -49,7 +49,10 @@ namespace ZooLib {
 	typedef ZMtxR_pthread ZMtxR;
 
 	typedef ZSem_pthread ZSem;
-	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
+
+	#if !defined(__MACH__)
+		typedef ZSemNoTimeout_pthread ZSemNoTimeout;
+	#endif
 
 #elif ZCONFIG_API_Enabled(Thread_MacMP)
 
@@ -99,8 +102,13 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
 #pragma mark -
 #pragma mark ZBen (benaphore)
 
-typedef ZBen_T<ZSemNoTimeout> ZBen;
-typedef ZBenR_T<ZBen,ZThread::ID,ZThread::sID> ZBenR;
+#if defined(__MACH__)
+	typedef ZMtx ZBen;
+	typedef ZMtxR ZBenR;
+#else
+	typedef ZBen_T<ZSemNoTimeout> ZBen;
+	typedef ZBenR_T<ZBen,ZThread::ID,ZThread::sID> ZBenR;
+#endif
 
 // =================================================================================================
 #pragma mark -
