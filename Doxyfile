@@ -575,9 +575,11 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
+INPUT                 = ./docs
+
 INPUT2                 = ./zoolib/ZWinCom.h ./zoolib/ZWinCom.cpp
 
-INPUT                 = \
+INPUT3                 = \
                          ./zoolib/ \
                          ./more/zoolib/blackberry/ \
                          ./more/zoolib/dataset/ \

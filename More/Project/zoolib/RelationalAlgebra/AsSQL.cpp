@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_STL_map.h"
 
-#include "zoolib/ZLog.h"
+#include "zoolib/Log.h"
 #include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUtil_Any.h"

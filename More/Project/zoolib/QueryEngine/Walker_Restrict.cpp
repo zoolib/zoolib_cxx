@@ -85,7 +85,7 @@ public:
 		{ delete fExec; }
 
 	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
-		{ return !fExec->Call(iVars, iConsts); }
+		{ return not fExec->Call(iVars, iConsts); }
 
 	Exec* fExec;
 	};
@@ -227,11 +227,11 @@ struct Functor_StringContains
 
 	bool operator()(const Val_Any& l, const Val_Any& r) const
 		{
-		if (const string8* target = l.PGet<string8>())
-			{
+//##		if (const string8* target = l.PGet<string8>())
+//##			{
 //##			if (const string8* pattern = r.PGet<string8>())
 //##				return ZTextCollator(fStrength).Contains(*pattern, *target);
-			}
+//##			}
 		return false;
 		}
 
@@ -434,14 +434,17 @@ ZRef<Walker> Walker_Restrict::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	fWalker = fWalker->Prime(iOffsets, fChildOffsets, ioBaseOffset);
+	delete fExec;
+	fExec = nullptr;
+
+	fWalker = fWalker->Prime(iOffsets, fCombinedOffsets, ioBaseOffset);
 	if (not fWalker)
 		return null;
 
-	oOffsets.insert(fChildOffsets.begin(), fChildOffsets.end());
-	fChildOffsets.insert(iOffsets.begin(), iOffsets.end());
+	oOffsets.insert(fCombinedOffsets.begin(), fCombinedOffsets.end());
+	fCombinedOffsets.insert(iOffsets.begin(), iOffsets.end());
 
-	fExec = AsExec(fChildOffsets, fConsts).Do(fExpr_Bool);
+	fExec = AsExec(fCombinedOffsets, fConsts).Do(fExpr_Bool);
 
 	return this;
 	}

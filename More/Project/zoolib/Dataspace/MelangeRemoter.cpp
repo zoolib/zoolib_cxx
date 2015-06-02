@@ -44,6 +44,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanRU_XX_Unreader.h"
 
+#include "zoolib/StdIO.h"
+
+#include "zoolib/QueryEngine/Transform_Search.h"
+#include "zoolib/RelationalAlgebra/Transform_ConsolidateRenames.h"
+#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
+#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -773,6 +780,32 @@ void Melange_Client::pFinalize(Registration* iRegistration)
 	}
 
 } // namespace Dataspace
+
+ZRef<Dataspace::Expr_Rel> sTestRel(const ZRef<ChannerRU_UTF>& iChannerRU);
+ZRef<Dataspace::Expr_Rel> sTestRel(const ZRef<ChannerRU_UTF>& iChannerRU)
+	{
+	using RelationalAlgebra::Expr_Rel;
+
+	ZRef<Expr_Rel> theRel = RelationalAlgebra::Util_Strim_Rel::sQFromStrim(
+		sGetChan<ChanR_UTF>(iChannerRU), sGetChan<ChanU_UTF>(iChannerRU));
+
+	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
+
+//	theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
+//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
+
+// This next one needs some work doing with Embeds
+//	theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
+//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
+
+//	theRel = RelationalAlgebra::sTransform_ConsolidateRenames(theRel);
+//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
+
+//##	theRel = QueryEngine::sTransform_Search(theRel);
+	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
+
+	return theRel;
+	}
 
 //ZRef<RelationalAlgebra::Expr_Rel> sTestRel(const std::string& iString)
 //	{

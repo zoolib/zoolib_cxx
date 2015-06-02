@@ -50,7 +50,7 @@ public:
 
 private:
 	const ZRef<Expr_Bool> fExpr_Bool;
-	std::map<string8,size_t> fChildOffsets;
+	std::map<string8,size_t> fCombinedOffsets;
 
 	std::vector<Val_Any> fConsts;
 	Exec* fExec;

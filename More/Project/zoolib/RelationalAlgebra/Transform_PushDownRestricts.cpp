@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
-using std::vector;
+//##using std::vector;
 
 using namespace Util_STL;
 
@@ -50,8 +50,6 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed
 	{
 	// I think this needs to work in a fashion akin to product, because we may have a restrict
 	// in op1 that refers to a name from op0.
-
-	ZUnimplemented(); // ^^^^
 
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 

@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/ValPred_Any.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
+#include "zoolib/Expr/Expr_Bool.h"
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
@@ -45,6 +46,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel_Project.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
+
+#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -224,16 +227,23 @@ public:
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 		{
-		if (ZLOGF(w, eDebug))
-			 w << "Encountered embed";
+//		if (ZLOGF(w, eDebug))
+//			 w << "Encountered embed";
+//
+//		if (fEncounteredEmbed)
+//			*fEncounteredEmbed = true;
+//
+//		RA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
+//		return;
+//
 
-		if (fEncounteredEmbed)
-			*fEncounteredEmbed = true;
+		ZRef<Expr_Rel> newOp0, newOp1;
 
-		RA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
-		return;
-
-		ZRef<Expr_Rel> newOp1;
+		{
+		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
+		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
+		newOp0 = this->Do(iExpr->GetOp0());
+		}
 
 		{
 		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
@@ -242,15 +252,17 @@ public:
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
+//		if (ZLOGF(w, eDebug))
+//			w << "\n" << newOp0;
+//
+//		if (ZLOGF(w, eDebug))
+//			w << "\n" << newOp1;
+//
 		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
-
-		ZRef<RA::Expr_Rel> newEmbed;
-		{
-		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
-		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
-		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
-		}
+		ZRef<RA::Expr_Rel> newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
+//
+//		if (ZLOGF(w, eDebug))
+//			w << "\n" << newEmbed;
 
 		fRename.clear();
 		this->pApplyRestrictProject(newEmbed);
