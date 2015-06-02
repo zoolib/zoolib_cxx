@@ -171,11 +171,14 @@ void sWrite_RenameWithOptional(
 	ValueOnce<std::string> separator("", ", ");
 	foreachi (ii, iRename)
 		{
-		const ColName& theName = ii->first;
-		if (sContains(iOptional, theName))
-			w << separator() << "?" << ii->second << "<--" << ii->first;
+		w << separator();
+		if (sContains(iOptional, ii->first))
+			w << "?";
 		else
-			w << separator() << "@" << ii->second << "<--" << ii->first;
+			w << "@";
+		Yad_JSON::sWrite_PropName(ii->second, w);
+		w << "<--";
+		Yad_JSON::sWrite_PropName(ii->first, w);
 		}
 	w << "]";
 	}

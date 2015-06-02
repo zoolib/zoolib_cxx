@@ -149,11 +149,11 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iE
 	{
 	const ChanW_UTF& w = pStrimW();
 	w << "Search(";
-	this->pToStrim(iExpr->GetExpr_Bool());
-	w << ",";
-	this->pWriteLFIndent();
 	Util_Strim_RelHead::sWrite_RenameWithOptional(
 		iExpr->GetRename(), iExpr->GetRelHead_Optional(), w);
+	w << ",";
+	this->pWriteLFIndent();
+	this->pToStrim(iExpr->GetExpr_Bool());
 	w << ")";
 	}
 
