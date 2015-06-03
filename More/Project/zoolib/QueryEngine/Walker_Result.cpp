@@ -59,10 +59,11 @@ bool Walker_Result::QReadInc(Val_Any* oResults)
 	if (fIndex >= fResult->Count())
 		return false;
 
-	size_t theOffset = fBaseOffset;
+//	size_t theOffset = fBaseOffset;
 	const Val_Any* theVals = fResult->GetValsAt(fIndex);
-	foreachi (ii, fResult->GetRelHead())
-		oResults[theOffset++] = *theVals++;
+	std::copy(theVals + fBaseOffset, theVals + fBaseOffset + fResult->GetRelHead().size(), oResults);
+//	foreachi (ii, fResult->GetRelHead())
+//		oResults[theOffset++] = *theVals++;
 
 	++fIndex;
 
