@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/Singleton.h" // For sDefault
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 
@@ -38,7 +39,7 @@ ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
 	{
 	map<string8,size_t> offsets;
 	size_t baseOffset = 0;
-	iWalker = iWalker->Prime(map<string8,size_t>(), offsets, baseOffset);
+	iWalker = iWalker->Prime(sDefault(), offsets, baseOffset);
 
 	vector<Val_Any> thePackedRows;
 	vector<Val_Any> theRow(baseOffset);
