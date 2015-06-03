@@ -39,7 +39,7 @@ using namespace Util_STL;
 #pragma mark Walker_Embed
 
 Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
-		const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
+	const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
 :	fWalker_Parent(iWalker_Parent)
 ,	fColName(iColName)
 ,	fWalker_Embedee(iWalker_Embedee)
