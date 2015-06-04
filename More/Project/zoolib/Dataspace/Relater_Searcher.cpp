@@ -31,10 +31,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
-#include "zoolib/QueryEngine/Walker_Project.h"
+//#include "zoolib/QueryEngine/Walker_Project.h"
 #include "zoolib/QueryEngine/Walker_Result.h"
 #include "zoolib/QueryEngine/Walker_Rename.h"
-#include "zoolib/QueryEngine/Walker_Restrict.h"
+//#include "zoolib/QueryEngine/Walker_Restrict.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -149,12 +149,6 @@ public:
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(fSearcher->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteHead())); }
 
-	// Do we need to be accumulating what names are available? Actually, that's in the search, that's
-	// kind of the whole point. But we'd need to keep track of what names are available up above ...
-	// We'll need to fix embed if we just want to bodge things -- just keep condition clauses that
-	// depend on the Op0 values from being pushed down, but still allow some.
-
-
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
 		if (ZLOGF(w, eDebug+1))
@@ -213,7 +207,13 @@ void Relater_Searcher::ModifyRegistrations(
 //		theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
 //
 		// As does this one:
-//##		theRel = QueryEngine::sTransform_Search(theRel);
+		theRel = QueryEngine::sTransform_Search(theRel);
+
+		if (ZLOGF(w, eDebug + 1))
+			{
+			w << "Before:\n" << iAdded->GetRel();
+			w << "After:\n" << theRel;
+			}
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -301,27 +301,16 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		ZAssert(not thePQuery->fResult);
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
-		if (not theWalker)
-			{
-			if (ZLOGF(w, eDebug))
-				w << "\n" << thePQuery->fRel;
-			theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
-			}
-		else
-			{
-			if (ZLOGF(w, eDebug))
-				w << "\n" << thePQuery->fRel;
-			}
 
 		const double start = Time::sSystem();
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
 		const double elapsed = Time::sSystem() - start;
 
-		if (elapsed > 0.25)
+//##		if (elapsed > 0.01)
 			{
 			if (ZLOGF(w, eDebug))
 				{
-				w << "Slow query, " << elapsed << "s\n";
+				w << "Query, " << elapsed * 1e3 << "ms\n";
 				w << thePQuery->fRel;
 				}
 			}
@@ -448,18 +437,6 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQue
 
 		thePRegSearch->fSearchSpec = iSearchSpec;
 		thePRegSearch->fRefconInSearcher = iterPair.first->first;
-
-		if (ZRef<Expr_Bool> theRestriction = iSearchSpec.GetRestriction())
-			{
-			// This is where things go wrong. theRestriction could refer to values in whatever
-			// was passed in: e.g (@Name == @"Outer.Name" & @Type == "Var")
-			// Each time this walker is rewound we'll need to establush a new search, with the values
-			// from the scope we're passed. So I think we may no longer be able to rest on Result as
-			// our basis of operation.
-
-			if (ZLOGF(w, eDebug))
-				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(Visitor_Expr_Bool_ValPred_Any_ToStrim::Options(), w, theRestriction);
-			}
 
 		const AddedSearch theAS(thePRegSearch->fRefconInSearcher, iSearchSpec);
 

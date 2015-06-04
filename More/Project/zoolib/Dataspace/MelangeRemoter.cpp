@@ -195,7 +195,6 @@ public:
 			}
 		return false;
 		}
-
 	};
 
 // =================================================================================================
@@ -801,7 +800,7 @@ ZRef<Dataspace::Expr_Rel> sTestRel(const ZRef<ChannerRU_UTF>& iChannerRU)
 //	theRel = RelationalAlgebra::sTransform_ConsolidateRenames(theRel);
 //	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
 
-//##	theRel = QueryEngine::sTransform_Search(theRel);
+	theRel = QueryEngine::sTransform_Search(theRel);
 	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
 
 	return theRel;

@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
+#include "zoolib/Expr/Util_Expr_Bool_CNF.h"
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
@@ -49,6 +50,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
+
+//##
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+#include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
+//##
+
 namespace ZooLib {
 namespace QueryEngine {
 
@@ -66,30 +73,42 @@ using namespace Util_STL;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark HasConst (anonymous)
+#pragma mark Visitor_Analyze (anonymous)
 
 namespace { // anonymous
 
-bool spHasConst(const ZRef<ValComparand>& iComparand)
+struct Analysis_t
 	{
-	if (iComparand.DynamicCast<ValComparand_Const_Any>())
-		return true;
-	return false;
-	}
+	Analysis_t()
+	:	fAnyIsConst(false)
+	,	fAnyNameUnknown(false)
+		{}
 
-bool spHasConst(const ValPred& iValPred)
-	{ return spHasConst(iValPred.GetLHS()) || spHasConst(iValPred.GetRHS()); }
+	Analysis_t(bool iAnyIsConst, bool iAnyNameUnknown)
+	:	fAnyIsConst(iAnyIsConst)
+	,	fAnyNameUnknown(iAnyNameUnknown)
+		{}
 
-class HasConst
-:	public virtual Visitor_Do_T<bool>
+	bool fAnyIsConst;
+	bool fAnyNameUnknown;
+	};
+
+Analysis_t operator|(const Analysis_t& l, const Analysis_t& r)
+	{ return Analysis_t(l.fAnyIsConst || r.fAnyIsConst, l.fAnyNameUnknown || r.fAnyNameUnknown); }
+
+class Visitor_Analyze
+:	public virtual Visitor_Do_T<Analysis_t>
 ,	public virtual Visitor_Expr_Bool_ValPred
 ,	public virtual Visitor_Expr_Op1_T<Expr_Bool>
 ,	public virtual Visitor_Expr_Op2_T<Expr_Bool>
 	{
 public:
+	Visitor_Analyze(const RelHead& iNames)
+	:	fNames(iNames)
+		{}
 // From Visitor_Expr_Bool_ValPred
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
-		{ this->pSetResult(spHasConst(iExpr->GetValPred())); }
+		{ this->pSetResult(sAnalyze(iExpr->GetValPred())); }
 
 // From Visitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Bool> >& iExpr)
@@ -97,7 +116,29 @@ public:
 
 // From Visitor_Expr_Op2_T
 	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Bool> >& iExpr)
-		{ this->pSetResult(this->Do(iExpr->GetOp0()) || this->Do(iExpr->GetOp1())); }
+		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
+
+
+private:
+	Analysis_t sAnalyze(const ZRef<ValComparand>& iComparand)
+		{
+		Analysis_t result;
+		if (iComparand.DynamicCast<ValComparand_Const_Any>())
+			result.fAnyIsConst = true;
+
+		if (ZRef<ValComparand_Name> theComparand_Name = iComparand.DynamicCast<ValComparand_Name>())
+			{
+			if (not sContains(fNames, theComparand_Name->GetName()))
+				result.fAnyNameUnknown = true;
+			}
+
+		return result;
+		}
+
+	Analysis_t sAnalyze(const ValPred& iValPred)
+		{ return sAnalyze(iValPred.GetLHS()) | sAnalyze(iValPred.GetRHS()); }
+
+	const RelHead fNames;
 	};
 
 } // anonymous namespace
@@ -127,17 +168,14 @@ class Transform_Search
 ,	public virtual RA::Visitor_Expr_Rel_Project
 ,	public virtual RA::Visitor_Expr_Rel_Rename
 ,	public virtual RA::Visitor_Expr_Rel_Restrict
+//,	public virtual RA::Visitor_Expr_Rel_Search //??
 	{
 	typedef Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
 public:
-	Transform_Search(bool* oEncounteredEmbed)
+	Transform_Search()
 	:	fRestriction(sTrue())
 	,	fProjection(UniSet<ColName>::sUniversal())
-	,	fEncounteredEmbed(oEncounteredEmbed)
-		{
-		if (fEncounteredEmbed)
-			*fEncounteredEmbed = false;
-		}
+		{}
 
 	virtual void Visit(const ZRef<Visitee>& iRep)
 		{ ZUnimplemented(); }
@@ -168,9 +206,7 @@ public:
 		{
 		// fRestriction by now is written in terms used by the concrete itself,
 		// and fRename maps from the concrete's terms to those used at the top of
-		// the containing branch. We'll pass a rename that includes only those
-		// resulting names that are in fProjection, so the passed rename is
-		// effectively a project/rename descriptor.
+		// the containing branch.
 
 		Rename newRename;
 		foreachi (iterRename, fRename)
@@ -180,30 +216,79 @@ public:
 			}
 
 		// Add missing entries
+		RelHead theRH_All;
 		RelHead theRH_Optional;
 		foreachi (iter, iExpr->GetConcreteHead())
 			{
 			const ColName& theColName = iter->first;
 			if (fProjection.Contains(theColName))
 				sQInsert(newRename, theColName, theColName);
+
+			sQInsert(theRH_All, theColName);
+
 			if (not iter->second)
 				sQInsert(theRH_Optional, theColName);
 			}
 
-		if (fRestriction == sTrue())
+		fLikelySize = 1;
+
+//		if (fRestriction == sTrue())
+//			{
+//			fLikelySize = 100;
+//			}
+//		else if (HasConst().Do(fRestriction))
+//			{
+//			fLikelySize = 1;
+//			}
+//		else
+//			{
+//			fLikelySize = 100;
+//			}
+
+		// However, fRestriction may well also reference names *not* in the concrete, if we're
+		// part of the embeddee of an embed. The simplest solution for now is to pull up any
+		// terms referencing names *not* in the concrete. So, get fRestriction into CNF. Separate it
+		// into stuff that references names in the concrete, which we'll stuff into a search. Any
+		// referencing names not in the concrete are stuffed into a restrict, wrapped around the search.
+
+		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
+
+		Visitor_Analyze theVisitor(theRH_All);
+
+		foreachi (clause, Util_Expr_Bool::sAsCNF(fRestriction))
 			{
-			fLikelySize = 100;
-			}
-		else if (HasConst().Do(fRestriction))
-			{
-			fLikelySize = 1;
-			}
-		else
-			{
-			fLikelySize = 100;
+			bool referencesInnerOnly = true;
+
+			ZRef<Expr_Bool> newClause;
+
+			foreachv (const ZRef<Expr_Bool> disjunction, *clause)
+				{
+				newClause |= disjunction;
+				const Analysis_t theAn = theVisitor.Do(disjunction);
+				if (theAn.fAnyNameUnknown)
+					referencesInnerOnly = false;
+				}
+
+			if (referencesInnerOnly)
+				{
+				if (conjunctionSearch)
+					conjunctionSearch &= newClause;
+				else
+					conjunctionSearch = newClause;
+				}
+			else
+				{
+				if (conjunctionRestrict)
+					conjunctionRestrict &= newClause;
+				else
+					conjunctionRestrict = newClause;
+				}
 			}
 
-		ZRef<Expr_Rel_Search> theRel = new Expr_Rel_Search(newRename, theRH_Optional, fRestriction);
+		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(newRename, theRH_Optional, conjunctionSearch);
+		if (conjunctionRestrict)
+			theRel &= conjunctionRestrict;
+
 		this->pSetResult(theRel);
 		}
 
@@ -227,16 +312,6 @@ public:
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 		{
-//		if (ZLOGF(w, eDebug))
-//			 w << "Encountered embed";
-//
-//		if (fEncounteredEmbed)
-//			*fEncounteredEmbed = true;
-//
-//		RA::Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(iExpr);
-//		return;
-//
-
 		ZRef<Expr_Rel> newOp0, newOp1;
 
 		{
@@ -252,19 +327,13 @@ public:
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
-//		if (ZLOGF(w, eDebug))
-//			w << "\n" << newOp0;
-//
-//		if (ZLOGF(w, eDebug))
-//			w << "\n" << newOp1;
-//
 		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
 		ZRef<RA::Expr_Rel> newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
-//
-//		if (ZLOGF(w, eDebug))
-//			w << "\n" << newEmbed;
 
+		// But rename is now superfluous -- our children will have done whatever they need
+		// with it. pApplyRestrictProject will apply any restriction/projection that remains.
 		fRename.clear();
+
 		this->pApplyRestrictProject(newEmbed);
 		}
 
@@ -397,7 +466,6 @@ public:
 
 	ZRef<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
-	bool* fEncounteredEmbed;
 	Rename fRename;
 	ZQ<double> fLikelySize;
 	};
@@ -406,11 +474,9 @@ public:
 
 ZRef<RA::Expr_Rel> sTransform_Search(const ZRef<RA::Expr_Rel>& iExpr)
 	{
-	bool encounteredEmbed;
-	if (ZRef<RA::Expr_Rel> result = Transform_Search(&encounteredEmbed).Do(iExpr))
+	if (ZRef<RA::Expr_Rel> result = Transform_Search().Do(iExpr))
 		{
-		if (not encounteredEmbed)
-			return result;
+		return result;
 		}
 	return iExpr;
 	}
