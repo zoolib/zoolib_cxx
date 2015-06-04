@@ -137,9 +137,9 @@ bool sNotEmpty(const Name& iName)
 	ZMACRO_namespace_tr1_begin
 //	template <typename T> struct hash;
 
-	template <>
-	struct hash<ZooLib::Name>
-		{ public: size_t operator()(const ZooLib::Name& iName) const { return iName.Hash(); } };
+//	template <>
+//	struct hash<ZooLib::Name>
+//		{ public: size_t operator()(const ZooLib::Name& iName) const { return iName.Hash(); } };
 
 	ZMACRO_namespace_tr1_end
 
