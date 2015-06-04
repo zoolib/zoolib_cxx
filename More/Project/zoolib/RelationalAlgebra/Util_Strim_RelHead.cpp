@@ -177,8 +177,11 @@ void sWrite_RenameWithOptional(
 		else
 			w << "@";
 		Yad_JSON::sWrite_PropName(ii->second, w);
-		w << "<--";
-		Yad_JSON::sWrite_PropName(ii->first, w);
+		if (ii->first != ii->second)
+			{
+			w << "<--";
+			Yad_JSON::sWrite_PropName(ii->first, w);
+			}
 		}
 	w << "]";
 	}
