@@ -48,6 +48,19 @@ ZRef<Walker> Walker_Rename::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+#if 1
+	map<string8,size_t> childOffsets;
+	fWalker = fWalker->Prime(sDefault(), childOffsets, ioBaseOffset);
+
+	if (ZQ<size_t> theQ = sQGetErase(childOffsets, fOld))
+		childOffsets[fNew] = *theQ;
+
+	oOffsets.insert(childOffsets.begin(), childOffsets.end());
+
+	return fWalker;
+
+#else
+
 	map<string8,size_t> newBindingOffsets = iOffsets;
 	if (ZQ<size_t> theQ = sQGetErase(newBindingOffsets, fNew))
 		newBindingOffsets[fOld] = *theQ;
@@ -57,6 +70,7 @@ ZRef<Walker> Walker_Rename::Prime(
 	sInsertMust(oOffsets, fNew, sGetEraseMust(oOffsets, fOld));
 
 	return fWalker;
+#endif
 	}
 
 bool Walker_Rename::QReadInc(Val_Any* ioResults)
