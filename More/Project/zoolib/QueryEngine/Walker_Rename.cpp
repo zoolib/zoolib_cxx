@@ -48,29 +48,17 @@ ZRef<Walker> Walker_Rename::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-#if 1
+	// Confusion will result if the name we're going to be our new name is already in the list
+	ZAssert(not sContains(iOffsets, fNew));
+
 	map<string8,size_t> childOffsets;
 	fWalker = fWalker->Prime(sDefault(), childOffsets, ioBaseOffset);
 
-	if (ZQ<size_t> theQ = sQGetErase(childOffsets, fOld))
-		childOffsets[fNew] = *theQ;
+	sInsertMust(childOffsets, fNew, sGetEraseMust(childOffsets, fOld));
 
 	oOffsets.insert(childOffsets.begin(), childOffsets.end());
 
 	return fWalker;
-
-#else
-
-	map<string8,size_t> newBindingOffsets = iOffsets;
-	if (ZQ<size_t> theQ = sQGetErase(newBindingOffsets, fNew))
-		newBindingOffsets[fOld] = *theQ;
-
-	fWalker = fWalker->Prime(newBindingOffsets, oOffsets, ioBaseOffset);
-
-	sInsertMust(oOffsets, fNew, sGetEraseMust(oOffsets, fOld));
-
-	return fWalker;
-#endif
 	}
 
 bool Walker_Rename::QReadInc(Val_Any* ioResults)
