@@ -54,7 +54,7 @@ public:
 
 		if (const size_t countRead = sQRead(buf, std::min(iCount, countof(buf)), fChanR))
 			{
-			std::copy(buf, buf + countRead, oDest);
+			std::copy_n(buf, countRead, oDest);
 
 			const size_t countWritten = sQWriteFully(buf, countRead, fChanW);
 

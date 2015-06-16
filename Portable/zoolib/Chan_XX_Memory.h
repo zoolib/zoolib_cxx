@@ -55,8 +55,7 @@ public:
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
 			fSize > fPosition ? fSize - fPosition : 0);
-		const Elmt_t* source = static_cast<const Elmt_t*>(fAddress) + fPosition;
-		std::copy(source, source + countToCopy, oDest);
+		std::copy_n(static_cast<const Elmt_t*>(fAddress) + fPosition, countToCopy, oDest);
 		fPosition += countToCopy;
 		return countToCopy;
 		}
@@ -151,10 +150,9 @@ public:
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
-		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress))
-			+ this->fPosition - countToCopy;
+		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress)) + this->fPosition - countToCopy;
 
-		std::copy(iSource, iSource + countToCopy, dest);
+		std::copy_n(iSource, countToCopy, dest);
 
 		this->fPosition -= countToCopy;
 
@@ -174,7 +172,7 @@ public:
 		const size_t countToCopy = std::min<size_t>(iCount,
 			this->fCount > this->fPosition ? this->fCount - this->fPosition : 0);
 
-		std::copy(iSource, iSource + countToCopy, dest);
+		std::copy_n(iSource, countToCopy, dest);
 
 		this->fPosition += countToCopy;
 

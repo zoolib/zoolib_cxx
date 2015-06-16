@@ -154,8 +154,7 @@ void Data_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	if (iCount == 0)
 		return;
 	this->pTouch();
-	const char* source = static_cast<const char*>(iSource);
-	std::copy(source, source + iCount, fRep->fVector.begin() + iOffset);
+	std::copy_n(static_cast<const char*>(iSource), iCount, fRep->fVector.begin() + iOffset);
 	}
 
 void Data_Any::CopyFrom(const void* iSource, size_t iCount)
@@ -166,8 +165,7 @@ void Data_Any::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	ZAssertStop(2, iCount + iOffset <= this->GetSize());
 	if (iCount == 0)
 		return;
-	vector<char>::const_iterator begin = fRep->fVector.begin() + iOffset;
-	std::copy(begin, begin + iCount, static_cast<char*>(oDest));
+	std::copy_n(fRep->fVector.begin() + iOffset, iCount, static_cast<char*>(oDest));
 	}
 
 void Data_Any::CopyTo(void* oDest, size_t iCount) const

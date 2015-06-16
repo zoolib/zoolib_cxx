@@ -51,7 +51,7 @@ size_t ChanBase_Bin_string::QRead(byte* oDest, size_t iCount)
 	if (const size_t countToCopy =
 		std::min<size_t>(iCount, theSize > fPosition ? theSize - fPosition : 0))
 		{
-		std::copy(&fStringPtr->at(fPosition), (&fStringPtr->at(fPosition)) + iCount, (char*)oDest);
+		std::copy_n(&fStringPtr->at(fPosition), countToCopy, (char*)oDest);
 		fPosition += countToCopy;
 		return countToCopy;
 		}
@@ -107,7 +107,7 @@ size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
 	const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
-	std::copy(iSource, iSource + iCount, (byte*)(&fStringPtr->at(fPosition)));
+	std::copy_n(iSource, countToCopy, (byte*)(&fStringPtr->at(fPosition)));
 
 	this->fPosition -= countToCopy;
 
@@ -120,10 +120,11 @@ size_t ChanRWPos_Bin_string::UnreadableLimit()
 size_t ChanRWPos_Bin_string::QWrite(const byte* iSource, size_t iCount)
 	{
 	const size_t newPosition = this->fPosition + iCount;
+
 	if (this->fStringPtr->size() < newPosition)
 		this->fStringPtr->resize(newPosition);
 
-	std::copy(iSource, iSource + iCount, (byte*)(&fStringPtr->at(fPosition)));
+	std::copy_n(iSource, iCount, (byte*)(&fStringPtr->at(fPosition)));
 
 	this->fPosition = newPosition;
 

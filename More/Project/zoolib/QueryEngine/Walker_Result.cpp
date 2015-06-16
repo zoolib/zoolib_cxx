@@ -60,7 +60,7 @@ bool Walker_Result::QReadInc(Val_Any* oResults)
 		return false;
 
 	const Val_Any* theVals = fResult->GetValsAt(fIndex);
-	std::copy(theVals, theVals + fResult->GetRelHead().size(), oResults + fBaseOffset);
+	std::copy_n(theVals, fResult->GetRelHead().size(), oResults + fBaseOffset);
 
 	++fIndex;
 

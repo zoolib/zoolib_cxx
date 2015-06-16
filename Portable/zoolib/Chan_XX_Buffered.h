@@ -58,7 +58,7 @@ public:
 				{
 				// We have some data in our buffer, use it up first.
 				const size_t countToMove = std::min(fEnd - fBegin, iCount);
-				std::copy(&fBuffer[fBegin], &fBuffer[fBegin + countToMove], localDest);
+				std::copy_n(&fBuffer[fBegin], countToMove, localDest);
 				fBegin += countToMove;
 				localDest += countToMove;
 				iCount -= countToMove;
@@ -156,7 +156,7 @@ public:
 				// Either we already have data in the buffer, or we have an empty buffer
 				// and less than a buffer's worth to send.
 				const size_t countToCopy = std::min(iCount, fBuffer.size() - fOffset);
-				std::copy(localSource, localSource + countToCopy, &fBuffer[fOffset]);
+				std::copy_n(localSource, countToCopy, &fBuffer[fOffset]);
 				fOffset += countToCopy;
 				localSource += countToCopy;
 				iCount -= countToCopy;

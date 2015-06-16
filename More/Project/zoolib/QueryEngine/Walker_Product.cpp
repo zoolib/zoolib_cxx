@@ -85,7 +85,7 @@ bool Walker_Product::QReadInc(Val_Any* ioResults)
 			if (not fWalker_Left->QReadInc(ioResults))
 				return false;
 
-			std::copy(ioResults, ioResults + fResults_Left.size(), fResults_Left.begin());
+			std::copy_n(ioResults, fResults_Left.size(), fResults_Left.begin());
 			}
 		else
 			{
