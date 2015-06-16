@@ -99,7 +99,7 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 
 // Not sure about the XX_Until name -- it made sense in ZUtil_Strim, maybe not so much elsewhere.
 template <class Elmt_t>
-bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const Elmt_t& iTerminator)
+bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator, const ChanW<Elmt_t>& iChanW)
 	{
 	for (;;)
 		{
@@ -114,7 +114,7 @@ bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, const
 
 template <class Elmt_t>
 bool sSkip_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator)
-	{ return sCopy_Until(iChanR, ChanW_XX_Discard<Elmt_t>(), iTerminator); }
+	{ return sCopy_Until(iChanR, iTerminator, ChanW_XX_Discard<Elmt_t>()); }
 
 } // namespace ZooLib
 

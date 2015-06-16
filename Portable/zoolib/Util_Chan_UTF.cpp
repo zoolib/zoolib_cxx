@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compat_cmath.h"
+#include "zoolib/Chan_XX_Boundary.h"
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
 #include "zoolib/Unicode.h" // For Unicode::sIsEOL
@@ -92,7 +93,7 @@ static bool spIsWhitespace(UTF32 iCP)
 string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 	{
 	string8 result;
-	sCopy_Until<UTF32>(iSource, ChanW_UTF_string8(&result), iTerminator);
+	sCopy_Until(iSource, iTerminator, ChanW_UTF_string8(&result));
 	return result;
 	}
 
@@ -486,9 +487,8 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 				else if (sTryRead_CP('*', iChanR, iChanU))
 					{
 					sWriteMust("/*", oDest);
-					ZUnimplemented();
-	//##				if (not sCopy_Until("*/", iChanR, oDest))
-	//##					throw ParseException("Unexpected end of data while parsing a /**/ comment");
+					if (not sCopy_Until(iChanR, "*/", oDest))
+						throw ParseException("Unexpected end of data while parsing a /**/ comment");
 					sWriteMust("*/", oDest);
 					continue;
 					}
@@ -504,11 +504,30 @@ void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
-void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spCopy_Until(const ChanR_UTF& iChanR, const string32& iTerminator,
 	const ChanW_UTF& oDest)
 	{
-	sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanR, iChanU), oDest);
+  ChanR_XX_Boundary<UTF32> chanR(iTerminator.begin(), iTerminator.end(), iChanR);
+  sCopyAll(chanR, oDest);
+  return chanR.HitBoundary();
+  }
+
+bool sCopy_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
+	const ChanW_UTF& oDest)
+	{ return spCopy_Until(iChanR, Unicode::sAsUTF32(iTerminator), oDest); }
+
+bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
+	string8& oString)
+	{
+	oString.resize(0);
+	return sCopy_Until(iChanR, iTerminator, ChanW_UTF_string8(&oString));
 	}
+
+// -----------------
+
+void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ChanW_UTF& oDest)
+	{ sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanR, iChanU), oDest); }
 
 void sRead_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string8& oString)

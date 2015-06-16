@@ -82,6 +82,12 @@ void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
+bool sCopy_Until(const ChanR_UTF& iChanR, const string8& iTerminator, const ChanW_UTF& oDest);
+
+bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator, string8& oString);
+
+// -----------------
+
 void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest);
 
