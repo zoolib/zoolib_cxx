@@ -492,7 +492,7 @@ public:
 #pragma mark Melange_Client
 
 Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
-  const ZRef<Callable_Status>& iCallable_Status)
+	const ZRef<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
 , fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
@@ -732,26 +732,26 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 
 		guard.Release();
 
-    if (ZLOGF(w, eDebug))
-      w << "No Channer";
+		if (ZLOGF(w, eDebug))
+			w << "No Channer";
 
-    sCall(fCallable_Status, false);
+		sCall(fCallable_Status, false);
 
 		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
 		if (not theChanner)
 			{
 			// No Channer was available, pause for 1s;
-      if (ZLOGF(w, eDebug))
-        w << "Still no Channer";
+			if (ZLOGF(w, eDebug))
+				w << "Still no Channer";
 			ZThread::sSleep(1);
 			}
-    else
-      {
-      if (ZLOGF(w, eDebug))
-        w << "Has Channer";
+		else
+			{
+			if (ZLOGF(w, eDebug))
+				w << "Has Channer";
 
-      sCall(fCallable_Status, true);
-      }
+			sCall(fCallable_Status, true);
+			}
 
 		guard.Acquire();
 

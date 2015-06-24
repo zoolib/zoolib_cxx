@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef  __ZooLib_QueryEngine_Result_h__
-#define  __ZooLib_QueryEngine_Result_h__ 1
+#ifndef __ZooLib_QueryEngine_Result_h__
+#define __ZooLib_QueryEngine_Result_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
@@ -100,4 +100,4 @@ int sCompare_T<ZRef<QueryEngine::Result> >(
 
 } // namespace ZooLib
 
-#endif //  __ZooLib_QueryEngine_Result_h__
+#endif // __ZooLib_QueryEngine_Result_h__

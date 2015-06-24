@@ -507,10 +507,10 @@ void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 static bool spCopy_Until(const ChanR_UTF& iChanR, const string32& iTerminator,
 	const ChanW_UTF& oDest)
 	{
-  ChanR_XX_Boundary<UTF32> chanR(iTerminator.begin(), iTerminator.end(), iChanR);
-  sCopyAll(chanR, oDest);
-  return chanR.HitBoundary();
-  }
+	ChanR_XX_Boundary<UTF32> chanR(iTerminator.begin(), iTerminator.end(), iChanR);
+	sCopyAll(chanR, oDest);
+	return chanR.HitBoundary();
+	}
 
 bool sCopy_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
 	const ChanW_UTF& oDest)

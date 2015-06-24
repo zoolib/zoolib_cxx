@@ -83,7 +83,7 @@ protected:
 		const ZRef<Expr_Bool>& iExpr_Bool);
 
 	ZRef<QueryEngine::Walker> pMakeWalker_SearchSpec(PQuery* iPQuery,
-    const SearchSpec& iSearchSpec);
+		const SearchSpec& iSearchSpec);
 
 	// -----
 
