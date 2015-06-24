@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/Singleton.h" // For sDefault
+#include "zoolib/Default.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 

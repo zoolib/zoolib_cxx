@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compat_operator_bool.h"
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/CtorDtor.h" // For placement ctor/copy/dtor/assign
-#include "zoolib/Singleton.h" // For sDefault
+#include "zoolib/Default.h"
 #include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZDebug.h"

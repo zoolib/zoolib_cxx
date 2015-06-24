@@ -32,7 +32,7 @@ using std::vector;
 namespace ZooLib {
 
 static const Val_Any& spVal_Null()
-	{ return sSingleton<Val_Any>(); }
+	{ return sDefault<Val_Any>(); }
 
 template <>
 int sCompare_T(const Val_Any& iL, const Val_Any& iR)

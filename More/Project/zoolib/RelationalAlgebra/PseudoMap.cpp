@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 
-#include "zoolib/Singleton.h"
+#include "zoolib/Default.h"
 #include "zoolib/Util_STL_map.h"
 
 namespace ZooLib {
@@ -60,7 +60,7 @@ const Val_Any& PseudoMap::Get(const string8& iName) const
 	{
 	if (const Val_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return sSingleton<Val_Any>();
+	return sDefault<Val_Any>();
 	}
 
 Map_Any PseudoMap::AsMap() const

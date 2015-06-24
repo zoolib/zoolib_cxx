@@ -205,7 +205,7 @@ static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 	{
 	const double start = Time::sSystem();
 
-	Yad_JSONB::sToChan(sSingleton<ZRef_Counted<WriteFilter_Result> >(), sYadR(iMessage), iChanW);
+	Yad_JSONB::sToChan(sDefault<ZRef_Counted<WriteFilter_Result> >(), sYadR(iMessage), iChanW);
 	sFlush(iChanW);
 
 	const double finish = Time::sSystem();
@@ -226,7 +226,7 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 
 	const double start = Time::sSystem();
 
-	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sSingleton<ZRef_Counted<ReadFilter_Result> >(), theChannerRU));
+	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sDefault<ZRef_Counted<ReadFilter_Result> >(), theChannerRU));
 	if (not theQ)
 		sThrow_ExhaustedR();
 

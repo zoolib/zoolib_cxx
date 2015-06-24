@@ -202,7 +202,7 @@ SafePtrStack_WithDestroyer<Event,SafePtrStackLink_Event> spSafePtrStack_Event;
 } // anonymous namespace
 
 ZRef<Event> Event::sZero()
-	{ return sSingleton<ZRef_Counted<Event> >(); }
+	{ return sDefault<ZRef_Counted<Event> >(); }
 
 ZRef<Event> Event::sMake(size_t iValue, const ZRef<Event>& iLeft, const ZRef<Event>& iRight)
 	{
