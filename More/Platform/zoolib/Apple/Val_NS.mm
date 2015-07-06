@@ -168,7 +168,7 @@ Val_NS::Val_NS(const string16& iVal)
 	{}
 
 Val_NS::Val_NS(CFStringRef iVal)
-:	inherited((NSObject*)iVal)
+:	inherited((NSString*)iVal)
 	{}
 
 template <>
