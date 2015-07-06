@@ -67,8 +67,10 @@ void MelangeRoot::pWork()
 #pragma mark -
 #pragma mark MelangeCombo
 
-MelangeCombo::MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent)
+MelangeCombo::MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
+	const std::vector<IndexSpec>& iIndexSpecs)
 :	fWDS_Parent(iWDS_Parent)
+,	fIndexSpecs(iIndexSpecs)
 	{}
 
 ZQ<ZRef<ZCounted> > MelangeCombo::QCall(
@@ -110,7 +112,7 @@ void MelangeCombo::Start(ZRef<Starter> iStarter)
 	fWDS = sSpawned(fWDS_Parent, theCallable_NeedsUpdate);
 	fWDS_Parent.Clear();
 
-	ZRef<Searcher_DatonSet> theSearcher = new Searcher_DatonSet;
+	ZRef<Searcher_DatonSet> theSearcher = new Searcher_DatonSet(fIndexSpecs);
 	fWDS->InsertCallable_PullSuggested(theSearcher->GetCallable_PullSuggested());
 
 	ZRef<Relater> theRelater = new Relater_Searcher(theSearcher);

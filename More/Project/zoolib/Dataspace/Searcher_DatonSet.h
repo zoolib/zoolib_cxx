@@ -28,8 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/QueryEngine/Walker.h"
 
+#include <set>
+
 namespace ZooLib {
 namespace Dataspace {
+
+typedef std::vector<ColName> IndexSpec;
 
 // =================================================================================================
 #pragma mark -
@@ -41,7 +45,7 @@ class Searcher_DatonSet
 public:
 	enum { kDebug = 1 };
 
-	Searcher_DatonSet();
+	Searcher_DatonSet(const std::vector<IndexSpec>& iIndexSpecs);
 	virtual ~Searcher_DatonSet();
 
 // From Searcher
@@ -64,6 +68,8 @@ private:
 
 	void pPull();
 	void pChanged(const Val_Any& iVal);
+	void pIndexInsert(const Val_Any* iVal);
+	void pIndexErase(const Val_Any* iVal);
 
 	std::set<ZRef<DatonSet::Callable_PullFrom> > fCallables_PullFrom;
 
@@ -87,6 +93,10 @@ private:
 
 	ZRef<Event> fEvent;
 
+	class Index;
+
+	std::vector<Index*> fIndexes;
+
 	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
 	Map_Assert fMap_Assert;
 
@@ -100,7 +110,7 @@ private:
 	class DLink_ClientSearch_InPSearch;
 	class DLink_ClientSearch_NeedsWork;
 	class ClientSearch;
-	std::map<int64, ClientSearch> fMap_Refcon_ClientSearch;
+	std::map<int64,ClientSearch> fMap_Refcon_ClientSearch;
 	DListHead<DLink_ClientSearch_NeedsWork> fClientSearch_NeedsWork;
 
 	// -----

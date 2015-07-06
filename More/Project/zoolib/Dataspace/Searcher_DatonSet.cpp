@@ -183,11 +183,144 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark Index
+
+typedef vector<ColName> IndexSpec;
+
+class Searcher_DatonSet::Index
+	{
+	static const size_t kMaxCols = 4;
+
+	class Key
+		{
+	public:
+		bool operator<(const Key& iOther) const
+			{
+			// When called by lower_bound this is a key in the set, and iOther
+			// is a key that's being looked for. So when this has more entries
+			// than iOther then this is considered bigger than iOther.
+
+			// When called by upper_bound this is a key that's being looked for
+			// and iOther is a key in the set. So when this has fewer entries
+			// than iOther then this is considered bigger than iOther.
+
+			// The upshot being that when one or other vector of values is
+			// exhausted we return false, indicating that this is not smaller
+			// than iOther.
+
+			const Val_Any* const* otherIter = &iOther.fValues[0];
+			const Val_Any* const* otherEnd = &iOther.fValues[iOther.fCount];
+
+			const Val_Any* const* thisIter = &fValues[0];
+			const Val_Any* const* thisEnd = &fValues[fCount];
+
+			for (;;)
+				{
+				if (otherIter == otherEnd)
+					{
+					// We've run out of iOther, and must be equal so far.
+					if (thisIter == thisEnd)
+						{
+						// We've also run out of this. We use IDs as a tiebreak.
+						return fTarget < iOther.fTarget;
+						}
+					else
+						{
+						// Our vectors are of different lengths, so we
+						// return false as discussed above.
+						return false;
+						}
+					}
+				else if (thisIter == thisEnd)
+					{
+					// Again, our vectors are of different lengths so we return false.
+					return false;
+					}
+
+				if (int compare = (*thisIter)->Compare(**otherIter))
+					return compare < 0;
+				++thisIter;
+				++otherIter;
+				}
+			}
+
+		const Val_Any* fTarget;
+		const Val_Any* fValues[kMaxCols];
+		size_t fCount;
+		};
+	// -----
+
+public:
+	Index(const IndexSpec& iIndexSpec)
+	:	fCount(iIndexSpec.size())
+		{
+		ZAssert(fCount <= kMaxCols);
+		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
+		}
+
+	void Insert(const Val_Any* iVal)
+		{
+		Key theKey;
+		if (this->pAsKey(iVal, theKey))
+			sInsertMust(fSet, theKey);
+		}
+
+	void Erase(const Val_Any* iVal)
+		{
+		Key theKey;
+		if (this->pAsKey(iVal, theKey))
+			sEraseMust(fSet, theKey);
+		}
+
+	bool pAsKey(const Val_Any* iVal, Key& oKey)
+		{
+		const Map_Any* asMap = iVal->PGet<Map_Any>();
+		if (not asMap)
+			{
+			// iVal is not a map, can't index.
+			return false;
+			}
+
+		const Val_Any* firstVal = asMap->PGet(fColNames[0]);
+		if (not firstVal)
+			{
+			// The map does not have our first property, so there's no point
+			// in storing it -- no search we can do will help find it.
+			return false;
+			}
+
+		const Val_Any* emptyValPtr = &sDefault<Val_Any>();
+
+		oKey.fCount = fCount;
+		oKey.fValues[0] = firstVal;
+		for (size_t xx = 1; xx < fCount; ++xx)
+			{
+			if (const Val_Any* theVal = asMap->PGet(fColNames[xx]))
+				oKey.fValues[xx] = theVal;
+			else
+				oKey.fValues[xx] = emptyValPtr;
+			}
+
+		oKey.fTarget = iVal;
+		return true;
+		}
+
+	ColName fColNames[kMaxCols];
+	const size_t fCount;
+
+	std::set<Key> fSet;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark Searcher_DatonSet
 
-Searcher_DatonSet::Searcher_DatonSet()
+Searcher_DatonSet::Searcher_DatonSet(const vector<IndexSpec>& iIndexSpecs)
 :	fEvent(Event::sZero())
-	{}
+	{
+	foreachi (ii, iIndexSpecs)
+		fIndexes.push_back(new Index(*ii));
+	}
 
 Searcher_DatonSet::~Searcher_DatonSet()
 	{
@@ -225,6 +358,13 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 		if (iterPSearchPair.second)
 			{
+			if (ZLOGPF(w, eDebug))
+				{
+				w << "\n" << theSearchSpec.GetConcreteHead();
+				w << "\n";
+				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+				}
+
 			// It's a new PSearch, so we'll need to work on it
 			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
 
@@ -460,8 +600,9 @@ void Searcher_DatonSet::pPull()
 							this->pChanged(theVal);
 
 							fMap_Retract.erase(lbRetract);
-							fMap_Assert.insert(lbAssert,
+							Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
 								make_pair(theDaton, make_pair(theEvent, theVal)));
+							this->pIndexInsert(&iter->second.second);
 							}
 						}
 					else
@@ -470,8 +611,9 @@ void Searcher_DatonSet::pPull()
 						const Val_Any theVal = sAsVal(theDaton);
 						this->pChanged(theVal);
 
-						fMap_Assert.insert(lbAssert,
+						Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
 							make_pair(theDaton, make_pair(theEvent, theVal)));
+						this->pIndexInsert(&iter->second.second);
 						}
 					}
 				else
@@ -486,6 +628,7 @@ void Searcher_DatonSet::pPull()
 							// It's more recent.
 							this->pChanged(lbAssert->second.second);
 
+							this->pIndexErase(&lbAssert->second.second);
 							fMap_Assert.erase(lbAssert);
 							fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
 							}
@@ -543,6 +686,18 @@ void Searcher_DatonSet::pChanged(const Val_Any& iVal)
 		}
 	}
 
+void Searcher_DatonSet::pIndexInsert(const Val_Any* iVal)
+	{
+	foreacha (anIndex, fIndexes)
+		anIndex->Insert(iVal);
+	}
+
+void Searcher_DatonSet::pIndexErase(const Val_Any* iVal)
+	{
+	foreacha (anIndex, fIndexes)
+		anIndex->Erase(iVal);
+	}
+
 void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)
 	{
 	iWalker->fCurrent = fMap_Assert.begin();
@@ -555,11 +710,8 @@ void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
 	{
 	iWalker->fCurrent = fMap_Assert.begin();
 	iWalker->fBaseOffset = ioBaseOffset;
-	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
-	for (ConcreteHead::const_iterator ii =
-		theConcreteHead.begin(), end = theConcreteHead.end();
-		ii != end; ++ii)
-		{ oOffsets[ii->first] = ioBaseOffset++; }
+	foreachi (ii, iWalker->fConcreteHead)
+		oOffsets[ii->first] = ioBaseOffset++;
 	}
 
 bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults)

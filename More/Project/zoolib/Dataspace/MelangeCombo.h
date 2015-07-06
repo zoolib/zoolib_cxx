@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zooLib/Dataspace/Melange.h"
 #include "zooLib/Dataspace/RelsWatcher_Relater.h"
+#include "zoolib/Dataspace/Searcher_DatonSet.h"
+
 #include "zoolib/datonset/WrappedDatonSet.h"
 
 namespace ZooLib {
@@ -68,7 +70,8 @@ class MelangeCombo
 ,	public Starter_EventLoopBase
 	{
 public:
-	MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent);
+	MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
+		const std::vector<Dataspace::IndexSpec>& iIndexSpecs);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -91,6 +94,8 @@ private:
 
 	ZRef<DatonSet::WrappedDatonSet> fWDS_Parent;
 	ZRef<DatonSet::WrappedDatonSet> fWDS;
+
+	const std::vector<Dataspace::IndexSpec> fIndexSpecs;
 
 	StartScheduler::Job fJob;
 	ZRef<RelsWatcher_Relater> fRelsWatcher_Relater;
