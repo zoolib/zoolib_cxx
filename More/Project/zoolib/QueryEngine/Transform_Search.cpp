@@ -118,7 +118,6 @@ public:
 	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Bool> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
-
 private:
 	Analysis_t sAnalyze(const ZRef<ValComparand>& iComparand)
 		{
