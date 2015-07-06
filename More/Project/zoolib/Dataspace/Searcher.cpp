@@ -136,8 +136,7 @@ SearchResult& SearchResult::operator=(const SearchResult& iOther)
 	return *this;
 	}
 
-SearchResult::SearchResult(
-	int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
+SearchResult::SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 	{}
