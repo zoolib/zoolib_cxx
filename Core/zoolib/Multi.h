@@ -109,7 +109,7 @@ public: \
 		{ \
 		if (inherited::operator<(iOther)) \
 			return true; \
-		return false; \
+		return f##X_1 < iOther.f##X_1; \
 		} \
 \
 	int Compare(const Multi##X& iOther) const \
