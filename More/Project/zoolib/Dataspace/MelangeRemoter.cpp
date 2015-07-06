@@ -740,7 +740,7 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
 		if (not theChanner)
 			{
-			// No Channer was available, pause for 1s;
+			// No Channer was available, pause for 1s.
 			if (ZLOGF(w, eDebug))
 				w << "Still no Channer";
 			ZThread::sSleep(1);
