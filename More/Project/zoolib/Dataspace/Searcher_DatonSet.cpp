@@ -25,6 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_JSON.h"
+
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Dataspace/Daton_Val.h"
@@ -272,12 +275,12 @@ public:
 			sEraseMust(fSet, theKey);
 		}
 
-	bool pAsKey(const Val_Any* iVal, Key& oKey)
+	bool pAsKey(const Val_Any* iValPtr, Key& oKey)
 		{
-		const Map_Any* asMap = iVal->PGet<Map_Any>();
+		const Map_Any* asMap = iValPtr->PGet<Map_Any>();
 		if (not asMap)
 			{
-			// iVal is not a map, can't index.
+			// iValPtr is not a map, can't index.
 			return false;
 			}
 
@@ -301,7 +304,7 @@ public:
 				oKey.fValues[xx] = emptyValPtr;
 			}
 
-		oKey.fTarget = iVal;
+		oKey.fTarget = iValPtr;
 		return true;
 		}
 
@@ -363,6 +366,25 @@ void Searcher_DatonSet::ModifyRegistrations(
 				w << "\n" << theSearchSpec.GetConcreteHead();
 				w << "\n";
 				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+
+				foreacha (anIndex, fIndexes)
+					{
+					w << "\n";
+					for (size_t xx = 0; xx < anIndex->fCount; ++xx)
+						w << anIndex->fColNames[xx] << " ";
+					foreachi (iterSet, anIndex->fSet)
+						{
+						for (size_t xx = 0; xx < anIndex->fCount; ++xx)
+							{
+							Yad_JSON::sToChan(sYadR(*(iterSet->fValues[xx])), w);
+							w << " ";
+							}
+						w << "--> ";
+						Yad_JSON::sToChan(sYadR(*(iterSet->fTarget)), w);
+						w << "\n";
+						}
+					w << "\n";
+					}
 				}
 
 			// It's a new PSearch, so we'll need to work on it
