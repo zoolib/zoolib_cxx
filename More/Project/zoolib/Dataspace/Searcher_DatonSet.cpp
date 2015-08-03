@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
@@ -35,6 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/DatonSet/Util_Strim_IntervalTreeClock.h"
 
+#include "zoolib/Expr/Util_Expr_Bool_CNF.h"
+
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Walker_Project.h"
 #include "zoolib/QueryEngine/Walker_Result.h"
@@ -44,6 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
+#include "zoolib/ValPred/ValPred_Any.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
@@ -71,191 +75,50 @@ identify those entities that satisfy a RelHead.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Searcher_DatonSet::Walker
-
-class Searcher_DatonSet::Walker
-:	public QE::Walker
-	{
-public:
-	Walker(ZRef<Searcher_DatonSet> iSearcher, const ConcreteHead& iConcreteHead)
-	:	fSearcher(iSearcher)
-	,	fConcreteHead(iConcreteHead)
-		{}
-
-	virtual ~Walker()
-		{}
-
-// From QE::Walker
-	virtual void Rewind()
-		{ fSearcher->pRewind(this); }
-
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
-		map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset)
-		{
-		fSearcher->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
-		return this;
-		}
-
-	virtual bool QReadInc(Val_Any* ioResults)
-		{ return fSearcher->pReadInc(this, ioResults); }
-
-	const ZRef<Searcher_DatonSet> fSearcher;
-	const ConcreteHead fConcreteHead;
-	size_t fBaseOffset;
-	Map_Assert::const_iterator fCurrent;
-	std::set<std::vector<Val_Any> > fPriors;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Searcher_DatonSet::ClientSearch
-
-class Searcher_DatonSet::DLink_ClientSearch_InPSearch
-:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
-	{};
-
-class Searcher_DatonSet::DLink_ClientSearch_NeedsWork
-:	public DListLink<ClientSearch, DLink_ClientSearch_NeedsWork, kDebug>
-	{};
-
-class Searcher_DatonSet::ClientSearch
-:	public DLink_ClientSearch_InPSearch
-,	public DLink_ClientSearch_NeedsWork
-	{
-public:
-	ClientSearch(int64 iRefcon, PSearch* iPSearch)
-	:	fRefcon(iRefcon)
-	,	fPSearch(iPSearch)
-		{}
-
-	int64 const fRefcon;
-	PSearch* const fPSearch;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Searcher_DatonSet::PSearch
-
-class Searcher_DatonSet::DLink_PSearch_InPScan
-:	public DListLink<PSearch, DLink_PSearch_InPScan, kDebug>
-	{};
-
-class Searcher_DatonSet::DLink_PSearch_NeedsWork
-:	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
-	{};
-
-class Searcher_DatonSet::PSearch
-:	public DLink_PSearch_InPScan
-,	public DLink_PSearch_NeedsWork
-	{
-public:
-	PSearch(const SearchSpec& iSearchSpec)
-	:	fSearchSpec(iSearchSpec)
-		{}
-
-	const SearchSpec fSearchSpec;
-
-	DListHead<DLink_ClientSearch_InPSearch> fClientSearch_InPSearch;
-
-	PScan* fPScan;
-
-	ZRef<QE::Result> fResult;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Searcher_DatonSet::PScan
-
-class Searcher_DatonSet::DLink_PScan_NeedsWork
-:	public DListLink<PScan, DLink_PScan_NeedsWork, kDebug>
-	{};
-
-class Searcher_DatonSet::PScan
-:	public DLink_PScan_NeedsWork
-	{
-public:
-	PScan(const ConcreteHead& iConcreteHead)
-	:	fConcreteHead(iConcreteHead)
-		{}
-
-	const ConcreteHead fConcreteHead;
-	DListHead<DLink_PSearch_InPScan> fPSearch_InPScan;
-	ZRef<QE::Result> fResult;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark Index
 
 typedef vector<ColName> IndexSpec;
 
 class Searcher_DatonSet::Index
 	{
+public:
 	static const size_t kMaxCols = 4;
 
-	class Key
-		{
-	public:
-		bool operator<(const Key& iOther) const
-			{
-			// When called by lower_bound this is a key in the set, and iOther
-			// is a key that's being looked for. So when this has more entries
-			// than iOther then this is considered bigger than iOther.
-
-			// When called by upper_bound this is a key that's being looked for
-			// and iOther is a key in the set. So when this has fewer entries
-			// than iOther then this is considered bigger than iOther.
-
-			// The upshot being that when one or other vector of values is
-			// exhausted we return false, indicating that this is not smaller
-			// than iOther.
-
-			const Val_Any* const* otherIter = &iOther.fValues[0];
-			const Val_Any* const* otherEnd = &iOther.fValues[iOther.fCount];
-
-			const Val_Any* const* thisIter = &fValues[0];
-			const Val_Any* const* thisEnd = &fValues[fCount];
-
-			for (;;)
-				{
-				if (otherIter == otherEnd)
-					{
-					// We've run out of iOther, and must be equal so far.
-					if (thisIter == thisEnd)
-						{
-						// We've also run out of this. We use IDs as a tiebreak.
-						return fTarget < iOther.fTarget;
-						}
-					else
-						{
-						// Our vectors are of different lengths, so we
-						// return false as discussed above.
-						return false;
-						}
-					}
-				else if (thisIter == thisEnd)
-					{
-					// Again, our vectors are of different lengths so we return false.
-					return false;
-					}
-
-				if (int compare = (*thisIter)->Compare(**otherIter))
-					return compare < 0;
-				++thisIter;
-				++otherIter;
-				}
-			}
-
-		const Val_Any* fTarget;
-		const Val_Any* fValues[kMaxCols];
-		size_t fCount;
-		};
 	// -----
 
-public:
+	struct Key
+		{
+		const Val_Any* fTarget;
+		const Val_Any* fValues[kMaxCols];
+		};
+
+	// -----
+
+	struct Comparer
+		{
+		Comparer(size_t iCount)
+		:	fCount(iCount)
+			{}
+
+		bool operator()(const Key& iLeft, const Key& iRight) const
+			{
+			for (size_t xx = 0; xx < fCount; ++xx)
+				{
+				if (int compare = sCompare_T(*iLeft.fValues[xx], *iRight.fValues[xx]))
+					return compare < 0;
+				}
+
+			// Tie-break on the *pointer*, just so keys are distinct.
+			return iLeft.fTarget < iRight.fTarget;
+			}
+		const size_t fCount;
+		};
+
+	// -----
+
 	Index(const IndexSpec& iIndexSpec)
 	:	fCount(iIndexSpec.size())
+	,	fSet(Comparer(fCount))
 		{
 		ZAssert(fCount <= kMaxCols);
 		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
@@ -294,7 +157,6 @@ public:
 
 		const Val_Any* emptyValPtr = &sDefault<Val_Any>();
 
-		oKey.fCount = fCount;
 		oKey.fValues[0] = firstVal;
 		for (size_t xx = 1; xx < fCount; ++xx)
 			{
@@ -311,7 +173,135 @@ public:
 	ColName fColNames[kMaxCols];
 	const size_t fCount;
 
-	std::set<Key> fSet;
+	typedef std::set<Key,Comparer> Set;
+	Set fSet;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Searcher_DatonSet::Walker_Map
+
+class Searcher_DatonSet::Walker_Map
+:	public QE::Walker
+	{
+public:
+	Walker_Map(ZRef<Searcher_DatonSet> iSearcher, const ConcreteHead& iConcreteHead)
+	:	fSearcher(iSearcher)
+	,	fConcreteHead(iConcreteHead)
+		{}
+
+	virtual ~Walker_Map()
+		{}
+
+// From QE::Walker
+	virtual void Rewind()
+		{ fSearcher->pRewind(this); }
+
+	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+		map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset)
+		{
+		fSearcher->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		return this;
+		}
+
+	virtual bool QReadInc(Val_Any* ioResults)
+		{ return fSearcher->pReadInc(this, ioResults); }
+
+	const ZRef<Searcher_DatonSet> fSearcher;
+	const ConcreteHead fConcreteHead;
+	size_t fBaseOffset;
+	Map_Assert::const_iterator fCurrent;
+	std::set<std::vector<Val_Any> > fPriors;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Searcher_DatonSet::Walker_Index
+
+class Searcher_DatonSet::Walker_Index
+:	public QE::Walker
+	{
+public:
+	Walker_Index(ZRef<Searcher_DatonSet> iSearcher,
+		Index::Set::const_iterator iBegin, Index::Set::const_iterator iEnd)
+	:	fSearcher(iSearcher)
+	,	fBegin(iBegin)
+	,	fEnd(iEnd)
+		{}
+
+	virtual ~Walker_Index()
+		{}
+
+// From QE::Walker
+	virtual void Rewind()
+		{ fSearcher->pRewind(this); }
+
+	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+		map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset)
+		{
+		fSearcher->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		return this;
+		}
+
+	virtual bool QReadInc(Val_Any* ioResults)
+		{ return fSearcher->pReadInc(this, ioResults); }
+
+	const ZRef<Searcher_DatonSet> fSearcher;
+	const Index::Set::const_iterator fBegin;
+	const Index::Set::const_iterator fEnd;
+
+	Index::Set::const_iterator fCurrent;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Searcher_DatonSet::ClientSearch
+
+class Searcher_DatonSet::DLink_ClientSearch_InPSearch
+:	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
+	{};
+
+class Searcher_DatonSet::DLink_ClientSearch_NeedsWork
+:	public DListLink<ClientSearch, DLink_ClientSearch_NeedsWork, kDebug>
+	{};
+
+class Searcher_DatonSet::ClientSearch
+:	public DLink_ClientSearch_InPSearch
+,	public DLink_ClientSearch_NeedsWork
+	{
+public:
+	ClientSearch(int64 iRefcon, PSearch* iPSearch)
+	:	fRefcon(iRefcon)
+	,	fPSearch(iPSearch)
+		{}
+
+	int64 const fRefcon;
+	PSearch* const fPSearch;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Searcher_DatonSet::PSearch
+
+class Searcher_DatonSet::DLink_PSearch_NeedsWork
+:	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
+	{};
+
+class Searcher_DatonSet::PSearch
+:	public DLink_PSearch_NeedsWork
+	{
+public:
+	PSearch(const SearchSpec& iSearchSpec)
+	:	fSearchSpec(iSearchSpec)
+		{}
+
+	const SearchSpec fSearchSpec;
+
+	DListHead<DLink_ClientSearch_InPSearch> fClientSearch_InPSearch;
+
+	ZRef<QE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -327,10 +317,6 @@ Searcher_DatonSet::Searcher_DatonSet(const vector<IndexSpec>& iIndexSpecs)
 
 Searcher_DatonSet::~Searcher_DatonSet()
 	{
-	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
-		eraser; eraser.Advance())
-		{}
-
 	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{}
@@ -338,10 +324,197 @@ Searcher_DatonSet::~Searcher_DatonSet()
 	for (DListEraser<ClientSearch,DLink_ClientSearch_NeedsWork> eraser = fClientSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{}
+
+	sDeleteAll(fIndexes.begin(), fIndexes.end());
 	}
 
 bool Searcher_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
+
+struct Searcher_DatonSet::Thing
+	{
+	Index* fIndex;
+	vector<Val_Any> fVals_EQ;
+	ZQ<Val_Any> fVal_Lo;
+	bool fLoIsLT;
+	ZQ<Val_Any> fVal_Hi;
+	bool fHiIsGT;
+	Util_Expr_Bool::CNF fCNFRemainder;
+
+	Thing()
+	:	fIndex(nullptr)
+		{}
+	};
+
+typedef ValComparator_Simple::EComparator EComparator;
+
+#if 1
+static EComparator spFlipped(EComparator iEComparator)
+	{
+	switch (iEComparator)
+		{
+		case ValComparator_Simple::eLT: return ValComparator_Simple::eGT;
+		case ValComparator_Simple::eLE: return ValComparator_Simple::eGE;
+		case ValComparator_Simple::eEQ: return ValComparator_Simple::eEQ;
+		case ValComparator_Simple::eNE: return ValComparator_Simple::eNE;
+		case ValComparator_Simple::eGE: return ValComparator_Simple::eLE;
+		case ValComparator_Simple::eGT: return ValComparator_Simple::eLT;
+		}
+	ZUnimplemented();
+	}
+
+static void spMungeIt(const string8& iName, EComparator iEComparator, const Val_Any& iVal,
+	Searcher_DatonSet::Thing& ioThing)
+	{
+	}
+
+void Searcher_DatonSet::pSetupPSearch(PSearch& ioPSearch)
+	{
+	using namespace Util_Expr_Bool;
+
+	const CNF theCNF = sAsCNF(ioPSearch.fSearchSpec.GetRestriction());
+
+	foreachv (Index* curIndex, fIndexes)
+		{
+		CNF curDClauses = theCNF;
+
+		vector<Val_Any> equalityVals;
+		ZQ<Val_Any> tailLowerQ;
+		ZQ<Val_Any> tailUpperQ;
+
+		for (size_t xxColName = 0; xxColName < curIndex->fCount; ++xxColName)
+			{
+			const ColName& curColName = curIndex->fColNames[xxColName];
+
+			EComparator curEComparator;
+			Val_Any curComparand;
+			bool gotCurComparison = false;
+
+			// Go through each DClause -- intersect each clause's effect into curEComparator/curComparand.
+			// If the clause is completely representable as such, remove it from curDClauses.
+
+			for (set<DClause>::iterator iterDClauses = curDClauses.begin();
+				iterDClauses != curDClauses.end();
+				/*no inc*/)
+				{
+				bool gotClauseComparison = false;
+				EComparator clauseEComparator;
+				Val_Any clauseComparand;
+
+				// Every term in this DClause must refer to curColName in a usable fashion. We could
+				// consolidate them into a single comparator. For the moment I'm just going to take
+				// DClauses that have a single term. Fixes needed at ***
+
+				bool everyTermIsRelevant = iterDClauses->size() == 1; // ***
+
+				for (set<Term>::iterator iterTerms = iterDClauses->begin();
+					everyTermIsRelevant && iterTerms != iterDClauses->end();
+					/*no inc*/)
+					{
+					bool termIsRelevant = false;
+					if (ZRef<Expr_Bool_ValPred> theExpr = iterTerms->Get().DynamicCast<Expr_Bool_ValPred>())
+						{
+						const ValPred& theValPred = theExpr->GetValPred();
+
+						if (ZRef<ValComparator_Simple> theValComparator =
+							theValPred.GetComparator().DynamicCast<ValComparator_Simple>())
+							{
+							EComparator theEComparator = theValComparator->GetEComparator();
+
+							ZRef<ValComparand_Const_Any> theComparand_Const =
+								theValPred.GetRHS().DynamicCast<ValComparand_Const_Any>();
+
+							ZRef<ValComparand_Name> theComparand_Name =
+								theValPred.GetLHS().DynamicCast<ValComparand_Name>();
+
+							if (not theComparand_Const || not theComparand_Name)
+								{
+								theComparand_Const = theValPred.GetLHS().DynamicCast<ValComparand_Const_Any>();
+								theComparand_Name = theValPred.GetRHS().DynamicCast<ValComparand_Name>();
+								theEComparator = spFlipped(theEComparator);
+								}
+
+							if (theComparand_Const
+								&& theComparand_Name && theComparand_Name->GetName() == curColName)
+								{
+								if (not gotClauseComparison)
+									{
+									gotClauseComparison = true;
+									clauseEComparator = theEComparator;
+									clauseComparand = theComparand_Const->GetVal();
+									}
+								else
+									{
+									// Don't have the code to union yet.***
+									ZUnimplemented();
+									}
+								termIsRelevant = true;
+								++iterTerms;
+								}
+							}
+						}
+					everyTermIsRelevant = everyTermIsRelevant && termIsRelevant;
+					} // iterTerms
+
+				if (not everyTermIsRelevant)
+					{
+					++iterDClauses;
+					}
+				else
+					{
+					// Remove this DClause from further consideration -- its constraints will be
+					// represented in curComparison.
+					iterDClauses = sEraseInc(curDClauses, iterDClauses);
+
+					if (ZLOGF(w, eDebug))
+						{
+						w << curColName << " " << clauseEComparator << " ";
+						Yad_JSON::sToChan(sYadR(clauseComparand), w);
+						}
+
+					// And intersect clauseComparison with curComparison
+					if (not gotCurComparison)
+						{
+						gotCurComparison = true;
+						curEComparator = clauseEComparator;
+						curComparand = clauseComparand;
+						}
+					else
+						{
+						// Don't have the code to intersect yet.
+						ZUnimplemented();
+						}
+					}
+				} // iterDClauses
+
+			if (not gotCurComparison)
+				{
+				break;
+				}
+			else if (curEComparator == ValComparator_Simple::eEQ)
+				{
+				equalityVals.push_back(curComparand);
+				}
+			else
+				{
+				gotLastComparison = true;
+				lastEComparator = curEComparator;
+				lastComparand = curComparand;
+				break;
+				}
+			} // xxColName
+
+		// We've got equalityVals filled in with stuff we're doing an equality search on, and
+		// may have a comparison in lastComparison.
+		ZLOGTRACE(eDebug);
+		}
+
+//	this->pChooseIndex(theCNF, theIndex, theVals_EQ, theVal_Lo, loIsLT, theVal_Hi, hiIsGT,
+//#		theCNFRemainder);
+
+	}
+
+#endif
 
 void Searcher_DatonSet::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
@@ -355,7 +528,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 		const pair<Map_SearchSpec_PSearch::iterator,bool>
 			iterPSearchPair = fMap_SearchSpec_PSearch.insert(
-				make_pair(theSearchSpec, PSearch(theSearchSpec)));
+				Map_SearchSpec_PSearch::value_type(theSearchSpec, theSearchSpec));
 
 		PSearch* thePSearch = &iterPSearchPair.first->second;
 
@@ -390,27 +563,8 @@ void Searcher_DatonSet::ModifyRegistrations(
 			// It's a new PSearch, so we'll need to work on it
 			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
 
-			// and connect it to a PScan
-			RelHead theRH_Required, theRH_Optional;
-			RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
-
-			const RelHead theRH_Restriction = sGetNames(theSearchSpec.GetRestriction());
-
-			const ConcreteHead theCH = RA::sConcreteHead(
-				theRH_Required, theRH_Optional | theRH_Restriction);
-
-			const pair<Map_PScan::iterator,bool>
-				iterPScanPair = fMap_PScan.insert(make_pair(theCH, PScan(theCH)));
-
-			PScan* thePScan = &iterPScanPair.first->second;
-			thePSearch->fPScan = thePScan;
-			sInsertBackMust(thePScan->fPSearch_InPScan, thePSearch);
-
-			if (iterPScanPair.second)
-				{
-				// It's a new PScan, so we'll need to work on it.
-				sInsertBackMust(fPScan_NeedsWork, thePScan);
-				}
+			// and get it hooked up.
+			this->pSetupPSearch(*thePSearch);
 			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
@@ -428,7 +582,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 	while (iRemovedCount--)
 		{
-		int64 theRefcon = *iRemoved++;
+		const int64 theRefcon = *iRemoved++;
 
 		map<int64, ClientSearch>::iterator iterClientSearch =
 			fMap_Refcon_ClientSearch.find(theRefcon);
@@ -441,14 +595,6 @@ void Searcher_DatonSet::ModifyRegistrations(
 		sEraseMust(thePSearch->fClientSearch_InPSearch, theClientSearch);
 		if (sIsEmpty(thePSearch->fClientSearch_InPSearch))
 			{
-			PScan* thePScan = thePSearch->fPScan;
-			sEraseMust(thePScan->fPSearch_InPScan, thePSearch);
-			if (sIsEmpty(thePScan->fPSearch_InPScan))
-				{
-				sQErase(fPScan_NeedsWork, thePScan);
-				sEraseMust(kDebug, fMap_PScan, thePScan->fConcreteHead);
-				}
-
 			sQErase(fPSearch_NeedsWork, thePSearch);
 			sEraseMust(kDebug, fMap_SearchSpec_PSearch, thePSearch->fSearchSpec);
 			}
@@ -457,9 +603,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 		fMap_Refcon_ClientSearch.erase(iterClientSearch);
 		}
 
-	if (sNotEmpty(fClientSearch_NeedsWork)
-		|| sNotEmpty(fPSearch_NeedsWork)
-		|| sNotEmpty(fPScan_NeedsWork))
+	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
 		{
 		guard.Release();
 		Searcher::pTriggerSearcherResultsAvailable();
@@ -478,24 +622,24 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 	// Go through the PScans that need work, and generate any result needed.
 
-	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
-		eraser; eraser.Advance())
-		{
-		PScan* thePScan = eraser.Current();
-		if (not thePScan->fResult)
-			{
-			ZRef<QE::Walker> theWalker = new Walker(this, thePScan->fConcreteHead);
-			thePScan->fResult = QE::sResultFromWalker(theWalker);
-
-			for (DListIterator<PSearch, DLink_PSearch_InPScan>
-				iter = thePScan->fPSearch_InPScan; iter; iter.Advance())
-				{
-				PSearch* thePSearch = iter.Current();
-				thePSearch->fResult.Clear();
-				sQInsertBack(fPSearch_NeedsWork, thePSearch);
-				}
-			}
-		}
+//	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
+//		eraser; eraser.Advance())
+//		{
+//		PScan* thePScan = eraser.Current();
+//		if (not thePScan->fResult)
+//			{
+//			ZRef<QE::Walker> theWalker = new Walker(this, thePScan->fConcreteHead);
+//			thePScan->fResult = QE::sResultFromWalker(theWalker);
+//
+//			for (DListIterator<PSearch, DLink_PSearch_InPScan>
+//				iter = thePScan->fPSearch_InPScan; iter; iter.Advance())
+//				{
+//				PSearch* thePSearch = iter.Current();
+//				thePSearch->fResult.Clear();
+//				sQInsertBack(fPSearch_NeedsWork, thePSearch);
+//				}
+//			}
+//		}
 
 	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
 		eraser; eraser.Advance())
@@ -504,6 +648,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 		if (not thePSearch->fResult)
 			{
+#if 0
 			PScan* thePScan = thePSearch->fPScan;
 
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
@@ -533,6 +678,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
 				iter = thePSearch->fClientSearch_InPSearch; iter; iter.Advance())
 				{ sQInsertBack(fClientSearch_NeedsWork, iter.Current()); }
+#endif
 			}
 		}
 
@@ -606,10 +752,7 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbAssert->second.first, theEvent))
 							{
 							// It's more recent.
-							const Val_Any theVal = sAsVal(theDaton);
-							this->pChanged(theVal);
 							lbAssert->second.first = theEvent;
-							lbAssert->second.second = theVal;
 							}
 						}
 					else if (lbRetract != fMap_Retract.end() and lbRetract->first == theDaton)
@@ -618,23 +761,20 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbRetract->second, theEvent))
 							{
 							// It's more recent.
-							const Val_Any theVal = sAsVal(theDaton);
-							this->pChanged(theVal);
-
 							fMap_Retract.erase(lbRetract);
+
 							Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
-								make_pair(theDaton, make_pair(theEvent, theVal)));
+								make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
+
 							this->pIndexInsert(&iter->second.second);
 							}
 						}
 					else
 						{
 						// It's not previously known.
-						const Val_Any theVal = sAsVal(theDaton);
-						this->pChanged(theVal);
-
 						Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
-							make_pair(theDaton, make_pair(theEvent, theVal)));
+							make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
+
 						this->pIndexInsert(&iter->second.second);
 						}
 					}
@@ -648,8 +788,6 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbAssert->second.first, theEvent))
 							{
 							// It's more recent.
-							this->pChanged(lbAssert->second.second);
-
 							this->pIndexErase(&lbAssert->second.second);
 							fMap_Assert.erase(lbAssert);
 							fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
@@ -675,38 +813,38 @@ void Searcher_DatonSet::pPull()
 		}
 	}
 
-void Searcher_DatonSet::pChanged(const Val_Any& iVal)
-	{
-	const Map_Any theMap = iVal.Get<Map_Any>();
-	RelHead theRH;
-	for (Map_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
-		theRH |= RA::ColName(theMap.NameOf(i));
-
-	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
-	theRH.insert(string8());
-
-	if (ZLOGPF(w, eDebug + 1))
-		w << "theRH: " << theRH;
-
-	// This is overkill -- we don't necessarily have to rework the whole PScan.
-	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
-		iterPScan != fMap_PScan.end(); ++iterPScan)
-		{
-		PScan* thePScan = &iterPScan->second;
-		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
-			{
-			if (ZLOGPF(w,eDebug + 1))
-				w << "Invalidating PScan: " << thePScan->fConcreteHead;
-			thePScan->fResult.Clear();
-			sQInsertBack(fPScan_NeedsWork, thePScan);
-			}
-		else
-			{
-			if (ZLOGPF(w,eDebug + 1))
-				w << "Not invalidating PScan: " << thePScan->fConcreteHead;
-			}
-		}
-	}
+//void Searcher_DatonSet::pChanged(const Val_Any& iVal)
+//	{
+//	const Map_Any theMap = iVal.Get<Map_Any>();
+//	RelHead theRH;
+//	for (Map_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
+//		theRH |= RA::ColName(theMap.NameOf(i));
+//
+//	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
+//	theRH.insert(string8());
+//
+//	if (ZLOGPF(w, eDebug + 1))
+//		w << "theRH: " << theRH;
+//
+//	// This is overkill -- we don't necessarily have to rework the whole PScan.
+//	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
+//		iterPScan != fMap_PScan.end(); ++iterPScan)
+//		{
+//		PScan* thePScan = &iterPScan->second;
+//		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
+//			{
+//			if (ZLOGPF(w,eDebug + 1))
+//				w << "Invalidating PScan: " << thePScan->fConcreteHead;
+//			thePScan->fResult.Clear();
+//			sQInsertBack(fPScan_NeedsWork, thePScan);
+//			}
+//		else
+//			{
+//			if (ZLOGPF(w,eDebug + 1))
+//				w << "Not invalidating PScan: " << thePScan->fConcreteHead;
+//			}
+//		}
+//	}
 
 void Searcher_DatonSet::pIndexInsert(const Val_Any* iVal)
 	{
@@ -720,34 +858,34 @@ void Searcher_DatonSet::pIndexErase(const Val_Any* iVal)
 		anIndex->Erase(iVal);
 	}
 
-void Searcher_DatonSet::pRewind(ZRef<Walker> iWalker)
+void Searcher_DatonSet::pRewind(ZRef<Walker_Map> iWalker_Map)
 	{
-	iWalker->fCurrent = fMap_Assert.begin();
+	iWalker_Map->fCurrent = fMap_Assert.begin();
 	}
 
-void Searcher_DatonSet::pPrime(ZRef<Walker> iWalker,
+void Searcher_DatonSet::pPrime(ZRef<Walker_Map> iWalker_Map,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	iWalker->fCurrent = fMap_Assert.begin();
-	iWalker->fBaseOffset = ioBaseOffset;
-	foreachi (ii, iWalker->fConcreteHead)
+	iWalker_Map->fCurrent = fMap_Assert.begin();
+	iWalker_Map->fBaseOffset = ioBaseOffset;
+	foreachi (ii, iWalker_Map->fConcreteHead)
 		oOffsets[ii->first] = ioBaseOffset++;
 	}
 
-bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults)
+bool Searcher_DatonSet::pReadInc(ZRef<Walker_Map> iWalker_Map, Val_Any* ioResults)
 	{
-	const ConcreteHead& theConcreteHead = iWalker->fConcreteHead;
+	const ConcreteHead& theConcreteHead = iWalker_Map->fConcreteHead;
 
-	while (iWalker->fCurrent != fMap_Assert.end())
+	while (iWalker_Map->fCurrent != fMap_Assert.end())
 		{
-		if (const Map_Any* theMap = iWalker->fCurrent->second.second.PGet<Map_Any>())
+		if (const Map_Any* theMap = iWalker_Map->fCurrent->second.second.PGet<Map_Any>())
 			{
 			bool gotAll = true;
 			vector<Val_Any> subset;
 			subset.reserve(theConcreteHead.size());
-			size_t offset = iWalker->fBaseOffset;
+			size_t offset = iWalker_Map->fBaseOffset;
 			for (ConcreteHead::const_iterator
 				ii = theConcreteHead.begin(), end = theConcreteHead.end();
 				ii != end; ++ii, ++offset)
@@ -756,7 +894,7 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults)
 				if (theName.empty())
 					{
 					// Empty name indicates that we want the Daton itself.
-					const Val_Any& theVal = iWalker->fCurrent->first;
+					const Val_Any& theVal = iWalker_Map->fCurrent->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
 					}
@@ -777,16 +915,38 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults)
 					}
 				}
 
-			if (gotAll && sQInsert(iWalker->fPriors, subset))
+			if (gotAll && sQInsert(iWalker_Map->fPriors, subset))
 				{
-				++iWalker->fCurrent;
+				++iWalker_Map->fCurrent;
 				return true;
 				}
 			}
-		++iWalker->fCurrent;
+		++iWalker_Map->fCurrent;
 		}
 
 	return false;
+	}
+
+void Searcher_DatonSet::pRewind(ZRef<Walker_Index> iWalker_Index)
+	{
+	iWalker_Index->fCurrent = iWalker_Index->fBegin;
+	}
+
+void Searcher_DatonSet::pPrime(ZRef<Walker_Index> iWalker_Index,
+	const map<string8,size_t>& iOffsets,
+	map<string8,size_t>& oOffsets,
+	size_t& ioBaseOffset)
+	{
+	ZUnimplemented();
+//	iWalker_Map->fCurrent = fMap_Assert.begin();
+//	iWalker_Map->fBaseOffset = ioBaseOffset;
+//	foreachi (ii, iWalker_Map->fConcreteHead)
+//		oOffsets[ii->first] = ioBaseOffset++;
+	}
+
+bool Searcher_DatonSet::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResults)
+	{
+	ZUnimplemented();
 	}
 
 } // namespace Dataspace

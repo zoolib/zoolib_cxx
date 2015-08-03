@@ -67,7 +67,7 @@ private:
 	ZRef<DatonSet::Callable_PullSuggested> fCallable_PullSuggested_Self;
 
 	void pPull();
-	void pChanged(const Val_Any& iVal);
+
 	void pIndexInsert(const Val_Any* iVal);
 	void pIndexErase(const Val_Any* iVal);
 
@@ -75,17 +75,31 @@ private:
 
 	// -----
 
-	class Walker;
-	friend class Walker;
+	class Walker_Map;
+	friend class Walker_Map;
 
-	void pRewind(ZRef<Walker> iWalker);
+	void pRewind(ZRef<Walker_Map> iWalker_Map);
 
-	void pPrime(ZRef<Walker> iWalker,
+	void pPrime(ZRef<Walker_Map> iWalker_Map,
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker> iWalker, Val_Any* ioResults);
+	bool pReadInc(ZRef<Walker_Map> iWalker, Val_Any* ioResults);
+
+	// -----
+
+	class Walker_Index;
+	friend class Walker_Index;
+
+	void pRewind(ZRef<Walker_Index> iWalker_Index);
+
+	void pPrime(ZRef<Walker_Index> iWalker_Index,
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
+
+	bool pReadInc(ZRef<Walker_Index> iWalker, Val_Any* ioResults);
 
 	// -----
 
@@ -93,8 +107,11 @@ private:
 
 	ZRef<Event> fEvent;
 
+public:
+	struct Thing;
 	class Index;
 
+private:
 	std::vector<Index*> fIndexes;
 
 	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
@@ -105,32 +122,24 @@ private:
 
 	// -----
 
-	class PSearch;
-
 	class DLink_ClientSearch_InPSearch;
 	class DLink_ClientSearch_NeedsWork;
 	class ClientSearch;
+
 	std::map<int64,ClientSearch> fMap_Refcon_ClientSearch;
 	DListHead<DLink_ClientSearch_NeedsWork> fClientSearch_NeedsWork;
 
 	// -----
 
-	class DLink_PSearch_InPScan;
 	class DLink_PSearch_NeedsWork;
+	class PSearch;
+
 	typedef std::map<SearchSpec,PSearch> Map_SearchSpec_PSearch;
 	Map_SearchSpec_PSearch fMap_SearchSpec_PSearch;
 
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 
-	// -----
-
-	class DLink_PScan_NeedsWork;
-	class PScan;
-
-	typedef std::map<ConcreteHead,PScan> Map_PScan;
-	Map_PScan fMap_PScan;
-
-	DListHead<DLink_PScan_NeedsWork> fPScan_NeedsWork;
+	void pSetupPSearch(PSearch& ioPSearch);
 	};
 
 } // namespace Dataspace
