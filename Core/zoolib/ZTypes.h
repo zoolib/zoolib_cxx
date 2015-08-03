@@ -51,18 +51,6 @@ extern char sGarbageBuffer[4096];
 #endif
 
 // =================================================================================================
-
-// Use the ZFourCC inline if possible.
-inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
-	{ return uint32((a << 24) | (b << 16) | (c << 8) | d); }
-
-// And the macro if a compile-time constant is needed (case statements).
-#ifndef ZFOURCC
-	#define ZFOURCC(a,b,c,d) \
-		((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
-#endif
-
-// =================================================================================================
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
