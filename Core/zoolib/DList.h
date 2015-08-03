@@ -150,9 +150,8 @@ public:
 
 	L* GetEraseFront()
 		{
-		if (fHeadL)
+		if (L* theL = fHeadL)
 			{
-			L* theL = fHeadL;
 			this->QErase(theL);
 			return theL;
 			}
@@ -161,9 +160,8 @@ public:
 
 	L* GetEraseBack()
 		{
-		if (fHeadL)
+		if (L* theL = fHeadL->fPrev)
 			{
-			L* theL = fHeadL->fPrev;
 			this->QErase(theL);
 			return theL;
 			}
