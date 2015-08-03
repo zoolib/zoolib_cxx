@@ -41,9 +41,9 @@ CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 		{
 		foreachi (iter1, iCNF1)
 			{
-			Clause theClause = *iter0;
-			theClause.insert(iter1->begin(), iter1->end());
-			result.insert(theClause);
+			DClause theDClause = *iter0;
+			theDClause.insert(iter1->begin(), iter1->end());
+			result.insert(theDClause);
 			}
 		}
 	return result;
@@ -51,18 +51,25 @@ CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 
 CNF spTrue()
 	{
-	Clause theClause;
-	theClause.insert(sTrue());
+	DClause theDClause;
+	theDClause.insert(sTrue());
 	CNF result;
-	result.insert(theClause);
+	result.insert(theDClause);
 	return result;
+	}
+
+bool spIsTrue(const CNF& iCNF)
+	{
+	if (iCNF.size() == 1 && iCNF.begin()->size() == 1 && *iCNF.begin()->begin() == sTrue())
+		return true;
+	return false;
 	}
 
 CNF spFalse()
 	{
-	Clause theClause;
+	DClause theDClause;
 	CNF result;
-	result.insert(theClause);
+	result.insert(theDClause);
 	return result;
 	}
 
@@ -96,14 +103,14 @@ public:
 
 	virtual void Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Bool> >& iExpr)
 		{
-		Clause theClause;
+		DClause theDClause;
 		if (fNegating)
-			theClause.insert(sNot(iExpr->Self()));
+			theDClause.insert(sNot(iExpr->Self()));
 		else
-			theClause.insert(iExpr->Self());
+			theDClause.insert(iExpr->Self());
 
 		CNF result;
-		result.insert(theClause);
+		result.insert(theDClause);
 		this->pSetResult(result);
 		}
 
@@ -138,17 +145,26 @@ public:
 			{
 			this->pSetResult(spCrossMultiply(theCNF0, theCNF1));
 			}
+		else if (spIsFalse(theCNF0))
+			{
+			this->pSetResult(spFalse());
+			}
+		else if (spIsFalse(theCNF1))
+			{
+			this->pSetResult(spFalse());
+			}
+		else if (spIsTrue(theCNF0))
+			{
+			this->pSetResult(theCNF1);
+			}
+		else if (spIsTrue(theCNF1))
+			{
+			this->pSetResult(theCNF0);
+			}
 		else
 			{
-			if (spIsFalse(theCNF0) || spIsFalse(theCNF1))
-				{
-				this->pSetResult(spFalse());
-				}
-			else
-				{
-				theCNF1.insert(theCNF0.begin(), theCNF0.end());
-				this->pSetResult(theCNF1);
-				}
+			theCNF1.insert(theCNF0.begin(), theCNF0.end());
+			this->pSetResult(theCNF1);
 			}
 		}
 
@@ -156,21 +172,30 @@ public:
 		{
 		const CNF theCNF0 = this->Do(iRep->GetOp0());
 		CNF theCNF1 = this->Do(iRep->GetOp1());
-		if (fNegating)
+		if (not fNegating)
 			{
-			if (spIsFalse(theCNF0) || spIsFalse(theCNF1))
-				{
-				this->pSetResult(spFalse());
-				}
-			else
-				{
-				theCNF1.insert(theCNF0.begin(), theCNF0.end());
-				this->pSetResult(theCNF1);
-				}
+			this->pSetResult(spCrossMultiply(theCNF0, theCNF1));
+			}
+		else if (spIsFalse(theCNF0))
+			{
+			this->pSetResult(spFalse());
+			}
+		else if (spIsFalse(theCNF1))
+			{
+			this->pSetResult(spFalse());
+			}
+		else if (spIsTrue(theCNF0))
+			{
+			this->pSetResult(theCNF1);
+			}
+		else if (spIsTrue(theCNF1))
+			{
+			this->pSetResult(theCNF0);
 			}
 		else
 			{
-			this->pSetResult(spCrossMultiply(theCNF0, theCNF1));
+			theCNF1.insert(theCNF0.begin(), theCNF0.end());
+			this->pSetResult(theCNF1);
 			}
 		}
 
@@ -184,13 +209,13 @@ protected:
 #pragma mark -
 #pragma mark Util_Expr_Bool
 
-static ZRef<Expr_Bool> spFromClause(
-	const Clause& iClause,
+static ZRef<Expr_Bool> spFromDClause(
+	const DClause& iDClause,
 	const ZRef<Expr_Bool>& iTrue,
 	const ZRef<Expr_Bool>& iFalse)
 	{
 	ZRef<Expr_Bool> result = iFalse;
-	foreachi (iter, iClause)
+	foreachi (iter, iDClause)
 		{
 		ZRef<Expr_Bool> theExpr = iter->Get();
 		if (theExpr == iTrue)
@@ -215,7 +240,7 @@ ZRef<Expr_Bool> sFromCNF(const CNF& iCNF)
 	ZRef<Expr_Bool> result = theTrue;
 	foreachi (iter, iCNF)
 		{
-		ZRef<Expr_Bool> theExpr = spFromClause(*iter, theTrue, theFalse);
+		ZRef<Expr_Bool> theExpr = spFromDClause(*iter, theTrue, theFalse);
 		if (not theExpr || theExpr == theFalse)
 			return theFalse;
 		else if (result == theTrue)
