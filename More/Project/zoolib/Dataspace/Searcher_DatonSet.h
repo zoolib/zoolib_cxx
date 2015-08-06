@@ -107,8 +107,7 @@ private:
 
 	ZRef<Event> fEvent;
 
-public:
-	struct Thing;
+private:
 	class Index;
 
 private:
@@ -131,15 +130,15 @@ private:
 
 	// -----
 
+	class DLink_PSearch_InIndex;
 	class DLink_PSearch_NeedsWork;
 	class PSearch;
 
 	typedef std::map<SearchSpec,PSearch> Map_SearchSpec_PSearch;
 	Map_SearchSpec_PSearch fMap_SearchSpec_PSearch;
-
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 
-	void pSetupPSearch(PSearch& ioPSearch);
+	void pSetupPSearch(PSearch* ioPSearch);
 	};
 
 } // namespace Dataspace

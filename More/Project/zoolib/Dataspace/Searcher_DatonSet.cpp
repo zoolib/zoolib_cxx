@@ -124,18 +124,26 @@ public:
 		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
 		}
 
-	void Insert(const Val_Any* iVal)
+	bool Insert(const Val_Any* iVal)
 		{
 		Key theKey;
 		if (this->pAsKey(iVal, theKey))
+			{
 			sInsertMust(fSet, theKey);
+			return true;
+			}
+		return false;
 		}
 
-	void Erase(const Val_Any* iVal)
+	bool Erase(const Val_Any* iVal)
 		{
 		Key theKey;
 		if (this->pAsKey(iVal, theKey))
+			{
 			sEraseMust(fSet, theKey);
+			return true;
+			}
+		return false;
 		}
 
 	bool pAsKey(const Val_Any* iValPtr, Key& oKey)
@@ -175,6 +183,8 @@ public:
 
 	typedef std::set<Key,Comparer> Set;
 	Set fSet;
+
+	DListHead<DLink_PSearch_InIndex> fPSearch_InIndex;
 	};
 
 // =================================================================================================
@@ -223,9 +233,10 @@ class Searcher_DatonSet::Walker_Index
 :	public QE::Walker
 	{
 public:
-	Walker_Index(ZRef<Searcher_DatonSet> iSearcher,
+	Walker_Index(ZRef<Searcher_DatonSet> iSearcher, const ConcreteHead& iConcreteHead,
 		Index::Set::const_iterator iBegin, Index::Set::const_iterator iEnd)
 	:	fSearcher(iSearcher)
+	,	fConcreteHead(iConcreteHead)
 	,	fBegin(iBegin)
 	,	fEnd(iEnd)
 		{}
@@ -249,6 +260,8 @@ public:
 		{ return fSearcher->pReadInc(this, ioResults); }
 
 	const ZRef<Searcher_DatonSet> fSearcher;
+	const ConcreteHead fConcreteHead;
+
 	const Index::Set::const_iterator fBegin;
 	const Index::Set::const_iterator fEnd;
 
@@ -285,19 +298,33 @@ public:
 #pragma mark -
 #pragma mark Searcher_DatonSet::PSearch
 
+typedef ZQ<pair<Val_Any,bool> > Bound_t; // Value, inclusive
+
+class Searcher_DatonSet::DLink_PSearch_InIndex
+:	public DListLink<PSearch, DLink_PSearch_InIndex, kDebug>
+	{};
+
 class Searcher_DatonSet::DLink_PSearch_NeedsWork
 :	public DListLink<PSearch, DLink_PSearch_NeedsWork, kDebug>
 	{};
 
 class Searcher_DatonSet::PSearch
-:	public DLink_PSearch_NeedsWork
+:	public DLink_PSearch_InIndex
+,	public DLink_PSearch_NeedsWork
 	{
 public:
 	PSearch(const SearchSpec& iSearchSpec)
 	:	fSearchSpec(iSearchSpec)
+	,	fIndex(nullptr)
 		{}
 
 	const SearchSpec fSearchSpec;
+
+	Index* fIndex;
+	vector<Val_Any> fValsEqual;
+	Bound_t fRangeLo;
+	Bound_t fRangeHi;
+	ZRef<Expr_Bool> fRestrictionRemainder;
 
 	DListHead<DLink_ClientSearch_InPSearch> fClientSearch_InPSearch;
 
@@ -331,24 +358,8 @@ Searcher_DatonSet::~Searcher_DatonSet()
 bool Searcher_DatonSet::Intersects(const RelHead& iRelHead)
 	{ return true; }
 
-struct Searcher_DatonSet::Thing
-	{
-	Index* fIndex;
-	vector<Val_Any> fVals_EQ;
-	ZQ<Val_Any> fVal_Lo;
-	bool fLoIsLT;
-	ZQ<Val_Any> fVal_Hi;
-	bool fHiIsGT;
-	Util_Expr_Bool::CNF fCNFRemainder;
-
-	Thing()
-	:	fIndex(nullptr)
-		{}
-	};
-
 typedef ValComparator_Simple::EComparator EComparator;
 
-#if 1
 static EComparator spFlipped(EComparator iEComparator)
 	{
 	switch (iEComparator)
@@ -363,53 +374,42 @@ static EComparator spFlipped(EComparator iEComparator)
 	ZUnimplemented();
 	}
 
-static void spMungeIt(const string8& iName, EComparator iEComparator, const Val_Any& iVal,
-	Searcher_DatonSet::Thing& ioThing)
-	{
-	}
-
-void Searcher_DatonSet::pSetupPSearch(PSearch& ioPSearch)
+void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 	{
 	using namespace Util_Expr_Bool;
 
-	const CNF theCNF = sAsCNF(ioPSearch.fSearchSpec.GetRestriction());
+	const CNF theCNF = sAsCNF(ioPSearch->fSearchSpec.GetRestriction());
+
+	CNF bestDClauses;
+	Index* bestIndex = nullptr;
+	vector<Val_Any> bestValsEqual;
+	Bound_t bestLo, bestHi;
 
 	foreachv (Index* curIndex, fIndexes)
 		{
 		CNF curDClauses = theCNF;
 
-		vector<Val_Any> equalityVals;
-		ZQ<Val_Any> tailLowerQ;
-		ZQ<Val_Any> tailUpperQ;
+		vector<Val_Any> valsEqual;
+
+		Bound_t finalLo, finalHi;
 
 		for (size_t xxColName = 0; xxColName < curIndex->fCount; ++xxColName)
 			{
 			const ColName& curColName = curIndex->fColNames[xxColName];
 
-			EComparator curEComparator;
-			Val_Any curComparand;
-			bool gotCurComparison = false;
-
-			// Go through each DClause -- intersect each clause's effect into curEComparator/curComparand.
-			// If the clause is completely representable as such, remove it from curDClauses.
+			Bound_t clausesLo, clausesHi;
 
 			for (set<DClause>::iterator iterDClauses = curDClauses.begin();
 				iterDClauses != curDClauses.end();
 				/*no inc*/)
 				{
-				bool gotClauseComparison = false;
-				EComparator clauseEComparator;
-				Val_Any clauseComparand;
+				bool everyTermIsRelevant = iterDClauses->size() == 1;
 
-				// Every term in this DClause must refer to curColName in a usable fashion. We could
-				// consolidate them into a single comparator. For the moment I'm just going to take
-				// DClauses that have a single term. Fixes needed at ***
-
-				bool everyTermIsRelevant = iterDClauses->size() == 1; // ***
+				Bound_t termsLo, termsHi;
 
 				for (set<Term>::iterator iterTerms = iterDClauses->begin();
 					everyTermIsRelevant && iterTerms != iterDClauses->end();
-					/*no inc*/)
+					++iterTerms)
 					{
 					bool termIsRelevant = false;
 					if (ZRef<Expr_Bool_ValPred> theExpr = iterTerms->Get().DynamicCast<Expr_Bool_ValPred>())
@@ -435,24 +435,55 @@ void Searcher_DatonSet::pSetupPSearch(PSearch& ioPSearch)
 								}
 
 							if (theComparand_Const
-								&& theComparand_Name && theComparand_Name->GetName() == curColName)
+								&& theComparand_Name
+								&& theComparand_Name->GetName() == curColName)
 								{
-								if (not gotClauseComparison)
-									{
-									gotClauseComparison = true;
-									clauseEComparator = theEComparator;
-									clauseComparand = theComparand_Const->GetVal();
-									}
-								else
-									{
-									// Don't have the code to union yet.***
-									ZUnimplemented();
-									}
 								termIsRelevant = true;
-								++iterTerms;
+
+								const Val_Any& theVal = theComparand_Const->GetVal();
+
+								switch (theEComparator)
+									{
+									case ValComparator_Simple::eLT:
+										{
+										termsLo.Clear();
+										termsHi = Bound_t(theVal, false);
+										break;
+										}
+									case ValComparator_Simple::eLE:
+										{
+										termsLo.Clear();
+										termsHi = Bound_t(theVal, true);
+										break;
+										}
+									case ValComparator_Simple::eEQ:
+										{
+										termsLo = Bound_t(theVal, true);
+										termsHi = Bound_t(theVal, true);
+										break;
+										}
+									case ValComparator_Simple::eGE:
+										{
+										termsLo = Bound_t(theVal, true);
+										termsHi.Clear();
+										break;
+										}
+									case ValComparator_Simple::eGT:
+										{
+										termsLo = Bound_t(theVal, false);
+										termsHi.Clear();
+										break;
+										}
+									default:
+										{
+										termIsRelevant = true;
+										break;
+										}
+									}
 								}
 							}
 						}
+
 					everyTermIsRelevant = everyTermIsRelevant && termIsRelevant;
 					} // iterTerms
 
@@ -466,55 +497,143 @@ void Searcher_DatonSet::pSetupPSearch(PSearch& ioPSearch)
 					// represented in curComparison.
 					iterDClauses = sEraseInc(curDClauses, iterDClauses);
 
-					if (ZLOGF(w, eDebug))
+					if (not clausesLo)
 						{
-						w << curColName << " " << clauseEComparator << " ";
-						Yad_JSON::sToChan(sYadR(clauseComparand), w);
+						clausesLo = termsLo;
 						}
-
-					// And intersect clauseComparison with curComparison
-					if (not gotCurComparison)
+					else if (not termsLo)
+						{}
+					else if (termsLo->second == clausesLo->second)
 						{
-						gotCurComparison = true;
-						curEComparator = clauseEComparator;
-						curComparand = clauseComparand;
+						// terms and clauses are both inclusive or exclusive.
+						if (clausesLo->first < termsLo->first)
+							clausesLo = termsLo;
+						}
+					else if (termsLo->second)
+						{
+						// clauses is inclusive and terms is exclusive. So C1 <= XX && T1 < XX
+						if (clausesLo->first <= termsLo->first)
+							clausesLo = termsLo;
 						}
 					else
 						{
-						// Don't have the code to intersect yet.
-						ZUnimplemented();
+						// clauses is exclusive and terms is inclusive. So C1 < XX && T1 <= XX
+						if (clausesLo->first < termsLo->first)
+							clausesLo = termsLo;
 						}
-					}
+
+					if (not clausesHi)
+						{
+						clausesHi = termsHi;
+						}
+					else if (not termsHi)
+						{}
+					else if (termsHi->second == clausesHi->second)
+						{
+						// terms and clauses are both inclusive or exclusive.
+						if (clausesHi->first > termsHi->first)
+							clausesHi = termsHi;
+						}
+					else if (termsHi->second)
+						{
+						// clauses is exclusive and terms is inclusive. So XX < C1 && XX <= T1
+						if (clausesHi->first > termsHi->first)
+							clausesHi = termsHi;
+						}
+					else
+						{
+						// clauses is inclusive and terms is exclusive. So XX <= C1 && XX < T1
+						if (clausesHi->first >= termsHi->first)
+							clausesHi = termsHi;
+						}
+					} // not everyTermIsRelevant
 				} // iterDClauses
 
-			if (not gotCurComparison)
+			if (clausesLo && clausesHi
+				&& clausesLo->second and clausesHi->second
+				&& clausesLo->first == clausesHi->first)
 				{
-				break;
-				}
-			else if (curEComparator == ValComparator_Simple::eEQ)
-				{
-				equalityVals.push_back(curComparand);
+				// It's an equality.
+				valsEqual.push_back(clausesLo->first);
 				}
 			else
 				{
-				gotLastComparison = true;
-				lastEComparator = curEComparator;
-				lastComparand = curComparand;
+				finalLo = clausesLo;
+				finalHi = clausesHi;
 				break;
 				}
 			} // xxColName
 
-		// We've got equalityVals filled in with stuff we're doing an equality search on, and
-		// may have a comparison in lastComparison.
-		ZLOGTRACE(eDebug);
+		if (curDClauses.size() < theCNF.size())
+			{
+			// We were able to remove at least one clause.
+
+			if (not bestIndex || curDClauses.size() < bestDClauses.size())
+				{
+				// This is the first usable index, or we've removed more clauses than the last best index.
+				bestIndex = curIndex;
+				bestValsEqual = valsEqual;
+				bestLo = finalLo;
+				bestHi = finalHi;
+				bestDClauses = curDClauses;
+				}
+			}
 		}
 
-//	this->pChooseIndex(theCNF, theIndex, theVals_EQ, theVal_Lo, loIsLT, theVal_Hi, hiIsGT,
-//#		theCNFRemainder);
+	// We've got valsEqual filled in with stuff we're doing an equality search on, and
+	// may have a comparison in finalLo/finalHi.
+	if (ZLOGF(w, eDebug))
+		{
+		w << "\n" << bestIndex << " ";
+		if (size_t count = bestValsEqual.size())
+			{
+			w << "(";
+			for (size_t xx = 0; xx < count; ++xx)
+				{
+				if (xx)
+					w << " && ";
+				w << bestIndex->fColNames[xx] << " == ";
+				Yad_JSON::sToChan(sYadR(bestValsEqual[xx]), w);
+				}
+			w << ")";
+			}
 
+		if (bestLo || bestHi)
+			{
+			w << " Range(";
+			if (bestLo)
+				{
+				Yad_JSON::sToChan(sYadR(bestLo->first), w);
+				if (bestLo->second)
+					w << " <= ";
+				else
+					w << " < ";
+				}
+
+			w << bestIndex->fColNames[bestValsEqual.size()];
+
+			if (bestHi)
+				{
+				if (bestHi->second)
+					w << " <= ";
+				else
+					w << " < ";
+				Yad_JSON::sToChan(sYadR(bestHi->first), w);
+				}
+			w << ")";
+			}
+		}
+
+	if (bestIndex)
+		{
+		ioPSearch->fIndex = bestIndex;
+		sInsertBackMust(bestIndex->fPSearch_InIndex, ioPSearch);
+		ioPSearch->fValsEqual.swap(bestValsEqual);
+		ioPSearch->fRangeLo = bestLo;
+		ioPSearch->fRangeHi = bestHi;
+		ioPSearch->fRestrictionRemainder = sFromCNF(bestDClauses);
+		}
 	}
-
-#endif
 
 void Searcher_DatonSet::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
@@ -534,7 +653,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 		if (iterPSearchPair.second)
 			{
-			if (ZLOGPF(w, eDebug))
+			if (ZLOGPF(w, eDebug+1))
 				{
 				w << "\n" << theSearchSpec.GetConcreteHead();
 				w << "\n";
@@ -556,7 +675,6 @@ void Searcher_DatonSet::ModifyRegistrations(
 						Yad_JSON::sToChan(sYadR(*(iterSet->fTarget)), w);
 						w << "\n";
 						}
-					w << "\n";
 					}
 				}
 
@@ -564,7 +682,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
 
 			// and get it hooked up.
-			this->pSetupPSearch(*thePSearch);
+			this->pSetupPSearch(thePSearch);
 			}
 
 		const int64 theRefcon = iAdded->GetRefcon();
@@ -592,6 +710,9 @@ void Searcher_DatonSet::ModifyRegistrations(
 		ClientSearch* theClientSearch = &iterClientSearch->second;
 
 		PSearch* thePSearch = theClientSearch->fPSearch;
+		if (thePSearch->fIndex)
+			sEraseMust(thePSearch->fIndex->fPSearch_InIndex, thePSearch);
+
 		sEraseMust(thePSearch->fClientSearch_InPSearch, theClientSearch);
 		if (sIsEmpty(thePSearch->fClientSearch_InPSearch))
 			{
@@ -620,27 +741,6 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 	oChanged.clear();
 
-	// Go through the PScans that need work, and generate any result needed.
-
-//	for (DListEraser<PScan,DLink_PScan_NeedsWork> eraser = fPScan_NeedsWork;
-//		eraser; eraser.Advance())
-//		{
-//		PScan* thePScan = eraser.Current();
-//		if (not thePScan->fResult)
-//			{
-//			ZRef<QE::Walker> theWalker = new Walker(this, thePScan->fConcreteHead);
-//			thePScan->fResult = QE::sResultFromWalker(theWalker);
-//
-//			for (DListIterator<PSearch, DLink_PSearch_InPScan>
-//				iter = thePScan->fPSearch_InPScan; iter; iter.Advance())
-//				{
-//				PSearch* thePSearch = iter.Current();
-//				thePSearch->fResult.Clear();
-//				sQInsertBack(fPSearch_NeedsWork, thePSearch);
-//				}
-//			}
-//		}
-
 	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{
@@ -648,37 +748,98 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 		if (not thePSearch->fResult)
 			{
-#if 0
-			PScan* thePScan = thePSearch->fPScan;
-
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
+
+			RelHead theRH_Required, theRH_Optional;
+			RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
 
 			const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
 
+			const RelHead theRH_Restriction = sGetNames(theRestriction);
+
+			const ConcreteHead theCH = RA::sConcreteHead(
+				theRH_Required, theRH_Optional | theRH_Restriction);
+
 			ZRef<QE::Walker> theWalker;
-			if (theRestriction && theRestriction != sTrue())
+
+			if (thePSearch->fIndex)
 				{
-				theWalker = new QE::Walker_Result(thePScan->fResult);
-				theWalker = new QE::Walker_Restrict(theWalker, theRestriction);
+				ZLOGTRACE(eDebug);
+
+				Index::Set::const_iterator theBegin, theEnd;
+
+				Index::Key theKey;
+
+		const Map_Any* asMap = iValPtr->PGet<Map_Any>();
+		if (not asMap)
+			{
+			// iValPtr is not a map, can't index.
+			return false;
+			}
+
+		const Val_Any* firstVal = asMap->PGet(fColNames[0]);
+		if (not firstVal)
+			{
+			// The map does not have our first property, so there's no point
+			// in storing it -- no search we can do will help find it.
+			return false;
+			}
+
+		const Val_Any* emptyValPtr = &sDefault<Val_Any>();
+
+
+				Need to construct a Key with vals from fValsEqual. Possibly followed by rangeLo, and rangeHi.
+
+				if (not thePSearch->fRangeLo)
+					{
+					theBegin = thePSearch->fIndex->fSet.begin();
+					}
+				else
+					{
+					Index::Key theKey;
+					ZEnsure(thePSearch->fIndex->pAsKey(&thePSearch->fRangeLo->first, theKey));
+					if (thePSearch->fRangeLo->second)
+						theBegin = thePSearch->fIndex->fSet.lower_bound(theKey);
+					else
+						theBegin = thePSearch->fIndex->fSet.upper_bound(theKey);
+					}
+
+				if (not thePSearch->fRangeHi)
+					{
+					theEnd = thePSearch->fIndex->fSet.end();
+					}
+				else
+					{
+					Index::Key theKey;
+					ZEnsure(thePSearch->fIndex->pAsKey(&thePSearch->fRangeHi->first, theKey));
+					if (thePSearch->fRangeHi->second)
+						theEnd = thePSearch->fIndex->fSet.upper_bound(theKey);
+					else
+						theEnd = thePSearch->fIndex->fSet.lower_bound(theKey);
+					}
+
+				theWalker = new Walker_Index(this, theCH, theBegin, theEnd);
+
+				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
+					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
+				}
+			else
+				{
+				theWalker = new Walker_Map(this, theCH);
+
+				if (theRestriction && theRestriction != sTrue())
+					theWalker = new QE::Walker_Restrict(theWalker, theRestriction);
 				}
 
 			const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
-			if (theRH_Wanted != RA::sRelHead(thePScan->fConcreteHead))
-				{
-				if (not theWalker)
-					theWalker = new QE::Walker_Result(thePScan->fResult);
+			if (theRH_Wanted != RA::sRelHead(theCH))
 				theWalker = new QE::Walker_Project(theWalker, theRH_Wanted);
-				}
 
-			if (not theWalker)
-				thePSearch->fResult = thePScan->fResult;
-			else
-				thePSearch->fResult = QE::sResultFromWalker(theWalker);
+			thePSearch->fResult = QE::sResultFromWalker(theWalker);
 
 			for (DListIterator<ClientSearch, DLink_ClientSearch_InPSearch>
 				iter = thePSearch->fClientSearch_InPSearch; iter; iter.Advance())
 				{ sQInsertBack(fClientSearch_NeedsWork, iter.Current()); }
-#endif
 			}
 		}
 
@@ -727,6 +888,8 @@ void Searcher_DatonSet::pPull()
 
 		const Vector_Event_Delta_t& theVector = theDeltas->GetVector();
 
+		bool anyChanges = false;
+
 		foreachi (iterVector, theVector)
 			{
 			const ZRef<Event>& theEvent = iterVector->first;
@@ -767,6 +930,7 @@ void Searcher_DatonSet::pPull()
 								make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
 
 							this->pIndexInsert(&iter->second.second);
+							anyChanges = true;
 							}
 						}
 					else
@@ -776,6 +940,7 @@ void Searcher_DatonSet::pPull()
 							make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
 
 						this->pIndexInsert(&iter->second.second);
+						anyChanges = true;
 						}
 					}
 				else
@@ -789,6 +954,7 @@ void Searcher_DatonSet::pPull()
 							{
 							// It's more recent.
 							this->pIndexErase(&lbAssert->second.second);
+							anyChanges = true;
 							fMap_Assert.erase(lbAssert);
 							fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
 							}
@@ -810,52 +976,52 @@ void Searcher_DatonSet::pPull()
 					}
 				}
 			}
+
+		if (anyChanges)
+			{
+			// Invalidate all PSearches unattached to indexes.
+			for (Map_SearchSpec_PSearch::iterator
+				iter = fMap_SearchSpec_PSearch.begin(), end = fMap_SearchSpec_PSearch.end();
+				iter != end; ++iter)
+				{
+				if (not iter->second.fIndex)
+					{
+					iter->second.fResult.Clear();
+					sQInsertBack(fPSearch_NeedsWork, &iter->second);
+					}
+				}
+			}
 		}
 	}
-
-//void Searcher_DatonSet::pChanged(const Val_Any& iVal)
-//	{
-//	const Map_Any theMap = iVal.Get<Map_Any>();
-//	RelHead theRH;
-//	for (Map_Any::Index_t i = theMap.Begin(); i != theMap.End(); ++i)
-//		theRH |= RA::ColName(theMap.NameOf(i));
-//
-//	// The Daton itself has changed, so include the daton's pseudo-name in theRH.
-//	theRH.insert(string8());
-//
-//	if (ZLOGPF(w, eDebug + 1))
-//		w << "theRH: " << theRH;
-//
-//	// This is overkill -- we don't necessarily have to rework the whole PScan.
-//	for (Map_PScan::iterator iterPScan = fMap_PScan.begin();
-//		iterPScan != fMap_PScan.end(); ++iterPScan)
-//		{
-//		PScan* thePScan = &iterPScan->second;
-//		if (sIncludes(theRH, RA::sRelHead_Required(thePScan->fConcreteHead)))
-//			{
-//			if (ZLOGPF(w,eDebug + 1))
-//				w << "Invalidating PScan: " << thePScan->fConcreteHead;
-//			thePScan->fResult.Clear();
-//			sQInsertBack(fPScan_NeedsWork, thePScan);
-//			}
-//		else
-//			{
-//			if (ZLOGPF(w,eDebug + 1))
-//				w << "Not invalidating PScan: " << thePScan->fConcreteHead;
-//			}
-//		}
-//	}
 
 void Searcher_DatonSet::pIndexInsert(const Val_Any* iVal)
 	{
 	foreacha (anIndex, fIndexes)
-		anIndex->Insert(iVal);
+		{
+		if (anIndex->Insert(iVal))
+			{
+			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
+				iter; iter.Advance())
+				{
+				sQInsertBack(fPSearch_NeedsWork, iter.Current());
+				}
+			}
+		}
 	}
 
 void Searcher_DatonSet::pIndexErase(const Val_Any* iVal)
 	{
 	foreacha (anIndex, fIndexes)
-		anIndex->Erase(iVal);
+		{
+		if (anIndex->Erase(iVal))
+			{
+			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
+				iter; iter.Advance())
+				{
+				sQInsertBack(fPSearch_NeedsWork, iter.Current());
+				}
+			}
+		}
 	}
 
 void Searcher_DatonSet::pRewind(ZRef<Walker_Map> iWalker_Map)
