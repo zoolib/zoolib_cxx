@@ -98,6 +98,7 @@ public:
 		}
 
 	const std::type_info& Type() const;
+	const std::type_info* TypeIfNotVoid() const;
 
 	void* MutableVoidStar();
 	const void* ConstVoidStar() const;

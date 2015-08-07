@@ -48,19 +48,26 @@ const ZRef<Any::Reffed>& Any::pAsReffed() const
 
 const std::type_info& Any::Type() const
 	{
+	if (const std::type_info* theType = this->TypeIfNotVoid())
+		return *theType;
+	return typeid(void);
+	}
+
+const std::type_info* Any::TypeIfNotVoid() const
+	{
 	if (fDistinguisher)
 		{
 		if (spIsPOD(fDistinguisher))
-			return *spPODTypeInfo(fDistinguisher);
-		return pAsInPlace().Type();
+			return spPODTypeInfo(fDistinguisher);
+		return &pAsInPlace().Type();
 		}
 	else if (const ZRef<Reffed>& theReffed = pAsReffed())
 		{
-		return theReffed->Type();
+		return &theReffed->Type();
 		}
 	else
 		{
-		return typeid(void);
+		return nullptr;
 		}
 	}
 

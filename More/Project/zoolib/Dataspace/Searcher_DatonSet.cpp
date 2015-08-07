@@ -68,10 +68,12 @@ using std::vector;
 namespace QE = QueryEngine;
 namespace RA = RelationalAlgebra;
 
-/*
-Minimally, keep an index of property names in contents -- that way we can efficiently
-identify those entities that satisfy a RelHead.
-*/
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
+	{
+	Yad_JSON::sToChan(sYadR(iVal), w);
+	return w;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -100,19 +102,56 @@ public:
 		:	fCount(iCount)
 			{}
 
-		bool operator()(const Key& iLeft, const Key& iRight) const
+
+		bool spDoIt(const Key& iLeft, const Key& iRight) const
 			{
+			// When called by lower_bound iLeft is a key in the set, and iRight
+			// is a key that's being looked for. So when iLeft has more entries
+			// than iRight then iLeft is considered bigger than iRight.
+
+			// When called by upper_bound iLeft is a key that's being looked for
+			// and iRight is a key in the set. So when iLeft has fewer entries
+			// than iRight then iLeft is is considered bigger than iRight.
+
+			// The upshot being that when one or other vector of values is
+			// exhausted we return false, indicating that iLeft is not smaller
+			// than iRight.
+
+
 			for (size_t xx = 0; xx < fCount; ++xx)
 				{
-				if (int compare = sCompare_T(*iLeft.fValues[xx], *iRight.fValues[xx]))
-					return compare < 0;
-				}
+				const Val_Any* valL = iLeft.fValues[xx];
+				if (not valL)
+					return false;
+				const Val_Any* valR = iRight.fValues[xx];
+				if (not valR)
+					return false;
 
+				const int compare = valL->Compare(*valR);
+				if (compare < 0)
+					return true;
+				if (compare > 0)
+					return false;
+				}
 			// Tie-break on the *pointer*, just so keys are distinct.
 			return iLeft.fTarget < iRight.fTarget;
 			}
+
+		static void spDump(bool result, const Key& iLeft, const Key& iRight);
+
+		bool operator()(const Key& iLeft, const Key& iRight) const
+			{
+			bool result = spDoIt(iLeft, iRight);
+			spDump(result, iLeft, iRight);
+			return result;
+			}
+
 		const size_t fCount;
 		};
+
+	// -----
+
+	typedef std::set<Key,Comparer> Set;
 
 	// -----
 
@@ -174,6 +213,9 @@ public:
 				oKey.fValues[xx] = emptyValPtr;
 			}
 
+		for (size_t xx = fCount; xx < kMaxCols; ++xx)
+			oKey.fValues[xx] = nullptr;
+
 		oKey.fTarget = iValPtr;
 		return true;
 		}
@@ -181,11 +223,31 @@ public:
 	ColName fColNames[kMaxCols];
 	const size_t fCount;
 
-	typedef std::set<Key,Comparer> Set;
 	Set fSet;
 
 	DListHead<DLink_PSearch_InIndex> fPSearch_InIndex;
 	};
+
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::Key& iKey);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::Key& iKey)
+	{
+	w << (intptr_t)iKey.fTarget << ", ";
+	for (size_t xx = 0; xx < Searcher_DatonSet::Index::kMaxCols;++xx)
+		{
+		if (not iKey.fValues[xx])
+			break;
+		if (xx)
+			w << " ";
+		w << *iKey.fValues[xx];
+		}
+	return w;
+	}
+
+void Searcher_DatonSet::Index::Comparer::spDump(bool iResult, const Key& iLeft, const Key& iRight)
+	{
+	if (ZLOGF(w, eDebug))
+		w << iLeft << "/" << iResult<< "/" << iRight;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -261,11 +323,13 @@ public:
 
 	const ZRef<Searcher_DatonSet> fSearcher;
 	const ConcreteHead fConcreteHead;
+	size_t fBaseOffset;
 
 	const Index::Set::const_iterator fBegin;
 	const Index::Set::const_iterator fEnd;
 
 	Index::Set::const_iterator fCurrent;
+	std::set<std::vector<Val_Any> > fPriors;
 	};
 
 // =================================================================================================
@@ -321,6 +385,7 @@ public:
 	const SearchSpec fSearchSpec;
 
 	Index* fIndex;
+
 	vector<Val_Any> fValsEqual;
 	Bound_t fRangeLo;
 	Bound_t fRangeHi;
@@ -592,8 +657,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 				{
 				if (xx)
 					w << " && ";
-				w << bestIndex->fColNames[xx] << " == ";
-				Yad_JSON::sToChan(sYadR(bestValsEqual[xx]), w);
+				w << bestIndex->fColNames[xx] << " == " << bestValsEqual[xx];
 				}
 			w << ")";
 			}
@@ -603,7 +667,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 			w << " Range(";
 			if (bestLo)
 				{
-				Yad_JSON::sToChan(sYadR(bestLo->first), w);
+				w << bestLo->first;
 				if (bestLo->second)
 					w << " <= ";
 				else
@@ -618,7 +682,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 					w << " <= ";
 				else
 					w << " < ";
-				Yad_JSON::sToChan(sYadR(bestHi->first), w);
+				w << bestHi->first;
 				}
 			w << ")";
 			}
@@ -653,7 +717,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 		if (iterPSearchPair.second)
 			{
-			if (ZLOGPF(w, eDebug+1))
+			if (ZLOGPF(w, eDebug+0))
 				{
 				w << "\n" << theSearchSpec.GetConcreteHead();
 				w << "\n";
@@ -664,16 +728,12 @@ void Searcher_DatonSet::ModifyRegistrations(
 					w << "\n";
 					for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 						w << anIndex->fColNames[xx] << " ";
+					w << "\n";
 					foreachi (iterSet, anIndex->fSet)
 						{
 						for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-							{
-							Yad_JSON::sToChan(sYadR(*(iterSet->fValues[xx])), w);
-							w << " ";
-							}
-						w << "--> ";
-						Yad_JSON::sToChan(sYadR(*(iterSet->fTarget)), w);
-						w << "\n";
+							w << *(iterSet->fValues[xx]) << " ";
+						w << "--> " << *(iterSet->fTarget) << "\n";
 						}
 					}
 				}
@@ -764,59 +824,63 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 			if (thePSearch->fIndex)
 				{
-				ZLOGTRACE(eDebug);
+				Index::Key theKeyBegin;
+				theKeyBegin.fTarget = nullptr;
 
-				Index::Set::const_iterator theBegin, theEnd;
+				const size_t countEqual = thePSearch->fValsEqual.size();
+				const size_t countAll = Index::kMaxCols;//thePSearch->fIndex->fCount;
+				ZAssert(countEqual <= countAll);
+				for (size_t xx = 0; xx < countEqual; ++xx)
+					theKeyBegin.fValues[xx] = &thePSearch->fValsEqual[xx];
 
-				Index::Key theKey;
+				for (size_t xx = countEqual; xx < countAll; ++xx)
+					theKeyBegin.fValues[xx] = nullptr;
 
-		const Map_Any* asMap = iValPtr->PGet<Map_Any>();
-		if (not asMap)
-			{
-			// iValPtr is not a map, can't index.
-			return false;
-			}
+				Index::Key theKeyEnd = theKeyBegin;
+				theKeyEnd.fTarget = (Val_Any*)-1;
 
-		const Val_Any* firstVal = asMap->PGet(fColNames[0]);
-		if (not firstVal)
-			{
-			// The map does not have our first property, so there's no point
-			// in storing it -- no search we can do will help find it.
-			return false;
-			}
-
-		const Val_Any* emptyValPtr = &sDefault<Val_Any>();
-
-
-				Need to construct a Key with vals from fValsEqual. Possibly followed by rangeLo, and rangeHi.
-
+				Index::Set::const_iterator theBegin;
 				if (not thePSearch->fRangeLo)
 					{
-					theBegin = thePSearch->fIndex->fSet.begin();
+					theBegin = thePSearch->fIndex->fSet.lower_bound(theKeyBegin);
 					}
 				else
 					{
-					Index::Key theKey;
-					ZEnsure(thePSearch->fIndex->pAsKey(&thePSearch->fRangeLo->first, theKey));
+					theKeyBegin.fValues[countEqual] = &thePSearch->fRangeLo->first;
 					if (thePSearch->fRangeLo->second)
-						theBegin = thePSearch->fIndex->fSet.lower_bound(theKey);
+						theBegin = thePSearch->fIndex->fSet.lower_bound(theKeyBegin);
 					else
-						theBegin = thePSearch->fIndex->fSet.upper_bound(theKey);
+						theBegin = thePSearch->fIndex->fSet.upper_bound(theKeyBegin);
 					}
 
+				if (ZLOGF(w, eDebug))
+					w << theKeyBegin;
+
+				if (theBegin == thePSearch->fIndex->fSet.end())
+					ZLOGTRACE(eDebug);
+
+				Index::Set::const_iterator theEnd;
 				if (not thePSearch->fRangeHi)
 					{
-					theEnd = thePSearch->fIndex->fSet.end();
+					theEnd = thePSearch->fIndex->fSet.upper_bound(theKeyEnd);
 					}
 				else
 					{
-					Index::Key theKey;
-					ZEnsure(thePSearch->fIndex->pAsKey(&thePSearch->fRangeHi->first, theKey));
+					theKeyEnd.fValues[countEqual] = &thePSearch->fRangeHi->first;
 					if (thePSearch->fRangeHi->second)
-						theEnd = thePSearch->fIndex->fSet.upper_bound(theKey);
+						theEnd = thePSearch->fIndex->fSet.lower_bound(theKeyEnd);
 					else
-						theEnd = thePSearch->fIndex->fSet.lower_bound(theKey);
+						theEnd = thePSearch->fIndex->fSet.upper_bound(theKeyEnd);
 					}
+
+				if (ZLOGF(w, eDebug))
+					w << theKeyEnd;
+
+				if (theEnd == thePSearch->fIndex->fSet.end())
+					ZLOGTRACE(eDebug);
+
+				if (theBegin == theEnd)
+					ZLOGTRACE(eDebug);
 
 				theWalker = new Walker_Index(this, theCH, theBegin, theEnd);
 
@@ -1103,16 +1167,63 @@ void Searcher_DatonSet::pPrime(ZRef<Walker_Index> iWalker_Index,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	ZUnimplemented();
-//	iWalker_Map->fCurrent = fMap_Assert.begin();
-//	iWalker_Map->fBaseOffset = ioBaseOffset;
-//	foreachi (ii, iWalker_Map->fConcreteHead)
-//		oOffsets[ii->first] = ioBaseOffset++;
+	iWalker_Index->fCurrent = iWalker_Index->fBegin;
+	iWalker_Index->fBaseOffset = ioBaseOffset;
+	foreachi (ii, iWalker_Index->fConcreteHead)
+		oOffsets[ii->first] = ioBaseOffset++;
 	}
 
 bool Searcher_DatonSet::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResults)
 	{
-	ZUnimplemented();
+	const ConcreteHead& theConcreteHead = iWalker_Index->fConcreteHead;
+
+	while (iWalker_Index->fCurrent != iWalker_Index->fEnd)
+		{
+		if (const Map_Any* theMap = iWalker_Index->fCurrent->fTarget->PGet<Map_Any>())
+			{
+			bool gotAll = true;
+			vector<Val_Any> subset;
+			subset.reserve(theConcreteHead.size());
+			size_t offset = iWalker_Index->fBaseOffset;
+			for (ConcreteHead::const_iterator
+				ii = theConcreteHead.begin(), end = theConcreteHead.end();
+				ii != end; ++ii, ++offset)
+				{
+				const string8& theName = ii->first;
+				if (theName.empty())
+					{
+					// Empty name indicates that we want the Daton itself.
+					const Val_Any& theVal = *iWalker_Index->fCurrent->fTarget;
+					ioResults[offset] = theVal;
+					subset.push_back(theVal);
+					}
+				else if (const Val_Any* theVal = sPGet(*theMap, theName))
+					{
+					ioResults[offset] = *theVal;
+					subset.push_back(*theVal);
+					}
+				else if (not ii->second)
+					{
+					ioResults[offset] = AbsentOptional_t();
+					subset.push_back(AbsentOptional_t());
+					}
+				else
+					{
+					gotAll = false;
+					break;
+					}
+				}
+
+			if (gotAll && sQInsert(iWalker_Index->fPriors, subset))
+				{
+				++iWalker_Index->fCurrent;
+				return true;
+				}
+			}
+		++iWalker_Index->fCurrent;
+		}
+
+	return false;
 	}
 
 } // namespace Dataspace

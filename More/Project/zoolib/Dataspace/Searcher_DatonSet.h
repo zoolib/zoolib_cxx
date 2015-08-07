@@ -107,7 +107,7 @@ private:
 
 	ZRef<Event> fEvent;
 
-private:
+public:
 	class Index;
 
 private:
