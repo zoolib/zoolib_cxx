@@ -90,7 +90,7 @@ public:
 
 	struct Key
 		{
-		const Val_Any* fTarget;
+		const Map_Assert::value_type* fMapEntryP;
 		const Val_Any* fValues[kMaxCols];
 		};
 
@@ -127,14 +127,11 @@ public:
 				if (not valR)
 					return false;
 
-				const int compare = valL->Compare(*valR);
-				if (compare < 0)
-					return true;
-				if (compare > 0)
-					return false;
+				if (const int compare = valL->Compare(*valR))
+					return compare < 0;
 				}
 			// Tie-break on the *pointer*, just so keys are distinct.
-			return iLeft.fTarget < iRight.fTarget;
+			return iLeft.fMapEntryP < iRight.fMapEntryP;
 			}
 
 		static void spDump(bool result, const Key& iLeft, const Key& iRight);
@@ -142,7 +139,7 @@ public:
 		bool operator()(const Key& iLeft, const Key& iRight) const
 			{
 			bool result = spDoIt(iLeft, iRight);
-			spDump(result, iLeft, iRight);
+//##			spDump(result, iLeft, iRight);
 			return result;
 			}
 
@@ -163,10 +160,10 @@ public:
 		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
 		}
 
-	bool Insert(const Val_Any* iVal)
+	bool Insert(const Map_Assert::value_type* iMapEntryP)
 		{
 		Key theKey;
-		if (this->pAsKey(iVal, theKey))
+		if (this->pAsKey(iMapEntryP, theKey))
 			{
 			sInsertMust(fSet, theKey);
 			return true;
@@ -174,10 +171,10 @@ public:
 		return false;
 		}
 
-	bool Erase(const Val_Any* iVal)
+	bool Erase(const Map_Assert::value_type* iMapEntryP)
 		{
 		Key theKey;
-		if (this->pAsKey(iVal, theKey))
+		if (this->pAsKey(iMapEntryP, theKey))
 			{
 			sEraseMust(fSet, theKey);
 			return true;
@@ -185,9 +182,9 @@ public:
 		return false;
 		}
 
-	bool pAsKey(const Val_Any* iValPtr, Key& oKey)
+	bool pAsKey(const Map_Assert::value_type* iMapEntryP, Key& oKey)
 		{
-		const Map_Any* asMap = iValPtr->PGet<Map_Any>();
+		const Map_Any* asMap = iMapEntryP->second.second.PGet<Map_Any>();
 		if (not asMap)
 			{
 			// iValPtr is not a map, can't index.
@@ -216,7 +213,8 @@ public:
 		for (size_t xx = fCount; xx < kMaxCols; ++xx)
 			oKey.fValues[xx] = nullptr;
 
-		oKey.fTarget = iValPtr;
+		oKey.fMapEntryP = iMapEntryP;
+
 		return true;
 		}
 
@@ -231,7 +229,7 @@ public:
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::Key& iKey);
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::Key& iKey)
 	{
-	w << (intptr_t)iKey.fTarget << ", ";
+	w << (uint64)iKey.fMapEntryP << ", ";
 	for (size_t xx = 0; xx < Searcher_DatonSet::Index::kMaxCols;++xx)
 		{
 		if (not iKey.fValues[xx])
@@ -647,7 +645,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 
 	// We've got valsEqual filled in with stuff we're doing an equality search on, and
 	// may have a comparison in finalLo/finalHi.
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eDebug+1))
 		{
 		w << "\n" << bestIndex << " ";
 		if (size_t count = bestValsEqual.size())
@@ -688,7 +686,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 			}
 		}
 
-	if (bestIndex)
+	if (true && bestIndex)
 		{
 		ioPSearch->fIndex = bestIndex;
 		sInsertBackMust(bestIndex->fPSearch_InIndex, ioPSearch);
@@ -717,7 +715,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 
 		if (iterPSearchPair.second)
 			{
-			if (ZLOGPF(w, eDebug+0))
+			if (ZLOGPF(w, eDebug+1))
 				{
 				w << "\n" << theSearchSpec.GetConcreteHead();
 				w << "\n";
@@ -733,7 +731,7 @@ void Searcher_DatonSet::ModifyRegistrations(
 						{
 						for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 							w << *(iterSet->fValues[xx]) << " ";
-						w << "--> " << *(iterSet->fTarget) << "\n";
+						w << "--> " << *(iterSet->fMapEntryP) << "\n";
 						}
 					}
 				}
@@ -824,63 +822,64 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 
 			if (thePSearch->fIndex)
 				{
-				Index::Key theKeyBegin;
-				theKeyBegin.fTarget = nullptr;
+				Index::Key theKey;
 
 				const size_t countEqual = thePSearch->fValsEqual.size();
 				const size_t countAll = Index::kMaxCols;//thePSearch->fIndex->fCount;
 				ZAssert(countEqual <= countAll);
 				for (size_t xx = 0; xx < countEqual; ++xx)
-					theKeyBegin.fValues[xx] = &thePSearch->fValsEqual[xx];
+					theKey.fValues[xx] = &thePSearch->fValsEqual[xx];
 
 				for (size_t xx = countEqual; xx < countAll; ++xx)
-					theKeyBegin.fValues[xx] = nullptr;
-
-				Index::Key theKeyEnd = theKeyBegin;
-				theKeyEnd.fTarget = (Val_Any*)-1;
+					theKey.fValues[xx] = nullptr;
 
 				Index::Set::const_iterator theBegin;
 				if (not thePSearch->fRangeLo)
 					{
-					theBegin = thePSearch->fIndex->fSet.lower_bound(theKeyBegin);
+					theKey.fMapEntryP = nullptr;
+					theBegin = thePSearch->fIndex->fSet.lower_bound(theKey);
 					}
 				else
 					{
-					theKeyBegin.fValues[countEqual] = &thePSearch->fRangeLo->first;
+					theKey.fValues[countEqual] = &thePSearch->fRangeLo->first;
 					if (thePSearch->fRangeLo->second)
-						theBegin = thePSearch->fIndex->fSet.lower_bound(theKeyBegin);
+						{
+						theKey.fMapEntryP = nullptr;
+						theBegin = thePSearch->fIndex->fSet.lower_bound(theKey);
+						}
 					else
-						theBegin = thePSearch->fIndex->fSet.upper_bound(theKeyBegin);
+						{
+						theKey.fMapEntryP = (Map_Assert::value_type*)-1;
+						theBegin = thePSearch->fIndex->fSet.upper_bound(theKey);
+						}
 					}
 
-				if (ZLOGF(w, eDebug))
-					w << theKeyBegin;
-
-				if (theBegin == thePSearch->fIndex->fSet.end())
-					ZLOGTRACE(eDebug);
+				if (ZLOGF(w, eDebug+1))
+					w << theKey;
 
 				Index::Set::const_iterator theEnd;
 				if (not thePSearch->fRangeHi)
 					{
-					theEnd = thePSearch->fIndex->fSet.upper_bound(theKeyEnd);
+					theKey.fMapEntryP = (Map_Assert::value_type*)-1;
+					theEnd = thePSearch->fIndex->fSet.upper_bound(theKey);
 					}
 				else
 					{
-					theKeyEnd.fValues[countEqual] = &thePSearch->fRangeHi->first;
+					theKey.fValues[countEqual] = &thePSearch->fRangeHi->first;
 					if (thePSearch->fRangeHi->second)
-						theEnd = thePSearch->fIndex->fSet.lower_bound(theKeyEnd);
+						{
+						theKey.fMapEntryP = (Map_Assert::value_type*)-1;
+						theEnd = thePSearch->fIndex->fSet.upper_bound(theKey);
+						}
 					else
-						theEnd = thePSearch->fIndex->fSet.upper_bound(theKeyEnd);
+						{
+						theKey.fMapEntryP = nullptr;
+						theEnd = thePSearch->fIndex->fSet.lower_bound(theKey);
+						}
 					}
 
-				if (ZLOGF(w, eDebug))
-					w << theKeyEnd;
-
-				if (theEnd == thePSearch->fIndex->fSet.end())
-					ZLOGTRACE(eDebug);
-
-				if (theBegin == theEnd)
-					ZLOGTRACE(eDebug);
+				if (ZLOGF(w, eDebug+1))
+					w << theKey;
 
 				theWalker = new Walker_Index(this, theCH, theBegin, theEnd);
 
@@ -993,7 +992,7 @@ void Searcher_DatonSet::pPull()
 							Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
 								make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
 
-							this->pIndexInsert(&iter->second.second);
+							this->pIndexInsert(&*iter);
 							anyChanges = true;
 							}
 						}
@@ -1003,7 +1002,7 @@ void Searcher_DatonSet::pPull()
 						Map_Assert::const_iterator iter = fMap_Assert.insert(lbAssert,
 							make_pair(theDaton, make_pair(theEvent, sAsVal(theDaton))));
 
-						this->pIndexInsert(&iter->second.second);
+						this->pIndexInsert(&*iter);
 						anyChanges = true;
 						}
 					}
@@ -1017,7 +1016,7 @@ void Searcher_DatonSet::pPull()
 						if (sIsBefore(lbAssert->second.first, theEvent))
 							{
 							// It's more recent.
-							this->pIndexErase(&lbAssert->second.second);
+							this->pIndexErase(&*lbAssert);
 							anyChanges = true;
 							fMap_Assert.erase(lbAssert);
 							fMap_Retract.insert(lbRetract, make_pair(theDaton, theEvent));
@@ -1058,31 +1057,35 @@ void Searcher_DatonSet::pPull()
 		}
 	}
 
-void Searcher_DatonSet::pIndexInsert(const Val_Any* iVal)
+void Searcher_DatonSet::pIndexInsert(const Map_Assert::value_type* iMapEntryP)
 	{
 	foreacha (anIndex, fIndexes)
 		{
-		if (anIndex->Insert(iVal))
+		if (anIndex->Insert(iMapEntryP))
 			{
 			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
 				iter; iter.Advance())
 				{
-				sQInsertBack(fPSearch_NeedsWork, iter.Current());
+				PSearch* thePSearch = iter.Current();
+				sQInsertBack(fPSearch_NeedsWork, thePSearch);
+				thePSearch->fResult.Clear();
 				}
 			}
 		}
 	}
 
-void Searcher_DatonSet::pIndexErase(const Val_Any* iVal)
+void Searcher_DatonSet::pIndexErase(const Map_Assert::value_type* iMapEntryP)
 	{
 	foreacha (anIndex, fIndexes)
 		{
-		if (anIndex->Erase(iVal))
+		if (anIndex->Erase(iMapEntryP))
 			{
 			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
 				iter; iter.Advance())
 				{
-				sQInsertBack(fPSearch_NeedsWork, iter.Current());
+				PSearch* thePSearch = iter.Current();
+				sQInsertBack(fPSearch_NeedsWork, thePSearch);
+				thePSearch->fResult.Clear();
 				}
 			}
 		}
@@ -1179,7 +1182,8 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioRe
 
 	while (iWalker_Index->fCurrent != iWalker_Index->fEnd)
 		{
-		if (const Map_Any* theMap = iWalker_Index->fCurrent->fTarget->PGet<Map_Any>())
+		const Map_Assert::value_type* theTarget = iWalker_Index->fCurrent->fMapEntryP;
+		if (const Map_Any* theMap = theTarget->second.second.PGet<Map_Any>())
 			{
 			bool gotAll = true;
 			vector<Val_Any> subset;
@@ -1193,7 +1197,7 @@ bool Searcher_DatonSet::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioRe
 				if (theName.empty())
 					{
 					// Empty name indicates that we want the Daton itself.
-					const Val_Any& theVal = *iWalker_Index->fCurrent->fTarget;
+					const Val_Any& theVal = theTarget->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
 					}

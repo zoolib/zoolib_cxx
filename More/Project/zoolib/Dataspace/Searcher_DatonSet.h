@@ -68,8 +68,11 @@ private:
 
 	void pPull();
 
-	void pIndexInsert(const Val_Any* iVal);
-	void pIndexErase(const Val_Any* iVal);
+	typedef DatonSet::Event Event;
+	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
+
+	void pIndexInsert(const Map_Assert::value_type* iMapEntryP);
+	void pIndexErase(const Map_Assert::value_type* iMapEntryP);
 
 	std::set<ZRef<DatonSet::Callable_PullFrom> > fCallables_PullFrom;
 
@@ -103,8 +106,6 @@ private:
 
 	// -----
 
-	typedef DatonSet::Event Event;
-
 	ZRef<Event> fEvent;
 
 public:
@@ -113,7 +114,6 @@ public:
 private:
 	std::vector<Index*> fIndexes;
 
-	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
 	Map_Assert fMap_Assert;
 
 	typedef std::map<DatonSet::Daton,ZRef<Event> > Map_Retract;

@@ -151,7 +151,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		if (ZLOGF(w, eDebug+1))
+		if (ZLOGF(w, eDebug+0))
 			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
 
 		this->pSetResult(fSearcher->pMakeWalker_Search(fPQuery,
@@ -209,10 +209,10 @@ void Relater_Searcher::ModifyRegistrations(
 		// As does this one:
 		theRel = QueryEngine::sTransform_Search(theRel);
 
-		if (ZLOGF(w, eDebug + 1))
+		if (ZLOGF(w, eDebug + 0))
 			{
-			w << "Before:\n" << iAdded->GetRel();
-			w << "After:\n" << theRel;
+			w << "\nBefore:\n" << iAdded->GetRel();
+			w << "\nAfter:\n" << theRel;
 			}
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
