@@ -246,9 +246,10 @@ public:
 
 		// However, fRestriction may well also reference names *not* in the concrete, if we're
 		// part of the embeddee of an embed. The simplest solution for now is to pull up any
-		// terms referencing names *not* in the concrete. So, get fRestriction into CNF. Separate it
-		// into stuff that references names in the concrete, which we'll stuff into a search. Any
-		// referencing names not in the concrete are stuffed into a restrict, wrapped around the search.
+		// terms referencing names *not* in the concrete. So, get fRestriction into CNF. Separate
+		// it into stuff that references names in the concrete, which we'll stuff into a search.
+		// Any referencing names not in the concrete are stuffed into a restrict, wrapped around
+		// the search.
 
 		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 
