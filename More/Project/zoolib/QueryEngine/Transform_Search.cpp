@@ -233,20 +233,7 @@ public:
 				sQInsert(theRH_Optional, theColName);
 			}
 
-		fLikelySize = 1;
-
-//		if (fRestriction == sTrue())
-//			{
-//			fLikelySize = 100;
-//			}
-//		else if (HasConst().Do(fRestriction))
-//			{
-//			fLikelySize = 1;
-//			}
-//		else
-//			{
-//			fLikelySize = 100;
-//			}
+		// TODO: Something with fLikelySize.
 
 		// However, fRestriction may well also reference names *not* in the concrete, if we're
 		// part of the embeddee of an embed. The simplest solution for now is to pull up any
