@@ -37,6 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace QueryEngine {
 
+namespace RA = RelationalAlgebra;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark Visitor_DoMakeWalker
@@ -49,22 +51,22 @@ void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	ZUnimplemented();
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Calc(op0, iExpr->GetColName(), iExpr->GetCallable()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
 	{ this->pSetResult(new Walker_Const(iExpr->GetColName(), iExpr->GetVal())); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<RelationalAlgebra::Expr_Rel_Dee>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<RA::Expr_Rel_Dee>& iExpr)
 	{ this->pSetResult(new Walker_Dee); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Dum(const ZRef<RelationalAlgebra::Expr_Rel_Dum>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dum(const ZRef<RA::Expr_Rel_Dum>& iExpr)
 	{ this->pSetResult(new Walker_Dum); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -73,7 +75,7 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Ex
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -82,25 +84,25 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Project(op0, iExpr->GetProjectRelHead()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Rename(op0, iExpr->GetNew(), iExpr->GetOld()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Restrict(op0, iExpr->GetExpr_Bool()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Expr_Rel_Union>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
