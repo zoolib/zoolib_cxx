@@ -89,12 +89,16 @@ struct Analysis_t
 	,	fAnyNameUnknown(iAnyNameUnknown)
 		{}
 
+	Analysis_t operator|(const Analysis_t& r)
+		{
+		return Analysis_t(
+			this->fAnyIsConst || r.fAnyIsConst,
+			this->fAnyNameUnknown || r.fAnyNameUnknown);
+		}
+
 	bool fAnyIsConst;
 	bool fAnyNameUnknown;
 	};
-
-Analysis_t operator|(const Analysis_t& l, const Analysis_t& r)
-	{ return Analysis_t(l.fAnyIsConst || r.fAnyIsConst, l.fAnyNameUnknown || r.fAnyNameUnknown); }
 
 class Visitor_Analyze
 :	public virtual Visitor_Do_T<Analysis_t>
