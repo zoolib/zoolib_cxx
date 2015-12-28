@@ -340,7 +340,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
 		{
-		// Remember curent state
+		// Remember current state
 		const ZRef<Expr_Bool> priorRestriction = fRestriction;
 		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename = fRename;
