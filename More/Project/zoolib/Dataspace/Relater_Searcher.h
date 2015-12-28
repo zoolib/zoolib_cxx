@@ -78,6 +78,7 @@ protected:
 		const ConcreteHead& iConcreteHead);
 
 	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery,
+		const RelHead& iRelHead_Bound,
 		const RelationalAlgebra::Rename& iRename,
 		const RelHead& iRelHead_Optional,
 		const ZRef<Expr_Bool>& iExpr_Bool);

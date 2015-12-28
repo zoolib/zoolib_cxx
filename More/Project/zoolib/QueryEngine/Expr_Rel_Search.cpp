@@ -30,6 +30,9 @@ namespace ZooLib {
 template <>
 int sCompare_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR)
 	{
+	if (int compare = sCompare_T(iL.GetRelHead_Bound(), iR.GetRelHead_Bound()))
+		return compare;
+
 	if (int compare = sCompare_T(iL.GetRename(), iR.GetRename()))
 		return compare;
 
@@ -47,10 +50,12 @@ namespace QueryEngine {
 #pragma mark -
 #pragma mark Expr_Rel_Search
 
-Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::Rename& iRename,
+Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::RelHead& iRelHead_Bound,
+	const RelationalAlgebra::Rename& iRename,
 	const RelationalAlgebra::RelHead& iRelHead_Optional,
 	const ZRef<Expr_Bool>& iExpr_Bool)
-:	fRename(iRename)
+:	fRelHead_Bound(iRelHead_Bound)
+,	fRename(iRename)
 ,	fRelHead_Optional(iRelHead_Optional)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
@@ -79,6 +84,9 @@ ZRef<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Clone()
 
 void Expr_Rel_Search::Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Search(this); }
+
+const RelationalAlgebra::RelHead& Expr_Rel_Search::GetRelHead_Bound() const
+	{ return fRelHead_Bound; }
 
 const RelationalAlgebra::Rename& Expr_Rel_Search::GetRename() const
 	{ return fRename; }

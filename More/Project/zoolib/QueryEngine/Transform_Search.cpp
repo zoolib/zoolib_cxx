@@ -242,9 +242,11 @@ public:
 		// Any referencing names not in the concrete are stuffed into a restrict, wrapped around
 		// the search.
 
-		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
+		// What do we do about overlaps between theRH_All and fLeftNames? Assert
+		// because it's a semantic error at a higher level?
+		Visitor_Analyze theVisitor(theRH_All | fLeftNames);
 
-		Visitor_Analyze theVisitor(theRH_All);
+		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 
 		foreachi (clause, Util_Expr_Bool::sAsCNF(fRestriction))
 			{
@@ -276,7 +278,7 @@ public:
 				}
 			}
 
-		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(newRename, theRH_Optional, conjunctionSearch);
+		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(fLeftNames, newRename, theRH_Optional, conjunctionSearch);
 		if (conjunctionRestrict)
 			theRel &= conjunctionRestrict;
 
@@ -315,6 +317,8 @@ public:
 		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
 		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
 		SaveSetRestore<Rename> ssr2(fRename, Rename());
+		SaveRestore<RelHead> ssr3(fLeftNames);
+		fLeftNames |= iExpr->GetLeftNames();
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
@@ -456,6 +460,7 @@ public:
 		this->pSetResult(iRel);
 		}
 
+	RelHead fLeftNames;
 	ZRef<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
 	Rename fRename;

@@ -40,7 +40,8 @@ class Expr_Rel_Search
 	{
 	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Search(const RelationalAlgebra::Rename& iRename,
+	Expr_Rel_Search(const RelationalAlgebra::RelHead& iRelHead_Bound,
+		const RelationalAlgebra::Rename& iRename,
 		const RelationalAlgebra::RelHead& iRelHead_Optional,
 		const ZRef<Expr_Bool>& iExpr_Bool);
 
@@ -56,11 +57,13 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor);
 
+	const RelationalAlgebra::RelHead& GetRelHead_Bound() const;
 	const RelationalAlgebra::Rename& GetRename() const;
 	const RelationalAlgebra::RelHead& GetRelHead_Optional() const;
 	const ZRef<Expr_Bool>& GetExpr_Bool() const;
 
 private:
+	const RelationalAlgebra::RelHead fRelHead_Bound;
 	const RelationalAlgebra::Rename fRename;
 	const RelationalAlgebra::RelHead fRelHead_Optional;
 	const ZRef<Expr_Bool> fExpr_Bool;

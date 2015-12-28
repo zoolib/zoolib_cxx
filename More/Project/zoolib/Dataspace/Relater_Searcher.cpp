@@ -155,7 +155,10 @@ public:
 			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
 
 		this->pSetResult(fSearcher->pMakeWalker_Search(fPQuery,
-			iExpr->GetRename(), iExpr->GetRelHead_Optional(), iExpr->GetExpr_Bool()));
+			iExpr->GetRelHead_Bound(),
+			iExpr->GetRename(),
+			iExpr->GetRelHead_Optional(),
+			iExpr->GetExpr_Bool()));
 		}
 
 	ZRef<Relater_Searcher> const fSearcher;
@@ -390,33 +393,35 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery
 	const ConcreteHead& iConcreteHead)
 	{ return this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(iConcreteHead, null)); }
 
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
-	const RelationalAlgebra::Rename& iRename,
-	const RelHead& iRelHead_Optional,
-	const ZRef<Expr_Bool>& iExpr_Bool)
-	{
-	ZGuardMtxR guard(fMtxR);
-
-	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
-	vector<pair<string8,string8> > finalRename;
-	ConcreteHead theConcreteHead;
-	foreachi (iter, iRename)
-		{
-		const string8& source = iter->first;
-		if (source != iter->second)
-			sPushBack(finalRename, *iter);
-
-		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
-		}
-
-	ZRef<QueryEngine::Walker> theWalker =
-		this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(theConcreteHead, iExpr_Bool));
-
-	foreachi (iter, finalRename)
-		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
-
-	return theWalker;
-	}
+// NDY
+//ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
+//	const RelHead& iRelHead_Bound,
+//	const RelationalAlgebra::Rename& iRename,
+//	const RelHead& iRelHead_Optional,
+//	const ZRef<Expr_Bool>& iExpr_Bool)
+//	{
+//	ZGuardMtxR guard(fMtxR);
+//
+//	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
+//	vector<pair<string8,string8> > finalRename;
+//	ConcreteHead theConcreteHead;
+//	foreachi (iter, iRename)
+//		{
+//		const string8& source = iter->first;
+//		if (source != iter->second)
+//			sPushBack(finalRename, *iter);
+//
+//		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
+//		}
+//
+//	ZRef<QueryEngine::Walker> theWalker =
+//		this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(theConcreteHead, iExpr_Bool));
+//
+//	foreachi (iter, finalRename)
+//		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
+//
+//	return theWalker;
+//	}
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQuery,
 	const SearchSpec& iSearchSpec)
