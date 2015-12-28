@@ -35,7 +35,7 @@ namespace QueryEngine {
 class Walker_Embed : public Walker
 	{
 public:
-	Walker_Embed(const ZRef<Walker>& iWalker_Parent,
+	Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelationalAlgebra::RelHead& iLeftNames,
 		const string8& iColName, const ZRef<Walker>& iWalker_Embedee);
 
 	virtual ~Walker_Embed();
@@ -52,6 +52,7 @@ public:
 
 private:
 	ZRef<Walker> fWalker_Parent;
+	const RelationalAlgebra::RelHead fLeftNames;
 	const string8 fColName;
 	ZRef<Walker> fWalker_Embedee;
 

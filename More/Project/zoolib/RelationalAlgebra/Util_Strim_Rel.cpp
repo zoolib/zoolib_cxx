@@ -151,7 +151,7 @@ void Visitor::Visit_Expr_Rel_Search(const ZRef<QueryEngine::Expr_Rel_Search>& iE
 	const ChanW_UTF& w = pStrimW();
 	w << "Search(";
 	Util_Strim_RelHead::sWrite_RenameWithOptional(
-		iExpr->GetRename(), iExpr->GetRelHead_Optional(), w);
+	iExpr->GetRename(), iExpr->GetRelHead_Optional(), w);
 	w << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetExpr_Bool());
@@ -302,6 +302,14 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 				sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
+				const ZQ<RelHead> theLeftNamesQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanR, iChanU);
+				if (theLeftNamesQ)
+					{
+					spRead_WSComma(iChanR, iChanU, " after LeftNames in Embed");
+
+					sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+					}
+
 				if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanR, iChanU))
 					throw ParseException("Expected ColName as first param in Embed");
 				else
@@ -316,7 +324,7 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 					if (ZRef<Expr_Rel,false> innerRel = sFromStrim(iChanR, iChanU))
 						throw ParseException("Expected Rel as second param in Embed");
 					else
-						result = sEmbed(outerRel, *theColNameQ, innerRel);
+						result = sEmbed(outerRel, sGet(theLeftNamesQ), *theColNameQ, innerRel);
 					}
 				}
 			}

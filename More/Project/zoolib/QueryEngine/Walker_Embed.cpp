@@ -34,13 +34,16 @@ using std::vector;
 
 using namespace Util_STL;
 
+using RelationalAlgebra::RelHead;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark Walker_Embed
 
-Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent,
+Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelHead& iLeftNames,
 	const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
 :	fWalker_Parent(iWalker_Parent)
+,	fLeftNames(iLeftNames)
 ,	fColName(iColName)
 ,	fWalker_Embedee(iWalker_Embedee)
 	{}

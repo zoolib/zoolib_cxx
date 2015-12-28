@@ -69,7 +69,7 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Ex
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
 		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Walker_Embed(op0, iExpr->GetColName(), op1));
+			this->pSetResult(new Walker_Embed(op0, iExpr->GetLeftNames(), iExpr->GetColName(), op1));
 		}
 	}
 

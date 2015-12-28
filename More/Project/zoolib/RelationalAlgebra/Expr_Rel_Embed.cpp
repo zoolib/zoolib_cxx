@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T
+#pragma mark - sCompare_T
 
 template <>
 int sCompare_T(const RelationalAlgebra::Expr_Rel_Embed& iL,
@@ -46,12 +45,12 @@ ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Embed)
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Embed
+#pragma mark - Expr_Rel_Embed
 
-Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0,
-	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
+Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
+		const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
 :	inherited(iOp0, iEmbedee)
+,	fLeftNames(iLeftNames)
 ,	fColName(iColName)
 	{}
 
@@ -75,28 +74,29 @@ ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
-	{ return new Expr_Rel_Embed(iOp0, fColName, iOp1); }
+	{ return new Expr_Rel_Embed(iOp0, fLeftNames, fColName, iOp1); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Embed(this); }
+
+const RelHead& Expr_Rel_Embed::GetLeftNames() const
+	{ return fLeftNames; }
 
 const ColName& Expr_Rel_Embed::GetColName() const
 	{ return fColName; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Embed
+#pragma mark - Visitor_Expr_Rel_Embed
 
 void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
-ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0,
+ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
 	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
-	{ return new Expr_Rel_Embed(iOp0, iColName, iEmbedee); }
+	{ return new Expr_Rel_Embed(iOp0, iLeftNames, iColName, iEmbedee); }
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib
