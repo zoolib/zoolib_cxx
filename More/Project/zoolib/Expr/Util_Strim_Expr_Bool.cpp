@@ -101,7 +101,7 @@ ZRef<Expr_Bool> spAndable(
 	if (ZRef<Expr_Bool,false> child = spNotable(iCallable_Terminal, iChanR, iChanU))
 		throw ParseException("Expected notable");
 	else if (isNotted)
-			return sNot(child);
+		return sNot(child);
 	else
 		return child;
 	}

@@ -193,7 +193,7 @@ public:
 		fProjection = UniSet<ColName>::sUniversal();
 
 		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		ZRef<RA::Expr_Rel> newCalc = new RA::Expr_Rel_Calc(newOp0, theName, iExpr->GetCallable());
+		ZRef<RA::Expr_Rel> newCalc = sCalc(newOp0, theName, iExpr->GetCallable());
 
 		fRestriction = priorRestriction;
 		fProjection = priorProjection;
@@ -326,8 +326,9 @@ public:
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
+		const RelHead& theLeftNames = RA::sRenamed(fRename, iExpr->GetLeftNames());
 		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
-		ZRef<RA::Expr_Rel> newEmbed = new RA::Expr_Rel_Embed(newOp0, theName, newOp1);
+		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theLeftNames, theName, newOp1);
 
 		// But rename is now superfluous -- our children will have done whatever they need
 		// with it. pApplyRestrictProject will apply any restriction/projection that remains.
@@ -374,9 +375,9 @@ public:
 		fRename.clear();
 
 		if (rightLikelySize < leftLikelySize)
-			this->pApplyRestrictProject(new RA::Expr_Rel_Product(op1, op0));
+			this->pApplyRestrictProject(sProduct(op1, op0));
 		else
-			this->pApplyRestrictProject(new RA::Expr_Rel_Product(op0, op1));
+			this->pApplyRestrictProject(sProduct(op0, op1));
 		}
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)

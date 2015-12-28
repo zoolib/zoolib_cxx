@@ -225,7 +225,8 @@ void Relater_Searcher::ModifyRegistrations(
 
 		const pair<map<int64,ClientQuery>::iterator,bool> iterClientQueryPair =
 			fMap_Refcon_ClientQuery.insert(
-			make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+				make_pair(theRefcon, ClientQuery(theRefcon, thePQuery)));
+
 		ZAssert(iterClientQueryPair.second);
 
 		ClientQuery* theClientQuery = &iterClientQueryPair.first->second;

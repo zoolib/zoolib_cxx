@@ -466,6 +466,7 @@ void Searcher_DatonSet::pSetupPSearch(PSearch* ioPSearch)
 				iterDClauses != curDClauses.end();
 				/*no inc*/)
 				{
+				// Hack for now -- only start with success if we have a single clause.
 				bool everyTermIsRelevant = iterDClauses->size() == 1;
 
 				Bound_t termsLo, termsHi;

@@ -235,8 +235,8 @@ static ZRef<Expr_Bool> spFromDClause(
 
 ZRef<Expr_Bool> sFromCNF(const CNF& iCNF)
 	{
-	ZRef<Expr_Bool> theTrue = sTrue();
-	ZRef<Expr_Bool> theFalse = sFalse();
+	const ZRef<Expr_Bool> theTrue = sTrue();
+	const ZRef<Expr_Bool> theFalse = sFalse();
 	ZRef<Expr_Bool> result = theTrue;
 	foreachi (iter, iCNF)
 		{

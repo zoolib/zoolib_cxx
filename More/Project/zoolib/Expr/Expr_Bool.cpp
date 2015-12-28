@@ -43,6 +43,7 @@ ZRef<Expr_Bool> Expr_Bool_True::sTrue()
 	static ZRef<Expr_Bool_True> spTrue = new Expr_Bool_True;
 	return spTrue;
 	}
+//	{ return sSingleton<ZRef<Expr_Bool_True> >(); } ???
 
 void Expr_Bool_True::Accept(const Visitor& iVisitor)
 	{
