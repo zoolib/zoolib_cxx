@@ -30,8 +30,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark RelopsTraits
 
-struct RelopsTraits_Has
-	{ enum { Yes = 1, No = 0 }; };
+// Default templates positively say "No", and with Yes being SFINAE.
 
 template <class S> struct RelopsTraits_HasEQ { enum { No = 1 }; };
 template <class S> struct RelopsTraits_HasNE { enum { No = 1 }; };
@@ -39,6 +38,11 @@ template <class S> struct RelopsTraits_HasLT { enum { No = 1 }; };
 template <class S> struct RelopsTraits_HasGT { enum { No = 1 }; };
 template <class S> struct RelopsTraits_HasLE { enum { No = 1 }; };
 template <class S> struct RelopsTraits_HasGE { enum { No = 1 }; };
+
+// Explicit instantiations of RelopsTraits_HasXX can derive from this, so Yes is present
+// with a truthy value, and No with a falsey one.
+struct RelopsTraits_Has
+	{ enum { Yes = 1, No = 0 }; };
 
 // =================================================================================================
 #pragma mark -
