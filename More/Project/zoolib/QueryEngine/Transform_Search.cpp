@@ -244,7 +244,8 @@ public:
 
 		// What do we do about overlaps between theRH_All and fLeftNames? Assert
 		// because it's a semantic error at a higher level?
-		Visitor_Analyze theVisitor(theRH_All | fLeftNames);
+		Visitor_Analyze theVisitor(theRH_All); //###
+//		Visitor_Analyze theVisitor(theRH_All | fLeftNames);
 
 		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 

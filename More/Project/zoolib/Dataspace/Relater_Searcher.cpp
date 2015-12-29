@@ -35,6 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Result.h"
 #include "zoolib/QueryEngine/Walker_Rename.h"
 //#include "zoolib/QueryEngine/Walker_Restrict.h"
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -46,7 +47,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
 #include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
-
 
 namespace ZooLib {
 namespace Dataspace {
@@ -315,7 +315,8 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 			if (ZLOGF(w, eDebug))
 				{
 				w << "Query, " << elapsed * 1e3 << "ms\n";
-				w << thePQuery->fRel;
+				w << thePQuery->fRel << "\n";
+				sToStrim(thePQuery->fResult, w);
 				}
 			}
 
