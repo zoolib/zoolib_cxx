@@ -646,8 +646,7 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 //		}
 	else
 		{
-		w << "null";
-//##		" /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
+		w << "NULL" << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
@@ -704,7 +703,7 @@ Visitor_Writer::Visitor_Writer(
 
 void Visitor_Writer::Visit_YadR(const ZRef<YadR>& iYadR)
 	{
-	fChanW << "null";
+	fChanW << "NULL";
 	if (fOptions.fBreakStrings)
 		{
 		fChanW << " /*!! Unhandled yad: "
