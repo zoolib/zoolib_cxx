@@ -48,7 +48,7 @@ namespace RelationalAlgebra {
 #pragma mark - Expr_Rel_Embed
 
 Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
-		const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
+	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
 :	inherited(iOp0, iEmbedee)
 ,	fLeftNames(iLeftNames)
 ,	fColName(iColName)
