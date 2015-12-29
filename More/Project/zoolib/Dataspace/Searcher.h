@@ -46,15 +46,19 @@ public:
 	~SearchSpec();
 	SearchSpec operator=(const SearchSpec& iOther);
 
-	SearchSpec(const ConcreteHead& iConcreteHead, const ZRef<Expr_Bool>& iRestriction);
+	SearchSpec(const RelHead& iBoundNames,
+		const ConcreteHead& iConcreteHead,
+		const ZRef<Expr_Bool>& iRestriction);
 
 	bool operator==(const SearchSpec& iOther) const;
 	bool operator<(const SearchSpec& iOther) const;
 
+	const RelHead& GetBoundNames() const;
 	const ConcreteHead& GetConcreteHead() const;
 	const ZRef<Expr_Bool>& GetRestriction() const;
 
 private:
+	RelHead fBoundNames;
 	ConcreteHead fConcreteHead;
 	ZRef<Expr_Bool> fRestriction;
 	};

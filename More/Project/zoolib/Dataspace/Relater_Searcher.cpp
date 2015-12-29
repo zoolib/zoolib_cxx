@@ -391,42 +391,43 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery,
 	const ConcreteHead& iConcreteHead)
-	{ return this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(iConcreteHead, null)); }
+	{ return this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(RelHead(), iConcreteHead, null)); }
 
-// NDY
-//ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
-//	const RelHead& iRelHead_Bound,
-//	const RelationalAlgebra::Rename& iRename,
-//	const RelHead& iRelHead_Optional,
-//	const ZRef<Expr_Bool>& iExpr_Bool)
-//	{
-//	ZGuardMtxR guard(fMtxR);
-//
-//	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
-//	vector<pair<string8,string8> > finalRename;
-//	ConcreteHead theConcreteHead;
-//	foreachi (iter, iRename)
-//		{
-//		const string8& source = iter->first;
-//		if (source != iter->second)
-//			sPushBack(finalRename, *iter);
-//
-//		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
-//		}
-//
-//	ZRef<QueryEngine::Walker> theWalker =
-//		this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(theConcreteHead, iExpr_Bool));
-//
-//	foreachi (iter, finalRename)
-//		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
-//
-//	return theWalker;
-//	}
+ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
+	const RelHead& iRelHead_Bound,
+	const RelationalAlgebra::Rename& iRename,
+	const RelHead& iRelHead_Optional,
+	const ZRef<Expr_Bool>& iExpr_Bool)
+	{
+	ZGuardMtxR guard(fMtxR);
+
+	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
+	vector<pair<string8,string8> > finalRename;
+	ConcreteHead theConcreteHead;
+	foreachi (iter, iRename)
+		{
+		const string8& source = iter->first;
+		if (source != iter->second)
+			sPushBack(finalRename, *iter);
+
+		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
+		}
+
+	ZRef<QueryEngine::Walker> theWalker = this->pMakeWalker_SearchSpec(iPQuery,
+		SearchSpec(iRelHead_Bound, theConcreteHead, iExpr_Bool));
+
+	foreachi (iter, finalRename)
+		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
+
+	return theWalker;
+	}
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQuery,
 	const SearchSpec& iSearchSpec)
 	{
 	ZGuardMtxR guard(fMtxR);
+
+//somewhere in here we need to do the different thing -- we're gonna get primed later with some values in boundnames, *that's* when we do the registration.
 
 	PRegSearch* thePRegSearch = nullptr;
 	if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, iSearchSpec))
@@ -450,6 +451,9 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQue
 
 		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
 
+		// Note that we could just ayncize this -- we don't actually need the value that's in
+		// thePRegSearch right now, we just don't have a walker that can hold the promise of
+		// a result.
 		while (not thePRegSearch->fResult)
 			fCnd.Wait(fMtxR); // *2* see above at *1*
 		}
