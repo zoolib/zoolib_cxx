@@ -75,6 +75,7 @@ protected:
 	friend class Walker_Bingo;
 
 	void pFinalize(Walker_Bingo* iWalker_Bingo);
+	void pUnregister(Walker_Bingo* iWalker_Bingo);
 
 	void pRewind(ZRef<Walker_Bingo> iWalker_Bingo);
 

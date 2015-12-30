@@ -195,6 +195,7 @@ public:
 
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)
+,	fNextRefcon(1)
 	{}
 
 Relater_Searcher::~Relater_Searcher()
@@ -496,6 +497,7 @@ public:
 		ZRef<Expr_Bool> iRestriction)
 	:	fRelater(iRelater)
 	,	fPQuery(iPQuery)
+	,	fRefcon(0)
 	,	fBoundNames(iBoundNames.begin(), iBoundNames.end())
 	,	fConcreteHead(iConcreteHead)
 		{
@@ -540,6 +542,9 @@ public:
 
 	const ZRef<Relater_Searcher> fRelater;
 	PQuery* fPQuery;
+	bool fReady;
+	int64 fRefcon;
+
 	const vector<ColName> fBoundNames;
 	ConcreteHead fConcreteHead;
 	ZRef<Expr_Bool> fRestriction;
@@ -553,39 +558,67 @@ public:
 
 void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
 	{
+	this->pUnregister(iWalker_Bingo);
+
+	if (iWalker_Bingo->FinishFinalize())
+		delete iWalker_Bingo;
+	}
+
+void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
+	{
+	if (iWalker_Bingo->fRefcon)
+		{
+		ZGuardMtxR guard(fMtxR);
+		fSearcher->ModifyRegistrations(nullptr, 0, &iWalker_Bingo->fRefcon, 1);
+		iWalker_Bingo->fRefcon = 0;
+		}
 	}
 
 void Relater_Searcher::pRewind(ZRef<Walker_Bingo> iWalker_Bingo)
-	{
-
-	}
+	{ this->pUnregister(iWalker_Bingo.Get()); }
 
 ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 	const std::map<string8,size_t>& iOffsets,
 	std::map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+	// Remember the offsets from which we're fetching bound values.
 	foreachi (ii, iWalker_Bingo->fBoundNames)
-		{
-		const size_t theOffset = sGetMust(iOffsets, *ii);
-		sPushBack(iWalker_Bingo->fBoundOffsets, theOffset);
-		}
+		sPushBack(iWalker_Bingo->fBoundOffsets, sGetMust(iOffsets, *ii));
 
+	// Where we're going to start putting our output.
 	iWalker_Bingo->fBaseOffset = ioBaseOffset;
 	foreachi (ii, iWalker_Bingo->fConcreteHead)
 		{
-		// Hmm, watch for *ii being in fBoundNames.
+		// Hmm, we should watch for *ii being in fBoundNames.
 		oOffsets[ii->first] = ioBaseOffset++;
 		}
 	return iWalker_Bingo;
-
 	}
 
-bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker, Val_Any* ioResults)
+bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
 	{
-	// If we've not been called, or rewind has been called since the last call, then
-	// we need to release the prior search registration and create a new one. The search
-	// must have its expr_bool rewritten using the new bound values.
+	if (not iWalker_Bingo->fRefcon)
+		{
+		ZGuardMtxR guard(fMtxR);
+
+		// Walker is new, or has been rewound. Get a refcon for it.
+		iWalker_Bingo->fRefcon = fNextRefcon++;
+
+		for (size_t xx = 0; xx < iWalker_Bingo->fVCs.size(); ++xx)
+			iWalker_Bingo->fVCs[xx]->SetVal(ioResults[iWalker_Bingo->fBoundOffsets[xx]]);
+
+		const AddedSearch theAS(iWalker_Bingo->fRefcon,
+			SearchSpec(iWalker_Bingo->fConcreteHead, iWalker_Bingo->fRestriction));
+
+		guard.Release();
+
+		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
+		}
+
+	while (not iWalker_Bingo->fResult)
+		fCnd.Wait(fMtxR); // *2* see above at *1*
+
 	}
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
