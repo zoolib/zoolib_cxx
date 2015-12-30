@@ -41,19 +41,16 @@ class DoRename
 ,	public virtual Visitor_Expr_Bool_ValPred
 	{
 public:
-	DoRename(const map<string,string>& iRename);
+	DoRename(const map<string,string>& iRename)
+	:	fRename(iRename)
+		{}
 
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+		{ this->pSetResult(new Expr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
+
 private:
 	const map<string,string>& fRename;
 	};
-
-DoRename::DoRename(const map<string,string>& iRename)
-:	fRename(iRename)
-	{}
-
-void DoRename::Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
-	{ this->pSetResult(new Expr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
 
 } // anonymous namespace
 
