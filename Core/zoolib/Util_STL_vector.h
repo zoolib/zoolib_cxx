@@ -175,6 +175,15 @@ bool sQInsertSorted(std::vector<Base>& ioVec, const Derived& iElement)
 	return true;
 	}
 
+template <typename Base, typename Derived>
+ZQ<size_t> sQFindSorted(const std::vector<Base>& iVec, const Derived& iElement)
+	{
+	typename std::vector<Base>::const_iterator ii = lower_bound(iVec.begin(), iVec.end(), iElement);
+	if (ii != iVec.end() && *ii == iElement)
+		return ii - iVec.begin();
+	return null;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark Util_STL, sXXXMust
