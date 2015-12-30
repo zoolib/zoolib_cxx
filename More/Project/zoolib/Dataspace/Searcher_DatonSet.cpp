@@ -720,7 +720,8 @@ void Searcher_DatonSet::ModifyRegistrations(
 				{
 				w << "\n" << theSearchSpec.GetConcreteHead();
 				w << "\n";
-				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(
+					sDefault(), w, theSearchSpec.GetRestriction());
 
 				foreacha (anIndex, fIndexes)
 					{
