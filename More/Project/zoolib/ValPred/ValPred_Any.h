@@ -41,8 +41,8 @@ public:
 // Our protocol
 	const Val_Any& GetVal() const;
 
-private:
-	const Val_Any fVal;
+protected:
+	Val_Any fVal;
 	};
 
 template <>
