@@ -38,8 +38,7 @@ SearchSpec::SearchSpec()
 	{}
 
 SearchSpec::SearchSpec(const SearchSpec& iOther)
-:	fBoundNames(iOther.fBoundNames)
-,	fConcreteHead(iOther.fConcreteHead)
+:	fConcreteHead(iOther.fConcreteHead)
 ,	fRestriction(iOther.fRestriction)
 	{}
 
@@ -48,32 +47,25 @@ SearchSpec::~SearchSpec()
 
 SearchSpec SearchSpec::operator=(const SearchSpec& iOther)
 	{
-	fBoundNames = iOther.fBoundNames;
 	fConcreteHead = iOther.fConcreteHead;
 	fRestriction = iOther.fRestriction;
 	return *this;
 	}
 
-SearchSpec::SearchSpec(const RelHead& iBoundNames,
-	const ConcreteHead& iConcreteHead,
+SearchSpec::SearchSpec(const ConcreteHead& iConcreteHead,
 	const ZRef<Expr_Bool>& iRestriction)
-:	fBoundNames(iBoundNames)
-,	fConcreteHead(iConcreteHead)
+:	fConcreteHead(iConcreteHead)
 ,	fRestriction(iRestriction)
 	{}
 
 bool SearchSpec::operator==(const SearchSpec& iOther) const
 	{
-	return fBoundNames == iOther.fBoundNames
-		&& fConcreteHead == iOther.fConcreteHead
+	return fConcreteHead == iOther.fConcreteHead
 		&& 0 == sCompare_Ref_T(fRestriction, iOther.fRestriction);
 	}
 
 bool SearchSpec::operator<(const SearchSpec& iOther) const
 	{
-	if (fBoundNames < iOther.fBoundNames)
-		return true;
-
 	if (fConcreteHead < iOther.fConcreteHead)
 		return true;
 
@@ -82,9 +74,6 @@ bool SearchSpec::operator<(const SearchSpec& iOther) const
 
 	return -1 == sCompare_Ref_T(fRestriction, iOther.fRestriction);
 	}
-
-const RelHead& SearchSpec::GetBoundNames() const
-	{ return fBoundNames; }
 
 const ConcreteHead& SearchSpec::GetConcreteHead() const
 	{ return fConcreteHead; }
