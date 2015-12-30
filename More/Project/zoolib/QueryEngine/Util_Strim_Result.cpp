@@ -1,0 +1,55 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2010 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
+namespace ZooLib {
+namespace QueryEngine {
+
+using RelationalAlgebra::RelHead;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark - sToStrim
+
+void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
+	{
+	const RelHead& theRH = iResult->GetRelHead();
+
+	w << theRH << "\n";
+
+	for (size_t yy = 0, theCount = iResult->Count(); yy < theCount; ++yy)
+		{
+		const Val_Any* theRow = iResult->GetValsAt(yy);
+		for (size_t xx = 0; xx < theRH.size(); ++xx)
+			{
+			if (xx)
+				w << ", ";
+			Util_Any_JSON::sWrite(true, theRow[xx], w);
+			}
+		w << "\n";
+		}
+	}
+
+} // namespace QueryEngine
+} // namespace ZooLib
