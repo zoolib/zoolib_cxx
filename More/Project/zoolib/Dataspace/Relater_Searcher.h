@@ -74,16 +74,8 @@ protected:
 	class Visitor_DoMakeWalker;
 	friend class Visitor_DoMakeWalker;
 
-	ZRef<QueryEngine::Walker> pMakeWalker_Concrete(PQuery* iPQuery,
-		const ConcreteHead& iConcreteHead);
-
-	ZRef<QueryEngine::Walker> pMakeWalker_Search(PQuery* iPQuery,
-		const RelHead& iRelHead_Bound,
-		const RelationalAlgebra::Rename& iRename,
-		const RelHead& iRelHead_Optional,
-		const ZRef<Expr_Bool>& iExpr_Bool);
-
 	ZRef<QueryEngine::Walker> pMakeWalker_SearchSpec(PQuery* iPQuery,
+		const RelHead& iRelHead_Bound,
 		const SearchSpec& iSearchSpec);
 
 	// -----

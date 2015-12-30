@@ -147,18 +147,40 @@ public:
 		{}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
-		{ this->pSetResult(fSearcher->pMakeWalker_Concrete(fPQuery, iExpr->GetConcreteHead())); }
+		{
+		// Do we need to do something with embed here as well? To gather the bound names
+		// that will be passed off?
+		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker_SearchSpec(fPQuery,
+			RelHead(), SearchSpec(iExpr->GetConcreteHead(), null));
+
+		this->pSetResult(theWalker);
+		}
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
 		if (ZLOGF(w, eDebug+0))
 			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
 
-		this->pSetResult(fSearcher->pMakeWalker_Search(fPQuery,
+		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
+		vector<pair<string8,string8> > finalRename;
+		ConcreteHead theConcreteHead;
+		foreachi (iter, iExpr->GetRename())
+			{
+			const string8& source = iter->first;
+			if (source != iter->second)
+				sPushBack(finalRename, *iter);
+
+			theConcreteHead[source] = not sContains(iExpr->GetRelHead_Optional(), source);
+			}
+
+		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker_SearchSpec(fPQuery,
 			iExpr->GetRelHead_Bound(),
-			iExpr->GetRename(),
-			iExpr->GetRelHead_Optional(),
-			iExpr->GetExpr_Bool()));
+			SearchSpec(theConcreteHead, iExpr->GetExpr_Bool()));
+
+		foreachi (iter, finalRename)
+			theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
+
+		this->pSetResult(theWalker);
 		}
 
 	ZRef<Relater_Searcher> const fSearcher;
@@ -390,45 +412,14 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 		Relater::pTrigger_RelaterResultsAvailable();
 	}
 
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Concrete(PQuery* iPQuery,
-	const ConcreteHead& iConcreteHead)
-	{ return this->pMakeWalker_SearchSpec(iPQuery, SearchSpec(RelHead(), iConcreteHead, null)); }
-
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_Search(PQuery* iPQuery,
-	const RelHead& iRelHead_Bound,
-	const RelationalAlgebra::Rename& iRename,
-	const RelHead& iRelHead_Optional,
-	const ZRef<Expr_Bool>& iExpr_Bool)
-	{
-	ZGuardMtxR guard(fMtxR);
-
-	// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
-	vector<pair<string8,string8> > finalRename;
-	ConcreteHead theConcreteHead;
-	foreachi (iter, iRename)
-		{
-		const string8& source = iter->first;
-		if (source != iter->second)
-			sPushBack(finalRename, *iter);
-
-		theConcreteHead[source] = not sContains(iRelHead_Optional, source);
-		}
-
-	ZRef<QueryEngine::Walker> theWalker = this->pMakeWalker_SearchSpec(iPQuery,
-		SearchSpec(iRelHead_Bound, theConcreteHead, iExpr_Bool));
-
-	foreachi (iter, finalRename)
-		theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
-
-	return theWalker;
-	}
-
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQuery,
+	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
 	ZGuardMtxR guard(fMtxR);
 
-//somewhere in here we need to do the different thing -- we're gonna get primed later with some values in boundnames, *that's* when we do the registration.
+//somewhere in here we need to do the different thing -- we're gonna get primed later with
+// some values in boundnames, *that's* when we do the registration.
 
 	PRegSearch* thePRegSearch = nullptr;
 	if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, iSearchSpec))
