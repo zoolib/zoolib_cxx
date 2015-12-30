@@ -150,7 +150,7 @@ public:
 		{
 		// Do we need to do something with embed here as well? To gather the bound names
 		// that will be passed off?
-		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker_SearchSpec(fPQuery,
+		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			RelHead(), SearchSpec(iExpr->GetConcreteHead(), null));
 
 		this->pSetResult(theWalker);
@@ -173,7 +173,7 @@ public:
 			theConcreteHead[source] = not sContains(iExpr->GetRelHead_Optional(), source);
 			}
 
-		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker_SearchSpec(fPQuery,
+		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			iExpr->GetRelHead_Bound(),
 			SearchSpec(theConcreteHead, iExpr->GetExpr_Bool()));
 
@@ -412,10 +412,68 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 		Relater::pTrigger_RelaterResultsAvailable();
 	}
 
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQuery,
+// =================================================================================================
+#pragma mark -
+#pragma mark Relater_Searcher::Walker_Bingo
+
+class Relater_Searcher::Walker_Bingo
+:	public QE::Walker
+	{
+public:
+	Walker_Bingo(ZRef<Relater_Searcher> iRelater,
+		PQuery* iPQuery,
+		const RelHead& iRelHead_Bound,
+		const SearchSpec& iSearchSpec)
+	:	fRelater(iRelater)
+	,	fPQuery(iPQuery)
+	,	fRelHead_Bound(iRelHead_Bound)
+	,	fSearchSpec(iSearchSpec)
+		{}
+
+	virtual ~Walker_Bingo()
+		{}
+
+// From QE::Walker
+	virtual void Rewind()
+		{ fRelater->pRewind(this); }
+
+	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+		map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset)
+		{
+		fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset);
+		return this;
+		}
+
+	virtual bool QReadInc(Val_Any* ioResults)
+		{ return fRelater->pReadInc(this, ioResults); }
+
+	const ZRef<Relater_Searcher> fRelater;
+	PQuery* fPQuery;
+	const RelHead fRelHead_Bound;
+	const SearchSpec fSearchSpec;
+	};
+
+// =================================================================================================
+#pragma mark -
+
+//	void pRewind(ZRef<Walker_Bingo> iWalker_Bingo);
+//
+//	void pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
+//		const std::map<string8,size_t>& iOffsets,
+//		std::map<string8,size_t>& oOffsets,
+//		size_t& ioBaseOffset);
+//
+//	bool pReadInc(ZRef<Walker_Bingo> iWalker, Val_Any* ioResults);
+
+ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
+	return new Walker_Bingo(this, iPQuery, iRelHead_Bound, iSearchSpec);
+	}
+
+#if 0
 	ZGuardMtxR guard(fMtxR);
 
 //somewhere in here we need to do the different thing -- we're gonna get primed later with
@@ -459,6 +517,7 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker_SearchSpec(PQuery* iPQue
 
 	return new QE::Walker_Result(thePRegSearch->fResult);
 	}
+#endif
 
 } // namespace Dataspace
 } // namespace ZooLib
