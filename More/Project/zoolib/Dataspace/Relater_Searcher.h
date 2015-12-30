@@ -74,14 +74,16 @@ protected:
 	class Walker_Bingo;
 	friend class Walker_Bingo;
 
+	void pFinalize(Walker_Bingo* iWalker_Bingo);
+
 	void pRewind(ZRef<Walker_Bingo> iWalker_Bingo);
 
-	void pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
+	ZRef<QueryEngine::Walker> pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker_Bingo> iWalker, Val_Any* ioResults);
+	bool pQReadInc(ZRef<Walker_Bingo> iWalker, Val_Any* ioResults);
 
 	// -----
 
