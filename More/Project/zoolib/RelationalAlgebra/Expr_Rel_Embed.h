@@ -39,7 +39,7 @@ class Expr_Rel_Embed
 	{
 	typedef Expr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
+	Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 		const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
 
 // From Visitee
@@ -54,11 +54,11 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
 
-	const RelHead& GetLeftNames() const;
+	const RelHead& GetBoundNames() const;
 	const ColName& GetColName() const;
 
 private:
-	const RelHead fLeftNames;
+	const RelHead fBoundNames;
 	const ColName fColName;
 	};
 
@@ -75,7 +75,7 @@ public:
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
+ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
 
 } // namespace RelationalAlgebra

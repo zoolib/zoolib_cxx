@@ -47,10 +47,10 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Embed
 
-Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
+Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
 :	inherited(iOp0, iEmbedee)
-,	fLeftNames(iLeftNames)
+,	fBoundNames(iBoundNames)
 ,	fColName(iColName)
 	{}
 
@@ -74,13 +74,13 @@ ZRef<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
-	{ return new Expr_Rel_Embed(iOp0, fLeftNames, fColName, iOp1); }
+	{ return new Expr_Rel_Embed(iOp0, fBoundNames, fColName, iOp1); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Embed(this); }
 
-const RelHead& Expr_Rel_Embed::GetLeftNames() const
-	{ return fLeftNames; }
+const RelHead& Expr_Rel_Embed::GetBoundNames() const
+	{ return fBoundNames; }
 
 const ColName& Expr_Rel_Embed::GetColName() const
 	{ return fColName; }
@@ -94,9 +94,9 @@ void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iE
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iLeftNames,
+ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
-	{ return new Expr_Rel_Embed(iOp0, iLeftNames, iColName, iEmbedee); }
+	{ return new Expr_Rel_Embed(iOp0, iBoundNames, iColName, iEmbedee); }
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

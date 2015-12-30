@@ -40,10 +40,10 @@ using RelationalAlgebra::RelHead;
 #pragma mark -
 #pragma mark Walker_Embed
 
-Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelHead& iLeftNames,
+Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelHead& iBoundNames,
 	const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
 :	fWalker_Parent(iWalker_Parent)
-,	fLeftNames(iLeftNames)
+,	fBoundNames(iBoundNames)
 ,	fColName(iColName)
 ,	fWalker_Embedee(iWalker_Embedee)
 	{}

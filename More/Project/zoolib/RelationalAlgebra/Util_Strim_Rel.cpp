@@ -305,10 +305,10 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 				sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
-				const ZQ<RelHead> theLeftNamesQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanR, iChanU);
-				if (theLeftNamesQ)
+				const ZQ<RelHead> theBoundNamesQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanR, iChanU);
+				if (theBoundNamesQ)
 					{
-					spRead_WSComma(iChanR, iChanU, " after LeftNames in Embed");
+					spRead_WSComma(iChanR, iChanU, " after BoundNames in Embed");
 
 					sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 					}
@@ -327,7 +327,7 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 					if (ZRef<Expr_Rel,false> innerRel = sFromStrim(iChanR, iChanU))
 						throw ParseException("Expected Rel as second param in Embed");
 					else
-						result = sEmbed(outerRel, sGet(theLeftNamesQ), *theColNameQ, innerRel);
+						result = sEmbed(outerRel, sGet(theBoundNamesQ), *theColNameQ, innerRel);
 					}
 				}
 			}
