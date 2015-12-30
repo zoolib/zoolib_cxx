@@ -218,8 +218,8 @@ public:
 				newRename.insert(*iterRename);
 			}
 
-		// Add missing entries
-		RelHead theRH_All;
+		// Build list of all the names a condition can rely on.
+		RelHead theRH_InnerAndBound = fBoundNames;
 		RelHead theRH_Optional;
 		foreachi (iter, iExpr->GetConcreteHead())
 			{
@@ -227,13 +227,19 @@ public:
 			if (fProjection.Contains(theColName))
 				sQInsert(newRename, theColName, theColName);
 
-			sQInsert(theRH_All, theColName);
+			// TODO: What do we do about overlaps between bound names, and those referenced
+			// inside? It's a semantic error at a higher level, so we shouldn't see it here,
+			// and it doesn't actually affect what's happening here, but it *will* affect the
+			// processing of conjunctionSearch. I suppose the inner actually shadows/hides the
+			// bound name, which is reasonable, which Walkers will need to handle when they're
+			// setting up offsets.
+			sQInsert(theRH_InnerAndBound, theColName);
 
 			if (not iter->second)
 				sQInsert(theRH_Optional, theColName);
 			}
 
-		// TODO: Something with fLikelySize.
+		// TODO: Manipulate fLikelySize in some fashion.
 
 		// However, fRestriction may well also reference names *not* in the concrete, if we're
 		// part of the embeddee of an embed. The simplest solution for now is to pull up any
@@ -242,16 +248,13 @@ public:
 		// Any referencing names not in the concrete are stuffed into a restrict, wrapped around
 		// the search.
 
-		// What do we do about overlaps between theRH_All and fLeftNames? Assert
-		// because it's a semantic error at a higher level?
-		Visitor_Analyze theVisitor(theRH_All); //###
-//		Visitor_Analyze theVisitor(theRH_All | fLeftNames);
+		Visitor_Analyze theVisitor(theRH_InnerAndBound);
 
 		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 
 		foreachi (clause, Util_Expr_Bool::sAsCNF(fRestriction))
 			{
-			bool referencesInnerOnly = true;
+			bool referencesInnerAndBoundOnly = true;
 
 			ZRef<Expr_Bool> newClause;
 
@@ -260,10 +263,10 @@ public:
 				newClause |= disjunction;
 				const Analysis_t theAn = theVisitor.Do(disjunction);
 				if (theAn.fAnyNameUnknown)
-					referencesInnerOnly = false;
+					referencesInnerAndBoundOnly = false;
 				}
 
-			if (referencesInnerOnly)
+			if (referencesInnerAndBoundOnly)
 				{
 				if (conjunctionSearch)
 					conjunctionSearch &= newClause;
@@ -279,7 +282,9 @@ public:
 				}
 			}
 
-		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(fLeftNames, newRename, theRH_Optional, conjunctionSearch);
+		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(fBoundNames,
+			newRename, theRH_Optional, conjunctionSearch);
+
 		if (conjunctionRestrict)
 			theRel &= conjunctionRestrict;
 
@@ -318,14 +323,13 @@ public:
 		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
 		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
 		SaveSetRestore<Rename> ssr2(fRename, Rename());
-		SaveRestore<RelHead> ssr3(fLeftNames);
-		fLeftNames |= iExpr->GetLeftNames();
+		SaveSetRestore<RelHead> ssr3(fBoundNames, iExpr->GetBoundNames());
 		newOp1 = this->Do(iExpr->GetOp1());
 		}
 
-		const RelHead& theLeftNames = RA::sRenamed(fRename, iExpr->GetLeftNames());
+		const RelHead& theBoundNames = RA::sRenamed(fRename, iExpr->GetBoundNames());
 		const ColName& theName = RA::sRenamed(fRename, iExpr->GetColName());
-		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theLeftNames, theName, newOp1);
+		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
 
 		// But rename is now superfluous -- our children will have done whatever they need
 		// with it. pApplyRestrictProject will apply any restriction/projection that remains.
@@ -461,7 +465,7 @@ public:
 		this->pSetResult(iRel);
 		}
 
-	RelHead fLeftNames;
+	RelHead fBoundNames;
 	ZRef<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
 	Rename fRename;
