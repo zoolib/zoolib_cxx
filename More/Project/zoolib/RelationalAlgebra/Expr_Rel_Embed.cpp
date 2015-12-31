@@ -31,6 +31,9 @@ template <>
 int sCompare_T(const RelationalAlgebra::Expr_Rel_Embed& iL,
 	const RelationalAlgebra::Expr_Rel_Embed& iR)
 	{
+	if (int compare = sCompare_T(iL.GetBoundNames(), iR.GetBoundNames()))
+		return compare;
+
 	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
 		return compare;
 

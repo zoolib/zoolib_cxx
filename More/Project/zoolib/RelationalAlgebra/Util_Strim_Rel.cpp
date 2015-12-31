@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
@@ -38,6 +39,7 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 namespace Util_Strim_Rel {
 
+using namespace Util_STL;
 using std::string;
 
 // =================================================================================================
@@ -95,6 +97,13 @@ void Visitor::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
 	this->pToStrim(iExpr->GetOp0());
 	w << ",";
 	this->pWriteLFIndent();
+	const RelHead theBoundNames = iExpr->GetBoundNames();
+	if (sNotEmpty(theBoundNames))
+		{
+		w << theBoundNames;
+		w << ",";
+		this->pWriteLFIndent();
+		}
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << " = ";
 	++fIndent;
