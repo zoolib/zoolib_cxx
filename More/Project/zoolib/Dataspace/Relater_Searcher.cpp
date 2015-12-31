@@ -305,6 +305,10 @@ Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 
 Relater_Searcher::~Relater_Searcher()
 	{
+	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
+		eraser; eraser.Advance())
+		{}
+
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{}
@@ -329,19 +333,26 @@ void Relater_Searcher::ModifyRegistrations(
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
 		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
+		ZRef<RA::Expr_Rel> rel_Added = theRel;
 
-//		theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
-//
-//		// This next one needs some work doing with Embeds
-//		theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
-//
+		theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
+		ZRef<RA::Expr_Rel> rel_DecomposeRestricts = theRel;
+
+		// This next one needs some work doing with Embeds
+		ZRef<RA::Expr_Rel> rel_PushdownRestrics = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
+//##		theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
+
 		// As does this one:
-		theRel = QueryEngine::sTransform_Search(theRel);
+		theRel = QueryEngine::sTransform_Search(rel_Added);
+		ZRef<RA::Expr_Rel> rel_Search = theRel;
 
 		if (ZLOGF(w, eDebug + 0))
 			{
-			w << "\nBefore:\n" << iAdded->GetRel();
-			w << "\nAfter:\n" << theRel;
+			w << "\n" << "rel_Added:\n" << rel_Added;
+			w << "\n" << "rel_DecomposeRestricts:\n" << rel_DecomposeRestricts;
+			w << "\n" << "rel_PushdownRestrics:\n" << RelationalAlgebra::Transform_PushDownRestricts().Do(rel_Added);
+			w << "\n" << "rel_PushdownRestrics after decompose:\n" << RelationalAlgebra::Transform_PushDownRestricts().Do(rel_DecomposeRestricts);
+			w << "\n" << "rel_Search:\n" << rel_Search;
 			}
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
@@ -442,7 +453,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 				{
 				w << "Query, " << elapsed * 1e3 << "ms\n";
 				w << thePQuery->fRel << "\n";
-				sToStrim(thePQuery->fResult, w);
+//				sToStrim(thePQuery->fResult, w);
 				}
 			}
 
