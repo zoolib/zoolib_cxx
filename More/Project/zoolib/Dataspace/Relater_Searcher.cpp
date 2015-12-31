@@ -462,6 +462,24 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult));
 		}
+
+	// Remove any unused PRegSearches
+	vector<int64> toRemove;
+	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
+		eraser; eraser.Advance())
+		{
+		PRegSearch* thePRegSearch = eraser.Current();
+		if (sIsEmpty(thePRegSearch->fPQuery_Using))
+			{
+			toRemove.push_back(thePRegSearch->fRefconInSearcher);
+			sEraseMust(kDebug, fMap_SearchSpec_PRegSearchStar, thePRegSearch->fSearchSpec);
+			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearch->fRefconInSearcher);
+			}
+		}
+	guard.Release();
+
+	if (sNotEmpty(toRemove))
+		fSearcher->ModifyRegistrations(nullptr, 0, &toRemove[0], toRemove.size());
 	}
 
 void Relater_Searcher::ForceUpdate()
