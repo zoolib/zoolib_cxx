@@ -622,35 +622,6 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 	return true;
 	}
 
-//bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
-//	{
-//	if (not iWalker_Bingo->fRefcon)
-//		{
-//		ZGuardMtxR guard(fMtxR);
-//
-//		// Walker is new, or has been rewound. Get a refcon for it.
-//		iWalker_Bingo->fRefcon = fNextRefcon++;
-//
-//		for (size_t xx = 0; xx < iWalker_Bingo->fVCs.size(); ++xx)
-//			iWalker_Bingo->fVCs[xx]->SetVal(ioResults[iWalker_Bingo->fBoundOffsets[xx]]);
-//
-//		const AddedSearch theAS(iWalker_Bingo->fRefcon,
-//			SearchSpec(iWalker_Bingo->fConcreteHead, iWalker_Bingo->fRestriction));
-//
-//		guard.Release();
-//
-//		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
-//		}
-//
-//	while (not iWalker_Bingo->fResult)
-//		fCnd.Wait(fMtxR); // *2* see above at *1*
-//
-//	const Val_Any* theRows = iWalker_Bingo->fResult->GetValsAt(iWalker_Bingo->fNextRow++);
-//
-//	for (size_t xx = 0, count = iWalker_Bingo->fConcreteHead.size(); xx < count; ++xx)
-//		ioResults[iWalker_Bingo->fBaseOffset + xx] = theRows[xx];
-//	}
-
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
