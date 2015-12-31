@@ -251,6 +251,22 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 	return result;
 	}
 
+RelHead sNamesFrom(const Rename& iRename)
+	{
+	RelHead result;
+	foreachi (ii, iRename)
+		result.insert(ii->first);
+	return result;
+	}
+
+RelHead sNamesTo(const Rename& iRename)
+	{
+	RelHead result;
+	foreachi (ii, iRename)
+		result.insert(ii->second);
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark ConcreteHead

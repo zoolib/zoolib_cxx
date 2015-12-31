@@ -136,7 +136,7 @@ inline RelHead& operator-=(RelHead& ioRelHead, const char* iElem)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Prefix
+#pragma mark
 
 bool sHasPrefix(const ColName& iPrefix, const ColName& iColName);
 ColName sPrefixInserted(const ColName& iPrefix, const ColName& iColName);
@@ -149,6 +149,9 @@ RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
 ZQ<RelHead> sQPrefixErased(const ColName& iPrefix, const RelHead& iRelHead);
 RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead);
+
+RelHead sNamesFrom(const Rename& iRename);
+RelHead sNamesTo(const Rename& iRename);
 
 // =================================================================================================
 #pragma mark -
