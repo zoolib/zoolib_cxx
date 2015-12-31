@@ -134,6 +134,111 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark DoReplaceBoundNames (anonymous)
+
+namespace { // anonymous
+
+class DoReplaceBoundNames
+:	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Bool>
+,	public virtual Visitor_Expr_Bool_ValPred
+	{
+public:
+	DoReplaceBoundNames(const vector<ColName>& iBoundNames,
+		const size_t* iBoundOffsets,
+		const Val_Any* iVals)
+	:	fBoundNames(iBoundNames)
+	,	fBoundOffsets(iBoundOffsets)
+	,	fVals(iVals)
+		{}
+
+	ZRef<ValComparand> pUpdated(const ZRef<ValComparand>& iVC)
+		{
+		if (ZRef<ValComparand_Name> asName = iVC.DynamicCast<ValComparand_Name>())
+			{
+			// We could have a different kind of ValComparand, which holds the name's offset
+			// and for which we sub a value without needing to do the lookup every time.
+			if (ZQ<size_t> offset = sQFindSorted(fBoundNames, asName->GetName()))
+				return new ValComparand_Const_Any(fVals[fBoundOffsets[*offset]]);
+			}
+		return iVC;
+		}
+
+	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+		{
+		const ValPred& theValPred = iExpr->GetValPred();
+
+		ZRef<Expr_Bool> theResult = new Expr_Bool_ValPred(
+			ValPred(
+				pUpdated(theValPred.GetLHS()),
+				theValPred.GetComparator(),
+				pUpdated(theValPred.GetRHS())));
+
+		this->pSetResult(theResult);
+		}
+
+private:
+	const vector<ColName>& fBoundNames;
+	const size_t* fBoundOffsets;
+	const Val_Any* fVals;
+	};
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Relater_Searcher::Walker_Bingo
+
+class Relater_Searcher::Walker_Bingo
+:	public QE::Walker
+	{
+public:
+	Walker_Bingo(ZRef<Relater_Searcher> iRelater,
+		PQuery* iPQuery,
+		const RelHead& iBoundNames,
+		const ConcreteHead& iConcreteHead,
+		ZRef<Expr_Bool> iRestriction)
+	:	fRelater(iRelater)
+	,	fPQuery(iPQuery)
+	,	fPRegSearch(nullptr)
+	,	fNextRow(0)
+	,	fBoundNames(iBoundNames.begin(), iBoundNames.end())
+	,	fConcreteHead(iConcreteHead)
+	,	fRestriction(iRestriction)
+		{}
+
+	virtual ~Walker_Bingo()
+		{}
+
+// From ZCounted via QE::Walker
+	virtual void Finalize()
+		{ fRelater->pFinalize(this); }
+
+// From QE::Walker
+	virtual void Rewind()
+		{ fRelater->pRewind(this); }
+
+	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+		map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset)
+		{ return fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset); }
+
+	virtual bool QReadInc(Val_Any* ioResults)
+		{ return fRelater->pQReadInc(this, ioResults); }
+
+	const ZRef<Relater_Searcher> fRelater;
+	PQuery* fPQuery;
+	PRegSearch* fPRegSearch;
+	size_t fNextRow;
+
+	const vector<ColName> fBoundNames;
+	ConcreteHead fConcreteHead;
+	ZRef<Expr_Bool> fRestriction;
+	size_t fBaseOffset;
+	vector<size_t> fBoundOffsets;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark Relater_Searcher::Visitor_DoMakeWalker
 
 class Relater_Searcher::Visitor_DoMakeWalker
@@ -200,10 +305,6 @@ Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 
 Relater_Searcher::~Relater_Searcher()
 	{
-	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
-		eraser; eraser.Advance())
-		{}
-
 	for (DListEraser<ClientQuery,DLink_ClientQuery_NeedsWork> eraser = fClientQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{}
@@ -361,24 +462,6 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		PQuery* thePQuery = theClientQuery->fPQuery;
 		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult));
 		}
-
-	// Remove any unused PRegSearches
-	vector<int64> toRemove;
-	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
-		eraser; eraser.Advance())
-		{
-		PRegSearch* thePRegSearch = eraser.Current();
-		if (sIsEmpty(thePRegSearch->fPQuery_Using))
-			{
-			toRemove.push_back(thePRegSearch->fRefconInSearcher);
-			sEraseMust(kDebug, fMap_SearchSpec_PRegSearchStar, thePRegSearch->fSearchSpec);
-			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearch->fRefconInSearcher);
-			}
-		}
-	guard.Release();
-
-	if (sNotEmpty(toRemove))
-		fSearcher->ModifyRegistrations(nullptr, 0, &toRemove[0], toRemove.size());
 	}
 
 void Relater_Searcher::ForceUpdate()
@@ -415,167 +498,17 @@ void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 		Relater::pTrigger_RelaterResultsAvailable();
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ValComparand_Const_Any_Mutable (anonymous)
-
-namespace { // anonymous
-
-class ValComparand_Const_Any_Mutable : public ValComparand_Const_Any
-	{
-public:
-	ValComparand_Const_Any_Mutable()
-	:	ValComparand_Const_Any(null)
-		{}
-
-// Our protocol
-	void SetVal(const Val_Any& iVal)
-		{ fVal = iVal; }
-	};
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark DoReplaceBoundNames (anonymous)
-
-namespace { // anonymous
-
-class DoReplaceBoundNames
-:	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Bool>
-,	public virtual Visitor_Expr_Bool_ValPred
-	{
-public:
-	DoReplaceBoundNames(const vector<ColName>& iBoundNames,
-		vector<ZRef<ValComparand_Const_Any_Mutable> >& ioVCs)
-	:	fBoundNames(iBoundNames)
-	,	fVCs(ioVCs)
-		{}
-
-	ZRef<ValComparand> pUpdated(const ZRef<ValComparand>& iVC)
-		{
-		if (ZRef<ValComparand_Name> asName = iVC.DynamicCast<ValComparand_Name>())
-			{
-			if (ZQ<size_t> offset = sQFindSorted(fBoundNames, asName->GetName()))
-				return fVCs[*offset];
-			}
-		return iVC;
-		}
-
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
-		{
-		const ValPred& theValPred = iExpr->GetValPred();
-
-		ZRef<Expr_Bool> theResult = new Expr_Bool_ValPred(
-			ValPred(
-				pUpdated(theValPred.GetLHS()),
-				theValPred.GetComparator(),
-				pUpdated(theValPred.GetRHS())));
-
-		this->pSetResult(theResult);
-		}
-
-private:
-	const vector<ColName>& fBoundNames;
-	vector<ZRef<ValComparand_Const_Any_Mutable> >& fVCs;
-	};
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::Walker_Bingo
-
-class Relater_Searcher::Walker_Bingo
-:	public QE::Walker
-	{
-public:
-	Walker_Bingo(ZRef<Relater_Searcher> iRelater,
-		PQuery* iPQuery,
-		const RelHead& iBoundNames,
-		const ConcreteHead& iConcreteHead,
-		ZRef<Expr_Bool> iRestriction)
-	:	fRelater(iRelater)
-	,	fPQuery(iPQuery)
-	,	fRefcon(0)
-	,	fBoundNames(iBoundNames.begin(), iBoundNames.end())
-	,	fConcreteHead(iConcreteHead)
-		{
-		if (sIsEmpty(fBoundNames))
-			return;
-
-		// For each bound name, allocate a ValComparand_Const_Any_Mutable whose value will be
-		// modifed each time we get new bound values.
-		foreachi (ii, fBoundNames)
-			sPushBack(fVCs, new ValComparand_Const_Any_Mutable);
-
-		// fBoundNames ends up as a sorted vector.
-		fRestriction = DoReplaceBoundNames(fBoundNames, fVCs).Do(iRestriction);
-
-		if (ZLOGF(w, eDebug))
-			{
-			w << "\n";
-			Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, iRestriction);
-			w << "\n";
-			Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, fRestriction);
-			}
-		}
-
-	virtual ~Walker_Bingo()
-		{}
-
-// From ZCounted via QE::Walker
-	virtual void Finalize()
-		{ fRelater->pFinalize(this); }
-
-// From QE::Walker
-	virtual void Rewind()
-		{ fRelater->pRewind(this); }
-
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
-		map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset)
-		{ return fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset); }
-
-	virtual bool QReadInc(Val_Any* ioResults)
-		{ return fRelater->pQReadInc(this, ioResults); }
-
-	const ZRef<Relater_Searcher> fRelater;
-	PQuery* fPQuery;
-	bool fReady;
-	int64 fRefcon;
-
-	const vector<ColName> fBoundNames;
-	ConcreteHead fConcreteHead;
-	ZRef<Expr_Bool> fRestriction;
-	size_t fBaseOffset;
-	vector<size_t> fBoundOffsets;
-	vector<ZRef<ValComparand_Const_Any_Mutable> > fVCs;
-	};
-
-// =================================================================================================
-#pragma mark -
-
 void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
 	{
-	this->pUnregister(iWalker_Bingo);
-
 	if (iWalker_Bingo->FinishFinalize())
 		delete iWalker_Bingo;
 	}
 
-void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
-	{
-	if (iWalker_Bingo->fRefcon)
-		{
-		ZGuardMtxR guard(fMtxR);
-		fSearcher->ModifyRegistrations(nullptr, 0, &iWalker_Bingo->fRefcon, 1);
-		iWalker_Bingo->fRefcon = 0;
-		}
-	}
-
 void Relater_Searcher::pRewind(ZRef<Walker_Bingo> iWalker_Bingo)
-	{ this->pUnregister(iWalker_Bingo.Get()); }
+	{
+	iWalker_Bingo->fPRegSearch = nullptr;
+	iWalker_Bingo->fNextRow = 0;
+	}
 
 ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 	const std::map<string8,size_t>& iOffsets,
@@ -598,82 +531,117 @@ ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 
 bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
 	{
-	if (not iWalker_Bingo->fRefcon)
+	ZGuardMtxR guard(fMtxR);
+	if (not iWalker_Bingo->fPRegSearch)
 		{
-		ZGuardMtxR guard(fMtxR);
+		ZRef<Expr_Bool> theRestriction = iWalker_Bingo->fRestriction;
 
-		// Walker is new, or has been rewound. Get a refcon for it.
-		iWalker_Bingo->fRefcon = fNextRefcon++;
+		if (sNotEmpty(iWalker_Bingo->fBoundNames))
+			{
+			// fBoundNames ends up as a sorted vector.
+			theRestriction = DoReplaceBoundNames(
+				iWalker_Bingo->fBoundNames,
+				&iWalker_Bingo->fBoundOffsets[0],
+				ioResults).Do(theRestriction);
 
-		for (size_t xx = 0; xx < iWalker_Bingo->fVCs.size(); ++xx)
-			iWalker_Bingo->fVCs[xx]->SetVal(ioResults[iWalker_Bingo->fBoundOffsets[xx]]);
+			if (ZLOGF(w, eDebug))
+				{
+				w << "\n";
+				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, iWalker_Bingo->fRestriction);
+				w << "\n";
+				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theRestriction);
+				}
+			}
 
-		const AddedSearch theAS(iWalker_Bingo->fRefcon,
-			SearchSpec(iWalker_Bingo->fConcreteHead, iWalker_Bingo->fRestriction));
+		const SearchSpec theSearchSpec(iWalker_Bingo->fConcreteHead, theRestriction);
 
-		guard.Release();
+		PRegSearch* thePRegSearch = nullptr;
+		if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, theSearchSpec))
+			{ thePRegSearch = *thePRegSearchP; }
+		else
+			{
+			pair<Map_Refcon_PRegSearch::iterator,bool> iterPair =
+				fMap_Refcon_PRegSearch.insert(make_pair(fNextRefcon++, PRegSearch()));
+			ZAssert(iterPair.second);
 
-		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
+			thePRegSearch = &iterPair.first->second;
+
+			sInsertMust(fMap_SearchSpec_PRegSearchStar, theSearchSpec, thePRegSearch);
+
+			thePRegSearch->fSearchSpec = theSearchSpec;
+			thePRegSearch->fRefconInSearcher = iterPair.first->first;
+
+			const AddedSearch theAS(thePRegSearch->fRefconInSearcher, theSearchSpec);
+
+			guard.Release();
+
+			fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
+
+			while (not thePRegSearch->fResult)
+				fCnd.Wait(fMtxR); // *2* see above at *1*
+			}
+
+		// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),
+		// so we sQInsert rather than sInsertMust.
+		PQuery* thePQuery = iWalker_Bingo->fPQuery;
+		sQInsert(thePRegSearch->fPQuery_Using, thePQuery);
+		sQInsert(thePQuery->fPRegSearch_Used, thePRegSearch);
+		iWalker_Bingo->fPRegSearch = thePRegSearch;
+
+		ZAssert(thePRegSearch->fResult);
 		}
 
-	while (not iWalker_Bingo->fResult)
-		fCnd.Wait(fMtxR); // *2* see above at *1*
+	ZRef<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;
 
+	if (iWalker_Bingo->fNextRow >= theResult->Count())
+		return false;
+
+	const Val_Any* theRows = theResult->GetValsAt(iWalker_Bingo->fNextRow++);
+
+	for (size_t xx = 0, colCount = iWalker_Bingo->fConcreteHead.size(); xx < colCount; ++xx)
+		ioResults[iWalker_Bingo->fBaseOffset + xx] = theRows[xx];
+
+	return true;
 	}
+
+//bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
+//	{
+//	if (not iWalker_Bingo->fRefcon)
+//		{
+//		ZGuardMtxR guard(fMtxR);
+//
+//		// Walker is new, or has been rewound. Get a refcon for it.
+//		iWalker_Bingo->fRefcon = fNextRefcon++;
+//
+//		for (size_t xx = 0; xx < iWalker_Bingo->fVCs.size(); ++xx)
+//			iWalker_Bingo->fVCs[xx]->SetVal(ioResults[iWalker_Bingo->fBoundOffsets[xx]]);
+//
+//		const AddedSearch theAS(iWalker_Bingo->fRefcon,
+//			SearchSpec(iWalker_Bingo->fConcreteHead, iWalker_Bingo->fRestriction));
+//
+//		guard.Release();
+//
+//		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
+//		}
+//
+//	while (not iWalker_Bingo->fResult)
+//		fCnd.Wait(fMtxR); // *2* see above at *1*
+//
+//	const Val_Any* theRows = iWalker_Bingo->fResult->GetValsAt(iWalker_Bingo->fNextRow++);
+//
+//	for (size_t xx = 0, count = iWalker_Bingo->fConcreteHead.size(); xx < count; ++xx)
+//		ioResults[iWalker_Bingo->fBaseOffset + xx] = theRows[xx];
+//	}
 
 ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
-	return new Walker_Bingo(this,
-		iPQuery, iRelHead_Bound, iSearchSpec.GetConcreteHead(), iSearchSpec.GetRestriction());
-	}
-
-#if 0
 	ZGuardMtxR guard(fMtxR);
-
-//somewhere in here we need to do the different thing -- we're gonna get primed later with
-// some values in boundnames, *that's* when we do the registration.
-
-	PRegSearch* thePRegSearch = nullptr;
-	if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, iSearchSpec))
-		{ thePRegSearch = *thePRegSearchP; }
-	else
-		{
-		pair<Map_Refcon_PRegSearch::iterator,bool> iterPair =
-			fMap_Refcon_PRegSearch.insert(make_pair(fNextRefcon++, PRegSearch()));
-		ZAssert(iterPair.second);
-
-		thePRegSearch = &iterPair.first->second;
-
-		sInsertMust(fMap_SearchSpec_PRegSearchStar, iSearchSpec, thePRegSearch);
-
-		thePRegSearch->fSearchSpec = iSearchSpec;
-		thePRegSearch->fRefconInSearcher = iterPair.first->first;
-
-		const AddedSearch theAS(thePRegSearch->fRefconInSearcher, iSearchSpec);
-
-		guard.Release();
-
-		fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
-
-		// Note that we could just ayncize this -- we don't actually need the value that's in
-		// thePRegSearch right now, we just don't have a walker that can hold the promise of
-		// a result.
-		while (not thePRegSearch->fResult)
-			fCnd.Wait(fMtxR); // *2* see above at *1*
-		}
-
-	// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),
-	// so we sQInsert rather than sInsertMust.
-	sQInsert(thePRegSearch->fPQuery_Using, iPQuery);
-	sQInsert(iPQuery->fPRegSearch_Used, thePRegSearch);
-
-	ZAssert(thePRegSearch->fResult);
-
-	return new QE::Walker_Result(thePRegSearch->fResult);
+	ZRef<Walker_Bingo> theWalker = new Walker_Bingo(this,
+		iPQuery, iRelHead_Bound, iSearchSpec.GetConcreteHead(), iSearchSpec.GetRestriction());
+	return theWalker;
 	}
-#endif
 
 } // namespace Dataspace
 } // namespace ZooLib
