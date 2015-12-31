@@ -265,7 +265,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		if (ZLOGF(w, eDebug+0))
+		if (ZLOGF(w, eDebug+1))
 			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
 
 		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
@@ -544,7 +544,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 				&iWalker_Bingo->fBoundOffsets[0],
 				ioResults).Do(theRestriction);
 
-			if (ZLOGF(w, eDebug))
+			if (ZLOGF(w, eDebug+1))
 				{
 				w << "\n";
 				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, iWalker_Bingo->fRestriction);
