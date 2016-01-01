@@ -160,18 +160,30 @@ public:
 			if (ZQ<size_t> offset = sQFindSorted(fBoundNames, asName->GetName()))
 				return new ValComparand_Const_Any(fVals[fBoundOffsets[*offset]]);
 			}
-		return iVC;
+		return null;
 		}
 
 	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
 		{
-		const ValPred& theValPred = iExpr->GetValPred();
+		const ValPred& theVP = iExpr->GetValPred();
 
-		ZRef<Expr_Bool> theResult = new Expr_Bool_ValPred(
-			ValPred(
-				pUpdated(theValPred.GetLHS()),
-				theValPred.GetComparator(),
-				pUpdated(theValPred.GetRHS())));
+		ZRef<Expr_Bool> theResult;
+
+		if (ZRef<ValComparand> newLHS = pUpdated(theVP.GetLHS()))
+			{
+			if (ZRef<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
+				theResult = new Expr_Bool_ValPred(ValPred(newLHS, theVP.GetComparator(), newRHS));
+			else
+				theResult = new Expr_Bool_ValPred(ValPred(newLHS, theVP.GetComparator(), theVP.GetRHS()));
+			}
+		else if (ZRef<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
+			{
+			theResult = new Expr_Bool_ValPred(ValPred(theVP.GetLHS(), theVP.GetComparator(), newRHS));
+			}
+		else
+			{
+			theResult = iExpr;
+			}
 
 		this->pSetResult(theResult);
 		}
@@ -332,28 +344,21 @@ void Relater_Searcher::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
-		ZRef<RA::Expr_Rel> rel_Added = theRel;
-
-		theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
-		ZRef<RA::Expr_Rel> rel_DecomposeRestricts = theRel;
-
-		// This next one needs some work doing with Embeds
-		ZRef<RA::Expr_Rel> rel_PushdownRestrics = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
-//##		theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
-
-		// As does this one:
-		theRel = QueryEngine::sTransform_Search(rel_Added);
-		ZRef<RA::Expr_Rel> rel_Search = theRel;
+		ZRef<RA::Expr_Rel> rel_Added = iAdded->GetRel();
 
 		if (ZLOGF(w, eDebug + 0))
 			{
-			w << "\n" << "rel_Added:\n" << rel_Added;
-			w << "\n" << "rel_DecomposeRestricts:\n" << rel_DecomposeRestricts;
-			w << "\n" << "rel_PushdownRestrics:\n" << RelationalAlgebra::Transform_PushDownRestricts().Do(rel_Added);
-			w << "\n" << "rel_PushdownRestrics after decompose:\n" << RelationalAlgebra::Transform_PushDownRestricts().Do(rel_DecomposeRestricts);
-			w << "\n" << "rel_Search:\n" << rel_Search;
+			w << "\n" << "Added:\n" << rel_Added;
+			w << "\n" << "DecomposeRestricts:\n" << RA::Transform_DecomposeRestricts().Do(rel_Added);
+			w << "\n" << "PushdownRestrics:\n" << RA::Transform_PushDownRestricts().Do(rel_Added);
+
+			w << "\n" << "Search after PushdownRestrics:\n" << QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(rel_Added));
+
+			w << "\n" << "PushdownRestrics after Decompose:\n" << RA::Transform_PushDownRestricts().Do(RA::Transform_DecomposeRestricts().Do(rel_Added));
+			w << "\n" << "Search after PushdownRestrics after Decompose:\n" << QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(RA::Transform_DecomposeRestricts().Do(rel_Added)));
 			}
+
+		const ZRef<Expr_Rel> theRel = QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(rel_Added));
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -402,10 +407,10 @@ void Relater_Searcher::ModifyRegistrations(
 			// Detach from any depended-upon PRegSearch
 			foreachi (iterPRegSearch, thePQuery->fPRegSearch_Used)
 				{
-				PRegSearch* thePRegSearch = *iterPRegSearch;
-				sEraseMust(kDebug, thePRegSearch->fPQuery_Using, thePQuery);
-				if (sIsEmpty(thePRegSearch->fPQuery_Using))
-					sQInsertBack(fPRegSearch_NeedsWork, thePRegSearch);
+				PRegSearch* thePRegSearchStar = *iterPRegSearch;
+				sEraseMust(kDebug, thePRegSearchStar->fPQuery_Using, thePQuery);
+				if (sIsEmpty(thePRegSearchStar->fPQuery_Using))
+					sQInsertBack(fPRegSearch_NeedsWork, thePRegSearchStar);
 				}
 			thePQuery->fPRegSearch_Used.clear();
 
@@ -443,6 +448,9 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
+		if (ZLOGF(w, eDebug+1))
+			w << thePQuery->fRel << "\n";
+
 		const double start = Time::sSystem();
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
 		const double elapsed = Time::sSystem() - start;
@@ -479,12 +487,12 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	for (DListEraser<PRegSearch,DLink_PRegSearch_NeedsWork> eraser = fPRegSearch_NeedsWork;
 		eraser; eraser.Advance())
 		{
-		PRegSearch* thePRegSearch = eraser.Current();
-		if (sIsEmpty(thePRegSearch->fPQuery_Using))
+		PRegSearch* thePRegSearchStar = eraser.Current();
+		if (sIsEmpty(thePRegSearchStar->fPQuery_Using))
 			{
-			toRemove.push_back(thePRegSearch->fRefconInSearcher);
-			sEraseMust(kDebug, fMap_SearchSpec_PRegSearchStar, thePRegSearch->fSearchSpec);
-			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearch->fRefconInSearcher);
+			toRemove.push_back(thePRegSearchStar->fRefconInSearcher);
+			sEraseMust(kDebug, fMap_SearchSpec_PRegSearchStar, thePRegSearchStar->fSearchSpec);
+			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearchStar->fRefconInSearcher);
 			}
 		}
 	guard.Release();
@@ -573,7 +581,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 				&iWalker_Bingo->fBoundOffsets[0],
 				ioResults).Do(theRestriction);
 
-			if (ZLOGF(w, eDebug+1))
+			if (ZLOGF(w, eDebug + 1))
 				{
 				w << "\n";
 				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, iWalker_Bingo->fRestriction);
@@ -584,40 +592,41 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 
 		const SearchSpec theSearchSpec(iWalker_Bingo->fConcreteHead, theRestriction);
 
-		PRegSearch* thePRegSearch = nullptr;
-		if (PRegSearch** thePRegSearchP = sPMut(fMap_SearchSpec_PRegSearchStar, theSearchSpec))
-			{ thePRegSearch = *thePRegSearchP; }
+		PRegSearch* thePRegSearchStar = nullptr;
+		Map_SearchSpec_PRegSearchStar::iterator iterMap = fMap_SearchSpec_PRegSearchStar.lower_bound(theSearchSpec);
+		if (iterMap != fMap_SearchSpec_PRegSearchStar.end() && iterMap->first == theSearchSpec)
+			{ thePRegSearchStar = iterMap->second; }
 		else
 			{
 			pair<Map_Refcon_PRegSearch::iterator,bool> iterPair =
 				fMap_Refcon_PRegSearch.insert(make_pair(fNextRefcon++, PRegSearch()));
 			ZAssert(iterPair.second);
 
-			thePRegSearch = &iterPair.first->second;
+			thePRegSearchStar = &iterPair.first->second;
 
-			sInsertMust(fMap_SearchSpec_PRegSearchStar, theSearchSpec, thePRegSearch);
+			fMap_SearchSpec_PRegSearchStar.insert(iterMap, make_pair(theSearchSpec, thePRegSearchStar));
 
-			thePRegSearch->fSearchSpec = theSearchSpec;
-			thePRegSearch->fRefconInSearcher = iterPair.first->first;
+			thePRegSearchStar->fSearchSpec = theSearchSpec;
+			thePRegSearchStar->fRefconInSearcher = iterPair.first->first;
 
-			const AddedSearch theAS(thePRegSearch->fRefconInSearcher, theSearchSpec);
+			const AddedSearch theAS(thePRegSearchStar->fRefconInSearcher, theSearchSpec);
 
 			guard.Release();
 
 			fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
 
-			while (not thePRegSearch->fResult)
+			while (not thePRegSearchStar->fResult)
 				fCnd.Wait(fMtxR); // *2* see above at *1*
 			}
 
 		// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),
 		// so we sQInsert rather than sInsertMust.
 		PQuery* thePQuery = iWalker_Bingo->fPQuery;
-		sQInsert(thePRegSearch->fPQuery_Using, thePQuery);
-		sQInsert(thePQuery->fPRegSearch_Used, thePRegSearch);
-		iWalker_Bingo->fPRegSearch = thePRegSearch;
+		sQInsert(thePRegSearchStar->fPQuery_Using, thePQuery);
+		sQInsert(thePQuery->fPRegSearch_Used, thePRegSearchStar);
+		iWalker_Bingo->fPRegSearch = thePRegSearchStar;
 
-		ZAssert(thePRegSearch->fResult);
+		ZAssert(thePRegSearchStar->fResult);
 		}
 
 	ZRef<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;

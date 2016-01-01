@@ -355,6 +355,7 @@ public:
 		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
 		const double leftLikelySize = fLikelySize.Get();
 		fLikelySize.Clear();
+		const RelHead namesOnLeft = RA::sNamesTo(fRename);
 
 		// Projection, rename and restriction may have been touched, so reset things
 		// to the same state for the right branch as for the left.
@@ -362,8 +363,14 @@ public:
 		fProjection = UniSet<ColName>::sUniversal();
 		fRename = priorRename;
 
+		// Can we treat the left branch names as bound for the right?
+
 		// Process the right branch.
-		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
+		ZRef<RA::Expr_Rel> op1;
+		{
+//##		SaveSetRestore<RelHead> ssr3(fBoundNames, namesOnLeft);
+		op1 = this->Do(iExpr->GetOp1());
+		}
 		const double rightLikelySize = fLikelySize.Get();
 
 		fLikelySize = leftLikelySize * rightLikelySize;
@@ -375,9 +382,9 @@ public:
 		// with it. pApplyRestrictProject will apply any restriction/projection that remains.
 		fRename.clear();
 
-		if (rightLikelySize < leftLikelySize)
-			this->pApplyRestrictProject(sProduct(op1, op0));
-		else
+//		if (rightLikelySize < leftLikelySize)
+//			this->pApplyRestrictProject(sProduct(op1, op0));
+//		else
 			this->pApplyRestrictProject(sProduct(op0, op1));
 		}
 
