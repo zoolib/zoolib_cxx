@@ -52,7 +52,7 @@ ZRef<Walker> Walker_Rename::Prime(
 	ZAssert(not sContains(iOffsets, fNew));
 
 	map<string8,size_t> childOffsets;
-	fWalker = fWalker->Prime(sDefault(), childOffsets, ioBaseOffset);
+	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
 
 	sInsertMust(childOffsets, fNew, sGetEraseMust(childOffsets, fOld));
 
