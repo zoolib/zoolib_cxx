@@ -69,14 +69,14 @@ struct ForEachWrapper_Reverse_T
 	// foreachX will not be usable in a template context before C++11.
 	#define ZMACRO_foreach_prefix(container) \
 		for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
-		for (ZooLib::add_reference \
+		for (ZooLib::add_lvalue_reference \
 			<ZooLib::add_const \
 			<ZMACRO_decltype(container)>::type>::type \
 			__CR = container; not __FEBreak; ++__FEBreak)
 #else
 	#define ZMACRO_foreach_prefix(container) \
 		for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
-		for (typename ZooLib::add_reference \
+		for (typename ZooLib::add_lvalue_reference \
 			<typename ZooLib::add_const \
 			<ZMACRO_decltype(container)>::type>::type \
 			__CR = container; not __FEBreak; ++__FEBreak)

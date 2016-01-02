@@ -110,8 +110,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		using ZMACRO_namespace_tr1_prefix::add_reference;
 	#else
 		using ZMACRO_namespace_tr1_prefix::add_lvalue_reference;
-//		using ZMACRO_namespace_tr1_prefix::add_rvalue_reference;
-		template <class _Tp> using add_reference = add_lvalue_reference<_Tp>;
+		using ZMACRO_namespace_tr1_prefix::add_rvalue_reference;
+//##		template <class _Tp> using add_reference = add_lvalue_reference<_Tp>;
 	#endif
 
 	// Pointer transformations:
@@ -136,7 +136,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	using ZMACRO_namespace_tr1_prefix::is_pod;
 	#if not ZMACRO_Has_tr1_early
 		using ZMACRO_namespace_tr1_prefix::is_trivial;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_copyable;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_copyable;
 		using ZMACRO_namespace_tr1_prefix::is_standard_layout;
 		using ZMACRO_namespace_tr1_prefix::is_literal_type;
 	#endif
@@ -146,31 +146,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#if not ZMACRO_Has_tr1_early
 		using ZMACRO_namespace_tr1_prefix::is_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_default_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_copy_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_move_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_copy_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_move_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_destructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_default_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_copy_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_move_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_copy_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_move_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_destructible;
 
-		using ZMACRO_namespace_tr1_prefix::is_trivially_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_default_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_move_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_move_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_trivially_destructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_default_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_move_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_copy_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_move_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_trivially_destructible;
 
 		using ZMACRO_namespace_tr1_prefix::is_nothrow_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_default_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_constructible;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_assignable;
-		using ZMACRO_namespace_tr1_prefix::is_nothrow_destructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_default_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_constructible;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_copy_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_move_assignable;
+//##		using ZMACRO_namespace_tr1_prefix::is_nothrow_destructible;
 	#endif
 
 	using ZMACRO_namespace_tr1_prefix::has_virtual_destructor;

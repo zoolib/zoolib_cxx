@@ -149,4 +149,15 @@ struct SaveRestore : public SaveSetRestore<T>
 
 } // namespace ZooLib
 
+#if ZCONFIG_CPP < 2011 && (!defined(__GLIBCXX__) || __GLIBCXX__ < 20121127)
+	namespace std {
+
+	template <class _InputIterator, class _Size, class _OutputIterator>
+	_OutputIterator copy_n(_InputIterator __first, _Size __n, _OutputIterator __result)
+		{ return std::copy(__first, __first + __n, __result); }
+
+	} // namespace std
+
+#endif
+
 #endif // __ZooLib_Compat_algorithm_h__
