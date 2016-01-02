@@ -72,7 +72,7 @@ bool SearchSpec::operator<(const SearchSpec& iOther) const
 	if (iOther.fConcreteHead < fConcreteHead)
 		return false;
 
-	return -1 == sCompare_Ref_T(fRestriction, iOther.fRestriction);
+	return sCompare_Ref_T(fRestriction, iOther.fRestriction) < 0;
 	}
 
 const ConcreteHead& SearchSpec::GetConcreteHead() const
