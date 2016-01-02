@@ -78,7 +78,7 @@ int Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 int Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 	{ return ::recv(iSocket, oDest, iCount, 0); }
 
-#elif defined(linux) || defined(__sun__)
+#elif defined(linux) || defined(__linux__) || defined(__sun__)
 
 // RedHat Linux 6.1 adds the sigpipe-on-closed behavior to recv and send, and also adds
 // a new flag that can be passed to supress that behavior. Older kernels return EINVAL

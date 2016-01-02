@@ -83,7 +83,7 @@ void sWaitWriteable(int iFD)
 	::select(iFD + 1, nullptr, &writeSet, nullptr, &timeout);
 	}
 
-#elif defined(linux) || defined(__sun__)
+#elif defined(linux) || defined(__linux__) || defined(__sun__)
 
 bool sWaitReadable(int iFD, double iTimeout)
 	{

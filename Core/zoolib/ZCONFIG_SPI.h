@@ -390,7 +390,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark Linux
 
 #ifndef ZCONFIG_SPI_Avail__Linux
-	#ifdef linux
+	#if defined(linux) || defined(__linux__)
 		#define ZCONFIG_SPI_Avail__Linux 1
 	#endif
 #endif
@@ -476,7 +476,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_SPI_Avail__POSIX
 	#if __MACH__
 		#define ZCONFIG_SPI_Avail__POSIX 1
-	#elif linux
+	#elif defined(linux) || defined(__linux__)
 		#define ZCONFIG_SPI_Avail__POSIX 1
 	#endif
 #endif
