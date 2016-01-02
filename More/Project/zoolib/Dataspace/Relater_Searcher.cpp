@@ -346,19 +346,7 @@ void Relater_Searcher::ModifyRegistrations(
 		{
 		ZRef<RA::Expr_Rel> rel_Added = iAdded->GetRel();
 
-		if (ZLOGF(w, eDebug + 0))
-			{
-			w << "\n" << "Added:\n" << rel_Added;
-			w << "\n" << "DecomposeRestricts:\n" << RA::Transform_DecomposeRestricts().Do(rel_Added);
-			w << "\n" << "PushdownRestrics:\n" << RA::Transform_PushDownRestricts().Do(rel_Added);
-
-			w << "\n" << "Search after PushdownRestrics:\n" << QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(rel_Added));
-
-			w << "\n" << "PushdownRestrics after Decompose:\n" << RA::Transform_PushDownRestricts().Do(RA::Transform_DecomposeRestricts().Do(rel_Added));
-			w << "\n" << "Search after PushdownRestrics after Decompose:\n" << QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(RA::Transform_DecomposeRestricts().Do(rel_Added)));
-			}
-
-		const ZRef<Expr_Rel> theRel = QE::sTransform_Search(RA::Transform_PushDownRestricts().Do(rel_Added));
+		const ZRef<Expr_Rel> theRel = QE::sTransform_Search(rel_Added);
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -580,26 +568,22 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 				iWalker_Bingo->fBoundNames,
 				&iWalker_Bingo->fBoundOffsets[0],
 				ioResults).Do(theRestriction);
-
-			if (ZLOGF(w, eDebug + 1))
-				{
-				w << "\n";
-				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, iWalker_Bingo->fRestriction);
-				w << "\n";
-				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theRestriction);
-				}
 			}
 
 		const SearchSpec theSearchSpec(iWalker_Bingo->fConcreteHead, theRestriction);
 
 		PRegSearch* thePRegSearchStar = nullptr;
+//		Map_SearchSpec_PRegSearchStar::iterator iterMap1 = fMap_SearchSpec_PRegSearchStar.find(theSearchSpec);
 		Map_SearchSpec_PRegSearchStar::iterator iterMap = fMap_SearchSpec_PRegSearchStar.lower_bound(theSearchSpec);
 		if (iterMap != fMap_SearchSpec_PRegSearchStar.end() && iterMap->first == theSearchSpec)
-			{ thePRegSearchStar = iterMap->second; }
+			{
+			thePRegSearchStar = iterMap->second;
+			}
 		else
 			{
 			pair<Map_Refcon_PRegSearch::iterator,bool> iterPair =
 				fMap_Refcon_PRegSearch.insert(make_pair(fNextRefcon++, PRegSearch()));
+
 			ZAssert(iterPair.second);
 
 			thePRegSearchStar = &iterPair.first->second;
@@ -617,6 +601,8 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 
 			while (not thePRegSearchStar->fResult)
 				fCnd.Wait(fMtxR); // *2* see above at *1*
+
+			guard.Acquire();
 			}
 
 		// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),
