@@ -34,6 +34,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
+#include "zooLib/Apple/Util_NS.h"
+
+#include "zoolib/UIKit/TVCell.h"
+
 //###include "zoolib/ZUtil_Any_JSON.h"
 
 // =================================================================================================
@@ -400,9 +404,9 @@ ZRef<UITableViewCell> SectionBody_Sieve::UITableViewCellForRow(UITableView* iVie
 	if (fShowLoading && fIsLoading)
 		{
 		ZAssertStop(0, iRowIndex == 0);
-//##		ZRef<UITVCell_LeftRightLabel> theCell = sGetCell_Simple("Loading...");
+    ZRef<UITableViewCell> theCell = sGetCell_Simple(iView, Util_NS::sString("Loading..."), false);
 //##		[theCell->fUILabel_Left setTextColor:sColor_Text_Gray()];
-//##		return theCell;
+		return theCell;
 		}
 	else if (fCallable_GetCellForMap)
 		{

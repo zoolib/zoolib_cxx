@@ -214,7 +214,6 @@ public:
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
 // Our protocol
-	bool fApplyAccessory;
 	void ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell);
 
 	ZQ<UITableViewCellEditingStyle> fEditingStyleQ;
@@ -236,6 +235,8 @@ public:
 	UITableViewRowAnimation fRowAnimation_Insert;
 	UITableViewRowAnimation fRowAnimation_Delete;
 	UITableViewRowAnimation fRowAnimation_Reload;
+
+	bool fApplyAccessory;
 	};
 
 // =================================================================================================
