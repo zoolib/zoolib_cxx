@@ -50,7 +50,7 @@ size_t ChanRU_UTF_Std::QRead(UTF32* oDest, size_t iCount)
 			}
 		else
 			{
-			if (NotQ<UTF32> theQ = sQReadCP(fChanR_CRLFRemovetheCP))
+			if (NotQ<UTF32> theQ = sQRead(fChanR_CRLFRemove))
 				{ break; }
 			else
 				{
@@ -73,7 +73,12 @@ size_t ChanRU_UTF_Std::QRead(UTF32* oDest, size_t iCount)
 	}
 
 size_t ChanRU_UTF_Std::Unread(const UTF32* iSource, size_t iCount)
-	{ fStack.push_back(iCP); }
+	{
+	size_t localCount = iCount + 1;
+	while (--localCount)
+		fStack.push_back(*iSource++);
+	return iCount;
+	}
 
 size_t ChanRU_UTF_Std::UnreadableLimit()
 	{ return size_t(-1); }

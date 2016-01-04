@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_CRLF.h"
 #include "zoolib/ChanU_UTF.h"
 
+#include "zoolib/Channer_UTF.h"
+
 #include <vector>
 
 namespace ZooLib {
@@ -58,6 +60,39 @@ private:
 	size_t fPos;
 	size_t fLine;
 	size_t fColumn;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChannerRU_UTF_Std
+
+class ChannerRU_UTF_Std
+:	public ChannerRU_UTF
+	{
+public:
+	ChannerRU_UTF_Std(const ZRef<ChannerR_UTF>& iChannerR_UTF)
+	:	fChannerR_UTF(iChannerR_UTF)
+	,	fChanRU_UTF_Std(sGetChan(fChannerR_UTF))
+		{}
+
+	virtual ~ChannerRU_UTF_Std()
+		{}
+
+// From ChannerR_UTF via ChannerRU_UTF
+	virtual void GetChan(const ChanR_UTF*& oChanPtr)
+		{ oChanPtr = &fChanRU_UTF_Std; }
+
+// From ChannerU_UTF via ChannerRU_UTF
+	virtual void GetChan(const ChanU_UTF*& oChanPtr)
+		{ oChanPtr = &fChanRU_UTF_Std; }
+
+// Our protocol
+	ChanRU_UTF_Std& GetChanActual()
+    { return fChanRU_UTF_Std; }
+
+private:
+	const ZRef<ChannerR_UTF> fChannerR_UTF;
+	ChanRU_UTF_Std fChanRU_UTF_Std;
 	};
 
 } // namespace ZooLib
