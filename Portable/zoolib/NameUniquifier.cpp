@@ -34,12 +34,7 @@ bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRef
 #pragma mark sName
 
 Name sName(const string8& iString)
-	{
-	const ZRefCountedString theCountedString = sCountedVal<string8>(iString);
-	if (ThreadVal_NameUniquifier::Type_t* theUniquifier = ThreadVal_NameUniquifier::sPMut())
-		return Name(theUniquifier->Get(theCountedString));
-	return Name(theCountedString);
-	}
+	{ return sName(sCountedVal<string8>(iString)); }
 
 Name sName(const ZRefCountedString& iCountedString)
 	{
