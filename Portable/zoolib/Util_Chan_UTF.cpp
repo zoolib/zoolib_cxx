@@ -262,6 +262,9 @@ static bool spTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChan
 		}
 	}
 
+bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
+	{ return spTryRead_HexInteger(iChanR, iChanU, oInt64); }
+
 static bool spTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
@@ -307,6 +310,9 @@ static bool spTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& i
 		}
 	}
 
+bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64)
+	{ return spTryRead_DecimalInteger(iChanR, iChanU, oInt64); }
 
 static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64)
@@ -325,7 +331,6 @@ static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_
 
 	return false;
 	}
-
 
 static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
@@ -437,6 +442,22 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
+void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	for (;;)
+		{
+		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+			{ break; }
+		else if (not spIsWhitespace(*theCPQ))
+			{
+			sUnread(*theCPQ, iChanU);
+			break;
+			}
+		}
+	}
+
+// -----------------
+
 void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
 	for (;;)
@@ -515,6 +536,9 @@ static bool spCopy_Until(const ChanR_UTF& iChanR, const string32& iTerminator,
 bool sCopy_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
 	const ChanW_UTF& oDest)
 	{ return spCopy_Until(iChanR, Unicode::sAsUTF32(iTerminator), oDest); }
+
+bool sSkip_Until(const ChanR_UTF& iChanR, const string8& iTerminator)
+	{ return sCopy_Until(iChanR, iTerminator, ChanW_XX_Discard<UTF32>()); }
 
 bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
 	string8& oString)

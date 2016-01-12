@@ -64,8 +64,17 @@ bool sTryRead_CaselessString(const string8& iTarget,
 
 bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative);
 
+bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+
+bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64);
+
 bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble);
+
+// -----------------
+
+void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 // -----------------
 
@@ -83,6 +92,8 @@ void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 // -----------------
 
 bool sCopy_Until(const ChanR_UTF& iChanR, const string8& iTerminator, const ChanW_UTF& oDest);
+
+bool sSkip_Until(const ChanR_UTF& iChanR, const string8& iTerminator);
 
 bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator, string8& oString);
 
