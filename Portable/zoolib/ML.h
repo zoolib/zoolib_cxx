@@ -18,23 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZML_h__
-#define __ZML_h__ 1
+#ifndef __ZooLib_ML_h__
+#define __ZooLib_ML_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
+#include "zoolib/Compat_NonCopyable.h"
 
-#include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZStrimmer.h"
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanU_UTF.h"
+#include "zoolib/Channer_UTF.h"
+#include "zoolib/ChannerXX.h"
 
 #include <vector>
 
 namespace ZooLib {
-namespace ZML {
+namespace ML {
 
 // =================================================================================================
-// MARK: - ZML
+#pragma mark -
+#pragma mark ML
 
 using std::pair;
 using std::string;
@@ -56,31 +59,34 @@ typedef vector<Attr_t> Attrs_t;
 typedef Callable<string(string)> Callable_Entity;
 
 // =================================================================================================
-// MARK: - ZML::StrimU
+#pragma mark -
+#pragma mark ML::ChanRU_UTF
 
-/// Tokenizes ML in a source strim.
+/// Tokenizes the ML from a source strim.
 
-class StrimU
-:	public ZStrimU
+class ChanRU_UTF
+:	public ZooLib::ChanR_UTF
+,	public ZooLib::ChanU_UTF
 ,	NonCopyable
 	{
 public:
-	StrimU(const ZStrimU& iStrim);
-	StrimU(const ZStrimU& iStrim,
+	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
-	~StrimU();
+	~ChanRU_UTF();
 
-// From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCount);
 
-// From ZStrimU
-	virtual void Imp_Unread(UTF32 iCP);
-	virtual size_t Imp_UnreadableLimit();
+// From ChanU_UTF
+	virtual size_t Unread(const UTF32* iSource, size_t iCount);
+
+	virtual size_t UnreadableLimit();
 
 // Our protocol
-	ZMACRO_operator_bool(StrimU, operator_bool) const;
+	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
 	EToken Current() const;
-	ZML::StrimU& Advance();
+	ChanRU_UTF& Advance();
 
 	const string& Name() const;
 	Attrs_t Attrs() const;
@@ -92,7 +98,8 @@ private:
 	void pAdvance() const;
 	void pAdvance();
 
-	const ZStrimU& fStrim;
+	const ChanR_UTF& fChanR;
+	const ChanU_UTF& fChanU;
 
 	bool fRecognizeEntitiesInAttributeValues;
 
@@ -108,45 +115,62 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZML::StrimmerU
+#pragma mark -
+#pragma mark ML::ChannerRU_UTF
 
-class StrimmerU : public ZStrimmerU
+class ChannerRU_UTF
+:	public ZooLib::ChannerRU<UTF32>
 	{
 public:
-	StrimmerU(ZRef<ZStrimmerU> iStrimmerU);
-	StrimmerU(ZRef<ZStrimmerU> iStrimmerU,
-		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
-	virtual ~StrimmerU();
+	ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
+		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF);
 
-// From ZStrimmerU
-	const ZStrimU& GetStrimU();
+ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
+		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF,
+		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
+
+	virtual ~ChannerRU_UTF();
+
+// From ChannerR_UTF
+	void GetChan(const ChanR_UTF*& oChanPtr);
+
+// From ChannerU_UTF
+	void GetChan(const ChanU_UTF*& oChanPtr);
 
 // Our protocol
-	StrimU& GetStrim();
+	ChanRU_UTF& GetChan();
 
-public:
-	ZRef<ZStrimmerU> fStrimmerU;
-	StrimU fStrim;
+private:
+	ZRef<ChannerR_UTF> fChannerR_UTF;
+	ZRef<ChannerU_UTF> fChannerU_UTF;
+	ChanRU_UTF fChan;
 	};
 
-ZRef<StrimmerU> sStrimmerU(ZRef<ZStrimmerU> iStrimmerU);
+ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
+	const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF);
+
+ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerRU_UTF>& iChannerRU_UTF);
 
 // =================================================================================================
-// MARK: - ZML parsing support
+#pragma mark -
+#pragma mark ZML parsing support
 
-void sSkipText(StrimU& r);
+void sSkipText(ChanRU_UTF& r);
 
-bool sSkip(StrimU& r, const string& iTagName);
-bool sSkip(StrimU& r, vector<string>& ioTags);
+bool sSkip(ChanRU_UTF& r, const string& iTagName);
+bool sSkip(ChanRU_UTF& r, vector<string>& ioTags);
 
-bool sTryRead_Begin(StrimU& r, const string& iTagName);
+bool sTryRead_Begin(ChanRU_UTF& r, const string& iTagName);
 
-bool sTryRead_Empty(StrimU& r, const string& iTagName);
+bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName);
 
-bool sTryRead_End(StrimU& r, const string& iTagName);
+bool sTryRead_End(ChanRU_UTF& r, const string& iTagName);
 
 // =================================================================================================
-// MARK: - ZML::StrimW
+#pragma mark -
+#pragma mark ZML::StrimW
+
+#if 0
 
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
@@ -274,9 +298,13 @@ protected:
 	std::vector<string8> fAttributeNames;
 	std::vector<string8*> fAttributeValues;
 	};
+#endif
 
 // =================================================================================================
-// MARK: - ZML::StrimW::Indenter
+#pragma mark -
+#pragma mark ZML::StrimW::Indenter
+
+#if 0
 
 class StrimW::Indenter
 	{
@@ -289,8 +317,13 @@ private:
 	bool fPriorIndent;
 	};
 
+#endif
+
 // =================================================================================================
-// MARK: - ZML::StrimmerW
+#pragma mark -
+#pragma mark ZML::StrimmerW
+
+#if 0
 
 /// A write filter strimmer encapsulating a StrimW.
 
@@ -313,7 +346,9 @@ protected:
 	StrimW fStrimW;
 	};
 
-} // namespace ZML
+#endif
+
+} // namespace ML
 } // namespace ZooLib
 
-#endif // __ZML_h__
+#endif // __ZooLib_ML_h__

@@ -19,21 +19,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Memory.h"
+#include "zoolib/ML.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/Util_string.h"
 #include "zoolib/Util_Time.h"
 
-#include "zoolib/ZML.h"
-#include "zoolib/ZStrimR_Boundary.h"
-#include "zoolib/ZUtil_Strim.h"
-
 #include <stdio.h> // For sprintf
 
 namespace ZooLib {
-namespace ZML {
+namespace ML {
 
 #define kDebug_StrimW_ML 1
 
@@ -42,28 +40,29 @@ using std::pair;
 using std::string;
 using std::vector;
 
+using namespace Util_Chan;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: - Static helper functions
+#pragma mark -
+#pragma mark Static helper functions
 
-static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCallable)
+static string spReadReference(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	ZRef<Callable_Entity> iCallable)
 	{
-	using namespace ZUtil_Strim;
-
 	string result;
 
-	if (sTryRead_CP(iStrim, '#'))
+	if (sTryRead_CP('#', iChanR, iChanU))
 		{
 		// It's a character reference.
 		int64 theInt;
 		bool gotIt = false;
-		if (sTryRead_CP(iStrim, 'x') || sTryRead_CP(iStrim, 'X'))
-			gotIt = sTryRead_HexInteger(iStrim, theInt);
+		if (sTryRead_CP('x', iChanR, iChanU) || sTryRead_CP('X', iChanR, iChanU))
+			gotIt = sTryRead_HexInteger(iChanR, iChanU, theInt);
 		else
-			gotIt = sTryRead_DecimalInteger(iStrim, theInt);
+			gotIt = sTryRead_DecimalInteger(iChanR, iChanU, theInt);
 
-		if (gotIt && sTryRead_CP(iStrim, ';'))
+		if (gotIt && sTryRead_CP(';', iChanR, iChanU))
 			result += UTF32(theInt);
 		}
 	else
@@ -72,23 +71,22 @@ static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCall
 		theEntity.reserve(8);
 		for (;;)
 			{
-			UTF32 theCP;
-			if (not iStrim.ReadCP(theCP))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 				{
 				theEntity.clear();
 				break;
 				}
-
-			if (theCP == ';')
-				break;
-
-			if (Unicode::sIsWhitespace(theCP))
+			else if (*theCPQ == ';')
+				{ break; }
+			else if (Unicode::sIsWhitespace((*theCPQ)))
 				{
 				theEntity.clear();
 				break;
 				}
-
-			theEntity += theCP;
+			else
+				{
+				theEntity += *theCPQ;
+				}
 			}
 
 		if (not theEntity.empty())
@@ -113,179 +111,149 @@ static string spReadReference(const ZStrimU& iStrim, ZRef<Callable_Entity> iCall
 	return result;
 	}
 
-static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
+static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string& oText)
 	{
 	oText.resize(0);
 
-	UTF32 curCP;
-	if (not s.ReadCP(curCP))
-		return false;
-
-	if (not Unicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+		{ return false; }
+	else if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 		{
-		s.Unread(curCP);
+		sUnread(*theCPQ, iChanU);
 		return false;
 		}
-
-	oText += curCP;
-
-	for (;;)
+	else
 		{
-		if (not s.ReadCP(curCP))
+		oText += *theCPQ;
+
+		for (;;)
 			{
-			break;
-			}
-		else if (not Unicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
-			{
-			s.Unread(curCP);
-			break;
-			}
-		else
-			{
-			oText += curCP;
+			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+				{
+				break;
+				}
+			else if (not Unicode::sIsAlphaDigit(*theCPQ)
+				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
+				{
+				sUnread(*theCPQ, iChanU);
+				break;
+				}
+			else
+				{
+				oText += *theCPQ;
+				}
 			}
 		}
 
 	return true;
 	}
 
-static bool spReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
+static bool spReadUntil(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTerminator,
+	string& oText)
 	{
 	oText.resize(0);
 
 	for (;;)
 		{
-		UTF32 theCP;
-		if (not s.ReadCP(theCP))
+		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 			return false;
-
-		if (theCP == iTerminator)
+		else if (*theCPQ == iTerminator)
 			return true;
-
-		oText += theCP;
+		else
+			oText += *theCPQ;
 		}
 	}
 
 static bool spReadUntil(
-	const ZStrimU& s, bool iRecognizeEntities,
-	ZRef<Callable_Entity> iCallable,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
 	UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
 	for (;;)
 		{
-		UTF32 theCP;
-		if (not s.ReadCP(theCP))
-			{
+		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 			return false;
-			}
-		else if (theCP == iTerminator)
-			{
+		else if (*theCPQ == iTerminator)
 			return true;
-			}
-		else if (theCP == '&' && iRecognizeEntities)
-			{
-			oText += spReadReference(s, iCallable);
-			}
+		else if (*theCPQ == '&' && iRecognizeEntities)
+			oText += spReadReference(iChanR, iChanU, iCallable);
 		else
-			{
-			oText += theCP;
-			}
+			oText += *theCPQ;
 		}
 	}
 
-static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
+static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, string& oName)
 	{
 	oName.resize(0);
 
-	UTF32 curCP;
-	if (not s.ReadCP(curCP))
-		return false;
-
-	if (curCP == '"')
-		{
-		return spReadUntil(s, '"', oName);
-		}
-	else if (curCP == '\'')
-		{
-		return spReadUntil(s, '\'', oName);
-		}
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+		{ return false; }
+	else if (*theCPQ == '"')
+		{ return spReadUntil(iChanR, iChanU, '"', oName); }
+	else if (*theCPQ == '\'')
+		{ return spReadUntil(iChanR, iChanU, '\'', oName); }
 	else
 		{
-		if (not Unicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
+		if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 			{
-			s.Unread(curCP);
+			sUnread(*theCPQ, iChanU);
 			return false;
 			}
 
-		oName += curCP;
+		oName += *theCPQ;
 		for (;;)
 			{
-			if (not s.ReadCP(curCP))
-				break;
-
-			if (not Unicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
+			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+				{ return true; }
+			else if (not Unicode::sIsAlphaDigit(*theCPQ)
+				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
 				{
-				s.Unread(curCP);
-				break;
+				sUnread(*theCPQ, iChanU);
+				return true;
 				}
-
-			oName += curCP;
+			else
+				{ oName += *theCPQ; }
 			}
 		}
-
-	return true;
 	}
 
 static bool spReadMLAttributeValue(
-	const ZStrimU& s, bool iRecognizeEntities,
-	ZRef<Callable_Entity> iCallable,
+	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
 	string& oValue)
 	{
 	oValue.resize(0);
 
-	UTF32 curCP;
-	if (not s.ReadCP(curCP))
-		return false;
-
-	if (curCP == '"')
-		{
-		return spReadUntil(s, iRecognizeEntities, iCallable, '"', oValue);
-		}
-	else if (curCP == '\'')
-		{
-		return spReadUntil(s, iRecognizeEntities, iCallable, '\'', oValue);
-		}
+	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+		{ return false; }
+	else if (*theCPQ == '"')
+		{ return spReadUntil(iChanR, iChanU, '"', oValue); }
+	else if (*theCPQ == '\'')
+		{ return spReadUntil(iChanR, iChanU, '\'', oValue); }
 	else
 		{
-		s.Unread(curCP);
+		sUnread(*theCPQ, iChanU);
 
-		ZUtil_Strim::sSkip_WS(s);
+		sSkip_WS(iChanR, iChanU);
 
 		for (;;)
 			{
-			if (not s.ReadCP(curCP))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+				{ break; }
+			else if (*theCPQ == '>')
 				{
+				sUnread(*theCPQ, iChanU);
 				break;
 				}
-			else if (curCP == '>')
-				{
-				s.Unread(curCP);
-				break;
-				}
-			else if (Unicode::sIsWhitespace(curCP))
-				{
-				break;
-				}
-			else if (curCP == '&' && iRecognizeEntities)
-				{
-				oValue += spReadReference(s, iCallable);
-				}
+			else if (Unicode::sIsWhitespace(*theCPQ))
+				{ break; }
+			else if (*theCPQ == '&' && iRecognizeEntities)
+				{ oValue += spReadReference(iChanR, iChanU, iCallable); }
 			else
-				{
-				oValue += curCP;
-				}
+				{ oValue += *theCPQ; }
 			}
 		}
 
@@ -293,28 +261,31 @@ static bool spReadMLAttributeValue(
 	}
 
 // =================================================================================================
-// MARK: - ZML::StrimU
+#pragma mark -
+#pragma mark	::StrimU
 
-StrimU::StrimU(const ZStrimU& iStrim)
-:	fStrim(iStrim),
-	fRecognizeEntitiesInAttributeValues(false),
-	fBufferStart(0),
-	fToken(eToken_Fresh)
+ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+:	fChanR(iChanR)
+,	fChanU(iChanU)
+,	fRecognizeEntitiesInAttributeValues(false)
+,	fBufferStart(0)
+,	fToken(eToken_Fresh)
 	{}
 
-StrimU::StrimU(const ZStrimU& iStrim,
+ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
-:	fStrim(iStrim),
-	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues),
-	fCallable(iCallable),
-	fBufferStart(0),
-	fToken(eToken_Fresh)
+:	fChanR(iChanR)
+,	fChanU(iChanU)
+,	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
+,	fCallable(iCallable)
+,	fBufferStart(0)
+,	fToken(eToken_Fresh)
 	{}
 
-StrimU::~StrimU()
+ChanRU_UTF::~ChanRU_UTF()
 	{}
 
-void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+size_t ChanRU_UTF::QRead(UTF32* oDest, size_t iCount)
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -338,56 +309,57 @@ void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 					fBuffer.resize(0);
 					}
 				}
+			else if (NotQ<UTF32> theCPQ = sQRead(fChanR))
+				{
+				fToken = eToken_Exhausted;
+				break;
+				}
+			else if (*theCPQ == '<')
+				{
+				sUnread(*theCPQ, fChanU);
+				break;
+				}
+			else if (*theCPQ == '&')
+				{
+				fBufferStart = 0;
+				fBuffer = Unicode::sAsUTF32(spReadReference(fChanR, fChanU, fCallable));
+				}
 			else
 				{
-				UTF32 theCP;
-				if (not fStrim.ReadCP(theCP))
-					{
-					fToken = eToken_Exhausted;
-					break;
-					}
-				else if (theCP == '<')
-					{
-					fStrim.Unread(theCP);
-					break;
-					}
-				else if (theCP == '&')
-					{
-					fBufferStart = 0;
-					fBuffer = Unicode::sAsUTF32(spReadReference(fStrim, fCallable));
-					}
-				else
-					{
-					*localDest++ = theCP;
-					--iCount;
-					}
+				*localDest++ = *theCPQ;
+				--iCount;
 				}
 			}
 		}
 
-	if (oCount)
-		*oCount = localDest - oDest;
+	return localDest - oDest;
 	}
 
-void StrimU::Imp_Unread(UTF32 iCP)
+size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 	{
 	ZAssert(fToken == eToken_Text);
 
-	if (fBufferStart == 0)
-		fBuffer.insert(fBuffer.begin(), iCP);
+	if (fBufferStart > iCount)
+		{
+		fBufferStart -= iCount;
+		}
 	else
-		--fBufferStart;
-
-	ZAssert(fBuffer[fBufferStart] == iCP);
+		{
+		// iCount >= fBufferStart
+		const string32 toInsert(iSource + fBufferStart, iSource + iCount);
+		fBuffer.insert(fBuffer.begin(), toInsert.rbegin(), toInsert.rend());
+		fBufferStart = 0;
+		}
+	return iCount;
 	}
 
-size_t StrimU::Imp_UnreadableLimit()
+size_t ChanRU_UTF::UnreadableLimit()
 	{ return size_t(-1); }
 
-StrimU::operator operator_bool() const
+ChanRU_UTF::operator operator_bool() const
 	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }
 
-EToken StrimU::Current() const
+EToken ChanRU_UTF::Current() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -395,7 +367,7 @@ EToken StrimU::Current() const
 	return fToken;
 	}
 
-StrimU& StrimU::Advance()
+ChanRU_UTF& ChanRU_UTF::Advance()
 	{
 	if (fToken == eToken_Fresh)
 		{
@@ -404,16 +376,14 @@ StrimU& StrimU::Advance()
 	else
 		{
 		// If we're on a text token, this will skip it. Otherwise it's a no-op.
-		this->SkipAll();
+		sSkipAll(*this);
 
 		fToken = eToken_Fresh;
 		}
 	return *this;
 	}
 
-static string spEmptyString;
-
-const string& StrimU::Name() const
+const string& ChanRU_UTF::Name() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -421,10 +391,10 @@ const string& StrimU::Name() const
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
 		return fTagName;
 
-	return spEmptyString;
+	return sDefault<string>();
 	}
 
-Attrs_t StrimU::Attrs() const
+Attrs_t ChanRU_UTF::Attrs() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -435,7 +405,7 @@ Attrs_t StrimU::Attrs() const
 	return Attrs_t();
 	}
 
-ZQ<string> StrimU::QAttr(const string& iAttrName) const
+ZQ<string> ChanRU_UTF::QAttr(const string& iAttrName) const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -451,7 +421,7 @@ ZQ<string> StrimU::QAttr(const string& iAttrName) const
 	return null;
 	}
 
-string StrimU::Attr(const string& iAttrName) const
+string ChanRU_UTF::Attr(const string& iAttrName) const
 	{
 	if (ZQ<string> theAttr = this->QAttr(iAttrName))
 		return *theAttr;
@@ -460,10 +430,10 @@ string StrimU::Attr(const string& iAttrName) const
 
 // The semantics of this do not precisely match those of other sTryRead_XXX methods.
 // We will consume code points from \a s up to and including the failing code point.
-static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
+static bool spTryRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 	{
 	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
-		/*no test*/;/*no inc*/)
+		/*no test*/; /*no inc*/)
 		{
 		UTF32 patternCP;
 		if (not Unicode::sReadInc(iter, iterEnd, patternCP))
@@ -472,14 +442,12 @@ static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 			return true;
 			}
 
-		UTF32 targetCP;
-		if (not iStrimR.ReadCP(targetCP))
+		if (NotQ<UTF32> targetCPQ = sQRead(iChanR))
 			{
 			// Exhausted the target before seeing the pattern.
 			return false;
 			}
-
-		if (targetCP != patternCP)
+		else if (*targetCPQ != patternCP)
 			{
 			// Mismatch.
 			return false;
@@ -487,54 +455,51 @@ static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 		}
 	}
 
-void StrimU::pAdvance() const
-	{ const_cast<StrimU*>(this)->pAdvance(); }
+void ChanRU_UTF::pAdvance() const
+	{ const_cast<ChanRU_UTF*>(this)->pAdvance(); }
 
-void StrimU::pAdvance()
+void ChanRU_UTF::pAdvance()
 	{
-	using namespace ZUtil_Strim;
+//	using namespace ZUtil_Strim;
 
 	fTagAttributes.clear();
 
 	for	(;;)
 		{
-		UTF32 theCP;
-		if (not fStrim.ReadCP(theCP))
+		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
 			{
 			fToken = eToken_Exhausted;
 			return;
 			}
-
-		if (theCP != '<')
+		else if (*theCPQ != '<')
 			{
-			fStrim.Unread(theCP);
+			sUnread(*theCPQ, fChanU);
 			fToken = eToken_Text;
 			return;
 			}
 
-		sSkip_WS(fStrim);
+		sSkip_WS(fChanR, fChanU);
 
-		if (not fStrim.ReadCP(theCP))
+		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
 			{
 			fToken = eToken_Exhausted;
 			return;
 			}
-
-		switch (theCP)
+		else switch (*theCPQ)
 			{
 			case'/':
 				{
-				sSkip_WS(fStrim);
+				sSkip_WS(fChanR, fChanU);
 
-				if (not spReadMLIdentifier(fStrim, fTagName))
+				if (not spReadMLIdentifier(fChanR, fChanU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
 					}
 
-				sSkip_WS(fStrim);
+				sSkip_WS(fChanR, fChanU);
 
-				if (not sTryRead_CP(fStrim, '>'))
+				if (not sTryRead_CP('>', fChanR, fChanU))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -546,42 +511,42 @@ void StrimU::pAdvance()
 			case '?':
 				{
 				// PI
-				ZStrimR_Boundary("?>", fStrim).SkipAll();
+				sSkip_Until(fChanR, "?>");
 				break;
 				}
 			case '!':
 				{
-				if (sTryRead_CP(fStrim, '-'))
+				if (sTryRead_CP('-', fChanR, fChanU))
 					{
-					if (sTryRead_CP(fStrim, '-'))
+					if (sTryRead_CP('-', fChanR, fChanU))
 						{
 						// A comment.
-						ZStrimR_Boundary("-->", fStrim).SkipAll();
+						sSkip_Until(fChanR, "-->");
 						}
 					else
 						{
 						// Not a comment, but not an entity definition. Just skip
 						// till we hit a '>'
-						ZStrimR_Boundary(">", fStrim).SkipAll();
+						sSkip_Until(fChanR, ">");
 						}
 					}
-				else if (spTryRead_String(fStrim, "[CDATA["))
+				else if (spTryRead_String("[CDATA[", fChanR))
 					{
 					// CDATA
-					ZStrimR_Boundary("]]>", fStrim).SkipAll();
+					sSkip_Until(fChanR, "]]>");
 					}
 				else
 					{
 					// An entity definition
-					ZStrimR_Boundary(">", fStrim).SkipAll();
+					sSkip_Until(fChanR, ">");
 					}
 				break;
 				}
 			default:
 				{
-				fStrim.Unread(theCP);
+				sUnread(*theCPQ, fChanU);
 
-				if (not spReadMLIdentifier(fStrim, fTagName))
+				if (not spReadMLIdentifier(fChanR, fChanU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -589,22 +554,23 @@ void StrimU::pAdvance()
 
 				for (;;)
 					{
-					sSkip_WS(fStrim);
+					sSkip_WS(fChanR, fChanU);
 
 					string attributeName;
 					attributeName.reserve(8);
-					if (not spReadMLAttributeName(fStrim, attributeName))
+					if (not spReadMLAttributeName(fChanR, fChanU, attributeName))
 						break;
 
-					sSkip_WS(fStrim);
+					sSkip_WS(fChanR, fChanU);
 
-					if (sTryRead_CP(fStrim, '='))
+					if (sTryRead_CP('=', fChanR, fChanU))
 						{
-						sSkip_WS(fStrim);
+						sSkip_WS(fChanR, fChanU);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (not spReadMLAttributeValue(
-							fStrim, fRecognizeEntitiesInAttributeValues, fCallable, attributeValue))
+						if (not spReadMLAttributeValue(fChanR, fChanU,
+							fRecognizeEntitiesInAttributeValues, fCallable,
+							attributeValue))
 							{
 							fToken = eToken_Exhausted;
 							return;
@@ -617,14 +583,14 @@ void StrimU::pAdvance()
 						}
 					}
 
-				sSkip_WS(fStrim);
+				sSkip_WS(fChanR, fChanU);
 
-				if (sTryRead_CP(fStrim, '/'))
+				if (sTryRead_CP('/', fChanR, fChanU))
 					fToken = eToken_TagEmpty;
 				else
 					fToken = eToken_TagBegin;
 
-				if (not sTryRead_CP(fStrim, '>'))
+				if (not sTryRead_CP('>', fChanR, fChanU))
 					fToken = eToken_Exhausted;
 
 				return;
@@ -634,51 +600,69 @@ void StrimU::pAdvance()
 	}
 
 // =================================================================================================
-// MARK: - ZML::StrimmerU
+#pragma mark -
+#pragma mark ML::ChannerRU_UTF
 
-StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU)
-,	fStrim(iStrimmerU->GetStrimU())
+ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
+	const ZRef<ChannerU_UTF>& iChannerU_UTF)
+:	fChannerR_UTF(iChannerR_UTF)
+,	fChannerU_UTF(iChannerU_UTF)
+,	fChan(sGetChan(fChannerR_UTF), sGetChan(fChannerU_UTF))
 	{}
 
-StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU,
+ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
+	const ZRef<ChannerU_UTF>& iChannerU_UTF,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
-:	fStrimmerU(iStrimmerU)
-,	fStrim(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues, iCallable)
+:	fChannerR_UTF(iChannerR_UTF)
+,	fChannerU_UTF(iChannerU_UTF)
+,	fChan(sGetChan(fChannerR_UTF), sGetChan(fChannerU_UTF),
+		iRecognizeEntitiesInAttributeValues, iCallable)
 	{}
 
-StrimmerU::~StrimmerU()
+ChannerRU_UTF::~ChannerRU_UTF()
 	{}
 
-const ZStrimU& StrimmerU::GetStrimU()
-	{ return fStrim; }
+void ChannerRU_UTF::GetChan(const ChanR_UTF*& oChanPtr)
+	{ oChanPtr = &fChan; }
 
-StrimU& StrimmerU::GetStrim()
-	{ return fStrim; }
+void ChannerRU_UTF::GetChan(const ChanU_UTF*& oChanPtr)
+	{ oChanPtr = &fChan; }
 
-ZRef<StrimmerU> sStrimmerU(ZRef<ZStrimmerU> iStrimmerU)
+ChanRU_UTF& ChannerRU_UTF::GetChan()
+	{ return fChan; }
+
+ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
+	const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF)
 	{
-	if (iStrimmerU)
-		return new StrimmerU(iStrimmerU);
+	if (iChannerR_UTF && iChannerU_UTF)
+		return new ChannerRU_UTF(iChannerR_UTF, iChannerU_UTF);
+	return null;
+	}
+
+ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerRU_UTF>& iChannerRU_UTF)
+	{
+	if (iChannerRU_UTF)
+		return new ChannerRU_UTF(iChannerRU_UTF, iChannerRU_UTF);
 	return null;
 	}
 
 // =================================================================================================
-// MARK: - ZML parsing support
+#pragma mark -
+#pragma mark ZML parsing support
 
-void sSkipText(StrimU& r)
+void sSkipText(ChanRU_UTF& r)
 	{
 	while (r.Current() == eToken_Text)
 		r.Advance();
 	}
 
-bool sSkip(StrimU& r, const string& iTagName)
+bool sSkip(ChanRU_UTF& r, const string& iTagName)
 	{
 	vector<string> theTags(1, iTagName);
 	return sSkip(r, theTags);
 	}
 
-bool sSkip(StrimU& r, vector<string>& ioTags)
+bool sSkip(ChanRU_UTF& r, vector<string>& ioTags)
 	{
 	while (!ioTags.empty())
 		{
@@ -708,7 +692,7 @@ bool sSkip(StrimU& r, vector<string>& ioTags)
 	return true;
 	}
 
-bool sTryRead_Begin(StrimU& r, const string& iTagName)
+bool sTryRead_Begin(ChanRU_UTF& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagBegin || r.Name() != iTagName)
 		return false;
@@ -717,7 +701,7 @@ bool sTryRead_Begin(StrimU& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_Empty(StrimU& r, const string& iTagName)
+bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEmpty || r.Name() != iTagName)
 		return false;
@@ -726,7 +710,7 @@ bool sTryRead_Empty(StrimU& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_End(StrimU& r, const string& iTagName)
+bool sTryRead_End(ChanRU_UTF& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
 		return false;
@@ -736,7 +720,10 @@ bool sTryRead_End(StrimU& r, const string& iTagName)
 	}
 
 // =================================================================================================
-// MARK: - ZML::StrimW
+#pragma mark -
+#pragma mark ZML::StrimW
+
+#if 0
 
 /** \class ZML::StrimW
 ZML::StrimW extends the ZStrimW protocol with methods to open and close
@@ -1414,8 +1401,13 @@ void StrimW::pEnd()
 	fTagType = eTagTypeNone;
 	}
 
+#endif
+
 // =================================================================================================
-// MARK: - ZML::StrimW::Indenter
+#pragma mark -
+#pragma mark ZML::StrimW::Indenter
+
+#if 0
 
 StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 :	fStrimW(iStrimW),
@@ -1425,8 +1417,13 @@ StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 StrimW::Indenter::~Indenter()
 	{ fStrimW.Indent(fPriorIndent); }
 
+#endif
+
 // =================================================================================================
-// MARK: - ZML::StrimmerW
+#pragma mark -
+#pragma mark ZML::StrimmerW
+
+#if 0
 
 StrimmerW::StrimmerW(ZRef<ZStrimmerW> iStrimmerW)
 :	fStrimmerW(iStrimmerW),
@@ -1452,6 +1449,7 @@ const ZStrimW& StrimmerW::GetStrimW()
 
 ZML::StrimW& StrimmerW::GetStrim()
 	{ return fStrimW; }
+#endif
 
 } // namespace ZML
 } // namespace ZooLib
