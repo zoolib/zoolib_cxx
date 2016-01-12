@@ -88,7 +88,7 @@ public:
 
 // Our protocol
 	ChanRU_UTF_Std& GetChanActual()
-    { return fChanRU_UTF_Std; }
+		{ return fChanRU_UTF_Std; }
 
 private:
 	const ZRef<ChannerR_UTF> fChannerR_UTF;

@@ -48,17 +48,17 @@ typedef Channer<ChanSizeSet> ChannerSizeSet;
 
 #if ZCONFIG_CPP >= 2011
 
-template <class Elmt_p> using ChannerR = Channer<ChanR<Elmt_p> >;
-template <class Elmt_p> using ChannerU = Channer<ChanU<Elmt_p> >;
-template <class Elmt_p> using ChannerW = Channer<ChanW<Elmt_p> >;
+	template <class Elmt_p> using ChannerR = Channer<ChanR<Elmt_p> >;
+	template <class Elmt_p> using ChannerU = Channer<ChanU<Elmt_p> >;
+	template <class Elmt_p> using ChannerW = Channer<ChanW<Elmt_p> >;
 
-#else // ZCONFIG_CPP >= 2011
+#elif 1
 
-template <class Elmt_p> class ChannerR : public Channer<ChanR<Elmt_p> > {};
-template <class Elmt_p> class ChannerU : public Channer<ChanU<Elmt_p> > {};
-template <class Elmt_p> class ChannerW : public Channer<ChanW<Elmt_p> > {};
+	template <class Elmt_p> class ChannerR : public Channer<ChanR<Elmt_p> > {};
+	template <class Elmt_p> class ChannerU : public Channer<ChanU<Elmt_p> > {};
+	template <class Elmt_p> class ChannerW : public Channer<ChanW<Elmt_p> > {};
 
-#endif // ZCONFIG_CPP >= 2011
+#endif
 
 // =================================================================================================
 #pragma mark -

@@ -30,7 +30,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCountedStringUniquifier
+#pragma mark CountedStringUniquifier
 
 typedef CountedVal<string8> CountedString;
 

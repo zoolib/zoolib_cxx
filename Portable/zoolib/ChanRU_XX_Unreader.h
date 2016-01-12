@@ -68,9 +68,10 @@ public:
 		return localDest - oDest;
 		}
 
-// From ChanU
 	virtual size_t Readable()
 		{ return fStack.size() + sReadable(fChanR); }
+
+// From ChanU
 
 	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
