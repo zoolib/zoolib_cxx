@@ -67,7 +67,7 @@ public:
 		return fVal || not fPromiseExists;
 		}
 
-	bool WaitUntil(Time iDeadline)
+	bool WaitUntil(double iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
 
