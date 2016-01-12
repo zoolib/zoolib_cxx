@@ -51,7 +51,7 @@ public:
 	void Wait()
 		{
 		ZAcqMtx acq(fMtx);
-		while (fPromiseExists && not fVal)
+		while (fPromiseExists && not fValQ)
 			fCnd.Wait(fMtx);
 		}
 
@@ -59,32 +59,32 @@ public:
 		{
 		ZAcqMtx acq(fMtx);
 
-		if (fVal || not fPromiseExists)
+		if (fValQ || not fPromiseExists)
 			return true;
 
 		fCnd.WaitFor(fMtx, iTimeout);
 
-		return fVal || not fPromiseExists;
+		return fValQ || not fPromiseExists;
 		}
 
 	bool WaitUntil(double iDeadline)
 		{
 		ZAcqMtx acq(fMtx);
 
-		if (fVal || not fPromiseExists)
+		if (fValQ || not fPromiseExists)
 			return true;
 
 		fCnd.WaitUntil(fMtx, iDeadline);
 
-		return fVal || not fPromiseExists;
+		return fValQ || not fPromiseExists;
 		}
 
 	ZQ<T> QGet()
 		{
 		ZAcqMtx acq(fMtx);
-		while (fPromiseExists && not fVal)
+		while (fPromiseExists && not fValQ)
 			fCnd.Wait(fMtx);
-		return fVal;
+		return fValQ;
 		}
 
 private:
@@ -92,7 +92,7 @@ private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fPromiseExists;
-	ZQ<T> fVal;
+	ZQ<T> fValQ;
 	};
 
 // =================================================================================================
@@ -118,20 +118,20 @@ public:
 	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		return fDelivery->fVal;
+		return fDelivery->fValQ;
 		}
 
 	void Deliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		fDelivery->fVal.Set(iVal);
+		fDelivery->fValQ.Set(iVal);
 		fDelivery->fCnd.Broadcast();
 		}
 
 	bool QDeliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		if (not fDelivery->fVal.QSet(iVal))
+		if (not fDelivery->fValQ.QSet(iVal))
 			return false;
 		fDelivery->fCnd.Broadcast();
 		return true;
@@ -167,20 +167,20 @@ public:
 	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		return fDelivery->fVal;
+		return fDelivery->fValQ;
 		}
 
 	void Deliver()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		fDelivery->fVal.Set();
+		fDelivery->fValQ.Set();
 		fDelivery->fCnd.Broadcast();
 		}
 
 	bool QDeliver()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		if (not fDelivery->fVal.QSet())
+		if (not fDelivery->fValQ.QSet())
 			return false;
 		fDelivery->fCnd.Broadcast();
 		return true;
