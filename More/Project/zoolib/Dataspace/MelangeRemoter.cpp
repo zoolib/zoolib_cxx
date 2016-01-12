@@ -494,7 +494,7 @@ public:
 Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
 	const ZRef<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
-, fCallable_Status(iCallable_Status)
+,	fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
 ,	fNextRefcon(1)
 	{}
@@ -519,6 +519,7 @@ ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 
 ZQ<void> Melange_Client::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	{
+	ZGuardMtxR guard(fMtxR);
 	std::map<Daton,bool>::iterator iter = fPending_Updates.lower_bound(iDaton);
 	if (iter != fPending_Updates.end() && iter->first == iDaton)
 		{
@@ -559,6 +560,7 @@ void Melange_Client::pWork()
 	// Pull stuff from fQueue_Read
 	vector<Map_Any> theMessages;
 	swap(fQueue_Read, theMessages);
+	guard.Release();
 
 	foreachv (Map_Any theMessage, theMessages)
 		{
@@ -575,6 +577,8 @@ void Melange_Client::pWork()
 				}
 			}
 		}
+
+	guard.Acquire();
 
 	// trigger write of anything that's now pending, if necessary.
 	if (sNotEmpty(fPending_Registrations)
@@ -660,7 +664,7 @@ bool Melange_Client::pWrite_Inner()
 
 	Map_Any theMessage;
 
-	if (not sIsEmpty(fPending_Registrations))
+	if (sNotEmpty(fPending_Registrations))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Registrations");
 		foreachv (ZRef<Registration> theReg, fPending_Registrations)
@@ -676,7 +680,7 @@ bool Melange_Client::pWrite_Inner()
 		sClear(fPending_Registrations);
 		}
 
-	if (not sIsEmpty(fPending_Unregistrations))
+	if (sNotEmpty(fPending_Unregistrations))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Unregistrations");
 		foreachi (ii, fPending_Unregistrations)
@@ -684,7 +688,7 @@ bool Melange_Client::pWrite_Inner()
 		sClear(fPending_Unregistrations);
 		}
 
-	if (not sIsEmpty(fPending_Updates))
+	if (sNotEmpty(fPending_Updates))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Updates");
 		foreachi (ii, fPending_Updates)
