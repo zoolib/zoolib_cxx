@@ -299,7 +299,7 @@ bool Trail::IsNormalized() const
 		++ii;
 
 	// Skip any regular components.
-	while (ii != fComps.end() && not sIsEmpty(*ii))
+	while (ii != fComps.end() && sNotEmpty(*ii))
 		++ii;
 
 	// If we hit the end then there were no bounces following a regular component.
