@@ -71,6 +71,13 @@ private:
 	typedef DatonSet::Event Event;
 	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
 
+	// -----
+
+	struct Key;
+	class PSearch;
+
+	void pInvalidateSearchIfAppropriate(PSearch* thePSearch, const Key& iKey);
+
 	void pIndexInsert(const Map_Assert::value_type* iMapEntryP);
 	void pIndexErase(const Map_Assert::value_type* iMapEntryP);
 
@@ -132,7 +139,6 @@ private:
 
 	class DLink_PSearch_InIndex;
 	class DLink_PSearch_NeedsWork;
-	class PSearch;
 
 	typedef std::map<SearchSpec,PSearch> Map_SearchSpec_PSearch;
 	Map_SearchSpec_PSearch fMap_SearchSpec_PSearch;

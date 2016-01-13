@@ -79,20 +79,18 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
 #pragma mark -
 #pragma mark Index
 
-typedef vector<ColName> IndexSpec;
+
+struct Searcher_DatonSet::Key
+	{
+	static const size_t kMaxCols = 4;
+	const Searcher_DatonSet::Map_Assert::value_type* fMapEntryP;
+	const Val_Any* fValues[kMaxCols];
+	};
 
 class Searcher_DatonSet::Index
 	{
 public:
-	static const size_t kMaxCols = 4;
-
-	// -----
-
-	struct Key
-		{
-		const Map_Assert::value_type* fMapEntryP;
-		const Val_Any* fValues[kMaxCols];
-		};
+	typedef Searcher_DatonSet::Key Key;
 
 	// -----
 
@@ -156,7 +154,7 @@ public:
 	:	fCount(iIndexSpec.size())
 	,	fSet(Comparer(fCount))
 		{
-		ZAssert(fCount <= kMaxCols);
+		ZAssert(fCount <= Key::kMaxCols);
 		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
 		}
 
@@ -210,7 +208,7 @@ public:
 				oKey.fValues[xx] = emptyValPtr;
 			}
 
-		for (size_t xx = fCount; xx < kMaxCols; ++xx)
+		for (size_t xx = fCount; xx < Key::kMaxCols; ++xx)
 			oKey.fValues[xx] = nullptr;
 
 		oKey.fMapEntryP = iMapEntryP;
@@ -218,7 +216,7 @@ public:
 		return true;
 		}
 
-	ColName fColNames[kMaxCols];
+	ColName fColNames[Key::kMaxCols];
 	const size_t fCount;
 
 	Set fSet;
@@ -230,7 +228,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_DatonSet::Index::Key& iKey)
 	{
 	w << (uint64)iKey.fMapEntryP << ", ";
-	for (size_t xx = 0; xx < Searcher_DatonSet::Index::kMaxCols;++xx)
+	for (size_t xx = 0; xx < countof(iKey.fValues); ++xx)
 		{
 		if (not iKey.fValues[xx])
 			break;
@@ -827,7 +825,7 @@ void Searcher_DatonSet::CollectResults(vector<SearchResult>& oChanged)
 				Index::Key theKey;
 
 				const size_t countEqual = thePSearch->fValsEqual.size();
-				const size_t countAll = Index::kMaxCols;//thePSearch->fIndex->fCount;
+				const size_t countAll = Key::kMaxCols;//thePSearch->fIndex->fCount;
 				ZAssert(countEqual <= countAll);
 				for (size_t xx = 0; xx < countEqual; ++xx)
 					theKey.fValues[xx] = &thePSearch->fValsEqual[xx];
@@ -1059,18 +1057,66 @@ void Searcher_DatonSet::pPull()
 		}
 	}
 
+void Searcher_DatonSet::pInvalidateSearchIfAppropriate(PSearch* iPSearch, const Key& iKey)
+	{
+	if (iPSearch->fResult && not sContains(fPSearch_NeedsWork, iPSearch))
+		{
+		// We will invalidate only if iKey matches iPSearch.
+		bool allMatch = true;
+		const size_t countEqual = iPSearch->fValsEqual.size();
+		for (size_t xx = 0; xx < countEqual; ++xx)
+			{
+			if (*iKey.fValues[xx] != iPSearch->fValsEqual[xx])
+				{
+				allMatch = false;
+				break;
+				}
+			}
+
+		if (allMatch)
+			{
+			if (iPSearch->fRangeLo)
+				{
+				if (iPSearch->fRangeLo->second)
+					allMatch = iPSearch->fRangeLo->first <= *iKey.fValues[countEqual];
+				else
+					allMatch = iPSearch->fRangeLo->first < *iKey.fValues[countEqual];
+				}
+			}
+
+		if (allMatch)
+			{
+			if (iPSearch->fRangeHi)
+				{
+				if (iPSearch->fRangeHi->second)
+					allMatch = iPSearch->fRangeHi->first >= *iKey.fValues[countEqual];
+				else
+					allMatch = iPSearch->fRangeHi->first > *iKey.fValues[countEqual];
+				}
+			}
+
+		// Ignoring iPSearch->fRestrictionRemainder, so we'll have some false positives.
+
+		if (allMatch)
+			{
+			sQInsertBack(fPSearch_NeedsWork, iPSearch);
+			iPSearch->fResult.Clear();
+			}
+		}
+	}
+
 void Searcher_DatonSet::pIndexInsert(const Map_Assert::value_type* iMapEntryP)
 	{
 	foreacha (anIndex, fIndexes)
 		{
-		if (anIndex->Insert(iMapEntryP))
+		Key theKey;
+		if (anIndex->pAsKey(iMapEntryP, theKey))
 			{
+			sInsertMust(anIndex->fSet, theKey);
 			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
 				iter; iter.Advance())
 				{
-				PSearch* thePSearch = iter.Current();
-				sQInsertBack(fPSearch_NeedsWork, thePSearch);
-				thePSearch->fResult.Clear();
+				this->pInvalidateSearchIfAppropriate(iter.Current(), theKey);
 				}
 			}
 		}
@@ -1080,14 +1126,14 @@ void Searcher_DatonSet::pIndexErase(const Map_Assert::value_type* iMapEntryP)
 	{
 	foreacha (anIndex, fIndexes)
 		{
-		if (anIndex->Erase(iMapEntryP))
+		Key theKey;
+		if (anIndex->pAsKey(iMapEntryP, theKey))
 			{
+			sEraseMust(anIndex->fSet, theKey);
 			for (DListIterator<PSearch,DLink_PSearch_InIndex> iter = anIndex->fPSearch_InIndex;
 				iter; iter.Advance())
 				{
-				PSearch* thePSearch = iter.Current();
-				sQInsertBack(fPSearch_NeedsWork, thePSearch);
-				thePSearch->fResult.Clear();
+				this->pInvalidateSearchIfAppropriate(iter.Current(), theKey);
 				}
 			}
 		}
