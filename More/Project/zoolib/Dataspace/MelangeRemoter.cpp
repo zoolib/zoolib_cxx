@@ -211,30 +211,28 @@ static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 	const double finish = Time::sSystem();
 
 	if (ZLOGF(w, eDebug))
-		w << 1e3 * (finish - start) << "ms\n" << iMessage;
+		{
+		w << 1e3 * (finish - start) << "ms\n";
+//		w << iMessage;
+		Util_Any_JSON::sWrite(true, iMessage, w);
+		}
 	}
 
 static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	{
-	ZRef<ChannerRU_XX_Unreader<byte> > theChannerRU = new ChannerRU_XX_Unreader<byte>(iChannerR);
-
-	ZQ<byte> theByteQ = sQRead(sGetChan<ChanR_Bin>(theChannerRU));
-	if (not theByteQ)
-		sThrow_ExhaustedR();
-
-	sUnread(*theByteQ, sGetChan<ChanU<byte> >(theChannerRU));
-
-	const double start = Time::sSystem();
+	const ZRef<ChannerR_Bin> theChannerRU = iChannerR;
 
 	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(sDefault<ZRef_Counted<ReadFilter_Result> >(), theChannerRU));
 	if (not theQ)
 		sThrow_ExhaustedR();
 
-	const double finish = Time::sSystem();
-
 	const Map_Any theMessage = theQ->Get<Map_Any>();
 	if (ZLOGF(w, eDebug))
-		w << 1e3 * (finish - start) << "ms\n" << theMessage;
+		{
+//		w << "\n" << theMessage;
+		w << "\n";
+		Util_Any_JSON::sWrite(true, theMessage, w);
+		}
 
 	return theMessage;
 	}
