@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Yad_JSON.h"
 
+#include <vector>
+
 #if ZCONFIG(Compiler,GCC)
 	#include <cxxabi.h>
 	#include <stdlib.h> // For free
@@ -678,6 +680,43 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 
 		w << ">";
 		}
+	else if (iOptions.fRawAsASCII && chunkSize)
+		{
+		w << "<";
+		std::vector<char> buffer(chunkSize, 0);
+		for (;;)
+			{
+			const size_t countRead = sQRead(&buffer[0], chunkSize, iChanR);
+			if (not countRead)
+				break;
+			const size_t countCopied = sQWriteFully(&buffer[0], countRead,
+				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w));
+
+			if (size_t extraSpaces = chunkSize - countCopied)
+				{
+				// We didn't write a complete line of bytes, so pad it out.
+				while (extraSpaces--)
+					{
+					// Two spaces for the two nibbles
+					w << "  ";
+					// And then the separator sequence
+					w << iOptions.fRawByteSeparator;
+					}
+				}
+
+			w << " // ";
+			for (size_t xx = 0; xx < countCopied; ++xx)
+				{
+				char theChar = buffer[xx];
+				if (theChar < 0x20 || theChar > 0x7E)
+					w << ".";
+				else
+					w << theChar;
+				}
+			spWriteLFIndent(iLevel, iOptions, w);
+			}
+		w << ">";
+		}
 	else
 		{
 		w << "<";
@@ -686,6 +725,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 			ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, w));
 
 		w << ">";
+
 		}
 	}
 
