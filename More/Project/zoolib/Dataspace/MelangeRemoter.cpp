@@ -701,7 +701,7 @@ bool Melange_Client::pWrite_Inner()
 		sClear(fPending_Updates);
 		}
 
-	guard.Release();
+//##	guard.Release();
 
 	if (not theMessage.IsEmpty())
 		spWriteMessage(theMessage, sGetChan(theChannerW));
