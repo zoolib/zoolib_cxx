@@ -72,7 +72,6 @@ public:
 		{ return fStack.size() + sReadable(fChanR); }
 
 // From ChanU
-
 	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
 		{
 		const size_t theCount = iCount;
