@@ -232,25 +232,26 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 		{
 		switch (*theTypeQ)
 			{
-			case 1: return sYadR(Any());
-			case 2: return sYadR(Any(false));
-			case 3: return sYadR(Any(true));
-			case 4: return sYadR(Any(sReadBE<int64>(r)));
-			case 5: return sYadR(Any(sReadBE<double>(r)));
-			case 7: return new YadStreamerR_JSONB(iChannerR_Bin);
-			case 8: return spYadRFromString(spStringFromChan(r));
-			case 11: return new YadSeqR_JSONB(iReadFilter, iChannerR_Bin);
-			case 13: return new YadMapR_JSONB(iReadFilter, iChannerR_Bin);
+			case 0xE0: return sYadR(Any());
+			case 0xE2: return sYadR(Any(false));
+			case 0xE3: return sYadR(Any(true));
+			case 0xE4: return sYadR(Any(sReadBE<int64>(r)));
+			case 0xE5: return sYadR(Any(sReadBE<double>(r)));
+			case 0xE7: return new YadStreamerR_JSONB(iChannerR_Bin);
+			case 0xE8: return spYadRFromString(spStringFromChan(r));
+			case 0xEA: return new YadSeqR_JSONB(iReadFilter, iChannerR_Bin);
+			case 0xED: return new YadMapR_JSONB(iReadFilter, iChannerR_Bin);
 			case 254:
 				{
 				if (iReadFilter)
 					{
 					if (ZQ<Any> theQ = iReadFilter->QRead(iChannerR_Bin))
 						return sYadR(*theQ);
+					ZLOGTRACE(eDebug);
 					}
 				break;
 				}
-			case 255:
+			case 0xFF:
 				{
 				// End of list marker.
 				return null;
@@ -289,23 +290,23 @@ public:
 			{}
 		else if (theVal.IsNull())
 			{
-			sWriteBE<uint8>(1, fW);
+			sWriteBE<uint8>(0xE0, fW);
 			}
 		else if (const bool* p = theVal.PGet<bool>())
 			{
 			if (*p)
-				sWriteBE<uint8>(3, fW);
+				sWriteBE<uint8>(0xE3, fW);
 			else
-				sWriteBE<uint8>(2, fW);
+				sWriteBE<uint8>(0xE2, fW);
 			}
 		else if (ZQ<int64> theQ = sQCoerceInt(theVal))
 			{
-			sWriteBE<uint8>(4, fW);
+			sWriteBE<uint8>(0xE4, fW);
 			sWriteBE<int64>(*theQ, fW);
 			}
 		else if (ZQ<double> theQ = sQCoerceRat(theVal))
 			{
-			sWriteBE<uint8>(5, fW);
+			sWriteBE<uint8>(0xE5, fW);
 			sWriteBE<double>(*theQ, fW);
 			}
 		else
@@ -314,7 +315,7 @@ public:
 			if (not fWriteFilter || not fWriteFilter->QWrite(theVal, fW))
 				{
 				if (ZLOGF(w, eErr))
-						w << "Couldn't write " << theVal.Type().name();
+					w << "Couldn't write " << theVal.Type().name();
 				ZUnimplemented();
 				}
 			}
@@ -323,7 +324,7 @@ public:
 	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
 		{
 		const ChanR_Bin& r = sGetChan<ChanR_Bin>(iYadStreamerR);
-		sWriteBE<uint8>(7, fW);
+		sWriteBE<uint8>(0xE7, fW);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
 		for (;;)
@@ -339,14 +340,14 @@ public:
 	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
 		{
 		const string8 theString8 = sReadAllUTF8(sGetChan<ChanR_UTF>(iYadStrimmerR));
-		sWriteBE<uint8>(8, fW);
+		sWriteBE<uint8>(0xE8, fW);
 		sWriteCountMust(theString8.size(), fW);
 		sWriteMust(theString8, fW);
 		}
 
 	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{
-		sWriteBE<uint8>(11, fW);
+		sWriteBE<uint8>(0xEA, fW);
 		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
 			theChild->Accept(*this);
 		sWriteBE<uint8>(0xFF, fW); // Terminator
@@ -354,7 +355,7 @@ public:
 
 	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 		{
-		sWriteBE<uint8>(13, fW);
+		sWriteBE<uint8>(0xED, fW);
 		Name theName;
 		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
 			{
