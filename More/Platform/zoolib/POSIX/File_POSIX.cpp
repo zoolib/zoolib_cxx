@@ -173,7 +173,7 @@ static int spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters,
 		{
 		err = spFCntl(iFD, F_GETLK, theFLock);
 
-		if (err == ENOLCK || err == EACCES)
+		if (err == ENOLCK || err == EACCES || err == ENOTSUP)
 			{
 			// Assume that we're hitting an NFS-based file. Allow the access to happen.
 			return iFD;
