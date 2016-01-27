@@ -133,6 +133,8 @@ const struct
 
 		operator const T*() const { return &fT; }
 
+		operator const void*() const { return &fT; }
+
 	private:
 		const T fT;
 		};
