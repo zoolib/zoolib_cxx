@@ -54,8 +54,7 @@ static void spSetSocketOptions(int iSocketFD)
 	// expect higher level code to do buffering if it doesn't want to flood the connection with
 	// lots of small packets. This is a reasonable expectation because it's what has to be done
 	// anyway under Linux to prevent Nagle algorithm from kicking in.
-	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY,
-		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
+	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY, sConstPtr(int(1)), sizeof(int));
 	}
 
 static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
