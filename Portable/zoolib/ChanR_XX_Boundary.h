@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_XX_Boundary_h__
-#define __ZooLib_Chan_XX_Boundary_h__ 1
+#ifndef __ZooLib_ChanR_XX_Boundary_h__
+#define __ZooLib_ChanR_XX_Boundary_h__ 1
 #include "zconfig.h"
 
 #include <vector>
@@ -181,4 +181,4 @@ protected:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_XX_Boundary_h__
+#endif // __ZooLib_ChanR_XX_Boundary_h__
