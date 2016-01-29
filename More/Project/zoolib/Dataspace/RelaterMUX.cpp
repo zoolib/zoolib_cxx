@@ -95,7 +95,7 @@ RelaterMUX::~RelaterMUX()
 
 void RelaterMUX::Initialize()
 	{
-	RelaterFactory::Initialize();
+	Factory_Relater::Initialize();
 	fRelater->SetCallable_RelaterResultsAvailable(
 		sCallable(sWeakRef(this), &RelaterMUX::pResultsAvailable));
 	}
@@ -103,7 +103,7 @@ void RelaterMUX::Initialize()
 void RelaterMUX::Finalize()
 	{
 	fRelater->SetCallable_RelaterResultsAvailable(null);
-	RelaterFactory::Finalize();
+	Factory_Relater::Finalize();
 	}
 
 ZQ<ZRef<Relater> > RelaterMUX::QCall()

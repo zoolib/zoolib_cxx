@@ -31,7 +31,7 @@ namespace Dataspace {
 #pragma mark -
 #pragma mark RelaterMUX
 
-class RelaterMUX : public RelaterFactory
+class RelaterMUX : public Factory_Relater
 	{
 public:
 	enum { kDebug = 1 };
@@ -39,11 +39,11 @@ public:
 	RelaterMUX(ZRef<Relater> iRelater);
 	virtual ~RelaterMUX();
 
-// From ZCounted via RelaterFactory (aka Callable<ZRef<Relater>()>)
+// From ZCounted via Factory_Relater (aka Callable<ZRef<Relater>()>)
 	virtual void Initialize();
 	virtual void Finalize();
 
-// From RelaterFactory
+// From Factory_Relater
 	virtual ZQ<ZRef<Relater> > QCall();
 
 private:

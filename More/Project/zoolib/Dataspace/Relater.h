@@ -114,7 +114,7 @@ private:
 #pragma mark -
 #pragma mark RelaterFactory
 
-typedef Callable<ZRef<Relater>()> RelaterFactory;
+typedef Callable<ZRef<Relater>()> Factory_Relater;
 
 } // namespace Dataspace
 } // namespace ZooLib
