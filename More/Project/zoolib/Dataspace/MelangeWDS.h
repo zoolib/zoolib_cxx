@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_MelangeCombo_h__
-#define __ZooLib_Dataspace_MelangeCombo_h__ 1
+#ifndef __ZooLib_Dataspace_MelangeWDS_h__
+#define __ZooLib_Dataspace_MelangeWDS_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Starter_EventLoopBase.h"
@@ -62,15 +62,15 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark MelangeCombo
+#pragma mark MelangeWDS
 
-class MelangeCombo
+class MelangeWDS
 :	public Dataspace::Callable_Register
 ,	public Callable_DatonSetUpdate
 ,	public Starter_EventLoopBase
 	{
 public:
-	MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
+	MelangeWDS(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
 		const std::vector<Dataspace::IndexSpec>& iIndexSpecs);
 
 // From Callable via Callable_Register
@@ -104,4 +104,4 @@ private:
 } // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_MelangeCombo_h__
+#endif // __ZooLib_Dataspace_MelangeWDS_h__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable_PMF.h"
 
-#include "zoolib/Dataspace/MelangeCombo.h"
+#include "zoolib/Dataspace/MelangeWDS.h"
 #include "zoolib/dataspace/Relater_Searcher.h"
 #include "zoolib/dataspace/Searcher_DatonSet.h"
 
@@ -65,20 +65,20 @@ void MelangeRoot::pWork()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark MelangeCombo
+#pragma mark MelangeWDS
 
-MelangeCombo::MelangeCombo(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
+MelangeWDS::MelangeWDS(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
 	const std::vector<IndexSpec>& iIndexSpecs)
 :	fWDS_Parent(iWDS_Parent)
 ,	fIndexSpecs(iIndexSpecs)
 	{}
 
-ZQ<ZRef<ZCounted> > MelangeCombo::QCall(
+ZQ<ZRef<ZCounted> > MelangeWDS::QCall(
 	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZRef<Expr_Rel>& iRel)
 	{ return fRelsWatcher_Relater->QCall(iCallable_Changed, iRel); }
 
-ZQ<void> MelangeCombo::QCall(const DatonSet::Daton& iDaton, bool iTrue)
+ZQ<void> MelangeWDS::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	{
 	ZRef<DatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
 	if (iTrue)
@@ -88,7 +88,7 @@ ZQ<void> MelangeCombo::QCall(const DatonSet::Daton& iDaton, bool iTrue)
 	return notnull;
 	}
 
-bool MelangeCombo::pTrigger()
+bool MelangeWDS::pTrigger()
 	{
 	if (fJob.first)
 		{
@@ -98,16 +98,16 @@ bool MelangeCombo::pTrigger()
 	return false;
 	}
 
-void MelangeCombo::Start(ZRef<Starter> iStarter)
+void MelangeWDS::Start(ZRef<Starter> iStarter)
 	{
 	ZAssert(not fJob.first);
 
 	fJob = StartScheduler::Job(
 		iStarter,
-		sCallable(sWeakRef(this), &MelangeCombo::pWork));
+		sCallable(sWeakRef(this), &MelangeWDS::pWork));
 
 	ZRef<Callable_Void> theCallable_NeedsUpdate =
-		sCallable(sWeakRef(this), &MelangeCombo::pNeedsUpdate);
+		sCallable(sWeakRef(this), &MelangeWDS::pNeedsUpdate);
 
 	fWDS = sSpawned(fWDS_Parent, theCallable_NeedsUpdate);
 	fWDS_Parent.Clear();
@@ -124,10 +124,10 @@ void MelangeCombo::Start(ZRef<Starter> iStarter)
 	sNextStartIn(0, fJob);
 	}
 
-void MelangeCombo::pNeedsUpdate()
+void MelangeWDS::pNeedsUpdate()
 	{ sNextStartIn(0, fJob); }
 
-void MelangeCombo::pWork()
+void MelangeWDS::pWork()
 	{
 	fWDS->Update();
 
