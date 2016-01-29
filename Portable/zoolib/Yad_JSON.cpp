@@ -392,22 +392,117 @@ void YadStreamerR_Base64::GetChan(const ChanR_Bin*& oChanPtr)
 #pragma mark -
 #pragma mark YadStrimmerR
 
+static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
+
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
-,	fChanR('"', sGetChan(iChannerR), sGetChan(iChannerU))
+,	fChanR_Boundary(spThreeQuotes, 3, sGetChan(iChannerR))
+,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
 void YadStrimmerR_JSON::Finish()
 	{
 	using namespace Util_Chan;
-	sSkipAll(fChanR);
-	if (not sTryRead_CP('"', sGetChan(fChannerR), sGetChan(fChannerU)))
-		throw ParseException("Missing string delimiter");
+	sSkipAll(*this);
+	if (fQuotesSeen)
+		throw ParseException("Improperly closed string");
 	}
 
 void YadStrimmerR_JSON::GetChan(const ChanR_UTF*& oChanPtr)
-	{ oChanPtr = &fChanR; }
+	{ oChanPtr = this; }
+
+size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
+	{
+	using namespace Util_Chan;
+
+	const ChanR_UTF& theStrimR = sGetChan(fChannerR);
+	const ChanU_UTF& theStrimU = sGetChan(fChannerU);
+
+	UTF32* localDest = oDest;
+	UTF32* const localDestEnd = oDest + iCount;
+	bool exhausted = false;
+	while (localDestEnd > localDest && not exhausted)
+		{
+		switch (fQuotesSeen)
+			{
+			case 0:
+				{
+				sSkip_WSAndCPlusPlusComments(theStrimR, theStrimU);
+
+				if (sTryRead_CP('"', theStrimR, theStrimU))
+					fQuotesSeen = 1;
+				else
+					exhausted = true;
+				break;
+				}
+			case 1:
+				{
+				if (sTryRead_CP('"', theStrimR, theStrimU))
+					{
+					// We have two quotes in a row.
+					fQuotesSeen = 2;
+					}
+				else
+					{
+					const size_t countRead = sQRead( localDest, localDestEnd - localDest, ChanR_UTF_Escaped('"', theStrimR, theStrimU));
+					localDest += countRead;
+
+					if (sTryRead_CP('"', theStrimR, theStrimU))
+						fQuotesSeen = 0;
+					else if (countRead == 0)
+						throw ParseException("Expected \" to close a string");
+					}
+				break;
+				}
+			case 2:
+				{
+				if (sTryRead_CP('"', theStrimR, theStrimU))
+					{
+					// We have three quotes in a row.
+					fQuotesSeen = 3;
+					if (ZQ<UTF32> theCPQ = sQRead(theStrimR))
+						{
+						if (not Unicode::sIsEOL(*theCPQ))
+							{
+							// And the following character was *not* an EOL, so we'll treat it as
+							// part of the string.
+							sUnread(*theCPQ, theStrimU);
+							}
+						}
+					}
+				else
+					{
+					// We have two quotes in a row, followed by something
+					// else, so we had an empty string segment.
+					fQuotesSeen = 0;
+					}
+				break;
+				}
+			case 3:
+				{
+				// We've got three quotes in a row, and any trailing EOL
+				// has been stripped.
+				if (const size_t countRead = sQRead(localDest, localDestEnd - localDest, fChanR_Boundary))
+					{
+					localDest += countRead;
+					}
+				else if (not fChanR_Boundary.HitBoundary())
+					{
+					throw ParseException("Expected \"\"\" to close a string");
+					}
+				else
+					{
+					fChanR_Boundary.Reset();
+					fQuotesSeen = 0;
+					}
+				break;
+				}
+			}
+		}
+
+	return localDest - oDest;
+	}
 
 // =================================================================================================
 #pragma mark -

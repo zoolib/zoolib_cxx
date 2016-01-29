@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Terminated.h"
+#include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/CountedVal.h"
 #include "zoolib/Yad_Std.h"
 
@@ -128,7 +129,8 @@ private:
 #pragma mark YadStrimmerR_JSON
 
 class YadStrimmerR_JSON
-:	public ZooLib::YadStrimmerR
+:	public YadStrimmerR
+,	private ChanR_UTF
 	{
 public:
 	YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
@@ -139,10 +141,14 @@ public:
 // From ChannerR via YadStrimmerR
 	virtual void GetChan(const ChanR_UTF*& oChanPtr);
 
+// From ChanR_UTF
+	virtual size_t QRead(UTF32* oDest, size_t iCount);
+
 private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
-	ChanR_UTF_Escaped fChanR;
+	ChanR_XX_Boundary<UTF32> fChanR_Boundary;
+	size_t fQuotesSeen;
 	};
 
 // =================================================================================================
