@@ -29,58 +29,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <queue>
 
-// =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T
-
-namespace ZooLib {
-
-template <>
-int sCompare_T<DatonSet::Daton>(const DatonSet::Daton& iL, const DatonSet::Daton& iR)
-	{ return sCompare_T(iL.GetData(), iR.GetData()); }
-
-ZMACRO_CompareRegistration_T(DatonSet::Daton)
-
-} // namespace ZooLib
-
 namespace ZooLib {
 namespace DatonSet {
 
 using namespace std;
 using namespace Util_STL;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Daton
-
-Daton::Daton()
-	{}
-
-Daton::Daton(const Daton& iOther)
-:	fData(iOther.fData)
-	{}
-
-Daton::~Daton()
-	{}
-
-Daton& Daton::operator=(const Daton& iOther)
-	{
-	fData = iOther.fData;
-	return *this;
-	}
-
-Daton::Daton(Data_Any iData)
-:	fData(iData)
-	{}
-
-bool Daton::operator==(const Daton& iOther) const
-	{ return fData == iOther.fData; }
-
-bool Daton::operator<(const Daton& iOther) const
-	{ return fData < iOther.fData; }
-
-Data_Any Daton::GetData() const
-	{ return fData; }
 
 // =================================================================================================
 #pragma mark -

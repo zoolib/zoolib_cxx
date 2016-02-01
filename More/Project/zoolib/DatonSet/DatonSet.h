@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Relops.h"
 #include "zoolib/ZThread.h"
 
+#include "zoolib/DatonSet/Daton.h"
 #include "zoolib/DatonSet/IntervalTreeClock.h"
 
 #include <map>
@@ -38,38 +39,6 @@ namespace DatonSet {
 
 using IntervalTreeClock::Identity;
 using IntervalTreeClock::Event;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Daton
-
-//! A trivial implementation till I get the signing stuff figured out
-
-class Daton
-	{
-public:
-	Daton();
-	Daton(const Daton& iOther);
-	~Daton();
-	Daton& operator=(const Daton& iOther);
-
-	Daton(Data_Any iData);
-
-	bool operator==(const Daton& iOther) const;
-	bool operator<(const Daton& iOther) const;
-
-	Data_Any GetData() const;
-
-private:
-	Data_Any fData;
-	};
-
-} // namespace DatonSet
-
-template <> struct RelopsTraits_HasEQ<DatonSet::Daton> : public RelopsTraits_Has {};
-template <> struct RelopsTraits_HasLT<DatonSet::Daton> : public RelopsTraits_Has {};
-
-namespace DatonSet {
 
 // =================================================================================================
 #pragma mark -
