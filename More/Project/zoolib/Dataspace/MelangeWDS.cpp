@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/Relater_Searcher.h"
 #include "zoolib/dataspace/Searcher_DatonSet.h"
 
+#include "zoolib/Log.h"
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -106,26 +108,44 @@ void MelangeWDS::Start(ZRef<Starter> iStarter)
 		iStarter,
 		sCallable(sWeakRef(this), &MelangeWDS::pWork));
 
-	ZRef<Callable_Void> theCallable_NeedsUpdate =
-		sCallable(sWeakRef(this), &MelangeWDS::pNeedsUpdate);
+	{
+	ZRef<Callable_Void> theCallable_NeedsUpdate_FromWDS =
+		sCallable(sWeakRef(this), &MelangeWDS::pNeedsUpdate_FromWDS);
 
-	fWDS = sSpawned(fWDS_Parent, theCallable_NeedsUpdate);
+	fWDS = sSpawned(fWDS_Parent, theCallable_NeedsUpdate_FromWDS);
+	}
+
 	fWDS_Parent.Clear();
 
 	ZRef<Searcher_DatonSet> theSearcher = new Searcher_DatonSet(fIndexSpecs);
+
 	fWDS->InsertCallable_PullSuggested(theSearcher->GetCallable_PullSuggested());
 
 	ZRef<Relater> theRelater = new Relater_Searcher(theSearcher);
 
-	fRelsWatcher_Relater = new RelsWatcher_Relater(theRelater, theCallable_NeedsUpdate);
+	{
+	ZRef<Callable_Void> theCallable_NeedsUpdate_FromRelWatcher =
+		sCallable(sWeakRef(this), &MelangeWDS::pNeedsUpdate_FromRelWatcher);
+	fRelsWatcher_Relater = new RelsWatcher_Relater(theRelater, theCallable_NeedsUpdate_FromRelWatcher);
+	}
 
 	fWDS->SuggestPull(theSearcher->GetCallable_PullSuggested());
 
 	sNextStartIn(0, fJob);
 	}
 
-void MelangeWDS::pNeedsUpdate()
-	{ sNextStartIn(0, fJob); }
+
+void MelangeWDS::pNeedsUpdate_FromWDS()
+	{
+	ZLOGTRACE(eDebug);
+	sNextStartIn(0, fJob);
+	}
+
+void MelangeWDS::pNeedsUpdate_FromRelWatcher()
+	{
+	ZLOGTRACE(eDebug);
+	sNextStartIn(0, fJob);
+	}
 
 void MelangeWDS::pWork()
 	{

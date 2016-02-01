@@ -88,7 +88,8 @@ public:
 	void Start(ZRef<Starter> iStarter);
 
 private:
-	void pNeedsUpdate();
+	void pNeedsUpdate_FromWDS();
+	void pNeedsUpdate_FromRelWatcher();
 
 	void pWork();
 
