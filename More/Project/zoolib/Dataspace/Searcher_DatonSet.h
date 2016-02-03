@@ -22,11 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Searcher_DatonSet_h__ 1
 #include "zconfig.h"
 
-#include "zooLib/Dataspace/Searcher.h"
+#include "zooLib/Dataspace/Searcher_Datons.h"
 
 #include "zoolib/DatonSet/DatonSet.h"
-
-#include "zoolib/QueryEngine/Walker.h"
 
 #include <set>
 
@@ -48,6 +46,9 @@ public:
 	Searcher_DatonSet(const std::vector<IndexSpec>& iIndexSpecs);
 	virtual ~Searcher_DatonSet();
 
+// From ZCounted
+	virtual void Initialize();
+
 // From Searcher
 	virtual bool Intersects(const RelHead& iRelHead);
 
@@ -63,88 +64,27 @@ public:
 private:
 	ZMtxR fMtxR;
 
+	void pSearcherResultsAvailable(ZRef<Searcher>);
+
 	void pPullSuggested(const ZRef<DatonSet::Callable_PullFrom>& iCallable_PullFrom);
 	ZRef<DatonSet::Callable_PullSuggested> fCallable_PullSuggested_Self;
 
 	void pPull();
 
-	typedef DatonSet::Event Event;
-	typedef std::map<DatonSet::Daton,std::pair<ZRef<Event>,Val_Any> > Map_Assert;
-
-	// -----
-
-	struct Key;
-	class PSearch;
-
-	void pInvalidateSearchIfAppropriate(PSearch* thePSearch, const Key& iKey);
-
-	void pIndexInsert(const Map_Assert::value_type* iMapEntryP);
-	void pIndexErase(const Map_Assert::value_type* iMapEntryP);
-
 	std::set<ZRef<DatonSet::Callable_PullFrom> > fCallables_PullFrom;
 
-	// -----
-
-	class Walker_Map;
-	friend class Walker_Map;
-
-	void pRewind(ZRef<Walker_Map> iWalker_Map);
-
-	void pPrime(ZRef<Walker_Map> iWalker_Map,
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	bool pReadInc(ZRef<Walker_Map> iWalker, Val_Any* ioResults);
-
-	// -----
-
-	class Walker_Index;
-	friend class Walker_Index;
-
-	void pRewind(ZRef<Walker_Index> iWalker_Index);
-
-	void pPrime(ZRef<Walker_Index> iWalker_Index,
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	bool pReadInc(ZRef<Walker_Index> iWalker, Val_Any* ioResults);
+	typedef DatonSet::Event Event;
+	typedef std::map<DatonSet::Daton,ZRef<Event> > Map_Assert;
 
 	// -----
 
 	ZRef<Event> fEvent;
-
-public:
-	class Index;
-
-private:
-	std::vector<Index*> fIndexes;
+	ZRef<Searcher_Datons> fSearcher_Datons;
 
 	Map_Assert fMap_Assert;
 
 	typedef std::map<DatonSet::Daton,ZRef<Event> > Map_Retract;
 	Map_Retract fMap_Retract;
-
-	// -----
-
-	class DLink_ClientSearch_InPSearch;
-	class DLink_ClientSearch_NeedsWork;
-	class ClientSearch;
-
-	std::map<int64,ClientSearch> fMap_Refcon_ClientSearch;
-	DListHead<DLink_ClientSearch_NeedsWork> fClientSearch_NeedsWork;
-
-	// -----
-
-	class DLink_PSearch_InIndex;
-	class DLink_PSearch_NeedsWork;
-
-	typedef std::map<SearchSpec,PSearch> Map_SearchSpec_PSearch;
-	Map_SearchSpec_PSearch fMap_SearchSpec_PSearch;
-	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
-
-	void pSetupPSearch(PSearch* ioPSearch);
 	};
 
 } // namespace Dataspace
