@@ -573,8 +573,10 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 		const SearchSpec theSearchSpec(iWalker_Bingo->fConcreteHead, theRestriction);
 
 		PRegSearch* thePRegSearchStar = nullptr;
-//		Map_SearchSpec_PRegSearchStar::iterator iterMap1 = fMap_SearchSpec_PRegSearchStar.find(theSearchSpec);
-		Map_SearchSpec_PRegSearchStar::iterator iterMap = fMap_SearchSpec_PRegSearchStar.lower_bound(theSearchSpec);
+
+		Map_SearchSpec_PRegSearchStar::iterator iterMap =
+			fMap_SearchSpec_PRegSearchStar.lower_bound(theSearchSpec);
+
 		if (iterMap != fMap_SearchSpec_PRegSearchStar.end() && iterMap->first == theSearchSpec)
 			{
 			thePRegSearchStar = iterMap->second;
