@@ -943,6 +943,12 @@ void Searcher_Datons::MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
 			sQInsertBack(fPSearch_NeedsWork, &iter->second);
 			}
 		}
+
+	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
+		{
+		guard.Release();
+		Searcher::pTriggerSearcherResultsAvailable();
+		}
 	}
 
 void Searcher_Datons::pInvalidateSearchIfAppropriate(PSearch* iPSearch, const Key& iKey)
