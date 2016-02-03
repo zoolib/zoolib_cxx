@@ -909,6 +909,8 @@ void Searcher_Datons::MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
 	if (not iAssertedCount and not iRetractedCount)
 		return;
 
+	ZGuardMtxR guard(fMtxR);
+
 	while (iAssertedCount--)
 		{
 		const Daton theDaton = *iAsserted++;
