@@ -547,53 +547,6 @@ void Melange_Client::Start(ZRef<Starter> iStarter)
 	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
 	}
 
-void Melange_Client::pWake()
-	{ sNextStartIn(0, fJob); }
-
-void Melange_Client::pWork()
-	{
-	// Handle everything that's in fQueue_Read -- mainly doing change notifications
-
-	ZGuardMtxR guard(fMtxR);
-
-	// Pull stuff from fQueue_Read
-	vector<Map_Any> theMessages;
-	swap(fQueue_Read, theMessages);
-	guard.Release();
-
-	foreachv (Map_Any theMessage, theMessages)
-		{
-		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
-			{
-			// Get the registration and call its callable
-			if (ZQ<bool> theIsFirst = sQCoerceBool(theMessage.Get("IsFirst")))
-				{
-				if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
-					{
-					if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
-						sCall(theReg->fCallable_Changed, theReg, theResult, *theIsFirst);
-					}
-				}
-			}
-		}
-
-	guard.Acquire();
-
-	// trigger write of anything that's now pending, if necessary.
-	if (sNotEmpty(fPending_Registrations)
-		|| sNotEmpty(fPending_Unregistrations)
-		|| sNotEmpty(fPending_Updates))
-		{
-		if (fTrueOnce_WriteNeedsStart())
-			sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pWrite));
-		else
-			fCnd.Broadcast();
-		}
-
-	// Invoke everything that needed to be called from us as a starter.
-	Starter_EventLoopBase::pInvokeClearQueue();
-	}
-
 void Melange_Client::pRead()
 	{
 	ZThread::sSetName("Melange_Client::pRead");
@@ -629,37 +582,68 @@ void Melange_Client::pWrite()
 	{
 	ZThread::sSetName("Melange_Client::pWrite");
 
-	try
-		{
-		if (this->pWrite_Inner())
-			{
-			// the write succeded. It will have moved pending entries into their real containers.
-			return;
-			}
-		}
-	catch (...)
-		{}
-
-	// The write failed in some fashion, ditch the channer (if any).
-
 	ZGuardMtxR guard(fMtxR);
+	for (;;)
+		{
+		if (sIsEmpty(fQueue_ToWrite))
+			{
+			fCnd.WaitFor(fMtxR, 1);
+			if (sIsEmpty(fQueue_ToWrite))
+				break;
+			continue;
+			}
 
-	fChanner.Clear();
+		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
+		if (not theChannerW)
+			break;
+
+		vector<Map_Any> theMessages;
+		swap(fQueue_ToWrite, theMessages);
+
+		guard.Release();
+
+		foreachi (ii, theMessages)
+			spWriteMessage(*ii, sGetChan(theChannerW));
+
+		guard.Acquire();
+		}
+	fTrueOnce_WriteNeedsStart.Reset();
 	}
 
-bool Melange_Client::pWrite_Inner()
+void Melange_Client::pWake()
+	{ sNextStartIn(0, fJob); }
+
+void Melange_Client::pWork()
 	{
-	ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
+	// Handle everything that's in fQueue_Read -- mainly doing change notifications
 
 	ZGuardMtxR guard(fMtxR);
 
-	fTrueOnce_WriteNeedsStart.Reset();
+	// Pull stuff from fQueue_Read
+	vector<Map_Any> theMessages;
+	swap(fQueue_Read, theMessages);
+	guard.Release();
 
-	if (not theChannerW)
+	foreachv (Map_Any theMessage, theMessages)
 		{
-		// No Channer was available
-		return false;
+		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
+			{
+			// Get the registration and call its callable
+			if (ZQ<bool> theIsFirst = sQCoerceBool(theMessage.Get("IsFirst")))
+				{
+				if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
+					{
+					if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
+						sCall(theReg->fCallable_Changed, theReg, theResult, *theIsFirst);
+					}
+				}
+			}
 		}
+
+	// Invoke everything that needed to be called from us as a starter.
+	Starter_EventLoopBase::pInvokeClearQueue();
+
+	guard.Acquire();
 
 	Map_Any theMessage;
 
@@ -700,12 +684,16 @@ bool Melange_Client::pWrite_Inner()
 		sClear(fPending_Updates);
 		}
 
-//##	guard.Release();
-
 	if (not theMessage.IsEmpty())
-		spWriteMessage(theMessage, sGetChan(theChannerW));
+		sPushBack(fQueue_ToWrite, theMessage);
 
-	return true;
+	if (sNotEmpty(fQueue_ToWrite))
+		{
+		if (fTrueOnce_WriteNeedsStart())
+			sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pWrite));
+		else
+			fCnd.Broadcast();
+		}
 	}
 
 ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()

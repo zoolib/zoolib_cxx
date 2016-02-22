@@ -115,7 +115,6 @@ private:
 
 	void pRead();
 	void pWrite();
-	bool pWrite_Inner();
 
 	void pWake();
 	void pWork();
@@ -134,17 +133,17 @@ private:
 	bool fGettingChanner;
 	ZRef<ChannerRW_Bin> fChanner;
 
+	vector<Map_Any> fQueue_Read;
+	vector<Map_Any> fQueue_ToWrite;
+	TrueOnce fTrueOnce_WriteNeedsStart;
+
 	int64 fNextRefcon;
 	std::set<ZRef<Registration> > fPending_Registrations;
 	std::set<int64> fPending_Unregistrations;
 	std::map<DatonSet::Daton,bool> fPending_Updates;
-	TrueOnce fTrueOnce_WriteNeedsStart;
 
 	std::map<int64,Registration*> fMap_Refcon2Reg;
 	std::map<Registration*,int64> fMap_Reg2Refcon;
-
-	vector<Map_Any> fQueue_Read;
-	vector<Map_Any> fQueue_ToWrite;
 	};
 
 } // namespace Dataspace
