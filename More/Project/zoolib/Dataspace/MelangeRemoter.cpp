@@ -214,7 +214,7 @@ static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 		{
 		w << 1e3 * (finish - start) << "ms\n";
 //		w << iMessage;
-		Util_Any_JSON::sWrite(true, iMessage, w);
+		Util_Any_JSON::sWrite(false, iMessage, w);
 		}
 	}
 
@@ -231,11 +231,15 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 		{
 //		w << "\n" << theMessage;
 		w << "\n";
-		Util_Any_JSON::sWrite(true, theMessage, w);
+		Util_Any_JSON::sWrite(false, theMessage, w);
 		}
 
 	return theMessage;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
 
 namespace { // anonymous
 
@@ -397,10 +401,9 @@ void MelangeServer::pWork()
 					{
 					if (ZRef<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
 						{
-						ZRef<ZCounted> theRegistration =
-							sCall(fMelange.f0, fCallable_Changed, theRel);
-						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theRegistration);
-						sInsertMust(fMap_Reg2Refcon, theRegistration, *theRefconQ);
+						ZRef<ZCounted> theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
+						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
+						sInsertMust(fMap_Reg2Refcon, theReg, *theRefconQ);
 						}
 					}
 				}
@@ -410,11 +413,9 @@ void MelangeServer::pWork()
 			{
 			if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
 				{
-				const ZRef<ZCounted> theRegistration =
-					sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
+				const ZRef<ZCounted> theReg = sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
 
-				const int64 theRefcon =
-					sGetEraseMust(fMap_Reg2Refcon, theRegistration);
+				const int64 theRefcon = sGetEraseMust(fMap_Reg2Refcon, theReg);
 
 				ZAssert(theRefcon == *theRefconQ);
 				}
@@ -781,37 +782,4 @@ void Melange_Client::pFinalize(Registration* iRegistration)
 	}
 
 } // namespace Dataspace
-
-ZRef<Dataspace::Expr_Rel> sTestRel(const ZRef<ChannerRU_UTF>& iChannerRU);
-ZRef<Dataspace::Expr_Rel> sTestRel(const ZRef<ChannerRU_UTF>& iChannerRU)
-	{
-	using RelationalAlgebra::Expr_Rel;
-
-	ZRef<Expr_Rel> theRel = RelationalAlgebra::Util_Strim_Rel::sQFromStrim(
-		sGetChan<ChanR_UTF>(iChannerRU), sGetChan<ChanU_UTF>(iChannerRU));
-
-	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
-
-//	theRel = RelationalAlgebra::Transform_DecomposeRestricts().Do(theRel);
-//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
-
-// This next one needs some work doing with Embeds
-//	theRel = RelationalAlgebra::Transform_PushDownRestricts().Do(theRel);
-//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
-
-//	theRel = RelationalAlgebra::sTransform_ConsolidateRenames(theRel);
-//	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
-
-	theRel = QueryEngine::sTransform_Search(theRel);
-	StdIO::sChan_UTF_Out << "\n" << theRel << "\n";
-
-	return theRel;
-	}
-
-//ZRef<RelationalAlgebra::Expr_Rel> sTestRel(const std::string& iString)
-//	{
-//	ChanRU_UTF_string8 theChan(iString);
-//	return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(theChan, theChan);
-//	}
-
 } // namespace ZooLib
