@@ -916,20 +916,23 @@ void Searcher_Datons::MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
 		const Daton theDaton = *iAsserted++;
 		Map_Thing::iterator iterLB = fMap_Thing.lower_bound(theDaton);
 
-		ZAssert(iterLB == fMap_Thing.end() || theDaton != iterLB->first);
-
-		Map_Thing::const_iterator iter =
-			fMap_Thing.insert(iterLB, make_pair(theDaton, sAsVal(theDaton)));
-		this->pIndexInsert(&*iter);
+		if (iterLB == fMap_Thing.end() || theDaton != iterLB->first)
+			{
+			Map_Thing::const_iterator iter =
+				fMap_Thing.insert(iterLB, make_pair(theDaton, sAsVal(theDaton)));
+			this->pIndexInsert(&*iter);
+			}
 		}
 
 	while (iRetractedCount--)
 		{
 		const Daton theDaton = *iRetracted++;
 		Map_Thing::iterator iter = fMap_Thing.find(theDaton);
-		ZAssert(iter != fMap_Thing.end());
-		this->pIndexErase(&*iter);
-		fMap_Thing.erase(iter);
+		if (iter != fMap_Thing.end())
+			{
+			this->pIndexErase(&*iter);
+			fMap_Thing.erase(iter);
+			}
 		}
 
 	// Invalidate all PSearches unattached to indexes.
