@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For sName
+#include "zoolib/Stringf.h"
 #include "zoolib/Util_Any.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSONB.h"
@@ -257,7 +258,7 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 				return null;
 				}
 			}
-		ZUnimplemented();
+		throw std::runtime_error(sStringf("JSONB invalid type %d", int(*theTypeQ)));
 		}
 
 	return null;
