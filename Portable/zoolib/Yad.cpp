@@ -53,7 +53,7 @@ access to them allows code to be applied to any of them.
 #pragma mark YadOptions
 
 YadOptions::YadOptions(bool iDoIndentation)
-:	fRawChunkSize(16),
+:	fRawChunkSize(64),
 	fRawByteSeparator(" "),
 	fRawAsASCII(iDoIndentation),
 	fBreakStrings(true),
