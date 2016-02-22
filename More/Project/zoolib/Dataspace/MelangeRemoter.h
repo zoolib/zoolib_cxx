@@ -49,6 +49,8 @@ public:
 	virtual void Initialize();
 
 private:
+	typedef ZRef<ZCounted> RefReg;
+
 	void pRead();
 	void pWrite();
 
@@ -57,7 +59,7 @@ private:
 	StartScheduler::Job fJob;
 
 	void pChanged(
-		const ZRef<ZCounted>& iRegistration,
+		const RefReg& iRegistration,
 		const ZRef<Result>& iResult,
 		bool iIsFirst);
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
@@ -74,8 +76,8 @@ private:
 	vector<Map_Any> fQueue_ToWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
-	std::map<int64,ZRef<ZCounted> > fMap_Refcon2Reg;
-	std::map<ZRef<ZCounted>,int64> fMap_Reg2Refcon;
+	std::map<int64,RefReg> fMap_Refcon2Reg;
+	std::map<RefReg,int64> fMap_Reg2Refcon;
 	};
 
 // =================================================================================================

@@ -401,7 +401,7 @@ void MelangeServer::pWork()
 					{
 					if (ZRef<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
 						{
-						ZRef<ZCounted> theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
+						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
 						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
 						sInsertMust(fMap_Reg2Refcon, theReg, *theRefconQ);
 						}
@@ -413,7 +413,7 @@ void MelangeServer::pWork()
 			{
 			if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
 				{
-				const ZRef<ZCounted> theReg = sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
+				const RefReg theReg = sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
 
 				const int64 theRefcon = sGetEraseMust(fMap_Reg2Refcon, theReg);
 
@@ -444,7 +444,7 @@ void MelangeServer::pWork()
 	}
 
 void MelangeServer::pChanged(
-	const ZRef<ZCounted>& iRegistration,
+	const RefReg& iRegistration,
 	const ZRef<Result>& iResult,
 	bool iIsFirst)
 	{
