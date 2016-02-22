@@ -121,9 +121,10 @@ void MelangeWDS::Start(ZRef<Starter> iStarter)
 
 	fWDS->InsertCallable_PullSuggested(theSearcher->GetCallable_PullSuggested());
 
-	ZRef<Relater> theRelater = new Relater_Searcher(theSearcher);
 
 	{
+	ZRef<Relater> theRelater = new Relater_Searcher(theSearcher);
+
 	ZRef<Callable_Void> theCallable_NeedsUpdate_FromRelWatcher =
 		sCallable(sWeakRef(this), &MelangeWDS::pNeedsUpdate_FromRelWatcher);
 	fRelsWatcher_Relater = new RelsWatcher_Relater(theRelater, theCallable_NeedsUpdate_FromRelWatcher);
