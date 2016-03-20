@@ -130,9 +130,9 @@ void sFree(Key iKey)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCnd_pthread
+#pragma mark ZCndBase_pthread
 
-bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
+bool ZCndBase_pthread::pWaitFor(ZMtx_pthread& iMtx, double iTimeout)
 	{
 	if (iTimeout <= 0)
 		return false;
@@ -146,7 +146,7 @@ bool ZCnd_pthread::pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
 	#endif
 	}
 
-bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, double iDeadline)
+bool ZCndBase_pthread::pWaitUntil(ZMtx_pthread& iMtx, double iDeadline)
 	{
 	const timespec the_timespec = { time_t(iDeadline), long(1e9 * fmod(iDeadline, 1.0)) };
 	return 0 == ::pthread_cond_timedwait(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
@@ -154,23 +154,23 @@ bool ZCnd_pthread::pWaitUntil(ZMtx_pthread_base& iMtx, double iDeadline)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ~ZMtx_pthread_base
+#pragma mark ~ZMtx_pthread
 
 #if ZCONFIG_pthread_Debug
 
-ZMtx_pthread_base::~ZMtx_pthread_base()
+ZMtx_pthread::~ZMtx_pthread()
 	{
 	int result = ::pthread_mutex_destroy(&f_pthread_mutex_t);
 	ZAssert(result == 0);
 	}
 
-void ZMtx_pthread_base::Acquire()
+void ZMtx_pthread::Acquire()
 	{
 	int result = ::pthread_mutex_lock(&f_pthread_mutex_t);
 	ZAssert(result == 0);
 	}
 
-void ZMtx_pthread_base::Release()
+void ZMtx_pthread::Release()
 	{
 	int result = ::pthread_mutex_unlock(&f_pthread_mutex_t);
 	ZAssert(result == 0);
@@ -194,21 +194,6 @@ ZMtx_pthread::ZMtx_pthread()
 	}
 
 #endif // ZCONFIG_pthread_Debug
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZMtxR_pthread
-
-ZMtxR_pthread::ZMtxR_pthread()
-	{
-	pthread_mutexattr_t attr;
-	::pthread_mutexattr_init(&attr);
-	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-	int result = ::pthread_mutex_init(&f_pthread_mutex_t, &attr);
-	::pthread_mutexattr_destroy(&attr);
-
-	ZAssert(result == 0);
-	}
 
 } // namespace ZooLib
 

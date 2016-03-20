@@ -107,17 +107,18 @@ Value sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMtx_pthread_base
+#pragma mark ZMtx_pthread
 
-class ZCnd_pthread;
+class ZCndBase_pthread;
 
-class ZMtx_pthread_base
+class ZMtx_pthread
 :	NonCopyable
 	{
 public:
 	#if ZCONFIG_pthread_Debug
 
-		~ZMtx_pthread_base();
+		ZMtx_pthread();
+		~ZMtx_pthread();
 		void Acquire();
 		void Release();
 
@@ -125,7 +126,11 @@ public:
 
 		ZMACRO_Attribute_NoThrow
 		inline
-		~ZMtx_pthread_base() { ::pthread_mutex_destroy(&f_pthread_mutex_t); }
+		ZMtx_pthread() { ::pthread_mutex_init(&f_pthread_mutex_t, nullptr); }
+
+		ZMACRO_Attribute_NoThrow
+		inline
+		~ZMtx_pthread() { ::pthread_mutex_destroy(&f_pthread_mutex_t); }
 
 		ZMACRO_Attribute_NoThrow
 		inline
@@ -139,38 +144,38 @@ public:
 
 protected:
 	pthread_mutex_t f_pthread_mutex_t;
-	friend class ZCnd_pthread;
+	friend class ZCndBase_pthread;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCnd_pthread
+#pragma mark ZCndBase_pthread
 
-class ZCnd_pthread
+class ZCndBase_pthread
 :	NonCopyable
 	{
 public:
 	ZMACRO_Attribute_NoThrow
 	inline
-	ZCnd_pthread() { ::pthread_cond_init(&f_pthread_cond_t, nullptr); }
+	ZCndBase_pthread() { ::pthread_cond_init(&f_pthread_cond_t, nullptr); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	~ZCnd_pthread() { ::pthread_cond_destroy(&f_pthread_cond_t); }
+	~ZCndBase_pthread() { ::pthread_cond_destroy(&f_pthread_cond_t); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	void Wait(ZMtx_pthread_base& iMtx)
+	void Wait(ZMtx_pthread& iMtx)
 		{ ::pthread_cond_wait(&f_pthread_cond_t, &iMtx.f_pthread_mutex_t); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitFor(ZMtx_pthread_base& iMtx, double iTimeout)
+	bool WaitFor(ZMtx_pthread& iMtx, double iTimeout)
 		{ return this->pWaitFor(iMtx, iTimeout); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitUntil(ZMtx_pthread_base& iMtx, double iDeadline)
+	bool WaitUntil(ZMtx_pthread& iMtx, double iDeadline)
 		{ return this->pWaitUntil(iMtx, iDeadline); }
 
 	ZMACRO_Attribute_NoThrow
@@ -183,50 +188,31 @@ public:
 
 protected:
 	ZMACRO_Attribute_NoThrow
-	bool pWaitFor(ZMtx_pthread_base& iMtx, double iTimeout);
+	bool pWaitFor(ZMtx_pthread& iMtx, double iTimeout);
 
 	ZMACRO_Attribute_NoThrow
-	bool pWaitUntil(ZMtx_pthread_base& iMtx, double iDeadline);
+	bool pWaitUntil(ZMtx_pthread& iMtx, double iDeadline);
 
 	pthread_cond_t f_pthread_cond_t;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMtx_pthread
+#pragma mark ZMtxR_pthread
 
-class ZMtx_pthread : public ZMtx_pthread_base
-	{
-public:
-	#if ZCONFIG_pthread_Debug
-
-		ZMtx_pthread();
-
-	#else
-
-		ZMACRO_Attribute_NoThrow
-		inline
-		ZMtx_pthread() { ::pthread_mutex_init(&f_pthread_mutex_t, nullptr); }
-
-	#endif
-	};
+typedef ZMtxR_T<ZMtx_pthread, ZCndBase_pthread, ZThread_pthread::ID, ZThread_pthread::sID> ZMtxR_pthread;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMtxR_pthread
+#pragma mark ZCndR_pthread
 
-class ZMtxR_pthread : public ZMtx_pthread_base
-	{
-public:
-	ZMACRO_Attribute_NoThrow
-	ZMtxR_pthread();
-	};
+typedef ZCndR_T<ZMtxR_pthread, ZCndBase_pthread> ZCnd_pthread;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ZSem_pthread
 
-typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
+typedef ZSem_T<ZMtx_pthread, ZCndBase_pthread> ZSem_pthread;
 
 // =================================================================================================
 #pragma mark -
