@@ -98,7 +98,7 @@ public:
 	ZMACRO_Attribute_NoThrow
 	inline
 	ZGuard_T(const Mtx& iMtx, bool iAcquire)
-	: fMtx(const_cast<Mtx&>(iMtx))
+	:	fMtx(const_cast<Mtx&>(iMtx))
 	,	fCount(0)
 		{
 		if (iAcquire)
