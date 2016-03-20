@@ -113,7 +113,7 @@ public:
 	inline
 	~ZGuard_T()
 		{
-		if (fCount)
+		while (fCount--)
 			fMtx.Release();
 		}
 
