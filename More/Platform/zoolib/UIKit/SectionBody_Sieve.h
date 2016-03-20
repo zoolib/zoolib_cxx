@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_UIKit_SectionBody_Sieve_h__ 1
 
 #include "zoolib/Callable.h"
+#include "zoolib/Apple/Delegate.h"
 
 #include "ZooLib/Dataspace/Melange.h" // For ZooLib::Dataspace::Callable_DatonSetUpdate
 
@@ -97,6 +98,8 @@ public:
 
 	SectionBody_Sieve();
 
+	virtual void Initialize();
+
 // From SectionBody
 	virtual size_t NumberOfRows();
 
@@ -148,7 +151,7 @@ public:
 
 	ZQ<Map_Any> QGet(size_t iRowIndex);
 
-	void pCreateOrDestroySieve(bool iShowing);
+	void pGetSieveCorrectlySetup();
 
 	void pChanged(const ZRef<ZCounted>& iRegistration,
 		const ZRef<QueryEngine::Result>& iResult,
@@ -177,6 +180,12 @@ public:
 	bool fShowLoading;
 	bool fWasLoading;
 	bool fIsLoading;
+
+	bool fMayBeShowing;
+	Delegate fDelegate;
+	void pWillEnterForegroundNotification();
+	void pDidEnterForeground();
+	void pDidEnterBackgroundNotification();
 	};
 
 } // namespace UIKit

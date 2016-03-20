@@ -34,6 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
+#include "zooLib/Apple/Starter_CFRunLoop.h"
 #include "zooLib/Apple/Util_NS.h"
 
 #include "zoolib/UIKit/TVCell.h"
@@ -171,6 +172,33 @@ SectionBody_Sieve::SectionBody_Sieve()
 ,	fWasLoading(false)
 ,	fIsLoading(true)
 	{}
+
+void SectionBody_Sieve::Initialize()
+	{
+	UIKit::SectionBody_Concrete::Initialize();
+
+	const SEL willEnterForegroundNotificationSEL = sel_registerName("willEnterForegroundNotification");
+
+	fDelegate.Set(willEnterForegroundNotificationSEL,
+		sCallable(sWeakRef(this), &SectionBody_Sieve::pWillEnterForegroundNotification));
+
+	[[NSNotificationCenter defaultCenter]
+		addObserver:fDelegate
+		selector:willEnterForegroundNotificationSEL
+		name:UIApplicationWillEnterForegroundNotification
+		object:nil];
+
+	const SEL didEnterBackgroundNotificationSEL = sel_registerName("didEnterBackgroundNotification");
+
+	fDelegate.Set(didEnterBackgroundNotificationSEL,
+		sCallable(sWeakRef(this), &SectionBody_Sieve::pDidEnterBackgroundNotification));
+
+	[[NSNotificationCenter defaultCenter]
+		addObserver:fDelegate
+		selector:didEnterBackgroundNotificationSEL
+		name:UIApplicationDidEnterBackgroundNotification
+		object:nil];
+	}
 
 size_t SectionBody_Sieve::NumberOfRows()
 	{
@@ -387,7 +415,10 @@ void SectionBody_Sieve::FinishUpdate()
 	}
 
 void SectionBody_Sieve::ViewWillAppear(UITableView* iTV)
-	{ this->pCreateOrDestroySieve(true); }
+	{
+	fMayBeShowing = true;
+	this->pGetSieveCorrectlySetup();
+	}
 
 void SectionBody_Sieve::ViewDidAppear(UITableView* iTV)
 	{}
@@ -396,7 +427,10 @@ void SectionBody_Sieve::ViewWillDisappear(UITableView* iTV)
 	{}
 
 void SectionBody_Sieve::ViewDidDisappear(UITableView* iTV)
-	{ this->pCreateOrDestroySieve(false); }
+	{
+	fMayBeShowing = false;
+	this->pGetSieveCorrectlySetup();
+	}
 
 ZRef<UITableViewCell> SectionBody_Sieve::UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 	bool& ioIsPreceded, bool& ioIsSucceeded)
@@ -404,7 +438,7 @@ ZRef<UITableViewCell> SectionBody_Sieve::UITableViewCellForRow(UITableView* iVie
 	if (fShowLoading && fIsLoading)
 		{
 		ZAssertStop(0, iRowIndex == 0);
-    ZRef<UITableViewCell> theCell = sGetCell_Simple(iView, Util_NS::sString("Loading..."), false);
+		ZRef<UITableViewCell> theCell = sGetCell_Simple(iView, Util_NS::sString("Loading..."), false);
 //##		[theCell->fUILabel_Left setTextColor:sColor_Text_Gray()];
 		return theCell;
 		}
@@ -519,7 +553,9 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 
 	fRegistration.Clear();
 
-	this->pCreateOrDestroySieve(true);
+	fMayBeShowing = true;
+
+	this->pGetSieveCorrectlySetup();
 	}
 
 ZQ<Map_Any> SectionBody_Sieve::QGet(size_t iRowIndex)
@@ -529,9 +565,10 @@ ZQ<Map_Any> SectionBody_Sieve::QGet(size_t iRowIndex)
 	return null;
 	}
 
-void SectionBody_Sieve::pCreateOrDestroySieve(bool iShowing)
+void SectionBody_Sieve::pGetSieveCorrectlySetup()
 	{
-	if (iShowing)
+	if (fMayBeShowing
+		&& (UIApplicationStateBackground != [UIApplication sharedApplication].applicationState))
 		{
 		if (fRel and not fRegistration)
 			{
@@ -556,6 +593,21 @@ void SectionBody_Sieve::pChanged(const ZRef<ZCounted>& iRegistration,
 	if (not sGetSet(fNeedsUpdate, true))
 		fCallable_NeedsUpdate->Call();
 	}
+
+void SectionBody_Sieve::pWillEnterForegroundNotification()
+	{
+	// At this point, applicationState is still UIApplicationStateBackground. So call
+	// pGetSieveCorrectlySetup the next time round the event loop. Or more likely at the end of
+	// this event loop, and in any case, after the application considers itself to be out of
+	// the background.
+	//
+	Starter_CFRunLoop::sMain()->QStart(sCallable(sWeakRef(this), &SectionBody_Sieve::pGetSieveCorrectlySetup));
+	}
+
+void SectionBody_Sieve::pDidEnterBackgroundNotification()
+	{ this->pGetSieveCorrectlySetup(); }
+
+
 
 } // namespace UIKit
 } // namespace ZooLib
