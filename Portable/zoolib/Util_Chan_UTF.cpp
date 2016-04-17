@@ -424,7 +424,10 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 	if (spTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
 		{
 		if (isNegative)
+			{
 			oInt64 = -oInt64;
+			oDouble = -oDouble;
+			}
 		return true;
 		}
 
