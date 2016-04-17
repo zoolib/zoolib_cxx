@@ -285,7 +285,7 @@ ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 				{
 				ZRef<ChannerR_UTF> theChannerR = sChanner_Chan(iChanR);
 				ZRef<ChannerU_UTF> theChannerU = sChanner_Chan(iChanU);
-					spRead_WSComma(iChanR, iChanU, " after ColName in Const");
+				spRead_WSComma(iChanR, iChanU, " after ColName in Const");
 				if (NotQ<Val_Any> theValQ = Util_Any_JSON::sQRead(theChannerR, theChannerU))
 					throw ParseException("Expected value as second param in Const");
 				else
