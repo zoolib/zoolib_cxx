@@ -232,7 +232,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			#define ZCONFIG_CPP 2003
 		#endif
 	#elif defined(__GNUC__)
-		#if __cplusplus >= 199711L // Go figure.
+		#if __cplusplus >= 201103L
+			#define ZCONFIG_CPP 2011
+		#elif __cplusplus >= 199711L // Go figure.
 			#define ZCONFIG_CPP 2003
 		#else
 			#define ZCONFIG_CPP 1998
