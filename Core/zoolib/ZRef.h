@@ -61,6 +61,18 @@ public:
 			{ return operator_bool_gen::translate(Sense_p == !!fP); }
 	#endif
 
+	T& operator *()
+		{
+		sCheck(fP);
+		return *fP;
+		}
+
+	T& operator *() const
+		{
+		sCheck(fP);
+		return *fP;
+		}
+
 	friend class ZRef<T,not Sense_p>;
 
 	template <class O, bool OtherSense_p>
