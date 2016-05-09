@@ -108,7 +108,7 @@ bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator, const C
 		else if (iTerminator == *theQ)
 			return true;
 		else
-			sWriteMust(*theQ, iChanW);
+			sEWrite(*theQ, iChanW);
 		}
 	}
 

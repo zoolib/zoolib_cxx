@@ -85,6 +85,13 @@ bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	{ return 1 == sNonConst(iChanW).QWrite(&iElmt, 1); }
 
 template <class Elmt_p>
+void sEWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+	{
+	if (1 != sQWrite(&iElmt, 1, iChanW))
+		sThrow_ExhaustedW();
+	}
+
+template <class Elmt_p>
 void sWriteMust(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
 	{
 	if (1 != sQWrite(&iElmt, 1, iChanW))
