@@ -70,6 +70,8 @@ class MelangeWDS
 ,	public Starter_EventLoopBase
 	{
 public:
+	typedef DatonSet::Daton Daton;
+
 	MelangeWDS(const ZRef<DatonSet::WrappedDatonSet>& iWDS_Parent,
 		const std::vector<Dataspace::IndexSpec>& iIndexSpecs);
 
@@ -79,7 +81,8 @@ public:
 		const ZRef<Expr_Rel>& iRel);
 
 // From Callable via Callable_DatonSetUpdate
-	virtual ZQ<void> QCall(const DatonSet::Daton& iDaton, bool iTrue);
+	virtual ZQ<void> QCall(const Daton* iAsserted, size_t iAssertedCount,
+		const Daton* iRetracted, size_t iRetractedCount);
 
 // From Starter_EventLoopBase
 	virtual bool pTrigger();

@@ -210,7 +210,7 @@ static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
 
 	const double finish = Time::sSystem();
 
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eDebug + 1))
 		{
 		w << 1e3 * (finish - start) << "ms\n";
 //		w << iMessage;
@@ -227,7 +227,7 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 		sThrow_ExhaustedR();
 
 	const Map_Any theMessage = theQ->Get<Map_Any>();
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eDebug + 1))
 		{
 //		w << "\n" << theMessage;
 		w << "\n";
@@ -251,7 +251,7 @@ ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
 		}
 	else
 		{
-		if (ZLOGF(w, eDebug))
+		if (ZLOGF(w, eDebug + 1))
 			w << "\n" << *theStringQ;
 		ChanRU_UTF_string8 theChan(*theStringQ);
 		return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(theChan, theChan);
@@ -358,9 +358,14 @@ void MelangeServer::pWrite()
 		{
 		if (sIsEmpty(fQueue_ToWrite))
 			{
+			// Give it a second to fill up.
 			fCnd.WaitFor(fMtxR, 1);
 			if (sIsEmpty(fQueue_ToWrite))
+				{
+				// It's still empty, drop out of the loop and let the thread dispose.
 				break;
+				}
+			// We now have data to send, but fChannerW may have gone null in the meantime.
 			continue;
 			}
 
@@ -413,14 +418,54 @@ void MelangeServer::pWork()
 			{
 			if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
 				{
-				const RefReg theReg = sGetEraseMust(fMap_Refcon2Reg, *theRefconQ);
+				if (NotQ<RefReg> theRegQ = sQGetErase(fMap_Refcon2Reg, *theRefconQ))
+					{
+					if (ZLOGF(w, eErr))
+						w << "Failed to find Refcon2Reg entry for " << *theRefconQ;
+					}
+				else if (NotQ<int64> theMapRefconQ = sQGetErase(fMap_Reg2Refcon, *theRegQ))
+					{
+					if (ZLOGF(w, eErr))
+						w << "Failed to find Refcon2Reg entry for " << *theRefconQ << ", " << theRegQ->Get();
+					}
+				else if (*theRefconQ != *theMapRefconQ)
+					{
+					if (ZLOGF(w, eErr))
+						w << "Failed *theRefconQ: " << *theRefconQ << " != *theMapRefconQ: " << *theMapRefconQ;
+					}
+				else
+					{
+					continue;
+					}
 
-				const int64 theRefcon = sGetEraseMust(fMap_Reg2Refcon, theReg);
-
-				ZAssert(theRefcon == *theRefconQ);
+				if (ZLOGF(w, eErr))
+					{
+					w << "\n ii: ";
+					Util_Any_JSON::sWrite(true, ii, w);
+					w << "\n theMessage: ";
+					Util_Any_JSON::sWrite(true, theMessage, w);
+					}
 				}
 			}
 
+		vector<Daton> toInsert, toErase;
+		foreachi (ii, theMessage.Get<Seq_Any>("Asserts"))
+			{
+			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
+				sPushBack(toInsert, *theDataQ);
+			else
+				ZLOGTRACE(eDebug);
+			}
+
+		foreachi (ii, theMessage.Get<Seq_Any>("Retracts"))
+			{
+			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
+				sPushBack(toErase, *theDataQ);
+			else
+				ZLOGTRACE(eDebug);
+			}
+
+		// Handle old message
 		foreachi (ii, theMessage.Get<Seq_Any>("Updates"))
 			{
 			if (ZQ<Map_Any> theMapQ = ii->Get<Map_Any>())
@@ -428,10 +473,18 @@ void MelangeServer::pWork()
 				if (ZQ<bool> theBoolQ = sQCoerceBool(theMapQ->Get("True")))
 					{
 					if (ZQ<Data_Any> theDataQ = theMapQ->QGet<Data_Any>("Daton"))
-						sCall(fMelange.f1, *theDataQ, *theBoolQ);
+						{
+						if (*theBoolQ)
+							sPushBack(toInsert, *theDataQ);
+						else
+							sPushBack(toErase, *theDataQ);
+						}
 					}
 				}
 			}
+
+		sCall(fMelange.f1, sFirstOrNil(toInsert), toInsert.size(),
+			sFirstOrNil(toErase), toErase.size());
 		}
 
 	if (sNotEmpty(fQueue_ToWrite))
@@ -516,18 +569,23 @@ ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 	return theRegistration;
 	}
 
-ZQ<void> Melange_Client::QCall(const DatonSet::Daton& iDaton, bool iTrue)
+ZQ<void> Melange_Client::QCall(const Daton* iAsserted, size_t iAssertedCount,
+	const Daton* iRetracted, size_t iRetractedCount)
 	{
 	ZGuardMtxR guard(fMtxR);
-	std::map<Daton,bool>::iterator iter = fPending_Updates.lower_bound(iDaton);
-	if (iter != fPending_Updates.end() && iter->first == iDaton)
+
+	while (iAssertedCount--)
 		{
-		if (iter->second != iTrue)
-			fPending_Updates.erase(iter);
+		const Daton& theDaton = *iAsserted++;
+		if (not sQErase(fPending_Retracts, theDaton))
+			sInsertMust(fPending_Asserts, theDaton);
 		}
-	else
+
+	while (iRetractedCount--)
 		{
-		sInsertMust(fPending_Updates, iDaton, iTrue);
+		const Daton& theDaton = *iRetracted++;
+		if (not sQErase(fPending_Asserts, theDaton))
+			sInsertMust(fPending_Retracts, theDaton);
 		}
 
 	this->pWake();
@@ -600,12 +658,17 @@ void Melange_Client::pWrite()
 		vector<Map_Any> theMessages;
 		swap(fQueue_ToWrite, theMessages);
 
-		guard.Release();
+		try
+			{
+			ZRelGuardR rel(guard);
+			foreachi (ii, theMessages)
+				spWriteMessage(*ii, sGetChan(theChannerW));
+			}
+		catch (...)
+			{
+			break;
+			}
 
-		foreachi (ii, theMessages)
-			spWriteMessage(*ii, sGetChan(theChannerW));
-
-		guard.Acquire();
 		}
 	fTrueOnce_WriteNeedsStart.Reset();
 	}
@@ -671,17 +734,20 @@ void Melange_Client::pWork()
 		sClear(fPending_Unregistrations);
 		}
 
-	if (sNotEmpty(fPending_Updates))
+	if (sNotEmpty(fPending_Asserts))
 		{
-		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Updates");
-		foreachi (ii, fPending_Updates)
-			{
-			Map_Any theMap;
-			theMap.Set("True", ii->second);
-			theMap.Set("Daton", ii->first.GetData());
-			theSeq.Append(theMap);
-			}
-		sClear(fPending_Updates);
+		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Asserts");
+		foreachi (ii, fPending_Asserts)
+			theSeq.Append(ii->GetData());
+		sClear(fPending_Asserts);
+		}
+
+	if (sNotEmpty(fPending_Retracts))
+		{
+		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Retracts");
+		foreachi (ii, fPending_Retracts)
+			theSeq.Append(ii->GetData());
+		sClear(fPending_Retracts);
 		}
 
 	if (not theMessage.IsEmpty())
@@ -711,11 +777,13 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 		foreachi (ii, fMap_Reg2Refcon)
 			sInsertMust(fPending_Registrations, ii->first);
 
+		sClear(fPending_Asserts);
+		sClear(fPending_Retracts);
 		sClear(fPending_Unregistrations);
-		sClear(fPending_Updates);
 		sClear(fMap_Refcon2Reg);
 		sClear(fMap_Reg2Refcon);
 		sClear(fQueue_Read);
+		sClear(fQueue_ToWrite);
 
 		this->pWake();
 
@@ -723,7 +791,7 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 
 		guard.Release();
 
-		if (ZLOGF(w, eDebug))
+		if (ZLOGF(w, eDebug - 1))
 			w << "No Channer";
 
 		sCall(fCallable_Status, false);
@@ -732,13 +800,13 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 		if (not theChanner)
 			{
 			// No Channer was available, pause for 1s.
-			if (ZLOGF(w, eDebug))
+			if (ZLOGF(w, eDebug - 1))
 				w << "Still no Channer";
 			ZThread::sSleep(1);
 			}
 		else
 			{
-			if (ZLOGF(w, eDebug))
+			if (ZLOGF(w, eDebug - 1))
 				w << "Has Channer";
 
 			sCall(fCallable_Status, true);

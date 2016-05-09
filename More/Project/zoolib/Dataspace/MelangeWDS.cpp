@@ -80,13 +80,17 @@ ZQ<ZRef<ZCounted> > MelangeWDS::QCall(
 	const ZRef<Expr_Rel>& iRel)
 	{ return fRelsWatcher_Relater->QCall(iCallable_Changed, iRel); }
 
-ZQ<void> MelangeWDS::QCall(const DatonSet::Daton& iDaton, bool iTrue)
+ZQ<void> MelangeWDS::QCall(const Daton* iAsserted, size_t iAssertedCount,
+		const Daton* iRetracted, size_t iRetractedCount)
 	{
 	ZRef<DatonSet::DatonSet> theDS = fWDS->GetDatonSet_Active();
-	if (iTrue)
-		theDS->Insert(iDaton);
-	else
-		theDS->Erase(iDaton);
+
+	while (iAssertedCount--)
+		theDS->Insert(*iAsserted++);
+
+	while (iRetractedCount--)
+		theDS->Erase(*iRetracted++);
+
 	return notnull;
 	}
 

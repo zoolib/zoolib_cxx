@@ -153,10 +153,10 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 
 // * oRemoved indices are relative to the prior list.
 // * oAdded pairs have the index at which the entry should be inserted, and the corresponding
-// index of the value in iResult.
+//   index of the value in iResult.
 // * oChanged triples have the index in the new list as the first field, the second field is
-// the index into the prior result (so the prior value is available) and the third field
-// is the index into iResult for the new value.
+//   the index into the prior result (so the prior value is available) and the third field
+//   is the index into iResult for the new value.
 
 // To mutate an external list you would erase every position in oRemoved,
 // insert everything in oAdded, and then apply changes in oChanged after both.

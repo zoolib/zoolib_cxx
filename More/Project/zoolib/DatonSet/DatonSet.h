@@ -141,7 +141,8 @@ private:
 #pragma mark -
 #pragma mark Callables
 
-typedef Callable<void(const Daton& iDaton, bool iTrue)> Callable_DatonSetUpdate;
+typedef Callable<void(const Daton* iAsserted, size_t iAssertedCount,
+	const Daton* iRetracted, size_t iRetractedCount)> Callable_DatonSetUpdate;
 
 typedef Callable<ZRef<Deltas>(ZRef<Event> iEvent)> Callable_PullFrom;
 

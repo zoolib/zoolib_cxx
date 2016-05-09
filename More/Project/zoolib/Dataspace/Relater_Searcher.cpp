@@ -443,7 +443,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
 		const double elapsed = Time::sSystem() - start;
 
-//##		if (elapsed > 0.01)
+		if (elapsed > 0.1)
 			{
 			if (ZLOGF(w, eDebug))
 				{
@@ -517,10 +517,9 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 
 void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 	{
-	// *1* We must call pCollectResultsFromSearcher because we're possibly
-	// waiting on an fResult field at *2* below.
-	if (this->pCollectResultsFromSearcher())
-		Relater::pTrigger_RelaterResultsAvailable();
+	Relater::pTrigger_RelaterResultsAvailable();
+	ZGuardMtxR guard(fMtxR);
+	fCnd.Broadcast();
 	}
 
 void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
@@ -601,10 +600,19 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 
 			fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
 
-			while (not thePRegSearchStar->fResult)
-				fCnd.Wait(fMtxR); // *2* see above at *1*
+			for (;;)
+				{
+				this->pCollectResultsFromSearcher();
 
-			guard.Acquire();
+				guard.Acquire();
+
+				if (thePRegSearchStar->fResult)
+					break;
+
+				fCnd.Wait(fMtxR);
+
+				guard.Release();
+				}
 			}
 
 		// We may end up using the same PRegSearch to support a single PQuery (e.g. a self-join),

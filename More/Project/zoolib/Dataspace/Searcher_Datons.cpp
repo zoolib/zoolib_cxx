@@ -903,7 +903,8 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 		}
 	}
 
-void Searcher_Datons::MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
+void Searcher_Datons::MakeChanges(
+	const Daton* iAsserted, size_t iAssertedCount,
 	const Daton* iRetracted, size_t iRetractedCount)
 	{
 	if (not iAssertedCount and not iRetractedCount)

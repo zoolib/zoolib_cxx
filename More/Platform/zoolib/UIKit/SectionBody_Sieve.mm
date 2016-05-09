@@ -487,7 +487,7 @@ bool SectionBody_Sieve::CommitEditingStyle(UITableViewCellEditingStyle iStyle, s
 			if (ZQ<DatonSet::Daton> theDatonQ =
 				fRows[iRowIndex].QGet<DatonSet::Daton>(*fDatonColNameQ))
 				{
-				sCall(fCallable_DatonSetUpdate, *theDatonQ, false);
+				sCall(fCallable_DatonSetUpdate, nullptr, 0, &*theDatonQ, 1);
 				}
 			}
 		}
