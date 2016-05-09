@@ -93,7 +93,7 @@ ChanR_Bin_Chunked::~ChanR_Bin_Chunked()
 
 size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(oDest);
+	byte* localDest = oDest;
 	while (iCount && !fHitEnd)
 		{
 		if (fChunkSize == 0)
@@ -117,7 +117,7 @@ size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 			fChunkSize -= countRead;
 			}
 		}
-	return localDest - reinterpret_cast<uint8*>(oDest);
+	return localDest - oDest;
 	}
 
 size_t ChanR_Bin_Chunked::Readable()
