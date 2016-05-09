@@ -42,7 +42,7 @@ template <class Elmt_t>
 std::pair<uint64,uint64> sCopyFully(
 	const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, uint64 iCount)
 	{
-	Elmt_t buf[sStackBufferSize / sizeof(Elmt_t)];
+	Elmt_t buf[(sStackBufferSize + sizeof(Elmt_t) - 1) / sizeof(Elmt_t)];
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
@@ -75,7 +75,7 @@ std::pair<uint64,uint64> sCopyFully(
 template <class Elmt_t>
 std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW)
 	{
-	Elmt_t buf[sStackBufferSize / sizeof(Elmt_t)];
+	Elmt_t buf[(sStackBufferSize + sizeof(Elmt_t) - 1) / sizeof(Elmt_t)];
 
 	uint64 totalCopied = 0;
 	for (;;)
