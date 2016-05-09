@@ -62,8 +62,9 @@ public:
 	template <class P>
 	P* Pop()
 		{
-		ZAcqMtx acq(fMtx);
 		ZAssertStop(L::kDebug, fHead);
+
+		ZAcqMtx acq(fMtx);
 		L* result = fHead;
 		fHead = fHead->fNext;
 		result->fNext = nullptr;

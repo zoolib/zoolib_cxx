@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Yad.h"
 
+#define ZMACRO_UseSafeStack 0
+
 namespace ZooLib {
 
 using std::min;
@@ -268,16 +270,20 @@ namespace {
 
 class YadAtomR_Any;
 
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 class SafeStackLink_YadAtomR_Any
 :	public SafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
 	{};
 
 SafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 
 class YadAtomR_Any
 :	public virtual YadAtomR
 ,	public virtual YadR_Any
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 ,	public SafeStackLink_YadAtomR_Any
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 	{
 public:
 	YadAtomR_Any(const Any& iAny)
@@ -288,6 +294,7 @@ public:
 		{}
 
 // From ZCounted
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 	virtual void Finalize()
 		{
 		bool finalized = this->FinishFinalize();
@@ -297,6 +304,7 @@ public:
 
 		spSafeStack_YadAtomR_Any.Push(this);
 		}
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 
 // From YadAtomR
 	virtual Any AsAny()
@@ -311,11 +319,13 @@ public:
 
 ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
 	{
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 	if (YadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<YadAtomR_Any>())
 		{
 		result->SetAny(iAny);
 		return result;
 		}
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
 	return new YadAtomR_Any(iAny);
 	}
 
