@@ -59,16 +59,16 @@ void ZCountedBase::Finalize()
 
 bool ZCountedBase::FinishFinalize()
 	{
-	if (not sAtomic_DecAndTest(&fRefCount))
-		return false;
+	// Our weak proxy may be a way to get resurrected, so kill it before we
+	// check our refcount, so we can be sure that value is valid.
 
-	if (fWeakRefProxy)
+	if (ZRef<WeakRefProxy> theWeakRefProxy = fWeakRefProxy)
 		{
-		fWeakRefProxy->pClear();
-		fWeakRefProxy.Clear();
+		if (fWeakRefProxy.AtomicCAS(theWeakRefProxy.Get(), nullptr))
+			theWeakRefProxy->pClear();
 		}
 
-	return true;
+	return sAtomic_DecAndTest(&fRefCount);
 	}
 
 void ZCountedBase::Retain()
