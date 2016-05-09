@@ -59,15 +59,15 @@ static bool spTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	return false;
 	}
 
-static bool sQRead(UTF32& oCP, ChanR_UTF& iChanR)
-	{
-	if (ZQ<UTF32> theQ = sQRead(iChanR))
-		{
-		oCP = *theQ;
-		return true;
-		}
-	return false;
-	}
+//static bool sQRead(UTF32& oCP, ChanR_UTF& iChanR)
+//	{
+//	if (ZQ<UTF32> theQ = sQRead(iChanR))
+//		{
+//		oCP = *theQ;
+//		return true;
+//		}
+//	return false;
+//	}
 
 // -----------------
 // -----------------
