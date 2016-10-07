@@ -27,13 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 class YadStreamerRPos_Any
-:	public virtual YadStreamerRPos_Val_T<Data_Any>
+:	public ChanRPos_Bin_Data<Data_Any>
 ,	public virtual YadR_Any
+,	public virtual YadStreamerR
 	{
 public:
 	YadStreamerRPos_Any(const Data_Any& iData)
-	:	YadStreamerRPos_Val_T<Data_Any>(iData)
-	,	YadR_Any(Any(iData))
+	:	YadR_Any(Any(iData))
+	,	ChanRPos_Bin_Data<Data_Any>(iData)
 		{}
 	};
 

@@ -34,14 +34,12 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Buffered
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Buffered
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Buffered(size_t iBufferSize, const ChanR<XX>& iChanR)
+	ChanR_XX_Buffered(size_t iBufferSize, const ChanR<EE>& iChanR)
 	:	fChanR(iChanR)
 	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
 	,	fBegin(0)
@@ -49,9 +47,9 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
-		Elmt_t* localDest = oDest;
+		EE* localDest = oDest;
 		while (iCount)
 			{
 			if (fEnd > fBegin)
@@ -101,8 +99,8 @@ public:
 		{ return fEnd - fBegin + sReadable(fChanR); }
 
 protected:
-	const ChanR<XX>& fChanR;
-	std::vector<XX> fBuffer;
+	const ChanR<EE>& fChanR;
+	std::vector<EE> fBuffer;
 	size_t fBegin;
 	size_t fEnd;
 	};
@@ -112,14 +110,12 @@ protected:
 #pragma mark -
 #pragma mark ChanW_XX_Buffered
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Buffered
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanW_XX_Buffered(size_t iBufferSize, const ChanW<XX>& iChanW)
+	ChanW_XX_Buffered(size_t iBufferSize, const ChanW<EE>& iChanW)
 	:	fChanW(iChanW)
 	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
 	,	fOffset(0)
@@ -137,9 +133,9 @@ public:
 			}
 		}
 
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
-		const Elmt_t* localSource = iSource;
+		const EE* localSource = iSource;
 		while (iCount)
 			{
 			if (fOffset == 0 && fBuffer.size() <= iCount)
@@ -181,11 +177,11 @@ protected:
 	void pFlush()
 		{
 		if (size_t used = sGetSet(fOffset, 0))
-			sWriteMust(&fBuffer[0], used, fChanW);
+			sEWrite(&fBuffer[0], used, fChanW);
 		}
 
-	const ChanW<XX>& fChanW;
-	std::vector<XX> fBuffer;
+	const ChanW<EE>& fChanW;
+	std::vector<EE> fBuffer;
 	size_t fOffset;
 	};
 

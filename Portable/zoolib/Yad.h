@@ -115,7 +115,7 @@ public:
 
 class YadStreamerR
 :	public virtual YadR
-,	public virtual ChannerR_Bin
+,	public ChannerR_Bin
 	{
 public:
 // From YadR
@@ -129,7 +129,7 @@ public:
 
 class YadStrimmerR
 :	public virtual YadR
-,	public virtual ChannerR_UTF
+,	public ChannerR_UTF
 	{
 // From YadR
 	virtual void Accept_Yad(Visitor_Yad& iVisitor);

@@ -31,13 +31,13 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Chan_FILE
+#pragma mark FILEHolder
 
-class Chan_FILE
+class FILEHolder
 	{
 public:
-	Chan_FILE(FILE* iFILE, bool iAdopt);
-	~Chan_FILE();
+	FILEHolder(FILE* iFILE, bool iAdopt);
+	~FILEHolder();
 
 	FILE* GetFILE();
 	FILE* OrphanFILE();
@@ -55,7 +55,7 @@ protected:
 
 class ChanR_Bin_FILE
 :	public ChanR_Bin
-,	public Chan_FILE
+,	public FILEHolder
 	{
 public:
 	ChanR_Bin_FILE(FILE* iFILE);
@@ -73,7 +73,7 @@ public:
 //
 //class ZStreamRPos_FILE
 //:	public ZStreamRPos
-//,	public Chan_FILE
+//,	public FILEHolder
 //	{
 //public:
 //	ZStreamRPos_FILE(FILE* iFILE);
@@ -97,7 +97,7 @@ public:
 
 class ChanW_Bin_FILE
 :	public ChanW_Bin
-,	public Chan_FILE
+,	public FILEHolder
 	{
 public:
 	ChanW_Bin_FILE(FILE* iFILE);

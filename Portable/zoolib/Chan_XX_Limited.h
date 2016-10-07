@@ -31,20 +31,18 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Limited
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Limited
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Limited(uint64 iLimit, const ChanR<XX>& iChanR)
+	ChanR_XX_Limited(uint64 iLimit, const ChanR<EE>& iChanR)
 	:	fChanR(iChanR)
 	,	fLimit(iLimit)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		const size_t countRead = sQRead(oDest, std::min<uint64>(fLimit, iCount), fChanR);
 		fLimit -= countRead;
@@ -62,7 +60,7 @@ public:
 		{ return std::min<uint64>(fLimit, sReadable(fChanR)); }
 
 protected:
-	const ChanR<XX>& fChanR;
+	const ChanR<EE>& fChanR;
 	uint64 fLimit;
 	};
 
@@ -70,20 +68,18 @@ protected:
 #pragma mark -
 #pragma mark ChanW_XX_Limited
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Limited
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanW_XX_Limited(uint64 iLimit, const ChanW<XX>& iChanW)
+	ChanW_XX_Limited(uint64 iLimit, const ChanW<EE>& iChanW)
 	:	fChanW(iChanW)
 	,	fLimit(iLimit)
 		{}
 
 // From ChanW
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
 		const size_t countWritten = sQWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
 		fLimit -= countWritten;
@@ -94,7 +90,7 @@ public:
 		{ sFlush(fChanW); }
 
 protected:
-	const ChanW<XX>& fChanW;
+	const ChanW<EE>& fChanW;
 	uint64 fLimit;
 	};
 

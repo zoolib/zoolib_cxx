@@ -132,7 +132,7 @@ ZRef<YadR> YadMapR::ReadInc(Name& oName)
 	if (!fChannerRU_UTF)
 		return null;
 
-	ML::ChanRU_UTF& theR = fChannerRU_UTF->GetChan();
+	ML::ChanRU_UTF& theR = *fChannerRU_UTF;
 
 	// We have read the begin, and have returned
 	// any attributes on that begin.
@@ -192,8 +192,8 @@ ZRef<YadR> YadMapR::ReadInc(Name& oName)
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
 	{
-	sSkipText(iChannerRU_UTF->GetChan());
-	if (iChannerRU_UTF->GetChan().Current() != ML::eToken_Exhausted)
+	sSkipText(*iChannerRU_UTF);
+	if (iChannerRU_UTF->Current() != ML::eToken_Exhausted)
 		return new YadMapR(iChannerRU_UTF);
 	return null;
 	}

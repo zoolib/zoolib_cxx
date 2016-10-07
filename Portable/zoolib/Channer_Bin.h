@@ -23,18 +23,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
-#include "zoolib/ChannerXX.h"
+#include "zoolib/Channer.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 
-typedef Channer<ChanR_Bin> ChannerR_Bin;
-typedef Channer<ChanU<byte> > ChannerU_Bin;
-typedef Channer<ChanW_Bin> ChannerW_Bin;
+typedef ChannerR<byte> ChannerR_Bin;
+typedef ChannerU<byte> ChannerU_Bin;
+typedef ChannerW<byte> ChannerW_Bin;
 
 typedef ChannerRPos<byte> ChannerRPos_Bin;
 typedef ChannerWPos<byte> ChannerWPos_Bin;

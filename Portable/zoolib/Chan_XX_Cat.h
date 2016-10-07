@@ -31,21 +31,19 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Cat
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Cat
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Cat(const ChanR<XX>& iChanR0, const ChanR<XX>& iChanR1)
+	ChanR_XX_Cat(const ChanR<EE>& iChanR0, const ChanR<EE>& iChanR1)
 	:	fChanR0(iChanR0)
 	,	fChanR1(iChanR1)
 	,	fFirstIsLive(true)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{
@@ -71,8 +69,8 @@ public:
 		}
 
 protected:
-	const ChanR<XX>& fChanR0;
-	const ChanR<XX>& fChanR1;
+	const ChanR<EE>& fChanR0;
+	const ChanR<EE>& fChanR1;
 	bool fFirstIsLive;
 	};
 
@@ -80,21 +78,19 @@ protected:
 #pragma mark -
 #pragma mark ChanW_XX_Cat
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Cat
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanW_XX_Cat(const ChanW<XX>& iChanW0, const ChanW<XX>& iChanW1)
+	ChanW_XX_Cat(const ChanW<EE>& iChanW0, const ChanW<EE>& iChanW1)
 	:	fChanW0(iChanW0)
 	,	fChanW1(iChanW1)
 	,	fFirstIsLive(true)
 		{}
 
 // From ChanW
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
 		if (fFirstIsLive)
 			{
@@ -114,8 +110,8 @@ public:
 		}
 
 protected:
-	const ChanW<XX>& fChanW0;
-	const ChanW<XX>& fChanW1;
+	const ChanW<EE>& fChanW0;
+	const ChanW<EE>& fChanW1;
 	bool fFirstIsLive;
 	};
 

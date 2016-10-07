@@ -22,54 +22,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanU_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/size_t.h" // For size_t
+#include "zoolib/Chan.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanU
 
-template <class Elmt_p>
-class ChanU
-	{
-protected:
-	ChanU() {}
-	virtual ~ChanU() {}
-	ChanU(const ChanU&) {}
-	ChanU& operator=(const ChanU&) { return *this; }
-
-public:
-	typedef Elmt_p Elmt_t;
-	typedef ChanU<Elmt_p> Chan_Base;
-
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount) = 0;
-
-	virtual size_t UnreadableLimit() // ??
-		{ return 0; }
-	};
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-size_t sUnread(const Elmt_p* iSource, size_t iCount, const ChanU<Elmt_p>& iChanU)
-	{ return sNonConst(iChanU).Unread(iSource, iCount); }
-
-template <class Elmt_p>
-bool sUnread(const Elmt_p& iElmt, const ChanU<Elmt_p>& iChanU)
+template <class EE>
+bool sUnread(const EE& iElmt, const ChanU<EE>& iChanU)
 	{ return 1 == sUnread(&iElmt, 1, iChanU); }
-
-template <class Elmt_p>
-size_t sUnreadableLimit(const ChanU<Elmt_p>& iChanU)
-	{ return sNonConst(iChanU).UnreadableLimit(); }
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-bool sQUnread(const Elmt_p& iElmt, const ChanU<Elmt_p>& iChanU)
-	{ return 1 == sNonConst(iChanU).Unread(&iElmt, 1); }
 
 } // namespace ZooLib
 

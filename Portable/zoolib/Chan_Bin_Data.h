@@ -22,11 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Bin_Data_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanSize.h"
-#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll
 
@@ -34,30 +30,84 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanBase_Bin_Data
+#pragma mark ChanRPos_Bin_Data
 
 template <class Data_p>
-class ChanBase_Bin_Data
-:	public ChanR_Bin
-,	public ChanPos
-,	public ChanSize
+class ChanRPos_Bin_Data
+:	public ChanRPos<byte>
 	{
-protected:
-	ChanBase_Bin_Data()
-		{}
-
 public:
 	typedef Data_p Data;
 
-	ChanBase_Bin_Data(Data* ioDataPtr)
-	:	fDataPtr(ioDataPtr)
+	ChanRPos_Bin_Data(const Data& iData)
+	:	fData(iData)
 	,	fPosition(0)
-		{
-		ZAssert(fDataPtr);
-		}
+		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(byte* oDest, size_t iCount)
+		{
+		const size_t theSize = fData.GetSize();
+		const size_t countToCopy = std::min<size_t>(iCount,
+			theSize > fPosition ? theSize - fPosition : 0);
+		fData.CopyTo(fPosition, oDest, countToCopy);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
+
+	virtual size_t Readable()
+		{
+		const size_t theSize = fData.GetSize();
+		return theSize >= fPosition ? theSize - fPosition : 0;
+		}
+
+// From ChanSize
+	virtual uint64 Size()
+		{ return fData.GetSize(); }
+
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void SetPos(uint64 iPos)
+		{ fPosition = iPos; }
+
+// From ChanU
+	virtual size_t Unread(const byte* iSource, size_t iCount)
+		{
+		const size_t countToCopy = std::min(iCount, this->fPosition);
+		this->fPosition -= countToCopy;
+
+		// See Chan_XX_Memory for a note regarding bogus unreads.
+
+		return countToCopy;
+		}
+
+	virtual size_t UnreadableLimit()
+		{ return this->fPosition; }
+
+private:
+	Data fData;
+	size_t fPosition;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanRWPos_Bin_Data
+
+template <class Data_p>
+class ChanRWPos_Bin_Data
+:	public ChanRWPos<byte>
+	{
+public:
+	typedef Data_p Data;
+
+	ChanRWPos_Bin_Data(Data* ioData)
+	:	fDataPtr(ioData)
+	,	fPosition(0)
+		{}
+
+	virtual size_t QRead(byte* oDest, size_t iCount)
 		{
 		const size_t theSize = fDataPtr->GetSize();
 		const size_t countToCopy = std::min<size_t>(iCount,
@@ -83,67 +133,6 @@ public:
 
 	virtual void SetPos(uint64 iPos)
 		{ fPosition = iPos; }
-
-protected:
-	Data* fDataPtr;
-	size_t fPosition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_Data
-
-template <class Data_p>
-class ChanRPos_Bin_Data
-:	public ChanBase_Bin_Data<Data_p>
-,	public ChanU<byte>
-	{
-public:
-	typedef Data_p Data;
-
-	ChanRPos_Bin_Data()
-	:	ChanBase_Bin_Data<Data_p>(&fData)
-		{}
-
-	ChanRPos_Bin_Data(Data iData)
-	:	ChanBase_Bin_Data<Data_p>(&fData)
-	,	fData(iData)
-		{}
-
-// From ChanU
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
-		{
-		const size_t countToCopy = std::min(iCount, this->fPosition);
-		this->fPosition -= countToCopy;
-
-		// See Chan_XX_Memory for a note regarding bogus unreads.
-
-		return countToCopy;
-		}
-
-	virtual size_t UnreadableLimit()
-		{ return this->fPosition; }
-
-	Data fData;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_Bin_Data
-
-template <class Data_p>
-class ChanRWPos_Bin_Data
-:	public ChanBase_Bin_Data<Data_p>
-,	public ChanU<byte>
-,	public ChanW_Bin
-,	public ChanSizeSet
-	{
-public:
-	typedef Data_p Data;
-
-	ChanRWPos_Bin_Data(Data* ioData)
-	:	ChanBase_Bin_Data<Data_p>(ioData)
-		{}
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount)
@@ -181,6 +170,10 @@ public:
 			this->fPosition = iSize;
 		this->fDataPtr->SetSize(iSize);
 		}
+
+private:
+	Data* fDataPtr;
+	size_t fPosition;
 	};
 
 // =================================================================================================

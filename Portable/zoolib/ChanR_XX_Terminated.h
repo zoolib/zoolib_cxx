@@ -30,26 +30,24 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Terminated
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Terminated
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Terminated(Elmt_t iTerminator, const ChanR<XX>& iChanR)
+	ChanR_XX_Terminated(EE iTerminator, const ChanR<EE>& iChanR)
 	:	fTerminator(iTerminator)
 	,	fChanR(iChanR)
 	,	fHitTerminator(false)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		size_t countRemaining = iCount;
 		while (not fHitTerminator && countRemaining)
 			{
-			if (NotQ<Elmt_t> theQ = sQRead(fChanR))
+			if (NotQ<EE> theQ = sQRead(fChanR))
 				{
 				break;
 				}
@@ -68,7 +66,7 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return sReadable(fChanR); }
+		{ return fHitTerminator ? 0 : sReadable(fChanR); }
 
 // Our protocol
 	bool HitTerminator()
@@ -78,8 +76,8 @@ public:
 		{ fHitTerminator = false; }
 
 protected:
-	const Elmt_t fTerminator;
-	const ChanR<XX>& fChanR;
+	const EE fTerminator;
+	const ChanR<EE>& fChanR;
 	bool fHitTerminator;
 	};
 

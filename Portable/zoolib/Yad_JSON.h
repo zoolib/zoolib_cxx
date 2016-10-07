@@ -82,7 +82,8 @@ public:
 #pragma mark YadStreamerR_Hex
 
 class YadStreamerR_Hex
-:	public YadStreamerR
+:	public virtual YadStreamerR
+,	public ChanR_Bin_HexStrim
 	{
 public:
 	YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
@@ -90,13 +91,9 @@ public:
 // From YadR
 	virtual void Finish();
 
-// From ChannerR via YadStreamerR
-	virtual void GetChan(const ChanR_Bin*& oChanPtr);
-
 private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
-	ChanR_Bin_HexStrim fChanR;
 	};
 
 // =================================================================================================
@@ -113,8 +110,8 @@ public:
 // From YadR
 	virtual void Finish();
 
-// From ChannerR via YadStreamerR
-	virtual void GetChan(const ChanR_Bin*& oChanPtr);
+// From ChanR
+	virtual size_t QRead(byte* oDest, size_t iCount);
 
 private:
 	ZRef<ChannerR_UTF> fChannerR;
@@ -130,16 +127,12 @@ private:
 
 class YadStrimmerR_JSON
 :	public YadStrimmerR
-,	private ChanR_UTF
 	{
 public:
 	YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
 // From YadR
 	virtual void Finish();
-
-// From ChannerR via YadStrimmerR
-	virtual void GetChan(const ChanR_UTF*& oChanPtr);
 
 // From ChanR_UTF
 	virtual size_t QRead(UTF32* oDest, size_t iCount);

@@ -38,49 +38,40 @@ size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanBase_Bin_string
+#pragma mark ChanRPos_Bin_string
 
-ChanBase_Bin_string::ChanBase_Bin_string(std::string* ioStringPtr)
-:	fStringPtr(ioStringPtr)
+ChanRPos_Bin_string::ChanRPos_Bin_string(const std::string& iString)
+:	fString(iString)
 ,	fPosition(0)
 	{}
 
-size_t ChanBase_Bin_string::QRead(byte* oDest, size_t iCount)
+size_t ChanRPos_Bin_string::QRead(byte* oDest, size_t iCount)
 	{
-	const size_t theSize = fStringPtr->size();
+	const size_t theSize = fString.size();
 	if (const size_t countToCopy =
 		std::min<size_t>(iCount, theSize > fPosition ? theSize - fPosition : 0))
 		{
-		std::copy_n(&fStringPtr->at(fPosition), countToCopy, (char*)oDest);
+		std::copy_n(&fString.at(fPosition), countToCopy, (char*)oDest);
 		fPosition += countToCopy;
 		return countToCopy;
 		}
 	return 0;
 	}
 
-size_t ChanBase_Bin_string::Readable()
+size_t ChanRPos_Bin_string::Readable()
 	{
-	const size_t theSize = fStringPtr->size();
+	const size_t theSize = fString.size();
 	return theSize >= fPosition ? theSize - fPosition : 0;
 	}
 
-uint64 ChanBase_Bin_string::Size()
-	{ return fStringPtr->size(); }
+uint64 ChanRPos_Bin_string::Size()
+	{ return fString.size(); }
 
-uint64 ChanBase_Bin_string::Pos()
+uint64 ChanRPos_Bin_string::Pos()
 	{ return fPosition; }
 
-void ChanBase_Bin_string::SetPos(uint64 iPos)
+void ChanRPos_Bin_string::SetPos(uint64 iPos)
 	{ fPosition = iPos; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_string
-
-ChanRPos_Bin_string::ChanRPos_Bin_string(const std::string& iString)
-:	ChanBase_Bin_string(const_cast<std::string*>(&fString))
-,	fString(iString)
-	{}
 
 size_t ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
@@ -100,8 +91,38 @@ size_t ChanRPos_Bin_string::UnreadableLimit()
 #pragma mark ChanRWPos_Bin_string
 
 ChanRWPos_Bin_string::ChanRWPos_Bin_string(std::string* ioStringPtr)
-:	ChanBase_Bin_string(ioStringPtr)
+:	fStringPtr(ioStringPtr)
+,	fPosition(0)
 	{}
+
+size_t ChanRWPos_Bin_string::QRead(byte* oDest, size_t iCount)
+	{
+	const size_t theSize = fStringPtr->size();
+	if (const size_t countToCopy =
+		std::min<size_t>(iCount, theSize > fPosition ? theSize - fPosition : 0))
+		{
+		std::copy_n(&fStringPtr->at(fPosition), countToCopy, (char*)oDest);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
+	return 0;
+	}
+
+size_t ChanRWPos_Bin_string::Readable()
+	{
+	const size_t theSize = fStringPtr->size();
+	return theSize >= fPosition ? theSize - fPosition : 0;
+	}
+
+uint64 ChanRWPos_Bin_string::Size()
+	{ return fStringPtr->size(); }
+
+uint64 ChanRWPos_Bin_string::Pos()
+	{ return fPosition; }
+
+void ChanRWPos_Bin_string::SetPos(uint64 iPos)
+	{ fPosition = iPos; }
+
 
 size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{

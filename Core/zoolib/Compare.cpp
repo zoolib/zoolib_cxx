@@ -21,7 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Compat_string.h"
 #include "zoolib/Singleton.h"
-#include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_unordered_map.h"
+//#include "zoolib/Util_STL_map.h"
 
 #include "zoolib/ZDebug.h"
 
@@ -40,7 +41,9 @@ public:
 		{ return strcmp(iL, iR) < 0; }
 	};
 
-typedef std::map<const char*, Comparer*, Functor_CompareCharStars> ComparerMap;
+typedef std::unordered_map<const char*, Comparer*> ComparerMap;
+
+//typedef std::map<const char*, Comparer*, Functor_CompareCharStars> ComparerMap;
 
 } // anonymous namespace
 

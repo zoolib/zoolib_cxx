@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 
-#include "zoolib/ZCompat_unordered_map.h"
+#include "zoolib/Compat_unordered_map.h"
 
 #if ZCONFIG_SPI_Enabled(unordered_map)
 

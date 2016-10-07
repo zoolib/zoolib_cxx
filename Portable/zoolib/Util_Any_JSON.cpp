@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
-#include "zoolib/ChannerXX.h"
+#include "zoolib/Channer.h"
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
@@ -51,12 +51,15 @@ ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>
 
 ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR)
 	{
-	ZRef<ChannerRU_XX_Unreader<UTF32> > theChanner = new ChannerRU_XX_Unreader<UTF32>(iChannerR);
+	ZRef<ChannerRU<UTF32> > theChanner = sChanner_Channer_T<ChanRU_XX_Unreader<UTF32>>(iChannerR);
 	return sQRead(theChanner, theChanner);
 	}
 
 ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
-	{ return sQRead(new Channer_Channer_T<ChanR_UTF_Chan_Bin_UTF8,ChanR_Bin>(iChannerR)); }
+	{
+	ZRef<ChannerR_UTF> theChannerR = sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(iChannerR);
+	return sQRead(theChannerR);
+	}
 
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{ Yad_JSON::sToChan(sYadR(iVal), iChanW); }
@@ -81,9 +84,8 @@ string8 sAsJSON(const Val_Any& iVal)
 
 const Val_Any sFromJSON(const string8& iString)
 	{
-	ZRef<ChannerRU_T<ChanRU_UTF_string8> > theChanner =
-		new ChannerRU_T<ChanRU_UTF_string8>(iString);
-	return sQRead(theChanner, theChanner).Get();
+	ZRef<ChannerRU_UTF> theChannerRU = sChanner_T<ChanRU_UTF_string8>(iString);
+	return sQRead(theChannerRU, theChannerRU).Get();
 	}
 
 } // namespace Util_Any_JSON

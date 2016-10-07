@@ -24,15 +24,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/ChannerXX.h"
 
 namespace ZooLib {
 
 // ---
 
-typedef ChannerRWClose<byte> ChannerRWClose_Bin;
+typedef ChannerConnection<byte> ChannerConnection_Bin;
 
-typedef Callable<ZRef<ChannerRWClose_Bin>()> Factory_ChannerRWClose_Bin;
+typedef Callable<ZRef<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
+
+// Workaround for now.
+typedef ChannerConnection_Bin ChannerRWClose_Bin;
+typedef Factory_ChannerConnection_Bin Factory_ChannerRWClose_Bin;
 
 // ---
 

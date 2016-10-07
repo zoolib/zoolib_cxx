@@ -61,34 +61,6 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadStreamerRPos_Val_T
-
-template <class Data_p>
-class YadStreamerRPos_Val_T
-:	public /*virtual*/ YadStreamerR
-	{
-protected:
-	YadStreamerRPos_Val_T() {}
-
-public:
-	YadStreamerRPos_Val_T(const Data_p& iData)
-	:	fChan(iData)
-		{}
-
-// From ChannerR_Bin, via YadStreamerR
-	virtual void GetChan(const Chan_t*& oChanPtr)
-		{ 	oChanPtr = &fChan; }
-
-// From YadR
-	bool IsSimple(const YadOptions& iOptions)
-		{ return false; }
-
-protected:
-	ChanRPos_Bin_Data<Data_p> fChan;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark YadSeqR_Val_T
 
 template <class Seq_p>

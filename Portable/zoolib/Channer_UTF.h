@@ -24,16 +24,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/ChannerXX.h"
+#include "zoolib/Channer.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 
-typedef Channer<ChanR_UTF> ChannerR_UTF;
-typedef Channer<ChanU<UTF32> > ChannerU_UTF;
-typedef Channer<ChanW_UTF> ChannerW_UTF;
+typedef ChannerR<UTF32> ChannerR_UTF;
+typedef ChannerU<UTF32> ChannerU_UTF;
+typedef ChannerW<UTF32> ChannerW_UTF;
 
 typedef ChannerRU<UTF32> ChannerRU_UTF;
 

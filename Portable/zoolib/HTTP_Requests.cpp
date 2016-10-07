@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_XX_Tee.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
+#include "zoolib/Channer_XX_Wrapper.h"
 #include "zoolib/HTTP.h"
 #include "zoolib/HTTP_Content.h" // For ChanW_Bin_Chunked.
 #include "zoolib/HTTP_Requests.h"
@@ -204,7 +205,7 @@ bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
 					// Read and discard the body
 					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
 						iMethod, theResponseCode, theResponseHeader,
-						sGetChanner<ChanR_Bin>(ioConnection)))
+						ioConnection))
 						{ sSkipAll(sGetChan(theChannerR_Content)); }
 
 					string newScheme;
@@ -263,7 +264,7 @@ ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 
 			if (iBodyCountQ)
 				{
-				sWritefMust(theChanW, "Content-Length: %lld\r\n", *iBodyCountQ);
+				sEWritef(theChanW, "Content-Length: %lld\r\n", *iBodyCountQ);
 				theChanW << "\r\n";
 				sCopyFully(iBody, theChanW, *iBodyCountQ);
 				}

@@ -180,7 +180,8 @@ private:
 		const ZThread::ID theThreadID ZMACRO_Attribute_Unused = ZThread::sID();
 
 		#if __MACH__
-			const mach_port_t theMachThreadID ZMACRO_Attribute_Unused = ::mach_thread_self();
+			const mach_port_t theMachThreadID ZMACRO_Attribute_Unused =
+				::pthread_mach_thread_np(::pthread_self());
 		#endif
 
 		sStarted();

@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Connection.h"
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/ChannerXX.h"
 
 namespace ZooLib {
 // =================================================================================================

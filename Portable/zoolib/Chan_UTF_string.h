@@ -30,15 +30,14 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanRU_UTF_string8Ref
+#pragma mark ChanRU_UTF_string8
 
-class ChanRU_UTF_string8Ref
-:	public ChanR_UTF
-,	public ChanU_UTF
+class ChanRU_UTF_string8
+:	public ChanRU<UTF32>
 	{
 public:
-	ChanRU_UTF_string8Ref(const string8* iStringPtr);
-	~ChanRU_UTF_string8Ref();
+	ChanRU_UTF_string8(const string8& iString);
+	~ChanRU_UTF_string8();
 
 // From ChanR_UTF
 	virtual size_t QRead(UTF32* oDest, size_t iCount);
@@ -52,28 +51,8 @@ public:
 	const string8& GetString8() const;
 
 private:
-	const string8* fString;
+	const string8 fString;
 	size_t fPosition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_string8
-
-/// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
-
-struct ChanRU_string8Helper
-	{
-	ChanRU_string8Helper(const string8& iString);
-	const string8 fStringStorage;
-	};
-
-class ChanRU_UTF_string8
-:	public ChanRU_string8Helper
-,	public ChanRU_UTF_string8Ref
-	{
-public:
-	ChanRU_UTF_string8(const string8& iString);
 	};
 
 // =================================================================================================

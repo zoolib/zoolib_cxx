@@ -25,7 +25,7 @@ ifneq (,$(filter $(TARGET_PLATFORM),Win))
 	ZMAKE_WINDRES ?=i386-mingw32-windres
 	ZMAKE_STRIP ?=i386-mingw32-strip
 else
-	ifneq (,$(filter $(TARGET_PLATFORM),Darwin))
+	ifneq (,$(filter $(TARGET_PLATFORM),Darwinthing))
 		ZMAKE_CC ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CC)
 		ZMAKE_CXX ?=MACOSX_DEPLOYMENT_TARGET=10.5 $(CXX)
 		# When linking on 10.5 g++ cares about this value.
@@ -51,10 +51,10 @@ ZMAKE_LDFLAGS +=-dead_strip
 
 
 ifneq (,$(filter $(TARGET_PLATFORM),Darwin))
-	ifneq (,$(DARWIN_SYS_ROOT))
-		ZMAKE_CFLAGS +=-isysroot $(DARWIN_SYS_ROOT)
-	ZMAKE_LDFLAGS +=-Wl,-syslibroot,$(DARWIN_SYS_ROOT)
-	endif
+# 	ifneq (,$(DARWIN_SYS_ROOT))
+# 		ZMAKE_CFLAGS +=-isysroot $(DARWIN_SYS_ROOT)
+# 		ZMAKE_LDFLAGS +=-Wl,-syslibroot,$(DARWIN_SYS_ROOT)
+# 	endif
 	ZMAKE_LDFLAGS +=-Wl,-multiply_defined,suppress
 else
 #	ZMAKE_LDFLAGS +=--allow-multiple-definition
@@ -235,12 +235,22 @@ endif
 
 ifneq (clean,$(MAKECMDGOALS))
 -include $(OBJECTS_DIR_ROOT)/*.d
--include $(OBJECTS_DIR_ROOT)/*/*.d
--include $(OBJECTS_DIR_ROOT)/*/*/*.d
--include $(OBJECTS_DIR_ROOT)/*/*/*/*.d
--include $(OBJECTS_DIR_ROOT)/*/*/*/*/*.d
--include $(OBJECTS_DIR_ROOT)/*/*/*/*/*/*.d
--include $(OBJECTS_DIR_ROOT)/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*/*/*/*/*.d
+-include $(OBJECTS_DIR_ROOT)/4/3/2/1/*/*/*/*/*/*/*/*/*/*/*/*/*.d
 endif
 
 

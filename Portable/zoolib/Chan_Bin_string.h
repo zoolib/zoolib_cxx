@@ -22,11 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Bin_string_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanSize.h"
-#include "zoolib/ChanSizeSet.h"
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanU.h"
 #include "zoolib/ChanW_Bin.h"
 
 namespace ZooLib {
@@ -49,22 +45,18 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanBase_Bin_string
+#pragma mark ChanRPos_Bin_string
 
-// This looks like a ChanRPos, except it doesn't implement ChanU. We derive a real ChanRPos and
-// ChanRWPos from this class, because each has a different Unread strategy.
-
-class ChanBase_Bin_string
-:	public ChanR_Bin
-,	public ChanPos
-,	public ChanSize
+class ChanRPos_Bin_string
+:	public ChanRPos<byte>
 	{
 public:
-	ChanBase_Bin_string(std::string* ioStringPtr);
+	ChanRPos_Bin_string(const std::string& iString);
 
 // From ChanR
 	virtual size_t QRead(byte* oDest, size_t iCount);
 
+// From ChanReadable
 	virtual size_t Readable();
 
 // From ChanPos
@@ -75,28 +67,13 @@ public:
 // From ChanSize
 	virtual uint64 Size();
 
-protected:
-	std::string* fStringPtr;
-	size_t fPosition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_string
-
-class ChanRPos_Bin_string
-:	public ChanBase_Bin_string
-,	public ChanU<byte>
-	{
-public:
-	ChanRPos_Bin_string(const std::string& iString);
-
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 	virtual size_t UnreadableLimit();
 
-protected:
+private:
 	const std::string fString;
+	size_t fPosition;
 	};
 
 // =================================================================================================
@@ -104,13 +81,27 @@ protected:
 #pragma mark ChanRWPos_Bin_string
 
 class ChanRWPos_Bin_string
-:	public ChanBase_Bin_string
-,	public ChanU<byte>
-,	public ChanW_Bin
-,	public ChanSizeSet
+:	public ChanRWPos<byte>
 	{
 public:
 	ChanRWPos_Bin_string(std::string* ioStringPtr);
+
+// From ChanR
+	virtual size_t QRead(byte* oDest, size_t iCount);
+
+// From ChanReadable
+	virtual size_t Readable();
+
+// From ChanPos
+	virtual uint64 Pos();
+
+	virtual void SetPos(uint64 iPos);
+
+// From ChanSize
+	virtual uint64 Size();
+
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize);
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount);
@@ -120,8 +111,9 @@ public:
 // From ChanW
 	virtual size_t QWrite(const byte* iSource, size_t iCount);
 
-// From ChanSizeSet
-	virtual void SizeSet(uint64 iSize);
+private:
+	std::string* fStringPtr;
+	size_t fPosition;
 	};
 
 } // namespace ZooLib

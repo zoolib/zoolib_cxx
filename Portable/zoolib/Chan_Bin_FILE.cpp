@@ -132,23 +132,23 @@ using std::range_error;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Chan_FILE
+#pragma mark FILEHolder
 
-Chan_FILE::Chan_FILE(FILE* iFILE, bool iAdopt)
+FILEHolder::FILEHolder(FILE* iFILE, bool iAdopt)
 :	fFILE(iFILE)
 ,	fAdopted(false)
 	{}
 
-Chan_FILE::~Chan_FILE()
+FILEHolder::~FILEHolder()
 	{
 	if (fFILE && fAdopted)
 		fclose(fFILE);
 	}
 
-FILE* Chan_FILE::GetFILE()
+FILE* FILEHolder::GetFILE()
 	{ return fFILE; }
 
-FILE* Chan_FILE::OrphanFILE()
+FILE* FILEHolder::OrphanFILE()
 	{ FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
 
 // =================================================================================================
@@ -156,11 +156,11 @@ FILE* Chan_FILE::OrphanFILE()
 #pragma mark ChanR_Bin_FILE
 
 ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE)
-:	Chan_FILE(iFILE, false)
+:	FILEHolder(iFILE, false)
 	{}
 
 ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE, bool iAdopt)
-:	Chan_FILE(iFILE, iAdopt)
+:	FILEHolder(iFILE, iAdopt)
 	{}
 
 size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
@@ -171,11 +171,11 @@ size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
 #pragma mark ZStreamRPos_FILE
 //
 //ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE)
-//:	Chan_FILE(iFILE, false)
+//:	FILEHolder(iFILE, false)
 //	{}
 //
 //ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE, bool iAdopt)
-//:	Chan_FILE(iFILE, iAdopt)
+//:	FILEHolder(iFILE, iAdopt)
 //	{}
 //
 //void ZStreamRPos_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
@@ -198,11 +198,11 @@ size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
 #pragma mark ChanW_Bin_FILE
 
 ChanW_Bin_FILE::ChanW_Bin_FILE(FILE* iFILE)
-:	Chan_FILE(iFILE, false)
+:	FILEHolder(iFILE, false)
 	{}
 
 ChanW_Bin_FILE::ChanW_Bin_FILE(FILE* iFILE, bool iAdopt)
-:	Chan_FILE(iFILE, iAdopt)
+:	FILEHolder(iFILE, iAdopt)
 	{}
 
 size_t ChanW_Bin_FILE::QWrite(const byte* iSource, size_t iCount)

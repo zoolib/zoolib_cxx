@@ -37,16 +37,16 @@ typedef ChanR<UTF32> ChanR_UTF;
 #pragma mark -
 
 void sRead(UTF32* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR);
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR);
 
 void sRead(UTF16* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR);
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR);
 
 void sRead(UTF8* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR);
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR);
 
 // =================================================================================================
 #pragma mark -
@@ -55,9 +55,9 @@ ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
 ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
 ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 
-string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
-string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
-string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+string32 sEReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
+string16 sEReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
+string8 sEReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
 
 string8 sReadAllUTF8(const ChanR_UTF& iChanR);
 
@@ -72,6 +72,7 @@ public:
 // From ChanR_UTF
 	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
 
+// Our protocol
 	virtual void ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
 	};
@@ -87,6 +88,7 @@ public:
 // From ChanR_UTF
 	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
 
+// Our protocol
 	virtual void ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) = 0;
 	};

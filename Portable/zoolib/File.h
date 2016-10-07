@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/Channer_Bin.h"
-#include "zoolib/ChannerXX.h"
 #include "zoolib/FunctionChain.h"
 #include "zoolib/Time.h"
 #include "zoolib/Trail.h"

@@ -336,34 +336,23 @@ ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
 class YadStrimmerR_string
 :	public virtual YadStrimmerR
 ,	public virtual YadR_Any
-,	public virtual ChannerRU_T<ChanRU_UTF_string8Ref>
+,	public ChanRU_UTF_string8
 	{
 public:
-	YadStrimmerR_string(const Any& iAny);
-	YadStrimmerR_string(const std::string& iString);
+	YadStrimmerR_string(const Any& iAny)
+	:	YadR_Any(iAny)
+	,	ChanRU_UTF_string8(fAny.Get<string8>())
+		{}
+
+	YadStrimmerR_string(const std::string& iString)
+	:	YadR_Any(Any(iString))
+	,	ChanRU_UTF_string8(fAny.Get<string8>())
+		{}
 
 // From YadR
-	virtual bool IsSimple(const YadOptions& iOptions);
-
-	virtual void GetChan(const ChanR_UTF*& oChanPtr)
-		{ return ChannerRU_T<ChanRU_UTF_string8Ref>::GetChan(oChanPtr); }
-
-	virtual void GetChan(const ChanU_UTF*& oChanPtr)
-		{ return ChannerRU_T<ChanRU_UTF_string8Ref>::GetChan(oChanPtr); }
+	bool IsSimple(const YadOptions& iOptions)
+		{ return true; }
 	};
-
-YadStrimmerR_string::YadStrimmerR_string(const Any& iAny)
-:	YadR_Any(iAny)
-,	ChannerRU_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
-	{}
-
-YadStrimmerR_string::YadStrimmerR_string(const std::string& iString)
-:	YadR_Any(Any(iString))
-,	ChannerRU_T<ChanRU_UTF_string8Ref>(&fAny.Get<string8>())
-	{}
-
-bool YadStrimmerR_string::IsSimple(const YadOptions& iOptions)
-	{ return true; }
 
 // =================================================================================================
 #pragma mark -

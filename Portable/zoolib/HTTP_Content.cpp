@@ -149,11 +149,11 @@ ChanW_Bin_Chunked::~ChanW_Bin_Chunked()
 		this->pFlush();
 
 		// Terminating zero-length chunk
-		sWriteMust("0\r\n", fChanW);
+		sEWrite("0\r\n", fChanW);
 
 		// There's supposed to be an additional CRLF at the end of all the data,
 		// after any trailer entity headers.
-		sWriteMust("\r\n", fChanW);
+		sEWrite("\r\n", fChanW);
 		}
 	catch (...)
 		{}
@@ -168,12 +168,12 @@ size_t ChanW_Bin_Chunked::QWrite(const byte* iSource, size_t iCount)
 			{
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
-			sWritefMust(fChanW, "%X\r\n", fBufferUsed + iCount);
+			sEWritef(fChanW, "%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
-			sWriteMust(&fBuffer[0], fBufferUsed, fChanW);
+			sEWrite(&fBuffer[0], fBufferUsed, fChanW);
 			fBufferUsed = 0;
-			sWriteMust(localSource, iCount, fChanW);
-			sWriteMust("\r\n", fChanW);
+			sEWrite(localSource, iCount, fChanW);
+			sEWrite("\r\n", fChanW);
 			localSource += iCount;
 			iCount = 0;
 			}
@@ -200,9 +200,9 @@ void ChanW_Bin_Chunked::pFlush()
 	if (const size_t bufferUsed = fBufferUsed)
 		{
 		fBufferUsed = 0;
-		sWritefMust(fChanW, "%X\r\n", bufferUsed);
-		sWriteMust(&fBuffer[0], bufferUsed, fChanW);
-		sWriteMust("\r\n", fChanW);
+		sEWritef(fChanW, "%X\r\n", bufferUsed);
+		sEWrite(&fBuffer[0], bufferUsed, fChanW);
+		sEWrite("\r\n", fChanW);
 		}
 	}
 
@@ -218,10 +218,10 @@ static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
 	if (Util_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
-		return new Channer_Channer_T<ChanR_Bin_Chunked>(iChannerR);
+		return sChanner_Channer_T<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
-		return new Channer_Channer_T<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
+		return sChanner_Channer_T<ChanR_XX_Limited<byte> >(*contentLength, iChannerR);
 
 	return iChannerR;
 	}
@@ -240,7 +240,9 @@ ZRef<ChannerR_Bin> sMakeContentChanner(
 	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	if (iMethod == "HEAD")
+		{
 		return sChanner_T<ChanR_XX_Null<byte> >();
+		}
 
 	if (iMethod == "GET" && iResponseCode == 304)
 		{

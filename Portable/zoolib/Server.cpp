@@ -160,10 +160,10 @@ ZRef<Server::Callable_Connection> Server::GetCallable_Connection()
 	return fCallable_Connection;
 	}
 
-static void spKill(ZRef<ChannerClose> iChannerClose)
+static void spKill(ZRef<ChannerAbort> iChannerAbort)
 	{
-	if (iChannerClose)
-		sClose(sGetChan(iChannerClose));
+	if (iChannerAbort)
+		sAbort(sGetChan(iChannerAbort));
 	}
 
 bool Server::pWork(ZRef<Worker> iWorker)
@@ -182,7 +182,7 @@ bool Server::pWork(ZRef<Worker> iWorker)
 				try
 					{
 					ZRef<Callable_Void> theCallable_Kill =
-						sBindR(sCallable(spKill), sRef(theChanner.DynamicCast<ChannerClose>()));
+						sBindR(sCallable(spKill), sRef(theChanner.DynamicCast<ChannerAbort>()));
 					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theChanner);
 					}
 				catch (...)

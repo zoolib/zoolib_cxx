@@ -47,8 +47,8 @@ size_t sQReadFully(void* oDest, size_t iCount, const ChanR_Bin& iChan)
 	{ return sQReadFully(static_cast<byte*>(oDest), iCount, iChan); }
 
 inline
-void sReadMust(void* oDest, size_t iCount, const ChanR_Bin& iChan)
-	{ return sReadMust(static_cast<byte*>(oDest), iCount, iChan); }
+void sERead(void* oDest, size_t iCount, const ChanR_Bin& iChan)
+	{ return sERead(static_cast<byte*>(oDest), iCount, iChan); }
 
 // =================================================================================================
 #pragma mark -
@@ -94,7 +94,7 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 #endif
 
 template <class T>
-T sReadBE(const ChanR_Bin& iChanR)
+T sEReadBE(const ChanR_Bin& iChanR)
 	{
 	ZQ<T> theQ = sQReadBE<T>(iChanR);
 	if (not theQ)
@@ -103,7 +103,7 @@ T sReadBE(const ChanR_Bin& iChanR)
 	}
 
 template <class T>
-T sReadLE(const ChanR_Bin& iChanR)
+T sEReadLE(const ChanR_Bin& iChanR)
 	{
 	ZQ<T> theQ = sQReadLE<T>(iChanR);
 	if (not theQ)

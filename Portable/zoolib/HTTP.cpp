@@ -177,24 +177,24 @@ void Response::Send(const ChanW_Bin& iChanW) const
 	{
 	ZAssert(fResult >= 100 && fResult <= 999);
 	if (fIsVersion11)
-		sWriteMust("HTTP/1.1 ", iChanW);
+		sEWrite("HTTP/1.1 ", iChanW);
 	else
-		sWriteMust("HTTP/1.0 ", iChanW);
+		sEWrite("HTTP/1.0 ", iChanW);
 
-	sWritefMust(iChanW, "%d", fResult);
+	sEWritef(iChanW, "%d", fResult);
 	if (not fMessage.empty())
 		{
-		sWriteMust(" ", iChanW);
-		sWriteMust(fMessage, iChanW);
+		sEWrite(" ", iChanW);
+		sEWrite(fMessage, iChanW);
 		}
 
-	sWriteMust("\r\n", iChanW);
+	sEWrite("\r\n", iChanW);
 
 	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
 		{ sWrite_HeaderLine(ii->first, ii->second, iChanW); }
 
-	sWriteMust("\r\n", iChanW);
+	sEWrite("\r\n", iChanW);
 	}
 
 // =================================================================================================
@@ -1696,10 +1696,10 @@ bool sIs_qdtext(char iChar)
 
 void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW)
 	{
-	sWriteMust(iName, iChanW);
-	sWriteMust(": ", iChanW);
-	sWriteMust(iBody, iChanW);
-	sWriteMust("\r\n", iChanW);
+	sEWrite(iName, iChanW);
+	sEWrite(": ", iChanW);
+	sEWrite(iBody, iChanW);
+	sEWrite("\r\n", iChanW);
 	}
 
 void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
@@ -1726,14 +1726,14 @@ void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
 	}
 
 void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW)
-	{ sWritefMust(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
+	{ sEWritef(iChanW, "HTTP/1.1 %d OK\r\n\r\n", iResult); }
 
 void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	{
-	sWritefMust(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
-	sWriteMust("Content-Type: text/plain\r\n", iChanW);
-	sWriteMust("\r\n", iChanW);
-	sWritefMust(iChanW, "Error %d", iError);
+	sEWritef(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
+	sEWrite("Content-Type: text/plain\r\n", iChanW);
+	sEWrite("\r\n", iChanW);
+	sEWritef(iChanW, "Error %d", iError);
 	}
 
 

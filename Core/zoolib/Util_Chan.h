@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanSizeSet.h"
 
 namespace ZooLib {
 
@@ -38,11 +36,11 @@ inline void sTruncate(const ChanSizeSet& iChanSizeSet, const ChanPos& iChanPos)
 // =================================================================================================
 #pragma mark -
 
-template <class Elmt_t>
+template <class EE>
 std::pair<uint64,uint64> sCopyFully(
-	const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW, uint64 iCount)
+	const ChanR<EE>& iChanR, const ChanW<EE>& iChanW, uint64 iCount)
 	{
-	Elmt_t buf[(sStackBufferSize + sizeof(Elmt_t) - 1) / sizeof(Elmt_t)];
+	EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
@@ -72,10 +70,10 @@ std::pair<uint64,uint64> sCopyFully(
 		}
 	}
 
-template <class Elmt_t>
-std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW)
+template <class EE>
+std::pair<uint64,uint64> sCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
 	{
-	Elmt_t buf[(sStackBufferSize + sizeof(Elmt_t) - 1) / sizeof(Elmt_t)];
+	EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
 
 	uint64 totalCopied = 0;
 	for (;;)
@@ -98,23 +96,22 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_
 	}
 
 // Not sure about the XX_Until name -- it made sense in ZUtil_Strim, maybe not so much elsewhere.
-template <class Elmt_t>
-bool sCopy_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator, const ChanW<Elmt_t>& iChanW)
+template <class EE>
+bool sCopy_Until(const ChanR<EE>& iChanR, const EE& iTerminator, const ChanW<EE>& iChanW)
 	{
-	for (;;)
+	while (ZQ<EE> theQ = sQRead(iChanR))
 		{
-		if (ZQ<Elmt_t,false> theQ = sQRead(iChanR))
-			return false;
-		else if (iTerminator == *theQ)
+		if (iTerminator == *theQ)
 			return true;
 		else
 			sEWrite(*theQ, iChanW);
 		}
+	return false;
 	}
 
-template <class Elmt_t>
-bool sSkip_Until(const ChanR<Elmt_t>& iChanR, const Elmt_t& iTerminator)
-	{ return sCopy_Until(iChanR, iTerminator, ChanW_XX_Discard<Elmt_t>()); }
+template <class EE>
+bool sSkip_Until(const ChanR<EE>& iChanR, const EE& iTerminator)
+	{ return sCopy_Until(iChanR, iTerminator, ChanW_XX_Discard<EE>()); }
 
 } // namespace ZooLib
 

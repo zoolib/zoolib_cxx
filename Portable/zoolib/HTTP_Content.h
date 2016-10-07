@@ -32,7 +32,8 @@ namespace HTTP {
 #pragma mark -
 #pragma mark ChanR_Bin_Chunked
 
-class ChanR_Bin_Chunked : public ChanR_Bin
+class ChanR_Bin_Chunked
+:	public ChanR_Bin
 	{
 public:
 	ChanR_Bin_Chunked(const ChanR_Bin& iChanR);
@@ -52,7 +53,8 @@ private:
 #pragma mark -
 #pragma mark ChanW_Bin_Chunked
 
-class ChanW_Bin_Chunked : public ChanW_Bin
+class ChanW_Bin_Chunked
+:	public ChanW_Bin
 	{
 public:
 	ChanW_Bin_Chunked(size_t iBufferSize, const ChanW_Bin& iChanW);

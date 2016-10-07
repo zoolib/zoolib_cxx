@@ -348,21 +348,18 @@ ParseException::ParseException(const char* iWhat)
 #pragma mark YadStreamerR_Hex
 
 YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
-:	fChannerR(iChannerR)
+:	ChanR_Bin_HexStrim(sGetChan(iChannerR), sGetChan(iChannerU))
+,	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
-,	fChanR(sGetChan(iChannerR), sGetChan(iChannerU))
 	{}
 
 void YadStreamerR_Hex::Finish()
 	{
 	using namespace Util_Chan;
-	sSkipAll(fChanR);
+	sSkipAll(*static_cast<ChanR_Bin_HexStrim*>(this));
 	if (not sTryRead_CP('>', sGetChan(fChannerR), sGetChan(fChannerU)))
 		throw ParseException("Expected '>' to close a binary data");
 	}
-
-void YadStreamerR_Hex::GetChan(const ChanR_Bin*& oChanPtr)
-	{ oChanPtr = &fChanR; }
 
 // =================================================================================================
 #pragma mark -
@@ -385,8 +382,8 @@ void YadStreamerR_Base64::Finish()
 		throw ParseException("Expected '>' to close a base64 data");
 	}
 
-void YadStreamerR_Base64::GetChan(const ChanR_Bin*& oChanPtr)
-	{ oChanPtr = &fChanR; }
+size_t YadStreamerR_Base64::QRead(byte* oDest, size_t iCount)
+	{ return sQRead(oDest, iCount, fChanR); }
 
 // =================================================================================================
 #pragma mark -
@@ -409,8 +406,6 @@ void YadStrimmerR_JSON::Finish()
 		throw ParseException("Improperly closed string");
 	}
 
-void YadStrimmerR_JSON::GetChan(const ChanR_UTF*& oChanPtr)
-	{ oChanPtr = this; }
 
 size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 	{
@@ -725,7 +720,7 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
 		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
-			sWritefMust(w, "0x%016llX", (unsigned long long)*theQ);
+			sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
 		else
 			w << *theQ;
 		}
@@ -736,6 +731,13 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
 		Util_Chan::sWriteExact(*asDouble, w);
+		if (not fmod(*asDouble, 1.0))
+			{
+			// There's no fractional part, so we'll have written a sequence of digits with no
+			// decimal point. So the number would likely be subsequently interpreted as an
+			// integer, so we append a ".0".
+			w << ".0";
+			}
 		}
 //	else if (const ZTime* asTime = iAny.PGet<ZTime>())
 //		{

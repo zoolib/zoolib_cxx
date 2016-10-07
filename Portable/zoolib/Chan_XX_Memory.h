@@ -22,12 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Memory_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanSize.h"
-#include "zoolib/ChanSizeSet.h"
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanU.h"
-#include "zoolib/ChanW.h"
+#include "zoolib/Chan.h"
 
 namespace ZooLib {
 
@@ -35,27 +30,31 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanBase_XX_Memory
 
-template <class XX>
-class ChanBase_XX_Memory
-:	public ChanR<XX>
-,	public ChanPos
-,	public ChanSize
+template <class EE>
+class ChanRPos_XX_Memory
+:	public ChanRPos<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanBase_XX_Memory(const void* iAddress, size_t iSize)
-	:	fAddress(static_cast<const byte*>(iAddress))
+	ChanRPos_XX_Memory(const void* iAddress, size_t iSize)
+	:	fAddress(static_cast<const EE*>(iAddress))
 	,	fSize(iSize)
 	,	fPosition(0)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
 			fSize > fPosition ? fSize - fPosition : 0);
-		std::copy_n(static_cast<const Elmt_t*>(fAddress) + fPosition, countToCopy, oDest);
+		std::copy_n(fAddress + fPosition, countToCopy, oDest);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
+
+	virtual size_t Skip(size_t iCount)
+		{
+		const size_t countToCopy = std::min<size_t>(iCount,
+			fSize > fPosition ? fSize - fPosition : 0);
 		fPosition += countToCopy;
 		return countToCopy;
 		}
@@ -74,42 +73,19 @@ public:
 	virtual uint64 Size()
 		{ return fSize; }
 
-protected:
-	const void* fAddress;
-	size_t fSize;
-	uint64 fPosition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_XX_Memory
-
-template <class XX>
-class ChanRPos_XX_Memory
-:	public ChanBase_XX_Memory<XX>
-,	public ChanU<XX>
-	{
-public:
-	typedef XX Elmt_t;
-
-	ChanRPos_XX_Memory(const void* iAddress, size_t iCount)
-	:	ChanBase_XX_Memory<XX>(iAddress, iCount)
-		{}
-
 // From ChanU
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		const size_t countToCopy = std::min(iCount, this->fPosition);
+		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
 
 		if (false)
 			{
 			// If this code is enabled, then we assert that what's being
 			// unread matches what was in here already.
 
-			const Elmt_t* dest = static_cast<const Elmt_t*>(this->fAddress)
-				+ this->fPosition - countToCopy;
+			const EE* dest = fAddress + fPosition - countToCopy;
 
-			for (const Elmt_t* last = iSource + countToCopy; iSource != last; /*no inc*/)
+			for (const EE* last = iSource + countToCopy; iSource != last; /*no inc*/)
 				{
 				ZAssert(*iSource == *dest);
 				++iSource;
@@ -117,78 +93,115 @@ public:
 				}
 			}
 
-		this->fPosition -= countToCopy;
+		fPosition -= countToCopy;
 
 		return countToCopy;
 		}
 
 	virtual size_t UnreadableLimit()
-		{ return this->fPosition; }
+		{ return fPosition; }
+
+protected:
+	const EE* fAddress;
+	const size_t fSize;
+	uint64 fPosition;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ChanRWPos_XX_Memory
 
-template <class XX>
+template <class EE>
 class ChanRWPos_XX_Memory
-:	public ChanBase_XX_Memory<XX>
-,	public ChanU<XX>
-,	public ChanW<XX>
-,	public ChanSizeSet
+:	public ChanRWPos<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
 	ChanRWPos_XX_Memory(void* iAddress, size_t iSize, size_t iCapacity)
-	:	ChanBase_XX_Memory<XX>(iAddress, iSize)
+	:	fAddress(static_cast<EE*>(iAddress))
+	,	fSize(iSize)
 	,	fCapacity(iCapacity)
+	,	fPosition(0)
 		{}
 
-// From ChanU
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
+// From ChanR
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
+		const size_t countToCopy = std::min<size_t>(iCount,
+			fSize > fPosition ? fSize - fPosition : 0);
+		std::copy_n(fAddress + fPosition, countToCopy, oDest);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
 
-		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress)) + this->fPosition - countToCopy;
+	virtual size_t Skip(size_t iCount)
+		{
+		const size_t countToCopy = std::min<size_t>(iCount,
+			fSize > fPosition ? fSize - fPosition : 0);
+		fPosition += countToCopy;
+		return countToCopy;
+		}
+
+	virtual size_t Readable()
+		{ return fSize >= fPosition ? fSize - fPosition : 0; }
+
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void SetPos(uint64 iPos)
+		{ fPosition = iPos; }
+
+// From ChanU
+	virtual size_t Unread(const EE* iSource, size_t iCount)
+		{
+		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
+
+		EE* dest = fAddress + fPosition - countToCopy;
 
 		std::copy_n(iSource, countToCopy, dest);
 
-		this->fPosition -= countToCopy;
+		fPosition -= countToCopy;
 
 		return countToCopy;
 		}
 
 	virtual size_t UnreadableLimit()
-		{ return this->fPosition; }
+		{ return fPosition; }
 
 // From ChanW
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
-		Elmt_t* dest = static_cast<Elmt_t*>(sNonConst(this->fAddress)) + this->fPosition;
+		EE* dest = fAddress + fPosition;
 
-		this->fCount = std::min(fCapacity, std::max<size_t>(this->fCount, this->fPosition + iCount));
+		fSize = std::min(fCapacity, std::max<size_t>(fSize, fPosition + iCount));
 
 		const size_t countToCopy = std::min<size_t>(iCount,
-			this->fCount > this->fPosition ? this->fCount - this->fPosition : 0);
+			fSize > fPosition ? fSize - fPosition : 0);
 
 		std::copy_n(iSource, countToCopy, dest);
 
-		this->fPosition += countToCopy;
+		fPosition += countToCopy;
 
 		return countToCopy;
 		}
+
+// From ChanSize
+	virtual uint64 Size()
+		{ return fSize; }
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
 		{
 		if (fCapacity < iSize)
-			sThrowBadSize();
-		this->fSize = iSize;
+			sThrow_ExhaustedW();
+		fSize = iSize;
 		}
 
 protected:
+	EE* fAddress;
+	size_t fSize;
 	const size_t fCapacity;
+	uint64 fPosition;
 	};
 
 } // namespace ZooLib

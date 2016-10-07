@@ -61,9 +61,9 @@ bool sQWrite(const UTF32* iString, const ChanW_UTF& iChanW);
 bool sQWrite(const UTF16* iString, const ChanW_UTF& iChanW);
 bool sQWrite(const UTF8* iString, const ChanW_UTF& iChanW);
 
-void sWriteMust(const UTF32* iString, const ChanW_UTF& iChanW);
-void sWriteMust(const UTF16* iString, const ChanW_UTF& iChanW);
-void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW);
+void sEWrite(const UTF32* iString, const ChanW_UTF& iChanW);
+void sEWrite(const UTF16* iString, const ChanW_UTF& iChanW);
+void sEWrite(const UTF8* iString, const ChanW_UTF& iChanW);
 //@}
 
 // =================================================================================================
@@ -75,9 +75,9 @@ bool sQWrite(const string32& iString, const ChanW_UTF& iChanW);
 bool sQWrite(const string16& iString, const ChanW_UTF& iChanW);
 bool sQWrite(const string8& iString, const ChanW_UTF& iChanW);
 
-void sWriteMust(const string32& iString, const ChanW_UTF& iChanW);
-void sWriteMust(const string16& iString, const ChanW_UTF& iChanW);
-void sWriteMust(const string8& iString, const ChanW_UTF& iChanW);
+void sEWrite(const string32& iString, const ChanW_UTF& iChanW);
+void sEWrite(const string16& iString, const ChanW_UTF& iChanW);
+void sEWrite(const string8& iString, const ChanW_UTF& iChanW);
 //@}
 
 // =================================================================================================
@@ -85,7 +85,7 @@ void sWriteMust(const string8& iString, const ChanW_UTF& iChanW);
 
 /** \name Formatted strings
 */	//@{
-void sWritefMust(const ChanW_UTF& iChanW,
+void sEWritef(const ChanW_UTF& iChanW,
 	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(2,3);
 
@@ -93,7 +93,7 @@ void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(4,5);
 
-void sWritevMust(const ChanW_UTF& iChanW,
+void sEWritev(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs);
 
 void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,

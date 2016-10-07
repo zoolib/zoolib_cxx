@@ -31,26 +31,24 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Tee
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Tee
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Tee(const ChanR<XX>& iChanR, const ChanW<XX>& iChanW)
+	ChanR_XX_Tee(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
 	:	fChanR(iChanR)
 	,	fChanW(iChanW)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fChanW, and oDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
 
-		Elmt_t buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(Elmt_t))];
+		EE buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(EE))];
 
 		if (const size_t countRead = sQRead(buf, std::min(iCount, countof(buf)), fChanR))
 			{
@@ -72,28 +70,26 @@ public:
 		{ return sReadable(fChanR); }
 
 protected:
-	const ChanR<XX>& fChanR;
-	const ChanW<XX>& fChanW;
+	const ChanR<EE>& fChanR;
+	const ChanW<EE>& fChanW;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ChanW_XX_Tee
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Tee
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanW_XX_Tee(const ChanW<XX>& iChanW0, const ChanW<XX>& iChanW1)
+	ChanW_XX_Tee(const ChanW<EE>& iChanW0, const ChanW<EE>& iChanW1)
 	:	fChanW0(iChanW0)
 	,	fChanW1(iChanW1)
 		{}
 
 // From ChanW
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
 		if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
 			{
@@ -113,8 +109,8 @@ public:
 		}
 
 protected:
-	const ChanW<XX>& fChanW0;
-	const ChanW<XX>& fChanW1;
+	const ChanW<EE>& fChanW0;
+	const ChanW<EE>& fChanW1;
 	};
 
 } // namespace ZooLib

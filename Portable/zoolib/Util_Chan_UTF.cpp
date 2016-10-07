@@ -447,11 +447,9 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
-	for (;;)
+	while (ZQ<UTF32> theCPQ = sQRead(iChanR))
 		{
-		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
-			{ break; }
-		else if (not spIsWhitespace(*theCPQ))
+		if (not spIsWhitespace(*theCPQ))
 			{
 			sUnread(*theCPQ, iChanU);
 			break;
@@ -463,14 +461,11 @@ void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 
 void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
-	for (;;)
+	while (ZQ<UTF32> theCPQ = sQRead(iSource))
 		{
-		if (NotQ<UTF32> theCPQ = sQRead(iSource))
+		if (Unicode::sIsEOL(*theCPQ))
 			break;
-		else if (Unicode::sIsEOL(*theCPQ))
-			break;
-		else
-			sWriteMust(*theCPQ, oDest);
+		sEWrite(*theCPQ, oDest);
 		}
 	}
 
@@ -497,23 +492,23 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			{
 			if (spIsWhitespace(*firstCPQ))
 				{
-				sWriteMust(*firstCPQ, oDest);
+				sEWrite(*firstCPQ, oDest);
 				continue;
 				}
 			else if (*firstCPQ == '/')
 				{
 				if (sTryRead_CP('/', iChanR, iChanU))
 					{
-					sWriteMust("//", oDest);
+					sEWrite("//", oDest);
 					sCopy_Line(iChanR, oDest);
 					continue;
 					}
 				else if (sTryRead_CP('*', iChanR, iChanU))
 					{
-					sWriteMust("/*", oDest);
+					sEWrite("/*", oDest);
 					if (not sCopy_Until(iChanR, "*/", oDest))
 						throw ParseException("Unexpected end of data while parsing a /**/ comment");
-					sWriteMust("*/", oDest);
+					sEWrite("*/", oDest);
 					continue;
 					}
 				}
@@ -598,19 +593,19 @@ void sWriteExact(float iVal, const ChanW_UTF& iChanW)
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	sWritefMust(iChanW, "%.9g", iVal);
+	sEWritef(iChanW, "%.9g", iVal);
 	}
 
 void sWriteExact(double iVal, const ChanW_UTF& iChanW)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	sWritefMust(iChanW, "%.17g", iVal);
+	sEWritef(iChanW, "%.17g", iVal);
 	}
 
 void sWriteExact(long double iVal, const ChanW_UTF& iChanW)
 	{
 	// This is a guess for now.
-	sWritefMust(iChanW, "%.34Lg", iVal);
+	sEWritef(iChanW, "%.34Lg", iVal);
 	}
 
 } // namespace Util_Chan

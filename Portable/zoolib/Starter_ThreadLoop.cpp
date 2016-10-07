@@ -77,8 +77,9 @@ public:
 			ZGuardMtxR guard(fMtxR);
 			fStartables.push_back(iStartable);
 			fCnd.Broadcast();
+			return true;
 			}
-		return true;
+		return false;
 		}
 
 private:

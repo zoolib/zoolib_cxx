@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan.h"
 
 #include "zoolib/ZQ.h"
-#include "zoolib/ZTypes.h" // For sNonConst
 
 #include <stdexcept> // for range_error
 #include <string> // because range_error may require it
@@ -40,91 +39,34 @@ inline bool sThrow_ExhaustedR()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR
 
-template <class Elmt_p>
-class ChanR
-:	public virtual Chan<Elmt_p>
+template <class EE>
+ZQ<EE> sQRead(const ChanR<EE>& iChanR)
 	{
-protected:
-/** \name Canonical Methods
-The canonical methods are protected, thus you cannot create, destroy or assign through a
-ChanR reference, you must work with some derived class.
-*/	//@{
-	ChanR() {}
-	virtual ~ChanR() {}
-	ChanR(const ChanR&) {}
-	ChanR& operator=(const ChanR&) { return *this; }
-	//@}
-
-public:
-	typedef Elmt_p Elmt_t;
-	typedef ChanR<Elmt_p> Chan_Base;
-
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount) = 0;
-
-	virtual uint64 Skip(uint64 iCount)
-		{
-		// buf will have space for at least one element.
-		Elmt_t buf[(sStackBufferSize + sizeof(Elmt_t) - 1) / sizeof(Elmt_t)];
-		return this->QRead(buf, std::min<size_t>(iCount, countof(buf)));
-		}
-
-	virtual size_t Readable()
-		{ return 0; }
-
-// For a golang-style select mechanism we'll need something where we can register
-// a callable, or something, so that blocked entities can notify when they unblock.
-// Something like this perhaps:
-//	virtual void WhenReadable(const ZRef<Callable_Void>& iCallable)
-//		{}
-	};
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-size_t sQRead(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
-	{ return sNonConst(iChanR).QRead(oDest, iCount); }
-
-template <class Elmt_p>
-uint64 sSkip(uint64 iCount, const ChanR<Elmt_p>& iChanR)
-	{ return sNonConst(iChanR).Skip(iCount); }
-
-template <class Elmt_p>
-size_t sReadable(const ChanR<Elmt_p>& iChanR)
-	{ return sNonConst(iChanR).Readable(); }
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-ZQ<Elmt_p> sQRead(const ChanR<Elmt_p>& iChanR)
-	{
-	Elmt_p buf;
+	EE buf;
 	if (1 != sQRead(&buf, 1, iChanR))
 		return null;
 	return buf;
 	}
 
 // This is still used in HTTP and Util_Chan_UTF
-template <class Elmt_p>
-bool sQRead(Elmt_p& oElmt, const ChanR<Elmt_p>& iChanR)
+template <class EE>
+bool sQRead(EE& oElmt, const ChanR<EE>& iChanR)
 	{ return 1 == sQRead(&oElmt, 1, iChanR); }
 
-template <class Elmt_p>
-Elmt_p sReadMust(const ChanR<Elmt_p>& iChanR)
+template <class EE>
+EE sERead(const ChanR<EE>& iChanR)
 	{
-	Elmt_p buf;
+	EE buf;
 	if (1 != sQRead(&buf, 1, iChanR))
 		sThrow_Exhausted(iChanR);
 	return buf;
 	}
 
-template <class Elmt_p>
-size_t sQReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
+template <class EE>
+size_t sQReadFully(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
 	{
-	Elmt_p* localDest = oDest;
+	EE* localDest = oDest;
 	while (iCount)
 		{
 		if (const size_t countRead = sQRead(localDest, iCount, iChanR))
@@ -133,43 +75,43 @@ size_t sQReadFully(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 			localDest += countRead;
 			}
 		else
-			{ break; }
+			{
+			break;
+			}
 		}
 	return localDest - oDest;
 	}
 
-template <class Elmt_p>
-uint64 sSkipFully(uint64 iCount, const ChanR<Elmt_p>& iChanR)
+template <class EE>
+uint64 sSkipFully(uint64 iCount, const ChanR<EE>& iChanR)
 	{
 	uint64 countRemaining = iCount;
+
+	// We need the 64->32 bit clamping stuff here
 	while (countRemaining)
 		{
 		if (const size_t countSkipped = sSkip(countRemaining, iChanR))
-			{ countRemaining -= countSkipped; }
+			countRemaining -= countSkipped;
 		else
-			{ break; }
+			break;
 		}
+
 	return iCount - countRemaining;
 	}
 
-template <class Elmt_p>
-uint64 sSkipAll(const ChanR<Elmt_p>& iChanR)
+template <class EE>
+uint64 sSkipAll(const ChanR<EE>& iChanR)
 	{
 	uint64 result = 0;
-	for (;;)
-		{
-		if (const uint64 countSkipped = sSkip(0x100000, iChanR))
-			{ result += countSkipped; }
-		else
-			{ break; }
-		}
+	while (const uint64 countSkipped = sSkip(0x100000, iChanR))
+		result += countSkipped;
 	return result;
 	}
 
-template <class Elmt_p>
-void sReadMust(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
+template <class EE>
+void sERead(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
 	{
-	if (iCount != sQReadFully<Elmt_p>(oDest, iCount, iChanR))
+	if (iCount != sQReadFully<EE>(oDest, iCount, iChanR))
 		sThrow_ExhaustedR();
 	}
 
@@ -179,13 +121,12 @@ void sReadMust(Elmt_p* oDest, size_t iCount, const ChanR<Elmt_p>& iChanR)
 
 /// A read Chan with no content.
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Null
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{ return 0; }
 	};
 

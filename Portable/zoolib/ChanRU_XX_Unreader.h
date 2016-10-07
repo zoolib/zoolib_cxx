@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanRU_XX_Unreader_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChannerXX.h"
+#include "zoolib/Chan.h"
 
 #include <vector>
 
@@ -32,23 +32,20 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanRU_XX_Unreader
 
-template <class XX>
+template <class EE>
 class ChanRU_XX_Unreader
-:	public ChanR<XX>
-,	public ChanU<XX>
+:	public ChanRU<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanRU_XX_Unreader(const ChanR<Elmt_t>& iChanR)
+	ChanRU_XX_Unreader(const ChanR<EE>& iChanR)
 	:	fChanR(iChanR)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
-		Elmt_t* localDest = oDest;
-		Elmt_t* localDestEnd = oDest + iCount;
+		EE* localDest = oDest;
+		EE* localDestEnd = oDest + iCount;
 		while (localDest < localDestEnd)
 			{
 			if (fStack.empty())
@@ -72,7 +69,7 @@ public:
 		{ return fStack.size() + sReadable(fChanR); }
 
 // From ChanU
-	virtual size_t Unread(const Elmt_t* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t theCount = iCount;
 		while (iCount--)
@@ -84,38 +81,9 @@ public:
 		{ return size_t(-1); }
 
 protected:
-	const ChanR<Elmt_t>& fChanR;
-	std::vector<Elmt_t> fStack;
+	const ChanR<EE>& fChanR;
+	std::vector<EE> fStack;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChannerRU_XX_Unreader
-
-// See ChannerRU_T??
-
-template <class XX>
-class ChannerRU_XX_Unreader
-:	public ChannerRU<XX>
-	{
-public:
-	ChannerRU_XX_Unreader(const ZRef<Channer<ChanR<XX> > >& iChannerR)
-	:	fChannerR(iChannerR)
-	,	fChan(sGetChan(iChannerR))
-		{}
-
-// From Channer<ChanR<XX> >
-	virtual void GetChan(const ChanR<XX>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-// From Channer<ChanU<XX> >
-	virtual void GetChan(const ChanU<XX>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	ZRef<Channer<ChanR<XX> > > fChannerR;
-	ChanRU_XX_Unreader<XX> fChan;
-	};
-
 
 } // namespace ZooLib
 

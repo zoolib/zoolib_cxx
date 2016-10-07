@@ -65,7 +65,7 @@ size_t ChanW_UTF_InsertSeparator::QWrite(const UTF32* iSource, size_t iCountCU)
 						{
 						if (0 == (fCount % riter->first))
 							{
-							sWriteMust(riter->second, fStrimSink);
+							sEWrite(riter->second, fStrimSink);
 							break;
 							}
 						}

@@ -33,15 +33,13 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Boundary
 
-template <class XX>
+template <class EE>
 class ChanR_XX_Boundary
-:	public ChanR<XX>
+:	public ChanR<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	ChanR_XX_Boundary(const Elmt_t* iBoundary, size_t iBoundaryCount,
-		const ChanR<XX>& iChanR)
+	ChanR_XX_Boundary(const EE* iBoundary, size_t iBoundaryCount,
+		const ChanR<EE>& iChanR)
 	:	fChanR(iChanR)
 	,	fBoundary(iBoundary, iBoundary + iBoundaryCount)
 	,	fBuffer(fBoundary.size())
@@ -51,7 +49,7 @@ public:
 
 	template <class Iterator>
 	ChanR_XX_Boundary(const Iterator& iBegin, const Iterator& iEnd,
-		const ChanR<XX>& iChanR)
+		const ChanR<EE>& iChanR)
 	:	fChanR(iChanR)
 	,	fBoundary(iBegin, iEnd)
 	,	fBuffer(fBoundary.size())
@@ -60,7 +58,7 @@ public:
 		}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		const size_t boundaryCount = fBoundary.size();
 		if (not boundaryCount)
@@ -69,7 +67,7 @@ public:
 			}
 		else
 			{
-			Elmt_t* localDest = oDest;
+			EE* localDest = oDest;
 			while (iCount)
 				{
 				if (fEnd > fBegin)
@@ -169,10 +167,10 @@ protected:
 			fDistance[uint8(fBoundary[xx])] = boundaryCount - xx - 1;
 		}
 
-	const ChanR<XX>& fChanR;
-	const std::vector<Elmt_t> fBoundary;
+	const ChanR<EE>& fChanR;
+	const std::vector<EE> fBoundary;
 
-	std::vector<Elmt_t> fBuffer;
+	std::vector<EE> fBuffer;
 	size_t fDistance[256];
 	size_t fBegin;
 	size_t fEnd;

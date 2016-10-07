@@ -25,19 +25,19 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanRU_UTF_string8Ref
+#pragma mark ChanRU_UTF_string8
 
-ChanRU_UTF_string8Ref::ChanRU_UTF_string8Ref(const string8* iString)
+ChanRU_UTF_string8::ChanRU_UTF_string8(const string8& iString)
 :	fString(iString)
 ,	fPosition(0)
 	{}
 
-ChanRU_UTF_string8Ref::~ChanRU_UTF_string8Ref()
+ChanRU_UTF_string8::~ChanRU_UTF_string8()
 	{}
 
-size_t ChanRU_UTF_string8Ref::QRead(UTF32* oDest, size_t iCount)
+size_t ChanRU_UTF_string8::QRead(UTF32* oDest, size_t iCount)
 	{
-	const size_t theLength = fString->length();
+	const size_t theLength = fString.length();
 	if (fPosition >= theLength)
 		{
 		return 0;
@@ -47,7 +47,7 @@ size_t ChanRU_UTF_string8Ref::QRead(UTF32* oDest, size_t iCount)
 		size_t countConsumed;
 		size_t countProduced;
 		Unicode::sUTF8ToUTF32(
-			fString->data() + fPosition, theLength - fPosition,
+			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
 			oDest, iCount,
 			&countProduced);
@@ -56,11 +56,11 @@ size_t ChanRU_UTF_string8Ref::QRead(UTF32* oDest, size_t iCount)
 		}
 	}
 
-size_t ChanRU_UTF_string8Ref::Unread(const UTF32* iSource, size_t iCount)
+size_t ChanRU_UTF_string8::Unread(const UTF32* iSource, size_t iCount)
 	{
-	const string8::const_iterator stringStart = fString->begin();
+	const string8::const_iterator stringStart = fString.begin();
 	string8::const_iterator stringCurrent = stringStart + fPosition;
-	const string8::const_iterator stringEnd = fString->end();
+	const string8::const_iterator stringEnd = fString.end();
 
 	size_t localCount = 0;
 
@@ -70,23 +70,10 @@ size_t ChanRU_UTF_string8Ref::Unread(const UTF32* iSource, size_t iCount)
 	return localCount;
 	}
 
-size_t ChanRU_UTF_string8Ref::UnreadableLimit()
+size_t ChanRU_UTF_string8::UnreadableLimit()
 	{ return size_t(-1); }
 
-const string8& ChanRU_UTF_string8Ref::GetString8() const
-	{ return *fString; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_string8
-
-ChanRU_string8Helper::ChanRU_string8Helper(const string8& iString)
-:	fStringStorage(iString)
-	{}
-
-ChanRU_UTF_string8::ChanRU_UTF_string8(const string8& iString)
-:	ChanRU_string8Helper(iString)
-,	ChanRU_UTF_string8Ref(&fStringStorage)
-	{}
+const string8& ChanRU_UTF_string8::GetString8() const
+	{ return fString; }
 
 } // namespace ZooLib

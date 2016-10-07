@@ -39,86 +39,34 @@ inline bool sThrow_ExhaustedW()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanW
 
-template <class Elmt_p>
-class ChanW
-:	public virtual Chan<Elmt_p>
+template <class EE>
+bool sQWrite(const EE& iElmt, const ChanW<EE>& iChan)
+	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
+
+template <class EE>
+void sEWrite(const EE& iElmt, const ChanW<EE>& iChan)
 	{
-protected:
-/** \name Canonical Methods
-The canonical methods are protected, thus you cannot create, destroy or assign through a
-ChanW reference, you must work with some derived class.
-*/	//@{
-	ChanW() {}
-	virtual ~ChanW() {}
-	ChanW(const ChanW&) {}
-	ChanW& operator=(const ChanW&) { return *this; }
-	//@}
-
-public:
-	typedef Elmt_p Elmt_t;
-	typedef ChanW<Elmt_p> Chan_Base;
-
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount) = 0;
-
-	virtual void Flush()
-		{}
-	};
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-size_t sQWrite(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
-	{ return sNonConst(iChanW).QWrite(iSource, iCount); }
-
-template <class Elmt_p>
-void sFlush(const ChanW<Elmt_p>& iChanW)
-	{ sNonConst(iChanW).Flush(); }
-
-// =================================================================================================
-#pragma mark -
-
-template <class Elmt_p>
-bool sQWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
-	{ return 1 == sNonConst(iChanW).QWrite(&iElmt, 1); }
-
-template <class Elmt_p>
-void sEWrite(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
-	{
-	if (1 != sQWrite(&iElmt, 1, iChanW))
+	if (1 != sQWrite(&iElmt, 1, iChan))
 		sThrow_ExhaustedW();
 	}
 
-template <class Elmt_p>
-void sWriteMust(const Elmt_p& iElmt, const ChanW<Elmt_p>& iChanW)
+template <class EE>
+size_t sQWriteFully(const EE* iSource, size_t iCount, const ChanW<EE>& iChan)
 	{
-	if (1 != sQWrite(&iElmt, 1, iChanW))
-		sThrow_ExhaustedW();
-	}
-
-template <class Elmt_p>
-size_t sQWriteFully(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
-	{
-	const Elmt_p* localSource = iSource;
-	while (iCount)
+	const EE* localSource = iSource;
+	while (const size_t countWritten = sQWrite(localSource, iCount, iChan))
 		{
-		if (const size_t countWritten = sQWrite(localSource, iCount, iChanW))
-			{
-			iCount -= countWritten;
-			localSource += countWritten;
-			}
-		else
-			{ break; }
+		iCount -= countWritten;
+		localSource += countWritten;
 		}
 	return localSource - iSource;
 	}
 
-template <class Elmt_p>
-void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChanW)
+template <class EE>
+void sEWrite(const EE* iSource, size_t iCount, const ChanW<EE>& iChan)
 	{
-	if (iCount != sQWriteFully<Elmt_p>(iSource, iCount, iChanW))
+	if (iCount != sQWriteFully<EE>(iSource, iCount, iChan))
 		sThrow_ExhaustedW();
 	}
 
@@ -127,13 +75,12 @@ void sWriteMust(const Elmt_p* iSource, size_t iCount, const ChanW<Elmt_p>& iChan
 
 /// A write Chan that accepts no data.
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Null
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{ return 0; }
 	};
 
@@ -142,13 +89,12 @@ public:
 
 /// A write Chan that accepts and discards all data
 
-template <class XX>
+template <class EE>
 class ChanW_XX_Discard
-:	public ChanW<XX>
+:	public ChanW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{ return iCount; }
 	};
 

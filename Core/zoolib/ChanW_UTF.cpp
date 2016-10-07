@@ -169,13 +169,13 @@ bool sQWrite(const UTF16* iString, const ChanW_UTF& iChanW)
 bool sQWrite(const UTF8* iString, const ChanW_UTF& iChanW)
 	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
 
-void sWriteMust(const UTF32* iString, const ChanW_UTF& iChanW)
+void sEWrite(const UTF32* iString, const ChanW_UTF& iChanW)
 	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
 
-void sWriteMust(const UTF16* iString, const ChanW_UTF& iChanW)
+void sEWrite(const UTF16* iString, const ChanW_UTF& iChanW)
 	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
 
-void sWriteMust(const UTF8* iString, const ChanW_UTF& iChanW)
+void sEWrite(const UTF8* iString, const ChanW_UTF& iChanW)
 	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
@@ -202,19 +202,19 @@ bool sQWrite(const string8& iString, const ChanW_UTF& iChanW)
 	return countCU == 0 || spQWrite(iString.data(), countCU, iChanW);
 	}
 
-void sWriteMust(const string32& iString, const ChanW_UTF& iChanW)
+void sEWrite(const string32& iString, const ChanW_UTF& iChanW)
 	{
 	const size_t countCU = iString.size();
 	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
 	}
 
-void sWriteMust(const string16& iString, const ChanW_UTF& iChanW)
+void sEWrite(const string16& iString, const ChanW_UTF& iChanW)
 	{
 	const size_t countCU = iString.size();
 	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
 	}
 
-void sWriteMust(const string8& iString, const ChanW_UTF& iChanW)
+void sEWrite(const string8& iString, const ChanW_UTF& iChanW)
 	{
 	const size_t countCU = iString.size();
 	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
@@ -227,7 +227,7 @@ void sWriteMust(const string8& iString, const ChanW_UTF& iChanW)
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
 substitution is applied to the string before writing.
 */
-void sWritefMust(const ChanW_UTF& iChanW,
+void sEWritef(const ChanW_UTF& iChanW,
 	const UTF8* iString, ...)
 	{
 	va_list args;
@@ -253,7 +253,7 @@ void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	va_end(args);
 	}
 
-void sWritevMust(const ChanW_UTF& iChanW,
+void sEWritev(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs)
 	{
 	size_t countCU_Produced, count_CUWritten;

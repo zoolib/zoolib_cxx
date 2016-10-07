@@ -30,8 +30,9 @@ namespace ZooLib {
 
 //##static const UTF32 spLF[] = { '\n' };
 //##static const UTF32 spCR[] = { '\r' };
-static const UTF32 LF = '\n';
-static const UTF32 CR = '\r';
+
+static const UTF32 LF = 0x0A; // Probably the same as '\n'
+static const UTF32 CR = 0x0D; // Probably the same as '\r'
 
 static const size_t kBufSize = sStackBufferSize;
 

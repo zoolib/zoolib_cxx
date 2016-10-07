@@ -70,7 +70,7 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 void spToChan(const string& iString, const ChanW_Bin& w)
 	{
 	const size_t theLength = iString.length();
-	sWriteCountMust(theLength, w);
+	sEWriteCount(theLength, w);
 	if (theLength)
 		{
 		if (theLength != sQWriteFully(iString.data(), theLength, w))
@@ -91,16 +91,12 @@ string spStringFromChan(const ChanR_Bin& r)
 
 class YadStreamerR_JSONB
 :	public YadStreamerR
-,	private ChanR_Bin
 	{
 public:
 	YadStreamerR_JSONB(ZRef<ChannerR_Bin> iChannerR_Bin);
 
 // From YadR
 	virtual void Finish();
-
-// From ChannerR via YadStreamerR
-	virtual void GetChan(const ChanR_Bin*& oChanPtr);
 
 // From ChanR
 	virtual size_t QRead(byte* oDest, size_t iCount);
@@ -122,8 +118,6 @@ YadStreamerR_JSONB::YadStreamerR_JSONB(ZRef<ChannerR_Bin> iChannerR_Bin)
 void YadStreamerR_JSONB::Finish()
 	{ sSkipAll(*this); }
 
-void YadStreamerR_JSONB::GetChan(const ChanR_Bin*& oChanPtr)
-	{ oChanPtr = this; }
 
 size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
 	{
@@ -236,8 +230,8 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 			case 0xE0: return sYadR(Any());
 			case 0xE2: return sYadR(Any(false));
 			case 0xE3: return sYadR(Any(true));
-			case 0xE4: return sYadR(Any(sReadBE<int64>(r)));
-			case 0xE5: return sYadR(Any(sReadBE<double>(r)));
+			case 0xE4: return sYadR(Any(sEReadBE<int64>(r)));
+			case 0xE5: return sYadR(Any(sEReadBE<double>(r)));
 			case 0xE7: return new YadStreamerR_JSONB(iChannerR_Bin);
 			case 0xE8: return spYadRFromString(spStringFromChan(r));
 			case 0xEA: return new YadSeqR_JSONB(iReadFilter, iChannerR_Bin);
@@ -291,28 +285,28 @@ public:
 			{}
 		else if (theVal.IsNull())
 			{
-			sWriteBE<uint8>(0xE0, fW);
+			sEWriteBE<uint8>(0xE0, fW);
 			}
 		else if (const bool* p = theVal.PGet<bool>())
 			{
 			if (*p)
-				sWriteBE<uint8>(0xE3, fW);
+				sEWriteBE<uint8>(0xE3, fW);
 			else
-				sWriteBE<uint8>(0xE2, fW);
+				sEWriteBE<uint8>(0xE2, fW);
 			}
 		else if (ZQ<int64> theQ = sQCoerceInt(theVal))
 			{
-			sWriteBE<uint8>(0xE4, fW);
-			sWriteBE<int64>(*theQ, fW);
+			sEWriteBE<uint8>(0xE4, fW);
+			sEWriteBE<int64>(*theQ, fW);
 			}
 		else if (ZQ<double> theQ = sQCoerceRat(theVal))
 			{
-			sWriteBE<uint8>(0xE5, fW);
-			sWriteBE<double>(*theQ, fW);
+			sEWriteBE<uint8>(0xE5, fW);
+			sEWriteBE<double>(*theQ, fW);
 			}
 		else
 			{
-			sWriteBE<uint8>(254, fW);
+			sEWriteBE<uint8>(254, fW);
 			if (not fWriteFilter || not fWriteFilter->QWrite(theVal, fW))
 				{
 				if (ZLOGF(w, eErr))
@@ -325,46 +319,46 @@ public:
 	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
 		{
 		const ChanR_Bin& r = sGetChan<ChanR_Bin>(iYadStreamerR);
-		sWriteBE<uint8>(0xE7, fW);
+		sEWriteBE<uint8>(0xE7, fW);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
 		for (;;)
 			{
 			const size_t countRead = sQReadFully(&buffer[0], chunkSize, r);
-			sWriteCountMust(countRead, fW);
+			sEWriteCount(countRead, fW);
 			if (!countRead)
 				break;
-			sWriteMust(&buffer[0], countRead, fW);
+			sEWrite(&buffer[0], countRead, fW);
 			}
 		}
 
 	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
 		{
 		const string8 theString8 = sReadAllUTF8(sGetChan<ChanR_UTF>(iYadStrimmerR));
-		sWriteBE<uint8>(0xE8, fW);
-		sWriteCountMust(theString8.size(), fW);
-		sWriteMust(theString8, fW);
+		sEWriteBE<uint8>(0xE8, fW);
+		sEWriteCount(theString8.size(), fW);
+		sEWrite(theString8, fW);
 		}
 
 	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{
-		sWriteBE<uint8>(0xEA, fW);
+		sEWriteBE<uint8>(0xEA, fW);
 		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
 			theChild->Accept(*this);
-		sWriteBE<uint8>(0xFF, fW); // Terminator
+		sEWriteBE<uint8>(0xFF, fW); // Terminator
 		}
 
 	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 		{
-		sWriteBE<uint8>(0xED, fW);
+		sEWriteBE<uint8>(0xED, fW);
 		Name theName;
 		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			spToChan(theName, fW);
 			theChild->Accept(*this);
 			}
-		sWriteBE<uint8>(0, fW); // Empty name
-		sWriteBE<uint8>(0xFF, fW); // Terminator
+		sEWriteBE<uint8>(0, fW); // Empty name
+		sEWriteBE<uint8>(0xFF, fW); // Terminator
 		}
 
 private:

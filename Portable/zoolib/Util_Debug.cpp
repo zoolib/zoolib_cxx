@@ -216,7 +216,7 @@ public:
 			theStrimW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now, 60));
 
 			#if __MACH__
-				theStrimW << sStringf(" %5x", ((int)mach_thread_self()));
+				theStrimW << sStringf(" %5x", ((int)::pthread_mach_thread_np(::pthread_self())));
 			#else
 				if (sizeof(ZThread::ID) > 4)
 					theStrimW << sStringf(" %016llX", (unsigned long long)ZThread::sID());
@@ -283,12 +283,10 @@ void sInstall()
 		ZRef<LogMeister_Default> theLM = new LogMeister_Default;
 
 		FILE* theStdOut = stdout; // Workaround for VC++
-		ZRef<Channer<ChanW_UTF> > theChannerW_UTF =
-			new Channer_Channer_T<ChanW_UTF_Chan_Bin_UTF8,ChanW_Bin>(
-				new Channer_T<ChanW_Bin_FILE>(theStdOut));
+		ZRef<Channer<ChanW_Bin> > asChannerW_Bin = sChanner_T<ChanW_Bin_FILE>(theStdOut);
+		ZRef<Channer<ChanW_UTF> > theChannerW_UTF = sChanner_Channer_T<ChanW_UTF_Chan_Bin_UTF8>(asChannerW_Bin);
 
 		theLM->SetChanner(theChannerW_UTF);
-
 
 		Log::sLogMeister = theLM;
 	#endif

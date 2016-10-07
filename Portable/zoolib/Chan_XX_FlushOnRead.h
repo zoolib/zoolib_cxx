@@ -35,21 +35,18 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark Chan_XX_FlushOnRead
 
-template <class XX>
+template <class EE>
 class Chan_XX_FlushOnRead
-:	public ChanR<XX>
-,	public ChanW<XX>
+:	public ChanRW<EE>
 	{
 public:
-	typedef XX Elmt_t;
-
-	Chan_XX_FlushOnRead(const ChanR<Elmt_t>& iChanR, const ChanW<Elmt_t>& iChanW)
+	Chan_XX_FlushOnRead(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
 	:	fChanR(iChanR)
 	,	fChanW(iChanW)
 		{}
 
 // From ChanR
-	virtual size_t QRead(Elmt_t* oDest, size_t iCount)
+	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
 		if (ZMACRO_ThreadSafe_Swap(fLastWasWrite, 0))
 			{
@@ -70,7 +67,7 @@ public:
 		}
 
 // From ChanW
-	virtual size_t QWrite(const Elmt_t* iSource, size_t iCount)
+	virtual size_t QWrite(const EE* iSource, size_t iCount)
 		{
 		ZMACRO_ThreadSafe_Set(fLastWasWrite, 1);
 		ZAcqMtx acq(fMutex);
@@ -80,46 +77,37 @@ public:
 protected:
 	ThreadSafe_t fLastWasWrite;
 	ZMtx fMutex;
-	const ChanR<Elmt_t>& fChanR;
-	const ChanW<Elmt_t>& fChanW;
+	const ChanR<EE>& fChanR;
+	const ChanW<EE>& fChanW;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark Channer_XX_FlushOnRead
 
-template <class XX>
+template <class EE>
 class Channer_XX_FlushOnRead
-:	public virtual Channer<ChanR<XX> >
-,	public virtual Channer<ChanW<XX> >
+:	public Channer<ChanRW<EE> >
+,	public Chan_XX_FlushOnRead
 	{
 public:
-	typedef XX Elmt_t;
-
-	Channer_XX_FlushOnRead(const ZRef<Channer<ChanR<Elmt_t> > >& iChannerR,
-		const ZRef<Channer<ChanW<Elmt_t> > >& iChannerW)
-	:	fChannerR(iChannerR)
+	Channer_XX_FlushOnRead(const ZRef<Channer<ChanR<EE> > >& iChannerR,
+		const ZRef<Channer<ChanW<EE> > >& iChannerW)
+	:	Chan_XX_FlushOnRead(*iChannerR, *iChannerW)
 	,	fChannerW(iChannerW)
-	,	fChan(sGetChan(fChannerR), sGetChan(fChannerW))
+	,	fChan(fChannerR, fChannerW)
 		{}
-
-	virtual void GetChan(const ChanR<Elmt_t>*& oChanPtr)
-		{ oChanPtr = &fChan; }
-
-	virtual void GetChan(const ChanW<Elmt_t>*& oChanPtr)
-		{ oChanPtr = &fChan; }
 
 private:
 	const ZRef<Channer<ChanR<Elmt_t> > > fChannerR;
 	const ZRef<Channer<ChanW<Elmt_t> > > fChannerW;
-	const Chan_XX_FlushOnRead<Elmt_t> fChan;
 	};
 
-template <class XX>
-ZRef<Channer_XX_FlushOnRead<XX> > sChanner_XX_FlushOnRead(
-	const ZRef<Channer<ChanR<XX> > >& iChannerR,
-	const ZRef<Channer<ChanW<XX> > >& iChannerW)
-	{ return new Channer_XX_FlushOnRead<XX>(iChannerR, iChannerW); }
+template <class EE>
+ZRef<Channer_XX_FlushOnRead<EE> > sChanner_XX_FlushOnRead(
+	const ZRef<Channer<ChanR<EE> > >& iChannerR,
+	const ZRef<Channer<ChanW<EE> > >& iChannerW)
+	{ return new Channer_XX_FlushOnRead<EE>(iChannerR, iChannerW); }
 
 } // namespace ZooLib
 

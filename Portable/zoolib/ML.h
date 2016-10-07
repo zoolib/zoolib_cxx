@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanU_UTF.h"
 #include "zoolib/Channer_UTF.h"
-#include "zoolib/ChannerXX.h"
 
 #include <vector>
 
@@ -65,9 +64,7 @@ typedef Callable<string(string)> Callable_Entity;
 /// Tokenizes the ML from a source strim.
 
 class ChanRU_UTF
-:	public ZooLib::ChanR_UTF
-,	public ZooLib::ChanU_UTF
-,	NonCopyable
+:	public ZooLib::ChanRU<UTF32>
 	{
 public:
 	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
@@ -119,31 +116,22 @@ private:
 #pragma mark ML::ChannerRU_UTF
 
 class ChannerRU_UTF
-:	public ZooLib::ChannerRU<UTF32>
+:	public ChanRU_UTF
+,	public Channer<ZooLib::ChanRU<UTF32>>
 	{
 public:
 	ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
 		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF);
 
-ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
+	ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
 		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
 
 	virtual ~ChannerRU_UTF();
 
-// From ChannerR_UTF
-	void GetChan(const ChanR_UTF*& oChanPtr);
-
-// From ChannerU_UTF
-	void GetChan(const ChanU_UTF*& oChanPtr);
-
-// Our protocol
-	ChanRU_UTF& GetChan();
-
 private:
 	ZRef<ChannerR_UTF> fChannerR_UTF;
 	ZRef<ChannerU_UTF> fChannerU_UTF;
-	ChanRU_UTF fChan;
 	};
 
 ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,

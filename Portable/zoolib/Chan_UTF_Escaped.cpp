@@ -101,7 +101,7 @@ size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 					break;
 				case 'x':
 					{
-					if (ZQ<int,false> theQ = sQRead_HexDigit(fChanR, fChanU))
+					if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
 						{
 						throw ParseException("Illegal non-hex digit following \"\\x\"");
 						}
@@ -123,7 +123,7 @@ size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 					UTF32 resultCP = 0;
 					while (requiredChars--)
 						{
-						if (ZQ<int,false> theQ = sQRead_HexDigit(fChanR, fChanU))
+						if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
 							{
 							throw ParseException(string8("Illegal non-hex digit in \"\\")
 								+ char(theCP) + "\" escape sequence");
@@ -185,8 +185,8 @@ ChanW_UTF_Escaped::~ChanW_UTF_Escaped()
 		{
 		if (fLastWasCR)
 			{
-			sWriteMust("\\r", fStrimSink);
-			sWriteMust(fEOL, fStrimSink);
+			sEWrite("\\r", fStrimSink);
+			sEWrite(fEOL, fStrimSink);
 			}
 		}
 	catch (...)
@@ -214,42 +214,42 @@ size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
 				{
 				case '\t':
 					{
-					sWriteMust("\\t", fStrimSink);
+					sEWrite("\\t", fStrimSink);
 					break;
 					}
 				case '\n':
 					{
 					if (lastWasCR)
-						sWriteMust("\\r", fStrimSink);
-					sWriteMust("\\n", fStrimSink);
-					sWriteMust(fEOL, fStrimSink);
+						sEWrite("\\r", fStrimSink);
+					sEWrite("\\n", fStrimSink);
+					sEWrite(fEOL, fStrimSink);
 					break;
 					}
 				case '\r':
 					{
 					if (lastWasCR)
 						{
-						sWriteMust("\\r", fStrimSink);
-						sWriteMust(fEOL, fStrimSink);
+						sEWrite("\\r", fStrimSink);
+						sEWrite(fEOL, fStrimSink);
 						}
 					fLastWasCR = true;
 					break;
 					}
 				case '\b':
 					{
-					sWriteMust("\\b", fStrimSink);
+					sEWrite("\\b", fStrimSink);
 					break;
 					}
 				case '\f':
 					{
-					sWriteMust("\\f", fStrimSink);
+					sEWrite("\\f", fStrimSink);
 					break;
 					}
 				default:
 					{
-					sWriteMust("\\x", fStrimSink);
-					sWriteMust(spAsHexCP(theCP >> 4), fStrimSink);
-					sWriteMust(spAsHexCP(theCP & 0xF), fStrimSink);
+					sEWrite("\\x", fStrimSink);
+					sEWrite(spAsHexCP(theCP >> 4), fStrimSink);
+					sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 					break;
 					}
 				}
@@ -257,33 +257,33 @@ size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
 		else if (theCP < 0x80 || !fEscapeHighUnicode)
 			{
 			if (fQuoteQuotes && theCP == '\"')
-				sWriteMust("\\\"", fStrimSink);
+				sEWrite("\\\"", fStrimSink);
 			else if (not fQuoteQuotes && theCP == '\'')
-				sWriteMust("\\\'", fStrimSink);
+				sEWrite("\\\'", fStrimSink);
 			else if (theCP == '\\')
-				sWriteMust("\\\\", fStrimSink);
+				sEWrite("\\\\", fStrimSink);
 			else
-				sWriteMust(theCP, fStrimSink);
+				sEWrite(theCP, fStrimSink);
 			}
 		else if (theCP < 0x10000)
 			{
-			sWriteMust("\\u", fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP(theCP & 0xF), fStrimSink);
+			sEWrite("\\u", fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 			}
 		else
 			{
-			sWriteMust("\\U", fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 28) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 24) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 20) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 16) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
-			sWriteMust(spAsHexCP(theCP & 0xF), fStrimSink);
+			sEWrite("\\U", fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 28) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 24) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 20) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 16) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
+			sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
 			}
 		}
 	return iCountCU - localCount;

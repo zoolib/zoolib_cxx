@@ -41,7 +41,7 @@ bool sQWrite(const char* iString, const ChanW_Bin& iChanW);
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
 May invoke sThrow_ExhaustedW.
 */
-void sWriteMust(const char* iString, const ChanW_Bin& iChanW);
+void sEWrite(const char* iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes contained in \a iString, with no terminating zero byte.
@@ -53,7 +53,7 @@ bool sQWrite(const std::string& iString, const ChanW_Bin& iChanW);
 Write the bytes contained in \a iString, with no terminating zero byte.
 May invoke sThrow_ExhaustedW.
 */
-void sWriteMust(const std::string& iString, const ChanW_Bin& iChanW);
+void sEWrite(const std::string& iString, const ChanW_Bin& iChanW);
 
 /**
 Write the bytes pointed to by \a iString, up to but not including the terminating zero byte.
@@ -67,7 +67,7 @@ Write the bytes pointed to by \a iString, up to but not including the terminatin
 Standard printf-style parameter substitution is applied to the string before writing.
 May invoke sThrow_ExhaustedW.
 */
-void sWritefMust(const ChanW_Bin& iChanW, const char* iString, ...);
+void sEWritef(const ChanW_Bin& iChanW, const char* iString, ...);
 
 // =================================================================================================
 #pragma mark -
@@ -80,7 +80,7 @@ const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
 
 bool sQWriteCount(uint64 iValue, const ChanW_Bin& w);
 
-void sWriteCountMust(uint64 iValue, const ChanW_Bin& w);
+void sEWriteCount(uint64 iValue, const ChanW_Bin& w);
 
 } // namespace ZooLib
 

@@ -23,83 +23,133 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
+#include "zoolib/TypeList.h"
+
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark DeriveFrom
 
-class DeriveFrom0
+template <
+	class P0 = null_t, class P1 = null_t, class P2 = null_t, class P3 = null_t,
+	class P4 = null_t, class P5 = null_t, class P6 = null_t, class P7 = null_t,
+	class End = null_t // Needed so that the 8-param specialization is still considered partial.
+	>
+class DeriveFrom;
+
+// This template catches cases where we try doing a DeriveFrom of a DeriveFrom, which
+// causes weird compilation errors.
+template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
+class DeriveFrom<DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>>
 	{};
 
+// The real suite.
 template <class P0>
-class DeriveFrom1
-:	public virtual DeriveFrom0
-,	public virtual P0
-	{};
+class DeriveFrom<P0>
+:	public virtual P0
+	{
+public:
+	typedef TypeList<P0> Types;
+	};
 
 template <class P0, class P1>
-class DeriveFrom2
-:	public virtual DeriveFrom1<    P1>
-,	public virtual DeriveFrom1<P0    >
-	{};
+class DeriveFrom<P0, P1>
+:	public virtual DeriveFrom<    P1>
+,	public virtual DeriveFrom<P0    >
+	{
+public:
+	typedef TypeList<P0, P1> Types;
+	};
 
 template <class P0, class P1, class P2>
-class DeriveFrom3
-:	public virtual DeriveFrom2<    P1, P2>
-,	public virtual DeriveFrom2<P0,     P2>
-,	public virtual DeriveFrom2<P0, P1    >
-	{};
+class DeriveFrom<P0, P1, P2>
+:	public virtual DeriveFrom<    P1, P2>
+,	public virtual DeriveFrom<P0,     P2>
+,	public virtual DeriveFrom<P0, P1    >
+	{
+public:
+	typedef TypeList<P0, P1, P2> Types;
+	};
 
 template <class P0, class P1, class P2, class P3>
-class DeriveFrom4
-:	public virtual DeriveFrom3<    P1, P2, P3>
-,	public virtual DeriveFrom3<P0,     P2, P3>
-,	public virtual DeriveFrom3<P0, P1,     P3>
-,	public virtual DeriveFrom3<P0, P1, P2    >
-	{};
+class DeriveFrom<P0, P1, P2, P3>
+:	public virtual DeriveFrom<    P1, P2, P3>
+,	public virtual DeriveFrom<P0,     P2, P3>
+,	public virtual DeriveFrom<P0, P1,     P3>
+,	public virtual DeriveFrom<P0, P1, P2    >
+	{
+public:
+	typedef TypeList<P0, P1, P2, P3> Types;
+	};
 
 template <class P0, class P1, class P2, class P3, class P4>
-class DeriveFrom5
-:	public virtual DeriveFrom4<    P1, P2, P3, P4>
-,	public virtual DeriveFrom4<P0,     P2, P3, P4>
-,	public virtual DeriveFrom4<P0, P1,     P3, P4>
-,	public virtual DeriveFrom4<P0, P1, P2,     P4>
-,	public virtual DeriveFrom4<P0, P1, P2, P3    >
-	{};
+class DeriveFrom<P0, P1, P2, P3, P4>
+:	public virtual DeriveFrom<    P1, P2, P3, P4>
+,	public virtual DeriveFrom<P0,     P2, P3, P4>
+,	public virtual DeriveFrom<P0, P1,     P3, P4>
+,	public virtual DeriveFrom<P0, P1, P2,     P4>
+,	public virtual DeriveFrom<P0, P1, P2, P3    >
+	{
+public:
+	typedef TypeList<P0, P1, P2, P3, P4> Types;
+	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5>
-class DeriveFrom6
-:	public virtual DeriveFrom5<    P1, P2, P3, P4, P5>
-,	public virtual DeriveFrom5<P0,     P2, P3, P4, P5>
-,	public virtual DeriveFrom5<P0, P1,     P3, P4, P5>
-,	public virtual DeriveFrom5<P0, P1, P2,     P4, P5>
-,	public virtual DeriveFrom5<P0, P1, P2, P3,     P5>
-,	public virtual DeriveFrom5<P0, P1, P2, P3, P4    >
-	{};
+class DeriveFrom<P0, P1, P2, P3, P4, P5>
+:	public virtual DeriveFrom<    P1, P2, P3, P4, P5>
+,	public virtual DeriveFrom<P0,     P2, P3, P4, P5>
+,	public virtual DeriveFrom<P0, P1,     P3, P4, P5>
+,	public virtual DeriveFrom<P0, P1, P2,     P4, P5>
+,	public virtual DeriveFrom<P0, P1, P2, P3,     P5>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4    >
+	{
+public:
+	typedef TypeList<P0, P1, P2, P3, P4, P5> Types;
+	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-class DeriveFrom7
-:	public virtual DeriveFrom6<    P1, P2, P3, P4, P5, P6>
-,	public virtual DeriveFrom6<P0,     P2, P3, P4, P5, P6>
-,	public virtual DeriveFrom6<P0, P1,     P3, P4, P5, P6>
-,	public virtual DeriveFrom6<P0, P1, P2,     P4, P5, P6>
-,	public virtual DeriveFrom6<P0, P1, P2, P3,     P5, P6>
-,	public virtual DeriveFrom6<P0, P1, P2, P3, P4,     P6>
-,	public virtual DeriveFrom6<P0, P1, P2, P3, P4, P5    >
-	{};
+class DeriveFrom<P0, P1, P2, P3, P4, P5, P6>
+:	public virtual DeriveFrom<    P1, P2, P3, P4, P5, P6>
+,	public virtual DeriveFrom<P0,     P2, P3, P4, P5, P6>
+,	public virtual DeriveFrom<P0, P1,     P3, P4, P5, P6>
+,	public virtual DeriveFrom<P0, P1, P2,     P4, P5, P6>
+,	public virtual DeriveFrom<P0, P1, P2, P3,     P5, P6>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4,     P6>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5    >
+	{
+public:
+	typedef TypeList<P0, P1, P2, P3, P4, P5, P6> Types;
+	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-class DeriveFrom8
-:	public virtual DeriveFrom7<    P1, P2, P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom7<P0,     P2, P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom7<P0, P1,     P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom7<P0, P1, P2,     P4, P5, P6, P7>
-,	public virtual DeriveFrom7<P0, P1, P2, P3,     P5, P6, P7>
-,	public virtual DeriveFrom7<P0, P1, P2, P3, P4,     P6, P7>
-,	public virtual DeriveFrom7<P0, P1, P2, P3, P4, P5,     P7>
-,	public virtual DeriveFrom7<P0, P1, P2, P3, P4, P5, P6    >
-	{};
+class DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>
+:	public virtual DeriveFrom<    P1, P2, P3, P4, P5, P6, P7>
+,	public virtual DeriveFrom<P0,     P2, P3, P4, P5, P6, P7>
+,	public virtual DeriveFrom<P0, P1,     P3, P4, P5, P6, P7>
+,	public virtual DeriveFrom<P0, P1, P2,     P4, P5, P6, P7>
+,	public virtual DeriveFrom<P0, P1, P2, P3,     P5, P6, P7>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4,     P6, P7>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5,     P7>
+,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6    >
+	{
+public:
+	typedef TypeList<P0, P1, P2, P3, P4, P5, P6, P7> Types;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark DeriveFrom
+
+template <class TL>
+struct AsDeriveFrom
+	{
+	typedef DeriveFrom
+		<
+		typename TL::T0, typename TL::T1, typename TL::T2, typename TL::T3,
+		typename TL::T4, typename TL::T5, typename TL::T6, typename TL::T7
+		> Result;
+	};
 
 } // namespace ZooLib
 

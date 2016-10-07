@@ -225,7 +225,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //MSVC++ 5.0  _MSC_VER == 1100
 
 #ifndef ZCONFIG_CPP
-	#if  defined(__clang__)
+	#if defined(__clang__)
 		#if __cplusplus >= 201103L
 			#define ZCONFIG_CPP 2011
 		#else
@@ -255,7 +255,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // TR1
 
-#if  defined(__clang__)
+#if defined(__clang__)
 	#include <cstddef> // To see if _LIBCPP_VERSION gets defined
 	#ifdef _LIBCPP_VERSION
 		#define ZMACRO_namespace_tr1_prefix std
@@ -547,5 +547,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #else
 	typedef unsigned __int64 __uint64;
 #endif
+
+// =================================================================================================
+
+#define whilenot (cond) for (;;) if (cond) { break; } else
+#define until whilenot
+
+#define ifnot (cond) if (cond) {} else
+#define unless ifnot
+
+// =================================================================================================
 
 #endif // __zconfigl_h__

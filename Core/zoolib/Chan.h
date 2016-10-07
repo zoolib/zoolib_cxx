@@ -22,17 +22,302 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compat_algorithm.h"
+#include "zoolib/DeriveFrom.h"
+
+#include "zoolib/ZStdInt.h" // For uint64
+#include "zoolib/ZTypes.h" // For sNonConst
+
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark UserOfElement
 
-template <class Elmt_p>
-class Chan
+template <class EE>
+class UserOfElement
 	{
 public:
-	typedef Elmt_p CommonElmt_t;
+	typedef EE Element_t;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Abort
+
+class Aspect_Abort
+	{
+public:
+	virtual void Abort() = 0;
+	};
+
+using ChanAbort = DeriveFrom<Aspect_Abort>;
+
+inline void sAbort(const ChanAbort& iChan)
+	{ sNonConst(iChan).Abort(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark AspectDisconnectRead
+
+class Aspect_DisconnectRead
+	{
+public:
+	virtual bool DisconnectRead(double iTimeout) = 0;
+	};
+
+using ChanDisconnectRead = DeriveFrom<Aspect_DisconnectRead>;
+
+inline bool sDisconnectRead(double iTimeout, const ChanDisconnectRead& iChan)
+	{ return sNonConst(iChan).DisconnectRead(iTimeout); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_DisconnectWrite
+
+class Aspect_DisconnectWrite
+	{
+public:
+	virtual void DisconnectWrite() = 0;
+	};
+
+using ChanDisconnectWrite = DeriveFrom<Aspect_DisconnectWrite>;
+
+inline void sDisconnectWrite(const ChanDisconnectWrite& iChan)
+	{ sNonConst(iChan).DisconnectWrite(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Position
+
+class Aspect_Position
+	{
+public:
+	virtual uint64 Pos() = 0;
+
+	virtual void SetPos(uint64 iPosition) = 0;
+	};
+
+using ChanPosition = DeriveFrom<Aspect_Position>;
+
+using ChanPos = ChanPosition;
+
+inline uint64 sPos(const ChanPosition& iChan)
+	{ return sNonConst(iChan).Pos(); }
+
+inline void sPosSet(uint64 iPosition, const ChanPosition& iChan)
+	{ sNonConst(iChan).SetPos(iPosition); }
+
+inline void sSetPos(uint64 iPosition, const ChanPosition& iChan)
+	{ sNonConst(iChan).SetPos(iPosition); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Read
+
+template <class EE>
+class Aspect_Read
+:	public virtual UserOfElement<EE>
+	{
+public:
+	virtual size_t QRead(EE* oDest, size_t iCount) = 0;
+
+	virtual uint64 Skip(uint64 iCount)
+		{
+		// buf will have space for at least one element.
+		EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
+		return this->QRead(buf, std::min<size_t>(iCount, countof(buf)));
+		}
+
+	virtual size_t Readable()
+		{ return 0; }
+	};
+
+template <class EE>
+using ChanR = DeriveFrom<Aspect_Read<EE>>;
+
+template <class EE>
+inline size_t sQRead(EE* oDest, size_t iCount, const ChanR<EE>& iChan)
+	{ return sNonConst(iChan).QRead(oDest, iCount); }
+
+template <class EE>
+inline size_t sSkip(size_t iCount, const ChanR<EE>& iChan)
+	{ return sNonConst(iChan).Skip(iCount); }
+
+template <class EE>
+inline size_t sReadable(const ChanR<EE>& iChan)
+	{ return sNonConst(iChan).Readable(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Readable
+
+class Aspect_Readable
+	{
+public:
+	virtual bool WaitReadable(double iTimeout)
+		{ return false; }
+
+//	virtual bool CallWhenReadable(const ZRef<Callable>& iCallable)
+//		{ return false; }
+	};
+
+using ChanReadable = DeriveFrom<Aspect_Readable>;
+
+inline bool sWaitReadable(double iTimeout, const ChanReadable& iChan)
+	{ return sNonConst(iChan).WaitReadable(iTimeout); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Size
+
+class Aspect_Size
+	{
+public:
+	virtual uint64 Size() = 0;
+	};
+
+using ChanSize = DeriveFrom<Aspect_Size>;
+
+inline uint64 sSize(const ChanSize& iChan)
+	{ return sNonConst(iChan).Size(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_SizeSet
+
+class Aspect_SizeSet
+	{
+public:
+	virtual void SizeSet(uint64 iSize) = 0;
+	};
+
+using ChanSizeSet = DeriveFrom<Aspect_SizeSet>;
+
+inline void sSizeSet(uint64 iSize, const ChanSizeSet& iChan)
+	{ sNonConst(iChan).SizeSet(iSize); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Unread
+
+template <class EE>
+class Aspect_Unread
+:	public virtual UserOfElement<EE>
+	{
+public:
+	virtual size_t Unread(const EE* iSource, size_t iCount) = 0;
+
+	virtual size_t UnreadableLimit()
+		{ return 0; }
+	};
+
+template <class EE>
+using ChanU = DeriveFrom<Aspect_Unread<EE>>;
+
+template <class EE>
+inline size_t sUnread(const EE* iSource, size_t iCount, const ChanU<EE>& iChan)
+	{ return sNonConst(iChan).Unread(iSource, iCount); }
+
+template <class EE>
+inline size_t sUnreadableLimit(const ChanU<EE>& iChan)
+	{ return sNonConst(iChan).UnreadableLimit(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_Write
+
+template <class EE>
+class Aspect_Write
+:	public virtual UserOfElement<EE>
+	{
+public:
+	virtual size_t QWrite(const EE* iSource, size_t iCount) = 0;
+
+	virtual void Flush()
+		{}
+	};
+
+template <class EE>
+using ChanW = DeriveFrom<Aspect_Write<EE>>;
+
+template <class EE>
+inline size_t sQWrite(const EE* iSource, size_t iCount, const ChanW<EE>& iChan)
+	{ return sNonConst(iChan).QWrite(iSource, iCount); }
+
+template <class EE>
+inline void sFlush(const ChanW<EE>& iChan)
+	{ sNonConst(iChan).Flush(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Common composites.
+
+template <typename EE> using ChanRU = DeriveFrom
+	<
+	Aspect_Read<EE>,
+	Aspect_Unread<EE>
+	>;
+
+template <typename EE> using ChanRPos = DeriveFrom
+	<
+	Aspect_Position,
+	Aspect_Read<EE>,
+	Aspect_Size,
+	Aspect_Unread<EE>
+	>;
+
+template <typename EE> using ChanWPos = DeriveFrom
+	<
+	Aspect_Position,
+	Aspect_Size,
+	Aspect_SizeSet,
+	Aspect_Write<EE>
+	>;
+
+template <typename EE> using ChanRWPos = DeriveFrom
+	<
+	Aspect_Position,
+	Aspect_Read<EE>,
+	Aspect_Size,
+	Aspect_SizeSet,
+	Aspect_Unread<EE>,
+	Aspect_Write<EE>
+	>;
+
+template <typename EE> using ChanRW = DeriveFrom
+	<
+	Aspect_Read<EE>,
+	Aspect_Readable,
+	Aspect_Write<EE>
+	>;
+
+template <typename EE> using ChanConnection = DeriveFrom
+	<
+	Aspect_Abort,
+	Aspect_DisconnectRead,
+	Aspect_DisconnectWrite,
+	Aspect_Read<EE>,
+	Aspect_Readable,
+	Aspect_Write<EE>
+	>;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Hmmm.
+
+#if 0
+template <class EE>
+inline size_t sUnread(const EE* iSource, size_t iCount,
+	const DeriveFrom<Aspect_Position, Aspect_Unread<EE>>& iChan)
+	{
+	const uint64 thePos = sGetPosition(iChan);
+	if (iCount >= thePos)
+		iCount = thePos;
+	sSetPosition(thePos - iCount, iChan);
+	return iCount;
+	}
+#endif
 
 } // namespace ZooLib
 

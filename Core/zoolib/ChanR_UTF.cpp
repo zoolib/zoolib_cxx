@@ -32,20 +32,20 @@ using std::min;
 #pragma mark -
 
 void sRead(UTF32* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR)
-	 {
-	 const size_t countRead = sQRead(oDest, std::min(iCountCU, iCountCP), iChanR);
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR)
+	{
+	const size_t countRead = sQRead(oDest, std::min(iCountCU, iCountCP), iChanR);
 
-	 if (oCountCU)
-	 	*oCountCU = countRead;
-	 if (oCountCP)
-	 	*oCountCP = countRead;
-	 }
+	if (oCountCU)
+		*oCountCU = countRead;
+	if (oCountCP)
+		*oCountCP = countRead;
+	}
 
 void sRead(UTF16* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR)
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR)
 	{
 	UTF32 utf32Buffer[kBufSize];
 	UTF16* localDest = oDest;
@@ -83,8 +83,8 @@ void sRead(UTF16* oDest,
 	}
 
 void sRead(UTF8* oDest,
-	 size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	 const ChanR_UTF& iChanR)
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
+	const ChanR_UTF& iChanR)
 	{
 	UTF32 utf32Buffer[kBufSize];
 	UTF8* localDest = oDest;
@@ -186,7 +186,7 @@ ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 
 // -----
 
-string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
+string32 sEReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	const ZQ<string32> theQ = sQReadUTF32(iCountCP, iChanR);
 	if (not theQ)
@@ -194,7 +194,7 @@ string32 sReadMustUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	return *theQ;
 	}
 
-string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
+string16 sEReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	const ZQ<string16> theQ = sQReadUTF16(iCountCP, iChanR);
 	if (not theQ)
@@ -202,7 +202,7 @@ string16 sReadMustUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 	return *theQ;
 	}
 
-string8 sReadMustUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
+string8 sEReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 	{
 	const ZQ<string8> theQ = sQReadUTF8(iCountCP, iChanR);
 	if (not theQ)

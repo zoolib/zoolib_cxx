@@ -50,59 +50,67 @@ struct RelopsTraits_Has
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasEQ<T>::No
-	&& RelopsTraits_HasNE<T>::Yes,bool>::type
+	<  RelopsTraits_HasEQ<T>::No
+	&& RelopsTraits_HasNE<T>::Yes
+	,bool>::type
 operator==(const T& l, const T& r)
 	{ return not (l != r); }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasEQ<T>::No
+	<  RelopsTraits_HasEQ<T>::No
 	&& RelopsTraits_HasNE<T>::No
-	&& RelopsTraits_HasLT<T>::Yes,bool>::type
+	&& RelopsTraits_HasLT<T>::Yes
+	,bool>::type
 operator==(const T& l, const T& r)
 	{ return not (l < r || r < l); }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasNE<T>::No
-	&& RelopsTraits_HasEQ<T>::Yes,bool>::type
+	<  RelopsTraits_HasNE<T>::No
+	&& RelopsTraits_HasEQ<T>::Yes
+	,bool>::type
 operator!=(const T& l, const T& r)
 	{ return not (l == r); }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasNE<T>::No
+	<  RelopsTraits_HasNE<T>::No
 	&& RelopsTraits_HasEQ<T>::No
-	&& RelopsTraits_HasLT<T>::Yes,bool>::type
+	&& RelopsTraits_HasLT<T>::Yes
+	,bool>::type
 operator!=(const T& l, const T& r)
 	{ return l < r || r < l; }
 
-template <class T>
-typename EnableIfC
-	<RelopsTraits_HasLT<T>::No
-	&& RelopsTraits_HasGT<T>::Yes,bool>::type
-operator<(const T& l, const T& r)
-	{ return l > r; }
+//template <class T>
+//typename EnableIfC
+//	<  RelopsTraits_HasLT<T>::No
+//	&& RelopsTraits_HasGT<T>::Yes
+//	,bool>::type
+//operator<(const T& l, const T& r)
+//	{ return r > l; }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasGT<T>::No
-	&& RelopsTraits_HasLT<T>::Yes,bool>::type
+	<  RelopsTraits_HasGT<T>::No
+	&& RelopsTraits_HasLT<T>::Yes
+	,bool>::type
 operator>(const T& l, const T& r)
 	{ return r < l; }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasLE<T>::No
-	&& RelopsTraits_HasLT<T>::Yes,bool>::type
+	<  RelopsTraits_HasLE<T>::No
+	&& RelopsTraits_HasLT<T>::Yes
+	,bool>::type
 operator<=(const T& l, const T& r)
 	{ return not (r < l); }
 
 template <class T>
 typename EnableIfC
-	<RelopsTraits_HasGE<T>::No
-	&& RelopsTraits_HasLT<T>::Yes,bool>::type
+	<  RelopsTraits_HasGE<T>::No
+	&& RelopsTraits_HasLT<T>::Yes
+	,bool>::type
 operator>=(const T& l, const T& r)
 	{ return not (l < r); }
 

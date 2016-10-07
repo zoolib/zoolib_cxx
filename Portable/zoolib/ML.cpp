@@ -605,31 +605,21 @@ void ChanRU_UTF::pAdvance()
 
 ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
 	const ZRef<ChannerU_UTF>& iChannerU_UTF)
-:	fChannerR_UTF(iChannerR_UTF)
+:	ChanRU_UTF(*iChannerR_UTF, *iChannerU_UTF)
+,	fChannerR_UTF(iChannerR_UTF)
 ,	fChannerU_UTF(iChannerU_UTF)
-,	fChan(sGetChan(fChannerR_UTF), sGetChan(fChannerU_UTF))
 	{}
 
 ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
 	const ZRef<ChannerU_UTF>& iChannerU_UTF,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
-:	fChannerR_UTF(iChannerR_UTF)
+:	ChanRU_UTF(*iChannerR_UTF, *iChannerU_UTF)
+,	fChannerR_UTF(iChannerR_UTF)
 ,	fChannerU_UTF(iChannerU_UTF)
-,	fChan(sGetChan(fChannerR_UTF), sGetChan(fChannerU_UTF),
-		iRecognizeEntitiesInAttributeValues, iCallable)
 	{}
 
 ChannerRU_UTF::~ChannerRU_UTF()
 	{}
-
-void ChannerRU_UTF::GetChan(const ChanR_UTF*& oChanPtr)
-	{ oChanPtr = &fChan; }
-
-void ChannerRU_UTF::GetChan(const ChanU_UTF*& oChanPtr)
-	{ oChanPtr = &fChan; }
-
-ChanRU_UTF& ChannerRU_UTF::GetChan()
-	{ return fChan; }
 
 ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
 	const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF)
