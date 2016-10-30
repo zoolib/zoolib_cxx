@@ -80,7 +80,7 @@ endif
 # Append -static if STATIC_DESIRED and we're not targetting darwin
 ZMAKE_LDFLAGS +=$(if $(STATIC_DESIRED),$(call ifplatform,Darwin,,-static))
 
-ZMAKE_CXXFLAGS =$(ZMAKE_CFLAGS)
+ZMAKE_CXXFLAGS +=$(ZMAKE_CFLAGS)
 
 # ==================================================================================================
 # Generate the list of the project's [Obj]C[++] source files, including any explicit path.
