@@ -54,12 +54,12 @@ struct Views_t
 
 	if ([[iViews.fSubtitle text] length])
 		{
-		[iViews.fSubtitle setFrame:sWithTB(0, 20, frame)];
-		[iViews.fTitle setFrame:sWithTB(B(frame) - 28, B(frame) - 4, frame)];
+		[iViews.fSubtitle setFrame:sWithTB(frame, 0, 20)];
+		[iViews.fTitle setFrame:sWithTB(frame, B(frame) - 28, B(frame) - 4)];
 		}
 	else
 		{
-		[iViews.fTitle setFrame:sCenteredY(CY(frame), sWithHT(24, frame))];
+		[iViews.fTitle setFrame:sCenteredY(sWithHT(frame, 24), CY(frame))];
 		}
 	}
 

@@ -67,7 +67,7 @@ using namespace ZooLib;
 	[super layoutSubviews];
 
 //	const ZGRectf theBounds = [self bounds];
-	[fLabel setFrame:sInsetted(19, 6, [self bounds])];
+	[fLabel setFrame:sInsetted([self bounds], 19, 6)];
 	}
 
 @end // implementation ZooLib_UIKit_SectionHeader
