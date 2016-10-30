@@ -615,16 +615,16 @@ bool sContains(const Rect_p& iRect, const Other& iOther)
 #pragma mark sOffsetted, whole
 
 template <class Rect_p, class OtherX_p>
-Rect_p sOffsettedX(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sOffsettedX(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect) + X(iX), T(iRect), R(iRect) + X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sOffsettedY(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedY(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iY), R(iRect), B(iRect) + Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
 typename RectTraits<Rect_p>::Rect_t
-sOffsetted(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+sOffsetted(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{
 	return sRect<Rect_p>(
 		L(iRect) + X(iX), T(iRect) + Y(iY),
@@ -642,7 +642,7 @@ sOffsetted(const OtherL_p& iL, const OtherT_p& iT, const OtherR_p& iR, const Oth
 	}
 
 template <class Rect_p, class Other>
-Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)
+Rect_p sOffsetted(const Rect_p& iRect, const Other& iOther)
 	{
 	return sRect<Rect_p>(
 		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
@@ -653,19 +653,19 @@ Rect_p sOffsetted(const Other& iOther, const Rect_p& iRect)
 #pragma mark sOffsetted, edge
 
 template <class Rect_p, class OtherX_p>
-Rect_p sOffsettedL(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sOffsettedL(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect) + X(iX), T(iRect), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sOffsettedT(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedT(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p>
-Rect_p sOffsettedR(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sOffsettedR(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect) + X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sOffsettedB(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), B(iRect) + Y(iY)); }
 
 // =================================================================================================
@@ -673,35 +673,35 @@ Rect_p sOffsettedB(const OtherY_p& iY, const Rect_p& iRect)
 #pragma mark sOffsetted, corner
 
 template <class Rect_p, class Other_p>
-Rect_p sOffsettedLT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sOffsettedLT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect), B(iRect)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sOffsettedRB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sOffsettedRB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect) + X(iOther), B(iRect) + Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sOffsettedLB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sOffsettedLB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect) + X(iOther), T(iRect), R(iRect), B(iRect) + Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sOffsettedRT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sOffsettedRT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sOffsettedLT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedLT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect) + X(iX), T(iRect) + Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sOffsettedRB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedRB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect) + X(iX), B(iRect) + Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sOffsettedLB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedLB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect) + X(iX), T(iRect), R(iRect), B(iRect) + Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sOffsettedRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sOffsettedRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iY), R(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
@@ -709,55 +709,55 @@ Rect_p sOffsettedRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 #pragma mark sAligned, edge
 
 template <class Rect_p, class OtherX_p>
-Rect_p sAlignedL(const OtherX_p& iX, const Rect_p& iRect)
-	{ return sOffsetted(X(iX) - L(iRect), 0, iRect); }
+Rect_p sAlignedL(const Rect_p& iRect, const OtherX_p& iX)
+	{ return sOffsetted(iRect, X(iX) - L(iRect), 0); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sAlignedT(const OtherY_p& iY, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iY) - T(iRect), iRect); }
+Rect_p sAlignedT(const Rect_p& iRect, const OtherY_p& iY)
+	{ return sOffsetted(iRect, 0, Y(iY) - T(iRect)); }
 
 template <class Rect_p, class OtherX_p>
-Rect_p sAlignedR(const OtherX_p& iX, const Rect_p& iRect)
-	{ return sOffsetted(X(iX) - R(iRect), 0, iRect); }
+Rect_p sAlignedR(const Rect_p& iRect, const OtherX_p& iX)
+	{ return sOffsetted(iRect, X(iX) - R(iRect), 0); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sAlignedB(const OtherY_p& iY, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iY) - B(iRect), iRect); }
+Rect_p sAlignedB(const Rect_p& iRect, const OtherY_p& iY)
+	{ return sOffsetted(iRect, 0, Y(iY) - B(iRect)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sAligned, corner
 
 template <class Rect_p, class Other_p>
-Rect_p sAlignedLT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sAlignedLT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - T(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
-Rect_p sAlignedRB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sAlignedRB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - B(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
-Rect_p sAlignedLB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sAlignedLB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - B(iRect), iRect); }
 
 template <class Rect_p, class Other_p>
-Rect_p sAlignedRT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sAlignedRT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - T(iRect), iRect); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sAlignedLT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sAlignedLT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - T(iRect), iRect); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sAlignedRB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sAlignedRB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - B(iRect), iRect); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sAlignedLB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sAlignedLB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - B(iRect), iRect); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sAlignedRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sAlignedRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - T(iRect), iRect); }
 
 // =================================================================================================
@@ -765,27 +765,27 @@ Rect_p sAlignedRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 #pragma mark sCentered
 
 template <class Rect_p, class OtherX_p>
-Rect_p sCenteredX(const OtherX_p& iX, const Rect_p& iRect)
-	{ return sOffsetted(X(iX) - CX(iRect), 0, iRect); }
+Rect_p sCenteredX(const Rect_p& iRect, const OtherX_p& iX)
+	{ return sOffsetted(iRect, X(iX) - CX(iRect), 0); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sCenteredY(const OtherY_p& iY, const Rect_p& iRect)
-	{ return sOffsetted(0, Y(iY) - CY(iRect), iRect); }
+Rect_p sCenteredY(const Rect_p& iRect, const OtherY_p& iY)
+	{ return sOffsetted(iRect, 0, Y(iY) - CY(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sCentered(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
-	{ return sOffsetted(X(iX) - CX(iRect), Y(iY) - CY(iRect), iRect); }
+Rect_p sCentered(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
+	{ return sOffsetted(iRect, X(iX) - CX(iRect), Y(iY) - CY(iRect)); }
 
 template <class Rect_p, class Other>
-Rect_p sCentered(const Other& iOther, const Rect_p& iRect)
-	{ return sOffsetted(X(iOther) - CX(iRect), Y(iOther) - CY(iRect), iRect); }
+Rect_p sCentered(const Rect_p& iRect, const Other& iOther)
+	{ return sOffsetted(iRect, X(iOther) - CX(iRect), Y(iOther) - CY(iRect)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sFlippedY
 
 template <class Rect_p, class Other_p>
-Rect_p sFlippedY(const Other_p& iY, const Rect_p& iRect)
+Rect_p sFlippedY(const Rect_p& iRect, const Other_p& iY)
 	{ return sRect<Rect_p>(L(iRect), Y(iY) - B(iRect), R(iRect), Y(iY) - T(iRect)); }
 
 // =================================================================================================
@@ -793,15 +793,15 @@ Rect_p sFlippedY(const Other_p& iY, const Rect_p& iRect)
 #pragma mark sInsetted
 
 template <class Rect_p, class OtherX_p>
-Rect_p sInsettedX(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sInsettedX(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect) + X(iX), T(iRect), R(iRect) - X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sInsettedY(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sInsettedY(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iY), R(iRect), B(iRect) - Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sInsetted(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sInsetted(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{
 	return sRect<Rect_p>(
 		L(iRect) + X(iX), T(iRect) + Y(iY),
@@ -809,7 +809,7 @@ Rect_p sInsetted(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
 	}
 
 template <class Rect_p, class Other>
-Rect_p sInsetted(const Other& iOther, const Rect_p& iRect)
+Rect_p sInsetted(const Rect_p& iRect, const Other& iOther)
 	{
 	return sRect<Rect_p>(
 		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) - X(iOther), B(iRect) - Y(iOther));
@@ -820,19 +820,19 @@ Rect_p sInsetted(const Other& iOther, const Rect_p& iRect)
 #pragma mark sWith, edge
 
 template <class Rect_p, class OtherX_p>
-Rect_p sWithL(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sWithL(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(X(iX), T(iRect), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sWithT(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithT(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p>
-Rect_p sWithR(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sWithR(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sWithB(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), Y(iY)); }
 
 // =================================================================================================
@@ -840,43 +840,43 @@ Rect_p sWithB(const OtherY_p& iY, const Rect_p& iRect)
 #pragma mark sWith, corner
 
 template <class Rect_p, class Other_p>
-Rect_p sWithLT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithLT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(X(iOther), Y(iOther), R(iRect), B(iRect)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithRB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithRB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), X(iOther), Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithLB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithLB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(X(iOther), T(iRect), R(iRect), Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithRT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithRT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iOther), Y(iOther), X(iOther), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithLT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithLT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(X(iX), Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithRB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithRB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), X(iX), Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithLB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithLB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(X(iX), T(iRect), R(iRect), Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), Y(iY), X(iX), B(iRect)); }
 
 template <class Rect_p, class OtherL_p, class OtherR_p>
-Rect_p sWithLR(const OtherL_p& iLHS, const OtherR_p& iR, const Rect_p& iRect)
+Rect_p sWithLR(const Rect_p& iRect, const OtherL_p& iLHS, const OtherR_p& iR)
 	{ return sRect<Rect_p>(X(iLHS), T(iRect), X(iR), B(iRect)); }
 
 template <class Rect_p, class OtherT_p, class OtherB_p>
-Rect_p sWithTB(const OtherT_p& iT, const OtherB_p& iB, const Rect_p& iRect)
+Rect_p sWithTB(const Rect_p& iRect, const OtherT_p& iT, const OtherB_p& iB)
 	{ return sRect<Rect_p>(L(iRect), Y(iT), R(iRect), Y(iB)); }
 
 // =================================================================================================
@@ -884,11 +884,11 @@ Rect_p sWithTB(const OtherT_p& iT, const OtherB_p& iB, const Rect_p& iRect)
 #pragma mark sWithW, with Width by moving L or R edge
 
 template <class Rect_p, class OtherX_p>
-Rect_p sWithWL(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sWithWL(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(R(iRect) - X(iX), T(iRect), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p>
-Rect_p sWithWR(const OtherX_p& iX, const Rect_p& iRect)
+Rect_p sWithWR(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
@@ -896,11 +896,11 @@ Rect_p sWithWR(const OtherX_p& iX, const Rect_p& iRect)
 #pragma mark sWithH, with Height by moving T or B edge
 
 template <class Rect_p, class OtherY_p>
-Rect_p sWithHT(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithHT(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherY_p>
-Rect_p sWithHB(const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithHB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), T(iRect) + Y(iY)); }
 
 // =================================================================================================
@@ -908,35 +908,35 @@ Rect_p sWithHB(const OtherY_p& iY, const Rect_p& iRect)
 #pragma mark sWithWH, with Width and Height by moving LT, RB, LB, RT corner
 
 template <class Rect_p, class Other_p>
-Rect_p sWithWHLT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithWHLT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(R(iRect) - X(iOther), B(iRect) - Y(iOther), R(iRect), B(iRect)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithWHRB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithWHRB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), L(iRect) + X(iOther), B(iRect) + Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithWHLB(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithWHLB(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(R(iRect) - X(iOther), T(iRect), R(iRect), B(iRect) + Y(iOther)); }
 
 template <class Rect_p, class Other_p>
-Rect_p sWithWHRT(const Other_p& iOther, const Rect_p& iRect)
+Rect_p sWithWHRT(const Rect_p& iRect, const Other_p& iOther)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iOther), L(iRect) + X(iOther), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithWHLT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithWHLT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(R(iRect) - X(iX), B(iRect) - Y(iY), R(iRect), B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithWHRB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithWHRB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), L(iRect) + X(iX), B(iRect) + Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithWHLB(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithWHLB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(R(iRect) - X(iX), T(iRect), R(iRect), B(iRect) + Y(iY)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-Rect_p sWithWHRT(const OtherX_p& iX, const OtherY_p& iY, const Rect_p& iRect)
+Rect_p sWithWHRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
