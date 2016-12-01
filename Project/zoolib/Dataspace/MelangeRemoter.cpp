@@ -63,7 +63,7 @@ using DatonSet::Daton;
 // =================================================================================================
 #pragma mark -
 
-static void spToChan(const string8& iString, const ChanW_Bin& w)
+static void spToChan(const ChanW_Bin& w, const string8& iString)
 	{
 	const size_t theLength = iString.length();
 	sEWriteCount(w, theLength);
@@ -158,7 +158,7 @@ public:
 			sEWriteCount(w, theRHCount);
 
 			foreachi (ii, theRH)
-				spToChan(*ii, w);
+				spToChan(w, *ii);
 
 			const size_t theRowCount = theResult->Count();
 
@@ -201,7 +201,7 @@ public:
 #pragma mark -
 #pragma mark
 
-static void spWriteMessage(const Map_Any& iMessage, const ChanW_Bin& iChanW)
+static void spWriteMessage(const ChanW_Bin& iChanW, const Map_Any& iMessage)
 	{
 	const double start = Time::sSystem();
 
@@ -377,7 +377,7 @@ void MelangeServer::pWrite()
 		guard.Release();
 
 		foreachi (ii, theMessages)
-			spWriteMessage(*ii, sGetChan(theChannerW));
+			spWriteMessage(sGetChan(theChannerW), *ii);
 
 		guard.Acquire();
 		}
@@ -663,7 +663,7 @@ void Melange_Client::pWrite()
 			{
 			ZRelGuardR rel(guard);
 			foreachi (ii, theMessages)
-				spWriteMessage(*ii, sGetChan(theChannerW));
+				spWriteMessage(sGetChan(theChannerW), *ii);
 			}
 		catch (...)
 			{
