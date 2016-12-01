@@ -371,7 +371,7 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 ,	fChannerU(iChannerU)
 ,	fChanR_Bin_ASCIIStrim(sGetChan(iChannerR))
 ,	fChanR_Bin_Boundary('>', fChanR_Bin_ASCIIStrim)
-,	fChanR(fChanR_Bin_Boundary, iDecode)
+,	fChanR(iDecode, fChanR_Bin_Boundary)
 	{}
 
 void YadStreamerR_Base64::Finish()
@@ -771,8 +771,8 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 
 		sCopyAll(iChanR,
 			ChanW_Bin_Base64Encode(
-				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w)),
-				Base64::sEncode_Normal()
+				Base64::sEncode_Normal(),
+				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))
 				)
 			);
 

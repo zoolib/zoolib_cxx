@@ -36,7 +36,7 @@ class ChanPos_Offset
 :	public ChanPos
 	{
 public:
-	ChanPos_Offset(const ChanPos& iChanPos, uint64 iOffset)
+	ChanPos_Offset(uint64 iOffset, const ChanPos& iChanPos)
 	:	fChanPos(iChanPos)
 	,	fOffset(iOffset)
 		{}
@@ -60,7 +60,7 @@ class ChanSize_Offset
 :	public ChanSize
 	{
 public:
-	ChanSize_Offset(const ChanSize& iChanSize, uint64 iOffset)
+	ChanSize_Offset(uint64 iOffset, const ChanSize& iChanSize)
 	:	fChanSize(iChanSize)
 	,	fOffset(iOffset)
 		{}
@@ -82,7 +82,7 @@ class ChanSizeSet_Offset
 :	public ChanSizeSet
 	{
 public:
-	ChanSizeSet_Offset(const ChanSizeSet& iChanSizeSet, uint64 iOffset)
+	ChanSizeSet_Offset(uint64 iOffset, const ChanSizeSet& iChanSizeSet)
 	:	fChanSizeSet(iChanSizeSet)
 	,	fOffset(iOffset)
 		{}
