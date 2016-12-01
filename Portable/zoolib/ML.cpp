@@ -971,13 +971,13 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 
 void StrimW::Imp_Flush()
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 	fStrimSink.Flush();
 	}
 
 const ZStrimW& StrimW::Raw() const
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 	return fStrimSink;
 	}
 
@@ -985,7 +985,7 @@ const ZStrimW& StrimW::Raw() const
 // is with the code unit sequence "\xC2\xA0".
 const StrimW& StrimW::WriteNBSP() const
 	{
-	const_cast<StrimW*>(this)->pPreText();
+	sNonConst(this)->pPreText();
 
 	fStrimSink.Write("&nbsp;");
 
@@ -996,7 +996,7 @@ const StrimW& StrimW::WriteNBSP() const
 // use only legal characters.
 const StrimW& StrimW::WriteEntity(const string8& iEntity) const
 	{
-	const_cast<StrimW*>(this)->pPreText();
+	sNonConst(this)->pPreText();
 
 	fStrimSink.Write("&");
 	fStrimSink.Write(iEntity);
@@ -1007,7 +1007,7 @@ const StrimW& StrimW::WriteEntity(const string8& iEntity) const
 
 const StrimW& StrimW::WriteEntity(const UTF8* iEntity) const
 	{
-	const_cast<StrimW*>(this)->pPreText();
+	sNonConst(this)->pPreText();
 
 	fStrimSink.Write("&");
 	fStrimSink.Write(iEntity);
@@ -1018,58 +1018,58 @@ const StrimW& StrimW::WriteEntity(const UTF8* iEntity) const
 
 const StrimW& StrimW::Begin(const string8& iTag) const
 	{
-	const_cast<StrimW*>(this)->pBegin(iTag, eTagTypeNormal);
+	sNonConst(this)->pBegin(iTag, eTagTypeNormal);
 
 	return *this;
 	}
 
 const StrimW& StrimW::End(const string8& iTag) const
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 
 	ZAssertStop(kDebug_StrimW_ML, !fTags.empty());
 	ZAssertStopf(kDebug_StrimW_ML, fTags.back() == iTag,
 		"Expected \"%s\", got \"%s\"", fTags.back().c_str(), iTag.c_str());
 
-	const_cast<StrimW*>(this)->pEnd();
+	sNonConst(this)->pEnd();
 
 	return *this;
 	}
 
 const StrimW& StrimW::End() const
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 
 	ZAssertStop(kDebug_StrimW_ML, !fTags.empty());
-	const_cast<StrimW*>(this)->pEnd();
+	sNonConst(this)->pEnd();
 
 	return *this;
 	}
 
 const StrimW& StrimW::Empty(const string8& iTag) const
 	{
-	const_cast<StrimW*>(this)->pBegin(iTag, eTagTypeEmpty);
+	sNonConst(this)->pBegin(iTag, eTagTypeEmpty);
 
 	return *this;
 	}
 
 const StrimW& StrimW::PI(const string8& iTag) const
 	{
-	const_cast<StrimW*>(this)->pBegin(iTag, eTagTypePI);
+	sNonConst(this)->pBegin(iTag, eTagTypePI);
 
 	return *this;
 	}
 
 const StrimW& StrimW::Tag(const string8& iTag) const
 	{
-	const_cast<StrimW*>(this)->pBegin(iTag, eTagTypeNoEnd);
+	sNonConst(this)->pBegin(iTag, eTagTypeNoEnd);
 
 	return *this;
 	}
 
 const StrimW& StrimW::Attr(const string8& iName) const
 	{
-	const_cast<StrimW*>(this)->pAttr(iName, nullptr);
+	sNonConst(this)->pAttr(iName, nullptr);
 
 	return *this;
 	}
@@ -1158,7 +1158,7 @@ const StrimW& StrimW::Attr(const string8& iName, const string8& iValue) const
 			}
 		}
 
-	const_cast<StrimW*>(this)->pAttr(iName, newValue);
+	sNonConst(this)->pAttr(iName, newValue);
 
 	return *this;
 	}
@@ -1169,7 +1169,7 @@ const StrimW& StrimW::Attr(const string8& iName, const UTF8* iValue) const
 const StrimW& StrimW::Attr(const string8& iName, int iValue) const
 	{
 	string8 theValue = sStringf("%d", iValue);
-	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));
+	sNonConst(this)->pAttr(iName, new string8(theValue));
 
 	return *this;
 	}
@@ -1181,7 +1181,7 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 	string8 theValue = sStringf(iValue, args);
 	va_end(args);
 
-	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));
+	sNonConst(this)->pAttr(iName, new string8(theValue));
 
 	return *this;
 	}
@@ -1196,10 +1196,10 @@ const StrimW& StrimW::Attrs(const Attrs_t& iMap) const
 
 bool StrimW::Indent(bool iIndent) const
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 
 	bool oldIndent = fIndentEnabled;
-	const_cast<StrimW*>(this)->fIndentEnabled = iIndent;
+	sNonConst(this)->fIndentEnabled = iIndent;
 	return oldIndent;
 	}
 
@@ -1254,7 +1254,7 @@ const StrimW& StrimW::EndAll(const string8& iTag)
 
 const StrimW& StrimW::WritePending() const
 	{
-	const_cast<StrimW*>(this)->pWritePending();
+	sNonConst(this)->pWritePending();
 	return *this;
 	}
 
