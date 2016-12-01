@@ -71,7 +71,7 @@ public:
 					// asking for more data than the stream will be able to provide without
 					// blocking. In either case we bypass the buffer and read straight into our
 					// read destination
-					const size_t countRead = sQRead(localDest, iCount, fChanR);
+					const size_t countRead = sQRead(fChanR, localDest, iCount);
 					if (countRead == 0)
 						break;
 					localDest += countRead;
@@ -82,9 +82,9 @@ public:
 					// We're asking for less data than the stream guarantees it could provide
 					// without blocking, in which case we fill up as much of our buffer as we can,
 					// so some later request will be able to be satisfied straight from our buffer.
-					const size_t countRead = sQRead(&fBuffer[0],
-						std::min(fBuffer.size(), countReadable),
-						fChanR);
+					const size_t countRead = sQRead(fChanR,
+						&fBuffer[0],
+						std::min(fBuffer.size(), countReadable));
 					if (countRead == 0)
 						break;
 					fBegin = 0;
@@ -141,7 +141,7 @@ public:
 			if (fOffset == 0 && fBuffer.size() <= iCount)
 				{
 				// We have an empty buffer *and* we have more data to send than would fit in the buffer.
-				const size_t countWritten = sQWrite(localSource, iCount, fChanW);
+				const size_t countWritten = sQWrite(fChanW, localSource, iCount);
 				if (countWritten == 0)
 					break;
 				localSource += countWritten;

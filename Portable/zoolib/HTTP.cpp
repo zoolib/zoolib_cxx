@@ -68,7 +68,7 @@ static bool spQReadDigit(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int& 
 
 	if (readChar < '0' || readChar > '9')
 		{
-		sUnread(readChar, iChanU);
+		sUnread(iChanU, readChar);
 		return false;
 		}
 
@@ -554,7 +554,7 @@ bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
 
 			if (readChar == '=')
 				{
-				sUnread(readChar, iChanU);
+				sUnread(iChanU, readChar);
 				break;
 				}
 			name.append(1, readChar);
@@ -571,7 +571,7 @@ bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
 
 			if (readChar == '&')
 				{
-				sUnread(readChar, iChanU);
+				sUnread(iChanU, readChar);
 				break;
 				}
 			value.append(1, readChar);
@@ -1072,7 +1072,7 @@ bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
 
 		if (sIs_LWS(readChar))
 			{
-			sUnread(readChar, iChanU);
+			sUnread(iChanU, readChar);
 			break;
 			}
 
@@ -1221,7 +1221,7 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 
 	if (not sIs_ALPHA(readChar))
 		{
-		sUnread(readChar, iChanU);
+		sUnread(iChanU, readChar);
 		return false;
 		}
 
@@ -1235,7 +1235,7 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 
 		if (not sIs_ALPHA(readChar) && readChar != '-')
 			{
-			sUnread(readChar, iChanU);
+			sUnread(iChanU, readChar);
 			return true;
 			}
 
@@ -1391,7 +1391,7 @@ bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 
 		if (not sIs_token(readChar))
 			{
-			sUnread(readChar, iChanU);
+			sUnread(iChanU, readChar);
 			break;
 			}
 
@@ -1447,7 +1447,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 				&& readChar != ')'
 				&& readChar != '=')
 				{
-				sUnread(readChar, iChanU);
+				sUnread(iChanU, readChar);
 				break;
 				}
 			}
@@ -1498,7 +1498,7 @@ bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 
 		if (not sIs_qdtext(readChar))
 			{
-			sUnread(readChar, iChanU);
+			sUnread(iChanU, readChar);
 			break;
 			}
 
@@ -1522,7 +1522,7 @@ bool sTryReadChar(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, char iChar)
 
 	if (readChar != iChar)
 		{
-		sUnread(readChar, iChanU);
+		sUnread(iChanU, readChar);
 		return false;
 		}
 
@@ -1553,7 +1553,7 @@ void sSkipLWS(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
 
 		if (not sIs_LWS(readChar))
 			{
-			sUnread(readChar, iChanU);
+			sUnread(iChanU, readChar);
 			break;
 			}
 		}
@@ -1567,7 +1567,7 @@ bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string
 
 	if (not isxdigit(readChar))
 		{
-		sUnread(readChar, iChanU);
+		sUnread(iChanU, readChar);
 		ioString.append(1, '%');
 		}
 	else
@@ -1578,7 +1578,7 @@ bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string
 
 		if (not isxdigit(readChar2))
 			{
-			sUnread(readChar2, iChanU);
+			sUnread(iChanU, readChar2);
 
 			ioString.append(1, '%');
 			ioString.append(1, readChar);

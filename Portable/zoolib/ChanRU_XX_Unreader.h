@@ -50,7 +50,7 @@ public:
 			{
 			if (fStack.empty())
 				{
-				size_t countRead = sQRead(localDest, localDestEnd - localDest, fChanR);
+				size_t countRead = sQRead(fChanR, localDest, localDestEnd - localDest);
 				if (countRead == 0)
 					break;
 				localDest += countRead;

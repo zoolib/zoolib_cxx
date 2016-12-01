@@ -161,7 +161,7 @@ uint64 YadStreamerR_JSONB::QSkip(uint64 iCount)
 			}
 		else
 			{
-			const uint64 countSkipped = sSkip(min(countRemaining, uint64(fChunkSize)), r);
+			const uint64 countSkipped = sSkip(r, min(countRemaining, uint64(fChunkSize)));
 			countRemaining -= countSkipped;
 			fChunkSize -= countSkipped;
 			}

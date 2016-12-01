@@ -61,7 +61,7 @@ void sWrite(const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
 	const ChanW_UTF& iChanW)
 	{
-	const size_t countWritten = sQWrite(iSource, iCountCU, iChanW);
+	const size_t countWritten = sQWrite(iChanW, iSource, iCountCU);
 	if (oCountCU)
 		*oCountCU = countWritten;
 	if (oCountCP)

@@ -43,13 +43,13 @@ public:
 		{}
 
 	virtual size_t QRead(byte* oDest, size_t iCount)
-		{ return sQRead(oDest, iCount, *fChannerR); }
+		{ return sQRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
-		{ return sSkip(iCount, *fChannerR); }
+		{ return sSkip(*fChannerR, iCount); }
 
 	virtual size_t QWrite(const byte* iSource, size_t iCount)
-		{ return sQWrite(iSource, iCount, *fChannerW); }
+		{ return sQWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()
 		{ sFlush(*fChannerW); }
@@ -84,13 +84,13 @@ public:
 		{}
 
 	virtual size_t QRead(byte* oDest, size_t iCount)
-		{ return sQRead(oDest, iCount, *fChannerR); }
+		{ return sQRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
-		{ return sSkip(iCount, *fChannerR); }
+		{ return sSkip(*fChannerR, iCount); }
 
 	virtual size_t QWrite(const byte* iSource, size_t iCount)
-		{ return sQWrite(iSource, iCount, *fChannerW); }
+		{ return sQWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()
 		{ sFlush(*fChannerW); }
@@ -99,7 +99,7 @@ public:
 		{ return sAbort(*fChannerClose); }
 
 	virtual bool DisconnectRead(double iTimeout)
-		{ return sDisconnectRead(iTimeout, *fChannerClose); }
+		{ return sDisconnectRead(*fChannerClose, iTimeout); }
 
 	virtual void DisconnectWrite()
 		{ return sDisconnectWrite(*fChannerClose); }

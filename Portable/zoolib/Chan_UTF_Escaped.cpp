@@ -55,13 +55,13 @@ size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
 
 		if (theCP == fDelimiter)
 			{
-			sUnread(theCP, fChanU);
+			sUnread(fChanU, theCP);
 			break;
 			}
 
 		if (Unicode::sIsEOL(theCP))
 			{
-			sUnread(theCP, fChanU);
+			sUnread(fChanU, theCP);
 			throw ParseException("Illegal end of line whilst parsing a string");
 			}
 

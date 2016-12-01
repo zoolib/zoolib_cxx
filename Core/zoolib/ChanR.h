@@ -44,7 +44,7 @@ template <class EE>
 ZQ<EE> sQRead(const ChanR<EE>& iChanR)
 	{
 	EE buf;
-	if (1 != sQRead(&buf, 1, iChanR))
+	if (1 != sQRead(iChanR, &buf, 1))
 		return null;
 	return buf;
 	}
@@ -52,7 +52,7 @@ ZQ<EE> sQRead(const ChanR<EE>& iChanR)
 // This is still used in HTTP and Util_Chan_UTF
 template <class EE>
 bool sQRead(EE& oElmt, const ChanR<EE>& iChanR)
-	{ return 1 == sQRead(&oElmt, 1, iChanR); }
+	{ return 1 == sQRead(iChanR, &oElmt, 1); }
 
 template <class EE>
 EE sERead(const ChanR<EE>& iChanR)
@@ -69,7 +69,7 @@ size_t sQReadFully(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
 	EE* localDest = oDest;
 	while (iCount)
 		{
-		if (const size_t countRead = sQRead(localDest, iCount, iChanR))
+		if (const size_t countRead = sQRead(iChanR, localDest, iCount))
 			{
 			iCount -= countRead;
 			localDest += countRead;
@@ -103,7 +103,7 @@ template <class EE>
 uint64 sSkipAll(const ChanR<EE>& iChanR)
 	{
 	uint64 result = 0;
-	while (const uint64 countSkipped = sSkip(0x100000, iChanR))
+	while (const uint64 countSkipped = sSkip(iChanR, 0x100000))
 		result += countSkipped;
 	return result;
 	}

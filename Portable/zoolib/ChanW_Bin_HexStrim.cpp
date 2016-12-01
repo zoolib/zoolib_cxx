@@ -86,7 +86,7 @@ ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(
 	{}
 
 size_t ChanW_Bin_HexStrim::QWrite(const byte* iSource, size_t iCount)
-	{ return sQWrite(iSource, iCount, fChanW_Bin); }
+	{ return sQWrite(fChanW_Bin, iSource, iCount); }
 
 void ChanW_Bin_HexStrim::Flush()
 	{ fChanW_Bin.Flush(); }

@@ -99,7 +99,7 @@ size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 		if (fChunkSize == 0)
 			{
 			// Read and discard the CRLF at the end of the chunk.
-			const uint64 countSkipped = sSkip(2, fChanR);
+			const uint64 countSkipped = sSkip(fChanR, 2);
 			if (countSkipped == 2)
 				fChunkSize = spReadChunkSize(fChanR);
 			if (fChunkSize == 0)
@@ -107,8 +107,8 @@ size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 			}
 		else
 			{
-			const size_t countRead = sQRead(
-				localDest, std::min<size_t>(iCount, fChunkSize), fChanR);
+			const size_t countRead = sQRead(fChanR, 
+				localDest, std::min<size_t>(iCount, fChunkSize));
 
 			if (countRead == 0)
 				fHitEnd = true;

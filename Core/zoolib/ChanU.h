@@ -30,8 +30,8 @@ namespace ZooLib {
 #pragma mark -
 
 template <class EE>
-bool sUnread(const EE& iElmt, const ChanU<EE>& iChanU)
-	{ return 1 == sUnread(&iElmt, 1, iChanU); }
+bool sUnread(const ChanU<EE>& iChanU, const EE& iElmt)
+	{ return 1 == sUnread(iChanU, &iElmt, 1); }
 
 } // namespace ZooLib
 

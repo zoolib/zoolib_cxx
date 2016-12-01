@@ -60,7 +60,7 @@ size_t ChanR_UTF_CRLFRemove::QRead(UTF32* oDest, size_t iCount)
 	UTF32* localDestEnd = oDest + iCount;
 	while (localDestEnd > localDest)
 		{
-		const size_t countRead = sQRead(buffer, min(size_t(localDestEnd - localDest), kBufSize), fChanR);
+		const size_t countRead = sQRead(fChanR, buffer, min(size_t(localDestEnd - localDest), kBufSize));
 		if (countRead == 0)
 			break;
 

@@ -118,7 +118,7 @@ public:
 				case 101:
 					{
 					Data_Any theData(sReadCount(r));
-					sERead(theData.GetPtrMutable(), theData.GetSize(), r);
+					sERead(r, theData.GetPtrMutable(), theData.GetSize());
 					return Daton(theData);
 					}
 				case 102:

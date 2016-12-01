@@ -170,7 +170,7 @@ ZRef<ValComparator> spQRead_ValComparator(const ChanR_UTF& iChanR, const ChanU_U
 		}
 	else
 		{
-		sUnread(*theQ, iChanU);
+		sUnread(iChanU, *theQ);
 		return null;
 		}
 	}

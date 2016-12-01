@@ -50,7 +50,7 @@ public:
 
 		EE buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(EE))];
 
-		if (const size_t countRead = sQRead(buf, std::min(iCount, countof(buf)), fChanR))
+		if (const size_t countRead = sQRead(fChanR, buf, std::min(iCount, countof(buf))))
 			{
 			std::copy_n(buf, countRead, oDest);
 

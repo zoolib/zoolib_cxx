@@ -111,7 +111,7 @@ bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{ return true; }
 	else
 		{
-		sUnread(*theCPQ, iChanU);
+		sUnread(iChanU, *theCPQ);
 		return false;
 		}
 	}
@@ -126,7 +126,7 @@ ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{ return *theCPQ - '0'; }
 	else
 		{
-		sUnread(*theCPQ, iChanU);
+		sUnread(iChanU, *theCPQ);
 		return null;
 		}
 	}
@@ -143,7 +143,7 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{ return *theCPQ - 'A' + 10; }
 	else
 		{
-		sUnread(*theCPQ, iChanU);
+		sUnread(iChanU, *theCPQ);
 		return null;
 		}
 	}
@@ -184,7 +184,7 @@ bool sTryRead_String(const string8& iTarget,
 
 	while (not stack.empty())
 		{
-		sUnread(stack.back(), iChanU);
+		sUnread(iChanU, stack.back());
 		stack.pop_back();
 		}
 	return false;
@@ -226,7 +226,7 @@ bool sTryRead_CaselessString(const string8& iTarget,
 
 	while (not stack.empty())
 		{
-		sUnread(stack.back(), iChanU);
+		sUnread(iChanU, stack.back());
 		stack.pop_back();
 		}
 	return false;
@@ -410,7 +410,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			throw ParseException("Expected a valid hex integer after '0x' prefix");
 			}
 
-		sUnread(theCP, iChanU);
+		sUnread(iChanU, theCP);
 
 		if (theCP != '.' and not Unicode::sIsDigit(theCP))
 			{
@@ -418,7 +418,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			return true;
 			}
 
-		sUnread(UTF32('0'), iChanU);
+		sUnread(iChanU, UTF32('0'));
 		}
 
 	if (spTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
@@ -451,7 +451,7 @@ void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{
 		if (not spIsWhitespace(*theCPQ))
 			{
-			sUnread(*theCPQ, iChanU);
+			sUnread(iChanU, *theCPQ);
 			break;
 			}
 		}
@@ -512,7 +512,7 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 					continue;
 					}
 				}
-			sUnread(*firstCPQ, iChanU);
+			sUnread(iChanU, *firstCPQ);
 			}
 		break;
 		}

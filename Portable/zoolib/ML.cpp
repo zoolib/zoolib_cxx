@@ -120,7 +120,7 @@ static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		{ return false; }
 	else if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 		{
-		sUnread(*theCPQ, iChanU);
+		sUnread(iChanU, *theCPQ);
 		return false;
 		}
 	else
@@ -136,7 +136,7 @@ static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			else if (not Unicode::sIsAlphaDigit(*theCPQ)
 				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
 				{
-				sUnread(*theCPQ, iChanU);
+				sUnread(iChanU, *theCPQ);
 				break;
 				}
 			else
@@ -199,7 +199,7 @@ static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 		{
 		if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 			{
-			sUnread(*theCPQ, iChanU);
+			sUnread(iChanU, *theCPQ);
 			return false;
 			}
 
@@ -211,7 +211,7 @@ static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			else if (not Unicode::sIsAlphaDigit(*theCPQ)
 				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
 				{
-				sUnread(*theCPQ, iChanU);
+				sUnread(iChanU, *theCPQ);
 				return true;
 				}
 			else
@@ -235,7 +235,7 @@ static bool spReadMLAttributeValue(
 		{ return spReadUntil(iChanR, iChanU, '\'', oValue); }
 	else
 		{
-		sUnread(*theCPQ, iChanU);
+		sUnread(iChanU, *theCPQ);
 
 		sSkip_WS(iChanR, iChanU);
 
@@ -245,7 +245,7 @@ static bool spReadMLAttributeValue(
 				{ break; }
 			else if (*theCPQ == '>')
 				{
-				sUnread(*theCPQ, iChanU);
+				sUnread(iChanU, *theCPQ);
 				break;
 				}
 			else if (Unicode::sIsWhitespace(*theCPQ))
@@ -316,7 +316,7 @@ size_t ChanRU_UTF::QRead(UTF32* oDest, size_t iCount)
 				}
 			else if (*theCPQ == '<')
 				{
-				sUnread(*theCPQ, fChanU);
+				sUnread(fChanU, *theCPQ);
 				break;
 				}
 			else if (*theCPQ == '&')
@@ -473,7 +473,7 @@ void ChanRU_UTF::pAdvance()
 			}
 		else if (*theCPQ != '<')
 			{
-			sUnread(*theCPQ, fChanU);
+			sUnread(fChanU, *theCPQ);
 			fToken = eToken_Text;
 			return;
 			}
@@ -544,7 +544,7 @@ void ChanRU_UTF::pAdvance()
 				}
 			default:
 				{
-				sUnread(*theCPQ, fChanU);
+				sUnread(fChanU, *theCPQ);
 
 				if (not spReadMLIdentifier(fChanR, fChanU, fTagName))
 					{

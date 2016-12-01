@@ -29,8 +29,8 @@ namespace ZooLib {
 
 inline void sTruncate(const ChanSizeSet& iChanSizeSet, const ChanPos& iChanPos)
 	{
-	sSizeSet(0, iChanSizeSet);
-	sSetPos(0, iChanPos);
+	sSizeSet(iChanSizeSet, 0);
+	sPosSet(iChanPos, 0);
 	}
 
 // =================================================================================================
@@ -44,10 +44,8 @@ std::pair<uint64,uint64> sCopyFully(
 
 	for (uint64 countRemaining = iCount; /*no test*/; /*no inc*/)
 		{
-		if (const size_t countRead = sQRead(
-			buf,
-			std::min<size_t>(countRemaining, countof(buf)),
-			iChanR))
+		if (const size_t countRead = sQRead(iChanR,
+			buf, std::min<size_t>(countRemaining, countof(buf))))
 			{
 			const size_t countWritten = sQWriteFully(iChanW, buf, countRead);
 
@@ -78,7 +76,7 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iCha
 	uint64 totalCopied = 0;
 	for (;;)
 		{
-		if (const size_t countRead = sQRead(buf, countof(buf), iChanR))
+		if (const size_t countRead = sQRead(iChanR, buf, countof(buf)))
 			{
 			const size_t countWritten = sQWriteFully(iChanW, buf, countRead);
 

@@ -28,7 +28,7 @@ namespace ZooLib {
 ZQ<std::string> sQReadString(const ChanR_Bin& iChanR, size_t iCount)
 	{
 	std::string theString(iCount, 0);
-	if (iCount and iCount != sQReadFully(const_cast<char*>(theString.data()), iCount, iChanR))
+	if (iCount and iCount != sQReadFully(iChanR, const_cast<char*>(theString.data()), iCount))
 		return null;
 	return theString;
 	}
