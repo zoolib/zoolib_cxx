@@ -49,7 +49,7 @@ std::pair<uint64,uint64> sCopyFully(
 			std::min<size_t>(countRemaining, countof(buf)),
 			iChanR))
 			{
-			const size_t countWritten = sQWriteFully(buf, countRead, iChanW);
+			const size_t countWritten = sQWriteFully(iChanW, buf, countRead);
 
 			if (countWritten == countRead)
 				{
@@ -80,7 +80,7 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iCha
 		{
 		if (const size_t countRead = sQRead(buf, countof(buf), iChanR))
 			{
-			const size_t countWritten = sQWriteFully(buf, countRead, iChanW);
+			const size_t countWritten = sQWriteFully(iChanW, buf, countRead);
 
 			if (countWritten == countRead)
 				{
@@ -104,7 +104,7 @@ bool sCopy_Until(const ChanR<EE>& iChanR, const EE& iTerminator, const ChanW<EE>
 		if (iTerminator == *theQ)
 			return true;
 		else
-			sEWrite(*theQ, iChanW);
+			sEWrite(iChanW, *theQ);
 		}
 	return false;
 	}

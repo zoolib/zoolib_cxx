@@ -66,10 +66,10 @@ using DatonSet::Daton;
 static void spToChan(const string8& iString, const ChanW_Bin& w)
 	{
 	const size_t theLength = iString.length();
-	sEWriteCount(theLength, w);
+	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteFully(iString.data(), theLength, w))
+		if (theLength != sQWriteFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}
@@ -77,7 +77,7 @@ static void spToChan(const string8& iString, const ChanW_Bin& w)
 static string8 spStringFromChan(const ChanR_Bin& r)
 	{
 	if (size_t theCount = sReadCount(r))
-		return sReadString(theCount, r);
+		return sReadString(r, theCount);
 	return string8();
 	}
 
@@ -148,21 +148,21 @@ public:
 			{}
 		else if (const ZRef<Result>* theResultP = iAny.PGet<ZRef<Result> >())
 			{
-			sEWriteBE<uint8>(100, w);
+			sEWriteBE<uint8>(w, 100);
 
 			const ZRef<Result> theResult = *theResultP;
 
 			const RelHead& theRH = theResult->GetRelHead();
 			const size_t theRHCount = theRH.size();
 
-			sEWriteCount(theRHCount, w);
+			sEWriteCount(w, theRHCount);
 
 			foreachi (ii, theRH)
 				spToChan(*ii, w);
 
 			const size_t theRowCount = theResult->Count();
 
-			sEWriteCount(theRowCount, w);
+			sEWriteCount(w, theRowCount);
 
 			for (size_t yy = 0; yy < theRowCount; ++yy)
 				{
@@ -174,17 +174,17 @@ public:
 			}
 		else if (const Daton* theDatonP = iAny.PGet<Daton>())
 			{
-			sEWriteBE<uint8>(101, w);
+			sEWriteBE<uint8>(w, 101);
 
 			const Data_Any& theData = theDatonP->GetData();
 
-			sEWriteCount(theData.GetSize(), w);
-			sEWrite(theData.GetPtr(), theData.GetSize(), w);
+			sEWriteCount(w, theData.GetSize());
+			sEWrite(w, theData.GetPtr(), theData.GetSize());
 			return true;
 			}
 		else if (iAny.PGet<AbsentOptional_t>())
 			{
-			sEWriteBE<uint8>(102, w);
+			sEWriteBE<uint8>(w, 102);
 			return true;
 			}
 		else

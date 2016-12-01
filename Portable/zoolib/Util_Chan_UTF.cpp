@@ -465,7 +465,7 @@ void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 		{
 		if (Unicode::sIsEOL(*theCPQ))
 			break;
-		sEWrite(*theCPQ, oDest);
+		sEWrite(oDest, *theCPQ);
 		}
 	}
 
@@ -492,23 +492,23 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			{
 			if (spIsWhitespace(*firstCPQ))
 				{
-				sEWrite(*firstCPQ, oDest);
+				sEWrite(oDest, *firstCPQ);
 				continue;
 				}
 			else if (*firstCPQ == '/')
 				{
 				if (sTryRead_CP('/', iChanR, iChanU))
 					{
-					sEWrite("//", oDest);
+					sEWrite(oDest, "//");
 					sCopy_Line(iChanR, oDest);
 					continue;
 					}
 				else if (sTryRead_CP('*', iChanR, iChanU))
 					{
-					sEWrite("/*", oDest);
+					sEWrite(oDest, "/*");
 					if (not sCopy_Until(iChanR, "*/", oDest))
 						throw ParseException("Unexpected end of data while parsing a /**/ comment");
-					sEWrite("*/", oDest);
+					sEWrite(oDest, "*/");
 					continue;
 					}
 				}
@@ -588,7 +588,7 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const Cha
 // =================================================================================================
 #pragma mark -
 
-void sWriteExact(float iVal, const ChanW_UTF& iChanW)
+void sWriteExact(const ChanW_UTF& iChanW, float iVal)
 	{
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
@@ -596,13 +596,13 @@ void sWriteExact(float iVal, const ChanW_UTF& iChanW)
 	sEWritef(iChanW, "%.9g", iVal);
 	}
 
-void sWriteExact(double iVal, const ChanW_UTF& iChanW)
+void sWriteExact(const ChanW_UTF& iChanW, double iVal)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
 	sEWritef(iChanW, "%.17g", iVal);
 	}
 
-void sWriteExact(long double iVal, const ChanW_UTF& iChanW)
+void sWriteExact(const ChanW_UTF& iChanW, long double iVal)
 	{
 	// This is a guess for now.
 	sEWritef(iChanW, "%.34Lg", iVal);

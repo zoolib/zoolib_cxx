@@ -185,8 +185,8 @@ ChanW_UTF_Escaped::~ChanW_UTF_Escaped()
 		{
 		if (fLastWasCR)
 			{
-			sEWrite("\\r", fStrimSink);
-			sEWrite(fEOL, fStrimSink);
+			sEWrite(fStrimSink, "\\r");
+			sEWrite(fStrimSink, fEOL);
 			}
 		}
 	catch (...)
@@ -214,42 +214,42 @@ size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
 				{
 				case '\t':
 					{
-					sEWrite("\\t", fStrimSink);
+					sEWrite(fStrimSink, "\\t");
 					break;
 					}
 				case '\n':
 					{
 					if (lastWasCR)
-						sEWrite("\\r", fStrimSink);
-					sEWrite("\\n", fStrimSink);
-					sEWrite(fEOL, fStrimSink);
+						sEWrite(fStrimSink, "\\r");
+					sEWrite(fStrimSink, "\\n");
+					sEWrite(fStrimSink, fEOL);
 					break;
 					}
 				case '\r':
 					{
 					if (lastWasCR)
 						{
-						sEWrite("\\r", fStrimSink);
-						sEWrite(fEOL, fStrimSink);
+						sEWrite(fStrimSink, "\\r");
+						sEWrite(fStrimSink, fEOL);
 						}
 					fLastWasCR = true;
 					break;
 					}
 				case '\b':
 					{
-					sEWrite("\\b", fStrimSink);
+					sEWrite(fStrimSink, "\\b");
 					break;
 					}
 				case '\f':
 					{
-					sEWrite("\\f", fStrimSink);
+					sEWrite(fStrimSink, "\\f");
 					break;
 					}
 				default:
 					{
-					sEWrite("\\x", fStrimSink);
-					sEWrite(spAsHexCP(theCP >> 4), fStrimSink);
-					sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
+					sEWrite(fStrimSink, "\\x");
+					sEWrite(fStrimSink, spAsHexCP(theCP >> 4));
+					sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
 					break;
 					}
 				}
@@ -257,33 +257,33 @@ size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
 		else if (theCP < 0x80 || !fEscapeHighUnicode)
 			{
 			if (fQuoteQuotes && theCP == '\"')
-				sEWrite("\\\"", fStrimSink);
+				sEWrite(fStrimSink, "\\\"");
 			else if (not fQuoteQuotes && theCP == '\'')
-				sEWrite("\\\'", fStrimSink);
+				sEWrite(fStrimSink, "\\\'");
 			else if (theCP == '\\')
-				sEWrite("\\\\", fStrimSink);
+				sEWrite(fStrimSink, "\\\\");
 			else
-				sEWrite(theCP, fStrimSink);
+				sEWrite(fStrimSink, theCP);
 			}
 		else if (theCP < 0x10000)
 			{
-			sEWrite("\\u", fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
+			sEWrite(fStrimSink, "\\u");
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 12) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 8) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 4) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
 			}
 		else
 			{
-			sEWrite("\\U", fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 28) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 24) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 20) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 16) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 12) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 8) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP((theCP >> 4) & 0xF), fStrimSink);
-			sEWrite(spAsHexCP(theCP & 0xF), fStrimSink);
+			sEWrite(fStrimSink, "\\U");
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 28) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 24) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 20) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 16) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 12) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 8) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP((theCP >> 4) & 0xF));
+			sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
 			}
 		}
 	return iCountCU - localCount;

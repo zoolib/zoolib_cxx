@@ -32,21 +32,21 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark Helpers
 
-static bool spQWrite(const UTF32* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+static bool spQWrite(const ChanW_UTF& iChanW, const UTF32* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
 	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
 	return countWritten == iCountCU;
 	}
 
-static bool spQWrite(const UTF16* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+static bool spQWrite(const ChanW_UTF& iChanW, const UTF16* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
 	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
 	return countWritten == iCountCU;
 	}
 
-static bool spQWrite(const UTF8* iSource, size_t iCountCU, const ChanW_UTF& iChanW)
+static bool spQWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
 	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
@@ -93,7 +93,7 @@ void sWrite(const UTF16* iSource,
 				}
 			}
 
-		const size_t utf32Consumed = sQWriteFully(buffer, utf32Generated, iChanW);
+		const size_t utf32Consumed = sQWriteFully(iChanW, buffer, utf32Generated);
 		localCountCP -= utf32Consumed;
 		if (utf32Consumed < utf32Generated)
 			{
@@ -137,7 +137,7 @@ void sWrite(const UTF8* iSource,
 				}
 			}
 
-		const size_t utf32Consumed = sQWriteFully(buffer, utf32Generated, iChanW);
+		const size_t utf32Consumed = sQWriteFully(iChanW, buffer, utf32Generated);
 		localCountCP -= utf32Consumed;
 		if (utf32Consumed < utf32Generated)
 			{
@@ -160,64 +160,64 @@ void sWrite(const UTF8* iSource,
 #pragma mark -
 #pragma mark Zero-terminated strings
 
-bool sQWrite(const UTF32* iString, const ChanW_UTF& iChanW)
-	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iString)
+	{ return spQWrite(iChanW, iString, Unicode::sCountCU(iString)); }
 
-bool sQWrite(const UTF16* iString, const ChanW_UTF& iChanW)
-	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+bool sQWrite(const ChanW_UTF& iChanW, const UTF16* iString)
+	{ return spQWrite(iChanW, iString, Unicode::sCountCU(iString)); }
 
-bool sQWrite(const UTF8* iString, const ChanW_UTF& iChanW)
-	{ return spQWrite(iString, Unicode::sCountCU(iString), iChanW); }
+bool sQWrite(const ChanW_UTF& iChanW, const UTF8* iString)
+	{ return spQWrite(iChanW, iString, Unicode::sCountCU(iString)); }
 
-void sEWrite(const UTF32* iString, const ChanW_UTF& iChanW)
-	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
+void sEWrite(const ChanW_UTF& iChanW, const UTF32* iString)
+	{ spQWrite(iChanW, iString, Unicode::sCountCU(iString)) || sThrow_ExhaustedW(); }
 
-void sEWrite(const UTF16* iString, const ChanW_UTF& iChanW)
-	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
+void sEWrite(const ChanW_UTF& iChanW, const UTF16* iString)
+	{ spQWrite(iChanW, iString, Unicode::sCountCU(iString)) || sThrow_ExhaustedW(); }
 
-void sEWrite(const UTF8* iString, const ChanW_UTF& iChanW)
-	{ spQWrite(iString, Unicode::sCountCU(iString), iChanW) || sThrow_ExhaustedW(); }
+void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString)
+	{ spQWrite(iChanW, iString, Unicode::sCountCU(iString)) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark Standard library strings
 
-bool sQWrite(const string32& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const ChanW_UTF& iChanW, const string32& iString)
 	{
 	// Some non-conformant string implementations (MS) hate it if you access the buffer underlying
 	// an empty string. They don't even return null, they crash or throw an exception.
 	const size_t countCU = iString.size();
-	return countCU == 0 || spQWrite(iString.data(), countCU, iChanW);
+	return countCU == 0 || spQWrite(iChanW, iString.data(), countCU);
 	}
 
-bool sQWrite(const string16& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const ChanW_UTF& iChanW, const string16& iString)
 	{
 	const size_t countCU = iString.size();
-	return countCU == 0 || spQWrite(iString.data(), countCU, iChanW);
+	return countCU == 0 || spQWrite(iChanW, iString.data(), countCU);
 	}
 
-bool sQWrite(const string8& iString, const ChanW_UTF& iChanW)
+bool sQWrite(const ChanW_UTF& iChanW, const string8& iString)
 	{
 	const size_t countCU = iString.size();
-	return countCU == 0 || spQWrite(iString.data(), countCU, iChanW);
+	return countCU == 0 || spQWrite(iChanW, iString.data(), countCU);
 	}
 
-void sEWrite(const string32& iString, const ChanW_UTF& iChanW)
+void sEWrite(const ChanW_UTF& iChanW, const string32& iString)
 	{
 	const size_t countCU = iString.size();
-	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
+	countCU == 0 || spQWrite(iChanW, iString.data(), countCU) || sThrow_ExhaustedW();
 	}
 
-void sEWrite(const string16& iString, const ChanW_UTF& iChanW)
+void sEWrite(const ChanW_UTF& iChanW, const string16& iString)
 	{
 	const size_t countCU = iString.size();
-	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
+	countCU == 0 || spQWrite(iChanW, iString.data(), countCU) || sThrow_ExhaustedW();
 	}
 
-void sEWrite(const string8& iString, const ChanW_UTF& iChanW)
+void sEWrite(const ChanW_UTF& iChanW, const string8& iString)
 	{
 	const size_t countCU = iString.size();
-	countCU == 0 || spQWrite(iString.data(), countCU, iChanW) || sThrow_ExhaustedW();
+	countCU == 0 || spQWrite(iChanW, iString.data(), countCU) || sThrow_ExhaustedW();
 	}
 
 // =================================================================================================

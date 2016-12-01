@@ -133,15 +133,15 @@ Encode sEncode_Normal()
 #pragma mark ChanR_Bin_Base64Decode
 
 ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR)
-:	fDecode(Base64::sDecode_Normal())
-,	fChanR(iChanR)
+:	fChanR(iChanR)
+,	fDecode(Base64::sDecode_Normal())
 ,	fSinkCount(3)
 	{}
 
-ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(
-	const Base64::Decode& iDecode, const ChanR_Bin& iChanR)
-:	fDecode(iDecode)
-,	fChanR(iChanR)
+ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR,
+	const Base64::Decode& iDecode)
+:	fChanR(iChanR)
+,	fDecode(iDecode)
 ,	fSinkCount(3)
 	{}
 
@@ -212,15 +212,15 @@ size_t ChanR_Bin_Base64Decode::QRead(byte* oDest, size_t iCount)
 #pragma mark ChanW_Bin_Base64Encode
 
 ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW)
-:	fEncode(Base64::sEncode_Normal())
-,	fChanW(iChanW)
+:	fChanW(iChanW)
+,	fEncode(Base64::sEncode_Normal())
 ,	fSourceCount(0)
 	{}
 
-ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(
-	const Base64::Encode& iEncode, const ChanW_Bin& iChanW)
-:	fEncode(iEncode)
-,	fChanW(iChanW)
+ChanW_Bin_Base64Encode::ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW,
+	const Base64::Encode& iEncode)
+:	fChanW(iChanW)
+,	fEncode(iEncode)
 ,	fSourceCount(0)
 	{}
 

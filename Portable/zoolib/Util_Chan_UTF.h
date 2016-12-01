@@ -116,9 +116,9 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const Cha
 // =================================================================================================
 #pragma mark -
 
-void sWriteExact(float iFloat, const ChanW_UTF& iChanW);
-void sWriteExact(double iDouble, const ChanW_UTF& iChanW);
-void sWriteExact(long double iVal, const ChanW_UTF& iChanW);
+void sWriteExact(const ChanW_UTF& iChanW, float iFloat);
+void sWriteExact(const ChanW_UTF& iChanW, double iDouble);
+void sWriteExact(const ChanW_UTF& iChanW, long double iVal);
 
 } // namespace Util_Chan
 } // namespace ZooLib

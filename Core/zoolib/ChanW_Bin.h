@@ -36,30 +36,30 @@ typedef ChanW<byte> ChanW_Bin;
 #pragma mark -
 
 inline
-size_t sQWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
-	{ return sQWrite<byte>(static_cast<const byte*>(iSource), iCount, iChan); }
+size_t sQWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return sQWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
-size_t sQWriteFully(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
-	{ return sQWriteFully<byte>(static_cast<const byte*>(iSource), iCount, iChan); }
+size_t sQWriteFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return sQWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
-void sEWrite(const void* iSource, size_t iCount, const ChanW_Bin& iChan)
-	{ return sEWrite<byte>(static_cast<const byte*>(iSource), iCount, iChan); }
+void sEWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return sEWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 template <class T>
-bool sQWriteNative(const T& iT, const ChanW_Bin& iChanW)
+bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
 	{
-	if (sizeof(T) != sWriteFully(&iT, sizeof(T), iChanW))
+	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
 		return false;
 	return true;
 	}
 
 template <class T>
-bool sQWriteSwapped(const T& iT, const ChanW_Bin& iChanW)
+bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	{
 	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sQWriteFully(&buf, sizeof(T), iChanW))
+	if (sizeof(T) != sQWriteFully(iChanW, &buf, sizeof(T)))
 		return false;
 	return true;
 	}
@@ -67,36 +67,36 @@ bool sQWriteSwapped(const T& iT, const ChanW_Bin& iChanW)
 #if ZCONFIG_Endian == ZCONFIG_Endian_Big
 
 	template <class T>
-	bool sQWriteBE(const T& iT, const ChanW_Bin& iChanW)
-		{ return sQWriteNative<T>(iT, iChanW); }
+	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteNative<T>(iChanW, iT); }
 
 	template <class T>
-	bool sQWriteLE(const T& iT, const ChanW_Bin& iChanW)
-		{ return sQWriteSwapped<T>(iT, iChanW); }
+	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteSwapped<T>(iChanW, iT); }
 
 #else
 
 	template <class T>
-	bool sQWriteBE(const T& iT, const ChanW_Bin& iChanW)
-		{ return sQWriteSwapped<T>(iT, iChanW); }
+	bool sQWriteBE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteSwapped<T>(iChanW, iT); }
 
 	template <class T>
-	bool sQWriteLE(const T& iT, const ChanW_Bin& iChanW)
-		{ return sQWriteNative<T>(iT, iChanW); }
+	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
+		{ return sQWriteNative<T>(iChanW, iT); }
 
 #endif
 
 template <class T>
-void sEWriteBE(const T& iT, const ChanW_Bin& iChanW)
+void sEWriteBE(const ChanW_Bin& iChanW, const T& iT)
 	{
-	if (not sQWriteBE<T>(iT, iChanW))
+	if (not sQWriteBE<T>(iChanW, iT))
 		sThrow_ExhaustedW();
 	}
 
 template <class T>
-void sEWriteLE(const T& iT, const ChanW_Bin& iChanW)
+void sEWriteLE(const ChanW_Bin& iChanW, const T& iT)
 	{
-	if (not sQWriteLE<T>(iT, iChanW))
+	if (not sQWriteLE<T>(iChanW, iT))
 		sThrow_ExhaustedW();
 	}
 

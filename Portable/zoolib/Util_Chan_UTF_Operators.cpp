@@ -32,55 +32,55 @@ namespace Util_Chan_UTF_Operators {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string32& iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF32* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF32* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string16& iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF16* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF16* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const string8& iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const UTF8* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, UTF8* iString)
 	{
-	sEWrite(iString, w);
+	sEWrite(w, iString);
 	return w;
 	}
 
@@ -92,7 +92,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ChanR_UTF& r)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, bool iVal)
 	{
-	sEWrite(iVal ? "true" : "false", w);
+	sEWrite(w, iVal ? "true" : "false");
 	return w;
 	}
 
@@ -170,19 +170,19 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, __uint64 iVal)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, float iVal)
 	{
-	Util_Chan::sWriteExact(iVal, w);
+	Util_Chan::sWriteExact(w, iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, double iVal)
 	{
-	Util_Chan::sWriteExact(iVal, w);
+	Util_Chan::sWriteExact(w, iVal);
 	return w;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, long double iVal)
 	{
-	Util_Chan::sWriteExact(iVal, w);
+	Util_Chan::sWriteExact(w, iVal);
 	return w;
 	}
 

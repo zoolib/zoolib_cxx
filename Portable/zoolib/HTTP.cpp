@@ -177,24 +177,24 @@ void Response::Send(const ChanW_Bin& iChanW) const
 	{
 	ZAssert(fResult >= 100 && fResult <= 999);
 	if (fIsVersion11)
-		sEWrite("HTTP/1.1 ", iChanW);
+		sEWrite(iChanW, "HTTP/1.1 ");
 	else
-		sEWrite("HTTP/1.0 ", iChanW);
+		sEWrite(iChanW, "HTTP/1.0 ");
 
 	sEWritef(iChanW, "%d", fResult);
 	if (not fMessage.empty())
 		{
-		sEWrite(" ", iChanW);
-		sEWrite(fMessage, iChanW);
+		sEWrite(iChanW, " ");
+		sEWrite(iChanW, fMessage);
 		}
 
-	sEWrite("\r\n", iChanW);
+	sEWrite(iChanW, "\r\n");
 
 	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
 		{ sWrite_HeaderLine(ii->first, ii->second, iChanW); }
 
-	sEWrite("\r\n", iChanW);
+	sEWrite(iChanW, "\r\n");
 	}
 
 // =================================================================================================
@@ -1696,10 +1696,10 @@ bool sIs_qdtext(char iChar)
 
 void sWrite_HeaderLine(const string& iName, const string& iBody, const ChanW_Bin& iChanW)
 	{
-	sEWrite(iName, iChanW);
-	sEWrite(": ", iChanW);
-	sEWrite(iBody, iChanW);
-	sEWrite("\r\n", iChanW);
+	sEWrite(iChanW, iName);
+	sEWrite(iChanW, ": ");
+	sEWrite(iChanW, iBody);
+	sEWrite(iChanW, "\r\n");
 	}
 
 void sWrite_Header(const Map& iHeader, const ChanW_Bin& iChanW)
@@ -1731,8 +1731,8 @@ void sWrite_MinimalResponse(int iResult, const ChanW_Bin& iChanW)
 void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	{
 	sEWritef(iChanW, "HTTP/1.1 %d ERROR\r\n", iError);
-	sEWrite("Content-Type: text/plain\r\n", iChanW);
-	sEWrite("\r\n", iChanW);
+	sEWrite(iChanW, "Content-Type: text/plain\r\n");
+	sEWrite(iChanW, "\r\n");
 	sEWritef(iChanW, "Error %d", iError);
 	}
 

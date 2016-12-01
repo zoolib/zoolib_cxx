@@ -57,7 +57,7 @@ namespace { // anonymous
 Name spNameFromChan(const ChanR_Bin& r)
 	{
 	if (size_t theCount = sReadCount(r))
-		return sName(sReadString(theCount, r));
+		return sName(sReadString(r, theCount));
 	return Name();
 	}
 
@@ -67,13 +67,13 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 #pragma mark -
 #pragma mark String to/from stream
 
-void spToChan(const string& iString, const ChanW_Bin& w)
+void spToChan(const ChanW_Bin& w, const string& iString)
 	{
 	const size_t theLength = iString.length();
-	sEWriteCount(theLength, w);
+	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteFully(iString.data(), theLength, w))
+		if (theLength != sQWriteFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}
@@ -81,7 +81,7 @@ void spToChan(const string& iString, const ChanW_Bin& w)
 string spStringFromChan(const ChanR_Bin& r)
 	{
 	if (size_t theCount = sReadCount(r))
-		return sReadString(theCount, r);
+		return sReadString(r, theCount);
 	return string();
 	}
 
@@ -285,28 +285,28 @@ public:
 			{}
 		else if (theVal.IsNull())
 			{
-			sEWriteBE<uint8>(0xE0, fW);
+			sEWriteBE<uint8>(fW, 0xE0);
 			}
 		else if (const bool* p = theVal.PGet<bool>())
 			{
 			if (*p)
-				sEWriteBE<uint8>(0xE3, fW);
+				sEWriteBE<uint8>(fW, 0xE3);
 			else
-				sEWriteBE<uint8>(0xE2, fW);
+				sEWriteBE<uint8>(fW, 0xE2);
 			}
 		else if (ZQ<int64> theQ = sQCoerceInt(theVal))
 			{
-			sEWriteBE<uint8>(0xE4, fW);
-			sEWriteBE<int64>(*theQ, fW);
+			sEWriteBE<uint8>(fW, 0xE4);
+			sEWriteBE<int64>(fW, *theQ);
 			}
 		else if (ZQ<double> theQ = sQCoerceRat(theVal))
 			{
-			sEWriteBE<uint8>(0xE5, fW);
-			sEWriteBE<double>(*theQ, fW);
+			sEWriteBE<uint8>(fW, 0xE5);
+			sEWriteBE<double>(fW, *theQ);
 			}
 		else
 			{
-			sEWriteBE<uint8>(254, fW);
+			sEWriteBE<uint8>(fW, 254);
 			if (not fWriteFilter || not fWriteFilter->QWrite(theVal, fW))
 				{
 				if (ZLOGF(w, eErr))
@@ -319,46 +319,46 @@ public:
 	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
 		{
 		const ChanR_Bin& r = sGetChan<ChanR_Bin>(iYadStreamerR);
-		sEWriteBE<uint8>(0xE7, fW);
+		sEWriteBE<uint8>(fW, 0xE7);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
 		for (;;)
 			{
 			const size_t countRead = sQReadFully(&buffer[0], chunkSize, r);
-			sEWriteCount(countRead, fW);
+			sEWriteCount(fW, countRead);
 			if (!countRead)
 				break;
-			sEWrite(&buffer[0], countRead, fW);
+			sEWrite(fW, &buffer[0], countRead);
 			}
 		}
 
 	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
 		{
 		const string8 theString8 = sReadAllUTF8(sGetChan<ChanR_UTF>(iYadStrimmerR));
-		sEWriteBE<uint8>(0xE8, fW);
-		sEWriteCount(theString8.size(), fW);
-		sEWrite(theString8, fW);
+		sEWriteBE<uint8>(fW, 0xE8);
+		sEWriteCount(fW, theString8.size());
+		sEWrite(fW, theString8);
 		}
 
 	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{
-		sEWriteBE<uint8>(0xEA, fW);
+		sEWriteBE<uint8>(fW, 0xEA);
 		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
 			theChild->Accept(*this);
-		sEWriteBE<uint8>(0xFF, fW); // Terminator
+		sEWriteBE<uint8>(fW, 0xFF); // Terminator
 		}
 
 	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 		{
-		sEWriteBE<uint8>(0xED, fW);
+		sEWriteBE<uint8>(fW, 0xED);
 		Name theName;
 		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
 			{
-			spToChan(theName, fW);
+			spToChan(fW, theName);
 			theChild->Accept(*this);
 			}
-		sEWriteBE<uint8>(0, fW); // Empty name
-		sEWriteBE<uint8>(0xFF, fW); // Terminator
+		sEWriteBE<uint8>(fW, 0); // Empty name
+		sEWriteBE<uint8>(fW, 0xFF); // Terminator
 		}
 
 private:

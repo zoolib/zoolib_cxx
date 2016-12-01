@@ -371,7 +371,7 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 ,	fChannerU(iChannerU)
 ,	fChanR_Bin_ASCIIStrim(sGetChan(iChannerR))
 ,	fChanR_Bin_Boundary('>', fChanR_Bin_ASCIIStrim)
-,	fChanR(iDecode, fChanR_Bin_Boundary)
+,	fChanR(fChanR_Bin_Boundary, iDecode)
 	{}
 
 void YadStreamerR_Base64::Finish()
@@ -726,11 +726,11 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		Util_Chan::sWriteExact(*asFloat, w);
+		Util_Chan::sWriteExact(w, *asFloat);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		Util_Chan::sWriteExact(*asDouble, w);
+		Util_Chan::sWriteExact(w, *asDouble);
 		if (not fmod(*asDouble, 1.0))
 			{
 			// There's no fractional part, so we'll have written a sequence of digits with no
@@ -771,9 +771,10 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 
 		sCopyAll(iChanR,
 			ChanW_Bin_Base64Encode(
-				Base64::sEncode_Normal(),
-				ChanW_Bin_ASCIIStrim(
-					ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))));
+				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w)),
+				Base64::sEncode_Normal()
+				)
+			);
 
 		w << ">";
 		}
@@ -786,8 +787,9 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 			const size_t countRead = sQRead(&buffer[0], chunkSize, iChanR);
 			if (not countRead)
 				break;
-			const size_t countCopied = sQWriteFully(&buffer[0], countRead,
-				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w));
+			const size_t countCopied = sQWriteFully(
+				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w),
+				&buffer[0], countRead);
 
 			if (size_t extraSpaces = chunkSize - countCopied)
 				{

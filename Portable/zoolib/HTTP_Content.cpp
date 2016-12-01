@@ -149,11 +149,11 @@ ChanW_Bin_Chunked::~ChanW_Bin_Chunked()
 		this->pFlush();
 
 		// Terminating zero-length chunk
-		sEWrite("0\r\n", fChanW);
+		sEWrite(fChanW, "0\r\n");
 
 		// There's supposed to be an additional CRLF at the end of all the data,
 		// after any trailer entity headers.
-		sEWrite("\r\n", fChanW);
+		sEWrite(fChanW, "\r\n");
 		}
 	catch (...)
 		{}
@@ -170,10 +170,10 @@ size_t ChanW_Bin_Chunked::QWrite(const byte* iSource, size_t iCount)
 			// buffer content (if any) plus this new stuff.
 			sEWritef(fChanW, "%X\r\n", fBufferUsed + iCount);
 			// Hmmm. Do we allow an end of stream exception to propogate?
-			sEWrite(&fBuffer[0], fBufferUsed, fChanW);
+			sEWrite(fChanW, &fBuffer[0], fBufferUsed);
 			fBufferUsed = 0;
-			sEWrite(localSource, iCount, fChanW);
-			sEWrite("\r\n", fChanW);
+			sEWrite(fChanW, localSource, iCount);
+			sEWrite(fChanW, "\r\n");
 			localSource += iCount;
 			iCount = 0;
 			}
@@ -201,8 +201,8 @@ void ChanW_Bin_Chunked::pFlush()
 		{
 		fBufferUsed = 0;
 		sEWritef(fChanW, "%X\r\n", bufferUsed);
-		sEWrite(&fBuffer[0], bufferUsed, fChanW);
-		sEWrite("\r\n", fChanW);
+		sEWrite(fChanW, &fBuffer[0], bufferUsed);
+		sEWrite(fChanW, "\r\n");
 		}
 	}
 

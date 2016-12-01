@@ -177,7 +177,7 @@ protected:
 	void pFlush()
 		{
 		if (size_t used = sGetSet(fOffset, 0))
-			sEWrite(&fBuffer[0], used, fChanW);
+			sEWrite(fChanW, &fBuffer[0], used);
 		}
 
 	const ChanW<EE>& fChanW;

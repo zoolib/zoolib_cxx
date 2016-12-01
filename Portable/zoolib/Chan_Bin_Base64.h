@@ -64,15 +64,15 @@ class ChanR_Bin_Base64Decode
 	{
 public:
 	ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR);
-	ChanR_Bin_Base64Decode(const Base64::Decode& iDecode, const ChanR_Bin& iChanR);
+	ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR, const Base64::Decode& iDecode);
 	~ChanR_Bin_Base64Decode();
 
 // From ChanR_Bin
 	virtual size_t QRead(byte* oDest, size_t iCount);
 
 protected:
-	const Base64::Decode fDecode;
 	const ChanR_Bin& fChanR;
+	const Base64::Decode fDecode;
 	uint8 fSinkBuf[3];
 	size_t fSinkCount;
 	};
@@ -89,7 +89,7 @@ class ChanW_Bin_Base64Encode
 	{
 public:
 	ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW);
-	ChanW_Bin_Base64Encode(const Base64::Encode& iEncode, const ChanW_Bin& iChanW);
+	ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW, const Base64::Encode& iEncode);
 	~ChanW_Bin_Base64Encode();
 
 // From ZStreamW
@@ -97,8 +97,8 @@ public:
 	virtual void Flush();
 
 protected:
-	const Base64::Encode fEncode;
 	const ChanW_Bin& fChanW;
+	const Base64::Encode fEncode;
 	uint8 fSourceBuf[3];
 	size_t fSourceCount;
 	};

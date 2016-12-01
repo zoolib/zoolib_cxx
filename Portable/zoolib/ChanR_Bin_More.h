@@ -31,9 +31,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 
-ZQ<std::string> sQReadString(size_t iCount, const ChanR_Bin& iChanR);
+ZQ<std::string> sQReadString(const ChanR_Bin& iChanR, size_t iCount);
 
-std::string sReadString(size_t iCount, const ChanR_Bin& iChanR);
+std::string sReadString(const ChanR_Bin& iChanR, size_t iCount);
 
 ZQ<uint64> sQReadCount(const ChanR_Bin& r);
 

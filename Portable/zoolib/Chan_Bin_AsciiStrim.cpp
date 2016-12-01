@@ -108,7 +108,7 @@ size_t ChanW_Bin_ASCIIStrim::QWrite(const byte* iSource, size_t iCount)
 		UTF32 current = *localSource++;
 		if (int32(current) >= 0 && current <= 127)
 			{
-			if (not sQWrite(current, fChanW_UTF))
+			if (not sQWrite(fChanW_UTF, current))
 				break;
 			}
 		}

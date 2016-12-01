@@ -68,7 +68,10 @@ public:
 
 using ChanDisconnectRead = DeriveFrom<Aspect_DisconnectRead>;
 
-inline bool sDisconnectRead(double iTimeout, const ChanDisconnectRead& iChan)
+inline bool sDisconnectRead(const ChanDisconnectRead& iChan, double iTimeout)
+	{ return sNonConst(iChan).DisconnectRead(iTimeout); }
+
+inline bool sDisconnectRead(double iTimeout, const ChanDisconnectRead& iChan) //###
 	{ return sNonConst(iChan).DisconnectRead(iTimeout); }
 
 // =================================================================================================
@@ -105,10 +108,13 @@ using ChanPos = ChanPosition;
 inline uint64 sPos(const ChanPosition& iChan)
 	{ return sNonConst(iChan).Pos(); }
 
-inline void sPosSet(uint64 iPosition, const ChanPosition& iChan)
+inline void sPosSet(const ChanPosition& iChan, uint64 iPosition)
 	{ sNonConst(iChan).SetPos(iPosition); }
 
-inline void sSetPos(uint64 iPosition, const ChanPosition& iChan)
+inline void sPosSet(uint64 iPosition, const ChanPosition& iChan) //###
+	{ sNonConst(iChan).SetPos(iPosition); }
+
+inline void sSetPos(uint64 iPosition, const ChanPosition& iChan) //###
 	{ sNonConst(iChan).SetPos(iPosition); }
 
 // =================================================================================================
@@ -137,11 +143,19 @@ template <class EE>
 using ChanR = DeriveFrom<Aspect_Read<EE>>;
 
 template <class EE>
-inline size_t sQRead(EE* oDest, size_t iCount, const ChanR<EE>& iChan)
+inline size_t sQRead(const ChanR<EE>& iChan, EE* oDest, size_t iCount)
 	{ return sNonConst(iChan).QRead(oDest, iCount); }
 
 template <class EE>
-inline size_t sSkip(size_t iCount, const ChanR<EE>& iChan)
+inline size_t sQRead(EE* oDest, size_t iCount, const ChanR<EE>& iChan) //###
+	{ return sNonConst(iChan).QRead(oDest, iCount); }
+
+template <class EE>
+inline size_t sSkip(const ChanR<EE>& iChan, size_t iCount)
+	{ return sNonConst(iChan).Skip(iCount); }
+
+template <class EE>
+inline size_t sSkip(size_t iCount, const ChanR<EE>& iChan) //###
 	{ return sNonConst(iChan).Skip(iCount); }
 
 template <class EE>
@@ -164,7 +178,10 @@ public:
 
 using ChanReadable = DeriveFrom<Aspect_Readable>;
 
-inline bool sWaitReadable(double iTimeout, const ChanReadable& iChan)
+inline bool sWaitReadable(const ChanReadable& iChan, double iTimeout)
+	{ return sNonConst(iChan).WaitReadable(iTimeout); }
+
+inline bool sWaitReadable(double iTimeout, const ChanReadable& iChan) //###
 	{ return sNonConst(iChan).WaitReadable(iTimeout); }
 
 // =================================================================================================
@@ -194,7 +211,10 @@ public:
 
 using ChanSizeSet = DeriveFrom<Aspect_SizeSet>;
 
-inline void sSizeSet(uint64 iSize, const ChanSizeSet& iChan)
+inline void sSizeSet(const ChanSizeSet& iChan, uint64 iSize)
+	{ sNonConst(iChan).SizeSet(iSize); }
+
+inline void sSizeSet(uint64 iSize, const ChanSizeSet& iChan) //###
 	{ sNonConst(iChan).SizeSet(iSize); }
 
 // =================================================================================================
@@ -216,7 +236,11 @@ template <class EE>
 using ChanU = DeriveFrom<Aspect_Unread<EE>>;
 
 template <class EE>
-inline size_t sUnread(const EE* iSource, size_t iCount, const ChanU<EE>& iChan)
+inline size_t sUnread(const ChanU<EE>& iChan, const EE* iSource, size_t iCount)
+	{ return sNonConst(iChan).Unread(iSource, iCount); }
+
+template <class EE>
+inline size_t sUnread(const EE* iSource, size_t iCount, const ChanU<EE>& iChan) //###
 	{ return sNonConst(iChan).Unread(iSource, iCount); }
 
 template <class EE>
@@ -242,7 +266,11 @@ template <class EE>
 using ChanW = DeriveFrom<Aspect_Write<EE>>;
 
 template <class EE>
-inline size_t sQWrite(const EE* iSource, size_t iCount, const ChanW<EE>& iChan)
+inline size_t sQWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
+	{ return sNonConst(iChan).QWrite(iSource, iCount); }
+
+template <class EE>
+inline size_t sQWrite(const EE* iSource, size_t iCount, const ChanW<EE>& iChan) //###
 	{ return sNonConst(iChan).QWrite(iSource, iCount); }
 
 template <class EE>
@@ -308,8 +336,9 @@ template <typename EE> using ChanConnection = DeriveFrom
 
 #if 0
 template <class EE>
-inline size_t sUnread(const EE* iSource, size_t iCount,
-	const DeriveFrom<Aspect_Position, Aspect_Unread<EE>>& iChan)
+inline size_t sUnread(const DeriveFrom<Aspect_Position, Aspect_Unread<EE>>& iChan,
+	const EE* iSource, size_t iCount
+	)
 	{
 	const uint64 thePos = sGetPosition(iChan);
 	if (iCount >= thePos)

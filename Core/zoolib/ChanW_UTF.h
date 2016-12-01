@@ -57,13 +57,13 @@ void sWrite(const UTF8* iSource,
 
 /** \name Zero-terminated strings
 */	//@{
-bool sQWrite(const UTF32* iString, const ChanW_UTF& iChanW);
-bool sQWrite(const UTF16* iString, const ChanW_UTF& iChanW);
-bool sQWrite(const UTF8* iString, const ChanW_UTF& iChanW);
+bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iString);
+bool sQWrite(const ChanW_UTF& iChanW, const UTF16* iString);
+bool sQWrite(const ChanW_UTF& iChanW, const UTF8* iString);
 
-void sEWrite(const UTF32* iString, const ChanW_UTF& iChanW);
-void sEWrite(const UTF16* iString, const ChanW_UTF& iChanW);
-void sEWrite(const UTF8* iString, const ChanW_UTF& iChanW);
+void sEWrite(const ChanW_UTF& iChanW, const UTF32* iString);
+void sEWrite(const ChanW_UTF& iChanW, const UTF16* iString);
+void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString);
 //@}
 
 // =================================================================================================
@@ -71,13 +71,13 @@ void sEWrite(const UTF8* iString, const ChanW_UTF& iChanW);
 
 /** \name Standard library strings
 */	//@{
-bool sQWrite(const string32& iString, const ChanW_UTF& iChanW);
-bool sQWrite(const string16& iString, const ChanW_UTF& iChanW);
-bool sQWrite(const string8& iString, const ChanW_UTF& iChanW);
+bool sQWrite(const ChanW_UTF& iChanW, const string32& iString);
+bool sQWrite(const ChanW_UTF& iChanW, const string16& iString);
+bool sQWrite(const ChanW_UTF& iChanW, const string8& iString);
 
-void sEWrite(const string32& iString, const ChanW_UTF& iChanW);
-void sEWrite(const string16& iString, const ChanW_UTF& iChanW);
-void sEWrite(const string8& iString, const ChanW_UTF& iChanW);
+void sEWrite(const ChanW_UTF& iChanW, const string32& iString);
+void sEWrite(const ChanW_UTF& iChanW, const string16& iString);
+void sEWrite(const ChanW_UTF& iChanW, const string8& iString);
 //@}
 
 // =================================================================================================
