@@ -134,7 +134,7 @@ size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
 			}
 		else
 			{
-			const size_t countRead = sQReadFully(localDest, min(iCount, fChunkSize), r);
+			const size_t countRead = sQReadFully(r, localDest, min(iCount, fChunkSize));
 			localDest += countRead;
 			iCount -= countRead;
 			fChunkSize -= countRead;
@@ -324,7 +324,7 @@ public:
 		vector<uint8> buffer(chunkSize);
 		for (;;)
 			{
-			const size_t countRead = sQReadFully(&buffer[0], chunkSize, r);
+			const size_t countRead = sQReadFully(r, &buffer[0], chunkSize);
 			sEWriteCount(fW, countRead);
 			if (!countRead)
 				break;

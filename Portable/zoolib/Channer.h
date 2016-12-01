@@ -149,12 +149,16 @@ template <class EE> using ChannerRWClose = ChannerConnection<EE>;
 #pragma mark -
 #pragma mark sChanner_Chan.
 
-// Get's the channer from a chan.
+// Get the channer from a chan
 
 template <class Chan_p>
 ZRef<Channer<Chan_p>> sChanner_Chan(const Chan_p& iChan)
+	{ return dynamic_cast<Channer<Chan_p>*>(sNonConst(&iChan)); }
+
+template <class Chan_p>
+ZRef<Channer<Chan_p>> sAChanner_Chan(const Chan_p& iChan)
 	{
-	ZRef<Channer<Chan_p>> result = dynamic_cast<Channer<Chan_p>*>(sNonConst(&iChan));
+	ZRef<Channer<Chan_p>> result = sChanner_Chan<Chan_p>(iChan);
 	ZAssert(result);
 	return result;
 	}
@@ -166,7 +170,7 @@ ZRef<Channer<Chan_p>> sChanner_Chan(const Chan_p& iChan)
 template <class Chan_p>
 class Channer_T
 :	public Chan_p
-,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::Types>::Result>
+,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
 	{
 public:
 	Channer_T() : Chan_p () {}
@@ -203,7 +207,7 @@ ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1)
 template <class Chan_p>
 class Channer_Channer_T
 :	public Chan_p
-,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::Types>::Result>
+,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
 	{
 public:
 	template <class ChannerOther_p>

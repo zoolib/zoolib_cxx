@@ -155,6 +155,7 @@ public:
 	virtual bool WaitReadable(double iTimeout)
 		{ return false; }
 
+// Placeholder -- don't yet know what the Sig should be for the Callable.
 //	virtual bool CallWhenReadable(const ZRef<Callable>& iCallable)
 //		{ return false; }
 	};

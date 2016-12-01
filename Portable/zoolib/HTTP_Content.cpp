@@ -50,7 +50,7 @@ static uint64 spReadChunkSize(const ChanR_Bin& iChanR)
 	for (;;)
 		{
 		byte theChar;
-		if (not sQRead(theChar, iChanR))
+		if (not sQRead(iChanR, theChar))
 			return 0;
 
 		int theXDigit = 0;

@@ -76,7 +76,7 @@ size_t ChanR_Bin_Header::QRead(byte* oDest, size_t iCount)
 				break;
 			}
 
-		if (not sQRead(fX, fChanR))
+		if (not sQRead(fChanR, fX))
 			break;
 
 		if (fX == CR)
@@ -146,7 +146,7 @@ size_t ChanR_Bin_Line::QRead(byte* oDest, size_t iCount)
 			continue;
 			}
 
-		if (not sQRead(fX, fChanR))
+		if (not sQRead(fChanR, fX))
 			break;
 
 		if (fState == eNormal)

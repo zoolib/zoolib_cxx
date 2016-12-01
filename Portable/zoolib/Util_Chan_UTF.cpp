@@ -393,7 +393,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 	if (sTryRead_CP('0', iChanR, iChanU))
 		{
 		UTF32 theCP;
-		if (not sQRead(theCP, iChanR))
+		if (not sQRead(iChanR, theCP))
 			{
 			oInt64 = 0;
 			return true;

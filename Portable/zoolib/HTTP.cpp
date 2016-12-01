@@ -63,7 +63,7 @@ static uint32 spHexCharToUInt(char iChar)
 static bool spQReadDigit(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int& oDigit)
 	{
 	byte readChar;
-	if (not sQRead(readChar, iChanR))
+	if (not sQRead(iChanR, readChar))
 		return false;
 
 	if (readChar < '0' || readChar > '9')
@@ -297,7 +297,7 @@ bool sQReadResponse(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 		if (readChar == '\n')
 			break;
@@ -549,7 +549,7 @@ bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
 		string name;
 		for (;;)
 			{
-			if (not sQRead(readChar, iChanR))
+			if (not sQRead(iChanR, readChar))
 				break;
 
 			if (readChar == '=')
@@ -566,7 +566,7 @@ bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
 		string value;
 		for (;;)
 			{
-			if (not sQRead(readChar, iChanR))
+			if (not sQRead(iChanR, readChar))
 				break;
 
 			if (readChar == '&')
@@ -589,7 +589,7 @@ bool sDecodeComponent(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& 
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 		gotAny = true;
 		if (readChar == '/')
@@ -1067,7 +1067,7 @@ bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 
 		if (sIs_LWS(readChar))
@@ -1216,7 +1216,7 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 		oLanguageTag->resize(0);
 
 	byte readChar;
-	if (not sQRead(readChar, iChanR))
+	if (not sQRead(iChanR, readChar))
 		return false;
 
 	if (not sIs_ALPHA(readChar))
@@ -1230,7 +1230,7 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 
 	for (;;)
 		{
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			return true;
 
 		if (not sIs_ALPHA(readChar) && readChar != '-')
@@ -1386,7 +1386,7 @@ bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 
 		if (not sIs_token(readChar))
@@ -1435,7 +1435,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 
 		if (not sIs_token(readChar))
@@ -1493,7 +1493,7 @@ bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 
 		if (not sIs_qdtext(readChar))
@@ -1517,7 +1517,7 @@ bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 bool sTryReadChar(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, char iChar)
 	{
 	byte readChar;
-	if (not sQRead(readChar, iChanR))
+	if (not sQRead(iChanR, readChar))
 		return false;
 
 	if (readChar != iChar)
@@ -1534,7 +1534,7 @@ bool sQReadChars(const ChanR_Bin& iChanR, const char* iString)
 	while (*iString)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			return false;
 		if (*iString != readChar)
 			return false;
@@ -1548,7 +1548,7 @@ void sSkipLWS(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(readChar, iChanR))
+		if (not sQRead(iChanR, readChar))
 			break;
 
 		if (not sIs_LWS(readChar))
@@ -1562,7 +1562,7 @@ void sSkipLWS(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
 bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& ioString)
 	{
 	byte readChar;
-	if (not sQRead(readChar, iChanR))
+	if (not sQRead(iChanR, readChar))
 		return false;
 
 	if (not isxdigit(readChar))
@@ -1573,7 +1573,7 @@ bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string
 	else
 		{
 		byte readChar2;
-		if (not sQRead(readChar2, iChanR))
+		if (not sQRead(iChanR, readChar2))
 			return false;
 
 		if (not isxdigit(readChar2))

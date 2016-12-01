@@ -50,7 +50,7 @@ class DeriveFrom<P0>
 :	public virtual P0
 	{
 public:
-	typedef TypeList<P0> Types;
+	typedef TypeList<P0> AsTypeList_t;
 	};
 
 template <class P0, class P1>
@@ -59,7 +59,7 @@ class DeriveFrom<P0, P1>
 ,	public virtual DeriveFrom<P0    >
 	{
 public:
-	typedef TypeList<P0, P1> Types;
+	typedef TypeList<P0, P1> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2>
@@ -69,7 +69,7 @@ class DeriveFrom<P0, P1, P2>
 ,	public virtual DeriveFrom<P0, P1    >
 	{
 public:
-	typedef TypeList<P0, P1, P2> Types;
+	typedef TypeList<P0, P1, P2> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2, class P3>
@@ -80,7 +80,7 @@ class DeriveFrom<P0, P1, P2, P3>
 ,	public virtual DeriveFrom<P0, P1, P2    >
 	{
 public:
-	typedef TypeList<P0, P1, P2, P3> Types;
+	typedef TypeList<P0, P1, P2, P3> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2, class P3, class P4>
@@ -92,7 +92,7 @@ class DeriveFrom<P0, P1, P2, P3, P4>
 ,	public virtual DeriveFrom<P0, P1, P2, P3    >
 	{
 public:
-	typedef TypeList<P0, P1, P2, P3, P4> Types;
+	typedef TypeList<P0, P1, P2, P3, P4> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5>
@@ -105,7 +105,7 @@ class DeriveFrom<P0, P1, P2, P3, P4, P5>
 ,	public virtual DeriveFrom<P0, P1, P2, P3, P4    >
 	{
 public:
-	typedef TypeList<P0, P1, P2, P3, P4, P5> Types;
+	typedef TypeList<P0, P1, P2, P3, P4, P5> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
@@ -119,7 +119,7 @@ class DeriveFrom<P0, P1, P2, P3, P4, P5, P6>
 ,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5    >
 	{
 public:
-	typedef TypeList<P0, P1, P2, P3, P4, P5, P6> Types;
+	typedef TypeList<P0, P1, P2, P3, P4, P5, P6> AsTypeList_t;
 	};
 
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
@@ -134,7 +134,7 @@ class DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>
 ,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6    >
 	{
 public:
-	typedef TypeList<P0, P1, P2, P3, P4, P5, P6, P7> Types;
+	typedef TypeList<P0, P1, P2, P3, P4, P5, P6, P7> AsTypeList_t;
 	};
 
 // =================================================================================================
@@ -148,7 +148,7 @@ struct AsDeriveFrom
 		<
 		typename TL::T0, typename TL::T1, typename TL::T2, typename TL::T3,
 		typename TL::T4, typename TL::T5, typename TL::T6, typename TL::T7
-		> Result;
+		> Result_t;
 	};
 
 } // namespace ZooLib

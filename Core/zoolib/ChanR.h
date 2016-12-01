@@ -51,7 +51,7 @@ ZQ<EE> sQRead(const ChanR<EE>& iChanR)
 
 // This is still used in HTTP and Util_Chan_UTF
 template <class EE>
-bool sQRead(EE& oElmt, const ChanR<EE>& iChanR)
+bool sQRead(const ChanR<EE>& iChanR, EE& oElmt)
 	{ return 1 == sQRead(iChanR, &oElmt, 1); }
 
 template <class EE>
@@ -64,7 +64,7 @@ EE sERead(const ChanR<EE>& iChanR)
 	}
 
 template <class EE>
-size_t sQReadFully(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
+size_t sQReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	{
 	EE* localDest = oDest;
 	while (iCount)
@@ -83,14 +83,14 @@ size_t sQReadFully(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
 	}
 
 template <class EE>
-uint64 sSkipFully(uint64 iCount, const ChanR<EE>& iChanR)
+uint64 sSkipFully(const ChanR<EE>& iChanR, uint64 iCount)
 	{
 	uint64 countRemaining = iCount;
 
 	// We need the 64->32 bit clamping stuff here
 	while (countRemaining)
 		{
-		if (const size_t countSkipped = sSkip(countRemaining, iChanR))
+		if (const size_t countSkipped = sSkip(iChanR, countRemaining))
 			countRemaining -= countSkipped;
 		else
 			break;
@@ -109,9 +109,9 @@ uint64 sSkipAll(const ChanR<EE>& iChanR)
 	}
 
 template <class EE>
-void sERead(EE* oDest, size_t iCount, const ChanR<EE>& iChanR)
+void sERead(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	{
-	if (iCount != sQReadFully<EE>(oDest, iCount, iChanR))
+	if (iCount != sQReadFully<EE>(iChanR, oDest, iCount))
 		sThrow_ExhaustedR();
 	}
 
