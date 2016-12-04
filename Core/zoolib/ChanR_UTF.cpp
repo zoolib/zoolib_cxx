@@ -31,9 +31,9 @@ using std::min;
 // =================================================================================================
 #pragma mark -
 
-void sRead(UTF32* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR)
+void sRead(const ChanR_UTF& iChanR,
+	UTF32* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t countRead = sQRead(iChanR, oDest, std::min(iCountCU, iCountCP));
 
@@ -43,9 +43,9 @@ void sRead(UTF32* oDest,
 		*oCountCP = countRead;
 	}
 
-void sRead(UTF16* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR)
+void sRead(const ChanR_UTF& iChanR,
+	UTF16* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	UTF32 utf32Buffer[kBufSize];
 	UTF16* localDest = oDest;
@@ -82,9 +82,9 @@ void sRead(UTF16* oDest,
 		*oCountCU = localDest - oDest;
 	}
 
-void sRead(UTF8* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR)
+void sRead(const ChanR_UTF& iChanR,
+	UTF8* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	UTF32 utf32Buffer[kBufSize];
 	UTF8* localDest = oDest;
@@ -124,7 +124,7 @@ void sRead(UTF8* oDest,
 // =================================================================================================
 #pragma mark -
 
-ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string32> sQReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
 	string32 result;
 	size_t destGenerated = 0;
@@ -144,7 +144,7 @@ ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
 	return result;
 	}
 
-ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string16> sQReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
 	string16 result;
 	size_t destGenerated = 0;
@@ -152,8 +152,8 @@ ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 		{
 		result.resize(destGenerated + iCountCP + 1);
 		size_t cuRead, cpRead;
-		sRead(sNonConst(result.data()) + destGenerated,
-			iCountCP + 1, &cuRead, iCountCP, &cpRead, iChanR);
+		sRead(iChanR, sNonConst(result.data()) + destGenerated,
+			iCountCP + 1, &cuRead, iCountCP, &cpRead);
 
 		if (cuRead == 0)
 			return null;
@@ -164,7 +164,7 @@ ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
 	return result;
 	}
 
-ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
+ZQ<string8> sQReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
 	string8 result;
 	size_t destGenerated = 0;
@@ -172,8 +172,8 @@ ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 		{
 		result.resize(destGenerated + iCountCP + 5);
 		size_t cuRead, cpRead;
-		sRead(sNonConst(result.data()) + destGenerated,
-			iCountCP + 5, &cuRead, iCountCP, &cpRead, iChanR);
+		sRead(iChanR, sNonConst(result.data()) + destGenerated,
+			iCountCP + 5, &cuRead, iCountCP, &cpRead);
 
 		if (cuRead == 0)
 			return null;
@@ -186,25 +186,25 @@ ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
 
 // -----
 
-string32 sEReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR)
+string32 sEReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string32> theQ = sQReadUTF32(iCountCP, iChanR);
+	const ZQ<string32> theQ = sQReadUTF32(iChanR, iCountCP);
 	if (not theQ)
 		sThrow_ExhaustedR();
 	return *theQ;
 	}
 
-string16 sEReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR)
+string16 sEReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string16> theQ = sQReadUTF16(iCountCP, iChanR);
+	const ZQ<string16> theQ = sQReadUTF16(iChanR, iCountCP);
 	if (not theQ)
 		sThrow_ExhaustedR();
 	return *theQ;
 	}
 
-string8 sEReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR)
+string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string8> theQ = sQReadUTF8(iCountCP, iChanR);
+	const ZQ<string8> theQ = sQReadUTF8(iChanR, iCountCP);
 	if (not theQ)
 		sThrow_ExhaustedR();
 	return *theQ;
@@ -220,8 +220,8 @@ string8 sReadAllUTF8(const ChanR_UTF& iChanR)
 		{
 		result.resize(destGenerated + 1024);
 		size_t cuRead;
-		sRead(sNonConst(result.data()) + destGenerated,
-			1024, &cuRead, 1024, nullptr, iChanR);
+		sRead(iChanR, sNonConst(result.data()) + destGenerated,
+			1024, &cuRead, 1024, nullptr);
 
 		if (cuRead == 0)
 			break;

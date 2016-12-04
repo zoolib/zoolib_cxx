@@ -44,7 +44,7 @@ size_t ChanR_Bin_ASCIIStrim::QRead(byte* oDest, size_t iCount)
 			{
 			size_t countCURead;
 			size_t countCPRead;
-			sRead(buffer, 6, &countCURead, iCount, &countCPRead, fChanR_UTF);
+			sRead(fChanR_UTF, buffer, 6, &countCURead, iCount, &countCPRead);
 			if (countCURead == 0)
 				break;
 
@@ -65,7 +65,7 @@ size_t ChanR_Bin_ASCIIStrim::QRead(byte* oDest, size_t iCount)
 			{
 			// Top up our buffer with UTF8 code points.
 			size_t countRead;
-			sRead(localDest, iCount, &countRead, iCount, nullptr, fChanR_UTF);
+			sRead(fChanR_UTF, localDest, iCount, &countRead, iCount, nullptr);
 			if (countRead == 0)
 				break;
 

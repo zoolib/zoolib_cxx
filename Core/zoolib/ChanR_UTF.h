@@ -36,28 +36,28 @@ typedef ChanR<UTF32> ChanR_UTF;
 // =================================================================================================
 #pragma mark -
 
-void sRead(UTF32* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR);
+void sRead(const ChanR_UTF& iChanR,
+	UTF32* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sRead(UTF16* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR);
+void sRead(const ChanR_UTF& iChanR,
+	UTF16* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sRead(UTF8* oDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanR_UTF& iChanR);
+void sRead(const ChanR_UTF& iChanR,
+	UTF8* oDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 // =================================================================================================
 #pragma mark -
 
-ZQ<string32> sQReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
-ZQ<string16> sQReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
-ZQ<string8> sQReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+ZQ<string32> sQReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP);
+ZQ<string16> sQReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP);
+ZQ<string8> sQReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP);
 
-string32 sEReadUTF32(size_t iCountCP, const ChanR_UTF& iChanR);
-string16 sEReadUTF16(size_t iCountCP, const ChanR_UTF& iChanR);
-string8 sEReadUTF8(size_t iCountCP, const ChanR_UTF& iChanR);
+string32 sEReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP);
+string16 sEReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP);
+string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP);
 
 string8 sReadAllUTF8(const ChanR_UTF& iChanR);
 
