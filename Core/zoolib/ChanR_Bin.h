@@ -39,15 +39,15 @@ typedef ChanR<byte> ChanR_Bin;
 // Overloads of sRead that take void*, so a binary chan can read into any pointer.
 
 inline
-size_t sQRead(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+size_t sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sQRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
-size_t sQReadFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+size_t sQReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sQReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
-void sERead(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sERead(iChan, static_cast<byte*>(oDest), iCount); }
 
 // =================================================================================================
@@ -66,7 +66,7 @@ template <class T>
 ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof(T) != sQReadFully(iChanR, &buf, sizeof(T)))
+	if (sizeof(T) != sQReadMemFully(iChanR, &buf, sizeof(T)))
 		return null;
 	return sByteSwapped(buf);
 	}

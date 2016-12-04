@@ -69,7 +69,7 @@ static void spToChan(const ChanW_Bin& w, const string8& iString)
 	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteFully(w, iString.data(), theLength))
+		if (theLength != sQWriteMemFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}
@@ -118,7 +118,7 @@ public:
 				case 101:
 					{
 					Data_Any theData(sReadCount(r));
-					sERead(r, theData.GetPtrMutable(), theData.GetSize());
+					sEReadMem(r, theData.GetPtrMutable(), theData.GetSize());
 					return Daton(theData);
 					}
 				case 102:
@@ -179,7 +179,7 @@ public:
 			const Data_Any& theData = theDatonP->GetData();
 
 			sEWriteCount(w, theData.GetSize());
-			sEWrite(w, theData.GetPtr(), theData.GetSize());
+			sEWriteMem(w, theData.GetPtr(), theData.GetSize());
 			return true;
 			}
 		else if (iAny.PGet<AbsentOptional_t>())

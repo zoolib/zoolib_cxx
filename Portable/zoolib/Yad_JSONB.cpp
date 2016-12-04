@@ -73,7 +73,7 @@ void spToChan(const ChanW_Bin& w, const string& iString)
 	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteFully(w, iString.data(), theLength))
+		if (theLength != sQWriteMemFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}

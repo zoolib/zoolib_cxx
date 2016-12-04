@@ -784,10 +784,10 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 		std::vector<char> buffer(chunkSize, 0);
 		for (;;)
 			{
-			const size_t countRead = sQRead(iChanR, &buffer[0], chunkSize);
+			const size_t countRead = sQReadMem(iChanR, &buffer[0], chunkSize);
 			if (not countRead)
 				break;
-			const size_t countCopied = sQWriteFully(
+			const size_t countCopied = sQWriteMemFully(
 				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w),
 				&buffer[0], countRead);
 

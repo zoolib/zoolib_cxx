@@ -34,7 +34,7 @@ bool sQWrite(const ChanW_Bin& iChanW, const char* iString)
 		{
 		if (const size_t length = strlen(iString))
 			{
-			if (length != sQWrite(iChanW, iString, length))
+			if (length != sQWriteMem(iChanW, iString, length))
 				return false;
 			}
 		}
@@ -48,7 +48,7 @@ bool sQWrite(const ChanW_Bin& iChanW, const std::string& iString)
 	{
 	if (const size_t length = iString.size())
 		{
-		if (length != sQWriteFully(iChanW, iString.data(), length))
+		if (length != sQWriteMemFully(iChanW, iString.data(), length))
 			return false;
 		}
 	return true;
@@ -62,7 +62,7 @@ bool spQWritev(const ChanW_Bin& iChanW, const UTF8* iString, va_list iArgs)
 	{
 	const std::string theString = sStringv(iString, iArgs);
 	if (theString.size())
-		return theString.size() == sQWriteFully(iChanW, theString.data(), theString.size());
+		return theString.size() == sQWriteMemFully(iChanW, theString.data(), theString.size());
 	return true;
 	}
 

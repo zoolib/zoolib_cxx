@@ -36,15 +36,15 @@ typedef ChanW<byte> ChanW_Bin;
 #pragma mark -
 
 inline
-size_t sQWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+size_t sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sQWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
-size_t sQWriteFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+size_t sQWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sQWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
-void sEWrite(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sEWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 template <class T>
@@ -59,7 +59,7 @@ template <class T>
 bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	{
 	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sQWriteFully(iChanW, &buf, sizeof(T)))
+	if (sizeof(T) != sQWriteMemFully(iChanW, &buf, sizeof(T)))
 		return false;
 	return true;
 	}
