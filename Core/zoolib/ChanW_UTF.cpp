@@ -35,21 +35,21 @@ static const size_t kBufSize = sStackBufferSize;
 static bool spQWrite(const ChanW_UTF& iChanW, const UTF32* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
+	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
 	return countWritten == iCountCU;
 	}
 
 static bool spQWrite(const ChanW_UTF& iChanW, const UTF16* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
+	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
 	return countWritten == iCountCU;
 	}
 
 static bool spQWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iSource, iCountCU, &countWritten, iCountCU, nullptr, iChanW);
+	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
 	return countWritten == iCountCU;
 	}
 
@@ -57,9 +57,9 @@ static bool spQWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCount
 #pragma mark -
 #pragma mark String buffers, limiting and reporting both CU and CP
 
-void sWrite(const UTF32* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW)
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF32* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t countWritten = sQWrite(iChanW, iSource, iCountCU);
 	if (oCountCU)
@@ -68,9 +68,9 @@ void sWrite(const UTF32* iSource,
 		*oCountCP = countWritten;
 	}
 
-void sWrite(const UTF16* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW)
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF16* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const UTF16* localSource = iSource;
 	size_t localCountCP = iCountCP;
@@ -112,9 +112,9 @@ void sWrite(const UTF16* iSource,
 		*oCountCP = iCountCP - localCountCP;
 	}
 
-void sWrite(const UTF8* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW)
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF8* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const UTF8* localSource = iSource;
 	size_t localCountCP = iCountCP;
@@ -273,7 +273,7 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	if (theCount)
 		{
 		size_t countWritten;
-		sWrite(theString.data(), theCount, &countWritten, theCount, nullptr, iChanW);
+		sWrite(iChanW, theString.data(), theCount, &countWritten, theCount, nullptr);
 		if (oCount_CUWritten)
 			*oCount_CUWritten = countWritten;
 		}

@@ -39,17 +39,17 @@ typedef ChanW<UTF32> ChanW_UTF;
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{
-void sWrite(const UTF32* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW);
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF32* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sWrite(const UTF16* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW);
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF16* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sWrite(const UTF8* iSource,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP,
-	const ChanW_UTF& iChanW);
+void sWrite(const ChanW_UTF& iChanW,
+	const UTF8* iSource,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 //@}
 
 // =================================================================================================
