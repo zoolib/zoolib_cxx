@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 #include "zoolib/Apple/Delegate.h"
 
-#include "ZooLib/Dataspace/Melange.h" // For ZooLib::Dataspace::Callable_DatonSetUpdate
-
+#include "ZooLib/Dataspace/Melange.h" // For ZooLib::Dataspace::Callable_DatonUpdate
 #include "ZooLib/Dataspace/RelsWatcher.h"
 
 //###include "zoolib/ZTextCollator.h"
@@ -89,7 +88,7 @@ public:
 class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 	{
 public:
-	typedef ZooLib::Dataspace::Callable_DatonSetUpdate Callable_DatonSetUpdate;
+	typedef ZooLib::Dataspace::Callable_DatonUpdate Callable_DatonUpdate;
 	typedef Callable<ZRef<UITableViewCell>(UITableView*,Map_Any)> Callable_GetCellForMap;
 	typedef Callable<bool(Map_Any)> Callable_CanSelectForMap;
 	typedef Callable<void()> Callable_NeedsUpdate;
@@ -147,7 +146,7 @@ public:
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
 		const ZQ<ColName>& iDatonColNameQ,
-		const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate);
+		const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate);
 
 	ZQ<Map_Any> QGet(size_t iRowIndex);
 
@@ -171,7 +170,7 @@ public:
 	RelHead fIdentity;
 	RelHead fSignificant;
 	ZQ<ColName> fDatonColNameQ;
-	ZRef<Callable_DatonSetUpdate> fCallable_DatonSetUpdate;
+	ZRef<Callable_DatonUpdate> fCallable_DatonUpdate;
 
 	bool fNeedsUpdate;
 	std::vector<Entry> fRows;

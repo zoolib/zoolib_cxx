@@ -58,7 +58,6 @@ using namespace Operators_Any_JSON;
 using namespace Util_STL;
 
 using QueryEngine::Result;
-using DatonSet::Daton;
 
 // =================================================================================================
 #pragma mark -

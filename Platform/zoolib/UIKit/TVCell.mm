@@ -1,4 +1,5 @@
 #include "zoolib/UIKit/TVCell.h"
+#include <UIKit/UILabel.h>
 
 // =================================================================================================
 #pragma mark -

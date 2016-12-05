@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Searcher_Datons_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Dataspace/Daton.h"
 #include "zooLib/Dataspace/Searcher.h"
-
-#include "zoolib/DatonSet/Daton.h"
 
 #include "zoolib/QueryEngine/Walker.h"
 
@@ -43,8 +42,6 @@ class Searcher_Datons
 :	public Searcher
 	{
 public:
-	typedef DatonSet::Daton Daton;
-
 	enum { kDebug = 1 };
 
 	Searcher_Datons(const std::vector<IndexSpec>& iIndexSpecs);

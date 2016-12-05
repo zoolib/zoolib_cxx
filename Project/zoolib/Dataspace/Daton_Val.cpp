@@ -50,10 +50,10 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 #pragma mark -
 #pragma mark Daton/Val conversion.
 
-Val_Any sAsVal(const DatonSet::Daton& iDaton)
+Val_Any sAsVal(const Daton& iDaton)
 	{ return spQAsVal(iDaton.GetData()).Get(); }
 
-DatonSet::Daton sAsDaton(const Val_Any& iVal)
+Daton sAsDaton(const Val_Any& iVal)
 	{
 	Data_Any theData;
 	Util_Any_JSON::sWrite(iVal, ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_Any>(&theData)));

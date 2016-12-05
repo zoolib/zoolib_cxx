@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Starter.h"
 
 #include "zooLib/Dataspace/RelsWatcher.h"
-#include "zoolib/DatonSet/DatonSet.h"
+#include "zoolib/Dataspace/Daton.h"
 
 // =================================================================================================
 #pragma mark -
@@ -35,11 +35,10 @@ namespace ZooLib {
 namespace Dataspace {
 
 using RelsWatcher::Callable_Register;
-using DatonSet::Callable_DatonSetUpdate;
 
 typedef Multi3<
 	ZRef<Callable_Register>,
-	ZRef<Callable_DatonSetUpdate>,
+	ZRef<Callable_DatonUpdate>,
 	ZRef<Starter>
 	> Melange_t;
 

@@ -23,9 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Dataspace/Daton_Val.h"
-#include "zoolib/Dataspace/Melange.h" // For Callable_DatonSetUpdate et al
-#include "zooLib/Dataspace/RelsWatcher_Relater.h"
-#include "zoolib/Dataspace/Searcher_DatonSet.h"
+#include "zoolib/Dataspace/Melange.h" // For Callable_DatonUpdate et al
+#include "zooLib/Dataspace/RelsWatcher.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -42,7 +41,7 @@ public:
 	typedef Callable_Changed::Signature Signature;
 
 	Sieve_Singleton(ZRef<Callable_Register> iCallable_Register,
-		const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate,
+		const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate,
 		const ZRef<Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel,
 		const ColName& iDatonColName,
@@ -71,7 +70,7 @@ private:
 		bool iIsFirst);
 
 	ZRef<RelsWatcher::Callable_Register> const fCallable_Register;
-	ZRef<Callable_DatonSetUpdate> const fCallable_DatonSetUpdate;
+	ZRef<Callable_DatonUpdate> const fCallable_DatonUpdate;
 	ZRef<Callable_Changed> const fCallable_Changed;
 	ZRef<Expr_Rel> const fRel;
 	ColName const fDatonColName;
@@ -82,7 +81,7 @@ private:
 
 	ZQ<Map_Any> fMapQ;
 	Map_Any fMapInDaton;
-	DatonSet::Daton fDaton;
+	Daton fDaton;
 	};
 
 } // namespace Dataspace

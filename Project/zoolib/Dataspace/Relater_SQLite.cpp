@@ -21,12 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 
+#include "zoolib/Chan_UTF_string.h"
+#include "zoolib/Log.h"
+
 #include "zooLib/Dataspace/Relater_SQLite.h"
 
 #include "zoolib/RelationalAlgebra/AsSQL.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
-#include "zoolib/ZLog.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
@@ -39,7 +41,7 @@ using std::set;
 using std::vector;
 
 using namespace SQLite;
-using namespace ZUtil_STL;
+using namespace Util_STL;
 
 namespace RA = RelationalAlgebra;
 
@@ -134,7 +136,7 @@ void Relater_SQLite::ModifyRegistrations(
 
 		if (iterPQueryPair.second)
 			{
-			RA::sWriteAsSQL(fMap_Tables, theRel, ZStrimW_String8(&thePQuery->fSQL));
+			RA::sWriteAsSQL(fMap_Tables, theRel, ChanW_UTF_string8(&thePQuery->fSQL));
 			thePQuery->fRelHead = sGetRelHead(theRel);
 			}
 

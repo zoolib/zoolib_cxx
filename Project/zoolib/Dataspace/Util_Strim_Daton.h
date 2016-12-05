@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__
-#define __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__ 1
+#ifndef __ZooLib_Dataspace_Util_Strim_Daton_h__
+#define __ZooLib_Dataspace_Util_Strim_Daton_h__
 #include "zconfig.h"
 
 #include "zoolib/ChanW_UTF.h"
-
-#include "zoolib/DatonSet/IntervalTreeClock.h"
+#include "zoolib/Dataspace/Daton.h"
 
 namespace ZooLib {
-namespace IntervalTreeClock {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark IntervalTreeClock
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Dataspace::Daton& iDaton);
 
-} // namespace IntervalTreeClock
 } // namespace ZooLib
 
-#endif // __ZooLib_DatonSet_Util_Strim_IntervalTreeClock_h__
+#endif // __ZooLib_Dataspace_Util_Strim_Daton_h__

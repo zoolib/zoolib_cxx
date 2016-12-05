@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Val_Any.h"
 
-#include "zoolib/DatonSet/DatonSet.h"
+#include "zoolib/Dataspace/Daton.h"
 
 // =================================================================================================
 #pragma mark -
@@ -32,8 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
-Val_Any sAsVal(const DatonSet::Daton& iDaton);
-DatonSet::Daton sAsDaton(const Val_Any& iVal);
+Val_Any sAsVal(const Daton& iDaton);
+Daton sAsDaton(const Val_Any& iVal);
 
 } // namespace Dataspace
 } // namespace ZooLib

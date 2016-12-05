@@ -86,12 +86,10 @@ private:
 
 class Melange_Client
 :	public Callable_Register
-,	public Callable_DatonSetUpdate
+,	public Callable_DatonUpdate
 ,	public Starter_EventLoopBase
 	{
 public:
-	typedef DatonSet::Daton Daton;
-
 	typedef Callable<void(bool)> Callable_Status;
 
 	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
@@ -102,7 +100,7 @@ public:
 		const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZRef<Expr_Rel>& iRel);
 
-// From Callable via Callable_DatonSetUpdate
+// From Callable via Callable_DatonUpdate
 	virtual ZQ<void> QCall(
 		const Daton* iAsserted, size_t iAssertedCount,
 		const Daton* iRetracted, size_t iRetractedCount);
@@ -144,8 +142,8 @@ private:
 	int64 fNextRefcon;
 	std::set<ZRef<Registration> > fPending_Registrations;
 	std::set<int64> fPending_Unregistrations;
-	std::set<DatonSet::Daton> fPending_Asserts;
-	std::set<DatonSet::Daton> fPending_Retracts;
+	std::set<Daton> fPending_Asserts;
+	std::set<Daton> fPending_Retracts;
 
 	std::map<int64,Registration*> fMap_Refcon2Reg;
 	std::map<Registration*,int64> fMap_Reg2Refcon;

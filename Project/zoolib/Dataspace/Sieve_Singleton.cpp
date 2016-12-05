@@ -29,14 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
-#include "zoolib/dataspace/Searcher_DatonSet.h"
 #include "zoolib/dataspace/Sieve_Singleton.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
 using namespace Util_STL;
-using DatonSet::Daton;
 using namespace ZooLib::RelationalAlgebra;
 
 // =================================================================================================
@@ -44,13 +42,13 @@ using namespace ZooLib::RelationalAlgebra;
 #pragma mark Sieve_Singleton
 
 Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_Register,
-	const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate,
+	const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate,
 	const ZRef<Callable_Changed>& iCallable_Changed,
 	const ZRef<Expr_Rel>& iRel,
 	const ColName& iDatonColName,
 	const RelHead& iEditableRelHead)
 :	fCallable_Register(iCallable_Register)
-,	fCallable_DatonSetUpdate(iCallable_DatonSetUpdate)
+,	fCallable_DatonUpdate(iCallable_DatonUpdate)
 ,	fCallable_Changed(iCallable_Changed)
 ,	fRel(iRel)
 ,	fDatonColName(iDatonColName)
@@ -149,7 +147,7 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 
 	const Daton newDaton = Dataspace::sAsDaton(fMapInDaton);
 
-	fCallable_DatonSetUpdate->Call(&newDaton, 1, &fDaton, 1);
+	fCallable_DatonUpdate->Call(&newDaton, 1, &fDaton, 1);
 
 	fDaton = newDaton;
 
@@ -166,7 +164,7 @@ void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 	if (iResult->Count() && sNotEmpty(fEditableRelHead))
 		{
 		PseudoMap_RelHead thePM(iResult->GetRelHead(), iResult->GetValsAt(0));
-		if (ZQ<Daton> theDatonQ = thePM.QGet<DatonSet::Daton>(fDatonColName))
+		if (ZQ<Daton> theDatonQ = thePM.QGet<Daton>(fDatonColName))
 			{ fDaton = *theDatonQ; }
 		else
 			{

@@ -484,10 +484,10 @@ bool SectionBody_Sieve::CommitEditingStyle(UITableViewCellEditingStyle iStyle, s
 		{
 		if (fDatonColNameQ)
 			{
-			if (ZQ<DatonSet::Daton> theDatonQ =
-				fRows[iRowIndex].QGet<DatonSet::Daton>(*fDatonColNameQ))
+			if (ZQ<Dataspace::Daton> theDatonQ =
+				fRows[iRowIndex].QGet<Dataspace::Daton>(*fDatonColNameQ))
 				{
-				sCall(fCallable_DatonSetUpdate, nullptr, 0, &*theDatonQ, 1);
+				sCall(fCallable_DatonUpdate, nullptr, 0, &*theDatonQ, 1);
 				}
 			}
 		}
@@ -528,7 +528,7 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	const RelHead& iIdentity,
 	const RelHead& iSignificant,
 	const ZQ<ColName>& iDatonColNameQ,
-	const ZRef<Callable_DatonSetUpdate>& iCallable_DatonSetUpdate)
+	const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate)
 	{
 	if (fRel == iRel)
 		return;
@@ -544,9 +544,9 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	fSignificant = iSignificant;
 	fDatonColNameQ = iDatonColNameQ;
 	fCallable_Register = iCallable_Register;
-	fCallable_DatonSetUpdate = iCallable_DatonSetUpdate;
+	fCallable_DatonUpdate = iCallable_DatonUpdate;
 
-	ZAssert(not iDatonColNameQ || iCallable_DatonSetUpdate);
+	ZAssert(not iDatonColNameQ || iCallable_DatonUpdate);
 
 	if (fDatonColNameQ && fRel)
 		ZAssert(Util_STL::sContains(sGetRelHead(fRel), *fDatonColNameQ));

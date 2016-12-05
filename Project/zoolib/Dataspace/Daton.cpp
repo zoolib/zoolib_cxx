@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2016 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,18 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/DatonSet/Util_Strim_Daton.h"
+#include "zoolib/Compare.h"
 
-namespace ZooLib {
+#include "zoolib/Dataspace/Daton.h"
 
 // =================================================================================================
 #pragma mark -
+#pragma mark sCompare_T
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const DatonSet::Daton& iDaton)
+namespace ZooLib {
+
+template <>
+int sCompare_T<Dataspace::Daton>(const Dataspace::Daton& iL, const Dataspace::Daton& iR)
+	{ return sCompare_T(iL.GetData(), iR.GetData()); }
+
+ZMACRO_CompareRegistration_T(Dataspace::Daton)
+
+} // namespace ZooLib
+
+namespace ZooLib {
+namespace Dataspace {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Daton
+
+Daton::Daton()
+	{}
+
+Daton::Daton(const Daton& iOther)
+:	fData(iOther.fData)
+	{}
+
+Daton::~Daton()
+	{}
+
+Daton& Daton::operator=(const Daton& iOther)
 	{
-	const Data_Any& theData = iDaton.GetData();
-	sWrite(w, (const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr);
-	return w;
+	fData = iOther.fData;
+	return *this;
 	}
 
+Daton::Daton(Data_Any iData)
+:	fData(iData)
+	{}
+
+bool Daton::operator==(const Daton& iOther) const
+	{ return fData == iOther.fData; }
+
+bool Daton::operator<(const Daton& iOther) const
+	{ return fData < iOther.fData; }
+
+Data_Any Daton::GetData() const
+	{ return fData; }
+
+} // namespace Dataspace
 } // namespace ZooLib

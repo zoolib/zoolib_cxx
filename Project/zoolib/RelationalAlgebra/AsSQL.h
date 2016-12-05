@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_AsSQL_h__
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ChanW_UTF.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 #include "zoolib/RelationalAlgebra/RelHead.h"
@@ -35,7 +35,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark -
 
-bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s);
+bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ChanW_UTF& w);
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

@@ -730,35 +730,35 @@ Rect_p sAlignedB(const Rect_p& iRect, const OtherY_p& iY)
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedLT(const Rect_p& iRect, const Other_p& iOther)
-	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - T(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iOther) - L(iRect), Y(iOther) - T(iRect)); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedRB(const Rect_p& iRect, const Other_p& iOther)
-	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - B(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iOther) - R(iRect), Y(iOther) - B(iRect)); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedLB(const Rect_p& iRect, const Other_p& iOther)
-	{ return sOffsetted(X(iOther) - L(iRect), Y(iOther) - B(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iOther) - L(iRect), Y(iOther) - B(iRect)); }
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedRT(const Rect_p& iRect, const Other_p& iOther)
-	{ return sOffsetted(X(iOther) - R(iRect), Y(iOther) - T(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iOther) - R(iRect), Y(iOther) - T(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
 Rect_p sAlignedLT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
-	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - T(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iX) - L(iRect), Y(iY) - T(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
 Rect_p sAlignedRB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
-	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - B(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iX) - R(iRect), Y(iY) - B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
 Rect_p sAlignedLB(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
-	{ return sOffsetted(X(iX) - L(iRect), Y(iY) - B(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iX) - L(iRect), Y(iY) - B(iRect)); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
 Rect_p sAlignedRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
-	{ return sOffsetted(X(iX) - R(iRect), Y(iY) - T(iRect), iRect); }
+	{ return sOffsetted(iRect, X(iX) - R(iRect), Y(iY) - T(iRect)); }
 
 // =================================================================================================
 #pragma mark -

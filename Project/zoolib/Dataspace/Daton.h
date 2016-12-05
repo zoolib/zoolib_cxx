@@ -18,15 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_DatonSet_Daton_h__
-#define __ZooLib_DatonSet_Daton_h__ 1
+#ifndef __ZooLib_Dataspace_Daton_h__
+#define __ZooLib_Dataspace_Daton_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Callable.h"
 #include "zoolib/Data_Any.h"
 #include "zoolib/Util_Relops.h"
 
 namespace ZooLib {
-namespace DatonSet {
+namespace Dataspace {
 
 // =================================================================================================
 #pragma mark -
@@ -53,11 +54,14 @@ private:
 	Data_Any fData;
 	};
 
-} // namespace DatonSet
+typedef Callable<void(const Daton* iAsserted, size_t iAssertedCount,
+	const Daton* iRetracted, size_t iRetractedCount)> Callable_DatonUpdate;
 
-template <> struct RelopsTraits_HasEQ<DatonSet::Daton> : public RelopsTraits_Has {};
-template <> struct RelopsTraits_HasLT<DatonSet::Daton> : public RelopsTraits_Has {};
+} // namespace Dataspace
+
+template <> struct RelopsTraits_HasEQ<Dataspace::Daton> : public RelopsTraits_Has {};
+template <> struct RelopsTraits_HasLT<Dataspace::Daton> : public RelopsTraits_Has {};
 
 } // namespace ZooLib
 
-#endif // __ZooLib_DatonSet_Daton_h__
+#endif // __ZooLib_Dataspace_Daton_h__

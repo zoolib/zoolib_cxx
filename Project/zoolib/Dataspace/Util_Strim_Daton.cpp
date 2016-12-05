@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,41 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_Chan_UTF_Operators.h"
-
-#include "zoolib/DatonSet/Util_Strim_IntervalTreeClock.h"
+#include "zoolib/Dataspace/Util_Strim_Daton.h"
 
 namespace ZooLib {
-namespace IntervalTreeClock {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark IntervalTreeClock
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Identity>& iIdentity)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Dataspace::Daton& iDaton)
 	{
-	if (iIdentity->IsZero())
-		w << "-";
-	else if (iIdentity->IsOne())
-		w << "I";
-	else
-		w << "(" << iIdentity->Left() << iIdentity->Right() << ")";
+	const Data_Any& theData = iDaton.GetData();
+	sWrite(w, (const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr);
 	return w;
 	}
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<Event>& iEvent)
-	{
-	if (iEvent->IsLeaf())
-		{
-		w << iEvent->Value();
-		}
-	else
-		{
-		w << "(" << iEvent->Value()
-			<< "+" << iEvent->Left() << "," << iEvent->Right() << ")";
-		}
-	return w;
-	}
-
-} // namespace IntervalTreeClock
 } // namespace ZooLib
