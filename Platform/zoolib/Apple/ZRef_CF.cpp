@@ -58,7 +58,8 @@ ZMACRO_Retain_Release(CFTypeRef)
 // =================================================================================================
 
 #define ZMACRO_CF(a) \
-	ZMACRO_Const(CF##a) \
+	typedef const struct __CF##a * CF##a##Ref; \
+	ZMACRO_Retain_Release(CF##a##Ref) \
 	typedef struct __CF##a * CFMutable##a##Ref; \
 	ZMACRO_Retain_Release(CFMutable##a##Ref)
 
