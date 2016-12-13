@@ -985,7 +985,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 - (void)tableViewWillAppear:(UITableView*)tableView
 	{
-	[tableView deselect];
+	[(UITableView_WithSections*)tableView deselect];
 	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 		fSections_All[xx]->GetBody()->ViewWillAppear(tableView);
 	}
@@ -1007,7 +1007,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 
 - (void)tableViewDidDisappear:(UITableView*)tableView
 	{
-	[tableView deselect];
+	[(UITableView_WithSections*)tableView deselect];
 	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 		fSections_All[xx]->GetBody()->ViewDidDisappear(tableView);
 	}
@@ -1077,7 +1077,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 			if (sQSet(priorSection, section))
 				countInSection = [self tableView:tableView numberOfRowsInSection:section];
 
-			const int row = thePath.row;
+			const size_t row = thePath.row;
 			spApplyPosition(cell, row > 0, row + 1 < countInSection);
 			}
 		}
