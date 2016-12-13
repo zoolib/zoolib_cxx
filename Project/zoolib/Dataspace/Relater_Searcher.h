@@ -46,7 +46,7 @@ public:
 // From ZCounted via Relater
 	virtual void Initialize();
 
-// From Source
+// From Relater
 	virtual bool Intersects(const RelHead& iRelHead);
 
 	virtual void ModifyRegistrations(
