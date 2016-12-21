@@ -533,7 +533,7 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	if (fRel == iRel)
 		return;
 
-	if (ZLOGPF(s, eDebug))
+	if (ZLOGPF(s, eDebug + 1))
 		s << "\n" << iRel;
 
 	fRel = iRel;

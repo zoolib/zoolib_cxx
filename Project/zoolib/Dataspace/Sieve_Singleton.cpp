@@ -57,10 +57,8 @@ Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_
 	if (sNotEmpty(fEditableRelHead) and not sContains(sGetRelHead(fRel), fDatonColName))
 		{
 		if (ZLOGF(w, eDebug))
-			{
 			w << "No daton column named '" << fDatonColName << "' in relation " << fRel;
-			ZUnimplemented();
-			}
+		ZUnimplemented();
 		}
 	}
 
@@ -143,9 +141,11 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 	if (not anyChange)
 		return;
 
-	fMapQ.Clear();
-
 	const Daton newDaton = Dataspace::sAsDaton(fMapInDaton);
+	if (fDaton == newDaton)
+		return;
+
+	fMapQ.Clear();
 
 	fCallable_DatonUpdate->Call(&newDaton, 1, &fDaton, 1);
 

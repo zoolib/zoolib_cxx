@@ -337,8 +337,7 @@ private:
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
-	int fTouchCount;
-	bool fDragging;
+	bool fTouchState;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
 	bool fCheckForUpdateQueued;

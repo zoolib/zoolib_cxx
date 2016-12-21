@@ -112,7 +112,7 @@ public:
 						{
 						// Do Boyer-Moore search on the full buffer.
 						int xx;
-						for (xx = boundaryCount - 1; xx >= 0 && fBuffer[xx] == fBoundary[xx]; --xx)
+						for (xx = int(boundaryCount) - 1; xx >= 0 && fBuffer[xx] == fBoundary[xx]; --xx)
 							{}
 
 						if (xx < 0)

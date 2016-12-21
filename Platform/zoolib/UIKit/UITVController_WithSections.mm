@@ -722,8 +722,7 @@ using namespace ZooLib::UIKit;
 - (id)init
 	{
 	self = [super init];
-	fTouchCount = 0;
-	fDragging = false;
+	fTouchState = false;
 	fNeedsUpdate = false;
 	fUpdateInFlight = false;
 	fCheckForUpdateQueued = false;
@@ -795,18 +794,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 
 	return nullptr;
-	}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-	{
-	if (not sGetSet(fDragging, true))
-		[self changeTouchState:YES forTableView:(UITableView*)scrollView];
-	}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-	{
-	if (sGetSet(fDragging, false))
-		[self changeTouchState:NO forTableView:(UITableView*)scrollView];
 	}
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
@@ -893,16 +880,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	return true;
 	}
 
-- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
-	{
-	[self changeTouchState:YES forTableView:tableView];
-	}
-
-- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
-	{
-	[self changeTouchState:NO forTableView:tableView];
-	}
-
 - (UITableViewCellEditingStyle)tableView:(UITableView*)tableView
 	editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
@@ -939,7 +916,7 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	{
 	fCheckForUpdateQueued = false;
 
-	if (fTouchCount)
+	if (fTouchState)
 		return;
 
 	if (not fNeedsUpdate)
@@ -1016,11 +993,11 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 	{
 	if (touchState)
 		{
-		++fTouchCount;
+		fTouchState = true;
 		}
 	else
 		{
-		if (0 == --fTouchCount)
+		if (sGetSet(fTouchState, false))
 			[self pEnqueueCheckForUpdate:tableView];
 		}
 	}
@@ -1395,7 +1372,7 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 	{
-	[super touchesEnded:touches withEvent:event];
+	[super touchesCancelled:touches withEvent:event];
 	self.state = UIGestureRecognizerStateFailed;
 	if (sGetSet(fCallEnd, false))
 		[fTV pChangeTouchState:NO];
@@ -1459,9 +1436,7 @@ static void spInsertSections(UITableView* iTableView,
 	}
 
 - (void)pChangeTouchState:(BOOL)touchState
-	{
-	[fHandler changeTouchState:touchState forTableView:self];
-	}
+	{ [fHandler changeTouchState:touchState forTableView:self]; }
 
 @end // implementation UITableView_WithSections
 
