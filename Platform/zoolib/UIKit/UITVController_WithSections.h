@@ -355,10 +355,6 @@ private:
 - (void)tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath;
  - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 
-// From UIScrollViewDelegate via UITableViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
-
 // From UITableViewDelegate
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section;
 - (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section;
