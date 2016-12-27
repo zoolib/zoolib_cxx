@@ -121,7 +121,7 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	theSB->fCallable_ButtonTapped = iCallable_ButtonTapped;
 	theSB->fRowAnimation_Insert = UITableViewRowAnimationNone;
 	theSB->fRowAnimation_Delete = UITableViewRowAnimationNone;
-	theSB->fRowAnimation_Reload = UITableViewRowAnimationNone;
+	theSB->fRowAnimation_Reload = UITableViewRowAnimationFade;//##
 	return theSB;
 	}
 

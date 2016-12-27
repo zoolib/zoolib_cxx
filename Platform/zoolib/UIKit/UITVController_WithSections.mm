@@ -705,7 +705,7 @@ using namespace ZooLib::UIKit;
 @interface UITVHandler_WithSections (Private)
 
 - (ZRef<Section>)pGetSection:(size_t)iSectionIndex;
-- (void)pDoUpdate1:(UITableView*)tableview;
+- (void)pDoUpdate_WholeSections:(UITableView*)tableview;
 - (void)pDoUpdate2:(UITableView*)tableview;
 - (void)pDoUpdate3:(UITableView*)tableview;
 
@@ -899,7 +899,7 @@ using namespace ZooLib::UIKit;
 	if (sGetSet(fUpdateInFlight, true))
 		return;
 
-	[self pDoUpdate1:tableView];
+	[self pDoUpdate_WholeSections:tableView];
 	}
 
 -(void)pCheckForUpdate:(UITableView*)tableView
@@ -915,7 +915,7 @@ using namespace ZooLib::UIKit;
 	if (sGetSet(fUpdateInFlight, true))
 		return;
 
-	[self pDoUpdate1:tableView];
+	[self pDoUpdate_WholeSections:tableView];
 	}
 
 -(void)pEnqueueCheckForUpdate:(UITableView*)tableView
@@ -982,14 +982,9 @@ using namespace ZooLib::UIKit;
 - (void)changeTouchState:(BOOL)touchState forTableView:(UITableView*)tableView
 	{
 	if (touchState)
-		{
 		fTouchState = true;
-		}
-	else
-		{
-		if (sGetSet(fTouchState, false))
-			[self pEnqueueCheckForUpdate:tableView];
-		}
+	else if (sGetSet(fTouchState, false))
+		[self pEnqueueCheckForUpdate:tableView];
 	}
 
 static void spInsertSections(UITableView* iTableView,
@@ -1010,28 +1005,28 @@ static void spInsertSections(UITableView* iTableView,
 		}
 	}
 
-- (void)pDoUpdate1:(UITableView*)tableView
+- (void)pDoUpdate_WholeSections:(UITableView*)tableView
 	{
 	ZAssert(tableView);
 
 	if (not sGetSet(fNeedsUpdate, false))
 		return;
 
-	ZLOGF(w, eDebug);
-
 	ZAssert(fUpdateInFlight);
 
+	ZLOGF(w, eDebug);
+
 	fSections_ToIgnore.clear();
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > sections_Pending;
 	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 		{
 		ZRef<Section> theSection = fSections_All[xx];
 		theSection->GetBody()->PreUpdate();
 		if (not theSection->HideWhenEmpty() || not theSection->GetBody()->WillBeEmpty())
-			fSections_Shown_Pending.push_back(theSection);
+			sections_Pending.push_back(theSection);
 		}
 
-	// We've done PreUpdate on every section, and fSections_Shown_Pending contains
+	// We've done PreUpdate on every section, and sections_Pending contains
 	// those sections that will be visible.
 
 	if (not fShown)
@@ -1044,7 +1039,7 @@ static void spInsertSections(UITableView* iTableView,
 			theSection->GetBody()->Update_NOP();
 			theSection->GetBody()->FinishUpdate();
 			}
-		fSections_Shown = fSections_Shown_Pending;
+		fSections_Shown = sections_Pending;
 		[tableView reloadData];
 		fUpdateInFlight = false;
 		if (fNeedsUpdate)
@@ -1052,7 +1047,7 @@ static void spInsertSections(UITableView* iTableView,
 		return;
 		}
 
-	if (fSections_Shown == fSections_Shown_Pending)
+	if (fSections_Shown == sections_Pending)
 		{
 		// The list of sections hasn't changed, move directly on to pUpdate2
 		[self pDoUpdate2:tableView];
@@ -1062,12 +1057,22 @@ static void spInsertSections(UITableView* iTableView,
 	// We need to insert and remove sections.
 	[CATransaction begin];
 
-	[CATransaction setCompletionBlock:^{ [self pDoUpdate2:tableView]; }];
+	[CATransaction setCompletionBlock:
+		^{
+		dispatch_async
+			(
+			dispatch_get_main_queue(),
+				^{
+				[self pDoUpdate2:tableView];
+				}
+			);
+		}
+	];
 
 	[tableView beginUpdates];
 
 	const vector<ZRef<Section> > sectionsOld = fSections_Shown;
-	fSections_Shown = fSections_Shown_Pending;
+	fSections_Shown = sections_Pending;
 
 	const size_t endOld = sectionsOld.size();
 
@@ -1120,10 +1125,10 @@ static void spInsertSections(UITableView* iTableView,
 
 - (void)pDoUpdate2:(UITableView*)tableView
 	{
-	ZAssert(fUpdateInFlight);
 	ZAssert(tableView);
+	ZAssert(fUpdateInFlight);
 
-	// We really must be shown, otherwise pDoUpdate1 would not have called us.
+	// We really must be shown, otherwise pDoUpdate_WholeSections would not have called us.
 	ZAssert(fShown);
 
 	vector<map<size_t, UITableViewRowAnimation> > theInserts(fSections_Shown.size());
@@ -1155,68 +1160,68 @@ static void spInsertSections(UITableView* iTableView,
 		}
 	fSections_ToIgnore.clear();
 
-	if (anyReloads)
-		{
-		ZLOGF(w, eDebug);
-		if (anyDeletes || anyInserts)
-			{
-			if (not anyDeletes)
-			{
-			// Do it immediately.
-			[tableView beginUpdates];
-
-			w << "\n" << "Reloads, with no animation:";
-			for (size_t xx = 0; xx < theReloads.size(); ++xx)
-				{
-				map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
-				foreachi (ii, theMap)
-					{
-					w << "\n" << xx << "    " << ii->first << "   " << ii->second;
-					[tableView
-						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-						withRowAnimation:UITableViewRowAnimationNone];
-					}
-				}
-
-// Can we get just the reload row cells copied over -- FinishUpdate is not correct here.
+//	if (anyReloads)
+//		{
+//		ZLOGF(w, eDebug);
+//		if (anyDeletes || anyInserts)
+//			{
+//			if (not anyDeletes)
+//			{
+//			// Do it immediately.
+//			[tableView beginUpdates];
+//
+//			w << "\n" << "Reloads, with no animation:";
+//			for (size_t xx = 0; xx < theReloads.size(); ++xx)
+//				{
+//				map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
+//				foreachi (ii, theMap)
+//					{
+//					w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+//					[tableView
+//						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+//						withRowAnimation:UITableViewRowAnimationNone];
+//					}
+//				}
+//
+//// Can we get just the reload row cells copied over -- FinishUpdate is not correct here.
+////			for (size_t xx = 0; xx < fSections_All.size(); ++xx)
+////				fSections_All[xx]->GetBody()->FinishUpdate();
+//
+//			[tableView endUpdates];
+//			}
+//			}
+//		else
+//			{
+//			// Do it as an animation.
+//			[CATransaction begin];
+//
+//			[CATransaction setCompletionBlock:^{ [self pDoUpdate3:tableView]; }];
+//
+//			[tableView beginUpdates];
+//
+//			w << "\n" << "Reloads with animation:";
+//			for (size_t xx = 0; xx < theReloads.size(); ++xx)
+//				{
+//				map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
+//				foreachi (ii, theMap)
+//					{
+//					w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+//					[tableView
+//						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+//						withRowAnimation:ii->second];
+//					}
+//				}
+//
 //			for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 //				fSections_All[xx]->GetBody()->FinishUpdate();
+//
+//			[tableView endUpdates];
+//
+//			[CATransaction commit];
+//			}
+//		}
 
-			[tableView endUpdates];
-			}
-			}
-		else
-			{
-			// Do it as an animation.
-			[CATransaction begin];
-
-			[CATransaction setCompletionBlock:^{ [self pDoUpdate3:tableView]; }];
-
-			[tableView beginUpdates];
-
-			w << "\n" << "Reloads with animation:";
-			for (size_t xx = 0; xx < theReloads.size(); ++xx)
-				{
-				map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
-				foreachi (ii, theMap)
-					{
-					w << "\n" << xx << "    " << ii->first << "   " << ii->second;
-					[tableView
-						reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-						withRowAnimation:ii->second];
-					}
-				}
-
-			for (size_t xx = 0; xx < fSections_All.size(); ++xx)
-				fSections_All[xx]->GetBody()->FinishUpdate();
-
-			[tableView endUpdates];
-
-			[CATransaction commit];
-			}
-		}
-
-	if (anyDeletes || anyInserts)
+	if (anyDeletes || anyInserts || anyReloads)
 		{
 		ZLOGF(w, eDebug);
 		[CATransaction begin];
@@ -1224,6 +1229,25 @@ static void spInsertSections(UITableView* iTableView,
 		[CATransaction setCompletionBlock:^{ [self pDoUpdate3:tableView]; }];
 
 		[tableView beginUpdates];
+
+		for (size_t xx = 0; xx < theReloads.size(); ++xx)
+			{
+			map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
+			foreachi (ii, theMap)
+				{
+				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+				[tableView
+					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+					withRowAnimation:ii->second];
+//				[tableView
+//					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+//					withRowAnimation:UITableViewRowAnimationFade];
+//				[tableView
+//					insertRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+//					withRowAnimation:UITableViewRowAnimationFade];
+				}
+			}
+
 
 		w << "\n" << "Deletes:";
 		for (size_t xx = 0; xx < theDeletes.size(); ++xx)
