@@ -335,7 +335,6 @@ private:
 @interface UITVHandler_WithSections : NSObject <UITableViewDelegate, UITableViewDataSource>
 	{
 	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
 	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
 	bool fTouchState;
 	bool fNeedsUpdate;

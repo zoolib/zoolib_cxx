@@ -1029,7 +1029,7 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(fUpdateInFlight);
 
 	fSections_ToIgnore.clear();
-	fSections_Shown_Pending.clear();
+	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown_Pending;
 	for (size_t xx = 0; xx < fSections_All.size(); ++xx)
 		{
 		ZRef<Section> theSection = fSections_All[xx];
