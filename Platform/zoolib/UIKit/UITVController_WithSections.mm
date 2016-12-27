@@ -342,7 +342,7 @@ UITableViewRowAnimation SectionBody_Concrete::RowAnimation_Reload()
 SectionBody_SingleRow::SectionBody_SingleRow(ZRef<UITableViewCell> iCell)
 :	fCell_Pending(iCell)
 	{
-	ZAssert(!fCell_Pending || not [fCell_Pending reuseIdentifier]);
+	ZAssert(not fCell_Pending || not [fCell_Pending reuseIdentifier]);
 	}
 
 size_t SectionBody_SingleRow::NumberOfRows()
@@ -354,7 +354,7 @@ size_t SectionBody_SingleRow::NumberOfRows()
 
 void SectionBody_SingleRow::PreUpdate()
 	{
-	ZAssert(!fCell_Pending || not [fCell_Pending reuseIdentifier]);
+	ZAssert(not fCell_Pending || not [fCell_Pending reuseIdentifier]);
 	fCell_New = fCell_Pending;
 	}
 
@@ -778,8 +778,6 @@ shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 	return indexPath;
 	}
 
-static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsSucceeded);
-
  - (UITableViewCell*)tableView:(UITableView*)tableView
 	cellForRowAtIndexPath:(NSIndexPath*)indexPath
 	{
@@ -789,8 +787,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		if (ZRef<UITableViewCell> theCell =
 			theSection->GetBody()->UITableViewCellForRow(tableView, indexPath.row, isPreceded, isSucceeded))
 			{
-			if ([tableView style] != UITableViewStylePlain)
-				spApplyPosition(theCell, isPreceded, isSucceeded);
 			return [theCell.Orphan() autorelease];
 			}
 		}
@@ -1004,64 +1000,6 @@ static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsS
 		}
 	}
 
-typedef enum 
-	{
-	UACellBackgroundViewPositionSingle = 0,
-	UACellBackgroundViewPositionTop, 
-	UACellBackgroundViewPositionBottom,
-	UACellBackgroundViewPositionMiddle
-	} UACellBackgroundViewPosition;
-
-static void spApplyPosition(UITableViewCell* ioCell, bool iIsPreceded, bool iIsSucceeded)
-	{
-	UACellBackgroundViewPosition thePosition;
-	if (iIsPreceded)
-		{
-		if (iIsSucceeded)
-			thePosition = UACellBackgroundViewPositionMiddle;
-		else
-			thePosition = UACellBackgroundViewPositionBottom;
-		}
-	else if (iIsSucceeded)
-		{
-		thePosition = UACellBackgroundViewPositionTop;
-		}
-	else
-		{
-		thePosition = UACellBackgroundViewPositionSingle;
-		}
-
-	if ([ioCell respondsToSelector:@selector(applyPosition:)])
-		[ioCell applyPosition:thePosition];
-	}
-
-- (void)pApplyPositionToVisibleCells:(UITableView*)tableView
-	{
-	if ([tableView style] == UITableViewStylePlain)
-		return;
-
-	[tableView visibleCells];
-	const NSArray* paths = [tableView indexPathsForVisibleRows];
-
-	size_t countInSection = 0;
-	int priorSection = -1;
-	for (size_t xx = 0, count = [paths count]; xx < count; ++xx)
-		{
-		NSIndexPath* thePath = [paths objectAtIndex:xx];
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:thePath];
-		if ([cell respondsToSelector:@selector(applyPosition:)])
-			{
-			const int section = thePath.section;
-
-			if (sQSet(priorSection, section))
-				countInSection = [self tableView:tableView numberOfRowsInSection:section];
-
-			const size_t row = thePath.row;
-			spApplyPosition(cell, row > 0, row + 1 < countInSection);
-			}
-		}
-	}
-
 static void spInsertSections(UITableView* iTableView,
 	size_t iBaseIndex,
 	const ZRef<Section>* iSections,
@@ -1216,42 +1154,47 @@ static void spInsertSections(UITableView* iTableView,
 
 	if (spIsVersion4OrLater() && anyChanges)
 		{
+		ZLOGF(w, eDebug);
+
 		[CATransaction begin];
 
 		[CATransaction setCompletionBlock:^{ [self pDoUpdate3:tableView anyChanges:anyChanges]; }];
 
 		[tableView beginUpdates];
 
+		w << "\n" << "Reloads:";
 		for (size_t xx = 0; xx < theReloads.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
 			foreachi (ii, theMap)
 				{
-				UITableViewRowAnimation theAnimation = UITableViewRowAnimationNone;
-				if (fShown)
-					theAnimation = ii->second;
-				[tableView
-					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-					withRowAnimation:theAnimation];
+				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+//				[tableView
+//					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
+//					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 
+		w << "\n" << "Deletes:";
 		for (size_t xx = 0; xx < theDeletes.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theDeletes[xx];
 			foreachi (ii, theMap)
 				{
+				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
 				[tableView
 					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
 					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
 				}
 			}
 
+		w << "\n" << "Inserts:";
 		for (size_t xx = 0; xx < theInserts.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theInserts[xx];
 			foreachi (ii, theMap)
 				{
+				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
 				[tableView
 					insertRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
 					withRowAnimation:isShown ? ii->second : UITableViewRowAnimationNone];
@@ -1262,8 +1205,6 @@ static void spInsertSections(UITableView* iTableView,
 			fSections_All[xx]->GetBody()->FinishUpdate();
 
 		[tableView endUpdates];
-
-		[self pApplyPositionToVisibleCells:tableView];
 
 		[CATransaction commit];
 		}
@@ -1288,7 +1229,6 @@ static void spInsertSections(UITableView* iTableView,
 	ZAssert(tableView);
 	fUpdateInFlight = false;
 
-	[self pApplyPositionToVisibleCells:tableView];
 	spUpdatePopovers();
 	if (fNeedsUpdate)
 		[self pEnqueueCheckForUpdate:tableView];

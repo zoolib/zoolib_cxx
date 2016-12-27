@@ -382,8 +382,6 @@ private:
 
 - (void)changeTouchState:(BOOL)touchState forTableView:(UITableView*)tableView;
 
-- (void)pApplyPositionToVisibleCells:(UITableView*)tableView;
-
 @end // interface UITVController_WithSections
 
 // =================================================================================================
