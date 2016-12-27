@@ -320,8 +320,8 @@ public:
 	std::vector<ZRef<SectionBody> > fBodies_Pending;
 
 private:
-	ZRef<SectionBody> pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex);
-	ZRef<SectionBody> pGetBodyAndRowIndex(size_t& oIndex, size_t iIndex, bool* oIsSucceeded);
+	ZRef<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex);
+	ZRef<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex, bool* oIsSucceeded);
 	std::vector<ZRef<SectionBody> > fBodies;
 	};
 
