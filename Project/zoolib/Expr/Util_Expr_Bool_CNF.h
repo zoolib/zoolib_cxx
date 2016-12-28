@@ -35,8 +35,9 @@ namespace Util_Expr_Bool {
 #pragma mark -
 #pragma mark Util_Expr_Bool
 
-// CNF == Conjunctive Normal Form
-// DClause is a disjunction of literals
+// CNF == Conjunctive Normal Form (an AND of ORs of terms, ie an AND of DClauses).
+// DClause is a disjunction of literals (an OR of terms).
+// Term is a literal or the negation of a literal.
 
 typedef TagVal<ZRef<Expr_Bool>,struct Tag_Clause> Term;
 typedef std::set<Term> DClause;
