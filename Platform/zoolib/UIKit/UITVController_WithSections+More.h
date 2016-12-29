@@ -28,20 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZooLib_UIKit_SectionHeader
-
-@interface ZooLib_UIKit_SectionHeader : UIView
-	{
-@public
-	ZooLib::ZRef<UILabel> fLabel;
-	}
-
-+ (ZooLib_UIKit_SectionHeader*)sMake;
-
-@end // interface MMSectionHeader
-
-// =================================================================================================
-#pragma mark -
 #pragma mark ZooLib::UIKit
 
 namespace ZooLib {
@@ -50,20 +36,12 @@ namespace UIKit {
 ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty);
 ZRef<Section> sMakeSection(ZRef<SectionBody> iBody);
 
-ZRef<Section> sMakeSectionWithTitle
-	(ZRef<SectionBody> iBody, NSString* iTitle, bool iHideWhenEmpty);
-
-ZRef<Section> sMakeSectionWithTitle(ZRef<SectionBody> iBody, NSString* iTitle);
-
 ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected = null,
 	ZRef<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped = null);
 
 ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	id iDelegate, SEL iSEL);
-
-//##UIColor* sColor_Text();
-//##UIColor* sColor_Text_Shadow();
 
 ZRef<UILabel> sMakeUILabel();
 

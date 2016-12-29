@@ -32,46 +32,6 @@ using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZooLib_UIKit_SectionHeader
-
-@implementation ZooLib_UIKit_SectionHeader
-
-+ (ZooLib_UIKit_SectionHeader*)sMake
-	{
-	return [[[ZooLib_UIKit_SectionHeader alloc] initWithFrame:sRect<CGRect>(100, 100)] autorelease];
-	}
-
-- (id)initWithFrame:(CGRect)frame
-	{
-	self = [super initWithFrame:frame];
-
-	// We need this, because otherwise we often end up with a black background.
-	self.backgroundColor = [UIColor clearColor];
-
-	fLabel = UIKit::sMakeUILabel();
-	[fLabel setBackgroundColor:[UIColor clearColor]];
-	[fLabel setFont:[UIFont boldSystemFontOfSize:17]];
-	[fLabel setOpaque:NO];
-	[fLabel setShadowOffset:CGSizeMake(0,1)];
-	[fLabel setUserInteractionEnabled:NO];
-
-	[self addSubview:fLabel];
-
-	return self;
-	}
-
-- (void) layoutSubviews
-	{
-	[super layoutSubviews];
-
-//	const ZGRectf theBounds = [self bounds];
-	[fLabel setFrame:sInsetted([self bounds], 19, 6)];
-	}
-
-@end // implementation ZooLib_UIKit_SectionHeader
-
-// =================================================================================================
-#pragma mark -
 #pragma mark ZooLib::UIKit
 
 namespace ZooLib {
@@ -91,21 +51,6 @@ ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty)
 
 ZRef<Section> sMakeSection(ZRef<SectionBody> iBody)
 	{ return sMakeSection(iBody, false); }
-
-ZRef<Section> sMakeSectionWithTitle(
-	ZRef<SectionBody> iBody, NSString* iTitle, bool iHideWhenEmpty)
-	{
-	ZRef<Section> theSection = sMakeSection(iBody, iHideWhenEmpty);
-	ZRef<ZooLib_UIKit_SectionHeader> theSH = [ZooLib_UIKit_SectionHeader sMake];
-
-	[theSH->fLabel setText:iTitle];
-	theSection->fHeaderViewQ = theSH;
-	theSection->fHeaderHeightQ = 40;
-	return theSection;
-	}
-
-ZRef<Section> sMakeSectionWithTitle(ZRef<SectionBody> iBody, NSString* iTitle)
-	{ return sMakeSectionWithTitle(iBody, iTitle, true); }
 
 ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected,
