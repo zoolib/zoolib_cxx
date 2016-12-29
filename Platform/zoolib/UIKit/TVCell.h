@@ -13,7 +13,7 @@ namespace ZooLib {
 namespace UIKit {
 
 template <class CellClass_t>
-ZRef<CellClass_t> spGetCell_T(UITableView* iView, bool iReusable = true)
+ZRef<CellClass_t> sGetCell_T(UITableView* iView, bool iReusable)
 	{
 	ZRef<CellClass_t> theCell;
 	NSString* theReuseIdentifier = nil;
