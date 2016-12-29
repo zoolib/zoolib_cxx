@@ -65,7 +65,7 @@ namespace ZooLib {
 //	while (localCount)
 //		{
 //		size_t bytesRead;
-//		iStreamR.Read(utf16Buffer, sizeof(UTF16) * min(localCount , kBufSize), &bytesRead);
+//		iStreamR.Read(utf16Buffer, sizeof(UTF16) * min(localCount, kBufSize), &bytesRead);
 //		const size_t utf16Read = bytesRead / 2;
 //
 //		size_t utf16Consumed;
@@ -92,7 +92,7 @@ namespace ZooLib {
 //	while (localCount)
 //		{
 //		size_t bytesRead;
-//		iStreamR.Read(utf16Buffer, sizeof(UTF16) * min(localCount , kBufSize), &bytesRead);
+//		iStreamR.Read(utf16Buffer, sizeof(UTF16) * min(localCount, kBufSize), &bytesRead);
 //		const size_t utf16Read = bytesRead / 2;
 //
 //		UTF16* swapPtr = utf16Buffer;

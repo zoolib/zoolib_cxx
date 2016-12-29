@@ -88,12 +88,12 @@ class ZGuard_T : NonCopyable
 public:
 	ZMACRO_Attribute_NoThrow
 	inline
-	ZGuard_T(Mtx& iMtx) : fMtx(iMtx) , fCount(1) { fMtx.Acquire(); }
+	ZGuard_T(Mtx& iMtx) : fMtx(iMtx), fCount(1) { fMtx.Acquire(); }
 	
 	ZMACRO_Attribute_NoThrow
 	inline
 	ZGuard_T(const Mtx& iMtx)
-	: fMtx(const_cast<Mtx&>(iMtx)) , fCount(1) { fMtx.Acquire(); }
+	: fMtx(const_cast<Mtx&>(iMtx)), fCount(1) { fMtx.Acquire(); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
