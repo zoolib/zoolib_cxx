@@ -52,8 +52,6 @@ using namespace ZooLib;
 	[fLabel setBackgroundColor:[UIColor clearColor]];
 	[fLabel setFont:[UIFont boldSystemFontOfSize:17]];
 	[fLabel setOpaque:NO];
-//##	[fLabel setTextColor:UIKit::sColor_Text()];
-//##	[fLabel setShadowColor:UIKit::sColor_Text_Shadow()];
 	[fLabel setShadowOffset:CGSizeMake(0,1)];
 	[fLabel setUserInteractionEnabled:NO];
 
