@@ -76,22 +76,6 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 		null);
 	}
 
-UIColor* sColor_Text()
-	{
-	static UIColor* theColor;
-	if (not theColor)
-		theColor = [[UIColor alloc] initWithRed:51/255.0 green:119/255.0 blue:87/255.0 alpha:1.0];
-	return theColor;
-	}
-
-//UIColor* sColor_Text_Shadow()
-//	{
-//	static UIColor* theColor;
-//	if (not theColor)
-//		theColor = [[UIColor alloc] initWithRed:241/255.0 green:244/255.0 blue:236/255.0 alpha:1.0];
-//	return theColor;
-//	}
-
 ZRef<UILabel> sMakeUILabel()
 	{
 	ZRef<UILabel> theLabel = sAdopt& [[UILabel alloc] initWithFrame:CGRectZero];
