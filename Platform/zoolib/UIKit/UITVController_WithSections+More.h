@@ -62,8 +62,8 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	id iDelegate, SEL iSEL);
 
-UIColor* sColor_Text();
-UIColor* sColor_Text_Shadow();
+//##UIColor* sColor_Text();
+//##UIColor* sColor_Text_Shadow();
 
 ZRef<UILabel> sMakeUILabel();
 

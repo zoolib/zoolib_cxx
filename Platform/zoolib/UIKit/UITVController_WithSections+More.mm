@@ -52,8 +52,8 @@ using namespace ZooLib;
 	[fLabel setBackgroundColor:[UIColor clearColor]];
 	[fLabel setFont:[UIFont boldSystemFontOfSize:17]];
 	[fLabel setOpaque:NO];
-	[fLabel setTextColor:UIKit::sColor_Text()];
-	[fLabel setShadowColor:UIKit::sColor_Text_Shadow()];
+//##	[fLabel setTextColor:UIKit::sColor_Text()];
+//##	[fLabel setShadowColor:UIKit::sColor_Text_Shadow()];
 	[fLabel setShadowOffset:CGSizeMake(0,1)];
 	[fLabel setUserInteractionEnabled:NO];
 
@@ -141,13 +141,13 @@ UIColor* sColor_Text()
 	return theColor;
 	}
 
-UIColor* sColor_Text_Shadow()
-	{
-	static UIColor* theColor;
-	if (not theColor)
-		theColor = [[UIColor alloc] initWithRed:241/255.0 green:244/255.0 blue:236/255.0 alpha:1.0];
-	return theColor;
-	}
+//UIColor* sColor_Text_Shadow()
+//	{
+//	static UIColor* theColor;
+//	if (not theColor)
+//		theColor = [[UIColor alloc] initWithRed:241/255.0 green:244/255.0 blue:236/255.0 alpha:1.0];
+//	return theColor;
+//	}
 
 ZRef<UILabel> sMakeUILabel()
 	{

@@ -16,18 +16,18 @@ ZRef<UILabel> spMakeUILabel()
 	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	label.backgroundColor = [UIColor clearColor];
 	label.textAlignment = NSTextAlignmentCenter;
-	if (false && UIUserInterfaceIdiomPhone == UI_USER_INTERFACE_IDIOM())
-		{
-		label.textColor = [UIColor whiteColor];
-		label.shadowColor = [UIColor darkGrayColor];
-		label.shadowOffset = CGSizeMake(0, -1);
-		}
-	else
-		{
-		label.textColor = [UIColor darkGrayColor];
-		label.shadowColor = [UIColor whiteColor];
-		label.shadowOffset = CGSizeMake(0, 1);
-		}
+//	if (false && UIUserInterfaceIdiomPhone == UI_USER_INTERFACE_IDIOM())
+//		{
+//		label.textColor = [UIColor whiteColor];
+//		label.shadowColor = [UIColor darkGrayColor];
+//		label.shadowOffset = CGSizeMake(0, -1);
+//		}
+//	else
+//		{
+//		label.textColor = [UIColor darkGrayColor];
+//		label.shadowColor = [UIColor whiteColor];
+//		label.shadowOffset = CGSizeMake(0, 1);
+//		}
 	label.minimumFontSize = 8;
 	label.adjustsFontSizeToFitWidth = YES;
 	return sAdopt& label;
