@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Accumulator_T_h__
-#define __ZooLib_Accumulator_T_h__ 1
+#ifndef __ZooLib_PairwiseCombiner_T_h__
+#define __ZooLib_PairwiseCombiner_T_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZStdInt.h" // For uint32
 
@@ -27,7 +27,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Accumulator_T
+#pragma mark PairwiseCombiner_T
 
 // AG 2000-02-17. If we assume that unioning a rectangle into a region requires a linear search
 // through the target region, then a region built out of n rectangles will take (n^2)/2 operations.
@@ -45,26 +45,14 @@ namespace ZooLib {
 // S is a stack-like container of T (vector, list or deque are all fine).
 
 template <typename T, typename C, typename S>
-class Accumulator_T
+class PairwiseCombiner_T
 	{
-	static inline uint32 sHammingWeight(uint32 n)
-		{
-		// See <https://stackoverflow.com/revisions/9830282/2>
-		// for the nicest explanation I've seen of this.
-		n = (n & 0x55555555) + ((n & 0xAAAAAAAA) >> 1);
-		n = (n & 0x33333333) + ((n & 0xCCCCCCCC) >> 2);
-		n = (n & 0x0F0F0F0F) + ((n & 0xF0F0F0F0) >> 4);
-		n = (n & 0x00FF00FF) + ((n & 0xFF00FF00) >> 8);
-		n = (n & 0x0000FFFF) + ((n & 0xFFFF0000) >> 16);
-		return n;
-		}
-
 public:
-	Accumulator_T()
+	PairwiseCombiner_T()
 	:	fCount(0)
 		{}
 
-	Accumulator_T(const T& iT)
+	PairwiseCombiner_T(const T& iT)
 	:	fStack(1, iT)
 	,	fCount(1)
 		{}
@@ -73,9 +61,9 @@ public:
 		{
 		fStack.push_back(iT);
 
-		uint32 changedBitsCount = sHammingWeight((fCount + 1) ^ fCount);
+		uint32 changedBits = (fCount + 1) ^ fCount;
 		++fCount;
-		while (--changedBitsCount)
+		while (changedBits = (changedBits >> 1))
 			{
 			T tail = fStack.back();
 			fStack.pop_back();
@@ -101,4 +89,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Accumulator_T_h__
+#endif // __ZooLib_PairwiseCombiner_T_h__
