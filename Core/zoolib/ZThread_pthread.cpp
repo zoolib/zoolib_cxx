@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h" // For countof
 
 #include <stdio.h> // For snprintf
-#include <sys/time.h> // For gettimeofday
 #include <unistd.h> // For usleep
 
 #include <new> // For std::bad_alloc
@@ -43,13 +42,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(MacOSX)
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
 		#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_10_6 <= MAC_OS_X_VERSION_MIN_REQUIRED
+
 			void ZooLib::ZThread_pthread::sSetName(const char* iName)
 				{
 				char buffer[256];
 				snprintf(buffer, countof(buffer), "%4x:%s", ((int)mach_thread_self()), iName);
 				::pthread_setname_np(buffer);
 				}
+
 		#else
+
 			extern int pthread_setname_np(const char*) __attribute__((weak_import));
 
 			void ZooLib::ZThread_pthread::sSetName(const char* iName)
@@ -57,19 +59,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				if (pthread_setname_np)
 					::pthread_setname_np(iName);
 				}
+
 		#endif
 	#endif
+
 #elif ZCONFIG_SPI_Enabled(iPhone)
+
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(iName); }
+
 #elif not defined(__ANDROID_API__)
+
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(::pthread_self(), iName); }
+
 #else
+
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ /* no-op */ }
-#endif
 
+#endif
 
 namespace ZooLib {
 
