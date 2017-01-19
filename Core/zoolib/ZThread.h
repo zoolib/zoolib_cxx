@@ -23,12 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZThread_T.h" // For ZAcquirer_T, ZReleaser_T, ZGuard_T
+#include "zoolib/ZThread_T.h"
 #include "zoolib/ZThread_Win.h"
-
-#if __MACH__
-	#include <mach/mach_init.h> // For mach_thread_self
-#endif
 
 namespace ZooLib {
 
