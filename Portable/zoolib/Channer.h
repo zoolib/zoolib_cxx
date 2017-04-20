@@ -31,87 +31,22 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark Channer
 
-template <class Chan_aka_DeriveFrom> class Channer;
+template <class DF> using Channer
+	= typename AsDeriveFrom<
+		typename TypeListPrefixed<
+			ZCounted,
+			typename DF::AsTypeList_t
+			>::Result_t
+		>::Result_t;
 
-template <class Chan_p>
-const Chan_p& sGetChan(const ZRef<Channer<Chan_p> >& iChanner)
+// Not super happy with these. Generally better at this point to just use operator* directly.
+template <class Thing>
+const Thing& sGetChan(const ZRef<Thing>& iChanner)
 	{ return *iChanner; }
 
-template <class P0>
-class Channer<DeriveFrom<P0>>
-:	public virtual DeriveFrom<P0>
-,	public virtual ZCounted
-	{};
-
-template <class P0, class P1>
-class Channer<DeriveFrom<P0, P1>>
-:	public virtual DeriveFrom<P0, P1>
-,	public virtual Channer<DeriveFrom<    P1>>
-,	public virtual Channer<DeriveFrom<P0    >>
-	{};
-
-template <class P0, class P1, class P2>
-class Channer<DeriveFrom<P0, P1, P2>>
-:	public virtual DeriveFrom<P0, P1, P2>
-,	public virtual Channer<DeriveFrom<    P1, P2>>
-,	public virtual Channer<DeriveFrom<P0,     P2>>
-,	public virtual Channer<DeriveFrom<P0, P1    >>
-	{};
-
-template <class P0, class P1, class P2, class P3>
-class Channer<DeriveFrom<P0, P1, P2, P3>>
-:	public virtual DeriveFrom<P0, P1, P2, P3>
-,	public virtual Channer<DeriveFrom<    P1, P2, P3>>
-,	public virtual Channer<DeriveFrom<P0,     P2, P3>>
-,	public virtual Channer<DeriveFrom<P0, P1,     P3>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2    >>
-	{};
-
-template <class P0, class P1, class P2, class P3, class P4>
-class Channer<DeriveFrom<P0, P1, P2, P3, P4>>
-:	public virtual DeriveFrom<P0, P1, P2, P3, P4>
-,	public virtual Channer<DeriveFrom<    P1, P2, P3, P4>>
-,	public virtual Channer<DeriveFrom<P0,     P2, P3, P4>>
-,	public virtual Channer<DeriveFrom<P0, P1,     P3, P4>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2,     P4>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3    >>
-	{};
-
-template <class P0, class P1, class P2, class P3, class P4, class P5>
-class Channer<DeriveFrom<P0, P1, P2, P3, P4, P5>>
-:	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5>
-,	public virtual Channer<DeriveFrom<    P1, P2, P3, P4, P5>>
-,	public virtual Channer<DeriveFrom<P0,     P2, P3, P4, P5>>
-,	public virtual Channer<DeriveFrom<P0, P1,     P3, P4, P5>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2,     P4, P5>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3,     P5>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4    >>
-	{};
-
-template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
-class Channer<DeriveFrom<P0, P1, P2, P3, P4, P5, P6>>
-:	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6>
-,	public virtual Channer<DeriveFrom<    P1, P2, P3, P4, P5, P6>>
-,	public virtual Channer<DeriveFrom<P0,     P2, P3, P4, P5, P6>>
-,	public virtual Channer<DeriveFrom<P0, P1,     P3, P4, P5, P6>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2,     P4, P5, P6>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3,     P5, P6>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4,     P6>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4, P5    >>
-	{};
-
-template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-class Channer<DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>>
-:	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>
-,	public virtual Channer<DeriveFrom<    P1, P2, P3, P4, P5, P6, P7>>
-,	public virtual Channer<DeriveFrom<P0,     P2, P3, P4, P5, P6, P7>>
-,	public virtual Channer<DeriveFrom<P0, P1,     P3, P4, P5, P6, P7>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2,     P4, P5, P6, P7>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3,     P5, P6, P7>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4,     P6, P7>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4, P5,     P7>>
-,	public virtual Channer<DeriveFrom<P0, P1, P2, P3, P4, P5, P6    >>
-	{};
+template <class Result, class Thing>
+const Result& sGetChan(const ZRef<Thing>& iChanner)
+	{ return *iChanner; }
 
 // =================================================================================================
 #pragma mark -

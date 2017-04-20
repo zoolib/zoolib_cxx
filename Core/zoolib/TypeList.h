@@ -47,6 +47,14 @@ struct TypeList
 	typedef P7 T7;
 	};
 
+template <class P, class TL>
+struct TypeListPrefixed
+	{
+	typedef TypeList<
+		P, typename TL::T0, typename TL::T1, typename TL::T2,
+		typename TL::T3, typename TL::T4, typename TL::T5, typename TL::T6> Result_t;
+	};
+
 } // namespace ZooLib
 
 #endif // __ZooLib_TypeList_h__
