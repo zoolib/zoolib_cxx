@@ -22,9 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Offset_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanPos.h"
-#include "zoolib/ChanSize.h"
-#include "zoolib/ChanSizeSet.h"
+#include "zoolib/Chan.h"
 
 namespace ZooLib {
 
@@ -45,11 +43,11 @@ public:
 		{ return sPos(fChanPos) - fOffset; }
 
 	virtual void SetPos(uint64 iPos)
-		{ sSetPos(iPos + fOffset, fChanPos); }
+		{ sPosSet(fChanPos, iPos + fOffset); }
 
 protected:
 	const ChanPos& fChanPos;
-	const uint64 iOffset;
+	const uint64 fOffset;
 	};
 
 // =================================================================================================
@@ -71,7 +69,7 @@ public:
 
 protected:
 	const ChanSize& fChanSize;
-	const uint64 iOffset;
+	const uint64 fOffset;
 	};
 
 // =================================================================================================
@@ -89,11 +87,11 @@ public:
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
-		{ sSizeSet(iSize + fOffset, fChanSizeSet); }
+		{ sSizeSet(fChanSizeSet, iSize + fOffset); }
 
 protected:
 	const ChanSizeSet& fChanSizeSet;
-	const uint64 iOffset;
+	const uint64 fOffset;
 	};
 
 } // namespace ZooLib
