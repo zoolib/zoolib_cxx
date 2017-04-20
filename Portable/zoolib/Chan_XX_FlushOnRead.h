@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Channer.h"
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanW.h"
+//#include "zoolib/ChanR.h"
+//#include "zoolib/ChanW.h"
 #include "zoolib/ThreadSafe.h"
 
 #include "zoolib/ZThread.h"
@@ -88,19 +88,19 @@ protected:
 template <class EE>
 class Channer_XX_FlushOnRead
 :	public Channer<ChanRW<EE> >
-,	public Chan_XX_FlushOnRead
+,	public Chan_XX_FlushOnRead<EE>
 	{
 public:
 	Channer_XX_FlushOnRead(const ZRef<Channer<ChanR<EE> > >& iChannerR,
 		const ZRef<Channer<ChanW<EE> > >& iChannerW)
-	:	Chan_XX_FlushOnRead(*iChannerR, *iChannerW)
+	:	Chan_XX_FlushOnRead<EE>(*iChannerR, *iChannerW)
+	,	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
-	,	fChan(fChannerR, fChannerW)
 		{}
 
 private:
-	const ZRef<Channer<ChanR<Elmt_t> > > fChannerR;
-	const ZRef<Channer<ChanW<Elmt_t> > > fChannerW;
+	const ZRef<Channer<ChanR<EE> > > fChannerR;
+	const ZRef<Channer<ChanW<EE> > > fChannerW;
 	};
 
 template <class EE>
