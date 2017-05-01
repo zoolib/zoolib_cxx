@@ -23,25 +23,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Function.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/Factory.h"
 
 namespace ZooLib {
 
 template <class T>
-ZRef<T> sFun_Fallback(
-	const ZRef<Callable<ZRef<T>()> >& iPreferred,
-	const ZRef<Callable<ZRef<T>()> >& iFallback)
+T sFun_Fallback(
+	const ZRef<Factory<T> >& iPreferred,
+	const ZRef<Factory<T> >& iFallback)
 	{
-	if (ZRef<T> result = sCall(iPreferred))
+	if (T result = sCall(iPreferred))
 		return result;
 	return sCall(iFallback);
 	}
 
 template <class T>
-ZRef<Callable<ZRef<T>()> > sFactory_Fallback(
-	const ZRef<Callable<ZRef<T>()> >& iPreferred,
-	const ZRef<Callable<ZRef<T>()> >& iFallback)
-	{ return sBindR(sCallable(&sFun_Fallback<T>), iPreferred, iFallback); }
+ZRef<Factory<T> > sFactory_Fallback(
+	const ZRef<Factory<T> >& iPreferred,
+	const ZRef<Factory<T> >& iFallback)
+	{
+	return sBindR(sCallable(&sFun_Fallback<T>), iPreferred, iFallback);
+	}
 
 } // namespace ZooLib
 

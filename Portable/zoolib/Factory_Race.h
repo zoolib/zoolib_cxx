@@ -23,10 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Function.h"
+#include "zoolib/Factory.h"
 #include "zoolib/Promise.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZRef.h"
 
 #include "zoolib/Log.h"
 
@@ -40,22 +40,16 @@ namespace ZooLib {
 
 template <class T>
 class Factory_Race
-:	public Callable<ZRef<T>()>
+:	public Factory<T>
 	{
 public:
-	typedef ZRef<T> Result;
-	typedef Callable<Result()> Factory;
+	typedef T Result_t;
 
 	Factory_Race()
 		{}
 
-	void Add(const ZRef<Factory>& iFactory)
-		{
-		fFactories.push_back(iFactory);
-		}
-
 // From Callable
-	virtual ZQ<ZRef<T> > QCall()
+	virtual ZQ<T> QCall()
 		{
 		if (fFactories.size() == 1)
 			{
@@ -63,7 +57,7 @@ public:
 			}
 		else if (fFactories.size() > 1)
 			{
-			ZRef<Promise<Result > > thePromise = sPromise<Result>();
+			ZRef<Promise<T > > thePromise = sPromise<T>();
 			foreacha (factory, fFactories)
 				{
 				sStartOnNewThread(
@@ -71,11 +65,11 @@ public:
 						factory, thePromise));
 				}
 
-			ZRef<Delivery<Result> > theDelivery = sGetDeliveryClearPromise(thePromise);
+			ZRef<Delivery<T> > theDelivery = sGetDeliveryClearPromise(thePromise);
 
 			if (theDelivery->WaitFor(30))
 				{
-				if (ZQ<Result> theQ = theDelivery->QGet())
+				if (ZQ<T> theQ = theDelivery->QGet())
 					return *theQ;
 				}
 			}
@@ -83,14 +77,20 @@ public:
 		return null;
 		}
 
+// Our protocol
+	void Add(const ZRef<Factory<T> >& iFactory)
+		{
+		fFactories.push_back(iFactory);
+		}
+
 private:
-	static void spTryIt(const ZRef<Factory>& theFactory, const ZRef<Promise<Result> >& iPromise)
+	static void spTryIt(const ZRef<Factory<T>>& theFactory, const ZRef<Promise<T> >& iPromise)
 		{
 		ZLOGTRACE(eDebug);
 
-		if (ZRef<T> theResult = sCall(theFactory))
+		if (ZQ<T> theT = sQCall(theFactory))
 			{
-			if (not iPromise->QDeliver(theResult))
+			if (not iPromise->QDeliver(*theT))
 				{
 				ZLOGTRACE(eDebug);
 				}
@@ -101,7 +101,7 @@ private:
 			}
 		}
 
-	std::vector<ZRef<Factory> > fFactories;
+	std::vector<ZRef<Factory<T> > > fFactories;
 	};
 
 } // namespace ZooLib

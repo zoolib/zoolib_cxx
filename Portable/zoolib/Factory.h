@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2017 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,36 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Connection_h__
-#define __ZooLib_Connection_h__ 1
+#ifndef __ZooLib_Factory_h__
+#define __ZooLib_Factory_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/Channer_Bin.h"
 
 namespace ZooLib {
 
-// ---
-
-typedef ChannerConnection<byte> ChannerConnection_Bin;
-
-typedef Callable<ZRef<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
-
-// Workaround for now.
-typedef ChannerConnection_Bin ChannerRWClose_Bin;
-typedef Factory_ChannerConnection_Bin Factory_ChannerRWClose_Bin;
-
-// ---
-
-typedef ChannerRW<byte> ChannerRW_Bin;
-
-typedef Callable<ZRef<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
-
-// ---
-
-ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
-	const ZRef<Factory_ChannerRWClose_Bin>& iFactory);
+template <class R>
+using Factory = Callable<R()>;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Connection_h__
+#endif // __ZooLib_Factory_h__

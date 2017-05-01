@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2017 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,36 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Connection_h__
-#define __ZooLib_Connection_h__ 1
+#ifndef __ZooLib_Callable_Cast_h__
+#define __ZooLib_Callable_Cast_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/Channer_Bin.h"
+
+#if ZCONFIG_CPP >= 2011
 
 namespace ZooLib {
 
-// ---
+// =================================================================================================
+#pragma mark -
+#pragma mark Callable_Cast
 
-typedef ChannerConnection<byte> ChannerConnection_Bin;
+template <class R0, class R1, typename... A_p>
+class Callable_Cast
+:	public Callable<R0(A_p...)>
+	{
+public:
+	Callable_Cast(const ZRef<Callable<R1(A_p...)> >& iCallable)
+	:	fCallable(iCallable)
+		{}
 
-typedef Callable<ZRef<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
+// From Callable
+	virtual ZQ<R0> QCall(A_p... iParams)
+		{
+		if (ZQ<R1> theQ = sQCall(fCallable, iParams...))
+			return static_cast<R0>(*theQ);
+		return null;
+		}
 
-// Workaround for now.
-typedef ChannerConnection_Bin ChannerRWClose_Bin;
-typedef Factory_ChannerConnection_Bin Factory_ChannerRWClose_Bin;
+private:
+	const ZRef<Callable<R1(A_p...)> > fCallable;
+	};
 
-// ---
-
-typedef ChannerRW<byte> ChannerRW_Bin;
-
-typedef Callable<ZRef<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
-
-// ---
-
-ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
-	const ZRef<Factory_ChannerRWClose_Bin>& iFactory);
+template <class R0, class R1, typename... A_p>
+ZRef<Callable<R0(A_p...)>> sCallable_Cast(const ZRef<Callable<R1(A_p...)>>& iCallable)
+	{
+	if (iCallable)
+		return new Callable_Cast<R0,R1,A_p...>(iCallable);
+	return null;
+	}
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Connection_h__
+#endif // ZCONFIG_CPP >= 2011
+
+#endif // __ZooLib_Callable_Cast_h__

@@ -18,26 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Callable.h"
-#include "zoolib/Callable_Bind.h"
-#include "zoolib/Callable_Function.h"
+#include "zoolib/Callable_Cast.h"
 #include "zoolib/Connection.h"
-#include "zoolib/Channer_Bin.h"
 
 namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 #pragma mark
 
-static ZRef<ChannerRW_Bin> spMake(const ZRef<Factory_ChannerRWClose_Bin>& iFactory)
-	{ return sCall(iFactory); }
-
 ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
 	const ZRef<Factory_ChannerRWClose_Bin>& iFactory)
-	{
-	if (iFactory)
-		return sBindR(sCallable(spMake), iFactory);
-	return null;
-	}
+	{ return sCallable_Cast<ZRef<ChannerRW_Bin>>(iFactory); }
 
 } // namespace ZooLib

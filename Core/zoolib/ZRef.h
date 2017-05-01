@@ -87,6 +87,8 @@ public:
 	typedef T Type_t;
 	typedef T* Ptr_t;
 
+//--
+
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
 	ZRef()
@@ -113,6 +115,8 @@ public:
 		return *this;
 		}
 
+//--
+
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
 	ZRef(const null_t&)
@@ -134,6 +138,27 @@ public:
 		return *this;
 		}
 
+//--
+
+//	template <class O>
+//	ZMACRO_Attribute_NoThrow_Ref
+//	inline
+//	ZRef(O* iP)
+//	:	fP(iP)
+//		{ spRetain(fP); }
+//
+//	template <class O>
+//	inline
+//	ZRef& operator=(O* iP)
+//		{
+//		spRetain(iP);
+//		spRelease(fP);
+//		fP = iP;
+//		return *this;
+//		}
+//
+//--
+
 	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
@@ -152,6 +177,8 @@ public:
 		return *this;
 		}
 
+//--
+
 	template <class O>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
@@ -169,6 +196,8 @@ public:
 		spRelease(otherP);
 		return *this;
 		}
+
+//--
 
 	template <class O>
 	ZMACRO_Attribute_NoThrow_Ref

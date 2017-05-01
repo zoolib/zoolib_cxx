@@ -61,24 +61,26 @@ struct RemoveClass_T<R_p(C::*)(A_p...) const volatile>
 #pragma mark -
 #pragma mark GetSig_T
 
-template<typename T, bool> struct GetSigImpl_T {};
+// Available to be used below and elsewhere, but never proved valuable?
 
-template<typename R_p, typename... A_p>
-struct GetSigImpl_T<R_p(A_p...),true>
-	{ using type = R_p(A_p...); };
-
-template<typename R_p, typename... A_p>
-struct GetSigImpl_T<R_p(*)(A_p...),true>
-	{ using type = R_p(A_p...); };
-
-template<typename T>
-struct GetSigImpl_T<T, true>
-	{
-	using type =
-		typename RemoveClass_T<decltype(&remove_reference<T>::type::operator())>::type;
-	};
-
-template<typename T> using GetSig_T = typename GetSigImpl_T<T,true>::type;
+//template<typename T, bool> struct GetSigImpl_T {};
+//
+//template<typename R_p, typename... A_p>
+//struct GetSigImpl_T<R_p(A_p...),true>
+//	{ using type = R_p(A_p...); };
+//
+//template<typename R_p, typename... A_p>
+//struct GetSigImpl_T<R_p(*)(A_p...),true>
+//	{ using type = R_p(A_p...); };
+//
+//template<typename T>
+//struct GetSigImpl_T<T, true>
+//	{
+//	using type =
+//		typename RemoveClass_T<decltype(&remove_reference<T>::type::operator())>::type;
+//	};
+//
+//template<typename T> using GetSig_T = typename GetSigImpl_T<T,true>::type;
 
 } // namespace Callable_Lambda_Util
 
