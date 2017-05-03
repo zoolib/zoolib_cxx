@@ -54,7 +54,7 @@ public:
 			{
 			if (fEnd > fBegin)
 				{
-				// We have some data in our buffer, use it up first.
+				// We have some data in our buffer, consume it first.
 				const size_t countToMove = std::min(fEnd - fBegin, iCount);
 				std::copy_n(&fBuffer[fBegin], countToMove, localDest);
 				fBegin += countToMove;
