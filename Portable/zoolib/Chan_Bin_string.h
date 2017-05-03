@@ -55,8 +55,6 @@ public:
 
 // From ChanR
 	virtual size_t QRead(byte* oDest, size_t iCount);
-
-// From ChanReadable
 	virtual size_t Readable();
 
 // From ChanPos
@@ -88,8 +86,6 @@ public:
 
 // From ChanR
 	virtual size_t QRead(byte* oDest, size_t iCount);
-
-// From ChanReadable
 	virtual size_t Readable();
 
 // From ChanPos
