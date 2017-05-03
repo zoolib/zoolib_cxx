@@ -48,30 +48,36 @@ public:
 	Factory_Race()
 		{}
 
+	Factory_Race(double iTimeout)
+	:	fTimeoutQ(iTimeout)
+		{}
+
 // From Callable
 	virtual ZQ<T> QCall()
 		{
-		if (fFactories.size() == 1)
+		if (not fTimeoutQ && fFactories.size() == 1)
 			{
 			return sCall(fFactories.back());
 			}
-		else if (fFactories.size() > 1)
+		else if (fFactories.size())
 			{
 			ZRef<Promise<T > > thePromise = sPromise<T>();
 			foreacha (factory, fFactories)
 				{
 				sStartOnNewThread(
-					sBindR(sCallable(&Factory_Race::spTryIt),
+					sBindR(sCallable(&Factory_Race::spCallAndQDeliver),
 						factory, thePromise));
+				if (thePromise->IsDelivered())
+					break;
 				}
 
 			ZRef<Delivery<T> > theDelivery = sGetDeliveryClearPromise(thePromise);
 
-			if (theDelivery->WaitFor(30))
-				{
-				if (ZQ<T> theQ = theDelivery->QGet())
-					return *theQ;
-				}
+			if (fTimeoutQ)
+				theDelivery->WaitFor(*fTimeoutQ);
+
+			if (ZQ<T> theQ = theDelivery->QGet())
+				return *theQ;
 			}
 
 		return null;
@@ -84,24 +90,17 @@ public:
 		}
 
 private:
-	static void spTryIt(const ZRef<Factory<T>>& theFactory, const ZRef<Promise<T> >& iPromise)
+	static void spCallAndQDeliver(const ZRef<Factory<T>>& iFactory, const ZRef<Promise<T> >& iPromise)
 		{
-		ZLOGTRACE(eDebug);
-
-		if (ZQ<T> theT = sQCall(theFactory))
+		if (ZQ<T> theT = sQCall(iFactory))
 			{
-			if (not iPromise->QDeliver(*theT))
-				{
-				ZLOGTRACE(eDebug);
-				}
-			else
-				{
-				ZLOGTRACE(eDebug);
-				}
+			// QDeliver it, so the value that's seen in the promise is the *first*.
+			iPromise->QDeliver(*theT);
 			}
 		}
 
 	std::vector<ZRef<Factory<T> > > fFactories;
+	ZQ<double> fTimeoutQ;
 	};
 
 } // namespace ZooLib
