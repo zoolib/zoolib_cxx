@@ -147,9 +147,9 @@ inline size_t sReadable(const ChanR<EE>& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Aspect_Readable
+#pragma mark Aspect_WaitReadable
 
-class Aspect_Readable
+class Aspect_WaitReadable
 	{
 public:
 	virtual bool WaitReadable(double iTimeout)
@@ -160,9 +160,9 @@ public:
 //		{ return false; }
 	};
 
-using ChanReadable = DeriveFrom<Aspect_Readable>;
+using ChanWaitReadable = DeriveFrom<Aspect_WaitReadable>;
 
-inline bool sWaitReadable(const ChanReadable& iChan, double iTimeout)
+inline bool sWaitReadable(const ChanWaitReadable& iChan, double iTimeout)
 	{ return sNonConst(iChan).WaitReadable(iTimeout); }
 
 // =================================================================================================
@@ -286,7 +286,7 @@ template <typename EE> using ChanRWPos = DeriveFrom
 template <typename EE> using ChanRW = DeriveFrom
 	<
 	Aspect_Read<EE>,
-	Aspect_Readable,
+	Aspect_WaitReadable,
 	Aspect_Write<EE>
 	>;
 
@@ -296,7 +296,7 @@ template <typename EE> using ChanConnection = DeriveFrom
 	Aspect_DisconnectRead,
 	Aspect_DisconnectWrite,
 	Aspect_Read<EE>,
-	Aspect_Readable,
+	Aspect_WaitReadable,
 	Aspect_Write<EE>
 	>;
 
