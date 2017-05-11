@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2016 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,33 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Factory_Fallback_h__
-#define __ZooLib_Factory_Fallback_h__ 1
+#ifndef __ZYadFilter_h__
+#define __ZYadFilter_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable_Function.h"
-#include "zoolib/Factory.h"
+#include "zoolib/Callable.h"
+#include "zoolib/Yad.h"
 
 namespace ZooLib {
 
-template <class T>
-T sFun_Fallback(
-	const ZRef<Factory<T> >& iPreferred,
-	const ZRef<Factory<T> >& iFallback)
-	{
-	if (T result = sCall(iPreferred))
-		return result;
-	return sCall(iFallback);
-	}
+// =================================================================================================
+// MARK: - ZYadFilter
 
-template <class T>
-ZRef<Factory<T> > sFactory_Fallback(
-	const ZRef<Factory<T> >& iPreferred,
-	const ZRef<Factory<T> >& iFallback)
-	{
-	return sBindR(sCallable(&sFun_Fallback<T>), iPreferred, iFallback);
-	}
+typedef Callable<ZRef<YadR>(const ZRef<YadR>&)> Callable_YadFilter;
+
+ZRef<YadR> sYadFilter(
+	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<YadR>& iYadR);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Factory_Fallback_h__
+#endif // __ZYadFilter_h__

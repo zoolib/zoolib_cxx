@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Cartesian.h"
 
-#include "zoolib/ZMatrixArray.h"
+#include "zoolib/GameEngine/ZMatrixArray.h"
 
 namespace ZooLib {
 namespace Cartesian {

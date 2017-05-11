@@ -19,13 +19,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMatrix_h__
-#define __ZMatrix_h__ 1
+#ifndef __Zoolib_GameEngine_Matrix_h__
+#define __Zoolib_GameEngine_Matrix_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Compat_cmath.h"
 #include "zoolib/Memory.h"
 
-#include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For null
 
@@ -1079,4 +1079,4 @@ ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,3>& iRHS)
 
 } // namespace ZooLib
 
-#endif // __ZMatrix_h__
+#endif // __Zoolib_GameEngine_Matrix_h__

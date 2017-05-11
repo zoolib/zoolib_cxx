@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGameEngine_Tweens_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h"
-#include "zoolib/ZTween_Std.h" // For ZTween_Filter_Fun
-#include "zoolib/gameengine/ZGameEngine_Geometry3D.h"
+#include "zoolib/Compat_algorithm.h"
+#include "zoolib/GameEngine/ZTween_Std.h" // For ZTween_Filter_Fun
+#include "zoolib/GameEngine/ZGameEngine_Geometry3D.h"
 
 namespace ZooLib {
 namespace ZGameEngine {

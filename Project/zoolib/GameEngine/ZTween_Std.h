@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTween_Std_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTween.h"
+#include "zoolib/GameEngine/ZTween.h"
 
 namespace ZooLib {
 

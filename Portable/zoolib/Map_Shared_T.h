@@ -18,47 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZMap_Shared_T_h__
-#define __ZMap_Shared_T_h__ 1
+#ifndef __ZooLib_Map_Shared_T_h__
+#define __ZooLib_Map_Shared_T_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/CountedVal.h"
 
-#include "zoolib/ZAny.h" // For sDefault
+#include "zoolib/Default.h" // For sDefault
 #include "zoolib/ZQ.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMap_Shared_T
+#pragma mark Map_Shared_T
 
 template <class Map_p, class Val_p = typename Map_p::Val_t, class Name_p = typename Map_p::Name_t>
-class ZMap_Shared_T
+class Map_Shared_T
 	{
 public:
 	typedef Map_p Map_t;
 	typedef Val_p Val_t;
 	typedef Name_p Name_t;
 
-	ZMap_Shared_T()
+	Map_Shared_T()
 		{}
 
-	ZMap_Shared_T(const ZMap_Shared_T& iOther)
+	Map_Shared_T(const Map_Shared_T& iOther)
 	:	fRep(iOther.fRep)
 		{}
 
-	~ZMap_Shared_T()
+	~Map_Shared_T()
 		{}
 
-	ZMap_Shared_T& operator=(const ZMap_Shared_T& iOther)
+	Map_Shared_T& operator=(const Map_Shared_T& iOther)
 		{
 		fRep = iOther.fRep;
 		return *this;
 		}
 
 // Our ctor protocol
-	explicit ZMap_Shared_T(const Map_t& iMap)
+	explicit Map_Shared_T(const Map_t& iMap)
 	:	fRep(sCountedVal(iMap))
 		{}
 
@@ -133,13 +133,13 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMap_Shared_Mutable_T
+#pragma mark Map_Shared_Mutable_T
 
 template <class Map_p, class Val_p = typename Map_p::Val_t, class Name_p = typename Map_p::Name_t>
-class ZMap_Shared_Mutable_T
-:	public ZMap_Shared_T<Map_p,Val_p,Name_p>
+class Map_Shared_Mutable_T
+:	public Map_Shared_T<Map_p,Val_p,Name_p>
 	{
-	typedef ZMap_Shared_T<Map_p,Val_p,Name_p> inherited;
+	typedef Map_Shared_T<Map_p,Val_p,Name_p> inherited;
 	using inherited::fRep;
 
 public:
@@ -147,24 +147,24 @@ public:
 	typedef Val_p Val_t;
 	typedef Name_p Name_t;
 
-	ZMap_Shared_Mutable_T()
+	Map_Shared_Mutable_T()
 		{}
 
-	ZMap_Shared_Mutable_T(const ZMap_Shared_Mutable_T& iOther)
+	Map_Shared_Mutable_T(const Map_Shared_Mutable_T& iOther)
 	:	inherited(iOther)
 		{}
 
-	~ZMap_Shared_Mutable_T()
+	~Map_Shared_Mutable_T()
 		{}
 
-	ZMap_Shared_Mutable_T& operator=(const ZMap_Shared_Mutable_T& iOther)
+	Map_Shared_Mutable_T& operator=(const Map_Shared_Mutable_T& iOther)
 		{
 		inherited::operator=(iOther);
 		return *this;
 		}
 
 // Our ctor protocol
-	explicit ZMap_Shared_Mutable_T(const Map_t& iMap)
+	explicit Map_Shared_Mutable_T(const Map_t& iMap)
 	:	inherited(iMap)
 		{}
 
@@ -188,7 +188,7 @@ public:
 	Val_t& Mut(const Name_t& iName)
 		{
 		if (not fRep)
-			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
 		return sMut(fRep).Mut(iName);
 		}
 
@@ -204,23 +204,23 @@ public:
 	S& Mut(const Name_t& iName)
 		{
 		if (not fRep)
-			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
 		return sMut(fRep).template Mut<S>(iName);
 		}
 
-	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
+	Map_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
 		{
 		if (not fRep)
-			const_cast<ZMap_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
 		sMut(fRep).Set(iName, iVal);
 		return *this;
 		}
 
 	template <class S>
-	ZMap_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal)
+	Map_Shared_Mutable_T& Set(const Name_t& iName, const S& iVal)
 		{ return this->Set(iName, Val_t(iVal)); }
 
-	ZMap_Shared_Mutable_T& Erase(const Name_t& iName)
+	Map_Shared_Mutable_T& Erase(const Name_t& iName)
 		{
 		if (fRep)
 			sMut(fRep).Erase(iName);
@@ -233,4 +233,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZMap_Shared_T_h__
+#endif // __ZooLib_Map_Shared_T_h__

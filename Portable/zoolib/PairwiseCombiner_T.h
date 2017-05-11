@@ -63,7 +63,7 @@ public:
 
 		uint32 changedBits = (fCount + 1) ^ fCount;
 		++fCount;
-		while (changedBits = (changedBits >> 1))
+		while ((changedBits = (changedBits >> 1)))
 			{
 			T tail = fStack.back();
 			fStack.pop_back();

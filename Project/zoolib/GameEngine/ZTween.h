@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTween_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCountedWithoutFinalize.h"
-#include "zoolib/ZCompat_algorithm.h" // For std::binary_function
-#include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/CountedWithoutFinalize.h"
+#include "zoolib/Compat_algorithm.h" // For std::binary_function
+#include "zoolib/Compat_cmath.h" // For fmod
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZRef.h"
@@ -52,7 +53,7 @@ If given a place outside that weight it returns null.
 
 template <class Val_p>
 class ZTween
-:	public ZCountedWithoutFinalize
+:	public CountedWithoutFinalize
 	{
 protected:
 	ZTween() {}

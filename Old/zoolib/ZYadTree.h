@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,23 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Yad_h__
-#define __ZUtil_Yad_h__ 1
+#ifndef __ZYadTree_h__
+#define __ZYadTree_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Trail.h"
 #include "zoolib/Yad.h"
 
 namespace ZooLib {
-namespace ZUtil_Yad {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZUtil_Yad
+ZRef<ZYadMapAtRPos> sYadTree(
+	const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const std::string& iProtoName);
 
-ZRef<YadR> sWalk(ZRef<YadR> iYadR, const Trail& iTrail);
+ZRef<ZYadMapAtRPos> sYadTree(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
 
-} // namespace ZUtil_Yad
+ZRef<ZYadMapAtRPos> sParameterizedYadTree(const ZRef<ZYadMapAtRPos>& iBase,
+	const std::string& iRootAugmentName, const ZRef<ZYadMapAtRPos>& iRootAugment);
+
 } // namespace ZooLib
 
-#endif // __ZUtil_Yad_h__
+#endif // __ZYadTree_h__

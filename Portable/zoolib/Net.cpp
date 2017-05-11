@@ -42,7 +42,11 @@ NetAddress::~NetAddress()
 	{}
 
 ZQ<ZRef<ChannerRWClose_Bin> > NetAddress::QCall()
-	{ return this->Connect(); }
+	{
+	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
+		return theChanner;
+	return null;
+	}
 
 ZRef<NetAddressLookup> NetAddress::MakeLookup(size_t iMaxNames)
 	{ return null; }
@@ -68,7 +72,11 @@ NetName::~NetName()
 	{}
 
 ZQ<ZRef<ChannerRWClose_Bin> > NetName::QCall()
-	{ return this->Connect(); }
+	{
+	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
+		return theChanner;
+	return null;
+	}
 
 ZRef<ChannerRWClose_Bin> NetName::Connect()
 	{
@@ -106,7 +114,11 @@ NetListener::~NetListener()
 	{}
 
 ZQ<ZRef<ChannerRWClose_Bin> > NetListener::QCall()
-	{ return this->Listen(); }
+	{
+	if (ZRef<ChannerRWClose_Bin> theChanner = this->Listen())
+		return theChanner;
+	return null;
+	}
 
 ZRef<NetAddress> NetListener::GetAddress()
 	{ return null; }

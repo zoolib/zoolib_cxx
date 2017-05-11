@@ -30,9 +30,9 @@ using std::string;
 #pragma mark -
 #pragma mark Static helpers
 
-static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
+static ZRef<YadR> spGetChild(ZRef<YadR> iYadR, const string& iName)
 	{
-	if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
+	if (ZRef<YadMapR> theYadMapR = iYadR.DynamicCast<YadMapR>())
 		{
 		if (ZRef<ZYadMapAtR> theYadMapAtR = iYadR.DynamicCast<ZYadMapAtR>())
 			{
@@ -86,9 +86,9 @@ static ZRef<ZYadR> spGetChild(ZRef<ZYadR> iYadR, const string& iName)
 #pragma mark -
 #pragma mark ZUtil_Yad
 
-ZRef<ZYadR> ZUtil_Yad::sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail)
+ZRef<YadR> ZUtil_Yad::sWalk(ZRef<YadR> iYadR, const Trail& iTrail)
 	{
-	const ZTrail theTrail = iTrail.Normalized();
+	const Trail theTrail = iTrail.Normalized();
 
 	for (size_t x = 0, count = theTrail.Count(); iYadR && x < count; ++x)
 		iYadR = spGetChild(iYadR, theTrail.At(x));

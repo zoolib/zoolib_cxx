@@ -19,8 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compat_algorithm.h"
-#include "zoolib/Unicode.h"
 #include "zoolib/Trail.h"
+#include "zoolib/Unicode.h"
 
 #include <cstring> // For std::strlen
 

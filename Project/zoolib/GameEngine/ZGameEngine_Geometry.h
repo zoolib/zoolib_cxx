@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGameEngine_Geometry_h__
-#define __ZGameEngine_Geometry_h__ 1
+#ifndef __Zoolib_GameEngine_Geometry_h__
+#define __Zoolib_GameEngine_Geometry_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZMatrix.h"
+#include "zoolib/GameEngine/ZMatrix.h"
 
 namespace ZooLib {
 namespace ZGameEngine {
@@ -189,4 +189,4 @@ ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)
 } // namespace ZGameEngine
 } // namespace ZooLib
 
-#endif // __ZGameEngine_Geometry_h__
+#endif // __Zoolib_GameEngine_Geometry_h__

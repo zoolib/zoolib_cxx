@@ -46,25 +46,25 @@ public:
 	typedef Callable<R(void)> Callable;
 
 	Callable_Indirect(const ZRef<Callable>& iCallable)
-	:	fCallable(iCallable)
+	:	fSafeCallable(iCallable)
 		{}
 
 // From Callable
 	virtual ZQ<R> QCall()
-		{ return sQCall(fCallable.Get()); }
+		{ return sQCall(fSafeCallable.Get()); }
 
 // Our protocol
 	ZRef<Callable> Get()
-		{ return fCallable.Get(); }
+		{ return fSafeCallable.Get(); }
 
 	void Set(const ZRef<Callable>& iCallable)
-		{ fCallable.Set(iCallable); }
+		{ fSafeCallable.Set(iCallable); }
 
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
-		{ return fCallable.CAS(iPrior, iNew); }
+		{ return fSafeCallable.CAS(iPrior, iNew); }
 
 private:
-	Safe<ZRef<Callable> > fCallable;
+	Safe<ZRef<Callable> > fSafeCallable;
 	};
 
 // =================================================================================================
@@ -81,23 +81,23 @@ public: \
 	typedef Callable<R(ZMACRO_Callable_P##X)> Callable; \
 \
 	Callable_Indirect(const ZRef<Callable>& iCallable) \
-	:	fCallable(iCallable) \
+	:	fSafeCallable(iCallable) \
 		{} \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
-		{ return sQCall(fCallable.Get(), ZMACRO_Callable_i##X); } \
+		{ return sQCall(fSafeCallable.Get(), ZMACRO_Callable_i##X); } \
 \
 	ZRef<Callable> Get() \
-		{ return fCallable.Get(); } \
+		{ return fSafeCallable.Get(); } \
 \
 	void Set(const ZRef<Callable>& iCallable) \
-		{ fCallable.Set(iCallable); } \
+		{ fSafeCallable.Set(iCallable); } \
 \
 	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew) \
-		{ return fCallable.CAS(iPrior, iNew); } \
+		{ return fSafeCallable.CAS(iPrior, iNew); } \
 \
 private: \
-	Safe<ZRef<Callable> > fCallable; \
+	Safe<ZRef<Callable> > fSafeCallable; \
 	};
 
 ZMACRO_Callable_Callable(0)

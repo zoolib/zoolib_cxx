@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCog_h__
 #define __ZCog_h__ 1
 
-#include "zoolib/ZRef<Callable<typename_Bind.h"
-#include "zoolib/ZRef<Callable<typename_Function.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 
 namespace ZooLib {
 
@@ -95,32 +95,40 @@ public:
 
 //--
 
-	ZCog(const bool iBool)
-	:	inherited(iBool ? sTrue() : null)
-		{}
+	ZCog(const bool iBool);
 
-	ZCog& operator=(const bool iBool)
-		{
-		inherited::operator=(iBool ? sTrue() : null);
-		return *this;
-		}
-
-//--
-
-	static const ZCog& sFalse()
-		{
-		static const ZCog spCog;
-		return spCog;
-		}
-
-	static ZCog spCogFun_True(const ZCog& iSelf, Param iParam)
-		{ ZUnimplemented(); }
-
-	static const ZCog spCog_True;
-
-	static const ZCog& sTrue()
-		{ return spCog_True; }
+	ZCog& operator=(const bool iBool);
 	};
+
+template <class Param_p>
+const ZCog<Param_p>& sCog_False()
+	{
+	static const ZCog<Param_p> spCog;
+	return spCog;
+	}
+
+template <class Param_p>
+ZCog<Param_p> spCogFun_True(const ZCog<Param_p>& iSelf, Param_p iParam)
+	{ ZUnimplemented(); }
+
+template <class Param_p>
+ZCog<Param_p> sCog_True()
+	{
+	static const ZCog<Param_p> spCog_True = sCallable(spCogFun_True<Param_p>);
+	return spCog_True;
+	}
+
+template <class Param_p>
+ZCog<Param_p>::ZCog(const bool iBool)
+:	inherited(iBool ? sCog_True<Param_p>() : null)
+	{}
+
+template <class Param_p>
+ZCog<Param_p>& ZCog<Param_p>::operator=(const bool iBool)
+	{
+	inherited::operator=(iBool ? sCog_True<Param_p>() : null);
+	return *this;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -144,7 +152,7 @@ const ZCog<Param>& sCog_Pending()
 template <class Param>
 inline
 bool sIsTrue(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return ZCog<Param>::sTrue() == iCallable; }
+	{ return sCog_True<Param>() == iCallable; }
 
 template <class Param>
 inline
@@ -467,9 +475,9 @@ ZCog<Param> sCog_Repeat(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param
 	return new Cog_Repeat<Param>(iCallable, iCallable);
 	}
 
-template <class Param>
-ZCog<Param> operator*(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
-	{ return sCog_Repeat<Param>(iCallable); }
+//template <class Param>
+//ZCog<Param> operator*(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable)
+//	{ return sCog_Repeat<Param>(iCallable); }
 
 // =================================================================================================
 #pragma mark -
@@ -483,8 +491,8 @@ class Cog_Each
 	{
 public:
 	Cog_Each(
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -511,8 +519,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_Each(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFinished(iCallable0))
 		return iCallable1;
@@ -525,14 +533,14 @@ ZCog<Param> sCog_Each(
 
 template <class Param>
 ZCog<Param> operator^(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_Each<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator^=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = ioCog0 ^ iCallable1; }
 
 // =================================================================================================
@@ -541,11 +549,11 @@ ZCog<Param>& operator^=(
 
 template <class Param>
 class Cog_And
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_And(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_And(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -622,8 +630,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_And(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFalse(iCallable0))
 		return false;
@@ -639,14 +647,14 @@ ZCog<Param> sCog_And(
 
 template <class Param>
 ZCog<Param> operator&(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_And<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator&=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_And<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -655,11 +663,11 @@ ZCog<Param>& operator&=(
 
 template <class Param>
 class Cog_Or
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_Or(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_Or(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -733,8 +741,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_Or(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFalse(iCallable0))
 		return iCallable1;
@@ -750,14 +758,14 @@ ZCog<Param> sCog_Or(
 
 template <class Param>
 ZCog<Param> operator|(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_Or<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator|=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Or<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -768,11 +776,11 @@ ZCog<Param>& operator|=(
 
 template <class Param>
 class Cog_While
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_While(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_While(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -831,8 +839,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_While(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsPending(iCallable0) && sIsPending(iCallable1))
 		return new Cog_While<Param>(iCallable0, iCallable1);
@@ -847,11 +855,11 @@ ZCog<Param> sCog_While(
 
 template <class Param>
 class Cog_With
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_With(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_With(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -908,8 +916,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_With(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsPending(iCallable0) && sIsPending(iCallable1))
 		return new Cog_With<Param>(iCallable0, iCallable1);
@@ -918,14 +926,14 @@ ZCog<Param> sCog_With(
 
 template <class Param>
 ZCog<Param> operator/(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_With<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator/=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -936,11 +944,11 @@ ZCog<Param>& operator/=(
 
 template <class Param>
 class Cog_Plus
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_Plus(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_Plus(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -996,8 +1004,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_Plus(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFinished(iCallable0))
 		return iCallable1;
@@ -1010,14 +1018,14 @@ ZCog<Param> sCog_Plus(
 
 template <class Param>
 ZCog<Param> operator+(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_Plus<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator+=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Plus<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -1028,11 +1036,11 @@ ZCog<Param>& operator+=(
 
 template <class Param>
 class Cog_Minus
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_Minus(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_Minus(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -1088,8 +1096,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_Minus(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFinished(iCallable0))
 		return iCallable0;
@@ -1102,14 +1110,14 @@ ZCog<Param> sCog_Minus(
 
 template <class Param>
 ZCog<Param> operator-(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_Minus<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator-=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_Minus<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -1120,11 +1128,11 @@ ZCog<Param>& operator-=(
 
 template <class Param>
 class Cog_WithUnchanged
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_WithUnchanged(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_WithUnchanged(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCog0(iCallable0)
 	,	fCog1(iCallable1)
 		{}
@@ -1164,8 +1172,8 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_WithUnchanged(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsPending(iCallable0) && sIsPending(iCallable1))
 		return new Cog_WithUnchanged<Param>(iCallable0, iCallable1);
@@ -1174,14 +1182,14 @@ ZCog<Param> sCog_WithUnchanged(
 
 template <class Param>
 ZCog<Param> operator%(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_WithUnchanged<Param>(iCallable0, iCallable1); }
 
 template <class Param>
 ZCog<Param>& operator%=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_WithUnchanged<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
@@ -1190,8 +1198,8 @@ ZCog<Param>& operator%=(
 
 template <class Param>
 ZCog<Param> sCog_Fallback(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iPreferred,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iFallback)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iPreferred,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iFallback)
 	{ return iPreferred ? iPreferred : iFallback; }
 
 // =================================================================================================
@@ -1202,12 +1210,12 @@ ZCog<Param> sCog_Fallback(
 
 template <class Param>
 class Cog_If
-:	public ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)>
+:	public Callable<ZCog<Param>(const ZCog<Param>&,Param)>
 	{
 public:
-	Cog_If(const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-		const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	Cog_If(const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+		const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	:	fCondition(iCondition)
 	,	fCog0(iCallable0)
 	,	fCog1(iCallable1)
@@ -1250,9 +1258,9 @@ public:
 
 template <class Param>
 ZCog<Param> sCog_If(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCondition,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{
 	if (sIsFalse(iCondition))
 		return iCallable1;
@@ -1265,14 +1273,14 @@ ZCog<Param> sCog_If(
 
 template <class Param>
 ZCog<Param> operator>>(
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable0,
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return sCog_If<Param>(iCallable0, iCallable1, null); }
 
 template <class Param>
 ZCog<Param>& operator>>=(
 	ZCog<Param>& ioCog0,
-	const ZRef<ZRef<Callable<typename<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
+	const ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)> >& iCallable1)
 	{ return ioCog0 = sCog_If<Param>(ioCog0, iCallable1, null); }
 
 } // namespace ZooLib

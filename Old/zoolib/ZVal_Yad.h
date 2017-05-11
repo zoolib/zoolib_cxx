@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_Yad_h__
+#if 0
+//#ifndef __ZVal_Yad_h__
 #define __ZVal_Yad_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h" // For ZSeq_Any and ZMap_Any
-#include "zoolib/ZValAccessors.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/Val_Any.h" // For Seq_Any and Map_Any
+//#include "zoolib/ZValAccessors.h"
+#include "zoolib/Yad.h"
 
 #include <string>
 
@@ -33,7 +34,7 @@ namespace ZooLib {
 class ZSeq_Yad;
 class ZMap_Yad;
 
-typedef ZVal_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
+typedef Val_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
 
 // =================================================================================================
 #pragma mark -
@@ -121,13 +122,13 @@ public:
 	const ZVal_Yad& operator[](size_t iIndex) const;
 
 	ZRef<ZYadSeqAtRPos> GetYad() const;
-	ZSeq_Any GetSeq() const;
+	Seq_Any GetSeq() const;
 
 private:
 	void pGenSeq();
 
 	mutable ZRef<ZYadSeqAtRPos> fYad;
-	mutable ZSeq_Any fSeq;
+	mutable Seq_Any fSeq;
 	};
 
 // =================================================================================================
@@ -138,7 +139,7 @@ class ZMap_Yad
 	{
 public:
 	typedef ZVal_Yad Val_t;
-	typedef ZMap_Any::Name_t Name_t;
+	typedef Map_Any::Name_t Name_t;
 
 	ZMap_Yad();
 	ZMap_Yad(const ZMap_Yad& iOther);
@@ -215,18 +216,18 @@ public:
 	const ZVal_Yad& operator[](const Name_t& iName) const;
 
 	ZRef<ZYadMapAtRPos> GetYad() const;
-	ZMap_Any GetMap() const;
+	Map_Any GetMap() const;
 
 private:
 	mutable ZRef<ZYadMapAtRPos> fYad;
-	mutable ZMap_Any fMap;
+	mutable Map_Any fMap;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<ZYadR> sYadR(const ZVal_Yad& iVal);
+ZRef<YadR> sYadR(const ZVal_Yad& iVal);
 
 ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq);
 
