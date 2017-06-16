@@ -49,7 +49,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME
-	#include "zoolib/Cartesian_CG.h"
+	#include "zoolib/Apple/Cartesian_CG.h"
 #endif
 
 #if not ZMACRO_NS_AND_CG_GEOMETRY_ARE_SAME

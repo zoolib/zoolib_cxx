@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/ZCounted.h"
 
-#include "zoolib/GameEngine/ZDCPixmapNS.h"
+#include "zoolib/ZDCPixmapNS.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 

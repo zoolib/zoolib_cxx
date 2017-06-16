@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#if 0
-//#ifndef __ZVal_Yad_h__
+//#if 0
+#ifndef __ZVal_Yad_h__
 #define __ZVal_Yad_h__ 1
 #include "zconfig.h"
 
@@ -50,8 +50,8 @@ public:
 	~ZSeq_Yad();
 	ZSeq_Yad& operator=(const ZSeq_Yad& iOther);
 
-	ZSeq_Yad(const ZRef<ZYadSeqAtRPos>& iYad);
-	ZSeq_Yad& operator=(const ZRef<ZYadSeqAtRPos>& iYad);
+//##	ZSeq_Yad(const ZRef<ZYadSeqAtRPos>& iYad);
+//##	ZSeq_Yad& operator=(const ZRef<ZYadSeqAtRPos>& iYad);
 
 // ZSeq protocol
 	size_t Count() const;
@@ -121,13 +121,13 @@ public:
 	ZVal_Yad& operator[](size_t iIndex);
 	const ZVal_Yad& operator[](size_t iIndex) const;
 
-	ZRef<ZYadSeqAtRPos> GetYad() const;
+//##	ZRef<ZYadSeqAtRPos> GetYad() const;
 	Seq_Any GetSeq() const;
 
 private:
 	void pGenSeq();
 
-	mutable ZRef<ZYadSeqAtRPos> fYad;
+//##	mutable ZRef<ZYadSeqAtRPos> fYad;
 	mutable Seq_Any fSeq;
 	};
 
@@ -146,8 +146,8 @@ public:
 	~ZMap_Yad();
 	ZMap_Yad& operator=(const ZMap_Yad& iOther);
 
-	ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad);
-	ZMap_Yad& operator=(const ZRef<ZYadMapAtRPos>& iYad);
+//##	ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad);
+//##	ZMap_Yad& operator=(const ZRef<ZYadMapAtRPos>& iYad);
 
 // ZMap protocol
 	void Clear();
@@ -215,11 +215,11 @@ public:
 	ZVal_Yad& operator[](const Name_t& iName);
 	const ZVal_Yad& operator[](const Name_t& iName) const;
 
-	ZRef<ZYadMapAtRPos> GetYad() const;
+//##	ZRef<ZYadMapAtRPos> GetYad() const;
 	Map_Any GetMap() const;
 
 private:
-	mutable ZRef<ZYadMapAtRPos> fYad;
+//##	mutable ZRef<ZYadMapAtRPos> fYad;
 	mutable Map_Any fMap;
 	};
 
@@ -229,9 +229,9 @@ private:
 
 ZRef<YadR> sYadR(const ZVal_Yad& iVal);
 
-ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq);
+//##ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq);
 
-ZRef<ZYadMapAtRPos> sYadR(const ZMap_Yad& iMap);
+//##ZRef<ZYadMapAtRPos> sYadR(const ZMap_Yad& iMap);
 
 } // namespace ZooLib
 

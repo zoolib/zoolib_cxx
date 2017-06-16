@@ -68,12 +68,8 @@ typename std::map<KBase,Value,Comparator>::iterator
 sEraseInc(std::map<KBase,Value,Comparator>& ioMap,
 	typename std::map<KBase,Value,Comparator>::iterator iter)
 	{
-	if (ioMap.end() == iter)
-		return iter;
-
-	const KBase theKey = iter->first;
-	ioMap.erase(iter);
-	return ioMap.lower_bound(theKey);
+	ZAssert(ioMap.end() != iter);
+	return ioMap.erase(iter);
 	}
 
 // -----

@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_STL_set.h"
+#include "zoolib/Yad_Any.h"
 
 #include "zoolib/ZVal_Yad.h"
-#include "zoolib/ZYad_Any.h"
 
 namespace ZooLib {
 
@@ -34,7 +34,7 @@ namespace { // anonymous
 
 class Tombstone_t {};
 
-ZVal_Yad spAsVal_Yad(const ZRef<ZYadR>& iYadR)
+ZVal_Yad spAsVal_Yad(const ZRef<YadR>& iYadR)
 	{
 	if (not iYadR)
 		return sDefault<ZVal_Yad>();
@@ -211,7 +211,7 @@ const ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex) const
 ZRef<ZYadSeqAtRPos> ZSeq_Yad::GetYad() const
 	{ return fYad; }
 
-ZSeq_Any ZSeq_Yad::GetSeq() const
+Seq_Any ZSeq_Yad::GetSeq() const
 	{ return fSeq; }
 
 void ZSeq_Yad::pGenSeq()
@@ -275,7 +275,7 @@ void ZMap_Yad::Clear()
 
 const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 	{
-	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
+	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
 		{
 		if (const ZAny* theAny = fMap.PGet(theIndex))
@@ -322,7 +322,7 @@ const ZVal_Yad& ZMap_Yad::Get(const Name_t& iName) const
 
 ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 	{
-	ZMap_Any::Index_t theIndex = fMap.IndexOf(iName);
+	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
 		{
 		if (ZAny* theAny = fMap.PMut(theIndex))
@@ -390,7 +390,7 @@ const ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName) const
 ZRef<ZYadMapAtRPos> ZMap_Yad::GetYad() const
 	{ return fYad; }
 
-ZMap_Any ZMap_Yad::GetMap() const
+Map_Any ZMap_Yad::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
@@ -409,7 +409,7 @@ class YadMapAtRPos
 		{}
 
 public:
-	YadMapAtRPos(ZRef<ZYadMapAtRPos> iYad, const ZMap_Any& iMap)
+	YadMapAtRPos(ZRef<ZYadMapAtRPos> iYad, const Map_Any& iMap)
 	:	fYad(iYad)
 	,	fMap(iMap)
 	,	fCurrent(fMap.Begin())
@@ -473,8 +473,8 @@ public:
 
 private:
 	ZRef<ZYadMapAtRPos> fYad;
-	ZMap_Any fMap;
-	ZMap_Any::Index_t fCurrent;
+	Map_Any fMap;
+	Map_Any::Index_t fCurrent;
 	set<string> fNamesSeen;
 	};
 

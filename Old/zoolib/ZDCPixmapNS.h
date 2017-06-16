@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef.h"
 
-#include "zoolib/GameEngine/ZGeomPOD.h"
+#include "zoolib/ZGeomPOD.h"
 #include "zoolib/GameEngine/ZRGBA.h"
 
 // For documentation, see ZDCPixmapNS.cpp

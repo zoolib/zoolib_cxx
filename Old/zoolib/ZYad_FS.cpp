@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 
 #include "zoolib/ZYad_FS.h"
-#include "zoolib/ZYad_Std.h"
 
 namespace ZooLib {
 namespace ZYad_FS {
@@ -37,7 +36,7 @@ class YadStreamerRPos
 ,	public virtual ZStreamerRPos
 	{
 public:
-	YadStreamerRPos(const ZFileSpec& iFS);
+	YadStreamerRPos(const FileSpec& iFS);
 	virtual ~YadStreamerRPos();
 
 // From ZYadR
@@ -47,11 +46,11 @@ public:
 	virtual const ZStreamRPos& GetStreamRPos();
 
 private:
-	ZFileSpec fFileSpec;
+	FileSpec fFileSpec;
 	ZRef<ZStreamerRPos> fStreamerRPos;
 	};
 
-YadStreamerRPos::YadStreamerRPos(const ZFileSpec& iFS)
+YadStreamerRPos::YadStreamerRPos(const FileSpec& iFS)
 :	fFileSpec(iFS)
 	{}
 
@@ -77,8 +76,8 @@ class YadMapAtRPos
 :	public ZYadMapAtRPos
 	{
 public:
-	YadMapAtRPos(const ZFileSpec& iFS);
-	YadMapAtRPos(const ZFileSpec& iFS, const ZFileIter& iFileIter);
+	YadMapAtRPos(const FileSpec& iFS);
+	YadMapAtRPos(const FileSpec& iFS, const ZFileIter& iFileIter);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(Name& oName);
@@ -93,19 +92,19 @@ public:
 	virtual ZRef<ZYadR> ReadAt(const Name& iName);
 
 private:
-	ZFileSpec fFileSpec;
+	FileSpec fFileSpec;
 	ZFileIter fFileIter;
 	};
 
-YadMapAtRPos::YadMapAtRPos(const ZFileSpec& iFS)
+YadMapAtRPos::YadMapAtRPos(const FileSpec& iFS)
 :	fFileSpec(iFS)
 ,	fFileIter(iFS)
 	{}
 
-	ZFileSpec fFileSpec;
+	FileSpec fFileSpec;
 	ZFileIter fFileIter;
 
-YadMapAtRPos::YadMapAtRPos(const ZFileSpec& iFS, const ZFileIter& iFileIter)
+YadMapAtRPos::YadMapAtRPos(const FileSpec& iFS, const ZFileIter& iFileIter)
 :	fFileSpec(iFS)
 ,	fFileIter(iFileIter)
 	{}
@@ -114,7 +113,7 @@ ZRef<ZYadR> YadMapAtRPos::ReadInc(Name& oName)
 	{
 	while (fFileIter)
 		{
-		const ZFileSpec cur = fFileIter.Current();
+		const FileSpec cur = fFileIter.Current();
 		const Name curName = fFileIter.CurrentName();
 		fFileIter.Advance();
 		if (ZRef<ZYadR> result = ZYad_FS::sYadR(cur))
@@ -145,7 +144,7 @@ ZRef<ZYadR> YadMapAtRPos::ReadAt(const Name& iName)
 #pragma mark -
 #pragma mark ZYad_FS::sYadR
 
-ZRef<ZYadR> sYadR(const ZFileSpec& iFS)
+ZRef<ZYadR> sYadR(const FileSpec& iFS)
 	{
 	switch (iFS.Kind())
 		{

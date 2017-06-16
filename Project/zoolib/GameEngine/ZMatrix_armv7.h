@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 
-#include "zoolib/ZCompat_arm.h"
-#include "zoolib/ZMatrix.h"
+#include "zoolib/ARM/ZCompat_arm.h"
+#include "zoolib/GameEngine/ZMatrix.h"
 
 #ifndef ZCONFIG_API_Desired__Matrix_armv7
 	#define ZCONFIG_API_Desired__Matrix_armv7 1

@@ -47,13 +47,13 @@ static ZRef<YadR> spGetChild(ZRef<YadR> iYadR, const string& iName)
 		else for (;;)
 			{
 			Name theName;
-			if (ZRef<ZYadR,false> cur = theYadMapR->ReadInc(theName))
+			if (ZRef<YadR,false> cur = theYadMapR->ReadInc(theName))
 				break;
 			else if (theName == iName)
 				return cur;
 			}
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
+	else if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
 		{
 		if (ZQ<int64> theQ = Util_string::sQInt64(iName))
 			{

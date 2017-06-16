@@ -130,7 +130,7 @@ public: \
 template <ZMACRO_Callable_Class_P##X_1> \
 class RelopsTraits_HasLT<Multi##X<ZMACRO_Callable_P##X_1> > : public RelopsTraits_Has {}; \
 \
-template <ZMACRO_Callable_Class_P##X> \
+template <ZMACRO_Callable_Class_P##X_1> \
 Multi##X<ZMACRO_Callable_P##X_1> sMulti(ZMACRO_Callable_VT##X_1) \
 	{ return Multi##X<ZMACRO_Callable_P##X_1>(ZMACRO_Callable_i##X_1); } \
 

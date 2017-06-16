@@ -52,13 +52,13 @@ const Result& sGetChan(const ZRef<Thing>& iChanner)
 #pragma mark -
 #pragma mark Basic channer typedefs.
 
-typedef Channer<ChanAbort> ChannerAbort;
-typedef Channer<ChanDisconnectRead> ChannerDisconnectRead;
-typedef Channer<ChanDisconnectWrite> ChannerDisconnectWrite;
-typedef Channer<ChanPos> ChannerPos;
+using ChannerAbort = Channer<ChanAbort>;
+using ChannerDisconnectRead = Channer<ChanDisconnectRead>;
+using ChannerDisconnectWrite = Channer<ChanDisconnectWrite>;
+using ChannerPos = Channer<ChanPos>;
 template <class EE> using ChannerR = Channer<ChanR<EE> >;
-typedef Channer<ChanSize> ChannerSize;
-typedef Channer<ChanSizeSet> ChannerSizeSet;
+using ChannerSize = Channer<ChanSize>;
+using ChannerSizeSet = Channer<ChanSizeSet>;
 template <class EE> using ChannerU = Channer<ChanU<EE> >;
 template <class EE> using ChannerW = Channer<ChanW<EE> >;
 

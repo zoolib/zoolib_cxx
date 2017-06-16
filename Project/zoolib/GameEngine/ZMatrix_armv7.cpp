@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "zoolib/ZMatrix_armv7.h"
+#include "zoolib/GameEngine/ZMatrix_armv7.h"
 
 #if ZCONFIG_API_Enabled(Matrix_armv7)
 

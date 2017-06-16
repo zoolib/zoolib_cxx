@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,22 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadTree_h__
-#define __ZYadTree_h__ 1
+#ifndef __ZYad_FS_h__
+#define __ZYad_FS_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/File.h"
 #include "zoolib/Yad.h"
 
 namespace ZooLib {
 
-//ZRef<ZYadMapAtRPos> sYadTree(
-//	const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const std::string& iProtoName);
-//
-//ZRef<ZYadMapAtRPos> sYadTree(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
-//
-//ZRef<ZYadMapAtRPos> sParameterizedYadTree(const ZRef<ZYadMapAtRPos>& iBase,
-//	const std::string& iRootAugmentName, const ZRef<ZYadMapAtRPos>& iRootAugment);
+// =================================================================================================
+#pragma mark -
+#pragma mark ZYad_FS
+
+namespace ZYad_FS {
+
+ZRef<YadR> sYadR(const FileSpec& iFS);
+
+} // namespace ZYad_FS
 
 } // namespace ZooLib
 
-#endif // __ZYadTree_h__
+#endif // __ZYad_FS_h__

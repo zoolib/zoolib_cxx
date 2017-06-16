@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZRGBA.h"
-#include "zoolib/ZCompat_algorithm.h" // For min/max
+#include "zoolib/Compat_algorithm.h" // For min/max
+#include "zoolib/GameEngine/ZRGBA.h"
 
 namespace ZooLib {
 

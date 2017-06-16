@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZMatrix.h"
-#include "zoolib/ZMatrix_armv6.h"
-#include "zoolib/ZMatrix_armv7.h"
+#include "zoolib/GameEngine/ZMatrix.h"
+#include "zoolib/GameEngine/ZMatrix_armv6.h"
+#include "zoolib/GameEngine/ZMatrix_armv7.h"
 
 namespace ZooLib {
 

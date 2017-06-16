@@ -394,7 +394,7 @@ static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
-,	fChanR_Boundary(spThreeQuotes, 3, sGetChan(iChannerR))
+,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), sGetChan(iChannerR))
 ,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
@@ -405,7 +405,6 @@ void YadStrimmerR_JSON::Finish()
 	if (fQuotesSeen)
 		throw ParseException("Improperly closed string");
 	}
-
 
 size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 	{

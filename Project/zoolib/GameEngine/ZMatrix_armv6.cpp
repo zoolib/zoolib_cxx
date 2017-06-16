@@ -44,7 +44,7 @@ not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "zoolib/ZMatrix_armv6.h"
+#include "zoolib/GameEngine/ZMatrix_armv6.h"
 
 #if ZCONFIG_API_Enabled(Matrix_armv6)
 

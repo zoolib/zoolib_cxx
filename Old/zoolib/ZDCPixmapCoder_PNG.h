@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2002 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_FS_h__
-#define __ZYad_FS_h__ 1
+#ifndef __ZDCPixmapCoder_PNG_h__
+#define __ZDCPixmapCoder_PNG_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZFile.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZDCPixmapCoder.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYad_FS
+// MARK: - ZDCPixmapEncoder_PNG
 
-namespace ZYad_FS {
+class ZDCPixmapEncoder_PNG : public ZDCPixmapEncoder
+	{
+public:
+	static void sWritePixmap(const ChanW_Bin& iStream, const ZDCPixmap& iPixmap);
 
-ZRef<ZYadR> sYadR(const ZFileSpec& iFS);
+	ZDCPixmapEncoder_PNG();
+	virtual ~ZDCPixmapEncoder_PNG();
 
-} // namespace ZYad_FS
+// From ZDCPixmapEncoder
+	virtual void Imp_Write(const ChanW_Bin& iStream,
+		const void* iBaseAddress,
+		const ZDCPixmapNS::RasterDesc& iRasterDesc,
+		const ZDCPixmapNS::PixelDesc& iPixelDesc,
+		const ZRectPOD& iBounds);
+	};
+
+// =================================================================================================
+// MARK: - ZDCPixmapDecoder_PNG
+
+class ZDCPixmapDecoder_PNG : public ZDCPixmapDecoder
+	{
+public:
+	static ZDCPixmap sReadPixmap(const ChanR_Bin& iStream);
+
+	ZDCPixmapDecoder_PNG();
+	virtual ~ZDCPixmapDecoder_PNG();
+
+// From ZDCPixmapDecoder
+	virtual void Imp_Read(const ChanR_Bin& iStream, ZDCPixmap& oPixmap);
+
+private:
+	};
 
 } // namespace ZooLib
 
-#endif // __ZYad_FS_h__
+#endif // __ZDCPixmapCoder_PNG_h__

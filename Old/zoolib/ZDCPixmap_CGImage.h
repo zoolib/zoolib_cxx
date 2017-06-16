@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,22 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadTree_h__
-#define __ZYadTree_h__ 1
+#ifndef __ZDCPixmap_CGImage_h__
+#define __ZDCPixmap_CGImage_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Yad.h"
+#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZDCPixmap.h"
+
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+
+#if ZMACRO_IOS
+	#include ZMACINCLUDE2(CoreGraphics,CGImage.h)
+#else
+	#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGImage.h)
+#endif
 
 namespace ZooLib {
+namespace ZDCPixmap_CGImage {
 
-//ZRef<ZYadMapAtRPos> sYadTree(
-//	const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const std::string& iProtoName);
-//
-//ZRef<ZYadMapAtRPos> sYadTree(const ZRef<ZYadMapAtRPos>& iYadMapAtRPos);
-//
-//ZRef<ZYadMapAtRPos> sParameterizedYadTree(const ZRef<ZYadMapAtRPos>& iBase,
-//	const std::string& iRootAugmentName, const ZRef<ZYadMapAtRPos>& iRootAugment);
+// =================================================================================================
+// MARK: - ZDCPixmap_CGImage
 
+ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef);
+
+} // namespace ZDCPixmap_CGImage
 } // namespace ZooLib
 
-#endif // __ZYadTree_h__
+#endif // ZCONFIG_SPI_Enabled(CoreGraphics)
+
+#endif // __ZDCPixmap_CGImage_h__

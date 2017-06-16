@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h" // For sMemCopy
 
 #include "zoolib/ZDCPixmap.h"
-#include "zoolib/ZStream.h"
 
 #include <vector>
 
@@ -277,10 +276,10 @@ void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation,
 	ZRectPOD realSourceBounds = iSourceBounds;
 
 	realSourceBounds =
-		sWithWR(sMin(W(realSourceBounds), W(repBounds) - X(realDestLocation)), realSourceBounds);
+		sWithWR(realSourceBounds, sMin(W(realSourceBounds), W(repBounds) - X(realDestLocation)));
 
 	realSourceBounds =
-		sWithHB(sMin(H(realSourceBounds), H(repBounds) - Y(realDestLocation)), realSourceBounds);
+		sWithHB(realSourceBounds, sMin(H(realSourceBounds), H(repBounds) - Y(realDestLocation)));
 
 	if (L(realSourceBounds) < 0)
 		{
