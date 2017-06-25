@@ -343,27 +343,19 @@ private:
 // AsSig is needed so a void T0 or T1 does not end up in the param list of a signature.
 
 template <class Sig_p>
-struct AsSigBase
-	{
-	typedef Sig_p Sig_t;
-	typedef Callable<Sig_t> Callable_t;
-	};
+struct AsSigBase { typedef Callable<Sig_p> Callable_t; };
 
 template <class T0, class T1>
-struct AsSig : public AsSigBase<T0(T1)>
-	{};
+struct AsSig : public AsSigBase<T0(T1)> {};
 
 template <class T>
-struct AsSig<T,void> : public AsSigBase<T()>
-	{};
+struct AsSig<T,void> : public AsSigBase<T()> {};
 
 template <class T>
-struct AsSig<void,T> : public AsSigBase<void(T)>
-	{};
+struct AsSig<void,T> : public AsSigBase<void(T)> {};
 
 template <>
-struct AsSig<void,void> : public AsSigBase<void()>
-	{};
+struct AsSig<void,void> : public AsSigBase<void()> {};
 
 // =================================================================================================
 #pragma mark -
