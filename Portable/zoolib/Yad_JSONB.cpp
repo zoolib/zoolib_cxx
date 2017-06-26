@@ -263,7 +263,7 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 #pragma mark Visitor_ToChan
 
 class Visitor_ToChan
-:	public Visitor_Yad
+//:	public Visitor_Yad
 	{
 public:
 	Visitor_ToChan(ZRef<WriteFilter> iWriteFilter, const ChanW_Bin& iChanW)
@@ -272,12 +272,12 @@ public:
 		{}
 
 // From ZVisitor_Yad
-	virtual void Visit_YadR(const ZRef<YadR>& iYadR)
+	void Visit(const ZRef<YadR>& iYadR)
 		{
 		ZUnimplemented();
 		}
 
-	virtual void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
+	void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
 		{
 		const Any theVal = iYadAtomR->AsAny();
 
@@ -316,7 +316,7 @@ public:
 			}
 		}
 
-	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
+	void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
 		{
 		const ChanR_Bin& r = sGetChan<ChanR_Bin>(iYadStreamerR);
 		sEWriteBE<uint8>(fW, 0xE7);
@@ -332,7 +332,7 @@ public:
 			}
 		}
 
-	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
+	void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
 		{
 		const string8 theString8 = sReadAllUTF8(sGetChan<ChanR_UTF>(iYadStrimmerR));
 		sEWriteBE<uint8>(fW, 0xE8);
@@ -340,22 +340,22 @@ public:
 		sEWrite(fW, theString8);
 		}
 
-	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
+	void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{
 		sEWriteBE<uint8>(fW, 0xEA);
 		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
-			theChild->Accept(*this);
+			this->Visit(theChild);
 		sEWriteBE<uint8>(fW, 0xFF); // Terminator
 		}
 
-	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
+	void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
 		{
 		sEWriteBE<uint8>(fW, 0xED);
 		Name theName;
 		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
 			{
 			spToChan(fW, theName);
-			theChild->Accept(*this);
+			this->Visit(theChild);
 			}
 		sEWriteBE<uint8>(fW, 0); // Empty name
 		sEWriteBE<uint8>(fW, 0xFF); // Terminator
@@ -375,10 +375,10 @@ ZRef<YadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin)
 	{ return spMakeYadR(null, iChannerR_Bin); }
 
 void sToChan(ZRef<WriteFilter> iWriteFilter, ZRef<YadR> iYadR, const ChanW_Bin& w)
-	{ iYadR->Accept(Visitor_ToChan(iWriteFilter, w)); }
+	{ Visitor_ToChan(iWriteFilter, w).Visit(iYadR); }
 
 void sToChan(ZRef<YadR> iYadR, const ChanW_Bin& w)
-	{ iYadR->Accept(Visitor_ToChan(null, w)); }
+	{ Visitor_ToChan(null, w).Visit(iYadR); }
 
 } // namespace Yad_JSONB
 } // namespace ZooLib

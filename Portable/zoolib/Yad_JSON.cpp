@@ -831,226 +831,240 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 #pragma mark -
 #pragma mark Visitor_Writer
 
-Visitor_Writer::Visitor_Writer(
-	size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
-:	fIndent(iIndent)
-,	fOptions(iOptions)
-,	fChanW(iChanW)
-,	fMayNeedInitialLF(false)
-	{}
-
-void Visitor_Writer::Visit_YadR(const ZRef<YadR>& iYadR)
+class Visitor_Writer
 	{
-	fChanW << "NULL";
-	if (fOptions.fBreakStrings)
+	size_t fIndent;
+	const WriteOptions fOptions;
+	const ChanW_UTF& fChanW;
+	bool fMayNeedInitialLF;
+
+public:
+	Visitor_Writer(
+		size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+	:	fIndent(iIndent)
+	,	fOptions(iOptions)
+	,	fChanW(iChanW)
+	,	fMayNeedInitialLF(false)
+		{}
+
+	void Visit(const ZRef<YadR>& iYadR)
 		{
-		fChanW << " /*!! Unhandled yad: "
-			<< spPrettyName(typeid(*iYadR.Get()))
-			<< " !!*/";
-		}
-	}
-
-void Visitor_Writer::Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
-	{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
-
-void Visitor_Writer::Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
-	{
-	spToStrim_Stream(sGetChan<ChanR_Bin>(iYadStreamerR),
-		fIndent, fOptions, fMayNeedInitialLF, fChanW);
-	}
-
-void Visitor_Writer::Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR)
-	{ spWriteString(sGetChan<ChanR_UTF>(iYadStrimmerR), fChanW); }
-
-void Visitor_Writer::Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
-	{
-	bool needsIndentation = false;
-	if (fOptions.DoIndentation())
-		{
-		// We're supposed to be indenting if we're complex, ie if any element is:
-		// 1. A non-empty vector.
-		// 2. A non-empty tuple.
-		// or if iOptions.fBreakStrings is true, any element is a string with embedded
-		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = not iYadSeqR->IsSimple(fOptions);
+		ZUnimplemented();
 		}
 
-	if (needsIndentation)
+	void Visit_YadR(const ZRef<YadR>& iYadR)
 		{
-		// We need to indent.
-		if (fMayNeedInitialLF)
+		fChanW << "NULL";
+		if (fOptions.fBreakStrings)
 			{
-			// We were invoked by a tuple which has already issued the property
-			// name and equals sign, so we need to start a fresh line.
-			spWriteLFIndent(fIndent, fOptions, fChanW);
+			fChanW << " /*!! Unhandled yad: "
+				<< spPrettyName(typeid(*iYadR.Get()))
+				<< " !!*/";
+			}
+		}
+
+	void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
+		{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
+
+	void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
+		{
+		spToStrim_Stream(sGetChan<ChanR_Bin>(iYadStreamerR),
+			fIndent, fOptions, fMayNeedInitialLF, fChanW);
+		}
+
+	void Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR)
+		{ spWriteString(sGetChan<ChanR_UTF>(iYadStrimmerR), fChanW); }
+
+	void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
+		{
+		bool needsIndentation = false;
+		if (fOptions.DoIndentation())
+			{
+			// We're supposed to be indenting if we're complex, ie if any element is:
+			// 1. A non-empty vector.
+			// 2. A non-empty tuple.
+			// or if iOptions.fBreakStrings is true, any element is a string with embedded
+			// line breaks or more than iOptions.fStringLineLength characters.
+			//##needsIndentation = not iYadSeqR->IsSimple(fOptions);
 			}
 
-		SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
+		if (needsIndentation)
+			{
+			// We need to indent.
+			if (fMayNeedInitialLF)
+				{
+				// We were invoked by a tuple which has already issued the property
+				// name and equals sign, so we need to start a fresh line.
+				spWriteLFIndent(fIndent, fOptions, fChanW);
+				}
 
-		uint64 count = 0;
-		fChanW << "[";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
-			{
-			if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
+			SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
+
+			uint64 count = 0;
+			fChanW << "[";
+			for (bool isFirst = true; /*no test*/ ; isFirst = false)
 				{
-				break;
-				}
-			else if (false && fOptions.fUseExtendedNotation.DGet(false))
-				{
-				spWriteLFIndent(fIndent, fOptions, fChanW);
-				cur->Accept(*this);
-				fChanW << ";";
-				}
-			else
-				{
-				if (not isFirst)
-					fChanW << ",";
-				spWriteLFIndent(fIndent, fOptions, fChanW);
-				if (fOptions.fNumberSequences.DGet(false))
-					fChanW << "/*" << count << "*/";
-				cur->Accept(*this);
-				}
-			++count;
-			}
-		spWriteLFIndent(fIndent, fOptions, fChanW);
-		fChanW << "]";
-		}
-	else
-		{
-		// We're not indenting, so we can just dump everything out on
-		// one line, with just some spaces to keep things legible.
-		fChanW << "[";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
-			{
-			if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
-				{
-				break;
-				}
-			else if (false && fOptions.fUseExtendedNotation.DGet(false))
-				{
-				if (not isFirst && fOptions.fBreakStrings)
-					fChanW << " ";
-				cur->Accept(*this);
-				fChanW << ";";
-				}
-			else
-				{
-				if (not isFirst)
+				if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
 					{
-					fChanW << ",";
+					break;
+					}
+				else if (false && fOptions.fUseExtendedNotation.DGet(false))
+					{
+					spWriteLFIndent(fIndent, fOptions, fChanW);
+					this->Visit(cur);
+					fChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						fChanW << ",";
+					spWriteLFIndent(fIndent, fOptions, fChanW);
+					if (fOptions.fNumberSequences.DGet(false))
+						fChanW << "/*" << count << "*/";
+					this->Visit(cur);
+					}
+				++count;
+				}
+			spWriteLFIndent(fIndent, fOptions, fChanW);
+			fChanW << "]";
+			}
+		else
+			{
+			// We're not indenting, so we can just dump everything out on
+			// one line, with just some spaces to keep things legible.
+			fChanW << "[";
+			for (bool isFirst = true; /*no test*/ ; isFirst = false)
+				{
+				if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
+					{
+					break;
+					}
+				else if (false && fOptions.fUseExtendedNotation.DGet(false))
+					{
+					if (not isFirst && fOptions.fBreakStrings)
+						fChanW << " ";
+					this->Visit(cur);
+					fChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						{
+						fChanW << ",";
+						if (fOptions.fBreakStrings)
+							fChanW << " ";
+						}
+					this->Visit(cur);
+					}
+				}
+			fChanW << "]";
+			}
+		}
+
+	void Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR)
+		{
+		bool needsIndentation = false;
+		if (fOptions.DoIndentation())
+			{
+			//##needsIndentation = not iYadMapR->IsSimple(fOptions);
+			}
+
+		const bool useSingleQuotes = fOptions.fPreferSingleQuotes.DGet(false);
+
+		if (needsIndentation)
+			{
+			if (fMayNeedInitialLF)
+				{
+				// We're going to be indenting, but need to start
+				// a fresh line to have our { and contents line up.
+				spWriteLFIndent(fIndent, fOptions, fChanW);
+				}
+
+			fChanW << "{";
+			for (bool isFirst = true; /*no test*/ ; isFirst = false)
+				{
+				Name curName;
+				if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
+					{
+					break;
+					}
+				else if (fOptions.fUseExtendedNotation.DGet(false))
+					{
+					spWriteLFIndent(fIndent, fOptions, fChanW);
+					spWritePropName(curName, useSingleQuotes, fChanW);
+					fChanW << " = ";
+
+					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+					SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+					this->Visit(cur);
+					fChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						fChanW << ",";
+					spWriteLFIndent(fIndent, fOptions, fChanW);
+					spWriteString(curName, useSingleQuotes, fChanW);
+					fChanW << ": ";
+
+					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+					SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+					this->Visit(cur);
+					}
+				}
+			spWriteLFIndent(fIndent, fOptions, fChanW);
+			fChanW << "}";
+			}
+		else
+			{
+			fChanW << "{";
+			bool wroteAny = false;
+			for (bool isFirst = true; /*no test*/ ; isFirst = false)
+				{
+				Name curName;
+				if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
+					{
+					break;
+					}
+				else if (fOptions.fUseExtendedNotation.DGet(false))
+					{
+					if (not isFirst && fOptions.fBreakStrings)
+						fChanW << " ";
+
+					spWritePropName(curName, useSingleQuotes, fChanW);
+					if (fOptions.fBreakStrings)
+						fChanW << " = ";
+					else
+						fChanW << "=";
+
+					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+					SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+					this->Visit(cur);
+					fChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						fChanW << ",";
 					if (fOptions.fBreakStrings)
 						fChanW << " ";
+					spWriteString(curName, useSingleQuotes, fChanW);
+					fChanW << ":";
+					if (fOptions.fBreakStrings)
+						fChanW << " ";
+
+					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
+					SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
+					this->Visit(cur);
 					}
-				cur->Accept(*this);
+				wroteAny = true;
 				}
+			if (wroteAny && fOptions.fBreakStrings)
+				fChanW << " ";
+			fChanW << "}";
 			}
-		fChanW << "]";
 		}
-	}
-
-void Visitor_Writer::Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR)
-	{
-	bool needsIndentation = false;
-	if (fOptions.DoIndentation())
-		{
-		needsIndentation = not iYadMapR->IsSimple(fOptions);
-		}
-
-	const bool useSingleQuotes = fOptions.fPreferSingleQuotes.DGet(false);
-
-	if (needsIndentation)
-		{
-		if (fMayNeedInitialLF)
-			{
-			// We're going to be indenting, but need to start
-			// a fresh line to have our { and contents line up.
-			spWriteLFIndent(fIndent, fOptions, fChanW);
-			}
-
-		fChanW << "{";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
-			{
-			Name curName;
-			if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
-				{
-				break;
-				}
-			else if (fOptions.fUseExtendedNotation.DGet(false))
-				{
-				spWriteLFIndent(fIndent, fOptions, fChanW);
-				spWritePropName(curName, useSingleQuotes, fChanW);
-				fChanW << " = ";
-
-				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
-				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
-				cur->Accept(*this);
-				fChanW << ";";
-				}
-			else
-				{
-				if (not isFirst)
-					fChanW << ",";
-				spWriteLFIndent(fIndent, fOptions, fChanW);
-				spWriteString(curName, useSingleQuotes, fChanW);
-				fChanW << ": ";
-
-				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
-				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
-				cur->Accept(*this);
-				}
-			}
-		spWriteLFIndent(fIndent, fOptions, fChanW);
-		fChanW << "}";
-		}
-	else
-		{
-		fChanW << "{";
-		bool wroteAny = false;
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
-			{
-			Name curName;
-			if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
-				{
-				break;
-				}
-			else if (fOptions.fUseExtendedNotation.DGet(false))
-				{
-				if (not isFirst && fOptions.fBreakStrings)
-					fChanW << " ";
-
-				spWritePropName(curName, useSingleQuotes, fChanW);
-				if (fOptions.fBreakStrings)
-					fChanW << " = ";
-				else
-					fChanW << "=";
-
-				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
-				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
-				cur->Accept(*this);
-				fChanW << ";";
-				}
-			else
-				{
-				if (not isFirst)
-					fChanW << ",";
-				if (fOptions.fBreakStrings)
-					fChanW << " ";
-				spWriteString(curName, useSingleQuotes, fChanW);
-				fChanW << ":";
-				if (fOptions.fBreakStrings)
-					fChanW << " ";
-
-				SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
-				SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, true);
-				cur->Accept(*this);
-				}
-			wroteAny = true;
-			}
-		if (wroteAny && fOptions.fBreakStrings)
-			fChanW << " ";
-		fChanW << "}";
-		}
-	}
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -1078,7 +1092,7 @@ void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
 	ZRef<YadR> iYadR, const ChanW_UTF& w)
 	{
 	if (iYadR)
-		iYadR->Accept(Visitor_Writer(iInitialIndent, iOptions, w));
+		Visitor_Writer(iInitialIndent, iOptions, w).Visit(iYadR);
 	}
 
 ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)

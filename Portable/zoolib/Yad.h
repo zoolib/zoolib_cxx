@@ -27,13 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Name.h"
 #include "zoolib/SafePtrStack.h"
-#include "zoolib/Visitor.h"
 
 #include <string>
 
 namespace ZooLib {
-
-class Visitor_Yad;
 
 // =================================================================================================
 #pragma mark -
@@ -77,20 +74,15 @@ public:
 #pragma mark YadR
 
 class YadR
-:	public Visitee
+:	public ZCounted
 	{
 protected:
 	YadR();
 
 public:
-// From Visitee
-	virtual void Accept(const Visitor& iVisitor);
-
 // Our protocol
 	virtual void Finish();
 	virtual ZRef<YadR> Meta();
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions) = 0;
 	};
 
 // =================================================================================================
@@ -101,10 +93,6 @@ class YadAtomR
 :	public virtual YadR
 	{
 public:
-// From YadR
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions);
-
 // Our protocol
 	virtual Any AsAny() = 0;
 	};
@@ -118,9 +106,6 @@ class YadStreamerR
 ,	public ChannerR_Bin
 	{
 public:
-// From YadR
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -131,9 +116,6 @@ class YadStrimmerR
 :	public virtual YadR
 ,	public ChannerR_UTF
 	{
-// From YadR
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -144,10 +126,6 @@ class YadSeqR
 :	public virtual YadR
 	{
 public:
-// From YadR
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions);
-
 // Our protocol
 	virtual ZRef<YadR> ReadInc() = 0;
 
@@ -163,32 +141,10 @@ class YadMapR
 :	public virtual YadR
 	{
 public:
-// From YadR
-	virtual void Accept_Yad(Visitor_Yad& iVisitor);
-	virtual bool IsSimple(const YadOptions& iOptions);
-
 // Our protocol
 	virtual ZRef<YadR> ReadInc(Name& oName) = 0;
 	virtual bool Skip();
 	virtual void SkipAll();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Yad
-
-class Visitor_Yad
-:	public virtual Visitor
-	{
-public:
-	virtual void Visit_YadR(const ZRef<YadR>& iYadR);
-	virtual void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR);
-	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR);
-
-	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR);
-
-	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR);
 	};
 
 // =================================================================================================

@@ -186,31 +186,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Visitor_Writer
-
-class Visitor_Writer : public Visitor_Yad
-	{
-public:
-	Visitor_Writer(
-		size_t iIndent, const WriteOptions& iOptions, const ChanW_UTF& iStrimW);
-
-// From ZVisitor_Yad
-	virtual void Visit_YadR(const ZRef<ZooLib::YadR>& iYadR);
-	virtual void Visit_YadAtomR(const ZRef<ZooLib::YadAtomR>& iYadAtomR);
-	virtual void Visit_YadStreamerR(const ZRef<ZooLib::YadStreamerR>& iYadStreamerR);
-	virtual void Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR);
-	virtual void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR);
-	virtual void Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR);
-
-private:
-	size_t fIndent;
-	const WriteOptions fOptions;
-	const ChanW_UTF& fChanW;
-	bool fMayNeedInitialLF;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark sYadR and sToStrim
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);

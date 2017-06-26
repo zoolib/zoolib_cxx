@@ -96,22 +96,11 @@ YadParseException::YadParseException(const char* iWhat)
 YadR::YadR()
 	{}
 
-void YadR::Accept(const Visitor& iVisitor)
-	{
-	if (Visitor_Yad* theVisitor = sDynNonConst<Visitor_Yad>(&iVisitor))
-		this->Accept_Yad(*theVisitor);
-	else
-		Visitee::Accept(iVisitor);
-	}
-
 void YadR::Finish()
 	{}
 
 ZRef<YadR> YadR::Meta()
 	{ return null; }
-
-void YadR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
 #pragma mark -
@@ -124,12 +113,6 @@ void YadR::Accept_Yad(Visitor_Yad& iVisitor)
 
 */
 
-void YadAtomR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadAtomR(this); }
-
-bool YadAtomR::IsSimple(const YadOptions& iOptions)
-	{ return true; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark YadStreamerR
@@ -140,12 +123,6 @@ bool YadAtomR::IsSimple(const YadOptions& iOptions)
 \sa Yad
 
 */
-
-void YadStreamerR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadStreamerR(this); }
-
-bool YadStreamerR::IsSimple(const YadOptions& iOptions)
-	{ return false; }
 
 // =================================================================================================
 #pragma mark -
@@ -158,12 +135,6 @@ bool YadStreamerR::IsSimple(const YadOptions& iOptions)
 
 */
 
-void YadStrimmerR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadStrimmerR(this); }
-
-bool YadStrimmerR::IsSimple(const YadOptions& iOptions)
-	{ return false; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark YadSeqR
@@ -174,12 +145,6 @@ bool YadStrimmerR::IsSimple(const YadOptions& iOptions)
 \sa Yad
 
 */
-
-void YadSeqR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadSeqR(this); }
-
-bool YadSeqR::IsSimple(const YadOptions& iOptions)
-	{ return false; }
 
 bool YadSeqR::Skip()
 	{ return this->ReadInc(); }
@@ -201,12 +166,6 @@ void YadSeqR::SkipAll()
 
 */
 
-void YadMapR::Accept_Yad(Visitor_Yad& iVisitor)
-	{ iVisitor.Visit_YadMapR(this); }
-
-bool YadMapR::IsSimple(const YadOptions& iOptions)
-	{ return false; }
-
 bool YadMapR::Skip()
 	{
 	Name dummy;
@@ -218,35 +177,6 @@ void YadMapR::SkipAll()
 	while (this->Skip())
 		{}
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Yad
-
-/**
-\class Visitor_Yad
-\ingroup Yad
-\sa Yad
-
-*/
-
-void Visitor_Yad::Visit_YadR(const ZRef<YadR>& iYadR)
-	{ this->Visit(iYadR); }
-
-void Visitor_Yad::Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
-	{ this->Visit_YadR(iYadAtomR); }
-
-void Visitor_Yad::Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
-	{ this->Visit_YadR(iYadStreamerR); }
-
-void Visitor_Yad::Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
-	{ this->Visit_YadR(iYadStrimmerR); }
-
-void Visitor_Yad::Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
-	{ this->Visit_YadR(iYadSeqR); }
-
-void Visitor_Yad::Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
-	{ this->Visit_YadR(iYadMapR); }
 
 // =================================================================================================
 #pragma mark -
@@ -348,10 +278,6 @@ public:
 	:	YadR_Any(Any(iString))
 	,	ChanRU_UTF_string8(fAny.Get<string8>())
 		{}
-
-// From YadR
-	bool IsSimple(const YadOptions& iOptions)
-		{ return true; }
 	};
 
 // =================================================================================================
