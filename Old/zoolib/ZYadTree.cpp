@@ -41,6 +41,9 @@ typedef CountedVal<Name> CountedString;
 class Link;
 class YadMapAtRPos;
 
+typedef YadR ZYadR;
+typedef ZooLib::YadSeqR ZYadSeqR;
+
 // =================================================================================================
 // MARK: - Helpers
 
@@ -105,33 +108,33 @@ private:
 // =================================================================================================
 // MARK: - YadSeqRClone
 
-class YadSeqRClone
-:	public ZYadSeqRClone
-	{
-public:
-	YadSeqRClone(const ZRef<Link>& iLink, const ZRef<ZYadSeqRClone>& iYad)
-	:	fLink(iLink)
-	,	fYad(iYad)
-		{}
-
-// From ZYadSeqR
-	virtual ZRef<ZYadR> ReadInc()
-		{ return spWrap(fLink, fYad->ReadInc()); }
-
-	virtual bool Skip()
-		{ return fYad->Skip(); }
-
-	virtual void SkipAll()
-		{ fYad->SkipAll(); }
-
-// From ZYadSeqRClone
-	virtual ZRef<ZYadSeqRClone> Clone()
-		{ return new YadSeqRClone(fLink, fYad->Clone()); }
-
-private:
-	const ZRef<Link> fLink;
-	const ZRef<ZYadSeqRClone> fYad;
-	};
+//class YadSeqRClone
+//:	public ZYadSeqRClone
+//	{
+//public:
+//	YadSeqRClone(const ZRef<Link>& iLink, const ZRef<ZYadSeqRClone>& iYad)
+//	:	fLink(iLink)
+//	,	fYad(iYad)
+//		{}
+//
+//// From ZYadSeqR
+//	virtual ZRef<ZYadR> ReadInc()
+//		{ return spWrap(fLink, fYad->ReadInc()); }
+//
+//	virtual bool Skip()
+//		{ return fYad->Skip(); }
+//
+//	virtual void SkipAll()
+//		{ fYad->SkipAll(); }
+//
+//// From ZYadSeqRClone
+//	virtual ZRef<ZYadSeqRClone> Clone()
+//		{ return new YadSeqRClone(fLink, fYad->Clone()); }
+//
+//private:
+//	const ZRef<Link> fLink;
+//	const ZRef<ZYadSeqRClone> fYad;
+//	};
 
 // =================================================================================================
 // MARK: - YadSeqRPos

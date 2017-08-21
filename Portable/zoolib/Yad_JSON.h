@@ -129,6 +129,7 @@ class YadStrimmerR_JSON
 :	public YadStrimmerR
 	{
 public:
+	YadStrimmerR_JSON(ZRef<ChannerRU_UTF> iChanner);
 	YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
 // From YadR

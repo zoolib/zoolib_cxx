@@ -391,6 +391,13 @@ size_t YadStreamerR_Base64::QRead(byte* oDest, size_t iCount)
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
+YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerRU_UTF> iChanner)
+:	fChannerR(iChanner)
+,	fChannerU(iChanner)
+,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), *iChanner)
+,	fQuotesSeen(1) // We're initialized having seen a single quote.
+	{}
+
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)

@@ -37,8 +37,8 @@ public:
 	,	fYadMapR(iYadMapR)
 		{}
 	
-	virtual bool IsSimple(const YadOptions& iOptions)
-		{ return fYadMapR->IsSimple(iOptions); }
+//	virtual bool IsSimple(const YadOptions& iOptions)
+//		{ return fYadMapR->IsSimple(iOptions); }
 
 	virtual ZRef<YadR> ReadInc(Name& oName)
 		{ return sYadFilter(fCallable, sCall(fCallable, fYadMapR->ReadInc(oName))); }
@@ -57,8 +57,8 @@ public:
 	,	fYadSeqR(iYadSeqR)
 		{}
 	
-	virtual bool IsSimple(const YadOptions& iOptions)
-		{ return fYadSeqR->IsSimple(iOptions); }
+//	virtual bool IsSimple(const YadOptions& iOptions)
+//		{ return fYadSeqR->IsSimple(iOptions); }
 
 	virtual ZRef<YadR> ReadInc()
 		{ return sYadFilter(fCallable, sCall(fCallable, fYadSeqR->ReadInc())); }

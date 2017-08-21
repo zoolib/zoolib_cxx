@@ -57,7 +57,7 @@ public:
 		{
 		if (not fTimeoutQ && fFactories.size() == 1)
 			{
-			return sCall(fFactories.back());
+			return sQCall(fFactories.back());
 			}
 		else if (fFactories.size())
 			{

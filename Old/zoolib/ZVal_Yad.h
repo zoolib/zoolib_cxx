@@ -146,8 +146,8 @@ public:
 	~ZMap_Yad();
 	ZMap_Yad& operator=(const ZMap_Yad& iOther);
 
-//##	ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad);
-//##	ZMap_Yad& operator=(const ZRef<ZYadMapAtRPos>& iYad);
+	ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad);
+	ZMap_Yad& operator=(const ZRef<ZYadMapAtRPos>& iYad);
 
 // ZMap protocol
 	void Clear();
@@ -215,7 +215,7 @@ public:
 	ZVal_Yad& operator[](const Name_t& iName);
 	const ZVal_Yad& operator[](const Name_t& iName) const;
 
-//##	ZRef<ZYadMapAtRPos> GetYad() const;
+	ZRef<ZYadMapAtRPos> GetYad() const;
 	Map_Any GetMap() const;
 
 private:

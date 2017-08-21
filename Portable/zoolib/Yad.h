@@ -147,6 +147,19 @@ public:
 	virtual void SkipAll();
 	};
 
+class ZYadMapAtR : public YadMapR
+	{
+public:
+	virtual ZRef<YadR> ReadAt(const Name&) = 0;
+	};
+
+class ZYadMapAtRPos : public ZYadMapAtR
+	{
+public:
+//	virtual ZRef<YadR> ReadAt(const std::string&) = 0;
+	};
+
+
 // =================================================================================================
 #pragma mark -
 #pragma mark YadR_Any

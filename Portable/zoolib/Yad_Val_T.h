@@ -22,42 +22,60 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Yad_Val_T_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Chan_Bin_Data.h"
+#include "zoolib/Chan.h"
 #include "zoolib/Yad.h"
 
 namespace ZooLib {
+
+template <class EE, class LL>
+class Aspect_ReadAt
+:	public virtual UserOfElement<EE>
+	{
+public:
+	virtual size_t QReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
+	};
+
+template <class EE, class LL>
+using ChanReadAt = DeriveFrom<Aspect_ReadAt<EE,LL>>;
+
+template <class EE, class LL>
+inline size_t sQReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
+	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
+
+typedef ChanReadAt<ZRef<YadR>,Name> YadMapAt;
+typedef ChanReadAt<ZRef<YadR>,uint64> YadSeqAt;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark YadR_Val_T
 
-template <class Val_p>
-class YadR_Val_T
-:	public /*virtual*/ YadR
-	{
-public:
-	typedef YadR_Val_T YadBase_t;
-
-	YadR_Val_T()
-		{}
-
-	template <class P0>
-	YadR_Val_T(const P0& i0)
-	:	fVal(i0)
-		{}
-
-	template <class P0, class P1>
-	YadR_Val_T(const P0& i0, const P1& i1)
-	:	fVal(i0, i1)
-		{}
-
-// Our protocol
-	const Val_p& GetVal()
-		{ return fVal; }
-
-protected:
-	const Val_p fVal;
-	};
+//template <class Val_p>
+//class YadR_Val_T
+//:	public /*virtual*/ YadR
+//	{
+//public:
+//	typedef YadR_Val_T YadBase_t;
+//
+//	YadR_Val_T()
+//		{}
+//
+//	template <class P0>
+//	YadR_Val_T(const P0& i0)
+//	:	fVal(i0)
+//		{}
+//
+//	template <class P0, class P1>
+//	YadR_Val_T(const P0& i0, const P1& i1)
+//	:	fVal(i0, i1)
+//		{}
+//
+//// Our protocol
+//	const Val_p& GetVal()
+//		{ return fVal; }
+//
+//protected:
+//	const Val_p fVal;
+//	};
 
 // =================================================================================================
 #pragma mark -
