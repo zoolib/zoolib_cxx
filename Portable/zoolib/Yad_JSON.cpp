@@ -849,7 +849,33 @@ public:
 
 	void Visit(const ZRef<YadR>& iYadR)
 		{
-		ZUnimplemented();
+		if (false)
+			{}
+		else if (ZRef<YadAtomR> theYadAtomR = iYadR.DynamicCast<YadAtomR>())
+			{ spToStrim_SimpleValue(theYadAtomR->AsAny(), fOptions, fChanW); }
+
+		else if (ZRef<ChannerR_UTF> theChanner = iYadR.DynamicCast<ChannerR_UTF>())
+			{ spWriteString(*theChanner, fChanW); }
+
+		else if (ZRef<ChannerR_Bin> theChanner = iYadR.DynamicCast<ChannerR_Bin>())
+			{
+			spToStrim_Stream(*theChanner,
+				fIndent, fOptions, fMayNeedInitialLF, fChanW);
+			}
+
+		else if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
+			{
+			this->Visit_YadSeqR(theYadSeqR);
+			}
+
+		else if (ZRef<YadMapR> theYadMapR = iYadR.DynamicCast<YadMapR>())
+			{
+			this->Visit_YadMapR(theYadMapR);
+			}
+		else
+			{
+			this->Visit_YadR(iYadR);
+			}
 		}
 
 	void Visit_YadR(const ZRef<YadR>& iYadR)
@@ -866,14 +892,6 @@ public:
 	void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
 		{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
 
-	void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
-		{
-		spToStrim_Stream(sGetChan<ChanR_Bin>(iYadStreamerR),
-			fIndent, fOptions, fMayNeedInitialLF, fChanW);
-		}
-
-	void Visit_YadStrimmerR(const ZRef<ZooLib::YadStrimmerR>& iYadStrimmerR)
-		{ spWriteString(sGetChan<ChanR_UTF>(iYadStrimmerR), fChanW); }
 
 	void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
 		{

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
+#include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Visitor_Do_T.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_Std.h"
@@ -96,73 +97,80 @@ ZRef<YadMapR> sYadR(const Map_Any& iMap)
 
 namespace { // anonymous
 
-class Visitor_Do_GetVal
-:	public virtual Visitor_Do_T<Val_Any>
-,	public virtual Visitor_Yad
+class ValFromYadR
 	{
 public:
-// From Visitor_Yad
-	Visitor_Do_GetVal(bool iRepeatedPropsAsSeq)
+	ValFromYadR(bool iRepeatedPropsAsSeq)
 	:	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
 		{}
 
-	virtual ZQ<Val_Any> QDo(const ZRef<Visitee>& iRep)
+	ZQ<Val_Any> QVisit(const ZRef<ZCounted>& iCounted)
 		{
-		if (ZRef<YadR_Any> asAny = iRep.DynamicCast<YadR_Any>())
-			return asAny->GetAny();
-		return Visitor_Do_T<Val_Any>::QDo(iRep);
-		}
+		if (false)
+			{}
 
-	virtual void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
-		{ this->pSetResult(iYadAtomR->AsAny()); }
+		if (ZRef<YadAtomR> theYadAtomR = iCounted.DynamicCast<YadAtomR>())
+			return theYadAtomR->AsAny();
 
-	virtual void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
-		{ this->pSetResult(sReadAll_T<Data_Any>(sGetChan<ChanR_Bin>(iYadStreamerR))); }
-
-	virtual void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
-		{
-		string8 theString;
-		sCopyAll(sGetChan<ChanR_UTF>(iYadStrimmerR), ChanW_UTF_string8(&theString));
-		this->pSetResult(theString);
-		}
-
-	virtual void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
-		{
-		Seq_Any theSeq;
-
-		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
-			theSeq.Append(this->Do(theChild));
-
-		this->pSetResult(theSeq);
-		}
-
-	virtual void Visit_YadMapR(const ZRef<YadMapR>& iYadMapR)
-		{
-		Map_Any theMap;
-
-		Name theName;
-		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
+		if (ZRef<ChannerR_UTF> theChanner = iCounted.DynamicCast<ChannerR_UTF>())
 			{
-			Val_Any theVal = this->Do(theChild);
-			if (fRepeatedPropsAsSeq)
-				{
-				if (Val_Any* prior = theMap.PMut(theName))
-					{
-					if (Seq_Any* priorSeq = prior->PMut<Seq_Any>())
-						{
-						priorSeq->Append(theVal);
-						continue;
-						}
-					Seq_Any theSeq;
-					theSeq.Append(*prior);
-					theSeq.Append(theVal);
-					theVal = theSeq;
-					}
-				}
-			theMap.Set(theName, theVal);
+			string8 theString;
+			sCopyAll(*theChanner, ChanW_UTF_string8(&theString));
+			return theString;
 			}
 
-		this->pSetResult(theMap);
+		if (ZRef<ChannerR_Bin> theChanner = iCounted.DynamicCast<ChannerR_Bin>())
+			return sReadAll_T<Data_Any>(*theChanner);
+
+		if (ZRef<YadSeqR> theYadSeqR = iCounted.DynamicCast<YadSeqR>())
+			{
+			Seq_Any theSeq;
+
+			while (ZRef<YadR> theChild = theYadSeqR->ReadInc())
+				{
+				if (NotQ<Val_Any> theQ = this->QVisit(theChild))
+					return null;
+				else
+					theSeq.Append(*theQ);
+				}
+
+			return theSeq;
+			}
+
+		if (ZRef<YadMapR> theYadMapR = iCounted.DynamicCast<YadMapR>())
+			{
+			Map_Any theMap;
+
+			Name theName;
+			while (ZRef<YadR> theChild = theYadMapR->ReadInc(theName))
+				{
+				if (NotQ<Val_Any> theQ = this->QVisit(theChild))
+					{ return false; }
+				else
+					{
+					if (fRepeatedPropsAsSeq)
+						{
+						if (Val_Any* prior = theMap.PMut(theName))
+							{
+							if (Seq_Any* priorSeq = prior->PMut<Seq_Any>())
+								{
+								priorSeq->Append(*theQ);
+								continue;
+								}
+							Seq_Any theSeq;
+							theSeq.Append(*prior);
+							theSeq.Append(*theQ);
+							theQ = theSeq;
+							}
+						}
+					theMap.Set(theName, *theQ);
+					}
+				}
+
+			return theMap;
+			}
+
+		return null;
 		}
 
 private:
@@ -181,7 +189,7 @@ ZQ<Val_Any> sQFromYadR(ZRef<YadR> iYadR)
 	{ return sQFromYadR(false, iYadR); }
 
 ZQ<Val_Any> sQFromYadR(bool iRepeatedPropsAsSeq, ZRef<YadR> iYadR)
-	{ return Visitor_Do_GetVal(iRepeatedPropsAsSeq).QDo(iYadR); }
+	{ return ValFromYadR(iRepeatedPropsAsSeq).QVisit(iYadR); }
 
 } // namespace Yad_Any
 
