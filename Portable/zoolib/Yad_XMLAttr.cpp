@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Yad_XMLAttr.h"
+#include "zoolib/Yad_Any.h"
 
 /*
 ZYad_XMLAttr turns this:

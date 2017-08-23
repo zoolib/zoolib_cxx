@@ -31,6 +31,10 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark sYadR
 
+ZRef<YadAtomR> sYadAtomR_Any(const Any& iAny);
+
+ZRef<YadR> sYadR(const string8& iVal);
+
 ZRef<YadR> sYadR(const Any& iVal);
 
 ZRef<YadStreamerR> sYadR(const Data_Any& iData);

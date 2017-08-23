@@ -32,11 +32,12 @@ namespace SQLite {
 #pragma mark -
 #pragma mark SQLite::YadSeqR_Iter
 
-class YadSeqR_Iter : public YadSeqR_Std
+class ChanR_RefYad_Iter
+:	public ChanR_RefYad_Std
 	{
 public:
-	YadSeqR_Iter(ZRef<Iter> iIter);
-	virtual ~YadSeqR_Iter();
+	ChanR_RefYad_Iter(ZRef<Iter> iIter);
+	virtual ~ChanR_RefYad_Iter();
 
 // From YadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
@@ -44,6 +45,8 @@ public:
 private:
 	ZRef<Iter> fIter;
 	};
+
+typedef Channer_T<ChanR_RefYad_Iter> YadSeqR_Iter;
 
 } // namespace SQLite
 } // namespace ZooLib

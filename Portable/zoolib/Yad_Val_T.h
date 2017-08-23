@@ -79,29 +79,30 @@ typedef ChanReadAt<ZRef<YadR>,uint64> YadSeqAt;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadSeqR_Val_T
+#pragma mark ChanR_YadSeq_Val_T
 
 template <class Seq_p>
-class YadSeqR_Val_T
-:	public YadSeqR
+class ChanR_YadSeq_Val_T
+:	public ChanR_RefYad
 	{
 public:
-	YadSeqR_Val_T(const Seq_p& iSeq)
+	ChanR_YadSeq_Val_T(const Seq_p& iSeq)
 	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	YadSeqR_Val_T(const Seq_p& iSeq, uint64 iPosition)
+	ChanR_YadSeq_Val_T(const Seq_p& iSeq, uint64 iPosition)
 	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
-// From YadSeqR via YadSeqR
-	virtual ZRef<YadR> ReadInc()
+// From ChanR_YadSeq
+	virtual size_t QRead(ZRef<YadR>* oDest, size_t iCount)
 		{
-		if (fPosition < fSeq.Count())
-			return sYadR(fSeq.Get(fPosition++));
-		return null;
+		ZRef<YadR>* startDest = oDest;
+		while (fPosition < fSeq.Count() && iCount--)
+			*oDest++ = sYadR(fSeq.Get(fPosition++));
+		return oDest - startDest;
 		}
 
 // Our protocol

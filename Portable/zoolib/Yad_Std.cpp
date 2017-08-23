@@ -38,32 +38,26 @@ YadParseException_Std::YadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadSeqR_Std
+#pragma mark ChanR_RefYad_Std
 
-YadSeqR_Std::YadSeqR_Std()
+ChanR_RefYad_Std::ChanR_RefYad_Std()
 :	fStarted(false)
 	{}
 
-YadSeqR_Std::YadSeqR_Std(bool iFinished)
-:	fStarted(iFinished)
-	{}
-
-void YadSeqR_Std::Finish()
-	{ this->SkipAll(); }
-
-ZRef<YadR> YadSeqR_Std::ReadInc()
+size_t ChanR_RefYad_Std::QRead(ZRef<YadR>* oDest, size_t iCount)
 	{
-	if (not sGetSet(fStarted, true))
-		{
-		this->Imp_ReadInc(true, fValue);
-		}
-	else if (fValue)
-		{
-		fValue->Finish();
-		fValue.Clear();
-		this->Imp_ReadInc(false, fValue);
-		}
+	// It is *crucial* that we read one Yad at a time. It is likely that the underlying entity is
+	// in a partially consumed state, and walking the one yad we return will advance that state
+	// to the point when there *would* be another yad to read.
+	if (iCount && (*oDest = this->pReadInc()))
+		return 1;
+	return 0;
+	}
 
+ZRef<YadR> ChanR_RefYad_Std::pReadInc()
+	{
+	fValue.Clear();
+	this->Imp_ReadInc(not sGetSet(fStarted, true), fValue);
 	return fValue;
 	}
 
@@ -91,7 +85,7 @@ ZRef<YadR> YadMapR_Std::ReadInc(Name& oName)
 		}
 	else if (fValue)
 		{
-		fValue->Finish();
+		sFinish(fValue);
 		fValue.Clear();
 		this->Imp_ReadInc(false, oName, fValue);
 		}

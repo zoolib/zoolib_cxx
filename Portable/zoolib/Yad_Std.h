@@ -40,25 +40,23 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadSeqR_Std
+#pragma mark ChanR_RefYad_Std
 
-class YadSeqR_Std
-:	public YadSeqR
+class ChanR_RefYad_Std
+:	public ChanR_RefYad
 	{
 public:
-	YadSeqR_Std();
-	YadSeqR_Std(bool iFinished);
+	ChanR_RefYad_Std();
 
-// From YadR
-	virtual void Finish();
-
-// From YadSeqR
-	virtual ZRef<YadR> ReadInc();
+// From ChanR_RefYad
+	virtual size_t QRead(ZRef<YadR>* oDest, size_t iCount);
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR) = 0;
 
 private:
+	ZRef<YadR> pReadInc();
+
 	bool fStarted;
 	ZRef<YadR> fValue;
 	};

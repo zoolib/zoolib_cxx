@@ -26,13 +26,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
 
 #include <vector>
 
 #if ZCONFIG(Compiler,GCC)
 	#include <cxxabi.h>
-	#include <stdlib.h> // For free
+	#include <stdlib.h> // For free, required by __cxa_demangle
 #endif
 
 namespace ZooLib {
@@ -42,7 +43,7 @@ using std::min;
 using std::string;
 
 /*! \namespace ZooLib::Yad_JSON
-JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.html>.
+JSON is JavaScript Object Notation. See <http://www.json.org/>.
 
 Yad_JSON provides Yad facilities to read and write JSON source.
 
@@ -288,7 +289,7 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	else
 		{
 		if (ZQ<Any> theQ = spQFromChan_Val(theChanR, theChanU))
-			return sMake_YadAtomR_Any(*theQ);
+			return sYadAtomR_Any(*theQ);
 		}
 
 	return null;
@@ -405,13 +406,25 @@ YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU
 ,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
-void YadStrimmerR_JSON::Finish()
+YadStrimmerR_JSON::~YadStrimmerR_JSON()
+	{}
+
+void YadStrimmerR_JSON::Finalize()
 	{
-	using namespace Util_Chan;
 	sSkipAll(*this);
-	if (fQuotesSeen)
+	const bool quotesSeen = fQuotesSeen;
+	YadStrimmerR::Finalize();
+	if (quotesSeen)
 		throw ParseException("Improperly closed string");
 	}
+
+//void YadStrimmerR_JSON::Finish()
+//	{
+//	using namespace Util_Chan;
+//	sSkipAll(*this);
+//	if (fQuotesSeen)
+//		throw ParseException("Improperly closed string");
+//	}
 
 size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 	{
@@ -507,16 +520,16 @@ size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadSeqR
+#pragma mark YadSeqR_JSON
 
-YadSeqR_JSON::YadSeqR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+ChanR_RefYad_JSON::ChanR_RefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fRO(iRO)
 ,	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 	{}
 
-void YadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
+void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	using namespace Util_Chan;
 
@@ -929,7 +942,7 @@ public:
 			fChanW << "[";
 			for (bool isFirst = true; /*no test*/ ; isFirst = false)
 				{
-				if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
+				if (ZRef<YadR,false> cur = sReadInc(iYadSeqR))
 					{
 					break;
 					}
@@ -960,7 +973,7 @@ public:
 			fChanW << "[";
 			for (bool isFirst = true; /*no test*/ ; isFirst = false)
 				{
-				if (ZRef<YadR,false> cur = iYadSeqR->ReadInc())
+				if (ZRef<YadR,false> cur = sReadInc(iYadSeqR))
 					{
 					break;
 					}

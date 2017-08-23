@@ -73,17 +73,10 @@ public:
 #pragma mark -
 #pragma mark YadR
 
-class YadR
-:	public ZCounted
-	{
-protected:
-	YadR();
+typedef ZCounted YadR;
+typedef ZRef<YadR> RefYad;
 
-public:
-// Our protocol
-	virtual void Finish();
-	virtual ZRef<YadR> Meta();
-	};
+void sFinish(const RefYad& iYad);
 
 // =================================================================================================
 #pragma mark -
@@ -101,37 +94,29 @@ public:
 #pragma mark -
 #pragma mark YadStreamerR
 
-class YadStreamerR
-:	public virtual YadR
-,	public ChannerR_Bin
-	{
-public:
-	};
+typedef ChannerR_Bin YadStreamerR;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark YadStrimmerR
 
-class YadStrimmerR
-:	public virtual YadR
-,	public ChannerR_UTF
-	{
-	};
+typedef ChannerR_UTF YadStrimmerR;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark YadSeqR
 
-class YadSeqR
-:	public virtual YadR
-	{
-public:
-// Our protocol
-	virtual ZRef<YadR> ReadInc() = 0;
+typedef ChanR<RefYad> ChanR_RefYad;
 
-	virtual bool Skip();
-	virtual void SkipAll();
-	};
+typedef Channer<ChanR_RefYad> YadSeqR;
+
+inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
+	{
+	RefYad result;
+	if (iYadSeqR)
+		sQRead(*iYadSeqR, &result, 1);
+	return result;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -157,57 +142,6 @@ class ZYadMapAtRPos : public ZYadMapAtR
 	{
 public:
 //	virtual ZRef<YadR> ReadAt(const std::string&) = 0;
-	};
-
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadR_Any
-
-class YadR_Any
-:	public virtual YadR
-	{
-public:
-	YadR_Any(const Any& iAny);
-	virtual ~YadR_Any();
-
-// Our protocol
-	const Any& GetAny();
-
-protected:
-	Any fAny;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadAtomR_Any
-
-ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark sYadR
-
-ZRef<YadR> sYadR(const std::string& iVal);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadMapR_WithFirst
-
-class YadMapR_WithFirst
-:	public YadMapR
-	{
-public:
-	YadMapR_WithFirst(const ZRef<YadR>& iFirst, const Name& iFirstName,
-		const ZRef<YadMapR>& iRemainder);
-
-// From YadMapR
-	virtual ZRef<YadR> ReadInc(Name& oName);
-
-private:
-	ZRef<YadR> fFirst;
-	const Name fFirstName;
-	const ZRef<YadMapR> fRemainder;
 	};
 
 } // namespace ZooLib

@@ -63,16 +63,16 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark SQLite::YadSeqR_Iter
+#pragma mark SQLite::ChanR_RefYad_Iter
 
-YadSeqR_Iter::YadSeqR_Iter(ZRef<Iter> iIter)
+ChanR_RefYad_Iter::ChanR_RefYad_Iter(ZRef<Iter> iIter)
 :	fIter(iIter)
 	{}
 
-YadSeqR_Iter::~YadSeqR_Iter()
+ChanR_RefYad_Iter::~ChanR_RefYad_Iter()
 	{}
 
-void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
+void ChanR_RefYad_Iter::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	if (not iIsFirst)
 		fIter->Advance();

@@ -27,43 +27,142 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+namespace { // anonymous
+
+class AnyHolder
+	{
+public:
+	AnyHolder(const Any& iAny)
+	:	fAny(iAny)
+		{}
+
+	virtual ~AnyHolder()
+		{}
+
+// Our protocol
+	const Any& Get()
+		{ return fAny; }
+
+protected:
+	Any fAny;
+	};
+
+class YadAtomR_Any;
+
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+class SafeStackLink_YadAtomR_Any
+:	public SafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
+	{};
+
+SafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+
+class YadAtomR_Any
+:	public AnyHolder
+,	public virtual YadAtomR
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+,	public SafeStackLink_YadAtomR_Any
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+	{
+public:
+	YadAtomR_Any(const Any& iAny)
+	:	AnyHolder(iAny)
+		{}
+
+	virtual ~YadAtomR_Any()
+		{}
+
+// From ZCounted
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+	virtual void Finalize()
+		{
+		bool finalized = this->FinishFinalize();
+		ZAssert(finalized);
+		ZAssert(not this->IsReferenced());
+		fAny.Clear();
+
+		spSafeStack_YadAtomR_Any.Push(this);
+		}
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+
+// From YadAtomR
+	virtual Any AsAny()
+		{ return AnyHolder::Get(); }
+
+// Our protocol
+	void SetAny(const Any& iAny)
+		{ fAny = iAny; }
+	};
+
+class YadStrimmerR_string
+:	public AnyHolder
+,	public Channer_T<ChanRU_UTF_string8>
+	{
+public:
+	YadStrimmerR_string(const Any& iAny)
+	:	AnyHolder(iAny)
+	,	Channer_T<ChanRU_UTF_string8>(fAny.Get<string8>())
+		{}
+
+	YadStrimmerR_string(const std::string& iString)
+	:	AnyHolder(Any(iString))
+	,	Channer_T<ChanRU_UTF_string8>(fAny.Get<string8>())
+		{}
+	};
+
 class YadStreamerRPos_Any
-:	public ChanRPos_Bin_Data<Data_Any>
-,	public virtual YadR_Any
-,	public virtual YadStreamerR
+:	public AnyHolder
+,	public Channer_T<ChanRPos_Bin_Data<Data_Any>>
 	{
 public:
 	YadStreamerRPos_Any(const Data_Any& iData)
-	:	YadR_Any(Any(iData))
-	,	ChanRPos_Bin_Data<Data_Any>(iData)
+	:	AnyHolder(Any(iData))
+	,	Channer_T<ChanRPos_Bin_Data<Data_Any>>(iData)
 		{}
 	};
 
 class YadSeqR_Any
-:	public virtual YadSeqR_Val_T<Seq_Any>
-,	public virtual YadR_Any
+:	public AnyHolder
+,	public Channer_T<ChanR_YadSeq_Val_T<Seq_Any>>
 	{
 public:
 	YadSeqR_Any(const Seq_Any& iSeq)
-	:	YadSeqR_Val_T<Seq_Any>(iSeq)
-	,	YadR_Any(Any(iSeq))
+	:	AnyHolder(Any(iSeq))
+	,	Channer_T<ChanR_YadSeq_Val_T<Seq_Any>>(iSeq)
 		{}
 	};
 
 class YadMapR_Any
-:	public virtual YadMapR_Val_T<Map_Any>
-,	public virtual YadR_Any
+:	public AnyHolder
+,	public YadMapR_Val_T<Map_Any>
 	{
 public:
 	YadMapR_Any(const Map_Any& iMap)
-	:	YadMapR_Val_T<Map_Any>(iMap)
-	,	YadR_Any(Any(iMap))
+	:	AnyHolder(Any(iMap))
+	,	YadMapR_Val_T<Map_Any>(iMap)
 		{}
 	};
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sYadR
+
+ZRef<YadAtomR> sYadAtomR_Any(const Any& iAny)
+	{
+#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+	if (YadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<YadAtomR_Any>())
+		{
+		result->SetAny(iAny);
+		return result;
+		}
+#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
+	return new YadAtomR_Any(iAny);
+	}
+
+ZRef<YadR> sYadR(const string8& iVal)
+	{ return new YadStrimmerR_string(iVal); }
 
 ZRef<YadR> sYadR(const Any& iVal)
 	{
@@ -79,7 +178,7 @@ ZRef<YadR> sYadR(const Any& iVal)
 	if (const Map_Any* theVal = iVal.PGet<Map_Any>())
 		return sYadR(*theVal);
 
-	return sMake_YadAtomR_Any(iVal);
+	return sYadAtomR_Any(iVal);
 	}
 
 ZRef<YadStreamerR> sYadR(const Data_Any& iData)
@@ -109,6 +208,9 @@ public:
 		if (false)
 			{}
 
+		if (AnyHolder* theAnyHolder = dynamic_cast<AnyHolder*>(iCounted.Get()))
+			return theAnyHolder->Get();
+
 		if (ZRef<YadAtomR> theYadAtomR = iCounted.DynamicCast<YadAtomR>())
 			return theYadAtomR->AsAny();
 
@@ -126,7 +228,7 @@ public:
 			{
 			Seq_Any theSeq;
 
-			while (ZRef<YadR> theChild = theYadSeqR->ReadInc())
+			while (ZRef<YadR> theChild = sReadInc(theYadSeqR))
 				{
 				if (NotQ<Val_Any> theQ = this->QVisit(theChild))
 					return null;

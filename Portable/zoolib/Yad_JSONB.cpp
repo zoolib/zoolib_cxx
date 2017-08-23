@@ -174,10 +174,11 @@ uint64 YadStreamerR_JSONB::QSkip(uint64 iCount)
 #pragma mark -
 #pragma mark YadSeqR_JSONB
 
-class YadSeqR_JSONB : public YadSeqR_Std
+class ChanR_RefYad_JSONB
+:	public ChanR_RefYad_Std
 	{
 public:
-	YadSeqR_JSONB(const ZRef<ReadFilter>& iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
+	ChanR_RefYad_JSONB(const ZRef<ReadFilter>& iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	:	fReadFilter(iReadFilter)
 	,	fChannerR_Bin(iChannerR_Bin)
 		{}
@@ -190,6 +191,8 @@ private:
 	const ZRef<ReadFilter> fReadFilter;
 	const ZRef<ChannerR_Bin> fChannerR_Bin;
 	};
+
+typedef Channer_T<ChanR_RefYad_JSONB> YadSeqR_JSONB;
 
 // =================================================================================================
 #pragma mark -
@@ -343,7 +346,7 @@ public:
 	void Visit_YadSeqR(const ZRef<YadSeqR>& iYadSeqR)
 		{
 		sEWriteBE<uint8>(fW, 0xEA);
-		while (ZRef<YadR> theChild = iYadSeqR->ReadInc())
+		while (ZRef<YadR> theChild = sReadInc(iYadSeqR))
 			this->Visit(theChild);
 		sEWriteBE<uint8>(fW, 0xFF); // Terminator
 		}

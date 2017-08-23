@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Yad.h"
 
+#include "zoolib/Log.h"
+
 #define ZMACRO_UseSafeStack 0
 
 namespace ZooLib {
@@ -93,14 +95,19 @@ YadParseException::YadParseException(const char* iWhat)
 
 */
 
-YadR::YadR()
-	{}
+void sFinish(const ZRef<YadR>& iYad)
+	{
+	ZLOGTRACE(eDebug + 2);
+	}
 
-void YadR::Finish()
-	{}
-
-ZRef<YadR> YadR::Meta()
-	{ return null; }
+//YadR::YadR()
+//	{}
+//
+//void YadR::Finish()
+//	{}
+//
+//ZRef<YadR> YadR::Meta()
+//	{ return null; }
 
 // =================================================================================================
 #pragma mark -
@@ -146,14 +153,14 @@ ZRef<YadR> YadR::Meta()
 
 */
 
-bool YadSeqR::Skip()
-	{ return this->ReadInc(); }
-
-void YadSeqR::SkipAll()
-	{
-	while (this->Skip())
-		{}
-	}
+//bool YadSeqR::Skip()
+//	{ return this->ReadInc(); }
+//
+//void YadSeqR::SkipAll()
+//	{
+//	while (this->Skip())
+//		{}
+//	}
 
 // =================================================================================================
 #pragma mark -
@@ -176,136 +183,6 @@ void YadMapR::SkipAll()
 	{
 	while (this->Skip())
 		{}
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadR_Any
-
-YadR_Any::YadR_Any(const Any& iAny)
-:	fAny(iAny)
-	{}
-
-YadR_Any::~YadR_Any()
-	{}
-
-const Any& YadR_Any::GetAny()
-	{ return fAny; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadAtomR_Any
-
-namespace {
-
-class YadAtomR_Any;
-
-#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-class SafeStackLink_YadAtomR_Any
-:	public SafePtrStackLink<YadAtomR_Any,SafeStackLink_YadAtomR_Any>
-	{};
-
-SafePtrStack_WithDestroyer<YadAtomR_Any,SafeStackLink_YadAtomR_Any> spSafeStack_YadAtomR_Any;
-#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-
-class YadAtomR_Any
-:	public virtual YadAtomR
-,	public virtual YadR_Any
-#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-,	public SafeStackLink_YadAtomR_Any
-#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-	{
-public:
-	YadAtomR_Any(const Any& iAny)
-	:	YadR_Any(iAny)
-		{}
-
-	virtual ~YadAtomR_Any()
-		{}
-
-// From ZCounted
-#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-	virtual void Finalize()
-		{
-		bool finalized = this->FinishFinalize();
-		ZAssert(finalized);
-		ZAssert(not this->IsReferenced());
-		fAny.Clear();
-
-		spSafeStack_YadAtomR_Any.Push(this);
-		}
-#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-
-// From YadAtomR
-	virtual Any AsAny()
-		{ return this->GetAny(); }
-
-// Our protocol
-	void SetAny(const Any& iAny)
-		{ fAny = iAny; }
-	};
-
-} // anonymous namespace
-
-ZRef<YadAtomR> sMake_YadAtomR_Any(const Any& iAny)
-	{
-#if defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-	if (YadAtomR_Any* result = spSafeStack_YadAtomR_Any.PopIfNotEmpty<YadAtomR_Any>())
-		{
-		result->SetAny(iAny);
-		return result;
-		}
-#endif // defined(ZMACRO_UseSafeStack) && ZMACRO_UseSafeStack
-	return new YadAtomR_Any(iAny);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadStrimmerR_string
-
-class YadStrimmerR_string
-:	public virtual YadStrimmerR
-,	public virtual YadR_Any
-,	public ChanRU_UTF_string8
-	{
-public:
-	YadStrimmerR_string(const Any& iAny)
-	:	YadR_Any(iAny)
-	,	ChanRU_UTF_string8(fAny.Get<string8>())
-		{}
-
-	YadStrimmerR_string(const std::string& iString)
-	:	YadR_Any(Any(iString))
-	,	ChanRU_UTF_string8(fAny.Get<string8>())
-		{}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark sYadR
-
-ZRef<YadR> sYadR(const string& iVal)
-	{ return new YadStrimmerR_string(iVal); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadMapR_WithFirst
-
-YadMapR_WithFirst::YadMapR_WithFirst(const ZRef<YadR>& iFirst, const Name& iFirstName,
-	const ZRef<YadMapR>& iRemainder)
-:	fFirst(iFirst)
-,	fFirstName(iFirstName)
-,	fRemainder(iRemainder)
-	{}
-
-ZRef<YadR> YadMapR_WithFirst::ReadInc(Name& oName)
-	{
-	if (fFirst)
-		{
-		oName = fFirstName;
-		return sGetSet(fFirst, null);
-		}
-	return fRemainder->ReadInc(oName);
 	}
 
 } // namespace ZooLib

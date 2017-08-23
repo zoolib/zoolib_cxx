@@ -132,10 +132,15 @@ public:
 	YadStrimmerR_JSON(ZRef<ChannerRU_UTF> iChanner);
 	YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From YadR
-	virtual void Finish();
+	virtual ~YadStrimmerR_JSON();
 
-// From ChanR_UTF
+// From ZCounted
+	virtual void Finalize();
+
+//// From YadR
+//	virtual void Finish();
+
+// From ChanR_UTF via YadStrimmerR
 	virtual size_t QRead(UTF32* oDest, size_t iCount);
 
 private:
@@ -149,14 +154,14 @@ private:
 #pragma mark -
 #pragma mark YadSeqR_JSON
 
-class YadSeqR_JSON
-:	public YadSeqR_Std
+class ChanR_RefYad_JSON
+:	public ChanR_RefYad_Std
 	{
 public:
-	YadSeqR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+	ChanR_RefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From YadSeqR_Std
+// From ChanR_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
@@ -164,6 +169,8 @@ private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
 	};
+
+typedef Channer_T<ChanR_RefYad_JSON> YadSeqR_JSON;
 
 // =================================================================================================
 #pragma mark -
