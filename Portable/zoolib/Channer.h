@@ -120,7 +120,7 @@ public:
 	Channer_T(const T0& iT0, const T1& iT1) : Chan_p(iT0, iT1) {}
 
 	template <class T0, class T1, class T2>
-	Channer_T(const T0& iT0, const T1& iT1, const T0& iT2) : Chan_p(iT0, iT1, iT2) {}
+	Channer_T(const T0& iT0, const T1& iT1, const T2& iT2) : Chan_p(iT0, iT1, iT2) {}
 	};
 
 template <class Chan_p>
@@ -170,7 +170,7 @@ public:
 		{}
 
 	template <class T0, class T1, class T2, class ChannerOther_p>
-	Channer_Channer_T(const T0& iT0, const T1& iT1, const T0& iT2, const ZRef<ChannerOther_p>& iOther)
+	Channer_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
 	:	Chan_p(iT0, iT1, iT2, *iOther)
 	,	fOther(iOther)
 		{}
