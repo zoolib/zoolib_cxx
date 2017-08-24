@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-//#if 0
 #ifndef __ZVal_Yad_h__
 #define __ZVal_Yad_h__ 1
 #include "zconfig.h"

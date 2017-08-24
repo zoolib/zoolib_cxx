@@ -96,7 +96,7 @@ public:
 	,	fPosition(iPosition)
 		{}
 
-// From ChanR_YadSeq
+// From ChanR_RefYad
 	virtual size_t QRead(ZRef<YadR>* oDest, size_t iCount)
 		{
 		ZRef<YadR>* startDest = oDest;

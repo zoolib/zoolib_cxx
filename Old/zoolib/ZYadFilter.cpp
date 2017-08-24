@@ -40,28 +40,35 @@ public:
 //	virtual bool IsSimple(const YadOptions& iOptions)
 //		{ return fYadMapR->IsSimple(iOptions); }
 
-	virtual ZRef<YadR> ReadInc(Name& oName)
+	virtual RefYad ReadInc(Name& oName)
 		{ return sYadFilter(fCallable, sCall(fCallable, fYadMapR->ReadInc(oName))); }
 
 	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<YadMapR> fYadMapR;
 	};
 
-class YadSeqR_Filtered
-:	public YadSeqR
+class ChanR_RefYad_Filtered
+:	public ChanR_RefYad
 	{
 public:
-	YadSeqR_Filtered(
-		const ZRef<Callable_YadFilter>& iCallable, const ZRef<YadSeqR>& iYadSeqR)
+	ChanR_RefYad_Filtered(const ZRef<Callable_YadFilter>& iCallable, const ZRef<YadSeqR>& iYadSeqR)
 	:	fCallable(iCallable)
 	,	fYadSeqR(iYadSeqR)
 		{}
 	
+// From ChanR_RefYad
+	virtual size_t QRead(RefYad* oDest, size_t iCount)
+		{
+		if (iCount && (*oDest++ = sYadFilter(fCallable, sCall(fCallable, sReadInc(fYadSeqR)))))
+			return 1;
+		return 0;
+		}
+
 //	virtual bool IsSimple(const YadOptions& iOptions)
 //		{ return fYadSeqR->IsSimple(iOptions); }
 
-	virtual ZRef<YadR> ReadInc()
-		{ return sYadFilter(fCallable, sCall(fCallable, fYadSeqR->ReadInc())); }
+//	virtual RefYad ReadInc()
+//		{ return sYadFilter(fCallable, sCall(fCallable, sReadInc(fYadSeqR))); }
 
 	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<YadSeqR> fYadSeqR;
@@ -72,8 +79,8 @@ public:
 // =================================================================================================
 // MARK: -
 
-ZRef<YadR> sYadFilter(
-	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<YadR>& iYadR)
+RefYad sYadFilter(
+	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const RefYad& iYadR)
 	{
 	if (iCallable_YadFilter)
 		{
@@ -81,7 +88,7 @@ ZRef<YadR> sYadFilter(
 			return new YadMapR_Filtered(iCallable_YadFilter, theYadMapR);
 
 		if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
-			return new YadSeqR_Filtered(iCallable_YadFilter, theYadSeqR);
+			return sChanner_T<ChanR_RefYad_Filtered>(iCallable_YadFilter, theYadSeqR);
 		}
 
 	return iYadR;

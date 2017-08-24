@@ -30,10 +30,10 @@ namespace ZooLib {
 // =================================================================================================
 // MARK: - ZYadFilter
 
-typedef Callable<ZRef<YadR>(const ZRef<YadR>&)> Callable_YadFilter;
+typedef Callable<RefYad(const RefYad&)> Callable_YadFilter;
 
-ZRef<YadR> sYadFilter(
-	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const ZRef<YadR>& iYadR);
+RefYad sYadFilter(
+	const ZRef<Callable_YadFilter>& iCallable_YadFilter, const RefYad& iYadR);
 
 } // namespace ZooLib
 

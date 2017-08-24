@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+#if 0 //##
 using std::string;
 
 // =================================================================================================
@@ -95,5 +96,6 @@ ZRef<YadR> ZUtil_Yad::sWalk(ZRef<YadR> iYadR, const Trail& iTrail)
 
 	return iYadR;
 	}
+#endif
 
 } // namespace ZooLib
