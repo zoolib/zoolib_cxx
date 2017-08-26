@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Name.h"
 #include "zoolib/UnicodeString.h" // For string8 etc.
 #include "zoolib/Util_Relops.h"
-#include "zoolib/Val_T.h"
 
 namespace ZooLib {
 

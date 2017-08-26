@@ -106,17 +106,19 @@ typedef ChannerR_UTF YadStrimmerR;
 #pragma mark -
 #pragma mark YadSeqR
 
-typedef ChanR<RefYad> ChanR_RefYad;
+using ChanR_RefYad = DeriveFrom<Aspect_Read<RefYad>>;
+using YadSeqR = Channer<ChanR_RefYad>;
 
-typedef Channer<ChanR_RefYad> YadSeqR;
-
-inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
+inline RefYad sReadInc(const ChanR<RefYad>& iAspectRead)
 	{
 	RefYad result;
-	if (iYadSeqR)
-		sQRead(*iYadSeqR, &result, 1);
-	return result;
+	if (1 == sQRead(iAspectRead, &result, 1))
+		return result;
+	return null;
 	}
+
+inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
+	{ return sReadInc(*iYadSeqR); }
 
 // =================================================================================================
 #pragma mark -

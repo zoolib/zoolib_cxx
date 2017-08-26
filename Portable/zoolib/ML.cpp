@@ -1372,7 +1372,7 @@ void StrimW::pEnd()
 
 	if (fIndentEnabled)
 		{
-		if (not fWrittenSinceLastTag && !fLastWasBegin)
+		if (not fWrittenSinceLastTag && not fLastWasBegin)
 			{
 			if (not fLastWasEOL)
 				fStrimSink.Write(fString_EOL);

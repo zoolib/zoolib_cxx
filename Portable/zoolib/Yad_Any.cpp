@@ -208,7 +208,7 @@ public:
 		if (false)
 			{}
 
-		if (AnyHolder* theAnyHolder = dynamic_cast<AnyHolder*>(iCounted.Get()))
+		if (AnyHolder* theAnyHolder = iCounted.DynamicCast<AnyHolder>())
 			return theAnyHolder->Get();
 
 		if (ZRef<YadAtomR> theYadAtomR = iCounted.DynamicCast<YadAtomR>())

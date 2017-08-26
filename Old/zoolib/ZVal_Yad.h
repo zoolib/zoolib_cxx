@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Val_Any.h" // For Seq_Any and Map_Any
-//#include "zoolib/ZValAccessors.h"
-#include "zoolib/Yad.h"
+#include "zoolib/Yad.h" // For YadSeqAt
 
 #include <string>
 
