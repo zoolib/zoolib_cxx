@@ -385,7 +385,7 @@ const Val_NS Val_NS::Get(size_t iIndex) const
 #pragma mark Seq_NS
 
 Seq_NS::operator bool() const
-	{ return this->Count(); }
+	{ return this->Size(); }
 
 Seq_NS::Seq_NS()
 :	inherited(sArrayMutable())
@@ -455,7 +455,7 @@ Seq_NS& Seq_NS::operator=(const Adopt_T<NSArray*>& iOther)
 	return *this;
 	}
 
-size_t Seq_NS::Count() const
+size_t Seq_NS::Size() const
 	{
 	if (NSArray* theArray = this->pArray())
 		return [theArray count];

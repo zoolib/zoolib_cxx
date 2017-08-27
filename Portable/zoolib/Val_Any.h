@@ -68,7 +68,8 @@ public:
 	int Compare(const Seq_Any& iOther) const;
 
 // ZSeq protocol
-	size_t Count() const;
+	size_t Size() const;
+	size_t Count() const { return this->Size(); }
 
 	void Clear();
 

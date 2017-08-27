@@ -95,7 +95,7 @@ public:
 	virtual size_t QRead(RefYad* oDest, size_t iCount)
 		{
 		RefYad* startDest = oDest;
-		while (fPosition < fSeq.Count() && iCount--)
+		while (fPosition < fSeq.Size() && iCount--)
 			*oDest++ = sYadR(fSeq.Get(fPosition++));
 		return oDest - startDest;
 		}
@@ -105,14 +105,14 @@ public:
 		{
 		RefYad* startDest = oDest;
 		uint64 loc = iLoc;
-		while (loc < fSeq.Count() && iCount--)
+		while (loc < fSeq.Size() && iCount--)
 			*oDest++ = sYadR(fSeq.Get(loc++));
 		return oDest - startDest;
 		}
 
 // From Aspect_Size
 	virtual uint64 Size()
-		{ return fSeq.Count(); }
+		{ return fSeq.Size(); }
 
 // Our protocol
 	const Seq_p& GetSeq()

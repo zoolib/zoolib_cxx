@@ -192,7 +192,7 @@ public:
 	Seq_NS& operator=(const Adopt_T<NSArray*>& iOther);
 
 // ZSeq protocol
-	size_t Count() const;
+	size_t Size() const;
 
 	using inherited::Clear;
 	using inherited::Get;

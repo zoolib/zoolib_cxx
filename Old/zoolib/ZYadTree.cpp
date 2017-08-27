@@ -81,7 +81,7 @@ private:
 // =================================================================================================
 // MARK: - YadSeqR
 
-class YadSeqR
+class Chan_YadSeq
 :	public ZooLib::YadSeqR
 	{
 public:
@@ -321,7 +321,7 @@ public:
 		return fYadMapAtRPos->ReadInc(oName);
 		}
 
-// From ZYadMapRClone
+// From ZYadMap8
 	virtual ZRef<ZYadMapRClone> Clone()
 		{ return new YadMapAtRPos(*this); }
 

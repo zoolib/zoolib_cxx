@@ -83,7 +83,7 @@ ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtRPos>& iYad)
 	return *this;
 	}
 
-size_t ZSeq_Yad::Count() const
+size_t ZSeq_Yad::Size() const
 	{
 	if (fYad)
 		return fYad->Count();

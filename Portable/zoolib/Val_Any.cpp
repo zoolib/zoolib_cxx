@@ -127,7 +127,7 @@ int Seq_Any::Compare(const Seq_Any& iOther) const
 		}
 	}
 
-size_t Seq_Any::Count() const
+size_t Seq_Any::Size() const
 	{
 	if (fRep)
 		return fRep->fVector.size();

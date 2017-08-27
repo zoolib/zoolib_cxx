@@ -89,7 +89,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 	else if (const Seq_Any* theValue = iVal.PGet<Seq_Any>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
-		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
+		for (size_t xx = 0, count = theValue->Size(); xx < count; ++xx)
 			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
 		return theArray;
 		}

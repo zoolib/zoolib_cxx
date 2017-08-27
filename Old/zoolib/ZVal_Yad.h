@@ -52,7 +52,8 @@ public:
 //##	ZSeq_Yad& operator=(const ZRef<ZYadSeqAtRPos>& iYad);
 
 // ZSeq protocol
-	size_t Count() const;
+	size_t Size() const;
+	size_t Count() const { return this->Size(); }
 
 	void Clear();
 

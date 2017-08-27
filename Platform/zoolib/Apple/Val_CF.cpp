@@ -473,7 +473,7 @@ const Val_CF Val_CF::Get(size_t iIndex) const
 #pragma mark Seq_CF
 
 Seq_CF::operator bool() const
-	{ return this->Count(); }
+	{ return this->Size(); }
 
 Seq_CF::Seq_CF()
 :	inherited(sArrayMutable())
@@ -543,7 +543,7 @@ Seq_CF& Seq_CF::operator=(const Adopt_T<CFArrayRef>& iOther)
 	return *this;
 	}
 
-size_t Seq_CF::Count() const
+size_t Seq_CF::Size() const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		return ::CFArrayGetCount(theArray);
