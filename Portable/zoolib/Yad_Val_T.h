@@ -27,24 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-template <class EE, class LL>
-class Aspect_ReadAt
-:	public virtual UserOfElement<EE>
-	{
-public:
-	virtual size_t QReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
-	};
-
-template <class EE, class LL>
-using ChanReadAt = DeriveFrom<Aspect_ReadAt<EE,LL>>;
-
-template <class EE, class LL>
-inline size_t sQReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
-	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
-
-typedef ChanReadAt<ZRef<YadR>,Name> YadMapAt;
-typedef ChanReadAt<ZRef<YadR>,uint64> YadSeqAt;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark YadR_Val_T
@@ -79,31 +61,58 @@ typedef ChanReadAt<ZRef<YadR>,uint64> YadSeqAt;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR_YadSeq_Val_T
+#pragma mark Chan_YadSeq_T
 
 template <class Seq_p>
-class ChanR_YadSeq_Val_T
-:	public ChanR_RefYad
+class Chan_YadSeq_T
+:	public DeriveFrom
+		<
+		Aspect_Position,
+		Aspect_Read<RefYad>,
+		Aspect_ReadAt<RefYad,uint64>,
+		Aspect_Size
+		>
 	{
 public:
-	ChanR_YadSeq_Val_T(const Seq_p& iSeq)
+	Chan_YadSeq_T(const Seq_p& iSeq)
 	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	ChanR_YadSeq_Val_T(const Seq_p& iSeq, uint64 iPosition)
+	Chan_YadSeq_T(const Seq_p& iSeq, uint64 iPosition)
 	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
-// From ChanR_RefYad
-	virtual size_t QRead(ZRef<YadR>* oDest, size_t iCount)
+// From Aspect_Position
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void SetPos(uint64 iPosition)
+		{ fPosition = iPosition; }
+
+// From Aspect_Read
+	virtual size_t QRead(RefYad* oDest, size_t iCount)
 		{
-		ZRef<YadR>* startDest = oDest;
+		RefYad* startDest = oDest;
 		while (fPosition < fSeq.Count() && iCount--)
 			*oDest++ = sYadR(fSeq.Get(fPosition++));
 		return oDest - startDest;
 		}
+
+// From Aspect_ReadAt
+	virtual size_t QReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
+		{
+		RefYad* startDest = oDest;
+		uint64 loc = iLoc;
+		while (loc < fSeq.Count() && iCount--)
+			*oDest++ = sYadR(fSeq.Get(loc++));
+		return oDest - startDest;
+		}
+
+// From Aspect_Size
+	virtual uint64 Size()
+		{ return fSeq.Count(); }
 
 // Our protocol
 	const Seq_p& GetSeq()

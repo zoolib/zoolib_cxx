@@ -105,6 +105,8 @@ private:
 	const ZRef<ZYadSeqR> fYad;
 	};
 
+using YadSeqR = Channer_T<Chan_YadSeq>;
+
 // =================================================================================================
 // MARK: - YadSeqRClone
 

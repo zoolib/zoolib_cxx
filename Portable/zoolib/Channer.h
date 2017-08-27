@@ -56,27 +56,27 @@ using ChannerAbort = Channer<ChanAbort>;
 using ChannerDisconnectRead = Channer<ChanDisconnectRead>;
 using ChannerDisconnectWrite = Channer<ChanDisconnectWrite>;
 using ChannerPos = Channer<ChanPos>;
-template <class EE> using ChannerR = Channer<ChanR<EE> >;
+template <class EE> using ChannerR = Channer<ChanR<EE>>;
 using ChannerSize = Channer<ChanSize>;
 using ChannerSizeSet = Channer<ChanSizeSet>;
-template <class EE> using ChannerU = Channer<ChanU<EE> >;
-template <class EE> using ChannerW = Channer<ChanW<EE> >;
+template <class EE> using ChannerU = Channer<ChanU<EE>>;
+template <class EE> using ChannerW = Channer<ChanW<EE>>;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark Composite channers typedefs.
 
-template <class EE> using ChannerRU = Channer<ChanRU<EE> >;
-template <class EE> using ChannerRPos = Channer<ChanRPos<EE> >;
-template <class EE> using ChannerWPos = Channer<ChanWPos<EE> >;
-template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE> >;
-template <class EE> using ChannerConnection = Channer<ChanConnection<EE> >;
+template <class EE> using ChannerRU = Channer<ChanRU<EE>>;
+template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
+template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
+template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
+template <class EE> using ChannerConnection = Channer<ChanConnection<EE>>;
 
-template <class EE> using ChannerRW = Channer<ChanRW<EE> >;
+template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
 
 using ChannerClose = Channer<DeriveFrom<Aspect_Abort,Aspect_DisconnectRead,Aspect_DisconnectWrite>>;
 
-template <class EE> using ChannerRW = Channer<ChanRW<EE> >;
+template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
 
 template <class EE> using ChannerRWClose = ChannerConnection<EE>;
 

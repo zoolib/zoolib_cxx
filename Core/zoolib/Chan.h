@@ -147,23 +147,22 @@ inline size_t sReadable(const ChanR<EE>& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Aspect_WaitReadable
+#pragma mark Aspect_ReadAt
 
-class Aspect_WaitReadable
+template <class EE, class LL>
+class Aspect_ReadAt
+:	public virtual UserOfElement<EE>
 	{
 public:
-	virtual bool WaitReadable(double iTimeout)
-		{ return false; }
-
-// Placeholder -- don't yet know what the Sig should be for the Callable.
-//	virtual bool CallWhenReadable(const ZRef<Callable>& iCallable)
-//		{ return false; }
+	virtual size_t QReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
 	};
 
-using ChanWaitReadable = DeriveFrom<Aspect_WaitReadable>;
+template <class EE, class LL>
+using ChanReadAt = DeriveFrom<Aspect_ReadAt<EE,LL>>;
 
-inline bool sWaitReadable(const ChanWaitReadable& iChan, double iTimeout)
-	{ return sNonConst(iChan).WaitReadable(iTimeout); }
+template <class EE, class LL>
+inline size_t sQReadAt(const ChanReadAt<EE,LL>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
+	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
 
 // =================================================================================================
 #pragma mark -
@@ -220,6 +219,26 @@ inline size_t sUnread(const ChanU<EE>& iChan, const EE* iSource, size_t iCount)
 template <class EE>
 inline size_t sUnreadableLimit(const ChanU<EE>& iChan)
 	{ return sNonConst(iChan).UnreadableLimit(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Aspect_WaitReadable
+
+class Aspect_WaitReadable
+	{
+public:
+	virtual bool WaitReadable(double iTimeout)
+		{ return false; }
+
+// Placeholder -- don't yet know what the Sig should be for the Callable.
+//	virtual bool CallWhenReadable(const ZRef<Callable>& iCallable)
+//		{ return false; }
+	};
+
+using ChanWaitReadable = DeriveFrom<Aspect_WaitReadable>;
+
+inline bool sWaitReadable(const ChanWaitReadable& iChan, double iTimeout)
+	{ return sNonConst(iChan).WaitReadable(iTimeout); }
 
 // =================================================================================================
 #pragma mark -

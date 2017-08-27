@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+//typedef ChanReadAt<ZRef<YadR>,Name> YadMapAt;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark YadOptions
@@ -107,6 +109,7 @@ typedef ChannerR_UTF YadStrimmerR;
 #pragma mark YadSeqR
 
 using ChanR_RefYad = DeriveFrom<Aspect_Read<RefYad>>;
+
 using YadSeqR = Channer<ChanR_RefYad>;
 
 inline RefYad sReadInc(const ChanR<RefYad>& iAspectRead)
@@ -119,6 +122,12 @@ inline RefYad sReadInc(const ChanR<RefYad>& iAspectRead)
 
 inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
 	{ return sReadInc(*iYadSeqR); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark YadSeqAtR
+
+using YadSeqAtR = Channer<ChanReadAt<RefYad,uint64>>;
 
 // =================================================================================================
 #pragma mark -

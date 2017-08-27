@@ -123,12 +123,12 @@ public:
 
 class YadSeqR_Any
 :	public AnyHolder
-,	public Channer_T<ChanR_YadSeq_Val_T<Seq_Any>>
+,	public Channer_T<Chan_YadSeq_T<Seq_Any>>
 	{
 public:
 	YadSeqR_Any(const Seq_Any& iSeq)
 	:	AnyHolder(Any(iSeq))
-	,	Channer_T<ChanR_YadSeq_Val_T<Seq_Any>>(iSeq)
+	,	Channer_T<Chan_YadSeq_T<Seq_Any>>(iSeq)
 		{}
 	};
 
