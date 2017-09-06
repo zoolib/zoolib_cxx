@@ -121,7 +121,7 @@ void YadStreamerR_JSONB::Finish()
 
 size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
 	{
-	const ChanR_Bin& r = sGetChan(fChannerR_Bin);
+	const ChanR_Bin& r = *fChannerR_Bin;
 
 	byte* localDest = oDest;
 	while (iCount && not fHitEnd)
@@ -144,11 +144,11 @@ size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
 	}
 
 size_t YadStreamerR_JSONB::Readable()
-	{ return min(fChunkSize, sReadable(sGetChan(fChannerR_Bin))); }
+	{ return min(fChunkSize, sReadable(*fChannerR_Bin)); }
 
 uint64 YadStreamerR_JSONB::QSkip(uint64 iCount)
 	{
-	const ChanR_Bin& r = sGetChan(fChannerR_Bin);
+	const ChanR_Bin& r = *fChannerR_Bin;
 
 	uint64 countRemaining = iCount;
 	while (countRemaining && not fHitEnd)
@@ -210,7 +210,7 @@ public:
 // From YadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 		{
-		oName = spNameFromChan(sGetChan(fChannerR_Bin));
+		oName = spNameFromChan(*fChannerR_Bin);
 		oYadR = spMakeYadR(fReadFilter, fChannerR_Bin);
 		}
 
@@ -227,7 +227,7 @@ typedef Channer_T<ChanR_NameRefYad_JSONB> YadMapR_JSONB;
 
 ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	{
-	const ChanR_Bin& r = sGetChan(iChannerR_Bin);
+	const ChanR_Bin& r = *iChannerR_Bin;
 
 	if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
 		{
@@ -341,7 +341,7 @@ public:
 
 	void Visit_YadStreamerR(const ZRef<YadStreamerR>& iYadStreamerR)
 		{
-		const ChanR_Bin& r = sGetChan<ChanR_Bin>(iYadStreamerR);
+		const ChanR_Bin& r = *iYadStreamerR;
 		sEWriteBE<uint8>(fW, 0xE7);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
@@ -357,7 +357,7 @@ public:
 
 	void Visit_YadStrimmerR(const ZRef<YadStrimmerR>& iYadStrimmerR)
 		{
-		const string8 theString8 = sReadAllUTF8(sGetChan<ChanR_UTF>(iYadStrimmerR));
+		const string8 theString8 = sReadAllUTF8(*iYadStrimmerR);
 		sEWriteBE<uint8>(fW, 0xE8);
 		sEWriteCount(fW, theString8.size());
 		sEWrite(fW, theString8);

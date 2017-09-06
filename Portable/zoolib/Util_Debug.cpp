@@ -196,7 +196,7 @@ public:
 		if (not theChannerW)
 			return;
 
-		const ChanW_UTF& theStrimW = sGetChan(theChannerW);
+		const ChanW_UTF& theStrimW = *theChannerW;
 
 		ZAcqMtx acq(fMtx);
 

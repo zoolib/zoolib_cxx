@@ -39,15 +39,6 @@ template <class DF> using Channer
 			>::Result_t
 		>::Result_t;
 
-// Not super happy with these. Generally better at this point to just use operator* directly.
-template <class Thing>
-const Thing& sGetChan(const ZRef<Thing>& iChanner)
-	{ return *iChanner; }
-
-template <class Result, class Thing>
-const Result& sGetChan(const ZRef<Thing>& iChanner)
-	{ return *iChanner; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark Basic channer typedefs.

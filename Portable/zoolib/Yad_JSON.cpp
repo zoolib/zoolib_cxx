@@ -255,8 +255,8 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	{
 	using namespace Util_Chan;
 
-	const ChanR_UTF& theChanR = sGetChan(iChannerR);
-	const ChanU_UTF& theChanU = sGetChan(iChannerU);
+	const ChanR_UTF& theChanR = *iChannerR;
+	const ChanU_UTF& theChanU = *iChannerU;
 
 	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
@@ -349,7 +349,7 @@ ParseException::ParseException(const char* iWhat)
 #pragma mark YadStreamerR_Hex
 
 YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
-:	ChanR_Bin_HexStrim(sGetChan(iChannerR), sGetChan(iChannerU))
+:	ChanR_Bin_HexStrim(*iChannerR, *iChannerU)
 ,	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 	{}
@@ -358,7 +358,7 @@ void YadStreamerR_Hex::Finish()
 	{
 	using namespace Util_Chan;
 	sSkipAll(*static_cast<ChanR_Bin_HexStrim*>(this));
-	if (not sTryRead_CP('>', sGetChan(fChannerR), sGetChan(fChannerU)))
+	if (not sTryRead_CP('>', *fChannerR, *fChannerU))
 		throw ParseException("Expected '>' to close a binary data");
 	}
 
@@ -370,7 +370,7 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
-,	fChanR_Bin_ASCIIStrim(sGetChan(iChannerR))
+,	fChanR_Bin_ASCIIStrim(*iChannerR)
 ,	fChanR_Bin_Boundary('>', fChanR_Bin_ASCIIStrim)
 ,	fChanR(iDecode, fChanR_Bin_Boundary)
 	{}
@@ -402,7 +402,7 @@ YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerRU_UTF> iChanner)
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
-,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), sGetChan(iChannerR))
+,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), *iChannerR)
 ,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
@@ -430,8 +430,8 @@ size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 	{
 	using namespace Util_Chan;
 
-	const ChanR_UTF& theStrimR = sGetChan(fChannerR);
-	const ChanU_UTF& theStrimU = sGetChan(fChannerU);
+	const ChanR_UTF& theStrimR = *fChannerR;
+	const ChanU_UTF& theStrimU = *fChannerU;
 
 	UTF32* localDest = oDest;
 	UTF32* const localDestEnd = oDest + iCount;
@@ -533,8 +533,8 @@ void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	using namespace Util_Chan;
 
-	const ChanR_UTF& theChanR = sGetChan(fChannerR);
-	const ChanU_UTF& theChanU = sGetChan(fChannerU);
+	const ChanR_UTF& theChanR = *fChannerR;
+	const ChanU_UTF& theChanU = *fChannerU;
 
 	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 
@@ -585,8 +585,8 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 	{
 	using namespace Util_Chan;
 
-	const ChanR_UTF& theChanR = sGetChan(fChannerR);
-	const ChanU_UTF& theChanU = sGetChan(fChannerU);
+	const ChanR_UTF& theChanR = *fChannerR;
+	const ChanU_UTF& theChanU = *fChannerU;
 
 	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
 

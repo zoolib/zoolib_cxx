@@ -67,7 +67,7 @@ template <class Seq_p>
 class Chan_YadSeqAtRPos_T
 :	public DeriveFrom
 		<
-		Aspect_Position,
+		Aspect_Pos,
 		Aspect_Read<RefYad>,
 		Aspect_ReadAt<uint64, RefYad>,
 		Aspect_Size
@@ -84,7 +84,7 @@ public:
 	,	fPosition(iPosition)
 		{}
 
-// From Aspect_Position
+// From Aspect_Pos
 	virtual uint64 Pos()
 		{ return fPosition; }
 

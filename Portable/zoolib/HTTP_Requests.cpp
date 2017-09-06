@@ -166,7 +166,7 @@ bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
 			int32 theResponseCode;
 			Map theResponseHeader;
 			if (not spQRequest(
-				sGetChan<ChanR_Bin>(ioConnection), sGetChan<ChanW_Bin>(ioConnection),
+				*ioConnection, *ioConnection,
 				iMethod, theHost + sStringf(":%d", thePort), thePath, iHeader,
 				iConnectionClose,
 				&theResponseCode, &theResponseHeader, oRawHeader))
@@ -206,7 +206,7 @@ bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
 					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
 						iMethod, theResponseCode, theResponseHeader,
 						ioConnection))
-						{ sSkipAll(sGetChan(theChannerR_Content)); }
+						{ sSkipAll(*theChannerR_Content); }
 
 					string newScheme;
 					string newHost;
@@ -258,7 +258,7 @@ ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 		{
 		if (ZRef<ChannerRWClose_Bin> theConn = spConnect(iCallable_Connect, theScheme, theHost, thePort))
 			{
-			const ChanW_Bin& theChanW = sGetChan<ChanW_Bin>(theConn);
+			const ChanW_Bin& theChanW = *theConn;
 
 			spPOST_Prefix(theChanW, iMethod, theHost, thePath, iHeader, true);
 
@@ -303,7 +303,7 @@ ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 		{
 		int32 theResponseCode;
 		Map theResponseHeader;
-		if (spQPOST_Suffix(sGetChan<ChanR_Bin>(iConn),
+		if (spQPOST_Suffix(*iConn,
 			&theResponseCode, &theResponseHeader, oRawHeader))
 			{
 			if (oResponseCode)

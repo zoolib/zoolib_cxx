@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Melange_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Factory.h"
 #include "zoolib/Multi.h"
 #include "zoolib/Starter.h"
 
@@ -42,7 +43,7 @@ typedef Multi3<
 	ZRef<Starter>
 	> Melange_t;
 
-typedef Callable<Melange_t()> Factory_Melange;
+typedef Factory<Melange_t> Factory_Melange;
 
 } // namespace Dataspace
 } // namespace ZooLib

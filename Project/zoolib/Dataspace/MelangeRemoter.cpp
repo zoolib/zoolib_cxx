@@ -89,7 +89,7 @@ class ReadFilter_Result
 public:
 	virtual ZQ<Any> QRead(const ZRef<ChannerR_Bin>& iChannerR_Bin)
 		{
-		const ChanR_Bin& r = sGetChan(iChannerR_Bin);
+		const ChanR_Bin& r = *iChannerR_Bin;
 
 		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
 			{
@@ -376,7 +376,7 @@ void MelangeServer::pWrite()
 		guard.Release();
 
 		foreachi (ii, theMessages)
-			spWriteMessage(sGetChan(theChannerW), *ii);
+			spWriteMessage(*theChannerW, *ii);
 
 		guard.Acquire();
 		}
@@ -662,7 +662,7 @@ void Melange_Client::pWrite()
 			{
 			ZRelGuardR rel(guard);
 			foreachi (ii, theMessages)
-				spWriteMessage(sGetChan(theChannerW), *ii);
+				spWriteMessage(*theChannerW, *ii);
 			}
 		catch (...)
 			{

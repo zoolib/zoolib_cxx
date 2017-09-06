@@ -88,25 +88,23 @@ inline void sDisconnectWrite(const ChanDisconnectWrite& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Aspect_Position
+#pragma mark Aspect_Pos
 
-class Aspect_Position
+class Aspect_Pos
 	{
 public:
 	virtual uint64 Pos() = 0;
 
-	virtual void SetPos(uint64 iPosition) = 0;
+	virtual void SetPos(uint64 iPos) = 0;
 	};
 
-using ChanPosition = DeriveFrom<Aspect_Position>;
+using ChanPos = DeriveFrom<Aspect_Pos>;
 
-using ChanPos = ChanPosition;
-
-inline uint64 sPos(const ChanPosition& iChan)
+inline uint64 sPos(const ChanPos& iChan)
 	{ return sNonConst(iChan).Pos(); }
 
-inline void sPosSet(const ChanPosition& iChan, uint64 iPosition)
-	{ sNonConst(iChan).SetPos(iPosition); }
+inline void sPosSet(const ChanPos& iChan, uint64 iPos)
+	{ sNonConst(iChan).SetPos(iPos); }
 
 // =================================================================================================
 #pragma mark -
@@ -278,7 +276,7 @@ template <typename EE> using ChanRU = DeriveFrom
 
 template <typename EE> using ChanRPos = DeriveFrom
 	<
-	Aspect_Position,
+	Aspect_Pos,
 	Aspect_Read<EE>,
 	Aspect_Size,
 	Aspect_Unread<EE>
@@ -286,7 +284,7 @@ template <typename EE> using ChanRPos = DeriveFrom
 
 template <typename EE> using ChanWPos = DeriveFrom
 	<
-	Aspect_Position,
+	Aspect_Pos,
 	Aspect_Size,
 	Aspect_SizeSet,
 	Aspect_Write<EE>
@@ -294,7 +292,7 @@ template <typename EE> using ChanWPos = DeriveFrom
 
 template <typename EE> using ChanRWPos = DeriveFrom
 	<
-	Aspect_Position,
+	Aspect_Pos,
 	Aspect_Read<EE>,
 	Aspect_Size,
 	Aspect_SizeSet,
@@ -306,6 +304,21 @@ template <typename EE> using ChanRW = DeriveFrom
 	<
 	Aspect_Read<EE>,
 	Aspect_WaitReadable,
+	Aspect_Write<EE>
+	>;
+
+template <typename EE> using ChanRCon = DeriveFrom
+	<
+	Aspect_Abort,
+	Aspect_DisconnectRead,
+	Aspect_Read<EE>,
+	Aspect_WaitReadable
+	>;
+
+template <typename EE> using ChanWCon = DeriveFrom
+	<
+	Aspect_Abort,
+	Aspect_DisconnectWrite,
 	Aspect_Write<EE>
 	>;
 
@@ -325,14 +338,14 @@ template <typename EE> using ChanConnection = DeriveFrom
 
 #if 0
 template <class EE>
-inline size_t sUnread(const DeriveFrom<Aspect_Position, Aspect_Unread<EE>>& iChan,
+inline size_t sUnread(const DeriveFrom<Aspect_Pos, Aspect_Unread<EE>>& iChan,
 	const EE* iSource, size_t iCount
 	)
 	{
-	const uint64 thePos = sGetPosition(iChan);
+	const uint64 thePos = sGetPos(iChan);
 	if (iCount >= thePos)
 		iCount = thePos;
-	sSetPosition(thePos - iCount, iChan);
+	sSetPos(thePos - iCount, iChan);
 	return iCount;
 	}
 #endif

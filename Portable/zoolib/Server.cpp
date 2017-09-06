@@ -163,7 +163,7 @@ ZRef<Server::Callable_Connection> Server::GetCallable_Connection()
 static void spKill(ZRef<ChannerAbort> iChannerAbort)
 	{
 	if (iChannerAbort)
-		sAbort(sGetChan(iChannerAbort));
+		sAbort(*iChannerAbort);
 	}
 
 bool Server::pWork(ZRef<Worker> iWorker)
