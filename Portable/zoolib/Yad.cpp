@@ -32,7 +32,7 @@ using std::string;
 
 /**
 \defgroup Yad Yad (Yet Another Data)
-Yad is another neologism by <a href="http://www.linkedin.com/in/ericbwcooper">Eric Cooper</a>.
+Yad is a neologism by <a href="http://www.linkedin.com/in/ericbwcooper">Eric Cooper</a>.
 It's an acronym for <em>Yet Another Data</em>, but interestingly is also a Hebrew word.
 From <a href="http://en.wikipedia.org/wiki/Yad">Wikipedia</a>:
 
@@ -83,106 +83,5 @@ YadParseException::YadParseException(const string& iWhat)
 YadParseException::YadParseException(const char* iWhat)
 :	runtime_error(iWhat)
 	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadR
-
-/**
-\class YadR
-\ingroup Yad
-\sa Yad
-
-*/
-
-void sFinish(const ZRef<YadR>& iYad)
-	{
-	ZLOGTRACE(eDebug + 2);
-	}
-
-//YadR::YadR()
-//	{}
-//
-//void YadR::Finish()
-//	{}
-//
-//ZRef<YadR> YadR::Meta()
-//	{ return null; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadAtomR
-
-/**
-\class YadAtomR
-\ingroup Yad
-\sa Yad
-
-*/
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR
-
-/**
-\class YadStreamerR
-\ingroup Yad
-\sa Yad
-
-*/
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadStrimmerR
-
-/**
-\class YadStrimmerR
-\ingroup Yad
-\sa Yad
-
-*/
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR
-
-/**
-\class YadSeqR
-\ingroup Yad
-\sa Yad
-
-*/
-
-//bool YadSeqR::Skip()
-//	{ return this->ReadInc(); }
-//
-//void YadSeqR::SkipAll()
-//	{
-//	while (this->Skip())
-//		{}
-//	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark YadMapR
-
-/**
-\class YadMapR
-\ingroup Yad
-\sa Yad
-
-*/
-
-bool YadMapR::Skip()
-	{
-	Name dummy;
-	return this->ReadInc(dummy);
-	}
-
-void YadMapR::SkipAll()
-	{
-	while (this->Skip())
-		{}
-	}
 
 } // namespace ZooLib

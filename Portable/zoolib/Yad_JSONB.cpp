@@ -198,10 +198,11 @@ typedef Channer_T<ChanR_RefYad_JSONB> YadSeqR_JSONB;
 #pragma mark -
 #pragma mark YadMapR_JSONB
 
-class YadMapR_JSONB : public YadMapR_Std
+class ChanR_NameRefYad_JSONB
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	YadMapR_JSONB(const ZRef<ReadFilter>& iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
+	ChanR_NameRefYad_JSONB(const ZRef<ReadFilter>& iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	:	fReadFilter(iReadFilter)
 	,	fChannerR_Bin(iChannerR_Bin)
 		{}
@@ -217,6 +218,8 @@ private:
 	const ZRef<ReadFilter> fReadFilter;
 	const ZRef<ChannerR_Bin> fChannerR_Bin;
 	};
+
+typedef Channer_T<ChanR_NameRefYad_JSONB> YadMapR_JSONB;
 
 // =================================================================================================
 #pragma mark -
@@ -263,21 +266,38 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Visitor_ToChan
+#pragma mark Visitor_Writer
 
-class Visitor_ToChan
-//:	public Visitor_Yad
+class Visitor_Writer
 	{
 public:
-	Visitor_ToChan(ZRef<WriteFilter> iWriteFilter, const ChanW_Bin& iChanW)
+	Visitor_Writer(ZRef<WriteFilter> iWriteFilter, const ChanW_Bin& iChanW)
 	:	fWriteFilter(iWriteFilter)
 	,	fW(iChanW)
 		{}
 
-// From ZVisitor_Yad
 	void Visit(const ZRef<YadR>& iYadR)
 		{
-		ZUnimplemented();
+		if (false)
+			{}
+
+		else if (ZRef<YadAtomR> theYadAtomR = iYadR.DynamicCast<YadAtomR>())
+			{ this->Visit_YadAtomR(theYadAtomR); }
+
+		else if (ZRef<ChannerR_UTF> theChanner = iYadR.DynamicCast<ChannerR_UTF>())
+			{ this->Visit_YadStrimmerR(theChanner); }
+
+		else if (ZRef<ChannerR_Bin> theChanner = iYadR.DynamicCast<ChannerR_Bin>())
+			{ this->Visit_YadStreamerR(theChanner); }
+
+		else if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
+			{ this->Visit_YadSeqR(theYadSeqR); }
+
+		else if (ZRef<YadMapR> theYadMapR = iYadR.DynamicCast<YadMapR>())
+			{ this->Visit_YadMapR(theYadMapR); }
+
+		else
+			{ ZUnimplemented(); }
 		}
 
 	void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
@@ -355,7 +375,7 @@ public:
 		{
 		sEWriteBE<uint8>(fW, 0xED);
 		Name theName;
-		while (ZRef<YadR> theChild = iYadMapR->ReadInc(theName))
+		while (ZRef<YadR> theChild = sReadInc(iYadMapR, theName))
 			{
 			spToChan(fW, theName);
 			this->Visit(theChild);
@@ -378,10 +398,10 @@ ZRef<YadR> sYadR(ZRef<ChannerR_Bin> iChannerR_Bin)
 	{ return spMakeYadR(null, iChannerR_Bin); }
 
 void sToChan(ZRef<WriteFilter> iWriteFilter, ZRef<YadR> iYadR, const ChanW_Bin& w)
-	{ Visitor_ToChan(iWriteFilter, w).Visit(iYadR); }
+	{ Visitor_Writer(iWriteFilter, w).Visit(iYadR); }
 
 void sToChan(ZRef<YadR> iYadR, const ChanW_Bin& w)
-	{ Visitor_ToChan(null, w).Visit(iYadR); }
+	{ Visitor_Writer(null, w).Visit(iYadR); }
 
 } // namespace Yad_JSONB
 } // namespace ZooLib

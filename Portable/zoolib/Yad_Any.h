@@ -33,15 +33,15 @@ namespace ZooLib {
 
 ZRef<YadAtomR> sYadAtomR_Any(const Any& iAny);
 
-ZRef<YadR> sYadR(const string8& iVal);
+ZRef<YadStrimmerR> sYadR(const string8& iVal);
 
 ZRef<YadR> sYadR(const Any& iVal);
 
 ZRef<YadStreamerR> sYadR(const Data_Any& iData);
 
-ZRef<YadSeqR> sYadR(const Seq_Any& iSeq);
+ZRef<YadSeqAtRPos> sYadR(const Seq_Any& iSeq);
 
-ZRef<YadMapR> sYadR(const Map_Any& iMap);
+ZRef<YadMapAtR> sYadR(const Map_Any& iMap);
 
 // =================================================================================================
 #pragma mark -

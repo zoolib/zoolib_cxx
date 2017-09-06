@@ -572,16 +572,16 @@ void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapR_JSON
+#pragma mark ChanR_NameRefYad_JSON
 
-YadMapR_JSON::YadMapR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+ChanR_NameRefYad_JSON::ChanR_NameRefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fRO(iRO)
 ,	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 	{}
 
-void YadMapR_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
+void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
 	using namespace Util_Chan;
 
@@ -1022,7 +1022,7 @@ public:
 			for (bool isFirst = true; /*no test*/ ; isFirst = false)
 				{
 				Name curName;
-				if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
+				if (ZRef<YadR,false> cur = sReadInc(iYadMapR, curName))
 					{
 					break;
 					}
@@ -1060,7 +1060,7 @@ public:
 			for (bool isFirst = true; /*no test*/ ; isFirst = false)
 				{
 				Name curName;
-				if (ZRef<YadR,false> cur = iYadMapR->ReadInc(curName))
+				if (ZRef<YadR,false> cur = sReadInc(iYadMapR, curName))
 					{
 					break;
 					}

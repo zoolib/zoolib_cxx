@@ -29,51 +29,10 @@ namespace { // anonymous
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadStreamerRPos
-
-class YadStreamerRPos
-:	public virtual ZYadStreamerR
-,	public virtual ZStreamerRPos
-	{
-public:
-	YadStreamerRPos(const FileSpec& iFS);
-	virtual ~YadStreamerRPos();
-
-// From ZYadR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZStreamerRPos
-	virtual const ZStreamRPos& GetStreamRPos();
-
-private:
-	FileSpec fFileSpec;
-	ZRef<ZStreamerRPos> fStreamerRPos;
-	};
-
-YadStreamerRPos::YadStreamerRPos(const FileSpec& iFS)
-:	fFileSpec(iFS)
-	{}
-
-YadStreamerRPos::~YadStreamerRPos()
-	{}
-
-bool YadStreamerRPos::IsSimple(const ZYadOptions& iOptions)
-	{ return false; }
-
-const ZStreamRPos& YadStreamerRPos::GetStreamRPos()
-	{
-	if (not fStreamerRPos)
-		fStreamerRPos = fFileSpec.OpenRPos();
-
-	return fStreamerRPos->GetStreamRPos();
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark YadMapAtRPos
 
 class YadMapAtRPos
-:	public ZYadMapAtRPos
+:	public YadMapAtRPos
 	{
 public:
 	YadMapAtRPos(const FileSpec& iFS);
@@ -151,7 +110,7 @@ ZRef<ZYadR> sYadR(const FileSpec& iFS)
 		case ZFile::kindDir:
 			return new YadMapAtRPos(iFS);
 		case ZFile::kindFile:
-			return new YadStreamerRPos(iFS);
+			return iFS.OpenRPos();
 		default:
 			break;
 		}

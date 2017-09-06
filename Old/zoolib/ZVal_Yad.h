@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Val_Any.h" // For Seq_Any and Map_Any
-#include "zoolib/Yad.h" // For YadSeqAt
+#include "zoolib/Yad.h"
 
 #include <string>
 
@@ -48,8 +48,8 @@ public:
 	~ZSeq_Yad();
 	ZSeq_Yad& operator=(const ZSeq_Yad& iOther);
 
-//##	ZSeq_Yad(const ZRef<ZYadSeqAtRPos>& iYad);
-//##	ZSeq_Yad& operator=(const ZRef<ZYadSeqAtRPos>& iYad);
+	ZSeq_Yad(const ZRef<YadSeqAtR>& iYad);
+	ZSeq_Yad& operator=(const ZRef<YadSeqAtR>& iYad);
 
 // ZSeq protocol
 	size_t Size() const;
@@ -120,13 +120,13 @@ public:
 	ZVal_Yad& operator[](size_t iIndex);
 	const ZVal_Yad& operator[](size_t iIndex) const;
 
-//##	ZRef<ZYadSeqAtRPos> GetYad() const;
+	ZRef<YadSeqAtR> GetYad() const;
 	Seq_Any GetSeq() const;
 
 private:
 	void pGenSeq();
 
-//##	mutable ZRef<ZYadSeqAtRPos> fYad;
+	mutable ZRef<YadSeqAtR> fYad;
 	mutable Seq_Any fSeq;
 	};
 
@@ -145,8 +145,8 @@ public:
 	~ZMap_Yad();
 	ZMap_Yad& operator=(const ZMap_Yad& iOther);
 
-	ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad);
-	ZMap_Yad& operator=(const ZRef<ZYadMapAtRPos>& iYad);
+	ZMap_Yad(const ZRef<YadMapAtR>& iYad);
+	ZMap_Yad& operator=(const ZRef<YadMapAtR>& iYad);
 
 // ZMap protocol
 	void Clear();
@@ -214,11 +214,11 @@ public:
 	ZVal_Yad& operator[](const Name_t& iName);
 	const ZVal_Yad& operator[](const Name_t& iName) const;
 
-	ZRef<ZYadMapAtRPos> GetYad() const;
+	ZRef<YadMapAtR> GetYad() const;
 	Map_Any GetMap() const;
 
 private:
-//##	mutable ZRef<ZYadMapAtRPos> fYad;
+	mutable ZRef<YadMapAtR> fYad;
 	mutable Map_Any fMap;
 	};
 
@@ -228,9 +228,9 @@ private:
 
 ZRef<YadR> sYadR(const ZVal_Yad& iVal);
 
-//##ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq);
+ZRef<YadSeqAtR> sYadR(const ZSeq_Yad& iSeq);
 
-//##ZRef<ZYadMapAtRPos> sYadR(const ZMap_Yad& iMap);
+ZRef<YadMapAtR> sYadR(const ZMap_Yad& iMap);
 
 } // namespace ZooLib
 

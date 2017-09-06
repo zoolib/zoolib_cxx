@@ -61,25 +61,25 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Chan_YadSeq_T
+#pragma mark Chan_YadSeqAtRPos_T
 
 template <class Seq_p>
-class Chan_YadSeq_T
+class Chan_YadSeqAtRPos_T
 :	public DeriveFrom
 		<
 		Aspect_Position,
 		Aspect_Read<RefYad>,
-		Aspect_ReadAt<RefYad,uint64>,
+		Aspect_ReadAt<uint64, RefYad>,
 		Aspect_Size
 		>
 	{
 public:
-	Chan_YadSeq_T(const Seq_p& iSeq)
+	Chan_YadSeqAtRPos_T(const Seq_p& iSeq)
 	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	Chan_YadSeq_T(const Seq_p& iSeq, uint64 iPosition)
+	Chan_YadSeqAtRPos_T(const Seq_p& iSeq, uint64 iPosition)
 	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
@@ -125,34 +125,49 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapR_Val_T
+#pragma mark Chan_YadMapAtRPos_T
 
 template <class Map_p, class Index_p = typename Map_p::Index_t>
-class YadMapR_Val_T
-:	public YadMapR
+class Chan_YadMapAtRPos_T
+:	public DeriveFrom
+		<
+		Aspect_Read<NameRefYad>,
+		Aspect_ReadAt<Name,RefYad>
+		>
 	{
 public:
 	typedef Index_p Index_t;
 
-	YadMapR_Val_T(const Map_p& iMap)
+	Chan_YadMapAtRPos_T(const Map_p& iMap)
 	:	fMap(iMap)
 	,	fIndex(fMap.Begin())
 		{}
 
-	YadMapR_Val_T(const Map_p& iMap, const Index_t& iIndex)
+	Chan_YadMapAtRPos_T(const Map_p& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
 	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
 
-// From YadMapR
-	ZRef<YadR> ReadInc(Name& oName)
+// From Aspect_Read
+	virtual size_t QRead(NameRefYad* oDest, size_t iCount)
 		{
-		if (fIndex != fMap.End())
+		NameRefYad* startDest = oDest;
+		if (fIndex != fMap.End() && iCount--)
 			{
-			oName = fMap.NameOf(fIndex);
-			return sYadR(fMap.Get(fIndex++));
+			oDest->first = fMap.NameOf(fIndex);
+			oDest->second = sYadR(fMap.Get(fIndex));
+			++fIndex;
+			++oDest;
 			}
-		return null;
+		return oDest - startDest;
+		}
+
+// From Aspect_ReadAt
+	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
+		{
+		if (iCount && (*oDest = sYadR(fMap.Get(iLoc))))
+			return 1;
+		return 0;
 		}
 
 // Our protocol

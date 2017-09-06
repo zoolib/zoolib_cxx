@@ -121,25 +121,25 @@ public:
 		{}
 	};
 
-class YadSeqR_Any
+class YadSeqAtRPos_Any
 :	public AnyHolder
-,	public Channer_T<Chan_YadSeq_T<Seq_Any>>
+,	public Channer_T<Chan_YadSeqAtRPos_T<Seq_Any>>
 	{
 public:
-	YadSeqR_Any(const Seq_Any& iSeq)
+	YadSeqAtRPos_Any(const Seq_Any& iSeq)
 	:	AnyHolder(Any(iSeq))
-	,	Channer_T<Chan_YadSeq_T<Seq_Any>>(iSeq)
+	,	Channer_T<Chan_YadSeqAtRPos_T<Seq_Any>>(iSeq)
 		{}
 	};
 
 class YadMapR_Any
 :	public AnyHolder
-,	public YadMapR_Val_T<Map_Any>
+,	public Channer_T<Chan_YadMapAtRPos_T<Map_Any>>
 	{
 public:
 	YadMapR_Any(const Map_Any& iMap)
 	:	AnyHolder(Any(iMap))
-	,	YadMapR_Val_T<Map_Any>(iMap)
+	,	Channer_T<Chan_YadMapAtRPos_T<Map_Any>>(iMap)
 		{}
 	};
 
@@ -161,7 +161,7 @@ ZRef<YadAtomR> sYadAtomR_Any(const Any& iAny)
 	return new YadAtomR_Any(iAny);
 	}
 
-ZRef<YadR> sYadR(const string8& iVal)
+ZRef<YadStrimmerR> sYadR(const string8& iVal)
 	{ return new YadStrimmerR_string(iVal); }
 
 ZRef<YadR> sYadR(const Any& iVal)
@@ -184,10 +184,10 @@ ZRef<YadR> sYadR(const Any& iVal)
 ZRef<YadStreamerR> sYadR(const Data_Any& iData)
 	{ return new YadStreamerRPos_Any(iData); }
 
-ZRef<YadSeqR> sYadR(const Seq_Any& iSeq)
-	{ return new YadSeqR_Any(iSeq); }
+ZRef<YadSeqAtRPos> sYadR(const Seq_Any& iSeq)
+	{ return new YadSeqAtRPos_Any(iSeq); }
 
-ZRef<YadMapR> sYadR(const Map_Any& iMap)
+ZRef<YadMapAtR> sYadR(const Map_Any& iMap)
 	{ return new YadMapR_Any(iMap); }
 
 // =================================================================================================
@@ -244,7 +244,7 @@ public:
 			Map_Any theMap;
 
 			Name theName;
-			while (ZRef<YadR> theChild = theYadMapR->ReadInc(theName))
+			while (ZRef<YadR> theChild = sReadInc(theYadMapR, theName))
 				{
 				if (NotQ<Val_Any> theQ = this->QVisit(theChild))
 					{ return false; }

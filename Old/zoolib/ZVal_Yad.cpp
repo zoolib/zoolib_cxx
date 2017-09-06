@@ -39,13 +39,13 @@ ZVal_Yad spAsVal_Yad(const ZRef<YadR>& iYadR)
 	if (not iYadR)
 		return sDefault<ZVal_Yad>();
 
-	if (ZRef<ZYadSeqAtRPos> theYad = iYadR.DynamicCast<ZYadSeqAtRPos>())
+	if (ZRef<YadSeqAtR> theYad = iYadR.DynamicCast<YadSeqAtR>())
 		return ZSeq_Yad(theYad);
 
-	if (ZRef<ZYadMapAtRPos> theYad = iYadR.DynamicCast<ZYadMapAtRPos>())
+	if (ZRef<YadMapAtR> theYad = iYadR.DynamicCast<YadMapAtR>())
 		return ZMap_Yad(theYad);
 
-	return sFromYadR(ZVal_Any(), iYadR).AsAny();
+	return sFromYadR(Val_Any(), iYadR).AsAny();
 	}
 
 } // anonymous namespace
@@ -72,11 +72,11 @@ ZSeq_Yad& ZSeq_Yad::operator=(const ZSeq_Yad& iOther)
 	return *this;
 	}
 
-ZSeq_Yad::ZSeq_Yad(const ZRef<ZYadSeqAtRPos>& iYad)
+ZSeq_Yad::ZSeq_Yad(const ZRef<YadSeqAtR>& iYad)
 :	fYad(iYad)
 	{}
 
-ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtRPos>& iYad)
+ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<YadSeqAtR>& iYad)
 	{
 	fYad = iYad;
 	fSeq.Clear();
@@ -86,7 +86,7 @@ ZSeq_Yad& ZSeq_Yad::operator=(const ZRef<ZYadSeqAtRPos>& iYad)
 size_t ZSeq_Yad::Size() const
 	{
 	if (fYad)
-		return fYad->Count();
+		return sSize(*fYad);
 	return fSeq.Count();
 	}
 
@@ -100,16 +100,16 @@ const ZVal_Yad* ZSeq_Yad::PGet(size_t iIndex) const
 	{
 	if (fYad)
 		{
-		for (const size_t yadCount = fYad->Count();
+		for (const size_t yadCount = sSize(*fYad);
 			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
 		}
 
-	if (ZAny* theP = fSeq.PMut(iIndex))
+	if (Any* theP = fSeq.PMut(iIndex))
 		{
 		if (theP->PGet<Tombstone_t>())
-			*theP = spAsVal_Yad(fYad->ReadAt(iIndex)).AsAny();
+			*theP = spAsVal_Yad(sReadAt(fYad, iIndex)).AsAny();
 		return static_cast<ZVal_Yad*>(theP);
 		}
 
@@ -141,16 +141,16 @@ ZVal_Yad* ZSeq_Yad::PMut(size_t iIndex)
 	{
 	if (fYad)
 		{
-		for (const size_t yadCount = fYad->Count();
+		for (const size_t yadCount = sSize(*fYad);
 			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
 		}
 
-	if (ZAny* theP = fSeq.PMut(iIndex))
+	if (Any* theP = fSeq.PMut(iIndex))
 		{
 		if (theP->PGet<Tombstone_t>())
-			*theP = spAsVal_Yad(fYad->ReadAt(iIndex)).AsAny();
+			*theP = spAsVal_Yad(sReadAt(fYad, iIndex)).AsAny();
 		return static_cast<ZVal_Yad*>(theP);
 		}
 
@@ -168,7 +168,7 @@ ZSeq_Yad& ZSeq_Yad::Set(size_t iIndex, const ZVal_Yad& iVal)
 	{
 	if (fYad)
 		{
-		for (const size_t yadCount = fYad->Count();
+		for (const size_t yadCount = sSize(*fYad);
 			iIndex < yadCount && iIndex >= fSeq.Count();
 			/*no inc*/)
 			{ fSeq.Append(Tombstone_t()); }
@@ -208,7 +208,7 @@ const ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex) const
 	return sDefault<ZVal_Yad>();
 	}
 
-ZRef<ZYadSeqAtRPos> ZSeq_Yad::GetYad() const
+ZRef<YadSeqAtR> ZSeq_Yad::GetYad() const
 	{ return fYad; }
 
 Seq_Any ZSeq_Yad::GetSeq() const
@@ -219,15 +219,15 @@ void ZSeq_Yad::pGenSeq()
 	if (not fYad)
 		return;
 
-	for (size_t x = 0, count = fYad->Count(); x < count ; ++x)
+	for (size_t xx = 0, count = sSize(*fYad); xx < count ; ++xx)
 		{
-		if (fSeq.Count() == x)
+		if (fSeq.Count() == xx)
 			{
-			fSeq.Append(spAsVal_Yad(fYad->ReadAt(x)).AsAny());
+			fSeq.Append(spAsVal_Yad(sReadAt(fYad, xx)).AsAny());
 			}
-		else if (fSeq.PGet<Tombstone_t>(x))
+		else if (fSeq.PGet<Tombstone_t>(xx))
 			{
-			fSeq.Set(x, spAsVal_Yad(fYad->ReadAt(x)).AsAny());
+			fSeq.Set(xx, spAsVal_Yad(sReadAt(fYad, xx)).AsAny());
 			}
 		}
 
@@ -256,11 +256,11 @@ ZMap_Yad& ZMap_Yad::operator=(const ZMap_Yad& iOther)
 	return *this;
 	}
 
-ZMap_Yad::ZMap_Yad(const ZRef<ZYadMapAtRPos>& iYad)
+ZMap_Yad::ZMap_Yad(const ZRef<YadMapAtR>& iYad)
 :	fYad(iYad)
 	{}
 
-ZMap_Yad& ZMap_Yad::operator=(const ZRef<ZYadMapAtRPos>& iYad)
+ZMap_Yad& ZMap_Yad::operator=(const ZRef<YadMapAtR>& iYad)
 	{
 	fYad = iYad;
 	fMap.Clear();
@@ -278,7 +278,7 @@ const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
 		{
-		if (const ZAny* theAny = fMap.PGet(theIndex))
+		if (const Any* theAny = fMap.PGet(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -288,10 +288,10 @@ const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 
 	if (fYad)
 		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+		if (ZRef<YadR> theYad = sReadAt(fYad, iName))
 			{
-			fMap.Set(iName, ZVal_Any(spAsVal_Yad(theYad).AsAny()));
-			return static_cast<const ZVal_Yad*>(static_cast<const ZAny*>(fMap.PGet(iName)));
+			fMap.Set(iName, Val_Any(spAsVal_Yad(theYad).AsAny()));
+			return static_cast<const ZVal_Yad*>(static_cast<const Any*>(fMap.PGet(iName)));
 			}
 		}
 
@@ -325,7 +325,7 @@ ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
 		{
-		if (ZAny* theAny = fMap.PMut(theIndex))
+		if (Any* theAny = fMap.PMut(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -335,10 +335,10 @@ ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 
 	if (fYad)
 		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+		if (ZRef<YadR> theYad = sReadAt(fYad, iName))
 			{
-			fMap.Set(iName, ZVal_Any(spAsVal_Yad(theYad).AsAny()));
-			return static_cast<ZVal_Yad*>(static_cast<ZAny*>(fMap.PMut(iName)));
+			fMap.Set(iName, Val_Any(spAsVal_Yad(theYad).AsAny()));
+			return static_cast<ZVal_Yad*>(static_cast<Any*>(fMap.PMut(iName)));
 			}
 		}
 
@@ -348,17 +348,17 @@ ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 
 ZVal_Yad& ZMap_Yad::Mut(const Name_t& iName)
 	{
-	if (ZAny* theP = fMap.PMut(iName))
+	if (Any* theP = fMap.PMut(iName))
 		{
 		if (theP->PGet<Tombstone_t>())
-			*theP = ZAny();			
+			*theP = Any();
 		return *static_cast<ZVal_Yad*>(theP);
 		}
 	
-	ZAny& theMutable = fMap.Mut(iName);
+	Any& theMutable = fMap.Mut(iName);
 	if (fYad)
 		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
+		if (ZRef<YadR> theYad = sReadAt(fYad, iName))
 			theMutable = spAsVal_Yad(theYad).AsAny();
 		}
 
@@ -387,7 +387,7 @@ const ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName) const
 	return sDefault<ZVal_Yad>();
 	}
 
-ZRef<ZYadMapAtRPos> ZMap_Yad::GetYad() const
+ZRef<YadMapAtR> ZMap_Yad::GetYad() const
 	{ return fYad; }
 
 Map_Any ZMap_Yad::GetMap() const
@@ -395,96 +395,9 @@ Map_Any ZMap_Yad::GetMap() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapAtRPos
-
-namespace { // anonymous
-
-class YadMapAtRPos
-:	public ZYadMapAtRPos
-	{
-	YadMapAtRPos(const YadMapAtRPos& iOther)
-	:	fYad(iOther.fYad->Clone().DynamicCast<ZYadMapAtRPos>())
-	,	fMap(iOther.fMap)
-	,	fCurrent(fMap.IndexOf(iOther.fMap, iOther.fCurrent))
-		{}
-
-public:
-	YadMapAtRPos(ZRef<ZYadMapAtRPos> iYad, const Map_Any& iMap)
-	:	fYad(iYad)
-	,	fMap(iMap)
-	,	fCurrent(fMap.Begin())
-		{}
-
-// From ZYadR
-	virtual bool IsSimple(const ZYadOptions& iOptions)
-		{ return false; }
-
-// From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(Name& oName)
-		{
-		if (ZRef<ZYadR> theYad = fYad->ReadInc(oName))
-			{
-			sInsertMust(fNamesSeen, oName);
-			if (const ZVal_Any* theP = fMap.PGet(oName))
-				return sYadR(*theP);
-			return theYad;
-			}
-
-		while (fCurrent != fMap.End())
-			{
-			oName = fMap.NameOf(fCurrent);
-			if (sQInsert(fNamesSeen, oName))
-				return sYadR(fMap.Get(fCurrent++));
-			++fCurrent;
-			}
-
-		return null;
-		}
-
-// From ZYadMapRClone
-	virtual ZRef<ZYadMapRClone> Clone()
-		{ return new YadMapAtRPos(*this); }
-
-// From ZYadMapAtR
-	virtual ZRef<ZYadR> ReadAt(const Name& iName)
-		{
-		if (ZRef<ZYadR> theYad = fYad->ReadAt(iName))
-			{
-			if (const ZVal_Any* theP = fMap.PGet(iName))
-				return sYadR(*theP);
-			return theYad;
-			}
-		
-		if (const ZVal_Any* theP = fMap.PGet(iName))
-			return sYadR(*theP);
-		
-		return null;
-		}
-
-	virtual ZQ<ZAny> QAsAny()
-		{ return null; }
-
-// From ZYadMapRPos
-	virtual void SetPosition(const Name& iName)
-		{
-		// Urg.
-		ZUnimplemented();
-		}
-
-private:
-	ZRef<ZYadMapAtRPos> fYad;
-	Map_Any fMap;
-	Map_Any::Index_t fCurrent;
-	set<string> fNamesSeen;
-	};
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark sYadR
 
-ZRef<ZYadR> sYadR(const ZVal_Yad& iVal)
+ZRef<YadR> sYadR(const ZVal_Yad& iVal)
 	{
 	if (const string8* theVal = iVal.PGet<string8>())
 		return sYadR(*theVal);
@@ -495,20 +408,20 @@ ZRef<ZYadR> sYadR(const ZVal_Yad& iVal)
 	if (const ZMap_Yad* theVal = iVal.PGet<ZMap_Yad>())
 		return sYadR(*theVal);
 
-	return sMake_YadAtomR_Any(iVal.AsAny());
+	return sYadR(iVal.AsAny());
 	}
 
-ZRef<ZYadSeqAtRPos> sYadR(const ZSeq_Yad& iSeq)
+ZRef<YadSeqAtR> sYadR(const ZSeq_Yad& iSeq)
 	{
-	if (ZRef<ZYadSeqAtRPos> theYad = iSeq.GetYad())
-		return theYad->Clone().DynamicCast<ZYadSeqAtRPos>();
+	if (ZRef<YadSeqAtR> theYad = iSeq.GetYad())
+		return theYad;
 	return sYadR(iSeq.GetSeq());
 	}
 
-ZRef<ZYadMapAtRPos> sYadR(const ZMap_Yad& iMap)
+ZRef<YadMapAtR> sYadR(const ZMap_Yad& iMap)
 	{
-	if (ZRef<ZYadMapAtRPos> theYad = iMap.GetYad())
-		return new YadMapAtRPos(theYad->Clone().DynamicCast<ZYadMapAtRPos>(), iMap.GetMap());
+	if (ZRef<YadMapAtR> theYad = iMap.GetYad())
+		return theYad;
 	return sYadR(iMap.GetMap());
 	}
 

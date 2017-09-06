@@ -27,21 +27,31 @@ namespace ZooLib {
 
 namespace { // anonymous
 
-class YadMapR_Filtered
-:	public YadMapR
+class ChanR_NameRefYad_Filtered
+:	public ChanR_NameRefYad
 	{
 public:
-	YadMapR_Filtered(
+	ChanR_NameRefYad_Filtered(
 		const ZRef<Callable_YadFilter>& iCallable, const ZRef<YadMapR>& iYadMapR)
 	:	fCallable(iCallable)
 	,	fYadMapR(iYadMapR)
 		{}
 	
-//	virtual bool IsSimple(const YadOptions& iOptions)
-//		{ return fYadMapR->IsSimple(iOptions); }
-
-	virtual RefYad ReadInc(Name& oName)
-		{ return sYadFilter(fCallable, sCall(fCallable, fYadMapR->ReadInc(oName))); }
+// From ChanR_NameRefYad
+	virtual size_t QRead(NameRefYad* oDest, size_t iCount)
+		{
+		if (iCount)
+			{
+			NameRefYad result;
+			if (1 == sQRead(*fYadMapR, &result, 1))
+				{
+				oDest->first = result.first;
+				oDest->second = sYadFilter(fCallable, sCall(fCallable, result.second));
+				return 1;
+				}
+			}
+		return 0;
+		}
 
 	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<YadMapR> fYadMapR;
@@ -64,12 +74,6 @@ public:
 		return 0;
 		}
 
-//	virtual bool IsSimple(const YadOptions& iOptions)
-//		{ return fYadSeqR->IsSimple(iOptions); }
-
-//	virtual RefYad ReadInc()
-//		{ return sYadFilter(fCallable, sCall(fCallable, sReadInc(fYadSeqR))); }
-
 	const ZRef<Callable_YadFilter> fCallable;
 	const ZRef<YadSeqR> fYadSeqR;
 	};
@@ -85,7 +89,7 @@ RefYad sYadFilter(
 	if (iCallable_YadFilter)
 		{
 		if (ZRef<YadMapR> theYadMapR = iYadR.DynamicCast<YadMapR>())
-			return new YadMapR_Filtered(iCallable_YadFilter, theYadMapR);
+			return sChanner_T<ChanR_NameRefYad_Filtered>(iCallable_YadFilter, theYadMapR);
 
 		if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
 			return sChanner_T<ChanR_RefYad_Filtered>(iCallable_YadFilter, theYadSeqR);

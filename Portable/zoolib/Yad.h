@@ -32,8 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-//typedef ChanReadAt<ZRef<YadR>,Name> YadMapAt;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark YadOptions
@@ -78,8 +76,6 @@ public:
 typedef ZCounted YadR;
 typedef ZRef<YadR> RefYad;
 
-void sFinish(const RefYad& iYad);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark YadAtomR
@@ -112,10 +108,10 @@ using ChanR_RefYad = DeriveFrom<Aspect_Read<RefYad>>;
 
 using YadSeqR = Channer<ChanR_RefYad>;
 
-inline RefYad sReadInc(const ChanR<RefYad>& iAspectRead)
+inline RefYad sReadInc(const ChanR_RefYad& iChan)
 	{
 	RefYad result;
-	if (1 == sQRead(iAspectRead, &result, 1))
+	if (1 == sQRead(iChan, &result, 1))
 		return result;
 	return null;
 	}
@@ -127,33 +123,75 @@ inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
 #pragma mark -
 #pragma mark YadSeqAtR
 
-using YadSeqAtR = Channer<ChanReadAt<RefYad,uint64>>;
+using ChanAtR_RefYad = DeriveFrom<Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
+using YadSeqAtR = Channer<ChanAtR_RefYad>;
+
+inline RefYad sReadAt(const ChanReadAt<uint64,RefYad>& iChan, uint64 iLoc)
+	{
+	RefYad result;
+	if (1 == sQReadAt(iChan, iLoc, &result, 1))
+		return result;
+	return null;
+	}
+
+inline RefYad sReadAt(const ZRef<YadSeqAtR>& iYadSeqAtR, uint64 iLoc)
+	{ return sReadAt(*iYadSeqAtR, iLoc); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark YadMapR
 
-class YadMapR
-:	public virtual YadR
-	{
-public:
-// Our protocol
-	virtual ZRef<YadR> ReadInc(Name& oName) = 0;
-	virtual bool Skip();
-	virtual void SkipAll();
-	};
+using ChanRPos_RefYad = DeriveFrom<Aspect_Read<RefYad>,Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
+using YadSeqAtRPos = Channer<ChanRPos_RefYad>;
 
-class ZYadMapAtR : public YadMapR
-	{
-public:
-	virtual ZRef<YadR> ReadAt(const Name&) = 0;
-	};
+// =================================================================================================
+#pragma mark -
+#pragma mark YadMapR
 
-class ZYadMapAtRPos : public ZYadMapAtR
+typedef std::pair<Name,RefYad> NameRefYad;
+
+using ChanR_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>>;
+
+using YadMapR = Channer<ChanR_NameRefYad>;
+
+inline RefYad sReadInc(const ChanR_NameRefYad& iChan, Name& oName)
 	{
-public:
-//	virtual ZRef<YadR> ReadAt(const std::string&) = 0;
-	};
+	NameRefYad result;
+	if (1 == sQRead(iChan, &result, 1))
+		{
+		oName = result.first;
+		return result.second;
+		}
+	return null;
+	}
+
+inline RefYad sReadInc(const ZRef<YadMapR>& iYadMapR, Name& oName)
+	{ return sReadInc(*iYadMapR, oName); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark YadMapAtR
+
+using ChanAtR_NameRefYad = DeriveFrom<Aspect_ReadAt<Name,RefYad>>;
+using YadMapAtR = Channer<ChanAtR_NameRefYad>;
+
+inline RefYad sReadAt(const ChanReadAt<Name,RefYad>& iChan, const Name& iLoc)
+	{
+	RefYad result;
+	if (1 == sQReadAt(iChan, iLoc, &result, 1))
+		return result;
+	return null;
+	}
+
+inline RefYad sReadAt(const ZRef<YadMapAtR>& iYadMapAtR, const Name& iLoc)
+	{ return sReadAt(*iYadMapAtR, iLoc); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark YadMapAtR
+
+using ChanRPos_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>,Aspect_ReadAt<Name,RefYad>>;
+using YadMapAtRPos = Channer<ChanRPos_NameRefYad>;
 
 } // namespace ZooLib
 

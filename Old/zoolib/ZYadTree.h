@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+typedef YadMapAtR ZYadMapAtRPos;
+
 ZRef<ZYadMapAtRPos> sYadTree(
 	const ZRef<ZYadMapAtRPos>& iYadMapAtRPos, const std::string& iProtoName);
 

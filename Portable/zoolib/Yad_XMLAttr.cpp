@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Yad_XMLAttr.h"
 #include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_Std.h"
+#include "zoolib/Yad_XMLAttr.h"
 
 /*
 ZYad_XMLAttr turns this:
@@ -84,7 +85,7 @@ ParseException::ParseException(const char* iWhat)
 #pragma mark YadMapR
 
 class YadMapR
-:	public ZooLib::YadMapR
+:	public Channer_T<ChanR_NameRefYad_Std>
 	{
 public:
 	YadMapR(const ML::Attrs_t& iAttrs);
@@ -92,8 +93,8 @@ public:
 	YadMapR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF,
 		const string& iOuterName, const ML::Attrs_t& iAttrs);
 
-// From ZooLib::YadMapR
-	virtual ZRef<YadR> ReadInc(Name& oName);
+// From ChanR_NameRefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
 	ZRef<ML::ChannerRU_UTF> fChannerRU_UTF;
@@ -120,18 +121,18 @@ YadMapR::YadMapR(
 ,	fIter(fAttrs.begin())
 	{}
 
-ZRef<YadR> YadMapR::ReadInc(Name& oName)
+void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
 	if (fIter != fAttrs.end())
 		{
 		oName = fIter->first;
-		ZRef<YadR> result = ZooLib::sYadR(fIter->second);
+		oYadR = ZooLib::sYadR(fIter->second);
 		++fIter;
-		return result;
+		return;
 		}
 
 	if (!fChannerRU_UTF)
-		return null;
+		return;
 
 	ML::ChanRU_UTF& theR = *fChannerRU_UTF;
 
@@ -142,19 +143,19 @@ ZRef<YadR> YadMapR::ReadInc(Name& oName)
 	if (fOuterName.empty())
 		{
 		if (theR.Current() == ML::eToken_Exhausted)
-			return null;
+			return;
 		}
 	else if (sTryRead_End(theR, fOuterName))
 		{
-		return null;
+		return;
 		}
 
 	if (theR.Current() == ML::eToken_TagEmpty)
 		{
 		oName = theR.Name();
-		ZRef<YadR> result = new YadMapR(theR.Attrs());
+		oYadR = new YadMapR(theR.Attrs());
 		theR.Advance();
-		return result;
+		return;
 		}
 
 	if (theR.Current() != ML::eToken_TagBegin)
@@ -176,7 +177,8 @@ ZRef<YadR> YadMapR::ReadInc(Name& oName)
 		if (theAttrs.empty())
 			{
 			theR.Advance();
-			return ZooLib::sYadR(theText);
+			oYadR = ZooLib::sYadR(theText);
+			return;
 			}
 		else if (!theText.empty())
 			{
@@ -184,7 +186,7 @@ ZRef<YadR> YadMapR::ReadInc(Name& oName)
 			}
 		}
 
-	return new YadMapR(fChannerRU_UTF, theName, theAttrs);
+	oYadR = new YadMapR(fChannerRU_UTF, theName, theAttrs);
 	}
 
 // =================================================================================================

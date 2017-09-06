@@ -30,7 +30,7 @@ namespace SQLite {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark SQLite::YadSeqR_Iter
+#pragma mark SQLite::ChanR_RefYad_Iter
 
 class ChanR_RefYad_Iter
 :	public ChanR_RefYad_Std

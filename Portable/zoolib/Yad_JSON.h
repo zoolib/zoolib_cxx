@@ -176,14 +176,14 @@ typedef Channer_T<ChanR_RefYad_JSON> YadSeqR_JSON;
 #pragma mark -
 #pragma mark YadMapR_JSON
 
-class YadMapR_JSON
-:	public YadMapR_Std
+class ChanR_NameRefYad_JSON
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	YadMapR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
+	ChanR_NameRefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From YadMapR_Std
+// From ChanR_NameRefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
@@ -191,6 +191,8 @@ private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
 	};
+
+typedef Channer_T<ChanR_NameRefYad_JSON> YadMapR_JSON;
 
 // =================================================================================================
 #pragma mark -

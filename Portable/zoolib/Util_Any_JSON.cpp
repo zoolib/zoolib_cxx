@@ -40,10 +40,7 @@ ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>
 		if (ZRef<YadR> theYad = sYadR(theRO, iChannerR, iChannerU))
 			{
 			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
-				{
-				sFinish(theYad);
 				return resultQ;
-				}
 			}
 		}
 	return null;

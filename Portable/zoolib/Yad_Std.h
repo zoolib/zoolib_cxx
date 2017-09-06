@@ -49,7 +49,7 @@ public:
 	ChanR_RefYad_Std();
 
 // From ChanR_RefYad
-	virtual size_t QRead(ZRef<YadR>* oDest, size_t iCount);
+	virtual size_t QRead(RefYad* oDest, size_t iCount);
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR) = 0;
@@ -63,25 +63,24 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapR_Std
+#pragma mark ChanR_NameRefYad_Std
 
-class YadMapR_Std
-:	public YadMapR
+class ChanR_NameRefYad_Std
+:	public ChanR_NameRefYad
 	{
 public:
-	YadMapR_Std();
-	YadMapR_Std(bool iFinished);
-
-// From YadR
-	virtual void Finish();
+	ChanR_NameRefYad_Std();
+	ChanR_NameRefYad_Std(bool iFinished);
 
 // From YadMapR
-	virtual ZRef<YadR> ReadInc(Name& oName);
+	virtual size_t QRead(NameRefYad* oDest, size_t iCount);
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR) = 0;
 
 private:
+	ZRef<YadR> pReadInc(Name& oName);
+
 	bool fStarted;
 	ZRef<YadR> fValue;
 	};

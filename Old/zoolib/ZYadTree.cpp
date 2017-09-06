@@ -85,7 +85,7 @@ class Chan_YadSeq
 :	public ZooLib::YadSeqR
 	{
 public:
-	YadSeqR(const ZRef<Link>& iLink, const ZRef<ZYadSeqR>& iYad)
+	Chan_YadSeq(const ZRef<Link>& iLink, const ZRef<ZYadSeqR>& iYad)
 	:	fLink(iLink)
 	,	fYad(iYad)
 		{}
@@ -153,12 +153,6 @@ public:
 // From ZYadSeqR
 	virtual ZRef<ZYadR> ReadInc()
 		{ return spWrap(fLink, fYad->ReadInc()); }
-
-	virtual bool Skip()
-		{ return fYad->Skip(); }
-
-	virtual void SkipAll()
-		{ fYad->SkipAll(); }
 
 // From ZYadSeqRClone
 	virtual ZRef<ZYadSeqRClone> Clone()
@@ -244,15 +238,6 @@ public:
 	virtual ZRef<ZYadR> ReadInc()
 		{ return spWrap(fLink, fYad->ReadInc()); }
 
-	virtual bool Skip()
-		{ return fYad->Skip(); }
-
-	virtual void SkipAll()
-		{ fYad->SkipAll(); }
-
-// From ZYadSeqRClone
-	virtual ZRef<ZYadSeqRClone> Clone()
-		{ return new YadSeqRPos(fLink, fYad->Clone().DynamicCast<ZYadSeqAtRPos>()); }
 
 // From ZYadSeqRPos
 	virtual uint64 GetPosition()
@@ -321,7 +306,7 @@ public:
 		return fYadMapAtRPos->ReadInc(oName);
 		}
 
-// From ZYadMap8
+// From ZYadMapRClone
 	virtual ZRef<ZYadMapRClone> Clone()
 		{ return new YadMapAtRPos(*this); }
 

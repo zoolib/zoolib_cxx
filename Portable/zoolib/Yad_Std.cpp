@@ -44,7 +44,7 @@ ChanR_RefYad_Std::ChanR_RefYad_Std()
 :	fStarted(false)
 	{}
 
-size_t ChanR_RefYad_Std::QRead(ZRef<YadR>* oDest, size_t iCount)
+size_t ChanR_RefYad_Std::QRead(RefYad* oDest, size_t iCount)
 	{
 	// It is *crucial* that we read one Yad at a time. It is likely that the underlying entity is
 	// in a partially consumed state, and walking the one yad we return will advance that state
@@ -63,32 +63,39 @@ ZRef<YadR> ChanR_RefYad_Std::pReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapR_Std
+#pragma mark ChanR_NameRefYad_Std
 
-YadMapR_Std::YadMapR_Std()
+ChanR_NameRefYad_Std::ChanR_NameRefYad_Std()
 :	fStarted(false)
 	{}
 
-YadMapR_Std::YadMapR_Std(bool iFinished)
+ChanR_NameRefYad_Std::ChanR_NameRefYad_Std(bool iFinished)
 :	fStarted(iFinished)
 	{}
 
-void YadMapR_Std::Finish()
-	{ this->SkipAll(); }
+size_t ChanR_NameRefYad_Std::QRead(NameRefYad* oDest, size_t iCount)
+	{
+	// It is *crucial* that we read one Yad at a time. It is likely that the underlying entity is
+	// in a partially consumed state, and walking the one yad we return will advance that state
+	// to the point when there *would* be another yad to read.
+	if (iCount)
+		{
+		Name theName;
+		if (ZRef<YadR> theYad = this->pReadInc(theName))
+			{
+			oDest->first = theName;
+			oDest->second = theYad;
+			return 1;
+			}
+		}
+	return 0;
+	}
 
-ZRef<YadR> YadMapR_Std::ReadInc(Name& oName)
+ZRef<YadR> ChanR_NameRefYad_Std::pReadInc(Name& oName)
 	{
 	oName.Clear();
-	if (not sGetSet(fStarted, true))
-		{
-		this->Imp_ReadInc(true, oName, fValue);
-		}
-	else if (fValue)
-		{
-		sFinish(fValue);
-		fValue.Clear();
-		this->Imp_ReadInc(false, oName, fValue);
-		}
+	fValue.Clear();
+	this->Imp_ReadInc(not sGetSet(fStarted, true), oName, fValue);
 
 	return fValue;
 	}

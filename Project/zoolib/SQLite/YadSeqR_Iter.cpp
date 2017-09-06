@@ -27,16 +27,16 @@ namespace SQLite {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Anonymous YadMapR
+#pragma mark Anonymous ChanR_NameRefYad
 
 namespace { // anonymous
 
-class YadMapR : public YadMapR_Std
+class ChanR_NameRefYad : public ChanR_NameRefYad_Std
 	{
 public:
-	YadMapR(ZRef<Iter> iIter);
+	ChanR_NameRefYad(ZRef<Iter> iIter);
 
-// From YadMapR_Std
+// From ChanR_NameRefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
@@ -44,12 +44,12 @@ private:
 	size_t fIndex;
 	};
 
-YadMapR::YadMapR(ZRef<Iter> iIter)
+ChanR_NameRefYad::ChanR_NameRefYad(ZRef<Iter> iIter)
 :	fIter(iIter)
 ,	fIndex(0)
 	{}
 
-void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
+void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
 	if (fIndex < fIter->Count())
 		{
@@ -78,7 +78,7 @@ void ChanR_RefYad_Iter::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 		fIter->Advance();
 
 	if (fIter->HasValue())
-		oYadR = new YadMapR(fIter);
+		oYadR = sChanner_T<ChanR_NameRefYad>(fIter);
 	}
 
 } // namespace SQLite

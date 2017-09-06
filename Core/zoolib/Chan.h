@@ -147,9 +147,9 @@ inline size_t sReadable(const ChanR<EE>& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Aspect_ReadAt
+#pragma mark Aspect_Size
 
-template <class EE, class LL>
+template <class LL, class EE>
 class Aspect_ReadAt
 :	public virtual UserOfElement<EE>
 	{
@@ -157,11 +157,11 @@ public:
 	virtual size_t QReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
 	};
 
-template <class EE, class LL>
-using ChanReadAt = DeriveFrom<Aspect_ReadAt<EE,LL>>;
+template <class LL, class EE>
+using ChanReadAt = DeriveFrom<Aspect_ReadAt<LL,EE>>;
 
-template <class EE, class LL>
-inline size_t sQReadAt(const ChanReadAt<EE,LL>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
+template <class LL, class EE>
+inline size_t sQReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
 	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
 
 // =================================================================================================
