@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
 #include "zoolib/ValPred/ValPred_Any.h"
 
-#include "zooLib/Dataspace/RowBoat.h"
+#include "zoolib/Dataspace/RowBoat.h"
 
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 #include "zoolib/RelationalAlgebra/Util_Rel_Operators.h"

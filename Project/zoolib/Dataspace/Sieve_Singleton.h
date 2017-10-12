@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Dataspace/Daton_Val.h"
 #include "zoolib/Dataspace/Melange.h" // For Callable_DatonUpdate et al
-#include "zooLib/Dataspace/RelsWatcher.h"
+#include "zoolib/Dataspace/RelsWatcher.h"
 
 namespace ZooLib {
 namespace Dataspace {

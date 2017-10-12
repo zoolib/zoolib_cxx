@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/DList.h"
 
-#include "zooLib/Dataspace/Relater.h"
+#include "zoolib/Dataspace/Relater.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {

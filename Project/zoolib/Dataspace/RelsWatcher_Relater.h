@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_RelsWatcher_Relater_h__ 1
 #include "zconfig.h"
 
-#include "zooLib/ValueOnce.h"
+#include "zoolib/ValueOnce.h"
 
-#include "zooLib/Dataspace/Relater.h"
-#include "zooLib/Dataspace/RelsWatcher.h"
+#include "zoolib/Dataspace/Relater.h"
+#include "zoolib/Dataspace/RelsWatcher.h"
 
 namespace ZooLib {
 namespace Dataspace {

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare.h"
-#include "zooLib/Dataspace/Types.h"
+#include "zoolib/Dataspace/Types.h"
 
 namespace ZooLib {
 

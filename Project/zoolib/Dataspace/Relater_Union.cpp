@@ -34,8 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
-#include "zooLib/Dataspace/Relater_Union.h"
-#include "zooLib/Dataspace/Util_Strim.h"
+#include "zoolib/Dataspace/Relater_Union.h"
+#include "zoolib/Dataspace/Util_Strim.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"

@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zooLib/Dataspace/Relater_Asyncify.h"
+#include "zoolib/Dataspace/Relater_Asyncify.h"
 
 namespace ZooLib {
 namespace Dataspace {

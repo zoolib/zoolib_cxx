@@ -36,8 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zooLib/Apple/Starter_CFRunLoop.h"
-#include "zooLib/Apple/Util_NS.h"
+#include "zoolib/Apple/Starter_CFRunLoop.h"
+#include "zoolib/Apple/Util_NS.h"
 
 #include "zoolib/UIKit/TVCell.h"
 

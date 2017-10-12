@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zooLib/Dataspace/Searcher.h"
+#include "zoolib/Dataspace/Searcher.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
