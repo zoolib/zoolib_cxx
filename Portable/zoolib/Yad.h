@@ -139,7 +139,7 @@ inline RefYad sReadAt(const ZRef<YadSeqAtR>& iYadSeqAtR, uint64 iLoc)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapR
+#pragma mark YadSeqAtRPos
 
 using ChanRPos_RefYad = DeriveFrom<Aspect_Read<RefYad>,Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
 using YadSeqAtRPos = Channer<ChanRPos_RefYad>;
@@ -188,7 +188,7 @@ inline RefYad sReadAt(const ZRef<YadMapAtR>& iYadMapAtR, const Name& iLoc)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapAtR
+#pragma mark YadMapAtRPos
 
 using ChanRPos_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>,Aspect_ReadAt<Name,RefYad>>;
 using YadMapAtRPos = Channer<ChanRPos_NameRefYad>;

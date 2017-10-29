@@ -29,14 +29,13 @@ namespace { // anonymous
 
 // =================================================================================================
 #pragma mark -
-#pragma mark YadMapAtRPos
+#pragma mark ChanAtR_NameRefYad
 
-class YadMapAtRPos
-:	public YadMapAtRPos
+class ChanAtR_NameRefYad_FS
+:	public ChanAtR_NameRefYad
 	{
 public:
-	YadMapAtRPos(const FileSpec& iFS);
-	YadMapAtRPos(const FileSpec& iFS, const ZFileIter& iFileIter);
+	ChanAtR_NameRefYad(const FileSpec& iFS);
 
 // From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(Name& oName);
@@ -87,12 +86,12 @@ ZRef<ZYadR> YadMapAtRPos::ReadInc(Name& oName)
 ZRef<ZYadMapRClone> YadMapAtRPos::Clone()
 	{ return new YadMapAtRPos(fFileSpec, fFileIter); }
 
-void YadMapAtRPos::SetPosition(const Name& iName)
-	{
-	string8 asString = string8(iName);
-	while (fFileIter && fFileIter.CurrentName() != asString)
-		fFileIter.Advance();
-	}
+//void YadMapAtRPos::SetPosition(const Name& iName)
+//	{
+//	string8 asString = string8(iName);
+//	while (fFileIter && fFileIter.CurrentName() != asString)
+//		fFileIter.Advance();
+//	}
 
 ZRef<ZYadR> YadMapAtRPos::ReadAt(const Name& iName)
 	{ return ZYad_FS::sYadR(fFileSpec.Child(iName)); }
@@ -103,7 +102,7 @@ ZRef<ZYadR> YadMapAtRPos::ReadAt(const Name& iName)
 #pragma mark -
 #pragma mark ZYad_FS::sYadR
 
-ZRef<ZYadR> sYadR(const FileSpec& iFS)
+ZRef<YadR> sYadR(const FileSpec& iFS)
 	{
 	switch (iFS.Kind())
 		{
