@@ -233,11 +233,11 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 		{
 		switch (*theTypeQ)
 			{
-			case 0xE0: return sYadR(Any());
-			case 0xE2: return sYadR(Any(false));
-			case 0xE3: return sYadR(Any(true));
-			case 0xE4: return sYadR(Any(sEReadBE<int64>(r)));
-			case 0xE5: return sYadR(Any(sEReadBE<double>(r)));
+			case 0xE0: return sYadAtomR_Any(Any());
+			case 0xE2: return sYadAtomR_Any(Any(false));
+			case 0xE3: return sYadAtomR_Any(Any(true));
+			case 0xE4: return sYadAtomR_Any(Any(sEReadBE<int64>(r)));
+			case 0xE5: return sYadAtomR_Any(Any(sEReadBE<double>(r)));
 			case 0xE7: return new YadStreamerR_JSONB(iChannerR_Bin);
 			case 0xE8: return spYadRFromString(spStringFromChan(r));
 			case 0xEA: return new YadSeqR_JSONB(iReadFilter, iChannerR_Bin);
