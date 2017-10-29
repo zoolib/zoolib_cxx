@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSONB.h"
 
-#include "zoolib/dataspace/MelangeRemoter.h"
+#include "zoolib/Dataspace/MelangeRemoter.h"
 
 #include "zoolib/QueryEngine/Result.h"
 

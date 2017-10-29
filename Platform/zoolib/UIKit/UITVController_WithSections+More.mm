@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(iPhone)
 
-#include "zoolib/Apple/Callable_Objc.h"
+#include "zoolib/Apple/Callable_ObjC.h"
 #include "zoolib/Apple/Cartesian_CG.h"
 #include "zoolib/Apple/Util_NS.h"
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGameEngine_Geometry2D_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/gameengine/ZGameEngine_Geometry.h"
+#include "zoolib/GameEngine/ZGameEngine_Geometry.h"
 
 namespace ZooLib {
 namespace ZGameEngine {

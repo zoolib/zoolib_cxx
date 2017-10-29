@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 
-#include "zoolib/dataspace/Sieve_Singleton.h"
+#include "zoolib/Dataspace/Sieve_Singleton.h"
 
 namespace ZooLib {
 namespace Dataspace {

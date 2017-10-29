@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 #include "zoolib/Apple/Delegate.h"
 
-#include "ZooLib/Dataspace/Melange.h" // For ZooLib::Dataspace::Callable_DatonUpdate
-#include "ZooLib/Dataspace/RelsWatcher.h"
+#include "zoolib/Dataspace/Melange.h" // For ZooLib::Dataspace::Callable_DatonUpdate
+#include "zoolib/Dataspace/RelsWatcher.h"
 
 //###include "zoolib/ZTextCollator.h"
 

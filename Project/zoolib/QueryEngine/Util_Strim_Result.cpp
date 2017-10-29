@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zooLib/Dataspace/Types.h"
+#include "zoolib/Dataspace/Types.h"
 
 namespace ZooLib {
 namespace QueryEngine {

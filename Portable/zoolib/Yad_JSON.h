@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan_UTF_Escaped.h"
-#include "zoolib/Chan_Bin_AsciiStrim.h"
+#include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Terminated.h"
