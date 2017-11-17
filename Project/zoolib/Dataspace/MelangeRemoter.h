@@ -137,6 +137,7 @@ private:
 
 	vector<Map_Any> fQueue_Read;
 	vector<Map_Any> fQueue_ToWrite;
+	bool fReadSinceWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
 	int64 fNextRefcon;

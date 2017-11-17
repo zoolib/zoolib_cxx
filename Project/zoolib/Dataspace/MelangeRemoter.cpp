@@ -547,6 +547,7 @@ Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
 :	fFactory(iFactory)
 ,	fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
+,	fReadSinceWrite(false)
 ,	fNextRefcon(1)
 	{}
 
@@ -709,6 +710,12 @@ void Melange_Client::pWork()
 
 	guard.Acquire();
 
+	if (sNotEmpty(theMessages))
+		{
+		// We've read something, so may need to issue a no-op write.
+		fReadSinceWrite = true;
+		}
+
 	Map_Any theMessage;
 
 	if (sNotEmpty(fPending_Registrations))
@@ -751,8 +758,11 @@ void Melange_Client::pWork()
 		sClear(fPending_Retracts);
 		}
 
-	if (not theMessage.IsEmpty())
+	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
+		{
+		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
+		}
 
 	if (sNotEmpty(fQueue_ToWrite))
 		{
@@ -785,6 +795,8 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 		sClear(fMap_Reg2Refcon);
 		sClear(fQueue_Read);
 		sClear(fQueue_ToWrite);
+
+		fReadSinceWrite = false;
 
 		this->pWake();
 
