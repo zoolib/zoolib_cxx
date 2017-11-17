@@ -69,8 +69,8 @@ private:
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 
-	ZRef<ChannerR_Bin> fChannerR;
-	ZRef<ChannerW_Bin> fChannerW;
+	const ZRef<ChannerR_Bin> fChannerR;
+	const ZRef<ChannerW_Bin> fChannerW;
 
 	vector<Map_Any> fQueue_Read;
 	vector<Map_Any> fQueue_ToWrite;
