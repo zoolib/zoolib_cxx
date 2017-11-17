@@ -332,7 +332,7 @@ void MelangeServer::pRead()
 	ZThread::sSetName("MelangeServer::pRead");
 
 	ZGuardMtxR guard(fMtxR);
-	while (fChannerR)
+	for (;;)
 		{
 		ZRef<ChannerR_Bin> theChannerR = fChannerR;
 
@@ -349,8 +349,10 @@ void MelangeServer::pRead()
 
 void MelangeServer::pWrite()
 	{
+	ZThread::sSetName("MelangeServer::pWrite");
+
 	ZGuardMtxR guard(fMtxR);
-	while (fChannerW)
+	for (;;)
 		{
 		if (sIsEmpty(fQueue_ToWrite))
 			{
@@ -361,21 +363,17 @@ void MelangeServer::pWrite()
 				// It's still empty, drop out of the loop and let the thread dispose.
 				break;
 				}
-			// We now have data to send, but fChannerW may have gone null in the meantime.
-			continue;
 			}
-
-		ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
 		vector<Map_Any> theMessages;
 		swap(fQueue_ToWrite, theMessages);
+
+		ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
 		guard.Release();
 
 		foreachi (ii, theMessages)
 			spWriteMessage(*theChannerW, *ii);
-
-		guard.Acquire();
 		}
 	fTrueOnce_WriteNeedsStart.Reset();
 	}
@@ -605,13 +603,13 @@ void Melange_Client::Start(ZRef<Starter> iStarter)
 void Melange_Client::pRead()
 	{
 	ZThread::sSetName("Melange_Client::pRead");
+
+	ZGuardMtxR guard(fMtxR);
 	for (;;)
 		{
 		try
 			{
-			ZRef<ChannerRW_Bin> theChanner = this->pEnsureChanner();
-
-			ZGuardMtxR guard(fMtxR);
+			ZRef<ChannerR_Bin> theChanner = this->pEnsureChanner();
 
 			if (not theChanner)
 				continue;
@@ -627,7 +625,6 @@ void Melange_Client::pRead()
 			}
 		catch (...)
 			{
-			ZGuardMtxR guard(fMtxR);
 			fChanner.Clear();
 			}
 		}
@@ -642,10 +639,13 @@ void Melange_Client::pWrite()
 		{
 		if (sIsEmpty(fQueue_ToWrite))
 			{
+			// Give it a second to fill up.
 			fCnd.WaitFor(fMtxR, 1);
 			if (sIsEmpty(fQueue_ToWrite))
+				{
+				// It's still empty, drop out of the loop and let the thread dispose.
 				break;
-			continue;
+				}
 			}
 
 		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
@@ -665,7 +665,6 @@ void Melange_Client::pWrite()
 			{
 			break;
 			}
-
 		}
 	fTrueOnce_WriteNeedsStart.Reset();
 	}
