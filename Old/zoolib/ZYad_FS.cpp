@@ -35,66 +35,25 @@ class ChanAtR_NameRefYad_FS
 :	public ChanAtR_NameRefYad
 	{
 public:
-	ChanAtR_NameRefYad(const FileSpec& iFS);
+	ChanAtR_NameRefYad_FS(const FileSpec& iFS)
+	:	fFileSpec(iFS)
+		{}
 
-// From ZYadMapR via ZYadMapRPos
-	virtual ZRef<ZYadR> ReadInc(Name& oName);
+// From ChanAtR_NameRefYad
+	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
+		{
+		if (iCount)
+			{
+			*oDest = ZYad_FS::sYadR(fFileSpec.Child(iLoc));
+			return 1;
+			}
+		return 0;
+		}
 
-// From ZYadMapRClone via ZYadMapRPos
-	virtual ZRef<ZYadMapRClone> Clone();
-
-// From ZYadMapRPos via ZYadMapAtRPos
-	virtual void SetPosition(const Name& iName);
-
-// From ZYadMapAtR via ZYadMapAtRPos
-	virtual ZRef<ZYadR> ReadAt(const Name& iName);
-
-private:
-	FileSpec fFileSpec;
-	ZFileIter fFileIter;
+	const FileSpec fFileSpec;
 	};
 
-YadMapAtRPos::YadMapAtRPos(const FileSpec& iFS)
-:	fFileSpec(iFS)
-,	fFileIter(iFS)
-	{}
-
-	FileSpec fFileSpec;
-	ZFileIter fFileIter;
-
-YadMapAtRPos::YadMapAtRPos(const FileSpec& iFS, const ZFileIter& iFileIter)
-:	fFileSpec(iFS)
-,	fFileIter(iFileIter)
-	{}
-
-ZRef<ZYadR> YadMapAtRPos::ReadInc(Name& oName)
-	{
-	while (fFileIter)
-		{
-		const FileSpec cur = fFileIter.Current();
-		const Name curName = fFileIter.CurrentName();
-		fFileIter.Advance();
-		if (ZRef<ZYadR> result = ZYad_FS::sYadR(cur))
-			{
-			oName = curName;
-			return result;
-			}
-		}
-	return null;
-	}
-
-ZRef<ZYadMapRClone> YadMapAtRPos::Clone()
-	{ return new YadMapAtRPos(fFileSpec, fFileIter); }
-
-//void YadMapAtRPos::SetPosition(const Name& iName)
-//	{
-//	string8 asString = string8(iName);
-//	while (fFileIter && fFileIter.CurrentName() != asString)
-//		fFileIter.Advance();
-//	}
-
-ZRef<ZYadR> YadMapAtRPos::ReadAt(const Name& iName)
-	{ return ZYad_FS::sYadR(fFileSpec.Child(iName)); }
+using YadMapAtR_NameRefYad_FS = Channer_T<ChanAtR_NameRefYad_FS>;
 
 } // anonymous namespace
 
@@ -106,9 +65,9 @@ ZRef<YadR> sYadR(const FileSpec& iFS)
 	{
 	switch (iFS.Kind())
 		{
-		case ZFile::kindDir:
-			return new YadMapAtRPos(iFS);
-		case ZFile::kindFile:
+		case File::kindDir:
+			return new YadMapAtR_NameRefYad_FS(iFS);
+		case File::kindFile:
 			return iFS.OpenRPos();
 		default:
 			break;
