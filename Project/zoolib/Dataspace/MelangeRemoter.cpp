@@ -477,8 +477,13 @@ void MelangeServer::pWork()
 				}
 			}
 
-		sCall(fMelange.f1, sFirstOrNil(toInsert), toInsert.size(),
-			sFirstOrNil(toErase), toErase.size());
+		if (toInsert.size() || toErase.size())
+			{
+			guard.Release();
+			sCall(fMelange.f1, sFirstOrNil(toInsert), toInsert.size(),
+				sFirstOrNil(toErase), toErase.size());
+			guard.Acquire();
+			}
 		}
 
 	if (sNotEmpty(fQueue_ToWrite))
