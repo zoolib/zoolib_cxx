@@ -486,6 +486,14 @@ void MelangeServer::pWork()
 			}
 		}
 
+// We want to do something where we don't do a send until we've had a receive. Plus the send is the
+// collapsed/consolidated state, not every change that's been seen since we were last able to emit
+// a message. Basically we set a hasRead flag when we read, we only write when its true, and we clear it
+// when we write. Maybe it's fReadSinceWrite like in the client. In any event we want pChanged
+// to hold the last "Result" for a registration. We can ditch the isFirst value.
+ 
+
+
 	if (sNotEmpty(fQueue_ToWrite))
 		{
 		if (fTrueOnce_WriteNeedsStart())
@@ -615,7 +623,7 @@ void Melange_Client::pRead()
 		{
 		try
 			{
-			ZRef<ChannerR_Bin> theChanner = this->pEnsureChanner();
+			ZRef<ChannerR_Bin> theChanner = this->pEnsureChannerR();
 
 			if (not theChanner)
 				continue;
@@ -654,7 +662,7 @@ void Melange_Client::pWrite()
 				}
 			}
 
-		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChanner();
+		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW();
 		if (not theChannerW)
 			break;
 
@@ -780,6 +788,12 @@ void Melange_Client::pWork()
 			fCnd.Broadcast();
 		}
 	}
+
+ZRef<ChannerR_Bin> Melange_Client::pEnsureChannerR()
+	{ return this->pEnsureChanner(); }
+
+ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW()
+	{ return this->pEnsureChanner(); }
 
 ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 	{
