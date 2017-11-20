@@ -714,6 +714,8 @@ void Melange_Client::pWork()
 		{
 		// We've read something, so may need to issue a no-op write.
 		fReadSinceWrite = true;
+		if (ZLOGF(w, eDebug + 1))
+			w << "fReadSinceWrite = true";
 		}
 
 	Map_Any theMessage;
@@ -760,6 +762,12 @@ void Melange_Client::pWork()
 
 	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
 		{
+		if (ZLOGF(w, eDebug + 1))
+			{
+			w	<< "theMessage.IsEmpty() == " << theMessage.IsEmpty() << ", "
+				<< "fReadSinceWrite == " << fReadSinceWrite << ", "
+				<< "sIsEmpty(fQueue_ToWrite) == " << sIsEmpty(fQueue_ToWrite);
+			}
 		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
 		}
