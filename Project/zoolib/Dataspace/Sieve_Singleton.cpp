@@ -151,12 +151,11 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 
 	fDaton = newDaton;
 
-	fCallable_Changed->Call(this, false);
+	fCallable_Changed->Call(this);
 	}
 
 void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
-	const ZRef<QueryEngine::Result>& iResult,
-	bool iIsFirst)
+	const ZRef<QueryEngine::Result>& iResult)
 	{
 	fMapQ.Clear();
 	fResult = iResult;
@@ -174,7 +173,7 @@ void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 			}
 		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<Map_Any>();
 		}
-	fCallable_Changed->Call(this, iIsFirst);
+	fCallable_Changed->Call(this);
 	}
 
 } // namespace Dataspace

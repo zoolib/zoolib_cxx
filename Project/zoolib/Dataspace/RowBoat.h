@@ -68,8 +68,7 @@ public:
 private:
 	void pChanged(
 		const ZRef<ZCounted>& iRegistration,
-		const ZRef<Result>& iResult,
-		bool iIsFirst);
+		const ZRef<Result>& iResult);
 
 	ZRef<Callable_Register> fCallable_Register;
 	ZRef<Expr_Rel> fRel;

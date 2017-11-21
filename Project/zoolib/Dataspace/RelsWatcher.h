@@ -33,8 +33,7 @@ namespace RelsWatcher {
 
 typedef Callable<void(
 		const ZRef<ZCounted>& iRegistration,
-		const ZRef<Result>& iResult,
-		bool iIsFirst)>
+		const ZRef<Result>& iResult)>
 	Callable_Changed;
 
 typedef Callable<ZRef<ZCounted>(

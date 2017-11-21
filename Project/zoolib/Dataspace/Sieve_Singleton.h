@@ -37,7 +37,7 @@ class Sieve_Singleton
 :	public ZCounted
 	{
 public:
-	typedef Callable<void(ZRef<Sieve_Singleton> iSieve, bool)> Callable_Changed;
+	typedef Callable<void(ZRef<Sieve_Singleton> iSieve)> Callable_Changed;
 	typedef Callable_Changed::Signature Signature;
 
 	Sieve_Singleton(ZRef<Callable_Register> iCallable_Register,
@@ -66,8 +66,7 @@ public:
 
 private:
 	void pChanged(const ZRef<ZCounted>& iRegistration,
-		const ZRef<QueryEngine::Result>& iResult,
-		bool iIsFirst);
+		const ZRef<QueryEngine::Result>& iResult);
 
 	ZRef<RelsWatcher::Callable_Register> const fCallable_Register;
 	ZRef<Callable_DatonUpdate> const fCallable_DatonUpdate;

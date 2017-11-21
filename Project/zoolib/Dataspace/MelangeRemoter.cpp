@@ -507,15 +507,14 @@ void MelangeServer::pWork()
 
 void MelangeServer::pChanged(
 	const RefReg& iRegistration,
-	const ZRef<Result>& iResult,
-	bool iIsFirst)
+	const ZRef<Result>& iResult)
 	{
 	ZGuardMtxR guard(fMtxR);
 	Map_Any theMap;
 
 	theMap.Set("What", "Change");
 	theMap.Set("Refcon", sGetMust(fMap_Reg2Refcon, iRegistration));
-	theMap.Set("IsFirst", iIsFirst);
+	theMap.Set("IsFirst", false); //##
 	theMap.Set("Result", spAsVal(iResult));
 
 	sPushBack(fQueue_ToWrite, theMap);
@@ -704,13 +703,10 @@ void Melange_Client::pWork()
 		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
 			{
 			// Get the registration and call its callable
-			if (ZQ<bool> theIsFirst = sQCoerceBool(theMessage.Get("IsFirst")))
+			if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
 				{
-				if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
-					{
-					if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
-						sCall(theReg->fCallable_Changed, theReg, theResult, *theIsFirst);
-					}
+				if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
+					sCall(theReg->fCallable_Changed, theReg, theResult);
 				}
 			}
 		}

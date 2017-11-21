@@ -178,7 +178,7 @@ void RelsWatcher_Relater::Update()
 		guard.Release();
 
 		foreacha (rr, changes)
-			{ sCall(rr->fCallable, rr, rr->fResult, not rr->fHadResultPrior); }
+			{ sCall(rr->fCallable, rr, rr->fResult); }
 		}
 	}
 

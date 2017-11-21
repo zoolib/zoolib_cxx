@@ -153,8 +153,7 @@ public:
 	void pGetSieveCorrectlySetup();
 
 	void pChanged(const ZRef<ZCounted>& iRegistration,
-		const ZRef<QueryEngine::Result>& iResult,
-		bool iIsFirst);
+		const ZRef<QueryEngine::Result>& iResult);
 
 //##	ZTextCollator fTextCollators[4];
 	ZRef<Callable_GetCellForMap> fCallable_GetCellForMap;

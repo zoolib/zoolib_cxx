@@ -60,8 +60,7 @@ private:
 
 	void pChanged(
 		const RefReg& iRegistration,
-		const ZRef<Result>& iResult,
-		bool iIsFirst);
+		const ZRef<Result>& iResult);
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
 
 	const Melange_t fMelange;
@@ -77,6 +76,7 @@ private:
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
 	std::map<int64,RefReg> fMap_Refcon2Reg;
+//##	std::map<int64,ZRef<Result>> fMap_Refcon2Result;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
 	};
 

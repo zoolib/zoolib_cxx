@@ -586,8 +586,7 @@ void SectionBody_Sieve::pGetSieveCorrectlySetup()
 	}
 
 void SectionBody_Sieve::pChanged(const ZRef<ZCounted>& iRegistration,
-	const ZRef<QueryEngine::Result>& iResult,
-	bool iIsFirst)
+	const ZRef<QueryEngine::Result>& iResult)
 	{
 	fResult = iResult;
 	if (not sGetSet(fNeedsUpdate, true))
