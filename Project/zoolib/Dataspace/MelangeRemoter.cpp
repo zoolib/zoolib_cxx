@@ -354,11 +354,11 @@ void MelangeServer::pWrite()
 	ZGuardMtxR guard(fMtxR);
 	for (;;)
 		{
-		if (sIsEmpty(fQueue_ToWrite))
+		if (sIsEmpty(fMap_Refcon2Result))
 			{
 			// Give it a second to fill up.
 			fCnd.WaitFor(fMtxR, 1);
-			if (sIsEmpty(fQueue_ToWrite))
+			if (sIsEmpty(fMap_Refcon2Result))
 				{
 				// It's still empty, drop out of the loop and let the thread dispose.
 				break;
@@ -366,7 +366,16 @@ void MelangeServer::pWrite()
 			}
 
 		vector<Map_Any> theMessages;
-		swap(fQueue_ToWrite, theMessages);
+		foreachi (ii, fMap_Refcon2Result)
+			{
+			Map_Any theMap;
+			theMap.Set("IsFirst", false); //## For old clients for now.
+			theMap.Set("What", "Change");
+			theMap.Set("Refcon", ii->first);
+			theMap.Set("Result", spAsVal(ii->second));
+			sPushBack(theMessages, theMap);
+			}
+		sClear(fMap_Refcon2Result);
 
 		ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
@@ -431,15 +440,8 @@ void MelangeServer::pWork()
 					}
 				else
 					{
-					continue;
-					}
-
-				if (ZLOGF(w, eErr))
-					{
-					w << "\n ii: ";
-					Util_Any_JSON::sWrite(true, ii, w);
-					w << "\n theMessage: ";
-					Util_Any_JSON::sWrite(true, theMessage, w);
+					// Also toss any result for the refcon.
+					sErase(fMap_Refcon2Result, *theRefconQ);
 					}
 				}
 			}
@@ -496,7 +498,7 @@ void MelangeServer::pWork()
  
 
 
-	if (sNotEmpty(fQueue_ToWrite))
+	if (sNotEmpty(fMap_Refcon2Result))
 		{
 		if (fTrueOnce_WriteNeedsStart())
 			sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pWrite));
@@ -510,14 +512,8 @@ void MelangeServer::pChanged(
 	const ZRef<Result>& iResult)
 	{
 	ZGuardMtxR guard(fMtxR);
-	Map_Any theMap;
 
-	theMap.Set("What", "Change");
-	theMap.Set("Refcon", sGetMust(fMap_Reg2Refcon, iRegistration));
-	theMap.Set("IsFirst", false); //##
-	theMap.Set("Result", spAsVal(iResult));
-
-	sPushBack(fQueue_ToWrite, theMap);
+	sSet(fMap_Refcon2Result, sGetMust(fMap_Reg2Refcon, iRegistration), iResult);
 
 	this->pWake();
 	}

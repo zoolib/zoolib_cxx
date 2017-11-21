@@ -72,11 +72,10 @@ private:
 	const ZRef<ChannerW_Bin> fChannerW;
 
 	vector<Map_Any> fQueue_Read;
-	vector<Map_Any> fQueue_ToWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
 	std::map<int64,RefReg> fMap_Refcon2Reg;
-//##	std::map<int64,ZRef<Result>> fMap_Refcon2Result;
+	std::map<int64,ZRef<Result>> fMap_Refcon2Result;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
 	};
 
