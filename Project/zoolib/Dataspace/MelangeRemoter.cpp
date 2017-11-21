@@ -374,6 +374,8 @@ void MelangeServer::pWrite()
 
 		foreachi (ii, theMessages)
 			spWriteMessage(*theChannerW, *ii);
+
+		guard.Acquire();
 		}
 	fTrueOnce_WriteNeedsStart.Reset();
 	}
