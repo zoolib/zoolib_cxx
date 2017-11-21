@@ -310,10 +310,13 @@ Val_Any spAsVal(ZRef<Result> iResult)
 #pragma mark -
 #pragma mark MelangeServer
 
-MelangeServer::MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW)
+MelangeServer::MelangeServer(const Melange_t& iMelange,
+	const ZRef<ChannerRW_Bin>& iChannerRW,
+	int64 iClientVersion)
 :	fMelange(iMelange)
 ,	fChannerR(iChannerRW)
 ,	fChannerW(iChannerRW)
+,	fClientVersion(iClientVersion)
 	{}
 
 void MelangeServer::Initialize()

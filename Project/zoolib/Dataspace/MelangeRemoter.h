@@ -43,7 +43,7 @@ class MelangeServer
 :	public ZCounted
 	{
 public:
-	MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW);
+	MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW, int64 iClientVersion);
 
 // From ZCounted
 	virtual void Initialize();
@@ -70,6 +70,7 @@ private:
 
 	const ZRef<ChannerR_Bin> fChannerR;
 	const ZRef<ChannerW_Bin> fChannerW;
+	const int64 fClientVersion;
 
 	vector<Map_Any> fQueue_Read;
 	TrueOnce fTrueOnce_WriteNeedsStart;
