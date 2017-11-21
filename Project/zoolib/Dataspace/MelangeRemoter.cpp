@@ -624,7 +624,7 @@ void Melange_Client::pRead()
 		{
 		try
 			{
-			ZRef<ChannerR_Bin> theChanner = this->pEnsureChannerR();
+			ZRef<ChannerR_Bin> theChanner = this->pEnsureChannerR(guard);
 
 			if (not theChanner)
 				continue;
@@ -663,7 +663,7 @@ void Melange_Client::pWrite()
 				}
 			}
 
-		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW();
+		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW(guard);
 		if (not theChannerW)
 			break;
 
@@ -787,16 +787,14 @@ void Melange_Client::pWork()
 		}
 	}
 
-ZRef<ChannerR_Bin> Melange_Client::pEnsureChannerR()
-	{ return this->pEnsureChanner(); }
+ZRef<ChannerR_Bin> Melange_Client::pEnsureChannerR(ZGuardMtxR& iGuard)
+	{ return this->pEnsureChanner(iGuard); }
 
-ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW()
-	{ return this->pEnsureChanner(); }
+ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW(ZGuardMtxR& iGuard)
+	{ return this->pEnsureChanner(iGuard); }
 
-ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
+ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuard)
 	{
-	ZGuardMtxR guard(fMtxR);
-
 	while (fGettingChanner)
 		fCnd.WaitFor(fMtxR, 5);
 
@@ -822,7 +820,7 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 
 		SaveSetRestore<bool> theSSR(fGettingChanner, true);
 
-		guard.Release();
+		iGuard.Release();
 
 		if (ZLOGF(w, eDebug - 1))
 			w << "No Channer";
@@ -845,7 +843,7 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner()
 			sCall(fCallable_Status, true);
 			}
 
-		guard.Acquire();
+		iGuard.Acquire();
 
 		fChanner = theChanner;
 		fCnd.Broadcast();

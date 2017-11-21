@@ -122,9 +122,9 @@ private:
 	void pWork();
 	StartScheduler::Job fJob;
 
-	ZRef<ChannerR_Bin> pEnsureChannerR();
-	ZRef<ChannerW_Bin> pEnsureChannerW();
-	ZRef<ChannerRW_Bin> pEnsureChanner();
+	ZRef<ChannerR_Bin> pEnsureChannerR(ZGuardMtxR& iGuard);
+	ZRef<ChannerW_Bin> pEnsureChannerW(ZGuardMtxR& iGuard);
+	ZRef<ChannerRW_Bin> pEnsureChanner(ZGuardMtxR& iGuard);
 
 	void pFinalize(Registration* iRegistration);
 
