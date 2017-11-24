@@ -75,6 +75,9 @@ private:
 	vector<Map_Any> fQueue_Read;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
+	double fTimeOfLastWrite;
+	double fTimeout;
+
 	std::map<int64,RefReg> fMap_Refcon2Reg;
 	std::map<int64,ZRef<Result>> fMap_Refcon2Result;
 	std::map<RefReg,int64> fMap_Reg2Refcon;

@@ -317,6 +317,8 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 ,	fChannerR(iChannerRW)
 ,	fChannerW(iChannerRW)
 ,	fClientVersion(iClientVersion)
+,	fTimeOfLastWrite(false)
+,	fTimeout(10)
 	{}
 
 void MelangeServer::Initialize()
@@ -353,51 +355,77 @@ void MelangeServer::pRead()
 void MelangeServer::pWrite()
 	{
 	ZThread::sSetName("MelangeServer::pWrite");
+	ZLOGTRACE(eDebug);
 
 	ZGuardMtxR guard(fMtxR);
 	for (;;)
 		{
 		if (sIsEmpty(fMap_Refcon2Result))
 			{
-			// Give it a second to fill up.
-			fCnd.WaitFor(fMtxR, 1);
-			if (sIsEmpty(fMap_Refcon2Result))
+			ZLOGTRACE(eDebug);
+			// We have no real message to send.
+			const double delta = fTimeOfLastWrite + fTimeout - Time::sSystem();
+			if (delta > 0)
 				{
-				// It's still empty, drop out of the loop and let the thread dispose.
+				ZLOGTRACE(eDebug);
+				// It's less than ten seconds since we wrote. Wakeup when out timeout will have expired.
+				sNextStartIn(delta, fJob);
 				break;
 				}
-			}
+			else
+				{
+				ZLOGTRACE(eDebug);
+				// It's mrore than fTimeout since we wrote.Send an empty message
+				ZRef<ChannerW_Bin> theChannerW = fChannerW;
+				guard.Release();
 
-		vector<Map_Any> theMessages;
-		foreachi (ii, fMap_Refcon2Result)
+				spWriteMessage(*theChannerW, Map_Any());
+
+				guard.Acquire();
+				fTimeOfLastWrite = Time::sSystem();
+				}
+			}
+		else
 			{
-			Map_Any theMap;
-			theMap.Set("IsFirst", false); //## For old clients for now.
-			theMap.Set("What", "Change");
-			theMap.Set("Refcon", ii->first);
-			theMap.Set("Result", spAsVal(ii->second));
-			sPushBack(theMessages, theMap);
+			ZLOGTRACE(eDebug);
+			vector<Map_Any> theMessages;
+			foreachi (ii, fMap_Refcon2Result)
+				{
+				Map_Any theMap;
+				theMap.Set("IsFirst", false); //## For old clients for now.
+				theMap.Set("What", "Change");
+				theMap.Set("Refcon", ii->first);
+				theMap.Set("Result", spAsVal(ii->second));
+				sPushBack(theMessages, theMap);
+				}
+			sClear(fMap_Refcon2Result);
+
+			ZRef<ChannerW_Bin> theChannerW = fChannerW;
+			guard.Release();
+
+			foreachi (ii, theMessages)
+				spWriteMessage(*theChannerW, *ii);
+
+			guard.Acquire();
+
+			fTimeOfLastWrite = Time::sSystem();
 			}
-		sClear(fMap_Refcon2Result);
-
-		ZRef<ChannerW_Bin> theChannerW = fChannerW;
-
-		guard.Release();
-
-		foreachi (ii, theMessages)
-			spWriteMessage(*theChannerW, *ii);
-
-		guard.Acquire();
 		}
+	ZLOGTRACE(eDebug);
 	fTrueOnce_WriteNeedsStart.Reset();
 	}
 
 void MelangeServer::pWake()
-	{ sNextStartIn(0, fJob); }
+	{
+	ZLOGTRACE(eDebug);
+	sNextStartIn(0, fJob);
+	}
 
 void MelangeServer::pWork()
 	{
 	ZGuardMtxR guard(fMtxR);
+
+	ZLOGTRACE(eDebug);
 
 	// Pull stuff from fQueue_Read
 	vector<Map_Any> theMessages;
@@ -493,20 +521,20 @@ void MelangeServer::pWork()
 			}
 		}
 
-// We want to do something where we don't do a send until we've had a receive. Plus the send is the
-// collapsed/consolidated state, not every change that's been seen since we were last able to emit
-// a message. Basically we set a hasRead flag when we read, we only write when its true, and we clear it
-// when we write. Maybe it's fReadSinceWrite like in the client. In any event we want pChanged
-// to hold the last "Result" for a registration. We can ditch the isFirst value.
- 
+	sNextStartIn(fTimeOfLastWrite + fTimeout - Time::sSystem(), fJob);
 
-
-	if (sNotEmpty(fMap_Refcon2Result))
+	if (sNotEmpty(fMap_Refcon2Result) || fTimeOfLastWrite + fTimeout < Time::sSystem())
 		{
 		if (fTrueOnce_WriteNeedsStart())
+			{
+			ZLOGTRACE(eDebug);
 			sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pWrite));
+			}
 		else
+			{
+			ZLOGTRACE(eDebug);
 			fCnd.Broadcast();
+			}
 		}
 	}
 
