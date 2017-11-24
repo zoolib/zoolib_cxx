@@ -74,7 +74,9 @@ private:
 
 	vector<Map_Any> fQueue_Read;
 	TrueOnce fTrueOnce_WriteNeedsStart;
+	TrueOnce fTrueOnce_SendAnEmptyMessage;
 
+	double fTimeOfLastRead;
 	double fTimeOfLastWrite;
 	double fTimeout;
 
