@@ -78,7 +78,8 @@ private:
 
 	double fTimeOfLastRead;
 	double fTimeOfLastWrite;
-	double fTimeout;
+	const double fTimeout;
+	const double fConnectionTimeout;
 
 	std::map<int64,RefReg> fMap_Refcon2Reg;
 	std::map<int64,ZRef<Result>> fMap_Refcon2Result;

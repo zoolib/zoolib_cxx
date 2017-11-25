@@ -320,6 +320,7 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 ,	fTimeOfLastRead(0)
 ,	fTimeOfLastWrite(0)
 ,	fTimeout(10)
+,	fConnectionTimeout(30)
 	{}
 
 void MelangeServer::Initialize()
@@ -364,7 +365,7 @@ void MelangeServer::pRead()
 void MelangeServer::pWrite()
 	{
 	ZThread::sSetName("MelangeServer::pWrite");
-	ZLOGFUNCTION(eDebug);
+//##	ZLOGFUNCTION(eDebug);
 
 	ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
@@ -421,8 +422,11 @@ void MelangeServer::pWork()
 
 	ZLOGTRACE(eDebug);
 
-	if (ZLOGF(w, eDebug))
-		w << (Time::sSystem() - fTimeOfLastRead) * 1000 << "ms since last read";
+	if (Time::sSystem() - fTimeOfLastRead > fConnectionTimeout)
+		{
+		if (ZLOGF(w, eDebug))
+			w << "*** Could/should abort the connection ***";
+		}
 
 	// Pull stuff from fQueue_Read
 	vector<Map_Any> theMessages;
