@@ -98,8 +98,22 @@ class Melange_Client
 public:
 	typedef Callable<void(bool)> Callable_Status;
 
-	Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
-		const ZRef<Callable_Status>& iCallable_Status);
+	using Chan_t = DeriveFrom<Aspect_Abort,
+		Aspect_Read<byte>,
+		Aspect_WaitReadable,
+		Aspect_Write<byte>>;
+
+	using Channer_t = Channer<Chan_t>;
+
+	using Factory_t = Factory<ZRef<Channer_t>>;
+
+	using ChanForRead = DeriveFrom<Aspect_Abort,
+		Aspect_Read<byte>,
+		Aspect_WaitReadable>;
+
+	using ChannerForRead = Channer<ChanForRead>;
+
+	Melange_Client(const ZRef<Factory_t>& iFactory, const ZRef<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -128,20 +142,20 @@ private:
 	void pWork();
 	StartScheduler::Job fJob;
 
-	ZRef<ChannerR_Bin> pEnsureChannerR(ZGuardMtxR& iGuard);
+	ZRef<ChannerForRead> pEnsureChannerR(ZGuardMtxR& iGuard);
 	ZRef<ChannerW_Bin> pEnsureChannerW(ZGuardMtxR& iGuard);
-	ZRef<ChannerRW_Bin> pEnsureChanner(ZGuardMtxR& iGuard);
+	ZRef<Channer_t> pEnsureChanner(ZGuardMtxR& iGuard);
 
 	void pFinalize(Registration* iRegistration);
 
-	const ZRef<Factory_ChannerRW_Bin> fFactory;
+	const ZRef<Factory_t> fFactory;
 	const ZRef<Callable_Status> fCallable_Status;
 
 	ZMtxR fMtxR;
 	ZCnd fCnd;
 
 	bool fGettingChanner;
-	ZRef<ChannerRW_Bin> fChanner;
+	ZRef<Channer_t> fChanner;
 
 	vector<Map_Any> fQueue_Read;
 	vector<Map_Any> fQueue_ToWrite;

@@ -580,7 +580,7 @@ public:
 #pragma mark -
 #pragma mark Melange_Client
 
-Melange_Client::Melange_Client(const ZRef<Factory_ChannerRW_Bin>& iFactory,
+Melange_Client::Melange_Client(const ZRef<Factory_t>& iFactory,
 	const ZRef<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
 ,	fCallable_Status(iCallable_Status)
@@ -653,7 +653,7 @@ void Melange_Client::pRead()
 		{
 		try
 			{
-			ZRef<ChannerR_Bin> theChanner = this->pEnsureChannerR(guard);
+			ZRef<ChannerForRead> theChanner = this->pEnsureChannerR(guard);
 
 			if (not theChanner)
 				continue;
@@ -661,6 +661,20 @@ void Melange_Client::pRead()
 			Map_Any theMap;
 			{
 			ZRelGuardR rel(guard);
+
+			bool isReadable = sWaitReadable(*theChanner, 15);
+
+			if (not isReadable)
+				{
+				ZLOGTRACE(eDebug);
+				sAbort(*theChanner);
+				sThrow_ExhaustedR();
+				}
+			else
+				{
+				ZLOGTRACE(eDebug);
+				}
+
 			theMap = spReadMessage(theChanner);
 			}
 
@@ -669,6 +683,7 @@ void Melange_Client::pRead()
 			}
 		catch (...)
 			{
+			ZLOGTRACE(eDebug);
 			fChanner.Clear();
 			}
 		}
@@ -816,13 +831,13 @@ void Melange_Client::pWork()
 		}
 	}
 
-ZRef<ChannerR_Bin> Melange_Client::pEnsureChannerR(ZGuardMtxR& iGuard)
+ZRef<Melange_Client::ChannerForRead> Melange_Client::pEnsureChannerR(ZGuardMtxR& iGuard)
 	{ return this->pEnsureChanner(iGuard); }
 
 ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW(ZGuardMtxR& iGuard)
 	{ return this->pEnsureChanner(iGuard); }
 
-ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuard)
+ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuard)
 	{
 	while (fGettingChanner)
 		fCnd.WaitFor(fMtxR, 5);
@@ -856,7 +871,7 @@ ZRef<ChannerRW_Bin> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuard)
 
 		sCall(fCallable_Status, false);
 
-		ZRef<ChannerRW_Bin> theChanner = sCall(fFactory);
+		ZRef<Channer_t> theChanner = sCall(fFactory);
 		if (not theChanner)
 			{
 			// No Channer was available, pause for 1s.
