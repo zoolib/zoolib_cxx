@@ -159,12 +159,6 @@ int Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 
 #endif
 
-bool Net_Socket::sWaitReadable(int iSocket, double iTimeout)
-	{ return Util_POSIXFD::sWaitReadable(iSocket, iTimeout); }
-
-void Net_Socket::sWaitWriteable(int iSocket)
-	{ Util_POSIXFD::sWaitWriteable(iSocket); }
-
 Net::Error Net_Socket::sTranslateError(int iNativeError)
 	{
 	Net::Error theError = Net::errorGeneric;
@@ -219,7 +213,7 @@ ZRef<ChannerRWClose_Bin> NetListener_Socket::Listen()
 
 	fMtx.Release();
 
-	Net_Socket::sWaitReadable(fSocketFD, sleepTime);
+	Util_POSIXFD::sWaitReadable(fSocketFD, sleepTime);
 
 	char remoteSockAddr[SOCK_MAXADDRLEN];
 	const int result = ::accept(fSocketFD,
@@ -305,7 +299,7 @@ size_t NetEndpoint_Socket::QRead(byte* oDest, size_t iCount)
 				{
 				const int err = errno;
 				if (err == EAGAIN)
-					Net_Socket::sWaitReadable(fSocketFD, 60);
+					Util_POSIXFD::sWaitReadable(fSocketFD, 60);
 				else if (err != EINTR)
 					break;
 				}
@@ -338,7 +332,7 @@ size_t NetEndpoint_Socket::QWrite(const byte* iSource, size_t iCount)
 			{
 			const int err = errno;
 			if (err == EAGAIN)
-				Net_Socket::sWaitWriteable(fSocketFD);
+				Util_POSIXFD::sWaitWriteable(fSocketFD);
 			else if (err != EINTR)
 				break;
 			}
@@ -385,7 +379,7 @@ bool NetEndpoint_Socket::DisconnectRead(double iTimeout)
 			const int err = errno;
 			if (err == EAGAIN)
 				{
-				Net_Socket::sWaitReadable(fSocketFD, 60);
+				Util_POSIXFD::sWaitReadable(fSocketFD, 60);
 				}
 			else
 				{
@@ -399,6 +393,9 @@ void NetEndpoint_Socket::DisconnectWrite()
 	{
 	::shutdown(fSocketFD, SHUT_WR);
 	}
+
+bool NetEndpoint_Socket::WaitReadable(double iTimeout)
+	{ return Util_POSIXFD::sWaitReadable(fSocketFD, iTimeout); }
 
 int NetEndpoint_Socket::GetSocketFD()
 	{ return fSocketFD; }
