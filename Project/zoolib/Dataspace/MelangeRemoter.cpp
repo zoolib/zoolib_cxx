@@ -195,7 +195,7 @@ public:
 #pragma mark -
 #pragma mark
 
-static void spWriteMessage(const ChanW_Bin& iChanW, const Map_Any& iMessage)
+static void spWriteMessage(const ChanW_Bin& iChanW, const Map_Any& iMessage, const ZQ<string>& iDescriptionQ)
 	{
 	const ZRef<Yad_JSONB::WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter_Result> >();
 
@@ -208,13 +208,18 @@ static void spWriteMessage(const ChanW_Bin& iChanW, const Map_Any& iMessage)
 
 	if (ZLOGF(w, eDebug + 1))
 		{
-		w << 1e3 * (finish - start) << "ms\n";
-//		w << iMessage;
+		if (iDescriptionQ)
+			w << *iDescriptionQ << ", ";
+		w << 1e3 * (finish - start) << "ms";
+		if (iMessage.IsEmpty())
+			w << ", ";
+		else
+			w << "\n";
 		Util_Any_JSON::sWrite(false, iMessage, w);
 		}
 	}
 
-static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
+static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<string>& iDescriptionQ)
 	{
 	const ZRef<Yad_JSONB::ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter_Result> >();
 
@@ -225,8 +230,14 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR)
 	const Map_Any theMessage = theQ->Get<Map_Any>();
 	if (ZLOGF(w, eDebug + 1))
 		{
-//		w << "\n" << theMessage;
-		w << "\n";
+		if (iDescriptionQ)
+			{
+			w << *iDescriptionQ;
+			if (theMessage.IsEmpty())
+				w << ", ";
+			}
+		if (not theMessage.IsEmpty())
+			w << "\n";
 		Util_Any_JSON::sWrite(false, theMessage, w);
 		}
 
@@ -312,16 +323,27 @@ Val_Any spAsVal(ZRef<Result> iResult)
 
 MelangeServer::MelangeServer(const Melange_t& iMelange,
 	const ZRef<ChannerRW_Bin>& iChannerRW,
-	int64 iClientVersion)
+	int64 iClientVersion,
+	const ZQ<string>& iDescriptionQ)
 :	fMelange(iMelange)
 ,	fChannerR(iChannerRW)
 ,	fChannerW(iChannerRW)
 ,	fClientVersion(iClientVersion)
+,	fDescriptionQ(iDescriptionQ)
 ,	fTimeOfLastRead(0)
 ,	fTimeOfLastWrite(0)
 ,	fTimeout(10)
 ,	fConnectionTimeout(30)
 	{}
+
+MelangeServer::~MelangeServer()
+	{
+	if (ZLOGF(w, eDebug))
+		{
+		if (fDescriptionQ)
+			w << *fDescriptionQ;
+		}
+	}
 
 void MelangeServer::Initialize()
 	{
@@ -336,7 +358,10 @@ void MelangeServer::Initialize()
 
 void MelangeServer::pRead()
 	{
-	ZThread::sSetName("MelangeServer::pRead");
+	if (fDescriptionQ)
+		ZThread::sSetName(("MSR:" + *fDescriptionQ).c_str());
+	else
+		ZThread::sSetName("MelangeServer::pRead");
 
 	ZGuardMtxR guard(fMtxR);
 	for (;;)
@@ -349,7 +374,7 @@ void MelangeServer::pRead()
 
 		guard.Release();
 
-		const Map_Any theMap = spReadMessage(theChannerR);
+		const Map_Any theMap = spReadMessage(theChannerR, fDescriptionQ);
 
 		guard.Acquire();
 
@@ -364,8 +389,10 @@ void MelangeServer::pRead()
 
 void MelangeServer::pWrite()
 	{
-	ZThread::sSetName("MelangeServer::pWrite");
-//##	ZLOGFUNCTION(eDebug);
+	if (fDescriptionQ)
+		ZThread::sSetName(("MSW:" + *fDescriptionQ).c_str());
+	else
+		ZThread::sSetName("MelangeServer::pWrite");
 
 	ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
@@ -375,13 +402,9 @@ void MelangeServer::pWrite()
 		if (fTrueOnce_SendAnEmptyMessage())
 			{
 			guard.Release();
-			spWriteMessage(*theChannerW, Map_Any());
+			spWriteMessage(*theChannerW, Map_Any(), fDescriptionQ);
 			guard.Acquire();
 			fTimeOfLastWrite = Time::sSystem();
-			}
-		else
-			{
-			ZLOGTRACE(eDebug);
 			}
 		}
 	else while (not sIsEmpty(fMap_Refcon2Result))
@@ -402,7 +425,7 @@ void MelangeServer::pWrite()
 		foreachi (ii, theMessages)
 			{
 			guard.Release();
-			spWriteMessage(*theChannerW, *ii);
+			spWriteMessage(*theChannerW, *ii, fDescriptionQ);
 			guard.Acquire();
 			fTimeOfLastWrite = Time::sSystem();
 			}
@@ -412,7 +435,6 @@ void MelangeServer::pWrite()
 
 void MelangeServer::pWake()
 	{
-	ZLOGTRACE(eDebug);
 	sNextStartIn(0, fJob);
 	}
 
@@ -420,12 +442,14 @@ void MelangeServer::pWork()
 	{
 	ZGuardMtxR guard(fMtxR);
 
-	ZLOGTRACE(eDebug);
-
 	if (Time::sSystem() - fTimeOfLastRead > fConnectionTimeout)
 		{
 		if (ZLOGF(w, eDebug))
-			w << "*** Could/should abort the connection ***";
+			{
+			w << "MelangeServer, no data read in prior " << fConnectionTimeout << "s";
+			if (fDescriptionQ)
+				w << ", " << *fDescriptionQ;
+			}
 		}
 
 	// Pull stuff from fQueue_Read
@@ -483,16 +507,12 @@ void MelangeServer::pWork()
 			{
 			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
 				sPushBack(toInsert, *theDataQ);
-			else
-				ZLOGTRACE(eDebug);
 			}
 
 		foreachi (ii, theMessage.Get<Seq_Any>("Retracts"))
 			{
 			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
 				sPushBack(toErase, *theDataQ);
-			else
-				ZLOGTRACE(eDebug);
 			}
 
 		// Handle old message
@@ -522,18 +542,15 @@ void MelangeServer::pWork()
 			}
 		}
 
-	ZLOGTRACE(eDebug);
 	if (sNotEmpty(fMap_Refcon2Result) || fTimeOfLastWrite + fTimeout < Time::sSystem())
 		{
 		fTimeOfLastWrite = Time::sSystem();
 		if (fTrueOnce_WriteNeedsStart())
 			{
-			ZLOGTRACE(eDebug);
 			sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pWrite));
 			}
 		else
 			{
-			ZLOGTRACE(eDebug);
 			fCnd.Broadcast();
 			}
 		}
@@ -580,7 +597,7 @@ public:
 #pragma mark -
 #pragma mark Melange_Client
 
-Melange_Client::Melange_Client(const ZRef<Factory_t>& iFactory,
+Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
 	const ZRef<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
 ,	fCallable_Status(iCallable_Status)
@@ -644,6 +661,36 @@ void Melange_Client::Start(ZRef<Starter> iStarter)
 	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
 	}
 
+// --
+
+class ChanR_Bin_AbortOnSlowRead
+:	public ChanR_Bin
+	{
+public:
+	typedef Melange_Client::ChanForRead ChanForRead;
+
+	ChanR_Bin_AbortOnSlowRead(double iTimeout, const ChanForRead& iChan)
+	:	fTimeout(iTimeout)
+	,	fChan(iChan)
+		{}
+
+	virtual size_t QRead(byte* oDest, size_t iCount)
+		{
+		if (not sWaitReadable(fChan, fTimeout))
+			{
+			sAbort(fChan);
+			sThrow_ExhaustedR();
+			}
+
+		return sQRead(fChan, oDest, iCount);
+		}
+
+	const double fTimeout;
+	const ChanForRead& fChan;
+	};
+
+// --
+
 void Melange_Client::pRead()
 	{
 	ZThread::sSetName("Melange_Client::pRead");
@@ -661,21 +708,7 @@ void Melange_Client::pRead()
 			Map_Any theMap;
 			{
 			ZRelGuardR rel(guard);
-
-			bool isReadable = sWaitReadable(*theChanner, 15);
-
-			if (not isReadable)
-				{
-				ZLOGTRACE(eDebug);
-				sAbort(*theChanner);
-				sThrow_ExhaustedR();
-				}
-			else
-				{
-				ZLOGTRACE(eDebug);
-				}
-
-			theMap = spReadMessage(theChanner);
+			theMap = spReadMessage(sChanner_Channer_T<ChanR_Bin_AbortOnSlowRead>(15, theChanner), null);
 			}
 
 			fQueue_Read.push_back(theMap);
@@ -683,7 +716,6 @@ void Melange_Client::pRead()
 			}
 		catch (...)
 			{
-			ZLOGTRACE(eDebug);
 			fChanner.Clear();
 			}
 		}
@@ -718,7 +750,7 @@ void Melange_Client::pWrite()
 			{
 			ZRelGuardR rel(guard);
 			foreachi (ii, theMessages)
-				spWriteMessage(*theChannerW, *ii);
+				spWriteMessage(*theChannerW, *ii, null);
 			}
 		catch (...)
 			{

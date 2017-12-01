@@ -33,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
+using std::string;
 using std::vector;
 
 // ================================================================================================
@@ -43,7 +44,10 @@ class MelangeServer
 :	public ZCounted
 	{
 public:
-	MelangeServer(const Melange_t& iMelange, const ZRef<ChannerRW_Bin>& iChannerRW, int64 iClientVersion);
+	MelangeServer(const Melange_t& iMelange,
+		const ZRef<ChannerRW_Bin>& iChannerRW, int64 iClientVersion, const ZQ<string>& iDescriptionQ);
+
+	virtual ~MelangeServer();
 
 // From ZCounted
 	virtual void Initialize();
@@ -71,6 +75,8 @@ private:
 	const ZRef<ChannerR_Bin> fChannerR;
 	const ZRef<ChannerW_Bin> fChannerW;
 	const int64 fClientVersion;
+
+	const ZQ<string> fDescriptionQ;
 
 	vector<Map_Any> fQueue_Read;
 	TrueOnce fTrueOnce_WriteNeedsStart;
@@ -105,7 +111,7 @@ public:
 
 	using Channer_t = Channer<Chan_t>;
 
-	using Factory_t = Factory<ZRef<Channer_t>>;
+	using Factory_Channer = Factory<ZRef<Channer_t>>;
 
 	using ChanForRead = DeriveFrom<Aspect_Abort,
 		Aspect_Read<byte>,
@@ -113,7 +119,7 @@ public:
 
 	using ChannerForRead = Channer<ChanForRead>;
 
-	Melange_Client(const ZRef<Factory_t>& iFactory, const ZRef<Callable_Status>& iCallable_Status);
+	Melange_Client(const ZRef<Factory_Channer>& iFactory, const ZRef<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(
@@ -148,7 +154,7 @@ private:
 
 	void pFinalize(Registration* iRegistration);
 
-	const ZRef<Factory_t> fFactory;
+	const ZRef<Factory_Channer> fFactory;
 	const ZRef<Callable_Status> fCallable_Status;
 
 	ZMtxR fMtxR;
