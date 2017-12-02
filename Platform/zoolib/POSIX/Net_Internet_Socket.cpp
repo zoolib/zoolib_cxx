@@ -26,6 +26,8 @@ ZMACRO_MSVCStaticLib_cpp(Net_Internet_Socket)
 
 #include "zoolib/Memory.h"
 
+#include "zoolib/POSIX/Util_POSIXFD.h"
+
 #include <errno.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -87,12 +89,26 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
-	if (::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr)) < 0)
+
+	::fcntl(socketFD, F_SETFL, ::fcntl(socketFD, F_GETFL, 0) | O_NONBLOCK);
+
+	int result = ::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr));
+	if (result < 0)
 		{
-		int err = errno;
-		::close(socketFD);
-		throw NetEx(Net_Socket::sTranslateError(err));
+		if (errno != EINPROGRESS)
+			{
+			int err = errno;
+			::close(socketFD);
+			throw NetEx(Net_Socket::sTranslateError(err));
+			}
 		}
+
+	if (not Util_POSIXFD::sWaitWriteable(socketFD, 10))
+		{
+		::close(socketFD);
+		throw NetEx(Net::errorCouldntConnect);
+		}
+
 	return socketFD;
 	}
 
