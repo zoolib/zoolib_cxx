@@ -332,7 +332,7 @@ size_t NetEndpoint_Socket::QWrite(const byte* iSource, size_t iCount)
 			{
 			const int err = errno;
 			if (err == EAGAIN)
-				Util_POSIXFD::sWaitWriteable(fSocketFD);
+				Util_POSIXFD::sWaitWriteable(fSocketFD, 10);
 			else if (err != EINTR)
 				break;
 			}

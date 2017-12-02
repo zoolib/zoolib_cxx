@@ -35,7 +35,7 @@ namespace Util_POSIXFD {
 #pragma mark Util_POSIXFD
 
 bool sWaitReadable(int iFD, double iTimeout);
-void sWaitWriteable(int iFD);
+bool sWaitWriteable(int iFD, double iTimeout);
 size_t sCountReadable(int iFD);
 
 } // namespace Util_POSIXFD

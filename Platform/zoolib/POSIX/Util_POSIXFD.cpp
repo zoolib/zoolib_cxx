@@ -68,19 +68,20 @@ bool sWaitReadable(int iFD, double iTimeout)
 	struct timeval timeout;
 	timeout.tv_sec = int(iTimeout);
 	timeout.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
+
 	return 0 < ::select(iFD + 1, &readSet, nullptr, &exceptSet, &timeout);
 	}
 
-void sWaitWriteable(int iFD)
+bool sWaitWriteable(int iFD, double iTimeout)
 	{
 	fd_set writeSet;
 	spSetup(writeSet, iFD);
 
 	struct timeval timeout;
-	timeout.tv_sec = 1;
-	timeout.tv_usec = 0;
+	timeout.tv_sec = int(iTimeout);
+	timeout.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
 
-	::select(iFD + 1, nullptr, &writeSet, nullptr, &timeout);
+	return 0 < ::select(iFD + 1, nullptr, &writeSet, nullptr, &timeout);
 	}
 
 #elif defined(linux) || defined(__linux__) || defined(__sun__)
@@ -94,12 +95,12 @@ bool sWaitReadable(int iFD, double iTimeout)
 	return 0 < ::poll(&thePollFD, 1, 1000 * sMin<int>(3600, iTimeout));
 	}
 
-void sWaitWriteable(int iFD)
+bool sWaitWriteable(int iFD, double iTimeout)
 	{
 	pollfd thePollFD;
 	thePollFD.fd = iFD;
 	thePollFD.events = POLLOUT;
-	::poll(&thePollFD, 1, 1000);
+	return 0 < ::poll(&thePollFD, 1, 1000 * sMin<int>(3600, iTimeout));
 	}
 
 #endif
