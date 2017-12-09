@@ -754,6 +754,7 @@ void Melange_Client::pWrite()
 			}
 		catch (...)
 			{
+			ZLOGTRACE(eDebug);
 			break;
 			}
 		}
