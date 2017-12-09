@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
+#include <cstdio>
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -348,13 +350,23 @@ public:
 			}
 		}
 
+	void AssertOwned()
+		{
+		const ThreadID current = GetThreadIDProc();
+		if (fOwner != current)
+			{
+			fprintf(stderr, "fCount = %d, fOwner = %d, current = %d\n", int(fCount), int(fOwner), int (current));
+			ZAssert(false);
+			}
+		}
+
 private:
 	ZMACRO_Attribute_NoThrow
 	inline
 	void pWait(Cnd& iCnd)
 		{
+		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-		ZAssert(fOwner == current);
 
 		const int priorCount = fCount;
 		fCount = 0;
@@ -368,8 +380,8 @@ private:
 	inline
 	bool pWaitFor(Cnd& iCnd, double iTimeout)
 		{
+		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-		ZAssert(fOwner == current);
 
 		const int priorCount = fCount;
 		fCount = 0;
@@ -384,8 +396,8 @@ private:
 	inline
 	bool pWaitUntil(Cnd& iCnd, double iDeadline)
 		{
+		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-		ZAssert(fOwner == current);
 
 		const int priorCount = fCount;
 		fCount = 0;
