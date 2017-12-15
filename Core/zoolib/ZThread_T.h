@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
-#include <cstdio>
+//#include <cstdio>
 
 namespace ZooLib {
 
@@ -247,28 +247,58 @@ private:
 	ZAtomic_t fWaitingThreads;
 	};
 
+//// =================================================================================================
+//#pragma mark -
+//#pragma mark ZCndR_T
+//
+//template <class MtxR, class Cnd>
+//class ZCndR_T : public Cnd
+//	{
+//public:
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	void Wait(MtxR& iMtxR)
+//		{ iMtxR.pWait(*this); }
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	bool WaitFor(MtxR& iMtxR, double iTimeout)
+//		{ return iMtxR.pWaitFor(*this, iTimeout); }
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	bool WaitUntil(MtxR& iMtxR, double iDeadline)
+//		{ return iMtxR.pWaitUntil(*this, iDeadline); }
+//
+//	using Cnd::Wait;
+//	using Cnd::WaitFor;
+//	using Cnd::WaitUntil;
+//	using Cnd::Signal;
+//	using Cnd::Broadcast;
+//	};
+
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCndR_T
+#pragma mark ZCndChecked_T
 
-template <class MtxR, class Cnd>
-class ZCndR_T : public Cnd
+template <class MtxChecked, class Cnd>
+class ZCndChecked_T : public Cnd
 	{
 public:
 	ZMACRO_Attribute_NoThrow
 	inline
-	void Wait(MtxR& iMtxR)
-		{ iMtxR.pWait(*this); }
+	void Wait(MtxChecked& iChecked)
+		{ iChecked.pWait(*this); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitFor(MtxR& iMtxR, double iTimeout)
-		{ return iMtxR.pWaitFor(*this, iTimeout); }
+	bool WaitFor(MtxChecked& iChecked, double iTimeout)
+		{ return iChecked.pWaitFor(*this, iTimeout); }
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	bool WaitUntil(MtxR& iMtxR, double iDeadline)
-		{ return iMtxR.pWaitUntil(*this, iDeadline); }
+	bool WaitUntil(MtxChecked& iChecked, double iDeadline)
+		{ return iChecked.pWaitUntil(*this, iDeadline); }
 
 	using Cnd::Wait;
 	using Cnd::WaitFor;
@@ -305,36 +335,140 @@ private:
 	Sem fSem;
 	};
 
+//// =================================================================================================
+//#pragma mark -
+//#pragma mark ZMtxR_T
+//
+//template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
+//class ZMtxR_T : NonCopyable
+//	{
+//public:
+//	friend class ZCndR_T<ZMtxR_T, Cnd>;
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	ZMtxR_T() : fOwner(0), fCount(0) {}
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	~ZMtxR_T() {}
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	void Acquire()
+//		{
+//		const ThreadID current = GetThreadIDProc();
+//		if (fOwner != current)
+//			{
+//			fMtx.Acquire();
+//			fOwner = current;
+//			ZAssert(fCount == 0);
+//			}
+//		++fCount;
+//		}
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	void Release()
+//		{
+//		ZAssert(fOwner == GetThreadIDProc());
+//
+//		if (0 == --fCount)
+//			{
+//			fOwner = 0;
+//			fMtx.Release();
+//			}
+//		}
+//
+//	void AssertOwned()
+//		{
+//		const ThreadID current = GetThreadIDProc();
+//		if (fOwner != current)
+//			{
+//			fprintf(stderr, "fCount = %d, fOwner = %d, current = %d\n", int(fCount), int(fOwner), int (current));
+//			ZAssert(false);
+//			}
+//		}
+//
+//private:
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	void pWait(Cnd& iCnd)
+//		{
+//		this->AssertOwned();
+//		const ThreadID current = GetThreadIDProc();
+//
+//		const int priorCount = fCount;
+//		fCount = 0;
+//		fOwner = 0;
+//		iCnd.Wait(fMtx);
+//		fOwner = current;
+//		fCount = priorCount;
+//		}
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	bool pWaitFor(Cnd& iCnd, double iTimeout)
+//		{
+//		this->AssertOwned();
+//		const ThreadID current = GetThreadIDProc();
+//
+//		const int priorCount = fCount;
+//		fCount = 0;
+//		fOwner = 0;
+//		bool result = iCnd.WaitFor(fMtx, iTimeout);
+//		fOwner = current;
+//		fCount = priorCount;
+//		return result;
+//		}
+//
+//	ZMACRO_Attribute_NoThrow
+//	inline
+//	bool pWaitUntil(Cnd& iCnd, double iDeadline)
+//		{
+//		this->AssertOwned();
+//		const ThreadID current = GetThreadIDProc();
+//
+//		const int priorCount = fCount;
+//		fCount = 0;
+//		fOwner = 0;
+//		bool result = iCnd.WaitUntil(fMtx, iDeadline);
+//		fOwner = current;
+//		fCount = priorCount;
+//		return result;
+//		}
+//
+//	ThreadID fOwner;
+//	Mtx fMtx;
+//	int fCount;
+//	};
+
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMtxR_T
+#pragma mark ZMtxChecked_T
 
 template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
-class ZMtxR_T : NonCopyable
+class ZMtxChecked_T : NonCopyable
 	{
 public:
-	friend class ZCndR_T<ZMtxR_T, Cnd>;
+	friend class ZCndChecked_T<ZMtxChecked_T, Cnd>;
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	ZMtxR_T() : fOwner(0), fCount(0) {}
+	ZMtxChecked_T() : fOwner(0) {}
 
 	ZMACRO_Attribute_NoThrow
 	inline
-	~ZMtxR_T() {}
+	~ZMtxChecked_T() {}
 
 	ZMACRO_Attribute_NoThrow
 	inline
 	void Acquire()
 		{
 		const ThreadID current = GetThreadIDProc();
-		if (fOwner != current)
-			{
-			fMtx.Acquire();
-			fOwner = current;
-			ZAssert(fCount == 0);
-			}
-		++fCount;
+		ZAssert(fOwner != current);
+		fMtx.Acquire();
+		fOwner = current;
 		}
 
 	ZMACRO_Attribute_NoThrow
@@ -342,53 +476,42 @@ public:
 	void Release()
 		{
 		ZAssert(fOwner == GetThreadIDProc());
-
-		if (0 == --fCount)
-			{
-			fOwner = 0;
-			fMtx.Release();
-			}
+		fOwner = 0;
+		fMtx.Release();
 		}
 
 	void AssertOwned()
+		{ this->pAssertOwned(GetThreadIDProc()); }
+
+private:
+	void pAssertOwned(ThreadID current)
 		{
-		const ThreadID current = GetThreadIDProc();
 		if (fOwner != current)
 			{
-			fprintf(stderr, "fCount = %d, fOwner = %d, current = %d\n", int(fCount), int(fOwner), int (current));
+			//##fprintf(stderr, "fOwner = %X, current = %X\n", (int)fOwner, (int)current);
 			ZAssert(false);
 			}
 		}
 
-private:
 	ZMACRO_Attribute_NoThrow
 	inline
 	void pWait(Cnd& iCnd)
 		{
-		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-
-		const int priorCount = fCount;
-		fCount = 0;
-		fOwner = 0;
+		this->pAssertOwned(current);
 		iCnd.Wait(fMtx);
 		fOwner = current;
-		fCount = priorCount;
 		}
 
 	ZMACRO_Attribute_NoThrow
 	inline
 	bool pWaitFor(Cnd& iCnd, double iTimeout)
 		{
-		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-
-		const int priorCount = fCount;
-		fCount = 0;
+		this->pAssertOwned(current);
 		fOwner = 0;
 		bool result = iCnd.WaitFor(fMtx, iTimeout);
 		fOwner = current;
-		fCount = priorCount;
 		return result;
 		}
 
@@ -396,21 +519,16 @@ private:
 	inline
 	bool pWaitUntil(Cnd& iCnd, double iDeadline)
 		{
-		this->AssertOwned();
 		const ThreadID current = GetThreadIDProc();
-
-		const int priorCount = fCount;
-		fCount = 0;
+		this->pAssertOwned(current);
 		fOwner = 0;
 		bool result = iCnd.WaitUntil(fMtx, iDeadline);
 		fOwner = current;
-		fCount = priorCount;
 		return result;
 		}
 
 	ThreadID fOwner;
 	Mtx fMtx;
-	int fCount;
 	};
 
 // =================================================================================================

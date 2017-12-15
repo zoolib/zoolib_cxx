@@ -198,16 +198,28 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZMtxR_pthread
+#pragma mark ZMtxChecked_pthread
 
-typedef ZMtxR_T<ZMtx_pthread, ZCndBase_pthread, ZThread_pthread::ID, ZThread_pthread::sID> ZMtxR_pthread;
+typedef ZMtxChecked_T<ZMtx_pthread, ZCndBase_pthread, ZThread_pthread::ID, ZThread_pthread::sID> ZMtxChecked_pthread;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZCndR_pthread
+#pragma mark ZCndChecked_pthread
 
-typedef ZCndR_T<ZMtxR_pthread, ZCndBase_pthread> ZCnd_pthread;
+typedef ZCndChecked_T<ZMtxChecked_pthread, ZCndBase_pthread> ZCnd_pthread;
 
+//// =================================================================================================
+//#pragma mark -
+//#pragma mark ZMtxR_pthread
+//
+//typedef ZMtxR_T<ZMtx_pthread, ZCndBase_pthread, ZThread_pthread::ID, ZThread_pthread::sID> ZMtxR_pthread;
+//
+//// =================================================================================================
+//#pragma mark -
+//#pragma mark ZCndR_pthread
+//
+//typedef ZCndR_T<ZMtxR_pthread, ZCndBase_pthread> ZCnd_pthread;
+//
 // =================================================================================================
 #pragma mark -
 #pragma mark ZSem_pthread
