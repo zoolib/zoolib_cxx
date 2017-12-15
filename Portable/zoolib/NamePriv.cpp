@@ -28,6 +28,8 @@ namespace ZooLib {
 // unnecessarily taint their callers with Unwind_SjLj_Register/Unwind_SjLj_Unregister calls,
 // which are a noticeable cost on iOS.
 
+#if ! ZMACRO_NameUsesString
+
 void Name::spRetain(const CountedString* iCounted)
 	{
 	try { const_cast<CountedString*>(iCounted)->Retain(); }
@@ -39,5 +41,7 @@ void Name::spRelease(const CountedString* iCounted)
 	try { const_cast<CountedString*>(iCounted)->Release(); }
 	catch (...) {}
 	}
+
+#endif // ZMACRO_NameUsesString
 
 } // namespace ZooLib

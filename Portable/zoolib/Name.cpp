@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+#if ! ZMACRO_NameUsesString
+
 // =================================================================================================
 #pragma mark -
 
@@ -220,5 +222,8 @@ Name::CountedString* Name::pGetIfCounted()
 	#endif
 	return nullptr;
 	}
+
+#endif // ! ZMACRO_NameUsesString
+
 
 } // namespace ZooLib

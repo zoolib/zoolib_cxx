@@ -33,6 +33,75 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark Name
 
+#define ZMACRO_NameUsesString 1
+
+#if ZMACRO_NameUsesString
+
+class Name
+	{
+public:
+	typedef CountedVal<string8> CountedString;
+
+	inline
+	Name()
+		{}
+
+	inline
+	Name(const Name& iOther)
+	:	fString(iOther.fString)
+		{}
+
+	Name& operator=(const Name& iOther)
+		{
+		fString = iOther.fString;
+		return *this;
+		}
+
+	inline
+	~Name()
+		{}
+
+	Name(const char* iStatic)
+	:	fString(iStatic)
+		{}
+
+	Name(const string8& iString)
+	:	fString(iString)
+		{}
+
+	Name(const ZRef<CountedString>& iRefCountedString)
+	:	fString(sGet(iRefCountedString))
+		{}
+
+	operator string8() const
+		{ return fString; }
+
+//	operator RefCountedString() const;
+
+	inline
+	bool operator<(const Name& iOther) const
+		{ return fString < iOther.fString; }
+
+	inline
+	bool operator==(const Name& iOther) const
+		{ return fString == iOther.fString; }
+
+	int Compare(const Name& iOther) const
+		{ return fString.compare(fString); }
+
+	bool IsEmpty() const
+		{ return fString.empty(); }
+
+	void Clear()
+		{ fString.clear(); }
+
+//	size_t Hash() const;
+
+private:
+	string8 fString;
+	};
+
+#else
 class Name
 	{
 public:
@@ -114,6 +183,8 @@ private:
 	#endif
 	};
 
+#endif
+
 template <> struct RelopsTraits_HasEQ<Name> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Name> : public RelopsTraits_Has {};
 
@@ -131,18 +202,5 @@ bool sNotEmpty(const Name& iName)
 	{ return not sIsEmpty(iName); }
 
 } // namespace ZooLib
-
-#if ZMACRO_Has_tr1
-
-	ZMACRO_namespace_tr1_begin
-//	template <typename T> struct hash;
-
-//	template <>
-//	struct hash<ZooLib::Name>
-//		{ public: size_t operator()(const ZooLib::Name& iName) const { return iName.Hash(); } };
-
-	ZMACRO_namespace_tr1_end
-
-#endif
 
 #endif // __ZooLib_Name_h__
