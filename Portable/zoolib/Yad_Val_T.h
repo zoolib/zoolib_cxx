@@ -165,8 +165,14 @@ public:
 // From Aspect_ReadAt
 	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
 		{
-		if (iCount && (*oDest = sYadR(fMap.Get(iLoc))))
-			return 1;
+		if (iCount)
+			{
+			if (ZQ<typename Map_p::Val_t> theValQ = sQGet(fMap, iLoc))
+				{
+				*oDest = sYadR(*theValQ);
+				return 1;
+				}
+			}
 		return 0;
 		}
 
