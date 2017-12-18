@@ -46,7 +46,7 @@ struct YadOptions
 	size_t fRawChunkSize;
 	std::string fRawByteSeparator;
 	bool fRawAsASCII;
-	ZQ<uint64> fRawSizeCap;
+	ZQ<uint64> fRawSizeCapQ;
 
 	bool fBreakStrings;
 	int fStringLineLength;

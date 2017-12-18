@@ -131,7 +131,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 		return;
 		}
 
-	if (!fChannerRU_UTF)
+	if (not fChannerRU_UTF)
 		return;
 
 	ML::ChanRU_UTF& theR = *fChannerRU_UTF;
