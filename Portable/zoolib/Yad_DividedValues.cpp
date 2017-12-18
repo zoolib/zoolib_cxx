@@ -18,8 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_DividedValues.h"
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_DividedValues.h"
+
+#if 0
 
 namespace ZooLib {
 namespace ZYad_DividedValues {
@@ -72,11 +74,11 @@ static bool spReadValues(vector<string8>& oValues,
 #pragma mark ParseException
 
 ParseException::ParseException(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZooLib::YadParseException(iWhat)
 	{}
 
 ParseException::ParseException(const char* iWhat)
-:	ZYadParseException(iWhat)
+:	ZooLib::YadParseException(iWhat)
 	{}
 
 // =================================================================================================
@@ -134,3 +136,5 @@ ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iSt
 
 } // namespace ZYad_DividedValues
 } // namespace ZooLib
+
+#endif

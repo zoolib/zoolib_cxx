@@ -18,21 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_DividedValues_h__
-#define __ZYad_DividedValues_h__ 1
+#ifndef __ZooLib_Yad_DividedValues_h__
+#define __ZooLib_Yad_DividedValues_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZML.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ML.h"
+#include "zoolib/Yad.h"
 
 namespace ZooLib {
-namespace ZYad_DividedValues {
+namespace Yad_DividedValues {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ParseException
 
-class ParseException : public ZYadParseException
+class ParseException : public ZooLib::YadParseException
 	{
 public:
 	ParseException(const std::string& iWhat);
@@ -43,9 +43,9 @@ public:
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
+ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iStrimmerR);
 
 } // namespace ZYad_DividedValues
 } // namespace ZooLib
 
-#endif // __ZYad_DividedValues_h__
+#endif // __ZooLib_Yad_DividedValues_h__

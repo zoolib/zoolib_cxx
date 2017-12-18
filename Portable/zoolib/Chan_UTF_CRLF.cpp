@@ -100,4 +100,272 @@ size_t ChanR_UTF_CRLFRemove::QRead(UTF32* oDest, size_t iCount)
 	return localDest - oDest;
 	}
 
+// // =================================================================================================
+// #pragma mark -
+// #pragma mark ZStreamR_CRLFInsert
+// 
+// ZStreamR_CRLFInsert::ZStreamR_CRLFInsert(const ZStreamR& iStreamSource)
+// :	fStreamSource(iStreamSource),
+// 	fLastWasCR(false),
+// 	fHasBuffChar(false)
+// 	{}
+// 
+// ZStreamR_CRLFInsert::~ZStreamR_CRLFInsert()
+// 	{}
+// 
+// void ZStreamR_CRLFInsert::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+// 	{
+// 	if (oCountRead)
+// 		*oCountRead = 0;
+// 
+// 	if (iCount == 0)
+// 		return;
+// 
+// 	char* localDest = reinterpret_cast<char*>(oDest);
+// 	size_t countRemaining = iCount;
+// 
+// 	while (countRemaining)
+// 		{
+// 		char* priorDest = localDest;
+// 		if (!fHasBuffChar)
+// 			{
+// 			if (!fStreamSource.ReadChar(fBuffChar))
+// 				{
+// 				if (fLastWasCR)
+// 					{
+// 					*localDest++ = LF;
+// 					fLastWasCR = false;
+// 					if (oCountRead)
+// 						++*oCountRead;
+// 					--countRemaining;
+// 					}
+// 				break;
+// 				}
+// 			fHasBuffChar = true;
+// 			}
+// 		else
+// 			{
+// 			if (fLastWasCR)
+// 				{
+// 				fLastWasCR = false;
+// 				*localDest++ = LF;
+// 				if (fBuffChar == LF)
+// 					fHasBuffChar = false;
+// 				}
+// 			else
+// 				{
+// 				if (fBuffChar == CR)
+// 					{
+// 					*localDest++ = CR;
+// 					fLastWasCR = true;
+// 					fHasBuffChar = false;
+// 					}
+// 				else if (fBuffChar == LF)
+// 					{
+// 					*localDest++ = CR;
+// 					fLastWasCR = true;
+// 					}
+// 				else
+// 					{
+// 					*localDest++ = fBuffChar;
+// 					fLastWasCR = false;
+// 					fHasBuffChar = false;
+// 					}
+// 				}
+// 			}
+// 		if (oCountRead)
+// 			*oCountRead += localDest - priorDest;
+// 		countRemaining -= localDest - priorDest;
+// 		}
+// 	}
+// 
+// // =================================================================================================
+// #pragma mark -
+// #pragma mark ZStreamW_CRLFRemove
+// 
+// ZStreamW_CRLFRemove::ZStreamW_CRLFRemove(const ZStreamW& iStreamSink)
+// :	fStreamSink(iStreamSink),
+// 	fReplaceChar('n'),
+// 	fLastWasCR(false)
+// 	{}
+// 
+// ZStreamW_CRLFRemove::ZStreamW_CRLFRemove(char iReplaceChar, const ZStreamW& iStreamSink)
+// :	fStreamSink(iStreamSink),
+// 	fReplaceChar(iReplaceChar),
+// 	fLastWasCR(false)
+// 	{}
+// 
+// ZStreamW_CRLFRemove::~ZStreamW_CRLFRemove()
+// 	{
+// 	}
+// 
+// void ZStreamW_CRLFRemove::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+// 	{
+// 	if (oCountWritten)
+// 		*oCountWritten = 0;
+// 
+// 	const char* localSource = reinterpret_cast<const char*>(iSource);
+// 	size_t countRemaining = iCount;
+// 	while (countRemaining)
+// 		{
+// 		if (*localSource == CR)
+// 			{
+// 			size_t countWritten;
+// 			fStreamSink.Write(&fReplaceChar, 1, &countWritten);
+// 			if (countWritten == 0)
+// 				break;
+// 			fLastWasCR = true;
+// 			if (oCountWritten)
+// 				++*oCountWritten;
+// 			--countRemaining;
+// 			++localSource;
+// 			}
+// 		else if (*localSource == LF)
+// 			{
+// 			if (!fLastWasCR)
+// 				{
+// 				size_t countWritten;
+// 				fStreamSink.Write(&fReplaceChar, 1, &countWritten);
+// 				if (countWritten == 0)
+// 					break;
+// 				}
+// 			if (oCountWritten)
+// 				++*oCountWritten;
+// 			--countRemaining;
+// 			++localSource;
+// 			fLastWasCR = false;
+// 			}
+// 		else
+// 			{
+// 			// Find the next CR or LF
+// 			const char* innerSource = localSource;
+// 			const char* innerEnd = localSource + countRemaining;
+// 			char currChar;
+// 			while (innerSource < innerEnd)
+// 				{
+// 				currChar = *innerSource;
+// 				if (currChar == CR || currChar == LF)
+// 					break;
+// 				++innerSource;
+// 				}
+// 
+// 			if (innerSource > localSource)
+// 				{
+// 				size_t countWritten;
+// 				fStreamSink.Write(localSource, innerSource - localSource, &countWritten);
+// 				if (countWritten == 0)
+// 					break;
+// 				if (oCountWritten)
+// 					*oCountWritten += countWritten;
+// 				countRemaining -= countWritten;
+// 				localSource += countWritten;
+// 				fLastWasCR = false;
+// 				}
+// 			}
+// 		}
+// 	}
+// 
+// void ZStreamW_CRLFRemove::Imp_Flush()
+// 	{
+// 	fStreamSink.Flush();
+// 	}
+// 
+// // =================================================================================================
+// #pragma mark -
+// #pragma mark ZStreamW_CRLFInsert
+// 
+// ZStreamW_CRLFInsert::ZStreamW_CRLFInsert(const ZStreamW& iStreamSink)
+// :	fStreamSink(iStreamSink),
+// 	fLastWasCR(false)
+// 	{}
+// 
+// ZStreamW_CRLFInsert::~ZStreamW_CRLFInsert()
+// 	{
+// 	if (fLastWasCR)
+// 		{
+// 		fStreamSink.Write(spLF, 1, nullptr);
+// 		fLastWasCR = false;
+// 		}
+// 	}
+// 
+// void ZStreamW_CRLFInsert::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+// 	{
+// 	if (oCountWritten)
+// 		*oCountWritten = 0;
+// 
+// 	const char* localSource = reinterpret_cast<const char*>(iSource);
+// 	size_t countRemaining = iCount;
+// 	while (countRemaining)
+// 		{
+// 		if (fLastWasCR)
+// 			{
+// 			fLastWasCR = false;
+// 			size_t countWritten;
+// 			fStreamSink.Write(spLF, 1, &countWritten);
+// 			if (countWritten == 0)
+// 				break;
+// 			if (*localSource == LF)
+// 				{
+// 				if (oCountWritten)
+// 					++*oCountWritten;
+// 				--countRemaining;
+// 				++localSource;
+// 				}
+// 			}
+// 		else if (*localSource == CR)
+// 			{
+// 			size_t countWritten;
+// 			fStreamSink.Write(spCR, 1, &countWritten);
+// 			if (countWritten == 0)
+// 				break;
+// 			fLastWasCR = true;
+// 			if (oCountWritten)
+// 				++*oCountWritten;
+// 			--countRemaining;
+// 			++localSource;
+// 			}
+// 		else if (*localSource == LF)
+// 			{
+// 			size_t countWritten;
+// 			fStreamSink.Write(spCR, 1, &countWritten);
+// 			if (countWritten == 0)
+// 				break;
+// 			// Pretend that the last was a CR, we'll write the LF and consume
+// 			// this LF on the next go round
+// 			fLastWasCR = true;
+// 			}
+// 		else
+// 			{
+// 			// Find the next CR or LF
+// 			const char* innerSource = localSource;
+// 			const char* innerEnd = localSource + countRemaining;
+// 			char currChar;
+// 			while (innerSource < innerEnd)
+// 				{
+// 				currChar = *innerSource;
+// 				if (currChar == CR || currChar == LF)
+// 					break;
+// 				++innerSource;
+// 				}
+// 
+// 			if (innerSource > localSource)
+// 				{
+// 				size_t countWritten;
+// 				fStreamSink.Write(localSource, innerSource - localSource, &countWritten);
+// 				if (countWritten == 0)
+// 					break;
+// 				if (oCountWritten)
+// 					*oCountWritten += countWritten;
+// 				countRemaining -= countWritten;
+// 				localSource += countWritten;
+// 				}
+// 			}
+// 		}
+// 	}
+// 
+// void ZStreamW_CRLFInsert::Imp_Flush()
+// 	{
+// 	fStreamSink.Flush();
+// 	}
+
 } // namespace ZooLib

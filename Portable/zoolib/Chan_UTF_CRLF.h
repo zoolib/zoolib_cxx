@@ -47,6 +47,27 @@ private:
 	bool fLastWasCR;
 	};
 
+// 
+// // =================================================================================================
+// #pragma mark -
+// #pragma mark ZStreamR_CRLFInsert
+// 
+// class ZStreamR_CRLFInsert : public ZStreamR
+// 	{
+// public:
+// 	ZStreamR_CRLFInsert(const ZStreamR& iStreamSource);
+// 	~ZStreamR_CRLFInsert();
+// 
+// // From ZStreamR
+// 	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
+// 
+// protected:
+// 	const ZStreamR& fStreamSource;
+// 	bool fLastWasCR;
+// 	bool fHasBuffChar;
+// 	char fBuffChar;
+// 	};
+// 
 //// =================================================================================================
 //#pragma mark -
 //#pragma mark ZStrimW_CRLFRemove
