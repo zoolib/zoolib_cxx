@@ -67,6 +67,7 @@ class ChanRU_UTF
 :	public ZooLib::ChanRU<UTF32>
 	{
 public:
+	ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU);
 	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
@@ -115,29 +116,7 @@ private:
 #pragma mark -
 #pragma mark ML::ChannerRU_UTF
 
-class ChannerRU_UTF
-:	public ChanRU_UTF
-,	public Channer<ZooLib::ChanRU<UTF32>>
-	{
-public:
-	ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
-		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF);
-
-	ChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
-		const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF,
-		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
-
-	virtual ~ChannerRU_UTF();
-
-private:
-	ZRef<ChannerR_UTF> fChannerR_UTF;
-	ZRef<ChannerU_UTF> fChannerU_UTF;
-	};
-
-ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
-	const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF);
-
-ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerRU_UTF>& iChannerRU_UTF);
+typedef Channer_T<ChanRU_UTF> ChannerRU_UTF;
 
 // =================================================================================================
 #pragma mark -

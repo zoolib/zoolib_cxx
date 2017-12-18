@@ -262,7 +262,15 @@ static bool spReadMLAttributeValue(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark	::StrimU
+#pragma mark ChanRU_UTF
+
+ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU)
+:	fChanR(iChanRU)
+,	fChanU(iChanRU)
+,	fRecognizeEntitiesInAttributeValues(false)
+,	fBufferStart(0)
+,	fToken(eToken_Fresh)
+	{}
 
 ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 :	fChanR(iChanR)
@@ -597,43 +605,6 @@ void ChanRU_UTF::pAdvance()
 				}
 			}
 		}
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ML::ChannerRU_UTF
-
-ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
-	const ZRef<ChannerU_UTF>& iChannerU_UTF)
-:	ChanRU_UTF(*iChannerR_UTF, *iChannerU_UTF)
-,	fChannerR_UTF(iChannerR_UTF)
-,	fChannerU_UTF(iChannerU_UTF)
-	{}
-
-ChannerRU_UTF::ChannerRU_UTF(const ZRef<ChannerR_UTF>& iChannerR_UTF,
-	const ZRef<ChannerU_UTF>& iChannerU_UTF,
-	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
-:	ChanRU_UTF(*iChannerR_UTF, *iChannerU_UTF)
-,	fChannerR_UTF(iChannerR_UTF)
-,	fChannerU_UTF(iChannerU_UTF)
-	{}
-
-ChannerRU_UTF::~ChannerRU_UTF()
-	{}
-
-ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerR_UTF>& iChannerR_UTF,
-	const ZRef<ZooLib::ChannerU_UTF>& iChannerU_UTF)
-	{
-	if (iChannerR_UTF && iChannerU_UTF)
-		return new ChannerRU_UTF(iChannerR_UTF, iChannerU_UTF);
-	return null;
-	}
-
-ZRef<ChannerRU_UTF> sChannerRU_UTF(const ZRef<ZooLib::ChannerRU_UTF>& iChannerRU_UTF)
-	{
-	if (iChannerRU_UTF)
-		return new ChannerRU_UTF(iChannerRU_UTF, iChannerRU_UTF);
-	return null;
 	}
 
 // =================================================================================================
