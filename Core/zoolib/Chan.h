@@ -332,24 +332,6 @@ template <typename EE> using ChanConnection = DeriveFrom
 	Aspect_Write<EE>
 	>;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark Hmmm.
-
-#if 0
-template <class EE>
-inline size_t sUnread(const DeriveFrom<Aspect_Pos, Aspect_Unread<EE>>& iChan,
-	const EE* iSource, size_t iCount
-	)
-	{
-	const uint64 thePos = sGetPos(iChan);
-	if (iCount >= thePos)
-		iCount = thePos;
-	sSetPos(thePos - iCount, iChan);
-	return iCount;
-	}
-#endif
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__
