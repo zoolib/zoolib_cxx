@@ -96,10 +96,10 @@ ZRef<Channer<Chan_p>> sAChanner_Chan(const Chan_p& iChan)
 template <class Chan_p>
 class Channer_T
 :	public Chan_p
-,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
+,	public Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
 	{
 public:
-	Channer_T() : Chan_p () {}
+	Channer_T() : Chan_p() {}
 
 //	template <class... T>
 //	Channer_T(T... args) : Chan_p(args...) {}
@@ -132,13 +132,13 @@ ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1)
 
 template <class Chan_p>
 class Channer_Channer_T
-:	public Chan_p
-,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
+:	public Channer_T<Chan_p>
 	{
+	typedef Channer_T<Chan_p> inherited;
 public:
 	template <class ChannerOther_p>
 	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther)
-	:	Chan_p(*iOther)
+	:	inherited(*iOther)
 	,	fOther(iOther)
 		{}
 
@@ -150,19 +150,19 @@ public:
 
 	template <class T0, class ChannerOther_p>
 	Channer_Channer_T(const T0& iT0, const ZRef<ChannerOther_p>& iOther)
-	:	Chan_p(iT0, *iOther)
+	:	inherited(iT0, *iOther)
 	,	fOther(iOther)
 		{}
 
 	template <class T0, class T1, class ChannerOther_p>
 	Channer_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
-	:	Chan_p(iT0, iT1, *iOther)
+	:	inherited(iT0, iT1, *iOther)
 	,	fOther(iOther)
 		{}
 
 	template <class T0, class T1, class T2, class ChannerOther_p>
 	Channer_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
-	:	Chan_p(iT0, iT1, iT2, *iOther)
+	:	inherited(iT0, iT1, iT2, *iOther)
 	,	fOther(iOther)
 		{}
 
