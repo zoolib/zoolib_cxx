@@ -18,68 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Bencode_h__
-#define __ZYad_Bencode_h__ 1
+#ifndef __ZooLib_Yad_Bencode_h__
+#define __ZooLib_Yad_Bencode_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/Channer_Bin.h"
+#include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
 
+typedef ChanRU<byte> ChanRU_Bin;
+typedef Channer<ChanRU_Bin> ChannerRU_Bin;
+
+namespace Yad_Bencode {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadParseException_Bencode
+#pragma mark Yad_Bencode::YadParseException
 
-class ZYadParseException_Bencode : public ZYadParseException_Std
+class YadParseException : public ZooLib::YadParseException
 	{
 public:
-	ZYadParseException_Bencode(const std::string& iWhat);
-	ZYadParseException_Bencode(const char* iWhat);
+	YadParseException(const std::string& iWhat);
+	YadParseException(const char* iWhat);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadSeqR_Bencode
+#pragma mark ChanR_RefYad
 
-class ZYadSeqR_Bencode : public ZYadSeqR_Std
+class ChanR_RefYad
+:	public ChanR_RefYad_Std
 	{
 public:
-	ZYadSeqR_Bencode(ZRef<ZStreamerU> iStreamerU);
+	ChanR_RefYad(ZRef<ChannerRU_Bin> iChanner);
 
-// From ZYadSeqR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
+// From ChanR_RefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZStreamerU> fStreamerU;
+	ZRef<ChannerRU_Bin> fChanner;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadMapR_Bencode
+#pragma mark ChanR_NameRefYad
 
-class ZYadMapR_Bencode : public ZYadMapR_Std
+class ChanR_NameRefYad
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU);
+	ChanR_NameRefYad(ZRef<ChannerRU_Bin> iChanner);
 
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR);
+// From ChanR_RefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZStreamerU> fStreamerU;
+	ZRef<ChannerRU_Bin> fChanner;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYad_Bencode
+#pragma mark sYadR
 
-namespace ZYad_Bencode {
+ZRef<YadR> sYadR(ZRef<ChannerRU_Bin> iChanner);
 
-ZRef<ZYadR> sYadR(ZRef<ZStreamerU> iStreamerU);
-
-} // namespace ZYad_Bencode
+} // namespace Bencode
 
 } // namespace ZooLib
 
-#endif // __ZYad_Bencode_h__
+#endif // __ZooLib_Yad_Bencode_h__

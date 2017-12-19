@@ -20,11 +20,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZCompat_cmath.h"
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_Bencode.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanR_Bin_More.h"
+#include "zoolib/ChanU_Bin.h"
+#include "zoolib/Compat_cmath.h"
+#include "zoolib/Util_Chan.h"
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_Bencode.h"
 
 namespace ZooLib {
+namespace Yad_Bencode {
 
 using std::string;
 
@@ -33,22 +38,15 @@ using std::string;
 #pragma mark Helpers
 
 static void spThrowParseException(const string& iMessage)
-	{
-	throw ZYadParseException_Bencode(iMessage);
-	}
+	{ throw YadParseException(iMessage); }
 
-static bool spTryRead_Byte(const ZStreamU& s, uint8 iByte)
-	{
-	if (iByte == s.ReadUInt8())
-		return true;
-	s.Unread();
-	return false;
-	}
+static bool spTryRead_Byte(const ChanRU_Bin& iChanRU, uint8 iByte)
+	{ return sTryRead<uint8>(iByte, iChanRU, iChanRU); }
 
-static bool spTryRead_Digit(const ZStreamU& s, int& oDigit)
+static bool spTryRead_Digit(const ChanRU_Bin& s, int& oDigit)
 	{
 	uint8 theByte;
-	if (!s.ReadByte(theByte))
+	if (1 != sQRead(s, &theByte, 1))
 		return false;
 
 	if (theByte >= '0' && theByte <= '9')
@@ -57,18 +55,18 @@ static bool spTryRead_Digit(const ZStreamU& s, int& oDigit)
 		return true;
 		}
 
-	s.Unread();
+	sUnread(s, theByte);
 	return false;
 	}
 
-static bool spTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
+static bool spTryRead_DecimalInteger(const ChanRU_Bin& s, int64& oInteger)
 	{
 	oInteger = 0;
 	bool isValid = false;
 	for (;;)
 		{
 		int curDigit;
-		if (!spTryRead_Digit(s, curDigit))
+		if (not spTryRead_Digit(s, curDigit))
 			return isValid;
 		isValid = true;
 		oInteger *= 10;
@@ -76,11 +74,11 @@ static bool spTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
 		}
 	}
 
-static bool spTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
+static bool spTryRead_SignedInteger(const ChanRU_Bin& s, int64& oInteger)
 	{
 	const bool isNegative = spTryRead_Byte(s, '-');
 
-	if (!spTryRead_DecimalInteger(s, oInteger))
+	if (not spTryRead_DecimalInteger(s, oInteger))
 		return false;
 
 	if (isNegative)
@@ -89,33 +87,33 @@ static bool spTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
 	return true;
 	}
 
-static int64 spRead_PositiveInteger(const ZStreamU& s)
+static int64 spRead_PositiveInteger(const ChanRU_Bin& s)
 	{
 	int64 result;
-	if (!spTryRead_DecimalInteger(s, result))
+	if (not spTryRead_DecimalInteger(s, result))
 		spThrowParseException("Expected unsigned length");
 	return result;
 	}
 
-static string spReadString(const ZStreamU& s)
+static string spReadString(const ChanRU_Bin& s)
 	{
 	const int32 stringLength = spRead_PositiveInteger(s);
-	if (!spTryRead_Byte(s, ':'))
+	if (not spTryRead_Byte(s, ':'))
 		spThrowParseException("Expected ':' terminator for string length");
 
-	return s.ReadString(stringLength);
+	return sReadString(s, stringLength);
 	}
 
-static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
+static ZRef<YadR> spReadStringish(const ChanRU_Bin& s)
 	{
 	const int32 theLength = spRead_PositiveInteger(s);
-	if (!spTryRead_Byte(s, ':'))
+	if (not spTryRead_Byte(s, ':'))
 		spThrowParseException("Expected ':' terminator for string/binary length");
 
-	if (!theLength)
-		return sMake_YadAtomR_Any(ZAny());
+	if (not theLength)
+		return sYadAtomR_Any(Any());
 
-	const string theString = s.ReadString(theLength);
+	const string8 theString = sReadString(s, theLength);
 	string::const_iterator current = theString.begin();
 	string::const_iterator end = theString.end();
 	size_t countSkipped = 0;
@@ -126,46 +124,46 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 	if (countSkipped == 0)
 		{
 		// We skipped no code units, so theString is valid UTF8.
-		return sYadR(theString);
+		return ZooLib::sYadR(theString);
 		}
 	else
 		{
-		return sYadR(ZData_Any(theString.data(), theLength));
+		return sYadR(Data_Any(theString.data(), theLength));
 		}
 	}
 
-static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
+static ZRef<YadR> spMakeYadR_Bencode(ZRef<ChannerRU_Bin> iChanner)
 	{
-	const ZStreamU& theStreamU = iStreamerU->GetStreamU();
+	const ChanRU_Bin& theChan = *iChanner;
 
-	const uint8 type = theStreamU.ReadUInt8();
+	const uint8 type = sEReadBE<uint8>(theChan);
 	switch (type)
 		{
 		case 'd':
 			{
-			return new ZYadMapR_Bencode(iStreamerU);
+			return sChanner_T<ChanR_NameRefYad>(iChanner);
 			}
 		case 'l':
 			{
-			return new ZYadSeqR_Bencode(iStreamerU);
+			return sChanner_T<ChanR_RefYad>(iChanner);
 			}
 		case 'i':
 			{
 			int64 theInteger;
-			if (!spTryRead_SignedInteger(theStreamU, theInteger))
+			if (not spTryRead_SignedInteger(theChan, theInteger))
 				spThrowParseException("Expected signed decimal integer");
-			if (!spTryRead_Byte(theStreamU, 'e'))
+			if (not spTryRead_Byte(theChan, 'e'))
 				spThrowParseException("Expected 'e' terminator for integer");
-			return sMake_YadAtomR_Any(ZAny(theInteger));
+			return sYadAtomR_Any(Any(theInteger));
 			}
 		default:
 			{
-			theStreamU.Unread();
+			sUnread(theChan, type);
 			// It must be a 'string'.
 
 			// It could be valid UTF-8, or could be
 			// arbitrary bytes, so we call sReadStringish.
-			return spReadStringish(theStreamU);
+			return spReadStringish(theChan);
 			}
 		}
 
@@ -174,45 +172,45 @@ static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadParseException_Bencode
+#pragma mark YadParseException
 
-ZYadParseException_Bencode::ZYadParseException_Bencode(const string& iWhat)
-:	ZYadParseException_Std(iWhat)
+YadParseException::YadParseException(const string& iWhat)
+:	ZooLib::YadParseException(iWhat)
 	{}
 
-ZYadParseException_Bencode::ZYadParseException_Bencode(const char* iWhat)
-:	ZYadParseException_Std(iWhat)
+YadParseException::YadParseException(const char* iWhat)
+:	ZooLib::YadParseException(iWhat)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadSeqR_Bencode
+#pragma mark ChanR_RefYad
 
-ZYadSeqR_Bencode::ZYadSeqR_Bencode(ZRef<ZStreamerU> iStreamerU)
-:	fStreamerU(iStreamerU)
+ChanR_RefYad::ChanR_RefYad(ZRef<ChannerRU_Bin> iChanner)
+:	fChanner(iChanner)
 	{}
 
-void ZYadSeqR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
-	if (!spTryRead_Byte(fStreamerU->GetStreamU(), 'e'))
-		oYadR = spMakeYadR_Bencode(fStreamerU);
+	if (not spTryRead_Byte(*fChanner, 'e'))
+		oYadR = spMakeYadR_Bencode(fChanner);
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadMapR_Bencode
+#pragma mark ChanR_NameRefYad
 
-ZYadMapR_Bencode::ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU)
-:	fStreamerU(iStreamerU)
+ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ChannerRU_Bin> iChanner)
+:	fChanner(iChanner)
 	{}
 
-void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
+void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
-	const ZStreamU& theStreamU = fStreamerU->GetStreamU();
-	if (!spTryRead_Byte(theStreamU, 'e'))
+	const ChanRU_Bin& theChan = *fChanner;
+	if (not spTryRead_Byte(theChan, 'e'))
 		{
-		oName = spReadString(theStreamU);
-		oYadR = spMakeYadR_Bencode(fStreamerU);
+		oName = spReadString(theChan);
+		oYadR = spMakeYadR_Bencode(fChanner);
 		}
 	}
 
@@ -220,7 +218,8 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYad
 #pragma mark -
 #pragma mark ZYad_Bencode
 
-ZRef<ZYadR> ZYad_Bencode::sYadR(ZRef<ZStreamerU> iStreamerU)
-	{ return spMakeYadR_Bencode(iStreamerU); }
+ZRef<YadR> sYadR(ZRef<ChannerRU_Bin> iChanner)
+	{ return spMakeYadR_Bencode(iChanner); }
 
+} // namespace Yad_Bencode
 } // namespace ZooLib
