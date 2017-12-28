@@ -116,7 +116,7 @@ private:
 #pragma mark -
 #pragma mark ML::ChannerRU_UTF
 
-typedef Channer_T<ChanRU_UTF> ChannerRU_UTF;
+typedef Channer_Channer_T<ChanRU_UTF> ChannerRU_UTF;
 
 // =================================================================================================
 #pragma mark -
