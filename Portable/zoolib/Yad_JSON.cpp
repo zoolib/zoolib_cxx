@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_UTF_Escaped.h"
-#include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Compat_algorithm.h" // ZSetRestore_T
 #include "zoolib/Compat_cmath.h"
@@ -391,15 +390,19 @@ size_t YadStreamerR_Base64::QRead(byte* oDest, size_t iCount)
 #pragma mark -
 #pragma mark YadStrimmerR
 
+static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
+
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerRU_UTF> iChanner)
 :	fChannerR(iChanner)
 ,	fChannerU(iChanner)
+,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), *iChanner)
 ,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
 YadStrimmerR_JSON::YadStrimmerR_JSON(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
+,	fChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), *iChannerR)
 ,	fQuotesSeen(1) // We're initialized having seen a single quote.
 	{}
 
@@ -494,18 +497,17 @@ size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 				{
 				// We've got three quotes in a row, and any trailing EOL
 				// has been stripped.
-				static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
-				ChanR_XX_Boundary<UTF32> theChanR(spThreeQuotes, countof(spThreeQuotes), *fChannerR);
-				if (const size_t countRead = sQRead(theChanR, localDest, localDestEnd - localDest))
+				if (const size_t countRead = sQRead(fChanR_Boundary, localDest, localDestEnd - localDest))
 					{
 					localDest += countRead;
 					}
-				else if (not theChanR.HitBoundary())
+				else if (not fChanR_Boundary.HitBoundary())
 					{
 					throw ParseException("Expected \"\"\" to close a string");
 					}
 				else
 					{
+					fChanR_Boundary.Reset();
 					fQuotesSeen = 0;
 					}
 				break;
@@ -922,7 +924,6 @@ public:
 			// or if iOptions.fBreakStrings is true, any element is a string with embedded
 			// line breaks or more than iOptions.fStringLineLength characters.
 			//##needsIndentation = not iYadSeqR->IsSimple(fOptions);
-			needsIndentation = true;
 			}
 
 		if (needsIndentation)
@@ -1004,7 +1005,6 @@ public:
 		if (fOptions.DoIndentation())
 			{
 			//##needsIndentation = not iYadMapR->IsSimple(fOptions);
-			needsIndentation = true;
 			}
 
 		const bool useSingleQuotes = fOptions.fPreferSingleQuotes.DGet(false);

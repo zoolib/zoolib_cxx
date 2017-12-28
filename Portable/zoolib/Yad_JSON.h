@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Terminated.h"
+#include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/CountedVal.h"
 #include "zoolib/Yad_Std.h"
 
@@ -145,6 +146,7 @@ public:
 private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
+	ChanR_XX_Boundary<UTF32> fChanR_Boundary;
 	size_t fQuotesSeen;
 	};
 
