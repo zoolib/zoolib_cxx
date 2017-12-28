@@ -40,10 +40,8 @@ namespace ZooLib {
 	namespace ZTSS { using namespace ZTSS_pthread; }
 
 	typedef ZCnd_pthread ZCnd;
-	typedef ZMtx_pthread ZMtx;
-	typedef ZMtxChecked_pthread ZMtxR;
-
-//##	typedef ZMtxR_pthread ZMtxR;
+	typedef ZMtxChecked_pthread ZMtx;
+//	typedef ZMtx_pthread ZMtx;
 
 	typedef ZSem_pthread ZSem;
 
@@ -58,7 +56,6 @@ namespace ZooLib {
 
 	typedef ZCnd_MacMP ZCnd;
 	typedef ZMtx_MacMP ZMtx;
-//##	typedef ZMtxR_MacMP ZMtxR;
 
 	typedef ZSem_MacMP ZSem;
 
@@ -69,7 +66,6 @@ namespace ZooLib {
 
 	typedef ZCnd_Win ZCnd;
 	typedef ZMtx_Win ZMtx;
-//##	typedef ZMtxR_Win ZMtxR;
 
 	typedef ZSem_Win ZSem;
 	typedef ZSem_Win ZSemNoTimeout;
@@ -97,32 +93,11 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZBen (benaphore)
-
-#if defined(__MACH__)
-	typedef ZMtx ZBen;
-#else
-	typedef ZBen_T<ZSemNoTimeout> ZBen;
-#endif
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Acquirer, Releaser, Guard
+#pragma mark Acquirer, Releaser
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
-typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
 
 typedef ZReleaser_T<ZMtx> ZRelMtx;
-typedef ZReleaser_T<ZMtxR> ZRelMtxR;
-
-typedef ZGuard_T<ZMtx> ZGuardMtx;
-typedef ZGuard_T<ZMtxR> ZGuardMtxR;
-
-typedef ZAcquirer_T<ZBen> ZAcqBen;
-//##typedef ZGuard_T<ZBenR> ZGuardBenR;
-
-typedef ZAcquirer_T<ZGuardMtxR> ZAcqGuardR;
-typedef ZReleaser_T<ZGuardMtxR> ZRelGuardR;
 
 // =================================================================================================
 #pragma mark -

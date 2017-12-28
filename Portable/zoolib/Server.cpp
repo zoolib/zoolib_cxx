@@ -37,19 +37,20 @@ Server::~Server()
 
 void Server::Finalize()
 	{
-	ZGuardMtx guard(fMtx);
+	{
+	ZAcqMtx acq(fMtx);
 	ZAssert(not fWorker);
 	ZAssert(not fFactory);
 	fRoster.Clear();
 	fCallable_Connection.Clear();
-	guard.Release();
+	}
 
 	ZCounted::Finalize();
 	}
 
 bool Server::IsStarted()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	return fFactory;
 	}
 
@@ -123,20 +124,20 @@ void Server::StopWait()
 
 void Server::KillConnections()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	if (ZRef<Roster> theRoster = fRoster)
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		theRoster->Broadcast();
 		}
 	}
 
 void Server::KillConnectionsWait()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	if (ZRef<Roster> theRoster = fRoster)
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		theRoster->Broadcast();
 		for (;;)
 			{
@@ -168,17 +169,16 @@ static void spKill(ZRef<ChannerAbort> iChannerAbort)
 
 bool Server::pWork(ZRef<Worker> iWorker)
 	{
-	ZGuardMtx guard(fMtx);
-
+	ZAcqMtx acq(fMtx);
 	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		if (ZRef<ChannerRW_Bin> theChanner = sCall(theFactory))
 			{
-			guard.Acquire();
+			ZAcqMtx acq(fMtx);
 			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
 				{
-				guard.Release();
+				ZRelMtx rel(fMtx);
 				try
 					{
 					ZRef<Callable_Void> theCallable_Kill =

@@ -87,20 +87,20 @@ Worker::Worker()
 
 ZQ<void> Worker::QCall()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 
 	for (;;)
 		{
 		fWorking = ZThread::sID();
 		fNextWake = kDistantFuture;
-		guard.Release();
+		ZRelMtx rel(fMtx);
 
 		ZQ<bool> result;
 
 		try { result = fCallable_Work->QCall(this); }
 		catch (...) {}
 
-		guard.Acquire();
+		ZAcqMtx acq(fMtx);
 		fWorking = 0;
 
 		if (result && *result)
@@ -117,7 +117,7 @@ ZQ<void> Worker::QCall()
 		fStarter.Clear();
 		fCnd.Broadcast();
 
-		guard.Release();
+		ZRelMtx rel2(fMtx);
 
 		try { sCall(fCallable_Detached, this); }
 		catch (...) {}
@@ -140,27 +140,25 @@ bool Worker::IsWorking()
 
 bool Worker::Attach(ZRef<Starter> iStarter)
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	if (not fStarter)
 		{
 		fStarter = iStarter;
 
-		guard.Release();
 		try
 			{
+			ZRelMtx rel(fMtx);
 			sCall(fCallable_Attached, this);
 			return true;
 			}
 		catch (...) {}
-		guard.Acquire();
 
 		fStarter.Clear();
 		fCnd.Broadcast();
 
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		try { sCall(fCallable_Detached, this); }
 		catch (...) {}
-		guard.Acquire();
 		}
 	return false;
 	}

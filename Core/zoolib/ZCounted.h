@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZThread.h" // For ZBen
+#include "zoolib/ZThread.h" // For ZMtx
 
 namespace ZooLib {
 
@@ -97,7 +97,7 @@ private:
 	ZRef<ZCountedBase> pGetCountedBase();
 	void pClear();
 
-	ZBen fBen;
+	ZMtx fMtx;
 	ZCountedBase* fCountedBase;
 
 	friend class ZCountedBase;

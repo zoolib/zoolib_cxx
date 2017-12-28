@@ -49,7 +49,7 @@ public:
 	virtual void Initialize()
 		{
 		ZCounted::Initialize();
-		ZAcqMtxR acq(fMtxR);
+		ZAcqMtx acq(fMtx);
 
 		ZAssert(not fKeepRunning);
 
@@ -59,7 +59,7 @@ public:
 
 	virtual void Finalize()
 		{
-		ZGuardMtxR guard(fMtxR);
+		ZAcqMtx acq(fMtx);
 		if (not this->FinishFinalize())
 			return;
 
@@ -74,7 +74,7 @@ public:
 		{
 		if (iStartable)
 			{
-			ZGuardMtxR guard(fMtxR);
+			ZAcqMtx acq(fMtx);
 			fStartables.push_back(iStartable);
 			fCnd.Broadcast();
 			return true;
@@ -90,12 +90,13 @@ private:
 		else
 			ZThread::sSetName("Starter_ThreadLoop");
 
-		ZGuardMtxR guard(fMtxR);
+		{ // Scope, so we don't delete fMtx out from under the acq. 
+		ZAcqMtx acq(fMtx);
 
 		while (fKeepRunning)
 			{
 			if (fStartables.empty())
-				{ fCnd.Wait(fMtxR); }
+				{ fCnd.Wait(fMtx); }
 			else
 				{
 				ZRef<ZCounted> self_ref = this;
@@ -104,7 +105,7 @@ private:
 
 				fStartables.swap(toStart);
 
-				guard.Release();
+				ZRelMtx rel(fMtx);
 
 				for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
 					iter != toStart.end(); ++iter)
@@ -112,18 +113,16 @@ private:
 					try { (*iter)->Call(); }
 					catch (...) {}
 					}
-
-				guard.Acquire();
 				}
 			}
-		guard.Release();
+		}
 		delete this;
 		}
 
 	static void spRun(Starter_ThreadLoop* iStarter)
 		{ iStarter->pRun(); }
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fKeepRunning;
 	std::vector<ZRef<Startable> > fStartables;

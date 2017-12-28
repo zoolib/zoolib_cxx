@@ -90,7 +90,7 @@ void StartScheduler::pNextStartAt(double iSystemTime, const Job& iJob)
 
 void StartScheduler::pRun()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
 		if (fTimeJobs.empty())
@@ -120,12 +120,10 @@ void StartScheduler::pRun()
 				sEraseMust(fJobTimes, JobTime(begin->second, begin->first));
 				fTimeJobs.erase(begin);
 
-				guard.Release();
+				ZRelMtx rel(fMtx);
 
 				try { theStarter->QStart(theCallable); }
 				catch (...) {}
-
-				guard.Acquire();
 				}
 			}
 		}

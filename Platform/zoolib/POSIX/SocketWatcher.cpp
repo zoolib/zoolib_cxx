@@ -81,7 +81,7 @@ bool SocketWatcher::QErase(int iSocket, const ZRef<Callable_Void>& iCallable)
 
 void SocketWatcher::pRun()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
 		if (fSet.empty())
@@ -115,11 +115,11 @@ void SocketWatcher::pRun()
 			timeout.tv_sec = 1;
 			timeout.tv_usec = 0;
 
-			guard.Release();
-
-			int count = ::select(largest + 1, &readSet, nullptr, &exceptSet, &timeout);
-
-			guard.Acquire();
+			int count;
+			{
+			ZRelMtx rel(fMtx);
+			count = ::select(largest + 1, &readSet, nullptr, &exceptSet, &timeout);
+			}
 
 			if (count < 1)
 				{
@@ -157,13 +157,12 @@ void SocketWatcher::pRun()
 					break;
 				}
 
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			foreachi (ii, toCall)
 				{
 				try { (*ii)->Call(); }
 				catch (...) {}
 				}
-			guard.Acquire();
 			}
 		}
 	}

@@ -48,7 +48,10 @@ Roster::~Roster()
 
 void Roster::Finalize()
 	{
-	ZGuardMtx guard(fMtx);
+	ZRef<Callable_Void> theCallable;
+
+	{
+	ZAcqMtx acq(fMtx);
 
 	if (not	this->FinishFinalize())
 		return;
@@ -56,9 +59,9 @@ void Roster::Finalize()
 	for (set<Entry*>::const_iterator ii = fEntries.begin(); ii != fEntries.end(); ++ii)
 		(*ii)->fRoster.Clear();
 
-	ZRef<Callable_Void> theCallable = fCallable_Gone;
+	theCallable = fCallable_Gone;
 
-	guard.Release();
+	}
 
 	delete this;
 
@@ -86,9 +89,10 @@ ZRef<Roster::Entry> Roster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broad
 
 void Roster::Broadcast()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
-	guard.Release();
+
+	ZRelMtx rel(fMtx);
 
 	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
 		sCall((*ii)->fCallable_Broadcast);
