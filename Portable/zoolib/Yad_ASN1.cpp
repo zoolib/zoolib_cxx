@@ -244,7 +244,8 @@ void spReadHeader(const ChanR_Bin& r,
 #pragma mark -
 #pragma mark ChanR_RefYad_Definite
 
-// We return this for an definite universal SEQUENCE or SET.
+// We return this for an definite universal SEQUENCE or SET, and as the value for a definite
+// non-universal constructed.
 
 class ChanR_RefYad_Definite
 :	public ChanR_RefYad_Std
@@ -271,7 +272,8 @@ private:
 #pragma mark -
 #pragma mark ChanR_RefYad_Indefinite
 
-// We return this for an indefinite universal SEQUENCE or SET.
+// We return this for an indefinite universal SEQUENCE or SET, and as the value for an indefinite
+// non-universal constructed.
 
 class ChanR_RefYad_Indefinite
 :	public ChanR_RefYad_Std
@@ -302,13 +304,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR_NameRefYad_Constructed
+#pragma mark ChanR_NameRefYad_SingleChild
 
-class ChanR_NameRefYad_Constructed
+// We return this as the value of a non-universal constructed.
+// It'll be a map with a single named element being a sequence.
+
+class ChanR_NameRefYad_SingleChild
 :	public ChanR_NameRefYad_Std
 	{
 public:
-	ChanR_NameRefYad_Constructed(string iName, ZRef<YadR> iChild)
+	ChanR_NameRefYad_SingleChild(string iName, ZRef<YadR> iChild)
 	:	fName(iName)
 	,	fChild(iChild)
 		{}
@@ -329,44 +334,13 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR_NameRefYad_Primitive
-
-// This is what we return for a non-universal primitive. It'll be a map, with a single named element being
-// a stream of bytes.
-
-class ChanR_NameRefYad_Primitive
-:	public ChanR_NameRefYad_Std
-	{
-public:
-	ChanR_NameRefYad_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin, uint64 iLength, string iName)
-	:	fChannerR_Bin(iChannerR_Bin)
-	,	fLength(iLength)
-	,	fName(iName)
-		{}
-
-// From YadSeqR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
-		{
-		if (not iIsFirst)
-			return;
-
-		oName = fName;
-		oYadR = sChanner_Channer_T<ChanR_XX_Limited<byte>>(fLength, fChannerR_Bin);
-		}
-
-private:
-	const ZRef<ChannerR_Bin> fChannerR_Bin;
-	const uint64 fLength;
-	const string fName;
-	};
-
-// =================================================================================================
-#pragma mark -
 
 ZRef<YadR> spMakeYadR_Constructed(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 	ETagClass iTagClass, uint64 iTagNumber, ZQ<uint64> iLengthQ)
 	{
-	if (iTagClass != eTagClass_Universal)
+	if (iTagClass != eTagClass_Universal
+		|| iTagNumber == eTagNumber_Universal_EXTERNAL
+		|| iTagNumber == eTagNumber_Universal_EMBEDDED_PDV)
 		{
 		string theName = spAsString(iTagClass) + sStringf(" %llu", iTagNumber);
 		ZRef<YadR> theChild;
@@ -375,20 +349,19 @@ ZRef<YadR> spMakeYadR_Constructed(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 		else
 			theChild = sChanner_T<ChanR_RefYad_Indefinite>(iChannerR_Bin);
 
-		return sChanner_T<ChanR_NameRefYad_Constructed>(theName, theChild);
+		return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 		}
 
 	// It's a constructed universal.
 	switch (iTagNumber)
 		{
-		case eTagNumber_Universal_EXTERNAL:
-		case eTagNumber_Universal_EMBEDDED_PDV:
 		case eTagNumber_Universal_SEQUENCE:
 		case eTagNumber_Universal_SET:
 			{
 			if (iLengthQ)
 				return sChanner_T<ChanR_RefYad_Definite>(iChannerR_Bin, *iLengthQ);
-			return sChanner_T<ChanR_RefYad_Indefinite>(iChannerR_Bin);
+			else
+				return sChanner_T<ChanR_RefYad_Indefinite>(iChannerR_Bin);
 			}
 		}
 
@@ -428,7 +401,8 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 	if (iTagClass != eTagClass_Universal)
 		{
 		string theName = spAsString(iTagClass) + sStringf(" %llu", iTagNumber);
-		return sChanner_T<ChanR_NameRefYad_Primitive>(iChannerR_Bin, iLength, theName);
+		ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+		return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 		}
 
 	switch (iTagNumber)
@@ -442,8 +416,8 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 				+ spAsString(ETagNumber_Universal(iTagNumber))
 				+ sStringf(" (%llu))", iTagNumber)
 				+ "should not be primitive";
-			return sChanner_T<ChanR_NameRefYad_Primitive>(iChannerR_Bin, iLength, theName);
-			break;
+			ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+			return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 			}
 		}
 
@@ -503,13 +477,12 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 		case eTagNumber_Universal_RELATIVE_OID:
 			{
 			string theName = spAsString(ETagNumber_Universal(iTagNumber));
-			return sChanner_T<ChanR_NameRefYad_Primitive>(iChannerR_Bin, iLength, theName);
+			ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+			return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 			}
 		}
 
 	ZAssert(false);
-
-//		// And finally those that can be either.
 
 	return null;
 	}
