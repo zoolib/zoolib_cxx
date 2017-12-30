@@ -47,18 +47,18 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countRead = sQRead(oDest, iCount, fChanR0))
+			if (const size_t countRead = sQRead(fChanR0, oDest, iCount))
 				return countRead;
 			fFirstIsLive = false;
 			}
-		return sQRead(oDest, iCount, fChanR1);
+		return sQRead(fChanR1, oDest, iCount);
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
 		if (fFirstIsLive)
-			return sSkip(iCount, fChanR0);
-		return sSkip(iCount, fChanR1);
+			return sSkip(fChanR0, iCount);
+		return sSkip(fChanR1, iCount);
 		}
 
 	virtual size_t Readable()
@@ -94,11 +94,11 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
+			if (const size_t countWritten0 = sQWrite(fChanW0, iSource, iCount))
 				return countWritten0;
 			fFirstIsLive = false;
 			}
-		return sQWrite(iSource, iCount, fChanW1);
+		return sQWrite(fChanW1, iSource, iCount);
 		}
 
 	virtual void Flush()
