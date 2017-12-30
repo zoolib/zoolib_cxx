@@ -363,7 +363,7 @@ void MelangeServer::pRead()
 	else
 		ZThread::sSetName("MelangeServer::pRead");
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
 		ZRef<ChannerR_Bin> theChannerR = fChannerR;
@@ -372,11 +372,11 @@ void MelangeServer::pRead()
 		// can abort the connection, and we're unwind. Or pWork can just check for fTimeOfLastRead
 		// getting too stale and do the abort anyway.
 
-		guard.Release();
-
-		const Map_Any theMap = spReadMessage(theChannerR, fDescriptionQ);
-
-		guard.Acquire();
+		Map_Any theMap;
+		{
+		ZRelMtx rel(fMtx);
+		theMap = spReadMessage(theChannerR, fDescriptionQ);
+		}
 
 		fTimeOfLastRead = Time::sSystem();
 
@@ -396,14 +396,15 @@ void MelangeServer::pWrite()
 
 	ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	if (sIsEmpty(fMap_Refcon2Result))
 		{
 		if (fTrueOnce_SendAnEmptyMessage())
 			{
-			guard.Release();
+			{
+			ZRelMtx rel(fMtx);
 			spWriteMessage(*theChannerW, Map_Any(), fDescriptionQ);
-			guard.Acquire();
+			}
 			fTimeOfLastWrite = Time::sSystem();
 			}
 		}
@@ -424,9 +425,10 @@ void MelangeServer::pWrite()
 
 		foreachi (ii, theMessages)
 			{
-			guard.Release();
+			{
+			ZRelMtx rel(fMtx);
 			spWriteMessage(*theChannerW, *ii, fDescriptionQ);
-			guard.Acquire();
+			}
 			fTimeOfLastWrite = Time::sSystem();
 			}
 		}
@@ -440,7 +442,7 @@ void MelangeServer::pWake()
 
 void MelangeServer::pWork()
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	if (Time::sSystem() - fTimeOfLastRead > fConnectionTimeout)
 		{
@@ -535,10 +537,9 @@ void MelangeServer::pWork()
 
 		if (toInsert.size() || toErase.size())
 			{
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			sCall(fMelange.f1, sFirstOrNil(toInsert), toInsert.size(),
 				sFirstOrNil(toErase), toErase.size());
-			guard.Acquire();
 			}
 		}
 
@@ -561,7 +562,7 @@ void MelangeServer::pChanged(
 	const RefReg& iRegistration,
 	const ZRef<Result>& iResult)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	sSet(fMap_Refcon2Result, sGetMust(fMap_Reg2Refcon, iRegistration), iResult);
 
@@ -613,7 +614,7 @@ ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 	// We're probably on our own starter.
 	// Shove it into data structure, and wake the starter, which will itself wake the writer.
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	ZRef<Registration> theRegistration = new Registration(this, iCallable_Changed, iRel);
 
@@ -628,7 +629,7 @@ ZQ<void> Melange_Client::QCall(
 	const Daton* iAsserted, size_t iAssertedCount,
 	const Daton* iRetracted, size_t iRetractedCount)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	while (iAssertedCount--)
 		{
@@ -695,19 +696,19 @@ void Melange_Client::pRead()
 	{
 	ZThread::sSetName("Melange_Client::pRead");
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
 		try
 			{
-			ZRef<ChannerForRead> theChanner = this->pEnsureChannerR(guard);
+			ZRef<ChannerForRead> theChanner = this->pEnsureChannerR();
 
 			if (not theChanner)
 				continue;
 
 			Map_Any theMap;
 			{
-			ZRelGuardR rel(guard);
+			ZRelMtx rel(fMtx);
 			theMap = spReadMessage(sChanner_Channer_T<ChanR_Bin_AbortOnSlowRead>(15, theChanner), null);
 			}
 
@@ -725,13 +726,13 @@ void Melange_Client::pWrite()
 	{
 	ZThread::sSetName("Melange_Client::pWrite");
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
 		if (sIsEmpty(fQueue_ToWrite))
 			{
 			// Give it a second to fill up.
-			fCnd.WaitFor(fMtxR, 1);
+			fCnd.WaitFor(fMtx, 1);
 			if (sIsEmpty(fQueue_ToWrite))
 				{
 				// It's still empty, drop out of the loop and let the thread dispose.
@@ -739,7 +740,7 @@ void Melange_Client::pWrite()
 				}
 			}
 
-		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW(guard);
+		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW();
 		if (not theChannerW)
 			break;
 
@@ -748,7 +749,7 @@ void Melange_Client::pWrite()
 
 		try
 			{
-			ZRelGuardR rel(guard);
+			ZRelMtx rel(fMtx);
 			foreachi (ii, theMessages)
 				spWriteMessage(*theChannerW, *ii, null);
 			}
@@ -768,12 +769,14 @@ void Melange_Client::pWork()
 	{
 	// Handle everything that's in fQueue_Read -- mainly doing change notifications
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	// Pull stuff from fQueue_Read
 	vector<Map_Any> theMessages;
 	swap(fQueue_Read, theMessages);
-	guard.Release();
+
+	{
+	ZRelMtx rel(fMtx);
 
 	foreachv (Map_Any theMessage, theMessages)
 		{
@@ -790,8 +793,7 @@ void Melange_Client::pWork()
 
 	// Invoke everything that needed to be called from us as a starter.
 	Starter_EventLoopBase::pInvokeClearQueue();
-
-	guard.Acquire();
+	}
 
 	if (sNotEmpty(theMessages))
 		{
@@ -864,16 +866,16 @@ void Melange_Client::pWork()
 		}
 	}
 
-ZRef<Melange_Client::ChannerForRead> Melange_Client::pEnsureChannerR(ZGuardMtxR& iGuard)
-	{ return this->pEnsureChanner(iGuard); }
+ZRef<Melange_Client::ChannerForRead> Melange_Client::pEnsureChannerR()
+	{ return this->pEnsureChanner(); }
 
-ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW(ZGuardMtxR& iGuard)
-	{ return this->pEnsureChanner(iGuard); }
+ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW()
+	{ return this->pEnsureChanner(); }
 
-ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuard)
+ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner()
 	{
 	while (fGettingChanner)
-		fCnd.WaitFor(fMtxR, 5);
+		fCnd.WaitFor(fMtx, 5);
 
 	if (not fChanner)
 		{
@@ -897,14 +899,16 @@ ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuar
 
 		SaveSetRestore<bool> theSSR(fGettingChanner, true);
 
-		iGuard.Release();
+		ZRef<Channer_t> theChanner;
+		{
+		ZRelMtx rel(fMtx);
 
 		if (ZLOGF(w, eDebug - 1))
 			w << "No Channer";
 
 		sCall(fCallable_Status, false);
 
-		ZRef<Channer_t> theChanner = sCall(fFactory);
+		theChanner = sCall(fFactory);
 		if (not theChanner)
 			{
 			// No Channer was available, pause for 1s.
@@ -919,8 +923,7 @@ ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuar
 
 			sCall(fCallable_Status, true);
 			}
-
-		iGuard.Acquire();
+		}
 
 		fChanner = theChanner;
 		fCnd.Broadcast();
@@ -931,7 +934,7 @@ ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner(ZGuardMtxR& iGuar
 
 void Melange_Client::pFinalize(Registration* iRegistration)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	if (not iRegistration->FinishFinalize())
 		return;
 

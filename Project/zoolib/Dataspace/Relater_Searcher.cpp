@@ -445,7 +445,7 @@ void Relater_Searcher::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
@@ -517,7 +517,7 @@ void Relater_Searcher::ModifyRegistrations(
 
 	if (sNotEmpty(fClientQuery_NeedsWork) || sNotEmpty(fPQuery_NeedsWork))
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		Relater::pTrigger_RelaterResultsAvailable();
 		}
 	}
@@ -590,15 +590,15 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 
 	this->pCollectResultsFromSearcher();
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
 		{
 		PQuery* thePQuery = eraser.Current();
 
-		guard.Release();
-
+		{
+		ZRelMtx rel(fMtx);
 		ZAssert(not thePQuery->fResult);
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
@@ -620,8 +620,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 				spDump(theWalker, w);
 				}
 			}
-
-		guard.Acquire();
+		}
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 			iter = thePQuery->fClientQuery_InPQuery; iter; iter.Advance())
@@ -651,8 +650,8 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 			sEraseMust(kDebug, fMap_Refcon_PRegSearch, thePRegSearchStar->fRefconInSearcher);
 			}
 		}
-	guard.Release();
 
+	ZRelMtx rel(fMtx);
 	if (sNotEmpty(toRemove))
 		fSearcher->ModifyRegistrations(nullptr, 0, &toRemove[0], toRemove.size());
 	}
@@ -665,7 +664,7 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 	vector<SearchResult> theSearchResults;
 	fSearcher->CollectResults(theSearchResults);
 
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 	for (vector<SearchResult>::const_iterator ii = theSearchResults.begin();
 		ii != theSearchResults.end(); ++ii)
 		{
@@ -686,7 +685,7 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
 	{
 	Relater::pTrigger_RelaterResultsAvailable();
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	fCnd.Broadcast();
 	}
 
@@ -723,7 +722,7 @@ ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 
 bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	if (not iWalker_Bingo->fPRegSearch)
 		{
 		ZRef<Expr_Bool> theRestriction = iWalker_Bingo->fRestriction;
@@ -763,7 +762,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 
 			const AddedSearch theAS(thePRegSearchStar->fRefconInSearcher, theSearchSpec);
 
-			guard.Release();
+			ZRelMtx rel(fMtx);
 
 			fSearcher->ModifyRegistrations(&theAS, 1, nullptr, 0);
 
@@ -771,14 +770,12 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 				{
 				this->pCollectResultsFromSearcher();
 
-				guard.Acquire();
+				ZAcqMtx acq(fMtx);
 
 				if (thePRegSearchStar->fResult)
 					break;
 
-				fCnd.Wait(fMtxR);
-
-				guard.Release();
+				fCnd.Wait(fMtx);
 				}
 			}
 
@@ -815,7 +812,7 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	ZRef<Walker_Bingo> theWalker = new Walker_Bingo(this,
 		iPQuery, iRelHead_Bound, iSearchSpec.GetConcreteHead(), iSearchSpec.GetRestriction());
 	return theWalker;

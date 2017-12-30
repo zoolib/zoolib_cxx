@@ -687,7 +687,7 @@ void Searcher_Datons::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
@@ -771,7 +771,7 @@ void Searcher_Datons::ModifyRegistrations(
 
 	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		Searcher::pTriggerSearcherResultsAvailable();
 		}
 	}
@@ -786,7 +786,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 	{
 	Searcher::pCollectResultsCalled();
 
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	oChanged.clear();
 
@@ -930,7 +930,7 @@ void Searcher_Datons::MakeChanges(
 	if (not iAssertedCount and not iRetractedCount)
 		return;
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	while (iAssertedCount--)
 		{
@@ -970,7 +970,7 @@ void Searcher_Datons::MakeChanges(
 
 	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		Searcher::pTriggerSearcherResultsAvailable();
 		}
 	}

@@ -109,13 +109,13 @@ ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 	{
 	ZRef<Registration> theR = new Registration(this, iCallable_Changed, iRel);
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	sInsertMust(fToAdd, theR.Get());
 
 	if (not fCalled_NeedsUpdate())
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		sCall(fCallable_NeedsUpdate);
 		}
 
@@ -124,14 +124,11 @@ ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 
 void RelsWatcher_Relater::Update()
 	{
-	ZGuardMtxR guard(fMtxR);
+	{
+	ZAcqMtx acq(fMtx);
 	fCalled_NeedsUpdate.Reset();
 
-	if (sIsEmpty(fToAdd) && sIsEmpty(fToRemove))
-		{
-		guard.Release();
-		}
-	else
+	if (sNotEmpty(fToAdd) || sNotEmpty(fToRemove))
 		{
 		vector<AddedQuery> added;
 		foreacha (rr, fToAdd)
@@ -145,12 +142,13 @@ void RelsWatcher_Relater::Update()
 
 		vector<int64> removed(fToRemove.begin(), fToRemove.end());
 		fToRemove.clear();
-		guard.Release();
 
+		ZRelMtx rel(fMtx);
 		fRelater->ModifyRegistrations(
 			sFirstOrNil(added), added.size(),
 			sFirstOrNil(removed), removed.size());
 		}
+	}
 
 	// Pick up any results
 	vector<QueryResult> theQueryResults;
@@ -158,10 +156,10 @@ void RelsWatcher_Relater::Update()
 
 	if (sNotEmpty(theQueryResults))
 		{
+		// This vector must be outside the mutex acq, so any reg that goes out of scope
+		// does not finalize and attempt to double-acquire the mutex. 
 		vector<ZRef<Registration> > changes;
-
-		guard.Acquire();
-
+		ZAcqMtx acq(fMtx);
 		foreachi (iterQueryResults, theQueryResults)
 			{
 			Map_RefconToRegistrationX::iterator iterRegistration =
@@ -175,8 +173,7 @@ void RelsWatcher_Relater::Update()
 			theRegistration->fResult = iterQueryResults->GetResult();
 			changes.push_back(theRegistration);
 			}
-		guard.Release();
-
+		ZRelMtx rel(fMtx);
 		foreacha (rr, changes)
 			{ sCall(rr->fCallable, rr, rr->fResult); }
 		}
@@ -184,17 +181,17 @@ void RelsWatcher_Relater::Update()
 
 void RelsWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	if (not fCalled_NeedsUpdate())
 		{
-		guard.Release();
+		ZRelMtx rel(fMtx);
 		sCall(fCallable_NeedsUpdate);
 		}
 	}
 
 void RelsWatcher_Relater::pFinalize(Registration* iRegistration)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	if (not iRegistration->FinishFinalize())
 		return;
@@ -213,7 +210,7 @@ void RelsWatcher_Relater::pFinalize(Registration* iRegistration)
 
 		if (not fCalled_NeedsUpdate())
 			{
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			sCall(fCallable_NeedsUpdate);
 			}
 		}

@@ -62,7 +62,7 @@ protected:
 	bool pCollectResultsFromSearcher();
 	void pSearcherResultsAvailable(ZRef<Searcher>);
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
 
 	ZRef<Searcher> fSearcher;

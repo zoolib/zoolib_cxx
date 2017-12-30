@@ -60,7 +60,7 @@ public:
 	void EraseRelater(ZRef<Relater> iRelater);
 
 private:
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 
 	class PQuery;
 

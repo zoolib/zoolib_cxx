@@ -69,7 +69,7 @@ private:
 
 	const Melange_t fMelange;
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
 
 	const ZRef<ChannerR_Bin> fChannerR;
@@ -148,16 +148,16 @@ private:
 	void pWork();
 	StartScheduler::Job fJob;
 
-	ZRef<ChannerForRead> pEnsureChannerR(ZGuardMtxR& iGuard);
-	ZRef<ChannerW_Bin> pEnsureChannerW(ZGuardMtxR& iGuard);
-	ZRef<Channer_t> pEnsureChanner(ZGuardMtxR& iGuard);
+	ZRef<ChannerForRead> pEnsureChannerR();
+	ZRef<ChannerW_Bin> pEnsureChannerW();
+	ZRef<Channer_t> pEnsureChanner();
 
 	void pFinalize(Registration* iRegistration);
 
 	const ZRef<Factory_Channer> fFactory;
 	const ZRef<Callable_Status> fCallable_Status;
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
 
 	bool fGettingChanner;

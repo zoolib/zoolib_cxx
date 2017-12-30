@@ -117,12 +117,12 @@ void Relater::pCalled_RelaterCollectResults()
 
 void Relater::pTrigger_RelaterResultsAvailable()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	if (not fCalled_RelaterResultsAvailable())
 		{
 		if (ZRef<Callable_RelaterResultsAvailable> theCallable = fCallable_RelaterResultsAvailable)
 			{
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			theCallable->Call(this);
 			}
 		}

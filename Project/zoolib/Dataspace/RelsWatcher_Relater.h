@@ -62,7 +62,7 @@ private:
 	class Registration;
 	void pFinalize(Registration* iRegistration);
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 
 	ZRef<Relater> fRelater;
 

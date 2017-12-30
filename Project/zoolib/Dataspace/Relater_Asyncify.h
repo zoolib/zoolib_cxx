@@ -64,7 +64,7 @@ private:
 
 	void pResultsAvailable(ZRef<Relater> iRelater);
 
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 	ZCnd fCnd;
 	ZRef<Relater> fRelater;
 

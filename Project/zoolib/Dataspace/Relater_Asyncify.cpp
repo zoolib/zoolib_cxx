@@ -71,7 +71,7 @@ void Relater_Asyncify::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	while (iAddedCount--)
 		{
@@ -101,7 +101,7 @@ void Relater_Asyncify::ModifyRegistrations(
 
 void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 	Relater::pCalled_RelaterCollectResults();
 
 	oChanged.reserve(fPendingResults.size());
@@ -120,16 +120,16 @@ void Relater_Asyncify::CrankIt()
 
 void Relater_Asyncify::Shutdown()
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 	while (fTriggered_Update)
-		fCnd.Wait(fMtxR);
+		fCnd.Wait(fMtx);
 	// Fake, to prevent pTrigger_Update from operating
 	fTriggered_Update = true;
 	}
 
 void Relater_Asyncify::pTrigger_Update()
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 	if (sGetSet(fTriggered_Update, true))
 		return;
 
@@ -140,7 +140,7 @@ void Relater_Asyncify::pUpdate()
 	{
 	ZThread::sSleep(2);
 
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	for (;;)
 		{
@@ -157,17 +157,16 @@ void Relater_Asyncify::pUpdate()
 
 		if (theAdds.size() || theRemoves.size())
 			{
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			didAnything = true;
 			fRelater->ModifyRegistrations(sFirstOrNil(theAdds), theAdds.size(),
 				sFirstOrNil(theRemoves), theRemoves.size());
-			guard.Acquire();
 			}
 
 		if (fNeeds_RelaterCollectResults)
 			{
 			fNeeds_RelaterCollectResults = false;
-			guard.Release();
+			ZRelMtx rel(fMtx);
 
 			vector<QueryResult> changes;
 			fRelater->CollectResults(changes);
@@ -175,15 +174,15 @@ void Relater_Asyncify::pUpdate()
 			if (changes.size())
 				{
 				didAnything = true;
-				guard.Acquire();
 
+				{
+				ZAcqMtx acq(fMtx);
 				foreachi (iter, changes)
 					fPendingResults[iter->GetRefcon()] = *iter;
+				}
 
-				guard.Release();
 				Relater::pTrigger_RelaterResultsAvailable();
 				}
-			guard.Acquire();
 			}
 
 		if (not didAnything)
@@ -195,7 +194,7 @@ void Relater_Asyncify::pUpdate()
 
 void Relater_Asyncify::pResultsAvailable(ZRef<Relater> iRelater)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 	fNeeds_RelaterCollectResults = true;
 	this->pTrigger_Update();
 	}

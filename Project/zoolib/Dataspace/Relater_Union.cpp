@@ -784,7 +784,7 @@ void Relater_Union::Initialize()
 
 bool Relater_Union::Intersects(const RelHead& iRelHead)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	foreachi (iterRelater, fMap_Relater_PRelater)
 		{
@@ -799,7 +799,7 @@ void Relater_Union::ModifyRegistrations(
 	const AddedQuery* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
 	{
-	ZGuardMtxR guard(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	// -----------------
 
@@ -885,7 +885,7 @@ void Relater_Union::ModifyRegistrations(
 			sInsertBackMust(fClientQuery_NeedsWork, theClientQuery);
 		}
 
-	guard.Release();
+	ZRelMtx rel(fMtx);
 	Relater::pTrigger_RelaterResultsAvailable();
 	}
 
@@ -893,7 +893,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 	{
 	Relater::pCalled_RelaterCollectResults();
 
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	// -----------------
 
@@ -1012,7 +1012,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 
 void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 
 	// We can't add Relaters on the fly -- require that no queries exist yet.
 	ZAssertStop(kDebug, fMap_Refcon_ClientQuery.empty());
@@ -1024,7 +1024,7 @@ void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix
 
 void Relater_Union::EraseRelater(ZRef<Relater> iRelater)
 	{
-	ZAcqMtxR acq(fMtxR);
+	ZAcqMtx acq(fMtx);
 	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
 	PRelater& thePRelater = iterRelater->second;
 	vector<int64> toRemove;
@@ -1203,10 +1203,11 @@ void Relater_Union::pCollectFrom(PRelater* iPRelater)
 
 void Relater_Union::pResultsAvailable(ZRef<Relater> iRelater)
 	{
-	ZGuardMtxR guard(fMtxR);
+	{
+	ZAcqMtx acq(fMtx);
 	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
 	sQInsertBack(fPRelater_CollectFrom, &iterRelater->second);
-	guard.Release();
+	}
 	Relater::pTrigger_RelaterResultsAvailable();
 	}
 

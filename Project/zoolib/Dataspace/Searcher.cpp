@@ -174,13 +174,13 @@ void Searcher::pCollectResultsCalled()
 
 void Searcher::pTriggerSearcherResultsAvailable()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	if (not fCalled_SearcherResultsAvailable())
 		{
 		if (ZRef<Callable_SearcherResultsAvailable> theCallable =
 			fCallable_SearcherResultsAvailable)
 			{
-			guard.Release();
+			ZRelMtx rel(fMtx);
 			theCallable->Call(this);
 			}
 		}

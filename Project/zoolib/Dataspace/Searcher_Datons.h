@@ -61,7 +61,7 @@ public:
 		const Daton* iRetracted, size_t iRetractedCount);
 
 private:
-	ZMtxR fMtxR;
+	ZMtx fMtx;
 
 	typedef std::map<Daton,Val_Any> Map_Thing;
 
