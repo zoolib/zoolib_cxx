@@ -105,13 +105,24 @@ public:
 //	Channer_T(T... args) : Chan_p(args...) {}
 
 	template <class T0>
-	Channer_T(const T0& iT0) : Chan_p(iT0) {}
+	Channer_T(const T0& iT0)
+	:	Chan_p(iT0)
+		{}
 
 	template <class T0, class T1>
-	Channer_T(const T0& iT0, const T1& iT1) : Chan_p(iT0, iT1) {}
+	Channer_T(const T0& iT0, const T1& iT1)
+	:	Chan_p(iT0, iT1)
+		{}
 
 	template <class T0, class T1, class T2>
-	Channer_T(const T0& iT0, const T1& iT1, const T2& iT2) : Chan_p(iT0, iT1, iT2) {}
+	Channer_T(const T0& iT0, const T1& iT1, const T2& iT2)
+	:	Chan_p(iT0, iT1, iT2)
+		{}
+
+	template <class T0, class T1, class T2, class T3>
+	Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const T3& iT3)
+	:	Chan_p(iT0, iT1, iT2, iT3)
+		{}
 	};
 
 template <class Chan_p>
@@ -125,6 +136,14 @@ ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0)
 template <class Chan_p, class T0, class T1>
 ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1)
 	{ return new Channer_T<Chan_p>(iT0, iT1); }
+
+template <class Chan_p, class T0, class T1, class T2>
+ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1, const T2& iT2)
+	{ return new Channer_T<Chan_p>(iT0, iT1, iT2); }
+
+template <class Chan_p, class T0, class T1, class T2, class T3>
+ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1, const T2& iT2, const T3& iT3)
+	{ return new Channer_T<Chan_p>(iT0, iT1, iT2, iT3); }
 
 // =================================================================================================
 #pragma mark -
@@ -154,15 +173,33 @@ public:
 	,	fOther(iOther)
 		{}
 
+	template <class T0, class ChannerOther_p>
+	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0)
+	:	inherited(*iOther, iT0)
+	,	fOther(iOther)
+		{}
+
 	template <class T0, class T1, class ChannerOther_p>
 	Channer_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
 	:	inherited(iT0, iT1, *iOther)
 	,	fOther(iOther)
 		{}
 
+	template <class T0, class T1, class ChannerOther_p>
+	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1)
+	:	inherited(*iOther, iT0, iT1)
+	,	fOther(iOther)
+		{}
+
 	template <class T0, class T1, class T2, class ChannerOther_p>
 	Channer_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
 	:	inherited(iT0, iT1, iT2, *iOther)
+	,	fOther(iOther)
+		{}
+
+	template <class T0, class T1, class T2, class ChannerOther_p>
+	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1, const T2& iT2)
+	:	inherited(*iOther, iT0, iT1, iT2)
 	,	fOther(iOther)
 		{}
 
@@ -179,15 +216,30 @@ ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const ZRef<ChannerOther_p>& iOther)
 	{ return new Channer_Channer_T<Chan_p>(iT0, iOther); }
 
+template <class Chan_p, class T0, class ChannerOther_p>
+ZRef<Channer_Channer_T<Chan_p>>
+sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0)
+	{ return new Channer_Channer_T<Chan_p>(iOther, iT0); }
+
 template <class Chan_p, class T0, class T1, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
 	{ return new Channer_Channer_T<Chan_p>(iT0, iT1, iOther); }
 
+template <class Chan_p, class T0, class T1, class ChannerOther_p>
+ZRef<Channer_Channer_T<Chan_p>>
+sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1)
+	{ return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1); }
+
 template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
 	{ return new Channer_Channer_T<Chan_p>(iT0, iT1, iT2, iOther); }
+
+template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
+ZRef<Channer_Channer_T<Chan_p>>
+sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1, const T2& iT2)
+	{ return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1, iT2); }
 
 } // namespace ZooLib
 
