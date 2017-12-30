@@ -607,6 +607,9 @@ void ChanRU_UTF::pAdvance()
 		}
 	}
 
+ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
+	{ return sChanner_Channer_T<ChanRU_UTF>(iChanner); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark ZML parsing support
