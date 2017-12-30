@@ -924,6 +924,7 @@ public:
 			// or if iOptions.fBreakStrings is true, any element is a string with embedded
 			// line breaks or more than iOptions.fStringLineLength characters.
 			//##needsIndentation = not iYadSeqR->IsSimple(fOptions);
+			needsIndentation = true;
 			}
 
 		if (needsIndentation)
@@ -1005,6 +1006,7 @@ public:
 		if (fOptions.DoIndentation())
 			{
 			//##needsIndentation = not iYadMapR->IsSimple(fOptions);
+			needsIndentation = true;
 			}
 
 		const bool useSingleQuotes = fOptions.fPreferSingleQuotes.DGet(false);
