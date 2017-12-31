@@ -468,8 +468,6 @@ void ChanRU_UTF::pAdvance() const
 
 void ChanRU_UTF::pAdvance()
 	{
-//	using namespace ZUtil_Strim;
-
 	fTagAttributes.clear();
 
 	for	(;;)
