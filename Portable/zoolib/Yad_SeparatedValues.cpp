@@ -19,12 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_DividedValues.h"
-
-#if 0
+#include "zoolib/Yad_SeparatedValues.h"
+#include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
-namespace ZYad_DividedValues {
+namespace Yad_SeparatedValues {
 
 using std::string;
 using std::vector;
@@ -34,7 +33,7 @@ using std::vector;
 #pragma mark Static parsing functions
 
 static bool spReadValues(vector<string8>& oValues,
-	UTF32 iDivider_Value, UTF32 iDivider_Line, const ZStrimR& iStrimR)
+	UTF32 iDivider_Value, UTF32 iDivider_Line, const ChanR_UTF& iStrimR)
 	{
 	bool gotAny = false;
 	oValues.clear();
@@ -42,7 +41,7 @@ static bool spReadValues(vector<string8>& oValues,
 	for (;;)
 		{
 		UTF32 theCP;
-		if (not iStrimR.ReadCP(theCP))
+		if (not sQRead(iStrimR ,theCP))
 			{
 			oValues.push_back(curValue);
 			break;
@@ -85,56 +84,54 @@ ParseException::ParseException(const char* iWhat)
 #pragma mark -
 #pragma mark YadSeqR
 
-class YadSeqR : public ZYadSeqR
+class ChanR_RefYad : public ChanR_RefYad_Std
 	{
 public:
-	YadSeqR(const vector<string8>& iNames,
-		UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR);
+	ChanR_RefYad(const vector<string8>& iNames,
+		UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
 
-// From ZYadSeqR
-	virtual ZRef<ZYadR> ReadInc();
+// From ChanR_RefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
 	vector<string8> fNames;
 	UTF32 fDivider_Value;
 	UTF32 fDivider_Line;
-	ZRef<ZStrimmerR> fStrimmerR;
+	ZRef<ChannerR_UTF> fChannerR_UTF;
 	};
 
-YadSeqR::YadSeqR(const vector<string8>& iNames,
-	UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ZStrimmerR> iStrimmerR)
+ChanR_RefYad::ChanR_RefYad(const vector<string8>& iNames,
+	UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF)
 :	fNames(iNames)
 ,	fDivider_Value(iDivider_Value)
 ,	fDivider_Line(iDivider_Line)
-,	fStrimmerR(iStrimmerR)
+,	fChannerR_UTF(iChannerR_UTF)
 	{}
 
-ZRef<ZYadR> YadSeqR::ReadInc()
+void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	vector<string8> theValues;
-	if (!spReadValues(theValues, fDivider_Value, fDivider_Line, fStrimmerR->GetStrimR()))
-		return null;
+	if (not spReadValues(theValues, fDivider_Value, fDivider_Line, *fChannerR_UTF))
+		return;
 
-	ZMap_Any theMap;
+	Map_Any theMap;
 	for (size_t x = 0; x < fNames.size() && x < theValues.size(); ++x)
 		theMap.Set(fNames[x], theValues[x]);
-	return sYadR(theMap);
+	oYadR = sYadR(theMap);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<ZYadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ZStrimmerR> iStrimmerR)
+ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ChannerR_UTF> iChannerR_UTF)
 	{
 	// Read the first line and build list of property names.
 	vector<string8> values;
-	if (!spReadValues(values, iDivider_Value, iDividerLine, iStrimmerR->GetStrimR()))
+	if (!spReadValues(values, iDivider_Value, iDividerLine, *iChannerR_UTF))
 		return null;
-	return new YadSeqR(values, iDivider_Value, iDividerLine, iStrimmerR);
+	return sChanner_T<ChanR_RefYad>(values, iDivider_Value, iDividerLine, iChannerR_UTF);
 	}
 
-} // namespace ZYad_DividedValues
+} // namespace Yad_SeparatedValues
 } // namespace ZooLib
-
-#endif

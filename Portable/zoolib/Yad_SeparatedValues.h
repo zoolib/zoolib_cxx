@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Yad_DividedValues_h__
-#define __ZooLib_Yad_DividedValues_h__ 1
+#ifndef __ZooLib_Yad_SeparatedValues_h__
+#define __ZooLib_Yad_SeparatedValues_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ML.h"
 #include "zoolib/Yad.h"
 
 namespace ZooLib {
-namespace Yad_DividedValues {
+namespace Yad_SeparatedValues {
 
 // =================================================================================================
 #pragma mark -
@@ -43,9 +43,9 @@ public:
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iStrimmerR);
+ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
 
-} // namespace ZYad_DividedValues
+} // namespace Yad_SeparatedValues
 } // namespace ZooLib
 
-#endif // __ZooLib_Yad_DividedValues_h__
+#endif // __ZooLib_Yad_SeparatedValues_h__
