@@ -18,78 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_ML_h__
-#define __ZYad_ML_h__ 1
+#ifndef __ZooLib_Yad_ML_h__
+#define __ZooLib_Yad_ML_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZML.h"
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/ML.h"
+#include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
+namespace Yad_ML {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadParseException_ML
+#pragma mark YadParseException_ML
 
-class ZYadParseException_ML : public ZYadParseException_Std
+class YadParseException_ML : public YadParseException_Std
 	{
 public:
-	ZYadParseException_ML(const std::string& iWhat);
-	ZYadParseException_ML(const char* iWhat);
+	YadParseException_ML(const std::string& iWhat);
+	YadParseException_ML(const char* iWhat);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadStrimmerR_ML
+#pragma mark ChanR_NameRefYad
 
-class ZYadStrimmerR_ML
-:	public virtual ZYadStrimmerR
+class ChanR_NameRefYad
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	ZYadStrimmerR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
+	ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF);
+	ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF, const ML::Attrs_t& iAttrs);
+	ChanR_NameRefYad(
+		ZRef<ML::ChannerRU_UTF> iChannerRU_UTF, const std::string& iTagName, const ML::Attrs_t& iAttrs);
 
 // From ZYadR
-	virtual void Finish();
-
-// From ZStrimmerU via ZYadStrimmerR
-	virtual const ZStrimR& GetStrimR();
-
-// Our protocol
-	ZML::StrimU& GetStrim();
-
-private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZYadMapR_ML
-
-class ZYadMapR_ML
-:	public virtual ZYadMapR_Std
-	{
-public:
-	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
-	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iAttrs);
-	ZYadMapR_ML(
-		ZRef<ZML::StrimmerU> iStrimmerU, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
-
-// From ZYadR
-	virtual ZRef<ZYadR> Meta();
+	virtual ZRef<YadR> Meta();
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 // Our protocol
-	ZML::Attrs_t GetAttrs();
+	ML::Attrs_t GetAttrs();
 
 private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-
+	ZRef<ML::ChannerRU_UTF> fChannerRU_UTF;
 	const std::string fTagName;
-	const ZML::Attrs_t fAttrs;
+	const ML::Attrs_t fAttrs;
+	bool fLastWasText;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF);
+
+} // namespace Yad_ML
 } // namespace ZooLib
 
-#endif // __ZYad_ML_h__
+#endif // __ZooLib_Yad_ML_h__

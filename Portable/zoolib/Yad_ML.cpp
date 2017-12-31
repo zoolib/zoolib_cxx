@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_ML.h"
-#include "zoolib/ZYad_Any.h"
+#include "zoolib/Yad_ML.h"
+#include "zoolib/Yad_Any.h"
 
 namespace ZooLib {
+namespace Yad_ML {
 
 using std::string;
 using std::vector;
@@ -40,65 +41,50 @@ for walking HTML.
 
 static void spThrowParseException(const string& iMessage)
 	{
-	throw ZYadParseException_ML(iMessage);
+	throw YadParseException_ML(iMessage);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ZYadParseException_ML
 
-ZYadParseException_ML::ZYadParseException_ML(const string& iWhat)
-:	ZYadParseException_Std(iWhat)
+YadParseException_ML::YadParseException_ML(const string& iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
-ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
-:	ZYadParseException_Std(iWhat)
+YadParseException_ML::YadParseException_ML(const char* iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZYadStrimmerR_ML
+#pragma mark ChanR_NameRefYad
 
-ZYadStrimmerR_ML::ZYadStrimmerR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU)
+ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
+:	fChannerRU_UTF(iChannerRU_UTF)
+,	fLastWasText(false)
 	{}
 
-void ZYadStrimmerR_ML::Finish()
-	{ sSkipText(fStrimmerU->GetStrim()); }
-
-const ZStrimR& ZYadStrimmerR_ML::GetStrimR()
-	{ return fStrimmerU->GetStrimR(); }
-
-ZML::StrimU& ZYadStrimmerR_ML::GetStrim()
-	{ return fStrimmerU->GetStrim(); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZYadMapR_ML
-
-ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU)
-:	fStrimmerU(iStrimmerU)
+ChanR_NameRefYad::ChanR_NameRefYad(
+	ZRef<ML::ChannerRU_UTF> iChannerRU_UTF, const string& iTagName, const ML::Attrs_t& iAttrs)
+:	fChannerRU_UTF(iChannerRU_UTF)
+,	fTagName(iTagName)
+,	fAttrs(iAttrs)
+,	fLastWasText(false)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(
-	ZRef<ZML::StrimmerU> iStrimmerU, const string& iTagName, const ZML::Attrs_t& iAttrs)
-:	fStrimmerU(iStrimmerU),
-	fTagName(iTagName),
-	fAttrs(iAttrs)
+ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF, const ML::Attrs_t& iAttrs)
+:	fChannerRU_UTF(iChannerRU_UTF)
+,	fAttrs(iAttrs)
+,	fLastWasText(false)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iAttrs)
-:	ZYadMapR_Std(true),
-	fStrimmerU(iStrimmerU),
-	fAttrs(iAttrs)
-	{}
-
-ZRef<ZYadR> ZYadMapR_ML::Meta()
+ZRef<YadR> ChanR_NameRefYad::Meta()
 	{
 	if (!fAttrs.empty())
 		{
-		ZMap_Any theMap;
-		for (ZML::Attrs_t::const_iterator ii = fAttrs.begin(); ii != fAttrs.end(); ++ii)
+		Map_Any theMap;
+		for (ML::Attrs_t::const_iterator ii = fAttrs.begin(); ii != fAttrs.end(); ++ii)
 			theMap.Set(ii->first, ii->second);
 		return sYadR(theMap);
 		}
@@ -106,48 +92,64 @@ ZRef<ZYadR> ZYadMapR_ML::Meta()
 	return null;
 	}
 
-ZML::Attrs_t ZYadMapR_ML::GetAttrs()
+ML::Attrs_t ChanR_NameRefYad::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
+void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
-	ZML::StrimU& theR = fStrimmerU->GetStrim();
+	ML::ChanRU_UTF& theChan = *fChannerRU_UTF;
+
+	if (sGetSet(fLastWasText, false))
+		theChan.Advance();
 
 	if (!fTagName.empty())
 		{
-		if (sTryRead_End(theR, fTagName))
+		if (sTryRead_End(theChan, fTagName))
 			return;
 		}
 
-	oName = theR.Name();
+	oName = theChan.Name();
 
-	switch (theR.Current())
+	switch (theChan.Current())
 		{
-		case ZML::eToken_TagBegin:
+		case ML::eToken_TagBegin:
 			{
-			const ZML::Attrs_t theAttrs = theR.Attrs();
-			theR.Advance();
-			oYadR = new ZYadMapR_ML(fStrimmerU, oName, theAttrs);
+			const ML::Attrs_t theAttrs = theChan.Attrs();
+			theChan.Advance();
+			oYadR = sChanner_T<ChanR_NameRefYad>(fChannerRU_UTF, oName, theAttrs);
 			break;
 			}
-		case ZML::eToken_TagEmpty:
+		case ML::eToken_TagEmpty:
 			{
-			const ZML::Attrs_t theAttrs = theR.Attrs();
-			theR.Advance();
-			oYadR = new ZYadMapR_ML(fStrimmerU, theAttrs);
+			const ML::Attrs_t theAttrs = theChan.Attrs();
+			theChan.Advance();
+			oYadR = sChanner_T<ChanR_NameRefYad>(fChannerRU_UTF, theAttrs);
 			break;
 			}
-		case ZML::eToken_Text:
+		case ML::eToken_Text:
 			{
-			oYadR = new ZYadStrimmerR_ML(fStrimmerU);
+			fLastWasText = true;
+			oYadR = fChannerRU_UTF;
 			break;
 			}
 		default:
 			break;
 		}
 
-	if (!oYadR && !fTagName.empty())
+	if (not oYadR && not fTagName.empty())
 		spThrowParseException("Expected value or end tag '" + fTagName + "'");
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
+	{
+	if (iChannerRU_UTF)
+		return sChanner_T<ChanR_NameRefYad>(iChannerRU_UTF);
+	return null;
+	}
+
+} // namespace Yad_ML
 } // namespace ZooLib
