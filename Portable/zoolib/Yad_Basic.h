@@ -18,21 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Basic_h__
-#define __ZYad_Basic_h__ 1
+#ifndef __ZooLib_Yad_Basic_h__
+#define __ZooLib_Yad_Basic_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrimmer.h"
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
-namespace ZYad_Basic {
+namespace Yad_Basic {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ParseException
 
-class ParseException : public ZYadParseException_Std
+class ParseException : public YadParseException_Std
 	{
 public:
 	ParseException(const std::string& iWhat);
@@ -53,9 +52,10 @@ struct Options
 	// Perhaps should make sure we differentiate terminator and separator?
 	};
 
-ZRef<ZYadMapR> sYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU);
+ZRef<Channer<ChanR_NameRefYad>> sYadR(const Options& iOptions,
+	ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF);
 
-} // namespace ZYad_Basic
+} // namespace Yad_Basic
 } // namespace ZooLib
 
-#endif // __ZYad_Basic_h__
+#endif // __ZooLib_Yad_Basic_h__

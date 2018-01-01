@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ChanW_UTF_string.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Util_Chan.h"
-
-#include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZYad_Basic.h"
+#include "zoolib/Util_Chan_UTF.h"
+#include "zoolib/Yad_Any.h"
+#include "zoolib/Yad_Basic.h"
 
 namespace ZooLib {
-namespace ZYad_Basic {
+namespace Yad_Basic {
 
 using std::string;
 
@@ -38,10 +38,10 @@ namespace { // anonymous
 void spThrowParseException(const string& iMessage)
 	{ throw ParseException(iMessage); }
 
-bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
+bool spRead_Until(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
-	return sCopy_Until<UTF32>(iStrimU, ChanW_UTF_string8(&oString), iTerminator);
+	return sCopy_Until<UTF32>(iChanR, iTerminator, ChanW_UTF_string8(&oString));
 	}
 
 } // anonymous namespace
@@ -51,47 +51,50 @@ bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 #pragma mark ParseException
 
 ParseException::ParseException(const string& iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 ParseException::ParseException(const char* iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark MapR
 
-class MapR
-:	public ZYadMapR_Std
+class ChanR_NameRefYad
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	MapR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU)
+	ChanR_NameRefYad(const Options& iOptions,
+		ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF)
 	:	fOptions(iOptions)
-	,	fStrimmerU(iStrimmerU)
+	,	fChannerR_UTF(iChannerR_UTF)
+	,	fChannerU_UTF(iChannerU_UTF)
 		{}
 
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<ZYadR>& oYadR)
+// From ChanR_RefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 		{
-		using namespace ZUtil_Strim;
+//		using namespace Util_Chan;
 
-		const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+		const ChanR_UTF& theChanR = *fChannerR_UTF;
+		const ChanU_UTF& theChanU = *fChannerU_UTF;
 
 		if (iIsFirst)
 			{
 			UTF32 aCP;
-			if (!theStrimU.ReadCP(aCP))
+			if (not sQRead(theChanR, aCP))
 				{
 				// couldn't read anything, we're empty.
 				return;
 				}
-			theStrimU.Unread(aCP);
+			sUnread(theChanU, aCP);
 			}
 		else
 			{
 			// We've already returned something
-			if (!sTryRead_CP(theStrimU, fOptions.fSeparator_EntryFromEntry))
+			if (not Util_Chan::sTryRead_CP(fOptions.fSeparator_EntryFromEntry, theChanR, theChanU))
 				{
 				// and there's no separator, so we're at the end.
 				return;
@@ -99,20 +102,21 @@ public:
 			}
 
 		string theName;
-		if (!spRead_Until(theStrimU, fOptions.fSeparator_NameFromValue, theName))
+		if (not spRead_Until(theChanR, theChanU, fOptions.fSeparator_NameFromValue, theName))
 			spThrowParseException("Expected a member name, followed by #Need UTF32->string8 converter or string8+UTF32 appender#");// + fOptions.fSeparator_NameFromValue);
 		oName = theName;
 
 		string theValue;
-		if (spRead_Until(theStrimU, fOptions.fSeparator_EntryFromEntry, theValue))
-			theStrimU.Unread(fOptions.fSeparator_EntryFromEntry);
+		if (spRead_Until(theChanR, theChanU, fOptions.fSeparator_EntryFromEntry, theValue))
+			sUnread(theChanU, fOptions.fSeparator_EntryFromEntry);
 
 		oYadR = ZooLib::sYadR(theValue);
 		}
 
 private:
 	const Options fOptions;
-	ZRef<ZStrimmerU> fStrimmerU;
+	ZRef<ChannerR_UTF> fChannerR_UTF;
+	ZRef<ChannerU_UTF> fChannerU_UTF;
 	};
 
 // =================================================================================================
@@ -128,8 +132,9 @@ Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<ZYadMapR> sYadR(const Options& iOptions, ZRef<ZStrimmerU> iStrimmerU)
-	{ return new MapR(iOptions, iStrimmerU); }
+ZRef<Channer<ChanR_NameRefYad>> sYadR(const Options& iOptions,
+	ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF)
+	{ return sChanner_T<ChanR_NameRefYad>(iOptions, iChannerR_UTF, iChannerU_UTF); }
 
 } // namespace ZYad_Basic
 } // namespace ZooLib
