@@ -76,8 +76,6 @@ public:
 // From ChanR_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 		{
-//		using namespace Util_Chan;
-
 		const ChanR_UTF& theChanR = *fChannerR_UTF;
 		const ChanU_UTF& theChanU = *fChannerU_UTF;
 
@@ -132,7 +130,7 @@ Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<Channer<ChanR_NameRefYad>> sYadR(const Options& iOptions,
+ZRef<Channer<ZooLib::ChanR_NameRefYad>> sYadR(const Options& iOptions,
 	ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF)
 	{ return sChanner_T<ChanR_NameRefYad>(iOptions, iChannerR_UTF, iChannerU_UTF); }
 

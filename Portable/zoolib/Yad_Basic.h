@@ -52,7 +52,7 @@ struct Options
 	// Perhaps should make sure we differentiate terminator and separator?
 	};
 
-ZRef<Channer<ChanR_NameRefYad>> sYadR(const Options& iOptions,
+ZRef<Channer<ZooLib::ChanR_NameRefYad>> sYadR(const Options& iOptions,
 	ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF);
 
 } // namespace Yad_Basic
