@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Stream_Operators_h__
-#define __ZUtil_Stream_Operators_h__ 1
+#ifndef __ZooLib_Util_Chan_Bin_Operators_h__
+#define __ZooLib_Util_Chan_Bin_Operators_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
 
 #include <string>
 
@@ -31,22 +32,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark ZUtil_Stream_Operators
 
 namespace ZooLib {
-namespace ZUtil_Stream_Operators {
+namespace Util_Chan_Bin_Operators {
 
-const ZStreamW& operator<<(const ZStreamW& w, const char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
 
-const ZStreamW& operator<<(const ZStreamW& w, char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString);
 
-const ZStreamW& operator<<(const ZStreamW& w, const std::string& iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
 
-const ZStreamW& operator<<(const ZStreamW& w, const ZStreamR& r);
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const ChanR_Bin& r);
 
-} // namespace ZUtil_Stream_Operators
+} // namespace Util_Chan_Bin_Operators
 
-#if not defined(ZMACRO_Util_Stream_Operators_Suppress) || not ZMACRO_Util_Stream_Operators_Suppress
-	using ZUtil_Stream_Operators::operator<<;
+#if not defined(ZMACRO_Util_Chan_Bin_Operators_Suppress) || not ZMACRO_Util_Chan_Bin_Operators_Suppress
+	using Util_Chan_Bin_Operators::operator<<;
 #endif
 
 } // namespace ZooLib
 
-#endif // __ZUtil_Stream_Operators_h__
+#endif // __ZooLib_Util_Chan_Bin_Operators_h__

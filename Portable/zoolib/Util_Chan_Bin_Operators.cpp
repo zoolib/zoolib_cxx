@@ -18,38 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Stream_Operators.h"
+#include "zoolib/Util_Chan_Bin_Operators.h"
+#include "zoolib/Util_Chan.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZUtil_Stream_Operators
+#pragma mark Util_Chan_Bin_Operators
 
 namespace ZooLib {
-namespace ZUtil_Stream_Operators {
+namespace Util_Chan_Bin_Operators {
 
-const ZStreamW& operator<<(const ZStreamW& w, const char* iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString)
 	{
-	w.WriteString(iString);
+	sEWriteMem(w, iString, strlen(iString));
 	return w;
 	}
 
-const ZStreamW& operator<<(const ZStreamW& w, char* iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString)
 	{
-	w.WriteString(iString);
+	sEWriteMem(w, iString, strlen(iString));
 	return w;
 	}
 
-const ZStreamW& operator<<(const ZStreamW& w, const std::string& iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString)
 	{
-	w.WriteString(iString);
+	sEWriteMem(w, iString.c_str(), iString.length());
 	return w;
 	}
 
-const ZStreamW& operator<<(const ZStreamW& w, const ZStreamR& r)
+const ChanW_Bin& operator<<(const ChanW_Bin& w, const ChanR_Bin& r)
 	{
-	w.CopyAllFrom(r);
+	sCopyAll<byte>(r, w);
 	return w;
 	}
 
-} // namespace ZUtil_Stream_Operators
+} // namespace Util_Chan_Bin_Operators
 } // namespace ZooLib
