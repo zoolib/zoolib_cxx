@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 20012 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,23 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_string_h__
-#define __ZUtil_Strim_string_h__ 1
+#ifndef __ZooLib_Util_Chan_UTF_Operators_string_h__
+#define __ZooLib_Util_Chan_UTF_Operators_string_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-
-namespace ZooLib {
+#include "zoolib/Chan_UTF_string.h"
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanW_UTF.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZUtil_Strim_string
+#pragma mark Util_Chan_UTF_Operators
+
+namespace ZooLib {
+namespace Util_Chan_UTF_Operators {
 
 template <class Val_p>
 string32 operator<<(const string32& iString, const Val_p& iVal)
 	{
 	string32 result = iString;
-	ZStrimW_String<string32>(result) << iVal;
+	ChanW_UTF_string<UTF32>(&result) << iVal;
 	return result;
 	}
 
@@ -42,7 +46,7 @@ template <class Val_p>
 string16 operator<<(const string16& iString, const Val_p& iVal)
 	{
 	string16 result = iString;
-	ZStrimW_String<string16>(result) << iVal;
+	ChanW_UTF_string<UTF16>(&result) << iVal;
 	return result;
 	}
 
@@ -50,10 +54,16 @@ template <class Val_p>
 string8 operator<<(const string8& iString, const Val_p& iVal)
 	{
 	string8 result = iString;
-	ZStrimW_String<string8>(result) << iVal;
+	ChanW_UTF_string<UTF8>(&result) << iVal;
 	return result;
 	}
 
+} // namespace Util_Chan_UTF_Operators
+
+#if not defined(ZMACRO_Util_Chan_UTF_Operators_Suppress) || not ZMACRO_Util_Chan_UTF_Operators_Suppress
+	using Util_Chan_UTF_Operators::operator<<;
+#endif
+
 } // namespace ZooLib
 
-#endif // __ZUtil_Strim_string_h__
+#endif // __ZooLib_Util_Chan_UTF_Operators_string_h__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __zoolib_Util_Chan_UTF_Operators_h__
-#define __zoolib_Util_Chan_UTF_Operators_h__ 1
+#ifndef __ZooLib_Util_Chan_UTF_Operators_h__
+#define __ZooLib_Util_Chan_UTF_Operators_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanR_UTF.h"
@@ -95,4 +95,4 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, P* iVal)
 
 } // namespace ZooLib
 
-#endif // __zoolib_Util_Chan_UTF_Operators_h__
+#endif // __ZooLib_Util_Chan_UTF_Operators_h__
