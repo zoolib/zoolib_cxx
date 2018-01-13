@@ -58,9 +58,6 @@ public:
 // From YadR
 	virtual void Finish();
 
-// From ZStreamerR via YadStreamerR
-	const ZStreamR& GetStreamR();
-
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
 	const ERead fRead;
@@ -73,7 +70,6 @@ private:
 
 class YadStrimmerR_XMLPList
 :	public YadStrimmerR
-,	YadR_XMLPlist
 	{
 public:
 	YadStrimmerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
@@ -81,25 +77,21 @@ public:
 // From YadR
 	virtual void Finish();
 
-// From ZStrimmerR via YadStrimmerR
-	const ZStrimR& GetStrimR();
-
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
 	const ERead fRead;
 	};
 
 // =================================================================================================
-// MARK: - YadSeqR_XMLPList
+// MARK: - Chan_RefYad_XMLPList
 
-class YadSeqR_XMLPList
-:	public YadSeqR_Std
-,	YadR_XMLPlist
+class Chan_RefYad_XMLPList
+:	public Chan_RefYad_Std
 	{
 public:
-	YadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	Chan_RefYad_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
-// From YadSeqR_Std
+// From Chan_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
@@ -110,14 +102,13 @@ private:
 // =================================================================================================
 // MARK: - YadMapR_XMLPList
 
-class YadMapR_XMLPList
-:	public YadMapR_Std
-,	YadR_XMLPlist
+class Chan_NameRefYad_XMLPList
+:	public Chan_NameRefYad_Std
 	{
 public:
 	YadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
 
-// From YadMapR_Std
+// From Chan_NameRefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<YadR>& oYadR);
 
 private:
