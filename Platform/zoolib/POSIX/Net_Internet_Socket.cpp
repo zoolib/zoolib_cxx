@@ -28,8 +28,9 @@ ZMACRO_MSVCStaticLib_cpp(Net_Internet_Socket)
 
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
-#include <errno.h>
 #include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
