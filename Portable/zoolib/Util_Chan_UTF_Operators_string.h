@@ -34,6 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Chan_UTF_Operators {
 
+// These are not efficient -- syntactically and performance-wise they're very
+// like the standard operator+
+
 template <class Val_p>
 string32 operator<<(const string32& iString, const Val_p& iVal)
 	{
