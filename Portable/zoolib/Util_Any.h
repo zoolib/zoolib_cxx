@@ -30,16 +30,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+ZQ<bool> sQCoerceBool(const ZQ<Any>& iAnyQ);
 ZQ<bool> sQCoerceBool(const Any& iAny);
 bool sQCoerceBool(const Any& iAny, bool& oVal);
 bool sDCoerceBool(bool iDefault, const Any& iAny);
 bool sCoerceBool(const Any& iAny);
 
+ZQ<__int64> sQCoerceInt(const ZQ<Any>& iAnyQ);
 ZQ<__int64> sQCoerceInt(const Any& iAny);
 bool sQCoerceInt(const Any& iAny, __int64& oVal);
 __int64 sDCoerceInt(__int64 iDefault, const Any& iAny);
 __int64 sCoerceInt(const Any& iAny);
 
+ZQ<double> sQCoerceRat(const ZQ<Any>& iAnyQ);
 ZQ<double> sQCoerceRat(const Any& iAny);
 bool sQCoerceRat(const Any& iAny, double& oVal);
 double sDCoerceRat(double iDefault, const Any& iAny);

@@ -29,6 +29,13 @@ using std::string;
 
 namespace ZooLib {
 
+ZQ<bool> sQCoerceBool(const ZQ<Any>& iAnyQ)
+	{
+	if (not iAnyQ)
+		return sQCoerceBool(*iAnyQ);
+	return null;
+	}
+
 ZQ<bool> sQCoerceBool(const Any& iAny)
 	{
 	if (const bool* pBool = iAny.PGet<bool>())
@@ -82,6 +89,13 @@ bool sCoerceBool(const Any& iAny)
 	if (ZQ<bool> qq = sQCoerceBool(iAny))
 		return *qq;
 	return false;
+	}
+
+ZQ<__int64> sQCoerceInt(const ZQ<Any>& iAnyQ)
+	{
+	if (not iAnyQ)
+		return sQCoerceInt(*iAnyQ);
+	return null;
 	}
 
 ZQ<__int64> sQCoerceInt(const Any& iAny)
@@ -138,6 +152,13 @@ __int64 sCoerceInt(const Any& iAny)
 	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		return *qq;
 	return 0;
+	}
+
+ZQ<double> sQCoerceRat(const ZQ<Any>& iAnyQ)
+	{
+	if (not iAnyQ)
+		return sQCoerceRat(*iAnyQ);
+	return null;
 	}
 
 ZQ<double> sQCoerceRat(const Any& iAny)
