@@ -76,7 +76,7 @@ template <>
 int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_StringContains& iR)
 	{ return sCompare_T(iL.GetStrength(), iR.GetStrength()); }
 
-ZMACRO_CompareRegistration_T(ValComparator_StringContains)m
+ZMACRO_CompareRegistration_T(ValComparator_StringContains)
 
 // =================================================================================================
 #pragma mark -
