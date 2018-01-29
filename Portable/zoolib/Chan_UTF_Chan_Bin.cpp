@@ -505,7 +505,7 @@ ChanW_UTF_Chan_Bin_UTF8::ChanW_UTF_Chan_Bin_UTF8(const ChanW_Bin& iChanW_Bin)
 :	fChanW_Bin(iChanW_Bin)
 	{}
 
-size_t ChanW_UTF_Chan_Bin_UTF8::QWriteUTF8(const UTF8* iSource, size_t iCountCU)
+size_t ChanW_UTF_Chan_Bin_UTF8::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 	{ return sWriteMem(fChanW_Bin, iSource, iCountCU); }
 
 void ChanW_UTF_Chan_Bin_UTF8::Flush()

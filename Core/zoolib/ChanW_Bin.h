@@ -39,17 +39,9 @@ inline
 size_t sWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
-//inline //##
-//size_t sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-//	{ return sQWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
-
 inline
 size_t sWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
-
-//inline //##
-//size_t sQWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-//	{ return sQWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
 void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)

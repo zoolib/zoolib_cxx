@@ -63,18 +63,6 @@ size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	return localSource - iSource;
 	}
 
-//template <class EE> //##
-//size_t sQWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
-//	{
-//	const EE* localSource = iSource;
-//	while (const size_t countWritten = sQWrite(iChan, localSource, iCount))
-//		{
-//		iCount -= countWritten;
-//		localSource += countWritten;
-//		}
-//	return localSource - iSource;
-//	}
-
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{

@@ -81,7 +81,7 @@ public:
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		const size_t countWritten = sQWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
+		const size_t countWritten = sWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
 		fLimit -= countWritten;
 		return countWritten;
 		}

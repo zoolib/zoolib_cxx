@@ -36,19 +36,15 @@ typedef ChanR<byte> ChanR_Bin;
 // =================================================================================================
 #pragma mark -
 
-// Overloads of sRead that take void*, so a binary chan can read into any pointer.
+// Analogs of sRead that take void*, so a binary chan can read into any pointer.
 
 inline
-size_t sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+size_t sReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
 size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
-
-//inline //##
-//size_t sQReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-//	{ return sQReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)

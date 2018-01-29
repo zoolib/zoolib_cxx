@@ -91,14 +91,14 @@ public:
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
+		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
 			{
 			sWriteFully(iSource, countWritten0, fChanW1);
 			return countWritten0;
 			}
 		else
 			{
-			return sQWrite(iSource, iCount, fChanW1);
+			return sWrite(iSource, iCount, fChanW1);
 			}
 		}
 

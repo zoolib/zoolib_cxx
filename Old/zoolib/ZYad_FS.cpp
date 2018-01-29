@@ -40,7 +40,7 @@ public:
 		{}
 
 // From ChanAtR_NameRefYad
-	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
+	virtual size_t ReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{

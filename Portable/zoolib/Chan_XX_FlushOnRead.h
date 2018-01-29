@@ -71,7 +71,7 @@ public:
 		{
 		ZMACRO_ThreadSafe_Set(fLastWasWrite, 1);
 		ZAcqMtx acq(fMutex);
-		return sQWrite(iSource, iCount, fChanW);
+		return sWrite(iSource, iCount, fChanW);
 		}
 
 protected:

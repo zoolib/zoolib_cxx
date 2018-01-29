@@ -214,7 +214,7 @@ public:
 	virtual void Flush();
 
 // From ChanW_UTF_Native8
-	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU);
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
 
 private:
 	const ChanW_Bin& fChanW_Bin;

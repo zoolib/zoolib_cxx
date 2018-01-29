@@ -101,7 +101,7 @@ public:
 		{}
 
 // From ChanW_UTF_Native16
-	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU)
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU)
 		{
 		fStringPtr->append(iSource, iCountCU);
 		return iCountCU;
@@ -127,7 +127,7 @@ public:
 		{}
 
 // From ChanW_UTF_Native8
-	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU)
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU)
 		{
 		fStringPtr->append(iSource, iCountCU);
 		return iCountCU;

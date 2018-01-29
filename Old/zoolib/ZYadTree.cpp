@@ -87,7 +87,7 @@ public:
 		{}
 
 // From ChanR_RefYad
-	virtual size_t QRead(RefYad* oDest, size_t iCount)
+	virtual size_t Read(RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{
@@ -119,7 +119,7 @@ public:
 		{}
 
 // From ChanAtR_RefYad
-	virtual size_t QReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
+	virtual size_t ReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{
@@ -166,7 +166,7 @@ public:
 		{}
 
 // From ChanAtR_NameRefYad
-	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
+	virtual size_t ReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{

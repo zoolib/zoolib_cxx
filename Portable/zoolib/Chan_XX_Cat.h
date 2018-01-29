@@ -47,11 +47,11 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countRead = sQRead(fChanR0, oDest, iCount))
+			if (const size_t countRead = sRead(fChanR0, oDest, iCount))
 				return countRead;
 			fFirstIsLive = false;
 			}
-		return sQRead(fChanR1, oDest, iCount);
+		return sRead(fChanR1, oDest, iCount);
 		}
 
 	virtual uint64 Skip(uint64 iCount)
@@ -94,11 +94,11 @@ public:
 		{
 		if (fFirstIsLive)
 			{
-			if (const size_t countWritten0 = sQWrite(fChanW0, iSource, iCount))
+			if (const size_t countWritten0 = sWrite(fChanW0, iSource, iCount))
 				return countWritten0;
 			fFirstIsLive = false;
 			}
-		return sQWrite(fChanW1, iSource, iCount);
+		return sWrite(fChanW1, iSource, iCount);
 		}
 
 	virtual void Flush()

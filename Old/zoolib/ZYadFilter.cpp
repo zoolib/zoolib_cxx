@@ -38,7 +38,7 @@ public:
 		{}
 	
 // From ChanR_NameRefYad
-	virtual size_t QRead(NameRefYad* oDest, size_t iCount)
+	virtual size_t Read(NameRefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{
@@ -67,7 +67,7 @@ public:
 		{}
 	
 // From ChanR_RefYad
-	virtual size_t QRead(RefYad* oDest, size_t iCount)
+	virtual size_t Read(RefYad* oDest, size_t iCount)
 		{
 		if (iCount && (*oDest++ = sYadFilter(fCallable, sCall(fCallable, sReadInc(fYadSeqR)))))
 			return 1;

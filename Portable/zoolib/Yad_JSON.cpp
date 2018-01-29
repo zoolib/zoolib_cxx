@@ -803,7 +803,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 		std::vector<char> buffer(chunkSize, 0);
 		for (;;)
 			{
-			const size_t countRead = sQReadMem(iChanR, &buffer[0], chunkSize);
+			const size_t countRead = sReadMem(iChanR, &buffer[0], chunkSize);
 			if (not countRead)
 				break;
 			const size_t countCopied = sWriteMemFully(

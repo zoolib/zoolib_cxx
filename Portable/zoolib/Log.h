@@ -128,7 +128,7 @@ public:
 	~ChanW();
 
 // From ChanW_UTF_Native8
-	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU);
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
 
 // Our protocol
 	ZMACRO_operator_bool(ChanW, operator_bool) const;

@@ -307,7 +307,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 		ZAssert(utf32Consumed <= iCountCU);
 		ZAssert(utf16Generated <= kBufSize);
 
-		size_t utf16Consumed = this->QWriteUTF16(buffer, utf16Generated);
+		size_t utf16Consumed = this->WriteUTF16(buffer, utf16Generated);
 		if (utf16Consumed < utf16Generated)
 			{
 			// It's a truncated write. We need to convert from utf16Consumed back into
@@ -345,7 +345,7 @@ size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 		ZAssert(utf32Consumed <= iCountCU);
 		ZAssert(utf8Generated <= kBufSize);
 
-		size_t utf8Consumed = this->QWriteUTF8(buffer, utf8Generated);
+		size_t utf8Consumed = this->WriteUTF8(buffer, utf8Generated);
 		if (utf8Consumed < utf8Generated)
 			{
 			// It's a truncated write. We need to convert from utf8Consumed back into

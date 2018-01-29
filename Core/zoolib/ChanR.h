@@ -58,7 +58,7 @@ template <class EE>
 EE sERead(const ChanR<EE>& iChanR)
 	{
 	EE buf;
-	if (1 != sQRead(&buf, 1, iChanR))
+	if (1 != sRead(&buf, 1, iChanR))
 		sThrow_Exhausted(iChanR);
 	return buf;
 	}
@@ -81,25 +81,6 @@ size_t sReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 		}
 	return localDest - oDest;
 	}
-
-//template <class EE> //##
-//size_t sQReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
-//	{
-//	EE* localDest = oDest;
-//	while (iCount)
-//		{
-//		if (const size_t countRead = sQRead(iChanR, localDest, iCount))
-//			{
-//			iCount -= countRead;
-//			localDest += countRead;
-//			}
-//		else
-//			{
-//			break;
-//			}
-//		}
-//	return localDest - oDest;
-//	}
 
 template <class EE>
 uint64 sSkipFully(const ChanR<EE>& iChanR, uint64 iCount)

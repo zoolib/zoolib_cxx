@@ -133,7 +133,7 @@ ChanW::~ChanW()
 		this->pEmit();
 	}
 
-size_t ChanW::QWriteUTF8(const UTF8* iSource, size_t iCountCU)
+size_t ChanW::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 	{
 	if (iCountCU)
 		sMut(fMessageQ).append(iSource, iCountCU);
