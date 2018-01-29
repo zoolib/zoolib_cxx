@@ -64,6 +64,25 @@ EE sERead(const ChanR<EE>& iChanR)
 	}
 
 template <class EE>
+size_t sReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
+	{
+	EE* localDest = oDest;
+	while (iCount)
+		{
+		if (const size_t countRead = sRead(iChanR, localDest, iCount))
+			{
+			iCount -= countRead;
+			localDest += countRead;
+			}
+		else
+			{
+			break;
+			}
+		}
+	return localDest - oDest;
+	}
+
+template <class EE> //##
 size_t sQReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	{
 	EE* localDest = oDest;

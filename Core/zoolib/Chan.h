@@ -132,6 +132,10 @@ template <class EE>
 using ChanR = DeriveFrom<Aspect_Read<EE>>;
 
 template <class EE>
+inline size_t sRead(const ChanR<EE>& iChan, EE* oDest, size_t iCount)
+	{ return sNonConst(iChan).QRead(oDest, iCount); }
+
+template <class EE> //##
 inline size_t sQRead(const ChanR<EE>& iChan, EE* oDest, size_t iCount)
 	{ return sNonConst(iChan).QRead(oDest, iCount); }
 
@@ -159,6 +163,10 @@ template <class LL, class EE>
 using ChanReadAt = DeriveFrom<Aspect_ReadAt<LL,EE>>;
 
 template <class LL, class EE>
+inline size_t sReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
+	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
+
+template <class LL, class EE> //##
 inline size_t sQReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
 	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
 
@@ -257,6 +265,10 @@ template <class EE>
 using ChanW = DeriveFrom<Aspect_Write<EE>>;
 
 template <class EE>
+inline size_t sWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
+	{ return sNonConst(iChan).QWrite(iSource, iCount); }
+
+template <class EE> //##
 inline size_t sQWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{ return sNonConst(iChan).QWrite(iSource, iCount); }
 

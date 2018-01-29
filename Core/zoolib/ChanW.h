@@ -41,6 +41,10 @@ inline bool sThrow_ExhaustedW()
 #pragma mark -
 
 template <class EE>
+bool sWrite(const ChanW<EE>& iChan, const EE& iElmt)
+	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
+
+template <class EE> //##
 bool sQWrite(const ChanW<EE>& iChan, const EE& iElmt)
 	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
 
@@ -52,6 +56,18 @@ void sEWrite(const ChanW<EE>& iChan, const EE& iElmt)
 	}
 
 template <class EE>
+size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
+	{
+	const EE* localSource = iSource;
+	while (const size_t countWritten = sQWrite(iChan, localSource, iCount))
+		{
+		iCount -= countWritten;
+		localSource += countWritten;
+		}
+	return localSource - iSource;
+	}
+
+template <class EE> //@@
 size_t sQWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{
 	const EE* localSource = iSource;
