@@ -63,7 +63,7 @@ static void spToChan(const ChanW_Bin& w, const string8& iString)
 	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteMemFully(w, iString.data(), theLength))
+		if (theLength != sWriteMemFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}
@@ -683,7 +683,7 @@ public:
 			sThrow_ExhaustedR();
 			}
 
-		return sQRead(fChan, oDest, iCount);
+		return sRead(fChan, oDest, iCount);
 		}
 
 	const double fTimeout;

@@ -141,7 +141,7 @@ public:
 			if (fOffset == 0 && fBuffer.size() <= iCount)
 				{
 				// We have an empty buffer *and* we have more data to send than would fit in the buffer.
-				const size_t countWritten = sQWrite(fChanW, localSource, iCount);
+				const size_t countWritten = sWrite(fChanW, localSource, iCount);
 				if (countWritten == 0)
 					break;
 				localSource += countWritten;
