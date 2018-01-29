@@ -35,7 +35,7 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF32* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const size_t countRead = sQRead(iChanR, oDest, std::min(iCountCU, iCountCP));
+	const size_t countRead = sRead(iChanR, oDest, std::min(iCountCU, iCountCP));
 
 	if (oCountCU)
 		*oCountCU = countRead;
@@ -55,7 +55,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 2 && localCountCP)
 		{
 		const size_t utf32Read =
-			sQRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
 
 		if (utf32Read == 0)
 			break;
@@ -94,7 +94,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 6 && localCountCP)
 		{
 		const size_t utf32Read =
-			sQRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
 
 		if (utf32Read == 0)
 			break;
@@ -132,7 +132,7 @@ ZQ<string32> sQReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP)
 		{
 		result.resize(destGenerated + iCountCP);
 		UTF32* dest = sNonConst(result.data()) + destGenerated;
-		const size_t cuRead = sQRead(iChanR, dest, iCountCP);
+		const size_t cuRead = sRead(iChanR, dest, iCountCP);
 		const size_t cpRead = Unicode::sCUToCP(dest, cuRead);
 
 		if (cuRead == 0)

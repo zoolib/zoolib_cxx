@@ -111,7 +111,7 @@ using YadSeqR = Channer<ChanR_RefYad>;
 inline RefYad sReadInc(const ChanR_RefYad& iChan)
 	{
 	RefYad result;
-	if (1 == sQRead(iChan, &result, 1))
+	if (1 == sRead(iChan, &result, 1))
 		return result;
 	return null;
 	}
@@ -129,7 +129,7 @@ using YadSeqAtR = Channer<ChanAtR_RefYad>;
 inline RefYad sReadAt(const ChanReadAt<uint64,RefYad>& iChan, uint64 iLoc)
 	{
 	RefYad result;
-	if (1 == sQReadAt(iChan, iLoc, &result, 1))
+	if (1 == sReadAt(iChan, iLoc, &result, 1))
 		return result;
 	return null;
 	}
@@ -157,7 +157,7 @@ using YadMapR = Channer<ChanR_NameRefYad>;
 inline RefYad sReadInc(const ChanR_NameRefYad& iChan, Name& oName)
 	{
 	NameRefYad result;
-	if (1 == sQRead(iChan, &result, 1))
+	if (1 == sRead(iChan, &result, 1))
 		{
 		oName = result.first;
 		return result.second;
@@ -178,7 +178,7 @@ using YadMapAtR = Channer<ChanAtR_NameRefYad>;
 inline RefYad sReadAt(const ChanReadAt<Name,RefYad>& iChan, const Name& iLoc)
 	{
 	RefYad result;
-	if (1 == sQReadAt(iChan, iLoc, &result, 1))
+	if (1 == sReadAt(iChan, iLoc, &result, 1))
 		return result;
 	return null;
 	}

@@ -40,11 +40,15 @@ typedef ChanR<byte> ChanR_Bin;
 
 inline
 size_t sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sQRead(iChan, static_cast<byte*>(oDest), iCount); }
+	{ return sRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
-size_t sQReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sQReadFully(iChan, static_cast<byte*>(oDest), iCount); }
+size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
+
+//inline //##
+//size_t sQReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+//	{ return sQReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
@@ -66,7 +70,7 @@ template <class T>
 ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof(T) != sQReadMemFully(iChanR, &buf, sizeof(T)))
+	if (sizeof(T) != sReadMemFully(iChanR, &buf, sizeof(T)))
 		return null;
 	return sByteSwapped(buf);
 	}

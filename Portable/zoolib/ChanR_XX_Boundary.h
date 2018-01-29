@@ -63,7 +63,7 @@ public:
 		const size_t boundaryCount = fBoundary.size();
 		if (not boundaryCount)
 			{
-			return sQRead(fChanR, oDest, iCount);
+			return sRead(fChanR, oDest, iCount);
 			}
 		else
 			{
@@ -88,7 +88,7 @@ public:
 					std::copy_n(&fBuffer[fEnd], boundaryCount - fEnd, &fBuffer[0]);
 
 					// Top up the tail.
-					const size_t countRead = sQRead(fChanR, &fBuffer[boundaryCount - fEnd], fEnd);
+					const size_t countRead = sRead(fChanR, &fBuffer[boundaryCount - fEnd], fEnd);
 
 					if (fEnd > countRead)
 						{

@@ -44,7 +44,7 @@ public:
 // From ChanR
 	virtual size_t QRead(EE* oDest, size_t iCount)
 		{
-		const size_t countRead = sQRead(fChanR, oDest, iCount);
+		const size_t countRead = sRead(fChanR, oDest, iCount);
 		fCount += countRead;
 		return countRead;
 		}

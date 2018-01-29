@@ -50,11 +50,11 @@ public:
 
 		EE buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(EE))];
 
-		if (const size_t countRead = sQRead(fChanR, buf, std::min(iCount, countof(buf))))
+		if (const size_t countRead = sRead(fChanR, buf, std::min(iCount, countof(buf))))
 			{
 			std::copy_n(buf, countRead, oDest);
 
-			const size_t countWritten = sQWriteFully(fChanW, buf, countRead);
+			const size_t countWritten = sWriteFully(fChanW, buf, countRead);
 
 			if (countWritten != countRead)
 				{

@@ -34,7 +34,7 @@ bool sQWrite(const ChanW_Bin& iChanW, const char* iString)
 		{
 		if (const size_t length = strlen(iString))
 			{
-			if (length != sQWriteMem(iChanW, iString, length))
+			if (length != sWriteMem(iChanW, iString, length))
 				return false;
 			}
 		}
@@ -48,7 +48,7 @@ bool sQWrite(const ChanW_Bin& iChanW, const std::string& iString)
 	{
 	if (const size_t length = iString.size())
 		{
-		if (length != sQWriteMemFully(iChanW, iString.data(), length))
+		if (length != sWriteMemFully(iChanW, iString.data(), length))
 			return false;
 		}
 	return true;
@@ -62,7 +62,7 @@ bool spQWritev(const ChanW_Bin& iChanW, const UTF8* iString, va_list iArgs)
 	{
 	const std::string theString = sStringv(iString, iArgs);
 	if (theString.size())
-		return theString.size() == sQWriteMemFully(iChanW, theString.data(), theString.size());
+		return theString.size() == sWriteMemFully(iChanW, theString.data(), theString.size());
 	return true;
 	}
 
@@ -112,15 +112,15 @@ const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 bool sQWriteCount(const ChanW_Bin& w, uint64 iValue)
 	{
 	if (iValue < 253)
-		return sQWrite<uint8>(w, iValue);
+		return sQWriteBE<uint8>(w, iValue);
 
 	if (iValue <= 0xFFFFU)
-		return sQWrite<uint8>(w, 253) && sQWriteBE<uint16>(w, iValue);
+		return sQWriteBE<uint8>(w, 253) && sQWriteBE<uint16>(w, iValue);
 
 	if (iValue <= 0xFFFFFFFFU)
-		return sQWrite<uint8>(w, 254) && sQWriteBE<uint32>(w, iValue);
+		return sQWriteBE<uint8>(w, 254) && sQWriteBE<uint32>(w, iValue);
 
-	return sQWrite<uint8>(w, 255) && sQWriteBE<uint64>(w, iValue);
+	return sQWriteBE<uint8>(w, 255) && sQWriteBE<uint64>(w, iValue);
 	}
 
 void sEWriteCount(const ChanW_Bin& w, uint64 iValue)

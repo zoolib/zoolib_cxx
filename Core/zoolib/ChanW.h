@@ -41,17 +41,13 @@ inline bool sThrow_ExhaustedW()
 #pragma mark -
 
 template <class EE>
-bool sWrite(const ChanW<EE>& iChan, const EE& iElmt)
-	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
-
-template <class EE> //##
 bool sQWrite(const ChanW<EE>& iChan, const EE& iElmt)
 	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
 
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE& iElmt)
 	{
-	if (1 != sQWrite(iChan, &iElmt, 1))
+	if (1 != sWrite(iChan, &iElmt, 1))
 		sThrow_ExhaustedW();
 	}
 
@@ -59,7 +55,7 @@ template <class EE>
 size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{
 	const EE* localSource = iSource;
-	while (const size_t countWritten = sQWrite(iChan, localSource, iCount))
+	while (const size_t countWritten = sWrite(iChan, localSource, iCount))
 		{
 		iCount -= countWritten;
 		localSource += countWritten;
@@ -67,22 +63,22 @@ size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	return localSource - iSource;
 	}
 
-template <class EE> //@@
-size_t sQWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
-	{
-	const EE* localSource = iSource;
-	while (const size_t countWritten = sQWrite(iChan, localSource, iCount))
-		{
-		iCount -= countWritten;
-		localSource += countWritten;
-		}
-	return localSource - iSource;
-	}
+//template <class EE> //##
+//size_t sQWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
+//	{
+//	const EE* localSource = iSource;
+//	while (const size_t countWritten = sQWrite(iChan, localSource, iCount))
+//		{
+//		iCount -= countWritten;
+//		localSource += countWritten;
+//		}
+//	return localSource - iSource;
+//	}
 
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{
-	if (iCount != sQWriteFully<EE>(iChan, iSource, iCount))
+	if (iCount != sWriteFully<EE>(iChan, iSource, iCount))
 		sThrow_ExhaustedW();
 	}
 

@@ -46,7 +46,7 @@ static bool spTryRead_Byte(const ChanRU_Bin& iChanRU, uint8 iByte)
 static bool spTryRead_Digit(const ChanRU_Bin& s, int& oDigit)
 	{
 	uint8 theByte;
-	if (1 != sQRead(s, &theByte, 1))
+	if (1 != sRead(s, &theByte, 1))
 		return false;
 
 	if (theByte >= '0' && theByte <= '9')

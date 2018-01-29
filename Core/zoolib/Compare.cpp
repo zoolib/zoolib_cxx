@@ -1,5 +1,5 @@
 // Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
-// http://www.zoolib.org/
+// MIT License. http://www.zoolib.org/
 
 #include "zoolib/Compare.h"
 #include "zoolib/Compat_string.h"

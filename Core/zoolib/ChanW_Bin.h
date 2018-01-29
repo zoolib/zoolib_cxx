@@ -39,17 +39,17 @@ inline
 size_t sWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
-inline //@@
-size_t sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sQWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
+//inline //##
+//size_t sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+//	{ return sQWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
 size_t sWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
-inline //@@
-size_t sQWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sQWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
+//inline //##
+//size_t sQWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+//	{ return sQWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
 void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
@@ -67,7 +67,7 @@ template <class T>
 bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	{
 	const T buf = sByteSwapped(iT);
-	if (sizeof(T) != sQWriteMemFully(iChanW, &buf, sizeof(T)))
+	if (sizeof(T) != sWriteMemFully(iChanW, &buf, sizeof(T)))
 		return false;
 	return true;
 	}

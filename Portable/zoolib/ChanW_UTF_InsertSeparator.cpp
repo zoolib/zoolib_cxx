@@ -87,7 +87,7 @@ size_t ChanW_UTF_InsertSeparator::QWrite(const UTF32* iSource, size_t iCountCU)
 				}
 			}
 
-		const size_t countWritten = sQWrite(fStrimSink, localSource, countToWrite);
+		const size_t countWritten = sWrite(fStrimSink, localSource, countToWrite);
 		if (countWritten == 0)
 			break;
 		

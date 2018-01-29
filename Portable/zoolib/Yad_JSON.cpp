@@ -384,7 +384,7 @@ void YadStreamerR_Base64::Finish()
 	}
 
 size_t YadStreamerR_Base64::QRead(byte* oDest, size_t iCount)
-	{ return sQRead(fChanR, oDest, iCount); }
+	{ return sRead(fChanR, oDest, iCount); }
 
 // =================================================================================================
 #pragma mark -
@@ -459,7 +459,7 @@ size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 					}
 				else
 					{
-					const size_t countRead = sQRead(ChanR_UTF_Escaped('"', theStrimR, theStrimU), localDest, localDestEnd - localDest);
+					const size_t countRead = sRead(ChanR_UTF_Escaped('"', theStrimR, theStrimU), localDest, localDestEnd - localDest);
 					localDest += countRead;
 
 					if (sTryRead_CP('"', theStrimR, theStrimU))
@@ -497,7 +497,7 @@ size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
 				{
 				// We've got three quotes in a row, and any trailing EOL
 				// has been stripped.
-				if (const size_t countRead = sQRead(fChanR_Boundary, localDest, localDestEnd - localDest))
+				if (const size_t countRead = sRead(fChanR_Boundary, localDest, localDestEnd - localDest))
 					{
 					localDest += countRead;
 					}
@@ -806,7 +806,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 			const size_t countRead = sQReadMem(iChanR, &buffer[0], chunkSize);
 			if (not countRead)
 				break;
-			const size_t countCopied = sQWriteMemFully(
+			const size_t countCopied = sWriteMemFully(
 				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w),
 				&buffer[0], countRead);
 

@@ -61,7 +61,7 @@ void sWrite(const ChanW_UTF& iChanW,
 	const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const size_t countWritten = sQWrite(iChanW, iSource, iCountCU);
+	const size_t countWritten = sWrite(iChanW, iSource, iCountCU);
 	if (oCountCU)
 		*oCountCU = countWritten;
 	if (oCountCP)
@@ -93,7 +93,7 @@ void sWrite(const ChanW_UTF& iChanW,
 				}
 			}
 
-		const size_t utf32Consumed = sQWriteFully(iChanW, buffer, utf32Generated);
+		const size_t utf32Consumed = sWriteFully(iChanW, buffer, utf32Generated);
 		localCountCP -= utf32Consumed;
 		if (utf32Consumed < utf32Generated)
 			{
@@ -137,7 +137,7 @@ void sWrite(const ChanW_UTF& iChanW,
 				}
 			}
 
-		const size_t utf32Consumed = sQWriteFully(iChanW, buffer, utf32Generated);
+		const size_t utf32Consumed = sWriteFully(iChanW, buffer, utf32Generated);
 		localCountCP -= utf32Consumed;
 		if (utf32Consumed < utf32Generated)
 			{

@@ -107,7 +107,7 @@ size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
 			}
 		else
 			{
-			const size_t countRead = sQRead(fChanR, 
+			const size_t countRead = sRead(fChanR, 
 				localDest, std::min<size_t>(iCount, fChunkSize));
 
 			if (countRead == 0)

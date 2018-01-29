@@ -43,7 +43,7 @@ public:
 		if (iCount)
 			{
 			NameRefYad result;
-			if (1 == sQRead(*fYadMapR, &result, 1))
+			if (1 == sRead(*fYadMapR, &result, 1))
 				{
 				oDest->first = result.first;
 				oDest->second = sYadFilter(fCallable, sCall(fCallable, result.second));

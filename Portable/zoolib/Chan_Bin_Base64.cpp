@@ -230,7 +230,7 @@ ChanW_Bin_Base64Encode::~ChanW_Bin_Base64Encode()
 		{
 		uint8 sinkBuf[4];
 		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
-		sQWrite(fChanW, sinkBuf, 4);
+		sWriteFully(fChanW, sinkBuf, 4);
 		fSourceCount = 0;
 		}
 	}
@@ -252,7 +252,7 @@ size_t ChanW_Bin_Base64Encode::QWrite(const byte* iSource, size_t iCount)
 			{
 			uint8 sinkBuf[4];
 			Base64::spEncode(fEncode, fSourceBuf, 3, sinkBuf);
-			sQWrite(fChanW, sinkBuf, 4);
+			sWriteFully(fChanW, sinkBuf, 4);
 			fSourceCount = 0;
 			}
 		}
@@ -265,7 +265,7 @@ void ChanW_Bin_Base64Encode::Flush()
 		{
 		uint8 sinkBuf[4];
 		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
-		sQWrite(fChanW, sinkBuf, 4);
+		sWriteFully(fChanW, sinkBuf, 4);
 		fSourceCount = 0;
 		}
 	sFlush(fChanW);

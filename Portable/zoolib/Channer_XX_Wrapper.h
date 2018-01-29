@@ -84,13 +84,13 @@ public:
 		{}
 
 	virtual size_t QRead(byte* oDest, size_t iCount)
-		{ return sQRead(*fChannerR, oDest, iCount); }
+		{ return sRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(*fChannerR, iCount); }
 
 	virtual size_t QWrite(const byte* iSource, size_t iCount)
-		{ return sQWrite(*fChannerW, iSource, iCount); }
+		{ return sWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()
 		{ sFlush(*fChannerW); }

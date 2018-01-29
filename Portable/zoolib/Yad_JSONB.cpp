@@ -73,7 +73,7 @@ void spToChan(const ChanW_Bin& w, const string& iString)
 	sEWriteCount(w, theLength);
 	if (theLength)
 		{
-		if (theLength != sQWriteMemFully(w, iString.data(), theLength))
+		if (theLength != sWriteMemFully(w, iString.data(), theLength))
 			sThrow_ExhaustedW();
 		}
 	}
@@ -134,7 +134,7 @@ size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
 			}
 		else
 			{
-			const size_t countRead = sQReadFully(r, localDest, min(iCount, fChunkSize));
+			const size_t countRead = sReadFully(r, localDest, min(iCount, fChunkSize));
 			localDest += countRead;
 			iCount -= countRead;
 			fChunkSize -= countRead;
@@ -347,7 +347,7 @@ public:
 		vector<uint8> buffer(chunkSize);
 		for (;;)
 			{
-			const size_t countRead = sQReadFully(r, &buffer[0], chunkSize);
+			const size_t countRead = sReadFully(r, &buffer[0], chunkSize);
 			sEWriteCount(fW, countRead);
 			if (!countRead)
 				break;
