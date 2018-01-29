@@ -675,7 +675,7 @@ public:
 	,	fChan(iChan)
 		{}
 
-	virtual size_t QRead(byte* oDest, size_t iCount)
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		if (not sWaitReadable(fChan, fTimeout))
 			{

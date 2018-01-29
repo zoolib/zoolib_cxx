@@ -42,13 +42,13 @@ public:
 	,	fChannerW(iChannerW)
 		{}
 
-	virtual size_t QRead(byte* oDest, size_t iCount)
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{ return sRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(*fChannerR, iCount); }
 
-	virtual size_t QWrite(const byte* iSource, size_t iCount)
+	virtual size_t Write(const byte* iSource, size_t iCount)
 		{ return sWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()
@@ -83,13 +83,13 @@ public:
 	,	fChannerClose(iChannerClose)
 		{}
 
-	virtual size_t QRead(byte* oDest, size_t iCount)
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{ return sRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(*fChannerR, iCount); }
 
-	virtual size_t QWrite(const byte* iSource, size_t iCount)
+	virtual size_t Write(const byte* iSource, size_t iCount)
 		{ return sWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()

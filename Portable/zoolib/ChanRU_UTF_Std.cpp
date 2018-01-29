@@ -37,7 +37,7 @@ ChanRU_UTF_Std::ChanRU_UTF_Std(const ChanR_UTF& iChanR)
 ,	fColumn(0)
 	{}
 
-size_t ChanRU_UTF_Std::QRead(UTF32* oDest, size_t iCount)
+size_t ChanRU_UTF_Std::Read(UTF32* oDest, size_t iCount)
 	{
 	UTF32* localDest = oDest;
 	UTF32* localDestEnd = oDest + iCount;

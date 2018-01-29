@@ -99,7 +99,7 @@ public:
 	virtual void Finish();
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 	virtual uint64 QSkip(uint64 iCount);
 
@@ -119,7 +119,7 @@ void YadStreamerR_JSONB::Finish()
 	{ sSkipAll(*this); }
 
 
-size_t YadStreamerR_JSONB::QRead(byte* oDest, size_t iCount)
+size_t YadStreamerR_JSONB::Read(byte* oDest, size_t iCount)
 	{
 	const ChanR_Bin& r = *fChannerR_Bin;
 

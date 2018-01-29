@@ -41,7 +41,7 @@ ChanR_UTF_Escaped::ChanR_UTF_Escaped(UTF32 iDelimiter,
 ChanR_UTF_Escaped::~ChanR_UTF_Escaped()
 	{}
 
-size_t ChanR_UTF_Escaped::QRead(UTF32* oDest, size_t iCountCU)
+size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 	{
 	using namespace Util_Chan;
 
@@ -200,7 +200,7 @@ static UTF32 spAsHexCP(int inInt)
 	return inInt - 10 + 'A';
 	}
 
-size_t ChanW_UTF_Escaped::QWrite(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Escaped::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	size_t localCount = iCountCU + 1;
 	while (--localCount)

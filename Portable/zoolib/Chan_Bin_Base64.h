@@ -68,7 +68,7 @@ public:
 	~ChanR_Bin_Base64Decode();
 
 // From ChanR_Bin
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 protected:
 	const Base64::Decode fDecode;
@@ -93,7 +93,7 @@ public:
 	~ChanW_Bin_Base64Encode();
 
 // From ZStreamW
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 	virtual void Flush();
 
 protected:

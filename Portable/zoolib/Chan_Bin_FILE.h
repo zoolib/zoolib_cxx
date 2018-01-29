@@ -62,7 +62,7 @@ public:
 	ChanR_Bin_FILE(FILE* iFILE, bool iAdopt);
 
 // From ChanR_Bin
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 	};
 
 //// =================================================================================================
@@ -104,7 +104,7 @@ public:
 	ChanW_Bin_FILE(FILE* iFILE, bool iAdopt);
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 	virtual void Flush();
 	};
 

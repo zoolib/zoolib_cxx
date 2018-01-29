@@ -52,7 +52,7 @@ ChanR_UTF_CRLFRemove::ChanR_UTF_CRLFRemove(UTF32 iReplacementCP, const ChanR_UTF
 	ZAssertStop(2, Unicode::sIsValid(fReplacementCP));
 	}
 
-size_t ChanR_UTF_CRLFRemove::QRead(UTF32* oDest, size_t iCount)
+size_t ChanR_UTF_CRLFRemove::Read(UTF32* oDest, size_t iCount)
 	{
 	UTF32 buffer[kBufSize];
 

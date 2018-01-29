@@ -35,7 +35,7 @@ ChanRU_UTF_string8::ChanRU_UTF_string8(const string8& iString)
 ChanRU_UTF_string8::~ChanRU_UTF_string8()
 	{}
 
-size_t ChanRU_UTF_string8::QRead(UTF32* oDest, size_t iCount)
+size_t ChanRU_UTF_string8::Read(UTF32* oDest, size_t iCount)
 	{
 	const size_t theLength = fString.length();
 	if (fPosition >= theLength)

@@ -310,7 +310,7 @@ ChanR_UTF_Chan_Bin_UTF8::ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin)
 :	fChanR_Bin(iChanR_Bin)
 	{}
 
-size_t ChanR_UTF_Chan_Bin_UTF8::QRead(UTF32* oDest, size_t iCount)
+size_t ChanR_UTF_Chan_Bin_UTF8::Read(UTF32* oDest, size_t iCount)
 	{ return spReadUTF32_UTF8(oDest, iCount, fChanR_Bin); }
 
 //// =================================================================================================

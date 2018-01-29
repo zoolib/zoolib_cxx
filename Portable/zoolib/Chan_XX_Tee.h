@@ -42,7 +42,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fChanW, and oDest could reference memory that's
@@ -89,7 +89,7 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t QWrite(const EE* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		if (const size_t countWritten0 = sQWrite(iSource, iCount, fChanW0))
 			{

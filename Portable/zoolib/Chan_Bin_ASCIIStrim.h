@@ -40,7 +40,7 @@ class ChanR_Bin_ASCIIStrim
 	{
 public:
 	ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR);
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:
 	const ChanR_UTF& fChanR_UTF;
@@ -57,7 +57,7 @@ class ChanW_Bin_ASCIIStrim
 	{
 public:
 	ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW);
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 private:
 	const ChanW_UTF& fChanW_UTF;

@@ -42,7 +42,7 @@ public:
 	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 	~ChanR_Bin_HexStrim();
 
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:
 	const ChanR_UTF& fChanR;

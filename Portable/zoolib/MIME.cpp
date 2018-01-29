@@ -51,7 +51,7 @@ ChanR_Bin_Header::ChanR_Bin_Header(const ChanR_Bin& iChanR)
 	fState(eInitial)
 	{}
 
-size_t ChanR_Bin_Header::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_Header::Read(byte* oDest, size_t iCount)
 	{
 	byte* localDest = static_cast<byte*>(oDest);
 	byte* localEnd = localDest + iCount;
@@ -131,7 +131,7 @@ ChanR_Bin_Line::ChanR_Bin_Line(const ChanR_Bin& iChanR)
 	fState(eNormal)
 	{}
 
-size_t ChanR_Bin_Line::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_Line::Read(byte* oDest, size_t iCount)
 	{
 	byte* localDest = static_cast<byte*>(oDest);
 	byte* localEnd = localDest + iCount;

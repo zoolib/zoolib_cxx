@@ -42,7 +42,7 @@ ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& i
 ChanR_Bin_HexStrim::~ChanR_Bin_HexStrim()
 	{}
 
-size_t ChanR_Bin_HexStrim::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_HexStrim::Read(byte* oDest, size_t iCount)
 	{
 	using namespace Util_Chan;
 

@@ -43,7 +43,7 @@ ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 ,	fCount(0)
 	{}
 
-size_t ChanW_UTF_InsertSeparator::QWrite(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	size_t countRemaining = iCountCU;

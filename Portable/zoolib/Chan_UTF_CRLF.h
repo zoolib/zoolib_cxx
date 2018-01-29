@@ -39,7 +39,7 @@ public:
 	ChanR_UTF_CRLFRemove(UTF32 iReplacementCP, const ChanR_UTF& iChanR);
 
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCount);
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
 	const ChanR_UTF& fChanR;

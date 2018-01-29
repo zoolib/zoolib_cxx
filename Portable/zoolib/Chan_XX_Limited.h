@@ -42,7 +42,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		const size_t countRead = sRead(fChanR, oDest, std::min<uint64>(fLimit, iCount));
 		fLimit -= countRead;
@@ -79,7 +79,7 @@ public:
 		{}
 
 // From ChanW
-	virtual size_t QWrite(const EE* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		const size_t countWritten = sQWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
 		fLimit -= countWritten;

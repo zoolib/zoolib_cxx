@@ -92,7 +92,7 @@ public:
 		{ fPosition = iPosition; }
 
 // From Aspect_Read
-	virtual size_t QRead(RefYad* oDest, size_t iCount)
+	virtual size_t Read(RefYad* oDest, size_t iCount)
 		{
 		RefYad* startDest = oDest;
 		while (fPosition < fSeq.Size() && iCount--)
@@ -101,7 +101,7 @@ public:
 		}
 
 // From Aspect_ReadAt
-	virtual size_t QReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
+	virtual size_t ReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
 		{
 		RefYad* startDest = oDest;
 		uint64 loc = iLoc;
@@ -149,7 +149,7 @@ public:
 		{}
 
 // From Aspect_Read
-	virtual size_t QRead(NameRefYad* oDest, size_t iCount)
+	virtual size_t Read(NameRefYad* oDest, size_t iCount)
 		{
 		NameRefYad* startDest = oDest;
 		if (fIndex != fMap.End() && iCount--)
@@ -163,7 +163,7 @@ public:
 		}
 
 // From Aspect_ReadAt
-	virtual size_t QReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
+	virtual size_t ReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
 			{

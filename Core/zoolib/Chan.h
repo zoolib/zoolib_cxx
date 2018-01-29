@@ -115,13 +115,13 @@ class Aspect_Read
 :	public virtual UserOfElement<EE>
 	{
 public:
-	virtual size_t QRead(EE* oDest, size_t iCount) = 0;
+	virtual size_t Read(EE* oDest, size_t iCount) = 0;
 
 	virtual uint64 Skip(uint64 iCount)
 		{
 		// buf will have space for at least one element.
 		EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
-		return this->QRead(buf, std::min<size_t>(iCount, countof(buf)));
+		return this->Read(buf, std::min<size_t>(iCount, countof(buf)));
 		}
 
 	virtual size_t Readable()
@@ -133,7 +133,7 @@ using ChanR = DeriveFrom<Aspect_Read<EE>>;
 
 template <class EE>
 inline size_t sRead(const ChanR<EE>& iChan, EE* oDest, size_t iCount)
-	{ return sNonConst(iChan).QRead(oDest, iCount); }
+	{ return sNonConst(iChan).Read(oDest, iCount); }
 
 //template <class EE> //##
 //inline size_t sQRead(const ChanR<EE>& iChan, EE* oDest, size_t iCount)
@@ -156,7 +156,7 @@ class Aspect_ReadAt
 :	public virtual UserOfElement<EE>
 	{
 public:
-	virtual size_t QReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
+	virtual size_t ReadAt(const LL& iLoc, EE* oDest, size_t iCount) = 0;
 	};
 
 template <class LL, class EE>
@@ -164,7 +164,7 @@ using ChanReadAt = DeriveFrom<Aspect_ReadAt<LL,EE>>;
 
 template <class LL, class EE>
 inline size_t sReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
-	{ return sNonConst(iChan).QReadAt(iLoc, oDest, iCount); }
+	{ return sNonConst(iChan).ReadAt(iLoc, oDest, iCount); }
 
 //template <class LL, class EE> //##
 //inline size_t sQReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest, size_t iCount)
@@ -255,7 +255,7 @@ class Aspect_Write
 :	public virtual UserOfElement<EE>
 	{
 public:
-	virtual size_t QWrite(const EE* iSource, size_t iCount) = 0;
+	virtual size_t Write(const EE* iSource, size_t iCount) = 0;
 
 	virtual void Flush()
 		{}
@@ -266,7 +266,7 @@ using ChanW = DeriveFrom<Aspect_Write<EE>>;
 
 template <class EE>
 inline size_t sWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
-	{ return sNonConst(iChan).QWrite(iSource, iCount); }
+	{ return sNonConst(iChan).Write(iSource, iCount); }
 
 //template <class EE> //##
 //inline size_t sQWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)

@@ -115,7 +115,7 @@ class ChanW_UTF_Native16
 	{
 public:
 // From ChanW_UTF (aka ChanW<UTF32>)
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 // Our protocol
 	virtual size_t QWriteUTF16(const UTF16* iSource, size_t iCountCU) = 0;
@@ -130,7 +130,7 @@ class ChanW_UTF_Native8
 	{
 public:
 // From ChanW_UTF (aka ChanW<UTF32>)
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 // Our protocol
 	virtual size_t QWriteUTF8(const UTF8* iSource, size_t iCountCU) = 0;

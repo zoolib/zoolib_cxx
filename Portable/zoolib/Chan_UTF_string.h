@@ -40,7 +40,7 @@ public:
 	~ChanRU_UTF_string8();
 
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCount);
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 // From ChanU_UTF
 	virtual size_t Unread(const UTF32* iSource, size_t iCount);
@@ -75,7 +75,7 @@ public:
 		{}
 
 // From ChanW_UTF_Native32 (aka ChanW_UTF)
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU)
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU)
 		{
 		fStringPtr->append(iSource, iCountCU);
 		return iCountCU;

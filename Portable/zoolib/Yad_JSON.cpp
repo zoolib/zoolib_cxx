@@ -383,7 +383,7 @@ void YadStreamerR_Base64::Finish()
 		throw ParseException("Expected '>' to close a base64 data");
 	}
 
-size_t YadStreamerR_Base64::QRead(byte* oDest, size_t iCount)
+size_t YadStreamerR_Base64::Read(byte* oDest, size_t iCount)
 	{ return sRead(fChanR, oDest, iCount); }
 
 // =================================================================================================
@@ -426,7 +426,7 @@ void YadStrimmerR_JSON::Finalize()
 //		throw ParseException("Improperly closed string");
 //	}
 
-size_t YadStrimmerR_JSON::QRead(UTF32* oDest, size_t iCount)
+size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
 	{
 	using namespace Util_Chan;
 

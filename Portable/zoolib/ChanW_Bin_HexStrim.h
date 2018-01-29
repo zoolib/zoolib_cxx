@@ -38,7 +38,7 @@ public:
 	ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF);
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 	virtual void Flush();
 
 protected:
@@ -62,7 +62,7 @@ public:
 		bool iUseUnderscore, const ChanW_UTF& iStrimSink);
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 	virtual void Flush();
 
 protected:

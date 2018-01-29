@@ -47,7 +47,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = oDest;
 		while (iCount)
@@ -133,7 +133,7 @@ public:
 			}
 		}
 
-	virtual size_t QWrite(const EE* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		const EE* localSource = iSource;
 		while (iCount)

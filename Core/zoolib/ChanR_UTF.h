@@ -70,7 +70,7 @@ class ChanR_UTF_Native16
 	{
 public:
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 // Our protocol
 	virtual void ReadUTF16(UTF16* oDest,
@@ -86,7 +86,7 @@ class ChanR_UTF_Native8
 	{
 public:
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 // Our protocol
 	virtual void ReadUTF8(UTF8* oDest,

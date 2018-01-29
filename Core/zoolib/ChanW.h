@@ -42,7 +42,7 @@ inline bool sThrow_ExhaustedW()
 
 template <class EE>
 bool sQWrite(const ChanW<EE>& iChan, const EE& iElmt)
-	{ return 1 == sNonConst(iChan).QWrite(&iElmt, 1); }
+	{ return 1 == sNonConst(iChan).Write(&iElmt, 1); }
 
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE& iElmt)
@@ -92,7 +92,7 @@ class ChanW_XX_Null
 :	public ChanW<EE>
 	{
 public:
-	virtual size_t QWrite(const EE* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{ return 0; }
 	};
 
@@ -106,7 +106,7 @@ class ChanW_XX_Discard
 :	public ChanW<EE>
 	{
 public:
-	virtual size_t QWrite(const EE* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{ return iCount; }
 	};
 

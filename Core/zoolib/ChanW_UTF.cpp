@@ -288,7 +288,7 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 #pragma mark -
 #pragma mark ChanW_UTF_Native16
 
-size_t ChanW_UTF_Native16::QWrite(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	while (iCountCU)
@@ -326,7 +326,7 @@ size_t ChanW_UTF_Native16::QWrite(const UTF32* iSource, size_t iCountCU)
 #pragma mark -
 #pragma mark ChanW_UTF_Native8
 
-size_t ChanW_UTF_Native8::QWrite(const UTF32* iSource, size_t iCountCU)
+size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 	{
 	const UTF32* localSource = iSource;
 	while (iCountCU)

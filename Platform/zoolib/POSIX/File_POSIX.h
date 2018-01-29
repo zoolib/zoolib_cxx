@@ -132,7 +132,7 @@ public:
 	~ChanRPos_File_POSIX();
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 	virtual size_t Readable();
 
@@ -162,7 +162,7 @@ public:
 	~ChanWPos_File_POSIX();
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 // From ChanPos
 	virtual uint64 Pos();
@@ -189,12 +189,12 @@ public:
 	~ChanRWPos_File_POSIX();
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 	virtual size_t Readable();
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 // From ChanPos
 	virtual uint64 Pos();

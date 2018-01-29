@@ -91,7 +91,7 @@ ChanR_Bin_Chunked::ChanR_Bin_Chunked(const ChanR_Bin& iChanR)
 ChanR_Bin_Chunked::~ChanR_Bin_Chunked()
 	{}
 
-size_t ChanR_Bin_Chunked::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 	{
 	byte* localDest = oDest;
 	while (iCount && !fHitEnd)
@@ -159,7 +159,7 @@ ChanW_Bin_Chunked::~ChanW_Bin_Chunked()
 		{}
 	}
 
-size_t ChanW_Bin_Chunked::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_Chunked::Write(const byte* iSource, size_t iCount)
 	{
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)

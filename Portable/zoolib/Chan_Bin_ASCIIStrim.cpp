@@ -31,7 +31,7 @@ ChanR_Bin_ASCIIStrim::ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR)
 :	fChanR_UTF(iChanR)
 	{}
 
-size_t ChanR_Bin_ASCIIStrim::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_ASCIIStrim::Read(byte* oDest, size_t iCount)
 	{
 	UTF8* localDest = reinterpret_cast<UTF8*>(oDest);
 
@@ -99,7 +99,7 @@ ChanW_Bin_ASCIIStrim::ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW)
 :	fChanW_UTF(iChanW)
 	{}
 
-size_t ChanW_Bin_ASCIIStrim::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_ASCIIStrim::Write(const byte* iSource, size_t iCount)
 	{
 	const byte* localSource = iSource;
 	while (iCount--)

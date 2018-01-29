@@ -58,7 +58,7 @@ public:
 		}
 
 // From ChanR
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		const size_t boundaryCount = fBoundary.size();
 		if (not boundaryCount)

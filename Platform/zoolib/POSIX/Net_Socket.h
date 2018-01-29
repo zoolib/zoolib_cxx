@@ -97,11 +97,11 @@ public:
 	virtual ~NetEndpoint_Socket();
 
 // From ChanR_Bin
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
 // From ChanW_Bin
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 // From ChanClose
 	virtual void Abort();

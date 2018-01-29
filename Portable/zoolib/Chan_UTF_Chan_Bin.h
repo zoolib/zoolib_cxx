@@ -116,7 +116,7 @@ public:
 	ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin);
 
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCount);
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
 	const ChanR_Bin& fChanR_Bin;

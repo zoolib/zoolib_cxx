@@ -42,7 +42,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		size_t countRemaining = iCount;
 		while (not fHitTerminator && countRemaining)

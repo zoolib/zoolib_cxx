@@ -45,7 +45,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount)
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		const size_t theSize = fData.GetSize();
 		const size_t countToCopy = std::min<size_t>(iCount,
@@ -107,7 +107,7 @@ public:
 	,	fPosition(0)
 		{}
 
-	virtual size_t QRead(byte* oDest, size_t iCount)
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		const size_t theSize = fDataPtr->GetSize();
 		const size_t countToCopy = std::min<size_t>(iCount,
@@ -150,7 +150,7 @@ public:
 		{ return this->fPosition; }
 
 // From ChanW
-	virtual size_t QWrite(const byte* iSource, size_t iCount)
+	virtual size_t Write(const byte* iSource, size_t iCount)
 		{
 		const size_t newPosition = this->fPosition + iCount;
 		if (this->fDataPtr->GetSize() < newPosition)

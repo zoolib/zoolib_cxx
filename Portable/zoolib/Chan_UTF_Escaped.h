@@ -40,7 +40,7 @@ public:
 	~ChanR_UTF_Escaped();
 
 // From ChanR_UTF
-	virtual size_t QRead(UTF32* oDest, size_t iCountCU);
+	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 protected:
 	const UTF32 fDelimiter;
@@ -72,7 +72,7 @@ public:
 	~ChanW_UTF_Escaped();
 
 // From ChanW_UTF_Native32
-	virtual size_t QWrite(const UTF32* iSource, size_t iCountCU);
+	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
 	const ChanW_UTF& fStrimSink;

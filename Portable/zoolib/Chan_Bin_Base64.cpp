@@ -148,7 +148,7 @@ ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(
 ChanR_Bin_Base64Decode::~ChanR_Bin_Base64Decode()
 	{}
 
-size_t ChanR_Bin_Base64Decode::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_Base64Decode::Read(byte* oDest, size_t iCount)
 	{
 	byte* localDest = oDest;
 	size_t countRemaining = iCount;
@@ -235,7 +235,7 @@ ChanW_Bin_Base64Encode::~ChanW_Bin_Base64Encode()
 		}
 	}
 
-size_t ChanW_Bin_Base64Encode::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_Base64Encode::Write(const byte* iSource, size_t iCount)
 	{
 	const byte* localSource = iSource;
 	size_t countRemaining = iCount;

@@ -145,7 +145,7 @@ class ChanR_XX_Null
 :	public ChanR<EE>
 	{
 public:
-	virtual size_t QRead(EE* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{ return 0; }
 	};
 

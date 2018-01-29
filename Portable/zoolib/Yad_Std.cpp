@@ -44,7 +44,7 @@ ChanR_RefYad_Std::ChanR_RefYad_Std()
 :	fStarted(false)
 	{}
 
-size_t ChanR_RefYad_Std::QRead(RefYad* oDest, size_t iCount)
+size_t ChanR_RefYad_Std::Read(RefYad* oDest, size_t iCount)
 	{
 	// It is *crucial* that we read one Yad at a time. It is likely that the underlying entity is
 	// in a partially consumed state, and walking the one yad we return will advance that state
@@ -73,7 +73,7 @@ ChanR_NameRefYad_Std::ChanR_NameRefYad_Std(bool iFinished)
 :	fStarted(iFinished)
 	{}
 
-size_t ChanR_NameRefYad_Std::QRead(NameRefYad* oDest, size_t iCount)
+size_t ChanR_NameRefYad_Std::Read(NameRefYad* oDest, size_t iCount)
 	{
 	// It is *crucial* that we read one Yad at a time. It is likely that the underlying entity is
 	// in a partially consumed state, and walking the one yad we return will advance that state

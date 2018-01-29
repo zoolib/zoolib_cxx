@@ -111,7 +111,7 @@ public:
 	virtual void Finish();
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:
 	ZRef<ChannerR_UTF> fChannerR;
@@ -141,7 +141,7 @@ public:
 //	virtual void Finish();
 
 // From ChanR_UTF via YadStrimmerR
-	virtual size_t QRead(UTF32* oDest, size_t iCount);
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
 	ZRef<ChannerR_UTF> fChannerR;

@@ -286,7 +286,7 @@ NetEndpoint_Socket::NetEndpoint_Socket(int iSocketFD)
 NetEndpoint_Socket::~NetEndpoint_Socket()
 	{ ::close(fSocketFD); }
 
-size_t NetEndpoint_Socket::QRead(byte* oDest, size_t iCount)
+size_t NetEndpoint_Socket::Read(byte* oDest, size_t iCount)
 	{
 	char* localDest = (char*)oDest;
 	if (iCount)
@@ -321,7 +321,7 @@ size_t NetEndpoint_Socket::QRead(byte* oDest, size_t iCount)
 size_t NetEndpoint_Socket::Readable()
 	{ return Util_POSIXFD::sCountReadable(fSocketFD); }
 
-size_t NetEndpoint_Socket::QWrite(const byte* iSource, size_t iCount)
+size_t NetEndpoint_Socket::Write(const byte* iSource, size_t iCount)
 	{
 	const char* localSource = (const char*)iSource;
 	while (iCount)

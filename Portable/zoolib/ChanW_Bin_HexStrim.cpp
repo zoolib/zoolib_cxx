@@ -38,7 +38,7 @@ ChanW_Bin_HexStrim_Real::ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const Chan
 		fHexDigits = spHexDigits;
 	}
 
-size_t ChanW_Bin_HexStrim_Real::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_HexStrim_Real::Write(const byte* iSource, size_t iCount)
 	{
 	const byte* localSource = iSource;
 
@@ -85,7 +85,7 @@ ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(
 ,	fChanW_Bin(false, fChanW_UTF)
 	{}
 
-size_t ChanW_Bin_HexStrim::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_HexStrim::Write(const byte* iSource, size_t iCount)
 	{ return sWrite(fChanW_Bin, iSource, iCount); }
 
 void ChanW_Bin_HexStrim::Flush()

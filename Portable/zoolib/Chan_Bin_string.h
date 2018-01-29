@@ -37,7 +37,7 @@ class ChanW_Bin_string
 public:
 	ChanW_Bin_string(std::string* ioString);
 
-	virtual size_t QWrite(const byte* iSource, size_t iCountCU);
+	virtual size_t Write(const byte* iSource, size_t iCountCU);
 
 protected:
 	std::string* fStringPtr;
@@ -54,7 +54,7 @@ public:
 	ChanRPos_Bin_string(const std::string& iString);
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
 // From ChanPos
@@ -85,7 +85,7 @@ public:
 	ChanRWPos_Bin_string(std::string* ioStringPtr);
 
 // From ChanR
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
 // From ChanPos
@@ -105,7 +105,7 @@ public:
 	virtual size_t UnreadableLimit();
 
 // From ChanW
-	virtual size_t QWrite(const byte* iSource, size_t iCount);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 private:
 	std::string* fStringPtr;

@@ -49,7 +49,7 @@ public:
 	ChanR_RefYad_Std();
 
 // From ChanR_RefYad
-	virtual size_t QRead(RefYad* oDest, size_t iCount);
+	virtual size_t Read(RefYad* oDest, size_t iCount);
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR) = 0;
@@ -73,7 +73,7 @@ public:
 	ChanR_NameRefYad_Std(bool iFinished);
 
 // From YadMapR
-	virtual size_t QRead(NameRefYad* oDest, size_t iCount);
+	virtual size_t Read(NameRefYad* oDest, size_t iCount);
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR) = 0;

@@ -49,7 +49,7 @@ public:
 	ChanR_Bin_Header(const ChanR_Bin& iChanR);
 
 // From ChanR_Bin
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 // Our protocol
 	void Reset();
@@ -82,7 +82,7 @@ public:
 	ChanR_Bin_Line(const ChanR_Bin& iChanR);
 
 // From ChanR_Bin
-	virtual size_t QRead(byte* oDest, size_t iCount);
+	virtual size_t Read(byte* oDest, size_t iCount);
 
 // Our protocol
 	void Reset();

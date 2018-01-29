@@ -163,7 +163,7 @@ ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE, bool iAdopt)
 :	FILEHolder(iFILE, iAdopt)
 	{}
 
-size_t ChanR_Bin_FILE::QRead(byte* oDest, size_t iCount)
+size_t ChanR_Bin_FILE::Read(byte* oDest, size_t iCount)
 	{ return spRead(fFILE, oDest, iCount); }
 
 //// =================================================================================================
@@ -205,7 +205,7 @@ ChanW_Bin_FILE::ChanW_Bin_FILE(FILE* iFILE, bool iAdopt)
 :	FILEHolder(iFILE, iAdopt)
 	{}
 
-size_t ChanW_Bin_FILE::QWrite(const byte* iSource, size_t iCount)
+size_t ChanW_Bin_FILE::Write(const byte* iSource, size_t iCount)
 	{ return spWrite(fFILE, iSource, iCount); }
 
 void ChanW_Bin_FILE::Flush()

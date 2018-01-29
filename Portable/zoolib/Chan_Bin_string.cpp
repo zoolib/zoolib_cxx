@@ -30,7 +30,7 @@ ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
 :	fStringPtr(ioString)
 	{}
 
-size_t ChanW_Bin_string::QWrite(const byte* iSource, size_t iCountCU)
+size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCountCU)
 	{
 	fStringPtr->append((char*)iSource, iCountCU);
 	return iCountCU;
@@ -45,7 +45,7 @@ ChanRPos_Bin_string::ChanRPos_Bin_string(const std::string& iString)
 ,	fPosition(0)
 	{}
 
-size_t ChanRPos_Bin_string::QRead(byte* oDest, size_t iCount)
+size_t ChanRPos_Bin_string::Read(byte* oDest, size_t iCount)
 	{
 	const size_t theSize = fString.size();
 	if (const size_t countToCopy =
@@ -95,7 +95,7 @@ ChanRWPos_Bin_string::ChanRWPos_Bin_string(std::string* ioStringPtr)
 ,	fPosition(0)
 	{}
 
-size_t ChanRWPos_Bin_string::QRead(byte* oDest, size_t iCount)
+size_t ChanRWPos_Bin_string::Read(byte* oDest, size_t iCount)
 	{
 	const size_t theSize = fStringPtr->size();
 	if (const size_t countToCopy =
@@ -138,7 +138,7 @@ size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 size_t ChanRWPos_Bin_string::UnreadableLimit()
 	{ return this->fPosition; }
 
-size_t ChanRWPos_Bin_string::QWrite(const byte* iSource, size_t iCount)
+size_t ChanRWPos_Bin_string::Write(const byte* iSource, size_t iCount)
 	{
 	const size_t newPosition = this->fPosition + iCount;
 

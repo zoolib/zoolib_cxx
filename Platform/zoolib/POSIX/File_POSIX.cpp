@@ -1171,7 +1171,7 @@ ChanRPos_File_POSIX::ChanRPos_File_POSIX(const Init_t& iInit)
 ChanRPos_File_POSIX::~ChanRPos_File_POSIX()
 	{}
 
-size_t ChanRPos_File_POSIX::QRead(byte* oDest, size_t iCount)
+size_t ChanRPos_File_POSIX::Read(byte* oDest, size_t iCount)
 	{
 	size_t countRead;
 	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
@@ -1241,7 +1241,7 @@ ChanWPos_File_POSIX::ChanWPos_File_POSIX(const Init_t& iInit)
 ChanWPos_File_POSIX::~ChanWPos_File_POSIX()
 	{}
 
-size_t ChanWPos_File_POSIX::QWrite(const byte* iSource, size_t iCount)
+size_t ChanWPos_File_POSIX::Write(const byte* iSource, size_t iCount)
 	{
 	size_t countWritten;
 	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
@@ -1282,7 +1282,7 @@ ChanRWPos_File_POSIX::ChanRWPos_File_POSIX(const Init_t& iInit)
 ChanRWPos_File_POSIX::~ChanRWPos_File_POSIX()
 	{}
 
-size_t ChanRWPos_File_POSIX::QRead(byte* oDest, size_t iCount)
+size_t ChanRWPos_File_POSIX::Read(byte* oDest, size_t iCount)
 	{
 	size_t countRead;
 	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
@@ -1302,7 +1302,7 @@ size_t ChanRWPos_File_POSIX::Readable()
 	return 0;
 	}
 
-size_t ChanRWPos_File_POSIX::QWrite(const byte* iSource, size_t iCount)
+size_t ChanRWPos_File_POSIX::Write(const byte* iSource, size_t iCount)
 	{
 	size_t countWritten;
 	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))

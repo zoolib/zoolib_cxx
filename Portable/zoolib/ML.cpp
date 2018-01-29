@@ -293,7 +293,7 @@ ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 ChanRU_UTF::~ChanRU_UTF()
 	{}
 
-size_t ChanRU_UTF::QRead(UTF32* oDest, size_t iCount)
+size_t ChanRU_UTF::Read(UTF32* oDest, size_t iCount)
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
