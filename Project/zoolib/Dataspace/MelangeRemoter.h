@@ -104,7 +104,8 @@ class Melange_Client
 public:
 	typedef Callable<void(bool)> Callable_Status;
 
-	using Chan_t = DeriveFrom<Aspect_Abort,
+	using Chan_t = DeriveFrom<
+		Aspect_Abort,
 		Aspect_Read<byte>,
 		Aspect_WaitReadable,
 		Aspect_Write<byte>>;
@@ -113,7 +114,8 @@ public:
 
 	using Factory_Channer = Factory<ZRef<Channer_t>>;
 
-	using ChanForRead = DeriveFrom<Aspect_Abort,
+	using ChanForRead = DeriveFrom<
+		Aspect_Abort,
 		Aspect_Read<byte>,
 		Aspect_WaitReadable>;
 
