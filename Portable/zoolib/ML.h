@@ -137,15 +137,12 @@ bool sTryRead_End(ChanRU_UTF& r, const string& iTagName);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZML::StrimW
-
-#if 0
+#pragma mark ML::StrimW
 
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
 class StrimW
-:	public ZStrimW_T<ZStrimW_NativeUTF8, StrimW>
-,	NonCopyable
+:	public ChanW_UTF_Native8
 	{
 public:
 	class Indenter;
@@ -153,21 +150,22 @@ public:
 	// The copy constructor is deliberately not implemented. See docs for reason.
 	StrimW(const StrimW&);
 
-	explicit StrimW(const ZStrimW& iStrimSink);
+	explicit StrimW(const ChanW_UTF& iStrimSink);
 
-	StrimW(bool iIndent, const ZStrimW& iStrimSink);
-	StrimW(const string8& iEOL, const string8& iIndent, const ZStrimW& iStrimSink);
+	StrimW(bool iIndent, const ChanW_UTF& iStrimSink);
+	StrimW(const string8& iEOL, const string8& iIndent, const ChanW_UTF& iStrimSink);
 	~StrimW();
 
-// From ZStrimW
-	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
+// From ChanW_UTF
+	virtual void Flush();
 
-	virtual void Imp_Flush();
+// From ChanW_UTF_Native8
+	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
 
 // Our protocol
 
 	/// Close off any pending tag and return the sink stream.
-	const ZStrimW& Raw() const;
+	const ChanW_UTF& Raw() const;
 
 	/// Write an nbsp entity.
 	const StrimW& WriteNBSP() const;
@@ -218,7 +216,7 @@ public:
 	/** Add attributes to the currently pending tag, taking the names and values from
 	properties of iAttrs. String values are added as you would expect, null values
 	are added as boolean attributes. This convention is compatible with that
-	used by ZML::StrimR. */
+	used by ML::StrimR. */
 	const StrimW& Attrs(const Attrs_t& iAttrs) const;
 
 	/// Set indent enable, and return previous value.
@@ -254,7 +252,7 @@ protected:
 	void pAttr(const string8& iName, string8* iValue);
 	void pEnd();
 
-	const ZStrimW& fStrimSink;
+	const ChanW_UTF& fStrimSink;
 
 	ETagType fTagType;
 	bool fWrittenSinceLastTag;
@@ -267,13 +265,10 @@ protected:
 	std::vector<string8> fAttributeNames;
 	std::vector<string8*> fAttributeValues;
 	};
-#endif
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZML::StrimW::Indenter
-
-#if 0
+#pragma mark ML::StrimW::Indenter
 
 class StrimW::Indenter
 	{
@@ -285,37 +280,6 @@ private:
 	StrimW& fStrimW;
 	bool fPriorIndent;
 	};
-
-#endif
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZML::StrimmerW
-
-#if 0
-
-/// A write filter strimmer encapsulating a StrimW.
-
-class StrimmerW : public ZStrimmerW
-	{
-public:
-	StrimmerW(ZRef<ZStrimmerW> iStrimmerW);
-	StrimmerW(bool iIndent, ZRef<ZStrimmerW> iStrimmerW);
-	StrimmerW(const string8& iEOL, const string8& iIndent, ZRef<ZStrimmerW> iStrimmerW);
-	virtual ~StrimmerW();
-
-// From ZStrimmerW
-	virtual const ZStrimW& GetStrimW();
-
-// Our protocol
-	StrimW& GetStrim();
-
-protected:
-	ZRef<ZStrimmerW> fStrimmerW;
-	StrimW fStrimW;
-	};
-
-#endif
 
 } // namespace ML
 } // namespace ZooLib

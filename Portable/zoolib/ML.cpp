@@ -685,10 +685,8 @@ bool sTryRead_End(ChanRU_UTF& r, const string& iTagName)
 #pragma mark -
 #pragma mark ZML::StrimW
 
-#if 0
-
 /** \class ZML::StrimW
-ZML::StrimW extends the ZStrimW protocol with methods to open and close
+ZML::StrimW extends the ChanW_UTF protocol with methods to open and close
 tags, attach attributes to those tags incrementally and pretty-print the
 output. For example, assuming we're passed \c iStrimW:
 \code
@@ -744,7 +742,7 @@ will generate the html:
 \endverbatim
 
 It is not necessary to pass the tag name to \c End, but if you do then
-ZML::StrimW can ensure that the tag you think you're closing is indeed
+StrimW can ensure that the tag you think you're closing is indeed
 the last tag opened. Note that tag names, attribute names and attribute
 values are stored, compared and emitted as-is -- no case conversion is performed,
 so closing an 'HTML' begin tag with an 'html' end tag will trip an assertion.
@@ -790,37 +788,37 @@ implementation of ZML::StrimW(const ZML::StrimW&) can be found, you've
 got yourself a compiler that's doing (b) and we'll need to rethink things.
 */
 
-StrimW::StrimW(const ZStrimW& iStrimSink)
-:	fStrimSink(iStrimSink),
-	fTagType(eTagTypeNone),
-	fWrittenSinceLastTag(true),
-	fLastWasBegin(false),
-	fLastWasEOL(false),
-	fIndentEnabled(true),
-	fString_EOL("\n"),
-	fString_Indent("  ")
+StrimW::StrimW(const ChanW_UTF& iStrimSink)
+:	fStrimSink(iStrimSink)
+,	fTagType(eTagTypeNone)
+,	fWrittenSinceLastTag(true)
+,	fLastWasBegin(false)
+,	fLastWasEOL(false)
+,	fIndentEnabled(true)
+,	fString_EOL("\n")
+,	fString_Indent("  ")
 	{}
 
-StrimW::StrimW(bool iIndent, const ZStrimW& iStrimSink)
-:	fStrimSink(iStrimSink),
-	fTagType(eTagTypeNone),
-	fWrittenSinceLastTag(true),
-	fLastWasBegin(false),
-	fLastWasEOL(false),
-	fIndentEnabled(iIndent),
-	fString_EOL("\n"),
-	fString_Indent("  ")
+StrimW::StrimW(bool iIndent, const ChanW_UTF& iStrimSink)
+:	fStrimSink(iStrimSink)
+,	fTagType(eTagTypeNone)
+,	fWrittenSinceLastTag(true)
+,	fLastWasBegin(false)
+,	fLastWasEOL(false)
+,	fIndentEnabled(iIndent)
+,	fString_EOL("\n")
+,	fString_Indent("  ")
 	{}
 
-StrimW::StrimW(const string8& iEOL, const string8& iIndent, const ZStrimW& iStrimSink)
-:	fStrimSink(iStrimSink),
-	fTagType(eTagTypeNone),
-	fWrittenSinceLastTag(true),
-	fLastWasBegin(false),
-	fLastWasEOL(false),
-	fIndentEnabled(true),
-	fString_EOL(iEOL),
-	fString_Indent(iIndent)
+StrimW::StrimW(const string8& iEOL, const string8& iIndent, const ChanW_UTF& iStrimSink)
+:	fStrimSink(iStrimSink)
+,	fTagType(eTagTypeNone)
+,	fWrittenSinceLastTag(true)
+,	fLastWasBegin(false)
+,	fLastWasEOL(false)
+,	fIndentEnabled(true)
+,	fString_EOL(iEOL)
+,	fString_Indent(iIndent)
 	{}
 
 StrimW::~StrimW()
@@ -837,13 +835,19 @@ StrimW::~StrimW()
 	// ZAssertLog(kDebug_StrimW_ML, fTags.empty());
 	}
 
-static void spWriteIndent(const ZStrimW& iStrim, const string8& iString, size_t iCount)
+void StrimW::Flush()
 	{
-	while (iCount--)
-		iStrim.Write(iString);
+	sNonConst(this)->pWritePending();
+	sFlush(fStrimSink);
 	}
 
-void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
+static void spWriteIndent(const ChanW_UTF& iStrim, const string8& iString, size_t iCount)
+	{
+	while (iCount--)
+		sEWrite(iStrim, iString);
+	}
+
+size_t StrimW::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 	{
 	this->pPreText();
 
@@ -893,15 +897,15 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 			// Write everything prior to the entity.
 			if (size_t countToWrite = priorToEntity - localSource)
 				{
-				size_t countWritten;
-				fStrimSink.Write(localSource, countToWrite, &countWritten);
+				const size_t countWritten = sWrite(fStrimSink, localSource, countToWrite);
 				if (not countWritten)
 					break;
 
 				localSource += countWritten;
 				if (countWritten < countToWrite)
 					{
-					// We weren't able to write the whole chunk, so just
+					// We weren't able to write the whole chunk. Trust that the writer did a decent
+					// job of moving to a usable UTF8 boundary (trivial if the fStrimSink is UTF-8 native),
 					// return to the top of the for loop and try again.
 					continue;
 					}
@@ -910,12 +914,12 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 			// Write the substitution text.
 			switch (*theEntityCPQ)
 				{
-				case '"': fStrimSink.Write("&quot;"); break;
-				case '&': fStrimSink.Write("&amp;"); break;
-				case '<': fStrimSink.Write("&lt;"); break;
-				case '>': fStrimSink.Write("&gt;"); break;
-				case 0x00A0: fStrimSink.Write("&nbsp;"); break;
-				default: fStrimSink.Writef("&#%u;", (unsigned int)*theEntityCPQ);
+				case '"': sEWrite(fStrimSink, "&quot;"); break;
+				case '&': sEWrite(fStrimSink, "&amp;"); break;
+				case '<': sEWrite(fStrimSink, "&lt;"); break;
+				case '>': sEWrite(fStrimSink, "&gt;"); break;
+				case 0x00A0: sEWrite(fStrimSink, "&nbsp;"); break;
+				default: sEWritef(fStrimSink, "&#%u;", (unsigned int)*theEntityCPQ);
 				}
 
 			localSource = current;
@@ -925,29 +929,23 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 			size_t countToWrite = current - localSource;
 			if (not countToWrite)
 				break;
-			size_t countWritten;
-			fStrimSink.Write(localSource, countToWrite, &countWritten);
+			size_t countWritten = sWrite(fStrimSink, localSource, countToWrite);
 			if (not countWritten)
 				break;
 			localSource += countWritten;
 			}
 		}
 
-	if (oCountCU)
-		*oCountCU = localSource - iSource;
+	const size_t result = localSource - iSource;
 
 	UTF32 theCP;
 	if (Unicode::sDecRead(iSource, localSource, localSourceEnd, theCP))
 		fLastWasEOL = Unicode::sIsEOL(theCP);
+
+	return result;
 	}
 
-void StrimW::Imp_Flush()
-	{
-	sNonConst(this)->pWritePending();
-	fStrimSink.Flush();
-	}
-
-const ZStrimW& StrimW::Raw() const
+const ChanW_UTF& StrimW::Raw() const
 	{
 	sNonConst(this)->pWritePending();
 	return fStrimSink;
@@ -959,7 +957,7 @@ const StrimW& StrimW::WriteNBSP() const
 	{
 	sNonConst(this)->pPreText();
 
-	fStrimSink.Write("&nbsp;");
+	sEWrite(fStrimSink, "&nbsp;");
 
 	return *this;
 	}
@@ -970,9 +968,9 @@ const StrimW& StrimW::WriteEntity(const string8& iEntity) const
 	{
 	sNonConst(this)->pPreText();
 
-	fStrimSink.Write("&");
-	fStrimSink.Write(iEntity);
-	fStrimSink.Write(";");
+	sEWrite(fStrimSink, "&");
+	sEWrite(fStrimSink, iEntity);
+	sEWrite(fStrimSink, ";");
 
 	return *this;
 	}
@@ -981,9 +979,9 @@ const StrimW& StrimW::WriteEntity(const UTF8* iEntity) const
 	{
 	sNonConst(this)->pPreText();
 
-	fStrimSink.Write("&");
-	fStrimSink.Write(iEntity);
-	fStrimSink.Write(";");
+	sEWrite(fStrimSink, "&");
+	sEWrite(fStrimSink, iEntity);
+	sEWrite(fStrimSink, ";");
 
 	return *this;
 	}
@@ -1254,7 +1252,7 @@ void StrimW::pPreTag()
 		if (not fWrittenSinceLastTag)
 			{
 			if (not fLastWasEOL)
-				fStrimSink.Write(fString_EOL);
+				sEWrite(fStrimSink, fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
@@ -1274,7 +1272,7 @@ void StrimW::pWritePending()
 		if (not fWrittenSinceLastTag)
 			{
 			if (not fLastWasEOL)
-				fStrimSink.Write(fString_EOL);
+				sEWrite(fStrimSink, fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
@@ -1282,25 +1280,25 @@ void StrimW::pWritePending()
 	fLastWasEOL = false;
 
 	if (fTagType == eTagTypePI)
-		fStrimSink.Write("<?");
+		sEWrite(fStrimSink, "<?");
 	else
-		fStrimSink.Write("<");
+		sEWrite(fStrimSink, "<");
 
-	fStrimSink.Write(fTags.back());
+	sEWrite(fStrimSink, fTags.back());
 
 	if (not fAttributeNames.empty())
 		{
 		for (size_t xx = 0; xx < fAttributeNames.size(); ++xx)
 			{
-			fStrimSink.Write(" ");
+			sEWrite(fStrimSink, " ");
 
-			fStrimSink.Write(fAttributeNames[xx]);
+			sEWrite(fStrimSink, fAttributeNames[xx]);
 
 			if (fAttributeValues[xx])
 				{
-				fStrimSink.Write("=\"");
-				fStrimSink.Write(*fAttributeValues[xx]);
-				fStrimSink.Write("\"");
+				sEWrite(fStrimSink, "=\"");
+				sEWrite(fStrimSink, *fAttributeValues[xx]);
+				sEWrite(fStrimSink, "\"");
 				delete fAttributeValues[xx];
 				}
 			}
@@ -1311,13 +1309,13 @@ void StrimW::pWritePending()
 	switch (fTagType)
 		{
 		case eTagTypeEmpty:
-			fStrimSink.Write("/>");
+			sEWrite(fStrimSink, "/>");
 			break;
 		case eTagTypePI:
-			fStrimSink.Write("?>");
+			sEWrite(fStrimSink, "?>");
 			break;
 		default:
-			fStrimSink.Write(">");
+			sEWrite(fStrimSink, ">");
 			break;
 		}
 
@@ -1347,7 +1345,7 @@ void StrimW::pEnd()
 		if (not fWrittenSinceLastTag && not fLastWasBegin)
 			{
 			if (not fLastWasEOL)
-				fStrimSink.Write(fString_EOL);
+				sEWrite(fStrimSink, fString_EOL);
 			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
@@ -1355,21 +1353,17 @@ void StrimW::pEnd()
 	fLastWasEOL = false;
 	fLastWasBegin = false;
 
-	fStrimSink.Write("</");
-	fStrimSink.Write(fTags.back());
-	fStrimSink.Write(">");
+	sEWrite(fStrimSink, "</");
+	sEWrite(fStrimSink, fTags.back());
+	sEWrite(fStrimSink, ">");
 	fTags.pop_back();
 
 	fTagType = eTagTypeNone;
 	}
 
-#endif
-
 // =================================================================================================
 #pragma mark -
 #pragma mark ZML::StrimW::Indenter
-
-#if 0
 
 StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 :	fStrimW(iStrimW),
@@ -1378,40 +1372,6 @@ StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 
 StrimW::Indenter::~Indenter()
 	{ fStrimW.Indent(fPriorIndent); }
-
-#endif
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZML::StrimmerW
-
-#if 0
-
-StrimmerW::StrimmerW(ZRef<ZStrimmerW> iStrimmerW)
-:	fStrimmerW(iStrimmerW),
-	fStrimW(iStrimmerW->GetStrimW())
-	{}
-
-StrimmerW::StrimmerW(bool iIndent, ZRef<ZStrimmerW> iStrimmerW)
-:	fStrimmerW(iStrimmerW),
-	fStrimW(iIndent, iStrimmerW->GetStrimW())
-	{}
-
-StrimmerW::StrimmerW(
-	const string8& iEOL, const string8& iIndent, ZRef<ZStrimmerW> iStrimmerW)
-:	fStrimmerW(iStrimmerW),
-	fStrimW(iEOL, iIndent, iStrimmerW->GetStrimW())
-	{}
-
-StrimmerW::~StrimmerW()
-	{}
-
-const ZStrimW& StrimmerW::GetStrimW()
-	{ return fStrimW; }
-
-ZML::StrimW& StrimmerW::GetStrim()
-	{ return fStrimW; }
-#endif
 
 } // namespace ZML
 } // namespace ZooLib
