@@ -28,8 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
-namespace Yad_XMLPlist {
+namespace Yad_XMLPList {
 
+#if 0
 // =================================================================================================
 // MARK: - ParseException
 
@@ -121,9 +122,11 @@ private:
 
 ZRef<YadR> sYadR(ZRef<ZML::StrimmerU> iR);
 
-void sToStrim(ZRef<YadR> iYadR, const ZML::StrimW& s);
+#endif  // 0
 
-void sWritePreamble(const ZML::StrimW& s);
+void sToStrim(ZRef<YadR> iYadR, const ML::StrimW& s);
+
+void sWritePreamble(const ML::StrimW& s);
 
 } // namespace Yad_XMLPList
 } // namespace ZooLib

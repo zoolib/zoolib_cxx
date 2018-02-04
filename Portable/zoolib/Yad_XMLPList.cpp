@@ -18,19 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#if 0
-
-#include "zoolib/Debug.h"
 #include "zoolib/Util_Any.h"
-#include "zoolib/Util_Strim.h"
-#include "zoolib/Util_Strim_Operators.h"
-#include "zoolib/Util_Time.h"
+#include "zoolib/Util_Chan.h"
+#include "zoolib/Util_Chan_UTF.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
+//#include "zoolib/Util_Time.h"
 #include "zoolib/Yad_XMLPList.h"
+#include "zoolib/ZDebug.h"
 
 namespace ZooLib {
-namespace Yad_XMLPlist {
+namespace Yad_XMLPList {
 
 using std::string;
+
+#if 0
 
 // =================================================================================================
 // MARK: -
@@ -300,10 +301,16 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oY
 		spThrowParseException("Expected value after <key>...</key>");
 	}
 
-// =================================================================================================
-// MARK: - ZYad_XMLPList
+#endif // 0
 
-ZRef<ZYadR> ZYad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
+} // namespace Yad_XMLPlist
+
+// =================================================================================================
+// MARK: - Yad_XMLPList
+
+#if 0
+
+ZRef<YadR> Yad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
 	if (not iStrimmerU)
 		return null;
@@ -321,43 +328,46 @@ ZRef<ZYadR> ZYad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 	return spMakeYadR_XMLPList(iStrimmerU);
 	}
 
-static void spToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
+#endif
+
+static void spToStrim_Stream(const ML::StrimW& s, const ChanR_Bin& iChanR)
 	{
 	s.Begin("data");
-		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
+		sCopyAll(iChanR, ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)));
+//		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
 	s.End("data");
 	}
 
-static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
+static void spToStrim_Strim(const ML::StrimW& s, const ChanR_UTF& iStrimR)
 	{
 	s.Begin("string");
-		iStrimR.CopyAllTo(s);
+		sCopyAll(iStrimR, s);
 	s.End("string");
 	}
 
-static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)
+static void spToStrim_List(const ML::StrimW& s, ZRef<YadSeqR> iYadSeqR)
 	{
 	s.Begin("array");
-		while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-			ZYad_XMLPList::sToStrim(theChild, s);
+		while (ZRef<YadR> theChild = sReadInc(*iYadSeqR))
+			Yad_XMLPList::sToStrim(theChild, s);
 	s.End("array");
 	}
 
-static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
+static void spToStrim_Map(const ML::StrimW& s, ZRef<YadMapR> iYadMapR)
 	{
 	s.Begin("dict");
-		ZName theName;
-		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
+		Name theName;
+		while (ZRef<YadR> theChild = sReadInc(iYadMapR, theName))
 			{
 			s.Begin("key");
 				s << string8(theName);
 			s.End("key");
-			ZYad_XMLPList::sToStrim(theChild, s);
+			Yad_XMLPList::sToStrim(theChild, s);
 			}
 	s.End("dict");
 	}
 
-static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
+static void spToStrim_Any(const ML::StrimW& s, const Any& iVal)
 	{
 	int64 asInt64;
 	double asDouble;
@@ -378,21 +388,21 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	else if (sQCoerceInt(iVal, asInt64))
 		{
 		s.Begin("integer");
-			s.Writef("%lld", asInt64);
+			sEWritef(s, "%lld", asInt64);
 		s.End("integer");
 		}
 	else if (sQCoerceRat(iVal, asDouble))
 		{
 		s.Begin("real");
-			ZUtil_Strim::sWriteExact(s, asDouble);
+			Util_Chan::sWriteExact(s, asDouble);
 		s.End("real");
 		}
-	else if (const ZTime* theValue = iVal.PGet<ZTime>())
-		{
-		s.Begin("date");
-			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
-		s.End("date");
-		}
+//	else if (const ZTime* theValue = iVal.PGet<ZTime>())
+//		{
+//		s.Begin("date");
+//			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
+//		s.End("date");
+//		}
 	else
 		{
 		s.Begin("nil");
@@ -401,29 +411,29 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	}
 
-void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
+void Yad_XMLPList::sToStrim(ZRef<YadR> iYadR, const ML::StrimW& s)
 	{
 	if (not iYadR)
 		{
 		return;
 		}
-	else if (ZRef<ZYadMapR> theYadMapR = iYadR.DynamicCast<ZYadMapR>())
+	else if (ZRef<YadMapR> theYadMapR = iYadR.DynamicCast<YadMapR>())
 		{
 		spToStrim_Map(s, theYadMapR);
 		}
-	else if (ZRef<ZYadSeqR> theYadSeqR = iYadR.DynamicCast<ZYadSeqR>())
+	else if (ZRef<YadSeqR> theYadSeqR = iYadR.DynamicCast<YadSeqR>())
 		{
 		spToStrim_List(s, theYadSeqR);
 		}
-	else if (ZRef<ZYadStreamerR> theYadStreamerR = iYadR.DynamicCast<ZYadStreamerR>())
+	else if (ZRef<YadStreamerR> theYadStreamerR = iYadR.DynamicCast<YadStreamerR>())
 		{
-		spToStrim_Stream(s, theYadStreamerR->GetStreamR());
+		spToStrim_Stream(s, *theYadStreamerR);
 		}
-	else if (ZRef<ZYadStrimmerR> theYadStrimmerR = iYadR.DynamicCast<ZYadStrimmerR>())
+	else if (ZRef<YadStrimmerR> theYadStrimmerR = iYadR.DynamicCast<YadStrimmerR>())
 		{
-		spToStrim_Strim(s, theYadStrimmerR->GetStrimR());
+		spToStrim_Strim(s, *theYadStrimmerR);
 		}
-	else if (ZRef<ZYadAtomR> theYadAtomR = iYadR.DynamicCast<ZYadAtomR>())
+	else if (ZRef<YadAtomR> theYadAtomR = iYadR.DynamicCast<YadAtomR>())
 		{
 		spToStrim_Any(s, theYadAtomR->AsAny());
 		}
@@ -435,7 +445,7 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		}
 	}
 
-void ZYad_XMLPList::sWritePreamble(const ZML::StrimW& s)
+void Yad_XMLPList::sWritePreamble(const ML::StrimW& s)
 	{
 	s.PI("xml");
 		s.Attr("version", "1.0");
@@ -452,5 +462,3 @@ void ZYad_XMLPList::sWritePreamble(const ZML::StrimW& s)
 	}
 
 } // namespace ZooLib
-
-#endif
