@@ -55,6 +55,25 @@ void sWrite(const ChanW_UTF& iChanW,
 // =================================================================================================
 #pragma mark -
 
+/** \name Pointer-and-length
+*/	//@{
+//size_t sWrite(const ChanW_UTF& iChanW, const UTF32* iString, size_t iLength);
+size_t sWrite(const ChanW_UTF& iChanW, const UTF16* iString, size_t iLength);
+size_t sWrite(const ChanW_UTF& iChanW, const UTF8* iString, size_t iLength);
+
+bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iString, size_t iLength);
+bool sQWrite(const ChanW_UTF& iChanW, const UTF16* iString, size_t iLength);
+bool sQWrite(const ChanW_UTF& iChanW, const UTF8* iString, size_t iLength);
+
+void sEWrite(const ChanW_UTF& iChanW, const UTF32* iString, size_t iLength);
+void sEWrite(const ChanW_UTF& iChanW, const UTF16* iString, size_t iLength);
+void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString, size_t iLength);
+//@}
+
+
+// =================================================================================================
+#pragma mark -
+
 /** \name Zero-terminated strings
 */	//@{
 bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iString);
