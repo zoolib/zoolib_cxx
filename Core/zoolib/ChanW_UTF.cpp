@@ -135,7 +135,7 @@ void sWrite(const ChanW_UTF& iChanW,
 #pragma mark -
 #pragma mark Pointer-and-length
 
-// We do *not* implement this. UTF32 naturally has an only-CU variant
+// We do *not* implement this. UTF32 naturally has a CU-only variant
 //size_t sWrite(const ChanW_UTF& iChanW, const UTF32* iSource, size_t iCountCU)
 //	{
 //	size_t countWritten;
