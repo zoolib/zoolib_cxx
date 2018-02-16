@@ -193,7 +193,7 @@ public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
 
 	virtual bool WaitReadable(double iTimeout)
-		{ return sWaitReadable(DerivedFrom_p::pGetChan()); }
+		{ return sWaitReadable(DerivedFrom_p::pGetChan(), iTimeout); }
 	};
 
 // =================================================================================================
