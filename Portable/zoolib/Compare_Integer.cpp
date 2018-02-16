@@ -37,16 +37,12 @@ ZMACRO_CompareRegistration_T(unsigned int)
 ZMACRO_CompareRegistration_T(long)
 ZMACRO_CompareRegistration_T(unsigned long)
 
-#if ZCONFIG(Compiler, MSVC)
+ZMACRO_CompareRegistration_T(__int64)
+ZMACRO_CompareRegistration_T(__uint64)
 
-	ZMACRO_CompareRegistration_T(__int64)
-	ZMACRO_CompareRegistration_T(unsigned __int64)
-
-#else
-
-	ZMACRO_CompareRegistration_T(long long)
-	ZMACRO_CompareRegistration_T(unsigned long long)
-
+#if ZCONFIG_CPP >= 2011
+	ZMACRO_CompareRegistration_T(char16_t)
+	ZMACRO_CompareRegistration_T(char32_t)
 #endif
 
 } // namespace ZooLib

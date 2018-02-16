@@ -87,6 +87,18 @@ template <>
 inline int sCompare_T(const __uint64& iL, const __uint64& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
+#if ZCONFIG_CPP >= 2011
+
+template <>
+inline int sCompare_T(const char16_t& iL, const char16_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+template <>
+inline int sCompare_T(const char32_t& iL, const char32_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+#endif // ZCONFIG_CPP >= 2011
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Compare_Integer_h__

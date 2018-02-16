@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include <inttypes.h> // For PRIuLEAST16 and PRIuLEAST32
+
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll
 #include "zoolib/Util_Chan_UTF.h"
@@ -167,6 +169,21 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, __uint64 iVal)
 	sEWritef(w, "%llu", iVal);
 	return w;
 	}
+
+#if ZCONFIG_CPP >= 2011
+const ChanW_UTF& operator<<(const ChanW_UTF& w, char16_t iVal)
+	{
+	// Would like to use PRIuLEAST16, but the compiler complains.
+	sEWritef(w, "%u", iVal);
+	return w;
+	}
+
+const ChanW_UTF& operator<<(const ChanW_UTF& w, char32_t iVal)
+	{
+	sEWritef(w, "%" PRIuLEAST32, iVal);
+	return w;
+	}
+#endif // ZCONFIG_CPP >= 2011
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, float iVal)
 	{
