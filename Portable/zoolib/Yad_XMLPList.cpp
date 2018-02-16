@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
-//#include "zoolib/Util_Time.h"
+#include "zoolib/Util_Time.h"
 #include "zoolib/Yad_XMLPList.h"
 #include "zoolib/ZDebug.h"
 
@@ -397,12 +398,12 @@ static void spToStrim_Any(const ML::StrimW& s, const Any& iVal)
 			Util_Chan::sWriteExact(s, asDouble);
 		s.End("real");
 		}
-//	else if (const ZTime* theValue = iVal.PGet<ZTime>())
-//		{
-//		s.Begin("date");
-//			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
-//		s.End("date");
-//		}
+	else if (const UTCDateTime* theValue = iVal.PGet<UTCDateTime>())
+		{
+		s.Begin("date");
+			s << Util_Time::sAsString_ISO8601(*theValue, true);
+		s.End("date");
+		}
 	else
 		{
 		s.Begin("nil");
