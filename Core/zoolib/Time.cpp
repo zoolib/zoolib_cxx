@@ -204,7 +204,7 @@ double sSystem()
 #endif
 	}
 
-double sBoot()
+double sAtBoot()
 	{
 #if ZCONFIG_SPI_Enabled(BSD)
 
@@ -249,7 +249,7 @@ double sSinceBoot()
 
 #elif ZCONFIG_SPI_Enabled(BSD)
 
-	return sNow() - sBoot();
+	return sNow() - sAtBoot();
 
 #else
 

@@ -34,7 +34,7 @@ namespace Time {
 
 double sNow();
 double sSystem();
-double sBoot();
+double sAtBoot();
 
 double sSinceBoot();
 
