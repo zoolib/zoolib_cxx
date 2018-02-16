@@ -1199,7 +1199,7 @@ uint64 ChanRPos_File_POSIX::Pos()
 	return 0;
 	}
 
-void ChanRPos_File_POSIX::SetPos(uint64 iPos)
+void ChanRPos_File_POSIX::PosSet(uint64 iPos)
 	{ spSetPosition(fFD, iPos); }
 
 uint64 ChanRPos_File_POSIX::Size()
@@ -1257,7 +1257,7 @@ uint64 ChanWPos_File_POSIX::Pos()
 	return 0;
 	}
 
-void ChanWPos_File_POSIX::SetPos(uint64 iPos)
+void ChanWPos_File_POSIX::PosSet(uint64 iPos)
 	{ spSetPosition(fFD, iPos); }
 
 uint64 ChanWPos_File_POSIX::Size()
@@ -1322,7 +1322,7 @@ uint64 ChanRWPos_File_POSIX::Pos()
 	return 0;
 	}
 
-void ChanRWPos_File_POSIX::SetPos(uint64 iPos)
+void ChanRWPos_File_POSIX::PosSet(uint64 iPos)
 	{ spSetPosition(fFD, iPos); }
 
 uint64 ChanRWPos_File_POSIX::Size()

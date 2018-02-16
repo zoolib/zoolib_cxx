@@ -88,7 +88,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
-	virtual void SetPos(uint64 iPosition)
+	virtual void PosSet(uint64 iPosition)
 		{ fPosition = iPosition; }
 
 // From Aspect_Read

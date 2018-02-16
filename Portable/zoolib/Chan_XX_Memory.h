@@ -66,7 +66,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
-	virtual void SetPos(uint64 iPos)
+	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
 // From ChanSize
@@ -148,7 +148,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
-	virtual void SetPos(uint64 iPos)
+	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
 // From ChanU

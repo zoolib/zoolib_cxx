@@ -58,7 +58,7 @@ inline void sAbort(const ChanAbort& iChan)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark AspectDisconnectRead
+#pragma mark Aspect_DisconnectRead
 
 class Aspect_DisconnectRead
 	{
@@ -95,7 +95,7 @@ class Aspect_Pos
 public:
 	virtual uint64 Pos() = 0;
 
-	virtual void SetPos(uint64 iPos) = 0;
+	virtual void PosSet(uint64 iPos) = 0;
 	};
 
 using ChanPos = DeriveFrom<Aspect_Pos>;
@@ -104,7 +104,7 @@ inline uint64 sPos(const ChanPos& iChan)
 	{ return sNonConst(iChan).Pos(); }
 
 inline void sPosSet(const ChanPos& iChan, uint64 iPos)
-	{ sNonConst(iChan).SetPos(iPos); }
+	{ sNonConst(iChan).PosSet(iPos); }
 
 // =================================================================================================
 #pragma mark -

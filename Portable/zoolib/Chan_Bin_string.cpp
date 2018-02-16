@@ -70,7 +70,7 @@ uint64 ChanRPos_Bin_string::Size()
 uint64 ChanRPos_Bin_string::Pos()
 	{ return fPosition; }
 
-void ChanRPos_Bin_string::SetPos(uint64 iPos)
+void ChanRPos_Bin_string::PosSet(uint64 iPos)
 	{ fPosition = iPos; }
 
 size_t ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
@@ -120,9 +120,8 @@ uint64 ChanRWPos_Bin_string::Size()
 uint64 ChanRWPos_Bin_string::Pos()
 	{ return fPosition; }
 
-void ChanRWPos_Bin_string::SetPos(uint64 iPos)
+void ChanRWPos_Bin_string::PosSet(uint64 iPos)
 	{ fPosition = iPos; }
-
 
 size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{

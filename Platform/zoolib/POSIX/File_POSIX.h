@@ -139,7 +139,7 @@ public:
 // From ChanPos
 	virtual uint64 Pos();
 
-	virtual void SetPos(uint64 iPos);
+	virtual void PosSet(uint64 iPos);
 
 // From ChanSize
 	virtual uint64 Size();
@@ -167,7 +167,7 @@ public:
 // From ChanPos
 	virtual uint64 Pos();
 
-	virtual void SetPos(uint64 iPos);
+	virtual void PosSet(uint64 iPos);
 
 // From ChanSize
 	virtual uint64 Size();
@@ -199,7 +199,7 @@ public:
 // From ChanPos
 	virtual uint64 Pos();
 
-	virtual void SetPos(uint64 iPos);
+	virtual void PosSet(uint64 iPos);
 
 // From ChanSize
 	virtual uint64 Size();
