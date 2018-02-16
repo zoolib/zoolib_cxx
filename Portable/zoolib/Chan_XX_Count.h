@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Count_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR.h"
-#include "zoolib/ChanW.h"
+#include "zoolib/ChanFilter.h"
 
 namespace ZooLib {
 
@@ -31,40 +30,40 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Count
 
-template <class EE>
+template <class Chan_p>
 class ChanR_XX_Count
-:	public ChanR<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
 public:
-	ChanR_XX_Count(const ChanR<EE>& iChanR)
-	:	fChanR(iChanR)
+	ChanR_XX_Count(const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fCount(0)
 		{}
 
 // From ChanR
-	virtual size_t Read(EE* oDest, size_t iCount)
+	virtual size_t Read(typename Chan_p::Element_t* oDest, size_t iCount)
 		{
-		const size_t countRead = sRead(fChanR, oDest, iCount);
+		const size_t countRead = sRead(inherited::pGetChan(), oDest, iCount);
 		fCount += countRead;
 		return countRead;
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countSkipped = sSkip(fChanR, iCount);
+		const size_t countSkipped = sSkip(inherited::pGetChan(), iCount);
 		fCount += countSkipped;
 		return countSkipped;
 		}
 
 	virtual size_t Readable()
-		{ return sReadable(fChanR); }
+		{ return sReadable(inherited::pGetChan()); }
 
 // Our protocol
 	uint64 GetCount()
 		{ return fCount; }
 
 protected:
-	const ChanR<EE>& fChanR;
 	uint64 fCount;
 	};
 
@@ -72,33 +71,33 @@ protected:
 #pragma mark -
 #pragma mark ChanW_XX_Count
 
-template <class EE>
+template <class Chan_p>
 class ChanW_XX_Count
-:	public ChanW<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
 public:
-	ChanW_XX_Count(const ChanW<EE>& iChanW)
-	:	fChanW(iChanW)
+	ChanW_XX_Count(const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fCount(0)
 		{}
 
 // From ChanW
-	virtual size_t Write(const EE* iSource, size_t iCount)
+	virtual size_t Write(const typename Chan_p::Element_t* iSource, size_t iCount)
 		{
-		const size_t countWritten = sWrite(iSource, iCount, fChanW);
+		const size_t countWritten = sWrite(inherited::pGetChan(), iSource, iCount);
 		fCount += countWritten;
 		return countWritten;
 		}
 
 	virtual void Flush()
-		{ sFlush(fChanW); }
+		{ sFlush(inherited::pGetChan()); }
 
 // Our protocol
 	uint64 GetCount()
 		{ return fCount; }
 
 protected:
-	const ChanW<EE>& fChanW;
 	uint64 fCount;
 	};
 
