@@ -251,8 +251,8 @@ class ChanR_RefYad_Definite
 :	public ChanR_RefYad_Std
 	{
 public:
-	ChanR_RefYad_Definite(const ZRef<ChannerR_Bin>& iChannerR_Bin, uint64 iLength)
-	:	fChannerR_Count(sChanner_Channer_T<ChanR_XX_Count<byte>>(iChannerR_Bin))
+	ChanR_RefYad_Definite(const ZRef<Channer<ChanR_Bin>>& iChannerR_Bin , uint64 iLength)
+	:	fChannerR_Count(sChanner_Channer_T<ChanR_XX_Count<ChanR_Bin>>(iChannerR_Bin))
 	,	fLength(iLength)
 		{}
 
@@ -264,7 +264,7 @@ public:
 		}
 
 private:
-	const ZRef<Channer_T<ChanR_XX_Count<byte>>> fChannerR_Count;
+	const ZRef<Channer_T<ChanR_XX_Count<ChanR_Bin>>> fChannerR_Count;
 	const uint64 fLength;
 	};
 
