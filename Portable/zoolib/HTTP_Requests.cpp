@@ -106,7 +106,7 @@ static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 	if (oRawHeader)
 		{
 		ChanRWPos_Bin_Data<Data> theSRWP_Data(oRawHeader);
-		ChanR_XX_Tee<byte> theTee(iChanR, theSRWP_Data);
+		ChanR_XX_Tee<ChanR_Bin> theTee(iChanR, theSRWP_Data);
 		return spQReadResponse(theTee, oResponseCode, oHeader);
 		}
 	else
@@ -287,7 +287,7 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 	if (oRawHeader)
 		{
 		ChanRWPos_Bin_Data<Data> theSRWP_Data(oRawHeader);
-		ChanR_XX_Tee<byte> theTee(iChanR, theSRWP_Data);
+		ChanR_XX_Tee<ChanR_Bin> theTee(iChanR, theSRWP_Data);
 		return spQReadResponse(theTee, oResponseCode, oHeader);
 		}
 	else

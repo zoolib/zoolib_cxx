@@ -401,7 +401,7 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 	if (iTagClass != eTagClass_Universal)
 		{
 		string theName = spAsString(iTagClass) + sStringf(" %llu", iTagNumber);
-		ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+		ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin>>(iLength, iChannerR_Bin);
 		return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 		}
 
@@ -416,7 +416,7 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 				+ spAsString(ETagNumber_Universal(iTagNumber))
 				+ sStringf(" (%llu))", iTagNumber)
 				+ "should not be primitive";
-			ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+			ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin>>(iLength, iChannerR_Bin);
 			return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 			}
 		}
@@ -442,7 +442,7 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 		case eTagNumber_Universal_BMPString:
 			{
 			// For now return as raw bytes. Later we'll stick appropriate interpretation on them
-			return sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+			return sChannerR_Limited(iChannerR_Bin, iLength);
 			}
 		}
 
@@ -477,7 +477,7 @@ ZRef<YadR> spMakeYadR_Primitive(const ZRef<ChannerR_Bin>& iChannerR_Bin,
 		case eTagNumber_Universal_RELATIVE_OID:
 			{
 			string theName = spAsString(ETagNumber_Universal(iTagNumber));
-			ZRef<YadR> theChild = sChanner_Channer_T<ChanR_XX_Limited<byte>>(iLength, iChannerR_Bin);
+			ZRef<YadR> theChild = sChannerR_Limited(iChannerR_Bin, iLength);
 			return sChanner_T<ChanR_NameRefYad_SingleChild>(theName, theChild);
 			}
 		}
