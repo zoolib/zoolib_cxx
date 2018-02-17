@@ -41,6 +41,14 @@ template <class DF> using Channer
 
 // =================================================================================================
 #pragma mark -
+#pragma mark ChanOfChanner
+
+template <class Channer_p> using ChanOfChanner =
+	typename ZooLib::AsDeriveFrom<
+		typename TypeListWithoutPrefix<typename Channer_p::AsTypeList_t>::Result_t>::Result_t;
+
+// =================================================================================================
+#pragma mark -
 #pragma mark Basic channer typedefs.
 
 using ChannerAbort = Channer<ChanAbort>;
@@ -209,37 +217,65 @@ protected:
 
 template <class Chan_p, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>> sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther)
-	{ return new Channer_Channer_T<Chan_p>(iOther); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iOther);
+	return null;
+	}
 
 template <class Chan_p, class T0, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const ZRef<ChannerOther_p>& iOther)
-	{ return new Channer_Channer_T<Chan_p>(iT0, iOther); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iT0, iOther);
+	return null;
+	}
 
 template <class Chan_p, class T0, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0)
-	{ return new Channer_Channer_T<Chan_p>(iOther, iT0); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iOther, iT0);
+	return null;
+	}
 
 template <class Chan_p, class T0, class T1, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
-	{ return new Channer_Channer_T<Chan_p>(iT0, iT1, iOther); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iT0, iT1, iOther);
+	return null;
+	}
 
 template <class Chan_p, class T0, class T1, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1)
-	{ return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1);
+	return null;
+	}
 
 template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
-	{ return new Channer_Channer_T<Chan_p>(iT0, iT1, iT2, iOther); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iT0, iT1, iT2, iOther);
+	return null;
+	}
 
 template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
 ZRef<Channer_Channer_T<Chan_p>>
 sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1, const T2& iT2)
-	{ return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1, iT2); }
+	{
+	if (iOther)
+		return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1, iT2);
+	return null;
+	}
 
 } // namespace ZooLib
 
