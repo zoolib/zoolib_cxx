@@ -53,7 +53,7 @@ public:
 			ZAcqMtx acq(fMutex);
 			sFlush(fChanW);
 			}
-		return sRead(oDest, iCount, fChanR);
+		return sRead(fChanR, oDest, iCount);
 		}
 
 	virtual size_t Readable()
@@ -71,7 +71,7 @@ public:
 		{
 		ZMACRO_ThreadSafe_Set(fLastWasWrite, 1);
 		ZAcqMtx acq(fMutex);
-		return sWrite(iSource, iCount, fChanW);
+		return sWrite(fChanW, iSource, iCount);
 		}
 
 protected:

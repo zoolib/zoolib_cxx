@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Buffered_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanFilter.h"
+#include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
 #include "zoolib/Compat_algorithm.h" // for sMinMax
@@ -34,13 +36,15 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Buffered
 
-template <class EE>
+template <class Chan_p>
 class ChanR_XX_Buffered
-:	public ChanR<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanR_XX_Buffered(size_t iBufferSize, const ChanR<EE>& iChanR)
-	:	fChanR(iChanR)
+	ChanR_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
+	:	inherited(iChan)
 	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
 	,	fBegin(0)
 	,	fEnd(0)
@@ -64,14 +68,14 @@ public:
 			else
 				{
 				// Our buffer is empty.
-				const size_t countReadable = sReadable(fChanR);
+				const size_t countReadable = sReadable(inherited::pGetChan());
 				if (iCount >= fBuffer.size() || iCount >= countReadable)
 					{
 					// Either we're asking for more data than would fit in our buffer, or we're
 					// asking for more data than the stream will be able to provide without
 					// blocking. In either case we bypass the buffer and read straight into our
 					// read destination
-					const size_t countRead = sRead(fChanR, localDest, iCount);
+					const size_t countRead = sRead(inherited::pGetChan(), localDest, iCount);
 					if (countRead == 0)
 						break;
 					localDest += countRead;
@@ -82,7 +86,7 @@ public:
 					// We're asking for less data than the stream guarantees it could provide
 					// without blocking, in which case we fill up as much of our buffer as we can,
 					// so some later request will be able to be satisfied straight from our buffer.
-					const size_t countRead = sRead(fChanR,
+					const size_t countRead = sRead(inherited::pGetChan(),
 						&fBuffer[0],
 						std::min(fBuffer.size(), countReadable));
 					if (countRead == 0)
@@ -96,26 +100,31 @@ public:
 		}
 
 	virtual size_t Readable()
-		{ return fEnd - fBegin + sReadable(fChanR); }
+		{ return fEnd - fBegin + sReadable(inherited::pGetChan()); }
 
 protected:
-	const ChanR<EE>& fChanR;
 	std::vector<EE> fBuffer;
 	size_t fBegin;
 	size_t fEnd;
 	};
 
+template <class Channer_p>
+ZRef<Channer_p> sChannerR_Buffered(const ZRef<Channer_p>& iChanner, size_t iBufferSize)
+	{ return sChanner_Channer_T<ChanR_XX_Buffered<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark ChanW_XX_Buffered
 
-template <class EE>
+template <class Chan_p>
 class ChanW_XX_Buffered
-:	public ChanW<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanW_XX_Buffered(size_t iBufferSize, const ChanW<EE>& iChanW)
-	:	fChanW(iChanW)
+	ChanW_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
+	:	inherited(iChan)
 	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
 	,	fOffset(0)
 		{}
@@ -140,7 +149,7 @@ public:
 			if (fOffset == 0 && fBuffer.size() <= iCount)
 				{
 				// We have an empty buffer *and* we have more data to send than would fit in the buffer.
-				const size_t countWritten = sWrite(fChanW, localSource, iCount);
+				const size_t countWritten = sWrite(inherited::pGetChan(), localSource, iCount);
 				if (countWritten == 0)
 					break;
 				localSource += countWritten;
@@ -169,20 +178,23 @@ public:
 	virtual void Flush()
 		{
 		this->pFlush();
-		sFlush(fChanW);
+		sFlush(inherited::pGetChan());
 		}
 
 protected:
 	void pFlush()
 		{
 		if (size_t used = sGetSet(fOffset, 0))
-			sEWrite(fChanW, &fBuffer[0], used);
+			sEWrite(inherited::pGetChan(), &fBuffer[0], used);
 		}
 
-	const ChanW<EE>& fChanW;
 	std::vector<EE> fBuffer;
 	size_t fOffset;
 	};
+
+template <class Channer_p>
+ZRef<Channer_p> sChannerW_Buffered(const ZRef<Channer_p>& iChanner, size_t iBufferSize)
+	{ return sChanner_Channer_T<ChanW_XX_Buffered<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
 
 } // namespace ZooLib
 

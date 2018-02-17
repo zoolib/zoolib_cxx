@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Limited_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanFilter.h"
+#include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
 
@@ -31,68 +33,85 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Limited
 
-template <class EE>
+template <class Chan_p>
 class ChanR_XX_Limited
-:	public ChanR<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanR_XX_Limited(uint64 iLimit, const ChanR<EE>& iChanR)
-	:	fChanR(iChanR)
+	ChanR_XX_Limited(const Chan_p& iChan, uint64 iLimit)
+	:	inherited(iChan)
+	,	fLimit(iLimit)
+		{}
+
+	ChanR_XX_Limited(uint64 iLimit, const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fLimit(iLimit)
 		{}
 
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countRead = sRead(fChanR, oDest, std::min<uint64>(fLimit, iCount));
+		const size_t countRead = sRead(inherited::pGetChan(), oDest, std::min<uint64>(fLimit, iCount));
 		fLimit -= countRead;
 		return countRead;
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countSkipped = sSkip(fChanR, std::min<uint64>(fLimit, iCount));
+		const size_t countSkipped = sSkip(inherited::pGetChan(), std::min<uint64>(fLimit, iCount));
 		fLimit -= countSkipped;
 		return countSkipped;
 		}
 
 	virtual size_t Readable()
-		{ return std::min<uint64>(fLimit, sReadable(fChanR)); }
+		{ return std::min<uint64>(fLimit, sReadable(inherited::pGetChan())); }
 
 protected:
-	const ChanR<EE>& fChanR;
 	uint64 fLimit;
 	};
+
+template <class Channer_p>
+ZRef<Channer_p> sChannerR_Limited(const ZRef<Channer_p>& iChanner, size_t iLimit)
+	{ return sChanner_Channer_T<ChanR_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark ChanW_XX_Limited
 
-template <class EE>
+template <class Chan_p>
 class ChanW_XX_Limited
-:	public ChanW<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanW_XX_Limited(uint64 iLimit, const ChanW<EE>& iChanW)
-	:	fChanW(iChanW)
+	ChanW_XX_Limited(const Chan_p& iChan, uint64 iLimit)
+	:	inherited(iChan)
+	,	fLimit(iLimit)
+		{}
+
+	ChanW_XX_Limited(uint64 iLimit, const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fLimit(iLimit)
 		{}
 
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		const size_t countWritten = sWrite(iSource, std::min<uint64>(fLimit, iCount), fChanW);
+		const size_t countWritten = sWrite(inherited::pGetChan(), iSource, std::min<uint64>(fLimit, iCount));
 		fLimit -= countWritten;
 		return countWritten;
 		}
 
-	virtual void Flush()
-		{ sFlush(fChanW); }
-
 protected:
-	const ChanW<EE>& fChanW;
 	uint64 fLimit;
 	};
+
+template <class Channer_p>
+ZRef<Channer_p> sChannerW_Limited(const ZRef<Channer_p>& iChanner, size_t iLimit)
+	{ return sChanner_Channer_T<ChanW_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
 
 } // namespace ZooLib
 

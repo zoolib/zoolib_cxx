@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_Tee_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanFilter.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
 
@@ -31,13 +32,15 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_XX_Tee
 
-template <class EE>
+template <class Chan_p>
 class ChanR_XX_Tee
-:	public ChanR<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanR_XX_Tee(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
-	:	fChanR(iChanR)
+	ChanR_XX_Tee(const Chan_p& iChan, const ChanW<EE>& iChanW)
+	:	inherited(iChan)
 	,	fChanW(iChanW)
 		{}
 
@@ -50,7 +53,7 @@ public:
 
 		EE buf[std::min<size_t>(iCount, sStackBufferSize / sizeof(EE))];
 
-		if (const size_t countRead = sRead(fChanR, buf, std::min(iCount, countof(buf))))
+		if (const size_t countRead = sRead(inherited::pGetChan(), buf, std::min(iCount, countof(buf))))
 			{
 			std::copy_n(buf, countRead, oDest);
 
@@ -66,11 +69,7 @@ public:
 		return 0;
 		}
 
-	virtual size_t Readable()
-		{ return sReadable(fChanR); }
-
 protected:
-	const ChanR<EE>& fChanR;
 	const ChanW<EE>& fChanW;
 	};
 
@@ -78,39 +77,40 @@ protected:
 #pragma mark -
 #pragma mark ChanW_XX_Tee
 
-template <class EE>
+template <class Chan_p>
 class ChanW_XX_Tee
-:	public ChanW<EE>
+:	public ChanFilter<Chan_p>
 	{
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
-	ChanW_XX_Tee(const ChanW<EE>& iChanW0, const ChanW<EE>& iChanW1)
-	:	fChanW0(iChanW0)
-	,	fChanW1(iChanW1)
+	ChanW_XX_Tee(const Chan_p& iChan, const ChanW<EE>& iChanW)
+	:	inherited(iChan)
+	,	fChanW(iChanW)
 		{}
 
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		if (const size_t countWritten0 = sWrite(iSource, iCount, fChanW0))
+		if (const size_t countWritten0 = sWrite(inherited::pGetChan(), iSource, iCount))
 			{
-			sWriteFully(iSource, countWritten0, fChanW1);
+			sWriteFully(fChanW, iSource, countWritten0);
 			return countWritten0;
 			}
 		else
 			{
-			return sWrite(iSource, iCount, fChanW1);
+			return sWrite(fChanW, iSource, iCount);
 			}
 		}
 
 	virtual void Flush()
 		{
-		sFlush(fChanW0);
-		sFlush(fChanW1);
+		inherited::Flush();
+		sFlush(fChanW);
 		}
 
 protected:
-	const ChanW<EE>& fChanW0;
-	const ChanW<EE>& fChanW1;
+	const ChanW<EE>& fChanW;
 	};
 
 } // namespace ZooLib

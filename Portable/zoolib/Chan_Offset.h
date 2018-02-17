@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_Offset_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Chan.h"
+#include "zoolib/ChanFilter.h"
 
 namespace ZooLib {
 
@@ -30,23 +30,29 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanPos_Offset
 
+template <class Chan_p>
 class ChanPos_Offset
-:	public ChanPos
+:	public ChanFilter<Chan_P>
 	{
+	typedef ChanFilter<Chan_P> inherited;
 public:
-	ChanPos_Offset(uint64 iOffset, const ChanPos& iChanPos)
-	:	fChanPos(iChanPos)
+	ChanPos_Offset(const Chan_p& iChan, uint64 iOffset)
+	:	inherited(iChan)
+	,	fOffset(iOffset)
+		{}
+
+	ChanPos_Offset(uint64 iOffset, const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fOffset(iOffset)
 		{}
 
 	virtual uint64 Pos()
-		{ return sPos(fChanPos) - fOffset; }
+		{ return sPos(inherited::pGetChan()) - fOffset; }
 
 	virtual void PosSet(uint64 iPos)
-		{ sPosSet(fChanPos, iPos + fOffset); }
+		{ sPosSet(inherited::pGetChan(), iPos + fOffset); }
 
 protected:
-	const ChanPos& fChanPos;
 	const uint64 fOffset;
 	};
 
@@ -54,21 +60,27 @@ protected:
 #pragma mark -
 #pragma mark ChanSize_Offset
 
+template <class Chan_p>
 class ChanSize_Offset
-:	public ChanSize
+:	public ChanFilter<Chan_P>
 	{
+	typedef ChanFilter<Chan_P> inherited;
 public:
-	ChanSize_Offset(uint64 iOffset, const ChanSize& iChanSize)
-	:	fChanSize(iChanSize)
+	ChanSize_Offset(const Chan_p& iChan, uint64 iOffset)
+	:	inherited(iChan)
+	,	fOffset(iOffset)
+		{}
+
+	ChanSize_Offset(uint64 iOffset, const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fOffset(iOffset)
 		{}
 
 // From ChanSize
 	virtual uint64 Size()
-		{ return sSize(fChanSize) - fOffset; }
+		{ return sSize(inherited::pGetChan()) - fOffset; }
 
 protected:
-	const ChanSize& fChanSize;
 	const uint64 fOffset;
 	};
 
@@ -76,21 +88,27 @@ protected:
 #pragma mark -
 #pragma mark ChanSizeSet_Offset
 
+template <class Chan_p>
 class ChanSizeSet_Offset
-:	public ChanSizeSet
+:	public ChanFilter<Chan_P>
 	{
+	typedef ChanFilter<Chan_P> inherited;
 public:
-	ChanSizeSet_Offset(uint64 iOffset, const ChanSizeSet& iChanSizeSet)
-	:	fChanSizeSet(iChanSizeSet)
+	ChanSizeSet_Offset(const Chan_p& iChan, uint64 iOffset)
+	:	inherited(iChan)
+	,	fOffset(iOffset)
+		{}
+
+	ChanSizeSet_Offset(uint64 iOffset, const Chan_p& iChan)
+	:	inherited(iChan)
 	,	fOffset(iOffset)
 		{}
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
-		{ sSizeSet(fChanSizeSet, iSize + fOffset); }
+		{ sSizeSet(inherited::pGetChan(), iSize + fOffset); }
 
 protected:
-	const ChanSizeSet& fChanSizeSet;
 	const uint64 fOffset;
 	};
 

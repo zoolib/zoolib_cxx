@@ -35,6 +35,7 @@ class ChanR_XX_Count
 :	public ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
 public:
 	ChanR_XX_Count(const Chan_p& iChan)
 	:	inherited(iChan)
@@ -42,7 +43,7 @@ public:
 		{}
 
 // From ChanR
-	virtual size_t Read(typename Chan_p::Element_t* oDest, size_t iCount)
+	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		const size_t countRead = sRead(inherited::pGetChan(), oDest, iCount);
 		fCount += countRead;
