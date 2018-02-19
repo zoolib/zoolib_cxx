@@ -57,9 +57,6 @@ public:
 		return countSkipped;
 		}
 
-	virtual size_t Readable()
-		{ return sReadable(inherited::pGetChan()); }
-
 // Our protocol
 	uint64 GetCount()
 		{ return fCount; }
@@ -90,9 +87,6 @@ public:
 		fCount += countWritten;
 		return countWritten;
 		}
-
-	virtual void Flush()
-		{ sFlush(inherited::pGetChan()); }
 
 // Our protocol
 	uint64 GetCount()
