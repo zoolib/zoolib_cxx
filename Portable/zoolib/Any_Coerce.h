@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Util_Any_h__
-#define __ZooLib_Util_Any_h__ 1
+#ifndef __ZooLib_Any_Coerce_h__
+#define __ZooLib_Any_Coerce_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Any.h"
@@ -50,4 +50,4 @@ double sCoerceRat(const Any& iAny);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Util_Any_h__
+#endif // __ZooLib_Any_Coerce_h__
