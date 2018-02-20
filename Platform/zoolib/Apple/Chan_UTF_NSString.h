@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_NSString_h__
-#define __ZStrim_NSString_h__ 1
+#ifndef __ZooLib_Apple_Chan_UTF_NSString_h__
+#define __ZooLib_Apple_Chan_UTF_NSString_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZStrim.h"
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
@@ -34,18 +35,16 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStrimR_NSString
+#pragma mark ChanR_UTF_NSString
 
-class ZStrimR_NSString : public ZStrimR
+class ChanR_UTF_NSString : public ChanR_UTF
 	{
 public:
-	ZStrimR_NSString(NSString* iString);
-	~ZStrimR_NSString();
+	ChanR_UTF_NSString(NSString* iString);
+	~ChanR_UTF_NSString();
 
-// From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
-
-	virtual bool Imp_ReadCP(UTF32& oCP);
+// From ChanR_UTF
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
 	ZRef<NSString> fString;
@@ -54,16 +53,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStrimW_NSString
+#pragma mark ChanW_UTF_NSString
 
-class ZStrimW_NSString : public ZStrimW_NativeUTF16
+class ChanW_UTF_NSString : public ChanW_UTF_Native16
 	{
 public:
-	ZStrimW_NSString(NSMutableString* ioString);
-	~ZStrimW_NSString();
+	ChanW_UTF_NSString(NSMutableString* ioString);
+	~ChanW_UTF_NSString();
 
-// From ZStrimW via ZStrimW_NativeUTF16
-	virtual void Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU);
+// From ChanW_UTF_Native16
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
 
 private:
 	ZRef<NSMutableString> fString;
@@ -73,4 +72,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
-#endif // __ZStrim_NSString_h__
+#endif // __ZooLib_Apple_Chan_UTF_NSString_h__

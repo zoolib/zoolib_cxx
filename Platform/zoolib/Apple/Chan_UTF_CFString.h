@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStrim_CFString_h__
-#define __ZStrim_CFString_h__ 1
+#ifndef __ZooLib_Apple_Chan_UTF_CFString_h__
+#define __ZooLib_Apple_Chan_UTF_CFString_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZStrim.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
@@ -34,24 +35,17 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStrimR_CFString
+#pragma mark ChanR_UTF_CFString
 
-class ZStrimR_CFString : public ZStrimR
+class ChanR_UTF_CFString : public ChanR_UTF_Native16
 	{
 public:
-	ZStrimR_CFString(CFStringRef iStringRef);
-	~ZStrimR_CFString();
+	ChanR_UTF_CFString(CFStringRef iStringRef);
+	~ChanR_UTF_CFString();
 
-// From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
-
-	virtual void Imp_ReadUTF16(UTF16* oDest,
+// From ChanR_UTF_Native16
+	virtual void ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual void Imp_ReadUTF8(UTF8* oDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual bool Imp_ReadCP(UTF32& oCP);
 
 private:
 	ZRef<CFStringRef> fStringRef;
@@ -60,16 +54,16 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStrimW_CFString
+#pragma mark ChanW_UTF_CFString
 
-class ZStrimW_CFString : public ZStrimW_NativeUTF16
+class ChanW_UTF_CFString : public ChanW_UTF_Native16
 	{
 public:
-	ZStrimW_CFString(CFMutableStringRef iStringRef);
-	~ZStrimW_CFString();
+	ChanW_UTF_CFString(CFMutableStringRef iStringRef);
+	~ChanW_UTF_CFString();
 
-// From ZStrimW via ZStrimW_NativeUTF16
-	virtual void Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU);
+// From ChanW_UTF_Native16
+	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
 
 private:
 	ZRef<CFMutableStringRef> fStringRef;
@@ -79,4 +73,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZStrim_CFString_h__
+#endif // __ZooLib_Apple_Chan_UTF_CFString_h__
