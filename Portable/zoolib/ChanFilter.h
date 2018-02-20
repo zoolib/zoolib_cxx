@@ -60,8 +60,8 @@ class AspectCallForwarder<Aspect_DisconnectRead,Chan_p,DerivedFrom_p>
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
 
-	virtual bool DisconnectRead()
-		{ return sDisconnectRead(DerivedFrom_p::pGetChan()); }
+	virtual bool DisconnectRead(double iTimeout)
+		{ return sDisconnectRead(DerivedFrom_p::pGetChan(), iTimeout); }
 	};
 
 // =================================================================================================
