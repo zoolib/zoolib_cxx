@@ -42,14 +42,14 @@ bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
 
 // -----
 
-ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ChannerRWClose_Bin> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ);
 
-ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
+ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
-ZRef<ChannerRWClose_Bin> sQPOST(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ChannerRWClose_Bin> sPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 

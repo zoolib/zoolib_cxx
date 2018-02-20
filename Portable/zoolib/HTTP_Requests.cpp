@@ -246,7 +246,7 @@ static void spPOST_Prefix(const ChanW_Bin& w,
 		sWrite_Header(*iHeader, w);
 	}
 
-ZRef<ChannerRWClose_Bin> sQPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ChannerRWClose_Bin> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ)
 	{
@@ -296,7 +296,7 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		}
 	}
 
-ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
+ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (iConn)
@@ -327,14 +327,14 @@ ZRef<ChannerRWClose_Bin> sQPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	return null;
 	}
 
-ZRef<ChannerRWClose_Bin> sQPOST(ZRef<Callable_Connect> iCallable_Connect,
+ZRef<ChannerRWClose_Bin> sPOST(ZRef<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZRef<ChannerRWClose_Bin> theConn = sQPOST_Send(iCallable_Connect,
+	if (ZRef<ChannerRWClose_Bin> theConn = sPOST_Send(iCallable_Connect,
 		"POST", iURL, iHeader, iBody, iBodyCountQ))
 		{
-		return sQPOST_Receive(theConn, oResponseCode, oHeader, oRawHeader);
+		return sPOST_Receive(theConn, oResponseCode, oHeader, oRawHeader);
 		}
 	return null;
 	}

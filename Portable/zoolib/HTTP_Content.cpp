@@ -123,9 +123,6 @@ size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 size_t ChanR_Bin_Chunked::Readable()
 	{ return min<size_t>(fChunkSize, sReadable(fChanR)); }
 
-//bool ChanR_Bin_Chunked::Imp_WaitReadable(double iTimeout)
-//	{ return fStreamSource.WaitReadable(iTimeout); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark HTTP::ChanW_Bin_Chunked
