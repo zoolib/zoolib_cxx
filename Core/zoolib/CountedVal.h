@@ -80,13 +80,7 @@ template <class T>
 ZRef<CountedVal<T> > sCountedVal()
 	{ return new CountedVal<T>; }
 
-template <class T>
-ZRef<CountedVal<T> > sCountedVal(const T& iOther)
-	{ return new CountedVal<T>(iOther); }
-
-// I don't understand why this works, but this form is needed to avoid ambiguity with
-// sCountedVal above when doing sCountedVal<T>(T()).
-template <class P0, class T>
+template <class P0, class T = P0>
 ZRef<CountedVal<T> > sCountedVal(const P0& i0)
 	{ return new CountedVal<T>(i0); }
 
