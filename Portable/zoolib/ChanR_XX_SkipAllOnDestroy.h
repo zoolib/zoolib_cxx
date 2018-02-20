@@ -18,32 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
+#ifndef __ZooLib_ChanR_XX_SkipAllOnDestroy_h__
+#define __ZooLib_ChanR_XX_SkipAllOnDestroy_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/ChanFilter.h"
+#include "zoolib/ChanR.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamR_SkipAllOnDestroy
+#pragma mark ChanR_XX_SkipAllOnDestroy
 
-/**
-\class ZStreamR_SkipAllOnDestroy
-\ingroup stream
-*/
+/// A read filter stream that when destroyed invokes SkipAll on its real stream.
 
-ZStreamR_SkipAllOnDestroy::ZStreamR_SkipAllOnDestroy(const ZStreamR& iStreamR)
-:	ZStreamR_Filter(iStreamR),
-	fStreamR(const_cast<ZStreamR&>(iStreamR))
-	{}
-
-ZStreamR_SkipAllOnDestroy::~ZStreamR_SkipAllOnDestroy()
+template <class Chan_p>
+class ChanR_XX_SkipAllOnDestroy
+:	public ChanFilter<Chan_p>
 	{
-	try
-		{
-		fStreamR.SkipAll();
-		}
-	catch (...)
+	typedef ChanFilter<Chan_p> inherited;
+public:
+	ChanR_XX_SkipAllOnDestroy(const Chan_p& iChan)
+	:	inherited(iChan)
 		{}
-	}
+
+	~ChanR_XX_SkipAllOnDestroy()
+		{ sSkipAll(inherited::pGetChan()); }
+	};
+
 
 } // namespace ZooLib
+
+#endif // __ZooLib_ChanR_XX_SkipAllOnDestroy_h__
