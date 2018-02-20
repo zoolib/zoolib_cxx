@@ -335,7 +335,6 @@ static void spToStrim_Stream(const ML::StrimW& s, const ChanR_Bin& iChanR)
 	{
 	s.Begin("data");
 		sCopyAll(iChanR, ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)));
-//		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
 	s.End("data");
 	}
 

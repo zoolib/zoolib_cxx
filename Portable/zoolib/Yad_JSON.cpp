@@ -23,9 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compat_algorithm.h" // ZSetRestore_T
 #include "zoolib/Compat_cmath.h"
 #include "zoolib/Unicode.h"
+#include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_Time.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
 
@@ -643,12 +645,12 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	while (iCount--)
-		iChanW << iOptions.fIndentString;
+		iChanW << sIndentString(iOptions);
 	}
 
 static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
-	iChanW << iOptions.fEOLString;
+	iChanW << sEOLString(iOptions);
 	spWriteIndent(iCount, iOptions, iChanW);
 	}
 
@@ -758,10 +760,12 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 			w << ".0";
 			}
 		}
-//	else if (const ZTime* asTime = iAny.PGet<ZTime>())
-//		{
-//		Util_Chan::sWriteExact(asTime->fVal, w);
-//		}
+	else if (const UTCDateTime* asTime = iAny.PGet<UTCDateTime>())
+		{
+		Util_Chan::sWriteExact(w, sGet(*asTime));
+		if (sTimesHaveUserLegibleComment(iOptions))
+			w << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
+		}
 	else
 		{
 		w << "NULL" << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
@@ -774,13 +778,13 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
-	if (iOptions.DoIndentation())
+	if (sDoIndentation(iOptions))
 		{
-		chunkSeparator = iOptions.fEOLString;
+		chunkSeparator = sEOLString(iOptions);
 		for (size_t xx = 0; xx < iLevel; ++xx)
-			chunkSeparator += iOptions.fIndentString;
+			chunkSeparator += sIndentString(iOptions);
 
-		chunkSize = iOptions.fRawChunkSize;
+		chunkSize = sRawChunkSize(iOptions);
 		}
 
 	if (iOptions.fBinaryAsBase64.DGet(false))
@@ -797,7 +801,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 
 		w << ">";
 		}
-	else if (iOptions.fRawAsASCII && chunkSize)
+	else if (sRawAsASCII(iOptions) && chunkSize)
 		{
 		w << "<";
 		std::vector<char> buffer(chunkSize, 0);
@@ -807,7 +811,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 			if (not countRead)
 				break;
 			const size_t countCopied = sWriteMemFully(
-				ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, "", 0, w),
+				ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, w),
 				&buffer[0], countRead);
 
 			if (size_t extraSpaces = chunkSize - countCopied)
@@ -818,7 +822,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 					// Two spaces for the two nibbles
 					w << "  ";
 					// And then the separator sequence
-					w << iOptions.fRawByteSeparator;
+					w << sRawByteSeparator(iOptions);
 					}
 				}
 
@@ -840,7 +844,7 @@ static void spToStrim_Stream(const ChanR_Bin& iChanR,
 		w << "<";
 
 		sCopyAll(iChanR,
-			ChanW_Bin_HexStrim(iOptions.fRawByteSeparator, chunkSeparator, chunkSize, w));
+			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, w));
 
 		w << ">";
 
@@ -901,7 +905,7 @@ public:
 	void Visit_YadR(const ZRef<YadR>& iYadR)
 		{
 		fChanW << "NULL";
-		if (fOptions.fBreakStrings)
+		if (sBreakStrings(fOptions))
 			{
 			fChanW << " /*!! Unhandled yad: "
 				<< spPrettyName(typeid(*iYadR.Get()))
@@ -916,7 +920,7 @@ public:
 	void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
 		{
 		bool needsIndentation = false;
-		if (fOptions.DoIndentation())
+		if (sDoIndentation(fOptions))
 			{
 			// We're supposed to be indenting if we're complex, ie if any element is:
 			// 1. A non-empty vector.
@@ -980,7 +984,7 @@ public:
 					}
 				else if (false && fOptions.fUseExtendedNotation.DGet(false))
 					{
-					if (not isFirst && fOptions.fBreakStrings)
+					if (not isFirst && sBreakStrings(fOptions))
 						fChanW << " ";
 					this->Visit(cur);
 					fChanW << ";";
@@ -990,7 +994,7 @@ public:
 					if (not isFirst)
 						{
 						fChanW << ",";
-						if (fOptions.fBreakStrings)
+						if (sBreakStrings(fOptions))
 							fChanW << " ";
 						}
 					this->Visit(cur);
@@ -1003,7 +1007,7 @@ public:
 	void Visit_YadMapR(const ZRef<ZooLib::YadMapR>& iYadMapR)
 		{
 		bool needsIndentation = false;
-		if (fOptions.DoIndentation())
+		if (sDoIndentation(fOptions))
 			{
 			//##needsIndentation = not iYadMapR->IsSimple(fOptions);
 			needsIndentation = true;
@@ -1068,11 +1072,11 @@ public:
 					}
 				else if (fOptions.fUseExtendedNotation.DGet(false))
 					{
-					if (not isFirst && fOptions.fBreakStrings)
+					if (not isFirst && sBreakStrings(fOptions))
 						fChanW << " ";
 
 					spWritePropName(curName, useSingleQuotes, fChanW);
-					if (fOptions.fBreakStrings)
+					if (sBreakStrings(fOptions))
 						fChanW << " = ";
 					else
 						fChanW << "=";
@@ -1086,11 +1090,11 @@ public:
 					{
 					if (not isFirst)
 						fChanW << ",";
-					if (fOptions.fBreakStrings)
+					if (sBreakStrings(fOptions))
 						fChanW << " ";
 					spWriteString(curName, useSingleQuotes, fChanW);
 					fChanW << ":";
-					if (fOptions.fBreakStrings)
+					if (sBreakStrings(fOptions))
 						fChanW << " ";
 
 					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
@@ -1099,7 +1103,7 @@ public:
 					}
 				wroteAny = true;
 				}
-			if (wroteAny && fOptions.fBreakStrings)
+			if (wroteAny && sBreakStrings(fOptions))
 				fChanW << " ";
 			fChanW << "}";
 			}

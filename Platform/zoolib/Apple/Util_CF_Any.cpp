@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/UTCDateTime.h"
+
 #include "zoolib/Apple/Util_CF.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
@@ -102,11 +104,11 @@ Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
 	if (theTypeID == ::CFBooleanGetTypeID())
 		return Any(bool(::CFBooleanGetValue((CFBooleanRef)iVal)));
 
-//	if (theTypeID == ::CFDateGetTypeID())
-//		{
-//		return Any(ZTime(kCFAbsoluteTimeIntervalSince1970
-//			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
-//		}
+	if (theTypeID == ::CFDateGetTypeID())
+		{
+		return Any(UTCDateTime(kCFAbsoluteTimeIntervalSince1970
+			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
+		}
 
 	if (theTypeID == ::CFDataGetTypeID())
 		return Any(spAsData_Any((CFDataRef)iVal));
@@ -228,10 +230,10 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 		else
 			return kCFBooleanFalse;
 		}
-//	else if (const ZTime* theValue = iVal.PGet<ZTime>())
-//		{
-//		return sAdopt& ::CFDateCreate(nullptr, theValue->fVal - kCFAbsoluteTimeIntervalSince1970);
-//		}
+	else if (const UTCDateTime* theValue = iVal.PGet<UTCDateTime>())
+		{
+		return sAdopt& ::CFDateCreate(nullptr, sGet(*theValue) - kCFAbsoluteTimeIntervalSince1970);
+		}
 	else if (const char* theValue = iVal.PGet<char>())
 		{
 		return spMakeNumber(kCFNumberSInt8Type, theValue);

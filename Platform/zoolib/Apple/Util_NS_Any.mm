@@ -25,9 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Apple/Util_NS.h"
 
 #include "zoolib/Unicode.h"
+#include "zoolib/UTCDateTime.h"
 #include "zoolib/Val_Any.h"
-
-//#include "zoolib/ZTime.h"
 
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
@@ -108,10 +107,10 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 		{
 		return [NSNumber numberWithBool:(BOOL)*theValue];
 		}
-//	else if (const ZTime* theValue = iVal.PGet<ZTime>())
-//		{
-//		return [NSDate dateWithTimeIntervalSince1970:theValue->fVal];
-//		}
+	else if (const UTCDateTime* theValue = iVal.PGet<UTCDateTime>())
+		{
+		return [NSDate dateWithTimeIntervalSince1970:sGet(*theValue)];
+		}
 	else if (const char* theValue = iVal.PGet<char>())
 		{
 		return [NSNumber numberWithChar:*theValue];
@@ -277,15 +276,15 @@ NSObject* sAsNSObject(const Any& iVal)
 @end
 
 //// =================================================================================================
-//@interface NSDate (ZooLib_Any_Additions)
-//-(Any)asAnyWithDefault:(const Any&)iDefault;
-//@end
-//
-//@implementation NSDate (ZooLib_Any_Additions)
-//
-//-(Any)asAnyWithDefault:(const Any&)iDefault
-//	{ return Any(ZTime([self timeIntervalSince1970])); }
-//
-//@end
+@interface NSDate (ZooLib_Any_Additions)
+-(Any)asAnyWithDefault:(const Any&)iDefault;
+@end
+
+@implementation NSDate (ZooLib_Any_Additions)
+
+-(Any)asAnyWithDefault:(const Any&)iDefault
+	{ return Any(ZooLib::UTCDateTime([self timeIntervalSince1970])); }
+
+@end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)

@@ -57,19 +57,9 @@ access to them allows code to be applied to any of them.
 #pragma mark YadOptions
 
 YadOptions::YadOptions(bool iDoIndentation)
-:	fRawChunkSize(64),
-	fRawByteSeparator(" "),
-	fRawAsASCII(iDoIndentation),
-	fBreakStrings(true),
-	fStringLineLength(80),
-	fIDsHaveDecimalVersionComment(iDoIndentation),
-	fTimesHaveUserLegibleComment(true)
 	{
 	if (iDoIndentation)
-		{
-		fEOLString = "\n";
-		fIndentString = "  ";
-		}
+		fIndentStringQ = "  ";
 	}
 
 // =================================================================================================
