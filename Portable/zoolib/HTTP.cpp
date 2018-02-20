@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Any_Coerce.h"
 #include "zoolib/Chan_Bin_string.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
@@ -26,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"
-#include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_string.h"
 

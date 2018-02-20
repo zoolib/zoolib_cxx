@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Any_Coerce.h"
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Compat_algorithm.h" // ZSetRestore_T
 #include "zoolib/Compat_cmath.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
-#include "zoolib/Util_Any.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_Time.h"

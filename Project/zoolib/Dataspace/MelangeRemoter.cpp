@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Any_Coerce.h"
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_PMF.h"
@@ -27,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Log.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/Stringf.h"
-#include "zoolib/Util_Any.h"
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
