@@ -73,13 +73,9 @@ public:
 
 			ZRef<Delivery<T> > theDelivery = sGetDeliveryClearPromise(thePromise);
 
-			if (fTimeoutQ)
-				theDelivery->WaitFor(*fTimeoutQ);
-
-			if (ZQ<T> theQ = theDelivery->QGet())
-				return *theQ;
+			if (not fTimeoutQ || theDelivery->WaitFor(*fTimeoutQ))
+				return theDelivery->QGet();
 			}
-
 		return null;
 		}
 
