@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_CGData_h__
-#define __ZStream_CGData_h__ 1
+#ifndef __ZooLib_Apple_CGData_Channer_h__
+#define __ZooLib_Apple_CGData_Channer_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -33,24 +33,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
 #endif
 
-#include "zoolib/ZStreamer.h"
+#include "zoolib/Channer_Bin.h"
 
 namespace ZooLib {
-namespace ZStream_CGData {
+namespace CGData_Channer {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStream_CGData
+#pragma mark CGData_Channer
 
-ZRef<CGDataProviderRef> sProvider(ZRef<ZStreamerR> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ChannerR_Bin> iStreamer);
 
-ZRef<CGDataProviderRef> sProvider(ZRef<ZStreamerRPos> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ChannerRPos_Bin> iStreamer);
 
-ZRef<CGDataConsumerRef> sConsumer(ZRef<ZStreamerW> iStreamer);
+ZRef<CGDataConsumerRef> sConsumer(ZRef<ChannerW_Bin> iStreamer);
 
-} // namespace ZStream_CGData
+} // namespace CGData_Channer
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
-#endif // __ZStream_CGData_h__
+#endif // __ZooLib_Apple_CGData_Channer_h__

@@ -18,24 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_CGData.h"
+#include "zoolib/Apple/CGData_Channer.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
+//#include "zoolib/ChanR_Bin.h"
 #include "zoolib/ZDebug.h"
 
 namespace ZooLib {
 
+typedef ChannerR_Bin ZStreamerR;
+typedef ChannerRPos_Bin ZStreamerRPos;
+typedef ChannerW_Bin ZStreamerW;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStream_CGData::sProvider
+#pragma mark CGData_Channer::sProvider
 
 static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
-	{
-	size_t countRead;
-	static_cast<ZStreamerR*>(iInfo)->GetStreamR().Read(oBuffer, iCount, &countRead);
-	return countRead;
-	}
+	{ return sReadMem(*static_cast<ZStreamerR*>(iInfo), oBuffer, iCount); }
 
 static void spReleaseProvider_R(void* iInfo)
 	{ static_cast<ZStreamerR*>(iInfo)->Release(); }
@@ -43,11 +44,7 @@ static void spReleaseProvider_R(void* iInfo)
 #if ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static off_t spSkipForward_R(void* iInfo, off_t iCount)
-	{
-	uint64 countSkipped;
-	static_cast<ZStreamerR*>(iInfo)->GetStreamR().Skip(iCount, &countSkipped);
-	return countSkipped;
-	}
+	{ return sSkip(*static_cast<ZStreamerR*>(iInfo), iCount); }
 
 static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	{
@@ -58,7 +55,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
+ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ZStreamerR> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -81,7 +78,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
+ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ZStreamerR> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -95,17 +92,13 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerR> iStreamer)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStream_CGData::sProvider
+#pragma mark CGData_Channer::sProvider
 
 static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
-	{
-	size_t countRead;
-	static_cast<ZStreamerRPos*>(iInfo)->GetStreamR().Read(oBuffer, iCount, &countRead);
-	return countRead;
-	}
+	{ return sReadMem(*static_cast<ZStreamerRPos*>(iInfo), oBuffer, iCount); }
 
 static void spRewind_RPos(void* iInfo)
-	{ static_cast<ZStreamerRPos*>(iInfo)->GetStreamRPos().SetPosition(0); }
+	{ sPosSet(*static_cast<ZStreamerRPos*>(iInfo), 0); }
 
 static void spReleaseProvider_RPos(void* iInfo)
 	{ static_cast<ZStreamerRPos*>(iInfo)->Release(); }
@@ -113,11 +106,7 @@ static void spReleaseProvider_RPos(void* iInfo)
 #if ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 static off_t spSkipForward_RPos(void* iInfo, off_t iCount)
-	{
-	uint64 countSkipped;
-	static_cast<ZStreamerR*>(iInfo)->GetStreamR().Skip(iCount, &countSkipped);
-	return countSkipped;
-	}
+	{ return sSkip(*static_cast<ZStreamerRPos*>(iInfo), iCount); }
 
 static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 	{
@@ -128,7 +117,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
+ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -151,7 +140,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
+ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ZStreamerRPos> iStreamer)
 	{
 	if (iStreamer)
 		{
@@ -170,11 +159,7 @@ ZRef<CGDataProviderRef> ZStream_CGData::sProvider(ZRef<ZStreamerRPos> iStreamer)
 namespace { // anonymous
 
 size_t spPutBytes_W(void* iInfo, const void* iBuffer, size_t iCount)
-	{
-	size_t countWritten;
-	static_cast<ZRef<ZStreamerW>*>(iInfo)[0]->GetStreamW().Write(iBuffer, iCount, &countWritten);
-	return countWritten;
-	}
+	{ return sWriteMem(*static_cast<ZRef<ZStreamerW>*>(iInfo)[0], iBuffer, iCount); }
 
 void spReleaseConsumer_W(void* iInfo)
 	{ static_cast<ZStreamerW*>(iInfo)->Release(); }
@@ -187,7 +172,7 @@ CGDataConsumerCallbacks spCallbacks_W =
 
 } // anonymous namespace
 
-ZRef<CGDataConsumerRef> ZStream_CGData::sConsumer(ZRef<ZStreamerW> iStreamer)
+ZRef<CGDataConsumerRef> CGData_Channer::sConsumer(ZRef<ZStreamerW> iStreamer)
 	{
 	if (iStreamer)
 		{
