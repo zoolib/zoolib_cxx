@@ -369,9 +369,6 @@ static void spToStrim_Map(const ML::StrimW& s, ZRef<YadMapR> iYadMapR)
 
 static void spToStrim_Any(const ML::StrimW& s, const Any& iVal)
 	{
-	int64 asInt64;
-	double asDouble;
-
 	if (false)
 		{}
 	else if (iVal.IsNull())
@@ -385,16 +382,16 @@ static void spToStrim_Any(const ML::StrimW& s, const Any& iVal)
 		else
 			s.Empty("false");
 		}
-	else if (sQCoerceInt(iVal, asInt64))
+	else if (ZQ<int64> asIntQ = sQCoerceInt(iVal))
 		{
 		s.Begin("integer");
-			sEWritef(s, "%lld", asInt64);
+			sEWritef(s, "%lld", *asIntQ);
 		s.End("integer");
 		}
-	else if (sQCoerceRat(iVal, asDouble))
+	else if (ZQ<double> asDoubleQ = sQCoerceRat(iVal))
 		{
 		s.Begin("real");
-			Util_Chan::sWriteExact(s, asDouble);
+			Util_Chan::sWriteExact(s, *asDoubleQ);
 		s.End("real");
 		}
 	else if (const UTCDateTime* theValue = iVal.PGet<UTCDateTime>())
