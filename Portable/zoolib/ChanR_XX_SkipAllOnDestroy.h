@@ -47,7 +47,6 @@ public:
 		{ sSkipAll(inherited::pGetChan()); }
 	};
 
-
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanR_XX_SkipAllOnDestroy_h__
