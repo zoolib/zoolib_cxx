@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamRWCon_OpenSSL.h"
+#include "zoolib/OpenSSL/ZStreamRWCon_OpenSSL.h"
 
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
