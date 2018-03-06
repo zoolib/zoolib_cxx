@@ -1174,9 +1174,11 @@ ChanRPos_File_POSIX::~ChanRPos_File_POSIX()
 size_t ChanRPos_File_POSIX::Read(byte* oDest, size_t iCount)
 	{
 	size_t countRead;
-	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
-		return countRead;
-	return 0;
+	spRead(fFD, oDest, iCount, &countRead);
+	return countRead;
+//	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
+//		return countRead;
+//	return 0;
 	}
 
 size_t ChanRPos_File_POSIX::Readable()
@@ -1244,9 +1246,11 @@ ChanWPos_File_POSIX::~ChanWPos_File_POSIX()
 size_t ChanWPos_File_POSIX::Write(const byte* iSource, size_t iCount)
 	{
 	size_t countWritten;
-	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
-		return countWritten;
-	return 0;
+	spWrite(fFD, iSource, iCount, &countWritten);
+	return countWritten;
+//	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
+//		return countWritten;
+//	return 0;
 	}
 
 uint64 ChanWPos_File_POSIX::Pos()
