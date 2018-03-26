@@ -180,7 +180,8 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, char16_t iVal)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, char32_t iVal)
 	{
-	sEWritef(w, "%" PRIuLEAST32, iVal);
+	sEWritef(w, "%u", iVal);
+// 	sEWritef(w, "%" PRIuLEAST32, iVal);
 	return w;
 	}
 #endif // ZCONFIG_CPP >= 2011
