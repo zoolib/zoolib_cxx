@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_arm_h__ 1
 #include "zconfig.h"
 
-#if __arm__
+#if 0 // __arm__
 	#if defined (__ANDROID__)
 		#include <machine/cpu-features.h>
 	#else
