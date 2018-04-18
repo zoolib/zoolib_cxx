@@ -351,16 +351,18 @@ ParseException::ParseException(const char* iWhat)
 #pragma mark YadStreamerR_Hex
 
 YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
-:	ChanR_Bin_HexStrim(*iChannerR, *iChannerU)
+:	inherited(*iChannerR, *iChannerU)
 ,	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 	{}
 
-void YadStreamerR_Hex::Finish()
+void YadStreamerR_Hex::Finalize()
 	{
 	using namespace Util_Chan;
 	sSkipAll(*static_cast<ChanR_Bin_HexStrim*>(this));
-	if (not sTryRead_CP('>', *fChannerR, *fChannerU))
+	const bool hitClose = sTryRead_CP('>', *fChannerR, *fChannerU);
+	YadStreamerR::Finalize();
+	if (not hitClose)
 		throw ParseException("Expected '>' to close a binary data");
 	}
 
@@ -377,11 +379,13 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 ,	fChanR(iDecode, fChanR_Bin_Boundary)
 	{}
 
-void YadStreamerR_Base64::Finish()
+void YadStreamerR_Base64::Finalize()
 	{
 	using namespace Util_Chan;
 	sSkipAll(fChanR);
-	if (not fChanR_Bin_Boundary.HitTerminator())
+	const bool hitBoundary = not fChanR_Bin_Boundary.HitTerminator();
+	YadStreamerR::Finalize();
+	if (not hitBoundary)
 		throw ParseException("Expected '>' to close a base64 data");
 	}
 
@@ -419,14 +423,6 @@ void YadStrimmerR_JSON::Finalize()
 	if (quotesSeen)
 		throw ParseException("Improperly closed string");
 	}
-
-//void YadStrimmerR_JSON::Finish()
-//	{
-//	using namespace Util_Chan;
-//	sSkipAll(*this);
-//	if (fQuotesSeen)
-//		throw ParseException("Improperly closed string");
-//	}
 
 size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
 	{

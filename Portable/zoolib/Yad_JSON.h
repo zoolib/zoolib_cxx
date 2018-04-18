@@ -82,14 +82,14 @@ public:
 #pragma mark YadStreamerR_Hex
 
 class YadStreamerR_Hex
-:	public virtual YadStreamerR
-,	public ChanR_Bin_HexStrim
+:	public Channer_T<ChanR_Bin_HexStrim>
 	{
+	typedef Channer_T<ChanR_Bin_HexStrim> inherited;
 public:
 	YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From YadR
-	virtual void Finish();
+// From ZCounted
+	virtual void Finalize();
 
 private:
 	ZRef<ChannerR_UTF> fChannerR;
@@ -107,8 +107,8 @@ public:
 	YadStreamerR_Base64(const Base64::Decode& iDecode,
 		ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
-// From YadR
-	virtual void Finish();
+// From ZCounted
+	virtual void Finalize();
 
 // From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount);
@@ -136,9 +136,6 @@ public:
 
 // From ZCounted
 	virtual void Finalize();
-
-//// From YadR
-//	virtual void Finish();
 
 // From ChanR_UTF via YadStrimmerR
 	virtual size_t Read(UTF32* oDest, size_t iCount);
