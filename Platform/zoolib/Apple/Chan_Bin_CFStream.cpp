@@ -18,60 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_CFStream_h__
-#define __ZStream_CFStream_h__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/Apple/Chan_Bin_CFStream.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
-
-#include "zoolib/ZStreamer.h"
-
-#include <CoreFoundation/CFStream.h>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamR_CFStream
+#pragma mark ChanR_Bin_CFStream
 
-class ZStreamR_CFStream : public ZStreamR
+ChanR_Bin_CFStream::ChanR_Bin_CFStream(CFReadStreamRef iCFStream)
+:	fCFStream(iCFStream)
+	{}
+
+ChanR_Bin_CFStream::~ChanR_Bin_CFStream()
+	{}
+
+size_t ChanR_Bin_CFStream::Read(byte* oDest, size_t iCount)
 	{
-public:
-	ZStreamR_CFStream(CFReadStreamRef iCFStream);
-	~ZStreamR_CFStream();
+	if (fCFStream)
+		{
+		CFIndex result = ::CFReadStreamRead(fCFStream, (byte*)oDest, iCount);
+		if (result > 0)
+			return result;
+		}
+	return 0;
+	}
 
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
-
-private:
-	ZRef<CFReadStreamRef> fCFStream;
-	};
-
-typedef ZStreamerR_T<ZStreamR_CFStream> ZStreamerR_CFStream;
+size_t ChanR_Bin_CFStream::CountReadable()
+	{
+	if (fCFStream && ::CFReadStreamHasBytesAvailable(fCFStream))
+		return 1;
+	return 0;
+	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamW_CFStream
+#pragma mark ChanW_Bin_CFStream
 
-class ZStreamW_CFStream : public ZStreamW
+ChanW_Bin_CFStream::ChanW_Bin_CFStream(CFWriteStreamRef iCFStream)
+:	fCFStream(iCFStream)
+	{}
+
+ChanW_Bin_CFStream::~ChanW_Bin_CFStream()
+	{}
+
+size_t ChanW_Bin_CFStream::Write(const byte* iSource, size_t iCount)
 	{
-public:
-	ZStreamW_CFStream(CFWriteStreamRef iCFStream);
-	~ZStreamW_CFStream();
-
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-
-private:
-	ZRef<CFWriteStreamRef> fCFStream;
-	};
-
-typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
+	if (fCFStream)
+		{
+		CFIndex result = ::CFWriteStreamWrite(fCFStream, (byte*)iSource, iCount);
+		if (result > 0)
+			return result;
+		}
+	return 0;
+	}
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
-
-#endif // __ZStream_MacOSX_h__

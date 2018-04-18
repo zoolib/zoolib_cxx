@@ -18,70 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_CFStream.h"
+#ifndef __ZooLib_Apple_Chan_Bin_CFStream_h__
+#define __ZooLib_Apple_Chan_Bin_CFStream_h__ 1
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
+
+#include <CoreFoundation/CFStream.h>
+
+#include "zoolib/Apple/ZRef_CF.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamR_CFStream
+#pragma mark ChanR_Bin_CFStream
 
-ZStreamR_CFStream::ZStreamR_CFStream(CFReadStreamRef iCFStream)
-:	fCFStream(iCFStream)
-	{}
-
-ZStreamR_CFStream::~ZStreamR_CFStream()
-	{}
-
-void ZStreamR_CFStream::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+class ChanR_Bin_CFStream
+:	public ChanR_Bin
 	{
-	if (oCountRead)
-		*oCountRead = 0;
+public:
+	ChanR_Bin_CFStream(CFReadStreamRef iCFStream);
+	~ChanR_Bin_CFStream();
 
-	if (fCFStream)
-		{
-		CFIndex result = ::CFReadStreamRead(fCFStream, static_cast<UInt8*>(oDest), iCount);
+// From ChanR_Bin
+	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual size_t CountReadable();
 
-		if (result > 0 && oCountRead)
-			*oCountRead = result;
-		}
-	}
-
-size_t ZStreamR_CFStream::Imp_CountReadable()
-	{
-	if (fCFStream && ::CFReadStreamHasBytesAvailable(fCFStream))
-		return 1;
-	return 0;
-	}
+private:
+	ZRef<CFReadStreamRef> fCFStream;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamW_CFStream
+#pragma mark ChanW_Bin_CFStream
 
-ZStreamW_CFStream::ZStreamW_CFStream(CFWriteStreamRef iCFStream)
-:	fCFStream(iCFStream)
-	{}
-
-ZStreamW_CFStream::~ZStreamW_CFStream()
-	{}
-
-void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+class ChanW_Bin_CFStream
+:	public ChanW_Bin
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
+public:
+	ChanW_Bin_CFStream(CFWriteStreamRef iCFStream);
+	~ChanW_Bin_CFStream();
 
-	if (fCFStream)
-		{
-		CFIndex result = ::CFWriteStreamWrite(fCFStream,
-			static_cast<const UInt8*>(iSource), iCount);
+// From ChanW_Bin
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
-		if (result > 0 && oCountWritten)
-			*oCountWritten = result;
-		}
-	}
+private:
+	ZRef<CFWriteStreamRef> fCFStream;
+	};
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
+
+#endif // __ZooLib_Apple_Chan_Bin_CFStream_h__
