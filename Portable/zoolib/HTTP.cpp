@@ -1261,13 +1261,13 @@ bool sParseURL(const string& iURL,
 		oPath->clear();
 
 	size_t start = 0;
-	const char schemeDivider[] = "://";
-	const size_t dividerOffset = iURL.find(schemeDivider);
-	if (string::npos != dividerOffset)
+	const char schemeSeparator[] = "://";
+	const size_t separatorOffset = iURL.find(schemeSeparator);
+	if (string::npos != separatorOffset)
 		{
-		start = dividerOffset + std::strlen(schemeDivider);
+		start = separatorOffset + std::strlen(schemeSeparator);
 		if (oScheme)
-			*oScheme = iURL.substr(0, dividerOffset);
+			*oScheme = iURL.substr(0, separatorOffset);
 		}
 
 	string hostAndPort;
