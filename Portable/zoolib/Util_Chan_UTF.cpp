@@ -332,6 +332,10 @@ static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_
 	return false;
 	}
 
+bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	int64& oInt64)
+	{ return spTryRead_SignedDecimalInteger(iChanR, iChanU, oInt64); }
+
 static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
