@@ -123,19 +123,19 @@ static ZRef<YadR> spMakeYadR_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU)
 		{
 		if (theChan.Name() == "dict")
 			{
-			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, eTagToRead_Empty);
+			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, true);
 			}
 		else if (theChan.Name() == "array")
 			{
-			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, eTagToRead_Empty);
+			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, true);
 			}
 		else if (theChan.Name() == "data")
 			{
-			return new ChannerR_Bin_XMLPList(iStrimmerU, eTagToRead_Empty);
+			return new ChannerR_Bin_XMLPList(iStrimmerU, true);
 			}
 		else if (theChan.Name() == "string")
 			{
-			return new ChannerR_UTF_XMLPList(iStrimmerU, eTagToRead_Empty);
+			return new ChannerR_UTF_XMLPList(iStrimmerU, true);
 			}
 		}
 	else if (theChan.Current() == ML::eToken_TagBegin)
@@ -143,22 +143,22 @@ static ZRef<YadR> spMakeYadR_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU)
 		if (theChan.Name() == "dict")
 			{
 			theChan.Advance();
-			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, eTagToRead_End);
+			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, false);
 			}
 		else if (theChan.Name() == "array")
 			{
 			theChan.Advance();
-			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, eTagToRead_End);
+			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, false);
 			}
 		else if (theChan.Name() == "data")
 			{
 			theChan.Advance();
-			return new ChannerR_Bin_XMLPList(iStrimmerU, eTagToRead_End);
+			return new ChannerR_Bin_XMLPList(iStrimmerU, false);
 			}
 		else if (theChan.Name() == "string")
 			{
 			theChan.Advance();
-			return new ChannerR_UTF_XMLPList(iStrimmerU, eTagToRead_End);
+			return new ChannerR_UTF_XMLPList(iStrimmerU, false);
 			}
 		}
 
@@ -183,30 +183,27 @@ ParseException::ParseException(const char* iWhat)
 // =================================================================================================
 // MARK: - ChannerR_Bin_XMLPList
 
-ChannerR_Bin_XMLPList::ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
-:	fStrimmerU(iStrimmerU),
-	fTagToRead(iTagToRead),
-	fStreamR_ASCIIStrim(*iStrimmerU),
-	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
+ChannerR_Bin_XMLPList::ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag)
+:	fStrimmerU(iStrimmerU)
+,	fIsEmptyTag(iIsEmptyTag)
+,	fStreamR_ASCIIStrim(*iStrimmerU)
+,	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
 void ChannerR_Bin_XMLPList::Finalize()
 	{
 	ZRef<ML::ChannerRU_UTF> theStrimmerU = fStrimmerU;
-	const ETagToRead theTagToRead = fTagToRead;
+	const bool isEmptyTag = fIsEmptyTag;
 
 	inherited::Finalize();
 
-	if (theTagToRead == eTagToRead_Empty)
+	if (isEmptyTag)
 		{
 		spEmptyOrThrow(*theStrimmerU, "data");
 		}
 	else
 		{
-		sSkipAll(*theStrimmerU);
-
-		if (fTagToRead == eTagToRead_End)
-			spSkipThenEndOrThrow(*theStrimmerU, "data");
+		spSkipThenEndOrThrow(*theStrimmerU, "data");
 		}
 	}
 
@@ -216,28 +213,25 @@ size_t ChannerR_Bin_XMLPList::Read(byte* oDest, size_t iCount)
 // =================================================================================================
 // MARK: - ChannerR_UTF_XMLPList
 
-ChannerR_UTF_XMLPList::ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
-:	fStrimmerU(iStrimmerU),
-	fTagToRead(iTagToRead)
+ChannerR_UTF_XMLPList::ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag)
+:	fStrimmerU(iStrimmerU)
+,	fIsEmptyTag(iIsEmptyTag)
 	{}
 
 void ChannerR_UTF_XMLPList::Finalize()
 	{
 	ZRef<ML::ChannerRU_UTF> theStrimmerU = fStrimmerU;
-	const ETagToRead theTagToRead = fTagToRead;
+	const bool isEmptyTag = fIsEmptyTag;
 
 	inherited::Finalize();
 
-	if (theTagToRead == eTagToRead_Empty)
+	if (isEmptyTag)
 		{
 		spEmptyOrThrow(*theStrimmerU, "string");
 		}
 	else
 		{
-		sSkipAll(*theStrimmerU);
-
-		if (theTagToRead == eTagToRead_End)
-			spSkipThenEndOrThrow(*theStrimmerU, "string");
+		spSkipThenEndOrThrow(*theStrimmerU, "string");
 		}
 	}
 
@@ -248,16 +242,16 @@ size_t ChannerR_UTF_XMLPList::Read(UTF32* oDest, size_t iCount)
 // MARK: - ChanR_RefYad_XMLPList
 
 ChanR_RefYad_XMLPList::ChanR_RefYad_XMLPList(
-	ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
-:	fStrimmerU(iStrimmerU),
-	fTagToRead(iTagToRead)
+	ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag)
+:	fStrimmerU(iStrimmerU)
+,	fIsEmptyTag(iIsEmptyTag)
 	{}
 
 void ChanR_RefYad_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	ML::ChanRU_UTF& theChan = *fStrimmerU;
 
-	if (fTagToRead == eTagToRead_Empty)
+	if (fIsEmptyTag)
 		{
 		spEmptyOrThrow(theChan, "array");
 		}
@@ -265,16 +259,11 @@ void ChanR_RefYad_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 		{
 		sSkipText(theChan);
 
-		if (fTagToRead == eTagToRead_End)
-			{
-			if (sTryRead_End(theChan, "array"))
-				return;
-			}
+		if (sTryRead_End(theChan, "array"))
+			return;
 
 		if (not (oYadR = spMakeYadR_XMLPList(fStrimmerU)))
 			{
-			if (fTagToRead == eTagToRead_None)
-				return;
 			spThrowParseException("Expected a value");
 			}
 		}
@@ -284,16 +273,16 @@ void ChanR_RefYad_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 // MARK: - ChanR_NameRefYad_XMLPList
 
 ChanR_NameRefYad_XMLPList::ChanR_NameRefYad_XMLPList(
-	ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
-:	fStrimmerU(iStrimmerU),
-	fTagToRead(iTagToRead)
+	ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag)
+:	fStrimmerU(iStrimmerU)
+,	fIsEmptyTag(iIsEmptyTag)
 	{}
 
 void ChanR_NameRefYad_XMLPList::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
 	ML::ChanRU_UTF& theChan = *fStrimmerU;
 
-	if (fTagToRead == eTagToRead_Empty)
+	if (fIsEmptyTag)
 		{
 		spEmptyOrThrow(theChan, "dict");
 		}
@@ -301,18 +290,11 @@ void ChanR_NameRefYad_XMLPList::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<Yad
 		{
 		sSkipText(theChan);
 
-		if (fTagToRead == eTagToRead_End)
-			{
-			if (sTryRead_End(theChan, "dict"))
-				return;
-			}
+		if (sTryRead_End(theChan, "dict"))
+			return;
 
 		if (not sTryRead_Begin(theChan, "key"))
-			{
-			if (fTagToRead == eTagToRead_None)
-				return;
 			spThrowParseException("Expected <key>");
-			}
 
 		oName = sReadAllUTF8(theChan);
 

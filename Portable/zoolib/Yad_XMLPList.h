@@ -40,9 +40,6 @@ public:
 	ParseException(const char* iWhat);
 	};
 
-// Which tag had been read.
-enum ETagToRead { eTagToRead_End, eTagToRead_Empty, eTagToRead_None };
-
 // =================================================================================================
 // MARK: - ChannerR_Bin_XMLPList
 
@@ -51,7 +48,7 @@ class ChannerR_Bin_XMLPList
 	{
 	typedef ChannerR_Bin inherited;
 public:
-	ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+	ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag);
 
 // From ZCounted
 	virtual void Finalize();
@@ -61,7 +58,7 @@ public:
 
 private:
 	ZRef<ML::ChannerRU_UTF> fStrimmerU;
-	const ETagToRead fTagToRead;
+	const bool fIsEmptyTag;
 	ChanR_Bin_ASCIIStrim fStreamR_ASCIIStrim;
 	ChanR_Bin_Base64Decode fStreamR_Base64Decode;
 	};
@@ -74,7 +71,7 @@ class ChannerR_UTF_XMLPList
 	{
 	typedef ChannerR_UTF inherited;
 public:
-	ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+	ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag);
 
 // From ZCounted
 	virtual void Finalize();
@@ -84,7 +81,7 @@ public:
 
 private:
 	ZRef<ML::ChannerRU_UTF> fStrimmerU;
-	const ETagToRead fTagToRead;
+	const bool fIsEmptyTag;
 	};
 
 // =================================================================================================
@@ -94,14 +91,14 @@ class ChanR_RefYad_XMLPList
 :	public ChanR_RefYad_Std
 	{
 public:
-	ChanR_RefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+	ChanR_RefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag);
 
 // From Chan_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
 	ZRef<ML::ChannerRU_UTF> fStrimmerU;
-	const ETagToRead fTagToRead;
+	const bool fIsEmptyTag;
 	};
 
 // =================================================================================================
@@ -111,14 +108,14 @@ class ChanR_NameRefYad_XMLPList
 :	public ChanR_NameRefYad_Std
 	{
 public:
-	ChanR_NameRefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+	ChanR_NameRefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, bool iIsEmptyTag);
 
 // From ChanR_NameRefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
 	ZRef<ML::ChannerRU_UTF> fStrimmerU;
-	const ETagToRead fTagToRead;
+	const bool fIsEmptyTag;
 	};
 
 // =================================================================================================
