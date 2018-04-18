@@ -33,7 +33,7 @@ using std::vector;
 #pragma mark Static parsing functions
 
 static bool spReadValues(vector<string8>& oValues,
-	UTF32 iDivider_Value, UTF32 iDivider_Line, const ChanR_UTF& iStrimR)
+	UTF32 iSeparator_Value, UTF32 iSeparator_Line, const ChanR_UTF& iStrimR)
 	{
 	bool gotAny = false;
 	oValues.clear();
@@ -49,13 +49,13 @@ static bool spReadValues(vector<string8>& oValues,
 
 		gotAny = true;
 
-		if (theCP == iDivider_Line)
+		if (theCP == iSeparator_Line)
 			{
 			oValues.push_back(curValue);
 			break;
 			}
 
-		if (theCP == iDivider_Value)
+		if (theCP == iSeparator_Value)
 			{
 			oValues.push_back(curValue);
 			curValue.clear();
@@ -88,30 +88,30 @@ class ChanR_RefYad : public ChanR_RefYad_Std
 	{
 public:
 	ChanR_RefYad(const vector<string8>& iNames,
-		UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
+		UTF32 iSeparator_Value, UTF32 iSeparator_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
 
 // From ChanR_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
 	vector<string8> fNames;
-	UTF32 fDivider_Value;
-	UTF32 fDivider_Line;
+	UTF32 fSeparator_Value;
+	UTF32 fSeparator_Line;
 	ZRef<ChannerR_UTF> fChannerR_UTF;
 	};
 
 ChanR_RefYad::ChanR_RefYad(const vector<string8>& iNames,
-	UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF)
+	UTF32 iSeparator_Value, UTF32 iSeparator_Line, ZRef<ChannerR_UTF> iChannerR_UTF)
 :	fNames(iNames)
-,	fDivider_Value(iDivider_Value)
-,	fDivider_Line(iDivider_Line)
+,	fSeparator_Value(iSeparator_Value)
+,	fSeparator_Line(iSeparator_Line)
 ,	fChannerR_UTF(iChannerR_UTF)
 	{}
 
 void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
 	vector<string8> theValues;
-	if (not spReadValues(theValues, fDivider_Value, fDivider_Line, *fChannerR_UTF))
+	if (not spReadValues(theValues, fSeparator_Value, fSeparator_Line, *fChannerR_UTF))
 		return;
 
 	Map_Any theMap;
@@ -124,13 +124,13 @@ void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDividerLine, ZRef<ChannerR_UTF> iChannerR_UTF)
+ZRef<YadR> sYadR(UTF32 iSeparator_Value, UTF32 iSeparatorLine, ZRef<ChannerR_UTF> iChannerR_UTF)
 	{
 	// Read the first line and build list of property names.
 	vector<string8> values;
-	if (!spReadValues(values, iDivider_Value, iDividerLine, *iChannerR_UTF))
+	if (!spReadValues(values, iSeparator_Value, iSeparatorLine, *iChannerR_UTF))
 		return null;
-	return sChanner_T<ChanR_RefYad>(values, iDivider_Value, iDividerLine, iChannerR_UTF);
+	return sChanner_T<ChanR_RefYad>(values, iSeparator_Value, iSeparatorLine, iChannerR_UTF);
 	}
 
 } // namespace Yad_SeparatedValues

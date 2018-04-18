@@ -43,7 +43,7 @@ public:
 #pragma mark -
 #pragma mark sYadR
 
-ZRef<YadR> sYadR(UTF32 iDivider_Value, UTF32 iDivider_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
+ZRef<YadR> sYadR(UTF32 iSeparator_Value, UTF32 iSeparator_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
 
 } // namespace Yad_SeparatedValues
 } // namespace ZooLib
