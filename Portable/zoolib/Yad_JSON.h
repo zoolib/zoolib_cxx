@@ -117,7 +117,7 @@ private:
 	ZRef<ChannerR_UTF> fChannerR;
 	ZRef<ChannerU_UTF> fChannerU;
 	ChanR_Bin_ASCIIStrim fChanR_Bin_ASCIIStrim;
-	ChanR_XX_Terminated<byte> fChanR_Bin_Boundary;
+	ChanR_XX_Terminated<byte> fChanR_Bin_Terminated;
 	ChanR_Bin_Base64Decode fChanR;
 	};
 

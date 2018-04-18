@@ -375,15 +375,15 @@ YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 :	fChannerR(iChannerR)
 ,	fChannerU(iChannerU)
 ,	fChanR_Bin_ASCIIStrim(*iChannerR)
-,	fChanR_Bin_Boundary('>', fChanR_Bin_ASCIIStrim)
-,	fChanR(iDecode, fChanR_Bin_Boundary)
+,	fChanR_Bin_Terminated('>', fChanR_Bin_ASCIIStrim)
+,	fChanR(iDecode, fChanR_Bin_Terminated)
 	{}
 
 void YadStreamerR_Base64::Finalize()
 	{
 	using namespace Util_Chan;
 	sSkipAll(fChanR);
-	const bool hitBoundary = not fChanR_Bin_Boundary.HitTerminator();
+	const bool hitBoundary = fChanR_Bin_Terminated.HitTerminator();
 	YadStreamerR::Finalize();
 	if (not hitBoundary)
 		throw ParseException("Expected '>' to close a base64 data");
