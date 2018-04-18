@@ -26,7 +26,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark Compare_RefCountedString
 
-bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r)
+bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r) const
 	{ return l->Get() < r->Get(); }
 
 // =================================================================================================

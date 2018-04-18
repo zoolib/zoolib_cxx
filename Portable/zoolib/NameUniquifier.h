@@ -37,7 +37,7 @@ typedef CountedVal<string8> CountedString;
 typedef ZRef<CountedString> ZRefCountedString;
 
 struct Compare_RefCountedString
-	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r); };
+	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r) const; };
 
 typedef Uniquifier<ZRefCountedString,Compare_RefCountedString> CountedStringUniquifier;
 
