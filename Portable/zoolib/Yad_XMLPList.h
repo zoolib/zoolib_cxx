@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Yad_XMLPList {
 
-#if 0
 // =================================================================================================
 // MARK: - ParseException
 
@@ -41,88 +40,91 @@ public:
 	ParseException(const char* iWhat);
 	};
 
-class YadR_XMLPlist
+// Which tag had been read.
+enum ETagToRead { eTagToRead_End, eTagToRead_Empty, eTagToRead_None };
+
+// =================================================================================================
+// MARK: - ChannerR_Bin_XMLPList
+
+class ChannerR_Bin_XMLPList
+:	public ChannerR_Bin
 	{
+	typedef ChannerR_Bin inherited;
 public:
-	enum ERead { eRead_EndTag, eRead_EmptyTag, eRead_NoTag };
+	ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+
+// From ZCounted
+	virtual void Finalize();
+
+// From ChanR
+	virtual size_t Read(byte* oDest, size_t iCount);
+
+private:
+	ZRef<ML::ChannerRU_UTF> fStrimmerU;
+	const ETagToRead fTagToRead;
+	ChanR_Bin_ASCIIStrim fStreamR_ASCIIStrim;
+	ChanR_Bin_Base64Decode fStreamR_Base64Decode;
 	};
 
 // =================================================================================================
-// MARK: - YadStreamerR_XMLPList
+// MARK: - ChannerR_UTF_XMLPList
 
-class YadStreamerR_XMLPList
-:	public virtual YadStreamerR
+class ChannerR_UTF_XMLPList
+:	public ChannerR_UTF
 	{
+	typedef ChannerR_UTF inherited;
 public:
-	YadStreamerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
+
+// From ZCounted
+	virtual void Finalize();
 
 // From YadR
-	virtual void Finish();
+	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	const ERead fRead;
-	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
-	ZStreamR_Base64Decode fStreamR_Base64Decode;
-	};
-
-// =================================================================================================
-// MARK: - YadStrimmerR_XMLPList
-
-class YadStrimmerR_XMLPList
-:	public YadStrimmerR
-	{
-public:
-	YadStrimmerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
-
-// From YadR
-	virtual void Finish();
-
-private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	const ERead fRead;
+	ZRef<ML::ChannerRU_UTF> fStrimmerU;
+	const ETagToRead fTagToRead;
 	};
 
 // =================================================================================================
 // MARK: - Chan_RefYad_XMLPList
 
-class Chan_RefYad_XMLPList
-:	public Chan_RefYad_Std
+class ChanR_RefYad_XMLPList
+:	public ChanR_RefYad_Std
 	{
 public:
-	Chan_RefYad_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	ChanR_RefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
 
 // From Chan_RefYad_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	const ERead fRead;
+	ZRef<ML::ChannerRU_UTF> fStrimmerU;
+	const ETagToRead fTagToRead;
 	};
 
 // =================================================================================================
-// MARK: - YadMapR_XMLPList
+// MARK: - ChanR_NameRefYad_XMLPList
 
-class Chan_NameRefYad_XMLPList
-:	public Chan_NameRefYad_Std
+class ChanR_NameRefYad_XMLPList
+:	public ChanR_NameRefYad_Std
 	{
 public:
-	YadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead);
+	ChanR_NameRefYad_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead);
 
-// From Chan_NameRefYad_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<YadR>& oYadR);
+// From ChanR_NameRefYad_Std
+	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerU> fStrimmerU;
-	const ERead fRead;
+	ZRef<ML::ChannerRU_UTF> fStrimmerU;
+	const ETagToRead fTagToRead;
 	};
 
 // =================================================================================================
 // MARK: - Yad_XMLPList
 
-ZRef<YadR> sYadR(ZRef<ZML::StrimmerU> iR);
-
-#endif  // 0
+ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iR);
 
 void sToStrim(ZRef<YadR> iYadR, const ML::StrimW& s);
 

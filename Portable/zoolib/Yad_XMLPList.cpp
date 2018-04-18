@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_Time.h"
+#include "zoolib/Yad_Any.h" // For sYadAtomR_Any
 #include "zoolib/Yad_XMLPList.h"
 #include "zoolib/ZDebug.h"
 
@@ -32,33 +33,36 @@ namespace Yad_XMLPList {
 
 using std::string;
 
-#if 0
-
 // =================================================================================================
 // MARK: -
 // MARK:	Static parsing functions
 
-static void spThrowParseException(const string& iMessage)
+static bool spThrowParseException(const string& iMessage)
 	{
 	throw ParseException(iMessage);
+	return false;
 	}
 
-static void spEnd(ZML::StrimU& r, const string& iTagName)
+static void spSkipThenEndOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	{
 	sSkipText(r);
 
-	if (!sTryRead_End(r, iTagName))
-		spThrowParseException("Expected end tag '" + iTagName + "'");
+	sTryRead_End(r, iTagName) || spThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
+static void spEmptyOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	{
-	if (r.Current() == ZML::eToken_TagEmpty)
+	sTryRead_Empty(r, iTagName) || spThrowParseException("*Really* expected empty tag '" + iTagName + "'");
+	}
+
+static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
+	{
+	if (r.Current() == ML::eToken_TagEmpty)
 		{
 		if (false) {}
 		else if (r.Name() == "true") oVal = true;
 		else if (r.Name() == "false") oVal = false;
-		else if (r.Name() == "nil") oVal = ZAny();
+		else if (r.Name() == "nil") oVal = Any();
 		else return false;
 
 		r.Advance();
@@ -66,7 +70,7 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 		}
 
 	// If there's no open tag, then we're not at the start of a value.
-	if (r.Current() != ZML::eToken_TagBegin)
+	if (r.Current() != ML::eToken_TagBegin)
 		return false;
 
 	const string tagName = r.Name();
@@ -78,22 +82,27 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 	else if (tagName == "integer")
 		{
 		int64 theInt64;
-		if (not ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
+		if (not Util_Chan::sTryRead_SignedDecimalInteger(r, r, theInt64))
 			spThrowParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
 		}
 	else if (tagName == "real")
 		{
+		int64 theInt64;
 		double theDouble;
-		if (not ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
+		bool isDouble;
+		if (not Util_Chan::sTryRead_SignedGenericNumber(r, r, theInt64, theDouble, isDouble))
 			spThrowParseException("Expected valid real");
 
-		oVal = theDouble;
+		if (isDouble)
+			oVal = theDouble;
+		else
+			oVal = double(theInt64);
 		}
 	else if (tagName == "date")
 		{
-		oVal = ZUtil_Time::sFromString_ISO8601(r.ReadAll8());
+		oVal = UTCDateTime(Util_Time::sFromString_ISO8601(sReadAllUTF8(r)));
 		}
 	else
 		{
@@ -101,61 +110,61 @@ static bool spTryRead_Any(ZML::StrimU& r, ZAny& oVal)
 		spThrowParseException("Invalid begin tag '" + tagName + "'");
 		}
 
-	spEnd(r, tagName);
+	spSkipThenEndOrThrow(r, tagName);
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
+static ZRef<YadR> spMakeYadR_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU)
 	{
-	ZML::StrimU& theR = iStrimmerU->GetStrim();
-	sSkipText(theR);
+	ML::ChanRU_UTF& theChan = *iStrimmerU;
+	sSkipText(theChan);
 
-	if (theR.Current() == ZML::eToken_TagEmpty)
+	if (theChan.Current() == ML::eToken_TagEmpty)
 		{
-		if (theR.Name() == "dict")
+		if (theChan.Name() == "dict")
 			{
-			return new ZYadMapR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, eTagToRead_Empty);
 			}
-		else if (theR.Name() == "array")
+		else if (theChan.Name() == "array")
 			{
-			return new ZYadSeqR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, eTagToRead_Empty);
 			}
-		else if (theR.Name() == "data")
+		else if (theChan.Name() == "data")
 			{
-			return new ZYadStreamerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new ChannerR_Bin_XMLPList(iStrimmerU, eTagToRead_Empty);
 			}
-		else if (theR.Name() == "string")
+		else if (theChan.Name() == "string")
 			{
-			return new ZYadStrimmerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EmptyTag);
+			return new ChannerR_UTF_XMLPList(iStrimmerU, eTagToRead_Empty);
 			}
 		}
-	else if (theR.Current() == ZML::eToken_TagBegin)
+	else if (theChan.Current() == ML::eToken_TagBegin)
 		{
-		if (theR.Name() == "dict")
+		if (theChan.Name() == "dict")
 			{
-			theR.Advance();
-			return new ZYadMapR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			theChan.Advance();
+			return new Channer_T<ChanR_NameRefYad_XMLPList>(iStrimmerU, eTagToRead_End);
 			}
-		else if (theR.Name() == "array")
+		else if (theChan.Name() == "array")
 			{
-			theR.Advance();
-			return new ZYadSeqR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			theChan.Advance();
+			return new Channer_T<ChanR_RefYad_XMLPList>(iStrimmerU, eTagToRead_End);
 			}
-		else if (theR.Name() == "data")
+		else if (theChan.Name() == "data")
 			{
-			theR.Advance();
-			return new ZYadStreamerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			theChan.Advance();
+			return new ChannerR_Bin_XMLPList(iStrimmerU, eTagToRead_End);
 			}
-		else if (theR.Name() == "string")
+		else if (theChan.Name() == "string")
 			{
-			theR.Advance();
-			return new ZYadStrimmerR_XMLPList(iStrimmerU, ZYadR_XMLPlist::eRead_EndTag);
+			theChan.Advance();
+			return new ChannerR_UTF_XMLPList(iStrimmerU, eTagToRead_End);
 			}
 		}
 
-	ZAny theVal;
-	if (spTryRead_Any(theR, theVal))
-		return sMake_YadAtomR_Any(theVal);
+	Any theVal;
+	if (spTryRead_Any(theChan, theVal))
+		return sYadAtomR_Any(theVal);
 
 	return null;
 	}
@@ -164,172 +173,178 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 // MARK: - ParseException
 
 ParseException::ParseException(const string& iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 ParseException::ParseException(const char* iWhat)
-:	ZYadParseException_Std(iWhat)
+:	YadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
-// MARK: - ZYadStreamerR_XMLPList
+// MARK: - ChannerR_Bin_XMLPList
 
-ZYadStreamerR_XMLPList::ZYadStreamerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ChannerR_Bin_XMLPList::ChannerR_Bin_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
 :	fStrimmerU(iStrimmerU),
-	fRead(iRead),
-	fStreamR_ASCIIStrim(fStrimmerU->GetStrimR()),
+	fTagToRead(iTagToRead),
+	fStreamR_ASCIIStrim(*iStrimmerU),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
-void ZYadStreamerR_XMLPList::Finish()
+void ChannerR_Bin_XMLPList::Finalize()
 	{
-	if (fRead == eRead_EmptyTag)
-		{
-		if (!sTryRead_Empty(fStrimmerU->GetStrim(), "data"))
-			spThrowParseException("Expected </data>");
-		return;
-		}
-	
-	fStreamR_Base64Decode.SkipAll();
+	ZRef<ML::ChannerRU_UTF> theStrimmerU = fStrimmerU;
+	const ETagToRead theTagToRead = fTagToRead;
 
-	if (fRead == eRead_EndTag)
-		spEnd(fStrimmerU->GetStrim(), "data");
+	inherited::Finalize();
+
+	if (theTagToRead == eTagToRead_Empty)
+		{
+		spEmptyOrThrow(*theStrimmerU, "data");
+		}
+	else
+		{
+		sSkipAll(*theStrimmerU);
+
+		if (fTagToRead == eTagToRead_End)
+			spSkipThenEndOrThrow(*theStrimmerU, "data");
+		}
 	}
 
-const ZStreamR& ZYadStreamerR_XMLPList::GetStreamR()
-	{ return fStreamR_Base64Decode; }
+size_t ChannerR_Bin_XMLPList::Read(byte* oDest, size_t iCount)
+	{ return sRead(fStreamR_Base64Decode, oDest, iCount); }
 
 // =================================================================================================
-// MARK: - ZYadStrimmerR_XMLPList
+// MARK: - ChannerR_UTF_XMLPList
 
-ZYadStrimmerR_XMLPList::ZYadStrimmerR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ChannerR_UTF_XMLPList::ChannerR_UTF_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
 :	fStrimmerU(iStrimmerU),
-	fRead(iRead)
+	fTagToRead(iTagToRead)
 	{}
 
-void ZYadStrimmerR_XMLPList::Finish()
+void ChannerR_UTF_XMLPList::Finalize()
 	{
-	if (fRead == eRead_EmptyTag)
+	ZRef<ML::ChannerRU_UTF> theStrimmerU = fStrimmerU;
+	const ETagToRead theTagToRead = fTagToRead;
+
+	inherited::Finalize();
+
+	if (theTagToRead == eTagToRead_Empty)
 		{
-		if (sTryRead_Empty(fStrimmerU->GetStrim(), "string"))
-			return;
-		spThrowParseException("Expected </string>");
+		spEmptyOrThrow(*theStrimmerU, "string");
 		}
+	else
+		{
+		sSkipAll(*theStrimmerU);
 
-	fStrimmerU->GetStrim().Advance();
-
-	if (fRead == eRead_EndTag)
-		spEnd(fStrimmerU->GetStrim(), "string");
+		if (theTagToRead == eTagToRead_End)
+			spSkipThenEndOrThrow(*theStrimmerU, "string");
+		}
 	}
 
-const ZStrimR& ZYadStrimmerR_XMLPList::GetStrimR()
-	{ return fStrimmerU->GetStrimR(); }
+size_t ChannerR_UTF_XMLPList::Read(UTF32* oDest, size_t iCount)
+	{ return sRead(*fStrimmerU, oDest, iCount); }
 
 // =================================================================================================
-// MARK: - ZYadReaderRep_XMLPList
+// MARK: - ChanR_RefYad_XMLPList
 
-ZYadSeqR_XMLPList::ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ChanR_RefYad_XMLPList::ChanR_RefYad_XMLPList(
+	ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
 :	fStrimmerU(iStrimmerU),
-	fRead(iRead)
+	fTagToRead(iTagToRead)
 	{}
 
-void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ChanR_RefYad_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	{
-	ZML::StrimU& theR = fStrimmerU->GetStrim();
+	ML::ChanRU_UTF& theChan = *fStrimmerU;
 
-	if (fRead == eRead_EmptyTag)
+	if (fTagToRead == eTagToRead_Empty)
 		{
-		if (sTryRead_Empty(theR, "array"))
-			return;
-		spThrowParseException("Expected </array>");
+		spEmptyOrThrow(theChan, "array");
 		}
-	
-	sSkipText(theR);
-
-	if (fRead == eRead_EndTag)
+	else
 		{
-		if (sTryRead_End(theR, "array"))
-			return;
-		}
+		sSkipText(theChan);
 
-	if (!(oYadR = spMakeYadR_XMLPList(fStrimmerU)))
-		{
-		if (fRead == eRead_NoTag)
-			return;
-		spThrowParseException("Expected a value");
+		if (fTagToRead == eTagToRead_End)
+			{
+			if (sTryRead_End(theChan, "array"))
+				return;
+			}
+
+		if (not (oYadR = spMakeYadR_XMLPList(fStrimmerU)))
+			{
+			if (fTagToRead == eTagToRead_None)
+				return;
+			spThrowParseException("Expected a value");
+			}
 		}
 	}
 
 // =================================================================================================
-// MARK: - ZYadMapR_XMLPList
+// MARK: - ChanR_NameRefYad_XMLPList
 
-ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, ERead iRead)
+ChanR_NameRefYad_XMLPList::ChanR_NameRefYad_XMLPList(
+	ZRef<ML::ChannerRU_UTF> iStrimmerU, ETagToRead iTagToRead)
 :	fStrimmerU(iStrimmerU),
-	fRead(iRead)
+	fTagToRead(iTagToRead)
 	{}
 
-void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, ZName& oName, ZRef<ZYadR>& oYadR)
+void ChanR_NameRefYad_XMLPList::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	{
-	ZML::StrimU& theR = fStrimmerU->GetStrim();
+	ML::ChanRU_UTF& theChan = *fStrimmerU;
 
-	if (fRead == eRead_EmptyTag)
+	if (fTagToRead == eTagToRead_Empty)
 		{
-		if (sTryRead_Empty(theR, "dict"))
-			return;
-		spThrowParseException("Expected </dict>");
+		spEmptyOrThrow(theChan, "dict");
 		}
-	
-	sSkipText(theR);
-
-	if (fRead == eRead_EndTag)
+	else
 		{
-		if (sTryRead_End(theR, "dict"))
-			return;
+		sSkipText(theChan);
+
+		if (fTagToRead == eTagToRead_End)
+			{
+			if (sTryRead_End(theChan, "dict"))
+				return;
+			}
+
+		if (not sTryRead_Begin(theChan, "key"))
+			{
+			if (fTagToRead == eTagToRead_None)
+				return;
+			spThrowParseException("Expected <key>");
+			}
+
+		oName = sReadAllUTF8(theChan);
+
+		spSkipThenEndOrThrow(theChan, "key");
+
+		if (not (oYadR = spMakeYadR_XMLPList(fStrimmerU)))
+			spThrowParseException("Expected value after <key>...</key>");
 		}
-
-	if (!sTryRead_Begin(theR, "key"))
-		{
-		if (fRead == eRead_NoTag)
-			return;
-		spThrowParseException("Expected <key>");
-		}
-
-	oName = theR.ReadAll8();
-
-	spEnd(theR, "key");
-
-	if (!(oYadR = spMakeYadR_XMLPList(fStrimmerU)))
-		spThrowParseException("Expected value after <key>...</key>");
 	}
-
-#endif // 0
 
 } // namespace Yad_XMLPlist
 
 // =================================================================================================
 // MARK: - Yad_XMLPList
 
-#if 0
-
-ZRef<YadR> Yad_XMLPList::sYadR(ZRef<ZML::StrimmerU> iStrimmerU)
+ZRef<YadR> Yad_XMLPList::sYadR(ZRef<ML::ChannerRU_UTF> iStrimmerU)
 	{
 	if (not iStrimmerU)
 		return null;
 
-	ZML::StrimU& theR = iStrimmerU->GetStrim();
+	ML::ChanRU_UTF& theChan = *iStrimmerU;
 
 	for (;;)
 		{
-		sSkipText(theR);
-		if (theR.Current() != ZML::eToken_TagBegin || theR.Name() != "plist")
+		sSkipText(theChan);
+		if (theChan.Current() != ML::eToken_TagBegin || theChan.Name() != "plist")
 			break;
-		theR.Advance();
+		theChan.Advance();
 		}
 
 	return spMakeYadR_XMLPList(iStrimmerU);
 	}
-
-#endif
 
 static void spToStrim_Stream(const ML::StrimW& s, const ChanR_Bin& iChanR)
 	{
