@@ -56,7 +56,7 @@ void Visitor_ToStrim::Visit(const ZRef<Visitee>& iRep)
 			<< "/*unhandled Visitee: "
 			<< (void*)iRep.Get()
 			<< "/"
-			<< typeid(*iRep.Get()).name()
+			<< typeid(decltype(*iRep.Get())).name()
 			<< "*/";
 		}
 	else

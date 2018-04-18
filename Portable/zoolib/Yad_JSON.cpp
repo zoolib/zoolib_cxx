@@ -908,7 +908,7 @@ public:
 		if (sBreakStrings(fOptions))
 			{
 			fChanW << " /*!! Unhandled yad: "
-				<< spPrettyName(typeid(*iYadR.Get()))
+				<< spPrettyName(typeid(decltype(*iYadR.Get())))
 				<< " !!*/";
 			}
 		}
