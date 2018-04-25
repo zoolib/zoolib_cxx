@@ -553,9 +553,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define whilenot (cond) for (;;) if (cond) { break; } else
 #define until whilenot
 
-#define ifnot (cond) if (cond) {} else
-#define unless ifnot
-
 // =================================================================================================
 
 #endif // __zconfigl_h__
