@@ -37,8 +37,8 @@ int sCompare_Ref_T(const ZRef<T>& iL, const ZRef<T>& iR)
 		{
 		if (const T* r = iR.Get())
 			{
-			const char* typeName = typeid(decltype(*l)).name();
-			if (int compare = strcmp(typeName, typeid(decltype(*r)).name()))
+			const char* typeName = typeid(*l).name();
+			if (int compare = strcmp(typeName, typeid(*r).name()))
 				return compare;
 
 			return Comparer::sCompare(typeName, l, r);
