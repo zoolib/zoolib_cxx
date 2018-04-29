@@ -69,7 +69,7 @@ public:
 	virtual size_t Readable()
 		{ return pReadable(); }
 
-// From ChanW_Bin
+// From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		if (iCount)
