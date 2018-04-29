@@ -18,35 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamW_Fragmented.h"
+#ifndef __ZooLib_ChanW_XX_Fragmented_h__
+#define __ZooLib_ChanW_XX_Fragmented_h__ 1
+#include "zconfig.h"
 
-using std::max;
+#include "zoolib/ChanW.h"
+#include "zoolib/Compat_Algorithm.h" // For min
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamW_Fragmented
+#pragma mark ChanW_XX_Fragmented
 
-/**
-\class ZStreamW_Fragmented
-\ingroup stream
-ZStreamW_Fragmented passes data written to it, but no more than fFragmentSize at a time.
-*/
+/// A write filter stream that passes on data in chunks no larger than a limit.
 
-ZStreamW_Fragmented::ZStreamW_Fragmented(size_t iFragmentSize, const ZStreamW& iStreamSink)
-:	fStreamSink(iStreamSink),
-	fFragmentSize(iFragmentSize)
-	{}
-
-void ZStreamW_Fragmented::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+template <class Chan_p>
+class ChanW_XX_Fragmented
+:	public ChanFilter<Chan_p>
 	{
-	fStreamSink.Write(iSource, max(fFragmentSize, iCount), oCountWritten);
-	}
+	typedef ChanFilter<Chan_p> inherited;
+	typedef typename Chan_p::Element_t EE;
+public:
+	ChanW_XX_Fragmented(const Chan_p& iChan, size_t iFragmentCount)
+	:	inherited(iChan)
+	,	fFragmentCount(iFragmentCount)
+		{}
 
-void ZStreamW_Fragmented::Imp_Flush()
-	{
-	fStreamSink.Flush();
-	}
+	virtual size_t Write(const EE* iSource, size_t iCount)
+		{ return sWrite(inherited::pGetChan(), iSource, min(fFragmentCount, iCount)); }
+
+protected:
+	const size_t fFragmentCount;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZooLib_ChanW_XX_Fragmented_h__
