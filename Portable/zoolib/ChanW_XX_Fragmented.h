@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ChanW_XX_Fragmented_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ChanFilter.h"
 #include "zoolib/ChanW.h"
-#include "zoolib/Compat_Algorithm.h" // For min
+#include "zoolib/Compat_algorithm.h" // For min
 
 namespace ZooLib {
 
