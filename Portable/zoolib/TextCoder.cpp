@@ -20,9 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
-
-#include "zoolib/ZStream.h"
-#include "zoolib/ZTextCoder.h"
+#include "zoolib/TextCoder.h"
 
 using std::min;
 using std::string;
@@ -33,7 +31,7 @@ static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextCoder
+#pragma mark TextCoder
 
 namespace { // anonymous
 struct CharsetEntry_t
@@ -433,8 +431,9 @@ static const CharsetEntry_t spCharsetTable[] =
 		{ 0, 0 }
 	};
 
-void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>& oAliases)
+std::vector<std::string> sGetTextEncodingAliases(const std::string& iName)
 	{
+	std::vector<std::string> result;
 	const CharsetEntry_t* found = nullptr;
 	for (const CharsetEntry_t* current = spCharsetTable; current->fName && !found; ++current)
 		{
@@ -450,48 +449,50 @@ void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>&
 			for (const CharsetEntry_t* current = spCharsetTable; current->fName; ++current)
 				{
 				if (theMIB == current->fMIB)
-					oAliases.push_back(current->fName);
+					result.push_back(current->fName);
 				}
 			}
 		}
+
+	return result;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder
+#pragma mark TextDecoder
 
 /**
-\class ZTextDecoder
+\class TextDecoder
 \sa Unicode
-\sa ZTextEncoder
+\sa TextEncoder
 
 \brief Takes binary data and generates Unicode text according to some encoding scheme.
 
-The standard ZTextDecoder derivatives follow ZooLib's standard practice of treating malformed
+The standard TextDecoder derivatives follow ZooLib's standard practice of treating malformed
 data as being something to simply skip. Malformed data generally means data that either does
 not conform to the specification for the particular text encoding (illegal byte values or
 sequences) or occasionally data that represents code points that have no equivalent in Unicode,
 although this is extremely rare.
 
 Decoders are allowed and expected to maintain state, so that large sequences of source material
-can processed by multiple calls to ZTextDecoder::Decode. A decoder is assumed to be in a fresh
-state when first created, and can be returned to that state by calling ZTextDecoder::Reset.
+can processed by multiple calls to TextDecoder::Decode. A decoder is assumed to be in a fresh
+state when first created, and can be returned to that state by calling TextDecoder::Reset.
 */
 
-ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
-	{
-	const string charsetLC = Unicode::sToLower(iCharset);
-	return FunctionChain<ZTextDecoder*, const string&>::sInvoke(charsetLC);
-	}
+//TextDecoder* TextDecoder::sMake(const std::string& iCharset)
+//	{
+//	const string charsetLC = Unicode::sToLower(iCharset);
+//	return FunctionChain<TextDecoder*, const string&>::sInvoke(charsetLC);
+//	}
 
 /**
-\fn bool ZTextDecoder::Decode( \
+\fn bool TextDecoder::Decode( \
 const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped, \
 UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 
 \brief Decode UTF-32 text, reading the encoded form from a buffer in memory.
 
-For single byte encodings implementing ZTextDecoder::Decode is straightforward, generally just
+For single byte encodings implementing TextDecoder::Decode is straightforward, generally just
 a table lookup for each byte in the source. For multi-byte encodings some subtlety is required,
 particularly when handling source buffers that contain valid but incomplete data.
 
@@ -507,31 +508,36 @@ particularly when handling source buffers that contain valid but incomplete data
 \param oDestCU (optional output) The number of UTF-32 code units that were generated. This
 				will also be the number of Unicode code points, provided that your decoder does
 				not generate illegal UTF-32 code units.
-\return \li \a true The normal return value.
-
-\return \li \a false If \a iSourceBytes and \a iDestCU were non-zero but nothing could be consumed
-				and nothing generated, generally because the source data was incomplete. This can
-				only occur with source encodings that may require more than a single byte to
-				represent a single Unicode code point.
 
 It's entirely legal for a decoder to consume source data without generating any UTF-32, e.g. if
 the source contains only illegal code units they will be skipped over without generating output,
 and the total number of bytes making up such skipped data will be placed in \a oSourceBytesSkipped.
 It's also feasible that a decoder might suck up and buffer source data in one set of calls, and
 later generate UTF-32 output without consuming any source data. For example
-ZTextDecoder_Unicode_AutoDetect does this, in order to more cleanly handle the skipping of a BOM.
+TextDecoder_Unicode_AutoDetect does this, in order to more cleanly handle the skipping of a BOM.
 */
 
-/** \brief Decode UTF-32 text, reading the encoded form from a ZStreamR.
+void sDecode(
+	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+	const ZRef<TextDecoder>& iTextDecoder,
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
+	{
+	sCall(iTextDecoder,
+		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+		oDest, iDestCU, oDestCU);
+	}
 
-The ZStreamR protocol is such that data cannot be returned to the stream once read. In order
-to allow ZTextDecoder derivatives to take advantage of their knowledge of an encoding scheme
-ZTextDecoder::Decode is an overrideable method. The platform-specific decoders work only in terms
+
+/** \brief Decode UTF-32 text, reading the encoded form from a ChanR_Bin.
+
+The ChanR protocol is such that data cannot be returned to the chanr once read. In order
+to allow TextDecoder derivatives to take advantage of their knowledge of an encoding scheme
+TextDecoder::Decode is an overrideable method. The platform-specific decoders work only in terms
 of buffers, and do not provide enough information to communicate how much data they need to read
 in order to generate a certain quantity of output. The default implementation of
-ZTextDecoder::Decode has to nibble away at the stream in order not to over-read it.
+TextDecoder::Decode has to nibble away at the chan in order not to over-read it.
 
-\param iStreamR The stream from which encoded data is to be read.
+\param iChanR The chan from which encoded data is to be read.
 \param oDest Points to the start of the buffer into which UTF-32 is to be placed.
 \param iDestCU The maximum number of UTF-32 code units to be generated. It's the size
 				of the buffer referenced by \a oDest.
@@ -539,7 +545,10 @@ ZTextDecoder::Decode has to nibble away at the stream in order not to over-read 
 				will also be the number of Unicode code points, provided that your decoder does
 				not generate illegal UTF-32 code units.
 */
-void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU, size_t* oDestCU)
+void sDecode(
+	const ChanR_Bin& iChanR,
+	const ZRef<TextDecoder>& iTextDecoder,
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	uint8 buffer[kBufSize];
 
@@ -547,18 +556,17 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU
 	size_t bufferUsed = 0;
 	while (iDestCU)
 		{
-		size_t countRead;
-		iStreamR.Read(buffer + bufferUsed, min(kBufSize - bufferUsed, iDestCU), &countRead);
+		size_t countRead = sRead(iChanR, buffer + bufferUsed, min(kBufSize - bufferUsed, iDestCU));
 		if (countRead == 0)
 			{
 			// We may still have data in the buffer, in which case bufferUsed will be non-zero.
 			// However it must be incomplete data, code units that in themselves do not
 			// form a valid code point, otherwise the call to Decode on the last iteration
-			// would have consumed them, and as the stream has gone empty we will not be
+			// would have consumed them, and as the chan has gone empty we will not be
 			// getting any more code units which could, in conjunction with the data in the
 			// buffer, represent valid code points. If we were decoding from a buffer, rather
-			// than a stream, then we could return a value indicating that this situation
-			// has occurred. But the data has already been irrevocably pulled from the stream
+			// than a chan, then we could return a value indicating that this situation
+			// has occurred. But the data has already been irrevocably pulled from the chan
 			// and in this general implementation there is no way for a caller to do anything
 			// with the knowledge. So we simply abandon the buffered data.
 			break;
@@ -567,7 +575,10 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU
 
 		size_t countConsumed;
 		size_t utf32Generated;
-		this->Decode(buffer, bufferUsed, &countConsumed, nullptr, localDest, iDestCU, &utf32Generated);
+		sDecode(
+			buffer, bufferUsed, &countConsumed, nullptr,
+			iTextDecoder,
+			localDest, iDestCU, &utf32Generated);
 
 		// Remove the consumed code units from the buffer by reducing bufferUsed
 		// and moving any remaining data to the front of the buffer.
@@ -582,55 +593,51 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU
 		*oDestCU = localDest - oDest;
 	}
 
-/** \brief Decode a single UTF-32 codepoint from a ZStreamR.
+/** \brief Decode a single UTF-32 codepoint from a ChanR.
 
-\param iStreamR The stream from which encoded data is to be read.
-\param oCP The code point that was read.
-
-\return \li \a true \a oCP contains a code point read from \a iStreamR.
-
-\return \li \a false No code point could be read from iStreamR, because
+\param iChanR The chan from which encoded data is to be read.
+\param iTextDecoder The text decoder to use.
+\return A ZQ containing the CP. It will be empty if no CP could be read from iChanR, because
 				the stream was empty, or contained only malformed data.
 */
-bool ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32& oCP)
+ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecoder)
 	{
-	size_t countCU;
-	this->Decode(iStreamR, &oCP, 1, &countCU);
-	return countCU;
+	UTF32 theCP;
+	size_t destCU;
+	sDecode(iChanR, iTextDecoder, &theCP, 1, &destCU);
+	if (destCU)
+		return theCP;
+	return null;
 	}
-
-/** \brief Discard any state in preparation for a fresh sequence of source material.*/
-void ZTextDecoder::Reset()
-	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder
+#pragma mark TextEncoder
 
 /**
-\class ZTextEncoder
+\class TextEncoder
 \sa Unicode
-\sa ZTextDecoder
+\sa TextDecoder
 
 \brief Takes Unicode text and generates binary data according to some encoding scheme.
 
 Encoders are allowed and expected to maintain state, so that large sequences of source
-text can be processed by multiple calls to ZTextEncoder::Encode. This state can be
-discarded by calling ZTextEncoder::Reset, returning the encoder to the same condition
+text can be processed by multiple calls to TextEncoder::Encode. This state can be
+discarded by calling TextEncoder::Reset, returning the encoder to the same condition
 it was in when it was first instantiated.
 
 Encoding is less tricky than decoding because source material is always a sequence of
 UTF-32 code units and thus there is no need to deal with truncated source.
 */
 
-ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
-	{
-	const string charsetLC = Unicode::sToLower(iCharset);
-	return FunctionChain<ZTextEncoder*, const string&>::sInvoke(charsetLC);
-	}
+//TextEncoder* TextEncoder::sMake(const std::string& iCharset)
+//	{
+//	const string charsetLC = Unicode::sToLower(iCharset);
+//	return FunctionChain<TextEncoder*, const string&>::sInvoke(charsetLC);
+//	}
 
 /**
-\fn void ZTextEncoder::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU, \
+\fn void TextEncoder::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU, \
 void* oDest, size_t iDestBytes, size_t* oDestBytes)
 
 \brief Encode UTF-32 text, writing the encoded form to a buffer in memory.
@@ -646,9 +653,19 @@ void* oDest, size_t iDestBytes, size_t* oDestBytes)
 It's entirely legal for an encoder to consume UTF-32 without generating any encoded data. If
 the source has illegal code units they will be skipped over. It's also feasible that an encoder
 might suck up and buffer UTF-32 in one set of calls without generating output, and later
-generate output without consuming any source. The standard ZTextEncoder derivatives do not
+generate output without consuming any source. The standard TextEncoder derivatives do not
 do this, but others might need to.
 */
+
+void sEncode(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	const ZRef<TextEncoder>& iTextEncoder,
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
+	{
+	sCall(iTextEncoder,
+		iSource, iSourceCU, oSourceCU,
+		oDest, iDestBytes, oDestBytes);
+	}
 
 /** \brief Encode UTF-32 text, writing the encoded form to a ZStreamW.
 
@@ -657,8 +674,10 @@ do this, but others might need to.
 \param iSourceCU The number UTF-32 code units that are available to be encoded.
 \param oSourceCU (optional output) The number of UTF-32 code units that were consumed.
 */
-void ZTextEncoder::Encode(
-	const ZStreamW& iStreamW, const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU)
+void sEncode(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	const ZRef<TextEncoder>& iTextEncoder,
+	const ChanW_Bin& iChanW)
 	{
 	uint8 buffer[kBufSize];
 	const UTF32* localSource = iSource;
@@ -666,9 +685,10 @@ void ZTextEncoder::Encode(
 		{
 		size_t utf32Consumed;
 		size_t countGenerated;
-		this->Encode(localSource, iSourceCU, &utf32Consumed, buffer, kBufSize, &countGenerated);
-		size_t countWritten;
-		iStreamW.Write(buffer, countGenerated, &countWritten);
+		sEncode(localSource, iSourceCU, &utf32Consumed,
+			iTextEncoder,
+			buffer, kBufSize, &countGenerated);
+		size_t countWritten = sWrite(iChanW, buffer, countGenerated);
 		if (countWritten < countGenerated)
 			{
 			// There's no direct way for an encoder to tell us which bytes in a buffer correspond
@@ -692,11 +712,11 @@ void ZTextEncoder::Encode(
 \param iStreamW The stream to which encoded data is to be written.
 \param iCP The code point to write.
 */
-void ZTextEncoder::Encode(const ZStreamW& iStreamW, UTF32 iCP)
-	{ this->Encode(iStreamW, &iCP, 1, nullptr); }
-
-/** \brief Discard any state in preparation for a fresh sequence of source material.*/
-void ZTextEncoder::Reset()
-	{}
+bool sEncode(UTF32 iCP, const ZRef<TextEncoder>& iTextEncoder, const ChanW_Bin& iChanW)
+	{
+	size_t countConsumed;
+	sEncode(&iCP, 1, &countConsumed, iTextEncoder, iChanW);
+	return countConsumed;
+	}
 
 } // namespace ZooLib
