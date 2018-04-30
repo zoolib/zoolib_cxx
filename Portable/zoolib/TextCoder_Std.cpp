@@ -18,68 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Callable_Function.h"
+#include "zoolib/Compat_algorithm.h" // For lower_bound
+#include "zoolib/TextCoder_Std.h"
 #include "zoolib/Unicode.h"
-
-#include "zoolib/ZCompat_algorithm.h" // For lower_bound
-#include "zoolib/ZTextCoder_Std.h"
-
-#include <string>
-
-ZMACRO_MSVCStaticLib_cpp(TextCoder_Std)
-
-using std::string;
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Factory functions
+#pragma mark spTextDecode_ASCII
 
-namespace { // anonymous
-
-class Make_Decoder
-:	public FunctionChain<ZTextDecoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (false) {}
-		else if (iParam == "ascii") oResult = new ZTextDecoder_ASCII;
-		else if (iParam == "cp1252") oResult = new ZTextDecoder_CP1252;
-		else if (iParam == "cp850") oResult = new ZTextDecoder_CP850;
-		else if (iParam == "macroman") oResult = new ZTextDecoder_MacRoman;
-		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-			oResult = new ZTextDecoder_ISO8859_1;
-		else return false;
-
-		return true;
-		}
-	} sMaker0;
-
-class Make_Encoder
-:	public FunctionChain<ZTextEncoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (false) {}
-		else if (iParam == "ascii") oResult = new ZTextEncoder_ASCII;
-		else if (iParam == "cp1252") oResult = new ZTextEncoder_CP1252;
-		else if (iParam == "cp850") oResult = new ZTextEncoder_CP850;
-		else if (iParam == "macroman") oResult = new ZTextEncoder_MacRoman;
-		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-			oResult = new ZTextEncoder_ISO8859_1;
-		else return false;
-
-		return true;
-		}
-	} sMaker1;
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_ASCII
-
-bool ZTextDecoder_ASCII::Decode(
+static void spTextDecode_ASCII(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -101,14 +51,14 @@ bool ZTextDecoder_ASCII::Decode(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
-	return true;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_ASCII
+#pragma mark spTextEncode_ASCII
 
-void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spTextEncode_ASCII(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
@@ -133,9 +83,9 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_ISO8859_1
+#pragma mark spTextDecode_ISO8859_1
 
-bool ZTextDecoder_ISO8859_1::Decode(
+static void spTextDecode_ISO8859_1(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -153,14 +103,14 @@ bool ZTextDecoder_ISO8859_1::Decode(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
-	return true;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_ISO8859_1
+#pragma mark spTextEncode_ISO8859_1
 
-void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spTextEncode_ISO8859_1(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
@@ -185,7 +135,7 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_MacRoman
+#pragma mark spTextDecode_MacRoman
 
 static const UTF32 spMacToUnicode[256] =
 	{
@@ -223,7 +173,7 @@ static const UTF32 spMacToUnicode[256] =
 	0x00AF, 0x02D8, 0x02D9, 0x02DA, 0x00B8, 0x02DD, 0x02DB, 0x02C7
 	};
 
-bool ZTextDecoder_MacRoman::Decode(
+static void spTextDecode_MacRoman(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -241,12 +191,11 @@ bool ZTextDecoder_MacRoman::Decode(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
-	return true;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_MacRoman
+#pragma mark spTextEncode_MacRoman
 
 struct UnicodeToMac_t
 	{
@@ -325,7 +274,8 @@ static const UnicodeToMac_t spUnicodeToMac[256] =
 	{0xD7, 0x25CA}, {0xF0, 0xF8FF}, {0xDE, 0xFB01}, {0xDF, 0xFB02}
 	};
 
-void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spTextEncode_MacRoman(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
@@ -354,7 +304,7 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_CP1252
+#pragma mark spTextDecode_CP1252
 
 // CP1252 is also known as Latin1. It's a superset of ISO-8859-1, but has various
 // dingbat characters in CL and CR
@@ -369,7 +319,7 @@ static const UTF32 spCP1252ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-bool ZTextDecoder_CP1252::Decode(
+static void spTextDecode_CP1252(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -393,12 +343,11 @@ bool ZTextDecoder_CP1252::Decode(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
-	return true;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_CP1252
+#pragma mark spTextEncode_CP1252
 
 static const uint8 spCP1252_Page01[72] =
 	{
@@ -429,7 +378,8 @@ static const uint8 spCP1252_Page20[48] =
 	0x00, 0x8b, 0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x38-0x3f */
 	};
 
-void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spTextEncode_CP1252(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
@@ -457,7 +407,7 @@ void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t*
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_CP850
+#pragma mark spTextDecode_CP850
 
 static const UTF32 spCP850ToUnicode[128] =
 	{
@@ -469,7 +419,7 @@ static const UTF32 spCP850ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-bool ZTextDecoder_CP850::Decode(
+static void spTextDecode_CP850(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -493,12 +443,11 @@ bool ZTextDecoder_CP850::Decode(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
-	return true;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_CP850
+#pragma mark spTextEncode_CP850
 
 static const unsigned char spCP850_Page00[96] =
 	{
@@ -541,7 +490,8 @@ static const unsigned char spCP850_Page25[168] =
 	0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0xa0-0xa7 */
 	};
 
-void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spTextEncode_CP850(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
@@ -564,6 +514,50 @@ void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<uint8*>(oDest);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+ZRef<TextDecoder> sMake_TextDecoder_Std(const std::string& iSourceName)
+	{
+	if (iSourceName == "ascii")
+		return sCallable(spTextDecode_ASCII);
+
+	if (iSourceName == "cp1252")
+		return sCallable(spTextDecode_CP1252);
+
+	if (iSourceName == "cp850")
+		return sCallable(spTextDecode_CP850);
+
+	if (iSourceName == "macroman")
+		return sCallable(spTextDecode_MacRoman);
+
+	if (iSourceName == "iso_8859-1" || iSourceName == "iso-8859-1")
+		return sCallable(spTextDecode_ISO8859_1);
+
+	return null;
+	}
+
+ZRef<TextEncoder> sMake_TextEncoder_Std(const std::string& iDestName)
+	{
+	if (iDestName == "ascii")
+		return sCallable(spTextEncode_ASCII);
+
+	if (iDestName == "cp1252")
+		return sCallable(spTextEncode_CP1252);
+
+	if (iDestName == "cp850")
+		return sCallable(spTextEncode_CP850);
+
+	if (iDestName == "macroman")
+		return sCallable(spTextEncode_MacRoman);
+
+	if (iDestName == "iso_8859-1" || iDestName == "iso-8859-1")
+		return sCallable(spTextEncode_ISO8859_1);
+
+	return null;
 	}
 
 } // namespace ZooLib
