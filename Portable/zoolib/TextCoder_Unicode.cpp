@@ -18,16 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Memory.h"
+#include "zoolib/TextCoder_Unicode.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
 
 #include <string>
-
-ZMACRO_MSVCStaticLib_cpp(TextCoder_Unicode)
 
 using std::min;
 using std::string;
@@ -38,125 +37,32 @@ static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Factory functions
-
-namespace { // anonymous
-
-class Make_Decoder
-:	public FunctionChain<ZTextDecoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (false)
-			{}
-		else if (iParam == "utf-8" || iParam == "utf8")
-			{
-			oResult = new ZTextDecoder_UTF8;
-			}
-		else if (iParam == "ucs-4" || iParam == "ucs4"
-			|| iParam == "utf-32" || iParam == "utf32")
-			{
-			if (ZCONFIG(Endian, Big))
-				oResult = new ZTextDecoder_UTF32BE;
-			else
-				oResult = new ZTextDecoder_UTF32LE;
-			}
-		else if (iParam == "utf-16" || iParam == "utf16")
-			{
-			if (ZCONFIG(Endian, Big))
-				oResult = new ZTextDecoder_UTF16BE;
-			else
-				oResult = new ZTextDecoder_UTF16LE;
-			}
-		else if (iParam == "ucs-4be" || iParam == "ucs4be"
-			|| iParam == "utf-32be" || iParam == "utf32be")
-			{
-			oResult = new ZTextDecoder_UTF32BE;
-			}
-		else if (iParam == "ucs-4le" || iParam == "ucs4le"
-			|| iParam == "utf-32le" || iParam == "utf32le")
-			{
-			oResult = new ZTextDecoder_UTF32LE;
-			}
-		else if (iParam == "utf-16be" || iParam == "utf16be")
-			{
-			oResult = new ZTextDecoder_UTF16BE;
-			}
-		else if (iParam == "utf-16le" || iParam == "utf16le")
-			{
-			oResult = new ZTextDecoder_UTF16LE;
-			}
-		else
-			{
-			return false;
-			}
-		return true;
-		}
-	} sMaker0;
-
-class Make_Encoder
-:	public FunctionChain<ZTextEncoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (false)
-			{}
-		else if (iParam == "utf-8" || iParam == "utf8")
-			{
-			oResult = new ZTextEncoder_UTF8;
-			}
-		else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
-			{
-			if (ZCONFIG(Endian, Big))
-				oResult = new ZTextEncoder_UTF32BE;
-			else
-				oResult = new ZTextEncoder_UTF32LE;
-			}
-		else if (iParam == "utf-16" || iParam == "utf16")
-			{
-			if (ZCONFIG(Endian, Big))
-				oResult = new ZTextEncoder_UTF16BE;
-			else
-				oResult = new ZTextEncoder_UTF16LE;
-			}
-		else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
-			{
-			oResult = new ZTextEncoder_UTF32BE;
-			}
-		else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
-			{
-			oResult = new ZTextEncoder_UTF32LE;
-			}
-		else if (iParam == "utf-16be" || iParam == "utf16be")
-			{
-			oResult = new ZTextEncoder_UTF16BE;
-			}
-		else if (iParam == "utf-16le" || iParam == "utf16le")
-			{
-			oResult = new ZTextEncoder_UTF16LE;
-			}
-		else
-			{
-			return false;
-			}
-		return true;
-		}
-	} sMaker1;
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark Utility functions
 
-static void spCopyUTF32(const void* iSource, void* oDest, size_t iCount)
-	{ sMemCopy(oDest, iSource, iCount * sizeof(UTF32)); }
-
-static void spCopyUTF32Swapped(const void* iSource, void* oDest, size_t iCount)
+static void spEncodeUTF32(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
-	const UTF32* localSource = static_cast<const UTF32*>(iSource);
+	const size_t countToCopy = min(iSourceCU, iDestBytes / 4);
+	if (oSourceCU)
+		*oSourceCU = countToCopy;
+	if (oDestBytes)
+		*oDestBytes = countToCopy * 4;
+
+	sMemCopy(oDest, iSource, countToCopy * sizeof(UTF32));
+	}
+
+static void spEncodeUTF32Swapped(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
+	{
+	size_t countToCopy = min(iSourceCU, iDestBytes / 4);
+	if (oSourceCU)
+		*oSourceCU = countToCopy;
+	if (oDestBytes)
+		*oDestBytes = countToCopy * 4;
+
+	const UTF32* localSource = iSource;
 	UTF32* localDest = static_cast<UTF32*>(oDest);
-	while (iCount--)
+	while (countToCopy--)
 		*localDest++ = ZByteSwap_Read32(localSource++);
 	}
 
@@ -479,177 +385,103 @@ static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_UTF32BE
+#pragma mark Factory functions
 
-bool ZTextDecoder_UTF32BE::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
+ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
 	{
-	if (ZCONFIG(Endian, Big))
+	if (iSourceName == "utf-8" || iSourceName == "utf8")
+		return sCallable(spDecodeUTF8);
+
+	if (iSourceName == "ucs-4" || iSourceName == "ucs4"
+		|| iSourceName == "utf-32" || iSourceName == "utf32"
+		|| iSourceName == "ucs-4be" || iSourceName == "ucs4be"
+		|| iSourceName == "utf-32be" || iSourceName == "utf32be")
 		{
-		return spDecodeUTF32(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spDecodeUTF32);
+		else
+			return sCallable(spDecodeUTF32Swapped);
 		}
-	else
+
+	if (iSourceName == "ucs-4le" || iSourceName == "ucs4le"
+		|| iSourceName == "utf-32le" || iSourceName == "utf32le")
 		{
-		return spDecodeUTF32Swapped(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spDecodeUTF32Swapped);
+		else
+			return sCallable(spDecodeUTF32);
 		}
-	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_UTF32BE
-
-void ZTextEncoder_UTF32BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)
-	{
-	size_t countToCopy = min(iSourceCU, iDestBytes / 4);
-
-	if (ZCONFIG(Endian, Big))
-		spCopyUTF32(iSource, oDest, countToCopy);
-	else
-		spCopyUTF32Swapped(iSource, oDest, countToCopy);
-
-	if (oSourceCU)
-		*oSourceCU = countToCopy;
-	if (oDestBytes)
-		*oDestBytes = countToCopy * 4;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_UTF32LE
-
-bool ZTextDecoder_UTF32LE::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
-	{
-	if (ZCONFIG(Endian, Big))
+	if (iSourceName == "utf-16" || iSourceName == "utf16"
+		|| iSourceName == "utf-16be" || iSourceName == "utf16be")
 		{
-		return spDecodeUTF32Swapped(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spDecodeUTF16);
+		else
+			return sCallable(spDecodeUTF16Swapped);
 		}
-	else
+
+	if (iSourceName == "utf-16le" || iSourceName == "utf16le")
 		{
-		return spDecodeUTF32(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spDecodeUTF16Swapped);
+		else
+			return sCallable(spDecodeUTF16);
 		}
+
+	return null;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_UTF32LE
-
-void ZTextEncoder_UTF32LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)
+ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName)
 	{
-	size_t countToCopy = min(iSourceCU, iDestBytes / 4);
+	if (iDestName == "utf-8" || iDestName == "utf8")
+		return sCallable(spEncodeUTF8);
 
-	if (ZCONFIG(Endian, Big))
-		spCopyUTF32Swapped(iSource, oDest, countToCopy);
-	else
-		spCopyUTF32(iSource, oDest, countToCopy);
-
-	if (oSourceCU)
-		*oSourceCU = countToCopy;
-	if (oDestBytes)
-		*oDestBytes = countToCopy * 4;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_UTF16BE
-
-bool ZTextDecoder_UTF16BE::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
-	{
-	if (ZCONFIG(Endian, Big))
+	if (iDestName == "ucs-4" || iDestName == "ucs4"
+		|| iDestName == "utf-32" || iDestName == "utf32"
+		|| iDestName == "ucs-4be" || iDestName == "ucs4be"
+		|| iDestName == "utf-32be" || iDestName == "utf32be")
 		{
-		return spDecodeUTF16(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spEncodeUTF32);
+		else
+			return sCallable(spEncodeUTF32Swapped);
 		}
-	else
+
+	if (iDestName == "ucs-4le" || iDestName == "ucs4le"
+		|| iDestName == "utf-32le" || iDestName == "utf32le")
 		{
-		return spDecodeUTF16Swapped(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spEncodeUTF32Swapped);
+		else
+			return sCallable(spEncodeUTF32);
 		}
-	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_UTF16BE
-
-void ZTextEncoder_UTF16BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)
-	{
-	if (ZCONFIG(Endian, Big))
-		spEncodeUTF16(iSource, iSourceCU, oSourceCU, oDest, iDestBytes, oDestBytes);
-	else
-		spEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, oDest, iDestBytes, oDestBytes);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_UTF16LE
-
-bool ZTextDecoder_UTF16LE::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
-	{
-	if (ZCONFIG(Endian, Big))
+	if (iDestName == "utf-16" || iDestName == "utf16"
+		|| iDestName == "utf-16be" || iDestName == "utf16be")
 		{
-		return spDecodeUTF16Swapped(
-			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spEncodeUTF16);
+		else
+			return sCallable(spEncodeUTF16Swapped);
 		}
-	else
+
+	if (iDestName == "utf-16le" || iDestName == "utf16le")
 		{
-		return spDecodeUTF16(
-		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
+		if (ZCONFIG(Endian, Big))
+			return sCallable(spEncodeUTF16Swapped);
+		else
+			return sCallable(spEncodeUTF16);
 		}
+
+	return null;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_UTF16LE
+#pragma mark TextDecoder_Unicode_AutoDetect
 
-void ZTextEncoder_UTF16LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)
-	{
-	if (ZCONFIG(Endian, Big))
-		spEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, oDest, iDestBytes, oDestBytes);
-	else
-		spEncodeUTF16(iSource, iSourceCU, oSourceCU, oDest, iDestBytes, oDestBytes);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_UTF8
-
-bool ZTextDecoder_UTF8::Decode(
-	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
-	{
-	return spDecodeUTF8(
-		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, oDest, iDestCU, oDestCU);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_UTF8
-
-void ZTextEncoder_UTF8::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)
-	{
-	spEncodeUTF8(iSource, iSourceCU, oSourceCU, oDest, iDestBytes, oDestBytes);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_Unicode_AutoDetect
-
-ZTextDecoder_Unicode_AutoDetect::ZTextDecoder_Unicode_AutoDetect()
+TextDecoder_Unicode_AutoDetect::TextDecoder_Unicode_AutoDetect()
 :	fType(eFresh)
 	{}
 
@@ -658,7 +490,7 @@ ZTextDecoder_Unicode_AutoDetect::ZTextDecoder_Unicode_AutoDetect()
 // UTF-16LE --> FF FE
 // UTF-16BE --> FE FF
 
-bool ZTextDecoder_Unicode_AutoDetect::Decode(
+ZQ<bool> TextDecoder_Unicode_AutoDetect::QCall(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -762,7 +594,7 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 	return true;
 	}
 
-void ZTextDecoder_Unicode_AutoDetect::Reset()
+void TextDecoder_Unicode_AutoDetect::Reset()
 	{ fType = eFresh; }
 
 } // namespace ZooLib
