@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCoder_Mac_h__
-#define __ZTextCoder_Mac_h__ 1
+#ifndef __ZooLib_OSX_TextCoder_Mac_h__
+#define __ZooLib_OSX_TextCoder_Mac_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -34,11 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_API_Desired__TextCoder_Mac 1
 #endif
 
-#include "zoolib/ZTextCoder.h"
+#include "zoolib/TextCoder.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
-
-ZMACRO_MSVCStaticLib_Reference(TextCoder_Mac)
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,UnicodeConverter.h)
 
@@ -46,54 +44,14 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_Mac
+#pragma mark
 
-class ZTextDecoder_Mac : public ZTextDecoder
-	{
-public:
-	ZTextDecoder_Mac(const char* iName);
-	ZTextDecoder_Mac(const std::string& iName);
-	ZTextDecoder_Mac(TextEncoding iSourceEncoding);
-	virtual ~ZTextDecoder_Mac();
+ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName);
 
-	using ZTextDecoder::Decode;
-
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
-
-private:
-	void Init(TextEncoding iSourceEncoding);
-
-	TextToUnicodeInfo fInfo;
-	bool fIsReset;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_Mac
-
-class ZTextEncoder_Mac : public ZTextEncoder
-	{
-public:
-	ZTextEncoder_Mac(const char* iName);
-	ZTextEncoder_Mac(const std::string& iName);
-	ZTextEncoder_Mac(TextEncoding iDestEncoding);
-	virtual ~ZTextEncoder_Mac();
-
-	using ZTextEncoder::Encode;
-
-	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* oDest, size_t iDestBytes, size_t* oDestBytes);
-private:
-	void Init(TextEncoding iDestEncoding);
-
-	UnicodeToTextInfo fInfo;
-	bool fIsReset;
-	};
+ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName);
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Mac)
 
-#endif // __ZTextCoder_Mac_h__
+#endif // __ZooLib_OSX_TextCoder_Mac_h__

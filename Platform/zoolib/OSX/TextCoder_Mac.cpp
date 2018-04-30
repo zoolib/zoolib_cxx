@@ -18,11 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZTextCoder_Mac.h"
+#include "zoolib/OSX/TextCoder_Mac.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
-
-ZMACRO_MSVCStaticLib_cpp(TextCoder_Mac)
 
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_string.h"
@@ -47,35 +45,7 @@ static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Factory functions
-
-namespace { // anonymous
-
-class Make_Decoder
-:	public FunctionChain<ZTextDecoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		oResult = new ZTextDecoder_Mac(iParam);
-		return true;
-		}
-	} sMaker0;
-
-class Make_Encoder
-:	public FunctionChain<ZTextEncoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		oResult = new ZTextEncoder_Mac(iParam);
-		return true;
-		}
-	} sMaker1;
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextCoder_Mac
+#pragma mark TextCoder_Mac
 
 static TextEncoding spLookupName(const string& iName)
 	{
@@ -90,9 +60,8 @@ static TextEncoding spLookupName(const string& iName)
 	if (noErr == TECGetTextEncodingFromInternetName(&theTE, theNameStr255))
 		return theTE;
 
-	// Work our way through any aliases ZTextCoder may know about
-	vector<string> aliases;
-	ZTextCoder::sGetAliases(iName, aliases);
+	// Work our way through any aliases TextCoder may know about
+	vector<string> aliases = sGetTextCodingAliases(iName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		Util_string::sToPString(Unicode::sToLower(*ii), theNameStr255, 255);
@@ -105,24 +74,43 @@ static TextEncoding spLookupName(const string& iName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_Mac
+#pragma mark TextDecoder_Mac
 
-ZTextDecoder_Mac::ZTextDecoder_Mac(const char* iName)
+class TextDecoder_Mac : public TextDecoder
 	{
-	this->Init(spLookupName(iName));
+public:
+	TextDecoder_Mac(TextEncoding iSourceEncoding);
+	virtual ~TextDecoder_Mac();
+
+	virtual ZQ<bool> QCall(
+		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
+
+private:
+	TextToUnicodeInfo fInfo;
+	bool fIsReset;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark TextDecoder_Mac
+
+TextDecoder_Mac::TextDecoder_Mac(TextEncoding iSourceEncoding)
+	{
+	fIsReset = true;
+
+	// Note: We can't use kUnicode32BitFormat, the Unicode converter does not support it.
+	UnicodeMapping theMapping;
+	theMapping.unicodeEncoding = ::CreateTextEncoding(
+		kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
+
+	theMapping.otherEncoding = iSourceEncoding;
+	theMapping.mappingVersion = kUnicodeUseLatestMapping;
+	if (noErr != ::CreateTextToUnicodeInfo(&theMapping, &fInfo))
+		throw runtime_error("TextDecoder_Mac, couldn't create converter");
 	}
 
-ZTextDecoder_Mac::ZTextDecoder_Mac(const string& iName)
-	{
-	this->Init(spLookupName(iName));
-	}
-
-ZTextDecoder_Mac::ZTextDecoder_Mac(TextEncoding iSourceEncoding)
-	{
-	this->Init(iSourceEncoding);
-	}
-
-ZTextDecoder_Mac::~ZTextDecoder_Mac()
+TextDecoder_Mac::~TextDecoder_Mac()
 	{
 	::DisposeTextToUnicodeInfo(&fInfo);
 	}
@@ -130,7 +118,7 @@ ZTextDecoder_Mac::~ZTextDecoder_Mac()
 static ByteOffset spSourceOffsets[kBufSize];
 static bool spInitedSourceOffsets = false;
 
-bool ZTextDecoder_Mac::Decode(
+ZQ<bool> TextDecoder_Mac::QCall(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -276,47 +264,64 @@ bool ZTextDecoder_Mac::Decode(
 	return true;
 	}
 
-void ZTextDecoder_Mac::Init(TextEncoding iSourceEncoding)
+// =================================================================================================
+#pragma mark -
+#pragma mark TextEncoder_Mac
+
+class TextEncoder_Mac : public TextEncoder
+	{
+public:
+	TextEncoder_Mac(TextEncoding iDestEncoding);
+	virtual ~TextEncoder_Mac();
+
+	virtual ZQ<void> QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+					void* oDest, size_t iDestBytes, size_t* oDestBytes);
+private:
+	UnicodeToTextInfo fInfo;
+	bool fIsReset;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark TextEncoder_Mac
+
+static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,
+	ByteCount *oSrcConvLen,
+	TextPtr oDestStr, ByteCount iDestStrLen, ByteCount *oDestConvLen,
+	LogicalAddress iInfoPtr, ConstUnicodeMappingPtr iUnicodeMappingPtr)
+	{
+	*oSrcConvLen = iSrcUniStrLen;
+	*oDestConvLen = 0;
+	return noErr;
+	}
+
+static UnicodeToTextFallbackUPP spUnicodeToTextFallback_NullUPP =
+	NewUnicodeToTextFallbackUPP(spUnicodeToTextFallback_Null);
+
+TextEncoder_Mac::TextEncoder_Mac(TextEncoding iDestEncoding)
 	{
 	fIsReset = true;
 
-	// Note: We can't use kUnicode32BitFormat, the Unicode converter does not support it.
 	UnicodeMapping theMapping;
 	theMapping.unicodeEncoding = ::CreateTextEncoding(
 		kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
 
-	theMapping.otherEncoding = iSourceEncoding;
+	theMapping.otherEncoding = iDestEncoding;
 	theMapping.mappingVersion = kUnicodeUseLatestMapping;
-	if (noErr != ::CreateTextToUnicodeInfo(&theMapping, &fInfo))
-		throw runtime_error("ZTextDecoder_Mac, couldn't create converter");
+	if (noErr != ::CreateUnicodeToTextInfo(&theMapping, &fInfo))
+		throw runtime_error("TextDecoder_Mac, couldn't create converter");
+
+	::SetFallbackUnicodeToText(fInfo, spUnicodeToTextFallback_NullUPP,
+		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nullptr);
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_Mac
-
-ZTextEncoder_Mac::ZTextEncoder_Mac(const char* iName)
-	{
-	this->Init(spLookupName(iName));
-	}
-
-ZTextEncoder_Mac::ZTextEncoder_Mac(const string& iName)
-	{
-	this->Init(spLookupName(iName));
-	}
-
-ZTextEncoder_Mac::ZTextEncoder_Mac(TextEncoding iDestEncoding)
-	{
-	this->Init(iDestEncoding);
-	}
-
-ZTextEncoder_Mac::~ZTextEncoder_Mac()
+TextEncoder_Mac::~TextEncoder_Mac()
 	{
 	::DisposeUnicodeToTextInfo(&fInfo);
 	}
 
-void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* oDest, size_t iDestBytes, size_t* oDestBytes)
+ZQ<void> TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	// utf16Buffer is the source for calls to ConvertFromUnicodeToText, we use
 	// Unicode::sUTF32ToUTF16 to populate it from the UTF-32 we're passed.
@@ -377,36 +382,26 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<uint8*>(oDest);
+
+	return notnull;
 	}
 
-static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,
-	ByteCount *oSrcConvLen,
-	TextPtr oDestStr, ByteCount iDestStrLen, ByteCount *oDestConvLen,
-	LogicalAddress iInfoPtr, ConstUnicodeMappingPtr iUnicodeMappingPtr)
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
 	{
-	*oSrcConvLen = iSrcUniStrLen;
-	*oDestConvLen = 0;
-	return noErr;
+	if (TextEncoding theTextEncoding = spLookupName(iSourceName))
+		return new TextDecoder_Mac(theTextEncoding);
+	return null;
 	}
 
-static UnicodeToTextFallbackUPP spUnicodeToTextFallback_NullUPP =
-	NewUnicodeToTextFallbackUPP(spUnicodeToTextFallback_Null);
-
-void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
+ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName)
 	{
-	fIsReset = true;
-
-	UnicodeMapping theMapping;
-	theMapping.unicodeEncoding = ::CreateTextEncoding(
-		kTextEncodingUnicodeV3_2, kTextEncodingDefaultVariant, kUnicode16BitFormat);
-
-	theMapping.otherEncoding = iDestEncoding;
-	theMapping.mappingVersion = kUnicodeUseLatestMapping;
-	if (noErr != ::CreateUnicodeToTextInfo(&theMapping, &fInfo))
-		throw runtime_error("ZTextDecoder_Mac, couldn't create converter");
-
-	::SetFallbackUnicodeToText(fInfo, spUnicodeToTextFallback_NullUPP,
-		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nullptr);
+	if (TextEncoding theTextEncoding = spLookupName(iDestName))
+		return new TextEncoder_Mac(theTextEncoding);
+	return null;
 	}
 
 } // namespace ZooLib
