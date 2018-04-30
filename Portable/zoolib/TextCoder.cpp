@@ -431,7 +431,7 @@ static const CharsetEntry_t spCharsetTable[] =
 		{ 0, 0 }
 	};
 
-std::vector<std::string> sGetTextEncodingAliases(const std::string& iName)
+std::vector<std::string> sGetTextCodingAliases(const std::string& iName)
 	{
 	std::vector<std::string> result;
 	const CharsetEntry_t* found = nullptr;

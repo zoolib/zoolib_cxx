@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTextCoder_iconv_h__
-#define __ZTextCoder_iconv_h__ 1
+#ifndef __ZooLib_POSIX_TextCoder_iconv_h__
+#define __ZooLib_POSIX_TextCoder_iconv_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -41,65 +41,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZCONFIG_API_Desired__TextCoder_iconv 1
 #endif
 
-#include "zoolib/ZTextCoder.h"
+#include "zoolib/TextCoder.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_iconv)
 
-#include <iconv.h>
-
 namespace ZooLib {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_iconv
+ZRef<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName);
 
-/// Puts a ZTextDecoder interface over the \a iconv library.
-
-class ZTextDecoder_iconv : public ZTextDecoder
-	{
-public:
-	ZTextDecoder_iconv(const std::string& iSourceName);
-	ZTextDecoder_iconv(const char* iSourceName);
-	virtual ~ZTextDecoder_iconv();
-
-	using ZTextDecoder::Decode;
-
-	virtual bool Decode(
-		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
-
-	virtual void Reset();
-
-private:
-	iconv_t fConverter;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_iconv
-
-/// Puts a ZTextEncoder interface over the \a iconv library.
-
-class ZTextEncoder_iconv : public ZTextEncoder
-	{
-public:
-	ZTextEncoder_iconv(const std::string& iDestName);
-	ZTextEncoder_iconv(const char* iDestName);
-	virtual ~ZTextEncoder_iconv();
-
-	using ZTextEncoder::Encode;
-
-	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-		void* oDest, size_t iDestBytes, size_t* oDestBytes);
-
-	virtual void Reset();
-
-private:
-	iconv_t fConverter;
-	};
+ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iSourceName);
 
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_iconv)
 
-#endif // __ZTextCoder_iconv_h__
+#endif // __ZooLib_POSIX_TextCoder_iconv_h__

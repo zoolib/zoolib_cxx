@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZTextCoder_iconv.h"
+#include "zoolib/POSIX/TextCoder_iconv.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_iconv)
 
-#include "zoolib/FunctionChain.h"
+#include <iconv.h>
 
 #include "zoolib/ZDebug.h"
 
@@ -34,36 +34,6 @@ using std::string;
 using std::vector;
 
 namespace ZooLib {
-
-static const size_t kBufSize = sStackBufferSize;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
-
-namespace { // anonymous
-
-class Make_Decoder
-:	public FunctionChain<ZTextDecoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		oResult = new ZTextDecoder_iconv(iParam);
-		return true;
-		}
-	} sMaker0;
-
-class Make_Encoder
-:	public FunctionChain<ZTextEncoder*, const string&>
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		oResult = new ZTextEncoder_iconv(iParam);
-		return true;
-		}
-	} sMaker1;
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -105,7 +75,7 @@ size_t static spIconv(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextDecoder_iconv
+#pragma mark TextDecoder_iconv
 
 static iconv_t spIconvOpenDecoder(const string& iSourceName)
 	{
@@ -117,6 +87,7 @@ static iconv_t spIconvOpenDecoder(const string& iSourceName)
 
 	if (result == iconv_t(-1))
 		return 0;
+
 	return result;
 	}
 
@@ -125,9 +96,8 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 	if (iconv_t result = spIconvOpenDecoder(iSourceName))
 		return result;
 
-	// Work our way through any aliases ZTextCoder may know about
-	vector<string> aliases;
-	ZTextCoder::sGetAliases(iSourceName, aliases);
+	// Work our way through any aliases TextCoder may know about
+	vector<string> aliases = sGetTextCodingAliases(iSourceName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		if (iconv_t result = spIconvOpenDecoder(*ii))
@@ -136,26 +106,45 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 	return 0;
 	}
 
-ZTextDecoder_iconv::ZTextDecoder_iconv(const string& iSourceName)
+class TextDecoder_iconv : public TextDecoder
+	{
+public:
+	TextDecoder_iconv(const std::string& iSourceName);
+	TextDecoder_iconv(const char* iSourceName);
+	virtual ~TextDecoder_iconv();
+
+	// From TextDecoder (Callable)
+	virtual ZQ<void> QCall(
+		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
+		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
+
+	// Our protocol (just for example)
+	void Reset();
+
+private:
+	iconv_t fConverter;
+	};
+
+TextDecoder_iconv::TextDecoder_iconv(const string& iSourceName)
 	{
 	fConverter = spOpenDecoder(iSourceName);
 	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
-ZTextDecoder_iconv::ZTextDecoder_iconv(const char* iSourceName)
+TextDecoder_iconv::TextDecoder_iconv(const char* iSourceName)
 	{
 	fConverter = spOpenDecoder(iSourceName);
 	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
-ZTextDecoder_iconv::~ZTextDecoder_iconv()
+TextDecoder_iconv::~TextDecoder_iconv()
 	{
 	::iconv_close(fConverter);
 	}
 
-bool ZTextDecoder_iconv::Decode(
+ZQ<void> TextDecoder_iconv::QCall(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -202,17 +191,18 @@ bool ZTextDecoder_iconv::Decode(
 		*oSourceBytesSkipped = sourceBytesSkipped;
 	if (oDestCU)
 		*oDestCU = reinterpret_cast<UTF32*>(localDest) - oDest;
-	return sourceComplete;
+
+	return notnull;
 	}
 
-void ZTextDecoder_iconv::Reset()
+void TextDecoder_iconv::Reset()
 	{
 	::iconv(fConverter, nullptr, 0, nullptr, 0);
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZTextEncoder_iconv
+#pragma mark TextEncoder_iconv
 
 static iconv_t spIconvOpenEncoder(const string& iDestName)
 	{
@@ -224,6 +214,7 @@ static iconv_t spIconvOpenEncoder(const string& iDestName)
 
 	if (result == iconv_t(-1))
 		return 0;
+
 	return result;
 	}
 
@@ -232,9 +223,8 @@ static iconv_t spOpenEncoder(const string& iDestName)
 	if (iconv_t result = spIconvOpenEncoder(iDestName))
 		return result;
 
-	// Work our way through any aliases ZTextCoder may know about
-	vector<string> aliases;
-	ZTextCoder::sGetAliases(iDestName, aliases);
+	// Work our way through any aliases TextCoder may know about
+	vector<string> aliases = sGetTextCodingAliases(iDestName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		if (iconv_t result = spIconvOpenEncoder(*ii))
@@ -243,27 +233,47 @@ static iconv_t spOpenEncoder(const string& iDestName)
 	return 0;
 	}
 
-ZTextEncoder_iconv::ZTextEncoder_iconv(const string& iDestName)
+class TextEncoder_iconv : public TextEncoder
+	{
+public:
+	TextEncoder_iconv(const std::string& iDestName);
+	TextEncoder_iconv(const char* iDestName);
+	virtual ~TextEncoder_iconv();
+
+	// From TextEncoder (Callable)
+	virtual ZQ<void> QCall(
+		const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+		void* oDest, size_t iDestBytes, size_t* oDestBytes);
+
+	// Our protocol (just for example)
+	virtual void Reset();
+
+private:
+	iconv_t fConverter;
+	};
+
+TextEncoder_iconv::TextEncoder_iconv(const string& iDestName)
 	{
 	fConverter = spOpenEncoder(iDestName);
 	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
-ZTextEncoder_iconv::ZTextEncoder_iconv(const char* iDestName)
+TextEncoder_iconv::TextEncoder_iconv(const char* iDestName)
 	{
 	fConverter = spOpenEncoder(iDestName);
 	if (not fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
-ZTextEncoder_iconv::~ZTextEncoder_iconv()
+TextEncoder_iconv::~TextEncoder_iconv()
 	{
 	::iconv_close(fConverter);
 	}
 
-void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* oDest, size_t iDestBytes, size_t* oDestBytes)
+ZQ<void> TextEncoder_iconv::QCall(
+	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const char* localSource = static_cast<const char*>(static_cast<const void*>(iSource));
 	size_t localSourceBytes = iSourceCU * sizeof(UTF32);
@@ -304,9 +314,11 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 		*oSourceCU = reinterpret_cast<const UTF32*>(localSource) - iSource;
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<char*>(oDest);
+
+	return notnull;
 	}
 
-void ZTextEncoder_iconv::Reset()
+void TextEncoder_iconv::Reset()
 	{
 	::iconv(fConverter, nullptr, 0, nullptr, 0);
 	}

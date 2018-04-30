@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-std::vector<std::string> sGetTextEncodingAliases(const std::string& iName);
+std::vector<std::string> sGetTextCodingAliases(const std::string& iName);
 
 // =================================================================================================
 #pragma mark -
