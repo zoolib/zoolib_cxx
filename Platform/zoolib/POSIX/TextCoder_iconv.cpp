@@ -106,11 +106,12 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 	return 0;
 	}
 
+// -----
+
 class TextDecoder_iconv : public TextDecoder
 	{
 public:
-	TextDecoder_iconv(const std::string& iSourceName);
-	TextDecoder_iconv(const char* iSourceName);
+	TextDecoder_iconv(iconv_t iConverter);
 	virtual ~TextDecoder_iconv();
 
 	// From TextDecoder (Callable)
@@ -125,19 +126,20 @@ private:
 	iconv_t fConverter;
 	};
 
-TextDecoder_iconv::TextDecoder_iconv(const string& iSourceName)
+// -----
+
+ZRef<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName)
 	{
-	fConverter = spOpenDecoder(iSourceName);
-	if (not fConverter)
-		throw runtime_error("Couldn't open converter");
+	if (iconv_t theConverter = spOpenDecoder(iSourceName))
+		return new TextDecoder_iconv(theConverter);
+	return null;
 	}
 
-TextDecoder_iconv::TextDecoder_iconv(const char* iSourceName)
-	{
-	fConverter = spOpenDecoder(iSourceName);
-	if (not fConverter)
-		throw runtime_error("Couldn't open converter");
-	}
+// -----
+
+TextDecoder_iconv::TextDecoder_iconv(iconv_t iConverter)
+:	fConverter(iConverter)
+	{}
 
 TextDecoder_iconv::~TextDecoder_iconv()
 	{
@@ -233,11 +235,12 @@ static iconv_t spOpenEncoder(const string& iDestName)
 	return 0;
 	}
 
+// -----
+
 class TextEncoder_iconv : public TextEncoder
 	{
 public:
-	TextEncoder_iconv(const std::string& iDestName);
-	TextEncoder_iconv(const char* iDestName);
+	TextEncoder_iconv(iconv_t iConverter);
 	virtual ~TextEncoder_iconv();
 
 	// From TextEncoder (Callable)
@@ -252,19 +255,20 @@ private:
 	iconv_t fConverter;
 	};
 
-TextEncoder_iconv::TextEncoder_iconv(const string& iDestName)
+// -----
+
+ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName)
 	{
-	fConverter = spOpenEncoder(iDestName);
-	if (not fConverter)
-		throw runtime_error("Couldn't open converter");
+	if (iconv_t theConverter = spOpenEncoder(iDestName))
+		return new TextEncoder_iconv(theConverter);
+	return null;
 	}
 
-TextEncoder_iconv::TextEncoder_iconv(const char* iDestName)
-	{
-	fConverter = spOpenEncoder(iDestName);
-	if (not fConverter)
-		throw runtime_error("Couldn't open converter");
-	}
+// -----
+
+TextEncoder_iconv::TextEncoder_iconv(iconv_t iConverter)
+:	fConverter(iConverter)
+	{}
 
 TextEncoder_iconv::~TextEncoder_iconv()
 	{

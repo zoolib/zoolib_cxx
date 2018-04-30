@@ -49,7 +49,7 @@ namespace ZooLib {
 
 ZRef<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName);
 
-ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iSourceName);
+ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName);
 
 } // namespace ZooLib
 
