@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,17 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_XLib_h__
-#define __ZCompat_XLib_h__
+#ifndef __ZooLib_OpenGL_Compat_OpenGL_h__
+#define __ZooLib_OpenGL_Compat_OpenGL_h__ 1
 #include "zconfig.h"
+
+// =================================================================================================
+#pragma mark -
+#pragma mark defined(ZProjectHeader_OpenGL)
+
+#if defined(ZProjectHeader_OpenGL)
+
+#include ZProjectHeader_OpenGL
+
+#endif // defined(ZProjectHeader_OpenGL)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark not defined(ZProjectHeader_OpenGL)
+
+#if not defined(ZProjectHeader_OpenGL)
+
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(X11)
-// Unfortunately, QuickDraw also defines Cursor. For the moment this lets us compile
-// code that sees both QuickDraw and X11 headers. And don't get me started on BOOL ...
-	#define Cursor ZooLib_X11_Cursor
-	#include <X11/Xlib.h>
-	#undef Cursor
+#if ZMACRO_IOS
+	#include <OpenGLES/ES1/gl.h>
+	#include <OpenGLES/ES2/gl.h>
+#elif defined(__ANDROID__)
+	#include <GLES/gl.h>
+	#include <GLES2/gl2.h>
+#else
+	#include <OpenGL/gl.h>
 #endif
 
-#endif // __ZCompat_XLib_h__
+#endif // not defined(ZProjectHeader_OpenGL)
+
+#endif // __ZooLib_OpenGL_Compat_OpenGL_h__

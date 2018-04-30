@@ -18,12 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRef_PyObject_h__
-#define __ZRef_PyObject_h__ 1
+#ifndef __ZooLib_Python_ZRef_PyObject_h__
+#define __ZooLib_Python_ZRef_PyObject_h__ 1
 #include "zconfig.h"
 
-#include "Python.h"
-
+#include "zoolib/Python/Compat_Python.h"
 #include "zoolib/ZRef.h"
 
-#endif // __ZRef_PyObject_h__
+#endif // __ZooLib_Python_ZRef_PyObject_h__

@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZUtil_Python.h"
+#include "zoolib/Python/Util_Python.h"
 
 namespace ZooLib {
-namespace ZUtil_Python {
+namespace Util_Python {
 
 // =================================================================================================
 #pragma mark -
@@ -92,6 +92,5 @@ PyObject* sInvokeSafely(PyCFunction iFunc, PyObject* self, PyObject* args)
 	return nullptr;
 	}
 
-
-} // namespace ZUtil_Python
+} // namespace Util_Python
 } // namespace ZooLib

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2012 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,38 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_OpenGL_h__
-#define __ZCompat_OpenGL_h__ 1
+#ifndef __ZooLib_Python_Compat_Python_h__
+#define __ZooLib_Python_Compat_Python_h__ 1
 #include "zconfig.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark defined(ZProjectHeader_OpenGL)
+#pragma mark defined(ZProjectHeader_Python)
 
-#if defined(ZProjectHeader_OpenGL)
+#if defined(ZProjectHeader_Python)
 
-#include ZProjectHeader_OpenGL
+#include ZProjectHeader_Python
 
-#endif // defined(ZProjectHeader_OpenGL)
+#endif // defined(ZProjectHeader_Python)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark not defined(ZProjectHeader_OpenGL)
+#pragma mark not defined(ZProjectHeader_Python)
 
-#if not defined(ZProjectHeader_OpenGL)
+#if not defined(ZProjectHeader_Python)
 
-#include "zoolib/ZCONFIG_SPI.h"
+extern "C" {
+#include <Python.h>
+} // extern "C"
 
-#if ZMACRO_IOS
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES2/gl.h>
-#elif defined(__ANDROID__)
-	#include <GLES/gl.h>
-	#include <GLES2/gl2.h>
-#else
-	#include <OpenGL/gl.h>
-#endif
+#endif // not defined(ZProjectHeader_Python)
 
-#endif // not defined(ZProjectHeader_OpenGL)
-
-#endif // __ZCompat_OpenGL_h__
+#endif // __ZooLib_Python_Compat_Python_h__

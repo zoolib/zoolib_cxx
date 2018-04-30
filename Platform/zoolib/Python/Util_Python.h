@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Python_h__
-#define __ZUtil_Python_h__
+#ifndef __ZooLib_Python_Util_Python_h__
+#define __ZooLib_Python_Util_Python_h__
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_Python.h"
+#include "zoolib/Python/Compat_Python.h"
 #include "zoolib/ZQ.h"
 
 #include <string>
 
 namespace ZooLib {
-namespace ZUtil_Python {
+namespace Util_Python {
 
 // =================================================================================================
 #pragma mark -
@@ -76,7 +76,7 @@ struct MethodWrapper_T
 		{ return sInvokeSafely(Func, self, args); }
 	};
 
-} // namespace ZUtil_Python
+} // namespace Util_Python
 } // namespace ZooLib
 
-#endif // __ZUtil_Python_h__
+#endif // __ZooLib_Python_Util_Python_h__

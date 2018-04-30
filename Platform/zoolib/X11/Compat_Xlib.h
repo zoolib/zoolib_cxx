@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,30 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_Python_h__
-#define __ZCompat_Python_h__ 1
+#ifndef __ZooLib_X11_Compat_XLib_h__
+#define __ZooLib_X11_Compat_XLib_h__
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-// =================================================================================================
-#pragma mark -
-#pragma mark defined(ZProjectHeader_Python)
+#if ZCONFIG_SPI_Enabled(X11)
+// Unfortunately, QuickDraw also defines Cursor. For the moment this lets us compile
+// code that sees both QuickDraw and X11 headers. And don't get me started on BOOL ...
+	#define Cursor ZooLib_X11_Cursor
+	#include <X11/Xlib.h>
+	#undef Cursor
+#endif
 
-#if defined(ZProjectHeader_Python)
-
-#include ZProjectHeader_Python
-
-#endif // defined(ZProjectHeader_Python)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark not defined(ZProjectHeader_Python)
-
-#if not defined(ZProjectHeader_Python)
-
-extern "C" {
-#include <Python.h>
-} // extern "C"
-
-#endif // not defined(ZProjectHeader_Python)
-
-#endif // __ZCompat_Python_h__
+#endif // __ZooLib_X11_Compat_XLib_h__

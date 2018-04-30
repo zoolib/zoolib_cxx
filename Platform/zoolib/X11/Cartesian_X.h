@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Cartesian_X_h__
-#define __ZooLib_Cartesian_X_h__ 1
+#ifndef __ZooLib_X11_Cartesian_X_h__
+#define __ZooLib_X11_Cartesian_X_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "zoolib/ZCompat_Xlib.h"
+#include "zoolib/X11/Compat_Xlib.h"
 
 namespace ZooLib {
 namespace Cartesian {
@@ -65,4 +65,4 @@ struct RectTraits<XRectangle>
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(X11)
-#endif // __ZooLib_Cartesian_X_h__
+#endif // __ZooLib_X11_Cartesian_X_h__
