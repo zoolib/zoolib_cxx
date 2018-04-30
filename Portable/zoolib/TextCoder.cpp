@@ -486,7 +486,7 @@ state when first created, and can be returned to that state by calling TextDecod
 //	}
 
 /**
-\fn bool TextDecoder::Decode( \
+\fn bool sDecode( \
 const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped, \
 UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 
@@ -509,6 +509,13 @@ particularly when handling source buffers that contain valid but incomplete data
 				will also be the number of Unicode code points, provided that your decoder does
 				not generate illegal UTF-32 code units.
 
+\return \li \a true The normal return value.
+
+\return \li \a false If \a iSourceBytes and \a iDestCU were non-zero but nothing could be consumed
+				and nothing generated, generally because the source data was incomplete. This can
+				only occur with source encodings that may require more than a single byte to
+				represent a single Unicode code point.
+
 It's entirely legal for a decoder to consume source data without generating any UTF-32, e.g. if
 the source contains only illegal code units they will be skipped over without generating output,
 and the total number of bytes making up such skipped data will be placed in \a oSourceBytesSkipped.
@@ -517,12 +524,12 @@ later generate UTF-32 output without consuming any source data. For example
 TextDecoder_Unicode_AutoDetect does this, in order to more cleanly handle the skipping of a BOM.
 */
 
-void sDecode(
+bool sDecode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	const ZRef<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
-	sCall(iTextDecoder,
+	return sCall(iTextDecoder,
 		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 		oDest, iDestCU, oDestCU);
 	}

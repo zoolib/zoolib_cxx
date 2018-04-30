@@ -115,7 +115,7 @@ public:
 	virtual ~TextDecoder_iconv();
 
 	// From TextDecoder (Callable)
-	virtual ZQ<void> QCall(
+	virtual ZQ<bool> QCall(
 		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
@@ -146,7 +146,7 @@ TextDecoder_iconv::~TextDecoder_iconv()
 	::iconv_close(fConverter);
 	}
 
-ZQ<void> TextDecoder_iconv::QCall(
+ZQ<bool> TextDecoder_iconv::QCall(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -187,6 +187,7 @@ ZQ<void> TextDecoder_iconv::QCall(
 				}
 			}
 		}
+
 	if (oSourceBytes)
 		*oSourceBytes = localSource - static_cast<char*>(const_cast<void*>(iSource));
 	if (oSourceBytesSkipped)
@@ -194,7 +195,7 @@ ZQ<void> TextDecoder_iconv::QCall(
 	if (oDestCU)
 		*oDestCU = reinterpret_cast<UTF32*>(localDest) - oDest;
 
-	return notnull;
+	return sourceComplete;
 	}
 
 void TextDecoder_iconv::Reset()

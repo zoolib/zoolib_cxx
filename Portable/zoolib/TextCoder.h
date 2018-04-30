@@ -38,19 +38,14 @@ std::vector<std::string> sGetTextCodingAliases(const std::string& iName);
 #pragma mark -
 #pragma mark TextDecoder
 
-typedef Callable<void(
+typedef Callable<bool(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)> TextDecoder;
 
-void sDecode(
+bool sDecode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	const ZRef<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU);
-
-//void sDecode(
-//	const ChanR_Bin& iChanR, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-//	const ZRef<TextDecoder>& iTextDecoder,
-//	UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
 void sDecode(
 	const ChanR_Bin& iChanR,

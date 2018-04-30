@@ -29,7 +29,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark spTextDecode_ASCII
 
-static void spTextDecode_ASCII(
+static bool spTextDecode_ASCII(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -51,6 +51,8 @@ static void spTextDecode_ASCII(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
+
+	return true;
 	}
 
 // =================================================================================================
@@ -85,7 +87,7 @@ static void spTextEncode_ASCII(
 #pragma mark -
 #pragma mark spTextDecode_ISO8859_1
 
-static void spTextDecode_ISO8859_1(
+static bool spTextDecode_ISO8859_1(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -103,6 +105,8 @@ static void spTextDecode_ISO8859_1(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
+
+	return true;
 	}
 
 // =================================================================================================
@@ -173,7 +177,7 @@ static const UTF32 spMacToUnicode[256] =
 	0x00AF, 0x02D8, 0x02D9, 0x02DA, 0x00B8, 0x02DD, 0x02DB, 0x02C7
 	};
 
-static void spTextDecode_MacRoman(
+static bool spTextDecode_MacRoman(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -191,6 +195,8 @@ static void spTextDecode_MacRoman(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
+
+	return true;
 	}
 
 // =================================================================================================
@@ -319,7 +325,7 @@ static const UTF32 spCP1252ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-static void spTextDecode_CP1252(
+static bool spTextDecode_CP1252(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -343,6 +349,8 @@ static void spTextDecode_CP1252(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
+
+	return true;
 	}
 
 // =================================================================================================
@@ -419,7 +427,7 @@ static const UTF32 spCP850ToUnicode[128] =
 	0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0xfffd, 0x017e, 0x0178,
 	};
 
-static void spTextDecode_CP850(
+static bool spTextDecode_CP850(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -443,6 +451,8 @@ static void spTextDecode_CP850(
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
 		*oDestCU = localDest - oDest;
+
+	return true;
 	}
 
 // =================================================================================================
