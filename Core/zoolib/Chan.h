@@ -32,6 +32,24 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark sClamped
+
+inline size_t sClamped(uint64 iVal)
+	{
+	if (sizeof(size_t) < sizeof(uint64))
+		return size_t(std::min(iVal, uint64(size_t(-1))));
+	else
+		return size_t(iVal);
+	}
+
+inline uint64 sClampedAvailable(uint64 iSize, uint64 iPosition)
+	{ return iSize > iPosition ? iSize - iPosition : 0; }
+
+inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
+	{ return std::min(iCount, sClampedAvailable(iSize, iPosition)); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark UserOfElement
 
 template <class EE>
