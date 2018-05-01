@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2006 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,39 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWFactory_Fallback_h__
-#define __ZStreamerRWFactory_Fallback_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZStreamer.h"
-
-#include <vector>
+#include "zoolib/Chan_XX_RateCapped.h"
+#include "zoolib/Time.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamerRWFactory_Fallback
+#pragma mark RateLimiter
 
-class ZStreamerRWFactory_Fallback : public ZStreamerRWFactory
+RateLimiter::RateLimiter(double iRate, size_t iQuantum)
+:	fRate(iRate),
+	fQuantum(iQuantum),
+	fLastTime(0)
+	{}
+
+size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 	{
-public:
-	ZStreamerRWFactory_Fallback();
-	ZStreamerRWFactory_Fallback(
-		const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount);
-	virtual ~ZStreamerRWFactory_Fallback();
+	double now = Time::sSystem();
+	if (now <= fLastTime)
+		return 0;
 
-// From ZStreamerRWFactory
-	virtual ZRef<ZStreamerRW> MakeStreamerRW();
+	const double lastConsumed = fRate * (now - fLastTime);
+	if (iLastCount > lastConsumed)
+		{
+		const double remaining = double(iLastCount) - lastConsumed;
+		ZThread::sSleep(remaining / fRate);
+		}
 
-// Our protocol
-	void Add(ZRef<ZStreamerRWFactory> iFactory);
-	void Add(const ZRef<ZStreamerRWFactory>* iFactories, size_t iCount);
-
-private:
-	std::vector<ZRef<ZStreamerRWFactory> > fFactories;
-	};
+	fLastTime = Time::sSystem();
+	return std::min(iCount, fQuantum);
+	}
 
 } // namespace ZooLib
-
-#endif // __ZStreamerRWFactory_Fallback_h__

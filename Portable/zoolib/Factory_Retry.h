@@ -18,77 +18,87 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamerRWFactory_Retry.h"
-#include "zoolib/ZLog.h"
-#include "zoolib/ZThread.h"
+#ifndef __ZooLib_Factory_Retry_h__
+#define __ZooLib_Factory_Retry_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/Factory.h"
+#include "zoolib/Log.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamerRWFactory_Retry
+#pragma mark Factory_Retry
 
-ZStreamerRWFactory_Retry::ZStreamerRWFactory_Retry(
-	ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval)
-:	fStreamerRWFactory(iStreamerRWFactory),
-	fCount(iCount),
-	fInterval(iInterval)
-	{}
-
-ZStreamerRWFactory_Retry::~ZStreamerRWFactory_Retry()
-	{}
-
-ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
+template <class T>
+class Factory_Retry
+:	public Factory<T>
 	{
-	for (size_t attempt = 1; /*no test*/; ++attempt)
+public:
+	typedef T Result_t;
+
+	Factory_Retry(const ZRef<Factory_Retry<T>>& iFactory, size_t iCount, double iInterval)
+	:	fFactory(iFactory)
+	,	fCount(iCount)
+	,	fInterval(iInterval)
+		{}
+
+	virtual ~Factory_Retry()
+		{}
+
+// From Callable
+	virtual ZQ<T> QCall()
 		{
-		ZRef<ZStreamerRWFactory> theFactory = fStreamerRWFactory;
-		if (!theFactory)
+		for (size_t attempt = 1; /*no test*/; ++attempt)
 			{
-			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
-				s.Writef("MakeStreamerRW, no factory");
-			break;
-			}
-
-		if (ZLOG(s, eDebug, "ZStreamerRWFactory_Retry"))
-			{
-			s.Writef("Connect, attempt %zu of %zu",
-				attempt, fCount);
-			}
-
-		if (ZRef<ZStreamerRW> theSRW = theFactory->MakeStreamerRW())
-			{
-			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
-				s << "Connect succeeded";
-
-			return theSRW;
-			}
-
-		if (!fCount || attempt < fCount)
-			{
-			if (ZLOG(s, eDebug, "ZStreamerRWFactory_Retry"))
+			ZRef<Factory_Retry<T>> theFactory = fFactory;
+			if (not theFactory)
 				{
-				s.Writef("Connect, couldn't connect, sleeping for %g seconds",
-					fInterval);
+				if (ZLOG(w, eInfo, "Factory_Retry"))
+					sEWritef(w, "QCall, no factory");
+				break;
 				}
 
-			ZThread::sSleep(fInterval);
-			}
-		else
-			{
-			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
-				s.Writef("Connect failed after %zu attempts", fCount);
+			if (ZLOG(s, eDebug, "Factory_Retry"))
+				{
+				sWritef(s, "QCall, attempt %zu of %zu", attempt, fCount);
+				}
 
-			break;
+			if (ZQ<T> theQ = theFactory->Call())
+				{
+				if (ZLOG(w, eInfo, "Factory_Retry"))
+					w << "QCall succeeded";
+
+				return theQ;
+				}
+
+			if (!fCount || attempt < fCount)
+				{
+				if (ZLOG(w, eDebug, "Factory_Retry"))
+					{
+					sEWritef(w, "QCall failed, sleeping for %g seconds", fInterval);
+					}
+
+				ZThread::sSleep(fInterval);
+				}
+			else
+				{
+				if (ZLOG(w, eInfo, "Factory_Retry"))
+					sEWritef(w, "QCall failed after %zu attempts", fCount);
+				break;
+				}
 			}
+
+		return null;
 		}
 
-	return null;
-	}
-
-void ZStreamerRWFactory_Retry::Abort()
-	{
-	fStreamerRWFactory = null;
-	}
+protected:
+	ZRef<Factory_Retry<T>> fFactory;
+	size_t fCount;
+	double fInterval;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Factory_Retry_h__
