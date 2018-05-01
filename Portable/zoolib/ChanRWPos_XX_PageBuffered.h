@@ -94,14 +94,14 @@ public:
 			}
 		}
 
-// From Aspect_Pos,
+// From Aspect_Pos
 	virtual uint64 Pos()
 		{ return fPosition; }
 
 	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
-// From Aspect_Read<EE>,
+// From Aspect_Read<EE>
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = oDest;
