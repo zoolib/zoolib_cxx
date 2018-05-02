@@ -903,8 +903,12 @@ public:
 		fChanW << "NULL";
 		if (sBreakStrings(fOptions))
 			{
+			// We put the pointer into a local var to elide clang's warning:
+			// `expression with side effects will be evaluated despite
+			// being used as an operand to 'typeid'"`
+			YadR* asPointer = iYadR.Get();
 			fChanW << " /*!! Unhandled yad: "
-				<< spPrettyName(typeid(decltype(*iYadR.Get())))
+				<< spPrettyName(typeid(*asPointer))
 				<< " !!*/";
 			}
 		}

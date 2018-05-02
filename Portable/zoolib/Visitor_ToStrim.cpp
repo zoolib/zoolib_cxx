@@ -52,11 +52,15 @@ void Visitor_ToStrim::Visit(const ZRef<Visitee>& iRep)
 	{
 	if (iRep)
 		{
+		// We put the pointer into a local var to elide clang's warning:
+		// `expression with side effects will be evaluated despite
+		// being used as an operand to 'typeid'"`
+		Visitee* asPointer = iRep.Get();
 		pStrimW()
 			<< "/*unhandled Visitee: "
-			<< (void*)iRep.Get()
+			<< (void*)asPointer
 			<< "/"
-			<< typeid(decltype(*iRep.Get())).name()
+			<< typeid(*asPointer).name()
 			<< "*/";
 		}
 	else
