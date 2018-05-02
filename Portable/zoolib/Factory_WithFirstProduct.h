@@ -18,63 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamerFactory_Precon.h"
-#include "zoolib/ZLog.h"
+#ifndef __ZooLib_Factory_WithFirstProduct_h__
+#define __ZooLib_Factory_WithFirstProduct_h__ 1
+#include "zconfig.h"
+
+#include "zoolib/Factory.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamerRWFactory_Precon
+#pragma mark Factory_WithFirstProduct
 
-ZStreamerRWFactory_Precon::ZStreamerRWFactory_Precon(
-	ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory)
-:	fSRW(iSRW),
-	fFactory(iFactory)
-	{}
-
-ZStreamerRWFactory_Precon::~ZStreamerRWFactory_Precon()
-	{}
-
-ZRef<ZStreamerRW> ZStreamerRWFactory_Precon::MakeStreamerRW()
+template <class T>
+class Factory_WithFirstProduct
+:	public Factory<T>
 	{
-	if (ZRef<ZStreamerRW> theSRW = fSRW)
+public:
+	Factory_WithFirstProduct(const ZRef<T>& iFactory, const T& iFirstProduct)
+	:	fFirstProductQ(iFirstProduct)
+		{}
+
+// From Callable
+	virtual ZQ<T> QCall()
 		{
-		fSRW.Clear();
-		return theSRW;
+		if (ZQ<T> theQ = sQGetClear(fFirstProductQ))
+			return theQ;
+		return sQCall(fFactory);
 		}
 
-	if (fFactory)
-		return fFactory->MakeStreamerRW();
-
-	return null;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerRWConFactory_Precon
-
-ZStreamerRWConFactory_Precon::ZStreamerRWConFactory_Precon(
-	ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory)
-:	fSRWCon(iSRWCon),
-	fFactory(iFactory)
-	{}
-
-ZStreamerRWConFactory_Precon::~ZStreamerRWConFactory_Precon()
-	{}
-
-ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Precon::MakeStreamerRWCon()
-	{
-	if (ZRef<ZStreamerRWCon> theSRWCon = fSRWCon)
-		{
-		fSRWCon.Clear();
-		return theSRWCon;
-		}
-
-	if (fFactory)
-		return fFactory->MakeStreamerRWCon();
-
-	return null;
-	}
+private:
+	const ZRef<T> fFactory;
+	ZQ<T> fFirstProductQ;
+	};
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Factory_WithFirstProduct_h__
