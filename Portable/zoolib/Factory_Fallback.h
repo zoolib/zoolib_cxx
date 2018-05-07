@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Factory.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 #include <vector>
 
@@ -52,8 +53,7 @@ public:
 // From Callable
 	virtual ZQ<T> QCall()
 		{
-		for (typename std::vector<ZRef<Factory_Fallback<T>> >::iterator ii = fFactories.begin();
-			ii != fFactories.end(); ++ii)
+		foreachi (ii, fFactories);
 			{
 			if (ZQ<T> theQ = sQCall(*ii))
 				return theQ;
