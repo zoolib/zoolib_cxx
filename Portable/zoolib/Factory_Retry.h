@@ -38,7 +38,7 @@ class Factory_Retry
 public:
 	typedef T Result_t;
 
-	Factory_Retry(const ZRef<Factory_Retry<T>>& iFactory, size_t iCount, double iInterval)
+	Factory_Retry(const ZRef<Factory<T>>& iFactory, size_t iCount, double iInterval)
 	:	fFactory(iFactory)
 	,	fCount(iCount)
 	,	fInterval(iInterval)
@@ -52,7 +52,7 @@ public:
 		{
 		for (size_t attempt = 1; /*no test*/; ++attempt)
 			{
-			ZRef<Factory_Retry<T>> theFactory = fFactory;
+			ZRef<Factory<T>> theFactory = fFactory;
 			if (not theFactory)
 				{
 				if (ZLOG(w, eInfo, "Factory_Retry"))
@@ -61,9 +61,7 @@ public:
 				}
 
 			if (ZLOG(s, eDebug, "Factory_Retry"))
-				{
 				sWritef(s, "QCall, attempt %zu of %zu", attempt, fCount);
-				}
 
 			if (ZQ<T> theQ = theFactory->Call())
 				{
@@ -73,12 +71,10 @@ public:
 				return theQ;
 				}
 
-			if (!fCount || attempt < fCount)
+			if (not fCount || attempt < fCount)
 				{
 				if (ZLOG(w, eDebug, "Factory_Retry"))
-					{
 					sEWritef(w, "QCall failed, sleeping for %g seconds", fInterval);
-					}
 
 				ZThread::sSleep(fInterval);
 				}
@@ -94,7 +90,7 @@ public:
 		}
 
 protected:
-	ZRef<Factory_Retry<T>> fFactory;
+	ZRef<Factory<T>> fFactory;
 	size_t fCount;
 	double fInterval;
 	};
