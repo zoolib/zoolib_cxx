@@ -42,8 +42,11 @@ inline size_t sClamped(uint64 iVal)
 		return size_t(iVal);
 	}
 
+inline uint64 sSubtractSaturated(uint64 iLHS, uint64 iRHS)
+	{ return (iLHS - iRHS) & -(iRHS <= iLHS); }
+
 inline uint64 sClampedAvailable(uint64 iSize, uint64 iPosition)
-	{ return iSize > iPosition ? iSize - iPosition : 0; }
+	{ return sSubtractSaturated(iSize, iPosition); }
 
 inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
 	{ return std::min(iCount, sClampedAvailable(iSize, iPosition)); }
