@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
+#include "zoolib/TextCoderAliases.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_string.h"
 
@@ -61,7 +62,7 @@ static TextEncoding spLookupName(const string& iName)
 		return theTE;
 
 	// Work our way through any aliases TextCoder may know about
-	vector<string> aliases = sGetTextCodingAliases(iName);
+	vector<string> aliases = sGetTextCoderAliases(iName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		Util_string::sToPString(Unicode::sToLower(*ii), theNameStr255, 255);

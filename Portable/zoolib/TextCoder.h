@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_TextCoder_h__ 1
 #include "zconfig.h"
 
-#include <vector>
-
 #include "zoolib/Callable.h"
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
@@ -32,15 +30,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-std::vector<std::string> sGetTextCodingAliases(const std::string& iName);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark TextDecoder
 
 typedef Callable<bool(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* oDest, size_t iDestCU, size_t* oDestCU)> TextDecoder;
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)>
+	TextDecoder;
 
 bool sDecode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -60,7 +57,8 @@ ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecode
 
 typedef Callable<void(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* oDest, size_t iDestBytes, size_t* oDestBytes)> TextEncoder;
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)>
+	TextEncoder;
 
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,

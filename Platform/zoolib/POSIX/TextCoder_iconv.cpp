@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iconv.h>
 
+#include "zoolib/TextCoderAliases.h"
 #include "zoolib/ZDebug.h"
 
 #include <errno.h>
@@ -97,7 +98,7 @@ static iconv_t spOpenDecoder(const string& iSourceName)
 		return result;
 
 	// Work our way through any aliases TextCoder may know about
-	vector<string> aliases = sGetTextCodingAliases(iSourceName);
+	vector<string> aliases = sGetTextCoderAliases(iSourceName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		if (iconv_t result = spIconvOpenDecoder(*ii))
@@ -227,7 +228,7 @@ static iconv_t spOpenEncoder(const string& iDestName)
 		return result;
 
 	// Work our way through any aliases TextCoder may know about
-	vector<string> aliases = sGetTextCodingAliases(iDestName);
+	vector<string> aliases = sGetTextCoderAliases(iDestName);
 	for (vector<string>::iterator ii = aliases.begin(); ii != aliases.end(); ++ii)
 		{
 		if (iconv_t result = spIconvOpenEncoder(*ii))
