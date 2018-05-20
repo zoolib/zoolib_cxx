@@ -53,7 +53,7 @@ public:
 // From Callable
 	virtual ZQ<T> QCall()
 		{
-		foreachi (ii, fFactories);
+		foreachi (ii, fFactories)
 			{
 			if (ZQ<T> theQ = sQCall(*ii))
 				return theQ;
