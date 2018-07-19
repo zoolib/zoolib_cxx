@@ -33,8 +33,8 @@ namespace ZYad_Zip {
 // =================================================================================================
 #pragma mark -
 
-ZRef<ZYadMapAtRPos> sYadR(const char* iFilePath);
-ZRef<ZYadMapAtRPos> sYadR(zip* i_zip, bool iAdopt);
+ZRef<YadMapAtR> sYadR(const char* iFilePath);
+ZRef<YadMapAtR> sYadR(zip* i_zip, bool iAdopt);
 
 } // namespace ZYad_Zip
 } // namespace ZooLib

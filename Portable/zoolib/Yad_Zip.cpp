@@ -104,8 +104,7 @@ struct ZipHolder
 #pragma mark YadStreamerR
 
 struct YadStreamerR
-:	public ZYadStreamerR
-,	private ZStreamR
+:	public ZooLib::YadStreamerR
 	{
 	ZRef<ZipHolder> fZipHolder;
 	zip_file* f_zip_file;
@@ -118,22 +117,12 @@ struct YadStreamerR
 	virtual ~YadStreamerR()
 		{ ::zip_fclose(f_zip_file); }
 
-// From ZStreamerR via ZYadStreamerR
-	const ZStreamR& GetStreamR()
-		{ return *this; }
-
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+// From ChanR
+	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		const ssize_t countRead = ::zip_fread(f_zip_file, oDest, iCount);
-		if (oCountRead)
-			{
-			if (countRead <= 0)
-				*oCountRead = 0;
-			else
-				*oCountRead = countRead;
-			}
-		}	
+		return countRead <= 0 ? 0 : countRead;
+		}
 	};
 
 // =================================================================================================
