@@ -195,11 +195,15 @@ public:
 #pragma mark -
 #pragma mark
 
-static void spWriteMessage(const ChanW_Bin& iChanW, const Map_Any& iMessage, const ZQ<string>& iDescriptionQ)
+static ZAtomic_t spSentMessageCounter;
+
+static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<string>& iDescriptionQ)
 	{
 	const ZRef<Yad_JSONB::WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter_Result> >();
 
 	const double start = Time::sSystem();
+
+	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
 	Yad_JSONB::sToChan(theWriteFilter, sYadR(iMessage), iChanW);
 	sFlush(iChanW);
