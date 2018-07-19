@@ -102,6 +102,15 @@ public:
 	virtual size_t Readable()
 		{ return fEnd - fBegin + sReadable(inherited::pGetChan()); }
 
+// From Aspect_WaitReadable
+	virtual bool WaitReadable(double iTimeout)
+		{
+		if (fEnd > fBegin)
+			return true;
+		return sWaitReadable(inherited::pGetChan(), iTimeout);
+//		return inherited::WaitReadable(iTimeout);
+		}
+
 protected:
 	std::vector<EE> fBuffer;
 	size_t fBegin;
