@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_POSIXFD {
 
-static void spSetup(fd_set& oSet, int iFD)
+void sSetup(fd_set& oSet, int iFD)
 	{
 	ZAssert(iFD > 0);
 	// For (marginally) improved efficiency we could zero only those bits <= iFD.
@@ -62,8 +62,8 @@ static void spSetup(fd_set& oSet, int iFD)
 bool sWaitReadable(int iFD, double iTimeout)
 	{
 	fd_set readSet, exceptSet;
-	spSetup(readSet, iFD);
-	spSetup(exceptSet, iFD);
+	sSetup(readSet, iFD);
+	sSetup(exceptSet, iFD);
 
 	struct timeval timeout;
 	timeout.tv_sec = int(iTimeout);
@@ -75,7 +75,7 @@ bool sWaitReadable(int iFD, double iTimeout)
 bool sWaitWriteable(int iFD, double iTimeout)
 	{
 	fd_set writeSet;
-	spSetup(writeSet, iFD);
+	sSetup(writeSet, iFD);
 
 	struct timeval timeout;
 	timeout.tv_sec = int(iTimeout);

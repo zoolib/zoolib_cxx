@@ -27,12 +27,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/size_t.h" // For size_t
 
+struct fd_set;
+
 namespace ZooLib {
 namespace Util_POSIXFD {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark Util_POSIXFD
+
+void sSetup(fd_set& oSet, int iFD);
 
 bool sWaitReadable(int iFD, double iTimeout);
 bool sWaitWriteable(int iFD, double iTimeout);

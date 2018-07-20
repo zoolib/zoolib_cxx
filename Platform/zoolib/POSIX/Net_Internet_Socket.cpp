@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(Net_Internet_Socket)
 
+#include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/Memory.h"
 
 #include "zoolib/POSIX/Util_POSIXFD.h"
@@ -60,6 +61,40 @@ static void spSetSocketOptions(int iSocketFD)
 	::setsockopt(iSocketFD, IPPROTO_TCP, TCP_NODELAY, sConstPtr(int(1)), sizeof(int));
 	}
 
+static bool spWaitConnected(int iFD, double iTimeout)
+	{
+	fd_set writeSet;
+	Util_POSIXFD::sSetup(writeSet, iFD);
+
+	struct timeval timeout;
+	timeout.tv_sec = int(iTimeout);
+	timeout.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
+
+	int selectResult = ::select(iFD + 1, nullptr, &writeSet, nullptr, &timeout);
+	if (selectResult < 0)
+		{
+		// select failed, presume that FD is bad too.
+		return false;
+		}
+
+	if (selectResult == 0)
+		{
+		// There were zero writeable FDs, so  also not yet usable.
+		return false;
+		}
+
+	int selectErr = 0;
+	if (0 != getsockopt(iFD, SOL_SOCKET, SO_ERROR,
+		(char*)&selectErr, sMutablePtr(socklen_t(sizeof(selectErr)))))
+		{
+		// We failed to get an error value, so presumably there is no error, and the FD is connected.
+		return true;
+		}
+
+	// The FD is connected if the reported error was None.
+	return selectErr == 0;
+	}
+
 static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteHost, ip_port iRemotePort)
 	{
 	int socketFD = ::socket(PF_INET, SOCK_STREAM, 0);
@@ -94,17 +129,17 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 	::fcntl(socketFD, F_SETFL, ::fcntl(socketFD, F_GETFL, 0) | O_NONBLOCK);
 
 	int result = ::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr));
-	if (result < 0)
+	if (result == 0)
+		return socketFD;
+
+	int err = errno;
+	if (err != EINPROGRESS)
 		{
-		if (errno != EINPROGRESS)
-			{
-			int err = errno;
-			::close(socketFD);
-			throw NetEx(Net_Socket::sTranslateError(err));
-			}
+		::close(socketFD);
+		throw NetEx(Net_Socket::sTranslateError(err));
 		}
 
-	if (not Util_POSIXFD::sWaitWriteable(socketFD, 10))
+	if (not spWaitConnected(socketFD, 10))
 		{
 		::close(socketFD);
 		throw NetEx(Net::errorCouldntConnect);
