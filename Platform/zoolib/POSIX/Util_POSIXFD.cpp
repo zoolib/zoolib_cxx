@@ -33,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include <sys/ioctl.h>
-#include <sys/select.h>
 
 // AG 2005-01-04. It looks like poll.h is not always present on MacOS X.
 // We don't use poll on MacOS, so we can just skip the include for now.
