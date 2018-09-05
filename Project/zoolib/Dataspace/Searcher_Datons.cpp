@@ -1158,6 +1158,11 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 	while (iWalker_Index->fCurrent != iWalker_Index->fEnd)
 		{
 		const Map_Thing::value_type* theTarget = iWalker_Index->fCurrent->fMapEntryP;
+
+		// const Key& theKey = *iWalker_Index->fCurrent;
+		// We should transcribe the values in theKey into appropriate locations of ioResults, or
+		// at least into theValPtrs -- We really need to avoid the call to sPGet if possible.
+
 		if (const Map_Any* theMap = theTarget->second.PGet<Map_Any>())
 			{
 			// It's a map, and thus usable.
@@ -1172,7 +1177,7 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 					theVal_Daton = theTarget->first;
 					theValPtrs[xx] = &theVal_Daton;
 					}
-				else if (const Val_Any* theValPtr = sPGet(*theMap, theName))
+				else if (const Val_Any* theValPtr = sPGet(*theMap, theName)) // <-- this is where we spend time
 					{
 					theValPtrs[xx] = theValPtr;
 					}
