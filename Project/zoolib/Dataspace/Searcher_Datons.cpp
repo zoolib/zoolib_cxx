@@ -631,7 +631,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 	// We've got valsEqual filled in with stuff we're doing an equality search on, and
 	// may have a comparison in finalLo/finalHi.
-	if (ZLOGF(w, eDebug+1))
+	if (ZLOGF(w, eDebug+2))
 		{
 		w << "\n" << bestIndex << " ";
 		if (size_t count = bestValsEqual.size())
@@ -868,7 +868,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 						}
 					}
 
-				if (ZLOGPF(w, eDebug+1))
+				if (ZLOGPF(w, eDebug+2))
 					w << theKey;
 
 				theWalker = new Walker_Index(this, theCH, theBegin, theEnd);
