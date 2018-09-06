@@ -203,16 +203,28 @@ struct ForEachWrapper_Reverse_T
 	#define foreachri ZMACRO_foreachri
 #endif
 
-#ifndef foreachv
-	#define foreachv ZMACRO_foreachv
+#if ZCONFIG_CPP >= 2011
+	#ifndef foreachv
+		#define foreachv(vardecl, container) for (vardecl : container)
+	#endif
+#else
+	#ifndef foreachv
+		#define foreachv ZMACRO_foreachv
+	#endif
 #endif
 
 #ifndef foreachrv
 	#define foreachrv ZMACRO_foreachrv
 #endif
 
-#ifndef foreacha
-	#define foreacha ZMACRO_foreacha
+#if ZCONFIG_CPP >= 2011
+	#ifndef foreacha
+		#define foreacha(varname, container) for (auto&& varname : container)
+	#endif
+#else
+	#ifndef foreacha
+		#define foreacha ZMACRO_foreacha
+	#endif
 #endif
 
 #ifndef foreachra
