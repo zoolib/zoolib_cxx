@@ -52,6 +52,13 @@ public:
 		{ return sQCall(iCallable); }
 	};
 
+inline bool sQStart(ZRef<Starter> iStarter, const ZRef<Startable>& iStartable)
+	{
+	if (iStarter && iStartable)
+		return iStarter->QStart(iStartable);
+	return false;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Starter_h__
