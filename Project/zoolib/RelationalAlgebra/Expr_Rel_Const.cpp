@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Compare_Ref.h"
+#include "zoolib/Compare_string.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
 
 namespace ZooLib {
