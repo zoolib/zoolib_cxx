@@ -269,13 +269,15 @@ class Searcher_Datons::Walker_Index
 :	public QE::Walker
 	{
 public:
-	Walker_Index(ZRef<Searcher_Datons> iSearcher, const ConcreteHead& iConcreteHead,
+	Walker_Index(ZRef<Searcher_Datons> iSearcher, Index* iIndex,
+		const ConcreteHead& iConcreteHead,
 		Index::Set::const_iterator iBegin, Index::Set::const_iterator iEnd)
 	:	fSearcher(iSearcher)
+	,	fIndex(iIndex)
 	,	fNameBoolVector(iConcreteHead.begin(), iConcreteHead.end())
 	,	fBegin(iBegin)
 	,	fEnd(iEnd)
-	,	fPrior(iConcreteHead.size())
+	,	fPrior(iIndex->fCount + iConcreteHead.size())
 		{}
 
 	virtual ~Walker_Index()
@@ -303,6 +305,7 @@ public:
 		}
 
 	const ZRef<Searcher_Datons> fSearcher;
+	Index* const fIndex;
 
 	typedef pair<Name,bool> NameBool;
 	typedef vector<NameBool> NameBoolVector;
@@ -619,7 +622,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 			if (not bestIndex || curDClauses.size() < bestDClauses.size())
 				{
-				// This is the first usable index, or we've removed more clauses than the last best index.
+				// This is the first usable index, or we've removed more clauses than the prior best index.
 				bestIndex = curIndex;
 				bestValsEqual = valsEqual;
 				bestLo = finalLo;
@@ -806,7 +809,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const RelHead theRH_Restriction = sGetNames(theRestriction);
 
-			const ConcreteHead theCH = RA::sConcreteHead(
+			ConcreteHead theCH = RA::sConcreteHead(
 				theRH_Required, theRH_Optional | theRH_Restriction);
 
 			ZRef<QE::Walker> theWalker;
@@ -871,7 +874,11 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 				if (ZLOGPF(w, eDebug+2))
 					w << theKey;
 
-				theWalker = new Walker_Index(this, theCH, theBegin, theEnd);
+				// Remove the indexed names from theCH.
+				for (size_t xxColName = 0; xxColName < thePSearch->fIndex->fCount; ++xxColName)
+					sQErase(theCH, thePSearch->fIndex->fColNames[xxColName]);
+
+				theWalker = new Walker_Index(this, thePSearch->fIndex, theCH, theBegin, theEnd);
 
 				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
@@ -1019,7 +1026,7 @@ void Searcher_Datons::pInvalidateSearchIfAppropriate(PSearch* iPSearch, const Ke
 				}
 			}
 
-		// Ignoring iPSearch->fRestrictionRemainder, so we'll have some false positives.
+		// We're ignoring iPSearch->fRestrictionRemainder, so we will have some false positives.
 
 		if (allMatch)
 			{
@@ -1142,18 +1149,24 @@ void Searcher_Datons::pPrime(ZRef<Walker_Index> iWalker_Index,
 	{
 	iWalker_Index->fCurrent = iWalker_Index->fBegin;
 	iWalker_Index->fBaseOffset = ioBaseOffset;
+
+	for (size_t xxColName = 0; xxColName < iWalker_Index->fIndex->fCount; ++xxColName)
+		oOffsets[iWalker_Index->fIndex->fColNames[xxColName]] = ioBaseOffset++;
+
 	foreachi (ii, iWalker_Index->fNameBoolVector)
 		oOffsets[ii->first] = ioBaseOffset++;
 	}
 
+static const Val_Any spVal_AbsentOptional = AbsentOptional_t();
+
 bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResults)
 	{
+	const size_t theCount_Indexed = iWalker_Index->fIndex->fCount;
 	const auto& theNBV = iWalker_Index->fNameBoolVector;
-	const size_t theCount = theNBV.size();
-	vector<const Val_Any*> theValPtrs(theCount);
+	const size_t theCount_NBV = theNBV.size();
+	vector<const Val_Any*> theValPtrs(theCount_Indexed + theCount_NBV);
 
 	Val_Any theVal_Daton;
-	const Val_Any theVal_AbsentOptional = AbsentOptional_t();
 
 	while (iWalker_Index->fCurrent != iWalker_Index->fEnd)
 		{
@@ -1162,12 +1175,19 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 		// const Key& theKey = *iWalker_Index->fCurrent;
 		// We should transcribe the values in theKey into appropriate locations of ioResults, or
 		// at least into theValPtrs -- We really need to avoid the call to sPGet if possible.
+		// To do so thought, we will need to manage fNameBoolVector -- we want to be
+		// able to skip some entries in it.
 
 		if (const Map_Any* theMap = theTarget->second.PGet<Map_Any>())
 			{
 			// It's a map, and thus usable.
+
+			// Transcribe the values in the current key into theValPtrs.
+			for (size_t xx = 0; xx < theCount_Indexed; ++xx)
+				theValPtrs[xx] = iWalker_Index->fCurrent->fValues[xx];
+
 			bool gotAll = true;
-			for (size_t xx = 0; xx < theCount; ++xx)
+			for (size_t xx = 0; xx < theCount_NBV; ++xx)
 				{
 				const auto& theNB = theNBV[xx];
 				const Name& theName = theNB.first;
@@ -1175,15 +1195,15 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 					{
 					// Empty name indicates that we want the Daton itself.
 					theVal_Daton = theTarget->first;
-					theValPtrs[xx] = &theVal_Daton;
+					theValPtrs[theCount_Indexed + xx] = &theVal_Daton;
 					}
 				else if (const Val_Any* theValPtr = sPGet(*theMap, theName)) // <-- this is where we spend time
 					{
-					theValPtrs[xx] = theValPtr;
+					theValPtrs[theCount_Indexed + xx] = theValPtr;
 					}
 				else if (not theNB.second)
 					{
-					theValPtrs[xx] = &theVal_AbsentOptional;
+					theValPtrs[theCount_Indexed + xx] = &spVal_AbsentOptional;
 					}
 				else
 					{
@@ -1195,9 +1215,12 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 			if (gotAll)
 				{
 				bool allMatch = true;
-				for (size_t xx = 0; xx < theCount; ++xx)
+				size_t theCount = theValPtrs.size();
+				const Val_Any* iterPrior = &iWalker_Index->fPrior[theCount-1];
+				const Val_Any** iterCurr = &theValPtrs[theCount-1];
+				for (size_t count = theValPtrs.size(); count--; /*no inc*/)
 					{
-					if (iWalker_Index->fPrior[xx] != *theValPtrs[xx])
+					if (*iterPrior-- != **iterCurr--)
 						{
 						allMatch = false;
 						break;
@@ -1206,7 +1229,7 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 
 				if (not allMatch)
 					{
-					for (size_t xx = 0; xx < theCount; ++xx)
+					for (size_t xx = 0; xx < theValPtrs.size(); ++xx)
 						{
 						const Val_Any* theValPtr = theValPtrs[xx];
 						ioResults[iWalker_Index->fBaseOffset + xx] = *theValPtr;
