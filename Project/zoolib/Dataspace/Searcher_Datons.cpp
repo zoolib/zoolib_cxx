@@ -371,6 +371,9 @@ public:
 
 	const SearchSpec fSearchSpec;
 
+	ConcreteHead fCH;
+	RelHead fProjectionIfNecessary;
+
 	Index* fIndex;
 
 	vector<Val_Any> fValsEqual;
@@ -428,6 +431,21 @@ static EComparator spFlipped(EComparator iEComparator)
 void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 	{
 	using namespace Util_Expr_Bool;
+
+	const SearchSpec& theSearchSpec = ioPSearch->fSearchSpec;
+
+	RelHead theRH_Required, theRH_Optional;
+	RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
+
+	const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
+
+	const RelHead theRH_Restriction = sGetNames(theRestriction);
+
+	ioPSearch->fCH = RA::sConcreteHead(theRH_Required, theRH_Optional | theRH_Restriction);
+
+	const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
+	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
+		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
 
 	const CNF theCNF = sAsCNF(ioPSearch->fSearchSpec.GetRestriction());
 
@@ -787,7 +805,7 @@ PP* spAllOnesPointer()
 
 void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 	{
-	ZLOGTRACE(eDebug + 1);
+	ZLOGTRACE(eDebug + 2);
 
 	Searcher::pCollectResultsCalled();
 
@@ -899,11 +917,11 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const double start = Time::sSystem();
 
-			ZLOGTRACE(eDebug + 1);
+			ZLOGTRACE(eDebug + 2);
 
 			thePSearch->fResult = QE::sResultFromWalker(theWalker);
 
-			ZLOGTRACE(eDebug + 1);
+			ZLOGTRACE(eDebug + 2);
 
 			const double elapsed = Time::sSystem() - start;
 
@@ -913,7 +931,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 					{
 					w << "Slow PSearch, " << elapsed * 1e3 << "ms\n";
 
-					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theRestriction);
+					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
 
 					void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
 
@@ -935,7 +953,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult));
 		}
 
-	ZLOGTRACE(eDebug + 1);
+	ZLOGTRACE(eDebug + 2);
 	}
 
 void Searcher_Datons::MakeChanges(
