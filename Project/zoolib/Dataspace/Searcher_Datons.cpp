@@ -829,8 +829,10 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const RelHead theRH_Restriction = sGetNames(theRestriction);
 
-			ConcreteHead theCH = RA::sConcreteHead(
+			ConcreteHead theCH2 = RA::sConcreteHead(
 				theRH_Required, theRH_Optional | theRH_Restriction);
+
+			ConcreteHead theCH = thePSearch->fCH;
 
 			ZRef<QE::Walker> theWalker;
 
