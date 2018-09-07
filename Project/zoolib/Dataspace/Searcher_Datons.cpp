@@ -787,6 +787,8 @@ PP* spAllOnesPointer()
 
 void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 	{
+	ZLOGTRACE(eDebug + 1);
+
 	Searcher::pCollectResultsCalled();
 
 	ZAcqMtx acq(fMtx);
@@ -897,7 +899,11 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const double start = Time::sSystem();
 
+			ZLOGTRACE(eDebug + 1);
+
 			thePSearch->fResult = QE::sResultFromWalker(theWalker);
+
+			ZLOGTRACE(eDebug + 1);
 
 			const double elapsed = Time::sSystem() - start;
 
@@ -928,6 +934,8 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 		PSearch* thePSearch = theClientSearch->fPSearch;
 		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult));
 		}
+
+	ZLOGTRACE(eDebug + 1);
 	}
 
 void Searcher_Datons::MakeChanges(
@@ -1172,12 +1180,6 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 		{
 		const Map_Thing::value_type* theTarget = iWalker_Index->fCurrent->fMapEntryP;
 
-		// const Key& theKey = *iWalker_Index->fCurrent;
-		// We should transcribe the values in theKey into appropriate locations of ioResults, or
-		// at least into theValPtrs -- We really need to avoid the call to sPGet if possible.
-		// To do so thought, we will need to manage fNameBoolVector -- we want to be
-		// able to skip some entries in it.
-
 		if (const Map_Any* theMap = theTarget->second.PGet<Map_Any>())
 			{
 			// It's a map, and thus usable.
@@ -1215,10 +1217,10 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 			if (gotAll)
 				{
 				bool allMatch = true;
-				size_t theCount = theValPtrs.size();
+				const size_t theCount = theValPtrs.size();
 				const Val_Any* iterPrior = &iWalker_Index->fPrior[theCount-1];
 				const Val_Any** iterCurr = &theValPtrs[theCount-1];
-				for (size_t count = theValPtrs.size(); count--; /*no inc*/)
+				for (size_t count = theCount + 1; --count; /*no inc*/)
 					{
 					if (*iterPrior-- != **iterCurr--)
 						{
@@ -1229,7 +1231,7 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 
 				if (not allMatch)
 					{
-					for (size_t xx = 0; xx < theValPtrs.size(); ++xx)
+					for (size_t xx = 0; xx < theCount; ++xx)
 						{
 						const Val_Any* theValPtr = theValPtrs[xx];
 						ioResults[iWalker_Index->fBaseOffset + xx] = *theValPtr;
