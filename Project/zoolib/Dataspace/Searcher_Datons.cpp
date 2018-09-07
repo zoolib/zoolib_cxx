@@ -444,7 +444,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 	ioPSearch->fCH = RA::sConcreteHead(theRH_Required, theRH_Optional | theRH_Restriction);
 
 	const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
-	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
+//	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
 		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
 
 	const CNF theCNF = sAsCNF(ioPSearch->fSearchSpec.GetRestriction());
@@ -822,17 +822,6 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 			{
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
 
-			RelHead theRH_Required, theRH_Optional;
-			RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
-
-			const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
-
-			const RelHead theRH_Restriction = sGetNames(theRestriction);
-
-			ConcreteHead theCH2 = RA::sConcreteHead(
-				theRH_Required, theRH_Optional | theRH_Restriction);
-
-			ConcreteHead theCH = thePSearch->fCH;
 
 			ZRef<QE::Walker> theWalker;
 
@@ -897,25 +886,26 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 					w << theKey;
 
 				// Remove the indexed names from theCH.
+				ConcreteHead theCHWithoutIndexedName = thePSearch->fCH;
 				for (size_t xxColName = 0; xxColName < thePSearch->fIndex->fCount; ++xxColName)
-					sQErase(theCH, thePSearch->fIndex->fColNames[xxColName]);
+					sQErase(theCHWithoutIndexedName, thePSearch->fIndex->fColNames[xxColName]);
 
-				theWalker = new Walker_Index(this, thePSearch->fIndex, theCH, theBegin, theEnd);
+				theWalker = new Walker_Index(this, thePSearch->fIndex, theCHWithoutIndexedName, theBegin, theEnd);
 
 				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
 				}
 			else
 				{
-				theWalker = new Walker_Map(this, theCH);
+				theWalker = new Walker_Map(this, thePSearch->fCH);
 
+				const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
 				if (theRestriction && theRestriction != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, theRestriction);
 				}
 
-			const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
-			if (theRH_Wanted != RA::sRelHead(theCH))
-				theWalker = new QE::Walker_Project(theWalker, theRH_Wanted);
+			if (sNotEmpty(thePSearch->fProjectionIfNecessary))
+				theWalker = new QE::Walker_Project(theWalker, thePSearch->fProjectionIfNecessary);
 
 			const double start = Time::sSystem();
 
