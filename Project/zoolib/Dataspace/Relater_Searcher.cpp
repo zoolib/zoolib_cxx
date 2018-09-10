@@ -791,6 +791,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 
 	ZRef<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;
 
+	ZAssert(theResult->GetRelHead() == sRelHead(iWalker_Bingo->fConcreteHead));
 	if (iWalker_Bingo->fNextRow >= theResult->Count())
 		return false;
 
