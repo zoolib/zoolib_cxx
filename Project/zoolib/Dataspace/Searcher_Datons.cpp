@@ -375,7 +375,7 @@ public:
 	const SearchSpec fSearchSpec;
 
 	size_t fUsableIndexNames;
-	ConcreteHead fCH;
+	ConcreteHead fConcreteHead;
 	RelHead fProjectionIfNecessary;
 
 	Index* fIndex;
@@ -690,18 +690,15 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 	RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
 
 	// Add in any names in restriction that weren't provided in the searchspec's CH.
-	ioPSearch->fCH = RA::sConcreteHead(theRH_Required, theRH_Optional | sGetNames(theSearchSpec.GetRestriction()));
+	ioPSearch->fConcreteHead = RA::sAugmentedOptional(
+		theSearchSpec.GetConcreteHead(),
+		sGetNames(theSearchSpec.GetRestriction()));
 
-	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
+	if (theRH_Wanted != sRelHead(ioPSearch->fConcreteHead))
 		{
-		// There were names in the restriction that aren't in the searchspec's CH, so we
-		// must project them out.
+		// There were names in the restriction that aren't in
+		// the searchspec's CH, so we must project them out.
 		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
-		}
-	else
-		{
-		// For some reason we have to have this here. Really we don't want it.
-//		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
 		}
 
 	if (true && bestIndex)
@@ -720,7 +717,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 		// Remove the indexed names from theCH.
 		for (size_t xxColName = 0; xxColName < ioPSearch->fUsableIndexNames; ++xxColName)
-			sQErase(ioPSearch->fCH, ioPSearch->fIndex->fColNames[xxColName]);
+			sQErase(ioPSearch->fConcreteHead, ioPSearch->fIndex->fColNames[xxColName]);
 		}
 	}
 
@@ -904,14 +901,14 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 				if (ZLOGPF(w, eDebug+2))
 					w << theKey;
 
-				theWalker = new Walker_Index(this, thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fCH, theBegin, theEnd);
+				theWalker = new Walker_Index(this, thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fConcreteHead, theBegin, theEnd);
 
 				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
 				}
 			else
 				{
-				theWalker = new Walker_Map(this, thePSearch->fCH);
+				theWalker = new Walker_Map(this, thePSearch->fConcreteHead);
 
 				const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
 				if (theRestriction && theRestriction != sTrue())
