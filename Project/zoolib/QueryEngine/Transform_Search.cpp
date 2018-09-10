@@ -50,12 +50,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
-
-//##
-#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
-#include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
-//##
-
 namespace ZooLib {
 namespace QueryEngine {
 
