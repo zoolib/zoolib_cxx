@@ -296,6 +296,33 @@ ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional)
 	return result;
 	}
 
+ConcreteHead sAugmentedOptional(const ConcreteHead& iConcreteHead, const RelHead& iOptional)
+	{
+	ConcreteHead result = iConcreteHead;
+
+	for (RelHead::const_iterator ii = iOptional.begin(), end = iOptional.end();
+		ii != end; ++ii)
+		{
+		// Evaluating this will get a false value into a non-extant slot, and and otherwise
+		// have no effect.
+		result[*ii];
+		}
+
+	return result;
+	}
+
+ConcreteHead sAugmentedRequired(const ConcreteHead& iConcreteHead, const RelHead& iRequired)
+	{
+	ConcreteHead result = iConcreteHead;
+
+	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
+		ii != end; ++ii)
+		{ result[*ii] = true; }
+
+	return result;
+	}
+
+
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;

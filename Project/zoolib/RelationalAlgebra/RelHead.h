@@ -162,6 +162,9 @@ typedef std::map<ColName,bool> ConcreteHead;
 ConcreteHead sConcreteHead(const RelHead& iRequired);
 ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional);
 
+ConcreteHead sAugmentedOptional(const ConcreteHead& iConcreteHead, const RelHead& iOptional);
+ConcreteHead sAugmentedRequired(const ConcreteHead& iConcreteHead, const RelHead& iRequired);
+
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead);
 RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead);
 RelHead sRelHead(const ConcreteHead& iConcreteHead);
