@@ -419,7 +419,7 @@ void MelangeServer::pWrite()
 		foreachi (ii, fMap_Refcon2Result)
 			{
 			Map_Any theMap;
-			theMap.Set("IsFirst", false); //## For old clients for now.
+//##			theMap.Set("IsFirst", false); //## For old clients for now.
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", ii->first);
 			theMap.Set("Result", spAsVal(ii->second));
