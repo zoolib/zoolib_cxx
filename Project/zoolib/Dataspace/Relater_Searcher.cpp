@@ -49,10 +49,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
 #include "zoolib/QueryEngine/Walker_Embed.h"
 #include "zoolib/QueryEngine/Walker_Product.h"
 #include "zoolib/QueryEngine/Walker_Union.h"
-
 
 namespace ZooLib {
 namespace Dataspace {
@@ -616,7 +616,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 				{
 				w << "Slow Query, " << elapsed * 1e3 << "ms\n";
 				w << thePQuery->fRel << "\n";
-//				sToStrim(thePQuery->fResult, w);
+				sToStrim(thePQuery->fResult, w);
 				spDump(theWalker, w);
 				}
 			}
@@ -792,6 +792,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 	ZRef<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;
 
 	ZAssert(theResult->GetRelHead() == sRelHead(iWalker_Bingo->fConcreteHead));
+
 	if (iWalker_Bingo->fNextRow >= theResult->Count())
 		return false;
 
