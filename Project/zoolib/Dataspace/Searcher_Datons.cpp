@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
 #include "zoolib/QueryEngine/Walker_Project.h"
 #include "zoolib/QueryEngine/Walker_Result.h"
 #include "zoolib/QueryEngine/Walker_Restrict.h"
@@ -270,10 +271,12 @@ class Searcher_Datons::Walker_Index
 	{
 public:
 	Walker_Index(ZRef<Searcher_Datons> iSearcher, Index* iIndex,
+		size_t iUsableIndexNames,
 		const ConcreteHead& iConcreteHead,
 		Index::Set::const_iterator iBegin, Index::Set::const_iterator iEnd)
 	:	fSearcher(iSearcher)
 	,	fIndex(iIndex)
+	,	fUsableIndexNames(iUsableIndexNames)
 	,	fNameBoolVector(iConcreteHead.begin(), iConcreteHead.end())
 	,	fBegin(iBegin)
 	,	fEnd(iEnd)
@@ -306,7 +309,7 @@ public:
 
 	const ZRef<Searcher_Datons> fSearcher;
 	Index* const fIndex;
-
+	const size_t fUsableIndexNames;
 	typedef pair<Name,bool> NameBool;
 	typedef vector<NameBool> NameBoolVector;
 	const NameBoolVector fNameBoolVector;
@@ -371,6 +374,7 @@ public:
 
 	const SearchSpec fSearchSpec;
 
+	size_t fUsableIndexNames;
 	ConcreteHead fCH;
 	RelHead fProjectionIfNecessary;
 
@@ -434,20 +438,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 	const SearchSpec& theSearchSpec = ioPSearch->fSearchSpec;
 
-	RelHead theRH_Required, theRH_Optional;
-	RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
-
-	const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
-
-	const RelHead theRH_Restriction = sGetNames(theRestriction);
-
-	ioPSearch->fCH = RA::sConcreteHead(theRH_Required, theRH_Optional | theRH_Restriction);
-
-	const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
-//	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
-		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
-
-	const CNF theCNF = sAsCNF(ioPSearch->fSearchSpec.GetRestriction());
+	const CNF theCNF = sAsCNF(theSearchSpec.GetRestriction());
 
 	CNF bestDClauses;
 	Index* bestIndex = nullptr;
@@ -693,14 +684,43 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 			}
 		}
 
+	const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
+
+	RelHead theRH_Required, theRH_Optional;
+	RA::sRelHeads(theSearchSpec.GetConcreteHead(), theRH_Required, theRH_Optional);
+
+	// Add in any names in restriction that weren't provided in the searchspec's CH.
+	ioPSearch->fCH = RA::sConcreteHead(theRH_Required, theRH_Optional | sGetNames(theSearchSpec.GetRestriction()));
+
+	if (theRH_Wanted != RA::sRelHead(ioPSearch->fCH))
+		{
+		// There were names in the restriction that aren't in the searchspec's CH, so we
+		// must project them out.
+		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
+		}
+	else
+		{
+		// For some reason we have to have this here. Really we don't want it.
+//		ioPSearch->fProjectionIfNecessary = theRH_Wanted;
+		}
+
 	if (true && bestIndex)
 		{
 		ioPSearch->fIndex = bestIndex;
+
 		sInsertBackMust(bestIndex->fPSearch_InIndex, ioPSearch);
 		ioPSearch->fValsEqual.swap(bestValsEqual);
 		ioPSearch->fRangeLo = bestLo;
 		ioPSearch->fRangeHi = bestHi;
 		ioPSearch->fRestrictionRemainder = sFromCNF(bestDClauses);
+
+		ioPSearch->fUsableIndexNames = ioPSearch->fValsEqual.size();
+		if (bestLo || bestHi)
+			++ioPSearch->fUsableIndexNames;
+
+		// Remove the indexed names from theCH.
+		for (size_t xxColName = 0; xxColName < ioPSearch->fUsableIndexNames; ++xxColName)
+			sQErase(ioPSearch->fCH, ioPSearch->fIndex->fColNames[xxColName]);
 		}
 	}
 
@@ -822,7 +842,6 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 			{
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
 
-
 			ZRef<QE::Walker> theWalker;
 
 			if (thePSearch->fIndex)
@@ -885,12 +904,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 				if (ZLOGPF(w, eDebug+2))
 					w << theKey;
 
-				// Remove the indexed names from theCH.
-				ConcreteHead theCHWithoutIndexedName = thePSearch->fCH;
-				for (size_t xxColName = 0; xxColName < thePSearch->fIndex->fCount; ++xxColName)
-					sQErase(theCHWithoutIndexedName, thePSearch->fIndex->fColNames[xxColName]);
-
-				theWalker = new Walker_Index(this, thePSearch->fIndex, theCHWithoutIndexedName, theBegin, theEnd);
+				theWalker = new Walker_Index(this, thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fCH, theBegin, theEnd);
 
 				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
@@ -917,16 +931,19 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const double elapsed = Time::sSystem() - start;
 
-			if (elapsed > 0.1)
+			if (true || elapsed > 0.1)
 				{
 				if (ZLOGPF(w, eDebug))
 					{
 					w << "Slow PSearch, " << elapsed * 1e3 << "ms\n";
-
 					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+					w << "\n";
+
+					sToStrim(thePSearch->fResult, w);
+
+					w << "\n";
 
 					void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
-
 					spDump(theWalker, w);
 					}
 				}
@@ -1168,7 +1185,7 @@ void Searcher_Datons::pPrime(ZRef<Walker_Index> iWalker_Index,
 	iWalker_Index->fCurrent = iWalker_Index->fBegin;
 	iWalker_Index->fBaseOffset = ioBaseOffset;
 
-	for (size_t xxColName = 0; xxColName < iWalker_Index->fIndex->fCount; ++xxColName)
+	for (size_t xxColName = 0; xxColName < iWalker_Index->fUsableIndexNames; ++xxColName)
 		oOffsets[iWalker_Index->fIndex->fColNames[xxColName]] = ioBaseOffset++;
 
 	foreachi (ii, iWalker_Index->fNameBoolVector)
@@ -1179,7 +1196,7 @@ static const Val_Any spVal_AbsentOptional = AbsentOptional_t();
 
 bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResults)
 	{
-	const size_t theCount_Indexed = iWalker_Index->fIndex->fCount;
+	const size_t theCount_Indexed = iWalker_Index->fUsableIndexNames;
 	const auto& theNBV = iWalker_Index->fNameBoolVector;
 	const size_t theCount_NBV = theNBV.size();
 	vector<const Val_Any*> theValPtrs(theCount_Indexed + theCount_NBV);
