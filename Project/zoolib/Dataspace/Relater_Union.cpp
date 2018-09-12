@@ -897,10 +897,11 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	// -----------------
 
-	for (DListEraser<PRelater, DLink_PRelater_NeedsWork>
-		eraserPRelater = fPRelater_NeedsWork; eraserPRelater; eraserPRelater.Advance())
+	// We have to call out to the underlying relater, which can actually call back into us,
+	// so we have to be able to release fMtx before making the call.
+	while (sNotEmpty(fPRelater_NeedsWork))
 		{
-		PRelater* thePRelater = eraserPRelater.Current();
+		PRelater* thePRelater = sGetEraseFront<PRelater>(fPRelater_NeedsWork);
 		vector<AddedQuery> theAddedQueries;
 		vector<int64> theRemoves;
 		for (DListEraser<PIP, DLink_PIP_NeedsWork>
@@ -923,17 +924,38 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				theRemoves.push_back(thePIP->fRefcon);
 				}
 			}
+		ZRef<Relater> theRelater = thePRelater->fRelater;
+		ZRelMtx rel(fMtx);
 
-		thePRelater->fRelater->ModifyRegistrations(
+		theRelater->ModifyRegistrations(
 			sFirstOrNil(theAddedQueries), theAddedQueries.size(),
 			sFirstOrNil(theRemoves), theRemoves.size());
 		}
 
 	// -----------------
 
-	for (DListEraser<PRelater, DLink_PRelater_CollectFrom>
-		eraserPRelater = fPRelater_CollectFrom; eraserPRelater; eraserPRelater.Advance())
-		{ this->pCollectFrom(eraserPRelater.Current()); }
+	while (sNotEmpty(fPRelater_CollectFrom))
+		{
+		PRelater* thePRelater = sGetEraseFront<PRelater>(fPRelater_CollectFrom);
+		ZRef<Relater> theRelater = thePRelater->fRelater;
+		vector<QueryResult> theQueryResults;
+		{
+		ZRelMtx rel(fMtx);
+		theRelater->CollectResults(theQueryResults);
+		}
+
+		// It's feasible that thePRelater got whacked while we were unlocked. Not sure what to do about it.
+		foreachi (iterQueryResults, theQueryResults)
+			{
+			const int64 theRefcon = iterQueryResults->GetRefcon();
+			if (PIP* thePIP = sPMut(thePRelater->fMap_Refcon_PIP, theRefcon))
+				{
+				thePIP->fResult = iterQueryResults->GetResult();
+				foreachi (ii, thePIP->fProxy->fDependentPQueries)
+					sQInsertBack(fPQuery_NeedsWork, *ii);
+				}
+			}
+		}
 
 	// -----------------
 
@@ -1179,25 +1201,6 @@ bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
 			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;
 		return true;
-		}
-	}
-
-void Relater_Union::pCollectFrom(PRelater* iPRelater)
-	{
-	vector<QueryResult> theQueryResults;
-	iPRelater->fRelater->CollectResults(theQueryResults);
-
-	foreachi (iterQueryResults, theQueryResults)
-		{
-		const int64 theRefcon = iterQueryResults->GetRefcon();
-		Map_Refcon_PIP::iterator iter = iPRelater->fMap_Refcon_PIP.find(theRefcon);
-		if (iPRelater->fMap_Refcon_PIP.end() != iter)
-			{
-			PIP* thePIP = &iter->second;
-			thePIP->fResult = iterQueryResults->GetResult();
-			foreachi (ii, thePIP->fProxy->fDependentPQueries)
-				sQInsertBack(fPQuery_NeedsWork, *ii);
-			}
 		}
 	}
 
