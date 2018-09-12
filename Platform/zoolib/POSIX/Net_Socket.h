@@ -47,8 +47,8 @@ namespace ZooLib {
 class Net_Socket
 	{
 public:
-	static int sSend(int iSocket, const char* iSource, size_t iCount);
-	static int sReceive(int iSocket, char* oDest, size_t iCount);
+	static ssize_t sSend(int iSocket, const char* iSource, size_t iCount);
+	static ssize_t sReceive(int iSocket, char* oDest, size_t iCount);
 //	static bool sWaitReadable(int iSocket, double iTimeout);
 //	static void sWaitWriteable(int iSocket);
 	static Net::Error sTranslateError(int iNativeError);

@@ -72,10 +72,10 @@ static void spSetSocketOptions(int iSocket)
 		(const char*)(const int*)sConstPtr(int(1)), sizeof(int));
 	}
 
-int Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
+ssize_t Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{ return ::send(iSocket, iSource, iCount, 0); }
 
-int Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
+ssize_t Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 	{ return ::recv(iSocket, oDest, iCount, 0); }
 
 #elif defined(linux) || defined(__linux__) || defined(__sun__)
@@ -293,7 +293,7 @@ size_t NetEndpoint_Socket::Read(byte* oDest, size_t iCount)
 		{
 		for (;;)
 			{
-			const int result = Net_Socket::sReceive(fSocketFD, localDest, iCount);
+			const ssize_t result = Net_Socket::sReceive(fSocketFD, localDest, iCount);
 
 			if (result < 0)
 				{
@@ -326,7 +326,7 @@ size_t NetEndpoint_Socket::Write(const byte* iSource, size_t iCount)
 	const char* localSource = (const char*)iSource;
 	while (iCount)
 		{
-		const int result = Net_Socket::sSend(fSocketFD, localSource, iCount);
+		const ssize_t result = Net_Socket::sSend(fSocketFD, localSource, iCount);
 
 		if (result < 0)
 			{
@@ -367,7 +367,7 @@ bool NetEndpoint_Socket::DisconnectRead(double iTimeout)
 	{
 	for (;;)
 		{
-		const int result = Net_Socket::sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
+		const ssize_t result = Net_Socket::sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.
