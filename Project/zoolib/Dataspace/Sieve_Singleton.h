@@ -37,7 +37,7 @@ class Sieve_Singleton
 :	public ZCounted
 	{
 public:
-	typedef Callable<void(ZRef<Sieve_Singleton> iSieve)> Callable_Changed;
+	typedef Callable<void(ZRef<Sieve_Singleton> iSieve, bool iWasLoad)> Callable_Changed;
 	typedef Callable_Changed::Signature Signature;
 
 	Sieve_Singleton(ZRef<Callable_Register> iCallable_Register,
@@ -54,7 +54,9 @@ public:
 	void Activate();
 	void Deactivate();
 
-	ZQ<bool> QIsLoaded();
+	ZQ<bool> QExists();
+
+	bool IsLoadedAndExists();
 
 	bool IsLoaded();
 

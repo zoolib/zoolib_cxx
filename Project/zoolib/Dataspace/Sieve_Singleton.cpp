@@ -83,33 +83,35 @@ void Sieve_Singleton::Deactivate()
 	fResult.Clear();
 	}
 
-ZQ<bool> Sieve_Singleton::QIsLoaded()
+ZQ<bool> Sieve_Singleton::QExists()
 	{
 	if (fRegistration and fResult)
 		return 0 != fResult->Count();
 	return null;
 	}
 
-bool Sieve_Singleton::IsLoaded()
+bool Sieve_Singleton::IsLoadedAndExists()
 	{ return fRegistration && fResult && fResult->Count(); }
+
+bool Sieve_Singleton::IsLoaded()
+	{ return fRegistration && fResult; }
 
 Map_Any Sieve_Singleton::GetMap()
 	{
+	ZAssert(this->IsLoadedAndExists());
+
 	if (not fMapQ)
 		{
 		// Take basic value from what's in fMapInDaton.
 		fMapQ = fMapInDaton;
-		if (fRegistration and fResult and fResult->Count())
+		// Put anything that's in our Result under what's in fMapInDaton.
+		const RelHead theRelHead = fResult->GetRelHead();
+		const Val_Any* theVals = fResult->GetValsAt(0);
+		foreachv (const string8& theName, theRelHead)
 			{
-			// Put anything that's in our Result under what's in fMapInDaton.
-			const RelHead theRelHead = fResult->GetRelHead();
-			const Val_Any* theVals = fResult->GetValsAt(0);
-			foreachv (const string8& theName, theRelHead)
-				{
-				const Val_Any& theVal = *theVals++;
-				if (not fMapQ->PGet(theName))
-					fMapQ->Set(theName, theVal);
-				}
+			const Val_Any& theVal = *theVals++;
+			if (not fMapQ->PGet(theName))
+				fMapQ->Set(theName, theVal);
 			}
 		}
 
@@ -124,7 +126,7 @@ void Sieve_Singleton::Set(const string8& iName, const Val_Any& iVal)
 
 void Sieve_Singleton::Set(const Map_Any& iMap)
 	{
-	ZAssert(this->IsLoaded());
+	ZAssert(this->IsLoadedAndExists());
 
 	bool anyChange = false;
 	for (Map_Any::Index_t iter = iMap.Begin(); iter != iMap.End(); ++iter)
@@ -151,12 +153,13 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 
 	fDaton = newDaton;
 
-	fCallable_Changed->Call(this);
+	fCallable_Changed->Call(this, false);
 	}
 
 void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 	const ZRef<QueryEngine::Result>& iResult)
 	{
+	const bool wasLoaded = fRegistration && fResult;
 	fMapQ.Clear();
 	fResult = iResult;
 	fMapInDaton.Clear();
@@ -173,7 +176,7 @@ void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 			}
 		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<Map_Any>();
 		}
-	fCallable_Changed->Call(this);
+	fCallable_Changed->Call(this, not wasLoaded);
 	}
 
 } // namespace Dataspace
