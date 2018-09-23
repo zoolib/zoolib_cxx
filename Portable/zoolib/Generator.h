@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/StartOnNewThread.h"
+#include "zoolib/ThreadVal.h"
 
 namespace ZooLib {
 namespace Generator {
