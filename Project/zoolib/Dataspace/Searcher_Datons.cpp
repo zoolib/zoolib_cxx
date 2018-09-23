@@ -928,18 +928,23 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const double elapsed = Time::sSystem() - start;
 
-			if (elapsed > 0.1)
+			if (elapsed > 50e-3)
 				{
 				if (ZLOGPF(w, eDebug))
 					{
-					w << "Slow PSearch, " << elapsed * 1e3 << "ms\n";
-					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+					w << "Slow PSearch, " << elapsed * 1e3 << "ms";
 					w << "\n";
+					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+					if (thePSearch->fRestrictionRemainder)
+						{
+						w << "\nRestrictionRemainder:";
+						Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
+						}
 
+					w << "\n";
 					sToStrim(thePSearch->fResult, w);
 
 					w << "\n";
-
 					void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
 					spDump(theWalker, w);
 					}
@@ -970,6 +975,13 @@ void Searcher_Datons::MakeChanges(
 		return;
 
 	ZAcqMtx acq(fMtx);
+
+	if (ZLOGPF(w, eDebug))
+		{
+		w << "extant: " << fMap_Thing.size()
+			<< ", asserted: " << iAssertedCount
+			<< ", retracted: " << iRetractedCount;
+		}
 
 	while (iAssertedCount--)
 		{
@@ -1223,7 +1235,7 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResu
 					theVal_Daton = theTarget->first;
 					theValPtrs[theCount_Indexed + xx] = &theVal_Daton;
 					}
-				else if (const Val_Any* theValPtr = sPGet(*theMap, theName)) // <-- this is where we spend time
+				else if (const Val_Any* theValPtr = sPGet(*theMap, theName))
 					{
 					theValPtrs[theCount_Indexed + xx] = theValPtr;
 					}
