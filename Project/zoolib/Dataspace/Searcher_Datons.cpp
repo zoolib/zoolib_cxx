@@ -901,7 +901,9 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 				if (ZLOGPF(w, eDebug+2))
 					w << theKey;
 
-				theWalker = new Walker_Index(this, thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fConcreteHead, theBegin, theEnd);
+				theWalker = new Walker_Index(this,
+					thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fConcreteHead,
+					theBegin, theEnd);
 
 				if (thePSearch->fRestrictionRemainder && thePSearch->fRestrictionRemainder != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, thePSearch->fRestrictionRemainder);
