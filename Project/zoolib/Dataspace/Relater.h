@@ -110,12 +110,6 @@ private:
 	ZRef<Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark RelaterFactory
-
-typedef Callable<ZRef<Relater>()> Factory_Relater;
-
 } // namespace Dataspace
 } // namespace ZooLib
 
