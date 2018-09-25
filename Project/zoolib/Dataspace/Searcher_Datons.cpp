@@ -936,11 +936,13 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 					{
 					w << "Slow PSearch, " << elapsed * 1e3 << "ms";
 					w << "\n";
-					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+					Visitor_Expr_Bool_ValPred_Any_ToStrim()
+						.ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
 					if (thePSearch->fRestrictionRemainder)
 						{
 						w << "\nRestrictionRemainder:";
-						Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
+						Visitor_Expr_Bool_ValPred_Any_ToStrim()
+							.ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
 						}
 
 					w << "\n";
