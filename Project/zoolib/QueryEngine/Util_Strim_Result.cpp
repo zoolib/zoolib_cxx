@@ -40,10 +40,11 @@ void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 
 	const RelHead& theRH = iResult->GetRelHead();
 
-	w << theCount << ", " << theRH << "\n";
+	w << "Count: " << theCount << ", RelHead: " << theRH;
 
 	for (size_t yy = 0; yy < theCount; ++yy)
 		{
+		w << "\n";
 		const Val_Any* theRow = iResult->GetValsAt(yy);
 		for (size_t xx = 0; xx < theRH.size(); ++xx)
 			{
@@ -52,9 +53,8 @@ void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
 				w << "!absent!";
 			else
-				Util_Any_JSON::sWrite(true, theRow[xx], w);
+				Util_Any_JSON::sWrite(false, theRow[xx], w);
 			}
-		w << "\n";
 		}
 	}
 

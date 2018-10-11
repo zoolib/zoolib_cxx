@@ -165,8 +165,9 @@ public:
 		const Val_Any* firstVal = asMap->PGet(fColNames[0]);
 		if (not firstVal)
 			{
-			// The map does not have our first property, so there's no point
-			// in storing it -- no search we can do will help find it.
+			// The map does not have our first property, which we treat as a null. So it's
+			// unlikely that anything will search for that with that as the first criteria
+			// and we need not index it.
 			return false;
 			}
 
@@ -748,15 +749,19 @@ void Searcher_Datons::ModifyRegistrations(
 
 				foreacha (anIndex, fIndexes)
 					{
-					w << "\n" << "Indexed on: ";
+					w << "\n" << anIndex->fSet.size() << " entries, indexed on: ";
 					for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 						w << anIndex->fColNames[xx] << " ";
-					w << "\n";
-					foreachi (iterSet, anIndex->fSet)
+
+					if (ZLOGPF(w, eDebug+2))
 						{
-						for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-							w << *(iterSet->fValues[xx]) << " ";
-						w << "--> " << *(iterSet->fMapEntryP) << "\n";
+						foreachi (iterSet, anIndex->fSet)
+							{
+							w << "\n";
+							for (size_t xx = 0; xx < anIndex->fCount; ++xx)
+								w << *(iterSet->fValues[xx]) << " ";
+							w << "--> " << *(iterSet->fMapEntryP);
+							}
 						}
 					}
 				}
@@ -934,13 +939,12 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 				{
 				if (ZLOGPF(w, eDebug))
 					{
-					w << "Slow PSearch, " << elapsed * 1e3 << "ms";
-					w << "\n";
+					w << "\nSlow PSearch " << elapsed * 1e3 << "ms: ";
 					Visitor_Expr_Bool_ValPred_Any_ToStrim()
 						.ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
 					if (thePSearch->fRestrictionRemainder)
 						{
-						w << "\nRestrictionRemainder:";
+						w << "\nRestrictionRemainder: ";
 						Visitor_Expr_Bool_ValPred_Any_ToStrim()
 							.ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
 						}
@@ -948,7 +952,6 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 					w << "\n";
 					sToStrim(thePSearch->fResult, w);
 
-					w << "\n";
 					void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
 					spDump(theWalker, w);
 					}

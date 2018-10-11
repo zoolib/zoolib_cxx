@@ -329,14 +329,9 @@ class Transform_PushDownRestricts_IntoSearch
 public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		if (false)
+		if (ZLOGPF(w, eDebug + 2))
 			{
-			this->pSetResult(iExpr);
-			return;
-			}
-
-		if (ZLOGPF(w, eDebug + 1))
-			{
+			w << "\nBefore: " << ZRef<Expr_Rel>(iExpr);
 			if (fRestricts.size())
 				{
 				w << "\nRestricts:";
@@ -347,7 +342,6 @@ public:
 						sDefault(), w, (*iter)->fExpr_Bool);
 					}
 				}
-			w << "\n" << ZRef<Expr_Rel>(iExpr);
 			}
 
 		const RA::Rename theRename = iExpr->GetRename();
@@ -399,8 +393,8 @@ public:
 			iExpr->GetRelHead_Optional(),
 			result);
 
-		if (ZLOGPF(w, eDebug + 1))
-			w << "\n" << ZRef<Expr_Rel>(theSearch);
+		if (ZLOGPF(w, eDebug + 2))
+			w << "\nAfter: " << ZRef<Expr_Rel>(theSearch);
 
 		this->pSetResult(theSearch);
 		}
@@ -604,7 +598,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
 		if (ZLOGPF(w, eDebug+1))
-			w << thePQuery->fRel << "\n";
+			w << "\n" << thePQuery->fRel;
 
 		const double start = Time::sSystem();
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
@@ -614,7 +608,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 			{
 			if (ZLOGPF(w, eDebug))
 				{
-				w << "Slow Query, " << elapsed * 1e3 << "ms\n";
+				w << "\nSlow Query " << elapsed * 1e3 << "ms: ";
 				w << thePQuery->fRel << "\n";
 				sToStrim(thePQuery->fResult, w);
 				spDump(theWalker, w);
