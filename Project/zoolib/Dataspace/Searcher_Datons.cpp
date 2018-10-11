@@ -753,14 +753,15 @@ void Searcher_Datons::ModifyRegistrations(
 					for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 						w << anIndex->fColNames[xx] << " ";
 
-					if (ZLOGPF(w, eDebug+2))
+					if (ZLOGPF(w2, eDebug+2))
 						{
+						// We're only using w2 to control whether we emit this. We still want it on w.
 						foreachi (iterSet, anIndex->fSet)
 							{
 							w << "\n";
 							for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 								w << *(iterSet->fValues[xx]) << " ";
-							w << "--> " << *(iterSet->fMapEntryP);
+							w << "--> " << iterSet->fMapEntryP->second;
 							}
 						}
 					}
