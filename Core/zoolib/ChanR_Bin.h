@@ -57,7 +57,7 @@ template <class T>
 ZQ<T> sQReadNative(const ChanR_Bin& iChanR)
 	{
 	T buf;
-	if (sizeof(T) != sReadFully(iChanR, &buf, sizeof(T)))
+	if (sizeof(T) != sReadMemFully(iChanR, &buf, sizeof(T)))
 		return null;
 	return buf;
 	}
