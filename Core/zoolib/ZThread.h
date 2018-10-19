@@ -41,6 +41,9 @@ namespace ZooLib {
 
 	typedef ZCnd_pthread ZCnd;
 	typedef ZMtxChecked_pthread ZMtx;
+
+// If lighterweight implementation is desired:
+//	typedef ZCndBase_pthread ZCnd
 //	typedef ZMtx_pthread ZMtx;
 
 	typedef ZSem_pthread ZSem;
