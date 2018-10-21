@@ -46,7 +46,6 @@ public:
 	ChanConnection_XX_MemoryPipe()
 		{
 		fWriteClosed = false;
-		fReadClosed = false;
 
 		fSource = nullptr;
 		fSourceEnd = nullptr;
@@ -59,7 +58,6 @@ public:
 		{
 		ZAcqMtx acq(fMutex);
 		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
-		ZAssertStop(2, fWriteClosed == fReadClosed);
 		}
 
 // From Aspect_Abort
@@ -69,7 +67,6 @@ public:
 		if (not fWriteClosed)
 			{
 			fWriteClosed = true;
-			fReadClosed = true; //??
 			fCondition_Read.Broadcast();
 			fCondition_Write.Broadcast();
 			}
@@ -80,7 +77,6 @@ public:
 		{
 		const double deadline = Time::sSystem() + iTimeout;
 		ZAcqMtx acq(fMutex);
-		fReadClosed = true;
 		for (;;)
 			{
 			if (fSource && fSource < fSourceEnd)
