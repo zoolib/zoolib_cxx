@@ -638,19 +638,19 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 #pragma mark -
 #pragma mark Static writing functions
 
-static void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
 
-static void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	iChanW << sEOLString(iOptions);
 	spWriteIndent(iCount, iOptions, iChanW);
 	}
 
-static void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW)
+void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW)
 	{
 	ChanW_UTF_Escaped::Options theOptions;
 	theOptions.fEscapeHighUnicode = false;
@@ -677,7 +677,7 @@ static void spWriteString(const string& iString, bool iPreferSingleQuotes, const
 		}
 	}
 
-static void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
+void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
 	{
 	iChanW << "\"";
 
@@ -690,7 +690,7 @@ static void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
 	iChanW << "\"";
 	}
 
-static bool spContainsProblemChars(const string& iString)
+bool spContainsProblemChars(const string& iString)
 	{
 	if (iString.empty())
 		{
@@ -711,7 +711,7 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-static void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w)
+void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w)
 	{
 	if (spContainsProblemChars(iString))
 		spWriteString(iString, iUseSingleQuotes, w);
@@ -719,7 +719,7 @@ static void spWritePropName(const string& iString, bool iUseSingleQuotes, const 
 		w << iString;
 	}
 
-static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
+void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
 	{
 	if (false)
 		{}
@@ -768,7 +768,7 @@ static void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions,
 		}
 	}
 
-static void spToStrim_Stream(const ChanR_Bin& iChanR,
+void spToStrim_Stream(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w)
 	{
@@ -1160,6 +1160,6 @@ void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
 		w << iPropName;
 		}
 	}
-
+  
 } // namespace Yad_JSON
 } // namespace ZooLib

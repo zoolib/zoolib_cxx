@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Yad_JSON {
 
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark ReadOptions
@@ -76,6 +78,21 @@ public:
 	ParseException(const std::string& iWhat);
 	ParseException(const char* iWhat);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark ParseException
+
+void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
+void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
+void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW);
+void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW);
+bool spContainsProblemChars(const string& iString);
+void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w);
+void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w);
+void spToStrim_Stream(const ChanR_Bin& iChanR,
+	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ChanW_UTF& w);
 
 // =================================================================================================
 #pragma mark -
@@ -193,7 +210,7 @@ typedef Channer_T<ChanR_NameRefYad_JSON> YadMapR_JSON;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark sYadR and sToStrim
+#pragma mark sYadR, sToStrim and sPush
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 
