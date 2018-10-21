@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_algorithm.h"
 #include "zoolib/DeriveFrom.h"
+#include "zoolib/Time.h" // For Time::kDay
 
 #include "zoolib/ZStdInt.h" // For uint64
 #include "zoolib/ZTypes.h" // For sNonConst
@@ -91,6 +92,12 @@ using ChanDisconnectRead = DeriveFrom<Aspect_DisconnectRead>;
 
 inline bool sDisconnectRead(const ChanDisconnectRead& iChan, double iTimeout)
 	{ return sNonConst(iChan).DisconnectRead(iTimeout); }
+
+inline void sDisconnectRead(const ChanDisconnectRead& iChan)
+	{
+	while (not sDisconnectRead(iChan, 1 * Time::kDay))
+		{}
+	}
 
 // =================================================================================================
 #pragma mark -
