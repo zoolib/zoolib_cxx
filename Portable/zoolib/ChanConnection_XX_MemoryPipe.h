@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
+//#include "zoolib/Compat_algorithm.h" // For min
+//#include "zoolib/Memory.h" // For sMemCopy
 #include "zoolib/Time.h"
 #include "zoolib/ZThread.h"
 
@@ -44,6 +46,7 @@ public:
 	ChanConnection_XX_MemoryPipe()
 		{
 		fWriteClosed = false;
+		fReadClosed = false;
 
 		fSource = nullptr;
 		fSourceEnd = nullptr;
@@ -56,15 +59,17 @@ public:
 		{
 		ZAcqMtx acq(fMutex);
 		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
+		ZAssertStop(2, fWriteClosed == fReadClosed);
 		}
 
 // From Aspect_Abort
 	virtual void Abort()
 		{
 		ZAcqMtx acq(fMutex);
-		if (!fWriteClosed)
+		if (not fWriteClosed)
 			{
 			fWriteClosed = true;
+			fReadClosed = true; //??
 			fCondition_Read.Broadcast();
 			fCondition_Write.Broadcast();
 			}
@@ -75,6 +80,7 @@ public:
 		{
 		const double deadline = Time::sSystem() + iTimeout;
 		ZAcqMtx acq(fMutex);
+		fReadClosed = true;
 		for (;;)
 			{
 			if (fSource && fSource < fSourceEnd)
@@ -84,7 +90,10 @@ public:
 				}
 
 			if (fWriteClosed)
+				{
+				fCondition_Write.Broadcast();
 				return true;
+				}
 
 			if (not fCondition_Read.WaitUntil(fMutex, deadline))
 				return false;
@@ -99,7 +108,6 @@ public:
 			{
 			fWriteClosed = true;
 			fCondition_Read.Broadcast();
-			fCondition_Write.Broadcast();
 			}
 		}
 
@@ -115,8 +123,8 @@ public:
 			if (fSource && fSource < fSourceEnd)
 				{
 				// We've got a source waiting to give us data.
-				size_t countToCopy = min(localEnd - localDest, fSourceEnd - fSource);
-				sMemCopy(localDest, fSource, countToCopy);
+				size_t countToCopy = std::min(localEnd - localDest, fSourceEnd - fSource);
+				std::copy(fSource, fSource + countToCopy, localDest);
 				localDest += countToCopy;
 				fSource += countToCopy;
 				fCondition_Write.Broadcast();
@@ -172,22 +180,22 @@ public:
 		}
 
 // From Aspect_Write
-	virtual size_t Write(const byte* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		const EE* localSource = static_cast<const EE*>(iSource);
 		const EE* localEnd = localSource + iCount;
 
 		ZAcqMtx acq(fMutex);
-		while (localSource < localEnd && !fWriteClosed)
+		while (localSource < localEnd && not fWriteClosed)
 			{
 			if (fDestCount)
 				{
 				// A reader is waiting for data, so copy straight
 				// from our source into the reader's dest.
-				size_t countToCopy = min(fDestCount, size_t(localEnd - localSource));
+				size_t countToCopy = std::min(fDestCount, size_t(localEnd - localSource));
 				if (fDest)
 					{
-					sMemCopy(fDest, localSource, countToCopy);
+					std::copy(localSource, localSource + countToCopy, fDest);
 					fDest += countToCopy;
 					}
 				localSource += countToCopy;
