@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW.h"
+#include "zoolib/Channer.h"
 #include "zoolib/Name.h"
 #include "zoolib/ZQ.h"
 
@@ -57,6 +58,9 @@ extern const Any kEndSeq;
 using ChanR_Any = ChanR<Any>;
 using ChanW_Any = ChanW<Any>;
 using ChanRCon_Bin = ChanRCon<byte>;
+
+using ChanWCon_Any = ChanWCon<Any>;
+using ChannerWCon_Any = Channer<ChanWCon_Any>;
 
 void sPush(const ChanW_Any& iChanW, const Any& iVal);
 
