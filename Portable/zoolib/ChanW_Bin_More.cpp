@@ -115,10 +115,10 @@ bool sQWriteCount(const ChanW_Bin& w, uint64 iValue)
 		return sQWriteBE<uint8>(w, iValue);
 
 	if (iValue <= 0xFFFFU)
-		return sQWriteBE<uint8>(w, 253) && sQWriteBE<uint16>(w, iValue);
+		return sQWriteBE<uint8>(w, 253) && sQWriteBE<uint16>(w, uint16(iValue));
 
 	if (iValue <= 0xFFFFFFFFU)
-		return sQWriteBE<uint8>(w, 254) && sQWriteBE<uint32>(w, iValue);
+		return sQWriteBE<uint8>(w, 254) && sQWriteBE<uint32>(w, uint32(iValue));
 
 	return sQWriteBE<uint8>(w, 255) && sQWriteBE<uint64>(w, iValue);
 	}

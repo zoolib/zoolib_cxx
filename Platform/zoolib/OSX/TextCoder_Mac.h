@@ -46,9 +46,9 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark
 
-ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName);
+ZRef<TextDecoder> sMake_TextDecoder_Mac(const std::string& iSourceName);
 
-ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName);
+ZRef<TextEncoder> sMake_TextEncoder_Mac(const std::string& iDestName);
 
 } // namespace ZooLib
 

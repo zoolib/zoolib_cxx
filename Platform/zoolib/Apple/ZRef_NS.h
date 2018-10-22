@@ -42,6 +42,9 @@ void sRelease(NSObject& iNSObject);
 void sCheck(struct objc_object*);
 void sCheck(NSObject*);
 
+int sRetainCount(struct objc_object*);
+int sRetainCount(NSObject*);
+
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #endif // __ZooLib_Apple_ZRef_NS_h__

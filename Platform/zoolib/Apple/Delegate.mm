@@ -99,7 +99,9 @@ Delegate::Delegate()
 Delegate::~Delegate()
 	{
 	fProxy->fDelegate = nil;
-	[fProxy release];
+	#if !ZCONFIG(Compiler,Clang) || !__has_feature(objc_arc)
+		[fProxy release];
+	#endif
 	}
 
 Delegate::operator id()

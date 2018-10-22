@@ -74,56 +74,56 @@ static size_t spWrite(FILE* iFILE, const void* iSource, size_t iCount)
 	return localSource - reinterpret_cast<const char*>(iSource);
 	}
 
-static uint64 spGetPosition(FILE* iFILE)
-	{
-	if (iFILE)
-		{
-		#if ZCONFIG_Has_fseeko
-			off_t result = ftello(iFILE);
-			if (result >= 0)
-				return result;
-		#else
-			long result = ftell(iFILE);
-			if (result >= 0)
-				return result;
-		#endif
-		}
-	return 0;
-	}
+//static uint64 spGetPosition(FILE* iFILE)
+//	{
+//	if (iFILE)
+//		{
+//		#if ZCONFIG_Has_fseeko
+//			off_t result = ftello(iFILE);
+//			if (result >= 0)
+//				return result;
+//		#else
+//			long result = ftell(iFILE);
+//			if (result >= 0)
+//				return result;
+//		#endif
+//		}
+//	return 0;
+//	}
 
-static bool spSetPosition(FILE* iFILE, uint64 iPosition)
-	{
-	if (iFILE)
-		{
-		#if ZCONFIG_Has_fseeko
-			return 0 < fseeko(iFILE, iPosition, SEEK_SET);
-		#else
-			if (iPosition != size_t(iPosition))
-				return false;
-			return 0 < fseek(iFILE, iPosition, SEEK_SET);
-		#endif
-		}
-	return false;
-	}
+//static bool spSetPosition(FILE* iFILE, uint64 iPosition)
+//	{
+//	if (iFILE)
+//		{
+//		#if ZCONFIG_Has_fseeko
+//			return 0 < fseeko(iFILE, iPosition, SEEK_SET);
+//		#else
+//			if (iPosition != size_t(iPosition))
+//				return false;
+//			return 0 < fseek(iFILE, iPosition, SEEK_SET);
+//		#endif
+//		}
+//	return false;
+//	}
 
-static uint64 spGetSize(FILE* iFILE)
-	{
-	if (iFILE)
-		{
-		#if ZCONFIG_Has_fseeko
-			off_t oldPos = fseeko(iFILE, 0, SEEK_CUR);
-			off_t endPos = fseeko(iFILE, 0, SEEK_END);
-			fseeko(iFILE, oldPos, SEEK_SET);
-			return endPos;
-		#else
-			long oldPos = fseek(iFILE, 0, SEEK_CUR);
-			long endPos = fseek(iFILE, 0, SEEK_END);
-			fseek(iFILE, oldPos, SEEK_SET);
-			return endPos;
-		#endif
-		}
-	return 0;
-	}
+//static uint64 spGetSize(FILE* iFILE)
+//	{
+//	if (iFILE)
+//		{
+//		#if ZCONFIG_Has_fseeko
+//			off_t oldPos = fseeko(iFILE, 0, SEEK_CUR);
+//			off_t endPos = fseeko(iFILE, 0, SEEK_END);
+//			fseeko(iFILE, oldPos, SEEK_SET);
+//			return endPos;
+//		#else
+//			long oldPos = fseek(iFILE, 0, SEEK_CUR);
+//			long endPos = fseek(iFILE, 0, SEEK_END);
+//			fseek(iFILE, oldPos, SEEK_SET);
+//			return endPos;
+//		#endif
+//		}
+//	return 0;
+//	}
 
 // This one's difficult to support
 //static void spSetSize(FILE* iFILE, uint64 iSize)

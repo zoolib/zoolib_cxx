@@ -44,18 +44,20 @@ namespace ZooLib {
 template <class T, bool Sense_p = true>
 class ZRef
 	{
-	inline
-	ZMACRO_Attribute_NoThrow_Ref
-	static void spRetain(T* iP) { if (iP) sRetain(*iP); }
+	typedef __unsafe_unretained T* TPtr;
 
 	inline
 	ZMACRO_Attribute_NoThrow_Ref
-	static void spRelease(T* iP) { if (iP) sRelease(*iP); }
+	static void spRetain(TPtr iP) { if (iP) sRetain(*iP); }
+
+	inline
+	ZMACRO_Attribute_NoThrow_Ref
+	static void spRelease(TPtr iP) { if (iP) sRelease(*iP); }
 
 public:
 	#if defined(__OBJC__)
 		operator bool() const { return Sense_p == !!fP; }
-		operator T*() const { return fP; }
+		operator TPtr() const { return fP; }
 	#else
 		ZMACRO_operator_bool_T(ZRef, operator_bool) const
 			{ return operator_bool_gen::translate(Sense_p == !!fP); }
@@ -85,7 +87,7 @@ public:
 		}
 
 	typedef T Type_t;
-	typedef T* Ptr_t;
+	typedef TPtr Ptr_t;
 
 //--
 
@@ -109,7 +111,7 @@ public:
 	ZRef& operator=(const ZRef& iOther)
 		{
 		using std::swap;
-		T* otherP = iOther.Copy();
+		TPtr otherP = iOther.Copy();
 		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
@@ -124,12 +126,12 @@ public:
 		{}
 
 	inline
-	ZRef(T* iP)
+	ZRef(TPtr iP)
 	:	fP(iP)
 		{ spRetain(fP); }
 
 	inline
-	ZRef& operator=(T* iP)
+	ZRef& operator=(TPtr iP)
 		{
 		using std::swap;
 		swap(iP, fP);
@@ -171,7 +173,7 @@ public:
 	ZRef& operator=(const ZRef<O,OtherSense_p>& iOther)
 		{
 		using std::swap;
-		T* otherP = iOther.Copy();
+		TPtr otherP = iOther.Copy();
 		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
@@ -191,7 +193,7 @@ public:
 	ZRef& operator=(const Adopt_T<O>& iAdopt)
 		{
 		using std::swap;
-		T* otherP = iAdopt.Get();
+		TPtr otherP = iAdopt.Get();
 		swap(otherP, fP);
 		spRelease(otherP);
 		return *this;
@@ -231,7 +233,7 @@ public:
 
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	T* operator->() const
+	TPtr operator->() const
 		{
 		sCheck(fP);
 		return fP;
@@ -239,11 +241,11 @@ public:
 
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	T* Get() const
+	TPtr Get() const
 		{ return fP; }
 
 	inline
-	T* Copy() const
+	TPtr Copy() const
 		{
 		spRetain(fP);
 		return fP;
@@ -251,10 +253,10 @@ public:
 
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
-	T* Orphan()
+	TPtr Orphan()
 		{
 		using std::swap;
-		T* otherP = 0;
+		TPtr otherP = 0;
 		swap(otherP, fP);
 		return otherP;
 		}
@@ -263,17 +265,19 @@ public:
 	void Clear()
 		{
 		using std::swap;
-		T* otherP = 0;
+		TPtr otherP = 0;
 		swap(otherP, fP);
 		spRelease(otherP);
 		}
 
+	#if ! ZCONFIG(Compiler,Clang) || !__has_feature(objc_arc)
 	inline
-	T*& OParam()
+	TPtr& OParam()
 		{
 		this->Clear();
 		return fP;
 		}
+	#endif
 
 	template <class O>
 	ZMACRO_Attribute_NoThrow_Ref
@@ -288,7 +292,7 @@ public:
 		{ return static_cast<O*>(fP); }
 
 	inline
-	bool AtomicCAS(T* iPrior, T* iNew)
+	bool AtomicCAS(TPtr iPrior, TPtr iNew)
 		{
 		if (not sAtomicPtr_CAS(&fP, iPrior, iNew))
 			return false;
@@ -298,7 +302,7 @@ public:
 		}
 
 	inline
-	bool CAS(T* iPrior, T* iNew)
+	bool CAS(TPtr iPrior, TPtr iNew)
 		{
 		if (fP != iPrior)
 			return false;
@@ -309,14 +313,14 @@ public:
 		}
 
 	inline
-	static T* sCFAllocatorRetain(T* iP)
+	static TPtr sCFAllocatorRetain(TPtr iP)
 		{
 		spRetain(iP);
 		return iP;
 		}
 
 	inline
-	static void sCFAllocatorRelease(T* iP)
+	static void sCFAllocatorRelease(TPtr iP)
 		{ spRelease(iP); }
 
 	inline
@@ -328,7 +332,7 @@ public:
 		{ spRelease(fP); }
 
 private:
-	T* fP;
+	TPtr fP;
 	};
 
 template <class T>

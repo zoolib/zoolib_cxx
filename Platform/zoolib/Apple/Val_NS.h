@@ -144,7 +144,7 @@ public:
 	const Val_NS Get(size_t iIndex) const;
 
 
-	typedef NSString* NSStringPtr;
+	typedef __unsafe_unretained NSString* NSStringPtr;
 	};
 
 template <class S>

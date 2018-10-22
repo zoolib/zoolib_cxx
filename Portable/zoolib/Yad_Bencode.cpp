@@ -97,7 +97,7 @@ static int64 spRead_PositiveInteger(const ChanRU_Bin& s)
 
 static string spReadString(const ChanRU_Bin& s)
 	{
-	const int32 stringLength = spRead_PositiveInteger(s);
+	const int64 stringLength = spRead_PositiveInteger(s);
 	if (not spTryRead_Byte(s, ':'))
 		spThrowParseException("Expected ':' terminator for string length");
 
@@ -106,7 +106,7 @@ static string spReadString(const ChanRU_Bin& s)
 
 static ZRef<YadR> spReadStringish(const ChanRU_Bin& s)
 	{
-	const int32 theLength = spRead_PositiveInteger(s);
+	const int64 theLength = spRead_PositiveInteger(s);
 	if (not spTryRead_Byte(s, ':'))
 		spThrowParseException("Expected ':' terminator for string/binary length");
 

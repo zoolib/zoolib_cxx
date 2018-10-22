@@ -165,7 +165,7 @@ NSMutableData* Data_NS::pTouch()
 	ZRef<NSMutableData> theMutableData;
 	if (NSData* theData = this->pData())
 		{
-		if (not fMutable || [theData retainCount] > 1)
+		if (not fMutable || sRetainCount(theData) > 1)
 			{
 			theMutableData = sDataMutable(theData);
 			inherited::operator=(theMutableData);

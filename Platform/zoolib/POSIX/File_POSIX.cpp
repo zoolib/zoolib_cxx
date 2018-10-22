@@ -322,102 +322,102 @@ static File::Error spWrite(int iFD, const void* iSource, size_t iCount, size_t* 
 	return File::errorNone;
 	}
 
-static File::Error spReadAt(
-	int iFD, uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
-	{
-#if ZCONFIG_File_AtAPISupported
+//static File::Error spReadAt(
+//	int iFD, uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
+//	{
+//#if ZCONFIG_File_AtAPISupported
+//
+//	if (oCountRead)
+//		*oCountRead = 0;
+//
+//	#if !defined(linux) || defined(__linux__)
+//	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
+//		return File::errorGeneric;
+//	#endif
+//
+//	char* localDest = reinterpret_cast<char*>(oDest);
+//	uint64 localOffset = iOffset;
+//	size_t countRemaining = iCount;
+//	while (countRemaining > 0)
+//		{
+//		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+//			ssize_t countRead = ::pread64(iFD, localDest, countRemaining, localOffset);
+//		#else
+//			ssize_t countRead = ::pread(iFD, localDest, countRemaining, localOffset);
+//		#endif
+//
+//		if (countRead == 0)
+//			return File::errorReadPastEOF;
+//
+//		if (countRead < 0)
+//			{
+//			int err = errno;
+//			if (err == EINTR)
+//				continue;
+//			return spTranslateError(err);
+//			}
+//		if (oCountRead)
+//			*oCountRead += countRead;
+//		countRemaining -= countRead;
+//		localDest += countRead;
+//		localOffset += countRead;
+//		}
+//	return File::errorNone;
+//
+//#else
+//
+//	ZUnimplemented();
+//	return File::errorNone;
+//
+//#endif
+//	}
 
-	if (oCountRead)
-		*oCountRead = 0;
-
-	#if !defined(linux) || defined(__linux__)
-	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
-		return File::errorGeneric;
-	#endif
-
-	char* localDest = reinterpret_cast<char*>(oDest);
-	uint64 localOffset = iOffset;
-	size_t countRemaining = iCount;
-	while (countRemaining > 0)
-		{
-		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-			ssize_t countRead = ::pread64(iFD, localDest, countRemaining, localOffset);
-		#else
-			ssize_t countRead = ::pread(iFD, localDest, countRemaining, localOffset);
-		#endif
-
-		if (countRead == 0)
-			return File::errorReadPastEOF;
-
-		if (countRead < 0)
-			{
-			int err = errno;
-			if (err == EINTR)
-				continue;
-			return spTranslateError(err);
-			}
-		if (oCountRead)
-			*oCountRead += countRead;
-		countRemaining -= countRead;
-		localDest += countRead;
-		localOffset += countRead;
-		}
-	return File::errorNone;
-
-#else
-
-	ZUnimplemented();
-	return File::errorNone;
-
-#endif
-	}
-
-static File::Error spWriteAt(int iFD,
-	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{
-#if ZCONFIG_File_AtAPISupported
-
-	if (oCountWritten)
-		*oCountWritten = 0;
-
-	#if !(defined(linux) || defined(__linux__))
-	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
-		return File::errorGeneric;
-	#endif
-
-	const char* localSource = reinterpret_cast<const char*>(iSource);
-	uint64 localOffset = iOffset;
-	size_t countRemaining = iCount;
-	while (countRemaining > 0)
-		{
-		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-			ssize_t countWritten = ::pwrite64(iFD, localSource, countRemaining, localOffset);
-		#else
-			ssize_t countWritten = ::pwrite(iFD, localSource, countRemaining, localOffset);
-		#endif
-
-		if (countWritten < 0)
-			{
-			int err = errno;
-			if (err == EINTR)
-				continue;
-			return spTranslateError(err);
-			}
-		if (oCountWritten)
-			*oCountWritten += countWritten;
-		countRemaining -= countWritten;
-		localSource += countWritten;
-		localOffset += countWritten;
-		}
-	return File::errorNone;
-
-#else
-
-	ZUnimplemented();
-	return File::errorNone;
-
-#endif
-	}
+//static File::Error spWriteAt(int iFD,
+//	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+//	{
+//#if ZCONFIG_File_AtAPISupported
+//
+//	if (oCountWritten)
+//		*oCountWritten = 0;
+//
+//	#if !(defined(linux) || defined(__linux__))
+//	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
+//		return File::errorGeneric;
+//	#endif
+//
+//	const char* localSource = reinterpret_cast<const char*>(iSource);
+//	uint64 localOffset = iOffset;
+//	size_t countRemaining = iCount;
+//	while (countRemaining > 0)
+//		{
+//		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+//			ssize_t countWritten = ::pwrite64(iFD, localSource, countRemaining, localOffset);
+//		#else
+//			ssize_t countWritten = ::pwrite(iFD, localSource, countRemaining, localOffset);
+//		#endif
+//
+//		if (countWritten < 0)
+//			{
+//			int err = errno;
+//			if (err == EINTR)
+//				continue;
+//			return spTranslateError(err);
+//			}
+//		if (oCountWritten)
+//			*oCountWritten += countWritten;
+//		countRemaining -= countWritten;
+//		localSource += countWritten;
+//		localOffset += countWritten;
+//		}
+//	return File::errorNone;
+//
+//#else
+//
+//	ZUnimplemented();
+//	return File::errorNone;
+//
+//#endif
+//	}
 
 static File::Error spGetPosition(int iFD, uint64& oPosition)
 	{
@@ -485,24 +485,24 @@ static File::Error spSetSize(int iFD, uint64 iSize)
 	return File::errorNone;
 	}
 
-static File::Error spFlush(int iFD)
-	{
-	// AG 2001-08-02. Stumbled across the docs for fdatasync, which ensures the contents of a
-	// file are flushed to disk, but does not necessarily ensure mod time is brought up to date.
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-		::fdatasync(iFD);
-	#else
-		::fsync(iFD);
-	#endif
+//static File::Error spFlush(int iFD)
+//	{
+//	// AG 2001-08-02. Stumbled across the docs for fdatasync, which ensures the contents of a
+//	// file are flushed to disk, but does not necessarily ensure mod time is brought up to date.
+//	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+//		::fdatasync(iFD);
+//	#else
+//		::fsync(iFD);
+//	#endif
+//
+//	return File::errorNone;
+//	}
 
-	return File::errorNone;
-	}
-
-static File::Error spFlushVolume(int iFD)
-	{
-	::fsync(iFD);
-	return File::errorNone;
-	}
+//static File::Error spFlushVolume(int iFD)
+//	{
+//	::fsync(iFD);
+//	return File::errorNone;
+//	}
 
 static void spSplit(
 	char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,

@@ -951,7 +951,7 @@ public:
 					{
 					break;
 					}
-				else if (false && fOptions.fUseExtendedNotation.DGet(false))
+				else if (fOptions.fUseExtendedNotation.DGet(false))
 					{
 					spWriteLFIndent(fIndent, fOptions, fChanW);
 					this->Visit(cur);
@@ -982,7 +982,7 @@ public:
 					{
 					break;
 					}
-				else if (false && fOptions.fUseExtendedNotation.DGet(false))
+				else if (fOptions.fUseExtendedNotation.DGet(false))
 					{
 					if (not isFirst && sBreakStrings(fOptions))
 						fChanW << " ";

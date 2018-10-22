@@ -84,11 +84,11 @@ size_t ChanRU_UTF_Std::UnreadableLimit()
 	{ return size_t(-1); }
 
 int ChanRU_UTF_Std::GetPos()
-	{ return fPos - fStack.size(); }
+	{ return int(fPos - fStack.size()); }
 
 int ChanRU_UTF_Std::GetLine()
 	{
-	int line = fLine;
+	int line = int(fLine);
 	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
 		ii != rend; ++ii)
 		{
@@ -100,7 +100,7 @@ int ChanRU_UTF_Std::GetLine()
 
 int ChanRU_UTF_Std::GetColumn()
 	{
-	int column = fColumn;
+	int column = int(fColumn);
 	for (vector<UTF32>::const_reverse_iterator ii = fStack.rbegin(), rend = fStack.rend();
 		ii != rend; ++ii)
 		{

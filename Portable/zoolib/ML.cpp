@@ -165,25 +165,25 @@ static bool spReadUntil(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 
 		}
 	}
 
-static bool spReadUntil(
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
-	UTF32 iTerminator, string& oText)
-	{
-	oText.resize(0);
-
-	for (;;)
-		{
-		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
-			return false;
-		else if (*theCPQ == iTerminator)
-			return true;
-		else if (*theCPQ == '&' && iRecognizeEntities)
-			oText += spReadReference(iChanR, iChanU, iCallable);
-		else
-			oText += *theCPQ;
-		}
-	}
+//static bool spReadUntil(
+//	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+//	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
+//	UTF32 iTerminator, string& oText)
+//	{
+//	oText.resize(0);
+//
+//	for (;;)
+//		{
+//		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+//			return false;
+//		else if (*theCPQ == iTerminator)
+//			return true;
+//		else if (*theCPQ == '&' && iRecognizeEntities)
+//			oText += spReadReference(iChanR, iChanU, iCallable);
+//		else
+//			oText += *theCPQ;
+//		}
+//	}
 
 static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, string& oName)
 	{

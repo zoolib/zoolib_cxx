@@ -168,7 +168,7 @@ Val_NS::Val_NS(const string16& iVal)
 	{}
 
 Val_NS::Val_NS(CFStringRef iVal)
-:	inherited((NSString*)iVal)
+:	inherited((__bridge NSString*)iVal)
 	{}
 
 template <>
@@ -525,7 +525,7 @@ NSMutableArray* Seq_NS::pTouch()
 	ZRef<NSMutableArray> theMutableArray;
 	if (NSArray* theArray = this->pArray())
 		{
-		if (not fMutable || [theArray retainCount] > 1)
+		if (not fMutable || sRetainCount(theArray) > 1)
 			{
 			theMutableArray = sArrayMutable(theArray);
 			inherited::operator=(theMutableArray);
@@ -664,7 +664,7 @@ const Val_NS Map_NS::Get(NSString* iName) const
 	{ return this->DGet(Val_NS(), iName); }
 
 const Val_NS Map_NS::Get(CFStringRef iName) const
-	{ return this->Get((NSString*)iName); }
+	{ return this->Get((__bridge NSString*)iName); }
 
 Map_NS& Map_NS::Set(const string8& iName, const Val_NS& iVal)
 	{
@@ -679,7 +679,7 @@ Map_NS& Map_NS::Set(NSString* iName, const Val_NS& iVal)
 	}
 
 Map_NS& Map_NS::Set(CFStringRef iName, const Val_NS& iVal)
-	{ return this->Set((NSString*)iName, iVal); }
+	{ return this->Set((__bridge NSString*)iName, iVal); }
 
 Map_NS& Map_NS::Erase(const string8& iName)
 	{
@@ -694,7 +694,7 @@ Map_NS& Map_NS::Erase(NSString* iName)
 	}
 
 Map_NS& Map_NS::Erase(CFStringRef iName)
-	{ return this->Erase((NSString*)iName); }
+	{ return this->Erase((__bridge NSString*)iName); }
 
 NSDictionary* Map_NS::pDictionary() const
 	{ return inherited::Get(); }
@@ -704,7 +704,7 @@ NSMutableDictionary* Map_NS::pTouch()
 	ZRef<NSMutableDictionary> theMutableDictionary;
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
-		if (not fMutable || [theDictionary retainCount] > 1)
+		if (not fMutable || sRetainCount(theDictionary) > 1)
 			{
 			theMutableDictionary = sDictionaryMutable(theDictionary);
 			inherited::operator=(theMutableDictionary);

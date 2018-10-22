@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanConnection_XX_MemoryPipe.h"
 #include "zoolib/ChanR_XX_Boundary.h"
+#include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
@@ -424,7 +425,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				{
 				break;
 				}
-			else if (false && iOptions.fUseExtendedNotation.DGet(false))
+			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				spWriteLFIndent(iIndent, iOptions, iChanW);
 				if (not spEmit(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
@@ -461,7 +462,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				{
 				break;
 				}
-			else if (false && iOptions.fUseExtendedNotation.DGet(false))
+			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";

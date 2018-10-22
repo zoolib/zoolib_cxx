@@ -713,7 +713,7 @@ parameters = {
   parameterNameX = string(parameterValueX);
   }
 }
-<\endcode>
+</code>
 */
 bool sQRead_accept(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
 	{
