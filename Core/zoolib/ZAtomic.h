@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAtomic_h__ 1
 #include "zconfig.h"
 
+#if ZCONFIG_CPP >= 2011
+	#include <atomic>
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -72,6 +76,40 @@ inline void ZAtomicPtr_Set(ZAtomicPtr_t* iAtomicPtr, void* iParam)
 void sAtomic_Barrier();
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark -
+#pragma mark "C++11"
+
+#if ZCONFIG_CPP >= 2011
+
+namespace ZooLib {
+
+// -----------------------------------------------
+#if 0 &&!defined(DEFINED_sAtomicPtr_CAS)
+#define DEFINED_sAtomicPtr_CAS 1
+
+inline
+bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
+{
+//	#if ZCONFIG_Is64Bit
+	std::atomic_compare_exchange_strong_explicit((std::atomic<int64_t>*)iPtrAddress, ((int64_t**)&iOldValue), (int64_t)iNewValue, std::memory_order_relaxed, std::memory_order_relaxed);
+
+//		return ::OSAtomicCompareAndSwap64(
+//			(int64_t)iOldValue, (int64_t)iNewValue, (int64_t*)iPtrAddress);
+//	#else
+//		return ::OSAtomicCompareAndSwap32(
+//			(int32_t)iOldValue, (int32_t)iNewValue, (int32_t*)iPtrAddress);
+//	#endif
+}
+
+#endif
+
+
+} // namespace ZooLib
+
+#endif // ZCONFIG_CPP >= 2011
+
 
 // =================================================================================================
 #pragma mark -
@@ -408,6 +446,9 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 
 #include <libkern/OSAtomic.h>
 
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 namespace ZooLib {
 
 // -----------------------------------------------
@@ -484,6 +525,8 @@ void sAtomic_Barrier()
 // -----------------------------------------------
 
 } // namespace ZooLib
+
+#pragma GCC diagnostic pop
 
 #endif // defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
 
