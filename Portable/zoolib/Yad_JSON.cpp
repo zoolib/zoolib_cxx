@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-#if ZCONFIG(Compiler,GCC)
+#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 	#include <cxxabi.h>
 	#include <stdlib.h> // For free, required by __cxa_demangle
 #endif
@@ -104,9 +104,9 @@ type             -
 #pragma mark -
 #pragma mark Helpers
 
-static string spPrettyName(const std::type_info& iTI)
+string spPrettyName(const std::type_info& iTI)
 	{
-	#if ZCONFIG(Compiler,GCC)
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
 	if (char* unmangled = abi::__cxa_demangle(iTI.name(), 0, 0, 0))
 		{
 		string result = unmangled;
@@ -118,7 +118,7 @@ static string spPrettyName(const std::type_info& iTI)
 	return iTI.name();
 	}
 
-static bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string* oStringLC, string* oStringExact)
 	{
 	if (oStringExact)
@@ -150,7 +150,7 @@ static bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	return gotAny;
 	}
 
-static bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string& oString)
 	{
 	using namespace Util_Chan;
@@ -197,7 +197,7 @@ static bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChan
 	return false;
 	}
 
-static bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string& oName, bool iAllowUnquoted)
 	{
 	using namespace Util_Chan;

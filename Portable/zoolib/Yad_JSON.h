@@ -83,6 +83,14 @@ public:
 #pragma mark -
 #pragma mark ParseException
 
+string spPrettyName(const std::type_info& iTI);
+bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string* oStringLC, string* oStringExact);
+bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string& oName, bool iAllowUnquoted);
+bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	string& oString);
+
 void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
 void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
 void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW);
