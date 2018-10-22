@@ -50,8 +50,8 @@ extern const Any kStartSeq;
 struct End {};
 extern const Any kEnd;
 
-extern const Any kEndMap;
-extern const Any kEndSeq;
+//extern const Any kEndMap;
+//extern const Any kEndSeq;
 
 } // namespace PullPush
 

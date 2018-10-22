@@ -31,8 +31,9 @@ const Any kStartMap = Any(StartMap());
 const Any kStartSeq = Any(StartSeq());
 
 const Any kEnd = Any(End());
-const Any kEndMap = Any(End());
-const Any kEndSeq = Any(End());
+
+//const Any kEndMap = Any(End());
+//const Any kEndSeq = Any(End());
 
 } // namespace PullPush
 

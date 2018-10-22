@@ -19,13 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/PullPush_JSON.h"
+
+#include "zoolib/ChanConnection_XX_MemoryPipe.h"
+#include "zoolib/ChanR_XX_Boundary.h"
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
-
-//#if ZCONFIG(Compiler,GCC)
-//	#include <cxxabi.h>
-//	#include <stdlib.h> // For free, required by __cxa_demangle
-//#endif
 
 namespace ZooLib {
 namespace PullPush_JSON {
@@ -35,15 +34,12 @@ using Util_Chan::sTryRead_CP;
 using std::min;
 using std::string;
 
-static bool spPull_Val(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
-	{
-	string theString;
-	if (Yad_JSON::spTryRead_JSONString(iChanRU, iChanRU, theString))
-		{
-		sPush(iChanW, theString);
-		return true;
-		}
+// =================================================================================================
+#pragma mark -
+#pragma mark
 
+static bool spPull_OtherVal(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+	{
 	int64 asInt64;
 	double asDouble;
 	bool isDouble;
@@ -76,6 +72,141 @@ static bool spPull_Val(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 		}
 
 	return false;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
+
+static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_UTF& iChanW)
+	{
+	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanRU);
+	int quotesSeen = 1;
+	for (;;)
+		{
+		switch (quotesSeen)
+			{
+			case 0:
+				{
+				sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+				if (sTryRead_CP('"', iChanRU, iChanRU))
+					quotesSeen = 1;
+				else
+					return true;
+				break;
+				}
+			case 1:
+				{
+				if (sTryRead_CP('"', iChanRU, iChanRU))
+					{
+					// We have two quotes in a row.
+					quotesSeen = 2;
+					}
+				else
+					{
+					const std::pair<int64,int64> result =
+						sCopyAll(ChanR_UTF_Escaped('"', iChanRU, iChanRU), iChanW);
+
+					if (sTryRead_CP('"', iChanRU, iChanRU))
+						quotesSeen = 0;
+					else if (result.first == 0)
+						throw ParseException("Expected \" to close a string");
+					}
+				break;
+				}
+			case 2:
+				{
+				if (sTryRead_CP('"', iChanRU, iChanRU))
+					{
+					// We have three quotes in a row.
+					quotesSeen = 3;
+					if (ZQ<UTF32> theCPQ = sQRead(iChanRU))
+						{
+						if (not Unicode::sIsEOL(*theCPQ))
+							{
+							// And the following character was *not* an EOL, so we'll treat it as
+							// part of the string.
+							sUnread(iChanRU, *theCPQ);
+							}
+						}
+					}
+				else
+					{
+					// We have two quotes in a row, followed by something
+					// else, so we had an empty string segment.
+					quotesSeen = 0;
+					}
+				break;
+				}
+			case 3:
+				{
+				// We've got three quotes in a row, and any trailing EOL has been stripped.
+				const std::pair<int64,int64> result = sCopyAll(theChanR_Boundary, iChanW);
+				if (result.first)
+					{}
+				else if (not theChanR_Boundary.HitBoundary())
+					{
+					throw ParseException("Expected \"\"\" to close a string");
+					}
+				else
+					{
+					theChanR_Boundary.Reset();
+					quotesSeen = 0;
+					}
+				break;
+				}
+			}
+		}
+	}
+
+static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+	{
+	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe =
+		new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
+
+	sPush(iChanW, ZRef<ChannerR_UTF>(theChannerPipe));
+
+	bool result = spPullPush_String(iChanRU, *theChannerPipe);
+	sDisconnectWrite(*theChannerPipe);
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+static bool spPullPush_Base64(const ChanR_UTF& iChanR, const ChanW_Bin& iChanW)
+	{
+	ChanR_XX_Terminated<UTF32> theChanR_UTF_Terminated('>', iChanR);
+	ChanR_Bin_ASCIIStrim theChanR_Bin_ASCIIStrim(theChanR_UTF_Terminated);
+	ChanR_Bin_Base64Decode theChanR_Bin_Base64Decode(theChanR_Bin_ASCIIStrim);
+
+	std::pair<int64,int64> counts = sCopyAll(theChanR_Bin_Base64Decode, iChanW);
+
+	if (counts.first != counts.second)
+		return false;
+
+	if (not theChanR_UTF_Terminated.HitTerminator())
+		throw ParseException("Expected '>' to close a base64 data");
+
+	return true;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
+static bool spPullPush_Hex(const ChanRU_UTF& iChanRU, const ChanW_Bin& iChanW)
+	{
+	std::pair<int64,int64> counts = sCopyAll(ChanR_Bin_HexStrim(iChanRU, iChanRU), iChanW);
+	if (counts.first != counts.second)
+		return false;
+	if (not sTryRead_CP('>', iChanRU, iChanRU))
+		throw ParseException("Expected '>' to close a hex data");
+	return true;
 	}
 
 // =================================================================================================
@@ -117,33 +248,82 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 		}
 	else if (sTryRead_CP('{', iChanRU, iChanRU))
 		{
-//		return new YadMapR_JSON(iRO, iChannerR, iChannerU);
+		sPush(iChanW, kStartMap);
+		for (;;)
+			{
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+			if (sTryRead_CP('}', iChanRU, iChanRU))
+				{
+				sPush(iChanW, kEnd);
+				return true;
+				}
+
+			string theName;
+			if (not Yad_JSON::spTryRead_PropertyName(iChanRU, iChanRU,
+				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
+				{ throw ParseException("Expected a member name"); }
+
+			sPush(iChanW, sName(theName));
+
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+			if (not sTryRead_CP(':', iChanRU, iChanRU))
+				{
+				if (not iRO.fAllowEquals.DGet(false))
+					throw ParseException("Expected ':' after a member name");
+
+				if (not sTryRead_CP('=', iChanRU, iChanRU))
+					throw ParseException("Expected ':' or '=' after a member name");
+				}
+
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+			if (not sPull(iChanRU, iRO, iChanW))
+				throw ParseException("Expected value");
+
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+			if (sTryRead_CP(',', iChanRU, iChanRU))
+				{}
+			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU, iChanRU))
+				{}
+			else if (iRO.fLooseSeparators.DGet(false))
+				{}
+			else if (iRO.fAllowSemiColons.DGet(false))
+				throw ParseException("Require ',' or ';' to separate object elements");
+			else
+				throw ParseException("Require ',' to separate object elements");
+			}
 		}
-//	else if (sTryRead_CP('"', iChanRU, iChanRU))
-//		{
-//		return new YadStrimmerR_JSON(iChannerR, iChannerU);
-//		}
+	else if (sTryRead_CP('"', iChanRU, iChanRU))
+		{
+		// Could use YadStrimmerR_JSON and sPullPush_UTF, but this is a good chance to
+		// demo how easy PullPush makes it to do fiddly source parsing.
+		return spPullPush_String(iChanRU, iChanW);
+		}
 	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanRU, iChanRU))
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+		ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
+			new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
+
+		sPush(iChanW, ZRef<ChannerR_Bin>(theChannerPipe));
+
+		bool result;
 		if (sTryRead_CP('=', iChanRU, iChanRU))
-			{
-			// It's Base64
-//			return new YadStreamerR_Base64(Base64::sDecode_Normal(), iChannerR, iChannerU);
-			}
+			result = spPullPush_Base64(iChanRU, *theChannerPipe);
 		else
-			{
-			// It's Hex
-//			return new YadStreamerR_Hex(iChannerR, iChannerU);
-			}
+			result = spPullPush_Hex(iChanRU, *theChannerPipe);
+
+		sDisconnectWrite(*theChannerPipe);
+
+		return result;
 		}
 	else
 		{
-		if (spPull_Val(iChanRU, iChanW))
-			return true;
+		return spPull_OtherVal(iChanRU, iChanW);
 		}
-
-	return false;
 	}
 
 // =================================================================================================
