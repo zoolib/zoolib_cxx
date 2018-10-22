@@ -26,6 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Yad_JSON.h" // For WriteOptions etc.
 
 namespace ZooLib {
+
+using ChanRU_UTF = ChanRU<UTF32>;
+
 namespace PullPush_JSON {
 
 using namespace PullPush;
@@ -34,11 +37,20 @@ using namespace PullPush;
 #pragma mark -
 #pragma mark
 
+using Yad_JSON::ReadOptions;
+using Yad_JSON::ParseException;
+
+bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark
+
 using Yad_JSON::WriteOptions;
 
-bool sPullPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
+bool sPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-bool sPullPush(size_t iInitialIndent, const WriteOptions& iOptions,
+bool sPush(size_t iInitialIndent, const WriteOptions& iOptions,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
 } // namespace PullPush_JSON

@@ -19,19 +19,132 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/PullPush_JSON.h"
+#include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-
-#if ZCONFIG(Compiler,GCC)
-	#include <cxxabi.h>
-	#include <stdlib.h> // For free, required by __cxa_demangle
-#endif
+//#if ZCONFIG(Compiler,GCC)
+//	#include <cxxabi.h>
+//	#include <stdlib.h> // For free, required by __cxa_demangle
+//#endif
 
 namespace ZooLib {
 namespace PullPush_JSON {
 
+using Util_Chan::sSkip_WSAndCPlusPlusComments;
+using Util_Chan::sTryRead_CP;
 using std::min;
 using std::string;
+
+static bool spPull_Val(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+	{
+	string theString;
+	if (Yad_JSON::spTryRead_JSONString(iChanRU, iChanRU, theString))
+		{
+		sPush(iChanW, theString);
+		return true;
+		}
+
+	int64 asInt64;
+	double asDouble;
+	bool isDouble;
+
+	if (Util_Chan::sTryRead_SignedGenericNumber(iChanRU, iChanRU, asInt64, asDouble, isDouble))
+		{
+		if (isDouble)
+			sPush(iChanW, asDouble);
+		else
+			sPush(iChanW, asInt64);
+		return true;
+		}
+
+	if (Util_Chan::sTryRead_CaselessString("null", iChanRU, iChanRU))
+		{
+		sPush(iChanW, Any(null));
+		return true;
+		}
+
+	if (Util_Chan::sTryRead_CaselessString("false", iChanRU, iChanRU))
+		{
+		sPush(iChanW, false);
+		return true;
+		}
+
+	if (Util_Chan::sTryRead_CaselessString("true", iChanRU, iChanRU))
+		{
+		sPush(iChanW, true);
+		return true;
+		}
+
+	return false;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark sPull
+
+bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
+	{
+	sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+	if (sTryRead_CP('[', iChanRU, iChanRU))
+		{
+		sPush(iChanW, kStartSeq);
+		for (;;)
+			{
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+			if (sTryRead_CP(']', iChanRU, iChanRU))
+				{
+				sPush(iChanW, kEnd);
+				return true;
+				}
+
+			if (not sPull(iChanRU, iRO, iChanW))
+				throw ParseException("Expected value");
+
+			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+
+			if (sTryRead_CP(',', iChanRU, iChanRU))
+				{}
+			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU, iChanRU))
+				{}
+			else if (iRO.fLooseSeparators.DGet(false))
+				{}
+			else if (iRO.fAllowSemiColons.DGet(false))
+				throw ParseException("Require ',' or ';' to separate array elements");
+			else
+				throw ParseException("Require ',' to separate array elements");
+			}
+		}
+	else if (sTryRead_CP('{', iChanRU, iChanRU))
+		{
+//		return new YadMapR_JSON(iRO, iChannerR, iChannerU);
+		}
+//	else if (sTryRead_CP('"', iChanRU, iChanRU))
+//		{
+//		return new YadStrimmerR_JSON(iChannerR, iChannerU);
+//		}
+	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanRU, iChanRU))
+		{
+		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+		if (sTryRead_CP('=', iChanRU, iChanRU))
+			{
+			// It's Base64
+//			return new YadStreamerR_Base64(Base64::sDecode_Normal(), iChannerR, iChannerU);
+			}
+		else
+			{
+			// It's Hex
+//			return new YadStreamerR_Hex(iChannerR, iChannerU);
+			}
+		}
+	else
+		{
+		if (spPull_Val(iChanRU, iChanW))
+			return true;
+		}
+
+	return false;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -43,17 +156,18 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-static bool spEmit(const Any& iIany, size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spEmit(const Any& iIany,
+	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark sPush
 
-bool sPullPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
-	{ return sPullPush(0, WriteOptions(), iChanR, iChanW); }
+bool sPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+	{ return sPush(0, WriteOptions(), iChanR, iChanW); }
 
-bool sPullPush(size_t iInitialIndent, const WriteOptions& iOptions,
+bool sPush(size_t iInitialIndent, const WriteOptions& iOptions,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
@@ -192,7 +306,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 	return true;
 	}
 
-bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
