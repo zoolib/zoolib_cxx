@@ -86,7 +86,7 @@ int sRetainCount(NSObject* iP)
 	#if ZCONFIG(Compiler,Clang) && __has_feature(objc_arc)
 		return (int)CFGetRetainCount((__bridge CFTypeRef)iP);
 	#else
-		[iP retainCount];
+		return [iP retainCount];
 	#endif
 	}
 
