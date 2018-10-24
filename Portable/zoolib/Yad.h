@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Name.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/SafePtrStack.h"
 
 #include <string>
@@ -90,7 +91,7 @@ inline bool sTimesHaveUserLegibleComment(const YadOptions& iYO)
 #pragma mark -
 #pragma mark YadParseException
 
-class YadParseException : public std::runtime_error
+class YadParseException : public ParseException
 	{
 public:
 	YadParseException(const std::string& iWhat);

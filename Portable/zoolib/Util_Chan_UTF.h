@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan.h"
 
 namespace ZooLib {
@@ -33,12 +34,7 @@ namespace Util_Chan {
 // =================================================================================================
 #pragma mark -
 
-class ParseException : public std::runtime_error
-	{
-public:
-	ParseException(const char* iWhat) : runtime_error(iWhat) {}
-	ParseException(const std::string& iWhat) : runtime_error(iWhat.c_str()) {}
-	};
+//using ZooLib::ParseException;
 
 // =================================================================================================
 #pragma mark -

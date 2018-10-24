@@ -67,11 +67,11 @@ YadOptions::YadOptions(bool iDoIndentation)
 #pragma mark YadParseException
 
 YadParseException::YadParseException(const string& iWhat)
-:	runtime_error(iWhat)
+:	ParseException(iWhat)
 	{}
 
 YadParseException::YadParseException(const char* iWhat)
-:	runtime_error(iWhat)
+:	ParseException(iWhat)
 	{}
 
 } // namespace ZooLib

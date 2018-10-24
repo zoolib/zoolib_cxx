@@ -18,25 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Any_Coerce.h"
-#include "zoolib/Chan_UTF_Escaped.h"
-#include "zoolib/ChanW_Bin_HexStrim.h"
-#include "zoolib/Compat_algorithm.h" // ZSetRestore_T
-#include "zoolib/Compat_cmath.h"
-#include "zoolib/Unicode.h"
-#include "zoolib/UTCDateTime.h"
-#include "zoolib/Util_Chan_UTF.h"
-#include "zoolib/Util_Chan_UTF_Operators.h"
-#include "zoolib/Util_Time.h"
-#include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
 
-#include <vector>
+#include "zoolib/Chan_UTF_Escaped.h"
+#include "zoolib/Unicode.h"
+#include "zoolib/Util_Chan_JSON.h"
+#include "zoolib/Util_Chan_UTF.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Yad_Any.h" // For sYadAtomR_Any
 
-#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
-	#include <cxxabi.h>
-	#include <stdlib.h> // For free, required by __cxa_demangle
-#endif
+#include <vector>
 
 namespace ZooLib {
 namespace Yad_JSON {
@@ -104,116 +95,6 @@ type             -
 #pragma mark -
 #pragma mark Helpers
 
-string spPrettyName(const std::type_info& iTI)
-	{
-	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
-	if (char* unmangled = abi::__cxa_demangle(iTI.name(), 0, 0, 0))
-		{
-		string result = unmangled;
-		free(unmangled);
-		return result;
-		}
-	#endif
-
-	return iTI.name();
-	}
-
-bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string* oStringLC, string* oStringExact)
-	{
-	if (oStringExact)
-		oStringExact->reserve(32);
-
-	if (oStringLC)
-		oStringLC->reserve(32);
-
-	bool gotAny = false;
-	for (;;)
-		{
-		const ZQ<UTF32> theCPQ = sQRead(iChanR);
-		if (not theCPQ)
-			break;
-		const UTF32 theCP = *theCPQ;
-		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
-			{
-			sUnread(iChanU, theCP);
-			break;
-			}
-
-		gotAny = true;
-
-		if (oStringLC)
-			*oStringLC += Unicode::sToLower(theCP);
-		if (oStringExact)
-			*oStringExact += theCP;
-		}
-	return gotAny;
-	}
-
-bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string& oString)
-	{
-	using namespace Util_Chan;
-
-	if (sTryRead_CP('"', iChanR, iChanU))
-		{
-		// We've got a string, delimited by ".
-		for (;;)
-			{
-			string tempString;
-			sRead_EscapedString('"', iChanR, iChanU, tempString);
-
-			if (not sTryRead_CP('"', iChanR, iChanU))
-				throw ParseException("Expected '\"' to close a string");
-
-			oString += tempString;
-
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-
-			if (not sTryRead_CP('"', iChanR, iChanU))
-				return true;
-			}
-		}
-	else if (sTryRead_CP('\'', iChanR, iChanU))
-		{
-		// We've got a string, delimited by '.
-		for (;;)
-			{
-			string tempString;
-			sRead_EscapedString( '\'', iChanR, iChanU, tempString);
-
-			if (not sTryRead_CP('\'', iChanR, iChanU))
-				throw ParseException("Expected \"'\" to close a string");
-
-			oString += tempString;
-
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-
-			if (not sTryRead_CP('\'', iChanR, iChanU))
-				return true;
-			}
-		}
-
-	return false;
-	}
-
-bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string& oName, bool iAllowUnquoted)
-	{
-	using namespace Util_Chan;
-
-	if (sTryRead_EscapedString('"', iChanR, iChanU, oName))
-		return true;
-
-	if (sTryRead_EscapedString('\'', iChanR, iChanU, oName))
-		return true;
-
-	if (iAllowUnquoted && spRead_Identifier(iChanR, iChanU, nullptr, &oName))
-		return true;
-
-	return false;
-	}
-
 static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
 	using namespace Util_Chan;
@@ -224,7 +105,7 @@ static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	double asDouble;
 	bool isDouble;
 
-	if (spTryRead_JSONString(iChanR, iChanU, theString))
+	if (sTryRead_JSONString(iChanR, iChanU, theString))
 		{
 		return theString;
 		}
@@ -297,42 +178,6 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	return null;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ReadOptions
-
-ReadOptions sReadOptions_Extended()
-	{
-	ReadOptions theRO;
-	theRO.fAllowUnquotedPropertyNames = true;
-	theRO.fAllowEquals = true;
-	theRO.fAllowSemiColons = true;
-	theRO.fAllowTerminators = true;
-	theRO.fLooseSeparators = true;
-	theRO.fAllowBinary = true;
-
-	return theRO;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark WriteOptions
-
-WriteOptions::WriteOptions()
-:	YadOptions()
-	{}
-
-WriteOptions::WriteOptions(const YadOptions& iOther)
-:	YadOptions(iOther)
-	{}
-
-WriteOptions::WriteOptions(const WriteOptions& iOther)
-:	YadOptions(iOther)
-,	fUseExtendedNotation(iOther.fUseExtendedNotation)
-,	fBinaryAsBase64(iOther.fBinaryAsBase64)
-,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
-,	fNumberSequences(iOther.fNumberSequences)
-	{}
 
 // =================================================================================================
 #pragma mark -
@@ -617,7 +462,7 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 		}
 
 	string theName;
-	if (not spTryRead_PropertyName(theChanR, theChanU,
+	if (not sTryRead_PropertyName(theChanR, theChanU,
 		theName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
 		{ throw ParseException("Expected a member name"); }
 	oName = theName;
@@ -632,219 +477,6 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 
 	if (not (oYadR = spMakeYadR_JSON(fRO, fChannerR, fChannerU)))
 		throw ParseException("Expected value after ':'");
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark Static writing functions
-
-void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
-	{
-	while (iCount--)
-		iChanW << sIndentString(iOptions);
-	}
-
-void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
-	{
-	iChanW << sEOLString(iOptions);
-	spWriteIndent(iCount, iOptions, iChanW);
-	}
-
-void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW)
-	{
-	ChanW_UTF_Escaped::Options theOptions;
-	theOptions.fEscapeHighUnicode = false;
-
-	if (iPreferSingleQuotes)
-		{
-		iChanW << "'";
-
-		theOptions.fQuoteQuotes = false;
-
-		ChanW_UTF_Escaped(theOptions, iChanW) << iString;
-
-		iChanW << "'";
-		}
-	else
-		{
-		iChanW << "\"";
-
-		theOptions.fQuoteQuotes = true;
-
-		ChanW_UTF_Escaped(theOptions, iChanW) << iString;
-
-		iChanW << "\"";
-		}
-	}
-
-void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
-	{
-	iChanW << "\"";
-
-	ChanW_UTF_Escaped::Options theOptions;
-	theOptions.fQuoteQuotes = true;
-	theOptions.fEscapeHighUnicode = false;
-
-	ChanW_UTF_Escaped(theOptions, iChanW) << iChanR;
-
-	iChanW << "\"";
-	}
-
-bool spContainsProblemChars(const string& iString)
-	{
-	if (iString.empty())
-		{
-		// An empty string can't be distinguished from no string at all, so
-		// we treat it as if it has problem chars so that it will be wrapped in quotes.
-		return true;
-		}
-
-	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
-		{
-		UTF32 theCP;
-		if (not Unicode::sReadInc(ii, end, theCP))
-			break;
-		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
-			return true;
-		}
-
-	return false;
-	}
-
-void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w)
-	{
-	if (spContainsProblemChars(iString))
-		spWriteString(iString, iUseSingleQuotes, w);
-	else
-		w << iString;
-	}
-
-void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
-	{
-	if (false)
-		{}
-	else if (iAny.IsNull())
-		{
-		w << "null";
-		}
-	else if (const bool* theValue = iAny.PGet<bool>())
-		{
-		if (*theValue)
-			w << "true";
-		else
-			w << "false";
-		}
-	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
-		{
-		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
-			sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
-		else
-			w << *theQ;
-		}
-	else if (const float* asFloat = iAny.PGet<float>())
-		{
-		Util_Chan::sWriteExact(w, *asFloat);
-		}
-	else if (const double* asDouble = iAny.PGet<double>())
-		{
-		Util_Chan::sWriteExact(w, *asDouble);
-		if (not fmod(*asDouble, 1.0))
-			{
-			// There's no fractional part, so we'll have written a sequence of digits with no
-			// decimal point. So the number would likely be subsequently interpreted as an
-			// integer, so we append a ".0".
-			w << ".0";
-			}
-		}
-	else if (const UTCDateTime* asTime = iAny.PGet<UTCDateTime>())
-		{
-		Util_Chan::sWriteExact(w, sGet(*asTime));
-		if (sTimesHaveUserLegibleComment(iOptions))
-			w << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
-		}
-	else
-		{
-		w << "NULL" << " /*!! Unhandled: " << spPrettyName(iAny.Type()) << " !!*/";
-		}
-	}
-
-void spToStrim_Stream(const ChanR_Bin& iChanR,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanW_UTF& w)
-	{
-	string chunkSeparator;
-	size_t chunkSize = 0;
-	if (sDoIndentation(iOptions))
-		{
-		chunkSeparator = sEOLString(iOptions);
-		for (size_t xx = 0; xx < iLevel; ++xx)
-			chunkSeparator += sIndentString(iOptions);
-
-		chunkSize = sRawChunkSize(iOptions);
-		}
-
-	if (iOptions.fBinaryAsBase64.DGet(false))
-		{
-		w << "<";
-		w << "=";
-
-		sCopyAll(iChanR,
-			ChanW_Bin_Base64Encode(
-				Base64::sEncode_Normal(),
-				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))
-				)
-			);
-
-		w << ">";
-		}
-	else if (sRawAsASCII(iOptions) && chunkSize)
-		{
-		w << "<";
-		std::vector<char> buffer(chunkSize, 0);
-		for (;;)
-			{
-			const size_t countRead = sReadMem(iChanR, &buffer[0], chunkSize);
-			if (not countRead)
-				break;
-			const size_t countCopied = sWriteMemFully(
-				ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, w),
-				&buffer[0], countRead);
-
-			if (size_t extraSpaces = chunkSize - countCopied)
-				{
-				// We didn't write a complete line of bytes, so pad it out.
-				while (extraSpaces--)
-					{
-					// Two spaces for the two nibbles
-					w << "  ";
-					// And then the separator sequence
-					w << sRawByteSeparator(iOptions);
-					}
-				}
-
-			w << " // ";
-			for (size_t xx = 0; xx < countCopied; ++xx)
-				{
-				char theChar = buffer[xx];
-				if (theChar < 0x20 || theChar > 0x7E)
-					w << ".";
-				else
-					w << theChar;
-				}
-			spWriteLFIndent(iLevel, iOptions, w);
-			}
-		w << ">";
-		}
-	else
-		{
-		w << "<";
-
-		sCopyAll(iChanR,
-			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, w));
-
-		w << ">";
-
-		}
 	}
 
 // =================================================================================================
@@ -872,14 +504,14 @@ public:
 		if (false)
 			{}
 		else if (ZRef<YadAtomR> theYadAtomR = iYadR.DynamicCast<YadAtomR>())
-			{ spToStrim_SimpleValue(theYadAtomR->AsAny(), fOptions, fChanW); }
+			{ sWriteSimpleValue(theYadAtomR->AsAny(), fOptions, fChanW); }
 
 		else if (ZRef<ChannerR_UTF> theChanner = iYadR.DynamicCast<ChannerR_UTF>())
-			{ spWriteString(*theChanner, fChanW); }
+			{ sWriteString(*theChanner, fChanW); }
 
 		else if (ZRef<ChannerR_Bin> theChanner = iYadR.DynamicCast<ChannerR_Bin>())
 			{
-			spToStrim_Stream(*theChanner,
+			sToStrim_Stream(*theChanner,
 				fIndent, fOptions, fMayNeedInitialLF, fChanW);
 			}
 
@@ -908,13 +540,13 @@ public:
 			// being used as an operand to 'typeid'"`
 			YadR* asPointer = iYadR.Get();
 			fChanW << " /*!! Unhandled yad: "
-				<< spPrettyName(typeid(*asPointer))
+				<< sPrettyName(typeid(*asPointer))
 				<< " !!*/";
 			}
 		}
 
 	void Visit_YadAtomR(const ZRef<YadAtomR>& iYadAtomR)
-		{ spToStrim_SimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
+		{ sWriteSimpleValue(iYadAtomR->AsAny(), fOptions, fChanW); }
 
 
 	void Visit_YadSeqR(const ZRef<ZooLib::YadSeqR>& iYadSeqR)
@@ -938,7 +570,7 @@ public:
 				{
 				// We were invoked by a tuple which has already issued the property
 				// name and equals sign, so we need to start a fresh line.
-				spWriteLFIndent(fIndent, fOptions, fChanW);
+				sWriteLFIndent(fIndent, fOptions, fChanW);
 				}
 
 			SaveSetRestore<bool> ssr_MayNeedInitialLF(fMayNeedInitialLF, false);
@@ -953,7 +585,7 @@ public:
 					}
 				else if (fOptions.fUseExtendedNotation.DGet(false))
 					{
-					spWriteLFIndent(fIndent, fOptions, fChanW);
+					sWriteLFIndent(fIndent, fOptions, fChanW);
 					this->Visit(cur);
 					fChanW << ";";
 					}
@@ -961,14 +593,14 @@ public:
 					{
 					if (not isFirst)
 						fChanW << ",";
-					spWriteLFIndent(fIndent, fOptions, fChanW);
+					sWriteLFIndent(fIndent, fOptions, fChanW);
 					if (fOptions.fNumberSequences.DGet(false))
 						fChanW << "/*" << count << "*/";
 					this->Visit(cur);
 					}
 				++count;
 				}
-			spWriteLFIndent(fIndent, fOptions, fChanW);
+			sWriteLFIndent(fIndent, fOptions, fChanW);
 			fChanW << "]";
 			}
 		else
@@ -1021,7 +653,7 @@ public:
 				{
 				// We're going to be indenting, but need to start
 				// a fresh line to have our { and contents line up.
-				spWriteLFIndent(fIndent, fOptions, fChanW);
+				sWriteLFIndent(fIndent, fOptions, fChanW);
 				}
 
 			fChanW << "{";
@@ -1034,8 +666,8 @@ public:
 					}
 				else if (fOptions.fUseExtendedNotation.DGet(false))
 					{
-					spWriteLFIndent(fIndent, fOptions, fChanW);
-					spWritePropName(curName, useSingleQuotes, fChanW);
+					sWriteLFIndent(fIndent, fOptions, fChanW);
+					sWritePropName(curName, useSingleQuotes, fChanW);
 					fChanW << " = ";
 
 					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
@@ -1047,8 +679,8 @@ public:
 					{
 					if (not isFirst)
 						fChanW << ",";
-					spWriteLFIndent(fIndent, fOptions, fChanW);
-					spWriteString(curName, useSingleQuotes, fChanW);
+					sWriteLFIndent(fIndent, fOptions, fChanW);
+					sWriteString(curName, useSingleQuotes, fChanW);
 					fChanW << ": ";
 
 					SaveSetRestore<size_t> ssr_Indent(fIndent, fIndent + 1);
@@ -1056,7 +688,7 @@ public:
 					this->Visit(cur);
 					}
 				}
-			spWriteLFIndent(fIndent, fOptions, fChanW);
+			sWriteLFIndent(fIndent, fOptions, fChanW);
 			fChanW << "}";
 			}
 		else
@@ -1075,7 +707,7 @@ public:
 					if (not isFirst && sBreakStrings(fOptions))
 						fChanW << " ";
 
-					spWritePropName(curName, useSingleQuotes, fChanW);
+					sWritePropName(curName, useSingleQuotes, fChanW);
 					if (sBreakStrings(fOptions))
 						fChanW << " = ";
 					else
@@ -1092,7 +724,7 @@ public:
 						fChanW << ",";
 					if (sBreakStrings(fOptions))
 						fChanW << " ";
-					spWriteString(curName, useSingleQuotes, fChanW);
+					sWriteString(curName, useSingleQuotes, fChanW);
 					fChanW << ":";
 					if (sBreakStrings(fOptions))
 						fChanW << " ";
@@ -1142,14 +774,14 @@ void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
 ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
 	string8 theString8;
-	if (not spTryRead_PropertyName(iChanR, iChanU, theString8, true))
+	if (not sTryRead_PropertyName(iChanR, iChanU, theString8, true))
 		return null;
 	return theString8;
 	}
 
 void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
 	{
-	if (spContainsProblemChars(iPropName))
+	if (sContainsProblemChars(iPropName))
 		{
 		w << "\"";
 		ChanW_UTF_Escaped(w) << iPropName;

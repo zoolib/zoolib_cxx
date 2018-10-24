@@ -37,7 +37,7 @@ ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>
 	if (iChannerR and iChannerU)
 		{
 		Yad_JSON::ReadOptions theRO = Yad_JSON::sReadOptions_Extended();
-		if (ZRef<YadR> theYad = sYadR(theRO, iChannerR, iChannerU))
+		if (ZRef<YadR> theYad = Yad_JSON::sYadR(theRO, iChannerR, iChannerU))
 			{
 			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
 				return resultQ;

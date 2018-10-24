@@ -18,39 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_PullPush_JSON_h__
-#define __ZooLib_PullPush_JSON_h__ 1
+#ifndef __ZooLib_ParseException_h__
+#define __ZooLib_ParseException_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/PullPush.h"
-#include "zoolib/Util_Chan_JSON.h" // For WriteOptions etc.
+#include <stdexcept>
+#include <string>
 
 namespace ZooLib {
-namespace PullPush_JSON {
-
-using namespace PullPush;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark
+#pragma mark ParseException
 
-using Util_Chan_JSON::ReadOptions;
+class ParseException : public std::runtime_error
+	{
+public:
+	ParseException(const std::string& iWhat)
+	:	runtime_error(iWhat)
+		{}
 
-bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW);
+	ParseException(const char* iWhat)
+	:	runtime_error(iWhat)
+		{}
+	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark
-
-using Util_Chan_JSON::WriteOptions;
-
-bool sPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
-
-bool sPush(size_t iInitialIndent, const WriteOptions& iOptions,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
-
-} // namespace PullPush_JSON
 } // namespace ZooLib
 
-#endif // __ZooLib_PullPush_JSON_h__
+#endif // __ZooLib_Yad_h__

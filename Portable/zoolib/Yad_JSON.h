@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Yad_JSON_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Terminated.h"
 #include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/CountedVal.h"
+#include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Yad_Std.h"
 
 namespace ZooLib {
@@ -36,37 +36,7 @@ namespace Yad_JSON {
 
 using std::string;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark ReadOptions
-
-struct ReadOptions
-	{
-	ZQ<bool> fAllowUnquotedPropertyNames;
-	ZQ<bool> fAllowEquals;
-	ZQ<bool> fAllowSemiColons;
-	ZQ<bool> fAllowTerminators;
-	ZQ<bool> fLooseSeparators;
-	ZQ<bool> fAllowBinary;
-	};
-
-ReadOptions sReadOptions_Extended();
-
-// =================================================================================================
-#pragma mark -
-#pragma mark WriteOptions
-
-struct WriteOptions : YadOptions
-	{
-	WriteOptions();
-	WriteOptions(const YadOptions& iOther);
-	WriteOptions(const WriteOptions& iOther);
-
-	ZQ<bool> fUseExtendedNotation;
-	ZQ<bool> fBinaryAsBase64;
-	ZQ<bool> fPreferSingleQuotes;
-	ZQ<bool> fNumberSequences;
-	};
+using namespace Util_Chan_JSON;
 
 // =================================================================================================
 #pragma mark -
@@ -78,29 +48,6 @@ public:
 	ParseException(const std::string& iWhat);
 	ParseException(const char* iWhat);
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ParseException
-
-string spPrettyName(const std::type_info& iTI);
-bool spRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string* oStringLC, string* oStringExact);
-bool spTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string& oName, bool iAllowUnquoted);
-bool spTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string& oString);
-
-void spWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
-void spWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
-void spWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW);
-void spWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW);
-bool spContainsProblemChars(const string& iString);
-void spWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w);
-void spToStrim_SimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w);
-void spToStrim_Stream(const ChanR_Bin& iChanR,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanW_UTF& w);
 
 // =================================================================================================
 #pragma mark -

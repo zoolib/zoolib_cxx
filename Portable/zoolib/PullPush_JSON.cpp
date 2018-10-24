@@ -21,8 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/PullPush_JSON.h"
 
 #include "zoolib/ChanConnection_XX_MemoryPipe.h"
+#include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Boundary.h"
+#include "zoolib/ChanR_XX_Terminated.h"
+#include "zoolib/Chan_Bin_ASCIIStrim.h"
+#include "zoolib/Chan_Bin_Base64.h"
+#include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/NameUniquifier.h" // For sName
+#include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
@@ -124,7 +130,7 @@ static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_UTF& iChanW
 					{
 					// We have three quotes in a row.
 					quotesSeen = 3;
-					if (ZQ<UTF32> theCPQ = sQRead(iChanRU))
+					if (ZQ<UTF32,false> theCPQ = sQRead(iChanRU))
 						{
 						if (not Unicode::sIsEOL(*theCPQ))
 							{
@@ -260,7 +266,7 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 				}
 
 			string theName;
-			if (not Yad_JSON::spTryRead_PropertyName(iChanRU, iChanRU,
+			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanRU, iChanRU,
 				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
 				{ throw ParseException("Expected a member name"); }
 
@@ -337,7 +343,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-static bool spEmit(const Any& iIany,
+static bool spEmit(const Any& iAny,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
@@ -364,13 +370,13 @@ static bool spEmit(const Any& iAny, size_t iIndent, const WriteOptions& iOptions
 	{
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
-		Yad_JSON::spWriteString(*theChanner, iChanW);
+		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
 		return true;
 		}
 
 	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
 		{
-		Yad_JSON::spToStrim_Stream(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		Util_Chan_JSON::sToStrim_Stream(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		return true;
 		}
 
@@ -384,7 +390,7 @@ static bool spEmit(const Any& iAny, size_t iIndent, const WriteOptions& iOptions
 		return spEmitSeq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
 		}
 
-	Yad_JSON::spToStrim_SimpleValue(iAny, iOptions, iChanW);
+	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
 	return true;
 	}
 
@@ -410,7 +416,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			spWriteLFIndent(iIndent, iOptions, iChanW);
+			sWriteLFIndent(iIndent, iOptions, iChanW);
 			}
 
 		uint64 count = 0;
@@ -427,7 +433,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(iIndent, iOptions, iChanW);
+				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (not spEmit(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
 					return false;
 				iChanW << ";";
@@ -436,7 +442,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				{
 				if (not isFirst)
 					iChanW << ",";
-				spWriteLFIndent(iIndent, iOptions, iChanW);
+				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (iOptions.fNumberSequences.DGet(false))
 					iChanW << "/*" << count << "*/";
 				if (not spEmit(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
@@ -444,7 +450,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				}
 			++count;
 			}
-		spWriteLFIndent(iIndent, iOptions, iChanW);
+		sWriteLFIndent(iIndent, iOptions, iChanW);
 		iChanW << "]";
 		}
 	else
@@ -505,7 +511,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			spWriteLFIndent(iIndent, iOptions, iChanW);
+			sWriteLFIndent(iIndent, iOptions, iChanW);
 			}
 
 		iChanW << "{";
@@ -528,8 +534,8 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
-				spWriteLFIndent(iIndent, iOptions, iChanW);
-				Yad_JSON::spWritePropName(*theNameStar, useSingleQuotes, iChanW);
+				sWriteLFIndent(iIndent, iOptions, iChanW);
+				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << " = ";
 
 				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
@@ -541,15 +547,15 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				{
 				if (not isFirst)
 					iChanW << ",";
-				spWriteLFIndent(iIndent, iOptions, iChanW);
-				Yad_JSON::spWriteString(*theNameStar, useSingleQuotes, iChanW);
+				sWriteLFIndent(iIndent, iOptions, iChanW);
+				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << ": ";
 
 				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 				}
 			}
-		spWriteLFIndent(iIndent, iOptions, iChanW);
+		sWriteLFIndent(iIndent, iOptions, iChanW);
 		iChanW << "}";
 		}
 	else
@@ -578,7 +584,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
 
-				Yad_JSON::spWritePropName(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
 				if (sBreakStrings(iOptions))
 					iChanW << " = ";
 				else
@@ -595,7 +601,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 					iChanW << ",";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
-				Yad_JSON::spWriteString(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << ":";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";

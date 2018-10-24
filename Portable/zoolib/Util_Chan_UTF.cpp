@@ -33,12 +33,6 @@ namespace Util_Chan {
 // =================================================================================================
 #pragma mark -
 
-// -----------------
-// -----------------
-// -----------------
-// -----------------
-// -----------------
-
 static bool spTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
 	{
 	if (ZQ<int> theQ = sQRead_Digit(iChanR, iChanU))
@@ -58,24 +52,6 @@ static bool spTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		}
 	return false;
 	}
-
-//static bool sQRead(UTF32& oCP, ChanR_UTF& iChanR)
-//	{
-//	if (ZQ<UTF32> theQ = sQRead(iChanR))
-//		{
-//		oCP = *theQ;
-//		return true;
-//		}
-//	return false;
-//	}
-
-// -----------------
-// -----------------
-// -----------------
-// -----------------
-// -----------------
-// -----------------
-// -----------------
 
 static bool spIsWhitespace(UTF32 iCP)
 	{
