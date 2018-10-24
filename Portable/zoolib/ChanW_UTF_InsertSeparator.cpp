@@ -28,8 +28,8 @@ namespace ZooLib {
 #pragma mark ChanW_UTF_InsertSeparator
 
 ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
-	size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink)
-:	fStrimSink(iStrimSink)
+	size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iChanW)
+:	fChanW(iChanW)
 ,	fCount(0)
 	{
 	if (iSpacing)
@@ -37,8 +37,8 @@ ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
 	}
 
 ChanW_UTF_InsertSeparator::ChanW_UTF_InsertSeparator(
-	const Spacings& iSpacings, const ChanW_UTF& iStrimSink)
-:	fStrimSink(iStrimSink)
+	const Spacings& iSpacings, const ChanW_UTF& iChanW)
+:	fChanW(iChanW)
 ,	fSpacings(iSpacings)
 ,	fCount(0)
 	{}
@@ -65,7 +65,7 @@ size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 						{
 						if (0 == (fCount % riter->first))
 							{
-							sEWrite(fStrimSink, riter->second);
+							sEWrite(fChanW, riter->second);
 							break;
 							}
 						}
@@ -87,7 +87,7 @@ size_t ChanW_UTF_InsertSeparator::Write(const UTF32* iSource, size_t iCountCU)
 				}
 			}
 
-		const size_t countWritten = sWrite(fStrimSink, localSource, countToWrite);
+		const size_t countWritten = sWrite(fChanW, localSource, countToWrite);
 		if (countWritten == 0)
 			break;
 		

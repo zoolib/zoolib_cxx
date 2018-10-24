@@ -48,8 +48,6 @@ ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChanner);
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChanner,
 	const std::string& iOuterName, const ML::Attrs_t& iAttrs);
 
-//void sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
-
 } // namespace Yad_XMLAttr
 } // namespace ZooLib
 

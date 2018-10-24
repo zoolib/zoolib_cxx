@@ -164,16 +164,16 @@ ChanW_UTF_Escaped::Options::Options()
 #pragma mark -
 #pragma mark ChanW_UTF_Escaped
 
-ChanW_UTF_Escaped::ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink)
-:	fStrimSink(iStrimSink),
+ChanW_UTF_Escaped::ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iChanW)
+:	fChanW(iChanW),
 	fEOL(iOptions.fEOL),
 	fQuoteQuotes(iOptions.fQuoteQuotes),
 	fEscapeHighUnicode(iOptions.fEscapeHighUnicode),
 	fLastWasCR(false)
 	{}
 
-ChanW_UTF_Escaped::ChanW_UTF_Escaped(const ChanW_UTF& iStrimSink)
-:	fStrimSink(iStrimSink),
+ChanW_UTF_Escaped::ChanW_UTF_Escaped(const ChanW_UTF& iChanW)
+:	fChanW(iChanW),
 	fQuoteQuotes(true),
 	fEscapeHighUnicode(true),
 	fLastWasCR(false)
@@ -185,8 +185,8 @@ ChanW_UTF_Escaped::~ChanW_UTF_Escaped()
 		{
 		if (fLastWasCR)
 			{
-			sEWrite(fStrimSink, "\\r");
-			sEWrite(fStrimSink, fEOL);
+			sEWrite(fChanW, "\\r");
+			sEWrite(fChanW, fEOL);
 			}
 		}
 	catch (...)
@@ -214,42 +214,42 @@ size_t ChanW_UTF_Escaped::Write(const UTF32* iSource, size_t iCountCU)
 				{
 				case '\t':
 					{
-					sEWrite(fStrimSink, "\\t");
+					sEWrite(fChanW, "\\t");
 					break;
 					}
 				case '\n':
 					{
 					if (lastWasCR)
-						sEWrite(fStrimSink, "\\r");
-					sEWrite(fStrimSink, "\\n");
-					sEWrite(fStrimSink, fEOL);
+						sEWrite(fChanW, "\\r");
+					sEWrite(fChanW, "\\n");
+					sEWrite(fChanW, fEOL);
 					break;
 					}
 				case '\r':
 					{
 					if (lastWasCR)
 						{
-						sEWrite(fStrimSink, "\\r");
-						sEWrite(fStrimSink, fEOL);
+						sEWrite(fChanW, "\\r");
+						sEWrite(fChanW, fEOL);
 						}
 					fLastWasCR = true;
 					break;
 					}
 				case '\b':
 					{
-					sEWrite(fStrimSink, "\\b");
+					sEWrite(fChanW, "\\b");
 					break;
 					}
 				case '\f':
 					{
-					sEWrite(fStrimSink, "\\f");
+					sEWrite(fChanW, "\\f");
 					break;
 					}
 				default:
 					{
-					sEWrite(fStrimSink, "\\x");
-					sEWrite(fStrimSink, spAsHexCP(theCP >> 4));
-					sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
+					sEWrite(fChanW, "\\x");
+					sEWrite(fChanW, spAsHexCP(theCP >> 4));
+					sEWrite(fChanW, spAsHexCP(theCP & 0xF));
 					break;
 					}
 				}
@@ -257,33 +257,33 @@ size_t ChanW_UTF_Escaped::Write(const UTF32* iSource, size_t iCountCU)
 		else if (theCP < 0x80 || !fEscapeHighUnicode)
 			{
 			if (fQuoteQuotes && theCP == '\"')
-				sEWrite(fStrimSink, "\\\"");
+				sEWrite(fChanW, "\\\"");
 			else if (not fQuoteQuotes && theCP == '\'')
-				sEWrite(fStrimSink, "\\\'");
+				sEWrite(fChanW, "\\\'");
 			else if (theCP == '\\')
-				sEWrite(fStrimSink, "\\\\");
+				sEWrite(fChanW, "\\\\");
 			else
-				sEWrite(fStrimSink, theCP);
+				sEWrite(fChanW, theCP);
 			}
 		else if (theCP < 0x10000)
 			{
-			sEWrite(fStrimSink, "\\u");
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 12) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 8) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 4) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
+			sEWrite(fChanW, "\\u");
+			sEWrite(fChanW, spAsHexCP((theCP >> 12) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 8) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 4) & 0xF));
+			sEWrite(fChanW, spAsHexCP(theCP & 0xF));
 			}
 		else
 			{
-			sEWrite(fStrimSink, "\\U");
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 28) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 24) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 20) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 16) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 12) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 8) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP((theCP >> 4) & 0xF));
-			sEWrite(fStrimSink, spAsHexCP(theCP & 0xF));
+			sEWrite(fChanW, "\\U");
+			sEWrite(fChanW, spAsHexCP((theCP >> 28) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 24) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 20) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 16) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 12) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 8) & 0xF));
+			sEWrite(fChanW, spAsHexCP((theCP >> 4) & 0xF));
+			sEWrite(fChanW, spAsHexCP(theCP & 0xF));
 			}
 		}
 	return iCountCU - localCount;

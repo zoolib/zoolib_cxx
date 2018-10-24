@@ -118,7 +118,7 @@ std::string sNameFromPriority(EPriority iPriority);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Log::StrimW
+#pragma mark Log::ChanW
 
 class ChanW : public ChanW_UTF_Native8
 	{

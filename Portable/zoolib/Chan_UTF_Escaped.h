@@ -67,15 +67,15 @@ public:
 		bool fEscapeHighUnicode;
 		};
 
-	ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iStrimSink);
-	ChanW_UTF_Escaped(const ChanW_UTF& iStrimSink);
+	ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iChanW);
+	ChanW_UTF_Escaped(const ChanW_UTF& iChanW);
 	~ChanW_UTF_Escaped();
 
 // From ChanW_UTF_Native32
 	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
-	const ChanW_UTF& fStrimSink;
+	const ChanW_UTF& fChanW;
 	string8 fEOL;
 	bool fQuoteQuotes;
 	bool fEscapeHighUnicode;

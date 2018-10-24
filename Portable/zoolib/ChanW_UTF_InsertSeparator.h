@@ -38,15 +38,15 @@ class ChanW_UTF_InsertSeparator
 public:
 	typedef std::map<size_t,string8> Spacings;
 
-	ChanW_UTF_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iStrimSink);
+	ChanW_UTF_InsertSeparator(size_t iSpacing, const string8& iSeparator, const ChanW_UTF& iChanW);
 
-	ChanW_UTF_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iStrimSink);
+	ChanW_UTF_InsertSeparator(const Spacings& iSpacings, const ChanW_UTF& iChanW);
 	
 // From ChanW<UTF32> via ChanW_UTF_Native32
 	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
-	const ChanW_UTF& fStrimSink;
+	const ChanW_UTF& fChanW;
 	Spacings fSpacings;	
 	uint64 fCount;
 	};
