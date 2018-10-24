@@ -325,7 +325,7 @@ void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const Chan
 		}
 	}
 
-void sToStrim_Stream(const ChanR_Bin& iChanR,
+void sPullPush_Bin(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w)
 	{
@@ -403,7 +403,6 @@ void sToStrim_Stream(const ChanR_Bin& iChanR,
 
 		}
 	}
-
 
 } // namespace Util_Chan_JSON
 } // namespace ZooLib

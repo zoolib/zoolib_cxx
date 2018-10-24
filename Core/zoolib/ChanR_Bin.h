@@ -81,6 +81,14 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
 		{ return sQReadSwapped<T>(iChanR); }
 
+	template <class T>
+	ZQ<T> sQRead(bool iBE, const ChanR_Bin& iChanR)
+		{
+		if (iBE)
+			return sQReadNative<T>(iChanR);
+		return sQReadSwapped<T>(iChanR);
+		}
+
 #else
 
 	template <class T>
@@ -90,6 +98,14 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 	template <class T>
 	ZQ<T> sQReadLE(const ChanR_Bin& iChanR)
 		{ return sQReadNative<T>(iChanR); }
+
+	template <class T>
+	ZQ<T> sQRead(bool iBE, const ChanR_Bin& iChanR)
+		{
+		if (iBE)
+			return sQReadSwapped<T>(iChanR);
+		return sQReadNative<T>(iChanR);
+		}
 
 #endif
 
@@ -111,6 +127,13 @@ T sEReadLE(const ChanR_Bin& iChanR)
 	return *theQ;
 	}
 
+template <class T>
+T sERead(bool iBE, const ChanR_Bin& iChanR)
+	{
+	if (iBE)
+		return sEReadBE<T>(iChanR);
+	return sEReadLE<T>(iChanR);
+	}
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanR_Bin_h__

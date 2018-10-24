@@ -32,9 +32,6 @@ const Any kStartSeq = Any(StartSeq());
 
 const Any kEnd = Any(End());
 
-//const Any kEndMap = Any(End());
-//const Any kEndSeq = Any(End());
-
 } // namespace PullPush
 
 void sPush(const ChanW_Any& iChanW, const Any& iVal)
@@ -42,7 +39,8 @@ void sPush(const ChanW_Any& iChanW, const Any& iVal)
 
 void sPullPush_UTF(const ChanR_UTF& iChanR, const ChanW_Any& iChanW)
 	{
-	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe = new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
+	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe =
+		new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
 	sPush(iChanW, ZRef<ChannerR_UTF>(theChannerPipe));
 	sCopyAll(iChanR, *theChannerPipe);
 	sDisconnectWrite(*theChannerPipe);
@@ -51,7 +49,8 @@ void sPullPush_UTF(const ChanR_UTF& iChanR, const ChanW_Any& iChanW)
 
 void sPullPush_UTF(const ChanR_UTF& iChanR, const ChanW_Any& iChanW, uint64 iCount)
 	{
-	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe = new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
+	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe =
+		new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
 	sPush(iChanW, ZRef<ChannerR_UTF>(theChannerPipe));
 	std::pair<uint64,uint64> counts = sCopyFully(iChanR, *theChannerPipe, iCount);
 	sDisconnectWrite(*theChannerPipe);
@@ -60,7 +59,8 @@ void sPullPush_UTF(const ChanR_UTF& iChanR, const ChanW_Any& iChanW, uint64 iCou
 
 void sPullPush_Bin(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
 	{
-	ZRef<Channer<ChanConnection<byte>>> theChannerPipe = new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
+	ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
+		new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
 	sPush(iChanW, ZRef<ChannerR_Bin>(theChannerPipe));
 	sCopyAll(iChanR, *theChannerPipe);
 	sDisconnectWrite(*theChannerPipe);
@@ -69,7 +69,8 @@ void sPullPush_Bin(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
 
 void sPullPush_Bin(const ChanR_Bin& iChanR, const ChanW_Any& iChanW, uint64 iCount)
 	{
-	ZRef<Channer<ChanConnection<byte>>> theChannerPipe = new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
+	ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
+		new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
 	sPush(iChanW, ZRef<ChannerR_Bin>(theChannerPipe));
 	std::pair<uint64,uint64> counts = sCopyFully(iChanR, *theChannerPipe, iCount);
 	sDisconnectWrite(*theChannerPipe);

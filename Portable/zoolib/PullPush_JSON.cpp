@@ -337,13 +337,13 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 #pragma mark -
 #pragma mark Helpers
 
-static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-static bool spEmit(const Any& iAny,
+static bool spPush(const Any& iAny,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
@@ -359,13 +359,13 @@ bool sPush(size_t iInitialIndent, const WriteOptions& iOptions,
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
-		spEmit(*theQ, iInitialIndent, iOptions, false, iChanR, iChanW);
+		spPush(*theQ, iInitialIndent, iOptions, false, iChanR, iChanW);
 		return true;
 		}
 	return false;
 	}
 
-static bool spEmit(const Any& iAny, size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPush(const Any& iAny, size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
@@ -376,25 +376,22 @@ static bool spEmit(const Any& iAny, size_t iIndent, const WriteOptions& iOptions
 
 	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
 		{
-		Util_Chan_JSON::sToStrim_Stream(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		Util_Chan_JSON::sPullPush_Bin(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		return true;
 		}
 
 	if (sPGet<PullPush::StartMap>(iAny))
-		{
-		return spEmitMap(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
-		}
+		return spPullPush_Map(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
 
 	if (sPGet<PullPush::StartSeq>(iAny))
-		{
-		return spEmitSeq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
-		}
+		return spPullPush_Seq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
 
 	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
+
 	return true;
 	}
 
-static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -434,7 +431,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				if (not spEmit(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
 					return false;
 				iChanW << ";";
 				}
@@ -445,7 +442,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (iOptions.fNumberSequences.DGet(false))
 					iChanW << "/*" << count << "*/";
-				if (not spEmit(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
 					return false;
 				}
 			++count;
@@ -472,7 +469,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				if (not spEmit(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
 					return false;
 				iChanW << ";";
 				}
@@ -484,7 +481,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				if (not spEmit(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
 					return false;
 				}
 			}
@@ -493,7 +490,7 @@ static bool spEmitSeq(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 	return true;
 	}
 
-static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -538,7 +535,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << " = ";
 
-				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -551,7 +548,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << ": ";
 
-				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 				}
 			}
@@ -590,7 +587,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				else
 					iChanW << "=";
 
-				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -606,7 +603,7 @@ static bool spEmitMap(size_t iIndent, const WriteOptions& iOptions, bool iMayNee
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				if (not spEmit(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 				}
 			wroteAny = true;

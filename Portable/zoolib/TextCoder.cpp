@@ -226,7 +226,6 @@ might suck up and buffer UTF-32 in one set of calls without generating output, a
 generate output without consuming any source. The standard TextEncoder derivatives do not
 do this, but others might need to.
 */
-
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	const ZRef<TextEncoder>& iTextEncoder,

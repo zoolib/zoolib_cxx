@@ -50,9 +50,6 @@ extern const Any kStartSeq;
 struct End {};
 extern const Any kEnd;
 
-//extern const Any kEndMap;
-//extern const Any kEndSeq;
-
 } // namespace PullPush
 
 using ChanR_Any = ChanR<Any>;

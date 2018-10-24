@@ -97,10 +97,9 @@ void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UT
 
 void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w);
 
-void sToStrim_Stream(const ChanR_Bin& iChanR,
+void sPullPush_Bin(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w);
-
 
 } // namespace Util_Chan_JSON
 } // namespace ZooLib
