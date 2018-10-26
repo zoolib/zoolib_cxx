@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/PullPush_JSON.h"
 
-#include "zoolib/ChanConnection_XX_MemoryPipe.h"
 #include "zoolib/ChanR_Bin_HexStrim.h"
 #include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/ChanR_XX_Terminated.h"
@@ -170,13 +169,12 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU, const ChanW_U
 
 static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
-	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe =
-		new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
+	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 
-	sPush(ZRef<ChannerR_UTF>(theChannerPipe), iChanW);
+	sPush(thePullPushPair.first, iChanW);
 
-	bool result = spPull_JSON_String_Push_UTF(iChanRU, *theChannerPipe);
-	sDisconnectWrite(*theChannerPipe);
+	bool result = spPull_JSON_String_Push_UTF(iChanRU, *thePullPushPair.second);
+	sDisconnectWrite(*thePullPushPair.second);
 	return result;
 	}
 
@@ -309,18 +307,17 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const Ch
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
-		ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
-			new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
+		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 
-		sPush(ZRef<ChannerR_Bin>(theChannerPipe), iChanW);
+		sPush(thePullPushPair.first, iChanW);
 
 		bool result;
 		if (sTryRead_CP('=', iChanRU, iChanRU))
-			result = spPull_Base64_Push_Bin(iChanRU, *theChannerPipe);
+			result = spPull_Base64_Push_Bin(iChanRU, *thePullPushPair.second);
 		else
-			result = spPull_Hex_Push_Bin(iChanRU, *theChannerPipe);
+			result = spPull_Hex_Push_Bin(iChanRU, *thePullPushPair.second);
 
-		sDisconnectWrite(*theChannerPipe);
+		sDisconnectWrite(*thePullPushPair.second);
 
 		return result;
 		}

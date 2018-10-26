@@ -54,15 +54,11 @@ extern const Any kEnd;
 } // namespace PullPush
 
 using ChanR_Any = ChanR<Any>;
+using ChannerR_Any = Channer<ChanR_Any>;
+
 using ChanW_Any = ChanW<Any>;
-
-using ChanRCon_Bin = ChanRCon<byte>;
-
 using ChanWCon_Any = ChanWCon<Any>;
 using ChannerWCon_Any = Channer<ChanWCon_Any>;
-
-using ChanRCon_Any = ChanRCon<Any>;
-using ChannerRCon_Any = Channer<ChanRCon_Any>;
 
 void sPush(const Any& iVal, const ChanW_Any& iChanW);
 
@@ -77,13 +73,20 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW);
 void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iChanW);
 
 template <class EE>
-using PipePair = std::pair<ZRef<ChannerRCon<EE>>,ZRef<ChannerWCon<EE>>>;
+using PullPushPair = std::pair<ZRef<ChannerR<EE>>,ZRef<ChannerWCon<EE>>>;
 
 template <class EE>
-PipePair<EE> sMakePipePair()
+PullPushPair<EE> sMakePullPushPair()
 	{
-	ZRef<Channer<ChanConnection<EE>>> thePipeChanner = new Channer_T<ChanConnection_XX_MemoryPipe<EE>>;
-	return PipePair<EE>(thePipeChanner,thePipeChanner);
+	ZRef<Channer<ChanConnection<EE>>> thePipeChanner =
+		new Channer_T<ChanConnection_XX_MemoryPipe<EE>>;
+
+	// This will be expanded so that the ChannerR we place in the pair will be a filter
+	// that does a DisconnectRead on the underlying pipe when it goes out of scope,
+	// so a SkipAll at a higher level can implicitly do so for anything nested within it.
+	// For the moment, SkipAll will block when nested channers are pulled from the chan. 
+
+	return PullPushPair<EE>(thePipeChanner,thePipeChanner);
 	}
 
 } // namespace ZooLib

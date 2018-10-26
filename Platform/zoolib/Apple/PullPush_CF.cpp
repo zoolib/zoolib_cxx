@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Apple/Util_CF_Any.h"
 #include "zoolib/Apple/Val_CF.h"
 
-#include "zoolib/ChanConnection_XX_MemoryPipe.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Chan_Bin_Data.h"
@@ -67,15 +66,14 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW)
 
 	if (theTypeID == ::CFDataGetTypeID())
 		{
-		ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
-			new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
+		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 
-		sPush(ZRef<ChannerR_Bin>(theChannerPipe), iChanW);
+		sPush(thePullPushPair.first, iChanW);
 
 		if (size_t theLength = ::CFDataGetLength((CFDataRef)iCFTypeRef))
-			sWriteFully(*theChannerPipe, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
+			sWriteFully(*thePullPushPair.second, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
 
-		sDisconnectWrite(*theChannerPipe);
+		sDisconnectWrite(*thePullPushPair.second);
 		return true;
 		}
 
