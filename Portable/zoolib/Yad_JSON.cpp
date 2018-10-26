@@ -511,7 +511,7 @@ public:
 
 		else if (ZRef<ChannerR_Bin> theChanner = iYadR.DynamicCast<ChannerR_Bin>())
 			{
-			sPullPush_Bin(*theChanner,
+			sPull_Bin_Push_JSON(*theChanner,
 				fIndent, fOptions, fMayNeedInitialLF, fChanW);
 			}
 

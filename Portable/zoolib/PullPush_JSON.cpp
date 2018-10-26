@@ -34,8 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 namespace ZooLib {
-namespace PullPush_JSON {
 
+using namespace PullPush;
+using namespace PullPush_JSON;
 using Util_Chan::sSkip_WSAndCPlusPlusComments;
 using Util_Chan::sTryRead_CP;
 using std::min;
@@ -43,9 +44,8 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark
 
-static bool spPull_OtherVal(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	int64 asInt64;
 	double asDouble;
@@ -54,27 +54,27 @@ static bool spPull_OtherVal(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	if (Util_Chan::sTryRead_SignedGenericNumber(iChanRU, iChanRU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
-			sPush(iChanW, asDouble);
+			sPush(asDouble, iChanW);
 		else
-			sPush(iChanW, asInt64);
+			sPush(asInt64, iChanW);
 		return true;
 		}
 
 	if (Util_Chan::sTryRead_CaselessString("null", iChanRU, iChanRU))
 		{
-		sPush(iChanW, Any(null));
+		sPush(Any(null), iChanW);
 		return true;
 		}
 
 	if (Util_Chan::sTryRead_CaselessString("false", iChanRU, iChanRU))
 		{
-		sPush(iChanW, false);
+		sPush(false, iChanW);
 		return true;
 		}
 
 	if (Util_Chan::sTryRead_CaselessString("true", iChanRU, iChanRU))
 		{
-		sPush(iChanW, true);
+		sPush(true, iChanW);
 		return true;
 		}
 
@@ -83,11 +83,10 @@ static bool spPull_OtherVal(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
-static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_UTF& iChanW)
+static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU, const ChanW_UTF& iChanW)
 	{
 	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanRU);
 	int quotesSeen = 1;
@@ -169,23 +168,22 @@ static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_UTF& iChanW
 		}
 	}
 
-static bool spPullPush_String(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	ZRef<Channer<ChanConnection<UTF32>>> theChannerPipe =
 		new Channer_T<ChanConnection_XX_MemoryPipe<UTF32>>;
 
-	sPush(iChanW, ZRef<ChannerR_UTF>(theChannerPipe));
+	sPush(ZRef<ChannerR_UTF>(theChannerPipe), iChanW);
 
-	bool result = spPullPush_String(iChanRU, *theChannerPipe);
+	bool result = spPull_JSON_String_Push_UTF(iChanRU, *theChannerPipe);
 	sDisconnectWrite(*theChannerPipe);
 	return result;
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark
 
-static bool spPullPush_Base64(const ChanR_UTF& iChanR, const ChanW_Bin& iChanW)
+static bool spPull_Base64_Push_Bin(const ChanR_UTF& iChanR, const ChanW_Bin& iChanW)
 	{
 	ChanR_XX_Terminated<UTF32> theChanR_UTF_Terminated('>', iChanR);
 	ChanR_Bin_ASCIIStrim theChanR_Bin_ASCIIStrim(theChanR_UTF_Terminated);
@@ -204,9 +202,8 @@ static bool spPullPush_Base64(const ChanR_UTF& iChanR, const ChanW_Bin& iChanW)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark
 
-static bool spPullPush_Hex(const ChanRU_UTF& iChanRU, const ChanW_Bin& iChanW)
+static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iChanW)
 	{
 	std::pair<int64,int64> counts = sCopyAll(ChanR_Bin_HexStrim(iChanRU, iChanRU), iChanW);
 	if (counts.first != counts.second)
@@ -220,23 +217,23 @@ static bool spPullPush_Hex(const ChanRU_UTF& iChanRU, const ChanW_Bin& iChanW)
 #pragma mark -
 #pragma mark sPull
 
-bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
+bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
 	if (sTryRead_CP('[', iChanRU, iChanRU))
 		{
-		sPush(iChanW, kStartSeq);
+		sPush(kStartSeq, iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 			if (sTryRead_CP(']', iChanRU, iChanRU))
 				{
-				sPush(iChanW, kEnd);
+				sPush(kEnd, iChanW);
 				return true;
 				}
 
-			if (not sPull(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
 				throw ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
@@ -255,13 +252,13 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 		}
 	else if (sTryRead_CP('{', iChanRU, iChanRU))
 		{
-		sPush(iChanW, kStartMap);
+		sPush(kStartMap, iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 			if (sTryRead_CP('}', iChanRU, iChanRU))
 				{
-				sPush(iChanW, kEnd);
+				sPush(kEnd, iChanW);
 				return true;
 				}
 
@@ -270,7 +267,7 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
 				{ throw ParseException("Expected a member name"); }
 
-			sPush(iChanW, sName(theName));
+			sPush(sName(theName), iChanW);
 
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
@@ -285,7 +282,7 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
-			if (not sPull(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
 				throw ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
@@ -306,7 +303,7 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 		{
 		// Could use YadStrimmerR_JSON and sPullPush_UTF, but this is a good chance to
 		// demo how easy PullPush makes it to do fiddly source parsing.
-		return spPullPush_String(iChanRU, iChanW);
+		return spPull_JSON_String_Push(iChanRU, iChanW);
 		}
 	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanRU, iChanRU))
 		{
@@ -315,13 +312,13 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 		ZRef<Channer<ChanConnection<byte>>> theChannerPipe =
 			new Channer_T<ChanConnection_XX_MemoryPipe<byte>>;
 
-		sPush(iChanW, ZRef<ChannerR_Bin>(theChannerPipe));
+		sPush(ZRef<ChannerR_Bin>(theChannerPipe), iChanW);
 
 		bool result;
 		if (sTryRead_CP('=', iChanRU, iChanRU))
-			result = spPullPush_Base64(iChanRU, *theChannerPipe);
+			result = spPull_Base64_Push_Bin(iChanRU, *theChannerPipe);
 		else
-			result = spPullPush_Hex(iChanRU, *theChannerPipe);
+			result = spPull_Hex_Push_Bin(iChanRU, *theChannerPipe);
 
 		sDisconnectWrite(*theChannerPipe);
 
@@ -329,69 +326,19 @@ bool sPull(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& i
 		}
 	else
 		{
-		return spPull_OtherVal(iChanRU, iChanW);
+		return spPull_JSON_Other_Push(iChanRU, iChanW);
 		}
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Helpers
+#pragma mark
 
-static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
-
-static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
-
-static bool spPush(const Any& iAny,
+static bool spPull_Push_JSON(const Any& iAny,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark sPush
-
-bool sPush(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
-	{ return sPush(0, WriteOptions(), iChanR, iChanW); }
-
-bool sPush(size_t iInitialIndent, const WriteOptions& iOptions,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
-	{
-	if (ZQ<Any> theQ = sQRead(iChanR))
-		{
-		spPush(*theQ, iInitialIndent, iOptions, false, iChanR, iChanW);
-		return true;
-		}
-	return false;
-	}
-
-static bool spPush(const Any& iAny, size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
-	{
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
-		{
-		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
-		return true;
-		}
-
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
-		{
-		Util_Chan_JSON::sPullPush_Bin(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
-		return true;
-		}
-
-	if (sPGet<PullPush::StartMap>(iAny))
-		return spPullPush_Map(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
-
-	if (sPGet<PullPush::StartSeq>(iAny))
-		return spPullPush_Seq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
-
-	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
-
-	return true;
-	}
-
-static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -431,7 +378,7 @@ static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iM
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				if (not spPush(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
 					return false;
 				iChanW << ";";
 				}
@@ -442,7 +389,7 @@ static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iM
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (iOptions.fNumberSequences.DGet(false))
 					iChanW << "/*" << count << "*/";
-				if (not spPush(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
 					return false;
 				}
 			++count;
@@ -469,8 +416,11 @@ static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iM
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				if (not spPush(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, iMayNeedInitialLF,
+					iChanR, iChanW))
+					{
 					return false;
+					}
 				iChanW << ";";
 				}
 			else
@@ -481,8 +431,11 @@ static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iM
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				if (not spPush(*theNotQ, iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, iMayNeedInitialLF,
+					iChanR, iChanW))
+					{
 					return false;
+					}
 				}
 			}
 		iChanW << "]";
@@ -490,7 +443,7 @@ static bool spPullPush_Seq(size_t iIndent, const WriteOptions& iOptions, bool iM
 	return true;
 	}
 
-static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -514,14 +467,14 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 		iChanW << "{";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			ZQ<Any> theNameQ = sQRead(iChanR);
-			if (not theNameQ)
+			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
+			if (not theNameOrEndQ)
 				return false;
 
-			if (sPGet<PullPush::End>(*theNameQ))
+			if (sPGet<PullPush::End>(*theNameOrEndQ))
 				break;
 
-			const Name* theNameStar = sPGet<Name>(*theNameQ);
+			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
 			if (not theNameStar)
 				return false;
 
@@ -535,7 +488,7 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << " = ";
 
-				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -548,7 +501,7 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << ": ";
 
-				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 				}
 			}
@@ -561,14 +514,14 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			ZQ<Any> theNameQ = sQRead(iChanR);
-			if (not theNameQ)
+			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
+			if (not theNameOrEndQ)
 				return false;
 
-			if (sPGet<PullPush::End>(*theNameQ))
+			if (sPGet<PullPush::End>(*theNameOrEndQ))
 				break;
 
-			const Name* theNameStar = sPGet<Name>(*theNameQ);
+			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
 			if (not theNameStar)
 				return false;
 
@@ -587,7 +540,7 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 				else
 					iChanW << "=";
 
-				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -603,7 +556,7 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				if (not spPush(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
 					return false;
 				}
 			wroteAny = true;
@@ -615,5 +568,45 @@ static bool spPullPush_Map(size_t iIndent, const WriteOptions& iOptions, bool iM
 	return true;
 	}
 
-} // namespace PullPush_JSON
+bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+	{ return sPull_Push_JSON(0, WriteOptions(), iChanR, iChanW); }
+
+bool sPull_Push_JSON(size_t iInitialIndent, const WriteOptions& iOptions,
+	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		spPull_Push_JSON(*theQ, iInitialIndent, iOptions, false, iChanR, iChanW);
+		return true;
+		}
+	return false;
+	}
+
+static bool spPull_Push_JSON(const Any& iAny,
+	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+	{
+	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
+		{
+		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
+		return true;
+		}
+
+	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
+		{
+		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		return true;
+		}
+
+	if (sPGet<PullPush::StartMap>(iAny))
+		return spPull_Push_JSON_Map(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
+
+	if (sPGet<PullPush::StartSeq>(iAny))
+		return spPull_Push_JSON_Seq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
+
+	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
+
+	return true;
+	}
+
 } // namespace ZooLib

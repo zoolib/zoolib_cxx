@@ -43,77 +43,12 @@ namespace Util_CF {
 #pragma mark -
 #pragma mark Util_CF
 
-static Data_Any spAsData_Any(CFDataRef iCFData)
+ZQ<Any> sQSimpleAsAny(CFTypeID iTypeID, CFTypeRef iVal)
 	{
-	if (size_t theLength = ::CFDataGetLength(iCFData))
-		return Data_Any(::CFDataGetBytePtr(iCFData), theLength);
-	return Data_Any();
-	}
-
-Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray)
-	{
-	Seq_Any theSeq;
-
-	for (size_t xx = 0, theCount = ::CFArrayGetCount(iCFArray); xx < theCount; ++xx)
-		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, xx)));
-
-	return theSeq;
-	}
-
-static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
-	{
-	CFStringRef theKey = static_cast<CFStringRef>(iKey);
-	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
-
-	pair<const Any*,Map_Any*>* thePair =
-		static_cast<pair<const Any*,Map_Any*>*>(iRefcon);
-
-	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue));
-	}
-
-Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary)
-	{
-	Map_Any theMap;
-	pair<const Any*, Map_Any*> thePair(&iDefault, &theMap);
-	::CFDictionaryApplyFunction(iCFDictionary, spGatherContents, &thePair);
-	return theMap;
-	}
-
-Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
-	{
-	if (not iVal)
-		return iDefault;
-
-	const CFTypeID theTypeID = ::CFGetTypeID(iVal);
-
-	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-		&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
-		if (theTypeID == ::CFNullGetTypeID())
-			return Any();
-	#endif
-
-	if (theTypeID == ::CFStringGetTypeID())
-		return Any(sAsUTF8((CFStringRef)iVal));
-
-	if (theTypeID == ::CFDictionaryGetTypeID())
-		return Any(sAsMap_Any(iDefault, (CFDictionaryRef)iVal));
-
-	if (theTypeID == ::CFArrayGetTypeID())
-		return Any(sAsSeq_Any(iDefault, (CFArrayRef)iVal));
-
-	if (theTypeID == ::CFBooleanGetTypeID())
+	if (iTypeID == ::CFBooleanGetTypeID())
 		return Any(bool(::CFBooleanGetValue((CFBooleanRef)iVal)));
 
-	if (theTypeID == ::CFDateGetTypeID())
-		{
-		return Any(UTCDateTime(kCFAbsoluteTimeIntervalSince1970
-			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
-		}
-
-	if (theTypeID == ::CFDataGetTypeID())
-		return Any(spAsData_Any((CFDataRef)iVal));
-
-	if (theTypeID == ::CFNumberGetTypeID())
+	if (iTypeID == ::CFNumberGetTypeID())
 		{
 		const CFNumberRef theNumberRef = (CFNumberRef)iVal;
 		switch (::CFNumberGetType(theNumberRef))
@@ -165,11 +100,97 @@ Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
 			}
 		}
 
+	if (iTypeID == ::CFDateGetTypeID())
+		{
+		return Any(UTCDateTime(kCFAbsoluteTimeIntervalSince1970
+			+ ::CFDateGetAbsoluteTime((CFDateRef)iVal)));
+		}
+
+	return null;
+	}
+
+static Data_Any spAsData_Any(CFDataRef iCFData)
+	{
+	if (size_t theLength = ::CFDataGetLength(iCFData))
+		return Data_Any(::CFDataGetBytePtr(iCFData), theLength);
+	return Data_Any();
+	}
+
+Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray)
+	{
+	Seq_Any theSeq;
+
+	for (size_t xx = 0, theCount = ::CFArrayGetCount(iCFArray); xx < theCount; ++xx)
+		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, xx)));
+
+	return theSeq;
+	}
+
+static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
+	{
+	CFStringRef theKey = static_cast<CFStringRef>(iKey);
+	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
+
+	pair<const Any*,Map_Any*>* thePair =
+		static_cast<pair<const Any*,Map_Any*>*>(iRefcon);
+
+	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue));
+	}
+
+Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary)
+	{
+	Map_Any theMap;
+	pair<const Any*, Map_Any*> thePair(&iDefault, &theMap);
+	::CFDictionaryApplyFunction(iCFDictionary, spGatherContents, &thePair);
+	return theMap;
+	}
+
+ZQ<Any> sQAsAny(CFTypeRef iVal)
+	{
+	if (not iVal)
+		return null;
+
+	const CFTypeID theTypeID = ::CFGetTypeID(iVal);
+
+	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+		&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+		if (theTypeID == ::CFNullGetTypeID())
+			return Any();
+	#endif
+
+	if (theTypeID == ::CFStringGetTypeID())
+		return Any(sAsUTF8((CFStringRef)iVal));
+
+	if (theTypeID == ::CFDictionaryGetTypeID())
+		return Any(sAsMap_Any(Any(), (CFDictionaryRef)iVal));
+
+	if (theTypeID == ::CFArrayGetTypeID())
+		return Any(sAsSeq_Any(Any(), (CFArrayRef)iVal));
+
+	if (theTypeID == ::CFDataGetTypeID())
+		return Any(spAsData_Any((CFDataRef)iVal));
+
+	return null;
+	}
+
+Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
+	{
+	if (ZQ<Any> theQ = sQAsAny(iVal))
+		return *theQ;
+
 	return iDefault;
 	}
 
 Any sAsAny(CFTypeRef iVal)
-	{ return sDAsAny(Any(), iVal); }
+	{
+	if (ZQ<Any> theQ = sQAsAny(iVal))
+		return *theQ;
+	return Any();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Util_CF
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return sAdopt& ::CFNumberCreate(nullptr, iType, iVal); }

@@ -325,7 +325,7 @@ void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const Chan
 		}
 	}
 
-void sPullPush_Bin(const ChanR_Bin& iChanR,
+void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w)
 	{

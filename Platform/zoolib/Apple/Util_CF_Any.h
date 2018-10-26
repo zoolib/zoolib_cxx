@@ -36,6 +36,8 @@ namespace Util_CF {
 #pragma mark -
 #pragma mark Util_CF
 
+ZQ<Any> sQSimpleAsAny(CFTypeID iTypeID, CFTypeRef iVal);
+ZQ<Any> sQAsAny(CFTypeRef iVal);
 Any sDAsAny(const Any& iDefault, CFTypeRef iVal);
 Any sAsAny(CFTypeRef iVal);
 

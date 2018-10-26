@@ -18,38 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_PullPush_JSON_h__
-#define __ZooLib_PullPush_JSON_h__ 1
+#ifndef __ZooLib_Apple_PullPush_CF_h__
+#define __ZooLib_Apple_PullPush_CF_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/PullPush.h"
-#include "zoolib/Util_Chan_JSON.h" // For WriteOptions etc.
+
+#include "zoolib/Apple/ZRef_CF.h"
+
+#if ZCONFIG_SPI_Enabled(CFType)
 
 namespace ZooLib {
-namespace PullPush_JSON {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark
 
-using Util_Chan_JSON::ReadOptions;
-using Util_Chan_JSON::WriteOptions;
-
-} // namespace PullPush_JSON
+bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark
 
-bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO,
-	const ChanW_Any& iChanW);
-
-bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
-
-bool sPull_Push_JSON(size_t iInitialIndent, const PullPush_JSON::WriteOptions& iOptions,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
+bool sPull_Push_CF(const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_PullPush_JSON_h__
+#endif // ZCONFIG_SPI_Enabled(CFType)
+
+#endif // __ZooLib_Apple_PullPush_CF_h__
