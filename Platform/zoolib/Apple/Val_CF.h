@@ -44,7 +44,7 @@ class Val_CF
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
-	operator bool() const;
+//	operator bool() const;
 
 	Val_CF();
 	Val_CF(const Val_CF& iOther);
@@ -143,7 +143,7 @@ class Seq_CF
 public:
 	typedef Val_CF Val;
 
-	operator bool() const;
+//	operator bool() const;
 
 	Seq_CF();
 	Seq_CF(const Seq_CF& iOther);
@@ -210,7 +210,7 @@ class Map_CF
 public:
 	typedef Val_CF Val;
 
-	operator bool() const;
+//	operator bool() const;
 
 	Map_CF();
 	Map_CF(const Map_CF& iOther);

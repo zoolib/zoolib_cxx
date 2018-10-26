@@ -64,16 +64,16 @@ NSNumber* spAsNumber(NSObject* iObj)
 \brief Compatible with ZVal & NSObject
 */
 
-Val_NS::operator bool() const
-	{
-	if (NSObject* theVal = inherited::Get())
-		{
-		if ([theVal isMemberOfClass:[NSNull class]])
-			return false;
-		return true;
-		}
-	return false;
-	}
+//Val_NS::operator bool() const
+//	{
+//	if (NSObject* theVal = inherited::Get())
+//		{
+//		if ([theVal isMemberOfClass:[NSNull class]])
+//			return false;
+//		return true;
+//		}
+//	return false;
+//	}
 
 Val_NS::Val_NS()
 	{}
@@ -384,8 +384,8 @@ const Val_NS Val_NS::Get(size_t iIndex) const
 #pragma mark -
 #pragma mark Seq_NS
 
-Seq_NS::operator bool() const
-	{ return this->Size(); }
+//Seq_NS::operator bool() const
+//	{ return this->Size(); }
 
 Seq_NS::Seq_NS()
 :	inherited(sArrayMutable())
@@ -548,12 +548,12 @@ NSMutableArray* Seq_NS::pTouch()
 #pragma mark -
 #pragma mark Map_NS
 
-Map_NS::operator bool() const
-	{
-	if (NSDictionary* theDictionary = this->pDictionary())
-		return [theDictionary count];
-	return false;
-	}
+//Map_NS::operator bool() const
+//	{
+//	if (NSDictionary* theDictionary = this->pDictionary())
+//		return [theDictionary count];
+//	return false;
+//	}
 
 Map_NS::Map_NS()
 :	inherited(sDictionaryMutable())

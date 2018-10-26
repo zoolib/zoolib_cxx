@@ -51,7 +51,7 @@ class Val_NS
 	{
 	typedef ZRef<NSObject> inherited;
 public:
-	operator bool() const;
+//	operator bool() const;
 
 	Val_NS();
 	Val_NS(const Val_NS& iOther);
@@ -172,7 +172,7 @@ class Seq_NS
 	typedef ZRef<NSArray> inherited;
 
 public:
-	operator bool() const;
+//	operator bool() const;
 
 	Seq_NS();
 	Seq_NS(const Seq_NS& iOther);
@@ -237,7 +237,7 @@ class Map_NS
 	typedef ZRef<NSDictionary> inherited;
 
 public:
-	operator bool() const;
+//	operator bool() const;
 
 	Map_NS();
 	Map_NS(const Map_NS& iOther);
