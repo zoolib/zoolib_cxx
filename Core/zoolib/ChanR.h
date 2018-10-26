@@ -58,8 +58,8 @@ template <class EE>
 EE sERead(const ChanR<EE>& iChanR)
 	{
 	EE buf;
-	if (1 != sRead(&buf, 1, iChanR))
-		sThrow_Exhausted(iChanR);
+	if (1 != sRead(iChanR, &buf, 1))
+		sThrow_ExhaustedR();
 	return buf;
 	}
 
