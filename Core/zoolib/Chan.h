@@ -335,6 +335,13 @@ template <typename EE> using ChanRW = DeriveFrom
 	Aspect_Write<EE>
 	>;
 
+using ChanClose = DeriveFrom
+	<
+	Aspect_Abort,
+	Aspect_DisconnectRead,
+	Aspect_DisconnectWrite
+	>;
+
 template <typename EE> using ChanRCon = DeriveFrom
 	<
 	Aspect_Abort,

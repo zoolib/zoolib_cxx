@@ -63,20 +63,20 @@ template <class EE> using ChannerW = Channer<ChanW<EE>>;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark Composite channers typedefs.
+#pragma mark Composite channer typedefs.
 
 template <class EE> using ChannerRU = Channer<ChanRU<EE>>;
 template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
 template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
+template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
+template <class EE> using ChannerRCon = Channer<ChanRCon<EE>>;
+template <class EE> using ChannerWCon = Channer<ChanWCon<EE>>;
 template <class EE> using ChannerConnection = Channer<ChanConnection<EE>>;
 
-template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
+using ChannerClose = Channer<ChanClose>;
 
-using ChannerClose = Channer<DeriveFrom<Aspect_Abort,Aspect_DisconnectRead,Aspect_DisconnectWrite>>;
-
-template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
-
+// This name is still in use.
 template <class EE> using ChannerRWClose = ChannerConnection<EE>;
 
 // =================================================================================================
