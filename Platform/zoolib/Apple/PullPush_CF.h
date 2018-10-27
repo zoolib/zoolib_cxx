@@ -43,6 +43,8 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW);
 
 bool sPull_Push_CF(const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
 
+ZRef<CFTypeRef> sPull_CF(const ChanR_Any& iChanR);
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

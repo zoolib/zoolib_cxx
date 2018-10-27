@@ -181,4 +181,15 @@ bool sPull_Push_CF(const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
 	return spPull_Push_CF(*theQ, iChanR, oCFTypeRef);
 	}
 
+ZRef<CFTypeRef> sPull_CF(const ChanR_Any& iChanR)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		ZRef<CFTypeRef> theCFTypeRef;
+		if (spPull_Push_CF(*theQ, iChanR, theCFTypeRef))
+			return theCFTypeRef;
+		}
+	return null;
+	}
+
 } // namespace ZooLib
