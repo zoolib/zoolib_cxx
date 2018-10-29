@@ -41,9 +41,6 @@ class Data_NS
 :	public ZRef<NSData>
 	{
 	typedef ZRef<NSData> inherited;
-
-	class Rep;
-
 public:
 	Data_NS();
 	Data_NS(const Data_NS& iOther);

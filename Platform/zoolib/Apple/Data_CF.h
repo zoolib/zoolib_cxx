@@ -39,9 +39,6 @@ class Data_CF
 :	public ZRef<CFDataRef>
 	{
 	typedef ZRef<CFDataRef> inherited;
-
-	class Rep;
-
 public:
 	Data_CF();
 	Data_CF(const Data_CF& iOther);
