@@ -45,7 +45,7 @@ class ChanConnection_XX_MemoryPipe
 public:
 	ChanConnection_XX_MemoryPipe()
 		{
-		fWriteClosed = false;
+		fClosed = false;
 
 		fSource = nullptr;
 		fSourceEnd = nullptr;
@@ -64,9 +64,9 @@ public:
 	virtual void Abort()
 		{
 		ZAcqMtx acq(fMutex);
-		if (not fWriteClosed)
+		if (not fClosed)
 			{
-			fWriteClosed = true;
+			fClosed = true;
 			fCondition_Read.Broadcast();
 			fCondition_Write.Broadcast();
 			}
@@ -75,34 +75,23 @@ public:
 // From Aspect_DisconnectRead
 	virtual bool DisconnectRead(double iTimeout)
 		{
-		const double deadline = Time::sSystem() + iTimeout;
 		ZAcqMtx acq(fMutex);
-		for (;;)
+		if (not fClosed)
 			{
-			if (fSource && fSource < fSourceEnd)
-				{
-				fSource = fSourceEnd;
-				fCondition_Write.Broadcast();
-				}
-
-			if (fWriteClosed)
-				{
-				fCondition_Write.Broadcast();
-				return true;
-				}
-
-			if (not fCondition_Read.WaitUntil(fMutex, deadline))
-				return false;
+			fSource = fSourceEnd;
+			fClosed = true;
+			fCondition_Write.Broadcast();
 			}
+		return true;
 		}
 
 // From Aspect_DisconnectWrite
 	virtual void DisconnectWrite()
 		{
 		ZAcqMtx acq(fMutex);
-		if (not fWriteClosed)
+		if (not fClosed)
 			{
-			fWriteClosed = true;
+			fClosed = true;
 			fCondition_Read.Broadcast();
 			}
 		}
@@ -128,7 +117,7 @@ public:
 			else
 				{
 				// Register ourselves as waiting for data.
-				if (fWriteClosed)
+				if (fClosed)
 					break;
 				ZAssertStop(2, fDest == nullptr && fDestCount == 0);
 				fDest = localDest;
@@ -167,7 +156,7 @@ public:
 		ZAcqMtx acq(fMutex);
 		for (;;)
 			{
-			if ((fSource && fSource < fSourceEnd) || fWriteClosed)
+			if ((fSource && fSource < fSourceEnd) || fClosed)
 				return true;
 
 			if (not fCondition_Read.WaitUntil(fMutex, deadline))
@@ -182,7 +171,7 @@ public:
 		const EE* localEnd = localSource + iCount;
 
 		ZAcqMtx acq(fMutex);
-		while (localSource < localEnd && not fWriteClosed)
+		while (localSource < localEnd && not fClosed)
 			{
 			if (fDestCount)
 				{
@@ -227,7 +216,7 @@ private:
 	ZCnd fCondition_Read;
 	ZCnd fCondition_Write;
 
-	bool fWriteClosed;
+	bool fClosed;
 
 	const EE* fSource;
 	const EE* fSourceEnd;
