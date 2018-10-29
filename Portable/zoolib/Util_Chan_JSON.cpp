@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Util_Chan_JSON.h"
 
-#include "zoolib/Any_Coerce.h"
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/ChanW_Bin_HexStrim.h"
+#include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
