@@ -153,4 +153,26 @@ bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny)
 	return spPull_Push_Any(*theQ, iChanR, oAny);
 	}
 
+ZQ<Any> sQPull_Any(const ChanR_Any& iChanR)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		Any theAny;
+		if (spPull_Push_Any(*theQ, iChanR, theAny))
+			return theAny;
+		}
+	return null;
+	}
+
+Any sPull_Any(const ChanR_Any& iChanR)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		Any theAny;
+		if (spPull_Push_Any(*theQ, iChanR, theAny))
+			return theAny;
+		}
+	return Any();
+	}
+
 } // namespace ZooLib

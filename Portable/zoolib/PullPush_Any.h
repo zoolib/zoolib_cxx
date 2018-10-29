@@ -35,6 +35,9 @@ bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW);
 
 bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny);
 
+ZQ<Any> sQPull_Any(const ChanR_Any& iChanR);
+Any sPull_Any(const ChanR_Any& iChanR);
+
 } // namespace ZooLib
 
 #endif // __ZooLib__PullPush_Any_h__
