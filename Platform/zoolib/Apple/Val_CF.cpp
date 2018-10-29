@@ -93,20 +93,6 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 \brief Compatible with ZVal & CFTypeRef
 */
 
-//Val_CF::operator bool() const
-//	{
-//	if (CFTypeRef theVal = inherited::Get())
-//		{
-//		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-//			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
-//			if (::CFGetTypeID(theVal) == ::CFNullGetTypeID())
-//				return false;
-//		#endif
-//		return true;
-//		}
-//	return false;
-//	}
-
 Val_CF::Val_CF()
 	{}
 
@@ -472,9 +458,6 @@ const Val_CF Val_CF::Get(size_t iIndex) const
 #pragma mark -
 #pragma mark Seq_CF
 
-//Seq_CF::operator bool() const
-//	{ return this->Size(); }
-
 Seq_CF::Seq_CF()
 :	inherited(sArrayMutable())
 ,	fMutable(true)
@@ -635,13 +618,6 @@ CFMutableArrayRef Seq_CF::pTouch()
 // =================================================================================================
 #pragma mark -
 #pragma mark Map_CF
-
-//Map_CF::operator bool() const
-//	{
-//	if (CFDictionaryRef theDictionary = this->pDictionary())
-//		return ::CFDictionaryGetCount(theDictionary);
-//	return false;
-//	}
 
 Map_CF::Map_CF()
 :	inherited(sDictionaryMutable())

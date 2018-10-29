@@ -44,8 +44,6 @@ class Val_CF
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
-//	operator bool() const;
-
 	Val_CF();
 	Val_CF(const Val_CF& iOther);
 	~Val_CF();
@@ -143,8 +141,6 @@ class Seq_CF
 public:
 	typedef Val_CF Val;
 
-//	operator bool() const;
-
 	Seq_CF();
 	Seq_CF(const Seq_CF& iOther);
 	~Seq_CF();
@@ -209,8 +205,6 @@ class Map_CF
 
 public:
 	typedef Val_CF Val;
-
-//	operator bool() const;
 
 	Map_CF();
 	Map_CF(const Map_CF& iOther);
@@ -285,6 +279,26 @@ private:
 	CFMutableDictionaryRef pTouch();
 	bool fMutable;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark Accessor functions
+
+template <class S>
+const ZQ<S> sQGet(const Val_CF& iVal)
+	{ return iVal.QGet<S>(); }
+
+template <class S>
+const S sDGet(const S& iDefault, const Val_CF& iVal)
+	{ return iVal.DGet<S>(iDefault); }
+
+template <class S>
+const S sGet(const Val_CF& iVal)
+	{ return iVal.Get<S>(); }
+
+template <class S>
+void sSet(Val_CF& ioVal, const S& iVal)
+	{ ioVal.Set<S>(iVal); }
 
 } // namespace ZooLib
 
