@@ -170,8 +170,8 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU, const ChanW_U
 static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
-
 	sPush(thePullPushPair.first, iChanW);
+	thePullPushPair.first.Clear();
 
 	bool result = spPull_JSON_String_Push_UTF(iChanRU, *thePullPushPair.second);
 	sDisconnectWrite(*thePullPushPair.second);
@@ -308,8 +308,8 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const Ch
 		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
 		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
-
 		sPush(thePullPushPair.first, iChanW);
+		thePullPushPair.first.Clear();
 
 		bool result;
 		if (sTryRead_CP('=', iChanRU, iChanRU))

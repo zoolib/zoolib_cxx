@@ -25,13 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Any.h"
 #include "zoolib/Chan.h"
 #include "zoolib/ChanConnection_XX_MemoryPipe.h"
+#include "zoolib/ChanFilter.h"
 #include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW.h"
 #include "zoolib/Name.h"
-#include "zoolib/ZQ.h"
 
 #include <string>
 
@@ -82,18 +82,37 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iCh
 template <class EE>
 using PullPushPair = std::pair<ZRef<ChannerR<EE>>,ZRef<ChannerWCon<EE>>>;
 
+// ----------
+
+template <class EE>
+class Channer_On_Finalize_DisconnectRead
+: public Channer_Channer_T<ChanFilter<ChanRCon<EE>>>
+	{
+	typedef Channer_Channer_T<ChanFilter<ChanRCon<EE>>> inherited;
+public:
+	Channer_On_Finalize_DisconnectRead(const ZRef<Channer<ChanRCon<EE>>>& iChanner)
+	:	inherited(iChanner)
+		{}
+
+	virtual void Finalize()
+		{
+		sDisconnectRead(inherited::pGetChan());
+		inherited::Finalize();
+		}
+	};
+
+// ----------
+
 template <class EE>
 PullPushPair<EE> sMakePullPushPair()
 	{
 	ZRef<Channer<ChanConnection<EE>>> thePipeChanner =
 		new Channer_T<ChanConnection_XX_MemoryPipe<EE>>;
 
-	// This will be expanded so that the ChannerR we place in the pair will be a filter
-	// that does a DisconnectRead on the underlying pipe when it goes out of scope,
-	// so a SkipAll at a higher level can implicitly do so for anything nested within it.
-	// For the moment, SkipAll will block when nested channers are pulled from the chan. 
+	ZRef<Channer<ChanRCon<EE>>> theChannerRCon =
+		new Channer_On_Finalize_DisconnectRead<EE>(thePipeChanner);
 
-	return PullPushPair<EE>(thePipeChanner,thePipeChanner);
+	return PullPushPair<EE>(theChannerRCon, thePipeChanner);
 	}
 
 } // namespace ZooLib

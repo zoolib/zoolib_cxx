@@ -41,6 +41,8 @@ void sPull_UTF_Push(const ChanR_UTF& iChanR, const ChanW_Any& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(thePullPushPair.first, iChanW);
+	thePullPushPair.first.Clear();
+
 	sCopyAll(iChanR, *thePullPushPair.second);
 	sDisconnectWrite(*thePullPushPair.second);
 	sSkipAll(iChanR);
@@ -50,6 +52,8 @@ void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iCh
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(thePullPushPair.first, iChanW);
+	thePullPushPair.first.Clear();
+
 	std::pair<uint64,uint64> counts = sCopyFully(iChanR, *thePullPushPair.second, iCount);
 	sDisconnectWrite(*thePullPushPair.second);
 	sSkipFully(iChanR, iCount - counts.first);
@@ -59,6 +63,8 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(thePullPushPair.first, iChanW);
+	thePullPushPair.first.Clear();
+
 	sCopyAll(iChanR, *thePullPushPair.second);
 	sDisconnectWrite(*thePullPushPair.second);
 	sSkipAll(iChanR);
@@ -68,6 +74,8 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iCh
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(thePullPushPair.first, iChanW);
+	thePullPushPair.first.Clear();
+
 	std::pair<uint64,uint64> counts = sCopyFully(iChanR, *thePullPushPair.second, iCount);
 	sDisconnectWrite(*thePullPushPair.second);
 	sSkipFully(iChanR, iCount - counts.first);
