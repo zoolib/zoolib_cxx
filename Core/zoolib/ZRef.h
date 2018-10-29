@@ -606,6 +606,8 @@ inline
 void swap(ZRef<T,Sense_p>& a, ZRef<T,not Sense_p>& b)
 	{ a.swap(b); }
 
+template <class T> using NotRef = ZRef<T,false>;
+
 } // namespace ZooLib
 
 #endif // __ZRef_h__
