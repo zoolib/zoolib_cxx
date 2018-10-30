@@ -80,7 +80,7 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW);
 void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iChanW);
 
 template <class EE>
-using PullPushPair = std::pair<ZRef<ChannerR<EE>>,ZRef<ChannerWCon<EE>>>;
+using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 
 // ----------
 
@@ -112,7 +112,7 @@ PullPushPair<EE> sMakePullPushPair()
 	ZRef<Channer<ChanRCon<EE>>> theChannerRCon =
 		new Channer_On_Finalize_DisconnectRead<EE>(thePipeChanner);
 
-	return PullPushPair<EE>(theChannerRCon, thePipeChanner);
+	return PullPushPair<EE>(thePipeChanner, theChannerRCon);
 	}
 
 } // namespace ZooLib

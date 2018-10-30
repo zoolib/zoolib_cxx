@@ -170,11 +170,11 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU, const ChanW_U
 static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
-	sPush(thePullPushPair.first, iChanW);
-	thePullPushPair.first.Clear();
+	sPush(thePullPushPair.second, iChanW);
+	thePullPushPair.second.Clear();
 
-	bool result = spPull_JSON_String_Push_UTF(iChanRU, *thePullPushPair.second);
-	sDisconnectWrite(*thePullPushPair.second);
+	bool result = spPull_JSON_String_Push_UTF(iChanRU, *thePullPushPair.first);
+	sDisconnectWrite(*thePullPushPair.first);
 	return result;
 	}
 
@@ -308,16 +308,16 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const Ch
 		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
 
 		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
-		sPush(thePullPushPair.first, iChanW);
-		thePullPushPair.first.Clear();
+		sPush(thePullPushPair.second, iChanW);
+		thePullPushPair.second.Clear();
 
 		bool result;
 		if (sTryRead_CP('=', iChanRU, iChanRU))
-			result = spPull_Base64_Push_Bin(iChanRU, *thePullPushPair.second);
+			result = spPull_Base64_Push_Bin(iChanRU, *thePullPushPair.first);
 		else
-			result = spPull_Hex_Push_Bin(iChanRU, *thePullPushPair.second);
+			result = spPull_Hex_Push_Bin(iChanRU, *thePullPushPair.first);
 
-		sDisconnectWrite(*thePullPushPair.second);
+		sDisconnectWrite(*thePullPushPair.first);
 
 		return result;
 		}
@@ -583,6 +583,12 @@ static bool spPull_Push_JSON(const Any& iAny,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
 	{
+	if (const string* theString = sPGet<string>(iAny))
+		{
+		Util_Chan_JSON::sWriteString(*theString, false, iChanW);
+		return true;
+		}
+
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);

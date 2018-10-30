@@ -67,7 +67,8 @@ bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 
 	if (const string* theString = sPGet<string>(iAny))
 		{
-		sPull_UTF_Push(ChanRU_UTF_string8(*theString), iChanW);
+		sPush(*theString, iChanW);
+		// sPull_UTF_Push(ChanRU_UTF_string8(*theString), iChanW);
 		return true;
 		}
 
@@ -87,6 +88,12 @@ bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 
 static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 	{
+	if (const string* theString = sPGet<string>(iAny))
+		{
+		oAny = theString;
+		return true;
+		}
+
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		oAny = sReadAllUTF8(*theChanner);

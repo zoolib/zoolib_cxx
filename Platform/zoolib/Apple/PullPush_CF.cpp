@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+using std::string;
+
 using namespace PullPush;
 using namespace Util_CF;
 
@@ -67,13 +69,13 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW)
 	if (theTypeID == ::CFDataGetTypeID())
 		{
 		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
-		sPush(thePullPushPair.first, iChanW);
-		thePullPushPair.first.Clear();
+		sPush(thePullPushPair.second, iChanW);
+		thePullPushPair.second.Clear();
 
 		if (size_t theLength = ::CFDataGetLength((CFDataRef)iCFTypeRef))
-			sWriteFully(*thePullPushPair.second, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
+			sWriteFully(*thePullPushPair.first, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
 
-		sDisconnectWrite(*thePullPushPair.second);
+		sDisconnectWrite(*thePullPushPair.first);
 		return true;
 		}
 
@@ -113,6 +115,12 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW)
 
 static bool spPull_Push_CF(const Any& iAny, const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
 	{
+	if (const string* theString = sPGet<string>(iAny))
+		{
+		oCFTypeRef = sString(*theString);
+		return true;
+		}
+
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		ZRef<CFMutableStringRef> theStringRef = sStringMutable();
