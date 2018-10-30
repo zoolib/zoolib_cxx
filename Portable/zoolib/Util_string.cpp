@@ -233,7 +233,7 @@ void sToPString(const char* inString, unsigned char* outPString, size_t inMaxLen
 
 // =================================================================================================
 
-vector<string> sSplit(const string& iString, char iChar)
+vector<string> sSplit(char iChar, const string& iString)
 	{
 	vector<string> result;
 	size_t index = 0;

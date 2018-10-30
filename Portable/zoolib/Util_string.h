@@ -70,7 +70,7 @@ void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength)
 
 // -----
 
-std::vector<string> sSplit(const string& iString, char iChar);
+std::vector<string> sSplit(char iChar, const string& iString);
 
 } // namespace Util_string
 } // namespace ZooLib
