@@ -425,51 +425,60 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
-void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+bool sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
+	bool readAny = false;
 	while (ZQ<UTF32> theCPQ = sQRead(iChanR))
 		{
+		readAny = true;
 		if (not spIsWhitespace(*theCPQ))
 			{
 			sUnread(iChanU, *theCPQ);
 			break;
 			}
 		}
+	return readAny;
 	}
 
 // -----------------
 
-void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
+bool sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
+	bool readAny = false;
 	while (ZQ<UTF32> theCPQ = sQRead(iSource))
 		{
+		readAny = true;
 		if (Unicode::sIsEOL(*theCPQ))
 			break;
 		sEWrite(oDest, *theCPQ);
 		}
+	return readAny;
 	}
 
-void sSkip_Line(const ChanR_UTF& iSource)
-	{ sCopy_Line(iSource, ChanW_XX_Discard<UTF32>()); }
+bool sSkip_Line(const ChanR_UTF& iSource)
+	{ return sCopy_Line(iSource, ChanW_XX_Discard<UTF32>()); }
 
-string8 sRead_Line(const ChanR_UTF& iSource)
+ZQ<string8> sQRead_Line(const ChanR_UTF& iSource)
 	{
 	string8 result;
-	sCopy_Line(iSource, ChanW_UTF_string8(&result));
-	return result;
+	if (sCopy_Line(iSource, ChanW_UTF_string8(&result)))
+		return result;
+	return null;
 	}
 
 // -----------------
 
-void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest)
 	{
 	ZAssert(sUnreadableLimit(iChanU) >= 2);
 
+	bool readAny = false;
 	for (;;)
 		{
 		if (ZQ<UTF32> firstCPQ = sQRead(iChanR))
 			{
+			readAny = true;
 			if (spIsWhitespace(*firstCPQ))
 				{
 				sEWrite(oDest, *firstCPQ);
@@ -496,10 +505,11 @@ void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			}
 		break;
 		}
+	return readAny;
 	}
 
-void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-	{ sCopy_WSAndCPlusPlusComments(iChanR, iChanU, ChanW_XX_Discard<UTF32>()); }
+bool sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{ return sCopy_WSAndCPlusPlusComments(iChanR, iChanU, ChanW_XX_Discard<UTF32>()); }
 
 // -----------------
 

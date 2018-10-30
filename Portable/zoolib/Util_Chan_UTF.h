@@ -73,20 +73,20 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
-void sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 // -----------------
 
-void sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest);
-void sSkip_Line(const ChanR_UTF& iSource);
-string8 sRead_Line(const ChanR_UTF& iSource);
+bool sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest);
+bool sSkip_Line(const ChanR_UTF& iSource);
+ZQ<string8> sQRead_Line(const ChanR_UTF& iSource);
 
 // -----------------
 
-void sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest);
 
-void sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
 // -----------------
 
