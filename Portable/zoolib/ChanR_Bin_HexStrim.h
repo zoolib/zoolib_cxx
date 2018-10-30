@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 
 namespace ZooLib {
 
@@ -38,6 +37,8 @@ class ChanR_Bin_HexStrim
 :	public ChanR_Bin
 	{
 public:
+	ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU);
+	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanRU_UTF& iChanRU);
 	ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 	~ChanR_Bin_HexStrim();

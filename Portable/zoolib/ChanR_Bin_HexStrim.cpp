@@ -27,6 +27,18 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_Bin_HexStrim
 
+ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU)
+:	fChanR(iChanRU)
+,	fChanU(iChanRU)
+,	fAllowUnderscore(false)
+	{}
+
+ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanRU_UTF& iChanRU)
+:	fChanR(iChanRU)
+,	fChanU(iChanRU)
+,	fAllowUnderscore(iAllowUnderscore)
+	{}
+
 ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 :	fChanR(iChanR)
 ,	fChanU(iChanU)
