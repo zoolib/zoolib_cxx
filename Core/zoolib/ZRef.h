@@ -590,6 +590,15 @@ inline
 void sClear(ZRef<T,Sense_p>& ioRef)
 	{ ioRef.Clear(); }
 
+template <class T, bool Sense_p>
+inline
+ZRef<T> sGetClear(ZRef<T,Sense_p>& ioRef)
+	{
+	const ZRef<T> result = ioRef;
+	sClear(ioRef);
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark swap
