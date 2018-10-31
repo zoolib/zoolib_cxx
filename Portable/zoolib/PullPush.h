@@ -57,6 +57,8 @@ using ChanR_Any = ChanR<Any>;
 using ChannerR_Any = Channer<ChanR_Any>;
 
 using ChanW_Any = ChanW<Any>;
+using ChannerW_Any = Channer<ChanW_Any>;
+
 using ChanWCon_Any = ChanWCon<Any>;
 using ChannerWCon_Any = Channer<ChanWCon_Any>;
 
