@@ -357,6 +357,8 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	else if (sRawAsASCII(iOptions) && chunkSize)
 		{
 		w << "<";
+		if (sReadable(iChanR) > chunkSize)
+			sWriteLFIndent(iLevel, iOptions, w);
 		std::vector<char> buffer(chunkSize, 0);
 		for (;;)
 			{
@@ -372,7 +374,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 				// We didn't write a complete line of bytes, so pad it out.
 				while (extraSpaces--)
 					{
-					// Two saces for the two nibbles
+					// Two spaces for the two nibbles
 					w << "  ";
 					// And then the separator sequence
 					w << sRawByteSeparator(iOptions);
