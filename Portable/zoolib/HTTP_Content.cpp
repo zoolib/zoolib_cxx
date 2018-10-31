@@ -218,7 +218,7 @@ static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 		return sChanner_Channer_T<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
-		return sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin> >(*contentLength, iChannerR);
+		return sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin> >(iChannerR, *contentLength);
 
 	return iChannerR;
 	}

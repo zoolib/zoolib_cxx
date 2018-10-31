@@ -70,11 +70,10 @@ template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
 template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
 template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
+using ChannerClose = Channer<ChanClose>;
 template <class EE> using ChannerRCon = Channer<ChanRCon<EE>>;
 template <class EE> using ChannerWCon = Channer<ChanWCon<EE>>;
 template <class EE> using ChannerConnection = Channer<ChanConnection<EE>>;
-
-using ChannerClose = Channer<ChanClose>;
 
 // This name is still in use.
 template <class EE> using ChannerRWClose = ChannerConnection<EE>;
@@ -109,8 +108,12 @@ class Channer_T
 public:
 	Channer_T() : Chan_p() {}
 
-//	template <class... T>
-//	Channer_T(T... args) : Chan_p(args...) {}
+#if ZCONFIG_CPP >= 2011
+
+	template <typename... Args_p>
+	Channer_T(Args_p&&... args) : Chan_p(std::forward<Args_p>(args)...) {}
+
+#else // ZCONFIG_CPP
 
 	template <class T0>
 	Channer_T(const T0& iT0)
@@ -127,15 +130,20 @@ public:
 	:	Chan_p(iT0, iT1, iT2)
 		{}
 
-	template <class T0, class T1, class T2, class T3>
-	Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const T3& iT3)
-	:	Chan_p(iT0, iT1, iT2, iT3)
-		{}
+#endif // ZCONFIG_CPP
 	};
 
 template <class Chan_p>
 ZRef<Channer_T<Chan_p>> sChanner_T()
 	{ return new Channer_T<Chan_p>(); }
+
+#if ZCONFIG_CPP >= 2011
+
+template <class Chan_p, typename... Args_p>
+ZRef<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
+	{ return new Channer_T<Chan_p>(std::forward<Args_p>(args)...); }
+
+#else // ZCONFIG_CPP
 
 template <class Chan_p, class T0>
 ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0)
@@ -149,9 +157,7 @@ template <class Chan_p, class T0, class T1, class T2>
 ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1, const T2& iT2)
 	{ return new Channer_T<Chan_p>(iT0, iT1, iT2); }
 
-template <class Chan_p, class T0, class T1, class T2, class T3>
-ZRef<Channer_T<Chan_p>> sChanner_T(const T0& iT0, const T1& iT1, const T2& iT2, const T3& iT3)
-	{ return new Channer_T<Chan_p>(iT0, iT1, iT2, iT3); }
+#endif // ZCONFIG_CPP
 
 // =================================================================================================
 #pragma mark -
@@ -163,119 +169,101 @@ class Channer_Channer_T
 	{
 	typedef Channer_T<Chan_p> inherited;
 public:
-	template <class ChannerOther_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther)
+	template <class ChannerOther_p, bool Sense_p>
+	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
 	:	inherited(*iOther)
 	,	fOther(iOther)
 		{}
 
-//	template <class ChannerOther_p, class... T>
-//	Channer_Channer_T(T... args, const ZRef<ChannerOther_p>& iOther)
-//	:	Chan_p(args..., *iOther)
-//	,	fOther(iOther)
-//		{}
+#if ZCONFIG_CPP >= 2011
 
-	template <class T0, class ChannerOther_p>
-	Channer_Channer_T(const T0& iT0, const ZRef<ChannerOther_p>& iOther)
-	:	inherited(iT0, *iOther)
+	template <class ChannerOther_p, bool Sense_p, typename... Args_p>
+	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
+	:	inherited(*iOther, std::forward<Args_p>(args)...)
 	,	fOther(iOther)
 		{}
 
-	template <class T0, class ChannerOther_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0)
+#else // ZCONFIG_CPP
+
+	template <class ChannerOther_p, bool Sense_p, class T0>
+	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+		const T0& iT0)
 	:	inherited(*iOther, iT0)
 	,	fOther(iOther)
 		{}
 
-	template <class T0, class T1, class ChannerOther_p>
-	Channer_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
-	:	inherited(iT0, iT1, *iOther)
-	,	fOther(iOther)
-		{}
-
-	template <class T0, class T1, class ChannerOther_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1)
+	template <class ChannerOther_p, bool Sense_p, class T0, class T1>
+	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+		const T0& iT0, const T1& iT1)
 	:	inherited(*iOther, iT0, iT1)
 	,	fOther(iOther)
 		{}
 
-	template <class T0, class T1, class T2, class ChannerOther_p>
-	Channer_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
-	:	inherited(iT0, iT1, iT2, *iOther)
-	,	fOther(iOther)
-		{}
-
-	template <class T0, class T1, class T2, class ChannerOther_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1, const T2& iT2)
+	template <class ChannerOther_p, bool Sense_p, class T0, class T1, class T2>
+	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+		const T0& iT0, const T1& iT1, const T2& iT2)
 	:	inherited(*iOther, iT0, iT1, iT2)
 	,	fOther(iOther)
 		{}
+
+#endif // ZCONFIG_CPP
 
 protected:
 	const ZRef<ZCounted> fOther;
 	};
 
-template <class Chan_p, class ChannerOther_p>
-ZRef<Channer_Channer_T<Chan_p>> sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther)
+template <class Chan_p, class ChannerOther_p, bool Sense_p>
+ZRef<Channer_Channer_T<Chan_p>> sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
 	{
-	if (iOther)
-		return new Channer_Channer_T<Chan_p>(iOther);
+	if (ZRef<ChannerOther_p,true> theOther = iOther)
+		return new Channer_Channer_T<Chan_p>(theOther);
 	return null;
 	}
 
-template <class Chan_p, class T0, class ChannerOther_p>
+#if ZCONFIG_CPP >= 2011
+
+template <class Chan_p, class ChannerOther_p, bool Sense_p, typename... Args_p>
 ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const T0& iT0, const ZRef<ChannerOther_p>& iOther)
+sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
 	{
-	if (iOther)
-		return new Channer_Channer_T<Chan_p>(iT0, iOther);
+	if (ZRef<ChannerOther_p,true> theOther = iOther)
+		return new Channer_Channer_T<Chan_p>(iOther, std::forward<Args_p>(args)...);
 	return null;
 	}
 
-template <class Chan_p, class T0, class ChannerOther_p>
+#else // ZCONFIG_CPP
+
+template <class Chan_p, class ChannerOther_p, bool Sense_p, class T0>
 ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0)
+sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+	const T0& iT0)
 	{
-	if (iOther)
+	if (ZRef<ChannerOther_p,true> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(iOther, iT0);
 	return null;
 	}
 
-template <class Chan_p, class T0, class T1, class ChannerOther_p>
+template <class Chan_p, class ChannerOther_p, bool Sense_p, class T0, class T1>
 ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const T0& iT0, const T1& iT1, const ZRef<ChannerOther_p>& iOther)
+sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+	const T0& iT0, const T1& iT1)
 	{
-	if (iOther)
-		return new Channer_Channer_T<Chan_p>(iT0, iT1, iOther);
-	return null;
-	}
-
-template <class Chan_p, class T0, class T1, class ChannerOther_p>
-ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1)
-	{
-	if (iOther)
+	if (ZRef<ChannerOther_p,true> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1);
 	return null;
 	}
 
-template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
+template <class Chan_p, class ChannerOther_p, bool Sense_p, class T0, class T1, class T2>
 ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const T0& iT0, const T1& iT1, const T2& iT2, const ZRef<ChannerOther_p>& iOther)
+sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther,
+	const T0& iT0, const T1& iT1, const T2& iT2)
 	{
-	if (iOther)
-		return new Channer_Channer_T<Chan_p>(iT0, iT1, iT2, iOther);
-	return null;
-	}
-
-template <class Chan_p, class T0, class T1, class T2, class ChannerOther_p>
-ZRef<Channer_Channer_T<Chan_p>>
-sChanner_Channer_T(const ZRef<ChannerOther_p>& iOther, const T0& iT0, const T1& iT1, const T2& iT2)
-	{
-	if (iOther)
+	if (ZRef<ChannerOther_p,true> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(iOther, iT0, iT1, iT2);
 	return null;
 	}
+
+#endif // ZCONFIG_CPP
 
 } // namespace ZooLib
 
