@@ -170,7 +170,7 @@ ZQ<Any> sQAsAny(CFTypeRef iVal)
 	if (theTypeID == ::CFDataGetTypeID())
 		return Any(spAsData_Any((CFDataRef)iVal));
 
-	return null;
+	return sQSimpleAsAny(theTypeID, iVal);
 	}
 
 Any sDAsAny(const Any& iDefault, CFTypeRef iVal)
