@@ -65,15 +65,20 @@ using ChannerWCon_Any = Channer<ChanWCon_Any>;
 void sPush(const Any& iVal, const ChanW_Any& iChanW);
 
 template <class T>
-void sPush(const Name& iName, const T& iVal, const ChanW_Any& iChanW)
-	{
-	sEWrite<Any>(iChanW, Any(iName));
-	sEWrite<Any>(iChanW, Any(iVal));
-	}
-
-template <class T>
 void sPush(const T& iVal, const ChanW_Any& iChanW)
 	{ sEWrite<Any>(iChanW, Any(iVal)); }
+
+// Special-case NotRef -- we generally want them on the chan as ZRef.
+template <class T>
+void sPush(const ZRef<T,false>& iVal, const ChanW_Any& iChanW)
+	{ sPush(sRef(iVal), iChanW); }
+
+template <class T>
+void sPush(const Name& iName, const T& iVal, const ChanW_Any& iChanW)
+	{
+	sPush(iName, iChanW);
+	sPush(iVal, iChanW);
+	}
 
 void sPull_UTF_Push(const ChanR_UTF& iChanR, const ChanW_Any& iChanW);
 void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iChanW);
