@@ -356,43 +356,69 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		}
 	else if (sRawAsASCII(iOptions) && chunkSize)
 		{
-		w << "<";
-		if (sReadable(iChanR) > chunkSize)
-			sWriteLFIndent(iLevel, iOptions, w);
 		std::vector<char> buffer(chunkSize, 0);
-		for (;;)
+		if (size_t countRead = sReadMem(iChanR, &buffer[0], chunkSize))
 			{
-			const size_t countRead = sReadMem(iChanR, &buffer[0], chunkSize);
-			if (not countRead)
-				break;
-			const size_t countCopied = sWriteMemFully(
-				ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, w),
-				&buffer[0], countRead);
+			w << "<";
+			if (countRead == chunkSize)
+				sWriteLFIndent(iLevel, iOptions, w);
 
-			if (size_t extraSpaces = chunkSize - countCopied)
+			std::vector<char> nextBuffer(chunkSize, 0);
+			for (;;)
 				{
-				// We didn't write a complete line of bytes, so pad it out.
-				while (extraSpaces--)
+				const size_t countCopied = sWriteMemFully(
+					ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, w),
+					&buffer[0], countRead);
+
+				countRead = sReadMem(iChanR, &nextBuffer[0], chunkSize);
+
+				if (size_t extraSpaces = chunkSize - countCopied)
 					{
-					// Two spaces for the two nibbles
-					w << "  ";
-					// And then the separator sequence
-					w << sRawByteSeparator(iOptions);
-					}
-				}
+					// We didn't write a complete line of bytes.
+					if (countRead == 0)
+						{
+						// And it was the end. Emit the close and a space (matching a pair of nibbles).
+						w << sRawByteSeparator(iOptions);
+						w << "> ";
+						--extraSpaces;
+						}
 
-			w << " // ";
-			for (size_t xx = 0; xx < countCopied; ++xx)
-				{
-				char theChar = buffer[xx];
-				if (theChar < 0x20 || theChar > 0x7E)
-					w << ".";
+					while (extraSpaces--)
+						{
+						// Separator sequence
+						w << sRawByteSeparator(iOptions);
+						// Two spaces for the two nibbles
+						w << "  ";
+						}
+					w << " // ";
+					}
+				else if (countRead == 0)
+					{
+					// We'd exactly consumed the data. Emit a close tight up against the data.
+					w << ">// ";
+					}
 				else
-					w << theChar;
+					{
+					w << " // ";
+					}
+				for (size_t xx = 0; xx < countCopied; ++xx)
+					{
+					char theChar = buffer[xx];
+					if (theChar < 0x20 || theChar > 0x7E)
+						w << ".";
+					else
+						w << theChar;
+					}
+				if (countRead == 0)
+					break;
+				sWriteLFIndent(iLevel, iOptions, w);
+				swap(buffer, nextBuffer);
 				}
-			sWriteLFIndent(iLevel, iOptions, w);
 			}
-		w << ">";
+		else
+			{
+			w << "<>";
+			}
 		}
 	else
 		{
