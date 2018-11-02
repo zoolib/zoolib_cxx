@@ -86,6 +86,13 @@ void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iCh
 void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW);
 void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iChanW);
 
+// ----------
+
+bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW);
+bool sSkip_Node(const ChanR_Any& iChanR);
+
+// ----------
+
 template <class EE>
 using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 

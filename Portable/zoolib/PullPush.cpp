@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/PullPush.h"
+
 #include "zoolib/ChanConnection_XX_MemoryPipe.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
@@ -76,5 +77,32 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iCh
 	sDisconnectWrite(*thePullPushPair.first);
 	sSkipFully(iChanR, iCount - counts.first);
 	}
+
+bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW)
+	{
+	using namespace PullPush;
+
+	size_t depth = 0;
+
+	while (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		const Any& theAny = *theQ;
+
+		sPush(theAny, iChanW);
+
+		if (sPGet<StartMap>(theAny) || sPGet<StartSeq>(theAny))
+			{
+			++depth;
+			}
+		else if (sPGet<End>(theAny) && 0 == --depth)
+			{
+			break;
+			}
+		}
+	return depth == 0;
+	}
+
+bool sSkip_Node(const ChanR_Any& iChanR)
+	{ return sCopy_Node(iChanR, ChanW_XX_Discard<Any>()); }
 
 } // namespace ZooLib
