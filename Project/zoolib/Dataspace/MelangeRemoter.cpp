@@ -674,7 +674,7 @@ class ChanR_Bin_AbortOnSlowRead
 public:
 	typedef Melange_Client::ChanForRead ChanForRead;
 
-	ChanR_Bin_AbortOnSlowRead(double iTimeout, const ChanForRead& iChan)
+	ChanR_Bin_AbortOnSlowRead(const ChanForRead& iChan, double iTimeout)
 	:	fTimeout(iTimeout)
 	,	fChan(iChan)
 		{}
@@ -713,7 +713,7 @@ void Melange_Client::pRead()
 			Map_Any theMap;
 			{
 			ZRelMtx rel(fMtx);
-			theMap = spReadMessage(sChanner_Channer_T<ChanR_Bin_AbortOnSlowRead>(15, theChanner), null);
+			theMap = spReadMessage(sChanner_Channer_T<ChanR_Bin_AbortOnSlowRead>(theChanner, 15), null);
 			}
 
 			fQueue_Read.push_back(theMap);
