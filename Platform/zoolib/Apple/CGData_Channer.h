@@ -42,11 +42,11 @@ namespace CGData_Channer {
 #pragma mark -
 #pragma mark CGData_Channer
 
-ZRef<CGDataProviderRef> sProvider(ZRef<ChannerR_Bin> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ChannerR_Bin> iChanner);
 
-ZRef<CGDataProviderRef> sProvider(ZRef<ChannerRPos_Bin> iStreamer);
+ZRef<CGDataProviderRef> sProvider(ZRef<ChannerRPos_Bin> iChanner);
 
-ZRef<CGDataConsumerRef> sConsumer(ZRef<ChannerW_Bin> iStreamer);
+ZRef<CGDataConsumerRef> sConsumer(ZRef<ChannerW_Bin> iChanner);
 
 } // namespace CGData_Channer
 } // namespace ZooLib
