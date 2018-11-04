@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
+#include "zoolib/PullPush_JSON.h"
 #include "zoolib/Val_Any.h"
 
 // =================================================================================================
@@ -32,11 +33,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU);
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO);
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU);
+ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO);
+ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR);
-
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR);
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU);
+//
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR);
+//
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR);
 
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW);
 

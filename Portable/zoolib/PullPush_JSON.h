@@ -42,13 +42,16 @@ using Util_Chan_JSON::WriteOptions;
 #pragma mark -
 #pragma mark
 
+bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO, const ChanW_Any& iChanW);
+
 bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO,
 	const ChanW_Any& iChanW);
 
 bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
 
-bool sPull_Push_JSON(size_t iInitialIndent, const PullPush_JSON::WriteOptions& iOptions,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
+bool sPull_Push_JSON(const ChanR_Any& iChanR,
+	size_t iInitialIndent, const PullPush_JSON::WriteOptions& iOptions,
+	const ChanW_UTF& iChanW);
 
 } // namespace ZooLib
 

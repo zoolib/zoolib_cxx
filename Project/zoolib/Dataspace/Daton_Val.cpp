@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"
+#include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Util_Any_JSON.h"
 
 namespace ZooLib {
@@ -37,8 +38,8 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 	{
 	try
 		{
-		ZRef<ChannerR_Bin> theChanner = sChanner_T<ChanRPos_Bin_Data<Data_Any>>(iData);
-		return Util_Any_JSON::sQRead(theChanner);
+//		ZRef<ChannerR_Bin> theChanner = sChanner_T<ChanRPos_Bin_Data<Data_Any>>(iData);
+		return Util_Any_JSON::sQRead(ChanRU_XX_Unreader<UTF32>(ChanR_UTF_Chan_Bin_UTF8(ChanRPos_Bin_Data<Data_Any>(iData))));
 		}
 	catch (...) {}
 	return null;

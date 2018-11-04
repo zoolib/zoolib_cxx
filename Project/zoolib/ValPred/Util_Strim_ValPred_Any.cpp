@@ -134,7 +134,8 @@ ZRef<ValComparand> spQRead_ValComparand(const ChanR_UTF& iChanR, const ChanU_UTF
 		throw ParseException("Expected Name after @");
 		}
 
-	if (ZQ<Val_Any> theQ = Util_Any_JSON::sQRead(sChanner_Chan(iChanR), sChanner_Chan(iChanU)))
+//	if (ZQ<Val_Any> theQ = Util_Any_JSON::sQRead(sChanner_Chan(iChanR), sChanner_Chan(iChanU)))
+	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanR, iChanU))
 		return new ValComparand_Const_Any(*theQ);
 
 	return null;

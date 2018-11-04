@@ -18,13 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Any_JSON.h"
+
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
-#include "zoolib/Channer.h"
-#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/PullPush_Any.h"
+#include "zoolib/PullPush_JSON.h"
 #include "zoolib/Yad_Any.h"
 #include "zoolib/Yad_JSON.h"
+
+#include "zoolib/Callable_Function.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Promise.h"
+#include "zoolib/StartOnNewThread.h"
 
 // =================================================================================================
 #pragma mark -
@@ -32,31 +39,63 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU)
+static void spAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR, const ZRef<Promise<Any>>& iPromise)
 	{
-	if (iChannerR and iChannerU)
-		{
-		Yad_JSON::ReadOptions theRO = Yad_JSON::sReadOptions_Extended();
-		if (ZRef<YadR> theYad = Yad_JSON::sYadR(theRO, iChannerR, iChannerU))
-			{
-			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
-				return resultQ;
-			}
-		}
-	return null;
+	if (ZQ<Any> theAny = sQPull_Any(*iChannerR))
+		iPromise->Deliver(*theAny);
 	}
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR)
+static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR)
 	{
-	ZRef<ChannerRU<UTF32> > theChanner = sChanner_Channer_T<ChanRU_XX_Unreader<UTF32>>(iChannerR);
-	return sQRead(theChanner, theChanner);
+	ZRef<Promise<Any>> thePromise = sPromise<Any>();
+	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iChannerR, thePromise));
+	return thePromise->GetDelivery();
 	}
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
+ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO)
 	{
-	ZRef<ChannerR_UTF> theChannerR = sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(iChannerR);
-	return sQRead(theChannerR);
+	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
+	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
+	sPull_JSON_Push(iChanR, iChanU, iRO, *thePair.first);
+	sDisconnectWrite(*thePair.first);
+
+	return theDelivery->QGet();
 	}
+
+ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{ return sQRead(iChanR, iChanU, Util_Chan_JSON::sReadOptions_Extended()); }
+
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO)
+	{ return sQRead(iChanRU, iChanRU, iRO); }
+
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
+	{ return sQRead(iChanRU, Util_Chan_JSON::sReadOptions_Extended()); }
+
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU)
+//	{
+//	if (iChannerR and iChannerU)
+//		{
+//		Yad_JSON::ReadOptions theRO = Yad_JSON::sReadOptions_Extended();
+//		if (ZRef<YadR> theYad = Yad_JSON::sYadR(theRO, iChannerR, iChannerU))
+//			{
+//			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
+//				return resultQ;
+//			}
+//		}
+//	return null;
+//	}
+//
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR)
+//	{
+//	ZRef<ChannerRU<UTF32> > theChanner = sChanner_Channer_T<ChanRU_XX_Unreader<UTF32>>(iChannerR);
+//	return sQRead(theChanner, theChanner);
+//	}
+//
+//ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
+//	{
+//	ZRef<ChannerR_UTF> theChannerR = sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(iChannerR);
+//	return sQRead(theChannerR);
+//	}
 
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{ Yad_JSON::sToChan(sYadR(iVal), iChanW); }
@@ -81,8 +120,8 @@ string8 sAsJSON(const Val_Any& iVal)
 
 const Val_Any sFromJSON(const string8& iString)
 	{
-	ZRef<ChannerRU_UTF> theChannerRU = sChanner_T<ChanRU_UTF_string8>(iString);
-	return sQRead(theChannerRU, theChannerRU).Get();
+//	ZRef<ChannerRU_UTF> theChannerRU = sChanner_T<ChanRU_UTF_string8>(iString);
+	return sQRead(ChanRU_UTF_string8(iString)).Get();
 	}
 
 } // namespace Util_Any_JSON
