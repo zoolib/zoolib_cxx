@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2012 Andrew Green
+Copyright (c) 2018 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,11 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_StartOnNewThread_h__
-#define __ZooLib_StartOnNewThread_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/Callable.h"
+#include "zoolib/StartOnNewThread.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -30,8 +27,16 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark sStartOnNewThread
 
-void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable);
+static void spCall(Callable<void()>* iCallable)
+	{
+	ZRef<Callable<void()>> theCallable = sAdopt& iCallable;
+	theCallable->QCall();
+	}
+
+void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable)
+	{
+	if (iCallable)
+		ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spCall, iCallable.Copy());
+	}
 
 } // namespace ZooLib
-
-#endif // __ZooLib_StartOnNewThread_h__
