@@ -90,7 +90,7 @@ static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 	{
 	if (const string* theString = sPGet<string>(iAny))
 		{
-		oAny = theString;
+		oAny = *theString;
 		return true;
 		}
 
