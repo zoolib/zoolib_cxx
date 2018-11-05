@@ -158,14 +158,11 @@ size_t sWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCountCU)
 	}
 
 bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iSource, size_t iCountCU)
-	{
-	size_t countWritten;
-	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
-	return countWritten == iCountCU;
-	}
+	{ return iCountCU == sWriteFully(iChanW, iSource, iCountCU); }
 
 bool sQWrite(const ChanW_UTF& iChanW, const UTF16* iSource, size_t iCountCU)
 	{
+	// We need WriteFully variant of some sort.
 	size_t countWritten;
 	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
 	return countWritten == iCountCU;
