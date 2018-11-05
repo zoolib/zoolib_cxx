@@ -274,7 +274,10 @@ protected:
 	void pFlush()
 		{
 		if (size_t used = sGetSet(fOffset, 0))
-			sEWrite(inherited::pGetChan(), &fBuffer[0], used);
+			{
+			if (used != sWriteFully(inherited::pGetChan(), &fBuffer[0], used))
+				sThrow_ExhaustedW();
+			}
 		}
 
 	std::vector<EE> fBuffer;
