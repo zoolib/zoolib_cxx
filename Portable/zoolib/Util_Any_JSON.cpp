@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/PullPush_Any.h"
 #include "zoolib/PullPush_JSON.h"
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSON.h"
+//#include "zoolib/Yad_Any.h"
+//#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Callable_Bind.h"
@@ -52,6 +52,12 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
+static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
+	{
+	sPull_Any_Push(iAny, *iChannerWCon);
+	sDisconnectWrite(*iChannerWCon);
+	}
+
 ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
@@ -71,41 +77,14 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO)
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 	{ return sQRead(iChanRU, Util_Chan_JSON::sReadOptions_Extended()); }
 
-//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR, const ZRef<ChannerU_UTF>& iChannerU)
-//	{
-//	if (iChannerR and iChannerU)
-//		{
-//		Yad_JSON::ReadOptions theRO = Yad_JSON::sReadOptions_Extended();
-//		if (ZRef<YadR> theYad = Yad_JSON::sYadR(theRO, iChannerR, iChannerU))
-//			{
-//			if (ZQ<Val_Any> resultQ = Yad_Any::sQFromYadR(theYad))
-//				return resultQ;
-//			}
-//		}
-//	return null;
-//	}
-//
-//ZQ<Val_Any> sQRead(const ZRef<ChannerR_UTF>& iChannerR)
-//	{
-//	ZRef<ChannerRU<UTF32> > theChanner = sChanner_Channer_T<ChanRU_XX_Unreader<UTF32>>(iChannerR);
-//	return sQRead(theChanner, theChanner);
-//	}
-//
-//ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
-//	{
-//	ZRef<ChannerR_UTF> theChannerR = sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(iChannerR);
-//	return sQRead(theChannerR);
-//	}
-
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
-	{ Yad_JSON::sToChan(sYadR(iVal), iChanW); }
+	{ sWrite(false, iVal, iChanW); }
 
 void sWrite(bool iPrettyPrint, const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{
-	if (iPrettyPrint)
-		Yad_JSON::sToChan(0, YadOptions(true), sYadR(iVal), iChanW);
-	else
-		Yad_JSON::sToChan(sYadR(iVal), iChanW);
+	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
+	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
+	sPull_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
 	}
 
 string8 sAsJSON(const Val_Any& iVal)
@@ -119,10 +98,7 @@ string8 sAsJSON(const Val_Any& iVal)
 #pragma mark -
 
 const Val_Any sFromJSON(const string8& iString)
-	{
-//	ZRef<ChannerRU_UTF> theChannerRU = sChanner_T<ChanRU_UTF_string8>(iString);
-	return sQRead(ChanRU_UTF_string8(iString)).Get();
-	}
+	{ return sQRead(ChanRU_UTF_string8(iString)).Get(); }
 
 } // namespace Util_Any_JSON
 

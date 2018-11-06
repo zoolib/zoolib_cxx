@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Any.h"
 #include "zoolib/Chan.h"
-#include "zoolib/Channer_XX_PipePair.h"
-//#include "zoolib/ChanFilter.h"
+#include "zoolib/Chan_XX_PipePair.h"
 #include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanR_Bin.h"

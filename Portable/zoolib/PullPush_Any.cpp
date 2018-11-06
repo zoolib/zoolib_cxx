@@ -67,8 +67,7 @@ bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 
 	if (const string* theString = sPGet<string>(iAny))
 		{
-		sPush(*theString, iChanW);
-		// sPull_UTF_Push(ChanRU_UTF_string8(*theString), iChanW);
+		sPull_UTF_Push(ChanRU_UTF_string8(*theString), iChanW);
 		return true;
 		}
 
@@ -154,10 +153,9 @@ static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 
 bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny)
 	{
-	ZQ<Any> theQ = sQRead(iChanR);
-	if (not theQ)
-		return false;
-	return spPull_Push_Any(*theQ, iChanR, oAny);
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		return spPull_Push_Any(*theQ, iChanR, oAny);
+	return false;
 	}
 
 ZQ<Any> sQPull_Any(const ChanR_Any& iChanR)

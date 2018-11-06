@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/PullPush.h"
 
-#include "zoolib/ChanConnection_XX_MemoryPipe.h"
+//#include "zoolib/ChanConnection_XX_MemoryPipe.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Util_Chan.h" // For sCopyFully

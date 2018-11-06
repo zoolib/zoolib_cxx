@@ -89,7 +89,6 @@ static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
 static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_UTF& iChanW)
 	{
-//	ChanW_XX_Buffered<ChanW_UTF> iChanW(iChanW_Real, 4096);
 	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanR);
 	int quotesSeen = 1;
 	for (;;)
@@ -172,19 +171,12 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 
 static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Any& iChanW)
 	{
-#if 0
-	string theString;
-	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, ChanW_UTF_string<UTF8>(&theString));
-	sPush(theString, iChanW);
-	return result;
-#else
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 
 	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	return result;
-#endif
 	}
 
 // =================================================================================================
