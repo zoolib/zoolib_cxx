@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Any.h"
 #include "zoolib/Chan.h"
-#include "zoolib/ChanConnection_XX_MemoryPipe.h"
-#include "zoolib/ChanFilter.h"
+#include "zoolib/Channer_XX_PipePair.h"
+//#include "zoolib/ChanFilter.h"
 #include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanR_Bin.h"
@@ -99,34 +99,12 @@ using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 // ----------
 
 template <class EE>
-class Channer_On_Finalize_DisconnectRead
-: public Channer_Channer_T<ChanFilter<ChanRCon<EE>>>
-	{
-	typedef Channer_Channer_T<ChanFilter<ChanRCon<EE>>> inherited;
-public:
-	Channer_On_Finalize_DisconnectRead(const ZRef<Channer<ChanRCon<EE>>>& iChanner)
-	:	inherited(iChanner)
-		{}
-
-	virtual void Finalize()
-		{
-		sDisconnectRead(inherited::pGetChan());
-		inherited::Finalize();
-		}
-	};
-
-// ----------
-
-template <class EE>
 PullPushPair<EE> sMakePullPushPair()
 	{
-	ZRef<Channer<ChanConnection<EE>>> thePipeChanner =
-		new Channer_T<ChanConnection_XX_MemoryPipe<EE>>;
-
-	ZRef<Channer<ChanRCon<EE>>> theChannerRCon =
-		new Channer_On_Finalize_DisconnectRead<EE>(thePipeChanner);
-
-	return PullPushPair<EE>(thePipeChanner, theChannerRCon);
+	ZRef<ImpPipePair<EE>> theImp = new ImpPipePair<EE>;
+	ZRef<Channer<ChanWCon<EE>>> theChannerWCon = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
+	ZRef<Channer<ChanR<EE>>> theChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
+	return PullPushPair<EE>(theChannerWCon, theChannerR);
 	}
 
 } // namespace ZooLib
