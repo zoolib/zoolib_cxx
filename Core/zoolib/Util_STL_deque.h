@@ -75,7 +75,7 @@ template <typename Base>
 typename std::deque<Base>::iterator
 sEraseInc(std::deque<Base>& ioCont, typename std::deque<Base>::iterator iter)
 	{
-	ZAssert(ioCont.end() != iter)
+	ZAssert(ioCont.end() != iter);
 	return ioCont.erase(iter);
 	}
 
