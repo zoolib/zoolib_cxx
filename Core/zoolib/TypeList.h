@@ -47,6 +47,8 @@ struct TypeList
 	typedef P7 T7;
 	};
 
+// ----------
+
 template <class P, class TL>
 struct TypeListPrefixed
 	{
@@ -56,6 +58,8 @@ struct TypeListPrefixed
 		typename TL::T4, typename TL::T5, typename TL::T6> Result_t;
 	};
 
+// ----------
+
 template <class TL>
 struct TypeListWithoutPrefix
 	{
@@ -63,7 +67,6 @@ struct TypeListWithoutPrefix
 		typename TL::T1, typename TL::T2, typename TL::T3,
 		typename TL::T4, typename TL::T5, typename TL::T6, typename TL::T6> Result_t;
 	};
-
 
 } // namespace ZooLib
 

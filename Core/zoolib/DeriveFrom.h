@@ -83,6 +83,7 @@ public:
 	typedef TypeList<P0, P1, P2, P3> AsTypeList_t;
 	};
 
+// !5 == 153. See http://oeis.org/A007489
 template <class P0, class P1, class P2, class P3, class P4>
 class DeriveFrom<P0, P1, P2, P3, P4>
 :	public virtual DeriveFrom<    P1, P2, P3, P4>
@@ -95,6 +96,7 @@ public:
 	typedef TypeList<P0, P1, P2, P3, P4> AsTypeList_t;
 	};
 
+// !6 == 873
 template <class P0, class P1, class P2, class P3, class P4, class P5>
 class DeriveFrom<P0, P1, P2, P3, P4, P5>
 :	public virtual DeriveFrom<    P1, P2, P3, P4, P5>
@@ -108,6 +110,7 @@ public:
 	typedef TypeList<P0, P1, P2, P3, P4, P5> AsTypeList_t;
 	};
 
+// !7 == 5913
 template <class P0, class P1, class P2, class P3, class P4, class P5, class P6>
 class DeriveFrom<P0, P1, P2, P3, P4, P5, P6>
 :	public virtual DeriveFrom<    P1, P2, P3, P4, P5, P6>
@@ -122,20 +125,21 @@ public:
 	typedef TypeList<P0, P1, P2, P3, P4, P5, P6> AsTypeList_t;
 	};
 
-template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
-class DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>
-:	public virtual DeriveFrom<    P1, P2, P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom<P0,     P2, P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom<P0, P1,     P3, P4, P5, P6, P7>
-,	public virtual DeriveFrom<P0, P1, P2,     P4, P5, P6, P7>
-,	public virtual DeriveFrom<P0, P1, P2, P3,     P5, P6, P7>
-,	public virtual DeriveFrom<P0, P1, P2, P3, P4,     P6, P7>
-,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5,     P7>
-,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6    >
-	{
-public:
-	typedef TypeList<P0, P1, P2, P3, P4, P5, P6, P7> AsTypeList_t;
-	};
+// !8 == 46233
+//template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
+//class DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>
+//:	public virtual DeriveFrom<    P1, P2, P3, P4, P5, P6, P7>
+//,	public virtual DeriveFrom<P0,     P2, P3, P4, P5, P6, P7>
+//,	public virtual DeriveFrom<P0, P1,     P3, P4, P5, P6, P7>
+//,	public virtual DeriveFrom<P0, P1, P2,     P4, P5, P6, P7>
+//,	public virtual DeriveFrom<P0, P1, P2, P3,     P5, P6, P7>
+//,	public virtual DeriveFrom<P0, P1, P2, P3, P4,     P6, P7>
+//,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5,     P7>
+//,	public virtual DeriveFrom<P0, P1, P2, P3, P4, P5, P6    >
+//	{
+//public:
+//	typedef TypeList<P0, P1, P2, P3, P4, P5, P6, P7> AsTypeList_t;
+//	};
 
 // =================================================================================================
 #pragma mark -
