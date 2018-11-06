@@ -32,7 +32,7 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark ChanR_UTF_Chan_Bin_UTF8
 
-/// A read strim that sources text by reading UTF-8 code units from a ZStreamR.
+/// A read strim that sources text by reading UTF-8 code units from a ChanR_Bin.
 
 class ChanR_UTF_Chan_Bin_UTF8
 :	public ChanR_UTF
@@ -51,7 +51,7 @@ private:
 #pragma mark -
 #pragma mark ChanW_UTF_Chan_Bin_UTF8
 
-/// A write strim that writes text to a ZStreamW in UTF-8.
+/// A write strim that writes text to a ChanW_Bin in UTF-8.
 
 class ChanW_UTF_Chan_Bin_UTF8
 :	public ChanW_UTF_Native8

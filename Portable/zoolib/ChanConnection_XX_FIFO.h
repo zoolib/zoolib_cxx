@@ -42,13 +42,13 @@ class ChanConnection_XX_FIFO
 public:
 	ChanConnection_XX_FIFO()
 	:	fClosed(false)
-	,	fMaxSize(0)
+	,	fMaxSize(64)
 	,	fUserCount(0)
 		{}
 
 	ChanConnection_XX_FIFO(size_t iMaxSize)
 	:	fClosed(false)
-	,	fMaxSize(0)
+	,	fMaxSize(iMaxSize)
 	,	fUserCount(0)
 		{}
 
@@ -117,7 +117,7 @@ public:
 			{
 			for (;;)
 				{
-				const size_t countToCopy = min(iCount, fBuffer.size());
+				const size_t countToCopy = std::min(iCount, fBuffer.size());
 				if (countToCopy == 0)
 					{
 					if (fClosed)
@@ -126,7 +126,7 @@ public:
 					}
 				else
 					{
-					std::copy_n(fBuffer.begin(), fBuffer.begin() + countToCopy, localDest);
+					std::copy_n(fBuffer.begin(), countToCopy, localDest);
 					fBuffer.erase(fBuffer.begin(), fBuffer.begin() + countToCopy);
 					localDest += countToCopy;
 					fCondition_Write.Broadcast();
@@ -140,7 +140,6 @@ public:
 		return localDest - oDest;
 		}
 
-// From Aspect_Readable
 	virtual size_t Readable()
 		{
 		ZAcqMtx acq(fMutex);
@@ -162,7 +161,7 @@ public:
 		}
 
 // From Aspect_Write<EE>
-	virtual size_t Write(const void* iSource, size_t iCount)
+	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		ZAcqMtx acq(fMutex);
 		++fUserCount;
@@ -173,7 +172,7 @@ public:
 			if (fMaxSize)
 				{
 				if (fMaxSize >= fBuffer.size())
-					countToInsert = min(iCount, fMaxSize - fBuffer.size());
+					countToInsert = std::min(iCount, fMaxSize - fBuffer.size());
 				else
 					countToInsert = 0;
 				}
@@ -207,7 +206,7 @@ private:
 	ZCnd fCondition_Write;
 	bool fClosed;
 	size_t fMaxSize;
-	std::deque<uint8> fBuffer;
+	std::deque<EE> fBuffer;
 	size_t fUserCount;
 	};
 

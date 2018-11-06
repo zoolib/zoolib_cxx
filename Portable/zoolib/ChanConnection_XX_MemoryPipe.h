@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
-//#include "zoolib/Compat_algorithm.h" // For min
-//#include "zoolib/Memory.h" // For sMemCopy
 #include "zoolib/Time.h"
 #include "zoolib/ZThread.h"
 
@@ -32,7 +30,7 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ZStreamRWCon_MemoryPipe
+#pragma mark ChanConnection_XX_MemoryPipe
 
 /** A connected RW stream that transfers data directly from a writer's source
 buffer to a reader's destination buffer. Note that read and write must therefore
@@ -140,7 +138,6 @@ public:
 		return localDest - static_cast<EE*>(oDest);
 		}
 
-// From Aspect_Readable
 	virtual size_t Readable()
 		{
 		ZAcqMtx acq(fMutex);
