@@ -171,12 +171,19 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 
 static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Any& iChanW)
 	{
+#if 1
+	string theString;
+	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, ChanW_UTF_string<UTF8>(&theString));
+	sPush(theString, iChanW);
+	return result;
+#else
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 
 	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	return result;
+#endif
 	}
 
 // =================================================================================================
