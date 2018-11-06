@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/ChanR_XX_Terminated.h"
 #include "zoolib/Chan_XX_Buffered.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/Chan_UTF_Escaped.h"
@@ -86,9 +87,9 @@ static bool spPull_JSON_Other_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iCh
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
-static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_UTF& iChanW_Real)
+static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_UTF& iChanW)
 	{
-	ChanW_XX_Buffered<ChanW_UTF> iChanW(iChanW_Real, 4096);
+//	ChanW_XX_Buffered<ChanW_UTF> iChanW(iChanW_Real, 4096);
 	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanR);
 	int quotesSeen = 1;
 	for (;;)
@@ -171,12 +172,19 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 
 static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Any& iChanW)
 	{
+#if 0
+	string theString;
+	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, ChanW_UTF_string<UTF8>(&theString));
+	sPush(theString, iChanW);
+	return result;
+#else
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 
 	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	return result;
+#endif
 	}
 
 // =================================================================================================
@@ -584,8 +592,8 @@ bool sPull_Push_JSON(const ChanR_Any& iChanR,
 	}
 
 static bool spPull_Push_JSON(const Any& iAny,
-	const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ChanR_Any& iChanR,
 	const ChanW_UTF& iChanW)
 	{
 	if (const string* theString = sPGet<string>(iAny))
