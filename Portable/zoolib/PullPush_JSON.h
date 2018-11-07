@@ -42,9 +42,12 @@ using Util_Chan_JSON::WriteOptions;
 #pragma mark -
 #pragma mark
 
-bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO, const ChanW_Any& iChanW);
+bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const PullPush_JSON::ReadOptions& iRO,
+	const ChanW_Any& iChanW);
 
-bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO,
+bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
+	const PullPush_JSON::ReadOptions& iRO,
 	const ChanW_Any& iChanW);
 
 bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);

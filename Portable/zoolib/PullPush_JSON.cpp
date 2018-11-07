@@ -224,9 +224,11 @@ static bool spPull_Hex_Push_Bin(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 #pragma mark sPull
 
 bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
-	{ return sPull_JSON_Push(iChanRU, iRO, iChanW); }
+	{ return sPull_JSON_Push(iChanRU, iChanRU, iRO, iChanW); }
 
-bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ReadOptions& iRO, const ChanW_Any& iChanW)
+bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ReadOptions& iRO,
+	const ChanW_Any& iChanW)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
@@ -342,11 +344,13 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const Rea
 #pragma mark
 
 static bool spPull_Push_JSON(const Any& iAny,
+	const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
+	const ChanW_UTF& iChanW);
 
-static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
+	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
 	if (sDoIndentation(iOptions))
@@ -385,7 +389,7 @@ static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, b
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW))
 					return false;
 				iChanW << ";";
 				}
@@ -396,7 +400,7 @@ static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, b
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (iOptions.fNumberSequences.DGet(false))
 					iChanW << "/*" << count << "*/";
-				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, false, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW))
 					return false;
 				}
 			++count;
@@ -423,8 +427,9 @@ static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, b
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, iMayNeedInitialLF,
-					iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR,
+					iIndent, iOptions, iMayNeedInitialLF,
+					iChanW))
 					{
 					return false;
 					}
@@ -438,8 +443,9 @@ static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, b
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				if (not spPull_Push_JSON(*theNotQ, iIndent, iOptions, iMayNeedInitialLF,
-					iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR,
+					iIndent, iOptions, iMayNeedInitialLF,
+					iChanW))
 					{
 					return false;
 					}
@@ -450,8 +456,9 @@ static bool spPull_Push_JSON_Seq(size_t iIndent, const WriteOptions& iOptions, b
 	return true;
 	}
 
-static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
-	const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
+static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
+	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
 	if (sDoIndentation(iOptions))
@@ -495,7 +502,7 @@ static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, b
 				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << " = ";
 
-				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -508,7 +515,7 @@ static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, b
 				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
 				iChanW << ": ";
 
-				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
 					return false;
 				}
 			}
@@ -547,7 +554,7 @@ static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, b
 				else
 					iChanW << "=";
 
-				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
 					return false;
 
 				iChanW << ";";
@@ -563,7 +570,7 @@ static bool spPull_Push_JSON_Map(size_t iIndent, const WriteOptions& iOptions, b
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				if (not spPull_Push_JSON(*theNotQ, iIndent + 1, iOptions, true, iChanR, iChanW))
+				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
 					return false;
 				}
 			wroteAny = true;
@@ -584,15 +591,15 @@ bool sPull_Push_JSON(const ChanR_Any& iChanR,
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
-		spPull_Push_JSON(*theQ, iInitialIndent, iOptions, false, iChanR, iChanW);
+		spPull_Push_JSON(*theQ, iChanR, iInitialIndent, iOptions, false, iChanW);
 		return true;
 		}
 	return false;
 	}
 
 static bool spPull_Push_JSON(const Any& iAny,
-	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanR_Any& iChanR,
+	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
 	if (const string* theString = sPGet<string>(iAny))
@@ -614,10 +621,10 @@ static bool spPull_Push_JSON(const Any& iAny,
 		}
 
 	if (sPGet<PullPush::StartMap>(iAny))
-		return spPull_Push_JSON_Map(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
+		return spPull_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 
 	if (sPGet<PullPush::StartSeq>(iAny))
-		return spPull_Push_JSON_Seq(iIndent, iOptions, iMayNeedInitialLF, iChanR, iChanW);
+		return spPull_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 
 	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
 
