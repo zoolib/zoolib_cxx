@@ -104,4 +104,51 @@ bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW)
 bool sSkip_Node(const ChanR_Any& iChanR)
 	{ return sCopy_Node(iChanR, ChanW_XX_Discard<Any>()); }
 
+bool sTryPull_StartMap(const ChanRU<Any>& iChanRU)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanRU))
+		{
+		if (sPGet<PullPush::StartMap>(*theQ))
+			return true;
+		sUnread(iChanRU, *theQ);
+		}
+	return false;
+	}
+
+bool sTryPull_StartSeq(const ChanRU<Any>& iChanRU)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanRU))
+		{
+		if (sPGet<PullPush::StartSeq>(*theQ))
+			return true;
+		sUnread(iChanRU, *theQ);
+		}
+	return false;
+	}
+
+bool sTryPull_End(const ChanRU<Any>& iChanRU)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanRU))
+		{
+		if (sPGet<PullPush::End>(*theQ))
+			return true;
+		sUnread(iChanRU, *theQ);
+		}
+	return false;
+	}
+
+bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanRU))
+		{
+		if (ZQ<Name> theNameQ = sQGet<Name>(*theQ))
+			{
+			if (iName == *theNameQ)
+				return true;
+			}
+		sUnread(iChanRU, *theQ);
+		}
+	return false;
+	}
+
 } // namespace ZooLib

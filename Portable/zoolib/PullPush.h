@@ -92,6 +92,13 @@ bool sSkip_Node(const ChanR_Any& iChanR);
 
 // ----------
 
+bool sTryPull_StartMap(const ChanRU<Any>& iChanRU);
+bool sTryPull_StartSeq(const ChanRU<Any>& iChanRU);
+bool sTryPull_End(const ChanRU<Any>& iChanRU);
+bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU);
+
+// ----------
+
 template <class EE>
 using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 
