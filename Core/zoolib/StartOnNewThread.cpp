@@ -27,11 +27,20 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark sStartOnNewThread
 
+#if ZCONFIG_API_Enabled(Thread_Win)
+static __stdcall unsigned spCall(Callable<void()>* iCallable)
+	{
+	ZRef<Callable<void()>> theCallable = sAdopt& iCallable;
+	theCallable->QCall();
+	return 0;
+	}
+#else
 static void spCall(Callable<void()>* iCallable)
 	{
 	ZRef<Callable<void()>> theCallable = sAdopt& iCallable;
 	theCallable->QCall();
 	}
+#endif
 
 void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable)
 	{
