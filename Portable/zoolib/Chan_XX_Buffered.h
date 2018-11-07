@@ -34,86 +34,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanR_XX_Buffered_NotWaitReadable
-
-template <class Chan_p>
-class ChanR_XX_Buffered_NotWaitReadable
-:	public ChanFilter<Chan_p>
-	{
-	typedef ChanFilter<Chan_p> inherited;
-	typedef typename Chan_p::Element_t EE;
-public:
-	ChanR_XX_Buffered_NotWaitReadable(const Chan_p& iChan, size_t iBufferSize)
-	:	inherited(iChan)
-	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
-	,	fBegin(0)
-	,	fEnd(0)
-		{}
-
-// From ChanR
-	virtual size_t Read(EE* oDest, size_t iCount)
-		{
-		EE* localDest = oDest;
-		while (iCount)
-			{
-			if (fEnd > fBegin)
-				{
-				// We have some data in our buffer, consume it first.
-				const size_t countToMove = std::min(fEnd - fBegin, iCount);
-				std::copy_n(&fBuffer[fBegin], countToMove, localDest);
-				fBegin += countToMove;
-				localDest += countToMove;
-				iCount -= countToMove;
-				}
-			else
-				{
-				// Our buffer is empty.
-				const size_t countReadable = sReadable(inherited::pGetChan());
-				if (iCount >= fBuffer.size() || iCount >= countReadable)
-					{
-					// Either we're asking for more data than would fit in our buffer, or we're
-					// asking for more data than the stream will be able to provide without
-					// blocking. In either case we bypass the buffer and read straight into our
-					// read destination
-					const size_t countRead = sRead(inherited::pGetChan(), localDest, iCount);
-					if (countRead == 0)
-						break;
-					localDest += countRead;
-					iCount -= countRead;
-					}
-				else
-					{
-					// We're asking for less data than the stream guarantees it could provide
-					// without blocking, in which case we fill up as much of our buffer as we can,
-					// so some later request will be able to be satisfied straight from our buffer.
-					const size_t countRead = sRead(inherited::pGetChan(),
-						&fBuffer[0],
-						std::min(fBuffer.size(), countReadable));
-					if (countRead == 0)
-						break;
-					fBegin = 0;
-					fEnd = countRead;
-					}
-				}
-			}
-		return localDest - oDest;
-		}
-
-	virtual size_t Readable()
-		{ return fEnd - fBegin + sReadable(inherited::pGetChan()); }
-
-protected:
-	std::vector<EE> fBuffer;
-	size_t fBegin;
-	size_t fEnd;
-	};
-
-template <class Channer_p>
-ZRef<Channer_p> sChannerR_Buffered_NotWaitReadable(const ZRef<Channer_p>& iChanner, size_t iBufferSize)
-	{ return sChanner_Channer_T<ChanR_XX_Buffered_NotWaitReadable<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark ChanR_XX_Buffered
 
 template <class Chan_p>
@@ -187,8 +107,7 @@ public:
 		{
 		if (fEnd > fBegin)
 			return true;
-		return sWaitReadable(inherited::pGetChan(), iTimeout);
-//		return inherited::WaitReadable(iTimeout);
+		return WaitReadableIf<Chan_p>::sCall(inherited::pGetChan(), iTimeout);
 		}
 
 protected:

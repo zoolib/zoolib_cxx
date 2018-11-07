@@ -266,6 +266,17 @@ using ChanWaitReadable = DeriveFrom<Aspect_WaitReadable>;
 inline bool sWaitReadable(const ChanWaitReadable& iChan, double iTimeout)
 	{ return sNonConst(iChan).WaitReadable(iTimeout); }
 
+template <class Chan_p, bool enabled=std::is_base_of<ChanWaitReadable,Chan_p>::value>
+struct WaitReadableIf
+	{ static bool sCall(const Chan_p& iChan, double iTimeout) { return false; } };
+
+template <class Chan_p>
+struct WaitReadableIf<Chan_p,true>
+	{
+	static bool sCall(const Chan_p& iChan, double iTimeout)
+		{ return sNonConst(iChan).WaitReadable(iTimeout); }
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark Aspect_Write
