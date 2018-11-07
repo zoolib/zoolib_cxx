@@ -108,6 +108,7 @@ public:
 				localDest += countToCopy;
 				fSource += countToCopy;
 				fCondition_Write.Broadcast();
+				break;
 				}
 			else
 				{
@@ -122,13 +123,6 @@ public:
 				localDest = fDest;
 				fDest = nullptr;
 				fDestCount = 0;
-				}
-
-			if (localDest != static_cast<EE*>(oDest))
-				{
-				// We were able to get *some* data. Let's give up for now
-				// and possibly allow a writer to build up a head of steam, as it were.
-				break;
 				}
 			}
 
@@ -172,14 +166,12 @@ public:
 				// A reader is waiting for data, so copy straight
 				// from our source into the reader's dest.
 				size_t countToCopy = std::min(fDestCount, size_t(localEnd - localSource));
-				if (fDest)
-					{
-					std::copy(localSource, localSource + countToCopy, fDest);
-					fDest += countToCopy;
-					}
+				std::copy(localSource, localSource + countToCopy, fDest);
+				fDest += countToCopy;
 				localSource += countToCopy;
 				fDestCount -= countToCopy;
 				fCondition_Read.Broadcast();
+				break;
 				}
 			else
 				{
@@ -192,13 +184,6 @@ public:
 				localSource = fSource;
 				fSource = nullptr;
 				fSourceEnd = nullptr;
-				}
-
-			if (localSource != static_cast<const EE*>(iSource))
-				{
-				// We were able to write *some* data. Let's give up for now
-				// and possibly allow a reader to come in.
-				break;
 				}
 			}
 
@@ -271,8 +256,6 @@ public:
 
 	ZRef<ImpPipePair<EE>> fPipePair;
 	};
-
-// ----------
 
 
 } // namespace ZooLib
