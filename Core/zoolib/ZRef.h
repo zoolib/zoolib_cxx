@@ -44,7 +44,11 @@ namespace ZooLib {
 template <class T, bool Sense_p = true>
 class ZRef
 	{
-	typedef __unsafe_unretained T* TPtr;
+	#if defined(__APPLE__)
+		typedef __unsafe_unretained T* TPtr;
+	#else
+		typedef T* TPtr;
+	#endif
 
 	inline
 	ZMACRO_Attribute_NoThrow_Ref
@@ -270,14 +274,14 @@ public:
 		spRelease(otherP);
 		}
 
-	#if ! ZCONFIG(Compiler,Clang) || !__has_feature(objc_arc)
-	inline
-	TPtr& OParam()
-		{
-		this->Clear();
-		return fP;
-		}
-	#endif
+//	#if ! ZCONFIG(Compiler,Clang) || !__has_feature(objc_arc)
+//	inline
+//	TPtr& OParam()
+//		{
+//		this->Clear();
+//		return fP;
+//		}
+//	#endif
 
 	template <class O>
 	ZMACRO_Attribute_NoThrow_Ref
