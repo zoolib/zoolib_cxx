@@ -82,6 +82,20 @@ protected:
 	const Val_Any* fVals;
 	};
 
+// -----
+
+inline const Val_Any* sPGet(const PseudoMap& iMap, const string8& iName)
+	{ return iMap.PGet(iName); }
+
+inline const ZQ<Val_Any> sQGet(const PseudoMap& iMap, const string8& iName)
+	{ return iMap.QGet(iName); }
+
+inline const Val_Any& sDGet(const Val_Any& iDefault, const PseudoMap& iMap, const string8& iName)
+	{ return iMap.DGet(iDefault, iName); }
+
+inline const Val_Any& sGet(const PseudoMap& iMap, const string8& iName)
+	{ return iMap.Get(iName); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark PseudoMap_RelHead
