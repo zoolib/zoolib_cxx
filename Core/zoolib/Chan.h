@@ -368,7 +368,7 @@ template <typename EE> using ChanWCon = DeriveFrom
 	Aspect_Write<EE>
 	>;
 
-template <typename EE> using ChanConnection = DeriveFrom
+template <typename EE> using ChanRWCon = DeriveFrom
 	<
 	Aspect_Abort,
 	Aspect_DisconnectRead,
@@ -378,6 +378,7 @@ template <typename EE> using ChanConnection = DeriveFrom
 	Aspect_Write<EE>
 	>;
 
+template <typename EE> using ChanConnection = ChanRWCon<EE>;
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__
