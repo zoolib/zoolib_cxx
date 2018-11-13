@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <sys/select.h> // For fd_set
 
-#include "zoolib/size_t.h" // For size_t
+#include "zoolib/ZStdInt.h" // for uint64 and size_t
 
 namespace ZooLib {
 namespace Util_POSIXFD {
@@ -40,7 +40,19 @@ void sSetup(fd_set& oSet, int iFD);
 
 bool sWaitReadable(int iFD, double iTimeout);
 bool sWaitWriteable(int iFD, double iTimeout);
-size_t sCountReadable(int iFD);
+
+void sAbort(int iFD);
+uint64 sPos(int iFD);
+void sPosSet(int iFD, uint64 iPos);
+size_t sRead(int iFD, byte* oDest, size_t iCount);
+size_t sReadCon(int iFD, byte* oDest, size_t iCount);
+size_t sReadable(int iFD);
+uint64 sSize(int iFD);
+void sSizeSet(int iFD, uint64 iSize);
+size_t sUnread(int iFD, const byte* iSource, size_t iCount);
+size_t sUnreadableLimit(int iFD);
+size_t sWrite(int iFD, const byte* iSource, size_t iCount);
+size_t sWriteCon(int iFD, const byte* iSource, size_t iCount);
 
 } // namespace Util_POSIXFD
 } // namespace ZooLib

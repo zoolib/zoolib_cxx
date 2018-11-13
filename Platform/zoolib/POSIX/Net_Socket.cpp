@@ -319,7 +319,7 @@ size_t NetEndpoint_Socket::Read(byte* oDest, size_t iCount)
 	}
 
 size_t NetEndpoint_Socket::Readable()
-	{ return Util_POSIXFD::sCountReadable(fSocketFD); }
+	{ return Util_POSIXFD::sReadable(fSocketFD); }
 
 size_t NetEndpoint_Socket::Write(const byte* iSource, size_t iCount)
 	{

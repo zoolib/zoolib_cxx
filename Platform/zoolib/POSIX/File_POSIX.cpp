@@ -18,24 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-// Enable 64 bit variants of system calls on Linux. We don't go the whole hog and
-// use _FILE_OFFSET_BITS to do renaming of entry points and data types because I'd
-// rather be explicit about which functions we're calling.
-#ifndef _LARGEFILE64_SOURCE
-	#define _LARGEFILE64_SOURCE
-#endif
-
 #include "zoolib/POSIX/File_POSIX.h"
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
-#if ZCONFIG_SPI_Enabled(BeOS) || defined (__ANDROID__)
-	#define ZCONFIG_File_AtAPISupported 0
-#else
-	#define ZCONFIG_File_AtAPISupported 1
-#endif
-
-#include "zoolib/ZDebug.h"
+#include "zoolib/POSIX/Chan_Bin_POSIXFD.h"
 
 #include <cstring>
 #include <vector>
@@ -43,10 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define kDebug_File_POSIX 2
 
 #include <dirent.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 #if ZCONFIG_SPI_Enabled(Linux)
@@ -60,6 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if (!__MWERKS__)
 	using std::strchr;
 #endif
+
 using std::string;
 using std::vector;
 
@@ -268,242 +254,6 @@ static int spCreate(const char* iPath,
 	return spLockOrClose(theFD, iAllowRead, true, iPreventWriters, oErr);
 	}
 
-static File::Error spRead(int iFD, void* oDest, size_t iCount, size_t* oCountRead)
-	{
-	if (oCountRead)
-		*oCountRead = 0;
-
-	char* localDest = reinterpret_cast<char*>(oDest);
-	size_t countRemaining = iCount;
-	while (countRemaining > 0)
-		{
-		ssize_t countRead = ::read(iFD, localDest, countRemaining);
-
-		if (countRead == 0)
-			return File::errorReadPastEOF;
-
-		if (countRead < 0)
-			{
-			int err = errno;
-			if (err == EINTR)
-				continue;
-			return spTranslateError(err);
-			}
-		if (oCountRead)
-			*oCountRead += countRead;
-		countRemaining -= countRead;
-		localDest += countRead;
-		}
-	return File::errorNone;
-	}
-
-static File::Error spWrite(int iFD, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{
-	if (oCountWritten)
-		*oCountWritten = 0;
-
-	const char* localSource = reinterpret_cast<const char*>(iSource);
-	size_t countRemaining = iCount;
-	while (countRemaining > 0)
-		{
-		ssize_t countWritten = ::write(iFD, localSource, countRemaining);
-		if (countWritten < 0)
-			{
-			int err = errno;
-			if (err == EINTR)
-				continue;
-			return spTranslateError(err);
-			}
-		if (oCountWritten)
-			*oCountWritten += countWritten;
-		countRemaining -= countWritten;
-		localSource += countWritten;
-		}
-	return File::errorNone;
-	}
-
-//static File::Error spReadAt(
-//	int iFD, uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
-//	{
-//#if ZCONFIG_File_AtAPISupported
-//
-//	if (oCountRead)
-//		*oCountRead = 0;
-//
-//	#if !defined(linux) || defined(__linux__)
-//	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
-//		return File::errorGeneric;
-//	#endif
-//
-//	char* localDest = reinterpret_cast<char*>(oDest);
-//	uint64 localOffset = iOffset;
-//	size_t countRemaining = iCount;
-//	while (countRemaining > 0)
-//		{
-//		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-//			ssize_t countRead = ::pread64(iFD, localDest, countRemaining, localOffset);
-//		#else
-//			ssize_t countRead = ::pread(iFD, localDest, countRemaining, localOffset);
-//		#endif
-//
-//		if (countRead == 0)
-//			return File::errorReadPastEOF;
-//
-//		if (countRead < 0)
-//			{
-//			int err = errno;
-//			if (err == EINTR)
-//				continue;
-//			return spTranslateError(err);
-//			}
-//		if (oCountRead)
-//			*oCountRead += countRead;
-//		countRemaining -= countRead;
-//		localDest += countRead;
-//		localOffset += countRead;
-//		}
-//	return File::errorNone;
-//
-//#else
-//
-//	ZUnimplemented();
-//	return File::errorNone;
-//
-//#endif
-//	}
-
-//static File::Error spWriteAt(int iFD,
-//	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-//	{
-//#if ZCONFIG_File_AtAPISupported
-//
-//	if (oCountWritten)
-//		*oCountWritten = 0;
-//
-//	#if !(defined(linux) || defined(__linux__))
-//	if (sizeof(off_t) == 4 && iOffset > 0x7FFFFFFFL)
-//		return File::errorGeneric;
-//	#endif
-//
-//	const char* localSource = reinterpret_cast<const char*>(iSource);
-//	uint64 localOffset = iOffset;
-//	size_t countRemaining = iCount;
-//	while (countRemaining > 0)
-//		{
-//		#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-//			ssize_t countWritten = ::pwrite64(iFD, localSource, countRemaining, localOffset);
-//		#else
-//			ssize_t countWritten = ::pwrite(iFD, localSource, countRemaining, localOffset);
-//		#endif
-//
-//		if (countWritten < 0)
-//			{
-//			int err = errno;
-//			if (err == EINTR)
-//				continue;
-//			return spTranslateError(err);
-//			}
-//		if (oCountWritten)
-//			*oCountWritten += countWritten;
-//		countRemaining -= countWritten;
-//		localSource += countWritten;
-//		localOffset += countWritten;
-//		}
-//	return File::errorNone;
-//
-//#else
-//
-//	ZUnimplemented();
-//	return File::errorNone;
-//
-//#endif
-//	}
-
-static File::Error spGetPosition(int iFD, uint64& oPosition)
-	{
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-		off64_t result = ::lseek64(iFD, 0, SEEK_CUR);
-	#else
-		off_t result = ::lseek(iFD, 0, SEEK_CUR);
-	#endif
-
-	if (result < 0)
-		{
-		oPosition = 0;
-		return spTranslateError(errno);
-		}
-	oPosition = result;
-	return File::errorNone;
-	}
-
-static File::Error spSetPosition(int iFD, uint64 iPosition)
-	{
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-		if (::lseek64(iFD, iPosition, SEEK_SET) < 0)
-			return spTranslateError(errno);
-	#else
-		if (::lseek(iFD, iPosition, SEEK_SET) < 0)
-			return spTranslateError(errno);
-	#endif
-
-	return File::errorNone;
-	}
-
-static File::Error spGetSize(int iFD, uint64& oSize)
-	{
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-		struct stat64 theStatStruct;
-		if (::fstat64(iFD, &theStatStruct))
-			{
-			oSize = 0;
-			return spTranslateError(errno);
-			}
-	#else
-		struct stat theStatStruct;
-		if (::fstat(iFD, &theStatStruct))
-			{
-			oSize = 0;
-			return spTranslateError(errno);
-			}
-	#endif
-
-	oSize = theStatStruct.st_size;
-	return File::errorNone;
-	}
-
-static File::Error spSetSize(int iFD, uint64 iSize)
-	{
-	// NB ftruncate is not supported on all systems
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-		if (::ftruncate64(iFD, iSize) < 0)
-			return spTranslateError(errno);
-	#else
-		if (::ftruncate(iFD, iSize) < 0)
-			return spTranslateError(errno);
-	#endif
-
-	return File::errorNone;
-	}
-
-//static File::Error spFlush(int iFD)
-//	{
-//	// AG 2001-08-02. Stumbled across the docs for fdatasync, which ensures the contents of a
-//	// file are flushed to disk, but does not necessarily ensure mod time is brought up to date.
-//	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
-//		::fdatasync(iFD);
-//	#else
-//		::fsync(iFD);
-//	#endif
-//
-//	return File::errorNone;
-//	}
-
-//static File::Error spFlushVolume(int iFD)
-//	{
-//	::fsync(iFD);
-//	return File::errorNone;
-//	}
-
 static void spSplit(
 	char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
 	vector<string>& oComps)
@@ -560,6 +310,31 @@ static void spGetCWD(vector<string8>& oComps)
 			}
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark FDHolder_UnlockOnDestroy
+
+class FDHolder_UnlockOnDestroy
+:	public FDHolder
+	{
+public:
+	FDHolder_UnlockOnDestroy(int iFD)
+	:	fFD(iFD)
+		{}
+
+	virtual ~FDHolder_UnlockOnDestroy()
+		{
+		spClose(fFD);
+		}
+
+// Our protocol
+	virtual int GetFD()
+		{ return fFD; }
+
+protected:
+	int fFD;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -1079,7 +854,7 @@ ZRef<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
 	if (theFD < 0)
 		return null;
 
-	return sChanner_T<ChanRPos_File_POSIX>(ChanRPos_File_POSIX::Init_t(theFD, true));
+	return sChanner_T<ChanRPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
 	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
@@ -1089,7 +864,7 @@ ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
 	if (theFD < 0)
 		return null;
 
-	return sChanner_T<ChanWPos_File_POSIX>(ChanWPos_File_POSIX::Init_t(theFD, true));
+	return sChanner_T<ChanWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
 	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
@@ -1099,7 +874,7 @@ ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	if (theFD < 0)
 		return null;
 
-	return sChanner_T<ChanRWPos_File_POSIX>(ChanRPos_File_POSIX::Init_t(theFD, true));
+	return sChanner_T<ChanRWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
 	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
@@ -1109,7 +884,7 @@ ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreven
 	if (theFD < 0)
 		return null;
 
-	return sChanner_T<ChanWPos_File_POSIX>(FDHolder::Init_t(theFD, true));
+	return sChanner_T<ChanWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
 	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
@@ -1119,7 +894,7 @@ ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPrev
 	if (theFD < 0)
 		return null;
 
-	return sChanner_T<ChanRWPos_File_POSIX>(FDHolder::Init_t(theFD, true));
+	return sChanner_T<ChanRWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
 	}
 
 string FileLoc_POSIX::pGetPath()
@@ -1142,220 +917,6 @@ string FileLoc_POSIX::pGetPath()
 	return result;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark FDHolder
-
-FDHolder::FDHolder(const Init_t& iInit)
-:	fFD(iInit.first)
-,	fCloseWhenFinalized(iInit.second)
-	{}
-
-FDHolder::~FDHolder()
-	{
-	if (fCloseWhenFinalized)
-		spClose(fFD);
-	}
-
-int FDHolder::GetFD() const
-	{ return fFD; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_File_POSIX
-
-ChanRPos_File_POSIX::ChanRPos_File_POSIX(const Init_t& iInit)
-:	FDHolder(iInit)
-	{}
-
-ChanRPos_File_POSIX::~ChanRPos_File_POSIX()
-	{}
-
-size_t ChanRPos_File_POSIX::Read(byte* oDest, size_t iCount)
-	{
-	size_t countRead;
-	spRead(fFD, oDest, iCount, &countRead);
-	return countRead;
-//	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
-//		return countRead;
-//	return 0;
-	}
-
-size_t ChanRPos_File_POSIX::Readable()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		{
-		uint64 thePos;
-		if (File::errorNone == spGetPosition(fFD, thePos))
-			return theSize - thePos;
-		}
-	return 0;
-	}
-
-uint64 ChanRPos_File_POSIX::Pos()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
-
-void ChanRPos_File_POSIX::PosSet(uint64 iPos)
-	{ spSetPosition(fFD, iPos); }
-
-uint64 ChanRPos_File_POSIX::Size()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
-size_t ChanRPos_File_POSIX::Unread(const byte* iSource, size_t iCount)
-	{
-	uint64 thePos;
-	if (File::errorNone == spGetPosition(fFD, thePos))
-		{
-		const size_t countToUnread = std::min<uint64>(thePos, iCount);
-		spSetPosition(fFD, thePos - countToUnread);
-		return countToUnread;
-		}
-	return 0;
-	}
-
-size_t ChanRPos_File_POSIX::UnreadableLimit()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanWPos_File_POSIX
-
-ChanWPos_File_POSIX::ChanWPos_File_POSIX(const Init_t& iInit)
-:	FDHolder(iInit)
-	{}
-
-ChanWPos_File_POSIX::~ChanWPos_File_POSIX()
-	{}
-
-size_t ChanWPos_File_POSIX::Write(const byte* iSource, size_t iCount)
-	{
-	size_t countWritten;
-	spWrite(fFD, iSource, iCount, &countWritten);
-	return countWritten;
-//	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
-//		return countWritten;
-//	return 0;
-	}
-
-uint64 ChanWPos_File_POSIX::Pos()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
-
-void ChanWPos_File_POSIX::PosSet(uint64 iPos)
-	{ spSetPosition(fFD, iPos); }
-
-uint64 ChanWPos_File_POSIX::Size()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
-void ChanWPos_File_POSIX::SizeSet(uint64 iSize)
-	{ spSetSize(fFD, iSize); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_File_POSIX
-
-ChanRWPos_File_POSIX::ChanRWPos_File_POSIX(const Init_t& iInit)
-:	FDHolder(iInit)
-	{}
-
-ChanRWPos_File_POSIX::~ChanRWPos_File_POSIX()
-	{}
-
-size_t ChanRWPos_File_POSIX::Read(byte* oDest, size_t iCount)
-	{
-	size_t countRead;
-	if (File::errorNone == spRead(fFD, oDest, iCount, &countRead))
-		return countRead;
-	return 0;
-	}
-
-size_t ChanRWPos_File_POSIX::Readable()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		{
-		uint64 thePos;
-		if (File::errorNone == spGetPosition(fFD, thePos))
-			return theSize - thePos;
-		}
-	return 0;
-	}
-
-size_t ChanRWPos_File_POSIX::Write(const byte* iSource, size_t iCount)
-	{
-	size_t countWritten;
-	if (File::errorNone == spWrite(fFD, iSource, iCount, &countWritten))
-		return countWritten;
-	return 0;
-	}
-
-void ChanRWPos_File_POSIX::SizeSet(uint64 iSize)
-	{ spSetSize(fFD, iSize); }
-
-
-uint64 ChanRWPos_File_POSIX::Pos()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
-
-void ChanRWPos_File_POSIX::PosSet(uint64 iPos)
-	{ spSetPosition(fFD, iPos); }
-
-uint64 ChanRWPos_File_POSIX::Size()
-	{
-	uint64 theSize;
-	if (File::errorNone == spGetSize(fFD, theSize))
-		return theSize;
-	return 0;
-	}
-
-size_t ChanRWPos_File_POSIX::Unread(const byte* iSource, size_t iCount)
-	{
-	uint64 thePos;
-	if (File::errorNone == spGetPosition(fFD, thePos))
-		{
-		const size_t countToUnread = std::min<uint64>(thePos, iCount);
-		spSetPosition(fFD, thePos - countToUnread);
-		return countToUnread;
-		}
-	return 0;
-	}
-
-size_t ChanRWPos_File_POSIX::UnreadableLimit()
-	{
-	uint64 pos;
-	if (File::errorNone == spGetPosition(fFD, pos))
-		return pos;
-	return 0;
-	}
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(File_POSIX)

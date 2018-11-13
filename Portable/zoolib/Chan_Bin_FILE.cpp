@@ -40,9 +40,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-static size_t spRead(FILE* iFILE, void* oDest, size_t iCount)
+static size_t spRead(FILE* iFILE, byte* oDest, size_t iCount)
 	{
-	char* localDest = reinterpret_cast<char*>(oDest);
+	byte* localDest = oDest;
 	if (iFILE)
 		{
 		while (iCount)
@@ -54,12 +54,12 @@ static size_t spRead(FILE* iFILE, void* oDest, size_t iCount)
 			localDest += countRead;
 			}
 		}
-	return localDest - reinterpret_cast<char*>(oDest);
+	return localDest - oDest;
 	}
 
-static size_t spWrite(FILE* iFILE, const void* iSource, size_t iCount)
+static size_t spWrite(FILE* iFILE, const byte* iSource, size_t iCount)
 	{
-	const char* localSource = reinterpret_cast<const char*>(iSource);
+	const byte* localSource = iSource;
 	if (iFILE)
 		{
 		while (iCount)
@@ -71,62 +71,8 @@ static size_t spWrite(FILE* iFILE, const void* iSource, size_t iCount)
 			localSource += countWritten;
 			}
 		}
-	return localSource - reinterpret_cast<const char*>(iSource);
+	return localSource - iSource;
 	}
-
-//static uint64 spGetPosition(FILE* iFILE)
-//	{
-//	if (iFILE)
-//		{
-//		#if ZCONFIG_Has_fseeko
-//			off_t result = ftello(iFILE);
-//			if (result >= 0)
-//				return result;
-//		#else
-//			long result = ftell(iFILE);
-//			if (result >= 0)
-//				return result;
-//		#endif
-//		}
-//	return 0;
-//	}
-
-//static bool spSetPosition(FILE* iFILE, uint64 iPosition)
-//	{
-//	if (iFILE)
-//		{
-//		#if ZCONFIG_Has_fseeko
-//			return 0 < fseeko(iFILE, iPosition, SEEK_SET);
-//		#else
-//			if (iPosition != size_t(iPosition))
-//				return false;
-//			return 0 < fseek(iFILE, iPosition, SEEK_SET);
-//		#endif
-//		}
-//	return false;
-//	}
-
-//static uint64 spGetSize(FILE* iFILE)
-//	{
-//	if (iFILE)
-//		{
-//		#if ZCONFIG_Has_fseeko
-//			off_t oldPos = fseeko(iFILE, 0, SEEK_CUR);
-//			off_t endPos = fseeko(iFILE, 0, SEEK_END);
-//			fseeko(iFILE, oldPos, SEEK_SET);
-//			return endPos;
-//		#else
-//			long oldPos = fseek(iFILE, 0, SEEK_CUR);
-//			long endPos = fseek(iFILE, 0, SEEK_END);
-//			fseek(iFILE, oldPos, SEEK_SET);
-//			return endPos;
-//		#endif
-//		}
-//	return 0;
-//	}
-
-// This one's difficult to support
-//static void spSetSize(FILE* iFILE, uint64 iSize)
 
 using std::range_error;
 
@@ -136,7 +82,7 @@ using std::range_error;
 
 FILEHolder::FILEHolder(FILE* iFILE, bool iAdopt)
 :	fFILE(iFILE)
-,	fAdopted(false)
+,	fAdopted(iAdopt)
 	{}
 
 FILEHolder::~FILEHolder()
@@ -149,7 +95,7 @@ FILE* FILEHolder::GetFILE()
 	{ return fFILE; }
 
 FILE* FILEHolder::OrphanFILE()
-	{ FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
+	{ return sGetSet(fFILE, nullptr); }
 
 // =================================================================================================
 #pragma mark -
@@ -165,33 +111,6 @@ ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE, bool iAdopt)
 
 size_t ChanR_Bin_FILE::Read(byte* oDest, size_t iCount)
 	{ return spRead(fFILE, oDest, iCount); }
-
-//// =================================================================================================
-//#pragma mark -
-#pragma mark ZStreamRPos_FILE
-//
-//ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE)
-//:	FILEHolder(iFILE, false)
-//	{}
-//
-//ZStreamRPos_FILE::ZStreamRPos_FILE(FILE* iFILE, bool iAdopt)
-//:	FILEHolder(iFILE, iAdopt)
-//	{}
-//
-//void ZStreamRPos_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
-//	{ spRead(fFILE, oDest, iCount, oCountRead); }
-//
-//uint64 ZStreamRPos_FILE::Imp_GetPosition()
-//	{ return spGetPosition(fFILE); }
-//
-//void ZStreamRPos_FILE::Imp_SetPosition(uint64 iPosition)
-//	{
-//	if (not spSetPosition(fFILE, iPosition))
-//		throw range_error("ZStreamRPos_FILE::Imp_SetPosition");
-//	}
-//
-//uint64 ZStreamRPos_FILE::Imp_GetSize()
-//	{ return spGetSize(fFILE); }
 
 // =================================================================================================
 #pragma mark -
@@ -210,312 +129,5 @@ size_t ChanW_Bin_FILE::Write(const byte* iSource, size_t iCount)
 
 void ChanW_Bin_FILE::Flush()
 	{ fflush(fFILE); }
-
-//// =================================================================================================
-//#pragma mark -
-#pragma mark FILE backed by a ZStream
-//
-//#if defined(__USE_GNU)
-//
-//static ssize_t spReadStreamR(void* iCookie, char* oDest, size_t iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZStreamR*>(iCookie)->Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static ssize_t spWriteStreamW(void* iCookie, const char* iSource, size_t iCount)
-//	{
-//	size_t countWritten;
-//	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
-//	return countWritten;
-//	}
-//
-//static int64 spSeekStreamRPos(const ZStreamRPos& iStreamRPos, int64 iPos, int iWhence)
-//	{
-//	switch (iWhence)
-//		{
-//		case SEEK_SET:
-//			{
-//			iStreamRPos.SetPosition(iPos);
-//			return iStreamRPos.GetPosition();
-//			}
-//		case SEEK_CUR:
-//			{
-//			size_t newPos = iStreamRPos.GetPosition() + iPos;
-//			iStreamRPos.SetPosition(newPos);
-//			return newPos;
-//			}
-//		case SEEK_END:
-//			{
-//			size_t newPos = iStreamRPos.GetSize() + iPos;
-//			iStreamRPos.SetPosition(newPos);
-//			return newPos;
-//			}
-//		}
-//	ZUnimplemented();
-//	return -1;
-//	}
-//
-//static int spSeekStreamRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
-//	{
-//	return spSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), *iPos, iWhence);
-//	}
-//
-//static ssize_t spReadStreamerR(void* iCookie, char* oDest, size_t iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static ssize_t spReadStreamerRPos(void* iCookie, char* oDest, size_t iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static int spSeekStreamerRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
-//	{
-//	return spSeekStreamRPos(
-//		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), *iPos, iWhence);
-//	}
-//
-//static ssize_t spWriteStreamerW(void* iCookie, const char* iSource, size_t iCount)
-//	{
-//	size_t countWritten;
-//	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
-//	return countWritten;
-//	}
-//
-//static int spCloseStreamerR(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerR>*>(iCookie);
-//	return 0;
-//	}
-//
-//static int spCloseStreamerRPos(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerRPos>*>(iCookie);
-//	return 0;
-//	}
-//
-//static int spCloseStreamerW(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerW>*>(iCookie);
-//	return 0;
-//	}
-//
-//FILE* sStreamOpen(const ZStreamR& iStreamR)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = spReadStreamR;
-//	theFunctions.write = nullptr;
-//	theFunctions.seek = nullptr;
-//	theFunctions.close = nullptr;
-//	return ::fopencookie(const_cast<ZStreamR*>(&iStreamR), "", theFunctions);
-//	}
-//
-//FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = spReadStreamR;
-//	theFunctions.write = nullptr;
-//	theFunctions.seek = spSeekStreamRPos;
-//	theFunctions.close = nullptr;
-//	return ::fopencookie(const_cast<ZStreamRPos*>(&iStreamRPos), "", theFunctions);
-//	}
-//
-//FILE* sStreamOpen(const ZStreamW& iStreamW)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = nullptr;
-//	theFunctions.write = spWriteStreamW;
-//	theFunctions.seek = nullptr;
-//	theFunctions.close = nullptr;
-//	return ::fopencookie(const_cast<ZStreamW*>(&iStreamW), "", theFunctions);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = spReadStreamerR;
-//	theFunctions.write = nullptr;
-//	theFunctions.seek = nullptr;
-//	theFunctions.close = spCloseStreamerR;
-//	return ::fopencookie(new ZRef<ZStreamerR>(iStreamerR), "", theFunctions);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = spReadStreamerRPos;
-//	theFunctions.write = nullptr;
-//	theFunctions.seek = spSeekStreamerRPos;
-//	theFunctions.close = spCloseStreamerRPos;
-//	return ::fopencookie(new ZRef<ZStreamerRPos>(iStreamerRPos), "", theFunctions);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
-//	{
-//	_IO_cookie_io_functions_t theFunctions;
-//	theFunctions.read = nullptr;
-//	theFunctions.write = spWriteStreamerW;
-//	theFunctions.seek = nullptr;
-//	theFunctions.close = spCloseStreamerW;
-//	return ::fopencookie(new ZRef<ZStreamerW>(iStreamerW), "", theFunctions);
-//	}
-//
-//#elif defined(BSD)
-//
-//static int spReadStreamR(void* iCookie, char* oDest, int iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZStreamR*>(iCookie)->Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static fpos_t spSeekStreamRPos(const ZStreamRPos& iStreamRPos, fpos_t iPos, int iWhence)
-//	{
-//	switch (iWhence)
-//		{
-//		case SEEK_SET:
-//			{
-//			iStreamRPos.SetPosition(iPos);
-//			return iStreamRPos.GetPosition();
-//			}
-//		case SEEK_CUR:
-//			{
-//			size_t newPos = iStreamRPos.GetPosition() + iPos;
-//			iStreamRPos.SetPosition(newPos);
-//			return newPos;
-//			}
-//		case SEEK_END:
-//			{
-//			size_t newPos = iStreamRPos.GetSize() + iPos;
-//			iStreamRPos.SetPosition(newPos);
-//			return newPos;
-//			}
-//		}
-//	ZUnimplemented();
-//	return -1;
-//	}
-//
-//static fpos_t spSeekStreamRPos(void* iCookie, fpos_t iPos, int iWhence)
-//	{
-//	return spSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), iPos, iWhence);
-//	}
-//
-//static int spWriteStreamW(void* iCookie, const char* iSource, int iCount)
-//	{
-//	size_t countWritten;
-//	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
-//	return countWritten;
-//	}
-//
-//static int spReadStreamerR(void* iCookie, char* oDest, int iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static int spReadStreamerRPos(void* iCookie, char* oDest, int iCount)
-//	{
-//	size_t countRead;
-//	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
-//	return countRead;
-//	}
-//
-//static fpos_t spSeekStreamerRPos(void* iCookie, fpos_t iPos, int iWhence)
-//	{
-//	return spSeekStreamRPos(
-//		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), iPos, iWhence);
-//	}
-//
-//static int spWriteStreamerW(void* iCookie, const char* iSource, int iCount)
-//	{
-//	size_t countWritten;
-//	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
-//	return countWritten;
-//	}
-//
-//#if 0
-//static int spCloseStreamerR(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerR>*>(iCookie);
-//	return 0;
-//	}
-//#endif
-//
-//static int spCloseStreamerRPos(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerRPos>*>(iCookie);
-//	return 0;
-//	}
-//
-//static int spCloseStreamerW(void* iCookie)
-//	{
-//	delete static_cast<ZRef<ZStreamerW>*>(iCookie);
-//	return 0;
-//	}
-//
-//FILE* sStreamOpen(const ZStreamR& iStreamR)
-//	{
-//	return ::funopen(const_cast<ZStreamR*>(&iStreamR), spReadStreamR, nullptr, nullptr, nullptr);
-//	}
-//
-//FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
-//	{
-//	return ::funopen(
-//		const_cast<ZStreamRPos*>(&iStreamRPos), spReadStreamR, nullptr, spSeekStreamRPos, nullptr);
-//	}
-//
-//FILE* sStreamOpen(const ZStreamW& iStreamW)
-//	{
-//	return ::funopen(const_cast<ZStreamW*>(&iStreamW), nullptr, spWriteStreamW, nullptr, nullptr);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
-//	{
-//	return ::funopen(
-//		new ZRef<ZStreamerR>(iStreamerR), spReadStreamerR, nullptr, nullptr, spCloseStreamerRPos);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
-//	{
-//	return ::funopen(
-//		new ZRef<ZStreamerRPos>(iStreamerRPos),
-//		spReadStreamerRPos, nullptr, spSeekStreamerRPos, spCloseStreamerRPos);
-//	}
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
-//	{
-//	return ::funopen(new ZRef<ZStreamerW>(iStreamerW),
-//		nullptr, spWriteStreamerW, nullptr, spCloseStreamerW);
-//	}
-//
-//#else
-//
-//FILE* sStreamOpen(const ZStreamR& iStreamR)
-//	{ return nullptr; }
-//
-//FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
-//	{ return nullptr; }
-//
-//FILE* sStreamOpen(const ZStreamW& iStreamW)
-//	{ return nullptr; }
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
-//	{ return nullptr; }
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
-//	{ return nullptr; }
-//
-//FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
-//	{ return nullptr; }
-//
-//#endif
 
 } // namespace ZooLib
