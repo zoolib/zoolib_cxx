@@ -19,7 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/StartOnNewThread.h"
+
+#include "zoolib/Singleton.h"
 #include "zoolib/ZThread.h"
+
+#include <list>
 
 namespace ZooLib {
 
@@ -27,25 +31,72 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark sStartOnNewThread
 
-#if ZCONFIG_API_Enabled(Thread_Win)
-static __stdcall unsigned spCall(Callable<void()>* iCallable)
+class StartOnNewThreadHandler
 	{
-	ZRef<Callable<void()>> theCallable = sAdopt& iCallable;
-	theCallable->QCall();
-	return 0;
-	}
-#else
-static void spCall(Callable<void()>* iCallable)
-	{
-	ZRef<Callable<void()>> theCallable = sAdopt& iCallable;
-	theCallable->QCall();
-	}
-#endif
+public:
+	StartOnNewThreadHandler()
+	:	fSpareThreads(0)
+		{}
+
+	void Start(const ZRef<Callable<void()>>& iCallable)
+		{
+		ZAcqMtx acq(fMtx);
+		fQueue.push_back(iCallable);
+		if (fSpareThreads == 0)
+			ZThread::sStartRaw(0, (ZThread::ProcRaw_t)sDoOne, this);
+		else
+			fCnd.Broadcast();
+		}
+
+	void DoOne()
+		{
+		ZAcqMtx acq(fMtx);
+		double expires = Time::sSystem() + 10;
+		++fSpareThreads;
+		for (;;)
+			{
+			if (fQueue.empty())
+				{
+				if (Time::sSystem() > expires)
+					break;
+				fCnd.WaitFor(fMtx, 5);
+				}
+			else
+				{
+				ZRef<Callable<void()>> theCallable = fQueue.front();
+				fQueue.pop_front();
+
+				--fSpareThreads;
+
+				try
+					{
+					ZRelMtx acq(fMtx);
+					theCallable->QCall();
+					}
+				catch (...)
+					{}
+
+				++fSpareThreads;
+				}
+			}
+		--fSpareThreads;
+		}
+
+	static void sDoOne(void* iRefcon)
+		{ static_cast<StartOnNewThreadHandler*>(iRefcon)->DoOne(); }
+
+	ZMtx fMtx;
+	ZCnd fCnd;
+	int fSpareThreads;
+	std::list<ZRef<Callable<void()>>> fQueue;
+	};
+
+// ----------
 
 void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable)
 	{
 	if (iCallable)
-		ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spCall, iCallable.Copy());
+		sSingleton<StartOnNewThreadHandler>().Start(iCallable);
 	}
 
 } // namespace ZooLib
