@@ -193,6 +193,9 @@ size_t ChanRWPos_Bin_POSIXFD::Unread(const byte* iSource, size_t iCount)
 size_t ChanRWPos_Bin_POSIXFD::UnreadableLimit()
 	{ return Util_POSIXFD::sUnreadableLimit(fFDHolder->GetFD()); }
 
+
+// Need to decide how to handle DisconnectRead and DisconnectWrite.
+
 //// =================================================================================================
 //#pragma mark -
 //#pragma mark ChanRCon_Bin_POSIXFD
