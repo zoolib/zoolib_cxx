@@ -257,7 +257,6 @@ public:
 	ZRef<ImpPipePair<EE>> fPipePair;
 	};
 
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_XX_PipePair_h__
