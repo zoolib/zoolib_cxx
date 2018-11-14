@@ -464,8 +464,8 @@ S& sMut(Map_Any& ioMap, const Map_Any::Name_t& iName)
 	{ return ioMap.Mut<S>(iName); }
 
 template <class S>
-S& sSet(Map_Any& ioMap, const Map_Any::Name_t& iName, const S& iVal)
-	{ return ioMap.Set<S>(iName, iVal); }
+void sSet(Map_Any& ioMap, const Map_Any::Name_t& iName, const S& iVal)
+	{ ioMap.Set<S>(iName, iVal); }
 
 // =================================================================================================
 #pragma mark -
