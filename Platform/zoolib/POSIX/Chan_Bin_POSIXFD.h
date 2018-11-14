@@ -214,34 +214,34 @@ protected:
 	const ZRef<FDHolder> fFDHolder;
 	};
 
-//// =================================================================================================
-//#pragma mark -
-//#pragma mark ChanRCon_Bin_POSIXFD
-//
-//class ChanRCon_Bin_POSIXFD
-//:	public ChanRCon<byte>
-//	{
-//public:
-//	ChanRCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
-//	~ChanRCon_Bin_POSIXFD();
-//
-//// From Aspect_Abort
-//	virtual void Abort();
-//
-//// From Aspect_DisconnectRead
-//	virtual bool DisconnectRead(double iTimeout);
-//
-//// From Aspect_Read<byte>
-//	virtual size_t Read(byte* oDest, size_t iCount);
-//	virtual size_t Readable();
-//
-//// From Aspect_WaitReadable
-//	virtual bool WaitReadable(double iTimeout);
-//
-//protected:
-//	const ZRef<FDHolder> fFDHolder;
-//	};
-//
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanRCon_Bin_POSIXFD
+
+class ChanRCon_Bin_POSIXFD
+:	public ChanRCon<byte>
+	{
+public:
+	ChanRCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	~ChanRCon_Bin_POSIXFD();
+
+// From Aspect_Abort
+	virtual void Abort();
+
+// From Aspect_DisconnectRead
+	virtual bool DisconnectRead(double iTimeout);
+
+// From Aspect_Read<byte>
+	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual size_t Readable();
+
+// From Aspect_WaitReadable
+	virtual bool WaitReadable(double iTimeout);
+
+protected:
+	const ZRef<FDHolder> fFDHolder;
+	};
+
 //// =================================================================================================
 //#pragma mark -
 //#pragma mark ChanWCon_Bin_POSIXFD
