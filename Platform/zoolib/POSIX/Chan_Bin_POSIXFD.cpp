@@ -54,16 +54,16 @@ int FDHolder_Std::GetFD()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark FDHolder_CloseWhenDtor
+#pragma mark FDHolder_CloseOnDestroy
 
-FDHolder_CloseWhenDestroyed::FDHolder_CloseWhenDestroyed(int iFD)
+FDHolder_CloseOnDestroy::FDHolder_CloseOnDestroy(int iFD)
 :	fFD(iFD)
 	{}
 
-FDHolder_CloseWhenDestroyed::~FDHolder_CloseWhenDestroyed()
+FDHolder_CloseOnDestroy::~FDHolder_CloseOnDestroy()
 	{ ::close(fFD); }
 
-int FDHolder_CloseWhenDestroyed::GetFD()
+int FDHolder_CloseOnDestroy::GetFD()
 	{ return fFD; }
 
 // =================================================================================================

@@ -78,6 +78,38 @@ class Make_FileLoc
 
 // =================================================================================================
 #pragma mark -
+#pragma mark FDHolder_UnlockOnDestroy
+
+class FDHolder_UnlockOnDestroy
+:	public FDHolder
+	{
+public:
+	FDHolder_UnlockOnDestroy(int iFD)
+	:	fFD(iFD)
+		{}
+
+	virtual ~FDHolder_UnlockOnDestroy()
+		{
+		struct flock file_lock;
+		file_lock.l_type = F_UNLCK;
+		file_lock.l_whence = SEEK_SET;
+		file_lock.l_start = 0;
+		file_lock.l_len = 0;
+		::fcntl(fFD, F_SETLK, &file_lock);
+
+		::close(fFD);
+		}
+
+// Our protocol
+	virtual int GetFD()
+		{ return fFD; }
+
+protected:
+	int fFD;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark Shared implementation details
 
 static File::Error spTranslateError(int iNativeError)
@@ -127,14 +159,14 @@ static int spFCntl(int iFD, int iCmd, struct flock& ioFLock)
 		}
 	}
 
-static int spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, File::Error* oErr)
+ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 
 	if (ZCONFIG_SPI_Enabled(BeOS))
 		{
 		// Doesn't look like BeOS supports advisory locks.
-		return iFD;
+		return new FDHolder_CloseOnDestroy(iFD);
 		}
 
 	// We always respect advisory locks, and we may apply a lock ourselves.
@@ -148,36 +180,30 @@ static int spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters,
 	else
 		theFLock.l_type = F_RDLCK;
 
-	int err;
 	if (iPreventWriters)
 		{
-		err = spFCntl(iFD, F_SETLK, theFLock);
-		if (err == 0)
-			return iFD;
+		if (0 == spFCntl(iFD, F_SETLK, theFLock))
+			return new FDHolder_UnlockOnDestroy(iFD);
 		}
 	else
 		{
-		err = spFCntl(iFD, F_GETLK, theFLock);
+		int err = spFCntl(iFD, F_GETLK, theFLock);
 
 		if (err == ENOLCK || err == EACCES || err == ENOTSUP || err == EINVAL)
 			{
 			// Assume that we're hitting an NFS-based file. Allow the access to happen.
-			return iFD;
+			return new FDHolder_CloseOnDestroy(iFD);
 			}
 		else if (err == 0 && theFLock.l_type == F_UNLCK)
 			{
-			return iFD;
+			return new FDHolder_CloseOnDestroy(iFD);
 			}
 		}
-
 	::close(iFD);
-	if (oErr)
-		*oErr = spTranslateError(err);
-	return -1;
+	return null;
 	}
 
-static int spOpen(const char* iPath,
-	bool iRead, bool iWrite, bool iPreventWriters, File::Error* oErr)
+static ZRef<FDHolder> spOpen(const std::string& iPath, bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
 		int theFlags = O_NOCTTY | O_LARGEFILE;
@@ -192,41 +218,15 @@ static int spOpen(const char* iPath,
 	else
 		theFlags |= O_WRONLY;
 
-	int theFD = ::open(iPath, theFlags);
+	int theFD = ::open(iPath.c_str(), theFlags);
 
 	if (theFD < 0)
-		{
-		if (oErr)
-			*oErr = spTranslateError(errno);
-		return -1;
-		}
+		return null;
 
-	return spLockOrClose(theFD, iRead, iWrite, iPreventWriters, oErr);
+	return spLockOrClose(theFD, iRead, iWrite, iPreventWriters);
 	}
 
-static void spClose(int iFD)
-	{
-	if (iFD < 0)
-		return;
-
-	// We do not need to release the lock -- closing
-	// the file will release any locks on the file.
-	// AG2002-07-30. I'm no longer certain that comment is true, so
-	// we'll release the lock for now -- locks are actually by inode and process,
-	// not by file descriptor and process.
-
-	struct flock file_lock;
-	file_lock.l_type = F_UNLCK;
-	file_lock.l_whence = SEEK_SET;
-	file_lock.l_start = 0;
-	file_lock.l_len = 0;
-	::fcntl(iFD, F_SETLK, &file_lock);
-
-	::close(iFD);
-	}
-
-static int spCreate(const char* iPath,
-	bool iOpenExisting, bool iAllowRead, bool iPreventWriters, File::Error* oErr)
+static ZRef<FDHolder> spCreate(const std::string& iPath, bool iOpenExisting, bool iAllowRead, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
 		int flags = O_CREAT | O_NOCTTY | O_LARGEFILE;
@@ -242,16 +242,12 @@ static int spCreate(const char* iPath,
 	if (not iOpenExisting)
 		flags |= O_EXCL;
 
-	int theFD = ::open(iPath, flags, 0666);
+	int theFD = ::open(iPath.c_str(), flags, 0666);
 
 	if (theFD < 0)
-		{
-		if (oErr)
-			*oErr = spTranslateError(errno);
-		return -1;
-		}
+		return null;
 
-	return spLockOrClose(theFD, iAllowRead, true, iPreventWriters, oErr);
+	return spLockOrClose(theFD, iAllowRead, true, iPreventWriters);
 	}
 
 static void spSplit(
@@ -310,31 +306,6 @@ static void spGetCWD(vector<string8>& oComps)
 			}
 		}
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_UnlockOnDestroy
-
-class FDHolder_UnlockOnDestroy
-:	public FDHolder
-	{
-public:
-	FDHolder_UnlockOnDestroy(int iFD)
-	:	fFD(iFD)
-		{}
-
-	virtual ~FDHolder_UnlockOnDestroy()
-		{
-		spClose(fFD);
-		}
-
-// Our protocol
-	virtual int GetFD()
-		{ return fFD; }
-
-protected:
-	int fFD;
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -849,52 +820,37 @@ bool FileLoc_POSIX::Delete()
 
 ZRef<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
 	{
-	File::Error err;
-	const int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, &err);
-	if (theFD < 0)
-		return null;
-
-	return sChanner_T<ChanRPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
+	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters))
+		return sChanner_T<ChanRPos_Bin_POSIXFD>(theFDHolder);
+	return null;
 	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
 	{
-	File::Error err;
-	const int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, &err);
-	if (theFD < 0)
-		return null;
-
-	return sChanner_T<ChanWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
+	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters))
+		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
+	return null;
 	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	{
-	File::Error err;
-	const int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, &err);
-	if (theFD < 0)
-		return null;
-
-	return sChanner_T<ChanRWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
+	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters))
+		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
+	return null;
 	}
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	File::Error err;
-	const int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, &err);
-	if (theFD < 0)
-		return null;
-
-	return sChanner_T<ChanWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
+	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters))
+		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
+	return null;
 	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	File::Error err;
-	const int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, &err);
-	if (theFD < 0)
-		return null;
-
-	return sChanner_T<ChanRWPos_Bin_POSIXFD>(new FDHolder_UnlockOnDestroy(theFD));
+	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters))
+		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
+	return null;
 	}
 
 string FileLoc_POSIX::pGetPath()

@@ -67,14 +67,14 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark FDHolder_CloseWhenDestroyed
+#pragma mark FDHolder_CloseOnDestroy
 
-class FDHolder_CloseWhenDestroyed
+class FDHolder_CloseOnDestroy
 :	public FDHolder
 	{
 public:
-	FDHolder_CloseWhenDestroyed(int iFD);
-	virtual ~FDHolder_CloseWhenDestroyed();
+	FDHolder_CloseOnDestroy(int iFD);
+	virtual ~FDHolder_CloseOnDestroy();
 
 // Our protocol
 	virtual int GetFD();
