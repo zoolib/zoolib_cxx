@@ -134,6 +134,16 @@ T sERead(bool iBE, const ChanR_Bin& iChanR)
 		return sEReadBE<T>(iChanR);
 	return sEReadLE<T>(iChanR);
 	}
+
+template <class T>
+T sEReadNative(const ChanR_Bin& iChanR)
+	{
+	T buf;
+	if (sizeof(T) != sReadMemFully(iChanR, &buf, sizeof(T)))
+		sThrow_ExhaustedR();
+	return buf;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanR_Bin_h__
