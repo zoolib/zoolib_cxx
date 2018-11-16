@@ -156,7 +156,7 @@ static int spFCntl(int iFD, int iCmd, struct flock& ioFLock)
 		}
 	}
 
-ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters)
+static ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 

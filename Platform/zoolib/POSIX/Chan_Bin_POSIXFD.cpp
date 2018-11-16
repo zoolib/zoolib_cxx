@@ -202,7 +202,10 @@ void ChanRCon_Bin_POSIXFD::Abort()
 	{ return Util_POSIXFD::sAbort(fFDHolder->GetFD()); }
 
 bool ChanRCon_Bin_POSIXFD::DisconnectRead(double iTimeout)
-	{ Util_POSIXFD::sAbort(fFDHolder->GetFD()); }
+	{
+	Util_POSIXFD::sAbort(fFDHolder->GetFD());
+	return true;
+	}
 
 size_t ChanRCon_Bin_POSIXFD::Read(byte* oDest, size_t iCount)
 	{ return Util_POSIXFD::sReadCon(fFDHolder->GetFD(), oDest, iCount); }
