@@ -35,8 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_CFStream
+#pragma mark - ChanR_Bin_CFStream
 
 class ChanR_Bin_CFStream
 :	public ChanR_Bin
@@ -54,8 +53,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_CFStream
+#pragma mark - ChanW_Bin_CFStream
 
 class ChanW_Bin_CFStream
 :	public ChanW_Bin

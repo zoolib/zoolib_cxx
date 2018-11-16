@@ -24,8 +24,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker
+#pragma mark - Walker
 
 Walker::Walker()
 	{
@@ -58,15 +57,13 @@ void Walker::Called_QReadInc()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Walker
+#pragma mark - Visitor_Walker
 
 void Visitor_Walker::Visit_Walker(const ZRef<Walker>& iWalker)
 	{ this->Visit(iWalker); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Unary
+#pragma mark - Walker_Unary
 
 Walker_Unary::Walker_Unary(const ZRef<Walker>& iWalker)
 :	fWalker(iWalker)

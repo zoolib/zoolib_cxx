@@ -32,8 +32,7 @@ namespace RelationalAlgebra {
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Transform_ConsolidateRenames
+#pragma mark - Transform_ConsolidateRenames
 
 class Transform_ConsolidateRenames
 :	public virtual Visitor_Expr_Op_Do_Transform_T<Expr_Rel>
@@ -97,8 +96,7 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelationalAlgebra::sTransform_ConsolidateRenames
+#pragma mark - RelationalAlgebra::sTransform_ConsolidateRenames
 ZRef<Expr_Rel> sTransform_ConsolidateRenames(const ZRef<Expr_Rel>& iRel)
 	{
 	return Transform_ConsolidateRenames().Do(iRel);

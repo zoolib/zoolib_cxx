@@ -43,8 +43,7 @@ struct Views_t
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark UIViewController+Subtitle
+#pragma mark - UIViewController+Subtitle
 
 @implementation UIViewController (Subtitle)
 

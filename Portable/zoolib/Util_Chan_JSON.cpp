@@ -43,8 +43,7 @@ namespace ZooLib {
 namespace Util_Chan_JSON {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ReadOptions
+#pragma mark - ReadOptions
 
 ReadOptions sReadOptions_Extended()
 	{
@@ -173,8 +172,7 @@ bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark WriteOptions
+#pragma mark - WriteOptions
 
 WriteOptions::WriteOptions()
 :	YadOptions()

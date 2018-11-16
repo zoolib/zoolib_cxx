@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_EventLoopBase
+#pragma mark - Starter_EventLoopBase
 
 class Starter_EventLoopBase
 :	public Starter

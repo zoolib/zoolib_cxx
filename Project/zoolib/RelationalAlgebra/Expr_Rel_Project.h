@@ -32,8 +32,7 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Project;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Project
+#pragma mark - Expr_Rel_Project
 
 class Expr_Rel_Project
 :	public virtual Expr_Rel
@@ -63,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Project
+#pragma mark - Visitor_Expr_Rel_Project
 
 class Visitor_Expr_Rel_Project
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
@@ -74,8 +72,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
 ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 

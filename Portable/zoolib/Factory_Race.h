@@ -35,8 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory_Race
+#pragma mark - Factory_Race
 
 template <class T>
 class Factory_Race

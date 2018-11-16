@@ -50,8 +50,7 @@ ZMACRO_MSVCStaticLib_Reference(Net_Internet_Socket)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Net_TCP_Socket
+#pragma mark - Net_TCP_Socket
 
 namespace Net_TCP_Socket {
 
@@ -61,8 +60,7 @@ int sListen(ip6_addr iLocalAddress, ip_port iLocalPort);
 } // namespace Net_TCP_Socket
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetNameLookup_Internet_Socket
+#pragma mark - NetNameLookup_Internet_Socket
 
 class NetNameLookup_Internet_Socket
 :	public NetNameLookup
@@ -89,8 +87,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener_TCP_Socket
+#pragma mark - NetListener_TCP_Socket
 
 class NetListener_TCP_Socket
 :	public virtual NetListener_TCP

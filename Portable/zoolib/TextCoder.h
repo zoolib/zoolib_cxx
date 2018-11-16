@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder
+#pragma mark - TextDecoder
 
 typedef Callable<bool(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -52,8 +51,7 @@ void sDecode(
 ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecoder);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextEncoder
+#pragma mark - TextEncoder
 
 typedef Callable<void(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,

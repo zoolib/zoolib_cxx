@@ -54,8 +54,7 @@ ZMACRO_MSVCStaticLib_cpp(File_POSIX)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -77,8 +76,7 @@ class Make_FileLoc
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_UnlockOnDestroy
+#pragma mark - FDHolder_UnlockOnDestroy
 
 class FDHolder_UnlockOnDestroy
 :	public FDHolder
@@ -109,8 +107,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Shared implementation details
+#pragma mark - Shared implementation details
 
 static File::Error spTranslateError(int iNativeError)
 	{
@@ -308,8 +305,7 @@ static void spGetCWD(vector<string8>& oComps)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RealRep
+#pragma mark - RealRep
 
 namespace { // anonymous
 
@@ -410,8 +406,7 @@ string RealRep_POSIX::GetName(size_t iIndex)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileLoc_POSIX
+#pragma mark - FileLoc_POSIX
 
 ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_CWD()
 	{ return new FileLoc_POSIX(false); }

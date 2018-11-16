@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RateLimiter
+#pragma mark - RateLimiter
 
 class RateLimiter
 	{
@@ -45,8 +44,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_RateCapped
+#pragma mark - ChanR_XX_RateCapped
 
 template <class Chan_p>
 class ChanR_XX_RateCapped
@@ -75,8 +73,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_XX_RateCapped
+#pragma mark - ChanW_XX_RateCapped
 
 template <class Chan_p>
 class ChanW_XX_RateCapped

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace Util_POSIX {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_POSIX
+#pragma mark - Util_POSIX
 
 ZQ<std::string> sQGetEnv(const std::string& iName)
 	{

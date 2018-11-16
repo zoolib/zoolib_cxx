@@ -38,8 +38,7 @@ struct AnyTraits<string8>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Val_T
+#pragma mark - Val_T
 
 template <class Map_p, class Seq_p>
 class Val_T

@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadR_Val_T
+#pragma mark - YadR_Val_T
 
 //template <class Val_p>
 //class YadR_Val_T
@@ -60,8 +59,7 @@ namespace ZooLib {
 //	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Chan_YadSeqAtRPos_T
+#pragma mark - Chan_YadSeqAtRPos_T
 
 template <class Seq_p>
 class Chan_YadSeqAtRPos_T
@@ -124,8 +122,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Chan_YadMapAtRPos_T
+#pragma mark - Chan_YadMapAtRPos_T
 
 template <class Map_p, class Index_p = typename Map_p::Index_t>
 class Chan_YadMapAtRPos_T

@@ -30,14 +30,12 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark JNI::Env
+#pragma mark - JNI::Env
 
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark JNI::EnsureAttachedToCurrentThread
+#pragma mark - JNI::EnsureAttachedToCurrentThread
 
 class EnsureAttachedToCurrentThread
 	{

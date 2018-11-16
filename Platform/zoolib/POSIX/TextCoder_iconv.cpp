@@ -37,8 +37,7 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helper functions
+#pragma mark - Helper functions
 
 typedef size_t (*iconvproc_const_t)(iconv_t cd, const char**, size_t*, char**, size_t*);
 static inline size_t spIconvIntermediary(iconvproc_const_t iProc,
@@ -75,8 +74,7 @@ size_t static spIconv(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder_iconv
+#pragma mark - TextDecoder_iconv
 
 static iconv_t spIconvOpenDecoder(const string& iSourceName)
 	{
@@ -205,8 +203,7 @@ void TextDecoder_iconv::Reset()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextEncoder_iconv
+#pragma mark - TextEncoder_iconv
 
 static iconv_t spIconvOpenEncoder(const string& iDestName)
 	{

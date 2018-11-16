@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_XX_PageBuffered
+#pragma mark - ChanRPos_XX_PageBuffered
 
 /** A positionable read filter stream that buffers a fixed number of fixed size chunks
 which are read in preference to accessing the source stream. Chunks are recycled in

@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder
+#pragma mark - FDHolder
 
 FDHolder::FDHolder()
 	{}
@@ -39,8 +38,7 @@ FDHolder::~FDHolder()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_Std
+#pragma mark - FDHolder_Std
 
 FDHolder_Std::FDHolder_Std(int iFD)
 :	fFD(iFD)
@@ -53,8 +51,7 @@ int FDHolder_Std::GetFD()
 	{ return fFD; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_CloseOnDestroy
+#pragma mark - FDHolder_CloseOnDestroy
 
 FDHolder_CloseOnDestroy::FDHolder_CloseOnDestroy(int iFD)
 :	fFD(iFD)
@@ -67,8 +64,7 @@ int FDHolder_CloseOnDestroy::GetFD()
 	{ return fFD; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_POSIXFD
+#pragma mark - ChanR_Bin_POSIXFD
 
 ChanR_Bin_POSIXFD::ChanR_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -84,8 +80,7 @@ size_t ChanR_Bin_POSIXFD::Readable()
 	{ return Util_POSIXFD::sReadable(fFDHolder->GetFD()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_POSIXFD
+#pragma mark - ChanW_Bin_POSIXFD
 
 ChanW_Bin_POSIXFD::ChanW_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -98,8 +93,7 @@ size_t ChanW_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 	{ return Util_POSIXFD::sWrite(fFDHolder->GetFD(), iSource, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_POSIXFD
+#pragma mark - ChanRPos_Bin_POSIXFD
 
 ChanRPos_Bin_POSIXFD::ChanRPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -130,8 +124,7 @@ size_t ChanRPos_Bin_POSIXFD::UnreadableLimit()
 	{ return Util_POSIXFD::sUnreadableLimit(fFDHolder->GetFD()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanWPos_Bin_POSIXFD
+#pragma mark - ChanWPos_Bin_POSIXFD
 
 ChanWPos_Bin_POSIXFD::ChanWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -156,8 +149,7 @@ size_t ChanWPos_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 	{ return Util_POSIXFD::sWrite(fFDHolder->GetFD(), iSource, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_Bin_POSIXFD
+#pragma mark - ChanRWPos_Bin_POSIXFD
 
 ChanRWPos_Bin_POSIXFD::ChanRWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -197,8 +189,7 @@ size_t ChanRWPos_Bin_POSIXFD::UnreadableLimit()
 // Need to decide how to handle DisconnectRead and DisconnectWrite.
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRCon_Bin_POSIXFD
+#pragma mark - ChanRCon_Bin_POSIXFD
 
 ChanRCon_Bin_POSIXFD::ChanRCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)

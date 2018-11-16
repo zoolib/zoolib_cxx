@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace Yad_XMLAttr {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 class ParseException : public YadParseException
 	{
@@ -40,8 +39,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChanner);
 

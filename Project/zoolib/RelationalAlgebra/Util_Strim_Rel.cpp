@@ -42,8 +42,7 @@ using namespace Util_STL;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelationalAlgebra::Util_Strim_Rel::Visitor
+#pragma mark - RelationalAlgebra::Util_Strim_Rel::Visitor
 
 void Visitor::Visit_Expr(const ZRef<Expr>& iExpr)
 	{
@@ -184,8 +183,7 @@ void Visitor::pWriteBinary(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelationalAlgebra::Util_Strim_Rel::sToStrim
+#pragma mark - RelationalAlgebra::Util_Strim_Rel::sToStrim
 
 void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
 	{
@@ -207,8 +205,7 @@ void sToStrim(const ZRef<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOpt
 	{ Visitor().ToStrim(iOptions, iStrimW, iRel); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelationalAlgebra::Util_Strim_Rel::sFromStrim
+#pragma mark - RelationalAlgebra::Util_Strim_Rel::sFromStrim
 
 ZRef<Expr_Rel> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{

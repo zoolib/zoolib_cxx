@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanConnection_XX_FIFO
+#pragma mark - ChanConnection_XX_FIFO
 
 /** A RW stream that queues written data and returns it in FIFO order when read. */
 

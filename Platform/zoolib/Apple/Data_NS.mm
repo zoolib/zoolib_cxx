@@ -28,8 +28,7 @@ namespace ZooLib {
 using Util_NS::sDataMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Data_NS
+#pragma mark - Data_NS
 
 Data_NS::Data_NS()
 :	inherited(sDataMutable())

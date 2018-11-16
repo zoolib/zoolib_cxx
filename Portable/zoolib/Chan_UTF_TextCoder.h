@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_TextDecoder
+#pragma mark - ChanR_UTF_TextDecoder
 
 class ChanR_UTF_TextDecoder
 :	public ChanR_UTF
@@ -50,8 +49,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_TextEncoder
+#pragma mark - ChanW_UTF_TextEncoder
 
 class ChanW_UTF_TextEncoder
 :	public ChanW_UTF_Native32

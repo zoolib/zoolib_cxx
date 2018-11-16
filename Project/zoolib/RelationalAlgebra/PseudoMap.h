@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PseudoMap
+#pragma mark - PseudoMap
 
 class PseudoMap
 	{
@@ -97,8 +96,7 @@ inline const Val_Any& sGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.Get(iName); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PseudoMap_RelHead
+#pragma mark - PseudoMap_RelHead
 
 class PseudoMap_RelHead
 :	public PseudoMap

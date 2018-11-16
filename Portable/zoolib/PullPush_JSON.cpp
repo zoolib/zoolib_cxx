@@ -220,8 +220,7 @@ static bool spPull_Hex_Push_Bin(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sPull
+#pragma mark - sPull
 
 bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
 	{ return sPull_JSON_Push(iChanRU, iChanRU, iRO, iChanW); }
@@ -340,8 +339,7 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 static bool spPull_Push_JSON(const Any& iAny,
 	const ChanR_Any& iChanR,

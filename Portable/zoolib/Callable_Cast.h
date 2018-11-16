@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Cast
+#pragma mark - Callable_Cast
 
 template <class R0, class R1, typename... A_p>
 class Callable_Cast

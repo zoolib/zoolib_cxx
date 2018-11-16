@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CountedStringUniquifier
+#pragma mark - CountedStringUniquifier
 
 typedef CountedVal<string8> CountedString;
 
@@ -42,14 +41,12 @@ struct Compare_RefCountedString
 typedef Uniquifier<ZRefCountedString,Compare_RefCountedString> CountedStringUniquifier;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ThreadVal_NameUniquifier
+#pragma mark - ThreadVal_NameUniquifier
 
 typedef ThreadVal<CountedStringUniquifier, struct Tag_NameUniquifier> ThreadVal_NameUniquifier;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sName
+#pragma mark - sName
 
 inline Name sName(const char* iConstCharStar)
 	{ return Name(iConstCharStar); }

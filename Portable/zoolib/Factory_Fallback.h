@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory_Fallback
+#pragma mark - Factory_Fallback
 
 template <class T>
 class Factory_Fallback

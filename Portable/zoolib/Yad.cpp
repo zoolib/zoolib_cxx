@@ -53,8 +53,7 @@ access to them allows code to be applied to any of them.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadOptions
+#pragma mark - YadOptions
 
 YadOptions::YadOptions(bool iDoIndentation)
 	{
@@ -63,8 +62,7 @@ YadOptions::YadOptions(bool iDoIndentation)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadParseException
+#pragma mark - YadParseException
 
 YadParseException::YadParseException(const string& iWhat)
 :	ParseException(iWhat)

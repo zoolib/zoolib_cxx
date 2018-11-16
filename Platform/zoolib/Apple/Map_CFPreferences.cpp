@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_CFPreferences
+#pragma mark - Map_CFPreferences
 
 Map_CFPreferences::Map_CFPreferences()
 :	fApplicationID(kCFPreferencesCurrentApplication)

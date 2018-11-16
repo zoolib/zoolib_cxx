@@ -38,8 +38,7 @@ using namespace Util_STL;
 using namespace ZooLib::RelationalAlgebra;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Sieve_Singleton
+#pragma mark - Sieve_Singleton
 
 Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_Register,
 	const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate,

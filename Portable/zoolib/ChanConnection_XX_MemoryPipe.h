@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanConnection_XX_MemoryPipe
+#pragma mark - ChanConnection_XX_MemoryPipe
 
 /** A connected RW stream that transfers data directly from a writer's source
 buffer to a reader's destination buffer. Note that read and write must therefore

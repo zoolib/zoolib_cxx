@@ -26,8 +26,7 @@ namespace ZooLib {
 namespace SQLite {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Anonymous ChanR_NameRefYad
+#pragma mark - Anonymous ChanR_NameRefYad
 
 namespace { // anonymous
 
@@ -62,8 +61,7 @@ void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SQLite::ChanR_RefYad_Iter
+#pragma mark - SQLite::ChanR_RefYad_Iter
 
 ChanR_RefYad_Iter::ChanR_RefYad_Iter(ZRef<Iter> iIter)
 :	fIter(iIter)

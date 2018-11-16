@@ -66,8 +66,7 @@ Aligned, Centered, Flipped, Insetted, Offsetted, With
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits and accessors
+#pragma mark - PointTraits and accessors
 
 template <class Type_p> struct PointTraits;
 
@@ -82,8 +81,7 @@ template <class Type_p>
 typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY(iT); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits for scalars
+#pragma mark - PointTraits for scalars
 
 #define ZMACRO_Cartesian(T) \
 	template <> struct PointTraits<T> \
@@ -113,8 +111,7 @@ ZMACRO_Cartesian(long double)
 #undef ZMACRO_Cartesian
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Fundamental Point Pseudo-ctor
+#pragma mark - Fundamental Point Pseudo-ctor
 
 template <class Point_p>
 typename PointTraits<Point_p>::Point_t
@@ -124,8 +121,7 @@ sPoint(
 	{ return PointTraits<Point_p>::sMake(iX, iY); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Other Point Pseudo-ctors.
+#pragma mark - Other Point Pseudo-ctors.
 
 // Null == (0,0)
 // Usage: sPoint<PointType>()
@@ -144,8 +140,7 @@ sPoint(
 	{ return sPoint<Point_p>(X(iOther), Y(iOther)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits and accessors
+#pragma mark - RectTraits and accessors
 
 template <class Type_p> struct RectTraits;
 
@@ -205,8 +200,7 @@ template <class Type_p>
 typename RectTraits<Type_p>::RT_t RT(Type_p& iT) { return RectTraits<Type_p>::sRT(iT); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Fundamental Rect Pseudo-ctor.
+#pragma mark - Fundamental Rect Pseudo-ctor.
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Rect_t
@@ -218,8 +212,7 @@ sRect(
 	{ return RectTraits<Rect_p>::sMake(iL, iT, iR, iB); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Other Rect Pseudo-ctors.
+#pragma mark - Other Rect Pseudo-ctors.
 
 // Null == ((0,0),(0,0)).
 // Usage: sRect<RectType>()
@@ -274,8 +267,7 @@ sRect(
 	{ return RectTraits<Rect_p>::sMake(0, 0, iW, iH); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Point Comparison Operators
+#pragma mark - Point Comparison Operators
 
 namespace Operators {
 
@@ -312,8 +304,7 @@ operator>=(const Point_p& iLHS, const Point_p& iRHS)
 } // namespace Operators
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Point Manipulation functions
+#pragma mark - Point Manipulation functions
 
 template <class Point_p>
 typename EnableIfC<PointTraits<Point_p>::value,Point_p>::type
@@ -321,8 +312,7 @@ sTransposed(const Point_p& iPoint)
 	{ return sPoint<Point_p>(Y(iPoint), X(iPoint)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Point Manipulation Operators
+#pragma mark - Point Manipulation Operators
 
 namespace Operators {
 
@@ -390,8 +380,7 @@ operator/=(Point_p& ioL, const Other& iRHS)
 } // namespace Operators
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Rect Comparison Operators
+#pragma mark - Rect Comparison Operators
 
 namespace Operators {
 
@@ -428,8 +417,7 @@ operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
 } // namespace Operators
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Rect Manipulation Operators
+#pragma mark - Rect Manipulation Operators
 
 namespace Operators {
 
@@ -516,8 +504,7 @@ operator&=(Rect_p& ioL, const Rect_p& iRHS)
 } // namespace Operators
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sManhattanLength and sLength
+#pragma mark - sManhattanLength and sLength
 
 template <class Point_p>
 typename PointTraits<Point_p>::Ord_t
@@ -530,24 +517,21 @@ sLength(const Point_p& iPoint)
 	{ return sqrt(sManhattanLength(iPoint * iPoint)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sIsEmpty
+#pragma mark - sIsEmpty
 
 template <class Rect_p>
 bool sIsEmpty(const Rect_p& iRect)
 	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sNotEmpty
+#pragma mark - sNotEmpty
 
 template <class Rect_p>
 bool sNotEmpty(const Rect_p& iRect)
 	{ return not sIsEmpty(iRect); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Center
+#pragma mark - Center
 
 template <class Rect_p>
 typename RectTraits<Rect_p>::Ord_t
@@ -585,8 +569,7 @@ RC(const Rect_p& iRect)
 	{ return sPoint<typename RectTraits<Rect_p>::Point_t>(R(iRect), CY(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sContains
+#pragma mark - sContains
 
 template <class Rect_p, class OtherX_p>
 bool sContainsX(const Rect_p& iRect, const OtherX_p& iX)
@@ -611,8 +594,7 @@ bool sContains(const Rect_p& iRect, const Other& iOther)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sOffsetted, whole
+#pragma mark - sOffsetted, whole
 
 template <class Rect_p, class OtherX_p>
 Rect_p sOffsettedX(const Rect_p& iRect, const OtherX_p& iX)
@@ -649,8 +631,7 @@ Rect_p sOffsetted(const Rect_p& iRect, const Other& iOther)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sOffsetted, edge
+#pragma mark - sOffsetted, edge
 
 template <class Rect_p, class OtherX_p>
 Rect_p sOffsettedL(const Rect_p& iRect, const OtherX_p& iX)
@@ -669,8 +650,7 @@ Rect_p sOffsettedB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), B(iRect) + Y(iY)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sOffsetted, corner
+#pragma mark - sOffsetted, corner
 
 template <class Rect_p, class Other_p>
 Rect_p sOffsettedLT(const Rect_p& iRect, const Other_p& iOther)
@@ -705,8 +685,7 @@ Rect_p sOffsettedRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect) + Y(iY), R(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sAligned, edge
+#pragma mark - sAligned, edge
 
 template <class Rect_p, class OtherX_p>
 Rect_p sAlignedL(const Rect_p& iRect, const OtherX_p& iX)
@@ -725,8 +704,7 @@ Rect_p sAlignedB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sOffsetted(iRect, 0, Y(iY) - B(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sAligned, corner
+#pragma mark - sAligned, corner
 
 template <class Rect_p, class Other_p>
 Rect_p sAlignedLT(const Rect_p& iRect, const Other_p& iOther)
@@ -761,8 +739,7 @@ Rect_p sAlignedRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sOffsetted(iRect, X(iX) - R(iRect), Y(iY) - T(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCentered
+#pragma mark - sCentered
 
 template <class Rect_p, class OtherX_p>
 Rect_p sCenteredX(const Rect_p& iRect, const OtherX_p& iX)
@@ -781,16 +758,14 @@ Rect_p sCentered(const Rect_p& iRect, const Other& iOther)
 	{ return sOffsetted(iRect, X(iOther) - CX(iRect), Y(iOther) - CY(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sFlippedY
+#pragma mark - sFlippedY
 
 template <class Rect_p, class Other_p>
 Rect_p sFlippedY(const Rect_p& iRect, const Other_p& iY)
 	{ return sRect<Rect_p>(L(iRect), Y(iY) - B(iRect), R(iRect), Y(iY) - T(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sInsetted
+#pragma mark - sInsetted
 
 template <class Rect_p, class OtherX_p>
 Rect_p sInsettedX(const Rect_p& iRect, const OtherX_p& iX)
@@ -816,8 +791,7 @@ Rect_p sInsetted(const Rect_p& iRect, const Other& iOther)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWith, edge
+#pragma mark - sWith, edge
 
 template <class Rect_p, class OtherX_p>
 Rect_p sWithL(const Rect_p& iRect, const OtherX_p& iX)
@@ -836,8 +810,7 @@ Rect_p sWithB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), Y(iY)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWith, corner
+#pragma mark - sWith, corner
 
 template <class Rect_p, class Other_p>
 Rect_p sWithLT(const Rect_p& iRect, const Other_p& iOther)
@@ -880,8 +853,7 @@ Rect_p sWithTB(const Rect_p& iRect, const OtherT_p& iT, const OtherB_p& iB)
 	{ return sRect<Rect_p>(L(iRect), Y(iT), R(iRect), Y(iB)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWithW, with Width by moving L or R edge
+#pragma mark - sWithW, with Width by moving L or R edge
 
 template <class Rect_p, class OtherX_p>
 Rect_p sWithWL(const Rect_p& iRect, const OtherX_p& iX)
@@ -892,8 +864,7 @@ Rect_p sWithWR(const Rect_p& iRect, const OtherX_p& iX)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWithH, with Height by moving T or B edge
+#pragma mark - sWithH, with Height by moving T or B edge
 
 template <class Rect_p, class OtherY_p>
 Rect_p sWithHT(const Rect_p& iRect, const OtherY_p& iY)
@@ -904,8 +875,7 @@ Rect_p sWithHB(const Rect_p& iRect, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), T(iRect), R(iRect), T(iRect) + Y(iY)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWithWH, with Width and Height by moving LT, RB, LB, RT corner
+#pragma mark - sWithWH, with Width and Height by moving LT, RB, LB, RT corner
 
 template <class Rect_p, class Other_p>
 Rect_p sWithWHLT(const Rect_p& iRect, const Other_p& iOther)
@@ -940,8 +910,7 @@ Rect_p sWithWHRT(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{ return sRect<Rect_p>(L(iRect), B(iRect) - Y(iY), L(iRect) + X(iX), B(iRect)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraitsBase
+#pragma mark - PointTraitsBase
 
 template <class Type_p>
 struct PointTraitsBase
@@ -950,8 +919,7 @@ struct PointTraitsBase
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits_Std
+#pragma mark - PointTraits_Std
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std
@@ -966,8 +934,7 @@ struct PointTraits_Std
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits_Std_XY
+#pragma mark - PointTraits_Std_XY
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_XY
@@ -987,8 +954,7 @@ struct PointTraits_Std_XY
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits_Std_HV
+#pragma mark - PointTraits_Std_HV
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_HV
@@ -1008,8 +974,7 @@ struct PointTraits_Std_HV
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark PointTraits_Std_WidthHeight
+#pragma mark - PointTraits_Std_WidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct PointTraits_Std_WidthHeight
@@ -1029,8 +994,7 @@ struct PointTraits_Std_WidthHeight
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraitsBase
+#pragma mark - RectTraitsBase
 
 template <class Type_p>
 struct RectTraitsBase
@@ -1039,8 +1003,7 @@ struct RectTraitsBase
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std
+#pragma mark - RectTraits_Std
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std
@@ -1080,8 +1043,7 @@ struct RectTraits_Std
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std_OriginSize
+#pragma mark - RectTraits_Std_OriginSize
 
 template <class Ord_p, class Origin_p, class Size_p, class Rect_p>
 struct RectTraits_Std_OriginSize
@@ -1133,8 +1095,7 @@ struct RectTraits_Std_OriginSize
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std_XYWH_Base
+#pragma mark - RectTraits_Std_XYWH_Base
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_XYWH_Base
@@ -1162,8 +1123,7 @@ struct RectTraits_Std_XYWH_Base
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std_XYWH
+#pragma mark - RectTraits_Std_XYWH
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_XYWH
@@ -1183,8 +1143,7 @@ struct RectTraits_Std_XYWH
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std_XYWidthHeight
+#pragma mark - RectTraits_Std_XYWidthHeight
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_XYWidthHeight
@@ -1204,8 +1163,7 @@ struct RectTraits_Std_XYWidthHeight
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RectTraits_Std_LeftTopRightBottom
+#pragma mark - RectTraits_Std_LeftTopRightBottom
 
 template <class Ord_p, class Point_p, class Rect_p>
 struct RectTraits_Std_LeftTopRightBottom

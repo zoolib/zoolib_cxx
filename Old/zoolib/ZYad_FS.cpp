@@ -28,8 +28,7 @@ namespace ZYad_FS {
 namespace { // anonymous
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanAtR_NameRefYad
+#pragma mark - ChanAtR_NameRefYad
 
 class ChanAtR_NameRefYad_FS
 :	public ChanAtR_NameRefYad
@@ -58,8 +57,7 @@ using YadMapAtR_NameRefYad_FS = Channer_T<ChanAtR_NameRefYad_FS>;
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYad_FS::sYadR
+#pragma mark - ZYad_FS::sYadR
 
 ZRef<YadR> sYadR(const FileSpec& iFS)
 	{

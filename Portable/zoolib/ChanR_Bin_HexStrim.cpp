@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_HexStrim
+#pragma mark - ChanR_Bin_HexStrim
 
 ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU)
 :	fChanR(iChanRU)

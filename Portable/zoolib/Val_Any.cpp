@@ -59,8 +59,7 @@ ZMACRO_CompareRegistration_T(Seq_Any)
 ZMACRO_CompareRegistration_T(Map_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Seq_Any::Rep
+#pragma mark - Seq_Any::Rep
 
 Seq_Any::Rep::Rep()
 	{
@@ -75,8 +74,7 @@ Seq_Any::Rep::Rep(const Vector_t& iVector)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Seq_Any
+#pragma mark - Seq_Any
 
 Seq_Any::Seq_Any()
 	{}
@@ -270,8 +268,7 @@ void Seq_Any::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_Any::Rep
+#pragma mark - Map_Any::Rep
 
 namespace {
 
@@ -319,8 +316,7 @@ ZRef<Map_Any::Rep> Map_Any::Rep::sMake(const Map_t& iMap)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_Any
+#pragma mark - Map_Any
 
 static Map_Any::Name_t spEmptyString;
 

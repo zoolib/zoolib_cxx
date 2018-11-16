@@ -35,8 +35,7 @@ namespace ZooLib {
 static string8 spEmptyString;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helper functions
+#pragma mark - Helper functions
 
 template <class C, class Comp>
 void sParseStringAndAppend_T(
@@ -91,8 +90,7 @@ void sParseStringAndAppend_T(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Trail
+#pragma mark - Trail
 
 /** \class Trail
 */

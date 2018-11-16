@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanPos_Offset
+#pragma mark - ChanPos_Offset
 
 template <class Chan_p>
 class ChanPos_Offset
@@ -57,8 +56,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanSize_Offset
+#pragma mark - ChanSize_Offset
 
 template <class Chan_p>
 class ChanSize_Offset
@@ -85,8 +83,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanSizeSet_Offset
+#pragma mark - ChanSizeSet_Offset
 
 template <class Chan_p>
 class ChanSizeSet_Offset

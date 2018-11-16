@@ -39,8 +39,7 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Asyncify
+#pragma mark - Relater_Asyncify
 
 Relater_Asyncify::Relater_Asyncify(ZRef<Relater> iRelater)
 :	fRelater(iRelater)

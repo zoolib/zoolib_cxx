@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW);
 

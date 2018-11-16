@@ -37,8 +37,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadAtomR_CF
+#pragma mark - ZYadAtomR_CF
 
 ZYadAtomR_CF::ZYadAtomR_CF(CFTypeRef iVal)
 :	ZYadR_CF(iVal)
@@ -48,8 +47,7 @@ ZAny ZYadAtomR_CF::AsAny()
 	{ return ZUtil_CF::sAsAny(this->GetVal()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadStreamerRPos_CF
+#pragma mark - ZYadStreamerRPos_CF
 
 ZYadStreamerRPos_CF::ZYadStreamerRPos_CF(CFDataRef iDataRef)
 :	ZYadR_CF(iDataRef)
@@ -63,8 +61,7 @@ bool ZYadStreamerRPos_CF::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadStrimmerR_CF
+#pragma mark - ZYadStrimmerR_CF
 
 ZYadStrimmerR_CF::ZYadStrimmerR_CF(CFStringRef iStringRef)
 :	ZYadR_CF(iStringRef)
@@ -72,8 +69,7 @@ ZYadStrimmerR_CF::ZYadStrimmerR_CF(CFStringRef iStringRef)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadSeqAtRPos_CF
+#pragma mark - ZYadSeqAtRPos_CF
 
 ZYadSeqAtRPos_CF::ZYadSeqAtRPos_CF(CFArrayRef iArray)
 :	ZYadR_CF(iArray)
@@ -86,8 +82,7 @@ ZYadSeqAtRPos_CF::ZYadSeqAtRPos_CF(CFArrayRef iArray, uint64 iPosition)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadMapAtRPos_CF
+#pragma mark - ZYadMapAtRPos_CF
 
 namespace { // anonymous
 
@@ -169,8 +164,7 @@ void ZYadMapAtRPos_CF::pSetupPosition()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<ZYadR> sYadR(CFTypeRef iVal)
 	{
@@ -231,8 +225,7 @@ ZRef<ZYadMapAtRPos> sYadR(const ZRef<CFDictionaryRef>& iDictionary)
 	{ return sYadR(iDictionary.Get()); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sFromYadR
+#pragma mark - sFromYadR
 
 namespace { // anonymous
 

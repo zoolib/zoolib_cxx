@@ -32,8 +32,7 @@ namespace ZooLib {
 // In these templates, P is Pointer and L is Link.
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DListHead
+#pragma mark - DListHead
 
 template <typename L>
 struct DListHead
@@ -257,8 +256,7 @@ P* sGetEraseBackMust(DListHead<L>& ioDListHead)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DListLink
+#pragma mark - DListLink
 
 template <typename P, typename L = P, int kDebug_T = 1>
 class DListLink
@@ -286,8 +284,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DListIterator
+#pragma mark - DListIterator
 
 template <typename P, typename L = P>
 class DListIterator
@@ -339,8 +336,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DListEraser
+#pragma mark - DListEraser
 
 template <typename P, typename L = P>
 class DListEraser

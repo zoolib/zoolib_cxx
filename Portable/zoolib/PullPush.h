@@ -38,8 +38,7 @@ namespace ZooLib {
 namespace PullPush {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 struct StartMap {};
 extern const Any kStartMap;

@@ -51,8 +51,7 @@ ZVal_Yad spAsVal_Yad(const ZRef<YadR>& iYadR)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSeq_Yad
+#pragma mark - ZSeq_Yad
 
 ZSeq_Yad::ZSeq_Yad()
 	{}
@@ -235,8 +234,7 @@ void ZSeq_Yad::pGenSeq()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMap_Yad
+#pragma mark - ZMap_Yad
 
 ZMap_Yad::ZMap_Yad()
 	{}
@@ -394,8 +392,7 @@ Map_Any ZMap_Yad::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(const ZVal_Yad& iVal)
 	{

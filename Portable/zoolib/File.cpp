@@ -40,8 +40,7 @@ that's more than I want to do right now.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileSpec
+#pragma mark - FileSpec
 /**
 \class FileSpec
 \ingroup File
@@ -534,8 +533,7 @@ ZRef<FileLoc> FileSpec::pPhysicalLoc() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIter
+#pragma mark - FileIter
 
 /** \class FileIter
 \ingroup File
@@ -622,8 +620,7 @@ string FileIter::CurrentName() const
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileTreeIter
+#pragma mark - FileTreeIter
 
 FileTreeIter::FileTreeIter()
 	{}
@@ -680,8 +677,7 @@ std::string FileTreeIter::CurrentName() const
 	{ return fCurrent.Name(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileLoc
+#pragma mark - FileLoc
 
 /** \class FileLoc
 \ingroup File
@@ -738,8 +734,7 @@ ZRef<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWri
 	{ return null; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIterRep
+#pragma mark - FileIterRep
 
 /** \class FileIterRep
 */
@@ -751,8 +746,7 @@ FileIterRep::~FileIterRep()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIterRep_Std
+#pragma mark - FileIterRep_Std
 
 /** \class FileIterRep_Std
 */

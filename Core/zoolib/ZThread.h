@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread, ZTSS etc.
+#pragma mark - ZThread, ZTSS etc.
 
 #if 0
 
@@ -85,8 +84,7 @@ namespace ZooLib {
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTSS
+#pragma mark - ZTSS
 
 namespace ZTSS {
 
@@ -95,16 +93,14 @@ ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
 } // namespace ZTSS
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Acquirer, Releaser
+#pragma mark - Acquirer, Releaser
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
 
 typedef ZReleaser_T<ZMtx> ZRelMtx;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread
+#pragma mark - ZThread
 
 namespace ZThread {
 

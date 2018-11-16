@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Restrict
+#pragma mark - Walker_Restrict
 
 class Walker_Restrict : public Walker_Unary
 	{

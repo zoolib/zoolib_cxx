@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Sieve_Singleton
+#pragma mark - Sieve_Singleton
 
 class Sieve_Singleton
 :	public ZCounted

@@ -42,8 +42,7 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Restrict::Exec
+#pragma mark - Walker_Restrict::Exec
 
 class Walker_Restrict::Exec
 	{
@@ -55,8 +54,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Exec variants (anonymous)
+#pragma mark - Exec variants (anonymous)
 
 namespace { // anonymous
 
@@ -168,8 +166,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Functors (anonymous)
+#pragma mark - Functors (anonymous)
 
 namespace { // anonymous
 
@@ -241,8 +238,7 @@ struct Functor_StringContains
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark AsExec (anonymous)
+#pragma mark - AsExec (anonymous)
 
 namespace { // anonymous
 
@@ -417,8 +413,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Restrict
+#pragma mark - Walker_Restrict
 
 Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)

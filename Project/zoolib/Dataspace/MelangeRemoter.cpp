@@ -192,8 +192,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 static ZAtomic_t spSentMessageCounter;
 
@@ -249,8 +248,7 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<strin
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 namespace { // anonymous
 
@@ -322,8 +320,7 @@ Val_Any spAsVal(ZRef<Result> iResult)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MelangeServer
+#pragma mark - MelangeServer
 
 MelangeServer::MelangeServer(const Melange_t& iMelange,
 	const ZRef<ChannerRW_Bin>& iChannerRW,
@@ -574,8 +571,7 @@ void MelangeServer::pChanged(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Melange_Client::Registration
+#pragma mark - Melange_Client::Registration
 
 class Melange_Client::Registration
 :	public ZCounted
@@ -599,8 +595,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Melange_Client
+#pragma mark - Melange_Client
 
 Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
 	const ZRef<Callable_Status>& iCallable_Status)

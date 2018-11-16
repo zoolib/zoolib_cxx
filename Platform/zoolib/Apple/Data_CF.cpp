@@ -33,8 +33,7 @@ using Util_CF::sData;
 using Util_CF::sDataMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Data_CF
+#pragma mark - Data_CF
 
 Data_CF::Data_CF()
 :	inherited(sDataMutable())

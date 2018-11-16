@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sScale2
+#pragma mark - sScale2
 
 template <class E>
 ZMatrix<E,3,3> sScale2(E x, E y)
@@ -54,8 +53,7 @@ ZMatrix<E,3,3> sScale2(const ZMatrix<E,1,2>& iCVec2)
 	{ return sScale(iCVec2); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTranslate2
+#pragma mark - sTranslate2
 
 template <class E>
 ZMatrix<E,3,3> sTranslate2(E x, E y)
@@ -79,8 +77,7 @@ ZMatrix<E,3,3> sTranslate2(const ZMatrix<E,1,2>& iCVec2)
 	{ return sTranslate<E>(iCVec2); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sRotate2Z
+#pragma mark - sRotate2Z
 
 template <class E>
 ZMatrix<E,3,3> sRotate2Z(E radians)
@@ -97,8 +94,7 @@ ZMatrix<E,3,3> sRotate2Z(E radians)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sShear2
+#pragma mark - sShear2
 
 template <class E>
 ZMatrix<E,3,3> sShear2(E xy, E yx)

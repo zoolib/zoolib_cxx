@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(iPhone)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::UIKit
+#pragma mark - ZooLib::UIKit
 
 namespace ZooLib {
 namespace UIKit {

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_Count
+#pragma mark - ChanR_XX_Count
 
 template <class Chan_p>
 class ChanR_XX_Count
@@ -66,8 +65,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_XX_Count
+#pragma mark - ChanW_XX_Count
 
 template <class Chan_p>
 class ChanW_XX_Count

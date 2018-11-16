@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_CFStream
+#pragma mark - ChanR_Bin_CFStream
 
 ChanR_Bin_CFStream::ChanR_Bin_CFStream(CFReadStreamRef iCFStream)
 :	fCFStream(iCFStream)
@@ -54,8 +53,7 @@ size_t ChanR_Bin_CFStream::CountReadable()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_CFStream
+#pragma mark - ChanW_Bin_CFStream
 
 ChanW_Bin_CFStream::ChanW_Bin_CFStream(CFWriteStreamRef iCFStream)
 :	fCFStream(iCFStream)

@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_SQLite
+#pragma mark - Relater_SQLite
 
 class Relater_SQLite : public Relater
 	{

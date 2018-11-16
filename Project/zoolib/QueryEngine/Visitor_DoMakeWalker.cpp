@@ -40,8 +40,7 @@ namespace QueryEngine {
 namespace RA = RelationalAlgebra;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_DoMakeWalker
+#pragma mark - Visitor_DoMakeWalker
 
 void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	{

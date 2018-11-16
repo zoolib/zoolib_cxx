@@ -48,8 +48,7 @@ ZMACRO_MSVCStaticLib_Reference(Net_Local_Socket)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetNameLookup_Local_Socket
+#pragma mark - ZNetNameLookup_Local_Socket
 
 class ZNetNameLookup_Local_Socket : public ZNetNameLookup
 	{
@@ -71,8 +70,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetListener_Local_Socket
+#pragma mark - ZNetListener_Local_Socket
 
 class ZNetListener_Local_Socket
 :	public ZNetListener_Local,
@@ -94,8 +92,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetEndpoint_Local_Socket
+#pragma mark - ZNetEndpoint_Local_Socket
 
 class ZNetEndpoint_Local_Socket
 :	public ZNetEndpoint_Local,

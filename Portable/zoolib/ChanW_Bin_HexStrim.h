@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_HexStrim_Real
+#pragma mark - ChanW_Bin_HexStrim_Real
 
 class ChanW_Bin_HexStrim_Real
 :	public ChanW_Bin
@@ -47,8 +46,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_HexStrim
+#pragma mark - ChanW_Bin_HexStrim
 
 class ChanW_Bin_HexStrim
 :	public ChanW_Bin

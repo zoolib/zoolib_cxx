@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace HTTP {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_Chunked
+#pragma mark - ChanR_Bin_Chunked
 
 class ChanR_Bin_Chunked
 :	public ChanR_Bin
@@ -50,8 +49,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_Chunked
+#pragma mark - ChanW_Bin_Chunked
 
 class ChanW_Bin_Chunked
 :	public ChanW_Bin
@@ -74,8 +72,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sMakeContentChanner
+#pragma mark - sMakeContentChanner
 
 ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iChannerR);
 

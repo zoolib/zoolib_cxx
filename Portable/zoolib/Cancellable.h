@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Cancellable
+#pragma mark - Cancellable
 
 class Cancellable
 :	public ZCounted
@@ -38,8 +37,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCancellable
+#pragma mark - sCancellable
 
 ZRef<Cancellable> sCancellable(const ZRef<Callable_Void>& iCallable);
 

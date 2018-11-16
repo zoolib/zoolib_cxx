@@ -36,8 +36,7 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Calc;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Calc
+#pragma mark - Expr_Rel_Calc
 
 class Expr_Rel_Calc
 :	public virtual Expr_Rel
@@ -76,8 +75,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Calc
+#pragma mark - Visitor_Expr_Rel_Calc
 
 class Visitor_Expr_Rel_Calc
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
@@ -87,8 +85,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
 ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
 	const ColName& iColName,

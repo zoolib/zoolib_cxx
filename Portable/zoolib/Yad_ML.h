@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace Yad_ML {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadParseException_ML
+#pragma mark - YadParseException_ML
 
 class YadParseException_ML : public YadParseException_Std
 	{
@@ -40,8 +39,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_NameRefYad
+#pragma mark - ChanR_NameRefYad
 
 class ChanR_NameRefYad
 :	public ChanR_NameRefYad_Std
@@ -69,8 +67,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF);
 

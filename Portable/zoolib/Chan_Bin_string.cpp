@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_string
+#pragma mark - ChanW_Bin_string
 
 ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
 :	fStringPtr(ioString)
@@ -37,8 +36,7 @@ size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCountCU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_string
+#pragma mark - ChanRPos_Bin_string
 
 ChanRPos_Bin_string::ChanRPos_Bin_string(const std::string& iString)
 :	fString(iString)
@@ -87,8 +85,7 @@ size_t ChanRPos_Bin_string::UnreadableLimit()
 	{ return this->fPosition; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_Bin_string
+#pragma mark - ChanRWPos_Bin_string
 
 ChanRWPos_Bin_string::ChanRWPos_Bin_string(std::string* ioStringPtr)
 :	fStringPtr(ioStringPtr)

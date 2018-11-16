@@ -34,8 +34,7 @@ namespace Yad_Bencode {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 static void spThrowParseException(const string& iMessage)
 	{ throw YadParseException(iMessage); }
@@ -171,8 +170,7 @@ static ZRef<YadR> spMakeYadR_Bencode(ZRef<ChannerRU_Bin> iChanner)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadParseException
+#pragma mark - YadParseException
 
 YadParseException::YadParseException(const string& iWhat)
 :	ZooLib::YadParseException(iWhat)
@@ -183,8 +181,7 @@ YadParseException::YadParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_RefYad
+#pragma mark - ChanR_RefYad
 
 ChanR_RefYad::ChanR_RefYad(ZRef<ChannerRU_Bin> iChanner)
 :	fChanner(iChanner)
@@ -197,8 +194,7 @@ void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_NameRefYad
+#pragma mark - ChanR_NameRefYad
 
 ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ChannerRU_Bin> iChanner)
 :	fChanner(iChanner)
@@ -215,8 +211,7 @@ void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYad_Bencode
+#pragma mark - ZYad_Bencode
 
 ZRef<YadR> sYadR(ZRef<ChannerRU_Bin> iChanner)
 	{ return spMakeYadR_Bencode(iChanner); }

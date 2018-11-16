@@ -39,8 +39,7 @@ using std::string;
 using namespace Util_Chan_JSON;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 class ParseException : public YadParseException_Std
 	{
@@ -50,8 +49,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR_Hex
+#pragma mark - YadStreamerR_Hex
 
 class YadStreamerR_Hex
 :	public Channer_T<ChanR_Bin_HexStrim>
@@ -69,8 +67,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR_Base64
+#pragma mark - YadStreamerR_Base64
 
 class YadStreamerR_Base64
 :	public YadStreamerR
@@ -94,8 +91,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStrimmerR_JSON
+#pragma mark - YadStrimmerR_JSON
 
 class YadStrimmerR_JSON
 :	public YadStrimmerR
@@ -120,8 +116,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR_JSON
+#pragma mark - YadSeqR_JSON
 
 class ChanR_RefYad_JSON
 :	public ChanR_RefYad_Std
@@ -142,8 +137,7 @@ private:
 typedef Channer_T<ChanR_RefYad_JSON> YadSeqR_JSON;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapR_JSON
+#pragma mark - YadMapR_JSON
 
 class ChanR_NameRefYad_JSON
 :	public ChanR_NameRefYad_Std
@@ -164,8 +158,7 @@ private:
 typedef Channer_T<ChanR_NameRefYad_JSON> YadMapR_JSON;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR, sToStrim and sPush
+#pragma mark - sYadR, sToStrim and sPush
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU);
 

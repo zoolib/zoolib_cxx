@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FILEHolder
+#pragma mark - FILEHolder
 
 class FILEHolder
 	{
@@ -48,8 +47,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_FILE
+#pragma mark - ChanR_Bin_FILE
 
 /// A read stream that wraps a POSIX FILE*.
 
@@ -66,8 +64,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_FILE
+#pragma mark - ChanW_Bin_FILE
 
 /// A write stream that wraps a POSIX FILE*.
 

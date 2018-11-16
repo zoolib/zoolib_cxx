@@ -26,8 +26,7 @@ using std::set;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark *
+#pragma mark - *
 
 Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::
 Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const Val_Any& iVal)

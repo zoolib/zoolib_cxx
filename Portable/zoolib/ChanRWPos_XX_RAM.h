@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_XX_RAM
+#pragma mark - ChanRWPos_XX_RAM
 
 /// A RWPos stream that maintains its data in memory.
 

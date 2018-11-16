@@ -30,8 +30,7 @@ namespace ZooLib {
 #define kDebug_BitStream 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZBitReaderBE
+#pragma mark - ZBitReaderBE
 
 /** \class ZBitReaderBE
 \sa ZBitWriterBE
@@ -113,8 +112,7 @@ void ZBitReaderBE::ReadBits(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZBitReaderLE
+#pragma mark - ZBitReaderLE
 
 /** \class ZBitReaderLE
 \sa ZBitReaderLE
@@ -185,8 +183,7 @@ void ZBitReaderLE::ReadBits(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZBitWriterBE
+#pragma mark - ZBitWriterBE
 
 /** \class ZBitWriterBE
 \sa ZBitReaderBE
@@ -294,8 +291,7 @@ void ZBitWriterBE::Finish(void* oDest, size_t* oCountBytesWritten)
 		}
 	}
 // =================================================================================================
-#pragma mark -
-#pragma mark ZBitWriterLE
+#pragma mark - ZBitWriterLE
 
 /** \class ZBitWriterLE
 \sa ZBitReaderLE

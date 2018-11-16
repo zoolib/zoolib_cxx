@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChannerRW_Wrapper
+#pragma mark - ChannerRW_Wrapper
 
 template <class EE>
 class ChannerRW_Wrapper
@@ -66,8 +65,7 @@ ZRef<ChannerRW<EE> > sChanner_Wrapper(
 	{ return new ChannerRW_Wrapper<EE>(iChannerR, iChannerW); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChannerRWClose_Wrapper
+#pragma mark - ChannerRWClose_Wrapper
 
 template <class EE>
 class ChannerRWClose_Wrapper

@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <Foundation/NSAutoreleasePool.h>
 
 // =================================================================================================
-#pragma mark -
-#pragma mark AutoreleasePool
+#pragma mark - AutoreleasePool
 
 namespace ZooLib {
 

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace SQLite {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SQLite
+#pragma mark - SQLite
 
 DB::DB(const string8& iPath)
 :	fDB(nullptr)
@@ -54,8 +53,7 @@ sqlite3* DB::GetDB()
 	{ return fDB; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Iter
+#pragma mark - Iter
 
 // fPosition is one-based, so that zero can be a special value.
 // fPosition == 0 is the initial state, referencing the first result

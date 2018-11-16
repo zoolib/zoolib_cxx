@@ -27,14 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Fallback
+#pragma mark - Callable_Fallback
 
 template <class Signature> class Callable_Fallback;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Fallback (specialization for 0 params)
+#pragma mark - Callable_Fallback (specialization for 0 params)
 
 template <class R>
 class Callable_Fallback<R(void)>
@@ -62,8 +60,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Fallback variants
+#pragma mark - Callable_Fallback variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -111,8 +108,7 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCallable_Fallback
+#pragma mark - sCallable_Fallback
 
 template <class Sig>
 ZRef<Callable<Sig> > sCallable_Fallback(

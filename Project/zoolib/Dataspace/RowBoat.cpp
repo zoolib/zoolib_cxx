@@ -40,8 +40,7 @@ using namespace Util_STL;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RowBoat
+#pragma mark - RowBoat
 
 RowBoat::RowBoat(const ZRef<Callable_Register>& iCallable_Register,
 	const ZRef<Expr_Rel>& iRel,

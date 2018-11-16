@@ -37,8 +37,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Result
+#pragma mark - Result
 
 class Result : public ZCounted
 	{
@@ -63,8 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ResultDiffer
+#pragma mark - ResultDiffer
 
 class ResultDiffer
 	{

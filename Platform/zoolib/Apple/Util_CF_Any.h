@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_CF
+#pragma mark - Util_CF
 
 ZQ<Any> sQSimpleAsAny(CFTypeID iTypeID, CFTypeRef iVal);
 ZQ<Any> sQAsAny(CFTypeRef iVal);

@@ -35,8 +35,7 @@ using Util_NS::sArrayMutable;
 using Util_NS::sDictionaryMutable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers (anonymous)
+#pragma mark - Helpers (anonymous)
 
 namespace { // anonymous
 
@@ -54,8 +53,7 @@ NSNumber* spAsNumber(NSObject* iObj)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Val_NS
+#pragma mark - Val_NS
 
 /**
 \class Val_NS
@@ -370,8 +368,7 @@ const Val_NS Val_NS::Get(size_t iIndex) const
 	{ return this->Get<Seq_NS>().Get(iIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Seq_NS
+#pragma mark - Seq_NS
 
 Seq_NS::Seq_NS()
 :	inherited(sArrayMutable())
@@ -531,8 +528,7 @@ NSMutableArray* Seq_NS::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_NS
+#pragma mark - Map_NS
 
 Map_NS::Map_NS()
 :	inherited(sDictionaryMutable())

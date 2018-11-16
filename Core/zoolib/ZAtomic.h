@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZAtomic
+#pragma mark - ZAtomic
 
 struct ZAtomic_t
 	{
@@ -78,8 +77,7 @@ void sAtomic_Barrier();
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark "C++11"
+#pragma mark - "C++11"
 
 #if ZCONFIG_CPP >= 2011
 
@@ -112,8 +110,7 @@ bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 
 
 // =================================================================================================
-#pragma mark -
-#pragma mark "CodeWarrior/68K"
+#pragma mark - "CodeWarrior/68K"
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
@@ -140,8 +137,7 @@ inline asm bool sAtomic_CAS(ZAtomic_t* iAtomic : __A0,
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark GCC/PPC
+#pragma mark - GCC/PPC
 
 #if ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, PPC)
 
@@ -212,8 +208,7 @@ inline int sAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, PPC)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark GCC/x86
+#pragma mark - GCC/x86
 
 #if ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, x86)
 
@@ -327,8 +322,7 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MSVC/x86
+#pragma mark - MSVC/x86
 
 #if ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 
@@ -439,8 +433,7 @@ inline void sAtomic_Dec(ZAtomic_t* iAtomic)
 #endif // ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Mach (OSX/iPhone)
+#pragma mark - Mach (OSX/iPhone)
 
 #if defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
 

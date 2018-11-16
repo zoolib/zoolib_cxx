@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Union
+#pragma mark - Relater_Union
 
 class Relater_Union
 :	public Relater

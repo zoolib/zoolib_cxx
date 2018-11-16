@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Dataspace/Daton.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T
+#pragma mark - sCompare_T
 
 namespace ZooLib {
 
@@ -40,8 +39,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Daton
+#pragma mark - Daton
 
 Daton::Daton()
 	{}

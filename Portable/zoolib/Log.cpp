@@ -34,8 +34,7 @@ ZRef<LogMeister> sLogMeister;
 //ZSafe<ZRef<LogMeister> > sLogMeister;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Log::CallDepth
+#pragma mark - Log::CallDepth
 
 static ZTSS::Key spKey()
 	{
@@ -73,8 +72,7 @@ size_t CallDepth::sCountActive()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark String/integer mapping
+#pragma mark - String/integer mapping
 
 static const char* const spNames[] =
 	{
@@ -110,8 +108,7 @@ string sNameFromPriority(EPriority iPriority)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Log::ChanW
+#pragma mark - Log::ChanW
 
 ChanW::ChanW(EPriority iPriority, const string& iName_String)
 :	fPriority(iPriority)
@@ -184,8 +181,7 @@ void ChanW::pEmit()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Log::LogMeister
+#pragma mark - Log::LogMeister
 
 bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 	{ return true; }
@@ -207,8 +203,7 @@ void sLogIt(EPriority iPriority, const std::string& iName, size_t iDepth, const 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Log::FunctionEntryExit
+#pragma mark - Log::FunctionEntryExit
 
 FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName, const std::string& iMessage)
 :	fPriority(iPriority)
@@ -242,8 +237,7 @@ FunctionEntryExit::~FunctionEntryExit()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Log::sLogTrace
+#pragma mark - Log::sLogTrace
 
 static const char* spTruncateFileName(const char* iFilename)
 	{

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace HTTP {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark HTTP
+#pragma mark - HTTP
 
 typedef Callable<ZRef<ChannerRWClose_Bin>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;

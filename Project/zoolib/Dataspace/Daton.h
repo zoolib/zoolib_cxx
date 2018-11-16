@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Daton
+#pragma mark - Daton
 
 //! A trivial implementation till I get the signing stuff figured out
 

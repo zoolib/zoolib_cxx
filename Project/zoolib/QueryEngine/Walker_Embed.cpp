@@ -37,8 +37,7 @@ using namespace Util_STL;
 using RelationalAlgebra::RelHead;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Embed
+#pragma mark - Walker_Embed
 
 Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelHead& iBoundNames,
 	const string8& iColName, const ZRef<Walker>& iWalker_Embedee)

@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ZooLib;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::UIKit
+#pragma mark - ZooLib::UIKit
 
 namespace ZooLib {
 namespace UIKit {

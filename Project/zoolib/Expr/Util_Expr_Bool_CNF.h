@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Expr_Bool
+#pragma mark - Util_Expr_Bool
 
 // CNF == Conjunctive Normal Form (an AND of ORs of terms, ie an AND of DClauses).
 // DClause is a disjunction of literals (an OR of terms).

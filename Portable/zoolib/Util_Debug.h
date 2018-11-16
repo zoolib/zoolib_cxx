@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Util_Debug {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Debug
+#pragma mark - Util_Debug
 
 extern bool sCompact;
 

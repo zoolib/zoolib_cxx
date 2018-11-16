@@ -63,8 +63,7 @@ namespace ZooLib {
 namespace Time {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Time
+#pragma mark - Time
 
 double sNow()
 	{

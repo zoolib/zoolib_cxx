@@ -43,8 +43,7 @@ ZMACRO_MSVCStaticLib_Reference(File_POSIX)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileLoc_POSIX
+#pragma mark - FileLoc_POSIX
 
 class FileLoc_POSIX : public FileLoc
 	{

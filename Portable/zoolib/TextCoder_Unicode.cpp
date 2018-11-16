@@ -36,8 +36,7 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Utility functions
+#pragma mark - Utility functions
 
 static void spEncodeUTF32(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
@@ -384,8 +383,7 @@ static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
 	{
@@ -478,8 +476,7 @@ ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder_Unicode_AutoDetect
+#pragma mark - TextDecoder_Unicode_AutoDetect
 
 TextDecoder_Unicode_AutoDetect::TextDecoder_Unicode_AutoDetect()
 :	fType(eFresh)

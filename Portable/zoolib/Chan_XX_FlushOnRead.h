@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Chan_XX_FlushOnRead
+#pragma mark - Chan_XX_FlushOnRead
 
 template <class EE>
 class Chan_XX_FlushOnRead
@@ -82,8 +81,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Channer_XX_FlushOnRead
+#pragma mark - Channer_XX_FlushOnRead
 
 template <class EE>
 class Channer_XX_FlushOnRead

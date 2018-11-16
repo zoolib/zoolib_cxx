@@ -37,8 +37,7 @@ using std::min;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_string
+#pragma mark - Util_string
 
 ZQ<__int64> sQInt64(const string& iString)
 	{

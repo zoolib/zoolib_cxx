@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Data_NS
+#pragma mark - Data_NS
 
 class Data_NS
 :	public ZRef<NSData>

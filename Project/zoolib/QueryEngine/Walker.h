@@ -34,8 +34,7 @@ namespace QueryEngine {
 class Visitor_Walker;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker
+#pragma mark - Walker
 
 class Walker : public Visitee
 	{
@@ -70,8 +69,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Walker
+#pragma mark - Visitor_Walker
 
 class Visitor_Walker
 :	public virtual Visitor
@@ -82,8 +80,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Unary
+#pragma mark - Walker_Unary
 
 class Walker_Unary : public Walker
 	{

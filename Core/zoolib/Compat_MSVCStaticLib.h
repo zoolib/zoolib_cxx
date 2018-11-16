@@ -82,8 +82,7 @@ cause a non-executing reference to occur, and things will work as expected.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCompat_MSVCStaticLib
+#pragma mark - ZCompat_MSVCStaticLib
 
 #if not defined(ZMACRO_MSVCStaticLib_Reference)
 	#define ZMACRO_MSVCStaticLib_Reference(distinguisher_p) \

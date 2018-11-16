@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_NSString
+#pragma mark - ChanR_UTF_NSString
 
 class ChanR_UTF_NSString : public ChanR_UTF
 	{
@@ -52,8 +51,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_NSString
+#pragma mark - ChanW_UTF_NSString
 
 class ChanW_UTF_NSString : public ChanW_UTF_Native16
 	{

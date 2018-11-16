@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_Terminated
+#pragma mark - ChanR_XX_Terminated
 
 template <class EE>
 class ChanR_XX_Terminated

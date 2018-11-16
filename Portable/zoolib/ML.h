@@ -35,8 +35,7 @@ namespace ZooLib {
 namespace ML {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ML
+#pragma mark - ML
 
 using std::pair;
 using std::string;
@@ -58,8 +57,7 @@ typedef vector<Attr_t> Attrs_t;
 typedef Callable<string(string)> Callable_Entity;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ML::ChanRU_UTF
+#pragma mark - ML::ChanRU_UTF
 
 /// Tokenizes the ML from a source strim.
 
@@ -113,16 +111,14 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ML::ChannerRU_UTF
+#pragma mark - ML::ChannerRU_UTF
 
 typedef Channer_T<ChanRU_UTF> ChannerRU_UTF;
 
 ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZML parsing support
+#pragma mark - ZML parsing support
 
 void sSkipText(ChanRU_UTF& r);
 
@@ -136,8 +132,7 @@ bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName);
 bool sTryRead_End(ChanRU_UTF& r, const string& iTagName);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ML::StrimW
+#pragma mark - ML::StrimW
 
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
@@ -267,8 +262,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ML::StrimW::Indenter
+#pragma mark - ML::StrimW::Indenter
 
 class StrimW::Indenter
 	{

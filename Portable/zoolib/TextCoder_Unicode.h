@@ -27,16 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName);
 
 ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder_Unicode_AutoDetect
+#pragma mark - TextDecoder_Unicode_AutoDetect
 
 /** \brief A TextDecoder that treats the source data as being UTF-8, UTF-16BE or UTF-16LE based
 on the detection of a BOM (Byte Order Mark) at the beginning of the data. */

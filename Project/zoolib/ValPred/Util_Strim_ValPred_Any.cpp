@@ -34,8 +34,7 @@ using std::set;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helper functions (anonymous)
+#pragma mark - Helper functions (anonymous)
 
 namespace { // anonymous
 
@@ -179,8 +178,7 @@ ZRef<ValComparator> spQRead_ValComparator(const ChanR_UTF& iChanR, const ChanU_U
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_ValPred_Any
+#pragma mark - Util_Strim_ValPred_Any
 
 void sToStrim(const ValPred& iValPred, const ChanW_UTF& iChanW)
 	{

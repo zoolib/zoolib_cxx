@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace Yad_SeparatedValues {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 class ParseException : public ZooLib::YadParseException
 	{
@@ -39,8 +38,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(UTF32 iSeparator_Value, UTF32 iSeparator_Line, ZRef<ChannerR_UTF> iChannerR_UTF);
 

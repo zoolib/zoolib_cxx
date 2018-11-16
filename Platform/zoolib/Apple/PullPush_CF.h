@@ -32,14 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 bool sPull_Push_CF(const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
 

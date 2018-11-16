@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetEx
+#pragma mark - NetEx
 
 NetEx::NetEx(Net::Error iError)
 :	runtime_error("NetEx")
@@ -32,8 +31,7 @@ NetEx::NetEx(Net::Error iError)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddress
+#pragma mark - NetAddress
 
 NetAddress::NetAddress()
 	{}
@@ -52,8 +50,7 @@ ZRef<NetAddressLookup> NetAddress::MakeLookup(size_t iMaxNames)
 	{ return null; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddressLookup
+#pragma mark - NetAddressLookup
 
 NetAddressLookup::NetAddressLookup()
 	{}
@@ -62,8 +59,7 @@ NetAddressLookup::~NetAddressLookup()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetName
+#pragma mark - NetName
 
 NetName::NetName()
 	{}
@@ -94,8 +90,7 @@ ZRef<ChannerRWClose_Bin> NetName::Connect()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetNameLookup
+#pragma mark - NetNameLookup
 
 NetNameLookup::NetNameLookup()
 	{}
@@ -104,8 +99,7 @@ NetNameLookup::~NetNameLookup()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener
+#pragma mark - NetListener
 
 NetListener::NetListener()
 	{}

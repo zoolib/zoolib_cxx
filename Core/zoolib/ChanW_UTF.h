@@ -120,14 +120,12 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Native32
+#pragma mark - ChanW_UTF_Native32
 
 typedef ChanW_UTF ChanW_UTF_Native32;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Native16
+#pragma mark - ChanW_UTF_Native16
 
 class ChanW_UTF_Native16
 :	public ChanW_UTF
@@ -141,8 +139,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Native8
+#pragma mark - ChanW_UTF_Native8
 
 class ChanW_UTF_Native8
 :	public ChanW_UTF

@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CountedWithoutFinalize
+#pragma mark - CountedWithoutFinalize
 
 class CountedWithoutFinalize
 	{
@@ -46,8 +45,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sRetain/sRelease for CountedWithoutFinalize derivatives
+#pragma mark - sRetain/sRelease for CountedWithoutFinalize derivatives
 
 inline void sRetain(CountedWithoutFinalize& iObject)
 	{ iObject.Retain(); }

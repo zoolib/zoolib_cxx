@@ -29,8 +29,7 @@ namespace ZooLib {
 typedef Callable<void()> Startable;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter
+#pragma mark - Starter
 
 class Starter
 :	public ZCounted
@@ -40,8 +39,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_Trivial
+#pragma mark - Starter_Trivial
 
 class Starter_Trivial
 :	public Starter

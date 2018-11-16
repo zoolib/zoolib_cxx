@@ -31,8 +31,7 @@ namespace QueryEngine {
 using RelationalAlgebra::RelHead;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark - sToStrim
+#pragma mark - - sToStrim
 
 void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 	{

@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RowBoat
+#pragma mark - RowBoat
 
 class RowBoat
 :	public ZCounted

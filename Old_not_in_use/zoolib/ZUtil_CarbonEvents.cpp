@@ -39,8 +39,7 @@ using std::string;
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_CarbonEvents
+#pragma mark - Util_CarbonEvents
 
 bool Util_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* oBuffer)
@@ -65,8 +64,7 @@ void Util_CarbonEvents::sSetParam(EventRef iEventRef, EventParamName iName, Even
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Handler
+#pragma mark - Handler
 
 namespace { // anonymous
 

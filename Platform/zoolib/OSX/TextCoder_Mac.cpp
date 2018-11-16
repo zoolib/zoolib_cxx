@@ -45,8 +45,7 @@ ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextCoder_Mac
+#pragma mark - TextCoder_Mac
 
 static TextEncoding spLookupName(const string& iName)
 	{
@@ -74,8 +73,7 @@ static TextEncoding spLookupName(const string& iName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder_Mac
+#pragma mark - TextDecoder_Mac
 
 class TextDecoder_Mac : public TextDecoder
 	{
@@ -93,8 +91,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder_Mac
+#pragma mark - TextDecoder_Mac
 
 TextDecoder_Mac::TextDecoder_Mac(TextEncoding iSourceEncoding)
 	{
@@ -266,8 +263,7 @@ ZQ<bool> TextDecoder_Mac::QCall(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextEncoder_Mac
+#pragma mark - TextEncoder_Mac
 
 class TextEncoder_Mac : public TextEncoder
 	{
@@ -283,8 +279,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextEncoder_Mac
+#pragma mark - TextEncoder_Mac
 
 static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,
 	ByteCount *oSrcConvLen,
@@ -388,8 +383,7 @@ ZQ<void> TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<TextDecoder> sMake_TextDecoder_Mac(const std::string& iSourceName)
 	{

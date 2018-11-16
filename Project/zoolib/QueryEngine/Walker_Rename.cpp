@@ -31,8 +31,7 @@ using std::set;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Rename
+#pragma mark - Walker_Rename
 
 Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
 :	Walker_Unary(iWalker)

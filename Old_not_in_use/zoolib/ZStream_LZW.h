@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWEncode
+#pragma mark - ZStreamR_LZWEncode
 
 /* This one is not done yet.
 class ZStreamR_LZWEncode : public ZStreamR_F
@@ -61,8 +60,7 @@ protected:
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWEncodeNoPatent
+#pragma mark - ZStreamR_LZWEncodeNoPatent
 
 class ZStreamR_LZWEncodeNoPatent : public ZStreamR_Filter
 	{
@@ -92,8 +90,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWDecode
+#pragma mark - ZStreamR_LZWDecode
 
 /// A read filter stream that LZW-decompresses a source stream.
 
@@ -132,8 +129,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWEncode
+#pragma mark - ZStreamW_LZWEncode
 
 /// A write filter stream that LZW-compresses to a destination stream.
 
@@ -171,8 +167,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWEncodeNoPatent
+#pragma mark - ZStreamW_LZWEncodeNoPatent
 
 class ZStreamW_LZWEncodeNoPatent : public ZStreamW
 	{
@@ -199,8 +194,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWDecode
+#pragma mark - ZStreamW_LZWDecode
 
 /// An output filter stream that LZW-decompresses to destination stream.
 

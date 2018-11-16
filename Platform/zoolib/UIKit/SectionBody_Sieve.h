@@ -55,8 +55,7 @@ using RelationalAlgebra::RelHead;
 using Dataspace::RelsWatcher::Callable_Register;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SortSpec
+#pragma mark - SortSpec
 
 class SortSpec
 	{
@@ -82,8 +81,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SectionBody_Sieve
+#pragma mark - SectionBody_Sieve
 
 class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 	{

@@ -31,8 +31,7 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Union;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Union
+#pragma mark - Expr_Rel_Union
 
 class Expr_Rel_Union
 :	public virtual Expr_Rel
@@ -53,8 +52,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Union
+#pragma mark - Visitor_Expr_Rel_Union
 
 class Visitor_Expr_Rel_Union
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
@@ -64,8 +62,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
 ZRef<Expr_Rel_Union> sUnion(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 

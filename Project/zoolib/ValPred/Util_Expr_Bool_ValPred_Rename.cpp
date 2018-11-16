@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Util_Expr_Bool {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DoRename (anonymous)
+#pragma mark - DoRename (anonymous)
 
 namespace { // anonymous
 
@@ -55,8 +54,7 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Expr_Bool
+#pragma mark - Util_Expr_Bool
 
 ZRef<Expr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
 	const ZRef<Expr_Bool>& iExpr)

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTransform_Search
+#pragma mark - sTransform_Search
 
 ZRef<RelationalAlgebra::Expr_Rel> sTransform_Search(const ZRef<RelationalAlgebra::Expr_Rel>& iExpr);
 

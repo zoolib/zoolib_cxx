@@ -31,8 +31,7 @@ ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_OSX)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -49,8 +48,7 @@ class Make_SSL
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRWCon_SSL_OSX
+#pragma mark - ZStreamRWCon_SSL_OSX
 
 ZStreamRWCon_SSL_OSX::ZStreamRWCon_SSL_OSX(
 	const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer)
@@ -195,8 +193,7 @@ OSStatus ZStreamRWCon_SSL_OSX::spWrite(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerRWCon_SSL_OSX
+#pragma mark - ZStreamerRWCon_SSL_OSX
 
 ZStreamerRWCon_SSL_OSX::ZStreamerRWCon_SSL_OSX(
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer)

@@ -43,8 +43,7 @@ namespace ZooLib {
 namespace ZUtil_WinFirewall {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZUtil_WinFirewall
+#pragma mark - ZUtil_WinFirewall
 
 ZRef<INetFwMgr> sMgr();
 

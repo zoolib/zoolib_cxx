@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZQ
+#pragma mark - ZQ
 
 // The 'Q' stands for 'Questionable' or 'Queryable'.
 // It is pronounced 'Quid', as in the latin interrogative pronoun.
@@ -377,8 +376,7 @@ template <class T, bool Sense>
 struct RelopsTraits_HasLT<ZQ<T,Sense> > : public RelopsTraits_Has {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZQ (specialized for void)
+#pragma mark - ZQ (specialized for void)
 
 template <bool Sense>
 class ZQ<void,Sense>
@@ -486,8 +484,7 @@ bool operator<(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
 	{ return not iL.HasValue() && iR.HasValue(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NotQ
+#pragma mark - NotQ
 
 #if ZCONFIG_CPP >= 2011
 
@@ -569,8 +566,7 @@ public:
 #endif // ZCONFIG_CPP >= 2011
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Pseudo-ctor
+#pragma mark - Pseudo-ctor
 
 template <class T>
 ZQ<T> sQ()
@@ -589,8 +585,7 @@ ZQ<T> sQ(const P0& i0, const P1& i1)
 	{ return ZQ<T>(i0, i1); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Accessor functions
+#pragma mark - Accessor functions
 
 template <class T, bool Sense>
 const T* sPGet(const ZQ<T,Sense>& iQ)
@@ -648,8 +643,7 @@ ZQ<T> sQGetClear(ZQ<T,Sense>& ioQ)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark swap
+#pragma mark - swap
 
 template <class T, bool Sense>
 void swap(ZQ<T,Sense>& a, ZQ<T,Sense>& b)

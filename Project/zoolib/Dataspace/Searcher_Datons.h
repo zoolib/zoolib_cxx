@@ -35,8 +35,7 @@ namespace Dataspace {
 typedef std::vector<ColName> IndexSpec;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons
+#pragma mark - Searcher_Datons
 
 class Searcher_Datons
 :	public Searcher

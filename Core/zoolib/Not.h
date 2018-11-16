@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Not
+#pragma mark - Not
 
 template <class T>
 class Not
@@ -90,8 +89,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Pseudo-ctor
+#pragma mark - Pseudo-ctor
 
 template <class T>
 Not<T> sNot()

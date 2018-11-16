@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Name
+#pragma mark - Name
 
 #define ZMACRO_NameUsesString 1
 

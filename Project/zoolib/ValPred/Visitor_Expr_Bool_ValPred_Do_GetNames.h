@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Bool_ValPred_Do_GetNames
+#pragma mark - Visitor_Expr_Bool_ValPred_Do_GetNames
 
 class Visitor_Expr_Bool_ValPred_Do_GetNames
 :	public virtual Visitor_Do_T<std::set<std::string> >

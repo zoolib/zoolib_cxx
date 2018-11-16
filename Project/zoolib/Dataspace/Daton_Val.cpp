@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spAsVal (anonymous)
+#pragma mark - spAsVal (anonymous)
 
 namespace { // anonymous
 
@@ -48,8 +47,7 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Daton/Val conversion.
+#pragma mark - Daton/Val conversion.
 
 Val_Any sAsVal(const Daton& iDaton)
 	{ return spQAsVal(iDaton.GetData()).Get(); }

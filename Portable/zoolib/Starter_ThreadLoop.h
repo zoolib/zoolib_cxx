@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sStarter_ThreadLoop
+#pragma mark - sStarter_ThreadLoop
 
 ZRef<Starter> sStarter_ThreadLoop(const std::string& iName);
 

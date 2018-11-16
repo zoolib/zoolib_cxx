@@ -33,8 +33,7 @@ namespace RelationalAlgebra {
 namespace Util_Strim_RelHead {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_RelHead
+#pragma mark - Util_Strim_RelHead
 
 using namespace Util_STL;
 using std::set;

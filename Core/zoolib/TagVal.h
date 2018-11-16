@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TagVal
+#pragma mark - TagVal
 
 template <class Type_p, class Tag_p>
 class TagVal
@@ -110,7 +109,7 @@ template <class Type_p, class Tag_p>
 struct RelopsTraits_HasLT<TagVal<Type_p,Tag_p> > : public RelopsTraits_Has {};
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - 
 #pragma mark Accessors
 
 template <class Type_p, class Tag_p>

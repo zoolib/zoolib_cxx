@@ -29,12 +29,10 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextCoder
+#pragma mark - TextCoder
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextDecoder
+#pragma mark - TextDecoder
 
 /**
 \class TextDecoder
@@ -187,8 +185,7 @@ ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecode
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextEncoder
+#pragma mark - TextEncoder
 
 /**
 \class TextEncoder

@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ThreadVal
+#pragma mark - ThreadVal
 
 template <class Type_p, class Tag_p = Type_p>
 class ThreadVal
@@ -126,8 +125,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sThreadVal
+#pragma mark - sThreadVal
 
 template <class Type_p, class Tag_p>
 ZQ<Type_p> sQThreadVal()

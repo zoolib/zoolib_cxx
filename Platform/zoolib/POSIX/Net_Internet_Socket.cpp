@@ -47,8 +47,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetEndpoint_TCP_Socket
+#pragma mark - NetEndpoint_TCP_Socket
 
 static void spSetSocketOptions(int iSocketFD)
 	{
@@ -171,8 +170,7 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -235,8 +233,7 @@ class Make_Endpoint6
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 static ZRef<NetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
 	{
@@ -266,8 +263,7 @@ static ZRef<NetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_po
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Net_TCP_Socket
+#pragma mark - Net_TCP_Socket
 
 int Net_TCP_Socket::sListen(ip4_addr iLocalAddress, ip_port iLocalPort)
 	{
@@ -328,8 +324,7 @@ int Net_TCP_Socket::sListen(ip6_addr iLocalAddress, ip_port iLocalPort)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetNameLookup_Internet_Socket
+#pragma mark - NetNameLookup_Internet_Socket
 
 NetNameLookup_Internet_Socket::NetNameLookup_Internet_Socket(
 	const string& iName, ip_port iPort, size_t iMaxAddresses)
@@ -411,8 +406,7 @@ ZRef<NetName> NetNameLookup_Internet_Socket::CurrentName()
 	{ return new NetName_Internet(fName, fPort); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener_TCP_Socket
+#pragma mark - NetListener_TCP_Socket
 
 static int spEnsureInet(int iSocketFD)
 	{

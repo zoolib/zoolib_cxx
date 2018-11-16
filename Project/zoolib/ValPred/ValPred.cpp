@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator
+#pragma mark - ValComparator
 
 ValComparator::ValComparator()
 	{}
@@ -37,8 +36,7 @@ ValComparator::~ValComparator()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator_Simple
+#pragma mark - ValComparator_Simple
 
 ValComparator_Simple::ValComparator_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
@@ -54,8 +52,7 @@ int sCompare_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR)
 ZMACRO_CompareRegistration_T(ValComparator_Simple)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparand
+#pragma mark - ValComparand
 
 ValComparand::ValComparand()
 	{}
@@ -64,8 +61,7 @@ ValComparand::~ValComparand()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparand_Name
+#pragma mark - ValComparand_Name
 
 ValComparand_Name::ValComparand_Name(const std::string& iName)
 :	fName(iName)
@@ -81,8 +77,7 @@ int sCompare_T(const ValComparand_Name& iL, const ValComparand_Name& iR)
 ZMACRO_CompareRegistration_T(ValComparand_Name)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValPred
+#pragma mark - ValPred
 
 ValPred::ValPred()
 	{}
@@ -123,8 +118,7 @@ const ZRef<ValComparand>& ValPred::GetRHS() const
 	{ return fRHS; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValPred, sCompare_T
+#pragma mark - ValPred, sCompare_T
 
 template <>
 int sCompare_T(const ValPred& iL, const ValPred& iR)
@@ -142,8 +136,7 @@ bool operator<(const ValPred& iL, const ValPred& iR)
 	{ return sCompare_T(iL, iR) < 0; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Comparand pseudo constructors
+#pragma mark - Comparand pseudo constructors
 
 ValComparandPseudo CName(const std::string& iName)
 	{ return new ValComparand_Name(iName); }

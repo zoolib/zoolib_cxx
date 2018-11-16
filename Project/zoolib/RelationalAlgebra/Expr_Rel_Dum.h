@@ -33,8 +33,7 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Dum;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Dum
+#pragma mark - Expr_Rel_Dum
 
 class Expr_Rel_Dum
 :	public virtual Expr_Rel
@@ -60,8 +59,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Dum
+#pragma mark - Visitor_Expr_Rel_Dum
 
 class Visitor_Expr_Rel_Dum
 :	public virtual Visitor_Expr_Op0_T<Expr_Rel>
@@ -71,8 +69,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
 ZRef<Expr_Rel> sDum();
 

@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_string8
+#pragma mark - ChanRU_UTF_string8
 
 ChanRU_UTF_string8::ChanRU_UTF_string8(const string8& iString)
 :	fString(iString)

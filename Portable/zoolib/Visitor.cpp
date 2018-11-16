@@ -23,15 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitee
+#pragma mark - Visitee
 
 void Visitee::Accept(const Visitor& iVisitor)
 	{ const_cast<Visitor&>(iVisitor).Visit(this); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor
+#pragma mark - Visitor
 
 Visitor::~Visitor()
 	{}

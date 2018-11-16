@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Workaround
+#pragma mark - Workaround
 
 #if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
 
@@ -44,8 +43,7 @@ using std::string;
 #endif // !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib_Delegate_Proxy
+#pragma mark - ZooLib_Delegate_Proxy
 
 @interface ZooLib_Delegate_Proxy : NSObject
 	{
@@ -79,16 +77,14 @@ using std::string;
 @end // implementation ZooLib_Delegate_Proxy
 
 // =================================================================================================
-#pragma mark -
-#pragma mark C++
+#pragma mark - C++
 
 namespace ZooLib {
 
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Delegate
+#pragma mark - Delegate
 
 Delegate::Delegate()
 	{
@@ -124,8 +120,7 @@ NSMethodSignature* Delegate::pMethodSignatureForSelector(SEL aSelector)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Delegate::Wrapper
+#pragma mark - Delegate::Wrapper
 
 // Type code for receiver (an id) and SEL.
 static const string kRcvrSEL = "@:";

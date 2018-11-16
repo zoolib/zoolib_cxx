@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace Util_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL
+#pragma mark - Util_STL
 
 template <typename T, typename Comparator>
 bool
@@ -97,8 +96,7 @@ ZQ<Base> sQPopFront(std::set<Base,Comparator>& ioSet)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sXXXMust
+#pragma mark - sXXXMust
 
 template <typename Base, typename Comparator, typename Derived>
 void sInsertMust(const int iDebugLevel, std::set<Base,Comparator>& ioSet, const Derived& iElement)
@@ -125,8 +123,7 @@ void sEraseMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
 	{ sEraseMust(1, ioSet, iElement); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Intersection
+#pragma mark - Intersection
 
 template <class T, class C>
 std::set<T,C> operator&(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
@@ -177,8 +174,7 @@ std::set<T,C>& operator&=(std::set<T,C>& ioLHS, const T& iElem)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Union
+#pragma mark - Union
 
 template <class T, class C>
 std::set<T,C> operator|(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
@@ -217,8 +213,7 @@ std::set<T,C>& operator|=(std::set<T,C>& ioLHS, const T& iElem)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Xor
+#pragma mark - Xor
 
 template <class T, class C>
 std::set<T,C> operator^(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)
@@ -267,8 +262,7 @@ std::set<T,C>& operator^=(std::set<T,C>& ioLHS, const T& iElem)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Minus
+#pragma mark - Minus
 
 template <class T, class C>
 std::set<T,C> operator-(const std::set<T,C>& iLHS, const std::set<T,C>& iRHS)

@@ -39,8 +39,7 @@ namespace ZooLib {
 namespace Util_NS {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_NS
+#pragma mark - Util_NS
 
 Any sDAsAny(const Any& iDefault, NSObject* iVal)
 	{

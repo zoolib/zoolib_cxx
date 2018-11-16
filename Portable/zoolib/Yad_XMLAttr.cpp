@@ -60,8 +60,7 @@ using std::pair;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Static parsing functions
+#pragma mark - Static parsing functions
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -69,8 +68,7 @@ static void spThrowParseException(const string& iMessage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	YadParseException(iWhat)
@@ -81,8 +79,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapR
+#pragma mark - YadMapR
 
 class YadMapR
 :	public Channer_T<ChanR_NameRefYad_Std>
@@ -190,8 +187,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
 	{

@@ -35,8 +35,7 @@ class ZTextCollatorRep;
 class ZTextCollationKeyRep;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollator
+#pragma mark - ZTextCollator
 
 /// Instances of ZTextCollator provide locale-sensitive collation and comparison services.
 
@@ -102,8 +101,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollationKey
+#pragma mark - ZTextCollationKey
 
 class ZTextCollationKey
 	{
@@ -157,8 +155,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollatorRep
+#pragma mark - ZTextCollatorRep
 
 class ZTextCollatorRep : public CountedWithoutFinalize
 	{
@@ -223,8 +220,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollatorRep_NativeUTF8
+#pragma mark - ZTextCollatorRep_NativeUTF8
 
 class ZTextCollatorRep_NativeUTF8 : public ZTextCollatorRep
 	{
@@ -273,8 +269,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollatorRep_NativeUTF16
+#pragma mark - ZTextCollatorRep_NativeUTF16
 
 class ZTextCollatorRep_NativeUTF16 : public ZTextCollatorRep
 	{
@@ -323,8 +318,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollatorRep_NativeUTF32
+#pragma mark - ZTextCollatorRep_NativeUTF32
 
 class ZTextCollatorRep_NativeUTF32 : public ZTextCollatorRep
 	{

@@ -35,8 +35,7 @@ namespace RelationalAlgebra {
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_GetRelHead (anonymous)
+#pragma mark - Visitor_GetRelHead (anonymous)
 
 namespace { // anonymous
 
@@ -86,8 +85,7 @@ class Visitor_GetRelHead
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sGetRelHead
+#pragma mark - sGetRelHead
 
 RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel)
 	{ return Visitor_GetRelHead().Do(iRel); }

@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZRef support
+#pragma mark - ZRef support
 
 inline void sRetain(IUnknown& iObject)
 	{ iObject.AddRef(); }
@@ -57,8 +56,7 @@ inline void sCheck(IUnknown* iP)
 namespace ZWinCOM {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark EnsureInitialized
+#pragma mark - EnsureInitialized
 
 class EnsureInitialized
 	{
@@ -73,8 +71,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Support for QueryInterface and output-param APIs
+#pragma mark - Support for QueryInterface and output-param APIs
 
 template <class T>
 static HRESULT sCopy(void** oObjectRef, T* iOb)
@@ -121,8 +118,7 @@ ZRef<Target_p> sQueryInterface(const ZRef<Source_p> iSource)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::OParam
+#pragma mark - ZWinCOM::OParam
 
 template <class T, bool Sense = true>
 class OParam
@@ -183,8 +179,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::OParam specialized for ZRef<T>
+#pragma mark - ZWinCOM::OParam specialized for ZRef<T>
 
 template <class T, bool Sense>
 class OParam<ZRef<T>, Sense>
@@ -242,8 +237,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::sCreate
+#pragma mark - ZWinCOM::sCreate
 
 template <class Interface>
 ZRef<Interface> sCreate(CLSID iCLSID)
@@ -267,8 +261,7 @@ ZRef<Interface> sCreate()
 	{ return sCreate<Interface>(ZMACRO_UUID(Class)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::sSuccess& pseudo prefix operator
+#pragma mark - ZWinCOM::sSuccess& pseudo prefix operator
 
 const struct
 	{
@@ -278,8 +271,7 @@ const struct
 	} sSuccess = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::sFailure& pseudo prefix operator
+#pragma mark - ZWinCOM::sFailure& pseudo prefix operator
 
 const struct
 	{
@@ -289,8 +281,7 @@ const struct
 	} sFailure = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::Variant
+#pragma mark - ZWinCOM::Variant
 
 class Variant
 :	public VARIANT
@@ -373,8 +364,7 @@ inline void swap(Variant& a, Variant& b)
 	{ a.swap(b); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinCOM::String
+#pragma mark - ZWinCOM::String
 
 class String
 	{

@@ -29,8 +29,7 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark String buffers, limiting and reporting both CU and CP
+#pragma mark - String buffers, limiting and reporting both CU and CP
 
 void sWrite(const ChanW_UTF& iChanW,
 	const UTF32* iSource,
@@ -132,8 +131,7 @@ void sWrite(const ChanW_UTF& iChanW,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Pointer-and-length
+#pragma mark - Pointer-and-length
 
 // We do *not* implement this. UTF32 naturally has a CU-only variant
 //size_t sWrite(const ChanW_UTF& iChanW, const UTF32* iSource, size_t iCountCU)
@@ -185,8 +183,7 @@ void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString, size_t iCountCU)
 	{ sQWrite(iChanW, iString, iCountCU) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Zero-terminated strings
+#pragma mark - Zero-terminated strings
 
 bool sQWrite(const ChanW_UTF& iChanW, const UTF32* iString)
 	{ return sQWrite(iChanW, iString, Unicode::sCountCU(iString)); }
@@ -207,8 +204,7 @@ void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString)
 	{ sQWrite(iChanW, iString, Unicode::sCountCU(iString)) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Standard library strings
+#pragma mark - Standard library strings
 
 bool sQWrite(const ChanW_UTF& iChanW, const string32& iString)
 	{
@@ -249,8 +245,7 @@ void sEWrite(const ChanW_UTF& iChanW, const string8& iString)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Formatted strings
+#pragma mark - Formatted strings
 
 /** Write the zero-terminated UTF-8 string starting at \a iString. Standard printf-style parameter
 substitution is applied to the string before writing.
@@ -313,8 +308,7 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Native16
+#pragma mark - ChanW_UTF_Native16
 
 size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 	{
@@ -351,8 +345,7 @@ size_t ChanW_UTF_Native16::Write(const UTF32* iSource, size_t iCountCU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Native8
+#pragma mark - ChanW_UTF_Native8
 
 size_t ChanW_UTF_Native8::Write(const UTF32* iSource, size_t iCountCU)
 	{

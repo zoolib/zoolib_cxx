@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace HTTP {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark HTTP::sQConnect
+#pragma mark - HTTP::sQConnect
 
 ZRef<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{

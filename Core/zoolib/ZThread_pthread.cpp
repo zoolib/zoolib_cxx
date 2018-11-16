@@ -36,8 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread_pthread::sSetName
+#pragma mark - ZThread_pthread::sSetName
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
@@ -83,8 +82,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread_pthread
+#pragma mark - ZThread_pthread
 
 namespace ZThread_pthread {
 
@@ -120,8 +118,7 @@ void sSleep(double iDuration)
 } // namespace ZThread_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTSS_pthread
+#pragma mark - ZTSS_pthread
 
 namespace ZTSS_pthread {
 
@@ -138,8 +135,7 @@ void sFree(Key iKey)
 } // namespace ZTSS_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndBase_pthread
+#pragma mark - ZCndBase_pthread
 
 bool ZCndBase_pthread::pWaitFor(ZMtx_pthread& iMtx, double iTimeout)
 	{
@@ -162,8 +158,7 @@ bool ZCndBase_pthread::pWaitUntil(ZMtx_pthread& iMtx, double iDeadline)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ~ZMtx_pthread
+#pragma mark - ~ZMtx_pthread
 
 #if ZCONFIG_pthread_Debug
 
@@ -188,8 +183,7 @@ void ZMtx_pthread::Release()
 #endif // ZCONFIG_pthread_Debug
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtx_pthread
+#pragma mark - ZMtx_pthread
 
 #if ZCONFIG_pthread_Debug
 

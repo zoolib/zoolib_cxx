@@ -146,8 +146,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadAtomR> sYadAtomR_Any(const Any& iAny)
 	{
@@ -191,8 +190,7 @@ ZRef<YadMapAtR> sYadR(const Map_Any& iMap)
 	{ return new YadMapR_Any(iMap); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sFromYadR
+#pragma mark - sFromYadR
 
 namespace { // anonymous
 
@@ -282,8 +280,7 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Yad_Any
+#pragma mark - Yad_Any
 
 namespace Yad_Any {
 

@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddress_Internet
+#pragma mark - NetAddress_Internet
 
 NetAddress_Internet::NetAddress_Internet(ip_port iPort)
 :	fPort(iPort)
@@ -43,8 +42,7 @@ ip_port NetAddress_Internet::GetPort()
 	{ return fPort; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddress_IP4
+#pragma mark - NetAddress_IP4
 
 NetAddress_IP4::NetAddress_IP4(ip4_addr iAddr, ip_port iPort)
 :	NetAddress_Internet(iPort)
@@ -84,8 +82,7 @@ ip4_addr NetAddress_IP4::sAddr(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 i
 	{ return (iAddr0 << 24) | (iAddr1 << 16) | (iAddr2 << 8) | iAddr3; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddress_IP6
+#pragma mark - NetAddress_IP6
 
 NetAddress_IP6::NetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 :	NetAddress_Internet(iPort)
@@ -105,8 +102,7 @@ const ip6_addr NetAddress_IP6::sAny =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetName_Internet
+#pragma mark - NetName_Internet
 
 NetName_Internet::NetName_Internet(const std::string& iName, ip_port iPort)
 :	fName(iName)
@@ -132,8 +128,7 @@ ip_port NetName_Internet::GetPort() const
 	{ return fPort; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener_TCP
+#pragma mark - NetListener_TCP
 
 ZRef<NetListener_TCP> sNetListener_TCP(ip_port iPort)
 	{
@@ -154,8 +149,7 @@ ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetEndpoint_TCP
+#pragma mark - NetEndpoint_TCP
 
 ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Generator {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ShelfBase
+#pragma mark - ShelfBase
 
 class ShelfBase
 	{
@@ -64,8 +63,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Shelf
+#pragma mark - Shelf
 
 template <class T>
 class Shelf
@@ -120,8 +118,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Shelf (specialization for void)
+#pragma mark - Shelf (specialization for void)
 
 template <>
 class Shelf<void>
@@ -175,8 +172,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ShelfPair
+#pragma mark - ShelfPair
 
 template <class T0, class T1>
 class ShelfPair
@@ -188,8 +184,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Gen
+#pragma mark - Callable_Gen
 
 template <class T0, class T1>
 class Callable_Gen
@@ -224,8 +219,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Gen (partial specialization for <T,void>)
+#pragma mark - Callable_Gen (partial specialization for <T,void>)
 
 template <class T>
 class Callable_Gen<T,void>
@@ -260,8 +254,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Yield
+#pragma mark - Callable_Yield
 
 template <class T0, class T1>
 class Callable_Yield
@@ -299,8 +292,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Yield (partial specialization for <void,T>)
+#pragma mark - Callable_Yield (partial specialization for <void,T>)
 
 template <class T>
 class Callable_Yield<void,T>
@@ -338,8 +330,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark AsSig
+#pragma mark - AsSig
 
 // AsSig is needed so a void T0 or T1 does not end up in the param list of a signature.
 
@@ -359,8 +350,7 @@ template <>
 struct AsSig<void,void> : public AsSigBase<void()> {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCallablePair
+#pragma mark - sCallablePair
 
 template <class T0, class T1>
 void
@@ -374,8 +364,7 @@ sCallablePair(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sGenerator, function is passed a yield callable
+#pragma mark - sGenerator, function is passed a yield callable
 
 template <class T0, class T1>
 ZRef<typename AsSig<T0,T1>::Callable_t>
@@ -402,8 +391,7 @@ sGenerator(const ZRef<Callable<void(const ZRef<Callable<T()> >&)> >& iCallable)
 	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sGenerator, yield is installed as a thread value.
+#pragma mark - sGenerator, yield is installed as a thread value.
 
 // The signature of the Generator's root function, the thing that's called,
 // is void(T0*, T1*) -- two null pointers are passed, they're just there to

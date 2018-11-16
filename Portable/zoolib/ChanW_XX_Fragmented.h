@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_XX_Fragmented
+#pragma mark - ChanW_XX_Fragmented
 
 /// A write filter stream that passes on data in chunks no larger than a limit.
 

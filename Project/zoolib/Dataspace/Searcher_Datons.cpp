@@ -73,8 +73,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Index
+#pragma mark - Index
 
 struct Searcher_Datons::Key
 	{
@@ -220,8 +219,7 @@ void Searcher_Datons::Index::Comparer::spDump(bool iResult, const Key& iLeft, co
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons::Walker_Map
+#pragma mark - Searcher_Datons::Walker_Map
 
 class Searcher_Datons::Walker_Map
 :	public QE::Walker
@@ -264,8 +262,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons::Walker_Index
+#pragma mark - Searcher_Datons::Walker_Index
 
 class Searcher_Datons::Walker_Index
 :	public QE::Walker
@@ -324,8 +321,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons::ClientSearch
+#pragma mark - Searcher_Datons::ClientSearch
 
 class Searcher_Datons::DLink_ClientSearch_InPSearch
 :	public DListLink<ClientSearch, DLink_ClientSearch_InPSearch, kDebug>
@@ -350,8 +346,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons::PSearch
+#pragma mark - Searcher_Datons::PSearch
 
 typedef ZQ<pair<Val_Any,bool> > Bound_t; // Value, inclusive
 
@@ -392,8 +387,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Searcher_Datons
+#pragma mark - Searcher_Datons
 
 Searcher_Datons::Searcher_Datons(const vector<IndexSpec>& iIndexSpecs)
 	{

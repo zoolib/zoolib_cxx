@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr
+#pragma mark - Expr
 
 void Expr::Accept(const Visitor& iVisitor)
 	{
@@ -45,8 +44,7 @@ std::string Expr::DebugDescription()
 	{ return sStringf("%p/", this) + typeid(*this).name(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr
+#pragma mark - Visitor_Expr
 
 void Visitor_Expr::Visit_Expr(const ZRef<Expr>& iExpr)
 	{ this->Visit(iExpr); }

@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace ZWinCOM {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark EnsureInitialized
+#pragma mark - EnsureInitialized
 
 EnsureInitialized::EnsureInitialized()
 :	fHRESULT(::CoInitializeEx(nullptr, COINIT_MULTITHREADED))
@@ -48,8 +47,7 @@ bool EnsureInitialized::IsOK() const
 	{ return fHRESULT == RPC_E_CHANGED_MODE || sSuccess(fHRESULT); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Variant
+#pragma mark - Variant
 
 /**
 \class ZWinCOM::Variant
@@ -470,8 +468,7 @@ ZMACRO_ZValAccessors_Def_GetSet(Variant, Dispatch, ZRef<IDispatch>)
 /// \endcond DoxygenIgnore
 
 // =================================================================================================
-#pragma mark -
-#pragma mark String
+#pragma mark - String
 
 String::String()
 :	fBSTR(nullptr)

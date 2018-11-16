@@ -29,8 +29,7 @@ using std::set;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark StartScheduler
+#pragma mark - StartScheduler
 
 StartScheduler::StartScheduler()
 :	fThreadRunning(false)
@@ -137,8 +136,7 @@ void StartScheduler::spRun(StartScheduler* iStartScheduler)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark StartScheduler function interface
+#pragma mark - StartScheduler function interface
 
 bool sCancel(const StartScheduler::Job& iJob)
 	{ return sSingleton<StartScheduler>().Cancel(iJob); }

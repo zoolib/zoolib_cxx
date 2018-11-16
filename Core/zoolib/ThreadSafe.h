@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMACRO_ThreadSafe Macros
+#pragma mark - ZMACRO_ThreadSafe Macros
 
 // "Safe" increment and decrement. In non-preemptive environments this will do cheap
 // addition/subtraction, and in preemptive situations it will do slightly less efficient, but

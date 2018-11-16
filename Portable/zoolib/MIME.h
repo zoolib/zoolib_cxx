@@ -31,8 +31,7 @@ namespace MIME {
 bool sIs_LWS(char iChar);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MIME::ChanR_Bin_Header
+#pragma mark - MIME::ChanR_Bin_Header
 
 /** 
 Takes a source stream and reads until it sees an LFLF sequence, at which
@@ -70,8 +69,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMIME::ChanR_Bin_Line
+#pragma mark - ZMIME::ChanR_Bin_Line
 
 /// Returns bytes from the real stream until an end of line is detected.
 

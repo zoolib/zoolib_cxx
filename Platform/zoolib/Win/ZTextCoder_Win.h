@@ -43,8 +43,7 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_Win)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_Win
+#pragma mark - ZTextDecoder_Win
 
 class ZTextDecoder_Win : public ZTextDecoder
 	{
@@ -66,8 +65,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_Win
+#pragma mark - ZTextEncoder_Win
 
 class ZTextEncoder_Win : public ZTextEncoder
 	{

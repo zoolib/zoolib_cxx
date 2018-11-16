@@ -35,8 +35,7 @@ class ZMap_Yad;
 typedef Val_T<ZMap_Yad,ZSeq_Yad> ZVal_Yad;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSeq_Yad
+#pragma mark - ZSeq_Yad
 
 class ZSeq_Yad
 	{
@@ -131,8 +130,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMap_Yad
+#pragma mark - ZMap_Yad
 
 class ZMap_Yad
 	{
@@ -223,8 +221,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(const ZVal_Yad& iVal);
 

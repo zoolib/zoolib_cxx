@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T
+#pragma mark - sCompare_T
 
 namespace ZooLib {
 
@@ -45,23 +44,20 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel
+#pragma mark - Expr_Rel
 
 Expr_Rel::Expr_Rel()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SemanticError
+#pragma mark - SemanticError
 
 SemanticError::SemanticError(const string8& iMessage)
 :	runtime_error(iMessage)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SemanticError, helpers
+#pragma mark - SemanticError, helpers
 
 static void spThrow(const string8& iMessage)
 	{ throw SemanticError("RelationalAlgebra Semantic Error: " + iMessage); }
@@ -73,8 +69,7 @@ static void spLog(const string8& iMessage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SemanticError, global and per-thread handlers
+#pragma mark - SemanticError, global and per-thread handlers
 
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
 const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);

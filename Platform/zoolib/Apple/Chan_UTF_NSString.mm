@@ -35,8 +35,7 @@ namespace ZooLib {
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_NSString
+#pragma mark - ChanR_UTF_NSString
 
 ChanR_UTF_NSString::ChanR_UTF_NSString(NSString* iString)
 :	fString(iString)
@@ -69,8 +68,7 @@ size_t ChanR_UTF_NSString::Read(UTF32* oDest, size_t iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_NSString
+#pragma mark - ChanW_UTF_NSString
 
 ChanW_UTF_NSString::ChanW_UTF_NSString(NSMutableString* ioString)
 :	fString(ioString)

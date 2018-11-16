@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark UIControl (Callable)
+#pragma mark - UIControl (Callable)
 
 @interface UIControl (Callable)
 
@@ -38,8 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 @end // interface UIControl (Callable)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib
+#pragma mark - ZooLib
 
 namespace ZooLib {
 

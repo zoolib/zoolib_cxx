@@ -36,8 +36,7 @@ for walking HTML.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Static helpers
+#pragma mark - Static helpers
 
 static void spThrowParseException(const string& iMessage)
 	{
@@ -45,8 +44,7 @@ static void spThrowParseException(const string& iMessage)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYadParseException_ML
+#pragma mark - ZYadParseException_ML
 
 YadParseException_ML::YadParseException_ML(const string& iWhat)
 :	YadParseException_Std(iWhat)
@@ -57,8 +55,7 @@ YadParseException_ML::YadParseException_ML(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_NameRefYad
+#pragma mark - ChanR_NameRefYad
 
 ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
 :	fChannerRU_UTF(iChannerRU_UTF)
@@ -141,8 +138,7 @@ void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
 	{

@@ -35,8 +35,7 @@ namespace Util_Chan_JSON {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ReadOptions
+#pragma mark - ReadOptions
 
 struct ReadOptions
 	{
@@ -65,8 +64,7 @@ bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string& oString);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark WriteOptions
+#pragma mark - WriteOptions
 
 struct WriteOptions : YadOptions
 	{

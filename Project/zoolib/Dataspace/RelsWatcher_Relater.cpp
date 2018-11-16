@@ -35,8 +35,7 @@ using namespace Util_STL;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Registration
+#pragma mark - Registration
 
 class RelsWatcher_Relater::Registration
 :	public ZCounted
@@ -76,8 +75,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelsWatcher_Relater
+#pragma mark - RelsWatcher_Relater
 
 RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater,
 	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)

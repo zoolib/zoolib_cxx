@@ -26,8 +26,7 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark JNI::EnsureAttachedToCurrentThread
+#pragma mark - JNI::EnsureAttachedToCurrentThread
 
 EnsureAttachedToCurrentThread::EnsureAttachedToCurrentThread(JavaVM* iJavaVM)
 :	fJavaVM(iJavaVM)

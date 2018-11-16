@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T
+#pragma mark - sCompare_T
 
 template <>
 int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
@@ -42,8 +41,7 @@ ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Restrict)
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Restrict
+#pragma mark - Expr_Rel_Restrict
 
 Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool)
 :	inherited(iOp0)
@@ -82,8 +80,7 @@ const ZRef<Expr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Restrict
+#pragma mark - Visitor_Expr_Rel_Restrict
 
 void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
 	{
@@ -94,8 +91,7 @@ void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Rest
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relational operators
+#pragma mark - Relational operators
 
 ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)

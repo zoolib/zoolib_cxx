@@ -41,8 +41,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -79,8 +78,7 @@ class Make_Endpoint
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 static ZRef<ZNetAddress_Local> spAsNetAddress(const sockaddr* iSockAddr)
 	{
@@ -97,8 +95,7 @@ static ZRef<ZNetAddress_Local> spAsNetAddress(const sockaddr* iSockAddr)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetNameLookup_Local_Socket
+#pragma mark - ZNetNameLookup_Local_Socket
 
 ZNetNameLookup_Local_Socket::ZNetNameLookup_Local_Socket(const std::string& iPath)
 :	fPath(iPath),
@@ -135,8 +132,7 @@ ZRef<ZNetName> ZNetNameLookup_Local_Socket::CurrentName()
 	{ return new ZNetName_Local(fPath); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetListener_Local_Socket
+#pragma mark - ZNetListener_Local_Socket
 
 ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(int iFD)
 	{
@@ -221,8 +217,7 @@ ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
 	{ return new ZNetEndpoint_Local_Socket(iSocketFD); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetEndpoint_Local_Socket
+#pragma mark - ZNetEndpoint_Local_Socket
 
 static void spSetSocketOptions(int iSocketFD)
 	{}

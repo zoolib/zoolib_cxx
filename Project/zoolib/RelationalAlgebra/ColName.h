@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ColName
+#pragma mark - ColName
 
 typedef string8 ColName;
 

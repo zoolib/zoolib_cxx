@@ -65,8 +65,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark AppleEvent
+#pragma mark - AppleEvent
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
 	#define ZCONFIG_SPI_Avail__AppleEvent \
 		(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
@@ -77,8 +76,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark BeOS
+#pragma mark - BeOS
 
 #ifndef ZCONFIG_SPI_Avail__BeOS
 	#define ZCONFIG_SPI_Avail__BeOS 0
@@ -89,8 +87,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark BerkeleyDB
+#pragma mark - BerkeleyDB
 
 #ifndef ZCONFIG_SPI_Avail__BerkeleyDB
 	#define ZCONFIG_SPI_Avail__BerkeleyDB (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
@@ -105,8 +102,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark boost
+#pragma mark - boost
 
 #ifndef ZCONFIG_SPI_Avail__boost
 	#define ZCONFIG_SPI_Avail__boost 0
@@ -117,8 +113,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark BSD
+#pragma mark - BSD
 
 #ifndef ZCONFIG_SPI_Avail__BSD
 	#if defined(__APPLE__) \
@@ -138,8 +133,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark bzip2
+#pragma mark - bzip2
 
 #ifndef ZCONFIG_SPI_Avail__bzip2
 	#define ZCONFIG_SPI_Avail__bzip2 0
@@ -150,8 +144,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Carbon
+#pragma mark - Carbon
 
 #ifndef ZCONFIG_SPI_Avail__Carbon
 	#if __MACH__
@@ -176,8 +169,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Carbon64
+#pragma mark - Carbon64
 
 #ifndef ZCONFIG_SPI_Avail__Carbon64
 	#if ZCONFIG_SPI_Avail__Carbon
@@ -198,8 +190,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CFType
+#pragma mark - CFType
 
 #ifndef ZCONFIG_SPI_Avail__CFType
 	#if __MACH__
@@ -218,8 +209,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Cocoa
+#pragma mark - Cocoa
 
 #ifndef ZCONFIG_SPI_Avail__Cocoa
 	#if __MACH__
@@ -238,8 +228,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CocoaFoundation
+#pragma mark - CocoaFoundation
 
 #ifndef ZCONFIG_SPI_Avail__CocoaFoundation
 	#if __MACH__
@@ -258,8 +247,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CocoaAppKit
+#pragma mark - CocoaAppKit
 
 #ifndef ZCONFIG_SPI_Avail__CocoaAppKit
 	#if __MACH__
@@ -278,8 +266,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CoreFoundation
+#pragma mark - CoreFoundation
 
 #ifndef ZCONFIG_SPI_Avail__CoreFoundation
 	#if __MACH__
@@ -298,8 +285,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CoreGraphics
+#pragma mark - CoreGraphics
 
 #ifndef ZCONFIG_SPI_Avail__CoreGraphics
 	#if __MACH__
@@ -316,8 +302,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark GDI
+#pragma mark - GDI
 
 #ifndef ZCONFIG_SPI_Avail__GDI
 	#define ZCONFIG_SPI_Avail__GDI (ZCONFIG_SPI_Avail__Win && ZCONFIG_SPI_Desired__Win)
@@ -332,8 +317,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark iconv
+#pragma mark - iconv
 #ifndef ZCONFIG_SPI_Avail__iconv
 	#define ZCONFIG_SPI_Avail__iconv \
 		((ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX) || ZMACRO_IOS)
@@ -344,8 +328,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ICU
+#pragma mark - ICU
 
 #ifndef ZCONFIG_SPI_Avail__ICU
 	#define ZCONFIG_SPI_Avail__ICU 0
@@ -356,8 +339,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark imagehlp
+#pragma mark - imagehlp
 
 #ifndef ZCONFIG_SPI_Avail__imagehlp
 	#define ZCONFIG_SPI_Avail__imagehlp 0
@@ -368,8 +350,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark iPhone
+#pragma mark - iPhone
 
 #ifndef ZCONFIG_SPI_Avail__iPhone
 	#if ZMACRO_IOS
@@ -386,8 +367,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Linux
+#pragma mark - Linux
 
 #ifndef ZCONFIG_SPI_Avail__Linux
 	#if defined(linux) || defined(__linux__)
@@ -404,8 +384,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MacClassic
+#pragma mark - MacClassic
 
 #ifndef ZCONFIG_SPI_Avail__MacClassic
 	#if macintosh && ! ZCONFIG_SPI_Avail__Carbon
@@ -422,8 +401,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MacMP
+#pragma mark - MacMP
 
 #ifndef ZCONFIG_SPI_Avail__MacMP
 	#if macintosh || (ZCONFIG_SPI_Avail__Carbon64 && __MAC_OS_X_VERSION_MIN_REQUIRED < 1070)
@@ -440,8 +418,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MacOSX
+#pragma mark - MacOSX
 
 #ifndef ZCONFIG_SPI_Avail__MacOSX
 	#if __MACH__ && ! ZMACRO_IOS
@@ -458,8 +435,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark openssl
+#pragma mark - openssl
 
 #ifndef ZCONFIG_SPI_Avail__openssl
 	#define ZCONFIG_SPI_Avail__openssl 0
@@ -470,8 +446,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark POSIX
+#pragma mark - POSIX
 
 #ifndef ZCONFIG_SPI_Avail__POSIX
 	#if __MACH__
@@ -490,8 +465,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark pthread
+#pragma mark - pthread
 
 #ifndef ZCONFIG_SPI_Avail__pthread
 	#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
@@ -506,8 +480,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark QuickDraw
+#pragma mark - QuickDraw
 
 #ifndef ZCONFIG_SPI_Avail__QuickDraw
 	#define ZCONFIG_SPI_Avail__QuickDraw \
@@ -524,8 +497,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark stlsoft
+#pragma mark - stlsoft
 
 #ifndef ZCONFIG_SPI_Avail__stlsoft
 	#define ZCONFIG_SPI_Avail__stlsoft 0
@@ -536,8 +508,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SystemConfiguration
+#pragma mark - SystemConfiguration
 
 #ifndef ZCONFIG_SPI_Avail__SystemConfiguration
 	#define ZCONFIG_SPI_Avail__SystemConfiguration ZCONFIG_SPI_Avail__MacOSX
@@ -552,8 +523,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Win
+#pragma mark - Win
 
 #ifndef ZCONFIG_SPI_Avail__Win
 	#if defined(WIN32) || defined(_WIN32) || defined(WINDOWS)
@@ -572,8 +542,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark X11
+#pragma mark - X11
 
 //#ifndef ZCONFIG_SPI_Avail__X11
 //	#define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
@@ -588,8 +557,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark zlib
+#pragma mark - zlib
 
 #ifndef ZCONFIG_SPI_Avail__zlib
 	#define ZCONFIG_SPI_Avail__zlib 0

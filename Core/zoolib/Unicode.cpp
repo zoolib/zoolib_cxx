@@ -288,8 +288,7 @@ namespace ZooLib {
 namespace Unicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helper inlines and lookup tables
+#pragma mark - Helper inlines and lookup tables
 
 const uint8 sUTF8SequenceLength[256] =
 	{
@@ -330,8 +329,7 @@ const uint8 sUTF8StartByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC }
 const uint8 sUTF8StartByteMask[7] = { 0x00, 0x00, 0x3F, 0x1F, 0x0F, 0x07, 0x03 };
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Explicit instantiations of the template code
+#pragma mark - Explicit instantiations of the template code
 
 template struct Functions_CountCU_T<string32::const_iterator>;
 template struct Functions_CountCU_T<string16::const_iterator>;
@@ -402,8 +400,7 @@ template struct Functions_Convert_T<string16::iterator>;
 template struct Functions_Convert_T<string8::iterator>;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Converting between different serializations, template functions
+#pragma mark - Converting between different serializations, template functions
 
 namespace { // anonymous
 
@@ -498,8 +495,7 @@ bool spConvert_T(
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Converting between different serializations
+#pragma mark - Converting between different serializations
 
 void sUTF32ToUTF32(
 	const UTF32* iSource, size_t iSourceCount,
@@ -631,8 +627,7 @@ bool sUTF8ToUTF8(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Basic characterization of code points
+#pragma mark - Basic characterization of code points
 
 bool sIsValid(UTF32 iCP)
 	{
@@ -779,8 +774,7 @@ int sHexValue(UTF32 iCP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Optimized implementations of sAsUTFXX
+#pragma mark - Optimized implementations of sAsUTFXX
 
 string16 sAsUTF16(const string8& iString)
 	{

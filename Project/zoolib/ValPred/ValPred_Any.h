@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparand_Const_Any
+#pragma mark - ValComparand_Const_Any
 
 class ValComparand_Const_Any : public ValComparand
 	{
@@ -49,8 +48,7 @@ template <>
 int sCompare_T(const ValComparand_Const_Any& iL, const ValComparand_Const_Any& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator_Callable_Any
+#pragma mark - ValComparator_Callable_Any
 
 class ValComparator_Callable_Any : public ValComparator
 	{
@@ -70,8 +68,7 @@ template <>
 int sCompare_T(const ValComparator_Callable_Any& iL, const ValComparator_Callable_Any& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator_StringContains
+#pragma mark - ValComparator_StringContains
 
 class ValComparator_StringContains : public ValComparator
 	{
@@ -89,8 +86,7 @@ template <>
 int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_StringContains& iR);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Comparand pseudo constructors
+#pragma mark - Comparand pseudo constructors
 
 ValComparandPseudo CConst(const Val_Any& iVal);
 

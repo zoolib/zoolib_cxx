@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/UIKit/TVCell.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
+#pragma mark - sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
 
 namespace ZooLib {
 
@@ -68,8 +67,7 @@ using std::pair;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CompareEntries (anonymous)
+#pragma mark - CompareEntries (anonymous)
 
 typedef void ZTextCollator;
 
@@ -163,8 +161,7 @@ inline bool CompareEntries::operator()(
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SectionBody_Sieve
+#pragma mark - SectionBody_Sieve
 
 SectionBody_Sieve::SectionBody_Sieve()
 :	fNeedsUpdate(false)

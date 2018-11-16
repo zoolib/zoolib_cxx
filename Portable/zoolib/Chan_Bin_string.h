@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_string
+#pragma mark - ChanW_Bin_string
 
 class ChanW_Bin_string
 :	public ChanW_Bin
@@ -44,8 +43,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_string
+#pragma mark - ChanRPos_Bin_string
 
 class ChanRPos_Bin_string
 :	public ChanRPos<byte>
@@ -75,8 +73,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_Bin_string
+#pragma mark - ChanRWPos_Bin_string
 
 class ChanRWPos_Bin_string
 :	public ChanRWPos<byte>

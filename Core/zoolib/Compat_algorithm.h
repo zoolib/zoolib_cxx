@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sMin, sMax and sMinMax
+#pragma mark - sMin, sMax and sMinMax
 
 template <class T>
 inline
@@ -50,8 +49,7 @@ const T sMinMax(const T& iMin, const T& iVal, const T& iMax)
 	{ return iVal < iMin ? iMin : iMax < iVal ? iMax : iVal; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sGetSet
+#pragma mark - sGetSet
 
 template <class T>
 inline
@@ -73,8 +71,7 @@ T sGetSet(T& ioLoc, const S& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sQSet
+#pragma mark - sQSet
 
 template <class T, class S>
 inline
@@ -88,8 +85,7 @@ bool sQSet(T& ioLoc, const S& iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCAS (Check And Set)
+#pragma mark - sCAS (Check And Set)
 
 template <class T, class S, class R>
 inline
@@ -103,8 +99,7 @@ bool sCAS(T& ioLoc, const S& iOldVal, const R& iNewVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SaveSetRestore
+#pragma mark - SaveSetRestore
 
 template <class T>
 class SaveSetRestore

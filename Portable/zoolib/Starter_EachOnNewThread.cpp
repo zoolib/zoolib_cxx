@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_EachOnNewThread
+#pragma mark - Starter_EachOnNewThread
 
 class Starter_EachOnNewThread
 :	public Starter
@@ -49,8 +48,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sStarter_EachOnNewThread
+#pragma mark - sStarter_EachOnNewThread
 
 ZRef<Starter> sStarter_EachOnNewThread()
 	{ return sSingleton<ZRef_Counted<Starter_EachOnNewThread> >(); }

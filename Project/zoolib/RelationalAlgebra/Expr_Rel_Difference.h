@@ -31,8 +31,7 @@ namespace RelationalAlgebra {
 class Visitor_Expr_Rel_Difference;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Expr_Rel_Difference
+#pragma mark - Expr_Rel_Difference
 
 class Expr_Rel_Difference
 :	public virtual Expr_Rel
@@ -53,8 +52,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Rel_Difference
+#pragma mark - Visitor_Expr_Rel_Difference
 
 class Visitor_Expr_Rel_Difference
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>

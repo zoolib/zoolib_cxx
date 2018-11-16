@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparand_Const_Any
+#pragma mark - ValComparand_Const_Any
 
 ValComparand_Const_Any::ValComparand_Const_Any(const Val_Any& iVal)
 :	fVal(iVal)
@@ -45,8 +44,7 @@ int sCompare_T(const ValComparand_Const_Any& iL, const ValComparand_Const_Any& i
 ZMACRO_CompareRegistration_T(ValComparand_Const_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator_Callable_Any
+#pragma mark - ValComparator_Callable_Any
 
 ValComparator_Callable_Any::ValComparator_Callable_Any(ZRef<Callable_t> iCallable)
 :	fCallable(iCallable)
@@ -62,8 +60,7 @@ int sCompare_T(const ValComparator_Callable_Any& iL, const ValComparator_Callabl
 ZMACRO_CompareRegistration_T(ValComparator_Callable_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ValComparator_StringContains
+#pragma mark - ValComparator_StringContains
 
 ValComparator_StringContains::ValComparator_StringContains(int iStrength)
 :	fStrength(iStrength)
@@ -79,8 +76,7 @@ int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_Strin
 ZMACRO_CompareRegistration_T(ValComparator_StringContains)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Comparand pseudo constructors
+#pragma mark - Comparand pseudo constructors
 
 ValComparandPseudo CConst(const Val_Any& iVal)
 	{ return new ValComparand_Const_Any(iVal); }

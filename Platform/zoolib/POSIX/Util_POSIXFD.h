@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace Util_POSIXFD {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_POSIXFD
+#pragma mark - Util_POSIXFD
 
 void sSetup(fd_set& oSet, int iFD);
 

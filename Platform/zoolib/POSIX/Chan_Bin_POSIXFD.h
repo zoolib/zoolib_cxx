@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder
+#pragma mark - FDHolder
 
 class FDHolder
 :	public ZCounted
@@ -48,8 +47,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_Std
+#pragma mark - FDHolder_Std
 
 class FDHolder_Std
 :	public FDHolder
@@ -66,8 +64,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FDHolder_CloseOnDestroy
+#pragma mark - FDHolder_CloseOnDestroy
 
 class FDHolder_CloseOnDestroy
 :	public FDHolder
@@ -84,8 +81,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_POSIXFD
+#pragma mark - ChanR_Bin_POSIXFD
 
 class ChanR_Bin_POSIXFD
 :	public FDHolder
@@ -103,8 +99,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_POSIXFD
+#pragma mark - ChanW_Bin_POSIXFD
 
 class ChanW_Bin_POSIXFD
 :	public ChanW_Bin
@@ -121,8 +116,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRPos_Bin_POSIXFD
+#pragma mark - ChanRPos_Bin_POSIXFD
 
 class ChanRPos_Bin_POSIXFD
 :	public ChanRPos<byte>
@@ -151,8 +145,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanWPos_Bin_POSIXFD
+#pragma mark - ChanWPos_Bin_POSIXFD
 
 class ChanWPos_Bin_POSIXFD
 :	public ChanWPos<byte>
@@ -179,8 +172,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_Bin_POSIXFD
+#pragma mark - ChanRWPos_Bin_POSIXFD
 
 class ChanRWPos_Bin_POSIXFD
 :	public ChanRWPos<byte>
@@ -215,8 +207,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRCon_Bin_POSIXFD
+#pragma mark - ChanRCon_Bin_POSIXFD
 
 class ChanRCon_Bin_POSIXFD
 :	public ChanRCon<byte>

@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_XX_Unreader
+#pragma mark - ChanRU_XX_Unreader
 
 template <class EE>
 class ChanRU_XX_Unreader

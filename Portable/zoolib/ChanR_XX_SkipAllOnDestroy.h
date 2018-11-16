@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_SkipAllOnDestroy
+#pragma mark - ChanR_XX_SkipAllOnDestroy
 
 /// A read filter stream that when destroyed invokes SkipAll on its real stream.
 

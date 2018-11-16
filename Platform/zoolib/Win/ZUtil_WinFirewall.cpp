@@ -36,8 +36,7 @@ namespace ZUtil_WinFirewall {
 using namespace ZWinCOM;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZUtil_WinFirewall
+#pragma mark - ZUtil_WinFirewall
 
 ZRef<INetFwMgr> sMgr()
 	{ return ZWinCOM::sCreate<NetFwMgr,INetFwMgr>(); }

@@ -35,8 +35,7 @@ more discussion and suggested workarounds.
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FunctionChain
+#pragma mark - FunctionChain
 
 template <class Result, class Param>
 class FunctionChain

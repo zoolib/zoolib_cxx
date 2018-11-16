@@ -51,8 +51,7 @@ class ZMtx_Win;
 class ZSem_Win;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread_Win
+#pragma mark - ZThread_Win
 
 namespace ZThread_Win {
 
@@ -84,8 +83,7 @@ typedef void* Dummy_HANDLE;
 } // namespace ZThread_Win
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTSS_Win
+#pragma mark - ZTSS_Win
 
 namespace ZTSS_Win {
 
@@ -101,8 +99,7 @@ Value sGet(Key iKey);
 } // namespace ZTSS_Win
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtx_Win
+#pragma mark - ZMtx_Win
 
 class ZMtx_Win : NonCopyable
 	{
@@ -118,26 +115,22 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndBase_Win
+#pragma mark - ZCndBase_Win
 
 typedef ZCndBase_T<ZMtx_Win, ZSem_Win> ZCndBase_Win;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtxR_Win
+#pragma mark - ZMtxR_Win
 
 typedef ZMtxR_T<ZMtx_Win, ZCndBase_Win, ZThread_Win::ID, ZThread_Win::sID> ZMtxR_Win;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCnd_Win
+#pragma mark - ZCnd_Win
 
 typedef ZCndR_T<ZMtxR_Win, ZCndBase_Win> ZCnd_Win;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSem_Win
+#pragma mark - ZSem_Win
 
 class ZSem_Win : NonCopyable
 	{

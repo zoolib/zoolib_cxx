@@ -51,8 +51,7 @@ using std::vector;
 namespace { // anonymous
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Uniqued Names
+#pragma mark - Uniqued Names
 
 Name spNameFromChan(const ChanR_Bin& r)
 	{
@@ -64,8 +63,7 @@ Name spNameFromChan(const ChanR_Bin& r)
 ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark String to/from stream
+#pragma mark - String to/from stream
 
 void spToChan(const ChanW_Bin& w, const string& iString)
 	{
@@ -86,8 +84,7 @@ string spStringFromChan(const ChanR_Bin& r)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR_JSONB
+#pragma mark - YadStreamerR_JSONB
 
 class YadStreamerR_JSONB
 :	public YadStreamerR
@@ -171,8 +168,7 @@ uint64 YadStreamerR_JSONB::QSkip(uint64 iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR_JSONB
+#pragma mark - YadSeqR_JSONB
 
 class ChanR_RefYad_JSONB
 :	public ChanR_RefYad_Std
@@ -195,8 +191,7 @@ private:
 typedef Channer_T<ChanR_RefYad_JSONB> YadSeqR_JSONB;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapR_JSONB
+#pragma mark - YadMapR_JSONB
 
 class ChanR_NameRefYad_JSONB
 :	public ChanR_NameRefYad_Std
@@ -222,8 +217,7 @@ private:
 typedef Channer_T<ChanR_NameRefYad_JSONB> YadMapR_JSONB;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Yad
+#pragma mark - Yad
 
 ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iChannerR_Bin)
 	{
@@ -265,8 +259,7 @@ ZRef<YadR> spMakeYadR(ZRef<ReadFilter> iReadFilter, const ZRef<ChannerR_Bin>& iC
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Writer
+#pragma mark - Visitor_Writer
 
 class Visitor_Writer
 	{

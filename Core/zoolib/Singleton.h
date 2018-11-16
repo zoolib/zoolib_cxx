@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sSingleton
+#pragma mark - sSingleton
 
 template <class Type_p, class Tag_p>
 Type_p& sSingleton()

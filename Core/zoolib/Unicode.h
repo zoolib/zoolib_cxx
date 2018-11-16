@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace Unicode {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, code unit stuff
+#pragma mark - ZooLib::Unicode, code unit stuff
 
 /** \name Useful constants and lookup tables
 *///@{
@@ -112,8 +111,7 @@ inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
 	{ ioCP = (ioCP << 6) + (iContinuation & 0x3F); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, counting and iterators
+#pragma mark - ZooLib::Unicode, counting and iterators
 
 /* These are all template functions, they'll take anything that behaves like a string::iterator
 or a pointer. They call through to static member functions of template structs declared in
@@ -286,8 +284,7 @@ inline bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, string conversion
+#pragma mark - ZooLib::Unicode, string conversion
 
 /** \name Converting strings to UTF32.
 *///@{
@@ -406,8 +403,7 @@ inline string8 sAsUTF8(const string8& iString)
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, buffer conversion
+#pragma mark - ZooLib::Unicode, buffer conversion
 
 /** \name Converting buffers between UTF32, UTF16 and UTF8
 *///@{
@@ -476,8 +472,7 @@ bool sUTF8ToUTF8(
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, wstring conversion
+#pragma mark - ZooLib::Unicode, wstring conversion
 
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
@@ -502,8 +497,7 @@ bool sUTF8ToUTF8(
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, characterization
+#pragma mark - ZooLib::Unicode, characterization
 
 /** \name Simple characterization.
 *///@{
@@ -516,8 +510,7 @@ bool sIsEOL(UTF32 iCP);
 //@}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZooLib::Unicode, simple case conversion
+#pragma mark - ZooLib::Unicode, simple case conversion
 
 /** \name Case and other conversions.
 *///@{

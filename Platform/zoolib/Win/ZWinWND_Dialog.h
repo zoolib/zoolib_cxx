@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinWND, Callable <--> Dialog
+#pragma mark - ZWinWND, Callable <--> Dialog
 
 typedef Callable<INT_PTR(HWND,UINT,WPARAM,LPARAM)> Callable_Dialog;
 

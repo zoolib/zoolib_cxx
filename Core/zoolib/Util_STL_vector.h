@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace Util_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL
+#pragma mark - Util_STL
 
 template <class T>
 T* sFirstOrNil(std::vector<T>& iVec)
@@ -62,8 +61,7 @@ sClear(std::vector<T>& ioVec)
 // -----
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL, unsorted vectors
+#pragma mark - Util_STL, unsorted vectors
 
 template <typename Base, typename Derived>
 bool sContains(const std::vector<Base>& iVec, const Derived& iElement)
@@ -108,8 +106,7 @@ ZQ<Base> sQPopBack(std::vector<Base>& ioVec)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL, sXXXMust
+#pragma mark - Util_STL, sXXXMust
 
 template <typename Base, typename Derived>
 void sEraseMust(const int iDebugLevel,
@@ -140,8 +137,7 @@ void sPushBackMust(std::vector<Base>& ioVec, const Derived& iElement)
 	{ sPushBackMust(1, ioVec, iElement); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL, vectors sorted by less<Base>
+#pragma mark - Util_STL, vectors sorted by less<Base>
 
 template <typename Base, typename Derived>
 bool sQContainsSorted(const std::vector<Base>& iVec, const Derived& iElement)
@@ -185,8 +181,7 @@ ZQ<size_t> sQFindSorted(const std::vector<Base>& iVec, const Derived& iElement)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL, sXXXMust
+#pragma mark - Util_STL, sXXXMust
 
 template <typename Base, typename Derived>
 void sEraseSortedMust(const int iDebugLevel,

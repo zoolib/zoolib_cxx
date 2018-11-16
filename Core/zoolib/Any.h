@@ -31,8 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <typeinfo> // For std::type_info
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Any
+#pragma mark - Any
 
 namespace ZooLib {
 
@@ -507,8 +506,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Accessor functions
+#pragma mark - Accessor functions
 
 template <class S>
 const S* sPGet(const Any& iAny)
@@ -543,8 +541,7 @@ S& sSet(Any& ioAny, const S& iVal)
 	{ return ioAny.Set<S>(iVal); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Any, swap and pseudo-constructors
+#pragma mark - Any, swap and pseudo-constructors
 
 inline void swap(Any& a, Any& b)
 	{ a.swap(b); }

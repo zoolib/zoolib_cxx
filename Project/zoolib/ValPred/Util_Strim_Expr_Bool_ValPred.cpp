@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace Util_Strim_Expr_Bool_ValPred {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_Expr_Bool_ValPred
+#pragma mark - Util_Strim_Expr_Bool_ValPred
 
 static ZRef<Expr_Bool> spQReadValPred(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{

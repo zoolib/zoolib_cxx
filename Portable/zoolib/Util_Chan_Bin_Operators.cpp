@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Chan_Bin_Operators
+#pragma mark - Util_Chan_Bin_Operators
 
 namespace ZooLib {
 namespace Util_Chan_Bin_Operators {

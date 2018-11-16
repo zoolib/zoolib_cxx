@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_string8
+#pragma mark - ChanRU_UTF_string8
 
 class ChanRU_UTF_string8
 :	public ChanRU<UTF32>
@@ -56,14 +55,12 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_string
+#pragma mark - ChanW_UTF_string
 
 template <class UTF_p> class ChanW_UTF_string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_string<string32>
+#pragma mark - ChanW_UTF_string<string32>
 
 template <>
 class ChanW_UTF_string<UTF32>
@@ -88,8 +85,7 @@ protected:
 typedef ChanW_UTF_string<UTF32> ChanW_UTF_string32;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_string<string16>
+#pragma mark - ChanW_UTF_string<string16>
 
 template <>
 class ChanW_UTF_string<UTF16>
@@ -114,8 +110,7 @@ protected:
 typedef ChanW_UTF_string<UTF16> ChanW_UTF_string16;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_string<string8>
+#pragma mark - ChanW_UTF_string<string8>
 
 template <>
 class ChanW_UTF_string<UTF8>

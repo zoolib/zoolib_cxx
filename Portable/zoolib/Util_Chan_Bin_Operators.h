@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZUtil_Stream_Operators
+#pragma mark - ZUtil_Stream_Operators
 
 namespace ZooLib {
 namespace Util_Chan_Bin_Operators {

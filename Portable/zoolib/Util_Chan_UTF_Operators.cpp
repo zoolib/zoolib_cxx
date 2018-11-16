@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Chan_UTF_Operators
+#pragma mark - Util_Chan_UTF_Operators
 
 namespace ZooLib {
 namespace Util_Chan_UTF_Operators {

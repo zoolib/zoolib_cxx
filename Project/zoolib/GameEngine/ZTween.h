@@ -43,8 +43,7 @@ struct TweenCombiner : public std::binary_function<ZQ<Val0>, ZQ<Val1>, ZQ<Val0> 
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTween
+#pragma mark - ZTween
 
 /**
 A ZTween has a weight and returns a value given a place within that weight.
@@ -88,8 +87,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spWeight
+#pragma mark - spWeight
 
 template <class Val>
 double spWeight(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
@@ -100,8 +98,7 @@ double spWeight(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Null
+#pragma mark - sTween_Null
 
 template <class Val>
 class ZTween_Null
@@ -125,8 +122,7 @@ ZRef<ZTween<Val> > sTween_Null()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Or
+#pragma mark - sTween_Or
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
 class ZTween_Or
@@ -174,8 +170,7 @@ ZRef<ZTween<Val0> >& operator|=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1
 	{ return io0 = io0 | i1; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Or (for homogenous pairs)
+#pragma mark - sTween_Or (for homogenous pairs)
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Or(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
@@ -206,8 +201,7 @@ struct ZTweenAccumulatorCombiner_Or
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_And
+#pragma mark - sTween_And
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
 class ZTween_And
@@ -264,8 +258,7 @@ struct ZTweenAccumulatorCombiner_And
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Each
+#pragma mark - sTween_Each
 
 template <class Val>
 class ZTween_Each
@@ -323,8 +316,7 @@ struct ZTweenAccumulatorCombiner_Each
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_With
+#pragma mark - sTween_With
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
 class ZTween_With
@@ -389,8 +381,7 @@ struct ZTweenAccumulatorCombiner_With
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Repeat (count)
+#pragma mark - sTween_Repeat (count)
 
 template <class Val>
 class ZTween_Repeat
@@ -428,8 +419,7 @@ ZRef<ZTween<Val> > sTween_Repeat(size_t iCount, const ZRef<ZTween<Val> >& iTween
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_RepeatFor
+#pragma mark - sTween_RepeatFor
 
 template <class Val>
 class ZTween_RepeatFor
@@ -467,8 +457,7 @@ ZRef<ZTween<Val> > sTween_RepeatFor(double iWeight, const ZRef<ZTween<Val> >& iT
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_ForExactly
+#pragma mark - sTween_ForExactly
 
 template <class Val>
 class ZTween_ForExactly
@@ -506,8 +495,7 @@ ZRef<ZTween<Val> > sTween_ForExactly(double iWeight, const ZRef<ZTween<Val> >& i
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_ForAtMost
+#pragma mark - sTween_ForAtMost
 
 template <class Val>
 class ZTween_ForAtMost
@@ -545,8 +533,7 @@ ZRef<ZTween<Val> > sTween_ForAtMost(double iAtMost, const ZRef<ZTween<Val> >& iT
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_ForAtLeast
+#pragma mark - sTween_ForAtLeast
 
 template <class Val>
 class ZTween_ForAtLeast
@@ -580,8 +567,7 @@ ZRef<ZTween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<ZTween<Val> >& 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_WeightShift
+#pragma mark - sTween_WeightShift
 
 template <class Val>
 class ZTween_WeightShift
@@ -615,8 +601,7 @@ ZRef<ZTween<Val> > sTween_WeightShift(double iWeightShift, const ZRef<ZTween<Val
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_WeightScale
+#pragma mark - sTween_WeightScale
 
 template <class Val>
 class ZTween_WeightScale
@@ -665,8 +650,7 @@ ZRef<ZTween<Val> > sTween_WeightScale(double iWeightScale, const ZRef<ZTween<Val
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_WeightPhase
+#pragma mark - sTween_WeightPhase
 
 template <class Val>
 class ZTween_WeightPhase
@@ -703,8 +687,7 @@ ZRef<ZTween<Val> > sTween_WeightPhase(double iPhase, const ZRef<ZTween<Val> >& i
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_WeightNormalize
+#pragma mark - sTween_WeightNormalize
 
 template <class Val>
 class ZTween_WeightNormalize
@@ -733,8 +716,7 @@ ZRef<ZTween<Val> > sTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Const
+#pragma mark - sTween_Const
 
 template <class Val>
 class ZTween_Const
@@ -771,16 +753,14 @@ ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iWeight)
 	{ return new ZTween_Const<Val>(iVal, iWeight); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_ValScale
+#pragma mark - sTween_ValScale
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ValScale(Val iValScale, const ZRef<ZTween<Val> >& iTween)
 	{ return sTween_With(iTween, sTween_Const<Val>(iValScale)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_ValOffset
+#pragma mark - sTween_ValOffset
 
 template <class Val>
 class ZTween_ValOffset
@@ -817,16 +797,14 @@ ZRef<ZTween<Val> > sTween_ValOffset(Val iValOffset, const ZRef<ZTween<Val> >& iT
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Range
+#pragma mark - sTween_Range
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_ValRange(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
 	{ return sTween_ValOffset(iZeroVal, sTween_ValScale<Val>(iOneVal - iZeroVal, iTween)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_First
+#pragma mark - sTween_First
 
 template <class Val>
 class ZTween_First
@@ -854,8 +832,7 @@ ZRef<ZTween<Val> > sTween_First(const ZRef<ZTween<Val> >& iTween)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTween_Last
+#pragma mark - sTween_Last
 
 template <class Val>
 ZRef<ZTween<Val> > sTween_Last(const ZRef<ZTween<Val> >& iTween)

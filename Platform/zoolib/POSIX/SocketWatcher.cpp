@@ -45,8 +45,7 @@ using std::pair;
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark SocketWatcher
+#pragma mark - SocketWatcher
 
 SocketWatcher::SocketWatcher()
 :	fThreadRunning(false)

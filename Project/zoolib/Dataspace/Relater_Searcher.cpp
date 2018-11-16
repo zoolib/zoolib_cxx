@@ -69,8 +69,7 @@ namespace RA = RelationalAlgebra;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::ClientQuery
+#pragma mark - Relater_Searcher::ClientQuery
 
 class Relater_Searcher::DLink_ClientQuery_InPQuery
 :	public DListLink<ClientQuery, DLink_ClientQuery_InPQuery, kDebug>
@@ -95,8 +94,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::PQuery
+#pragma mark - Relater_Searcher::PQuery
 
 class Relater_Searcher::DLink_PQuery_NeedsWork
 :	public DListLink<PQuery, DLink_PQuery_NeedsWork, kDebug>
@@ -117,8 +115,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::PRegSearch
+#pragma mark - Relater_Searcher::PRegSearch
 
 class Relater_Searcher::DLink_PRegSearch_NeedsWork
 :	public DListLink<PRegSearch, DLink_PRegSearch_NeedsWork, kDebug>
@@ -137,8 +134,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark DoReplaceBoundNames (anonymous)
+#pragma mark - DoReplaceBoundNames (anonymous)
 
 namespace { // anonymous
 
@@ -201,8 +197,7 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::Walker_Bingo
+#pragma mark - Relater_Searcher::Walker_Bingo
 
 class Relater_Searcher::Walker_Bingo
 :	public QE::Walker
@@ -260,8 +255,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher::Visitor_DoMakeWalker
+#pragma mark - Relater_Searcher::Visitor_DoMakeWalker
 
 class Relater_Searcher::Visitor_DoMakeWalker
 :	public virtual QE::Visitor_DoMakeWalker
@@ -317,8 +311,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTransform_PushDownRestricts_IntoSearch
+#pragma mark - spTransform_PushDownRestricts_IntoSearch
 
 namespace { // anonymous
 
@@ -406,8 +399,7 @@ ZRef<Expr_Rel> spTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iR
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Searcher
+#pragma mark - Relater_Searcher
 
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)

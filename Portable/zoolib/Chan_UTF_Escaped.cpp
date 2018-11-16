@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_Escaped
+#pragma mark - ChanR_UTF_Escaped
 
 ChanR_UTF_Escaped::ChanR_UTF_Escaped(UTF32 iDelimiter,
 	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
@@ -152,8 +151,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Escaped::Options
+#pragma mark - ChanW_UTF_Escaped::Options
 
 ChanW_UTF_Escaped::Options::Options()
 :	fQuoteQuotes(true)
@@ -161,8 +159,7 @@ ChanW_UTF_Escaped::Options::Options()
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Escaped
+#pragma mark - ChanW_UTF_Escaped
 
 ChanW_UTF_Escaped::ChanW_UTF_Escaped(const Options& iOptions, const ChanW_UTF& iChanW)
 :	fChanW(iChanW),

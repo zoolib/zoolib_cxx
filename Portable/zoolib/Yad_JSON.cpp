@@ -92,8 +92,7 @@ type             -
 */
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
@@ -180,8 +179,7 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	YadParseException_Std(iWhat)
@@ -192,8 +190,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR_Hex
+#pragma mark - YadStreamerR_Hex
 
 YadStreamerR_Hex::YadStreamerR_Hex(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 :	inherited(*iChannerR, *iChannerU)
@@ -212,8 +209,7 @@ void YadStreamerR_Hex::Finalize()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR_Base64
+#pragma mark - YadStreamerR_Base64
 
 YadStreamerR_Base64::YadStreamerR_Base64(const Base64::Decode& iDecode,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -238,8 +234,7 @@ size_t YadStreamerR_Base64::Read(byte* oDest, size_t iCount)
 	{ return sRead(fChanR, oDest, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStrimmerR
+#pragma mark - YadStrimmerR
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
@@ -362,8 +357,7 @@ size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR_JSON
+#pragma mark - YadSeqR_JSON
 
 ChanR_RefYad_JSON::ChanR_RefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -414,8 +408,7 @@ void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_NameRefYad_JSON
+#pragma mark - ChanR_NameRefYad_JSON
 
 ChanR_NameRefYad_JSON::ChanR_NameRefYad_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
@@ -480,8 +473,7 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Writer
+#pragma mark - Visitor_Writer
 
 class Visitor_Writer
 	{
@@ -743,8 +735,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR and sToChan
+#pragma mark - sYadR and sToChan
 
 ZRef<YadR> sYadR(ZRef<ChannerR_UTF> iChannerR, ZRef<ChannerU_UTF> iChannerU)
 	{

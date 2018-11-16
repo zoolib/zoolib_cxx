@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZDebug
+#pragma mark - ZDebug
 
 namespace ZooLib {
 namespace ZDebug {
@@ -142,8 +141,7 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZUnimplemented
+#pragma mark - ZUnimplemented
 
 namespace ZooLib {
 

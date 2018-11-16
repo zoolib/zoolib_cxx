@@ -12,8 +12,7 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Functor_CompareCharStars (anonymous)
+#pragma mark - Functor_CompareCharStars (anonymous)
 
 namespace { // anonymous
 
@@ -31,8 +30,7 @@ typedef std::unordered_map<const char*, Comparer*> ComparerMap;
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Comparer
+#pragma mark - Comparer
 
 Comparer::Comparer(const char* iTypeName)
 :	fTypeName(iTypeName)
@@ -57,8 +55,7 @@ int Comparer::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CompareRegistration_Void (anonymous)
+#pragma mark - CompareRegistration_Void (anonymous)
 
 namespace { // anonymous
 

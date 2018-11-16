@@ -48,8 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_CFRunLoop
+#pragma mark - Starter_CFRunLoop
 
 class Starter_CFRunLoop
 :	public Starter_EventLoopBase

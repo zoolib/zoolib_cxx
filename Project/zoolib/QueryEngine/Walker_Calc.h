@@ -30,8 +30,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Calc
+#pragma mark - Walker_Calc
 
 class Walker_Calc : public Walker_Unary
 	{

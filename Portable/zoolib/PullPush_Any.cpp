@@ -34,8 +34,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 	{
@@ -83,8 +82,7 @@ bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 	{

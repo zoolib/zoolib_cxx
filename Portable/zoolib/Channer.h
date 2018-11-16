@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Channer
+#pragma mark - Channer
 
 template <class DF> using Channer
 	= typename AsDeriveFrom<
@@ -40,16 +39,14 @@ template <class DF> using Channer
 		>::Result_t;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanOfChanner
+#pragma mark - ChanOfChanner
 
 template <class Channer_p> using ChanOfChanner =
 	typename ZooLib::AsDeriveFrom<
 		typename TypeListWithoutPrefix<typename Channer_p::AsTypeList_t>::Result_t>::Result_t;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Basic channer typedefs.
+#pragma mark - Basic channer typedefs.
 
 using ChannerAbort = Channer<ChanAbort>;
 using ChannerDisconnectRead = Channer<ChanDisconnectRead>;
@@ -62,8 +59,7 @@ template <class EE> using ChannerU = Channer<ChanU<EE>>;
 template <class EE> using ChannerW = Channer<ChanW<EE>>;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Composite channer typedefs.
+#pragma mark - Composite channer typedefs.
 
 template <class EE> using ChannerRU = Channer<ChanRU<EE>>;
 template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
@@ -79,8 +75,7 @@ template <class EE> using ChannerConnection = Channer<ChanConnection<EE>>;
 template <class EE> using ChannerRWClose = ChannerConnection<EE>;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sChanner_Chan.
+#pragma mark - sChanner_Chan.
 
 // Get the channer from a chan
 
@@ -97,8 +92,7 @@ ZRef<Channer<Chan_p>> sAChanner_Chan(const Chan_p& iChan)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Channer_T
+#pragma mark - Channer_T
 
 template <class Chan_p>
 class Channer_T
@@ -121,8 +115,7 @@ ZRef<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
 	{ return new Channer_T<Chan_p>(std::forward<Args_p>(args)...); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Channer_Channer_T
+#pragma mark - Channer_Channer_T
 
 template <class Chan_p>
 class Channer_Channer_T

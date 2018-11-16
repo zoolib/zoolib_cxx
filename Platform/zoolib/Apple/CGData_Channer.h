@@ -39,8 +39,7 @@ namespace ZooLib {
 namespace CGData_Channer {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CGData_Channer
+#pragma mark - CGData_Channer
 
 ZRef<CGDataProviderRef> sProvider(ZRef<ChannerR_Bin> iChanner);
 

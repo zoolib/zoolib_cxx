@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace Dataspace {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater_Asyncify
+#pragma mark - Relater_Asyncify
 
 class Relater_Asyncify : public Relater
 	{

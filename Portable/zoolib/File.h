@@ -39,8 +39,7 @@ class FileLoc;
 class FileSpec;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark File
+#pragma mark - File
 
 namespace File {
 
@@ -69,8 +68,7 @@ enum Kind
 } // namespace File
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileSpec
+#pragma mark - FileSpec
 
 /// Represents a node in the file system.
 
@@ -169,8 +167,7 @@ template <>
 struct RelopsTraits_HasLT<FileSpec> : public RelopsTraits_Has {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIter
+#pragma mark - FileIter
 
 /// An iterator that provides access to the children of a directory.
 
@@ -193,8 +190,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileTreeIter
+#pragma mark - FileTreeIter
 
 /// An iterator that provides access to every node descending from a FileSpec.
 
@@ -218,8 +214,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileLoc
+#pragma mark - FileLoc
 
 class FileLoc : public ZCounted
 	{
@@ -268,8 +263,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIterRep
+#pragma mark - FileIterRep
 
 class FileIterRep : public ZCounted
 	{
@@ -288,8 +282,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIterRep_Std
+#pragma mark - FileIterRep_Std
 
 class FileIterRep_Std : public FileIterRep
 	{
@@ -313,8 +306,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FileIterRep_Std::RealRep
+#pragma mark - FileIterRep_Std::RealRep
 
 class FileIterRep_Std::RealRep : public ZCounted
 	{

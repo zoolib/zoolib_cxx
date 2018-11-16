@@ -44,8 +44,7 @@ using namespace Util_Chan;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Static helper functions
+#pragma mark - Static helper functions
 
 static string spReadReference(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	ZRef<Callable_Entity> iCallable)
@@ -261,8 +260,7 @@ static bool spReadMLAttributeValue(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF
+#pragma mark - ChanRU_UTF
 
 ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU)
 :	fChanR(iChanRU)
@@ -609,8 +607,7 @@ ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
 	{ return sChanner_Channer_T<ChanRU_UTF>(iChanner); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZML parsing support
+#pragma mark - ZML parsing support
 
 void sSkipText(ChanRU_UTF& r)
 	{
@@ -682,8 +679,7 @@ bool sTryRead_End(ChanRU_UTF& r, const string& iTagName)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZML::StrimW
+#pragma mark - ZML::StrimW
 
 /** \class ZML::StrimW
 ZML::StrimW extends the ChanW_UTF protocol with methods to open and close
@@ -1362,8 +1358,7 @@ void StrimW::pEnd()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZML::StrimW::Indenter
+#pragma mark - ZML::StrimW::Indenter
 
 StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 :	fStrimW(iStrimW),

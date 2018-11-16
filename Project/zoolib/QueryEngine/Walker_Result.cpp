@@ -29,8 +29,7 @@ using std::map;
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Result
+#pragma mark - Walker_Result
 
 Walker_Result::Walker_Result(ZRef<Result> iResult)
 :	fResult(iResult)

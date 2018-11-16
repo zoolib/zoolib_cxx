@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_CF::Context
+#pragma mark - Util_CF::Context
 
 template <class T>
 class Context

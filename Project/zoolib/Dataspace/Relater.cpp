@@ -26,8 +26,7 @@ namespace Dataspace {
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark AddedQuery
+#pragma mark - AddedQuery
 
 AddedQuery::AddedQuery()
 	{}
@@ -59,8 +58,7 @@ ZRef<RelationalAlgebra::Expr_Rel> AddedQuery::GetRel() const
 	{ return fRel; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark QueryResult
+#pragma mark - QueryResult
 
 QueryResult::QueryResult()
 :	fRefcon(0)
@@ -93,8 +91,7 @@ ZRef<QueryEngine::Result> QueryResult::GetResult() const
 	{ return fResult; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Relater
+#pragma mark - Relater
 
 Relater::Relater()
 	{}

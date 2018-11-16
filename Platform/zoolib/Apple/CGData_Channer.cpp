@@ -32,8 +32,7 @@ typedef ChannerRPos_Bin ChannerRPos_Bin;
 typedef ChannerW_Bin ChannerW_Bin;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CGData_Channer::sProvider
+#pragma mark - CGData_Channer::sProvider
 
 static size_t spGetBytes_R(void* iInfo, void* oBuffer, size_t iCount)
 	{ return sReadMem(*static_cast<ChannerR_Bin*>(iInfo), oBuffer, iCount); }
@@ -91,8 +90,7 @@ ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerR_Bin> iChanner)
 #endif // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CGData_Channer::sProvider
+#pragma mark - CGData_Channer::sProvider
 
 static size_t spGetBytes_RPos(void* iInfo, void* oBuffer, size_t iCount)
 	{ return sReadMem(*static_cast<ChannerRPos_Bin*>(iInfo), oBuffer, iCount); }
@@ -153,8 +151,7 @@ ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerRPos_Bin> iChanner
 #endif // ZMACRO_IOS || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CGDataConsumerRef, ChannerW_Bin
+#pragma mark - CGDataConsumerRef, ChannerW_Bin
 
 namespace { // anonymous
 

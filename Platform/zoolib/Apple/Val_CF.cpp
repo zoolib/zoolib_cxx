@@ -55,8 +55,7 @@ int sCompare_T(const Map_CF& iL, const Map_CF& iR)
 #endif
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 namespace {
 
@@ -83,8 +82,7 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Val_CF
+#pragma mark - Val_CF
 
 /**
 \class Val_CF
@@ -455,8 +453,7 @@ const Val_CF Val_CF::Get(size_t iIndex) const
 	{ return this->Get<Seq_CF>().Get(iIndex); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Seq_CF
+#pragma mark - Seq_CF
 
 Seq_CF::Seq_CF()
 :	inherited(sArrayMutable())
@@ -616,8 +613,7 @@ CFMutableArrayRef Seq_CF::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_CF
+#pragma mark - Map_CF
 
 Map_CF::Map_CF()
 :	inherited(sDictionaryMutable())

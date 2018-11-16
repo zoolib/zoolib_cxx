@@ -31,8 +31,7 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Roster
+#pragma mark - Roster
 
 Roster::Roster()
 	{}
@@ -145,8 +144,7 @@ void Roster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Roster::Entry
+#pragma mark - Roster::Entry
 
 Roster::Entry::Entry(
 	const ZRef<Roster>& iRoster,

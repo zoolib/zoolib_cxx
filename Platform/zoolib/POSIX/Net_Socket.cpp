@@ -42,8 +42,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Net_Socket
+#pragma mark - Net_Socket
 
 // On MacOS X (and FreeBSD) and Linux a send or receive on a socket where the other end
 // has closed can cause delivery of a sigpipe. These helper functions, and the conditional
@@ -175,8 +174,7 @@ Net::Error Net_Socket::sTranslateError(int iNativeError)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener_Socket
+#pragma mark - NetListener_Socket
 
 static bool spFastCancellationEnabled;
 
@@ -272,8 +270,7 @@ void NetListener_Socket::sEnableFastCancellation()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetEndpoint_Socket
+#pragma mark - NetEndpoint_Socket
 
 NetEndpoint_Socket::NetEndpoint_Socket(int iSocketFD)
 	{

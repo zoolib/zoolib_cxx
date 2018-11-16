@@ -43,8 +43,7 @@ using std::runtime_error;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -83,8 +82,7 @@ class Make_Endpoint
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 static string16 spAsPipeName(const string8& iName)
 	{ return ZUnicode::sAsUTF16("\\\\.\\pipe\\" + iName); }
@@ -153,8 +151,7 @@ static ZRef<HANDLE> spCreateEvent()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetNameLookup_Local_Win
+#pragma mark - ZNetNameLookup_Local_Win
 
 ZNetNameLookup_Local_Win::ZNetNameLookup_Local_Win(const std::string& iPath)
 :	fPath(iPath),
@@ -191,8 +188,7 @@ ZRef<ZNetName> ZNetNameLookup_Local_Win::CurrentName()
 	{ return new ZNetName_Local(fPath); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetListener_Local_Win
+#pragma mark - ZNetListener_Local_Win
 
 ZNetListener_Local_Win::ZNetListener_Local_Win(const string& iName)
 :	fPath(spAsPipeName(iName))
@@ -232,8 +228,7 @@ void ZNetListener_Local_Win::CancelListen()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetEndpoint_Local_Win
+#pragma mark - ZNetEndpoint_Local_Win
 
 ZNetEndpoint_Local_Win::ZNetEndpoint_Local_Win(const ZRef<HANDLE>& iHANDLE)
 	{ this->pInit(iHANDLE); }

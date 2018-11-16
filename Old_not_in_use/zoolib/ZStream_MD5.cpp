@@ -282,8 +282,7 @@ static void MD5Transform(uint32 buf[4], const unsigned char inext[64], ZStream_M
 #endif // !ZCONFIG_StreamMD5_UseOpenSSL
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStream_MD5
+#pragma mark - ZStream_MD5
 
 void ZStream_MD5::sInit(Context& oContext)
 	{ MD5_Init(&oContext); }
@@ -295,8 +294,7 @@ void ZStream_MD5::sFinal(Context& ioContext, uint8 oDigest[16])
 	{ MD5_Final(&oDigest[0], &ioContext); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_MD5
+#pragma mark - ZStreamR_MD5
 
 ZStreamR_MD5::ZStreamR_MD5(const ZStreamR& iStreamSource)
 :	ZStreamR_Filter(iStreamSource),
@@ -350,8 +348,7 @@ void ZStreamR_MD5::GetDigest(uint8 oDigest[16])
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_MD5
+#pragma mark - ZStreamW_MD5
 
 ZStreamW_MD5::ZStreamW_MD5(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),

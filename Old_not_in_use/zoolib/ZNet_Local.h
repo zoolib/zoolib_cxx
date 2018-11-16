@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetAddress_Local
+#pragma mark - ZNetAddress_Local
 
 class ZNetAddress_Local : public ZNetAddress
 	{
@@ -54,8 +53,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetName_Local
+#pragma mark - ZNetName_Local
 
 class ZNetName_Local : public ZNetName
 	{
@@ -79,8 +77,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetListener_TCP
+#pragma mark - ZNetListener_TCP
 
 class ZNetListener_Local : public virtual ZNetListener
 	{
@@ -92,8 +89,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetEndpoint_Local
+#pragma mark - ZNetEndpoint_Local
 
 class ZNetEndpoint_Local : public virtual ZNetEndpoint
 	{

@@ -30,14 +30,12 @@ namespace ZooLib {
 #define kDebug_LZW 2
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWEncode
+#pragma mark - ZStreamR_LZWEncode
 
 // ZStreamR_LZWEncode is not done yet.
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWEncodeNoPatent
+#pragma mark - ZStreamR_LZWEncodeNoPatent
 
 /**
 \class ZStreamR_LZWEncodeNoPatent
@@ -119,8 +117,7 @@ size_t ZStreamR_LZWEncodeNoPatent::Imp_CountReadable()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_LZWDecode
+#pragma mark - ZStreamR_LZWDecode
 
 /**
 \class ZStreamR_LZWDecode
@@ -232,8 +229,7 @@ size_t ZStreamR_LZWDecode::Imp_CountReadable()
 	{ return fStackEnd - fStackTop; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWEncode
+#pragma mark - ZStreamW_LZWEncode
 
 /**
 \class ZStreamW_LZWEncode
@@ -351,8 +347,7 @@ void ZStreamW_LZWEncode::Imp_Flush()
 	{ fStreamSink.Flush(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWEncodeNoPatent
+#pragma mark - ZStreamW_LZWEncodeNoPatent
 
 /**
 \class ZStreamW_LZWEncodeNoPatent
@@ -416,8 +411,7 @@ void ZStreamW_LZWEncodeNoPatent::Imp_Flush()
 	{ fStreamSink.Flush(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamW_LZWDecode
+#pragma mark - ZStreamW_LZWDecode
 
 /**
 \class ZStreamW_LZWDecode

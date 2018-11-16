@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CVec ctors
+#pragma mark - CVec ctors
 
 template <class Val>
 ZMatrix<Val,1,1> sCVec1(Val i0)
@@ -70,8 +69,7 @@ ZMatrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CVec2 ctors
+#pragma mark - CVec2 ctors
 
 template <class Val>
 ZMatrix<Val,1,2> sCVec2(Val iVal)
@@ -82,8 +80,7 @@ ZMatrix<Val,1,2> sCVec2()
 	{ return ZMatrix<Val,1,2>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark CVec3 ctors
+#pragma mark - CVec3 ctors
 
 template <class Val>
 ZMatrix<Val,1,3> sCVec3(Val iVal)
@@ -94,8 +91,7 @@ ZMatrix<Val,1,3> sCVec3()
 	{ return ZMatrix<Val,1,3>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RVec ctors
+#pragma mark - RVec ctors
 
 template <class Val>
 ZMatrix<Val,1,1> sRVec1(Val i0)
@@ -136,8 +132,7 @@ ZMatrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RVec2 ctors
+#pragma mark - RVec2 ctors
 
 template <class Val>
 ZMatrix<Val,2,1> sRVec2(Val iVal)
@@ -148,8 +143,7 @@ ZMatrix<Val,2,1> sRVec2()
 	{ return ZMatrix<Val,2,1>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RVec3 ctors
+#pragma mark - RVec3 ctors
 
 template <class Val>
 ZMatrix<Val,3,1> sRVec3(Val iVal)
@@ -160,8 +154,7 @@ ZMatrix<Val,3,1> sRVec3()
 	{ return ZMatrix<Val,3,1>(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sScale (taking column vector)
+#pragma mark - sScale (taking column vector)
 
 template <class E, size_t Dim>
 ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
@@ -174,8 +167,7 @@ ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTranslate (taking column vector)
+#pragma mark - sTranslate (taking column vector)
 
 template <class E, size_t Dim>
 ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)

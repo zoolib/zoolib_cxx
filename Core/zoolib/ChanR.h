@@ -116,8 +116,7 @@ void sERead(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_Null
+#pragma mark - ChanR_XX_Null
 
 /// A read Chan with no content.
 

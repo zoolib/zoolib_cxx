@@ -42,8 +42,7 @@ ZMACRO_MSVCStaticLib_Reference(File_Win)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFile_Win
+#pragma mark - ZFile_Win
 
 namespace ZFile_Win {
 
@@ -57,8 +56,7 @@ ZRef<ZStreamerRPos> sStreamerRPos(const UTF16* iPath, bool iPreventWriters);
 } // namespace ZFile_Win
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileLoc_Win
+#pragma mark - ZFileLoc_Win
 
 class ZFileLoc_Win : public ZFileLoc
 	{
@@ -127,8 +125,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileLoc_WinNT
+#pragma mark - ZFileLoc_WinNT
 
 class ZFileLoc_WinNT : public ZFileLoc
 	{
@@ -197,8 +194,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileR_Win
+#pragma mark - ZFileR_Win
 
 class ZFileR_Win : public ZFileR
 	{
@@ -219,8 +215,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileR_WinNT
+#pragma mark - ZFileR_WinNT
 
 class ZFileR_WinNT : public ZFileR
 	{
@@ -239,8 +234,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileW_Win
+#pragma mark - ZFileW_Win
 
 class ZFileW_Win : public ZFileW
 	{
@@ -266,8 +260,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileW_WinNT
+#pragma mark - ZFileW_WinNT
 
 class ZFileW_WinNT : public ZFileW
 	{
@@ -291,8 +284,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileRW_Win
+#pragma mark - ZFileRW_Win
 
 class ZFileRW_Win : public ZFileRW
 	{
@@ -319,8 +311,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileRW_WinNT
+#pragma mark - ZFileRW_WinNT
 
 class ZFileRW_WinNT : public ZFileRW
 	{
@@ -345,8 +336,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRPos_File_Win
+#pragma mark - ZStreamRPos_File_Win
 
 class ZStreamRPos_File_Win : public ZStreamRPos
 	{
@@ -369,8 +359,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerRPos_File_Win
+#pragma mark - ZStreamerRPos_File_Win
 
 class ZStreamerRPos_File_Win : public ZStreamerRPos
 	{
@@ -386,8 +375,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamWPos_File_Win
+#pragma mark - ZStreamWPos_File_Win
 
 class ZStreamWPos_File_Win : public ZStreamWPos
 	{
@@ -414,8 +402,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerWPos_File_Win
+#pragma mark - ZStreamerWPos_File_Win
 
 class ZStreamerWPos_File_Win : public ZStreamerWPos
 	{
@@ -431,8 +418,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRWPos_File_Win
+#pragma mark - ZStreamRWPos_File_Win
 
 class ZStreamRWPos_File_Win : public ZStreamRWPos
 	{
@@ -462,8 +448,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerRWPos_File_Win
+#pragma mark - ZStreamerRWPos_File_Win
 
 class ZStreamerRWPos_File_Win : public ZStreamerRWPos
 	{

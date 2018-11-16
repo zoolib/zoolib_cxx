@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_CRLFRemove
+#pragma mark - ChanR_UTF_CRLFRemove
 
 /// A read filter strim that removes CRLF sequences and replaces them with another code point.
 

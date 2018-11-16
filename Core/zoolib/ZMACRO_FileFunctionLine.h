@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZFileFunctionLine
+#pragma mark - ZFileFunctionLine
 
 namespace ZooLib {
 

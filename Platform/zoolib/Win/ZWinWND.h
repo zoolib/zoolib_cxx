@@ -32,8 +32,7 @@ namespace ZooLib {
 namespace ZWinWND {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinWND::ClassRegistration
+#pragma mark - ZWinWND::ClassRegistration
 
 class ClassRegistration
 	{
@@ -52,22 +51,19 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCreate_DefWindowProc
+#pragma mark - sCreate_DefWindowProc
 
 HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, void* iCreateParam);
 HWND sCreate_DefWindowProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCreate_DefDlgProc
+#pragma mark - sCreate_DefDlgProc
 
 HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, void* iCreateParam);
 HWND sCreate_DefDlgProc(HWND iParent, DWORD iStyle, DWORD iExStyle, void* iCreateParam);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWinWND, Callable <--> Regular window
+#pragma mark - ZWinWND, Callable <--> Regular window
 
 typedef Callable<ZQ<LRESULT>(HWND,UINT,WPARAM,LPARAM)> Callable_t;
 
@@ -91,8 +87,7 @@ bool sAttach(HWND iHWND, ZRef<Callable_t> iCallable);
 ZRef<Callable_t> sGetCallable(HWND iHWND);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Message pump
+#pragma mark - Message pump
 
 void sSetActiveHWND(HWND iHWND);
 HWND sGetActiveHWND();

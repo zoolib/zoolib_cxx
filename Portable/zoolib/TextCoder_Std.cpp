@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextDecode_ASCII
+#pragma mark - spTextDecode_ASCII
 
 static bool spTextDecode_ASCII(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -56,8 +55,7 @@ static bool spTextDecode_ASCII(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextEncode_ASCII
+#pragma mark - spTextEncode_ASCII
 
 static void spTextEncode_ASCII(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
@@ -84,8 +82,7 @@ static void spTextEncode_ASCII(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextDecode_ISO8859_1
+#pragma mark - spTextDecode_ISO8859_1
 
 static bool spTextDecode_ISO8859_1(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -110,8 +107,7 @@ static bool spTextDecode_ISO8859_1(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextEncode_ISO8859_1
+#pragma mark - spTextEncode_ISO8859_1
 
 static void spTextEncode_ISO8859_1(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
@@ -138,8 +134,7 @@ static void spTextEncode_ISO8859_1(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextDecode_MacRoman
+#pragma mark - spTextDecode_MacRoman
 
 static const UTF32 spMacToUnicode[256] =
 	{
@@ -200,8 +195,7 @@ static bool spTextDecode_MacRoman(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextEncode_MacRoman
+#pragma mark - spTextEncode_MacRoman
 
 struct UnicodeToMac_t
 	{
@@ -309,8 +303,7 @@ static void spTextEncode_MacRoman(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextDecode_CP1252
+#pragma mark - spTextDecode_CP1252
 
 // CP1252 is also known as Latin1. It's a superset of ISO-8859-1, but has various
 // dingbat characters in CL and CR
@@ -354,8 +347,7 @@ static bool spTextDecode_CP1252(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextEncode_CP1252
+#pragma mark - spTextEncode_CP1252
 
 static const uint8 spCP1252_Page01[72] =
 	{
@@ -414,8 +406,7 @@ static void spTextEncode_CP1252(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextDecode_CP850
+#pragma mark - spTextDecode_CP850
 
 static const UTF32 spCP850ToUnicode[128] =
 	{
@@ -456,8 +447,7 @@ static bool spTextDecode_CP850(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark spTextEncode_CP850
+#pragma mark - spTextEncode_CP850
 
 static const unsigned char spCP850_Page00[96] =
 	{
@@ -527,8 +517,7 @@ static void spTextEncode_CP850(
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<TextDecoder> sMake_TextDecoder_Std(const std::string& iSourceName)
 	{

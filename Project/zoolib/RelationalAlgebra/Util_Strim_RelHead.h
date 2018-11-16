@@ -34,8 +34,7 @@ namespace RelationalAlgebra {
 namespace Util_Strim_RelHead {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_RelHead
+#pragma mark - Util_Strim_RelHead
 
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s);
 void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s);

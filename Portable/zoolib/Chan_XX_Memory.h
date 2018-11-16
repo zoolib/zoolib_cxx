@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanBase_XX_Memory
+#pragma mark - ChanBase_XX_Memory
 
 template <class EE>
 class ChanRPos_XX_Memory
@@ -108,8 +107,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWPos_XX_Memory
+#pragma mark - ChanRWPos_XX_Memory
 
 template <class EE>
 class ChanRWPos_XX_Memory

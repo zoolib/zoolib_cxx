@@ -26,8 +26,7 @@ namespace ZooLib {
 namespace ZGameEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZGameEngine
+#pragma mark - ZGameEngine
 
 } // namespace ZGameEngine
 } // namespace ZooLib

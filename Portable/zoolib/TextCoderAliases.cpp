@@ -27,8 +27,7 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TextCoderAliases
+#pragma mark - TextCoderAliases
 
 namespace { // anonymous
 struct CharsetEntry_t

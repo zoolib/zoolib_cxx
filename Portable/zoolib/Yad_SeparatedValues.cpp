@@ -29,8 +29,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Static parsing functions
+#pragma mark - Static parsing functions
 
 static bool spReadValues(vector<string8>& oValues,
 	UTF32 iSeparator_Value, UTF32 iSeparator_Line, const ChanR_UTF& iStrimR)
@@ -69,8 +68,7 @@ static bool spReadValues(vector<string8>& oValues,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	ZooLib::YadParseException(iWhat)
@@ -81,8 +79,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR
+#pragma mark - YadSeqR
 
 class ChanR_RefYad : public ChanR_RefYad_Std
 	{
@@ -121,8 +118,7 @@ void ChanR_RefYad::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<YadR> sYadR(UTF32 iSeparator_Value, UTF32 iSeparatorLine, ZRef<ChannerR_UTF> iChannerR_UTF)
 	{

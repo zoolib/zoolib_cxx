@@ -29,14 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Indirect
+#pragma mark - Callable_Indirect
 
 template <class Signature> class Callable_Indirect;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Indirect (specialization for 0 params)
+#pragma mark - Callable_Indirect (specialization for 0 params)
 
 template <class R>
 class Callable_Indirect<R(void)>
@@ -68,8 +66,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Callable_Indirect variants
+#pragma mark - Callable_Indirect variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
@@ -120,8 +117,7 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCallable_Indirect
+#pragma mark - sCallable_Indirect
 
 template <class Sig>
 ZRef<Callable_Indirect<Sig> > sCallable_Indirect(const ZRef<Callable<Sig> >& iCallable)

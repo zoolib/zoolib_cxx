@@ -34,16 +34,14 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Rename
+#pragma mark - Rename
 
 typedef std::map<ColName,ColName> Rename;
 
 Rename sInverted(const Rename& iRename);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelHead
+#pragma mark - RelHead
 
 typedef std::set<ColName> RelHead;
 
@@ -84,8 +82,7 @@ RelHead sRelHead(
 	const ColName& i4, const ColName& i5, const ColName& i6, const ColName& i7);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark RelHead operators
+#pragma mark - RelHead operators
 
 // Incorporate set operators from Util_STL
 
@@ -135,8 +132,7 @@ inline RelHead& operator-=(RelHead& ioRelHead, const char* iElem)
 	{ return ioRelHead -= RelHead::key_type(iElem); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 bool sHasPrefix(const ColName& iPrefix, const ColName& iColName);
 ColName sPrefixInserted(const ColName& iPrefix, const ColName& iColName);
@@ -154,8 +150,7 @@ RelHead sNamesFrom(const Rename& iRename);
 RelHead sNamesTo(const Rename& iRename);
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ConcreteHead
+#pragma mark - ConcreteHead
 
 typedef std::map<ColName,bool> ConcreteHead;
 
@@ -174,8 +169,7 @@ void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& o
 } // namespace RelationalAlgebra
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sCompare_T declarations.
+#pragma mark - sCompare_T declarations.
 
 template <>
 int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);

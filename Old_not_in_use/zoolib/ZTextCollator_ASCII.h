@@ -29,8 +29,7 @@ ZMACRO_MSVCStaticLib_Reference(TextCollator_ASCII)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextCollatorRep_ASCII
+#pragma mark - ZTextCollatorRep_ASCII
 
 class ZTextCollatorRep_ASCII : public ZTextCollatorRep_NativeUTF8
 	{

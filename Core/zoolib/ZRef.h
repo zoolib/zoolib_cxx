@@ -38,8 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZRef
+#pragma mark - ZRef
 
 template <class T, bool Sense_p = true>
 class ZRef
@@ -348,8 +347,7 @@ void sRefCopy(void* oDest, T* iP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZRef partially specialized for pointer types
+#pragma mark - ZRef partially specialized for pointer types
 
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
@@ -541,8 +539,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sRef
+#pragma mark - sRef
 
 const struct
 	{
@@ -560,8 +557,7 @@ const struct
 	} sRef = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTempRef
+#pragma mark - sTempRef
 
 const struct
 	{
@@ -573,8 +569,7 @@ const struct
 	} sTempRef = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sTempPtrRef
+#pragma mark - sTempPtrRef
 
 const struct
 	{
@@ -586,8 +581,7 @@ const struct
 	} sTempPtrRef = {};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sClear
+#pragma mark - sClear
 
 template <class T, bool Sense_p>
 inline
@@ -604,8 +598,7 @@ ZRef<T> sGetClear(ZRef<T,Sense_p>& ioRef)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark swap
+#pragma mark - swap
 
 template <class T, bool Sense_p>
 ZMACRO_Attribute_NoThrow

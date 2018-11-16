@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Static helpers
+#pragma mark - Static helpers
 
 static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 	const ChanR_Bin& iChanR_Bin)
@@ -85,8 +84,7 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStrimR_StreamUTF8
+#pragma mark - ZStrimR_StreamUTF8
 
 ChanR_UTF_Chan_Bin_UTF8::ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin)
 :	fChanR_Bin(iChanR_Bin)
@@ -96,8 +94,7 @@ size_t ChanR_UTF_Chan_Bin_UTF8::Read(UTF32* oDest, size_t iCount)
 	{ return spReadUTF32_UTF8(oDest, iCount, fChanR_Bin); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Chan_Bin_UTF8
+#pragma mark - ChanW_UTF_Chan_Bin_UTF8
 
 ChanW_UTF_Chan_Bin_UTF8::ChanW_UTF_Chan_Bin_UTF8(const ChanW_Bin& iChanW_Bin)
 :	fChanW_Bin(iChanW_Bin)

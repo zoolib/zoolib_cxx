@@ -55,8 +55,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZThread_pthread
+#pragma mark - ZThread_pthread
 
 namespace ZThread_pthread {
 
@@ -82,8 +81,7 @@ void sSetName(const char* iName);
 } // namespace ZThread_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTSS_pthread
+#pragma mark - ZTSS_pthread
 
 namespace ZTSS_pthread {
 
@@ -106,8 +104,7 @@ Value sGet(Key iKey)
 } // namespace ZTSS_pthread
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtx_pthread
+#pragma mark - ZMtx_pthread
 
 class ZCndBase_pthread;
 
@@ -148,8 +145,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndBase_pthread
+#pragma mark - ZCndBase_pthread
 
 class ZCndBase_pthread
 :	NonCopyable
@@ -197,26 +193,22 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtxChecked_pthread
+#pragma mark - ZMtxChecked_pthread
 
 typedef ZMtxChecked_T<ZMtx_pthread, ZCndBase_pthread, ZThread_pthread::ID, ZThread_pthread::sID> ZMtxChecked_pthread;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndChecked_pthread
+#pragma mark - ZCndChecked_pthread
 
 typedef ZCndChecked_T<ZMtxChecked_pthread, ZCndBase_pthread> ZCnd_pthread;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSem_pthread
+#pragma mark - ZSem_pthread
 
 typedef ZSem_T<ZMtx_pthread, ZCndBase_pthread> ZSem_pthread;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSemNoTimeout_pthread
+#pragma mark - ZSemNoTimeout_pthread
 
 #if !defined(__MACH__)
 // Unnamed semaphores are not supported on OSX (or I presume on iOS).

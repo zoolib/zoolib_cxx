@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadParseException_Std
+#pragma mark - YadParseException_Std
 
 class YadParseException_Std : public YadParseException
 	{
@@ -39,8 +38,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_RefYad_Std
+#pragma mark - ChanR_RefYad_Std
 
 class ChanR_RefYad_Std
 :	public ChanR_RefYad
@@ -62,8 +60,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_NameRefYad_Std
+#pragma mark - ChanR_NameRefYad_Std
 
 class ChanR_NameRefYad_Std
 :	public ChanR_NameRefYad

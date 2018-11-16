@@ -27,8 +27,7 @@ namespace ZooLib {
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_Std
+#pragma mark - ChanRU_UTF_Std
 
 ChanRU_UTF_Std::ChanRU_UTF_Std(const ChanR_UTF& iChanR)
 :	fChanR_CRLFRemove(iChanR)

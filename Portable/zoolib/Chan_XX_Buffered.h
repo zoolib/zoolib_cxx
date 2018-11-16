@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_Buffered
+#pragma mark - ChanR_XX_Buffered
 
 template <class Chan_p>
 class ChanR_XX_Buffered
@@ -121,8 +120,7 @@ ZRef<Channer_p> sChannerR_Buffered(const ZRef<Channer_p>& iChanner, size_t iBuff
 	{ return sChanner_Channer_T<ChanR_XX_Buffered<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_XX_Buffered
+#pragma mark - ChanW_XX_Buffered
 
 template <class Chan_p>
 class ChanW_XX_Buffered

@@ -66,8 +66,7 @@ using std::set;
 using namespace Util_STL;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Analyze (anonymous)
+#pragma mark - Visitor_Analyze (anonymous)
 
 namespace { // anonymous
 
@@ -141,8 +140,7 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Transform_Search (anonymous)
+#pragma mark - Transform_Search (anonymous)
 
 namespace { // anonymous
 

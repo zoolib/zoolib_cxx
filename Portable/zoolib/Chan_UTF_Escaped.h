@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_Escaped
+#pragma mark - ChanR_UTF_Escaped
 
 class ChanR_UTF_Escaped
 :	public ChanR_UTF
@@ -49,8 +48,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Escaped
+#pragma mark - ChanW_UTF_Escaped
 
 /// A write filter strim that inserts C-style escape sequences.
 

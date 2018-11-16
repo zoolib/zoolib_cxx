@@ -28,8 +28,7 @@ ZMACRO_MSVCStaticLib_cpp(StreamRWCon_OpenSSL)
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -48,8 +47,7 @@ class Make_SSL
 static int spDummy = ::SSL_library_init();
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRWCon_OpenSSL
+#pragma mark - ZStreamRWCon_OpenSSL
 
 ZStreamRWCon_OpenSSL::ZStreamRWCon_OpenSSL(
 	const ZStreamR& iStreamR, const ZStreamW& iStreamW, bool iIsServer)
@@ -211,8 +209,7 @@ void ZStreamRWCon_OpenSSL::Imp_Abort()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRWCon_OpenSSL
+#pragma mark - ZStreamRWCon_OpenSSL
 
 ZStreamerRWCon_OpenSSL::ZStreamerRWCon_OpenSSL(
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, bool iIsServer)

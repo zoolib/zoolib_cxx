@@ -41,8 +41,7 @@ namespace ZooLib {
 namespace QueryEngine {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_DoMakeWalker
+#pragma mark - Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
 :	public virtual Visitor_Do_T<ZRef<Walker> >

@@ -34,8 +34,7 @@ using std::vector;
 ZMACRO_CompareRegistration_T(Data_Any)
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Data_Any::Rep
+#pragma mark - Data_Any::Rep
 
 class Data_Any::Rep : public CountedWithoutFinalize
 	{
@@ -59,8 +58,7 @@ Data_Any::Rep::Rep(const vector<char>& iVector)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Data_Any
+#pragma mark - Data_Any
 
 Data_Any::Data_Any()
 :	fRep(new Rep)

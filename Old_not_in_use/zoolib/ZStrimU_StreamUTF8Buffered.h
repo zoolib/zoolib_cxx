@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStrimU_StreamUTF8Buffered
+#pragma mark - ZStrimU_StreamUTF8Buffered
 
 class ZStrimU_StreamUTF8Buffered : public ZStrimU
 	{

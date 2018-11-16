@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark TypeList
+#pragma mark - TypeList
 
 template <
 	class P0 = null_t, class P1 = null_t, class P2 = null_t, class P3 = null_t,

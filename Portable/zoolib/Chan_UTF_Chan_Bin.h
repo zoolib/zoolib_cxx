@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_Chan_Bin_UTF8
+#pragma mark - ChanR_UTF_Chan_Bin_UTF8
 
 /// A read strim that sources text by reading UTF-8 code units from a ChanR_Bin.
 
@@ -48,8 +47,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_UTF_Chan_Bin_UTF8
+#pragma mark - ChanW_UTF_Chan_Bin_UTF8
 
 /// A write strim that writes text to a ChanW_Bin in UTF-8.
 

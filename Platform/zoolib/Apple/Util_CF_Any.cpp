@@ -40,8 +40,7 @@ namespace ZooLib {
 namespace Util_CF {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_CF
+#pragma mark - Util_CF
 
 ZQ<Any> sQSimpleAsAny(CFTypeID iTypeID, CFTypeRef iVal)
 	{
@@ -189,8 +188,7 @@ Any sAsAny(CFTypeRef iVal)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_CF
+#pragma mark - Util_CF
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return sAdopt& ::CFNumberCreate(nullptr, iType, iVal); }

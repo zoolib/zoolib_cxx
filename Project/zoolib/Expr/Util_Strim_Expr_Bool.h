@@ -34,8 +34,7 @@ namespace ZooLib {
 namespace Util_Strim_Expr_Bool {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_Expr_Bool
+#pragma mark - Util_Strim_Expr_Bool
 
 typedef Callable<ZRef<Expr_Bool>(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)>
 	Callable_Terminal;

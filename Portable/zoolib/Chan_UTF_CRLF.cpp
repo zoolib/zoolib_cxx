@@ -37,8 +37,7 @@ static const UTF32 CR = 0x0D; // Probably the same as '\r'
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_UTF_CRLFRemove
+#pragma mark - ChanR_UTF_CRLFRemove
 
 ChanR_UTF_CRLFRemove::ChanR_UTF_CRLFRemove(const ChanR_UTF& iChanR)
 :	fChanR(iChanR),

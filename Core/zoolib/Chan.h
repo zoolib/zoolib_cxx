@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sClamped
+#pragma mark - sClamped
 
 inline size_t sClamped(uint64 iVal)
 	{
@@ -53,8 +52,7 @@ inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
 	{ return std::min(iCount, sClampedAvailable(iSize, iPosition)); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark UserOfElement
+#pragma mark - UserOfElement
 
 template <class EE>
 class UserOfElement
@@ -64,8 +62,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Abort
+#pragma mark - Aspect_Abort
 
 class Aspect_Abort
 	{
@@ -79,8 +76,7 @@ inline void sAbort(const ChanAbort& iChan)
 	{ sNonConst(iChan).Abort(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_DisconnectRead
+#pragma mark - Aspect_DisconnectRead
 
 class Aspect_DisconnectRead
 	{
@@ -100,8 +96,7 @@ inline void sDisconnectRead(const ChanDisconnectRead& iChan)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_DisconnectWrite
+#pragma mark - Aspect_DisconnectWrite
 
 class Aspect_DisconnectWrite
 	{
@@ -115,8 +110,7 @@ inline void sDisconnectWrite(const ChanDisconnectWrite& iChan)
 	{ sNonConst(iChan).DisconnectWrite(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Pos
+#pragma mark - Aspect_Pos
 
 class Aspect_Pos
 	{
@@ -135,8 +129,7 @@ inline void sPosSet(const ChanPos& iChan, uint64 iPos)
 	{ sNonConst(iChan).PosSet(iPos); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Read
+#pragma mark - Aspect_Read
 
 template <class EE>
 class Aspect_Read
@@ -172,8 +165,7 @@ inline size_t sReadable(const ChanR<EE>& iChan)
 	{ return sNonConst(iChan).Readable(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Size
+#pragma mark - Aspect_Size
 
 template <class LL, class EE>
 class Aspect_ReadAt
@@ -191,8 +183,7 @@ inline size_t sReadAt(const ChanReadAt<LL,EE>& iChan, const LL& iLoc, EE* oDest,
 	{ return sNonConst(iChan).ReadAt(iLoc, oDest, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Size
+#pragma mark - Aspect_Size
 
 class Aspect_Size
 	{
@@ -206,8 +197,7 @@ inline uint64 sSize(const ChanSize& iChan)
 	{ return sNonConst(iChan).Size(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_SizeSet
+#pragma mark - Aspect_SizeSet
 
 class Aspect_SizeSet
 	{
@@ -221,8 +211,7 @@ inline void sSizeSet(const ChanSizeSet& iChan, uint64 iSize)
 	{ sNonConst(iChan).SizeSet(iSize); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Unread
+#pragma mark - Aspect_Unread
 
 template <class EE>
 class Aspect_Unread
@@ -247,8 +236,7 @@ inline size_t sUnreadableLimit(const ChanU<EE>& iChan)
 	{ return sNonConst(iChan).UnreadableLimit(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_WaitReadable
+#pragma mark - Aspect_WaitReadable
 
 class Aspect_WaitReadable
 	{
@@ -278,8 +266,7 @@ struct WaitReadableIf<Chan_p,true>
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Aspect_Write
+#pragma mark - Aspect_Write
 
 template <class EE>
 class Aspect_Write
@@ -304,8 +291,7 @@ inline void sFlush(const ChanW<EE>& iChan)
 	{ sNonConst(iChan).Flush(); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Common composites.
+#pragma mark - Common composites.
 
 template <typename EE> using ChanRU = DeriveFrom
 	<

@@ -30,8 +30,7 @@ namespace Yad_Basic {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helpers
+#pragma mark - Helpers
 
 namespace { // anonymous
 
@@ -47,8 +46,7 @@ bool spRead_Until(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTermi
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ParseException
+#pragma mark - ParseException
 
 ParseException::ParseException(const string& iWhat)
 :	YadParseException_Std(iWhat)
@@ -59,8 +57,7 @@ ParseException::ParseException(const char* iWhat)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark MapR
+#pragma mark - MapR
 
 class ChanR_NameRefYad
 :	public ChanR_NameRefYad_Std
@@ -118,8 +115,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZYad_Basic::Options
+#pragma mark - ZYad_Basic::Options
 
 Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 :	fSeparator_NameFromValue(iNameFromValue)
@@ -127,8 +123,7 @@ Options::Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
 	{}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sYadR
+#pragma mark - sYadR
 
 ZRef<Channer<ZooLib::ChanR_NameRefYad>> sYadR(const Options& iOptions,
 	ZRef<ChannerR_UTF> iChannerR_UTF, ZRef<ChannerU_UTF> iChannerU_UTF)

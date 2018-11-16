@@ -29,8 +29,7 @@ namespace ZooLib {
 namespace Util_File {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_File
+#pragma mark - Util_File
 
 ZQ<FileSpec> sQEnsureBranch(const FileSpec& iFS);
 

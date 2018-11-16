@@ -25,8 +25,7 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetAddress_Local
+#pragma mark - ZNetAddress_Local
 
 ZNetAddress_Local::ZNetAddress_Local()
 	{}
@@ -49,8 +48,7 @@ const string& ZNetAddress_Local::GetPath() const
 	{ return fPath ;}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetName_Local
+#pragma mark - ZNetName_Local
 
 ZNetName_Local::ZNetName_Local()
 	{}
@@ -79,8 +77,7 @@ const string& ZNetName_Local::GetPath() const
 	{ return fPath; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetListener_Local
+#pragma mark - ZNetListener_Local
 
 ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(const string& iPath)
 	{
@@ -89,8 +86,7 @@ ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(const string& iPath)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZNetEndpoint_Local
+#pragma mark - ZNetEndpoint_Local
 
 ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPath)
 	{

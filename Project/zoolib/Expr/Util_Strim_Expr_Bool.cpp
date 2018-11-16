@@ -28,8 +28,7 @@ namespace Util_Strim_Expr_Bool {
 using namespace Util_Chan;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Helper functions (anonymous)
+#pragma mark - Helper functions (anonymous)
 
 namespace { // anonymous
 
@@ -149,8 +148,7 @@ ZRef<Expr_Bool> spExpression(
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_Strim_Expr_Bool
+#pragma mark - Util_Strim_Expr_Bool
 
 ZRef<Expr_Bool> sQFromStrim(
 	const ZRef<Callable_Terminal>& iCallable_Terminal,

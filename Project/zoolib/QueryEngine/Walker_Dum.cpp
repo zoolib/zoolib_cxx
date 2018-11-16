@@ -27,8 +27,7 @@ using std::map;
 using std::set;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Walker_Dum
+#pragma mark - Walker_Dum
 
 Walker_Dum::Walker_Dum()
 	{}

@@ -30,8 +30,7 @@ using std::string;
 using std::vector;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_ThreadLoop
+#pragma mark - Starter_ThreadLoop
 
 class Starter_ThreadLoop
 :	public Starter
@@ -130,8 +129,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sStarter_ThreadLoop
+#pragma mark - sStarter_ThreadLoop
 
 ZRef<Starter> sStarter_ThreadLoop(const string& iName)
 	{ return new Starter_ThreadLoop(iName); }

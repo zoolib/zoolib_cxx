@@ -33,8 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZAcquirer_T
+#pragma mark - ZAcquirer_T
 
 template <class Mtx>
 class ZAcquirer_T : NonCopyable
@@ -57,8 +56,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZReleaser_T
+#pragma mark - ZReleaser_T
 
 template <class Mtx>
 class ZReleaser_T : NonCopyable
@@ -81,8 +79,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndBase_T
+#pragma mark - ZCndBase_T
 
 /*
 "Implementing Condition Variables with Semaphores",
@@ -188,8 +185,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCndChecked_T
+#pragma mark - ZCndChecked_T
 
 template <class MtxChecked, class Cnd>
 class ZCndChecked_T : public Cnd
@@ -218,8 +214,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtx_T
+#pragma mark - ZMtx_T
 
 template <class Sem>
 class ZMtx_T : NonCopyable
@@ -246,8 +241,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMtxChecked_T
+#pragma mark - ZMtxChecked_T
 
 template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)(void)>
 class ZMtxChecked_T : NonCopyable
@@ -334,8 +328,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZSem_T
+#pragma mark - ZSem_T
 
 template <class Mtx, class Cnd>
 class ZSem_T : NonCopyable

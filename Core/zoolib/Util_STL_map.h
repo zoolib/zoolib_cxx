@@ -31,8 +31,7 @@ namespace ZooLib {
 namespace Util_STL {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Util_STL
+#pragma mark - Util_STL
 
 template <typename KBase, typename Value, typename Comparator>
 bool sIsEmpty(const std::map<KBase,Value,Comparator>& iMap)
@@ -211,8 +210,7 @@ ZQ<std::pair<KBase,Value> > sQPopFront(std::map<KBase,Value,Comparator>& ioMap)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sXXXMust
+#pragma mark - sXXXMust
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 void sEraseMust(const int iDebugLevel,

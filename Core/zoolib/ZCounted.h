@@ -32,8 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCountedBase
+#pragma mark - ZCountedBase
 
 class ZCountedBase
 	{
@@ -64,8 +63,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
+#pragma mark - sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
 
 inline void sRetain(ZCountedBase& iObject)
 	{ iObject.Retain(); }
@@ -77,15 +75,13 @@ inline void sCheck(ZCountedBase* iP)
 	{ ZAssertStop(1, iP); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCounted
+#pragma mark - ZCounted
 
 class ZCounted : public virtual ZCountedBase
 	{};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZCountedBase::WeakRefProxy
+#pragma mark - ZCountedBase::WeakRefProxy
 
 class ZCountedBase::WeakRefProxy
 :	public CountedWithoutFinalize
@@ -105,8 +101,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWeakRefBase
+#pragma mark - ZWeakRefBase
 
 class ZWeakRefBase
 	{
@@ -131,8 +126,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZWeakRef
+#pragma mark - ZWeakRef
 
 template <class T>
 class ZWeakRef
@@ -233,8 +227,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark sWeakRef
+#pragma mark - sWeakRef
 
 template <class T>
 ZWeakRef<T> sWeakRef(T* iP)
@@ -253,8 +246,7 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZRef_Counted
+#pragma mark - ZRef_Counted
 
 // Useful in situations where we want the default ctor of a ZRef<X> to default create an X.
 // e.g. sStarter_EachOnNewThread and its use of sSingleton/ZRef_Counted

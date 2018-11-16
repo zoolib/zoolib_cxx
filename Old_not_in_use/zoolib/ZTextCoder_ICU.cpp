@@ -40,8 +40,7 @@ ZAssertCompile(sizeof(UChar) == sizeof(UTF16));
 static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Factory functions
+#pragma mark - Factory functions
 
 namespace { // anonymous
 
@@ -68,8 +67,7 @@ class Make_Encoder
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextDecoder_ICU
+#pragma mark - ZTextDecoder_ICU
 
 static void spCallbackCount(const void* iContext, UConverterToUnicodeArgs* toUArgs,
 	const char* codePoints, int32_t length, UConverterCallbackReason reason, UErrorCode* err)
@@ -160,8 +158,7 @@ void ZTextDecoder_ICU::Reset()
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZTextEncoder_ICU
+#pragma mark - ZTextEncoder_ICU
 
 ZTextEncoder_ICU::ZTextEncoder_ICU(const string& iDestName)
 	{

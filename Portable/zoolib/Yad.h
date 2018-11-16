@@ -34,8 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadOptions
+#pragma mark - YadOptions
 
 struct YadOptions
 	{
@@ -88,8 +87,7 @@ inline bool sTimesHaveUserLegibleComment(const YadOptions& iYO)
 	{ return iYO.fTimesHaveUserLegibleCommentQ.DGet(true); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadParseException
+#pragma mark - YadParseException
 
 class YadParseException : public ParseException
 	{
@@ -99,15 +97,13 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadR
+#pragma mark - YadR
 
 typedef ZCounted YadR;
 typedef ZRef<YadR> RefYad;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadAtomR
+#pragma mark - YadAtomR
 
 class YadAtomR
 :	public virtual YadR
@@ -118,20 +114,17 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStreamerR
+#pragma mark - YadStreamerR
 
 typedef ChannerR_Bin YadStreamerR;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadStrimmerR
+#pragma mark - YadStrimmerR
 
 typedef ChannerR_UTF YadStrimmerR;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqR
+#pragma mark - YadSeqR
 
 using ChanR_RefYad = DeriveFrom<Aspect_Read<RefYad>>;
 
@@ -149,8 +142,7 @@ inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
 	{ return sReadInc(*iYadSeqR); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqAtR
+#pragma mark - YadSeqAtR
 
 using ChanAtR_RefYad = DeriveFrom<Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
 using YadSeqAtR = Channer<ChanAtR_RefYad>;
@@ -167,15 +159,13 @@ inline RefYad sReadAt(const ZRef<YadSeqAtR>& iYadSeqAtR, uint64 iLoc)
 	{ return sReadAt(*iYadSeqAtR, iLoc); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadSeqAtRPos
+#pragma mark - YadSeqAtRPos
 
 using ChanRPos_RefYad = DeriveFrom<Aspect_Read<RefYad>,Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
 using YadSeqAtRPos = Channer<ChanRPos_RefYad>;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapR
+#pragma mark - YadMapR
 
 typedef std::pair<Name,RefYad> NameRefYad;
 
@@ -198,8 +188,7 @@ inline RefYad sReadInc(const ZRef<YadMapR>& iYadMapR, Name& oName)
 	{ return sReadInc(*iYadMapR, oName); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapAtR
+#pragma mark - YadMapAtR
 
 using ChanAtR_NameRefYad = DeriveFrom<Aspect_ReadAt<Name,RefYad>>;
 using YadMapAtR = Channer<ChanAtR_NameRefYad>;
@@ -216,8 +205,7 @@ inline RefYad sReadAt(const ZRef<YadMapAtR>& iYadMapAtR, const Name& iLoc)
 	{ return sReadAt(*iYadMapAtR, iLoc); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark YadMapAtRPos
+#pragma mark - YadMapAtRPos
 
 using ChanRPos_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>,Aspect_ReadAt<Name,RefYad>>;
 using YadMapAtRPos = Channer<ChanRPos_NameRefYad>;

@@ -28,8 +28,7 @@ namespace ZooLib {
 namespace ZUtil_WinSock {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZUtil_WinSock
+#pragma mark - ZUtil_WinSock
 
 bool sWaitReadable(SOCKET iSOCKET, double iTimeout)
 	{

@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Bool_Do_Eval
+#pragma mark - Visitor_Expr_Bool_Do_Eval
 
 void Visitor_Expr_Bool_Do_Eval::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
 	{ this->pSetResult(true); }

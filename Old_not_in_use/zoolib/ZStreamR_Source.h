@@ -29,8 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamR_Source
+#pragma mark - ZStreamR_Source
 
 /// A read stream providing an endless repeating sequence of bytes.
 
@@ -69,8 +68,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerR_Source
+#pragma mark - ZStreamerR_Source
 
 /// A read streamer encapsulating a ZStreamR_Source.
 

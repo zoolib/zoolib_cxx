@@ -36,8 +36,7 @@ class Seq_CF;
 class Map_CF;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Val_CF
+#pragma mark - Val_CF
 
 class Val_CF
 :	public ZRef<CFTypeRef>
@@ -130,8 +129,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Seq_CF
+#pragma mark - Seq_CF
 
 class Seq_CF
 :	public ZRef<CFArrayRef>
@@ -195,8 +193,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Map_CF
+#pragma mark - Map_CF
 
 class Map_CF
 :	public ZRef<CFDictionaryRef>
@@ -281,8 +278,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Accessor functions
+#pragma mark - Accessor functions
 
 template <class S>
 const ZQ<S> sQGet(const Val_CF& iVal)

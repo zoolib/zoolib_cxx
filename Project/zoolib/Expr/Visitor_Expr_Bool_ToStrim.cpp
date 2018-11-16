@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Visitor_Expr_Bool_ToStrim
+#pragma mark - Visitor_Expr_Bool_ToStrim
 
 void Visitor_Expr_Bool_ToStrim::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
 	{ this->pStrimW() << "TRUE"; }

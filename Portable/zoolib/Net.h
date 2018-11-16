@@ -35,8 +35,7 @@ class NetName;
 class NetNameLookup;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Net
+#pragma mark - Net
 
 namespace Net {
 
@@ -55,8 +54,7 @@ enum Error
 } // namespace Net
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetEx
+#pragma mark - NetEx
 
 class NetEx
 :	public std::runtime_error
@@ -71,8 +69,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddress
+#pragma mark - NetAddress
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
@@ -94,8 +91,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetAddressLookup
+#pragma mark - NetAddressLookup
 
 /// Subclasses of this are returned by NetAddress instances when
 /// NetAddress::MakeLookup is called. It's an iterator that returns zero or
@@ -117,8 +113,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetName
+#pragma mark - NetName
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
@@ -143,8 +138,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetNameLookup
+#pragma mark - NetNameLookup
 
 /// Subclasses of this are returned by NetName instances when
 /// NetName::MakeLookup is called. It's an iterator that returns zero or
@@ -167,8 +161,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark NetListener
+#pragma mark - NetListener
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener

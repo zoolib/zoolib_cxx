@@ -40,8 +40,7 @@ using namespace PullPush;
 using namespace Util_CF;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 	{
@@ -109,8 +108,7 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 static bool spPull_Push_CF(const Any& iAny, const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
 	{

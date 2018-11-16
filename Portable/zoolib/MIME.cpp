@@ -33,8 +33,7 @@ namespace ZooLib {
 namespace MIME {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZMIME
+#pragma mark - ZMIME
 
 // Character classification.
 bool sIs_LWS(char iChar)
@@ -43,8 +42,7 @@ bool sIs_LWS(char iChar)
 	}
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_Header
+#pragma mark - ChanR_Bin_Header
 
 ChanR_Bin_Header::ChanR_Bin_Header(const ChanR_Bin& iChanR)
 :	fChanR(iChanR),
@@ -122,8 +120,7 @@ void ChanR_Bin_Header::Reset()
 	{ fState = eInitial; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_Line
+#pragma mark - ChanR_Bin_Line
 
 ChanR_Bin_Line::ChanR_Bin_Line(const ChanR_Bin& iChanR)
 :	fChanR(iChanR),

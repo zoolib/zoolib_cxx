@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRU_UTF_Std
+#pragma mark - ChanRU_UTF_Std
 
 class ChanRU_UTF_Std
 :	public ChanRU<UTF32>

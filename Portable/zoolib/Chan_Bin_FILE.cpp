@@ -77,8 +77,7 @@ static size_t spWrite(FILE* iFILE, const byte* iSource, size_t iCount)
 using std::range_error;
 
 // =================================================================================================
-#pragma mark -
-#pragma mark FILEHolder
+#pragma mark - FILEHolder
 
 FILEHolder::FILEHolder(FILE* iFILE, bool iAdopt)
 :	fFILE(iFILE)
@@ -98,8 +97,7 @@ FILE* FILEHolder::OrphanFILE()
 	{ return sGetSet(fFILE, nullptr); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_Bin_FILE
+#pragma mark - ChanR_Bin_FILE
 
 ChanR_Bin_FILE::ChanR_Bin_FILE(FILE* iFILE)
 :	FILEHolder(iFILE, false)
@@ -113,8 +111,7 @@ size_t ChanR_Bin_FILE::Read(byte* oDest, size_t iCount)
 	{ return spRead(fFILE, oDest, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_Bin_FILE
+#pragma mark - ChanW_Bin_FILE
 
 ChanW_Bin_FILE::ChanW_Bin_FILE(FILE* iFILE)
 :	FILEHolder(iFILE, false)

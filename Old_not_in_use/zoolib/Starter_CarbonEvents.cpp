@@ -27,8 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Starter_CarbonEvents
+#pragma mark - Starter_CarbonEvents
 
 ZRef<Starter_CarbonEvents> Starter_CarbonEvents::sGet()
 	{ return sSingleton<ZRef_Counted<Starter_CarbonEvents> >(); }

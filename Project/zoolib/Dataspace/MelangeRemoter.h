@@ -93,8 +93,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark Melange_Client
+#pragma mark - Melange_Client
 
 class Melange_Client
 :	public Callable_Register

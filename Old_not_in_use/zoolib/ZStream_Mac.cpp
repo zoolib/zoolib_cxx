@@ -32,8 +32,7 @@ using std::min;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamRPos_Mac_PartialResource
+#pragma mark - ZStreamRPos_Mac_PartialResource
 
 ZStreamRPos_Mac_PartialResource::ZStreamRPos_Mac_PartialResource(
 	Handle inResourceHandle, bool inAdopt)
@@ -84,8 +83,7 @@ uint64 ZStreamRPos_Mac_PartialResource::Imp_GetSize()
 	{ return fSize; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ZStreamerRPos_Mac_PartialResource
+#pragma mark - ZStreamerRPos_Mac_PartialResource
 
 ZStreamerRPos_Mac_PartialResource::ZStreamerRPos_Mac_PartialResource(
 	Handle inResourceHandle, bool inAdopt)

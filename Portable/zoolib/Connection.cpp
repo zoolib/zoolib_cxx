@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 // =================================================================================================
-#pragma mark -
-#pragma mark
+#pragma mark - 
 
 ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
 	const ZRef<Factory_ChannerRWClose_Bin>& iFactory)

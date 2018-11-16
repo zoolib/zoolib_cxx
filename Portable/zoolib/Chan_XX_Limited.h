@@ -30,8 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanR_XX_Limited
+#pragma mark - ChanR_XX_Limited
 
 template <class Chan_p>
 class ChanR_XX_Limited
@@ -77,8 +76,7 @@ ZRef<Channer_p> sChannerR_Limited(const ZRef<Channer_p>& iChanner, size_t iLimit
 	{ return sChanner_Channer_T<ChanR_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanW_XX_Limited
+#pragma mark - ChanW_XX_Limited
 
 template <class Chan_p>
 class ChanW_XX_Limited
