@@ -69,10 +69,12 @@ template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
 using ChannerClose = Channer<ChanClose>;
 template <class EE> using ChannerRCon = Channer<ChanRCon<EE>>;
 template <class EE> using ChannerWCon = Channer<ChanWCon<EE>>;
-template <class EE> using ChannerConnection = Channer<ChanConnection<EE>>;
+template <class EE> using ChannerRWCon = Channer<ChanRWCon<EE>>;
+
+template <class EE> using ChannerConnection = ChannerRWCon<EE>;
 
 // This name is still in use.
-template <class EE> using ChannerRWClose = ChannerConnection<EE>;
+template <class EE> using ChannerRWClose = ChannerRWCon<EE>;
 
 // =================================================================================================
 #pragma mark - sChanner_Chan.
