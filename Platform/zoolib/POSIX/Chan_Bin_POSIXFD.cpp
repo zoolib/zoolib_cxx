@@ -216,26 +216,26 @@ size_t ChanRCon_Bin_POSIXFD::Readable()
 bool ChanRCon_Bin_POSIXFD::WaitReadable(double iTimeout)
 	{ return Util_POSIXFD::sWaitReadable(fFDHolder->GetFD(), iTimeout); }
 
-//// =================================================================================================
-//#pragma mark -
-//#pragma mark ChanWCon_Bin_POSIXFD
-//
-//ChanWCon_Bin_POSIXFD::ChanWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
-//:	fFDHolder(iFDHolder)
-//	{}
-//
-//ChanWCon_Bin_POSIXFD::~ChanWCon_Bin_POSIXFD()
-//	{}
-//
-//void ChanWCon_Bin_POSIXFD::Abort()
-//	{ return Util_POSIXFD::sAbort(fFDHolder->GetFD()); }
-//
-////void ChanWCon_Bin_POSIXFD::DisconnectWrite()
-////	{ Util_POSIXFD::sDisconnectWrite(fFDHolder->GetFD()); }
-//
-//size_t ChanWCon_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
-//	{ return Util_POSIXFD::sWriteCon(fFDHolder->GetFD(), iSource, iCount); }
-//
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanWCon_Bin_POSIXFD
+
+ChanWCon_Bin_POSIXFD::ChanWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+:	fFDHolder(iFDHolder)
+	{}
+
+ChanWCon_Bin_POSIXFD::~ChanWCon_Bin_POSIXFD()
+	{}
+
+void ChanWCon_Bin_POSIXFD::Abort()
+	{ return Util_POSIXFD::sAbort(fFDHolder->GetFD()); }
+
+void ChanWCon_Bin_POSIXFD::DisconnectWrite()
+	{ Util_POSIXFD::sAbort(fFDHolder->GetFD()); }
+
+size_t ChanWCon_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
+	{ return Util_POSIXFD::sWriteCon(fFDHolder->GetFD(), iSource, iCount); }
+
 //// =================================================================================================
 //#pragma mark -
 //#pragma mark ChanRWCon_Bin_POSIXFD

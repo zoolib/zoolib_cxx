@@ -233,30 +233,30 @@ protected:
 	const ZRef<FDHolder> fFDHolder;
 	};
 
-//// =================================================================================================
-//#pragma mark -
-//#pragma mark ChanWCon_Bin_POSIXFD
-//
-//class ChanWCon_Bin_POSIXFD
-//:	public ChanWCon<byte>
-//	{
-//public:
-//	ChanWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
-//	~ChanWCon_Bin_POSIXFD();
-//
-//// From Aspect_Abort
-//	virtual void Abort();
-//
-//// From Aspect_DisconnectWrite
-//	virtual void DisconnectWrite();
-//
-//// From Aspect_Write<byte>
-//	virtual size_t Write(const byte* iSource, size_t iCount);
-//
-//protected:
-//	const ZRef<FDHolder> fFDHolder;
-//	};
-//
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanWCon_Bin_POSIXFD
+
+class ChanWCon_Bin_POSIXFD
+:	public ChanWCon<byte>
+	{
+public:
+	ChanWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	~ChanWCon_Bin_POSIXFD();
+
+// From Aspect_Abort
+	virtual void Abort();
+
+// From Aspect_DisconnectWrite
+	virtual void DisconnectWrite();
+
+// From Aspect_Write<byte>
+	virtual size_t Write(const byte* iSource, size_t iCount);
+
+protected:
+	const ZRef<FDHolder> fFDHolder;
+	};
+
 //// =================================================================================================
 //#pragma mark -
 //#pragma mark ChanRWCon_Bin_POSIXFD
