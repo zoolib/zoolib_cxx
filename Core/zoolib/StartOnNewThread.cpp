@@ -42,12 +42,12 @@ public:
 		ZAcqMtx acq(fMtx);
 		fQueue.push_back(iCallable);
 		if (fSpareThreads == 0)
-			ZThread::sStartRaw(0, (ZThread::ProcRaw_t)sDoOne, this);
+			ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
 		else
 			fCnd.Broadcast();
 		}
 
-	void DoOne()
+	void RunLoop()
 		{
 		ZAcqMtx acq(fMtx);
 		double expires = Time::sSystem() + 10;
@@ -81,8 +81,8 @@ public:
 		--fSpareThreads;
 		}
 
-	static void sDoOne(void* iRefcon)
-		{ static_cast<StartOnNewThreadHandler*>(iRefcon)->DoOne(); }
+	static void spRunLoop(void* iRefcon)
+		{ static_cast<StartOnNewThreadHandler*>(iRefcon)->RunLoop(); }
 
 	ZMtx fMtx;
 	ZCnd fCnd;
