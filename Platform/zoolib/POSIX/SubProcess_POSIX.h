@@ -60,9 +60,9 @@ public:
 protected:
 	const std::string fProgram;
 	const std::vector<std::string> fArgs;
-	pid_t f_pid_t;
-	ZRef<ChannerRCon_Bin> fChannerR;
-	ZRef<ChannerWCon_Bin> fChannerW;
+	pid_t fPid;
+	ZRef<ChannerRCon_Bin> fChannerRCon;
+	ZRef<ChannerWCon_Bin> fChannerWCon;
 	};
 
 ZRef<SubProcess_POSIX> sLaunchSubProcess(

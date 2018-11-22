@@ -23,12 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(POSIX)
 
 #include "zoolib/Log.h"
+#include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/POSIX/Chan_Bin_POSIXFD.h"
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
 #include <signal.h>
 #include <unistd.h> // for close
 
 namespace ZooLib {
+
+using std::vector;
 
 // =================================================================================================
 #pragma mark - SubProcess_POSIX
@@ -37,6 +41,7 @@ SubProcess_POSIX::SubProcess_POSIX(const std::string& iProgram,
 	const std::vector<std::string>& iArgs)
 :	fProgram(iProgram)
 ,	fArgs(iArgs)
+,	fPid(-1)
 	{}
 
 SubProcess_POSIX::~SubProcess_POSIX()
@@ -53,34 +58,86 @@ void SubProcess_POSIX::Initialize()
 			w << (xx ? ", " : "") << fArgs[xx];
 		}
 
-	f_pid_t = -1;
-//	create a pipe, bind our channer to it, and fork.
+	vector<const char*> theArgs;
+	theArgs.push_back(fProgram.c_str());
+	foreachi (iter, fArgs)
+		theArgs.push_back(iter->c_str());
+	theArgs.push_back(nullptr);
 
-//	Launch the program, remember the pid
+	int childStdout[2];
+	::pipe(childStdout);
+
+	int childStdin[2];
+	::pipe(childStdin);
+
+	const pid_t pid1 = ::fork();
+	if (pid1 < 0)
+		{
+		if (ZLOGF(w, eErr))
+			w << "Couldn't fork to run " << fProgram;
+		throw std::runtime_error("Couldn't fork");
+		}
+	else if (pid1 != 0)
+		{
+		// We're still in the parent. Remember the pid and the pipe.
+		fPid = pid1;
+
+		fChannerRCon = sChanner_T<ChanRCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdout[0]));
+		::close(childStdout[1]);
+
+		fChannerWCon = sChanner_T<ChanWCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdin[1]));
+		::close(childStdin[0]);
+		}
+	else if (pid1 == 0)
+		{
+		// We're in the child. dup2 the appropriate ends of the pipes over fds 0 and 1.
+		::dup2(childStdin[0], 0);
+		::close(childStdin[0]);
+		::close(childStdin[1]);
+
+		::dup2(childStdout[1], 1);
+		::close(childStdout[0]);
+		::close(childStdout[1]);
+
+		// Leave stderr alone, and close everything else.
+		for (int xx = 3; xx < 1024; ++xx)
+			::close(xx);
+
+		execv(fProgram.c_str(), (char* const*) &theArgs[0]);
+
+		// We only get here if the execv fails.
+		const int the_errno = errno;
+
+		if (ZLOGF(w, eErr))
+			{
+			w << "Couldn't exec to run " << fProgram
+				<< ", errno: " << strerror(the_errno)
+				<< "(" << the_errno << ")";
+			}
+
+		_exit(EXIT_FAILURE);
+		}
 	}
 
 void SubProcess_POSIX::Stop()
 	{
-	::kill(f_pid_t, SIGKILL);
-
+	::kill(fPid, SIGKILL);
 	}
 
 void SubProcess_POSIX::WaitTillStopped()
 	{
 	for (;;)
 		{
-		int status;
-		pid_t result = ::waitpid(f_pid_t, &status, 0);
-		if (result >= 0 || errno != EINTR)
+		if (0 <= waitpid(fPid, 0, 0) || errno != EINTR)
 			break;
 		}
 	}
 
 ZRef<ChannerRCon_Bin> SubProcess_POSIX::GetChannerRCon()
-	{ return fChannerR; }
+	{ return fChannerRCon; }
 
 ZRef<ChannerWCon_Bin> SubProcess_POSIX::GetChannerWCon()
-	{ return fChannerW; }
+	{ return fChannerWCon; }
 
 // ----------
 
@@ -88,7 +145,14 @@ ZRef<SubProcess_POSIX> sLaunchSubProcess(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs)
 	{
-	return new SubProcess_POSIX(iProgram, iArgs);
+	try
+		{
+		return new SubProcess_POSIX(iProgram, iArgs);
+		}
+	catch (...)
+		{
+		return null;
+		}
 	}
 
 } // namespace ZooLib
