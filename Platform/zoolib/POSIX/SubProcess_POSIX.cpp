@@ -52,13 +52,6 @@ void SubProcess_POSIX::Initialize()
 	{
 	ZCounted::Initialize();
 
-	if (ZLOGF(w, eDebug))
-		{
-		w << "Program: " << fProgram << ", args: ";
-		for (size_t xx = 0; xx < fArgs.size(); ++xx)
-			w << (xx ? ", " : "") << fArgs[xx];
-		}
-
 	vector<const char*> theArgs;
 	theArgs.push_back(fProgram.c_str());
 	foreachi (iter, fArgs)
@@ -100,7 +93,7 @@ void SubProcess_POSIX::Initialize()
 		::close(childStdout[0]);
 		::close(childStdout[1]);
 
-		// Leave stderr alone, and close everything else.
+		// Leave stderr alone, and close everything else (well, up to 1023).
 		for (int xx = 3; xx < 1024; ++xx)
 			::close(xx);
 
