@@ -177,4 +177,26 @@ double sCoerceRat(const Any& iAny)
 	return 0.0;
 	}
 
+ZQ<__int64> sQCoerceNumberAsInt(const Any& iAny)
+	{
+	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
+		return *theQ;
+	if (ZQ<double> theQ = sQCoerceRat(iAny))
+		return *theQ;
+	if (const bool* pBool = iAny.PGet<bool>())
+		return *pBool;
+	return null;
+	}
+
+ZQ<double> sQCoerceNumberAsRat(const Any& iAny)
+	{
+	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
+		return *theQ;
+	if (ZQ<double> theQ = sQCoerceRat(iAny))
+		return *theQ;
+	if (const bool* pBool = iAny.PGet<bool>())
+		return *pBool;
+	return null;
+	}
+
 } // namespace ZooLib

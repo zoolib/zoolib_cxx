@@ -44,6 +44,9 @@ bool sQCoerceRat(const Any& iAny, double& oVal);
 double sDCoerceRat(double iDefault, const Any& iAny);
 double sCoerceRat(const Any& iAny);
 
+ZQ<__int64> sQCoerceNumberAsInt(const Any& iAny);
+ZQ<double> sQCoerceNumberAsRat(const Any& iAny);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Coerce_Any_h__
