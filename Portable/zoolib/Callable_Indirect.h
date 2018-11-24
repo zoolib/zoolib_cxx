@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Callable_Indirect_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Safe.h"
-
 #include "zoolib/Callable.h"
+#include "zoolib/Safe.h"
 
 namespace ZooLib {
 
@@ -41,9 +40,9 @@ class Callable_Indirect<R(void)>
 :	public Callable<R(void)>
 	{
 public:
-	typedef Callable<R(void)> Callable;
+	typedef Callable<R(void)> Callable_t;
 
-	Callable_Indirect(const ZRef<Callable>& iCallable)
+	Callable_Indirect(const ZRef<Callable_t>& iCallable)
 	:	fSafeCallable(iCallable)
 		{}
 
@@ -52,17 +51,17 @@ public:
 		{ return sQCall(fSafeCallable.Get()); }
 
 // Our protocol
-	ZRef<Callable> Get()
+	ZRef<Callable_t> Get()
 		{ return fSafeCallable.Get(); }
 
-	void Set(const ZRef<Callable>& iCallable)
+	void Set(const ZRef<Callable_t>& iCallable)
 		{ fSafeCallable.Set(iCallable); }
 
-	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew)
+	bool CAS(const ZRef<Callable_t>& iPrior, const ZRef<Callable_t>& iNew)
 		{ return fSafeCallable.CAS(iPrior, iNew); }
 
 private:
-	Safe<ZRef<Callable> > fSafeCallable;
+	Safe<ZRef<Callable_t> > fSafeCallable;
 	};
 
 // =================================================================================================
@@ -75,26 +74,26 @@ class Callable_Indirect<R(ZMACRO_Callable_P##X)> \
 :	public Callable<R(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
-	typedef Callable<R(ZMACRO_Callable_P##X)> Callable; \
+	typedef Callable<R(ZMACRO_Callable_P##X)> Callable_t; \
 \
-	Callable_Indirect(const ZRef<Callable>& iCallable) \
+	Callable_Indirect(const ZRef<Callable_t>& iCallable) \
 	:	fSafeCallable(iCallable) \
 		{} \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ return sQCall(fSafeCallable.Get(), ZMACRO_Callable_i##X); } \
 \
-	ZRef<Callable> Get() \
+	ZRef<Callable_t> Get() \
 		{ return fSafeCallable.Get(); } \
 \
-	void Set(const ZRef<Callable>& iCallable) \
+	void Set(const ZRef<Callable_t>& iCallable) \
 		{ fSafeCallable.Set(iCallable); } \
 \
-	bool CAS(const ZRef<Callable>& iPrior, const ZRef<Callable>& iNew) \
+	bool CAS(const ZRef<Callable_t>& iPrior, const ZRef<Callable_t>& iNew) \
 		{ return fSafeCallable.CAS(iPrior, iNew); } \
 \
 private: \
-	Safe<ZRef<Callable> > fSafeCallable; \
+	Safe<ZRef<Callable_t> > fSafeCallable; \
 	};
 
 ZMACRO_Callable_Callable(0)
