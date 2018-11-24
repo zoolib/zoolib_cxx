@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Net.h"
 
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStdInt.h" // for uint16, uint32, size_t
+#include "zoolib/ZStdInt.h" // For uint16, uint32, size_t
 
 #include <string>
 

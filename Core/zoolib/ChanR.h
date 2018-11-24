@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZQ.h"
 
-#include <stdexcept> // for range_error
+#include <stdexcept> // For range_error
 #include <string> // because range_error may require it
 
 namespace ZooLib {

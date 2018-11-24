@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 
-#include "zoolib/ZCompat_type_traits.h" // for std::remove_reference
+#include "zoolib/ZCompat_type_traits.h" // For std::remove_reference
 
 #if ZCONFIG_SPI_Enabled(type_traits) && ZCONFIG_CPP >= 2011
 

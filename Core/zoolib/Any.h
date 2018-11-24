@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Any_h__
 #include "zconfig.h"
 
-#include "zoolib/Compat_type_traits.h" // for is_pod
+#include "zoolib/Compat_type_traits.h" // For is_pod
 #include "zoolib/CountedWithoutFinalize.h"
 
 #include "zoolib/ZQ.h"

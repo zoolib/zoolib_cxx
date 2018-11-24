@@ -28,7 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
 #include <signal.h>
-#include <unistd.h> // for close
+#include <string.h> // For strerror
+#include <unistd.h> // For close
 
 namespace ZooLib {
 

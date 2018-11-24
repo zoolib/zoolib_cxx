@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
-#include <unistd.h> // for close
+#include <unistd.h> // For close
 
 namespace ZooLib {
 

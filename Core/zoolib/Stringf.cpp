@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG(Compiler, MSVC)
 	#define vsnprintf _vsnprintf
 #else
-	#include <stdio.h> // for vsnprintf
+	#include <stdio.h> // For vsnprintf
 #endif
 
 #ifndef va_copy

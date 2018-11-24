@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <sys/select.h> // For fd_set
 
-#include "zoolib/ZStdInt.h" // for uint64 and size_t
+#include "zoolib/ZStdInt.h" // For uint64 and size_t
 
 namespace ZooLib {
 namespace Util_POSIXFD {
