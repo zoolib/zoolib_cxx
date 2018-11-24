@@ -59,6 +59,11 @@ namespace Util_POSIXFD {
 // =================================================================================================
 #pragma mark - Util_POSIXFD
 
+void sSetNonBlocking(int iFD)
+	{
+	::fcntl(iFD, F_SETFL, ::fcntl(iFD, F_GETFL, 0) | O_NONBLOCK);
+	}
+
 void sSetup(fd_set& oSet, int iFD)
 	{
 	ZAssert(iFD > 0);
@@ -170,7 +175,7 @@ size_t sRead(int iFD, byte* oDest, size_t iCount)
 			int err = errno;
 			if (err == EINTR)
 				continue;
-				break;
+			break;
 			}
 		iCount -= countRead;
 		localDest += countRead;

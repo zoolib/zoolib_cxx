@@ -35,6 +35,8 @@ namespace Util_POSIXFD {
 // =================================================================================================
 #pragma mark - Util_POSIXFD
 
+void sSetNonBlocking(int iFD);
+
 void sSetup(fd_set& oSet, int iFD);
 
 bool sWaitReadable(int iFD, double iTimeout);
