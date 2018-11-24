@@ -76,9 +76,11 @@ void SubProcess_POSIX::Initialize()
 		// We're still in the parent. Remember the pid and the pipe.
 		fPid = pid1;
 
+		Util_POSIXFD::sSetNonBlocking(childStdout[0]);
 		fChannerRCon = sChanner_T<ChanRCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdout[0]));
 		::close(childStdout[1]);
 
+		Util_POSIXFD::sSetNonBlocking(childStdin[1]);
 		fChannerWCon = sChanner_T<ChanWCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdin[1]));
 		::close(childStdin[0]);
 		}
