@@ -87,7 +87,8 @@ static bool spPull_JSON_Other_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iCh
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
-static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_UTF& iChanW)
+static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	UTF32 iTerminator, const ChanW_UTF& iChanW)
 	{
 	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanR);
 	int quotesSeen = 1;
@@ -99,7 +100,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				{
 				sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
-				if (sTryRead_CP('"', iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanR, iChanU))
 					quotesSeen = 1;
 				else
 					return true;
@@ -107,7 +108,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				}
 			case 1:
 				{
-				if (sTryRead_CP('"', iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanR, iChanU))
 					{
 					// We have two quotes in a row.
 					quotesSeen = 2;
@@ -115,18 +116,18 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				else
 					{
 					const std::pair<int64,int64> result =
-						sCopyAll(ChanR_UTF_Escaped('"', iChanR, iChanU), iChanW);
+						sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanR, iChanU), iChanW);
 
-					if (sTryRead_CP('"', iChanR, iChanU))
+					if (sTryRead_CP(iTerminator, iChanR, iChanU))
 						quotesSeen = 0;
 					else if (result.first == 0)
-						throw ParseException("Expected \" to close a string");
+						throw ParseException(string("Expected ") + iTerminator + " to close a string");
 					}
 				break;
 				}
 			case 2:
 				{
-				if (sTryRead_CP('"', iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanR, iChanU))
 					{
 					// We have three quotes in a row.
 					quotesSeen = 3;
@@ -169,18 +170,20 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 		}
 	}
 
-static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Any& iChanW)
+static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	UTF32 iTerminator, const ChanW_Any& iChanW)
 	{
 #if 1
 	string theString;
-	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, ChanW_UTF_string<UTF8>(&theString));
+	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU,
+		iTerminator, ChanW_UTF_string<UTF8>(&theString));
 	sPush(theString, iChanW);
 	return result;
 #else
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 
-	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, *thePullPushPair.first);
+	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, iTerminator, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	return result;
 #endif
@@ -313,7 +316,11 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		{
 		// Could use YadStrimmerR_JSON and sPullPush_UTF, but this is a good chance to
 		// demo how easy PullPush makes it to do fiddly source parsing.
-		return spPull_JSON_String_Push(iChanR, iChanU, iChanW);
+		return spPull_JSON_String_Push(iChanR, iChanU, '"', iChanW);
+		}
+	else if (sTryRead_CP('\'', iChanR, iChanU))
+		{
+		return spPull_JSON_String_Push(iChanR, iChanU, '\'', iChanW);
 		}
 	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanR, iChanU))
 		{
