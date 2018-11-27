@@ -49,6 +49,7 @@ public:
 
 // From ZCounted
 	virtual void Initialize();
+	virtual void Finalize();
 
 // Our protocol
 	void Stop();
@@ -58,6 +59,8 @@ public:
 	ZRef<ChannerWCon_Bin> GetChannerWCon();
 
 protected:
+	void pWaitTillStopped();
+
 	const std::string fProgram;
 	const std::vector<std::string> fArgs;
 	pid_t fPid;

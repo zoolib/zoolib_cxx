@@ -115,25 +115,35 @@ void SubProcess_POSIX::Initialize()
 		}
 	}
 
-void SubProcess_POSIX::Stop()
+void SubProcess_POSIX::Finalize()
 	{
-	::kill(fPid, SIGKILL);
+	this->pWaitTillStopped();
+	ZCounted::Finalize();
 	}
 
+void SubProcess_POSIX::Stop()
+	{ ::kill(fPid, SIGKILL); }
+
 void SubProcess_POSIX::WaitTillStopped()
-	{
-	for (;;)
-		{
-		if (0 <= waitpid(fPid, 0, 0) || errno != EINTR)
-			break;
-		}
-	}
+	{ this->pWaitTillStopped(); }
 
 ZRef<ChannerRCon_Bin> SubProcess_POSIX::GetChannerRCon()
 	{ return fChannerRCon; }
 
 ZRef<ChannerWCon_Bin> SubProcess_POSIX::GetChannerWCon()
 	{ return fChannerWCon; }
+
+void SubProcess_POSIX::pWaitTillStopped()
+	{
+	for (;;)
+		{
+		if (0 <= waitpid(fPid, 0, 0) || errno != EINTR)
+			{
+			fPid = -1;
+			break;
+			}
+		}
+	}
 
 // ----------
 
