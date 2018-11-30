@@ -212,7 +212,7 @@ bool sEndsWith(const string& iPattern, const string& iTarget)
 // =================================================================================================
 
 string sFromPString(const unsigned char* inPString)
-	{ return string((const char*)(&(inPString[1])), (long)inPString[0]); }
+	{ return string((const char*)(&(inPString[1])), (size_t)inPString[0]); }
 
 void sToPString(const string& inString, unsigned char* outPString, size_t inMaxLength)
 	{
