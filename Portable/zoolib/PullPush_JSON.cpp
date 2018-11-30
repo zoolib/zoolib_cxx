@@ -27,7 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
+#include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_Escaped.h"
+#include "zoolib/Data_Any.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
@@ -616,6 +618,13 @@ static bool spPull_Push_JSON(const Any& iAny,
 	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
+		return true;
+		}
+
+	if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+		{
+		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_Any>(*theData),
+			iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		return true;
 		}
 

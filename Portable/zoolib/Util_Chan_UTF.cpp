@@ -212,7 +212,7 @@ bool sTryRead_CaselessString(const string8& iTarget,
 
 bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative)
 	{
-	if (sTryRead_CP( '-', iChanR, iChanU))
+	if (sTryRead_CP('-', iChanR, iChanU))
 		{
 		oIsNegative = true;
 		return true;

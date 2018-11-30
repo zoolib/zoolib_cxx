@@ -154,7 +154,7 @@ bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		for (;;)
 			{
 			string tempString;
-			sRead_EscapedString( '\'', iChanR, iChanU, tempString);
+			sRead_EscapedString('\'', iChanR, iChanU, tempString);
 
 			if (not sTryRead_CP('\'', iChanR, iChanU))
 				throw ParseException("Expected \"'\" to close a string");

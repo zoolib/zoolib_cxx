@@ -98,6 +98,12 @@ static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 		return true;
 		}
 
+	if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+		{
+		oAny = *theData;
+		return true;
+		}
+
 	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
 		{
 		oAny = sReadAll_T<Data_Any>(*theChanner);

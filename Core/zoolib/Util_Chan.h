@@ -94,6 +94,17 @@ std::pair<uint64,uint64> sCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iCha
 		}
 	}
 
+template <class EE>
+bool sQCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
+	{
+	std::pair<uint64,uint64> result = sCopyAll(iChanR, iChanW);
+	return result.first == result.second;
+	}
+
+template <class EE>
+void sECopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
+	{ sQCopyAll(iChanR, iChanW) ||sThrow_ExhaustedW(); }
+
 // Not sure about the XX_Until name -- it made sense in ZUtil_Strim, maybe not so much elsewhere.
 template <class EE>
 bool sCopy_Until(const ChanR<EE>& iChanR, const EE& iTerminator, const ChanW<EE>& iChanW)
