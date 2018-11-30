@@ -73,7 +73,7 @@ ZRef<Expr_Rel> Expr_Rel_Restrict::Self()
 ZRef<Expr_Rel> Expr_Rel_Restrict::Clone(const ZRef<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Restrict(iOp0, fExpr_Bool); }
 
-void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict( Visitor_Expr_Rel_Restrict& iVisitor)
+void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
 const ZRef<Expr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
