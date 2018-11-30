@@ -43,11 +43,6 @@ typedef ChannerRW<byte> ChannerRW_Bin;
 
 typedef Callable<ZRef<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
 
-// ---
-
-ZRef<Factory_ChannerRW_Bin> sFactory_ChannerRW_Bin(
-	const ZRef<Factory_ChannerRWClose_Bin>& iFactory);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Connection_h__
