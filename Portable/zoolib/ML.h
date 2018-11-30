@@ -118,7 +118,7 @@ typedef Channer_T<ChanRU_UTF> ChannerRU_UTF;
 ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner);
 
 // =================================================================================================
-#pragma mark - ZML parsing support
+#pragma mark - ML parsing support
 
 void sSkipText(ChanRU_UTF& r);
 
