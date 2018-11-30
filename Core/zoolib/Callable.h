@@ -43,7 +43,7 @@ class Callable<R_p(void)>
 	{
 public:
 	typedef R_p R;
-	typedef R(Signature)(void);
+	typedef R (Signature)(void);
 
 	virtual ZQ<R> QCall() = 0;
 
@@ -83,7 +83,7 @@ class Callable<R_p(ZMACRO_Callable_P##X)> \
 public: \
 	typedef R_p R; \
 	ZMACRO_Callable_typedef_##X; \
-	typedef R(Signature)(ZMACRO_Callable_P##X); \
+	typedef R (Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_P##X) = 0; \
 \

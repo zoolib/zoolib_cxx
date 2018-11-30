@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2018 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,37 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Callable_Starter_h__
-#define __ZooLib_Callable_Starter_h__ 1
+#ifndef __ZooLib_Callable_StarterAsync_h__
+#define __ZooLib_Callable_StarterAsync_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/CallByStarter.h"
+#include "zoolib/Starter.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - Callable_Starter
+#pragma mark - Callable_StarterAsync
 
-template <class Signature> class Callable_Starter;
+template <class Signature> class Callable_StarterAsync;
 
 // =================================================================================================
-#pragma mark - Callable_Starter (specialization for 0 params)
+#pragma mark - Callable_StarterAsync (specialization for 0 params)
 
-template <class R>
-class Callable_Starter<R(void)>
-:	public Callable<R(void)>
+template <>
+class Callable_StarterAsync<void()>
+:	public Callable<void()>
 	{
 public:
-	typedef R (Signature)();
+	typedef void (Signature)();
 
-	Callable_Starter(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable)
+	Callable_StarterAsync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable)
 	:	fStarter(iStarter)
 	,	fCallable(iCallable)
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
-		{ return sQCallByStarter(fStarter, fCallable)->QGet().Get(); }
+	virtual ZQ<void> QCall()
+		{
+		if (sQStart(fStarter, fCallable))
+			return notnull;
+		return null;
+
+		}
 
 private:
 	const ZRef<Starter> fStarter;
@@ -56,26 +61,27 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - Callable_Starter variants
+#pragma mark - Callable_StarterAsync variants
 
 #define ZMACRO_Callable_Callable(X) \
 \
-template <class R, ZMACRO_Callable_Class_P##X> \
-class Callable_Starter<R(ZMACRO_Callable_P##X)> \
-:	public Callable<R(ZMACRO_Callable_P##X)> \
+template <ZMACRO_Callable_Class_P##X> \
+class Callable_StarterAsync<void(ZMACRO_Callable_P##X)> \
+:	public Callable<void(ZMACRO_Callable_P##X)> \
 	{ \
 public: \
-	typedef R (Signature)(ZMACRO_Callable_P##X); \
+	typedef void (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable_Starter(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable) \
+	Callable_StarterAsync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable) \
 	:	fStarter(iStarter) \
 	,	fCallable(iCallable) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		return sQCallByStarter<R,ZMACRO_Callable_P##X>( fStarter, fCallable, \
-			ZMACRO_Callable_i##X)->QGet().Get(); \
+		if (sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X))) \
+			return notnull; \
+		return null; \
 		} \
 \
 private:\
@@ -103,14 +109,26 @@ ZMACRO_Callable_Callable(F)
 #undef ZMACRO_Callable_Callable
 
 // =================================================================================================
-#pragma mark - sCallable_Starter
+#pragma mark - sCallable_StarterAsync
+
+#if ZCONFIG_CPP >= 2011
+
+template <typename... A_p>
+ZRef<Callable<void(A_p...)>>
+sCallable_StarterAsync(
+	const ZRef<Starter>& iStarter, const ZRef<Callable<void(A_p...)>>& iCallable)
+	{ return new Callable_StarterAsync<void(A_p...)>(iStarter, iCallable); }
+
+#else
 
 template <class Signature_p>
 ZRef<Callable<Signature_p> >
-sCallable_Starter(
+sCallable_StarterAsync(
 	const ZRef<Starter>& iStarter, const ZRef<Callable<Signature_p> >& iCallable)
-	{ return new Callable_Starter<Signature_p>(iStarter, iCallable); }
+	{ return new Callable_StarterAsync<Signature_p>(iStarter, iCallable); }
+
+#endif // ZCONFIG_CPP >= 2011
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Callable_Starter_h__
+#endif // __ZooLib_Callable_StarterAsync_h__
