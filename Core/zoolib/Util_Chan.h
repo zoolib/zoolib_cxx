@@ -70,6 +70,17 @@ std::pair<uint64,uint64> sCopyFully(
 	}
 
 template <class EE>
+bool sQCopyFully(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW, uint64 iCount)
+	{
+	std::pair<uint64,uint64> result = sCopyFully(iChanR, iChanW, iCount);
+	return iCount == result.first && result.first == result.second;
+	}
+
+template <class EE>
+void sECopyFully(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW, uint64 iCount)
+	{ sQCopyFully(iChanR, iChanW, iCount) || sThrow_ExhaustedW(); }
+
+template <class EE>
 std::pair<uint64,uint64> sCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
 	{
 	EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
