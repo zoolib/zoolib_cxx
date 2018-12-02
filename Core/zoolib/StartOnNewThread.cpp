@@ -37,6 +37,14 @@ public:
 	:	fSpareThreads(0)
 		{}
 
+	~StartOnNewThreadHandler()
+		{
+		ZAcqMtx acq(fMtx);
+		fCnd.Broadcast();
+		while (fSpareThreads)
+			fCnd.WaitFor(fMtx, 1);
+		}
+
 	void Start(const ZRef<Callable<void()>>& iCallable)
 		{
 		ZAcqMtx acq(fMtx);
@@ -82,7 +90,11 @@ public:
 		}
 
 	static void spRunLoop(void* iRefcon)
-		{ static_cast<StartOnNewThreadHandler*>(iRefcon)->RunLoop(); }
+		{
+		ZThread::sStarted();
+		static_cast<StartOnNewThreadHandler*>(iRefcon)->RunLoop();
+		ZThread::sFinished();
+		}
 
 	ZMtx fMtx;
 	ZCnd fCnd;
