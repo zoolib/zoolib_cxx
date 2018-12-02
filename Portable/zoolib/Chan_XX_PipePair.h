@@ -119,9 +119,12 @@ public:
 				fDestCount = localEnd - localDest;
 				fCondition_Write.Broadcast();
 				fCondition_Read.Wait(fMutex);
+				fDestCount = 0;
+				bool readAny = localDest != fDest;
 				localDest = fDest;
 				fDest = nullptr;
-				fDestCount = 0;
+				if (readAny)
+					break;
 				}
 			}
 
