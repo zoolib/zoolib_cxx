@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_PullPush_XMLPList_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/PullPush.h"
 #include "zoolib/ML.h"
+#include "zoolib/PullPush.h"
 
 namespace ZooLib {
 
@@ -34,7 +33,10 @@ namespace ZooLib {
 bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU,
 	const ChanW_Any& iChanW);
 
-bool sPull_Push_sPull_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW);
+bool sPull_Push_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW);
+
+void sWriteXMLPListPreamble(const ML::StrimW& s);
+void sWriteXMLPListPostamble(const ML::StrimW& s);
 
 } // namespace ZooLib
 

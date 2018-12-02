@@ -31,8 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#include "zoolib/NameUniquifier.h" // For sName
 //#include "zoolib/ParseException.h"
 //#include "zoolib/Unicode.h"
+
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
+#include "zoolib/ChanRU_UTF.h"
+#include "zoolib/Channer_Bin.h"
+#include "zoolib/Coerce_Any.h"
 #include "zoolib/Data_Any.h"
 #include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Chan.h"
@@ -43,10 +47,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 using namespace PullPush;
-//using namespace PullPush_JSON;
-//using Util_Chan::sSkip_WSAndCPlusPlusComments;
-//using Util_Chan::sTryRead_CP;
-//using std::min;
 using std::string;
 
 static bool spThrowParseException(const string& iMessage)
@@ -120,18 +120,19 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 	return true;
 	}
 
-static void spPull_String_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
-	{
-	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
-	sPush(sGetClear(thePullPushPair.second), iChanW);
-	sECopyAll(iChanRU, *thePullPushPair.first);
-	sDisconnectWrite(*thePullPushPair.first);
-	}
+//static void spPull_String_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+//	{
+//	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
+//	sPush(sGetClear(thePullPushPair.second), iChanW);
+//	sECopyAll(iChanRU, *thePullPushPair.first);
+//	sDisconnectWrite(*thePullPushPair.first);
+//	}
 
 static void spPull_Base64_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
+
 	ChanR_Bin_ASCIIStrim theStreamR_ASCIIStrim(iChanRU);
 	ChanR_Bin_Base64Decode theStreamR_Base64Decode(theStreamR_ASCIIStrim);
 	sECopyAll(theStreamR_Base64Decode, *thePullPushPair.first);
@@ -233,7 +234,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 		else if (iChanRU.Name() == "string")
 			{
 			iChanRU.Advance();
-			spPull_String_Push(iChanRU, iChanW);
+			sPull_UTF_Push(iChanRU, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "string");
 			return true;
 			}
@@ -257,7 +258,167 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	return false;
 	}
 
-//bool sPull_Push_sPull_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW);
+// =================================================================================================
+#pragma mark -
 
+
+static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const ML::StrimW& iChanW)
+	{
+	const ML::StrimW& s = iChanW;
+
+	if (false)
+		{}
+
+	else if (const string* theString = sPGet<string>(iAny))
+		{
+		s.Begin("string");
+			sEWrite(s, *theString);
+		s.End("string");
+		}
+
+	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
+		{
+		s.Begin("string");
+			sECopyAll(*theChanner, s);
+		s.End("string");
+		}
+
+	else if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+		{
+		s.Begin("data");
+			sEWriteMem(ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)),
+				theData->GetPtr(), theData->GetSize());
+		s.End("data");
+		}
+
+	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
+		{
+		s.Begin("data");
+			sECopyAll(*theChanner, ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)));
+		s.End("data");
+		}
+
+	else if (sPGet<PullPush::StartMap>(iAny))
+		{
+		s.Begin("dict");
+			for (;;)
+				{
+				ZQ<Any> theNameOrEndQ = sQRead(iChanR);
+				if (not theNameOrEndQ)
+					return false;
+
+				if (sPGet<PullPush::End>(*theNameOrEndQ))
+					break;
+
+				const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
+				if (not theNameStar)
+					return false;
+
+				s.Begin("key");
+					sEWrite(s, *theNameStar);
+				s.End("key");
+
+				if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+					{
+					return false;
+					}
+				else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
+					{
+					return false;
+					}
+				}
+		s.End("dict");
+		}
+
+	else if (sPGet<PullPush::StartSeq>(iAny))
+		{
+		s.Begin("array");
+			for (;;)
+				{
+				if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+					{
+					return false;
+					}
+				else if (sPGet<PullPush::End>(*theNotQ))
+					{
+					break;
+					}
+				else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
+					{
+					return false;
+					}
+				}
+		s.End("array");
+		}
+
+	else if (iAny.IsNull())
+		{
+		s.Empty("nil");
+		}
+	else if (const bool* asBool = iAny.PGet<bool>())
+		{
+		if (*asBool)
+			s.Empty("true");
+		else
+			s.Empty("false");
+		}
+	else if (ZQ<int64> asIntQ = sQCoerceInt(iAny))
+		{
+		s.Begin("integer");
+			sEWritef(s, "%lld", *asIntQ);
+		s.End("integer");
+		}
+	else if (ZQ<double> asDoubleQ = sQCoerceRat(iAny))
+		{
+		s.Begin("real");
+			Util_Chan::sWriteExact(s, *asDoubleQ);
+		s.End("real");
+		}
+	else if (const UTCDateTime* theValue = iAny.PGet<UTCDateTime>())
+		{
+		s.Begin("date");
+			s << Util_Time::sAsString_ISO8601(*theValue, true);
+		s.End("date");
+		}
+	else
+		{
+		s.Begin("nil");
+			s.Raw() << "<!--!! Unhandled: */" << iAny.Type().name() << " !!-->";
+		s.End("nil");
+		}
+
+	return true;
+	}
+
+bool sPull_Push_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW)
+	{
+	if (ZQ<Any> theQ = sQRead(iChanR))
+		{
+		spPull_Push_XMLPList(*theQ, iChanR, iChanW);
+		return true;
+		}
+	return false;
+	}
+
+void sWriteXMLPListPreamble(const ML::StrimW& s)
+	{
+	s.PI("xml");
+		s.Attr("version", "1.0");
+		s.Attr("encoding", "UTF-8");
+
+	s.Tag("!DOCTYPE");
+		s.Attr("plist");
+		s.Attr("PUBLIC");
+		s.Attr("\"-//Apple Computer//DTD PLIST 1.0//EN\"");
+		s.Attr("\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"");
+
+	s.Begin("plist");
+		s.Attr("version", "1.0");
+	}
+
+void sWriteXMLPListPostamble(const ML::StrimW& s)
+	{
+	s.End("plist");
+	}
 
 } // namespace ZooLib
