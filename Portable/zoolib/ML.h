@@ -43,12 +43,12 @@ using std::vector;
 
 enum EToken
 	{
+	eToken_Exhausted = -1,
+	eToken_Fresh = 0,
 	eToken_TagBegin,
 	eToken_TagEnd,
 	eToken_TagEmpty,
-	eToken_Text,
-	eToken_Exhausted,
-	eToken_Fresh
+	eToken_Text
 	};
 
 typedef pair<string, string> Attr_t;
@@ -80,7 +80,7 @@ public:
 	virtual size_t UnreadableLimit();
 
 // Our protocol
-	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
+//	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
 	EToken Current() const;
 	ChanRU_UTF& Advance();
 

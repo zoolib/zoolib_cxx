@@ -362,8 +362,8 @@ size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 size_t ChanRU_UTF::UnreadableLimit()
 	{ return size_t(-1); }
 
-ChanRU_UTF::operator operator_bool() const
-	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }
+//ChanRU_UTF::operator operator_bool() const
+//	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }
 
 EToken ChanRU_UTF::Current() const
 	{
@@ -607,7 +607,7 @@ ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
 	{ return sChanner_Channer_T<ChanRU_UTF>(iChanner); }
 
 // =================================================================================================
-#pragma mark - ZML parsing support
+#pragma mark - ML parsing support
 
 void sSkipText(ChanRU_UTF& r)
 	{
@@ -679,10 +679,10 @@ bool sTryRead_End(ChanRU_UTF& r, const string& iTagName)
 	}
 
 // =================================================================================================
-#pragma mark - ZML::StrimW
+#pragma mark - ML::StrimW
 
-/** \class ZML::StrimW
-ZML::StrimW extends the ChanW_UTF protocol with methods to open and close
+/** \class ML::StrimW
+ML::StrimW extends the ChanW_UTF protocol with methods to open and close
 tags, attach attributes to those tags incrementally and pretty-print the
 output. For example, assuming we're passed \c iStrimW:
 \code
@@ -743,25 +743,22 @@ the last tag opened. Note that tag names, attribute names and attribute
 values are stored, compared and emitted as-is -- no case conversion is performed,
 so closing an 'HTML' begin tag with an 'html' end tag will trip an assertion.
 
-ZML::StrimW::Tag exists to allow for the generation of tags that do not have their
+ML::StrimW::Tag exists to allow for the generation of tags that do not have their
 balance checked, in particular common HTML tags such as BR, P, HR, LI, IMG etc.
 
-To generate XML empty tags e.g. <sometag param="something"/> use ZML::StrimW::Empty.
+To generate XML empty tags e.g. <sometag param="something"/> use ML::StrimW::Empty.
 
-After a call to ZML::StrimW::Begin, ZML::StrimW::Empty or ZML::StrimW::Tag
+After a call to ML::StrimW::Begin, ML::StrimW::Empty or ML::StrimW::Tag
 the strim is in a mode whereby attributes may be added to the tag. A call to
-ZML::StrimW::End or any call to the normal write methods will cause
+ML::StrimW::End or any call to the normal write methods will cause
 the pending tag plus its attributes to be emitted to the sink strim
-followed by the actual write. ZML::StrimW::Attr trips an assertion if the strim
+followed by the actual write. ML::StrimW::Attr trips an assertion if the strim
 is not in the correct mode.
 
-Note that ZML::StrimW descends from NonCopyable, in order to enforce
-that it can't be assigned or copy constructed from another ZML::StrimW. Nevertheless
+Note that ML::StrimW descends from NonCopyable, in order to enforce
+that it can't be assigned or copy constructed from another ML::StrimW. Nevertheless
 we declare a copy constructor and then don't define it. Why? In the words of
-<a href="http://groups.google.com/group/comp.lang.c++/tree/browse_frm/thread/
-13b9515221185fc0/4ae1743b3e3abeac?rnum=1&_done=
-%2Fgroup%2Fcomp.lang.c%2B%2B%2Fbrowse_frm%2Fthread%2F13b9515221185fc0
-%2F4ae1743b3e3abeac%3Ftvc%3D1%26#doc_59d07f9519b39ad1">
+<a href="https://groups.google.com/d/embed/msg/comp.lang.c++/E7lRUiEYX8A/0ZqzGZV_0FkJ">
 Pete C on comp.lang.c++</a>:
 
 <tt>"When initialising a const reference to an rvalue (which we are in this
@@ -774,13 +771,13 @@ constructor that would be used in (b) must be available anyway.<br>
 ...<br>
 See section 8.5.3.5 of the Standard for gory details."</tt>
 
-We often want to be able to pass a temporary ZML::StrimW initialized with a
-regular strim to a function taking a const ZML::StrimW&. In gcc pre-4.0 this
+We often want to be able to pass a temporary ML::StrimW initialized with a
+regular strim to a function taking a const ML::StrimW&. In gcc pre-4.0 this
 worked just as we want, and gcc post-4.0 still does the same thing (a),
 but now enforces the requirement that a copy constructor be visible.
 
 The upshot is that if you get an error at link time, stating that no
-implementation of ZML::StrimW(const ZML::StrimW&) can be found, you've
+implementation of ML::StrimW(const ML::StrimW&) can be found, you've
 got yourself a compiler that's doing (b) and we'll need to rethink things.
 */
 
@@ -1358,7 +1355,7 @@ void StrimW::pEnd()
 	}
 
 // =================================================================================================
-#pragma mark - ZML::StrimW::Indenter
+#pragma mark - ML::StrimW::Indenter
 
 StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 :	fStrimW(iStrimW),
@@ -1368,5 +1365,5 @@ StrimW::Indenter::Indenter(StrimW& iStrimW, bool iIndent)
 StrimW::Indenter::~Indenter()
 	{ fStrimW.Indent(fPriorIndent); }
 
-} // namespace ZML
+} // namespace ML
 } // namespace ZooLib
