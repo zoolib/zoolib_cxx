@@ -181,7 +181,7 @@ template <class Data_p>
 Data_p sReadAll_T(const ChanR_Bin& iChanR)
 	{
 	Data_p theData;
-	sCopyAll(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData));
+	sECopyAll(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData));
 	return theData;
 	}
 
@@ -189,7 +189,7 @@ template <class Data_p>
 Data_p sRead_T(const ChanR_Bin& iChanR, size_t iSize)
 	{
 	Data_p theData;
-	sCopyFully(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData), iSize);
+	sECopyFully(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData), iSize);
 	return theData;
 	}
 
