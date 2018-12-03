@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2018 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,59 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Yad_Bencode_h__
-#define __ZooLib_Yad_Bencode_h__ 1
+#ifndef __ZooLib_Pull_Bencode_h__
+#define __ZooLib_Pull_Bencode_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Channer_Bin.h"
-#include "zoolib/Yad_Std.h"
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/PullPush.h"
 
 namespace ZooLib {
 
 typedef ChanRU<byte> ChanRU_Bin;
-typedef Channer<ChanRU_Bin> ChannerRU_Bin;
-
-namespace Yad_Bencode {
 
 // =================================================================================================
-#pragma mark - ChanR_RefYad
+#pragma mark - 
 
-class ChanR_RefYad
-:	public ChanR_RefYad_Std
-	{
-public:
-	ChanR_RefYad(ZRef<ChannerRU_Bin> iChanner);
-
-// From ChanR_RefYad_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR);
-
-private:
-	ZRef<ChannerRU_Bin> fChanner;
-	};
-
-// =================================================================================================
-#pragma mark - ChanR_NameRefYad
-
-class ChanR_NameRefYad
-:	public ChanR_NameRefYad_Std
-	{
-public:
-	ChanR_NameRefYad(ZRef<ChannerRU_Bin> iChanner);
-
-// From ChanR_RefYad_Std
-	virtual void Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR);
-
-private:
-	ZRef<ChannerRU_Bin> fChanner;
-	};
-
-// =================================================================================================
-#pragma mark - sYadR
-
-ZRef<YadR> sYadR(ZRef<ChannerRU_Bin> iChanner);
-
-} // namespace Bencode
+bool sPull_Bencode_Push(const ChanRU_Bin& iChanRU, const ChanW_Any& iChanW);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Yad_Bencode_h__
+#endif // __ZooLib_Pull_Bencode_h__
