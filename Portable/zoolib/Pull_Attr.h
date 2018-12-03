@@ -29,7 +29,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-inline sPull_Attr_Push(const ChanR_UTF& iChanR,
+inline bool sPull_Attr_Push(const ChanR_UTF& iChanR,
 	const ChanW_Any& iChanW)
 	{ return sPull_Basic_Push(iChanR, Pull_Basic_Options('=', ','), iChanW); }
 
