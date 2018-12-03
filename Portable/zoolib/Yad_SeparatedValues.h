@@ -28,16 +28,6 @@ namespace ZooLib {
 namespace Yad_SeparatedValues {
 
 // =================================================================================================
-#pragma mark - ParseException
-
-class ParseException : public ZooLib::YadParseException
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - sYadR
 
 ZRef<YadR> sYadR(UTF32 iSeparator_Value, UTF32 iSeparator_Line, ZRef<ChannerR_UTF> iChannerR_UTF);

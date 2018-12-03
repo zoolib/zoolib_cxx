@@ -37,22 +37,16 @@ using std::string;
 // MARK: -
 // MARK:	Static parsing functions
 
-static bool spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	return false;
-	}
-
 static void spSkipThenEndOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	{
 	sSkipText(r);
 
-	sTryRead_End(r, iTagName) || spThrowParseException("Expected end tag '" + iTagName + "'");
+	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
 	}
 
 static void spEmptyOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	{
-	sTryRead_Empty(r, iTagName) || spThrowParseException("*Really* expected empty tag '" + iTagName + "'");
+	sTryRead_Empty(r, iTagName) || sThrow_ParseException("*Really* expected empty tag '" + iTagName + "'");
 	}
 
 static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
@@ -83,7 +77,7 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 		{
 		int64 theInt64;
 		if (not Util_Chan::sTryRead_SignedDecimalInteger(r, r, theInt64))
-			spThrowParseException("Expected valid integer");
+			sThrow_ParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
 		}
@@ -93,7 +87,7 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 		double theDouble;
 		bool isDouble;
 		if (not Util_Chan::sTryRead_SignedGenericNumber(r, r, theInt64, theDouble, isDouble))
-			spThrowParseException("Expected valid real");
+			sThrow_ParseException("Expected valid real");
 
 		if (isDouble)
 			oVal = theDouble;
@@ -107,7 +101,7 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		spThrowParseException("Invalid begin tag '" + tagName + "'");
+		sThrow_ParseException("Invalid begin tag '" + tagName + "'");
 		}
 
 	spSkipThenEndOrThrow(r, tagName);
@@ -168,17 +162,6 @@ static ZRef<YadR> spMakeYadR_XMLPList(ZRef<ML::ChannerRU_UTF> iStrimmerU)
 
 	return null;
 	}
-
-// =================================================================================================
-// MARK: - ParseException
-
-ParseException::ParseException(const string& iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
-ParseException::ParseException(const char* iWhat)
-:	YadParseException_Std(iWhat)
-	{}
 
 // =================================================================================================
 // MARK: - ChannerR_Bin_XMLPList
@@ -264,7 +247,7 @@ void ChanR_RefYad_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 
 		if (not (oYadR = spMakeYadR_XMLPList(fStrimmerU)))
 			{
-			spThrowParseException("Expected a value");
+			sThrow_ParseException("Expected a value");
 			}
 		}
 	}
@@ -294,14 +277,14 @@ void ChanR_NameRefYad_XMLPList::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<Yad
 			return;
 
 		if (not sTryRead_Begin(theChan, "key"))
-			spThrowParseException("Expected <key>");
+			sThrow_ParseException("Expected <key>");
 
 		oName = sReadAllUTF8(theChan);
 
 		spSkipThenEndOrThrow(theChan, "key");
 
 		if (not (oYadR = spMakeYadR_XMLPList(fStrimmerU)))
-			spThrowParseException("Expected value after <key>...</key>");
+			sThrow_ParseException("Expected value after <key>...</key>");
 		}
 	}
 

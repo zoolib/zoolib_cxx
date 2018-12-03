@@ -60,25 +60,6 @@ using std::pair;
 using std::string;
 
 // =================================================================================================
-#pragma mark - Static parsing functions
-
-static void spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	}
-
-// =================================================================================================
-#pragma mark - ParseException
-
-ParseException::ParseException(const string& iWhat)
-:	YadParseException(iWhat)
-	{}
-
-ParseException::ParseException(const char* iWhat)
-:	YadParseException(iWhat)
-	{}
-
-// =================================================================================================
 #pragma mark - YadMapR
 
 class YadMapR
@@ -156,7 +137,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 		}
 
 	if (theR.Current() != ML::eToken_TagBegin)
-		spThrowParseException("Expected begin tag");
+		sThrow_ParseException("Expected begin tag");
 
 	ML::Attrs_t theAttrs = theR.Attrs();
 	const string theName = theR.Name();
@@ -169,7 +150,7 @@ void YadMapR::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR)
 	if (theR.Current() == ML::eToken_TagEnd)
 		{
 		if (theR.Name() != theName)
-			spThrowParseException("Expected end tag '" + theName + "'");
+			sThrow_ParseException("Expected end tag '" + theName + "'");
 
 		if (theAttrs.empty())
 			{

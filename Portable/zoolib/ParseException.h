@@ -42,6 +42,12 @@ public:
 		{}
 	};
 
+inline bool sThrow_ParseException(const std::string& iMessage)
+	{
+	throw ParseException(iMessage);
+	return false;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Yad_h__

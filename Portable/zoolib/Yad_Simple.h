@@ -28,11 +28,6 @@ namespace ZooLib {
 namespace ZYad_Simple {
 
 // =================================================================================================
-#pragma mark - ParseException
-
-typedef ZYad_Basic::ParseException ParseException;
-
-// =================================================================================================
 #pragma mark - ZYad_Simple
 
 inline

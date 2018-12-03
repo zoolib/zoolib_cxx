@@ -20,18 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/PullPush_XMLPList.h"
 
-//#include "zoolib/ChanR_Bin_HexStrim.h"
-//#include "zoolib/ChanR_XX_Boundary.h"
-//#include "zoolib/ChanR_XX_Terminated.h"
-//#include "zoolib/Chan_XX_Buffered.h"
-//#include "zoolib/Chan_UTF_string.h"
-//#include "zoolib/Chan_Bin_ASCIIStrim.h"
-//#include "zoolib/Chan_Bin_Base64.h"
-//#include "zoolib/Chan_UTF_Escaped.h"
-//#include "zoolib/NameUniquifier.h" // For sName
-//#include "zoolib/ParseException.h"
-//#include "zoolib/Unicode.h"
-
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/ChanRU_UTF.h"
@@ -49,16 +37,10 @@ namespace ZooLib {
 using namespace PullPush;
 using std::string;
 
-static bool spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	return false;
-	}
-
 static void spSkipThenEndOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	{
 	sSkipText(r);
-	sTryRead_End(r, iTagName) || spThrowParseException("Expected end tag '" + iTagName + "'");
+	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
 	}
 
 static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
@@ -89,7 +71,7 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 		{
 		int64 theInt64;
 		if (not Util_Chan::sTryRead_SignedDecimalInteger(r, r, theInt64))
-			spThrowParseException("Expected valid integer");
+			sThrow_ParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
 		}
@@ -99,7 +81,7 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 		double theDouble;
 		bool isDouble;
 		if (not Util_Chan::sTryRead_SignedGenericNumber(r, r, theInt64, theDouble, isDouble))
-			spThrowParseException("Expected valid real");
+			sThrow_ParseException("Expected valid real");
 
 		if (isDouble)
 			oVal = theDouble;
@@ -113,25 +95,18 @@ static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		spThrowParseException("Invalid begin tag '" + tagName + "'");
+		sThrow_ParseException("Invalid begin tag '" + tagName + "'");
 		}
 
 	spSkipThenEndOrThrow(r, tagName);
 	return true;
 	}
 
-//static void spPull_String_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
-//	{
-//	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
-//	sPush(sGetClear(thePullPushPair.second), iChanW);
-//	sECopyAll(iChanRU, *thePullPushPair.first);
-//	sDisconnectWrite(*thePullPushPair.first);
-//	}
-
 static void spPull_Base64_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
+	sFlush(iChanW);
 
 	ChanR_Bin_ASCIIStrim theStreamR_ASCIIStrim(iChanRU);
 	ChanR_Bin_Base64Decode theStreamR_Base64Decode(theStreamR_ASCIIStrim);
@@ -176,7 +151,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			}
 		else
 			{
-			spThrowParseException("Unknown empty tag " + theName);
+			sThrow_ParseException("Unknown empty tag " + theName);
 			}
 		}
 	else if (iChanRU.Current() == ML::eToken_TagBegin)
@@ -202,7 +177,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 					}
 
 				if (not sTryRead_Begin(iChanRU, "key"))
-					spThrowParseException("Expected <key>");
+					sThrow_ParseException("Expected <key>");
 
 				Name theName = sReadAllUTF8(iChanRU);
 
@@ -211,7 +186,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 				spSkipThenEndOrThrow(iChanRU, "key");
 
 				if (not sPull_XMLPList_Push(iChanRU, iChanW))
-					spThrowParseException("Expected value after <key>...</key>");
+					sThrow_ParseException("Expected value after <key>...</key>");
 				}
 			}
 		else if (iChanRU.Name() == "array")
@@ -228,7 +203,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 					}
 
 				if (not sPull_XMLPList_Push(iChanRU, iChanW))
-					spThrowParseException("Expected a value");
+					sThrow_ParseException("Expected a value");
 				}
 			}
 		else if (iChanRU.Name() == "string")
@@ -260,7 +235,6 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 
 // =================================================================================================
 #pragma mark -
-
 
 static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const ML::StrimW& iChanW)
 	{

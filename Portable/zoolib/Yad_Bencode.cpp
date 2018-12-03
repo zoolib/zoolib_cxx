@@ -36,9 +36,6 @@ using std::string;
 // =================================================================================================
 #pragma mark - Helpers
 
-static void spThrowParseException(const string& iMessage)
-	{ throw YadParseException(iMessage); }
-
 static bool spTryRead_Byte(const ChanRU_Bin& iChanRU, uint8 iByte)
 	{ return sTryRead<uint8>(iByte, iChanRU, iChanRU); }
 
@@ -90,7 +87,7 @@ static int64 spRead_PositiveInteger(const ChanRU_Bin& s)
 	{
 	int64 result;
 	if (not spTryRead_DecimalInteger(s, result))
-		spThrowParseException("Expected unsigned length");
+		sThrow_ParseException("Expected unsigned length");
 	return result;
 	}
 
@@ -98,7 +95,7 @@ static string spReadString(const ChanRU_Bin& s)
 	{
 	const int64 stringLength = spRead_PositiveInteger(s);
 	if (not spTryRead_Byte(s, ':'))
-		spThrowParseException("Expected ':' terminator for string length");
+		sThrow_ParseException("Expected ':' terminator for string length");
 
 	return sReadString(s, stringLength);
 	}
@@ -107,7 +104,7 @@ static ZRef<YadR> spReadStringish(const ChanRU_Bin& s)
 	{
 	const int64 theLength = spRead_PositiveInteger(s);
 	if (not spTryRead_Byte(s, ':'))
-		spThrowParseException("Expected ':' terminator for string/binary length");
+		sThrow_ParseException("Expected ':' terminator for string/binary length");
 
 	if (not theLength)
 		return sYadAtomR_Any(Any());
@@ -150,9 +147,9 @@ static ZRef<YadR> spMakeYadR_Bencode(ZRef<ChannerRU_Bin> iChanner)
 			{
 			int64 theInteger;
 			if (not spTryRead_SignedInteger(theChan, theInteger))
-				spThrowParseException("Expected signed decimal integer");
+				sThrow_ParseException("Expected signed decimal integer");
 			if (not spTryRead_Byte(theChan, 'e'))
-				spThrowParseException("Expected 'e' terminator for integer");
+				sThrow_ParseException("Expected 'e' terminator for integer");
 			return sYadAtomR_Any(Any(theInteger));
 			}
 		default:
@@ -168,17 +165,6 @@ static ZRef<YadR> spMakeYadR_Bencode(ZRef<ChannerRU_Bin> iChanner)
 
 	return null;
 	}
-
-// =================================================================================================
-#pragma mark - YadParseException
-
-YadParseException::YadParseException(const string& iWhat)
-:	ZooLib::YadParseException(iWhat)
-	{}
-
-YadParseException::YadParseException(const char* iWhat)
-:	ZooLib::YadParseException(iWhat)
-	{}
 
 // =================================================================================================
 #pragma mark - ChanR_RefYad

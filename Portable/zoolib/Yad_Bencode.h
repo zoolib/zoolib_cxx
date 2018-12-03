@@ -33,16 +33,6 @@ typedef Channer<ChanRU_Bin> ChannerRU_Bin;
 namespace Yad_Bencode {
 
 // =================================================================================================
-#pragma mark - Yad_Bencode::YadParseException
-
-class YadParseException : public ZooLib::YadParseException
-	{
-public:
-	YadParseException(const std::string& iWhat);
-	YadParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - ChanR_RefYad
 
 class ChanR_RefYad

@@ -36,25 +36,6 @@ for walking HTML.
 */
 
 // =================================================================================================
-#pragma mark - Static helpers
-
-static void spThrowParseException(const string& iMessage)
-	{
-	throw YadParseException_ML(iMessage);
-	}
-
-// =================================================================================================
-#pragma mark - ZYadParseException_ML
-
-YadParseException_ML::YadParseException_ML(const string& iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
-YadParseException_ML::YadParseException_ML(const char* iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
-// =================================================================================================
 #pragma mark - ChanR_NameRefYad
 
 ChanR_NameRefYad::ChanR_NameRefYad(ZRef<ML::ChannerRU_UTF> iChannerRU_UTF)
@@ -134,7 +115,7 @@ void ChanR_NameRefYad::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& oYadR
 		}
 
 	if (not oYadR && not fTagName.empty())
-		spThrowParseException("Expected value or end tag '" + fTagName + "'");
+		sThrow_ParseException("Expected value or end tag '" + fTagName + "'");
 	}
 
 // =================================================================================================

@@ -34,11 +34,6 @@ namespace Util_Chan {
 // =================================================================================================
 #pragma mark -
 
-//using ZooLib::ParseException;
-
-// =================================================================================================
-#pragma mark -
-
 string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
 
 // -----------------

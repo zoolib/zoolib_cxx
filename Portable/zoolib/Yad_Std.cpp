@@ -25,17 +25,6 @@ namespace ZooLib {
 using std::string;
 
 // =================================================================================================
-#pragma mark - YadParseException_Std
-
-YadParseException_Std::YadParseException_Std(const string& iWhat)
-:	YadParseException(iWhat)
-	{}
-
-YadParseException_Std::YadParseException_Std(const char* iWhat)
-:	YadParseException(iWhat)
-	{}
-
-// =================================================================================================
 #pragma mark - ChanR_RefYad_Std
 
 ChanR_RefYad_Std::ChanR_RefYad_Std()

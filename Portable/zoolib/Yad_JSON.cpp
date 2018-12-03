@@ -128,7 +128,6 @@ static ZQ<Any> spQFromChan_Val(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		return true;
 		}
 
-//##	throw ParseException("Expected number, string or keyword");
 	return null;
 	}
 
@@ -177,18 +176,6 @@ static ZRef<YadR> spMakeYadR_JSON(const ZRef<CountedVal<ReadOptions> >& iRO,
 	return null;
 	}
 
-
-// =================================================================================================
-#pragma mark - ParseException
-
-ParseException::ParseException(const string& iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
-ParseException::ParseException(const char* iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
 // =================================================================================================
 #pragma mark - YadStreamerR_Hex
 
@@ -205,7 +192,7 @@ void YadStreamerR_Hex::Finalize()
 	const bool hitClose = sTryRead_CP('>', *fChannerR, *fChannerU);
 	YadStreamerR::Finalize();
 	if (not hitClose)
-		throw ParseException("Expected '>' to close a binary data");
+		sThrow_ParseException("Expected '>' to close a binary data");
 	}
 
 // =================================================================================================
@@ -227,7 +214,7 @@ void YadStreamerR_Base64::Finalize()
 	const bool hitBoundary = fChanR_Bin_Terminated.HitTerminator();
 	YadStreamerR::Finalize();
 	if (not hitBoundary)
-		throw ParseException("Expected '>' to close a base64 data");
+		sThrow_ParseException("Expected '>' to close a base64 data");
 	}
 
 size_t YadStreamerR_Base64::Read(byte* oDest, size_t iCount)
@@ -261,7 +248,7 @@ void YadStrimmerR_JSON::Finalize()
 	const bool quotesSeen = fQuotesSeen;
 	YadStrimmerR::Finalize();
 	if (quotesSeen)
-		throw ParseException("Improperly closed string");
+		sThrow_ParseException("Improperly closed string");
 	}
 
 size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
@@ -303,7 +290,7 @@ size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
 					if (sTryRead_CP('"', theStrimR, theStrimU))
 						fQuotesSeen = 0;
 					else if (countRead == 0)
-						throw ParseException("Expected \" to close a string");
+						sThrow_ParseException("Expected \" to close a string");
 					}
 				break;
 				}
@@ -341,7 +328,7 @@ size_t YadStrimmerR_JSON::Read(UTF32* oDest, size_t iCount)
 					}
 				else if (not fChanR_Boundary.HitBoundary())
 					{
-					throw ParseException("Expected \"\"\" to close a string");
+					sThrow_ParseException("Expected \"\"\" to close a string");
 					}
 				else
 					{
@@ -390,7 +377,7 @@ void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 				|| not sTryRead_CP(';', theChanR, theChanU))
 				{
 				if (not fRO->Get().fLooseSeparators.DGet(false))
-					throw ParseException("Require ',' to separate array elements");
+					sThrow_ParseException("Require ',' to separate array elements");
 				}
 			}
 
@@ -404,7 +391,7 @@ void ChanR_RefYad_JSON::Imp_ReadInc(bool iIsFirst, ZRef<YadR>& oYadR)
 		}
 
 	if (not (oYadR = spMakeYadR_JSON(fRO, fChannerR, fChannerU)))
-		throw ParseException("Expected a value");
+		sThrow_ParseException("Expected a value");
 	}
 
 // =================================================================================================
@@ -441,7 +428,7 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 				|| not sTryRead_CP(';', theChanR, theChanU))
 				{
 				if (not fRO->Get().fLooseSeparators.DGet(false))
-					throw ParseException("Require ',' to separate object elements");
+					sThrow_ParseException("Require ',' to separate object elements");
 				}
 			}
 
@@ -457,7 +444,7 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 	string theName;
 	if (not sTryRead_PropertyName(theChanR, theChanU,
 		theName, fRO->Get().fAllowUnquotedPropertyNames.DGet(false)))
-		{ throw ParseException("Expected a member name"); }
+		{ sThrow_ParseException("Expected a member name"); }
 	oName = theName;
 
 	sSkip_WSAndCPlusPlusComments(theChanR, theChanU);
@@ -465,11 +452,11 @@ void ChanR_NameRefYad_JSON::Imp_ReadInc(bool iIsFirst, Name& oName, ZRef<YadR>& 
 	if (not sTryRead_CP(':', theChanR, theChanU))
 		{
 		if (not fRO->Get().fAllowEquals.DGet(false) || not sTryRead_CP('=', theChanR, theChanU))
-			throw ParseException("Expected ':' after a member name");
+			sThrow_ParseException("Expected ':' after a member name");
 		}
 
 	if (not (oYadR = spMakeYadR_JSON(fRO, fChannerR, fChannerU)))
-		throw ParseException("Expected value after ':'");
+		sThrow_ParseException("Expected value after ':'");
 	}
 
 // =================================================================================================

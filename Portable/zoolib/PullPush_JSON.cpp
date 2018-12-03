@@ -123,7 +123,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 					if (sTryRead_CP(iTerminator, iChanR, iChanU))
 						quotesSeen = 0;
 					else if (result.first == 0)
-						throw ParseException(string("Expected ") + iTerminator + " to close a string");
+						sThrow_ParseException(string("Expected ") + iTerminator + " to close a string");
 					}
 				break;
 				}
@@ -159,7 +159,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 					{}
 				else if (not theChanR_Boundary.HitBoundary())
 					{
-					throw ParseException("Expected \"\"\" to close a string");
+					sThrow_ParseException("Expected \"\"\" to close a string");
 					}
 				else
 					{
@@ -206,7 +206,7 @@ static bool spPull_Base64_Push_Bin(const ChanR_UTF& iChanR, const ChanW_Bin& iCh
 		return false;
 
 	if (not theChanR_UTF_Terminated.HitTerminator())
-		throw ParseException("Expected '>' to close a base64 data");
+		sThrow_ParseException("Expected '>' to close a base64 data");
 
 	return true;
 	}
@@ -220,7 +220,7 @@ static bool spPull_Hex_Push_Bin(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 	if (counts.first != counts.second)
 		return false;
 	if (not sTryRead_CP('>', iChanR, iChanU))
-		throw ParseException("Expected '>' to close a hex data");
+		sThrow_ParseException("Expected '>' to close a hex data");
 	return true;
 	}
 
@@ -249,7 +249,7 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 				}
 
 			if (not sPull_JSON_Push(iChanR, iChanU, iRO, iChanW))
-				throw ParseException("Expected value");
+				sThrow_ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
@@ -260,9 +260,9 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			else if (iRO.fLooseSeparators.DGet(false))
 				{}
 			else if (iRO.fAllowSemiColons.DGet(false))
-				throw ParseException("Require ',' or ';' to separate array elements");
+				sThrow_ParseException("Require ',' or ';' to separate array elements");
 			else
-				throw ParseException("Require ',' to separate array elements");
+				sThrow_ParseException("Require ',' to separate array elements");
 			}
 		}
 	else if (sTryRead_CP('{', iChanR, iChanU))
@@ -280,7 +280,7 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			string theName;
 			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanR, iChanU,
 				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
-				{ throw ParseException("Expected a member name"); }
+				{ sThrow_ParseException("Expected a member name"); }
 
 			sPush(sName(theName), iChanW);
 
@@ -289,16 +289,16 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			if (not sTryRead_CP(':', iChanR, iChanU))
 				{
 				if (not iRO.fAllowEquals.DGet(false))
-					throw ParseException("Expected ':' after a member name");
+					sThrow_ParseException("Expected ':' after a member name");
 
 				if (not sTryRead_CP('=', iChanR, iChanU))
-					throw ParseException("Expected ':' or '=' after a member name");
+					sThrow_ParseException("Expected ':' or '=' after a member name");
 				}
 
 			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
 			if (not sPull_JSON_Push(iChanR, iChanU, iRO, iChanW))
-				throw ParseException("Expected value");
+				sThrow_ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 
@@ -309,9 +309,9 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			else if (iRO.fLooseSeparators.DGet(false))
 				{}
 			else if (iRO.fAllowSemiColons.DGet(false))
-				throw ParseException("Require ',' or ';' to separate object elements");
+				sThrow_ParseException("Require ',' or ';' to separate object elements");
 			else
-				throw ParseException("Require ',' to separate object elements");
+				sThrow_ParseException("Require ',' to separate object elements");
 			}
 		}
 	else if (sTryRead_CP('"', iChanR, iChanU))

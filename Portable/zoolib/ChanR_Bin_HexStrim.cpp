@@ -77,7 +77,7 @@ size_t ChanR_Bin_HexStrim::Read(byte* oDest, size_t iCount)
 		if (not secondDigitQ)
 			{
 			if (not fAllowUnderscore || not sTryRead_CP('_', fChanR, fChanU))
-				throw ParseException("Could not read second nibble of byte");
+				sThrow_ParseException("Could not read second nibble of byte");
 			secondDigitQ = 0;
 			}
 

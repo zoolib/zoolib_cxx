@@ -28,16 +28,6 @@ namespace ZooLib {
 namespace Yad_Basic {
 
 // =================================================================================================
-#pragma mark - ParseException
-
-class ParseException : public YadParseException_Std
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - ZYad_Basic
 
 struct Options

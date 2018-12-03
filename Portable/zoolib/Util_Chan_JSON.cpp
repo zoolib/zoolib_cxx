@@ -138,7 +138,7 @@ bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			sRead_EscapedString('"', iChanR, iChanU, tempString);
 
 			if (not sTryRead_CP('"', iChanR, iChanU))
-				throw ParseException("Expected '\"' to close a string");
+				sThrow_ParseException("Expected '\"' to close a string");
 
 			oString += tempString;
 
@@ -157,7 +157,7 @@ bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 			sRead_EscapedString('\'', iChanR, iChanU, tempString);
 
 			if (not sTryRead_CP('\'', iChanR, iChanU))
-				throw ParseException("Expected \"'\" to close a string");
+				sThrow_ParseException("Expected \"'\" to close a string");
 
 			oString += tempString;
 

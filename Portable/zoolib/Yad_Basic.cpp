@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_UTF_string.h"
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Yad_Any.h"
@@ -34,9 +35,6 @@ using std::string;
 
 namespace { // anonymous
 
-void spThrowParseException(const string& iMessage)
-	{ throw ParseException(iMessage); }
-
 bool spRead_Until(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
@@ -44,17 +42,6 @@ bool spRead_Until(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTermi
 	}
 
 } // anonymous namespace
-
-// =================================================================================================
-#pragma mark - ParseException
-
-ParseException::ParseException(const string& iWhat)
-:	YadParseException_Std(iWhat)
-	{}
-
-ParseException::ParseException(const char* iWhat)
-:	YadParseException_Std(iWhat)
-	{}
 
 // =================================================================================================
 #pragma mark - MapR
@@ -98,7 +85,11 @@ public:
 
 		string theName;
 		if (not spRead_Until(theChanR, theChanU, fOptions.fSeparator_NameFromValue, theName))
-			spThrowParseException("Expected a member name, followed by #Need UTF32->string8 converter or string8+UTF32 appender#");// + fOptions.fSeparator_NameFromValue);
+			{
+			sThrow_ParseException(string8("Expected a member name, followed by '")
+				+ fOptions.fSeparator_NameFromValue + "'");
+			}
+
 		oName = theName;
 
 		string theValue;

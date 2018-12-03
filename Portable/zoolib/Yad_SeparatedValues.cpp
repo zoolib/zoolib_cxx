@@ -68,17 +68,6 @@ static bool spReadValues(vector<string8>& oValues,
 	}
 
 // =================================================================================================
-#pragma mark - ParseException
-
-ParseException::ParseException(const string& iWhat)
-:	ZooLib::YadParseException(iWhat)
-	{}
-
-ParseException::ParseException(const char* iWhat)
-:	ZooLib::YadParseException(iWhat)
-	{}
-
-// =================================================================================================
 #pragma mark - YadSeqR
 
 class ChanR_RefYad : public ChanR_RefYad_Std

@@ -39,16 +39,6 @@ using std::string;
 using namespace Util_Chan_JSON;
 
 // =================================================================================================
-#pragma mark - ParseException
-
-class ParseException : public YadParseException_Std
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - YadStreamerR_Hex
 
 class YadStreamerR_Hex

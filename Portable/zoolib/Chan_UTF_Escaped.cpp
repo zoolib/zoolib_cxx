@@ -50,7 +50,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 		{
 		UTF32 theCP;
 		if (not sQRead(fChanR, theCP))
-			throw ParseException("Unexpected end of strim whilst parsing a string");
+			sThrow_ParseException("Unexpected end of strim whilst parsing a string");
 
 		if (theCP == fDelimiter)
 			{
@@ -61,13 +61,13 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 		if (Unicode::sIsEOL(theCP))
 			{
 			sUnread(fChanU, theCP);
-			throw ParseException("Illegal end of line whilst parsing a string");
+			sThrow_ParseException("Illegal end of line whilst parsing a string");
 			}
 
 		if (theCP == '\\')
 			{
 			if (not sQRead(fChanR, theCP))
-				throw ParseException("Unexpected end of strim whilst parsing a string");
+				sThrow_ParseException("Unexpected end of strim whilst parsing a string");
 
 			switch (theCP)
 				{
@@ -102,7 +102,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 					{
 					if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
 						{
-						throw ParseException("Illegal non-hex digit following \"\\x\"");
+						sThrow_ParseException("Illegal non-hex digit following \"\\x\"");
 						}
 					else
 						{
@@ -124,7 +124,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 						{
 						if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
 							{
-							throw ParseException(string8("Illegal non-hex digit in \"\\")
+							sThrow_ParseException(string8("Illegal non-hex digit in \"\\")
 								+ char(theCP) + "\" escape sequence");
 							}
 						else
@@ -139,7 +139,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 					{
 					// Gotta love escape sequences. This message
 					// has "\" (quote, backslash, quote) at the end.
-					throw ParseException("Illegal character following \"\\\"");
+					sThrow_ParseException("Illegal character following \"\\\"");
 					}
 				}
 			}

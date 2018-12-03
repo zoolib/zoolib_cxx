@@ -61,15 +61,4 @@ YadOptions::YadOptions(bool iDoIndentation)
 		fIndentStringQ = "  ";
 	}
 
-// =================================================================================================
-#pragma mark - YadParseException
-
-YadParseException::YadParseException(const string& iWhat)
-:	ParseException(iWhat)
-	{}
-
-YadParseException::YadParseException(const char* iWhat)
-:	ParseException(iWhat)
-	{}
-
 } // namespace ZooLib

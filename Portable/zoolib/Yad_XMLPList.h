@@ -31,16 +31,6 @@ namespace ZooLib {
 namespace Yad_XMLPList {
 
 // =================================================================================================
-// MARK: - ParseException
-
-class ParseException : public YadParseException_Std
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 // MARK: - ChannerR_Bin_XMLPList
 
 class ChannerR_Bin_XMLPList

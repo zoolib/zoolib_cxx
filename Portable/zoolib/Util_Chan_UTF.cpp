@@ -303,7 +303,7 @@ static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_
 		}
 
 	if (hadSign)
-		throw ParseException("Expected a valid integer after sign prefix");
+		sThrow_ParseException("Expected a valid integer after sign prefix");
 
 	return false;
 	}
@@ -357,7 +357,7 @@ static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iC
 		oIsDouble = true;
 		int64 exponent;
 		if (not spTryRead_SignedDecimalInteger(iChanR, iChanU, exponent))
-			throw ParseException("Expected a valid exponent after 'e'");
+			sThrow_ParseException("Expected a valid exponent after 'e'");
 		oDouble = oDouble * pow(10.0, int(exponent));
 		}
 
@@ -387,7 +387,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 					oInt64 = -oInt64;
 				return true;
 				}
-			throw ParseException("Expected a valid hex integer after '0x' prefix");
+			sThrow_ParseException("Expected a valid hex integer after '0x' prefix");
 			}
 
 		sUnread(iChanU, theCP);
@@ -415,9 +415,9 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 		{
 		// We've already absorbed a plus or minus sign, hence we have a parse exception.
 		if (isNegative)
-			throw ParseException("Expected a valid number after '-' prefix");
+			sThrow_ParseException("Expected a valid number after '-' prefix");
 		else
-			throw ParseException("Expected a valid number after '+' prefix");
+			sThrow_ParseException("Expected a valid number after '+' prefix");
 		}
 
 	return false;
@@ -496,7 +496,7 @@ bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 					{
 					sEWrite(oDest, "/*");
 					if (not sCopy_Until(iChanR, "*/", oDest))
-						throw ParseException("Unexpected end of data while parsing a /**/ comment");
+						sThrow_ParseException("Unexpected end of data while parsing a /**/ comment");
 					sEWrite(oDest, "*/");
 					continue;
 					}
@@ -560,7 +560,7 @@ bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const Cha
 	sCopy_EscapedString(iDelimiter, iChanR, iChanU, oDest);
 
 	if (not sTryRead_CP(iDelimiter, iChanR, iChanU))
-		throw ParseException("Missing string delimiter");
+		sThrow_ParseException("Missing string delimiter");
 
 	return true;
 	}

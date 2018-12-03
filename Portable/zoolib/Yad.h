@@ -87,16 +87,6 @@ inline bool sTimesHaveUserLegibleComment(const YadOptions& iYO)
 	{ return iYO.fTimesHaveUserLegibleCommentQ.DGet(true); }
 
 // =================================================================================================
-#pragma mark - YadParseException
-
-class YadParseException : public ParseException
-	{
-public:
-	YadParseException(const std::string& iWhat);
-	YadParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - YadR
 
 typedef ZCounted YadR;

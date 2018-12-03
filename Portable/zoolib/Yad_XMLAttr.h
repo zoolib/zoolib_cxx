@@ -29,16 +29,6 @@ namespace ZooLib {
 namespace Yad_XMLAttr {
 
 // =================================================================================================
-#pragma mark - ParseException
-
-class ParseException : public YadParseException
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - sYadR
 
 ZRef<YadR> sYadR(ZRef<ML::ChannerRU_UTF> iChanner);

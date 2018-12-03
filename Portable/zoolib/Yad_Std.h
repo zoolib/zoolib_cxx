@@ -28,16 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - YadParseException_Std
-
-class YadParseException_Std : public YadParseException
-	{
-public:
-	YadParseException_Std(const std::string& iWhat);
-	YadParseException_Std(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - ChanR_RefYad_Std
 
 class ChanR_RefYad_Std

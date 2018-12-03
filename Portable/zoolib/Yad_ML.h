@@ -29,16 +29,6 @@ namespace ZooLib {
 namespace Yad_ML {
 
 // =================================================================================================
-#pragma mark - YadParseException_ML
-
-class YadParseException_ML : public YadParseException_Std
-	{
-public:
-	YadParseException_ML(const std::string& iWhat);
-	YadParseException_ML(const char* iWhat);
-	};
-
-// =================================================================================================
 #pragma mark - ChanR_NameRefYad
 
 class ChanR_NameRefYad
