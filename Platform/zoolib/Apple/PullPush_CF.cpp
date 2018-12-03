@@ -69,6 +69,7 @@ bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW)
 		{
 		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 		sPush(sGetClear(thePullPushPair.second), iChanW);
+		sFlush(iChanW);
 
 		if (size_t theLength = ::CFDataGetLength((CFDataRef)iCFTypeRef))
 			sWriteFully(*thePullPushPair.first, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
