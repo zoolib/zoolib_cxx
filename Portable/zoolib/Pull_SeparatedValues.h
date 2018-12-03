@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_PullPush_XMLAttr_h__
-#define __ZooLib_PullPush_XMLAttr_h__ 1
+#ifndef __ZooLib_Pull_SeparatedValues_h__
+#define __ZooLib_Pull_SeparatedValues_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ML.h"
+#include "zoolib/ChanR_UTF.h"
 #include "zoolib/PullPush.h"
 
 namespace ZooLib {
@@ -30,8 +30,22 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU, const ChanW_Any& iChanW);
+struct Pull_SeparatedValues_Options
+	{
+	Pull_SeparatedValues_Options(UTF32 iSeparator_Value, UTF32 iSeparator_Line);
+
+	UTF32 fSeparator_Value;
+	UTF32 fSeparator_Line;
+	};
+
+bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
+	const Pull_SeparatedValues_Options& iOptions,
+	const ChanW_Any& iChanW);
+
+bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
+	UTF32 iSeparator_Value, UTF32 iSeparator_Line,
+	const ChanW_Any& iChanW);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_PullPush_XMLAttr_h__
+#endif // __ZooLib_Pull_SeparatedValues_h__

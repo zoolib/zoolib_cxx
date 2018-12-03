@@ -18,68 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/PullPush_Basic.h"
+#ifndef __ZooLib_Pull_Basic_h__
+#define __ZooLib_Pull_Basic_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
-#include "zoolib/NameUniquifier.h" // For sName
-#include "zoolib/ParseException.h"
-#include "zoolib/Util_Chan.h"
-
-#include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/ChanR_UTF.h"
+#include "zoolib/PullPush.h"
 
 namespace ZooLib {
 
-using namespace PullPush;
-using std::string;
-
 // =================================================================================================
-#pragma mark - Helpers
+#pragma mark - 
 
-namespace { // anonymous
-
-bool spRead_Until(const ChanR_UTF& iChanR, UTF32 iTerminator, string& oString)
+struct Pull_Basic_Options
 	{
-	oString.clear();
-	return sCopy_Until<UTF32>(iChanR, iTerminator, ChanW_UTF_string8(&oString));
-	}
+	Pull_Basic_Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry);
 
-} // anonymous namespace
+	UTF32 fSeparator_NameFromValue;
+	UTF32 fSeparator_EntryFromEntry;
 
-// =================================================================================================
-#pragma mark - Pull_Basic_Options
-
-Pull_Basic_Options::Pull_Basic_Options(UTF32 iNameFromValue, UTF32 iEntryFromEntry)
-:	fSeparator_NameFromValue(iNameFromValue)
-,	fSeparator_EntryFromEntry(iEntryFromEntry)
-	{}
-
-// =================================================================================================
-#pragma mark -
+	// Perhaps should make sure we differentiate terminator and separator?
+	};
 
 bool sPull_Basic_Push(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOptions,
-	const ChanW_Any& iChanW)
-	{
-	for (bool isFirst = true; /*no test*/; isFirst = false)
-		{
-		string theName;
-		if (not spRead_Until(iChanR, iOptions.fSeparator_NameFromValue, theName))
-			{
-			if (isFirst)
-				return false;
-			sPush(kEnd, iChanW);
-			return true;
-			}
-		else if (isFirst)
-			{
-			sPush(kStartMap, iChanW);
-			}
-
-		string theValue;
-		spRead_Until(iChanR, iOptions.fSeparator_EntryFromEntry, theValue);
-
-		sPush(sName(theName), iChanW);
-		sPush(theValue, iChanW);
-		}
-	}
+	const ChanW_Any& iChanW);
 
 } // namespace ZooLib
+
+#endif // __ZooLib_Pull_Basic_h__

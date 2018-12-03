@@ -18,13 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/PullPush_SeparatedValues.h"
+#include "zoolib/Pull_SeparatedValues.h"
 
-//#include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
-//#include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For sName
-//#include "zoolib/ParseException.h"
-//#include "zoolib/Util_Chan.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
@@ -97,6 +93,7 @@ bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
 		return false;
 		}
 
+	sPush(kStartMap, iChanW);
 	for (;;)
 		{
 		vector<string8> theValues;
@@ -112,6 +109,15 @@ bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
 			sPush(theValues[xx], iChanW);
 			}
 		}
+	}
+
+bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
+	UTF32 iSeparator_Value, UTF32 iSeparator_Line,
+	const ChanW_Any& iChanW)
+	{
+	return sPull_SeparatedValues_Push(iChanR,
+		Pull_SeparatedValues_Options(iSeparator_Value, iSeparator_Line),
+		iChanW);
 	}
 
 } // namespace ZooLib
