@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/PullPush_XMLAttr.h"
 
 #include "zoolib/Log.h"
-#include "zoolib/ZMACRO_foreach.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 /*
 sPull_XMLAttr_Push turns this:
@@ -37,35 +37,33 @@ sPull_XMLAttr_Push turns this:
   </tag1>
 
 into this:
+{
+tag1 =
   {
-  tag1 =
+  "!text" = "\n    ";
+  tag2 = "val3";
+  tag4 =
     {
-    tag2 = "val3";
-    tag4 =
-      {
-      at5 = "5";
-      at6 = "6";
-      };
-    tag7 =
-      {
-      at8 = "8";
-      tag9 = {};
-      tag10 = "";
-      };
+    at5 = "5";
+    at6 = "6";
     };
-  }
+  tag7 =
+    {
+    at8 = "8";
+    "!text" = "\n      ";
+    tag9 =
+      {
+      };
+    tag10 = "";
+    };
+  };
+};
 */
 
 namespace ZooLib {
 
 using namespace PullPush;
 using std::string;
-
-static bool spThrowParseException(const string& iMessage)
-	{
-	throw ParseException(iMessage);
-	return false;
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -80,7 +78,6 @@ static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_Any& iChanW)
 	}
 
 /*
-
 We enter the function having supposed been passed a tagname. Which will be empty for the top most.
 
 for (;;)
@@ -101,8 +98,8 @@ for (;;)
 	}
 */
 
-static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
-	const string& iOuterName,
+static void spPull_XMLAttr_Push(const string& iOuterName,
+	ML::ChanRU_UTF& ioChanRU,
 	const ChanW_Any& iChanW)
 	{
 	for (;;)
@@ -112,15 +109,18 @@ static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
 		if (ioChanRU.Current() == ML::eToken_Exhausted)
 			{
 			if (not iOuterName.empty())
-				spThrowParseException("Unexpected end of source");
-			return true;
+				sThrow_ParseException("Unexpected end of source");
+			break;
 			}
 		else if (ioChanRU.Current() == ML::eToken_TagEnd)
 			{
 			if (iOuterName != ioChanRU.Name())
-				spThrowParseException("Expected end tag '" + iOuterName + "', got '" + ioChanRU.Name() + "'");
+				{
+				sThrow_ParseException("Expected end tag '"
+					+ iOuterName + "', got '" + ioChanRU.Name() + "'");
+				}
 			ioChanRU.Advance();
-			return true;
+			break;
 			}
 		else if (ioChanRU.Current() == ML::eToken_TagEmpty)
 			{
@@ -145,7 +145,10 @@ static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
 			if (ioChanRU.Current() == ML::eToken_TagEnd)
 				{
 				if (ioChanRU.Name() != theName)
-					spThrowParseException("Expected end tag '" + theName + "', got '" + ioChanRU.Name() + "'");
+					{
+					sThrow_ParseException("Expected end tag '"
+						+ theName + "', got '" + ioChanRU.Name() + "'");
+					}
 
 				ioChanRU.Advance();
 
@@ -162,7 +165,8 @@ static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
 					sPush(kEnd, iChanW);
 					}
 				}
-			else if (ioChanRU.Current() == ML::eToken_TagBegin || ioChanRU.Current() == ML::eToken_TagEmpty)
+			else if (ioChanRU.Current() == ML::eToken_TagBegin
+				|| ioChanRU.Current() == ML::eToken_TagEmpty)
 				{
 				sPush(kStartMap, iChanW);
 					spPush_Attrs(theAttrs, iChanW);
@@ -171,14 +175,13 @@ static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
 						sPush(sName("!text"), iChanW);
 						sPush(theText, iChanW);
 						}
-					if (not spPull_XMLAttr_Push(ioChanRU, theName, iChanW))
-						return false;
+					spPull_XMLAttr_Push(theName, ioChanRU, iChanW);
 				sPush(kEnd, iChanW);
 				}
 			else
 				{
 				ZAssert(ioChanRU.Current() == ML::eToken_Exhausted);
-				spThrowParseException("Unexpected end of source");
+				sThrow_ParseException("Unexpected end of source");
 				}
 			}
 		}
@@ -186,13 +189,14 @@ static bool spPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU,
 
 bool sPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU, const ChanW_Any& iChanW)
 	{
+	sSkipText(ioChanRU);
+	if (ioChanRU.Current() == ML::eToken_Exhausted)
+		return false;
+
 	sPush(kStartMap, iChanW);
-	if (spPull_XMLAttr_Push(ioChanRU, string(), iChanW))
-		{
-		sPush(kEnd, iChanW);
-		return true;
-		}
-	return false;
+	spPull_XMLAttr_Push(string(), ioChanRU, iChanW);
+	sPush(kEnd, iChanW);
+	return true;
 	}
 
 } // namespace ZooLib
