@@ -161,6 +161,7 @@ ZQ<Any> sQEReadAnyOrEnd(const ChanR<Any>& iChanR)
 	if (NotQ<Any> theAnyQ = sQRead(iChanR))
 		{
 		sThrow_ParseException("Expected Any, failed to read");
+		return null;
 		}
 	else if (not sPGet<PullPush::End>(*theAnyQ))
 		{
