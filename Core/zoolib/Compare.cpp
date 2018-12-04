@@ -5,7 +5,6 @@
 #include "zoolib/Compat_string.h"
 #include "zoolib/Singleton.h"
 #include "zoolib/Util_STL_unordered_map.h"
-//#include "zoolib/Util_STL_map.h"
 
 #include "zoolib/ZDebug.h"
 
@@ -24,8 +23,6 @@ public:
 	};
 
 typedef std::unordered_map<const char*, Comparer*> ComparerMap;
-
-//typedef std::map<const char*, Comparer*, Functor_CompareCharStars> ComparerMap;
 
 } // anonymous namespace
 
