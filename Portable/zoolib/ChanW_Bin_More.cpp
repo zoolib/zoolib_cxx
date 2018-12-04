@@ -126,4 +126,12 @@ bool sQWriteCount(const ChanW_Bin& w, uint64 iValue)
 void sEWriteCount(const ChanW_Bin& w, uint64 iValue)
 	{ sQWriteCount(w, iValue) || sThrow_ExhaustedW(); }
 
+void sEWriteCountPrefixedString(const ChanW_Bin& w, const std::string& iString)
+	{
+	const size_t theLength = iString.length();
+	sEWriteCount(w, theLength);
+	if (theLength)
+		sEWriteMem(w, iString.data(), theLength);
+	}
+
 } // namespace ZooLib

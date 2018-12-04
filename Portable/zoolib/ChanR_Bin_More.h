@@ -39,6 +39,8 @@ ZQ<uint64> sQReadCount(const ChanR_Bin& r);
 
 uint64 sReadCount(const ChanR_Bin& r);
 
+std::string sReadCountPrefixedString(const ChanR_Bin& iChanR);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanW_Bin_More_h__

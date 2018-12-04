@@ -66,4 +66,7 @@ uint64 sReadCount(const ChanR_Bin& r)
 	return *theQ;
 	}
 
+std::string sReadCountPrefixedString(const ChanR_Bin& iChanR)
+	{ return sReadString(iChanR, size_t(sReadCount(iChanR))); }
+
 } // namespace ZooLib
