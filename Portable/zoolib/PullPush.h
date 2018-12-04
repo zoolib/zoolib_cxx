@@ -98,6 +98,10 @@ bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU);
 
 // ----------
 
+ZQ<Name> sEReadNameOrEnd(const ChanR<Any>& iChanR);
+
+// ----------
+
 template <class EE>
 using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 

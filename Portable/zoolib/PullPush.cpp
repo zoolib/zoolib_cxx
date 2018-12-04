@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan.h" // For sCopyFully
 
 namespace ZooLib {
@@ -153,6 +154,22 @@ bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU)
 		sUnread(iChanRU, *theQ);
 		}
 	return false;
+	}
+
+ZQ<Name> sEReadNameOrEnd(const ChanR<Any>& iChanR)
+	{
+	ZQ<Any> theNameOrEndQ = sQRead(iChanR);
+	if (not theNameOrEndQ)
+		sThrow_ParseException("Expected Name or End, failed to read");
+
+	if (sPGet<PullPush::End>(*theNameOrEndQ))
+		return null;
+
+	const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
+	if (not theNameStar)
+		sThrow_ParseException("Expected Name or End");
+
+	return *theNameStar;
 	}
 
 } // namespace ZooLib
