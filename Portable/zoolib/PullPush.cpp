@@ -156,20 +156,36 @@ bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU)
 	return false;
 	}
 
-ZQ<Name> sEReadNameOrEnd(const ChanR<Any>& iChanR)
+ZQ<Any> sQEReadAnyOrEnd(const ChanR<Any>& iChanR)
 	{
-	ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-	if (not theNameOrEndQ)
-		sThrow_ParseException("Expected Name or End, failed to read");
-
-	if (sPGet<PullPush::End>(*theNameOrEndQ))
+	if (NotQ<Any> theAnyQ = sQRead(iChanR))
+		{
+		sThrow_ParseException("Expected Any, failed to read");
+		}
+	else if (not sPGet<PullPush::End>(*theAnyQ))
+		{
 		return null;
+		}
+	else
+		{
+		return theAnyQ;
+		}
+	}
 
-	const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-	if (not theNameStar)
-		sThrow_ParseException("Expected Name or End");
-
-	return *theNameStar;
+ZQ<Name> sQEReadNameOrEnd(const ChanR<Any>& iChanR)
+	{
+	if (NotQ<Any> theAnyQ = sQEReadAnyOrEnd(iChanR))
+		{
+		return null;
+		}
+	else if (const Name* theNameStar = sPGet<Name>(*theAnyQ))
+		{
+		return *theNameStar;
+		}
+	else
+		{
+		return null;
+		}
 	}
 
 } // namespace ZooLib

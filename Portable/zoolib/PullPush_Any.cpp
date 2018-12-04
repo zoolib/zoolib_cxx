@@ -115,18 +115,17 @@ static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 		Map_Any theMap;
 		for (;;)
 			{
-			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-			if (not theNameOrEndQ)
-				return false;
-			if (sPGet<PullPush::End>(*theNameOrEndQ))
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
 				break;
-			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-			if (not theNameStar)
-				return false;
-			Any theAny;
-			if (not sPull_Push_Any(iChanR, theAny))
-				return false;
-			theMap.Set(*theNameStar, theAny);
+				}
+			else
+				{
+				Any theAny;
+				if (not sPull_Push_Any(iChanR, theAny))
+					return false;
+				theMap.Set(*theNameQ, theAny);
+				}
 			}
 		oAny = theMap;
 		return true;

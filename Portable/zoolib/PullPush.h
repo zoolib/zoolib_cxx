@@ -98,7 +98,11 @@ bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU);
 
 // ----------
 
-ZQ<Name> sEReadNameOrEnd(const ChanR<Any>& iChanR);
+// Throw if the chan is empty, return a false ZQ<Any> if we hit an end, otherwise return the Any.
+ZQ<Any> sQEReadAnyOrEnd(const ChanR<Any>& iChanR);
+
+// Throw if the chan is empty, return a false ZQ<Name> if we hit an end, otherwise return the Name.
+ZQ<Name> sQEReadNameOrEnd(const ChanR<Any>& iChanR);
 
 // ----------
 

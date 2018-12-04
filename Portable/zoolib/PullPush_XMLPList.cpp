@@ -277,28 +277,24 @@ static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const
 		s.Begin("dict");
 			for (;;)
 				{
-				ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-				if (not theNameOrEndQ)
-					return false;
-
-				if (sPGet<PullPush::End>(*theNameOrEndQ))
+				if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+					{
 					break;
-
-				const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-				if (not theNameStar)
-					return false;
-
-				s.Begin("key");
-					sEWrite(s, *theNameStar);
-				s.End("key");
-
-				if (ZQ<Any,false> theNotQ = sQRead(iChanR))
-					{
-					return false;
 					}
-				else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
+				else
 					{
-					return false;
+					s.Begin("key");
+						sEWrite(s, *theNameQ);
+					s.End("key");
+
+					if (NotQ<Any> theNotQ = sQRead(iChanR))
+						{
+						return false;
+						}
+					else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
+						{
+						return false;
+						}
 					}
 				}
 		s.End("dict");
@@ -309,7 +305,7 @@ static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const
 		s.Begin("array");
 			for (;;)
 				{
-				if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+				if (NotQ<Any> theNotQ = sQRead(iChanR))
 					{
 					return false;
 					}

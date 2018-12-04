@@ -387,7 +387,7 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+			if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
 				return false;
 				}
@@ -424,7 +424,7 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+			if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
 				return false;
 				}
@@ -490,25 +490,18 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 		iChanW << "{";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-			if (not theNameOrEndQ)
-				return false;
-
-			if (sPGet<PullPush::End>(*theNameOrEndQ))
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
 				break;
-
-			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-			if (not theNameStar)
-				return false;
-
-			if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+				}
+			else if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
 				return false;
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << " = ";
 
 				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
@@ -521,7 +514,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				if (not isFirst)
 					iChanW << ",";
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << ": ";
 
 				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
@@ -537,18 +530,11 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 		bool wroteAny = false;
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-			if (not theNameOrEndQ)
-				return false;
-
-			if (sPGet<PullPush::End>(*theNameOrEndQ))
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
 				break;
-
-			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-			if (not theNameStar)
-				return false;
-
-			if (ZQ<Any,false> theNotQ = sQRead(iChanR))
+				}
+			else if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
 				return false;
 				}
@@ -557,7 +543,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
 
-				Util_Chan_JSON::sWritePropName(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
 				if (sBreakStrings(iOptions))
 					iChanW << " = ";
 				else
@@ -574,7 +560,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 					iChanW << ",";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
-				Util_Chan_JSON::sWriteString(*theNameStar, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << ":";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";

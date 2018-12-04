@@ -138,18 +138,17 @@ static bool spPull_Push_CF(const Any& iAny, const ChanR_Any& iChanR, ZRef<CFType
 		Map_CF theMap;
 		for (;;)
 			{
-			ZQ<Any> theNameOrEndQ = sQRead(iChanR);
-			if (not theNameOrEndQ)
-				return false;
-			if (sPGet<PullPush::End>(*theNameOrEndQ))
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
 				break;
-			const Name* theNameStar = sPGet<Name>(*theNameOrEndQ);
-			if (not theNameStar)
-				return false;
-			ZRef<CFTypeRef> theCFTypeRef;
-			if (not sPull_Push_CF(iChanR, theCFTypeRef))
-				return false;
-			theMap.Set(*theNameStar, theCFTypeRef);
+				}
+			else
+				{
+				ZRef<CFTypeRef> theCFTypeRef;
+				if (not sPull_Push_CF(iChanR, theCFTypeRef))
+					return false;
+				theMap.Set(*theNameQ, theCFTypeRef);
+				}
 			}
 		oCFTypeRef = theMap;
 		return true;
