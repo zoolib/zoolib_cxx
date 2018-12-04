@@ -58,22 +58,68 @@ using QueryEngine::Result;
 #pragma mark -
 
 static void spToChan(const ChanW_Bin& w, const string8& iString)
-	{
-	const size_t theLength = iString.length();
-	sEWriteCount(w, theLength);
-	if (theLength)
-		{
-		if (theLength != sWriteMemFully(w, iString.data(), theLength))
-			sThrow_ExhaustedW();
-		}
-	}
+	{ sEWriteCountPrefixedString(w, iString); }
 
 static string8 spStringFromChan(const ChanR_Bin& r)
-	{
-	if (size_t theCount = sReadCount(r))
-		return sReadString(r, theCount);
-	return string8();
-	}
+	{ return sReadCountPrefixedString(r); }
+
+//class ReadFilter
+//:	public virtual Callable_JSONB_ReadFilter
+//	{
+//public:
+//	// FromCallable_JSONB_ReadFilter
+//	virtual ZQ<ZQ<Any>> QCall(const ChanR_Bin& r)
+//		{
+//		ZQ<Any> result = this->pRead(r);
+//		return return ZQ<ZQ<Any>>(result);
+//		}
+//
+//	ZQ<Any> pRead(const ChanR_Bin& iChanR, Fallback??)
+//		{
+//		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
+//			{
+//			switch (*theTypeQ)
+//				{
+//				case 100:
+//					{
+//					// We're at the beginning of a QE::Result. So read the RelHead to start with.
+//					RelHead theRelHead;
+//					for (size_t theCount = sReadCount(r); theCount; --theCount)
+//						theRelHead |= spStringFromChan(r);
+//
+//					// Now the vals
+//					vector<Val_Any> packedRows;
+//					for (size_t theCount = sReadCount(r) * theRelHead.size(); theCount; --theCount)
+//						{
+//						// This is the point at which we recurse. We probably need to be able to
+//						// pass down the top level entity we used for the read.
+////						if (ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(this, iChannerR_Bin)))
+////							packedRows.push_back(*theQ);
+////						else
+////							ZUnimplemented(); // return null;
+//						}
+//
+//					return sRef(new Result(theRelHead, &packedRows));
+//					}
+//				case 101:
+//					{
+//					Data_Any theData(sReadCount(r));
+//					sEReadMem(r, theData.GetPtrMutable(), theData.GetSize());
+//					return Daton(theData);
+//					}
+//				case 102:
+//					{
+//					return AbsentOptional_t();
+//					}
+//				}
+//
+//			if (ZLOGF(w, eDebug))
+//				w << *theTypeQ;
+//			ZUnimplemented();
+//			}
+//		return null;
+//		}
+//	};
 
 // =================================================================================================
 #pragma mark -
