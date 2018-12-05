@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
-//#include "zoolib/Yad_Any.h"
-//#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"

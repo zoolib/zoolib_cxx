@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
-#include "zoolib/Yad_Any.h"
 #include "zoolib/Util_Chan_JSON.h"
 
 #include "zoolib/ValPred/ValPred_Any.h"
