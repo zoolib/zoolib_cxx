@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+
+#include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/ValueOnce.h"
-#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-
-#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {
@@ -41,7 +41,7 @@ using std::set;
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{
 	s << "@";
-	Yad_JSON::sWrite_PropName(iName, s);
+	Util_Chan_JSON::sWrite_PropName(iName, s);
 	}
 
 void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
@@ -65,7 +65,7 @@ ZQ<ColName> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	if (not sTryRead_CP('@', iChanR, iChanU))
 		return null;
 
-	if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+	if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
 		throw ParseException("Expected PropName after '@'");
 	else
 		return *theQ;
@@ -136,14 +136,14 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_U
 		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
 		if (sTryRead_CP('@', iChanR, iChanU))
 			{
-			if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
 				throw ParseException("Expected PropName after '@'");
 			else
 				result[*theQ] = true;
 			}
 		else if (sTryRead_CP('?', iChanR, iChanU))
 			{
-			if (NotQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
 				throw ParseException("Expected PropName after '?'");
 			else
 				result[*theQ] = false;
@@ -175,11 +175,11 @@ void sWrite_RenameWithOptional(
 			w << "?";
 		else
 			w << "@";
-		Yad_JSON::sWrite_PropName(ii->second, w);
+		Util_Chan_JSON::sWrite_PropName(ii->second, w);
 		if (ii->first != ii->second)
 			{
 			w << "<--";
-			Yad_JSON::sWrite_PropName(ii->first, w);
+			Util_Chan_JSON::sWrite_PropName(ii->first, w);
 			}
 		}
 	w << "]";
@@ -215,7 +215,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
 			w << "@";
 		else
 			w << "?";
-		Yad_JSON::sWrite_PropName(ii->first, w);
+		Util_Chan_JSON::sWrite_PropName(ii->first, w);
 		}
 
 	w << "]";

@@ -28,63 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Name.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/SafePtrStack.h"
+#include "zoolib/YadOptions.h"
 
 #include <string>
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - YadOptions
-
-struct YadOptions
-	{
-	YadOptions(bool iDoIndentation = false);
-
-	ZQ<std::string> fEOLStringQ;
-	ZQ<std::string> fIndentStringQ;
-
-	ZQ<size_t> fRawChunkSizeQ;
-	ZQ<std::string> fRawByteSeparatorQ;
-	ZQ<bool> fRawAsASCIIQ;
-	ZQ<uint64> fRawSizeCapQ;
-
-	ZQ<bool> fBreakStringsQ;
-	ZQ<size_t> fStringLineLengthQ;
-
-	ZQ<bool> fIDsHaveDecimalVersionCommentQ;
-
-	ZQ<bool> fTimesHaveUserLegibleCommentQ;
-	};
-
-inline bool sDoIndentation(const YadOptions& iYO)
-	{ return iYO.fIndentStringQ && iYO.fIndentStringQ->size(); }
-
-inline std::string sEOLString(const YadOptions& iYO)
-	{ return iYO.fEOLStringQ.DGet("\n"); }
-
-inline std::string sIndentString(const YadOptions& iYO)
-	{ return iYO.fIndentStringQ.DGet("  "); }
-
-inline size_t sRawChunkSize(const YadOptions& iYO)
-	{ return iYO.fRawChunkSizeQ.DGet(64); }
-
-inline std::string sRawByteSeparator(const YadOptions& iYO)
-	{ return iYO.fRawByteSeparatorQ.DGet(" "); }
-
-inline bool sRawAsASCII(const YadOptions& iYO)
-	{ return iYO.fRawAsASCIIQ.DGet(sDoIndentation(iYO)); }
-
-inline bool sBreakStrings(const YadOptions& iYO)
-	{ return iYO.fBreakStringsQ.DGet(true); }
-
-inline size_t sStringLineLength(const YadOptions& iYO)
-	{ return iYO.fStringLineLengthQ.DGet(80); }
-
-inline bool sIDsHaveDecimalVersionComment(const YadOptions& iYO)
-	{ return iYO.fIDsHaveDecimalVersionCommentQ.DGet(true); }
-
-inline bool sTimesHaveUserLegibleComment(const YadOptions& iYO)
-	{ return iYO.fTimesHaveUserLegibleCommentQ.DGet(true); }
 
 // =================================================================================================
 #pragma mark - YadR

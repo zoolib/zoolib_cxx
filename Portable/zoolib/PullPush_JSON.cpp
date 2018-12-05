@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_Escaped.h"
+#include "zoolib/Channer_Bin.h"
+#include "zoolib/Channer_UTF.h"
 #include "zoolib/Data_Any.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"

@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_Chan_JSON_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Any.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-
-#include "zoolib/Yad.h"
+#include "zoolib/YadOptions.h"
 
 namespace ZooLib {
 namespace Util_Chan_JSON {
@@ -98,6 +98,10 @@ void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const Chan
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w);
+
+ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+
+void sWrite_PropName(const string8& iPropName, const ChanW_UTF& w);
 
 } // namespace Util_Chan_JSON
 } // namespace ZooLib

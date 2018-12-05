@@ -25,14 +25,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanR_Bin_More.h"
 #include "zoolib/ChanW_Bin_More.h"
+#include "zoolib/ChanW_Bin_More.h"
+#include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Log.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_Any_JSONB.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSONB.h"
 
 #include "zoolib/Dataspace/MelangeRemoter.h"
 
@@ -63,75 +64,13 @@ static void spToChan(const ChanW_Bin& w, const string8& iString)
 static string8 spStringFromChan(const ChanR_Bin& r)
 	{ return sReadCountPrefixedString(r); }
 
-//class ReadFilter
-//:	public virtual Callable_JSONB_ReadFilter
-//	{
-//public:
-//	// FromCallable_JSONB_ReadFilter
-//	virtual ZQ<ZQ<Any>> QCall(const ChanR_Bin& r)
-//		{
-//		ZQ<Any> result = this->pRead(r);
-//		return return ZQ<ZQ<Any>>(result);
-//		}
-//
-//	ZQ<Any> pRead(const ChanR_Bin& iChanR, Fallback??)
-//		{
-//		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
-//			{
-//			switch (*theTypeQ)
-//				{
-//				case 100:
-//					{
-//					// We're at the beginning of a QE::Result. So read the RelHead to start with.
-//					RelHead theRelHead;
-//					for (size_t theCount = sReadCount(r); theCount; --theCount)
-//						theRelHead |= spStringFromChan(r);
-//
-//					// Now the vals
-//					vector<Val_Any> packedRows;
-//					for (size_t theCount = sReadCount(r) * theRelHead.size(); theCount; --theCount)
-//						{
-//						// This is the point at which we recurse. We probably need to be able to
-//						// pass down the top level entity we used for the read.
-////						if (ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(this, iChannerR_Bin)))
-////							packedRows.push_back(*theQ);
-////						else
-////							ZUnimplemented(); // return null;
-//						}
-//
-//					return sRef(new Result(theRelHead, &packedRows));
-//					}
-//				case 101:
-//					{
-//					Data_Any theData(sReadCount(r));
-//					sEReadMem(r, theData.GetPtrMutable(), theData.GetSize());
-//					return Daton(theData);
-//					}
-//				case 102:
-//					{
-//					return AbsentOptional_t();
-//					}
-//				}
-//
-//			if (ZLOGF(w, eDebug))
-//				w << *theTypeQ;
-//			ZUnimplemented();
-//			}
-//		return null;
-//		}
-//	};
-
-// =================================================================================================
-#pragma mark -
-
-class ReadFilter_Result
-:	public Yad_JSONB::ReadFilter
+class ReadFilter
+:	public Callable_JSONB_ReadFilter
 	{
 public:
-	virtual ZQ<Any> QRead(const ZRef<ChannerR_Bin>& iChannerR_Bin)
+// From Callable_JSONB_ReadFilter
+	virtual ZQ<ZQ<Any>> QCall(const ChanR_Bin& r)
 		{
-		const ChanR_Bin& r = *iChannerR_Bin;
-
 		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(r))
 			{
 			switch (*theTypeQ)
@@ -147,23 +86,23 @@ public:
 					vector<Val_Any> packedRows;
 					for (size_t theCount = sReadCount(r) * theRelHead.size(); theCount; --theCount)
 						{
-						if (ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(this, iChannerR_Bin)))
+						// This is the point at which we recurse. We probably need to be able to
+						// pass down the top level entity we used for the read.
+						if (ZQ<Val_Any> theQ = Util_Any_JSONB::sQRead(r, this))
 							packedRows.push_back(*theQ);
 						else
 							ZUnimplemented(); // return null;
 						}
 
-					return sRef(new Result(theRelHead, &packedRows));
+					return Any(sRef(new Result(theRelHead, &packedRows)));
 					}
 				case 101:
 					{
-					Data_Any theData(sReadCount(r));
-					sEReadMem(r, theData.GetPtrMutable(), theData.GetSize());
-					return Daton(theData);
+					return Any(Daton(sRead_T<Data_Any>(r, sReadCount(r))));
 					}
 				case 102:
 					{
-					return AbsentOptional_t();
+					return Any(AbsentOptional_t());
 					}
 				}
 
@@ -178,11 +117,12 @@ public:
 // =================================================================================================
 #pragma mark -
 
-class WriteFilter_Result
-:	public Yad_JSONB::WriteFilter
+class WriteFilter
+:	public Callable_JSONB_WriteFilter
 	{
 public:
-	virtual bool QWrite(const Any& iAny, const ChanW_Bin& w)
+// From Callable_JSONB_WriteFilter
+	virtual ZQ<bool> QCall(const ChanW_Bin& w, const Any& iAny)
 		{
 		if (false)
 			{}
@@ -208,7 +148,7 @@ public:
 				{
 				const Val_Any* theRow = theResult->GetValsAt(yy);
 				for (size_t xx = 0; xx < theRHCount; ++xx)
-					Yad_JSONB::sToChan(this, sYadR(theRow[xx]),w);
+					Util_Any_JSONB::sWrite(theRow[xx], this, w);
 				}
 			return true;
 			}
@@ -244,13 +184,13 @@ static ZAtomic_t spSentMessageCounter;
 
 static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<string>& iDescriptionQ)
 	{
-	const ZRef<Yad_JSONB::WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter_Result> >();
+	const ZRef<WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter> >();
 
 	const double start = Time::sSystem();
 
 	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
-	Yad_JSONB::sToChan(theWriteFilter, sYadR(iMessage), iChanW);
+	Util_Any_JSONB::sWrite(iMessage, theWriteFilter, iChanW);
 	sFlush(iChanW);
 
 	const double finish = Time::sSystem();
@@ -270,9 +210,9 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 
 static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<string>& iDescriptionQ)
 	{
-	const ZRef<Yad_JSONB::ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter_Result> >();
+	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
-	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(theReadFilter, iChannerR));
+	ZQ<Val_Any> theQ = Util_Any_JSONB::sQRead(*iChannerR, theReadFilter);
 	if (not theQ)
 		sThrow_ExhaustedR();
 
@@ -462,7 +402,6 @@ void MelangeServer::pWrite()
 		foreachi (ii, fMap_Refcon2Result)
 			{
 			Map_Any theMap;
-//##			theMap.Set("IsFirst", false); //## For old clients for now.
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", ii->first);
 			theMap.Set("Result", spAsVal(ii->second));

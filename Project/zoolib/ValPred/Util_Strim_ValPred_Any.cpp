@@ -18,13 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
+
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSON.h"
+#include "zoolib/Util_Chan_JSON.h"
 
-#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 #include "zoolib/ValPred/ValPred_Any.h"
 
 namespace ZooLib {
@@ -41,7 +42,7 @@ namespace { // anonymous
 void spWrite_PropName(const string& iName, const ChanW_UTF& iChanW)
 	{
 	iChanW << "@";
-	Yad_JSON::sWrite_PropName(iName, iChanW);
+	Util_Chan_JSON::sWrite_PropName(iName, iChanW);
 	}
 
 void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& iChanW)
@@ -50,13 +51,13 @@ void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		{
 		iChanW << "/*Null Comparand*/";
 		}
-	else if (ZRef<ValComparand_Name> cr = iComparand.DynamicCast<ValComparand_Name>())
+	else if (ZRef<ValComparand_Name> cmprnd = iComparand.DynamicCast<ValComparand_Name>())
 		{
-		spWrite_PropName(cr->GetName(), iChanW);
+		spWrite_PropName(cmprnd->GetName(), iChanW);
 		}
-	else if (ZRef<ValComparand_Const_Any> cr = iComparand.DynamicCast<ValComparand_Const_Any>())
+	else if (ZRef<ValComparand_Const_Any> cmprnd = iComparand.DynamicCast<ValComparand_Const_Any>())
 		{
-		Yad_JSON::sToChan(sYadR(cr->GetVal()), iChanW);
+		Util_Any_JSON::sWrite(cmprnd->GetVal(), iChanW);
 		}
 	else
 		{
@@ -128,7 +129,7 @@ ZRef<ValComparand> spQRead_ValComparand(const ChanR_UTF& iChanR, const ChanU_UTF
 	using namespace Util_Chan;
 	if (sTryRead_CP('@', iChanR, iChanU))
 		{
-		if (ZQ<string8> theQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+		if (ZQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
 			return new ValComparand_Name(*theQ);
 		throw ParseException("Expected Name after @");
 		}

@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Data_Any.h"
 #include "zoolib/Log.h"
+#include "zoolib/NameUniquifier.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h"
@@ -43,6 +44,10 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 
+static void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
+	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ChanW_Any& iChanW);
+
 bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_Any& iChanW)
@@ -53,95 +58,124 @@ bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
 		}
 	else
 		{
-		switch (*theTypeQ)
+		spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
+		return true;
+		}
+	}
+
+void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
+	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ChanW_Any& iChanW)
+	{
+	switch (iType)
+		{
+		case 0xE0:
 			{
-			case 0xE0:
+			sPush(Any(), iChanW);
+			break;
+			}
+		case 0xE2:
+			{
+			sPush(false, iChanW);
+			break;
+			}
+		case 0xE3:
+			{
+			sPush(true, iChanW);
+			break;
+			}
+		case 0xE4:
+			{
+			sPush(sEReadBE<int64>(iChanR), iChanW);
+			break;
+			}
+		case 0xE5:
+			{
+			sPush(sEReadBE<double>(iChanR), iChanW);
+			break;
+			}
+		case 0xE7:
+			{
+			PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
+			sPush(sGetClear(thePullPushPair.second), iChanW);
+			for (;;)
 				{
-				sPush(Any(), iChanW);
-				break;
+				if (uint64 theCount = sReadCount(iChanR))
+					sECopyFully(iChanR, *thePullPushPair.first, theCount);
+				else
+					break;
 				}
-			case 0xE2:
+			sDisconnectWrite(*thePullPushPair.first);
+			break;
+			}
+		case 0xE8:
+			{
+			sPush(sReadString(iChanR, sReadCount(iChanR)), iChanW);
+			break;
+			}
+		case 0xEA:
+			{
+			sPush(kStartSeq, iChanW);
+			for (;;)
 				{
-				sPush(false, iChanW);
-				break;
-				}
-			case 0xE3:
-				{
-				sPush(true, iChanW);
-				break;
-				}
-			case 0xE4:
-				{
-				sPush(sEReadBE<int64>(iChanR), iChanW);
-				break;
-				}
-			case 0xE5:
-				{
-				sPush(sEReadBE<double>(iChanR), iChanW);
-				break;
-				}
-			case 0xE7:
-				{
-				PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
-				sPush(sGetClear(thePullPushPair.second), iChanW);
-				for (;;)
+				if (NotQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
 					{
-					if (uint64 theCount = sReadCount(iChanR))
-						sECopyFully(iChanR, *thePullPushPair.first, theCount);
-					else
-						break;
+					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
-				sDisconnectWrite(*thePullPushPair.first);
-				break;
-				}
-			case 0xE8:
-				{
-				sPush(sReadString(iChanR, sReadCount(iChanR)), iChanW);
-				break;
-				}
-			case 0xEA:
-				{
-				sPush(kStartSeq, iChanW);
-				for (;;)
+				else if (*theTypeQ == 0xFF)
 					{
-					if (not sPull_JSONB_Push(iChanR, iReadFilter, iChanW))
-						break;
+					break;
 					}
-				sPush(kEnd, iChanW);
-				}
-			case 0xED:
-				{
-				sPush(kStartMap, iChanW);
-				for (;;)
+				else
 					{
-					sPush(Name(sReadString(iChanR, sReadCount(iChanR))), iChanW);
-					if (not sPull_JSONB_Push(iChanR, iReadFilter, iChanW))
-						break;
+					spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
 					}
-				sPush(kEnd, iChanW);
-				break;
 				}
-			case 254:
+			sPush(kEnd, iChanW);
+			break;
+			}
+		case 0xED:
+			{
+			sPush(kStartMap, iChanW);
+			for (;;)
 				{
-				if (iReadFilter)
+				string theName = sReadCountPrefixedString(iChanR);
+				if (NotQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
 					{
-					if (ZQ<Any> theQ = sCall(iReadFilter, iChanR))
-						sPush(*theQ, iChanW);
-					else
-						return false;
+					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
-				break;
+				else if (*theTypeQ == 0xFF)
+					{
+					break;
+					}
+				else
+					{
+					sPush(sName(theName), iChanW);
+					spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
+					}
 				}
-			case 0xFF:
+			sPush(kEnd, iChanW);
+			break;
+			}
+		case 254:
+			{
+			if (iReadFilter)
 				{
-				// End of list marker.
-				return false;
+				if (ZQ<Any> theQ = sCall(iReadFilter, iChanR))
+					{
+					sPush(*theQ, iChanW);
+					break;
+					}
 				}
-			default:
-				sThrow_ParseException(sStringf("JSONB invalid type %d", int(*theTypeQ)));
+			sThrow_ParseException("Unhandled type 254");
+			break;
+			}
+		default:
+			{
+			sThrow_ParseException(sStringf("JSONB invalid type %d", int(iType)));
+			break;
 			}
 		}
-	return true;
 	}
 
 // =================================================================================================
@@ -217,6 +251,8 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 			{
 			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
 				{
+				// Empty name
+				sEWriteBE<uint8>(iChanW, 0);
 				break;
 				}
 			else
@@ -226,6 +262,7 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 					sThrow_ParseException("Require value after Name from ChanR_Any");
 				}
 			}
+		// Terminator
 		sEWriteBE<uint8>(iChanW, 0xFF);
 		return true;
 		}

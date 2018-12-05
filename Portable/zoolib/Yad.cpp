@@ -27,9 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-using std::min;
-using std::string;
-
 /**
 \defgroup Yad Yad (Yet Another Data)
 Yad is a neologism by <a href="http://www.linkedin.com/in/ericbwcooper">Eric Cooper</a>.
@@ -51,14 +48,5 @@ NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
 The idea is that there are a Map-like and Seq-like entities in many APIs, and that abstracting
 access to them allows code to be applied to any of them.
 */
-
-// =================================================================================================
-#pragma mark - YadOptions
-
-YadOptions::YadOptions(bool iDoIndentation)
-	{
-	if (iDoIndentation)
-		fIndentStringQ = "  ";
-	}
 
 } // namespace ZooLib

@@ -160,10 +160,6 @@ void sToChan(ZRef<YadR> iYadR, const ChanW_UTF& w);
 void sToChan(size_t iInitialIndent, const WriteOptions& iOptions,
 	ZRef<YadR> iYadR, const ChanW_UTF& w);
 
-ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
-
-void sWrite_PropName(const string8& iPropName, const ChanW_UTF& w);
-
 } // namespace Yad_JSON
 } // namespace ZooLib
 

@@ -430,5 +430,27 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		}
 	}
 
+ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+	{
+	string8 theString8;
+	if (not sTryRead_PropertyName(iChanR, iChanU, theString8, true))
+		return null;
+	return theString8;
+	}
+
+void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
+	{
+	if (sContainsProblemChars(iPropName))
+		{
+		w << "\"";
+		ChanW_UTF_Escaped(w) << iPropName;
+		w << "\"";
+		}
+	else
+		{
+		w << iPropName;
+		}
+	}
+
 } // namespace Util_Chan_JSON
 } // namespace ZooLib

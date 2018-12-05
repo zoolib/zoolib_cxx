@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSONB {
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR,
+ZQ<Val_Any> sQRead(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter);
 
 void sWrite(const Val_Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,

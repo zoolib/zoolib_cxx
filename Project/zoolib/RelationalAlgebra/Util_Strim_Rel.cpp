@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSON.h"
+//#include "zoolib/Yad_Any.h"
+//#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
@@ -74,7 +74,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
-	Yad_JSON::sToChan(sYadR(iExpr->GetVal()), w);
+	Util_Any_JSON::sWrite(iExpr->GetVal(), w);
 	w << ")";
 	}
 
@@ -243,7 +243,7 @@ static ZQ<RelPair> spQReadPair(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 ZRef<Expr_Rel> sFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-	if (NotQ<string8> theNameQ = Yad_JSON::sQRead_PropName(iChanR, iChanU))
+	if (NotQ<string8> theNameQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
 		{ return null; }
 	else
 		{

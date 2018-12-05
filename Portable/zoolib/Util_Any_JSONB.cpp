@@ -46,12 +46,12 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR,
+ZQ<Val_Any> sQRead(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
-	sPull_JSONB_Push(*iChannerR, iReadFilter, *thePair.first);
+	sPull_JSONB_Push(iChanR, iReadFilter, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();

@@ -22,12 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
-
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSON.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
@@ -54,6 +52,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Dataspace {
 
+using namespace Operators_Any_JSON;
 using namespace Util_STL;
 
 using std::make_pair;
@@ -68,7 +67,7 @@ namespace RA = RelationalAlgebra;
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
 	{
-	Yad_JSON::sToChan(sYadR(iVal), w);
+	Util_Any_JSON::sWrite(iVal, w);
 	return w;
 	}
 
