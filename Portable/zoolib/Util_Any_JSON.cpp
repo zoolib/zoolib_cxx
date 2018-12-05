@@ -49,13 +49,8 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
-static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
-	{
-	sPull_Any_Push(iAny, *iChannerWCon);
-	sDisconnectWrite(*iChannerWCon);
-	}
-
-ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO)
+ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const PullPush_JSON::ReadOptions& iRO)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
@@ -74,8 +69,16 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO)
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 	{ return sQRead(iChanRU, Util_Chan_JSON::sReadOptions_Extended()); }
 
+// -----
+
 void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{ sWrite(false, iVal, iChanW); }
+
+static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
+	{
+	sPull_Any_Push(iAny, *iChannerWCon);
+	sDisconnectWrite(*iChannerWCon);
+	}
 
 void sWrite(bool iPrettyPrint, const Val_Any& iVal, const ChanW_UTF& iChanW)
 	{
@@ -91,13 +94,13 @@ string8 sAsJSON(const Val_Any& iVal)
 	return result;
 	}
 
-// =================================================================================================
-#pragma mark -
-
 const Val_Any sFromJSON(const string8& iString)
 	{ return sQRead(ChanRU_UTF_string8(iString)).Get(); }
 
 } // namespace Util_Any_JSON
+
+// =================================================================================================
+#pragma mark -
 
 namespace Operators_Any_JSON {
 
