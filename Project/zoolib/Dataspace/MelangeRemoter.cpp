@@ -190,7 +190,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 
 	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
-	Util_Any_JSONB::sWrite(iMessage, theWriteFilter, iChanW);
+	Util_Any_JSONB::sWrite(Any(iMessage), theWriteFilter, iChanW);
 	sFlush(iChanW);
 
 	const double finish = Time::sSystem();
@@ -204,7 +204,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 			w << ", ";
 		else
 			w << "\n";
-		Util_Any_JSON::sWrite(false, iMessage, w);
+		Util_Any_JSON::sWrite(false, Any(iMessage), w);
 		}
 	}
 
@@ -212,7 +212,8 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<strin
 	{
 	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
-	ZQ<Val_Any> theQ = Util_Any_JSONB::sQRead(*iChannerR, theReadFilter);
+
+  	ZQ<Any> theQ = Util_Any_JSONB::sQRead(*iChannerR, theReadFilter);
 	if (not theQ)
 		sThrow_ExhaustedR();
 
@@ -227,7 +228,7 @@ static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<strin
 			}
 		if (not theMessage.IsEmpty())
 			w << "\n";
-		Util_Any_JSON::sWrite(false, theMessage, w);
+		Util_Any_JSON::sWrite(false, Any(theMessage), w);
 		}
 
 	return theMessage;

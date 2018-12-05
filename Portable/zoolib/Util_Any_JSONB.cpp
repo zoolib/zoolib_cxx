@@ -46,7 +46,7 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
-ZQ<Val_Any> sQRead(const ChanR_Bin& iChanR,
+ZQ<Any> sQRead(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
@@ -65,7 +65,7 @@ static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChann
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const Val_Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+void sWrite(const Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();

@@ -71,7 +71,7 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 
 // -----
 
-void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW)
+void sWrite(const Any& iVal, const ChanW_UTF& iChanW)
 	{ sWrite(false, iVal, iChanW); }
 
 static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
@@ -80,21 +80,21 @@ static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChann
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(bool iPrettyPrint, const Val_Any& iVal, const ChanW_UTF& iChanW)
+void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
 	sPull_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
 	}
 
-string8 sAsJSON(const Val_Any& iVal)
+string8 sAsJSON(const Any& iVal)
 	{
 	string8 result;
 	sWrite(iVal, ChanW_UTF_string8(&result));
 	return result;
 	}
 
-const Val_Any sFromJSON(const string8& iString)
+const Any sFromJSON(const string8& iString)
 	{ return sQRead(ChanRU_UTF_string8(iString)).Get(); }
 
 } // namespace Util_Any_JSON
@@ -112,19 +112,19 @@ const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Val_Any& iVal)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Map_Any& iMap)
 	{
-	Util_Any_JSON::sWrite(iMap, iChanW);
+	Util_Any_JSON::sWrite(Any(iMap), iChanW);
 	return iChanW;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Seq_Any& iSeq)
 	{
-	Util_Any_JSON::sWrite(iSeq, iChanW);
+	Util_Any_JSON::sWrite(Any(iSeq), iChanW);
 	return iChanW;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Data_Any& iData)
 	{
-	Util_Any_JSON::sWrite(iData, iChanW);
+	Util_Any_JSON::sWrite(Any(iData), iChanW);
 	return iChanW;
 	}
 

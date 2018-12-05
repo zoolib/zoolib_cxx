@@ -38,13 +38,13 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU);
 ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const PullPush_JSON::ReadOptions& iRO);
 ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 
-void sWrite(const Val_Any& iVal, const ChanW_UTF& iChanW);
+void sWrite(const Any& iVal, const ChanW_UTF& iChanW);
 
-void sWrite(bool iPrettyPrint, const Val_Any& iVal, const ChanW_UTF& iChanW);
+void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW);
 
-string8 sAsJSON(const Val_Any& iVal);
+string8 sAsJSON(const Any& iVal);
 
-const Val_Any sFromJSON(const string8& iString);
+const Any sFromJSON(const string8& iString);
 
 } // namespace Util_Any_JSON
 
