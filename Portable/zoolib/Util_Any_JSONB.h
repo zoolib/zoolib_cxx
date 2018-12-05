@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Channer_Bin.h"
+#include "zoolib/PullPush_JSONB.h"
 #include "zoolib/Val_Any.h"
 
 // =================================================================================================
@@ -31,9 +32,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSONB {
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR);
+ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR,
+	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter);
 
-void sWrite(const Val_Any& iVal, const ChanW_Bin& iChanW);
+void sWrite(const Val_Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+	const ChanW_Bin& iChanW);
 
 } // namespace Util_Any_JSONB
 } // namespace ZooLib

@@ -19,12 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_Any_JSONB.h"
-#include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_JSONB.h"
 
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Log.h"
-#include "zoolib/Stringf.h"
-#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Promise.h"
+#include "zoolib/PullPush_Any.h"
+#include "zoolib/StartOnNewThread.h"
 
 // =================================================================================================
 #pragma mark -
@@ -32,30 +33,44 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSONB {
 
-ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR)
+static void spAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR, const ZRef<Promise<Any>>& iPromise)
 	{
-	const double start = Time::sSystem();
-	ZQ<Val_Any> theQ = Yad_Any::sQFromYadR(Yad_JSONB::sYadR(iChannerR));
-	if (not theQ)
-		return null;
-
-	if (ZLOGF(w, eDebug+1))
-		{
-		w << "Received in " << sStringf("%.3gms: ", (Time::sSystem() - start) * 1e3);
-		Util_Any_JSON::sWrite(*theQ, w);
-		}
-	return theQ;
+	if (ZQ<Any> theAny = sQPull_Any(*iChannerR))
+		iPromise->Deliver(*theAny);
 	}
 
-void sWrite(const Val_Any& iVal, const ChanW_Bin& iChanW)
+static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR)
 	{
-	const double start = Time::sSystem();
-	Yad_JSONB::sToChan(sYadR(iVal), iChanW);
-	if (ZLOGF(w, eDebug+1))
-		{
-		w << "Sent in " << sStringf("%.3gms: ", (Time::sSystem() - start) * 1e3);
-		Util_Any_JSON::sWrite(iVal, w);
-		}
+	ZRef<Promise<Any>> thePromise = sPromise<Any>();
+	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iChannerR, thePromise));
+	return thePromise->GetDelivery();
+	}
+
+ZQ<Val_Any> sQRead(const ZRef<ChannerR_Bin>& iChannerR,
+	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter)
+	{
+	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
+	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
+	sPull_JSONB_Push(*iChannerR, iReadFilter, *thePair.first);
+	sDisconnectWrite(*thePair.first);
+
+	return theDelivery->QGet();
+	}
+
+// -----
+
+static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
+	{
+	sPull_Any_Push(iAny, *iChannerWCon);
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+void sWrite(const Val_Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+	const ChanW_Bin& iChanW)
+	{
+	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
+	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
+	sPull_Push_JSONB(*thePair.second, iWriteFilter, iChanW);
 	}
 
 } // namespace Util_Any_JSONB
