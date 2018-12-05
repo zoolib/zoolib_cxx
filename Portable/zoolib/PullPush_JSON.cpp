@@ -352,12 +352,12 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 // =================================================================================================
 #pragma mark - 
 
-static bool spPull_Push_JSON(const Any& iAny,
+static void spPull_Push_JSON(const Any& iAny,
 	const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW);
 
-static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
+static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
@@ -387,19 +387,14 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (NotQ<Any> theNotQ = sQRead(iChanR))
-				{
-				return false;
-				}
-			else if (sPGet<PullPush::End>(*theNotQ))
+			if (NotQ<Any> theNotQ = sQEReadAnyOrEnd(iChanR))
 				{
 				break;
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW))
-					return false;
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -409,8 +404,7 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				if (iOptions.fNumberSequences.DGet(false))
 					iChanW << "/*" << count << "*/";
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW))
-					return false;
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW);
 				}
 			++count;
 			}
@@ -424,11 +418,7 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (NotQ<Any> theNotQ = sQRead(iChanR))
-				{
-				return false;
-				}
-			else if (sPGet<PullPush::End>(*theNotQ))
+			if (NotQ<Any> theNotQ = sQEReadAnyOrEnd(iChanR))
 				{
 				break;
 				}
@@ -436,12 +426,7 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				if (not spPull_Push_JSON(*theNotQ, iChanR,
-					iIndent, iOptions, iMayNeedInitialLF,
-					iChanW))
-					{
-					return false;
-					}
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -452,20 +437,14 @@ static bool spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				if (not spPull_Push_JSON(*theNotQ, iChanR,
-					iIndent, iOptions, iMayNeedInitialLF,
-					iChanW))
-					{
-					return false;
-					}
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 				}
 			}
 		iChanW << "]";
 		}
-	return true;
 	}
 
-static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
+static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
@@ -496,17 +475,14 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				}
 			else if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
-				return false;
+				sThrow_ParseException("Require value after Name from ChanR_Any");
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << " = ";
-
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
-					return false;
-
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -516,9 +492,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << ": ";
-
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
-					return false;
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				}
 			}
 		sWriteLFIndent(iIndent, iOptions, iChanW);
@@ -536,7 +510,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				}
 			else if (NotQ<Any> theNotQ = sQRead(iChanR))
 				{
-				return false;
+				sThrow_ParseException("Require value after Name from ChanR_Any");
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
@@ -549,8 +523,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				else
 					iChanW << "=";
 
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
-					return false;
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 
 				iChanW << ";";
 				}
@@ -565,8 +538,7 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				if (not spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW))
-					return false;
+				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				}
 			wroteAny = true;
 			}
@@ -574,7 +546,6 @@ static bool spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 			iChanW << " ";
 		iChanW << "}";
 		}
-	return true;
 	}
 
 bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
@@ -592,7 +563,7 @@ bool sPull_Push_JSON(const ChanR_Any& iChanR,
 	return false;
 	}
 
-static bool spPull_Push_JSON(const Any& iAny,
+static void spPull_Push_JSON(const Any& iAny,
 	const ChanR_Any& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
@@ -600,37 +571,38 @@ static bool spPull_Push_JSON(const Any& iAny,
 	if (const string* theString = sPGet<string>(iAny))
 		{
 		Util_Chan_JSON::sWriteString(*theString, false, iChanW);
-		return true;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
+	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
-		return true;
 		}
 
-	if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+	else if (const Data_Any* theData = sPGet<Data_Any>(iAny))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_Any>(*theData),
 			iIndent, iOptions, iMayNeedInitialLF, iChanW);
-		return true;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
+	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
-		return true;
 		}
 
-	if (sPGet<PullPush::StartMap>(iAny))
-		return spPull_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+	else if (sPGet<PullPush::StartMap>(iAny))
+		{
+		spPull_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		}
 
-	if (sPGet<PullPush::StartSeq>(iAny))
-		return spPull_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+	else if (sPGet<PullPush::StartSeq>(iAny))
+		{
+		spPull_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		}
 
-	Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
-
-	return true;
+	else
+		{
+		Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
+		}
 	}
 
 } // namespace ZooLib

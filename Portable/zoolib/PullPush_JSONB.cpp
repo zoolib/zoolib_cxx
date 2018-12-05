@@ -215,12 +215,16 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		sEWriteBE<uint8>(iChanW, 0xED);
 		for (;;)
 			{
-			ZQ<Name> theNameQ = sEReadNameOrEnd(iChanR);
-			if (not theNameQ)
-				return false;
-			spWriteString(iChanW, *theNameQ);
-			if (not sPull_Push_JSONB(iChanR, iWriteFilter, iChanW))
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
 				break;
+				}
+			else
+				{
+				spWriteString(iChanW, *theNameQ);
+				if (not sPull_Push_JSONB(iChanR, iWriteFilter, iChanW))
+					sThrow_ParseException("Require value after Name from ChanR_Any");
+				}
 			}
 		sEWriteBE<uint8>(iChanW, 0xFF);
 		return true;

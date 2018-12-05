@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW);
+void sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW);
 
 bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny);
 

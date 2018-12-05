@@ -236,7 +236,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 // =================================================================================================
 #pragma mark -
 
-static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const ML::StrimW& iChanW)
+static void spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const ML::StrimW& iChanW)
 	{
 	const ML::StrimW& s = iChanW;
 
@@ -289,11 +289,11 @@ static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const
 
 					if (NotQ<Any> theNotQ = sQRead(iChanR))
 						{
-						return false;
+						sThrow_ParseException("Require value after Name from ChanR_Any");
 						}
-					else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
+					else
 						{
-						return false;
+						spPull_Push_XMLPList(*theNotQ, iChanR, iChanW);
 						}
 					}
 				}
@@ -305,18 +305,10 @@ static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const
 		s.Begin("array");
 			for (;;)
 				{
-				if (NotQ<Any> theNotQ = sQRead(iChanR))
-					{
-					return false;
-					}
-				else if (sPGet<PullPush::End>(*theNotQ))
-					{
+				if (NotQ<Any> theNotQ = sQEReadAnyOrEnd(iChanR))
 					break;
-					}
-				else if (not spPull_Push_XMLPList(*theNotQ, iChanR, iChanW))
-					{
-					return false;
-					}
+				else
+					spPull_Push_XMLPList(*theNotQ, iChanR, iChanW);
 				}
 		s.End("array");
 		}
@@ -356,8 +348,6 @@ static bool spPull_Push_XMLPList(const Any& iAny, const ChanR_Any& iChanR, const
 			s.Raw() << "<!--!! Unhandled: */" << iAny.Type().name() << " !!-->";
 		s.End("nil");
 		}
-
-	return true;
 	}
 
 bool sPull_Push_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW)

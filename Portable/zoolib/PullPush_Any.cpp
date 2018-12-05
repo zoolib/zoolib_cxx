@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/NameUniquifier.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/Val_Any.h"
 
 namespace ZooLib {
@@ -36,81 +37,73 @@ using std::string;
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
+void sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 	{
 	if (const Seq_Any* theSeq = sPGet<Seq_Any>(iAny))
 		{
 		sPush(PullPush::kStartSeq, iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
-			{
-			if (not sPull_Any_Push(theSeq->Get(xx), iChanW))
-				return false;
-			}
+			sPull_Any_Push(theSeq->Get(xx), iChanW);
 		sPush(PullPush::kEnd, iChanW);
-		return true;
 		}
 
-	if (const Map_Any* theMap = sPGet<Map_Any>(iAny))
+	else if (const Map_Any* theMap = sPGet<Map_Any>(iAny))
 		{
 		sPush(PullPush::kStartMap, iChanW);
 		for (Map_Any::Index_t iter = theMap->Begin(), end = theMap->End();
 			iter != end; ++iter)
 			{
 			sPush(sName(iter->first), iChanW);
-			if (not sPull_Any_Push(iter->second, iChanW))
-				return false;
+			sPull_Any_Push(iter->second, iChanW);
 			}
 		sPush(PullPush::kEnd, iChanW);
-		return true;
 		}
 
-	if (const string* theString = sPGet<string>(iAny))
+	else if (const string* theString = sPGet<string>(iAny))
 		{
 		sPush(*theString, iChanW);
 //		sPull_UTF_Push(ChanRU_UTF_string8(*theString), iChanW);
-		return true;
 		}
 
-	if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+	else if (const Data_Any* theData = sPGet<Data_Any>(iAny))
 		{
 		sPull_Bin_Push(ChanRPos_Bin_Data<Data_Any>(*theData), iChanW);
-		return true;
 		}
-
-	sPush(iAny, iChanW);
-	return true;
+	else
+		{
+		sPush(iAny, iChanW);
+		}
 	}
 
 // =================================================================================================
 #pragma mark - 
 
-static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
+static void spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 	{
-	if (const string* theString = sPGet<string>(iAny))
+	if (false)
+		{}
+
+	else if (const string* theString = sPGet<string>(iAny))
 		{
 		oAny = *theString;
-		return true;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
+	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
 		{
 		oAny = sReadAllUTF8(*theChanner);
-		return true;
 		}
 
-	if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+	else if (const Data_Any* theData = sPGet<Data_Any>(iAny))
 		{
 		oAny = *theData;
-		return true;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
+	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
 		{
 		oAny = sReadAll_T<Data_Any>(*theChanner);
-		return true;
 		}
 
-	if (sPGet<PullPush::StartMap>(iAny))
+	else if (sPGet<PullPush::StartMap>(iAny))
 		{
 		Map_Any theMap;
 		for (;;)
@@ -119,46 +112,52 @@ static bool spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 				{
 				break;
 				}
+			else if (NotQ<Any> theNotQ = sQRead(iChanR))
+				{
+				sThrow_ParseException("Require value after Name from ChanR_Any");
+				}
 			else
 				{
 				Any theAny;
-				if (not sPull_Push_Any(iChanR, theAny))
-					return false;
+				spPull_Push_Any(*theNotQ, iChanR, theAny);
 				theMap.Set(*theNameQ, theAny);
 				}
 			}
 		oAny = theMap;
-		return true;
 		}
 
-	if (sPGet<PullPush::StartSeq>(iAny))
+	else if (sPGet<PullPush::StartSeq>(iAny))
 		{
 		Seq_Any theSeq;
 		for (;;)
 			{
-			ZQ<Any> theQ = sQRead(iChanR);
-			if (not theQ)
-				return false;
-			if (sPGet<PullPush::End>(*theQ))
+			if (NotQ<Any> theQ = sQEReadAnyOrEnd(iChanR))
+				{
 				break;
-			Any theAny;
-			if (not spPull_Push_Any(*theQ, iChanR, theAny))
-				return false;
-			theSeq.Append(theAny);
+				}
+			else
+				{
+				Any theAny;
+				spPull_Push_Any(*theQ, iChanR, theAny);
+				theSeq.Append(theAny);
+				}
 			}
 		oAny = theSeq;
-		return true;
 		}
 
-	oAny = iAny;
-
-	return true;
+	else
+		{
+		oAny = iAny;
+		}
 	}
 
 bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny)
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
-		return spPull_Push_Any(*theQ, iChanR, oAny);
+		{
+		spPull_Push_Any(*theQ, iChanR, oAny);
+		return true;
+		}
 	return false;
 	}
 
@@ -167,8 +166,8 @@ ZQ<Any> sQPull_Any(const ChanR_Any& iChanR)
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		if (spPull_Push_Any(*theQ, iChanR, theAny))
-			return theAny;
+		spPull_Push_Any(*theQ, iChanR, theAny);
+		return theAny;
 		}
 	return null;
 	}
@@ -178,8 +177,8 @@ Any sPull_Any(const ChanR_Any& iChanR)
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		if (spPull_Push_Any(*theQ, iChanR, theAny))
-			return theAny;
+		spPull_Push_Any(*theQ, iChanR, theAny);
+		return theAny;
 		}
 	return Any();
 	}
