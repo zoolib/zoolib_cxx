@@ -50,4 +50,4 @@ inline bool sThrow_ParseException(const std::string& iMessage)
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Yad_h__
+#endif // __ZooLib_ParseException_h__
