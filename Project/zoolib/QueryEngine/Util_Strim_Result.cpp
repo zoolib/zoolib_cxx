@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zoolib/Dataspace/Types.h"
+#include "zoolib/Dataspace/Types.h" // For AbsentOptional_t
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -58,4 +58,11 @@ void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 	}
 
 } // namespace QueryEngine
+
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>& iResult)
+	{
+	QueryEngine::sToStrim(iResult, w);
+	return w;
+	}
+
 } // namespace ZooLib

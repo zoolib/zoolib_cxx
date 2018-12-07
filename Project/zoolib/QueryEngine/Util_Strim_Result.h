@@ -34,6 +34,9 @@ namespace QueryEngine {
 void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& iStrimW);
 
 } // namespace QueryEngine
+
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>& iResult);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_QueryEngine_Util_Strim_Result_h__
