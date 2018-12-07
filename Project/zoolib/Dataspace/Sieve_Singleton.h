@@ -59,6 +59,7 @@ public:
 
 	bool IsLoaded();
 
+	ZQ<Map_Any> QGetMap();
 	Map_Any GetMap();
 	Val_Any Get(const string8& iName);
 

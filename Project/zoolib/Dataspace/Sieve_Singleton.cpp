@@ -95,26 +95,33 @@ bool Sieve_Singleton::IsLoadedAndExists()
 bool Sieve_Singleton::IsLoaded()
 	{ return fRegistration && fResult; }
 
-Map_Any Sieve_Singleton::GetMap()
+ZQ<Map_Any> Sieve_Singleton::QGetMap()
 	{
-	ZAssert(this->IsLoadedAndExists());
-
 	if (not fMapQ)
 		{
-		// Take basic value from what's in fMapInDaton.
-		fMapQ = fMapInDaton;
-		// Put anything that's in our Result under what's in fMapInDaton.
-		const RelHead theRelHead = fResult->GetRelHead();
-		const Val_Any* theVals = fResult->GetValsAt(0);
-		foreachv (const string8& theName, theRelHead)
+		if (fRegistration && fResult && fResult->Count())
 			{
-			const Val_Any& theVal = *theVals++;
-			if (not fMapQ->PGet(theName))
-				fMapQ->Set(theName, theVal);
+			// Take basic value from what's in fMapInDaton.
+			fMapQ = fMapInDaton;
+			// Put anything that's in our Result under what's in fMapInDaton.
+			const RelHead theRelHead = fResult->GetRelHead();
+			const Val_Any* theVals = fResult->GetValsAt(0);
+			foreachv (const string8& theName, theRelHead)
+				{
+				const Val_Any& theVal = *theVals++;
+				if (not fMapQ->PGet(theName))
+					fMapQ->Set(theName, theVal);
+				}
 			}
 		}
 
-	return *fMapQ;
+	return fMapQ;
+	}
+
+Map_Any Sieve_Singleton::GetMap()
+	{
+	ZAssert(this->IsLoadedAndExists());
+	return *this->QGetMap();
 	}
 
 Val_Any Sieve_Singleton::Get(const string8& iName)
