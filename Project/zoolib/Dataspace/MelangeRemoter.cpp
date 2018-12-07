@@ -208,12 +208,11 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 		}
 	}
 
-static Map_Any spReadMessage(const ZRef<ChannerR_Bin>& iChannerR, const ZQ<string>& iDescriptionQ)
+static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescriptionQ)
 	{
 	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
-
-  	ZQ<Any> theQ = Util_Any_JSONB::sQRead(*iChannerR, theReadFilter);
+	ZQ<Any> theQ = Util_Any_JSONB::sQRead(iChanR, theReadFilter);
 	if (not theQ)
 		sThrow_ExhaustedR();
 
@@ -363,7 +362,7 @@ void MelangeServer::pRead()
 		Map_Any theMap;
 		{
 		ZRelMtx rel(fMtx);
-		theMap = spReadMessage(theChannerR, fDescriptionQ);
+		theMap = spReadMessage(*theChannerR, fDescriptionQ);
 		}
 
 		fTimeOfLastRead = Time::sSystem();
@@ -694,7 +693,7 @@ void Melange_Client::pRead()
 			Map_Any theMap;
 			{
 			ZRelMtx rel(fMtx);
-			theMap = spReadMessage(sChanner_Channer_T<ChanR_Bin_AbortOnSlowRead>(theChanner, 15), null);
+			theMap = spReadMessage(ChanR_Bin_AbortOnSlowRead(*theChanner, 15), null);
 			}
 
 			fQueue_Read.push_back(theMap);
