@@ -55,7 +55,7 @@ Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_
 	{
 	if (sNotEmpty(fEditableRelHead) and not sContains(sGetRelHead(fRel), fDatonColName))
 		{
-		if (ZLOGF(w, eDebug))
+		if (ZLOGF(w, eErr))
 			w << "No daton column named '" << fDatonColName << "' in relation " << fRel;
 		ZUnimplemented();
 		}
@@ -176,7 +176,7 @@ void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 			{ fDaton = *theDatonQ; }
 		else
 			{
-			if (ZLOGF(w, eDebug))
+			if (ZLOGF(w, eErr))
 				w << "fDatonColName: " << fDatonColName << "\n" << fRel;
 			ZUnimplemented();
 			}

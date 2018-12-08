@@ -628,7 +628,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 	fPRelaters = leftPRelaters | rightPRelaters;
 	if (leftRelHead != rightRelHead)
 		{
-		if (ZLOGPF(w,eInfo))
+		if (ZLOGPF(w, eErr))
 			{
 			w
 				<< "leftRelHead and rightRelHead don't match, newOp0 and newOp1 are incompatible"
@@ -796,9 +796,6 @@ void Relater_Union::ModifyRegistrations(
 		{
 		const int64 theRefcon = *iRemoved++;
 
-		if (ZLOGPF(s, eDebug + 1))
-			s << "Remove: " << theRefcon;
-
 		Map_Refcon_ClientQuery::iterator iterClientQuery =
 			fMap_Refcon_ClientQuery.find(theRefcon);
 
@@ -849,19 +846,10 @@ void Relater_Union::ModifyRegistrations(
 
 		const int64 theRefcon = iAdded->GetRefcon();
 
-		if (ZLOGPF(s, eDebug + 1))
-			s << "Add: " << theRefcon;
-
 		if (inPQuery.second)
 			{
-			if (ZLOGPF(s, eDebug + 1))
-				s << "Raw:\n" << theRel;
-
 			thePQuery->fRel_Analyzed = Analyze(this, thePQuery).TopLevelDo(theRel);
 			sInsertBackMust(fPQuery_NeedsWork, thePQuery);
-
-			if (ZLOGPF(s, eDebug + 1))
-				s << "Analyzed:\n" << thePQuery->fRel_Analyzed;
 			}
 
 		ClientQuery* theClientQuery = &fMap_Refcon_ClientQuery.insert(
@@ -949,8 +937,6 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	if (sNotEmpty(fPQuery_NeedsWork))
 		{
-		ZLOGPF(s, eDebug+1);
-
 		const double start = Time::sNow();
 
 		for (DListEraser<PQuery, DLink_PQuery_NeedsWork>
@@ -977,36 +963,15 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 				fReadCount = 0;
 				fStepCount = 0;
 
-				const double start = Time::sNow();
-
 				ZRef<QueryEngine::Walker> theWalker =
 					Relater_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
-				const double afterMakeWalker = Time::sNow();
 
 				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
-				const double afterDoQuery = Time::sNow();
-
-				if (s)
-					{
-					s << "\n" << thePQuery->fRel_Analyzed
-						<< "\nWalkerCount: " << fWalkerCount
-						<< "\nReadCount: " << fReadCount
-						<< "\nStepCount: " << fStepCount
-						<< "\nMakeWalker: " << sStringf("%gms", 1000*(afterMakeWalker-start))
-						<< "\nDoQuery: " << sStringf("%gms", 1000*(afterDoQuery-afterMakeWalker));
-					}
 
 				for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>
 					iterCS = thePQuery->fClientQueries; iterCS; iterCS.Advance())
 					{ sQInsertBack(fClientQuery_NeedsWork, iterCS.Current()); }
 				}
-			}
-
-		const double afterCollect = Time::sNow();
-
-		if (s)
-			{
-			s << "\nOverall Elapsed: " << sStringf("%gms", 1000*(afterCollect-start));
 			}
 		}
 
@@ -1176,12 +1141,12 @@ bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
 		const RA::RelHead& theRH = iWalker->fCurrentResult->GetRelHead();
 		if (theRH != iWalker->fProxy->fResultRelHead)
 			{
-			if (ZLOGPF(s, eDebug))
+			if (ZLOGPF(s, eErr))
 				{
 				s	<< "\n" << theRH
 					<< "\n" << iWalker->fProxy->fResultRelHead;
 				}
-			ZDebugStop(0);
+			ZUnimplemented();
 			}
 		size_t theOffset = iWalker->fBaseOffset;
 		const Val_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);

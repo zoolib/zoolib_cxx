@@ -74,8 +74,6 @@ void Relater_Asyncify::ModifyRegistrations(
 
 	while (iAddedCount--)
 		{
-		if (ZLOGPF(s, eDebug + 1))
-			s << "Add: " << iAdded->GetRefcon();
 		sInsertMust(fPendingAdds, iAdded->GetRefcon(), iAdded->GetRel());
 		++iAdded;
 		}
@@ -83,8 +81,6 @@ void Relater_Asyncify::ModifyRegistrations(
 	while (iRemovedCount--)
 		{
 		const int64 theRefcon = *iRemoved++;
-		if (ZLOGPF(s, eDebug + 1))
-			s << "Remove: " << theRefcon;
 		if (not sQErase(fPendingAdds, theRefcon))
 			sInsertMust(fPendingRemoves, theRefcon);
 

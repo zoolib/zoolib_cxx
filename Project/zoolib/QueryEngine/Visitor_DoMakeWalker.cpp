@@ -44,7 +44,7 @@ namespace RA = RelationalAlgebra;
 
 void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	{
-	if (ZLOGPF(w, eDebug))
+	if (ZLOGPF(w, eErr))
 		{
 		Visitee* asPointer = iRep.Get();
 		w << "Unimplemented for visitee: " << typeid(*asPointer).name();

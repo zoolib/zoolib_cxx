@@ -38,7 +38,6 @@ namespace HTTP {
 using std::max;
 using std::min;
 using std::pair;
-//using std::replace;
 using std::vector;
 
 // =================================================================================================
@@ -55,7 +54,6 @@ static uint32 spHexCharToUInt(char iChar)
 		return 10 + iChar - 'A';
 	if (iChar >= 'a' && iChar <= 'f')
 		return 10 + iChar - 'a';
-	ZUnimplemented();
 	return 0;
 	}
 

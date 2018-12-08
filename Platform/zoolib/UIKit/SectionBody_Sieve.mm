@@ -213,7 +213,6 @@ void SectionBody_Sieve::PreUpdate()
 	fIsLoading = true;
 	if (fRegistration)
 		{
-		ZLOGF(w, eDebug + 1);
 		vector<Entry> theRows;
 		if (ZRef<Result> theResult = fResult)
 			{
@@ -224,8 +223,6 @@ void SectionBody_Sieve::PreUpdate()
 				theRows.push_back(
 					RelationalAlgebra::PseudoMap_RelHead(theRelHead, theResult->GetValsAt(xx))
 					.AsMap());
-				w << "\n" << xx << ": ";
-//##				ZUtil_Any_JSON::sWrite(theRows.back(), w);
 				}
 			}
 
@@ -234,7 +231,6 @@ void SectionBody_Sieve::PreUpdate()
 
 		if (fSortSpecs.size())
 			sort(theRows.begin(), theRows.end(), CompareEntries(nullptr, fSortSpecs));
-//##			sort(theRows.begin(), theRows.end(), CompareEntries(fTextCollators, fSortSpecs));
 		fRows_Pending.swap(theRows);
 		}
 	}
@@ -529,9 +525,6 @@ void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCal
 	{
 	if (fRel == iRel)
 		return;
-
-	if (ZLOGPF(s, eDebug + 1))
-		s << "\n" << iRel;
 
 	fRel = iRel;
 

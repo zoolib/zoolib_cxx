@@ -281,9 +281,6 @@ public:
 
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		if (ZLOGPF(w, eDebug+1))
-			w << "Try handling:\n" << ZRef<Expr_Rel>(iExpr);
-
 		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
 		vector<pair<string8,string8> > finalRename;
 		ConcreteHead theConcreteHead;
@@ -322,21 +319,6 @@ class Transform_PushDownRestricts_IntoSearch
 public:
 	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
 		{
-		if (ZLOGPF(w, eDebug + 2))
-			{
-			w << "\nBefore: " << ZRef<Expr_Rel>(iExpr);
-			if (fRestricts.size())
-				{
-				w << "\nRestricts:";
-				foreachi (iter, fRestricts)
-					{
-					w << "\n  ";
-					Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(
-						sDefault(), w, (*iter)->fExpr_Bool);
-					}
-				}
-			}
-
 		const RA::Rename theRename = iExpr->GetRename();
 		const RA::Rename theRenameInverted = RA::sInverted(theRename);
 
@@ -385,9 +367,6 @@ public:
 			iExpr->GetRename(),
 			iExpr->GetRelHead_Optional(),
 			result);
-
-		if (ZLOGPF(w, eDebug + 2))
-			w << "\nAfter: " << ZRef<Expr_Rel>(theSearch);
 
 		this->pSetResult(theSearch);
 		}
@@ -588,9 +567,6 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 		ZAssert(not thePQuery->fResult);
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
-
-		if (ZLOGPF(w, eDebug+1))
-			w << "\n" << thePQuery->fRel;
 
 		const double start = Time::sSystem();
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);

@@ -106,7 +106,7 @@ public:
 					}
 				}
 
-			if (ZLOGF(w, eDebug))
+			if (ZLOGF(w, eErr))
 				w << *theTypeQ;
 			ZUnimplemented();
 			}
@@ -169,7 +169,7 @@ public:
 			}
 		else
 			{
-			if (ZLOGPF(w, eDebug))
+			if (ZLOGPF(w, eErr))
 				w << iAny.Type().name();
 			ZUnimplemented();
 			}
@@ -246,8 +246,6 @@ ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
 		}
 	else
 		{
-		if (ZLOGF(w, eDebug + 1))
-			w << "\n" << *theStringQ;
 		ZRef<Channer<ChanRU<UTF32>> > theChanner = sChanner_T<ChanRU_UTF_string8>(*theStringQ);
 		return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(*theChanner, *theChanner);
 		}
@@ -257,10 +255,6 @@ Val_Any spAsVal(ZRef<Expr_Rel> iRel)
 	{
 	string8 theString;
 	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(iRel, ChanW_UTF_string8(&theString));
-
-	if (ZLOGF(w,eDebug + 1))
-		w << "\n" << theString;
-
 	return theString;
 	}
 
@@ -739,7 +733,6 @@ void Melange_Client::pWrite()
 			}
 		catch (...)
 			{
-			ZLOGTRACE(eDebug);
 			break;
 			}
 		}
@@ -783,8 +776,6 @@ void Melange_Client::pWork()
 		{
 		// We've read something, so may need to issue a no-op write.
 		fReadSinceWrite = true;
-		if (ZLOGF(w, eDebug + 1))
-			w << "fReadSinceWrite = true";
 		}
 
 	Map_Any theMessage;
@@ -831,12 +822,6 @@ void Melange_Client::pWork()
 
 	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
 		{
-		if (ZLOGF(w, eDebug + 1))
-			{
-			w	<< "theMessage.IsEmpty() == " << theMessage.IsEmpty() << ", "
-				<< "fReadSinceWrite == " << fReadSinceWrite << ", "
-				<< "sIsEmpty(fQueue_ToWrite) == " << sIsEmpty(fQueue_ToWrite);
-			}
 		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
 		}

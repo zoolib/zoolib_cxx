@@ -129,7 +129,6 @@ public:
 		bool operator()(const Key& iLeft, const Key& iRight) const
 			{
 			bool result = spDoIt(iLeft, iRight);
-//##			spDump(result, iLeft, iRight);
 			return result;
 			}
 
@@ -426,6 +425,51 @@ static EComparator spFlipped(EComparator iEComparator)
 	ZUnimplemented();
 	}
 
+// -----
+
+static void spDump(const ChanW_UTF& w,
+	Searcher_Datons::Index* bestIndex,
+	const vector<Val_Any>& bestValsEqual, const Bound_t& bestLo, const Bound_t& bestHi)
+	{
+	w << "\n" << bestIndex << " ";
+	if (size_t count = bestValsEqual.size())
+		{
+		w << "(";
+		for (size_t xx = 0; xx < count; ++xx)
+			{
+			if (xx)
+				w << " && ";
+			w << bestIndex->fColNames[xx] << " == " << bestValsEqual[xx];
+			}
+		w << ")";
+		}
+
+	if (bestLo || bestHi)
+		{
+		w << " Range(";
+		if (bestLo)
+			{
+			w << bestLo->first;
+			if (bestLo->second)
+				w << " <= ";
+			else
+				w << " < ";
+			}
+
+		w << bestIndex->fColNames[bestValsEqual.size()];
+
+		if (bestHi)
+			{
+			if (bestHi->second)
+				w << " <= ";
+			else
+				w << " < ";
+			w << bestHi->first;
+			}
+		w << ")";
+		}
+	}
+
 void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 	{
 	using namespace Util_Expr_Bool;
@@ -637,46 +681,6 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 	// We've got valsEqual filled in with stuff we're doing an equality search on, and
 	// may have a comparison in finalLo/finalHi.
-	if (ZLOGF(w, eDebug+2))
-		{
-		w << "\n" << bestIndex << " ";
-		if (size_t count = bestValsEqual.size())
-			{
-			w << "(";
-			for (size_t xx = 0; xx < count; ++xx)
-				{
-				if (xx)
-					w << " && ";
-				w << bestIndex->fColNames[xx] << " == " << bestValsEqual[xx];
-				}
-			w << ")";
-			}
-
-		if (bestLo || bestHi)
-			{
-			w << " Range(";
-			if (bestLo)
-				{
-				w << bestLo->first;
-				if (bestLo->second)
-					w << " <= ";
-				else
-					w << " < ";
-				}
-
-			w << bestIndex->fColNames[bestValsEqual.size()];
-
-			if (bestHi)
-				{
-				if (bestHi->second)
-					w << " <= ";
-				else
-					w << " < ";
-				w << bestHi->first;
-				}
-			w << ")";
-			}
-		}
 
 	const RelHead theRH_Wanted = RA::sRelHead(theSearchSpec.GetConcreteHead());
 
@@ -715,6 +719,32 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 		}
 	}
 
+static void spDump(const ChanW_UTF& w,
+	const SearchSpec& theSearchSpec,
+	const vector<Searcher_Datons::Index*>& fIndexes)
+	{
+	w << "\n" << "ConcreteHead: " << theSearchSpec.GetConcreteHead();
+	w << "\n" << "Restriction: ";
+	Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(
+		sDefault(), w, theSearchSpec.GetRestriction());
+
+	foreacha (anIndex, fIndexes)
+		{
+		w << "\n" << anIndex->fSet.size() << " entries, indexed on: ";
+		for (size_t xx = 0; xx < anIndex->fCount; ++xx)
+			w << anIndex->fColNames[xx] << " ";
+
+		foreachi (iterSet, anIndex->fSet)
+			{
+			w << "\n";
+			for (size_t xx = 0; xx < anIndex->fCount; ++xx)
+				w << *(iterSet->fValues[xx]) << " ";
+			w << "--> " << iterSet->fMapEntryP->second;
+			}
+		}
+	}
+
+
 void Searcher_Datons::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,
 	const int64* iRemoved, size_t iRemovedCount)
@@ -733,33 +763,6 @@ void Searcher_Datons::ModifyRegistrations(
 
 		if (iterPSearchPair.second)
 			{
-			if (ZLOGPF(w, eDebug+2))
-				{
-				w << "\n" << "ConcreteHead: " << theSearchSpec.GetConcreteHead();
-				w << "\n" << "Restriction: ";
-				Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(
-					sDefault(), w, theSearchSpec.GetRestriction());
-
-				foreacha (anIndex, fIndexes)
-					{
-					w << "\n" << anIndex->fSet.size() << " entries, indexed on: ";
-					for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-						w << anIndex->fColNames[xx] << " ";
-
-					if (ZLOGPF(w2, eDebug+2))
-						{
-						// We're only using w2 to control whether we emit this. We still want it on w.
-						foreachi (iterSet, anIndex->fSet)
-							{
-							w << "\n";
-							for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-								w << *(iterSet->fValues[xx]) << " ";
-							w << "--> " << iterSet->fMapEntryP->second;
-							}
-						}
-					}
-				}
-
 			// It's a new PSearch, so we'll need to work on it
 			sInsertBackMust(fPSearch_NeedsWork, thePSearch);
 
@@ -821,8 +824,6 @@ PP* spAllOnesPointer()
 
 void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 	{
-	ZLOGTRACE(eDebug + 2);
-
 	Searcher::pCollectResultsCalled();
 
 	ZAcqMtx acq(fMtx);
@@ -897,9 +898,6 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 						}
 					}
 
-				if (ZLOGPF(w, eDebug+2))
-					w << theKey;
-
 				theWalker = new Walker_Index(this,
 					thePSearch->fIndex, thePSearch->fUsableIndexNames, thePSearch->fConcreteHead,
 					theBegin, theEnd);
@@ -921,11 +919,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 
 			const double start = Time::sSystem();
 
-			ZLOGTRACE(eDebug + 2);
-
 			thePSearch->fResult = QE::sResultFromWalker(theWalker);
-
-			ZLOGTRACE(eDebug + 2);
 
 			const double elapsed = Time::sSystem() - start;
 
@@ -964,8 +958,6 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 		PSearch* thePSearch = theClientSearch->fPSearch;
 		oChanged.push_back(SearchResult(theClientSearch->fRefcon, thePSearch->fResult));
 		}
-
-	ZLOGTRACE(eDebug + 2);
 	}
 
 void Searcher_Datons::MakeChanges(
@@ -976,13 +968,6 @@ void Searcher_Datons::MakeChanges(
 		return;
 
 	ZAcqMtx acq(fMtx);
-
-	if (ZLOGPF(w, eDebug))
-		{
-		w << "extant: " << fMap_Thing.size()
-			<< ", asserted: " << iAssertedCount
-			<< ", retracted: " << iRetractedCount;
-		}
 
 	while (iAssertedCount--)
 		{
