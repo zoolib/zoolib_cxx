@@ -174,20 +174,28 @@ public:
 		{ return this->PGet<S>(); }
 
 // Special purpose constructors, called by sAny and sAnyCounted
-	template <class S, class P0>
-	Any(const S* dummy, const P0& iP0)
-		{ pCtor_T<S>(iP0); }
-
-	template <class S, class P0, class P1>
-	Any(const S* dummy, const P0& iP0, const P1& iP1)
-		{ pCtor_T<S>(iP0, iP1); }
+	template <class S>
+	Any(const S* dummy, const IKnowWhatIAmDoing_t&)
+		{ pCtor_T<S>(); }
 
 	template <class S, class P0>
 	Any(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
-		{ pCtor_Counted_T<S>(iP0); }
+		{ pCtor_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
 	Any(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+		{ pCtor_T<S>(iP0, iP1); }
+
+	template <class S>
+	Any(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+		{ pCtor_Counted_T<S>(); }
+
+	template <class S, class P0>
+	Any(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+		{ pCtor_Counted_T<S>(iP0); }
+
+	template <class S, class P0, class P1>
+	Any(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(iP0, iP1); }
 
 private:
@@ -365,26 +373,28 @@ private:
 
 // -----------------
 
-	template <class S, class P0, class P1>
-	void pCtor_T(const P0& iP0, const P1& iP1)
+	template <class S>
+	void pCtor_T()
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0, iP1);
+			sCtor_T<InPlace_T<S> >(&fDistinguisher);
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>());
 			}
 		}
 
-	template <class S, class P0, class P1>
-	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
+	template <class S>
+	void pCtor_Counted_T()
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>());
 		}
+
+// -----
 
 	template <class S, class P0>
 	void pCtor_T(const P0& iP0)
@@ -417,6 +427,29 @@ private:
 		{
 		fDistinguisher = 0;
 		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
+		}
+
+// -----
+
+	template <class S, class P0, class P1>
+	void pCtor_T(const P0& iP0, const P1& iP1)
+		{
+		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
+			{
+			sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0, iP1);
+			}
+		else
+			{
+			fDistinguisher = 0;
+			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+			}
+		}
+
+	template <class S, class P0, class P1>
+	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
+		{
+		fDistinguisher = 0;
+		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
 		}
 
 // -----------------
@@ -548,23 +581,27 @@ inline void swap(Any& a, Any& b)
 
 template <class S>
 Any sAny()
-	{ return Any(static_cast<S*>(0)); }
+	{ return Any(static_cast<S*>(0), IKnowWhatIAmDoing); }
 
 template <class S, class P0>
 Any sAny(const P0& iP0)
-	{ return Any(static_cast<S*>(0), iP0); }
-
-template <class S, class P0, class P1>
-Any sAny(const P0& iP0, const P1& iP1)
-	{ return Any(static_cast<S*>(0), iP0, iP1); }
-
-template <class S, class P0>
-Any sAnyCounted(const P0& iP0)
 	{ return Any(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
 
 template <class S, class P0, class P1>
-Any sAnyCounted(const P0& iP0, const P1& iP1)
+Any sAny(const P0& iP0, const P1& iP1)
 	{ return Any(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
+
+template <class S>
+Any sAnyCounted()
+	{ return Any(static_cast<S*>(0), IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+
+template <class S, class P0>
+Any sAnyCounted(const P0& iP0)
+	{ return Any(static_cast<S*>(0), iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+
+template <class S, class P0, class P1>
+Any sAnyCounted(const P0& iP0, const P1& iP1)
+	{ return Any(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
 
 } // namespace ZooLib
 
