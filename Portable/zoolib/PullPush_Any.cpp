@@ -158,8 +158,11 @@ void sPull_Push_Any(const Any& iAny,
 		{
 		if (iReadFilter)
 			{
-			if (iReadFilter->QCall(iAny, iChanR, oAny))
-				return;
+			if (ZQ<bool> theQ = iReadFilter->QCall(iAny, iChanR, oAny))
+				{
+				if (*theQ)
+					return;
+				}
 			}
 		oAny = iAny;
 		}
