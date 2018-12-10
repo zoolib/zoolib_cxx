@@ -45,7 +45,7 @@ void sPull_Any_Push(const Any& iAny,
 		{
 		sPush(PullPush::kStartSeq, iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
-			sPull_Any_Push(theSeq->Get(xx), iChanW);
+			sPull_Any_Push(theSeq->Get(xx), iWriteFilter, iChanW);
 		sPush(PullPush::kEnd, iChanW);
 		}
 
@@ -56,7 +56,7 @@ void sPull_Any_Push(const Any& iAny,
 			iter != end; ++iter)
 			{
 			sPush(sName(iter->first), iChanW);
-			sPull_Any_Push(iter->second, iChanW);
+			sPull_Any_Push(iter->second, iWriteFilter, iChanW);
 			}
 		sPush(PullPush::kEnd, iChanW);
 		}
@@ -72,7 +72,13 @@ void sPull_Any_Push(const Any& iAny,
 		sPull_Bin_Push(ChanRPos_Bin_Data<Data_Any>(*theData), iChanW);
 		}
 
-	else if (not iWriteFilter || not sCall(iWriteFilter, iAny, iChanW))
+	else if (iWriteFilter)
+		{
+		if (not sCall(iWriteFilter, iAny, iChanW))
+			sPush(iAny, iChanW);
+		}
+
+	else
 		{
 		sPush(iAny, iChanW);
 		}
