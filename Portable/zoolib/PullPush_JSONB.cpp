@@ -52,7 +52,7 @@ bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_Any& iChanW)
 	{
-	if (NotQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
+	if (NotQ<uint8> theTypeQ = sQRead(iChanR))
 		{
 		return false;
 		}
@@ -118,7 +118,7 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 			sPush(kStartSeq, iChanW);
 			for (;;)
 				{
-				if (NotQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
+				if (NotQ<uint8> theTypeQ = sQRead(iChanR))
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
@@ -140,7 +140,7 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 			for (;;)
 				{
 				string theName = sReadCountPrefixedString(iChanR);
-				if (NotQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
+				if (NotQ<uint8> theTypeQ = sQRead(iChanR))
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
