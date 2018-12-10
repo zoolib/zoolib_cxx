@@ -47,7 +47,7 @@ size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 
 inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return sERead(iChan, static_cast<byte*>(oDest), iCount); }
+	{ sERead(iChan, static_cast<byte*>(oDest), iCount); }
 
 // =================================================================================================
 #pragma mark -
