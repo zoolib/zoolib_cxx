@@ -937,8 +937,6 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 
 	if (sNotEmpty(fPQuery_NeedsWork))
 		{
-		const double start = Time::sNow();
-
 		for (DListEraser<PQuery, DLink_PQuery_NeedsWork>
 			eraserPQuery = fPQuery_NeedsWork; eraserPQuery; eraserPQuery.Advance())
 			{
