@@ -98,6 +98,7 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 			{
 			PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 			sPush(sGetClear(thePullPushPair.second), iChanW);
+			sFlush(iChanW);
 			for (;;)
 				{
 				if (uint64 theCount = sReadCount(iChanR))
