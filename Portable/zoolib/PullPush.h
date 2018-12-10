@@ -49,6 +49,9 @@ extern const Any kStartSeq;
 struct End {};
 extern const Any kEnd;
 
+template <class T>
+struct Start {};
+
 } // namespace PullPush
 
 using ChanR_Any = ChanR<Any>;
