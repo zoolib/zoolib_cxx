@@ -31,11 +31,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSONB {
 
-ZQ<Any> sQRead(const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter);
+ZQ<Any> sQRead(const ChanR_Bin& iChanR);
 
-void sWrite(const Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
-	const ChanW_Bin& iChanW);
+void sWrite(const Any& iVal, const ChanW_Bin& iChanW);
 
 } // namespace Util_Any_JSONB
 } // namespace ZooLib

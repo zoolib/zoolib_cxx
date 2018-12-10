@@ -159,14 +159,8 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 			}
 		case 254:
 			{
-			if (iReadFilter)
-				{
-				if (ZQ<Any> theQ = sCall(iReadFilter, iChanR))
-					{
-					sPush(*theQ, iChanW);
-					break;
-					}
-				}
+			if (iReadFilter && sCall(iReadFilter, iChanR, iChanW))
+				break;
 			sThrow_ParseException("Unhandled type 254");
 			break;
 			}
@@ -309,7 +303,7 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		}
 
 	sEWriteBE<uint8>(iChanW, 254);
-	if (iWriteFilter && sCall(iWriteFilter, iChanW, *theAnyQ))
+	if (iWriteFilter && sCall(iWriteFilter, *theAnyQ, iChanR, iChanW))
 		return true;
 
 	if (ZLOGF(w, eErr))

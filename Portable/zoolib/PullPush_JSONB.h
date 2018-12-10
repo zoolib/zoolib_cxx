@@ -32,13 +32,13 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-typedef Callable<ZQ<Any>(const ChanR_Bin& iChanR)> Callable_JSONB_ReadFilter;
-
-typedef Callable<bool(const ChanW_Bin& iChanW, const Any& iAny)> Callable_JSONB_WriteFilter;
+typedef Callable<bool(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)> Callable_JSONB_ReadFilter;
 
 bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_Any& iChanW);
+
+typedef Callable<bool(const Any& iAny, const ChanR_Any& iChanR, const ChanW_Bin& iChanW)> Callable_JSONB_WriteFilter;
 
 bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 	const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,

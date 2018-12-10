@@ -46,12 +46,11 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
-ZQ<Any> sQRead(const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter)
+ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
-	sPull_JSONB_Push(iChanR, iReadFilter, *thePair.first);
+	sPull_JSONB_Push(iChanR, null, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();
@@ -61,16 +60,16 @@ ZQ<Any> sQRead(const ChanR_Bin& iChanR,
 
 static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
 	{
-	sPull_Any_Push(iAny, *iChannerWCon);
+	sPull_Any_Push(iAny, null, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const Any& iVal, const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+void sWrite(const Any& iVal,
 	const ChanW_Bin& iChanW)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
-	sPull_Push_JSONB(*thePair.second, iWriteFilter, iChanW);
+	sPull_Push_JSONB(*thePair.second, null, iChanW);
 	}
 
 } // namespace Util_Any_JSONB

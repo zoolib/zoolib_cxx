@@ -37,7 +37,9 @@ using std::string;
 // =================================================================================================
 #pragma mark - 
 
-void sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
+void sPull_Any_Push(const Any& iAny,
+	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
+	const ChanW_Any& iChanW)
 	{
 	if (const Seq_Any* theSeq = sPGet<Seq_Any>(iAny))
 		{
@@ -69,16 +71,23 @@ void sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW)
 		{
 		sPull_Bin_Push(ChanRPos_Bin_Data<Data_Any>(*theData), iChanW);
 		}
-	else
+
+	else if (not iWriteFilter || not sCall(iWriteFilter, iAny, iChanW))
 		{
 		sPush(iAny, iChanW);
 		}
 	}
 
+void sPull_Any_Push(const Any& iAny,
+	const ChanW_Any& iChanW)
+	{ sPull_Any_Push(iAny, null, iChanW); }
+
 // =================================================================================================
 #pragma mark - 
 
-static void spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
+void sPull_Push_Any(const Any& iAny,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ChanR_Any& iChanR, Any& oAny)
 	{
 	if (false)
 		{}
@@ -119,7 +128,7 @@ static void spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 			else
 				{
 				Any theAny;
-				spPull_Push_Any(*theNotQ, iChanR, theAny);
+				sPull_Push_Any(*theNotQ, iReadFilter, iChanR, theAny);
 				theMap.Set(*theNameQ, theAny);
 				}
 			}
@@ -138,7 +147,7 @@ static void spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 			else
 				{
 				Any theAny;
-				spPull_Push_Any(*theQ, iChanR, theAny);
+				sPull_Push_Any(*theQ, iReadFilter, iChanR, theAny);
 				theSeq.Append(theAny);
 				}
 			}
@@ -147,26 +156,36 @@ static void spPull_Push_Any(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
 
 	else
 		{
+		if (iReadFilter)
+			{
+			if (iReadFilter->QCall(iAny, iChanR, oAny))
+				return;
+			}
 		oAny = iAny;
 		}
 	}
 
-bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny)
+bool sPull_Push_Any(const ChanR_Any& iChanR,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	Any& oAny)
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
-		spPull_Push_Any(*theQ, iChanR, oAny);
+		sPull_Push_Any(*theQ, iReadFilter, iChanR, oAny);
 		return true;
 		}
 	return false;
 	}
+
+bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny)
+	{ return sPull_Push_Any(iChanR, null, oAny); }
 
 ZQ<Any> sQPull_Any(const ChanR_Any& iChanR)
 	{
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		spPull_Push_Any(*theQ, iChanR, theAny);
+		sPull_Push_Any(*theQ, null, iChanR, theAny);
 		return theAny;
 		}
 	return null;
@@ -177,7 +196,7 @@ Any sPull_Any(const ChanR_Any& iChanR)
 	if (ZQ<Any> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		spPull_Push_Any(*theQ, iChanR, theAny);
+		sPull_Push_Any(*theQ, null, iChanR, theAny);
 		return theAny;
 		}
 	return Any();

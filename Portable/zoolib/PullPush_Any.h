@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib__PullPush_Any_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Callable.h"
 #include "zoolib/PullPush.h"
 #include "zoolib/Val_Any.h"
 
@@ -30,9 +31,29 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-void sPull_Any_Push(const Any& iAny, const ChanW_Any& iChanW);
+typedef Callable<bool(const Any& iAny, const ChanW_Any& iChanW)> Callable_Any_WriteFilter;
 
-bool sPull_Push_Any(const ChanR_Any& iChanR, Any& oAny);
+void sPull_Any_Push(const Any& iAny,
+	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
+	const ChanW_Any& iChanW);
+
+void sPull_Any_Push(const Any& iAny,
+	const ChanW_Any& iChanW);
+
+// --
+
+typedef Callable<bool(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)> Callable_Any_ReadFilter;
+
+void sPull_Push_Any(const Any& iAny,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ChanR_Any& iChanR, Any& oAny);
+
+bool sPull_Push_Any(const ChanR_Any& iChanR,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	Any& oAny);
+
+bool sPull_Push_Any(const ChanR_Any& iChanR,
+	Any& oAny);
 
 ZQ<Any> sQPull_Any(const ChanR_Any& iChanR);
 Any sPull_Any(const ChanR_Any& iChanR);
