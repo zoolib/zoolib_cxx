@@ -175,13 +175,44 @@ private:
 	};
 
 // =================================================================================================
+#pragma mark - ChanW_Bin_Data
+
+template <class Data_p>
+class ChanW_Bin_Data
+:	public ChanW<byte>
+	{
+public:
+	typedef Data_p Data;
+
+	ChanW_Bin_Data(Data* ioData)
+	:	fDataPtr(ioData)
+		{}
+
+	~ChanW_Bin_Data()
+		{}
+
+// From ChanW
+	virtual size_t Write(const byte* iSource, size_t iCount)
+		{
+		const size_t thePos = fDataPtr->GetSize();
+		fDataPtr->SetSize(thePos + iCount);
+
+		this->fDataPtr->CopyFrom(thePos, iSource, iCount);
+
+		return iCount;
+		}
+private:
+	Data* fDataPtr;
+	};
+
+// =================================================================================================
 #pragma mark - Data stream reading functions
 
 template <class Data_p>
 Data_p sReadAll_T(const ChanR_Bin& iChanR)
 	{
 	Data_p theData;
-	sECopyAll(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData));
+	sECopyAll(iChanR, ChanW_Bin_Data<Data_p>(&theData));
 	return theData;
 	}
 
@@ -189,7 +220,7 @@ template <class Data_p>
 Data_p sRead_T(const ChanR_Bin& iChanR, size_t iSize)
 	{
 	Data_p theData;
-	sECopyFully(iChanR, ChanRWPos_Bin_Data<Data_p>(&theData), iSize);
+	sECopyFully(iChanR, ChanW_Bin_Data<Data_p>(&theData), iSize);
 	return theData;
 	}
 
