@@ -52,6 +52,13 @@ namespace QueryEngine {
 
 using RelationalAlgebra::RelHead;
 
+Result::Result(RelHead* ioRelHead,
+	vector<Val_Any>* ioPackedRows)
+	{
+	ioRelHead->swap(fRelHead);
+	ioPackedRows->swap(fPackedRows);
+	}
+
 Result::Result(const RelHead& iRelHead,
 	vector<Val_Any>* ioPackedRows)
 :	fRelHead(iRelHead)

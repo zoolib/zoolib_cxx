@@ -42,6 +42,9 @@ namespace QueryEngine {
 class Result : public ZCounted
 	{
 public:
+	Result(RelationalAlgebra::RelHead* ioRelHead,
+		std::vector<Val_Any>* ioPackedRows);
+
 	Result(const RelationalAlgebra::RelHead& iRelHead,
 		std::vector<Val_Any>* ioPackedRows);
 
