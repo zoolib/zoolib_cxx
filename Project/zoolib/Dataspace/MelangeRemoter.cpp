@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_Bin_Data.h"
+#include "zoolib/Chan_XX_Buffered.h"
 #include "zoolib/Log.h"
 #include "zoolib/Promise.h"
 #include "zoolib/StartOnNewThread.h"
@@ -57,6 +58,8 @@ using namespace Util_STL;
 
 using QueryEngine::Result;
 
+static size_t kBufSize = 16;
+
 // =================================================================================================
 #pragma mark -
 
@@ -73,7 +76,8 @@ public:
 		{
 		if (iAny.PGet<PullPush::Start<Result>>())
 			{
-			const RelHead theRelHead = sGet<RelHead>(sERead(iChanR));
+			Any theRHAny = sERead(iChanR);
+			RelHead& theRelHead = sMut<RelHead>(theRHAny);
 			const size_t theRowCount = sCoerceInt(sERead(iChanR));
 			size_t theCount = theRowCount * theRelHead.size();
 			vector<Val_Any> theVals;
@@ -85,7 +89,7 @@ public:
 				sPull_Push_Any(theAny, this, iChanR, munged);
 				sPushBack(theVals, munged);
 				}
-			oAny = sRef(new Result(theRelHead, &theVals));
+			oAny = sRef(new Result(&theRelHead, &theVals));
 			return true;
 			}
 		return false;
@@ -94,7 +98,7 @@ public:
 // From Callable_JSONB_ReadFilter
 	virtual ZQ<bool> QCall(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
 		{
-		if (ZQ<uint8> theTypeQ = sQReadBE<uint8>(iChanR))
+		if (ZQ<uint8> theTypeQ = sQRead(iChanR))
 			{
 			switch (*theTypeQ)
 				{
@@ -103,10 +107,11 @@ public:
 					sPush(PullPush::Start<Result>(), iChanW);
 
 					// We're at the beginning of a QE::Result. So copy the RelHead to start with.
-					RelHead theRH;
+					Any theAny = sAnyCounted<RelHead>();
+					RelHead& theRH = sMut<RelHead>(theAny);
 					for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
 						theRH |= spStringFromChan(iChanR);
-					sPush(theRH, iChanW);
+					sPush(theAny, iChanW);
 
 					const size_t theCount = sReadCount(iChanR);
 					sPush(theCount, iChanW);
@@ -140,7 +145,7 @@ static void spAsyncPullAny(const ZRef<Callable_Any_ReadFilter>& iReadFilter,
 	if (ZQ<Any> theQ = sQRead(*iChannerR))
 		{
 		Any result;
-		sPull_Push_Any(*theQ, iReadFilter, *iChannerR, result);
+		sPull_Push_Any(*theQ, iReadFilter, ChanR_XX_Buffered<ChanR_Any>(*iChannerR, kBufSize), result);
 		iPromise->Deliver(result);
 		}
 	}
@@ -159,7 +164,7 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(theReadFilter, sGetClear(thePair.second));
-	sPull_JSONB_Push(iChanR, theReadFilter, *thePair.first);
+	sPull_JSONB_Push(iChanR, theReadFilter, ChanW_XX_Buffered<ChanW_Any>(*thePair.first, kBufSize));
 	sDisconnectWrite(*thePair.first);
 
 	ZQ<Any> theQ = theDelivery->QGet();
@@ -191,7 +196,6 @@ class WriteFilter
 ,	public Callable_JSONB_WriteFilter
 	{
 public:
-
 // From Callable_Any_WriteFilter
 	virtual ZQ<bool> QCall(const Any& iAny, const ChanW_Any& iChanW)
 		{
@@ -270,7 +274,7 @@ static void spPull_Any_Push(const Any& iAny,
 	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
 	const ZRef<ChannerWCon_Any>& iChannerWCon)
 	{
-	sPull_Any_Push(iAny, iWriteFilter, *iChannerWCon);
+	sPull_Any_Push(iAny, iWriteFilter, ChanW_XX_Buffered<ChanW_Any>(*iChannerWCon, kBufSize));
 	sDisconnectWrite(*iChannerWCon);
 	}
 
@@ -289,7 +293,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 		Any(iMessage),
 		theWriteFilter,
 		sGetClear(thePair.first)));
-	sPull_Push_JSONB(*thePair.second, theWriteFilter, iChanW);
+	sPull_Push_JSONB(ChanR_XX_Buffered<ChanR_Any>(*thePair.second, kBufSize), theWriteFilter, iChanW);
 
 	sFlush(iChanW);
 
@@ -332,44 +336,44 @@ Val_Any spAsVal(ZRef<Expr_Rel> iRel)
 	return theString;
 	}
 
-//ZRef<Result> spAsResult(const Val_Any& iVal)
-//	{
-//	RelHead theRH;
-//	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("RelHead"))
-//		sInsert(theRH, theVal.Get<string8>());
-//
-//	std::vector<Val_Any> thePackedRows;
-//
-//	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("Vals"))
-//		sPushBack(thePackedRows, theVal);
-//
-//	return new Result(theRH, &thePackedRows);
-//	}
+ZRef<Result> spAsResult(const Val_Any& iVal)
+	{
+	RelHead theRH;
+	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("RelHead"))
+		sInsert(theRH, theVal.Get<string8>());
 
-//Val_Any spAsVal(ZRef<Result> iResult)
-//	{
-//	Map_Any result;
-//
-//	const RelHead& theRH = iResult->GetRelHead();
-//
-//	Seq_Any& theSeq_RH = result.Mut<Seq_Any>("RelHead");
-//	foreachi (ii, theRH)
-//		theSeq_RH.Append(*ii);
-//
-//	const size_t theCount = iResult->Count();
-//	result.Set("Count", int64(theCount));
-//
-//	Seq_Any& theSeq_Vals = result.Mut<Seq_Any>("Vals");
-//
-//	for (size_t yy = 0; yy < theCount; ++yy)
-//		{
-//		const Val_Any* theRow = iResult->GetValsAt(yy);
-//		for (size_t xx = 0; xx < theRH.size(); ++xx)
-//			theSeq_Vals.Append(theRow[xx]);
-//		}
-//
-//	return result;
-//	}
+	std::vector<Val_Any> thePackedRows;
+
+	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("Vals"))
+		sPushBack(thePackedRows, theVal);
+
+	return new Result(&theRH, &thePackedRows);
+	}
+
+Val_Any spAsVal(ZRef<Result> iResult)
+	{
+	Map_Any result;
+
+	const RelHead& theRH = iResult->GetRelHead();
+
+	Seq_Any& theSeq_RH = result.Mut<Seq_Any>("RelHead");
+	foreachi (ii, theRH)
+		theSeq_RH.Append(*ii);
+
+	const size_t theCount = iResult->Count();
+	result.Set("Count", int64(theCount));
+
+	Seq_Any& theSeq_Vals = result.Mut<Seq_Any>("Vals");
+
+	for (size_t yy = 0; yy < theCount; ++yy)
+		{
+		const Val_Any* theRow = iResult->GetValsAt(yy);
+		for (size_t xx = 0; xx < theRH.size(); ++xx)
+			theSeq_Vals.Append(theRow[xx]);
+		}
+
+	return result;
+	}
 
 } // anonymous namespace
 
@@ -472,7 +476,7 @@ void MelangeServer::pWrite()
 			Map_Any theMap;
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", ii->first);
-			theMap.Set("Result", ii->second);
+			theMap.Set("Result", spAsVal(ii->second));
 			sPushBack(theMessages, theMap);
 			}
 		sClear(fMap_Refcon2Result);
@@ -834,7 +838,7 @@ void Melange_Client::pWork()
 		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
 			{
 			// Get the registration and call its callable
-			if (ZRef<Result> theResult = theMessage.Get<ZRef<Result>>("Result"))
+			if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
 				{
 				if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
 					sCall(theReg->fCallable_Changed, theReg, theResult);
