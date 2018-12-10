@@ -219,8 +219,8 @@ Data_p sReadAll_T(const ChanR_Bin& iChanR)
 template <class Data_p>
 Data_p sRead_T(const ChanR_Bin& iChanR, size_t iSize)
 	{
-	Data_p theData;
-	sECopyFully(iChanR, ChanW_Bin_Data<Data_p>(&theData), iSize);
+	Data_p theData(iSize);
+	sEReadMem(iChanR, theData.GetPtrMutable(), iSize);
 	return theData;
 	}
 
