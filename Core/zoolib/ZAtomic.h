@@ -103,11 +103,9 @@ bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
 
 #endif
 
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_CPP >= 2011
-
 
 // =================================================================================================
 #pragma mark - "CodeWarrior/68K"

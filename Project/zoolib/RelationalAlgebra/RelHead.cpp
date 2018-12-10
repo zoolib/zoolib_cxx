@@ -317,7 +317,6 @@ ConcreteHead sAugmentedRequired(const ConcreteHead& iConcreteHead, const RelHead
 	return result;
 	}
 
-
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;

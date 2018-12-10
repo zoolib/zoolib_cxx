@@ -225,5 +225,4 @@ Name::CountedString* Name::pGetIfCounted()
 
 #endif // ! ZMACRO_NameUsesString
 
-
 } // namespace ZooLib

@@ -42,6 +42,7 @@ inline string16 operator+(const string16& iString, UTF32 iCP)
 	return temp += iCP;
 	}
 
+// -----
 
 /// Prepend a UTF32 code point to a UTF8 standard library string.
 string8 operator+(UTF32 iCP, const string8& iString);

@@ -1724,6 +1724,5 @@ void sWrite_MinimalResponse_ErrorInBody(int iError, const ChanW_Bin& iChanW)
 	sEWritef(iChanW, "Error %d", iError);
 	}
 
-
 } // namespace HTTP
 } // namespace ZooLib

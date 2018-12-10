@@ -128,7 +128,6 @@ public:
 // From Factory_ChannerRWClose_Bin
 	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
 
-
 // Our protocol
 	virtual ZRef<ChannerRWClose_Bin> Connect();
 

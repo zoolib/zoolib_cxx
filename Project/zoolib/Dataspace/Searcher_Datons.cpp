@@ -149,7 +149,6 @@ public:
 		std::copy_n(iIndexSpec.begin(), fCount, fColNames);
 		}
 
-
 	bool pAsKey(const Map_Thing::value_type* iMapEntryP, Key& oKey)
 		{
 		const Map_Any* asMap = iMapEntryP->second.PGet<Map_Any>();
@@ -743,7 +742,6 @@ static void spDump(const ChanW_UTF& w,
 			}
 		}
 	}
-
 
 void Searcher_Datons::ModifyRegistrations(
 	const AddedSearch* iAdded, size_t iAddedCount,

@@ -101,7 +101,6 @@ bool sDecode(
 		oDest, iDestCU, oDestCU);
 	}
 
-
 /** \brief Decode UTF-32 text, reading the encoded form from a ChanR_Bin.
 
 The ChanR protocol is such that data cannot be returned to the chanr once read. In order

@@ -165,7 +165,6 @@ extern ZRef<LogMeister> sLogMeister;
 void sLogIt(EPriority iPriority, const std::string& iName,
 	size_t iDepth, const std::string& iMessage);
 
-
 // =================================================================================================
 #pragma mark - Log::FunctionEntryExit
 

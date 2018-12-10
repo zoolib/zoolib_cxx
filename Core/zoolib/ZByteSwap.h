@@ -52,7 +52,7 @@ void ZByteSwap_Write16(volatile void* oValueAddress, int16 iValue);
 void ZByteSwap_Write32(volatile void* oValueAddress, int32 iValue);
 void ZByteSwap_Write64(volatile void* oValueAddress, int64 iValue);
 
-
+// -----
 
 // And we define endian-specific versions of these calls that map to the appropriate
 // unconditional calls, or are no-ops. We define the symbol ZByteSwap_EndianBig
@@ -67,7 +67,7 @@ void ZByteSwap_BigToLittle16(int16* ioValueAddress);
 void ZByteSwap_BigToLittle32(int32* ioValueAddress);
 void ZByteSwap_BigToLittle64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_LittleToBig16(int16 iValue);
 int32 ZByteSwap_LittleToBig32(int32 iValue);
@@ -77,7 +77,7 @@ void ZByteSwap_LittleToBig16(int16* ioValueAddress);
 void ZByteSwap_LittleToBig32(int32* ioValueAddress);
 void ZByteSwap_LittleToBig64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_HostToBig16(int16 iValue);
 int32 ZByteSwap_HostToBig32(int32 iValue);
@@ -87,7 +87,7 @@ void ZByteSwap_HostToBig16(int16* ioValueAddress);
 void ZByteSwap_HostToBig32(int32* ioValueAddress);
 void ZByteSwap_HostToBig64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_HostToLittle16(int16 iValue);
 int32 ZByteSwap_HostToLittle32(int32 iValue);
@@ -97,7 +97,7 @@ void ZByteSwap_HostToLittle16(int16* ioValueAddress);
 void ZByteSwap_HostToLittle32(int32* ioValueAddress);
 void ZByteSwap_HostToLittle64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_BigToHost16(int16 iValue);
 int32 ZByteSwap_BigToHost32(int32 iValue);
@@ -107,7 +107,7 @@ void ZByteSwap_BigToHost16(int16* ioValueAddress);
 void ZByteSwap_BigToHost32(int32* ioValueAddress);
 void ZByteSwap_BigToHost64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_LittleToHost16(int16 iValue);
 int32 ZByteSwap_LittleToHost32(int32 iValue);
@@ -117,7 +117,7 @@ void ZByteSwap_LittleToHost16(int16* ioValueAddress);
 void ZByteSwap_LittleToHost32(int32* ioValueAddress);
 void ZByteSwap_LittleToHost64(int64* ioValueAddress);
 
-
+// -----
 
 int16 ZByteSwap_ReadBig16(const volatile void* iValueAddress);
 int32 ZByteSwap_ReadBig32(const volatile void* iValueAddress);
@@ -127,7 +127,7 @@ int16 ZByteSwap_ReadLittle16(const volatile void* iValueAddress);
 int32 ZByteSwap_ReadLittle32(const volatile void* iValueAddress);
 int64 ZByteSwap_ReadLittle64(const volatile void* iValueAddress);
 
-
+// -----
 void ZByteSwap_WriteBig16(volatile void* oValueAddress, int16 iValue);
 void ZByteSwap_WriteBig32(volatile void* oValueAddress, int32 iValue);
 void ZByteSwap_WriteBig64(volatile void* oValueAddress, int64 iValue);
@@ -158,7 +158,7 @@ asm inline int32 ZByteSwap_32(int32 : __D0)
 	rol.w #8, d0
 	}
 
-
+// -----
 
 asm inline void ZByteSwap_16(volatile void* : __A0)
 	{
@@ -176,7 +176,7 @@ asm inline void ZByteSwap_32(volatile void* : __A0)
 	move.l d0, (a0)
 	}
 
-
+// -----
 
 asm inline int16 ZByteSwap_Read16(const volatile void* iValueAddress : __A0)
 	{
@@ -192,7 +192,7 @@ asm inline int32 ZByteSwap_Read32(const volatile void* iValueAddress)
 	rol.w #8, d0
 	}
 
-
+// -----
 
 asm inline void ZByteSwap_Write16(volatile void* ioValueAddress : __A0, int16 iValue : __D0)
 	{
@@ -313,6 +313,7 @@ inline int16 ZByteSwap_16(int16 iValue)
 inline int32 ZByteSwap_32(int32 iValue)
 	{ return ZByteSwap_Read32(&iValue); }
 
+// -----
 
 inline void ZByteSwap_16(volatile void* ioValueAddress)
 	{ *static_cast<volatile int16*>(ioValueAddress) = ZByteSwap_Read16(ioValueAddress); }
@@ -361,7 +362,7 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 		return iValue;
 		}
 
-
+// -----
 
 	inline void ZByteSwap_16(volatile void* ioValueAddress)
 		{
@@ -385,7 +386,7 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 			}
 		}
 
-
+// -----
 
 	inline int16 ZByteSwap_Read16(const volatile void* iValueAddress)
 		{
@@ -413,7 +414,7 @@ inline void ZByteSwap_32(volatile void* ioValueAddress)
 		return result;
 		}
 
-
+// -----
 
 	inline void ZByteSwap_Write16(volatile void* oValueAddress, int16 iValue)
 		{
@@ -620,7 +621,6 @@ inline void ZByteSwap_Write64(volatile void* oValueAddress, int64 iValue)
 // =================================================================================================
 #pragma mark - The Real Calls
 
-
 #if ZByteSwap_EndianBig
 
 inline int16 ZByteSwap_BigToLittle16(int16 iValue) { return ZByteSwap_16(iValue); }
@@ -635,7 +635,7 @@ inline int64 ZByteSwap_BigToLittle64(int64 iValue) { return ZByteSwap_64(iValue)
 inline void ZByteSwap_BigToLittle64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_BigToLittle64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_LittleToBig16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_LittleToBig16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -649,7 +649,7 @@ inline int64 ZByteSwap_LittleToBig64(int64 iValue) { return ZByteSwap_64(iValue)
 inline void ZByteSwap_LittleToBig64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_LittleToBig64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_HostToBig16(int16 iValue) { return iValue; }
 inline void ZByteSwap_HostToBig16(int16* ioValueAddress) {}
@@ -663,7 +663,7 @@ inline int64 ZByteSwap_HostToBig64(int64 iValue) { return iValue; }
 inline void ZByteSwap_HostToBig64(int64* ioValueAddress) {}
 inline void ZByteSwap_HostToBig64(uint64* ioValueAddress) {}
 
-
+// -----
 
 inline int16 ZByteSwap_HostToLittle16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_HostToLittle16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -677,7 +677,7 @@ inline int64 ZByteSwap_HostToLittle64(int64 iValue) { return ZByteSwap_64(iValue
 inline void ZByteSwap_HostToLittle64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_HostToLittle64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_BigToHost16(int16 iValue) { return iValue; }
 inline void ZByteSwap_BigToHost16(int16* ioValueAddress) {}
@@ -691,7 +691,7 @@ inline int64 ZByteSwap_BigToHost64(int64 iValue) { return iValue; }
 inline void ZByteSwap_BigToHost64(int64* ioValueAddress) {}
 inline void ZByteSwap_BigToHost64(uint64* ioValueAddress) {}
 
-
+// -----
 
 inline int16 ZByteSwap_LittleToHost16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_LittleToHost16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -705,7 +705,7 @@ inline int64 ZByteSwap_LittleToHost64(int64 iValue) { return ZByteSwap_64(iValue
 inline void ZByteSwap_LittleToHost64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_LittleToHost64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_ReadBig16(const volatile void* iValueAddress)
 	{ return *static_cast<const volatile int16*>(iValueAddress); }
@@ -721,7 +721,7 @@ inline int32 ZByteSwap_ReadLittle32(const volatile void* iValueAddress)
 inline int64 ZByteSwap_ReadLittle64(const volatile void* iValueAddress)
 	{ return ZByteSwap_Read64(iValueAddress); }
 
-
+// -----
 
 inline void ZByteSwap_WriteBig16(volatile void* oValueAddress, int16 iValue)
 	{ *static_cast<volatile int16*>(oValueAddress) = iValue; }
@@ -736,7 +736,6 @@ inline void ZByteSwap_WriteLittle32(volatile void* oValueAddress, int32 iValue)
 	{ ZByteSwap_Write32(oValueAddress, iValue); }
 inline void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue)
 	{ ZByteSwap_Write64(oValueAddress, iValue); }
-
 
 #else // ZByteSwap_EndianBig
 
@@ -752,7 +751,7 @@ inline int64 ZByteSwap_BigToLittle64(int64 iValue) { return ZByteSwap_64(iValue)
 inline void ZByteSwap_BigToLittle64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_BigToLittle64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_LittleToBig16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_LittleToBig16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -766,7 +765,7 @@ inline int64 ZByteSwap_LittleToBig64(int64 iValue) { return ZByteSwap_64(iValue)
 inline void ZByteSwap_LittleToBig64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_LittleToBig64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_HostToBig16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_HostToBig16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -780,7 +779,7 @@ inline int64 ZByteSwap_HostToBig64(int64 iValue) { return ZByteSwap_64(iValue); 
 inline void ZByteSwap_HostToBig64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_HostToBig64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_HostToLittle16(int16 iValue) { return iValue; }
 inline void ZByteSwap_HostToLittle16(int16* ioValueAddress) {}
@@ -794,7 +793,7 @@ inline int64 ZByteSwap_HostToLittle64(int64 iValue) { return iValue; }
 inline void ZByteSwap_HostToLittle64(int64* ioValueAddress) {}
 inline void ZByteSwap_HostToLittle64(uint64* ioValueAddress) {}
 
-
+// -----
 
 inline int16 ZByteSwap_BigToHost16(int16 iValue) { return ZByteSwap_16(iValue); }
 inline void ZByteSwap_BigToHost16(int16* ioValueAddress) { ZByteSwap_16(ioValueAddress); }
@@ -808,7 +807,7 @@ inline int64 ZByteSwap_BigToHost64(int64 iValue) { return ZByteSwap_64(iValue); 
 inline void ZByteSwap_BigToHost64(int64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 inline void ZByteSwap_BigToHost64(uint64* ioValueAddress) { ZByteSwap_64(ioValueAddress); }
 
-
+// -----
 
 inline int16 ZByteSwap_LittleToHost16(int16 iValue) { return iValue; }
 inline void ZByteSwap_LittleToHost16(int16* ioValueAddress) {}
@@ -822,7 +821,7 @@ inline int64 ZByteSwap_LittleToHost64(int64 iValue) { return iValue; }
 inline void ZByteSwap_LittleToHost64(int64* ioValueAddress) {}
 inline void ZByteSwap_LittleToHost64(uint64* ioValueAddress) {}
 
-
+// -----
 
 inline int16 ZByteSwap_ReadBig16(const volatile void* iValueAddress)
 	{ return ZByteSwap_Read16(iValueAddress); }
@@ -838,7 +837,7 @@ inline int32 ZByteSwap_ReadLittle32(const volatile void* iValueAddress)
 inline int64 ZByteSwap_ReadLittle64(const volatile void* iValueAddress)
 	{ return *static_cast<const volatile int64*>(iValueAddress); }
 
-
+// -----
 
 inline void ZByteSwap_WriteBig16(volatile void* oValueAddress, int16 iValue)
 	{ ZByteSwap_Write16(oValueAddress, iValue); }
@@ -853,7 +852,6 @@ inline void ZByteSwap_WriteLittle32(volatile void* oValueAddress, int32 iValue)
 	{ *static_cast<volatile int32*>(oValueAddress) = iValue; }
 inline void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue)
 	{ *static_cast<volatile int64*>(oValueAddress) = iValue; }
-
 
 #endif // ZByteSwap_EndianBig
 

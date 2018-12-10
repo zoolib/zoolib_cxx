@@ -70,7 +70,6 @@ void sEWrite(const ChanW_UTF& iChanW, const UTF16* iString, size_t iLength);
 void sEWrite(const ChanW_UTF& iChanW, const UTF8* iString, size_t iLength);
 //@}
 
-
 // =================================================================================================
 #pragma mark -
 

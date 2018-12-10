@@ -228,7 +228,6 @@ size_t sReadable(int iFD)
 	return 0;
 	}
 
-
 uint64 sSize(int iFD)
 	{
 	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)

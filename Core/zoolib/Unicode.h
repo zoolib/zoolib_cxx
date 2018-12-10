@@ -427,6 +427,7 @@ void sUTF32ToUTF8(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
+// -----
 
 bool sUTF16ToUTF32(
 	const UTF16* iSource, size_t iSourceCU,
@@ -448,6 +449,7 @@ bool sUTF16ToUTF8(
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
+// -----
 
 bool sUTF8ToUTF32(
 	const UTF8* iSource, size_t iSourceCU,

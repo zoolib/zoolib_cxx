@@ -67,7 +67,6 @@ template <class T> struct VT<T&>
 // =================================================================================================
 #pragma mark - ZooLib::Callable_Macros
 
-
 #define ZMACRO_Callable_typedef_V
 #define ZMACRO_Callable_typedef_0 typedef P0_p P0
 #define ZMACRO_Callable_typedef_1 ZMACRO_Callable_typedef_0;typedef P1_p P1

@@ -39,7 +39,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_Processor_ARM_64 256
 #define ZCONFIG_Processor_MIPS 512
 
-
 // Byte order -- ZCONFIG_Endian
 #define ZCONFIG_Endian_Big 1
 #define ZCONFIG_Endian_Little 2

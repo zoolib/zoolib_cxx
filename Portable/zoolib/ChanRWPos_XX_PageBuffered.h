@@ -282,7 +282,6 @@ public:
 		sFlush(fChanReal);
 		}
 
-
 protected:
 	void pFlush()
 		{

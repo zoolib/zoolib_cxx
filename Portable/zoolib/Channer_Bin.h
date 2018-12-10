@@ -47,7 +47,6 @@ typedef ChannerRCon<byte> ChannerRCon_Bin;
 typedef ChannerWCon<byte> ChannerWCon_Bin;
 typedef ChannerRWCon<byte> ChannerRWCon_Bin;
 
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Channer_Bin_h__

@@ -339,6 +339,7 @@ template struct Functions_CountCU_T<string32::iterator>;
 template struct Functions_CountCU_T<string16::iterator>;
 template struct Functions_CountCU_T<string8::iterator>;
 
+// -----
 
 template struct Functions_Count_T<const UTF32*>;
 template struct Functions_Count_T<const UTF16*>;
@@ -356,6 +357,7 @@ template struct Functions_Count_T<string32::iterator>;
 template struct Functions_Count_T<string16::iterator>;
 template struct Functions_Count_T<string8::iterator>;
 
+// -----
 
 template struct Functions_Read_T<const UTF32*>;
 template struct Functions_Read_T<const UTF16*>;
@@ -373,6 +375,7 @@ template struct Functions_Read_T<string32::iterator>;
 template struct Functions_Read_T<string16::iterator>;
 template struct Functions_Read_T<string8::iterator>;
 
+// -----
 
 template struct Functions_Write_T<UTF32*>;
 template struct Functions_Write_T<UTF16*>;
@@ -382,6 +385,7 @@ template struct Functions_Write_T<string32::iterator>;
 template struct Functions_Write_T<string16::iterator>;
 template struct Functions_Write_T<string8::iterator>;
 
+// -----
 
 template struct Functions_Convert_T<const UTF32*>;
 template struct Functions_Convert_T<const UTF16*>;

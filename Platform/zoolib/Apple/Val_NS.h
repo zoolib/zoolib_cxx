@@ -140,7 +140,6 @@ public:
 	const Val_NS Get(NSString* iName) const;
 	const Val_NS Get(size_t iIndex) const;
 
-
 	typedef __unsafe_unretained NSString* NSStringPtr;
 	};
 
