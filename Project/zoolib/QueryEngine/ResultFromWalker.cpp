@@ -55,7 +55,7 @@ ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
 	foreachi (ii, offsets)
 		theRelHead.insert(ii->first);
 
-	return new Result(theRelHead, &thePackedRows);
+	return new Result(&theRelHead, &thePackedRows);
 	}
 
 } // namespace QueryEngine
