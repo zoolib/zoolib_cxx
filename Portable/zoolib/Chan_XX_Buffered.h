@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/ChanW.h"
-#include "zoolib/Compat_algorithm.h" // For sMinMax
+//#include "zoolib/Compat_algorithm.h" // For sMinMax
 
 #include <vector>
 
@@ -44,7 +44,7 @@ class ChanR_XX_Buffered
 public:
 	ChanR_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
 	:	inherited(iChan)
-	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
+	,	fBuffer(iBufferSize, EE())
 	,	fBegin(0)
 	,	fEnd(0)
 		{}
@@ -131,7 +131,7 @@ class ChanW_XX_Buffered
 public:
 	ChanW_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
 	:	inherited(iChan)
-	,	fBuffer(sMinMax<size_t>(128, iBufferSize, 8192), 0)
+	,	fBuffer(iBufferSize, EE())
 	,	fOffset(0)
 		{}
 
