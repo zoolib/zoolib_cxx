@@ -58,7 +58,7 @@ static void spPull_Base64_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_An
 // =================================================================================================
 #pragma mark -
 
-bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+void sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	sSkipText(iChanRU);
 	if (iChanRU.Current() == ML::eToken_TagEmpty)
@@ -69,46 +69,42 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			iChanRU.Advance();
 			sPush(kStartMap, iChanW);
 			sPush(kEnd, iChanW);
-			return true;
 			}
 		else if (theName == "array")
 			{
 			iChanRU.Advance();
 			sPush(kStartSeq, iChanW);
 			sPush(kEnd, iChanW);
-			return true;
 			}
 		else if (theName == "string")
 			{
 			iChanRU.Advance();
 			sPush(string(), iChanW);
-			return true;
 			}
 		else if (theName == "data")
 			{
 			iChanRU.Advance();
 			sPush(Data_Any(), iChanW);
-			return true;
 			}
 		else if (iChanRU.Name() == "true")
 			{
 			iChanRU.Advance();
 			sPush(true, iChanW);
-			return true;
 			}
 		else if (iChanRU.Name() == "false")
 			{
 			iChanRU.Advance();
 			sPush(false, iChanW);
-			return true;
 			}
 		else if (iChanRU.Name() == "nil")
 			{
 			iChanRU.Advance();
 			sPush(Any(), iChanW);
-			return true;
 			}
-		sThrow_ParseException("Unhandled empty tag " + theName);
+		else
+			{
+			sThrow_ParseException("Unhandled empty tag " + theName);
+			}
 		}
 	else if (iChanRU.Current() == ML::eToken_TagBegin)
 		{
@@ -117,7 +113,6 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			iChanRU.Advance();
 			sPull_XMLPList_Push(iChanRU, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "plist");
-			return true;
 			}
 		else if (iChanRU.Name() == "dict")
 			{
@@ -129,7 +124,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 				if (sTryRead_End(iChanRU, "dict"))
 					{
 					sPush(kEnd, iChanW);
-					return true;
+					break;
 					}
 
 				if (not sTryRead_Begin(iChanRU, "key"))
@@ -141,8 +136,7 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 
 				spSkipThenEndOrThrow(iChanRU, "key");
 
-				if (not sPull_XMLPList_Push(iChanRU, iChanW))
-					sThrow_ParseException("Expected value after <key>...</key>");
+				sPull_XMLPList_Push(iChanRU, iChanW);
 				}
 			}
 		else if (iChanRU.Name() == "array")
@@ -155,11 +149,10 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 				if (sTryRead_End(iChanRU, "array"))
 					{
 					sPush(kEnd, iChanW);
-					return true;
+					break;
 					}
 
-				if (not sPull_XMLPList_Push(iChanRU, iChanW))
-					sThrow_ParseException("Expected a value");
+				sPull_XMLPList_Push(iChanRU, iChanW);
 				}
 			}
 		else if (iChanRU.Name() == "string")
@@ -167,14 +160,12 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			iChanRU.Advance();
 			sPull_UTF_Push(iChanRU, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "string");
-			return true;
 			}
 		else if (iChanRU.Name() == "data")
 			{
 			iChanRU.Advance();
 			spPull_Base64_Push(iChanRU, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "data");
-			return true;
 			}
 		else if (iChanRU.Name() == "integer")
 			{
@@ -184,7 +175,6 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 				sThrow_ParseException("Expected valid integer");
 			sPush(theInt64, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "integer");
-			return true;
 			}
 		else if (iChanRU.Name() == "real")
 			{
@@ -200,7 +190,6 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			else
 				sPush(theInt64, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "real");
-			return true;
 			}
 		else if (iChanRU.Name() == "date")
 			{
@@ -208,14 +197,12 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(sReadAllUTF8(iChanRU));
 			sPush(theUTCDateTime, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "date");
-			return true;
 			}
 		else
 			{
 			sThrow_ParseException("Unhandled begin tag '" + iChanRU.Name() + "'");
 			}
 		}
-	return false;
 	}
 
 // =================================================================================================
