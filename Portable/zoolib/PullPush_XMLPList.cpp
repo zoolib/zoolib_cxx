@@ -43,65 +43,6 @@ static void spSkipThenEndOrThrow(ML::ChanRU_UTF& r, const string& iTagName)
 	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static bool spTryRead_Any(ML::ChanRU_UTF& r, Any& oVal)
-	{
-	if (r.Current() == ML::eToken_TagEmpty)
-		{
-		if (false) {}
-		else if (r.Name() == "true") oVal = true;
-		else if (r.Name() == "false") oVal = false;
-		else if (r.Name() == "nil") oVal = Any();
-		else return false;
-
-		r.Advance();
-		return true;
-		}
-
-	// If there's no open tag, then we're not at the start of a value.
-	if (r.Current() != ML::eToken_TagBegin)
-		return false;
-
-	const string tagName = r.Name();
-	r.Advance();
-
-	// We've read and advanced past an open tag, in tagName.
-	if (false)
-		{}
-	else if (tagName == "integer")
-		{
-		int64 theInt64;
-		if (not Util_Chan::sTryRead_SignedDecimalInteger(r, r, theInt64))
-			sThrow_ParseException("Expected valid integer");
-
-		oVal = int32(theInt64);
-		}
-	else if (tagName == "real")
-		{
-		int64 theInt64;
-		double theDouble;
-		bool isDouble;
-		if (not Util_Chan::sTryRead_SignedGenericNumber(r, r, theInt64, theDouble, isDouble))
-			sThrow_ParseException("Expected valid real");
-
-		if (isDouble)
-			oVal = theDouble;
-		else
-			oVal = double(theInt64);
-		}
-	else if (tagName == "date")
-		{
-		oVal = UTCDateTime(Util_Time::sFromString_ISO8601(sReadAllUTF8(r)));
-		}
-	else
-		{
-		// Hmm. Ignore tags we don't recognize?
-		sThrow_ParseException("Invalid begin tag '" + tagName + "'");
-		}
-
-	spSkipThenEndOrThrow(r, tagName);
-	return true;
-	}
-
 static void spPull_Base64_Push(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
@@ -149,10 +90,25 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			sPush(Data_Any(), iChanW);
 			return true;
 			}
-		else
+		else if (iChanRU.Name() == "true")
 			{
-			sThrow_ParseException("Unknown empty tag " + theName);
+			iChanRU.Advance();
+			sPush(true, iChanW);
+			return true;
 			}
+		else if (iChanRU.Name() == "false")
+			{
+			iChanRU.Advance();
+			sPush(false, iChanW);
+			return true;
+			}
+		else if (iChanRU.Name() == "nil")
+			{
+			iChanRU.Advance();
+			sPush(Any(), iChanW);
+			return true;
+			}
+		sThrow_ParseException("Unhandled empty tag " + theName);
 		}
 	else if (iChanRU.Current() == ML::eToken_TagBegin)
 		{
@@ -220,14 +176,43 @@ bool sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			spSkipThenEndOrThrow(iChanRU, "data");
 			return true;
 			}
-		}
-	else
-		{
-		Any theVal;
-		if (spTryRead_Any(iChanRU, theVal))
+		else if (iChanRU.Name() == "integer")
 			{
-			sPush(theVal, iChanW);
+			iChanRU.Advance();
+			int64 theInt64;
+			if (not Util_Chan::sTryRead_SignedDecimalInteger(iChanRU, iChanRU, theInt64))
+				sThrow_ParseException("Expected valid integer");
+			sPush(theInt64, iChanW);
+			spSkipThenEndOrThrow(iChanRU, "integer");
 			return true;
+			}
+		else if (iChanRU.Name() == "real")
+			{
+			iChanRU.Advance();
+			int64 theInt64;
+			double theDouble;
+			bool isDouble;
+			if (not Util_Chan::sTryRead_SignedGenericNumber(iChanRU, iChanRU, theInt64, theDouble, isDouble))
+				sThrow_ParseException("Expected valid real");
+
+			if (isDouble)
+				sPush(theDouble, iChanW);
+			else
+				sPush(theInt64, iChanW);
+			spSkipThenEndOrThrow(iChanRU, "real");
+			return true;
+			}
+		else if (iChanRU.Name() == "date")
+			{
+			iChanRU.Advance();
+			UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(sReadAllUTF8(iChanRU));
+			sPush(theUTCDateTime, iChanW);
+			spSkipThenEndOrThrow(iChanRU, "date");
+			return true;
+			}
+		else
+			{
+			sThrow_ParseException("Unhandled begin tag '" + iChanRU.Name() + "'");
 			}
 		}
 	return false;
