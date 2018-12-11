@@ -101,8 +101,6 @@ class Melange_Client
 ,	public Starter_EventLoopBase
 	{
 public:
-	typedef Callable<void(bool)> Callable_Status;
-
 	using Chan_t = DeriveFrom<
 		Aspect_Abort,
 		Aspect_Read<byte>,
@@ -120,7 +118,10 @@ public:
 
 	using ChannerForRead = Channer<ChanForRead>;
 
-	Melange_Client(const ZRef<Factory_Channer>& iFactory, const ZRef<Callable_Status>& iCallable_Status);
+	typedef Callable<void(bool)> Callable_Status;
+
+	Melange_Client(const ZRef<Factory_Channer>& iFactory,
+		const ZRef<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
 	virtual ZQ<ZRef<ZCounted> > QCall(

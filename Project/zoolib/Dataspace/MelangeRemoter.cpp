@@ -427,10 +427,6 @@ void MelangeServer::pRead()
 		{
 		ZRef<ChannerR_Bin> theChannerR = fChannerR;
 
-		// Want to be able to do a WaitRead here, and wake ourselves if necessary? Then pWork
-		// can abort the connection, and we're unwind. Or pWork can just check for fTimeOfLastRead
-		// getting too stale and do the abort anyway.
-
 		Map_Any theMap;
 		{
 		ZRelMtx rel(fMtx);
