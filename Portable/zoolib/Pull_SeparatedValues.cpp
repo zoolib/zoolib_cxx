@@ -103,11 +103,9 @@ bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
 			sPush(kEnd, iChanW);
 			return true;
 			}
+
 		for (size_t xx = 0; xx < theNames.size() && xx < theValues.size(); ++xx)
-			{
-			sPush(sName(theNames[xx]), iChanW);
-			sPush(theValues[xx], iChanW);
-			}
+			sPush(theNames[xx], theValues[xx], iChanW);
 		}
 	}
 

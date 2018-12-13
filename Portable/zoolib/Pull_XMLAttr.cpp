@@ -71,10 +71,7 @@ using std::string;
 static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_Any& iChanW)
 	{
 	foreachi (iter, iAttrs)
-		{
-		sPush(sName(iter->first), iChanW);
-		sPush(iter->second, iChanW);
-		}
+		sPush(iter->first, iter->second, iChanW);
 	}
 
 /*
@@ -160,8 +157,7 @@ static void spPull_XMLAttr_Push(const string& iOuterName,
 					{
 					sPush(kStartMap, iChanW);
 						spPush_Attrs(ioChanRU.Attrs(), iChanW);
-						sPush(sName("!text"), iChanW);
-						sPush(theText, iChanW);
+						sPush("!text", theText, iChanW);
 					sPush(kEnd, iChanW);
 					}
 				}
@@ -171,10 +167,7 @@ static void spPull_XMLAttr_Push(const string& iOuterName,
 				sPush(kStartMap, iChanW);
 					spPush_Attrs(theAttrs, iChanW);
 					if (theText.size())
-						{
-						sPush(sName("!text"), iChanW);
-						sPush(theText, iChanW);
-						}
+						sPush("!text", theText, iChanW);
 					spPull_XMLAttr_Push(theName, ioChanRU, iChanW);
 				sPush(kEnd, iChanW);
 				}

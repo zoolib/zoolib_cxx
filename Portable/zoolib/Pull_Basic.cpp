@@ -77,8 +77,7 @@ bool sPull_Basic_Push(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOption
 		string theValue;
 		spRead_Until(iChanR, iOptions.fSeparator_EntryFromEntry, theValue);
 
-		sPush(sName(theName), iChanW);
-		sPush(theValue, iChanW);
+		sPush(theName, theValue, iChanW);
 		}
 	}
 
