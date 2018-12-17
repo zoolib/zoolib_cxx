@@ -35,7 +35,8 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Static parsing functions
 
-static bool spReadValues(const ChanR_UTF& iChanR, UTF32 iSeparator_Value, UTF32 iSeparator_Line, vector<string8>& oValues)
+static bool spReadValues(const ChanR_UTF& iChanR, UTF32 iSeparator_Value, UTF32 iSeparator_Line,
+	vector<string8>& oValues)
 	{
 	bool gotAny = false;
 	oValues.clear();

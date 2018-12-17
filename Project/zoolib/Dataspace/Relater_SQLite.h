@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Dataspace/Relater.h"
-#include "zoolib/sqlite/SQLite.h"
+#include "zoolib/SQLite/SQLite.h"
 
 namespace ZooLib {
 namespace Dataspace {
