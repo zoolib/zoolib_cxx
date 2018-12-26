@@ -410,7 +410,6 @@ int Map_Any::Compare(const Map_Any& iOther) const
 				{
 				// Other is not exhausted either, so we compare their current values.
 				if (int compare = sCompare_T(iterThis->first, iterOther->first))
-//				if (int compare = sCompare_T<string>(iterThis->first, iterOther->first))
 					{
 					// The names are different.
 					return compare;

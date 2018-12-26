@@ -233,7 +233,7 @@ void ChanWCon_Bin_POSIXFD::DisconnectWrite()
 size_t ChanWCon_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 	{ return Util_POSIXFD::sWriteCon(fFDHolder->GetFD(), iSource, iCount); }
 
-//// =================================================================================================
+// =================================================================================================
 //#pragma mark -
 //#pragma mark ChanRWCon_Bin_POSIXFD
 //
