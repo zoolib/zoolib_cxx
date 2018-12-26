@@ -56,7 +56,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			void ZooLib::ZThread_pthread::sSetName(const char* iName)
 				{
 				if (pthread_setname_np)
-					::pthread_setname_np(iName);
+					{
+					if (0 != ::pthread_setname_np(iName))
+						{
+						if (0 != pthread_setname_np("FailedToSetName"))
+							::pthread_setname_np("FTSN");
+						}
+					}
 				}
 
 		#endif
@@ -70,7 +76,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif not defined(__ANDROID_API__)
 
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
-		{ ::pthread_setname_np(::pthread_self(), iName); }
+		{
+		if (not iName)
+			iName = "NullName";
+
+		if (0 != ::pthread_setname_np(::pthread_self(), iName))
+			{
+			if (0 != pthread_setname_np(::pthread_self(), "FailedToSetName"))
+				::pthread_setname_np(::pthread_self(), "FTSN");
+			}
+		}
 
 #else
 
