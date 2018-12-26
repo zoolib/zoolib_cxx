@@ -420,7 +420,7 @@ void MelangeServer::pRead()
 	if (fDescriptionQ)
 		ZThread::sSetName(("MSR:" + *fDescriptionQ).c_str());
 	else
-		ZThread::sSetName("MelangeServer::pRead");
+		ZThread::sSetName("MSR");
 
 	ZAcqMtx acq(fMtx);
 	for (;;)
@@ -447,7 +447,7 @@ void MelangeServer::pWrite()
 	if (fDescriptionQ)
 		ZThread::sSetName(("MSW:" + *fDescriptionQ).c_str());
 	else
-		ZThread::sSetName("MelangeServer::pWrite");
+		ZThread::sSetName("MSW");
 
 	ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
@@ -746,7 +746,7 @@ public:
 
 void Melange_Client::pRead()
 	{
-	ZThread::sSetName("Melange_Client::pRead");
+	ZThread::sSetName("MCR");
 
 	ZAcqMtx acq(fMtx);
 	for (;;)
@@ -776,7 +776,7 @@ void Melange_Client::pRead()
 
 void Melange_Client::pWrite()
 	{
-	ZThread::sSetName("Melange_Client::pWrite");
+	ZThread::sSetName("MCW");
 
 	ZAcqMtx acq(fMtx);
 	for (;;)

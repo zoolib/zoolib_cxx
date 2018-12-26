@@ -87,7 +87,7 @@ private:
 		if (fNameQ)
 			ZThread::sSetName(fNameQ->c_str());
 		else
-			ZThread::sSetName("Starter_ThreadLoop");
+			ZThread::sSetName("STL");
 
 		{ // Scope, so we don't delete fMtx out from under the acq. 
 		ZAcqMtx acq(fMtx);

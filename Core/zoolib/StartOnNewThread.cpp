@@ -64,12 +64,14 @@ public:
 			{
 			if (fQueue.empty())
 				{
+				ZThread::sSetName("SONT idle");
 				if (Time::sSystem() > expires)
 					break;
 				fCnd.WaitFor(fMtx, 5);
 				}
 			else
 				{
+				ZThread::sSetName("SONT call");
 				ZRef<Callable<void()>> theCallable = fQueue.front();
 				fQueue.pop_front();
 
