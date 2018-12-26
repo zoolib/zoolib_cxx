@@ -28,37 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - YadR_Val_T
-
-//template <class Val_p>
-//class YadR_Val_T
-//:	public /*virtual*/ YadR
-//	{
-//public:
-//	typedef YadR_Val_T YadBase_t;
-//
-//	YadR_Val_T()
-//		{}
-//
-//	template <class P0>
-//	YadR_Val_T(const P0& i0)
-//	:	fVal(i0)
-//		{}
-//
-//	template <class P0, class P1>
-//	YadR_Val_T(const P0& i0, const P1& i1)
-//	:	fVal(i0, i1)
-//		{}
-//
-//// Our protocol
-//	const Val_p& GetVal()
-//		{ return fVal; }
-//
-//protected:
-//	const Val_p fVal;
-//	};
-
-// =================================================================================================
 #pragma mark - Chan_YadSeqAtRPos_T
 
 template <class Seq_p>

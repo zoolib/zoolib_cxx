@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Visitor_Do_T.h"
 #include "zoolib/Yad_Any.h"
-#include "zoolib/Yad_Std.h"
 #include "zoolib/Yad_Val_T.h"
 
 namespace ZooLib {
