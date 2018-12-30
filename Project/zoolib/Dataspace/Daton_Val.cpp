@@ -37,8 +37,10 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 	{
 	try
 		{
-//		ZRef<ChannerR_Bin> theChanner = sChanner_T<ChanRPos_Bin_Data<Data_Any>>(iData);
-		return Util_Any_JSON::sQRead(ChanRU_XX_Unreader<UTF32>(ChanR_UTF_Chan_Bin_UTF8(ChanRPos_Bin_Data<Data_Any>(iData))));
+		return Util_Any_JSON::sQRead(
+			ChanRU_XX_Unreader<UTF32>(
+				ChanR_UTF_Chan_Bin_UTF8(
+					ChanRPos_Bin_Data<Data_Any>(iData))));
 		}
 	catch (...) {}
 	return null;
