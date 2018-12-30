@@ -135,13 +135,10 @@ ZRef<ChannerWCon_Bin> SubProcess_POSIX::GetChannerWCon()
 
 void SubProcess_POSIX::pWaitTillStopped()
 	{
-	for (;;)
+	while (fPid != -1)
 		{
-		if (0 <= waitpid(fPid, 0, 0) || errno != EINTR)
-			{
+		if (0 <= ::waitpid(fPid, 0, 0) || errno != EINTR)
 			fPid = -1;
-			break;
-			}
 		}
 	}
 
