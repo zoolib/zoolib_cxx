@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_Bin_Data.h"
+#include "zoolib/ChanR_XX_AbortOnSlowRead.h"
 #include "zoolib/Chan_XX_Buffered.h"
 #include "zoolib/Log.h"
 #include "zoolib/Promise.h"
@@ -714,36 +715,6 @@ void Melange_Client::Start(ZRef<Starter> iStarter)
 	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
 	}
 
-// --
-
-class ChanR_Bin_AbortOnSlowRead
-:	public ChanR_Bin
-	{
-public:
-	typedef Melange_Client::ChanForRead ChanForRead;
-
-	ChanR_Bin_AbortOnSlowRead(const ChanForRead& iChan, double iTimeout)
-	:	fTimeout(iTimeout)
-	,	fChan(iChan)
-		{}
-
-	virtual size_t Read(byte* oDest, size_t iCount)
-		{
-		if (not sWaitReadable(fChan, fTimeout))
-			{
-			sAbort(fChan);
-			sThrow_ExhaustedR();
-			}
-
-		return sRead(fChan, oDest, iCount);
-		}
-
-	const double fTimeout;
-	const ChanForRead& fChan;
-	};
-
-// --
-
 void Melange_Client::pRead()
 	{
 	ZThread::sSetName("MCR");
@@ -761,7 +732,7 @@ void Melange_Client::pRead()
 			Map_Any theMap;
 			{
 			ZRelMtx rel(fMtx);
-			theMap = spReadMessage(ChanR_Bin_AbortOnSlowRead(*theChanner, 15), null);
+			theMap = spReadMessage(ChanR_XX_AbortOnSlowRead<byte>(*theChanner, 15), null);
 			}
 
 			fQueue_Read.push_back(theMap);

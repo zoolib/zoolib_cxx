@@ -122,7 +122,10 @@ void SubProcess_POSIX::Finalize()
 	}
 
 void SubProcess_POSIX::Stop()
-	{ ::kill(fPid, SIGKILL); }
+	{
+	if (fPid != -1)
+		::kill(fPid, SIGKILL);
+	}
 
 void SubProcess_POSIX::WaitTillStopped()
 	{ this->pWaitTillStopped(); }
