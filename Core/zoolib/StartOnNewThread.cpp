@@ -35,14 +35,17 @@ class StartOnNewThreadHandler
 public:
 	StartOnNewThreadHandler()
 	:	fSpareThreads(0)
+	,	fActiveThreads(0)
+	,	fKeepRunning(true)
 		{}
 
 	~StartOnNewThreadHandler()
 		{
 		ZAcqMtx acq(fMtx);
+		fKeepRunning = false;
 		fCnd.Broadcast();
-		while (fSpareThreads)
-			fCnd.WaitFor(fMtx, 1);
+		while (fActiveThreads)
+			fCnd.WaitFor(fMtx, 7);
 		}
 
 	void Start(const ZRef<Callable<void()>>& iCallable)
@@ -50,9 +53,14 @@ public:
 		ZAcqMtx acq(fMtx);
 		fQueue.push_back(iCallable);
 		if (fSpareThreads == 0)
+			{
+			++fActiveThreads;
 			ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
+			}
 		else
+			{
 			fCnd.Broadcast();
+			}
 		}
 
 	void RunLoop()
@@ -65,8 +73,15 @@ public:
 			if (fQueue.empty())
 				{
 				ZThread::sSetName("SONT idle");
-				if (Time::sSystem() > expires)
+				if (not fKeepRunning)
+					{
+					fCnd.Broadcast();
 					break;
+					}
+				else if (Time::sSystem() > expires)
+					{
+					break;
+					}
 				fCnd.WaitFor(fMtx, 5);
 				}
 			else
@@ -89,6 +104,7 @@ public:
 				}
 			}
 		--fSpareThreads;
+		--fActiveThreads;
 		}
 
 	static void spRunLoop(void* iRefcon)
@@ -101,6 +117,8 @@ public:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	int fSpareThreads;
+	int fActiveThreads;
+	bool fKeepRunning;
 	std::list<ZRef<Callable<void()>>> fQueue;
 	};
 
