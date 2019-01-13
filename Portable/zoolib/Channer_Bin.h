@@ -43,6 +43,10 @@ typedef ChannerRWPos<byte> ChannerRWPos_Bin;
 
 typedef ChannerRW<byte> ChannerRW_Bin;
 
+typedef ChannerRAbort<byte> ChannerRAbort_Bin;
+typedef ChannerWAbort<byte> ChannerWAbort_Bin;
+typedef ChannerRWAbort<byte> ChannerRWAbort_Bin;
+
 typedef ChannerRCon<byte> ChannerRCon_Bin;
 typedef ChannerWCon<byte> ChannerWCon_Bin;
 typedef ChannerRWCon<byte> ChannerRWCon_Bin;

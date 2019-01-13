@@ -77,11 +77,11 @@ void SubProcess_POSIX::Initialize()
 		fPid = pid1;
 
 		Util_POSIXFD::sSetNonBlocking(childStdout[0]);
-		fChannerRCon = sChanner_T<ChanRCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdout[0]));
+		fChannerRAbort = sChanner_T<ChanRAbort_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdout[0]));
 		::close(childStdout[1]);
 
 		Util_POSIXFD::sSetNonBlocking(childStdin[1]);
-		fChannerWCon = sChanner_T<ChanWCon_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdin[1]));
+		fChannerWAbort = sChanner_T<ChanWAbort_Bin_POSIXFD>(new FDHolder_CloseOnDestroy(childStdin[1]));
 		::close(childStdin[0]);
 		}
 	else if (pid1 == 0)
@@ -130,11 +130,11 @@ void SubProcess_POSIX::Stop()
 void SubProcess_POSIX::WaitTillStopped()
 	{ this->pWaitTillStopped(); }
 
-ZRef<ChannerRCon_Bin> SubProcess_POSIX::GetChannerRCon()
-	{ return fChannerRCon; }
+ZRef<ChannerRAbort_Bin> SubProcess_POSIX::GetChannerRAbort()
+	{ return fChannerRAbort; }
 
-ZRef<ChannerWCon_Bin> SubProcess_POSIX::GetChannerWCon()
-	{ return fChannerWCon; }
+ZRef<ChannerWAbort_Bin> SubProcess_POSIX::GetChannerWAbort()
+	{ return fChannerWAbort; }
 
 void SubProcess_POSIX::pWaitTillStopped()
 	{

@@ -66,7 +66,13 @@ template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
 template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
 template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
+
 using ChannerClose = Channer<ChanClose>;
+
+template <class EE> using ChannerRAbort = Channer<ChanRAbort<EE>>;
+template <class EE> using ChannerWAbort = Channer<ChanWAbort<EE>>;
+template <class EE> using ChannerRWAbort = Channer<ChanRWAbort<EE>>;
+
 template <class EE> using ChannerRCon = Channer<ChanRCon<EE>>;
 template <class EE> using ChannerWCon = Channer<ChanWCon<EE>>;
 template <class EE> using ChannerRWCon = Channer<ChanRWCon<EE>>;

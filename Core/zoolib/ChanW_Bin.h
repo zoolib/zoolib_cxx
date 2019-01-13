@@ -50,7 +50,7 @@ void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 template <class T>
 bool sQWriteNative(const ChanW_Bin& iChanW, const T& iT)
 	{
-	if (sizeof(T) != sWriteFully(iChanW, &iT, sizeof(T)))
+	if (sizeof(T) != sWriteMemFully(iChanW, &iT, sizeof(T)))
 		return false;
 	return true;
 	}
@@ -87,18 +87,16 @@ bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 #endif
 
 template <class T>
+void sEWriteNative(const ChanW_Bin& iChanW, const T& iT)
+	{ sQWriteNative<T>(iChanW, iT) || sThrow_ExhaustedW(); }
+
+template <class T>
 void sEWriteBE(const ChanW_Bin& iChanW, const T& iT)
-	{
-	if (not sQWriteBE<T>(iChanW, iT))
-		sThrow_ExhaustedW();
-	}
+	{ sQWriteBE<T>(iChanW, iT) || sThrow_ExhaustedW(); }
 
 template <class T>
 void sEWriteLE(const ChanW_Bin& iChanW, const T& iT)
-	{
-	if (not sQWriteLE<T>(iChanW, iT))
-		sThrow_ExhaustedW();
-	}
+	{ sQWriteLE<T>(iChanW, iT) || sThrow_ExhaustedW(); }
 
 } // namespace ZooLib
 

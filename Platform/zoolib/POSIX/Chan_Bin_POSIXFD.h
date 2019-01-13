@@ -207,20 +207,17 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ChanRCon_Bin_POSIXFD
+#pragma mark - ChanRAbort_Bin_POSIXFD
 
-class ChanRCon_Bin_POSIXFD
-:	public ChanRCon<byte>
+class ChanRAbort_Bin_POSIXFD
+:	public ChanRAbort<byte>
 	{
 public:
-	ChanRCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
-	~ChanRCon_Bin_POSIXFD();
+	ChanRAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	~ChanRAbort_Bin_POSIXFD();
 
 // From Aspect_Abort
 	virtual void Abort();
-
-// From Aspect_DisconnectRead
-	virtual bool DisconnectRead(double iTimeout);
 
 // From Aspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
@@ -235,20 +232,17 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark ChanWCon_Bin_POSIXFD
+#pragma mark ChanWAbort_Bin_POSIXFD
 
-class ChanWCon_Bin_POSIXFD
-:	public ChanWCon<byte>
+class ChanWAbort_Bin_POSIXFD
+:	public ChanWAbort<byte>
 	{
 public:
-	ChanWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
-	~ChanWCon_Bin_POSIXFD();
+	ChanWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	~ChanWAbort_Bin_POSIXFD();
 
 // From Aspect_Abort
 	virtual void Abort();
-
-// From Aspect_DisconnectWrite
-	virtual void DisconnectWrite();
 
 // From Aspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
@@ -257,39 +251,33 @@ protected:
 	const ZRef<FDHolder> fFDHolder;
 	};
 
-//// =================================================================================================
-//#pragma mark -
-//#pragma mark ChanRWCon_Bin_POSIXFD
-//
-//class ChanRWCon_Bin_POSIXFD
-//:	public ChanRWCon<byte>
-//	{
-//public:
-//	ChanRWCon_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
-//	~ChanRWCon_Bin_POSIXFD();
-//
-//// From Aspect_Abort
-//	virtual void Abort();
-//
-//// From Aspect_DisconnectRead
-//	virtual bool DisconnectRead(double iTimeout);
-//
-//// From Aspect_DisconnectWrite
-//	virtual void DisconnectWrite();
-//
-//// From Aspect_Read<byte>
-//	virtual size_t Read(byte* oDest, size_t iCount);
-//	virtual size_t Readable();
-//
-//// From Aspect_WaitReadable
-//	virtual bool WaitReadable(double iTimeout);
-//
-//// From Aspect_Write<byte>
-//	virtual size_t Write(const byte* iSource, size_t iCount);
-//
-//protected:
-//	const ZRef<FDHolder> fFDHolder;
-//	};
+// =================================================================================================
+#pragma mark -
+#pragma mark ChanRWAbort_Bin_POSIXFD
+
+class ChanRWAbort_Bin_POSIXFD
+:	public ChanRWAbort<byte>
+	{
+public:
+	ChanRWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	~ChanRWAbort_Bin_POSIXFD();
+
+// From Aspect_Abort
+	virtual void Abort();
+
+// From Aspect_Read<byte>
+	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual size_t Readable();
+
+// From Aspect_WaitReadable
+	virtual bool WaitReadable(double iTimeout);
+
+// From Aspect_Write<byte>
+	virtual size_t Write(const byte* iSource, size_t iCount);
+
+protected:
+	const ZRef<FDHolder> fFDHolder;
+	};
 
 } // namespace ZooLib
 
