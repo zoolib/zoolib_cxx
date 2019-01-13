@@ -46,7 +46,7 @@ template <class Channer_p> using ChanOfChanner =
 		typename TypeListWithoutPrefix<typename Channer_p::AsTypeList_t>::Result_t>::Result_t;
 
 // =================================================================================================
-#pragma mark - Basic channer typedefs.
+#pragma mark - Basic channer typedefs
 
 using ChannerAbort = Channer<ChanAbort>;
 using ChannerDisconnectRead = Channer<ChanDisconnectRead>;
@@ -59,7 +59,7 @@ template <class EE> using ChannerU = Channer<ChanU<EE>>;
 template <class EE> using ChannerW = Channer<ChanW<EE>>;
 
 // =================================================================================================
-#pragma mark - Composite channer typedefs.
+#pragma mark - Composite channer typedefs
 
 template <class EE> using ChannerRU = Channer<ChanRU<EE>>;
 template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
@@ -79,11 +79,11 @@ template <class EE> using ChannerRWCon = Channer<ChanRWCon<EE>>;
 
 template <class EE> using ChannerConnection = ChannerRWCon<EE>;
 
-// This name is still in use.
+// This name is still in use
 template <class EE> using ChannerRWClose = ChannerRWCon<EE>;
 
 // =================================================================================================
-#pragma mark - sChanner_Chan.
+#pragma mark - sChanner_Chan
 
 // Get the channer from a chan
 
@@ -127,28 +127,26 @@ ZRef<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
 
 template <class Chan_p>
 class Channer_Channer_T
-:	public Channer_T<Chan_p>
+:	private ZRef<ZCounted>
+,	public Channer_T<Chan_p>
 	{
-	typedef Channer_T<Chan_p> inherited;
 public:
 	template <class ChannerOther_p, bool Sense_p>
 	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
-	:	inherited(*iOther)
-	,	fOther(iOther)
+	:	ZRef<ZCounted>(iOther)
+	,	Channer_T<Chan_p>(*iOther)
 		{}
 
 	template <class ChannerOther_p, bool Sense_p, typename... Args_p>
 	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
-	:	inherited(*iOther, std::forward<Args_p>(args)...)
-	,	fOther(iOther)
+	:	ZRef<ZCounted>(iOther)
+	,	Channer_T<Chan_p>(*iOther, std::forward<Args_p>(args)...)
 		{}
-
-protected:
-	const ZRef<ZCounted> fOther;
 	};
 
 template <class Chan_p, class ChannerOther_p, bool Sense_p>
-ZRef<Channer_Channer_T<Chan_p>> sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
+ZRef<Channer_T<Chan_p>>
+sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
 	{
 	if (ZRef<ChannerOther_p,true> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(theOther);
@@ -156,7 +154,7 @@ ZRef<Channer_Channer_T<Chan_p>> sChanner_Channer_T(const ZRef<ChannerOther_p,Sen
 	}
 
 template <class Chan_p, class ChannerOther_p, bool Sense_p, typename... Args_p>
-ZRef<Channer_Channer_T<Chan_p>>
+ZRef<Channer_T<Chan_p>>
 sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
 	{
 	if (ZRef<ChannerOther_p,true> theOther = iOther)
