@@ -398,7 +398,7 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 
 MelangeServer::~MelangeServer()
 	{
-	if (ZLOGF(w, eDebug))
+	if (ZLOGF(w, eInfo))
 		{
 		if (fDescriptionQ)
 			w << *fDescriptionQ;
@@ -419,9 +419,17 @@ void MelangeServer::Initialize()
 void MelangeServer::pRead()
 	{
 	if (fDescriptionQ)
-		ZThread::sSetName(("MSR:" + *fDescriptionQ).c_str());
+		{
+		string threadName = *fDescriptionQ;
+		size_t length = threadName.size();
+		if (length >= 15)
+			threadName = threadName.substr(length - 15, 15);
+		ZThread::sSetName(threadName.c_str());
+		}
 	else
+		{
 		ZThread::sSetName("MSR");
+		}
 
 	ZAcqMtx acq(fMtx);
 	for (;;)
@@ -731,6 +739,7 @@ void Melange_Client::pRead()
 
 			Map_Any theMap;
 			{
+
 			ZRelMtx rel(fMtx);
 			theMap = spReadMessage(ChanR_XX_AbortOnSlowRead<byte>(*theChanner, 15), null);
 			}
