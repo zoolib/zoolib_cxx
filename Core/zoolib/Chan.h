@@ -346,14 +346,6 @@ template <typename EE> using ChanRAbort = DeriveFrom
 	Aspect_WaitReadable
 	>;
 
-template <typename EE> using ChanRCon = DeriveFrom
-	<
-	Aspect_Abort,
-	Aspect_DisconnectRead,
-	Aspect_Read<EE>,
-	Aspect_WaitReadable
-	>;
-
 template <typename EE> using ChanWAbort = DeriveFrom
 	<
 	Aspect_Abort,
@@ -366,6 +358,14 @@ template <typename EE> using ChanRWAbort = DeriveFrom
 	Aspect_Read<EE>,
 	Aspect_WaitReadable,
 	Aspect_Write<EE>
+	>;
+
+template <typename EE> using ChanRCon = DeriveFrom
+	<
+	Aspect_Abort,
+	Aspect_DisconnectRead,
+	Aspect_Read<EE>,
+	Aspect_WaitReadable
 	>;
 
 template <typename EE> using ChanWCon = DeriveFrom
