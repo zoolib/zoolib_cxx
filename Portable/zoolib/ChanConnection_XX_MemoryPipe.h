@@ -110,6 +110,7 @@ public:
 				localDest += countToCopy;
 				fSource += countToCopy;
 				fCondition_Write.Broadcast();
+				break;
 				}
 			else
 				{

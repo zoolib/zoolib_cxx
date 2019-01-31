@@ -75,10 +75,9 @@ public:
 					// blocking. In either case we bypass the buffer and read straight into our
 					// read destination
 					const size_t countRead = sRead(inherited::pGetChan(), localDest, iCount);
-					if (countRead == 0)
-						break;
 					localDest += countRead;
 					iCount -= countRead;
+					break;
 					}
 				else
 					{

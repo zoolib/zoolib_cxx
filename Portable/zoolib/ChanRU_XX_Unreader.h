@@ -49,10 +49,8 @@ public:
 			{
 			if (fStack.empty())
 				{
-				size_t countRead = sRead(fChanR, localDest, localDestEnd - localDest);
-				if (countRead == 0)
-					break;
-				localDest += countRead;
+				localDest += sRead(fChanR, localDest, localDestEnd - localDest);
+				break;
 				}
 			else
 				{
