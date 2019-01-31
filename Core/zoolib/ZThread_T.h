@@ -295,6 +295,7 @@ private:
 		{
 		const ThreadID current = GetThreadIDProc();
 		this->pAssertOwned(current);
+		fOwner = 0;
 		iCnd.Wait(fMtx);
 		fOwner = current;
 		}
