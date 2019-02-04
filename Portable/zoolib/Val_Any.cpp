@@ -584,6 +584,35 @@ Map_Any::Index_t Map_Any::End() const
 	return spEmptyMap.end();
 	}
 
+Map_Any::iterator Map_Any::begin()
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
+
+Map_Any::iterator Map_Any::end()
+	{
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
+	}
+
+
+Map_Any::const_iterator Map_Any::begin() const
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
+
+Map_Any::const_iterator Map_Any::end() const
+	{
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
+	}
+
 const Map_Any::Name_t& Map_Any::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())

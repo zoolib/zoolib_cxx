@@ -363,6 +363,14 @@ public:
 	Index_t Begin() const;
 	Index_t End() const;
 
+	typedef Map_t::iterator iterator;
+	iterator begin();
+	iterator end();
+
+	typedef Map_t::const_iterator const_iterator;
+	const_iterator begin() const;
+	const_iterator end() const;
+
 	const Name_t& NameOf(const Index_t& iIndex) const;
 	Index_t IndexOf(const Name_t& iName) const;
 
