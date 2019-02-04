@@ -37,8 +37,7 @@ using std::string;
 using std::vector;
 
 // ================================================================================================
-#pragma mark -
-#pragma mark MelangeServer
+#pragma mark - MelangeServer
 
 class MelangeServer
 :	public ZCounted

@@ -208,8 +208,7 @@ bool ChanRAbort_Bin_POSIXFD::WaitReadable(double iTimeout)
 	{ return Util_POSIXFD::sWaitReadable(fFDHolder->GetFD(), iTimeout); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanWAbort_Bin_POSIXFD
+#pragma mark - ChanWAbort_Bin_POSIXFD
 
 ChanWAbort_Bin_POSIXFD::ChanWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
@@ -225,8 +224,7 @@ size_t ChanWAbort_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 	{ return Util_POSIXFD::sWriteCon(fFDHolder->GetFD(), iSource, iCount); }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWAbort_Bin_POSIXFD
+#pragma mark - ChanRWAbort_Bin_POSIXFD
 
 ChanRWAbort_Bin_POSIXFD::ChanRWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)

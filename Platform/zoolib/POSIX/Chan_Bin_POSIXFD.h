@@ -231,8 +231,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanWAbort_Bin_POSIXFD
+#pragma mark - ChanWAbort_Bin_POSIXFD
 
 class ChanWAbort_Bin_POSIXFD
 :	public ChanWAbort<byte>
@@ -252,8 +251,7 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark -
-#pragma mark ChanRWAbort_Bin_POSIXFD
+#pragma mark - ChanRWAbort_Bin_POSIXFD
 
 class ChanRWAbort_Bin_POSIXFD
 :	public ChanRWAbort<byte>
