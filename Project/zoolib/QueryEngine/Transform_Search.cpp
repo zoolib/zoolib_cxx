@@ -191,10 +191,8 @@ public:
 		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 		ZRef<RA::Expr_Rel> newCalc = sCalc(newOp0, theName, iExpr->GetCallable());
 
-//		fRestriction = priorRestriction;
-//		fProjection = priorProjection;
-//		fRename_LeafToRoot.clear();
-		this->pApplyRestrictProject(newCalc, priorRestriction, priorProjection, Rename(), nullptr);
+		this->pSetResultWithRestrictProjectRename(
+			newCalc, priorRestriction, priorProjection, Rename(), nullptr);
 		}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
@@ -286,19 +284,19 @@ public:
 	virtual void Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
 		{
 		fLikelySizeQ = 1;
-		this->pApplyRestrictProject(sRelHead(iExpr->GetColName()), iExpr);
+		this->pSetResultWithRestrictProjectRename(sRelHead(iExpr->GetColName()), iExpr);
 		}
 
 	virtual void Visit_Expr_Rel_Dee(const ZRef<RA::Expr_Rel_Dee>& iExpr)
 		{
 		fLikelySizeQ = 1;
-		this->pApplyRestrictProject(RelHead(), iExpr);
+		this->pSetResultWithRestrictProjectRename(RelHead(), iExpr);
 		}
 
 	virtual void Visit_Expr_Rel_Dum(const ZRef<RA::Expr_Rel_Dum>& iExpr)
 		{
 		fLikelySizeQ = 0;
-		this->pApplyRestrictProject(RelHead(), iExpr);
+		this->pSetResultWithRestrictProjectRename(RelHead(), iExpr);
 		}
 
 	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
@@ -308,8 +306,8 @@ public:
 		{
 		SaveSetRestore<ZRef<Expr_Bool> > ssr0(fRestriction, sTrue());
 		SaveSetRestore<UniSet<ColName> > ssr1(fProjection, UniSet<ColName>::sUniversal());
-		SaveRestore<Rename> ssr2(fRename_LeafToRoot);
-		SaveRestore<RelHead> ssr3(fBoundNames);
+		SaveRestore<Rename> sr2(fRename_LeafToRoot);
+		SaveRestore<RelHead> sr3(fBoundNames);
 		newOp0 = this->Do(iExpr->GetOp0());
 		}
 
@@ -324,7 +322,8 @@ public:
 
 		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
 
-		this->pApplyRestrictProject(newEmbed);
+		this->pSetResultWithRestrictProjectRename(newEmbed,
+			fRestriction, fProjection, fRename_LeafToRoot, nullptr);
 		}
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
@@ -362,9 +361,14 @@ public:
 		fLikelySizeQ = leftLikelySize * rightLikelySize;
 
 //		if (rightLikelySize < leftLikelySize)
-//			this->pApplyRestrictProject(sProduct(op1, op0));
+//			{
+//			this->pSetResultWithRestrictProjectRename(sProduct(op1, op0));
+//			}
 //		else
-			this->pApplyRestrictProject(sProduct(op0, op1), priorRestriction, priorProjection, Rename(), nullptr);
+			{
+			this->pSetResultWithRestrictProjectRename(
+				sProduct(op0, op1), priorRestriction, priorProjection, Rename(), nullptr);
+			}
 		}
 
 	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
@@ -410,31 +414,31 @@ public:
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	void pApplyRestrictProject(const ZRef<Expr_Rel>& iRel)
-		{ this->pApplyRestrictProject(nullptr, iRel); }
+	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel)
+		{ this->pSetResultWithRestrictProjectRename(nullptr, iRel); }
 
-	void pApplyRestrictProject(const RelHead& iRH, const ZRef<Expr_Rel>& iRel)
-		{ this->pApplyRestrictProject(&iRH, iRel); }
+	void pSetResultWithRestrictProjectRename(const RelHead& iRH, const ZRef<Expr_Rel>& iRel)
+		{ this->pSetResultWithRestrictProjectRename(&iRH, iRel); }
 
-	void pApplyRestrictProject(const RelHead* iRH, ZRef<Expr_Rel> iRel)
+	void pSetResultWithRestrictProjectRename(const RelHead* iRH, ZRef<Expr_Rel> iRel)
 		{
-		ZRef<Expr_Rel> theResult =
-			spApplyRestrictProject(iRel, fRestriction, fProjection, fRename_LeafToRoot, iRH);
+		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
+			iRel, fRestriction, fProjection, fRename_LeafToRoot, iRH);
 		this->pSetResult(theResult);
 		}
 
-	void pApplyRestrictProject(const ZRef<Expr_Rel>& iRel,
+	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel,
 		const ZRef<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
 		const Rename& iRename_LeafToRoot,
 		const RelHead* iRH)
 		{
-		ZRef<Expr_Rel> theResult =
-			spApplyRestrictProject(iRel, iRestriction, iProjection, iRename_LeafToRoot, iRH);
+		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
+			iRel, iRestriction, iProjection, iRename_LeafToRoot, iRH);
 		this->pSetResult(theResult);
 		}
 
-	static ZRef<Expr_Rel> spApplyRestrictProject(
+	static ZRef<Expr_Rel> spGetResultWithRestrictProjectRename(
 		const ZRef<Expr_Rel>& iRel,
 		const ZRef<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
