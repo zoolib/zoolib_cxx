@@ -29,8 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
-//##using std::vector;
-
 using namespace Util_STL;
 
 // =================================================================================================
