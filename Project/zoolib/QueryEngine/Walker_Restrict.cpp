@@ -432,6 +432,9 @@ ZRef<Walker> Walker_Restrict::Prime(
 	delete fExec;
 	fExec = nullptr;
 
+	// fCombinedOffsets is our instance variable so that elements in the Exec tree can
+	// reference it without incurring any ownership.
+	fCombinedOffsets.clear();
 	fWalker = fWalker->Prime(iOffsets, fCombinedOffsets, ioBaseOffset);
 	if (not fWalker)
 		return null;
