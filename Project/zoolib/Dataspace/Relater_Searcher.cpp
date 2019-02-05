@@ -414,9 +414,15 @@ void Relater_Searcher::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<Expr_Rel> theRel = QE::sTransform_Search(iAdded->GetRel());
+//		ZRef<Expr_Rel> theRel = QE::sTransform_Search(iAdded->GetRel());
+//		theRel = RA::Transform_DecomposeRestricts().Do(theRel);
+//		theRel = spTransform_PushDownRestricts_IntoSearch(theRel);
+
+		ZRef<Expr_Rel> theRel = iAdded->GetRel();
 		theRel = RA::Transform_DecomposeRestricts().Do(theRel);
-		theRel = spTransform_PushDownRestricts_IntoSearch(theRel);
+		theRel = RA::Transform_PushDownRestricts().Do(theRel);
+//		theRel = Transform_PushDownRestricts_IntoSearch().Do(theRel);
+		theRel = QE::sTransform_Search(theRel);
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
