@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
+#include "zoolib/Log.h"
+
 namespace ZooLib {
 namespace RelationalAlgebra {
 
@@ -79,27 +81,32 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	foreachi (iter, fRestricts)
 		{
 		Restrict& theRestrict = **iter;
-
-		if (theRestrict.fCountTouching != theRestrict.fCountSubsuming)
+		if (theRestrict.fExpr_Bool)
 			{
-			// Our children touched, but did not individually subsume this rel.
-			const RelHead& exprNames = theRestrict.fNames;
-			const RelHead intersection = exprNames & combined;
-
-			// [Alternate version of this test:
-			// [if (theRelHead.Contains(sGetNames(theRestrict.fExpr_Bool))
-			if (intersection.size() && intersection.size() == exprNames.size())
+			if (theRestrict.fCountTouching != theRestrict.fCountSubsuming)
 				{
-				// This product as a *whole* touches and subsumes the rel. Override whatever
-				// values were in the counts with an arbitrary (but distinctive) matching pair,
-				// so that parents can tell that we consumed this restrict. Also preserve
-				// the restriction in the result.
-				theRestrict.fCountTouching = 8888;
-				theRestrict.fCountSubsuming = 8888;
-				result = result & theRestrict.fExpr_Bool;
+				// Our children touched, but did not individually subsume this rel.
+				const RelHead& exprNames = theRestrict.fNames;
+				const RelHead intersection = exprNames & combined;
+
+				// [Alternate version of this test:
+				// [if (theRelHead.Contains(sGetNames(theRestrict.fExpr_Bool))
+				if (intersection.size() && intersection.size() == exprNames.size())
+					{
+					// This product as a *whole* touches and subsumes the rel. Override whatever
+					// values were in the counts with an arbitrary (but distinctive) matching pair,
+					// so that parents can tell that we consumed this restrict. Also preserve
+					// the restriction in the result.
+					theRestrict.fCountTouching = 8888;
+					theRestrict.fCountSubsuming = 8888;
+					result = result & theRestrict.fExpr_Bool;
+					}
 				}
 			}
-
+		else
+			{
+			ZLOGTRACE(eDebug);
+			}
 		}
 	this->pSetResult(result);
 
@@ -114,14 +121,27 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename new2Old;
 	new2Old[newName] = oldName;
 
-	typedef std::pair<ZRef<Expr_Bool>,RelHead> priorRestriction;
-	vector<priorRestriction> priorRestrictions;
+	vector<ZRef<Expr_Bool>> priorRestrictions;
+	vector<RelHead> priorNames;
 
 	foreachi (iter, fRestricts)
 		{
-		sPushBack(priorRestrictions, priorRestriction((*iter)->fExpr_Bool, (*iter)->fNames));
-		(*iter)->fExpr_Bool = Util_Expr_Bool::sRenamed(new2Old, (*iter)->fExpr_Bool);
-		(*iter)->fNames = sRenamed(new2Old, (*iter)->fNames);
+		Restrict& theRestrict = **iter;
+
+		priorRestrictions.push_back(theRestrict.fExpr_Bool);
+		priorNames.push_back(theRestrict.fNames);
+
+		const RelHead newNames = sRenamed(new2Old, theRestrict.fNames);
+		if (newNames.size() != theRestrict.fNames.size())
+			{
+			// We've collapsed names, so the expression can no longer make sense.
+			theRestrict.fExpr_Bool = null;
+			}
+		else
+			{
+			theRestrict.fExpr_Bool = Util_Expr_Bool::sRenamed(new2Old, theRestrict.fExpr_Bool);
+			}
+		theRestrict.fNames = newNames;
 		}
 
 	Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
@@ -129,12 +149,12 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename old2New;
 	old2New[oldName] = newName;
 
-	vector<priorRestriction>::const_iterator iterPrior = priorRestrictions.begin();
+	vector<ZRef<Expr_Bool>>::const_iterator iterPriorRestrictions = priorRestrictions.begin();
+	vector<RelHead>::const_iterator iterPriorNames = priorNames.begin();
 	foreachi (iter, fRestricts)
 		{
-		(*iter)->fExpr_Bool = iterPrior->first;
-		(*iter)->fNames = iterPrior->second;
-		++iterPrior;
+		(*iter)->fExpr_Bool = *iterPriorRestrictions++;
+		(*iter)->fNames = *iterPriorNames++;
 		}
 
 	if (sQErase(fRelHead, oldName))
@@ -188,11 +208,17 @@ void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_
 		const RelHead intersection = exprNames & iRH;
 		if (intersection.size())
 			{
+			// We overlap with the expression. That is, we provide a value the expression uses.
 			++theRestrict.fCountTouching;
-			if (intersection.size() == exprNames.size())
+			if (theRestrict.fExpr_Bool)
 				{
-				++theRestrict.fCountSubsuming;
-				result = result & theRestrict.fExpr_Bool;
+				// The expression is valid -- it didn't get made nonsensical by a name clash
+				// between a rename and original data value. So we can use it.
+				if (intersection.size() == exprNames.size())
+					{
+					++theRestrict.fCountSubsuming;
+					result = result & theRestrict.fExpr_Bool;
+					}
 				}
 			}
 		}
