@@ -66,6 +66,7 @@ protected:
 	struct Restrict
 		{
 		ZRef<Expr_Bool> fExpr_Bool;
+		RelHead fNames;
 		size_t fCountTouching;
 		size_t fCountSubsuming;
 		};

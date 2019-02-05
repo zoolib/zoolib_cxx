@@ -482,9 +482,8 @@ public:
 ZRef<RA::Expr_Rel> sTransform_Search(const ZRef<RA::Expr_Rel>& iExpr)
 	{
 	if (ZRef<RA::Expr_Rel> result = Transform_Search().Do(iExpr))
-		{
 		return result;
-		}
+
 	return iExpr;
 	}
 

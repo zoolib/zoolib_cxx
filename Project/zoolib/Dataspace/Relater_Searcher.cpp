@@ -54,6 +54,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Product.h"
 #include "zoolib/QueryEngine/Walker_Union.h"
 
+#include "zoolib/DebuggingGear.h"
+#include "zoolib/StdIO.h"
+
 namespace ZooLib {
 namespace Dataspace {
 
@@ -347,6 +350,7 @@ public:
 
 			// Of those, which are part of available?
 			const RelHead intersection = exprNames & available;
+//			ZAssert(intersection.size() == exprNames.size());
 
 			if (intersection.size())
 				{
@@ -416,13 +420,18 @@ void Relater_Searcher::ModifyRegistrations(
 		{
 		ZRef<Expr_Rel> theRel = iAdded->GetRel();
 
-//		theRel = QE::sTransform_Search(theRel);
-//		theRel = RA::Transform_DecomposeRestricts().Do(theRel);
-//		theRel = Transform_PushDownRestricts_IntoSearch().Do(theRel);
-
-		theRel = RA::Transform_DecomposeRestricts().Do(theRel);
-		theRel = RA::Transform_PushDownRestricts().Do(theRel);
-		theRel = QE::sTransform_Search(theRel);
+		if (true)
+			{
+			theRel = QE::sTransform_Search(theRel);
+			theRel = RA::Transform_DecomposeRestricts().Do(theRel);
+			theRel = Transform_PushDownRestricts_IntoSearch().Do(theRel);
+			}
+		else
+			{
+			theRel = RA::Transform_DecomposeRestricts().Do(theRel);
+			theRel = RA::Transform_PushDownRestricts().Do(theRel);
+			theRel = QE::sTransform_Search(theRel);
+			}
 
 		const pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -551,6 +560,16 @@ void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w)
 	{
 	DumpWalkers dw(w);
 	iWalker->Accept(dw);
+	}
+
+#define ZMACRO_pdesc(param) \
+	static void pdesc(param); \
+	UNIQUEMarkAsUsed(static_cast<void (*)(param)>(pdesc)); \
+	static void pdesc(param)
+
+ZMACRO_pdesc(const ZRef<QE::Walker>& iWalker)
+	{
+	spDump(iWalker, StdIO::sChan_UTF_Err);
 	}
 
 // =================================================================================================
