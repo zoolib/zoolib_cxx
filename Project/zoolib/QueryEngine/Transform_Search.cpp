@@ -163,6 +163,7 @@ class Transform_Search
 ,	public virtual RA::Visitor_Expr_Rel_Project
 ,	public virtual RA::Visitor_Expr_Rel_Rename
 ,	public virtual RA::Visitor_Expr_Rel_Restrict
+,	public virtual RA::Visitor_Expr_Rel_Union
 //,	public virtual RA::Visitor_Expr_Rel_Search //??
 	{
 	typedef Visitor_Expr_Op_Do_Transform_T<RA::Expr_Rel> inherited;
@@ -410,6 +411,26 @@ public:
 			}
 
 		this->pSetResult(this->Do(iExpr->GetOp0()));
+		}
+
+	virtual void Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
+		{
+		const ZRef<Expr_Bool> priorRestriction = fRestriction;
+		const UniSet<ColName> priorProjection = fProjection;
+		const Rename priorRename_LeafToRoot = fRename_LeafToRoot;
+
+		// Process the left branch.
+		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
+
+		// Restore state and then process the right
+		fRestriction = priorRestriction;
+		fProjection = priorProjection;
+		fRename_LeafToRoot = priorRename_LeafToRoot;
+
+		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
+
+		this->pSetResultWithRestrictProjectRename(
+			sUnion(op0, op1), priorRestriction, priorProjection, priorRename_LeafToRoot, null);
 		}
 
 	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel, const ZQ<RelHead>& iRHQ)
