@@ -476,8 +476,9 @@ public:
 			}
 		else if (iNameQ)
 			{
-			if (sContains(projectElems, *iNameQ))
-				theRel = sProject(theRel, sRelHead(*iNameQ));
+			if (not sContains(projectElems, *iNameQ))
+				ZLOGTRACE(eWarning);
+// ##			theRel = sProject(theRel, sRelHead(*iNameQ));
 			}
 		else
 			{
@@ -486,8 +487,8 @@ public:
 
 		if (iNameQ)
 			{
-			if (ZQ<ColName> theNameQ = sQGet(iRename_LeafToRoot, *iNameQ))
-				theRel = sRename(theRel, *theNameQ, *iNameQ);
+			if (ZQ<ColName> theRootNameQ = sQGet(iRename_LeafToRoot, *iNameQ))
+				theRel = sRename(theRel, *theRootNameQ, *iNameQ);
 
 			}
 		else

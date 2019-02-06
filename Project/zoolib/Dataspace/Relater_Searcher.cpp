@@ -352,7 +352,6 @@ public:
 
 			// Of those, which are part of available?
 			const RelHead intersection = exprNames & available;
-//			ZAssert(intersection.size() == exprNames.size());
 
 			if (intersection.size())
 				{
@@ -423,7 +422,7 @@ void Relater_Searcher::ModifyRegistrations(
 		{
 		ZRef<Expr_Rel> theRel = iAdded->GetRel();
 
-		if (true)
+		if (false)
 			{
 			theRel = QE::sTransform_Search(theRel);
 			theRel = RA::Transform_DecomposeRestricts().Do(theRel);
