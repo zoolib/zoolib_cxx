@@ -193,7 +193,7 @@ public:
 		ZRef<RA::Expr_Rel> newCalc = sCalc(newOp0, theName, iExpr->GetCallable());
 
 		this->pSetResultWithRestrictProjectRename(
-			newCalc, priorRestriction, priorProjection, Rename(), null);
+			newCalc, priorRestriction, priorProjection, null);
 		}
 
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
@@ -321,8 +321,9 @@ public:
 
 		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
 
+//		this->pSetResult(newEmbed);
 		this->pSetResultWithRestrictProjectRename(newEmbed,
-			priorRestriction, priorProjection, priorRename_LeafToRoot, null);
+			priorRestriction, priorProjection, null);
 		}
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
@@ -365,8 +366,9 @@ public:
 //			}
 //		else
 			{
+//			this->pSetResult(sProduct(op0, op1));
 			this->pSetResultWithRestrictProjectRename(
-				sProduct(op0, op1), priorRestriction, priorProjection, Rename(), null);
+				sProduct(op0, op1), priorRestriction, priorProjection, null);
 			}
 		}
 
@@ -429,25 +431,25 @@ public:
 
 		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
 
-		this->pSetResultWithRestrictProjectRename(
-			sUnion(op0, op1), priorRestriction, priorProjection, priorRename_LeafToRoot, null);
+//		this->pSetResultWithRestrictProjectRename(
+//			sUnion(op0, op1), priorRestriction, priorProjection, null);
+		this->pSetResult(sUnion(op0, op1));
 		}
 
 	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel, const ZQ<RelHead>& iRHQ)
 		{
 		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
-			iRel, fRestriction, fProjection, fRename_LeafToRoot, iRHQ);
+			iRel, fRestriction, fProjection, iRHQ);
 		this->pSetResult(theResult);
 		}
 
 	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel,
 		const ZRef<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
-		const Rename& iRename_LeafToRoot,
 		const ZQ<RelHead>& iRHQ)
 		{
 		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
-			iRel, iRestriction, iProjection, iRename_LeafToRoot, iRHQ);
+			iRel, iRestriction, iProjection, iRHQ);
 		this->pSetResult(theResult);
 		}
 
@@ -455,7 +457,6 @@ public:
 		const ZRef<Expr_Rel>& iRel,
 		const ZRef<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
-		const Rename& iRename_LeafToRoot,
 		const ZQ<RelHead>& iRHQ)
 		{
 		ZRef<Expr_Rel> theRel = iRel;
@@ -483,11 +484,6 @@ public:
 			theRel = sProject(theRel, projectElems);
 			}
 
-		foreachi (iterRename, iRename_LeafToRoot)
-			{
-			if (iterRename->first != iterRename->second)
-				theRel = sRename(theRel, iterRename->second, iterRename->first);
-			}
 		return theRel;
 		}
 

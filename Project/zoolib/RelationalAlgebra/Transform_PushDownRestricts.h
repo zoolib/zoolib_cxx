@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel_Product.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Union.h"
 
 #include <vector>
 
@@ -49,6 +50,7 @@ class Transform_PushDownRestricts
 ,	public virtual Visitor_Expr_Rel_Product
 ,	public virtual Visitor_Expr_Rel_Rename
 ,	public virtual Visitor_Expr_Rel_Restrict
+,	public virtual Visitor_Expr_Rel_Union
 	{
 public:
 // From Visitor_Expr_Rel_XXX
@@ -59,6 +61,7 @@ public:
 	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
 	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
 	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr);
 
 protected:
 	void pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iRel);

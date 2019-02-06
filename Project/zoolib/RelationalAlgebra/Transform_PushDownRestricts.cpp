@@ -61,13 +61,13 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed
 
 void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	{
-	ZAssert(sIsEmpty(fRelHead));
+	RelHead priorRelHead = fRelHead;
 
-	sClear(fRelHead);
 	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 	const RelHead leftRelHead = fRelHead;
 
-	sClear(fRelHead);
+	fRelHead = priorRelHead;
+
 	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	const RelHead rightRelHead = fRelHead;
 
@@ -195,6 +195,23 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Re
 		// tree, but they didn't all do so.
 		this->pSetResult(iExpr->SelfOrClone(newOp0));
 		}
+	}
+
+void Transform_PushDownRestricts::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
+	{
+	const RelHead priorRelHead = fRelHead;
+
+	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const RelHead leftRelHead = fRelHead;
+
+	fRelHead = priorRelHead;
+
+	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const RelHead rightRelHead = fRelHead;
+
+	ZAssert(leftRelHead == rightRelHead);
+
+	this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
 void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iExpr)

@@ -54,8 +54,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Product.h"
 #include "zoolib/QueryEngine/Walker_Union.h"
 
-#include "zoolib/DebuggingGear.h"
-#include "zoolib/StdIO.h"
+#if __MACH__
+	#include "zoolib/DebuggingGear.h"
+	#include "zoolib/StdIO.h"
+#endif
 
 namespace ZooLib {
 namespace Dataspace {
@@ -376,10 +378,11 @@ public:
 		}
 	};
 
-ZRef<Expr_Rel> spTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel)
-	{ return Transform_PushDownRestricts_IntoSearch().Do(iRel); }
-
 } // anonymous namespace
+
+ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel);
+ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel)
+	{ return Transform_PushDownRestricts_IntoSearch().Do(iRel); }
 
 // =================================================================================================
 #pragma mark - Relater_Searcher
@@ -562,6 +565,7 @@ void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w)
 	iWalker->Accept(dw);
 	}
 
+#if __MACH__
 #define ZMACRO_pdesc(param) \
 	static void pdesc(param); \
 	UNIQUEMarkAsUsed(static_cast<void (*)(param)>(pdesc)); \
@@ -571,6 +575,7 @@ ZMACRO_pdesc(const ZRef<QE::Walker>& iWalker)
 	{
 	spDump(iWalker, StdIO::sChan_UTF_Err);
 	}
+#endif
 
 // =================================================================================================
 
