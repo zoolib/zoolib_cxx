@@ -422,8 +422,10 @@ void Relater_Searcher::ModifyRegistrations(
 		{
 		ZRef<Expr_Rel> theRel = iAdded->GetRel();
 
-		if (false)
+		if (true)
 			{
+			// This branch is much faster. sTransform_Search doesn't do a great job of pulling
+			// restricts into itself.
 			theRel = QE::sTransform_Search(theRel);
 			theRel = RA::Transform_DecomposeRestricts().Do(theRel);
 			theRel = Transform_PushDownRestricts_IntoSearch().Do(theRel);
