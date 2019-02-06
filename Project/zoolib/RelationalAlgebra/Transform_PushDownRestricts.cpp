@@ -71,9 +71,13 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	const RelHead rightRelHead = fRelHead;
 
-	ZAssert(sIsEmpty(leftRelHead & rightRelHead));
-
 	const RelHead combined = leftRelHead | rightRelHead;
+	
+	if (combined.size() != leftRelHead.size() + rightRelHead.size())
+		{
+		// The sets were not disjoint.
+		ZAssert(false);
+		}
 
 	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
