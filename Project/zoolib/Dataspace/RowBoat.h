@@ -54,6 +54,7 @@ public:
 		const ZRef<Expr_Rel>& iRel,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
+		bool iEmitDummyChanges,
 		const ZRef<Callable_Make_Callable_Row>& iCallable);
 
 	virtual ~RowBoat();
@@ -69,10 +70,10 @@ private:
 		const ZRef<ZCounted>& iRegistration,
 		const ZRef<Result>& iResult);
 
-	ZRef<Callable_Register> fCallable_Register;
-	ZRef<Expr_Rel> fRel;
+	const ZRef<Callable_Register> fCallable_Register;
+	const ZRef<Expr_Rel> fRel;
 	QueryEngine::ResultDiffer fResultDiffer;
-	ZRef<Callable_Make_Callable_Row> fCallable;
+	const ZRef<Callable_Make_Callable_Row> fCallable;
 
 	ZRef<ZCounted> fRegistration;
 	std::vector<ZRef<Callable_Row> > fRows;

@@ -145,9 +145,11 @@ struct Comparer_t
 #pragma mark - ResultDiffer
 
 ResultDiffer::ResultDiffer(const RelHead& iIdentity,
-	const RelHead& iSignificant)
+	const RelHead& iSignificant,
+	bool iEmitDummyChanges)
 :	fIdentity(iIdentity)
 ,	fSignificant(iSignificant)
+,	fEmitDummyChanges(iEmitDummyChanges)
 	{
 	// If you don't have any identity or significant fields, then I'm
 	// not even sure what we're doing.
@@ -309,7 +311,9 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 				}
 			else
 				{
-				if (oChanged && result.second < fIdentity.size() + fSignificant.size())
+				if (oChanged
+					&& (fEmitDummyChanges
+						|| (result.second < fIdentity.size() + fSignificant.size())))
 					{
 					// We care about changes, and comparison was terminated in the 'significant'
 					// portion of the values. So they matched in the identity portion, and thus

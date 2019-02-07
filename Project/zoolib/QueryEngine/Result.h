@@ -71,7 +71,8 @@ class ResultDiffer
 	{
 public:
 	ResultDiffer(const RelationalAlgebra::RelHead& iIdentity,
-		const RelationalAlgebra::RelHead& iSignificant);
+		const RelationalAlgebra::RelHead& iSignificant,
+		bool iEmitDummyChanges = false);
 
 	void Apply(const ZRef<Result>& iResult,
 		ZRef<Result>* oPrior,
@@ -82,6 +83,7 @@ public:
 private:
 	const RelationalAlgebra::RelHead fIdentity;
 	const RelationalAlgebra::RelHead fSignificant;
+	const bool fEmitDummyChanges;
 
 	ZRef<Result> fResult_Prior;
 	std::vector<size_t> fSort_Prior;

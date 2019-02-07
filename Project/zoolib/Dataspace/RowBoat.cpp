@@ -45,10 +45,11 @@ using std::vector;
 RowBoat::RowBoat(const ZRef<Callable_Register>& iCallable_Register,
 	const ZRef<Expr_Rel>& iRel,
 	const RelHead& iIdentity, const RelHead& iSignificant,
+	bool iEmitDummyChanges,
 	const ZRef<Callable_Make_Callable_Row>& iCallable)
 :	fCallable_Register(iCallable_Register)
 ,	fRel(iRel)
-,	fResultDiffer(iIdentity, iSignificant)
+,	fResultDiffer(iIdentity, iSignificant, iEmitDummyChanges)
 ,	fCallable(iCallable)
 	{}
 
