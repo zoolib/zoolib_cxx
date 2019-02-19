@@ -54,8 +54,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Product.h"
 #include "zoolib/QueryEngine/Walker_Union.h"
 
-#if __MACH__
-	#include "zoolib/DebuggingGear.h"
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
 	#include "zoolib/StdIO.h"
 #endif
 
@@ -566,18 +566,6 @@ void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w)
 	iWalker->Accept(dw);
 	}
 
-#if __MACH__
-#define ZMACRO_pdesc(param) \
-	static void pdesc(param); \
-	UNIQUEMarkAsUsed(static_cast<void (*)(param)>(pdesc)); \
-	static void pdesc(param)
-
-ZMACRO_pdesc(const ZRef<QE::Walker>& iWalker)
-	{
-	spDump(iWalker, StdIO::sChan_UTF_Err);
-	}
-#endif
-
 // =================================================================================================
 
 void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
@@ -815,3 +803,17 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 
 } // namespace Dataspace
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const ZRef<QueryEngine::Walker>& iWalker)
+	{
+	ZooLib::Dataspace::spDump(iWalker, StdIO::sChan_UTF_Err);
+	}
+
+#endif // defined(ZMACRO_pdesc)

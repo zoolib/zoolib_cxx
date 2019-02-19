@@ -28,6 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/StdIO.h"
+#endif
+
 namespace ZooLib {
 namespace RelationalAlgebra {
 namespace Util_Strim_RelHead {
@@ -224,3 +229,27 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
 	}
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const RelationalAlgebra::RelHead& iRH)
+	{
+	StdIO::sChan_UTF_Err << iRH << "\n";
+	}
+
+ZMACRO_pdesc(const RelationalAlgebra::Rename& iRename)
+	{
+	StdIO::sChan_UTF_Err << iRename << "\n";
+	}
+
+ZMACRO_pdesc(const RelationalAlgebra::ConcreteHead& iConcreteHead)
+	{
+	StdIO::sChan_UTF_Err << iConcreteHead << "\n";
+	}
+
+#endif // defined(ZMACRO_pdesc)

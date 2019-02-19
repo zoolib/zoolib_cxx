@@ -25,13 +25,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Dataspace/Types.h" // For AbsentOptional_t
 
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/StdIO.h"
+#endif
+
 namespace ZooLib {
 namespace QueryEngine {
 
 using RelationalAlgebra::RelHead;
 
 // =================================================================================================
-#pragma mark - - sToStrim
+#pragma mark - sToStrim
 
 void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 	{
@@ -66,3 +71,17 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>&
 	}
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const ZRef<QueryEngine::Result>& iResult)
+	{
+	StdIO::sChan_UTF_Err << iResult << "\n";
+	}
+
+#endif // defined(ZMACRO_pdesc)

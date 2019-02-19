@@ -30,7 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
 
-#include "zoolib/Log.h"
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/StdIO.h"
+#endif
 
 namespace ZooLib {
 namespace RelationalAlgebra {
@@ -418,3 +421,17 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<RelationalAlgebra::Ex
 	}
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
+	{
+	StdIO::sChan_UTF_Err << iRel << "\n";
+	}
+
+#endif // defined(ZMACRO_pdesc)

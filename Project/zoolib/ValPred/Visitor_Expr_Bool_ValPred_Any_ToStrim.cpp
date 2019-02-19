@@ -21,6 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
 
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/StdIO.h"
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -31,3 +36,17 @@ void Visitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
 	{ Util_Strim_ValPred_Any::sToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const ZRef<Expr_Bool>& iExpr)
+	{
+	Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), StdIO::sChan_UTF_Err, iExpr);
+	}
+
+#endif // defined(ZMACRO_pdesc)

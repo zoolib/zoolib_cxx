@@ -30,6 +30,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/PullPush_JSON.h"
 #include "zoolib/StartOnNewThread.h"
 
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/StdIO.h"
+	#include "zoolib/Util_Chan_UTF_Operators.h"
+#endif
+
 // =================================================================================================
 #pragma mark -
 
@@ -131,3 +137,33 @@ const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Data_Any& iData)
 } // namespace Operators_Any_JSON
 
 } // namespace ZooLib
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const Val_Any& iVal)
+	{
+	Util_Any_JSON::sWrite(iVal, StdIO::sChan_UTF_Err);
+	StdIO::sChan_UTF_Err << "\n";
+	}
+
+ZMACRO_pdesc(const Map_Any& iMap)
+	{
+	Util_Any_JSON::sWrite(Any(iMap), StdIO::sChan_UTF_Err);
+	StdIO::sChan_UTF_Err << "\n";
+	}
+
+ZMACRO_pdesc(const Seq_Any& iSeq)
+	{
+	Util_Any_JSON::sWrite(Any(iSeq), StdIO::sChan_UTF_Err);
+	StdIO::sChan_UTF_Err << "\n";
+	}
+
+ZMACRO_pdesc(const Data_Any& iData)
+	{
+	Util_Any_JSON::sWrite(Any(iData), StdIO::sChan_UTF_Err);
+	StdIO::sChan_UTF_Err << "\n";
+	}
+
+#endif // defined(ZMACRO_pdesc)
