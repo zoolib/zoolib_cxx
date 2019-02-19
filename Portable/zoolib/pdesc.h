@@ -1,24 +1,13 @@
-// http://www.zoolib.org
-// Copyright (c) 2019 Andrew Green
-// MIT License
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_pdesc_h__
 #define __ZooLib_pdesc_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compat_MSVCStaticLib.h"
-
-ZMACRO_MSVCStaticLib_Reference(PdescDistinguisher);
-
 struct ZooLib_MarkAsUsed
 	{
-	static void spMarkIt(const void*);
-
 	template <class T>
-	ZooLib_MarkAsUsed(T thing)
-		{
-//		spMarkIt(0);
-		}
+	ZooLib_MarkAsUsed(T thing) {}
 	};
 
 #define ZMACRO_UniqueMarkAsUsed(aa) \
