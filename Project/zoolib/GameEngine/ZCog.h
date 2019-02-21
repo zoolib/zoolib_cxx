@@ -72,6 +72,22 @@ public:
 
 //--
 
+#if ZCONFIG_CPP >= 2011
+
+	ZCog(ZCog&& iOther)
+	:	inherited(std::forward<ZCog>(iOther))
+		{}
+
+	ZCog& operator=(ZCog&& iOther)
+		{
+		inherited::operator=(std::forward<ZCog>(iOther));
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
+
+//--
+
 	ZCog(Callable* iCallable)
 	:	inherited(iCallable)
 		{}
@@ -93,6 +109,20 @@ public:
 		inherited::operator=(iOther);
 		return *this;
 		}
+
+#if ZCONFIG_CPP >= 2011
+
+	ZCog(ZRef<Callable>&& iOther)
+	:	inherited(std::forward<ZRef<Callable>>(iOther))
+		{}
+
+	ZCog& operator=(ZRef<Callable>&& iOther)
+		{
+		inherited::operator=(std::forward<ZRef<Callable>>(iOther));
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
 
 //--
 
