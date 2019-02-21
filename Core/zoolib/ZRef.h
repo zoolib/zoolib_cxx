@@ -103,8 +103,8 @@ public:
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
 	ZRef(const ZRef& iOther)
-	:	fP(0)
-		{ fP = iOther.Copy(); }
+	:	fP(iOther.Copy())
+		{}
 
 	inline
 	~ZRef()
@@ -119,6 +119,25 @@ public:
 		spRelease(otherP);
 		return *this;
 		}
+
+// --
+
+#if ZCONFIG_CPP >= 2011
+
+	inline
+	ZRef(ZRef&& iOther)
+	:	fP(iOther.Orphan())
+		{}
+
+	inline
+	ZRef& operator=(ZRef&& iOther)
+		{
+		using std::swap;
+		swap(iOther.fP, fP);
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
 
 //--
 
@@ -145,25 +164,6 @@ public:
 
 //--
 
-//	template <class O>
-//	ZMACRO_Attribute_NoThrow_Ref
-//	inline
-//	ZRef(O* iP)
-//	:	fP(iP)
-//		{ spRetain(fP); }
-//
-//	template <class O>
-//	inline
-//	ZRef& operator=(O* iP)
-//		{
-//		spRetain(iP);
-//		spRelease(fP);
-//		fP = iP;
-//		return *this;
-//		}
-//
-//--
-
 	template <class O, bool OtherSense_p>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
@@ -181,6 +181,29 @@ public:
 		spRelease(otherP);
 		return *this;
 		}
+
+// --
+
+#if ZCONFIG_CPP >= 2011
+
+	template <class O, bool OtherSense_p>
+	inline
+	ZRef(ZRef<O,OtherSense_p>&& iOther)
+	:	fP(iOther.Orphan())
+		{}
+
+	template <class O, bool OtherSense_p>
+	inline
+	ZRef& operator=(ZRef<O,OtherSense_p>&& iOther)
+		{
+		using std::swap;
+		TPtr otherP = iOther.Orphan();
+		swap(otherP, fP);
+		spRelease(otherP);
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
 
 //--
 
@@ -273,15 +296,6 @@ public:
 		spRelease(otherP);
 		}
 
-//	#if ! ZCONFIG(Compiler,Clang) || !__has_feature(objc_arc)
-//	inline
-//	TPtr& OParam()
-//		{
-//		this->Clear();
-//		return fP;
-//		}
-//	#endif
-
 	template <class O>
 	ZMACRO_Attribute_NoThrow_Ref
 	inline
@@ -371,13 +385,15 @@ public:
 	typedef T* Type_t;
 	typedef T* Ptr_t;
 
+//--
+
 	ZRef()
 	:	fP(0)
 		{}
 
 	ZRef(const ZRef& iOther)
-	:	fP(0)
-		{ fP = iOther.Copy(); }
+	:	fP(iOther.Copy())
+		{}
 
 	~ZRef()
 		{ spRelease(fP); }
@@ -390,6 +406,27 @@ public:
 		spRelease(otherP);
 		return *this;
 		}
+
+//--
+
+#if ZCONFIG_CPP >= 2011
+
+	ZRef(ZRef&& iOther)
+	:	fP(iOther.Orphan())
+		{}
+
+	ZRef& operator=(ZRef&& iOther)
+		{
+		using std::swap;
+		T* otherP = iOther.Orphan();
+		swap(otherP, fP);
+		spRelease(otherP);
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
+
+//--
 
 	ZRef(const null_t&)
 	:	fP(0)
@@ -408,6 +445,8 @@ public:
 		return *this;
 		}
 
+//--
+
 	template <class O, bool OtherSense_p>
 	ZRef(const ZRef<O*,OtherSense_p>& iOther)
 	:	fP(iOther.Copy())
@@ -423,6 +462,29 @@ public:
 		return *this;
 		}
 
+//--
+
+#if ZCONFIG_CPP >= 2011
+
+	template <class O, bool OtherSense_p>
+	ZRef(ZRef<O*,OtherSense_p>&& iOther)
+	:	fP(iOther.Orphan())
+		{}
+
+	template <class O, bool OtherSense_p>
+	ZRef& operator=(ZRef<O*,OtherSense_p>&& iOther)
+		{
+		using std::swap;
+		T* otherP = iOther.Orphan();
+		swap(otherP, fP);
+		spRelease(otherP);
+		return *this;
+		}
+
+#endif // ZCONFIG_CPP >= 2011
+
+//--
+
 	template <class O>
 	ZRef(const Adopt_T<O*>& iAdopt)
 	:	fP(iAdopt.Get())
@@ -437,6 +499,8 @@ public:
 		spRelease(otherP);
 		return *this;
 		}
+
+//--
 
 	template <class O>
 	bool operator==(O* iP) const
@@ -482,12 +546,6 @@ public:
 		T* otherP = 0;
 		swap(otherP, fP);
 		spRelease(otherP);
-		}
-
-	T*& OParam()
-		{
-		this->Clear();
-		return fP;
 		}
 
 	template <class O>
