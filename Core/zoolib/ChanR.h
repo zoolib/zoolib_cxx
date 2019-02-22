@@ -31,11 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+ZMACRO_NoReturn_Pre
+inline bool sThrow_ExhaustedR();
+ZMACRO_NoReturn_Post
+
 inline bool sThrow_ExhaustedR()
-	{
-	throw std::range_error("ChanR Exhausted");
-	return false;
-	}
+	{ throw std::range_error("ChanR Exhausted"); }
 
 // =================================================================================================
 #pragma mark -
@@ -110,10 +111,7 @@ uint64 sSkipAll(const ChanR<EE>& iChanR)
 
 template <class EE>
 void sERead(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
-	{
-	if (iCount != sReadFully<EE>(iChanR, oDest, iCount))
-		sThrow_ExhaustedR();
-	}
+	{ iCount == sReadFully<EE>(iChanR, oDest, iCount) || sThrow_ExhaustedR(); }
 
 // =================================================================================================
 #pragma mark - ChanR_XX_Null

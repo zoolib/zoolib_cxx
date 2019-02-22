@@ -42,11 +42,12 @@ public:
 		{}
 	};
 
+ZMACRO_NoReturn_Pre
+inline bool sThrow_ParseException(const std::string& iMessage);
+ZMACRO_NoReturn_Post
+
 inline bool sThrow_ParseException(const std::string& iMessage)
-	{
-	throw ParseException(iMessage);
-	return false;
-	}
+	{ throw ParseException(iMessage); }
 
 } // namespace ZooLib
 

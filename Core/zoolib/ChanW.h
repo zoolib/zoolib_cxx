@@ -31,11 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
+ZMACRO_NoReturn_Pre
+inline bool sThrow_ExhaustedW();
+ZMACRO_NoReturn_Post
+
 inline bool sThrow_ExhaustedW()
-	{
-	throw std::range_error("ChanW Exhausted");
-	return false;
-	}
+	{ throw std::range_error("ChanW Exhausted"); }
 
 // =================================================================================================
 #pragma mark -
@@ -46,10 +47,7 @@ bool sQWrite(const ChanW<EE>& iChan, const EE& iElmt)
 
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE& iElmt)
-	{
-	if (1 != sWrite(iChan, &iElmt, 1))
-		sThrow_ExhaustedW();
-	}
+	{ 1 == sNonConst(iChan).Write(&iElmt, 1) || sThrow_ExhaustedW(); }
 
 template <class EE>
 size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
@@ -65,10 +63,7 @@ size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 
 template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
-	{
-	if (iCount != sWriteFully<EE>(iChan, iSource, iCount))
-		sThrow_ExhaustedW();
-	}
+	{ iCount == sWriteFully<EE>(iChan, iSource, iCount) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
 #pragma mark -
