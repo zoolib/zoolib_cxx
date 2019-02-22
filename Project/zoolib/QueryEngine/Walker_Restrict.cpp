@@ -313,10 +313,6 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			fConsts.push_back(asConstR->GetVal());
 			return new Exec_Functor<Functor_p, true, false>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else
-			{
-			ZUnimplemented();
-			}
 		}
 	else if (ZRef<ValComparand_Const_Any> asConstL =
 		iLHS.DynamicCast<ValComparand_Const_Any>())
@@ -337,11 +333,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			return new Exec_Functor<Functor_p, false, false>(iFunctor, theOffsetL, theOffsetR);
 			}
 		}
-	else
-		{
-		ZUnimplemented();
-		}
-	return nullptr;
+	ZUnimplemented();
 	}
 
 Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
@@ -407,7 +399,6 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 		}
 
 	ZUnimplemented();
-	return nullptr;
 	}
 
 } // anonymous namespace

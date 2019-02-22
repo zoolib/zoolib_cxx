@@ -265,9 +265,8 @@ public:
 			{
 			if (ZLOGPF(w, eErr))
 				w << iAny.Type().name();
-			ZUnimplemented();
 			}
-		return false;
+		ZUnimplemented();
 		}
 	};
 

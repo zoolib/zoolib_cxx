@@ -588,7 +588,6 @@ ZQ<bool> TextDecoder_Unicode_AutoDetect::QCall(
 		}
 	// Can't get here.
 	ZUnimplemented();
-	return true;
 	}
 
 void TextDecoder_Unicode_AutoDetect::Reset()

@@ -116,7 +116,6 @@ bool spDoCompare(const Val_Any& iL, const ZRef<ValComparator>& iComparator, cons
 			case ValComparator_Simple::eGE: return compare >= 0;
 			case ValComparator_Simple::eGT: return compare > 0;
 			}
-		ZUnimplemented();
 		}
 	else if (ZRef<ValComparator_Callable_Any> asCallable =
 		iComparator.DynamicCast<ValComparator_Callable_Any>())
@@ -126,16 +125,13 @@ bool spDoCompare(const Val_Any& iL, const ZRef<ValComparator>& iComparator, cons
 	else if (ZRef<ValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ValComparator_StringContains>())
 		{
-		ZUnimplemented();
 //##		if (const string8* target = iL.PGet<string8>())
 //			{
 //			if (const string8* pattern = iR.PGet<string8>())
 //				return ZTextCollator(asStringContains->GetStrength()).Contains(*pattern, *target);
 //			}
-		return false;
 		}
 	ZUnimplemented();
-	return true;
 	}
 
 } // anonymous namespace

@@ -311,8 +311,6 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		w << "Couldn't write " << theAnyQ->Type().name();
 
 	ZUnimplemented();
-
-	return false;
 	}
 
 } // namespace ZooLib
