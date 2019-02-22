@@ -188,26 +188,23 @@ ZQ<string8> sQReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 
 string32 sEReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string32> theQ = sQReadUTF32(iChanR, iCountCP);
-	if (not theQ)
-		sThrow_ExhaustedR();
-	return *theQ;
+	if (const ZQ<string32> theQ = sQReadUTF32(iChanR, iCountCP))
+		return *theQ;
+	sThrow_ExhaustedR();
 	}
 
 string16 sEReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string16> theQ = sQReadUTF16(iChanR, iCountCP);
-	if (not theQ)
-		sThrow_ExhaustedR();
-	return *theQ;
+	if (const ZQ<string16> theQ = sQReadUTF16(iChanR, iCountCP))
+		return *theQ;
+	sThrow_ExhaustedR();
 	}
 
 string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 	{
-	const ZQ<string8> theQ = sQReadUTF8(iChanR, iCountCP);
-	if (not theQ)
-		sThrow_ExhaustedR();
-	return *theQ;
+	if (const ZQ<string8> theQ = sQReadUTF8(iChanR, iCountCP))
+		return *theQ;
+	sThrow_ExhaustedR();
 	}
 
 // -----

@@ -35,10 +35,9 @@ ZQ<std::string> sQReadString(const ChanR_Bin& iChanR, size_t iCount)
 
 std::string sReadString(const ChanR_Bin& iChanR, size_t iCount)
 	{
-	const ZQ<std::string> theQ = sQReadString(iChanR, iCount);
-	if (not theQ)
-		sThrow_ExhaustedR();
-	return *theQ;
+	if (const ZQ<std::string> theQ = sQReadString(iChanR, iCount))
+		return *theQ;
+	sThrow_ExhaustedR();
 	}
 
 // -----
@@ -60,10 +59,9 @@ ZQ<uint64> sQReadCount(const ChanR_Bin& r)
 
 uint64 sReadCount(const ChanR_Bin& r)
 	{
-	const ZQ<uint64> theQ = sQReadCount(r);
-	if (not theQ)
-		sThrow_ExhaustedR();
-	return *theQ;
+	if (const ZQ<uint64> theQ = sQReadCount(r))
+		return *theQ;
+	sThrow_ExhaustedR();
 	}
 
 std::string sReadCountPrefixedString(const ChanR_Bin& iChanR)
