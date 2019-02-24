@@ -100,10 +100,10 @@ void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 	Relater::pCalled_RelaterCollectResults();
 
 	oChanged.reserve(fPendingResults.size());
-	foreachi (iter, fPendingResults)
+	foreacha (entry, fPendingResults)
 		{
 		// May need to filter entries on our fPendingRemoves list.
-		oChanged.push_back(iter->second);
+		oChanged.push_back(entry.second);
 		}
 	fPendingResults.clear();
 	}
@@ -143,8 +143,8 @@ void Relater_Asyncify::pUpdate()
 
 		vector<AddedQuery> theAdds;
 		theAdds.reserve(fPendingAdds.size());
-		foreachi (iter, fPendingAdds)
-			theAdds.push_back(AddedQuery(iter->first, iter->second));
+		foreacha (entry, fPendingAdds)
+			theAdds.push_back(AddedQuery(entry.first, entry.second));
 		fPendingAdds.clear();
 
 		vector<int64> theRemoves(fPendingRemoves.begin(), fPendingRemoves.end());
@@ -172,8 +172,8 @@ void Relater_Asyncify::pUpdate()
 
 				{
 				ZAcqMtx acq(fMtx);
-				foreachi (iter, changes)
-					fPendingResults[iter->GetRefcon()] = *iter;
+				foreacha (entry, changes)
+					fPendingResults[entry.GetRefcon()] = entry;
 				}
 
 				Relater::pTrigger_RelaterResultsAvailable();

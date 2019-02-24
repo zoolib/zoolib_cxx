@@ -36,11 +36,11 @@ namespace Dataspace {
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const std::set<RelationalAlgebra::RelHead>& iSet)
 	{
 	FalseOnce needsSeparator;
-	foreachi (ii, iSet)
+	foreacha (entry, iSet)
 		{
 		if (needsSeparator())
 			w << ", ";
-		w << *ii;
+		w << entry;
 		}
 	return w;
 	}

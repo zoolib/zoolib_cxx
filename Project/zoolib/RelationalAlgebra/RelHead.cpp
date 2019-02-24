@@ -58,8 +58,8 @@ namespace RelationalAlgebra {
 Rename sInverted(const Rename& iRename)
 	{
 	Rename result;
-	foreachi (ii, iRename)
-		result[ii->second] = ii->first;
+	foreacha (entry, iRename)
+		result[entry.second] = entry.first;
 	return result;
 	}
 
@@ -186,9 +186,9 @@ bool sHasPrefix(const ColName& iPrefix, const RelHead& iRelHead)
 	if (iPrefix.empty())
 		return true;
 
-	foreachi (ii, iRelHead)
+	foreacha (entry, iRelHead)
 		{
-		if (not sHasPrefix(iPrefix, *ii))
+		if (not sHasPrefix(iPrefix, entry))
 			return false;
 		}
 
@@ -201,8 +201,8 @@ RelHead sPrefixInserted(const ColName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	foreachi (ii, iRelHead)
-		result.insert(sPrefixInserted(iPrefix, *ii));
+	foreacha (entry, iRelHead)
+		result.insert(sPrefixInserted(iPrefix, entry));
 
 	return result;
 	}
@@ -213,8 +213,8 @@ RelHead sPrefixErased(const ColName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	foreachi (ii, iRelHead)
-		result.insert(sPrefixErased(iPrefix, *ii));
+	foreacha (entry, iRelHead)
+		result.insert(sPrefixErased(iPrefix, entry));
 
 	return result;
 	}
@@ -225,9 +225,9 @@ ZQ<RelHead> sQPrefixErased(const ColName& iPrefix, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	foreachi (ii, iRelHead)
+	foreacha (entry, iRelHead)
 		{
-		if (ZQ<ColName> theQ = sQPrefixErased(iPrefix, *ii))
+		if (ZQ<ColName> theQ = sQPrefixErased(iPrefix, entry))
 			result.insert(*theQ);
 		else
 			return null;
@@ -242,8 +242,8 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 		return iRelHead;
 
 	RelHead result;
-	foreachi (ii, iRelHead)
-		result.insert(sRenamed(iRename, *ii));
+	foreacha (entry, iRelHead)
+		result.insert(sRenamed(iRename, entry));
 
 	return result;
 	}
@@ -251,16 +251,16 @@ RelHead sRenamed(const Rename& iRename, const RelHead& iRelHead)
 RelHead sNamesFrom(const Rename& iRename)
 	{
 	RelHead result;
-	foreachi (ii, iRename)
-		result.insert(ii->first);
+	foreacha (entry, iRename)
+		result.insert(entry.first);
 	return result;
 	}
 
 RelHead sNamesTo(const Rename& iRename)
 	{
 	RelHead result;
-	foreachi (ii, iRename)
-		result.insert(ii->second);
+	foreacha (entry, iRename)
+		result.insert(entry.second);
 	return result;
 	}
 
@@ -270,9 +270,8 @@ RelHead sNamesTo(const Rename& iRename)
 ConcreteHead sConcreteHead(const RelHead& iRequired)
 	{
 	ConcreteHead result;
-	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
-		ii != end; ++ii)
-		{ result[*ii] = true; }
+	foreacha (entry, iRequired)
+		result[entry] = true;
 	return result;
 	}
 
@@ -280,13 +279,11 @@ ConcreteHead sConcreteHead(const RelHead& iRequired, const RelHead& iOptional)
 	{
 	ConcreteHead result;
 
-	for (RelHead::const_iterator ii = iOptional.begin(), end = iOptional.end();
-		ii != end; ++ii)
-		{ result[*ii] = false; }
+	foreacha (entry, iOptional)
+		{ result[entry] = false; }
 
-	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
-		ii != end; ++ii)
-		{ result[*ii] = true; }
+	foreacha (entry, iRequired)
+		result[entry] = true;
 
 	return result;
 	}
@@ -295,12 +292,11 @@ ConcreteHead sAugmentedOptional(const ConcreteHead& iConcreteHead, const RelHead
 	{
 	ConcreteHead result = iConcreteHead;
 
-	for (RelHead::const_iterator ii = iOptional.begin(), end = iOptional.end();
-		ii != end; ++ii)
+	foreacha (entry, iOptional)
 		{
 		// Evaluating this will get a false value into a non-extant slot, and and otherwise
 		// have no effect.
-		result[*ii];
+		result[entry];
 		}
 
 	return result;
@@ -310,9 +306,8 @@ ConcreteHead sAugmentedRequired(const ConcreteHead& iConcreteHead, const RelHead
 	{
 	ConcreteHead result = iConcreteHead;
 
-	for (RelHead::const_iterator ii = iRequired.begin(), end = iRequired.end();
-		ii != end; ++ii)
-		{ result[*ii] = true; }
+	foreacha (entry, iRequired)
+		result[entry] = true;
 
 	return result;
 	}
@@ -320,11 +315,10 @@ ConcreteHead sAugmentedRequired(const ConcreteHead& iConcreteHead, const RelHead
 RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;
-	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
-		ii != end; ++ii)
+	foreacha (entry, iConcreteHead)
 		{
-		if (ii->second)
-			Util_STL::sInsert(result, ii->first);
+		if (entry.second)
+			Util_STL::sInsert(result, entry.first);
 		}
 	return result;
 	}
@@ -332,11 +326,10 @@ RelHead sRelHead_Required(const ConcreteHead& iConcreteHead)
 RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;
-	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
-		ii != end; ++ii)
+	foreacha (entry, iConcreteHead)
 		{
-		if (not ii->second)
-			Util_STL::sInsert(result, ii->first);
+		if (not entry.second)
+			Util_STL::sInsert(result, entry.first);
 		}
 	return result;
 	}
@@ -344,21 +337,19 @@ RelHead sRelHead_Optional(const ConcreteHead& iConcreteHead)
 RelHead sRelHead(const ConcreteHead& iConcreteHead)
 	{
 	RelHead result;
-	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
-		ii != end; ++ii)
-		{ Util_STL::sInsert(result, ii->first); }
+	foreacha (entry, iConcreteHead)
+		Util_STL::sInsert(result, entry.first);
 	return result;
 	}
 
 void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& oOptional)
 	{
-	for (ConcreteHead::const_iterator ii = iConcreteHead.begin(), end = iConcreteHead.end();
-		ii != end; ++ii)
+	foreacha (entry, iConcreteHead)
 		{
-		if (ii->second)
-			Util_STL::sInsert(oRequired, ii->first);
+		if (entry.second)
+			Util_STL::sInsert(oRequired, entry.first);
 		else
-			Util_STL::sInsert(oOptional, ii->first);
+			Util_STL::sInsert(oOptional, entry.first);
 		}
 	}
 

@@ -36,12 +36,12 @@ namespace { // anonymous
 CNF spCrossMultiply(const CNF& iCNF0, const CNF& iCNF1)
 	{
 	CNF result;
-	foreachi (iter0, iCNF0)
+	foreacha (entry0, iCNF0)
 		{
-		foreachi (iter1, iCNF1)
+		foreacha (entry1, iCNF1)
 			{
-			DClause theDClause = *iter0;
-			theDClause.insert(iter1->begin(), iter1->end());
+			DClause theDClause = entry0;
+			theDClause.insert(entry1.begin(), entry1.end());
 			result.insert(theDClause);
 			}
 		}
@@ -212,9 +212,9 @@ static ZRef<Expr_Bool> spFromDClause(
 	const ZRef<Expr_Bool>& iFalse)
 	{
 	ZRef<Expr_Bool> result = iFalse;
-	foreachi (iter, iDClause)
+	foreacha (entry, iDClause)
 		{
-		ZRef<Expr_Bool> theExpr = iter->Get();
+		ZRef<Expr_Bool> theExpr = entry.Get();
 		if (theExpr == iTrue)
 			{
 			return iTrue;
@@ -235,9 +235,9 @@ ZRef<Expr_Bool> sFromCNF(const CNF& iCNF)
 	const ZRef<Expr_Bool> theTrue = sTrue();
 	const ZRef<Expr_Bool> theFalse = sFalse();
 	ZRef<Expr_Bool> result = theTrue;
-	foreachi (iter, iCNF)
+	foreacha (entry, iCNF)
 		{
-		ZRef<Expr_Bool> theExpr = spFromDClause(*iter, theTrue, theFalse);
+		ZRef<Expr_Bool> theExpr = spFromDClause(entry, theTrue, theFalse);
 		if (not theExpr || theExpr == theFalse)
 			return theFalse;
 		else if (result == theTrue)

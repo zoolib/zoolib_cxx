@@ -36,11 +36,11 @@ void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_R
 	{
 	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
 
-	foreachi (ii, Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool()))
+	foreacha (entry, Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool()))
 		{
 		ZRef<Expr_Bool> newBool;
-		foreachi (jj, *ii)
-			newBool |= jj->Get();
+		foreacha (entryj, entry)
+			newBool |= entryj.Get();
 		theRel &= newBool;
 		}
 

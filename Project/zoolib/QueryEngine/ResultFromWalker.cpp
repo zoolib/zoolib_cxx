@@ -47,13 +47,13 @@ ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
 		if (not iWalker->QReadInc(&theRow[0]))
 			break;
 
-		foreachi (ii, offsets)
-			thePackedRows.push_back(theRow[ii->second]);
+		foreacha (entry, offsets)
+			thePackedRows.push_back(theRow[entry.second]);
 		}
 
 	RelHead theRelHead;
-	foreachi (ii, offsets)
-		theRelHead.insert(ii->first);
+	foreacha (entry, offsets)
+		theRelHead.insert(entry.first);
 
 	return new Result(&theRelHead, &thePackedRows);
 	}

@@ -289,11 +289,11 @@ public:
 		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
 		vector<pair<string8,string8> > finalRename;
 		ConcreteHead theConcreteHead;
-		foreachi (iter, iExpr->GetRename())
+		foreacha (entry, iExpr->GetRename())
 			{
-			const string8& source = iter->first;
-			if (source != iter->second)
-				sPushBack(finalRename, *iter);
+			const string8& source = entry.first;
+			if (source != entry.second)
+				sPushBack(finalRename, entry);
 
 			theConcreteHead[source] = not sContains(iExpr->GetRelHead_Optional(), source);
 			}
@@ -302,8 +302,8 @@ public:
 			iExpr->GetRelHead_Bound(),
 			SearchSpec(theConcreteHead, iExpr->GetExpr_Bool()));
 
-		foreachi (iter, finalRename)
-			theWalker = new QueryEngine::Walker_Rename(theWalker, iter->second, iter->first);
+		foreacha (entry, finalRename)
+			theWalker = new QueryEngine::Walker_Rename(theWalker, entry.second, entry.first);
 
 		this->pSetResult(theWalker);
 		}
@@ -343,9 +343,9 @@ public:
 		RelHead newBound;
 
 		// Go through each active restriction.
-		foreachi (iter, fRestricts)
+		foreacha (theRestrictPtr, fRestricts)
 			{
-			Restrict& theRestrict = **iter;
+			Restrict& theRestrict = *theRestrictPtr;
 
 			// Which names does the restriction reference?
 			const RelHead exprNames = sGetNames(theRestrict.fExpr_Bool);
@@ -482,9 +482,8 @@ void Relater_Searcher::ModifyRegistrations(
 		if (sIsEmpty(thePQuery->fClientQuery_InPQuery))
 			{
 			// Detach from any depended-upon PRegSearch
-			foreachi (iterPRegSearch, thePQuery->fPRegSearch_Used)
+			foreacha (thePRegSearchStar, thePQuery->fPRegSearch_Used)
 				{
-				PRegSearch* thePRegSearchStar = *iterPRegSearch;
 				sEraseMust(kDebug, thePRegSearchStar->fPQuery_Using, thePQuery);
 				if (sIsEmpty(thePRegSearchStar->fPQuery_Using))
 					sQInsertBack(fPRegSearch_NeedsWork, thePRegSearchStar);
@@ -688,15 +687,15 @@ ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 	size_t& ioBaseOffset)
 	{
 	// Remember the offsets from which we're fetching bound values.
-	foreachi (ii, iWalker_Bingo->fBoundNames)
-		sPushBack(iWalker_Bingo->fBoundOffsets, sGetMust(iOffsets, *ii));
+	foreacha (entry, iWalker_Bingo->fBoundNames)
+		sPushBack(iWalker_Bingo->fBoundOffsets, sGetMust(iOffsets, entry));
 
 	// Where we're going to start putting our output.
 	iWalker_Bingo->fBaseOffset = ioBaseOffset;
-	foreachi (ii, iWalker_Bingo->fConcreteHead)
+	foreacha (entry, iWalker_Bingo->fConcreteHead)
 		{
 		// Hmm, we should watch for *ii being in fBoundNames.
-		oOffsets[ii->first] = ioBaseOffset++;
+		oOffsets[entry.first] = ioBaseOffset++;
 		}
 	return iWalker_Bingo;
 	}

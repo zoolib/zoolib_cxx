@@ -92,13 +92,15 @@ void RowBoat::pChanged(
 		// Build fBindings the first time we get a result.
 		const RelHead& theRH = iResult->GetRelHead();
 		size_t index = 0;
-		for (RelHead::const_iterator ii = theRH.begin(), end = theRH.end(); ii != end; ++ii, ++index)
-			fBindings.insert(std::pair<string8,size_t>(*ii, index));
+		foreacha (entry, theRH)
+			fBindings.insert(std::pair<string8,size_t>(entry, index++));
 		}
 
 	// Note that we're doing a reverse scan here...
-	foreachra (yy, theRemoved)
+	for (vector<size_t>::reverse_iterator riter = theRemoved.rbegin();
+		riter != theRemoved.rend(); ++riter)
 		{
+		size_t yy = *riter;
 		ZAssert(yy < fRows.size());
 		if (ZRef<Callable_Row> theRow = fRows[yy])
 			{

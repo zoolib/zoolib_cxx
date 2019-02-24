@@ -90,8 +90,8 @@ void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iE
 	if (const ZQ<RelHead> theQ = RA::sQPrefixErased(fPrefix, theRelHead))
 		{
 		ZRef<RA::Expr_Rel> theRel = RA::sConcrete(*theQ);
-		foreachi (ii, *theQ)
-			theRel = sRename(theRel, RA::sPrefixInserted(fPrefix, *ii), *ii);
+		foreacha (entry, *theQ)
+			theRel = sRename(theRel, RA::sPrefixInserted(fPrefix, entry), entry);
 
 		this->pSetResult(theRel);
 		}
@@ -774,9 +774,9 @@ bool Relater_Union::Intersects(const RelHead& iRelHead)
 	{
 	ZAcqMtx acq(fMtx);
 
-	foreachi (iterRelater, fMap_Relater_PRelater)
+	foreacha (entry, fMap_Relater_PRelater)
 		{
-		if (iterRelater->first->Intersects(iRelHead))
+		if (entry.first->Intersects(iRelHead))
 			return true;
 		}
 
@@ -808,9 +808,8 @@ void Relater_Union::ModifyRegistrations(
 
 		if (thePQuery->fClientQueries.IsEmpty())
 			{
-			foreachi (iterProxies, thePQuery->fProxiesDependedUpon)
+			foreacha (theProxy, thePQuery->fProxiesDependedUpon)
 				{
-				ZRef<Proxy> theProxy = *iterProxies;
 				sEraseMust(kDebug, theProxy->fDependentPQueries, thePQuery);
 				if (theProxy->fDependentPQueries.empty())
 					{
@@ -921,14 +920,14 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 		}
 
 		// It's feasible that thePRelater got whacked while we were unlocked. Not sure what to do about it.
-		foreachi (iterQueryResults, theQueryResults)
+		foreacha (entry, theQueryResults)
 			{
-			const int64 theRefcon = iterQueryResults->GetRefcon();
+			const int64 theRefcon = entry.GetRefcon();
 			if (PIP* thePIP = sPMut(thePRelater->fMap_Refcon_PIP, theRefcon))
 				{
-				thePIP->fResult = iterQueryResults->GetResult();
-				foreachi (ii, thePIP->fProxy->fDependentPQueries)
-					sQInsertBack(fPQuery_NeedsWork, *ii);
+				thePIP->fResult = entry.GetResult();
+				foreacha (entryPQuery, thePIP->fProxy->fDependentPQueries)
+					sQInsertBack(fPQuery_NeedsWork, entryPQuery);
 				}
 			}
 		}
@@ -1052,10 +1051,8 @@ ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
 		theProxy->fRel = iRel;
 		theProxy->fResultRelHead = iRelHead;
 		sInsertMust(kDebug, fMap_Rel_ProxyX, iRel, theProxy);
-		foreachi (iterPRelaters, iPRelaters)
+		foreacha (thePRelater, iPRelaters)
 			{
-			PRelater* thePRelater = *iterPRelaters;
-
 			const int64 theRefcon = thePRelater->fNextRefcon++;
 
 			PIP* thePIP = &thePRelater->fMap_Refcon_PIP.insert(
@@ -1109,8 +1106,8 @@ void Relater_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 	size_t& ioBaseOffset)
 	{
 	iWalker->fBaseOffset = ioBaseOffset;
-	foreachi (ii, iWalker->fProxy->fResultRelHead)
-		oOffsets[*ii] = ioBaseOffset++;
+	foreacha (entry, iWalker->fProxy->fResultRelHead)
+		oOffsets[entry] = ioBaseOffset++;
 	}
 
 bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
@@ -1148,7 +1145,8 @@ bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
 			}
 		size_t theOffset = iWalker->fBaseOffset;
 		const Val_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
-		foreachi (ii, theRH)
+
+		for (size_t xx = 0, count = theRH.size(); xx < count; ++xx)
 			ioResults[theOffset++] = *theVals++;
 		++iWalker->fCurrentIndex;
 		return true;

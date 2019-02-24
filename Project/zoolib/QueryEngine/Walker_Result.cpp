@@ -51,8 +51,8 @@ ZRef<Walker> Walker_Result::Prime(
 	size_t& ioBaseOffset)
 	{
 	fBaseOffset = ioBaseOffset;
-	foreachi (ii, fResult->GetRelHead())
-		oOffsets[*ii] = ioBaseOffset++;
+	foreacha (entry, fResult->GetRelHead())
+		oOffsets[entry] = ioBaseOffset++;
 	return this;
 	}
 

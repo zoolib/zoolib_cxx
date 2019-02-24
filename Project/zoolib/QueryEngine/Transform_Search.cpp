@@ -203,18 +203,18 @@ public:
 		// the containing branch.
 
 		Rename newRename;
-		foreachi (iterRename, fRename_LeafToRoot)
+		foreacha (entry, fRename_LeafToRoot)
 			{
-			if (fProjection.Contains(iterRename->first))
-				newRename.insert(*iterRename);
+			if (fProjection.Contains(entry.first))
+				newRename.insert(entry);
 			}
 
 		// Build list of all the names a condition can rely on.
 		RelHead theRH_InnerAndBound = fBoundNames;
 		RelHead theRH_Optional;
-		foreachi (iter, iExpr->GetConcreteHead())
+		foreacha (entry, iExpr->GetConcreteHead())
 			{
-			const ColName& theColName = iter->first;
+			const ColName& theColName = entry.first;
 			if (fProjection.Contains(theColName))
 				sQInsert(newRename, theColName, theColName);
 
@@ -226,7 +226,7 @@ public:
 			// setting up offsets.
 			sQInsert(theRH_InnerAndBound, theColName);
 
-			if (not iter->second)
+			if (not entry.second)
 				sQInsert(theRH_Optional, theColName);
 			}
 
@@ -243,13 +243,13 @@ public:
 
 		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 
-		foreachi (clause, Util_Expr_Bool::sAsCNF(fRestriction))
+		foreacha (clause, Util_Expr_Bool::sAsCNF(fRestriction))
 			{
 			bool referencesInnerAndBoundOnly = true;
 
 			ZRef<Expr_Bool> newClause;
 
-			foreachv (const ZRef<Expr_Bool> disjunction, *clause)
+			foreachv (const ZRef<Expr_Bool> disjunction, clause)
 				{
 				newClause |= disjunction;
 				const Analysis_t theAn = theVisitor.Do(disjunction);
@@ -493,10 +493,10 @@ public:
 			}
 		else
 			{
-			foreachi (iterRename, iRename_LeafToRoot)
+			foreacha (entry, iRename_LeafToRoot)
 				{
-				if (iterRename->first != iterRename->second)
-					theRel = sRename(theRel, iterRename->second, iterRename->first);
+				if (entry.first != entry.second)
+					theRel = sRename(theRel, entry.second, entry.first);
 				}
 			}
 

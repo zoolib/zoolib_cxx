@@ -70,8 +70,8 @@ using std::string;
 
 static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_Any& iChanW)
 	{
-	foreachi (iter, iAttrs)
-		sPush(iter->first, iter->second, iChanW);
+	foreacha (entry, iAttrs)
+		sPush(entry.first, entry.second, iChanW);
 	}
 
 /*

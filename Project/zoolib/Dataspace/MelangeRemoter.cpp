@@ -235,8 +235,8 @@ public:
 			const RelHead theRH = sGet<RelHead>(sERead(iChanR));
 			const size_t theRHCount = theRH.size();
 			sEWriteCount(iChanW, theRHCount);
-			foreachi (ii, theRH)
-				sEWriteCountPrefixedString(iChanW, *ii);
+			foreacha (entry, theRH)
+				sEWriteCountPrefixedString(iChanW, entry);
 
 			const size_t theRowCount = sCoerceInt(sERead(iChanR));
 			sEWriteCount(iChanW, theRowCount);
@@ -357,8 +357,8 @@ Val_Any spAsVal(ZRef<Result> iResult)
 	const RelHead& theRH = iResult->GetRelHead();
 
 	Seq_Any& theSeq_RH = result.Mut<Seq_Any>("RelHead");
-	foreachi (ii, theRH)
-		theSeq_RH.Append(*ii);
+	foreacha (entry, theRH)
+		theSeq_RH.Append(entry);
 
 	const size_t theCount = iResult->Count();
 	result.Set("Count", int64(theCount));
@@ -475,21 +475,21 @@ void MelangeServer::pWrite()
 		{
 		fTrueOnce_SendAnEmptyMessage.Reset();
 		vector<Map_Any> theMessages;
-		foreachi (ii, fMap_Refcon2Result)
+		foreacha (entry, fMap_Refcon2Result)
 			{
 			Map_Any theMap;
 			theMap.Set("What", "Change");
-			theMap.Set("Refcon", ii->first);
-			theMap.Set("Result", spAsVal(ii->second));
+			theMap.Set("Refcon", entry.first);
+			theMap.Set("Result", spAsVal(entry.second));
 			sPushBack(theMessages, theMap);
 			}
 		sClear(fMap_Refcon2Result);
 
-		foreachi (ii, theMessages)
+		foreacha (entry, theMessages)
 			{
 			{
 			ZRelMtx rel(fMtx);
-			spWriteMessage(*theChannerW, *ii, fDescriptionQ);
+			spWriteMessage(*theChannerW, entry, fDescriptionQ);
 			}
 			fTimeOfLastWrite = Time::sSystem();
 			}
@@ -523,9 +523,9 @@ void MelangeServer::pWork()
 	// Act on messages
 	foreachv (Map_Any theMessage, theMessages)
 		{
-		foreachi (ii, theMessage.Get<Seq_Any>("Registrations"))
+		foreacha (entry, theMessage.Get<Seq_Any>("Registrations"))
 			{
-			if (ZQ<Map_Any> theMapQ = ii->Get<Map_Any>())
+			if (ZQ<Map_Any> theMapQ = entry.Get<Map_Any>())
 				{
 				if (ZQ<int64> theRefconQ = sQCoerceInt(theMapQ->Get("Refcon")))
 					{
@@ -539,9 +539,9 @@ void MelangeServer::pWork()
 				}
 			}
 
-		foreachi (ii, theMessage.Get<Seq_Any>("Unregistrations"))
+		foreacha (entry, theMessage.Get<Seq_Any>("Unregistrations"))
 			{
-			if (ZQ<int64> theRefconQ = sQCoerceInt(*ii))
+			if (ZQ<int64> theRefconQ = sQCoerceInt(entry))
 				{
 				if (NotQ<RefReg> theRegQ = sQGetErase(fMap_Refcon2Reg, *theRefconQ))
 					{
@@ -567,22 +567,22 @@ void MelangeServer::pWork()
 			}
 
 		vector<Daton> toInsert, toErase;
-		foreachi (ii, theMessage.Get<Seq_Any>("Asserts"))
+		foreacha (entry, theMessage.Get<Seq_Any>("Asserts"))
 			{
-			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
+			if (ZQ<Data_Any> theDataQ = entry.QGet<Data_Any>())
 				sPushBack(toInsert, *theDataQ);
 			}
 
-		foreachi (ii, theMessage.Get<Seq_Any>("Retracts"))
+		foreacha (entry, theMessage.Get<Seq_Any>("Retracts"))
 			{
-			if (ZQ<Data_Any> theDataQ = ii->QGet<Data_Any>())
+			if (ZQ<Data_Any> theDataQ = entry.QGet<Data_Any>())
 				sPushBack(toErase, *theDataQ);
 			}
 
 		// Handle old message
-		foreachi (ii, theMessage.Get<Seq_Any>("Updates"))
+		foreacha (entry, theMessage.Get<Seq_Any>("Updates"))
 			{
-			if (ZQ<Map_Any> theMapQ = ii->Get<Map_Any>())
+			if (ZQ<Map_Any> theMapQ = entry.Get<Map_Any>())
 				{
 				if (ZQ<bool> theBoolQ = sQCoerceBool(theMapQ->Get("True")))
 					{
@@ -781,8 +781,8 @@ void Melange_Client::pWrite()
 		try
 			{
 			ZRelMtx rel(fMtx);
-			foreachi (ii, theMessages)
-				spWriteMessage(*theChannerW, *ii, null);
+			foreacha (entry, theMessages)
+				spWriteMessage(*theChannerW, entry, null);
 			}
 		catch (...)
 			{
@@ -852,24 +852,24 @@ void Melange_Client::pWork()
 	if (sNotEmpty(fPending_Unregistrations))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Unregistrations");
-		foreachi (ii, fPending_Unregistrations)
-			theSeq.Append(*ii);
+		foreacha (entry, fPending_Unregistrations)
+			theSeq.Append(entry);
 		sClear(fPending_Unregistrations);
 		}
 
 	if (sNotEmpty(fPending_Asserts))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Asserts");
-		foreachi (ii, fPending_Asserts)
-			theSeq.Append(ii->GetData());
+		foreacha (entry, fPending_Asserts)
+			theSeq.Append(entry.GetData());
 		sClear(fPending_Asserts);
 		}
 
 	if (sNotEmpty(fPending_Retracts))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Retracts");
-		foreachi (ii, fPending_Retracts)
-			theSeq.Append(ii->GetData());
+		foreacha (entry, fPending_Retracts)
+			theSeq.Append(entry.GetData());
 		sClear(fPending_Retracts);
 		}
 
@@ -904,8 +904,8 @@ ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner()
 		// Registrations become pending, but writes are discarded -- we'll get replacement
 		// values when we reconnect, and our caller can reapply their work, if appropriate.
 
-		foreachi (ii, fMap_Reg2Refcon)
-			sInsertMust(fPending_Registrations, ii->first);
+		foreacha (entry, fMap_Reg2Refcon)
+			sInsertMust(fPending_Registrations, entry.first);
 
 		sClear(fPending_Asserts);
 		sClear(fPending_Retracts);

@@ -56,11 +56,11 @@ ZRef<Walker> Walker_Project::Prime(
 	map<string8,size_t> childOffsets;
 	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
 
-	foreachi (ii, fRelHead)
+	foreacha (entry, fRelHead)
 		{
-		const size_t childOffset = childOffsets[*ii];
+		const size_t childOffset = childOffsets[entry];
 		fChildMapping.push_back(childOffset);
-		oOffsets[*ii] = childOffset;
+		oOffsets[entry] = childOffset;
 		}
 
 	if (not fWalker)

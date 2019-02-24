@@ -158,17 +158,17 @@ void RelsWatcher_Relater::Update()
 		// does not finalize and attempt to double-acquire the mutex. 
 		vector<ZRef<Registration> > changes;
 		ZAcqMtx acq(fMtx);
-		foreachi (iterQueryResults, theQueryResults)
+		foreacha (entry, theQueryResults)
 			{
 			Map_RefconToRegistrationX::iterator iterRegistration =
-				fMap_RefconToRegistrationX.find(iterQueryResults->GetRefcon());
+				fMap_RefconToRegistrationX.find(entry.GetRefcon());
 
 			if (fMap_RefconToRegistrationX.end() == iterRegistration)
 				continue;
 
 			ZRef<Registration> theRegistration = iterRegistration->second;
 			theRegistration->fHadResultPrior = bool(theRegistration->fResult);
-			theRegistration->fResult = iterQueryResults->GetResult();
+			theRegistration->fResult = entry.GetResult();
 			changes.push_back(theRegistration);
 			}
 		ZRelMtx rel(fMtx);

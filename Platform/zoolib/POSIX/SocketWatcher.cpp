@@ -99,12 +99,12 @@ void SocketWatcher::pRun()
 			fd_set readSet;
 			FD_ZERO(&readSet);
 			int largest = 0;
-			foreachi (ii, fSet)
+			foreacha (entry, fSet)
 				{
-				const int theFD = ii->first;
+				const int theFD = entry.first;
 				if (largest < theFD)
 					largest = theFD;
-				FD_SET(ii->first, &readSet);
+				FD_SET(entry.first, &readSet);
 				}
 
 			fd_set exceptSet;
@@ -147,7 +147,8 @@ void SocketWatcher::pRun()
 				const Set_t::iterator iterEnd = fSet.end();
 				while (iter->first == fd and iter != iterEnd)
 					{
-					toCall.insert(iter->second);
+					if (iter->second)
+						toCall.insert(iter->second);
 					++iter;
 					}
 				fSet.erase(iterBegin, iterEnd);
@@ -157,9 +158,9 @@ void SocketWatcher::pRun()
 				}
 
 			ZRelMtx rel(fMtx);
-			foreachi (ii, toCall)
+			foreacha (entry, toCall)
 				{
-				try { (*ii)->Call(); }
+				try { entry->Call(); }
 				catch (...) {}
 				}
 			}

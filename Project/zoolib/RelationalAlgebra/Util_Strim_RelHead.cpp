@@ -54,11 +54,11 @@ void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
 	s << "[";
 
 	FalseOnce needsSeparator;
-	foreachi (ii, iRelHead)
+	foreacha (entry, iRelHead)
 		{
 		if (needsSeparator())
 			s << ", ";
-		sWrite_PropName(*ii, s);
+		sWrite_PropName(entry, s);
 		}
 	s << "]";
 	}
@@ -173,18 +173,18 @@ void sWrite_RenameWithOptional(
 	{
 	w << "[";
 	ValueOnce<std::string> separator("", ", ");
-	foreachi (ii, iRename)
+	foreacha (entry, iRename)
 		{
 		w << separator();
-		if (sContains(iOptional, ii->first))
+		if (sContains(iOptional, entry.first))
 			w << "?";
 		else
 			w << "@";
-		Util_Chan_JSON::sWrite_PropName(ii->second, w);
-		if (ii->first != ii->second)
+		Util_Chan_JSON::sWrite_PropName(entry.second, w);
+		if (entry.first != entry.second)
 			{
 			w << "<--";
-			Util_Chan_JSON::sWrite_PropName(ii->first, w);
+			Util_Chan_JSON::sWrite_PropName(entry.first, w);
 			}
 		}
 	w << "]";
@@ -212,15 +212,14 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
 	w << "[";
 
 	ValueOnce<std::string> separator("", ", ");
-	for (ConcreteHead::const_iterator ii = iCH.begin(), end = iCH.end();
-		ii != end; ++ii)
+	foreacha (entry, iCH)
 		{
 		w << separator();
-		if (ii->second)
+		if (entry.second)
 			w << "@";
 		else
 			w << "?";
-		Util_Chan_JSON::sWrite_PropName(ii->first, w);
+		Util_Chan_JSON::sWrite_PropName(entry.first, w);
 		}
 
 	w << "]";

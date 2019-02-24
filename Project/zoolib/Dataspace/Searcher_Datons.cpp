@@ -388,8 +388,8 @@ public:
 
 Searcher_Datons::Searcher_Datons(const vector<IndexSpec>& iIndexSpecs)
 	{
-	foreachi (ii, iIndexSpecs)
-		fIndexes.push_back(new Index(*ii));
+	foreacha (entry, iIndexSpecs)
+		fIndexes.push_back(new Index(entry));
 	}
 
 Searcher_Datons::~Searcher_Datons()
@@ -733,12 +733,12 @@ static void spDump(const ChanW_UTF& w,
 		for (size_t xx = 0; xx < anIndex->fCount; ++xx)
 			w << anIndex->fColNames[xx] << " ";
 
-		foreachi (iterSet, anIndex->fSet)
+		foreacha (entry, anIndex->fSet)
 			{
 			w << "\n";
 			for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-				w << *(iterSet->fValues[xx]) << " ";
-			w << "--> " << iterSet->fMapEntryP->second;
+				w << *(entry.fValues[xx]) << " ";
+			w << "--> " << entry.fMapEntryP->second;
 			}
 		}
 	}
@@ -1110,8 +1110,8 @@ void Searcher_Datons::pPrime(ZRef<Walker_Map> iWalker_Map,
 	{
 	iWalker_Map->fCurrent = fMap_Thing.begin();
 	iWalker_Map->fBaseOffset = ioBaseOffset;
-	foreachi (ii, iWalker_Map->fConcreteHead)
-		oOffsets[ii->first] = ioBaseOffset++;
+	foreacha (entry, iWalker_Map->fConcreteHead)
+		oOffsets[entry.first] = ioBaseOffset++;
 	}
 
 bool Searcher_Datons::pReadInc(ZRef<Walker_Map> iWalker_Map, Val_Any* ioResults)
@@ -1181,8 +1181,8 @@ void Searcher_Datons::pPrime(ZRef<Walker_Index> iWalker_Index,
 	for (size_t xxColName = 0; xxColName < iWalker_Index->fUsableIndexNames; ++xxColName)
 		oOffsets[iWalker_Index->fIndex->fColNames[xxColName]] = ioBaseOffset++;
 
-	foreachi (ii, iWalker_Index->fNameBoolVector)
-		oOffsets[ii->first] = ioBaseOffset++;
+	foreacha (entry, iWalker_Index->fNameBoolVector)
+		oOffsets[entry.first] = ioBaseOffset++;
 	}
 
 static const Val_Any spVal_AbsentOptional = AbsentOptional_t();

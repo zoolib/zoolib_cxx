@@ -82,9 +82,9 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
 	// Examine restricts, see which were touched
-	foreachi (iter, fRestricts)
+	foreachv (Restrict* theRestrictPtr, fRestricts)
 		{
-		Restrict& theRestrict = **iter;
+		Restrict& theRestrict = *theRestrictPtr;
 		if (theRestrict.fExpr_Bool)
 			{
 			if (theRestrict.fCountTouching != theRestrict.fCountSubsuming)
@@ -128,9 +128,9 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	vector<ZRef<Expr_Bool>> priorRestrictions;
 	vector<RelHead> priorNames;
 
-	foreachi (iter, fRestricts)
+	foreacha (theRestrictPtr, fRestricts)
 		{
-		Restrict& theRestrict = **iter;
+		Restrict& theRestrict = *theRestrictPtr;
 
 		priorRestrictions.push_back(theRestrict.fExpr_Bool);
 		priorNames.push_back(theRestrict.fNames);
@@ -155,10 +155,10 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 
 	vector<ZRef<Expr_Bool>>::const_iterator iterPriorRestrictions = priorRestrictions.begin();
 	vector<RelHead>::const_iterator iterPriorNames = priorNames.begin();
-	foreachi (iter, fRestricts)
+	foreacha (entry, fRestricts)
 		{
-		(*iter)->fExpr_Bool = *iterPriorRestrictions++;
-		(*iter)->fNames = *iterPriorNames++;
+		entry->fExpr_Bool = *iterPriorRestrictions++;
+		entry->fNames = *iterPriorNames++;
 		}
 
 	if (sQErase(fRelHead, oldName))
@@ -222,9 +222,9 @@ void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_
 	{
 	fRelHead |= iRH;
 	ZRef<Expr_Rel> result = iExpr;
-	foreachi (iter, fRestricts)
+	foreacha (entryPtr, fRestricts)
 		{
-		Restrict& theRestrict = **iter;
+		Restrict& theRestrict = *entryPtr;
 		const RelHead& exprNames = theRestrict.fNames;
 		const RelHead intersection = exprNames & iRH;
 		if (intersection.size())
