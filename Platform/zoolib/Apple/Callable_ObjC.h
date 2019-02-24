@@ -181,7 +181,10 @@ public: \
 	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {}\
 \
 	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
-		{ return Callable_ObjC_Util::MsgSend<R, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); } \
+		{ \
+		return Callable_ObjC_Util::MsgSend<R, FunctionPtr_t>::sMsgSend() \
+			(fObj, fSEL, ZMACRO_Callable_i##X); \
+		} \
 \
 private: \
 	Obj fObj; \
@@ -199,7 +202,8 @@ public: \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		Callable_ObjC_Util::MsgSend<void, FunctionPtr_t>::sMsgSend() (fObj, fSEL, ZMACRO_Callable_i##X); \
+		Callable_ObjC_Util::MsgSend<void, FunctionPtr_t>::sMsgSend() \
+			(fObj, fSEL, ZMACRO_Callable_i##X); \
 		return notnull; \
 		} \
 \
