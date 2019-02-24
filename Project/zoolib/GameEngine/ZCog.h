@@ -33,8 +33,8 @@ namespace ZooLib {
 //   template <class Param> using ZCog = ZRef<Callable<ZCog<Param>(const ZCog<Param>&,Param)>>;
 // but this is explicitly disallowed in the standard, at least as of C++17.
 
-// The closest approximation is to have ZCog derived from a ZRef<Callable<...>>, and to use CRTP to get
-// ZCog itself into the callable's signature.
+// The closest approximation is to have ZCog derived from a ZRef<Callable<...>>, and to use CRTP to
+// get ZCog itself into the callable's signature.
 
 // It actually works quite well in practice, but it does require that some functions take the base
 // class as the type, which to make it a bit more readable we define RefCallableCog as an alias.
@@ -75,12 +75,12 @@ public:
 #if ZCONFIG_CPP >= 2011
 
 	ZCog(ZCog&& iOther)
-	:	inherited(std::forward<ZCog>(iOther))
+	:	inherited(std::move(iOther))
 		{}
 
 	ZCog& operator=(ZCog&& iOther)
 		{
-		inherited::operator=(std::forward<ZCog>(iOther));
+		inherited::operator=(std::move(iOther));
 		return *this;
 		}
 
@@ -113,12 +113,12 @@ public:
 #if ZCONFIG_CPP >= 2011
 
 	ZCog(ZRef<Callable>&& iOther)
-	:	inherited(std::forward<ZRef<Callable>>(iOther))
+	:	inherited(std::move(iOther))
 		{}
 
 	ZCog& operator=(ZRef<Callable>&& iOther)
 		{
-		inherited::operator=(std::forward<ZRef<Callable>>(iOther));
+		inherited::operator=(std::move(iOther));
 		return *this;
 		}
 
