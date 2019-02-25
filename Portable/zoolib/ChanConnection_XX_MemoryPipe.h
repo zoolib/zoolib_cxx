@@ -57,7 +57,7 @@ public:
 		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
 		}
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort()
 		{
 		ZAcqMtx acq(fMutex);
@@ -69,7 +69,7 @@ public:
 			}
 		}
 
-// From Aspect_DisconnectRead
+// From ChanAspect_DisconnectRead
 	virtual bool DisconnectRead(double iTimeout)
 		{
 		ZAcqMtx acq(fMutex);
@@ -82,7 +82,7 @@ public:
 		return true;
 		}
 
-// From Aspect_DisconnectWrite
+// From ChanAspect_DisconnectWrite
 	virtual void DisconnectWrite()
 		{
 		ZAcqMtx acq(fMutex);
@@ -93,7 +93,7 @@ public:
 			}
 		}
 
-// From Aspect_Read
+// From ChanAspect_Read
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = static_cast<EE*>(oDest);
@@ -146,7 +146,7 @@ public:
 		return 0;
 		}
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout)
 		{
 		const double deadline = Time::sSystem() + iTimeout;
@@ -161,7 +161,7 @@ public:
 			}
 		}
 
-// From Aspect_Write
+// From ChanAspect_Write
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		const EE* localSource = static_cast<const EE*>(iSource);

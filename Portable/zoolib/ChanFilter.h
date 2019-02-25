@@ -31,13 +31,13 @@ namespace ChanFiltration {
 // =================================================================================================
 #pragma mark - AspectCallForwarder
 
-template <class Aspect_p, class Chan_p, class DerivedFrom_p> class AspectCallForwarder;
+template <class ChanAspect_p, class Chan_p, class DerivedFrom_p> class AspectCallForwarder;
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Abort
+#pragma mark - AspectCallForwarder, ChanAspect_Abort
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_Abort,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Abort,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -48,10 +48,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_DisconnectRead
+#pragma mark - AspectCallForwarder, ChanAspect_DisconnectRead
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_DisconnectRead,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_DisconnectRead,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -62,10 +62,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_DisconnectWrite
+#pragma mark - AspectCallForwarder, ChanAspect_DisconnectWrite
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_DisconnectWrite,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_DisconnectWrite,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -76,10 +76,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Pos
+#pragma mark - AspectCallForwarder, ChanAspect_Pos
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_Pos,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Pos,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -93,10 +93,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Read
+#pragma mark - AspectCallForwarder, ChanAspect_Read
 
 template <class Chan_p, class DerivedFrom_p, class EE>
-class AspectCallForwarder<Aspect_Read<EE>,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Read<EE>,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -113,10 +113,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_ReadAt
+#pragma mark - AspectCallForwarder, ChanAspect_ReadAt
 
 template <class Chan_p, class DerivedFrom_p, class LL, class EE>
-class AspectCallForwarder<Aspect_ReadAt<LL,EE>,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_ReadAt<LL,EE>,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -127,10 +127,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Size
+#pragma mark - AspectCallForwarder, ChanAspect_Size
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_Size,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Size,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -141,10 +141,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_SizeSet
+#pragma mark - AspectCallForwarder, ChanAspect_SizeSet
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_SizeSet,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_SizeSet,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -155,10 +155,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Unread
+#pragma mark - AspectCallForwarder, ChanAspect_Unread
 
 template <class Chan_p, class DerivedFrom_p, class EE>
-class AspectCallForwarder<Aspect_Unread<EE>,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Unread<EE>,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -172,10 +172,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_WaitReadable
+#pragma mark - AspectCallForwarder, ChanAspect_WaitReadable
 
 template <class Chan_p, class DerivedFrom_p>
-class AspectCallForwarder<Aspect_WaitReadable,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_WaitReadable,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:
@@ -186,10 +186,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - AspectCallForwarder, Aspect_Write
+#pragma mark - AspectCallForwarder, ChanAspect_Write
 
 template <class Chan_p, class DerivedFrom_p, class EE>
-class AspectCallForwarder<Aspect_Write<EE>,Chan_p,DerivedFrom_p>
+class AspectCallForwarder<ChanAspect_Write<EE>,Chan_p,DerivedFrom_p>
 :	public DerivedFrom_p
 	{
 public:

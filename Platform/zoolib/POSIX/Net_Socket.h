@@ -105,7 +105,7 @@ public:
 	virtual bool DisconnectRead(double iTimeout);
 	virtual void DisconnectWrite();
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout);
 
 // Our protocol

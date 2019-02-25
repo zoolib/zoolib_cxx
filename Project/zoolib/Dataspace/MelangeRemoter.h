@@ -101,19 +101,19 @@ class Melange_Client
 	{
 public:
 	using Chan_t = DeriveFrom<
-		Aspect_Abort,
-		Aspect_Read<byte>,
-		Aspect_WaitReadable,
-		Aspect_Write<byte>>;
+		ChanAspect_Abort,
+		ChanAspect_Read<byte>,
+		ChanAspect_WaitReadable,
+		ChanAspect_Write<byte>>;
 
 	using Channer_t = Channer<Chan_t>;
 
 	using Factory_Channer = Factory<ZRef<Channer_t>>;
 
 	using ChanForRead = DeriveFrom<
-		Aspect_Abort,
-		Aspect_Read<byte>,
-		Aspect_WaitReadable>;
+		ChanAspect_Abort,
+		ChanAspect_Read<byte>,
+		ChanAspect_WaitReadable>;
 
 	using ChannerForRead = Channer<ChanForRead>;
 

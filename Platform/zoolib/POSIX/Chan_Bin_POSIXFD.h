@@ -90,7 +90,7 @@ class ChanR_Bin_POSIXFD
 	ChanR_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanR_Bin_POSIXFD();
 
-// From Aspect_Read<byte>
+// From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
@@ -108,7 +108,7 @@ public:
 	ChanW_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanW_Bin_POSIXFD();
 
-// From Aspect_Write<byte>
+// From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
@@ -129,14 +129,14 @@ public:
 	virtual uint64 Pos();
 	virtual void PosSet(uint64 iPos);
 
-// From Aspect_Read<byte>
+// From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
-// From Aspect_Size
+// From ChanAspect_Size
 	virtual uint64 Size();
 
-// From Aspect_Unread<byte>
+// From ChanAspect_Unread<byte>
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 	virtual size_t UnreadableLimit();
 
@@ -158,13 +158,13 @@ public:
 	virtual uint64 Pos();
 	virtual void PosSet(uint64 iPos);
 
-// From Aspect_Size
+// From ChanAspect_Size
 	virtual uint64 Size();
 
-// From Aspect_SizeSet
+// From ChanAspect_SizeSet
 	virtual void SizeSet(uint64 iSize);
 
-// From Aspect_Write<byte>
+// From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
@@ -185,20 +185,20 @@ public:
 	virtual uint64 Pos();
 	virtual void PosSet(uint64 iPos);
 
-// From Aspect_Read<byte>
+// From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
-// From Aspect_Size
+// From ChanAspect_Size
 	virtual uint64 Size();
 
-// From Aspect_SizeSet
+// From ChanAspect_SizeSet
 	virtual void SizeSet(uint64 iSize);
 
-// From Aspect_Write<byte>
+// From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
-// From Aspect_Unread<byte>
+// From ChanAspect_Unread<byte>
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 	virtual size_t UnreadableLimit();
 
@@ -216,14 +216,14 @@ public:
 	ChanRAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanRAbort_Bin_POSIXFD();
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort();
 
-// From Aspect_Read<byte>
+// From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout);
 
 protected:
@@ -240,10 +240,10 @@ public:
 	ChanWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanWAbort_Bin_POSIXFD();
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort();
 
-// From Aspect_Write<byte>
+// From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
@@ -260,17 +260,17 @@ public:
 	ChanRWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanRWAbort_Bin_POSIXFD();
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort();
 
-// From Aspect_Read<byte>
+// From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout);
 
-// From Aspect_Write<byte>
+// From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:

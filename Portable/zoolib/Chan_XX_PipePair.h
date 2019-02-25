@@ -54,7 +54,7 @@ public:
 		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
 		}
 
-// For Aspect_Abort
+// For ChanAspect_Abort
 	void Abort()
 		{
 		ZAcqMtx acq(fMutex);
@@ -66,7 +66,7 @@ public:
 			}
 		}
 
-// For Aspect_DisconnectRead
+// For ChanAspect_DisconnectRead
 	bool DisconnectRead(double iTimeout)
 		{
 		ZAcqMtx acq(fMutex);
@@ -79,7 +79,7 @@ public:
 		return true;
 		}
 
-// For Aspect_DisconnectWrite
+// For ChanAspect_DisconnectWrite
 	void DisconnectWrite()
 		{
 		ZAcqMtx acq(fMutex);
@@ -90,7 +90,7 @@ public:
 			}
 		}
 
-// For Aspect_Read
+// For ChanAspect_Read
 	size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = static_cast<EE*>(oDest);
@@ -139,7 +139,7 @@ public:
 		return 0;
 		}
 
-// For Aspect_WaitReadable
+// For ChanAspect_WaitReadable
 	bool WaitReadable(double iTimeout)
 		{
 		const double deadline = Time::sSystem() + iTimeout;
@@ -154,7 +154,7 @@ public:
 			}
 		}
 
-// For Aspect_Write
+// For ChanAspect_Write
 	size_t Write(const EE* iSource, size_t iCount)
 		{
 		const EE* localSource = static_cast<const EE*>(iSource);
@@ -223,7 +223,7 @@ public:
 			{}
 		}
 
-// From Aspect_Read
+// From ChanAspect_Read
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{ return fPipePair->Read(oDest, iCount); }
 
@@ -244,15 +244,15 @@ public:
 	:	fPipePair(iPipePair)
 		{}
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort()
 		{ fPipePair->Abort(); }
 
-// From Aspect_DisconnectWrite
+// From ChanAspect_DisconnectWrite
 	virtual void DisconnectWrite()
 		{ return fPipePair->DisconnectWrite(); }
 
-// From Aspect_Write
+// From ChanAspect_Write
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{ return fPipePair->Write(iSource, iCount); }
 

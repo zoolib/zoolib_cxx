@@ -100,7 +100,7 @@ public:
 	virtual size_t Readable()
 		{ return fEnd - fBegin + sReadable(inherited::pGetChan()); }
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout)
 		{
 		if (fEnd > fBegin)

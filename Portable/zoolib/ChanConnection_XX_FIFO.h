@@ -63,7 +63,7 @@ public:
 			fCondition_UserCount.Wait(fMutex);
 		}
 
-// From Aspect_Abort
+// From ChanAspect_Abort
 	virtual void Abort()
 		{
 		ZAcqMtx acq(fMutex);
@@ -73,7 +73,7 @@ public:
 		fCondition_Write.Broadcast();
 		}
 
-// From Aspect_DisconnectRead
+// From ChanAspect_DisconnectRead
 	virtual bool DisconnectRead(double iTimeout)
 		{
 		double deadline = Time::sSystem() + iTimeout;
@@ -94,7 +94,7 @@ public:
 			}
 		}
 
-// From Aspect_DisconnectWrite
+// From ChanAspect_DisconnectWrite
 	virtual void DisconnectWrite()
 		{
 		ZAcqMtx acq(fMutex);
@@ -106,7 +106,7 @@ public:
 			}
 		}
 
-// From Aspect_Read<EE>
+// From ChanAspect_Read<EE>
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		ZAcqMtx acq(fMutex);
@@ -145,7 +145,7 @@ public:
 		return fBuffer.size();
 		}
 
-// From Aspect_WaitReadable
+// From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout)
 		{
 		const double deadline = Time::sSystem() + iTimeout;
@@ -159,7 +159,7 @@ public:
 			}
 		}
 
-// From Aspect_Write<EE>
+// From ChanAspect_Write<EE>
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
 		ZAcqMtx acq(fMutex);

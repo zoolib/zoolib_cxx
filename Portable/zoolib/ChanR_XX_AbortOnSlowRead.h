@@ -18,9 +18,9 @@ class ChanR_XX_AbortOnSlowRead
 	{
 public:
 	using ChanForRead = DeriveFrom<
-		Aspect_Abort,
-		Aspect_Read<EE>,
-		Aspect_WaitReadable>;
+		ChanAspect_Abort,
+		ChanAspect_Read<EE>,
+		ChanAspect_WaitReadable>;
 
 	ChanR_XX_AbortOnSlowRead(const ChanForRead& iChan, double iTimeout)
 	:	fChan(iChan)

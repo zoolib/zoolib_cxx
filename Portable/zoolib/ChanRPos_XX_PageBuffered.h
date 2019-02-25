@@ -86,14 +86,14 @@ public:
 			}
 		}
 
-// From Aspect_Pos,
+// From ChanAspect_Pos,
 	virtual uint64 Pos()
 		{ return fPosition; }
 
 	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
-// From Aspect_Read<EE>,
+// From ChanAspect_Read<EE>,
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = oDest;
@@ -149,11 +149,11 @@ public:
 		return localDest - oDest;
 		}
 
-// From Aspect_Size,
+// From ChanAspect_Size,
 	virtual uint64 Size()
 		{ return sSize(fChanReal); }
 
-// From Aspect_Unread<EE>
+// From ChanAspect_Unread<EE>
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t countToCopy = sClamped(std::min(uint64(iCount), this->fPosition));
