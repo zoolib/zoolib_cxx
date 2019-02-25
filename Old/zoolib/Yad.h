@@ -64,7 +64,7 @@ typedef ChannerR_UTF YadStrimmerR;
 // =================================================================================================
 #pragma mark - YadSeqR
 
-using ChanR_RefYad = DeriveFrom<Aspect_Read<RefYad>>;
+using ChanR_RefYad = DeriveFrom<ChanAspect_Read<RefYad>>;
 
 using YadSeqR = Channer<ChanR_RefYad>;
 
@@ -82,7 +82,7 @@ inline RefYad sReadInc(const ZRef<YadSeqR>& iYadSeqR)
 // =================================================================================================
 #pragma mark - YadSeqAtR
 
-using ChanAtR_RefYad = DeriveFrom<Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
+using ChanAtR_RefYad = DeriveFrom<ChanAspect_ReadAt<uint64,RefYad>,ChanAspect_Size>;
 using YadSeqAtR = Channer<ChanAtR_RefYad>;
 
 inline RefYad sReadAt(const ChanReadAt<uint64,RefYad>& iChan, uint64 iLoc)
@@ -99,7 +99,7 @@ inline RefYad sReadAt(const ZRef<YadSeqAtR>& iYadSeqAtR, uint64 iLoc)
 // =================================================================================================
 #pragma mark - YadSeqAtRPos
 
-using ChanRPos_RefYad = DeriveFrom<Aspect_Read<RefYad>,Aspect_ReadAt<uint64,RefYad>,Aspect_Size>;
+using ChanRPos_RefYad = DeriveFrom<ChanAspect_Read<RefYad>,ChanAspect_ReadAt<uint64,RefYad>,ChanAspect_Size>;
 using YadSeqAtRPos = Channer<ChanRPos_RefYad>;
 
 // =================================================================================================
@@ -107,7 +107,7 @@ using YadSeqAtRPos = Channer<ChanRPos_RefYad>;
 
 typedef std::pair<Name,RefYad> NameRefYad;
 
-using ChanR_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>>;
+using ChanR_NameRefYad = DeriveFrom<ChanAspect_Read<NameRefYad>>;
 
 using YadMapR = Channer<ChanR_NameRefYad>;
 
@@ -128,7 +128,7 @@ inline RefYad sReadInc(const ZRef<YadMapR>& iYadMapR, Name& oName)
 // =================================================================================================
 #pragma mark - YadMapAtR
 
-using ChanAtR_NameRefYad = DeriveFrom<Aspect_ReadAt<Name,RefYad>>;
+using ChanAtR_NameRefYad = DeriveFrom<ChanAspect_ReadAt<Name,RefYad>>;
 using YadMapAtR = Channer<ChanAtR_NameRefYad>;
 
 inline RefYad sReadAt(const ChanReadAt<Name,RefYad>& iChan, const Name& iLoc)
@@ -145,7 +145,7 @@ inline RefYad sReadAt(const ZRef<YadMapAtR>& iYadMapAtR, const Name& iLoc)
 // =================================================================================================
 #pragma mark - YadMapAtRPos
 
-using ChanRPos_NameRefYad = DeriveFrom<Aspect_Read<NameRefYad>,Aspect_ReadAt<Name,RefYad>>;
+using ChanRPos_NameRefYad = DeriveFrom<ChanAspect_Read<NameRefYad>,ChanAspect_ReadAt<Name,RefYad>>;
 using YadMapAtRPos = Channer<ChanRPos_NameRefYad>;
 
 } // namespace ZooLib

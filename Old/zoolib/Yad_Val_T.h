@@ -34,10 +34,10 @@ template <class Seq_p>
 class Chan_YadSeqAtRPos_T
 :	public DeriveFrom
 		<
-		Aspect_Pos,
-		Aspect_Read<RefYad>,
-		Aspect_ReadAt<uint64, RefYad>,
-		Aspect_Size
+		ChanAspect_Pos,
+		ChanAspect_Read<RefYad>,
+		ChanAspect_ReadAt<uint64, RefYad>,
+		ChanAspect_Size
 		>
 	{
 public:
@@ -51,14 +51,14 @@ public:
 	,	fPosition(iPosition)
 		{}
 
-// From Aspect_Pos
+// From ChanAspect_Pos
 	virtual uint64 Pos()
 		{ return fPosition; }
 
 	virtual void PosSet(uint64 iPosition)
 		{ fPosition = iPosition; }
 
-// From Aspect_Read
+// From ChanAspect_Read
 	virtual size_t Read(RefYad* oDest, size_t iCount)
 		{
 		RefYad* startDest = oDest;
@@ -67,7 +67,7 @@ public:
 		return oDest - startDest;
 		}
 
-// From Aspect_ReadAt
+// From ChanAspect_ReadAt
 	virtual size_t ReadAt(const uint64& iLoc, RefYad* oDest, size_t iCount)
 		{
 		RefYad* startDest = oDest;
@@ -77,7 +77,7 @@ public:
 		return oDest - startDest;
 		}
 
-// From Aspect_Size
+// From ChanAspect_Size
 	virtual uint64 Size()
 		{ return fSeq.Size(); }
 
@@ -97,8 +97,8 @@ template <class Map_p, class Index_p = typename Map_p::Index_t>
 class Chan_YadMapAtRPos_T
 :	public DeriveFrom
 		<
-		Aspect_Read<NameRefYad>,
-		Aspect_ReadAt<Name,RefYad>
+		ChanAspect_Read<NameRefYad>,
+		ChanAspect_ReadAt<Name,RefYad>
 		>
 	{
 public:
@@ -114,7 +114,7 @@ public:
 	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
 
-// From Aspect_Read
+// From ChanAspect_Read
 	virtual size_t Read(NameRefYad* oDest, size_t iCount)
 		{
 		NameRefYad* startDest = oDest;
@@ -128,7 +128,7 @@ public:
 		return oDest - startDest;
 		}
 
-// From Aspect_ReadAt
+// From ChanAspect_ReadAt
 	virtual size_t ReadAt(const Name& iLoc, RefYad* oDest, size_t iCount)
 		{
 		if (iCount)
