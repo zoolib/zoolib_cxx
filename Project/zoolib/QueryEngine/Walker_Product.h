@@ -55,7 +55,6 @@ public:
 
 private:
 	ZRef<Walker> fWalker_Left;
-	std::map<string8,size_t> fLeftOffsets;
 	std::vector<Val_Any> fResults_Left;
 
 	ZRef<Walker> fWalker_Right;

@@ -52,13 +52,14 @@ ZRef<Walker> Walker_Product::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	fWalker_Left = fWalker_Left->Prime(iOffsets, fLeftOffsets, ioBaseOffset);
+	std::map<string8,size_t> leftOffsets;
+	fWalker_Left = fWalker_Left->Prime(iOffsets, leftOffsets, ioBaseOffset);
 
 	fResults_Left.resize(ioBaseOffset);
-	oOffsets.insert(fLeftOffsets.begin(), fLeftOffsets.end());
+	oOffsets.insert(leftOffsets.begin(), leftOffsets.end());
 
 	map<string8,size_t> combined = iOffsets;
-	combined.insert(fLeftOffsets.begin(), fLeftOffsets.end());
+	combined.insert(leftOffsets.begin(), leftOffsets.end());
 
 	fWalker_Right = fWalker_Right->Prime(combined, oOffsets, ioBaseOffset);
 
