@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/QueryEngine/Transform_Search.h"
+
 #include "zoolib/Log.h"
 #include "zoolib/UniSet.h"
 #include "zoolib/Util_STL_map.h"
@@ -35,7 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
-#include "zoolib/QueryEngine/Transform_Search.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
@@ -316,13 +317,17 @@ public:
 		fBoundNames = iExpr->GetBoundNames();
 		ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
+		// Restore this stuff -- we don't want anything from the embedee itself to leak up to here.
+		fRestriction = priorRestriction;
+		fProjection = priorProjection;
+		fRename_LeafToRoot = priorRename_LeafToRoot;
+
 		const RelHead& theBoundNames = RA::sRenamed(priorRename_LeafToRoot, iExpr->GetBoundNames());
 		const ColName& theName = RA::sRenamed(priorRename_LeafToRoot, iExpr->GetColName());
 
 		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
 
-		this->pSetResultWithRestrictProjectRename(newEmbed,
-			priorRestriction, priorProjection, priorRename_LeafToRoot, null);
+		this->pSetResultWithRestrictProjectRename(newEmbed, null);
 		}
 
 	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
