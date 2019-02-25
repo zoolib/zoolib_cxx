@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ChanAspects.h"
+#include "zoolib/DeriveFrom.h"
 
 namespace ZooLib {
 
@@ -49,135 +50,135 @@ inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
 // =================================================================================================
 #pragma mark - Composites
 
-using ChanAbort = DeriveFrom<Aspect_Abort>;
+using ChanAbort = DeriveFrom<ChanAspect_Abort>;
 
-using ChanDisconnectRead = DeriveFrom<Aspect_DisconnectRead>;
+using ChanDisconnectRead = DeriveFrom<ChanAspect_DisconnectRead>;
 
-using ChanDisconnectWrite = DeriveFrom<Aspect_DisconnectWrite>;
+using ChanDisconnectWrite = DeriveFrom<ChanAspect_DisconnectWrite>;
 
-using ChanPos = DeriveFrom<Aspect_Pos>;
+using ChanPos = DeriveFrom<ChanAspect_Pos>;
 
 template <typename EE>
-using ChanR = DeriveFrom<Aspect_Read<EE>>;
+using ChanR = DeriveFrom<ChanAspect_Read<EE>>;
 
 template <typename LL, typename EE>
-using ChanReadAt = DeriveFrom<Aspect_ReadAt<LL,EE>>;
+using ChanReadAt = DeriveFrom<ChanAspect_ReadAt<LL,EE>>;
 
-using ChanSize = DeriveFrom<Aspect_Size>;
+using ChanSize = DeriveFrom<ChanAspect_Size>;
 
-using ChanSizeSet = DeriveFrom<Aspect_SizeSet>;
-
-template <typename EE>
-using ChanU = DeriveFrom<Aspect_Unread<EE>>;
-
-using ChanWaitReadable = DeriveFrom<Aspect_WaitReadable>;
+using ChanSizeSet = DeriveFrom<ChanAspect_SizeSet>;
 
 template <typename EE>
-using ChanW = DeriveFrom<Aspect_Write<EE>>;
+using ChanU = DeriveFrom<ChanAspect_Unread<EE>>;
+
+using ChanWaitReadable = DeriveFrom<ChanAspect_WaitReadable>;
+
+template <typename EE>
+using ChanW = DeriveFrom<ChanAspect_Write<EE>>;
 
 // ---
 
 template <typename EE>
 using ChanRU = DeriveFrom
 	<
-	Aspect_Read<EE>,
-	Aspect_Unread<EE>
+	ChanAspect_Read<EE>,
+	ChanAspect_Unread<EE>
 	>;
 
 template <typename EE>
 using ChanRPos = DeriveFrom
 	<
-	Aspect_Pos,
-	Aspect_Read<EE>,
-	Aspect_Size,
-	Aspect_Unread<EE>
+	ChanAspect_Pos,
+	ChanAspect_Read<EE>,
+	ChanAspect_Size,
+	ChanAspect_Unread<EE>
 	>;
 
 template <typename EE>
 using ChanWPos = DeriveFrom
 	<
-	Aspect_Pos,
-	Aspect_Size,
-	Aspect_SizeSet,
-	Aspect_Write<EE>
+	ChanAspect_Pos,
+	ChanAspect_Size,
+	ChanAspect_SizeSet,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
 using ChanRWPos = DeriveFrom
 	<
-	Aspect_Pos,
-	Aspect_Read<EE>,
-	Aspect_Size,
-	Aspect_SizeSet,
-	Aspect_Unread<EE>,
-	Aspect_Write<EE>
+	ChanAspect_Pos,
+	ChanAspect_Read<EE>,
+	ChanAspect_Size,
+	ChanAspect_SizeSet,
+	ChanAspect_Unread<EE>,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
 using ChanRW = DeriveFrom
 	<
-	Aspect_Read<EE>,
-	Aspect_WaitReadable,
-	Aspect_Write<EE>
+	ChanAspect_Read<EE>,
+	ChanAspect_WaitReadable,
+	ChanAspect_Write<EE>
 	>;
 
 using ChanClose = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_DisconnectRead,
-	Aspect_DisconnectWrite
+	ChanAspect_Abort,
+	ChanAspect_DisconnectRead,
+	ChanAspect_DisconnectWrite
 	>;
 
 template <typename EE>
 using ChanRAbort = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_Read<EE>,
-	Aspect_WaitReadable
+	ChanAspect_Abort,
+	ChanAspect_Read<EE>,
+	ChanAspect_WaitReadable
 	>;
 
 template <typename EE>
 using ChanWAbort = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_Write<EE>
+	ChanAspect_Abort,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
 using ChanRWAbort = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_Read<EE>,
-	Aspect_WaitReadable,
-	Aspect_Write<EE>
+	ChanAspect_Abort,
+	ChanAspect_Read<EE>,
+	ChanAspect_WaitReadable,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
 using ChanRCon = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_DisconnectRead,
-	Aspect_Read<EE>,
-	Aspect_WaitReadable
+	ChanAspect_Abort,
+	ChanAspect_DisconnectRead,
+	ChanAspect_Read<EE>,
+	ChanAspect_WaitReadable
 	>;
 
 template <typename EE>
 using ChanWCon = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_DisconnectWrite,
-	Aspect_Write<EE>
+	ChanAspect_Abort,
+	ChanAspect_DisconnectWrite,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
 using ChanRWCon = DeriveFrom
 	<
-	Aspect_Abort,
-	Aspect_DisconnectRead,
-	Aspect_DisconnectWrite,
-	Aspect_Read<EE>,
-	Aspect_WaitReadable,
-	Aspect_Write<EE>
+	ChanAspect_Abort,
+	ChanAspect_DisconnectRead,
+	ChanAspect_DisconnectWrite,
+	ChanAspect_Read<EE>,
+	ChanAspect_WaitReadable,
+	ChanAspect_Write<EE>
 	>;
 
 template <typename EE>
