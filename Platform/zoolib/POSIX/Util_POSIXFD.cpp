@@ -188,7 +188,7 @@ size_t sReadCon(int iFD, byte* oDest, size_t iCount)
 	byte* localDest = oDest;
 	while (iCount)
 		{
-		int result = ::read(iFD, localDest, iCount);
+		ssize_t result = ::read(iFD, localDest, iCount);
 
 		if (result < 0)
 			{
@@ -295,7 +295,7 @@ size_t sWriteCon(int iFD, const byte* iSource, size_t iCount)
 	const byte* localSource = iSource;
 	while (iCount)
 		{
-		int result = ::write(iFD, localSource, iCount);
+		ssize_t result = ::write(iFD, localSource, iCount);
 
 		if (result < 0)
 			{
