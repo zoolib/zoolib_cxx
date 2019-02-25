@@ -195,7 +195,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ChanW_Bin& iStream,
 		int numberOfPasses = ::png_set_interlace_handling(write_ptr);
 		for (int currentPass = 0; currentPass < numberOfPasses; ++currentPass)
 			{
-			for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
+			for (int y = iBounds.top; y < iBounds.bottom; ++y)
 				{
 				const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y);
 				sBlitRow(
@@ -273,7 +273,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ChanR_Bin& iStream, ZDCPixmap& oPixmap
 				::png_get_PLTE(read_ptr, info_ptr, &png_palette, &num_palette);
 
 				vector<ZRGBA_POD> theColorTable(num_palette);
-				for (size_t x = 0; x < num_palette; ++x)
+				for (int x = 0; x < num_palette; ++x)
 					{
 					theColorTable[x].red = png_palette[x].red * 0x101;
 					theColorTable[x].green = png_palette[x].green * 0x101;
