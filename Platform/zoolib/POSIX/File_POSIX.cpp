@@ -200,7 +200,8 @@ static ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPrev
 	return null;
 	}
 
-static ZRef<FDHolder> spOpen(const std::string& iPath, bool iRead, bool iWrite, bool iPreventWriters)
+static ZRef<FDHolder> spOpen(const std::string& iPath,
+	bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
 		int theFlags = O_NOCTTY | O_LARGEFILE;
@@ -223,7 +224,8 @@ static ZRef<FDHolder> spOpen(const std::string& iPath, bool iRead, bool iWrite, 
 	return spLockOrClose(theFD, iRead, iWrite, iPreventWriters);
 	}
 
-static ZRef<FDHolder> spCreate(const std::string& iPath, bool iOpenExisting, bool iAllowRead, bool iPreventWriters)
+static ZRef<FDHolder> spCreate(const std::string& iPath,
+	bool iOpenExisting, bool iAllowRead, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
 		int flags = O_CREAT | O_NOCTTY | O_LARGEFILE;
@@ -836,15 +838,21 @@ ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 
 ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters))
+	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
+		iOpenExisting, false, iPreventWriters))
+		{
 		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
+		}
 	return null;
 	}
 
 ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters))
+	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
+		iOpenExisting, true, iPreventWriters))
+		{
 		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
+		}
 	return null;
 	}
 
