@@ -658,7 +658,7 @@ ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t iIndex, size_t& 
 ZRef<SectionBody> SectionBody_Multi::pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex, bool* oIsSucceeded)
 	{
 	oIndex = iIndex;
-	foreachi (ii, fBodies)
+	for (auto ii = fBodies.begin(); ii != fBodies.end(); ++ii)
 		{
 		ZRef<SectionBody> theBody = *ii;
 		const size_t theCount = theBody->NumberOfRows();
@@ -1159,12 +1159,12 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t xx = 0; xx < theReloads.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theReloads[xx];
-			foreachi (ii, theMap)
+			foreacha (entry, theMap)
 				{
-				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+				w << "\n" << xx << "    " << entry.first << "   " << entry.second;
 				[tableView
-					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-					withRowAnimation:ii->second];
+					reloadRowsAtIndexPaths:sMakeNSIndexPathArray(xx, entry.first, 1)
+					withRowAnimation:entry.second];
 				}
 			}
 
@@ -1173,12 +1173,12 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t xx = 0; xx < theDeletes.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theDeletes[xx];
-			foreachi (ii, theMap)
+			foreacha (entry, theMap)
 				{
-				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+				w << "\n" << xx << "    " << entry.first << "   " << entry.second;
 				[tableView
-					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-					withRowAnimation:ii->second];
+					deleteRowsAtIndexPaths:sMakeNSIndexPathArray(xx, entry.first, 1)
+					withRowAnimation:entry.second];
 				}
 			}
 
@@ -1186,12 +1186,12 @@ static void spInsertSections(UITableView* iTableView,
 		for (size_t xx = 0; xx < theInserts.size(); ++xx)
 			{
 			map<size_t, UITableViewRowAnimation>& theMap = theInserts[xx];
-			foreachi (ii, theMap)
+			foreacha (entry, theMap)
 				{
-				w << "\n" << xx << "    " << ii->first << "   " << ii->second;
+				w << "\n" << xx << "    " << entry.first << "   " << entry.second;
 				[tableView
-					insertRowsAtIndexPaths:sMakeNSIndexPathArray(xx, ii->first, 1)
-					withRowAnimation:ii->second];
+					insertRowsAtIndexPaths:sMakeNSIndexPathArray(xx, entry.first, 1)
+					withRowAnimation:entry.second];
 				}
 			}
 

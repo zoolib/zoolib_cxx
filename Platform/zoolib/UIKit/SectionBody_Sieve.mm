@@ -253,9 +253,9 @@ static size_t spFind(const RelHead& iIdentity, const SectionBody_Sieve::Entry& i
 	for (size_t xx = iStart; xx < iEnd; ++xx)
 		{
 		bool allEqual = true;
-		foreachi (ii, iIdentity)
+		foreacha (entry, iIdentity)
 			{
-			if (not (iOld.Get(*ii) == iRows[xx].Get(*ii)))
+			if (not (iOld.Get(entry) == iRows[xx].Get(entry)))
 				allEqual = false;
 			}
 		if (allEqual)
@@ -269,9 +269,9 @@ static bool spSame(const Map_Any& l, const RelHead& iRelHead, const Map_Any& r)
 	if (iRelHead.empty())
 		return false;
 
-	foreachi (ii, iRelHead)
+	foreacha (entry, iRelHead)
 		{
-		if (l.Get(*ii).Compare(r.Get(*ii)))
+		if (l.Get(entry).Compare(r.Get(entry)))
 			return false;
 		}
 	return true;

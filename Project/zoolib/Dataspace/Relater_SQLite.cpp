@@ -108,9 +108,9 @@ Relater_SQLite::~Relater_SQLite()
 
 bool Relater_SQLite::Intersects(const RelHead& iRelHead)
 	{
-	foreachi (iterTables, fMap_Tables)
+	foreacha (entry, fMap_Tables)
 		{
-		if (sNotEmpty(RA::sPrefixInserted(iterTables->first + "_", iterTables->second) & iRelHead))
+		if (sNotEmpty(RA::sPrefixInserted(entry.first + "_", entry.second) & iRelHead))
 			return true;
 		}
 	return false;
@@ -174,9 +174,9 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	Relater::pCalled_RelaterCollectResults();
 	oChanged.clear();
 
-	foreachi (iterPQuery, fMap_Rel_PQuery)
+	foreacha (entry, fMap_Rel_PQuery)
 		{
-		const PQuery* thePQuery = &iterPQuery->second;
+		const PQuery* thePQuery = &entry.second;
 		vector<Val_Any> thePackedRows;
 		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
