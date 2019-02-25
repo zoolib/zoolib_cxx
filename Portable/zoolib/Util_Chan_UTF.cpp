@@ -511,6 +511,9 @@ bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 bool sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 	{ return sCopy_WSAndCPlusPlusComments(iChanR, iChanU, ChanW_XX_Discard<UTF32>()); }
 
+bool sSkip_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU)
+	{ return sCopy_WSAndCPlusPlusComments(iChanRU, iChanRU, ChanW_XX_Discard<UTF32>()); }
+
 // -----------------
 
 static bool spCopy_Until(const ChanR_UTF& iChanR, const string32& iTerminator,

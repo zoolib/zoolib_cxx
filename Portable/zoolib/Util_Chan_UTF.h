@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_Chan_UTF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan.h"
@@ -39,36 +38,46 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
 // -----------------
 
 bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU);
 
 // -----------------
 
 ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<int> sQRead_Digit(const ChanRU_UTF& iChanRU);
+
 ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU);
 
 // -----------------
 
-bool sTryRead_String(const string8& iTarget,
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sTryRead_String(const string8& iTarget, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sTryRead_String(const string8& iTarget, const ChanRU_UTF& iChanRU);
 
 bool sTryRead_CaselessString(const string8& iTarget,
 	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sTryRead_CaselessString(const string8& iTarget, const ChanRU_UTF& iChanRU);
 
 bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative);
+bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative);
 
 bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+bool sTryRead_HexInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
-bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64);
+bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+bool sTryRead_DecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
-bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	int64& oInt64);
+bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64);
+bool sTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
 bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	int64& oInt64, double& oDouble, bool& oIsDouble);
+bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
+int64& oInt64, double& oDouble, bool& oIsDouble);
 
 // -----------------
 
 bool sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sSkip_WS(const ChanRU_UTF& iChanRU);
 
 // -----------------
 
@@ -80,8 +89,10 @@ ZQ<string8> sQRead_Line(const ChanR_UTF& iSource);
 
 bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest);
+bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU, const ChanW_UTF& oDest);
 
 bool sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+bool sSkip_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU);
 
 // -----------------
 
@@ -95,17 +106,21 @@ bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator, string8& o
 
 void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest);
+void sCopy_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU, const ChanW_UTF& oDest);
 
 void sRead_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string8& oString);
+void sRead_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU, string8& oString);
 
 // -----------------
 
 bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	const ChanW_UTF& oDest);
+bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU, const ChanW_UTF& oDest);
 
 bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	string8& oString);
+bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU, string8& oString);
 
 // =================================================================================================
 #pragma mark -

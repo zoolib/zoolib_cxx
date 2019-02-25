@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/MelangeRemoter.h"
+
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
@@ -39,17 +41,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include "zoolib/Dataspace/MelangeRemoter.h"
-
 #include "zoolib/QueryEngine/Result.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-
-#include "zoolib/ChanRU_XX_Unreader.h"
-
-#include "zoolib/StdIO.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -324,8 +320,7 @@ ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
 		}
 	else
 		{
-		ZRef<Channer<ChanRU<UTF32>> > theChanner = sChanner_T<ChanRU_UTF_string8>(*theStringQ);
-		return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(*theChanner, *theChanner);
+		return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(ChanRU_UTF_string8(*theStringQ));
 		}
 	}
 
