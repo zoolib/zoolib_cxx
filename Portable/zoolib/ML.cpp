@@ -239,17 +239,16 @@ static bool spReadMLAttributeValue(
 // =================================================================================================
 #pragma mark - ChanRU_UTF
 
-ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU)
+ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU)
 :	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(false)
 ,	fBufferStart(0)
 ,	fToken(eToken_Fresh)
 	{}
 
-ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
-:	fChanR(iChanR)
-,	fChanU(iChanU)
+:	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
 ,	fCallable(iCallable)
 ,	fBufferStart(0)
@@ -327,8 +326,8 @@ size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 	return iCount;
 	}
 
-size_t ChanRU_UTF::UnreadableLimit()
-	{ return size_t(-1); }
+//size_t ChanRU_UTF::UnreadableLimit()
+//	{ return size_t(-1); }
 
 //ChanRU_UTF::operator operator_bool() const
 //	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }

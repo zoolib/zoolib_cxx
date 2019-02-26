@@ -81,8 +81,8 @@ size_t ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	return countToCopy;
 	}
 
-size_t ChanRPos_Bin_string::UnreadableLimit()
-	{ return this->fPosition; }
+//size_t ChanRPos_Bin_string::UnreadableLimit()
+//	{ return this->fPosition; }
 
 // =================================================================================================
 #pragma mark - ChanRWPos_Bin_string
@@ -131,8 +131,8 @@ size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	return countToCopy;
 	}
 
-size_t ChanRWPos_Bin_string::UnreadableLimit()
-	{ return this->fPosition; }
+//size_t ChanRWPos_Bin_string::UnreadableLimit()
+//	{ return this->fPosition; }
 
 size_t ChanRWPos_Bin_string::Write(const byte* iSource, size_t iCount)
 	{

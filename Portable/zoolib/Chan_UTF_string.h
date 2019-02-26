@@ -44,7 +44,7 @@ public:
 // From ChanU_UTF
 	virtual size_t Unread(const UTF32* iSource, size_t iCount);
 
-	virtual size_t UnreadableLimit();
+//	virtual size_t UnreadableLimit();
 
 // Our protocol
 	const string8& GetString8() const;

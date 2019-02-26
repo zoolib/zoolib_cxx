@@ -74,8 +74,8 @@ public:
 		return theCount;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return size_t(-1); }
+//	virtual size_t UnreadableLimit()
+//		{ return size_t(-1); }
 
 protected:
 	const ChanR<EE>& fChanR;

@@ -97,8 +97,8 @@ public:
 		return countToCopy;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return fPosition; }
+//	virtual size_t UnreadableLimit()
+//		{ return fPosition; }
 
 protected:
 	const EE* fAddress;
@@ -163,8 +163,8 @@ public:
 		return countToCopy;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return fPosition; }
+//	virtual size_t UnreadableLimit()
+//		{ return fPosition; }
 
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)

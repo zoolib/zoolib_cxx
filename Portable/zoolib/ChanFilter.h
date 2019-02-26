@@ -167,8 +167,8 @@ public:
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{ return sUnread(DerivedFrom_p::pGetChan(), iSource, iCount); }
 
-	virtual size_t UnreadableLimit()
-		{ return sUnreadableLimit(DerivedFrom_p::pGetChan()); }
+//	virtual size_t UnreadableLimit()
+//		{ return sUnreadableLimit(DerivedFrom_p::pGetChan()); }
 	};
 
 // =================================================================================================

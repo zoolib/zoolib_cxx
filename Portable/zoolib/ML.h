@@ -64,8 +64,8 @@ class ChanRU_UTF
 :	public ZooLib::ChanRU<UTF32>
 	{
 public:
-	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChan);
-	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanU,
+	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU);
+	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
 	~ChanRU_UTF();
 
@@ -75,7 +75,7 @@ public:
 // From ChanU_UTF
 	virtual size_t Unread(const UTF32* iSource, size_t iCount);
 
-	virtual size_t UnreadableLimit();
+//	virtual size_t UnreadableLimit();
 
 // Our protocol
 //	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;

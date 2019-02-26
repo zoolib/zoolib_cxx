@@ -69,8 +69,8 @@ size_t ChanRU_UTF_string8::Unread(const UTF32* iSource, size_t iCount)
 	return localCount;
 	}
 
-size_t ChanRU_UTF_string8::UnreadableLimit()
-	{ return size_t(-1); }
+//size_t ChanRU_UTF_string8::UnreadableLimit()
+//	{ return size_t(-1); }
 
 const string8& ChanRU_UTF_string8::GetString8() const
 	{ return fString; }

@@ -469,7 +469,7 @@ ZQ<string8> sQRead_Line(const ChanR_UTF& iSource)
 bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
 	{
-	ZAssert(sUnreadableLimit(iChanRU) >= 2);
+//	ZAssert(sUnreadableLimit(iChanRU) >= 2);
 
 	bool readAny = false;
 	for (;;)

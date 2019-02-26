@@ -109,8 +109,8 @@ public:
 		return count;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return fPosition; }
+//	virtual size_t UnreadableLimit()
+//		{ return fPosition; }
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)

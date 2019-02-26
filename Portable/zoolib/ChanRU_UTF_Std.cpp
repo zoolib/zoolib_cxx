@@ -79,8 +79,8 @@ size_t ChanRU_UTF_Std::Unread(const UTF32* iSource, size_t iCount)
 	return iCount;
 	}
 
-size_t ChanRU_UTF_Std::UnreadableLimit()
-	{ return size_t(-1); }
+//size_t ChanRU_UTF_Std::UnreadableLimit()
+//	{ return size_t(-1); }
 
 int ChanRU_UTF_Std::GetPos()
 	{ return int(fPos - fStack.size()); }
