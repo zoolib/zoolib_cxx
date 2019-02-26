@@ -72,18 +72,18 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual size_t Unread(const byte* iSource, size_t iCount)
+	virtual void Unread(const byte* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min(iCount, this->fPosition);
 		this->fPosition -= countToCopy;
 
 		// See Chan_XX_Memory for a note regarding bogus unreads.
 
-		return countToCopy;
+//		return countToCopy;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return this->fPosition; }
+//	virtual size_t UnreadableLimit()
+//		{ return this->fPosition; }
 
 private:
 	Data fData;
@@ -133,7 +133,7 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual size_t Unread(const byte* iSource, size_t iCount)
+	virtual void Unread(const byte* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
 
@@ -141,11 +141,11 @@ public:
 
 		this->fPosition -= countToCopy;
 
-		return countToCopy;
+//		return countToCopy;
 		}
 
-	virtual size_t UnreadableLimit()
-		{ return this->fPosition; }
+//	virtual size_t UnreadableLimit()
+//		{ return this->fPosition; }
 
 // From ChanW
 	virtual size_t Write(const byte* iSource, size_t iCount)

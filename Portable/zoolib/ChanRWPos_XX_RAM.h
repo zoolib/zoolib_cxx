@@ -102,11 +102,11 @@ public:
 		{ return fDeque.size(); }
 
 // From ChanU
-	virtual size_t Unread(const EE* iSource, size_t iCount)
+	virtual void Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t count = sMin(fPosition, iCount);
 		fPosition -= count;
-		return count;
+//		return count;
 		}
 
 //	virtual size_t UnreadableLimit()

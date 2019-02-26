@@ -71,12 +71,12 @@ size_t ChanRU_UTF_Std::Read(UTF32* oDest, size_t iCount)
 	return localDest - oDest;
 	}
 
-size_t ChanRU_UTF_Std::Unread(const UTF32* iSource, size_t iCount)
+void ChanRU_UTF_Std::Unread(const UTF32* iSource, size_t iCount)
 	{
 	size_t localCount = iCount + 1;
 	while (--localCount)
 		fStack.push_back(*iSource++);
-	return iCount;
+//	return iCount;
 	}
 
 //size_t ChanRU_UTF_Std::UnreadableLimit()

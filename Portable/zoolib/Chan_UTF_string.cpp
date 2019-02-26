@@ -55,7 +55,7 @@ size_t ChanRU_UTF_string8::Read(UTF32* oDest, size_t iCount)
 		}
 	}
 
-size_t ChanRU_UTF_string8::Unread(const UTF32* iSource, size_t iCount)
+void ChanRU_UTF_string8::Unread(const UTF32* iSource, size_t iCount)
 	{
 	const string8::const_iterator stringStart = fString.begin();
 	string8::const_iterator stringCurrent = stringStart + fPosition;
@@ -66,7 +66,7 @@ size_t ChanRU_UTF_string8::Unread(const UTF32* iSource, size_t iCount)
 	while (localCount < iCount && Unicode::sDec(stringStart, stringCurrent, stringEnd))
 		++localCount;
 	fPosition = stringCurrent - stringStart;
-	return localCount;
+//	return localCount;
 	}
 
 //size_t ChanRU_UTF_string8::UnreadableLimit()

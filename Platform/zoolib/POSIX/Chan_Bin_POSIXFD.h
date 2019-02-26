@@ -137,8 +137,8 @@ public:
 	virtual uint64 Size();
 
 // From ChanAspect_Unread<byte>
-	virtual size_t Unread(const byte* iSource, size_t iCount);
-	virtual size_t UnreadableLimit();
+	virtual void Unread(const byte* iSource, size_t iCount);
+//	virtual size_t UnreadableLimit();
 
 protected:
 	const ZRef<FDHolder> fFDHolder;
@@ -199,8 +199,8 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 // From ChanAspect_Unread<byte>
-	virtual size_t Unread(const byte* iSource, size_t iCount);
-	virtual size_t UnreadableLimit();
+	virtual void Unread(const byte* iSource, size_t iCount);
+//	virtual size_t UnreadableLimit();
 
 protected:
 	const ZRef<FDHolder> fFDHolder;

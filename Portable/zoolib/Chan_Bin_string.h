@@ -64,7 +64,7 @@ public:
 	virtual uint64 Size();
 
 // From ChanU
-	virtual size_t Unread(const byte* iSource, size_t iCount);
+	virtual void Unread(const byte* iSource, size_t iCount);
 //	virtual size_t UnreadableLimit();
 
 private:
@@ -97,7 +97,7 @@ public:
 	virtual void SizeSet(uint64 iSize);
 
 // From ChanU
-	virtual size_t Unread(const byte* iSource, size_t iCount);
+	virtual void Unread(const byte* iSource, size_t iCount);
 
 //	virtual size_t UnreadableLimit();
 

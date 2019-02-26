@@ -73,7 +73,7 @@ public:
 		{ return fSize; }
 
 // From ChanU
-	virtual size_t Unread(const EE* iSource, size_t iCount)
+	virtual void Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
 
@@ -94,7 +94,7 @@ public:
 
 		fPosition -= countToCopy;
 
-		return countToCopy;
+//		return countToCopy;
 		}
 
 //	virtual size_t UnreadableLimit()
@@ -150,7 +150,7 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual size_t Unread(const EE* iSource, size_t iCount)
+	virtual void Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
 
@@ -160,7 +160,7 @@ public:
 
 		fPosition -= countToCopy;
 
-		return countToCopy;
+//		return countToCopy;
 		}
 
 //	virtual size_t UnreadableLimit()

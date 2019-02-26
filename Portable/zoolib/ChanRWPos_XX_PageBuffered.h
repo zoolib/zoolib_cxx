@@ -191,7 +191,7 @@ public:
 		}
 
 // From ChanAspect_Unread<EE>
-	virtual size_t Unread(const EE* iSource, size_t iCount)
+	virtual void Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t countToCopy = sClamped(std::min(uint64(iCount), this->fPosition));
 
@@ -199,7 +199,7 @@ public:
 
 		// See Chan_XX_Memory for a note regarding bogus unreads.
 
-		return countToCopy;
+//		return countToCopy;
 		}
 
 // From ChanAspect_Write

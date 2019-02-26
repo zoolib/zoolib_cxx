@@ -42,7 +42,7 @@ public:
 	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 // From ChanU_UTF
-	virtual size_t Unread(const UTF32* iSource, size_t iCount);
+	virtual void Unread(const UTF32* iSource, size_t iCount);
 
 //	virtual size_t UnreadableLimit();
 
