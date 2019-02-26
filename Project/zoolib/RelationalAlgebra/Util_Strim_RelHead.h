@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/ZQ.h"
 
@@ -39,14 +38,13 @@ namespace Util_Strim_RelHead {
 void sWrite_PropName(const string8& iName, const ChanW_UTF& s);
 void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s);
 
-ZQ<ColName> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<ColName> sQRead_PropName(const ChanRU_UTF& iChanRU);
 
-ZQ<RelHead> sQFromStrim_RelHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU);
 
-ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(const ChanRU_UTF& iChanRU);
 
-ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU);
 
 void sWrite_RenameWithOptional(
 	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional,

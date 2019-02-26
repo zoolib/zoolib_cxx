@@ -33,9 +33,9 @@ namespace Util_Chan {
 // =================================================================================================
 #pragma mark -
 
-static bool spTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+static bool spTryRead_Digit(const ChanRU_UTF& iChanRU, int& oDigit)
 	{
-	if (ZQ<int> theQ = sQRead_Digit(iChanR, iChanU))
+	if (ZQ<int> theQ = sQRead_Digit(iChanRU))
 		{
 		oDigit = *theQ;
 		return true;
@@ -43,9 +43,9 @@ static bool spTryRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, in
 	return false;
 	}
 
-static bool spTryRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int& oDigit)
+static bool spTryRead_HexDigit(const ChanRU_UTF& iChanRU, int& oDigit)
 	{
-	if (ZQ<int> theQ = sQRead_HexDigit(iChanR, iChanU))
+	if (ZQ<int> theQ = sQRead_HexDigit(iChanRU))
 		{
 		oDigit = *theQ;
 		return true;
@@ -75,41 +75,41 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 
 // -----------------
 
-bool sTryRead_CP(UTF32 iCP, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU)
 	{
 	// Ensure that we only try to read a valid CP, one that
 	// can actually be returned by ReadCP.
 	ZAssertStop(2, Unicode::sIsValid(iCP));
 
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return false; }
 	else if (*theCPQ == iCP)
 		{ return true; }
 	else
 		{
-		sUnread(iChanU, *theCPQ);
+		sUnread(iChanRU, *theCPQ);
 		return false;
 		}
 	}
 
 // -----------------
 
-ZQ<int> sQRead_Digit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<int> sQRead_Digit(const ChanRU_UTF& iChanRU)
 	{
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return null; }
 	else if (*theCPQ >= '0' && *theCPQ <= '9')
 		{ return *theCPQ - '0'; }
 	else
 		{
-		sUnread(iChanU, *theCPQ);
+		sUnread(iChanRU, *theCPQ);
 		return null;
 		}
 	}
 
-ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU)
 	{
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return null; }
 	else if (*theCPQ >= '0' && *theCPQ <= '9')
 		{ return *theCPQ - '0'; }
@@ -119,15 +119,14 @@ ZQ<int> sQRead_HexDigit(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
 		{ return *theCPQ - 'A' + 10; }
 	else
 		{
-		sUnread(iChanU, *theCPQ);
+		sUnread(iChanRU, *theCPQ);
 		return null;
 		}
 	}
 
 // -----------------
 
-bool sTryRead_String(const string8& iTarget,
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+bool sTryRead_String(const string8& iTarget, const ChanRU_UTF& iChanRU)
 	{
 	string8::const_iterator targetIter = iTarget.begin();
 	string8::const_iterator targetEnd = iTarget.end();
@@ -142,7 +141,7 @@ bool sTryRead_String(const string8& iTarget,
 			return true;
 			}
 
-		if (NotQ<UTF32> candidateCPQ = sQRead(iChanR))
+		if (NotQ<UTF32> candidateCPQ = sQRead(iChanRU))
 			{
 			// Exhausted strim.
 			break;
@@ -160,7 +159,7 @@ bool sTryRead_String(const string8& iTarget,
 
 	while (not stack.empty())
 		{
-		sUnread(iChanU, stack.back());
+		sUnread(iChanRU, stack.back());
 		stack.pop_back();
 		}
 	return false;
@@ -168,8 +167,7 @@ bool sTryRead_String(const string8& iTarget,
 
 // -----------------
 
-bool sTryRead_CaselessString(const string8& iTarget,
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+bool sTryRead_CaselessString(const string8& iTarget, const ChanRU_UTF& iChanRU)
 	{
 	string8::const_iterator targetIter = iTarget.begin();
 	string8::const_iterator targetEnd = iTarget.end();
@@ -184,7 +182,7 @@ bool sTryRead_CaselessString(const string8& iTarget,
 			return true;
 			}
 
-		if (NotQ<UTF32> candidateCPQ = sQRead(iChanR))
+		if (NotQ<UTF32> candidateCPQ = sQRead(iChanRU))
 			{
 			// Exhausted strim.
 			break;
@@ -202,7 +200,7 @@ bool sTryRead_CaselessString(const string8& iTarget,
 
 	while (not stack.empty())
 		{
-		sUnread(iChanU, stack.back());
+		sUnread(iChanRU, stack.back());
 		stack.pop_back();
 		}
 	return false;
@@ -210,14 +208,14 @@ bool sTryRead_CaselessString(const string8& iTarget,
 
 // -----------------
 
-bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNegative)
+bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative)
 	{
-	if (sTryRead_CP('-', iChanR, iChanU))
+	if (sTryRead_CP('-', iChanRU))
 		{
 		oIsNegative = true;
 		return true;
 		}
-	else if (sTryRead_CP('+', iChanR, iChanU))
+	else if (sTryRead_CP('+', iChanRU))
 		{
 		oIsNegative = false;
 		return true;
@@ -225,23 +223,23 @@ bool sTryRead_Sign(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, bool& oIsNe
 	return false;
 	}
 
-static bool spTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
+static bool spTryRead_HexInteger(const ChanRU_UTF& iChanRU, int64& oInt64)
 	{
 	oInt64 = 0;
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (not spTryRead_HexDigit(iChanR, iChanU, curDigit))
+		if (not spTryRead_HexDigit(iChanRU, curDigit))
 			return gotAny;
 		oInt64 *= 16;
 		oInt64 += curDigit;
 		}
 	}
 
-bool sTryRead_HexInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, int64& oInt64)
-	{ return spTryRead_HexInteger(iChanR, iChanU, oInt64); }
+bool sTryRead_HexInteger(const ChanRU_UTF& iChanRU, int64& oInt64)
+	{ return spTryRead_HexInteger(iChanRU, oInt64); }
 
-static bool spTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spTryRead_Mantissa(const ChanRU_UTF& iChanRU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
 	using namespace Util_Chan;
@@ -253,7 +251,7 @@ static bool spTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+		if (not spTryRead_Digit(iChanRU, curDigit))
 			return gotAny;
 
 		if (not oIsDouble)
@@ -272,30 +270,30 @@ static bool spTryRead_Mantissa(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		}
 	}
 
-static bool spTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spTryRead_DecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
 	{
 	oInt64 = 0;
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		int curDigit;
-		if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+		if (not spTryRead_Digit(iChanRU, curDigit))
 			return gotAny;
 		oInt64 *= 10;
 		oInt64 += curDigit;
 		}
 	}
 
-bool sTryRead_DecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_DecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
-	{ return spTryRead_DecimalInteger(iChanR, iChanU, oInt64); }
+	{ return spTryRead_DecimalInteger(iChanRU, oInt64); }
 
-static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
 	{
 	bool isNegative = false;
-	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
-	if (spTryRead_DecimalInteger(iChanR, iChanU, oInt64))
+	bool hadSign = sTryRead_Sign(iChanRU, isNegative);
+	if (spTryRead_DecimalInteger(iChanRU, oInt64))
 		{
 		if (isNegative)
 			oInt64 = -oInt64;
@@ -308,33 +306,33 @@ static bool spTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_
 	return false;
 	}
 
-bool sTryRead_SignedDecimalInteger(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
-	{ return spTryRead_SignedDecimalInteger(iChanR, iChanU, oInt64); }
+	{ return spTryRead_SignedDecimalInteger(iChanRU, oInt64); }
 
-static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
 	using namespace Util_Chan;
 
-	if (sTryRead_CaselessString("nan", iChanR, iChanU))
+	if (sTryRead_CaselessString("nan", iChanRU))
 		{
 		oIsDouble = true;
 		oDouble = NAN;
 		return true;
 		}
 
-	if (sTryRead_CaselessString("inf", iChanR, iChanU))
+	if (sTryRead_CaselessString("inf", iChanRU))
 		{
 		oIsDouble = true;
 		oDouble = INFINITY;
 		return true;
 		}
 
-	if (not spTryRead_Mantissa(iChanR, iChanU, oInt64, oDouble, oIsDouble))
+	if (not spTryRead_Mantissa(iChanRU, oInt64, oDouble, oIsDouble))
 		return false;
 
-	if (sTryRead_CP('.', iChanR, iChanU))
+	if (sTryRead_CP('.', iChanRU))
 		{
 		oIsDouble = true;
 		double fracPart = 0.0;
@@ -343,7 +341,7 @@ static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iC
 		for (;;)
 			{
 			int curDigit;
-			if (not spTryRead_Digit(iChanR, iChanU, curDigit))
+			if (not spTryRead_Digit(iChanRU, curDigit))
 				break;
 			divisor *= 10;
 			fracPart *= 10;
@@ -352,11 +350,11 @@ static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iC
 		oDouble += fracPart / divisor;
 		}
 
-	if (sTryRead_CP('e', iChanR, iChanU) || sTryRead_CP('E', iChanR, iChanU))
+	if (sTryRead_CP('e', iChanRU) || sTryRead_CP('E', iChanRU))
 		{
 		oIsDouble = true;
 		int64 exponent;
-		if (not spTryRead_SignedDecimalInteger(iChanR, iChanU, exponent))
+		if (not spTryRead_SignedDecimalInteger(iChanRU, exponent))
 			sThrow_ParseException("Expected a valid exponent after 'e'");
 		oDouble = oDouble * pow(10.0, int(exponent));
 		}
@@ -364,16 +362,16 @@ static bool spTryRead_DecimalNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iC
 	return true;
 	}
 
-bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
 	oIsDouble = false;
 	bool isNegative = false;
-	bool hadSign = sTryRead_Sign(iChanR, iChanU, isNegative);
-	if (sTryRead_CP('0', iChanR, iChanU))
+	bool hadSign = sTryRead_Sign(iChanRU, isNegative);
+	if (sTryRead_CP('0', iChanRU))
 		{
 		UTF32 theCP;
-		if (not sQRead(iChanR, theCP))
+		if (not sQRead(iChanRU, theCP))
 			{
 			oInt64 = 0;
 			return true;
@@ -381,7 +379,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 		if (theCP == 'X' || theCP == 'x')
 			{
-			if (spTryRead_HexInteger(iChanR, iChanU, oInt64))
+			if (spTryRead_HexInteger(iChanRU, oInt64))
 				{
 				if (isNegative)
 					oInt64 = -oInt64;
@@ -390,7 +388,7 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			sThrow_ParseException("Expected a valid hex integer after '0x' prefix");
 			}
 
-		sUnread(iChanU, theCP);
+		sUnread(iChanRU, theCP);
 
 		if (theCP != '.' and not Unicode::sIsDigit(theCP))
 			{
@@ -398,10 +396,10 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 			return true;
 			}
 
-		sUnread(iChanU, UTF32('0'));
+		sUnread(iChanRU, UTF32('0'));
 		}
 
-	if (spTryRead_DecimalNumber(iChanR, iChanU, oInt64, oDouble, oIsDouble))
+	if (spTryRead_DecimalNumber(iChanRU, oInt64, oDouble, oIsDouble))
 		{
 		if (isNegative)
 			{
@@ -425,15 +423,15 @@ bool sTryRead_SignedGenericNumber(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 
 // -----------------
 
-bool sSkip_WS(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+bool sSkip_WS(const ChanRU_UTF& iChanRU)
 	{
 	bool readAny = false;
-	while (ZQ<UTF32> theCPQ = sQRead(iChanR))
+	while (ZQ<UTF32> theCPQ = sQRead(iChanRU))
 		{
 		readAny = true;
 		if (not spIsWhitespace(*theCPQ))
 			{
-			sUnread(iChanU, *theCPQ);
+			sUnread(iChanRU, *theCPQ);
 			break;
 			}
 		}
@@ -468,15 +466,15 @@ ZQ<string8> sQRead_Line(const ChanR_UTF& iSource)
 
 // -----------------
 
-bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
 	{
-	ZAssert(sUnreadableLimit(iChanU) >= 2);
+	ZAssert(sUnreadableLimit(iChanRU) >= 2);
 
 	bool readAny = false;
 	for (;;)
 		{
-		if (ZQ<UTF32> firstCPQ = sQRead(iChanR))
+		if (ZQ<UTF32> firstCPQ = sQRead(iChanRU))
 			{
 			readAny = true;
 			if (spIsWhitespace(*firstCPQ))
@@ -486,33 +484,30 @@ bool sCopy_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 				}
 			else if (*firstCPQ == '/')
 				{
-				if (sTryRead_CP('/', iChanR, iChanU))
+				if (sTryRead_CP('/', iChanRU))
 					{
 					sEWrite(oDest, "//");
-					sCopy_Line(iChanR, oDest);
+					sCopy_Line(iChanRU, oDest);
 					continue;
 					}
-				else if (sTryRead_CP('*', iChanR, iChanU))
+				else if (sTryRead_CP('*', iChanRU))
 					{
 					sEWrite(oDest, "/*");
-					if (not sCopy_Until(iChanR, "*/", oDest))
+					if (not sCopy_Until(iChanRU, "*/", oDest))
 						sThrow_ParseException("Unexpected end of data while parsing a /**/ comment");
 					sEWrite(oDest, "*/");
 					continue;
 					}
 				}
-			sUnread(iChanU, *firstCPQ);
+			sUnread(iChanRU, *firstCPQ);
 			}
 		break;
 		}
 	return readAny;
 	}
 
-bool sSkip_WSAndCPlusPlusComments(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-	{ return sCopy_WSAndCPlusPlusComments(iChanR, iChanU, ChanW_XX_Discard<UTF32>()); }
-
 bool sSkip_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU)
-	{ return sCopy_WSAndCPlusPlusComments(iChanRU, iChanRU, ChanW_XX_Discard<UTF32>()); }
+	{ return sCopy_WSAndCPlusPlusComments(iChanRU, ChanW_XX_Discard<UTF32>()); }
 
 // -----------------
 
@@ -540,40 +535,40 @@ bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
 
 // -----------------
 
-void sCopy_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+void sCopy_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
-	{ sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanR, iChanU), oDest); }
+	{ sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanRU), oDest); }
 
-void sRead_EscapedString(UTF32 iTerminator, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+void sRead_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU,
 	string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	sCopy_EscapedString(iTerminator, iChanR, iChanU, ChanW_UTF_string8(&oString));
+	sCopy_EscapedString(iTerminator, iChanRU, ChanW_UTF_string8(&oString));
 	}
 
 // -----------------
 
-bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
 	{
-	if (not sTryRead_CP(iDelimiter, iChanR, iChanU))
+	if (not sTryRead_CP(iDelimiter, iChanRU))
 		return false;
 
-	sCopy_EscapedString(iDelimiter, iChanR, iChanU, oDest);
+	sCopy_EscapedString(iDelimiter, iChanRU, oDest);
 
-	if (not sTryRead_CP(iDelimiter, iChanR, iChanU))
+	if (not sTryRead_CP(iDelimiter, iChanRU))
 		sThrow_ParseException("Missing string delimiter");
 
 	return true;
 	}
 
-bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 	string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
-	return sTryCopy_EscapedString(iDelimiter, iChanR, iChanU, ChanW_UTF_string8(&oString));
+	return sTryCopy_EscapedString(iDelimiter, iChanRU, ChanW_UTF_string8(&oString));
 	}
 
 // -----------------

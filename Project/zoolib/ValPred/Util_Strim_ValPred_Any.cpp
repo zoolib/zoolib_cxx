@@ -123,54 +123,54 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& iChanW)
 		}
 	}
 
-ZRef<ValComparand> spQRead_ValComparand(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZRef<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
-	if (sTryRead_CP('@', iChanR, iChanU))
+	if (sTryRead_CP('@', iChanRU))
 		{
-		if (ZQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
+		if (ZQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 			return new ValComparand_Name(*theQ);
 		throw ParseException("Expected Name after @");
 		}
 
 //	if (ZQ<Val_Any> theQ = Util_Any_JSON::sQRead(sChanner_Chan(iChanR), sChanner_Chan(iChanU)))
-	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanR, iChanU))
+	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU))
 		return new ValComparand_Const_Any(*theQ);
 
 	return null;
 	}
 
-ZRef<ValComparator> spQRead_ValComparator(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZRef<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
 	{
 	using Util_Chan::sTryRead_CP;
 
-	if (NotQ<UTF32> theQ = sQRead(iChanR))
+	if (NotQ<UTF32> theQ = sQRead(iChanRU))
 		{
 		return null;
 		}
 	else if (*theQ == '<')
 		{
-		if (sTryRead_CP('=', iChanR, iChanU))
+		if (sTryRead_CP('=', iChanRU))
 			return new ValComparator_Simple(ValComparator_Simple::eLE);
 		return new ValComparator_Simple(ValComparator_Simple::eLT);
 		}
 	else if (*theQ == '>')
 		{
-		if (sTryRead_CP('=', iChanR, iChanU))
+		if (sTryRead_CP('=', iChanRU))
 			return new ValComparator_Simple(ValComparator_Simple::eGE);
 		return new ValComparator_Simple(ValComparator_Simple::eGT);
 		}
-	else if (*theQ == '=' && sTryRead_CP('=', iChanR, iChanU))
+	else if (*theQ == '=' && sTryRead_CP('=', iChanRU))
 		{
 		return new ValComparator_Simple(ValComparator_Simple::eEQ);
 		}
-	else if (*theQ == '!' && sTryRead_CP('=', iChanR, iChanU))
+	else if (*theQ == '!' && sTryRead_CP('=', iChanRU))
 		{
 		return new ValComparator_Simple(ValComparator_Simple::eNE);
 		}
 	else
 		{
-		sUnread(iChanU, *theQ);
+		sUnread(iChanRU, *theQ);
 		return null;
 		}
 	}
@@ -187,25 +187,25 @@ void sToStrim(const ValPred& iValPred, const ChanW_UTF& iChanW)
 	spToStrim(iValPred.GetRHS(), iChanW);
 	}
 
-ZQ<ValPred> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (ZRef<ValComparand,false> theComparandL = spQRead_ValComparand(iChanR, iChanU))
+	if (ZRef<ValComparand,false> theComparandL = spQRead_ValComparand(iChanRU))
 		{
 		return null;
 		}
 	else
 		{
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-		if (ZRef<ValComparator,false> theComparator = spQRead_ValComparator(iChanR, iChanU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (ZRef<ValComparator,false> theComparator = spQRead_ValComparator(iChanRU))
 			{
 			throw ParseException("Expected Comparator after Comparand");
 			}
 		else
 			{
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-			if (ZRef<ValComparand,false> theComparandR = spQRead_ValComparand(iChanR, iChanU))
+			sSkip_WSAndCPlusPlusComments(iChanRU);
+			if (ZRef<ValComparand,false> theComparandR = spQRead_ValComparand(iChanRU))
 				{
 				throw ParseException("Expected Comparand after Comparator");
 				}

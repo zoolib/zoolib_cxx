@@ -46,22 +46,21 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Static helper functions
 
-static string spReadReference(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	ZRef<Callable_Entity> iCallable)
+static string spReadReference(const ChanRU_UTF& iChanRU, ZRef<Callable_Entity> iCallable)
 	{
 	string result;
 
-	if (sTryRead_CP('#', iChanR, iChanU))
+	if (sTryRead_CP('#', iChanRU))
 		{
 		// It's a character reference.
 		int64 theInt;
 		bool gotIt = false;
-		if (sTryRead_CP('x', iChanR, iChanU) || sTryRead_CP('X', iChanR, iChanU))
-			gotIt = sTryRead_HexInteger(iChanR, iChanU, theInt);
+		if (sTryRead_CP('x', iChanRU) || sTryRead_CP('X', iChanRU))
+			gotIt = sTryRead_HexInteger(iChanRU, theInt);
 		else
-			gotIt = sTryRead_DecimalInteger(iChanR, iChanU, theInt);
+			gotIt = sTryRead_DecimalInteger(iChanRU, theInt);
 
-		if (gotIt && sTryRead_CP(';', iChanR, iChanU))
+		if (gotIt && sTryRead_CP(';', iChanRU))
 			result += UTF32(theInt);
 		}
 	else
@@ -70,7 +69,7 @@ static string spReadReference(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		theEntity.reserve(8);
 		for (;;)
 			{
-			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 				{
 				theEntity.clear();
 				break;
@@ -110,16 +109,15 @@ static string spReadReference(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	return result;
 	}
 
-static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-	string& oText)
+static bool spReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
 	{
 	oText.resize(0);
 
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return false; }
 	else if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 		{
-		sUnread(iChanU, *theCPQ);
+		sUnread(iChanRU, *theCPQ);
 		return false;
 		}
 	else
@@ -128,14 +126,14 @@ static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 
 		for (;;)
 			{
-			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 				{
 				break;
 				}
 			else if (not Unicode::sIsAlphaDigit(*theCPQ)
 				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
 				{
-				sUnread(iChanU, *theCPQ);
+				sUnread(iChanRU, *theCPQ);
 				break;
 				}
 			else
@@ -148,14 +146,13 @@ static bool spReadMLIdentifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	return true;
 	}
 
-static bool spReadUntil(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 iTerminator,
-	string& oText)
+static bool spReadUntil(const ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
 	for (;;)
 		{
-		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+		if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 			return false;
 		else if (*theCPQ == iTerminator)
 			return true;
@@ -164,53 +161,33 @@ static bool spReadUntil(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, UTF32 
 		}
 	}
 
-//static bool spReadUntil(
-//	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
-//	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
-//	UTF32 iTerminator, string& oText)
-//	{
-//	oText.resize(0);
-//
-//	for (;;)
-//		{
-//		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
-//			return false;
-//		else if (*theCPQ == iTerminator)
-//			return true;
-//		else if (*theCPQ == '&' && iRecognizeEntities)
-//			oText += spReadReference(iChanR, iChanU, iCallable);
-//		else
-//			oText += *theCPQ;
-//		}
-//	}
-
-static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, string& oName)
+static bool spReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
 	{
 	oName.resize(0);
 
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return false; }
 	else if (*theCPQ == '"')
-		{ return spReadUntil(iChanR, iChanU, '"', oName); }
+		{ return spReadUntil(iChanRU, '"', oName); }
 	else if (*theCPQ == '\'')
-		{ return spReadUntil(iChanR, iChanU, '\'', oName); }
+		{ return spReadUntil(iChanRU, '\'', oName); }
 	else
 		{
 		if (not Unicode::sIsAlpha(*theCPQ) && *theCPQ != '_' && *theCPQ != '?' && *theCPQ != '!')
 			{
-			sUnread(iChanU, *theCPQ);
+			sUnread(iChanRU, *theCPQ);
 			return false;
 			}
 
 		oName += *theCPQ;
 		for (;;)
 			{
-			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 				{ return true; }
 			else if (not Unicode::sIsAlphaDigit(*theCPQ)
 				&& *theCPQ != '_' && *theCPQ != '-' && *theCPQ != ':')
 				{
-				sUnread(iChanU, *theCPQ);
+				sUnread(iChanRU, *theCPQ);
 				return true;
 				}
 			else
@@ -220,37 +197,37 @@ static bool spReadMLAttributeName(const ChanR_UTF& iChanR, const ChanU_UTF& iCha
 	}
 
 static bool spReadMLAttributeValue(
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	const ChanRU_UTF& iChanRU,
 	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
 	string& oValue)
 	{
 	oValue.resize(0);
 
-	if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return false; }
 	else if (*theCPQ == '"')
-		{ return spReadUntil(iChanR, iChanU, '"', oValue); }
+		{ return spReadUntil(iChanRU, '"', oValue); }
 	else if (*theCPQ == '\'')
-		{ return spReadUntil(iChanR, iChanU, '\'', oValue); }
+		{ return spReadUntil(iChanRU, '\'', oValue); }
 	else
 		{
-		sUnread(iChanU, *theCPQ);
+		sUnread(iChanRU, *theCPQ);
 
-		sSkip_WS(iChanR, iChanU);
+		sSkip_WS(iChanRU);
 
 		for (;;)
 			{
-			if (NotQ<UTF32> theCPQ = sQRead(iChanR))
+			if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 				{ break; }
 			else if (*theCPQ == '>')
 				{
-				sUnread(iChanU, *theCPQ);
+				sUnread(iChanRU, *theCPQ);
 				break;
 				}
 			else if (Unicode::sIsWhitespace(*theCPQ))
 				{ break; }
 			else if (*theCPQ == '&' && iRecognizeEntities)
-				{ oValue += spReadReference(iChanR, iChanU, iCallable); }
+				{ oValue += spReadReference(iChanRU, iCallable); }
 			else
 				{ oValue += *theCPQ; }
 			}
@@ -263,16 +240,7 @@ static bool spReadMLAttributeValue(
 #pragma mark - ChanRU_UTF
 
 ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU)
-:	fChanR(iChanRU)
-,	fChanU(iChanRU)
-,	fRecognizeEntitiesInAttributeValues(false)
-,	fBufferStart(0)
-,	fToken(eToken_Fresh)
-	{}
-
-ChanRU_UTF::ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-:	fChanR(iChanR)
-,	fChanU(iChanU)
+:	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(false)
 ,	fBufferStart(0)
 ,	fToken(eToken_Fresh)
@@ -315,20 +283,20 @@ size_t ChanRU_UTF::Read(UTF32* oDest, size_t iCount)
 					fBuffer.resize(0);
 					}
 				}
-			else if (NotQ<UTF32> theCPQ = sQRead(fChanR))
+			else if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
 				{
 				fToken = eToken_Exhausted;
 				break;
 				}
 			else if (*theCPQ == '<')
 				{
-				sUnread(fChanU, *theCPQ);
+				sUnread(fChanRU, *theCPQ);
 				break;
 				}
 			else if (*theCPQ == '&')
 				{
 				fBufferStart = 0;
-				fBuffer = Unicode::sAsUTF32(spReadReference(fChanR, fChanU, fCallable));
+				fBuffer = Unicode::sAsUTF32(spReadReference(fChanRU, fCallable));
 				}
 			else
 				{
@@ -470,21 +438,21 @@ void ChanRU_UTF::pAdvance()
 
 	for	(;;)
 		{
-		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
+		if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
 			{
 			fToken = eToken_Exhausted;
 			return;
 			}
 		else if (*theCPQ != '<')
 			{
-			sUnread(fChanU, *theCPQ);
+			sUnread(fChanRU, *theCPQ);
 			fToken = eToken_Text;
 			return;
 			}
 
-		sSkip_WS(fChanR, fChanU);
+		sSkip_WS(fChanRU);
 
-		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
+		if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
 			{
 			fToken = eToken_Exhausted;
 			return;
@@ -493,17 +461,17 @@ void ChanRU_UTF::pAdvance()
 			{
 			case'/':
 				{
-				sSkip_WS(fChanR, fChanU);
+				sSkip_WS(fChanRU);
 
-				if (not spReadMLIdentifier(fChanR, fChanU, fTagName))
+				if (not spReadMLIdentifier(fChanRU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
 					}
 
-				sSkip_WS(fChanR, fChanU);
+				sSkip_WS(fChanRU);
 
-				if (not sTryRead_CP('>', fChanR, fChanU))
+				if (not sTryRead_CP('>', fChanRU))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -515,42 +483,42 @@ void ChanRU_UTF::pAdvance()
 			case '?':
 				{
 				// PI
-				sSkip_Until(fChanR, "?>");
+				sSkip_Until(fChanRU, "?>");
 				break;
 				}
 			case '!':
 				{
-				if (sTryRead_CP('-', fChanR, fChanU))
+				if (sTryRead_CP('-', fChanRU))
 					{
-					if (sTryRead_CP('-', fChanR, fChanU))
+					if (sTryRead_CP('-', fChanRU))
 						{
 						// A comment.
-						sSkip_Until(fChanR, "-->");
+						sSkip_Until(fChanRU, "-->");
 						}
 					else
 						{
 						// Not a comment, but not an entity definition. Just skip
 						// till we hit a '>'
-						sSkip_Until(fChanR, ">");
+						sSkip_Until(fChanRU, ">");
 						}
 					}
-				else if (spTryRead_String("[CDATA[", fChanR))
+				else if (spTryRead_String("[CDATA[", fChanRU))
 					{
 					// CDATA
-					sSkip_Until(fChanR, "]]>");
+					sSkip_Until(fChanRU, "]]>");
 					}
 				else
 					{
 					// An entity definition
-					sSkip_Until(fChanR, ">");
+					sSkip_Until(fChanRU, ">");
 					}
 				break;
 				}
 			default:
 				{
-				sUnread(fChanU, *theCPQ);
+				sUnread(fChanRU, *theCPQ);
 
-				if (not spReadMLIdentifier(fChanR, fChanU, fTagName))
+				if (not spReadMLIdentifier(fChanRU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -558,21 +526,21 @@ void ChanRU_UTF::pAdvance()
 
 				for (;;)
 					{
-					sSkip_WS(fChanR, fChanU);
+					sSkip_WS(fChanRU);
 
 					string attributeName;
 					attributeName.reserve(8);
-					if (not spReadMLAttributeName(fChanR, fChanU, attributeName))
+					if (not spReadMLAttributeName(fChanRU, attributeName))
 						break;
 
-					sSkip_WS(fChanR, fChanU);
+					sSkip_WS(fChanRU);
 
-					if (sTryRead_CP('=', fChanR, fChanU))
+					if (sTryRead_CP('=', fChanRU))
 						{
-						sSkip_WS(fChanR, fChanU);
+						sSkip_WS(fChanRU);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (not spReadMLAttributeValue(fChanR, fChanU,
+						if (not spReadMLAttributeValue(fChanRU,
 							fRecognizeEntitiesInAttributeValues, fCallable,
 							attributeValue))
 							{
@@ -587,14 +555,14 @@ void ChanRU_UTF::pAdvance()
 						}
 					}
 
-				sSkip_WS(fChanR, fChanU);
+				sSkip_WS(fChanRU);
 
-				if (sTryRead_CP('/', fChanR, fChanU))
+				if (sTryRead_CP('/', fChanRU))
 					fToken = eToken_TagEmpty;
 				else
 					fToken = eToken_TagBegin;
 
-				if (not sTryRead_CP('>', fChanR, fChanU))
+				if (not sTryRead_CP('>', fChanRU))
 					fToken = eToken_Exhausted;
 
 				return;

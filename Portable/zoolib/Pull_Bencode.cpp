@@ -41,7 +41,7 @@ using std::string;
 namespace { // anonymous
 
 bool spTryRead_Byte(const ChanRU_Bin& iChanRU, uint8 iByte)
-	{ return sTryRead<uint8>(iByte, iChanRU, iChanRU); }
+	{ return sTryRead<uint8>(iByte, iChanRU); }
 
 bool spTryRead_Digit(const ChanRU_Bin& s, int& oDigit)
 	{

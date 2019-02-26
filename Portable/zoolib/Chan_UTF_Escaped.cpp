@@ -30,11 +30,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ChanR_UTF_Escaped
 
-ChanR_UTF_Escaped::ChanR_UTF_Escaped(UTF32 iDelimiter,
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ChanR_UTF_Escaped::ChanR_UTF_Escaped(UTF32 iDelimiter, const ChanRU_UTF& iChanRU)
 :	fDelimiter(iDelimiter)
-,	fChanR(iChanR)
-,	fChanU(iChanU)
+,	fChanRU(iChanRU)
 	{}
 
 ChanR_UTF_Escaped::~ChanR_UTF_Escaped()
@@ -49,24 +47,24 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 	while (localDestEnd > localDest)
 		{
 		UTF32 theCP;
-		if (not sQRead(fChanR, theCP))
+		if (not sQRead(fChanRU, theCP))
 			sThrow_ParseException("Unexpected end of strim whilst parsing a string");
 
 		if (theCP == fDelimiter)
 			{
-			sUnread(fChanU, theCP);
+			sUnread(fChanRU, theCP);
 			break;
 			}
 
 		if (Unicode::sIsEOL(theCP))
 			{
-			sUnread(fChanU, theCP);
+			sUnread(fChanRU, theCP);
 			sThrow_ParseException("Illegal end of line whilst parsing a string");
 			}
 
 		if (theCP == '\\')
 			{
-			if (not sQRead(fChanR, theCP))
+			if (not sQRead(fChanRU, theCP))
 				sThrow_ParseException("Unexpected end of strim whilst parsing a string");
 
 			switch (theCP)
@@ -100,14 +98,14 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 					break;
 				case 'x':
 					{
-					if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
+					if (NotQ<int> theQ = sQRead_HexDigit(fChanRU))
 						{
 						sThrow_ParseException("Illegal non-hex digit following \"\\x\"");
 						}
 					else
 						{
 						theCP = *theQ;
-						while (ZQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
+						while (ZQ<int> theQ = sQRead_HexDigit(fChanRU))
 							theCP = (theCP << 4) + *theQ;
 						}
 					break;
@@ -122,7 +120,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 					UTF32 resultCP = 0;
 					while (requiredChars--)
 						{
-						if (NotQ<int> theQ = sQRead_HexDigit(fChanR, fChanU))
+						if (NotQ<int> theQ = sQRead_HexDigit(fChanRU))
 							{
 							sThrow_ParseException(string8("Illegal non-hex digit in \"\\")
 								+ char(theCP) + "\" escape sequence");

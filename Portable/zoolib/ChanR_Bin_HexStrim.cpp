@@ -27,26 +27,12 @@ namespace ZooLib {
 #pragma mark - ChanR_Bin_HexStrim
 
 ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU)
-:	fChanR(iChanRU)
-,	fChanU(iChanRU)
+:	fChanRU(iChanRU)
 ,	fAllowUnderscore(false)
 	{}
 
 ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanRU_UTF& iChanRU)
-:	fChanR(iChanRU)
-,	fChanU(iChanRU)
-,	fAllowUnderscore(iAllowUnderscore)
-	{}
-
-ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-:	fChanR(iChanR)
-,	fChanU(iChanU)
-,	fAllowUnderscore(false)
-	{}
-
-ChanR_Bin_HexStrim::ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-:	fChanR(iChanR)
-,	fChanU(iChanU)
+:	fChanRU(iChanRU)
 ,	fAllowUnderscore(iAllowUnderscore)
 	{}
 
@@ -61,22 +47,22 @@ size_t ChanR_Bin_HexStrim::Read(byte* oDest, size_t iCount)
 
 	while (iCount)
 		{
-		sSkip_WSAndCPlusPlusComments(fChanR, fChanU);
+		sSkip_WSAndCPlusPlusComments(fChanRU);
 
-		ZQ<int> firstDigitQ = sQRead_HexDigit(fChanR, fChanU);
+		ZQ<int> firstDigitQ = sQRead_HexDigit(fChanRU);
 		if (not firstDigitQ)
 			{
-			if (not fAllowUnderscore || not sTryRead_CP('_', fChanR, fChanU))
+			if (not fAllowUnderscore || not sTryRead_CP('_', fChanRU))
 				break;
 			firstDigitQ = 0;
 			}
 
-		sSkip_WSAndCPlusPlusComments(fChanR, fChanU);
+		sSkip_WSAndCPlusPlusComments(fChanRU);
 
-		ZQ<int> secondDigitQ = sQRead_HexDigit(fChanR, fChanU);
+		ZQ<int> secondDigitQ = sQRead_HexDigit(fChanRU);
 		if (not secondDigitQ)
 			{
-			if (not fAllowUnderscore || not sTryRead_CP('_', fChanR, fChanU))
+			if (not fAllowUnderscore || not sTryRead_CP('_', fChanRU))
 				sThrow_ParseException("Could not read second nibble of byte");
 			secondDigitQ = 0;
 			}

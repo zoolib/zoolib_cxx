@@ -138,22 +138,18 @@ bool sSkip_Until(const ChanR<EE>& iChanR, const EE& iTerminator)
 #pragma mark -
 
 template <class EE>
-bool sTryRead(EE iEE, const ChanR<EE>& iChanR, const ChanU<EE>& iChanU)
+bool sTryRead(EE iEE, const ChanRU<EE>& iChanRU)
 	{
-	if (NotQ<EE> theElement = sQRead(iChanR))
+	if (NotQ<EE> theElement = sQRead(iChanRU))
 		{ return false; }
 	else if (*theElement == iEE)
 		{ return true; }
 	else
 		{
-		sUnread(iChanU, *theElement);
+		sUnread(iChanRU, *theElement);
 		return false;
 		}	
 	}
-
-template <class EE>
-bool sTryRead(EE iEE, const ChanRU<EE>& iChanRU)
-	{ return sTryRead(iEE, iChanRU, iChanRU); }
 
 } // namespace ZooLib
 

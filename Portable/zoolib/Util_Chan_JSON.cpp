@@ -75,7 +75,7 @@ string sPrettyName(const std::type_info& iTI)
 	return iTI.name();
 	}
 
-bool sTryRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_Identifier(const ChanRU_UTF& iChanRU,
 	string* oStringLC, string* oStringExact)
 	{
 	if (oStringExact)
@@ -87,13 +87,13 @@ bool sTryRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	bool gotAny = false;
 	for (;;)
 		{
-		const ZQ<UTF32> theCPQ = sQRead(iChanR);
+		const ZQ<UTF32> theCPQ = sQRead(iChanRU);
 		if (not theCPQ)
 			break;
 		const UTF32 theCP = *theCPQ;
 		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
-			sUnread(iChanU, theCP);
+			sUnread(iChanRU, theCP);
 			break;
 			}
 
@@ -107,63 +107,63 @@ bool sTryRead_Identifier(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 	return gotAny;
 	}
 
-bool sTryRead_PropertyName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_PropertyName(const ChanRU_UTF& iChanRU,
 	string& oName, bool iAllowUnquoted)
 	{
 	using namespace Util_Chan;
 
-	if (sTryRead_EscapedString('"', iChanR, iChanU, oName))
+	if (sTryRead_EscapedString('"', iChanRU, oName))
 		return true;
 
-	if (sTryRead_EscapedString('\'', iChanR, iChanU, oName))
+	if (sTryRead_EscapedString('\'', iChanRU, oName))
 		return true;
 
-	if (iAllowUnquoted && sTryRead_Identifier(iChanR, iChanU, nullptr, &oName))
+	if (iAllowUnquoted && sTryRead_Identifier(iChanRU, nullptr, &oName))
 		return true;
 
 	return false;
 	}
 
-bool sTryRead_JSONString(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 	string& oString)
 	{
 	using namespace Util_Chan;
 
-	if (sTryRead_CP('"', iChanR, iChanU))
+	if (sTryRead_CP('"', iChanRU))
 		{
 		// We've got a string, delimited by ".
 		for (;;)
 			{
 			string tempString;
-			sRead_EscapedString('"', iChanR, iChanU, tempString);
+			sRead_EscapedString('"', iChanRU, tempString);
 
-			if (not sTryRead_CP('"', iChanR, iChanU))
+			if (not sTryRead_CP('"', iChanRU))
 				sThrow_ParseException("Expected '\"' to close a string");
 
 			oString += tempString;
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP('"', iChanR, iChanU))
+			if (not sTryRead_CP('"', iChanRU))
 				return true;
 			}
 		}
-	else if (sTryRead_CP('\'', iChanR, iChanU))
+	else if (sTryRead_CP('\'', iChanRU))
 		{
 		// We've got a string, delimited by '.
 		for (;;)
 			{
 			string tempString;
-			sRead_EscapedString('\'', iChanR, iChanU, tempString);
+			sRead_EscapedString('\'', iChanRU, tempString);
 
-			if (not sTryRead_CP('\'', iChanR, iChanU))
+			if (not sTryRead_CP('\'', iChanRU))
 				sThrow_ParseException("Expected \"'\" to close a string");
 
 			oString += tempString;
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP('\'', iChanR, iChanU))
+			if (not sTryRead_CP('\'', iChanRU))
 				return true;
 			}
 		}
@@ -430,10 +430,10 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		}
 	}
 
-ZQ<string8> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU)
 	{
 	string8 theString8;
-	if (not sTryRead_PropertyName(iChanR, iChanU, theString8, true))
+	if (not sTryRead_PropertyName(iChanRU, theString8, true))
 		return null;
 	return theString8;
 	}

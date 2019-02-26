@@ -171,7 +171,7 @@ void sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			{
 			iChanRU.Advance();
 			int64 theInt64;
-			if (not Util_Chan::sTryRead_SignedDecimalInteger(iChanRU, iChanRU, theInt64))
+			if (not Util_Chan::sTryRead_SignedDecimalInteger(iChanRU, theInt64))
 				sThrow_ParseException("Expected valid integer");
 			sPush(theInt64, iChanW);
 			spSkipThenEndOrThrow(iChanRU, "integer");
@@ -182,7 +182,7 @@ void sPull_XMLPList_Push(ML::ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 			int64 theInt64;
 			double theDouble;
 			bool isDouble;
-			if (not Util_Chan::sTryRead_SignedGenericNumber(iChanRU, iChanRU, theInt64, theDouble, isDouble))
+			if (not Util_Chan::sTryRead_SignedGenericNumber(iChanRU, theInt64, theDouble, isDouble))
 				sThrow_ParseException("Expected valid real");
 
 			if (isDouble)

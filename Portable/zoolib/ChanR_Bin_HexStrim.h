@@ -38,15 +38,12 @@ class ChanR_Bin_HexStrim
 public:
 	ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU);
 	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanRU_UTF& iChanRU);
-	ChanR_Bin_HexStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
-	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
 	~ChanR_Bin_HexStrim();
 
 	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:
-	const ChanR_UTF& fChanR;
-	const ChanU_UTF& fChanU;
+	const ChanRU_UTF& fChanRU;
 	bool fAllowUnderscore;
 	};
 

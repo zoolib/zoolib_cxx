@@ -50,13 +50,13 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 
-static bool spPull_JSON_Other_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Any& iChanW)
+static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
 	{
 	int64 asInt64;
 	double asDouble;
 	bool isDouble;
 
-	if (Util_Chan::sTryRead_SignedGenericNumber(iChanR, iChanU, asInt64, asDouble, isDouble))
+	if (Util_Chan::sTryRead_SignedGenericNumber(iChanRU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
 			sPush(asDouble, iChanW);
@@ -65,19 +65,19 @@ static bool spPull_JSON_Other_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iCh
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("null", iChanR, iChanU))
+	if (Util_Chan::sTryRead_CaselessString("null", iChanRU))
 		{
 		sPush(Any(null), iChanW);
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("false", iChanR, iChanU))
+	if (Util_Chan::sTryRead_CaselessString("false", iChanRU))
 		{
 		sPush(false, iChanW);
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("true", iChanR, iChanU))
+	if (Util_Chan::sTryRead_CaselessString("true", iChanRU))
 		{
 		sPush(true, iChanW);
 		return true;
@@ -91,10 +91,10 @@ static bool spPull_JSON_Other_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iCh
 
 static const UTF32 spThreeQuotes[] = { '\"', '\"', '\"' };
 
-static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 	UTF32 iTerminator, const ChanW_UTF& iChanW)
 	{
-	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanR);
+	ChanR_XX_Boundary<UTF32> theChanR_Boundary(spThreeQuotes, countof(spThreeQuotes), iChanRU);
 	int quotesSeen = 1;
 	for (;;)
 		{
@@ -102,9 +102,9 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 			{
 			case 0:
 				{
-				sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+				sSkip_WSAndCPlusPlusComments(iChanRU);
 
-				if (sTryRead_CP(iTerminator, iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanRU))
 					quotesSeen = 1;
 				else
 					return true;
@@ -112,7 +112,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				}
 			case 1:
 				{
-				if (sTryRead_CP(iTerminator, iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanRU))
 					{
 					// We have two quotes in a row.
 					quotesSeen = 2;
@@ -120,9 +120,9 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				else
 					{
 					const std::pair<int64,int64> result =
-						sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanR, iChanU), iChanW);
+						sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanRU), iChanW);
 
-					if (sTryRead_CP(iTerminator, iChanR, iChanU))
+					if (sTryRead_CP(iTerminator, iChanRU))
 						quotesSeen = 0;
 					else if (result.first == 0)
 						sThrow_ParseException(string("Expected ") + iTerminator + " to close a string");
@@ -131,17 +131,17 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 				}
 			case 2:
 				{
-				if (sTryRead_CP(iTerminator, iChanR, iChanU))
+				if (sTryRead_CP(iTerminator, iChanRU))
 					{
 					// We have three quotes in a row.
 					quotesSeen = 3;
-					if (ZQ<UTF32,false> theCPQ = sQRead(iChanR))
+					if (ZQ<UTF32,false> theCPQ = sQRead(iChanRU))
 						{
 						if (not Unicode::sIsEOL(*theCPQ))
 							{
 							// And the following character was *not* an EOL, so we'll treat it as
 							// part of the string.
-							sUnread(iChanU, *theCPQ);
+							sUnread(iChanRU, *theCPQ);
 							}
 						}
 					}
@@ -174,12 +174,12 @@ static bool spPull_JSON_String_Push_UTF(const ChanR_UTF& iChanR, const ChanU_UTF
 		}
 	}
 
-static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU,
 	UTF32 iTerminator, const ChanW_Any& iChanW)
 	{
 #if 1
 	string theString;
-	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU,
+	bool result = spPull_JSON_String_Push_UTF(iChanRU,
 		iTerminator, ChanW_UTF_string<UTF8>(&theString));
 	sPush(theString, iChanW);
 	return result;
@@ -188,7 +188,7 @@ static bool spPull_JSON_String_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iC
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 	sFlush(iChanW);
 
-	bool result = spPull_JSON_String_Push_UTF(iChanR, iChanU, iTerminator, *thePullPushPair.first);
+	bool result = spPull_JSON_String_Push_UTF(iChanRU, iTerminator, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	return result;
 #endif
@@ -217,12 +217,12 @@ static bool spPull_Base64_Push_Bin(const ChanR_UTF& iChanR, const ChanW_Bin& iCh
 // =================================================================================================
 #pragma mark -
 
-static bool spPull_Hex_Push_Bin(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU, const ChanW_Bin& iChanW)
+static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iChanW)
 	{
-	std::pair<int64,int64> counts = sCopyAll(ChanR_Bin_HexStrim(iChanR, iChanU), iChanW);
+	std::pair<int64,int64> counts = sCopyAll(ChanR_Bin_HexStrim(iChanRU), iChanW);
 	if (counts.first != counts.second)
 		return false;
-	if (not sTryRead_CP('>', iChanR, iChanU))
+	if (not sTryRead_CP('>', iChanRU))
 		sThrow_ParseException("Expected '>' to close a hex data");
 	return true;
 	}
@@ -230,35 +230,32 @@ static bool spPull_Hex_Push_Bin(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU
 // =================================================================================================
 #pragma mark - sPull
 
-bool sPull_JSON_Push(const ChanRU_UTF& iChanRU, const ReadOptions& iRO, const ChanW_Any& iChanW)
-	{ return sPull_JSON_Push(iChanRU, iChanRU, iRO, iChanW); }
-
-bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
 	const ReadOptions& iRO,
 	const ChanW_Any& iChanW)
 	{
-	sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+	sSkip_WSAndCPlusPlusComments(iChanRU);
 
-	if (sTryRead_CP('[', iChanR, iChanU))
+	if (sTryRead_CP('[', iChanRU))
 		{
 		sPush(kStartSeq, iChanW);
 		for (;;)
 			{
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-			if (sTryRead_CP(']', iChanR, iChanU))
+			sSkip_WSAndCPlusPlusComments(iChanRU);
+			if (sTryRead_CP(']', iChanRU))
 				{
 				sPush(kEnd, iChanW);
 				return true;
 				}
 
-			if (not sPull_JSON_Push(iChanR, iChanU, iRO, iChanW))
+			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (sTryRead_CP(',', iChanR, iChanU))
+			if (sTryRead_CP(',', iChanRU))
 				{}
-			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanR, iChanU))
+			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
 				{}
 			else if (iRO.fLooseSeparators.DGet(false))
 				{}
@@ -268,46 +265,46 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 				sThrow_ParseException("Require ',' to separate array elements");
 			}
 		}
-	else if (sTryRead_CP('{', iChanR, iChanU))
+	else if (sTryRead_CP('{', iChanRU))
 		{
 		sPush(kStartMap, iChanW);
 		for (;;)
 			{
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-			if (sTryRead_CP('}', iChanR, iChanU))
+			sSkip_WSAndCPlusPlusComments(iChanRU);
+			if (sTryRead_CP('}', iChanRU))
 				{
 				sPush(kEnd, iChanW);
 				return true;
 				}
 
 			string theName;
-			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanR, iChanU,
+			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanRU,
 				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
 				{ sThrow_ParseException("Expected a member name"); }
 
 			sPush(sName(theName), iChanW);
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP(':', iChanR, iChanU))
+			if (not sTryRead_CP(':', iChanRU))
 				{
 				if (not iRO.fAllowEquals.DGet(false))
 					sThrow_ParseException("Expected ':' after a member name");
 
-				if (not sTryRead_CP('=', iChanR, iChanU))
+				if (not sTryRead_CP('=', iChanRU))
 					sThrow_ParseException("Expected ':' or '=' after a member name");
 				}
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sPull_JSON_Push(iChanR, iChanU, iRO, iChanW))
+			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
-			sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (sTryRead_CP(',', iChanR, iChanU))
+			if (sTryRead_CP(',', iChanRU))
 				{}
-			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanR, iChanU))
+			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
 				{}
 			else if (iRO.fLooseSeparators.DGet(false))
 				{}
@@ -317,29 +314,29 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 				sThrow_ParseException("Require ',' to separate object elements");
 			}
 		}
-	else if (sTryRead_CP('"', iChanR, iChanU))
+	else if (sTryRead_CP('"', iChanRU))
 		{
 		// Could use YadStrimmerR_JSON and sPullPush_UTF, but this is a good chance to
 		// demo how easy PullPush makes it to do fiddly source parsing.
-		return spPull_JSON_String_Push(iChanR, iChanU, '"', iChanW);
+		return spPull_JSON_String_Push(iChanRU, '"', iChanW);
 		}
-	else if (sTryRead_CP('\'', iChanR, iChanU))
+	else if (sTryRead_CP('\'', iChanRU))
 		{
-		return spPull_JSON_String_Push(iChanR, iChanU, '\'', iChanW);
+		return spPull_JSON_String_Push(iChanRU, '\'', iChanW);
 		}
-	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanR, iChanU))
+	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanRU))
 		{
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		sSkip_WSAndCPlusPlusComments(iChanRU);
 
 		PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 		sPush(sGetClear(thePullPushPair.second), iChanW);
 		sFlush(iChanW);
 
 		bool result;
-		if (sTryRead_CP('=', iChanR, iChanU))
-			result = spPull_Base64_Push_Bin(iChanR, *thePullPushPair.first);
+		if (sTryRead_CP('=', iChanRU))
+			result = spPull_Base64_Push_Bin(iChanRU, *thePullPushPair.first);
 		else
-			result = spPull_Hex_Push_Bin(iChanR, iChanU, *thePullPushPair.first);
+			result = spPull_Hex_Push_Bin(iChanRU, *thePullPushPair.first);
 
 		sDisconnectWrite(*thePullPushPair.first);
 
@@ -347,7 +344,7 @@ bool sPull_JSON_Push(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
 		}
 	else
 		{
-		return spPull_JSON_Other_Push(iChanR, iChanU, iChanW);
+		return spPull_JSON_Other_Push(iChanRU, iChanW);
 		}
 	}
 

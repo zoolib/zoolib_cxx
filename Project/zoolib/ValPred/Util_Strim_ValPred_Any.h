@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ValPred_Util_Strim_ValPred_Any_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/ZQ.h"
 
@@ -39,7 +38,7 @@ namespace Util_Strim_ValPred_Any {
 
 void sToStrim(const ValPred& iValPred, const ChanW_UTF& iStrimW);
 
-ZQ<ValPred> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_ValPred_Any
 

@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_UTF_Escaped_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {
@@ -35,7 +34,7 @@ class ChanR_UTF_Escaped
 :	public ChanR_UTF
 	{
 public:
-	ChanR_UTF_Escaped(UTF32 iDelimiter, const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	ChanR_UTF_Escaped(UTF32 iDelimiter, const ChanRU_UTF& iChan);
 	~ChanR_UTF_Escaped();
 
 // From ChanR_UTF
@@ -43,8 +42,7 @@ public:
 
 protected:
 	const UTF32 fDelimiter;
-	const ChanR_UTF& fChanR;
-	const ChanU_UTF& fChanU;
+	const ChanRU_UTF& fChanRU;
 	};
 
 // =================================================================================================

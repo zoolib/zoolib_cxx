@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/ZQ.h"
 
@@ -36,12 +35,12 @@ namespace Util_Strim_Expr_Bool {
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool
 
-typedef Callable<ZRef<Expr_Bool>(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)>
+typedef Callable<ZRef<Expr_Bool>(const ChanRU_UTF& iChanRU)>
 	Callable_Terminal;
 
 ZRef<Expr_Bool> sQFromStrim(
 	const ZRef<Callable_Terminal>& iCallable_Terminal,
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+	const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_Expr_Bool
 } // namespace ZooLib

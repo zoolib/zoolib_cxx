@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable.h"
 #include "zoolib/Compat_NonCopyable.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/Channer_UTF.h"
 
 #include <vector>
@@ -65,9 +64,8 @@ class ChanRU_UTF
 :	public ZooLib::ChanRU<UTF32>
 	{
 public:
-	ChanRU_UTF(const ZooLib::ChanRU<UTF32>& iChanRU);
-	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
-	ChanRU_UTF(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChan);
+	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanU,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
 	~ChanRU_UTF();
 
@@ -94,8 +92,7 @@ private:
 	void pAdvance() const;
 	void pAdvance();
 
-	const ChanR_UTF& fChanR;
-	const ChanU_UTF& fChanU;
+	const ZooLib::ChanRU_UTF& fChanRU;
 
 	bool fRecognizeEntitiesInAttributeValues;
 

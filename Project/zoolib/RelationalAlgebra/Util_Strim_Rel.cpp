@@ -222,14 +222,14 @@ typedef pair<ZRef<Expr_Rel>,ZRef<Expr_Rel> > RelPair;
 
 static void spRead_WSComma(const ChanRU_UTF& iChanRU, const string8& iMessage)
 	{
-	sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
-	if (not sTryRead_CP(',', iChanRU, iChanRU))
+	sSkip_WSAndCPlusPlusComments(iChanRU);
+	if (not sTryRead_CP(',', iChanRU))
 		throw ParseException("Expected ','" + iMessage);
 	}
 
 static ZQ<RelPair> spQReadPair(const ChanRU_UTF& iChanRU, const string& iMessage)
 	{
-	sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+	sSkip_WSAndCPlusPlusComments(iChanRU);
 	if (ZRef<Expr_Rel> left = sQFromStrim(iChanRU))
 		{
 		spRead_WSComma(iChanRU, iMessage);
@@ -241,16 +241,16 @@ static ZQ<RelPair> spQReadPair(const ChanRU_UTF& iChanRU, const string& iMessage
 
 ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 	{
-	sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
-	if (NotQ<string8> theNameQ = Util_Chan_JSON::sQRead_PropName(iChanRU, iChanRU))
+	sSkip_WSAndCPlusPlusComments(iChanRU);
+	if (NotQ<string8> theNameQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 		{ return null; }
 	else
 		{
-		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
-		if (not sTryRead_CP('(', iChanRU, iChanRU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (not sTryRead_CP('(', iChanRU))
 			throw ParseException("Expected '(' after " + *theNameQ);
 
-		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+		sSkip_WSAndCPlusPlusComments(iChanRU);
 
 		using Util_string::sEquali;
 
@@ -264,20 +264,20 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Concrete"))
 			{
-			if (NotQ<ConcreteHead> theConcreteHeadQ = Util_Strim_RelHead::sQFromStrim_ConcreteHead(iChanRU, iChanRU))
+			if (NotQ<ConcreteHead> theConcreteHeadQ = Util_Strim_RelHead::sQFromStrim_ConcreteHead(iChanRU))
 				throw ParseException("Expected ConcreteHead param to Concrete");
 			else
 				result = sConcrete(*theConcreteHeadQ);
 			}
 		else if (sEquali(*theNameQ, "Const"))
 			{
-			if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanRU, iChanRU))
+			if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanRU))
 				throw ParseException("Expected ColName as first param in Const");
 			else
 				{
 				spRead_WSComma(iChanRU, " after ColName in Const");
 
-				if (NotQ<Any> theValQ = Util_Any_JSON::sQRead(iChanRU, iChanRU))
+				if (NotQ<Any> theValQ = Util_Any_JSON::sQRead(iChanRU))
 					throw ParseException("Expected value as second param in Const");
 				else
 					result = sConst(*theColNameQ, *theValQ);
@@ -303,26 +303,26 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				{
 				spRead_WSComma(iChanRU, " after Rel in Embed");
 
-				sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+				sSkip_WSAndCPlusPlusComments(iChanRU);
 
-				const ZQ<RelHead> theBoundNamesQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanRU, iChanRU);
+				const ZQ<RelHead> theBoundNamesQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanRU);
 				if (theBoundNamesQ)
 					{
 					spRead_WSComma(iChanRU, " after BoundNames in Embed");
 
-					sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+					sSkip_WSAndCPlusPlusComments(iChanRU);
 					}
 
-				if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanRU, iChanRU))
+				if (NotQ<ColName> theColNameQ = Util_Strim_RelHead::sQRead_PropName(iChanRU))
 					throw ParseException("Expected ColName as first param in Embed");
 				else
 					{
-					sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+					sSkip_WSAndCPlusPlusComments(iChanRU);
 
-					if (not sTryRead_CP('=', iChanRU, iChanRU))
+					if (not sTryRead_CP('=', iChanRU))
 						throw ParseException("Expected '='");
 
-					sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
+					sSkip_WSAndCPlusPlusComments(iChanRU);
 
 					if (ZRef<Expr_Rel,false> innerRel = sFromStrim(iChanRU))
 						throw ParseException("Expected Rel as second param in Embed");
@@ -344,7 +344,7 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Project"))
 			{
-			if (NotQ<RelHead> theRelHeadQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanRU, iChanRU))
+			if (NotQ<RelHead> theRelHeadQ = Util_Strim_RelHead::sQFromStrim_RelHead(iChanRU))
 				throw ParseException("Expected RelHead param to Project");
 			else
 				{
@@ -358,7 +358,7 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Rename"))
 			{
-			if (NotQ<pair<ColName,ColName> > theRenameQ = Util_Strim_RelHead::sQFromStrim_Rename(iChanRU, iChanRU))
+			if (NotQ<pair<ColName,ColName> > theRenameQ = Util_Strim_RelHead::sQFromStrim_Rename(iChanRU))
 				{ throw ParseException("Expected Rename param to Rename"); }
 			else
 				{
@@ -372,8 +372,8 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Restrict"))
 			{
-			sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
-			if (ZRef<Expr_Bool,false> theExpr = Util_Strim_Expr_Bool_ValPred::sQFromStrim(iChanRU, iChanRU))
+			sSkip_WSAndCPlusPlusComments(iChanRU);
+			if (ZRef<Expr_Bool,false> theExpr = Util_Strim_Expr_Bool_ValPred::sQFromStrim(iChanRU))
 				{ throw ParseException("Expected Expr_Bool param to Restrict"); }
 			else
 				{
@@ -401,8 +401,8 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			throw ParseException("Unexpected name: " + *theNameQ);
 			}
 
-		sSkip_WSAndCPlusPlusComments(iChanRU, iChanRU);
-		if (not sTryRead_CP(')', iChanRU, iChanRU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (not sTryRead_CP(')', iChanRU))
 			throw ParseException("Expected ')' after " + *theNameQ);
 		return result;
 		}

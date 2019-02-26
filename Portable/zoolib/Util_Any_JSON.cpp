@@ -55,22 +55,16 @@ static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChanne
 	return thePromise->GetDelivery();
 	}
 
-ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU,
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	const PullPush_JSON::ReadOptions& iRO)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
 	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
-	sPull_JSON_Push(iChanR, iChanU, iRO, *thePair.first);
+	sPull_JSON_Push(iChanRU, iRO, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();
 	}
-
-ZQ<Any> sQRead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
-	{ return sQRead(iChanR, iChanU, Util_Chan_JSON::sReadOptions_Extended()); }
-
-ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO)
-	{ return sQRead(iChanRU, iChanRU, iRO); }
 
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 	{ return sQRead(iChanRU, Util_Chan_JSON::sReadOptions_Extended()); }

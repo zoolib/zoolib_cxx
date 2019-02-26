@@ -63,92 +63,91 @@ void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
 	s << "]";
 	}
 
-ZQ<ColName> sQRead_PropName(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<ColName> sQRead_PropName(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('@', iChanR, iChanU))
+	if (not sTryRead_CP('@', iChanRU))
 		return null;
 
-	if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
+	if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 		throw ParseException("Expected PropName after '@'");
 	else
 		return *theQ;
 	}
 
-ZQ<RelHead> sQFromStrim_RelHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('[', iChanR, iChanU))
+	if (not sTryRead_CP('[', iChanRU))
 		return null;
 
 	RelHead result;
 
 	for (;;)
 		{
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (NotQ<string8> theQ = sQRead_PropName(iChanR, iChanU))
+		if (NotQ<string8> theQ = sQRead_PropName(iChanRU))
 			throw ParseException("Expected PropName");
 		else
 			result |= *theQ;
 
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-		if (not sTryRead_CP(',', iChanR, iChanU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (not sTryRead_CP(',', iChanRU))
 			break;
 		}
 
-	if (not sTryRead_CP(']', iChanR, iChanU))
+	if (not sTryRead_CP(']', iChanRU))
 			throw ParseException("Expected ']'");
 	return result;
 	}
 
-ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(
-	const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (NotQ<string8> theQ0 = sQRead_PropName(iChanR, iChanU))
+	if (NotQ<string8> theQ0 = sQRead_PropName(iChanRU))
 		{ return null; }
 	else
 		{
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_String("<--", iChanR, iChanU))
+		if (not sTryRead_String("<--", iChanRU))
 			throw ParseException("Expected <-- after first PropName");
 
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
+		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (NotQ<string8> theQ1 = sQRead_PropName(iChanR, iChanU))
+		if (NotQ<string8> theQ1 = sQRead_PropName(iChanRU))
 			throw ParseException("Expected second PropName after <--");
 		else
 			return std::pair<ColName,ColName>(*theQ0, *theQ1);
 		}
 	}
 
-ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU)
+ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('[', iChanR, iChanU))
+	if (not sTryRead_CP('[', iChanRU))
 		return null;
 
 	ConcreteHead result;
 
 	for (;;)
 		{
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-		if (sTryRead_CP('@', iChanR, iChanU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (sTryRead_CP('@', iChanRU))
 			{
-			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
+			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 				throw ParseException("Expected PropName after '@'");
 			else
 				result[*theQ] = true;
 			}
-		else if (sTryRead_CP('?', iChanR, iChanU))
+		else if (sTryRead_CP('?', iChanRU))
 			{
-			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanR, iChanU))
+			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 				throw ParseException("Expected PropName after '?'");
 			else
 				result[*theQ] = false;
@@ -157,12 +156,12 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanR_UTF& iChanR, const ChanU_U
 			{
 			throw ParseException("Expected PropName");
 			}
-		sSkip_WSAndCPlusPlusComments(iChanR, iChanU);
-		if (not sTryRead_CP(',', iChanR, iChanU))
+		sSkip_WSAndCPlusPlusComments(iChanRU);
+		if (not sTryRead_CP(',', iChanRU))
 			break;
 		}
 
-	if (not sTryRead_CP(']', iChanR, iChanU))
+	if (not sTryRead_CP(']', iChanRU))
 			throw ParseException("Expected ']'");
 	return result;
 	}

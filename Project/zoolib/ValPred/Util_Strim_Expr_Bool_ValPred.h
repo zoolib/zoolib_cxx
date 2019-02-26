@@ -22,8 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_Strim_Expr_Bool_ValPred_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanU_UTF.h"
+#include "zoolib/ChanRU_UTF.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
 
@@ -33,7 +32,7 @@ namespace Util_Strim_Expr_Bool_ValPred {
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool_ValPred
 
-ZRef<Expr_Bool> sQFromStrim(const ChanR_UTF& iChanR, const ChanU_UTF& iChanU);
+ZRef<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_Expr_Bool_ValPred
 } // namespace ZooLib
