@@ -57,15 +57,15 @@ static uint32 spHexCharToUInt(char iChar)
 	return 0;
 	}
 
-static bool spQReadDigit(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int& oDigit)
+static bool spQReadDigit(const ChanRU_Bin& iChanRU, int& oDigit)
 	{
 	byte readChar;
-	if (not sQRead(iChanR, readChar))
+	if (not sQRead(iChanRU, readChar))
 		return false;
 
 	if (readChar < '0' || readChar > '9')
 		{
-		sUnread(iChanU, readChar);
+		sUnread(iChanRU, readChar);
 		return false;
 		}
 
@@ -73,13 +73,13 @@ static bool spQReadDigit(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int& 
 	return true;
 	}
 
-static bool spQReadInt32(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int32* oInt32)
+static bool spQReadInt32(const ChanRU_Bin& iChanRU, int32* oInt32)
 	{
 	if (oInt32)
 		*oInt32 = 0;
 
 	int digit;
-	if (not spQReadDigit(iChanR, iChanU, digit))
+	if (not spQReadDigit(iChanRU, digit))
 		return false;
 
 	for (;;)
@@ -89,20 +89,20 @@ static bool spQReadInt32(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int32
 			*oInt32 *= 10;
 			*oInt32 += digit;
 			}
-		if (not spQReadDigit(iChanR, iChanU, digit))
+		if (not spQReadDigit(iChanRU, digit))
 			break;
 		}
 
 	return true;
 	}
 
-static bool spQReadInt64(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int64* oInt64)
+static bool spQReadInt64(const ChanRU_Bin& iChanRU, int64* oInt64)
 	{
 	if (oInt64)
 		*oInt64 = 0;
 
 	int digit;
-	if (not spQReadDigit(iChanR, iChanU, digit))
+	if (not spQReadDigit(iChanRU, digit))
 		return false;
 
 	for (;;)
@@ -112,7 +112,7 @@ static bool spQReadInt64(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int64
 			*oInt64 *= 10;
 			*oInt64 += digit;
 			}
-		if (not spQReadDigit(iChanR, iChanU, digit))
+		if (not spQReadDigit(iChanRU, digit))
 			break;
 		}
 
@@ -241,26 +241,26 @@ bool sQReadRequest(const ChanR_Bin& iChanR, string* oMethod, string* oURL, strin
 	if (oError)
 		oError->resize(0);
 
-	if (not sQReadToken(theChanRU, theChanRU, nullptr, oMethod))
+	if (not sQReadToken(theChanRU, nullptr, oMethod))
 		{
 		if (oError)
 			*oError = "Failed to read method";
 		return false;
 		}
 
-	sSkipLWS(theChanRU, theChanRU);
+	sSkipLWS(theChanRU);
 
-	if (not sQReadURI(theChanRU, theChanRU, oURL))
+	if (not sQReadURI(theChanRU, oURL))
 		{
 		if (oError)
 			*oError = "Failed to read URI";
 		return false;
 		}
 
-	sSkipLWS(theChanRU, theChanRU);
+	sSkipLWS(theChanRU);
 
 	int32 major, minor;
-	if (not sQReadHTTPVersion(theChanRU, theChanRU, &major, &minor))
+	if (not sQReadHTTPVersion(theChanRU, &major, &minor))
 		{
 		if (oError)
 			*oError = "Failed to read version";
@@ -271,28 +271,28 @@ bool sQReadRequest(const ChanR_Bin& iChanR, string* oMethod, string* oURL, strin
 	return true;
 	}
 
-bool sQReadResponse(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadResponse(const ChanRU_Bin& iChanRU,
 	int32* oResultCode, string* oResultMessage)
 	{
 	if (oResultMessage)
 		oResultMessage->resize(0);
 
 	int32 major, minor;
-	if (not sQReadHTTPVersion(iChanR, iChanU, &major, &minor))
+	if (not sQReadHTTPVersion(iChanRU, &major, &minor))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not spQReadInt32(iChanR, iChanU, oResultCode))
+	if (not spQReadInt32(iChanRU, oResultCode))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
 	// Suck up the remainder of the stream as the result message.
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 		if (readChar == '\n')
 			break;
@@ -312,25 +312,25 @@ bool sQReadHeaderNoParsing(const ChanR_Bin& iChanR, Map* oFields)
 		{
 		MIME::ChanR_Bin_Line theSIL(iChanR);
 		ChanRU_XX_Unreader<byte> theChanRU(theSIL);
-		const bool gotOne = sQReadHeaderLineNoParsing(theChanRU, theChanRU, oFields);
+		const bool gotOne = sQReadHeaderLineNoParsing(theChanRU, oFields);
 		sSkipAll(theChanRU);
 		if (not gotOne)
 			return true;
 		}
 	}
 
-bool sQReadHeaderLineNoParsing(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQReadHeaderLineNoParsing(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	string fieldNameExact;
-	if (not sQReadFieldName(iChanR, iChanU, nullptr, &fieldNameExact))
+	if (not sQReadFieldName(iChanRU, nullptr, &fieldNameExact))
 		return false;
 
 	if (not fieldNameExact.size())
 		return true;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 	string fieldBody;
-	sCopyAll(iChanR, ChanW_Bin_string(&fieldBody));
+	sCopyAll(iChanRU, ChanW_Bin_string(&fieldBody));
 	if (ioFields)
 		spAppend(*ioFields, fieldNameExact, fieldBody);
 
@@ -346,17 +346,17 @@ bool sQReadHeader(const ChanR_Bin& iChanR, Map* oFields)
 		{
 		MIME::ChanR_Bin_Line theSIL(iChanR);
 		ChanRU_XX_Unreader<byte> theChanRU(theSIL);
-		const bool gotOne = sQReadHeaderLine(theChanRU, theChanRU, oFields);
+		const bool gotOne = sQReadHeaderLine(theChanRU, oFields);
 		sSkipAll(theChanRU);
 		if (not gotOne)
 			return true;
 		}
 	}
 
-bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQReadHeaderLine(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	string fieldName;
-	if (not sQReadFieldName(iChanR, iChanU, &fieldName, nullptr))
+	if (not sQReadFieldName(iChanRU, &fieldName, nullptr))
 		return false;
 
 	if (fieldName.empty())
@@ -366,23 +366,23 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 		{}
 	// -----------------
 	// Request headers
-	else if (fieldName == "accept") sQRead_accept(iChanR, iChanU, ioFields);
+	else if (fieldName == "accept") sQRead_accept(iChanRU, ioFields);
 	else if (fieldName == "accept-charset")
 		{
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
 			string charset;
-			if (not sQReadToken(iChanR, iChanU, &charset, nullptr))
+			if (not sQReadToken(iChanRU, &charset, nullptr))
 				break;
 
 			if (ioFields)
 				spAppend(*ioFields, "accept-charset", charset);
 
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ','))
+			if (not sTryReadChar(iChanRU, ','))
 				break;
 			}
 		}
@@ -390,22 +390,22 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 		{
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
 			string encoding;
-			if (not sQReadToken(iChanR, iChanU, &encoding, nullptr))
+			if (not sQReadToken(iChanRU, &encoding, nullptr))
 				break;
 
 			if (ioFields)
 				spAppend(*ioFields, "accept-encoding", encoding);
 
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ','))
+			if (not sTryReadChar(iChanRU, ','))
 				break;
 			}
 		}
-	else if (fieldName == "accept-language") sQRead_accept_language(iChanR, iChanU, ioFields);
+	else if (fieldName == "accept-language") sQRead_accept_language(iChanRU, ioFields);
 //	else if (fieldName == "authorization")
 //	else if (fieldName == "from")
 //	else if (fieldName == "host")
@@ -416,7 +416,7 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 //	else if (fieldName == "if-unmodified-since")
 //	else if (fieldName == "max-forwards")
 //	else if (fieldName == "proxy-authorization")
-	else if (fieldName == "range") sQRead_range(iChanR, iChanU, ioFields);
+	else if (fieldName == "range") sQRead_range(iChanRU, ioFields);
 //	else if (fieldName == "referer")
 //	else if (fieldName == "user-agent")
 	else if (fieldName == "cookie")
@@ -424,7 +424,7 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 		for (;;)
 			{
 			string cookieName, cookieValue;
-			if (not sQReadParameter_Cookie(iChanR, iChanU, nullptr, &cookieValue, &cookieName))
+			if (not sQReadParameter_Cookie(iChanRU, nullptr, &cookieValue, &cookieName))
 				break;
 
 			if (ioFields)
@@ -434,9 +434,9 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 				ioFields->Set("cookie", cookieMap);
 				}
 
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ';'))
+			if (not sTryReadChar(iChanRU, ';'))
 				break;
 			}
 		}
@@ -455,9 +455,9 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 	// Request/Response headers
 	else if (fieldName == "connection")
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 		string body;
-		if (sQReadToken(iChanR, iChanU, &body, nullptr))
+		if (sQReadToken(iChanRU, &body, nullptr))
 			{
 			if (ioFields)
 				ioFields->Set("connection", body);
@@ -472,18 +472,18 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 		{
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
 			string encoding;
-			if (not sQReadToken(iChanR, iChanU, &encoding, nullptr))
+			if (not sQReadToken(iChanRU, &encoding, nullptr))
 				break;
 
 			if (ioFields)
 				spAppend(*ioFields, "content-encoding", encoding);
 
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ','))
+			if (not sTryReadChar(iChanRU, ','))
 				break;
 			}
 		}
@@ -491,37 +491,37 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 		{
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
 			string language;
-			if (not sQReadToken(iChanR, iChanU, &language, nullptr))
+			if (not sQReadToken(iChanRU, &language, nullptr))
 				break;
 
 			if (ioFields)
 				spAppend(*ioFields, "content-language", language);
 
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ','))
+			if (not sTryReadChar(iChanRU, ','))
 				break;
 			}
 		}
-	else if (fieldName == "content-length") sQRead_content_length(iChanR, iChanU, ioFields);
+	else if (fieldName == "content-length") sQRead_content_length(iChanRU, ioFields);
 //	else if (fieldName == "content-location")
 //	else if (fieldName == "content-md5")
-	else if (fieldName == "content-range") sQRead_content_range(iChanR, iChanU, ioFields);
-	else if (fieldName == "content-type") sQRead_content_type(iChanR, iChanU, ioFields);
+	else if (fieldName == "content-range") sQRead_content_range(iChanRU, ioFields);
+	else if (fieldName == "content-type") sQRead_content_type(iChanRU, ioFields);
 //	else if (fieldName == "etag")
 //	else if (fieldName == "expires")
 //	else if (fieldName == "last-modified")
 //---------------
 	else if (fieldName == "content-disposition")
-		{ sQRead_content_disposition(iChanR, iChanU, ioFields); }
+		{ sQRead_content_disposition(iChanRU, ioFields); }
 	else
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 		string fieldBody;
-		sCopyAll(iChanR, ChanW_Bin_string(&fieldBody));
+		sCopyAll(iChanRU, ChanW_Bin_string(&fieldBody));
 		if (ioFields)
 			spAppend(*ioFields, fieldName, fieldBody);
 		}
@@ -530,13 +530,9 @@ bool sQReadHeaderLine(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioF
 	}
 
 bool sParseQuery(const string& iString, Map& oTuple)
-	{
-	ChanRPos_Bin_string theChanRPos(iString);
-	
-	return sParseQuery(theChanRPos, theChanRPos, oTuple);
-	}
+	{ return sParseQuery(ChanRPos_Bin_string(iString), oTuple); }
 
-bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
+bool sParseQuery(const ChanRU_Bin& iChanRU, Map& oTuple)
 	{
 	for (;;)
 		{
@@ -544,55 +540,54 @@ bool sParseQuery(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
 		string name;
 		for (;;)
 			{
-			if (not sQRead(iChanR, readChar))
+			if (not sQRead(iChanRU, readChar))
 				break;
 
 			if (readChar == '=')
 				{
-				sUnread(iChanU, readChar);
+				sUnread(iChanRU, readChar);
 				break;
 				}
 			name.append(1, readChar);
 			}
 
-		if (not sTryReadChar(iChanR, iChanU, '='))
+		if (not sTryReadChar(iChanRU, '='))
 			break;
 
 		string value;
 		for (;;)
 			{
-			if (not sQRead(iChanR, readChar))
+			if (not sQRead(iChanRU, readChar))
 				break;
 
 			if (readChar == '&')
 				{
-				sUnread(iChanU, readChar);
+				sUnread(iChanRU, readChar);
 				break;
 				}
 			value.append(1, readChar);
 			}
 		oTuple.Set(name, value);
-		if (not sTryReadChar(iChanR, iChanU, '&'))
+		if (not sTryReadChar(iChanRU, '&'))
 			break;
 		}
 	return true;
 	}
 
-bool sDecodeComponent(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& oComponent)
+bool sDecodeComponent(const ChanRU_Bin& iChanRU, string& oComponent)
 	{
 	bool gotAny = false;
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 		gotAny = true;
 		if (readChar == '/')
 			break;
 		if (readChar == '%')
 			{
-			string decodedChars;
-			if (not sQReadDecodedChars(iChanR, iChanU, oComponent))
+			if (not sQReadDecodedChars(iChanRU, oComponent))
 				break;
 			}
 		else
@@ -603,13 +598,13 @@ bool sDecodeComponent(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& 
 	return gotAny;
 	}
 
-Trail sDecodeTrail(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
+Trail sDecodeTrail(const ChanRU_Bin& iChanRU)
 	{
 	Trail result;
 	for (;;)
 		{
 		string component;
-		if (not sDecodeComponent(iChanR, iChanU, component))
+		if (not sDecodeComponent(iChanRU, component))
 			break;
 		if (component.empty())
 			continue;
@@ -629,10 +624,7 @@ Trail sDecodeTrail(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
 	}
 
 Trail sDecodeTrail(const string& iURL)
-	{
-	ChanRPos_Bin_string theChan(iURL);
-	return sDecodeTrail(theChan, theChan);
-	}
+	{ return sDecodeTrail(ChanRPos_Bin_string(iURL)); }
 
 string sEncodeComponent(const string& iString)
 	{
@@ -709,13 +701,13 @@ parameters = {
 }
 </code>
 */
-bool sQRead_accept(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_accept(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	for (;;)
 		{
 		Map parameters;
 		string type, subtype;
-		if (not sQReadMediaType(iChanR, iChanU, &type, &subtype, &parameters, nullptr, nullptr))
+		if (not sQReadMediaType(iChanRU, &type, &subtype, &parameters, nullptr, nullptr))
 			break;
 		Map temp;
 		temp.Set("type", type);
@@ -725,25 +717,25 @@ bool sQRead_accept(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFiel
 		if (ioFields)
 			spAppend(*ioFields, "accept", temp);
 
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
-		if (not sTryReadChar(iChanR, iChanU, ','))
+		if (not sTryReadChar(iChanRU, ','))
 			break;
 		}
 	return true;
 	}
 
-//bool sQRead_accept_charset(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
-//bool sQRead_accept_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+//bool sQRead_accept_charset(const ChanRU_Bin& iChanRU, Map* ioFields);
+//bool sQRead_accept_encoding(const ChanRU_Bin& iChanRU, Map* ioFields);
 
-bool sQRead_accept_language(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_accept_language(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	for (;;)
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		string languageTag;
-		if (not sQReadLanguageTag(iChanR, iChanU, &languageTag))
+		if (not sQReadLanguageTag(iChanRU, &languageTag))
 			break;
 
 		Map temp;
@@ -752,13 +744,13 @@ bool sQRead_accept_language(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Ma
 		Map parameters;
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ';'))
+			if (not sTryReadChar(iChanRU, ';'))
 				break;
 
 			string name, value;
-			if (not sQReadParameter(iChanR, iChanU, &name, &value, nullptr))
+			if (not sQReadParameter(iChanRU, &name, &value, nullptr))
 				break;
 			parameters.Set(name, value);
 			}
@@ -769,22 +761,22 @@ bool sQRead_accept_language(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Ma
 		if (ioFields)
 			spAppend(*ioFields, "accept-language", temp);
 
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
-		if (not sTryReadChar(iChanR, iChanU, ','))
+		if (not sTryReadChar(iChanRU, ','))
 			break;
 		}
 	return true;
 	}
 
-//bool sQRead_authorization(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
-//bool sQRead_from(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
-//bool sQRead_host(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+//bool sQRead_authorization(const ChanRU_Bin& iChanRU, Map* ioFields);
+//bool sQRead_from(const ChanRU_Bin& iChanRU, Map* ioFields);
+//bool sQRead_host(const ChanRU_Bin& iChanRU, Map* ioFields);
 
-bool sQRead_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_range(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	Map theRange;
-	if (not sQRead_range(iChanR, iChanU, theRange))
+	if (not sQRead_range(iChanRU, theRange))
 		return false;
 
 	if (ioFields)
@@ -800,68 +792,68 @@ bytes=x-y	{ begin = int64(x); end = int64(y); } // (x to y inclusive)
 bytes=x-	{ begin = int64(x); } // (x to the end)
 bytes=-y	{ last = int64(y); } // (last y)
 */
-bool sQRead_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oRange)
+bool sQRead_range(const ChanRU_Bin& iChanRU, Map& oRange)
 	{
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadChars(iChanR, "bytes"))
+	if (not sQReadChars(iChanRU, "bytes"))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '='))
+	if (not sTryReadChar(iChanRU, '='))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (sTryReadChar(iChanR, iChanU, '-'))
+	if (sTryReadChar(iChanRU, '-'))
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		int64 lastBytes;
-		if (not spQReadInt64(iChanR, iChanU, &lastBytes))
+		if (not spQReadInt64(iChanRU, &lastBytes))
 			return false;
 		oRange.Set("last", lastBytes);
 		return true;
 		}
 	else
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		int64 begin;
-		if (not spQReadInt64(iChanR, iChanU, &begin))
+		if (not spQReadInt64(iChanRU, &begin))
 			return false;
 
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		oRange.Set("begin", begin);
 
-		if (not sTryReadChar(iChanR, iChanU, '-'))
+		if (not sTryReadChar(iChanRU, '-'))
 			return false;
 
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		int64 end;
-		if (spQReadInt64(iChanR, iChanU, &end))
+		if (spQReadInt64(iChanRU, &end))
 			oRange.Set("end", end);
 		return true;
 		}
 	}
 
-//bool sQRead_referer(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+//bool sQRead_referer(const ChanRU_Bin& iChanRU, Map* ioFields);
 
 // =================================================================================================
 #pragma mark - HTTP, response headers
 
-bool sQRead_www_authenticate(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+bool sQRead_www_authenticate(const ChanRU_Bin& iChanRU, Map* ioFields);
 
 // =================================================================================================
 #pragma mark - HTTP, request or response headers
 
-bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_transfer_encoding(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	string encoding;
-	if (not sQRead_transfer_encoding(iChanR, iChanU, encoding))
+	if (not sQRead_transfer_encoding(iChanRU, encoding))
 		return false;
 
 	if (ioFields)
@@ -870,11 +862,11 @@ bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, 
 	return true;
 	}
 
-bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& oEncoding)
+bool sQRead_transfer_encoding(const ChanRU_Bin& iChanRU, string& oEncoding)
 	{
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, &oEncoding, nullptr))
+	if (not sQReadToken(iChanRU, &oEncoding, nullptr))
 		return false;
 
 	return true;
@@ -883,10 +875,10 @@ bool sQRead_transfer_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, 
 // =================================================================================================
 #pragma mark - HTTP, entity headers
 
-bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_content_disposition(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	Map dispositionTuple;
-	if (not sQRead_content_disposition(iChanR, iChanU, dispositionTuple))
+	if (not sQRead_content_disposition(iChanRU, dispositionTuple))
 		return false;
 
 	if (ioFields)
@@ -894,12 +886,12 @@ bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU
 	return true;
 	}
 
-bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map& oTuple)
+bool sQRead_content_disposition(const ChanRU_Bin& iChanRU, Map& oTuple)
 	{
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
 	string disposition;
-	if (sQReadToken(iChanR, iChanU, &disposition, nullptr))
+	if (sQReadToken(iChanRU, &disposition, nullptr))
 		{
 		Map dispositionTuple;
 		oTuple.Set("value", disposition);
@@ -907,18 +899,18 @@ bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU
 		Map parameters;
 		for (;;)
 			{
-			sSkipLWS(iChanR, iChanU);
+			sSkipLWS(iChanRU);
 
-			if (not sTryReadChar(iChanR, iChanU, ';'))
+			if (not sTryReadChar(iChanRU, ';'))
 				break;
 
 			string name, value;
-			if (not sQReadParameter(iChanR, iChanU, &name, &value, nullptr))
+			if (not sQReadParameter(iChanRU, &name, &value, nullptr))
 				break;
 			parameters.Set(name, value);
 			}
 
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
 		if (not parameters.IsEmpty())
 			oTuple.Set("parameters", parameters);
@@ -927,13 +919,13 @@ bool sQRead_content_disposition(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU
 	return false;
 	}
 
-//bool sQRead_content_encoding(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
-//bool sQRead_content_language(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+//bool sQRead_content_encoding(const ChanRU_Bin& iChanRU, Map* ioFields);
+//bool sQRead_content_language(const ChanRU_Bin& iChanRU, Map* ioFields);
 
-bool sQRead_content_length(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_content_length(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	int64 theLength;
-	if (sQRead_content_length(iChanR, iChanU, theLength))
+	if (sQRead_content_length(iChanRU, theLength))
 		{
 		if (ioFields)
 			ioFields->Set("content-length", theLength);
@@ -942,19 +934,19 @@ bool sQRead_content_length(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map
 	return false;
 	}
 
-bool sQRead_content_length(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int64& oLength)
+bool sQRead_content_length(const ChanRU_Bin& iChanRU, int64& oLength)
 	{
-	sSkipLWS(iChanR, iChanU);
-	return spQReadInt64(iChanR, iChanU, &oLength);
+	sSkipLWS(iChanRU);
+	return spQReadInt64(iChanRU, &oLength);
 	}
 
-bool sQRead_content_location(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
-bool sQRead_content_md5(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields);
+bool sQRead_content_location(const ChanRU_Bin& iChanRU, Map* ioFields);
+bool sQRead_content_md5(const ChanRU_Bin& iChanRU, Map* ioFields);
 
-bool sQRead_content_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_content_range(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	int64 begin, end, maxLength;
-	if (not sQRead_content_range(iChanR, iChanU, begin, end, maxLength))
+	if (not sQRead_content_range(iChanRU, begin, end, maxLength))
 		return false;
 
 	if (ioFields)
@@ -969,47 +961,47 @@ bool sQRead_content_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map*
 	return true;
 	}
 
-bool sQRead_content_range(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQRead_content_range(const ChanRU_Bin& iChanRU,
 	int64& oBegin, int64& oEnd, int64& oMaxLength)
 	{
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadChars(iChanR, "bytes"))
+	if (not sQReadChars(iChanRU, "bytes"))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not spQReadInt64(iChanR, iChanU, &oBegin))
+	if (not spQReadInt64(iChanRU, &oBegin))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '-'))
+	if (not sTryReadChar(iChanRU, '-'))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not spQReadInt64(iChanR, iChanU, &oEnd))
+	if (not spQReadInt64(iChanRU, &oEnd))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '/'))
+	if (not sTryReadChar(iChanRU, '/'))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not spQReadInt64(iChanR, iChanU, &oMaxLength))
+	if (not spQReadInt64(iChanRU, &oMaxLength))
 		return false;
 
 	return true;
 	}
 
-bool sQRead_content_type(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* ioFields)
+bool sQRead_content_type(const ChanRU_Bin& iChanRU, Map* ioFields)
 	{
 	string type, subType;
 	Map parameters;
-	if (not sQRead_content_type(iChanR, iChanU, type, subType, parameters))
+	if (not sQRead_content_type(iChanRU, type, subType, parameters))
 		return false;
 
 	if (ioFields)
@@ -1024,33 +1016,33 @@ bool sQRead_content_type(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, Map* 
 	return true;
 	}
 
-bool sQRead_content_type(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQRead_content_type(const ChanRU_Bin& iChanRU,
 	string& oType, string& oSubType, Map& oParameters)
 	{
-	if (not sQReadMediaType(iChanR, iChanU, &oType, &oSubType, &oParameters, nullptr, nullptr))
+	if (not sQReadMediaType(iChanRU, &oType, &oSubType, &oParameters, nullptr, nullptr))
 		return false;
 	return true;
 	}
 
 // =================================================================================================
 
-bool sQReadHTTPVersion(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, int32* oVersionMajor, int32* oVersionMinor)
+bool sQReadHTTPVersion(const ChanRU_Bin& iChanRU, int32* oVersionMajor, int32* oVersionMinor)
 	{
-	if (not sQReadChars(iChanR, "HTTP/"))
+	if (not sQReadChars(iChanRU, "HTTP/"))
 		return false;
 
-	if (not spQReadInt32(iChanR, iChanU, oVersionMajor))
+	if (not spQReadInt32(iChanRU, oVersionMajor))
 		return false;
 
-	if (not sTryReadChar(iChanR, iChanU, '.'))
+	if (not sTryReadChar(iChanRU, '.'))
 		return false;
 
-	if (not spQReadInt32(iChanR, iChanU, oVersionMinor))
+	if (not spQReadInt32(iChanRU, oVersionMinor))
 		return false;
 	return true;
 	}
 
-bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
+bool sQReadURI(const ChanRU_Bin& iChanRU, string* oURI)
 	{
 	if (oURI)
 		oURI->resize(0);
@@ -1058,12 +1050,12 @@ bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 
 		if (sIs_LWS(readChar))
 			{
-			sUnread(iChanU, readChar);
+			sUnread(iChanRU, readChar);
 			break;
 			}
 
@@ -1073,7 +1065,7 @@ bool sQReadURI(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oURI)
 	return true;
 	}
 
-bool sQReadFieldName(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadFieldName(const ChanRU_Bin& iChanRU,
 	string* oName, string* oNameExact)
 	{
 	if (oName)
@@ -1081,20 +1073,20 @@ bool sQReadFieldName(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	if (oNameExact)
 		oNameExact->resize(0);
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, oName, oNameExact))
+	if (not sQReadToken(iChanRU, oName, oNameExact))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, ':'))
+	if (not sTryReadChar(iChanRU, ':'))
 		return false;
 
 	return true;
 	}
 
-bool sQReadParameter(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadParameter(const ChanRU_Bin& iChanRU,
 	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
@@ -1104,27 +1096,27 @@ bool sQReadParameter(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	if (oNameExact)
 		oNameExact->resize(0);
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, oName, oNameExact))
+	if (not sQReadToken(iChanRU, oName, oNameExact))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '='))
+	if (not sTryReadChar(iChanRU, '='))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (sQReadToken(iChanR, iChanU, nullptr, oValue))
+	if (sQReadToken(iChanRU, nullptr, oValue))
 		return true;
-	else if (sQReadQuotedString(iChanR, iChanU, nullptr, oValue))
+	else if (sQReadQuotedString(iChanRU, nullptr, oValue))
 		return true;
 
 	return false;
 	}
 
-bool sQReadParameter_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadParameter_Cookie(const ChanRU_Bin& iChanRU,
 	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
@@ -1134,27 +1126,27 @@ bool sQReadParameter_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	if (oNameExact)
 		oNameExact->resize(0);
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, oName, oNameExact))
+	if (not sQReadToken(iChanRU, oName, oNameExact))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '='))
+	if (not sTryReadChar(iChanRU, '='))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (sQReadToken_Cookie(iChanR, iChanU, nullptr, oValue))
+	if (sQReadToken_Cookie(iChanRU, nullptr, oValue))
 		return true;
-	else if (sQReadQuotedString(iChanR, iChanU, nullptr, oValue))
+	else if (sQReadQuotedString(iChanRU, nullptr, oValue))
 		return true;
 
 	return false;
 	}
 
-bool sQReadMediaType(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadMediaType(const ChanRU_Bin& iChanRU,
 	string* oType, string* oSubtype, Map* oParameters,
 	string* oTypeExact, string* oSubtypeExact)
 	{
@@ -1169,30 +1161,30 @@ bool sQReadMediaType(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	if (oParameters)
 		oParameters->Clear();
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, oType, oTypeExact))
+	if (not sQReadToken(iChanRU, oType, oTypeExact))
 		return false;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sTryReadChar(iChanR, iChanU, '/'))
+	if (not sTryReadChar(iChanRU, '/'))
 		return true;
 
-	sSkipLWS(iChanR, iChanU);
+	sSkipLWS(iChanRU);
 
-	if (not sQReadToken(iChanR, iChanU, oSubtype, oSubtypeExact))
+	if (not sQReadToken(iChanRU, oSubtype, oSubtypeExact))
 		return true;
 
 	for (;;)
 		{
-		sSkipLWS(iChanR, iChanU);
+		sSkipLWS(iChanRU);
 
-		if (not sTryReadChar(iChanR, iChanU, ';'))
+		if (not sTryReadChar(iChanRU, ';'))
 			break;
 
 		string name, value;
-		if (not sQReadParameter(iChanR, iChanU, &name, &value, nullptr))
+		if (not sQReadParameter(iChanRU, &name, &value, nullptr))
 			break;
 		if (oParameters)
 			oParameters->Set(name, value);
@@ -1201,18 +1193,18 @@ bool sQReadMediaType(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	return true;
 	}
 
-bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string* oLanguageTag)
+bool sQReadLanguageTag(const ChanRU_Bin& iChanRU, string* oLanguageTag)
 	{
 	if (oLanguageTag)
 		oLanguageTag->resize(0);
 
 	byte readChar;
-	if (not sQRead(iChanR, readChar))
+	if (not sQRead(iChanRU, readChar))
 		return false;
 
 	if (not sIs_ALPHA(readChar))
 		{
-		sUnread(iChanU, readChar);
+		sUnread(iChanRU, readChar);
 		return false;
 		}
 
@@ -1221,12 +1213,12 @@ bool sQReadLanguageTag(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string*
 
 	for (;;)
 		{
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			return true;
 
 		if (not sIs_ALPHA(readChar) && readChar != '-')
 			{
-			sUnread(iChanU, readChar);
+			sUnread(iChanRU, readChar);
 			return true;
 			}
 
@@ -1363,7 +1355,7 @@ string sAbsoluteURI(const string& iBase, const string& iOther)
 	return result;
 	}
 
-bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadToken(const ChanRU_Bin& iChanRU,
 	string* oTokenLC, string* oTokenExact)
 	{
 	if (oTokenLC)
@@ -1376,19 +1368,19 @@ bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 
 		if (not sIs_token(readChar))
 			{
-			sUnread(iChanU, readChar);
+			sUnread(iChanRU, readChar);
 			break;
 			}
 
 		if (readChar == '%')
 			{
 			string decodedChars;
-			if (not sQReadDecodedChars(iChanR, iChanU, decodedChars))
+			if (not sQReadDecodedChars(iChanRU, decodedChars))
 				break;
 
 			gotAny = true;
@@ -1412,7 +1404,7 @@ bool sQReadToken(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	return gotAny;
 	}
 
-bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadToken_Cookie(const ChanRU_Bin& iChanRU,
 	string* oTokenLC, string* oTokenExact)
 	{
 	if (oTokenLC)
@@ -1425,7 +1417,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 
 		if (not sIs_token(readChar))
@@ -1437,7 +1429,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 				&& readChar != ')'
 				&& readChar != '=')
 				{
-				sUnread(iChanU, readChar);
+				sUnread(iChanRU, readChar);
 				break;
 				}
 			}
@@ -1445,7 +1437,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 		if (readChar == '%')
 			{
 			string decodedChars;
-			if (not sQReadDecodedChars(iChanR, iChanU, decodedChars))
+			if (not sQReadDecodedChars(iChanRU, decodedChars))
 				break;
 
 			gotAny = true;
@@ -1469,7 +1461,7 @@ bool sQReadToken_Cookie(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	return gotAny;
 	}
 
-bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
+bool sQReadQuotedString(const ChanRU_Bin& iChanRU,
 	string* oString, string* oStringExact)
 	{
 	if (oString)
@@ -1477,18 +1469,18 @@ bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 	if (oStringExact)
 		oStringExact->resize(0);
 
-	if (not sTryReadChar(iChanR, iChanU, '"'))
+	if (not sTryReadChar(iChanRU, '"'))
 		return false;
 
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 
 		if (not sIs_qdtext(readChar))
 			{
-			sUnread(iChanU, readChar);
+			sUnread(iChanRU, readChar);
 			break;
 			}
 
@@ -1498,33 +1490,33 @@ bool sQReadQuotedString(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU,
 			oStringExact->append(1, readChar);
 		}
 
-	if (not sTryReadChar(iChanR, iChanU, '"'))
+	if (not sTryReadChar(iChanRU, '"'))
 		return false;
 
 	return true;
 	}
 
-bool sTryReadChar(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, char iChar)
+bool sTryReadChar(const ChanRU_Bin& iChanRU, char iChar)
 	{
 	byte readChar;
-	if (not sQRead(iChanR, readChar))
+	if (not sQRead(iChanRU, readChar))
 		return false;
 
 	if (readChar != iChar)
 		{
-		sUnread(iChanU, readChar);
+		sUnread(iChanRU, readChar);
 		return false;
 		}
 
 	return true;
 	}
 
-bool sQReadChars(const ChanR_Bin& iChanR, const char* iString)
+bool sQReadChars(const ChanR_Bin& iChanRU, const char* iString)
 	{
 	while (*iString)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			return false;
 		if (*iString != readChar)
 			return false;
@@ -1533,42 +1525,42 @@ bool sQReadChars(const ChanR_Bin& iChanR, const char* iString)
 	return true;
 	}
 
-void sSkipLWS(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU)
+void sSkipLWS(const ChanRU_Bin& iChanRU)
 	{
 	for (;;)
 		{
 		byte readChar;
-		if (not sQRead(iChanR, readChar))
+		if (not sQRead(iChanRU, readChar))
 			break;
 
 		if (not sIs_LWS(readChar))
 			{
-			sUnread(iChanU, readChar);
+			sUnread(iChanRU, readChar);
 			break;
 			}
 		}
 	}
 
-bool sQReadDecodedChars(const ChanR_Bin& iChanR, const ChanU_Bin& iChanU, string& ioString)
+bool sQReadDecodedChars(const ChanRU_Bin& iChanRU, string& ioString)
 	{
 	byte readChar;
-	if (not sQRead(iChanR, readChar))
+	if (not sQRead(iChanRU, readChar))
 		return false;
 
 	if (not isxdigit(readChar))
 		{
-		sUnread(iChanU, readChar);
+		sUnread(iChanRU, readChar);
 		ioString.append(1, '%');
 		}
 	else
 		{
 		byte readChar2;
-		if (not sQRead(iChanR, readChar2))
+		if (not sQRead(iChanRU, readChar2))
 			return false;
 
 		if (not isxdigit(readChar2))
 			{
-			sUnread(iChanU, readChar2);
+			sUnread(iChanRU, readChar2);
 
 			ioString.append(1, '%');
 			ioString.append(1, readChar);

@@ -46,7 +46,7 @@ bool spQReadResponse(const ChanR_Bin& iChanR, int32* oResponseCode, Map* oHeader
 	MIME::ChanR_Bin_Header theSIH_Server(iChanR);
 	ChanRU_XX_Unreader<byte> theChanRU(theSIH_Server);
 
-	if (not sQReadResponse(theChanRU, theChanRU, oResponseCode, nullptr))
+	if (not sQReadResponse(theChanRU, oResponseCode, nullptr))
 		return false;
 
 	return sQReadHeader(theChanRU, oHeader);
@@ -357,7 +357,7 @@ bool sQCONNECT(const ChanR_Bin& r, const ChanW_Bin& w,
 
 	int32 serverResponseCode;
 	ChanRU_XX_Unreader<byte> theChanRU(r);
-	if (sQReadResponse(theChanRU, theChanRU, &serverResponseCode, nullptr))
+	if (sQReadResponse(theChanRU, &serverResponseCode, nullptr))
 		{
 		if (oResponseCode)
 			*oResponseCode = serverResponseCode;
