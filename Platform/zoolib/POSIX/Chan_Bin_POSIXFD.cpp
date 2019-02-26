@@ -120,9 +120,6 @@ uint64 ChanRPos_Bin_POSIXFD::Size()
 void ChanRPos_Bin_POSIXFD::Unread(const byte* iSource, size_t iCount)
 	{ Util_POSIXFD::sUnread(fFDHolder->GetFD(), iSource, iCount); }
 
-//size_t ChanRPos_Bin_POSIXFD::UnreadableLimit()
-//	{ return Util_POSIXFD::sUnreadableLimit(fFDHolder->GetFD()); }
-
 // =================================================================================================
 #pragma mark - ChanWPos_Bin_POSIXFD
 
@@ -181,9 +178,6 @@ size_t ChanRWPos_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 
 void ChanRWPos_Bin_POSIXFD::Unread(const byte* iSource, size_t iCount)
 	{ Util_POSIXFD::sUnread(fFDHolder->GetFD(), iSource, iCount); }
-
-//size_t ChanRWPos_Bin_POSIXFD::UnreadableLimit()
-//	{ return Util_POSIXFD::sUnreadableLimit(fFDHolder->GetFD()); }
 
 // =================================================================================================
 #pragma mark - ChanRAbort_Bin_POSIXFD

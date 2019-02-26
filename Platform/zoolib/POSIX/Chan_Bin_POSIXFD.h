@@ -138,7 +138,6 @@ public:
 
 // From ChanAspect_Unread<byte>
 	virtual void Unread(const byte* iSource, size_t iCount);
-//	virtual size_t UnreadableLimit();
 
 protected:
 	const ZRef<FDHolder> fFDHolder;
@@ -200,7 +199,6 @@ public:
 
 // From ChanAspect_Unread<byte>
 	virtual void Unread(const byte* iSource, size_t iCount);
-//	virtual size_t UnreadableLimit();
 
 protected:
 	const ZRef<FDHolder> fFDHolder;

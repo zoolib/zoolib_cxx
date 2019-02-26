@@ -73,16 +73,10 @@ void ChanRPos_Bin_string::PosSet(uint64 iPos)
 
 void ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
-	const size_t countToCopy = std::min(iCount, this->fPosition);
-	this->fPosition -= countToCopy;
-
+	ZAssert(fPosition >= iCount);
+	fPosition -= iCount;
 	// See Chan_XX_Memory for a note regarding bogus unreads.
-
-//	return countToCopy;
 	}
-
-//size_t ChanRPos_Bin_string::UnreadableLimit()
-//	{ return this->fPosition; }
 
 // =================================================================================================
 #pragma mark - ChanRWPos_Bin_string
@@ -122,37 +116,29 @@ void ChanRWPos_Bin_string::PosSet(uint64 iPos)
 
 void ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
-	const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
-
-	std::copy_n(iSource, countToCopy, (byte*)(&fStringPtr->at(fPosition)));
-
-	this->fPosition -= countToCopy;
-
-//	return countToCopy;
+	ZAssert(fPosition >= iCount);
+	fPosition -= iCount;
 	}
-
-//size_t ChanRWPos_Bin_string::UnreadableLimit()
-//	{ return this->fPosition; }
 
 size_t ChanRWPos_Bin_string::Write(const byte* iSource, size_t iCount)
 	{
-	const size_t newPosition = this->fPosition + iCount;
+	const size_t newPosition = fPosition + iCount;
 
-	if (this->fStringPtr->size() < newPosition)
-		this->fStringPtr->resize(newPosition);
+	if (fStringPtr->size() < newPosition)
+		fStringPtr->resize(newPosition);
 
 	std::copy_n(iSource, iCount, (byte*)(&fStringPtr->at(fPosition)));
 
-	this->fPosition = newPosition;
+	fPosition = newPosition;
 
 	return iCount;
 	}
 
 void ChanRWPos_Bin_string::SizeSet(uint64 iSize)
 	{
-	if (this->fPosition > iSize)
-		this->fPosition = iSize;
-	this->fStringPtr->resize(iSize);
+	if (fPosition > iSize)
+		fPosition = iSize;
+	fStringPtr->resize(iSize);
 	}
 
 } // namespace ZooLib

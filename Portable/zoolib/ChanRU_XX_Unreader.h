@@ -68,14 +68,9 @@ public:
 // From ChanU
 	virtual void Unread(const EE* iSource, size_t iCount)
 		{
-//		const size_t theCount = iCount;
 		while (iCount--)
 			fStack.push_back(*iSource++);
-//		return theCount;
 		}
-
-//	virtual size_t UnreadableLimit()
-//		{ return size_t(-1); }
 
 protected:
 	const ChanR<EE>& fChanR;

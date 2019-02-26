@@ -74,16 +74,10 @@ public:
 // From ChanU
 	virtual void Unread(const byte* iSource, size_t iCount)
 		{
-		const size_t countToCopy = std::min(iCount, this->fPosition);
-		this->fPosition -= countToCopy;
-
+		ZAssert(fPosition >= iCount);
+		fPosition -= iCount;
 		// See Chan_XX_Memory for a note regarding bogus unreads.
-
-//		return countToCopy;
 		}
-
-//	virtual size_t UnreadableLimit()
-//		{ return this->fPosition; }
 
 private:
 	Data fData;
@@ -135,28 +129,21 @@ public:
 // From ChanU
 	virtual void Unread(const byte* iSource, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
-
-		this->fDataPtr->CopyFrom(this->fPosition - countToCopy, iSource, countToCopy);
-
-		this->fPosition -= countToCopy;
-
-//		return countToCopy;
+		ZAssert(fPosition >= iCount);
+		fDataPtr->CopyFrom(fPosition - iCount, iSource, iCount);
+		fPosition -= iCount;
 		}
-
-//	virtual size_t UnreadableLimit()
-//		{ return this->fPosition; }
 
 // From ChanW
 	virtual size_t Write(const byte* iSource, size_t iCount)
 		{
-		const size_t newPosition = this->fPosition + iCount;
-		if (this->fDataPtr->GetSize() < newPosition)
-			this->fDataPtr->SetSize(newPosition);
+		const size_t newPosition = fPosition + iCount;
+		if (fDataPtr->GetSize() < newPosition)
+			fDataPtr->SetSize(newPosition);
 
-		this->fDataPtr->CopyFrom(this->fPosition, iSource, iCount);
+		fDataPtr->CopyFrom(fPosition, iSource, iCount);
 
-		this->fPosition = newPosition;
+		fPosition = newPosition;
 
 		return iCount;
 		}
@@ -164,9 +151,9 @@ public:
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
 		{
-		if (this->fPosition > iSize)
-			this->fPosition = iSize;
-		this->fDataPtr->SetSize(iSize);
+		if (fPosition > iSize)
+			fPosition = iSize;
+		fDataPtr->SetSize(iSize);
 		}
 
 private:
@@ -197,7 +184,7 @@ public:
 		const size_t thePos = fDataPtr->GetSize();
 		fDataPtr->SetSize(thePos + iCount);
 
-		this->fDataPtr->CopyFrom(thePos, iSource, iCount);
+		fDataPtr->CopyFrom(thePos, iSource, iCount);
 
 		return iCount;
 		}

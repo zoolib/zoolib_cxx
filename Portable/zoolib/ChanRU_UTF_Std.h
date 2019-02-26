@@ -43,7 +43,6 @@ public:
 
 // From ChanU_UTF
 	virtual void Unread(const UTF32* iSource, size_t iCount);
-//	virtual size_t UnreadableLimit();
 
 // Our protocol
 	int GetPos();

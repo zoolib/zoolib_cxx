@@ -180,18 +180,11 @@ class ChanAspect_Unread
 	{
 public:
 	virtual void Unread(const EE* iSource, size_t iCount) = 0;
-
-//	virtual size_t UnreadableLimit()
-//		{ return 0; }
 	};
 
 template <class EE>
 inline void sUnread(const ChanAspect_Unread<EE>& iAspect, const EE* iSource, size_t iCount)
 	{ sNonConst(iAspect).Unread(iSource, iCount); }
-
-//template <class EE>
-//inline size_t sUnreadableLimit(const ChanAspect_Unread<EE>& iAspect)
-//	{ return sNonConst(iAspect).UnreadableLimit(); }
 
 // =================================================================================================
 #pragma mark - ChanAspect_WaitReadable

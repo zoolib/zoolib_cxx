@@ -104,13 +104,9 @@ public:
 // From ChanU
 	virtual void Unread(const EE* iSource, size_t iCount)
 		{
-		const size_t count = sMin(fPosition, iCount);
-		fPosition -= count;
-//		return count;
+		ZAssert(fPosition >= iCount);
+		fPosition -= iCount;
 		}
-
-//	virtual size_t UnreadableLimit()
-//		{ return fPosition; }
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)

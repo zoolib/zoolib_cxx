@@ -323,14 +323,7 @@ void ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 		fBuffer.insert(fBuffer.begin(), toInsert.rbegin(), toInsert.rend());
 		fBufferStart = 0;
 		}
-//	return iCount;
 	}
-
-//size_t ChanRU_UTF::UnreadableLimit()
-//	{ return size_t(-1); }
-
-//ChanRU_UTF::operator operator_bool() const
-//	{ return operator_bool_gen::translate(fToken != eToken_Exhausted); }
 
 EToken ChanRU_UTF::Current() const
 	{

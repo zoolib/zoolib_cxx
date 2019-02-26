@@ -73,14 +73,9 @@ size_t ChanRU_UTF_Std::Read(UTF32* oDest, size_t iCount)
 
 void ChanRU_UTF_Std::Unread(const UTF32* iSource, size_t iCount)
 	{
-	size_t localCount = iCount + 1;
-	while (--localCount)
+	while (iCount--)
 		fStack.push_back(*iSource++);
-//	return iCount;
 	}
-
-//size_t ChanRU_UTF_Std::UnreadableLimit()
-//	{ return size_t(-1); }
 
 int ChanRU_UTF_Std::GetPos()
 	{ return int(fPos - fStack.size()); }

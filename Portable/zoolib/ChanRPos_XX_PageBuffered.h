@@ -156,13 +156,9 @@ public:
 // From ChanAspect_Unread<EE>
 	virtual void Unread(const EE* iSource, size_t iCount)
 		{
-		const size_t countToCopy = sClamped(std::min(uint64(iCount), this->fPosition));
-
-		fPosition -= countToCopy;
-
+		ZAssert(fPosition >= iCount);
+		fPosition -= iCount;
 		// See Chan_XX_Memory for a note regarding bogus unreads.
-
-//		return countToCopy;
 		}
 
 protected:

@@ -65,7 +65,6 @@ public:
 
 // From ChanU
 	virtual void Unread(const byte* iSource, size_t iCount);
-//	virtual size_t UnreadableLimit();
 
 private:
 	const std::string fString;
@@ -98,8 +97,6 @@ public:
 
 // From ChanU
 	virtual void Unread(const byte* iSource, size_t iCount);
-
-//	virtual size_t UnreadableLimit();
 
 // From ChanW
 	virtual size_t Write(const byte* iSource, size_t iCount);
