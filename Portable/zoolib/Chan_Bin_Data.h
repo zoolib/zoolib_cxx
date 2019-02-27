@@ -72,11 +72,14 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual void Unread(const byte* iSource, size_t iCount)
+	virtual size_t Unread(const byte* iSource, size_t iCount)
 		{
-		ZAssert(fPosition >= iCount);
-		fPosition -= iCount;
+		const size_t countToCopy = std::min(iCount, this->fPosition);
+		this->fPosition -= countToCopy;
+
 		// See Chan_XX_Memory for a note regarding bogus unreads.
+
+		return countToCopy;
 		}
 
 private:
@@ -127,11 +130,15 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual void Unread(const byte* iSource, size_t iCount)
+	virtual size_t Unread(const byte* iSource, size_t iCount)
 		{
-		ZAssert(fPosition >= iCount);
-		fDataPtr->CopyFrom(fPosition - iCount, iSource, iCount);
-		fPosition -= iCount;
+		const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
+
+		this->fDataPtr->CopyFrom(this->fPosition - countToCopy, iSource, countToCopy);
+
+		this->fPosition -= countToCopy;
+
+		return countToCopy;
 		}
 
 // From ChanW

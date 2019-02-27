@@ -308,7 +308,7 @@ size_t ChanRU_UTF::Read(UTF32* oDest, size_t iCount)
 	return localDest - oDest;
 	}
 
-void ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
+size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 	{
 	ZAssert(fToken == eToken_Text);
 
@@ -323,6 +323,7 @@ void ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 		fBuffer.insert(fBuffer.begin(), toInsert.rbegin(), toInsert.rend());
 		fBufferStart = 0;
 		}
+	return iCount;
 	}
 
 EToken ChanRU_UTF::Current() const

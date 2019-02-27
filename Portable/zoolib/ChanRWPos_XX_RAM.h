@@ -102,10 +102,11 @@ public:
 		{ return fDeque.size(); }
 
 // From ChanU
-	virtual void Unread(const EE* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		ZAssert(fPosition >= iCount);
-		fPosition -= iCount;
+		const size_t count = sMin(fPosition, iCount);
+		fPosition -= count;
+		return count;
 		}
 
 // From ChanSizeSet

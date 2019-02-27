@@ -137,7 +137,7 @@ public:
 	virtual uint64 Size();
 
 // From ChanAspect_Unread<byte>
-	virtual void Unread(const byte* iSource, size_t iCount);
+	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 protected:
 	const ZRef<FDHolder> fFDHolder;

@@ -66,10 +66,11 @@ public:
 		{ return fStack.size() + sReadable(fChanR); }
 
 // From ChanU
-	virtual void Unread(const EE* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		while (iCount--)
+		for (size_t theCount = iCount; theCount; --theCount)
 			fStack.push_back(*iSource++);
+		return iCount;
 		}
 
 protected:

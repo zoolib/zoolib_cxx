@@ -73,10 +73,28 @@ public:
 		{ return fSize; }
 
 // From ChanU
-	virtual void Unread(const EE* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		ZAssert(fPosition >= iCount);
+		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
+
+		if (false)
+			{
+			// If this code is enabled, then we assert that what's being
+			// unread matches what was in here already.
+
+			const EE* dest = fAddress + fPosition - countToCopy;
+
+			for (const EE* last = iSource + countToCopy; iSource != last; /*no inc*/)
+				{
+				ZAssert(*iSource == *dest);
+				++iSource;
+				++dest;
+				}
+			}
+
 		fPosition -= countToCopy;
+
+		return countToCopy;
 		}
 
 protected:
@@ -129,15 +147,17 @@ public:
 		{ fPosition = iPos; }
 
 // From ChanU
-	virtual void Unread(const EE* iSource, size_t iCount)
+	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
 
-		EE* dest = fAddress + fPosition - iCount;
+		EE* dest = fAddress + fPosition - countToCopy;
 
-		std::copy_n(iSource, iCount, dest);
+		std::copy_n(iSource, countToCopy, dest);
 
-		fPosition -= iCount;
+		fPosition -= countToCopy;
+
+		return countToCopy;
 		}
 
 // From ChanW

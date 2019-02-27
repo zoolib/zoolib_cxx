@@ -64,7 +64,7 @@ public:
 	virtual uint64 Size();
 
 // From ChanU
-	virtual void Unread(const byte* iSource, size_t iCount);
+	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 private:
 	const std::string fString;
@@ -96,7 +96,7 @@ public:
 	virtual void SizeSet(uint64 iSize);
 
 // From ChanU
-	virtual void Unread(const byte* iSource, size_t iCount);
+	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 // From ChanW
 	virtual size_t Write(const byte* iSource, size_t iCount);

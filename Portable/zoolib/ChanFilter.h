@@ -164,8 +164,8 @@ class AspectCallForwarder<ChanAspect_Unread<EE>,Chan_p,DerivedFrom_p>
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
 
-	virtual void Unread(const EE* iSource, size_t iCount)
-		{ sUnread(DerivedFrom_p::pGetChan(), iSource, iCount); }
+	virtual size_t Unread(const EE* iSource, size_t iCount)
+		{ return sUnread(DerivedFrom_p::pGetChan(), iSource, iCount); }
 	};
 
 // =================================================================================================
