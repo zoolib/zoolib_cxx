@@ -71,11 +71,14 @@ uint64 ChanRPos_Bin_string::Pos()
 void ChanRPos_Bin_string::PosSet(uint64 iPos)
 	{ fPosition = iPos; }
 
-void ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
+size_t ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
-	ZAssert(fPosition >= iCount);
-	fPosition -= iCount;
+	const size_t countToCopy = std::min(iCount, this->fPosition);
+	this->fPosition -= countToCopy;
+
 	// See Chan_XX_Memory for a note regarding bogus unreads.
+
+	return countToCopy;
 	}
 
 // =================================================================================================
@@ -114,10 +117,15 @@ uint64 ChanRWPos_Bin_string::Pos()
 void ChanRWPos_Bin_string::PosSet(uint64 iPos)
 	{ fPosition = iPos; }
 
-void ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
+size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
-	ZAssert(fPosition >= iCount);
-	fPosition -= iCount;
+	const size_t countToCopy = std::min<size_t>(iCount, this->fPosition);
+
+	std::copy_n(iSource, countToCopy, (byte*)(&fStringPtr->at(fPosition)));
+
+	this->fPosition -= countToCopy;
+
+	return countToCopy;
 	}
 
 size_t ChanRWPos_Bin_string::Write(const byte* iSource, size_t iCount)

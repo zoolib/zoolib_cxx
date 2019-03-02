@@ -198,7 +198,7 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 // From ChanAspect_Unread<byte>
-	virtual void Unread(const byte* iSource, size_t iCount);
+	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 protected:
 	const ZRef<FDHolder> fFDHolder;
