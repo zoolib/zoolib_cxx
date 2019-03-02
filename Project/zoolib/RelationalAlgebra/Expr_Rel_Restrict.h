@@ -74,7 +74,6 @@ public:
 // =================================================================================================
 #pragma mark - Relational operators
 
-// The order of parameters here differs from that in sRestrict precisely to keep them distinct.
 ZRef<Expr_Rel_Restrict> sRestrict(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
 
@@ -95,3 +94,4 @@ int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__
+
