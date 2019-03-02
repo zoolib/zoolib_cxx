@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_ChanAspects_h__
-#define __ZooLib_ChanAspects_h__ 1
+#ifndef __ZooLib_ChanAspect_h__
+#define __ZooLib_ChanAspect_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Compat_algorithm.h"
@@ -239,4 +239,4 @@ inline void sFlush(const ChanAspect_Write<EE>& iAspect)
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanAspects_h__
+#endif // __ZooLib_ChanAspect_h__

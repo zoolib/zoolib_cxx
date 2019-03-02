@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanAspects.h"
+#include "zoolib/ChanAspect.h"
 #include "zoolib/DeriveFrom.h"
 
 namespace ZooLib {
