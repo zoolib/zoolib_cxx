@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/Relater_Searcher.h"
+
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Log.h"
 #include "zoolib/Util_STL_map.h"
@@ -25,8 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-
-#include "zoolib/Dataspace/Relater_Searcher.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
@@ -313,7 +313,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - spTransform_PushDownRestricts_IntoSearch
+#pragma mark - sTransform_PushDownRestricts_IntoSearch
 
 namespace { // anonymous
 
@@ -379,7 +379,6 @@ public:
 
 } // anonymous namespace
 
-ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel);
 ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel)
 	{ return Transform_PushDownRestricts_IntoSearch().Do(iRel); }
 

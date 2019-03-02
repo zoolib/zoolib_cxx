@@ -129,6 +129,11 @@ protected:
 	DListHead<DLink_PRegSearch_NeedsWork> fPRegSearch_NeedsWork;
 	};
 
+// =================================================================================================
+#pragma mark - sTransform_PushDownRestricts_IntoSearch
+
+ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel);
+
 } // namespace Dataspace
 } // namespace ZooLib
 
