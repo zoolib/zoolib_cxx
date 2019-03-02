@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,30 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__
-#define __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__ 1
+#ifndef __ZooLib_RelationalAlgebra_Expr_Rel_Comment_h__
+#define __ZooLib_RelationalAlgebra_Expr_Rel_Comment_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Expr/Expr_Bool.h"
 #include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {
 
-class Visitor_Expr_Rel_Restrict;
+class Visitor_Expr_Rel_Comment;
 
 // =================================================================================================
-#pragma mark - Expr_Rel_Restrict
+#pragma mark - Expr_Rel_Comment
 
-class Expr_Rel_Restrict
+class Expr_Rel_Comment
 :	public virtual Expr_Rel
 ,	public virtual Expr_Op1_T<Expr_Rel>
 	{
 	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool);
-	virtual ~Expr_Rel_Restrict();
+	Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0, const std::string& iComment);
+	virtual ~Expr_Rel_Comment();
 
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
@@ -53,44 +52,35 @@ public:
 	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
+	virtual void Accept_Expr_Rel_Comment(Visitor_Expr_Rel_Comment& iVisitor);
 
-	const ZRef<Expr_Bool>& GetExpr_Bool() const;
+	const std::string& GetComment() const;
 
 private:
-	const ZRef<Expr_Bool> fExpr_Bool;
+	const std::string fComment;
 	};
 
 // =================================================================================================
-#pragma mark - Visitor_Expr_Rel_Restrict
+#pragma mark - Visitor_Expr_Rel_Comment
 
-class Visitor_Expr_Rel_Restrict
+class Visitor_Expr_Rel_Comment
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Comment(const ZRef<Expr_Rel_Comment>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Restrict> sRestrict(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
-
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
-
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
-
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
+ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel, const std::string& iComment);
 
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
-	const RelationalAlgebra::Expr_Rel_Restrict& iR);
+int sCompare_T(const RelationalAlgebra::Expr_Rel_Comment& iL,
+	const RelationalAlgebra::Expr_Rel_Comment& iR);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Comment_h__

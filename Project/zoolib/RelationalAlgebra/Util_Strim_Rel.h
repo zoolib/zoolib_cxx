@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Comment.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Dee.h"
@@ -52,6 +53,7 @@ namespace Util_Strim_Rel {
 class Visitor
 :	public virtual Visitor_Expr_Bool_ValPred_Any_ToStrim
 ,	public virtual Visitor_Expr_Rel_Calc
+,	public virtual Visitor_Expr_Rel_Comment
 ,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Const
 ,	public virtual Visitor_Expr_Rel_Dee
@@ -69,6 +71,7 @@ class Visitor
 public:
 	virtual void Visit_Expr(const ZRef<Expr>& iExpr);
 	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Comment(const ZRef<Expr_Rel_Comment>& iExpr);
 	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);

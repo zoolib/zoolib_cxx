@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Expr_Bool_ValPred.h" // For ValPred/Bool operators
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Comment.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Dee.h"

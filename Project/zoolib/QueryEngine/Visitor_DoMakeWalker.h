@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
+#include "zoolib/RelationalAlgebra/Expr_Rel_Comment.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Const.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Dee.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Dum.h"
@@ -47,6 +48,7 @@ class Visitor_DoMakeWalker
 :	public virtual Visitor_Do_T<ZRef<Walker> >
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
+,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Comment
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dee
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Dum
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Embed
@@ -62,6 +64,7 @@ public:
 
 // From Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Comment(const ZRef<RelationalAlgebra::Expr_Rel_Comment>& iExpr);
 	virtual void Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr);
 	virtual void Visit_Expr_Rel_Dee(const ZRef<RelationalAlgebra::Expr_Rel_Dee>& iExpr);
 	virtual void Visit_Expr_Rel_Dum(const ZRef<RelationalAlgebra::Expr_Rel_Dum>& iExpr);

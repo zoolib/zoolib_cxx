@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,9 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_STL_map.h"
-
-#include "zoolib/QueryEngine/Walker_Rename.h"
+#include "zoolib/QueryEngine/Walker_Comment.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -28,43 +26,34 @@ namespace QueryEngine {
 using std::map;
 using std::set;
 
-using namespace Util_STL;
-
 // =================================================================================================
-#pragma mark - Walker_Rename
+#pragma mark - Walker_Comment
 
-Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
+Walker_Comment::Walker_Comment(const ZRef<Walker>& iWalker, const string8& iComment)
 :	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
+,	fComment(iComment)
 	{}
 
-Walker_Rename::~Walker_Rename()
+Walker_Comment::~Walker_Comment()
 	{}
 
-ZRef<Walker> Walker_Rename::Prime(
+ZRef<Walker> Walker_Comment::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
-	// Confusion will result if the name we're going to be our new name is already in the list
-	ZAssert(not sContains(iOffsets, fNew));
-
-	map<string8,size_t> childOffsets;
-	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
-
-	sInsertMust(childOffsets, fNew, sGetEraseMust(childOffsets, fOld));
-
-	oOffsets.insert(childOffsets.begin(), childOffsets.end());
-
+	fWalker->Prime(iOffsets, oOffsets, ioBaseOffset);
 	return this;
 	}
 
-bool Walker_Rename::QReadInc(Val_Any* ioResults)
+bool Walker_Comment::QReadInc(Val_Any* ioResults)
 	{
 	this->Called_QReadInc();
 	return fWalker->QReadInc(ioResults);
 	}
+
+string8 Walker_Comment::GetComment()
+	{ return fComment; }
 
 } // namespace QueryEngine
 } // namespace ZooLib

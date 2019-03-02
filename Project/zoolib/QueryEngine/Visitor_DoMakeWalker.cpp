@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 #include "zoolib/QueryEngine/Walker_Calc.h"
+#include "zoolib/QueryEngine/Walker_Comment.h"
 #include "zoolib/QueryEngine/Walker_Const.h"
 #include "zoolib/QueryEngine/Walker_Dee.h"
 #include "zoolib/QueryEngine/Walker_Dum.h"
@@ -57,6 +58,12 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iE
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Calc(op0, iExpr->GetColName(), iExpr->GetCallable()));
+	}
+
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Comment(const ZRef<RA::Expr_Rel_Comment>& iExpr)
+	{
+	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new Walker_Comment(op0, iExpr->GetComment()));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)

@@ -63,6 +63,17 @@ void Visitor::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
 	w << ")";
 	}
 
+void Visitor::Visit_Expr_Rel_Comment(const ZRef<Expr_Rel_Comment>& iExpr)
+	{
+	const ChanW_UTF& w = pStrimW();
+	w << "Comment(";
+	Util_Chan_JSON::sWriteString(iExpr->GetComment(), false, w);
+	w << ",";
+	this->pWriteLFIndent();
+	this->pToStrim(iExpr->GetOp0());
+	w << ")";
+	}
+
 void Visitor::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	{
 	const ChanW_UTF& w = pStrimW();
@@ -261,6 +272,23 @@ ZRef<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 		else if (sEquali(*theNameQ, "Calc"))
 			{
 			ZAssert(false);
+			}
+		else if (sEquali(*theNameQ, "Comment"))
+			{
+			string theComment;
+			if (not Util_Chan_JSON::sTryRead_JSONString(iChanRU, theComment))
+				{
+				throw ParseException("Expected string param to Comment");
+				}
+			else
+				{
+				spRead_WSComma(iChanRU, " after string in Comment");
+
+				if (ZRef<Expr_Rel,false> childRel = sFromStrim(iChanRU))
+					throw ParseException("Expected Rel as second param in Comment");
+				else
+					result = sComment(childRel, theComment);
+				}
 			}
 		else if (sEquali(*theNameQ, "Concrete"))
 			{

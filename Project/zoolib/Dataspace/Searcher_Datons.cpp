@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Dataspace/Daton_Val.h"
 #include "zoolib/Dataspace/Searcher_Datons.h"
+#include "zoolib/Dataspace/Util_Strim_Walker.h"
 
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"
 
@@ -45,9 +46,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 #include "zoolib/ValPred/ValPred_Any.h"
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
-
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -938,8 +938,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 					w << "\n";
 					sToStrim(thePSearch->fResult, w);
 
-					void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
-					spDump(theWalker, w);
+					sDumpWalkers(theWalker, w);
 					}
 				}
 

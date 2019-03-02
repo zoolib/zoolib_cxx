@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,53 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_STL_map.h"
+#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
+#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/QueryEngine/Walker_Rename.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
 namespace QueryEngine {
 
-using std::map;
-using std::set;
-
-using namespace Util_STL;
-
 // =================================================================================================
-#pragma mark - Walker_Rename
+#pragma mark - Walker_Comment
 
-Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
-
-Walker_Rename::~Walker_Rename()
-	{}
-
-ZRef<Walker> Walker_Rename::Prime(
-	const map<string8,size_t>& iOffsets,
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
+class Walker_Comment : public Walker_Unary
 	{
-	// Confusion will result if the name we're going to be our new name is already in the list
-	ZAssert(not sContains(iOffsets, fNew));
+public:
+	Walker_Comment(const ZRef<Walker>& iWalker, const string8& iComment);
+	virtual ~Walker_Comment();
 
-	map<string8,size_t> childOffsets;
-	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
+// From QueryEngine::Walker
+	virtual ZRef<Walker> Prime(
+		const std::map<string8,size_t>& iOffsets,
+		std::map<string8,size_t>& oOffsets,
+		size_t& ioBaseOffset);
 
-	sInsertMust(childOffsets, fNew, sGetEraseMust(childOffsets, fOld));
+	virtual bool QReadInc(Val_Any* ioResults);
 
-	oOffsets.insert(childOffsets.begin(), childOffsets.end());
+// Our protocol
+	string8 GetComment();
 
-	return this;
-	}
-
-bool Walker_Rename::QReadInc(Val_Any* ioResults)
-	{
-	this->Called_QReadInc();
-	return fWalker->QReadInc(ioResults);
-	}
+private:
+	const string8 fComment;
+	};
 
 } // namespace QueryEngine
 } // namespace ZooLib
+
+#endif // __ZooLib_QueryEngine_Walker_Comment_h__

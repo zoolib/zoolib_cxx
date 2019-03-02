@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,53 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_STL_map.h"
+#ifndef __ZooLib_Dataspace_Util_Strim_Walker_h__
+#define __ZooLib_Dataspace_Util_Strim_Walker_h__
+#include "zconfig.h"
 
-#include "zoolib/QueryEngine/Walker_Rename.h"
+#include "zoolib/ChanW_UTF.h"
+#include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace QueryEngine {
-
-using std::map;
-using std::set;
-
-using namespace Util_STL;
+namespace Dataspace {
 
 // =================================================================================================
-#pragma mark - Walker_Rename
+#pragma mark - sDumpWalkers
 
-Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
-:	Walker_Unary(iWalker)
-,	fNew(iNew)
-,	fOld(iOld)
-	{}
+void sDumpWalkers(ZRef<QueryEngine::Walker> iWalker, const ChanW_UTF& w);
 
-Walker_Rename::~Walker_Rename()
-	{}
-
-ZRef<Walker> Walker_Rename::Prime(
-	const map<string8,size_t>& iOffsets,
-	map<string8,size_t>& oOffsets,
-	size_t& ioBaseOffset)
-	{
-	// Confusion will result if the name we're going to be our new name is already in the list
-	ZAssert(not sContains(iOffsets, fNew));
-
-	map<string8,size_t> childOffsets;
-	fWalker = fWalker->Prime(iOffsets, childOffsets, ioBaseOffset);
-
-	sInsertMust(childOffsets, fNew, sGetEraseMust(childOffsets, fOld));
-
-	oOffsets.insert(childOffsets.begin(), childOffsets.end());
-
-	return this;
-	}
-
-bool Walker_Rename::QReadInc(Val_Any* ioResults)
-	{
-	this->Called_QReadInc();
-	return fWalker->QReadInc(ioResults);
-	}
-
-} // namespace QueryEngine
+} // namespace Dataspace
 } // namespace ZooLib
+
+#endif // __ZooLib_Dataspace_Util_Strim_Walker_h__

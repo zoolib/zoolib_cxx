@@ -28,38 +28,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
+#include "zoolib/Dataspace/Util_Strim_Walker.h"
+
+#include "zoolib/QueryEngine/Expr_Rel_Search.h"
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
-#include "zoolib/QueryEngine/Walker_Result.h"
 #include "zoolib/QueryEngine/Walker_Rename.h"
-
-#include "zoolib/RelationalAlgebra/GetRelHead.h"
-#include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
-#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
-#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+#include "zoolib/QueryEngine/Walker_Result.h"
 
 #include "zoolib/RelationalAlgebra/Transform_ConsolidateRenames.h"
 #include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
 #include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
+#include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
 #include "zoolib/ValPred/ValPred_Any.h" // For ValComparand_Const_Any
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
-#include "zoolib/QueryEngine/Util_Strim_Result.h"
-#include "zoolib/QueryEngine/Walker_Embed.h"
-#include "zoolib/QueryEngine/Walker_Product.h"
-#include "zoolib/QueryEngine/Walker_Union.h"
-
-#include "zoolib/pdesc.h"
-#if defined(ZMACRO_pdesc)
-	#include "zoolib/StdIO.h"
-#endif
-
 namespace ZooLib {
+
+namespace QE = QueryEngine;
+namespace RA = RelationalAlgebra;
+
 namespace Dataspace {
 
 using std::make_pair;
@@ -67,9 +59,6 @@ using std::map;
 using std::pair;
 using std::set;
 using std::vector;
-
-namespace QE = QueryEngine;
-namespace RA = RelationalAlgebra;
 
 using namespace Util_STL;
 
@@ -267,7 +256,6 @@ class Relater_Searcher::Visitor_DoMakeWalker
 ,	public virtual RA::Visitor_Expr_Rel_Concrete
 ,	public virtual QE::Visitor_Expr_Rel_Search
 	{
-	typedef QE::Visitor_DoMakeWalker inherited;
 public:
 	Visitor_DoMakeWalker(ZRef<Relater_Searcher> iSearcher, PQuery* iPQuery)
 	:	fSearcher(iSearcher)
@@ -278,7 +266,7 @@ public:
 		{
 		// Do we need to do something with embed here as well? To gather the bound names
 		// that will be passed off?
-		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
+		ZRef<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			RelHead(), SearchSpec(iExpr->GetConcreteHead(), null));
 
 		this->pSetResult(theWalker);
@@ -298,12 +286,12 @@ public:
 			theConcreteHead[source] = not sContains(iExpr->GetRelHead_Optional(), source);
 			}
 
-		ZRef<QueryEngine::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
+		ZRef<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			iExpr->GetRelHead_Bound(),
 			SearchSpec(theConcreteHead, iExpr->GetExpr_Bool()));
 
 		foreacha (entry, finalRename)
-			theWalker = new QueryEngine::Walker_Rename(theWalker, entry.second, entry.first);
+			theWalker = new QE::Walker_Rename(theWalker, entry.second, entry.first);
 
 		this->pSetResult(theWalker);
 		}
@@ -506,66 +494,6 @@ void Relater_Searcher::ModifyRegistrations(
 
 // =================================================================================================
 
-using namespace QueryEngine;
-
-class DumpWalkers : public QueryEngine::Visitor_Walker
-	{
-public:
-	DumpWalkers(const ChanW_UTF& iW)
-	:	fW(iW)
-	,	fIndent(0)
-		{}
-
-	virtual void Visit_Walker(const ZRef<Walker>& iWalker)
-		{
-		fW << "\n";
-
-		for (size_t xx = 0; xx < fIndent; ++xx)
-			fW << "\t";
-
-		fW << iWalker->fCalled_Rewind << "\t" << iWalker->fCalled_QReadInc;
-		fW << " " << typeid(*iWalker).name();
-
-		++fIndent;
-
-		if (false)
-			{}
-		else if (ZRef<Walker_Embed> theW = iWalker.DynamicCast<Walker_Embed>())
-			{
-			theW->GetParent()->Accept(*this);
-			theW->GetEmbedee()->Accept(*this);
-			}
-		else if (ZRef<Walker_Product> theW = iWalker.DynamicCast<Walker_Product>())
-			{
-			theW->GetLeft()->Accept(*this);
-			theW->GetRight()->Accept(*this);
-			}
-		else if (ZRef<Walker_Union> theW = iWalker.DynamicCast<Walker_Union>())
-			{
-			theW->GetLeft()->Accept(*this);
-			theW->GetRight()->Accept(*this);
-			}
-		else if (ZRef<Walker_Unary> theW = iWalker.DynamicCast<Walker_Unary>())
-			{
-			theW->GetChild()->Accept(*this);
-			}
-
-		--fIndent;
-		}
-
-	const ChanW_UTF& fW;
-	size_t fIndent;
-	};
-
-void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w);
-void spDump(ZRef<QE::Walker> iWalker, const ChanW_UTF& w)
-	{
-	DumpWalkers dw(w);
-	iWalker->Accept(dw);
-	}
-
-// =================================================================================================
-
 void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 	{
 	Relater::pCalled_RelaterCollectResults();
@@ -596,7 +524,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
 				w << "\nSlow Query " << elapsed * 1e3 << "ms: ";
 				w << thePQuery->fRel << "\n";
 				sToStrim(thePQuery->fResult, w);
-				spDump(theWalker, w);
+				sDumpWalkers(theWalker, w);
 				}
 			}
 		}
@@ -789,7 +717,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 	return true;
 	}
 
-ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
+ZRef<QE::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
@@ -801,17 +729,3 @@ ZRef<QueryEngine::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 
 } // namespace Dataspace
 } // namespace ZooLib
-
-// =================================================================================================
-#pragma mark - pdesc
-
-#if defined(ZMACRO_pdesc)
-
-using namespace ZooLib;
-
-ZMACRO_pdesc(const ZRef<QueryEngine::Walker>& iWalker)
-	{
-	ZooLib::Dataspace::spDump(iWalker, StdIO::sChan_UTF_Err);
-	}
-
-#endif // defined(ZMACRO_pdesc)
