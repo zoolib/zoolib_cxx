@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Dataspace/Util_Strim.h"
 
-#include "zoolib/ZMACRO_foreach.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/ValueOnce.h"
 
-#include "zoolib/Dataspace/Util_Strim.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 

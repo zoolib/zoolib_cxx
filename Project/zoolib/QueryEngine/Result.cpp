@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/QueryEngine/Result.h"
+
 #include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_vector.h"
-
-#include "zoolib/QueryEngine/Result.h"
 
 using std::pair;
 using std::vector;

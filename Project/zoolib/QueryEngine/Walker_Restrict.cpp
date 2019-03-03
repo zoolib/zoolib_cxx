@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/QueryEngine/Walker_Restrict.h"
+
 #include "zoolib/Log.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
@@ -26,8 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //###include "zoolib/ZTextCollator.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
-
-#include "zoolib/QueryEngine/Walker_Restrict.h"
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
 #include "zoolib/ValPred/ValPred_Any.h"

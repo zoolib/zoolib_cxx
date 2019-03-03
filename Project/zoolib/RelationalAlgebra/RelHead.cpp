@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/RelHead.h"
+
 #include "zoolib/Compare_Integer.h" // For sCompare_T<bool>
 #include "zoolib/Compare_string.h"
 #include "zoolib/ZMACRO_foreach.h"
-
-#include "zoolib/RelationalAlgebra/RelHead.h"
 
 namespace ZooLib {
 

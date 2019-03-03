@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Debug.h"
+
 #include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Chan_Bin_FILE.h"
@@ -26,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Stringf.h"
 #include "zoolib/Time.h"
 #include "zoolib/Unicode.h"
-#include "zoolib/Util_Debug.h"
 #include "zoolib/Util_Time.h"
 
 #include "zoolib/ZThread.h"

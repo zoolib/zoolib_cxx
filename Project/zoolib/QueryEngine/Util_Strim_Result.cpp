@@ -19,11 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/QueryEngine/Util_Strim_Result.h"
-#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+
 #include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/Dataspace/Types.h" // For AbsentOptional_t
+
+#include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 #include "zoolib/pdesc.h"
 #if defined(ZMACRO_pdesc)

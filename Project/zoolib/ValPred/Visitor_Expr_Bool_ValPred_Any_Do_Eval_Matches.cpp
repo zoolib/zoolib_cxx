@@ -19,9 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches.h"
-#include "zoolib/ValPred/ValPred_Any.h"
 
-using std::set;
+#include "zoolib/ValPred/ValPred_Any.h"
 
 namespace ZooLib {
 

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_Bin_FILE.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include <errno.h>

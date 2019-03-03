@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanR_Bin_HexStrim.h"
+
 #include "zoolib/Util_Chan_UTF.h"
 
 namespace ZooLib {

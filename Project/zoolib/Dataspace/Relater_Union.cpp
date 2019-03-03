@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/Relater_Union.h"
+
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Log.h"
@@ -28,14 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/ValPred/Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/ValPred_GetNames.h"
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
+#include "zoolib/Dataspace/Util_Strim.h"
 
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
-
-#include "zoolib/Dataspace/Relater_Union.h"
-#include "zoolib/Dataspace/Util_Strim.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
@@ -46,6 +43,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
+
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/ValPred_GetNames.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
 namespace Dataspace {

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Net_Internet.h"
+
 #include "zoolib/Stringf.h"
 
 #if ZCONFIG_SPI_Enabled(Win)

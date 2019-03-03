@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/RowBoat.h"
+
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/ValPred/Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/ValPred_Any.h"
-
-#include "zoolib/Dataspace/RowBoat.h"
-
 #include "zoolib/RelationalAlgebra/PseudoMap.h"
 #include "zoolib/RelationalAlgebra/Util_Rel_Operators.h"
+
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
+#include "zoolib/ValPred/ValPred_Any.h"
 
 namespace ZooLib {
 namespace Dataspace {

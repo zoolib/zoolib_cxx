@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
+
+#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 
 #include "zoolib/pdesc.h"
 #if defined(ZMACRO_pdesc)

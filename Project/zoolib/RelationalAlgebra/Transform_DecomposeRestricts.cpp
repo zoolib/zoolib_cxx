@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
+
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"
-
-#include "zoolib/RelationalAlgebra/Transform_DecomposeRestricts.h"
 
 using std::set;
 

@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
+
 #include "zoolib/Callable_Function.h"
 
 #include "zoolib/Expr/Util_Strim_Expr_Bool.h"
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
 #include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 
 namespace ZooLib {

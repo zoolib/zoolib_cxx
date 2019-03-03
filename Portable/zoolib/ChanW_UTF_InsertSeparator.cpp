@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ChanW_UTF_InsertSeparator.h"
+
 #include "zoolib/Compat_algorithm.h"
 
 namespace ZooLib {

@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include <inttypes.h> // For PRIuLEAST16 and PRIuLEAST32
 
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll
 #include "zoolib/Util_Chan_UTF.h"
-#include "zoolib/Util_Chan_UTF_Operators.h"
 
 // =================================================================================================
 #pragma mark - Util_Chan_UTF_Operators

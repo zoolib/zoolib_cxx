@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Memory.h"
 #include "zoolib/ML.h"
+
+#include "zoolib/Memory.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"

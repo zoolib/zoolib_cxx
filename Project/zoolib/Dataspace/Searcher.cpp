@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/Searcher.h"
+
 #include "zoolib/Compare_Ref.h"
 #include "zoolib/Log.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-
-#include "zoolib/Dataspace/Searcher.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 

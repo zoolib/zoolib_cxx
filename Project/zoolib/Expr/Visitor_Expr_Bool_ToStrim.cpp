@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Util_Chan_UTF_Operators.h"
-
 #include "zoolib/Expr/Visitor_Expr_Bool_ToStrim.h"
+
+#include "zoolib/Util_Chan_UTF_Operators.h"
 
 namespace ZooLib {
 

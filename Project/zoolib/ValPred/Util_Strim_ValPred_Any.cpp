@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
 
 #include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
-#include "zoolib/Util_Chan_JSON.h"
 
 #include "zoolib/ValPred/ValPred_Any.h"
 

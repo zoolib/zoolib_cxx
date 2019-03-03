@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Dataspace/Searcher_Datons.h"
+
 #include "zoolib/Callable_PMF.h"
 #include "zoolib/Compare.h"
 #include "zoolib/Log.h"
@@ -30,7 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Dataspace/Daton_Val.h"
-#include "zoolib/Dataspace/Searcher_Datons.h"
 #include "zoolib/Dataspace/Util_Strim_Walker.h"
 
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"

@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
+
 #include "zoolib/Util_STL_set.h"
 
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 #include "zoolib/ValPred/ValPred_GetNames.h"
 
 namespace ZooLib {

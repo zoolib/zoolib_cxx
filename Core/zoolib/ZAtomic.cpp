@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZAtomic.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h" // For ZAssertCompile
 

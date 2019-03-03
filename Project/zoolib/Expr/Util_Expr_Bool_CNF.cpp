@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Visitor_Do_T.h"
-#include "zoolib/ZMACRO_foreach.h"
-
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"
+
+#include "zoolib/Visitor_Do_T.h"
+
+#include "zoolib/ZMACRO_foreach.h"
 
 using std::set;
 

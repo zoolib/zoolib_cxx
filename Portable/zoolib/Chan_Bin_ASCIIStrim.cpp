@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
+
 #include "zoolib/Util_Chan_UTF.h"
 
 namespace ZooLib {

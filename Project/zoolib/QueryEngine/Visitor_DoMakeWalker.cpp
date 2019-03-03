@@ -18,11 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
+
 #include "zoolib/Log.h"
 
-#include "zoolib/ValPred/Expr_Bool_ValPred.h"
-
-#include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 #include "zoolib/QueryEngine/Walker_Calc.h"
 #include "zoolib/QueryEngine/Walker_Comment.h"
 #include "zoolib/QueryEngine/Walker_Const.h"
@@ -34,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/QueryEngine/Walker_Rename.h"
 #include "zoolib/QueryEngine/Walker_Restrict.h"
 #include "zoolib/QueryEngine/Walker_Union.h"
+
+#include "zoolib/ValPred/Expr_Bool_ValPred.h"
 
 namespace ZooLib {
 namespace QueryEngine {

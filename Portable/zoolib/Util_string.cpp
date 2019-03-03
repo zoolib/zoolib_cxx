@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_string.h"
+
 #include "zoolib/Compat_algorithm.h" // For min
 #include "zoolib/Compat_string.h" // For strncasecmp
 #include "zoolib/Memory.h" // For sMemCopy
 #include "zoolib/Unicode.h"
-#include "zoolib/Util_string.h"
 
 #include <stdio.h>
 

@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Util_Chan_UTF.h"
+
 #include "zoolib/Compat_cmath.h"
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
 #include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/Unicode.h" // For Unicode::sIsEOL
-#include "zoolib/Util_Chan_UTF.h"
 
 #include <vector>
 

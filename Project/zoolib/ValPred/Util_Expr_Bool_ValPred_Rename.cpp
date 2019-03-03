@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
+
 #include "zoolib/Expr/Visitor_Expr_Op_Do_Transform_T.h"
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ValPred/ValPred_Renamed.h"
 
 using std::map;

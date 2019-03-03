@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/HTTP_Requests.h"
+
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/Chan_XX_Tee.h"
@@ -25,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_XX_Wrapper.h"
 #include "zoolib/HTTP.h"
 #include "zoolib/HTTP_Content.h" // For ChanW_Bin_Chunked.
-#include "zoolib/HTTP_Requests.h"
 #include "zoolib/Log.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"

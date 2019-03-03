@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
+
 #include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_string.h"
 #include "zoolib/Log.h"
-
-#include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 
 using std::string;
 

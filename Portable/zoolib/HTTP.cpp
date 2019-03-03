@@ -18,12 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/HTTP.h"
+
 #include "zoolib/Chan_Bin_string.h"
 #include "zoolib/ChanW_Bin_More.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_algorithm.h"
-#include "zoolib/HTTP.h"
 #include "zoolib/Memory.h"
 #include "zoolib/MIME.h"
 #include "zoolib/Stringf.h"

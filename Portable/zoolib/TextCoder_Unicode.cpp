@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/TextCoder_Unicode.h"
+
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Memory.h"
-#include "zoolib/TextCoder_Unicode.h"
 #include "zoolib/Unicode.h"
 
 #include "zoolib/ZByteSwap.h"

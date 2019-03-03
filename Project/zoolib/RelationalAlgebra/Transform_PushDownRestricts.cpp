@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
+
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
-
-#include "zoolib/RelationalAlgebra/Transform_PushDownRestricts.h"
 
 #include "zoolib/Log.h"
 

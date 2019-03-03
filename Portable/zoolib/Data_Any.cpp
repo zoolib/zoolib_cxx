@@ -18,10 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/Data_Any.h"
+
 #include "zoolib/Compare.h"
 #include "zoolib/Compare_vector.h"
 #include "zoolib/CountedWithoutFinalize.h"
-#include "zoolib/Data_Any.h"
 #include "zoolib/Memory.h"
 #include "zoolib/Util_STL_vector.h"
 

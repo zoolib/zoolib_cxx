@@ -18,6 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/RelationalAlgebra/GetRelHead.h"
+
 #include "zoolib/Visitor_Do_T.h"
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Calc.h"
@@ -27,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Expr_Rel_Project.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Rename.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel_Concrete.h"
-#include "zoolib/RelationalAlgebra/GetRelHead.h"
 
 namespace ZooLib {
 namespace RelationalAlgebra {

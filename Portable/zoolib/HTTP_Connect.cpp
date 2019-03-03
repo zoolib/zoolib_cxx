@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Chan_XX_Buffered.h"
 #include "zoolib/HTTP_Connect.h"
+
+#include "zoolib/Chan_XX_Buffered.h"
 #include "zoolib/Net_Internet.h"
 
 //###include "zoolib/ZStreamerRWCon_SSL.h"

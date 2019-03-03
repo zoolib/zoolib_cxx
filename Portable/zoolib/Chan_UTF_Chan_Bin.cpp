@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Chan_UTF_Chan_Bin.h"
+
 #include "zoolib/Compat_algorithm.h"
 #include "zoolib/Unicode.h"
 

@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/Util_Chan_Bin_Operators.h"
+
 #include "zoolib/Util_Chan.h"
 
 // =================================================================================================
