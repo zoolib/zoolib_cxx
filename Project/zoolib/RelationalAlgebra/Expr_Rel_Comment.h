@@ -39,7 +39,10 @@ class Expr_Rel_Comment
 	{
 	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0, const std::string& iComment);
+	Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0,
+		const std::string& iComment,
+		const ZRef<Callable_Void>& iCallable);
+
 	virtual ~Expr_Rel_Comment();
 
 // From Visitee
@@ -56,8 +59,11 @@ public:
 
 	const std::string& GetComment() const;
 
+	ZRef<Callable_Void> GetCallable() const;
+
 private:
 	const std::string fComment;
+	const ZRef<Callable_Void> fCallable;
 	};
 
 // =================================================================================================
@@ -74,6 +80,10 @@ public:
 #pragma mark - Relational operators
 
 ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel, const std::string& iComment);
+
+ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel,
+	const std::string& iComment,
+	const ZRef<Callable_Void>& iCallable);
 
 } // namespace RelationalAlgebra
 

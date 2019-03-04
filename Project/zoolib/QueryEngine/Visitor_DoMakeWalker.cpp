@@ -64,7 +64,7 @@ void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iE
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Comment(const ZRef<RA::Expr_Rel_Comment>& iExpr)
 	{
 	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new Walker_Comment(op0, iExpr->GetComment()));
+		this->pSetResult(new Walker_Comment(op0, iExpr->GetComment(), iExpr->GetCallable()));
 	}
 
 void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)

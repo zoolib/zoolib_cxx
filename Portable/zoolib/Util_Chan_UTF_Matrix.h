@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2019 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,46 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
-#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#ifndef __ZooLib_Util_Chan_UTF_Matrix_h__
+#define __ZooLib_Util_Chan_UTF_Matrix_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
-
-#include "zoolib/QueryEngine/Walker.h"
+#include "zoolib/Matrix.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
 
 namespace ZooLib {
-namespace QueryEngine {
 
-// =================================================================================================
-#pragma mark - Walker_Comment
-
-class Walker_Comment : public Walker_Unary
+template <class E, size_t R>
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,1,R>& mat)
 	{
-public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
-		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
+	w << "C[";
+	for (size_t r = 0; r < R; ++r)
+		{
+		if (r)
+			w << ", ";
+		w << mat.fE[0][r];
+		}
+	w << "]";
+	return w;
+	}
 
-	virtual ~Walker_Comment();
+template <class E, size_t C>
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,1>& mat)
+	{
+	w << "R[";
+	for (size_t c = 0; c < C; ++c)
+		{
+		if (c)
+			w << ", ";
+		w << mat.fE[c][0];
+		}
+	w << "]";
+	return w;
+	}
 
-// From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
+template <class E, size_t C, size_t R>
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,R>& mat)
+	{
+	w << "[";
+	for (size_t r = 0; r < R; ++r)
+		{
+		w << "[";
+		for (size_t c = 0; c < C; ++c)
+			{
+			if (c)
+				w << ", ";
+			w << mat.fE[c][r];
+			}
+		w << "]";
+		}
+	w << "]";
+	return w;
+	}
 
-	virtual bool QReadInc(Val_Any* ioResults);
-
-// Our protocol
-	string8 GetComment();
-
-private:
-	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
-	};
-
-} // namespace QueryEngine
 } // namespace ZooLib
 
-#endif // __ZooLib_QueryEngine_Walker_Comment_h__
+#endif // __ZooLib_Util_Chan_UTF_Matrix_h__

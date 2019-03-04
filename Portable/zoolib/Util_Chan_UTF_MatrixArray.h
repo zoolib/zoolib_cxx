@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2019 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,46 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
-#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#ifndef __ZooLib_Util_Chan_UTF_MatrixArray_h__
+#define __ZooLib_Util_Chan_UTF_MatrixArray_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
-
-#include "zoolib/QueryEngine/Walker.h"
+#include "zoolib/MatrixArray.h"
 
 namespace ZooLib {
-namespace QueryEngine {
 
-// =================================================================================================
-#pragma mark - Walker_Comment
-
-class Walker_Comment : public Walker_Unary
+template <class E, size_t C, size_t R, size_t Length_p>
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrixArray<E,C,R,Length_p>& iArray)
 	{
-public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
-		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
+	w << "Array(" << Length_p << ")[";
+	for (size_t x = 0; x < Length_p; ++x)
+		w << iArray[x];
+	w << "]";
+	
+	return w;
+	}
 
-	virtual ~Walker_Comment();
-
-// From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool QReadInc(Val_Any* ioResults);
-
-// Our protocol
-	string8 GetComment();
-
-private:
-	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
-	};
-
-} // namespace QueryEngine
 } // namespace ZooLib
 
-#endif // __ZooLib_QueryEngine_Walker_Comment_h__
+#endif // __ZooLib_Util_Chan_UTF_MatrixArray_h__

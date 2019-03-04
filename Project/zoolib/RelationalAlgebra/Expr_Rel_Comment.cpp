@@ -45,9 +45,12 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Comment
 
-Expr_Rel_Comment::Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0, const std::string& iComment)
+Expr_Rel_Comment::Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0,
+	const std::string& iComment,
+	const ZRef<Callable_Void>& iCallable)
 :	inherited(iOp0)
 ,	fComment(iComment)
+,	fCallable(iCallable)
 	{}
 
 Expr_Rel_Comment::~Expr_Rel_Comment()
@@ -73,13 +76,16 @@ ZRef<Expr_Rel> Expr_Rel_Comment::Self()
 	{ return this; }
 
 ZRef<Expr_Rel> Expr_Rel_Comment::Clone(const ZRef<Expr_Rel>& iOp0)
-	{ return new Expr_Rel_Comment(iOp0, fComment); }
+	{ return new Expr_Rel_Comment(iOp0, fComment, fCallable); }
 
 void Expr_Rel_Comment::Accept_Expr_Rel_Comment(Visitor_Expr_Rel_Comment& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Comment(this); }
 
 const std::string& Expr_Rel_Comment::GetComment() const
 	{ return fComment; }
+
+ZRef<Callable_Void> Expr_Rel_Comment::GetCallable() const
+	{ return fCallable; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Comment
@@ -93,7 +99,17 @@ void Visitor_Expr_Rel_Comment::Visit_Expr_Rel_Comment(const ZRef<Expr_Rel_Commen
 ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel, const std::string& iComment)
 	{
 	if (iExpr_Rel)
-		return new Expr_Rel_Comment(iExpr_Rel, iComment);
+		return new Expr_Rel_Comment(iExpr_Rel, iComment, null);
+	sSemanticError("sComment, rel is null");
+	return null;
+	}
+
+ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel,
+	const std::string& iComment,
+	const ZRef<Callable_Void>& iCallable)
+	{
+	if (iExpr_Rel)
+		return new Expr_Rel_Comment(iExpr_Rel, iComment, iCallable);
 	sSemanticError("sComment, rel is null");
 	return null;
 	}

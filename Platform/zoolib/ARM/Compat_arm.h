@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2019 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,46 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
-#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#ifndef __ZooLib_ARM_Compat_arm_h__
+#define __ZooLib_ARM_Compat_arm_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
+#if 0 // __arm__
+	#if defined (__ANDROID__)
+		#include <machine/cpu-features.h>
+	#else
+		#include <arm/arch.h>
+	#endif
+#endif
 
-#include "zoolib/QueryEngine/Walker.h"
-
-namespace ZooLib {
-namespace QueryEngine {
-
-// =================================================================================================
-#pragma mark - Walker_Comment
-
-class Walker_Comment : public Walker_Unary
-	{
-public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
-		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
-
-	virtual ~Walker_Comment();
-
-// From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool QReadInc(Val_Any* ioResults);
-
-// Our protocol
-	string8 GetComment();
-
-private:
-	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
-	};
-
-} // namespace QueryEngine
-} // namespace ZooLib
-
-#endif // __ZooLib_QueryEngine_Walker_Comment_h__
+#endif // __ZooLib_ARM_Compat_arm_h__

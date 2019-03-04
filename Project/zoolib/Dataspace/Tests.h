@@ -18,46 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
-#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#ifndef __ZooLib_Dataspace_Tests_h__
+#define __ZooLib_Dataspace_Tests_h__
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
-
-#include "zoolib/QueryEngine/Walker.h"
-
 namespace ZooLib {
-namespace QueryEngine {
+namespace Dataspace {
+namespace Tests {
 
 // =================================================================================================
-#pragma mark - Walker_Comment
+#pragma mark -
 
-class Walker_Comment : public Walker_Unary
-	{
-public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
-		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
+void RunTests();
 
-	virtual ~Walker_Comment();
-
-// From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool QReadInc(Val_Any* ioResults);
-
-// Our protocol
-	string8 GetComment();
-
-private:
-	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
-	};
-
-} // namespace QueryEngine
+} // namespace Tests
+} // namespace Dataspace
 } // namespace ZooLib
 
-#endif // __ZooLib_QueryEngine_Walker_Comment_h__
+#endif // __ZooLib_Dataspace_Tests_h__

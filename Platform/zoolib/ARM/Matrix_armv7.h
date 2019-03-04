@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2019 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,46 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Comment_h__
-#define __ZooLib_QueryEngine_Walker_Comment_h__ 1
+#ifndef __ZooLib_ARM_Matrix_armv7_h__
+#define __ZooLib_ARM_Matrix_armv7_h__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_API.h"
 
-#include "zoolib/Callable.h"
+#include "zoolib/ARM/Compat_arm.h"
 
-#include "zoolib/QueryEngine/Walker.h"
+#ifndef ZCONFIG_API_Desired__Matrix_armv7
+	#define ZCONFIG_API_Desired__Matrix_armv7 1
+#endif
+
+#ifndef ZCONFIG_API_Avail__Matrix_armv7
+	#if ZCONFIG_API_Desired__Matrix_armv7
+		#if __arm__
+			#if defined(_ARM_ARCH_7)
+				#define ZCONFIG_API_Avail__Matrix_armv7 1
+			#endif
+		#endif
+	#endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__Matrix_armv7
+	#define ZCONFIG_API_Avail__Matrix_armv7 0
+#endif
+
+#if ZCONFIG_API_Enabled(Matrix_armv7)
 
 namespace ZooLib {
-namespace QueryEngine {
+namespace Matrix_armv7 {
 
 // =================================================================================================
-#pragma mark - Walker_Comment
+#pragma mark -
 
-class Walker_Comment : public Walker_Unary
-	{
-public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
-		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
+void Matrix4Mul(const float* src_mat_1, const float* src_mat_2, float* dst_mat);
 
-	virtual ~Walker_Comment();
+void Matrix4Vector4Mul(const float* src_mat, const float* src_vec, float* dst_vec);
 
-// From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool QReadInc(Val_Any* ioResults);
-
-// Our protocol
-	string8 GetComment();
-
-private:
-	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
-	};
-
-} // namespace QueryEngine
+} // namespace Matrix_armv7
 } // namespace ZooLib
 
-#endif // __ZooLib_QueryEngine_Walker_Comment_h__
+#endif // ZCONFIG_API_Enabled(Matrix_armv7)
+
+#endif // __ZooLib_ARM_Matrix_armv7_h__

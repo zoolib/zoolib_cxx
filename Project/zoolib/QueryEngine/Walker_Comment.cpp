@@ -29,9 +29,12 @@ using std::set;
 // =================================================================================================
 #pragma mark - Walker_Comment
 
-Walker_Comment::Walker_Comment(const ZRef<Walker>& iWalker, const string8& iComment)
+Walker_Comment::Walker_Comment(const ZRef<Walker>& iWalker,
+	const string8& iComment,
+	const ZRef<Callable_Void>& iCallable)
 :	Walker_Unary(iWalker)
 ,	fComment(iComment)
+,	fCallable(iCallable)
 	{}
 
 Walker_Comment::~Walker_Comment()
@@ -42,12 +45,16 @@ ZRef<Walker> Walker_Comment::Prime(
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
 	{
+	if (fCallable)
+		sCall(fCallable);
 	fWalker->Prime(iOffsets, oOffsets, ioBaseOffset);
 	return this;
 	}
 
 bool Walker_Comment::QReadInc(Val_Any* ioResults)
 	{
+	if (fCallable)
+		sCall(fCallable);
 	this->Called_QReadInc();
 	return fWalker->QReadInc(ioResults);
 	}
