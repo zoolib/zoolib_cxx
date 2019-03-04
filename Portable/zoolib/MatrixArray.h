@@ -30,35 +30,35 @@ namespace ZooLib {
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p>
-class ZMatrixArray
+class MatrixArray
 	{
 public:
-	ZMatrixArray() {}
-	ZMatrixArray(const null_t&) {}
+	MatrixArray() {}
+	MatrixArray(const null_t&) {}
 
-	const ZMatrix<E,C,R>& operator[](size_t i) const
+	const Matrix<E,C,R>& operator[](size_t i) const
 		{ return fArray[i]; }
 
-	ZMatrix<E,C,R>& operator[](size_t i)
+	Matrix<E,C,R>& operator[](size_t i)
 		{ return fArray[i]; }
 
-	ZMatrix<E,C,R> fArray[Length_p];
+	Matrix<E,C,R> fArray[Length_p];
 	};
 
 // =================================================================================================
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p> operator*(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p> operator*(const MatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
 	{
-	ZMatrixArray<E,C,R,Length_p> result(null);
+	MatrixArray<E,C,R,Length_p> result(null);
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		result[ii] = iLeft[ii] * iRight;
 	return result;
 	}
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p>& operator*=(ZMatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p>& operator*=(MatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
 	{
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		ioLeft[ii] *= iRight;
@@ -69,16 +69,16 @@ ZMatrixArray<E,C,R,Length_p>& operator*=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p> operator/(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p> operator/(const MatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
 	{
-	ZMatrixArray<E,C,R,Length_p> result(null);
+	MatrixArray<E,C,R,Length_p> result(null);
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		result[ii] = iLeft[ii] / iRight;
 	return result;
 	}
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p>& operator/=(ZMatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p>& operator/=(MatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
 	{
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		ioLeft[ii] /= iRight;
@@ -89,16 +89,16 @@ ZMatrixArray<E,C,R,Length_p>& operator/=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p> operator+(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p> operator+(const MatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
 	{
-	ZMatrixArray<E,C,R,Length_p> result(null);
+	MatrixArray<E,C,R,Length_p> result(null);
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		result[ii] = iLeft[ii] + iRight;
 	return result;
 	}
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p>& operator+=(ZMatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p>& operator+=(MatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
 	{
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		ioLeft[ii] += iRight;
@@ -109,16 +109,16 @@ ZMatrixArray<E,C,R,Length_p>& operator+=(ZMatrixArray<E,C,R,Length_p>& ioLeft, c
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p> operator-(const ZMatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p> operator-(const MatrixArray<E,C,R,Length_p>& iLeft, const P& iRight)
 	{
-	ZMatrixArray<E,C,R,Length_p> result(null);
+	MatrixArray<E,C,R,Length_p> result(null);
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		result[ii] = iLeft[ii] - iRight;
 	return result;
 	}
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
-ZMatrixArray<E,C,R,Length_p>& operator-=(ZMatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
+MatrixArray<E,C,R,Length_p>& operator-=(MatrixArray<E,C,R,Length_p>& ioLeft, const P& iRight)
 	{
 	for (size_t ii = 0; ii < Length_p; ++ii)
 		ioLeft[ii] -= iRight;

@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <class E, size_t R>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,1,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,1,R>& mat)
 	{
 	w << "C[";
 	for (size_t r = 0; r < R; ++r)
@@ -42,7 +42,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,1,R>& mat)
 	}
 
 template <class E, size_t C>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,1>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,C,1>& mat)
 	{
 	w << "R[";
 	for (size_t c = 0; c < C; ++c)
@@ -56,7 +56,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,1>& mat)
 	}
 
 template <class E, size_t C, size_t R>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZMatrix<E,C,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,C,R>& mat)
 	{
 	w << "[";
 	for (size_t r = 0; r < R; ++r)

@@ -31,26 +31,26 @@ namespace GameEngine {
 #pragma mark - CVec ctors
 
 template <class Val>
-ZMatrix<Val,1,1> sCVec1(Val i0)
+Matrix<Val,1,1> sCVec1(Val i0)
 	{
-	ZMatrix<Val,1,1> result(null);
+	Matrix<Val,1,1> result(null);
 	result.fE[0][0] = i0;
 	return result;
 	}
 
 template <class Val>
-ZMatrix<Val,1,2> sCVec2(Val i0, Val i1)
+Matrix<Val,1,2> sCVec2(Val i0, Val i1)
 	{
-	ZMatrix<Val,1,2> result(null);
+	Matrix<Val,1,2> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	return result;
 	}
 
 template <class Val>
-ZMatrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
+Matrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
 	{
-	ZMatrix<Val,1,3> result(null);
+	Matrix<Val,1,3> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -58,9 +58,9 @@ ZMatrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
 	}
 
 template <class Val>
-ZMatrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
+Matrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 	{
-	ZMatrix<Val,1,4> result(null);
+	Matrix<Val,1,4> result(null);
 	result.fE[0][0] = i0;
 	result.fE[0][1] = i1;
 	result.fE[0][2] = i2;
@@ -72,48 +72,48 @@ ZMatrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 #pragma mark - CVec2 ctors
 
 template <class Val>
-ZMatrix<Val,1,2> sCVec2(Val iVal)
-	{ return ZMatrix<Val,1,2>(iVal); }
+Matrix<Val,1,2> sCVec2(Val iVal)
+	{ return Matrix<Val,1,2>(iVal); }
 
 template <class Val>
-ZMatrix<Val,1,2> sCVec2()
-	{ return ZMatrix<Val,1,2>(); }
+Matrix<Val,1,2> sCVec2()
+	{ return Matrix<Val,1,2>(); }
 
 // =================================================================================================
 #pragma mark - CVec3 ctors
 
 template <class Val>
-ZMatrix<Val,1,3> sCVec3(Val iVal)
-	{ return ZMatrix<Val,1,3>(iVal); }
+Matrix<Val,1,3> sCVec3(Val iVal)
+	{ return Matrix<Val,1,3>(iVal); }
 
 template <class Val>
-ZMatrix<Val,1,3> sCVec3()
-	{ return ZMatrix<Val,1,3>(); }
+Matrix<Val,1,3> sCVec3()
+	{ return Matrix<Val,1,3>(); }
 
 // =================================================================================================
 #pragma mark - RVec ctors
 
 template <class Val>
-ZMatrix<Val,1,1> sRVec1(Val i0)
+Matrix<Val,1,1> sRVec1(Val i0)
 	{
-	ZMatrix<Val,1,1> result(null);
+	Matrix<Val,1,1> result(null);
 	result.fE[0][0] = i0;
 	return result;
 	}
 
 template <class Val>
-ZMatrix<Val,2,1> sRVec2(Val i0, Val i1)
+Matrix<Val,2,1> sRVec2(Val i0, Val i1)
 	{
-	ZMatrix<Val,1,2> result(null);
+	Matrix<Val,1,2> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	return result;
 	}
 
 template <class Val>
-ZMatrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
+Matrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
 	{
-	ZMatrix<Val,1,3> result(null);
+	Matrix<Val,1,3> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	result.fE[2][0] = i2;
@@ -121,9 +121,9 @@ ZMatrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
 	}
 
 template <class Val>
-ZMatrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
+Matrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
 	{
-	ZMatrix<Val,1,4> result(null);
+	Matrix<Val,1,4> result(null);
 	result.fE[0][0] = i0;
 	result.fE[1][0] = i1;
 	result.fE[2][0] = i2;
@@ -135,31 +135,31 @@ ZMatrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
 #pragma mark - RVec2 ctors
 
 template <class Val>
-ZMatrix<Val,2,1> sRVec2(Val iVal)
-	{ return ZMatrix<Val,2,1>(iVal); }
+Matrix<Val,2,1> sRVec2(Val iVal)
+	{ return Matrix<Val,2,1>(iVal); }
 
 template <class Val>
-ZMatrix<Val,2,1> sRVec2()
-	{ return ZMatrix<Val,2,1>(); }
+Matrix<Val,2,1> sRVec2()
+	{ return Matrix<Val,2,1>(); }
 
 // =================================================================================================
 #pragma mark - RVec3 ctors
 
 template <class Val>
-ZMatrix<Val,3,1> sRVec3(Val iVal)
-	{ return ZMatrix<Val,3,1>(iVal); }
+Matrix<Val,3,1> sRVec3(Val iVal)
+	{ return Matrix<Val,3,1>(iVal); }
 
 template <class Val>
-ZMatrix<Val,3,1> sRVec3()
-	{ return ZMatrix<Val,3,1>(); }
+Matrix<Val,3,1> sRVec3()
+	{ return Matrix<Val,3,1>(); }
 
 // =================================================================================================
 #pragma mark - sScale (taking column vector)
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
+Matrix<E,Dim+1,Dim+1> sScale(const Matrix<E,1,Dim>& iVec)
 	{
-	ZMatrix<E,Dim+1,Dim+1> result;
+	Matrix<E,Dim+1,Dim+1> result;
 	for (size_t ii = 0; ii < Dim; ++ii)
 		result.fE[ii][ii] = iVec.fE[0][ii];
 	result.fE[Dim][Dim] = 1;
@@ -170,9 +170,9 @@ ZMatrix<E,Dim+1,Dim+1> sScale(const ZMatrix<E,1,Dim>& iVec)
 #pragma mark - sTranslate (taking column vector)
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim+1,Dim+1> sTranslate(const ZMatrix<E,1,Dim>& iVec)
+Matrix<E,Dim+1,Dim+1> sTranslate(const Matrix<E,1,Dim>& iVec)
 	{
-	ZMatrix<E,Dim+1,Dim+1> result(E(1));
+	Matrix<E,Dim+1,Dim+1> result(E(1));
 	for (size_t ii = 0; ii < Dim; ++ii)
 		result.fE[Dim][ii] = iVec.fE[0][ii];
 	return result;

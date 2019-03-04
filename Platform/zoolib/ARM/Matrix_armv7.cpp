@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(Matrix_armv7)
 
 namespace ZooLib {
-namespace ZMatrix_armv7 {
+namespace Matrix_armv7 {
 
 // =================================================================================================
 #pragma mark -
@@ -122,7 +122,7 @@ void Matrix4Vector4Mul(const float* m, const float* v, float* output)
 		);
 	}
 
-} // namespace ZMatrix_armv7
+} // namespace Matrix_armv7
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Matrix_armv7)

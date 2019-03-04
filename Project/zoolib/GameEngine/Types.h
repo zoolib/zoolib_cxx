@@ -41,13 +41,13 @@ typedef ZMap_Yad Map;
 
 typedef float Rat;
 
-typedef ZMatrix<Rat,4,4> Mat;
+typedef Matrix<Rat,4,4> Mat;
 
-typedef ZMatrix<Rat,1,2> CVec2;
-typedef ZMatrix<Rat,1,3> CVec3;
+typedef Matrix<Rat,1,2> CVec2;
+typedef Matrix<Rat,1,3> CVec3;
 
-typedef ZMatrixArray<Rat,1,2,2> GRect;
-typedef ZMatrix<Rat,1,2> GPoint;
+typedef MatrixArray<Rat,1,2,2> GRect;
+typedef Matrix<Rat,1,2> GPoint;
 
 typedef Map_Shared_T<Map> SharedState;
 typedef Map_Shared_Mutable_T<Map> SharedState_Mutable;

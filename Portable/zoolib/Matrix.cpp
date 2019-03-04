@@ -54,9 +54,9 @@ namespace ZooLib {
 
 #if !defined(IMPLEMENTED_sInverseMat4)
 	#define IMPLEMENTED_sInverseMat4 1
-	ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
+	Matrix<float,4,4> sInverse(const Matrix<float,4,4>& iMat)
 		{
-		ZMatrix<float,4,4> dest;
+		Matrix<float,4,4> dest;
 		Matrix_armv6::Matrix4Invert(iMat.fE[0], dest.fE[0]);
 		return dest;
 		}
@@ -87,7 +87,7 @@ namespace ZooLib {
 
 #if not IMPLEMENTED_sInverseMat4
 	#define IMPLEMENTED_sInverseMat4 1
-	ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat)
+	Matrix<float,4,4> sInverse(const Matrix<float,4,4>& iMat)
 		{ return sInverse<float,4>(iMat); }
 #endif
 

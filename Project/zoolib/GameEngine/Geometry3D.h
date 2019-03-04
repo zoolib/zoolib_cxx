@@ -31,9 +31,9 @@ namespace GameEngine {
 #pragma mark - sScale3
 
 template <class Val>
-ZMatrix<Val,4,4> sScale3(Val x, Val y, Val z)
+Matrix<Val,4,4> sScale3(Val x, Val y, Val z)
 	{
-	ZMatrix<Val,4,4> result;
+	Matrix<Val,4,4> result;
 	result[0][0] = x;
 	result[1][1] = y;
 	result[2][2] = z;
@@ -42,28 +42,28 @@ ZMatrix<Val,4,4> sScale3(Val x, Val y, Val z)
 	}
 
 template <class Val>
-ZMatrix<Val,4,4> sScale3X(Val x)
+Matrix<Val,4,4> sScale3X(Val x)
 	{ return sScale3<Val>(x, 1, 1); }
 
 template <class Val>
-ZMatrix<Val,4,4> sScale3Y(Val y)
+Matrix<Val,4,4> sScale3Y(Val y)
 	{ return sScale3<Val>(1, y, 1); }
 
 template <class Val>
-ZMatrix<Val,4,4> sScale3Z(Val z)
+Matrix<Val,4,4> sScale3Z(Val z)
 	{ return sScale3<Val>(1, 1, z); }
 
 template <class Val>
-ZMatrix<Val,4,4> sScale3(const ZMatrix<Val,1,3>& iCVec3)
+Matrix<Val,4,4> sScale3(const Matrix<Val,1,3>& iCVec3)
 	{ return sScale(iCVec3); }
 
 // =================================================================================================
 #pragma mark - sTranslate3
 
 template <class Val>
-ZMatrix<Val,4,4> sTranslate3(Val x, Val y, Val z)
+Matrix<Val,4,4> sTranslate3(Val x, Val y, Val z)
 	{
-	ZMatrix<Val,4,4> result(1);
+	Matrix<Val,4,4> result(1);
 	result[3][0] = x;
 	result[3][1] = y;
 	result[3][2] = z;
@@ -71,30 +71,30 @@ ZMatrix<Val,4,4> sTranslate3(Val x, Val y, Val z)
 	}
 
 template <class Val>
-ZMatrix<Val,4,4> sTranslate3X(Val x)
+Matrix<Val,4,4> sTranslate3X(Val x)
 	{ return sTranslate3<Val>(x, 0, 0); }
 
 template <class Val>
-ZMatrix<Val,4,4> sTranslate3Y(Val y)
+Matrix<Val,4,4> sTranslate3Y(Val y)
 	{ return sTranslate3<Val>(0, y, 0); }
 
 template <class Val>
-ZMatrix<Val,4,4> sTranslate3Z(Val z)
+Matrix<Val,4,4> sTranslate3Z(Val z)
 	{ return sTranslate3<Val>(0, 0, z); }
 
 template <class Val>
-ZMatrix<Val,4,4> sTranslate3(const ZMatrix<Val,1,3>& iCVec3)
+Matrix<Val,4,4> sTranslate3(const Matrix<Val,1,3>& iCVec3)
 	{ return sTranslate<Val>(iCVec3); }
 
 // =================================================================================================
 #pragma mark - sRotate3X
 
 template <class Val>
-ZMatrix<Val,4,4> sRotate3X(Val radians)
+Matrix<Val,4,4> sRotate3X(Val radians)
 	{
 	const Val s = sin(radians);
 	const Val c = cos(radians);
-	ZMatrix<Val,4,4> result;
+	Matrix<Val,4,4> result;
 	result.fE[0][0] = 1;
 	result.fE[1][1] = c;
 	result.fE[1][2] = s;
@@ -108,11 +108,11 @@ ZMatrix<Val,4,4> sRotate3X(Val radians)
 #pragma mark - sRotate3Y
 
 template <class Val>
-ZMatrix<Val,4,4> sRotate3Y(Val radians)
+Matrix<Val,4,4> sRotate3Y(Val radians)
 	{
 	const Val s = sin(radians);
 	const Val c = cos(radians);
-	ZMatrix<Val,4,4> result;
+	Matrix<Val,4,4> result;
 	result.fE[0][0] = c;
 	result.fE[1][1] = 1;
 	result.fE[0][2] = s;
@@ -126,11 +126,11 @@ ZMatrix<Val,4,4> sRotate3Y(Val radians)
 #pragma mark - sRotate3Z
 
 template <class Val>
-ZMatrix<Val,4,4> sRotate3Z(Val radians)
+Matrix<Val,4,4> sRotate3Z(Val radians)
 	{
 	const Val s = sin(radians);
 	const Val c = cos(radians);
-	ZMatrix<Val,4,4> result;
+	Matrix<Val,4,4> result;
 	result.fE[0][0] = c;
 	result.fE[0][1] = s;
 	result.fE[1][0] = -s;
@@ -144,9 +144,9 @@ ZMatrix<Val,4,4> sRotate3Z(Val radians)
 #pragma mark - sShear3
 
 template <class Val>
-ZMatrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
+Matrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 	{
-	ZMatrix<Val,4,4> result(null);
+	Matrix<Val,4,4> result(null);
 	result.fE[0][0] = 1;
 	result.fE[0][1] = xy;
 	result.fE[0][2] = xz;
@@ -173,28 +173,28 @@ ZMatrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 #pragma mark - Extraction of coordinate subsets
 
 template <class Val>
-ZMatrix<Val,1,2> sXY(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[0], iMat[1]); }
+Matrix<Val,1,2> sXY(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[0], iMat[1]); }
 
 template <class Val>
-ZMatrix<Val,1,2> sYX(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[1], iMat[0]); }
+Matrix<Val,1,2> sYX(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[1], iMat[0]); }
 
 template <class Val>
-ZMatrix<Val,1,2> sXZ(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[0], iMat[2]); }
+Matrix<Val,1,2> sXZ(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[0], iMat[2]); }
 
 template <class Val>
-ZMatrix<Val,1,2> sZX(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[2], iMat[0]); }
+Matrix<Val,1,2> sZX(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[2], iMat[0]); }
 
 template <class Val>
-ZMatrix<Val,1,2> sYZ(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[1], iMat[2]); }
+Matrix<Val,1,2> sYZ(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[1], iMat[2]); }
 
 template <class Val>
-ZMatrix<Val,1,2> sZY(const ZMatrix<Val,1,3>& iMat)
-	{ return ZMatrix<Val,1,2>(iMat[2], iMat[1]); }
+Matrix<Val,1,2> sZY(const Matrix<Val,1,3>& iMat)
+	{ return Matrix<Val,1,2>(iMat[2], iMat[1]); }
 
 } // namespace ZGameEngine
 } // namespace ZooLib

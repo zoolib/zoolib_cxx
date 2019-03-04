@@ -35,12 +35,12 @@ namespace ZooLib {
 // Matrices are specified as the number of columns, then the number of rows.
 
 // =================================================================================================
-#pragma mark - ZMatrix, general
+#pragma mark - Matrix, general
 
-template <class E, size_t C, size_t R> class ZMatrix;
+template <class E, size_t C, size_t R> class Matrix;
 
 template <class E_p, size_t C_p, size_t R_p>
-class ZMatrix
+class Matrix
 	{
 public:
 	typedef E_p E;
@@ -48,19 +48,19 @@ public:
 	static const size_t C = C_p;
 	static const size_t R = R_p;
 
-	ZMatrix()
+	Matrix()
 		{ sMemZero_T(fE); }
 
-	ZMatrix(const ZMatrix& iOther)
+	Matrix(const Matrix& iOther)
 		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
-	ZMatrix& operator=(const ZMatrix& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
 		return *this;
 		}
 
-	ZMatrix(const null_t&)
+	Matrix(const null_t&)
 		{}
 
 	E* operator[](size_t c)
@@ -73,31 +73,31 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - ZMatrix, specialized for column vector
+#pragma mark - Matrix, specialized for column vector
 
 template <class E_p, size_t R_p>
-class ZMatrix<E_p,1,R_p>
+class Matrix<E_p,1,R_p>
 	{
 public:
 	typedef E_p E;
 	static const size_t R = R_p;
 
-	ZMatrix()
+	Matrix()
 		{ sMemZero_T(fE); }
 
-	ZMatrix(const ZMatrix& iOther)
+	Matrix(const Matrix& iOther)
 		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
-	ZMatrix& operator=(const ZMatrix& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
 		return *this;
 		}
 
-	ZMatrix(const null_t&)
+	Matrix(const null_t&)
 		{}
 
-	ZMatrix(E iE)
+	Matrix(E iE)
 		{
 		for (size_t rr = 0; rr < R; ++rr)
 			fE[0][rr] = iE;
@@ -119,31 +119,31 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - ZMatrix, specialized for row vector
+#pragma mark - Matrix, specialized for row vector
 
 template <class E_p, size_t C_p>
-class ZMatrix<E_p,C_p,1>
+class Matrix<E_p,C_p,1>
 	{
 public:
 	typedef E_p E;
 	static const size_t C = C_p;
 
-	ZMatrix()
+	Matrix()
 		{ sMemZero_T(fE); }
 
-	ZMatrix(const ZMatrix& iOther)
+	Matrix(const Matrix& iOther)
 		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
-	ZMatrix& operator=(const ZMatrix& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
 		return *this;
 		}
 
-	ZMatrix(const null_t&)
+	Matrix(const null_t&)
 		{}
 
-	ZMatrix(E iE)
+	Matrix(E iE)
 		{
 		for (size_t cc = 0; cc < C; ++cc)
 			fE[0][cc] = iE;
@@ -165,10 +165,10 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - ZMatrix, square
+#pragma mark - Matrix, square
 
 template <class E_p, size_t Dim_p>
-class ZMatrix<E_p,Dim_p,Dim_p>
+class Matrix<E_p,Dim_p,Dim_p>
 	{
 public:
 	typedef E_p E;
@@ -177,22 +177,22 @@ public:
 	static const size_t R = Dim_p;
 	static const size_t Dim = Dim_p;
 
-	ZMatrix()
+	Matrix()
 		{ sMemZero_T(fE); }
 
-	ZMatrix(const ZMatrix& iOther)
+	Matrix(const Matrix& iOther)
 		{ sMemCopy(fE, iOther.fE, sizeof(fE)); }
 
-	ZMatrix& operator=(const ZMatrix& iOther)
+	Matrix& operator=(const Matrix& iOther)
 		{
 		sMemCopy(fE, iOther.fE, sizeof(fE));
 		return *this;
 		}
 
-	ZMatrix(const null_t&)
+	Matrix(const null_t&)
 		{}
 
-	ZMatrix(E iDiagonal)
+	Matrix(E iDiagonal)
 		{
 		for (size_t ii = 0; ii < Dim * Dim; ++ii)
 			fE[0][ii] = E(0);
@@ -200,11 +200,11 @@ public:
 			fE[ii][ii] = iDiagonal;
 		}
 
-	ZMatrix<E,1,Dim>& operator[](size_t c)
-		{ return *reinterpret_cast<ZMatrix<E,1,Dim>*>(fE[c]); }
+	Matrix<E,1,Dim>& operator[](size_t c)
+		{ return *reinterpret_cast<Matrix<E,1,Dim>*>(fE[c]); }
 
-	const ZMatrix<E,1,Dim>& operator[](size_t c) const
-		{ return *reinterpret_cast<const ZMatrix<E,1,Dim>*>(fE[c]); }
+	const Matrix<E,1,Dim>& operator[](size_t c) const
+		{ return *reinterpret_cast<const Matrix<E,1,Dim>*>(fE[c]); }
 
 	E fE[C][R];
 	};
@@ -213,7 +213,7 @@ public:
 #pragma mark - operator== and operator!=
 
 template <class E, size_t C, size_t R>
-bool operator==(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
+bool operator==(const Matrix<E,C,R>& iL, const Matrix<E,C,R>& iR)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		{
@@ -224,16 +224,16 @@ bool operator==(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
 	}
 
 template <class E, size_t C, size_t R>
-bool operator!=(const ZMatrix<E,C,R>& iL, const ZMatrix<E,C,R>& iR)
+bool operator!=(const Matrix<E,C,R>& iL, const Matrix<E,C,R>& iR)
 	{ return not (iL == iR); }
 
 // =================================================================================================
 #pragma mark - sHomogenous (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R+1> sHomogenous(const ZMatrix<E,1,R>& iMat)
+Matrix<E,1,R+1> sHomogenous(const Matrix<E,1,R>& iMat)
 	{
-	ZMatrix<E,1,R+1> result;
+	Matrix<E,1,R+1> result;
 	for (size_t rr = 0; rr < R; ++rr)
 		result.fE[0][rr] = iMat.fE[0][rr];
 	result.fE[0][R] = 1;
@@ -244,9 +244,9 @@ ZMatrix<E,1,R+1> sHomogenous(const ZMatrix<E,1,R>& iMat)
 #pragma mark - sHomogenous (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C+1,1> sHomogenous(const ZMatrix<E,C,1>& iMat)
+Matrix<E,C+1,1> sHomogenous(const Matrix<E,C,1>& iMat)
 	{
-	ZMatrix<E,C+1,1> result;
+	Matrix<E,C+1,1> result;
 	for (size_t cc = 0; cc < C; ++cc)
 		result.fE[cc][0] = iMat.fE[cc][0];
 	result.fE[C][0] = 1;
@@ -257,9 +257,9 @@ ZMatrix<E,C+1,1> sHomogenous(const ZMatrix<E,C,1>& iMat)
 #pragma mark - sCartesian (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R-1> sCartesian(const ZMatrix<E,1,R>& iMat)
+Matrix<E,1,R-1> sCartesian(const Matrix<E,1,R>& iMat)
 	{
-	ZMatrix<E,1,R-1> result;
+	Matrix<E,1,R-1> result;
 	const E last = iMat.fE[0][R-1];
 	for (size_t r = 0; r < R - 1; ++r)
 		result.fE[0][r] = iMat.fE[0][r]/last;
@@ -270,9 +270,9 @@ ZMatrix<E,1,R-1> sCartesian(const ZMatrix<E,1,R>& iMat)
 #pragma mark - sCartesian (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C-1,1> sCartesian(const ZMatrix<E,C,1>& iMat)
+Matrix<E,C-1,1> sCartesian(const Matrix<E,C,1>& iMat)
 	{
-	ZMatrix<E,C-1,1> result;
+	Matrix<E,C-1,1> result;
 	const E last = iMat.fE[C-1][0];
 	for (size_t cc = 0; cc < C - 1; ++cc)
 		result.fE[cc][0] = iMat.fE[cc][0]/last;
@@ -283,7 +283,7 @@ ZMatrix<E,C-1,1> sCartesian(const ZMatrix<E,C,1>& iMat)
 #pragma mark - sDot (column vector)
 
 template <class E, size_t R>
-E sDot(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
+E sDot(const Matrix<E,1,R>& i0, const Matrix<E,1,R>& i1)
 	{
 	E result = 0;
 	for (size_t rr = 0; rr < R; ++rr)
@@ -295,7 +295,7 @@ E sDot(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
 #pragma mark - sDot (row vector)
 
 template <class E, size_t C>
-E sDot(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
+E sDot(const Matrix<E,C,1>& i0, const Matrix<E,C,1>& i1)
 	{
 	E result = 0;
 	for (size_t cc = 0; cc < C; ++cc)
@@ -307,9 +307,9 @@ E sDot(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 #pragma mark - sCross (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R> sCross(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
+Matrix<E,1,R> sCross(const Matrix<E,1,R>& i0, const Matrix<E,1,R>& i1)
 	{
-	ZMatrix<E,1,R> result;
+	Matrix<E,1,R> result;
 	for (size_t rr = 0; rr < R; ++rr)
 		{
 		for (size_t r0 = 0; r0 < R; ++r0)
@@ -331,9 +331,9 @@ ZMatrix<E,1,R> sCross(const ZMatrix<E,1,R>& i0, const ZMatrix<E,1,R>& i1)
 #pragma mark - sCross (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
+Matrix<E,C,1> sCross(const Matrix<E,C,1>& i0, const Matrix<E,C,1>& i1)
 	{
-	ZMatrix<E,C,1> result;
+	Matrix<E,C,1> result;
 	for (size_t cc = 0; cc < C; ++cc)
 		{
 		for (size_t c0 = 0; c0 < C; ++c0)
@@ -355,7 +355,7 @@ ZMatrix<E,C,1> sCross(const ZMatrix<E,C,1>& i0, const ZMatrix<E,C,1>& i1)
 #pragma mark - sIsIdentity
 
 template <class E, size_t Dim>
-bool sIsIdentity(const ZMatrix<E,Dim,Dim>& iMat)
+bool sIsIdentity(const Matrix<E,Dim,Dim>& iMat)
 	{
 	const E& theID = iMat.fE[0][0];
 	for (size_t c = 0; c < Dim; ++c)
@@ -376,9 +376,9 @@ bool sIsIdentity(const ZMatrix<E,Dim,Dim>& iMat)
 #pragma mark - sTransposed
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> sTransposed(const ZMatrix<E,R,C>& iMat)
+Matrix<E,C,R> sTransposed(const Matrix<E,R,C>& iMat)
 	{
-	ZMatrix<E,C,R> result;
+	Matrix<E,C,R> result;
 	for (size_t cc = 0; cc < C; ++cc)
 		{
 		for (size_t rr = 0; rr < R; ++rr)
@@ -391,39 +391,39 @@ ZMatrix<E,C,R> sTransposed(const ZMatrix<E,R,C>& iMat)
 #pragma mark - sLengthSquared (column vector)
 
 template <class E, size_t R>
-E sLengthSquared(const ZMatrix<E,1,R>& iVec)
+E sLengthSquared(const Matrix<E,1,R>& iVec)
 	{ return sDot(iVec, iVec); }
 
 // =================================================================================================
 #pragma mark - sLengthSquared (row vector)
 
 template <class E, size_t C>
-E sLengthSquared(const ZMatrix<E,C,1>& iVec)
+E sLengthSquared(const Matrix<E,C,1>& iVec)
 	{ return sDot(iVec, iVec); }
 
 // =================================================================================================
 #pragma mark - sLength (column vector)
 
 template <class E, size_t R>
-E sLength(const ZMatrix<E,1,R>& iVec)
+E sLength(const Matrix<E,1,R>& iVec)
 	{ return sqrt(sLengthSquared(iVec)); }
 
 // =================================================================================================
 #pragma mark - sLength (row vector)
 
 template <class E, size_t C>
-E sLength(const ZMatrix<E,C,1>& iVec)
+E sLength(const Matrix<E,C,1>& iVec)
 	{ return sqrt(sLengthSquared(iVec)); }
 
 // =================================================================================================
 #pragma mark - sNormalized (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C,1> sNormalized(const ZMatrix<E,C,1>& iVec)
+Matrix<E,C,1> sNormalized(const Matrix<E,C,1>& iVec)
 	{
 	const E length = sLength(iVec);
 	ZAssert(length > 0);
-	ZMatrix<E,C,1> result(null);
+	Matrix<E,C,1> result(null);
 	for (size_t cc = 0; cc < C; ++cc)
 		result.fE[cc][0] = iVec.fE[cc][0] / length;
 	return result;
@@ -433,11 +433,11 @@ ZMatrix<E,C,1> sNormalized(const ZMatrix<E,C,1>& iVec)
 #pragma mark - sNormalized (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R> sNormalized(const ZMatrix<E,1,R>& iVec)
+Matrix<E,1,R> sNormalized(const Matrix<E,1,R>& iVec)
 	{
 	const E length = sLength(iVec);
 	ZAssert(length > 0);
-	ZMatrix<E,1,R> result(null);
+	Matrix<E,1,R> result(null);
 	for (size_t rr = 0; rr < R; ++rr)
 		result.fE[0][rr] = iVec.fE[0][rr] / length;
 	return result;
@@ -447,9 +447,9 @@ ZMatrix<E,1,R> sNormalized(const ZMatrix<E,1,R>& iVec)
 #pragma mark - sApply (binary function)
 
 template <class Fun, class E, size_t C, size_t R>
-ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& i0, const ZMatrix<E,C,R>& i1)
+Matrix<E,C,R> sApply(Fun iFun, const Matrix<E,C,R>& i0, const Matrix<E,C,R>& i1)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iFun(i0.fE[0][ii], i1.fE[0][ii]);
 	return result;
@@ -459,9 +459,9 @@ ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& i0, const ZMatrix<E,C,R>& 
 #pragma mark - sApply (unary function)
 
 template <class Fun, class E, size_t C, size_t R>
-ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& iMat)
+Matrix<E,C,R> sApply(Fun iFun, const Matrix<E,C,R>& iMat)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iFun(iMat.fE[0][ii]);
 	return result;
@@ -471,9 +471,9 @@ ZMatrix<E,C,R> sApply(Fun iFun, const ZMatrix<E,C,R>& iMat)
 #pragma mark - sNonZero
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
+Matrix<E,C,R> sNonZero(const Matrix<E,C,R>& iMat)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iMat.fE[0][ii] ? E(1) : E(0);
 	return result;
@@ -483,9 +483,9 @@ ZMatrix<E,C,R> sNonZero(const ZMatrix<E,C,R>& iMat)
 #pragma mark - Multiplication (aka composition)
 
 template <class E, size_t RL, size_t Common, size_t CR>
-ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLHS, const ZMatrix<E,CR,Common>& iRHS)
+Matrix<E,CR,RL> operator*(const Matrix<E,Common,RL>& iLHS, const Matrix<E,CR,Common>& iRHS)
 	{
-	ZMatrix<E,CR,RL> result(null);
+	Matrix<E,CR,RL> result(null);
 	for (size_t rl = 0; rl < RL; ++rl)
 		{
 		for (size_t cr = 0; cr < CR; ++cr)
@@ -499,23 +499,23 @@ ZMatrix<E,CR,RL> operator*(const ZMatrix<E,Common,RL>& iLHS, const ZMatrix<E,CR,
 	}
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim>& operator*=(ZMatrix<E,Dim,Dim>& ioLHS, const ZMatrix<E,Dim,Dim>& iRHS)
+Matrix<E,Dim,Dim>& operator*=(Matrix<E,Dim,Dim>& ioLHS, const Matrix<E,Dim,Dim>& iRHS)
 	{ return ioLHS = ioLHS * iRHS; }
 
 // =================================================================================================
 #pragma mark - Composition of undersized column vector
 
 template <class E, size_t Common, size_t RL>
-ZMatrix<E,1,Common> operator*(const ZMatrix<E,Common+1,RL>& iLHS, const ZMatrix<E,1,Common>& iRHS)
+Matrix<E,1,Common> operator*(const Matrix<E,Common+1,RL>& iLHS, const Matrix<E,1,Common>& iRHS)
 	{ return sCartesian(iLHS * sHomogenous(iRHS)); }
 
 // =================================================================================================
 #pragma mark - Element-by-element multiplication (general)
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> sTimes(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
+Matrix<E,C,R> sTimes(const Matrix<E,C,R>& iLHS, const Matrix<E,C,R>& iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] * iRHS.fE[0][ii];
 	return result;
@@ -525,16 +525,16 @@ ZMatrix<E,C,R> sTimes(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
 #pragma mark - Element-by-element multiplication (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R> operator*(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
+Matrix<E,1,R> operator*(const Matrix<E,1,R>& iLHS, const Matrix<E,1,R>& iRHS)
 	{
-	ZMatrix<E,1,R> result(null);
+	Matrix<E,1,R> result(null);
 	for (size_t rr = 0; rr < R; ++rr)
 		result.fE[0][rr] = iLHS.fE[0][rr] * iRHS.fE[0][rr];
 	return result;
 	}
 
 template <class E, size_t R>
-ZMatrix<E,1,R>& operator*=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
+Matrix<E,1,R>& operator*=(Matrix<E,1,R>& ioLHS, const Matrix<E,1,R>& iRHS)
 	{
 	for (size_t rr = 0; rr < R; ++rr)
 		ioLHS.fE[0][rr] *= iRHS.fE[0][rr];
@@ -545,16 +545,16 @@ ZMatrix<E,1,R>& operator*=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
 #pragma mark - Element-by-element multiplication (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C,1> operator*(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
+Matrix<E,C,1> operator*(const Matrix<E,C,1>& iLHS, const Matrix<E,C,1>& iRHS)
 	{
-	ZMatrix<E,C,1> result(null);
+	Matrix<E,C,1> result(null);
 	for (size_t cc = 0; cc < C; ++cc)
 		result.fE[cc][0] = iLHS.fE[cc][0] * iRHS.fE[cc][0];
 	return result;
 	}
 
 template <class E, size_t C>
-ZMatrix<E,C,1>& operator*=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
+Matrix<E,C,1>& operator*=(const Matrix<E,C,1>& ioLHS, const Matrix<E,C,1>& iRHS)
 	{
 	for (size_t cc = 0; cc < C; ++cc)
 		ioLHS.fE[cc][0] *= iRHS.fE[cc][0];
@@ -565,16 +565,16 @@ ZMatrix<E,C,1>& operator*=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iR
 #pragma mark - Element-by-element division (column vector)
 
 template <class E, size_t R>
-ZMatrix<E,1,R> operator/(const ZMatrix<E,1,R>& iLHS, const ZMatrix<E,1,R>& iRHS)
+Matrix<E,1,R> operator/(const Matrix<E,1,R>& iLHS, const Matrix<E,1,R>& iRHS)
 	{
-	ZMatrix<E,1,R> result(null);
+	Matrix<E,1,R> result(null);
 	for (size_t rr = 0; rr < R; ++rr)
 		result.fE[0][rr] = iLHS.fE[0][rr] / iRHS.fE[0][rr];
 	return result;
 	}
 
 template <class E, size_t R>
-ZMatrix<E,1,R>& operator/=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
+Matrix<E,1,R>& operator/=(Matrix<E,1,R>& ioLHS, const Matrix<E,1,R>& iRHS)
 	{
 	for (size_t rr = 0; rr < R; ++rr)
 		ioLHS.fE[0][rr] /= iRHS.fE[0][rr];
@@ -585,16 +585,16 @@ ZMatrix<E,1,R>& operator/=(ZMatrix<E,1,R>& ioLHS, const ZMatrix<E,1,R>& iRHS)
 #pragma mark - Element-by-element division (row vector)
 
 template <class E, size_t C>
-ZMatrix<E,C,1> operator/(const ZMatrix<E,C,1>& iLHS, const ZMatrix<E,C,1>& iRHS)
+Matrix<E,C,1> operator/(const Matrix<E,C,1>& iLHS, const Matrix<E,C,1>& iRHS)
 	{
-	ZMatrix<E,C,1> result(null);
+	Matrix<E,C,1> result(null);
 	for (size_t cc = 0; cc < C; ++cc)
 		result.fE[cc][0] = iLHS.fE[cc][0] / iRHS.fE[cc][0];
 	return result;
 	}
 
 template <class E, size_t C>
-ZMatrix<E,C,1>& operator/=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iRHS)
+Matrix<E,C,1>& operator/=(const Matrix<E,C,1>& ioLHS, const Matrix<E,C,1>& iRHS)
 	{
 	for (size_t cc = 0; cc < C; ++cc)
 		ioLHS.fE[cc][0] /= iRHS.fE[cc][0];
@@ -605,16 +605,16 @@ ZMatrix<E,C,1>& operator/=(const ZMatrix<E,C,1>& ioLHS, const ZMatrix<E,C,1>& iR
 #pragma mark - Addition
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
+Matrix<E,C,R> operator+(const Matrix<E,C,R>& iLHS, const Matrix<E,C,R>& iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] + iRHS.fE[0][ii];
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
+Matrix<E,C,R>& operator+=(Matrix<E,C,R>& ioLHS, const Matrix<E,C,R>& iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] += iRHS.fE[0][ii];
@@ -625,16 +625,16 @@ ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 #pragma mark - Subtraction
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, const ZMatrix<E,C,R>& iRHS)
+Matrix<E,C,R> operator-(const Matrix<E,C,R>& iLHS, const Matrix<E,C,R>& iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] - iRHS.fE[0][ii];
 	return result;
 	}
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
+Matrix<E,C,R>& operator-=(Matrix<E,C,R>& ioLHS, const Matrix<E,C,R>& iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] -= iRHS.fE[0][ii];
@@ -645,9 +645,9 @@ ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, const ZMatrix<E,C,R>& iRHS)
 #pragma mark - Negate
 
 template <class E, size_t C, size_t R>
-ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iMat)
+Matrix<E,C,R> operator-(const Matrix<E,C,R>& iMat)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = -iMat.fE[0][ii];
 	return result;
@@ -657,16 +657,16 @@ ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iMat)
 #pragma mark - Scalar multiplication
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator*(const ZMatrix<E,C,R>& iLHS, T iRHS)
+Matrix<E,C,R> operator*(const Matrix<E,C,R>& iLHS, T iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] * E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator*=(ZMatrix<E,C,R>& ioLHS, T iRHS)
+Matrix<E,C,R>& operator*=(Matrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] *= E(iRHS);
@@ -677,16 +677,16 @@ ZMatrix<E,C,R>& operator*=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 #pragma mark - Scalar division
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator/(const ZMatrix<E,C,R>& iLHS, T iRHS)
+Matrix<E,C,R> operator/(const Matrix<E,C,R>& iLHS, T iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] / E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator/=(ZMatrix<E,C,R>& ioLHS, T iRHS)
+Matrix<E,C,R>& operator/=(Matrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] /= E(iRHS);
@@ -697,16 +697,16 @@ ZMatrix<E,C,R>& operator/=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 #pragma mark - Scalar addition
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator+(const ZMatrix<E,C,R>& iLHS, T iRHS)
+Matrix<E,C,R> operator+(const Matrix<E,C,R>& iLHS, T iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] + E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, T iRHS)
+Matrix<E,C,R>& operator+=(Matrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] += E(iRHS);
@@ -717,16 +717,16 @@ ZMatrix<E,C,R>& operator+=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 #pragma mark - Scalar subtraction
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R> operator-(const ZMatrix<E,C,R>& iLHS, T iRHS)
+Matrix<E,C,R> operator-(const Matrix<E,C,R>& iLHS, T iRHS)
 	{
-	ZMatrix<E,C,R> result(null);
+	Matrix<E,C,R> result(null);
 	for (size_t ii = 0; ii < C * R; ++ii)
 		result.fE[0][ii] = iLHS.fE[0][ii] - E(iRHS);
 	return result;
 	}
 
 template <class E, size_t C, size_t R, class T>
-ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, T iRHS)
+Matrix<E,C,R>& operator-=(Matrix<E,C,R>& ioLHS, T iRHS)
 	{
 	for (size_t ii = 0; ii < C * R; ++ii)
 		ioLHS.fE[0][ii] -= E(iRHS);
@@ -737,9 +737,9 @@ ZMatrix<E,C,R>& operator-=(ZMatrix<E,C,R>& ioLHS, T iRHS)
 #pragma mark - sMinor
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim-1,Dim-1> sMinor(const ZMatrix<E,Dim,Dim>& iMat, size_t iRow, size_t iCol)
+Matrix<E,Dim-1,Dim-1> sMinor(const Matrix<E,Dim,Dim>& iMat, size_t iRow, size_t iCol)
 	{
-	ZMatrix<E,Dim-1,Dim-1> result(null);
+	Matrix<E,Dim-1,Dim-1> result(null);
 	size_t ri = 0;
 	for (size_t rr = 0; rr < Dim; ++rr)
 		{
@@ -763,7 +763,7 @@ ZMatrix<E,Dim-1,Dim-1> sMinor(const ZMatrix<E,Dim,Dim>& iMat, size_t iRow, size_
 #pragma mark - sDeterminant (general)
 
 template <class E, size_t Dim>
-E sDeterminant(const ZMatrix<E,Dim,Dim>& iMat)
+E sDeterminant(const Matrix<E,Dim,Dim>& iMat)
 	{
 	ZAssert(Dim > 3);
 
@@ -771,7 +771,7 @@ E sDeterminant(const ZMatrix<E,Dim,Dim>& iMat)
 
 	for (size_t cc = 0; cc < Dim; ++cc)
 		{
-		ZMatrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, cc);
+		Matrix<E,Dim-1,Dim-1> minor = sMinor(iMat, 0, cc);
 		if (cc & 1)
 			result -= iMat.fE[cc][0] * sDeterminant(minor);
 		else
@@ -785,15 +785,15 @@ E sDeterminant(const ZMatrix<E,Dim,Dim>& iMat)
 #pragma mark - sDeterminant (for 1x1 through 3x3)
 
 template <class E>
-E sDeterminant(const ZMatrix<E,1,1>& iMat)
+E sDeterminant(const Matrix<E,1,1>& iMat)
 	{ return iMat.fE[0][0]; }
 
 template <class E>
-E sDeterminant(const ZMatrix<E,2,2>& iMat)
+E sDeterminant(const Matrix<E,2,2>& iMat)
 	{ return iMat.fE[0][0] * iMat.fE[1][1] - iMat.fE[1][0] * iMat.fE[0][1]; }
 
 template <class E>
-E sDeterminant(const ZMatrix<E,3,3>& iMat)
+E sDeterminant(const Matrix<E,3,3>& iMat)
 	{
 	const E aei = iMat.fE[0][0] * iMat.fE[1][1] * iMat.fE[2][2];
 	const E bfg = iMat.fE[1][0] * iMat.fE[2][1] * iMat.fE[0][2];
@@ -810,11 +810,11 @@ E sDeterminant(const ZMatrix<E,3,3>& iMat)
 #pragma mark - sInverse
 
 template <class E, size_t Dim>
-ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
+Matrix<E,Dim,Dim> sInverse(const Matrix<E,Dim,Dim>& iMat)
 	{
 	const E det = 1.0 / sDeterminant(iMat);
 
-	ZMatrix<E,Dim,Dim> result(null);
+	Matrix<E,Dim,Dim> result(null);
 
 	for (size_t cc = 0; cc < Dim; ++cc)
 		{
@@ -834,7 +834,7 @@ ZMatrix<E,Dim,Dim> sInverse(const ZMatrix<E,Dim,Dim>& iMat)
 // =================================================================================================
 #pragma mark - Provision for out-of-line optimized version.
 
-ZMatrix<float,4,4> sInverse(const ZMatrix<float,4,4>& iMat);
+Matrix<float,4,4> sInverse(const Matrix<float,4,4>& iMat);
 
 // =================================================================================================
 #pragma mark - Optimized sComposeMat4
@@ -942,9 +942,9 @@ void sComposeMat4(const E iLHS[4][4], const E iRHS[4][4], E oDest[4][4])
 void sComposeMat4(const float iLHS[4][4], const float iRHS[4][4], float oDest[4][4]);
 
 template <class E>
-ZMatrix<E,4,4> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,4,4>& iRHS)
+Matrix<E,4,4> operator*(const Matrix<E,4,4>& iLHS, const Matrix<E,4,4>& iRHS)
 	{
-	ZMatrix<E,4,4> dest(null);
+	Matrix<E,4,4> dest(null);
 	sComposeMat4(iLHS.fE, iRHS.fE, dest.fE);
 	return dest;
 	}
@@ -983,9 +983,9 @@ void sComposeMat4Vec4(const E iLHS[4][4], const E* iRHS, E* oDest)
 void sComposeMat4Vec4(const float iLHS[4][4], const float* iRHS, float* oDest);
 
 template <class E>
-ZMatrix<E,1,4> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,4>& iRHS)
+Matrix<E,1,4> operator*(const Matrix<E,4,4>& iLHS, const Matrix<E,1,4>& iRHS)
 	{
-	ZMatrix<E,1,4> dest(null);
+	Matrix<E,1,4> dest(null);
 	sComposeMat4Vec4(iLHS.fE, iRHS.fE[0], dest.fE[0]);
 	return dest;
 	}
@@ -1024,9 +1024,9 @@ void sComposeMat4Vec3_ToVec4(const E iLHS[4][4], const E* iRHS, E* oDest)
 void sComposeMat4Vec3_ToVec4(const float iLHS[4][4], const float* iRHS, float* oDest);
 
 template <class E>
-ZMatrix<E,1,3> operator*(const ZMatrix<E,4,4>& iLHS, const ZMatrix<E,1,3>& iRHS)
+Matrix<E,1,3> operator*(const Matrix<E,4,4>& iLHS, const Matrix<E,1,3>& iRHS)
 	{
-	ZMatrix<E,1,4> dest(null);
+	Matrix<E,1,4> dest(null);
 	sComposeMat4Vec3_ToVec4(iLHS.fE, iRHS.fE[0], dest.fE[0]);
 	return sCartesian(dest);
 	}
