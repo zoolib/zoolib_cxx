@@ -1,7 +1,7 @@
 #ifndef __GameEngine_Cog_h__
 #define __GameEngine_Cog_h__ 1
 
-#include "zoolib/ZCog.h"
+#include "zoolib/Cog.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
 #include "zoolib/GameEngine/Nook.h"
@@ -110,7 +110,7 @@ struct Param
 	const double fSubsequentTime;
 	};
 
-typedef ZCog<const Param&> Cog;
+typedef ZooLib::Cog<const Param&> Cog;
 
 CVec3 sGetWorldPos(const Param& iParam, Rat iOffset);
 

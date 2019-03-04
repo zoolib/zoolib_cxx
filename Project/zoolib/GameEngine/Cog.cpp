@@ -160,17 +160,15 @@ Cog CogRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 
 namespace { // anonymous
 
-template <class Param>
 struct CogAccumulatorCombiner_Plus
 	{
-	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+	void operator()(Cog& io0, const Cog& i1) const
 		{ io0 += i1; }
 	};
 
-template <class Param>
 struct CogAccumulatorCombiner_Minus
 	{
-	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+	void operator()(Cog& io0, const Cog& i1) const
 		{
 		if (sIsPending(io0))
 			io0 -= i1;
@@ -179,17 +177,15 @@ struct CogAccumulatorCombiner_Minus
 		}
 	};
 
-template <class Param>
 struct CogAccumulatorCombiner_Each
 	{
-	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+	void operator()(Cog& io0, const Cog& i1) const
 		{ io0 ^= i1; }
 	};
 
-template <class Param>
 struct CogAccumulatorCombiner_And
 	{
-	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+	void operator()(Cog& io0, const Cog& i1) const
 		{
 		if (sIsPending(io0))
 			io0 &= i1;
@@ -198,10 +194,9 @@ struct CogAccumulatorCombiner_And
 		}
 	};
 
-template <class Param>
 struct CogAccumulatorCombiner_Or
 	{
-	void operator()(ZCog<Param>& io0, const ZCog<Param>& i1) const
+	void operator()(Cog& io0, const Cog& i1) const
 		{ io0 |= i1; }
 	};
 
@@ -221,19 +216,19 @@ Cog spCogs(const Seq& iSeq)
 	if (ZQ<string8> theQ = iSeq.QGet<string8>(0))
 		{
 		if (*theQ == "^")
-			return spCogs<CogAccumulatorCombiner_Each<const Param&> >(1, iSeq);
+			return spCogs<CogAccumulatorCombiner_Each>(1, iSeq);
 
 		if (*theQ == "+")
-			return spCogs<CogAccumulatorCombiner_Plus<const Param&> >(1, iSeq);
+			return spCogs<CogAccumulatorCombiner_Plus>(1, iSeq);
 
 		if (*theQ == "-")
-			return spCogs<CogAccumulatorCombiner_Minus<const Param&> >(1, iSeq);
+			return spCogs<CogAccumulatorCombiner_Minus>(1, iSeq);
 
 		if (*theQ == "&")
-			return spCogs<CogAccumulatorCombiner_And<const Param&> >(1, iSeq);
+			return spCogs<CogAccumulatorCombiner_And>(1, iSeq);
 
 		if (*theQ == "|")
-			return spCogs<CogAccumulatorCombiner_Or<const Param&> >(1, iSeq);
+			return spCogs<CogAccumulatorCombiner_Or>(1, iSeq);
 
 		if (*theQ == "/")
 			return sCog(iSeq.Get(1)) / sCog(iSeq.Get(2));
@@ -247,7 +242,7 @@ Cog spCogs(const Seq& iSeq)
 		ZUnimplemented();
 		}
 
-	return spCogs<CogAccumulatorCombiner_Plus<const Param&> >(0, iSeq);
+	return spCogs<CogAccumulatorCombiner_Plus>(0, iSeq);
 	}
 
 } // anonymous namespace
@@ -489,7 +484,7 @@ Cog sCogs_Plus(vector<Cog>* ioCogs)
 	{
 	if (ioCogs->size())
 		{
-		PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Plus<const Param&>, std::list<Cog> > theAcc;
+		PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Plus, std::list<Cog> > theAcc;
 
 		foreacha (entry, *ioCogs)
 			theAcc.Include(entry);
@@ -503,7 +498,7 @@ Cog sCogs_Each(vector<Cog>* ioCogs)
 	{
 	if (ioCogs->size())
 		{
-		PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Each<const Param&>, std::list<Cog> > theAcc;
+		PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Each, std::list<Cog> > theAcc;
 
 		foreacha (entry, *ioCogs)
 			theAcc.Include(entry);
