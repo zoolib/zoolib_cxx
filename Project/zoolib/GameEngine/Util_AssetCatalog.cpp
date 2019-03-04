@@ -8,7 +8,7 @@
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_string.h"
-#include "zoolib/ZYad_FS.h"
+//#include "zoolib/ZYad_FS.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
@@ -19,7 +19,7 @@ using namespace Util_string;
 using std::map;
 using std::pair;
 
-typedef pair<ZRef<YadMapAtR>,string8> YadSpec;
+typedef FileSpec YadSpec;
 
 // =================================================================================================
 // MARK: - anonymous
@@ -28,11 +28,11 @@ namespace { // anonymous
 
 ZDCPixmap spPixmap_PNG(const YadSpec& iYadSpec)
 	{
-	if (ZDCPixmap thePixmap = sPixmap_PNG(sReadAt(iYadSpec.first, iYadSpec.second).DynamicCast<ZStreamerR>()))
+	if (ZDCPixmap thePixmap = sPixmap_PNG(iYadSpec.OpenR()))
 		return thePixmap;
 
 	if (ZLOGF(w, eInfo))
-		w << "Failed to load pixmap: " << iYadSpec.second;
+		w << "Failed to load pixmap: " << iYadSpec;
 
 	return null;
 	}
@@ -45,17 +45,14 @@ bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 	{
 	if (ZRef<ChannerR_Bin> channer = iProcessed.OpenR()) // Could use sOpenR_Buffered
 		{
-		if (ZRef<YadMapAtR> theSheetsYad = ZYad_FS::sYadR(iSheets).DynamicCast<YadMapAtR>())
+		for (FileIter iter = iSheets; iter; iter.Advance())
 			{
-			for (FileIter iter = iSheets; iter; iter.Advance())
+			string theName = iter.CurrentName();
+			if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
 				{
-				string theName = iter.CurrentName();
-				if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
-					{
-					ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
-						sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, YadSpec(theSheetsYad, theName)));
-					iAC->InstallSheet(*theQ, theCallable);
-					}
+				ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
+					sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iter.Current()));
+				iAC->InstallSheet(*theQ, theCallable);
 				}
 			iAC->Set_Processed(sReadBin(channer).Get<Map_Any>());
 			return true;
@@ -68,21 +65,18 @@ bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 bool spReadAnim(const FileSpec& iParentAsFS,
 	map<string8,YadSpec>& oFiles, Map_Any& oMap)
 	{
-	if (ZRef<YadMapAtR> theYad_Parent = ZYad_FS::sYadR(iParentAsFS).DynamicCast<YadMapAtR>())
+	for (FileIter iter = iParentAsFS; iter; iter.Advance())
 		{
-		for (FileIter iter = iParentAsFS; iter; iter.Advance())
-			{
-			const string8 theName = iter.CurrentName();
+		const string8 theName = iter.CurrentName();
 
-			if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
-				oFiles[theName] = YadSpec(theYad_Parent, theName);
-			}
+		if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
+			oFiles[theName] = iter.Current();
+		}
 
-		if (not oFiles.empty())
-			{
-			oMap = sGet(sQReadMap_Any(iParentAsFS.Child("meta.txt").OpenR(), "meta.txt"));
-			return true;
-			}
+	if (not oFiles.empty())
+		{
+		oMap = sGet(sQReadMap_Any(iParentAsFS.Child("meta.txt").OpenR(), "meta.txt"));
+		return true;
 		}
 	return false;
 	}
@@ -123,60 +117,43 @@ void spInstall_Anim(
 		}
 	}
 
-bool spInstallArt(
-	const ZRef<AssetCatalog>& iAC,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
-	const FileSpec& iFS,
-	Map_Any& ioMap);
-
-void spInstallArt(
-	const ZRef<AssetCatalog>& iAC,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
-	const FileSpec& iFS,
-	const ZRef<YadMapAtR>& iYad_Parent,
-	Map_Any& ioMap)
-	{
-	if (spInstallArt(iAC, iTFP, iFS, ioMap))
-		return;
-
-	const string8 theName = iFS.Name();
-
-	if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
-		{
-		const string8 woSuffix = *theQ;
-		const string8 theMeta = woSuffix + ".txt";
-
-		Map_Any entry = sGet(sQReadMap_Any(iFS.Sibling(theMeta).OpenR(), theMeta));
-
-		Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
-
-		const string8 theSheetName = woSuffix;
-		ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
-			sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, YadSpec(iYad_Parent, theName)));
-		iAC->InstallSheet(theSheetName, theCallable);
-		Map_Any theFrame;
-		theFrame["SheetName"] = theSheetName;
-		theFrames.Append(theFrame);
-		
-		ioMap[woSuffix] = entry;
-		if (ZLOGF(w, eDebug))
-			w << "Installed art: " << theSheetName;
-		}	
-	}
-
-bool spInstallArt(
+void spInstall_Art(
 	const ZRef<AssetCatalog>& iAC,
 	const ZRef<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iFS,
 	Map_Any& ioMap)
 	{
-	if (ZRef<YadMapAtR> theYad_Parent = ZYad_FS::sYadR(iFS).DynamicCast<YadMapAtR>())
+	if (iFS.IsDir())
 		{
 		for (FileIter iter = iFS; iter; iter.Advance())
-			spInstallArt(iAC, iTFP, iter.Current(), theYad_Parent, ioMap);
-		return true;
+			spInstall_Art(iAC, iTFP, iter.Current(), ioMap);
 		}
-	return false;
+	else
+		{
+		const string8 theName = iFS.Name();
+
+		if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
+			{
+			const string8 woSuffix = *theQ;
+			const string8 theMeta = woSuffix + ".txt";
+
+			Map_Any entry = sGet(sQReadMap_Any(iFS.Sibling(theMeta).OpenR(), theMeta));
+
+			Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
+
+			const string8 theSheetName = woSuffix;
+			ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
+				sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iFS));
+			iAC->InstallSheet(theSheetName, theCallable);
+			Map_Any theFrame;
+			theFrame["SheetName"] = theSheetName;
+			theFrames.Append(theFrame);
+
+			ioMap[woSuffix] = entry;
+			if (ZLOGF(w, eDebug))
+				w << "Installed art: " << theSheetName;
+			}
+		}
 	}
 
 } // anonymous namespace
@@ -218,10 +195,15 @@ void sPopulate(
 			spInstall_Anim(iAC, iTFP, iter.Current(), theMap);
 			}
 
-		if (not spInstallArt(iAC, iTFP, iRoot.Child("art"), theMap))
+		const FileSpec theFS_Art = iRoot.Child("art");
+		if (not theFS_Art.IsDir())
 			{
 			if (ZLOGF(w, eNotice))
-				w << "missing 'art'";			
+				w << "missing 'art'";
+			}
+		else for (FileIter iter = theFS_Art; iter; iter.Advance())
+			{
+			spInstall_Art(iAC, iTFP, iter.Current(), theMap);
 			}
 
 		iAC->Set_Processed(theMap);
