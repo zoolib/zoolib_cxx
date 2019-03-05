@@ -10,30 +10,30 @@ namespace GameEngine {
 // =================================================================================================
 // MARK: - Alpha
 
-typedef ZTween<Alpha> Tween_Alpha;
+typedef Tween<Alpha> Tween_Alpha;
 
 ZRef<Tween_Alpha> sTween_Alpha(const ZRef<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
 // MARK: - Tween_Gain
 
-typedef ZTween<Gain> Tween_Gain;
+typedef Tween<Gain> Tween_Gain;
 
 ZRef<Tween_Gain> sTween_Gain(const ZRef<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
 // MARK: - Tween_Mat
 
-typedef ZTween<Mat> Tween_Mat;
+typedef Tween<Mat> Tween_Mat;
 
 ZRef<Tween_Mat> sTween_Mat_Identity();
 
 // =================================================================================================
 // MARK: - AlphaMat
 
-typedef ZTween<AlphaGainMat> Tween_AlphaGainMat;
+typedef Tween<AlphaGainMat> Tween_AlphaGainMat;
 
-ZRef<ZTween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap);
+ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap);
 
 ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const AlphaGainMat& iAlphaGainMat);
 

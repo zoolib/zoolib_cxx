@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ZTween_Fun
+#pragma mark - Tween_Fun
 
 template <class Val, Val(*Fun)(double)>
-class ZTween_Fun
-:	public ZTween<Val>
+class Tween_Fun
+:	public Tween<Val>
 	{
 public:
 	virtual ZQ<Val> QValAt(double iPlace)
@@ -46,14 +46,14 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - ZTween_Filter_Fun
+#pragma mark - Tween_Filter_Fun
 
 template <class Val, class Param, Val(*Fun)(Param)>
-class ZTween_Filter_Fun
-:	public ZTween<Val>
+class Tween_Filter_Fun
+:	public Tween<Val>
 	{
 public:
-	ZTween_Filter_Fun(const ZRef<ZTween<Param> >& iTween)
+	Tween_Filter_Fun(const ZRef<Tween<Param> >& iTween)
 	:	fTween(iTween)
 		{}
 
@@ -68,18 +68,18 @@ public:
 		{ return fTween->Weight(); }
 
 private:
-	const ZRef<ZTween<Param> > fTween;
+	const ZRef<Tween<Param> > fTween;
 	};
 
 // =================================================================================================
-#pragma mark - ZTween_Filter_Coerce
+#pragma mark - Tween_Filter_Coerce
 
 template <class Val, class Param>
-class ZTween_Filter_Coerce
-:	public ZTween<Val>
+class Tween_Filter_Coerce
+:	public Tween<Val>
 	{
 public:
-	ZTween_Filter_Coerce(const ZRef<ZTween<Param> >& iTween)
+	Tween_Filter_Coerce(const ZRef<Tween<Param> >& iTween)
 	:	fTween(iTween)
 		{}
 
@@ -94,14 +94,14 @@ public:
 //		{ return fTween->Weight(); }
 
 private:
-	const ZRef<ZTween<Param> > fTween;
+	const ZRef<Tween<Param> > fTween;
 	};
 
 template <class Val, class Param>
-ZRef<ZTween<Val> > sTween_Filter_Coerce(const ZRef<ZTween<Param> >& iTween)
+ZRef<Tween<Val> > sTween_Filter_Coerce(const ZRef<Tween<Param> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Coerce<Val,Param>(iTween);
+		return new Tween_Filter_Coerce<Val,Param>(iTween);
 	return null;
 	}
 
@@ -113,10 +113,10 @@ Val spTweenFun_OneMinus(Val iVal)
 	{ return 1 - iVal; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_OneMinus(const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_OneMinus(const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Filter_Fun<Val,Val,spTweenFun_OneMinus>(iTween);
+		return new Tween_Filter_Fun<Val,Val,spTweenFun_OneMinus>(iTween);
 	return null;
 	}
 
@@ -128,15 +128,15 @@ Val spTweenFun_Linear(double iPlace)
 	{ return iPlace; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Linear()
-	{ return new ZTween_Fun<Val,spTweenFun_Linear>; }
+ZRef<Tween<Val> > sTween_Linear()
+	{ return new Tween_Fun<Val,spTweenFun_Linear>; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
+ZRef<Tween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
 	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_Linear<Val>()); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iWeight)
+ZRef<Tween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iWeight)
 	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_WeightScale(iWeight, sTween_Linear<Val>())); }
 
 // =================================================================================================
@@ -147,8 +147,8 @@ Val spTweenFun_Triangle(double iPlace)
 	{ return 1 - fabs(iPlace * 2 - 1); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Triangle()
-	{ return new ZTween_Fun<Val,spTweenFun_Triangle>; }
+ZRef<Tween<Val> > sTween_Triangle()
+	{ return new Tween_Fun<Val,spTweenFun_Triangle>; }
 
 // =================================================================================================
 #pragma mark - sTween_Square
@@ -158,8 +158,8 @@ Val spTweenFun_Square(double iPlace)
 	{ return iPlace < 0.5 ? 0.0 : 1.0; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Square()
-	{ return new ZTween_Fun<Val,spTweenFun_Square>; }
+ZRef<Tween<Val> > sTween_Square()
+	{ return new Tween_Fun<Val,spTweenFun_Square>; }
 
 // =================================================================================================
 #pragma mark - sTween_Sin
@@ -169,8 +169,8 @@ Val spTweenFun_Sin(double iPlace)
 	{ return sin(2 * M_PI * iPlace); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Sin()
-	{ return new ZTween_Fun<Val,spTweenFun_Sin>; }
+ZRef<Tween<Val> > sTween_Sin()
+	{ return new Tween_Fun<Val,spTweenFun_Sin>; }
 
 // =================================================================================================
 #pragma mark - sTween_Cos
@@ -180,8 +180,8 @@ Val spTweenFun_Cos(double iPlace)
 	{ return cos(2 * M_PI * iPlace); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Cos()
-	{ return new ZTween_Fun<Val,spTweenFun_Cos>; }
+ZRef<Tween<Val> > sTween_Cos()
+	{ return new Tween_Fun<Val,spTweenFun_Cos>; }
 
 // =================================================================================================
 #pragma mark - sTween_Erf
@@ -193,8 +193,8 @@ Val spTweenFun_Erf(double iPlace)
 	{ return erf(2 * iPlace); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Erf()
-	{ return new ZTween_Fun<Val,spTweenFun_Erf>; }
+ZRef<Tween<Val> > sTween_Erf()
+	{ return new Tween_Fun<Val,spTweenFun_Erf>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuadIn
@@ -204,8 +204,8 @@ Val spTweenFun_QuadIn(double iPlace)
 	{ return iPlace * iPlace; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuadIn()
-	{ return new ZTween_Fun<Val,spTweenFun_QuadIn>; }
+ZRef<Tween<Val> > sTween_QuadIn()
+	{ return new Tween_Fun<Val,spTweenFun_QuadIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuadOut
@@ -215,8 +215,8 @@ Val spTweenFun_QuadOut(double iPlace)
 	{ return -iPlace * (iPlace - 2); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuadOut()
-	{ return new ZTween_Fun<Val,spTweenFun_QuadOut>; }
+ZRef<Tween<Val> > sTween_QuadOut()
+	{ return new Tween_Fun<Val,spTweenFun_QuadOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_CubicIn
@@ -226,8 +226,8 @@ Val spTweenFun_CubicIn(double iPlace)
 	{ return iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_CubicIn()
-	{ return new ZTween_Fun<Val,spTweenFun_CubicIn>; }
+ZRef<Tween<Val> > sTween_CubicIn()
+	{ return new Tween_Fun<Val,spTweenFun_CubicIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_CubicOut
@@ -240,8 +240,8 @@ Val spTweenFun_CubicOut(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_CubicOut()
-	{ return new ZTween_Fun<Val,spTweenFun_CubicOut>; }
+ZRef<Tween<Val> > sTween_CubicOut()
+	{ return new Tween_Fun<Val,spTweenFun_CubicOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuartIn
@@ -251,8 +251,8 @@ Val spTweenFun_QuartIn(double iPlace)
 	{ return iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuartIn()
-	{ return new ZTween_Fun<Val,spTweenFun_QuartIn>; }
+ZRef<Tween<Val> > sTween_QuartIn()
+	{ return new Tween_Fun<Val,spTweenFun_QuartIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuartOut
@@ -265,8 +265,8 @@ Val spTweenFun_QuartOut(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuartOut()
-	{ return new ZTween_Fun<Val,spTweenFun_QuartOut>; }
+ZRef<Tween<Val> > sTween_QuartOut()
+	{ return new Tween_Fun<Val,spTweenFun_QuartOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuintIn
@@ -276,8 +276,8 @@ Val spTweenFun_QuintIn(double iPlace)
 	{ return iPlace * iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuintIn()
-	{ return new ZTween_Fun<Val,spTweenFun_QuintIn>; }
+ZRef<Tween<Val> > sTween_QuintIn()
+	{ return new Tween_Fun<Val,spTweenFun_QuintIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_QuintOut
@@ -290,8 +290,8 @@ Val spTweenFun_QuintOut(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_QuintOut()
-	{ return new ZTween_Fun<Val,spTweenFun_QuintOut>; }
+ZRef<Tween<Val> > sTween_QuintOut()
+	{ return new Tween_Fun<Val,spTweenFun_QuintOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_SinIn
@@ -301,8 +301,8 @@ Val spTweenFun_SinIn(double iPlace)
 	{ return -1 * cos(iPlace * M_PI / 2) + 1; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_SinIn()
-	{ return new ZTween_Fun<Val,spTweenFun_SinIn>; }
+ZRef<Tween<Val> > sTween_SinIn()
+	{ return new Tween_Fun<Val,spTweenFun_SinIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_SinOut
@@ -312,8 +312,8 @@ Val spTweenFun_SinOut(double iPlace)
 	{ return sin(iPlace * M_PI / 2); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_SinOut()
-	{ return new ZTween_Fun<Val,spTweenFun_SinOut>; }
+ZRef<Tween<Val> > sTween_SinOut()
+	{ return new Tween_Fun<Val,spTweenFun_SinOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_ExpoIn
@@ -323,8 +323,8 @@ Val spTweenFun_ExpoIn(double iPlace)
 	{ return iPlace <= 0 ? 0 : pow(2, 10 * (iPlace - 1)); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ExpoIn()
-	{ return new ZTween_Fun<Val,spTweenFun_ExpoIn>; }
+ZRef<Tween<Val> > sTween_ExpoIn()
+	{ return new Tween_Fun<Val,spTweenFun_ExpoIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_ExpoOut
@@ -334,8 +334,8 @@ Val spTweenFun_ExpoOut(double iPlace)
 	{ return iPlace >= 1 ? 1 : (-pow(2, -10 * iPlace) + 1); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ExpoOut()
-	{ return new ZTween_Fun<Val,spTweenFun_ExpoOut>; }
+ZRef<Tween<Val> > sTween_ExpoOut()
+	{ return new Tween_Fun<Val,spTweenFun_ExpoOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_CircIn
@@ -345,8 +345,8 @@ Val spTweenFun_CircIn(double iPlace)
 	{ return -1 * (sqrt(1 - iPlace * iPlace) - 1); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_CircIn()
-	{ return new ZTween_Fun<Val,spTweenFun_CircIn>; }
+ZRef<Tween<Val> > sTween_CircIn()
+	{ return new Tween_Fun<Val,spTweenFun_CircIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_CircOut
@@ -359,8 +359,8 @@ Val spTweenFun_CircOut(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_CircOut()
-	{ return new ZTween_Fun<Val,spTweenFun_CircOut>; }
+ZRef<Tween<Val> > sTween_CircOut()
+	{ return new Tween_Fun<Val,spTweenFun_CircOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_ElasticIn
@@ -373,8 +373,8 @@ Val spTweenFun_ElasticIn(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ElasticIn()
-	{ return new ZTween_Fun<Val,spTweenFun_ElasticIn>; }
+ZRef<Tween<Val> > sTween_ElasticIn()
+	{ return new Tween_Fun<Val,spTweenFun_ElasticIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_ElasticOut
@@ -384,18 +384,18 @@ Val spTweenFun_ElasticOut(double iPlace)
 	{ return pow(2, -10*iPlace) * sin((iPlace-0.3)*2*M_PI/0.3) + 1; }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ElasticOut()
-	{ return new ZTween_Fun<Val,spTweenFun_ElasticOut>; }
+ZRef<Tween<Val> > sTween_ElasticOut()
+	{ return new Tween_Fun<Val,spTweenFun_ElasticOut>; }
 
 // =================================================================================================
 #pragma mark - sTween_BackIn
 
 template <class Val>
-class ZTween_Fun_BackIn
-:	public ZTween<Val>
+class Tween_Fun_BackIn
+:	public Tween<Val>
 	{
 public:
-	ZTween_Fun_BackIn(Val iFactor) : fFactor(iFactor) {}
+	Tween_Fun_BackIn(Val iFactor) : fFactor(iFactor) {}
 
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
@@ -412,22 +412,22 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BackIn()
-	{ return new ZTween_Fun_BackIn<Val>(1.70158); }
+ZRef<Tween<Val> > sTween_BackIn()
+	{ return new Tween_Fun_BackIn<Val>(1.70158); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BackIn(Val iFactor)
-	{ return new ZTween_Fun_BackIn<Val>(iFactor); }
+ZRef<Tween<Val> > sTween_BackIn(Val iFactor)
+	{ return new Tween_Fun_BackIn<Val>(iFactor); }
 
 // =================================================================================================
 #pragma mark - sTween_BackOut
 
 template <class Val>
-class ZTween_Fun_BackOut
-:	public ZTween<Val>
+class Tween_Fun_BackOut
+:	public Tween<Val>
 	{
 public:
-	ZTween_Fun_BackOut(Val iFactor) : fFactor(iFactor) {}
+	Tween_Fun_BackOut(Val iFactor) : fFactor(iFactor) {}
 
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
@@ -445,12 +445,12 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BackOut()
-	{ return new ZTween_Fun_BackOut<Val>(1.70158); }
+ZRef<Tween<Val> > sTween_BackOut()
+	{ return new Tween_Fun_BackOut<Val>(1.70158); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BackOut(Val iFactor)
-	{ return new ZTween_Fun_BackOut<Val>(iFactor); }
+ZRef<Tween<Val> > sTween_BackOut(Val iFactor)
+	{ return new Tween_Fun_BackOut<Val>(iFactor); }
 
 // =================================================================================================
 #pragma mark - sTween_BounceIn
@@ -480,8 +480,8 @@ Val spTweenFun_BounceIn(double iPlace)
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BounceIn()
-	{ return new ZTween_Fun<Val,spTweenFun_BounceIn>; }
+ZRef<Tween<Val> > sTween_BounceIn()
+	{ return new Tween_Fun<Val,spTweenFun_BounceIn>; }
 
 // =================================================================================================
 #pragma mark - sTween_BounceOut
@@ -491,8 +491,8 @@ Val spTweenFun_BounceOut(double iPlace)
 	{ return spTweenFun_BounceIn<Val>(1 - iPlace); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_BounceOut()
-	{ return new ZTween_Fun<Val,spTweenFun_BounceOut>; }
+ZRef<Tween<Val> > sTween_BounceOut()
+	{ return new Tween_Fun<Val,spTweenFun_BounceOut>; }
 
 } // namespace ZooLib
 

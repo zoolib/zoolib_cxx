@@ -43,24 +43,24 @@ struct TweenCombiner : public std::binary_function<ZQ<Val0>, ZQ<Val1>, ZQ<Val0> 
 	};
 
 // =================================================================================================
-#pragma mark - ZTween
+#pragma mark - Tween
 
 /**
-A ZTween has a weight and returns a value given a place within that weight.
+A Tween has a weight and returns a value given a place within that weight.
 If given a place outside that weight it returns null.
 */
 
 template <class Val_p>
-class ZTween
+class Tween
 :	public CountedWithoutFinalize
 	{
 protected:
-	ZTween() {}
+	Tween() {}
 
 public:
 	typedef Val_p Val;
 
-	virtual ~ZTween()
+	virtual ~Tween()
 		{}
 
 // Our protocol
@@ -90,7 +90,7 @@ public:
 #pragma mark - spWeight
 
 template <class Val>
-double spWeight(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
+double spWeight(const ZRef<Tween<Val> >& iTween, ZQ<double>& ioCache)
 	{
 	if (not ioCache)
 		ioCache = iTween->Weight();
@@ -101,10 +101,10 @@ double spWeight(const ZRef<ZTween<Val> >& iTween, ZQ<double>& ioCache)
 #pragma mark - sTween_Null
 
 template <class Val>
-class ZTween_Null
+class Tween_Null
 	{
 public:
-	ZTween_Null()
+	Tween_Null()
 		{}
 	
 	virtual ZQ<Val> QValAt(double iPlace)
@@ -115,9 +115,9 @@ public:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Null()
+ZRef<Tween<Val> > sTween_Null()
 	{
-	static ZRef<ZTween<Val> > spTween = new ZTween_Null<Val>;
+	static ZRef<Tween<Val> > spTween = new Tween_Null<Val>;
 	return spTween;
 	}
 
@@ -125,16 +125,16 @@ ZRef<ZTween<Val> > sTween_Null()
 #pragma mark - sTween_Or
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
-class ZTween_Or
-:	public ZTween<Val0>
+class Tween_Or
+:	public Tween<Val0>
 	{
 public:
-	ZTween_Or(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	Tween_Or(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
@@ -144,59 +144,59 @@ public:
 private:
 	Combiner fCombiner;
 
-	const ZRef<ZTween<Val0> > f0;
-	const ZRef<ZTween<Val1> > f1;
+	const ZRef<Tween<Val0> > f0;
+	const ZRef<Tween<Val1> > f1;
 	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > sTween_Or(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > sTween_Or(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new ZTween_Or<Val0,Val1>(i0, i1);
+			return new Tween_Or<Val0,Val1>(i0, i1);
 		return i0;
 		}
 	return null;
 	}
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > operator|(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > operator|(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{ return sTween_Or(i0, i1); }
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> >& operator|=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> >& operator|=(ZRef<Tween<Val0> >& io0, const ZRef<Tween<Val1> >& i1)
 	{ return io0 = io0 | i1; }
 
 // =================================================================================================
 #pragma mark - sTween_Or (for homogenous pairs)
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Or(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> > sTween_Or(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new ZTween_Or<Val,Val>(i0, i1);
+			return new Tween_Or<Val,Val>(i0, i1);
 		return i0;
 		}
 	return i1;
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > operator|(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> > operator|(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	{ return sTween_Or(i0, i1); }
 
 template <class Val>
-ZRef<ZTween<Val> >& operator|=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> >& operator|=(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1)
 	{ return io0 = io0 | i1; }
 
 template <class Val_p>
-struct ZTweenAccumulatorCombiner_Or
+struct TweenAccumulatorCombiner_Or
 	{
 	typedef Val_p Val;
-	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+	void operator()(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1) const
 		{ io0 = sTween_Or<Val>(io0, i1); }
 	};
 
@@ -204,16 +204,16 @@ struct ZTweenAccumulatorCombiner_Or
 #pragma mark - sTween_And
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
-class ZTween_And
-:	public ZTween<Val0>
+class Tween_And
+:	public Tween<Val0>
 	{
 public:
-	ZTween_And(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	Tween_And(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{ return fCombiner(f0->QValAt(iPlace), f1->QValAt(iPlace)); }
 
@@ -223,32 +223,32 @@ public:
 private:
 	Combiner fCombiner;
 
-	const ZRef<ZTween<Val0> > f0;
-	const ZRef<ZTween<Val1> > f1;
+	const ZRef<Tween<Val0> > f0;
+	const ZRef<Tween<Val1> > f1;
 	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > sTween_And(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > sTween_And(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{
 	if (i0 && i1)
-		return new ZTween_And<Val0,Val1>(i0, i1);
+		return new Tween_And<Val0,Val1>(i0, i1);
 	return null;
 	}
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > operator&(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > operator&(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{ return sTween_And(i0, i1); }
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> >& operator&=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> >& operator&=(ZRef<Tween<Val0> >& io0, const ZRef<Tween<Val1> >& i1)
 	{ return io0 = io0 & i1; }
 
 template <class Val_p>
-struct ZTweenAccumulatorCombiner_And
+struct TweenAccumulatorCombiner_And
 	{
 	typedef Val_p Val;
-	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+	void operator()(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1) const
 		{
 		if (io0)
 			io0 = sTween_And(io0, i1);
@@ -261,16 +261,16 @@ struct ZTweenAccumulatorCombiner_And
 #pragma mark - sTween_Each
 
 template <class Val>
-class ZTween_Each
-:	public ZTween<Val>
+class Tween_Each
+:	public Tween<Val>
 	{
 public:
-	ZTween_Each(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
+	Tween_Each(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (iPlace < spWeight(f0, fD0Q))
@@ -283,35 +283,35 @@ public:
 		{ return spWeight(f0, fD0Q) + spWeight(f1, fD1Q); }
 
 private:
-	const ZRef<ZTween<Val> > f0, f1;
+	const ZRef<Tween<Val> > f0, f1;
 	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Each(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> > sTween_Each(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new ZTween_Each<Val>(i0, i1);
+			return new Tween_Each<Val>(i0, i1);
 		return i0;
 		}
 	return i1;
 	}
 
 template <class Val>
-ZRef<ZTween<Val> > operator^(const ZRef<ZTween<Val> >& i0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> > operator^(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	{ return sTween_Each(i0, i1); }
 
 template <class Val>
-ZRef<ZTween<Val> >& operator^=(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1)
+ZRef<Tween<Val> >& operator^=(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1)
 	{ return io0 = io0 ^ i1; }
 
 template <class Val_p>
-struct ZTweenAccumulatorCombiner_Each
+struct TweenAccumulatorCombiner_Each
 	{
 	typedef Val_p Val;
-	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+	void operator()(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1) const
 		{ io0 = sTween_Each(io0, i1); }
 	};
 
@@ -319,16 +319,16 @@ struct ZTweenAccumulatorCombiner_Each
 #pragma mark - sTween_With
 
 template <class Val0, class Val1, class Combiner = TweenCombiner<Val0,Val1> >
-class ZTween_With
-:	public ZTween<Val0>
+class Tween_With
+:	public Tween<Val0>
 	{
 public:
-	ZTween_With(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+	Tween_With(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val0> QValAt(double iPlace)
 		{
 		const double proportion = iPlace / spWeight(f0, fD0Q);
@@ -341,37 +341,37 @@ public:
 private:
 	Combiner fCombiner;
 
-	const ZRef<ZTween<Val0> > f0;
-	const ZRef<ZTween<Val1> > f1;
+	const ZRef<Tween<Val0> > f0;
+	const ZRef<Tween<Val1> > f1;
 
 	ZQ<double> fD0Q, fD1Q;
 	};
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > sTween_With(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > sTween_With(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new ZTween_With<Val0,Val1>(i0, i1);
+			return new Tween_With<Val0,Val1>(i0, i1);
 		return i0;
 		}
 	return null;
 	}
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> > operator/(const ZRef<ZTween<Val0> >& i0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> > operator/(const ZRef<Tween<Val0> >& i0, const ZRef<Tween<Val1> >& i1)
 	{ return sTween_With(i0, i1); }
 
 template <class Val0, class Val1>
-ZRef<ZTween<Val0> >& operator/=(ZRef<ZTween<Val0> >& io0, const ZRef<ZTween<Val1> >& i1)
+ZRef<Tween<Val0> >& operator/=(ZRef<Tween<Val0> >& io0, const ZRef<Tween<Val1> >& i1)
 	{ return io0 = io0 / i1; }
 
 template <class Val_p>
-struct ZTweenAccumulatorCombiner_With
+struct TweenAccumulatorCombiner_With
 	{
 	typedef Val_p Val;
-	void operator()(ZRef<ZTween<Val> >& io0, const ZRef<ZTween<Val> >& i1) const
+	void operator()(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1) const
 		{
 		if (io0)
 			io0 = sTween_With(io0, i1);
@@ -384,16 +384,16 @@ struct ZTweenAccumulatorCombiner_With
 #pragma mark - sTween_Repeat (count)
 
 template <class Val>
-class ZTween_Repeat
-:	public ZTween<Val>
+class Tween_Repeat
+:	public Tween<Val>
 	{
 public:
-	ZTween_Repeat(const ZRef<ZTween<Val> >& iTween, size_t iCount)
+	Tween_Repeat(const ZRef<Tween<Val> >& iTween, size_t iCount)
 	:	fTween(iTween)
 	,	fCount(iCount)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double lPlace)
 		{
 		const double childWeight = spWeight(fTween, fTweenWeightQ);
@@ -405,16 +405,16 @@ public:
 		{ return fCount * spWeight(fTween, fTweenWeightQ); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const size_t fCount;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Repeat(size_t iCount, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_Repeat(size_t iCount, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_Repeat<Val>(iTween, iCount);
+		return new Tween_Repeat<Val>(iTween, iCount);
 	return null;
 	}
 
@@ -422,16 +422,16 @@ ZRef<ZTween<Val> > sTween_Repeat(size_t iCount, const ZRef<ZTween<Val> >& iTween
 #pragma mark - sTween_RepeatFor
 
 template <class Val>
-class ZTween_RepeatFor
-:	public ZTween<Val>
+class Tween_RepeatFor
+:	public Tween<Val>
 	{
 public:
-	ZTween_RepeatFor(const ZRef<ZTween<Val> >& iTween, double iWeight)
+	Tween_RepeatFor(const ZRef<Tween<Val> >& iTween, double iWeight)
 	:	fTween(iTween)
 	,	fWeight(iWeight)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (0 <= iPlace && iPlace < fWeight)
@@ -443,16 +443,16 @@ public:
 		{ return fWeight; }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fWeight;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_RepeatFor(double iWeight, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_RepeatFor(double iWeight, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_RepeatFor<Val>(iTween, iWeight);
+		return new Tween_RepeatFor<Val>(iTween, iWeight);
 	return null;
 	}
 
@@ -460,16 +460,16 @@ ZRef<ZTween<Val> > sTween_RepeatFor(double iWeight, const ZRef<ZTween<Val> >& iT
 #pragma mark - sTween_ForExactly
 
 template <class Val>
-class ZTween_ForExactly
-:	public ZTween<Val>
+class Tween_ForExactly
+:	public Tween<Val>
 	{
 public:
-	ZTween_ForExactly(const ZRef<ZTween<Val> >& iTween, double iWeight)
+	Tween_ForExactly(const ZRef<Tween<Val> >& iTween, double iWeight)
 	:	fTween(iTween)
 	,	fWeight(iWeight)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (iPlace < fWeight)
@@ -481,16 +481,16 @@ public:
 		{ return fWeight; }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fWeight;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ForExactly(double iWeight, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ForExactly(double iWeight, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_ForExactly<Val>(iTween, iWeight);
+		return new Tween_ForExactly<Val>(iTween, iWeight);
 	return null;
 	}
 
@@ -498,16 +498,16 @@ ZRef<ZTween<Val> > sTween_ForExactly(double iWeight, const ZRef<ZTween<Val> >& i
 #pragma mark - sTween_ForAtMost
 
 template <class Val>
-class ZTween_ForAtMost
-:	public ZTween<Val>
+class Tween_ForAtMost
+:	public Tween<Val>
 	{
 public:
-	ZTween_ForAtMost(const ZRef<ZTween<Val> >& iTween, double iAtMost)
+	Tween_ForAtMost(const ZRef<Tween<Val> >& iTween, double iAtMost)
 	:	fTween(iTween)
 	,	fAtMost(iAtMost)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (iPlace < fAtMost)
@@ -519,16 +519,16 @@ public:
 		{ return sMin(fAtMost, spWeight(fTween, fTweenWeightQ)); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fAtMost;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ForAtMost(double iAtMost, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ForAtMost(double iAtMost, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_ForAtMost<Val>(iTween, iAtMost);
+		return new Tween_ForAtMost<Val>(iTween, iAtMost);
 	return null;
 	}
 
@@ -536,16 +536,16 @@ ZRef<ZTween<Val> > sTween_ForAtMost(double iAtMost, const ZRef<ZTween<Val> >& iT
 #pragma mark - sTween_ForAtLeast
 
 template <class Val>
-class ZTween_ForAtLeast
-:	public ZTween<Val>
+class Tween_ForAtLeast
+:	public Tween<Val>
 	{
 public:
-	ZTween_ForAtLeast(const ZRef<ZTween<Val> >& iTween, double iAtLeast)
+	Tween_ForAtLeast(const ZRef<Tween<Val> >& iTween, double iAtLeast)
 	:	fTween(iTween)
 	,	fAtLeast(iAtLeast)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{ return fTween->QValAt(sMin(iPlace, spWeight(fTween, fTweenWeightQ) * 0.999999)); }
 
@@ -553,16 +553,16 @@ public:
 		{ return sMax(fAtLeast, spWeight(fTween, fTweenWeightQ)); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fAtLeast;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_ForAtLeast<Val>(iTween, iAtLeast);
+		return new Tween_ForAtLeast<Val>(iTween, iAtLeast);
 	return null;
 	}
 
@@ -570,16 +570,16 @@ ZRef<ZTween<Val> > sTween_ForAtLeast(double iAtLeast, const ZRef<ZTween<Val> >& 
 #pragma mark - sTween_WeightShift
 
 template <class Val>
-class ZTween_WeightShift
-:	public ZTween<Val>
+class Tween_WeightShift
+:	public Tween<Val>
 	{
 public:
-	ZTween_WeightShift(const ZRef<ZTween<Val> >& iTween, double iWeightShift)
+	Tween_WeightShift(const ZRef<Tween<Val> >& iTween, double iWeightShift)
 	:	fTween(iTween)
 	,	fWeightShift(iWeightShift)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{ return fTween->QValAt(iPlace - fWeightShift); }
 
@@ -587,16 +587,16 @@ public:
 		{ return sMax(0.0, spWeight(fTween, fTweenWeightQ) + fWeightShift); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fWeightShift;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_WeightShift(double iWeightShift, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_WeightShift(double iWeightShift, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_WeightShift<Val>(iTween, iWeightShift);
+		return new Tween_WeightShift<Val>(iTween, iWeightShift);
 	return null;
 	}
 
@@ -604,16 +604,16 @@ ZRef<ZTween<Val> > sTween_WeightShift(double iWeightShift, const ZRef<ZTween<Val
 #pragma mark - sTween_WeightScale
 
 template <class Val>
-class ZTween_WeightScale
-:	public ZTween<Val>
+class Tween_WeightScale
+:	public Tween<Val>
 	{
 public:
-	ZTween_WeightScale(const ZRef<ZTween<Val> >& iTween, double iWeightScale)
+	Tween_WeightScale(const ZRef<Tween<Val> >& iTween, double iWeightScale)
 	:	fTween(iTween)
 	,	fWeightScale(iWeightScale)
 		{ ZAssert(fWeightScale); }
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (fWeightScale > 0)
@@ -636,16 +636,16 @@ public:
 		}
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fWeightScale;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_WeightScale(double iWeightScale, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_WeightScale(double iWeightScale, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_WeightScale<Val>(iTween, iWeightScale);
+		return new Tween_WeightScale<Val>(iTween, iWeightScale);
 	return null;
 	}
 
@@ -653,16 +653,16 @@ ZRef<ZTween<Val> > sTween_WeightScale(double iWeightScale, const ZRef<ZTween<Val
 #pragma mark - sTween_WeightPhase
 
 template <class Val>
-class ZTween_WeightPhase
-:	public ZTween<Val>
+class Tween_WeightPhase
+:	public Tween<Val>
 	{
 public:
-	ZTween_WeightPhase(const ZRef<ZTween<Val> >& iTween, double iPhase)
+	Tween_WeightPhase(const ZRef<Tween<Val> >& iTween, double iPhase)
 	:	fTween(iTween)
 	,	fPhase(iPhase)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		const double theWeight = spWeight(fTween, fTweenWeightQ);
@@ -673,16 +673,16 @@ public:
 		{ return spWeight(fTween, fTweenWeightQ); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	const double fPhase;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_WeightPhase(double iPhase, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_WeightPhase(double iPhase, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_WeightPhase<Val>(iTween, iPhase);
+		return new Tween_WeightPhase<Val>(iTween, iPhase);
 	return null;
 	}
 
@@ -690,28 +690,28 @@ ZRef<ZTween<Val> > sTween_WeightPhase(double iPhase, const ZRef<ZTween<Val> >& i
 #pragma mark - sTween_WeightNormalize
 
 template <class Val>
-class ZTween_WeightNormalize
-:	public ZTween<Val>
+class Tween_WeightNormalize
+:	public Tween<Val>
 	{
 public:
-	ZTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
+	Tween_WeightNormalize(const ZRef<Tween<Val> >& iTween)
 	:	fTween(iTween)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{ return fTween->QValAt(iPlace / spWeight(fTween, fTweenWeightQ)); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	ZQ<double> fTweenWeightQ;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_WeightNormalize(const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_WeightNormalize<Val>(iTween);
+		return new Tween_WeightNormalize<Val>(iTween);
 	return null;
 	}
 
@@ -719,16 +719,16 @@ ZRef<ZTween<Val> > sTween_WeightNormalize(const ZRef<ZTween<Val> >& iTween)
 #pragma mark - sTween_Const
 
 template <class Val>
-class ZTween_Const
-:	public ZTween<Val>
+class Tween_Const
+:	public Tween<Val>
 	{
 public:
-	ZTween_Const(const Val& iVal, double iWeight)
+	Tween_Const(const Val& iVal, double iWeight)
 	:	fVal(iVal)
 	,	fWeight(iWeight)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (0 <= iPlace && iPlace < fWeight)
@@ -745,34 +745,34 @@ private:
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Const(const Val& iVal)
-	{ return new ZTween_Const<Val>(iVal, 1.0); }
+ZRef<Tween<Val> > sTween_Const(const Val& iVal)
+	{ return new Tween_Const<Val>(iVal, 1.0); }
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Const(const Val& iVal, double iWeight)
-	{ return new ZTween_Const<Val>(iVal, iWeight); }
+ZRef<Tween<Val> > sTween_Const(const Val& iVal, double iWeight)
+	{ return new Tween_Const<Val>(iVal, iWeight); }
 
 // =================================================================================================
 #pragma mark - sTween_ValScale
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ValScale(Val iValScale, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ValScale(Val iValScale, const ZRef<Tween<Val> >& iTween)
 	{ return sTween_With(iTween, sTween_Const<Val>(iValScale)); }
 
 // =================================================================================================
 #pragma mark - sTween_ValOffset
 
 template <class Val>
-class ZTween_ValOffset
-:	public ZTween<Val>
+class Tween_ValOffset
+:	public Tween<Val>
 	{
 public:
-	ZTween_ValOffset(const ZRef<ZTween<Val> >& iTween, Val iValOffset)
+	Tween_ValOffset(const ZRef<Tween<Val> >& iTween, Val iValOffset)
 	:	fTween(iTween)
 	,	fValOffset(iValOffset)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{
 		if (ZQ<Val> theQ = fTween->QValAt(iPlace))
@@ -784,15 +784,15 @@ public:
 		{ return fTween->Weight(); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	const Val fValOffset;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ValOffset(Val iValOffset, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ValOffset(Val iValOffset, const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_ValOffset<Val>(iTween, iValOffset);
+		return new Tween_ValOffset<Val>(iTween, iValOffset);
 	return null;
 	}
 
@@ -800,34 +800,34 @@ ZRef<ZTween<Val> > sTween_ValOffset(Val iValOffset, const ZRef<ZTween<Val> >& iT
 #pragma mark - sTween_Range
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_ValRange(Val iZeroVal, Val iOneVal, const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_ValRange(Val iZeroVal, Val iOneVal, const ZRef<Tween<Val> >& iTween)
 	{ return sTween_ValOffset(iZeroVal, sTween_ValScale<Val>(iOneVal - iZeroVal, iTween)); }
 
 // =================================================================================================
 #pragma mark - sTween_First
 
 template <class Val>
-class ZTween_First
-:	public ZTween<Val>
+class Tween_First
+:	public Tween<Val>
 	{
 public:
-	ZTween_First(const ZRef<ZTween<Val> >& iTween)
+	Tween_First(const ZRef<Tween<Val> >& iTween)
 	:	fTween(iTween)
 		{}
 
-// From ZTween
+// From Tween
 	virtual ZQ<Val> QValAt(double iPlace)
 		{ return fTween->QValAt(0); }
 
 private:
-	const ZRef<ZTween<Val> > fTween;
+	const ZRef<Tween<Val> > fTween;
 	};
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_First(const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_First(const ZRef<Tween<Val> >& iTween)
 	{
 	if (iTween)
-		return new ZTween_First<Val>(iTween);
+		return new Tween_First<Val>(iTween);
 	return null;
 	}
 
@@ -835,7 +835,7 @@ ZRef<ZTween<Val> > sTween_First(const ZRef<ZTween<Val> >& iTween)
 #pragma mark - sTween_Last
 
 template <class Val>
-ZRef<ZTween<Val> > sTween_Last(const ZRef<ZTween<Val> >& iTween)
+ZRef<Tween<Val> > sTween_Last(const ZRef<Tween<Val> >& iTween)
 	{ return sTween_First(sTween_WeightScale(-1, iTween)); }
 
 } // namespace ZooLib

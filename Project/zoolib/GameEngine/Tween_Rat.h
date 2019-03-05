@@ -8,7 +8,7 @@
 namespace ZooLib {
 namespace GameEngine {
 
-typedef ZTween<Rat> Tween_Rat;
+typedef Tween<Rat> Tween_Rat;
 
 // =================================================================================================
 // MARK: - RatRegistration

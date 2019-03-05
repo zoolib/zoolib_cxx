@@ -88,13 +88,13 @@ Cog spCogCtor_Group(const Map& iMap)
 
 	if (theCog)
 		{
-		ZRef<ZTween<AlphaGainMat> > theAGM =
+		ZRef<Tween<AlphaGainMat> > theAGM =
 			sTween<AlphaGainMat>(sQGetNamed(iMap, "AlphaGainMat", "AGM"));
 
 		if (not theAGM)
 			theAGM = sTween_AlphaGainMat(iMap);
 
-		ZRef<ZTween<Mat> > theScale = sTween_Const<Mat>(sScale3Z<Rat>(0.5));
+		ZRef<Tween<Mat> > theScale = sTween_Const<Mat>(sScale3Z<Rat>(0.5));
 		if (theAGM)
 			theAGM /= theScale;
 		else

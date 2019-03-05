@@ -14,7 +14,7 @@ namespace GameEngine {
 
 typedef ZRef<CountedVal<std::vector<Cel> > > CelStack;
 
-typedef ZTween<CelStack> Toon;
+typedef Tween<CelStack> Toon;
 
 // =================================================================================================
 // MARK: - sToon aka sTween<CelStack>
