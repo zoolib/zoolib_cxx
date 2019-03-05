@@ -4,10 +4,9 @@
 #include "zoolib/Singleton.h"
 #include "zoolib/Util_STL_map.h"
 
-#include "zoolib/GameEngine/AssetCatalog.h"
+#include "zoolib/GameEngine/AssetCatalog.h" // For sToonFrameCount
 #include "zoolib/GameEngine/Tween_AlphaGainMat.h"
 #include "zoolib/GameEngine/Util.h"
-//#include "zoolib/GameEngine/ZGameEngine_Tweens.h"
 
 using std::map;
 using std::pair;

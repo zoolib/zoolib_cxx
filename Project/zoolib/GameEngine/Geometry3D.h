@@ -196,7 +196,7 @@ template <class Val>
 Matrix<Val,1,2> sZY(const Matrix<Val,1,3>& iMat)
 	{ return Matrix<Val,1,2>(iMat[2], iMat[1]); }
 
-} // namespace ZGameEngine
+} // namespace GameEngine
 } // namespace ZooLib
 
 #endif // __ZooLib_GameEngine_Geometry3D_h__

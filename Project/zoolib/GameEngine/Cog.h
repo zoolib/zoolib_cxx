@@ -1,5 +1,5 @@
-#ifndef __GameEngine_Cog_h__
-#define __GameEngine_Cog_h__ 1
+#ifndef __ZooLib_GameEngine_Cog_h__
+#define __ZooLib_GameEngine_Cog_h__ 1
 
 #include "zoolib/Cog.h"
 
@@ -112,11 +112,12 @@ struct Param
 
 typedef ZooLib::Cog<const Param&> Cog;
 
-CVec3 sGetWorldPos(const Param& iParam, Rat iOffset);
+// =================================================================================================
+// MARK: - Nooks
 
-ZRef<Nook> sGetOneNook(const Param& iParam, const ZName& iName);
+ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName);
 
-std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const ZName& iName);
+std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const Name& iName);
 
 template <class Nook_p>
 ZRef<Nook_p> sGetOneNook(const Param& iParam)
@@ -126,7 +127,7 @@ template <class Nook_p>
 std::vector<ZRef<Nook_p> > sGetAllNooks(const Param& iParam)
 	{
 	std::vector<ZRef<Nook_p> > result;
-	foreacha (entry, sGetAllNooks(iParam, ZName(typeid(Nook_p).name())))
+	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
 		if (ZRef<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
 			result.push_back(theNook);
@@ -150,7 +151,7 @@ template <class Nook_p>
 void sUpdateNookSet(const Param& iParam, NookSet<Nook_p>& ioNookSet)
 	{
 	ioNookSet.fWRNooks.clear();
-	foreacha (entry, sGetAllNooks(iParam, ZName(typeid(Nook_p).name())))
+	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
 		if (ZRef<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
 			ioNookSet.fWRNooks.insert(sWeakRef(theNook));
@@ -207,4 +208,4 @@ Cog sCogs_Each(std::vector<Cog>* ioCogs);
 } // namespace GameEngine
 } // namespace ZooLib
 
-#endif // __GameEngine_Cog_h__
+#endif // __ZooLib_GameEngine_Cog_h__

@@ -26,8 +26,6 @@
 namespace ZooLib {
 namespace GameEngine {
 
-typedef ChannerR_Bin ZStreamerR;
-
 using namespace Util_string;
 
 // =================================================================================================
@@ -91,31 +89,31 @@ ZQ<GRect> sQGRect(const Val_Any& iVal_Any)
 static ZRef<ChannerR_Bin> spChanner_Buffered(const ZRef<ChannerR_Bin>& iChanner)
 	{ return sChannerR_Buffered(iChanner, 4096); }
 
-ZRef<ZStreamerW> sCreateW_Truncate(const FileSpec& iFS)
+ZRef<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS)
 	{
-	if (ZRef<ChannerWPos_Bin> theStreamerWPos = iFS.CreateWPos(true, true))
+	if (ZRef<ChannerWPos_Bin> theChannerWPos = iFS.CreateWPos(true, true))
 		{
-		sSizeSet(*theStreamerWPos, 0);
-		sPosSet(*theStreamerWPos, 0);
-		return theStreamerWPos;
+		sSizeSet(*theChannerWPos, 0);
+		sPosSet(*theChannerWPos, 0);
+		return theChannerWPos;
 		}
 	return null;
 	}
 
-ZRef<ZStreamerR> sOpenR_Buffered(const FileSpec& iFS)
+ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 	{
-	if (ZRef<ZStreamerR> theStreamerR = iFS.OpenR())
-		return spChanner_Buffered(theStreamerR);
+	if (ZRef<ChannerR_Bin> theChannerR = iFS.OpenR())
+		return spChanner_Buffered(theChannerR);
 	return null;
 	}
 
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w)
 	{ Util_Any_JSONB::sWrite(iVal, w); }
 
-Val_Any sReadBin(const ZRef<ZStreamerR>& iStreamerR)
+Val_Any sReadBin(const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	ThreadVal_NameUniquifier theNU;
-	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(*iStreamerR))
+	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(*iChannerR))
 		return *theQ;
 	return Val_Any();
 	}
@@ -134,13 +132,13 @@ static ZQ<Map_Any> spQReadMap(const ZRef<ChannerRU_UTF>& iStrimmerRU)
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ZStreamerR>& iStreamerR, const string8* iName)
+ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8* iName)
 	{
 	ThreadVal_NameUniquifier theNU;
 
-	if (iStreamerR)
+	if (iChannerR)
 		{
-		const ZRef<ZStreamerR> buffered = spChanner_Buffered(iStreamerR);
+		const ZRef<ChannerR_Bin> buffered = spChanner_Buffered(iChannerR);
 
 		ZRef<ChannerR_UTF> theChannerR_UTF =
 			sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(buffered);
@@ -163,16 +161,16 @@ ZQ<Map_Any> sQReadMap_Any(const ZRef<ZStreamerR>& iStreamerR, const string8* iNa
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ZStreamerR>& iStreamerR, const string8& iName)
-	{ return sQReadMap_Any(iStreamerR, &iName); }
+ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8& iName)
+	{ return sQReadMap_Any(iChannerR, &iName); }
 
 ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
 	{
 	if (Util_string::sQWithoutSuffix(".zootext", iFS.Name())
 		|| Util_string::sQWithoutSuffix(".txt", iFS.Name()))
 		{
-		if (ZRef<ZStreamerR> amerR = iFS.OpenR())
-			return sQReadMap_Any(amerR, iFS.Name());
+		if (ZRef<ChannerR_Bin> channerR = iFS.OpenR())
+			return sQReadMap_Any(channerR, iFS.Name());
 		}
 	return null;
 	}
@@ -188,11 +186,11 @@ Map_Any sReadTextData(const FileSpec& iFS)
 			{}
 		else if (ZQ<string8,false> theQ = sQWithoutSuffix(".txt", theName))
 			{}
-		else if (ZRef<ZStreamerR> amerR = iter.Current().OpenR())
+		else if (ZRef<ChannerR_Bin> channerR = iter.Current().OpenR())
 			{
 			// To handle multiple maps in a single file, sQReadMap_Any needs to be
 			// refactored so we use the *same* buffer between invocations
-			if (ZQ<Map_Any> theQ = sQReadMap_Any(amerR, theName))
+			if (ZQ<Map_Any> theQ = sQReadMap_Any(channerR, theName))
 				theMap = sAugmented(theMap, *theQ);
 			}
 		}
@@ -277,11 +275,11 @@ static bool spPremultiply(ZCoord iLocationH, ZCoord iLocationV,
 	return true;
 	}
 
-ZDCPixmap sPixmap_PNG(const ZRef<ZStreamerR>& iStreamerR)
+ZDCPixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	#if ZMACRO_IOS
 
-		if (ZRef<CGDataProviderRef> theProvider_File = CGData_Channer::sProvider(iStreamerR))
+		if (ZRef<CGDataProviderRef> theProvider_File = CGData_Channer::sProvider(iChannerR))
 			{
 			if (ZRef<CGImageRef> theImageRef = sAdopt& ::CGImageCreateWithPNGDataProvider(
 				theProvider_File, nullptr, true, kCGRenderingIntentDefault))
@@ -293,7 +291,7 @@ ZDCPixmap sPixmap_PNG(const ZRef<ZStreamerR>& iStreamerR)
 	
 	#else
 
-		if (ZDCPixmap thePixmap = ZDCPixmapDecoder_PNG::sReadPixmap(*iStreamerR))
+		if (ZDCPixmap thePixmap = ZDCPixmapDecoder_PNG::sReadPixmap(*iChannerR))
 			{
 			if (thePixmap.GetRasterDesc().fPixvalDesc.fDepth != 32)
 				{

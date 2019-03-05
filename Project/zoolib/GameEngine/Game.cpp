@@ -84,12 +84,12 @@ static ZMap_Yad spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	ZRef<YadMapAtR> theYad;
 	if (iPreferBinaryData)
 		{
-		if (ZRef<ZStreamerR,false> theStreamerR = iFS.Child("data.bin").OpenR())
+		if (ZRef<ChannerR_Bin,false> theChannerR = iFS.Child("data.bin").OpenR())
 			{
 			if (ZLOGF(w, eNotice))
 				w << "Binary data preferred, missing 'data.bin'";
 			}
-		else if (ZQ<Map_Any> theQ = sReadBin(theStreamerR).QGet<Map_Any>())
+		else if (ZQ<Map_Any> theQ = sReadBin(theChannerR).QGet<Map_Any>())
 			{
 			theYad = sYadR(*theQ).DynamicCast<YadMapAtR>();
 			}

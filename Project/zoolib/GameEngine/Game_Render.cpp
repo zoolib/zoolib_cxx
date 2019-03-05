@@ -4,13 +4,10 @@
 
 #include "zoolib/GameEngine/Draw_GL.h"
 #include "zoolib/GameEngine/Draw_GL_Fixed.h"
+#include "zoolib/GameEngine/Draw_GL_Shader.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
 #include "zoolib/OpenGL/Util.h"
-
-#if not defined(__ANDROID__)
-	#include "zoolib/GameEngine/Draw_GL_Shader.h"
-#endif
 
 namespace ZooLib {
 namespace GameEngine {

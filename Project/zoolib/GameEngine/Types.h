@@ -24,9 +24,6 @@
 namespace ZooLib {
 namespace GameEngine {
 
-typedef ZooLib::ChannerR_Bin ZStreamerR;
-typedef ZooLib::ChannerW_Bin ZStreamerW;
-
 // =================================================================================================
 
 typedef ZMtx MtxF;

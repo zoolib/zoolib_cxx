@@ -16,9 +16,6 @@
 namespace ZooLib {
 namespace GameEngine {
 
-typedef ZooLib::Name ZName;
-//namespace Util_STL = ZooLib::Util_STL;
-
 class Nook;
 
 // =================================================================================================
@@ -33,9 +30,9 @@ public:
 
 	void NewEra();
 
-	ZRef<Nook> GetOne(const ZName& iName);
+	ZRef<Nook> GetOne(const Name& iName);
 
-	std::vector<ZRef<Nook> > GetAll(const ZName& iName);
+	std::vector<ZRef<Nook> > GetAll(const Name& iName);
 
 private:
 	bool pIsFullCycle(Nook* iNook);
@@ -43,7 +40,7 @@ private:
 	void pFinalize(Nook* iNook);
 
 	ZMtx fMtx;
-	typedef std::pair<ZName,Nook*> NameNook;
+	typedef std::pair<Name,Nook*> NameNook;
 	typedef std::set<NameNook> NameNookSet;
 	NameNookSet fNooks_Adding;
 	NameNookSet fNooks_JustAdded;
@@ -72,7 +69,7 @@ private:
 	friend class NookScope;
 	const ZWeakRef<NookScope> fNookScope;
 	// Used by NookScope
-	ZName fName;
+	Name fName;
 	};
 
 // =================================================================================================

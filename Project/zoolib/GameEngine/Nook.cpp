@@ -28,7 +28,7 @@ void NookScope::NewEra()
 	fNooks_Adding.clear();	
 	}
 
-ZRef<Nook> NookScope::GetOne(const ZName& iName)
+ZRef<Nook> NookScope::GetOne(const Name& iName)
 	{
 	ZAcqMtx acq(fMtx);
 	const NameNook theNN(iName, nullptr);
@@ -44,7 +44,7 @@ ZRef<Nook> NookScope::GetOne(const ZName& iName)
 	return null;
 	}
 
-vector<ZRef<Nook> > NookScope::GetAll(const ZName& iName)
+vector<ZRef<Nook> > NookScope::GetAll(const Name& iName)
 	{
 	ZAcqMtx acq(fMtx);
 	vector<ZRef<Nook> > result;

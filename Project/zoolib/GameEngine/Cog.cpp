@@ -104,10 +104,7 @@ void OutChannel::Load(const NameFrame& iNameFrame, int iPriority) const
 // =================================================================================================
 // MARK: -
 
-CVec3 sGetWorldPos(const Param& iParam, Rat iOffset)
-	{ return iParam.fInChannel.GetMat() * sCVec3(iOffset, 0, 0); }
-
-ZRef<Nook> sGetOneNook(const Param& iParam, const ZName& iName)
+ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName)
 	{
 	for (const InChannel* cur = &iParam.fInChannel; cur; cur = cur->GetPrior())
 		{
@@ -120,7 +117,7 @@ ZRef<Nook> sGetOneNook(const Param& iParam, const ZName& iName)
 	return null;
 	}
 
-std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const ZName& iName)
+std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const Name& iName)
 	{
 	std::vector<ZRef<Nook> > result;
 	for (const InChannel* cur = &iParam.fInChannel; cur; cur = cur->GetPrior())
