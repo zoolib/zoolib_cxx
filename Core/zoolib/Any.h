@@ -201,6 +201,8 @@ public:
 private:
 // -----------------
 
+	static bool spTypesMatch(const std::type_info& a, const std::type_info& b);
+
 	class InPlace
 		{
 	public:
@@ -241,7 +243,7 @@ private:
 
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
 			{
-			if (iTI == typeid(S))
+			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
 			return 0;
 			}
@@ -250,7 +252,7 @@ private:
 
 		virtual void* MutableVoidStarIf(const std::type_info& iTI)
 			{
-			if (iTI == typeid(S))
+			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
 			return 0;
 			}
@@ -295,7 +297,7 @@ private:
 
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI)
 			{
-			if (iTI == typeid(S))
+			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
 			return 0;
 			}
@@ -313,7 +315,7 @@ private:
 
 		virtual void* FreshMutableVoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI)
 			{
-			if (iTI == typeid(S))
+			if (spTypesMatch(iTI, typeid(S)))
 				{
 				if (this->IsShared())
 					{

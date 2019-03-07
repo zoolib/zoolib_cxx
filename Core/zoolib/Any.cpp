@@ -29,6 +29,15 @@ static inline
 const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
+bool Any::spTypesMatch(const std::type_info& a, const std::type_info& b)
+	{
+	#if defined(ZCONFIG_typeinfo_comparison_broken)
+		return 0 == strcmp(a.name(), b.name());
+	#else
+		return a == b;
+	#endif
+	}
+
 inline
 Any::InPlace& Any::pAsInPlace()
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
