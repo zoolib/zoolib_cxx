@@ -47,7 +47,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Static helper functions
 
-static string spReadReference(const ChanRU_UTF& iChanRU, ZRef<Callable_Entity> iCallable)
+static string spReadReference(const ZooLib::ChanRU_UTF& iChanRU, ZRef<Callable_Entity> iCallable)
 	{
 	string result;
 
@@ -110,7 +110,7 @@ static string spReadReference(const ChanRU_UTF& iChanRU, ZRef<Callable_Entity> i
 	return result;
 	}
 
-static bool spReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
+static bool spReadMLIdentifier(const ZooLib::ChanRU_UTF& iChanRU, string& oText)
 	{
 	oText.resize(0);
 
@@ -147,7 +147,7 @@ static bool spReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
 	return true;
 	}
 
-static bool spReadUntil(const ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
+static bool spReadUntil(const ZooLib::ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
@@ -162,7 +162,7 @@ static bool spReadUntil(const ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oT
 		}
 	}
 
-static bool spReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
+static bool spReadMLAttributeName(const ZooLib::ChanRU_UTF& iChanRU, string& oName)
 	{
 	oName.resize(0);
 
@@ -198,7 +198,7 @@ static bool spReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
 	}
 
 static bool spReadMLAttributeValue(
-	const ChanRU_UTF& iChanRU,
+	const ZooLib::ChanRU_UTF& iChanRU,
 	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
 	string& oValue)
 	{
@@ -238,16 +238,16 @@ static bool spReadMLAttributeValue(
 	}
 
 // =================================================================================================
-#pragma mark - ChanRU_UTF
+#pragma mark - ML::ChanRU
 
-ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU)
+ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU)
 :	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(false)
 ,	fBufferStart(0)
 ,	fToken(eToken_Fresh)
 	{}
 
-ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU,
+ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
 	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
 :	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
@@ -256,10 +256,10 @@ ChanRU_UTF::ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU,
 ,	fToken(eToken_Fresh)
 	{}
 
-ChanRU_UTF::~ChanRU_UTF()
+ChanRU::~ChanRU()
 	{}
 
-size_t ChanRU_UTF::Read(UTF32* oDest, size_t iCount)
+size_t ChanRU::Read(UTF32* oDest, size_t iCount)
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -309,7 +309,7 @@ size_t ChanRU_UTF::Read(UTF32* oDest, size_t iCount)
 	return localDest - oDest;
 	}
 
-size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
+size_t ChanRU::Unread(const UTF32* iSource, size_t iCount)
 	{
 	ZAssert(fToken == eToken_Text);
 
@@ -327,7 +327,7 @@ size_t ChanRU_UTF::Unread(const UTF32* iSource, size_t iCount)
 	return iCount;
 	}
 
-EToken ChanRU_UTF::Current() const
+EToken ChanRU::Current() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -335,7 +335,7 @@ EToken ChanRU_UTF::Current() const
 	return fToken;
 	}
 
-ChanRU_UTF& ChanRU_UTF::Advance()
+ChanRU& ChanRU::Advance()
 	{
 	if (fToken == eToken_Fresh)
 		{
@@ -351,7 +351,7 @@ ChanRU_UTF& ChanRU_UTF::Advance()
 	return *this;
 	}
 
-const string& ChanRU_UTF::Name() const
+const string& ChanRU::Name() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -362,7 +362,7 @@ const string& ChanRU_UTF::Name() const
 	return sDefault<string>();
 	}
 
-Attrs_t ChanRU_UTF::Attrs() const
+Attrs_t ChanRU::Attrs() const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -373,7 +373,7 @@ Attrs_t ChanRU_UTF::Attrs() const
 	return Attrs_t();
 	}
 
-ZQ<string> ChanRU_UTF::QAttr(const string& iAttrName) const
+ZQ<string> ChanRU::QAttr(const string& iAttrName) const
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -389,7 +389,7 @@ ZQ<string> ChanRU_UTF::QAttr(const string& iAttrName) const
 	return null;
 	}
 
-string ChanRU_UTF::Attr(const string& iAttrName) const
+string ChanRU::Attr(const string& iAttrName) const
 	{
 	if (ZQ<string> theAttr = this->QAttr(iAttrName))
 		return *theAttr;
@@ -423,10 +423,10 @@ static bool spTryRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 		}
 	}
 
-void ChanRU_UTF::pAdvance() const
-	{ const_cast<ChanRU_UTF*>(this)->pAdvance(); }
+void ChanRU::pAdvance() const
+	{ const_cast<ChanRU*>(this)->pAdvance(); }
 
-void ChanRU_UTF::pAdvance()
+void ChanRU::pAdvance()
 	{
 	fTagAttributes.clear();
 
@@ -565,25 +565,25 @@ void ChanRU_UTF::pAdvance()
 		}
 	}
 
-ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
-	{ return sChanner_Channer_T<ChanRU_UTF>(iChanner); }
+ZRef<ChannerRU> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
+	{ return sChanner_Channer_T<ChanRU>(iChanner); }
 
 // =================================================================================================
 #pragma mark - ML parsing support
 
-void sSkipText(ChanRU_UTF& r)
+void sSkipText(ChanRU& r)
 	{
 	while (r.Current() == eToken_Text)
 		r.Advance();
 	}
 
-bool sSkip(ChanRU_UTF& r, const string& iTagName)
+bool sSkip(ChanRU& r, const string& iTagName)
 	{
 	vector<string> theTags(1, iTagName);
 	return sSkip(r, theTags);
 	}
 
-bool sSkip(ChanRU_UTF& r, vector<string>& ioTags)
+bool sSkip(ChanRU& r, vector<string>& ioTags)
 	{
 	while (!ioTags.empty())
 		{
@@ -613,7 +613,7 @@ bool sSkip(ChanRU_UTF& r, vector<string>& ioTags)
 	return true;
 	}
 
-bool sTryRead_Begin(ChanRU_UTF& r, const string& iTagName)
+bool sTryRead_Begin(ChanRU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagBegin || r.Name() != iTagName)
 		return false;
@@ -622,7 +622,7 @@ bool sTryRead_Begin(ChanRU_UTF& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName)
+bool sTryRead_Empty(ChanRU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEmpty || r.Name() != iTagName)
 		return false;
@@ -631,7 +631,7 @@ bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_End(ChanRU_UTF& r, const string& iTagName)
+bool sTryRead_End(ChanRU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
 		return false;

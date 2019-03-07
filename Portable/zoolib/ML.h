@@ -56,18 +56,19 @@ typedef vector<Attr_t> Attrs_t;
 typedef Callable<string(string)> Callable_Entity;
 
 // =================================================================================================
-#pragma mark - ML::ChanRU_UTF
+#pragma mark - ML::ChanRU
 
 /// Tokenizes the ML from a source strim.
 
-class ChanRU_UTF
-:	public ZooLib::ChanRU<UTF32>
+class ChanRU
+:	public ZooLib::ChanRU_UTF
 	{
 public:
-	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU);
-	ChanRU_UTF(const ZooLib::ChanRU_UTF& iChanRU,
+	explicit ChanRU(const ZooLib::ChanRU_UTF& iChanRU);
+
+	ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
 		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
-	~ChanRU_UTF();
+	~ChanRU();
 
 // From ChanR_UTF
 	virtual size_t Read(UTF32* oDest, size_t iCount);
@@ -78,7 +79,7 @@ public:
 // Our protocol
 //	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
 	EToken Current() const;
-	ChanRU_UTF& Advance();
+	ChanRU& Advance();
 
 	const string& Name() const;
 	Attrs_t Attrs() const;
@@ -106,25 +107,25 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - ML::ChannerRU_UTF
+#pragma mark - ML::ChannerRU
 
-typedef Channer_T<ChanRU_UTF> ChannerRU_UTF;
+typedef Channer_T<ChanRU> ChannerRU;
 
-ZRef<ChannerRU_UTF> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner);
+ZRef<ChannerRU> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner);
 
 // =================================================================================================
 #pragma mark - ML parsing support
 
-void sSkipText(ChanRU_UTF& r);
+void sSkipText(ChanRU& r);
 
-bool sSkip(ChanRU_UTF& r, const string& iTagName);
-bool sSkip(ChanRU_UTF& r, vector<string>& ioTags);
+bool sSkip(ChanRU& r, const string& iTagName);
+bool sSkip(ChanRU& r, vector<string>& ioTags);
 
-bool sTryRead_Begin(ChanRU_UTF& r, const string& iTagName);
+bool sTryRead_Begin(ChanRU& r, const string& iTagName);
 
-bool sTryRead_Empty(ChanRU_UTF& r, const string& iTagName);
+bool sTryRead_Empty(ChanRU& r, const string& iTagName);
 
-bool sTryRead_End(ChanRU_UTF& r, const string& iTagName);
+bool sTryRead_End(ChanRU& r, const string& iTagName);
 
 // =================================================================================================
 #pragma mark - ML::StrimW

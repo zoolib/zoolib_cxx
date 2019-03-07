@@ -390,20 +390,24 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 				{
 				break;
 				}
-			else if (iOptions.fUseExtendedNotation.DGet(false))
-				{
-				sWriteLFIndent(iIndent, iOptions, iChanW);
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW);
-				iChanW << ";";
-				}
 			else
 				{
-				if (not isFirst)
-					iChanW << ",";
-				sWriteLFIndent(iIndent, iOptions, iChanW);
-				if (iOptions.fNumberSequences.DGet(false))
-					iChanW << "/*" << count << "*/";
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, false, iChanW);
+				int localIndent = sPGet<PullPush::StartSeq>(*theNotQ) ? iIndent + 1 : iIndent;
+				if (iOptions.fUseExtendedNotation.DGet(false))
+					{
+					sWriteLFIndent(localIndent, iOptions, iChanW);
+					if (iOptions.fNumberSequences.DGet(false))
+						iChanW << "/*" << count << "*/";
+					spPull_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					iChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						iChanW << ",";
+					sWriteLFIndent(localIndent, iOptions, iChanW);
+					spPull_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					}
 				}
 			++count;
 			}

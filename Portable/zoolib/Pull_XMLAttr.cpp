@@ -96,7 +96,7 @@ for (;;)
 */
 
 static void spPull_XMLAttr_Push(const string& iOuterName,
-	ML::ChanRU_UTF& ioChanRU,
+	ML::ChanRU& ioChanRU,
 	const ChanW_Any& iChanW)
 	{
 	for (;;)
@@ -180,7 +180,7 @@ static void spPull_XMLAttr_Push(const string& iOuterName,
 		}
 	}
 
-bool sPull_XMLAttr_Push(ML::ChanRU_UTF& ioChanRU, const ChanW_Any& iChanW)
+bool sPull_XMLAttr_Push(ML::ChanRU& ioChanRU, const ChanW_Any& iChanW)
 	{
 	sSkipText(ioChanRU);
 	if (ioChanRU.Current() == ML::eToken_Exhausted)
