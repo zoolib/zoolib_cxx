@@ -11,7 +11,7 @@ class Callable_Cog_NookScope
 	{
 public:
 	const ZRef<NookScope> fNookScope;
-	Cog fChild;
+	const Cog fChild;
 
 	Callable_Cog_NookScope(const ZRef<NookScope>& iNookScope, const Cog& iChild)
 	:	fNookScope(iNookScope)

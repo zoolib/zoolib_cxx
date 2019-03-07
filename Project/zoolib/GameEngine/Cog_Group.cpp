@@ -173,7 +173,7 @@ class Callable_Cog_Group_Loop
 public:
 	const ZRef<Tween_AlphaGainMat> fTween;
 	const Cog fChild;
-	double fStartTime;
+	const double fStartTime;
 
 	Callable_Cog_Group_Loop(const ZRef<Tween_AlphaGainMat>& iTween, const Cog& iChild, double iStartTime)
 	:	fTween(iTween)
