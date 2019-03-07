@@ -4,6 +4,7 @@
 #include "zoolib/DList.h"
 #include "zoolib/Log.h"
 #include "zoolib/StartOnNewThread.h"
+#include "zoolib/ThreadVal.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_STL_unordered_map.h"
@@ -483,13 +484,10 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 // =================================================================================================
 // MARK: - Globals
 
-static ZRef<AssetCatalog> spAssetCatalog;
-
-void sSet(const ZRef<AssetCatalog>& iAssetCatalog)
-	{ spAssetCatalog = iAssetCatalog; }
-
 size_t sToonFrameCount(const Name& iName)
-	{ return spAssetCatalog->FrameCount(iName); }
+	{
+	return sThreadVal<ZRef<AssetCatalog>>()->FrameCount(iName);
+	}
 
 } // namespace GameEngine
 } // namespace ZooLib

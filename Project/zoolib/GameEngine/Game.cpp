@@ -1,14 +1,15 @@
+#include "zoolib/GameEngine/Game.h"
+
+#include "zoolib/Log.h"
+#include "zoolib/ThreadVal.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
-
-#include "zoolib/Log.h"
 #include "zoolib/ZYadTree.h"
 
 #include "zoolib/GameEngine/Cog.h"
 #include "zoolib/GameEngine/DebugFlags.h"
 #include "zoolib/GameEngine/DrawPreprocess.h"
-#include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Util.h"
 #include "zoolib/GameEngine/Util_AddBorder.h"
@@ -115,7 +116,7 @@ Game::Game(const FileSpec& iFS,
 	{
 	fAssetCatalog = new AssetCatalog;
 
-	sSet(fAssetCatalog);
+	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	sPopulate(fAssetCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
@@ -158,6 +159,8 @@ void Game::Draw(
 	bool iUseShader,
 	const ZRef<Callable_Void>& iCallable_FlipBuffers)
 	{
+	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
+
 	ZRef<Rendered> theRendered;
 	{
 	ZAcqMtx acq(fMtx_Game);
@@ -222,6 +225,8 @@ void Game::RunOnce(
 
 	this->pUpdateTouches();
 	}
+
+	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	ZRef<Rendered> theRendered = this->pCrank(interval);
 
