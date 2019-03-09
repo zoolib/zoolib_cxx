@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Any.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Chan.h"
 #include "zoolib/Chan_XX_PipePair.h"
 #include "zoolib/Channer.h"
@@ -31,6 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW.h"
 #include "zoolib/Name.h"
+#include "zoolib/StartOnNewThread.h"
 
 #include <string>
 
@@ -121,6 +124,76 @@ PullPushPair<EE> sMakePullPushPair()
 	ZRef<Channer<ChanWCon<EE>>> theChannerWCon = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
 	ZRef<Channer<ChanR<EE>>> theChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
 	return PullPushPair<EE>(theChannerWCon, theChannerR);
+	}
+
+// ----------
+
+template <class Pull_p, class Push_p>
+void sRunPullPush_ChanPtr(
+	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ChanR<Pull_p>* iChanR,
+	const ZRef<ChannerWCon<Push_p>>& iChannerWCon)
+	{
+	try
+		{
+		sCall(iCallable, *iChanR, *iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{}
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+template <class Pull_p, class Push_p>
+ZRef<ChannerR<Push_p>> sStartPullPush(
+	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ChanR<Pull_p>* iChanR)
+	{
+	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
+	sStartOnNewThread
+		(
+		sBindR
+			(
+			sCallable(sRunPullPush_ChanPtr<Pull_p,Push_p>),
+			iCallable,
+			iChanR,
+			sGetClear(thePullPushPair.first)
+			)
+		);
+	return thePullPushPair.second;
+	}
+
+template <class Pull_p, class Push_p>
+void sRunPullPush_Channer(
+	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZRef<ChannerR<Pull_p>>& iChannerR,
+	const ZRef<ChannerWCon<Push_p>>& iChannerWCon)
+	{
+	try
+		{
+		sCall(iCallable, *iChannerR, *iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{}
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+template <class Pull_p, class Push_p>
+ZRef<ChannerR<Push_p>> sStartPullPush(
+	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZRef<ChannerR<Pull_p>>& iChannerR)
+	{
+	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
+	sStartOnNewThread
+		(
+		sBindR
+			(
+			sCallable(sRunPullPush_Channer<Pull_p,Push_p>),
+			iCallable,
+			iChannerR,
+			sGetClear(thePullPushPair.first)
+			)
+		);
+	return thePullPushPair.second;
 	}
 
 } // namespace ZooLib

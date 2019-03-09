@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
+#include "zoolib/Promise.h"
 #include "zoolib/PullPush.h"
 #include "zoolib/Val_Any.h"
 
@@ -57,6 +58,10 @@ bool sPull_Push_Any(const ChanR_Any& iChanR,
 
 ZQ<Any> sQPull_Any(const ChanR_Any& iChanR);
 Any sPull_Any(const ChanR_Any& iChanR);
+
+// --
+
+ZRef<Delivery<Any>> sStartAsyncPull_Any(const ZRef<ChannerR_Any>& iChannerR);
 
 } // namespace ZooLib
 

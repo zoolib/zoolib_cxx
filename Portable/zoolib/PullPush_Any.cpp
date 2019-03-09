@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/NameUniquifier.h"
 #include "zoolib/ParseException.h"
+#include "zoolib/StartOnNewThread.h"
 #include "zoolib/Val_Any.h"
 
 namespace ZooLib {
@@ -209,6 +210,19 @@ Any sPull_Any(const ChanR_Any& iChanR)
 		return theAny;
 		}
 	return Any();
+	}
+
+static void spAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR, const ZRef<Promise<Any>>& iPromise)
+	{
+	if (ZQ<Any> theAny = sQPull_Any(*iChannerR))
+		iPromise->Deliver(*theAny);
+	}
+
+ZRef<Delivery<Any>> sStartAsyncPull_Any(const ZRef<ChannerR_Any>& iChannerR)
+	{
+	ZRef<Promise<Any>> thePromise = sPromise<Any>();
+	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iChannerR, thePromise));
+	return thePromise->GetDelivery();
 	}
 
 } // namespace ZooLib

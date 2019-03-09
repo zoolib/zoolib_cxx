@@ -42,24 +42,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
-static void spAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR, const ZRef<Promise<Any>>& iPromise)
-	{
-	if (ZQ<Any> theAny = sQPull_Any(*iChannerR))
-		iPromise->Deliver(*theAny);
-	}
-
-static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR)
-	{
-	ZRef<Promise<Any>> thePromise = sPromise<Any>();
-	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iChannerR, thePromise));
-	return thePromise->GetDelivery();
-	}
-
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	const PullPush_JSON::ReadOptions& iRO)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
+	ZRef<Delivery<Any>> theDelivery = sStartAsyncPull_Any(sGetClear(thePair.second));
 	sPull_JSON_Push(iChanRU, iRO, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 

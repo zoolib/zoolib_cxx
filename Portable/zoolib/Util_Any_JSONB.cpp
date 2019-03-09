@@ -23,9 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Log.h"
-#include "zoolib/Promise.h"
 #include "zoolib/PullPush_Any.h"
-#include "zoolib/StartOnNewThread.h"
 
 // =================================================================================================
 #pragma mark -
@@ -33,23 +31,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSONB {
 
-static void spAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR, const ZRef<Promise<Any>>& iPromise)
-	{
-	if (ZQ<Any> theAny = sQPull_Any(*iChannerR))
-		iPromise->Deliver(*theAny);
-	}
-
-static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<ChannerR_Any>& iChannerR)
-	{
-	ZRef<Promise<Any>> thePromise = sPromise<Any>();
-	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iChannerR, thePromise));
-	return thePromise->GetDelivery();
-	}
-
 ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 	{
 	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(sGetClear(thePair.second));
+	ZRef<Delivery<Any>> theDelivery = sStartAsyncPullAny(sGetClear(thePair.second));
 	sPull_JSONB_Push(iChanR, null, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
