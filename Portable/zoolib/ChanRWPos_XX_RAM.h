@@ -51,7 +51,7 @@ public:
 		if (const size_t count = sMin<size_t>(iCount, pReadable()))
 			{
 			const typename std::deque<EE>::const_iterator ii = fDeque.begin() + fPosition;
-			copy(ii, ii + count, static_cast<char*>(oDest));
+			copy(ii, ii + count, oDest);
 			fPosition += count;
 			return count;
 			}
