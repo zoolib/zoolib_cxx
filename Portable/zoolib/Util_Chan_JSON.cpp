@@ -388,16 +388,16 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 						// Two spaces for the two nibbles
 						w << "  ";
 						}
-					w << " // ";
+					w << " /* ";
 					}
 				else if (countRead == 0)
 					{
 					// We'd exactly consumed the data. Emit a close tight up against the data.
-					w << ">// ";
+					w << ">/* ";
 					}
 				else
 					{
-					w << " // ";
+					w << " /* ";
 					}
 				for (size_t xx = 0; xx < countCopied; ++xx)
 					{
@@ -407,6 +407,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 					else
 						w << theChar;
 					}
+				w << " */ ";
 				if (countRead == 0)
 					break;
 				sWriteLFIndent(iLevel, iOptions, w);
