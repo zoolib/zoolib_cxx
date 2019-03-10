@@ -26,6 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Util_Chan.h" // For sCopyFully
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark -
+
 namespace PullPush {
 
 const PPT kStartMap = PPT(StartMap());
@@ -34,6 +38,9 @@ const PPT kStartSeq = PPT(StartSeq());
 const PPT kEnd = PPT(End());
 
 } // namespace PullPush
+
+// =================================================================================================
+#pragma mark -
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, iVal); }
