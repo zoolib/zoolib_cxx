@@ -112,6 +112,8 @@ bool sTryPull_StartSeq(const ChanRU<PPT>& iChanRU);
 bool sTryPull_End(const ChanRU<PPT>& iChanRU);
 bool sTryPull_Name(const Name& iName, const ChanRU<PPT>& iChanRU);
 
+void sEPull_End(const ChanR<PPT>& iChanR);
+
 // ----------
 
 // Throw if the chan is empty, return a false ZQ<PPT> if we hit an end, otherwise return the PPT.

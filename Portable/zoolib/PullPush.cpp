@@ -163,6 +163,16 @@ bool sTryPull_Name(const Name& iName, const ChanRU<PPT>& iChanRU)
 	return false;
 	}
 
+void sEPull_End(const ChanR<PPT>& iChanR)
+	{
+	if (ZQ<PPT> theQ = sQRead(iChanR))
+		{
+		if (theQ->PGet<PullPush::End>())
+			return;
+		}
+	sThrow_ParseException("Required PullPush::End is absent");
+	}
+
 ZQ<PPT> sQEReadPPTOrEnd(const ChanR<PPT>& iChanR)
 	{
 	if (NotQ<PPT> thePPTQ = sQRead(iChanR))

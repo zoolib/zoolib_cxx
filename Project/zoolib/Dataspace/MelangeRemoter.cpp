@@ -87,6 +87,8 @@ public:
 				sPushBack(theVals, munged);
 				}
 			oAny = sRef(new Result(&theRelHead, &theVals));
+
+			sEPull_End(iChanR);
 			return true;
 			}
 		return false;
@@ -103,19 +105,22 @@ public:
 					{
 					sPush(PullPush::Start<Result>(), iChanW);
 
-					// We're at the beginning of a QE::Result. So copy the RelHead to start with.
-					PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
-					RelHead& theRH = sMut<RelHead>(thePPT);
-					for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
-						theRH |= spStringFromChan(iChanR);
-					sPush(thePPT, iChanW);
+						// We're at the beginning of a QE::Result. So copy the RelHead to start with.
+						PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
+						RelHead& theRH = sMut<RelHead>(thePPT);
+						for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
+							theRH |= spStringFromChan(iChanR);
+						sPush(thePPT, iChanW);
 
-					const size_t theCount = sReadCount(iChanR);
-					sPush(theCount, iChanW);
+						const size_t theCount = sReadCount(iChanR);
+						sPush(theCount, iChanW);
 
-					// Now copy the vals.
-					for (size_t xx = theCount * theRH.size(); xx; --xx)
-						sPull_JSONB_Push_PPT(iChanR, this, iChanW);
+						// Now copy the vals.
+						for (size_t xx = theCount * theRH.size(); xx; --xx)
+							sPull_JSONB_Push_PPT(iChanR, this, iChanW);
+
+					sPush(PullPush::End(), iChanW);
+
 					return true;
 					}
 				case 101:
@@ -184,18 +189,19 @@ public:
 
 			sPush(PullPush::Start<Result>(), iChanW);
 
-			const RelHead& theRH = theResult->GetRelHead();
-			sPush(theRH, iChanW);
-			const size_t theRHCount = theRH.size();
+				const RelHead& theRH = theResult->GetRelHead();
+				sPush(theRH, iChanW);
+				const size_t theRHCount = theRH.size();
 
-			const size_t theRowCount = theResult->Count();
-			sPush(theRowCount, iChanW);
-			for (size_t yy = 0; yy < theRowCount; ++yy)
-				{
-				const Val_Any* theRow = theResult->GetValsAt(yy);
-				for (size_t xx = 0; xx < theRHCount; ++xx)
-					sFromAny_Push_PPT(theRow[xx], this, iChanW);
-				}
+				const size_t theRowCount = theResult->Count();
+				sPush(theRowCount, iChanW);
+				for (size_t yy = 0; yy < theRowCount; ++yy)
+					{
+					const Val_Any* theRow = theResult->GetValsAt(yy);
+					for (size_t xx = 0; xx < theRHCount; ++xx)
+						sFromAny_Push_PPT(theRow[xx], this, iChanW);
+					}
+			sPush(PullPush::End(), iChanW);
 			return true;
 			}
 		return false;
@@ -222,6 +228,7 @@ public:
 			for (size_t xx = theRHCount * theRowCount; xx; --xx)
 				sPull_PPT_Push_JSONB(iChanR, this, iChanW);
 
+			sEPull_End(iChanR);
 			return true;
 			}
 		else if (const Daton* theDatonP = iPPT.PGet<Daton>())
