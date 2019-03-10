@@ -30,10 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <typeinfo> // For std::type_info
 
-// =================================================================================================
-#pragma mark - Any
-
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark - AnyBase
 
 template <class S>
 struct AnyTraits
@@ -41,61 +41,9 @@ struct AnyTraits
 	enum { eAllowInPlace = 1 };
 	};
 
-class Any
+class AnyBase
 	{
 public:
-	const Any& AsAny() const
-		{ return *this; }
-
-	Any& AsAny()
-		{ return *this; }
-
-	Any()
-		{
-		fDistinguisher = 0;
-		fPayload.fAsPtr = 0;
-		}
-
-	Any(const Any& iOther)
-		{ pCtor(iOther); }
-
-	~Any()
-		{ pDtor(); }
-
-	Any& operator=(const Any& iOther)
-		{
-		if (this != &iOther)
-			{
-			pDtor();
-			pCtor(iOther);
-			}
-		return *this;
-		}
-
-	Any(const null_t&)
-		{
-		fDistinguisher = 0;
-		fPayload.fAsPtr = 0;
-		}
-
-	Any& operator=(const null_t&)
-		{
-		this->Clear();
-		return *this;
-		}
-
-	template <class S>
-	explicit Any(const S& iVal)
-		{ pCtor_T<S>(iVal); }
-
-	template <class S>
-	Any& operator=(const S& iVal)
-		{
-		pDtor();
-		pCtor_T<S>(iVal);
-		return *this;
-		}
-
 	const std::type_info& Type() const;
 	const std::type_info* TypeIfNotVoid() const;
 
@@ -103,7 +51,6 @@ public:
 	const void* ConstVoidStar() const;
 
 // ZVal protocol, generally for use by ZVal derivatives
-	void swap(Any& ioOther);
 
 	bool IsNull() const;
 
@@ -173,29 +120,66 @@ public:
 	bool Is() const
 		{ return this->PGet<S>(); }
 
+protected:
+	AnyBase()
+		{
+		fDistinguisher = 0;
+		fPayload.fAsPtr = 0;
+		}
+
+	AnyBase(const AnyBase& iOther)
+		{ pCtor(iOther); }
+
+	~AnyBase()
+		{ pDtor(); }
+
+	AnyBase& operator=(const AnyBase& iOther)
+		{
+		if (this != &iOther)
+			{
+			pDtor();
+			pCtor(iOther);
+			}
+		return *this;
+		}
+
+	template <class S>
+	AnyBase(const S& iVal)
+		{ pCtor_T<S>(iVal); }
+
+	template <class S>
+	AnyBase& operator=(const S& iVal)
+		{
+		pDtor();
+		pCtor_T<S>(iVal);
+		return *this;
+		}
+
+	void pSwap(AnyBase& ioOther);
+
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S>
-	Any(const S* dummy, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const IKnowWhatIAmDoing_t&)
 		{ pCtor_T<S>(); }
 
 	template <class S, class P0>
-	Any(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
 		{ pCtor_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
-	Any(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
 		{ pCtor_T<S>(iP0, iP1); }
 
 	template <class S>
-	Any(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(); }
 
 	template <class S, class P0>
-	Any(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
-	Any(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	AnyBase(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
 		{ pCtor_Counted_T<S>(iP0, iP1); }
 
 private:
@@ -344,7 +328,7 @@ private:
 	const void* pFetchConst(const std::type_info& iTypeInfo) const;
 	void* pFetchMutable(const std::type_info& iTypeInfo);
 
-	void pCtor(const Any& iOther)
+	void pCtor(const AnyBase& iOther)
 		{
 		if (spNotPOD(iOther.fDistinguisher))
 			{
@@ -357,7 +341,7 @@ private:
 			}
 		}
 
-	void pCtor_NonPOD(const Any& iOther);
+	void pCtor_NonPOD(const AnyBase& iOther);
 
 	void pDtor()
 		{
@@ -515,7 +499,7 @@ private:
 // -----------------
 	// There are three situations indicated by the value in fDistinguisher.
 	// 1. It's zero. fPayload.fAsPtr points to an instance of a Reffed subclass. If
-	//    fPayload.fAsPtr is also null then the Any is itself a null object.
+	//    fPayload.fAsPtr is also null then the AnyBase is itself a null object.
 	// 2. LSB is one. It points one byte past a typeid, and fPayload holds a POD value.
 	// 3. LSB is zero. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
@@ -541,69 +525,169 @@ private:
 	};
 
 // =================================================================================================
+#pragma mark - Any_T
+
+template <class Tag_p>
+class Any_T : public AnyBase
+	{
+	template <class OtherTag>
+	Any_T(const Any_T<OtherTag>&);
+
+	template <class OtherTag>
+	Any_T& operator=(const Any_T<OtherTag>&);
+
+public:
+	typedef Tag_p Tag_T;
+
+	Any_T()
+		{}
+
+	Any_T(const Any_T& iOther)
+	:	AnyBase((const AnyBase&)iOther)
+		{}
+
+	~Any_T()
+		{}
+
+	Any_T& operator=(const Any_T& iOther)
+		{
+		AnyBase::operator=((const AnyBase&)iOther);
+		return *this;
+		}
+
+	Any_T(const null_t&)
+		{}
+
+	Any_T& operator=(const null_t&)
+		{
+		this->Clear();
+		return *this;
+		}
+
+	template <class S>
+	Any_T(const S& iVal)
+	:	AnyBase(iVal)
+		{}
+
+	template <class S>
+	Any_T& operator=(const S& iVal)
+		{
+		AnyBase::operator=(iVal);
+		return *this;
+		}
+
+	void swap(Any_T& ioOther)
+		{ AnyBase::pSwap(ioOther); }
+
+	template <class OtherAny>
+	const Any_T<typename OtherAny::Tag_T>& As() const
+		{
+		const AnyBase* thisBase = this;
+		return *static_cast<const Any_T<typename OtherAny::Tag_T>*>(thisBase);
+		}
+
+// Special purpose constructors, called by sAny and sAnyCounted
+	template <class S>
+	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, IKnowWhatIAmDoing)
+		{}
+
+	template <class S, class P0>
+	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, iP0, IKnowWhatIAmDoing)
+		{}
+
+	template <class S, class P0, class P1>
+	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, iP0, iP1, IKnowWhatIAmDoing)
+		{}
+
+	template <class S>
+	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+		{}
+
+	template <class S, class P0>
+	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+		{}
+
+	template <class S, class P0, class P1>
+	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	:	AnyBase(dummy, iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+		{}
+	};
+
+// =================================================================================================
+#pragma mark - Any
+
+typedef Any_T<void> Any;
+
+// =================================================================================================
 #pragma mark - Accessor functions
 
-template <class S>
-const S* sPGet(const Any& iAny)
-	{ return iAny.PGet<S>(); }
+template <class S, class Tag_p>
+const S* sPGet(const Any_T<Tag_p>& iAny)
+	{ return iAny.template PGet<S>(); }
 
-template <class S>
-const ZQ<S> sQGet(const Any& iAny)
-	{ return iAny.QGet<S>(); }
+template <class S, class Tag_p>
+const ZQ<S> sQGet(const Any_T<Tag_p>& iAny)
+	{ return iAny.template QGet<S>(); }
 
-template <class S>
-const S& sDGet(const S& iDefault, const Any& iAny)
-	{ return iAny.DGet<S>(iDefault); }
+template <class S, class Tag_p>
+const S& sDGet(const S& iDefault, const Any_T<Tag_p>& iAny)
+	{ return iAny.template DGet<S>(iDefault); }
 
-template <class S>
-const S& sGet(const Any& iAny)
-	{ return iAny.Get<S>(); }
+template <class S, class Tag_p>
+const S& sGet(const Any_T<Tag_p>& iAny)
+	{ return iAny.template Get<S>(); }
 
-template <class S>
-S* sPMut(Any& ioAny)
-	{ return ioAny.PMut<S>(); }
+template <class S, class Tag_p>
+S* sPMut(Any_T<Tag_p>& ioAny)
+	{ return ioAny.template PMut<S>(); }
 
-template <class S>
-S& sDMut(const S& iDefault, Any& ioAny)
-	{ return ioAny.DMut<S>(iDefault); }
+template <class S, class Tag_p>
+S& sDMut(const S& iDefault, Any_T<Tag_p>& ioAny)
+	{ return ioAny.template DMut<S>(iDefault); }
 
-template <class S>
-S& sMut(Any& ioAny)
-	{ return ioAny.Mut<S>(); }
+template <class S, class Tag_p>
+S& sMut(Any_T<Tag_p>& ioAny)
+	{ return ioAny.template Mut<S>(); }
 
-template <class S>
-S& sSet(Any& ioAny, const S& iVal)
-	{ return ioAny.Set<S>(iVal); }
+template <class S, class Tag_p>
+S& sSet(Any_T<Tag_p>& ioAny, const S& iVal)
+	{ return ioAny.template Set<S>(iVal); }
 
 // =================================================================================================
 #pragma mark - Any, swap and pseudo-constructors
 
-inline void swap(Any& a, Any& b)
+template <class Tag_p>
+inline void swap(Any_T<Tag_p>& a, Any_T<Tag_p>& b)
 	{ a.swap(b); }
 
-template <class S>
+template <class S, class Tag_p=void>
 Any sAny()
 	{ return Any(static_cast<S*>(0), IKnowWhatIAmDoing); }
 
-template <class S, class P0>
-Any sAny(const P0& iP0)
-	{ return Any(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
+template <class S, class P0, class Tag_p=void>
+Any_T<Tag_p> sAny(const P0& iP0)
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
 
-template <class S, class P0, class P1>
-Any sAny(const P0& iP0, const P1& iP1)
-	{ return Any(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
+template <class S, class P0, class P1, class Tag_p=void>
+Any_T<Tag_p> sAny(const P0& iP0, const P1& iP1)
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
 
-template <class S>
-Any sAnyCounted()
-	{ return Any(static_cast<S*>(0), IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+template <class S, class Tag_p=void>
+Any_T<Tag_p> sAnyCounted()
+	{ return Any_T<Tag_p>(static_cast<S*>(0), IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
 
-template <class S, class P0>
-Any sAnyCounted(const P0& iP0)
-	{ return Any(static_cast<S*>(0), iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+template <class S, class P0, class Tag_p=void>
+Any_T<Tag_p> sAnyCounted(const P0& iP0)
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
 
-template <class S, class P0, class P1>
-Any sAnyCounted(const P0& iP0, const P1& iP1)
-	{ return Any(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+template <class S, class P0, class P1, class Tag_p=void>
+Any_T<Tag_p> sAnyCounted(const P0& iP0, const P1& iP1)
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
 
 } // namespace ZooLib
 

@@ -55,7 +55,7 @@ public:
 		{}
 
 	Val_T(const Val_T& iOther)
-	:	Any(iOther.AsAny())
+	:	Any((const Any&)iOther)
 		{}
 
 	~Val_T()
@@ -63,7 +63,7 @@ public:
 
 	Val_T& operator=(const Val_T& iOther)
 		{
-		Any::operator=((const Any&)(iOther));
+		Any::operator=((const Any&)iOther);
 		return *this;
 		}
 

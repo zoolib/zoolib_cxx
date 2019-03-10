@@ -23,13 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - Any
+#pragma mark - AnyBase
 
 static inline 
 const std::type_info* spPODTypeInfo(const void* iPtr)
 	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
 
-bool Any::spTypesMatch(const std::type_info& a, const std::type_info& b)
+bool AnyBase::spTypesMatch(const std::type_info& a, const std::type_info& b)
 	{
 	#if defined(ZCONFIG_typeinfo_comparison_broken)
 		return 0 == strcmp(a.name(), b.name());
@@ -39,29 +39,29 @@ bool Any::spTypesMatch(const std::type_info& a, const std::type_info& b)
 	}
 
 inline
-Any::InPlace& Any::pAsInPlace()
+AnyBase::InPlace& AnyBase::pAsInPlace()
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-const Any::InPlace& Any::pAsInPlace() const
+const AnyBase::InPlace& AnyBase::pAsInPlace() const
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-ZRef<Any::Reffed>& Any::pAsReffed()
+ZRef<AnyBase::Reffed>& AnyBase::pAsReffed()
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
 inline
-const ZRef<Any::Reffed>& Any::pAsReffed() const
+const ZRef<AnyBase::Reffed>& AnyBase::pAsReffed() const
 	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
 
-const std::type_info& Any::Type() const
+const std::type_info& AnyBase::Type() const
 	{
 	if (const std::type_info* theType = this->TypeIfNotVoid())
 		return *theType;
 	return typeid(void);
 	}
 
-const std::type_info* Any::TypeIfNotVoid() const
+const std::type_info* AnyBase::TypeIfNotVoid() const
 	{
 	if (fDistinguisher)
 		{
@@ -79,7 +79,7 @@ const std::type_info* Any::TypeIfNotVoid() const
 		}
 	}
 
-void* Any::MutableVoidStar()
+void* AnyBase::MutableVoidStar()
 	{
 	if (fDistinguisher)
 		{
@@ -97,7 +97,7 @@ void* Any::MutableVoidStar()
 		}
 	}
 
-const void* Any::ConstVoidStar() const
+const void* AnyBase::ConstVoidStar() const
 	{
 	if (fDistinguisher)
 		{
@@ -115,7 +115,7 @@ const void* Any::ConstVoidStar() const
 		}
 	}
 
-void Any::swap(Any& ioOther)
+void AnyBase::pSwap(AnyBase& ioOther)
 	{
 	if (fDistinguisher || ioOther.fDistinguisher)
 		{
@@ -130,10 +130,10 @@ void Any::swap(Any& ioOther)
 		}
 	}
 
-bool Any::IsNull() const
+bool AnyBase::IsNull() const
 	{ return not fDistinguisher && not fPayload.fAsPtr; }
 
-void Any::Clear()
+void AnyBase::Clear()
 	{
 	if (fDistinguisher)
 		{
@@ -148,7 +148,7 @@ void Any::Clear()
 	fPayload.fAsPtr = 0;
 	}
 
-const void* Any::pFetchConst(const std::type_info& iTypeInfo) const
+const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 	{
 	if (fDistinguisher)
 		{
@@ -170,7 +170,7 @@ const void* Any::pFetchConst(const std::type_info& iTypeInfo) const
 	return 0;
 	}
 
-void* Any::pFetchMutable(const std::type_info& iTypeInfo)
+void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 	{
 	if (fDistinguisher)
 		{
@@ -192,7 +192,7 @@ void* Any::pFetchMutable(const std::type_info& iTypeInfo)
 	return 0;
 	}
 
-void Any::pCtor_NonPOD(const Any& iOther)
+void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
 	{
 	if (iOther.fDistinguisher)
 		{
@@ -205,7 +205,7 @@ void Any::pCtor_NonPOD(const Any& iOther)
 		}
 	}
 
-void Any::pDtor_NonPOD()
+void AnyBase::pDtor_NonPOD()
 	{
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);
