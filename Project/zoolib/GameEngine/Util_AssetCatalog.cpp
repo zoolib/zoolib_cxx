@@ -32,7 +32,7 @@ ZDCPixmap spPixmap_PNG(const YadSpec& iYadSpec)
 		return thePixmap;
 
 	if (ZLOGF(w, eInfo))
-		w << "Failed to load pixmap: " << iYadSpec;
+		w << "Failed to load pixmap: " << iYadSpec.AsString();
 
 	return null;
 	}
