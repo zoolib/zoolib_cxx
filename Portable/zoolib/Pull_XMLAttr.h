@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_XMLAttr_Push(ML::ChanRU& ioChanRU, const ChanW_Any& iChanW);
+bool sPull_XMLAttr_Push_PPT(ML::ChanRU& ioChanRU, const ChanW_PPT& iChanW);
 
 } // namespace ZooLib
 

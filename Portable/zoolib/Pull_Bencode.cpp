@@ -104,14 +104,14 @@ string spReadString(const ChanRU_Bin& s)
 	return sReadString(s, stringLength);
 	}
 
-void spReadStringish(const ChanRU_Bin& s, const ChanW_Any& iChanW)
+void spReadStringish(const ChanRU_Bin& s, const ChanW_PPT& iChanW)
 	{
 	const int64 theLength = spRead_PositiveInteger(s);
 	if (not spTryRead_Byte(s, ':'))
 		sThrow_ParseException("Expected ':' terminator for string/binary length");
 
 	if (not theLength)
-		sPush(Any(), iChanW);
+		sPush(null, iChanW);
 
 	const string8 theString = sReadString(s, theLength);
 	string::const_iterator current = theString.begin();
@@ -132,7 +132,7 @@ void spReadStringish(const ChanRU_Bin& s, const ChanW_Any& iChanW)
 		}
 	}
 
-void spRead(const ChanRU_Bin& iChanRU, const ChanW_Any& iChanW)
+void spRead(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW)
 	{
 	uint8 theType = sEReadBE<uint8>(iChanRU);
 	switch (theType)
@@ -193,7 +193,7 @@ void spRead(const ChanRU_Bin& iChanRU, const ChanW_Any& iChanW)
 // =================================================================================================
 #pragma mark -
 
-bool sPull_Bencode_Push(const ChanRU_Bin& iChanRU, const ChanW_Any& iChanW)
+bool sPull_Bencode_Push_PPT(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW)
 	{
 	if (ZQ<byte> theQ = sQReadBE<uint8>(iChanRU))
 		{

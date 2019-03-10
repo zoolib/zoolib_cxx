@@ -56,8 +56,8 @@ Pull_Basic_Options::Pull_Basic_Options(UTF32 iNameFromValue, UTF32 iEntryFromEnt
 // =================================================================================================
 #pragma mark -
 
-bool sPull_Basic_Push(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOptions,
-	const ChanW_Any& iChanW)
+bool sPull_Basic_Push_PPT(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOptions,
+	const ChanW_PPT& iChanW)
 	{
 	for (bool isFirst = true; /*no test*/; isFirst = false)
 		{

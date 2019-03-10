@@ -29,9 +29,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-inline bool sPull_Attr_Push(const ChanR_UTF& iChanR,
-	const ChanW_Any& iChanW)
-	{ return sPull_Basic_Push(iChanR, Pull_Basic_Options('=', ','), iChanW); }
+inline bool sPull_Attr_Push_PPT(const ChanR_UTF& iChanR,
+	const ChanW_PPT& iChanW)
+	{ return sPull_Basic_Push_PPT(iChanR, Pull_Basic_Options('=', ','), iChanW); }
 
 } // namespace ZooLib
 

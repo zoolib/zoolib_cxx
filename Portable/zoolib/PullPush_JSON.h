@@ -40,13 +40,13 @@ using Util_Chan_JSON::WriteOptions;
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
+bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	const PullPush_JSON::ReadOptions& iRO,
-	const ChanW_Any& iChanW);
+	const ChanW_PPT& iChanW);
 
-bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW);
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW);
 
-bool sPull_Push_JSON(const ChanR_Any& iChanR,
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	size_t iInitialIndent, const PullPush_JSON::WriteOptions& iOptions,
 	const ChanW_UTF& iChanW);
 

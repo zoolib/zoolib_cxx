@@ -40,8 +40,8 @@ struct Pull_Basic_Options
 	// Perhaps should make sure we differentiate terminator and separator?
 	};
 
-bool sPull_Basic_Push(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOptions,
-	const ChanW_Any& iChanW);
+bool sPull_Basic_Push_PPT(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOptions,
+	const ChanW_PPT& iChanW);
 
 } // namespace ZooLib
 

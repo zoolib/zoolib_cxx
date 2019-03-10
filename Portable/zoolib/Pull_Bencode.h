@@ -32,7 +32,7 @@ typedef ChanRU<byte> ChanRU_Bin;
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_Bencode_Push(const ChanRU_Bin& iChanRU, const ChanW_Any& iChanW);
+bool sPull_Bencode_Push_PPT(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW);
 
 } // namespace ZooLib
 

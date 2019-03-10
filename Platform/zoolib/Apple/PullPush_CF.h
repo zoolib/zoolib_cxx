@@ -34,14 +34,14 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_CF_Push(CFTypeRef iCFTypeRef, const ChanW_Any& iChanW);
+bool sFrom_CF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW);
 
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_Push_CF(const ChanR_Any& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
+bool sPull_PPT_As_CF(const ChanR_PPT& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
 
-ZRef<CFTypeRef> sPull_CF(const ChanR_Any& iChanR);
+ZRef<CFTypeRef> sAs_CF(const ChanR_PPT& iChanR);
 
 } // namespace ZooLib
 

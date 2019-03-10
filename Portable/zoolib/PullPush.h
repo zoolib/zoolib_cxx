@@ -38,77 +38,80 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 
 namespace ZooLib {
-namespace PullPush {
 
 // =================================================================================================
 #pragma mark - 
 
+namespace PullPush {
+
+struct Tag_PPT;
+typedef Any_T<Tag_PPT> PPT;
+
 struct StartMap {};
-extern const Any kStartMap;
+extern const PPT kStartMap;
 
 struct StartSeq {};
-extern const Any kStartSeq;
+extern const PPT kStartSeq;
 
 struct End {};
-extern const Any kEnd;
-
-template <class T>
-struct Start {};
+extern const PPT kEnd;
 
 } // namespace PullPush
 
-using ChanR_Any = ChanR<Any>;
-using ChannerR_Any = Channer<ChanR_Any>;
+using PPT = PullPush::PPT;
 
-using ChanW_Any = ChanW<Any>;
-using ChannerW_Any = Channer<ChanW_Any>;
+using ChanR_PPT = ChanR<PPT>;
+using ChannerR_PPT = Channer<ChanR_PPT>;
 
-using ChanWCon_Any = ChanWCon<Any>;
-using ChannerWCon_Any = Channer<ChanWCon_Any>;
+using ChanW_PPT = ChanW<PPT>;
+using ChannerW_PPT = Channer<ChanW_PPT>;
 
-void sPush(const Any& iVal, const ChanW_Any& iChanW);
+using ChanWCon_PPT = ChanWCon<PPT>;
+using ChannerWCon_PPT = Channer<ChanWCon_PPT>;
+
+void sPush(const PPT& iVal, const ChanW_PPT& iChanW);
 
 template <class T>
-void sPush(const T& iVal, const ChanW_Any& iChanW)
-	{ sEWrite<Any>(iChanW, Any(iVal)); }
+void sPush(const T& iVal, const ChanW_PPT& iChanW)
+	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
 
 // Special-case NotRef -- we generally want them on the chan as ZRef.
 template <class T>
-void sPush(const ZRef<T,false>& iVal, const ChanW_Any& iChanW)
+void sPush(const ZRef<T,false>& iVal, const ChanW_PPT& iChanW)
 	{ sPush(sRef(iVal), iChanW); }
 
 template <class T>
-void sPush(const Name& iName, const T& iVal, const ChanW_Any& iChanW)
+void sPush(const Name& iName, const T& iVal, const ChanW_PPT& iChanW)
 	{
 	sPush(iName, iChanW);
 	sPush(iVal, iChanW);
 	}
 
-void sPull_UTF_Push(const ChanR_UTF& iChanR, const ChanW_Any& iChanW);
-void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iChanW);
+void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, const ChanW_PPT& iChanW);
+void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_PPT& iChanW);
 
-void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW);
-void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iChanW);
-
-// ----------
-
-bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW);
-bool sSkip_Node(const ChanR_Any& iChanR);
+void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, const ChanW_PPT& iChanW);
+void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_PPT& iChanW);
 
 // ----------
 
-bool sTryPull_StartMap(const ChanRU<Any>& iChanRU);
-bool sTryPull_StartSeq(const ChanRU<Any>& iChanRU);
-bool sTryPull_End(const ChanRU<Any>& iChanRU);
-bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU);
+bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW);
+bool sSkip_Node(const ChanR_PPT& iChanR);
 
 // ----------
 
-// Throw if the chan is empty, return a false ZQ<Any> if we hit an end, otherwise return the Any.
-ZQ<Any> sQEReadAnyOrEnd(const ChanR<Any>& iChanR);
+bool sTryPull_StartMap(const ChanRU<PPT>& iChanRU);
+bool sTryPull_StartSeq(const ChanRU<PPT>& iChanRU);
+bool sTryPull_End(const ChanRU<PPT>& iChanRU);
+bool sTryPull_Name(const Name& iName, const ChanRU<PPT>& iChanRU);
+
+// ----------
+
+// Throw if the chan is empty, return a false ZQ<PPT> if we hit an end, otherwise return the PPT.
+ZQ<PPT> sQEReadPPTOrEnd(const ChanR<PPT>& iChanR);
 
 // Throw if the chan is empty, return a false ZQ<Name> if we hit an end, otherwise return the Name.
-ZQ<Name> sQEReadNameOrEnd(const ChanR<Any>& iChanR);
+ZQ<Name> sQEReadNameOrEnd(const ChanR<PPT>& iChanR);
 
 // ----------
 
@@ -118,12 +121,19 @@ using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
 // ----------
 
 template <class EE>
-PullPushPair<EE> sMakePullPushPair()
+void sMakePullPushPair(ZRef<ChannerWCon<EE>>& oChannerW, ZRef<ChannerR<EE>>& oChannerR)
 	{
 	ZRef<ImpPipePair<EE>> theImp = new ImpPipePair<EE>;
-	ZRef<Channer<ChanWCon<EE>>> theChannerWCon = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
-	ZRef<Channer<ChanR<EE>>> theChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
-	return PullPushPair<EE>(theChannerWCon, theChannerR);
+	oChannerW = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
+	oChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
+	}
+
+template <class EE>
+PullPushPair<EE> sMakePullPushPair()
+	{
+	PullPushPair<EE> thePair;
+	sMakePullPushPair<EE>(thePair.first, thePair.second);
+	return thePair;
 	}
 
 // ----------

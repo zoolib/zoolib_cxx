@@ -30,10 +30,10 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-void sPull_XMLPList_Push(ML::ChanRU& iChanRU,
-	const ChanW_Any& iChanW);
+void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU,
+	const ChanW_PPT& iChanW);
 
-bool sPull_Push_XMLPList(const ChanR_Any& iChanR, const ML::StrimW& iChanW);
+bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ML::StrimW& iChanW);
 
 void sWriteXMLPListPreamble(const ML::StrimW& s);
 void sWriteXMLPListPostamble(const ML::StrimW& s);

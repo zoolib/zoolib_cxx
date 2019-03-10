@@ -44,13 +44,13 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 
-static void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
+static void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
-	const ChanW_Any& iChanW);
+	const ChanW_PPT& iChanW);
 
-bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
+bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
 	if (NotQ<uint8> theTypeQ = sQRead(iChanR))
 		{
@@ -58,20 +58,20 @@ bool sPull_JSONB_Push(const ChanR_Bin& iChanR,
 		}
 	else
 		{
-		spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
+		spPull_JSONB_Push_PPT(*theTypeQ, iChanR, iReadFilter, iChanW);
 		return true;
 		}
 	}
 
-void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
+void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
 	switch (iType)
 		{
 		case 0xE0:
 			{
-			sPush(Any(), iChanW);
+			sPush(PPT(), iChanW);
 			break;
 			}
 		case 0xE2:
@@ -129,7 +129,7 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 					}
 				else
 					{
-					spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
+					spPull_JSONB_Push_PPT(*theTypeQ, iChanR, iReadFilter, iChanW);
 					}
 				}
 			sPush(kEnd, iChanW);
@@ -152,7 +152,7 @@ void spPull_JSONB_Push(uint8 iType, const ChanR_Bin& iChanR,
 				else
 					{
 					sPush(sName(theName), iChanW);
-					spPull_JSONB_Push(*theTypeQ, iChanR, iReadFilter, iChanW);
+					spPull_JSONB_Push_PPT(*theTypeQ, iChanR, iReadFilter, iChanW);
 					}
 				}
 			sPush(kEnd, iChanW);
@@ -189,33 +189,35 @@ static void spWriteString(const ChanW_Bin& iChanW, const string& iString)
 		}
 	}
 
-bool sPull_Push_JSONB(const ChanR_Any& iChanR,
+bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW)
 	{
-	ZQ<Any> theAnyQ = sQRead(iChanR);
+	ZQ<PPT> thePPTQ = sQRead(iChanR);
 
-	if (not theAnyQ)
+	if (not thePPTQ)
 		return false;
 
-	if (theAnyQ->PGet<PullPush::End>())
+	const PPT& thePPT = *thePPTQ;
+
+	if (sPGet<PullPush::End>(thePPT))
 		return false;
 
-	if (const string* theString = sPGet<string>(*theAnyQ))
+	if (const string* theString = sPGet<string>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE8);
 		spWriteString(iChanW, *theString);
 		return true;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(*theAnyQ))
+	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE8);
 		spWriteString(iChanW, sReadAllUTF8(*theChanner));
 		return true;
 		}
 
-	if (const Data_Any* theData = sPGet<Data_Any>(*theAnyQ))
+	if (const Data_Any* theData = sPGet<Data_Any>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE7);
 		sEWriteCount(iChanW, theData->GetSize());
@@ -223,7 +225,7 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		return true;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(*theAnyQ))
+	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE7);
 		const size_t chunkSize = 64 * 1024;
@@ -239,7 +241,7 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		return true;
 		}
 
-	if (sPGet<PullPush::StartMap>(*theAnyQ))
+	if (sPGet<PullPush::StartMap>(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xED);
 		for (;;)
@@ -253,8 +255,8 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 			else
 				{
 				spWriteString(iChanW, *theNameQ);
-				if (not sPull_Push_JSONB(iChanR, iWriteFilter, iChanW))
-					sThrow_ParseException("Require value after Name from ChanR_Any");
+				if (not sPull_PPT_Push_JSONB(iChanR, iWriteFilter, iChanW))
+					sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
 			}
 		// Terminator
@@ -262,25 +264,25 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		return true;
 		}
 
-	if (sPGet<PullPush::StartSeq>(*theAnyQ))
+	if (sPGet<PullPush::StartSeq>(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xEA);
 		for (;;)
 			{
-			if (not sPull_Push_JSONB(iChanR, iWriteFilter, iChanW))
+			if (not sPull_PPT_Push_JSONB(iChanR, iWriteFilter, iChanW))
 				break;
 			}
 		sEWriteBE<uint8>(iChanW, 0xFF);
 		return true;
 		}
 
-	if (theAnyQ->IsNull())
+	if (thePPT.IsNull())
 		{
 		sEWriteBE<uint8>(iChanW, 0xE0);
 		return true;
 		}
 
-	if (const bool* p = theAnyQ->PGet<bool>())
+	if (const bool* p = sPGet<bool>(thePPT))
 		{
 		if (*p)
 			sEWriteBE<uint8>(iChanW, 0xE3);
@@ -289,14 +291,14 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		return true;
 		}
 
-	if (ZQ<int64> theQ = sQCoerceInt(*theAnyQ))
+	if (ZQ<int64> theQ = sQCoerceInt(thePPT.As<Any>()))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE4);
 		sEWriteBE<int64>(iChanW, *theQ);
 		return true;
 		}
 
-	if (ZQ<double> theQ = sQCoerceRat(*theAnyQ))
+	if (ZQ<double> theQ = sQCoerceRat(thePPT.As<Any>()))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE5);
 		sEWriteBE<double>(iChanW, *theQ);
@@ -304,11 +306,11 @@ bool sPull_Push_JSONB(const ChanR_Any& iChanR,
 		}
 
 	sEWriteBE<uint8>(iChanW, 254);
-	if (iWriteFilter && sCall(iWriteFilter, *theAnyQ, iChanR, iChanW))
+	if (iWriteFilter && sCall(iWriteFilter, thePPT, iChanR, iChanW))
 		return true;
 
 	if (ZLOGF(w, eErr))
-		w << "Couldn't write " << theAnyQ->Type().name();
+		w << "Couldn't write " << thePPT.Type().name();
 
 	ZUnimplemented();
 	}

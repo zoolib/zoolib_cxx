@@ -68,7 +68,7 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 
-static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_Any& iChanW)
+static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_PPT& iChanW)
 	{
 	foreacha (entry, iAttrs)
 		sPush(entry.first, entry.second, iChanW);
@@ -95,9 +95,9 @@ for (;;)
 	}
 */
 
-static void spPull_XMLAttr_Push(const string& iOuterName,
+static void sPull_XMLAttr_Push_PPT(const string& iOuterName,
 	ML::ChanRU& ioChanRU,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
 	for (;;)
 		{
@@ -168,7 +168,7 @@ static void spPull_XMLAttr_Push(const string& iOuterName,
 					spPush_Attrs(theAttrs, iChanW);
 					if (theText.size())
 						sPush("!text", theText, iChanW);
-					spPull_XMLAttr_Push(theName, ioChanRU, iChanW);
+					sPull_XMLAttr_Push_PPT(theName, ioChanRU, iChanW);
 				sPush(kEnd, iChanW);
 				}
 			else
@@ -180,14 +180,14 @@ static void spPull_XMLAttr_Push(const string& iOuterName,
 		}
 	}
 
-bool sPull_XMLAttr_Push(ML::ChanRU& ioChanRU, const ChanW_Any& iChanW)
+bool sPull_XMLAttr_Push_PPT(ML::ChanRU& ioChanRU, const ChanW_PPT& iChanW)
 	{
 	sSkipText(ioChanRU);
 	if (ioChanRU.Current() == ML::eToken_Exhausted)
 		return false;
 
 	sPush(kStartMap, iChanW);
-	spPull_XMLAttr_Push(string(), ioChanRU, iChanW);
+	sPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
 	sPush(kEnd, iChanW);
 	return true;
 	}

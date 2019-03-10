@@ -45,9 +45,9 @@ namespace Util_Any_JSON {
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	const PullPush_JSON::ReadOptions& iRO)
 	{
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsyncPull_Any(sGetClear(thePair.second));
-	sPull_JSON_Push(iChanRU, iRO, *thePair.first);
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	ZRef<Delivery<Any>> theDelivery = sStartAsyncAs_Any(sGetClear(thePair.second));
+	sPull_JSON_Push_PPT(iChanRU, iRO, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();
@@ -61,17 +61,17 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 void sWrite(const Any& iVal, const ChanW_UTF& iChanW)
 	{ sWrite(false, iVal, iChanW); }
 
-static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
+static void spFrom_Any_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
-	sPull_Any_Push(iAny, *iChannerWCon);
+	sFrom_Any_Push_PPT(iAny, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
 void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW)
 	{
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
-	sPull_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spFrom_Any_Push_PPT), iVal, sGetClear(thePair.first)));
+	sPull_PPT_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
 	}
 
 string8 sAsJSON(const Any& iVal)

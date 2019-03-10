@@ -83,9 +83,9 @@ Pull_SeparatedValues_Options::Pull_SeparatedValues_Options(
 // =================================================================================================
 #pragma mark -
 
-bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
+bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 	const Pull_SeparatedValues_Options& iOptions,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
 	vector<string8> theNames;
 	if (not spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line,
@@ -110,11 +110,11 @@ bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
 		}
 	}
 
-bool sPull_SeparatedValues_Push(const ChanR_UTF& iChanR,
+bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 	UTF32 iSeparator_Value, UTF32 iSeparator_Line,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
-	return sPull_SeparatedValues_Push(iChanR,
+	return sPull_SeparatedValues_Push_PPT(iChanR,
 		Pull_SeparatedValues_Options(iSeparator_Value, iSeparator_Line),
 		iChanW);
 	}

@@ -28,17 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace PullPush {
 
-const Any kStartMap = Any(StartMap());
-const Any kStartSeq = Any(StartSeq());
+const PPT kStartMap = PPT(StartMap());
+const PPT kStartSeq = PPT(StartSeq());
 
-const Any kEnd = Any(End());
+const PPT kEnd = PPT(End());
 
 } // namespace PullPush
 
-void sPush(const Any& iVal, const ChanW_Any& iChanW)
-	{ sEWrite<Any>(iChanW, iVal); }
+void sPush(const PPT& iVal, const ChanW_PPT& iChanW)
+	{ sEWrite<PPT>(iChanW, iVal); }
 
-void sPull_UTF_Push(const ChanR_UTF& iChanR, const ChanW_Any& iChanW)
+void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
@@ -49,7 +49,7 @@ void sPull_UTF_Push(const ChanR_UTF& iChanR, const ChanW_Any& iChanW)
 	sSkipAll(iChanR);
 	}
 
-void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iChanW)
+void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
@@ -60,7 +60,7 @@ void sPull_UTF_Push(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_Any& iCh
 	sSkipFully(iChanR, iCount - counts.first);
 	}
 
-void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
+void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
@@ -71,7 +71,7 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
 	sSkipAll(iChanR);
 	}
 
-void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iChanW)
+void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
@@ -82,23 +82,23 @@ void sPull_Bin_Push(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_Any& iCh
 	sSkipFully(iChanR, iCount - counts.first);
 	}
 
-bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW)
+bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 	{
 	using namespace PullPush;
 
 	size_t depth = 0;
 
-	while (ZQ<Any> theQ = sQRead(iChanR))
+	while (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		const Any& theAny = *theQ;
+		const PPT& thePPT = *theQ;
 
-		sPush(theAny, iChanW);
+		sPush(thePPT, iChanW);
 
-		if (sPGet<StartMap>(theAny) || sPGet<StartSeq>(theAny))
+		if (sPGet<StartMap>(thePPT) || sPGet<StartSeq>(thePPT))
 			{
 			++depth;
 			}
-		else if (sPGet<End>(theAny) && 0 == --depth)
+		else if (sPGet<End>(thePPT) && 0 == --depth)
 			{
 			break;
 			}
@@ -106,12 +106,12 @@ bool sCopy_Node(const ChanR_Any& iChanR, const ChanW_Any& iChanW)
 	return depth == 0;
 	}
 
-bool sSkip_Node(const ChanR_Any& iChanR)
-	{ return sCopy_Node(iChanR, ChanW_XX_Discard<Any>()); }
+bool sSkip_Node(const ChanR_PPT& iChanR)
+	{ return sCopy_Node(iChanR, ChanW_XX_Discard<PPT>()); }
 
-bool sTryPull_StartMap(const ChanRU<Any>& iChanRU)
+bool sTryPull_StartMap(const ChanRU<PPT>& iChanRU)
 	{
-	if (ZQ<Any> theQ = sQRead(iChanRU))
+	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
 		if (sPGet<PullPush::StartMap>(*theQ))
 			return true;
@@ -120,9 +120,9 @@ bool sTryPull_StartMap(const ChanRU<Any>& iChanRU)
 	return false;
 	}
 
-bool sTryPull_StartSeq(const ChanRU<Any>& iChanRU)
+bool sTryPull_StartSeq(const ChanRU<PPT>& iChanRU)
 	{
-	if (ZQ<Any> theQ = sQRead(iChanRU))
+	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
 		if (sPGet<PullPush::StartSeq>(*theQ))
 			return true;
@@ -131,9 +131,9 @@ bool sTryPull_StartSeq(const ChanRU<Any>& iChanRU)
 	return false;
 	}
 
-bool sTryPull_End(const ChanRU<Any>& iChanRU)
+bool sTryPull_End(const ChanRU<PPT>& iChanRU)
 	{
-	if (ZQ<Any> theQ = sQRead(iChanRU))
+	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
 		if (sPGet<PullPush::End>(*theQ))
 			return true;
@@ -142,9 +142,9 @@ bool sTryPull_End(const ChanRU<Any>& iChanRU)
 	return false;
 	}
 
-bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU)
+bool sTryPull_Name(const Name& iName, const ChanRU<PPT>& iChanRU)
 	{
-	if (ZQ<Any> theQ = sQRead(iChanRU))
+	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
 		if (ZQ<Name> theNameQ = sQGet<Name>(*theQ))
 			{
@@ -156,29 +156,29 @@ bool sTryPull_Name(const Name& iName, const ChanRU<Any>& iChanRU)
 	return false;
 	}
 
-ZQ<Any> sQEReadAnyOrEnd(const ChanR<Any>& iChanR)
+ZQ<PPT> sQEReadPPTOrEnd(const ChanR<PPT>& iChanR)
 	{
-	if (NotQ<Any> theAnyQ = sQRead(iChanR))
+	if (NotQ<PPT> thePPTQ = sQRead(iChanR))
 		{
-		sThrow_ParseException("Expected Any, failed to read");
+		sThrow_ParseException("Expected PPT, failed to read");
 		}
-	else if (sPGet<PullPush::End>(*theAnyQ))
+	else if (sPGet<PullPush::End>(*thePPTQ))
 		{
 		return null;
 		}
 	else
 		{
-		return theAnyQ;
+		return thePPTQ;
 		}
 	}
 
-ZQ<Name> sQEReadNameOrEnd(const ChanR<Any>& iChanR)
+ZQ<Name> sQEReadNameOrEnd(const ChanR<PPT>& iChanR)
 	{
-	if (NotQ<Any> theAnyQ = sQEReadAnyOrEnd(iChanR))
+	if (NotQ<PPT> thePPTQ = sQEReadPPTOrEnd(iChanR))
 		{
 		return null;
 		}
-	else if (const Name* theNameStar = sPGet<Name>(*theAnyQ))
+	else if (const Name* theNameStar = sPGet<Name>(*thePPTQ))
 		{
 		return *theNameStar;
 		}

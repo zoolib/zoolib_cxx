@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Log.h"
 #include "zoolib/PullPush_Any.h"
+#include "zoolib/PullPush_JSONB.h"
 
 // =================================================================================================
 #pragma mark -
@@ -33,9 +34,9 @@ namespace Util_Any_JSONB {
 
 ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 	{
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsyncPull_Any(sGetClear(thePair.second));
-	sPull_JSONB_Push(iChanR, null, *thePair.first);
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	ZRef<Delivery<Any>> theDelivery = sStartAsyncAs_Any(sGetClear(thePair.second));
+	sPull_JSONB_Push_PPT(iChanR, null, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();
@@ -43,18 +44,17 @@ ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 
 // -----
 
-static void spPull_Any_Push(const Any& iAny, const ZRef<ChannerWCon_Any>& iChannerWCon)
+static void spFrom_Any_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
-	sPull_Any_Push(iAny, null, *iChannerWCon);
+	sFrom_Any_Push_PPT(iAny, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const Any& iVal,
-	const ChanW_Bin& iChanW)
+void sWrite(const Any& iVal, const ChanW_Bin& iChanW)
 	{
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push), iVal, sGetClear(thePair.first)));
-	sPull_Push_JSONB(*thePair.second, null, iChanW);
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spFrom_Any_Push_PPT), iVal, sGetClear(thePair.first)));
+	sPull_PPT_Push_JSONB(*thePair.second, null, iChanW);
 	}
 
 } // namespace Util_Any_JSONB

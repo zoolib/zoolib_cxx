@@ -50,7 +50,7 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 
-static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& iChanW)
+static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW)
 	{
 	int64 asInt64;
 	double asDouble;
@@ -67,7 +67,7 @@ static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_Any& i
 
 	if (Util_Chan::sTryRead_CaselessString("null", iChanRU))
 		{
-		sPush(Any(null), iChanW);
+		sPush(PPT(null), iChanW);
 		return true;
 		}
 
@@ -175,7 +175,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 	}
 
 static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU,
-	UTF32 iTerminator, const ChanW_Any& iChanW)
+	UTF32 iTerminator, const ChanW_PPT& iChanW)
 	{
 #if 1
 	string theString;
@@ -230,9 +230,9 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 // =================================================================================================
 #pragma mark - sPull
 
-bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
+bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	const ReadOptions& iRO,
-	const ChanW_Any& iChanW)
+	const ChanW_PPT& iChanW)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
 
@@ -248,7 +248,7 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
 				return true;
 				}
 
-			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -297,7 +297,7 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sPull_JSON_Push(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -351,12 +351,12 @@ bool sPull_JSON_Push(const ChanRU_UTF& iChanRU,
 // =================================================================================================
 #pragma mark - 
 
-static void spPull_Push_JSON(const Any& iAny,
-	const ChanR_Any& iChanR,
+static void spPull_PPT_Push_JSON(const PPT& iPPT,
+	const ChanR_PPT& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW);
 
-static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
+static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
@@ -386,7 +386,7 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (NotQ<Any> theNotQ = sQEReadAnyOrEnd(iChanR))
+			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
 				{
 				break;
 				}
@@ -398,7 +398,7 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 					sWriteLFIndent(localIndent, iOptions, iChanW);
 					if (iOptions.fNumberSequences.DGet(false))
 						iChanW << "/*" << count << "*/";
-					spPull_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
 					iChanW << ";";
 					}
 				else
@@ -406,7 +406,7 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 					if (not isFirst)
 						iChanW << ",";
 					sWriteLFIndent(localIndent, iOptions, iChanW);
-					spPull_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
 					}
 				}
 			++count;
@@ -421,7 +421,7 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 		iChanW << "[";
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (NotQ<Any> theNotQ = sQEReadAnyOrEnd(iChanR))
+			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
 				{
 				break;
 				}
@@ -429,7 +429,7 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -440,14 +440,14 @@ static void spPull_Push_JSON_Seq(const ChanR_Any& iChanR,
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 				}
 			}
 		iChanW << "]";
 		}
 	}
 
-static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
+static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
@@ -476,16 +476,16 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				{
 				break;
 				}
-			else if (NotQ<Any> theNotQ = sQRead(iChanR))
+			else if (NotQ<PPT> theNotQ = sQRead(iChanR))
 				{
-				sThrow_ParseException("Require value after Name from ChanR_Any");
+				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << " = ";
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -495,7 +495,7 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << ": ";
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				}
 			}
 		sWriteLFIndent(iIndent, iOptions, iChanW);
@@ -511,9 +511,9 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				{
 				break;
 				}
-			else if (NotQ<Any> theNotQ = sQRead(iChanR))
+			else if (NotQ<PPT> theNotQ = sQRead(iChanR))
 				{
-				sThrow_ParseException("Require value after Name from ChanR_Any");
+				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
 			else if (iOptions.fUseExtendedNotation.DGet(false))
 				{
@@ -526,7 +526,7 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				else
 					iChanW << "=";
 
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 
 				iChanW << ";";
 				}
@@ -541,7 +541,7 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				spPull_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
 				}
 			wroteAny = true;
 			}
@@ -551,60 +551,60 @@ static void spPull_Push_JSON_Map(const ChanR_Any& iChanR,
 		}
 	}
 
-bool sPull_Push_JSON(const ChanR_Any& iChanR, const ChanW_UTF& iChanW)
-	{ return sPull_Push_JSON(iChanR, 0, WriteOptions(), iChanW); }
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
+	{ return sPull_PPT_Push_JSON(iChanR, 0, WriteOptions(), iChanW); }
 
-bool sPull_Push_JSON(const ChanR_Any& iChanR,
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	size_t iInitialIndent, const WriteOptions& iOptions,
 	const ChanW_UTF& iChanW)
 	{
-	if (ZQ<Any> theQ = sQRead(iChanR))
+	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		spPull_Push_JSON(*theQ, iChanR, iInitialIndent, iOptions, false, iChanW);
+		spPull_PPT_Push_JSON(*theQ, iChanR, iInitialIndent, iOptions, false, iChanW);
 		return true;
 		}
 	return false;
 	}
 
-static void spPull_Push_JSON(const Any& iAny,
-	const ChanR_Any& iChanR,
+static void spPull_PPT_Push_JSON(const PPT& iPPT,
+	const ChanR_PPT& iChanR,
 	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
-	if (const string* theString = sPGet<string>(iAny))
+	if (const string* theString = sPGet<string>(iPPT))
 		{
 		Util_Chan_JSON::sWriteString(*theString, false, iChanW);
 		}
 
-	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iAny))
+	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
 		{
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
 		}
 
-	else if (const Data_Any* theData = sPGet<Data_Any>(iAny))
+	else if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_Any>(*theData),
 			iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iAny))
+	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (sPGet<PullPush::StartMap>(iAny))
+	else if (sPGet<PullPush::StartMap>(iPPT))
 		{
-		spPull_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		spPull_PPT_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (sPGet<PullPush::StartSeq>(iAny))
+	else if (sPGet<PullPush::StartSeq>(iPPT))
 		{
-		spPull_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		spPull_PPT_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
 	else
 		{
-		Util_Chan_JSON::sWriteSimpleValue(iAny, iOptions, iChanW);
+		Util_Chan_JSON::sWriteSimpleValue(iPPT.As<Any>(), iOptions, iChanW);
 		}
 	}
 
