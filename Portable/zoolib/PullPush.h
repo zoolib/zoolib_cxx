@@ -56,7 +56,14 @@ extern const PPT kStartSeq;
 struct End {};
 extern const PPT kEnd;
 
+// Generalized Start Marker.
+template <class T>
+struct Start {};
+
 } // namespace PullPush
+
+// =================================================================================================
+#pragma mark -
 
 using PPT = PullPush::PPT;
 
