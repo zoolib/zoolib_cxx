@@ -35,7 +35,7 @@ namespace Util_Any_JSONB {
 ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsyncAs_Any(sGetClear(thePair.second));
+	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
 	sPull_JSONB_Push_PPT(iChanR, null, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
@@ -44,16 +44,16 @@ ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 
 // -----
 
-static void spFrom_Any_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
+static void spFromAny_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
-	sFrom_Any_Push_PPT(iAny, *iChannerWCon);
+	sFromAny_Push_PPT(iAny, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
 void sWrite(const Any& iVal, const ChanW_Bin& iChanW)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFrom_Any_Push_PPT), iVal, sGetClear(thePair.first)));
+	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT), iVal, sGetClear(thePair.first)));
 	sPull_PPT_Push_JSONB(*thePair.second, null, iChanW);
 	}
 

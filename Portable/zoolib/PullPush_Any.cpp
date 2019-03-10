@@ -38,7 +38,7 @@ using std::string;
 // =================================================================================================
 #pragma mark - 
 
-void sFrom_Any_Push_PPT(const Any& iAny,
+void sFromAny_Push_PPT(const Any& iAny,
 	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
 	const ChanW_PPT& iChanW)
 	{
@@ -46,7 +46,7 @@ void sFrom_Any_Push_PPT(const Any& iAny,
 		{
 		sPush(PullPush::kStartSeq, iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
-			sFrom_Any_Push_PPT(theSeq->Get(xx), iWriteFilter, iChanW);
+			sFromAny_Push_PPT(theSeq->Get(xx), iWriteFilter, iChanW);
 		sPush(PullPush::kEnd, iChanW);
 		}
 
@@ -57,7 +57,7 @@ void sFrom_Any_Push_PPT(const Any& iAny,
 			iter != end; ++iter)
 			{
 			sPush(sName(iter->first), iChanW);
-			sFrom_Any_Push_PPT(iter->second, iWriteFilter, iChanW);
+			sFromAny_Push_PPT(iter->second, iWriteFilter, iChanW);
 			}
 		sPush(PullPush::kEnd, iChanW);
 		}
@@ -79,14 +79,14 @@ void sFrom_Any_Push_PPT(const Any& iAny,
 		}
 	}
 
-void sFrom_Any_Push_PPT(const Any& iAny,
+void sFromAny_Push_PPT(const Any& iAny,
 	const ChanW_PPT& iChanW)
-	{ sFrom_Any_Push_PPT(iAny, null, iChanW); }
+	{ sFromAny_Push_PPT(iAny, null, iChanW); }
 
 // =================================================================================================
 #pragma mark - 
 
-void sPull_PPT_As_Any(const PPT& iPPT,
+void sPull_PPT_AsAny(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
 	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny)
@@ -130,7 +130,7 @@ void sPull_PPT_As_Any(const PPT& iPPT,
 			else
 				{
 				Any theAny;
-				sPull_PPT_As_Any(*theNotQ, iChanR, iReadFilter, theAny);
+				sPull_PPT_AsAny(*theNotQ, iChanR, iReadFilter, theAny);
 				theMap.Set(*theNameQ, theAny);
 				}
 			}
@@ -149,7 +149,7 @@ void sPull_PPT_As_Any(const PPT& iPPT,
 			else
 				{
 				Any theAny;
-				sPull_PPT_As_Any(*theQ, iChanR, iReadFilter, theAny);
+				sPull_PPT_AsAny(*theQ, iChanR, iReadFilter, theAny);
 				theSeq.Append(theAny);
 				}
 			}
@@ -170,53 +170,60 @@ void sPull_PPT_As_Any(const PPT& iPPT,
 		}
 	}
 
-bool sPull_PPT_As_Any(const ChanR_PPT& iChanR,
+bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
 	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		sPull_PPT_As_Any(*theQ, iChanR, iReadFilter, oAny);
+		sPull_PPT_AsAny(*theQ, iChanR, iReadFilter, oAny);
 		return true;
 		}
 	return false;
 	}
 
-bool sPull_PPT_As_Any(const ChanR_PPT& iChanR, Any& oAny)
-	{ return sPull_PPT_As_Any(iChanR, null, oAny); }
+bool sPull_PPT_AsAny(const ChanR_PPT& iChanR, Any& oAny)
+	{ return sPull_PPT_AsAny(iChanR, null, oAny); }
 
-ZQ<Any> sQAs_Any(const ChanR_PPT& iChanR)
+ZQ<Any> sQAsAny(const ChanR_PPT& iChanR)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		sPull_PPT_As_Any(*theQ, iChanR, null, theAny);
+		sPull_PPT_AsAny(*theQ, iChanR, null, theAny);
 		return theAny;
 		}
 	return null;
 	}
 
-Any sAs_Any(const ChanR_PPT& iChanR)
+Any sAsAny(const ChanR_PPT& iChanR)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
 		Any theAny;
-		sPull_PPT_As_Any(*theQ, iChanR, null, theAny);
+		sPull_PPT_AsAny(*theQ, iChanR, null, theAny);
 		return theAny;
 		}
 	return Any();
 	}
 
-static void spAsyncsAs_Any(const ZRef<ChannerR_PPT>& iChannerR, const ZRef<Promise<Any>>& iPromise)
+static void spAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ZRef<Promise<Any>>& iPromise)
 	{
-	if (ZQ<Any> theAny = sAs_Any(*iChannerR))
-		iPromise->Deliver(*theAny);
+	Any result;
+	if (sPull_PPT_AsAny(*iChannerR, iReadFilter, result))
+		iPromise->Deliver(result);
 	}
 
-ZRef<Delivery<Any>> sStartAsyncAs_Any(const ZRef<ChannerR_PPT>& iChannerR)
+ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR)
+	{ return sStartAsync_AsAny(iChannerR, null); }
+
+ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
+	const ZRef<Callable_Any_ReadFilter>& iReadFilter)
 	{
 	ZRef<Promise<Any>> thePromise = sPromise<Any>();
-	sStartOnNewThread(sBindR(sCallable(spAsyncsAs_Any), iChannerR, thePromise));
+	sStartOnNewThread(sBindR(sCallable(spAsync_AsAny), iChannerR, iReadFilter, thePromise));
 	return thePromise->GetDelivery();
 	}
 

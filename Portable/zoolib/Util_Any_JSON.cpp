@@ -46,7 +46,7 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	const PullPush_JSON::ReadOptions& iRO)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsyncAs_Any(sGetClear(thePair.second));
+	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
 	sPull_JSON_Push_PPT(iChanRU, iRO, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
@@ -61,16 +61,16 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
 void sWrite(const Any& iVal, const ChanW_UTF& iChanW)
 	{ sWrite(false, iVal, iChanW); }
 
-static void spFrom_Any_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
+static void spFromAny_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
-	sFrom_Any_Push_PPT(iAny, *iChannerWCon);
+	sFromAny_Push_PPT(iAny, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
 void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFrom_Any_Push_PPT), iVal, sGetClear(thePair.first)));
+	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT), iVal, sGetClear(thePair.first)));
 	sPull_PPT_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
 	}
 
