@@ -69,21 +69,21 @@ class ReadFilter
 	{
 public:
 // From Callable_Any_ReadFilter
-	virtual ZQ<bool> QCall(const Any& iAny, const ChanR_Any& iChanR, Any& oAny)
+	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, Any& oAny)
 		{
-		if (iAny.PGet<PullPush::Start<Result>>())
+		if (iPPT.PGet<PullPush::Start<Result>>())
 			{
-			Any theRHAny = sERead(iChanR);
-			RelHead& theRelHead = sMut<RelHead>(theRHAny);
-			const size_t theRowCount = sCoerceInt(sERead(iChanR));
+			PPT theRHPPT = sERead(iChanR);
+			RelHead& theRelHead = sMut<RelHead>(theRHPPT);
+			const size_t theRowCount = sCoerceInt(sERead(iChanR).As<Any>());
 			size_t theCount = theRowCount * theRelHead.size();
 			vector<Val_Any> theVals;
 			theVals.reserve(theCount);
 			while (theCount--)
 				{
-				Any theAny = sERead(iChanR);
+				PPT thePPT = sERead(iChanR);
 				Any munged;
-				sPull_Push_Any(theAny, this, iChanR, munged);
+				sPull_PPT_AsAny(thePPT, iChanR, this, munged);
 				sPushBack(theVals, munged);
 				}
 			oAny = sRef(new Result(&theRelHead, &theVals));
@@ -93,7 +93,7 @@ public:
 		}
 
 // From Callable_JSONB_ReadFilter
-	virtual ZQ<bool> QCall(const ChanR_Bin& iChanR, const ChanW_Any& iChanW)
+	virtual ZQ<bool> QCall(const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)
 		{
 		if (ZQ<uint8> theTypeQ = sQRead(iChanR))
 			{
@@ -104,18 +104,18 @@ public:
 					sPush(PullPush::Start<Result>(), iChanW);
 
 					// We're at the beginning of a QE::Result. So copy the RelHead to start with.
-					Any theAny = sAnyCounted<RelHead>();
-					RelHead& theRH = sMut<RelHead>(theAny);
+					PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
+					RelHead& theRH = sMut<RelHead>(thePPT);
 					for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
 						theRH |= spStringFromChan(iChanR);
-					sPush(theAny, iChanW);
+					sPush(thePPT, iChanW);
 
 					const size_t theCount = sReadCount(iChanR);
 					sPush(theCount, iChanW);
 
 					// Now copy the vals.
 					for (size_t xx = theCount * theRH.size(); xx; --xx)
-						sPull_JSONB_Push(iChanR, this, iChanW);
+						sPull_JSONB_Push_PPT(iChanR, this, iChanW);
 					return true;
 					}
 				case 101:
@@ -135,33 +135,15 @@ public:
 		}
 	};
 
-static void spAsyncPullAny(const ZRef<Callable_Any_ReadFilter>& iReadFilter,
-	const ZRef<ChannerR_Any>& iChannerR,
-	const ZRef<Promise<Any>>& iPromise)
-	{
-	if (ZQ<Any> theQ = sQRead(*iChannerR))
-		{
-		Any result;
-		sPull_Push_Any(*theQ, iReadFilter, ChanR_XX_Buffered<ChanR_Any>(*iChannerR, kBufSize), result);
-		iPromise->Deliver(result);
-		}
-	}
-
-static ZRef<Delivery<Any>> spStartAsyncPullAny(const ZRef<Callable_Any_ReadFilter>& iReadFilter,
-	const ZRef<ChannerR_Any>& iChannerR)
-	{
-	ZRef<Promise<Any>> thePromise = sPromise<Any>();
-	sStartOnNewThread(sBindR(sCallable(spAsyncPullAny), iReadFilter, iChannerR, thePromise));
-	return thePromise->GetDelivery();
-	}
-
 static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescriptionQ)
 	{
+	// This ReadFilter handles both the JSONB-->PPT and the PPT->Any translations for
+	// Result, Daton and for AbsentOptional_t
 	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	ZRef<Delivery<Any>> theDelivery = spStartAsyncPullAny(theReadFilter, sGetClear(thePair.second));
-	sPull_JSONB_Push(iChanR, theReadFilter, ChanW_XX_Buffered<ChanW_Any>(*thePair.first, kBufSize));
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
+	sPull_JSONB_Push_PPT(iChanR, theReadFilter, ChanW_XX_Buffered<ChanW_PPT>(*thePair.first, kBufSize));
 	sDisconnectWrite(*thePair.first);
 
 	ZQ<Any> theQ = theDelivery->QGet();
@@ -194,7 +176,7 @@ class WriteFilter
 	{
 public:
 // From Callable_Any_WriteFilter
-	virtual ZQ<bool> QCall(const Any& iAny, const ChanW_Any& iChanW)
+	virtual ZQ<bool> QCall(const Any& iAny, const ChanW_PPT& iChanW)
 		{
 		if (const ZRef<Result>* theResultP = iAny.PGet<ZRef<Result> >())
 			{
@@ -212,7 +194,7 @@ public:
 				{
 				const Val_Any* theRow = theResult->GetValsAt(yy);
 				for (size_t xx = 0; xx < theRHCount; ++xx)
-					sPull_Any_Push(theRow[xx], this, iChanW);
+					sFromAny_Push_PPT(theRow[xx], this, iChanW);
 				}
 			return true;
 			}
@@ -220,11 +202,11 @@ public:
 		}
 
 // From Callable_JSONB_WriteFilter
-	virtual ZQ<bool> QCall(const Any& iAny, const ChanR_Any& iChanR, const ChanW_Bin& iChanW)
+	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_Bin& iChanW)
 		{
 		if (false)
 			{}
-		else if (iAny.PGet<PullPush::Start<Result>>())
+		else if (iPPT.PGet<PullPush::Start<Result>>())
 			{
 			sEWriteBE<uint8>(iChanW, 100);
 
@@ -234,15 +216,15 @@ public:
 			foreacha (entry, theRH)
 				sEWriteCountPrefixedString(iChanW, entry);
 
-			const size_t theRowCount = sCoerceInt(sERead(iChanR));
+			const size_t theRowCount = sCoerceInt(sERead(iChanR).As<Any>());
 			sEWriteCount(iChanW, theRowCount);
 
 			for (size_t xx = theRHCount * theRowCount; xx; --xx)
-				sPull_Push_JSONB(iChanR, this, iChanW);
+				sPull_PPT_Push_JSONB(iChanR, this, iChanW);
 
 			return true;
 			}
-		else if (const Daton* theDatonP = iAny.PGet<Daton>())
+		else if (const Daton* theDatonP = iPPT.PGet<Daton>())
 			{
 			sEWriteBE<uint8>(iChanW, 101);
 
@@ -252,7 +234,7 @@ public:
 			sEWriteMem(iChanW, theData.GetPtr(), theData.GetSize());
 			return true;
 			}
-		else if (iAny.PGet<AbsentOptional_t>())
+		else if (iPPT.PGet<AbsentOptional_t>())
 			{
 			sEWriteBE<uint8>(iChanW, 102);
 			return true;
@@ -260,17 +242,17 @@ public:
 		else
 			{
 			if (ZLOGPF(w, eErr))
-				w << iAny.Type().name();
+				w << iPPT.Type().name();
 			}
 		ZUnimplemented();
 		}
 	};
 
-static void spPull_Any_Push(const Any& iAny,
+static void spFromAny_Push_PPT(const Any& iAny,
 	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
-	const ZRef<ChannerWCon_Any>& iChannerWCon)
+	const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
-	sPull_Any_Push(iAny, iWriteFilter, ChanW_XX_Buffered<ChanW_Any>(*iChannerWCon, kBufSize));
+	sFromAny_Push_PPT(iAny, iWriteFilter, ChanW_XX_Buffered<ChanW_PPT>(*iChannerWCon, kBufSize));
 	sDisconnectWrite(*iChannerWCon);
 	}
 
@@ -284,12 +266,12 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 
 	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
-	PullPushPair<Any> thePair = sMakePullPushPair<Any>();
-	sStartOnNewThread(sBindR(sCallable(spPull_Any_Push),
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT),
 		Any(iMessage),
 		theWriteFilter,
 		sGetClear(thePair.first)));
-	sPull_Push_JSONB(ChanR_XX_Buffered<ChanR_Any>(*thePair.second, kBufSize), theWriteFilter, iChanW);
+	sPull_PPT_Push_JSONB(ChanR_XX_Buffered<ChanR_PPT>(*thePair.second, kBufSize), theWriteFilter, iChanW);
 
 	sFlush(iChanW);
 
