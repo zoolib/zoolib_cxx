@@ -94,14 +94,14 @@ bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 		return false;
 		}
 
-	sPush(kStartMap, iChanW);
+	sPush_Start_Map(iChanW);
 	for (;;)
 		{
 		vector<string8> theValues;
 		if (not spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line,
 		 	theValues))
 			{
-			sPush(kEnd, iChanW);
+			sPush_End(iChanW);
 			return true;
 			}
 

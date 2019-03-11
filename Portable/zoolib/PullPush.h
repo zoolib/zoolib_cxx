@@ -47,18 +47,26 @@ namespace PullPush {
 struct Tag_PPT;
 typedef Any_T<Tag_PPT> PPT;
 
-struct StartMap {};
-extern const PPT kStartMap;
+struct Start : CountedWithoutFinalize
+	{
+	// Something needs to be virtual so it has a vtbl.
+	virtual ~Start() {}
+	};
 
-struct StartSeq {};
-extern const PPT kStartSeq;
+struct Start_Map : Start {};
+
+struct Start_Seq : Start {};
+
+extern const PPT kStart_Map;
+extern const PPT kStart_Seq;
 
 struct End {};
 extern const PPT kEnd;
 
-// Generalized Start Marker.
-template <class T>
-struct Start {};
+bool sIsStart(const PPT& iPPT);
+bool sIsStartMap(const PPT& iPPT);
+bool sIsStartSeq(const PPT& iPPT);
+bool sIsEnd(const PPT& iPPT);
 
 } // namespace PullPush
 
@@ -75,6 +83,12 @@ using ChannerW_PPT = Channer<ChanW_PPT>;
 
 using ChanWCon_PPT = ChanWCon<PPT>;
 using ChannerWCon_PPT = Channer<ChanWCon_PPT>;
+
+//void sPush(const PullPush::Start& iStart, const ChanW_PPT& iChanW);
+
+void sPush_Start_Map(const ChanW_PPT& iChanW);
+void sPush_Start_Seq(const ChanW_PPT& iChanW);
+void sPush_End(const ChanW_PPT& iChanW);
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW);
 
@@ -107,8 +121,8 @@ bool sSkip_Node(const ChanR_PPT& iChanR);
 
 // ----------
 
-bool sTryPull_StartMap(const ChanRU<PPT>& iChanRU);
-bool sTryPull_StartSeq(const ChanRU<PPT>& iChanRU);
+bool sTryPull_Start_Map(const ChanRU<PPT>& iChanRU);
+bool sTryPull_Start_Seq(const ChanRU<PPT>& iChanRU);
 bool sTryPull_End(const ChanRU<PPT>& iChanRU);
 bool sTryPull_Name(const Name& iName, const ChanRU<PPT>& iChanRU);
 

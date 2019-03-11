@@ -60,6 +60,11 @@ static size_t kBufSize = 16;
 // =================================================================================================
 #pragma mark -
 
+struct Start_Result : PullPush::Start
+	{};
+
+const PPT kStart_Result = ZRef<PullPush::Start>(new Start_Result);
+
 static string8 spStringFromChan(const ChanR_Bin& r)
 	{ return sReadCountPrefixedString(r); }
 
@@ -71,8 +76,11 @@ public:
 // From Callable_Any_ReadFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, Any& oAny)
 		{
-		if (iPPT.PGet<PullPush::Start<Result>>())
+		if (const ZRef<PullPush::Start> theRef = sGet<ZRef<PullPush::Start>>(iPPT))
 			{
+			if (not theRef.DynamicCast<Start_Result>())
+				return false;
+
 			PPT theRHPPT = sERead(iChanR);
 			RelHead& theRelHead = sMut<RelHead>(theRHPPT);
 			const size_t theRowCount = sCoerceInt(sERead(iChanR).As<Any>());
@@ -91,6 +99,7 @@ public:
 			sEPull_End(iChanR);
 			return true;
 			}
+
 		return false;
 		}
 
@@ -103,7 +112,7 @@ public:
 				{
 				case 100:
 					{
-					sPush(PullPush::Start<Result>(), iChanW);
+					sPush(kStart_Result, iChanW);
 
 						// We're at the beginning of a QE::Result. So copy the RelHead to start with.
 						PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
@@ -187,7 +196,7 @@ public:
 			{
 			ZRef<Result> theResult = *theResultP;
 
-			sPush(PullPush::Start<Result>(), iChanW);
+			sPush(kStart_Result, iChanW);
 
 				const RelHead& theRH = theResult->GetRelHead();
 				sPush(theRH, iChanW);
@@ -210,10 +219,11 @@ public:
 // From Callable_JSONB_WriteFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_Bin& iChanW)
 		{
-		if (false)
-			{}
-		else if (iPPT.PGet<PullPush::Start<Result>>())
+		if (const ZRef<PullPush::Start> theRef = sGet<ZRef<PullPush::Start>>(iPPT))
 			{
+			if (not theRef.DynamicCast<Start_Result>())
+				return false;
+
 			sEWriteBE<uint8>(iChanW, 100);
 
 			const RelHead theRH = sGet<RelHead>(sERead(iChanR));
@@ -231,7 +241,8 @@ public:
 			sEPull_End(iChanR);
 			return true;
 			}
-		else if (const Daton* theDatonP = iPPT.PGet<Daton>())
+
+		if (const Daton* theDatonP = iPPT.PGet<Daton>())
 			{
 			sEWriteBE<uint8>(iChanW, 101);
 
@@ -241,16 +252,15 @@ public:
 			sEWriteMem(iChanW, theData.GetPtr(), theData.GetSize());
 			return true;
 			}
-		else if (iPPT.PGet<AbsentOptional_t>())
+
+		if (iPPT.PGet<AbsentOptional_t>())
 			{
 			sEWriteBE<uint8>(iChanW, 102);
 			return true;
 			}
-		else
-			{
-			if (ZLOGPF(w, eErr))
-				w << iPPT.Type().name();
-			}
+
+		if (ZLOGPF(w, eErr))
+			w << iPPT.Type().name();
 		ZUnimplemented();
 		}
 	};

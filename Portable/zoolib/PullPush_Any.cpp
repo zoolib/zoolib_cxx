@@ -44,7 +44,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 	{
 	if (const Seq_Any* theSeq = sPGet<Seq_Any>(iAny))
 		{
-		sPush(PullPush::kStartSeq, iChanW);
+		sPush_Start_Seq(iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
 			sFromAny_Push_PPT(theSeq->Get(xx), iWriteFilter, iChanW);
 		sPush(PullPush::kEnd, iChanW);
@@ -52,7 +52,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 
 	else if (const Map_Any* theMap = sPGet<Map_Any>(iAny))
 		{
-		sPush(PullPush::kStartMap, iChanW);
+		sPush_Start_Map(iChanW);
 		for (Map_Any::Index_t iter = theMap->Begin(), end = theMap->End();
 			iter != end; ++iter)
 			{
@@ -91,30 +91,47 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny)
 	{
+	// Handle the filter *first*, in case we may have Start derivatives in the chan.
+	if (iReadFilter)
+		{
+		if (ZQ<bool> theQ = iReadFilter->QCall(iPPT, iChanR, oAny))
+			{
+			if (*theQ)
+				return;
+			}
+		}
+
+	// Handle standard stuff.
+
 	if (false)
 		{}
 
-	else if (const string* theString = sPGet<string>(iPPT))
+
+	if (const string* theString = sPGet<string>(iPPT))
 		{
 		oAny = *theString;
+		return;
 		}
 
-	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
+	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
 		{
 		oAny = sReadAllUTF8(*theChanner);
+		return;
 		}
 
-	else if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
+	if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
 		{
 		oAny = *theData;
+		return;
 		}
 
-	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
+	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
 		{
 		oAny = sReadAll_T<Data_Any>(*theChanner);
+		return;
 		}
 
-	else if (sPGet<PullPush::StartMap>(iPPT))
+	if (sIsStartMap(iPPT))
 		{
 		Map_Any theMap;
 		for (;;)
@@ -123,51 +140,43 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 				{
 				break;
 				}
-			else if (NotQ<PPT> theNotQ = sQRead(iChanR))
+			else if (NotQ<PPT> thePPTQ = sQRead(iChanR))
 				{
 				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
 			else
 				{
 				Any theAny;
-				sPull_PPT_AsAny(*theNotQ, iChanR, iReadFilter, theAny);
+				sPull_PPT_AsAny(*thePPTQ, iChanR, iReadFilter, theAny);
 				theMap.Set(*theNameQ, theAny);
 				}
 			}
 		oAny = theMap;
+		return;
 		}
 
-	else if (sPGet<PullPush::StartSeq>(iPPT))
+	// This could be just Start, to generically handle Start derivatives
+	if (sIsStartSeq(iPPT))
 		{
 		Seq_Any theSeq;
 		for (;;)
 			{
-			if (NotQ<PPT> theQ = sQEReadPPTOrEnd(iChanR))
+			if (NotQ<PPT> thePPTQ = sQEReadPPTOrEnd(iChanR))
 				{
 				break;
 				}
 			else
 				{
 				Any theAny;
-				sPull_PPT_AsAny(*theQ, iChanR, iReadFilter, theAny);
+				sPull_PPT_AsAny(*thePPTQ, iChanR, iReadFilter, theAny);
 				theSeq.Append(theAny);
 				}
 			}
 		oAny = theSeq;
+		return;
 		}
 
-	else
-		{
-		if (iReadFilter)
-			{
-			if (ZQ<bool> theQ = iReadFilter->QCall(iPPT, iChanR, oAny))
-				{
-				if (*theQ)
-					return;
-				}
-			}
-		oAny = iPPT.As<Any>();
-		}
+	oAny = iPPT.As<Any>();
 	}
 
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
@@ -211,6 +220,7 @@ static void spAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
 	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
 	const ZRef<Promise<Any>>& iPromise)
 	{
+	ZThread::sSetName("spAsync_AsAny");
 	Any result;
 	if (sPull_PPT_AsAny(*iChannerR, iReadFilter, result))
 		iPromise->Deliver(result);

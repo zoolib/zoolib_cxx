@@ -122,9 +122,9 @@ static void sPull_XMLAttr_Push_PPT(const string& iOuterName,
 		else if (ioChanRU.Current() == ML::eToken_TagEmpty)
 			{
 			sPush(sName(ioChanRU.Name()), iChanW);
-			sPush(kStartMap, iChanW);
+			sPush_Start_Map(iChanW);
 				spPush_Attrs(ioChanRU.Attrs(), iChanW);
-			sPush(kEnd, iChanW);
+			sPush_End(iChanW);
 			ioChanRU.Advance();
 			}
 		else
@@ -155,21 +155,21 @@ static void sPull_XMLAttr_Push_PPT(const string& iOuterName,
 					}
 				else
 					{
-					sPush(kStartMap, iChanW);
+					sPush_Start_Map(iChanW);
 						spPush_Attrs(ioChanRU.Attrs(), iChanW);
 						sPush("!text", theText, iChanW);
-					sPush(kEnd, iChanW);
+					sPush_End(iChanW);
 					}
 				}
 			else if (ioChanRU.Current() == ML::eToken_TagBegin
 				|| ioChanRU.Current() == ML::eToken_TagEmpty)
 				{
-				sPush(kStartMap, iChanW);
+				sPush_Start_Map(iChanW);
 					spPush_Attrs(theAttrs, iChanW);
 					if (theText.size())
 						sPush("!text", theText, iChanW);
 					sPull_XMLAttr_Push_PPT(theName, ioChanRU, iChanW);
-				sPush(kEnd, iChanW);
+				sPush_End(iChanW);
 				}
 			else
 				{
@@ -186,9 +186,9 @@ bool sPull_XMLAttr_Push_PPT(ML::ChanRU& ioChanRU, const ChanW_PPT& iChanW)
 	if (ioChanRU.Current() == ML::eToken_Exhausted)
 		return false;
 
-	sPush(kStartMap, iChanW);
-	sPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
-	sPush(kEnd, iChanW);
+	sPush_Start_Map(iChanW);
+		sPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
+	sPush_End(iChanW);
 	return true;
 	}
 

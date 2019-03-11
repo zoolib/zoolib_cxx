@@ -238,13 +238,13 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 	if (sTryRead_CP('[', iChanRU))
 		{
-		sPush(kStartSeq, iChanW);
+		sPush_Start_Seq(iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 			if (sTryRead_CP(']', iChanRU))
 				{
-				sPush(kEnd, iChanW);
+				sPush_End(iChanW);
 				return true;
 				}
 
@@ -267,13 +267,13 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		}
 	else if (sTryRead_CP('{', iChanRU))
 		{
-		sPush(kStartMap, iChanW);
+		sPush_Start_Map(iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 			if (sTryRead_CP('}', iChanRU))
 				{
-				sPush(kEnd, iChanW);
+				sPush_End(iChanW);
 				return true;
 				}
 
@@ -392,7 +392,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else
 				{
-				int localIndent = sPGet<PullPush::StartSeq>(*theNotQ) ? iIndent + 1 : iIndent;
+				int localIndent = sIsStartSeq(*theNotQ) ? iIndent + 1 : iIndent;
 				if (iOptions.fUseExtendedNotation.DGet(false))
 					{
 					sWriteLFIndent(localIndent, iOptions, iChanW);
@@ -592,12 +592,12 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (sPGet<PullPush::StartMap>(iPPT))
+	else if (sIsStartMap(iPPT))
 		{
 		spPull_PPT_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (sPGet<PullPush::StartSeq>(iPPT))
+	else if (sIsStartSeq(iPPT))
 		{
 		spPull_PPT_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}

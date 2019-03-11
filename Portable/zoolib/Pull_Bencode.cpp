@@ -139,12 +139,12 @@ void spRead(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW)
 		{
 		case 'd':
 			{
-			sPush(kStartMap, iChanW);
+			sPush_Start_Map(iChanW);
 			for (;;)
 				{
 				if (spTryRead_Byte(iChanRU, 'e'))
 					{
-					sPush(kEnd, iChanW);
+					sPush_End(iChanW);
 					return;
 					}
 				string theName = spReadString(iChanRU);
@@ -155,12 +155,12 @@ void spRead(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW)
 			}
 		case 'l':
 			{
-			sPush(kStartSeq, iChanW);
+			sPush_Start_Seq(iChanW);
 			for (;;)
 				{
 				if (spTryRead_Byte(iChanRU, 'e'))
 					{
-					sPush(kEnd, iChanW);
+					sPush_End(iChanW);
 					return;
 					}
 				spRead(iChanRU, iChanW);

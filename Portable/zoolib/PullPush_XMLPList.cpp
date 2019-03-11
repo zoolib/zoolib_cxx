@@ -67,14 +67,14 @@ void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU, const ChanW_PPT& iChanW)
 		if (theName == "dict")
 			{
 			iChanRU.Advance();
-			sPush(kStartMap, iChanW);
-			sPush(kEnd, iChanW);
+			sPush_Start_Map(iChanW);
+			sPush_End(iChanW);
 			}
 		else if (theName == "array")
 			{
 			iChanRU.Advance();
-			sPush(kStartSeq, iChanW);
-			sPush(kEnd, iChanW);
+			sPush_Start_Seq(iChanW);
+			sPush_End(iChanW);
 			}
 		else if (theName == "string")
 			{
@@ -117,13 +117,13 @@ void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU, const ChanW_PPT& iChanW)
 		else if (iChanRU.Name() == "dict")
 			{
 			iChanRU.Advance();
-			sPush(kStartMap, iChanW);
+			sPush_Start_Map(iChanW);
 			for (;;)
 				{
 				sSkipText(iChanRU);
 				if (sTryRead_End(iChanRU, "dict"))
 					{
-					sPush(kEnd, iChanW);
+					sPush_End(iChanW);
 					break;
 					}
 
@@ -142,13 +142,13 @@ void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU, const ChanW_PPT& iChanW)
 		else if (iChanRU.Name() == "array")
 			{
 			iChanRU.Advance();
-			sPush(kStartSeq, iChanW);
+			sPush_Start_Seq(iChanW);
 			for (;;)
 				{
 				sSkipText(iChanRU);
 				if (sTryRead_End(iChanRU, "array"))
 					{
-					sPush(kEnd, iChanW);
+					sPush_End(iChanW);
 					break;
 					}
 
@@ -244,7 +244,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("data");
 		}
 
-	else if (sPGet<PullPush::StartMap>(iPPT))
+	else if (sIsStartMap(iPPT))
 		{
 		s.Begin("dict");
 			for (;;)
@@ -272,7 +272,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("dict");
 		}
 
-	else if (sPGet<PullPush::StartSeq>(iPPT))
+	else if (sIsStartSeq(iPPT))
 		{
 		s.Begin("array");
 			for (;;)

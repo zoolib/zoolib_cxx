@@ -32,15 +32,58 @@ namespace ZooLib {
 
 namespace PullPush {
 
-const PPT kStartMap = PPT(StartMap());
-const PPT kStartSeq = PPT(StartSeq());
+const PPT kStart_Map = ZRef<Start>(new Start_Map);
+const PPT kStart_Seq = ZRef<Start>(new Start_Seq);
 
-const PPT kEnd = PPT(End());
+const PPT kEnd = End();
+
+bool sIsStart(const PPT& iPPT)
+	{
+	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+		return true;
+	return false;
+	}
+
+bool sIsStartMap(const PPT& iPPT)
+	{
+	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+		{
+		if (theRef.DynamicCast<Start_Map>())
+			return true;
+		}
+	return false;
+	}
+
+bool sIsStartSeq(const PPT& iPPT)
+	{
+	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+		{
+		if (theRef.DynamicCast<Start_Seq>())
+			return true;
+		}
+	return false;
+	}
+
+bool sIsEnd(const PPT& iPPT)
+	{
+	if (const End* theP = sPGet<End>(iPPT))
+		return true;
+	return false;
+	}
 
 } // namespace PullPush
 
 // =================================================================================================
 #pragma mark -
+
+void sPush_Start_Map(const ChanW_PPT& iChanW)
+	{ sPush(PullPush::kStart_Map, iChanW); }
+
+void sPush_Start_Seq(const ChanW_PPT& iChanW)
+	{ sPush(PullPush::kStart_Seq, iChanW); }
+
+void sPush_End(const ChanW_PPT& iChanW)
+	{ sPush(PullPush::End(), iChanW); }
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, iVal); }
@@ -101,7 +144,7 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 
 		sPush(thePPT, iChanW);
 
-		if (sPGet<StartMap>(thePPT) || sPGet<StartSeq>(thePPT))
+		if (sPGet<Start>(thePPT))
 			{
 			++depth;
 			}
@@ -116,22 +159,22 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 bool sSkip_Node(const ChanR_PPT& iChanR)
 	{ return sCopy_Node(iChanR, ChanW_XX_Discard<PPT>()); }
 
-bool sTryPull_StartMap(const ChanRU<PPT>& iChanRU)
+bool sTryPull_Start_Map(const ChanRU<PPT>& iChanRU)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
-		if (sPGet<PullPush::StartMap>(*theQ))
+		if (sIsStartMap(*theQ))
 			return true;
 		sUnread(iChanRU, *theQ);
 		}
 	return false;
 	}
 
-bool sTryPull_StartSeq(const ChanRU<PPT>& iChanRU)
+bool sTryPull_Start_Seq(const ChanRU<PPT>& iChanRU)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
-		if (sPGet<PullPush::StartSeq>(*theQ))
+		if (sIsStartSeq(*theQ))
 			return true;
 		sUnread(iChanRU, *theQ);
 		}

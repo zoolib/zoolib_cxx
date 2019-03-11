@@ -81,7 +81,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 	if (theTypeID == ::CFArrayGetTypeID())
 		{
 		CFArrayRef theCFArrayRef = (CFArrayRef)iCFTypeRef;
-		sPush(PullPush::kStartSeq, iChanW);
+		sPush_Start_Seq(iChanW);
 		for (size_t xx = 0, theCount = ::CFArrayGetCount(theCFArrayRef); xx < theCount; ++xx)
 			{
 			if (not sFromCF_Push_PPT(::CFArrayGetValueAtIndex(theCFArrayRef, xx), iChanW))
@@ -93,7 +93,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
 		{
-		sPush(PullPush::kStartMap, iChanW);
+		sPush_Start_Map(iChanW);
 		::CFDictionaryApplyFunction((CFDictionaryRef)iCFTypeRef, spGatherContents, (void*)&iChanW);
 		sPush(PullPush::kEnd, iChanW);
 		return true;
@@ -133,7 +133,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 		return true;
 		}
 
-	if (sPGet<PullPush::StartMap>(iPPT))
+	if (sIsStartMap(iPPT))
 		{
 		Map_CF theMap;
 		for (;;)
@@ -154,7 +154,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 		return true;
 		}
 
-	if (sPGet<PullPush::StartSeq>(iPPT))
+	if (sIsStartSeq(iPPT))
 		{
 		Seq_CF theSeq;
 		for (;;)

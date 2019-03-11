@@ -116,7 +116,7 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 			}
 		case 0xEA:
 			{
-			sPush(kStartSeq, iChanW);
+			sPush_Start_Seq(iChanW);
 			for (;;)
 				{
 				if (NotQ<uint8> theTypeQ = sQRead(iChanR))
@@ -132,12 +132,12 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 					spPull_JSONB_Push_PPT(*theTypeQ, iChanR, iReadFilter, iChanW);
 					}
 				}
-			sPush(kEnd, iChanW);
+			sPush_End(iChanW);
 			break;
 			}
 		case 0xED:
 			{
-			sPush(kStartMap, iChanW);
+			sPush_Start_Map(iChanW);
 			for (;;)
 				{
 				string theName = sReadCountPrefixedString(iChanR);
@@ -241,7 +241,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (sPGet<PullPush::StartMap>(thePPT))
+	if (sIsStartMap(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xED);
 		for (;;)
@@ -264,7 +264,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (sPGet<PullPush::StartSeq>(thePPT))
+	if (sIsStartSeq(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xEA);
 		for (;;)

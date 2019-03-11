@@ -66,12 +66,12 @@ bool sPull_Basic_Push_PPT(const ChanR_UTF& iChanR, const Pull_Basic_Options& iOp
 			{
 			if (isFirst)
 				return false;
-			sPush(kEnd, iChanW);
+			sPush_End(iChanW);
 			return true;
 			}
 		else if (isFirst)
 			{
-			sPush(kStartMap, iChanW);
+			sPush_Start_Map(iChanW);
 			}
 
 		string theValue;
