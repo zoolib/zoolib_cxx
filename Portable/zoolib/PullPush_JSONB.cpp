@@ -196,7 +196,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	const PPT& thePPT = *thePPTQ;
 
-	if (sPGet<PullPush::End>(thePPT))
+	if (sIsEnd(thePPT))
 		return false;
 
 	if (iWriteFilter && sCall(iWriteFilter, thePPT, iChanR, iChanW))

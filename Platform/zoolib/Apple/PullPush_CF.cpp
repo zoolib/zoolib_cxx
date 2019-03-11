@@ -162,7 +162,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 			ZQ<PPT> theQ = sQRead(iChanR);
 			if (not theQ)
 				return false;
-			if (sPGet<PullPush::End>(*theQ))
+			if (sIsEnd(*theQ))
 				break;
 			ZRef<CFTypeRef> theCFTypeRef;
 			if (not sPull_PPT_AsCF(*theQ, iChanR, theCFTypeRef))

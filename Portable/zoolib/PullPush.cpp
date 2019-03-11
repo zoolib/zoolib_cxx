@@ -134,8 +134,6 @@ void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_PPT&
 
 bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 	{
-	using namespace PullPush;
-
 	size_t depth = 0;
 
 	while (ZQ<PPT> theQ = sQRead(iChanR))
@@ -144,14 +142,14 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 
 		sPush(thePPT, iChanW);
 
-		if (sPGet<Start>(thePPT))
-			{
+		if (sIsStart(thePPT))
 			++depth;
-			}
-		else if (sPGet<End>(thePPT) && 0 == --depth)
-			{
+
+		if (sIsEnd(thePPT))
+			--depth;
+
+		if (depth == 0)
 			break;
-			}
 		}
 	return depth == 0;
 	}
@@ -185,7 +183,7 @@ bool sTryPull_End(const ChanRU<PPT>& iChanRU)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
-		if (sPGet<PullPush::End>(*theQ))
+		if (sIsEnd(*theQ))
 			return true;
 		sUnread(iChanRU, *theQ);
 		}
@@ -210,7 +208,7 @@ void sEPull_End(const ChanR<PPT>& iChanR)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		if (theQ->PGet<PullPush::End>())
+		if (sIsEnd(*theQ))
 			return;
 		}
 	sThrow_ParseException("Required PullPush::End is absent");
@@ -222,7 +220,7 @@ ZQ<PPT> sQEReadPPTOrEnd(const ChanR<PPT>& iChanR)
 		{
 		sThrow_ParseException("Expected PPT, failed to read");
 		}
-	else if (sPGet<PullPush::End>(*thePPTQ))
+	else if (sIsEnd(*thePPTQ))
 		{
 		return null;
 		}

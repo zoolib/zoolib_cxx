@@ -84,8 +84,6 @@ using ChannerW_PPT = Channer<ChanW_PPT>;
 using ChanWCon_PPT = ChanWCon<PPT>;
 using ChannerWCon_PPT = Channer<ChanWCon_PPT>;
 
-//void sPush(const PullPush::Start& iStart, const ChanW_PPT& iChanW);
-
 void sPush_Start_Map(const ChanW_PPT& iChanW);
 void sPush_Start_Seq(const ChanW_PPT& iChanW);
 void sPush_End(const ChanW_PPT& iChanW);
