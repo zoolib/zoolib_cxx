@@ -104,46 +104,49 @@ public:
 		}
 
 // From Callable_JSONB_ReadFilter
-	virtual ZQ<bool> QCall(const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)
+	virtual ZQ<bool> QCall(uint8 iType, const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)
 		{
-		if (ZQ<uint8> theTypeQ = sQRead(iChanR))
+		if (iType == 254)
 			{
-			switch (*theTypeQ)
+			if (ZQ<uint8> theTypeQ = sQRead(iChanR))
 				{
-				case 100:
+				switch (*theTypeQ)
 					{
-					sPush(kStart_Result, iChanW);
+					case 100:
+						{
+						sPush(kStart_Result, iChanW);
 
-						// We're at the beginning of a QE::Result. So copy the RelHead to start with.
-						PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
-						RelHead& theRH = sMut<RelHead>(thePPT);
-						for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
-							theRH |= spStringFromChan(iChanR);
-						sPush(thePPT, iChanW);
+							// We're at the beginning of a QE::Result. So copy the RelHead to start with.
+							PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
+							RelHead& theRH = sMut<RelHead>(thePPT);
+							for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
+								theRH |= spStringFromChan(iChanR);
+							sPush(thePPT, iChanW);
 
-						const size_t theCount = sReadCount(iChanR);
-						sPush(theCount, iChanW);
+							const size_t theCount = sReadCount(iChanR);
+							sPush(theCount, iChanW);
 
-						// Now copy the vals.
-						for (size_t xx = theCount * theRH.size(); xx; --xx)
-							sPull_JSONB_Push_PPT(iChanR, this, iChanW);
+							// Now copy the vals.
+							for (size_t xx = theCount * theRH.size(); xx; --xx)
+								sPull_JSONB_Push_PPT(iChanR, this, iChanW);
 
-					sPush(PullPush::End(), iChanW);
+						sPush(PullPush::End(), iChanW);
 
-					return true;
+						return true;
+						}
+					case 101:
+						{
+						sPush(Daton(sRead_T<Data_Any>(iChanR, sReadCount(iChanR))), iChanW);
+						return true;
+						}
+					case 102:
+						{
+						sPush(AbsentOptional_t(), iChanW);
+						return true;
+						}
 					}
-				case 101:
-					{
-					sPush(Daton(sRead_T<Data_Any>(iChanR, sReadCount(iChanR))), iChanW);
-					return true;
-					}
-				case 102:
-					{
-					sPush(AbsentOptional_t(), iChanW);
-					return true;
-					}
+				return false;
 				}
-			return false;
 			}
 		return null;
 		}
@@ -224,6 +227,7 @@ public:
 			if (not theRef.DynamicCast<Start_Result>())
 				return false;
 
+			sEWriteBE<uint8>(iChanW, 254);
 			sEWriteBE<uint8>(iChanW, 100);
 
 			const RelHead theRH = sGet<RelHead>(sERead(iChanR));
@@ -244,6 +248,7 @@ public:
 
 		if (const Daton* theDatonP = iPPT.PGet<Daton>())
 			{
+			sEWriteBE<uint8>(iChanW, 254);
 			sEWriteBE<uint8>(iChanW, 101);
 
 			const Data_Any& theData = theDatonP->GetData();
@@ -255,13 +260,12 @@ public:
 
 		if (iPPT.PGet<AbsentOptional_t>())
 			{
+			sEWriteBE<uint8>(iChanW, 254);
 			sEWriteBE<uint8>(iChanW, 102);
 			return true;
 			}
 
-		if (ZLOGPF(w, eErr))
-			w << iPPT.Type().name();
-		ZUnimplemented();
+		return false;
 		}
 	};
 
