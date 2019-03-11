@@ -32,7 +32,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-typedef Callable<bool(const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)>
+typedef Callable<bool(uint8 iType, const ChanR_Bin& iChanR, const ChanW_PPT& iChanW)>
 	Callable_JSONB_ReadFilter;
 
 bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,

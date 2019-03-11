@@ -67,6 +67,9 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW)
 	{
+	if (iReadFilter && sCall(iReadFilter, iType, iChanR, iChanW))
+		return;
+
 	switch (iType)
 		{
 		case 0xE0:
@@ -155,19 +158,12 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 					spPull_JSONB_Push_PPT(*theTypeQ, iChanR, iReadFilter, iChanW);
 					}
 				}
-			sPush(kEnd, iChanW);
-			break;
-			}
-		case 254:
-			{
-			if (iReadFilter && sCall(iReadFilter, iChanR, iChanW))
-				break;
-			sThrow_ParseException("Unhandled type 254");
+			sPush_End(iChanW);
 			break;
 			}
 		default:
 			{
-			sThrow_ParseException(sStringf("JSONB invalid type %d", int(iType)));
+			sThrow_ParseException(sStringf("JSONB unhandled type %d", int(iType)));
 			break;
 			}
 		}
@@ -202,6 +198,9 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	if (sPGet<PullPush::End>(thePPT))
 		return false;
+
+	if (iWriteFilter && sCall(iWriteFilter, thePPT, iChanR, iChanW))
+		return true;
 
 	if (const string* theString = sPGet<string>(thePPT))
 		{
@@ -304,10 +303,6 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		sEWriteBE<double>(iChanW, *theQ);
 		return true;
 		}
-
-	sEWriteBE<uint8>(iChanW, 254);
-	if (iWriteFilter && sCall(iWriteFilter, thePPT, iChanR, iChanW))
-		return true;
 
 	if (ZLOGF(w, eErr))
 		w << "Couldn't write " << thePPT.Type().name();
