@@ -197,7 +197,6 @@ Map_Any sReadTextData(const FileSpec& iFS)
 	return theMap;
 	}
 
-
 static Util_Chan_JSON::WriteOptions spWO()
 	{
 	Util_Chan_JSON::WriteOptions theWO = YadOptions(true);

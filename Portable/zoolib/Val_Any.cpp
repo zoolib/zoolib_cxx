@@ -599,7 +599,6 @@ Map_Any::iterator Map_Any::end()
 	return spEmptyMap.end();
 	}
 
-
 Map_Any::const_iterator Map_Any::begin() const
 	{
 	if (fRep)

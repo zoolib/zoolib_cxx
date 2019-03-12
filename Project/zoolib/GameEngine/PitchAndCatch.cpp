@@ -62,7 +62,6 @@ const vector<Val>& sGetPitches(const Param& iParam, const Name& iName)
 	return sDefault();
 	}
 
-
 // =================================================================================================
 // MARK: - Cog_Pitch
 
