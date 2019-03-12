@@ -13,8 +13,6 @@
 namespace ZooLib {
 namespace GameEngine {
 
-//##using ZooLib::FileSpec;
-
 void sRotateGameRate();
 
 void sSetGameRate(Rat iRate);
