@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/Dataspace/Util_Strim_Walker.h"
+#include "zoolib/QueryEngine/Util_Strim_Walker.h"
 
 #include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
@@ -34,14 +34,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-namespace Dataspace {
-
-namespace QE = QueryEngine;
+namespace QueryEngine {
 
 // =================================================================================================
 #pragma mark - sDumpWalkers
 
-class DumpWalkers : public QE::Visitor_Walker
+class DumpWalkers : public Visitor_Walker
 	{
 public:
 	DumpWalkers(const ChanW_UTF& iW)
@@ -49,7 +47,7 @@ public:
 	,	fIndent(0)
 		{}
 
-	virtual void Visit_Walker(const ZRef<QE::Walker>& iWalker)
+	virtual void Visit_Walker(const ZRef<Walker>& iWalker)
 		{
 		fW << "\n";
 
@@ -63,24 +61,24 @@ public:
 
 		if (false)
 			{}
-		else if (ZRef<QE::Walker_Embed> theW = iWalker.DynamicCast<QE::Walker_Embed>())
+		else if (ZRef<Walker_Embed> theW = iWalker.DynamicCast<Walker_Embed>())
 			{
 			theW->GetParent()->Accept(*this);
 			theW->GetEmbedee()->Accept(*this);
 			}
-		else if (ZRef<QE::Walker_Product> theW = iWalker.DynamicCast<QE::Walker_Product>())
+		else if (ZRef<Walker_Product> theW = iWalker.DynamicCast<Walker_Product>())
 			{
 			theW->GetLeft()->Accept(*this);
 			theW->GetRight()->Accept(*this);
 			}
-		else if (ZRef<QE::Walker_Union> theW = iWalker.DynamicCast<QE::Walker_Union>())
+		else if (ZRef<Walker_Union> theW = iWalker.DynamicCast<Walker_Union>())
 			{
 			theW->GetLeft()->Accept(*this);
 			theW->GetRight()->Accept(*this);
 			}
-		else if (ZRef<QE::Walker_Unary> theW = iWalker.DynamicCast<QE::Walker_Unary>())
+		else if (ZRef<Walker_Unary> theW = iWalker.DynamicCast<Walker_Unary>())
 			{
-			if (ZRef<QE::Walker_Comment> theWalker_Comment = iWalker.DynamicCast<QE::Walker_Comment>())
+			if (ZRef<Walker_Comment> theWalker_Comment = iWalker.DynamicCast<Walker_Comment>())
 				{
 				fW << " ";
 				Util_Chan_JSON::sWriteString(theWalker_Comment->GetComment(), false, fW);
@@ -95,12 +93,11 @@ public:
 	size_t fIndent;
 	};
 
-void sDumpWalkers(ZRef<QE::Walker> iWalker, const ChanW_UTF& w)
+void sDumpWalkers(ZRef<Walker> iWalker, const ChanW_UTF& w)
 	{ iWalker->Accept(DumpWalkers(w)); }
 
-} // namespace Dataspace
+} // namespace QueryEngine
 } // namespace ZooLib
-
 
 // =================================================================================================
 #pragma mark - pdesc
@@ -111,7 +108,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZRef<QueryEngine::Walker>& iWalker)
 	{
-	ZooLib::Dataspace::sDumpWalkers(iWalker, StdIO::sChan_UTF_Err);
+	ZooLib::QueryEngine::sDumpWalkers(iWalker, StdIO::sChan_UTF_Err);
 	}
 
 #endif // defined(ZMACRO_pdesc)

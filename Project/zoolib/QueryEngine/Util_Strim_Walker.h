@@ -18,22 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Dataspace_Util_Strim_Walker_h__
-#define __ZooLib_Dataspace_Util_Strim_Walker_h__
+#ifndef __ZooLib_QueryEngine_Util_Strim_Walker_h__
+#define __ZooLib_QueryEngine_Util_Strim_Walker_h__
 #include "zconfig.h"
 
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/QueryEngine/Walker.h"
 
 namespace ZooLib {
-namespace Dataspace {
+namespace QueryEngine {
 
 // =================================================================================================
 #pragma mark - sDumpWalkers
 
 void sDumpWalkers(ZRef<QueryEngine::Walker> iWalker, const ChanW_UTF& w);
 
-} // namespace Dataspace
+} // namespace QueryEngine
 } // namespace ZooLib
 
-#endif // __ZooLib_Dataspace_Util_Strim_Walker_h__
+#endif // __ZooLib_QueryEngine_Util_Strim_Walker_h__

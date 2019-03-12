@@ -32,12 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Dataspace/Daton_Val.h"
-#include "zoolib/Dataspace/Util_Strim_Walker.h"
 
 #include "zoolib/Expr/Util_Expr_Bool_CNF.h"
 
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Util_Strim_Result.h"
+#include "zoolib/QueryEngine/Util_Strim_Walker.h"
 #include "zoolib/QueryEngine/Walker_Project.h"
 #include "zoolib/QueryEngine/Walker_Result.h"
 #include "zoolib/QueryEngine/Walker_Restrict.h"
