@@ -52,8 +52,8 @@ const char spVertexShaderSource_Textured[] = ""
 
 "	void main()"
 "		{"
-"		v_texCoord = a_tex;"
 "		gl_Position = u_projection * a_pos;"
+"		v_texCoord = a_tex;"
 "		}"
 "";
 
@@ -67,12 +67,10 @@ const char spFragmentShaderSource_Textured[] = ""
 
 "	void main()"
 "		{"
-""
 "		gl_FragColor = texture2D(u_texture, v_texCoord);"
 "		gl_FragColor *= u_modulation;"
 "		}"
 "";
-
 
 // -----
 
@@ -184,6 +182,11 @@ public:
 		::glDeleteShader(theFS_Constant);
 		}
 
+		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "u_projection");
+		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "u_color");
+
+		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "a_pos");
+
 		{
 		VertexShaderID theVS_Textured =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Textured);
@@ -201,32 +204,27 @@ public:
 		::glDeleteShader(theFS_Textured);
 		}
 
-		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "a_pos");
-
-		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "u_color");
-		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "u_projection");
+		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "u_projection");
+		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "u_modulation");
+		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "u_texture");
 
 		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "a_tex");
 		fAttribute_Textured_Pos = ::glGetAttribLocation(fProgramID_Textured, "a_pos");
-
-		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "u_modulation");
-		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "u_projection");
-		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "u_texture");
 		}
 
 	ProgramID fProgramID_Constant;
+		GLint fUniform_Constant_Projection;
+		GLint fUniform_Constant_Color;
+
 		GLint fAttribute_Constant_Pos;
 
-		GLint fUniform_Constant_Color;
-		GLint fUniform_Constant_Projection;
-
 	ProgramID fProgramID_Textured;
-		GLint fAttribute_Textured_Tex;
-		GLint fAttribute_Textured_Pos;
-
-		GLint fUniform_Textured_Modulation;
 		GLint fUniform_Textured_Projection;
+		GLint fUniform_Textured_Modulation;
 		GLint fUniform_Textured_Texture;
+
+		GLint fAttribute_Textured_Pos;
+		GLint fAttribute_Textured_Tex;
 	};
 
 ZRef<Context> spContext()
