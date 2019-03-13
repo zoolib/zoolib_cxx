@@ -21,12 +21,12 @@ namespace { // anonymous
 // -----
 
 const char spVertexShaderSource_Constant[] = ""
-"	uniform mat4 u_projection;"
-"	attribute vec4 a_pos;"
+"	uniform mat4 uProjection;"
+"	attribute vec4 aPos;"
 
 "	void main()"
 "		{"
-"		gl_Position = u_projection * a_pos;"
+"		gl_Position = uProjection * aPos;"
 "		}"
 "";
 
@@ -34,26 +34,26 @@ const char spFragmentShaderSource_Constant[] = ""
 #if not ZCONFIG_SPI_Enabled(MacOSX)
 "	precision mediump float; "
 #endif
-"	uniform vec4 u_color; "
+"	uniform vec4 uColor; "
 
 "	void main()"
 "		{"
-"		gl_FragColor = u_color;"
+"		gl_FragColor = uColor;"
 "		}"
 "";
 
 // -----
 
 const char spVertexShaderSource_Textured[] = ""
-"	uniform mat4 u_projection;"
-"	attribute vec2 a_tex;"
-"	attribute vec4 a_pos;"
-"	varying vec2 v_texCoord;"
+"	uniform mat4 uProjection;"
+"	attribute vec2 aTex;"
+"	attribute vec4 aPos;"
+"	varying vec2 vTexCoord;"
 
 "	void main()"
 "		{"
-"		gl_Position = u_projection * a_pos;"
-"		v_texCoord = a_tex;"
+"		gl_Position = uProjection * aPos;"
+"		vTexCoord = aTex;"
 "		}"
 "";
 
@@ -61,14 +61,14 @@ const char spFragmentShaderSource_Textured[] = ""
 #if not ZCONFIG_SPI_Enabled(MacOSX)
 "	precision mediump float; "
 #endif
-"	uniform sampler2D u_texture;"
-"	uniform vec4 u_modulation;"
-"	varying vec2 v_texCoord;"
+"	uniform sampler2D uTexture;"
+"	uniform vec4 uModulation;"
+"	varying vec2 vTexCoord;"
 
 "	void main()"
 "		{"
-"		gl_FragColor = texture2D(u_texture, v_texCoord);"
-"		gl_FragColor *= u_modulation;"
+"		gl_FragColor = texture2D(uTexture, vTexCoord);"
+"		gl_FragColor *= uModulation;"
 "		}"
 "";
 
@@ -92,8 +92,10 @@ bool spCompileOrDeleteShader(GLuint iShaderID, const string8& iSource)
 	const char* srcPtr = iSource.c_str();
 	::glShaderSource(iShaderID, 1, &srcPtr, nullptr);
 	::glCompileShader(iShaderID);
+
 	GLint result;
 	::glGetShaderiv(iShaderID, GL_COMPILE_STATUS, &result);
+
 	if (result)
 		return true;
 
@@ -101,6 +103,7 @@ bool spCompileOrDeleteShader(GLuint iShaderID, const string8& iSource)
 		{
 		GLint length;
 		::glGetShaderiv(iShaderID, GL_INFO_LOG_LENGTH, &length);
+
 		string8 theString(length, 0);
 		::glGetShaderInfoLog(iShaderID, length, nullptr, &theString[0]);
 		w << theString;
@@ -184,10 +187,10 @@ public:
 		::glDeleteShader(theFS_Constant);
 		}
 
-		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "u_projection");
-		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "u_color");
+		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "uProjection");
+		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
 
-		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "a_pos");
+		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "aPos");
 
 		{
 		VertexShaderID theVS_Textured =
@@ -209,12 +212,12 @@ public:
 		::glDeleteShader(theFS_Textured);
 		}
 
-		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "u_projection");
-		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "u_modulation");
-		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "u_texture");
+		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "uProjection");
+		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "uModulation");
+		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "uTexture");
 
-		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "a_tex");
-		fAttribute_Textured_Pos = ::glGetAttribLocation(fProgramID_Textured, "a_pos");
+		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "aTex");
+		fAttribute_Textured_Pos = ::glGetAttribLocation(fProgramID_Textured, "aPos");
 		}
 
 	ProgramID fProgramID_Constant;
@@ -287,7 +290,7 @@ void spDrawTexture(
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-void spSetColor(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
+void spSetUniform_Color(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
 	{
 	float theAlpha = iRGBA.floatAlpha() * sGet(iAlpha);
 	::glUniform4f(
@@ -310,7 +313,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetColor(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
@@ -341,7 +344,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetColor(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
