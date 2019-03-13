@@ -172,10 +172,12 @@ public:
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant);
 
 		fProgramID_Constant = ::glCreateProgram();
+
 		::glAttachShader(fProgramID_Constant, theVS_Constant);
 		::glAttachShader(fProgramID_Constant, theFS_Constant);		
-		::glBindAttribLocation(fProgramID_Constant, 1, "a_pos");
+
 		spLinkAndCheckProgram(fProgramID_Constant);
+
 		::glDetachShader(fProgramID_Constant, theVS_Constant);
 		::glDetachShader(fProgramID_Constant, theFS_Constant);		
 		::glDeleteShader(theVS_Constant);
@@ -195,9 +197,12 @@ public:
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
 
 		fProgramID_Textured = ::glCreateProgram();
+
 		::glAttachShader(fProgramID_Textured, theVS_Textured);
 		::glAttachShader(fProgramID_Textured, theFS_Textured);		
+
 		spLinkAndCheckProgram(fProgramID_Textured);
+
 		::glDetachShader(fProgramID_Textured, theVS_Textured);
 		::glDetachShader(fProgramID_Textured, theFS_Textured);		
 		::glDeleteShader(theVS_Textured);
