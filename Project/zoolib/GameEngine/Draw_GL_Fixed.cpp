@@ -35,15 +35,15 @@ void spDrawTexture(
 	{
 	::glPushMatrix();
 
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	spBefore(iAlphaMat, ZRGBA::sWhite);
 
-	SaveSetRestore_Enable theSetRestore_a(GL_TEXTURE_2D, true);
+	SaveSetRestore_Enable ssr_a(GL_TEXTURE_2D, true);
 
-	SaveSetRestore_BindTexture_2D theSetRestore_BindTexture_2D(iTextureID);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
 
 	::glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);//??
 
@@ -52,7 +52,7 @@ void spDrawTexture(
 	texCoords[1] = RT(iBounds) / iSize;
 	texCoords[2] = LB(iBounds) / iSize;
 	texCoords[3] = RB(iBounds) / iSize;
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, true);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, true);
 	::glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 
 	GPoint vertices[4];
@@ -60,7 +60,7 @@ void spDrawTexture(
 	vertices[1] = sPoint<GPoint>(W(iBounds),0);
 	vertices[2] = sPoint<GPoint>(0, H(iBounds));
 	vertices[3] = WH(iBounds);
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_b(GL_VERTEX_ARRAY, true);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
 	::glVertexPointer(2, GL_FLOAT, 0, vertices);
 
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -73,14 +73,14 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	{
 	::glPushMatrix();
 
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	spBefore(iAlphaMat, iRGBA);
 
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_b(GL_VERTEX_ARRAY, true);
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
 
 	GPoint vertices[4];
 	vertices[0] = LT(iRect);
@@ -101,14 +101,14 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 	{
 	::glPushMatrix();
 
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	spBefore(iAlphaMat, iRGBA);
 
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_b(GL_VERTEX_ARRAY, true);
-	SaveSetRestore_EnableClientState theSetRestore_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
 
 	GPoint vertices[3];
 	vertices[0] = iP0;
@@ -146,14 +146,14 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 
 	if (true)
 		{
-		SaveSetRestore_ActiveTexture theSetRestore_ActiveTexture(GL_TEXTURE0);
+		SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 
 		GLuint fbo;
 		::glGenFramebuffers(1, &fbo);
 
 		if (true)
 			{
-			SaveSetRestore_BindFramebuffer theSetRestore_BindFramebuffer(fbo);
+			SaveSetRestore_BindFramebuffer ssr_BindFramebuffer(fbo);
 			::glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 				theTexture_GL->GetTextureID(), 0);
 
@@ -161,7 +161,7 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 
 			if (true)
 				{
-				SaveSetRestore_ViewPort theSetRestore_ViewPort(0, 0, X(theTextureSize), Y(theTextureSize));
+				SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(theTextureSize), Y(theTextureSize));
 
 				::glMatrixMode(GL_PROJECTION);
 				::glPushMatrix();
@@ -190,11 +190,11 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 				::glMatrixMode(GL_PROJECTION);
 				::glPopMatrix();
 				::glMatrixMode(GL_MODELVIEW);
-				} // theSetRestore_ViewPort
-			} // theSetRestore_BindFramebuffer
+				} // ssr_ViewPort
+			} // ssr_BindFramebuffer
 
 		::glDeleteFramebuffers(1, &fbo);
-		} // theSetRestore_ActiveTexture
+		} // ssr_ActiveTexture
 
 	ZRef<Rendered> theRendered = sRendered_Texture(theTexture_GL,
 		sRect<GRect>(X(theTextureSize), Y(theTextureSize)));

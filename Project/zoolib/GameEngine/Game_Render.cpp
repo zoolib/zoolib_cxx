@@ -133,7 +133,7 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 	{
 	// See also Visitor_Draw_GL_Shader's and Visitor_Draw_GL_Fixed's Visit_Rendered_Buffer.
 
-	SaveSetRestore_ViewPort theSetRestore_ViewPort(0, 0, X(iPixelSize), Y(iPixelSize));
+	SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(iPixelSize), Y(iPixelSize));
 
 	::glClearColor(0, 0, 0, 1);
 	::glClear(GL_COLOR_BUFFER_BIT);

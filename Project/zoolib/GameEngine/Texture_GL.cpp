@@ -101,12 +101,12 @@ ZPointPOD Texture_GL::GetTextureSize()
 void Texture_GL::pMakeTexture()
 	{
 	ZAssert(not fTextureID);
-	SaveSetRestore_ActiveTexture theSetRestore_ActiveTexture(GL_TEXTURE0);
+	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 
 	GLuint theTextureID;
 	::glGenTextures(1, &theTextureID);
 
-	SaveSetRestore_BindTexture_2D theSetRestore_BindTexture_2D(theTextureID);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
 
 	::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

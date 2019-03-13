@@ -255,9 +255,9 @@ void spDrawTexture(
 	{
 	ZRef<Context> theContext = spContext();
 	
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	theContext->Use(theContext->fProgramID_Textured);
 
@@ -288,8 +288,8 @@ void spDrawTexture(
  	::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
 		2, GL_FLOAT, GL_FALSE, 0, vertices);
 
-	SaveSetRestore_ActiveTexture theSetRestore_ActiveTexture(GL_TEXTURE0);
-	SaveSetRestore_BindTexture_2D theSetRestore_BindTexture_2D(iTextureID);
+	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
 
 	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
 	
@@ -313,9 +313,9 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	{
 	ZRef<Context> theContext = spContext();
 
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	theContext->Use(theContext->fProgramID_Constant);
 
@@ -344,9 +344,9 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 	{
 	ZRef<Context> theContext = spContext();
 
-	SaveSetRestore_Enable theSetRestore_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation theSetRestore_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc theSetRestore_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	theContext->Use(theContext->fProgramID_Constant);
 
@@ -371,7 +371,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: -
+#pragma mark - Visitor_Draw_GL_Shader
 
 Visitor_Draw_GL_Shader::Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigin)
 :	fShowBounds(iShowBounds)
@@ -392,19 +392,19 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 
 	const ZPointPOD theTextureSize = theTexture_GL->GetTextureSize();
 
-	{SaveSetRestore_ActiveTexture theSetRestore_ActiveTexture(GL_TEXTURE0);
+	{SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 		{
 		GLuint fbo;
 		::glGenFramebuffers(1, &fbo);
 
-		{SaveSetRestore_BindFramebuffer theSetRestore_BindFramebuffer(fbo);
+		{SaveSetRestore_BindFramebuffer ssr_BindFramebuffer(fbo);
 			{
 			::glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 				theTexture_GL->GetTextureID(), 0);
 
 			ZAssert(GL_FRAMEBUFFER_COMPLETE == glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
-			{SaveSetRestore_ViewPort theSetRestore_ViewPort(0, 0, X(theTextureSize), Y(theTextureSize));
+			{SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(theTextureSize), Y(theTextureSize));
 				{
 				const ZRGBA theRGBA = iRendered_Buffer->GetRGBA();
 				::glClearColor(
@@ -427,11 +427,11 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 
 				::glFlush();
 
-				}} // theSetRestore_ViewPort
-			}} // theSetRestore_BindFramebuffer
+				}} // ssr_ViewPort
+			}} // ssr_BindFramebuffer
 
 		::glDeleteFramebuffers(1, &fbo);
-		}} // theSetRestore_ActiveTexture
+		}} // ssr_ActiveTexture
 
 	ZRef<Rendered> theRendered = sRendered_Texture(theTexture_GL,
 		sRect<GRect>(X(theTextureSize), Y(theTextureSize)));
