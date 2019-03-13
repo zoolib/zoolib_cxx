@@ -54,7 +54,7 @@ void SubProcess_POSIX::Initialize()
 
 	vector<const char*> theArgs;
 	theArgs.push_back(fProgram.c_str());
-	foreacha (entry, fArgs)
+	foreachv (const std::string& entry, fArgs)
 		theArgs.push_back(entry.c_str());
 	theArgs.push_back(nullptr);
 
