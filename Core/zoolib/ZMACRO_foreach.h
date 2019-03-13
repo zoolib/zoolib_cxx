@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMACRO_foreach_h__ 1
 #include "zconfig.h"
 
-#if false && ZCONFIG_CPP >= 2011
+#if ZCONFIG_CPP >= 2011
 
 #ifndef foreachv
 	#define foreachv(vardecl, container) for (vardecl : container)
