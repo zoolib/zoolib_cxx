@@ -18,72 +18,63 @@ using namespace ZooLib::OpenGL;
 
 namespace { // anonymous
 
-const char spVertexShaderSource_Constant[] = " \
-	uniform mat4 u_projection; \
-	attribute vec4 a_pos; \
-	\
-	void main() \
-		{ \
-		gl_Position = u_projection * a_pos; \
-		} \
-";
+// -----
 
-const char spFragmentShaderSource_Constant[] = " \
-	precision mediump float; \
-	uniform vec4 u_color; \
-	\
-	void main() \
-		{ \
-		gl_FragColor = u_color; \
-		} \
-";
+const char spVertexShaderSource_Constant[] = ""
+"	uniform mat4 u_projection;"
+"	attribute vec4 a_pos;"
 
-const char spFragmentShaderSource_Constant_Mac[] = " \
-	uniform vec4 u_color; \
-	\
-	void main() \
-		{ \
-		gl_FragColor = u_color; \
-		} \
-";
+"	void main()"
+"		{"
+"		gl_Position = u_projection * a_pos;"
+"		}"
+"";
 
-const char spVertexShaderSource_Textured[] = " \
-	uniform mat4 u_projection; \
-	attribute vec2 a_tex; \
-	attribute vec4 a_pos; \
-	varying vec2 v_texCoord; \
-	\
-	void main() \
-		{ \
-		v_texCoord = a_tex; \
-		gl_Position = u_projection * a_pos; \
-		} \
-";
+const char spFragmentShaderSource_Constant[] = ""
+#if not ZCONFIG_SPI_Enabled(MacOSX)
+"	precision mediump float; "
+#endif
+"	uniform vec4 u_color; "
 
-const char spFragmentShaderSource_Textured[] = " \
-	precision mediump float; \
-	uniform sampler2D u_texture; \
-	uniform vec4 u_modulation; \
-	varying vec2 v_texCoord; \
-	\
-	void main() \
-		{ \
-		gl_FragColor = texture2D(u_texture, v_texCoord); \
-		gl_FragColor *= u_modulation; \
-		} \
-";
+"	void main()"
+"		{"
+"		gl_FragColor = u_color;"
+"		}"
+"";
 
-const char spFragmentShaderSource_Textured_Mac[] = " \
-	uniform sampler2D u_texture; \
-	uniform vec4 u_modulation; \
-	varying vec2 v_texCoord; \
-	\
-	void main() \
-		{ \
-		gl_FragColor = texture2D(u_texture, v_texCoord); \
-		gl_FragColor *= u_modulation; \
-		} \
-";
+// -----
+
+const char spVertexShaderSource_Textured[] = ""
+"	uniform mat4 u_projection;"
+"	attribute vec2 a_tex;"
+"	attribute vec4 a_pos;"
+"	varying vec2 v_texCoord;"
+
+"	void main()"
+"		{"
+"		v_texCoord = a_tex;"
+"		gl_Position = u_projection * a_pos;"
+"		}"
+"";
+
+const char spFragmentShaderSource_Textured[] = ""
+#if not ZCONFIG_SPI_Enabled(MacOSX)
+"	precision mediump float; "
+#endif
+"	uniform sampler2D u_texture;"
+"	uniform vec4 u_modulation;"
+"	varying vec2 v_texCoord;"
+
+"	void main()"
+"		{"
+""
+"		gl_FragColor = texture2D(u_texture, v_texCoord);"
+"		gl_FragColor *= u_modulation;"
+"		}"
+"";
+
+
+// -----
 
 typedef TagVal<GLuint,struct Tag_FragmentShaderID> FragmentShaderID;
 typedef TagVal<GLuint,struct Tag_VertexShaderID> VertexShaderID;
@@ -152,6 +143,9 @@ bool spLinkAndCheckProgram(ProgramID iProgram)
 	return false;
 	}
 
+// =================================================================================================
+#pragma mark - Context
+
 class Context
 :	public ZCounted
 	{
@@ -176,11 +170,8 @@ public:
 		VertexShaderID theVS_Constant =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
 
-		FragmentShaderID theFS_Constant;
-		if (ZCONFIG_SPI_Enabled(MacOSX))
-			theFS_Constant = *spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant_Mac);
-		else
-			theFS_Constant = *spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant);
+		FragmentShaderID theFS_Constant =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant);
 
 		fProgramID_Constant = ::glCreateProgram();
 		::glAttachShader(fProgramID_Constant, theVS_Constant);
@@ -197,11 +188,8 @@ public:
 		VertexShaderID theVS_Textured =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Textured);
 
-		FragmentShaderID theFS_Textured;
-		if (ZCONFIG_SPI_Enabled(MacOSX))
-			theFS_Textured = *spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured_Mac);
-		else
-			theFS_Textured = *spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
+		FragmentShaderID theFS_Textured =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
 
 		fProgramID_Textured = ::glCreateProgram();
 		::glAttachShader(fProgramID_Textured, theVS_Textured);
