@@ -24,7 +24,7 @@ Visitor_Rendered_AccumulateAlphaGainMat::Visitor_Rendered_AccumulateAlphaGainMat
 void Visitor_Rendered_AccumulateAlphaGainMat::Visit_Rendered_AlphaGainMat(
 	const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat)
 	{
-	SaveSetRestore<AlphaGainMat> theSR(
+	SaveSetRestore<AlphaGainMat> theSSR(
 		fAlphaGainMat, fAlphaGainMat * iRendered_AlphaGainMat->GetAlphaGainMat());
 
 	if (ZRef<Rendered> theRendered = iRendered_AlphaGainMat->GetRendered())

@@ -180,10 +180,10 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 
 				if (true)
 					{
-					SaveSetRestore<AlphaGainMat> theSR(fAlphaGainMat, AlphaGainMat());
+					SaveSetRestore<AlphaGainMat> theSSR(fAlphaGainMat, AlphaGainMat());
 					if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
 						theRendered->Accept_Rendered(*this);
-					} // theSR
+					} // theSSR
 
 				::glFlush();
 

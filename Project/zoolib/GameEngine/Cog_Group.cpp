@@ -29,7 +29,7 @@ public:
 		if (fState.Get<bool>("Flipped"))
 			priorMat *= sScale3X<Rat>(-1);
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const ZQ<Cog> newChildQ = 
@@ -48,7 +48,7 @@ public:
 		if (fState.Get<bool>("Flipped"))
 			theAGM *= sScale3X<Rat>(-1);
 
-		theSR.Prior()->Append(sRendered_AlphaGainMat(theAGM, theSR.Current()));
+		theSSR.Prior()->Append(sRendered_AlphaGainMat(theAGM, theSSR.Current()));
 		
 		if (newChildQ)
 			{
@@ -137,13 +137,13 @@ public:
 		{
 		ZAssert(sIsPending(fChild));
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const ZQ<Cog> newChildQ = 
 			fChild->QCall(fChild, Param(iParam, InChannel(iParam.fInChannel, fAlphaGainMat.fMat)));
 
-		theSR.Prior()->Append(sRendered_AlphaGainMat(fAlphaGainMat, theSR.Current()));
+		theSSR.Prior()->Append(sRendered_AlphaGainMat(fAlphaGainMat, theSSR.Current()));
 
 		if (newChildQ)
 			{
@@ -185,7 +185,7 @@ public:
 		{
 		ZAssert(sIsPending(fChild));
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const AlphaGainMat theAM = fTween->ValAtWrapped(iParam.fElapsed - fStartTime);
@@ -193,7 +193,7 @@ public:
 		const ZQ<Cog> newChildQ =
 			fChild->QCall(fChild, Param(iParam, InChannel(iParam.fInChannel, theAM.fMat)));
 
-		theSR.Prior()->Append(sRendered_AlphaGainMat(theAM, theSR.Current()));
+		theSSR.Prior()->Append(sRendered_AlphaGainMat(theAM, theSSR.Current()));
 		
 		if (newChildQ)
 			{
@@ -257,14 +257,14 @@ Cog spCogFun_Group_Terminate(const Cog& iSelf, const Param& iParam,
 		}
 	else
 		{
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		Cog newChild = iChild;
 		const bool unchanged = sCallUpdate_Cog_Unchanged(
 			newChild, Param(iParam, InChannel(iParam.fInChannel, theQ->fMat)));
 
-		theSR.Prior()->Append(sRendered_AlphaGainMat(*theQ, theSR.Current()));
+		theSSR.Prior()->Append(sRendered_AlphaGainMat(*theQ, theSSR.Current()));
 
 		if (unchanged)
 			return iSelf;
@@ -321,14 +321,14 @@ Cog spCogFun_Group_Continue(const Cog& iSelf, const Param& iParam,
 		}
 	else
 		{
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		Cog newChild = iChild;
 		const bool unchanged = sCallUpdate_Cog_Unchanged(
 			newChild, Param(iParam, InChannel(iParam.fInChannel, theQ->fMat)));
 
-		theSR.Prior()->Append(sRendered_AlphaGainMat(*theQ, theSR.Current()));
+		theSSR.Prior()->Append(sRendered_AlphaGainMat(*theQ, theSSR.Current()));
 
 		if (unchanged)
 			return iSelf;

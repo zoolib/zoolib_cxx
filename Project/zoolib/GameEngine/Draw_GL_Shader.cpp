@@ -415,7 +415,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 				// Translate so it's 0 to X(theTextureSize) and 0 to Y(theTextureSize).
 				theMat *= sTranslate3<Rat>(-X(theTextureSize)/2, -Y(theTextureSize)/2, 0);
 
-				SaveSetRestore<AlphaGainMat> theSR(fAlphaGainMat, theMat);
+				SaveSetRestore<AlphaGainMat> theSSR(fAlphaGainMat, theMat);
 				if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
 					theRendered->Accept_Rendered(*this);
 
