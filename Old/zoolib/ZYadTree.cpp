@@ -18,26 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZYadTree.h"
+
 #include "zoolib/CountedVal.h"
-#include "zoolib/Log.h"
 #include "zoolib/Trail.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/ValueOnce.h"
-
-//#include "zoolib/Visitor_Do_T.h"
-#include "zoolib/ZYadTree.h"
 
 using std::map;
 using std::string;
 using std::vector;
 
 namespace ZooLib {
-namespace YadTree {
 namespace { // anonymous
 
 using namespace Util_STL;
 
-typedef CountedVal<Name> CountedString;
+typedef CountedVal<Name> CountedName;
 
 class Link;
 
@@ -54,7 +51,7 @@ class Link
 	{
 public:
 // ctor that establishes a tree
-	Link(const ZRef<CountedString>& iProtoName, const ZRef<YadMapAtR>& iYadMapAtR);
+	Link(const ZRef<CountedName>& iProtoName, const ZRef<YadMapAtR>& iYadMapAtR);
 
 // ctor used as we walk down a tree.
 	Link(const ZRef<Link>& iParent, const ZRef<YadMapAtR>& iYadMapAtR);
@@ -66,7 +63,7 @@ public:
 	ZRef<Link> WithRootAugment(const string& iRootAugmentName, const ZRef<Link>& iRootAugment);
 
 private:
-	const ZRef<CountedString> fProtoName;
+	const ZRef<CountedName> fProtoName;
 	const ZRef<Link> fParent;
 	const ZRef<YadMapAtR> fYadMapAtR;
 	map<string,ZRef<Link> > fChildren;
@@ -192,7 +189,7 @@ using YadMapAtR_WithLink = Channer_T<ChanAtR_NameRefYad_WithLink>;
 // =================================================================================================
 // MARK: - Link definition
 
-Link::Link(const ZRef<CountedString>& iProtoName, const ZRef<YadMapAtR>& iYadMapAtR)
+Link::Link(const ZRef<CountedName>& iProtoName, const ZRef<YadMapAtR>& iYadMapAtR)
 :	fProtoName(iProtoName)
 ,	fYadMapAtR(iYadMapAtR)
 	{}
@@ -315,19 +312,13 @@ ZRef<YadR> spWrap(const ZRef<Link>& iLink, const ZRef<YadR>& iYad)
 	}
 
 } // anonymous namespace
-} // namespace YadTree
 
 // =================================================================================================
 // MARK: -
 
-using namespace YadTree;
-
 ZRef<YadMapAtR> sYadTree(
 	const ZRef<YadMapAtR>& iYadMapAtR, const string& iProtoName)
-	{ return new YadMapAtR_WithLink(new Link(new CountedString(iProtoName), iYadMapAtR)); }
-
-ZRef<YadMapAtR> sYadTree(const ZRef<YadMapAtR>& iYadMapAtR)
-	{ return sYadTree(iYadMapAtR, "_"); }
+	{ return new YadMapAtR_WithLink(new Link(new CountedName(iProtoName), iYadMapAtR)); }
 
 ZRef<YadMapAtR> sParameterizedYadTree(const ZRef<YadMapAtR>& iBase,
 	const string& iRootAugmentName, const ZRef<YadMapAtR>& iRootAugment)

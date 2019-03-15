@@ -29,7 +29,8 @@ namespace ZooLib {
 ZRef<YadMapAtR> sYadTree(
 	const ZRef<YadMapAtR>& iYadMapAtR, const std::string& iProtoName);
 
-ZRef<YadMapAtR> sYadTree(const ZRef<YadMapAtR>& iYadMapAtR);
+inline ZRef<YadMapAtR> sYadTree(const ZRef<YadMapAtR>& iYadMapAtR)
+	{ return sYadTree(iYadMapAtR, "_"); }
 
 ZRef<YadMapAtR> sParameterizedYadTree(const ZRef<YadMapAtR>& iBase,
 	const std::string& iRootAugmentName, const ZRef<YadMapAtR>& iRootAugment);
