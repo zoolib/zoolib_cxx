@@ -204,23 +204,23 @@ static Util_Chan_JSON::WriteOptions spWO()
 	return theWO;
 	}
 
-static ZRef<YadR> spFilter(const ZRef<YadR>& iYadR)
-	{
-	if (ZRef<YadAtomR> theAtom = iYadR.DynamicCast<YadAtomR>())
-		{
-		if (ZQ<CVec3> theQ = theAtom->AsAny().QGet<CVec3>())
-			{
-			Map_Any theMap;
-			theMap["!"] = "CVec3";
-			Seq_Any& theSeq = theMap.Mut<Seq_Any>("E");
-			theSeq.Append(theQ->Get(0));
-			theSeq.Append(theQ->Get(1));
-			theSeq.Append(theQ->Get(2));
-			return sYadR(theMap);
-			}
-		}
-	return iYadR;
-	}
+//static ZRef<YadR> spFilter(const ZRef<YadR>& iYadR)
+//	{
+//	if (ZRef<YadAtomR> theAtom = iYadR.DynamicCast<YadAtomR>())
+//		{
+//		if (ZQ<CVec3> theQ = theAtom->AsAny().QGet<CVec3>())
+//			{
+//			Map_Any theMap;
+//			theMap["!"] = "CVec3";
+//			Seq_Any& theSeq = theMap.Mut<Seq_Any>("E");
+//			theSeq.Append(theQ->Get(0));
+//			theSeq.Append(theQ->Get(1));
+//			theSeq.Append(theQ->Get(2));
+//			return sYadR(theMap);
+//			}
+//		}
+//	return iYadR;
+//	}
 
 void sDump(const ZStrimW& w, const Val& iVal)
 	{

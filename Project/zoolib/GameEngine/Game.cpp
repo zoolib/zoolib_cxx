@@ -82,7 +82,7 @@ vector<ZRef<TouchListener> > spSortTLs(const vector<ZRef<TouchListener> >& iTLs)
 
 static ZMap_Yad spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	{
-	ZRef<YadMapAtR> theYad;
+	ZQ<Map_Any> theMapQ;
 	if (iPreferBinaryData)
 		{
 		if (ZRef<ChannerR_Bin,false> theChannerR = iFS.Child("data.bin").OpenR())
@@ -90,16 +90,16 @@ static ZMap_Yad spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 			if (ZLOGF(w, eNotice))
 				w << "Binary data preferred, missing 'data.bin'";
 			}
-		else if (ZQ<Map_Any> theQ = sReadBin(theChannerR).QGet<Map_Any>())
+		else
 			{
-			theYad = sYadR(*theQ).DynamicCast<YadMapAtR>();
+			theMapQ = sReadBin(theChannerR).QGet<Map_Any>();
 			}
 		}
 
-	if (not theYad)
-		theYad = sYadR(sReadTextData(iFS.Child("data"))).DynamicCast<YadMapAtR>();
+	if (not theMapQ)
+		theMapQ = sReadTextData(iFS.Child("data"));
 
-	return sYadTree(theYad);
+	return sYadTree(*theMapQ, "_");
 	}
 
 Game::Game(const FileSpec& iFS,
