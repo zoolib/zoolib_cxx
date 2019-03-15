@@ -7,7 +7,7 @@
 #include "zoolib/Name.h"
 #include "zoolib/TagVal.h"
 #include "zoolib/Val_Any.h"
-#include "zoolib/ZVal_Yad.h"
+#include "zoolib/ZYadTree.h"
 
 #include "zoolib/ARM/Compat_arm.h"
 

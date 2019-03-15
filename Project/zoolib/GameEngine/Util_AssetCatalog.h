@@ -2,8 +2,6 @@
 #define __GameEngine_Util_AssetCatalog_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Yad.h"
-
 #include "zoolib/GameEngine/AssetCatalog.h"
 
 namespace ZooLib {

@@ -4,7 +4,6 @@
 #include "zoolib/GameEngine/Types.h"
 
 #include "zoolib/File.h" // For FileSpec
-#include "zoolib/Yad.h"
 
 #include "zoolib/ZDCPixmap.h"
 
