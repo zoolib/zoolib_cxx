@@ -5,7 +5,6 @@
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
-#include "zoolib/ZYadTree.h"
 
 #include "zoolib/GameEngine/Cog.h"
 #include "zoolib/GameEngine/DebugFlags.h"
@@ -15,6 +14,7 @@
 #include "zoolib/GameEngine/Util_AddBorder.h"
 #include "zoolib/GameEngine/Util_Allocator.h"
 #include "zoolib/GameEngine/Util_AssetCatalog.h"
+#include "zoolib/GameEngine/Val.h"
 
 #include <map>
 #include <vector>
@@ -80,7 +80,7 @@ vector<ZRef<TouchListener> > spSortTLs(const vector<ZRef<TouchListener> >& iTLs)
 // =================================================================================================
 // MARK: - Game
 
-static ZMap_Yad spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
+static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	{
 	ZQ<Map_Any> theMapQ;
 	if (iPreferBinaryData)
@@ -121,7 +121,7 @@ Game::Game(const FileSpec& iFS,
 	sPopulate(fAssetCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
 
-	ZMap_Yad theRootMap = spLoadData(iFS, iPreferProcessedArt);
+	Map theRootMap = spLoadData(iFS, iPreferProcessedArt);
 
 	if (ZCONFIG_Debug)
 		fCog = sCog(theRootMap["Start"]);

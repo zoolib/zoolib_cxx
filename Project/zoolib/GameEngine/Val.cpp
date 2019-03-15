@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYadTree.h"
+#include "zoolib/GameEngine/Val.h"
 
 #include "zoolib/Trail.h"
 #include "zoolib/Util_STL_map.h"
-#include "zoolib/ValueOnce.h"
+
+namespace ZooLib {
+namespace GameEngine {
 
 using std::map;
 using std::string;
 using std::vector;
 
-namespace ZooLib {
+using namespace Util_STL;
 
 struct Tombstone_t {};
 
-using namespace Util_STL;
-
 // =================================================================================================
-// MARK: - Link definition
+#pragma mark - Link
 
 Link::Link(const ZRef<CountedName>& iProtoName, const Map_Any& iMap)
 :	fProtoName(iProtoName)
@@ -48,10 +48,10 @@ Link::Link(const ZRef<Link>& iParent, const Map_Any& iMap)
 ,	fMap(iMap)
 	{}
 
-ZQ<ZVal_Yad> Link::QReadAt(const Name& iName)
+ZQ<Val> Link::QReadAt(const Name& iName)
 	{
 	if (ZRef<Link> theLink = sGet(fChildren, iName))
-		return ZMap_Yad(theLink);//??
+		return Map(theLink);//??
 
 	if (const Val_Any* theVal = sPGet(fMap, iName))
 		{
@@ -59,15 +59,15 @@ ZQ<ZVal_Yad> Link::QReadAt(const Name& iName)
 			{
 			ZRef<Link> theLink = new Link(this, *theMap);
 			sInsertMust(fChildren, iName, theLink);
-			return ZMap_Yad(theLink);
+			return Map(theLink);
 			}
 		else if (const Seq_Any* theSeq_Any = theVal->PGet<Seq_Any>())
 			{
-			return ZSeq_Yad(this, *theSeq_Any);
+			return Seq(this, *theSeq_Any);
 			}
 		else
 			{
-			return ZVal_Yad(theVal->AsAny());
+			return Val(theVal->AsAny());
 			}
 		}
 
@@ -103,9 +103,9 @@ ZQ<ZVal_Yad> Link::QReadAt(const Name& iName)
 				// Walk down the tree.
 				for (;;)
 					{
-					if (ZQ<ZVal_Yad> theValQ = cur->QReadAt(theTrail.At(index)))
+					if (ZQ<Val> theValQ = cur->QReadAt(theTrail.At(index)))
 						{
-						if (const ZMap_Yad* theMap_Yad = theValQ->PGet<ZMap_Yad>())
+						if (const Map* theMap_Yad = theValQ->PGet<Map>())
 							{
 							cur = theMap_Yad->GetLink();
 							if (++index == theTrail.Count())
@@ -145,178 +145,178 @@ ZRef<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZRef<Link
 // =================================================================================================
 #pragma mark - spCoerceValPtr
 
-static const ZVal_Yad* spCoerceValPtr(const Any* iAny)
-	{ return static_cast<const ZVal_Yad*>(static_cast<const Any*>(iAny)); }
+static const Val* spCoerceValPtr(const Any* iAny)
+	{ return static_cast<const Val*>(static_cast<const Any*>(iAny)); }
 
-static ZVal_Yad* spCoerceValPtr(Any* iAny)
-	{ return static_cast<ZVal_Yad*>(static_cast<Any*>(iAny)); }
+static Val* spCoerceValPtr(Any* iAny)
+	{ return static_cast<Val*>(static_cast<Any*>(iAny)); }
 
 // =================================================================================================
-#pragma mark - ZSeq_Yad
+#pragma mark - Seq
 
-ZSeq_Yad::ZSeq_Yad()
+Seq::Seq()
 	{}
 
-ZSeq_Yad::ZSeq_Yad(const ZSeq_Yad& iOther)
+Seq::Seq(const Seq& iOther)
 :	fLink(iOther.fLink)
 ,	fSeq(iOther.fSeq)
 	{}
 
-ZSeq_Yad::~ZSeq_Yad()
+Seq::~Seq()
 	{}
 
-ZSeq_Yad& ZSeq_Yad::operator=(const ZSeq_Yad& iOther)
+Seq& Seq::operator=(const Seq& iOther)
 	{
 	fLink = iOther.fLink;
 	fSeq = iOther.fSeq;
 	return *this;
 	}
 
-ZSeq_Yad::ZSeq_Yad(const ZRef<Link>& iLink, const Seq_Any& iSeq)
+Seq::Seq(const ZRef<Link>& iLink, const Seq_Any& iSeq)
 :	fLink(iLink)
 ,	fSeq(iSeq)
 	{}
 
-size_t ZSeq_Yad::Size() const
+size_t Seq::Size() const
 	{ return fSeq.Count(); }
 
-void ZSeq_Yad::Clear()
+void Seq::Clear()
 	{
 	fLink.Clear();
 	fSeq.Clear();
 	}
 
-const ZVal_Yad* ZSeq_Yad::PGet(size_t iIndex) const
+const Val* Seq::PGet(size_t iIndex) const
 	{
 	if (Val_Any* theValP = fSeq.PMut(iIndex))
 		{
 		if (const Map_Any* theMap_Any = theValP->PGet<Map_Any>())
 			{
-			*theValP = ZMap_Yad(new Link(fLink, *theMap_Any));
+			*theValP = Map(new Link(fLink, *theMap_Any));
 			}
 		else if (const Seq_Any* theSeq_Any = theValP->PGet<Seq_Any>())
 			{
-			*theValP = ZSeq_Yad(fLink, *theSeq_Any);
+			*theValP = Seq(fLink, *theSeq_Any);
 			}
 		return spCoerceValPtr(theValP);
 		}
 	return nullptr;
 	}
 
-ZQ<ZVal_Yad> ZSeq_Yad::QGet(size_t iIndex) const
+ZQ<Val> Seq::QGet(size_t iIndex) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+	if (const Val* theVal = this->PGet(iIndex))
 		return *theVal;
 	return null;
 	}
 
-const ZVal_Yad& ZSeq_Yad::DGet(const ZVal_Yad& iDefault, size_t iIndex) const
+const Val& Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+	if (const Val* theVal = this->PGet(iIndex))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Yad& ZSeq_Yad::Get(size_t iIndex) const
+const Val& Seq::Get(size_t iIndex) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+	if (const Val* theVal = this->PGet(iIndex))
 		return *theVal;
-	return sDefault<ZVal_Yad>();
+	return sDefault<Val>();
 	}
 
-ZVal_Yad* ZSeq_Yad::PMut(size_t iIndex)
+Val* Seq::PMut(size_t iIndex)
 	{
 	if (Val_Any* theValP = fSeq.PMut(iIndex))
 		{
 		if (Map_Any* theMap_Any = theValP->PMut<Map_Any>())
 			{
-			*theValP = ZMap_Yad(new Link(fLink, *theMap_Any));
+			*theValP = Map(new Link(fLink, *theMap_Any));
 			}
 		else if (Seq_Any* theSeq_Any = theValP->PMut<Seq_Any>())
 			{
-			*theValP = ZSeq_Yad(fLink, *theSeq_Any);
+			*theValP = Seq(fLink, *theSeq_Any);
 			}
 		return spCoerceValPtr(theValP);
 		}
 	return nullptr;
 	}
 
-ZVal_Yad& ZSeq_Yad::Mut(size_t iIndex)
+Val& Seq::Mut(size_t iIndex)
 	{
-	ZVal_Yad* theP = this->PMut(iIndex);
+	Val* theP = this->PMut(iIndex);
 	ZAssert(theP);
 	return *theP;
 	}
 
-ZSeq_Yad& ZSeq_Yad::Set(size_t iIndex, const ZVal_Yad& iVal)
+Seq& Seq::Set(size_t iIndex, const Val& iVal)
 	{
 	fSeq.Set(iIndex, iVal.AsAny());
 	return *this;
 	}
 
-ZSeq_Yad& ZSeq_Yad::Erase(size_t iIndex)
+Seq& Seq::Erase(size_t iIndex)
 	{
 	fSeq.Erase(iIndex);
 	return *this;
 	}
 
-ZSeq_Yad& ZSeq_Yad::Insert(size_t iIndex, const ZVal_Yad& iVal)
+Seq& Seq::Insert(size_t iIndex, const Val& iVal)
 	{
 	fSeq.Insert(iIndex, iVal.AsAny());
 	return *this;
 	}
 
-ZSeq_Yad& ZSeq_Yad::Append(const ZVal_Yad& iVal)
+Seq& Seq::Append(const Val& iVal)
 	{
 	fSeq.Append(iVal.AsAny());
 	return *this;
 	}
 
-ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex)
+Val& Seq::operator[](size_t iIndex)
 	{ return this->Mut(iIndex); }
 
-const ZVal_Yad& ZSeq_Yad::operator[](size_t iIndex) const
+const Val& Seq::operator[](size_t iIndex) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iIndex))
+	if (const Val* theVal = this->PGet(iIndex))
 		return *theVal;
-	return sDefault<ZVal_Yad>();
+	return sDefault<Val>();
 	}
 
-Seq_Any ZSeq_Yad::GetSeq() const
+Seq_Any Seq::GetSeq() const
 	{ return fSeq; }
 
 // =================================================================================================
-#pragma mark - ZMap_Yad
+#pragma mark - Map
 
-ZMap_Yad::ZMap_Yad()
+Map::Map()
 	{}
 
-ZMap_Yad::ZMap_Yad(const ZMap_Yad& iOther)
+Map::Map(const Map& iOther)
 :	fLink(iOther.fLink)
 ,	fMap(iOther.fMap)
 	{}
 
-ZMap_Yad::~ZMap_Yad()
+Map::~Map()
 	{}
 
-ZMap_Yad& ZMap_Yad::operator=(const ZMap_Yad& iOther)
+Map& Map::operator=(const Map& iOther)
 	{
 	fLink = iOther.fLink;
 	fMap = iOther.fMap;
 	return *this;
 	}
 
-ZMap_Yad::ZMap_Yad(const ZRef<Link>& iLink)
+Map::Map(const ZRef<Link>& iLink)
 :	fLink(iLink)
 	{}
 
-void ZMap_Yad::Clear()
+void Map::Clear()
 	{
 	fLink.Clear();
 	fMap.Clear();
 	}
 
-const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
+const Val* Map::PGet(const Name_t& iName) const
 	{
 	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
@@ -331,7 +331,7 @@ const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 
 	if (fLink)
 		{
-		if (ZQ<ZVal_Yad> theValQ = fLink->QReadAt(iName))
+		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
 			{
 			fMap.Set(iName, theValQ->AsAny());
 			return spCoerceValPtr(fMap.PGet(iName));
@@ -342,28 +342,28 @@ const ZVal_Yad* ZMap_Yad::PGet(const Name_t& iName) const
 	return nullptr;
 	}
 
-ZQ<ZVal_Yad> ZMap_Yad::QGet(const Name_t& iName) const
+ZQ<Val> Map::QGet(const Name_t& iName) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iName))
+	if (const Val* theVal = this->PGet(iName))
 		return *theVal;
 	return null;
 	}
 
-const ZVal_Yad& ZMap_Yad::DGet(const ZVal_Yad& iDefault, const Name_t& iName) const
+const Val& Map::DGet(const Val& iDefault, const Name_t& iName) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iName))
+	if (const Val* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const ZVal_Yad& ZMap_Yad::Get(const Name_t& iName) const
+const Val& Map::Get(const Name_t& iName) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iName))
+	if (const Val* theVal = this->PGet(iName))
 		return *theVal;
-	return sDefault<ZVal_Yad>();
+	return sDefault<Val>();
 	}
 
-ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
+Val* Map::PMut(const Name_t& iName)
 	{
 	Map_Any::Index_t theIndex = fMap.IndexOf(iName);
 	if (theIndex != fMap.End())
@@ -378,7 +378,7 @@ ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 
 	if (fLink)
 		{
-		if (ZQ<ZVal_Yad> theValQ = fLink->QReadAt(iName))
+		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
 			{
 			fMap.Set(iName, theValQ->AsAny());
 			return spCoerceValPtr(fMap.PMut(iName));
@@ -389,7 +389,7 @@ ZVal_Yad* ZMap_Yad::PMut(const Name_t& iName)
 	return nullptr;
 	}
 
-ZVal_Yad& ZMap_Yad::Mut(const Name_t& iName)
+Val& Map::Mut(const Name_t& iName)
 	{
 	if (Any* theP = fMap.PMut(iName))
 		{
@@ -401,49 +401,50 @@ ZVal_Yad& ZMap_Yad::Mut(const Name_t& iName)
 	Any& theMutable = fMap.Mut(iName);
 	if (fLink)
 		{
-		if (ZQ<ZVal_Yad> theValQ = fLink->QReadAt(iName))
+		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
 			theMutable = theValQ->AsAny();
 		}
 
-	return static_cast<ZVal_Yad&>(theMutable);
+	return static_cast<Val&>(theMutable);
 	}
 
-ZMap_Yad& ZMap_Yad::Set(const Name_t& iName, const ZVal_Yad& iVal)
+Map& Map::Set(const Name_t& iName, const Val& iVal)
 	{
 	fMap.Set(iName, iVal.AsAny());
 	return *this;
 	}
 
-ZMap_Yad& ZMap_Yad::Erase(const Name_t& iName)
+Map& Map::Erase(const Name_t& iName)
 	{
 	fMap.Set(iName, Tombstone_t());
 	return *this;
 	}
 
-ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName)
+Val& Map::operator[](const Name_t& iName)
 	{ return this->Mut(iName); }
 
-const ZVal_Yad& ZMap_Yad::operator[](const Name_t& iName) const
+const Val& Map::operator[](const Name_t& iName) const
 	{
-	if (const ZVal_Yad* theVal = this->PGet(iName))
+	if (const Val* theVal = this->PGet(iName))
 		return *theVal;
-	return sDefault<ZVal_Yad>();
+	return sDefault<Val>();
 	}
 
-ZRef<Link> ZMap_Yad::GetLink() const
+ZRef<Link> Map::GetLink() const
 	{ return fLink; }
 
-Map_Any ZMap_Yad::GetMap() const
+Map_Any Map::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
 // MARK: -
 
-ZMap_Yad sYadTree(const Map_Any& iMap_Any, const std::string& iProtoName)
-	{ return ZMap_Yad(new Link(new CountedName(iProtoName), iMap_Any)); }
+Map sYadTree(const Map_Any& iMap_Any, const std::string& iProtoName)
+	{ return Map(new Link(new CountedName(iProtoName), iMap_Any)); }
 
-ZMap_Yad sParameterizedYadTree(const ZMap_Yad& iBase,
-	const std::string& iRootAugmentName, const ZMap_Yad& iRootAugment)
-	{ return ZMap_Yad(iBase.GetLink()->WithRootAugment(iRootAugmentName, iRootAugment.GetLink())); }
+Map sParameterizedYadTree(const Map& iBase,
+	const std::string& iRootAugmentName, const Map& iRootAugment)
+	{ return Map(iBase.GetLink()->WithRootAugment(iRootAugmentName, iRootAugment.GetLink())); }
 
+} // namespace GameEngine
 } // namespace ZooLib

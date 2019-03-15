@@ -7,14 +7,12 @@
 #include "zoolib/Name.h"
 #include "zoolib/TagVal.h"
 #include "zoolib/Val_Any.h"
-#include "zoolib/ZYadTree.h"
 
 #include "zoolib/ARM/Compat_arm.h"
 
-#include "zoolib/GameEngine/ZRGBA.h"
 #include "zoolib/GameEngine/Geometry3D.h"
-
-#include "zoolib/Channer_Bin.h"
+#include "zoolib/GameEngine/Val.h"
+#include "zoolib/GameEngine/ZRGBA.h"
 
 #include "zoolib/ZMACRO_auto.h"
 
@@ -31,10 +29,6 @@ typedef ZAcqMtx AcqMtxF;
 
 // =================================================================================================
 // MARK: - Fundamental types
-
-typedef ZVal_Yad Val;
-typedef ZSeq_Yad Seq;
-typedef ZMap_Yad Map;
 
 typedef float Rat;
 
