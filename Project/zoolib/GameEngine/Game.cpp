@@ -92,7 +92,7 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 			}
 		else
 			{
-			theMapQ = sReadBin(theChannerR).QGet<Map_Any>();
+			theMapQ = sReadBin(*theChannerR).QGet<Map_Any>();
 			}
 		}
 

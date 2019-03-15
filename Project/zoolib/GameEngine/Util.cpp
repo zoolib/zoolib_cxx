@@ -110,15 +110,15 @@ ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w)
 	{ Util_Any_JSONB::sWrite(iVal, w); }
 
-Val_Any sReadBin(const ZRef<ChannerR_Bin>& iChannerR)
+Val_Any sReadBin(const ChanR_Bin& iChanR)
 	{
 	ThreadVal_NameUniquifier theNU;
-	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(*iChannerR))
+	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(iChanR))
 		return *theQ;
 	return Val_Any();
 	}
 
-static ZQ<Map_Any> spQReadMap(const ZRef<ChannerRU_UTF>& iStrimmerRU)
+static ZQ<Map_Any> spQReadMap(const ChanRU_UTF& iChanRU)
 	{
 	Util_Chan_JSON::ReadOptions theRO;
 	theRO.fAllowUnquotedPropertyNames = true;
@@ -126,43 +126,37 @@ static ZQ<Map_Any> spQReadMap(const ZRef<ChannerRU_UTF>& iStrimmerRU)
 	theRO.fAllowSemiColons = true;
 	theRO.fAllowTerminators = true;
 	theRO.fLooseSeparators = true;
-	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(*iStrimmerRU, theRO))
+	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU, theRO))
 		return theQ->QGet<Map_Any>();
 
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8* iName)
+ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
 	{
 	ThreadVal_NameUniquifier theNU;
 
-	if (iChannerR)
+	ChanR_XX_Buffered<ChanR_Bin>  theChanR_Buffered(iChanR, 4096);
+	ChanR_UTF_Chan_Bin_UTF8 theChanR_UTF(theChanR_Buffered);
+	ChanRU_UTF_Std theChanRU_UTF(theChanR_UTF);
+
+	try { return spQReadMap(theChanRU_UTF); }
+	catch (std::exception& ex)
 		{
-		const ZRef<ChannerR_Bin> buffered = spChanner_Buffered(iChannerR);
-
-		ZRef<ChannerR_UTF> theChannerR_UTF =
-			sChanner_Channer_T<ChanR_UTF_Chan_Bin_UTF8>(buffered);
-
-		ZRef<Channer_T<ChanRU_UTF_Std>> theChannerRU_UTF = sChanner_Channer_T<ChanRU_UTF_Std>(theChannerR_UTF);
-
-		try { return spQReadMap(theChannerRU_UTF); }
-		catch (std::exception& ex)
+		if (ZLOGF(w, eErr))
 			{
-			if (ZLOGF(w, eErr))
-				{
-				w << "Caught exception: " << ex.what();
-				if (iName)
-					w << " in file: " << *iName;
-				w << ", line: " << theChannerRU_UTF->GetLine() + 1;
-				w << ", char: " << theChannerRU_UTF->GetColumn() + 1;
-				}
+			w << "Caught exception: " << ex.what();
+			if (iName)
+				w << " in file: " << *iName;
+			w << ", line: " << theChanRU_UTF.GetLine() + 1;
+			w << ", char: " << theChanRU_UTF.GetColumn() + 1;
 			}
 		}
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8& iName)
-	{ return sQReadMap_Any(iChannerR, &iName); }
+ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName)
+	{ return sQReadMap_Any(iChanR, &iName); }
 
 ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
 	{
@@ -170,7 +164,7 @@ ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
 		|| Util_string::sQWithoutSuffix(".txt", iFS.Name()))
 		{
 		if (ZRef<ChannerR_Bin> channerR = iFS.OpenR())
-			return sQReadMap_Any(channerR, iFS.Name());
+			return sQReadMap_Any(*channerR, iFS.Name());
 		}
 	return null;
 	}
@@ -190,7 +184,7 @@ Map_Any sReadTextData(const FileSpec& iFS)
 			{
 			// To handle multiple maps in a single file, sQReadMap_Any needs to be
 			// refactored so we use the *same* buffer between invocations
-			if (ZQ<Map_Any> theQ = sQReadMap_Any(channerR, theName))
+			if (ZQ<Map_Any> theQ = sQReadMap_Any(*channerR, theName))
 				theMap = sAugmented(theMap, *theQ);
 			}
 		}
@@ -203,24 +197,6 @@ static Util_Chan_JSON::WriteOptions spWO()
 	theWO.fUseExtendedNotation = true;
 	return theWO;
 	}
-
-//static ZRef<YadR> spFilter(const ZRef<YadR>& iYadR)
-//	{
-//	if (ZRef<YadAtomR> theAtom = iYadR.DynamicCast<YadAtomR>())
-//		{
-//		if (ZQ<CVec3> theQ = theAtom->AsAny().QGet<CVec3>())
-//			{
-//			Map_Any theMap;
-//			theMap["!"] = "CVec3";
-//			Seq_Any& theSeq = theMap.Mut<Seq_Any>("E");
-//			theSeq.Append(theQ->Get(0));
-//			theSeq.Append(theQ->Get(1));
-//			theSeq.Append(theQ->Get(2));
-//			return sYadR(theMap);
-//			}
-//		}
-//	return iYadR;
-//	}
 
 void sDump(const ZStrimW& w, const Val& iVal)
 	{

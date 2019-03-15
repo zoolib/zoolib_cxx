@@ -47,16 +47,16 @@ bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 		{
 		for (FileIter iter = iSheets; iter; iter.Advance())
 			{
-			string theName = iter.CurrentName();
-			if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
+			string theFileName = iter.CurrentName();
+			if (ZQ<string8> theNameQ = sQWithoutSuffix(".png", theFileName))
 				{
 				ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
 					sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iter.Current()));
-				iAC->InstallSheet(*theQ, theCallable);
+				iAC->InstallSheet(*theNameQ, theCallable);
 				}
-			iAC->Set_Processed(sReadBin(channer).Get<Map_Any>());
-			return true;
 			}
+		iAC->Set_Processed(sReadBin(*channer).Get<Map_Any>());
+		return true;
 		}
 	return false;
 	}
@@ -75,7 +75,8 @@ bool spReadAnim(const FileSpec& iParentAsFS,
 
 	if (not oFiles.empty())
 		{
-		oMap = sGet(sQReadMap_Any(iParentAsFS.Child("meta.txt").OpenR(), "meta.txt"));
+		if (ZRef<ChannerR_Bin> theChanner = iParentAsFS.Child("meta.txt").OpenR())
+			oMap = sGet(sQReadMap_Any(*theChanner, "meta.txt"));
 		return true;
 		}
 	return false;
@@ -137,7 +138,9 @@ void spInstall_Art(
 			const string8 woSuffix = *theQ;
 			const string8 theMeta = woSuffix + ".txt";
 
-			Map_Any entry = sGet(sQReadMap_Any(iFS.Sibling(theMeta).OpenR(), theMeta));
+			Map_Any entry;
+			if (ZRef<ChannerR_Bin> theChanner = iFS.Sibling(theMeta).OpenR())
+				entry = sGet(sQReadMap_Any(*theChanner, theMeta));
 
 			Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
 

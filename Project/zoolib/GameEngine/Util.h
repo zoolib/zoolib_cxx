@@ -19,8 +19,8 @@ ZQ<GRect> sQGRect(const Val& iVal);
 ZQ<GRect> sQGRect(const ZQ<Val_Any>& iVal_AnyQ);
 ZQ<GRect> sQGRect(const Val_Any& iVal_Any);
 
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8* iName = nullptr);
-ZQ<Map_Any> sQReadMap_Any(const ZRef<ChannerR_Bin>& iChannerR, const string8& iName);
+ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName = nullptr);
+ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName);
 ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS);
 
 Map_Any sReadTextData(const FileSpec& iFS);
@@ -29,7 +29,7 @@ ZRef<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
 ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w);
-Val_Any sReadBin(const ZRef<ChannerR_Bin>& iChannerR);
+Val_Any sReadBin(const ChanR_Bin& iChanR);
 
 void sDump(const ZStrimW& w, const Val& iVal);
 void sDump(const Val& iVal);
