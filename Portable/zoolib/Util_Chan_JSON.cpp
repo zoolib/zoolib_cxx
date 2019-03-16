@@ -43,19 +43,19 @@ namespace ZooLib {
 namespace Util_Chan_JSON {
 
 // =================================================================================================
-#pragma mark - ReadOptions
+#pragma mark - PullTextOptions_JSON
 
-ReadOptions sReadOptions_Extended()
+PullTextOptions_JSON sPullTextOptions_Extended()
 	{
-	ReadOptions theRO;
-	theRO.fAllowUnquotedPropertyNames = true;
-	theRO.fAllowEquals = true;
-	theRO.fAllowSemiColons = true;
-	theRO.fAllowTerminators = true;
-	theRO.fLooseSeparators = true;
-	theRO.fAllowBinary = true;
+	PullTextOptions_JSON theOptions;
+	theOptions.fAllowUnquotedPropertyNames = true;
+	theOptions.fAllowEquals = true;
+	theOptions.fAllowSemiColons = true;
+	theOptions.fAllowTerminators = true;
+	theOptions.fLooseSeparators = true;
+	theOptions.fAllowBinary = true;
 
-	return theRO;
+	return theOptions;
 	}
 
 // =================================================================================================
@@ -172,18 +172,18 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 	}
 
 // =================================================================================================
-#pragma mark - WriteOptions
+#pragma mark - PushTextOptions_JSON
 
-WriteOptions::WriteOptions()
-:	YadOptions()
+PushTextOptions_JSON::PushTextOptions_JSON()
+:	PushTextOptions()
 	{}
 
-WriteOptions::WriteOptions(const YadOptions& iOther)
-:	YadOptions(iOther)
+PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions& iOther)
+:	PushTextOptions(iOther)
 	{}
 
-WriteOptions::WriteOptions(const WriteOptions& iOther)
-:	YadOptions(iOther)
+PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions_JSON& iOther)
+:	PushTextOptions(iOther)
 ,	fUseExtendedNotation(iOther.fUseExtendedNotation)
 ,	fBinaryAsBase64(iOther.fBinaryAsBase64)
 ,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
@@ -193,13 +193,13 @@ WriteOptions::WriteOptions(const WriteOptions& iOther)
 // =================================================================================================
 #pragma mark -
 
-void sWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
 
-void sWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW)
+void sWriteLFIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	iChanW << sEOLString(iOptions);
 	sWriteIndent(iCount, iOptions, iChanW);
@@ -274,7 +274,7 @@ void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UT
 		w << iString;
 	}
 
-void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w)
+void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w)
 	{
 	if (false)
 		{}
@@ -324,7 +324,7 @@ void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const Chan
 	}
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iLevel, const PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w)
 	{
 	string chunkSeparator;

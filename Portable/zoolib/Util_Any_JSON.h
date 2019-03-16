@@ -34,7 +34,7 @@ namespace ZooLib {
 namespace Util_Any_JSON {
 
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU);
-ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullPush_JSON::ReadOptions& iRO);
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const Util_Chan_JSON::PullTextOptions_JSON& iRO);
 
 void sWrite(const Any& iVal, const ChanW_UTF& iChanW);
 

@@ -41,7 +41,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 using namespace PullPush;
-using namespace PullPush_JSON;
 using Util_Chan::sSkip_WSAndCPlusPlusComments;
 using Util_Chan::sTryRead_CP;
 using std::min;
@@ -231,7 +230,7 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 #pragma mark - sPull
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
-	const ReadOptions& iRO,
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
 	const ChanW_PPT& iChanW)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -316,8 +315,6 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		}
 	else if (sTryRead_CP('"', iChanRU))
 		{
-		// Could use YadStrimmerR_JSON and sPullPush_UTF, but this is a good chance to
-		// demo how easy PullPush makes it to do fiddly source parsing.
 		return spPull_JSON_String_Push(iChanRU, '"', iChanW);
 		}
 	else if (sTryRead_CP('\'', iChanRU))
@@ -353,11 +350,11 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW);
 
 static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
-	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -448,7 +445,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 	}
 
 static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
-	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
 	bool needsIndentation = false;
@@ -552,10 +549,10 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 	}
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
-	{ return sPull_PPT_Push_JSON(iChanR, 0, WriteOptions(), iChanW); }
+	{ return sPull_PPT_Push_JSON(iChanR, 0, Util_Chan_JSON::PushTextOptions_JSON(), iChanW); }
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iInitialIndent, const WriteOptions& iOptions,
+	size_t iInitialIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
@@ -568,7 +565,7 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	size_t iIndent, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& iChanW)
 	{
 	if (const string* theString = sPGet<string>(iPPT))

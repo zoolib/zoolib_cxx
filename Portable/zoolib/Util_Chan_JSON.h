@@ -26,7 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/YadOptions.h"
+#include "zoolib/PullTextOptions.h"
+#include "zoolib/PushTextOptions.h"
 
 namespace ZooLib {
 namespace Util_Chan_JSON {
@@ -36,7 +37,7 @@ using std::string;
 // =================================================================================================
 #pragma mark - ReadOptions
 
-struct ReadOptions
+struct PullTextOptions_JSON : PullTextOptions
 	{
 	ZQ<bool> fAllowUnquotedPropertyNames;
 	ZQ<bool> fAllowEquals;
@@ -46,7 +47,7 @@ struct ReadOptions
 	ZQ<bool> fAllowBinary;
 	};
 
-ReadOptions sReadOptions_Extended();
+PullTextOptions_JSON sPullTextOptions_Extended();
 
 // =================================================================================================
 #pragma mark -
@@ -63,13 +64,13 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 	string& oString);
 
 // =================================================================================================
-#pragma mark - WriteOptions
+#pragma mark - PushTextOptions_JSON
 
-struct WriteOptions : YadOptions
+struct PushTextOptions_JSON : PushTextOptions
 	{
-	WriteOptions();
-	WriteOptions(const YadOptions& iOther);
-	WriteOptions(const WriteOptions& iOther);
+	PushTextOptions_JSON();
+	PushTextOptions_JSON(const PushTextOptions& iOther);
+	PushTextOptions_JSON(const PushTextOptions_JSON& iOther);
 
 	ZQ<bool> fUseExtendedNotation;
 	ZQ<bool> fBinaryAsBase64;
@@ -80,9 +81,9 @@ struct WriteOptions : YadOptions
 // =================================================================================================
 #pragma mark -
 
-void sWriteIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
+void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
 
-void sWriteLFIndent(size_t iCount, const WriteOptions& iOptions, const ChanW_UTF& iChanW);
+void sWriteLFIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
 
 void sWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW);
 
@@ -92,10 +93,10 @@ bool sContainsProblemChars(const string& iString);
 
 void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w);
 
-void sWriteSimpleValue(const Any& iAny, const WriteOptions& iOptions, const ChanW_UTF& w);
+void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w);
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
-	size_t iLevel, const WriteOptions& iOptions, bool iMayNeedInitialLF,
+	size_t iLevel, const PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
 	const ChanW_UTF& w);
 
 ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU);

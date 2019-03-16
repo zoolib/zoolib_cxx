@@ -24,30 +24,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanRU_UTF.h"
 #include "zoolib/PullPush.h"
-#include "zoolib/Util_Chan_JSON.h" // For WriteOptions etc.
+#include "zoolib/Util_Chan_JSON.h" // For TextOptions etc.
 
 namespace ZooLib {
-namespace PullPush_JSON {
-
-// =================================================================================================
-#pragma mark - 
-
-using Util_Chan_JSON::ReadOptions;
-using Util_Chan_JSON::WriteOptions;
-
-} // namespace PullPush_JSON
 
 // =================================================================================================
 #pragma mark - 
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
-	const PullPush_JSON::ReadOptions& iRO,
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
 	const ChanW_PPT& iChanW);
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW);
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iInitialIndent, const PullPush_JSON::WriteOptions& iOptions,
+	size_t iInitialIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW);
 
 } // namespace ZooLib

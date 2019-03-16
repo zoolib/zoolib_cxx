@@ -43,7 +43,7 @@ namespace ZooLib {
 namespace Util_Any_JSON {
 
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
-	const PullPush_JSON::ReadOptions& iRO)
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
@@ -54,7 +54,7 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	}
 
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
-	{ return sQRead(iChanRU, Util_Chan_JSON::sReadOptions_Extended()); }
+	{ return sQRead(iChanRU, Util_Chan_JSON::sPullTextOptions_Extended()); }
 
 // -----
 
@@ -71,7 +71,7 @@ void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT), iVal, sGetClear(thePair.first)));
-	sPull_PPT_Push_JSON(*thePair.second, 0, YadOptions(iPrettyPrint), iChanW);
+	sPull_PPT_Push_JSON(*thePair.second, 0, PushTextOptions(iPrettyPrint), iChanW);
 	}
 
 string8 sAsJSON(const Any& iVal)

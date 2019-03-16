@@ -120,13 +120,13 @@ Val_Any sReadBin(const ChanR_Bin& iChanR)
 
 static ZQ<Map_Any> spQReadMap(const ChanRU_UTF& iChanRU)
 	{
-	Util_Chan_JSON::ReadOptions theRO;
-	theRO.fAllowUnquotedPropertyNames = true;
-	theRO.fAllowEquals = true;
-	theRO.fAllowSemiColons = true;
-	theRO.fAllowTerminators = true;
-	theRO.fLooseSeparators = true;
-	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU, theRO))
+	Util_Chan_JSON::PullTextOptions_JSON theOptions;
+	theOptions.fAllowUnquotedPropertyNames = true;
+	theOptions.fAllowEquals = true;
+	theOptions.fAllowSemiColons = true;
+	theOptions.fAllowTerminators = true;
+	theOptions.fLooseSeparators = true;
+	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU, theOptions))
 		return theQ->QGet<Map_Any>();
 
 	return null;
@@ -189,13 +189,6 @@ Map_Any sReadTextData(const FileSpec& iFS)
 			}
 		}
 	return theMap;
-	}
-
-static Util_Chan_JSON::WriteOptions spWO()
-	{
-	Util_Chan_JSON::WriteOptions theWO = YadOptions(true);
-	theWO.fUseExtendedNotation = true;
-	return theWO;
 	}
 
 void sDump(const ZStrimW& w, const Val& iVal)
