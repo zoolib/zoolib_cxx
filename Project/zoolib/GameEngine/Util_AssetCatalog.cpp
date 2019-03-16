@@ -8,7 +8,6 @@
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_string.h"
-//#include "zoolib/ZYad_FS.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
@@ -19,25 +18,23 @@ using namespace Util_string;
 using std::map;
 using std::pair;
 
-typedef FileSpec YadSpec;
-
 // =================================================================================================
 // MARK: - anonymous
 
 namespace { // anonymous
 
-ZDCPixmap spPixmap_PNG(const YadSpec& iYadSpec)
+ZDCPixmap spPixmap_PNG(const FileSpec& iFileSpec)
 	{
-	if (ZDCPixmap thePixmap = sPixmap_PNG(iYadSpec.OpenR()))
+	if (ZDCPixmap thePixmap = sPixmap_PNG(iFileSpec.OpenR()))
 		return thePixmap;
 
 	if (ZLOGF(w, eInfo))
-		w << "Failed to load pixmap: " << iYadSpec.AsString();
+		w << "Failed to load pixmap: " << iFileSpec.AsString();
 
 	return null;
 	}
 
-ZRef<Callable<ZDCPixmap(const YadSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
+ZRef<Callable<ZDCPixmap(const FileSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
 
 bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 	const ZRef<Callable_TextureFromPixmap>& iTFP,
@@ -63,7 +60,7 @@ bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 
 // std::map is used for oFiles to keep them sorted by name.
 bool spReadAnim(const FileSpec& iParentAsFS,
-	map<string8,YadSpec>& oFiles, Map_Any& oMap)
+	map<string8,FileSpec>& oFiles, Map_Any& oMap)
 	{
 	for (FileIter iter = iParentAsFS; iter; iter.Advance())
 		{
@@ -88,7 +85,7 @@ void spInstall_Anim(
 	const FileSpec& iFS,
 	Map_Any& ioMap)
 	{
-	map<string8,YadSpec> theFiles;
+	map<string8,FileSpec> theFiles;
 	Map_Any theMap;
 	if (not spReadAnim(iFS, theFiles, theMap))
 		return;
