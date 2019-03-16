@@ -79,7 +79,7 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 
 			if (theTrailString.size())
 				{
-				// Our Yad has a non-empty proto trail.
+				// We have a non-empty proto trail.
 				size_t index = 0;
 				const Trail theTrail = Trail(theTrailString).Normalized();
 
@@ -105,9 +105,9 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 					{
 					if (ZQ<Val> theValQ = cur->QReadAt(theTrail.At(index)))
 						{
-						if (const Map* theMap_Yad = theValQ->PGet<Map>())
+						if (const Map* theMapP = theValQ->PGet<Map>())
 							{
-							cur = theMap_Yad->GetLink();
+							cur = theMapP->GetLink();
 							if (++index == theTrail.Count())
 								{
 								fProto = cur;
