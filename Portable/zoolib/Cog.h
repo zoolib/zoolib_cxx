@@ -215,16 +215,6 @@ inline
 bool sIsPending(const RefCallableCog<Param>& iCallable)
 	{ return not sIsFinished(iCallable); }
 
-//// =================================================================================================
-//#pragma mark -
-//template <class Param>
-//Cog<Param>& sPreserveIfPending(Cog<Param>& ioCog)
-//	{
-//	if (sIsFinished(ioCog))
-//		ioCog = null;
-//	return ioCog;
-//	}
-
 // =================================================================================================
 #pragma mark -
 // Ctor from callable to Cog. For use in cases where there would be ambiguity.
@@ -299,6 +289,8 @@ bool sCallUpdate_Cog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 template <class Cog>
 bool sCallUpdate_PendingCog_StillPending(Cog& ioCog, typename Cog::Param iParam)
 	{
+	ZAssert(sIsPending(ioCog));
+
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
 		{
 		ioCog = *theQ;
@@ -311,6 +303,8 @@ bool sCallUpdate_PendingCog_StillPending(Cog& ioCog, typename Cog::Param iParam)
 template <class Cog>
 bool sCallUpdate_PendingCog_Changed(Cog& ioCog, typename Cog::Param iParam)
 	{
+	ZAssert(sIsPending(ioCog));
+
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
 		return sQSet(ioCog, *theQ);
 	ioCog.Clear();
@@ -320,6 +314,8 @@ bool sCallUpdate_PendingCog_Changed(Cog& ioCog, typename Cog::Param iParam)
 template <class Cog>
 bool sCallUpdate_PendingCog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 	{
+	ZAssert(sIsPending(ioCog));
+
 	if (ZQ<Cog> theQ = ioCog->QCall(ioCog, iParam))
 		return not sQSet(ioCog, *theQ);
 	ioCog.Clear();
@@ -377,7 +373,7 @@ Cog<Param> operator~(
 	{ return sCog_Not<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark - Unary, sCog_Tautology (TrueIfFinished)
+#pragma mark - Unary, sCog_Tautology (TrueIfFinished/TrueWhenChildIsFinished)
 
 template <class Param>
 class Callable_Cog_Tautology
@@ -420,7 +416,7 @@ Cog<Param> operator+(const RefCallableCog<Param>& iCallable)
 	{ return sCog_Tautology<Param>(iCallable); }
 
 // =================================================================================================
-#pragma mark - Unary, sCog_Contradiction (FalseIfFinished)
+#pragma mark - Unary, sCog_Contradiction (FalseIfFinished/FalseWhenChildIsFinished)
 
 template <class Param>
 class Callable_Cog_Contradiction
@@ -812,12 +808,6 @@ Cog<Param>& operator|=(
 	{ return ioCog0 = sCog_Or<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-//#pragma mark -
-//#pragma mark Binary parallel, sCog_While
-//
-//// Call cog0 and cog1 while cog0 is pending, result from cog1.
-
-// =================================================================================================
 #pragma mark - Binary parallel, sCog_With
 
 // Call cog0 and cog1 while cog0 is pending, result from cog0.
@@ -979,7 +969,7 @@ Cog<Param>& operator%=(
 // =================================================================================================
 #pragma mark - Binary parallel, sCog_Plus
 
-// Call cog0 and cog1, till both return, result is that of the last to return
+// Call cog0 and cog1, till both have finished, result is that of the last to return.
 
 template <class Param>
 class Callable_Cog_Plus
@@ -1070,7 +1060,7 @@ Cog<Param>& operator+=(
 // =================================================================================================
 #pragma mark - Binary parallel, sCog_Minus
 
-// Call cog0 and cog1, till either returns, result is that of the first to return
+// Call cog0 and cog1, till either finishes, result is that of the first to finish
 
 template <class Param>
 class Callable_Cog_Minus
@@ -1170,7 +1160,7 @@ Cog<Param> sCog_Fallback(
 // =================================================================================================
 #pragma mark - Ternary sequential, sCog_If
 
-// Call cog0 till it finishes, if true then call cog1
+// Call condition till it finishes, if true then call/return cog0, otherwise call/return cog1
 
 template <class Param>
 class Callable_Cog_If
@@ -1237,15 +1227,15 @@ Cog<Param> sCog_If(
 
 template <class Param>
 Cog<Param> operator>>(
-	const RefCallableCog<Param>& iCallable0,
-	const RefCallableCog<Param>& iCallable1)
-	{ return sCog_If<Param>(iCallable0, iCallable1, null); }
+	const RefCallableCog<Param>& iCondition,
+	const RefCallableCog<Param>& iCallable0)
+	{ return sCog_If<Param>(iCondition, iCallable0, null); }
 
 template <class Param>
 Cog<Param>& operator>>=(
-	Cog<Param>& ioCog0,
-	const RefCallableCog<Param>& iCallable1)
-	{ return ioCog0 = sCog_If<Param>(ioCog0, iCallable1, null); }
+	Cog<Param>& ioCogCondition,
+	const RefCallableCog<Param>& iCallable0)
+	{ return ioCogCondition = sCog_If<Param>(ioCogCondition, iCallable0, null); }
 
 } // namespace ZooLib
 
