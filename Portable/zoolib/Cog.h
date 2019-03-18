@@ -217,6 +217,7 @@ bool sIsPending(const RefCallableCog<Param>& iCallable)
 
 // =================================================================================================
 #pragma mark -
+
 // Ctor from callable to Cog. For use in cases where there would be ambiguity.
 
 template <class Param>
@@ -224,7 +225,7 @@ Cog<Param> sCog(Callable<Cog<Param>(const Cog<Param>&,Param)>* iCallable)
 	{ return Cog<Param>(iCallable); }
 
 // =================================================================================================
-// MARK:- sCallCog variants
+#pragma mark - sCallCog variants
 
 template <class Cog>
 Cog sCallCog(const Cog& iCog, typename Cog::Param iParam)
@@ -518,7 +519,7 @@ Cog<Param> sCog_Repeat(const RefCallableCog<Param>& iCallable)
 // =================================================================================================
 #pragma mark - Binary sequential, sCog_Each
 
-// Call cog0 till it finishes, then call cog1
+// Call cog0 till it finishes, then call/return cog1
 
 template <class Param>
 class Callable_Cog_Each
@@ -579,10 +580,83 @@ Cog<Param>& operator^=(
 	{ return ioCog0 = ioCog0 ^ iCallable1; }
 
 // =================================================================================================
+#pragma mark - Binary sequential, sCog_EachIf
+
+// Call condition till it finishes, if true call/return callable
+
+template <class Param>
+class Callable_Cog_EachIf
+:	public Cog<Param>::Callable
+	{
+public:
+	Callable_Cog_EachIf(
+		const RefCallableCog<Param>& iCondition,
+		const RefCallableCog<Param>& iCallable)
+	:	fCondition(iCondition)
+	,	fCog(iCallable)
+		{}
+
+	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+		{
+		if (ZQ<Cog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
+			{
+			const Cog<Param>& newCondition = *newConditionQ;
+			if (newCondition == fCondition)
+				return iSelf;
+
+			if (sIsFalse(newCondition))
+				return newCondition;
+
+			if (sIsTrue(newCondition))
+				{
+				if (sIsFinished(fCog))
+					return fCog;
+				return fCog->QCall(fCog, iParam);
+				}
+
+			return new Callable_Cog_EachIf(newCondition, fCog);
+			}
+		else
+			{
+			return false;
+			}
+		}
+
+	const Cog<Param> fCondition;
+	const Cog<Param> fCog;
+	};
+
+template <class Param>
+Cog<Param> sCog_EachIf(
+	const RefCallableCog<Param>& iCondition,
+	const RefCallableCog<Param>& iCallable)
+	{
+	if (sIsFalse(iCondition))
+		return iCondition;
+
+	if (sIsTrue(iCondition))
+		return iCallable;
+
+	return new Callable_Cog_EachIf<Param>(iCondition, iCallable);
+	}
+
+template <class Param>
+Cog<Param> operator>>(
+	const RefCallableCog<Param>& iCondition,
+	const RefCallableCog<Param>& iCallable)
+	{ return sCog_EachIf<Param>(iCondition, iCallable); }
+
+template <class Param>
+Cog<Param>& operator>>=(
+	Cog<Param>& ioCogCondition,
+	const RefCallableCog<Param>& iCallable)
+	{ return ioCogCondition = sCog_EachIf<Param>(ioCogCondition, iCallable); }
+
+// =================================================================================================
 #pragma mark - Binary parallel, sCog_And
 
 // Call cog0 and cog1 till one of them finishes.
-// If the finished cog was true return the other cog, otherwise return false.
+// If the finished cog was true call/return the other cog, otherwise return false.
 
 template <class Param>
 class Callable_Cog_And
@@ -1224,18 +1298,6 @@ Cog<Param> sCog_If(
 
 	return new Callable_Cog_If<Param>(iCondition, iCallable0, iCallable1);
 	}
-
-template <class Param>
-Cog<Param> operator>>(
-	const RefCallableCog<Param>& iCondition,
-	const RefCallableCog<Param>& iCallable0)
-	{ return sCog_If<Param>(iCondition, iCallable0, null); }
-
-template <class Param>
-Cog<Param>& operator>>=(
-	Cog<Param>& ioCogCondition,
-	const RefCallableCog<Param>& iCallable0)
-	{ return ioCogCondition = sCog_If<Param>(ioCogCondition, iCallable0, null); }
 
 } // namespace ZooLib
 
