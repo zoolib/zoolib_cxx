@@ -13,6 +13,8 @@ struct DebugFlags
 	static bool sTouches;
 	static bool sTextureBounds;
 	static bool sTextureNameFrame;
+	static bool sInfo;
+	static bool sInfoText;
 	};
 
 } // namespace GameEngine
