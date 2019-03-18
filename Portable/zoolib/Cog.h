@@ -142,6 +142,9 @@ public:
 	Cog& operator=(const bool iBool);
 	};
 
+// =================================================================================================
+#pragma mark - True and false
+
 template <class Param_p>
 const Cog<Param_p>& sCog_False()
 	{
@@ -178,19 +181,13 @@ Cog<Param_p>& Cog<Param_p>::operator=(const bool iBool)
 template <class Param> using RefCallableCog = ZRef<Callable<Cog<Param>(const Cog<Param>&,Param)>>;
 
 // =================================================================================================
-#pragma mark - Nullary, sCog_Pending
-// A no-op that is always pending, never finished.
+#pragma mark -
+
+// Ctor from callable to Cog. For use in cases where there would be ambiguity.
 
 template <class Param>
-Cog<Param> spCogFun_Pending(const Cog<Param>& iSelf, Param iParam)
-	{ return iSelf; }
-
-template <class Param>
-const Cog<Param>& sCog_Pending()
-	{
-	static const Cog<Param> spCog = sCallable(spCogFun_Pending<Param>);
-	return spCog;
-	}
+Cog<Param> sCog(Callable<Cog<Param>(const Cog<Param>&,Param)>* iCallable)
+	{ return Cog<Param>(iCallable); }
 
 // =================================================================================================
 #pragma mark - Cog classification
@@ -214,15 +211,6 @@ template <class Param>
 inline
 bool sIsPending(const RefCallableCog<Param>& iCallable)
 	{ return not sIsFinished(iCallable); }
-
-// =================================================================================================
-#pragma mark -
-
-// Ctor from callable to Cog. For use in cases where there would be ambiguity.
-
-template <class Param>
-Cog<Param> sCog(Callable<Cog<Param>(const Cog<Param>&,Param)>* iCallable)
-	{ return Cog<Param>(iCallable); }
 
 // =================================================================================================
 #pragma mark - sCallCog variants
@@ -321,6 +309,22 @@ bool sCallUpdate_PendingCog_Unchanged(Cog& ioCog, typename Cog::Param iParam)
 		return not sQSet(ioCog, *theQ);
 	ioCog.Clear();
 	return false;
+	}
+
+// =================================================================================================
+#pragma mark - Nullary, sCog_Pending
+
+// A no-op that is always pending, never finished.
+
+template <class Param>
+Cog<Param> spCogFun_Pending(const Cog<Param>& iSelf, Param iParam)
+	{ return iSelf; }
+
+template <class Param>
+const Cog<Param>& sCog_Pending()
+	{
+	static const Cog<Param> spCog = sCallable(spCogFun_Pending<Param>);
+	return spCog;
 	}
 
 // =================================================================================================
@@ -467,7 +471,8 @@ class Callable_Cog_Repeat
 :	public Cog<Param>::Callable
 	{
 public:
-	Callable_Cog_Repeat(const RefCallableCog<Param>& iCallable_Init, const RefCallableCog<Param>& iCallable)
+	Callable_Cog_Repeat(const RefCallableCog<Param>& iCallable_Init,
+		const RefCallableCog<Param>& iCallable)
 	:	fCog_Init(iCallable_Init)
 	,	fCog(iCallable)
 		{}
@@ -512,6 +517,7 @@ Cog<Param> sCog_Repeat(const RefCallableCog<Param>& iCallable)
 	return new Callable_Cog_Repeat<Param>(iCallable, iCallable);
 	}
 
+// Prefix * is already heavily used in other contexts (ZRef, ZQ etc). Enabling it here is confusing.
 //template <class Param>
 //Cog<Param> operator*(const RefCallableCog<Param>& iCallable)
 //	{ return sCog_Repeat<Param>(iCallable); }
@@ -970,80 +976,9 @@ Cog<Param>& operator/=(
 	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark - Binary parallel, sCog_WithUnchanged
-
-// Call cog0 and cog1 so long as cog0 is pending and unchanged, result from cog0
-
-template <class Param>
-class Callable_Cog_WithUnchanged
-:	public Cog<Param>::Callable
-	{
-public:
-	Callable_Cog_WithUnchanged(const RefCallableCog<Param>& iCallable0,
-		const RefCallableCog<Param>& iCallable1)
-	:	fCog0(iCallable0)
-	,	fCog1(iCallable1)
-		{}
-
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
-		{
-		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
-	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
-			{
-			const Cog<Param>& newCog0 = *newCog0Q;
-			if (newCog0 == fCog0)
-				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
-					{
-					const Cog<Param>& newCog1 = *newCog1Q;
-					if (newCog1 == fCog1)
-						return iSelf;
-			
-					if (sIsFinished(newCog1))
-						return newCog0;
-			
-					return new Callable_Cog_WithUnchanged(newCog0, newCog1);
-					}
-				}		
-			return newCog0;
-			}
-		else
-			{
-			return false;
-			}
-		}
-
-	const Cog<Param> fCog0;
-	const Cog<Param> fCog1;
-	};
-
-template <class Param>
-Cog<Param> sCog_WithUnchanged(
-	const RefCallableCog<Param>& iCallable0,
-	const RefCallableCog<Param>& iCallable1)
-	{
-	if (sIsPending(iCallable0) && sIsPending(iCallable1))
-		return new Callable_Cog_WithUnchanged<Param>(iCallable0, iCallable1);
-	return iCallable0;
-	}
-
-template <class Param>
-Cog<Param> operator%(
-	const RefCallableCog<Param>& iCallable0,
-	const RefCallableCog<Param>& iCallable1)
-	{ return sCog_WithUnchanged<Param>(iCallable0, iCallable1); }
-
-template <class Param>
-Cog<Param>& operator%=(
-	Cog<Param>& ioCog0,
-	const RefCallableCog<Param>& iCallable1)
-	{ return ioCog0 = sCog_WithUnchanged<Param>(ioCog0, iCallable1); }
-
-// =================================================================================================
 #pragma mark - Binary parallel, sCog_Plus
 
-// Call cog0 and cog1, till both have finished, result is that of the last to return.
+// Call cog0 and cog1, till both have finished, result is that of the last to finish.
 
 template <class Param>
 class Callable_Cog_Plus
