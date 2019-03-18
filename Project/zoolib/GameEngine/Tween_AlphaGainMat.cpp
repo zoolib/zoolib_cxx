@@ -163,17 +163,17 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	ZRef<Tween_Gain> theGain;
 	ZRef<Tween_Mat> theMat = sTween_Mat_Identity();
 
-	// -----
+	// ---------------------------------------------------------------------------------------------
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Alpha", "A"))
 		theAlpha = sTween_Alpha(sTween<Rat>(theQ));
 
-	// -----
+	// ---------------------------------------------------------------------------------------------
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Gain", "G"))
 		theGain = sTween_Gain(sTween<Rat>(theQ));
 	
-	// -----
+	// ---------------------------------------------------------------------------------------------
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Scale", "S"))
 		{
@@ -191,37 +191,12 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	
 	// -----
 
-	if (ZQ<Val> theQ = sQGetNamed(iMap, "Translate", "T", "Pos"))
-		{
-		if (ZQ<Seq> theSeqQ = theQ->QGet<Seq>())
-			{
-			theMat /= sTween_TranslateX(sTween<Rat>(theSeqQ->QGet(0)));
-			theMat /= sTween_TranslateY(sTween<Rat>(theSeqQ->QGet(1)));
-			theMat /= sTween_TranslateZ(sTween<Rat>(theSeqQ->QGet(2)));
-			}
-		else if (ZQ<CVec3> theCVecQ = sQCVec3(0, *theQ))
-			{
-			theMat /= sTween_Const<Mat>(sTranslate<Rat>(*theCVecQ));
-			}
-		}
-	
-	// -----
-
-	if (ZQ<Seq> theSeqQ = sGetNamed(iMap, "Rotate", "R").QGet<Seq>())
-		{
-		theMat /= sTween_RotateX(sTween<Rat>(theSeqQ->QGet(0)));
-		theMat /= sTween_RotateY(sTween<Rat>(theSeqQ->QGet(1)));
-		theMat /= sTween_RotateZ(sTween<Rat>(theSeqQ->QGet(2)));
-		}
-	
-	// -----
-
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleX", "SX"))
 		theMat /= sTween_ScaleX(sTween<Rat>(theQ));
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleY", "SY"))
 		theMat /= sTween_ScaleY(sTween<Rat>(theQ));
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleZ", "SZ"))
 		theMat /= sTween_ScaleZ(sTween<Rat>(theQ));
 
@@ -244,7 +219,7 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
 			theMat /= sTween_ScaleY(theTween) / sTween_ScaleZ(theTween);
 		}
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleXYZ", "SXYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
@@ -253,18 +228,55 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 				/ sTween_ScaleY(theTween) / sTween_ScaleZ(theTween);
 			}
 		}
+
+	// -------------------------------------------------------------------------
+
+	if (ZQ<Seq> theSeqQ = sGetNamed(iMap, "Rotate", "R").QGet<Seq>())
+		{
+		theMat /= sTween_RotateX(sTween<Rat>(theSeqQ->QGet(0)));
+		theMat /= sTween_RotateY(sTween<Rat>(theSeqQ->QGet(1)));
+		theMat /= sTween_RotateZ(sTween<Rat>(theSeqQ->QGet(2)));
+		}
 	
+	// -----
+
+	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateX", "RX"))
+		theMat /= sTween_RotateX(sTween<Rat>(theQ));
+	
+	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateY", "RY"))
+		theMat /= sTween_RotateY(sTween<Rat>(theQ));
+	
+	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateZ", "RZ"))
+		theMat /= sTween_RotateZ(sTween<Rat>(theQ));
+
+
+	// -------------------------------------------------------------------------
+
+	if (ZQ<Val> theQ = sQGetNamed(iMap, "Translate", "T", "Pos"))
+		{
+		if (ZQ<Seq> theSeqQ = theQ->QGet<Seq>())
+			{
+			theMat /= sTween_TranslateX(sTween<Rat>(theSeqQ->QGet(0)));
+			theMat /= sTween_TranslateY(sTween<Rat>(theSeqQ->QGet(1)));
+			theMat /= sTween_TranslateZ(sTween<Rat>(theSeqQ->QGet(2)));
+			}
+		else if (ZQ<CVec3> theCVecQ = sQCVec3(0, *theQ))
+			{
+			theMat /= sTween_Const<Mat>(sTranslate<Rat>(*theCVecQ));
+			}
+		}
+
 	// -----
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateX", "TX"))
 		theMat /= sTween_TranslateX(sTween<Rat>(theQ));
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateY", "TY"))
 		theMat /= sTween_TranslateY(sTween<Rat>(theQ));
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateZ", "TZ"))
 		theMat /= sTween_TranslateZ(sTween<Rat>(theQ));
-	
+
 
 	// -----
 
@@ -279,13 +291,13 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
 			theMat /= sTween_TranslateX(theTween) / sTween_TranslateZ(theTween);
 		}
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateYZ", "TYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
 			theMat /= sTween_TranslateY(theTween) / sTween_TranslateZ(theTween);
 		}
-	
+
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateXYZ", "TXYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
@@ -294,19 +306,8 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 				/ sTween_TranslateY(theTween) / sTween_TranslateZ(theTween);
 			}
 		}
-	
-	// -----
 
-	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateX", "RX"))
-		theMat /= sTween_RotateX(sTween<Rat>(theQ));
-	
-	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateY", "RY"))
-		theMat /= sTween_RotateY(sTween<Rat>(theQ));
-	
-	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateZ", "RZ"))
-		theMat /= sTween_RotateZ(sTween<Rat>(theQ));
-
-	// -----
+	// ---------------------------------------------------------------------------------------------
 
 	if (theMat == sTween_Mat_Identity())
 		theMat.Clear();
