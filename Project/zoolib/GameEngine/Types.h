@@ -390,12 +390,10 @@ double sRandomInRange(double iMin, double iMax);
 // =================================================================================================
 // MARK: - operator<<
 
-typedef ChanW_UTF ZStrimW;
-
-const ZStrimW& operator<<(const ZStrimW& w, const Name& iName);
-const ZStrimW& operator<<(const ZStrimW& w, const Any& iAny);
-const ZStrimW& operator<<(const ZStrimW& w, const Map& iMap);
-const ZStrimW& operator<<(const ZStrimW& w, const Seq& iSeq);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Name& iName);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Any& iAny);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Map& iMap);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Seq& iSeq);
 
 } // namespace GameEngine
 } // namespace ZooLib

@@ -191,7 +191,7 @@ Map_Any sReadTextData(const FileSpec& iFS)
 	return theMap;
 	}
 
-void sDump(const ZStrimW& w, const Val& iVal)
+void sDump(const ChanW_UTF& w, const Val& iVal)
 	{
 	if (iVal.IsNull())
 		{
@@ -210,7 +210,7 @@ void sDump(const Val& iVal)
 		sDump(w, iVal);
 	}
 
-void sDump(const ZStrimW& w, const Any& iAny)
+void sDump(const ChanW_UTF& w, const Any& iAny)
 	{
 	w << "\n";
 	Util_Any_JSON::sWrite(true, iAny, w);

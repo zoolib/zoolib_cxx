@@ -31,10 +31,10 @@ ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w);
 Val_Any sReadBin(const ChanR_Bin& iChanR);
 
-void sDump(const ZStrimW& w, const Val& iVal);
+void sDump(const ChanW_UTF& w, const Val& iVal);
 void sDump(const Val& iVal);
 
-void sDump(const ZStrimW& w, const Any& iAny);
+void sDump(const ChanW_UTF& w, const Any& iAny);
 void sDump(const Any& iAny);
 
 uint64 sNextID();

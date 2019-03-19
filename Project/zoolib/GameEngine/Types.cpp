@@ -239,25 +239,25 @@ double sRandomInRange(double iMin, double iMax)
 // =================================================================================================
 // MARK: - operator<<
 
-const ZStrimW& operator<<(const ZStrimW& w, const Name& iName)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Name& iName)
 	{
 	sEWrite(w, string8(iName));
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const Any& iAny)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Any& iAny)
 	{
 	Util_Any_JSON::sWrite(Val_Any(iAny), w);
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const Map& iMap)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Map& iMap)
 	{
 	Util_Any_JSON::sWrite(Any(iMap), w);
 	return w;
 	}
 
-const ZStrimW& operator<<(const ZStrimW& w, const Seq& iSeq)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Seq& iSeq)
 	{
 	Util_Any_JSON::sWrite(Any(iSeq), w);
 	return w;
