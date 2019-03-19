@@ -932,7 +932,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 	int prevBand = 0;
 	for (;;)
 		{
-		int curBand = ioNewRegion.fNumRects;
+		size_t curBand = ioNewRegion.fNumRects;
 
 		// This algorithm proceeds one source-band (as opposed to a
 		// destination band, which is determined by where the two regions
@@ -1018,7 +1018,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 
 	// Deal with whichever region still has rectangles left.
 
-	int32 curBand = ioNewRegion.fNumRects;
+	size_t curBand = ioNewRegion.fNumRects;
 	if (iNonOverlapFunc1 && r1 != r1End)
 		{
 		do
