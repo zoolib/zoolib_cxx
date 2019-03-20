@@ -797,6 +797,9 @@ void Melange_Client::pWork()
 	{
 	// Handle everything that's in fQueue_Read -- mainly doing change notifications
 
+	// Any regs that are to be tossed will end up in here. Individually out of the scope of fMtx.
+	std::set<ZRef<Registration>> localRegistrations;
+
 	ZAcqMtx acq(fMtx);
 
 	// Pull stuff from fQueue_Read
@@ -844,7 +847,7 @@ void Melange_Client::pWork()
 			sInsertMust(fMap_Reg2Refcon, theReg.Get(), theRefcon);
 			theSeq.Append(theMap);
 			}
-		sClear(fPending_Registrations);
+		swap(localRegistrations, fPending_Registrations);
 		}
 
 	if (sNotEmpty(fPending_Unregistrations))
