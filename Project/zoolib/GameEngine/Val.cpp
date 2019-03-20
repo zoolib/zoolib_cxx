@@ -100,19 +100,18 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 						{}
 					}
 
-				// Walk down the tree.
-				for (;;)
+				for (;;++index)
 					{
-					if (ZQ<Val> theValQ = cur->QReadAt(theTrail.At(index)))
+					if (index == theTrail.Count())
+						{
+						fProto = cur;
+						break;
+						}
+					else if (ZQ<Val> theValQ = cur->QReadAt(theTrail.At(index)))
 						{
 						if (const Map* theMapP = theValQ->PGet<Map>())
 							{
 							cur = theMapP->GetLink();
-							if (++index == theTrail.Count())
-								{
-								fProto = cur;
-								break;
-								}
 							continue;
 							}
 						}
