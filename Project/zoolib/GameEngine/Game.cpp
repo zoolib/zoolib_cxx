@@ -106,8 +106,7 @@ Game::Game(const FileSpec& iFS,
 	const ZRef<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
 	bool iPreferProcessedArt, bool iPreferSmallArt,
 	const ZRef<SoundMeister>& iSoundMeister)
-:	fPaused(false)
-,	fTimestamp_LatestDrawn(0)
+:	fTimestamp_LatestDrawn(0)
 ,	fTimestamp_ToDraw(0)
 ,	fNookScope(new NookScope)
 ,	fSoundMeister(iSoundMeister)
@@ -220,9 +219,6 @@ void Game::RunOnce(
 
 	fTimestamp_LatestDrawn = fTimestamp_ToDraw;
 
-	if (fPaused)
-		return;
-
 	this->pUpdateTouches();
 	}
 
@@ -239,15 +235,6 @@ void Game::RunOnce(
 
 	ZAcqMtx acq(fMtx_Game);
 	fRendered = theRendered;
-	}
-
-bool Game::GetSet_Paused(bool iPaused)
-	{
-	ZAcqMtx acq(fMtx_Game);
-	bool wasPaused = sGetSet(fPaused, iPaused);
-	if (ZLOGF(w, eWarning))
-		w << "wasPaused: " << wasPaused << ", isPaused: " << iPaused;
-	return wasPaused;
 	}
 
 void Game::pUpdateTouches()

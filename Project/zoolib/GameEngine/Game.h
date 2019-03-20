@@ -53,8 +53,6 @@ public:
 		GPoint iBackingSize,
 		GPoint iGameSize);
 
-	bool GetSet_Paused(bool iPaused);
-
 private:
 	void pUpdateTouches();
 
@@ -65,8 +63,6 @@ private:
 
 	ZMtx fMtx_Game;
 	ZCnd fCnd_Game;
-
-	bool fPaused;
 
 	double fTimestamp_LatestDrawn;
 	double fTimestamp_ToDraw;
