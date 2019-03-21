@@ -227,9 +227,14 @@ Cog spCogs(const Seq& iSeq)
 		if (*theQ == "|")
 			return spCogs<CogAccumulatorCombiner_Or>(1, iSeq);
 
+		if (*theQ == "%")
+			return sCog(iSeq.Get(1)) % sCog(iSeq.Get(2));
+
 		if (*theQ == "/")
-			return sCog(iSeq.Get(1)) / sCog(iSeq.Get(2));
-			
+			{
+			return sCog(iSeq.Get(1)) % sCog(iSeq.Get(2));
+			}
+
 		if (*theQ == "*")
 			return sCog_Repeat(sCog(iSeq.Get(1)));
 			

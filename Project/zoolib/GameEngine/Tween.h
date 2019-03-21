@@ -52,8 +52,13 @@ ZRef<Tween<Val> > sTweens(const Seq& iSeq)
 		if (*theQ == "&")
 			return spCombineTweens<TweenAccumulatorCombiner_And<Val> >(size_t(1), iSeq);
 
+		if (*theQ == "*")
+			return spCombineTweens<TweenAccumulatorCombiner_Multiply<Val> >(size_t(1), iSeq);
+
 		if (*theQ == "/")
-			return spCombineTweens<TweenAccumulatorCombiner_With<Val> >(size_t(1), iSeq);
+			{
+			return spCombineTweens<TweenAccumulatorCombiner_Multiply<Val> >(size_t(1), iSeq);
+			}
 
 		if (*theQ == "^")
 			return spCombineTweens<TweenAccumulatorCombiner_Each<Val> >(size_t(1), iSeq);
