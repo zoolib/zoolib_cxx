@@ -36,13 +36,13 @@ Cog sCog_StartAt(double iElapsed, const Cog& iCog)
 	{ return sCog_DelayUntil(iElapsed) ^ iCog; }
 
 Cog sCog_StopAt(double iElapsed, const Cog& iCog)
-	{ return sCog_DelayUntil(iElapsed) / iCog; }
+	{ return sCog_DelayUntil(iElapsed) % iCog; }
 
 Cog sCog_StartAfter(double iDelay, const Cog& iCog)
 	{ return sCog_DelayFor(iDelay) ^ iCog; }
 
 Cog sCog_StopAfter(double iDelay, const Cog& iCog)
-	{ return sCog_DelayFor(iDelay) / iCog; }
+	{ return sCog_DelayFor(iDelay) % iCog; }
 
 static
 Cog spCogCtor_Delay(const Map& iMap)

@@ -96,7 +96,7 @@ Cog spCogCtor_Group(const Map& iMap)
 
 		ZRef<Tween<Mat> > theScale = sTween_Const<Mat>(sScale3Z<Rat>(0.5));
 		if (theAGM)
-			theAGM /= theScale;
+			theAGM *= theScale;
 		else
 			theAGM = sTween_AlphaGainMat(theScale);
 

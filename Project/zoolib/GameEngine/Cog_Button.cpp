@@ -102,11 +102,11 @@ Cog spCogCtor_Button(const Map& iMap)
 
 	Cog aCog;
 
-	aCog ^= sCog_Repeat(cog_TouchNothing) / toon_UpOut;
+	aCog ^= sCog_Repeat(cog_TouchNothing) % toon_UpOut;
 
-	aCog ^= cog_TouchDown >> sCog_Repeat(cog_TouchIn) / toon_DownIn;
+	aCog ^= cog_TouchDown >> sCog_Repeat(cog_TouchIn) % toon_DownIn;
 
-	aCog ^= sCog_Repeat((sCog_Repeat(cog_TouchOut) / toon_DownOut) ^ cog_TouchIn >> +(sCog_Repeat(cog_TouchIn) / toon_DownIn));
+	aCog ^= sCog_Repeat((sCog_Repeat(cog_TouchOut) % toon_DownOut) ^ cog_TouchIn >> +(sCog_Repeat(cog_TouchIn) % toon_DownIn));
 
 	aCog ^= cog_TouchUp >> pushed;
 
