@@ -20,96 +20,48 @@ using GameEngine::AlphaMat;
 using GameEngine::AlphaGainMat;
 
 template <>
-ZQ<Alpha> sCombineTweenVals<Alpha,Alpha>(const ZQ<Alpha>& i0Q, const ZQ<Alpha>& i1Q)
+Alpha sCombineTweenVals<Alpha,Alpha>(const Alpha& iAlpha0, const Alpha& iAlpha1)
+	{ return iAlpha0 * iAlpha1; }
+
+template <>
+Gain sCombineTweenVals<Gain,Gain>(const Gain& iGain0, const Gain& iGain1)
+	{ return iGain0 * iGain1; }
+
+template <>
+Mat sCombineTweenVals<Mat,Mat>(const Mat& iMat0, const Mat& iMat1)
 	{
-	if (not i0Q || not i1Q)
-		return null;
-	return *i1Q * *i0Q;
+	return iMat1 * iMat0; // Note the order
 	}
 
 template <>
-ZQ<Gain> sCombineTweenVals<Gain,Gain>(const ZQ<Gain>& i0Q, const ZQ<Gain>& i1Q)
+AlphaGainMat sCombineTweenVals<AlphaGainMat,Alpha>
+	(const AlphaGainMat& iAlphaGainMat, const Alpha& iAlpha)
 	{
-	if (not i0Q || not i1Q)
-		return null;
-	return *i1Q * *i0Q;
+	return AlphaGainMat(
+		iAlphaGainMat.fAlpha * iAlpha, iAlphaGainMat.fGain, iAlphaGainMat.fMat);
 	}
 
 template <>
-ZQ<Mat> sCombineTweenVals<Mat,Mat>(const ZQ<Mat>& i0Q, const ZQ<Mat>& i1Q)
+AlphaGainMat sCombineTweenVals<AlphaGainMat,Gain>
+	(const AlphaGainMat& iAlphaGainMat, const Gain& iGain)
 	{
-	if (not i0Q || not i1Q)
-		return null;
-	return *i1Q * *i0Q; // Note the order
+	return AlphaGainMat(
+		iAlphaGainMat.fAlpha, iAlphaGainMat.fGain * iGain, iAlphaGainMat.fMat);
 	}
 
 template <>
-ZQ<AlphaGainMat> sCombineTweenVals<AlphaGainMat,Alpha>
-	(const ZQ<AlphaGainMat>& iAlphaGainMatQ, const ZQ<Alpha>& iAlphaQ)
+AlphaGainMat sCombineTweenVals<AlphaGainMat,Mat>
+	(const AlphaGainMat& iAlphaGainMat, const Mat& iMat)
 	{
-	if (iAlphaGainMatQ)
-		{
-		if (iAlphaQ)
-			{
-			return AlphaGainMat(
-				iAlphaGainMatQ->fAlpha * *iAlphaQ, iAlphaGainMatQ->fGain, iAlphaGainMatQ->fMat);
-			}
-		return iAlphaGainMatQ;
-		}
-	else if (iAlphaQ)
-		{
-		return AlphaGainMat(*iAlphaQ);
-		}
-	return null;
+	return AlphaGainMat(
+		iAlphaGainMat.fAlpha, iAlphaGainMat.fGain, iMat * iAlphaGainMat.fMat);
 	}
 
 template <>
-ZQ<AlphaGainMat> sCombineTweenVals<AlphaGainMat,Gain>
-	(const ZQ<AlphaGainMat>& iAlphaGainMatQ, const ZQ<Gain>& iGainQ)
+AlphaGainMat sCombineTweenVals<AlphaGainMat,AlphaGainMat>
+	(const AlphaGainMat& iAlphaGainMat0, const AlphaGainMat& iAlphaGainMat1)
 	{
-	if (iAlphaGainMatQ)
-		{
-		if (iGainQ)
-			{
-			return AlphaGainMat(
-				iAlphaGainMatQ->fAlpha, iAlphaGainMatQ->fGain * *iGainQ, iAlphaGainMatQ->fMat);
-			}
-		return iAlphaGainMatQ;
-		}
-	else if (iGainQ)
-		{
-		return AlphaGainMat(*iGainQ);
-		}
-	return null;
-	}
-
-template <>
-ZQ<AlphaGainMat> sCombineTweenVals<AlphaGainMat,Mat>
-	(const ZQ<AlphaGainMat>& iAlphaGainMatQ, const ZQ<Mat>& iMatQ)
-	{
-	if (iAlphaGainMatQ)
-		{
-		if (iMatQ)
-			{
-			return AlphaGainMat(
-				iAlphaGainMatQ->fAlpha, iAlphaGainMatQ->fGain, *iMatQ * iAlphaGainMatQ->fMat);
-			}
-		return iAlphaGainMatQ;
-		}
-	else if (iMatQ)
-		{
-		return AlphaGainMat(*iMatQ);
-		}
-	return null;
-	}
-
-template <>
-ZQ<AlphaGainMat> sCombineTweenVals<AlphaGainMat,AlphaGainMat>
-	(const ZQ<AlphaGainMat>& i0Q, const ZQ<AlphaGainMat>& i1Q)
-	{
-	if (not i0Q || not i1Q)
-		return null;
-	return *i1Q * *i0Q; // Note the order
+	return iAlphaGainMat1 * iAlphaGainMat0; // Note the order
 	}
 
 } // namespace ZooLib
@@ -151,19 +103,19 @@ ZRef<Tween_Mat> sTween_Mat_Identity()
 
 ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	{
-	ZRef<Tween_Alpha> theAlpha;
-	ZRef<Tween_Gain> theGain;
-	ZRef<Tween_Mat> theMat = sTween_Mat_Identity();
+	ZRef<Tween_Alpha> theTweenAlpha;
+	ZRef<Tween_Gain> theTweenGain;
+	ZRef<Tween_Mat> theTweenMat = sTween_Mat_Identity();
 
 	// ---------------------------------------------------------------------------------------------
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Alpha", "A"))
-		theAlpha = sTween_Alpha(sTween<Rat>(theQ));
+		theTweenAlpha = sTween_Alpha(sTween<Rat>(theQ));
 
 	// ---------------------------------------------------------------------------------------------
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Gain", "G"))
-		theGain = sTween_Gain(sTween<Rat>(theQ));
+		theTweenGain = sTween_Gain(sTween<Rat>(theQ));
 	
 	// ---------------------------------------------------------------------------------------------
 
@@ -171,53 +123,53 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 		{
 		if (ZQ<Seq> theSeqQ = theQ->QGet<Seq>())
 			{
-			theMat /= sTween_ScaleX(sTween<Rat>(theSeqQ->QGet(0)));
-			theMat /= sTween_ScaleY(sTween<Rat>(theSeqQ->QGet(1)));
-			theMat /= sTween_ScaleZ(sTween<Rat>(theSeqQ->QGet(2)));
+			theTweenMat *= sTween_ScaleX(sTween<Rat>(theSeqQ->QGet(0)));
+			theTweenMat *= sTween_ScaleY(sTween<Rat>(theSeqQ->QGet(1)));
+			theTweenMat *= sTween_ScaleZ(sTween<Rat>(theSeqQ->QGet(2)));
 			}
 		else if (ZQ<CVec3> theCVecQ = sQCVec3(1, *theQ))
 			{
-			theMat /= sTween_Const<Mat>(sScale<Rat>(*theCVecQ));
+			theTweenMat *= sTween_Const<Mat>(sScale<Rat>(*theCVecQ));
 			}
 		}
 	
 	// -----
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleX", "SX"))
-		theMat /= sTween_ScaleX(sTween<Rat>(theQ));
+		theTweenMat *= sTween_ScaleX(sTween<Rat>(theQ));
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleY", "SY"))
-		theMat /= sTween_ScaleY(sTween<Rat>(theQ));
+		theTweenMat *= sTween_ScaleY(sTween<Rat>(theQ));
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleZ", "SZ"))
-		theMat /= sTween_ScaleZ(sTween<Rat>(theQ));
+		theTweenMat *= sTween_ScaleZ(sTween<Rat>(theQ));
 
 	// -----
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleXY", "SXY"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_ScaleX(theTween) / sTween_ScaleY(theTween);
+			theTweenMat *= sTween_ScaleX(theTween) * sTween_ScaleY(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleXZ", "SXZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_ScaleX(theTween) / sTween_ScaleZ(theTween);
+			theTweenMat *= sTween_ScaleX(theTween) * sTween_ScaleZ(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleYZ", "SYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_ScaleY(theTween) / sTween_ScaleZ(theTween);
+			theTweenMat *= sTween_ScaleY(theTween) * sTween_ScaleZ(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "ScaleXYZ", "SXYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
 			{
-			theMat /= sTween_ScaleX(theTween)
-				/ sTween_ScaleY(theTween) / sTween_ScaleZ(theTween);
+			theTweenMat *= sTween_ScaleX(theTween)
+				* sTween_ScaleY(theTween) * sTween_ScaleZ(theTween);
 			}
 		}
 
@@ -225,21 +177,21 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 
 	if (ZQ<Seq> theSeqQ = sGetNamed(iMap, "Rotate", "R").QGet<Seq>())
 		{
-		theMat /= sTween_RotateX(sTween<Rat>(theSeqQ->QGet(0)));
-		theMat /= sTween_RotateY(sTween<Rat>(theSeqQ->QGet(1)));
-		theMat /= sTween_RotateZ(sTween<Rat>(theSeqQ->QGet(2)));
+		theTweenMat *= sTween_RotateX(sTween<Rat>(theSeqQ->QGet(0)));
+		theTweenMat *= sTween_RotateY(sTween<Rat>(theSeqQ->QGet(1)));
+		theTweenMat *= sTween_RotateZ(sTween<Rat>(theSeqQ->QGet(2)));
 		}
 	
 	// -----
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateX", "RX"))
-		theMat /= sTween_RotateX(sTween<Rat>(theQ));
+		theTweenMat *= sTween_RotateX(sTween<Rat>(theQ));
 	
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateY", "RY"))
-		theMat /= sTween_RotateY(sTween<Rat>(theQ));
+		theTweenMat *= sTween_RotateY(sTween<Rat>(theQ));
 	
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "RotateZ", "RZ"))
-		theMat /= sTween_RotateZ(sTween<Rat>(theQ));
+		theTweenMat *= sTween_RotateZ(sTween<Rat>(theQ));
 
 
 	// -------------------------------------------------------------------------
@@ -248,26 +200,26 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 		{
 		if (ZQ<Seq> theSeqQ = theQ->QGet<Seq>())
 			{
-			theMat /= sTween_TranslateX(sTween<Rat>(theSeqQ->QGet(0)));
-			theMat /= sTween_TranslateY(sTween<Rat>(theSeqQ->QGet(1)));
-			theMat /= sTween_TranslateZ(sTween<Rat>(theSeqQ->QGet(2)));
+			theTweenMat *= sTween_TranslateX(sTween<Rat>(theSeqQ->QGet(0)));
+			theTweenMat *= sTween_TranslateY(sTween<Rat>(theSeqQ->QGet(1)));
+			theTweenMat *= sTween_TranslateZ(sTween<Rat>(theSeqQ->QGet(2)));
 			}
 		else if (ZQ<CVec3> theCVecQ = sQCVec3(0, *theQ))
 			{
-			theMat /= sTween_Const<Mat>(sTranslate<Rat>(*theCVecQ));
+			theTweenMat *= sTween_Const<Mat>(sTranslate<Rat>(*theCVecQ));
 			}
 		}
 
 	// -----
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateX", "TX"))
-		theMat /= sTween_TranslateX(sTween<Rat>(theQ));
+		theTweenMat *= sTween_TranslateX(sTween<Rat>(theQ));
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateY", "TY"))
-		theMat /= sTween_TranslateY(sTween<Rat>(theQ));
+		theTweenMat *= sTween_TranslateY(sTween<Rat>(theQ));
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateZ", "TZ"))
-		theMat /= sTween_TranslateZ(sTween<Rat>(theQ));
+		theTweenMat *= sTween_TranslateZ(sTween<Rat>(theQ));
 
 
 	// -----
@@ -275,36 +227,36 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateXY", "TXY"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_TranslateX(theTween) / sTween_TranslateY(theTween);
+			theTweenMat *= sTween_TranslateX(theTween) * sTween_TranslateY(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateXZ", "TXZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_TranslateX(theTween) / sTween_TranslateZ(theTween);
+			theTweenMat *= sTween_TranslateX(theTween) * sTween_TranslateZ(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateYZ", "TYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
-			theMat /= sTween_TranslateY(theTween) / sTween_TranslateZ(theTween);
+			theTweenMat *= sTween_TranslateY(theTween) * sTween_TranslateZ(theTween);
 		}
 
 	if (const ZQ<Val> theQ = sQGetNamed(iMap, "TranslateXYZ", "TXYZ"))
 		{
 		if (ZRef<Tween<Rat> > theTween = sTween<Rat>(theQ))
 			{
-			theMat /= sTween_TranslateX(theTween)
-				/ sTween_TranslateY(theTween) / sTween_TranslateZ(theTween);
+			theTweenMat *= sTween_TranslateX(theTween)
+				* sTween_TranslateY(theTween) * sTween_TranslateZ(theTween);
 			}
 		}
 
 	// ---------------------------------------------------------------------------------------------
 
-	if (theMat == sTween_Mat_Identity())
-		theMat.Clear();
+	if (theTweenMat == sTween_Mat_Identity())
+		theTweenMat.Clear();
 
-	return sTween_AlphaGainMat(theAlpha, theGain, theMat);
+	return sTween_AlphaGainMat(theTweenAlpha, theTweenGain, theTweenMat);
 	}
 
 template <>

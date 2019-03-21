@@ -25,67 +25,47 @@ using GameEngine::CelStack;
 using GameEngine::Mat;
 
 template <>
-ZQ<CelStack> sCombineTweenVals<CelStack,Alpha>
-	(const ZQ<CelStack>& iCelStackQ, const ZQ<Alpha>& iAlphaQ)
+CelStack sCombineTweenVals<CelStack,Alpha>
+	(const CelStack& iCelStack, const Alpha& iAlpha)
 	{
-	if (not iCelStackQ)
-		return null;
-	else if (not iAlphaQ)
-		return iCelStackQ;
-
-	CelStack result = iCelStackQ->Get()->Clone();
+	CelStack result = iCelStack->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
-		ii->fAlphaMat.fAlpha *= *iAlphaQ;
+		ii->fAlphaMat.fAlpha *= iAlpha;
 	return result;
 	}
 
 template <>
-ZQ<CelStack> sCombineTweenVals<CelStack,Mat>(const ZQ<CelStack>& iCelStackQ, const ZQ<Mat>& iMatQ)
+CelStack sCombineTweenVals<CelStack,Mat>(const CelStack& iCelStack, const Mat& iMat)
 	{
-	if (not iCelStackQ)
-		return null;
-	else if (not iMatQ)
-		return iCelStackQ;
-
-	CelStack result = iCelStackQ->Get()->Clone();
+	CelStack result = iCelStack.Get()->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
-		ii->fAlphaMat.fMat = *iMatQ * ii->fAlphaMat.fMat;
+		ii->fAlphaMat.fMat = iMat * ii->fAlphaMat.fMat;
 	return result;
 	}
 
 template <>
-ZQ<CelStack> sCombineTweenVals<CelStack,AlphaGainMat>
-	(const ZQ<CelStack>& iCelStackQ, const ZQ<AlphaGainMat>& iAlphaGainMatQ)
+CelStack sCombineTweenVals<CelStack,AlphaGainMat>
+	(const CelStack& iCelStack, const AlphaGainMat& iAlphaGainMat)
 	{
-	if (not iCelStackQ)
-		return null;
-	else if (not iAlphaGainMatQ)
-		return iCelStackQ;
-
-	CelStack result = iCelStackQ->Get()->Clone();
+	CelStack result = iCelStack.Get()->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
 		{
-		ii->fAlphaMat.fMat = iAlphaGainMatQ->fMat * ii->fAlphaMat.fMat;
-		ii->fAlphaMat.fAlpha *= iAlphaGainMatQ->fAlpha;
+		ii->fAlphaMat.fMat = iAlphaGainMat.fMat * ii->fAlphaMat.fMat;
+		ii->fAlphaMat.fAlpha *= iAlphaGainMat.fAlpha;
 		}
 	return result;
 	}
 
 template <>
-ZQ<CelStack> sCombineTweenVals<CelStack,CelStack>
-	(const ZQ<CelStack>& iCelStackQ0, const ZQ<CelStack>& iCelStackQ1)
+CelStack sCombineTweenVals<CelStack,CelStack>
+	(const CelStack& iCelStack0, const CelStack& iCelStack1)
 	{
-	if (not iCelStackQ0)
-		return iCelStackQ1;
-	else if (not iCelStackQ1)
-		return iCelStackQ0;
-
-	CelStack result = iCelStackQ0->Get()->Clone();
+	CelStack result = iCelStack0.Get()->Clone();
 	sMut(result).insert(sMut(result).end(),
-		(*iCelStackQ1)->Get().begin(), (*iCelStackQ1)->Get().end());
+		iCelStack1->Get().begin(), iCelStack1->Get().end());
 	return result;
 	}
 
@@ -192,11 +172,11 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 				if (ZQ<Val> theAMQ = sQGetNamed(*theMapQ, "AlphaGainMat", "AGM"))
 					{
 					if (ZRef<Tween_AlphaGainMat> theAM = sTween<AlphaGainMat>(theAMQ))
-						theToon /= theAM;
+						theToon *= theAM;
 					}
 				else if (ZRef<Tween_AlphaGainMat> theAM = sTween<AlphaGainMat>(iValQ))
 					{
-					theToon /= theAM;
+					theToon *= theAM;
 					}
 
 				return theToon;

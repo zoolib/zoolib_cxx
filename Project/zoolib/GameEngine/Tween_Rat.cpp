@@ -21,14 +21,8 @@ namespace ZooLib {
 using GameEngine::Rat;
 
 template <>
-ZQ<Rat> sCombineTweenVals<Rat,Rat>(const ZQ<Rat>& iQ0, const ZQ<Rat>& iQ1)
-	{
-	if (not iQ0)
-		return iQ1;
-	if (not iQ1)
-		return iQ0;
-	return *iQ0 * *iQ1;
-	}
+Rat sCombineTweenVals<Rat,Rat>(const Rat& iRat0, const Rat& iRat1)
+	{ return iRat0 * iRat1; }
 
 } // namespace ZooLib
 
