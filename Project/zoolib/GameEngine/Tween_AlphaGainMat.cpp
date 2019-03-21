@@ -22,30 +22,24 @@ using GameEngine::AlphaGainMat;
 template <>
 ZQ<Alpha> sCombineTweenVals<Alpha,Alpha>(const ZQ<Alpha>& i0Q, const ZQ<Alpha>& i1Q)
 	{
-	if (not i0Q)
-		return i1Q;
-	if (not i1Q)
-		return i0Q;
+	if (not i0Q || not i1Q)
+		return null;
 	return *i1Q * *i0Q;
 	}
 
 template <>
 ZQ<Gain> sCombineTweenVals<Gain,Gain>(const ZQ<Gain>& i0Q, const ZQ<Gain>& i1Q)
 	{
-	if (not i0Q)
-		return i1Q;
-	if (not i1Q)
-		return i0Q;
+	if (not i0Q || not i1Q)
+		return null;
 	return *i1Q * *i0Q;
 	}
 
 template <>
 ZQ<Mat> sCombineTweenVals<Mat,Mat>(const ZQ<Mat>& i0Q, const ZQ<Mat>& i1Q)
 	{
-	if (not i0Q)
-		return i1Q;
-	if (not i1Q)
-		return i0Q;
+	if (not i0Q || not i1Q)
+		return null;
 	return *i1Q * *i0Q; // Note the order
 	}
 
@@ -113,10 +107,8 @@ template <>
 ZQ<AlphaGainMat> sCombineTweenVals<AlphaGainMat,AlphaGainMat>
 	(const ZQ<AlphaGainMat>& i0Q, const ZQ<AlphaGainMat>& i1Q)
 	{
-	if (not i0Q)
-		return i1Q;
-	if (not i1Q)
-		return i0Q;
+	if (not i0Q || not i1Q)
+		return null;
 	return *i1Q * *i0Q; // Note the order
 	}
 
