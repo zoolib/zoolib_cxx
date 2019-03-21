@@ -659,7 +659,7 @@ Cog<Param>& operator>>=(
 	{ return ioCogCondition = sCog_EachIf<Param>(ioCogCondition, iCallable); }
 
 // =================================================================================================
-#pragma mark - Binary parallel, sCog_And
+#pragma mark - Binary parallel, sCog_And, (Minimum)
 
 // Call cog0 and cog1 till one of them finishes.
 // If the finished cog was true call/return the other cog, otherwise return false.
@@ -775,7 +775,7 @@ Cog<Param>& operator&=(
 	{ return ioCog0 = sCog_And<Param>(ioCog0, iCallable1); }
 
 // =================================================================================================
-#pragma mark - Binary parallel, sCog_Or
+#pragma mark - Binary parallel, sCog_Or, (Maximum)
 
 // Call cog0 and cog1 till one of them finishes.
 // If the finished cog was false return the other cog, otherwise return true.
@@ -964,13 +964,13 @@ Cog<Param> sCog_With(
 	}
 
 template <class Param>
-Cog<Param> operator/(
+Cog<Param> operator%(
 	const RefCallableCog<Param>& iCallable0,
 	const RefCallableCog<Param>& iCallable1)
 	{ return sCog_With<Param>(iCallable0, iCallable1); }
 
 template <class Param>
-Cog<Param>& operator/=(
+Cog<Param>& operator%=(
 	Cog<Param>& ioCog0,
 	const RefCallableCog<Param>& iCallable1)
 	{ return ioCog0 = sCog_With<Param>(ioCog0, iCallable1); }
