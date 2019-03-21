@@ -48,7 +48,12 @@ public:
 
 // From Callable
 	virtual ZQ<void> QCall()
-		{ return sQStart(fStarter, fCallable) ? notnull : null; }
+		{
+		if (sQStart(fStarter, fCallable))
+			return notnull;
+		return null;
+
+		}
 
 private:
 	const ZRef<Starter> fStarter;
@@ -74,8 +79,9 @@ public: \
 \
 	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		return sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X))) ? \
-			notnull : null; \
+		if (sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X))) \
+			return notnull; \
+		return null; \
 		} \
 \
 private:\
