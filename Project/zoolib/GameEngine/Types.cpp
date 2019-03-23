@@ -1,9 +1,6 @@
 #include "zoolib/GameEngine/Types.h"
 
-#include "zoolib/ChanW_UTF.h"
 #include "zoolib/Coerce_Any.h" // For sQCoerceRat and sQCoerceInt
-
-#include "zoolib/Util_Any_JSON.h"
 
 #include <stdlib.h> // For arc4random
 
@@ -235,33 +232,6 @@ ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ)
 
 double sRandomInRange(double iMin, double iMax)
 	{ return (double(arc4random()) / 0x100000000) * (iMax - iMin) + iMin; }
-
-// =================================================================================================
-// MARK: - operator<<
-
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Name& iName)
-	{
-	sEWrite(w, string8(iName));
-	return w;
-	}
-
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Any& iAny)
-	{
-	Util_Any_JSON::sWrite(Val_Any(iAny), w);
-	return w;
-	}
-
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Map& iMap)
-	{
-	Util_Any_JSON::sWrite(Any(iMap), w);
-	return w;
-	}
-
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Seq& iSeq)
-	{
-	Util_Any_JSON::sWrite(Any(iSeq), w);
-	return w;
-	}
 
 } // namespace GameEngine
 } // namespace ZooLib

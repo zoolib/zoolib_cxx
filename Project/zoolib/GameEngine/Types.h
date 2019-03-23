@@ -1,8 +1,8 @@
 #ifndef __ZooLib_GameEngine_Types_h__
 #define __ZooLib_GameEngine_Types_h__ 1
 
-#include "zoolib/Cartesian_Matrix.h"
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/Cartesian_Matrix.h"
 #include "zoolib/Map_Shared_T.h"
 #include "zoolib/Name.h"
 #include "zoolib/TagVal.h"
@@ -386,14 +386,6 @@ ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ);
 // MARK: - sRandomInRange
 
 double sRandomInRange(double iMin, double iMax);
-
-// =================================================================================================
-// MARK: - operator<<
-
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Name& iName);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Any& iAny);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Map& iMap);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Seq& iSeq);
 
 } // namespace GameEngine
 } // namespace ZooLib
