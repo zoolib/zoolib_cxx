@@ -240,7 +240,7 @@ Cog<Param> sCallCog(const RefCallableCog<Param>& iCallable, Param iParam)
 	}
 
 template <class Cog>
-void sCallUpdate_Cog(Cog& ioCog, typename Cog::Param iParam)
+Cog& sCallUpdate_Cog(Cog& ioCog, typename Cog::Param iParam)
 	{
 	if (sIsPending(ioCog))
 		{
@@ -249,6 +249,7 @@ void sCallUpdate_Cog(Cog& ioCog, typename Cog::Param iParam)
 		else
 			ioCog.Clear();
 		}
+	return ioCog;
 	}
 
 template <class Cog>
