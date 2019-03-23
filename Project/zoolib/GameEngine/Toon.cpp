@@ -150,17 +150,20 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 				{
 				const Name theName = *theNameP;
 
-				ZQ<Rat> theFDQ = sQRat(sQGetNamed(*theMapQ, "FrameDuration", "FD"));
-				ZQ<Rat> theTDQ = sQRat(sQGetNamed(*theMapQ, "TotalDuration", "TD"));
-
 				const size_t theFrameCount = sToonFrameCount(theName);
 
-				if (theTDQ)
+				if (ZQ<Rat> theTDQ = sQRat(sQGetNamed(*theMapQ, "TotalDuration", "TD")))
+					{
 					theToon = spToon_NameFrame(theName, *theTDQ, theFrameCount);
-				else if (theFDQ)
+					}
+				else if (ZQ<Rat> theFDQ = sQRat(sQGetNamed(*theMapQ, "FrameDuration", "FD")))
+					{
 					theToon = spToon_NameFrame(theName, *theFDQ * theFrameCount, theFrameCount);
+					}
 				else
+					{
 					theToon = spToon_NameFrame(theName, theFrameCount * 1.0/15.0, theFrameCount);
+					}
 				}
 			else
 				{
