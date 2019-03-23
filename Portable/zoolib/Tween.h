@@ -251,13 +251,52 @@ ZRef<Tween<Val0> >& operator|=(ZRef<Tween<Val0> >& io0, const ZRef<Tween<Val1> >
 // =================================================================================================
 #pragma mark - sTween_Or (for homogenous pairs)
 
+template <class Val, class Combiner = TweenCombiner<Val,Val> >
+class Tween_Or_Homogoneous
+:	public Tween<Val>
+	{
+public:
+	Tween_Or_Homogoneous(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
+	:	f0(i0)
+	,	f1(i1)
+		{}
+
+// From Tween
+	virtual ZQ<Val> QValAt(double iPlace)
+		{
+		ZQ<Val> theQ0 = f0->QValAt(iPlace);
+		ZQ<Val> theQ1 = f1->QValAt(iPlace);
+		if (theQ0)
+			{
+		 	if (theQ1)
+				return fCombiner(*theQ0, *theQ1);
+			return *theQ0;
+			}
+		else if (theQ1)
+			{
+			return *theQ1;
+			}
+		return null;
+		}
+
+	virtual double Weight()
+		{ return sMax(spWeight(f0, fD0Q), spWeight(f1, fD1Q)); }
+
+private:
+	Combiner fCombiner;
+
+	const ZRef<Tween<Val> > f0;
+	const ZRef<Tween<Val> > f1;
+	ZQ<double> fD0Q, fD1Q;
+	};
+
 template <class Val>
-ZRef<Tween<Val> > sTween_Or(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
+ZRef<Tween<Val> > sTween_Or_Homogoneous(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
 	{
 	if (i0)
 		{
 		if (i1)
-			return new Tween_Or<Val,Val>(i0, i1);
+			return new Tween_Or_Homogoneous<Val>(i0, i1);
 		return i0;
 		}
 	return i1;
@@ -265,7 +304,7 @@ ZRef<Tween<Val> > sTween_Or(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >
 
 template <class Val>
 ZRef<Tween<Val> > operator|(const ZRef<Tween<Val> >& i0, const ZRef<Tween<Val> >& i1)
-	{ return sTween_Or(i0, i1); }
+	{ return sTween_Or_Homogoneous(i0, i1); }
 
 template <class Val>
 ZRef<Tween<Val> >& operator|=(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1)
@@ -276,7 +315,7 @@ struct TweenAccumulatorCombiner_Or
 	{
 	typedef Val_p Val;
 	void operator()(ZRef<Tween<Val> >& io0, const ZRef<Tween<Val> >& i1) const
-		{ io0 = sTween_Or<Val>(io0, i1); }
+		{ io0 = sTween_Or_Homogoneous<Val>(io0, i1); }
 	};
 
 // =================================================================================================
