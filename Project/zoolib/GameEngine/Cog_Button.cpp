@@ -1,3 +1,4 @@
+#include "zoolib/GameEngine/Cog_Button.h"
 #include "zoolib/GameEngine/PitchAndCatch.h"
 
 #include "zoolib/GameEngine/CoT.h"
@@ -77,22 +78,17 @@ Cog spCog_TouchUp(const ZRef<TouchListener>& iTouchListener)
 // =================================================================================================
 // MARK: -
 
-static
-Cog spCogCtor_Button(const Map& iMap)
-	{	
-	const Cog toon_DownIn = sCog_Repeat(sCoT(iMap.QGet("CoT_DownIn")));
-	const Cog toon_UpOut = sCog_Repeat(sCoT(iMap.QGet("CoT_UpOut")));
-	const Cog toon_DownOut = sCog_Fallback(sCog_Repeat(sCoT(iMap.QGet("CoT_DownOut"))), toon_UpOut);
-
-// There is currently no "UpIn" behavior in a touch interface. To handle mouse-style cursor
-// highlighting we'll need a concept of a 'non-touching' touch of some sort.
-
-//	const Cog toon_UpIn = sCog_Fallback(sCog_Repeat(sCoT(iMap.QGet("CoT_UpIn"))), toon_UpOut);
+Cog sCog_Button(
+	const GRect& iHotRect,
+	const Cog& iCog_UpOut,
+	const Cog& iCog_DownIn,
+	const Cog& iCog_DownOut,
+	const Cog& iCog_Pushed)
+	{
+	const Cog toon_DownOut = sCog_Fallback(iCog_DownOut, iCog_UpOut);
 
 	ZRef<TouchListener> theTL = new TouchListener(true);
-	theTL->fBounds = sDGet(sGRect(10,10), sQGRect(iMap["HotRect"]));
-
-	const Cog pushed = sCog_Pitch(iMap.Get<Map>("Pushed"));
+	theTL->fBounds = iHotRect;
 
 	const Cog cog_TouchNothing = sCog_TouchNothing(theTL);
 	const Cog cog_TouchDown = sCog_TouchDown(theTL);
@@ -102,15 +98,34 @@ Cog spCogCtor_Button(const Map& iMap)
 
 	Cog aCog;
 
-	aCog ^= sCog_Repeat(cog_TouchNothing) % toon_UpOut;
+	aCog ^= sCog_Repeat(cog_TouchNothing) % iCog_UpOut;
 
-	aCog ^= cog_TouchDown >> sCog_Repeat(cog_TouchIn) % toon_DownIn;
+	aCog ^= cog_TouchDown >> sCog_Repeat(cog_TouchIn) % iCog_DownIn;
 
-	aCog ^= sCog_Repeat((sCog_Repeat(cog_TouchOut) % toon_DownOut) ^ cog_TouchIn >> +(sCog_Repeat(cog_TouchIn) % toon_DownIn));
+	aCog ^= sCog_Repeat((sCog_Repeat(cog_TouchOut) % iCog_DownOut) ^ cog_TouchIn >> +(sCog_Repeat(cog_TouchIn) % iCog_DownIn));
 
-	aCog ^= cog_TouchUp >> pushed;
+	aCog ^= cog_TouchUp >> iCog_Pushed;
 
 	return sCog_Repeat(+aCog) & sCog_Repeat(sCog_UpdateTouchListener(theTL));
+	}
+
+static
+Cog spCogCtor_Button(const Map& iMap)
+	{	
+	const Cog toon_UpOut = sCog_Repeat(sCoT(iMap.QGet("CoT_UpOut")));
+	const Cog toon_DownIn = sCog_Repeat(sCoT(iMap.QGet("CoT_DownIn")));
+	const Cog toon_DownOut = sCog_Repeat(sCoT(iMap.QGet("CoT_DownOut")));
+
+// There is currently no "UpIn" behavior in a touch interface. To handle mouse-style cursor
+// highlighting we'll need a concept of a 'non-touching' touch of some sort.
+
+//	const Cog toon_UpIn = sCog_Fallback(sCog_Repeat(sCoT(iMap.QGet("CoT_UpIn"))), toon_UpOut);
+
+	GRect theHotRect = sDGet(sGRect(10,10), sQGRect(iMap["HotRect"]));
+
+	const Cog theCog_Pushed = sCog_Pitch(iMap.Get<Map>("Pushed"));
+
+	return sCog_Button(theHotRect, toon_UpOut, toon_DownIn, toon_DownOut, theCog_Pushed);
 	}
 
 static
