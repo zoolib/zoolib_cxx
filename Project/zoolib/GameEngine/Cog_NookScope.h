@@ -6,6 +6,8 @@
 namespace ZooLib {
 namespace GameEngine {
 
+Cog sCog_NookScope(const ZRef<NookScope>& iNookScope, const Cog& iChild);
+
 Cog sCog_NookScope(const Cog& iChild);
 
 } // namespace GameEngine

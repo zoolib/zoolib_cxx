@@ -37,12 +37,15 @@ public:
 		}
 	};
 
-Cog sCog_NookScope(const Cog& iChild)
+Cog sCog_NookScope(const ZRef<NookScope>& iNookScope, const Cog& iChild)
 	{
 	if (sIsPending(iChild))
-		return new Callable_Cog_NookScope(new NookScope, iChild);
+		return new Callable_Cog_NookScope(iNookScope, iChild);
 	return iChild;
 	}
+
+Cog sCog_NookScope(const Cog& iChild)
+	{ return sCog_NookScope(new NookScope, iChild); }
 
 static
 Cog spCogCtor_NookScope(const Map& iMap)
