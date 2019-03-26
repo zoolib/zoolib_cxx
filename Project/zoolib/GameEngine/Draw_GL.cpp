@@ -28,11 +28,21 @@ void Visitor_Draw_GL_String::Visit_Rendered_String(
 		
 		const string32 theString32 = Unicode::sAsUTF32(iRendered_String->GetString());
 		::glPushMatrix();
-		::glMultMatrixf(&fAlphaGainMat.fMat[0][0]);
+		Mat theMat = fAlphaGainMat.fMat * sScale3<Rat>(0.1,-0.1,1.0);
+
+		::glMultMatrixf(&theMat[0][0]);
 		::glRasterPos3f(0, 0, 0);
+
+		glLineWidth(1.5);
+
 		foreacha (cp, theString32)
-			::glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, cp);
+			::glutStrokeCharacter(GLUT_STROKE_ROMAN, cp);
+
+//		foreacha (cp, theString32)
+//			::glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, cp);
+
 		::glPopMatrix();
+
 	#endif
 	}
 
