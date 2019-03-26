@@ -54,6 +54,18 @@ Matrix<Val,4,4> sScale3Z(Val z)
 	{ return sScale3<Val>(1, 1, z); }
 
 template <class Val>
+Matrix<Val,4,4> sScale3XY(Val x, Val y)
+	{ return sScale3<Val>(x, y, 1); }
+
+template <class Val>
+Matrix<Val,4,4> sScale3XZ(Val x, Val z)
+	{ return sScale3<Val>(x, 1, z); }
+
+template <class Val>
+Matrix<Val,4,4> sScale3YZ(Val y, Val z)
+	{ return sScale3<Val>(1, y, z); }
+
+template <class Val>
 Matrix<Val,4,4> sScale3(const Matrix<Val,1,3>& iCVec3)
 	{ return sScale(iCVec3); }
 
@@ -81,6 +93,18 @@ Matrix<Val,4,4> sTranslate3Y(Val y)
 template <class Val>
 Matrix<Val,4,4> sTranslate3Z(Val z)
 	{ return sTranslate3<Val>(0, 0, z); }
+
+template <class Val>
+Matrix<Val,4,4> sTranslate3XY(Val x, Val y)
+	{ return sTranslate3<Val>(x, y, 0); }
+
+template <class Val>
+Matrix<Val,4,4> sTranslate3XZ(Val x, Val z)
+	{ return sTranslate3<Val>(x, 0, z); }
+
+template <class Val>
+Matrix<Val,4,4> sTranslate3YZ(Val y, Val z)
+	{ return sTranslate3<Val>(0, y, z); }
 
 template <class Val>
 Matrix<Val,4,4> sTranslate3(const Matrix<Val,1,3>& iCVec3)
