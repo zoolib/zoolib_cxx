@@ -34,7 +34,7 @@ class StartOnNewThreadHandler
 	{
 public:
 	StartOnNewThreadHandler()
-	:	fSpareThreads(0)
+	:	fIdleThreads(0)
 	,	fActiveThreads(0)
 	,	fKeepRunning(true)
 		{}
@@ -54,7 +54,7 @@ public:
 		try
 			{
 			fQueue.push_back(iCallable);
-			if (fSpareThreads == 0)
+			if (fIdleThreads == 0)
 				{
 				++fActiveThreads;
 				ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
@@ -74,7 +74,6 @@ public:
 		{
 		ZAcqMtx acq(fMtx);
 		double expires = Time::sSystem() + 10;
-		++fSpareThreads;
 		for (;;)
 			{
 			if (fQueue.empty())
@@ -89,15 +88,16 @@ public:
 					{
 					break;
 					}
+				++fIdleThreads;
 				fCnd.WaitFor(fMtx, 5);
-				}
+				--fIdleThreads;
+ 				}
 			else
 				{
 				ZThread::sSetName("SONT call");
 				ZRef<Callable<void()>> theCallable = fQueue.front();
 				fQueue.pop_front();
 
-				--fSpareThreads;
 
 				try
 					{
@@ -106,11 +106,8 @@ public:
 					}
 				catch (...)
 					{}
-
-				++fSpareThreads;
 				}
 			}
-		--fSpareThreads;
 		--fActiveThreads;
 		}
 
@@ -123,7 +120,7 @@ public:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	int fSpareThreads;
+	int fIdleThreads;
 	int fActiveThreads;
 	bool fKeepRunning;
 	std::list<ZRef<Callable<void()>>> fQueue;
