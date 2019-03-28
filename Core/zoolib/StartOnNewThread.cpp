@@ -51,15 +51,22 @@ public:
 	void Start(const ZRef<Callable<void()>>& iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		fQueue.push_back(iCallable);
-		if (fSpareThreads == 0)
+		try
 			{
-			++fActiveThreads;
-			ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
+			fQueue.push_back(iCallable);
+			if (fSpareThreads == 0)
+				{
+				++fActiveThreads;
+				ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
+				}
+			else
+				{
+				fCnd.Broadcast();
+				}
 			}
-		else
+		catch (...)
 			{
-			fCnd.Broadcast();
+			ZUnimplemented();
 			}
 		}
 
