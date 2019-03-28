@@ -54,7 +54,7 @@ public:
 		try
 			{
 			fQueue.push_back(iCallable);
-			if (fIdleThreads == 0)
+			if (fIdleThreads < fQueue.size())
 				{
 				++fActiveThreads;
 				ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
@@ -97,7 +97,6 @@ public:
 				ZThread::sSetName("SONT call");
 				ZRef<Callable<void()>> theCallable = fQueue.front();
 				fQueue.pop_front();
-
 
 				try
 					{
