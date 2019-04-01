@@ -19,7 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #ifndef __ZooLib_Not_h__
-#define __ZooLib_Not_h__
+#define __ZooLib_Not_h__ 1
+#include "zconfig.h"
 
 namespace ZooLib {
 
