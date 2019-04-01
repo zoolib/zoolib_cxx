@@ -39,6 +39,8 @@ public:
 	virtual void Accept(const Visitor& iVisitor) = 0;
 	};
 
+void sAccept(const ZRef<Visitee>& iVisitee, const Visitor& iVisitor);
+
 // =================================================================================================
 #pragma mark - Visitor
 

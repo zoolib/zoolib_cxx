@@ -28,6 +28,9 @@ namespace ZooLib {
 void Visitee::Accept(const Visitor& iVisitor)
 	{ const_cast<Visitor&>(iVisitor).Visit(this); }
 
+void sAccept(const ZRef<Visitee>& iVisitee, const Visitor& iVisitor)
+	{ iVisitee->Accept(iVisitor); }
+
 // =================================================================================================
 #pragma mark - Visitor
 
