@@ -120,7 +120,7 @@ void Texture_GL::pMakeTexture()
 		::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	#endif
 
-	static bool spNeedPOT = false;
+	static bool spNeedPOT = false; // Need textures that are a `Power Of Two` in size?
 
 	const void* baseAddress = nullptr;
 
