@@ -204,6 +204,30 @@ private:
 ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds);
 
 // =================================================================================================
+// MARK: - Rendered_RightAngleSegment
+
+class Rendered_RightAngleSegment
+:	public Rendered
+	{
+public:
+	Rendered_RightAngleSegment(const ZRGBA& iRGBA, bool iConcave, const GRect& iBounds);
+
+// From Rendered
+	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
+
+// Our protocol
+	void Get(ZRGBA& oRGBA, bool& oConcave, GRect& oBounds);
+
+private:
+	const ZRGBA fRGBA;
+	const bool fConcave;
+	const GRect fBounds;
+	};
+
+ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
+	const ZRGBA& iRGBA, bool iConcave, const GRect& iBounds);
+
+// =================================================================================================
 // MARK: - Rendered_Sound
 
 class Rendered_Sound
@@ -312,6 +336,7 @@ class Visitor_Rendered
 	{
 public:
 	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered);
+
 	virtual void Visit_Rendered_AlphaGainMat(
 		const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat);
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
@@ -319,6 +344,8 @@ public:
 	virtual void Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group);
 	virtual void Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line);
 	virtual void Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect);
+	virtual void Visit_Rendered_RightAngleSegment(
+		const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);
 	virtual void Visit_Rendered_Sound(const ZRef<Rendered_Sound>& iRendered_Sound);
 	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
 	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture);

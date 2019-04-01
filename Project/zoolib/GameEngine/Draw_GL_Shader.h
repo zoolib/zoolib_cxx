@@ -20,6 +20,8 @@ public:
 
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
 	virtual void Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect);
+	virtual void Visit_Rendered_RightAngleSegment(
+		const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);
 	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture);
 	virtual void Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iRendered_Triangle);
 

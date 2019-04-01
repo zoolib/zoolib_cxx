@@ -332,6 +332,38 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
 	}
 
+void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
+	const ZRGBA& iRGBA,
+	bool iConcave,
+	const GRect& iRect)
+	{
+	ZRef<Context> theContext = spContext();
+
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	theContext->Use(theContext->fProgramID_Constant);
+
+	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+
+	::glUniformMatrix4fv(
+		theContext->fUniform_Constant_Projection,
+		1, false, &iAlphaMat.fMat.fE[0][0]);
+
+	GPoint vertices[4];
+	vertices[0] = LT(iRect);
+	vertices[1] = RT(iRect);
+	vertices[2] = LB(iRect);
+	vertices[3] = RB(iRect);
+
+	::glEnableVertexAttribArray(theContext->fAttribute_Constant_Pos);
+ 	::glVertexAttribPointer(theContext->fAttribute_Constant_Pos,
+		2, GL_FLOAT, GL_FALSE, 0, vertices);
+
+	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
+
 void spDrawTriangle(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA,
 	const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
@@ -441,6 +473,16 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRen
 	GRect theRect;
 	iRendered_Rect->Get(theRGBA, theRect);
 	spDrawRect(sAlphaMat(fAlphaGainMat), theRGBA, theRect);
+	}
+
+void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
+	const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment)
+	{
+	ZRGBA theRGBA;
+	bool theConcave;
+	GRect theRect;
+	iRendered_RightAngleSegment->Get(theRGBA, theConcave, theRect);
+	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA, theConcave, theRect);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
