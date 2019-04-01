@@ -2,7 +2,7 @@
 #define __ZooLib_GameEngine_Draw_GL_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/GameEngine/Rendered_Visitors.h"
+#include "zoolib/GameEngine/Visitor_Rendered_Std.h"
 
 namespace ZooLib {
 namespace GameEngine {

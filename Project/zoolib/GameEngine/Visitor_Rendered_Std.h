@@ -1,5 +1,5 @@
-#ifndef __GameEngine_Rendered_Visitors_h__
-#define __GameEngine_Rendered_Visitors_h__ 1
+#ifndef __GameEngine_Visitor_Rendered_Std_h__
+#define __GameEngine_Visitor_Rendered_Std_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
@@ -64,4 +64,4 @@ public:
 } // namespace GameEngine
 } // namespace ZooLib
 
-#endif // __GameEngine_Rendered_Visitors_h__
+#endif // __GameEngine_Visitor_Rendered_Std_h__

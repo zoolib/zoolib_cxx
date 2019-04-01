@@ -2,8 +2,8 @@
 
 #include "zoolib/Log.h"
 
-#include "zoolib/GameEngine/Rendered_Visitors.h"
 #include "zoolib/GameEngine/Util_Allocator.h"
+#include "zoolib/GameEngine/Visitor_Rendered_Std.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
