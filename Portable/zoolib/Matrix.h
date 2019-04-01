@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-// For compatibility with OpenGL we store in column-major order.
 // Matrices are specified as the number of columns, then the number of rows.
 
 // =================================================================================================
