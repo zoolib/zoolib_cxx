@@ -38,7 +38,7 @@ public:
 	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered)
 		{
 		// Dispatch the default behavior.
-		this->pVisit_Rendered(iRendered.Get());
+		this->pInsertIntoMap(iRendered.Get());
 		}
 
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
@@ -56,7 +56,7 @@ public:
 			theRendered =
 				sRendered_Buffer(theWidth, theHeight, iRendered_Buffer->GetRGBA(), theRendered);
 
-			this->pVisit_Rendered(theRendered.Get());
+			this->pInsertIntoMap(theRendered.Get());
 			}
 		}
 
@@ -80,7 +80,7 @@ public:
 		const GRect intersection = visibleBounds & fScreenBounds;
 
 		if (sNotEmpty(intersection))
-			this->pVisit_Rendered(iRendered_Texture.Get());
+			this->pInsertIntoMap(iRendered_Texture.Get());
 		}
 
 // Our protocol
@@ -94,7 +94,7 @@ public:
 		return theGroup;
 		}
 
-	void pVisit_Rendered(Rendered* iRendered)
+	void pInsertIntoMap(Rendered* iRendered)
 		{
 		// Push (0,0,0) through our current accumulated
 		// transformation, and take the resulting Z coordinate.
