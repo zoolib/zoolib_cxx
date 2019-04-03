@@ -55,6 +55,12 @@ inline GRect sGRect(Rat iX, Rat iY)
 inline GRect sGRect(Rat iL, Rat iT, Rat iR, Rat iB)
 	{ return sRect<GRect>(iL, iT, iR, iB); }
 
+inline GPoint sGPoint()
+	{ return GPoint(); }
+
+inline GPoint sGPoint(Rat iX, Rat iY)
+	{ return sPoint<GPoint>(iX, iY); }
+
 // =================================================================================================
 // MARK: - Alpha
 
