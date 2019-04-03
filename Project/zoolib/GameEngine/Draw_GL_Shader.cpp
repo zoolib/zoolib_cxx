@@ -42,6 +42,18 @@ const char spFragmentShaderSource_Constant[] = ""
 "		}"
 "";
 
+const char spFragmentShaderSource_RAS[] = ""
+#if not ZCONFIG_SPI_Enabled(MacOSX)
+"	precision mediump float; "
+#endif
+"	uniform vec4 uColor; "
+
+"	void main()"
+"		{"
+"		gl_FragColor = uColor;"
+"		}"
+"";
+
 // -----
 
 const char spVertexShaderSource_Textured[] = ""
@@ -182,7 +194,8 @@ public:
 		spLinkAndCheckProgram(fProgramID_Constant);
 
 		::glDetachShader(fProgramID_Constant, theVS_Constant);
-		::glDetachShader(fProgramID_Constant, theFS_Constant);		
+		::glDetachShader(fProgramID_Constant, theFS_Constant);
+
 		::glDeleteShader(theVS_Constant);
 		::glDeleteShader(theFS_Constant);
 		}
@@ -191,6 +204,32 @@ public:
 		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
 
 		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "aPos");
+
+		{
+		VertexShaderID theVS_Constant =
+			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
+
+		FragmentShaderID theFS_RAS =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_RAS);
+
+		fProgramID_RAS = ::glCreateProgram();
+
+		::glAttachShader(fProgramID_RAS, theVS_Constant);
+		::glAttachShader(fProgramID_RAS, theFS_RAS);
+
+		spLinkAndCheckProgram(fProgramID_RAS);
+
+		::glDetachShader(fProgramID_RAS, theVS_Constant);
+		::glDetachShader(fProgramID_RAS, theFS_RAS);
+
+		::glDeleteShader(theVS_Constant);
+		::glDeleteShader(theFS_RAS);
+		}
+
+		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
+		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
+
+		fAttribute_RAS_Pos = ::glGetAttribLocation(fProgramID_RAS, "aPos");
 
 		{
 		VertexShaderID theVS_Textured =
@@ -225,6 +264,12 @@ public:
 		GLint fUniform_Constant_Color;
 
 		GLint fAttribute_Constant_Pos;
+
+	ProgramID fProgramID_RAS;
+		GLint fUniform_RAS_Projection;
+		GLint fUniform_RAS_Color;
+
+		GLint fAttribute_RAS_Pos;
 
 	ProgramID fProgramID_Textured;
 		GLint fUniform_Textured_Projection;
@@ -334,8 +379,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 
 void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA,
-	bool iConcave,
-	const GRect& iRect)
+	bool iConcave)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -343,25 +387,24 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
 	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	theContext->Use(theContext->fProgramID_Constant);
+	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
-		theContext->fUniform_Constant_Projection,
+		theContext->fUniform_RAS_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
 
-	GPoint vertices[4];
-	vertices[0] = LT(iRect);
-	vertices[1] = RT(iRect);
-	vertices[2] = LB(iRect);
-	vertices[3] = RB(iRect);
+	GPoint vertices[3];
+	vertices[0] = sGPoint(0,0);
+	vertices[1] = sGPoint(1,1);
+	vertices[2] = sGPoint(0,1);
 
-	::glEnableVertexAttribArray(theContext->fAttribute_Constant_Pos);
- 	::glVertexAttribPointer(theContext->fAttribute_Constant_Pos,
+	::glEnableVertexAttribArray(theContext->fAttribute_RAS_Pos);
+	::glVertexAttribPointer(theContext->fAttribute_RAS_Pos,
 		2, GL_FLOAT, GL_FALSE, 0, vertices);
 
-	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	::glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
 void spDrawTriangle(const AlphaMat& iAlphaMat,
@@ -382,7 +425,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 		theContext->fUniform_Constant_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
 
-	GPoint vertices[4];
+	GPoint vertices[3];
 	vertices[0] = iP0;
 	vertices[1] = iP1;
 	vertices[2] = iP2;
@@ -480,9 +523,8 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 	{
 	ZRGBA theRGBA;
 	bool theConcave;
-	GRect theRect;
-	iRendered_RightAngleSegment->Get(theRGBA, theConcave, theRect);
-	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA, theConcave, theRect);
+	iRendered_RightAngleSegment->Get(theRGBA, theConcave);
+	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA, theConcave);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)

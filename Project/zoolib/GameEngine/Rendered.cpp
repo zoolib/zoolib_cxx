@@ -214,25 +214,23 @@ ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
 // MARK: - Rendered_RightAngleSegment
 
 Rendered_RightAngleSegment::Rendered_RightAngleSegment(
-	const ZRGBA& iRGBA, bool iConcave, const GRect& iBounds)
+	const ZRGBA& iRGBA, bool iConcave)
 :	fRGBA(iRGBA)
 ,	fConcave(iConcave)
-,	fBounds(iBounds)
 	{}
 
 void Rendered_RightAngleSegment::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_RightAngleSegment(this); }
 
-void Rendered_RightAngleSegment::Get(ZRGBA& oRGBA, bool& oConcave, GRect& oBounds)
+void Rendered_RightAngleSegment::Get(ZRGBA& oRGBA, bool& oConcave)
 	{
 	oRGBA = fRGBA;
 	oConcave = fConcave;
-	oBounds = fBounds;
 	}
 
 ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
-	const ZRGBA& iRGBA, bool iConcave, const GRect& iBounds)
-	{ return new Rendered_RightAngleSegment(iRGBA, iConcave, iBounds); }
+	const ZRGBA& iRGBA, bool iConcave)
+	{ return new Rendered_RightAngleSegment(iRGBA, iConcave); }
 
 // =================================================================================================
 // MARK: - Rendered_Sound
@@ -301,8 +299,7 @@ const GRect& Rendered_Texture::GetBounds()
 ZRef<Rendered_Texture> Rendered_Texture::spMake(
 	const ZRef<Texture>& iTexture, const GRect& iBounds)
 	{
-	if (Rendered_Texture* result =
-		spSafePtrStack_Texture.PopIfNotEmpty<Rendered_Texture>())
+	if (Rendered_Texture* result = spSafePtrStack_Texture.PopIfNotEmpty<Rendered_Texture>())
 		{
 		result->fTexture = iTexture;
 		result->fBounds = iBounds;
