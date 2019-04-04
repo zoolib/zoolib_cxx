@@ -8,7 +8,7 @@
 namespace ZooLib {
 namespace GameEngine {
 
-ZRef<Rendered_Group> sDrawPreprocess(const ZRef<Rendered>& iRendered,
+ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
 	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
 	const GPoint& iGameSize);
 
