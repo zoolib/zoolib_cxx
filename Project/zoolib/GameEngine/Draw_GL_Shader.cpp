@@ -20,21 +20,27 @@ namespace { // anonymous
 
 // -----
 
+#define MACRO_ShaderPrefix \
+	"#ifdef GL_ES\n" \
+	"	precision mediump float;\n" \
+	"#endif\n" \
+
 const char spVertexShaderSource_Constant[] = ""
+MACRO_ShaderPrefix
 "	uniform mat4 uProjection;"
 "	attribute vec4 aPos;"
+"	varying vec4 ourPosition;"
 
 "	void main()"
 "		{"
 "		gl_Position = uProjection * aPos;"
+"		ourPosition = aPos;"
 "		}"
 "";
 
 const char spFragmentShaderSource_Constant[] = ""
-#if not ZCONFIG_SPI_Enabled(MacOSX)
-"	precision mediump float; "
-#endif
-"	uniform vec4 uColor; "
+MACRO_ShaderPrefix
+"	uniform vec4 uColor;"
 
 "	void main()"
 "		{"
@@ -43,20 +49,29 @@ const char spFragmentShaderSource_Constant[] = ""
 "";
 
 const char spFragmentShaderSource_RAS[] = ""
-#if not ZCONFIG_SPI_Enabled(MacOSX)
-"	precision mediump float; "
-#endif
+MACRO_ShaderPrefix
+"	uniform mat4 uInverseProjection; "
+"	uniform vec2 uResolution;"
 "	uniform vec4 uColor; "
-
+"	varying vec4 ourPosition; "
 "	void main()"
 "		{"
-"		gl_FragColor = uColor;"
+//"		vec2 offsetFragCoord = vec2(gl_FragCoord);"
+"		vec2 offsetFragCoord = vec2(gl_FragCoord.x, gl_FragCoord.y);"
+"		vec4 scaledFragCoord = vec4(offsetFragCoord.xy/uResolution.xy, 0.0, 1.0);"
+"		vec4 location = uInverseProjection * scaledFragCoord;"
+"		location.x -= 1.0;"
+//"		vec4 location = scaledFragCoord;"
+"		gl_FragColor = ourPosition;"
+
+//"		gl_FragColor = vec4(step(0.4, location.x), step(0.4, location.y), 0.1, 1.0);"
 "		}"
 "";
 
 // -----
 
 const char spVertexShaderSource_Textured[] = ""
+MACRO_ShaderPrefix
 "	uniform mat4 uProjection;"
 "	attribute vec2 aTex;"
 "	attribute vec4 aPos;"
@@ -70,9 +85,7 @@ const char spVertexShaderSource_Textured[] = ""
 "";
 
 const char spFragmentShaderSource_Textured[] = ""
-#if not ZCONFIG_SPI_Enabled(MacOSX)
-"	precision mediump float; "
-#endif
+MACRO_ShaderPrefix
 "	uniform sampler2D uTexture;"
 "	uniform vec4 uModulation;"
 "	varying vec2 vTexCoord;"
@@ -201,9 +214,9 @@ public:
 		}
 
 		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "uProjection");
-		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
-
 		fAttribute_Constant_Pos = ::glGetAttribLocation(fProgramID_Constant, "aPos");
+
+		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
 
 		{
 		VertexShaderID theVS_Constant =
@@ -227,9 +240,11 @@ public:
 		}
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
-		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
-
 		fAttribute_RAS_Pos = ::glGetAttribLocation(fProgramID_RAS, "aPos");
+
+		fUniform_RAS_InverseProjection = ::glGetUniformLocation(fProgramID_RAS, "uInverseProjection");
+		fUniform_RAS_Resolution = ::glGetUniformLocation(fProgramID_RAS, "uResolution");
+		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
 
 		{
 		VertexShaderID theVS_Textured =
@@ -252,32 +267,33 @@ public:
 		}
 
 		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "uProjection");
-		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "uModulation");
-		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "uTexture");
-
 		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "aTex");
 		fAttribute_Textured_Pos = ::glGetAttribLocation(fProgramID_Textured, "aPos");
+
+		fUniform_Textured_Texture = ::glGetUniformLocation(fProgramID_Textured, "uTexture");
+		fUniform_Textured_Modulation = ::glGetUniformLocation(fProgramID_Textured, "uModulation");
 		}
 
 	ProgramID fProgramID_Constant;
 		GLint fUniform_Constant_Projection;
-		GLint fUniform_Constant_Color;
-
 		GLint fAttribute_Constant_Pos;
+		GLint fUniform_Constant_Color;
 
 	ProgramID fProgramID_RAS;
 		GLint fUniform_RAS_Projection;
-		GLint fUniform_RAS_Color;
-
 		GLint fAttribute_RAS_Pos;
+
+		GLint fUniform_RAS_InverseProjection;
+		GLint fUniform_RAS_Resolution;
+		GLint fUniform_RAS_Color;
 
 	ProgramID fProgramID_Textured;
 		GLint fUniform_Textured_Projection;
-		GLint fUniform_Textured_Modulation;
-		GLint fUniform_Textured_Texture;
-
-		GLint fAttribute_Textured_Pos;
 		GLint fAttribute_Textured_Tex;
+		GLint fAttribute_Textured_Pos;
+
+		GLint fUniform_Textured_Texture;
+		GLint fUniform_Textured_Modulation;
 	};
 
 ZRef<Context> spContext()
@@ -389,22 +405,55 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
+	GLint viewPort[4];
+	::glGetIntegerv(GL_VIEWPORT, viewPort);
+
+	::glUniform2f(theContext->fUniform_RAS_Resolution, viewPort[2], viewPort[3]);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
 
-	GPoint vertices[3];
+	const Mat theInverse = sInverse(iAlphaMat.fMat);
+//
+//	CVec3 point1 = sCVec3<Rat>(200, 0, 0);
+//	CVec3 point2 = point1 / 800;
+//	CVec3 toObSpace = theInverse * point2;
+//
+//
+//	const Mat theMult = theInverse * iAlphaMat.fMat;
+//
+//	const Mat theMult2 = iAlphaMat.fMat * theInverse;
+//
+	::glUniformMatrix4fv(
+		theContext->fUniform_RAS_InverseProjection,
+		1, false, &theInverse.fE[0][0]);
+
+	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
+
+//	CVec3 test1 = sCVec3<Rat>(1,1,0);
+//	CVec3 test2 = iAlphaMat.fMat*test1;
+//	CVec4 test35 = theInverse*sCVec4<Rat>(1,1,0,1);
+//	CVec3 test3 = theInverse*test1;
+//	CVec3 test4 = theInverse*test2;
+//
+//
+//	CVec3 screenTest5 = sCVec3<Rat>(50,0,0);
+//	CVec3 obspace = theInverse * screenTest5;
+//
+//
+
+	GPoint vertices[4];
 	vertices[0] = sGPoint(0,0);
-	vertices[1] = sGPoint(1,1);
+	vertices[1] = sGPoint(1,0);
 	vertices[2] = sGPoint(0,1);
+	vertices[3] = sGPoint(1,1);
 
 	::glEnableVertexAttribArray(theContext->fAttribute_RAS_Pos);
 	::glVertexAttribPointer(theContext->fAttribute_RAS_Pos,
 		2, GL_FLOAT, GL_FALSE, 0, vertices);
 
-	::glDrawArrays(GL_TRIANGLES, 0, 3);
+	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
 void spDrawTriangle(const AlphaMat& iAlphaMat,

@@ -36,6 +36,7 @@ typedef Matrix<Rat,4,4> Mat;
 
 typedef Matrix<Rat,1,2> CVec2;
 typedef Matrix<Rat,1,3> CVec3;
+typedef Matrix<Rat,1,4> CVec4;
 
 typedef MatrixArray<Rat,1,2,2> GRect;
 typedef Matrix<Rat,1,2> GPoint;

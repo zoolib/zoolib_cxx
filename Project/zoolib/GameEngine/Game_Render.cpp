@@ -173,12 +173,16 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 
 		// Translate so it's 0 to X(iPixelSize) and 0 to Y(iPixelSize).
 		theMat *= sTranslate3<Rat>(-X(iPixelSize)/2, -Y(iPixelSize)/2, 0);
-		
+
 		// Apply any 960-->480 scaling, and centering
 		theMat *= additional;
 
 		iListenerL = X(theMat * sCVec3(iListenerL,0,0));
 		iListenerR = X(theMat * sCVec3(iListenerR,0,0));
+
+		CVec3 theTR = theMat * sCVec3<Rat>(800, 0, 0);
+		CVec3 theBR = theMat * sCVec3<Rat>(800, 800, 0);
+
 
 		iRendered->Accept(Visitor_Shader(
 			theMat, iShowBounds, iShowOrigin,
