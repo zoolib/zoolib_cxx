@@ -183,24 +183,24 @@ public:
 		ZCounted::Initialize();
 		
 		{
-		VertexShaderID theVS_Constant =
+		VertexShaderID theVS =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
 
-		FragmentShaderID theFS_Constant =
+		FragmentShaderID theFS =
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant);
 
 		fProgramID_Constant = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_Constant, theVS_Constant);
-		::glAttachShader(fProgramID_Constant, theFS_Constant);		
+		::glAttachShader(fProgramID_Constant, theVS);
+		::glAttachShader(fProgramID_Constant, theFS);
 
 		spLinkAndCheckProgram(fProgramID_Constant);
 
-		::glDetachShader(fProgramID_Constant, theVS_Constant);
-		::glDetachShader(fProgramID_Constant, theFS_Constant);
+		::glDetachShader(fProgramID_Constant, theVS);
+		::glDetachShader(fProgramID_Constant, theFS);
 
-		::glDeleteShader(theVS_Constant);
-		::glDeleteShader(theFS_Constant);
+		::glDeleteShader(theVS);
+		::glDeleteShader(theFS);
 		}
 
 		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "uProjection");
@@ -209,24 +209,24 @@ public:
 		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
 
 		{
-		VertexShaderID theVS_Constant =
+		VertexShaderID theVS =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
 
-		FragmentShaderID theFS_RAS =
+		FragmentShaderID theFS =
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_RAS);
 
 		fProgramID_RAS = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_RAS, theVS_Constant);
-		::glAttachShader(fProgramID_RAS, theFS_RAS);
+		::glAttachShader(fProgramID_RAS, theVS);
+		::glAttachShader(fProgramID_RAS, theFS);
 
 		spLinkAndCheckProgram(fProgramID_RAS);
 
-		::glDetachShader(fProgramID_RAS, theVS_Constant);
-		::glDetachShader(fProgramID_RAS, theFS_RAS);
+		::glDetachShader(fProgramID_RAS, theVS);
+		::glDetachShader(fProgramID_RAS, theFS);
 
-		::glDeleteShader(theVS_Constant);
-		::glDeleteShader(theFS_RAS);
+		::glDeleteShader(theVS);
+		::glDeleteShader(theFS);
 		}
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
@@ -234,23 +234,23 @@ public:
 		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
 
 		{
-		VertexShaderID theVS_Textured =
+		VertexShaderID theVS =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Textured);
 
-		FragmentShaderID theFS_Textured =
+		FragmentShaderID theFS =
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
 
 		fProgramID_Textured = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_Textured, theVS_Textured);
-		::glAttachShader(fProgramID_Textured, theFS_Textured);		
+		::glAttachShader(fProgramID_Textured, theVS);
+		::glAttachShader(fProgramID_Textured, theFS);
 
 		spLinkAndCheckProgram(fProgramID_Textured);
 
-		::glDetachShader(fProgramID_Textured, theVS_Textured);
-		::glDetachShader(fProgramID_Textured, theFS_Textured);		
-		::glDeleteShader(theVS_Textured);
-		::glDeleteShader(theFS_Textured);
+		::glDetachShader(fProgramID_Textured, theVS);
+		::glDetachShader(fProgramID_Textured, theFS);
+		::glDeleteShader(theVS);
+		::glDeleteShader(theFS);
 		}
 
 		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "uProjection");
@@ -389,11 +389,11 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
+	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
+
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
-
-	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
 
 	GPoint vertices[4];
 	vertices[0] = sGPoint(0,0);
