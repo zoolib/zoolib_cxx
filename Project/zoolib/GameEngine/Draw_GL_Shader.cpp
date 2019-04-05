@@ -405,43 +405,11 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	GLint viewPort[4];
-	::glGetIntegerv(GL_VIEWPORT, viewPort);
-
-	::glUniform2f(theContext->fUniform_RAS_Resolution, viewPort[2], viewPort[3]);
-
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
 
-	const Mat theInverse = sInverse(iAlphaMat.fMat);
-//
-//	CVec3 point1 = sCVec3<Rat>(200, 0, 0);
-//	CVec3 point2 = point1 / 800;
-//	CVec3 toObSpace = theInverse * point2;
-//
-//
-//	const Mat theMult = theInverse * iAlphaMat.fMat;
-//
-//	const Mat theMult2 = iAlphaMat.fMat * theInverse;
-//
-	::glUniformMatrix4fv(
-		theContext->fUniform_RAS_InverseProjection,
-		1, false, &theInverse.fE[0][0]);
-
 	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
-
-//	CVec3 test1 = sCVec3<Rat>(1,1,0);
-//	CVec3 test2 = iAlphaMat.fMat*test1;
-//	CVec4 test35 = theInverse*sCVec4<Rat>(1,1,0,1);
-//	CVec3 test3 = theInverse*test1;
-//	CVec3 test4 = theInverse*test2;
-//
-//
-//	CVec3 screenTest5 = sCVec3<Rat>(50,0,0);
-//	CVec3 obspace = theInverse * screenTest5;
-//
-//
 
 	GPoint vertices[4];
 	vertices[0] = sGPoint(0,0);
