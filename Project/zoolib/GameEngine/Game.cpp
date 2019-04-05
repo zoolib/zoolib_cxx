@@ -204,8 +204,6 @@ void Game::Draw(
 		}
 	}
 
-ZRef<Rendered> sMakeSpecialRendered();
-
 void Game::RunOnce(
 	GPoint iBackingSize,
 	GPoint iGameSize)
@@ -226,15 +224,14 @@ void Game::RunOnce(
 
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
-	ZRef<Rendered> theRendered = sMakeSpecialRendered();
-//	ZRef<Rendered> theRendered = this->pCrank(interval);
-//
-//	theRendered = Util::sAddBorder(theRendered, iBackingSize, iGameSize);
-//
-//	theRendered = sDrawPreprocess(
-//		theRendered,
-//		fAssetCatalog, GameEngine::DebugFlags::sTextureNameFrame,
-//		iGameSize);
+	ZRef<Rendered> theRendered = this->pCrank(interval);
+
+	theRendered = Util::sAddBorder(theRendered, iBackingSize, iGameSize);
+
+	theRendered = sDrawPreprocess(
+		theRendered,
+		fAssetCatalog, GameEngine::DebugFlags::sTextureNameFrame,
+		iGameSize);
 
 	ZAcqMtx acq(fMtx_Game);
 	fRendered = theRendered;
