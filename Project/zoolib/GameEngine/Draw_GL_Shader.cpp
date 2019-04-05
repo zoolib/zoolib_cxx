@@ -50,21 +50,11 @@ MACRO_ShaderPrefix
 
 const char spFragmentShaderSource_RAS[] = ""
 MACRO_ShaderPrefix
-"	uniform mat4 uInverseProjection; "
-"	uniform vec2 uResolution;"
 "	uniform vec4 uColor; "
 "	varying vec4 ourPosition; "
 "	void main()"
 "		{"
-//"		vec2 offsetFragCoord = vec2(gl_FragCoord);"
-"		vec2 offsetFragCoord = vec2(gl_FragCoord.x, gl_FragCoord.y);"
-"		vec4 scaledFragCoord = vec4(offsetFragCoord.xy/uResolution.xy, 0.0, 1.0);"
-"		vec4 location = uInverseProjection * scaledFragCoord;"
-"		location.x -= 1.0;"
-//"		vec4 location = scaledFragCoord;"
 "		gl_FragColor = ourPosition;"
-
-//"		gl_FragColor = vec4(step(0.4, location.x), step(0.4, location.y), 0.1, 1.0);"
 "		}"
 "";
 
@@ -241,9 +231,6 @@ public:
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
 		fAttribute_RAS_Pos = ::glGetAttribLocation(fProgramID_RAS, "aPos");
-
-		fUniform_RAS_InverseProjection = ::glGetUniformLocation(fProgramID_RAS, "uInverseProjection");
-		fUniform_RAS_Resolution = ::glGetUniformLocation(fProgramID_RAS, "uResolution");
 		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
 
 		{
@@ -282,9 +269,6 @@ public:
 	ProgramID fProgramID_RAS;
 		GLint fUniform_RAS_Projection;
 		GLint fAttribute_RAS_Pos;
-
-		GLint fUniform_RAS_InverseProjection;
-		GLint fUniform_RAS_Resolution;
 		GLint fUniform_RAS_Color;
 
 	ProgramID fProgramID_Textured;
