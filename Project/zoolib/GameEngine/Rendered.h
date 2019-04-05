@@ -210,21 +210,21 @@ class Rendered_RightAngleSegment
 :	public Rendered
 	{
 public:
-	Rendered_RightAngleSegment(const ZRGBA& iRGBA, bool iConcave);
+	Rendered_RightAngleSegment(const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(ZRGBA& oRGBA, bool& oConcave);
+	void Get(ZRGBA& oRGBA_Convex, ZRGBA& oRGBA_Concave);
 
 private:
-	const ZRGBA fRGBA;
-	const bool fConcave;
+	const ZRGBA fRGBA_Convex;
+	const ZRGBA fRGBA_Concave;
 	};
 
 ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
-	const ZRGBA& iRGBA, bool iConcave);
+	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave);
 
 // =================================================================================================
 // MARK: - Rendered_Sound

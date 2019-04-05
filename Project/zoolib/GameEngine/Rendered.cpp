@@ -214,23 +214,23 @@ ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
 // MARK: - Rendered_RightAngleSegment
 
 Rendered_RightAngleSegment::Rendered_RightAngleSegment(
-	const ZRGBA& iRGBA, bool iConcave)
-:	fRGBA(iRGBA)
-,	fConcave(iConcave)
+	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
+:	fRGBA_Convex(iRGBA_Convex)
+,	fRGBA_Concave(iRGBA_Concave)
 	{}
 
 void Rendered_RightAngleSegment::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_RightAngleSegment(this); }
 
-void Rendered_RightAngleSegment::Get(ZRGBA& oRGBA, bool& oConcave)
+void Rendered_RightAngleSegment::Get(ZRGBA& oRGBA_Convex, ZRGBA& oRGBA_Concave)
 	{
-	oRGBA = fRGBA;
-	oConcave = fConcave;
+	oRGBA_Convex = fRGBA_Convex;
+	oRGBA_Concave = fRGBA_Concave;
 	}
 
 ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
-	const ZRGBA& iRGBA, bool iConcave)
-	{ return new Rendered_RightAngleSegment(iRGBA, iConcave); }
+	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
+	{ return new Rendered_RightAngleSegment(iRGBA_Convex, iRGBA_Concave); }
 
 // =================================================================================================
 // MARK: - Rendered_Sound

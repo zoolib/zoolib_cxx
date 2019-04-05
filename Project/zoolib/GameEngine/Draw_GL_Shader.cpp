@@ -50,14 +50,14 @@ MACRO_ShaderPrefix
 
 const char spFragmentShaderSource_RAS[] = ""
 MACRO_ShaderPrefix
-"	uniform vec4 uColor1;"
-"	uniform vec4 uColor2;"
+"	uniform vec4 uColor_Convex;"
+"	uniform vec4 uColor_Concave;"
 "	varying vec4 ourPosition;"
 "	void main()"
 "		{"
-"		float theDistance = distance(ourPosition.xy, vec2(0.0));"
-"		theDistance = step(1.0, theDistance);"
-"		gl_FragColor = mix(uColor1, uColor2, theDistance);"
+"		float theDistance = distance(ourPosition.xy, vec2(1.0));"
+"		theDistance = smoothstep(0.95, 1.0, theDistance);"
+"		gl_FragColor = mix(uColor_Concave, uColor_Convex, theDistance);"
 "		}"
 "";
 
@@ -234,8 +234,8 @@ public:
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
 		fAttribute_RAS_Pos = ::glGetAttribLocation(fProgramID_RAS, "aPos");
-		fUniform_RAS_Color1 = ::glGetUniformLocation(fProgramID_RAS, "uColor1");
-		fUniform_RAS_Color2 = ::glGetUniformLocation(fProgramID_RAS, "uColor2");
+		fUniform_RAS_Color_Concave = ::glGetUniformLocation(fProgramID_RAS, "uColor_Concave");
+		fUniform_RAS_Color_Convex = ::glGetUniformLocation(fProgramID_RAS, "uColor_Convex");
 
 		{
 		VertexShaderID theVS =
@@ -273,8 +273,8 @@ public:
 	ProgramID fProgramID_RAS;
 		GLint fUniform_RAS_Projection;
 		GLint fAttribute_RAS_Pos;
-		GLint fUniform_RAS_Color1;
-		GLint fUniform_RAS_Color2;
+		GLint fUniform_RAS_Color_Concave;
+		GLint fUniform_RAS_Color_Convex;
 
 	ProgramID fProgramID_Textured;
 		GLint fUniform_Textured_Projection;
@@ -383,8 +383,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	}
 
 void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
-	const ZRGBA& iRGBA,
-	bool iConcave)
+	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -394,8 +393,8 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_RGBA(theContext->fUniform_RAS_Color1, iRGBA, iAlphaMat.fAlpha);
-	spSetUniform_RGBA(theContext->fUniform_RAS_Color2, ZRGBA::sGreen, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_RAS_Color_Concave, iRGBA_Convex, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_RAS_Color_Convex, iRGBA_Concave, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
@@ -528,10 +527,9 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRen
 void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 	const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment)
 	{
-	ZRGBA theRGBA;
-	bool theConcave;
-	iRendered_RightAngleSegment->Get(theRGBA, theConcave);
-	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA, theConcave);
+	ZRGBA theRGBA_Convex, theRGBA_Concave;
+	iRendered_RightAngleSegment->Get(theRGBA_Convex, theRGBA_Concave);
+	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA_Convex, theRGBA_Concave);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
