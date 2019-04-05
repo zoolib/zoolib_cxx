@@ -50,11 +50,12 @@ MACRO_ShaderPrefix
 
 const char spFragmentShaderSource_RAS[] = ""
 MACRO_ShaderPrefix
-"	uniform vec4 uColor; "
-"	varying vec4 ourPosition; "
+"	uniform vec4 uColor1;"
+"	uniform vec4 uColor2;"
+"	varying vec4 ourPosition;"
 "	void main()"
 "		{"
-"		gl_FragColor = ourPosition;"
+"		gl_FragColor = ourPosition + uColor1;"
 "		}"
 "";
 
@@ -231,7 +232,8 @@ public:
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
 		fAttribute_RAS_Pos = ::glGetAttribLocation(fProgramID_RAS, "aPos");
-		fUniform_RAS_Color = ::glGetUniformLocation(fProgramID_RAS, "uColor");
+		fUniform_RAS_Color1 = ::glGetUniformLocation(fProgramID_RAS, "uColor1");
+		fUniform_RAS_Color2 = ::glGetUniformLocation(fProgramID_RAS, "uColor2");
 
 		{
 		VertexShaderID theVS =
@@ -269,7 +271,8 @@ public:
 	ProgramID fProgramID_RAS;
 		GLint fUniform_RAS_Projection;
 		GLint fAttribute_RAS_Pos;
-		GLint fUniform_RAS_Color;
+		GLint fUniform_RAS_Color1;
+		GLint fUniform_RAS_Color2;
 
 	ProgramID fProgramID_Textured;
 		GLint fUniform_Textured_Projection;
@@ -335,7 +338,7 @@ void spDrawTexture(
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-void spSetUniform_Color(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
+void spSetUniform_RGBA(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
 	{
 	float theAlpha = iRGBA.floatAlpha() * sGet(iAlpha);
 	::glUniform4f(
@@ -358,7 +361,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
@@ -389,7 +392,8 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_Color(theContext->fUniform_RAS_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_RAS_Color1, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_RAS_Color2, ZRGBA::sBlack, 0);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
@@ -420,7 +424,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_Color(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
