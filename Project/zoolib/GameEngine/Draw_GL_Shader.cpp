@@ -55,7 +55,9 @@ MACRO_ShaderPrefix
 "	varying vec4 ourPosition;"
 "	void main()"
 "		{"
-"		gl_FragColor = ourPosition + uColor1;"
+"		float theDistance = distance(ourPosition.xy, vec2(0.0));"
+"		theDistance = step(1.0, theDistance);"
+"		gl_FragColor = mix(uColor1, uColor2, theDistance);"
 "		}"
 "";
 
@@ -393,7 +395,7 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 	theContext->Use(theContext->fProgramID_RAS);
 
 	spSetUniform_RGBA(theContext->fUniform_RAS_Color1, iRGBA, iAlphaMat.fAlpha);
-	spSetUniform_RGBA(theContext->fUniform_RAS_Color2, ZRGBA::sBlack, 0);
+	spSetUniform_RGBA(theContext->fUniform_RAS_Color2, ZRGBA::sGreen, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
