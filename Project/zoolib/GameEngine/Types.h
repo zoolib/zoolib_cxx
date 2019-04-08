@@ -1,8 +1,8 @@
 #ifndef __ZooLib_GameEngine_Types_h__
 #define __ZooLib_GameEngine_Types_h__ 1
 
-#include "zoolib/ChanW_UTF.h"
 #include "zoolib/Cartesian_Matrix.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/Map_Shared_T.h"
 #include "zoolib/Name.h"
 #include "zoolib/TagVal.h"
@@ -387,7 +387,11 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);
 // =================================================================================================
 // MARK: - RGBA
 
+ZQ<ZRGBA> sQRGBA(const string8& iString);
+
 ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ);
+
+ZQ<ZRGBA> sQRGBA(const Any& iVal);
 
 // =================================================================================================
 // MARK: - sRandomInRange

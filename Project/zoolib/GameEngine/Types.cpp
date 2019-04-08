@@ -1,6 +1,7 @@
 #include "zoolib/GameEngine/Types.h"
-
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Coerce_Any.h" // For sQCoerceRat and sQCoerceInt
+#include "zoolib/Util_Chan_UTF.h"
 
 #include <stdlib.h> // For arc4random
 
@@ -221,8 +222,53 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ)
 // =================================================================================================
 // MARK: - RGBA
 
+ZQ<ZRGBA> sQRGBA(const string8& iString)
+	{
+	using namespace std;
+	using namespace Util_Chan;
+
+	ChanRU_UTF_string8 theChan(iString);
+	vector<float> comps;
+	for (;;)
+		{
+		if (NotQ<int> high = sQRead_HexDigit(theChan))
+			break;
+		else if (NotQ<int> low = sQRead_HexDigit(theChan))
+			break;
+		else
+			comps.push_back(((*high<<4) | *low) / 255.0);
+		}
+
+	if (comps.size() == 1) // Gray
+		return ZRGBA(comps[0]);
+
+	if (comps.size() == 2) // Gray, Alpha
+		return ZRGBA(comps[0], comps[1]);
+
+	if (comps.size() == 3) // RGB
+		return ZRGBA(comps[0], comps[1], comps[2]);
+
+	if (comps.size() == 4) // RGBA
+		return ZRGBA(comps[0], comps[1], comps[2], comps[3]);
+
+	return null;
+	}
+
 ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ)
 	{
+	if (iValQ)
+		return sQRGBA(*iValQ);
+	return null;
+	}
+
+ZQ<ZRGBA> sQRGBA(const Any& iVal)
+	{
+	if (const ZRGBA* theRGBAP = iVal.PGet<ZRGBA>())
+		return *theRGBAP;
+
+	if (const string8* theStringP = iVal.PGet<string8>())
+		return sQRGBA(*theStringP);
+
 	ZUnimplemented();
 	return null;
 	}
