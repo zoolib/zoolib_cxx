@@ -22,6 +22,7 @@ namespace { // anonymous
 
 #define MACRO_ShaderPrefix \
 	"#ifdef GL_ES\n" \
+	"	#extension GL_OES_standard_derivatives : enable\n" \
 	"	precision mediump float;\n" \
 	"#endif\n" \
 
