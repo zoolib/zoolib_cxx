@@ -119,8 +119,8 @@ public:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	int fIdleThreads;
-	int fActiveThreads;
+	size_t fIdleThreads;
+	size_t fActiveThreads;
 	bool fKeepRunning;
 	std::list<ZRef<Callable<void()>>> fQueue;
 	};
