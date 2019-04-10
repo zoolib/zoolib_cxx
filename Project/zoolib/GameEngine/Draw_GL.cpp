@@ -1,15 +1,14 @@
 #include "zoolib/GameEngine/Draw_GL.h"
+#include "zoolib/OpenGL/Util.h"
 
 #include "zoolib/Unicode.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
-#if not ZMACRO_IOS && not defined(__ANDROID__)
-	#include <GLUT/glut.h>
-#endif
-
 namespace ZooLib {
 namespace GameEngine {
+
+using namespace OpenGL;
 
 // =================================================================================================
 // MARK: - Visitor_Draw_GL_String
@@ -17,33 +16,28 @@ namespace GameEngine {
 void Visitor_Draw_GL_String::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	#if defined(GLUT_API_VERSION)
-		const ZRGBA theRGBA = iRendered_String->GetRGBA();
-
-		::glColor4f(
-			theRGBA.floatRed(),
-			theRGBA.floatGreen(),
-			theRGBA.floatBlue(),
-			Alpha(theRGBA.floatAlpha()) * fAlphaGainMat.fAlpha);
-		
-		const string32 theString32 = Unicode::sAsUTF32(iRendered_String->GetString());
-		::glPushMatrix();
-		Mat theMat = fAlphaGainMat.fMat * sScale3<Rat>(0.1,-0.1,1.0);
-
-		::glMultMatrixf(&theMat[0][0]);
-		::glRasterPos3f(0, 0, 0);
-
-		glLineWidth(1.5);
-
-		foreacha (cp, theString32)
-			::glutStrokeCharacter(GLUT_STROKE_ROMAN, cp);
-
-//		foreacha (cp, theString32)
-//			::glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, cp);
-
-		::glPopMatrix();
-
-	#endif
+//	my_stbtt_initfont();
+//
+//	::glPushMatrix();
+//
+//	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+//	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+//	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+//
+//	spBefore(sAlphaMat(fAlphaGainMat), iRendered_String->GetRGBA());
+//
+//	SaveSetRestore_Enable ssr_a(GL_TEXTURE_2D, true);
+//
+//	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(ftex);
+//
+//	::glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);//??
+//
+//	string8 theString8 = iRendered_String->GetString();
+//
+//	my_stbtt_print(0, 0, theString8.c_str());
+//
+//	::glPopMatrix();
+//
 	}
 
 } // namespace GameEngine

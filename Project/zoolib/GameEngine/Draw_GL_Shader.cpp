@@ -8,6 +8,8 @@
 #include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/OpenGL/Util.h"
 
+void my_stbtt_initfont();
+
 // =================================================================================================
 // MARK: -
 
@@ -15,6 +17,10 @@ namespace ZooLib {
 namespace GameEngine {
 
 using namespace ZooLib::OpenGL;
+using std::string;
+using std::vector;
+
+GLuint GetStuff(const string& iString, vector<GPoint>& oTexCoords, vector<GPoint>& oVertices);
 
 namespace { // anonymous
 
@@ -91,6 +97,19 @@ MACRO_ShaderPrefix
 "	void main()"
 "		{"
 "		gl_FragColor = texture2D(uTexture, vTexCoord);"
+"		gl_FragColor *= uModulation;"
+"		}"
+"";
+
+const char spFragmentShaderSource_Alpha[] = ""
+MACRO_ShaderPrefix
+"	uniform sampler2D uTexture;"
+"	uniform vec4 uModulation;"
+"	varying vec2 vTexCoord;"
+
+"	void main()"
+"		{"
+"		gl_FragColor = vec4(texture2D(uTexture, vTexCoord).a);"
 "		gl_FragColor *= uModulation;"
 "		}"
 "";
@@ -247,7 +266,7 @@ public:
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Textured);
 
 		FragmentShaderID theFS =
-			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Alpha);
 
 		fProgramID_Textured = ::glCreateProgram();
 
@@ -535,6 +554,54 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 	ZRGBA theRGBA_Convex, theRGBA_Concave;
 	iRendered_RightAngleSegment->Get(theRGBA_Convex, theRGBA_Concave);
 	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA_Convex, theRGBA_Concave);
+	}
+
+void Visitor_Draw_GL_Shader::Visit_Rendered_String(
+	const ZRef<Rendered_String>& iRendered_String)
+	{
+	my_stbtt_initfont();
+
+	ZRef<Context> theContext = spContext();
+
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	theContext->Use(theContext->fProgramID_Textured);
+
+	const ZRGBA theRGBA = iRendered_String->GetRGBA();
+	const float theAlpha = theRGBA.floatAlpha() * sGet(fAlphaGainMat.fAlpha);
+	::glUniform4f(theContext->fUniform_Textured_Modulation,
+		theRGBA.floatRed() * theAlpha,
+		theRGBA.floatGreen() * theAlpha,
+		theRGBA.floatBlue() * theAlpha,
+		theAlpha);
+
+	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
+		1, false, &fAlphaGainMat.fMat.fE[0][0]);
+
+	vector<GPoint> texCoords, vertices;
+	GLuint theTextureID = GetStuff(iRendered_String->GetString(), texCoords, vertices);
+
+	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
+
+	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
+		{
+		::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
+		::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
+			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
+
+		::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
+		::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
+			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
+
+		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)

@@ -72,7 +72,7 @@ private:
 
 class Visitor_Shader
 :	public virtual Visitor_Draw_GL_Shader
-,	public virtual Visitor_Draw_GL_String
+//,	public virtual Visitor_Draw_GL_String
 ,	public virtual Visitor_GatherSound
 ,	public virtual Visitor_Rendered_DecomposeGroup
 ,	public virtual Visitor_Rendered_LineToRect
@@ -86,11 +86,11 @@ public:
 	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
 		{}
 
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String)
-		{
-		Visitor_Draw_GL_Shader::UseFixedProgram();
-		Visitor_Draw_GL_String::Visit_Rendered_String(iRendered_String);
-		}
+//	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String)
+//		{
+//		Visitor_Draw_GL_Shader::UseFixedProgram();
+//		Visitor_Draw_GL_String::Visit_Rendered_String(iRendered_String);
+//		}
 
 	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
 		{ ZUnimplemented(); }

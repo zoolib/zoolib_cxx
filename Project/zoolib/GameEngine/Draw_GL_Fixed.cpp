@@ -12,8 +12,6 @@ using namespace OpenGL;
 // =================================================================================================
 // MARK: -
 
-namespace { // anonymous
-
 void spBefore(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA)
 	{
@@ -26,6 +24,8 @@ void spBefore(const AlphaMat& iAlphaMat,
 		iRGBA.floatBlue() * theAlpha,
 		theAlpha);
 	}
+
+namespace { // anonymous
 
 void spDrawTexture(
 	TextureID iTextureID,
