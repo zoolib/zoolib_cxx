@@ -139,6 +139,8 @@ const CGFloat spWidth_Pixels()
 	if (not fContext)
 		fContext = sAdopt& [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 
+	[EAGLContext setCurrentContext:fContext];
+
 	return self;
 	}
 

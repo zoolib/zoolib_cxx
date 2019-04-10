@@ -15,15 +15,15 @@ unsigned char temp_bitmap[512*512];
 stbtt_bakedchar cdata[96]; // ASCII 32..126 is 95 glyphs
 GLuint ftex;
 
-void my_stbtt_initfont();
-void my_stbtt_initfont()
+void my_stbtt_initfont(const std::string& iFontPath);
+void my_stbtt_initfont(const std::string& iFontPath)
 	{
 	static bool inited;
 	if (inited)
 		return;
 
 	inited = true;
-	fread(ttf_buffer, 1, 1<<20, fopen("/Users/ag/zen/ZenMox/assets/other/Swiss 911 Ultra Compressed BT.ttf", "rb"));
+	fread(ttf_buffer, 1, 1<<20, fopen(iFontPath.c_str(), "rb"));
 	stbtt_BakeFontBitmap(ttf_buffer, 0, 32.0, temp_bitmap, 512, 512, 32, 96, cdata); // no guarantee this fits!
 	// can free ttf_buffer at this point
 	glGenTextures(1, &ftex);

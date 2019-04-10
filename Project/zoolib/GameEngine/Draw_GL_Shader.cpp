@@ -8,8 +8,6 @@
 #include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/OpenGL/Util.h"
 
-void my_stbtt_initfont();
-
 // =================================================================================================
 // MARK: -
 
@@ -101,7 +99,7 @@ MACRO_ShaderPrefix
 "		}"
 "";
 
-const char spFragmentShaderSource_Alpha[] = ""
+const char spFragmentShaderSource_Text[] = ""
 MACRO_ShaderPrefix
 "	uniform sampler2D uTexture;"
 "	uniform vec4 uModulation;"
@@ -210,24 +208,24 @@ public:
 		ZCounted::Initialize();
 		
 		{
-		VertexShaderID theVS =
+		VertexShaderID theVS_Constant =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
 
-		FragmentShaderID theFS =
+		FragmentShaderID theFS_Constant =
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Constant);
 
 		fProgramID_Constant = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_Constant, theVS);
-		::glAttachShader(fProgramID_Constant, theFS);
+		::glAttachShader(fProgramID_Constant, theVS_Constant);
+		::glAttachShader(fProgramID_Constant, theFS_Constant);
 
 		spLinkAndCheckProgram(fProgramID_Constant);
 
-		::glDetachShader(fProgramID_Constant, theVS);
-		::glDetachShader(fProgramID_Constant, theFS);
+		::glDetachShader(fProgramID_Constant, theVS_Constant);
+		::glDetachShader(fProgramID_Constant, theFS_Constant);
 
-		::glDeleteShader(theVS);
-		::glDeleteShader(theFS);
+		::glDeleteShader(theVS_Constant);
+		::glDeleteShader(theFS_Constant);
 		}
 
 		fUniform_Constant_Projection = ::glGetUniformLocation(fProgramID_Constant, "uProjection");
@@ -236,24 +234,24 @@ public:
 		fUniform_Constant_Color = ::glGetUniformLocation(fProgramID_Constant, "uColor");
 
 		{
-		VertexShaderID theVS =
+		VertexShaderID theVS_RAS =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Constant);
 
-		FragmentShaderID theFS =
+		FragmentShaderID theFS_RAS =
 			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_RAS);
 
 		fProgramID_RAS = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_RAS, theVS);
-		::glAttachShader(fProgramID_RAS, theFS);
+		::glAttachShader(fProgramID_RAS, theVS_RAS);
+		::glAttachShader(fProgramID_RAS, theFS_RAS);
 
 		spLinkAndCheckProgram(fProgramID_RAS);
 
-		::glDetachShader(fProgramID_RAS, theVS);
-		::glDetachShader(fProgramID_RAS, theFS);
+		::glDetachShader(fProgramID_RAS, theVS_RAS);
+		::glDetachShader(fProgramID_RAS, theFS_RAS);
 
-		::glDeleteShader(theVS);
-		::glDeleteShader(theFS);
+		::glDeleteShader(theVS_RAS);
+		::glDeleteShader(theFS_RAS);
 		}
 
 		fUniform_RAS_Projection = ::glGetUniformLocation(fProgramID_RAS, "uProjection");
@@ -262,24 +260,47 @@ public:
 		fUniform_RAS_Color_Convex = ::glGetUniformLocation(fProgramID_RAS, "uColor_Convex");
 
 		{
-		VertexShaderID theVS =
+		VertexShaderID theVS_Textured =
 			*spLoadShader<VertexShaderID>(spVertexShaderSource_Textured);
 
-		FragmentShaderID theFS =
-			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Alpha);
+		FragmentShaderID theFS_Textured =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Textured);
 
 		fProgramID_Textured = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_Textured, theVS);
-		::glAttachShader(fProgramID_Textured, theFS);
+		::glAttachShader(fProgramID_Textured, theVS_Textured);
+		::glAttachShader(fProgramID_Textured, theFS_Textured);
 
 		spLinkAndCheckProgram(fProgramID_Textured);
 
-		::glDetachShader(fProgramID_Textured, theVS);
-		::glDetachShader(fProgramID_Textured, theFS);
-		::glDeleteShader(theVS);
-		::glDeleteShader(theFS);
+		::glDetachShader(fProgramID_Textured, theVS_Textured);
+		::glDetachShader(fProgramID_Textured, theFS_Textured);
+
+
+		FragmentShaderID theFS_Text =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Text);
+
+		fProgramID_Text = ::glCreateProgram();
+
+		::glAttachShader(fProgramID_Text, theVS_Textured);
+		::glAttachShader(fProgramID_Text, theFS_Text);
+
+		spLinkAndCheckProgram(fProgramID_Text);
+
+		::glDetachShader(fProgramID_Text, theVS_Textured);
+		::glDetachShader(fProgramID_Text, theFS_Text);
+
+		::glDeleteShader(theVS_Textured);
+		::glDeleteShader(theFS_Textured);
+		::glDeleteShader(theFS_Text);
 		}
+
+		fUniform_Text_Projection = ::glGetUniformLocation(fProgramID_Text, "uProjection");
+		fAttribute_Text_Tex = ::glGetAttribLocation(fProgramID_Text, "aTex");
+		fAttribute_Text_Pos = ::glGetAttribLocation(fProgramID_Text, "aPos");
+
+		fUniform_Text_Texture = ::glGetUniformLocation(fProgramID_Text, "uTexture");
+		fUniform_Text_Modulation = ::glGetUniformLocation(fProgramID_Text, "uModulation");
 
 		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "uProjection");
 		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "aTex");
@@ -307,6 +328,14 @@ public:
 
 		GLint fUniform_Textured_Texture;
 		GLint fUniform_Textured_Modulation;
+
+	ProgramID fProgramID_Text;
+		GLint fUniform_Text_Projection;
+		GLint fAttribute_Text_Tex;
+		GLint fAttribute_Text_Pos;
+
+		GLint fUniform_Text_Texture;
+		GLint fUniform_Text_Modulation;
 	};
 
 ZRef<Context> spContext()
@@ -559,25 +588,23 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 void Visitor_Draw_GL_Shader::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	my_stbtt_initfont();
-
 	ZRef<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
 	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	theContext->Use(theContext->fProgramID_Textured);
+	theContext->Use(theContext->fProgramID_Text);
 
 	const ZRGBA theRGBA = iRendered_String->GetRGBA();
 	const float theAlpha = theRGBA.floatAlpha() * sGet(fAlphaGainMat.fAlpha);
-	::glUniform4f(theContext->fUniform_Textured_Modulation,
+	::glUniform4f(theContext->fUniform_Text_Modulation,
 		theRGBA.floatRed() * theAlpha,
 		theRGBA.floatGreen() * theAlpha,
 		theRGBA.floatBlue() * theAlpha,
 		theAlpha);
 
-	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
+	::glUniformMatrix4fv(theContext->fUniform_Text_Projection,
 		1, false, &fAlphaGainMat.fMat.fE[0][0]);
 
 	vector<GPoint> texCoords, vertices;
@@ -586,18 +613,18 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_String(
 	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
 
-	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
+	::glUniform1i(theContext->fUniform_Text_Texture, 0);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
 		{
-		::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
-		::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
+		::glEnableVertexAttribArray(theContext->fAttribute_Text_Tex);
+		::glVertexAttribPointer(theContext->fAttribute_Text_Tex,
 			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
 
-		::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
-		::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
+		::glEnableVertexAttribArray(theContext->fAttribute_Text_Pos);
+		::glVertexAttribPointer(theContext->fAttribute_Text_Pos,
 			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
 
 		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
