@@ -98,9 +98,6 @@ void OutChannel::MungeTLs(size_t iStartIndex, const Mat& iMat) const
 		fTLs->at(x)->Munge(iMat, inverseMat);
 	}
 
-void OutChannel::Load(const NameFrame& iNameFrame, int iPriority) const
-	{ fAssetCatalog->Load(iNameFrame, iPriority); }
-
 // =================================================================================================
 // MARK: -
 

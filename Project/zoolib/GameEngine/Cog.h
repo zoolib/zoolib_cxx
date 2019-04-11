@@ -65,8 +65,6 @@ public:
 	size_t GetPriorTLCount() const;
 	void MungeTLs(size_t iStartIndex, const Mat& iMat) const;
 
-	void Load(const NameFrame& iNameFrame, int iPriority) const;
-
 	const ZRef<AssetCatalog> fAssetCatalog;
 
 private:

@@ -26,7 +26,7 @@ public:
 			const ZRef<Rendered_Group>& theGroup = iParam.fOutChannel.GetGroup();
 			foreachv (const Cel& theCel, (*theCelStackQ)->Get())
 				{
-				iParam.fOutChannel.Load(theCel.fNameFrame, 0);
+				theAssetCatalog->Load(theCel.fNameFrame, 0);
 				theGroup->Append(new Rendered_Cel(theCel));
 				}
 			}
@@ -34,7 +34,7 @@ public:
 		if (ZQ<CelStack> theCelStackQ = fToon->QValAt(iParam.fSubsequentTime))
 			{
 			foreachv (const Cel& theCel, (*theCelStackQ)->Get())
-				iParam.fOutChannel.Load(theCel.fNameFrame, 1);
+				theAssetCatalog->Load(theCel.fNameFrame, 1);
 			}
 
 		return iSelf;

@@ -43,6 +43,8 @@ GLuint GetStuff(const string& iString, vector<GPoint>& oTexCoords, vector<GPoint
 	{
 	float x = 0;
 	float y = 0;
+	oTexCoords.reserve(iString.length());
+	oVertices.reserve(iString.length());
 	for (auto theChar: iString)
 		{
 		if (theChar >= 32 && theChar <= 127)
