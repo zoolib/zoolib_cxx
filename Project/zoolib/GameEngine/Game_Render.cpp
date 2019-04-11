@@ -9,6 +9,8 @@
 #include "zoolib/OpenGL/Compat_OpenGL.h"
 #include "zoolib/OpenGL/Util.h"
 
+#define ZMACRO_CanUseShader 1
+
 namespace ZooLib {
 namespace GameEngine {
 
@@ -68,7 +70,7 @@ private:
 // =================================================================================================
 // MARK: - Visitor_Shader
 
-#if not defined(__ANDROID__)
+#if ZMACRO_CanUseShader
 
 class Visitor_Shader
 :	public virtual Visitor_Draw_GL_Shader
@@ -96,7 +98,7 @@ public:
 		{ ZUnimplemented(); }
 	};
 
-#endif // not defined(__ANDROID__)
+#endif // ZMACRO_CanUseShader)
 
 // =================================================================================================
 // MARK: - Visitor_Fixed
@@ -161,7 +163,7 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 			0);
 		}
 
-#if not defined(__ANDROID__)
+#if ZMACRO_CanUseShader
 	if (iUseShader)
 		{
 		Mat theMat(1);
@@ -185,7 +187,7 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 			iSoundMeister, iListenerL, iListenerR, iListenerD / X(iPixelSize)));
 		}
 	else
-#endif // not defined(__ANDROID__)
+#endif // ZMACRO_CanUseShader
 		{
 		::glMatrixMode(GL_PROJECTION);
 		::glLoadIdentity();
