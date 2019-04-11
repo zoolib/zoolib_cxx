@@ -44,7 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZRGBA_POD
+#pragma mark - ZRGBA_POD
 
 class ColorComp
 	{
@@ -218,7 +218,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZRGBA
+#pragma mark - ZRGBA
 
 class ZRGBA : public ZRGBA_POD
 	{
@@ -442,7 +442,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZRGBAMap
+#pragma mark - ZRGBAMap
 
 class ZRGBAMap
 	{

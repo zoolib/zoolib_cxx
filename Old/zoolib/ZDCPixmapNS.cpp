@@ -275,7 +275,7 @@ static uint8* spBuildReverseLookup(const ZRGBA_POD* iColors, size_t iCount)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS
+#pragma mark - ZDCPixmapNS
 
 int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 	{
@@ -306,7 +306,7 @@ EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixvalDesc
+#pragma mark - ZDCPixmapNS::PixvalDesc
 
 ZDCPixmapNS::PixvalDesc::PixvalDesc(EFormatStandard iFormat)
 	{
@@ -334,7 +334,7 @@ ZDCPixmapNS::PixvalDesc::PixvalDesc(EFormatStandard iFormat)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::RasterDesc
+#pragma mark - ZDCPixmapNS::RasterDesc
 
 ZDCPixmapNS::RasterDesc::RasterDesc(ZPointPOD iSize, EFormatStandard iFormat, bool iFlipped)
 	{
@@ -382,7 +382,7 @@ void* ZDCPixmapNS::RasterDesc::CalcRowAddressDest(void* iBaseAddress, int iRow) 
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixvalAccessor
+#pragma mark - ZDCPixmapNS::PixvalAccessor
 
 ZDCPixmapNS::PixvalAccessor::PixvalAccessor(const PixvalDesc& iPixvalDesc)
 	{
@@ -1513,7 +1513,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixvalIterR
+#pragma mark - ZDCPixmapNS::PixvalIterR
 
 ZDCPixmapNS::PixvalIterR::PixvalIterR(const void* iAddress,
 	const PixvalDesc& iPixvalDesc, int iCoord)
@@ -1546,7 +1546,7 @@ void ZDCPixmapNS::PixvalIterR::Reset(const void* iAddress, int iCoord)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixvalIterRW
+#pragma mark - ZDCPixmapNS::PixvalIterRW
 
 ZDCPixmapNS::PixvalIterRW::PixvalIterRW(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord)
 :	fAddress(iAddress),
@@ -1589,7 +1589,7 @@ void ZDCPixmapNS::PixvalIterRW::Reset(void* iAddress, int iCoord)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixvalIterW
+#pragma mark - ZDCPixmapNS::PixvalIterW
 
 ZDCPixmapNS::PixvalIterW::PixvalIterW(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord)
 :	fAddress(iAddress),
@@ -1620,7 +1620,7 @@ void ZDCPixmapNS::PixvalIterW::Reset(void* iAddress, int iCoord)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapPixvalToRGB_Indexed
+#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Indexed
 
 void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
@@ -1656,7 +1656,7 @@ uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsAlpha(uint32 iPixval) const
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapPixvalToRGB_Gray
+#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Gray
 
 void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
@@ -1674,7 +1674,7 @@ void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapPixvalToRGB_Color
+#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Color
 
 void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBAs(const uint32* iPixvals,
 	size_t iCount, ZRGBA_POD* oColors) const
@@ -1691,7 +1691,7 @@ void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBAs(const uint32* iPixvals,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapRGBToPixval_Indexed
+#pragma mark - ZDCPixmapNS::MapRGBToPixval_Indexed
 
 void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
@@ -1721,7 +1721,7 @@ void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBA_POD* iColors,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapRGBToPixval_Gray
+#pragma mark - ZDCPixmapNS::MapRGBToPixval_Gray
 
 void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
@@ -1741,7 +1741,7 @@ void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBA_POD* iColors,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::MapRGBToPixval_Color
+#pragma mark - ZDCPixmapNS::MapRGBToPixval_Color
 
 void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
@@ -1759,7 +1759,7 @@ void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBA_POD* iColors,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixelDescRep
+#pragma mark - ZDCPixmapNS::PixelDescRep
 
 ThreadSafe_t ZDCPixmapNS::PixelDescRep::sChangeCount;
 
@@ -1782,7 +1782,7 @@ int ZDCPixmapNS::PixelDescRep::MarkChanged()
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixelDescRep_Indexed
+#pragma mark - ZDCPixmapNS::PixelDescRep_Indexed
 
 ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors, size_t iCount)
 :	fCheckedAlpha(false)
@@ -2010,7 +2010,7 @@ bool ZDCPixmapNS::PixelDescRep_Indexed::Matches(const PixelDescRep_Indexed* iOth
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixelDescRep_Gray
+#pragma mark - ZDCPixmapNS::PixelDescRep_Gray
 
 ZDCPixmapNS::PixelDescRep_Gray::PixelDescRep_Gray(uint32 iMaskL, uint32 iMaskA)
 	{
@@ -2066,7 +2066,7 @@ bool ZDCPixmapNS::PixelDescRep_Gray::Matches(const PixelDescRep_Gray* iOther)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixelDescRep_Color
+#pragma mark - ZDCPixmapNS::PixelDescRep_Color
 
 ZDCPixmapNS::PixelDescRep_Color::PixelDescRep_Color(
 	uint32 iMaskR, uint32 iMaskG, uint32 iMaskB, uint32 iMaskA)
@@ -2142,7 +2142,7 @@ bool ZDCPixmapNS::PixelDescRep_Color::Matches(const PixelDescRep_Color* iOther)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS::PixelDesc
+#pragma mark - ZDCPixmapNS::PixelDesc
 
 ZDCPixmapNS::PixelDesc::PixelDesc()
 	{}
@@ -2250,7 +2250,7 @@ void ZDCPixmapNS::PixelDesc::AsPixvals(
 	{ fRep->Imp_AsPixvals(iColors, iCount, oPixvals); }
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS
+#pragma mark - ZDCPixmapNS
 
 void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint32 iPixval)
 	{
@@ -2377,7 +2377,7 @@ void ZDCPixmapNS::sFill(
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS:sMunge variants
+#pragma mark - ZDCPixmapNS:sMunge variants
 
 template <class S, class D>
 static void sMungeRow_T(
@@ -2452,7 +2452,7 @@ void ZDCPixmapNS::sMunge(
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapNS:sBlit variants
+#pragma mark - ZDCPixmapNS:sBlit variants
 
 static const size_t kBufSize = sStackBufferSize;
 

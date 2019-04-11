@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZDCPixmapEncoder_PNG
+#pragma mark - ZDCPixmapEncoder_PNG
 
 class ZDCPixmapEncoder_PNG : public ZDCPixmapEncoder
 	{
@@ -46,7 +46,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - ZDCPixmapDecoder_PNG
+#pragma mark - ZDCPixmapDecoder_PNG
 
 class ZDCPixmapDecoder_PNG : public ZDCPixmapDecoder
 	{

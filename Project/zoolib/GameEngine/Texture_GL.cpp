@@ -11,7 +11,7 @@ namespace GameEngine {
 using namespace OpenGL;
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark - Helpers
 
 static int spNextPowerOfTwo(int input)
 	{	
@@ -22,7 +22,7 @@ static int spNextPowerOfTwo(int input)
 	}
 
 // =================================================================================================
-// MARK: - Texture_GL
+#pragma mark - Texture_GL
 
 Texture_GL::Texture_GL(ZPointPOD iDrawnSize)
 :	fDrawnSize(iDrawnSize)

@@ -19,7 +19,7 @@ void sSetGameRate(Rat iRate);
 Rat sGetGameRate();
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 class Game
 :	public ZCounted

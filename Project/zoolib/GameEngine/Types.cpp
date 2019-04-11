@@ -9,7 +9,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - NameFrame
+#pragma mark - NameFrame
 
 NameFrame::NameFrame()
 :	fFrame(0)
@@ -26,7 +26,7 @@ NameFrame::NameFrame(const Name& iName, size_t iFrame)
 	{}
 
 // =================================================================================================
-// MARK: - Cel
+#pragma mark - Cel
 
 Cel::Cel()
 	{}
@@ -37,7 +37,7 @@ Cel::Cel(const NameFrame& iNameFrame, const AlphaMat& iAlphaMat)
 	{}
 
 // =================================================================================================
-// MARK: - Map Get
+#pragma mark - Map Get
 
 ZQ<Val> sQGetNamed(const Map& iMap, const Name& iName0)
 	{ return iMap.QGet(iName0); }
@@ -64,7 +64,7 @@ Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1)
 	}
 
 // =================================================================================================
-// MARK: - Rat, from ZQ<Val>
+#pragma mark - Rat, from ZQ<Val>
 
 ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
 	{
@@ -88,7 +88,7 @@ Rat sRat(const ZQ<Val>& iValQ)
 	}
 
 // =================================================================================================
-// MARK: - Rat, from Any
+#pragma mark - Rat, from Any
 
 ZQ<Rat> sQRat(const Any& iAny)
 	{
@@ -114,7 +114,7 @@ Rat sRat(const Any& iAny)
 	}
 
 // =================================================================================================
-// MARK: - Coerce, CVec
+#pragma mark - Coerce, CVec
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	{
@@ -220,7 +220,7 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ)
 	{ return sCVec3<Rat>(iX, iY, iZ); }
 
 // =================================================================================================
-// MARK: - RGBA
+#pragma mark - RGBA
 
 ZQ<ZRGBA> sQRGBA(const string8& iString)
 	{
@@ -274,7 +274,7 @@ ZQ<ZRGBA> sQRGBA(const Any& iVal)
 	}
 
 // =================================================================================================
-// MARK: - sRandomInRange
+#pragma mark - sRandomInRange
 
 double sRandomInRange(double iMin, double iMax)
 	{ return (double(arc4random()) / 0x100000000) * (iMax - iMin) + iMin; }

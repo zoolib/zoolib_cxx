@@ -9,7 +9,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_AccumulateAlphaGainMat
+#pragma mark - Visitor_Rendered_AccumulateAlphaGainMat
 
 class Visitor_Rendered_AccumulateAlphaGainMat
 :	public virtual Visitor_Rendered
@@ -26,7 +26,7 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_DecomposeCel
+#pragma mark - Visitor_Rendered_DecomposeCel
 
 class Visitor_Rendered_DecomposeCel
 :	public virtual Visitor_Rendered
@@ -42,7 +42,7 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_DecomposeGroup
+#pragma mark - Visitor_Rendered_DecomposeGroup
 
 class Visitor_Rendered_DecomposeGroup
 :	public virtual Visitor_Rendered
@@ -52,7 +52,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_LineToRect
+#pragma mark - Visitor_Rendered_LineToRect
 
 class Visitor_Rendered_LineToRect
 :	public virtual Visitor_Rendered

@@ -11,7 +11,7 @@ namespace GameEngine {
 typedef Tween<Rat> Tween_Rat;
 
 // =================================================================================================
-// MARK: - RatRegistration
+#pragma mark - RatRegistration
 
 class RatRegistration
 	{

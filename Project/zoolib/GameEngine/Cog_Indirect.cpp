@@ -6,7 +6,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - sCog_Indirect
+#pragma mark - sCog_Indirect
 
 typedef Callable_Indirect<Cog::Signature> Callable_Indirect_Cog;
 

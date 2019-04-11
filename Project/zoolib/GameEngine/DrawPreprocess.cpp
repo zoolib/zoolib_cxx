@@ -13,7 +13,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Visitor_Preprocess (anonymous)
+#pragma mark - Visitor_Preprocess (anonymous)
 
 namespace { // anonymous
 
@@ -118,7 +118,7 @@ private:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - sDrawPreprocess
+#pragma mark - sDrawPreprocess
 
 ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
 	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,

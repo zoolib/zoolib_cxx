@@ -21,7 +21,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - SoundMeister_CoreAudio::PSound
+#pragma mark - SoundMeister_CoreAudio::PSound
 
 class SoundMeister_CoreAudio::PSound
 :	public Sound
@@ -75,7 +75,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - SoundMeister_CoreAudio
+#pragma mark - SoundMeister_CoreAudio
 
 SoundMeister_CoreAudio::SoundMeister_CoreAudio(const FileSpec& iFS)
 :	fAudioUnit(nullptr)

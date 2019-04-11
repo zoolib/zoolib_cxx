@@ -19,7 +19,7 @@ using std::map;
 using std::vector;
 
 // =================================================================================================
-// MARK: - InChannel
+#pragma mark - InChannel
 
 InChannel::InChannel(const ZRef<NookScope>& iNookScope)
 :	fPrior(nullptr)
@@ -58,7 +58,7 @@ const InChannel* InChannel::GetPrior() const
 	{ return fPrior; }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 OutChannel::OutChannel(
 	std::vector<ZRef<TouchListener> >* ioTLs,
@@ -99,7 +99,7 @@ void OutChannel::MungeTLs(size_t iStartIndex, const Mat& iMat) const
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName)
 	{
@@ -130,7 +130,7 @@ std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const Name& iName)
 	}
 
 // =================================================================================================
-// MARK: - CogRegistration
+#pragma mark - CogRegistration
 
 CogRegistration::CogRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }
@@ -150,7 +150,7 @@ Cog CogRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 	}
 
 // =================================================================================================
-// MARK: - sCog
+#pragma mark - sCog
 
 namespace { // anonymous
 
@@ -294,7 +294,7 @@ static
 CogRegistration spCogRegistration_Cog("CogCtor_Cog", spCogCtor_Cog);
 
 // =================================================================================================
-// MARK: - sCog_WithEpoch
+#pragma mark - sCog_WithEpoch
 
 class Callable_Cog_WithEpoch
 :	public Cog::Callable
@@ -356,7 +356,7 @@ Cog sCog_NewEpoch(const Cog& iChild)
 	}
 
 // =================================================================================================
-// MARK: - Touches
+#pragma mark - Touches
 
 static
 Cog spCogFun_UpdateTouchListener(const Cog& iSelf, const Param& iParam,
@@ -425,13 +425,13 @@ Cog sCog_DisableTouches(const Cog& iCog)
 	}
 
 // =================================================================================================
-// MARK: - Noop
+#pragma mark - Noop
 
 Cog sCog_Noop()
 	{ return sCog_Pending<Cog::Param>(); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 static
 Cog spCogFun_Log1(const Cog& iSelf, const Param& iParam,

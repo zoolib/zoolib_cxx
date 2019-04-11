@@ -28,7 +28,7 @@ typedef ZMtx MtxF;
 typedef ZAcqMtx AcqMtxF;
 
 // =================================================================================================
-// MARK: - Fundamental types
+#pragma mark - Fundamental types
 
 typedef float Rat;
 
@@ -45,7 +45,7 @@ typedef Map_Shared_T<Map> SharedState;
 typedef Map_Shared_Mutable_T<Map> SharedState_Mutable;
 
 // =================================================================================================
-// MARK: - GRect pseudo-ctors
+#pragma mark - GRect pseudo-ctors
 
 inline GRect sGRect()
 	{ return GRect(); }
@@ -63,7 +63,7 @@ inline GPoint sGPoint(Rat iX, Rat iY)
 	{ return sPoint<GPoint>(iX, iY); }
 
 // =================================================================================================
-// MARK: - Alpha
+#pragma mark - Alpha
 
 typedef TagVal<float, struct Tag_Alpha> Alpha;
 
@@ -77,7 +77,7 @@ inline Alpha& operator*=(Alpha& ioLHS, const Alpha& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - Gain
+#pragma mark - Gain
 
 struct Gain
 	{
@@ -116,7 +116,7 @@ inline Gain& operator*=(Gain& ioLHS, const Gain& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - AlphaMat
+#pragma mark - AlphaMat
 
 struct AlphaMat
 	{
@@ -160,7 +160,7 @@ inline AlphaMat& operator*=(AlphaMat& ioLHS, const AlphaMat& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - AlphaGainMat
+#pragma mark - AlphaGainMat
 
 struct AlphaGainMat
 	{
@@ -239,7 +239,7 @@ inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const AlphaGainMat& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - Pseudo-ctors, AlphaGainMat --> Alpha, Gain, Mat
+#pragma mark - Pseudo-ctors, AlphaGainMat --> Alpha, Gain, Mat
 
 inline Alpha sAlpha(const AlphaGainMat& iAlphaGainMat)
 	{ return iAlphaGainMat.fAlpha; }
@@ -254,7 +254,7 @@ inline AlphaMat sAlphaMat(const AlphaGainMat& iAlphaGainMat)
 	{ return AlphaMat(iAlphaGainMat.fAlpha, iAlphaGainMat.fMat); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 inline AlphaMat operator*(const Alpha& iAlpha, const Mat& iMat)
 	{ return AlphaMat(iAlpha, iMat); }
@@ -269,7 +269,7 @@ inline AlphaGainMat operator*(const Gain& iGain, const AlphaMat& iAlphaMat)
 	{ return AlphaGainMat(iAlphaMat.fAlpha, iGain, iAlphaMat.fMat); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 inline AlphaMat operator*(const AlphaMat& iAlphaMat, const Alpha& iAlpha)
 	{ return AlphaMat(iAlphaMat.fAlpha * iAlpha, iAlphaMat.fMat); }
@@ -290,7 +290,7 @@ inline AlphaMat& operator*=(AlphaMat& ioLHS, const Mat& iRHS)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 inline AlphaGainMat operator*(const AlphaGainMat& iLHS, const Alpha& iRHS)
 	{ return AlphaGainMat(iLHS.fAlpha * iRHS, iLHS.fGain, iLHS.fMat); }
@@ -320,7 +320,7 @@ inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const Mat& iRHS)
 	}
 
 // =================================================================================================
-// MARK: - NameFrame
+#pragma mark - NameFrame
 
 struct NameFrame
 	{
@@ -334,7 +334,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Cel
+#pragma mark - Cel
 
 struct Cel
 	{
@@ -346,7 +346,7 @@ struct Cel
 	};
 
 // =================================================================================================
-// MARK: - Map Get
+#pragma mark - Map Get
 
 ZQ<Val> sQGetNamed(const Map& iMap, const Name& iName0);
 
@@ -358,21 +358,21 @@ ZQ<Val> sQGetNamed(const Map& iMap,
 Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1);
 
 // =================================================================================================
-// MARK: - Rat, from ZQ<Val>
+#pragma mark - Rat, from ZQ<Val>
 
 ZQ<Rat> sQRat(const ZQ<Val>& iValQ);
 Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ);
 Rat sRat(const ZQ<Val>& iValQ);
 
 // =================================================================================================
-// MARK: - Rat, from Any
+#pragma mark - Rat, from Any
 
 ZQ<Rat> sQRat(const Any& iAny);
 Rat sDRat(Rat iDefault, const Any& iAny);
 Rat sRat(const Any& iAny);
 
 // =================================================================================================
-// MARK: - CVec
+#pragma mark - CVec
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
 CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ);
@@ -385,7 +385,7 @@ CVec3 sCVec3(Rat iIdentity, const Any& iVal);
 CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);
 
 // =================================================================================================
-// MARK: - RGBA
+#pragma mark - RGBA
 
 ZQ<ZRGBA> sQRGBA(const string8& iString);
 
@@ -394,7 +394,7 @@ ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ);
 ZQ<ZRGBA> sQRGBA(const Any& iVal);
 
 // =================================================================================================
-// MARK: - sRandomInRange
+#pragma mark - sRandomInRange
 
 double sRandomInRange(double iMin, double iMax);
 

@@ -13,7 +13,7 @@ using std::pair;
 using std::vector;
 
 // =================================================================================================
-// MARK: - sCombineTweenVals for CelStack, AlphaMat, Alpha and Mat combinations
+#pragma mark - sCombineTweenVals for CelStack, AlphaMat, Alpha and Mat combinations
 
 namespace ZooLib {
 
@@ -75,7 +75,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - spToon_NameFrame
+#pragma mark - spToon_NameFrame
 
 namespace { // anonymous
 ZRef<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCount)
@@ -115,7 +115,7 @@ ZRef<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCoun
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - sTween<CelStack>
+#pragma mark - sTween<CelStack>
 
 template <>
 ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
@@ -193,13 +193,13 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 	}
 
 // =================================================================================================
-// MARK: - sToon
+#pragma mark - sToon
 
 ZRef<Toon> sToon(const ZQ<Val>& iValQ)
 	{ return sTween<CelStack>(iValQ); }
 
 // =================================================================================================
-// MARK: - ToonRegistration
+#pragma mark - ToonRegistration
 
 ToonRegistration::ToonRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }

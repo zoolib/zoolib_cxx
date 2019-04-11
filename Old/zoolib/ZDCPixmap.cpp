@@ -47,12 +47,12 @@ clear the cache.
 */
 
 // =================================================================================================
-// MARK: - kDebug
+#pragma mark - kDebug
 
 #define kDebug_Pixmap 1
 
 // =================================================================================================
-// MARK: - ZDCPixmap
+#pragma mark - ZDCPixmap
 
 ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const ZDCPixmap& iMask)
 	{
@@ -413,7 +413,7 @@ void ZDCPixmap::pTouch()
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapRaster
+#pragma mark - ZDCPixmapRaster
 
 ZDCPixmapRaster::ZDCPixmapRaster(const RasterDesc& iRasterDesc)
 :	fRasterDesc(iRasterDesc),
@@ -447,7 +447,7 @@ void ZDCPixmapRaster::Fill(uint32 iPixval)
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapRaster_Simple
+#pragma mark - ZDCPixmapRaster_Simple
 
 ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(const RasterDesc& iRasterDesc)
 :	ZDCPixmapRaster(iRasterDesc)
@@ -477,7 +477,7 @@ ZDCPixmapRaster_Simple::~ZDCPixmapRaster_Simple()
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapRaster_StaticData
+#pragma mark - ZDCPixmapRaster_StaticData
 
 ZDCPixmapRaster_StaticData::ZDCPixmapRaster_StaticData(const void* iBaseAddress,
 	const RasterDesc& iRasterDesc)
@@ -506,7 +506,7 @@ ZDCPixmapRaster_StaticData::~ZDCPixmapRaster_StaticData()
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapCache
+#pragma mark - ZDCPixmapCache
 
 ZDCPixmapCache::ZDCPixmapCache()
 	{}
@@ -521,7 +521,7 @@ ZDCPixmapCache::~ZDCPixmapCache()
 	{}
 
 // =================================================================================================
-// MARK: - ZDCPixmapRep
+#pragma mark - ZDCPixmapRep
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const ZRef<ZDCPixmapRaster>& iRaster,

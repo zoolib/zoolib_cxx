@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Non-releasing allocator
+#pragma mark - Non-releasing allocator
 
 // RealAllocator and TTAllocator, names I'm not overly fond of.
 // RealAllocator is a simple class that allocates space

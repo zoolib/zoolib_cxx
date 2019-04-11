@@ -10,19 +10,19 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Toon
+#pragma mark - Toon
 
 typedef ZRef<CountedVal<std::vector<Cel> > > CelStack;
 
 typedef Tween<CelStack> Toon;
 
 // =================================================================================================
-// MARK: - sToon aka sTween<CelStack>
+#pragma mark - sToon aka sTween<CelStack>
 
 ZRef<Toon> sToon(const ZQ<Val>& iValQ);
 
 // =================================================================================================
-// MARK: - ToonRegistration
+#pragma mark - ToonRegistration
 
 class ToonRegistration
 	{

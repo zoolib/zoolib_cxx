@@ -25,7 +25,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Sheet (anonymous)
+#pragma mark - Sheet (anonymous)
 
 namespace { // anonymous
 
@@ -73,7 +73,7 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - AssetCatalog::SheetCatalog
+#pragma mark - AssetCatalog::SheetCatalog
 
 class AssetCatalog::SheetCatalog
 :	public ZCounted
@@ -235,7 +235,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Sheet
+#pragma mark - Sheet
 
 Sheet::Sheet(
 	const ZRef<AssetCatalog::SheetCatalog>& iSC,
@@ -282,7 +282,7 @@ ZRef<Texture> Sheet::GetTexture()
 	}
 
 // =================================================================================================
-// MARK: - AssetCatalog
+#pragma mark - AssetCatalog
 
 AssetCatalog::AssetCatalog()
 :	fSheetCatalog(new SheetCatalog)
@@ -482,7 +482,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 	return true;
 	}
 // =================================================================================================
-// MARK: - Globals
+#pragma mark - Globals
 
 size_t sToonFrameCount(const Name& iName)
 	{

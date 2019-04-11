@@ -3,7 +3,7 @@
 #include "zconfig.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 namespace ZooLib {
 namespace GameEngine {

@@ -79,7 +79,7 @@ SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZBigRegion
+#pragma mark - ZBigRegion
 
 // AG 98-08-13. ZBigRegion provides a region-type facility that works with 32 bit coordinates.
 // The implementation is ripped from the XFree86 source.
@@ -234,7 +234,7 @@ protected:
 	};
 
 // =================================================================================================
-// MARK: - ZBigRegionAccumulator
+#pragma mark - ZBigRegionAccumulator
 
 class ZBigRegionUnioner_t
 	{

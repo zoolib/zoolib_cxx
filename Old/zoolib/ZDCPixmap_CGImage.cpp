@@ -28,7 +28,7 @@ namespace ZDCPixmap_CGImage {
 using namespace ZDCPixmapNS;
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CGImage::PixmapRaster
+#pragma mark - ZDCPixmap_CGImage::PixmapRaster
 
 class PixmapRaster : public ZDCPixmapRaster
 	{
@@ -49,7 +49,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CGImage
+#pragma mark - ZDCPixmap_CGImage
 
 ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 	{

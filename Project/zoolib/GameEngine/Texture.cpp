@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Texture
+#pragma mark - Texture
 
 Texture::Texture()
 :	fPixelCount(0)

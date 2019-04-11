@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Sound
+#pragma mark - Sound
 
 Sound::Sound()
 :	fDetached(false)
@@ -14,7 +14,7 @@ Sound::~Sound()
 	{}
 
 // =================================================================================================
-// MARK: - SoundMeister
+#pragma mark - SoundMeister
 
 static ZRef<SoundMeister> spSoundMeister;
 

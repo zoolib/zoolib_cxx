@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Nook_Catcher
+#pragma mark - Nook_Catcher
 
 class Nook_Catcher
 :	public Nook
@@ -37,7 +37,7 @@ void sPitch(const Param& iParam, const Name& iName, const Val& iVal);
 const std::vector<Val>& sGetPitches(const Param& iParam, const Name& iName);
 
 // =================================================================================================
-// MARK: - Cog_Pitch
+#pragma mark - Cog_Pitch
 
 Cog sCog_Pitch(const Map& iMap);
 

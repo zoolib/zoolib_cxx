@@ -7,7 +7,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Sound cogs
+#pragma mark - Sound cogs
 
 static
 Cog spCogFun_Sound(const Cog& iSelf, const Param& iParam,

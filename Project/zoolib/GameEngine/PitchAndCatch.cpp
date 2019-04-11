@@ -7,7 +7,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - Nook_Catcher
+#pragma mark - Nook_Catcher
 
 Nook_Catcher::Nook_Catcher(const ZRef<NookScope>& iNookScope, const Name& iName)
 :	Nook(iNookScope)
@@ -63,7 +63,7 @@ const vector<Val>& sGetPitches(const Param& iParam, const Name& iName)
 	}
 
 // =================================================================================================
-// MARK: - Cog_Pitch
+#pragma mark - Cog_Pitch
 
 static
 Cog spCogFun(const Cog& iSelf, const Param& iParam,

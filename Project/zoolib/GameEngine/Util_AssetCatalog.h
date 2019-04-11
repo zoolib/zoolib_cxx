@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 void sPopulate(
 	const ZRef<AssetCatalog>& iAC,

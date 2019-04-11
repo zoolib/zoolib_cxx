@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace OpenGL {
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BindTexture_2D
+#pragma mark - SaveSetRestore_BindTexture_2D
 
 SaveSetRestore_BindTexture_2D::SaveSetRestore_BindTexture_2D(GLuint iTextureID)
 	{
@@ -16,7 +16,7 @@ SaveSetRestore_BindTexture_2D::~SaveSetRestore_BindTexture_2D()
 	{ ::glBindTexture(GL_TEXTURE_2D, fPrior); }
 
 // =================================================================================================
-// MARK: - SaveSetRestore_Enable
+#pragma mark - SaveSetRestore_Enable
 
 SaveSetRestore_Enable::SaveSetRestore_Enable(GLenum iEnum, bool iEnable)
 :	fEnum(iEnum)
@@ -37,7 +37,7 @@ SaveSetRestore_Enable::~SaveSetRestore_Enable()
 	}
 
 // =================================================================================================
-// MARK: - SaveSaveSetRestore_EnableClientState
+#pragma mark - SaveSaveSetRestore_EnableClientState
 
 SaveSetRestore_EnableClientState::SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable)
 :	fEnum(iEnum)
@@ -58,7 +58,7 @@ SaveSetRestore_EnableClientState::~SaveSetRestore_EnableClientState()
 	}
 
 // =================================================================================================
-// MARK: - SaveSetRestore_ActiveTexture
+#pragma mark - SaveSetRestore_ActiveTexture
 
 SaveSetRestore_ActiveTexture::SaveSetRestore_ActiveTexture(GLenum iTexture)
 	{
@@ -70,7 +70,7 @@ SaveSetRestore_ActiveTexture::~SaveSetRestore_ActiveTexture()
 	{ ::glActiveTexture(fPrior); }
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BlendFunc
+#pragma mark - SaveSetRestore_BlendFunc
 
 SaveSetRestore_BlendFunc::SaveSetRestore_BlendFunc(GLenum sfactor, GLenum dfactor)
 	{
@@ -83,7 +83,7 @@ SaveSetRestore_BlendFunc::~SaveSetRestore_BlendFunc()
 	{ ::glBlendFunc(fPrior_sfactor, fPrior_dfactor); }
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BlendEquation
+#pragma mark - SaveSetRestore_BlendEquation
 
 SaveSetRestore_BlendEquation::SaveSetRestore_BlendEquation(GLenum mode)
 	{
@@ -95,7 +95,7 @@ SaveSetRestore_BlendEquation::~SaveSetRestore_BlendEquation()
 	{ ::glBlendEquation(fPrior); }
 
 // =================================================================================================
-// MARK: - SaveSetRestore_ViewPort
+#pragma mark - SaveSetRestore_ViewPort
 
 SaveSetRestore_ViewPort::SaveSetRestore_ViewPort(GLint x, GLint y, GLsizei width, GLsizei height)
 	{
@@ -107,7 +107,7 @@ SaveSetRestore_ViewPort::~SaveSetRestore_ViewPort()
 	{ ::glViewport(fPrior[0], fPrior[1], fPrior[2], fPrior[3]); }
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BindFramebuffer
+#pragma mark - SaveSetRestore_BindFramebuffer
 
 SaveSetRestore_BindFramebuffer::SaveSetRestore_BindFramebuffer(GLuint iFBO)
 	{

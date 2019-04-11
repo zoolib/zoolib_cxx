@@ -12,7 +12,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Texture_GL
+#pragma mark - Texture_GL
 
 typedef TagVal<GLuint,struct Tag_TextureID> TextureID;
 

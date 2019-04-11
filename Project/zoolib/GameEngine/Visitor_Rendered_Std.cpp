@@ -11,7 +11,7 @@ namespace GameEngine {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_AccumulateAlphaGainMat
+#pragma mark - Visitor_Rendered_AccumulateAlphaGainMat
 
 Visitor_Rendered_AccumulateAlphaGainMat::Visitor_Rendered_AccumulateAlphaGainMat()
 	{}
@@ -32,7 +32,7 @@ void Visitor_Rendered_AccumulateAlphaGainMat::Visit_Rendered_AlphaGainMat(
 	}
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_DecomposeCel
+#pragma mark - Visitor_Rendered_DecomposeCel
 
 Visitor_Rendered_DecomposeCel::Visitor_Rendered_DecomposeCel(
 	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame)
@@ -79,7 +79,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 	}
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_DecomposeGroup
+#pragma mark - Visitor_Rendered_DecomposeGroup
 
 void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
 	const ZRef<Rendered_Group>& iRendered_Group)
@@ -89,7 +89,7 @@ void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
 	}
 
 // =================================================================================================
-// MARK: - Visitor_Rendered_LineToRect
+#pragma mark - Visitor_Rendered_LineToRect
 
 void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line)
 	{

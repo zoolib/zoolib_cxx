@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Toon cogs
+#pragma mark - Toon cogs
 
 class Callable_Cog_NookScope
 :	public Cog::Callable

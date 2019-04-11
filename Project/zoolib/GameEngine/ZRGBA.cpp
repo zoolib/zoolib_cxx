@@ -36,7 +36,7 @@ const ZRGBA_POD ZRGBA_POD::sMagenta = { 0xFFFF, 0x0000, 0xFFFF, 0xFFFF };
 const ZRGBA_POD ZRGBA_POD::sWhite =   { 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
 
 // =================================================================================================
-// MARK: - ZRGBA_POD
+#pragma mark - ZRGBA_POD
 
 #if ZCONFIG_SPI_Enabled(GDI)
 ZRGBA_POD ZRGBA_POD::sFromCOLORREF(COLORREF iColorRef)

@@ -29,7 +29,7 @@ namespace GameEngine {
 using namespace Util_string;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 template <class Rect_p, class Seq_p>
 ZQ<Rect_p> spQGRect_T(const Seq_p& iSeq)
@@ -223,7 +223,7 @@ void sDump(const Any& iAny)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 uint64 sNextID()
 	{

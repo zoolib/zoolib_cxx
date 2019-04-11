@@ -17,7 +17,7 @@ namespace GameEngine {
 class Visitor_Rendered;
 
 // =================================================================================================
-// MARK: - Rendered
+#pragma mark - Rendered
 
 class Rendered
 :	public Visitee
@@ -34,7 +34,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - Rendered_AlphaGainMat
+#pragma mark - Rendered_AlphaGainMat
 
 class Rendered_AlphaGainMat;
 
@@ -76,7 +76,7 @@ ZRef<Rendered_AlphaGainMat> sRendered_AlphaGainMat(
 	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
-// MARK: - Rendered_Buffer
+#pragma mark - Rendered_Buffer
 
 class Rendered_Buffer
 :	public Rendered
@@ -104,7 +104,7 @@ ZRef<Rendered_Buffer> sRendered_Buffer(
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
-// MARK: - Rendered_Cel
+#pragma mark - Rendered_Cel
 
 class Rendered_Cel
 :	public Rendered
@@ -125,7 +125,7 @@ private:
 ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel);
 
 // =================================================================================================
-// MARK: - Rendered_Group
+#pragma mark - Rendered_Group
 
 class Rendered_Group;
 
@@ -160,7 +160,7 @@ private:
 ZRef<Rendered_Group> sRendered_Group();
 
 // =================================================================================================
-// MARK: - Rendered_Line
+#pragma mark - Rendered_Line
 
 class Rendered_Line
 :	public Rendered
@@ -182,7 +182,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Rendered_Rect
+#pragma mark - Rendered_Rect
 
 class Rendered_Rect
 :	public Rendered
@@ -204,7 +204,7 @@ private:
 ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds);
 
 // =================================================================================================
-// MARK: - Rendered_RightAngleSegment
+#pragma mark - Rendered_RightAngleSegment
 
 class Rendered_RightAngleSegment
 :	public Rendered
@@ -227,7 +227,7 @@ ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
 	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave);
 
 // =================================================================================================
-// MARK: - Rendered_Sound
+#pragma mark - Rendered_Sound
 
 class Rendered_Sound
 :	public Rendered
@@ -245,7 +245,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Rendered_String
+#pragma mark - Rendered_String
 
 class Rendered_String
 :	public Rendered
@@ -266,7 +266,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Rendered_Texture
+#pragma mark - Rendered_Texture
 
 class Rendered_Texture;
 
@@ -303,7 +303,7 @@ private:
 ZRef<Rendered_Texture> sRendered_Texture(const ZRef<Texture>& iTexture, const GRect& iBounds);
 
 // =================================================================================================
-// MARK: - Rendered_Triangle
+#pragma mark - Rendered_Triangle
 
 class Rendered_Triangle
 :	public Rendered
@@ -328,7 +328,7 @@ ZRef<Rendered_Triangle> sRendered_Triangle(
 	const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
 // =================================================================================================
-// MARK: - Visitor_Rendered
+#pragma mark - Visitor_Rendered
 
 class Visitor_Rendered
 :	public virtual Visitor
@@ -352,7 +352,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 ZRef<Rendered> sFrontmost(const ZRef<Rendered>& iRendered);
 

@@ -10,7 +10,7 @@ namespace GameEngine {
 using namespace OpenGL;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 static void spBefore(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA)
@@ -125,7 +125,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 Visitor_Draw_GL_Fixed::Visitor_Draw_GL_Fixed(bool iShowBounds, bool iShowOrigin)
 :	fShowBounds(iShowBounds)

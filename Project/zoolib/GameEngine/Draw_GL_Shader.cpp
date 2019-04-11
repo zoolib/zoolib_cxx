@@ -9,7 +9,7 @@
 #include "zoolib/OpenGL/Util.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 namespace ZooLib {
 namespace GameEngine {
@@ -417,6 +417,7 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 void spDrawString(const AlphaMat& iAlphaMat, const ZRGBA& iRGBA, const string8& iString)
 	{
+#if 0
 	ZRef<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
@@ -458,6 +459,7 @@ void spDrawString(const AlphaMat& iAlphaMat, const ZRGBA& iRGBA, const string8& 
 
 		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
+#endif
 	}
 
 void spDrawTexture(

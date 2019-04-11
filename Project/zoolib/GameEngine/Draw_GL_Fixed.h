@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 class Visitor_Draw_GL_Fixed
 :	public virtual Visitor_Rendered_AccumulateAlphaGainMat

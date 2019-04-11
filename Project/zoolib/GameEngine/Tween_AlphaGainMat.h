@@ -8,28 +8,28 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Alpha
+#pragma mark - Alpha
 
 typedef Tween<Alpha> Tween_Alpha;
 
 ZRef<Tween_Alpha> sTween_Alpha(const ZRef<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
-// MARK: - Tween_Gain
+#pragma mark - Tween_Gain
 
 typedef Tween<Gain> Tween_Gain;
 
 ZRef<Tween_Gain> sTween_Gain(const ZRef<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
-// MARK: - Tween_Mat
+#pragma mark - Tween_Mat
 
 typedef Tween<Mat> Tween_Mat;
 
 ZRef<Tween_Mat> sTween_Mat_Identity();
 
 // =================================================================================================
-// MARK: - AlphaMat
+#pragma mark - AlphaMat
 
 typedef Tween<AlphaGainMat> Tween_AlphaGainMat;
 
@@ -55,7 +55,7 @@ ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Gain>& iTween_Gain
 ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Mat>& iTween_Mat);
 
 // =================================================================================================
-// MARK: - AlphaGainMatRegistration
+#pragma mark - AlphaGainMatRegistration
 
 class AlphaGainMatRegistration
 	{

@@ -7,7 +7,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 Cog sCog_Random(double iRatio, const Cog& iCog0, const Cog& iCog1);
 

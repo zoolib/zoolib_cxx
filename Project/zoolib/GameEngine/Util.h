@@ -11,7 +11,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 ZQ<GRect> sQGRect(const ZQ<Val>& iValQ);
 ZQ<GRect> sQGRect(const Val& iVal);

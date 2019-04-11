@@ -10,7 +10,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Texture
+#pragma mark - Texture
 
 class Texture
 :	public ZCounted

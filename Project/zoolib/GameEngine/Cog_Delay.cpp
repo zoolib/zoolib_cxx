@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 static
 Cog spCogFun_DelayUntil(const Cog& iSelf, const Param& iParam,

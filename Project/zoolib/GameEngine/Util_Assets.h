@@ -11,7 +11,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 bool sReadAnim(const FileSpec& iFS, std::map<string8,FileSpec>& oFiles, Map_Any& oMap);
 

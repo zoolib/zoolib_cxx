@@ -6,7 +6,7 @@ namespace GameEngine {
 using std::vector;
 
 // =================================================================================================
-// MARK: - Rendered
+#pragma mark - Rendered
 
 Rendered::Rendered()
 	{}
@@ -23,7 +23,7 @@ void Rendered::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered(this); }
 
 // =================================================================================================
-// MARK: - Rendered_AlphaGainMat
+#pragma mark - Rendered_AlphaGainMat
 
 namespace {
 
@@ -82,7 +82,7 @@ ZRef<Rendered_AlphaGainMat> sRendered_AlphaGainMat(
 	{ return Rendered_AlphaGainMat::spMake(iAlphaGainMat, iRendered); }
 
 // =================================================================================================
-// MARK: - Rendered_Buffer
+#pragma mark - Rendered_Buffer
 
 Rendered_Buffer::Rendered_Buffer(
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered)
@@ -112,7 +112,7 @@ ZRef<Rendered_Buffer> sRendered_Buffer(
 	{ return new Rendered_Buffer(iWidth, iHeight, iRGBA, iRendered); }
 
 // =================================================================================================
-// MARK: - Rendered_Cel
+#pragma mark - Rendered_Cel
 
 Rendered_Cel::Rendered_Cel(const Cel& iCel)
 :	fCel(iCel)
@@ -128,7 +128,7 @@ ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel)
 	{ return new Rendered_Cel(iCel); }
 
 // =================================================================================================
-// MARK: - Rendered_Group
+#pragma mark - Rendered_Group
 
 namespace { // anonymous
 
@@ -170,7 +170,7 @@ ZRef<Rendered_Group> sRendered_Group()
 	{ return Rendered_Group::spMake(); }
 
 // =================================================================================================
-// MARK: - Rendered_Line
+#pragma mark - Rendered_Line
 
 Rendered_Line::Rendered_Line(const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth)
 :	fRGBA(iRGBA)
@@ -191,7 +191,7 @@ void Rendered_Line::Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth)
 	}
 
 // =================================================================================================
-// MARK: - Rendered_Rect
+#pragma mark - Rendered_Rect
 
 Rendered_Rect::Rendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
 :	fRGBA(iRGBA)
@@ -211,7 +211,7 @@ ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
 	{ return new Rendered_Rect(iRGBA, iBounds); }
 
 // =================================================================================================
-// MARK: - Rendered_RightAngleSegment
+#pragma mark - Rendered_RightAngleSegment
 
 Rendered_RightAngleSegment::Rendered_RightAngleSegment(
 	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
@@ -233,7 +233,7 @@ ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
 	{ return new Rendered_RightAngleSegment(iRGBA_Convex, iRGBA_Concave); }
 
 // =================================================================================================
-// MARK: - Rendered_Sound
+#pragma mark - Rendered_Sound
 
 Rendered_Sound::Rendered_Sound(const ZRef<Sound>& iSound)
 :	fSound(iSound)
@@ -246,7 +246,7 @@ void Rendered_Sound::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Sound(this); }
 
 // =================================================================================================
-// MARK: - Rendered_String
+#pragma mark - Rendered_String
 
 Rendered_String::Rendered_String(const ZRGBA& iRGBA, const string8& iString)
 :	fRGBA(iRGBA)
@@ -263,7 +263,7 @@ const string8& Rendered_String::GetString()
 	{ return fString; }
 
 // =================================================================================================
-// MARK: - Rendered_Texture
+#pragma mark - Rendered_Texture
 
 namespace {
 
@@ -313,7 +313,7 @@ ZRef<Rendered_Texture> sRendered_Texture(const ZRef<Texture>& iTexture, const GR
 	{ return Rendered_Texture::spMake(iTexture, iBounds); }
 
 // =================================================================================================
-// MARK: - Rendered_Triangle
+#pragma mark - Rendered_Triangle
 
 Rendered_Triangle::Rendered_Triangle(
 	const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
@@ -339,7 +339,7 @@ ZRef<Rendered_Triangle> sRendered_Triangle(
 	{ return new Rendered_Triangle(iRGBA, iP0, iP1, iP2); }
 
 // =================================================================================================
-// MARK: - Visitor_Rendered
+#pragma mark - Visitor_Rendered
 
 void Visitor_Rendered::Visit_Rendered(const ZRef<Rendered>& iRendered)
 	{ this->Visit(iRendered); }
@@ -380,7 +380,7 @@ void Visitor_Rendered::Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iR
 	{ this->Visit_Rendered(iRendered_Triangle); }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 ZRef<Rendered> sFrontmost(const ZRef<Rendered>& iRendered)
 	{ return sRendered_AlphaGainMat(sTranslate3Z<Rat>(128), iRendered); }

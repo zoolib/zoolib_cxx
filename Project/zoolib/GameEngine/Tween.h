@@ -101,7 +101,7 @@ ZRef<Tween<Val> > sTweens(const Seq& iSeq)
 	}
 
 // =================================================================================================
-// MARK: - Tween_Callable
+#pragma mark - Tween_Callable
 
 template <class Val>
 class Tween_Callable
@@ -134,7 +134,7 @@ Tween<Val> sTween_Callable(const ZRef<Callable<Val(double)> >& iCallable)
 	}
 
 // =================================================================================================
-// MARK: - Tween_Filter_Callable
+#pragma mark - Tween_Filter_Callable
 
 template <class Val, class Param>
 class Tween_Filter_Callable

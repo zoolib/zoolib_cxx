@@ -29,7 +29,7 @@ using std::set;
 using std::vector;
 
 // =================================================================================================
-// MARK: - GameRate
+#pragma mark - GameRate
 
 static Rat spGameRate = 1.0;
 
@@ -50,7 +50,7 @@ Rat sGetGameRate()
 	{ return spGameRate; }
 
 // =================================================================================================
-// MARK: - spSortTLs
+#pragma mark - spSortTLs
 
 namespace { // anonymous 
 
@@ -78,7 +78,7 @@ vector<ZRef<TouchListener> > spSortTLs(const vector<ZRef<TouchListener> >& iTLs)
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - Game
+#pragma mark - Game
 
 static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	{

@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Toon cogs
+#pragma mark - Toon cogs
 
 class Callable_Cog_Toon
 :	public Cog::Callable
@@ -53,7 +53,7 @@ Cog sCog_Toon(const ZRef<Toon>& iToon)
 	{ return sCog_NewEpoch(sCog_Toon_NoEpoch(iToon)); }
 
 // =================================================================================================
-// MARK: - CogCtor_Toon
+#pragma mark - CogCtor_Toon
 
 static
 Cog spCogCtor_Toon(const Map& iMap)

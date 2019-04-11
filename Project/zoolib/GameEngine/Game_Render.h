@@ -9,7 +9,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 void sGame_Render(const ZRef<Rendered>& iRendered,
 	const GPoint& iPixelSize,

@@ -76,7 +76,7 @@ Cog spCog_TouchUp(const ZRef<TouchListener>& iTouchListener)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 Cog sCog_Button(
 	const ZRef<TouchListener>& iTouchListener,

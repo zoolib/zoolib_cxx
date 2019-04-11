@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZDCPixmapEncoder
+#pragma mark - ZDCPixmapEncoder
 
 void ZDCPixmapEncoder::sWritePixmap(const ChanW_Bin& iStream,
 	const ZDCPixmap& iPixmap, ZDCPixmapEncoder& iEncoder)
@@ -67,7 +67,7 @@ void ZDCPixmapEncoder::Write(const ChanW_Bin& iStream,
 	}
 
 // =================================================================================================
-// MARK: - ZDCPixmapDecoder
+#pragma mark - ZDCPixmapDecoder
 
 ZDCPixmap ZDCPixmapDecoder::sReadPixmap(const ChanR_Bin& iStream, ZDCPixmapDecoder& iDecoder)
 	{ return iDecoder.Read(iStream); }

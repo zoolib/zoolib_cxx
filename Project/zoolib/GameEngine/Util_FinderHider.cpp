@@ -5,7 +5,7 @@ namespace GameEngine {
 namespace Util {
 
 // =================================================================================================
-// MARK: - sFinderHider
+#pragma mark - sFinderHider
 
 ZRef<Rendered> sFinderHider(
 	const ZRef<Rendered>& iRendered,

@@ -11,7 +11,7 @@
 #include <vector>
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 namespace ZooLib {
 namespace GameEngine {
@@ -19,7 +19,7 @@ namespace GameEngine {
 class Nook;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 class NookScope
 :	public ZCounted
@@ -49,7 +49,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Nook
+#pragma mark - Nook
 
 class Nook
 :	public ZCounted
@@ -73,7 +73,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - NookSet
+#pragma mark - NookSet
 
 template <class Nook_p>
 class NookSet

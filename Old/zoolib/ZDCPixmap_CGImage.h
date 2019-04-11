@@ -37,7 +37,7 @@ namespace ZooLib {
 namespace ZDCPixmap_CGImage {
 
 // =================================================================================================
-// MARK: - ZDCPixmap_CGImage
+#pragma mark - ZDCPixmap_CGImage
 
 ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef);
 

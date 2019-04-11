@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - CogIndirect
+#pragma mark - CogIndirect
 
 void sSetIndirect(const Cog& iLHS, const Cog& iRHS);
 

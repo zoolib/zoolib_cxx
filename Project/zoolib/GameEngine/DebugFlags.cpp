@@ -1,7 +1,7 @@
 #include "zoolib/GameEngine/DebugFlags.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 namespace ZooLib {
 namespace GameEngine {

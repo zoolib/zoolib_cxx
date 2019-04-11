@@ -29,12 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - ZCoord (deprecated)
+#pragma mark - ZCoord (deprecated)
 
 typedef int32 ZCoord;
 
 // =================================================================================================
-// MARK: - ZPointPOD
+#pragma mark - ZPointPOD
 
 struct ZPointPOD
 	{
@@ -52,7 +52,7 @@ inline ZPointPOD sPointPOD(int32 iHV)
 	{ return sPointPOD(iHV, iHV); }
 
 // =================================================================================================
-// MARK: - ZRectPOD
+#pragma mark - ZRectPOD
 
 struct ZRectPOD
 	{
@@ -72,7 +72,7 @@ inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
 // =================================================================================================
-// MARK: - Cartesian::PointTraits<ZPointPOD>
+#pragma mark - Cartesian::PointTraits<ZPointPOD>
 
 namespace Cartesian {
 
@@ -87,7 +87,7 @@ struct PointTraits<ZPointPOD>
 } // namespace Cartesian
 
 // =================================================================================================
-// MARK: - Cartesian::RectTraits<ZRectPOD>
+#pragma mark - Cartesian::RectTraits<ZRectPOD>
 
 namespace Cartesian {
 

@@ -17,7 +17,7 @@ namespace GameEngine {
 using namespace OpenGL;
 
 // =================================================================================================
-// MARK: - Visitor_GatherSound
+#pragma mark - Visitor_GatherSound
 
 static inline
 Rat spSquared(const Rat iRat)
@@ -68,7 +68,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Visitor_Shader
+#pragma mark - Visitor_Shader
 
 #if ZMACRO_CanUseShader
 
@@ -101,7 +101,7 @@ public:
 #endif // ZMACRO_CanUseShader)
 
 // =================================================================================================
-// MARK: - Visitor_Fixed
+#pragma mark - Visitor_Fixed
 
 class Visitor_Fixed
 :	public Visitor_Draw_GL_Fixed
@@ -124,7 +124,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 void sGame_Render(const ZRef<Rendered>& iRendered,
 	const GPoint& iPixelSize,

@@ -9,7 +9,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Touch
+#pragma mark - Touch
 
 class Touch
 :	public ZCounted
@@ -22,7 +22,7 @@ public:
 typedef std::set<ZRef<Touch> > TouchSet;
 
 // =================================================================================================
-// MARK: - TouchListener
+#pragma mark - TouchListener
 
 class TouchListener
 :	public ZCounted

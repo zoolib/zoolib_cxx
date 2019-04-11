@@ -6,7 +6,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - sCoT
+#pragma mark - sCoT
 
 // CoT == Cog or Toon.
 

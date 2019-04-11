@@ -14,7 +14,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Texture_BoundsQ_Mat
+#pragma mark - Texture_BoundsQ_Mat
 
 struct Texture_BoundsQ_Mat
 	{
@@ -25,7 +25,7 @@ struct Texture_BoundsQ_Mat
 	};
 
 // =================================================================================================
-// MARK: - AssetCatalog
+#pragma mark - AssetCatalog
 
 class AssetCatalog
 :	public ZCounted
@@ -92,9 +92,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Globals
-
-void sSet(const ZRef<AssetCatalog>& iAssetCatalog);
+#pragma mark - Globals
 
 size_t sToonFrameCount(const Name& iName);
 

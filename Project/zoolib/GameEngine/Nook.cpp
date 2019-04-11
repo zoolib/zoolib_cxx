@@ -12,7 +12,7 @@ using std::vector;
 using namespace Util_STL;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 NookScope::NookScope()
 	{}
@@ -96,7 +96,7 @@ void NookScope::pFinalize(Nook* iNook)
 	}
 
 // =================================================================================================
-// MARK: - Nook
+#pragma mark - Nook
 
 Nook::Nook(const ZRef<NookScope>& iNookScope)
 :	fNookScope(iNookScope)

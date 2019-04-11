@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - sCog_Buffer
+#pragma mark - sCog_Buffer
 
 static
 Cog spCogFun_Buffer(const Cog& iSelf, const Param& iParam,
@@ -58,7 +58,7 @@ static
 CogRegistration spCogRegistration_Buffer("CogCtor_Buffer", spCogCtor_Buffer);
 
 // =================================================================================================
-// MARK: - sCog_Buffer_Continue
+#pragma mark - sCog_Buffer_Continue
 
 namespace { // anonymous
 

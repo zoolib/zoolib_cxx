@@ -9,7 +9,7 @@
 using std::map;
 
 // =================================================================================================
-// MARK: - sCombineTweenVals for Alpha, Gain, Mat and combinations
+#pragma mark - sCombineTweenVals for Alpha, Gain, Mat and combinations
 
 namespace ZooLib {
 
@@ -70,7 +70,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - sTween_Alpha
+#pragma mark - sTween_Alpha
 
 ZRef<Tween_Alpha> sTween_Alpha(const ZRef<Tween_Rat>& iTween_Rat)
 	{
@@ -80,7 +80,7 @@ ZRef<Tween_Alpha> sTween_Alpha(const ZRef<Tween_Rat>& iTween_Rat)
 	}
 
 // =================================================================================================
-// MARK: - sTween_Gain
+#pragma mark - sTween_Gain
 
 ZRef<Tween_Gain> sTween_Gain(const ZRef<Tween_Rat>& iTween_Rat)
 	{
@@ -90,7 +90,7 @@ ZRef<Tween_Gain> sTween_Gain(const ZRef<Tween_Rat>& iTween_Rat)
 	}
 
 // =================================================================================================
-// MARK: - sTween_Mat_Identity
+#pragma mark - sTween_Mat_Identity
 
 ZRef<Tween_Mat> sTween_Mat_Identity()
 	{
@@ -99,7 +99,7 @@ ZRef<Tween_Mat> sTween_Mat_Identity()
 	}
 
 // =================================================================================================
-// MARK: - sTween_AlphaGainMat
+#pragma mark - sTween_AlphaGainMat
 
 ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	{
@@ -376,7 +376,7 @@ ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Mat>& iTween_Mat)
 	{ return sTween_AlphaGainMat(null, null, iTween_Mat); }
 
 // =================================================================================================
-// MARK: - AlphaGainMatRegistration
+#pragma mark - AlphaGainMatRegistration
 
 AlphaGainMatRegistration::AlphaGainMatRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }

@@ -10,7 +10,7 @@ using std::map;
 using namespace Util_string;
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 bool sReadAnim(const FileSpec& iFS, map<string8,FileSpec>& oFiles, Map_Any& oMap)
 	{

@@ -7,7 +7,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Delay cogs
+#pragma mark - Delay cogs
 
 Cog sCog_DelayUntil(double iElapsed);
 Cog sCog_DelayFor(double iDelay);

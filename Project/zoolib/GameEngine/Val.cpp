@@ -436,7 +436,7 @@ Map_Any Map::GetMap() const
 	{ return fMap; }
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 Map sYadTree(const Map_Any& iMap_Any, const std::string& iProtoName)
 	{ return Map(new Link(new CountedName(iProtoName), iMap_Any)); }

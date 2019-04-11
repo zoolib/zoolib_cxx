@@ -12,7 +12,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - Sound
+#pragma mark - Sound
 
 class Sound
 :	public ZCounted
@@ -31,7 +31,7 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - SoundMeister
+#pragma mark - SoundMeister
 
 class SoundMeister
 :	public ZCounted

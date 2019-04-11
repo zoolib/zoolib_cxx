@@ -19,7 +19,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - InChannel
+#pragma mark - InChannel
 
 struct InChannel
 	{
@@ -44,7 +44,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - OutChannel
+#pragma mark - OutChannel
 
 class OutChannel
 :	ZooLib::NonCopyable
@@ -73,7 +73,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - Param and Cog
+#pragma mark - Param and Cog
 
 struct Param
 	{
@@ -111,7 +111,7 @@ struct Param
 typedef ZooLib::Cog<const Param&> Cog;
 
 // =================================================================================================
-// MARK: - Nooks
+#pragma mark - Nooks
 
 ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName);
 
@@ -157,7 +157,7 @@ void sUpdateNookSet(const Param& iParam, NookSet<Nook_p>& ioNookSet)
 	}
 
 // =================================================================================================
-// MARK: - CogRegistration
+#pragma mark - CogRegistration
 
 class CogRegistration
 	{
@@ -170,19 +170,19 @@ public:
 	};
 
 // =================================================================================================
-// MARK: - sCog
+#pragma mark - sCog
 
 Cog sCog(const ZQ<Val>& iValQ);
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 Cog sCog_NewEpoch(const Cog& iChild);
 
 Cog sCog_Noop();
 
 // =================================================================================================
-// MARK: - Touches
+#pragma mark - Touches
 
 Cog sCog_UpdateTouchListener(const ZRef<TouchListener>& iTouchListener);
 Cog sCog_TouchNothing(const ZRef<TouchListener>& iTouchListener);
@@ -191,14 +191,14 @@ Cog sCog_TouchDown(const ZRef<TouchListener>& iTouchListener);
 Cog sCog_DisableTouches(const Cog& iCog);
 
 // =================================================================================================
-// MARK: - Logging cogs
+#pragma mark - Logging cogs
 
 Cog sCog_Log1(int iLevel, const string8& iMessage);
 Cog sCog_Log1(const string8&);
 Cog sCog_Log(const string8&);
 
 // =================================================================================================
-// MARK: - Larger collections of cogs
+#pragma mark - Larger collections of cogs
 
 Cog sCogs_Plus(std::vector<Cog>* ioCogs);
 Cog sCogs_Each(std::vector<Cog>* ioCogs);

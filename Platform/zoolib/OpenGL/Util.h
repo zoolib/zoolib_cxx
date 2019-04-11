@@ -8,7 +8,7 @@ namespace ZooLib {
 namespace OpenGL {
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BindTexture_2D
+#pragma mark - SaveSetRestore_BindTexture_2D
 
 class SaveSetRestore_BindTexture_2D
 	{
@@ -21,7 +21,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_Enable
+#pragma mark - SaveSetRestore_Enable
 
 class SaveSetRestore_Enable
 	{
@@ -35,7 +35,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_EnableClientState
+#pragma mark - SaveSetRestore_EnableClientState
 
 class SaveSetRestore_EnableClientState
 	{
@@ -49,7 +49,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_ActiveTexture
+#pragma mark - SaveSetRestore_ActiveTexture
 
 class SaveSetRestore_ActiveTexture
 	{
@@ -62,7 +62,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BlendFunc
+#pragma mark - SaveSetRestore_BlendFunc
 
 class SaveSetRestore_BlendFunc
 	{
@@ -76,7 +76,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BlendEquation
+#pragma mark - SaveSetRestore_BlendEquation
 
 class SaveSetRestore_BlendEquation
 	{
@@ -89,7 +89,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_ViewPort
+#pragma mark - SaveSetRestore_ViewPort
 
 class SaveSetRestore_ViewPort
 	{
@@ -102,7 +102,7 @@ private:
 	};
 
 // =================================================================================================
-// MARK: - SaveSetRestore_BindFramebuffer
+#pragma mark - SaveSetRestore_BindFramebuffer
 
 class SaveSetRestore_BindFramebuffer
 	{

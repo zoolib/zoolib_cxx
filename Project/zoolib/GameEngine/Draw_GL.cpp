@@ -11,7 +11,7 @@ namespace GameEngine {
 using namespace OpenGL;
 
 // =================================================================================================
-// MARK: - Visitor_Draw_GL_String
+#pragma mark - Visitor_Draw_GL_String
 
 void Visitor_Draw_GL_String::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)

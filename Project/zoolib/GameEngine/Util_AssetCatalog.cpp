@@ -19,7 +19,7 @@ using std::map;
 using std::pair;
 
 // =================================================================================================
-// MARK: - anonymous
+#pragma mark - anonymous
 
 namespace { // anonymous
 
@@ -159,7 +159,7 @@ void spInstall_Art(
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 void sPopulate(
 	const ZRef<AssetCatalog>& iAC,

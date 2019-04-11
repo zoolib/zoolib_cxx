@@ -7,7 +7,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-// MARK: - sCog_Group_WithState
+#pragma mark - sCog_Group_WithState
 
 class Callable_Cog_Group_WithState
 :	public Cog::Callable
@@ -75,7 +75,7 @@ Cog sCog_Group_WithState(const SharedState& iState, const Cog& iChild)
 	}
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 namespace { // anonymous
 
@@ -119,7 +119,7 @@ CogRegistration spCogRegistration_Group("CogCtor_Group", spCogCtor_Group);
 } // anonymous namespace
 
 // =================================================================================================
-// MARK: - sCog_Group_WithAlphaGainMat
+#pragma mark - sCog_Group_WithAlphaGainMat
 
 class Callable_Cog_Group_WithAlphaGainMat
 :	public Cog::Callable
@@ -165,7 +165,7 @@ Cog sCog_Group_WithAlphaGainMat(const AlphaGainMat& iAlphaGainMat, const Cog& iC
 	}
 
 // =================================================================================================
-// MARK: - sCog_Group_Loop
+#pragma mark - sCog_Group_Loop
 
 class Callable_Cog_Group_Loop
 :	public Cog::Callable
@@ -239,7 +239,7 @@ Cog sCog_Group_Loop(const ZRef<Tween_AlphaGainMat>& iTween, const Cog& iChild)
 	}
 
 // =================================================================================================
-// MARK: - sCog_Group_Terminate
+#pragma mark - sCog_Group_Terminate
 
 namespace { // anonymous
 
@@ -303,7 +303,7 @@ Cog sCog_Group_Terminate(const ZRef<Tween_AlphaGainMat>& iTween, const Cog& iChi
 	}
 
 // =================================================================================================
-// MARK: - sCog_Group_Continue
+#pragma mark - sCog_Group_Continue
 
 namespace { // anonymous
 
