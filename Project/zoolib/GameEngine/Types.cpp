@@ -44,9 +44,9 @@ NameFrame::NameFrame(const Name& iName, size_t iFrame)
 Cel::Cel()
 	{}
 
-Cel::Cel(const NameFrame& iNameFrame, const AlphaMat& iAlphaMat)
+Cel::Cel(const NameFrame& iNameFrame, const BlushMat& iBlushMat)
 :	fNameFrame(iNameFrame)
-,	fAlphaMat(iAlphaMat)
+,	fBlushMat(iBlushMat)
 	{}
 
 // =================================================================================================

@@ -11,7 +11,7 @@ namespace GameEngine {
 #pragma mark -
 
 class Visitor_Draw_GL_Fixed
-:	public virtual Visitor_Rendered_AccumulateAlphaGainMat
+:	public virtual Visitor_Rendered_AccumulateBlushGainMat
 	{
 public:
 	Visitor_Draw_GL_Fixed(bool iShowBounds, bool iShowOrigin);

@@ -63,18 +63,18 @@ CogRegistration spCogRegistration_Buffer("CogCtor_Buffer", spCogCtor_Buffer);
 namespace { // anonymous
 
 Cog spCog_Buffer_Continue(
-	const ZRef<Tween_AlphaGainMat>& iTween,
+	const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
 	double iStartTime);
 
 Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_AlphaGainMat>& iTween,
+	const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
 	double iStartTime)
 	{
 	ZAssert(sIsPending(iChild));
 
-	if (NotQ<AlphaGainMat> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
+	if (NotQ<BlushGainMat> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
 		{
 		return sCallCog(iChild, iParam);
 		}
@@ -88,7 +88,7 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 			newChild, Param(iParam, InChannel(iParam.fInChannel, theQ->fMat)));
 
 		theSR.Prior()->Append(
-			sRendered_AlphaGainMat(*theQ, sRendered_Buffer(
+			sRendered_BlushGainMat(*theQ, sRendered_Buffer(
 				iWidth, iHeight, iRGBA, theSR.Current())));
 
 		if (unchanged)
@@ -104,7 +104,7 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 GEMACRO_Callable(spCallable_Buffer_Continue, spCogFun_Buffer_Continue);
 
 Cog spCog_Buffer_Continue(
-	const ZRef<Tween_AlphaGainMat>& iTween,
+	const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
 	double iStartTime)
 	{
@@ -114,7 +114,7 @@ Cog spCog_Buffer_Continue(
 	}
 
 Cog spCogFun_Buffer_Continue_Init(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_AlphaGainMat>& iTween, int iWidth, int iHeight, const ZRGBA& iRGBA,
+	const ZRef<Tween_BlushGainMat>& iTween, int iWidth, int iHeight, const ZRGBA& iRGBA,
 	const Cog& iChild)
 	{
 	return sCallCog(
@@ -126,7 +126,7 @@ GEMACRO_Callable(spCallable_Buffer_Continue_Init, spCogFun_Buffer_Continue_Init)
 
 } // anonymous namespace
 
-Cog sCog_Buffer_Continue(const ZRef<Tween_AlphaGainMat>& iTween,
+Cog sCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild)
 	{
 	if (sIsFinished(iChild) || not iTween)

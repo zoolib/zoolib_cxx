@@ -1,4 +1,4 @@
-#include "zoolib/GameEngine/Tween_AlphaGainMat.h"
+#include "zoolib/GameEngine/Tween_BlushGainMat.h"
 
 #include "zoolib/Singleton.h"
 #include "zoolib/Util_STL_map.h"
@@ -9,19 +9,19 @@
 using std::map;
 
 // =================================================================================================
-#pragma mark - sCombineTweenVals for Alpha, Gain, Mat and combinations
+#pragma mark - sCombineTweenVals for Blush, Gain, Mat and combinations
 
 namespace ZooLib {
 
-using GameEngine::Alpha;
+using GameEngine::Blush;
 using GameEngine::Gain;
 using GameEngine::Mat;
-using GameEngine::AlphaMat;
-using GameEngine::AlphaGainMat;
+using GameEngine::BlushMat;
+using GameEngine::BlushGainMat;
 
 template <>
-Alpha sCombineTweenVals<Alpha,Alpha>(const Alpha& iAlpha0, const Alpha& iAlpha1)
-	{ return iAlpha0 * iAlpha1; }
+Blush sCombineTweenVals<Blush,Blush>(const Blush& iBlush0, const Blush& iBlush1)
+	{ return iBlush0 * iBlush1; }
 
 template <>
 Gain sCombineTweenVals<Gain,Gain>(const Gain& iGain0, const Gain& iGain1)
@@ -34,34 +34,34 @@ Mat sCombineTweenVals<Mat,Mat>(const Mat& iMat0, const Mat& iMat1)
 	}
 
 template <>
-AlphaGainMat sCombineTweenVals<AlphaGainMat,Alpha>
-	(const AlphaGainMat& iAlphaGainMat, const Alpha& iAlpha)
+BlushGainMat sCombineTweenVals<BlushGainMat,Blush>
+	(const BlushGainMat& iBlushGainMat, const Blush& iBlush)
 	{
-	return AlphaGainMat(
-		iAlphaGainMat.fAlpha * iAlpha, iAlphaGainMat.fGain, iAlphaGainMat.fMat);
+	return BlushGainMat(
+		iBlushGainMat.fBlush * iBlush, iBlushGainMat.fGain, iBlushGainMat.fMat);
 	}
 
 template <>
-AlphaGainMat sCombineTweenVals<AlphaGainMat,Gain>
-	(const AlphaGainMat& iAlphaGainMat, const Gain& iGain)
+BlushGainMat sCombineTweenVals<BlushGainMat,Gain>
+	(const BlushGainMat& iBlushGainMat, const Gain& iGain)
 	{
-	return AlphaGainMat(
-		iAlphaGainMat.fAlpha, iAlphaGainMat.fGain * iGain, iAlphaGainMat.fMat);
+	return BlushGainMat(
+		iBlushGainMat.fBlush, iBlushGainMat.fGain * iGain, iBlushGainMat.fMat);
 	}
 
 template <>
-AlphaGainMat sCombineTweenVals<AlphaGainMat,Mat>
-	(const AlphaGainMat& iAlphaGainMat, const Mat& iMat)
+BlushGainMat sCombineTweenVals<BlushGainMat,Mat>
+	(const BlushGainMat& iBlushGainMat, const Mat& iMat)
 	{
-	return AlphaGainMat(
-		iAlphaGainMat.fAlpha, iAlphaGainMat.fGain, iMat * iAlphaGainMat.fMat);
+	return BlushGainMat(
+		iBlushGainMat.fBlush, iBlushGainMat.fGain, iMat * iBlushGainMat.fMat);
 	}
 
 template <>
-AlphaGainMat sCombineTweenVals<AlphaGainMat,AlphaGainMat>
-	(const AlphaGainMat& iAlphaGainMat0, const AlphaGainMat& iAlphaGainMat1)
+BlushGainMat sCombineTweenVals<BlushGainMat,BlushGainMat>
+	(const BlushGainMat& iBlushGainMat0, const BlushGainMat& iBlushGainMat1)
 	{
-	return iAlphaGainMat1 * iAlphaGainMat0; // Note the order
+	return iBlushGainMat1 * iBlushGainMat0; // Note the order
 	}
 
 } // namespace ZooLib
@@ -70,12 +70,15 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-#pragma mark - sTween_Alpha
+#pragma mark - sTween_Blush
 
-ZRef<Tween_Alpha> sTween_Alpha(const ZRef<Tween_Rat>& iTween_Rat)
+static Blush spBlushFromRat(Rat iRat)
+	{ return sRGBA(1, iRat); }
+
+ZRef<Tween_Blush> sTween_Blush(const ZRef<Tween_Rat>& iTween_Rat)
 	{
 	if (iTween_Rat)
-		return new Tween_Filter_Coerce<Alpha,Rat>(iTween_Rat);
+		return new Tween_Filter_Fun<Blush,Rat,spBlushFromRat>(iTween_Rat);
 	return null;
 	}
 
@@ -99,18 +102,18 @@ ZRef<Tween_Mat> sTween_Mat_Identity()
 	}
 
 // =================================================================================================
-#pragma mark - sTween_AlphaGainMat
+#pragma mark - sTween_BlushGainMat
 
-ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
+ZRef<Tween<BlushGainMat> > sTween_BlushGainMat(const Map& iMap)
 	{
-	ZRef<Tween_Alpha> theTweenAlpha;
+	ZRef<Tween_Blush> theTweenBlush;
 	ZRef<Tween_Gain> theTweenGain;
 	ZRef<Tween_Mat> theTweenMat = sTween_Mat_Identity();
 
 	// ---------------------------------------------------------------------------------------------
 
-	if (ZQ<Val> theQ = sQGetNamed(iMap, "Alpha", "A"))
-		theTweenAlpha = sTween_Alpha(sTween<Rat>(theQ));
+	if (ZQ<Val> theQ = sQGetNamed(iMap, "Blush", "B"))
+		theTweenBlush = sTween_Blush(sTween<Rat>(theQ));
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -256,11 +259,11 @@ ZRef<Tween<AlphaGainMat> > sTween_AlphaGainMat(const Map& iMap)
 	if (theTweenMat == sTween_Mat_Identity())
 		theTweenMat.Clear();
 
-	return sTween_AlphaGainMat(theTweenAlpha, theTweenGain, theTweenMat);
+	return sTween_BlushGainMat(theTweenBlush, theTweenGain, theTweenMat);
 	}
 
 template <>
-ZRef<Tween<AlphaGainMat> > sTween<AlphaGainMat>(const ZQ<Val>& iValQ)
+ZRef<Tween<BlushGainMat> > sTween<BlushGainMat>(const ZQ<Val>& iValQ)
 	{
 	if (not iValQ)
 		return null;
@@ -270,14 +273,14 @@ ZRef<Tween<AlphaGainMat> > sTween<AlphaGainMat>(const ZQ<Val>& iValQ)
 
 	if (ZQ<Seq> theSeqQ = iValQ->QGet<Seq>())
 		{
-		return sTweens<AlphaGainMat>(*theSeqQ);
+		return sTweens<BlushGainMat>(*theSeqQ);
 		}
 	else if (ZQ<Map> theMapQ = iValQ->QGet<Map>())
 		{
-		if (ZQ<string8> theAlphaMatCtor = theMapQ->QGet<string8>("AlphaMatCtor"))
-			return AlphaGainMatRegistration::sCtor(*theAlphaMatCtor, *theMapQ);
+		if (ZQ<string8> theBlushMatCtor = theMapQ->QGet<string8>("BlushMatCtor"))
+			return BlushGainMatRegistration::sCtor(*theBlushMatCtor, *theMapQ);
 
-		return sTween_AlphaGainMat(*theMapQ);
+		return sTween_BlushGainMat(*theMapQ);
 		}
 
 	sDump(*iValQ);
@@ -287,39 +290,39 @@ ZRef<Tween<AlphaGainMat> > sTween<AlphaGainMat>(const ZQ<Val>& iValQ)
 	return null;
 	}
 
-ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const AlphaGainMat& iAlphaGainMat)
-	{ return sTween_Const(iAlphaGainMat); }
+ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const BlushGainMat& iBlushGainMat)
+	{ return sTween_Const(iBlushGainMat); }
 
-ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(
-	const ZRef<Tween_Alpha>& iTween_Alpha,
+ZRef<Tween_BlushGainMat> sTween_BlushGainMat(
+	const ZRef<Tween_Blush>& iTween_Blush,
 	const ZRef<Tween_Gain>& iTween_Gain,
 	const ZRef<Tween_Mat>& iTween_Mat)
 	{
 	class Tween
-	:	public Tween_AlphaGainMat
+	:	public Tween_BlushGainMat
 		{
 	public:
 		Tween(
-			const ZRef<Tween_Alpha>& iTween_Alpha,
+			const ZRef<Tween_Blush>& iTween_Blush,
 			const ZRef<Tween_Gain>& iTween_Gain,
 			const ZRef<Tween_Mat>& iTween_Mat)
-		:	fTween_Alpha(iTween_Alpha)
+		:	fTween_Blush(iTween_Blush)
 		,	fTween_Gain(iTween_Gain)
 		,	fTween_Mat(iTween_Mat)
 			{}
 
-		virtual ZQ<AlphaGainMat> QValAt(double iPlace)
+		virtual ZQ<BlushGainMat> QValAt(double iPlace)
 			{
 			bool gotAny = false;
-			AlphaGainMat theAGM;
+			BlushGainMat theBGM;
 
-			if (fTween_Alpha)
+			if (fTween_Blush)
 				{
-				if (ZQ<Alpha> theQ =
-					fTween_Alpha->QValAt(iPlace / spWeight(fTween_Alpha, fWeight_Alpha)))
+				if (ZQ<Blush> theQ =
+					fTween_Blush->QValAt(iPlace / spWeight(fTween_Blush, fWeight_Blush)))
 					{
 					gotAny = true;
-					theAGM *= *theQ;
+					theBGM *= *theQ;
 					}
 				}
 
@@ -329,7 +332,7 @@ ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(
 					fTween_Gain->QValAt(iPlace / spWeight(fTween_Gain, fWeight_Gain)))
 					{
 					gotAny = true;
-					theAGM *= *theQ;
+					theBGM *= *theQ;
 					}
 				}
 
@@ -339,19 +342,19 @@ ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(
 					fTween_Mat->QValAt(iPlace / spWeight(fTween_Mat, fWeight_Mat)))
 					{
 					gotAny = true;
-					theAGM *= *theMatQ;
+					theBGM *= *theMatQ;
 					}
 				}
 
 			if (gotAny)
-				return theAGM;
+				return theBGM;
 
 			return null;
 			}
 
 	private:
-		const ZRef<Tween_Alpha> fTween_Alpha;
-		ZQ<double> fWeight_Alpha;
+		const ZRef<Tween_Blush> fTween_Blush;
+		ZQ<double> fWeight_Blush;
 		
 		const ZRef<Tween_Gain> fTween_Gain;
 		ZQ<double> fWeight_Gain;
@@ -360,28 +363,28 @@ ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(
 		ZQ<double> fWeight_Mat;
 		};
 
-	if (iTween_Alpha || iTween_Gain || iTween_Mat)
-		return new Tween(iTween_Alpha, iTween_Gain, iTween_Mat);
+	if (iTween_Blush || iTween_Gain || iTween_Mat)
+		return new Tween(iTween_Blush, iTween_Gain, iTween_Mat);
 
 	return null;
 	}
 
-ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Alpha>& iTween_Alpha)
-	{ return sTween_AlphaGainMat(iTween_Alpha, null, null); }
+ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Blush>& iTween_Blush)
+	{ return sTween_BlushGainMat(iTween_Blush, null, null); }
 
-ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Gain>& iTween_Gain)
-	{ return sTween_AlphaGainMat(null, iTween_Gain, null); }
+ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Gain>& iTween_Gain)
+	{ return sTween_BlushGainMat(null, iTween_Gain, null); }
 
-ZRef<Tween_AlphaGainMat> sTween_AlphaGainMat(const ZRef<Tween_Mat>& iTween_Mat)
-	{ return sTween_AlphaGainMat(null, null, iTween_Mat); }
+ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Mat>& iTween_Mat)
+	{ return sTween_BlushGainMat(null, null, iTween_Mat); }
 
 // =================================================================================================
-#pragma mark - AlphaGainMatRegistration
+#pragma mark - BlushGainMatRegistration
 
-AlphaGainMatRegistration::AlphaGainMatRegistration(const string8& iCtorName, Fun iFun)
+BlushGainMatRegistration::BlushGainMatRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }
 
-ZRef<Tween_AlphaGainMat> AlphaGainMatRegistration::sCtor(const string8& iCtorName, const Map& iMap)
+ZRef<Tween_BlushGainMat> BlushGainMatRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 	{
 	ZQ<Fun> theFun = Util_STL::sQGet(sSingleton<map<string8,Fun> >(), iCtorName);
 

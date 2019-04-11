@@ -11,23 +11,23 @@ namespace GameEngine {
 using std::vector;
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_AccumulateAlphaGainMat
+#pragma mark - Visitor_Rendered_AccumulateBlushGainMat
 
-Visitor_Rendered_AccumulateAlphaGainMat::Visitor_Rendered_AccumulateAlphaGainMat()
+Visitor_Rendered_AccumulateBlushGainMat::Visitor_Rendered_AccumulateBlushGainMat()
 	{}
 
-Visitor_Rendered_AccumulateAlphaGainMat::Visitor_Rendered_AccumulateAlphaGainMat(
-	const AlphaGainMat& iAlphaGainMat)
-:	fAlphaGainMat(iAlphaGainMat)
+Visitor_Rendered_AccumulateBlushGainMat::Visitor_Rendered_AccumulateBlushGainMat(
+	const BlushGainMat& iBlushGainMat)
+:	fBlushGainMat(iBlushGainMat)
 	{}
 
-void Visitor_Rendered_AccumulateAlphaGainMat::Visit_Rendered_AlphaGainMat(
-	const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat)
+void Visitor_Rendered_AccumulateBlushGainMat::Visit_Rendered_BlushGainMat(
+	const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat)
 	{
-	SaveSetRestore<AlphaGainMat> theSSR(
-		fAlphaGainMat, fAlphaGainMat * iRendered_AlphaGainMat->GetAlphaGainMat());
+	SaveSetRestore<BlushGainMat> theSSR(
+		fBlushGainMat, fBlushGainMat * iRendered_BlushGainMat->GetBlushGainMat());
 
-	if (ZRef<Rendered> theRendered = iRendered_AlphaGainMat->GetRendered())
+	if (ZRef<Rendered> theRendered = iRendered_BlushGainMat->GetRendered())
 		theRendered->Accept_Rendered(*this);
 	}
 
@@ -59,8 +59,8 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		RB(theBounds) -= RB(theTBM.fInset);
 
 		ZRef<Rendered> theRendered = sRendered_Texture(theTBM.fTexture, theBounds);
-		theRendered = sRendered_AlphaGainMat(
-			AlphaGainMat(theCel.fAlphaMat.fAlpha, theCel.fAlphaMat.fMat * theTBM.fMat),
+		theRendered = sRendered_BlushGainMat(
+			BlushGainMat(theCel.fBlushMat.fBlush, theCel.fBlushMat.fMat * theTBM.fMat),
 			theRendered);
 		sAccept(theRendered, *this);
 		}
@@ -108,7 +108,7 @@ void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
 //	of bounding rectangles and post-draw offsets, and a list of indices.
 //	The textures in this case will be Texture_GL, with the "useOnlyAlpha flag set".
 //
-//	Then we can turn that into a suite of AGMs and Textured.
+//	Then we can turn that into a suite of BGMs and Textured.
 
 	}
 
@@ -151,7 +151,7 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 	theMat *= theRot;
 
 	ZRef<Rendered> theRendered = new Rendered_Rect(theRGBA, theRect);
-	theRendered = sRendered_AlphaGainMat(theMat, theRendered);
+	theRendered = sRendered_BlushGainMat(theMat, theRendered);
 	theRendered->Accept(*this);
 	}
 

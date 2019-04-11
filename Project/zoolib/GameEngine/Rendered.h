@@ -34,21 +34,21 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - Rendered_AlphaGainMat
+#pragma mark - Rendered_BlushGainMat
 
-class Rendered_AlphaGainMat;
+class Rendered_BlushGainMat;
 
-class SafePtrStackLink_Rendered_AlphaGainMat
-:	public SafePtrStackLink<Rendered_AlphaGainMat,SafePtrStackLink_Rendered_AlphaGainMat>
+class SafePtrStackLink_Rendered_BlushGainMat
+:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
 	{};
 
-class Rendered_AlphaGainMat
+class Rendered_BlushGainMat
 :	public Rendered
-,	public SafePtrStackLink_Rendered_AlphaGainMat
+,	public SafePtrStackLink_Rendered_BlushGainMat
 	{
 protected:
-	Rendered_AlphaGainMat();
-	Rendered_AlphaGainMat(const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered);
+	Rendered_BlushGainMat();
+	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -58,22 +58,22 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const AlphaGainMat& GetAlphaGainMat();
+	const BlushGainMat& GetBlushGainMat();
 	const ZRef<Rendered>& GetRendered();
 
-	AlphaMat GetAlphaMat();
+	BlushMat GetBlushMat();
 
 	static
-	ZRef<Rendered_AlphaGainMat> spMake(
-		const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered);
+	ZRef<Rendered_BlushGainMat> spMake(
+		const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 private:
-	AlphaGainMat fAlphaGainMat;
+	BlushGainMat fBlushGainMat;
 	ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered_AlphaGainMat> sRendered_AlphaGainMat(
-	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered);
+ZRef<Rendered_BlushGainMat> sRendered_BlushGainMat(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
@@ -338,8 +338,8 @@ class Visitor_Rendered
 public:
 	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered);
 
-	virtual void Visit_Rendered_AlphaGainMat(
-		const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat);
+	virtual void Visit_Rendered_BlushGainMat(
+		const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat);
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
 	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel);
 	virtual void Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group);

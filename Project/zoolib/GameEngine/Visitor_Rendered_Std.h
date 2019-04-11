@@ -10,20 +10,20 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_AccumulateAlphaGainMat
+#pragma mark - Visitor_Rendered_AccumulateBlushGainMat
 
-class Visitor_Rendered_AccumulateAlphaGainMat
+class Visitor_Rendered_AccumulateBlushGainMat
 :	public virtual Visitor_Rendered
 	{
 public:
-	Visitor_Rendered_AccumulateAlphaGainMat();
-	Visitor_Rendered_AccumulateAlphaGainMat(const AlphaGainMat& iAlphaGainMat);
+	Visitor_Rendered_AccumulateBlushGainMat();
+	Visitor_Rendered_AccumulateBlushGainMat(const BlushGainMat& iBlushGainMat);
 
-	virtual void Visit_Rendered_AlphaGainMat(
-		const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat);
+	virtual void Visit_Rendered_BlushGainMat(
+		const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat);
 
 protected:
-	AlphaGainMat fAlphaGainMat;
+	BlushGainMat fBlushGainMat;
 	};
 
 // =================================================================================================

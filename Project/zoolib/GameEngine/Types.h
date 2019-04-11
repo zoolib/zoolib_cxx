@@ -67,6 +67,8 @@ inline GPoint sGPoint(Rat iX, Rat iY)
 
 typedef CVec4 RGBA;
 
+typedef RGBA Blush;
+
 RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha);
 
 inline RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue)
@@ -108,8 +110,6 @@ inline Rat sAlpha(const RGBA& iRGBA)
 inline RGBA sRGBA(const ZRGBA& iZ)
 	{ return sRGBA(iZ.floatRed(), iZ.floatGreen(), iZ.floatBlue(), iZ.floatAlpha()); }
 
-typedef RGBA Alpha; // grandfather in the old name for now.
-
 // =================================================================================================
 #pragma mark - Gain
 
@@ -150,174 +150,174 @@ inline Gain& operator*=(Gain& ioLHS, const Gain& iRHS)
 	}
 
 // =================================================================================================
-#pragma mark - AlphaMat
+#pragma mark - BlushMat
 
-struct AlphaMat
+struct BlushMat
 	{
-	AlphaMat()
-	:	fAlpha(1)
+	BlushMat()
+	:	fBlush(1)
 	,	fMat(1)
 		{}
 
-	AlphaMat(const AlphaMat& iOther)
-	:	fAlpha(iOther.fAlpha)
+	BlushMat(const BlushMat& iOther)
+	:	fBlush(iOther.fBlush)
 	,	fMat(iOther.fMat)
 		{}
 
-	AlphaMat(Alpha iAlpha)
-	:	fAlpha(iAlpha)
+	BlushMat(Blush iBlush)
+	:	fBlush(iBlush)
 	,	fMat(1)
 		{}
 
-	AlphaMat(const Mat& iMat)
-	:	fAlpha(1)
+	BlushMat(const Mat& iMat)
+	:	fBlush(1)
 	,	fMat(iMat)
 		{}
 
-	AlphaMat(Alpha iAlpha, const Mat& iMat)
-	:	fAlpha(iAlpha)
+	BlushMat(Blush iBlush, const Mat& iMat)
+	:	fBlush(iBlush)
 	,	fMat(iMat)
 		{}
 
-	Alpha fAlpha;
+	Blush fBlush;
 	Mat fMat;
 	};
 
-inline AlphaMat operator*(const AlphaMat& iLHS, const AlphaMat& iRHS)
-	{ return AlphaMat(iLHS.fAlpha * iRHS.fAlpha, iLHS.fMat * iRHS.fMat); }
+inline BlushMat operator*(const BlushMat& iLHS, const BlushMat& iRHS)
+	{ return BlushMat(iLHS.fBlush * iRHS.fBlush, iLHS.fMat * iRHS.fMat); }
 
-inline AlphaMat& operator*=(AlphaMat& ioLHS, const AlphaMat& iRHS)
+inline BlushMat& operator*=(BlushMat& ioLHS, const BlushMat& iRHS)
 	{
-	ioLHS.fAlpha *= iRHS.fAlpha;
+	ioLHS.fBlush *= iRHS.fBlush;
 	ioLHS.fMat *= iRHS.fMat;
 	return ioLHS;
 	}
 
 // =================================================================================================
-#pragma mark - AlphaGainMat
+#pragma mark - BlushGainMat
 
-struct AlphaGainMat
+struct BlushGainMat
 	{
-	AlphaGainMat()
-	:	fAlpha(1)
+	BlushGainMat()
+	:	fBlush(1)
 	,	fGain(1)
 	,	fMat(1)
 		{}
 
-	AlphaGainMat(const AlphaGainMat& iOther)
-	:	fAlpha(iOther.fAlpha)
+	BlushGainMat(const BlushGainMat& iOther)
+	:	fBlush(iOther.fBlush)
 	,	fGain(iOther.fGain)
 	,	fMat(iOther.fMat)
 		{}
 
-	AlphaGainMat(Alpha iAlpha)
-	:	fAlpha(iAlpha)
+	BlushGainMat(Blush iBlush)
+	:	fBlush(iBlush)
 	,	fGain(1)
 	,	fMat(1)
 		{}
 
-	AlphaGainMat(const Gain& iGain)
-	:	fAlpha(1)
+	BlushGainMat(const Gain& iGain)
+	:	fBlush(1)
 	,	fGain(iGain)
 	,	fMat(1)
 		{}
 
-	AlphaGainMat(const Mat& iMat)
-	:	fAlpha(1)
+	BlushGainMat(const Mat& iMat)
+	:	fBlush(1)
 	,	fGain(1)
 	,	fMat(iMat)
 		{}
 
-	AlphaGainMat(Alpha iAlpha, const Gain& iGain)
-	:	fAlpha(iAlpha)
+	BlushGainMat(Blush iBlush, const Gain& iGain)
+	:	fBlush(iBlush)
 	,	fGain(iGain)
 	,	fMat(1)
 		{}
 
-	AlphaGainMat(const Gain& iGain, const Mat& iMat)
-	:	fAlpha(1)
+	BlushGainMat(const Gain& iGain, const Mat& iMat)
+	:	fBlush(1)
 	,	fGain(iGain)
 	,	fMat(iMat)
 		{}
 
-	AlphaGainMat(Alpha iAlpha, const Mat& iMat)
-	:	fAlpha(iAlpha)
+	BlushGainMat(Blush iBlush, const Mat& iMat)
+	:	fBlush(iBlush)
 	,	fMat(iMat)
 		{}
 
-	AlphaGainMat(Alpha iAlpha, const Gain& iGain, const Mat& iMat)
-	:	fAlpha(iAlpha)
+	BlushGainMat(Blush iBlush, const Gain& iGain, const Mat& iMat)
+	:	fBlush(iBlush)
 	,	fGain(iGain)
 	,	fMat(iMat)
 		{}
 
-	Alpha fAlpha;
+	Blush fBlush;
 	Gain fGain;
 	Mat fMat;
 	};
 
-inline AlphaGainMat operator*(const AlphaGainMat& iLHS, const AlphaGainMat& iRHS)
+inline BlushGainMat operator*(const BlushGainMat& iLHS, const BlushGainMat& iRHS)
 	{
-	return AlphaGainMat(
-		iLHS.fAlpha * iRHS.fAlpha,
+	return BlushGainMat(
+		iLHS.fBlush * iRHS.fBlush,
 		iLHS.fGain * iRHS.fGain,
 		iLHS.fMat * iRHS.fMat);
 	}
 
-inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const AlphaGainMat& iRHS)
+inline BlushGainMat& operator*=(BlushGainMat& ioLHS, const BlushGainMat& iRHS)
 	{
-	ioLHS.fAlpha *= iRHS.fAlpha;
+	ioLHS.fBlush *= iRHS.fBlush;
 	ioLHS.fGain *= iRHS.fGain;
 	ioLHS.fMat *= iRHS.fMat;
 	return ioLHS;
 	}
 
 // =================================================================================================
-#pragma mark - Pseudo-ctors, AlphaGainMat --> Alpha, Gain, Mat
+#pragma mark - Pseudo-ctors, BlushGainMat --> Blush, Gain, Mat
 
-inline Alpha sAlpha(const AlphaGainMat& iAlphaGainMat)
-	{ return iAlphaGainMat.fAlpha; }
+inline Blush sBlush(const BlushGainMat& iBlushGainMat)
+	{ return iBlushGainMat.fBlush; }
 
-inline Gain sGain(const AlphaGainMat& iAlphaGainMat)
-	{ return iAlphaGainMat.fGain; }
+inline Gain sGain(const BlushGainMat& iBlushGainMat)
+	{ return iBlushGainMat.fGain; }
 
-inline Mat sMat(const AlphaGainMat& iAlphaGainMat)
-	{ return iAlphaGainMat.fMat; }
+inline Mat sMat(const BlushGainMat& iBlushGainMat)
+	{ return iBlushGainMat.fMat; }
 
-inline AlphaMat sAlphaMat(const AlphaGainMat& iAlphaGainMat)
-	{ return AlphaMat(iAlphaGainMat.fAlpha, iAlphaGainMat.fMat); }
-
-// =================================================================================================
-#pragma mark -
-
-inline AlphaMat operator*(const Alpha& iAlpha, const Mat& iMat)
-	{ return AlphaMat(iAlpha, iMat); }
-
-inline AlphaMat operator*(const Mat& iMat, const Alpha& iAlpha)
-	{ return AlphaMat(iAlpha, iMat); }
-
-inline AlphaGainMat operator*(const AlphaMat& iAlphaMat, const Gain& iGain)
-	{ return AlphaGainMat(iAlphaMat.fAlpha, iGain, iAlphaMat.fMat); }
-
-inline AlphaGainMat operator*(const Gain& iGain, const AlphaMat& iAlphaMat)
-	{ return AlphaGainMat(iAlphaMat.fAlpha, iGain, iAlphaMat.fMat); }
+inline BlushMat sBlushMat(const BlushGainMat& iBlushGainMat)
+	{ return BlushMat(iBlushGainMat.fBlush, iBlushGainMat.fMat); }
 
 // =================================================================================================
 #pragma mark -
 
-inline AlphaMat operator*(const AlphaMat& iAlphaMat, const Alpha& iAlpha)
-	{ return AlphaMat(iAlphaMat.fAlpha * iAlpha, iAlphaMat.fMat); }
+inline BlushMat operator*(const Blush& iBlush, const Mat& iMat)
+	{ return BlushMat(iBlush, iMat); }
 
-inline AlphaMat& operator*=(AlphaMat& ioLHS, const Alpha& iRHS)
+inline BlushMat operator*(const Mat& iMat, const Blush& iBlush)
+	{ return BlushMat(iBlush, iMat); }
+
+inline BlushGainMat operator*(const BlushMat& iBlushMat, const Gain& iGain)
+	{ return BlushGainMat(iBlushMat.fBlush, iGain, iBlushMat.fMat); }
+
+inline BlushGainMat operator*(const Gain& iGain, const BlushMat& iBlushMat)
+	{ return BlushGainMat(iBlushMat.fBlush, iGain, iBlushMat.fMat); }
+
+// =================================================================================================
+#pragma mark -
+
+inline BlushMat operator*(const BlushMat& iBlushMat, const Blush& iBlush)
+	{ return BlushMat(iBlushMat.fBlush * iBlush, iBlushMat.fMat); }
+
+inline BlushMat& operator*=(BlushMat& ioLHS, const Blush& iRHS)
 	{
-	ioLHS.fAlpha *= iRHS;
+	ioLHS.fBlush *= iRHS;
 	return ioLHS;
 	}
 
-inline AlphaMat operator*(const AlphaMat& iAlphaMat, const Mat& iMat)
-	{ return AlphaMat(iAlphaMat.fAlpha, iAlphaMat.fMat * iMat); }
+inline BlushMat operator*(const BlushMat& iBlushMat, const Mat& iMat)
+	{ return BlushMat(iBlushMat.fBlush, iBlushMat.fMat * iMat); }
 
-inline AlphaMat& operator*=(AlphaMat& ioLHS, const Mat& iRHS)
+inline BlushMat& operator*=(BlushMat& ioLHS, const Mat& iRHS)
 	{
 	ioLHS.fMat *= iRHS;
 	return ioLHS;
@@ -326,28 +326,28 @@ inline AlphaMat& operator*=(AlphaMat& ioLHS, const Mat& iRHS)
 // =================================================================================================
 #pragma mark -
 
-inline AlphaGainMat operator*(const AlphaGainMat& iLHS, const Alpha& iRHS)
-	{ return AlphaGainMat(iLHS.fAlpha * iRHS, iLHS.fGain, iLHS.fMat); }
+inline BlushGainMat operator*(const BlushGainMat& iLHS, const Blush& iRHS)
+	{ return BlushGainMat(iLHS.fBlush * iRHS, iLHS.fGain, iLHS.fMat); }
 
-inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const Alpha& iRHS)
+inline BlushGainMat& operator*=(BlushGainMat& ioLHS, const Blush& iRHS)
 	{
-	ioLHS.fAlpha *= iRHS;
+	ioLHS.fBlush *= iRHS;
 	return ioLHS;
 	}
 
-inline AlphaGainMat operator*(const AlphaGainMat& iLHS, const Gain& iRHS)
-	{ return AlphaGainMat(iLHS.fAlpha, iLHS.fGain * iRHS, iLHS.fMat); }
+inline BlushGainMat operator*(const BlushGainMat& iLHS, const Gain& iRHS)
+	{ return BlushGainMat(iLHS.fBlush, iLHS.fGain * iRHS, iLHS.fMat); }
 
-inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const Gain& iRHS)
+inline BlushGainMat& operator*=(BlushGainMat& ioLHS, const Gain& iRHS)
 	{
 	ioLHS.fGain *= iRHS;
 	return ioLHS;
 	}
 
-inline AlphaGainMat operator*(const AlphaGainMat& iLHS, const Mat& iRHS)
-	{ return AlphaGainMat(iLHS.fAlpha, iLHS.fGain, iLHS.fMat * iRHS); }
+inline BlushGainMat operator*(const BlushGainMat& iLHS, const Mat& iRHS)
+	{ return BlushGainMat(iLHS.fBlush, iLHS.fGain, iLHS.fMat * iRHS); }
 
-inline AlphaGainMat& operator*=(AlphaGainMat& ioLHS, const Mat& iRHS)
+inline BlushGainMat& operator*=(BlushGainMat& ioLHS, const Mat& iRHS)
 	{
 	ioLHS.fMat *= iRHS;
 	return ioLHS;
@@ -373,10 +373,10 @@ public:
 struct Cel
 	{
 	Cel();
-	Cel(const NameFrame& iNameFrame, const AlphaMat& iAlphaMat);
+	Cel(const NameFrame& iNameFrame, const BlushMat& iBlushMat);
 
 	NameFrame fNameFrame;
-	AlphaMat fAlphaMat;
+	BlushMat fBlushMat;
 	};
 
 // =================================================================================================

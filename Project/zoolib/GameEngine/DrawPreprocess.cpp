@@ -18,11 +18,11 @@ namespace GameEngine {
 namespace { // anonymous
 
 // Visitor_Preprocess transforms the tree into a flat list of nodes sorted front to back. The
-// list is a group, each node is an AGM containing a leaf rendered (line,
+// list is a group, each node is an BGM containing a leaf rendered (line,
 // rect, sound, texture, buffer). We don't flatten the elements of a buffer up into the root.
 
 class Visitor_Preprocess
-:	public virtual Visitor_Rendered_AccumulateAlphaGainMat
+:	public virtual Visitor_Rendered_AccumulateBlushGainMat
 ,	public virtual Visitor_Rendered_DecomposeCel
 ,	public virtual Visitor_Rendered_DecomposeGroup
 ,	public virtual Visitor_Rendered_DecomposeString
@@ -68,11 +68,11 @@ public:
 		// We discard textures if they would not intersect the destination rectangle. This
 		// is an optimization at the resource-management level. Drawing the texture wouldn't
 		// generally be costly, but getting the data into texture form is.
-		const CVec3 newLT = fAlphaGainMat.fMat * sCVec3<Rat>();
+		const CVec3 newLT = fBlushGainMat.fMat * sCVec3<Rat>();
 
 		const GPoint orgRB = WH(iRendered_Texture->GetBounds());
 
-		const CVec3 newRB = fAlphaGainMat.fMat * sCVec3(X(orgRB), Y(orgRB), 0);
+		const CVec3 newRB = fBlushGainMat.fMat * sCVec3(X(orgRB), Y(orgRB), 0);
 
 		const GRect visibleBounds = sRect<GRect>(
 			sMin(X(newLT), X(newRB)),
@@ -104,8 +104,8 @@ public:
 
 		// Push (0,0,0) through our current accumulated
 		// transformation, and take the resulting Z coordinate.
-		const Rat theZ = (fAlphaGainMat.fMat * CVec3())[2];
-		fMap.insert(std::make_pair(theZ, sRendered_AlphaGainMat(fAlphaGainMat, iRendered)));
+		const Rat theZ = (fBlushGainMat.fMat * CVec3())[2];
+		fMap.insert(std::make_pair(theZ, sRendered_BlushGainMat(fBlushGainMat, iRendered)));
 		}
 
 private:

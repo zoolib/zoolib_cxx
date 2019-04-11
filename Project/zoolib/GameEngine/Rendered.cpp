@@ -23,63 +23,63 @@ void Rendered::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered(this); }
 
 // =================================================================================================
-#pragma mark - Rendered_AlphaGainMat
+#pragma mark - Rendered_BlushGainMat
 
 namespace {
 
-SafePtrStack_WithDestroyer<Rendered_AlphaGainMat,SafePtrStackLink_Rendered_AlphaGainMat>
-	spSafePtrStack_AlphaGainMat;
+SafePtrStack_WithDestroyer<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+	spSafePtrStack_BlushGainMat;
 
 } // anonymous namespace
 
-Rendered_AlphaGainMat::Rendered_AlphaGainMat()
+Rendered_BlushGainMat::Rendered_BlushGainMat()
 	{}
 
-Rendered_AlphaGainMat::Rendered_AlphaGainMat(
-	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered)
-:	fAlphaGainMat(iAlphaGainMat)
+Rendered_BlushGainMat::Rendered_BlushGainMat(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
+:	fBlushGainMat(iBlushGainMat)
 ,	fRendered(iRendered)
 	{}
 
-void Rendered_AlphaGainMat::Finalize()
+void Rendered_BlushGainMat::Finalize()
 	{
 	bool finalized = this->FinishFinalize();
 	ZAssert(finalized);
 	ZAssert(not this->IsReferenced());
 	fRendered.Clear();
 	
-	spSafePtrStack_AlphaGainMat.Push(this);
+	spSafePtrStack_BlushGainMat.Push(this);
 	}
 
-void Rendered_AlphaGainMat::Accept_Rendered(Visitor_Rendered& iVisitor)
-	{ iVisitor.Visit_Rendered_AlphaGainMat(this); }
+void Rendered_BlushGainMat::Accept_Rendered(Visitor_Rendered& iVisitor)
+	{ iVisitor.Visit_Rendered_BlushGainMat(this); }
 
-const AlphaGainMat& Rendered_AlphaGainMat::GetAlphaGainMat()
-	{ return fAlphaGainMat; }
+const BlushGainMat& Rendered_BlushGainMat::GetBlushGainMat()
+	{ return fBlushGainMat; }
 
-const ZRef<Rendered>& Rendered_AlphaGainMat::GetRendered()
+const ZRef<Rendered>& Rendered_BlushGainMat::GetRendered()
 	{ return fRendered; }
 
-AlphaMat Rendered_AlphaGainMat::GetAlphaMat()
-	{ return sAlphaMat(fAlphaGainMat); }
+BlushMat Rendered_BlushGainMat::GetBlushMat()
+	{ return sBlushMat(fBlushGainMat); }
 
-ZRef<Rendered_AlphaGainMat> Rendered_AlphaGainMat::spMake(
-	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered)
+ZRef<Rendered_BlushGainMat> Rendered_BlushGainMat::spMake(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
 	{
-	if (Rendered_AlphaGainMat* result =
-		spSafePtrStack_AlphaGainMat.PopIfNotEmpty<Rendered_AlphaGainMat>())
+	if (Rendered_BlushGainMat* result =
+		spSafePtrStack_BlushGainMat.PopIfNotEmpty<Rendered_BlushGainMat>())
 		{
-		result->fAlphaGainMat = iAlphaGainMat;
+		result->fBlushGainMat = iBlushGainMat;
 		result->fRendered = iRendered;
 		return result;
 		}
 
-	return new Rendered_AlphaGainMat(iAlphaGainMat, iRendered);
+	return new Rendered_BlushGainMat(iBlushGainMat, iRendered);
 	}
 
-ZRef<Rendered_AlphaGainMat> sRendered_AlphaGainMat(
-	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered)
-	{ return Rendered_AlphaGainMat::spMake(iAlphaGainMat, iRendered); }
+ZRef<Rendered_BlushGainMat> sRendered_BlushGainMat(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
+	{ return Rendered_BlushGainMat::spMake(iBlushGainMat, iRendered); }
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
@@ -349,9 +349,9 @@ ZRef<Rendered_Triangle> sRendered_Triangle(
 void Visitor_Rendered::Visit_Rendered(const ZRef<Rendered>& iRendered)
 	{ this->Visit(iRendered); }
 
-void Visitor_Rendered::Visit_Rendered_AlphaGainMat(
-	const ZRef<Rendered_AlphaGainMat>& iRendered_AlphaGainMat)
-	{ this->Visit_Rendered(iRendered_AlphaGainMat); }
+void Visitor_Rendered::Visit_Rendered_BlushGainMat(
+	const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat)
+	{ this->Visit_Rendered(iRendered_BlushGainMat); }
 
 void Visitor_Rendered::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
 	{ this->Visit_Rendered(iRendered_Buffer); }
@@ -388,7 +388,7 @@ void Visitor_Rendered::Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iR
 #pragma mark -
 
 ZRef<Rendered> sFrontmost(const ZRef<Rendered>& iRendered)
-	{ return sRendered_AlphaGainMat(sTranslate3Z<Rat>(128), iRendered); }
+	{ return sRendered_BlushGainMat(sTranslate3Z<Rat>(128), iRendered); }
 
 } // namespace GameEngine
 } // namespace ZooLib

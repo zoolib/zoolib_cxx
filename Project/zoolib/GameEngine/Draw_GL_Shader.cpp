@@ -355,7 +355,7 @@ void spSetUniform_RGBA(GLint uniform, RGBA iRGBA)
 void spSetUniform_ZRGBA(GLint uniform, const ZRGBA& iZRGBA, RGBA iRGBA)
 	{ spSetUniform_RGBA(uniform, sRGBA(iZRGBA) * iRGBA); }
 
-void spDrawRect(const AlphaMat& iAlphaMat,
+void spDrawRect(const BlushMat& iBlushMat,
 	const ZRGBA& iRGBA,
 	const GRect& iRect)
 	{
@@ -367,11 +367,11 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iRGBA, iBlushMat.fBlush);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
+		1, false, &iBlushMat.fMat.fE[0][0]);
 
 	GPoint vertices[4];
 	vertices[0] = LT(iRect);
@@ -386,7 +386,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
 	}
 
-void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
+void spDrawRightAngleSegment(const BlushMat& iBlushMat,
 	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
 	{
 	ZRef<Context> theContext = spContext();
@@ -397,12 +397,12 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Concave, iRGBA_Convex, iAlphaMat.fAlpha);
-	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Convex, iRGBA_Concave, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Concave, iRGBA_Convex, iBlushMat.fBlush);
+	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Convex, iRGBA_Concave, iBlushMat.fBlush);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
+		1, false, &iBlushMat.fMat.fE[0][0]);
 
 	GPoint vertices[4];
 	vertices[0] = sGPoint(0,0);
@@ -421,7 +421,7 @@ void spDrawTexture_AlphaOnly(
 	TextureID iTextureID,
 	GPoint iTextureSize,
 	const GRect& iBounds,
-	const AlphaMat& iAlphaMat,
+	const BlushMat& iBlushMat,
 	const ZRGBA& iZRGBA)
 	{
 	ZRef<Context> theContext = spContext();
@@ -432,10 +432,10 @@ void spDrawTexture_AlphaOnly(
 
 	theContext->Use(theContext->fProgramID_String);
 
-	spSetUniform_ZRGBA(theContext->fUniform_String_Modulation, iZRGBA, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_String_Modulation, iZRGBA, iBlushMat.fBlush);
 
 	::glUniformMatrix4fv(theContext->fUniform_String_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
+		1, false, &iBlushMat.fMat.fE[0][0]);
 //
 //	vector<GPoint> texCoords, vertices;
 //	GLuint theTextureID = GetStuff(iString, texCoords, vertices);
@@ -494,7 +494,7 @@ void spDrawTexture(
 	TextureID iTextureID,
 	GPoint iTextureSize,
 	const GRect& iBounds,
-	const AlphaMat& iAlphaMat)
+	const BlushMat& iBlushMat)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -504,10 +504,10 @@ void spDrawTexture(
 
 	theContext->Use(theContext->fProgramID_Textured);
 
-	spSetUniform_RGBA(theContext->fUniform_Textured_Modulation, iAlphaMat.fAlpha);
+	spSetUniform_RGBA(theContext->fUniform_Textured_Modulation, iBlushMat.fBlush);
 
 	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
+		1, false, &iBlushMat.fMat.fE[0][0]);
 
 	const GRect insetBounds = sInsetted(iBounds, 0.5, 0.5);
 	GPoint texCoords[4];
@@ -538,7 +538,7 @@ void spDrawTexture(
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-void spDrawTriangle(const AlphaMat& iAlphaMat,
+void spDrawTriangle(const BlushMat& iBlushMat,
 	const ZRGBA& iZRGBA,
 	const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
 	{
@@ -550,11 +550,11 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iZRGBA, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iZRGBA, iBlushMat.fBlush);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
+		1, false, &iBlushMat.fMat.fE[0][0]);
 
 	GPoint vertices[3];
 	vertices[0] = iP0;
@@ -621,7 +621,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 				// Translate so it's 0 to X(theTextureSize) and 0 to Y(theTextureSize).
 				theMat *= sTranslate3<Rat>(-X(theTextureSize)/2, -Y(theTextureSize)/2, 0);
 
-				SaveSetRestore<AlphaGainMat> theSSR(fAlphaGainMat, theMat);
+				SaveSetRestore<BlushGainMat> theSSR(fBlushGainMat, theMat);
 				if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
 					theRendered->Accept_Rendered(*this);
 
@@ -646,7 +646,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRen
 	ZRGBA theZRGBA;
 	GRect theRect;
 	iRendered_Rect->Get(theZRGBA, theRect);
-	spDrawRect(sAlphaMat(fAlphaGainMat), theZRGBA, theRect);
+	spDrawRect(sBlushMat(fBlushGainMat), theZRGBA, theRect);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
@@ -654,7 +654,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 	{
 	ZRGBA theRGBA_Convex, theRGBA_Concave;
 	iRendered_RightAngleSegment->Get(theRGBA_Convex, theRGBA_Concave);
-	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA_Convex, theRGBA_Concave);
+	spDrawRightAngleSegment(sBlushMat(fBlushGainMat), theRGBA_Convex, theRGBA_Concave);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
@@ -668,11 +668,11 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 		if (theTexture_GL->GetIsAlphaOnly())
 			{
 //			spDrawTexture_AlphaOnly(theTextureID, sPoint<GPoint>(theTextureSize),
-//				iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat), theTexture_GL->GetColor());
+//				iRendered_Texture->GetBounds(), sBlushMat(fBlushGainMat), theTexture_GL->GetColor());
 			}
 		else
 			spDrawTexture(theTextureID, sPoint<GPoint>(theTextureSize),
-				iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat));
+				iRendered_Texture->GetBounds(), sBlushMat(fBlushGainMat));
 
 			if (fShowBounds)
 				{
@@ -707,7 +707,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Triangle(
 	ZRGBA theRGBA;
 	GPoint theP0, theP1, theP2;
 	iRendered_Triangle->Get(theRGBA, theP0, theP1, theP2);
-	spDrawTriangle(sAlphaMat(fAlphaGainMat), theRGBA, theP0, theP1, theP2);
+	spDrawTriangle(sBlushMat(fBlushGainMat), theRGBA, theP0, theP1, theP2);
 	}
 
 } // namespace GameEngine

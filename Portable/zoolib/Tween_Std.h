@@ -90,8 +90,8 @@ public:
 		return null;
 		}
 
-//	virtual double Weight()
-//		{ return fTween->Weight(); }
+	virtual double Weight()
+		{ return fTween->Weight(); }
 
 private:
 	const ZRef<Tween<Param> > fTween;

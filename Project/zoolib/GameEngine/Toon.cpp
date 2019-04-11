@@ -5,7 +5,7 @@
 #include "zoolib/Util_STL_map.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h" // For sToonFrameCount
-#include "zoolib/GameEngine/Tween_AlphaGainMat.h"
+#include "zoolib/GameEngine/Tween_BlushGainMat.h"
 #include "zoolib/GameEngine/Util.h"
 
 using std::map;
@@ -13,25 +13,25 @@ using std::pair;
 using std::vector;
 
 // =================================================================================================
-#pragma mark - sCombineTweenVals for CelStack, AlphaMat, Alpha and Mat combinations
+#pragma mark - sCombineTweenVals for CelStack, BlushMat, Blush and Mat combinations
 
 namespace ZooLib {
 
-using GameEngine::Alpha;
-using GameEngine::AlphaMat;
-using GameEngine::AlphaGainMat;
+using GameEngine::Blush;
+using GameEngine::BlushMat;
+using GameEngine::BlushGainMat;
 using GameEngine::Cel;
 using GameEngine::CelStack;
 using GameEngine::Mat;
 
 template <>
-CelStack sCombineTweenVals<CelStack,Alpha>
-	(const CelStack& iCelStack, const Alpha& iAlpha)
+CelStack sCombineTweenVals<CelStack,Blush>
+	(const CelStack& iCelStack, const Blush& iBlush)
 	{
 	CelStack result = iCelStack->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
-		ii->fAlphaMat.fAlpha *= iAlpha;
+		ii->fBlushMat.fBlush *= iBlush;
 	return result;
 	}
 
@@ -41,20 +41,20 @@ CelStack sCombineTweenVals<CelStack,Mat>(const CelStack& iCelStack, const Mat& i
 	CelStack result = iCelStack.Get()->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
-		ii->fAlphaMat.fMat = iMat * ii->fAlphaMat.fMat;
+		ii->fBlushMat.fMat = iMat * ii->fBlushMat.fMat;
 	return result;
 	}
 
 template <>
-CelStack sCombineTweenVals<CelStack,AlphaGainMat>
-	(const CelStack& iCelStack, const AlphaGainMat& iAlphaGainMat)
+CelStack sCombineTweenVals<CelStack,BlushGainMat>
+	(const CelStack& iCelStack, const BlushGainMat& iBlushGainMat)
 	{
 	CelStack result = iCelStack.Get()->Clone();
 	vector<Cel>& theVec = result->Mut();
 	for (vector<Cel>::iterator ii = theVec.begin(); ii != theVec.end(); ++ii)
 		{
-		ii->fAlphaMat.fMat = iAlphaGainMat.fMat * ii->fAlphaMat.fMat;
-		ii->fAlphaMat.fAlpha *= iAlphaGainMat.fAlpha;
+		ii->fBlushMat.fMat = iBlushGainMat.fMat * ii->fBlushMat.fMat;
+		ii->fBlushMat.fBlush *= iBlushGainMat.fBlush;
 		}
 	return result;
 	}
@@ -98,7 +98,7 @@ ZRef<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCoun
 			const size_t theFrame =
 				sMinMax<size_t>(0, fFrameCount * iPlace / fWeight, fFrameCount - 1);
 
-			return sCountedVal<vector<Cel> >(1, Cel(NameFrame(fName, theFrame), AlphaMat()));
+			return sCountedVal<vector<Cel> >(1, Cel(NameFrame(fName, theFrame), BlushMat()));
 			}
 
 		virtual double Weight()
@@ -172,12 +172,12 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 
 			if (theToon)
 				{
-				if (ZQ<Val> theAMQ = sQGetNamed(*theMapQ, "AlphaGainMat", "AGM"))
+				if (ZQ<Val> theAMQ = sQGetNamed(*theMapQ, "BlushGainMat", "BGM"))
 					{
-					if (ZRef<Tween_AlphaGainMat> theAM = sTween<AlphaGainMat>(theAMQ))
+					if (ZRef<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(theAMQ))
 						theToon *= theAM;
 					}
-				else if (ZRef<Tween_AlphaGainMat> theAM = sTween<AlphaGainMat>(iValQ))
+				else if (ZRef<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(iValQ))
 					{
 					theToon *= theAM;
 					}

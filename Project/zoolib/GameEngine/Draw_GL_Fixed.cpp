@@ -12,13 +12,13 @@ using namespace OpenGL;
 // =================================================================================================
 #pragma mark -
 
-static void spBefore(const AlphaMat& iAlphaMat,
+static void spBefore(const BlushMat& iBlushMat,
 	const ZRGBA& iRGBA)
 	{
-	::glMultMatrixf(&iAlphaMat.fMat[0][0]);
+	::glMultMatrixf(&iBlushMat.fMat[0][0]);
 
 //###########
-	const float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlphaMat.fAlpha);
+	const float theAlpha = iRGBA.floatAlpha() * sAlpha(iBlushMat.fBlush);
 	::glColor4f(
 		iRGBA.floatRed() * theAlpha,
 		iRGBA.floatGreen() * theAlpha,
@@ -28,7 +28,7 @@ static void spBefore(const AlphaMat& iAlphaMat,
 
 namespace { // anonymous
 
-void spDrawRect(const AlphaMat& iAlphaMat,
+void spDrawRect(const BlushMat& iBlushMat,
 	const ZRGBA& iRGBA,
 	const GRect& iRect)
 	{
@@ -38,7 +38,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
 	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	spBefore(iAlphaMat, iRGBA);
+	spBefore(iBlushMat, iRGBA);
 
 	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
 	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
@@ -60,7 +60,7 @@ void spDrawTexture(
 	TextureID iTextureID,
 	GPoint iSize,
 	const GRect& iBounds,
-	const AlphaMat& iAlphaMat)
+	const BlushMat& iBlushMat)
 	{
 	::glPushMatrix();
 
@@ -68,7 +68,7 @@ void spDrawTexture(
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
 	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	spBefore(iAlphaMat, ZRGBA::sWhite);
+	spBefore(iBlushMat, ZRGBA::sWhite);
 
 	SaveSetRestore_Enable ssr_a(GL_TEXTURE_2D, true);
 
@@ -96,7 +96,7 @@ void spDrawTexture(
 	::glPopMatrix();
 	}
 
-void spDrawTriangle(const AlphaMat& iAlphaMat,
+void spDrawTriangle(const BlushMat& iBlushMat,
 	const ZRGBA& iRGBA,
 	const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
 	{
@@ -106,7 +106,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
 	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	spBefore(iAlphaMat, iRGBA);
+	spBefore(iBlushMat, iRGBA);
 
 	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
 	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
@@ -181,7 +181,7 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 
 				if (true)
 					{
-					SaveSetRestore<AlphaGainMat> theSSR(fAlphaGainMat, AlphaGainMat());
+					SaveSetRestore<BlushGainMat> theSSR(fBlushGainMat, BlushGainMat());
 					if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
 						theRendered->Accept_Rendered(*this);
 					} // theSSR
@@ -210,7 +210,7 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRend
 	ZRGBA theRGBA;
 	GRect theRect;
 	iRendered_Rect->Get(theRGBA, theRect);
-	spDrawRect(sAlphaMat(fAlphaGainMat), theRGBA, theRect);
+	spDrawRect(sBlushMat(fBlushGainMat), theRGBA, theRect);
 	}
 
 void Visitor_Draw_GL_Fixed::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
@@ -222,7 +222,7 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Texture(const ZRef<Rendered_Texture>&
 		ZPointPOD theSize;
 		theTexture_GL->Get(theTextureID, theSize);
 		spDrawTexture(theTextureID, sPoint<GPoint>(theSize),
-			iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat));
+			iRendered_Texture->GetBounds(), sBlushMat(fBlushGainMat));
 
 		if (fShowBounds)
 			{
@@ -257,7 +257,7 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Triangle(
 	ZRGBA theRGBA;
 	GPoint theP0, theP1, theP2;
 	iRendered_Triangle->Get(theRGBA, theP0, theP1, theP2);
-	spDrawTriangle(sAlphaMat(fAlphaGainMat), theRGBA, theP0, theP1, theP2);
+	spDrawTriangle(sBlushMat(fBlushGainMat), theRGBA, theP0, theP1, theP2);
 	}
 
 } // namespace GameEngine
