@@ -94,12 +94,11 @@ MACRO_ShaderPrefix
 
 "	void main()"
 "		{"
-"		gl_FragColor = texture2D(uTexture, vTexCoord);"
-"		gl_FragColor *= uModulation;"
+"		gl_FragColor = uModulation * texture2D(uTexture, vTexCoord);"
 "		}"
 "";
 
-const char spFragmentShaderSource_Text[] = ""
+const char spFragmentShaderSource_String[] = ""
 MACRO_ShaderPrefix
 "	uniform sampler2D uTexture;"
 "	uniform vec4 uModulation;"
@@ -107,8 +106,7 @@ MACRO_ShaderPrefix
 
 "	void main()"
 "		{"
-"		gl_FragColor = vec4(texture2D(uTexture, vTexCoord).a);"
-"		gl_FragColor *= uModulation;"
+"		gl_FragColor = uModulation * vec4(texture2D(uTexture, vTexCoord).a);"
 "		}"
 "";
 
@@ -277,30 +275,30 @@ public:
 		::glDetachShader(fProgramID_Textured, theFS_Textured);
 
 
-		FragmentShaderID theFS_Text =
-			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_Text);
+		FragmentShaderID theFS_String =
+			*spLoadShader<FragmentShaderID>(spFragmentShaderSource_String);
 
-		fProgramID_Text = ::glCreateProgram();
+		fProgramID_String = ::glCreateProgram();
 
-		::glAttachShader(fProgramID_Text, theVS_Textured);
-		::glAttachShader(fProgramID_Text, theFS_Text);
+		::glAttachShader(fProgramID_String, theVS_Textured);
+		::glAttachShader(fProgramID_String, theFS_String);
 
-		spLinkAndCheckProgram(fProgramID_Text);
+		spLinkAndCheckProgram(fProgramID_String);
 
-		::glDetachShader(fProgramID_Text, theVS_Textured);
-		::glDetachShader(fProgramID_Text, theFS_Text);
+		::glDetachShader(fProgramID_String, theVS_Textured);
+		::glDetachShader(fProgramID_String, theFS_String);
 
 		::glDeleteShader(theVS_Textured);
 		::glDeleteShader(theFS_Textured);
-		::glDeleteShader(theFS_Text);
+		::glDeleteShader(theFS_String);
 		}
 
-		fUniform_Text_Projection = ::glGetUniformLocation(fProgramID_Text, "uProjection");
-		fAttribute_Text_Tex = ::glGetAttribLocation(fProgramID_Text, "aTex");
-		fAttribute_Text_Pos = ::glGetAttribLocation(fProgramID_Text, "aPos");
+		fUniform_String_Projection = ::glGetUniformLocation(fProgramID_String, "uProjection");
+		fAttribute_String_Tex = ::glGetAttribLocation(fProgramID_String, "aTex");
+		fAttribute_String_Pos = ::glGetAttribLocation(fProgramID_String, "aPos");
 
-		fUniform_Text_Texture = ::glGetUniformLocation(fProgramID_Text, "uTexture");
-		fUniform_Text_Modulation = ::glGetUniformLocation(fProgramID_Text, "uModulation");
+		fUniform_String_Texture = ::glGetUniformLocation(fProgramID_String, "uTexture");
+		fUniform_String_Modulation = ::glGetUniformLocation(fProgramID_String, "uModulation");
 
 		fUniform_Textured_Projection = ::glGetUniformLocation(fProgramID_Textured, "uProjection");
 		fAttribute_Textured_Tex = ::glGetAttribLocation(fProgramID_Textured, "aTex");
@@ -329,68 +327,19 @@ public:
 		GLint fUniform_Textured_Texture;
 		GLint fUniform_Textured_Modulation;
 
-	ProgramID fProgramID_Text;
-		GLint fUniform_Text_Projection;
-		GLint fAttribute_Text_Tex;
-		GLint fAttribute_Text_Pos;
+	ProgramID fProgramID_String;
+		GLint fUniform_String_Projection;
+		GLint fAttribute_String_Tex;
+		GLint fAttribute_String_Pos;
 
-		GLint fUniform_Text_Texture;
-		GLint fUniform_Text_Modulation;
+		GLint fUniform_String_Texture;
+		GLint fUniform_String_Modulation;
 	};
 
 ZRef<Context> spContext()
 	{
 	static ZRef<Context> spContext = new Context;
 	return spContext;
-	}
-
-void spDrawTexture(
-	TextureID iTextureID,
-	GPoint iSize,
-	const GRect& iBounds,
-	const AlphaMat& iAlphaMat)
-	{
-	ZRef<Context> theContext = spContext();
-	
-	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	theContext->Use(theContext->fProgramID_Textured);
-
-	::glUniform4f(theContext->fUniform_Textured_Modulation,
-		iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha);
-
-	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
-		1, false, &iAlphaMat.fMat.fE[0][0]);
-
-	const GRect insetBounds = sInsetted(iBounds, 0.5, 0.5);
-	GPoint texCoords[4];
-	texCoords[0] = LT(insetBounds) / iSize;
-	texCoords[1] = RT(insetBounds) / iSize;
-	texCoords[2] = LB(insetBounds) / iSize;
-	texCoords[3] = RB(insetBounds) / iSize;
-
-	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
-	::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
-		2, GL_FLOAT, GL_FALSE, 0, texCoords);
-
-	GPoint vertices[4];
-	vertices[0] = sPoint<GPoint>(0,0);
-	vertices[1] = sPoint<GPoint>(W(iBounds),0);
-	vertices[2] = sPoint<GPoint>(0, H(iBounds));
-	vertices[3] = WH(iBounds);
-
-	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
- 	::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
-		2, GL_FLOAT, GL_FALSE, 0, vertices);
-
-	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
-	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
-
-	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
-	
-	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
 void spSetUniform_RGBA(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
@@ -462,6 +411,100 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 	::glEnableVertexAttribArray(theContext->fAttribute_RAS_Pos);
 	::glVertexAttribPointer(theContext->fAttribute_RAS_Pos,
 		2, GL_FLOAT, GL_FALSE, 0, vertices);
+
+	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
+
+void spDrawString(const AlphaMat& iAlphaMat, const ZRGBA& iRGBA, const string8& iString)
+	{
+	ZRef<Context> theContext = spContext();
+
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	theContext->Use(theContext->fProgramID_String);
+
+	const float theAlpha = iRGBA.floatAlpha() * sGet(iAlphaMat.fAlpha);
+	::glUniform4f(theContext->fUniform_String_Modulation,
+		iRGBA.floatRed() * theAlpha,
+		iRGBA.floatGreen() * theAlpha,
+		iRGBA.floatBlue() * theAlpha,
+		theAlpha);
+
+	::glUniformMatrix4fv(theContext->fUniform_String_Projection,
+		1, false, &iAlphaMat.fMat.fE[0][0]);
+
+	vector<GPoint> texCoords, vertices;
+	GLuint theTextureID = GetStuff(iString, texCoords, vertices);
+
+	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
+
+	::glUniform1i(theContext->fUniform_String_Texture, 0);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	::glEnableVertexAttribArray(theContext->fAttribute_String_Tex);
+	::glEnableVertexAttribArray(theContext->fAttribute_String_Pos);
+
+	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
+		{
+		::glVertexAttribPointer(theContext->fAttribute_String_Tex,
+			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
+
+		::glVertexAttribPointer(theContext->fAttribute_String_Pos,
+			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
+
+		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
+	}
+
+void spDrawTexture(
+	TextureID iTextureID,
+	GPoint iSize,
+	const GRect& iBounds,
+	const AlphaMat& iAlphaMat)
+	{
+	ZRef<Context> theContext = spContext();
+
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	theContext->Use(theContext->fProgramID_Textured);
+
+	::glUniform4f(theContext->fUniform_Textured_Modulation,
+		iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha);
+
+	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
+		1, false, &iAlphaMat.fMat.fE[0][0]);
+
+	const GRect insetBounds = sInsetted(iBounds, 0.5, 0.5);
+	GPoint texCoords[4];
+	texCoords[0] = LT(insetBounds) / iSize;
+	texCoords[1] = RT(insetBounds) / iSize;
+	texCoords[2] = LB(insetBounds) / iSize;
+	texCoords[3] = RB(insetBounds) / iSize;
+
+	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
+	::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
+		2, GL_FLOAT, GL_FALSE, 0, texCoords);
+
+	GPoint vertices[4];
+	vertices[0] = sPoint<GPoint>(0,0);
+	vertices[1] = sPoint<GPoint>(W(iBounds),0);
+	vertices[2] = sPoint<GPoint>(0, H(iBounds));
+	vertices[3] = WH(iBounds);
+
+	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
+ 	::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
+		2, GL_FLOAT, GL_FALSE, 0, vertices);
+
+	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
+
+	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
 
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
@@ -588,47 +631,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 void Visitor_Draw_GL_Shader::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	ZRef<Context> theContext = spContext();
-
-	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	theContext->Use(theContext->fProgramID_Text);
-
-	const ZRGBA theRGBA = iRendered_String->GetRGBA();
-	const float theAlpha = theRGBA.floatAlpha() * sGet(fAlphaGainMat.fAlpha);
-	::glUniform4f(theContext->fUniform_Text_Modulation,
-		theRGBA.floatRed() * theAlpha,
-		theRGBA.floatGreen() * theAlpha,
-		theRGBA.floatBlue() * theAlpha,
-		theAlpha);
-
-	::glUniformMatrix4fv(theContext->fUniform_Text_Projection,
-		1, false, &fAlphaGainMat.fMat.fE[0][0]);
-
-	vector<GPoint> texCoords, vertices;
-	GLuint theTextureID = GetStuff(iRendered_String->GetString(), texCoords, vertices);
-
-	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
-	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
-
-	::glUniform1i(theContext->fUniform_Text_Texture, 0);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
-		{
-		::glEnableVertexAttribArray(theContext->fAttribute_Text_Tex);
-		::glVertexAttribPointer(theContext->fAttribute_Text_Tex,
-			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
-
-		::glEnableVertexAttribArray(theContext->fAttribute_Text_Pos);
-		::glVertexAttribPointer(theContext->fAttribute_Text_Pos,
-			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
-
-		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		}
+	spDrawString(sAlphaMat(fAlphaGainMat), iRendered_String->GetRGBA(), iRendered_String->GetString());
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
