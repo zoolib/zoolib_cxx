@@ -69,39 +69,44 @@ typedef CVec4 RGBA;
 
 RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha);
 
-inline RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue) { return sRGBA(iRed, iGreen, iBlue, 1.0); }
+inline RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue)
+	{ return sRGBA(iRed, iGreen, iBlue, 1.0); }
 
-inline RGBA sRGBA(Rat iGray, Rat iAlpha)  { return sRGBA(iGray, iGray, iGray, iAlpha); }
+inline RGBA sRGBA(Rat iGray, Rat iAlpha)
+	{ return sRGBA(iGray, iGray, iGray, iAlpha); }
 
-inline RGBA sRGBA(Rat iGray) { return sRGBA(iGray, iGray, iGray, 1.0); }
+inline RGBA sRGBA(Rat iGray)
+	{ return sRGBA(iGray, iGray, iGray, 1.0); }
 
+inline Rat& sRed(RGBA& iRGBA)
+	{ return iRGBA[0]; }
 
-inline Rat& sRed(RGBA& iRGBA) { return iRGBA[0]; }
+inline Rat sRed(const RGBA& iRGBA)
+	{ return iRGBA[0]; }
 
-inline Rat sRed(const RGBA& iRGBA) { return iRGBA[0]; }
+inline Rat& sGreen(RGBA& iRGBA)
+	{ return iRGBA[1]; }
 
-inline Rat& sGreen(RGBA& iRGBA) { return iRGBA[1]; }
+inline Rat sGreen(const RGBA& iRGBA)
+	{ return iRGBA[1]; }
 
-inline Rat sGreen(const RGBA& iRGBA) { return iRGBA[1]; }
+inline Rat& sBlue(RGBA& iRGBA)
+	{ return iRGBA[2]; }
 
-inline Rat& sBlue(RGBA& iRGBA) { return iRGBA[2]; }
+inline Rat sBlue(const RGBA& iRGBA)
+	{ return iRGBA[2]; }
 
-inline Rat sBlue(const RGBA& iRGBA) { return iRGBA[2]; }
+inline Rat& sAlpha(RGBA& iRGBA)
+	{ return iRGBA[3]; }
 
-inline Rat& sAlpha(RGBA& iRGBA) { return iRGBA[3]; }
+inline Rat sAlpha(const RGBA& iRGBA)
+	{ return iRGBA[3]; }
 
-inline Rat sAlpha(const RGBA& iRGBA) { return iRGBA[3]; }
+// =================================================================================================
+#pragma mark -
 
-//typedef TagVal<float, struct Tag_Alpha> Alpha;
-
-//inline Alpha operator*(const Alpha& iLHS, const Alpha& iRHS)
-//	{ return Alpha(sGet(iLHS) * sGet(iRHS)); }
-//
-//inline Alpha& operator*=(Alpha& ioLHS, const Alpha& iRHS)
-//	{
-//	sSet(ioLHS, sGet(ioLHS) * sGet(iRHS));
-//	return ioLHS;
-//	}
+inline RGBA sRGBA(const ZRGBA& iZ)
+	{ return sRGBA(iZ.floatRed(), iZ.floatGreen(), iZ.floatBlue(), iZ.floatAlpha()); }
 
 typedef RGBA Alpha; // grandfather in the old name for now.
 

@@ -342,16 +342,18 @@ ZRef<Context> spContext()
 	return spContext;
 	}
 
-void spSetUniform_RGBA(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
+void spSetUniform_RGBA(GLint uniform, RGBA iRGBA)
 	{
-	float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlpha);
 	::glUniform4f(
 		uniform,
-		iRGBA.floatRed() * theAlpha,
-		iRGBA.floatGreen() * theAlpha,
-		iRGBA.floatBlue() * theAlpha,
-		theAlpha);
+		sRed(iRGBA) * sAlpha(iRGBA),
+		sGreen(iRGBA) * sAlpha(iRGBA),
+		sBlue(iRGBA) * sAlpha(iRGBA),
+		sAlpha(iRGBA));
 	}
+
+void spSetUniform_ZRGBA(GLint uniform, const ZRGBA& iZRGBA, RGBA iRGBA)
+	{ spSetUniform_RGBA(uniform, sRGBA(iZRGBA) * iRGBA); }
 
 void spDrawRect(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA,
@@ -365,7 +367,7 @@ void spDrawRect(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_RGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
@@ -395,8 +397,8 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_RAS);
 
-	spSetUniform_RGBA(theContext->fUniform_RAS_Color_Concave, iRGBA_Convex, iAlphaMat.fAlpha);
-	spSetUniform_RGBA(theContext->fUniform_RAS_Color_Convex, iRGBA_Concave, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Concave, iRGBA_Convex, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_RAS_Color_Convex, iRGBA_Concave, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_RAS_Projection,
@@ -420,7 +422,7 @@ void spDrawTexture_AlphaOnly(
 	GPoint iTextureSize,
 	const GRect& iBounds,
 	const AlphaMat& iAlphaMat,
-	const ZRGBA& iRGBA)
+	const ZRGBA& iZRGBA)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -430,12 +432,7 @@ void spDrawTexture_AlphaOnly(
 
 	theContext->Use(theContext->fProgramID_String);
 
-	const float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlphaMat.fAlpha);
-	::glUniform4f(theContext->fUniform_String_Modulation,
-		iRGBA.floatRed() * theAlpha,
-		iRGBA.floatGreen() * theAlpha,
-		iRGBA.floatBlue() * theAlpha,
-		theAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_String_Modulation, iZRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(theContext->fUniform_String_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
@@ -507,11 +504,7 @@ void spDrawTexture(
 
 	theContext->Use(theContext->fProgramID_Textured);
 
-	::glUniform4f(theContext->fUniform_Textured_Modulation,
-		sAlpha(iAlphaMat.fAlpha),
-		sAlpha(iAlphaMat.fAlpha),
-		sAlpha(iAlphaMat.fAlpha),
-		sAlpha(iAlphaMat.fAlpha));
+	spSetUniform_RGBA(theContext->fUniform_Textured_Modulation, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
@@ -546,7 +539,7 @@ void spDrawTexture(
 	}
 
 void spDrawTriangle(const AlphaMat& iAlphaMat,
-	const ZRGBA& iRGBA,
+	const ZRGBA& iZRGBA,
 	const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
 	{
 	ZRef<Context> theContext = spContext();
@@ -557,7 +550,7 @@ void spDrawTriangle(const AlphaMat& iAlphaMat,
 
 	theContext->Use(theContext->fProgramID_Constant);
 
-	spSetUniform_RGBA(theContext->fUniform_Constant_Color, iRGBA, iAlphaMat.fAlpha);
+	spSetUniform_ZRGBA(theContext->fUniform_Constant_Color, iZRGBA, iAlphaMat.fAlpha);
 
 	::glUniformMatrix4fv(
 		theContext->fUniform_Constant_Projection,
@@ -650,10 +643,10 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect)
 	{
-	ZRGBA theRGBA;
+	ZRGBA theZRGBA;
 	GRect theRect;
-	iRendered_Rect->Get(theRGBA, theRect);
-	spDrawRect(sAlphaMat(fAlphaGainMat), theRGBA, theRect);
+	iRendered_Rect->Get(theZRGBA, theRect);
+	spDrawRect(sAlphaMat(fAlphaGainMat), theZRGBA, theRect);
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(

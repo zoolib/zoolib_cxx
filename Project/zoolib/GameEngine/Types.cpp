@@ -17,7 +17,7 @@ RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha)
 	result[0] = iRed;
 	result[1] = iGreen;
 	result[2] = iBlue;
-	result[3] = 1.0;
+	result[3] = iAlpha;
 	return result;
 	}
 
