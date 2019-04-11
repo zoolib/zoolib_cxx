@@ -62,19 +62,19 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		theRendered = sRendered_AlphaGainMat(
 			AlphaGainMat(theCel.fAlphaMat.fAlpha, theCel.fAlphaMat.fMat * theTBM.fMat),
 			theRendered);
-		theRendered->Accept(*this);
+		sAccept(theRendered, *this);
 		}
 
 	if (fShowNameFrame)
 		{
 		// Box at origin
-		sRef(new Rendered_Rect(ZRGBA::sWhite, sGRect(0,0,2,2)))->Accept_Rendered(*this);
+		sAccept(new Rendered_Rect(ZRGBA::sWhite, sGRect(0,0,2,2)), *this);
 		
 		string8 theString8;
 		ChanW_UTF_string8(&theString8)
 			<< theCel.fNameFrame.fName << "/" << theCel.fNameFrame.fFrame;
 
-		sRef(new Rendered_String(ZRGBA::sWhite, theString8))->Accept(*this);
+		sAccept(new Rendered_String(FontSpec(), ZRGBA::sWhite, theString8), *this);
 		}
 	}
 
@@ -86,6 +86,30 @@ void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
 	{
 	foreacha (entry, iRendered_Group->GetChildren())
 		entry->Accept_Rendered(*this);
+	}
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_DecomposeString
+
+Visitor_Rendered_DecomposeString::Visitor_Rendered_DecomposeString(
+	const ZRef<FontCatalog>& iFontCatalog)
+:	fFontCatalog(iFontCatalog)
+	{}
+
+void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
+	const ZRef<Rendered_String>& iRendered_String)
+	{
+	// Turn iRendered_String into a bunch of textures etc.
+	const ZRGBA theRGBA = iRendered_String->GetRGBA();
+	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
+	const string8& theString = iRendered_String->GetString();
+
+//	Given the FontSpec and the string, we ask the font catalog for a Texture, a list
+//	of bounding rectangles and post-draw offsets, and a list of indices.
+//	The textures in this case will be Texture_GL, with the "useOnlyAlpha flag set".
+//
+//	Then we can turn that into a suite of AGMs and Textured.
+
 	}
 
 // =================================================================================================

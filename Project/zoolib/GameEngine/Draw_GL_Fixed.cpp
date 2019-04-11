@@ -27,6 +27,34 @@ static void spBefore(const AlphaMat& iAlphaMat,
 
 namespace { // anonymous
 
+void spDrawRect(const AlphaMat& iAlphaMat,
+	const ZRGBA& iRGBA,
+	const GRect& iRect)
+	{
+	::glPushMatrix();
+
+	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
+	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
+	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	spBefore(iAlphaMat, iRGBA);
+
+	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
+	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
+
+	GPoint vertices[4];
+	vertices[0] = LT(iRect);
+	vertices[1] = RT(iRect);
+	vertices[2] = LB(iRect);
+	vertices[3] = RB(iRect);
+
+	::glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+
+	::glPopMatrix();
+	}
+
 void spDrawTexture(
 	TextureID iTextureID,
 	GPoint iSize,
@@ -64,34 +92,6 @@ void spDrawTexture(
 	::glVertexPointer(2, GL_FLOAT, 0, vertices);
 
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	::glPopMatrix();
-	}
-
-void spDrawRect(const AlphaMat& iAlphaMat,
-	const ZRGBA& iRGBA,
-	const GRect& iRect)
-	{
-	::glPushMatrix();
-
-	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
-	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
-	SaveSetRestore_BlendFunc ssr_BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	spBefore(iAlphaMat, iRGBA);
-
-	SaveSetRestore_EnableClientState ssr_EnableClientState_b(GL_VERTEX_ARRAY, true);
-	SaveSetRestore_EnableClientState ssr_EnableClientState_a(GL_TEXTURE_COORD_ARRAY, false);
-
-	GPoint vertices[4];
-	vertices[0] = LT(iRect);
-	vertices[1] = RT(iRect);
-	vertices[2] = LB(iRect);
-	vertices[3] = RB(iRect);
-
-	::glVertexPointer(2, GL_FLOAT, 0, vertices);
-
-	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
-
 	::glPopMatrix();
 	}
 
@@ -173,9 +173,9 @@ void Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& i
 				#endif
 				::glMatrixMode(GL_MODELVIEW);
 
-				const ZRGBA theRGBA = iRendered_Buffer->GetRGBA();
+				const ZRGBA theFill = iRendered_Buffer->GetFill();
 				::glClearColor(
-					theRGBA.floatRed(), theRGBA.floatGreen(), theRGBA.floatBlue(), theRGBA.floatAlpha());
+					theFill.floatRed(), theFill.floatGreen(), theFill.floatBlue(), theFill.floatAlpha());
 				::glClear(GL_COLOR_BUFFER_BIT);
 
 				if (true)

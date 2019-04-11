@@ -5,6 +5,7 @@
 #include "zoolib/File.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
+#include "zoolib/GameEngine/FontCatalog.h"
 #include "zoolib/GameEngine/Cog.h"
 #include "zoolib/GameEngine/Sound.h"
 #include "zoolib/GameEngine/Touch.h"
@@ -70,6 +71,8 @@ private:
 	ZRef<NookScope> fNookScope;
 
 	ZRef<AssetCatalog> fAssetCatalog;
+
+	ZRef<FontCatalog> fFontCatalog;
 
 	ZRef<SoundMeister> fSoundMeister;
 

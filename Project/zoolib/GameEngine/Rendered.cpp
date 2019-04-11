@@ -85,10 +85,10 @@ ZRef<Rendered_AlphaGainMat> sRendered_AlphaGainMat(
 #pragma mark - Rendered_Buffer
 
 Rendered_Buffer::Rendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered)
+	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered)
 :	fWidth(iWidth)
 ,	fHeight(iHeight)
-,	fRGBA(iRGBA)
+,	fFill(iFill)
 ,	fRendered(iRendered)
 	{}
 
@@ -101,15 +101,15 @@ int Rendered_Buffer::GetWidth()
 int Rendered_Buffer::GetHeight()
 	{ return fHeight; }
 
-ZRGBA Rendered_Buffer::GetRGBA()
-	{ return fRGBA; }
+ZRGBA Rendered_Buffer::GetFill()
+	{ return fFill; }
 
 const ZRef<Rendered>& Rendered_Buffer::GetRendered()
 	{ return fRendered; }
 
 ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered)
-	{ return new Rendered_Buffer(iWidth, iHeight, iRGBA, iRendered); }
+	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered)
+	{ return new Rendered_Buffer(iWidth, iHeight, iFill, iRendered); }
 
 // =================================================================================================
 #pragma mark - Rendered_Cel
@@ -248,13 +248,18 @@ void Rendered_Sound::Accept_Rendered(Visitor_Rendered& iVisitor)
 // =================================================================================================
 #pragma mark - Rendered_String
 
-Rendered_String::Rendered_String(const ZRGBA& iRGBA, const string8& iString)
-:	fRGBA(iRGBA)
+Rendered_String::Rendered_String(
+	const FontSpec& iFontSpec, const ZRGBA& iRGBA, const string8& iString)
+:	fFontSpec(iFontSpec)
+,	fRGBA(iRGBA)
 ,	fString(iString)
 	{}
 
 void Rendered_String::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_String(this); }
+
+const FontSpec& Rendered_String::GetFontSpec()
+	{ return fFontSpec; }
 
 const ZRGBA& Rendered_String::GetRGBA()
 	{ return fRGBA; }

@@ -114,13 +114,14 @@ Game::Game(const FileSpec& iFS,
 ,	fAccumulated(0)
 	{
 	fAssetCatalog = new AssetCatalog;
+	fFontCatalog = new FontCatalog;
 
-	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
-
-	sPopulate(fAssetCatalog,
+	sPopulate(fAssetCatalog, fFontCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
 
 	Map theRootMap = spLoadData(iFS, iPreferProcessedArt);
+
+	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	if (ZCONFIG_Debug)
 		fCog = sCog(theRootMap["Start"]);
@@ -231,6 +232,7 @@ void Game::RunOnce(
 	theRendered = sDrawPreprocess(
 		theRendered,
 		fAssetCatalog, GameEngine::DebugFlags::sTextureNameFrame,
+		fFontCatalog,
 		iGameSize);
 
 	ZAcqMtx acq(fMtx_Game);

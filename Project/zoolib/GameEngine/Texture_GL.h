@@ -21,7 +21,7 @@ class Texture_GL
 	{
 public:
 	Texture_GL(ZPointPOD iDrawnSize);
-	Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID);
+	Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly);
 	Texture_GL(const ZDCPixmap& iPixmap);
 	virtual ~Texture_GL();
 
@@ -32,6 +32,7 @@ public:
 	void Get(TextureID& oTextureID, ZPointPOD& oTextureSize);
 	TextureID GetTextureID();
 	ZPointPOD GetTextureSize();
+	bool GetIsAlphaOnly();
 
 private:
 	void pMakeTexture();
@@ -40,6 +41,7 @@ private:
 	ZPointPOD fTextureSize;
 	const ZPointPOD fDrawnSize;
 	TextureID fTextureID;
+	bool fIsAlphaOnly;
 	};
 
 ZRef<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL();

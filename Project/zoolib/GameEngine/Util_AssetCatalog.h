@@ -3,6 +3,7 @@
 #include "zconfig.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
+#include "zoolib/GameEngine/FontCatalog.h"
 
 namespace ZooLib {
 namespace GameEngine {
@@ -12,6 +13,7 @@ namespace GameEngine {
 
 void sPopulate(
 	const ZRef<AssetCatalog>& iAC,
+	const ZRef<FontCatalog>& iFC,
 	const FileSpec& iRoot,
 	const ZRef<Callable_TextureFromPixmap>& iTFP,
 	bool iPreferProcessedArt, bool iPreferSmallArt);

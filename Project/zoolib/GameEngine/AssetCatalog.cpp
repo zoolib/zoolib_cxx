@@ -375,6 +375,8 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 		{
 		Seq_Any& theFramesSeq = theEntry.fFramesSeq;
 
+		// TBM = Texture Bounds Mat
+
 		Seq_Any* theTBMsSeqP = theFramesSeq.PMut<Seq_Any>(iFrame);
 		if (not theTBMsSeqP)
 			{

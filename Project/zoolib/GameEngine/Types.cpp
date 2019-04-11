@@ -37,6 +37,17 @@ Cel::Cel(const NameFrame& iNameFrame, const AlphaMat& iAlphaMat)
 	{}
 
 // =================================================================================================
+#pragma mark - FontSpec
+
+FontSpec::FontSpec()
+	{}
+
+FontSpec::FontSpec(const Name& iName, Rat iSize)
+:	fName(iName)
+,	fSize(iSize)
+	{}
+
+// =================================================================================================
 #pragma mark - Map Get
 
 ZQ<Val> sQGetNamed(const Map& iMap, const Name& iName0)

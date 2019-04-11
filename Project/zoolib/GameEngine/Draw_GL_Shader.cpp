@@ -1,6 +1,6 @@
 #include "zoolib/GameEngine/Draw_GL_Shader.h"
 
-#if not defined(__ANDROID__)
+#if ZMACRO_CanUseShader
 
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/Log.h"
@@ -415,9 +415,13 @@ void spDrawRightAngleSegment(const AlphaMat& iAlphaMat,
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-void spDrawString(const AlphaMat& iAlphaMat, const ZRGBA& iRGBA, const string8& iString)
+void spDrawTexture_AlphaOnly(
+	TextureID iTextureID,
+	GPoint iTextureSize,
+	const GRect& iBounds,
+	const AlphaMat& iAlphaMat,
+	const ZRGBA& iRGBA)
 	{
-#if 0
 	ZRef<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
@@ -435,36 +439,63 @@ void spDrawString(const AlphaMat& iAlphaMat, const ZRGBA& iRGBA, const string8& 
 
 	::glUniformMatrix4fv(theContext->fUniform_String_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);
-
-	vector<GPoint> texCoords, vertices;
-	GLuint theTextureID = GetStuff(iString, texCoords, vertices);
-
+//
+//	vector<GPoint> texCoords, vertices;
+//	GLuint theTextureID = GetStuff(iString, texCoords, vertices);
+//
 	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
-	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(theTextureID);
+	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
 
 	::glUniform1i(theContext->fUniform_String_Texture, 0);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	::glEnableVertexAttribArray(theContext->fAttribute_String_Tex);
-	::glEnableVertexAttribArray(theContext->fAttribute_String_Pos);
-
-	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
-		{
-		::glVertexAttribPointer(theContext->fAttribute_String_Tex,
-			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
-
-		::glVertexAttribPointer(theContext->fAttribute_String_Pos,
-			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
-
-		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		}
-#endif
+//	GPoint texCoords[4];
+//	texCoords[0] = LT(iBounds) / iTextureSize;
+//	texCoords[1] = RT(insetBounds) / iTextureSize;
+//	texCoords[2] = LB(insetBounds) / iTextureSize;
+//	texCoords[3] = RB(insetBounds) / iTextureSize;
+//
+//	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
+//	::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
+//		2, GL_FLOAT, GL_FALSE, 0, texCoords);
+//
+//	GPoint vertices[4];
+//	vertices[0] = sPoint<GPoint>(0,0);
+//	vertices[1] = sPoint<GPoint>(W(iBounds),0);
+//	vertices[2] = sPoint<GPoint>(0, H(iBounds));
+//	vertices[3] = WH(iBounds);
+//
+//	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
+// 	::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
+//		2, GL_FLOAT, GL_FALSE, 0, vertices);
+//
+//	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
+//	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
+//
+//	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
+//
+//	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//
+//
+//	::glEnableVertexAttribArray(theContext->fAttribute_String_Tex);
+//	::glEnableVertexAttribArray(theContext->fAttribute_String_Pos);
+//
+//	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
+//		{
+//		::glVertexAttribPointer(theContext->fAttribute_String_Tex,
+//			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
+//
+//		::glVertexAttribPointer(theContext->fAttribute_String_Pos,
+//			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
+//
+//		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//		}
 	}
 
 void spDrawTexture(
 	TextureID iTextureID,
-	GPoint iSize,
+	GPoint iTextureSize,
 	const GRect& iBounds,
 	const AlphaMat& iAlphaMat)
 	{
@@ -484,10 +515,10 @@ void spDrawTexture(
 
 	const GRect insetBounds = sInsetted(iBounds, 0.5, 0.5);
 	GPoint texCoords[4];
-	texCoords[0] = LT(insetBounds) / iSize;
-	texCoords[1] = RT(insetBounds) / iSize;
-	texCoords[2] = LB(insetBounds) / iSize;
-	texCoords[3] = RB(insetBounds) / iSize;
+	texCoords[0] = LT(insetBounds) / iTextureSize;
+	texCoords[1] = RT(insetBounds) / iTextureSize;
+	texCoords[2] = LB(insetBounds) / iTextureSize;
+	texCoords[3] = RB(insetBounds) / iTextureSize;
 
 	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
 	::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
@@ -579,9 +610,9 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 
 			{SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(theTextureSize), Y(theTextureSize));
 				{
-				const ZRGBA theRGBA = iRendered_Buffer->GetRGBA();
+				const ZRGBA theFill = iRendered_Buffer->GetFill();
 				::glClearColor(
-					theRGBA.floatRed(), theRGBA.floatGreen(), theRGBA.floatBlue(), theRGBA.floatAlpha());
+					theFill.floatRed(), theFill.floatGreen(), theFill.floatBlue(), theFill.floatAlpha());
 				::glClear(GL_COLOR_BUFFER_BIT);
 
 				Mat theMat(1);
@@ -630,47 +661,47 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
 	spDrawRightAngleSegment(sAlphaMat(fAlphaGainMat), theRGBA_Convex, theRGBA_Concave);
 	}
 
-void Visitor_Draw_GL_Shader::Visit_Rendered_String(
-	const ZRef<Rendered_String>& iRendered_String)
-	{
-	spDrawString(sAlphaMat(fAlphaGainMat), iRendered_String->GetRGBA(), iRendered_String->GetString());
-	}
-
 void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
 	{
 	if (const ZRef<Texture_GL>& theTexture_GL =
 		iRendered_Texture->GetTexture().DynamicCast<Texture_GL>())
 		{
 		TextureID theTextureID;
-		ZPointPOD theSize;
-		theTexture_GL->Get(theTextureID, theSize);
-		spDrawTexture(theTextureID, sPoint<GPoint>(theSize),
-			iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat));
-
-		if (fShowBounds)
+		ZPointPOD theTextureSize;
+		theTexture_GL->Get(theTextureID, theTextureSize);
+		if (theTexture_GL->GetIsAlphaOnly())
 			{
-			const GRect theBounds = sAlignedLT(iRendered_Texture->GetBounds(), 0, 0);
-
-			// Red = left/top
-			// Green = right/bottom
-			// Blue = Horizontal
-
-			// Left/Port/Izquierda
-			sRef(new Rendered_Line(ZRGBA::sRed, LT(theBounds), LB(theBounds), 1.0))
-				->Accept(*this);
-
-			// Right/Starboard/Derecha
-			sRef(new Rendered_Line(ZRGBA::sGreen, RT(theBounds), RB(theBounds), 1.0))
-				->Accept(*this);
-
-			// Top/Above/Aloft/Arriba/Apex
-			sRef(new Rendered_Line(ZRGBA::sRed + ZRGBA::sBlue, LT(theBounds), RT(theBounds), 1.0))
-				->Accept(*this);
-
-			// Bottom/Below/Beneath/Abajo/Base
-			sRef(new Rendered_Line(ZRGBA::sGreen + ZRGBA::sBlue, LB(theBounds), RB(theBounds), 1.0))
-				->Accept(*this);
+//			spDrawTexture_AlphaOnly(theTextureID, sPoint<GPoint>(theTextureSize),
+//				iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat), theTexture_GL->GetColor());
 			}
+		else
+			spDrawTexture(theTextureID, sPoint<GPoint>(theTextureSize),
+				iRendered_Texture->GetBounds(), sAlphaMat(fAlphaGainMat));
+
+			if (fShowBounds)
+				{
+				const GRect theBounds = sAlignedLT(iRendered_Texture->GetBounds(), 0, 0);
+
+				// Red = left/top
+				// Green = right/bottom
+				// Blue = Horizontal
+
+				// Left/Port/Izquierda
+				sRef(new Rendered_Line(ZRGBA::sRed, LT(theBounds), LB(theBounds), 1.0))
+					->Accept(*this);
+
+				// Right/Starboard/Derecha
+				sRef(new Rendered_Line(ZRGBA::sGreen, RT(theBounds), RB(theBounds), 1.0))
+					->Accept(*this);
+
+				// Top/Above/Aloft/Arriba/Apex
+				sRef(new Rendered_Line(ZRGBA::sRed + ZRGBA::sBlue, LT(theBounds), RT(theBounds), 1.0))
+					->Accept(*this);
+
+				// Bottom/Below/Beneath/Abajo/Base
+				sRef(new Rendered_Line(ZRGBA::sGreen + ZRGBA::sBlue, LB(theBounds), RB(theBounds), 1.0))
+					->Accept(*this);
+				}
 		}
 	}
 
@@ -683,12 +714,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Triangle(
 	spDrawTriangle(sAlphaMat(fAlphaGainMat), theRGBA, theP0, theP1, theP2);
 	}
 
-void Visitor_Draw_GL_Shader::UseFixedProgram()
-	{
-	spContext()->Use(0);
-	}
-
 } // namespace GameEngine
 } // namespace ZooLib
 
-#endif // not defined(__ANDROID__)
+#endif // ZMACRO_CanUseShader

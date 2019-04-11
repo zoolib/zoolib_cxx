@@ -25,11 +25,14 @@ class Visitor_Preprocess
 :	public virtual Visitor_Rendered_AccumulateAlphaGainMat
 ,	public virtual Visitor_Rendered_DecomposeCel
 ,	public virtual Visitor_Rendered_DecomposeGroup
+,	public virtual Visitor_Rendered_DecomposeString
 	{
 public:
 	Visitor_Preprocess(const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
+		const ZRef<FontCatalog>& iFontCatalog,
 		const GPoint& iGameSize)
 	:	Visitor_Rendered_DecomposeCel(iAssetCatalog, iShowNameFrame)
+	,	Visitor_Rendered_DecomposeString(iFontCatalog)
 	,	fScreenBounds(sRect<GRect>(iGameSize))
 	,	fMap(std::less<Rat>(), fRealAllocator)
 		{}
@@ -51,10 +54,10 @@ public:
 			const int theHeight = iRendered_Buffer->GetHeight();
 
 			theRendered = sDrawPreprocess(theRendered,
-				fAssetCatalog, fShowNameFrame, sPoint<GPoint>(theWidth, theHeight));
+				fAssetCatalog, fShowNameFrame, fFontCatalog, sPoint<GPoint>(theWidth, theHeight));
 
 			theRendered =
-				sRendered_Buffer(theWidth, theHeight, iRendered_Buffer->GetRGBA(), theRendered);
+				sRendered_Buffer(theWidth, theHeight, iRendered_Buffer->GetFill(), theRendered);
 
 			this->pInsertIntoMap(theRendered.Get());
 			}
@@ -122,8 +125,12 @@ private:
 
 ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
 	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
+	const ZRef<FontCatalog>& iFontCatalog,
 	const GPoint& iGameSize)
-	{ return Visitor_Preprocess(iAssetCatalog, iShowNameFrame, iGameSize).Do(iRendered); }
+	{
+	return Visitor_Preprocess(iAssetCatalog, iShowNameFrame, iFontCatalog, iGameSize).Do(iRendered);
+	
+	}
 
 } // namespace GameEngine
 } // namespace ZooLib

@@ -27,17 +27,20 @@ static int spNextPowerOfTwo(int input)
 Texture_GL::Texture_GL(ZPointPOD iDrawnSize)
 :	fDrawnSize(iDrawnSize)
 ,	fTextureID(0)
+,	fIsAlphaOnly(false)
 	{}
 
-Texture_GL::Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID)
+Texture_GL::Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly)
 :	fTextureSize(iTextureSize)
 ,	fDrawnSize(iTextureSize)
 ,	fTextureID(iTextureID)
+,	fIsAlphaOnly(iIsAlphaOnly)
 	{}
 
 Texture_GL::Texture_GL(const ZDCPixmap& iPixmap)
 :	fPixmap(iPixmap)
 ,	fDrawnSize(fPixmap.Size())
+,	fIsAlphaOnly(false)
 	{
 	using namespace ZDCPixmapNS;
 
@@ -97,6 +100,9 @@ ZPointPOD Texture_GL::GetTextureSize()
 		this->pMakeTexture();
 	return fTextureSize;
 	}
+
+bool Texture_GL::GetIsAlphaOnly()
+	{ return fIsAlphaOnly; }
 
 void Texture_GL::pMakeTexture()
 	{

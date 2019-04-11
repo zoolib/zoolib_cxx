@@ -4,7 +4,9 @@
 
 #include "zoolib/GameEngine/Visitor_Rendered_Std.h"
 
-#if not defined(__ANDROID__)
+#define ZMACRO_CanUseShader 1
+
+#if ZMACRO_CanUseShader
 
 namespace ZooLib {
 namespace GameEngine {
@@ -19,14 +21,15 @@ public:
 	Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigin);
 
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
+
 	virtual void Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect);
+
 	virtual void Visit_Rendered_RightAngleSegment(
 		const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
-	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture);
-	virtual void Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iRendered_Triangle);
 
-	void UseFixedProgram();
+	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture);
+
+	virtual void Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iRendered_Triangle);
 
 private:
 	bool fShowBounds;
@@ -36,6 +39,6 @@ private:
 } // namespace GameEngine
 } // namespace ZooLib
 
-#endif // not defined(__ANDROID__)
+#endif // ZMACRO_CanUseShader
 
 #endif // __ZooLib_GameEngine_Draw_GL_Shader_h__

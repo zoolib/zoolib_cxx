@@ -82,7 +82,7 @@ class Rendered_Buffer
 :	public Rendered
 	{
 public:
-	Rendered_Buffer(int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered);
+	Rendered_Buffer(int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
@@ -90,18 +90,18 @@ public:
 // Our protocol
 	int GetWidth();
 	int GetHeight();
-	ZRGBA GetRGBA();
+	ZRGBA GetFill();
 	const ZRef<Rendered>& GetRendered();
 
 private:
 	const int fWidth;
 	const int fHeight;
-	const ZRGBA fRGBA;
+	const ZRGBA fFill;
 	const ZRef<Rendered> fRendered;
 	};
 
 ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const ZRef<Rendered>& iRendered);
+	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Cel
@@ -251,16 +251,18 @@ class Rendered_String
 :	public Rendered
 	{
 public:
-	Rendered_String(const ZRGBA& iRGBA, const string8& iString);
+	Rendered_String(const FontSpec& iFontSpec, const ZRGBA& iRGBA, const string8& iString);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
+	const FontSpec& GetFontSpec();
 	const ZRGBA& GetRGBA();
 	const string8& GetString();
 
 private:
+	const FontSpec fFontSpec;
 	const ZRGBA fRGBA;
 	const string8 fString;
 	};

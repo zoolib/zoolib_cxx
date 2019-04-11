@@ -3,6 +3,7 @@
 #include "zconfig.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
+#include "zoolib/GameEngine/FontCatalog.h"
 #include "zoolib/GameEngine/Rendered.h"
 
 namespace ZooLib {
@@ -49,6 +50,21 @@ class Visitor_Rendered_DecomposeGroup
 	{
 public:
 	virtual void Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group);
+	};
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_DecomposeString
+
+class Visitor_Rendered_DecomposeString
+:	public virtual Visitor_Rendered
+	{
+public:
+	Visitor_Rendered_DecomposeString(const ZRef<FontCatalog>& iFontCatalog);
+
+	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
+
+protected:
+	const ZRef<FontCatalog> fFontCatalog;
 	};
 
 // =================================================================================================
