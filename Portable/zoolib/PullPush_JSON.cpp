@@ -134,7 +134,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 					{
 					// We have three quotes in a row.
 					quotesSeen = 3;
-					if (ZQ<UTF32,false> theCPQ = sQRead(iChanRU))
+					if (ZQ<UTF32> theCPQ = sQRead(iChanRU))
 						{
 						if (not Unicode::sIsEOL(*theCPQ))
 							{
