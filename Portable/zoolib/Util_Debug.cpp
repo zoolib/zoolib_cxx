@@ -32,6 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
+#if __MACH__ || __linux__
+     #include <execinfo.h> // For backtrace
+#endif
+
 #if __MACH__
 	#include <mach/mach_init.h> // For mach_thread_self
 #endif
@@ -70,12 +74,14 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 
 	if (iParams.fStop)
 		{
-		s.Emit();
+		void* callstack[128];
+		size_t count = backtrace(callstack, 128);
+		char** strs = backtrace_symbols(callstack, count);
+		for (size_t ii = 0; ii < count; ++ii)
+			s << "\n" << strs[ii];
 
-		// We don't have stack crawls, which means we're probably
-		// on MacOS X. If we force a segfault then the Crash Reporter
-		// will dump out stacks for us.
-		*reinterpret_cast<double*>(1) = 0;
+		s.Emit();
+		abort();
 		}
 	}
 
