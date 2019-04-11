@@ -61,7 +61,7 @@ const ZRef<Rendered>& Rendered_AlphaGainMat::GetRendered()
 	{ return fRendered; }
 
 AlphaMat Rendered_AlphaGainMat::GetAlphaMat()
-	{ return AlphaMat(fAlphaGainMat.fAlpha, fAlphaGainMat.fMat); }
+	{ return sAlphaMat(fAlphaGainMat); }
 
 ZRef<Rendered_AlphaGainMat> Rendered_AlphaGainMat::spMake(
 	const AlphaGainMat& iAlphaGainMat, const ZRef<Rendered>& iRendered)
@@ -249,7 +249,7 @@ void Rendered_Sound::Accept_Rendered(Visitor_Rendered& iVisitor)
 #pragma mark - Rendered_String
 
 Rendered_String::Rendered_String(
-	const FontSpec& iFontSpec, const ZRGBA& iRGBA, const string8& iString)
+	const FontSpec& iFontSpec, const RGBA& iRGBA, const string8& iString)
 :	fFontSpec(iFontSpec)
 ,	fRGBA(iRGBA)
 ,	fString(iString)
@@ -261,7 +261,7 @@ void Rendered_String::Accept_Rendered(Visitor_Rendered& iVisitor)
 const FontSpec& Rendered_String::GetFontSpec()
 	{ return fFontSpec; }
 
-const ZRGBA& Rendered_String::GetRGBA()
+const RGBA& Rendered_String::GetRGBA()
 	{ return fRGBA; }
 
 const string8& Rendered_String::GetString()

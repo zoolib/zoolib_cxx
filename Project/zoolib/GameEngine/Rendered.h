@@ -251,19 +251,19 @@ class Rendered_String
 :	public Rendered
 	{
 public:
-	Rendered_String(const FontSpec& iFontSpec, const ZRGBA& iRGBA, const string8& iString);
+	Rendered_String(const FontSpec& iFontSpec, const RGBA& iRGBA, const string8& iString);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
 	const FontSpec& GetFontSpec();
-	const ZRGBA& GetRGBA();
+	const RGBA& GetRGBA();
 	const string8& GetString();
 
 private:
 	const FontSpec fFontSpec;
-	const ZRGBA fRGBA;
+	const RGBA fRGBA;
 	const string8 fString;
 	};
 

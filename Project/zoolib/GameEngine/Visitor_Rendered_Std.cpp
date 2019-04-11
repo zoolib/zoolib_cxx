@@ -74,7 +74,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		ChanW_UTF_string8(&theString8)
 			<< theCel.fNameFrame.fName << "/" << theCel.fNameFrame.fFrame;
 
-		sAccept(new Rendered_String(FontSpec(), ZRGBA::sWhite, theString8), *this);
+		sAccept(new Rendered_String(FontSpec(), RGBA(1), theString8), *this);
 		}
 	}
 
@@ -100,7 +100,7 @@ void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
 	// Turn iRendered_String into a bunch of textures etc.
-	const ZRGBA theRGBA = iRendered_String->GetRGBA();
+	const RGBA theRGBA = iRendered_String->GetRGBA();
 	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
 	const string8& theString = iRendered_String->GetString();
 

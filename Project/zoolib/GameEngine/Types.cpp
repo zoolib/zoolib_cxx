@@ -9,6 +9,19 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
+#pragma mark - RGBA
+
+RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha)
+	{
+	RGBA result;
+	result[0] = iRed;
+	result[1] = iGreen;
+	result[2] = iBlue;
+	result[3] = 1.0;
+	return result;
+	}
+
+// =================================================================================================
 #pragma mark - NameFrame
 
 NameFrame::NameFrame()

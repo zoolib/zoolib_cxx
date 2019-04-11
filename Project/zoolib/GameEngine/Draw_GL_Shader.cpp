@@ -344,7 +344,7 @@ ZRef<Context> spContext()
 
 void spSetUniform_RGBA(GLint uniform, const ZRGBA& iRGBA, Alpha iAlpha)
 	{
-	float theAlpha = iRGBA.floatAlpha() * sGet(iAlpha);
+	float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlpha);
 	::glUniform4f(
 		uniform,
 		iRGBA.floatRed() * theAlpha,
@@ -430,7 +430,7 @@ void spDrawTexture_AlphaOnly(
 
 	theContext->Use(theContext->fProgramID_String);
 
-	const float theAlpha = iRGBA.floatAlpha() * sGet(iAlphaMat.fAlpha);
+	const float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlphaMat.fAlpha);
 	::glUniform4f(theContext->fUniform_String_Modulation,
 		iRGBA.floatRed() * theAlpha,
 		iRGBA.floatGreen() * theAlpha,
@@ -508,7 +508,10 @@ void spDrawTexture(
 	theContext->Use(theContext->fProgramID_Textured);
 
 	::glUniform4f(theContext->fUniform_Textured_Modulation,
-		iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha, iAlphaMat.fAlpha);
+		sAlpha(iAlphaMat.fAlpha),
+		sAlpha(iAlphaMat.fAlpha),
+		sAlpha(iAlphaMat.fAlpha),
+		sAlpha(iAlphaMat.fAlpha));
 
 	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
 		1, false, &iAlphaMat.fMat.fE[0][0]);

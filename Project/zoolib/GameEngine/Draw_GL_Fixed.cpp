@@ -16,8 +16,9 @@ static void spBefore(const AlphaMat& iAlphaMat,
 	const ZRGBA& iRGBA)
 	{
 	::glMultMatrixf(&iAlphaMat.fMat[0][0]);
+
 //###########
-	const float theAlpha = iRGBA.floatAlpha() * sGet(iAlphaMat.fAlpha);
+	const float theAlpha = iRGBA.floatAlpha() * sAlpha(iAlphaMat.fAlpha);
 	::glColor4f(
 		iRGBA.floatRed() * theAlpha,
 		iRGBA.floatGreen() * theAlpha,
