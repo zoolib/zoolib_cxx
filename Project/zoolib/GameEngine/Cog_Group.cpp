@@ -251,7 +251,7 @@ Cog spCogFun_Group_Terminate(const Cog& iSelf, const Param& iParam,
 	{
 	ZAssert(sIsPending(iChild));
 
-	if (ZQ<AlphaGainMat,0> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
+	if (NotQ<AlphaGainMat> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
 		{
 		return true;
 		}
@@ -315,7 +315,7 @@ Cog spCogFun_Group_Continue(const Cog& iSelf, const Param& iParam,
 	{
 	ZAssert(sIsPending(iChild));
 
-	if (ZQ<AlphaGainMat,0> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
+	if (NotQ<AlphaGainMat> theQ = iTween->QValAt(iParam.fElapsed - iStartTime))
 		{
 		return sCallCog(iChild, iParam);
 		}

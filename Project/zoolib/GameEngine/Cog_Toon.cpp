@@ -18,7 +18,8 @@ public:
 
 	virtual ZQ<Cog> QCall(const Cog& iSelf, const Param& iParam)
 		{
-		if (ZQ<CelStack,0> theCelStackQ = fToon->QValAt(iParam.fElapsed))
+		ZRef<AssetCatalog> theAssetCatalog = iParam.fOutChannel.fAssetCatalog;
+		if (NotQ<CelStack> theCelStackQ = fToon->QValAt(iParam.fElapsed))
 			{ return true; }
 		else
 			{

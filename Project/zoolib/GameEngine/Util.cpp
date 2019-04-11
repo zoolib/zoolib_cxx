@@ -37,10 +37,10 @@ ZQ<Rect_p> spQGRect_T(const Seq_p& iSeq)
 	if (iSeq.Count() == 4)
 		{
 		if (false) {}
-		else if (ZQ<Rat,false> l = sQRat(iSeq[0])) {}
-		else if (ZQ<Rat,false> t = sQRat(iSeq[1])) {}
-		else if (ZQ<Rat,false> r = sQRat(iSeq[2])) {}
-		else if (ZQ<Rat,false> b = sQRat(iSeq[3])) {}
+		else if (NotQ<Rat> l = sQRat(iSeq[0])) {}
+		else if (NotQ<Rat> t = sQRat(iSeq[1])) {}
+		else if (NotQ<Rat> r = sQRat(iSeq[2])) {}
+		else if (NotQ<Rat> b = sQRat(iSeq[3])) {}
 		else { return sRect<Rect_p>(*l, *t, *r, *b); }
 		}
 
