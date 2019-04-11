@@ -96,6 +96,9 @@ public:
 
 	void pInsertIntoMap(Rendered* iRendered)
 		{
+		// We're passed a pointer, so there's one less refcount manipulation happening.
+		// We could/should use std::move.
+
 		// Push (0,0,0) through our current accumulated
 		// transformation, and take the resulting Z coordinate.
 		const Rat theZ = (fAlphaGainMat.fMat * CVec3())[2];
