@@ -11,9 +11,9 @@
 #include "zoolib/GameEngine/DrawPreprocess.h"
 #include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Util.h"
-#include "zoolib/GameEngine/Util_AddBorder.h"
 #include "zoolib/GameEngine/Util_Allocator.h"
 #include "zoolib/GameEngine/Util_AssetCatalog.h"
+#include "zoolib/GameEngine/Util_FinderHider.h"
 #include "zoolib/GameEngine/Val.h"
 
 #include <map>
@@ -226,7 +226,7 @@ void Game::RunOnce(
 
 	ZRef<Rendered> theRendered = this->pCrank(interval);
 
-	theRendered = Util::sAddBorder(theRendered, iBackingSize, iGameSize);
+	theRendered = Util::sFinderHider(theRendered, iBackingSize, iGameSize);
 
 	theRendered = sDrawPreprocess(
 		theRendered,

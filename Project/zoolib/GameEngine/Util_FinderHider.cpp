@@ -1,13 +1,13 @@
-#include "zoolib/GameEngine/Util_AddBorder.h"
+#include "zoolib/GameEngine/Util_FinderHider.h"
 
 namespace ZooLib {
 namespace GameEngine {
 namespace Util {
 
 // =================================================================================================
-// MARK: - sAddBorder
+// MARK: - sFinderHider
 
-ZRef<Rendered> sAddBorder(
+ZRef<Rendered> sFinderHider(
 	const ZRef<Rendered>& iRendered,
 	GPoint iBackingSize,
 	GPoint iGameSize)
