@@ -29,7 +29,7 @@ Cog spCogFun_Init(const Cog& iSelf, const Param& iParam,
 	if (ZLOGF(w, eDebug+1))
 		w << iName << ":" << iDetached;
 
-	if (ZRef<SoundMeister> theSM = SoundMeister::sGet())
+	if (ZRef<SoundMeister> theSM = iParam.fOutChannel.fSoundMeister)
 		{
 		if (ZRef<Sound> theSound = theSM->MakeSound(iName))
 			{

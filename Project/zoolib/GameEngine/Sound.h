@@ -37,8 +37,6 @@ class SoundMeister
 :	public ZCounted
 	{
 public:
-	static ZRef<SoundMeister> sGet();
-
 	SoundMeister();
 	virtual ~SoundMeister();
 

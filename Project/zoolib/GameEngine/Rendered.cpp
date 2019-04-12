@@ -292,7 +292,6 @@ ZRef<Rendered_Mat> Rendered_Mat::spMake(const Mat& iMat, const ZRef<Rendered>& i
 ZRef<Rendered> sRendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered)
 	{ return Rendered_Mat::spMake(iMat, iRendered); }
 
-
 // =================================================================================================
 #pragma mark - Rendered_Rect
 

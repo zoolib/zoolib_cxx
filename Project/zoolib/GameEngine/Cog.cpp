@@ -61,10 +61,14 @@ const InChannel* InChannel::GetPrior() const
 #pragma mark -
 
 OutChannel::OutChannel(
-	std::vector<ZRef<TouchListener> >* ioTLs,
 	const ZRef<AssetCatalog>& iAssetCatalog,
+	const ZRef<FontCatalog>& iFontCatalog,
+	const ZRef<SoundMeister>& iSoundMeister,
+	std::vector<ZRef<TouchListener> >& ioTLs,
 	ZRef<Rendered_Group>& ioGroup)
 :	fAssetCatalog(iAssetCatalog)
+,	fFontCatalog(iFontCatalog)
+,	fSoundMeister(iSoundMeister)
 ,	fTLs(ioTLs)
 ,	fGroup(ioGroup)
 	{}
@@ -72,7 +76,7 @@ OutChannel::OutChannel(
 OutChannel::~OutChannel()
 	{}
 
-vector<ZRef<TouchListener> >* OutChannel::GetTLs() const
+vector<ZRef<TouchListener> >& OutChannel::GetTLs() const
 	{ return fTLs; }
 
 ZRef<Rendered_Group>& OutChannel::GetGroup() const
@@ -81,21 +85,11 @@ ZRef<Rendered_Group>& OutChannel::GetGroup() const
 void OutChannel::RegisterTouchListener(ZRef<TouchListener> iListener) const
 	{
 	ZAssert(iListener);
-	ZAssert(not Util_STL::sContains(*fTLs, iListener));
-	fTLs->push_back(iListener);
+	ZAssert(not Util_STL::sContains(fTLs, iListener));
+	fTLs.push_back(iListener);
 
 	if (DebugFlags::sTouches)
 		fGroup->Append(sRendered_Rect(sRGBA(1, 0, 0, 0.25), iListener->fBounds));
-	}
-
-size_t OutChannel::GetPriorTLCount() const
-	{ return fTLs->size(); }
-
-void OutChannel::MungeTLs(size_t iStartIndex, const Mat& iMat) const
-	{
-	const Mat inverseMat = sInverse(iMat);
-	for (size_t x = iStartIndex; x < fTLs->size(); ++x)
-		fTLs->at(x)->Munge(iMat, inverseMat);
 	}
 
 // =================================================================================================
@@ -402,12 +396,12 @@ Cog spCogFun_DisableTouches(const Cog& iSelf, const Param& iParam,
 	const Cog& iChild)
 	{
 	vector<ZRef<TouchListener> > dummy;
-	iParam.fOutChannel.GetTLs()->swap(dummy);
+	iParam.fOutChannel.GetTLs().swap(dummy);
 
 	Cog newChild = iChild;
 	const bool unchanged = sCallUpdate_Cog_Unchanged(newChild, iParam);
 
-	iParam.fOutChannel.GetTLs()->swap(dummy);
+	iParam.fOutChannel.GetTLs().swap(dummy);
 
 	if (unchanged)
 		return iSelf;

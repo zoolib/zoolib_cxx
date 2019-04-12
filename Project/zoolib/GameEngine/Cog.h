@@ -4,6 +4,7 @@
 #include "zoolib/Cog.h"
 
 #include "zoolib/GameEngine/AssetCatalog.h"
+#include "zoolib/GameEngine/FontCatalog.h"
 #include "zoolib/GameEngine/Nook.h"
 #include "zoolib/GameEngine/Rendered.h"
 #include "zoolib/GameEngine/Touch.h"
@@ -51,24 +52,27 @@ class OutChannel
 	{
 public:
 	OutChannel(
-		std::vector<ZRef<TouchListener> >* ioTLs,
 		const ZRef<AssetCatalog>& iAssetCatalog,
+		const ZRef<FontCatalog>& iFontCatalog,
+		const ZRef<SoundMeister>& iSoundMeister,
+		std::vector<ZRef<TouchListener> >& ioTLs,
 		ZRef<Rendered_Group>& ioGroup);
 
 	~OutChannel();
 
-	std::vector<ZRef<TouchListener> >* GetTLs() const;
+	std::vector<ZRef<TouchListener> >& GetTLs() const;
 	ZRef<Rendered_Group>& GetGroup() const;
 
 	void RegisterTouchListener(ZRef<TouchListener> iListener) const;
 
-	size_t GetPriorTLCount() const;
-	void MungeTLs(size_t iStartIndex, const Mat& iMat) const;
+//	void MungeTLs(size_t iStartIndex, const Mat& iMat) const;
 
 	const ZRef<AssetCatalog> fAssetCatalog;
+	const ZRef<FontCatalog> fFontCatalog;
+	const ZRef<SoundMeister> fSoundMeister;
 
 private:
-	std::vector<ZRef<TouchListener> >* fTLs;
+	std::vector<ZRef<TouchListener> >& fTLs;
 	ZRef<Rendered_Group>& fGroup;
 	};
 

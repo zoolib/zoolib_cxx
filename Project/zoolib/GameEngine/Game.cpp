@@ -342,7 +342,7 @@ ZRef<Rendered> Game::pCrank(double iInterval)
 	InChannel theInChannel(fNookScope);
 
 	vector<ZRef<TouchListener> > newTLs;
-	OutChannel theOutChannel(&newTLs, fAssetCatalog, theGroup);
+	OutChannel theOutChannel(fAssetCatalog, fFontCatalog, fSoundMeister, newTLs, theGroup);
 
 	fNookScope->NewEra();
 

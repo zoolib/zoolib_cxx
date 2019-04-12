@@ -84,6 +84,7 @@ public:
 	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
 		{}
 
+	// Cels and Strings must have been processed into Textures before now.
 	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
 		{ ZUnimplemented(); }
 

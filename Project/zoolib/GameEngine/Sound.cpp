@@ -16,13 +16,8 @@ Sound::~Sound()
 // =================================================================================================
 #pragma mark - SoundMeister
 
-static ZRef<SoundMeister> spSoundMeister;
-
-ZRef<SoundMeister> SoundMeister::sGet()
-	{ return spSoundMeister; }
-
 SoundMeister::SoundMeister()
-	{ spSoundMeister = this; }
+	{}
 
 SoundMeister::~SoundMeister()
 	{}
