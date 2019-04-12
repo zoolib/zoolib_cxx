@@ -6,6 +6,14 @@
 namespace ZooLib {
 namespace GameEngine {
 
+ZRef<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZRef<Rendered> iRendered)
+	{
+	iRendered = sRendered_Blush(iBGM.fBlush, iRendered);
+	iRendered = sRendered_Gain(iBGM.fGain, iRendered);
+	iRendered = sRendered_Mat(iBGM.fMat, iRendered);
+	return iRendered;
+	}
+
 // =================================================================================================
 #pragma mark - sCog_Group_WithState
 

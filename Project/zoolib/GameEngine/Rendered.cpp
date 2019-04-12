@@ -23,60 +23,58 @@ void Rendered::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered(this); }
 
 // =================================================================================================
-#pragma mark - Rendered_BlushGainMat
+#pragma mark - Rendered_Blush
 
 namespace {
 
-SafePtrStack_WithDestroyer<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
-	spSafePtrStack_BlushGainMat;
+SafePtrStack_WithDestroyer<Rendered_Blush,SafePtrStackLink_Rendered_Blush>
+	spSafePtrStack_Blush;
 
 } // anonymous namespace
 
-Rendered_BlushGainMat::Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat,
-	const ZRef<Rendered>& iRendered)
-:	fBlushGainMat(iBlushGainMat)
+Rendered_Blush::Rendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered)
+:	fBlush(iBlush)
 ,	fRendered(iRendered)
 	{}
 
-void Rendered_BlushGainMat::Finalize()
+void Rendered_Blush::Finalize()
 	{
 	bool finalized = this->FinishFinalize();
 	ZAssert(finalized);
 	ZAssert(not this->IsReferenced());
 	fRendered.Clear();
 	
-	spSafePtrStack_BlushGainMat.Push(this);
+	spSafePtrStack_Blush.Push(this);
 	}
 
-void Rendered_BlushGainMat::Accept_Rendered(Visitor_Rendered& iVisitor)
-	{ iVisitor.Visit_Rendered_BlushGainMat(this); }
+void Rendered_Blush::Accept_Rendered(Visitor_Rendered& iVisitor)
+	{ iVisitor.Visit_Rendered_Blush(this); }
 
-const BlushGainMat& Rendered_BlushGainMat::GetBlushGainMat()
-	{ return fBlushGainMat; }
+const Blush& Rendered_Blush::GetBlush()
+	{ return fBlush; }
 
-const ZRef<Rendered>& Rendered_BlushGainMat::GetRendered()
+const ZRef<Rendered>& Rendered_Blush::GetRendered()
 	{ return fRendered; }
 
-BlushMat Rendered_BlushGainMat::GetBlushMat()
-	{ return sBlushMat(fBlushGainMat); }
-
-ZRef<Rendered_BlushGainMat> Rendered_BlushGainMat::spMake(const BlushGainMat& iBlushGainMat,
-	const ZRef<Rendered>& iRendered)
+ZRef<Rendered_Blush> Rendered_Blush::spMake(const Blush& iBlush, const ZRef<Rendered>& iRendered)
 	{
-	if (Rendered_BlushGainMat* result =
-		spSafePtrStack_BlushGainMat.PopIfNotEmpty<Rendered_BlushGainMat>())
+	if (Rendered_Blush* result = spSafePtrStack_Blush.PopIfNotEmpty<Rendered_Blush>())
 		{
-		result->fBlushGainMat = iBlushGainMat;
+		result->fBlush = iBlush;
 		result->fRendered = iRendered;
 		return result;
 		}
 
-	return new Rendered_BlushGainMat(iBlushGainMat, iRendered);
+	return new Rendered_Blush(iBlush, iRendered);
 	}
 
-ZRef<Rendered> sRendered_BlushGainMat(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
-	{ return Rendered_BlushGainMat::spMake(iBlushGainMat, iRendered); }
+ZRef<Rendered> sRendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered)
+	{
+	if (iBlush == sRGBA(1,1,1,1))
+		return iRendered;
+
+	return Rendered_Blush::spMake(iBlush, iRendered);
+	}
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
@@ -123,6 +121,60 @@ const Cel& Rendered_Cel::GetCel()
 
 ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel)
 	{ return new Rendered_Cel(iCel); }
+
+// =================================================================================================
+#pragma mark - Rendered_Gain
+
+namespace {
+
+SafePtrStack_WithDestroyer<Rendered_Gain,SafePtrStackLink_Rendered_Gain>
+	spSafePtrStack_Gain;
+
+} // anonymous namespace
+
+Rendered_Gain::Rendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered)
+:	fGain(iGain)
+,	fRendered(iRendered)
+	{}
+
+void Rendered_Gain::Finalize()
+	{
+	bool finalized = this->FinishFinalize();
+	ZAssert(finalized);
+	ZAssert(not this->IsReferenced());
+	fRendered.Clear();
+
+	spSafePtrStack_Gain.Push(this);
+	}
+
+void Rendered_Gain::Accept_Rendered(Visitor_Rendered& iVisitor)
+	{ iVisitor.Visit_Rendered_Gain(this); }
+
+const Gain& Rendered_Gain::GetGain()
+	{ return fGain; }
+
+const ZRef<Rendered>& Rendered_Gain::GetRendered()
+	{ return fRendered; }
+
+ZRef<Rendered_Gain> Rendered_Gain::spMake(const Gain& iGain, const ZRef<Rendered>& iRendered)
+	{
+	if (Rendered_Gain* result = spSafePtrStack_Gain.PopIfNotEmpty<Rendered_Gain>())
+		{
+		result->fGain = iGain;
+		result->fRendered = iRendered;
+		return result;
+		}
+
+	return new Rendered_Gain(iGain, iRendered);
+	}
+
+ZRef<Rendered> sRendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered)
+	{
+	if (iGain.fL == 1 && iGain.fR == 1)
+		return iRendered;
+
+	return Rendered_Gain::spMake(iGain, iRendered);
+	}
 
 // =================================================================================================
 #pragma mark - Rendered_Group
@@ -189,7 +241,57 @@ ZRef<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth)
 	{ return new Rendered_Line(iP0, iP1, iWidth); }
 
 ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth)
-	{ return sRendered_BlushGainMat(iRGBA, sRendered_Line(iP0, iP1, iWidth)); }
+	{ return sRendered_Blush(iRGBA, sRendered_Line(iP0, iP1, iWidth)); }
+
+// =================================================================================================
+#pragma mark - Rendered_Mat
+
+namespace {
+
+SafePtrStack_WithDestroyer<Rendered_Mat,SafePtrStackLink_Rendered_Mat>
+	spSafePtrStack_Mat;
+
+} // anonymous namespace
+
+Rendered_Mat::Rendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered)
+:	fMat(iMat)
+,	fRendered(iRendered)
+	{}
+
+void Rendered_Mat::Finalize()
+	{
+	bool finalized = this->FinishFinalize();
+	ZAssert(finalized);
+	ZAssert(not this->IsReferenced());
+	fRendered.Clear();
+
+	spSafePtrStack_Mat.Push(this);
+	}
+
+void Rendered_Mat::Accept_Rendered(Visitor_Rendered& iVisitor)
+	{ iVisitor.Visit_Rendered_Mat(this); }
+
+const Mat& Rendered_Mat::GetMat()
+	{ return fMat; }
+
+const ZRef<Rendered>& Rendered_Mat::GetRendered()
+	{ return fRendered; }
+
+ZRef<Rendered_Mat> Rendered_Mat::spMake(const Mat& iMat, const ZRef<Rendered>& iRendered)
+	{
+	if (Rendered_Mat* result = spSafePtrStack_Mat.PopIfNotEmpty<Rendered_Mat>())
+		{
+		result->fMat = iMat;
+		result->fRendered = iRendered;
+		return result;
+		}
+
+	return new Rendered_Mat(iMat, iRendered);
+	}
+
+ZRef<Rendered> sRendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered)
+	{ return Rendered_Mat::spMake(iMat, iRendered); }
+
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
@@ -210,7 +312,7 @@ ZRef<Rendered> sRendered_Rect(const GRect& iBounds)
 	{ return new Rendered_Rect(iBounds); }
 
 ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds)
-	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Rect(iBounds)); }
+	{ return sRendered_Blush(iRGBA, new Rendered_Rect(iBounds)); }
 
 // =================================================================================================
 #pragma mark - Rendered_RightAngleSegment
@@ -268,7 +370,7 @@ ZRef<Rendered> sRendered_String(const FontSpec& iFontSpec, const string8& iStrin
 	{ return new Rendered_String(iFontSpec, iString); }
 
 ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const FontSpec& iFontSpec, const string8& iString)
-	{ return sRendered_BlushGainMat(iRGBA, sRendered_String(iFontSpec, iString)); }
+	{ return sRendered_Blush(iRGBA, sRendered_String(iFontSpec, iString)); }
 
 // =================================================================================================
 #pragma mark - Rendered_Texture
@@ -344,7 +446,7 @@ ZRef<Rendered> sRendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GP
 
 ZRef<Rendered> sRendered_Triangle(
 	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
-	{ return sRendered_BlushGainMat(iRGBA, sRendered_Triangle(iP0, iP1, iP2)); }
+	{ return sRendered_Blush(iRGBA, sRendered_Triangle(iP0, iP1, iP2)); }
 
 // =================================================================================================
 #pragma mark - Visitor_Rendered
@@ -352,9 +454,8 @@ ZRef<Rendered> sRendered_Triangle(
 void Visitor_Rendered::Visit_Rendered(const ZRef<Rendered>& iRendered)
 	{ this->Visit(iRendered); }
 
-void Visitor_Rendered::Visit_Rendered_BlushGainMat(
-	const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat)
-	{ this->Visit_Rendered(iRendered_BlushGainMat); }
+void Visitor_Rendered::Visit_Rendered_Blush(const ZRef<Rendered_Blush>& iRendered_Blush)
+	{ this->Visit_Rendered(iRendered_Blush); }
 
 void Visitor_Rendered::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
 	{ this->Visit_Rendered(iRendered_Buffer); }
@@ -362,11 +463,17 @@ void Visitor_Rendered::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRende
 void Visitor_Rendered::Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
 	{ this->Visit_Rendered(iRendered_Cel); }
 
+void Visitor_Rendered::Visit_Rendered_Gain(const ZRef<Rendered_Gain>& iRendered_Gain)
+	{ this->Visit_Rendered(iRendered_Gain); }
+
 void Visitor_Rendered::Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group)
 	{ this->Visit_Rendered(iRendered_Group); }
 
 void Visitor_Rendered::Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line)
 	{ this->Visit_Rendered(iRendered_Line); }
+
+void Visitor_Rendered::Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat)
+	{ this->Visit_Rendered(iRendered_Mat); }
 
 void Visitor_Rendered::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect)
 	{ this->Visit_Rendered(iRendered_Rect); }
@@ -391,7 +498,7 @@ void Visitor_Rendered::Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iR
 #pragma mark -
 
 ZRef<Rendered> sFrontmost(const ZRef<Rendered>& iRendered)
-	{ return sRendered_BlushGainMat(sTranslate3Z<Rat>(128), iRendered); }
+	{ return sRendered_Mat(sTranslate3Z<Rat>(128), iRendered); }
 
 } // namespace GameEngine
 } // namespace ZooLib

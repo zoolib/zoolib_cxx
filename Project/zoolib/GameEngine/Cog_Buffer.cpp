@@ -2,6 +2,7 @@
 
 #include "zoolib/Compat_algorithm.h" // SaveSetRestore
 
+#include "zoolib/GameEngine/Cog_Group.h" // For sRendered_BlushGainMat
 #include "zoolib/GameEngine/Rendered.h"
 
 namespace ZooLib {

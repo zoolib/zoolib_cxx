@@ -37,7 +37,7 @@ ZRef<Rendered> sFinderHider(
 	theGroup->Append(iRendered);
 
 	// Bring it fairly far forward, but well behind frontmost (which is at 128)
-	theGroup->Append(sRendered_BlushGainMat(sTranslate3Z<Rat>(20), finderHider));
+	theGroup->Append(sRendered_Mat(sTranslate3Z<Rat>(20), finderHider));
 
 	return theGroup;
 	}

@@ -22,7 +22,9 @@ namespace { // anonymous
 // rect, sound, texture, buffer). We don't flatten the elements of a buffer up into the root.
 
 class Visitor_Preprocess
-:	public virtual Visitor_Rendered_AccumulateBlushGainMat
+:	public virtual Visitor_Rendered_AccumulateBlush
+,	public virtual Visitor_Rendered_AccumulateGain
+,	public virtual Visitor_Rendered_AccumulateMat
 ,	public virtual Visitor_Rendered_DecomposeCel
 ,	public virtual Visitor_Rendered_DecomposeGroup
 ,	public virtual Visitor_Rendered_DecomposeString
@@ -41,7 +43,7 @@ public:
 	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered)
 		{
 		// Dispatch the default behavior.
-		this->pInsertIntoMap(iRendered.Get());
+		this->pInsertIntoMap(iRendered);
 		}
 
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
@@ -59,7 +61,7 @@ public:
 			theRendered =
 				sRendered_Buffer(theWidth, theHeight, iRendered_Buffer->GetFill(), theRendered);
 
-			this->pInsertIntoMap(theRendered.Get());
+			this->pInsertIntoMap(theRendered);
 			}
 		}
 
@@ -68,11 +70,11 @@ public:
 		// We discard textures if they would not intersect the destination rectangle. This
 		// is an optimization at the resource-management level. Drawing the texture wouldn't
 		// generally be costly, but getting the data into texture form is.
-		const CVec3 newLT = sMat(fBlushGainMat) * sCVec3<Rat>();
+		const CVec3 newLT = fMat * sCVec3<Rat>();
 
 		const GPoint orgRB = WH(iRendered_Texture->GetBounds());
 
-		const CVec3 newRB = sMat(fBlushGainMat) * sCVec3(X(orgRB), Y(orgRB), 0);
+		const CVec3 newRB = fMat * sCVec3(X(orgRB), Y(orgRB), 0);
 
 		const GRect visibleBounds = sRect<GRect>(
 			sMin(X(newLT), X(newRB)),
@@ -83,7 +85,7 @@ public:
 		const GRect intersection = visibleBounds & fScreenBounds;
 
 		if (sNotEmpty(intersection))
-			this->pInsertIntoMap(iRendered_Texture.Get());
+			this->pInsertIntoMap(iRendered_Texture);
 		}
 
 // Our protocol
@@ -97,15 +99,21 @@ public:
 		return theGroup;
 		}
 
-	void pInsertIntoMap(Rendered* iRendered)
+	void pInsertIntoMap(ZRef<Rendered> iRendered)
 		{
 		// We're passed a pointer, so there's one less refcount manipulation happening.
 		// We could/should use std::move.
 
+		// Apply accumulated BGM.
+		iRendered = sRendered_Blush(fBlush, iRendered);
+		iRendered = sRendered_Gain(fGain, iRendered);
+		iRendered = sRendered_Mat(fMat, iRendered);
+
 		// Push (0,0,0) through our current accumulated
 		// transformation, and take the resulting Z coordinate.
-		const Rat theZ = (sMat(fBlushGainMat) * CVec3())[2];
-		fMap.insert(std::make_pair(theZ, sRendered_BlushGainMat(fBlushGainMat, iRendered)));
+		const Rat theZ = (fMat * CVec3())[2];
+
+		fMap.insert(std::make_pair(theZ, iRendered));
 		}
 
 private:

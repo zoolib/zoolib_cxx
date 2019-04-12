@@ -21,7 +21,8 @@ Rat spSquared(const Rat iRat)
 	{ return iRat * iRat; }
 
 class Visitor_GatherSound
-:	public virtual Visitor_Rendered_AccumulateBlushGainMat
+:	public virtual Visitor_Rendered_AccumulateGain
+,	public virtual Visitor_Rendered_AccumulateMat
 	{
 public:
 	Visitor_GatherSound(
@@ -42,7 +43,7 @@ public:
 		{
 		if (ZRef<Sound> theSound = iRendered_Sound->GetSound())
 			{
-			const Rat thePos = X(sMat(fBlushGainMat) * CVec3());
+			const Rat thePos = X(fMat * CVec3());
 			
 			const Rat distLSquared = fListenerDSquared + spSquared(fListenerL - thePos);
 
@@ -50,7 +51,7 @@ public:
 			
 			const Gain theGain(fListenerDSquared / distLSquared, fListenerDSquared / distRSquared);
 
-			theSound->fGain = fBlushGainMat.fGain * theGain;
+			theSound->fGain = fGain * theGain;
 
 			fSounds.push_back(theSound);
 			}
@@ -69,15 +70,16 @@ private:
 
 class Visitor_Shader
 :	public virtual Visitor_Draw_GL_Shader
-,	public virtual Visitor_GatherSound
+,	public virtual Visitor_Rendered_AccumulateBlush
+,	public virtual Visitor_GatherSound // also does AccumulateGain and AccumulateMat
 ,	public virtual Visitor_Rendered_DecomposeGroup
 ,	public virtual Visitor_Rendered_LineToRect
 	{
 public:
-	Visitor_Shader(const BlushGainMat& iBlushGainMat,
+	Visitor_Shader(const Mat& iMat,
 		bool iShowBounds, bool iShowOrigin,
 		const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
-	:	Visitor_Rendered_AccumulateBlushGainMat(iBlushGainMat)
+	:	Visitor_Rendered_AccumulateMat(iMat)
 	,	Visitor_Draw_GL_Shader(iShowBounds, iShowOrigin)
 	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
 		{}

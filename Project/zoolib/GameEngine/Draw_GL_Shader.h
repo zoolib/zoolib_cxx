@@ -15,7 +15,8 @@ namespace GameEngine {
 #pragma mark -
 
 class Visitor_Draw_GL_Shader
-:	public virtual Visitor_Rendered_AccumulateBlushGainMat
+:	public virtual Visitor_Rendered_AccumulateBlush
+,	public virtual Visitor_Rendered_AccumulateMat
 	{
 public:
 	Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigin);

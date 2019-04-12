@@ -11,23 +11,53 @@ namespace GameEngine {
 using std::vector;
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_AccumulateBlushGainMat
+#pragma mark - Visitor_Rendered_AccumulateBlush
 
-Visitor_Rendered_AccumulateBlushGainMat::Visitor_Rendered_AccumulateBlushGainMat()
+Visitor_Rendered_AccumulateBlush::Visitor_Rendered_AccumulateBlush()
+:	fBlush(1)
 	{}
 
-Visitor_Rendered_AccumulateBlushGainMat::Visitor_Rendered_AccumulateBlushGainMat(
-	const BlushGainMat& iBlushGainMat)
-:	fBlushGainMat(iBlushGainMat)
-	{}
-
-void Visitor_Rendered_AccumulateBlushGainMat::Visit_Rendered_BlushGainMat(
-	const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat)
+void Visitor_Rendered_AccumulateBlush::Visit_Rendered_Blush(
+	const ZRef<Rendered_Blush>& iRendered_Blush)
 	{
-	SaveSetRestore<BlushGainMat> theSSR(
-		fBlushGainMat, fBlushGainMat * iRendered_BlushGainMat->GetBlushGainMat());
+	SaveSetRestore<Blush> theSSR(fBlush, fBlush * iRendered_Blush->GetBlush());
 
-	if (ZRef<Rendered> theRendered = iRendered_BlushGainMat->GetRendered())
+	if (ZRef<Rendered> theRendered = iRendered_Blush->GetRendered())
+		theRendered->Accept_Rendered(*this);
+	}
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_AccumulateGain
+
+Visitor_Rendered_AccumulateGain::Visitor_Rendered_AccumulateGain()
+:	fGain(1)
+	{}
+
+void Visitor_Rendered_AccumulateGain::Visit_Rendered_Gain(
+	const ZRef<Rendered_Gain>& iRendered_Gain)
+	{
+	SaveSetRestore<Gain> theSSR(fGain, fGain * iRendered_Gain->GetGain());
+
+	if (ZRef<Rendered> theRendered = iRendered_Gain->GetRendered())
+		theRendered->Accept_Rendered(*this);
+	}
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_AccumulateMat
+
+Visitor_Rendered_AccumulateMat::Visitor_Rendered_AccumulateMat()
+:	fMat(1)
+	{}
+
+Visitor_Rendered_AccumulateMat::Visitor_Rendered_AccumulateMat(const Mat& iMat)
+:	fMat(iMat)
+	{}
+
+void Visitor_Rendered_AccumulateMat::Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat)
+	{
+	SaveSetRestore<Mat> theSSR(fMat, fMat * iRendered_Mat->GetMat());
+
+	if (ZRef<Rendered> theRendered = iRendered_Mat->GetRendered())
 		theRendered->Accept_Rendered(*this);
 	}
 
@@ -59,9 +89,8 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		RB(theBounds) -= RB(theTBM.fInset);
 
 		ZRef<Rendered> theRendered = sRendered_Texture(theTBM.fTexture, theBounds);
-		theRendered = sRendered_BlushGainMat(
-			theCel.fBlushMat * theTBM.fMat,
-			theRendered);
+		theRendered = sRendered_Blush(theCel.fBlushMat.fBlush, theRendered);
+		theRendered = sRendered_Mat(theCel.fBlushMat.fMat * theTBM.fMat, theRendered);
 		sAccept(theRendered, *this);
 		}
 
@@ -148,7 +177,7 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 	theRot[3][3] = 1;
 	theMat *= theRot;
 
-	sAccept(sRendered_BlushGainMat(theMat, sRendered_Rect(theRect)), *this);
+	sAccept(sRendered_Mat(theMat, sRendered_Rect(theRect)), *this);
 	}
 
 } // namespace GameEngine

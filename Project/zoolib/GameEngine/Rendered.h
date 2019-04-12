@@ -34,20 +34,20 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - Rendered_BlushGainMat
+#pragma mark - Rendered_Blush
 
-class Rendered_BlushGainMat;
+class Rendered_Blush;
 
-class SafePtrStackLink_Rendered_BlushGainMat
-:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+class SafePtrStackLink_Rendered_Blush
+:	public SafePtrStackLink<Rendered_Blush,SafePtrStackLink_Rendered_Blush>
 	{};
 
-class Rendered_BlushGainMat
+class Rendered_Blush
 :	public Rendered
-,	public SafePtrStackLink_Rendered_BlushGainMat
+,	public SafePtrStackLink_Rendered_Blush
 	{
 protected:
-	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+	Rendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -57,22 +57,18 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const BlushGainMat& GetBlushGainMat();
+	const Blush& GetBlush();
 	const ZRef<Rendered>& GetRendered();
 
-	BlushMat GetBlushMat();
-
 	static
-	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
-		const ZRef<Rendered>& iRendered);
+	ZRef<Rendered_Blush> spMake(const Blush& iBlush, const ZRef<Rendered>& iRendered);
 
 private:
-	BlushGainMat fBlushGainMat;
+	Blush fBlush;
 	ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_BlushGainMat(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+ZRef<Rendered> sRendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
@@ -124,20 +120,20 @@ private:
 ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel);
 
 // =================================================================================================
-#pragma mark - Rendered_BlushGainMat
+#pragma mark - Rendered_Gain
 
-class Rendered_BlushGainMat;
+class Rendered_Gain;
 
-class SafePtrStackLink_Rendered_BlushGainMat
-:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+class SafePtrStackLink_Rendered_Gain
+:	public SafePtrStackLink<Rendered_Gain,SafePtrStackLink_Rendered_Gain>
 	{};
 
-class Rendered_BlushGainMat
+class Rendered_Gain
 :	public Rendered
-,	public SafePtrStackLink_Rendered_BlushGainMat
+,	public SafePtrStackLink_Rendered_Gain
 	{
 protected:
-	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+	Rendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -147,22 +143,18 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const BlushGainMat& GetBlushGainMat();
+	const Gain& GetGain();
 	const ZRef<Rendered>& GetRendered();
 
-	BlushMat GetBlushMat();
-
 	static
-	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
-		const ZRef<Rendered>& iRendered);
+	ZRef<Rendered_Gain> spMake(const Gain& iGain, const ZRef<Rendered>& iRendered);
 
 private:
-	BlushGainMat fBlushGainMat;
+	Gain fGain;
 	ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_BlushGainMat(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+ZRef<Rendered> sRendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Group
@@ -225,20 +217,20 @@ ZRef<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 
 // =================================================================================================
-#pragma mark - Rendered_BlushGainMat
+#pragma mark - Rendered_Mat
 
-class Rendered_BlushGainMat;
+class Rendered_Mat;
 
-class SafePtrStackLink_Rendered_BlushGainMat
-:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+class SafePtrStackLink_Rendered_Mat
+:	public SafePtrStackLink<Rendered_Mat,SafePtrStackLink_Rendered_Mat>
 	{};
 
-class Rendered_BlushGainMat
+class Rendered_Mat
 :	public Rendered
-,	public SafePtrStackLink_Rendered_BlushGainMat
+,	public SafePtrStackLink_Rendered_Mat
 	{
 protected:
-	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+	Rendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -248,22 +240,20 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const BlushGainMat& GetBlushGainMat();
+	const Mat& GetMat();
 	const ZRef<Rendered>& GetRendered();
 
 	BlushMat GetBlushMat();
 
 	static
-	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
-		const ZRef<Rendered>& iRendered);
+	ZRef<Rendered_Mat> spMake(const Mat& iMat, const ZRef<Rendered>& iRendered);
 
 private:
-	BlushGainMat fBlushGainMat;
+	Mat fMat;
 	ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_BlushGainMat(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+ZRef<Rendered> sRendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
@@ -425,12 +415,13 @@ class Visitor_Rendered
 public:
 	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered);
 
-	virtual void Visit_Rendered_BlushGainMat(
-		const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat);
+	virtual void Visit_Rendered_Blush(const ZRef<Rendered_Blush>& iRendered_Blush) = 0;
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
 	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel);
+	virtual void Visit_Rendered_Gain(const ZRef<Rendered_Gain>& iRendered_Gain) = 0;
 	virtual void Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group);
 	virtual void Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line);
+	virtual void Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat) = 0;
 	virtual void Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect);
 	virtual void Visit_Rendered_RightAngleSegment(
 		const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);

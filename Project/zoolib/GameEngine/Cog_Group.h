@@ -16,6 +16,8 @@ Cog sCog_Group_Loop(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
 Cog sCog_Group_Terminate(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
 Cog sCog_Group_Continue(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
 
+ZRef<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZRef<Rendered> iRendered);
+
 } // namespace GameEngine
 } // namespace ZooLib
 

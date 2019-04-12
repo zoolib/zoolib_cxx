@@ -10,20 +10,49 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_AccumulateBlushGainMat
+#pragma mark - Visitor_Rendered_AccumulateBlush
 
-class Visitor_Rendered_AccumulateBlushGainMat
+class Visitor_Rendered_AccumulateBlush
 :	public virtual Visitor_Rendered
 	{
 public:
-	Visitor_Rendered_AccumulateBlushGainMat();
-	Visitor_Rendered_AccumulateBlushGainMat(const BlushGainMat& iBlushGainMat);
+	Visitor_Rendered_AccumulateBlush();
 
-	virtual void Visit_Rendered_BlushGainMat(
-		const ZRef<Rendered_BlushGainMat>& iRendered_BlushGainMat);
+	virtual void Visit_Rendered_Blush(const ZRef<Rendered_Blush>& iRendered_Blush);
 
 protected:
-	BlushGainMat fBlushGainMat;
+	Blush fBlush;
+	};
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_AccumulateGain
+
+class Visitor_Rendered_AccumulateGain
+:	public virtual Visitor_Rendered
+	{
+public:
+	Visitor_Rendered_AccumulateGain();
+
+	virtual void Visit_Rendered_Gain(const ZRef<Rendered_Gain>& iRendered_Gain);
+
+protected:
+	Gain fGain;
+	};
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_AccumulateMat
+
+class Visitor_Rendered_AccumulateMat
+:	public virtual Visitor_Rendered
+	{
+public:
+	Visitor_Rendered_AccumulateMat();
+	Visitor_Rendered_AccumulateMat(const Mat& iMat);
+
+	virtual void Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat);
+
+protected:
+	Mat fMat;
 	};
 
 // =================================================================================================
