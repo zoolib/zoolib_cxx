@@ -39,10 +39,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZMACRO_IOS
-	#include <OpenGLES/ES1/gl.h>
+//	#include <OpenGLES/ES1/gl.h>
 	#include <OpenGLES/ES2/gl.h>
 #elif defined(__ANDROID__)
-	#include <GLES/gl.h>
+//	#include <GLES/gl.h>
 	#include <GLES2/gl2.h>
 #else
 	#include <OpenGL/gl.h>

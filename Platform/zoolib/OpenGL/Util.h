@@ -37,16 +37,16 @@ private:
 // =================================================================================================
 #pragma mark - SaveSetRestore_EnableClientState
 
-class SaveSetRestore_EnableClientState
-	{
-public:
-	SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable);
-	~SaveSetRestore_EnableClientState();
-
-private:
-	GLenum fEnum;
-	bool fPrior;
-	};
+//class SaveSetRestore_EnableClientState
+//	{
+//public:
+//	SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable);
+//	~SaveSetRestore_EnableClientState();
+//
+//private:
+//	GLenum fEnum;
+//	bool fPrior;
+//	};
 
 // =================================================================================================
 #pragma mark - SaveSetRestore_ActiveTexture
@@ -71,8 +71,15 @@ public:
 	~SaveSetRestore_BlendFunc();
 
 private:
-	GLenum fPrior_sfactor;
-	GLenum fPrior_dfactor;
+	#if defined(GL_BLEND_SRC_RGB)
+		GLint fPrior_src_rgb;
+		GLint fPrior_dest_rgb;
+		GLint fPrior_src_alpha;
+		GLint fPrior_dest_alpha;
+	#else
+		GLint fPrior_sfactor;
+		GLint fPrior_dfactor;
+	#endif
 	};
 
 // =================================================================================================

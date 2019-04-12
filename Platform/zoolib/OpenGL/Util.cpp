@@ -39,23 +39,23 @@ SaveSetRestore_Enable::~SaveSetRestore_Enable()
 // =================================================================================================
 #pragma mark - SaveSaveSetRestore_EnableClientState
 
-SaveSetRestore_EnableClientState::SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable)
-:	fEnum(iEnum)
-,	fPrior(::glIsEnabled(iEnum))
-	{
-	if (iEnable)
-		::glEnableClientState(fEnum);
-	else
-		::glDisableClientState(fEnum);
-	}
-
-SaveSetRestore_EnableClientState::~SaveSetRestore_EnableClientState()
-	{
-	if (fPrior)
-		::glEnableClientState(fEnum);
-	else
-		::glDisableClientState(fEnum);
-	}
+//SaveSetRestore_EnableClientState::SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable)
+//:	fEnum(iEnum)
+//,	fPrior(::glIsEnabled(iEnum))
+//	{
+//	if (iEnable)
+//		::glEnableClientState(fEnum);
+//	else
+//		::glDisableClientState(fEnum);
+//	}
+//
+//SaveSetRestore_EnableClientState::~SaveSetRestore_EnableClientState()
+//	{
+//	if (fPrior)
+//		::glEnableClientState(fEnum);
+//	else
+//		::glDisableClientState(fEnum);
+//	}
 
 // =================================================================================================
 #pragma mark - SaveSetRestore_ActiveTexture
@@ -74,13 +74,37 @@ SaveSetRestore_ActiveTexture::~SaveSetRestore_ActiveTexture()
 
 SaveSetRestore_BlendFunc::SaveSetRestore_BlendFunc(GLenum sfactor, GLenum dfactor)
 	{
-	::glGetIntegerv(GL_BLEND_SRC, (GLint*)&fPrior_sfactor);
-	::glGetIntegerv(GL_BLEND_DST, (GLint*)&fPrior_dfactor);
+	#if defined(GL_BLEND_SRC_RGB)
+
+		::glGetIntegerv(GL_BLEND_SRC_RGB, &fPrior_src_rgb);
+		::glGetIntegerv(GL_BLEND_DST_RGB, &fPrior_dest_rgb);
+		::glGetIntegerv(GL_BLEND_SRC_ALPHA, &fPrior_src_alpha);
+		::glGetIntegerv(GL_BLEND_DST_ALPHA, &fPrior_dest_alpha);
+
+	#else
+
+		::glGetIntegerv(GL_BLEND_SRC, &fPrior_sfactor);
+		::glGetIntegerv(GL_BLEND_DST, &fPrior_dfactor);
+
+	#endif
+
 	::glBlendFunc(sfactor, dfactor);
 	}
 
+
+
 SaveSetRestore_BlendFunc::~SaveSetRestore_BlendFunc()
-	{ ::glBlendFunc(fPrior_sfactor, fPrior_dfactor); }
+	{
+	#if defined(GL_BLEND_SRC_RGB)
+
+		::glBlendFuncSeparate(fPrior_src_rgb, fPrior_dest_rgb, fPrior_src_alpha, fPrior_dest_alpha);
+
+	#else
+
+		::glBlendFunc(fPrior_sfactor, fPrior_dfactor);
+
+	#endif
+	}
 
 // =================================================================================================
 #pragma mark - SaveSetRestore_BlendEquation
