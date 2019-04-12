@@ -114,12 +114,12 @@ Game::Game(const FileSpec& iFS,
 ,	fAccumulated(0)
 	{
 	fAssetCatalog = new AssetCatalog;
-	fFontCatalog = new FontCatalog;
-
-	sPopulate(fAssetCatalog, fFontCatalog,
+	sPopulate(fAssetCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
 
 	Map theRootMap = spLoadData(iFS, iPreferProcessedArt);
+
+	fFontCatalog = sMakeFontCatalog(iFS.Child("fonts"));
 
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 

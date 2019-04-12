@@ -428,58 +428,34 @@ void spDrawTexture_AlphaOnly(const Blush& iBlush, const Mat& iMat,
 
 	::glUniformMatrix4fv(theContext->fUniform_AlphaOnly_Projection,
 		1, false, &iMat.fE[0][0]);
-//
-//	vector<GPoint> texCoords, vertices;
-//	GLuint theTextureID = GetStuff(iString, texCoords, vertices);
-//
+
+	const GRect insetBounds = iBounds;//sInsetted(iBounds, 0.5, 0.5);
+	GPoint texCoords[4];
+	texCoords[0] = LT(insetBounds) / iTextureSize;
+	texCoords[1] = RT(insetBounds) / iTextureSize;
+	texCoords[2] = LB(insetBounds) / iTextureSize;
+	texCoords[3] = RB(insetBounds) / iTextureSize;
+
+	::glEnableVertexAttribArray(theContext->fAttribute_AlphaOnly_Tex);
+	::glVertexAttribPointer(theContext->fAttribute_AlphaOnly_Tex,
+		2, GL_FLOAT, GL_FALSE, 0, texCoords);
+
+	GPoint vertices[4];
+	vertices[0] = sPoint<GPoint>(0,0);
+	vertices[1] = sPoint<GPoint>(W(iBounds),0);
+	vertices[2] = sPoint<GPoint>(0, H(iBounds));
+	vertices[3] = WH(iBounds);
+
+	::glEnableVertexAttribArray(theContext->fAttribute_AlphaOnly_Pos);
+ 	::glVertexAttribPointer(theContext->fAttribute_AlphaOnly_Pos,
+		2, GL_FLOAT, GL_FALSE, 0, vertices);
+
 	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
 
 	::glUniform1i(theContext->fUniform_AlphaOnly_Texture, 0);
 
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-//	GPoint texCoords[4];
-//	texCoords[0] = LT(iBounds) / iTextureSize;
-//	texCoords[1] = RT(insetBounds) / iTextureSize;
-//	texCoords[2] = LB(insetBounds) / iTextureSize;
-//	texCoords[3] = RB(insetBounds) / iTextureSize;
-//
-//	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Tex);
-//	::glVertexAttribPointer(theContext->fAttribute_Textured_Tex,
-//		2, GL_FLOAT, GL_FALSE, 0, texCoords);
-//
-//	GPoint vertices[4];
-//	vertices[0] = sPoint<GPoint>(0,0);
-//	vertices[1] = sPoint<GPoint>(W(iBounds),0);
-//	vertices[2] = sPoint<GPoint>(0, H(iBounds));
-//	vertices[3] = WH(iBounds);
-//
-//	::glEnableVertexAttribArray(theContext->fAttribute_Textured_Pos);
-// 	::glVertexAttribPointer(theContext->fAttribute_Textured_Pos,
-//		2, GL_FLOAT, GL_FALSE, 0, vertices);
-//
-//	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
-//	SaveSetRestore_BindTexture_2D ssr_BindTexture_2D(iTextureID);
-//
-//	::glUniform1i(theContext->fUniform_Textured_Texture, 0);
-//
-//	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//
-//
-//	::glEnableVertexAttribArray(theContext->fAttribute_String_Tex);
-//	::glEnableVertexAttribArray(theContext->fAttribute_String_Pos);
-//
-//	for (size_t xx = 0; xx < texCoords.size(); xx += 4)
-//		{
-//		::glVertexAttribPointer(theContext->fAttribute_String_Tex,
-//			2, GL_FLOAT, GL_FALSE, 0, &texCoords[xx]);
-//
-//		::glVertexAttribPointer(theContext->fAttribute_String_Pos,
-//			2, GL_FLOAT, GL_FALSE, 0, &vertices[xx]);
-//
-//		::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//		}
+	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
 void spDrawTexture(const Blush& iBlush, const Mat& iMat,
@@ -499,7 +475,7 @@ void spDrawTexture(const Blush& iBlush, const Mat& iMat,
 	::glUniformMatrix4fv(theContext->fUniform_Textured_Projection,
 		1, false, &iMat.fE[0][0]);
 
-	const GRect insetBounds = sInsetted(iBounds, 0.5, 0.5);
+	const GRect insetBounds = iBounds; // sInsetted(iBounds, 0.5, 0.5);
 	GPoint texCoords[4];
 	texCoords[0] = LT(insetBounds) / iTextureSize;
 	texCoords[1] = RT(insetBounds) / iTextureSize;
@@ -658,15 +634,17 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 		theTexture_GL->Get(theTextureID, theTextureSize);
 		if (theTexture_GL->GetIsAlphaOnly())
 			{
-//			spDrawTexture_AlphaOnly(theTextureID, sPoint<GPoint>(theTextureSize),
-//				iRendered_Texture->GetBounds(),
-//				fBlush, fMat);
+			spDrawTexture_AlphaOnly(fBlush, fMat,
+				theTextureID, sPoint<GPoint>(theTextureSize),
+				iRendered_Texture->GetBounds());
 			}
 		else
 			{
 			spDrawTexture(fBlush, fMat,
 				theTextureID, sPoint<GPoint>(theTextureSize),
 				iRendered_Texture->GetBounds());
+			}
+			{
 
 			if (fShowBounds)
 				{

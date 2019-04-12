@@ -163,7 +163,6 @@ void spInstall_Art(
 
 void sPopulate(
 	const ZRef<AssetCatalog>& iAC,
-	const ZRef<FontCatalog>& iFC,
 	const FileSpec& iRoot,
 	const ZRef<Callable_TextureFromPixmap>& iTFP,
 	bool iPreferProcessedArt, bool iPreferSmallArt)

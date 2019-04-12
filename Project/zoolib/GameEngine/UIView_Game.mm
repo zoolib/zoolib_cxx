@@ -195,6 +195,16 @@ const CGFloat spWidth_Pixels()
 	fViewRenderbuffer = 0;
 	}
 
+- (void)ensureIndependentContextExistsForThisThread
+	{
+	if (not [EAGLContext currentContext])
+		{
+		EAGLContext* theContext = [[EAGLContext alloc] initWithAPI:[fContext API] sharegroup:[fContext sharegroup]];
+		[EAGLContext setCurrentContext:theContext];
+		}
+	}
+
+
 - (void)beforeDraw
 	{
 	[EAGLContext setCurrentContext:fContext];

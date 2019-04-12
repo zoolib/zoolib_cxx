@@ -1,6 +1,7 @@
 #include "zoolib/GameEngine/Visitor_Rendered_Std.h"
 
 #include "zoolib/Chan_UTF_string.h"
+#include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZMACRO_foreach.h"
@@ -172,16 +173,36 @@ Visitor_Rendered_StringToTextures::Visitor_Rendered_StringToTextures(
 void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	// Turn iRendered_String into a bunch of textures etc.
-	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
-	const string8& theString = iRendered_String->GetString();
+	if (ZRef<FontStrike> theStrike = fFontCatalog->GetFontStrike(iRendered_String->GetFontSpec()))
+		{
+		ZRef<Rendered_Group> theGroup = sRendered_Group();
 
-//	Given the FontSpec and the string, we ask the font catalog for a Texture, a list
-//	of bounding rectangles and post-draw offsets, and a list of indices.
-//	The textures in this case will be Texture_GL, with the "useOnlyAlpha flag set".
-//
-//	Then we can turn that into a suite of BGMs and Textured.
+		const string8& theString = iRendered_String->GetString();
 
+		Mat theMat(1);
+		for (string8::const_iterator iter = theString.begin(), end = theString.end();
+			/*no test*/; /*no inc*/)
+			{
+			UTF32 theCP;
+			if (not Unicode::sReadInc(iter, end, theCP))
+				break;
+
+			GRect glyphBounds;
+			GPoint glyphOffset;
+			Rat xAdvance;
+			if (ZRef<Texture> theTexture = theStrike->GetGlyphTexture(theCP,
+				glyphBounds, glyphOffset, xAdvance))
+				{
+				theGroup->Append(
+					sRendered_Mat(sTranslate3XY(X(glyphOffset), Y(glyphOffset)) * theMat,
+						sRendered_Texture(theTexture, glyphBounds)));
+
+				theMat = sTranslate3X(xAdvance) * theMat;
+				}
+			}
+
+		sAccept(theGroup, *this);
+		}
 	}
 
 } // namespace GameEngine
