@@ -68,11 +68,11 @@ public:
 		// We discard textures if they would not intersect the destination rectangle. This
 		// is an optimization at the resource-management level. Drawing the texture wouldn't
 		// generally be costly, but getting the data into texture form is.
-		const CVec3 newLT = fBlushGainMat.fMat * sCVec3<Rat>();
+		const CVec3 newLT = sMat(fBlushGainMat) * sCVec3<Rat>();
 
 		const GPoint orgRB = WH(iRendered_Texture->GetBounds());
 
-		const CVec3 newRB = fBlushGainMat.fMat * sCVec3(X(orgRB), Y(orgRB), 0);
+		const CVec3 newRB = sMat(fBlushGainMat) * sCVec3(X(orgRB), Y(orgRB), 0);
 
 		const GRect visibleBounds = sRect<GRect>(
 			sMin(X(newLT), X(newRB)),
@@ -104,7 +104,7 @@ public:
 
 		// Push (0,0,0) through our current accumulated
 		// transformation, and take the resulting Z coordinate.
-		const Rat theZ = (fBlushGainMat.fMat * CVec3())[2];
+		const Rat theZ = (sMat(fBlushGainMat) * CVec3())[2];
 		fMap.insert(std::make_pair(theZ, sRendered_BlushGainMat(fBlushGainMat, iRendered)));
 		}
 

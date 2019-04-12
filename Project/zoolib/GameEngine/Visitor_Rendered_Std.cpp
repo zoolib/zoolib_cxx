@@ -60,7 +60,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 
 		ZRef<Rendered> theRendered = sRendered_Texture(theTBM.fTexture, theBounds);
 		theRendered = sRendered_BlushGainMat(
-			BlushGainMat(theCel.fBlushMat.fBlush, theCel.fBlushMat.fMat * theTBM.fMat),
+			theCel.fBlushMat * theTBM.fMat,
 			theRendered);
 		sAccept(theRendered, *this);
 		}
@@ -68,7 +68,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 	if (fShowNameFrame)
 		{
 		// Box at origin
-		sAccept(new Rendered_Rect(ZRGBA::sWhite, sGRect(0,0,2,2)), *this);
+		sAccept(sRendered_Rect(sRGBA(1,1), sGRect(0,0,2,2)), *this);
 		
 		string8 theString8;
 		ChanW_UTF_string8(&theString8)
@@ -117,7 +117,7 @@ void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
 
 void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line)
 	{
-	ZRGBA theRGBA;
+	RGBA theRGBA;
 	GPoint theP0, theP1;
 	Rat theWidth;
 	iRendered_Line->Get(theRGBA, theP0, theP1, theWidth);
@@ -150,7 +150,7 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 	theRot[3][3] = 1;
 	theMat *= theRot;
 
-	ZRef<Rendered> theRendered = new Rendered_Rect(theRGBA, theRect);
+	ZRef<Rendered> theRendered = new Rendered_Rect(theRect);
 	theRendered = sRendered_BlushGainMat(theMat, theRendered);
 	theRendered->Accept(*this);
 	}

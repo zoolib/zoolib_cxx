@@ -12,7 +12,6 @@
 
 #include "zoolib/GameEngine/Geometry3D.h"
 #include "zoolib/GameEngine/Val.h"
-#include "zoolib/GameEngine/ZRGBA.h"
 
 #include "zoolib/ZMACRO_auto.h"
 
@@ -103,12 +102,6 @@ inline Rat& sAlpha(RGBA& iRGBA)
 
 inline Rat sAlpha(const RGBA& iRGBA)
 	{ return iRGBA[3]; }
-
-// =================================================================================================
-#pragma mark -
-
-inline RGBA sRGBA(const ZRGBA& iZ)
-	{ return sRGBA(iZ.floatRed(), iZ.floatGreen(), iZ.floatBlue(), iZ.floatAlpha()); }
 
 // =================================================================================================
 #pragma mark - Gain
@@ -251,6 +244,13 @@ struct BlushGainMat
 	,	fMat(iMat)
 		{}
 
+	BlushGainMat(const BlushMat& iBlushMat)
+	:	fBlush(iBlushMat.fBlush)
+	,	fGain(1)
+	,	fMat(iBlushMat.fMat)
+		{}
+
+
 	Blush fBlush;
 	Gain fGain;
 	Mat fMat;
@@ -283,6 +283,12 @@ inline Gain sGain(const BlushGainMat& iBlushGainMat)
 
 inline Mat sMat(const BlushGainMat& iBlushGainMat)
 	{ return iBlushGainMat.fMat; }
+
+inline Blush sBlush(const BlushMat& iBlushMat)
+	{ return iBlushMat.fBlush; }
+
+inline Mat sMat(const BlushMat& iBlushMat)
+	{ return iBlushMat.fMat; }
 
 inline BlushMat sBlushMat(const BlushGainMat& iBlushGainMat)
 	{ return BlushMat(iBlushGainMat.fBlush, iBlushGainMat.fMat); }
@@ -433,11 +439,11 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);
 // =================================================================================================
 #pragma mark - RGBA
 
-ZQ<ZRGBA> sQRGBA(const string8& iString);
+ZQ<RGBA> sQRGBA(const string8& iString);
 
-ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ);
+ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ);
 
-ZQ<ZRGBA> sQRGBA(const Any& iVal);
+ZQ<RGBA> sQRGBA(const Any& iVal);
 
 // =================================================================================================
 #pragma mark - sRandomInRange

@@ -188,12 +188,12 @@ public:
 		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
-		const BlushGainMat theAM = fTween->ValAtWrapped(iParam.fElapsed - fStartTime);
+		const BlushGainMat theBGM = fTween->ValAtWrapped(iParam.fElapsed - fStartTime);
 
 		const ZQ<Cog> newChildQ =
-			fChild->QCall(fChild, Param(iParam, InChannel(iParam.fInChannel, theAM.fMat)));
+			fChild->QCall(fChild, Param(iParam, InChannel(iParam.fInChannel, theBGM.fMat)));
 
-		theSSR.Prior()->Append(sRendered_BlushGainMat(theAM, theSSR.Current()));
+		theSSR.Prior()->Append(sRendered_BlushGainMat(theBGM, theSSR.Current()));
 		
 		if (newChildQ)
 			{

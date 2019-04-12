@@ -12,7 +12,7 @@ namespace GameEngine {
 
 static
 Cog spCogFun_Buffer(const Cog& iSelf, const Param& iParam,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild)
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild)
 	{
 	ZAssert(sIsPending(iChild));
 
@@ -22,14 +22,14 @@ Cog spCogFun_Buffer(const Cog& iSelf, const Param& iParam,
 	const ZQ<Cog> newChildQ =
 		iChild->QCall(iChild, iParam);
 
-	theSR.Prior()->Append(sRendered_Buffer(iWidth, iHeight, iRGBA, theSR.Current()));
+	theSR.Prior()->Append(sRendered_Buffer(iWidth, iHeight, iFill, theSR.Current()));
 
 	if (newChildQ)
 		{
 		if (*newChildQ == iChild)
 			return iSelf;
 		
-		return sCog_Buffer(iWidth, iHeight, iRGBA, *newChildQ);
+		return sCog_Buffer(iWidth, iHeight, iFill, *newChildQ);
 		}
 	return false;
 	}
@@ -41,17 +41,17 @@ Cog spCogCtor_Buffer(const Map& iMap)
 	{
 	int theWidth = sRat(iMap["Width"]);
 	int theHeight = sRat(iMap["Height"]);
-	ZRGBA theRGBA = sDGet(ZRGBA(0.0f, 0.0f), sQRGBA(iMap["Color"]));
+	RGBA theRGBA = sDGet(sRGBA(0, 0), sQRGBA(iMap["Color"]));
 	Cog theCog = sCog(iMap["Cog"]);
 	return sCog_Buffer(theWidth, theHeight, theRGBA, theCog);
 	}
 
-Cog sCog_Buffer(int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild)
+Cog sCog_Buffer(int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild)
 	{
 	if (sIsFinished(iChild))
 		return iChild;
 
-	return sBindR(spCallable_Buffer, iWidth, iHeight, iRGBA, iChild);
+	return sBindR(spCallable_Buffer, iWidth, iHeight, iFill, iChild);
 	}
 
 static
@@ -64,12 +64,12 @@ namespace { // anonymous
 
 Cog spCog_Buffer_Continue(
 	const ZRef<Tween_BlushGainMat>& iTween,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild,
 	double iStartTime);
 
 Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 	const ZRef<Tween_BlushGainMat>& iTween,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild,
 	double iStartTime)
 	{
 	ZAssert(sIsPending(iChild));
@@ -89,7 +89,7 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 
 		theSR.Prior()->Append(
 			sRendered_BlushGainMat(*theQ, sRendered_Buffer(
-				iWidth, iHeight, iRGBA, theSR.Current())));
+				iWidth, iHeight, iFill, theSR.Current())));
 
 		if (unchanged)
 			return iSelf;
@@ -97,7 +97,7 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 		if (sIsFinished(newChild))
 			return newChild;
 
-		return spCog_Buffer_Continue(iTween, iWidth, iHeight, iRGBA, newChild, iStartTime);
+		return spCog_Buffer_Continue(iTween, iWidth, iHeight, iFill, newChild, iStartTime);
 		}
 	}
 
@@ -105,20 +105,20 @@ GEMACRO_Callable(spCallable_Buffer_Continue, spCogFun_Buffer_Continue);
 
 Cog spCog_Buffer_Continue(
 	const ZRef<Tween_BlushGainMat>& iTween,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild,
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild,
 	double iStartTime)
 	{
 	ZAssert(sIsPending(iChild) && iTween);
 
-	return sBindR(spCallable_Buffer_Continue, iTween, iWidth, iHeight, iRGBA, iChild, iStartTime);
+	return sBindR(spCallable_Buffer_Continue, iTween, iWidth, iHeight, iFill, iChild, iStartTime);
 	}
 
 Cog spCogFun_Buffer_Continue_Init(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, int iWidth, int iHeight, const ZRGBA& iRGBA,
+	const ZRef<Tween_BlushGainMat>& iTween, int iWidth, int iHeight, const RGBA& iFill,
 	const Cog& iChild)
 	{
 	return sCallCog(
-		spCog_Buffer_Continue(iTween, iWidth, iHeight, iRGBA, iChild, iParam.fElapsed),
+		spCog_Buffer_Continue(iTween, iWidth, iHeight, iFill, iChild, iParam.fElapsed),
 		iParam);
 	}
 
@@ -127,12 +127,12 @@ GEMACRO_Callable(spCallable_Buffer_Continue_Init, spCogFun_Buffer_Continue_Init)
 } // anonymous namespace
 
 Cog sCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild)
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild)
 	{
 	if (sIsFinished(iChild) || not iTween)
 		return iChild;
 
-	return sBindR(spCallable_Buffer_Continue_Init, iTween, iWidth, iHeight, iRGBA, iChild);
+	return sBindR(spCallable_Buffer_Continue_Init, iTween, iWidth, iHeight, iFill, iChild);
 	}
 
 } // namespace GameEngine

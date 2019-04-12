@@ -3,7 +3,6 @@
 #include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/GameEngine/Draw_GL.h"
-#include "zoolib/GameEngine/Draw_GL_Fixed.h"
 #include "zoolib/GameEngine/Draw_GL_Shader.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
@@ -43,7 +42,7 @@ public:
 		{
 		if (ZRef<Sound> theSound = iRendered_Sound->GetSound())
 			{
-			const Rat thePos = X(fBlushGainMat.fMat * CVec3());
+			const Rat thePos = X(sMat(fBlushGainMat) * CVec3());
 			
 			const Rat distLSquared = fListenerDSquared + spSquared(fListenerL - thePos);
 
@@ -68,8 +67,6 @@ private:
 // =================================================================================================
 #pragma mark - Visitor_Shader
 
-#if ZMACRO_CanUseShader
-
 class Visitor_Shader
 :	public virtual Visitor_Draw_GL_Shader
 ,	public virtual Visitor_GatherSound
@@ -92,33 +89,6 @@ public:
 		{ ZUnimplemented(); }
 	};
 
-#endif // ZMACRO_CanUseShader
-
-// =================================================================================================
-#pragma mark - Visitor_Fixed
-
-class Visitor_Fixed
-:	public Visitor_Draw_GL_Fixed
-,	public Visitor_GatherSound
-,	public Visitor_Rendered_DecomposeGroup
-,	public Visitor_Rendered_LineToRect
-	{
-public:
-	Visitor_Fixed(const BlushGainMat& iBlushGainMat,
-		bool iShowBounds, bool iShowOrigin,
-		const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
-	:	Visitor_Rendered_AccumulateBlushGainMat(iBlushGainMat)
-	,	Visitor_Draw_GL_Fixed(iShowBounds, iShowOrigin)
-	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
-		{}
-
-	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
-		{ ZUnimplemented(); }
-
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String)
-		{ ZUnimplemented(); }
-	};
-
 // =================================================================================================
 #pragma mark -
 
@@ -129,7 +99,7 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 	bool iShowBounds, bool iShowOrigin,
 	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	{
-	// See also Visitor_Draw_GL_Shader's and Visitor_Draw_GL_Fixed's Visit_Rendered_Buffer.
+	// See also Visitor_Draw_GL_Shader's Visit_Rendered_Buffer.
 
 	SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(iPixelSize), Y(iPixelSize));
 
@@ -159,51 +129,25 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 			0);
 		}
 
-#if ZMACRO_CanUseShader
-	if (iUseShader)
-		{
-		Mat theMat(1);
-		// We start with -1 <= X < 1 and -1 <= Y < 1.
+	Mat theMat(1);
+	// We start with -1 <= X < 1 and -1 <= Y < 1.
 
-		// Rescale so it's -X(iPixelSize)/2 to X(iPixelSize)/2 and -Y(iPixelSize)/2
-		// to Y(iPixelSize)/2, Y is flipped, and Z is scaled by 1e-3.
-		theMat *= sScale3<Rat>(2.0 / X(iPixelSize), -2.0 / Y(iPixelSize), 1e-3);
+	// Rescale so it's -X(iPixelSize)/2 to X(iPixelSize)/2 and -Y(iPixelSize)/2
+	// to Y(iPixelSize)/2, Y is flipped, and Z is scaled by 1e-3.
+	theMat *= sScale3<Rat>(2.0 / X(iPixelSize), -2.0 / Y(iPixelSize), 1e-3);
 
-		// Translate so it's 0 to X(iPixelSize) and 0 to Y(iPixelSize).
-		theMat *= sTranslate3<Rat>(-X(iPixelSize)/2, -Y(iPixelSize)/2, 0);
-		
-		// Apply any 960-->480 scaling, and centering
-		theMat *= additional;
+	// Translate so it's 0 to X(iPixelSize) and 0 to Y(iPixelSize).
+	theMat *= sTranslate3<Rat>(-X(iPixelSize)/2, -Y(iPixelSize)/2, 0);
 
-		iListenerL = X(theMat * sCVec3(iListenerL,0,0));
-		iListenerR = X(theMat * sCVec3(iListenerR,0,0));
+	// Apply any 960-->480 scaling, and centering
+	theMat *= additional;
 
-		iRendered->Accept(Visitor_Shader(
-			theMat, iShowBounds, iShowOrigin,
-			iSoundMeister, iListenerL, iListenerR, iListenerD / X(iPixelSize)));
-		}
-	else
-#endif // ZMACRO_CanUseShader
-		{
-		::glMatrixMode(GL_PROJECTION);
-		::glLoadIdentity();
+	iListenerL = X(theMat * sCVec3(iListenerL,0,0));
+	iListenerR = X(theMat * sCVec3(iListenerR,0,0));
 
-		#if defined(GL_VERSION_2_1)
-			::glOrtho(0, X(iPixelSize), Y(iPixelSize), 0, -1000.0, 1000.0);
-		#else
-			::glOrthof(0, X(iPixelSize), Y(iPixelSize), 0, -1000.0, 1000.0);
-		#endif
-
-		::glMatrixMode(GL_MODELVIEW);
-		::glLoadIdentity();
-
-		iListenerL = X(additional * sCVec3(iListenerL,0,0));
-		iListenerR = X(additional * sCVec3(iListenerR,0,0));
-
-		iRendered->Accept(Visitor_Fixed(
-			additional, iShowBounds, iShowOrigin,
-			iSoundMeister, iListenerL, iListenerR, iListenerD));
-		}
+	iRendered->Accept(Visitor_Shader(
+		theMat, iShowBounds, iShowOrigin,
+		iSoundMeister, iListenerL, iListenerR, iListenerD / X(iPixelSize)));
 	}
 
 } // namespace GameEngine

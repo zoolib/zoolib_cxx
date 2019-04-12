@@ -358,12 +358,12 @@ ZRef<Rendered> Game::pCrank(double iInterval)
 
 	if (DebugFlags::sTouches)
 		{
-		const ZRGBA theRGBA(0.0, 1.0, 0.0, 0.5);
+		const RGBA theRGBA = sRGBA(0.0, 1.0, 0.0, 0.5);
 		const GRect theBounds = sGRect(-30,-30,30,30);
 		foreachv (ZRef<Touch> theTouch, fTouchesActive)
 			{
 			const GRect theRect = theBounds + sCVec2(theTouch->fPos[0], theTouch->fPos[1]);
-			theGroup->Append(sFrontmost(new Rendered_Rect(theRGBA, theRect)));
+			theGroup->Append(sFrontmost(sRendered_Rect(theRGBA, theRect)));
 			}
 		}
 

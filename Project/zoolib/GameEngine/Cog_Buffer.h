@@ -7,10 +7,10 @@
 namespace ZooLib {
 namespace GameEngine {
 
-Cog sCog_Buffer(int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild);
+Cog sCog_Buffer(int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild);
 
 Cog sCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
-	int iWidth, int iHeight, const ZRGBA& iRGBA, const Cog& iChild);
+	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild);
 
 } // namespace GameEngine
 } // namespace ZooLib

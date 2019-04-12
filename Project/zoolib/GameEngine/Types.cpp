@@ -246,7 +246,7 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ)
 // =================================================================================================
 #pragma mark - RGBA
 
-ZQ<ZRGBA> sQRGBA(const string8& iString)
+ZQ<RGBA> sQRGBA(const string8& iString)
 	{
 	using namespace std;
 	using namespace Util_Chan;
@@ -264,30 +264,30 @@ ZQ<ZRGBA> sQRGBA(const string8& iString)
 		}
 
 	if (comps.size() == 1) // Gray
-		return ZRGBA(comps[0]);
+		return sRGBA(comps[0]);
 
 	if (comps.size() == 2) // Gray, Alpha
-		return ZRGBA(comps[0], comps[1]);
+		return sRGBA(comps[0], comps[1]);
 
 	if (comps.size() == 3) // RGB
-		return ZRGBA(comps[0], comps[1], comps[2]);
+		return sRGBA(comps[0], comps[1], comps[2]);
 
 	if (comps.size() == 4) // RGBA
-		return ZRGBA(comps[0], comps[1], comps[2], comps[3]);
+		return sRGBA(comps[0], comps[1], comps[2], comps[3]);
 
 	return null;
 	}
 
-ZQ<ZRGBA> sQRGBA(const ZQ<Val>& iValQ)
+ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
 		return sQRGBA(*iValQ);
 	return null;
 	}
 
-ZQ<ZRGBA> sQRGBA(const Any& iVal)
+ZQ<RGBA> sQRGBA(const Any& iVal)
 	{
-	if (const ZRGBA* theRGBAP = iVal.PGet<ZRGBA>())
+	if (const RGBA* theRGBAP = iVal.PGet<RGBA>())
 		return *theRGBAP;
 
 	if (const string8* theStringP = iVal.PGet<string8>())

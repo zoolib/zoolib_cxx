@@ -85,7 +85,7 @@ ZRef<Rendered_BlushGainMat> sRendered_BlushGainMat(
 #pragma mark - Rendered_Buffer
 
 Rendered_Buffer::Rendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered)
+	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered)
 :	fWidth(iWidth)
 ,	fHeight(iHeight)
 ,	fFill(iFill)
@@ -101,14 +101,14 @@ int Rendered_Buffer::GetWidth()
 int Rendered_Buffer::GetHeight()
 	{ return fHeight; }
 
-ZRGBA Rendered_Buffer::GetFill()
+RGBA Rendered_Buffer::GetFill()
 	{ return fFill; }
 
 const ZRef<Rendered>& Rendered_Buffer::GetRendered()
 	{ return fRendered; }
 
 ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered)
+	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered)
 	{ return new Rendered_Buffer(iWidth, iHeight, iFill, iRendered); }
 
 // =================================================================================================
@@ -172,8 +172,8 @@ ZRef<Rendered_Group> sRendered_Group()
 // =================================================================================================
 #pragma mark - Rendered_Line
 
-Rendered_Line::Rendered_Line(const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth)
-:	fRGBA(iRGBA)
+Rendered_Line::Rendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth)
+:	fRGBA(sRGBA(1))
 ,	fP0(iP0)
 ,	fP1(iP1)
 ,	fWidth(iWidth)
@@ -182,7 +182,7 @@ Rendered_Line::Rendered_Line(const ZRGBA& iRGBA, const GPoint& iP0, const GPoint
 void Rendered_Line::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Line(this); }
 
-void Rendered_Line::Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth)
+void Rendered_Line::Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth)
 	{
 	oRGBA = fRGBA;
 	oP0 = fP0;
@@ -190,31 +190,34 @@ void Rendered_Line::Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth)
 	oWidth = fWidth;
 	}
 
+ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth)
+	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Line(iP0, iP1, iWidth)); }
+
 // =================================================================================================
 #pragma mark - Rendered_Rect
 
-Rendered_Rect::Rendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
-:	fRGBA(iRGBA)
+Rendered_Rect::Rendered_Rect(const GRect& iBounds)
+:	fRGBA(sRGBA(1))
 ,	fBounds(iBounds)
 	{}
 
 void Rendered_Rect::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Rect(this); }
 
-void Rendered_Rect::Get(ZRGBA& oRGBA, GRect& oBounds)
+void Rendered_Rect::Get(RGBA& oRGBA, GRect& oBounds)
 	{
 	oRGBA = fRGBA;
 	oBounds = fBounds;
 	}
 
-ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds)
-	{ return new Rendered_Rect(iRGBA, iBounds); }
+ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds)
+	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Rect(iBounds)); }
 
 // =================================================================================================
 #pragma mark - Rendered_RightAngleSegment
 
 Rendered_RightAngleSegment::Rendered_RightAngleSegment(
-	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
+	const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave)
 :	fRGBA_Convex(iRGBA_Convex)
 ,	fRGBA_Concave(iRGBA_Concave)
 	{}
@@ -222,14 +225,14 @@ Rendered_RightAngleSegment::Rendered_RightAngleSegment(
 void Rendered_RightAngleSegment::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_RightAngleSegment(this); }
 
-void Rendered_RightAngleSegment::Get(ZRGBA& oRGBA_Convex, ZRGBA& oRGBA_Concave)
+void Rendered_RightAngleSegment::Get(RGBA& oRGBA_Convex, RGBA& oRGBA_Concave)
 	{
 	oRGBA_Convex = fRGBA_Convex;
 	oRGBA_Concave = fRGBA_Concave;
 	}
 
-ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
-	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave)
+ZRef<Rendered> sRendered_RightAngleSegment(
+	const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave)
 	{ return new Rendered_RightAngleSegment(iRGBA_Convex, iRGBA_Concave); }
 
 // =================================================================================================
@@ -320,9 +323,8 @@ ZRef<Rendered_Texture> sRendered_Texture(const ZRef<Texture>& iTexture, const GR
 // =================================================================================================
 #pragma mark - Rendered_Triangle
 
-Rendered_Triangle::Rendered_Triangle(
-	const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
-:	fRGBA(iRGBA)
+Rendered_Triangle::Rendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
+:	fRGBA(sRGBA(1))
 ,	fP0(iP0)
 ,	fP1(iP1)
 ,	fP2(iP2)
@@ -331,7 +333,7 @@ Rendered_Triangle::Rendered_Triangle(
 void Rendered_Triangle::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Triangle(this); }
 
-void Rendered_Triangle::Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2)
+void Rendered_Triangle::Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2)
 	{
 	oRGBA = fRGBA;
 	oP0 = fP0;
@@ -339,9 +341,9 @@ void Rendered_Triangle::Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2)
 	oP2 = fP2;
 	}
 
-ZRef<Rendered_Triangle> sRendered_Triangle(
-	const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
-	{ return new Rendered_Triangle(iRGBA, iP0, iP1, iP2); }
+ZRef<Rendered> sRendered_Triangle(
+	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
+	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Triangle(iP0, iP1, iP2)); }
 
 // =================================================================================================
 #pragma mark - Visitor_Rendered

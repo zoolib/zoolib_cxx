@@ -85,7 +85,7 @@ void OutChannel::RegisterTouchListener(ZRef<TouchListener> iListener) const
 	fTLs->push_back(iListener);
 
 	if (DebugFlags::sTouches)
-		fGroup->Append(new Rendered_Rect(ZRGBA(1.0, 0.0, 0.0, 0.25), iListener->fBounds));
+		fGroup->Append(sRendered_Rect(sRGBA(1, 0, 0, 0.25), iListener->fBounds));
 	}
 
 size_t OutChannel::GetPriorTLCount() const

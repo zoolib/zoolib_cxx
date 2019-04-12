@@ -82,7 +82,7 @@ class Rendered_Buffer
 :	public Rendered
 	{
 public:
-	Rendered_Buffer(int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered);
+	Rendered_Buffer(int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
@@ -90,18 +90,18 @@ public:
 // Our protocol
 	int GetWidth();
 	int GetHeight();
-	ZRGBA GetFill();
+	RGBA GetFill();
 	const ZRef<Rendered>& GetRendered();
 
 private:
 	const int fWidth;
 	const int fHeight;
-	const ZRGBA fFill;
+	const RGBA fFill;
 	const ZRef<Rendered> fRendered;
 	};
 
 ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const ZRGBA& iFill, const ZRef<Rendered>& iRendered);
+	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Cel
@@ -166,20 +166,22 @@ class Rendered_Line
 :	public Rendered
 	{
 public:
-	Rendered_Line(const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
+	Rendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth);
+	void Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth);
 
 private:
-	const ZRGBA fRGBA;
+	const RGBA fRGBA;
 	const GPoint fP0;
 	const GPoint fP1;
 	Rat fWidth;
 	};
+
+ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
@@ -188,20 +190,20 @@ class Rendered_Rect
 :	public Rendered
 	{
 public:
-	Rendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds);
+	Rendered_Rect(const GRect& iBounds);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(ZRGBA& oRGBA, GRect& oBounds);
+	void Get(RGBA& oRGBA, GRect& oBounds);
 
 private:
-	const ZRGBA fRGBA;
+	const RGBA fRGBA;
 	const GRect fBounds;
 	};
 
-ZRef<Rendered_Rect> sRendered_Rect(const ZRGBA& iRGBA, const GRect& iBounds);
+ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds);
 
 // =================================================================================================
 #pragma mark - Rendered_RightAngleSegment
@@ -210,21 +212,21 @@ class Rendered_RightAngleSegment
 :	public Rendered
 	{
 public:
-	Rendered_RightAngleSegment(const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave);
+	Rendered_RightAngleSegment(const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(ZRGBA& oRGBA_Convex, ZRGBA& oRGBA_Concave);
+	void Get(RGBA& oRGBA_Convex, RGBA& oRGBA_Concave);
 
 private:
-	const ZRGBA fRGBA_Convex;
-	const ZRGBA fRGBA_Concave;
+	const RGBA fRGBA_Convex;
+	const RGBA fRGBA_Concave;
 	};
 
-ZRef<Rendered_RightAngleSegment> sRendered_RightAngleSegment(
-	const ZRGBA& iRGBA_Convex, const ZRGBA& iRGBA_Concave);
+ZRef<Rendered> sRendered_RightAngleSegment(
+	const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
 
 // =================================================================================================
 #pragma mark - Rendered_Sound
@@ -311,23 +313,23 @@ class Rendered_Triangle
 :	public Rendered
 	{
 public:
-	Rendered_Triangle(const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
+	Rendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(ZRGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2);
+	void Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2);
 
 private:
-	const ZRGBA fRGBA;
+	const RGBA fRGBA;
 	const GPoint fP0;
 	const GPoint fP1;
 	const GPoint fP2;
 	};
 
-ZRef<Rendered_Triangle> sRendered_Triangle(
-	const ZRGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
+ZRef<Rendered> sRendered_Triangle(
+	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
 // =================================================================================================
 #pragma mark - Visitor_Rendered

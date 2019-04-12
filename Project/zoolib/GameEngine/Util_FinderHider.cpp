@@ -18,20 +18,20 @@ ZRef<Rendered> sFinderHider(
 	const Rat iHeight = Y(iGameSize);
 
 	// Left
-	finderHider->Append(new Rendered_Rect(
-		ZRGBA::sBlack, sRect<GRect>(-1000, -1000, 0, iHeight+1000)));
+	finderHider->Append(sRendered_Rect(
+		sRGBA(0,1), sRect<GRect>(-1000, -1000, 0, iHeight+1000)));
 
 	// Top
-	finderHider->Append(new Rendered_Rect(
-		ZRGBA::sBlack, sRect<GRect>(-1000, -1000, iWidth+1000, 0)));
+	finderHider->Append(sRendered_Rect(
+		sRGBA(0,1), sRect<GRect>(-1000, -1000, iWidth+1000, 0)));
 
 	// Right
-	finderHider->Append(new Rendered_Rect(
-		ZRGBA::sBlack, sRect<GRect>(iWidth, -1000, iWidth+1000, iHeight+1000)));
+	finderHider->Append(sRendered_Rect(
+		sRGBA(0,1), sRect<GRect>(iWidth, -1000, iWidth+1000, iHeight+1000)));
 
 	// Bottom
-	finderHider->Append(new Rendered_Rect(
-		ZRGBA::sBlack, sRect<GRect>(-1000, iHeight, iWidth+1000, iHeight+1000)));
+	finderHider->Append(sRendered_Rect(
+		sRGBA(0,1), sRect<GRect>(-1000, iHeight, iWidth+1000, iHeight+1000)));
 	
 	ZRef<Rendered_Group> theGroup = sRendered_Group();
 	theGroup->Append(iRendered);
