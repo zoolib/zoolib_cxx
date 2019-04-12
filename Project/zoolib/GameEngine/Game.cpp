@@ -335,26 +335,21 @@ void Game::pUpdateTouches()
 
 ZRef<Rendered> Game::pCrank(double iInterval)
 	{
-	std::vector<ZRef<TouchListener> > priorTLs = fTLs;
-
-	ZRef<Rendered_Group> theGroup = sRendered_Group();
-
 	InChannel theInChannel(fNookScope);
-
-	vector<ZRef<TouchListener> > newTLs;
-	OutChannel theOutChannel(fAssetCatalog, fFontCatalog, fSoundMeister, newTLs, theGroup);
-
 	fNookScope->NewEra();
+
+	OutChannel theOutChannel(fAssetCatalog, fFontCatalog, fSoundMeister);
 
 	iInterval *= spGameRate;
 	fAccumulated += iInterval;
+
 	const Param theParam(theInChannel, theOutChannel,
 		fNextEra++,
 		fAccumulated, iInterval, fAccumulated + 2*(iInterval));
 
 	fCog = sCallCog(fCog, theParam);
 
-	fTLs = spSortTLs(newTLs);
+	ZRef<Rendered_Group> theGroup = theOutChannel.GetGroup();
 
 	if (DebugFlags::sTouches)
 		{
@@ -366,6 +361,9 @@ ZRef<Rendered> Game::pCrank(double iInterval)
 			theGroup->Append(sFrontmost(sRendered_Rect(theRGBA, theRect)));
 			}
 		}
+
+	std::vector<ZRef<TouchListener> > priorTLs = fTLs;
+	fTLs = spSortTLs(theOutChannel.GetTLs());
 
 	foreachv (const ZRef<Touch> theTouch, fTouchesUp)
 		{

@@ -412,12 +412,9 @@ void spDrawRightAngleSegment(const Blush& iBlush, const Mat& iMat,
 	::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
-void spDrawTexture_AlphaOnly(
-	TextureID iTextureID,
-	GPoint iTextureSize,
-	const GRect& iBounds,
-	const Blush& iBlush,
-	const Mat& iMat)
+void spDrawTexture_AlphaOnly(const Blush& iBlush, const Mat& iMat,
+	TextureID iTextureID, GPoint iTextureSize,
+	const GRect& iBounds)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -485,12 +482,9 @@ void spDrawTexture_AlphaOnly(
 //		}
 	}
 
-void spDrawTexture(
-	TextureID iTextureID,
-	GPoint iTextureSize,
-	const GRect& iBounds,
-	const Blush& iBlush,
-	const Mat& iMat)
+void spDrawTexture(const Blush& iBlush, const Mat& iMat,
+	TextureID iTextureID, GPoint iTextureSize,
+	const GRect& iBounds)
 	{
 	ZRef<Context> theContext = spContext();
 
@@ -669,9 +663,10 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 //				fBlush, fMat);
 			}
 		else
-			spDrawTexture(theTextureID, sPoint<GPoint>(theTextureSize),
-				iRendered_Texture->GetBounds(),
-				fBlush, fMat);
+			{
+			spDrawTexture(fBlush, fMat,
+				theTextureID, sPoint<GPoint>(theTextureSize),
+				iRendered_Texture->GetBounds());
 
 			if (fShowBounds)
 				{
@@ -697,6 +692,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 				sRef(sRendered_Line(sRGBA(0,1,1,1), LB(theBounds), RB(theBounds), 1.0))
 					->Accept(*this);
 				}
+			}
 		}
 	}
 

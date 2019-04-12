@@ -54,9 +54,7 @@ public:
 	OutChannel(
 		const ZRef<AssetCatalog>& iAssetCatalog,
 		const ZRef<FontCatalog>& iFontCatalog,
-		const ZRef<SoundMeister>& iSoundMeister,
-		std::vector<ZRef<TouchListener> >& ioTLs,
-		ZRef<Rendered_Group>& ioGroup);
+		const ZRef<SoundMeister>& iSoundMeister);
 
 	~OutChannel();
 
@@ -65,15 +63,13 @@ public:
 
 	void RegisterTouchListener(ZRef<TouchListener> iListener) const;
 
-//	void MungeTLs(size_t iStartIndex, const Mat& iMat) const;
-
 	const ZRef<AssetCatalog> fAssetCatalog;
 	const ZRef<FontCatalog> fFontCatalog;
 	const ZRef<SoundMeister> fSoundMeister;
 
 private:
-	std::vector<ZRef<TouchListener> >& fTLs;
-	ZRef<Rendered_Group>& fGroup;
+	mutable std::vector<ZRef<TouchListener> > fTLs;
+	mutable ZRef<Rendered_Group> fGroup;
 	};
 
 // =================================================================================================

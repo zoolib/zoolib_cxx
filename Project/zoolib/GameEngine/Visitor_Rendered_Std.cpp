@@ -62,15 +62,15 @@ void Visitor_Rendered_AccumulateMat::Visit_Rendered_Mat(const ZRef<Rendered_Mat>
 	}
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_DecomposeCel
+#pragma mark - Visitor_Rendered_CelToTextures
 
-Visitor_Rendered_DecomposeCel::Visitor_Rendered_DecomposeCel(
+Visitor_Rendered_CelToTextures::Visitor_Rendered_CelToTextures(
 	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame)
 :	fAssetCatalog(iAssetCatalog)
 ,	fShowNameFrame(iShowNameFrame)
 	{}
 
-void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
+void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
 	{
 	const Cel& theCel = iRendered_Cel->GetCel();
 
@@ -78,6 +78,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 	
 	fAssetCatalog->Get(theCel.fNameFrame, theTBMs);
 
+	ZRef<Rendered_Group> theGroup = sRendered_Group();
 	foreachv (const Texture_BoundsQ_Mat& theTBM, theTBMs)
 		{
 		GRect theBounds;
@@ -88,11 +89,14 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		LT(theBounds) += LT(theTBM.fInset);
 		RB(theBounds) -= RB(theTBM.fInset);
 
-		ZRef<Rendered> theRendered = sRendered_Texture(theTBM.fTexture, theBounds);
-		theRendered = sRendered_Blush(theCel.fBlushMat.fBlush, theRendered);
-		theRendered = sRendered_Mat(theCel.fBlushMat.fMat * theTBM.fMat, theRendered);
-		sAccept(theRendered, *this);
+		theGroup->Append(sRendered_Mat(theTBM.fMat, sRendered_Texture(theTBM.fTexture, theBounds)));
 		}
+
+	ZRef<Rendered> theRendered =
+		sRendered_Blush(theCel.fBlushMat.fBlush,
+			sRendered_Mat(theCel.fBlushMat.fMat, theGroup));
+
+	sAccept(theRendered, *this);
 
 	if (fShowNameFrame)
 		{
@@ -114,30 +118,7 @@ void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
 	const ZRef<Rendered_Group>& iRendered_Group)
 	{
 	foreacha (entry, iRendered_Group->GetChildren())
-		entry->Accept_Rendered(*this);
-	}
-
-// =================================================================================================
-#pragma mark - Visitor_Rendered_DecomposeString
-
-Visitor_Rendered_DecomposeString::Visitor_Rendered_DecomposeString(
-	const ZRef<FontCatalog>& iFontCatalog)
-:	fFontCatalog(iFontCatalog)
-	{}
-
-void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
-	const ZRef<Rendered_String>& iRendered_String)
-	{
-	// Turn iRendered_String into a bunch of textures etc.
-	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
-	const string8& theString = iRendered_String->GetString();
-
-//	Given the FontSpec and the string, we ask the font catalog for a Texture, a list
-//	of bounding rectangles and post-draw offsets, and a list of indices.
-//	The textures in this case will be Texture_GL, with the "useOnlyAlpha flag set".
-//
-//	Then we can turn that into a suite of BGMs and Textured.
-
+		sAccept(entry, *this);
 	}
 
 // =================================================================================================
@@ -178,6 +159,29 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 	theMat *= theRot;
 
 	sAccept(sRendered_Mat(theMat, sRendered_Rect(theRect)), *this);
+	}
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_StringToTextures
+
+Visitor_Rendered_StringToTextures::Visitor_Rendered_StringToTextures(
+	const ZRef<FontCatalog>& iFontCatalog)
+:	fFontCatalog(iFontCatalog)
+	{}
+
+void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
+	const ZRef<Rendered_String>& iRendered_String)
+	{
+	// Turn iRendered_String into a bunch of textures etc.
+	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
+	const string8& theString = iRendered_String->GetString();
+
+//	Given the FontSpec and the string, we ask the font catalog for a Texture, a list
+//	of bounding rectangles and post-draw offsets, and a list of indices.
+//	The textures in this case will be Texture_GL, with the "useOnlyAlpha flag set".
+//
+//	Then we can turn that into a suite of BGMs and Textured.
+
 	}
 
 } // namespace GameEngine

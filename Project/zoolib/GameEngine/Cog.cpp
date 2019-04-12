@@ -63,14 +63,11 @@ const InChannel* InChannel::GetPrior() const
 OutChannel::OutChannel(
 	const ZRef<AssetCatalog>& iAssetCatalog,
 	const ZRef<FontCatalog>& iFontCatalog,
-	const ZRef<SoundMeister>& iSoundMeister,
-	std::vector<ZRef<TouchListener> >& ioTLs,
-	ZRef<Rendered_Group>& ioGroup)
+	const ZRef<SoundMeister>& iSoundMeister)
 :	fAssetCatalog(iAssetCatalog)
 ,	fFontCatalog(iFontCatalog)
 ,	fSoundMeister(iSoundMeister)
-,	fTLs(ioTLs)
-,	fGroup(ioGroup)
+,	fGroup(sRendered_Group())
 	{}
 
 OutChannel::~OutChannel()

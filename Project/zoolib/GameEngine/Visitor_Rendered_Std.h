@@ -56,13 +56,13 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_DecomposeCel
+#pragma mark - Visitor_Rendered_CelToTextures
 
-class Visitor_Rendered_DecomposeCel
+class Visitor_Rendered_CelToTextures
 :	public virtual Visitor_Rendered
 	{
 public:
-	Visitor_Rendered_DecomposeCel(const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame);
+	Visitor_Rendered_CelToTextures(const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame);
 
 	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel);	
 
@@ -82,21 +82,6 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - Visitor_Rendered_DecomposeString
-
-class Visitor_Rendered_DecomposeString
-:	public virtual Visitor_Rendered
-	{
-public:
-	Visitor_Rendered_DecomposeString(const ZRef<FontCatalog>& iFontCatalog);
-
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
-
-protected:
-	const ZRef<FontCatalog> fFontCatalog;
-	};
-
-// =================================================================================================
 #pragma mark - Visitor_Rendered_LineToRect
 
 class Visitor_Rendered_LineToRect
@@ -104,6 +89,21 @@ class Visitor_Rendered_LineToRect
 	{
 public:
 	virtual void Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line);
+	};
+
+// =================================================================================================
+#pragma mark - Visitor_Rendered_StringToTextures
+
+class Visitor_Rendered_StringToTextures
+:	public virtual Visitor_Rendered
+	{
+public:
+	Visitor_Rendered_StringToTextures(const ZRef<FontCatalog>& iFontCatalog);
+
+	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
+
+protected:
+	const ZRef<FontCatalog> fFontCatalog;
 	};
 
 } // namespace GameEngine

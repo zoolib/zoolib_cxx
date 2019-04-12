@@ -25,16 +25,16 @@ class Visitor_Preprocess
 :	public virtual Visitor_Rendered_AccumulateBlush
 ,	public virtual Visitor_Rendered_AccumulateGain
 ,	public virtual Visitor_Rendered_AccumulateMat
-,	public virtual Visitor_Rendered_DecomposeCel
+,	public virtual Visitor_Rendered_CelToTextures
 ,	public virtual Visitor_Rendered_DecomposeGroup
-,	public virtual Visitor_Rendered_DecomposeString
+,	public virtual Visitor_Rendered_StringToTextures
 	{
 public:
 	Visitor_Preprocess(const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
 		const ZRef<FontCatalog>& iFontCatalog,
 		const GPoint& iGameSize)
-	:	Visitor_Rendered_DecomposeCel(iAssetCatalog, iShowNameFrame)
-	,	Visitor_Rendered_DecomposeString(iFontCatalog)
+	:	Visitor_Rendered_CelToTextures(iAssetCatalog, iShowNameFrame)
+	,	Visitor_Rendered_StringToTextures(iFontCatalog)
 	,	fScreenBounds(sRect<GRect>(iGameSize))
 	,	fMap(std::less<Rat>(), fRealAllocator)
 		{}
@@ -137,7 +137,6 @@ ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
 	const GPoint& iGameSize)
 	{
 	return Visitor_Preprocess(iAssetCatalog, iShowNameFrame, iFontCatalog, iGameSize).Do(iRendered);
-	
 	}
 
 } // namespace GameEngine
