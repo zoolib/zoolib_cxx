@@ -47,7 +47,6 @@ class Rendered_BlushGainMat
 ,	public SafePtrStackLink_Rendered_BlushGainMat
 	{
 protected:
-	Rendered_BlushGainMat();
 	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 public:
@@ -64,15 +63,15 @@ public:
 	BlushMat GetBlushMat();
 
 	static
-	ZRef<Rendered_BlushGainMat> spMake(
-		const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
+		const ZRef<Rendered>& iRendered);
 
 private:
 	BlushGainMat fBlushGainMat;
 	ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered_BlushGainMat> sRendered_BlushGainMat(
+ZRef<Rendered> sRendered_BlushGainMat(
 	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
@@ -100,8 +99,8 @@ private:
 	const ZRef<Rendered> fRendered;
 	};
 
-ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered);
+ZRef<Rendered_Buffer> sRendered_Buffer(int iWidth, int iHeight, const RGBA& iFill,
+	const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Cel
@@ -123,6 +122,47 @@ private:
 	};
 
 ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel);
+
+// =================================================================================================
+#pragma mark - Rendered_BlushGainMat
+
+class Rendered_BlushGainMat;
+
+class SafePtrStackLink_Rendered_BlushGainMat
+:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+	{};
+
+class Rendered_BlushGainMat
+:	public Rendered
+,	public SafePtrStackLink_Rendered_BlushGainMat
+	{
+protected:
+	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+
+public:
+// From ZCounted
+	virtual void Finalize();
+
+// From Rendered
+	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
+
+// Our protocol
+	const BlushGainMat& GetBlushGainMat();
+	const ZRef<Rendered>& GetRendered();
+
+	BlushMat GetBlushMat();
+
+	static
+	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
+		const ZRef<Rendered>& iRendered);
+
+private:
+	BlushGainMat fBlushGainMat;
+	ZRef<Rendered> fRendered;
+	};
+
+ZRef<Rendered> sRendered_BlushGainMat(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Group
@@ -172,16 +212,58 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth);
+	void Get(GPoint& oP0, GPoint& oP1, Rat& oWidth);
 
 private:
-	const RGBA fRGBA;
 	const GPoint fP0;
 	const GPoint fP1;
 	Rat fWidth;
 	};
 
+ZRef<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth);
+
 ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
+
+// =================================================================================================
+#pragma mark - Rendered_BlushGainMat
+
+class Rendered_BlushGainMat;
+
+class SafePtrStackLink_Rendered_BlushGainMat
+:	public SafePtrStackLink<Rendered_BlushGainMat,SafePtrStackLink_Rendered_BlushGainMat>
+	{};
+
+class Rendered_BlushGainMat
+:	public Rendered
+,	public SafePtrStackLink_Rendered_BlushGainMat
+	{
+protected:
+	Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
+
+public:
+// From ZCounted
+	virtual void Finalize();
+
+// From Rendered
+	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
+
+// Our protocol
+	const BlushGainMat& GetBlushGainMat();
+	const ZRef<Rendered>& GetRendered();
+
+	BlushMat GetBlushMat();
+
+	static
+	ZRef<Rendered_BlushGainMat> spMake(const BlushGainMat& iBlushGainMat,
+		const ZRef<Rendered>& iRendered);
+
+private:
+	BlushGainMat fBlushGainMat;
+	ZRef<Rendered> fRendered;
+	};
+
+ZRef<Rendered> sRendered_BlushGainMat(
+	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
@@ -196,12 +278,13 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(RGBA& oRGBA, GRect& oBounds);
+	void Get(GRect& oBounds);
 
 private:
-	const RGBA fRGBA;
 	const GRect fBounds;
 	};
+
+ZRef<Rendered> sRendered_Rect(const GRect& iBounds);
 
 ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds);
 
@@ -225,8 +308,7 @@ private:
 	const RGBA fRGBA_Concave;
 	};
 
-ZRef<Rendered> sRendered_RightAngleSegment(
-	const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
+ZRef<Rendered> sRendered_RightAngleSegment(const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
 
 // =================================================================================================
 #pragma mark - Rendered_Sound
@@ -253,21 +335,23 @@ class Rendered_String
 :	public Rendered
 	{
 public:
-	Rendered_String(const FontSpec& iFontSpec, const RGBA& iRGBA, const string8& iString);
+	Rendered_String(const FontSpec& iFontSpec, const string8& iString);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
 	const FontSpec& GetFontSpec();
-	const RGBA& GetRGBA();
 	const string8& GetString();
 
 private:
 	const FontSpec fFontSpec;
-	const RGBA fRGBA;
 	const string8 fString;
 	};
+
+ZRef<Rendered> sRendered_String(const FontSpec& iFontSpec, const string8& iString);
+
+ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const FontSpec& iFontSpec, const string8& iString);
 
 // =================================================================================================
 #pragma mark - Rendered_Texture
@@ -319,14 +403,15 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	void Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2);
+	void Get(GPoint& oP0, GPoint& oP1, GPoint& oP2);
 
 private:
-	const RGBA fRGBA;
 	const GPoint fP0;
 	const GPoint fP1;
 	const GPoint fP2;
 	};
+
+ZRef<Rendered> sRendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
 ZRef<Rendered> sRendered_Triangle(
 	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);

@@ -74,7 +74,7 @@ void Visitor_Rendered_DecomposeCel::Visit_Rendered_Cel(const ZRef<Rendered_Cel>&
 		ChanW_UTF_string8(&theString8)
 			<< theCel.fNameFrame.fName << "/" << theCel.fNameFrame.fFrame;
 
-		sAccept(new Rendered_String(FontSpec(), RGBA(1), theString8), *this);
+		sAccept(sRendered_String(RGBA(1), FontSpec(), theString8), *this);
 		}
 	}
 
@@ -100,7 +100,6 @@ void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
 	// Turn iRendered_String into a bunch of textures etc.
-	const RGBA theRGBA = iRendered_String->GetRGBA();
 	const FontSpec theFontSpec = iRendered_String->GetFontSpec();
 	const string8& theString = iRendered_String->GetString();
 
@@ -117,10 +116,9 @@ void Visitor_Rendered_DecomposeString::Visit_Rendered_String(
 
 void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line)
 	{
-	RGBA theRGBA;
 	GPoint theP0, theP1;
 	Rat theWidth;
-	iRendered_Line->Get(theRGBA, theP0, theP1, theWidth);
+	iRendered_Line->Get(theP0, theP1, theWidth);
 
 	// Build a rectangle
 	const GPoint delta = theP1 - theP0;
@@ -150,9 +148,7 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 	theRot[3][3] = 1;
 	theMat *= theRot;
 
-	ZRef<Rendered> theRendered = new Rendered_Rect(theRect);
-	theRendered = sRendered_BlushGainMat(theMat, theRendered);
-	theRendered->Accept(*this);
+	sAccept(sRendered_BlushGainMat(theMat, sRendered_Rect(theRect)), *this);
 	}
 
 } // namespace GameEngine

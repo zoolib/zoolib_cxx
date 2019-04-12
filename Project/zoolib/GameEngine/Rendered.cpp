@@ -32,11 +32,8 @@ SafePtrStack_WithDestroyer<Rendered_BlushGainMat,SafePtrStackLink_Rendered_Blush
 
 } // anonymous namespace
 
-Rendered_BlushGainMat::Rendered_BlushGainMat()
-	{}
-
-Rendered_BlushGainMat::Rendered_BlushGainMat(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
+Rendered_BlushGainMat::Rendered_BlushGainMat(const BlushGainMat& iBlushGainMat,
+	const ZRef<Rendered>& iRendered)
 :	fBlushGainMat(iBlushGainMat)
 ,	fRendered(iRendered)
 	{}
@@ -63,8 +60,8 @@ const ZRef<Rendered>& Rendered_BlushGainMat::GetRendered()
 BlushMat Rendered_BlushGainMat::GetBlushMat()
 	{ return sBlushMat(fBlushGainMat); }
 
-ZRef<Rendered_BlushGainMat> Rendered_BlushGainMat::spMake(
-	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
+ZRef<Rendered_BlushGainMat> Rendered_BlushGainMat::spMake(const BlushGainMat& iBlushGainMat,
+	const ZRef<Rendered>& iRendered)
 	{
 	if (Rendered_BlushGainMat* result =
 		spSafePtrStack_BlushGainMat.PopIfNotEmpty<Rendered_BlushGainMat>())
@@ -77,15 +74,15 @@ ZRef<Rendered_BlushGainMat> Rendered_BlushGainMat::spMake(
 	return new Rendered_BlushGainMat(iBlushGainMat, iRendered);
 	}
 
-ZRef<Rendered_BlushGainMat> sRendered_BlushGainMat(
+ZRef<Rendered> sRendered_BlushGainMat(
 	const BlushGainMat& iBlushGainMat, const ZRef<Rendered>& iRendered)
 	{ return Rendered_BlushGainMat::spMake(iBlushGainMat, iRendered); }
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
 
-Rendered_Buffer::Rendered_Buffer(
-	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered)
+Rendered_Buffer::Rendered_Buffer(int iWidth, int iHeight, const RGBA& iFill,
+	const ZRef<Rendered>& iRendered)
 :	fWidth(iWidth)
 ,	fHeight(iHeight)
 ,	fFill(iFill)
@@ -107,8 +104,8 @@ RGBA Rendered_Buffer::GetFill()
 const ZRef<Rendered>& Rendered_Buffer::GetRendered()
 	{ return fRendered; }
 
-ZRef<Rendered_Buffer> sRendered_Buffer(
-	int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered)
+ZRef<Rendered_Buffer> sRendered_Buffer(int iWidth, int iHeight, const RGBA& iFill,
+	const ZRef<Rendered>& iRendered)
 	{ return new Rendered_Buffer(iWidth, iHeight, iFill, iRendered); }
 
 // =================================================================================================
@@ -173,8 +170,7 @@ ZRef<Rendered_Group> sRendered_Group()
 #pragma mark - Rendered_Line
 
 Rendered_Line::Rendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth)
-:	fRGBA(sRGBA(1))
-,	fP0(iP0)
+:	fP0(iP0)
 ,	fP1(iP1)
 ,	fWidth(iWidth)
 	{}
@@ -182,33 +178,36 @@ Rendered_Line::Rendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth)
 void Rendered_Line::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Line(this); }
 
-void Rendered_Line::Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, Rat& oWidth)
+void Rendered_Line::Get(GPoint& oP0, GPoint& oP1, Rat& oWidth)
 	{
-	oRGBA = fRGBA;
 	oP0 = fP0;
 	oP1 = fP1;
 	oWidth = fWidth;
 	}
 
+ZRef<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth)
+	{ return new Rendered_Line(iP0, iP1, iWidth); }
+
 ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth)
-	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Line(iP0, iP1, iWidth)); }
+	{ return sRendered_BlushGainMat(iRGBA, sRendered_Line(iP0, iP1, iWidth)); }
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
 
 Rendered_Rect::Rendered_Rect(const GRect& iBounds)
-:	fRGBA(sRGBA(1))
-,	fBounds(iBounds)
+:	fBounds(iBounds)
 	{}
 
 void Rendered_Rect::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Rect(this); }
 
-void Rendered_Rect::Get(RGBA& oRGBA, GRect& oBounds)
+void Rendered_Rect::Get(GRect& oBounds)
 	{
-	oRGBA = fRGBA;
 	oBounds = fBounds;
 	}
+
+ZRef<Rendered> sRendered_Rect(const GRect& iBounds)
+	{ return new Rendered_Rect(iBounds); }
 
 ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds)
 	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Rect(iBounds)); }
@@ -251,10 +250,8 @@ void Rendered_Sound::Accept_Rendered(Visitor_Rendered& iVisitor)
 // =================================================================================================
 #pragma mark - Rendered_String
 
-Rendered_String::Rendered_String(
-	const FontSpec& iFontSpec, const RGBA& iRGBA, const string8& iString)
+Rendered_String::Rendered_String(const FontSpec& iFontSpec, const string8& iString)
 :	fFontSpec(iFontSpec)
-,	fRGBA(iRGBA)
 ,	fString(iString)
 	{}
 
@@ -264,11 +261,14 @@ void Rendered_String::Accept_Rendered(Visitor_Rendered& iVisitor)
 const FontSpec& Rendered_String::GetFontSpec()
 	{ return fFontSpec; }
 
-const RGBA& Rendered_String::GetRGBA()
-	{ return fRGBA; }
-
 const string8& Rendered_String::GetString()
 	{ return fString; }
+
+ZRef<Rendered> sRendered_String(const FontSpec& iFontSpec, const string8& iString)
+	{ return new Rendered_String(iFontSpec, iString); }
+
+ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const FontSpec& iFontSpec, const string8& iString)
+	{ return sRendered_BlushGainMat(iRGBA, sRendered_String(iFontSpec, iString)); }
 
 // =================================================================================================
 #pragma mark - Rendered_Texture
@@ -324,8 +324,7 @@ ZRef<Rendered_Texture> sRendered_Texture(const ZRef<Texture>& iTexture, const GR
 #pragma mark - Rendered_Triangle
 
 Rendered_Triangle::Rendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
-:	fRGBA(sRGBA(1))
-,	fP0(iP0)
+:	fP0(iP0)
 ,	fP1(iP1)
 ,	fP2(iP2)
 	{}
@@ -333,17 +332,19 @@ Rendered_Triangle::Rendered_Triangle(const GPoint& iP0, const GPoint& iP1, const
 void Rendered_Triangle::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Triangle(this); }
 
-void Rendered_Triangle::Get(RGBA& oRGBA, GPoint& oP0, GPoint& oP1, GPoint& oP2)
+void Rendered_Triangle::Get(GPoint& oP0, GPoint& oP1, GPoint& oP2)
 	{
-	oRGBA = fRGBA;
 	oP0 = fP0;
 	oP1 = fP1;
 	oP2 = fP2;
 	}
 
+ZRef<Rendered> sRendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
+	{ return new Rendered_Triangle(iP0, iP1, iP2); }
+
 ZRef<Rendered> sRendered_Triangle(
 	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
-	{ return sRendered_BlushGainMat(iRGBA, new Rendered_Triangle(iP0, iP1, iP2)); }
+	{ return sRendered_BlushGainMat(iRGBA, sRendered_Triangle(iP0, iP1, iP2)); }
 
 // =================================================================================================
 #pragma mark - Visitor_Rendered
