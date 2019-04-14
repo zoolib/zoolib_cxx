@@ -501,6 +501,22 @@ typename RectTraits<Rect_p>::Rect_t&
 operator&=(Rect_p& ioL, const Rect_p& iRHS)
 	{ return ioL = ioL & iRHS; }
 
+template <class Rect_p>
+typename RectTraits<Rect_p>::Rect_t
+operator|(const Rect_p& iLHS, const Rect_p& iRHS)
+	{
+	return sRect<Rect_p>(
+		std::min(L(iLHS), L(iRHS)),
+		std::min(T(iLHS), T(iRHS)),
+		std::max(R(iLHS), R(iRHS)),
+		std::max(B(iLHS), B(iRHS)));
+	}
+
+template <class Rect_p>
+typename RectTraits<Rect_p>::Rect_t&
+operator|=(Rect_p& ioL, const Rect_p& iRHS)
+	{ return ioL = ioL | iRHS; }
+
 } // namespace Operators
 
 // =================================================================================================
