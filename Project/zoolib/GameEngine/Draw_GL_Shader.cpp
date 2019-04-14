@@ -553,10 +553,10 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 	// See also GameEngine_Game_Render.cpp/sGame_Render and
 	// Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer.
 
-	ZRef<Texture_GL> theTexture_GL =
-		new Texture_GL(sPointPOD(iRendered_Buffer->GetWidth(), iRendered_Buffer->GetHeight()));
+	const ZPointPOD theTextureSize =
+		sPointPOD(iRendered_Buffer->GetWidth(), iRendered_Buffer->GetHeight());
 
-	const ZPointPOD theTextureSize = theTexture_GL->GetTextureSize();
+	ZRef<Texture_GL> theTexture_GL = new Texture_GL(theTextureSize);
 
 	{SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 		{
@@ -643,8 +643,6 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 			spDrawTexture(fBlush, fMat,
 				theTextureID, sPoint<GPoint>(theTextureSize),
 				iRendered_Texture->GetBounds());
-			}
-			{
 
 			if (fShowBounds)
 				{
