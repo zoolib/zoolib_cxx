@@ -10,6 +10,9 @@ namespace GameEngine {
 
 using namespace OpenGL;
 
+using ZDCPixmapNS::PixelDescRep_Color;
+using ZDCPixmapNS::PixelDescRep_Gray;
+
 // =================================================================================================
 #pragma mark - Helpers
 
@@ -45,28 +48,39 @@ Texture_GL::Texture_GL(const ZDCPixmap& iPixmap)
 	using namespace ZDCPixmapNS;
 
 	// For the momemnt, insist on RGBA (LE)
-	ZRef<PixelDescRep_Color> thePDRep =
-		fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Color>();
-
-	ZooLib::uint32 theR, theG, theB, theA;
-	thePDRep->GetMasks(theR, theG, theB, theA);
-
-	const PixvalDesc thePVDesc = fPixmap.GetRaster()->GetRasterDesc().fPixvalDesc;
-	if (thePVDesc.fBigEndian)
+	if (ZRef<PixelDescRep_Color> thePDRep = fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Color>())
 		{
-		ZAssert(theR == 0xFF000000);
-		ZAssert(theG == 0x00FF0000);
-		ZAssert(theB == 0x0000FF00);
-		ZAssert(theA == 0x000000FF);
+		ZooLib::uint32 theR, theG, theB, theA;
+		thePDRep->GetMasks(theR, theG, theB, theA);
+
+		const PixvalDesc thePVDesc = fPixmap.GetRaster()->GetRasterDesc().fPixvalDesc;
+		if (thePVDesc.fBigEndian)
+			{
+			ZAssert(theR == 0xFF000000);
+			ZAssert(theG == 0x00FF0000);
+			ZAssert(theB == 0x0000FF00);
+			ZAssert(theA == 0x000000FF);
+			}
+		else
+			{
+			ZAssert(theA == 0xFF000000);
+			ZAssert(theB == 0x00FF0000);
+			ZAssert(theG == 0x0000FF00);
+			ZAssert(theR == 0x000000FF);
+			}
+		}
+	else if (ZRef<PixelDescRep_Gray> thePDRep = fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
+		{
+		uint32 maskL, maskA;
+		thePDRep->GetMasks(maskL, maskA);
+		ZAssert(maskL == 0);
+		ZAssert(maskA == 0xFF);
+		fIsAlphaOnly = true;
 		}
 	else
 		{
-		ZAssert(theA == 0xFF000000);
-		ZAssert(theB == 0x00FF0000);
-		ZAssert(theG == 0x0000FF00);
-		ZAssert(theR == 0x000000FF);
+		ZUnimplemented();
 		}
-
 	// We should also require that pixmap bounds encompass the entirety of the raster.
 	}
 
@@ -107,6 +121,7 @@ bool Texture_GL::GetIsAlphaOnly()
 void Texture_GL::pMakeTexture()
 	{
 	ZAssert(not fTextureID);
+
 	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 
 	GLuint theTextureID;
@@ -129,17 +144,22 @@ void Texture_GL::pMakeTexture()
 	static bool spNeedPOT = false; // Need textures that are a `Power Of Two` in size?
 
 	const void* baseAddress = nullptr;
+	GLenum format = GL_RGBA;
 
 	if (fPixmap)
+		{
 		baseAddress = fPixmap.GetBaseAddress();
+		if (fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
+			format = GL_ALPHA;
+		}
 
 	if (not spNeedPOT)
 		{
 		fTextureSize = fDrawnSize;
 
-		::glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+		::glTexImage2D(GL_TEXTURE_2D, 0, format,
 			X(fTextureSize), Y(fTextureSize), 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, baseAddress);
+			format, GL_UNSIGNED_BYTE, baseAddress);
 		}
 
 	if (spNeedPOT || ::glGetError())
@@ -147,16 +167,16 @@ void Texture_GL::pMakeTexture()
 		fTextureSize =
 			sPointPOD(spNextPowerOfTwo(X(fDrawnSize)), spNextPowerOfTwo(Y(fDrawnSize)));
 
-		::glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+		::glTexImage2D(GL_TEXTURE_2D, 0, format,
 			X(fTextureSize), Y(fTextureSize), 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			format, GL_UNSIGNED_BYTE, nullptr);
 
 		if (baseAddress)
 			{
 			::glTexSubImage2D(GL_TEXTURE_2D, 0,
 				0, 0,
 				X(fDrawnSize), Y(fDrawnSize),
-				GL_RGBA, GL_UNSIGNED_BYTE, baseAddress);
+				format, GL_UNSIGNED_BYTE, baseAddress);
 			}
 
 		if (not ::glGetError())
