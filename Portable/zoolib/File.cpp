@@ -449,7 +449,12 @@ bool FileSpec::Delete() const
 /// Return a new ChannerR backed by the contents of the file referenced by the file spec.
 ZRef<ChannerR_Bin> FileSpec::OpenR(bool iPreventWriters) const
 	{
-	return this->OpenRPos(iPreventWriters);
+	if (fLoc)
+		{
+		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+			return realLoc->OpenR(iPreventWriters);
+		}
+	return null;
 	}
 
 /// Return a new ChannerRPos backed by the contents of the file referenced by the file spec.
@@ -466,7 +471,12 @@ ZRef<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
 /// Return a new ChannerW backed by the contents of the file referenced by the file spec.
 ZRef<ChannerW_Bin> FileSpec::OpenW(bool iPreventWriters) const
 	{
-	return this->OpenWPos(iPreventWriters);
+	if (fLoc)
+		{
+		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+			return realLoc->OpenW(iPreventWriters);
+		}
+	return null;
 	}
 
 /// Return a new ChannerWPos backed by the contents of the file referenced by the file spec.
@@ -719,8 +729,14 @@ ZRef<FileLoc> FileLoc::Follow()
 bool FileLoc::SetCreatorAndType(uint32 iCreator, uint32 iType)
 	{ return false; }
 
+ZRef<ChannerR_Bin> FileLoc::OpenR(bool iPreventWriters)
+	{ return this->OpenRPos(iPreventWriters); }
+
 ZRef<ChannerRPos_Bin> FileLoc::OpenRPos(bool iPreventWriters)
 	{ return null; }
+
+ZRef<ChannerW_Bin> FileLoc::OpenW(bool iPreventWriters)
+	{ return this->OpenWPos(iPreventWriters); }
 
 ZRef<ChannerWPos_Bin> FileLoc::OpenWPos(bool iPreventWriters)
 	{ return null; }

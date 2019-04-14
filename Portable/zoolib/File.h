@@ -254,7 +254,9 @@ public:
 	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest) = 0;
 	virtual bool Delete() = 0;
 
+	virtual ZRef<ChannerR_Bin> OpenR(bool iPreventWriters);
 	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	virtual ZRef<ChannerW_Bin> OpenW(bool iPreventWriters);
 	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
 	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
 
