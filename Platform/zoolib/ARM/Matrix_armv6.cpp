@@ -60,23 +60,23 @@ namespace Matrix_armv6 {
 
 // Switches from THUMB to ARM mode.
 #if __thumb__
-  #define VFP_SWITCH_TO_ARM \
-  	".align 4               \n\t" \
-	"mov     r0, pc         \n\t" \
-	"bx      r0             \n\t" \
-	".arm	   \n\t" 
+    #define VFP_SWITCH_TO_ARM \
+        ".align 4               \n\t" \
+        "mov     r0, pc         \n\t" \
+        "bx      r0             \n\t" \
+        ".arm\n\t"
 #else
-  #define VFP_SWITCH_TO_ARM
+    #define VFP_SWITCH_TO_ARM
 #endif
 
 // Switches from ARM to THUMB mode.
 #if __thumb__
-  #define VFP_SWITCH_TO_THUMB \
-  	"add     r0, pc, #1     \n\t" \
-	"bx      r0             \n\t" \
-	".thumb	 \n\t" 
+    #define VFP_SWITCH_TO_THUMB \
+        "add     r0, pc, #1     \n\t" \
+        "bx      r0             \n\t" \
+        ".thumb \n\t"
 #else
-  #define VFP_SWITCH_TO_THUMB
+    #define VFP_SWITCH_TO_THUMB
 #endif
 
 #define VFP_VECTOR_LENGTH_ZERO "fmrx    r0, fpscr            \n\t" \

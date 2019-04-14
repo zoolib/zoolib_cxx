@@ -32,8 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
-#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
-     #include <execinfo.h> // For backtrace
+#if __MACH__ || (__linux__ && !defined(__ANDROID__))
+	#include <execinfo.h> // For backtrace
 #endif
 
 #if __MACH__

@@ -62,7 +62,7 @@ MACRO_ShaderPrefix
 "		{"
 "		float distFromEdge = distance(ourPosition.xy, vec2(1.0));"
 "		float derivX = dFdx(distFromEdge);"
-"  		float derivY = dFdy(distFromEdge);"
+"		float derivY = dFdy(distFromEdge);"
 "		float gradientLength = length(vec2(derivX, derivY));"
 "		float thresholdWidth = 1.0 * gradientLength;"
 "		float theRatio = smoothstep(1.0-thresholdWidth, 1.0+thresholdWidth, distFromEdge);"

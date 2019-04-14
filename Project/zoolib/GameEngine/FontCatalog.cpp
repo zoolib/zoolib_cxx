@@ -4,7 +4,7 @@
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Util_STL_map.h"
 
-#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#define STB_TRUETYPE_IMPLEMENTATION // force following include to generate implementation
 #include "stb_truetype.h"
 
 namespace ZooLib {

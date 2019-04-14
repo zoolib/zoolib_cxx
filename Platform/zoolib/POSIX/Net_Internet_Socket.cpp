@@ -78,7 +78,7 @@ static bool spWaitConnected(int iFD, double iTimeout)
 
 	if (selectResult == 0)
 		{
-		// There were zero writeable FDs, so  also not yet usable.
+		// There were zero writeable FDs, so also not yet usable.
 		return false;
 		}
 

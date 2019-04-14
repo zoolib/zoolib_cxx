@@ -136,7 +136,7 @@ ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
 	{
 	ThreadVal_NameUniquifier theNU;
 
-	ChanR_XX_Buffered<ChanR_Bin>  theChanR_Buffered(iChanR, 4096);
+	ChanR_XX_Buffered<ChanR_Bin> theChanR_Buffered(iChanR, 4096);
 	ChanR_UTF_Chan_Bin_UTF8 theChanR_UTF(theChanR_Buffered);
 	ChanRU_UTF_Std theChanRU_UTF(theChanR_UTF);
 
