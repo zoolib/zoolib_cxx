@@ -18,7 +18,12 @@ class FontStrike
 	{
 public:
 	virtual ZRef<Texture> GetGlyphTexture(UTF32 iCP,
-	GRect& oGlyphBounds, GPoint& oOffset, Rat& oXAdvance) = 0;
+		GRect& oGlyphBounds, GPoint& oOffset, Rat& oXAdvance) = 0;
+
+	virtual GRect Measure(const UTF32* iCPs, size_t iCount) = 0;
+
+//	void GetVMetrics(float* oAscent, float* oDescent, float* oLineGap);
+//	void GetHMetrics(const UTF32 iCP, float* oAdvance, float* oLeftSideBearing);
 	};
 
 // =================================================================================================
