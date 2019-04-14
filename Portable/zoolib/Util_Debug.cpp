@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
-#if __MACH__ || __linux__
+#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
      #include <execinfo.h> // For backtrace
 #endif
 
@@ -74,12 +74,14 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 
 	if (iParams.fStop)
 		{
-		void* callstack[128];
-		size_t count = backtrace(callstack, 128);
-		char** strs = backtrace_symbols(callstack, count);
-		for (size_t ii = 0; ii < count; ++ii)
-			s << "\n" << strs[ii];
+		#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
+			void* callstack[128];
+			int count = backtrace(callstack, 128);
+			char** strs = backtrace_symbols(callstack, count);
+			for (int ii = 0; ii < count; ++ii)
+				s << "\n" << strs[ii];
 
+		#endif
 		s.Emit();
 		abort();
 		}
