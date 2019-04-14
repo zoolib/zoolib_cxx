@@ -50,13 +50,13 @@ class PixvalIterR;
 class PixvalIterRW;
 class PixvalIterW;
 
-class MapPixvalToRGB_Indexed;
-class MapPixvalToRGB_Gray;
-class MapPixvalToRGB_Color;
+class MapPixvalToRGBA_Indexed;
+class MapPixvalToRGBA_Gray;
+class MapPixvalToRGBA_Color;
 
-class MapRGBToPixval_Indexed;
-class MapRGBToPixval_Gray;
-class MapRGBToPixval_Color;
+class MapRGBAToPixval_Indexed;
+class MapRGBAToPixval_Gray;
+class MapRGBAToPixval_Color;
 
 typedef bool (*MungeProc)(ZCoord iLocationH, ZCoord iLocationV,
 	ZRGBA_POD& ioColor, void* iRefcon);
@@ -109,6 +109,9 @@ enum EFormatStandard
 	eFormatStandard_Gray_2,
 	eFormatStandard_Gray_4,
 	eFormatStandard_Gray_8,
+
+	eFormatStandard_Alpha_1,
+	eFormatStandard_Alpha_8,
 
 	eFormatStandard_GA_16,
 	eFormatStandard_AG_16,
@@ -314,15 +317,15 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Indexed
+#pragma mark - ZDCPixmapNS::MapPixvalToRGBA_Indexed
 
-class ZDCPixmapNS::MapPixvalToRGB_Indexed
+class ZDCPixmapNS::MapPixvalToRGBA_Indexed
 	{
 protected:
-	MapPixvalToRGB_Indexed() {}
-	MapPixvalToRGB_Indexed(const MapPixvalToRGB_Indexed&) {}
-	~MapPixvalToRGB_Indexed() {}
-	MapPixvalToRGB_Indexed& operator=(const MapPixvalToRGB_Indexed&) { return *this; }
+	MapPixvalToRGBA_Indexed() {}
+	MapPixvalToRGBA_Indexed(const MapPixvalToRGBA_Indexed&) {}
+	~MapPixvalToRGBA_Indexed() {}
+	MapPixvalToRGBA_Indexed& operator=(const MapPixvalToRGBA_Indexed&) { return *this; }
 
 public:
 	void AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
@@ -353,15 +356,15 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Gray
+#pragma mark - ZDCPixmapNS::MapPixvalToRGBA_Gray
 
-class ZDCPixmapNS::MapPixvalToRGB_Gray
+class ZDCPixmapNS::MapPixvalToRGBA_Gray
 	{
 protected:
-	MapPixvalToRGB_Gray() {}
-	MapPixvalToRGB_Gray(const MapPixvalToRGB_Gray&) {}
-	~MapPixvalToRGB_Gray() {}
-	MapPixvalToRGB_Gray& operator=(const MapPixvalToRGB_Gray&) { return *this; }
+	MapPixvalToRGBA_Gray() {}
+	MapPixvalToRGBA_Gray(const MapPixvalToRGBA_Gray&) {}
+	~MapPixvalToRGBA_Gray() {}
+	MapPixvalToRGBA_Gray& operator=(const MapPixvalToRGBA_Gray&) { return *this; }
 
 public:
 	static uint32 sConvert(
@@ -398,15 +401,15 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapPixvalToRGB_Color
+#pragma mark - ZDCPixmapNS::MapPixvalToRGBA_Color
 
-class ZDCPixmapNS::MapPixvalToRGB_Color
+class ZDCPixmapNS::MapPixvalToRGBA_Color
 	{
 protected:
-	MapPixvalToRGB_Color() {}
-	MapPixvalToRGB_Color(const MapPixvalToRGB_Color&) {}
-	~MapPixvalToRGB_Color() {}
-	MapPixvalToRGB_Color& operator=(const MapPixvalToRGB_Color&) { return *this; }
+	MapPixvalToRGBA_Color() {}
+	MapPixvalToRGBA_Color(const MapPixvalToRGBA_Color&) {}
+	~MapPixvalToRGBA_Color() {}
+	MapPixvalToRGBA_Color& operator=(const MapPixvalToRGBA_Color&) { return *this; }
 
 public:
 	static uint32 sConvert(
@@ -453,15 +456,15 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapRGBToPixval_Indexed
+#pragma mark - ZDCPixmapNS::MapRGBAToPixval_Indexed
 
-class ZDCPixmapNS::MapRGBToPixval_Indexed
+class ZDCPixmapNS::MapRGBAToPixval_Indexed
 	{
 protected:
-	MapRGBToPixval_Indexed() {}
-	MapRGBToPixval_Indexed(const MapRGBToPixval_Indexed&) {}
-	~MapRGBToPixval_Indexed() {}
-	MapRGBToPixval_Indexed& operator=(const MapRGBToPixval_Indexed&) { return *this; }
+	MapRGBAToPixval_Indexed() {}
+	MapRGBAToPixval_Indexed(const MapRGBAToPixval_Indexed&) {}
+	~MapRGBAToPixval_Indexed() {}
+	MapRGBAToPixval_Indexed& operator=(const MapRGBAToPixval_Indexed&) { return *this; }
 
 public:
 	uint32 AsPixval(const ZRGBA_POD& iRGBA) const
@@ -483,15 +486,15 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapRGBToPixval_Gray
+#pragma mark - ZDCPixmapNS::MapRGBAToPixval_Gray
 
-class ZDCPixmapNS::MapRGBToPixval_Gray
+class ZDCPixmapNS::MapRGBAToPixval_Gray
 	{
 protected:
-	MapRGBToPixval_Gray() {}
-	MapRGBToPixval_Gray(const MapRGBToPixval_Gray&) {}
-	~MapRGBToPixval_Gray() {}
-	MapRGBToPixval_Gray& operator=(const MapRGBToPixval_Gray&) { return *this; }
+	MapRGBAToPixval_Gray() {}
+	MapRGBAToPixval_Gray(const MapRGBAToPixval_Gray&) {}
+	~MapRGBAToPixval_Gray() {}
+	MapRGBAToPixval_Gray& operator=(const MapRGBAToPixval_Gray&) { return *this; }
 
 public:
 	uint32 AsPixval(const ZRGBA_POD& iRGBA) const
@@ -516,15 +519,15 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapNS::MapRGBToPixval_Color
+#pragma mark - ZDCPixmapNS::MapRGBAToPixval_Color
 
-class ZDCPixmapNS::MapRGBToPixval_Color
+class ZDCPixmapNS::MapRGBAToPixval_Color
 	{
 protected:
-	MapRGBToPixval_Color() {}
-	MapRGBToPixval_Color(const MapRGBToPixval_Color&) {}
-	~MapRGBToPixval_Color() {}
-	MapRGBToPixval_Color& operator=(const MapRGBToPixval_Color&) { return *this; }
+	MapRGBAToPixval_Color() {}
+	MapRGBAToPixval_Color(const MapRGBAToPixval_Color&) {}
+	~MapRGBAToPixval_Color() {}
+	MapRGBAToPixval_Color& operator=(const MapRGBAToPixval_Color&) { return *this; }
 
 public:
 	uint32 AsPixval(const ZRGBA_POD& iRGBA) const
@@ -593,8 +596,8 @@ protected:
 
 class ZDCPixmapNS::PixelDescRep_Indexed
 :	public ZDCPixmapNS::PixelDescRep,
-	public ZDCPixmapNS::MapPixvalToRGB_Indexed,
-	public ZDCPixmapNS::MapRGBToPixval_Indexed
+	public ZDCPixmapNS::MapPixvalToRGBA_Indexed,
+	public ZDCPixmapNS::MapRGBAToPixval_Indexed
 	{
 public:
 	PixelDescRep_Indexed(const ZRGBA_POD* iColors, size_t iCount);
@@ -637,8 +640,8 @@ protected:
 
 class ZDCPixmapNS::PixelDescRep_Gray
 :	public ZDCPixmapNS::PixelDescRep,
-	public ZDCPixmapNS::MapPixvalToRGB_Gray,
-	public ZDCPixmapNS::MapRGBToPixval_Gray
+	public ZDCPixmapNS::MapPixvalToRGBA_Gray,
+	public ZDCPixmapNS::MapRGBAToPixval_Gray
 	{
 public:
 	PixelDescRep_Gray(uint32 iMaskGray, uint32 iMaskAlpha);
@@ -666,8 +669,8 @@ public:
 
 class ZDCPixmapNS::PixelDescRep_Color
 :	public ZDCPixmapNS::PixelDescRep,
-	public ZDCPixmapNS::MapPixvalToRGB_Color,
-	public ZDCPixmapNS::MapRGBToPixval_Color
+	public ZDCPixmapNS::MapPixvalToRGBA_Color,
+	public ZDCPixmapNS::MapRGBAToPixval_Color
 	{
 public:
 	PixelDescRep_Color(uint32 iMaskRed, uint32 iMaskGreen, uint32 iMaskBlue, uint32 iMaskAlpha);
