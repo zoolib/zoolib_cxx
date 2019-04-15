@@ -52,6 +52,20 @@ bool sCompact;
 using std::string;
 
 // =================================================================================================
+#pragma mark -
+
+void sWriteBacktrace(const ChanW_UTF& iChanW)
+	{
+	#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
+		void* callstack[128];
+		int count = backtrace(callstack, 128);
+		char** strs = backtrace_symbols(callstack, count);
+		for (int ii = 0; ii < count; ++ii)
+			iChanW << strs[ii] << "\n";
+	#endif
+	}
+
+// =================================================================================================
 #pragma mark - ZDebug and ZAssert handler (anonymous)
 
 namespace { // anonymous
@@ -74,14 +88,7 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 
 	if (iParams.fStop)
 		{
-		#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
-			void* callstack[128];
-			int count = backtrace(callstack, 128);
-			char** strs = backtrace_symbols(callstack, count);
-			for (int ii = 0; ii < count; ++ii)
-				s << "\n" << strs[ii];
-
-		#endif
+		sWriteBacktrace(s);
 		s.Emit();
 		abort();
 		}

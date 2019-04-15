@@ -34,6 +34,8 @@ namespace Util_Debug {
 
 extern bool sCompact;
 
+void sWriteBacktrace(const ChanW_UTF& iChanW);
+
 void sInstall();
 
 void sSetChanner(ZRef<ChannerW_UTF> iChannerW);
