@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZRef<FileLoc> sFileLoc_Zip(const char* iPath);
+FileSpec sFileSpec_Zip(const std::string& iZipFilePath);
 
 } // namespace ZooLib
 

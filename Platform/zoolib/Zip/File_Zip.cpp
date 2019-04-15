@@ -346,17 +346,14 @@ FileSpec FileIterRep_Zip::Current()
 // =================================================================================================
 #pragma mark - sFileLoc_Zip
 
-ZRef<FileLoc> sFileLoc_Zip(const char* iFilePath)
+FileSpec sFileSpec_Zip(const std::string& iZipFilePath)
 	{
-	if (iFilePath)
+	if (zip* the_zip = ::zip_open(iZipFilePath.c_str(), 0, nullptr))
 		{
-		if (zip* the_zip = ::zip_open(iFilePath, 0, nullptr))
-			{
-			ZRef<ZipHolder> theZipHolder = new ZipHolder(the_zip, true);
-			return new FileLoc_Zip(theZipHolder, theZipHolder->fRoot);
-			}
+		ZRef<ZipHolder> theZipHolder = new ZipHolder(the_zip, true);
+		return new FileLoc_Zip(theZipHolder, theZipHolder->fRoot);
 		}
-	return null;
+	return FileSpec();
 	}
 
 } // namespace ZooLib
