@@ -20,7 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/StartOnNewThread.h"
 
+#include "zoolib/Log.h"
 #include "zoolib/Singleton.h"
+#include "zoolib/Util_Debug.h"
 #include "zoolib/ZThread.h"
 
 #include <list>
@@ -51,22 +53,42 @@ public:
 	void Start(const ZRef<Callable<void()>>& iCallable)
 		{
 		ZAcqMtx acq(fMtx);
-		try
+		fQueue.push_back(iCallable);
+		if (fIdleThreads < fQueue.size())
 			{
-			fQueue.push_back(iCallable);
-			if (fIdleThreads < fQueue.size())
+			++fActiveThreads;
+			for (int xx = 0; /*no test*/; ++xx)
 				{
-				++fActiveThreads;
-				ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
-				}
-			else
-				{
-				fCnd.Broadcast();
+				try
+					{
+					ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
+					if (xx != 0)
+						{
+						if (ZLOGF(w, eErr))
+							w << "ZThread::sStartRaw succeeded after " << xx << " additional tries.";
+						}
+					break;
+					}
+				catch (std::exception& ex)
+					{
+					if (xx == 0)
+						{
+						if (ZLOGF(w, eErr))
+							{
+							w << "Exception: " << ex.what() << "\n";
+							Util_Debug::sWriteBacktrace(w);
+							}
+						}
+					else
+						{
+						ZThread::sSleep(0.01);
+						}
+					}
 				}
 			}
-		catch (...)
+		else
 			{
-			ZUnimplemented();
+			fCnd.Broadcast();
 			}
 		}
 
