@@ -95,20 +95,23 @@ public:
 // =================================================================================================
 #pragma mark -
 
-void sGame_Render(const ZRef<Rendered>& iRendered,
-	const GPoint& iPixelSize,
-	const GPoint& iGameSize,
-	bool iUseShader,
-	bool iShowBounds, bool iShowOrigin,
-	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
+GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iGPoint)
 	{
-	// See also Visitor_Draw_GL_Shader's Visit_Rendered_Buffer.
+	if (X(iPixelSize) < X(iGameSize))
+		{
+		iGPoint *= 2;
+		iGPoint -= iPixelSize - (iGameSize/2);
+		return iGPoint;
+		}
+	else
+		{
+		iGPoint -= (iPixelSize - iGameSize) / 2;
+		return iGPoint;
+		}
+	}
 
-	SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(iPixelSize), Y(iPixelSize));
-
-	::glClearColor(0, 0, 0, 1);
-	::glClear(GL_COLOR_BUFFER_BIT);
-
+static Mat spAdditionalMat(const GPoint& iPixelSize, const GPoint& iGameSize)
+	{
 	Mat additional(1);
 
 	if (X(iPixelSize) < X(iGameSize))
@@ -132,6 +135,23 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 			0);
 		}
 
+	return additional;
+	}
+
+void sGame_Render(const ZRef<Rendered>& iRendered,
+	const GPoint& iPixelSize,
+	const GPoint& iGameSize,
+	bool iUseShader,
+	bool iShowBounds, bool iShowOrigin,
+	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
+	{
+	// See also Visitor_Draw_GL_Shader's Visit_Rendered_Buffer.
+
+	SaveSetRestore_ViewPort ssr_ViewPort(0, 0, X(iPixelSize), Y(iPixelSize));
+
+	::glClearColor(0, 0, 0, 1);
+	::glClear(GL_COLOR_BUFFER_BIT);
+
 	Mat theMat(1);
 	// We start with -1 <= X < 1 and -1 <= Y < 1.
 
@@ -143,7 +163,7 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 	theMat *= sTranslate3<Rat>(-X(iPixelSize)/2, -Y(iPixelSize)/2, 0);
 
 	// Apply any 960-->480 scaling, and centering
-	theMat *= additional;
+	theMat *= spAdditionalMat(iPixelSize, iGameSize);
 
 	iListenerL = X(theMat * sCVec3(iListenerL,0,0));
 	iListenerR = X(theMat * sCVec3(iListenerR,0,0));
