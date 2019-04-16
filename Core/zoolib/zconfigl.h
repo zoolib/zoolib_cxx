@@ -159,30 +159,41 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // a SYM build, otherwise it is set to 0. You can override ZCONFIG_Debug by setting its value in
 // your zconfig.h before including this file.
 // With XCode we could base debug off !__OPTIMIZE__
+
 #ifndef ZCONFIG_Debug
 	#if 0
 	#elif defined(DEBUG)
+
 		#define ZCONFIG_Debug ZCONFIG_DebugLevel
-	#elif defined(NDEBUG)
-		#define ZCONFIG_Debug 0
+
+	#elif defined(ANDROID) && !defined(NDEBUG)
+
+		#define ZCONFIG_Debug ZCONFIG_DebugLevel
+
 	#elif defined(__MACH__)
+
 		#if not defined(__OPTIMIZE__)
 			#define ZCONFIG_Debug ZCONFIG_DebugLevel
 		#else
 			#define ZCONFIG_Debug 0
 		#endif
+
 	#elif defined(__MWERKS__)
+
 		#if __option(sym)
 			#define ZCONFIG_Debug ZCONFIG_DebugLevel
 		#else
 			#define ZCONFIG_Debug 0
 		#endif
+
 	#elif defined(_MSC_VER)
+
 		#if defined(DEBUG) || defined(_DEBUG)
 			#define ZCONFIG_Debug ZCONFIG_DebugLevel
 		#else
 			#define ZCONFIG_Debug 0
 		#endif
+
 	#else
 		#if defined(DEBUG) || defined(_GLIBCXX_DEBUG)
 			#define ZCONFIG_Debug ZCONFIG_DebugLevel
