@@ -55,7 +55,8 @@ public:
 			fW << "\t";
 
 		fW << iWalker->fCalled_Rewind << "\t" << iWalker->fCalled_QReadInc;
-		fW << " " << typeid(*iWalker).name();
+		Walker* asPointer = iWalker.Get();
+		fW << " " << typeid(*asPointer).name();
 
 		++fIndent;
 
