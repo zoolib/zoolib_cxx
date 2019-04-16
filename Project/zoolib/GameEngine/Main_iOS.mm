@@ -13,11 +13,7 @@
 
 #include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/Sound_CoreAudio.h"
-#include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/GameEngine/UIView_Game.h"
-
-#include "ZenMox/ZenMox.h"
-#include "ZenMox/Nook_Melange.h"
 
 #include <CoreFoundation/CFBundle.h>
 #include <CoreFoundation/CFURL.h>
@@ -26,22 +22,18 @@
 #include <UIKit/UIViewController.h>
 #include <UIKit/UIWindow.h>
 
-
 // =================================================================================================
 #pragma mark -
 
 using std::map;
 using std::vector;
 
-using namespace ZenMox;
-using namespace Zen;
+using namespace ZooLib;
+using namespace GameEngine;
 
 using namespace Util_STL;
 
 static const int kUpdateRate_Draw = 2;
-
-const Rat kWidth = 1024;
-const Rat kHeight = 768;
 
 // =================================================================================================
 #pragma mark - Helpers (anonymous)
@@ -57,24 +49,8 @@ ZQ<FileSpec> spQAsFileSpec(const ZRef<CFURLRef>& iURLRef)
 	return null;
 	}
 
-//static
-//ZQ<FileSpec> spQHomeDirResourceFS()
-//	{
-//	ZRef<NSString> theString = sAdopt& @"/Users/ag/GlassCeiling_Assets";//##??
-//	if (theString)
-//		{
-//		const FileSpec theFileSpec = FileSpec::sRoot().Follow(Util_NS::sAsUTF8(theString));
-//		if (theFileSpec.IsDir())
-//			return theFileSpec;
-//		}
-//	return null;
-//	}
-
 FileSpec spResourceFS()
 	{
-//	if (ZQ<FileSpec> theQ = spQHomeDirResourceFS())
-//		return *theQ;
-
 	if (ZQ<FileSpec> theQ = spQAsFileSpec(
 		sAdopt& ::CFBundleCopyResourcesDirectoryURL(::CFBundleGetMainBundle())))
 		{ return theQ->Child("assets"); }
@@ -92,22 +68,10 @@ FileSpec spResourceFS()
 	{
 @public
 	ZRef<UIView> fView_Outer;
-	ZRef<UIView_Game> fGCView;
+	ZRef<UIView_Game> fUIView_Game;
 	ZRef<CADisplayLink> fDisplayLink;
 
-	ZRef<Callable_Void> fCallable_RunGame;
-	ZRef<Starter> fStarter;
-
 	ZRef<Game> fGame;
-	ZRef<SoundMeister_CoreAudio> fSoundMeister;
-	ZRef<Nook_Melange> fNook_Melange;
-//	ZRef<Nook_Advert> fNook_Advert;
-//	ZRef<Nook_Globals> fNook_Globals;
-
-	ZMtx fMtx_Draw;
-
-	double fTime_Prior;
-	double fTime_LastEntry;
 
 	TouchMap fTouchMap;
 	}
@@ -134,7 +98,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesBegan:touches withEvent:event];
 
-	TouchSet theSet = [fGCView processTouches:touches withTouchMap:fTouchMap erasingFromMap:false];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
 
 	fGame->UpdateTouches(&theSet, nullptr, nullptr);
 	}
@@ -143,7 +107,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesMoved:touches withEvent:event];
 
-	TouchSet theSet = [fGCView processTouches:touches withTouchMap:fTouchMap erasingFromMap:false];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
 
 	fGame->UpdateTouches(nullptr, &theSet, nullptr);
 	}
@@ -152,7 +116,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesEnded:touches withEvent:event];
 
-	TouchSet theSet = [fGCView processTouches:touches withTouchMap:fTouchMap erasingFromMap:true];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
 
 	fGame->UpdateTouches(nullptr, nullptr, &theSet);
 	}
@@ -161,39 +125,25 @@ FileSpec spResourceFS()
 	{
 	[super touchesCancelled:touches withEvent:event];
 
-	TouchSet theSet = [fGCView processTouches:touches withTouchMap:fTouchMap erasingFromMap:true];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
 
 	fGame->UpdateTouches(nullptr, nullptr, &theSet);
 	}
 
 -(void)purge
-	{ fGame->Purge(); }
-
-- (void)pRunGame
 	{
-	[fGCView ensureIndependentContextExistsForThisThread];
-
-	ZThread::sSetName("RunGame");
-
-	ZRef<NSAutoreleasePool> pool = sAdopt& [[NSAutoreleasePool alloc] init];
-	fGame->RunOnce(
-		sPoint<GPoint>([fGCView backingSize]),
-		sPoint<GPoint>(kWidth, kHeight));
-
-	sQStart(fStarter, fCallable_RunGame);
+	fGame->Purge();
 	}
 
 - (void)pDrawView
 	{
 	//## Log this, see if it's called before/during black screen?
-	ZLOGTRACE(eDebug);
-	[fGCView beforeDraw];
+	[fUIView_Game beforeDraw];
 	fGame->Draw(
 		Time::sSystem(),
-		sPoint<GPoint>([fGCView backingSize]),
-		sPoint<GPoint>([fGCView gameSize]),
-		[fGCView->fContext API] >= kEAGLRenderingAPIOpenGLES2,
-		sCallable<void()>(fGCView, @selector(afterDraw)));
+		sPoint<GPoint>([fUIView_Game backingSize]),
+		[fUIView_Game->fContext API] >= kEAGLRenderingAPIOpenGLES2,
+		sCallable<void()>(fUIView_Game, @selector(afterDraw)));
 	}
 
 - (void)loadView
@@ -202,34 +152,18 @@ FileSpec spResourceFS()
 	if (mainScreenBounds.size.height > mainScreenBounds.size.width)
 		{
 		// Urg. Force landscape. Not needed when GCView is top level.
-		swap(mainScreenBounds.size.height, mainScreenBounds.size.width);
+		std::swap(mainScreenBounds.size.height, mainScreenBounds.size.width);
 		}
 
 	fView_Outer = sAdopt& [[UIView alloc] initWithFrame:mainScreenBounds];
 
-	CGPoint gameSize = sPoint<CGPoint>(kWidth, kHeight);
+	fUIView_Game = sAdopt& [[UIView_Game alloc] initWithFrame:mainScreenBounds];
 
-	fGCView = sAdopt& [[UIView_Game alloc] initWithFrame:mainScreenBounds andGameSize:gameSize];
-
-	[fView_Outer addSubview:fGCView];
+	[fView_Outer addSubview:fUIView_Game];
 
 	self.view = fView_Outer;
 
-	fTime_LastEntry = 0;
-
-	FileSpec resourceFS = spResourceFS();
-
-	fSoundMeister = new SoundMeister_CoreAudio(resourceFS.Child("audio"));
-
-	fGame = new Game(
-		resourceFS,
-		sCallable_TextureFromPixmap_GL(),
-		true, [fGCView preferSmallArt],
-		fSoundMeister);
-
-//	fNook_Globals = new Nook_Globals(fGame->GetNookScope());
-
-//	fNook_Globals->fLevelMax = sDRat(0, Util_CF::sAsAny(Map_CFPreferences().Get("LevelMax")));
+	fGame = sMakeGame(spResourceFS(), false);
 
 	fDisplayLink =
 		sAdopt& [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(pDrawView)];
@@ -237,15 +171,6 @@ FileSpec spResourceFS()
 	[fDisplayLink setFrameInterval:kUpdateRate_Draw];
 
 	[fDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-
-	fCallable_RunGame = sCallable<void()>(self, @selector(pRunGame));
-	fStarter = sStarter_ThreadLoop("RunGame");
-
-	Melange_t theMelange = sMakeMelange(fStarter, null);
-
-	fNook_Melange = new Nook_Melange(fGame->GetNookScope(), theMelange);
-
-	sQStart(fStarter, fCallable_RunGame);
 	}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

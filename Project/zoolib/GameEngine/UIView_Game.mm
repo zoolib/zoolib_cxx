@@ -52,8 +52,8 @@ const CGPoint spSize_Logical()
 const CGFloat spWidth_Logical()
 	{ return X(spSize_Logical()); }
 
-const CGFloat spWidth_Pixels()
-	{ return spWidth_Logical() * spScale(); }
+//const CGFloat spWidth_Pixels()
+//	{ return spWidth_Logical() * spScale(); }
 
 } // anonymous namespace
 
@@ -65,8 +65,14 @@ const CGFloat spWidth_Pixels()
 + (Class) layerClass
 	{ return [CAEAGLLayer class]; }
 
-- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing
+- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing gameSize:(CGPoint)iGameSize
 	{
+	CGFloat theClickScale = 1.0;
+	if (spWidth_Logical() < X(iGameSize))
+		theClickScale = 2.0;
+
+	CGPoint theClickTranslate = ((spSize_Logical() * theClickScale) - iGameSize) / -2;
+
 	TouchSet result;
 	NSEnumerator* e = [[touches allObjects] objectEnumerator];
 	for (id ob = [e nextObject]; ob; ob = [e nextObject])
@@ -92,27 +98,15 @@ const CGFloat spWidth_Pixels()
 			sEraseMust(ioTouchMap, theUITouch);
 
 		CGPoint locationInView = [theUITouch locationInView:self];
-		theTouch->fPos = sPoint<CVec3>(locationInView * fClickScale + fClickTranslate);
+		theTouch->fPos = sPoint<CVec3>(locationInView * theClickScale + theClickTranslate);
 		}
 	return result;
 	}
 
-- (bool) preferSmallArt
-	{
-	return spWidth_Pixels() < X(fGameSize);
-	}
-
--(id)initWithFrame:(CGRect)frame andGameSize:(CGPoint)gameSize
+-(id)initWithFrame:(CGRect)frame
 	{
 	[super initWithFrame:frame];
 	[self setMultipleTouchEnabled:YES];
-	fGameSize = gameSize;
-	if (spWidth_Logical() < X(fGameSize))
-		fClickScale = 2.0;
-	else
-		fClickScale = 1.0;
-
-	fClickTranslate = ((spSize_Logical() * fClickScale) - fGameSize) / -2;
 
 	[self initGLES];
 
@@ -121,9 +115,6 @@ const CGFloat spWidth_Pixels()
 
 -(id)initGLES
 	{
-	if (spWidth_Logical() < X(fGameSize))
-		self.contentScaleFactor = spScale();
-
 	CAEAGLLayer* eaglLayer = (CAEAGLLayer*)self.layer;
 
 	eaglLayer.opaque = YES;
@@ -146,9 +137,6 @@ const CGFloat spWidth_Pixels()
 
 -(CGPoint)backingSize
 	{ return sPoint<CGPoint>(fBackingWidth, fBackingHeight); }
-
--(CGPoint)gameSize
-	{ return fGameSize; }
 
 -(void)layoutSubviews
 	{
@@ -203,7 +191,6 @@ const CGFloat spWidth_Pixels()
 		[EAGLContext setCurrentContext:theContext];
 		}
 	}
-
 
 - (void)beforeDraw
 	{

@@ -100,7 +100,13 @@ GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iG
 	if (X(iPixelSize) < X(iGameSize))
 		{
 		iGPoint *= 2;
-		iGPoint -= iPixelSize - (iGameSize/2);
+		iGPoint -= iPixelSize - (iGameSize / 2);
+		return iGPoint;
+		}
+	else if (X(iGameSize) * 1.5 < X(iPixelSize))
+		{
+		iGPoint -= (iPixelSize - iGameSize * 1.5) / 2;
+		iGPoint /= 1.5;
 		return iGPoint;
 		}
 	else
@@ -120,15 +126,21 @@ static Mat spAdditionalMat(const GPoint& iPixelSize, const GPoint& iGameSize)
 		// have loaded low-res versions of artwork with compensating 200% scale.
 		additional *= sScale3<Rat>(0.5, 0.5, 1.0);
 
-		// And center. Note, this expression is *not* the same...
 		additional *= sTranslate3<Rat>(
 			X(iPixelSize) - (X(iGameSize) / 2),
 			Y(iPixelSize) - (Y(iGameSize) / 2),
 			0);
 		}
+	else if (X(iGameSize) * 1.5 < X(iPixelSize))
+		{
+		additional *= sTranslate3<Rat>(
+			(X(iPixelSize) - X(iGameSize * 1.5)) / 2,
+			(Y(iPixelSize) - Y(iGameSize * 1.5)) / 2,
+			0);
+		additional *= sScale3<Rat>(1.5, 1.5, 1.0);
+		}
 	else
 		{
-		// ... as this expression.
 		additional *= sTranslate3<Rat>(
 			(X(iPixelSize) - X(iGameSize)) / 2,
 			(Y(iPixelSize) - Y(iGameSize)) / 2,

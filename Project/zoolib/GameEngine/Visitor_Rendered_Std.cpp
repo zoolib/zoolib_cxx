@@ -173,7 +173,13 @@ Visitor_Rendered_StringToTextures::Visitor_Rendered_StringToTextures(
 void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	if (ZRef<FontStrike> theStrike = fFontCatalog->GetFontStrike(iRendered_String->GetFontSpec()))
+	FontSpec theSpec = iRendered_String->GetFontSpec();
+	if (theSpec.fName.IsEmpty())
+		{
+		theSpec.fName = "Helvetica.ttf";
+		theSpec.fSize = 12;
+		}
+	if (ZRef<FontStrike> theStrike = fFontCatalog->GetFontStrike(theSpec))
 		{
 		ZRef<Rendered_Group> theGroup = sRendered_Group();
 

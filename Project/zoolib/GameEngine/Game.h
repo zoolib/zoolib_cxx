@@ -37,6 +37,8 @@ public:
 	virtual void Initialize();
 
 // Our protocol
+	virtual GPoint GetGameSize() = 0;
+
 	void Purge();
 
 	ZRef<NookScope> GetNookScope();
@@ -46,13 +48,10 @@ public:
 	void Draw(
 		double iNewTimestamp,
 		GPoint iBackingSize,
-		GPoint iGameSize,
 		bool iUseShader,
 		const ZRef<Callable_Void>& iCallable_FlipBuffers);
 
-	void RunOnce(
-		GPoint iBackingSize,
-		GPoint iGameSize);
+	void RunOnce();
 
 private:
 	void pUpdateTouches();
@@ -90,6 +89,8 @@ private:
 	double fAccumulated;
 	Cog fCog;
 	};
+
+ZRef<Game> sMakeGame(const FileSpec& iResourceFS, bool iPreferSmallArt);
 
 } // namespace GameEngine
 } // namespace ZooLib

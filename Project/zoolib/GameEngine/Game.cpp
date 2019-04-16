@@ -114,6 +114,7 @@ Game::Game(const FileSpec& iFS,
 ,	fAccumulated(0)
 	{
 	fAssetCatalog = new AssetCatalog;
+
 	sPopulate(fAssetCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
 
@@ -155,11 +156,12 @@ void Game::UpdateTouches(const TouchSet* iDown, const TouchSet* iMove, const Tou
 void Game::Draw(
 	double iNewTimestamp,
 	GPoint iBackingSize,
-	GPoint iGameSize,
 	bool iUseShader,
 	const ZRef<Callable_Void>& iCallable_FlipBuffers)
 	{
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
+
+	GPoint theGameSize = this->GetGameSize();
 
 	ZRef<Rendered> theRendered;
 	{
@@ -178,13 +180,16 @@ void Game::Draw(
 	if (theRendered)
 		{
 		double start = Time::sSystem();
-		const Rat listenerL = X(iGameSize) / 3;
-		const Rat listenerR = 2 * X(iGameSize) / 3;
-		const Rat listenerDistance = 5.0 * X(iGameSize) / 12;
+		const Rat listenerL = X(theGameSize) / 3;
+		const Rat listenerR = 2 * X(theGameSize) / 3;
+		const Rat listenerDistance = 5.0 * X(theGameSize) / 12;
+
+		theRendered = Util::sFinderHider(theRendered, iBackingSize, theGameSize);
+
 		sGame_Render(
 			theRendered,
 			iBackingSize,
-			iGameSize,
+			theGameSize,
 			iUseShader,
 			DebugFlags::sTextureBounds, DebugFlags::sTextureBounds,
 			fSoundMeister, listenerL, listenerR, listenerDistance);
@@ -205,11 +210,11 @@ void Game::Draw(
 		}
 	}
 
-void Game::RunOnce(
-	GPoint iBackingSize,
-	GPoint iGameSize)
+void Game::RunOnce()
 	{
 	double interval;
+
+	GPoint theGameSize = this->GetGameSize();
 
 	{
 	ZAcqMtx acq(fMtx_Game);
@@ -227,13 +232,11 @@ void Game::RunOnce(
 
 	ZRef<Rendered> theRendered = this->pCrank(interval);
 
-	theRendered = Util::sFinderHider(theRendered, iBackingSize, iGameSize);
-
 	theRendered = sDrawPreprocess(
 		theRendered,
 		fAssetCatalog, GameEngine::DebugFlags::sTextureNameFrame,
 		fFontCatalog,
-		iGameSize);
+		theGameSize);
 
 	ZAcqMtx acq(fMtx_Game);
 	fRendered = theRendered;
@@ -242,7 +245,7 @@ void Game::RunOnce(
 void Game::pUpdateTouches()
 	{
 	// Go through touch downs and assign touches to listeners.
-	foreachv (const ZRef<Touch> theTouch, fPendingTouchesDown)
+	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesDown)
 		{
 		sInsertMust(fTouchesActive, theTouch);
 
@@ -283,7 +286,7 @@ void Game::pUpdateTouches()
 				sInsertMust(exclusive->fDowns, theTouch);
 				}
 			}
-		else foreachv (const ZRef<TouchListener> theListener, interested)
+		else foreachv (const ZRef<TouchListener>& theListener, interested)
 			{
 			if (theListener->fActive.size() < theListener->fMaxTouches)
 				{
@@ -294,7 +297,7 @@ void Game::pUpdateTouches()
 		}
 	fPendingTouchesDown.clear();
 
-	foreachv (const ZRef<Touch> theTouch, fPendingTouchesMove)
+	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesMove)
 		{
 		ZRef<TouchListener> exclusive;
 		if (ZQ<ZRef<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
@@ -311,7 +314,7 @@ void Game::pUpdateTouches()
 		}
 	fPendingTouchesMove.clear();
 
-	foreachv (const ZRef<Touch> theTouch, fPendingTouchesUp)
+	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesUp)
 		{
 		sEraseMust(fTouchesActive, theTouch);
 
@@ -365,7 +368,7 @@ ZRef<Rendered> Game::pCrank(double iInterval)
 	std::vector<ZRef<TouchListener> > priorTLs = fTLs;
 	fTLs = spSortTLs(theOutChannel.GetTLs());
 
-	foreachv (const ZRef<Touch> theTouch, fTouchesUp)
+	foreachv (const ZRef<Touch>& theTouch, fTouchesUp)
 		{
 		ZRef<TouchListener> exclusive;
 		if (ZQ<ZRef<TouchListener> > theQ = sQGetErase(fExclusiveTouches, theTouch))

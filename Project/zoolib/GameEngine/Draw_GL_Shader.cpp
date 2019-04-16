@@ -543,7 +543,7 @@ Visitor_Draw_GL_Shader::Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigi
 :	fShowBounds(iShowBounds)
 ,	fShowOrigin(iShowOrigin)
 	{
-	#if not ZMACRO_IOS
+	#if not ZMACRO_IOS and not defined(ANDROID)
 		ZAssert(strstr((const char*)glGetString(GL_EXTENSIONS), "GL_EXT_framebuffer_object"));
 	#endif
 	}

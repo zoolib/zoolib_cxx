@@ -5,19 +5,12 @@
 #include "zoolib/Util_Debug.h"
 #include "zoolib/Util_STL_map.h"
 
-//#include "zoolib/GameEngine/DebugFlags.h"
-//#include "zoolib/GameEngine/Draw_GL.h"
-//#include "zoolib/GameEngine/DrawPreprocess.h"
 #include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Types.h"
-//#include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/GameEngine/Util.h"
-//#include "zoolib/GameEngine/Util_AssetCatalog.h"
-//#include "zoolib/GameEngine/Util_FinderHider.h"
 
 #include "zoolib/JNI/JNI.h"
-
 
 // =================================================================================================
 // MARK: -
@@ -72,6 +65,8 @@ static void spSwapWindow()
 	jmethodID mid = env->GetStaticMethodID(spClass_Activity, "flipBuffers", "()V");
 	env->CallStaticVoidMethod(spClass_Activity, mid);
 	}
+
+static ZRef<Callable_Void> spCallable_SwapWindow = sCallable(spSwapWindow);
 
 static void spSetTitle(const char *title)
 	{
@@ -190,6 +185,9 @@ void Java_org_zoolib_SDLActivity_sOnTouch
 	{
 	JNI::Env theEnv(env);
 
+	if (ZLOGF(w, eErr))
+		w << "pointerId: " << pointerId << ", action: " << action << ", x: " << x << ", y: " << y << ", p: " << p;
+
 	ZAcqMtx axq(sMtx);
 	TouchInfo theTI;
 
@@ -261,14 +259,15 @@ static void spUpdateTouches(
             case ACTION_POINTER_UP:
             case ACTION_CANCEL:
             	{
-				sInsertMust(ioUp, theTouch);
+            	sInsertMust(ioUp, theTouch);
 				sEraseMust(ioAll, theTI.fPointerId);
 				break;
 				}
             case ACTION_MOVE:
             case ACTION_OUTSIDE:
             	{
-				sInsertMust(ioMove, theTouch);
+            	// The same touch may well have multiple moves reported, so we don't sInsertMust here.
+            	sQInsert(ioMove, theTouch);
 				break;
 				}
 			}
@@ -276,31 +275,25 @@ static void spUpdateTouches(
 	sTouches.clear();
 	}
 
-bool ZooLib_RunOnce(const ZRef<Game>& iGame, GPoint iGameSize)
+static TouchMap spTouchesAll;
+
+bool ZooLib_RunOnce(const ZRef<Game>& iGame)
 	{
-	using namespace::Util_STL;
-
-	TouchMap theTouches;
-
 	const GPoint backingSize = spWinSize;
 
 	const double loopStart = Time::sSystem();
 
-	iGame->Draw(loopStart, backingSize, iGameSize, true, sCallable(spSwapWindow));
+	iGame->Draw(loopStart, backingSize, true, spCallable_SwapWindow);
 
 	TouchSet theTouchesDown;
 	TouchSet theTouchesMove;
 	TouchSet theTouchesUp;
 
-	spUpdateTouches(backingSize, iGameSize,
-		theTouches,
+	spUpdateTouches(backingSize, iGame->GetGameSize(),
+		spTouchesAll,
 		theTouchesDown, theTouchesMove, theTouchesUp);
 
 	iGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
-
-	iGame->RunOnce(
-		backingSize,
-		iGameSize);
 
 	return spKeepRunning;
 	}

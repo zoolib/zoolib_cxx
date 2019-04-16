@@ -15,12 +15,10 @@
 #include "zoolib/Apple/ZRef_NS.h"
 
 #include "zoolib/GameEngine/Game.h"
+#include "zoolib/GameEngine/Nook_Keys.h"
 #include "zoolib/GameEngine/Sound_CoreAudio.h"
-#include "zoolib/GameEngine/Texture_GL.h"
 
-#include "ZenMox/ZenMox.h"
-#include "ZenMox/Nook_Keys.h"
-#include "ZenMox/Nook_Melange.h"
+#include "zoolib/OpenGL/Compat_OpenGL.h"
 
 #include <CoreFoundation/CFBundle.h>
 #include <CoreFoundation/CFURL.h>
@@ -36,21 +34,14 @@
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSWindow.h>
 
-#import "NSString+SymlinksAndAliases.h"
-
 // =================================================================================================
 #pragma mark -
 
 using std::map;
 using std::vector;
 
-using namespace ZenMox;
-using namespace Zen;
-
-using Dataspace::Melange_t;
-
-const Rat kWidth = 1024;
-const Rat kHeight = 768;
+using namespace ZooLib;
+using namespace GameEngine;
 
 // =================================================================================================
 #pragma mark - Helpers (anonymous)
@@ -65,25 +56,8 @@ ZQ<FileSpec> spQAsFileSpec(const ZRef<CFURLRef>& iURLRef)
 	return null;
 	}
 
-static
-ZQ<FileSpec> spQHomeDirResourceFS()
-	{
-	ZRef<NSString> theString = sAdopt& @"~/ZenMox_Assets";//##??
-	theString = [theString stringByResolvingSymlinksAndAliases];
-	if (theString)
-		{
-		const FileSpec theFileSpec = FileSpec::sRoot().Follow(Util_NS::sAsUTF8(theString));
-		if (theFileSpec.IsDir())
-			return theFileSpec;
-		}
-	return null;
-	}
-
 static FileSpec spResourceFS()
 	{
-	if (ZQ<FileSpec> theQ = spQHomeDirResourceFS())
-		return *theQ;
-
 	if (ZQ<FileSpec> theQ = spQAsFileSpec(
 		sAdopt& ::CFBundleCopyResourcesDirectoryURL(::CFBundleGetMainBundle())))
 		{ return theQ->Child("assets"); }
@@ -101,14 +75,9 @@ static FileSpec spResourceFS()
 	CVDisplayLinkRef fDisplayLink;
 
 	GPoint fWH;
-	ZRef<Callable_Void> fCallable_RunGame;
-	ZRef<Starter> fStarter;
 
 	ZRef<Game> fGame;
-	
-//##	ZRef<Nook_Globals> fNook_Globals;
 	ZRef<Nook_Keys> fNook_Keys;
-	ZRef<Nook_Melange> fNook_Melange;
 
 	ZRef<Touch> fCurrentTouch;
 	ZMtx fMtx;
@@ -133,28 +102,9 @@ static FileSpec spResourceFS()
 
 	self = [super initWithFrame:frameRect pixelFormat:pf];
 
-	FileSpec resourceFS = spResourceFS();
-
-	ZRef<SoundMeister_CoreAudio> theSoundMeister =
-		new SoundMeister_CoreAudio(resourceFS.Child("audio"));
-
-	fGame = new Game(
-		resourceFS,
-		sCallable_TextureFromPixmap_GL(),
-		false, false,
-		theSoundMeister);
-
-//##	fNook_Globals = new Nook_Globals(fGame->GetNookScope());
-//##	fNook_Globals->fLevelMax = sDRat(0, Util_CF::sAsAny(Map_CFPreferences().Get("LevelMax")));
+	fGame = sMakeGame(spResourceFS(), false);
 
 	fNook_Keys = new Nook_Keys(fGame->GetNookScope());
-
-	fCallable_RunGame = sCallable<void()>(self, @selector(pRunGame));
-	fStarter = sStarter_ThreadLoop("RunGame");
-
-	Melange_t theMelange = Zen::sMakeMelange(fStarter, null);
-
-	fNook_Melange = new Nook_Melange(fGame->GetNookScope(), theMelange);
 
 	return self;
 	}
@@ -168,27 +118,6 @@ static FileSpec spResourceFS()
 	[super dealloc];
 	}
 
-- (void)pRunGame
-	{
-	NSOpenGLContext* theOpenGLContext = [self openGLContext];
-	[theOpenGLContext makeCurrentContext];
-
-	ZRef<NSAutoreleasePool> pool = sAdopt& [[NSAutoreleasePool alloc] init];
-
-	{
-	ZAcqMtx acq(fMtx);
-	swap(fKeys, fNook_Keys->fKeys);
-	fKeys.clear();
-	}
-
-	fGame->RunOnce(
-		fWH,
-		sPoint<GPoint>(kWidth, kHeight));
-
-	ZThread::sSleep(0.05);
-
-	sQStart(fStarter, fCallable_RunGame);
-	}
 
 -(void)pFlipBuffers
 	{
@@ -208,7 +137,6 @@ static FileSpec spResourceFS()
 	fGame->Draw(
 		theTimestamp,
 		fWH,
-		sPoint<GPoint>(kWidth, kHeight),
 		true,
 		sCallable<void()>(self, @selector(pFlipBuffers)));
 	}
@@ -255,8 +183,6 @@ static CVReturn spDisplayLinkCallback(
 		fDisplayLink, theCGLContextObj, theCGLPixelFormatObj);
 
 	::CVDisplayLinkStart(fDisplayLink);
-
-	sQStart(fStarter, fCallable_RunGame);
 	}
 
 - (CVec3)pAsCVec3:(NSEvent*)iEvent
@@ -364,7 +290,7 @@ static CVReturn spDisplayLinkCallback(
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-	const NSRect iBounds = sRect<NSRect>(kWidth, kHeight) + sPoint<NSPoint>(0, 44);
+	const NSRect iBounds = sRect<NSRect>(1024, 768) + sPoint<NSPoint>(0, 44);
 	
 	fWindow = sAdopt& [[NSWindow alloc]
 		initWithContentRect:sFlippedY(iBounds, H(screenRect))

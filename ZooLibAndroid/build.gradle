@@ -1,0 +1,12 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 26
+    }
+}
+
+dependencies {
+}

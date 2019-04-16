@@ -34,10 +34,6 @@ namespace GameEngine {
 @interface UIView_Game : UIView
 	{
 @public
-	CGPoint fGameSize;
-	float fClickScale;
-	CGPoint fClickTranslate;
-
 	GLint fBackingWidth;
 	GLint fBackingHeight;
 
@@ -46,19 +42,16 @@ namespace GameEngine {
 	GLuint fViewFramebuffer;
 	}
 
--(id)initWithFrame:(CGRect)frame andGameSize:(CGPoint)gameSize;
+-(id)initWithFrame:(CGRect)frame;
 - (id)initGLES;
 - (BOOL)createFramebuffer;
 - (void)destroyFramebuffer;
 
 - (CGPoint)backingSize;
-- (CGPoint)gameSize;
 - (void)beforeDraw;
 - (void)afterDraw;
 
-- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing;
-
-- (bool) preferSmallArt;
+- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing gameSize:(CGPoint)iGameSize;
 
 @end // UIView_Game interface
 
