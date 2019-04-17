@@ -7,6 +7,7 @@
 #if ZCONFIG_SPI_Enabled(iPhone)
 
 #include "zoolib/GameEngine/Touch.h"
+#include "zoolib/GameEngine/Types.h"
 
 #include <map>
 
@@ -17,6 +18,7 @@
 #pragma mark -
 
 using ZooLib::ZRef;
+using ZooLib::GameEngine::GPoint;
 using ZooLib::GameEngine::Touch;
 using ZooLib::GameEngine::TouchSet;
 
@@ -42,16 +44,19 @@ namespace GameEngine {
 	GLuint fViewFramebuffer;
 	}
 
--(id)initWithFrame:(CGRect)frame;
+- (id)initWithFrame:(CGRect)frame;
 - (id)initGLES;
 - (BOOL)createFramebuffer;
 - (void)destroyFramebuffer;
 
-- (CGPoint)backingSize;
+- (GPoint)backingSize;
 - (void)beforeDraw;
 - (void)afterDraw;
 
-- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing gameSize:(CGPoint)iGameSize;
+- (TouchSet)processTouches:(NSSet*)touches
+	withTouchMap:(TouchMap&) ioTouchMap
+	erasingFromMap:(bool)erasing
+	gameSize:(GPoint)iGameSize;
 
 @end // UIView_Game interface
 

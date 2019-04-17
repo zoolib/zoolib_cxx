@@ -98,7 +98,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesBegan:touches withEvent:event];
 
-	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:fGame->GetGameSize()];
 
 	fGame->UpdateTouches(&theSet, nullptr, nullptr);
 	}
@@ -107,7 +107,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesMoved:touches withEvent:event];
 
-	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:false gameSize:fGame->GetGameSize()];
 
 	fGame->UpdateTouches(nullptr, &theSet, nullptr);
 	}
@@ -116,7 +116,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesEnded:touches withEvent:event];
 
-	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:fGame->GetGameSize()];
 
 	fGame->UpdateTouches(nullptr, nullptr, &theSet);
 	}
@@ -125,7 +125,7 @@ FileSpec spResourceFS()
 	{
 	[super touchesCancelled:touches withEvent:event];
 
-	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:sPoint<CGPoint>(fGame->GetGameSize())];
+	TouchSet theSet = [fUIView_Game processTouches:touches withTouchMap:fTouchMap erasingFromMap:true gameSize:fGame->GetGameSize()];
 
 	fGame->UpdateTouches(nullptr, nullptr, &theSet);
 	}
@@ -141,7 +141,7 @@ FileSpec spResourceFS()
 	[fUIView_Game beforeDraw];
 	fGame->Draw(
 		Time::sSystem(),
-		sPoint<GPoint>([fUIView_Game backingSize]),
+		[fUIView_Game backingSize],
 		[fUIView_Game->fContext API] >= kEAGLRenderingAPIOpenGLES2,
 		sCallable<void()>(fUIView_Game, @selector(afterDraw)));
 	}

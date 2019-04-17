@@ -4,8 +4,9 @@
 #include "zoolib/Apple/Cartesian_CG.h"
 #include "zoolib/Apple/Val_NS.h"
 
-#include "zoolib/GameEngine/UIView_Game.h"
+#include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Types.h"
+#include "zoolib/GameEngine/UIView_Game.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
 
@@ -13,49 +14,8 @@
 
 using namespace ZooLib;
 using namespace Util_STL;
-using GameEngine::GPoint;
+
 using GameEngine::CVec3;
-
-// =================================================================================================
-#pragma mark -
-
-namespace { // anonymous
-
-const CGFloat spScale()
-	{
-	static bool checked;
-	static CGFloat scale;
-	if (not checked)
-		{
-		checked = true;
-		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-			scale = [UIScreen mainScreen].scale;
-		else
-			scale = 1.0;
-		}
-	return scale;
-	}
-
-const CGPoint spSize_Logical()
-	{
-	static bool checked;
-	static CGPoint size;
-	if (not checked)
-		{
-		checked = true;
-		CGRect bounds = [[UIScreen mainScreen] bounds];
-		size = sPoint<CGPoint>(WH(bounds));
-		}
-	return size;
-	}
-
-const CGFloat spWidth_Logical()
-	{ return X(spSize_Logical()); }
-
-//const CGFloat spWidth_Pixels()
-//	{ return spWidth_Logical() * spScale(); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark - UIView_Game
@@ -65,14 +25,11 @@ const CGFloat spWidth_Logical()
 + (Class) layerClass
 	{ return [CAEAGLLayer class]; }
 
-- (TouchSet)processTouches:(NSSet*)touches withTouchMap:(TouchMap&) ioTouchMap erasingFromMap:(bool)erasing gameSize:(CGPoint)iGameSize
+- (TouchSet)processTouches:(NSSet*)touches
+	withTouchMap:(TouchMap&) ioTouchMap
+	erasingFromMap:(bool)erasing
+	gameSize:(GPoint)iGameSize
 	{
-	CGFloat theClickScale = 1.0;
-	if (spWidth_Logical() < X(iGameSize))
-		theClickScale = 2.0;
-
-	CGPoint theClickTranslate = ((spSize_Logical() * theClickScale) - iGameSize) / -2;
-
 	TouchSet result;
 	NSEnumerator* e = [[touches allObjects] objectEnumerator];
 	for (id ob = [e nextObject]; ob; ob = [e nextObject])
@@ -97,8 +54,9 @@ const CGFloat spWidth_Logical()
 		if (erasing)
 			sEraseMust(ioTouchMap, theUITouch);
 
-		CGPoint locationInView = [theUITouch locationInView:self];
-		theTouch->fPos = sPoint<CVec3>(locationInView * theClickScale + theClickTranslate);
+		const GPoint locationInView = sPoint<GPoint>([theUITouch locationInView:self]);
+		const GPoint pixelSize = sPoint<GPoint>(fBackingWidth, fBackingHeight);
+		theTouch->fPos = sHomogenous(GameEngine::sPixelToGame(pixelSize, iGameSize, locationInView));
 		}
 	return result;
 	}
@@ -135,8 +93,10 @@ const CGFloat spWidth_Logical()
 	return self;
 	}
 
--(CGPoint)backingSize
-	{ return sPoint<CGPoint>(fBackingWidth, fBackingHeight); }
+-(GPoint)backingSize
+	{
+	return sPoint<GPoint>(fBackingWidth, fBackingHeight);
+	}
 
 -(void)layoutSubviews
 	{

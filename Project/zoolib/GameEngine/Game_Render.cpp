@@ -95,57 +95,39 @@ public:
 // =================================================================================================
 #pragma mark -
 
-GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iGPoint)
+GPoint sPixelToGame(const GPoint& p, const GPoint& g, GPoint iGPoint)
 	{
-	if (X(iPixelSize) < X(iGameSize))
-		{
-		iGPoint *= 2;
-		iGPoint -= iPixelSize - (iGameSize / 2);
-		return iGPoint;
-		}
-	else if (X(iGameSize) * 1.5 < X(iPixelSize))
-		{
-		iGPoint -= (iPixelSize - iGameSize * 1.5) / 2;
-		iGPoint /= 1.5;
-		return iGPoint;
-		}
+	Rat scaleFactor;
+	if (X(p) / Y(p) < X(g) / Y(g))
+		scaleFactor = X(p) / X(g);
 	else
-		{
-		iGPoint -= (iPixelSize - iGameSize) / 2;
-		return iGPoint;
-		}
+		scaleFactor = Y(p) / Y(g);
+
+	GPoint newG = g * scaleFactor;
+
+	iGPoint -= (p - newG) / 2;
+	iGPoint /= scaleFactor;
+
+	return iGPoint;
 	}
 
-static Mat spAdditionalMat(const GPoint& iPixelSize, const GPoint& iGameSize)
+static Mat spAdditionalMat(const GPoint& p, const GPoint& g)
 	{
 	Mat additional(1);
 
-	if (X(iPixelSize) < X(iGameSize))
-		{
-		// We're on a screen narrower than the game, so scale to 50%. AssetCatalog will
-		// have loaded low-res versions of artwork with compensating 200% scale.
-		additional *= sScale3<Rat>(0.5, 0.5, 1.0);
-
-		additional *= sTranslate3<Rat>(
-			X(iPixelSize) - (X(iGameSize) / 2),
-			Y(iPixelSize) - (Y(iGameSize) / 2),
-			0);
-		}
-	else if (X(iGameSize) * 1.5 < X(iPixelSize))
-		{
-		additional *= sTranslate3<Rat>(
-			(X(iPixelSize) - X(iGameSize * 1.5)) / 2,
-			(Y(iPixelSize) - Y(iGameSize * 1.5)) / 2,
-			0);
-		additional *= sScale3<Rat>(1.5, 1.5, 1.0);
-		}
+	Rat scaleFactor;
+	if (X(p) / Y(p) < X(g) / Y(g))
+		scaleFactor = X(p) / X(g);
 	else
-		{
-		additional *= sTranslate3<Rat>(
-			(X(iPixelSize) - X(iGameSize)) / 2,
-			(Y(iPixelSize) - Y(iGameSize)) / 2,
-			0);
-		}
+		scaleFactor = Y(p) / Y(g);
+
+	additional = sScale3XY(scaleFactor, scaleFactor) * additional;
+
+	GPoint newG = g * scaleFactor;
+
+	additional = sTranslate3XY<Rat>(
+		(X(p) - X(newG)) / 2,
+		(Y(p) - Y(newG)) / 2) * additional;
 
 	return additional;
 	}
