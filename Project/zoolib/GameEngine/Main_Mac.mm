@@ -15,6 +15,7 @@
 #include "zoolib/Apple/ZRef_NS.h"
 
 #include "zoolib/GameEngine/Game.h"
+#include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Nook_Keys.h"
 #include "zoolib/GameEngine/Sound_CoreAudio.h"
 
@@ -118,7 +119,6 @@ static FileSpec spResourceFS()
 	[super dealloc];
 	}
 
-
 -(void)pFlipBuffers
 	{
 	NSOpenGLContext* theOpenGLContext = [self openGLContext];
@@ -139,6 +139,10 @@ static FileSpec spResourceFS()
 		fWH,
 		true,
 		sCallable<void()>(self, @selector(pFlipBuffers)));
+
+	ZAcqMtx acq(fMtx);
+	swap(fKeys, fNook_Keys->fKeys);
+	fKeys.clear();
 	}
 
 static CVReturn spDisplayLinkCallback(
@@ -189,7 +193,8 @@ static CVReturn spDisplayLinkCallback(
 	{
 	NSPoint thePoint = [self convertPoint:[iEvent locationInWindow] fromView:nil];
 	Y(thePoint) = H([self bounds]) - Y(thePoint);
-	return sPoint<CVec3>(thePoint);
+
+	return sHomogenous(GameEngine::sPixelToGame(fWH, fGame->GetGameSize(), sPoint<GPoint>(thePoint)));
 	}
 
 - (BOOL)acceptsFirstResponder
@@ -290,7 +295,7 @@ static CVReturn spDisplayLinkCallback(
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-	const NSRect iBounds = sRect<NSRect>(1024, 768) + sPoint<NSPoint>(0, 44);
+	const NSRect iBounds = sRect<NSRect>(1200, 600) + sPoint<NSPoint>(0, 44);
 	
 	fWindow = sAdopt& [[NSWindow alloc]
 		initWithContentRect:sFlippedY(iBounds, H(screenRect))
