@@ -125,9 +125,9 @@ Game::Game(const FileSpec& iFS,
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	if (ZCONFIG_Debug)
-		fCog = sCog(theRootMap["Start"]);
+		fCog = sCog(theRootMap["StartDebug"]);
 	else
-		fCog = sCog(theRootMap["StartNoDebug"]);
+		fCog = sCog(theRootMap["Start"]);
 	}
 
 Game::~Game()
