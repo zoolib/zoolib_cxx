@@ -244,6 +244,9 @@ public:
 	:	fPipePair(iPipePair)
 		{}
 
+	virtual ~ChanWCon_PipePair()
+		{ fPipePair->Abort(); }
+
 // From ChanAspect_Abort
 	virtual void Abort()
 		{ fPipePair->Abort(); }
