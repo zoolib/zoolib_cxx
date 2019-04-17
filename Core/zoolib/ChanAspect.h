@@ -31,6 +31,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
+#pragma mark - sClamped
+
+inline size_t sClamped(uint64 iVal)
+	{
+	if (sizeof(size_t) < sizeof(uint64))
+		return size_t(std::min(iVal, uint64(size_t(-1))));
+	else
+		return size_t(iVal);
+	}
+
+inline uint64 sSubtractSaturated(uint64 iLHS, uint64 iRHS)
+	{ return (iLHS - iRHS) & -(iRHS <= iLHS); }
+
+inline uint64 sClampedAvailable(uint64 iSize, uint64 iPosition)
+	{ return sSubtractSaturated(iSize, iPosition); }
+
+inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
+	{ return std::min(iCount, sClampedAvailable(iSize, iPosition)); }
+
+// =================================================================================================
 #pragma mark - UserOfElement
 
 template <class EE>
@@ -113,7 +133,7 @@ public:
 		{
 		// buf will have space for at least one element.
 		EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
-		return this->Read(buf, std::min<size_t>(iCount, countof(buf)));
+		return this->Read(buf, std::min<size_t>(sClamped(iCount), countof(buf)));
 		}
 
 	virtual size_t Readable()
@@ -125,7 +145,7 @@ size_t sRead(const ChanAspect_Read<EE>& iAspect, EE* oDest, size_t iCount)
 	{ return sNonConst(iAspect).Read(oDest, iCount); }
 
 template <class EE>
-size_t sSkip(const ChanAspect_Read<EE>& iAspect, size_t iCount)
+uint64 sSkip(const ChanAspect_Read<EE>& iAspect, uint64 iCount)
 	{ return sNonConst(iAspect).Skip(iCount); }
 
 template <class EE>

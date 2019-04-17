@@ -50,9 +50,9 @@ public:
 		return countToCopy;
 		}
 
-	virtual size_t Skip(size_t iCount)
+	virtual size_t Skip(uint64 iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount,
+		const size_t countToCopy = std::min<size_t>(sClamped(iCount),
 			fSize > fPosition ? fSize - fPosition : 0);
 		fPosition += countToCopy;
 		return countToCopy;
@@ -121,14 +121,14 @@ public:
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount,
+		const size_t countToCopy = std::min<size_t>(sClamped(iCount),
 			fSize > fPosition ? fSize - fPosition : 0);
 		std::copy_n(fAddress + fPosition, countToCopy, oDest);
 		fPosition += countToCopy;
 		return countToCopy;
 		}
 
-	virtual size_t Skip(size_t iCount)
+	virtual size_t Skip(uint64 iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(iCount,
 			fSize > fPosition ? fSize - fPosition : 0);

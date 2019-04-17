@@ -52,20 +52,21 @@ public:
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countRead = sRead(inherited::pGetChan(), oDest, std::min<uint64>(fLimit, iCount));
+		const size_t countRead = sRead(inherited::pGetChan(), oDest, std::min(sClamped(fLimit), iCount));
 		fLimit -= countRead;
 		return countRead;
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countSkipped = sSkip(inherited::pGetChan(), std::min<uint64>(fLimit, iCount));
+		uint64 theCount = std::min(fLimit, iCount);
+		const uint64 countSkipped = sSkip(inherited::pGetChan(), theCount);
 		fLimit -= countSkipped;
 		return countSkipped;
 		}
 
 	virtual size_t Readable()
-		{ return std::min<uint64>(fLimit, sReadable(inherited::pGetChan())); }
+		{ return std::min(sClamped(fLimit), sReadable(inherited::pGetChan())); }
 
 protected:
 	uint64 fLimit;

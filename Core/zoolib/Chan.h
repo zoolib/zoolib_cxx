@@ -28,26 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sClamped
-
-inline size_t sClamped(uint64 iVal)
-	{
-	if (sizeof(size_t) < sizeof(uint64))
-		return size_t(std::min(iVal, uint64(size_t(-1))));
-	else
-		return size_t(iVal);
-	}
-
-inline uint64 sSubtractSaturated(uint64 iLHS, uint64 iRHS)
-	{ return (iLHS - iRHS) & -(iRHS <= iLHS); }
-
-inline uint64 sClampedAvailable(uint64 iSize, uint64 iPosition)
-	{ return sSubtractSaturated(iSize, iPosition); }
-
-inline uint64 sClamped(uint64 iCount, uint64 iSize, uint64 iPosition)
-	{ return std::min(iCount, sClampedAvailable(iSize, iPosition)); }
-
-// =================================================================================================
 #pragma mark - Composites
 
 using ChanAbort = DeriveFrom<ChanAspect_Abort>;

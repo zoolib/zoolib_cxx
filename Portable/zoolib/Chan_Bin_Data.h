@@ -69,7 +69,7 @@ public:
 		{ return fPosition; }
 
 	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+		{ fPosition = sClamped(iPos); }
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount)
@@ -127,7 +127,7 @@ public:
 		{ return fPosition; }
 
 	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+		{ fPosition = sClamped(iPos); }
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount)
@@ -158,9 +158,10 @@ public:
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
 		{
-		if (fPosition > iSize)
-			fPosition = iSize;
-		fDataPtr->SetSize(iSize);
+		size_t actualSize = sClamped(iSize);
+		if (fPosition > actualSize)
+			fPosition = actualSize;
+		fDataPtr->SetSize(actualSize);
 		}
 
 private:

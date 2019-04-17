@@ -83,7 +83,7 @@ public:
 
 			PPT theRHPPT = sERead(iChanR);
 			RelHead& theRelHead = sMut<RelHead>(theRHPPT);
-			const size_t theRowCount = sCoerceInt(sERead(iChanR).As<Any>());
+			const size_t theRowCount = size_t(sCoerceInt(sERead(iChanR).As<Any>()));
 			size_t theCount = theRowCount * theRelHead.size();
 			vector<Val_Any> theVals;
 			theVals.reserve(theCount);
@@ -119,15 +119,15 @@ public:
 							// We're at the beginning of a QE::Result. So copy the RelHead to start with.
 							PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
 							RelHead& theRH = sMut<RelHead>(thePPT);
-							for (size_t theCount = sReadCount(iChanR); theCount; --theCount)
+							for (uint64 theCount = sReadCount(iChanR); theCount; --theCount)
 								theRH |= spStringFromChan(iChanR);
 							sPush(thePPT, iChanW);
 
-							const size_t theCount = sReadCount(iChanR);
+							const uint64 theCount = sReadCount(iChanR);
 							sPush(theCount, iChanW);
 
 							// Now copy the vals.
-							for (size_t xx = theCount * theRH.size(); xx; --xx)
+							for (uint64 xx = theCount * theRH.size(); xx; --xx)
 								sPull_JSONB_Push_PPT(iChanR, this, iChanW);
 
 						sPush(PullPush::End(), iChanW);
@@ -136,7 +136,7 @@ public:
 						}
 					case 101:
 						{
-						sPush(Daton(sRead_T<Data_Any>(iChanR, sReadCount(iChanR))), iChanW);
+						sPush(Daton(sRead_T<Data_Any>(iChanR, size_t(sReadCount(iChanR)))), iChanW);
 						return true;
 						}
 					case 102:

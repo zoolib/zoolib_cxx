@@ -250,7 +250,7 @@ public:
 
 			ZRef<Expr_Bool> newClause;
 
-			foreachv (const ZRef<Expr_Bool> disjunction, clause)
+			foreachv (const ZRef<Expr_Bool>& disjunction, clause)
 				{
 				newClause |= disjunction;
 				const Analysis_t theAn = theVisitor.Do(disjunction);

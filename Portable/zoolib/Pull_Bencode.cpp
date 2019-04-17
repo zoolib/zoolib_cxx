@@ -97,16 +97,16 @@ int64 spRead_PositiveInteger(const ChanRU_Bin& s)
 
 string spReadString(const ChanRU_Bin& s)
 	{
-	const int64 stringLength = spRead_PositiveInteger(s);
+	const size_t theLength = size_t(spRead_PositiveInteger(s));
 	if (not spTryRead_Byte(s, ':'))
 		sThrow_ParseException("Expected ':' terminator for string length");
 
-	return sReadString(s, stringLength);
+	return sReadString(s, theLength);
 	}
 
 void spReadStringish(const ChanRU_Bin& s, const ChanW_PPT& iChanW)
 	{
-	const int64 theLength = spRead_PositiveInteger(s);
+	const size_t theLength = size_t(spRead_PositiveInteger(s));
 	if (not spTryRead_Byte(s, ':'))
 		sThrow_ParseException("Expected ':' terminator for string/binary length");
 

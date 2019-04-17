@@ -69,7 +69,7 @@ uint64 ChanRPos_Bin_string::Pos()
 	{ return fPosition; }
 
 void ChanRPos_Bin_string::PosSet(uint64 iPos)
-	{ fPosition = iPos; }
+	{ fPosition = sClamped(iPos); }
 
 size_t ChanRPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
@@ -115,7 +115,7 @@ uint64 ChanRWPos_Bin_string::Pos()
 	{ return fPosition; }
 
 void ChanRWPos_Bin_string::PosSet(uint64 iPos)
-	{ fPosition = iPos; }
+	{ fPosition = sClamped(iPos); }
 
 size_t ChanRWPos_Bin_string::Unread(const byte* iSource, size_t iCount)
 	{
@@ -144,9 +144,10 @@ size_t ChanRWPos_Bin_string::Write(const byte* iSource, size_t iCount)
 
 void ChanRWPos_Bin_string::SizeSet(uint64 iSize)
 	{
-	if (fPosition > iSize)
-		fPosition = iSize;
-	fStringPtr->resize(iSize);
+	const size_t actualSize = sClamped(iSize);
+	if (fPosition > actualSize)
+		fPosition = actualSize;
+	fStringPtr->resize(actualSize);
 	}
 
 } // namespace ZooLib

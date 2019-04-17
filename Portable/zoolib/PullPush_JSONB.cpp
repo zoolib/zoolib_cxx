@@ -114,7 +114,7 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 			}
 		case 0xE8:
 			{
-			sPush(sReadString(iChanR, sReadCount(iChanR)), iChanW);
+			sPush(sReadString(iChanR, size_t(sReadCount(iChanR))), iChanW);
 			break;
 			}
 		case 0xEA:

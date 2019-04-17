@@ -333,6 +333,10 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ChanR_Bin& iStream, ZDCPixmap& oPixmap
 				thePixelDesc = PixelDesc(maskRed, maskGreen, maskBlue, maskAlpha);
 				break;
 				}
+			default:
+				{
+				ZUnimplemented();
+				}
 			}
 		::png_read_update_info(read_ptr, info_ptr);
 

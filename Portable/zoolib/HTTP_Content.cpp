@@ -107,7 +107,7 @@ size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 		else
 			{
 			const size_t countRead = sRead(fChanR, 
-				localDest, std::min<size_t>(iCount, fChunkSize));
+				localDest, std::min<size_t>(iCount, sClamped(fChunkSize)));
 
 			if (countRead == 0)
 				fHitEnd = true;
@@ -120,7 +120,7 @@ size_t ChanR_Bin_Chunked::Read(byte* oDest, size_t iCount)
 	}
 
 size_t ChanR_Bin_Chunked::Readable()
-	{ return min<size_t>(fChunkSize, sReadable(fChanR)); }
+	{ return min<size_t>(sClamped(fChunkSize), sReadable(fChanR)); }
 
 // =================================================================================================
 #pragma mark - HTTP::ChanW_Bin_Chunked
