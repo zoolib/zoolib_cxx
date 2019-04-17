@@ -13,6 +13,12 @@ namespace GameEngine {
 // =================================================================================================
 #pragma mark -
 
+ZQ<GPoint> sQGPoint(const ZQ<Val>& iValQ);
+ZQ<GPoint> sQGPoint(const Val& iVal);
+
+ZQ<GPoint> sQGPoint(const ZQ<Val_Any>& iVal_AnyQ);
+ZQ<GPoint> sQGPoint(const Val_Any& iVal_Any);
+
 ZQ<GRect> sQGRect(const ZQ<Val>& iValQ);
 ZQ<GRect> sQGRect(const Val& iVal);
 

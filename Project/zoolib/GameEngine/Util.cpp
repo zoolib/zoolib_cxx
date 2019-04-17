@@ -31,6 +31,37 @@ using namespace Util_string;
 // =================================================================================================
 #pragma mark -
 
+ZQ<GPoint> sQGPoint(const ZQ<Val>& iValQ)
+	{
+	if (iValQ)
+		return sQGPoint(*iValQ);
+	return null;
+	}
+
+ZQ<GPoint> sQGPoint(const Val& iVal)
+	{
+	if (ZQ<CVec3> theCVecQ = sQCVec3(1, iVal))
+		return sCartesian(*theCVecQ);
+	return null;
+	}
+
+ZQ<GPoint> sQGPoint(const ZQ<Val_Any>& iVal_AnyQ)
+	{
+	if (iVal_AnyQ)
+		return sQGPoint(*iVal_AnyQ);
+	return null;
+	}
+
+ZQ<GPoint> sQGPoint(const Val_Any& iVal_Any)
+	{
+	if (ZQ<CVec3> theCVecQ = sQCVec3(1, iVal_Any))
+		return sCartesian(*theCVecQ);
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark -
+
 template <class Rect_p, class Seq_p>
 ZQ<Rect_p> spQGRect_T(const Seq_p& iSeq)
 	{
@@ -85,6 +116,9 @@ ZQ<GRect> sQGRect(const Val_Any& iVal_Any)
 		return spQGRect_T<GRect>(*theSeqQ);
 	return null;
 	}
+
+// =================================================================================================
+#pragma mark -
 
 static ZRef<ChannerR_Bin> spChanner_Buffered(const ZRef<ChannerR_Bin>& iChanner)
 	{ return sChannerR_Buffered(iChanner, 4096); }
