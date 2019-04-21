@@ -54,6 +54,9 @@ public:
 	const Any& AsAny() const
 		{ return (const Any&)*this; }
 
+	Any& AsAny()
+		{ return (Any&)*this; }
+
 	Val_T()
 		{}
 
