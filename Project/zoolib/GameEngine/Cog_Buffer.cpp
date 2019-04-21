@@ -17,13 +17,13 @@ Cog spCogFun_Buffer(const Cog& iSelf, const Param& iParam,
 	{
 	ZAssert(sIsPending(iChild));
 
-	SaveSetRestore<ZRef<Rendered_Group> > theSR(
+	SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 		iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 	const ZQ<Cog> newChildQ =
 		iChild->QCall(iChild, iParam);
 
-	theSR.Prior()->Append(sRendered_Buffer(iWidth, iHeight, iFill, theSR.Current()));
+	theSSR.Prior()->Append(sRendered_Buffer(iWidth, iHeight, iFill, theSSR.Current()));
 
 	if (newChildQ)
 		{
@@ -63,8 +63,7 @@ CogRegistration spCogRegistration_Buffer("CogCtor_Buffer", spCogCtor_Buffer);
 
 namespace { // anonymous
 
-Cog spCog_Buffer_Continue(
-	const ZRef<Tween_BlushGainMat>& iTween,
+Cog spCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild,
 	double iStartTime);
 
@@ -81,16 +80,16 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 		}
 	else
 		{
-		SaveSetRestore<ZRef<Rendered_Group> > theSR(
+		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		Cog newChild = iChild;
 		const bool unchanged = sCallUpdate_Cog_Unchanged(
 			newChild, Param(iParam, InChannel(iParam.fInChannel, theQ->fMat)));
 
-		theSR.Prior()->Append(
+		theSSR.Prior()->Append(
 			sRendered_BlushGainMat(*theQ, sRendered_Buffer(
-				iWidth, iHeight, iFill, theSR.Current())));
+				iWidth, iHeight, iFill, theSSR.Current())));
 
 		if (unchanged)
 			return iSelf;
@@ -104,8 +103,7 @@ Cog spCogFun_Buffer_Continue(const Cog& iSelf, const Param& iParam,
 
 GEMACRO_Callable(spCallable_Buffer_Continue, spCogFun_Buffer_Continue);
 
-Cog spCog_Buffer_Continue(
-	const ZRef<Tween_BlushGainMat>& iTween,
+Cog spCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild,
 	double iStartTime)
 	{
@@ -115,7 +113,8 @@ Cog spCog_Buffer_Continue(
 	}
 
 Cog spCogFun_Buffer_Continue_Init(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, int iWidth, int iHeight, const RGBA& iFill,
+	const ZRef<Tween_BlushGainMat>& iTween,
+	int iWidth, int iHeight, const RGBA& iFill,
 	const Cog& iChild)
 	{
 	return sCallCog(
