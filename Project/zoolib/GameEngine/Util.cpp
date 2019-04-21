@@ -16,11 +16,7 @@
 #include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Apple/CGData_Channer.h"
-//#include "zoolib/Apple/Pixmap_CGImage.h"
-
-#if 1 // not ZCONFIG_SPI_Enabled(CoreGraphics)
-	#include "zoolib/Pixels/PixmapCoder_PNG.h"
-#endif
+#include "zoolib/Apple/Pixmap_CGImage.h"
 
 #include "zoolib/Pixels/Blit.h"
 #include "zoolib/Pixels/Formats.h"
@@ -272,6 +268,8 @@ uint64 sNextID()
 
 // =================================================================================================
 
+#if ZMACRO_IOS
+#else
 static bool spPremultiply(Ord iH, Ord iV, RGBA& ioColor, void* iRefcon)
 	{
 	sRed(ioColor) *= sAlpha(ioColor);
@@ -279,6 +277,7 @@ static bool spPremultiply(Ord iH, Ord iV, RGBA& ioColor, void* iRefcon)
 	sBlue(ioColor) *= sAlpha(ioColor);
 	return true;
 	}
+#endif
 
 Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
 	{
@@ -290,7 +289,7 @@ Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
 				theProvider_File, nullptr, true, kCGRenderingIntentDefault))
 				{
 				//CGImageAlphaInfo theInfo = ::CGImageGetAlphaInfo(theImageRef);
-				return Pixmap_CGImage::sPixmap(theImageRef);
+				return sPixmap(theImageRef);
 				}
 			}
 	

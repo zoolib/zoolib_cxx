@@ -18,29 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDCPixmap_CGImage.h"
+#include "zoolib/Apple/Pixmap_CGImage.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
 namespace ZooLib {
-namespace ZDCPixmap_CGImage {
 
-using namespace ZDCPixmapNS;
+using namespace Pixels;
 
 // =================================================================================================
-#pragma mark - ZDCPixmap_CGImage::PixmapRaster
+#pragma mark - PixmapRaster
 
-class PixmapRaster : public ZDCPixmapRaster
+class Raster_CGImage : public Raster
 	{
 public:
-	PixmapRaster(const RasterDesc& iRasterDesc,
+	Raster_CGImage(const RasterDesc& iRasterDesc,
 		const ZRef<CGImageRef>& iImageRef, const ZRef<CFDataRef>& iDataRef)
-	:	ZDCPixmapRaster(iRasterDesc)
+	:	Raster(iRasterDesc)
 	,	fImageRef(iImageRef)
 	,	fDataRef(iDataRef)
 		{ fBaseAddress = sNonConst(::CFDataGetBytePtr(fDataRef)); }
 
-	virtual ~PixmapRaster()
+	virtual ~Raster_CGImage()
 		{ fBaseAddress = nullptr; }
 
 private:
@@ -49,9 +48,9 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmap_CGImage
+#pragma mark - sPixmap
 
-ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
+Pixmap sPixmap(ZRef<CGImageRef> iImageRef)
 	{
 	if (not iImageRef)
 		{}
@@ -70,7 +69,7 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 			::CGImageGetHeight(iImageRef),
 			false);
 
-		ZRef<PixmapRaster> thePixmapRaster = new PixmapRaster(theRasterDesc, iImageRef, theDataRef);
+		ZRef<Raster> theRaster = new Raster_CGImage(theRasterDesc, iImageRef, theDataRef);
 
 		// Figure out mask
 		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
@@ -98,19 +97,14 @@ ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef)
 		const uint32 theG = theB << theBPC;
 		const uint32 theR = theG << theBPC;
 
-		const PixelDesc thePixelDesc(theR, theG, theB, theA);
-
-		return ZDCPixmapRep::sCreate(
-			thePixmapRaster,
-			sRectPOD(::CGImageGetWidth(iImageRef),
-			thePixmapRaster->GetRasterDesc().fRowCount),
-			thePixelDesc);
+		return Pixmap(new PixmapRep(theRaster,
+			sRectPOD(::CGImageGetWidth(iImageRef), theRaster->GetRasterDesc().fRowCount),
+			sPixelDesc(theR, theG, theB, theA)));
 		}
 
-	return ZDCPixmap();
+	return Pixmap();
 	}
 
-} // namespace ZDCPixmap_CGImage
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)

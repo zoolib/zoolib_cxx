@@ -66,186 +66,188 @@ SOFTWARE.
 
 ************************************************************************/
 
-#ifndef __ZBigRegion_h__
-#define __ZBigRegion_h__ 1
+#ifndef __ZooLib_Pixels_BigRegion_h__
+#define __ZooLib_Pixels_BigRegion_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/PairwiseCombiner_T.h"
 
-#include "zoolib/ZGeomPOD.h"
+#include "zoolib/Pixels/Geom.h"
 
 #include <vector>
 
 namespace ZooLib {
+namespace Pixels {
 
 // =================================================================================================
-#pragma mark - ZBigRegion
+#pragma mark - BigRegion
 
-// AG 98-08-13. ZBigRegion provides a region-type facility that works with 32 bit coordinates.
+// AG 98-08-13. BigRegion provides a region-type facility that works with 32 bit coordinates.
 // The implementation is ripped from the XFree86 source.
 
-class ZBigRegion
+class BigRegion
 	{
 public:
-	static ZBigRegion sRects(const ZRectPOD* iRects, size_t iCount, bool iAlreadySorted);
+	static BigRegion sRects(const RectPOD* iRects, size_t iCount, bool iAlreadySorted);
 
-	ZBigRegion();
-	ZBigRegion(const ZBigRegion& iOther);
-	ZBigRegion(const ZRectPOD& iBounds);
-	ZBigRegion(const ZPointPOD& iSize);
-	~ZBigRegion();
+	BigRegion();
+	BigRegion(const BigRegion& iOther);
+	BigRegion(const RectPOD& iBounds);
+	BigRegion(const PointPOD& iSize);
+	~BigRegion();
 
-	ZBigRegion& operator=(const ZBigRegion& iOther);
-	ZBigRegion& operator=(const ZRectPOD& iBounds);
+	BigRegion& operator=(const BigRegion& iOther);
+	BigRegion& operator=(const RectPOD& iBounds);
 
-	ZBigRegion Inset(const ZPointPOD& iInset) const
+	BigRegion Inset(const PointPOD& iInset) const
 		{ return this->Inset(iInset.h, iInset.v); }
-	ZBigRegion Inset(int32 iInsetH, int32 iInsetV) const
+	BigRegion Inset(int32 iInsetH, int32 iInsetV) const
 		{
-		ZBigRegion tempRgn(*this);
+		BigRegion tempRgn(*this);
 		tempRgn.MakeInset(iInsetH, iInsetV);
 		return tempRgn;
 		}
 
-	void MakeInset(const ZPointPOD& iInset)
+	void MakeInset(const PointPOD& iInset)
 		{ this->MakeInset(iInset.h, iInset.v); }
 	void MakeInset(int32 iInsetH, int32 iInsetV);
 
-	bool Contains(const ZPointPOD& iPoint) const;
+	bool Contains(const PointPOD& iPoint) const;
 	bool Contains(int32 iH, int32 iV) const;
 
 	void MakeEmpty();
 	bool IsEmpty() const;
 
-	ZRectPOD Bounds() const;
+	RectPOD Bounds() const;
 	bool IsSimpleRect() const;
 
-	void Decompose(std::vector<ZRectPOD>& oRects) const;
-	typedef bool (*DecomposeProc)(const ZRectPOD& iRect, void* iRefcon);
+	void Decompose(std::vector<RectPOD>& oRects) const;
+	typedef bool (*DecomposeProc)(const RectPOD& iRect, void* iRefcon);
 	int32 Decompose(DecomposeProc iProc, void* iRefcon) const;
 
-	bool operator==(const ZBigRegion& iOther) const;
-	bool operator!=(const ZBigRegion& iOther) const
+	bool operator==(const BigRegion& iOther) const;
+	bool operator!=(const BigRegion& iOther) const
 		{ return ! (*this == iOther); }
 
-	ZBigRegion& operator+=(const ZPointPOD& iOffset);
-	ZBigRegion operator+(const ZPointPOD& iOffset) const
+	BigRegion& operator+=(const PointPOD& iOffset);
+	BigRegion operator+(const PointPOD& iOffset) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion += iOffset;
 		}
 
-	ZBigRegion& operator-=(const ZPointPOD& iOffset)
+	BigRegion& operator-=(const PointPOD& iOffset)
 		{ return *this += sPointPOD(-iOffset.h, -iOffset.v); }
-	ZBigRegion operator-(const ZPointPOD& iOffset) const
+	BigRegion operator-(const PointPOD& iOffset) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion -= iOffset;
 		}
 
-	ZBigRegion& operator|=(const ZBigRegion& iOther);
-	ZBigRegion operator|(const ZBigRegion& iOther) const
+	BigRegion& operator|=(const BigRegion& iOther);
+	BigRegion operator|(const BigRegion& iOther) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion |= iOther;
 		}
 
-	ZBigRegion& operator&=(const ZBigRegion& iOther);
-	ZBigRegion operator&(const ZBigRegion& iOther) const
+	BigRegion& operator&=(const BigRegion& iOther);
+	BigRegion operator&(const BigRegion& iOther) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion &= iOther;
 		}
 
-	ZBigRegion& operator-=(const ZBigRegion& iOther);
-	ZBigRegion operator-(const ZBigRegion& iOther) const
+	BigRegion& operator-=(const BigRegion& iOther);
+	BigRegion operator-(const BigRegion& iOther) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion -= iOther;
 		}
 
-	ZBigRegion& operator^=(const ZBigRegion& iOther);
-	ZBigRegion operator^(const ZBigRegion& iOther) const
+	BigRegion& operator^=(const BigRegion& iOther);
+	BigRegion operator^(const BigRegion& iOther) const
 		{
-		ZBigRegion newRegion(*this);
+		BigRegion newRegion(*this);
 		return newRegion ^= iOther;
 		}
 
-	static void sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-		ZBigRegion& oDestination);
+	static void sUnion(const BigRegion& iSource1, const BigRegion& iSource2,
+		BigRegion& oDestination);
 
-	static void sIntersection(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-		ZBigRegion& oDestination);
+	static void sIntersection(const BigRegion& iSource1, const BigRegion& iSource2,
+		BigRegion& oDestination);
 
-	static void sDifference(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-		ZBigRegion& oDestination);
+	static void sDifference(const BigRegion& iSource1, const BigRegion& iSource2,
+		BigRegion& oDestination);
 
-	static void sExclusiveOr(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-		ZBigRegion& oDestination);
+	static void sExclusiveOr(const BigRegion& iSource1, const BigRegion& iSource2,
+		BigRegion& oDestination);
 
 protected:
-	static void spSpaceCheck(ZBigRegion& ioRegion, ZRectPOD*& oRect);
-	static void spReallocate(ZBigRegion& ioRegion, ZRectPOD*& oRect);
-	static void spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination);
-	static void spSetExtents(ZBigRegion& ioRegion);
+	static void spSpaceCheck(BigRegion& ioRegion, RectPOD*& oRect);
+	static void spReallocate(BigRegion& ioRegion, RectPOD*& oRect);
+	static void spCopy(const BigRegion& iSource, BigRegion& oDestination);
+	static void spSetExtents(BigRegion& ioRegion);
 
-	static void spUnionNonOverlapping(ZBigRegion& ioRegion,
-		ZRectPOD* r, ZRectPOD* rEnd, int32 y1, int32 y2);
+	static void spUnionNonOverlapping(BigRegion& ioRegion,
+		RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2);
 
-	static void spUnionOverlapping(ZBigRegion& ioRegion,
-		ZRectPOD* r1, ZRectPOD* r1End,
-		ZRectPOD* r2, ZRectPOD* r2End,
+	static void spUnionOverlapping(BigRegion& ioRegion,
+		RectPOD* r1, RectPOD* r1End,
+		RectPOD* r2, RectPOD* r2End,
 		int32 y1, int32 y2);
 
-	static void spIntersectionOverlapping(ZBigRegion& ioRegion,
-		ZRectPOD* r1, ZRectPOD* r1End,
-		ZRectPOD* r2, ZRectPOD* r2End,
+	static void spIntersectionOverlapping(BigRegion& ioRegion,
+		RectPOD* r1, RectPOD* r1End,
+		RectPOD* r2, RectPOD* r2End,
 		int32 y1, int32 y2);
 
-	static void spDifferenceNonOverlapping(ZBigRegion& ioRegion,
-		ZRectPOD* r, ZRectPOD* rEnd,
+	static void spDifferenceNonOverlapping(BigRegion& ioRegion,
+		RectPOD* r, RectPOD* rEnd,
 		int32 y1, int32 y2);
 
-	static void spDifferenceOverlapping(ZBigRegion& ioRegion,
-		ZRectPOD* r1, ZRectPOD* r1End,
-		ZRectPOD* r2, ZRectPOD* r2End,
+	static void spDifferenceOverlapping(BigRegion& ioRegion,
+		RectPOD* r1, RectPOD* r1End,
+		RectPOD* r2, RectPOD* r2End,
 		int32 y1, int32 y2);
 
-	typedef void (*NonOverlappingFuncPtr)(ZBigRegion& ioRegion,
-		ZRectPOD* r, ZRectPOD* rEnd, int32 y1, int32 y2);
+	typedef void (*NonOverlappingFuncPtr)(BigRegion& ioRegion,
+		RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2);
 
-	typedef void (*OverlappingFuncPtr)(ZBigRegion& ioRegion,
-		ZRectPOD* r1, ZRectPOD* r1End,
-		ZRectPOD* r2, ZRectPOD* r2End,
+	typedef void (*OverlappingFuncPtr)(BigRegion& ioRegion,
+		RectPOD* r1, RectPOD* r1End,
+		RectPOD* r2, RectPOD* r2End,
 		int32 y1, int32 y2);
 
-	static void spRegionOp(ZBigRegion& ioNewRegion,
-		const ZBigRegion& iRegion1, const ZBigRegion& iRegion2,
+	static void spRegionOp(BigRegion& ioNewRegion,
+		const BigRegion& iRegion1, const BigRegion& iRegion2,
 		OverlappingFuncPtr iOverlapFunc,
 		NonOverlappingFuncPtr iNonOverlapFunc1,
 		NonOverlappingFuncPtr iNonOverlapFunc2);
 
-	static int32 spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart);
+	static int32 spCoalesce(BigRegion& ioRegion, int32 prevStart, int32 curStart);
 
-	ZRectPOD* fRects;
+	RectPOD* fRects;
 	size_t fNumRectsAllocated;
 	size_t fNumRects;
-	ZRectPOD fExtent;
+	RectPOD fExtent;
 	};
 
 // =================================================================================================
-#pragma mark - ZBigRegionAccumulator
+#pragma mark - BigRegionAccumulator
 
-class ZBigRegionUnioner_t
+class BigRegionUnioner_t
 	{
 public:
-	void operator()(ZBigRegion& ioRgn, const ZBigRegion& iOther) const
+	void operator()(BigRegion& ioRgn, const BigRegion& iOther) const
 		{ ioRgn |= iOther; }
 	};
 
-typedef PairwiseCombiner_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
-	ZBigRegionAccumulator;
+typedef PairwiseCombiner_T<BigRegion, BigRegionUnioner_t, std::vector<BigRegion> >
+	BigRegionAccumulator;
 
+} // namespace Pixels
 } // namespace ZooLib
 
-#endif // __ZBigRegion_h__
+#endif // __BigRegion_h__

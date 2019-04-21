@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmap_CGImage_h__
-#define __ZDCPixmap_CGImage_h__ 1
+#ifndef __ZooLib_Apple_Pixmap_CGImage_h__
+#define __ZooLib_Apple_Pixmap_CGImage_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZDCPixmap.h"
+#include "zoolib/Pixels/Pixmap.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
@@ -34,16 +34,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 namespace ZooLib {
-namespace ZDCPixmap_CGImage {
 
 // =================================================================================================
-#pragma mark - ZDCPixmap_CGImage
+#pragma mark - sPixmap
 
-ZDCPixmap sPixmap(ZRef<CGImageRef> iImageRef);
+Pixels::Pixmap sPixmap(ZRef<CGImageRef> iImageRef);
 
-} // namespace ZDCPixmap_CGImage
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
-#endif // __ZDCPixmap_CGImage_h__
+#endif // __ZooLib_Apple_Pixmap_CGImage_h__

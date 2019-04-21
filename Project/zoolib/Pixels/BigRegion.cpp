@@ -66,9 +66,10 @@ SOFTWARE.
 
 ************************************************************************/
 
-#include "zoolib/Memory.h"
+#include "zoolib/Pixels/BigRegion.h"
+#include "zoolib/Pixels/Cartesian_Geom.h"
 
-#include "zoolib/ZBigRegion.h"
+#include "zoolib/Memory.h"
 #include "zoolib/ZDebug.h"
 
 #include <limits> // For numeric_limits
@@ -79,32 +80,33 @@ using std::numeric_limits;
 using std::vector;
 
 namespace ZooLib {
+namespace Pixels {
 
 #define kDebug_BigRegion 3
 
 // =================================================================================================
-#pragma mark - ZBigRegion
+#pragma mark - BigRegion
 
-ZBigRegion ZBigRegion::sRects(const ZRectPOD* iRects, size_t iCount, bool iAlreadySorted)
+BigRegion BigRegion::sRects(const RectPOD* iRects, size_t iCount, bool iAlreadySorted)
 	{
-	ZBigRegion resultRgn;
+	BigRegion resultRgn;
 	if (iCount > 0)
 		{
 		if (iAlreadySorted)
 			{
 			delete[] resultRgn.fRects;
-			resultRgn.fRects = new ZRectPOD[iCount];
+			resultRgn.fRects = new RectPOD[iCount];
 			resultRgn.fNumRectsAllocated = iCount;
 			resultRgn.fNumRects = iCount;
 
-			ZRectPOD bounds;
+			RectPOD bounds;
 			bounds.top = bounds.left = numeric_limits<int32>::max();
 			bounds.right = bounds.bottom = numeric_limits<int32>::min();
 
-			ZRectPOD* currentDest = resultRgn.fRects;
+			RectPOD* currentDest = resultRgn.fRects;
 			while (iCount--)
 				{
-				ZRectPOD currentRect = *iRects++;
+				RectPOD currentRect = *iRects++;
 				if (bounds.left > currentRect.left)
 					bounds.left = currentRect.left;
 				if (bounds.top > currentRect.top)
@@ -119,9 +121,9 @@ ZBigRegion ZBigRegion::sRects(const ZRectPOD* iRects, size_t iCount, bool iAlrea
 			}
 		else
 			{
-			ZBigRegionAccumulator theAccumulator;
+			BigRegionAccumulator theAccumulator;
 			while (iCount--)
-				theAccumulator.Include(ZBigRegion(*iRects++));
+				theAccumulator.Include(BigRegion(*iRects++));
 			resultRgn = theAccumulator.Get();
 			}
 		}
@@ -130,8 +132,8 @@ ZBigRegion ZBigRegion::sRects(const ZRectPOD* iRects, size_t iCount, bool iAlrea
 
 // ==================================================
 
-ZBigRegion::ZBigRegion()
-:	fRects(new ZRectPOD[1]),
+BigRegion::BigRegion()
+:	fRects(new RectPOD[1]),
 	fNumRectsAllocated(1),
 	fNumRects(0)
 	{
@@ -141,17 +143,17 @@ ZBigRegion::ZBigRegion()
 	fExtent.bottom = 0;
 	}
 
-ZBigRegion::ZBigRegion(const ZBigRegion& iOther)
+BigRegion::BigRegion(const BigRegion& iOther)
 	{
 	fNumRects = iOther.fNumRects;
 	fExtent = iOther.fExtent;
-	fRects = new ZRectPOD[fNumRects];
+	fRects = new RectPOD[fNumRects];
 	fNumRectsAllocated = fNumRects;
-	sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
+	sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(RectPOD));
 	}
 
-ZBigRegion::ZBigRegion(const ZRectPOD& iBounds)
-:	fRects(new ZRectPOD[1]),
+BigRegion::BigRegion(const RectPOD& iBounds)
+:	fRects(new RectPOD[1]),
 	fNumRectsAllocated(1),
 	fNumRects(1)
 	{
@@ -162,8 +164,8 @@ ZBigRegion::ZBigRegion(const ZRectPOD& iBounds)
 	fRects[0] = fExtent;
 	}
 
-ZBigRegion::ZBigRegion(const ZPointPOD& iSize)
-:	fRects(new ZRectPOD[1]),
+BigRegion::BigRegion(const PointPOD& iSize)
+:	fRects(new RectPOD[1]),
 	fNumRectsAllocated(1),
 	fNumRects(1)
 	{
@@ -174,30 +176,30 @@ ZBigRegion::ZBigRegion(const ZPointPOD& iSize)
 	fRects[0] = fExtent;
 	}
 
-ZBigRegion::~ZBigRegion()
+BigRegion::~BigRegion()
 	{
 	delete[] fRects;
 	}
 
-ZBigRegion& ZBigRegion::operator=(const ZBigRegion& iOther)
+BigRegion& BigRegion::operator=(const BigRegion& iOther)
 	{
 	if (&iOther != this)
 		{
 		if (fNumRectsAllocated < iOther.fNumRects)
 			{
 			delete[] fRects;
-			fRects = new ZRectPOD[iOther.fNumRects];
+			fRects = new RectPOD[iOther.fNumRects];
 			fNumRectsAllocated = iOther.fNumRects;
 			}
 
 		fNumRects = iOther.fNumRects;
 		fExtent = iOther.fExtent;
-		sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRectPOD));
+		sMemCopy(fRects, iOther.fRects, fNumRects * sizeof(RectPOD));
 		}
 	return *this;
 	}
 
-ZBigRegion& ZBigRegion::operator=(const ZRectPOD& iBounds)
+BigRegion& BigRegion::operator=(const RectPOD& iBounds)
 	{
 	fExtent.left = iBounds.left;
 	fExtent.top = iBounds.top;
@@ -208,8 +210,8 @@ ZBigRegion& ZBigRegion::operator=(const ZRectPOD& iBounds)
 	return *this;
 	}
 
-static void spCompress(ZBigRegion& ioRegion,
-	ZBigRegion& ioTempRegion1, ZBigRegion& ioTempRegion2,
+static void spCompress(BigRegion& ioRegion,
+	BigRegion& ioTempRegion1, BigRegion& ioTempRegion2,
 	int32 delta, bool iHorizontal, bool iGrow)
 	{
 	int32 shift = 1;
@@ -248,7 +250,7 @@ static void spCompress(ZBigRegion& ioRegion,
 		}
 	}
 
-void ZBigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
+void BigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
 	{
 	if (fNumRects == 0)
 		return;
@@ -263,8 +265,8 @@ void ZBigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
 		return;
 		}
 
-	ZBigRegion tempRegion1;
-	ZBigRegion tempBigRegion2;
+	BigRegion tempRegion1;
+	BigRegion tempBigRegion2;
 
 	bool grow = iInsetH < 0;
 	if (grow)
@@ -279,7 +281,7 @@ void ZBigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
 	*this += sPointPOD(iInsetH, iInsetV);
 	}
 
-bool ZBigRegion::Contains(const ZPointPOD& iPoint) const
+bool BigRegion::Contains(const PointPOD& iPoint) const
 	{
 	if (fNumRects == 0)
 		return false;
@@ -298,7 +300,7 @@ bool ZBigRegion::Contains(const ZPointPOD& iPoint) const
 	return false;
 	}
 
-bool ZBigRegion::Contains(int32 iH, int32 iV) const
+bool BigRegion::Contains(int32 iH, int32 iV) const
 	{
 	if (fNumRects == 0)
 		return false;
@@ -317,7 +319,7 @@ bool ZBigRegion::Contains(int32 iH, int32 iV) const
 	return false;
 	}
 
-void ZBigRegion::MakeEmpty()
+void BigRegion::MakeEmpty()
 	{
 	fNumRects = 0;
 	fExtent.left = 0;
@@ -326,16 +328,16 @@ void ZBigRegion::MakeEmpty()
 	fExtent.bottom = 0;
 	}
 
-bool ZBigRegion::IsEmpty() const
+bool BigRegion::IsEmpty() const
 	{ return fNumRects == 0; }
 
-ZRectPOD ZBigRegion::Bounds() const
+RectPOD BigRegion::Bounds() const
 	{ return sRectPOD(fExtent.left, fExtent.top, fExtent.right, fExtent.bottom); }
 
-bool ZBigRegion::IsSimpleRect() const
+bool BigRegion::IsSimpleRect() const
 	{ return fNumRects <= 1; }
 
-void ZBigRegion::Decompose(vector<ZRectPOD >& oRects) const
+void BigRegion::Decompose(vector<RectPOD >& oRects) const
 	{
 	oRects.empty();
 	oRects.reserve(fNumRects);
@@ -343,7 +345,7 @@ void ZBigRegion::Decompose(vector<ZRectPOD >& oRects) const
 		oRects.push_back(fRects[xx]);
 	}
 
-int32 ZBigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
+int32 BigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
 	{
 	int32 callbacksMade = 0;
 	for (size_t xx = 0; xx < fNumRects; ++xx)
@@ -355,7 +357,7 @@ int32 ZBigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
 	return callbacksMade;
 	}
 
-bool ZBigRegion::operator==(const ZBigRegion& iOther) const
+bool BigRegion::operator==(const BigRegion& iOther) const
 	{
 	if (fNumRects != iOther.fNumRects)
 		return false;
@@ -374,7 +376,7 @@ bool ZBigRegion::operator==(const ZBigRegion& iOther) const
 	return true;
 	}
 
-ZBigRegion& ZBigRegion::operator+=(const ZPointPOD& iOffset)
+BigRegion& BigRegion::operator+=(const PointPOD& iOffset)
 	{
 	fExtent += iOffset;
 	for (size_t xx = 0; xx < fNumRects; ++xx)
@@ -382,25 +384,25 @@ ZBigRegion& ZBigRegion::operator+=(const ZPointPOD& iOffset)
 	return *this;
 	}
 
-ZBigRegion& ZBigRegion::operator|=(const ZBigRegion& iOther)
+BigRegion& BigRegion::operator|=(const BigRegion& iOther)
 	{
 	sUnion(*this, iOther, *this);
 	return *this;
 	}
 
-ZBigRegion& ZBigRegion::operator&=(const ZBigRegion& iOther)
+BigRegion& BigRegion::operator&=(const BigRegion& iOther)
 	{
 	sIntersection(*this, iOther, *this);
 	return *this;
 	}
 
-ZBigRegion& ZBigRegion::operator-=(const ZBigRegion& iOther)
+BigRegion& BigRegion::operator-=(const BigRegion& iOther)
 	{
 	sDifference(*this, iOther, *this);
 	return *this;
 	}
 
-ZBigRegion& ZBigRegion::operator^=(const ZBigRegion& iOther)
+BigRegion& BigRegion::operator^=(const BigRegion& iOther)
 	{
 	sExclusiveOr(*this, iOther, *this);
 	return *this;
@@ -408,30 +410,30 @@ ZBigRegion& ZBigRegion::operator^=(const ZBigRegion& iOther)
 
 // =================================================================================================
 
-void ZBigRegion::spReallocate(ZBigRegion& ioRegion, ZRectPOD*& oRect)
+void BigRegion::spReallocate(BigRegion& ioRegion, RectPOD*& oRect)
 	{
-	ZRectPOD* newArray = new ZRectPOD[2 * ioRegion.fNumRectsAllocated];
-	sMemCopy(newArray, ioRegion.fRects, ioRegion.fNumRectsAllocated * sizeof(ZRectPOD));
+	RectPOD* newArray = new RectPOD[2 * ioRegion.fNumRectsAllocated];
+	sMemCopy(newArray, ioRegion.fRects, ioRegion.fNumRectsAllocated * sizeof(RectPOD));
 	delete[] ioRegion.fRects;
 	ioRegion.fRects = newArray;
 	ioRegion.fNumRectsAllocated = 2 * ioRegion.fNumRectsAllocated;
 	oRect = &ioRegion.fRects[ioRegion.fNumRects];
 	}
 
-inline void ZBigRegion::spSpaceCheck(ZBigRegion& ioRegion, ZRectPOD*& oRect)
+inline void BigRegion::spSpaceCheck(BigRegion& ioRegion, RectPOD*& oRect)
 	{
 	if (ioRegion.fNumRects >= ioRegion.fNumRectsAllocated - 1)
 		spReallocate(ioRegion, oRect);
 	}
 
-void ZBigRegion::spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination)
+void BigRegion::spCopy(const BigRegion& iSource, BigRegion& oDestination)
 	{
 	if (&iSource == &oDestination)
 		return;
 
 	if (oDestination.fNumRectsAllocated < iSource.fNumRects)
 		{
-		ZRectPOD* newArray = new ZRectPOD[iSource.fNumRects];
+		RectPOD* newArray = new RectPOD[iSource.fNumRects];
 		delete[] oDestination.fRects;
 		oDestination.fRects = newArray;
 		oDestination.fNumRectsAllocated = iSource.fNumRects;
@@ -441,10 +443,10 @@ void ZBigRegion::spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination)
 	oDestination.fExtent = iSource.fExtent;
 
 	sMemCopy(oDestination.fRects,
-		iSource.fRects, oDestination.fNumRects * sizeof(ZRectPOD));
+		iSource.fRects, oDestination.fNumRects * sizeof(RectPOD));
 	}
 
-void ZBigRegion::spSetExtents(ZBigRegion& ioRegion)
+void BigRegion::spSetExtents(BigRegion& ioRegion)
 	{
 	if (ioRegion.fNumRects == 0)
 		{
@@ -455,9 +457,9 @@ void ZBigRegion::spSetExtents(ZBigRegion& ioRegion)
 		return;
 		}
 
-	ZRectPOD* pExtents = &ioRegion.fExtent;
-	ZRectPOD* pBox = ioRegion.fRects;
-	ZRectPOD* pBoxEnd = &pBox[ioRegion.fNumRects - 1];
+	RectPOD* pExtents = &ioRegion.fExtent;
+	RectPOD* pBox = ioRegion.fRects;
+	RectPOD* pBoxEnd = &pBox[ioRegion.fNumRects - 1];
 
 	// Since pBox is the first rectangle in the region, it must have the
 	// smallest y1 and since pBoxEnd is the last rectangle in the region,
@@ -483,8 +485,8 @@ void ZBigRegion::spSetExtents(ZBigRegion& ioRegion)
 
 // ==================================================
 
-void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-	ZBigRegion& oDestination)
+void BigRegion::sUnion(const BigRegion& iSource1, const BigRegion& iSource2,
+	BigRegion& oDestination)
 	{
 	// Check for all the simple cases
 
@@ -540,10 +542,10 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 	oDestination.fExtent.bottom = max(iSource1.fExtent.bottom, iSource2.fExtent.bottom);
 	}
 
-void ZBigRegion::spUnionNonOverlapping(ZBigRegion& ioRegion,
-	ZRectPOD* r, ZRectPOD* rEnd, int32 y1, int32 y2)
+void BigRegion::spUnionNonOverlapping(BigRegion& ioRegion,
+	RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2)
 	{
-	ZRectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	ZAssertStop(kDebug_BigRegion, y1 < y2);
 
@@ -563,12 +565,12 @@ void ZBigRegion::spUnionNonOverlapping(ZBigRegion& ioRegion,
 		}
 	}
 
-void ZBigRegion::spUnionOverlapping(ZBigRegion& ioRegion,
-	ZRectPOD* r1, ZRectPOD* r1End,
-	ZRectPOD* r2, ZRectPOD* r2End,
+void BigRegion::spUnionOverlapping(BigRegion& ioRegion,
+	RectPOD* r1, RectPOD* r1End,
+	RectPOD* r2, RectPOD* r2End,
 	int32 y1, int32 y2)
 	{
-	ZRectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	#define MERGERECT(r) \
 	if ((ioRegion.fNumRects != 0) \
@@ -623,8 +625,8 @@ void ZBigRegion::spUnionOverlapping(ZBigRegion& ioRegion,
 
 // ==================================================
 
-void ZBigRegion::sIntersection(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-	ZBigRegion& oDestination)
+void BigRegion::sIntersection(const BigRegion& iSource1, const BigRegion& iSource2,
+	BigRegion& oDestination)
 	{
 	if (iSource1.fNumRects == 0
 		|| iSource2.fNumRects == 0
@@ -654,12 +656,12 @@ void ZBigRegion::sIntersection(const ZBigRegion& iSource1, const ZBigRegion& iSo
 	spSetExtents(oDestination);
 	}
 
-void ZBigRegion::spIntersectionOverlapping(ZBigRegion& ioRegion,
-	ZRectPOD* r1, ZRectPOD* r1End,
-	ZRectPOD* r2, ZRectPOD* r2End,
+void BigRegion::spIntersectionOverlapping(BigRegion& ioRegion,
+	RectPOD* r1, RectPOD* r1End,
+	RectPOD* r2, RectPOD* r2End,
 	int32 y1, int32 y2)
 	{
-	ZRectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	while ((r1 != r1End) && (r2 != r2End))
 		{
@@ -706,8 +708,8 @@ void ZBigRegion::spIntersectionOverlapping(ZBigRegion& ioRegion,
 
 // ==================================================
 
-void ZBigRegion::sDifference(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-	ZBigRegion& oDestination)
+void BigRegion::sDifference(const BigRegion& iSource1, const BigRegion& iSource2,
+	BigRegion& oDestination)
 	{
 	if (iSource1.fNumRects == 0
 		|| iSource2.fNumRects == 0
@@ -732,11 +734,11 @@ void ZBigRegion::sDifference(const ZBigRegion& iSource1, const ZBigRegion& iSour
 	spSetExtents(oDestination);
 	}
 
-void ZBigRegion::spDifferenceNonOverlapping(ZBigRegion& ioRegion,
-	ZRectPOD* r, ZRectPOD* rEnd,
+void BigRegion::spDifferenceNonOverlapping(BigRegion& ioRegion,
+	RectPOD* r, RectPOD* rEnd,
 	int32 y1, int32 y2)
 	{
-	ZRectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	ZAssertStop(kDebug_BigRegion, y1<y2);
 
@@ -757,15 +759,15 @@ void ZBigRegion::spDifferenceNonOverlapping(ZBigRegion& ioRegion,
 		}
 	}
 
-void ZBigRegion::spDifferenceOverlapping(ZBigRegion& ioRegion,
-	ZRectPOD* r1, ZRectPOD* r1End,
-	ZRectPOD* r2, ZRectPOD* r2End,
+void BigRegion::spDifferenceOverlapping(BigRegion& ioRegion,
+	RectPOD* r1, RectPOD* r1End,
+	RectPOD* r2, RectPOD* r2End,
 	int32 y1, int32 y2)
 	{
 	int32 x1 = r1->left;
 
 	ZAssertStop(kDebug_BigRegion, y1<y2);
-	ZRectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	while ((r1 != r1End) && (r2 != r2End))
 		{
@@ -864,11 +866,11 @@ void ZBigRegion::spDifferenceOverlapping(ZBigRegion& ioRegion,
 
 // ==================================================
 
-void ZBigRegion::sExclusiveOr(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
-	ZBigRegion& oDestination)
+void BigRegion::sExclusiveOr(const BigRegion& iSource1, const BigRegion& iSource2,
+	BigRegion& oDestination)
 	{
-	ZBigRegion tempRegionA;
-	ZBigRegion tempRegionB;
+	BigRegion tempRegionA;
+	BigRegion tempRegionB;
 	sDifference(iSource1, iSource2, tempRegionA);
 	sDifference(iSource2, iSource1, tempRegionB);
 	sUnion(tempRegionA, tempRegionB, oDestination);
@@ -876,8 +878,8 @@ void ZBigRegion::sExclusiveOr(const ZBigRegion& iSource1, const ZBigRegion& iSou
 
 // ==================================================
 
-void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
-	const ZBigRegion& iRegion1, const ZBigRegion& iRegion2,
+void BigRegion::spRegionOp(BigRegion& ioNewRegion,
+	const BigRegion& iRegion1, const BigRegion& iRegion2,
 	OverlappingFuncPtr iOverlapFunc,
 	NonOverlappingFuncPtr iNonOverlapFunc1,
 	NonOverlappingFuncPtr iNonOverlapFunc2)
@@ -888,12 +890,12 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 	// the two source regions, then mark the "new" region empty, allocating
 	// another array of rectangles for it to use.
 
-	ZRectPOD* r1 = iRegion1.fRects;
-	ZRectPOD* r2 = iRegion2.fRects;
-	ZRectPOD* r1End = r1 + iRegion1.fNumRects;
-	ZRectPOD* r2End = r2 + iRegion2.fNumRects;
+	RectPOD* r1 = iRegion1.fRects;
+	RectPOD* r2 = iRegion2.fRects;
+	RectPOD* r1End = r1 + iRegion1.fNumRects;
+	RectPOD* r2End = r2 + iRegion2.fNumRects;
 
-	ZRectPOD* oldRects = ioNewRegion.fRects;
+	RectPOD* oldRects = ioNewRegion.fRects;
 
 	ioNewRegion.fNumRects = 0;
 
@@ -904,7 +906,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 	// nuke the Xrealloc() at the end of this function eventually.
 
 	ioNewRegion.fNumRectsAllocated = 2 * max(iRegion1.fNumRects, iRegion2.fNumRects);
-	ioNewRegion.fRects = new ZRectPOD[ioNewRegion.fNumRectsAllocated];
+	ioNewRegion.fRects = new RectPOD[ioNewRegion.fNumRectsAllocated];
 
 	// Initialize ybot and ytop.
 	// In the upcoming loop, ybot and ytop serve different functions depending
@@ -940,11 +942,11 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		// rectangle after the last one in the current band for their
 		// respective regions.
 
-		ZRectPOD* r1BandEnd = r1;
+		RectPOD* r1BandEnd = r1;
 		while ((r1BandEnd != r1End) && (r1BandEnd->top == r1->top))
 			r1BandEnd++;
 
-		ZRectPOD* r2BandEnd = r2;
+		RectPOD* r2BandEnd = r2;
 		while ((r2BandEnd != r2End) && (r2BandEnd->top == r2->top))
 			r2BandEnd++;
 
@@ -1023,7 +1025,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		{
 		do
 			{
-			ZRectPOD* r1BandEnd = r1;
+			RectPOD* r1BandEnd = r1;
 			while ((r1BandEnd < r1End) && (r1BandEnd->top == r1->top))
 				r1BandEnd++;
 
@@ -1035,7 +1037,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		{
 		do
 			{
-			ZRectPOD* r2BandEnd = r2;
+			RectPOD* r2BandEnd = r2;
 			while ((r2BandEnd < r2End) && (r2BandEnd->top == r2->top))
 				r2BandEnd++;
 
@@ -1059,24 +1061,24 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		ioNewRegion.fNumRectsAllocated = ioNewRegion.fNumRects;
 		if (ioNewRegion.fNumRects == 0)
 			ioNewRegion.fNumRectsAllocated = 1;
-		ZRectPOD* newRects = new ZRectPOD[ioNewRegion.fNumRectsAllocated];
-		sMemCopy(newRects, ioNewRegion.fRects, ioNewRegion.fNumRects * sizeof(ZRectPOD));
+		RectPOD* newRects = new RectPOD[ioNewRegion.fNumRectsAllocated];
+		sMemCopy(newRects, ioNewRegion.fRects, ioNewRegion.fNumRects * sizeof(RectPOD));
 		delete[] ioNewRegion.fRects;
 		ioNewRegion.fRects = newRects;
 		}
 	delete[] oldRects;
 	}
 
-int32 ZBigRegion::spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart)
+int32 BigRegion::spCoalesce(BigRegion& ioRegion, int32 prevStart, int32 curStart)
 	{
-	ZRectPOD* pRegEnd = &ioRegion.fRects[ioRegion.fNumRects];
-	ZRectPOD* pPrevBox = &ioRegion.fRects[prevStart];
+	RectPOD* pRegEnd = &ioRegion.fRects[ioRegion.fNumRects];
+	RectPOD* pPrevBox = &ioRegion.fRects[prevStart];
 	int32 prevNumRects = curStart - prevStart;
 
 	// Figure out how many rectangles are in the current band. Have to do
 	// this because multiple bands could have been added in spRegionOp
 	// at the end when one region has been exhausted.
-	ZRectPOD* pCurBox = &ioRegion.fRects[curStart];
+	RectPOD* pCurBox = &ioRegion.fRects[curStart];
 	int32 bandY1 = pCurBox->top;
 	int32 curNumRects;
 	for (curNumRects = 0; (pCurBox != pRegEnd) && (pCurBox->top == bandY1); ++curNumRects)
@@ -1157,4 +1159,5 @@ int32 ZBigRegion::spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curSta
 	return curStart;
 	}
 
+} // namespace Pixels
 } // namespace ZooLib
