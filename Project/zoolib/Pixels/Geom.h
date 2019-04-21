@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,89 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZGeomPOD_h__
-#define __ZGeomPOD_h__
+#ifndef __ZooLib_Pixels_Geom_h__
+#define __ZooLib_Pixels_Geom_h__ 1
 #include "zconfig.h"
-
-#include "zoolib/Cartesian.h"
 
 #include "zoolib/ZStdInt.h" // For int32
 
 namespace ZooLib {
+namespace Pixels {
 
 // =================================================================================================
-#pragma mark - ZCoord (deprecated)
+#pragma mark -
 
-typedef int32 ZCoord;
+typedef int32 Ord;
 
 // =================================================================================================
-#pragma mark - ZPointPOD
+#pragma mark - PointPOD
 
-struct ZPointPOD
+struct PointPOD
 	{
-	int32 h;
-	int32 v;
+	Ord h;
+	Ord v;
 	};
 
-inline ZPointPOD sPointPOD(int32 iH, int32 iV)
+inline PointPOD sPointPOD(Ord iH, Ord iV)
 	{
-	const ZPointPOD result = {iH, iV};
+	const PointPOD result = {iH, iV};
 	return result;
 	}
 
-inline ZPointPOD sPointPOD(int32 iHV)
+inline PointPOD sPointPOD(Ord iHV)
 	{ return sPointPOD(iHV, iHV); }
 
 // =================================================================================================
-#pragma mark - ZRectPOD
+#pragma mark - RectPOD
 
-struct ZRectPOD
+struct RectPOD
 	{
-	int32 left;
-	int32 top;
-	int32 right;
-	int32 bottom;
+	Ord left;
+	Ord top;
+	Ord right;
+	Ord bottom;
 	};
 
-inline ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
+inline RectPOD sRectPOD(Ord iLeft, Ord iTop, Ord iRight, Ord iBottom)
 	{
-	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
+	const RectPOD result = {iLeft, iTop, iRight, iBottom};
 	return result;
 	}
 
-inline ZRectPOD sRectPOD(int32 iWidth, int32 iHeight)
+inline RectPOD sRectPOD(Ord iWidth, Ord iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
-// =================================================================================================
-#pragma mark - Cartesian::PointTraits<ZPointPOD>
-
-namespace Cartesian {
-
-template <>
-struct PointTraits<ZPointPOD>
-:	public PointTraits_Std_HV<int32,ZPointPOD,ZRectPOD>
-	{
-	static Point_t sMake(const Ord_t& iX, const Ord_t& iY)
-		{ return sPointPOD(iX, iY); }
-	};
-
-} // namespace Cartesian
-
-// =================================================================================================
-#pragma mark - Cartesian::RectTraits<ZRectPOD>
-
-namespace Cartesian {
-
-template <>
-struct RectTraits<ZRectPOD>
-:	public RectTraits_Std_LeftTopRightBottom<int32,ZPointPOD,ZRectPOD>
-	{
-	static Rect_t sMake(const Ord_t& iL, const Ord_t& iT, const Ord_t& iR, const Ord_t& iB)
-		{ return sRectPOD(iL, iT, iR, iB); }
-	};
-
-} // namespace Cartesian
-
+} // namespace Pixels
 } // namespace ZooLib
 
-#endif // ZGeomPOD
+#endif // __ZooLib_Pixels_Geom_h__

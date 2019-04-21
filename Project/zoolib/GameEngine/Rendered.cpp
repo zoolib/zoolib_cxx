@@ -351,25 +351,25 @@ void Rendered_Sound::Accept_Rendered(Visitor_Rendered& iVisitor)
 // =================================================================================================
 #pragma mark - Rendered_String
 
-Rendered_String::Rendered_String(const FontSpec& iFontSpec, const string8& iString)
-:	fFontSpec(iFontSpec)
+Rendered_String::Rendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString)
+:	fFontStrike(iFontStrike)
 ,	fString(iString)
 	{}
 
 void Rendered_String::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_String(this); }
 
-const FontSpec& Rendered_String::GetFontSpec()
-	{ return fFontSpec; }
+const ZRef<FontStrike>& Rendered_String::GetFontStrike()
+	{ return fFontStrike; }
 
 const string8& Rendered_String::GetString()
 	{ return fString; }
 
-ZRef<Rendered> sRendered_String(const FontSpec& iFontSpec, const string8& iString)
-	{ return new Rendered_String(iFontSpec, iString); }
+ZRef<Rendered> sRendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString)
+	{ return new Rendered_String(iFontStrike, iString); }
 
-ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const FontSpec& iFontSpec, const string8& iString)
-	{ return sRendered_Blush(iRGBA, sRendered_String(iFontSpec, iString)); }
+ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const ZRef<FontStrike>& iFontStrike, const string8& iString)
+	{ return sRendered_Blush(iRGBA, sRendered_String(iFontStrike, iString)); }
 
 // =================================================================================================
 #pragma mark - Rendered_Texture

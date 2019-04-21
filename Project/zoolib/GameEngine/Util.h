@@ -5,10 +5,12 @@
 
 #include "zoolib/File.h" // For FileSpec
 
-#include "zoolib/ZDCPixmap.h"
+#include "zoolib/Pixels/Pixmap.h"
 
 namespace ZooLib {
 namespace GameEngine {
+
+using Pixels::Pixmap;
 
 // =================================================================================================
 #pragma mark -
@@ -45,7 +47,7 @@ void sDump(const Any& iAny);
 
 uint64 sNextID();
 
-ZDCPixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR);
+Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR);
 
 } // namespace GameEngine
 } // namespace ZooLib

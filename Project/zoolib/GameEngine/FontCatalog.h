@@ -5,7 +5,7 @@
 #include "zoolib/File.h"
 
 #include "zoolib/GameEngine/Texture.h"
-#include "zoolib/GameEngine/Types.h" // For FontSpec, GPoint, GRect, Rat
+#include "zoolib/GameEngine/Types.h" // For GPoint, GRect, Rat
 
 namespace ZooLib {
 namespace GameEngine {
@@ -18,24 +18,37 @@ class FontStrike
 	{
 public:
 	virtual ZRef<Texture> GetGlyphTexture(UTF32 iCP,
-		GRect& oGlyphBounds, GPoint& oOffset, Rat& oXAdvance) = 0;
+		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance) = 0;
 
-	virtual GRect Measure(const UTF32* iCPs, size_t iCount) = 0;
-
-//	void GetVMetrics(float* oAscent, float* oDescent, float* oLineGap);
-//	void GetHMetrics(const UTF32 iCP, float* oAdvance, float* oLeftSideBearing);
+	virtual GRect Measure(UTF32 iCP) = 0;
 	};
+
+GRect sMeasure(const ZRef<FontStrike>& iFontStrike, const string8& iString);
+
+// =================================================================================================
+#pragma mark - FontInfo
+
+class FontInfo
+:	public ZCounted
+	{
+public:
+	virtual Rat GetScaleForEmHeight(Rat iEmHeight) = 0;
+	virtual Rat GetScaleForPixelHeight(Rat iPixelHeight) = 0;
+	virtual ZRef<FontStrike> GetStrikeForScale(Rat iScale) = 0;
+
+	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance) = 0;
+	};
+
+GRect sMeasure(const ZRef<FontInfo>& iFontInfo, Rat iScale, const string8& iString);
 
 // =================================================================================================
 #pragma mark - FontCatalog
-
-class FontStrike;
 
 class FontCatalog
 :	public ZCounted
 	{
 public:
-	virtual ZRef<FontStrike> GetFontStrike(const FontSpec& iFontSpec) = 0;
+	virtual ZRef<FontInfo> GetFontInfo(const string8& iName) = 0;
 	};
 
 ZRef<FontCatalog> sMakeFontCatalog(const FileSpec& iFileSpec);

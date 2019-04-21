@@ -295,7 +295,7 @@ static CVReturn spDisplayLinkCallback(
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-	const NSRect iBounds = sRect<NSRect>(1200, 600) + sPoint<NSPoint>(0, 44);
+	const NSRect iBounds = sRect<NSRect>(1024, 768) + sPoint<NSPoint>(0, 44);
 	
 	fWindow = sAdopt& [[NSWindow alloc]
 		initWithContentRect:sFlippedY(iBounds, H(screenRect))

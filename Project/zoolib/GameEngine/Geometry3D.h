@@ -196,6 +196,16 @@ Matrix<Val,4,4> sShear3(Val xy, Val xz, Val yx, Val yz, Val zx, Val zy)
 // =================================================================================================
 #pragma mark - Extraction of coordinate subsets
 
+// If you want X and Y, include Cartesian_Matrix.
+
+template <class Val>
+Val& Z(Matrix<Val,1,3>& iMat)
+	{ return iMat[2]; }
+
+template <class Val>
+Val Z(const Matrix<Val,1,3>& iMat)
+	{ return iMat[2]; }
+
 template <class Val>
 Matrix<Val,1,2> sXY(const Matrix<Val,1,3>& iMat)
 	{ return Matrix<Val,1,2>(iMat[0], iMat[1]); }

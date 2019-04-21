@@ -23,9 +23,9 @@ using std::pair;
 
 namespace { // anonymous
 
-ZDCPixmap spPixmap_PNG(const FileSpec& iFileSpec)
+Pixmap spPixmap_PNG(const FileSpec& iFileSpec)
 	{
-	if (ZDCPixmap thePixmap = sPixmap_PNG(iFileSpec.OpenR()))
+	if (Pixmap thePixmap = sPixmap_PNG(iFileSpec.OpenR()))
 		return thePixmap;
 
 	if (ZLOGF(w, eInfo))
@@ -34,7 +34,7 @@ ZDCPixmap spPixmap_PNG(const FileSpec& iFileSpec)
 	return null;
 	}
 
-ZRef<Callable<ZDCPixmap(const FileSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
+ZRef<Callable<Pixmap(const FileSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
 
 bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
 	const ZRef<Callable_TextureFromPixmap>& iTFP,

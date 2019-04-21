@@ -9,19 +9,6 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-#pragma mark - RGBA
-
-RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha)
-	{
-	RGBA result;
-	result[0] = iRed;
-	result[1] = iGreen;
-	result[2] = iBlue;
-	result[3] = iAlpha;
-	return result;
-	}
-
-// =================================================================================================
 #pragma mark - NameFrame
 
 NameFrame::NameFrame()
@@ -88,30 +75,6 @@ Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1)
 	}
 
 // =================================================================================================
-#pragma mark - Rat, from ZQ<Val>
-
-ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
-	{
-	if (iValQ)
-		return sQRat(iValQ->AsAny());
-	return null;
-	}
-
-Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ)
-	{
-	if (ZQ<Rat> theQ = sQRat(iValQ))
-		return *theQ;
-	return iDefault;
-	}
-
-Rat sRat(const ZQ<Val>& iValQ)
-	{
-	if (ZQ<Rat> theQ = sQRat(iValQ))
-		return *theQ;
-	return 0;
-	}
-
-// =================================================================================================
 #pragma mark - Rat, from Any
 
 ZQ<Rat> sQRat(const Any& iAny)
@@ -138,28 +101,31 @@ Rat sRat(const Any& iAny)
 	}
 
 // =================================================================================================
-#pragma mark - Coerce, CVec
+#pragma mark - Rat, from ZQ<Val>
 
-ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
+ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQCVec3(iIdentity, *iValQ);
+		return sQRat(iValQ->AsAny());
 	return null;
 	}
 
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ)
+Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ)
 	{
-	if (iValQ)
-		return sDCVec3(iDefault, iIdentity, *iValQ);
+	if (ZQ<Rat> theQ = sQRat(iValQ))
+		return *theQ;
 	return iDefault;
 	}
 
-CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
+Rat sRat(const ZQ<Val>& iValQ)
 	{
-	if (iValQ)
-		return sCVec3(iIdentity, *iValQ);
-	return sCVec3(iIdentity);
+	if (ZQ<Rat> theQ = sQRat(iValQ))
+		return *theQ;
+	return 0;
 	}
+
+// =================================================================================================
+#pragma mark - Coerce, CVec
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const Any& iVal)
 	{
@@ -240,6 +206,27 @@ CVec3 sCVec3(Rat iIdentity, const Any& iVal)
 	return CVec3(iIdentity);
 	}
 
+ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
+	{
+	if (iValQ)
+		return sQCVec3(iIdentity, iValQ->AsAny());
+	return null;
+	}
+
+CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ)
+	{
+	if (iValQ)
+		return sDCVec3(iDefault, iIdentity, iValQ->AsAny());
+	return iDefault;
+	}
+
+CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
+	{
+	if (iValQ)
+		return sCVec3(iIdentity, iValQ->AsAny());
+	return sCVec3(iIdentity);
+	}
+
 CVec3 sCVec3(Rat iX, Rat iY, Rat iZ)
 	{ return sCVec3<Rat>(iX, iY, iZ); }
 
@@ -278,13 +265,6 @@ ZQ<RGBA> sQRGBA(const string8& iString)
 	return null;
 	}
 
-ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ)
-	{
-	if (iValQ)
-		return sQRGBA(*iValQ);
-	return null;
-	}
-
 ZQ<RGBA> sQRGBA(const Any& iVal)
 	{
 	if (const RGBA* theRGBAP = iVal.PGet<RGBA>())
@@ -294,6 +274,13 @@ ZQ<RGBA> sQRGBA(const Any& iVal)
 		return sQRGBA(*theStringP);
 
 	ZUnimplemented();
+	return null;
+	}
+
+ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ)
+	{
+	if (iValQ)
+		return sQRGBA(iValQ->AsAny());
 	return null;
 	}
 

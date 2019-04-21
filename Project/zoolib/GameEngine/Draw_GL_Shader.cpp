@@ -553,7 +553,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 	// See also GameEngine_Game_Render.cpp/sGame_Render and
 	// Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer.
 
-	const ZPointPOD theTextureSize =
+	const PointPOD theTextureSize =
 		sPointPOD(iRendered_Buffer->GetWidth(), iRendered_Buffer->GetHeight());
 
 	ZRef<Texture_GL> theTexture_GL = new Texture_GL(theTextureSize);
@@ -630,7 +630,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 		iRendered_Texture->GetTexture().DynamicCast<Texture_GL>())
 		{
 		TextureID theTextureID;
-		ZPointPOD theTextureSize;
+		PointPOD theTextureSize;
 		theTexture_GL->Get(theTextureID, theTextureSize);
 		if (theTexture_GL->GetIsAlphaOnly())
 			{

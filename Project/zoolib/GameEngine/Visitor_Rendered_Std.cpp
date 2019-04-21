@@ -108,7 +108,7 @@ void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>
 		ChanW_UTF_string8(&theString8)
 			<< theCel.fNameFrame.fName << "/" << theCel.fNameFrame.fFrame;
 
-		sAccept(sRendered_String(RGBA(1), FontSpec(), theString8), *this);
+//###		sAccept(sRendered_String(RGBA(1), fFontStrike, theString8), *this);
 		}
 	}
 
@@ -173,13 +173,7 @@ Visitor_Rendered_StringToTextures::Visitor_Rendered_StringToTextures(
 void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 	const ZRef<Rendered_String>& iRendered_String)
 	{
-	FontSpec theSpec = iRendered_String->GetFontSpec();
-	if (theSpec.fName.IsEmpty())
-		{
-		theSpec.fName = "Helvetica.ttf";
-		theSpec.fSize = 12;
-		}
-	if (ZRef<FontStrike> theStrike = fFontCatalog->GetFontStrike(theSpec))
+	if (ZRef<FontStrike> theStrike = iRendered_String->GetFontStrike())
 		{
 		ZRef<Rendered_Group> theGroup = sRendered_Group();
 

@@ -10,8 +10,9 @@ namespace GameEngine {
 
 using namespace OpenGL;
 
-using ZDCPixmapNS::PixelDescRep_Color;
-using ZDCPixmapNS::PixelDescRep_Gray;
+using Pixels::PixelDescRep_Color;
+using Pixels::PixelDescRep_Gray;
+using Pixels::PixvalDesc;
 
 // =================================================================================================
 #pragma mark - Helpers
@@ -27,28 +28,26 @@ static int spNextPowerOfTwo(int input)
 // =================================================================================================
 #pragma mark - Texture_GL
 
-Texture_GL::Texture_GL(ZPointPOD iDrawnSize)
+Texture_GL::Texture_GL(PointPOD iDrawnSize)
 :	fDrawnSize(iDrawnSize)
 ,	fTextureID(0)
 ,	fIsAlphaOnly(false)
 	{}
 
-Texture_GL::Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly)
+Texture_GL::Texture_GL(PointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly)
 :	fTextureSize(iTextureSize)
 ,	fDrawnSize(iTextureSize)
 ,	fTextureID(iTextureID)
 ,	fIsAlphaOnly(iIsAlphaOnly)
 	{}
 
-Texture_GL::Texture_GL(const ZDCPixmap& iPixmap)
+Texture_GL::Texture_GL(const Pixmap& iPixmap)
 :	fPixmap(iPixmap)
 ,	fDrawnSize(fPixmap.Size())
 ,	fIsAlphaOnly(false)
 	{
-	using namespace ZDCPixmapNS;
-
 	// For the momemnt, insist on RGBA (LE)
-	if (ZRef<PixelDescRep_Color> thePDRep = fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Color>())
+	if (ZRef<PixelDescRep_Color> thePDRep = fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Color>())
 		{
 		ZooLib::uint32 theR, theG, theB, theA;
 		thePDRep->GetMasks(theR, theG, theB, theA);
@@ -69,7 +68,7 @@ Texture_GL::Texture_GL(const ZDCPixmap& iPixmap)
 			ZAssert(theR == 0x000000FF);
 			}
 		}
-	else if (ZRef<PixelDescRep_Gray> thePDRep = fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
+	else if (ZRef<PixelDescRep_Gray> thePDRep = fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Gray>())
 		{
 		uint32 maskL, maskA;
 		thePDRep->GetMasks(maskL, maskA);
@@ -90,10 +89,10 @@ Texture_GL::~Texture_GL()
 		::glDeleteTextures(1, &fTextureID.Get());
 	}
 
-ZPointPOD Texture_GL::GetDrawnSize()
+PointPOD Texture_GL::GetDrawnSize()
 	{ return fDrawnSize; }
 
-void Texture_GL::Get(TextureID& oTextureID, ZPointPOD& oTextureSize)
+void Texture_GL::Get(TextureID& oTextureID, PointPOD& oTextureSize)
 	{
 	if (not fTextureID)
 		this->pMakeTexture();
@@ -108,7 +107,7 @@ TextureID Texture_GL::GetTextureID()
 	return fTextureID;
 	}
 
-ZPointPOD Texture_GL::GetTextureSize()
+PointPOD Texture_GL::GetTextureSize()
 	{
 	if (not fTextureID)
 		this->pMakeTexture();
@@ -146,10 +145,10 @@ void Texture_GL::pMakeTexture()
 	const void* baseAddress = nullptr;
 	GLenum format = GL_RGBA;
 
-	if (fPixmap)
+	if (fPixmap.GetRep())
 		{
 		baseAddress = fPixmap.GetBaseAddress();
-		if (fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
+		if (fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Gray>())
 			format = GL_ALPHA;
 		}
 
@@ -188,9 +187,9 @@ void Texture_GL::pMakeTexture()
 	fPixmap = null;
 	}
 
-static ZRef<Texture> spTextureFromPixmap(const ZDCPixmap& iPixmap)
+static ZRef<Texture> spTextureFromPixmap(const Pixmap& iPixmap)
 	{
-	if (iPixmap)
+	if (iPixmap.GetRep())
 		return new Texture_GL(iPixmap);
 	return null;
 	}

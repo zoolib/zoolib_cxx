@@ -13,6 +13,9 @@
 #include "zoolib/GameEngine/Geometry3D.h"
 #include "zoolib/GameEngine/Val.h"
 
+#include "zoolib/Pixels/Cartesian_Geom.h"
+#include "zoolib/Pixels/RGBA.h"
+
 #include "zoolib/ZMACRO_auto.h"
 
 #define GEMACRO_Callable(callable, function) \
@@ -20,6 +23,19 @@
 
 namespace ZooLib {
 namespace GameEngine {
+
+using Pixels::PointPOD;
+using Pixels::sPointPOD;
+
+using Pixels::RectPOD;
+using Pixels::sRectPOD;
+
+using Pixels::RGBA;
+using Pixels::sRGBA;
+using Pixels::sRed;
+using Pixels::sGreen;
+using Pixels::sBlue;
+using Pixels::sAlpha;
 
 // =================================================================================================
 
@@ -62,46 +78,9 @@ inline GPoint sGPoint(Rat iX, Rat iY)
 	{ return sPoint<GPoint>(iX, iY); }
 
 // =================================================================================================
-#pragma mark - RGBA
-
-typedef CVec4 RGBA;
+#pragma mark - Blush
 
 typedef RGBA Blush;
-
-RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue, Rat iAlpha);
-
-inline RGBA sRGBA(Rat iRed, Rat iGreen, Rat iBlue)
-	{ return sRGBA(iRed, iGreen, iBlue, 1.0); }
-
-inline RGBA sRGBA(Rat iGray, Rat iAlpha)
-	{ return sRGBA(iGray, iGray, iGray, iAlpha); }
-
-inline RGBA sRGBA(Rat iGray)
-	{ return sRGBA(iGray, iGray, iGray, 1.0); }
-
-inline Rat& sRed(RGBA& iRGBA)
-	{ return iRGBA[0]; }
-
-inline Rat sRed(const RGBA& iRGBA)
-	{ return iRGBA[0]; }
-
-inline Rat& sGreen(RGBA& iRGBA)
-	{ return iRGBA[1]; }
-
-inline Rat sGreen(const RGBA& iRGBA)
-	{ return iRGBA[1]; }
-
-inline Rat& sBlue(RGBA& iRGBA)
-	{ return iRGBA[2]; }
-
-inline Rat sBlue(const RGBA& iRGBA)
-	{ return iRGBA[2]; }
-
-inline Rat& sAlpha(RGBA& iRGBA)
-	{ return iRGBA[3]; }
-
-inline Rat sAlpha(const RGBA& iRGBA)
-	{ return iRGBA[3]; }
 
 // =================================================================================================
 #pragma mark - Gain
@@ -410,13 +389,6 @@ ZQ<Val> sQGetNamed(const Map& iMap,
 Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1);
 
 // =================================================================================================
-#pragma mark - Rat, from ZQ<Val>
-
-ZQ<Rat> sQRat(const ZQ<Val>& iValQ);
-Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ);
-Rat sRat(const ZQ<Val>& iValQ);
-
-// =================================================================================================
 #pragma mark - Rat, from Any
 
 ZQ<Rat> sQRat(const Any& iAny);
@@ -424,15 +396,25 @@ Rat sDRat(Rat iDefault, const Any& iAny);
 Rat sRat(const Any& iAny);
 
 // =================================================================================================
-#pragma mark - CVec
+#pragma mark - Rat, from ZQ<Val>
 
-ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ);
-CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
+ZQ<Rat> sQRat(const ZQ<Val>& iValQ);
+Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ);
+Rat sRat(const ZQ<Val>& iValQ);
+
+// =================================================================================================
+#pragma mark - CVec3, from Any
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const Any& iVal);
 CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const Any& iVal);
 CVec3 sCVec3(Rat iIdentity, const Any& iVal);
+
+// =================================================================================================
+#pragma mark - CVec3, from ZQ<Val>
+
+ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
+CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ);
+CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
 
 CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);
 
@@ -441,9 +423,9 @@ CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);
 
 ZQ<RGBA> sQRGBA(const string8& iString);
 
-ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ);
-
 ZQ<RGBA> sQRGBA(const Any& iVal);
+
+ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ);
 
 // =================================================================================================
 #pragma mark - sRandomInRange

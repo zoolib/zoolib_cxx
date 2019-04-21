@@ -28,7 +28,11 @@ namespace ZooLib {
 namespace GameEngine {
 
 // =================================================================================================
-#pragma mark - CVec ctors
+#pragma mark - CVec1 ctors
+
+template <class Val>
+Matrix<Val,1,1> sCVec1()
+	{ return Matrix<Val,1,1>(); }
 
 template <class Val>
 Matrix<Val,1,1> sCVec1(Val i0)
@@ -38,6 +42,17 @@ Matrix<Val,1,1> sCVec1(Val i0)
 	return result;
 	}
 
+// =================================================================================================
+#pragma mark - CVec2 ctors
+
+template <class Val>
+Matrix<Val,1,2> sCVec2()
+	{ return Matrix<Val,1,2>(); }
+
+template <class Val>
+Matrix<Val,1,2> sCVec2(Val iVal)
+	{ return Matrix<Val,1,2>(iVal); }
+
 template <class Val>
 Matrix<Val,1,2> sCVec2(Val i0, Val i1)
 	{
@@ -46,6 +61,17 @@ Matrix<Val,1,2> sCVec2(Val i0, Val i1)
 	result.fE[0][1] = i1;
 	return result;
 	}
+
+// =================================================================================================
+#pragma mark - CVec3 ctors
+
+template <class Val>
+Matrix<Val,1,3> sCVec3()
+	{ return Matrix<Val,1,3>(); }
+
+template <class Val>
+Matrix<Val,1,3> sCVec3(Val iVal)
+	{ return Matrix<Val,1,3>(iVal); }
 
 template <class Val>
 Matrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
@@ -57,6 +83,17 @@ Matrix<Val,1,3> sCVec3(Val i0, Val i1, Val i2)
 	return result;
 	}
 
+// =================================================================================================
+#pragma mark - CVec4 ctors
+
+template <class Val>
+Matrix<Val,1,4> sCVec4()
+	{ return Matrix<Val,1,4>(); }
+
+template <class Val>
+Matrix<Val,1,4> sCVec4(Val iVal)
+	{ return Matrix<Val,1,4>(iVal); }
+
 template <class Val>
 Matrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 	{
@@ -67,91 +104,6 @@ Matrix<Val,1,4> sCVec4(Val i0, Val i1, Val i2, Val i3)
 	result.fE[0][3] = i3;
 	return result;
 	}
-
-// =================================================================================================
-#pragma mark - CVec2 ctors
-
-template <class Val>
-Matrix<Val,1,2> sCVec2(Val iVal)
-	{ return Matrix<Val,1,2>(iVal); }
-
-template <class Val>
-Matrix<Val,1,2> sCVec2()
-	{ return Matrix<Val,1,2>(); }
-
-// =================================================================================================
-#pragma mark - CVec3 ctors
-
-template <class Val>
-Matrix<Val,1,3> sCVec3(Val iVal)
-	{ return Matrix<Val,1,3>(iVal); }
-
-template <class Val>
-Matrix<Val,1,3> sCVec3()
-	{ return Matrix<Val,1,3>(); }
-
-// =================================================================================================
-#pragma mark - RVec ctors
-
-template <class Val>
-Matrix<Val,1,1> sRVec1(Val i0)
-	{
-	Matrix<Val,1,1> result(null);
-	result.fE[0][0] = i0;
-	return result;
-	}
-
-template <class Val>
-Matrix<Val,2,1> sRVec2(Val i0, Val i1)
-	{
-	Matrix<Val,1,2> result(null);
-	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
-	return result;
-	}
-
-template <class Val>
-Matrix<Val,3,1> sRVec3(Val i0, Val i1, Val i2)
-	{
-	Matrix<Val,1,3> result(null);
-	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
-	result.fE[2][0] = i2;
-	return result;
-	}
-
-template <class Val>
-Matrix<Val,4,1> sRVec4(Val i0, Val i1, Val i2, Val i3)
-	{
-	Matrix<Val,1,4> result(null);
-	result.fE[0][0] = i0;
-	result.fE[1][0] = i1;
-	result.fE[2][0] = i2;
-	result.fE[3][0] = i3;
-	return result;
-	}
-
-// =================================================================================================
-#pragma mark - RVec2 ctors
-
-template <class Val>
-Matrix<Val,2,1> sRVec2(Val iVal)
-	{ return Matrix<Val,2,1>(iVal); }
-
-template <class Val>
-Matrix<Val,2,1> sRVec2()
-	{ return Matrix<Val,2,1>(); }
-
-// =================================================================================================
-#pragma mark - RVec3 ctors
-
-template <class Val>
-Matrix<Val,3,1> sRVec3(Val iVal)
-	{ return Matrix<Val,3,1>(iVal); }
-
-template <class Val>
-Matrix<Val,3,1> sRVec3()
-	{ return Matrix<Val,3,1>(); }
 
 // =================================================================================================
 #pragma mark - sScale (taking column vector)
@@ -166,6 +118,16 @@ Matrix<E,Dim+1,Dim+1> sScale(const Matrix<E,1,Dim>& iVec)
 	return result;
 	}
 
+template <class E, size_t Dim>
+Matrix<E,Dim+1,Dim+1> sScale(E const (&iArray)[Dim])
+	{
+	Matrix<E,Dim+1,Dim+1> result;
+	for (size_t ii = 0; ii < Dim; ++ii)
+		result.fE[ii][ii] = iArray[ii];
+	result.fE[Dim][Dim] = 1;
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark - sTranslate (taking column vector)
 
@@ -175,6 +137,15 @@ Matrix<E,Dim+1,Dim+1> sTranslate(const Matrix<E,1,Dim>& iVec)
 	Matrix<E,Dim+1,Dim+1> result(E(1));
 	for (size_t ii = 0; ii < Dim; ++ii)
 		result.fE[Dim][ii] = iVec.fE[0][ii];
+	return result;
+	}
+
+template <class E, size_t Dim>
+Matrix<E,Dim+1,Dim+1> sTranslate(E const (&iArray)[Dim])
+	{
+	Matrix<E,Dim+1,Dim+1> result(E(1));
+	for (size_t ii = 0; ii < Dim; ++ii)
+		result.fE[Dim][ii] = iArray[ii];
 	return result;
 	}
 

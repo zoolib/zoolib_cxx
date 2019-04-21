@@ -4,7 +4,7 @@
 
 #include "zoolib/Callable.h"
 
-#include "zoolib/ZDCPixmap.h"
+#include "zoolib/Pixels/Pixmap.h"
 
 namespace ZooLib {
 namespace GameEngine {
@@ -21,12 +21,12 @@ protected:
 public:
 	virtual ~Texture();
 
-	virtual ZPointPOD GetDrawnSize() = 0;
+	virtual Pixels::PointPOD GetDrawnSize() = 0;
 	
 	size_t fPixelCount;
 	};
 
-typedef Callable<ZRef<Texture>(const ZDCPixmap&)> Callable_TextureFromPixmap;
+typedef Callable<ZRef<Texture>(const Pixels::Pixmap&)> Callable_TextureFromPixmap;
 
 } // namespace GameEngine
 } // namespace ZooLib

@@ -5,6 +5,7 @@
 #include "zoolib/SafePtrStack.h"
 #include "zoolib/Visitor.h"
 
+#include "zoolib/GameEngine/FontCatalog.h"
 #include "zoolib/GameEngine/Sound.h"
 #include "zoolib/GameEngine/Texture.h"
 #include "zoolib/GameEngine/Types.h"
@@ -325,23 +326,24 @@ class Rendered_String
 :	public Rendered
 	{
 public:
-	Rendered_String(const FontSpec& iFontSpec, const string8& iString);
+	Rendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const FontSpec& GetFontSpec();
+	const ZRef<FontStrike>& GetFontStrike();
 	const string8& GetString();
 
 private:
-	const FontSpec fFontSpec;
+	const ZRef<FontStrike> fFontStrike;
 	const string8 fString;
 	};
 
-ZRef<Rendered> sRendered_String(const FontSpec& iFontSpec, const string8& iString);
+ZRef<Rendered> sRendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString);
 
-ZRef<Rendered> sRendered_String(const RGBA& iRGBA, const FontSpec& iFontSpec, const string8& iString);
+ZRef<Rendered> sRendered_String(const RGBA& iRGBA,
+	const ZRef<FontStrike>& iFontStrike, const string8& iString);
 
 // =================================================================================================
 #pragma mark - Rendered_Texture

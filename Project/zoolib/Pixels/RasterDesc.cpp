@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2002 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,50 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapCoder_PNG_h__
-#define __ZDCPixmapCoder_PNG_h__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZDCPixmapCoder.h"
+#include "zoolib/Pixels/RasterDesc.h"
 
 namespace ZooLib {
+namespace Pixels {
 
 // =================================================================================================
-#pragma mark - ZDCPixmapEncoder_PNG
+#pragma mark -
 
-class ZDCPixmapEncoder_PNG : public ZDCPixmapEncoder
+int sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 	{
-public:
-	static void sWritePixmap(const ChanW_Bin& iStream, const ZDCPixmap& iPixmap);
+	const int bitRound = iByteRound * 8;
+	return ((iWidth * iDepth + bitRound - 1) / bitRound) * iByteRound;
+	}
 
-	ZDCPixmapEncoder_PNG();
-	virtual ~ZDCPixmapEncoder_PNG();
-
-// From ZDCPixmapEncoder
-	virtual void Imp_Write(const ChanW_Bin& iStream,
-		const void* iBaseAddress,
-		const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRectPOD& iBounds);
-	};
-
-// =================================================================================================
-#pragma mark - ZDCPixmapDecoder_PNG
-
-class ZDCPixmapDecoder_PNG : public ZDCPixmapDecoder
+const void* sCalcRowAddress(const RasterDesc& iRD, const void* iBaseAddress, int iRow)
 	{
-public:
-	static ZDCPixmap sReadPixmap(const ChanR_Bin& iStream);
-
-	ZDCPixmapDecoder_PNG();
-	virtual ~ZDCPixmapDecoder_PNG();
-
-// From ZDCPixmapDecoder
-	virtual void Imp_Read(const ChanR_Bin& iStream, ZDCPixmap& oPixmap);
-
-private:
-	};
-
+	return static_cast<const char*>(iBaseAddress)
+		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow);
+	}
+	
+void* sCalcRowAddress(const RasterDesc& iRD, void* iBaseAddress, int iRow)
+	{
+	return static_cast<char*>(iBaseAddress)
+		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow);
+	}
+	
+} // namespace Pixels
 } // namespace ZooLib
 
-#endif // __ZDCPixmapCoder_PNG_h__

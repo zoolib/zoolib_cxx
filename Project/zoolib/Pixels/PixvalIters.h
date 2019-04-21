@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2002 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,73 +18,85 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapCoder_h__
-#define __ZDCPixmapCoder_h__ 1
+#ifndef __ZooLib_Pixels_PixvalIters_h__
+#define __ZooLib_Pixels_PixvalIters_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanW_Bin.h"
-
-#include "zoolib/ZDCPixmap.h"
+#include "zoolib/Pixels/PixvalAccessor.h"
 
 namespace ZooLib {
+namespace Pixels {
 
 // =================================================================================================
-#pragma mark - ZDCPixmapEncoder
+#pragma mark - PixvalIterR
 
-class ZDCPixmapEncoder
+class PixvalIterR
 	{
 public:
-	static void sWritePixmap(const ChanW_Bin& iStream,
-		const ZDCPixmap& iPixmap, ZDCPixmapEncoder& iEncoder);
+	PixvalIterR(const PixvalDesc& iPixvalDesc, const void* iAddress, int iH);
+
+	Pixval ReadInc();
+	Pixval Read();
+
+	void Inc();
+
+	void Reset(const void* iAddress, int iH);
 
 protected:
-	ZDCPixmapEncoder();
-	ZDCPixmapEncoder(const ZDCPixmapEncoder&);
-	ZDCPixmapEncoder& operator=(const ZDCPixmapEncoder&);
+	PixvalAccessor fAccessor;
+	const void* fAddress;
 
-public:
-	virtual ~ZDCPixmapEncoder();
-
-	void Write(const ChanW_Bin& iStream, const ZDCPixmap& iPixmap);
-	void Write(const ChanW_Bin& iStream,
-		const void* iBaseAddress,
-		const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRectPOD& iBounds);
-
-	/** API that must be overridden. */
-	virtual void Imp_Write(const ChanW_Bin& iStream,
-		const void* iBaseAddress,
-		const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRectPOD& iBounds) = 0;
+	int fH;
 	};
 
 // =================================================================================================
-#pragma mark - ZDCPixmapDecoder
+#pragma mark - PixvalIterW
 
-class ZDCPixmapDecoder
+class PixvalIterW
 	{
 public:
-	static ZDCPixmap sReadPixmap(const ChanR_Bin& iStream, ZDCPixmapDecoder& iDecoder);
+	PixvalIterW(const PixvalDesc& iPixvalDesc, void* iAddress, int iH);
 
-protected:
-	ZDCPixmapDecoder();
-	ZDCPixmapDecoder(const ZDCPixmapDecoder&);
-	ZDCPixmapDecoder& operator=(const ZDCPixmapDecoder&);
+	void WriteInc(Pixval iPixval);
+	void Write(Pixval iPixval);
 
-public:
-	virtual ~ZDCPixmapDecoder();
+	void Inc();
 
-	ZDCPixmap Read(const ChanR_Bin& iStream);
+	void Reset(void* iAddress, int iH);
 
-	/** API that must be overridden. */
-	virtual void Imp_Read(const ChanR_Bin& iStream, ZDCPixmap& oPixmap) = 0;
+private:
+	PixvalAccessor fAccessor;
+	void* fAddress;
 
-	/** \todo. Need an API that reads into a subset only. */
+	int fH;
 	};
 
+// =================================================================================================
+#pragma mark - PixvalIterRW
+
+class PixvalIterRW
+	{
+public:
+	PixvalIterRW(const PixvalDesc& iPixvalDesc, void* iAddress, int iH);
+
+	Pixval ReadInc();
+	Pixval Read();
+
+	void WriteInc(Pixval iPixval);
+	void Write(Pixval iPixval);
+
+	void Inc();
+
+	void Reset(void* iAddress, int iH);
+
+private:
+	PixvalAccessor fAccessor;
+	void* fAddress;
+
+	int fH;
+	};
+
+} // namespace Pixels
 } // namespace ZooLib
 
-#endif // __ZDCPixmapCoder_h__
+#endif // __ZooLib_Pixels_PixvalIters_h__

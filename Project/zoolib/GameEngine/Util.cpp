@@ -15,18 +15,23 @@
 #include "zoolib/ZMACRO_auto.h"
 #include "zoolib/ZMACRO_foreach.h"
 
-#include "zoolib/ZDCPixmap_CGImage.h"
-
 #include "zoolib/Apple/CGData_Channer.h"
+//#include "zoolib/Apple/Pixmap_CGImage.h"
 
 #if 1 // not ZCONFIG_SPI_Enabled(CoreGraphics)
-	#include "zoolib/ZDCPixmapCoder_PNG.h"
+	#include "zoolib/Pixels/PixmapCoder_PNG.h"
 #endif
+
+#include "zoolib/Pixels/Blit.h"
+#include "zoolib/Pixels/Formats.h"
+#include "zoolib/Pixels/PixmapCoder_PNG.h"
 
 namespace ZooLib {
 namespace GameEngine {
 
 using namespace Util_string;
+
+using Pixels::Ord;
 
 // =================================================================================================
 #pragma mark -
@@ -267,17 +272,15 @@ uint64 sNextID()
 
 // =================================================================================================
 
-static bool spPremultiply(ZCoord iLocationH, ZCoord iLocationV,
-	ZRGBA_POD& ioColor, void* iRefcon)
+static bool spPremultiply(Ord iH, Ord iV, RGBA& ioColor, void* iRefcon)
 	{
-	const float alpha = ioColor.floatAlpha();
-	ioColor.red = 65535 * (ioColor.red / 65535.0) * alpha;
-	ioColor.green = 65535 * (ioColor.green / 65535.0) * alpha;
-	ioColor.blue = 65535 * (ioColor.blue / 65535.0) * alpha;
+	sRed(ioColor) *= sAlpha(ioColor);
+	sGreen(ioColor) *= sAlpha(ioColor);
+	sBlue(ioColor) *= sAlpha(ioColor);
 	return true;
 	}
 
-ZDCPixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
+Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
 	{
 	#if ZMACRO_IOS
 
@@ -287,22 +290,22 @@ ZDCPixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
 				theProvider_File, nullptr, true, kCGRenderingIntentDefault))
 				{
 				//CGImageAlphaInfo theInfo = ::CGImageGetAlphaInfo(theImageRef);
-				return ZDCPixmap_CGImage::sPixmap(theImageRef);
+				return Pixmap_CGImage::sPixmap(theImageRef);
 				}
 			}
 	
 	#else
 
-		if (ZDCPixmap thePixmap = ZDCPixmapDecoder_PNG::sReadPixmap(*iChannerR))
+		if (Pixmap thePixmap = Pixels::sReadPixmap_PNG(*iChannerR))
 			{
 			if (thePixmap.GetRasterDesc().fPixvalDesc.fDepth != 32)
 				{
-				const ZPointPOD theSize = thePixmap.Size();
-				ZDCPixmap target(theSize, ZDCPixmapNS::eFormatStandard_RGBA_32, ZRGBA(0,0,0,0));
-				target.CopyFrom(sPoint<ZPointPOD>(0,0), thePixmap, sRect<ZRectPOD>(theSize));
+				const PointPOD theSize = thePixmap.Size();
+				Pixmap target = sPixmap(theSize, Pixels::EFormatStandard::RGBA_32, sRGBA(0,0,0,0));
+				sBlit(thePixmap, sRect<RectPOD>(theSize), target, sPointPOD(0,0));
 				thePixmap = target;
 				}
-			thePixmap.Munge(spPremultiply, nullptr);
+			sMunge(thePixmap, spPremultiply, nullptr);
 			return thePixmap;
 			}
 

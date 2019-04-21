@@ -71,7 +71,7 @@ endif
 ifneq (,$(filter $(CONFIGURATION),Debug))
 	ZMAKE_CFLAGS +=-g -DDEBUG
 else
-	ZMAKE_CFLAGS +=-Os
+	ZMAKE_CFLAGS +=-Os -g
 # strip-all not supported on clang
 #	ZMAKE_LDFLAGS +=--strip-all
 endif

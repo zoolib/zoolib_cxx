@@ -5,11 +5,14 @@
 #include "zoolib/TagVal.h"
 
 #include "zoolib/GameEngine/Texture.h"
+#include "zoolib/GameEngine/Types.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
 
 namespace ZooLib {
 namespace GameEngine {
+
+using Pixels::Pixmap;
 
 // =================================================================================================
 #pragma mark - Texture_GL
@@ -20,26 +23,26 @@ class Texture_GL
 :	public Texture
 	{
 public:
-	Texture_GL(ZPointPOD iDrawnSize);
-	Texture_GL(ZPointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly);
-	Texture_GL(const ZDCPixmap& iPixmap);
+	Texture_GL(PointPOD iDrawnSize);
+	Texture_GL(PointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly);
+	Texture_GL(const Pixmap& iPixmap);
 	virtual ~Texture_GL();
 
 // From Texture
-	virtual ZPointPOD GetDrawnSize();
+	virtual PointPOD GetDrawnSize();
 	
 // Our protocol
-	void Get(TextureID& oTextureID, ZPointPOD& oTextureSize);
+	void Get(TextureID& oTextureID, PointPOD& oTextureSize);
 	TextureID GetTextureID();
-	ZPointPOD GetTextureSize();
+	PointPOD GetTextureSize();
 	bool GetIsAlphaOnly();
 
 private:
 	void pMakeTexture();
 
-	ZDCPixmap fPixmap;
-	ZPointPOD fTextureSize;
-	const ZPointPOD fDrawnSize;
+	Pixmap fPixmap;
+	PointPOD fTextureSize;
+	const PointPOD fDrawnSize;
 	TextureID fTextureID;
 	bool fIsAlphaOnly;
 	};

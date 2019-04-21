@@ -96,6 +96,12 @@ public:
 	Matrix(const null_t&)
 		{}
 
+	Matrix(E const (&iArray)[R])
+		{
+		for (size_t rr = 0; rr < R; ++rr)
+			fE[0][rr] = iArray[rr];
+		}
+
 	Matrix(E iE)
 		{
 		for (size_t rr = 0; rr < R; ++rr)
@@ -116,6 +122,9 @@ public:
 
 	E fE[1][R];
 	};
+
+template <class E_p, size_t R_p>
+using CVec = Matrix<E_p,1,R_p>;
 
 // =================================================================================================
 #pragma mark - Matrix, specialized for row vector
@@ -142,10 +151,16 @@ public:
 	Matrix(const null_t&)
 		{}
 
+	Matrix(E const (&iArray)[C])
+		{
+		for (size_t cc = 0; cc < C; ++cc)
+			fE[cc][0] = iArray[cc];
+		}
+
 	Matrix(E iE)
 		{
 		for (size_t cc = 0; cc < C; ++cc)
-			fE[0][cc] = iE;
+			fE[cc][0] = iE;
 		}
 
 	E& operator[](size_t c)
@@ -162,6 +177,9 @@ public:
 
 	E fE[C][1];
 	};
+
+template <class E_p, size_t C_p>
+using RVec = Matrix<E_p,C_p,1>;
 
 // =================================================================================================
 #pragma mark - Matrix, square
