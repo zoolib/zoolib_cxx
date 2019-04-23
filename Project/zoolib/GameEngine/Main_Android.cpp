@@ -46,7 +46,6 @@ typedef map<int64,ZRef<Touch> > TouchMap;
 
 } // anonymous namespace
 
-
 // =================================================================================================
 
 static jclass spClass_Activity;
