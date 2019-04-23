@@ -35,6 +35,23 @@ extends Activity
 		System.loadLibrary("ZooLibGame");
 		}
 
+	private void hideSystemUI()
+		{
+		// Set the IMMERSIVE flag.
+		// Set the content to appear under the system bars so that the content
+		// doesn't resize when the system bars hide and show.
+		getWindow().getDecorView().setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+						| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+						| View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+//		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+//		getActionBar().hide();
+		}
+
 	protected void onCreate(Bundle savedInstanceState)
 		{
 		super.onCreate(savedInstanceState);
@@ -50,11 +67,20 @@ extends Activity
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+		this.hideSystemUI();
+
 		// Set up the surface
 		spSurface = new SDLSurface(getApplication());
 		setContentView(spSurface);
 		SurfaceHolder holder = spSurface.getHolder();
 		holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+		}
+
+	public void onWindowFocusChanged(boolean hasFocus)
+		{
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus)
+			this.hideSystemUI();
 		}
 
 	protected void onPause()
@@ -203,8 +229,8 @@ implements SurfaceHolder.Callback
 				{
 				mSDLThread.join();
 				}
-			catch(Exception e)
-				{			
+			catch (Exception e)
+				{
 				Log.v("SDL", "Problem stopping thread: " + e);
 				}
 			mSDLThread = null;
