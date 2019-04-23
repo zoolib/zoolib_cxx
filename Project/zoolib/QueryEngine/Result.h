@@ -91,7 +91,15 @@ private:
 	std::vector<size_t> fPermute;
 	};
 
+// =================================================================================================
+#pragma mark - sBuildBindings
+
+void sBuildBindings(ZRef<Result> iResult, std::map<string8,size_t>& oResult);
+
 } // namespace QueryEngine
+
+// =================================================================================================
+#pragma mark - sCompare_T
 
 template <>
 int sCompare_T<QueryEngine::Result>(

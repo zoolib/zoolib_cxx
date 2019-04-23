@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_vector.h"
 
+using std::map;
 using std::pair;
 using std::vector;
 
@@ -172,6 +173,9 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	vector<pair<size_t,size_t> >* oAdded,
 	vector<Multi3<size_t,size_t,size_t> >* oChanged)
 	{
+	if (iResult == fResult_Prior)
+		return;
+
 	const RelHead& theRH = iResult->GetRelHead();
 
 	ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
@@ -335,6 +339,17 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 	fResult_Prior = iResult;
 
 	swap(fSort_Prior, theSort_New);
+	}
+
+// =================================================================================================
+#pragma mark - ResultDiffer
+
+void sBuildBindings(ZRef<Result> iResult, map<string8,size_t>& oResult)
+	{
+	const RelHead& theRH = iResult->GetRelHead();
+	size_t index = 0;
+	for (auto&& entry: theRH)
+		oResult.insert(pair<string8,size_t>(entry, index++));
 	}
 
 } // namespace QueryEngine
