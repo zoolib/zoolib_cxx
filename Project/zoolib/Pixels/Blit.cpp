@@ -598,6 +598,41 @@ static void sBlitRowWithMaps_T(
 		}
 	}
 
+void sBlitRowPixvals(
+	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc,
+	int32 iSourceH,
+	void* iDestBase, const PixvalDesc& iDestPixvalDesc,
+	int32 iDestH,
+	int32 iCount)
+	{
+	if (iSourcePixvalDesc.fDepth == iDestPixvalDesc.fDepth
+		&& iSourcePixvalDesc.fBigEndian == iDestPixvalDesc.fBigEndian
+		&& (iSourcePixvalDesc.fDepth >= 8
+			|| ((iSourceH | iDestH | iCount) & 0x07) == 0))
+		{
+		int32 hOffsetSource = iSourceH * iSourcePixvalDesc.fDepth / 8;
+		int32 hOffsetDest = iDestH * iDestPixvalDesc.fDepth / 8;
+		int32 countToCopy = iCount * iSourcePixvalDesc.fDepth / 8;
+		const uint8* sourceAddress = static_cast<const uint8*>(iSourceBase) + hOffsetSource;
+		uint8* destAddress = static_cast<uint8*>(iDestBase) + hOffsetDest;
+		sMemCopy(destAddress, sourceAddress, countToCopy);
+		}
+	else
+		{
+		PixvalAccessor sourceAccessor(iSourcePixvalDesc);
+		PixvalAccessor destAccessor(iDestPixvalDesc);
+
+		int32 hCurrent = 0;
+		while (hCurrent < iCount)
+			{
+			uint32 buffer[kBufSize];
+			const int32 count = min(int32(iCount - hCurrent), int32(kBufSize));
+			sourceAccessor.GetPixvals(iSourceBase, iSourceH + hCurrent, count, buffer);
+			destAccessor.SetPixvals(iDestBase, iDestH + hCurrent, count, buffer);
+			hCurrent += count;
+			}
+		}
+	}
 
 void sBlitRow(
 	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDescReal,
