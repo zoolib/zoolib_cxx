@@ -113,21 +113,21 @@ Game::Game(const FileSpec& iFS,
 ,	fNextEra(1)
 ,	fAccumulated(0)
 	{
+	fRootMap = spLoadData(iFS, iPreferProcessedArt);
+
 	fAssetCatalog = new AssetCatalog;
 
 	sPopulate(fAssetCatalog,
 		iFS, iCallable_TextureFromPixmap, iPreferProcessedArt, iPreferSmallArt);
-
-	Map theRootMap = spLoadData(iFS, iPreferProcessedArt);
 
 	fFontCatalog = sMakeFontCatalog(iFS.Child("fonts"));
 
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	if (ZCONFIG_Debug)
-		fCog = sCog(theRootMap["StartDebug"]);
+		fCog = sCog(fRootMap["StartDebug"]);
 	else
-		fCog = sCog(theRootMap["Start"]);
+		fCog = sCog(fRootMap["Start"]);
 	}
 
 Game::~Game()
@@ -341,7 +341,7 @@ ZRef<Rendered> Game::pCrank(double iInterval)
 	InChannel theInChannel(fNookScope);
 	fNookScope->NewEra();
 
-	OutChannel theOutChannel(fAssetCatalog, fFontCatalog, fSoundMeister);
+	OutChannel theOutChannel(fRootMap, fAssetCatalog, fFontCatalog, fSoundMeister);
 
 	iInterval *= spGameRate;
 	fAccumulated += iInterval;

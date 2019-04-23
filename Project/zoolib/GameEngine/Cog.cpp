@@ -61,10 +61,12 @@ const InChannel* InChannel::GetPrior() const
 #pragma mark -
 
 OutChannel::OutChannel(
+	const Map& iRootMap,
 	const ZRef<AssetCatalog>& iAssetCatalog,
 	const ZRef<FontCatalog>& iFontCatalog,
 	const ZRef<SoundMeister>& iSoundMeister)
-:	fAssetCatalog(iAssetCatalog)
+:	fRootMap(iRootMap)
+,	fAssetCatalog(iAssetCatalog)
 ,	fFontCatalog(iFontCatalog)
 ,	fSoundMeister(iSoundMeister)
 ,	fGroup(sRendered_Group())

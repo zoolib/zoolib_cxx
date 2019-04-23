@@ -52,6 +52,7 @@ class OutChannel
 	{
 public:
 	OutChannel(
+		const Map& iRootMap,
 		const ZRef<AssetCatalog>& iAssetCatalog,
 		const ZRef<FontCatalog>& iFontCatalog,
 		const ZRef<SoundMeister>& iSoundMeister);
@@ -63,6 +64,7 @@ public:
 
 	void RegisterTouchListener(ZRef<TouchListener> iListener) const;
 
+	const Map fRootMap;
 	const ZRef<AssetCatalog> fAssetCatalog;
 	const ZRef<FontCatalog> fFontCatalog;
 	const ZRef<SoundMeister> fSoundMeister;

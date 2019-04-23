@@ -69,6 +69,8 @@ private:
 
 	ZRef<NookScope> fNookScope;
 
+	Map fRootMap;
+
 	ZRef<AssetCatalog> fAssetCatalog;
 
 	ZRef<FontCatalog> fFontCatalog;
