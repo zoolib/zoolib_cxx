@@ -1,26 +1,33 @@
 package org.zoolib;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.*;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
-
-import android.app.*;
-import android.content.*;
-import android.view.*;
-import android.os.*;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.graphics.*;
-import android.hardware.*;
-
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
-import java.lang.*;
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
 
 import static android.opengl.EGL14.EGL_CONTEXT_CLIENT_VERSION;
-import static android.view.MotionEvent.ACTION_MASK;
-import static android.view.MotionEvent.ACTION_POINTER_INDEX_MASK;
-import static android.view.MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 
 // =================================================================================================
 
@@ -392,7 +399,7 @@ implements SurfaceHolder.Callback
 			mEGLDisplay = dpy;
 			mEGLSurface = surface;
 			}
-		catch(Exception e)
+		catch (Exception e)
 			{
 			Log.v("SDL", e + "");
 			for (StackTraceElement s : e.getStackTrace())
@@ -409,7 +416,7 @@ implements SurfaceHolder.Callback
 		{
 		try
 			{
-			EGL10 egl = (EGL10)EGLContext.getEGL();
+			EGL10 egl = (EGL10) EGLContext.getEGL();
 
 			egl.eglWaitNative(EGL10.EGL_NATIVE_RENDERABLE, null);
 
@@ -417,7 +424,7 @@ implements SurfaceHolder.Callback
 
 			egl.eglSwapBuffers(mEGLDisplay, mEGLSurface);
 			}
-		catch(Exception e)
+		catch (Exception e)
 			{
 			Log.v("SDL", "flipEGL(): " + e);
 			for (StackTraceElement s : e.getStackTrace())
