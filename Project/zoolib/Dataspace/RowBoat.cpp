@@ -90,10 +90,7 @@ void RowBoat::pChanged(
 		{
 		ZAssert(sIsEmpty(fBindings));
 		// Build fBindings the first time we get a result.
-		const RelHead& theRH = iResult->GetRelHead();
-		size_t index = 0;
-		foreacha (entry, theRH)
-			fBindings.insert(std::pair<string8,size_t>(entry, index++));
+		sBuildBindings(iResult, fBindings);
 		}
 
 	// Note that we're doing a reverse scan here...
