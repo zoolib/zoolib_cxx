@@ -105,9 +105,6 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon);
 
-void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
-	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc);
-
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	Pixmap& ioDest, PointPOD iDestLoc);
 

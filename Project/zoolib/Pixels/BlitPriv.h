@@ -57,113 +57,27 @@ f out b		f.color * (1 - b.alpha)
 f atop b	f.color * b.alpha + b.color * (1 - f.alpha)
 f xor b		f.color.color * (1 - b.alpha) + b.color * (1 - f.alpha)
 f plus b	f.color + b.color
-
 */
-
-inline uint16 sMul(uint32 l, uint32 r)
-	{
-	uint32 temp = l * r + 32768;
-	return (temp + (temp >> 16)) >> 16;
-	}
-
-inline void sMul(RGBA& ioColor, uint32 r);
-//	{
-//	if (r == 0xFFFFU)
-//		{
-//		}
-//	else if (r == 0)
-//		{
-//		ioColor.red = 0;
-//		ioColor.green = 0;
-//		ioColor.blue = 0;
-//		ioColor.alpha = 0;
-//		}
-//	else
-//		{
-//		ioColor.red = sMul(ioColor.red, r);
-//		ioColor.green = sMul(ioColor.green, r);
-//		ioColor.blue = sMul(ioColor.blue, r);
-//		ioColor.alpha = sMul(ioColor.alpha, r);
-//		}
-//	}
-
-inline uint16 sAdd(uint16 l, uint16 r)
-	{
-	return l + r;
-	}
-
-// u32b sat_addu32b(u32b x, u32b y)
-// {
-// 	u32b res = x + y;
-// 	res |= -(res < x);
-// 	
-// 	return res;
-// }
-
-//inline uint16 sAddSat(uint16 l, uint16 r)
-//	{
-//	uint32 result = l + r;
-//	if (result > 0xFFFFU)
-//		result = 0xFFFFU;
-//	return result;
-//	}
 
 struct Compose_Over
 	{
-	void operator() (const RGBA& f, RGBA& b) const;
-//		{
-//		if (f.alpha == 0)
-//			{
-//			// Don't touch b
-//			}
-//		else if (f.alpha == 0xFFFFU)
-//			{
-//			b.red = f.red;
-//			b.green = f.green;
-//			b.blue = f.blue;
-//			b.alpha = 0xFFFFU;
-//			}
-//		else
-//			{
-//			uint16 oneMinusAlpha = 0xFFFFU - f.alpha;
-//			if (b.red)
-//				b.red = sAdd(sMul(b.red, oneMinusAlpha), f.red);
-//			else
-//				b.red = f.red;
-//
-//			if (b.green)
-//				b.green = sAdd(sMul(b.green, oneMinusAlpha), f.green);
-//			else
-//				b.green = f.green;
-//
-//			if (b.blue)
-//				b.blue = sAdd(sMul(b.blue, oneMinusAlpha), f.blue);
-//			else
-//				b.blue = f.blue;
-//
-//			if (b.alpha != 0xFFFF)
-//				{
-//				if (b.alpha)
-//					b.alpha = sAdd(sMul(b.alpha, oneMinusAlpha), f.alpha);
-//				else
-//					b.alpha = f.alpha;
-//				}
-//			}
-//		}
+	void operator() (const RGBA& f, RGBA& b) const
+		{
+		Comp oneMinusAlpha = 1 - sAlpha(f);
+		sRed(b) = sRed(b) * oneMinusAlpha + sRed(f);
+		sGreen(b) = sGreen(b) * oneMinusAlpha + sGreen(f);
+		sBlue(b) = sBlue(b) * oneMinusAlpha + sBlue(f);
+		sAlpha(b) = sAlpha(b) * oneMinusAlpha + sAlpha(f);
+		}
 	};
 
 struct Compose_Plus
 	{
-	void operator() (const RGBA& f, RGBA& b) const;
-//		{
-//		// This will crap out with luminescent pixels.
-//		b.red = sAdd(b.red, f.red);
-//		b.green = sAdd(b.green, f.green);
-//		b.blue = sAdd(b.blue, f.blue);
-//		b.alpha = sAdd(b.alpha, f.alpha);
-//
-//		// b += f;
-//		}
+	void operator() (const RGBA& f, RGBA& b) const
+		{
+		// This will crap out with luminescent pixels.
+		b += f;
+		}
 	};
 
 // =================================================================================================
@@ -402,11 +316,11 @@ void sTile_SMD_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				destIter.WriteInc(thePixel);
 
@@ -544,11 +458,11 @@ void sTile_SMDO_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				RGBA destPixel = destIter.Read();
 
@@ -736,11 +650,11 @@ void sCopy_SMD_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				destIter.WriteInc(thePixel);
 				}
@@ -817,12 +731,11 @@ void sCopy_SMDO_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				RGBA destPixel = destIter.Read();
 
@@ -922,11 +835,11 @@ void sTileSource_SMD_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				destIter.WriteInc(thePixel);
 
@@ -1036,11 +949,11 @@ void sTileSource_SMDO_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				RGBA destPixel = destIter.Read();
 
@@ -1149,11 +1062,11 @@ void sTileMatte_SMD_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				destIter.WriteInc(thePixel);
 
@@ -1262,11 +1175,11 @@ void sTileMatte_SMDO_T(
 				{
 				RGBA thePixel = sourceIter.ReadInc();
 
-//				uint16 alpha = matteIter.ReadAlphaInc();
-//				thePixel.red = sMul(thePixel.red, alpha);
-//				thePixel.green = sMul(thePixel.green, alpha);
-//				thePixel.blue = sMul(thePixel.blue, alpha);
-//				sAlpha(thePixel) = alpha;
+				Comp alpha = matteIter.ReadAlphaInc();
+				sRed(thePixel) *= alpha;
+				sGreen(thePixel) *= alpha;
+				sBlue(thePixel) *= alpha;
+				sAlpha(thePixel) = alpha;
 
 				RGBA destPixel = destIter.Read();
 
@@ -1394,16 +1307,8 @@ void sColor_MD_T(
 
 		while (--destCountH)
 			{
-			if (uint16 alpha = matteIter.ReadAlphaInc())
-				{
-				RGBA tempColor = iColor;
-//				sMul(tempColor, alpha);
-				destIter.WriteInc(tempColor);
-				}
-			else
-				{
-				destIter.Inc();
-				}
+			Comp alpha = matteIter.ReadAlphaInc();
+			destIter.WriteInc(iColor * alpha);
 			}
 
  		++row;
@@ -1447,18 +1352,10 @@ void sColor_MDO_T(
 
 		while (--destCountH)
 			{
-			if (uint16 alpha = matteIter.ReadAlphaInc())
-				{
-				RGBA destPixel = destIter.Read();
-				RGBA tempColor = iColor;
-//				sMul(tempColor, alpha);
-				iOp(tempColor, destPixel);
-				destIter.WriteInc(destPixel);
-				}
-			else
-				{
-				destIter.Inc();
-				}
+			float alpha = matteIter.ReadAlphaInc();
+			RGBA destPixel = destIter.Read();
+			iOp(iColor * alpha, destPixel);
+			destIter.WriteInc(destPixel);
 			}
 
  		++row;
@@ -1516,16 +1413,8 @@ void sColorTile_MD_T(
 
 		while (--destCountH)
 			{
-			if (uint16 alpha = matteIter.ReadAlphaInc())
-				{
-				RGBA tempColor = iColor;
-//				sMul(tempColor, alpha);
-				destIter.WriteInc(tempColor);
-				}
-			else
-				{
-				destIter.Inc();
-				}
+			float alpha = matteIter.ReadAlphaInc();
+			destIter.WriteInc(iColor * alpha);
 
 			if (!--matteCountH)
 				{
@@ -1592,18 +1481,10 @@ void sColorTile_MDO_T(
 
 		while (--destCountH)
 			{
-			if (uint16 alpha = matteIter.ReadAlphaInc())
-				{
-				RGBA tempColor = iColor;
-//				sMul(tempColor, alpha);
-				RGBA destPixel = destIter.Read();
-				iOp(tempColor, destPixel);
-				destIter.WriteInc(destPixel);
-				}
-			else
-				{
-				destIter.Inc();
-				}
+			Comp alpha = matteIter.ReadAlphaInc();
+			RGBA destPixel = destIter.Read();
+			iOp(iColor * alpha, destPixel);
+			destIter.WriteInc(destPixel);
 
 			if (!--matteCountH)
 				{
@@ -2031,9 +1912,9 @@ void sInvert_T(const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& i
 		while (--destCountH)
 			{
 			RGBA destPixel = destIter.Read();
-//			destPixel.red = destPixel.alpha - destPixel.red;
-//			destPixel.green = destPixel.alpha - destPixel.green;
-//			destPixel.blue = destPixel.alpha - destPixel.blue;
+			sRed(destPixel) = sAlpha(destPixel) - sRed(destPixel);
+			sGreen(destPixel) = sAlpha(destPixel) - sGreen(destPixel);
+			sBlue(destPixel) = sAlpha(destPixel) - sBlue(destPixel);
 			destIter.WriteInc(destPixel);
 			}
 
@@ -2045,10 +1926,10 @@ void sInvert_T(const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& i
 		}
 	}
 
-// Multiply r,g, b & alpha by iAmount/65536
+// Multiply r,g, b & alpha by iAmount
 template <class D>
 void sOpaque_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
@@ -2066,11 +1947,7 @@ void sOpaque_T(
 		while (--destCountH)
 			{
 			RGBA destPixel = destIter.Read();
-//			destPixel.red = sMul(destPixel.red, iAmount);
-//			destPixel.green = sMul(destPixel.green, iAmount);
-//			destPixel.blue = sMul(destPixel.blue, iAmount);
-//			destPixel.alpha = sMul(destPixel.alpha, iAmount);
-			destIter.WriteInc(destPixel);
+			destIter.WriteInc(destPixel * iAmount);
 			}
 
  		++row;
@@ -2081,10 +1958,10 @@ void sOpaque_T(
 		}
 	}
 
-// Multiply r, g, b by iAmount/65536, leaving alpha alone.
+// Multiply r, g, b by iAmount, leaving alpha alone.
 template <class D>
 void sDarken_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
@@ -2102,9 +1979,9 @@ void sDarken_T(
 		while (--destCountH)
 			{
 			RGBA destPixel = destIter.Read();
-//			destPixel.red = sMul(destPixel.red, iAmount);
-//			destPixel.green = sMul(destPixel.green, iAmount);
-//			destPixel.blue = sMul(destPixel.blue, iAmount);
+			sRed(destPixel) *= iAmount;
+			sGreen(destPixel) *= iAmount;
+			sBlue(destPixel) *= iAmount;
 			destIter.WriteInc(destPixel);
 			}
 
@@ -2116,10 +1993,10 @@ void sDarken_T(
 		}
 	}
 
-// Multiply alpha by iAmount/65536, leaving r,g,b alone
+// Multiply alpha by iAmount, leaving r,g,b alone
 template <class D>
 void sFade_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
@@ -2137,7 +2014,7 @@ void sFade_T(
 		while (--destCountH)
 			{
 			RGBA destPixel = destIter.Read();
-//			destPixel.alpha = sMul(destPixel.alpha, iAmount);
+			sAlpha(destPixel) *= iAmount;
 			destIter.WriteInc(destPixel);
 			}
 
@@ -2178,13 +2055,11 @@ void sApplyMatte_T(
 		while (--destCountH)
 			{
 			RGBA thePixel = destIter.Read();
-
 			Comp alpha = matteIter.ReadAlphaInc();
-//			thePixel.red = sMul(thePixel.red, alpha);
-//			thePixel.green = sMul(thePixel.green, alpha);
-//			thePixel.blue = sMul(thePixel.blue, alpha);
+			sRed(thePixel) *= alpha;
+			sGreen(thePixel) *= alpha;
+			sBlue(thePixel) *= alpha;
 			sAlpha(thePixel) = alpha;
-
 			destIter.WriteInc(thePixel);
 			}
 

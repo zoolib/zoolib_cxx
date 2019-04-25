@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Pixels {
 
-const int kDebug_Pixmap = 1;
-
 // =================================================================================================
 #pragma mark - Raster
 
@@ -40,33 +38,8 @@ Raster::~Raster()
 	// Sanity check. Subclasses are required to nil out our fBaseAddress field.
 	// This helps to ensure that they have a proper constructor by effectively
 	// requiring that they have a destructor.
-	ZAssertStop(kDebug_Pixmap, fBaseAddress == nullptr);
+	ZAssert(fBaseAddress == nullptr);
 	}
-
-//void sFresh(ZRef<Raster>& ioRaster)
-//	{
-//	ZAssert(ioRaster);
-//
-//	if (ioRaster->IsShared() || not ioRaster->GetMutable())
-//		{
-//		const RasterDesc& ourRasterDesc = ioRaster->GetRasterDesc();
-//		RasterDesc newRasterDesc = ourRasterDesc;
-//		newRasterDesc.fRowBytes =
-//			sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
-//		newRasterDesc.fRowCount = H(fBounds);
-//
-//		ZRef<ZDCPixmapRep> newRep =
-//			sCreate(newRasterDesc, sRect(WH(fBounds)), fPixelDesc);
-//
-//		newRep->CopyFrom(sPointPOD(0,0),
-//			ioRaster->GetBaseAddress(), ourRasterDesc, fPixelDesc, fBounds);
-//		}
-//	else
-//		{
-//		// Clear any cache we might have.
-//// 		fCache.Clear();
-//		}
-//	}
 
 // =================================================================================================
 #pragma mark - Raster_Simple

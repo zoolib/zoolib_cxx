@@ -34,7 +34,13 @@ namespace Pixels {
 using std::min;
 using std::vector;
 
-static const size_t kBufSize = sStackBufferSize;
+// =================================================================================================
+#pragma mark -
+
+typedef PixelDescRep PDRep;
+typedef PixelDescRep_Indexed PDRep_Indexed;
+typedef PixelDescRep_Gray PDRep_Gray;
+typedef PixelDescRep_Color PDRep_Color;
 
 // =================================================================================================
 #pragma mark - sMunge
@@ -84,337 +90,31 @@ void sMunge(
 	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc,
 	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
-	const ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
-	if (PixelDescRep_Color* thePixelDescRep_Color =
-		thePixelDescRep.DynamicCast<PixelDescRep_Color>())
+	const ZRef<PDRep> thePDRep = iPixelDesc.GetRep();
+	if (PDRep_Color* thePDRep_Color =
+		thePDRep.DynamicCast<PDRep_Color>())
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePixelDescRep_Color, *thePixelDescRep_Color, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Color, *thePDRep_Color, iBounds, iMungeProc, iRefcon);
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
-		thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
+	else if (PDRep_Indexed* thePDRep_Indexed =
+		thePDRep.DynamicCast<PDRep_Indexed>())
 		{
-		thePixelDescRep_Indexed->BuildReverseLookupIfNeeded();
+		thePDRep_Indexed->BuildReverseLookupIfNeeded();
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePixelDescRep_Indexed, *thePixelDescRep_Indexed, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Indexed, *thePDRep_Indexed, iBounds, iMungeProc, iRefcon);
 		}
-	else if (PixelDescRep_Gray* thePixelDescRep_Gray =
-		thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
+	else if (PDRep_Gray* thePDRep_Gray =
+		thePDRep.DynamicCast<PDRep_Gray>())
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePixelDescRep_Gray, *thePixelDescRep_Gray, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Gray, *thePDRep_Gray, iBounds, iMungeProc, iRefcon);
 		}
 	else
 		{
 		sMunge_T(iBaseAddress, iRasterDesc, iPixelDesc, iPixelDesc, iBounds, iMungeProc, iRefcon);
 		}
 	}
-
-// =================================================================================================
-#pragma mark - sBlit
-
-template <class S, class D>
-static void sBlitRow_T(
-	const void* iSourceRowAddress, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int iSourceH,
-	void* iDestRowAddress, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int iDestH,
-	int inHCount)
-	{
-	PixvalAccessor sourceAccessor(iSourcePixvalDesc);
-	PixvalAccessor destAccessor(iDestPixvalDesc);
-
-	int hCurrent = 0;
-	while (hCurrent < inHCount)
-		{
-		uint32 buffer[kBufSize];
-		const size_t count = min(size_t(inHCount - hCurrent), kBufSize);
-		sourceAccessor.GetPixvals(iSourceRowAddress, iSourceH + hCurrent, count, buffer);
-
-		int tempCount = count + 1;
-		uint32* currentPixval = buffer;
-		while (--tempCount)
-			{
-			RGBA theRGBA = iSourcePixvalToRGBA.AsRGBA(*currentPixval);
-			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBA);
-			}
-		destAccessor.SetPixvals(iDestRowAddress, iDestH + hCurrent, count, buffer);
-		hCurrent += count;
-		}
-	}
-
-template <class S, class D>
-static void sBlitRowInvert_T(
-	const void* iSourceRowAddress, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int iSourceH,
-	void* iDestRowAddress, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int iDestH,
-	int inHCount)
-	{
-	PixvalAccessor sourceAccessor(iSourcePixvalDesc);
-	PixvalAccessor destAccessor(iDestPixvalDesc);
-
-	int hCurrent = 0;
-	while (hCurrent < inHCount)
-		{
-		uint32 buffer[kBufSize];
-		const size_t count = min(size_t(inHCount - hCurrent), kBufSize);
-		sourceAccessor.GetPixvals(iSourceRowAddress, iSourceH + hCurrent, count, buffer);
-
-		int tempCount = count + 1;
-		uint32* currentPixval = buffer;
-		while (--tempCount)
-			{
-			RGBA theRGBA = iSourcePixvalToRGBA.AsRGBA(*currentPixval);
-			sRed(theRGBA) = 1 - sRed(theRGBA);
-			sGreen(theRGBA) = 1 - sGreen(theRGBA);
-			sBlue(theRGBA) = 1 - sBlue(theRGBA);
-			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBA);
-			}
-		destAccessor.SetPixvals(iDestRowAddress, iDestH + hCurrent, count, buffer);
-		hCurrent += count;
-		}
-	}
-
-template <class S, class D>
-static void sBlitWithMaps_T(
-	const RasterDesc& iSourceRasterDesc, const void* iSourceBase, const S& iSourcePixvalToRGBA,
-	const RasterDesc& iDestRasterDesc, void* iDestBase, const D& iDestRGBToPixval,
-	const RectPOD& iSourceBounds, PointPOD iDestLocation, bool iInvertColors)
-	{
-	int vCount = H(iSourceBounds);
-	int hCount = W(iSourceBounds);
-
-	if (iInvertColors)
-		{
-		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
-			{
-			const void* sourceRowAddress =
-				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent);
-
-			void* destRowAddress =
-				sCalcRowAddress(iDestRasterDesc, iDestBase, iDestLocation.v + vCurrent);
-
-			sBlitRowInvert_T(
-				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGBA,
-				iSourceBounds.left,
-				destRowAddress, iDestRasterDesc.fPixvalDesc, iDestRGBToPixval,
-				iDestLocation.h,
-				hCount);
-			}
-		}
-	else
-		{
-		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
-			{
-			const void* sourceRowAddress =
-				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent);
-
-			void* destRowAddress =
-				sCalcRowAddress(iDestRasterDesc, iDestBase, iDestLocation.v + vCurrent);
-
-			sBlitRow_T(
-				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGBA,
-				iSourceBounds.left,
-				destRowAddress, iDestRasterDesc.fPixvalDesc, iDestRGBToPixval,
-				iDestLocation.h,
-				hCount);
-			}
-		}
-	}
-
-void sBlit(
-	const RasterDesc& iSourceRasterDesc, const void* iSourceBase, const PixelDesc& iSourcePixelDesc,
-	const RasterDesc& iDestRasterDesc, void* iDestBase, const PixelDesc& iDestPixelDesc,
-	const RectPOD& iSourceBounds, PointPOD iDestLocation)
-	{
-	bool iInvertColors = false;
-
-	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();
-	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDesc.GetRep();
-
-	if (PixelDescRep_Color* sourcePixelDescRep_Color =
-		sourcePixelDescRep.DynamicCast<PixelDescRep_Color>())
-		{
-		if (PixelDescRep_Color* destPixelDescRep_Color =
-			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
-			{
-			if (not iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
-				{
-				sBlitPixvals(iSourceRasterDesc, iSourceBase, iSourceBounds,
-					iDestRasterDesc, iDestBase, iDestLocation);
-				}
-			else
-				{
-				sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Color,
-					iDestRasterDesc, iDestBase, *destPixelDescRep_Color,
-					iSourceBounds, iDestLocation, iInvertColors);
-				}
-			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
-			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
-			{
-			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Color,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Indexed,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
-			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Color,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Gray,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Color,
-				iDestRasterDesc, iDestBase, iDestPixelDesc,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		}
-	else if (PixelDescRep_Indexed* sourcePixelDescRep_Indexed =
-		sourcePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
-		{
-		if (PixelDescRep_Color* destPixelDescRep_Color =
-			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Indexed,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Color,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
-			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
-			{
-			if (not iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
-				{
-				sBlitPixvals(iSourceRasterDesc, iSourceBase, iSourceBounds,
-					iDestRasterDesc, iDestBase, iDestLocation);
-				}
-			else
-				{
-				destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
-				sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Indexed,
-					iDestRasterDesc, iDestBase, *destPixelDescRep_Indexed,
-					iSourceBounds, iDestLocation, iInvertColors);
-				}
-			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
-			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Indexed,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Gray,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Indexed,
-				iDestRasterDesc, iDestBase, iDestPixelDesc,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		}
-	else if (PixelDescRep_Gray* sourcePixelDescRep_Gray =
-		sourcePixelDescRep.DynamicCast<PixelDescRep_Gray>())
-		{
-		if (PixelDescRep_Color* destPixelDescRep_Color =
-			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Gray,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Color,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
-			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
-			{
-			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Gray,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Indexed,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
-			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
-			{
-			if (not iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
-				{
-				sBlitPixvals(iSourceRasterDesc, iSourceBase, iSourceBounds,
-					iDestRasterDesc, iDestBase, iDestLocation);
-				}
-			else
-				{
-				sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Gray,
-					iDestRasterDesc, iDestBase, *destPixelDescRep_Gray,
-					iSourceBounds, iDestLocation, iInvertColors);
-				}
-			}
-		else
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, *sourcePixelDescRep_Gray,
-				iDestRasterDesc, iDestBase, iDestPixelDesc,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		}
-	else
-		{
-		if (PixelDescRep_Color* destPixelDescRep_Color =
-			destPixelDescRep.DynamicCast<PixelDescRep_Color>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, iSourcePixelDesc,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Color,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
-			destPixelDescRep.DynamicCast<PixelDescRep_Indexed>())
-			{
-			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, iSourcePixelDesc,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Indexed,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
-			destPixelDescRep.DynamicCast<PixelDescRep_Gray>())
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, iSourcePixelDesc,
-				iDestRasterDesc, iDestBase, *destPixelDescRep_Gray,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		else
-			{
-			sBlitWithMaps_T(iSourceRasterDesc, iSourceBase, iSourcePixelDesc,
-				iDestRasterDesc, iDestBase, iDestPixelDesc,
-				iSourceBounds, iDestLocation, iInvertColors);
-			}
-		}
-	}
-
-template <class S, class D>
-static void sBlitRowWithMaps_T(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int iSourceH,
-	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int iDestH,
-	int iCount, bool iInvertColors)
-	{
-	if (iInvertColors)
-		{
-		sBlitRowInvert_T(iSourceBase, iSourcePixvalDesc, iSourcePixvalToRGBA, iSourceH,
-			iDestBase, iDestPixvalDesc, iDestRGBToPixval, iDestH,
-			iCount);
-		}
-	else
-		{
-		sBlitRow_T(iSourceBase, iSourcePixvalDesc, iSourcePixvalToRGBA, iSourceH,
-			iDestBase, iDestPixvalDesc, iDestRGBToPixval, iDestH,
-			iCount);
-		}
-	}
-
-// =================================================================================================
-#pragma mark - sBlit
-
-typedef PixelDescRep PDRep;
-typedef PixelDescRep_Indexed PDRep_Indexed;
-typedef PixelDescRep_Gray PDRep_Gray;
-typedef PixelDescRep_Color PDRep_Color;
 
 // =================================================================================================
 // MARK: - Public API
@@ -677,7 +377,7 @@ void sInvert(
 	}
 
 void sOpaque(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -699,7 +399,7 @@ void sOpaque(
 	}
 
 void sDarken(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
@@ -721,7 +421,7 @@ void sDarken(
 	}
 
 void sFade(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())

@@ -48,14 +48,6 @@ void sMunge(void* iBaseAddress,
 	MungeProc iMungeProc, void* iRefcon);
 
 // =================================================================================================
-#pragma mark -
-
-void sBlit(
-	const RasterDesc& iSourceRasterDesc, const void* iSourceBase, const PixelDesc& iSourcePixelDesc,
-	const RasterDesc& iDestRasterDesc, void* iDestBase, const PixelDesc& iDestPixelDesc,
-	const RectPOD& iSourceBounds, PointPOD iDestLocation);
-
-// =================================================================================================
 
 enum EOp
 	{
@@ -135,17 +127,17 @@ void sColor(
 /** Invert, replacing each pixel with white minus that pixel. */
 void sInvert(const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD);
 
-/** Multiply r,g, b & alpha by iAmount/65535. */
+/** Multiply r,g, b & alpha by iAmount. */
 void sOpaque(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount);
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount);
 
-/** Multiply r, g, b by iAmount/65535, leaving alpha alone. */
+/** Multiply r, g, b by iAmount, leaving alpha alone. */
 void sDarken(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount);
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount);
 
-/** Multiply alpha by iAmount/65535, leaving r,g,b alone. */
+/** Multiply alpha by iAmount, leaving r,g,b alone. */
 void sFade(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, uint16 iAmount);
+	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount);
 
 /** Take the alpha channel of matte, store it in alpha channel of dest,
 pre-multiplying r,g,b of dest as it does so. */

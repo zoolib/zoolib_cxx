@@ -27,9 +27,28 @@ namespace ZooLib {
 namespace Pixels {
 
 // =================================================================================================
+#pragma mark -
+
+static void spBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
+	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc)
+	{
+	ZRef<Raster> sourceRaster = iSource->GetRaster();
+	ZRef<Raster> destRaster = ioDest->GetRaster();
+	ZAssert(destRaster->GetMutable());
+
+	const RectPOD iDestBounds = iSourceBounds - LT(iSourceBounds) + iDestLoc;
+
+	sBlit(
+		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(), iSourceBounds, iSource->GetPixelDesc(),
+		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(), iDestBounds, ioDest->GetPixelDesc(),
+		eOp_Copy);
+	}
+
+// =================================================================================================
 #pragma mark - PixmapRep
 
-PixmapRep::PixmapRep(const ZRef<Raster>& iRaster, const RectPOD& iBounds, const PixelDesc& iPixelDesc)
+PixmapRep::PixmapRep(
+	const ZRef<Raster>& iRaster,const RectPOD& iBounds, const PixelDesc& iPixelDesc)
 :	fRaster(iRaster)
 ,	fBounds(iBounds)
 ,	fPixelDesc(iPixelDesc)
@@ -60,7 +79,7 @@ ZRef<PixmapRep> PixmapRep::Touch()
 		ZRef<PixmapRep> newRep =
 			sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
 
-		sBlit(this, fBounds, newRep, sPointPOD(0,0));
+		spBlit(this, fBounds, newRep, sPointPOD(0,0));
 
 		return newRep;
 		}
@@ -152,7 +171,6 @@ const PixelDesc& Pixmap::GetPixelDesc() const
 const RectPOD& Pixmap::GetBounds() const
 	{ return fRep->GetBounds(); }
 
-
 Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& iPixelDesc)
 	{ return sPixmapRep(iRasterDesc, iSize, iPixelDesc); }
 
@@ -161,6 +179,7 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
 	{
+	ioPixmap.Touch();
 	sMunge(ioPixmap.GetBaseAddress(),
 		ioPixmap.GetRasterDesc(),
 		ioPixmap.GetPixelDesc(),
@@ -168,21 +187,11 @@ void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
 		iMungeProc, iRefcon);
 	}
 
-void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
-	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc)
-	{
-	ZRef<Raster> sourceRaster = iSource->GetRaster();
-	ZRef<Raster> destRaster = ioDest->GetRaster();
-	sBlit(sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(), iSource->GetPixelDesc(),
-		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(), ioDest->GetPixelDesc(),
-		iSourceBounds, iDestLoc);
-	}
-
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	Pixmap& ioDest, PointPOD iDestLoc)
 	{
 	ioDest.Touch();
-	sBlit(iSource.GetRep(), iSourceBounds, ioDest.GetRep(), iDestLoc);
+	spBlit(iSource.GetRep(), iSourceBounds, ioDest.GetRep(), iDestLoc);
 	}
 
 } // namespace Pixels
