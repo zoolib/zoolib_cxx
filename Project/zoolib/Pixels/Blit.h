@@ -56,27 +56,27 @@ void sMunge(void* iBaseAddress,
 // =================================================================================================
 #pragma mark -
 
-void sBlitPixvals(
-	const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
-	void* iDestBase, const RasterDesc& iDestRasterDesc,
-	const RectPOD& iSourceBounds, PointPOD iDestLocation);
-
+//void sBlitPixvals(
+//	const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
+//	void* iDestBase, const RasterDesc& iDestRasterDesc,
+//	const RectPOD& iSourceBounds, PointPOD iDestLocation);
+//
 void sBlit(
 	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDesc,
 	const RectPOD& iSourceBounds, PointPOD iDestLocation);
-
-void sBlitRowPixvals(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, int32 iSourceH,
-	void* iDestBase, const PixvalDesc& iDestPixvalDesc, int32 iDestH,
-	int32 iCount);
-
-void sBlitRow(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
-	int32 iSourceH,
-	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDesc,
-	int32 iDestH,
-	int32 iCount);
+//
+//void sBlitRowPixvals(
+//	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, int iSourceH,
+//	void* iDestBase, const PixvalDesc& iDestPixvalDesc, int iDestH,
+//	int iCount);
+//
+//void sBlitRow(
+//	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
+//	int iSourceH,
+//	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDesc,
+//	int iDestH,
+//	int iCount);
 
 // =================================================================================================
 

@@ -87,7 +87,7 @@ void sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint32 iPixval)
 		// We're going to build a uint32 to fill the raster with, but this will only
 		// work correctly if rowBytes is a multiple of four.
 		ZAssertStop(1, (iRasterDesc.fRowBytes & 0x03) == 0);
-		int32 effectiveDepth;
+		int effectiveDepth;
 		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 1:
@@ -147,15 +147,15 @@ void sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint32 iPixval)
 void sFill(
 	void* iBaseAddress, const RasterDesc& iRasterDesc, const RectPOD& iBounds, uint32 iPixval)
 	{
-	int32 hSize = W(iBounds);
+	int hSize = W(iBounds);
 
 	vector<uint32> sourcePixvals(hSize, iPixval);
 
 	PixvalAccessor destAccessor(iRasterDesc.fPixvalDesc);
 
-	int32 vSize = H(iBounds);
+	int vSize = H(iBounds);
 
-	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
+	for (int vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
 		void* rowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, iBounds.top + vCurrent);
 		destAccessor.SetPixvals(rowAddress, iBounds.left, hSize, &sourcePixvals[0]);
@@ -169,11 +169,11 @@ template <class S, class D>
 static void sMungeRow_T(
 	void* iRowAddress, const PixvalDesc& iPixvalDesc,
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
-	Ord inStartH, int32 inCount, Ord inCoordV,
+	Ord inStartH, int inCount, Ord inCoordV,
 	MungeProc iMungeProc, void* iRefcon)
 	{
 	PixvalAccessor sourceAccessor(iPixvalDesc);
-	int32 hCurrent = 0;
+	int hCurrent = 0;
 	while (hCurrent < inCount)
 		{
 		uint32 sourceValue = sourceAccessor.GetPixval(iRowAddress, inStartH + hCurrent);
@@ -193,10 +193,10 @@ static void sMunge_T(
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
 	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
-	int32 hSize = W(iBounds);
-	int32 vSize = H(iBounds);
+	int hSize = W(iBounds);
+	int vSize = H(iBounds);
 
-	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
+	for (int vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
 		void* rowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, iBounds.top + vCurrent);
 		sMungeRow_T(rowAddress, iRasterDesc.fPixvalDesc,
@@ -242,22 +242,22 @@ void sMunge(
 template <class S, class D>
 static void sBlitRow_T(
 	const void* iSourceRowAddress, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int32 iSourceH,
+	int iSourceH,
 	void* iDestRowAddress, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int32 iDestH,
-	int32 inHCount)
+	int iDestH,
+	int inHCount)
 	{
 	PixvalAccessor sourceAccessor(iSourcePixvalDesc);
 	PixvalAccessor destAccessor(iDestPixvalDesc);
 
-	int32 hCurrent = 0;
+	int hCurrent = 0;
 	while (hCurrent < inHCount)
 		{
 		uint32 buffer[kBufSize];
 		const size_t count = min(size_t(inHCount - hCurrent), kBufSize);
 		sourceAccessor.GetPixvals(iSourceRowAddress, iSourceH + hCurrent, count, buffer);
 
-		int32 tempCount = count + 1;
+		int tempCount = count + 1;
 		uint32* currentPixval = buffer;
 		while (--tempCount)
 			{
@@ -272,22 +272,22 @@ static void sBlitRow_T(
 template <class S, class D>
 static void sBlitRowInvert_T(
 	const void* iSourceRowAddress, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int32 iSourceH,
+	int iSourceH,
 	void* iDestRowAddress, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int32 iDestH,
-	int32 inHCount)
+	int iDestH,
+	int inHCount)
 	{
 	PixvalAccessor sourceAccessor(iSourcePixvalDesc);
 	PixvalAccessor destAccessor(iDestPixvalDesc);
 
-	int32 hCurrent = 0;
+	int hCurrent = 0;
 	while (hCurrent < inHCount)
 		{
 		uint32 buffer[kBufSize];
 		const size_t count = min(size_t(inHCount - hCurrent), kBufSize);
 		sourceAccessor.GetPixvals(iSourceRowAddress, iSourceH + hCurrent, count, buffer);
 
-		int32 tempCount = count + 1;
+		int tempCount = count + 1;
 		uint32* currentPixval = buffer;
 		while (--tempCount)
 			{
@@ -308,12 +308,12 @@ static void sBlitWithMaps_T(
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const D& iDestRGBToPixval,
 	const RectPOD& iSourceBounds, PointPOD iDestLocation, bool iInvertColors)
 	{
-	int32 vCount = H(iSourceBounds);
-	int32 hCount = W(iSourceBounds);
+	int vCount = H(iSourceBounds);
+	int hCount = W(iSourceBounds);
 
 	if (iInvertColors)
 		{
-		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
+		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const void* sourceRowAddress =
 				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent);
@@ -331,7 +331,7 @@ static void sBlitWithMaps_T(
 		}
 	else
 		{
-		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
+		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const void* sourceRowAddress =
 				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent);
@@ -353,17 +353,17 @@ void sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc,
 	const RectPOD& iSourceBounds, PointPOD iDestLocation)
 	{
-	int32 vCount = H(iSourceBounds);
-	int32 hCount = W(iSourceBounds);
+	int vCount = H(iSourceBounds);
+	int hCount = W(iSourceBounds);
 
 	if (iSourceRasterDesc.fPixvalDesc == iDestRasterDesc.fPixvalDesc
 		&& (iSourceRasterDesc.fPixvalDesc.fDepth >= 8
 			|| ((iSourceBounds.left | iDestLocation.h | hCount) & 0x07) == 0))
 		{
-		int32 hOffsetSource = iSourceBounds.left * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
-		int32 hOffsetDest = iDestLocation.h * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
-		int32 countToCopy = hCount * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
-		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
+		int hOffsetSource = iSourceBounds.left * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
+		int hOffsetDest = iDestLocation.h * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
+		int countToCopy = hCount * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
+		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const uint8* sourceRowAddress = static_cast<const uint8*>(
 				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent));
@@ -378,7 +378,7 @@ void sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 		}
 	else
 		{
-		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
+		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const void* sourceRowAddress =
 				sCalcRowAddress(iSourceRasterDesc, iSourceBase, iSourceBounds.top + vCurrent);
@@ -389,7 +389,7 @@ void sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 			PixvalAccessor sourceAccessor(iSourceRasterDesc.fPixvalDesc);
 			PixvalAccessor destAccessor(iDestRasterDesc.fPixvalDesc);
 
-			int32 hCurrent = 0;
+			int hCurrent = 0;
 			while (hCurrent < hCount)
 				{
 				uint32 buffer[kBufSize];
@@ -574,10 +574,10 @@ void sBlit(
 template <class S, class D>
 static void sBlitRowWithMaps_T(
 	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const S& iSourcePixvalToRGBA,
-	int32 iSourceH,
+	int iSourceH,
 	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const D& iDestRGBToPixval,
-	int32 iDestH,
-	int32 iCount, bool iInvertColors)
+	int iDestH,
+	int iCount, bool iInvertColors)
 	{
 	if (iInvertColors)
 		{
@@ -595,19 +595,19 @@ static void sBlitRowWithMaps_T(
 
 void sBlitRowPixvals(
 	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc,
-	int32 iSourceH,
+	int iSourceH,
 	void* iDestBase, const PixvalDesc& iDestPixvalDesc,
-	int32 iDestH,
-	int32 iCount)
+	int iDestH,
+	int iCount)
 	{
 	if (iSourcePixvalDesc.fDepth == iDestPixvalDesc.fDepth
 		&& iSourcePixvalDesc.fBigEndian == iDestPixvalDesc.fBigEndian
 		&& (iSourcePixvalDesc.fDepth >= 8
 			|| ((iSourceH | iDestH | iCount) & 0x07) == 0))
 		{
-		int32 hOffsetSource = iSourceH * iSourcePixvalDesc.fDepth / 8;
-		int32 hOffsetDest = iDestH * iDestPixvalDesc.fDepth / 8;
-		int32 countToCopy = iCount * iSourcePixvalDesc.fDepth / 8;
+		int hOffsetSource = iSourceH * iSourcePixvalDesc.fDepth / 8;
+		int hOffsetDest = iDestH * iDestPixvalDesc.fDepth / 8;
+		int countToCopy = iCount * iSourcePixvalDesc.fDepth / 8;
 		const uint8* sourceAddress = static_cast<const uint8*>(iSourceBase) + hOffsetSource;
 		uint8* destAddress = static_cast<uint8*>(iDestBase) + hOffsetDest;
 		sMemCopy(destAddress, sourceAddress, countToCopy);
@@ -617,11 +617,11 @@ void sBlitRowPixvals(
 		PixvalAccessor sourceAccessor(iSourcePixvalDesc);
 		PixvalAccessor destAccessor(iDestPixvalDesc);
 
-		int32 hCurrent = 0;
+		int hCurrent = 0;
 		while (hCurrent < iCount)
 			{
 			uint32 buffer[kBufSize];
-			const int32 count = min(int32(iCount - hCurrent), int32(kBufSize));
+			const int count = min(int(iCount - hCurrent), int(kBufSize));
 			sourceAccessor.GetPixvals(iSourceBase, iSourceH + hCurrent, count, buffer);
 			destAccessor.SetPixvals(iDestBase, iDestH + hCurrent, count, buffer);
 			hCurrent += count;
@@ -631,10 +631,10 @@ void sBlitRowPixvals(
 
 void sBlitRow(
 	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
-	int32 iSourceH,
+	int iSourceH,
 	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDesc,
-	int32 iDestH,
-	int32 iCount)
+	int iDestH,
+	int iCount)
 	{
 	bool iInvertColors = false;
 
@@ -854,13 +854,6 @@ void sBlitRow(
 
 // =================================================================================================
 #pragma mark - sBlit
-//
-//void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
-//	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc);
-//
-//void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
-//	Pixmap& ioDest, PointPOD iDestLoc);
-//
 
 typedef PixelDescRep PDRep;
 typedef PixelDescRep_Indexed PDRep_Indexed;

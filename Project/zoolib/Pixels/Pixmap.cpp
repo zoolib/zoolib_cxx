@@ -159,6 +159,15 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 // =================================================================================================
 #pragma mark - Pixmap
 
+void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
+	{
+	sMunge(ioPixmap.GetBaseAddress(),
+		ioPixmap.GetRasterDesc(),
+		ioPixmap.GetPixelDesc(),
+		ioPixmap.GetBounds(),
+		iMungeProc, iRefcon);
+	}
+
 void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc)
 	{
@@ -174,15 +183,6 @@ void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	{
 	ioDest.Touch();
 	sBlit(iSource.GetRep(), iSourceBounds, ioDest.GetRep(), iDestLoc);
-	}
-
-void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
-	{
-	sMunge(ioPixmap.GetBaseAddress(),
-		ioPixmap.GetRasterDesc(),
-		ioPixmap.GetPixelDesc(),
-		ioPixmap.GetBounds(),
-		iMungeProc, iRefcon);
 	}
 
 } // namespace Pixels
