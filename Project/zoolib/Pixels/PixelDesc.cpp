@@ -117,6 +117,59 @@ static uint8* spBuildReverseLookup(const RGBA* iColors, size_t iCount)
 } // anonymous namespace
 
 // =================================================================================================
+#pragma mark - PixelDesc
+
+PixelDesc::PixelDesc()
+	{}
+
+PixelDesc::PixelDesc(const PixelDesc& iOther)
+:	fRep(iOther.fRep)
+	{}
+
+PixelDesc::~PixelDesc()
+	{}
+
+PixelDesc& PixelDesc::operator=(const PixelDesc& iOther)
+	{
+	fRep = iOther.fRep;
+	return *this;
+	}
+
+PixelDesc::PixelDesc(const ZRef<PixelDescRep>& iPixelDescRep)
+:	fRep(iPixelDescRep)
+	{}
+
+PixelDesc& PixelDesc::operator=(const ZRef<PixelDescRep>& iPixelDescRep)
+	{
+	fRep = iPixelDescRep;
+	return *this;
+	}
+
+ZRef<PixelDescRep> PixelDesc::GetRep() const
+	{ return fRep; }
+
+bool PixelDesc::HasAlpha() const
+	{ return fRep->HasAlpha(); }
+
+PixelDesc PixelDesc::WithoutAlpha() const
+	{ return fRep->WithoutAlpha(); }
+
+RGBA PixelDesc::AsRGBA(Pixval iPixval) const
+	{ return fRep->Imp_AsRGBA(iPixval); }
+
+void PixelDesc::AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
+	{ return fRep->Imp_AsRGBAs(iPixvals, iCount, oColors); }
+
+Comp PixelDesc::AsAlpha(Pixval iPixval) const
+	{ return fRep->Imp_AsAlpha(iPixval); }
+
+Pixval PixelDesc::AsPixval(const RGBA& iRGBA) const
+	{ return fRep->Imp_AsPixval(iRGBA); }
+
+void PixelDesc::AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
+	{ return fRep->Imp_AsPixvals(iColors, iCount, oPixvals); }
+
+// =================================================================================================
 #pragma mark - PixelDescRep_Indexed
 
 PixelDescRep_Indexed::PixelDescRep_Indexed(const RGBA* iColors, size_t iCount)
@@ -420,15 +473,15 @@ bool PixelDescRep_Color::Matches(const PixelDescRep_Color* iOther)
 #pragma mark - PixelDesc
 
 PixelDesc sPixelDesc(const RGBA* iColors, size_t iCount)
-	{ return new PixelDescRep_Indexed(iColors, iCount); }
+	{ return PixelDesc(new PixelDescRep_Indexed(iColors, iCount)); }
 
 //PixelDesc sPixelDesc(const RGBAMap* iColorMap, size_t iCount)
 
 PixelDesc sPixelDesc(uint32 iMaskGray, uint32 iMaskAlpha)
-	{ return new PixelDescRep_Gray(iMaskGray, iMaskAlpha); }
+	{ return PixelDesc(new PixelDescRep_Gray(iMaskGray, iMaskAlpha)); }
 
 PixelDesc sPixelDesc(uint32 iMaskRed, uint32 iMaskGreen, uint32 iMaskBlue, uint32 iMaskAlpha)
-	{ return new PixelDescRep_Color(iMaskRed, iMaskGreen, iMaskBlue, iMaskAlpha); }
+	{ return PixelDesc(new PixelDescRep_Color(iMaskRed, iMaskGreen, iMaskBlue, iMaskAlpha)); }
 
 } // namespace Pixels
 } // namespace ZooLib

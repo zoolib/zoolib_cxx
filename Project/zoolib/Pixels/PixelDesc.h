@@ -30,6 +30,39 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Pixels {
 
+class PixelDescRep;
+
+// =================================================================================================
+#pragma mark - PixelDesc
+
+class PixelDesc
+	{
+public:
+	PixelDesc();
+	PixelDesc(const PixelDesc& iOther);
+	~PixelDesc();
+	PixelDesc& operator=(const PixelDesc& iOther);
+
+	PixelDesc(const ZRef<PixelDescRep>& iPixelDescRep);
+	PixelDesc& operator=(const ZRef<PixelDescRep>& iPixelDescRep);
+
+	ZRef<PixelDescRep> GetRep() const;
+
+	bool HasAlpha() const;
+	PixelDesc WithoutAlpha() const;
+
+	RGBA AsRGBA(Pixval iPixval) const;
+	void AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const;
+
+	Comp AsAlpha(Pixval iPixval) const;
+
+	Pixval AsPixval(const RGBA& iRGBA) const;
+	void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const;
+
+private:
+	ZRef<PixelDescRep> fRep;
+	};
+
 // =================================================================================================
 #pragma mark - PixelDescRep
 
@@ -47,13 +80,13 @@ public:
 	virtual bool HasAlpha() = 0;
 	virtual ZRef<PixelDescRep> WithoutAlpha() = 0;
 
-	virtual RGBA AsRGBA(Pixval iPixval) const = 0;
-	virtual void AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const = 0;
+	virtual RGBA Imp_AsRGBA(Pixval iPixval) const = 0;
+	virtual void Imp_AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const = 0;
 
-	virtual Comp AsAlpha(Pixval iPixval) const = 0;
+	virtual Comp Imp_AsAlpha(Pixval iPixval) const = 0;
 
-	virtual Pixval AsPixval(const RGBA& iRGBA) const = 0;
-	virtual void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const = 0;
+	virtual Pixval Imp_AsPixval(const RGBA& iRGBA) const = 0;
+	virtual void Imp_AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const = 0;
 	};
 
 // =================================================================================================
@@ -80,19 +113,19 @@ public:
 	virtual bool HasAlpha();
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
-	virtual RGBA AsRGBA(Pixval iPixval) const
+	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Indexed::AsRGBA(iPixval); }
 
-	virtual void AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
+	virtual void Imp_AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
 		{ return Pixval2RGBA_Indexed::AsRGBAs(iPixvals, iCount, oColors); }
 
-	virtual Comp AsAlpha(Pixval iPixval) const
+	virtual Comp Imp_AsAlpha(Pixval iPixval) const
 		{ return Pixval2RGBA_Indexed::AsAlpha(iPixval); }
 
-	virtual Pixval AsPixval(const RGBA& iRGBA) const
+	virtual Pixval Imp_AsPixval(const RGBA& iRGBA) const
 		{ return RGBA2Pixval_Indexed::AsPixval(iRGBA); }
 
-	virtual void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
+	virtual void Imp_AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
 		{ return RGBA2Pixval_Indexed::AsPixvals(iColors, iCount, oPixvals); }
 
 // Our protocol
@@ -122,19 +155,19 @@ public:
 	virtual bool HasAlpha();
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
-	virtual RGBA AsRGBA(Pixval iPixval) const
+	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Gray::AsRGBA(iPixval); }
 
-	virtual void AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
+	virtual void Imp_AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
 		{ return Pixval2RGBA_Gray::AsRGBAs(iPixvals, iCount, oColors); }
 
-	virtual Comp AsAlpha(Pixval iPixval) const
+	virtual Comp Imp_AsAlpha(Pixval iPixval) const
 		{ return Pixval2RGBA_Gray::AsAlpha(iPixval); }
 
-	virtual Pixval AsPixval(const RGBA& iRGBA) const
+	virtual Pixval Imp_AsPixval(const RGBA& iRGBA) const
 		{ return RGBA2Pixval_Gray::AsPixval(iRGBA); }
 
-	virtual void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
+	virtual void Imp_AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
 		{ return RGBA2Pixval_Gray::AsPixvals(iColors, iCount, oPixvals); }
 
 // Our protocol
@@ -158,19 +191,19 @@ public:
 	virtual bool HasAlpha();
 	virtual ZRef<PixelDescRep> WithoutAlpha();
 
-	virtual RGBA AsRGBA(Pixval iPixval) const
+	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Color::AsRGBA(iPixval); }
 
-	virtual void AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
+	virtual void Imp_AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const
 		{ return Pixval2RGBA_Color::AsRGBAs(iPixvals, iCount, oColors); }
 
-	virtual Comp AsAlpha(Pixval iPixval) const
+	virtual Comp Imp_AsAlpha(Pixval iPixval) const
 		{ return Pixval2RGBA_Color::AsAlpha(iPixval); }
 
-	virtual Pixval AsPixval(const RGBA& iRGBA) const
+	virtual Pixval Imp_AsPixval(const RGBA& iRGBA) const
 		{ return RGBA2Pixval_Color::AsPixval(iRGBA); }
 
-	virtual void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
+	virtual void Imp_AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const
 		{ return RGBA2Pixval_Color::AsPixvals(iColors, iCount, oPixvals); }
 
 	void GetMasks(uint32& oMaskR, uint32& oMaskG, uint32& oMaskB, uint32& oMaskA) const;
@@ -180,8 +213,6 @@ public:
 
 // =================================================================================================
 #pragma mark - PixelDesc
-
-using PixelDesc = ZRef<PixelDescRep>;
 
 PixelDesc sPixelDesc(const RGBA* iColors, size_t iCount);
 //PixelDesc sPixelDesc(const RGBAMap* iColorMap, size_t iCount)

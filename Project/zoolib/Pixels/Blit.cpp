@@ -206,13 +206,10 @@ static void sMunge_T(
 	}
 
 void sMunge(
-	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDescReal,
+	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc,
 	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
-	ZRef<PixelDescRep> thePixelDescRep = iPixelDescReal;
-	const PixelDescRep& iPixelDesc = *thePixelDescRep;
-
-
+	const ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 	if (PixelDescRep_Color* thePixelDescRep_Color =
 		thePixelDescRep.DynamicCast<PixelDescRep_Color>())
 		{
@@ -408,17 +405,14 @@ void sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 	}
 
 void sBlit(
-	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDescReal,
-	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDescReal,
+	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
+	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDesc,
 	const RectPOD& iSourceBounds, PointPOD iDestLocation)
 	{
 	bool iInvertColors = false;
 
-	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDescReal;
-	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDescReal;
-
-	const PixelDescRep& iSourcePixelDesc = *sourcePixelDescRep;
-	const PixelDescRep& iDestPixelDesc = *destPixelDescRep;
+	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();
+	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDesc.GetRep();
 
 	if (PixelDescRep_Color* sourcePixelDescRep_Color =
 		sourcePixelDescRep.DynamicCast<PixelDescRep_Color>())
@@ -635,19 +629,16 @@ void sBlitRowPixvals(
 	}
 
 void sBlitRow(
-	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDescReal,
+	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, const PixelDesc& iSourcePixelDesc,
 	int32 iSourceH,
-	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDescReal,
+	void* iDestBase, const PixvalDesc& iDestPixvalDesc, const PixelDesc& iDestPixelDesc,
 	int32 iDestH,
 	int32 iCount)
 	{
 	bool iInvertColors = false;
 
-	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDescReal;
-	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDescReal;
-
-	const PixelDescRep& iSourcePixelDesc = *sourcePixelDescRep;
-	const PixelDescRep& iDestPixelDesc = *destPixelDescRep;
+	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();
+	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDesc.GetRep();
 
 	if (PixelDescRep_Color* sourcePixelDescRep_Color =
 		sourcePixelDescRep.DynamicCast<PixelDescRep_Color>())

@@ -241,7 +241,7 @@ Pixmap sPixmap(PointPOD iSize, EFormatStandard iFormat, const RGBA& iFillColor)
 	{
 	Pixmap thePixmap = sPixmap(iSize, iFormat);
 
-	uint32 fillPixval = thePixmap.GetPixelDesc()->AsPixval(iFillColor);
+	uint32 fillPixval = thePixmap.GetPixelDesc().AsPixval(iFillColor);
 
 	sFill(thePixmap.GetRaster(), fillPixval);
 

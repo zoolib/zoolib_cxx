@@ -47,7 +47,8 @@ Texture_GL::Texture_GL(const Pixmap& iPixmap)
 ,	fIsAlphaOnly(false)
 	{
 	// For the momemnt, insist on RGBA (LE)
-	if (ZRef<PixelDescRep_Color> thePDRep = fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Color>())
+	if (ZRef<PixelDescRep_Color> thePDRep =
+		fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Color>())
 		{
 		ZooLib::uint32 theR, theG, theB, theA;
 		thePDRep->GetMasks(theR, theG, theB, theA);
@@ -68,7 +69,8 @@ Texture_GL::Texture_GL(const Pixmap& iPixmap)
 			ZAssert(theR == 0x000000FF);
 			}
 		}
-	else if (ZRef<PixelDescRep_Gray> thePDRep = fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Gray>())
+	else if (ZRef<PixelDescRep_Gray> thePDRep =
+		fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
 		{
 		uint32 maskL, maskA;
 		thePDRep->GetMasks(maskL, maskA);
@@ -148,7 +150,7 @@ void Texture_GL::pMakeTexture()
 	if (fPixmap.GetRep())
 		{
 		baseAddress = fPixmap.GetBaseAddress();
-		if (fPixmap.GetPixelDesc().DynamicCast<PixelDescRep_Gray>())
+		if (fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
 			format = GL_ALPHA;
 		}
 
