@@ -37,27 +37,6 @@ SaveSetRestore_Enable::~SaveSetRestore_Enable()
 	}
 
 // =================================================================================================
-#pragma mark - SaveSaveSetRestore_EnableClientState
-
-//SaveSetRestore_EnableClientState::SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable)
-//:	fEnum(iEnum)
-//,	fPrior(::glIsEnabled(iEnum))
-//	{
-//	if (iEnable)
-//		::glEnableClientState(fEnum);
-//	else
-//		::glDisableClientState(fEnum);
-//	}
-//
-//SaveSetRestore_EnableClientState::~SaveSetRestore_EnableClientState()
-//	{
-//	if (fPrior)
-//		::glEnableClientState(fEnum);
-//	else
-//		::glDisableClientState(fEnum);
-//	}
-
-// =================================================================================================
 #pragma mark - SaveSetRestore_ActiveTexture
 
 SaveSetRestore_ActiveTexture::SaveSetRestore_ActiveTexture(GLenum iTexture)

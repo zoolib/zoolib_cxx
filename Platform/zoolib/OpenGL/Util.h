@@ -35,20 +35,6 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - SaveSetRestore_EnableClientState
-
-//class SaveSetRestore_EnableClientState
-//	{
-//public:
-//	SaveSetRestore_EnableClientState(GLenum iEnum, bool iEnable);
-//	~SaveSetRestore_EnableClientState();
-//
-//private:
-//	GLenum fEnum;
-//	bool fPrior;
-//	};
-
-// =================================================================================================
 #pragma mark - SaveSetRestore_ActiveTexture
 
 class SaveSetRestore_ActiveTexture
