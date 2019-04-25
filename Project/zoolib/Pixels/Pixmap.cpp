@@ -173,8 +173,8 @@ void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 	{
 	ZRef<Raster> sourceRaster = iSource->GetRaster();
 	ZRef<Raster> destRaster = ioDest->GetRaster();
-	sBlit(sourceRaster->GetBaseAddress(), sourceRaster->GetRasterDesc(), iSource->GetPixelDesc(),
-		destRaster->GetBaseAddress(), destRaster->GetRasterDesc(), ioDest->GetPixelDesc(),
+	sBlit(sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(), iSource->GetPixelDesc(),
+		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(), ioDest->GetPixelDesc(),
 		iSourceBounds, iDestLoc);
 	}
 
