@@ -35,8 +35,8 @@ template <class P>
 class PixelIterR_T
 	{
 public:
-	PixelIterR_T(const void* iAddress,
-		const PixvalDesc& iPixvalDesc, int iCoord, const P& iPixelDesc)
+	PixelIterR_T(const PixvalDesc& iPixvalDesc, const void* iAddress, int iCoord,
+		const P& iPixelDesc)
 	:	fIter(iPixvalDesc, iAddress, iCoord)
 	,	fPixelDesc(iPixelDesc)
 		{}
@@ -68,7 +68,8 @@ template <class P>
 class PixelIterRW_T
 	{
 public:
-	PixelIterRW_T(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord, const P& iPixelDesc)
+	PixelIterRW_T(const PixvalDesc& iPixvalDesc, void* iAddress, int iCoord,
+		const P& iPixelDesc)
 	:	fIter(iPixvalDesc, iAddress, iCoord)
 	,	fPixelDesc(iPixelDesc)
 		{}
@@ -103,7 +104,8 @@ template <class P>
 class PixelIterW_T
 	{
 public:
-	PixelIterW_T(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord, const P& iPixelDesc)
+	PixelIterW_T(const PixvalDesc& iPixvalDesc, void* iAddress, int iCoord,
+		const P& iPixelDesc)
 	:	fIter(iPixvalDesc, iAddress, iCoord)
 	,	fPixelDesc(iPixelDesc)
 		{}

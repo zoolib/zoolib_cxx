@@ -192,15 +192,15 @@ void sTile_SD_T(
 	int sourceV = sourceVStart;
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -261,15 +261,15 @@ void sTile_SDO_T(
 
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -350,22 +350,22 @@ void sTile_SMD_T(
 
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -486,22 +486,22 @@ void sTile_SMDO_T(
 
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -602,14 +602,14 @@ void sCopy_SD_T(
 	void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD)
 	{
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceStart.h,
 		iSourcePD);
 
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -646,14 +646,14 @@ void sCopy_SDO_T(
 	const O& iOp)
 	{
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceStart.h,
 		iSourcePD);
 
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -697,20 +697,20 @@ void sCopy_SMD_T(
 	bool iSourcePremultiplied)
 	{
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceStart.h,
 		iSourcePD);
 
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteStart.h,
 		iMattePD);
 
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -772,20 +772,20 @@ void sCopy_SMDO_T(
 	const O& iOp)
 	{
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, iSourceStart.v),
 		iSourceStart.h,
 		iSourcePD);
 
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteStart.h,
 		iMattePD);
 
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -877,22 +877,22 @@ void sTileSource_SMD_T(
 
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	int matteV = iMatteStart.v;
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, matteV),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, matteV),
 		iMatteStart.h,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -985,22 +985,22 @@ void sTileSource_SMDO_T(
 
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 	PixelIterR_T<S> sourceIter(
-		sourceRowAddress,
 		iSourceRD.fPixvalDesc,
+		sourceRowAddress,
 		sourceHStart,
 		iSourcePD);
 
 	int matteV = iMatteStart.v;
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, matteV),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, matteV),
 		iMatteStart.h,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -1103,23 +1103,23 @@ void sTileMatte_SMD_T(
 
 	int sourceV = iSourceStart.v;
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, sourceV),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, sourceV),
 		iSourceStart.h,
 		iSourcePD);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -1210,23 +1210,23 @@ void sTileMatte_SMDO_T(
 
 	int sourceV = iSourceStart.v;
 	PixelIterR_T<S> sourceIter(
-		sCalcRowAddress(iSourceRD, iSource, sourceV),
 		iSourceRD.fPixvalDesc,
+		sCalcRowAddress(iSourceRD, iSource, sourceV),
 		iSourceStart.h,
 		iSourcePD);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -1338,8 +1338,8 @@ void sColor_DO_T(
 	const O& iOp)
 	{
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -1374,14 +1374,14 @@ void sColor_MD_T(
 	const RGBA& iColor)
 	{
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteStart.h,
 		iMattePD);
 
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -1427,14 +1427,14 @@ void sColor_MDO_T(
 	const O& iOp)
 	{
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteStart.h,
 		iMattePD);
 
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -1497,15 +1497,15 @@ void sColorTile_MD_T(
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -1573,15 +1573,15 @@ void sColorTile_MDO_T(
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 	PixelIterR_T<M> matteIter(
-		matteRowAddress,
 		iMatteRD.fPixvalDesc,
+		matteRowAddress,
 		matteHStart,
 		iMattePD);
 
 	int currentDestV = iDestB.top;
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, currentDestV),
 		iDestB.left,
 		iDestPD);
 
@@ -2016,8 +2016,8 @@ template <class D>
 void sInvert_T(void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD)
 	{
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -2051,8 +2051,8 @@ void sOpaque_T(
 	void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -2087,8 +2087,8 @@ void sDarken_T(
 	void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -2122,8 +2122,8 @@ void sFade_T(
 	void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
@@ -2157,14 +2157,14 @@ void sApplyMatte_T(
 	void* oDest, const RD& iDestRD, const RectPOD& iDestB, const D& iDestPD)
 	{
 	PixelIterR_T<M> matteIter(
-		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteRD.fPixvalDesc,
+		sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v),
 		iMatteStart.h,
 		iMattePD);
 
 	PixelIterRW_T<D> destIter(
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestRD.fPixvalDesc,
+		sCalcRowAddress(iDestRD, oDest, iDestB.top),
 		iDestB.left,
 		iDestPD);
 
