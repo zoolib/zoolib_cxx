@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZDCPixmapBlitPriv_h__
-#define __ZDCPixmapBlitPriv_h__ 1
+#ifndef __ZooLib_Pixels_BlitPriv_h__
+#define __ZooLib_Pixels_BlitPriv_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Pixels/ZDCPixmapBlit.h" // For EOp and abbreviating typedefs
+#include "zoolib/Pixels/Blit.h" // For EOp and abbreviating typedefs
 #include "zoolib/Pixels/PixelIters.h"
 #include "zoolib/Pixels/Cartesian_Geom.h"
 
@@ -2203,4 +2203,4 @@ void sApplyMatte_T(
 } // namespace Pixels
 } // namespace ZooLib
 
-#endif // __ZDCPixmapBlitPriv_h__
+#endif // __ZooLib_Pixels_BlitPriv_h__

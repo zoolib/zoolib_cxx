@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #ifndef __ZooLib_Pixels_PixvalAccessor_h__
-#define __ZooLib_Pixels_PixvalAccessorl_h__ 1
+#define __ZooLib_Pixels_PixvalAccessor_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Pixels/Pixval.h"

@@ -103,8 +103,6 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 // =================================================================================================
 #pragma mark - Pixmap
 
-typedef bool (*MungeProc)(Ord iHiLocationH, Ord iV, RGBA& ioColor, void* iRefcon);
-
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon);
 
 void sBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,

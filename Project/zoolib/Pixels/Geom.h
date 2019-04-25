@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Pixels_Geom_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStdInt.h" // For int32
 
 namespace ZooLib {
 namespace Pixels {
@@ -30,7 +29,7 @@ namespace Pixels {
 // =================================================================================================
 #pragma mark -
 
-typedef int32 Ord;
+typedef int Ord;
 
 // =================================================================================================
 #pragma mark - PointPOD
