@@ -195,11 +195,8 @@ void sTile_SDO_T(
 		while (--destCountH)
 			{
 			RGBA thePixel = sourceIter.ReadInc();
-
 			RGBA destPixel = destIter.Read();
-
 			iOp(thePixel, destPixel);
-
 			destIter.WriteInc(destPixel);
 
 			if (!--sourceCountH)
@@ -430,13 +427,9 @@ void sTile_SMDO_T(
 			while (--destCountH)
 				{
 				RGBA thePixel = sourceIter.ReadInc();
-
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
-
 				RGBA destPixel = destIter.Read();
-
 				iOp(thePixel, destPixel);
-
 				destIter.WriteInc(destPixel);
 
 				if (!--sourceCountH)
@@ -581,11 +574,8 @@ void sCopy_SDO_T(
 		while (--destCountH)
 			{
 			RGBA thePixel = sourceIter.ReadInc();
-
 			RGBA destPixel = destIter.Read();
-
 			iOp(thePixel, destPixel);
-
 			destIter.WriteInc(destPixel);
 			}
 
@@ -715,13 +705,9 @@ void sCopy_SMDO_T(
 			while (--destCountH)
 				{
 				RGBA thePixel = sourceIter.ReadInc();
-
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
-
 				RGBA destPixel = destIter.Read();
-
 				iOp(thePixel, destPixel);
-
 				destIter.WriteInc(destPixel);
 				}
 			}
@@ -927,13 +913,9 @@ void sTileSource_SMDO_T(
 			while (--destCountH)
 				{
 				RGBA thePixel = sourceIter.ReadInc();
-
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
-
 				RGBA destPixel = destIter.Read();
-
 				iOp(thePixel, destPixel);
-
 				destIter.WriteInc(destPixel);
 
 				if (!--sourceCountH)
@@ -1153,13 +1135,9 @@ void sTileMatte_SMDO_T(
 			while (--destCountH)
 				{
 				RGBA thePixel = sourceIter.ReadInc();
-
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
-
 				RGBA destPixel = destIter.Read();
-
 				iOp(thePixel, destPixel);
-
 				destIter.WriteInc(destPixel);
 
 				if (!--matteCountH)
@@ -1352,7 +1330,7 @@ void sColor_MDO_T(
 
 		while (--destCountH)
 			{
-			float alpha = matteIter.ReadAlphaInc();
+			Comp alpha = matteIter.ReadAlphaInc();
 			RGBA destPixel = destIter.Read();
 			iOp(iColor * alpha, destPixel);
 			destIter.WriteInc(destPixel);
@@ -1413,7 +1391,7 @@ void sColorTile_MD_T(
 
 		while (--destCountH)
 			{
-			float alpha = matteIter.ReadAlphaInc();
+			Comp alpha = matteIter.ReadAlphaInc();
 			destIter.WriteInc(iColor * alpha);
 
 			if (!--matteCountH)
@@ -1524,14 +1502,16 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sTile_SD_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SD_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iDestRD, oDest, iDestB, iDestPD);
 			break;
 			}
 		case eOp_Over:
 			{
-			sTile_SDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iDestRD, oDest, iDestB, iDestPD,
 				Compose_Over());
@@ -1539,7 +1519,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sTile_SDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iDestRD, oDest, iDestB, iDestPD,
 				Compose_Plus());
@@ -1562,14 +1543,16 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sCopy_SD_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SD_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iDestRD, oDest, iDestB, iDestPD);
 			break;
 			}
 		case eOp_Over:
 			{
-			sCopy_SDO_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iDestRD, oDest, iDestB, iDestPD,
 				Compose_Over());
@@ -1577,7 +1560,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sCopy_SDO_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iDestRD, oDest, iDestB, iDestPD,
 				Compose_Plus());
@@ -1601,7 +1585,8 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sTile_SMD_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SMD_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1611,7 +1596,8 @@ void sBlit_T(
 			}
 		case eOp_Over:
 			{
-			sTile_SMDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SMDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1622,7 +1608,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sTile_SMDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTile_SMDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1649,7 +1636,8 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sTileSource_SMD_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTileSource_SMD_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -1659,7 +1647,8 @@ void sBlit_T(
 			}
 		case eOp_Over:
 			{
-			sTileSource_SMDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTileSource_SMDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -1670,7 +1659,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sTileSource_SMDO_T(iSourceRD, iSource, iSourceB, iSourcePD,
+			sTileSource_SMDO_T(
+				iSourceRD, iSource, iSourceB, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -1697,7 +1687,8 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sTileMatte_SMD_T(iSourceRD, iSource, iSourcePD,
+			sTileMatte_SMD_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1707,7 +1698,8 @@ void sBlit_T(
 			}
 		case eOp_Over:
 			{
-			sTileMatte_SMDO_T(iSourceRD, iSource, iSourcePD,
+			sTileMatte_SMDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1718,7 +1710,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sTileMatte_SMDO_T(iSourceRD, iSource, iSourcePD,
+			sTileMatte_SMDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMatteB, iMattePD,
 				iMatteOrigin,
@@ -1745,7 +1738,8 @@ void sBlit_T(
 		default:
 		case eOp_Copy:
 			{
-			sCopy_SMD_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SMD_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -1755,7 +1749,8 @@ void sBlit_T(
 			}
 		case eOp_Over:
 			{
-			sCopy_SMDO_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SMDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -1766,7 +1761,8 @@ void sBlit_T(
 			}
 		case eOp_Plus:
 			{
-			sCopy_SMDO_T(iSourceRD, iSource, iSourcePD,
+			sCopy_SMDO_T(
+				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
@@ -2054,12 +2050,7 @@ void sApplyMatte_T(
 
 		while (--destCountH)
 			{
-			RGBA thePixel = destIter.Read();
-			Comp alpha = matteIter.ReadAlphaInc();
-			sRed(thePixel) *= alpha;
-			sGreen(thePixel) *= alpha;
-			sBlue(thePixel) *= alpha;
-			sAlpha(thePixel) = alpha;
+			RGBA thePixel = destIter.Read() * matteIter.ReadAlphaInc();
 			destIter.WriteInc(thePixel);
 			}
 
