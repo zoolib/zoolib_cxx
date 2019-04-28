@@ -85,14 +85,15 @@ public:
 	Ord Height() const;
 
 	void Touch();
-	const ZRef<PixmapRep>& GetRep() const;
-	const ZRef<Raster>& GetRaster() const;
 
+	const ZRef<PixmapRep>& GetRep() const;
+
+	const ZRef<Raster>& GetRaster() const;
+	const RasterDesc& GetRasterDesc() const;
 	const void* GetBaseAddress() const;
 	void* GetBaseAddress();
-	const RasterDesc& GetRasterDesc() const;
-	const PixelDesc& GetPixelDesc() const;
 	const RectPOD& GetBounds() const;
+	const PixelDesc& GetPixelDesc() const;
 
 protected:
 	ZRef<PixmapRep> fRep;

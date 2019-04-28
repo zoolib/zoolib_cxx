@@ -354,6 +354,9 @@ void sColor(
 		iOp);
 	}
 
+// =================================================================================================
+#pragma mark -
+
 void sInvert(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD)
 	{

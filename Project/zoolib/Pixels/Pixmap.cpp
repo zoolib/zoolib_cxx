@@ -36,11 +36,13 @@ static void spBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 	ZRef<Raster> destRaster = ioDest->GetRaster();
 	ZAssert(destRaster->GetMutable());
 
-	const RectPOD iDestBounds = iSourceBounds - LT(iSourceBounds) + iDestLoc;
+	const RectPOD theDestBounds = iSourceBounds - LT(iSourceBounds) + iDestLoc;
 
 	sBlit(
-		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(), iSourceBounds, iSource->GetPixelDesc(),
-		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(), iDestBounds, ioDest->GetPixelDesc(),
+		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(),
+			iSourceBounds, iSource->GetPixelDesc(),
+		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(),
+			theDestBounds, ioDest->GetPixelDesc(),
 		eOp_Copy);
 	}
 
@@ -70,14 +72,11 @@ ZRef<PixmapRep> PixmapRep::Touch()
 	{
 	if (this->IsShared() || fRaster->IsShared() || not fRaster->GetMutable())
 		{
-		const RasterDesc& ourRasterDesc = fRaster->GetRasterDesc();
-		RasterDesc newRasterDesc = ourRasterDesc;
-		newRasterDesc.fRowBytes =
-			sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
+		RasterDesc newRasterDesc = fRaster->GetRasterDesc();
+		newRasterDesc.fRowBytes = sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
 		newRasterDesc.fRowCount = H(fBounds);
 
-		ZRef<PixmapRep> newRep =
-			sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
+		ZRef<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
 
 		spBlit(this, fBounds, newRep, sPointPOD(0,0));
 
@@ -153,23 +152,23 @@ const ZRef<PixmapRep>& Pixmap::GetRep() const
 const ZRef<Raster>& Pixmap::GetRaster() const
 	{ return fRep->GetRaster(); }
 
+const RasterDesc& Pixmap::GetRasterDesc() const
+	{ return fRep->GetRaster()->GetRasterDesc(); }
+
 const void* Pixmap::GetBaseAddress() const
 	{ return fRep->GetRaster()->GetBaseAddress(); }
 
 void* Pixmap::GetBaseAddress()
 	{
-	this->Touch();
+	this->Touch(); //¿ Should we do this ?
 	return fRep->GetRaster()->GetBaseAddress();
 	}
 
-const RasterDesc& Pixmap::GetRasterDesc() const
-	{ return fRep->GetRaster()->GetRasterDesc(); }
+const RectPOD& Pixmap::GetBounds() const
+	{ return fRep->GetBounds(); }
 
 const PixelDesc& Pixmap::GetPixelDesc() const
 	{ return fRep->GetPixelDesc(); }
-
-const RectPOD& Pixmap::GetBounds() const
-	{ return fRep->GetBounds(); }
 
 Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& iPixelDesc)
 	{ return sPixmapRep(iRasterDesc, iSize, iPixelDesc); }
