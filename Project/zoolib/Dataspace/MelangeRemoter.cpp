@@ -738,7 +738,10 @@ void Melange_Client::pRead()
 			{
 
 			ZRelMtx rel(fMtx);
-			theMap = spReadMessage(ChanR_XX_AbortOnSlowRead<byte>(*theChanner, 15), null);
+			if (::getenv("ZOOLIB_DONT_ABORT_ON_SLOW_READ"))
+				theMap = spReadMessage(*theChanner, null);
+			else
+				theMap = spReadMessage(ChanR_XX_AbortOnSlowRead<byte>(*theChanner, 15), null);
 			}
 
 			fQueue_Read.push_back(theMap);
