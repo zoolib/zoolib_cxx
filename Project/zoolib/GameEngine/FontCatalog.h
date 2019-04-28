@@ -21,6 +21,12 @@ public:
 		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance) = 0;
 
 	virtual GRect Measure(UTF32 iCP) = 0;
+
+	virtual void VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading) = 0;
+
+	Rat Ascent();
+	Rat Decent();
+	Rat Leading();
 	};
 
 GRect sMeasure(const ZRef<FontStrike>& iFontStrike, const string8& iString);
@@ -37,6 +43,12 @@ public:
 	virtual ZRef<FontStrike> GetStrikeForScale(Rat iScale) = 0;
 
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance) = 0;
+
+	virtual void VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading) = 0;
+
+	Rat Ascent(Rat iScale);
+	Rat Decent(Rat iScale);
+	Rat Leading(Rat iScale);
 	};
 
 GRect sMeasure(const ZRef<FontInfo>& iFontInfo, Rat iScale, const string8& iString);

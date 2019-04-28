@@ -62,21 +62,75 @@ GRect sMeasure(const ZRef<FontInfo>& iFontInfo, Rat iScale, const string8& iStri
 	}
 
 // =================================================================================================
+#pragma mark - FontStrike
+
+Rat FontStrike::Ascent()
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(theAscent, theDescent, theLeading);
+	return theAscent;
+	}
+
+Rat FontStrike::Decent()
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(theAscent, theDescent, theLeading);
+	return theDescent;
+	}
+
+Rat FontStrike::Leading()
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(theAscent, theDescent, theLeading);
+	return theLeading;
+	}
+
+// =================================================================================================
+#pragma mark - FontInfo
+
+Rat FontInfo::Ascent(Rat iScale)
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(iScale, theAscent, theDescent, theLeading);
+	return theAscent;
+	}
+
+Rat FontInfo::Decent(Rat iScale)
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(iScale, theAscent, theDescent, theLeading);
+	return theDescent;
+	}
+
+Rat FontInfo::Leading(Rat iScale)
+	{
+	Rat theAscent, theDescent, theLeading;
+	this->VMetrics(iScale, theAscent, theDescent, theLeading);
+	return theLeading;
+	}
+
+// =================================================================================================
 #pragma mark - FontStrike_TT declaration
+
+class FontInfo_TT;
 
 class FontStrike_TT
 :	public FontStrike
 	{
 public:
-	FontStrike_TT(ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar);
+	FontStrike_TT(const ZRef<FontInfo_TT>& iFontInfo, Rat iScale,
+		ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar);
 
 	virtual ZRef<Texture> GetGlyphTexture(UTF32 iCP,
 		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance);
 
 	virtual GRect Measure(UTF32 iCP);
+	virtual void VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading);
 
-	ZRef<Texture> fTexture;
-	map<UTF32,stbtt_bakedchar> fBakedChar;
+	const ZRef<FontInfo_TT> fFontInfo;
+	const Rat fScale;
+	const ZRef<Texture> fTexture;
+	const map<UTF32,stbtt_bakedchar> fBakedChar;
 	};
 
 // =================================================================================================
@@ -94,6 +148,7 @@ public:
 	virtual ZRef<FontStrike> GetStrikeForScale(Rat iScale);
 
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance);
+	virtual void VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading);
 
 	const Data_Any fTTData;
 	unsigned char* fTTPtr;
@@ -121,8 +176,11 @@ public:
 // =================================================================================================
 #pragma mark - FontStrike_TT definition
 
-FontStrike_TT::FontStrike_TT(ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar)
-:	fTexture(iTexture)
+FontStrike_TT::FontStrike_TT(const ZRef<FontInfo_TT>& iFontInfo, Rat iScale,
+	ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar)
+:	fFontInfo(iFontInfo)
+,	fScale(iScale)
+,	fTexture(iTexture)
 ,	fBakedChar(iBakedChar)
 	{}
 
@@ -153,6 +211,9 @@ GRect FontStrike_TT::Measure(UTF32 iCP)
 		}
 	return sGRect();
 	}
+
+void FontStrike_TT::VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading)
+	{ fFontInfo->VMetrics(fScale, oAscent, oDescent, oLeading); }
 
 // =================================================================================================
 #pragma mark - FontInfo_TT definition
@@ -240,7 +301,7 @@ ZRef<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
 	const UTF32 lastCP = 127;
 
 	map<UTF32,stbtt_bakedchar> theMap;
-	int result = spBakeForScale(f_fontinfo,
+	/*int heightConsumed = */spBakeForScale(f_fontinfo,
 		iScale,
 		(unsigned char*)thePixmap.GetBaseAddress(), thePixmap.Width(), thePixmap.Height(),
 		firstCP, lastCP - firstCP + 1,
@@ -248,7 +309,7 @@ ZRef<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
 
 	ZRef<Texture> theTexture = new Texture_GL(thePixmap);
 
-	ZRef<FontStrike_TT> theStrike = new FontStrike_TT(theTexture, theMap);
+	ZRef<FontStrike_TT> theStrike = new FontStrike_TT(this, iScale, theTexture, theMap);
 	fStrikes[iScale] = theStrike;
 	return theStrike;
 	}
@@ -265,6 +326,15 @@ void FontInfo_TT::Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance)
 	stbtt_GetGlyphBitmapBox(&f_fontinfo, index, iScale, iScale, &x0, &y0, &x1, &y1);
 
 	oBounds = sGRect(x0, y0, x1, y1);
+	}
+
+void FontInfo_TT::VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading)
+	{
+	int ascent, descent, linegap;
+	stbtt_GetFontVMetrics(&f_fontinfo, &ascent, &descent, &linegap);
+	oAscent = ascent * iScale;
+	oDescent = descent * iScale;
+	oLeading = linegap * iScale;
 	}
 
 // =================================================================================================
