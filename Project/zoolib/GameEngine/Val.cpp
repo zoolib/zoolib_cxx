@@ -309,6 +309,10 @@ Map::Map(const ZRef<Link>& iLink)
 :	fLink(iLink)
 	{}
 
+Map::Map(const Map& iParent, const Map_Any& iMap)
+:	fLink(new Link(iParent.GetLink(), iMap))
+	{}
+
 void Map::Clear()
 	{
 	fLink.Clear();

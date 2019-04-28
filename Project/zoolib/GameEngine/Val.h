@@ -173,7 +173,8 @@ public:
 	Map& operator=(const Map& iOther);
 
 	explicit Map(const ZRef<Link>& iLink);
-	explicit Map(const Map_Any& iMap);
+
+	explicit Map(const Map& iParent, const Map_Any& iMap);
 
 // ZMap protocol
 	void Clear();
