@@ -133,6 +133,12 @@ public:
 	const map<UTF32,stbtt_bakedchar> fBakedChar;
 	};
 
+GRect sMeasure(const ZRef<FontStrike>& iFontStrike, const string8& iString)
+	{
+	ZRef<FontStrike_TT> theFS = iFontStrike.StaticCast<FontStrike_TT>();
+	return sMeasure(theFS->fFontInfo, theFS->fScale, iString);
+	}
+
 // =================================================================================================
 #pragma mark - FontInfo_TT declaration
 
