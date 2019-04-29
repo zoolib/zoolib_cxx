@@ -46,6 +46,24 @@ public:
 	};
 
 // =================================================================================================
+#pragma mark - operator== and operator!=
+
+template <class E, size_t C, size_t R, size_t Length_p>
+bool operator==(const MatrixArray<E,C,R,Length_p>& iL, const MatrixArray<E,C,R,Length_p>& iR)
+	{
+	for (size_t ii = 0; ii < Length_p; ++ii)
+		{
+		if (iL.fArray[ii] != iR.fArray[ii])
+			return false;
+		}
+	return true;
+	}
+
+template <class E, size_t C, size_t R, size_t Length_p>
+bool operator!=(const MatrixArray<E,C,R,Length_p>& iL, const MatrixArray<E,C,R,Length_p>& iR)
+	{ return not (iL == iR); }
+
+// =================================================================================================
 #pragma mark -
 
 template <class E, size_t C, size_t R, size_t Length_p, class P>
