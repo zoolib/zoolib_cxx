@@ -273,7 +273,6 @@ ZQ<RGBA> sQRGBA(const Any& iVal)
 	if (const string8* theStringP = iVal.PGet<string8>())
 		return sQRGBA(*theStringP);
 
-	ZUnimplemented();
 	return null;
 	}
 
