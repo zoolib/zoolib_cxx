@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Pixels {
 
-typedef bool (*MungeProc)(Ord iHiLocationH, Ord iV, RGBA& ioColor, void* iRefcon);
+typedef bool (*MungeProc)(Ord iH, Ord iV, RGBA& ioColor, void* iRefcon);
 
 class PixelDescRep;
 
