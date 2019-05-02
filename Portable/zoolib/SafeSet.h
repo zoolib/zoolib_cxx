@@ -87,7 +87,7 @@ private:
 		{ // Scope for guard
 		ZAcqMtx acq(fMtx);
 
-		if (!this->FinishFinalize())
+		if (not this->FinishFinalize())
 			return;
 
 		// Invalidate all iterators referencing entries.

@@ -81,7 +81,7 @@ size_t ChanR_UTF_CRLFRemove::Read(UTF32* oDest, size_t iCount)
 					}
 				case LF:
 					{
-					if (!fLastWasCR)
+					if (not fLastWasCR)
 						*localDest++ = fReplacementCP;
 					fLastWasCR = false;
 					break;

@@ -593,7 +593,7 @@ CFMutableArrayRef Seq_CF::pTouch()
 	ZRef<CFMutableArrayRef> theMutableArray;
 	if (CFArrayRef theArray = this->pArray())
 		{
-		if (!fMutable || ::CFGetRetainCount(theArray) > 1)
+		if (not fMutable || ::CFGetRetainCount(theArray) > 1)
 			{
 			theMutableArray = sArrayMutable(theArray);
 			inherited::operator=(theMutableArray);
@@ -755,7 +755,7 @@ CFMutableDictionaryRef Map_CF::pTouch()
 	ZRef<CFMutableDictionaryRef> theMutableDictionary;
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
-		if (!fMutable || ::CFGetRetainCount(theDictionary) > 1)
+		if (not fMutable || ::CFGetRetainCount(theDictionary) > 1)
 			{
 			theMutableDictionary = sDictionaryMutable(theDictionary);
 			inherited::operator=(theMutableDictionary);

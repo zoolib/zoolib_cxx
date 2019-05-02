@@ -585,7 +585,7 @@ bool sSkip(ChanRU& r, const string& iTagName)
 
 bool sSkip(ChanRU& r, vector<string>& ioTags)
 	{
-	while (!ioTags.empty())
+	while (not ioTags.empty())
 		{
 		switch (r.Current())
 			{
@@ -1142,7 +1142,7 @@ const StrimW& StrimW::EndAll()
 	{
 	this->pWritePending();
 
-	while (!fTags.empty())
+	while (not fTags.empty())
 		this->pEnd();
 
 	return *this;

@@ -323,7 +323,7 @@ PixelDescRep_Indexed::~PixelDescRep_Indexed()
 
 bool PixelDescRep_Indexed::HasAlpha()
 	{
-	if (!fCheckedAlpha)
+	if (not fCheckedAlpha)
 		{
 		fHasAlpha = false;
 		RGBA* current = fColors;
@@ -355,7 +355,7 @@ ZRef<PixelDescRep> PixelDescRep_Indexed::WithoutAlpha()
 
 void PixelDescRep_Indexed::BuildReverseLookupIfNeeded() const
 	{
-	if (!fReverseLookup)
+	if (not fReverseLookup)
 		fReverseLookup = spBuildReverseLookup(fColors, fCount);
 	}
 
@@ -390,7 +390,7 @@ bool PixelDescRep_Gray::HasAlpha()
 
 ZRef<PixelDescRep> PixelDescRep_Gray::WithoutAlpha()
 	{
-	if (!fMaskA)
+	if (not fMaskA)
 		return this;
 	return new PixelDescRep_Gray(fMaskL, 0);
 	}
@@ -442,7 +442,7 @@ bool PixelDescRep_Color::HasAlpha()
 
 ZRef<PixelDescRep> PixelDescRep_Color::WithoutAlpha()
 	{
-	if (!fMaskA)
+	if (not fMaskA)
 		return this;
 	return new PixelDescRep_Color(fMaskR, fMaskG, fMaskB, 0);
 	}

@@ -670,7 +670,7 @@ FileTreeIter& FileTreeIter::Advance()
 		{
 		// fCurrent is a file, or a directory that can't be accessed.
 		fCurrent = FileSpec();
-		while (!fStack.empty() && !fCurrent)
+		while (not fStack.empty() && !fCurrent)
 			{
 			if (fStack.back().Advance())
 				fCurrent = fStack.back().Current();

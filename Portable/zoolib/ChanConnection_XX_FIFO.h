@@ -154,7 +154,7 @@ public:
 			{
 			if (fBuffer.size())
 				return true;
-			if (!fCondition_Read.WaitUntil(fMutex, deadline))
+			if (not fCondition_Read.WaitUntil(fMutex, deadline))
 				return false;
 			}
 		}
