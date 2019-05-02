@@ -303,9 +303,7 @@ void Rendered_Rect::Accept_Rendered(Visitor_Rendered& iVisitor)
 	{ iVisitor.Visit_Rendered_Rect(this); }
 
 void Rendered_Rect::Get(GRect& oBounds)
-	{
-	oBounds = fBounds;
-	}
+	{ oBounds = fBounds; }
 
 ZRef<Rendered> sRendered_Rect(const GRect& iBounds)
 	{ return new Rendered_Rect(iBounds); }
