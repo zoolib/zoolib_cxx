@@ -128,7 +128,7 @@ void sTile_SD_T(
 			RGBA thePixel = sourceIter.ReadInc();
 			destIter.WriteInc(thePixel);
 
-			if (!--sourceCountH)
+			if (not --sourceCountH)
 				{
 				sourceIter.Reset(sourceRowAddress, sourceLeft);
 				sourceCountH = sourceCountHReset;
@@ -199,7 +199,7 @@ void sTile_SDO_T(
 			iOp(thePixel, destPixel);
 			destIter.WriteInc(destPixel);
 
-			if (!--sourceCountH)
+			if (not --sourceCountH)
 				{
 				sourceIter.Reset(sourceRowAddress, sourceLeft);
 				sourceCountH = sourceCountHReset;
@@ -294,13 +294,13 @@ void sTile_SMD_T(
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
 					}
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -321,13 +321,13 @@ void sTile_SMD_T(
 
 				destIter.WriteInc(thePixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
 					}
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -432,13 +432,13 @@ void sTile_SMDO_T(
 				iOp(thePixel, destPixel);
 				destIter.WriteInc(destPixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
 					}
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -463,13 +463,13 @@ void sTile_SMDO_T(
 
 				destIter.WriteInc(destPixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
 					}
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -808,7 +808,7 @@ void sTileSource_SMD_T(
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
@@ -829,7 +829,7 @@ void sTileSource_SMD_T(
 
 				destIter.WriteInc(thePixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
@@ -918,7 +918,7 @@ void sTileSource_SMDO_T(
 				iOp(thePixel, destPixel);
 				destIter.WriteInc(destPixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
@@ -943,7 +943,7 @@ void sTileSource_SMDO_T(
 
 				destIter.WriteInc(destPixel);
 
-				if (!--sourceCountH)
+				if (not --sourceCountH)
 					{
 					sourceIter.Reset(sourceRowAddress, sourceLeft);
 					sourceCountH = sourceCountHReset;
@@ -1031,7 +1031,7 @@ void sTileMatte_SMD_T(
 				sAlpha(thePixel) = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -1052,7 +1052,7 @@ void sTileMatte_SMD_T(
 
 				destIter.WriteInc(thePixel);
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -1140,7 +1140,7 @@ void sTileMatte_SMDO_T(
 				iOp(thePixel, destPixel);
 				destIter.WriteInc(destPixel);
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -1165,7 +1165,7 @@ void sTileMatte_SMDO_T(
 
 				destIter.WriteInc(destPixel);
 
-				if (!--matteCountH)
+				if (not --matteCountH)
 					{
 					matteIter.Reset(matteRowAddress, matteLeft);
 					matteCountH = matteCountHReset;
@@ -1394,7 +1394,7 @@ void sColorTile_MD_T(
 			Comp alpha = matteIter.ReadAlphaInc();
 			destIter.WriteInc(iColor * alpha);
 
-			if (!--matteCountH)
+			if (not --matteCountH)
 				{
 				matteIter.Reset(matteRowAddress, matteLeft);
 				matteCountH = matteCountHReset;
@@ -1464,7 +1464,7 @@ void sColorTile_MDO_T(
 			iOp(iColor * alpha, destPixel);
 			destIter.WriteInc(destPixel);
 
-			if (!--matteCountH)
+			if (not --matteCountH)
 				{
 				matteIter.Reset(matteRowAddress, matteLeft);
 				matteCountH = matteCountHReset;
