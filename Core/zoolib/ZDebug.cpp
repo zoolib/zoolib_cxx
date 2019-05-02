@@ -110,15 +110,10 @@ static void spHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	fputs("  *", stderr);
 	if (iParams.fUserMessage)
 		::vfprintf(stderr, iParams.fUserMessage, iArgs);
+	::fputs("\n", stderr);
+
 	if (iParams.fStop)
-		{
-		::fputs("\n", stderr);
 		abort();
-		}
-	else
-		{
-		::fputs("\n", stderr);
-		}
 	}
 
 class DebugFunction_POSIX
