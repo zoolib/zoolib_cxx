@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Util_Strim_Expr_Bool_ValPred_h__
-#define __ZooLib_Util_Strim_Expr_Bool_ValPred_h__ 1
+#ifndef __ZooLib_ValPred_Util_Strim_Expr_Bool_ValPred_h__
+#define __ZooLib_ValPred_Util_Strim_Expr_Bool_ValPred_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ChanRU_UTF.h"
@@ -37,4 +37,4 @@ ZRef<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU);
 } // namespace Util_Strim_Expr_Bool_ValPred
 } // namespace ZooLib
 
-#endif // __ZooLib_Util_Strim_Expr_Bool_ValPred_h__
+#endif // __ZooLib_ValPred_Util_Strim_Expr_Bool_ValPred_h__
