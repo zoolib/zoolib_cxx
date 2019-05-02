@@ -29,7 +29,7 @@ using std::string;
 
 namespace ZooLib {
 
-ZQ<bool> sQCoerceBool(const Any& iAny)
+ZQ<bool> sQCoerceBool(const AnyBase& iAny)
 	{
 	if (const bool* pBool = iAny.PGet<bool>())
 		return *pBool;
@@ -60,7 +60,7 @@ ZQ<bool> sQCoerceBool(const Any& iAny)
 	return null;
 	}
 
-bool sQCoerceBool(const Any& iAny, bool& oVal)
+bool sQCoerceBool(const AnyBase& iAny, bool& oVal)
 	{
 	if (ZQ<bool> qq = sQCoerceBool(iAny))
 		{
@@ -70,21 +70,21 @@ bool sQCoerceBool(const Any& iAny, bool& oVal)
 	return false;
 	}
 
-bool sDCoerceBool(bool iDefault, const Any& iAny)
+bool sDCoerceBool(bool iDefault, const AnyBase& iAny)
 	{
 	if (ZQ<bool> qq = sQCoerceBool(iAny))
 		return *qq;
 	return iDefault;
 	}
 
-bool sCoerceBool(const Any& iAny)
+bool sCoerceBool(const AnyBase& iAny)
 	{
 	if (ZQ<bool> qq = sQCoerceBool(iAny))
 		return *qq;
 	return false;
 	}
 
-ZQ<__int64> sQCoerceInt(const Any& iAny)
+ZQ<__int64> sQCoerceInt(const AnyBase& iAny)
 	{
 	if (false)
 		{}
@@ -116,7 +116,7 @@ ZQ<__int64> sQCoerceInt(const Any& iAny)
 	return null;
 	}
 
-bool sQCoerceInt(const Any& iAny, __int64& oVal)
+bool sQCoerceInt(const AnyBase& iAny, __int64& oVal)
 	{
 	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		{
@@ -126,21 +126,21 @@ bool sQCoerceInt(const Any& iAny, __int64& oVal)
 	return false;
 	}
 
-__int64 sDCoerceInt(__int64 iDefault, const Any& iAny)
+__int64 sDCoerceInt(__int64 iDefault, const AnyBase& iAny)
 	{
 	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		return *qq;
 	return iDefault;
 	}
 
-__int64 sCoerceInt(const Any& iAny)
+__int64 sCoerceInt(const AnyBase& iAny)
 	{
 	if (ZQ<__int64> qq = sQCoerceInt(iAny))
 		return *qq;
 	return 0;
 	}
 
-ZQ<double> sQCoerceRat(const Any& iAny)
+ZQ<double> sQCoerceRat(const AnyBase& iAny)
 	{
 	if (false)
 		{}
@@ -154,7 +154,7 @@ ZQ<double> sQCoerceRat(const Any& iAny)
 	return null;
 	}
 
-bool sQCoerceRat(const Any& iAny, double& oVal)
+bool sQCoerceRat(const AnyBase& iAny, double& oVal)
 	{
 	if (ZQ<double> qq = sQCoerceRat(iAny))
 		{
@@ -164,21 +164,21 @@ bool sQCoerceRat(const Any& iAny, double& oVal)
 	return false;
 	}
 
-double sDCoerceRat(double iDefault, const Any& iAny)
+double sDCoerceRat(double iDefault, const AnyBase& iAny)
 	{
 	if (ZQ<double> qq = sQCoerceRat(iAny))
 		return *qq;
 	return iDefault;
 	}
 
-double sCoerceRat(const Any& iAny)
+double sCoerceRat(const AnyBase& iAny)
 	{
 	if (ZQ<double> qq = sQCoerceRat(iAny))
 		return *qq;
 	return 0.0;
 	}
 
-ZQ<__int64> sQCoerceNumberAsInt(const Any& iAny)
+ZQ<__int64> sQCoerceNumberAsInt(const AnyBase& iAny)
 	{
 	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
 		return *theQ;
@@ -189,7 +189,7 @@ ZQ<__int64> sQCoerceNumberAsInt(const Any& iAny)
 	return null;
 	}
 
-ZQ<double> sQCoerceNumberAsRat(const Any& iAny)
+ZQ<double> sQCoerceNumberAsRat(const AnyBase& iAny)
 	{
 	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
 		return *theQ;

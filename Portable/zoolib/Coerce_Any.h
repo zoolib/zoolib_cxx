@@ -29,23 +29,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZQ<bool> sQCoerceBool(const Any& iAny);
-bool sQCoerceBool(const Any& iAny, bool& oVal);
-bool sDCoerceBool(bool iDefault, const Any& iAny);
-bool sCoerceBool(const Any& iAny);
+ZQ<bool> sQCoerceBool(const AnyBase& iAny);
+bool sQCoerceBool(const AnyBase& iAny, bool& oVal);
+bool sDCoerceBool(bool iDefault, const AnyBase& iAny);
+bool sCoerceBool(const AnyBase& iAny);
 
-ZQ<__int64> sQCoerceInt(const Any& iAny);
-bool sQCoerceInt(const Any& iAny, __int64& oVal);
-__int64 sDCoerceInt(__int64 iDefault, const Any& iAny);
-__int64 sCoerceInt(const Any& iAny);
+ZQ<__int64> sQCoerceInt(const AnyBase& iAny);
+bool sQCoerceInt(const AnyBase& iAny, __int64& oVal);
+__int64 sDCoerceInt(__int64 iDefault, const AnyBase& iAny);
+__int64 sCoerceInt(const AnyBase& iAny);
 
-ZQ<double> sQCoerceRat(const Any& iAny);
-bool sQCoerceRat(const Any& iAny, double& oVal);
-double sDCoerceRat(double iDefault, const Any& iAny);
-double sCoerceRat(const Any& iAny);
+ZQ<double> sQCoerceRat(const AnyBase& iAny);
+bool sQCoerceRat(const AnyBase& iAny, double& oVal);
+double sDCoerceRat(double iDefault, const AnyBase& iAny);
+double sCoerceRat(const AnyBase& iAny);
 
-ZQ<__int64> sQCoerceNumberAsInt(const Any& iAny);
-ZQ<double> sQCoerceNumberAsRat(const Any& iAny);
+ZQ<__int64> sQCoerceNumberAsInt(const AnyBase& iAny);
+ZQ<double> sQCoerceNumberAsRat(const AnyBase& iAny);
 
 } // namespace ZooLib
 
