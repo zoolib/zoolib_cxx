@@ -38,26 +38,26 @@ static ssize_t spReadRPos(void* iCookie, char* oDest, size_t iCount)
 static ssize_t spWrite(void* iCookie, const char* iSource, size_t iCount)
 	{ return sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
 
-static int spSeek(void* iCookie, _IO_off64_t *iPos, int iWhence)
+static int spSeek(void* iCookie, _IO_off64_t *ioPos, int iWhence)
 	{
 	ChannerRPos_Bin* theChannerRPos = static_cast<ChannerRPos_Bin*>(iCookie);
 	switch (iWhence)
 		{
 		case SEEK_SET:
 			{
-			sPosSet(*theChannerRPos, *iPos);
+			sPosSet(*theChannerRPos, *ioPos);
 			return 0;
 			}
 		case SEEK_CUR:
 			{
-			_IO_off64_t newPos = sPos(*theChannerRPos) + *iPos;
-			sPosSet(*theChannerRPos, newPos);
+			*ioPos += sPos(*theChannerRPos);
+			sPosSet(*theChannerRPos, *ioPos);
 			return 0;
 			}
 		case SEEK_END:
 			{
-			_IO_off64_t newPos = sSize(*theChannerRPos) + *iPos;
-			sPosSet(*theChannerRPos, newPos);
+			*ioPos += sSize(*theChannerRPos);
+			sPosSet(*theChannerRPos, *ioPos);
 			return 0;
 			}
 		}
