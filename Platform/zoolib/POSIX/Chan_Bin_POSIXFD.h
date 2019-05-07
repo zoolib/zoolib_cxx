@@ -84,8 +84,7 @@ protected:
 #pragma mark - ChanR_Bin_POSIXFD
 
 class ChanR_Bin_POSIXFD
-:	public FDHolder
-,	public ChanR<byte>
+:	public ChanR<byte>
 	{
 	ChanR_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
 	~ChanR_Bin_POSIXFD();
