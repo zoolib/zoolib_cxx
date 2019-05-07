@@ -342,7 +342,7 @@ public:
 
 	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<const Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -392,7 +392,7 @@ public:
 
 	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<const Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -435,7 +435,7 @@ public:
 
 	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<const Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -480,7 +480,7 @@ public:
 
 	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<const Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
