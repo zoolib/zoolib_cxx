@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - FILE backed by a Channer
+#pragma mark - FILE backed by a Channer
 
 FILE* sFILE(ZRef<ChannerR_Bin> iChannerR);
 FILE* sFILE(ZRef<ChannerRPos_Bin> iChannerRPos);

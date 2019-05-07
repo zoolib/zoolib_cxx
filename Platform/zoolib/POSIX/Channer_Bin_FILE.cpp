@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// MARK: - FILE backed by a Channer
+#pragma mark - FILE backed by a Channer
 
 #if defined(__USE_GNU)
 
