@@ -87,7 +87,8 @@ struct ZipHolder
 :	public ZCounted
 	{
 	static
-	void spStuff(size_t iEntryNum, const ZRef<Node_Directory>& ioParent, const Trail& iTrail, size_t iIndex)
+	void spStuff(size_t iEntryNum, const ZRef<Node_Directory>& ioParent,
+		const Trail& iTrail, size_t iIndex)
 		{
 		const string theName = iTrail.At(iIndex);
 
@@ -341,7 +342,6 @@ FileSpec FileIterRep_Zip::Current()
 
 	return FileSpec();
 	}
-
 
 // =================================================================================================
 #pragma mark - sFileLoc_Zip
