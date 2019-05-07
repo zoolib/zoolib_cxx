@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Chan_Bin_FILE_h__
-#define __ZooLib_Chan_Bin_FILE_h__ 1
+#ifndef __ZooLib_FILE_Channer_h__
+#define __ZooLib_FILE_Channer_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Channer_Bin.h"
@@ -37,4 +37,4 @@ FILE* sFILE(ZRef<ChannerW_Bin> iChannerW);
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Chan_Bin_FILE_h__
+#endif // __ZooLib_FILE_Channer_h__
