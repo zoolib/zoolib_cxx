@@ -734,12 +734,11 @@ string8 sToUpper(const string8& iString)
 	string8 result;
 	result.reserve(iString.size());
 
-	string8::const_iterator current = iString.begin();
-	string8::const_iterator end = iString.end();
-	for (;;)
+	for (string8::const_iterator iter = iString.begin(), end = iString.end();
+		/*no test*/; /*no inc*/)
 		{
 		UTF32 theUTF32;
-		if (not sReadInc(current, end, theUTF32))
+		if (not sReadInc(iter, end, theUTF32))
 			break;
 		result += sToUpper(theUTF32);
 		}
@@ -751,12 +750,11 @@ string8 sToLower(const string8& iString)
 	string8 result;
 	result.reserve(iString.size());
 
-	string8::const_iterator current = iString.begin();
-	string8::const_iterator end = iString.end();
-	for (;;)
+	for (string8::const_iterator iter = iString.begin(), end = iString.end();
+		/*no test*/; /*no inc*/)
 		{
 		UTF32 theUTF32;
-		if (not sReadInc(current, end, theUTF32))
+		if (not sReadInc(iter, end, theUTF32))
 			break;
 		result += sToLower(theUTF32);
 		}
