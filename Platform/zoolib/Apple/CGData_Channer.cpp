@@ -26,10 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-typedef ChannerR_Bin ChannerR_Bin;
-typedef ChannerRPos_Bin ChannerRPos_Bin;
-typedef ChannerW_Bin ChannerW_Bin;
-
 // =================================================================================================
 #pragma mark - CGData_Channer::sProvider
 
