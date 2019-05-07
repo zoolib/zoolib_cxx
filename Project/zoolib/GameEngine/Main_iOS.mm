@@ -142,7 +142,6 @@ FileSpec spResourceFS()
 	fGame->Draw(
 		Time::sSystem(),
 		[fUIView_Game backingSize],
-		[fUIView_Game->fContext API] >= kEAGLRenderingAPIOpenGLES2,
 		sCallable<void()>(fUIView_Game, @selector(afterDraw)));
 	}
 

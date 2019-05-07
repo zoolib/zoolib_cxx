@@ -48,7 +48,6 @@ public:
 	void Draw(
 		double iNewTimestamp,
 		GPoint iBackingSize,
-		bool iUseShader,
 		const ZRef<Callable_Void>& iCallable_FlipBuffers);
 
 	void RunOnce();

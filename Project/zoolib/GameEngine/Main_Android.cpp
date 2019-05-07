@@ -282,7 +282,7 @@ bool ZooLib_RunOnce(const ZRef<Game>& iGame)
 
 	const double loopStart = Time::sSystem();
 
-	iGame->Draw(loopStart, backingSize, true, spCallable_SwapWindow);
+	iGame->Draw(loopStart, backingSize, spCallable_SwapWindow);
 
 	TouchSet theTouchesDown;
 	TouchSet theTouchesMove;

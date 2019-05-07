@@ -135,7 +135,6 @@ static Mat spAdditionalMat(const GPoint& p, const GPoint& g)
 void sGame_Render(const ZRef<Rendered>& iRendered,
 	const GPoint& iPixelSize,
 	const GPoint& iGameSize,
-	bool iUseShader,
 	bool iShowBounds, bool iShowOrigin,
 	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	{

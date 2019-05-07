@@ -137,7 +137,6 @@ static FileSpec spResourceFS()
 	fGame->Draw(
 		theTimestamp,
 		fWH,
-		true,
 		sCallable<void()>(self, @selector(pFlipBuffers)));
 
 	ZAcqMtx acq(fMtx);

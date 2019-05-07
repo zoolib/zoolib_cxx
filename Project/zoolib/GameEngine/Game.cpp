@@ -156,7 +156,6 @@ void Game::UpdateTouches(const TouchSet* iDown, const TouchSet* iMove, const Tou
 void Game::Draw(
 	double iNewTimestamp,
 	GPoint iBackingSize,
-	bool iUseShader,
 	const ZRef<Callable_Void>& iCallable_FlipBuffers)
 	{
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
@@ -190,7 +189,6 @@ void Game::Draw(
 			theRendered,
 			iBackingSize,
 			theGameSize,
-			iUseShader,
 			DebugFlags::sTextureBounds, DebugFlags::sTextureBounds,
 			fSoundMeister, listenerL, listenerR, listenerDistance);
 
