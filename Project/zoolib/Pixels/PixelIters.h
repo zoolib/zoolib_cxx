@@ -29,7 +29,7 @@ namespace ZooLib {
 namespace Pixels {
 
 // =================================================================================================
-#pragma mark - PixellIterR
+#pragma mark - PixelIterR_T
 
 template <class P>
 class PixelIterR_T
@@ -62,7 +62,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - PixellIterR
+#pragma mark - PixelIterRW_T
 
 template <class P>
 class PixelIterRW_T
@@ -98,7 +98,7 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - PixellIterR
+#pragma mark - PixelIterW_T
 
 template <class P>
 class PixelIterW_T
