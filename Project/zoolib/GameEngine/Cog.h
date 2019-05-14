@@ -205,6 +205,24 @@ Cog sCog_Log(const string8&);
 Cog sCogs_Plus(std::vector<Cog>* ioCogs);
 Cog sCogs_Each(std::vector<Cog>* ioCogs);
 
+// =================================================================================================
+#pragma mark -
+
+struct CogAccumulatorCombiner_Plus
+	{ void operator()(Cog& io0, const Cog& i1) const; };
+
+struct CogAccumulatorCombiner_Minus
+	{ void operator()(Cog& io0, const Cog& i1) const; };
+
+struct CogAccumulatorCombiner_Each
+	{ void operator()(Cog& io0, const Cog& i1) const; };
+
+struct CogAccumulatorCombiner_And
+	{ void operator()(Cog& io0, const Cog& i1) const; };
+
+struct CogAccumulatorCombiner_Or
+	{ void operator()(Cog& io0, const Cog& i1) const; };
+
 } // namespace GameEngine
 } // namespace ZooLib
 

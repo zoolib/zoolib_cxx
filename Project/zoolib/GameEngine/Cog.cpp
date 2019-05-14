@@ -138,54 +138,42 @@ Cog CogRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 			w << "Couldn't find ctor for " << iCtorName;
 		}
 
-	// Assertion will trip if theFun wasn't found (logged above)
+	// Assertion will trip if theFun wasn't found (detail logged above)
 	return (*theFun)(iMap);
 	}
+
+// =================================================================================================
+#pragma mark - CogAccumulatorCombiner
+
+void CogAccumulatorCombiner_Plus::operator()(Cog& io0, const Cog& i1) const
+	{ io0 += i1; }
+
+void CogAccumulatorCombiner_Minus::operator()(Cog& io0, const Cog& i1) const
+	{
+	if (sIsPending(io0))
+		io0 -= i1;
+	else
+		io0 = i1;
+	}
+
+void CogAccumulatorCombiner_Each::operator()(Cog& io0, const Cog& i1) const
+	{ io0 ^= i1; }
+
+void CogAccumulatorCombiner_And::operator()(Cog& io0, const Cog& i1) const
+	{
+	if (sIsPending(io0))
+		io0 &= i1;
+	else
+		io0 = i1;
+	}
+
+void CogAccumulatorCombiner_Or::operator()(Cog& io0, const Cog& i1) const
+	{ io0 |= i1; }
 
 // =================================================================================================
 #pragma mark - sCog
 
 namespace { // anonymous
-
-struct CogAccumulatorCombiner_Plus
-	{
-	void operator()(Cog& io0, const Cog& i1) const
-		{ io0 += i1; }
-	};
-
-struct CogAccumulatorCombiner_Minus
-	{
-	void operator()(Cog& io0, const Cog& i1) const
-		{
-		if (sIsPending(io0))
-			io0 -= i1;
-		else
-			io0 = i1;
-		}
-	};
-
-struct CogAccumulatorCombiner_Each
-	{
-	void operator()(Cog& io0, const Cog& i1) const
-		{ io0 ^= i1; }
-	};
-
-struct CogAccumulatorCombiner_And
-	{
-	void operator()(Cog& io0, const Cog& i1) const
-		{
-		if (sIsPending(io0))
-			io0 &= i1;
-		else
-			io0 = i1;
-		}
-	};
-
-struct CogAccumulatorCombiner_Or
-	{
-	void operator()(Cog& io0, const Cog& i1) const
-		{ io0 |= i1; }
-	};
 
 template <class AccumulatorCombiner>
 Cog spCogs(size_t iStart, const Seq& iSeq)
@@ -221,9 +209,7 @@ Cog spCogs(const Seq& iSeq)
 			return sCog(iSeq.Get(1)) % sCog(iSeq.Get(2));
 
 		if (*theQ == "/")
-			{
 			return sCog(iSeq.Get(1)) % sCog(iSeq.Get(2));
-			}
 
 		if (*theQ == "*")
 			return sCog_Repeat(sCog(iSeq.Get(1)));
