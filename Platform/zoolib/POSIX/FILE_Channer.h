@@ -31,9 +31,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - FILE backed by a Channer
 
-FILE* sFILE(ZRef<ChannerR_Bin> iChannerR);
-FILE* sFILE(ZRef<ChannerRPos_Bin> iChannerRPos);
-FILE* sFILE(ZRef<ChannerW_Bin> iChannerW);
+FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR);
+FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos);
+FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW);
 
 } // namespace ZooLib
 
