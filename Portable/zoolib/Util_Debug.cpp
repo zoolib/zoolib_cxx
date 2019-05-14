@@ -88,6 +88,7 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 
 	if (iParams.fStop)
 		{
+		s << "\n";
 		sWriteBacktrace(s);
 		s.Emit();
 		abort();
