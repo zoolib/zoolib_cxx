@@ -37,11 +37,14 @@ public:
 	const Mat& GetInverseMat();
 	const Mat& GetMat();
 
-	void Munge(const Mat& iMat, const Mat& iInverseMat);
+//	void Munge(const Mat& iMat, const Mat& iInverseMat);
 
 	const bool fExclusive;
+
 	size_t fMaxTouches;
+
 	GRect fBounds;
+
 	std::set<ZRef<Touch> > fActive;
 	std::set<ZRef<Touch> > fDowns;
 	std::set<ZRef<Touch> > fMoves;
@@ -51,6 +54,13 @@ private:
 	ZQ<Mat> fMatQ;
 	ZQ<Mat> fInverseMatQ;
 	};
+
+// =================================================================================================
+#pragma mark -
+
+bool sTouchIn(const ZRef<TouchListener>& iTouchListener);
+bool sTouchOut(const ZRef<TouchListener>& iTouchListener);
+bool sTouchUp(const ZRef<TouchListener>& iTouchListener);
 
 } // namespace GameEngine
 } // namespace ZooLib

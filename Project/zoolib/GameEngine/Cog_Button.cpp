@@ -10,20 +10,7 @@ namespace GameEngine {
 static
 Cog spCogFun_TouchIn(const Cog& iSelf, const Param& iParam,
 	const ZRef<TouchListener>& iTouchListener)
-	{
-	if (iTouchListener->fActive.empty())
-		return false;
-
-	if (iTouchListener->fUps.size())
-		return false;
-
-	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
-	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-	if (sContains(iTouchListener->fBounds, localPos))
-		return true;
-
-	return false;
-	}
+	{ return sTouchIn(iTouchListener); }
 
 static
 Cog spCog_TouchIn(const ZRef<TouchListener>& iTouchListener)
@@ -35,17 +22,7 @@ Cog spCog_TouchIn(const ZRef<TouchListener>& iTouchListener)
 static
 Cog spCogFun_TouchOut(const Cog& iSelf, const Param& iParam,
 	const ZRef<TouchListener>& iTouchListener)
-	{
-	if (iTouchListener->fActive.empty())
-		return false;
-
-	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
-	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-	if (sContains(iTouchListener->fBounds, localPos))
-		return false;
-
-	return true;
-	}
+	{ return sTouchOut(iTouchListener); }
 
 static
 Cog spCog_TouchOut(const ZRef<TouchListener>& iTouchListener)
@@ -57,16 +34,7 @@ Cog spCog_TouchOut(const ZRef<TouchListener>& iTouchListener)
 static
 Cog spCogFun_TouchUp(const Cog& iSelf, const Param& iParam,
 	const ZRef<TouchListener>& iTouchListener)
-	{
-	if (iTouchListener->fUps.size())
-		{
-		ZRef<Touch> theTouch = *iTouchListener->fUps.begin();
-		const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-		if (sContains(iTouchListener->fBounds, localPos))
-			return true;
-		}
-	return false;
-	}
+	{ return sTouchUp(iTouchListener); }
 
 static
 Cog spCog_TouchUp(const ZRef<TouchListener>& iTouchListener)

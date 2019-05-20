@@ -40,13 +40,57 @@ const Mat& TouchListener::GetMat()
 	return *fMatQ;
 	}
 
-void TouchListener::Munge(const Mat& iMat, const Mat& iInverseMat)
-	{
-	if (fMatQ)
-		*fMatQ = *fMatQ * iMat;
+//void TouchListener::Munge(const Mat& iMat, const Mat& iInverseMat)
+//	{
+//	if (fMatQ)
+//		*fMatQ = *fMatQ * iMat;
+//
+//	if (fInverseMatQ)
+//		*fInverseMatQ = iInverseMat * *fInverseMatQ;
+//	}
 
-	if (fInverseMatQ)
-		*fInverseMatQ = iInverseMat * *fInverseMatQ;
+// =================================================================================================
+#pragma mark -
+
+bool sTouchIn(const ZRef<TouchListener>& iTouchListener)
+	{
+	if (iTouchListener->fActive.empty())
+		return false;
+
+	if (iTouchListener->fUps.size())
+		return false;
+
+	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
+	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
+	if (sContains(iTouchListener->fBounds, localPos))
+		return true;
+
+	return false;
+	}
+
+bool sTouchOut(const ZRef<TouchListener>& iTouchListener)
+	{
+	if (iTouchListener->fActive.empty())
+		return false;
+
+	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
+	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
+	if (sContains(iTouchListener->fBounds, localPos))
+		return false;
+
+	return true;
+	}
+
+bool sTouchUp(const ZRef<TouchListener>& iTouchListener)
+	{
+	if (iTouchListener->fUps.size())
+		{
+		ZRef<Touch> theTouch = *iTouchListener->fUps.begin();
+		const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
+		if (sContains(iTouchListener->fBounds, localPos))
+			return true;
+		}
+	return false;
 	}
 
 } // namespace GameEngine
