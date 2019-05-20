@@ -299,18 +299,34 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
-			sSkip_WSAndCPlusPlusComments(iChanRU);
-
-			if (sTryRead_CP(',', iChanRU))
-				{}
-			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
-				{}
-			else if (iRO.fLooseSeparators.DGet(false))
-				{}
-			else if (iRO.fAllowSemiColons.DGet(false))
-				sThrow_ParseException("Require ',' or ';' to separate object elements");
+			if (iRO.fLooseSeparators.DGet(false))
+				{
+				// We allow zero or more separators
+				for (;;)
+					{
+					sSkip_WSAndCPlusPlusComments(iChanRU);
+					if (sTryRead_CP(',', iChanRU))
+						{}
+					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
+						{}
+					else
+						break;
+					}
+				}
 			else
-				sThrow_ParseException("Require ',' to separate object elements");
+				{
+				sSkip_WSAndCPlusPlusComments(iChanRU);
+				if (sTryRead_CP(',', iChanRU))
+					{}
+				else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
+					{}
+				else if (iRO.fLooseSeparators.DGet(false))
+					{}
+				else if (iRO.fAllowSemiColons.DGet(false))
+					sThrow_ParseException("Require ',' or ';' to separate object elements");
+				else
+					sThrow_ParseException("Require ',' to separate object elements");
+				}
 			}
 		}
 	else if (sTryRead_CP('"', iChanRU))
