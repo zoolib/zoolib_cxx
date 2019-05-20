@@ -20,100 +20,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/POSIX/FILE_Channer.h"
 
-#include "zoolib/ZCONFIG_SPI.h" // For ZCONFIG_SPI_Enabled(BSD)
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(BSD) || (defined(__ANDROID__) && defined(__USE_BSD))
+	#define ZMACRO_Use_funopen 1
+#endif
+
+#ifndef ZMACRO_Use_funopen
+	#define ZMACRO_Use_funopen 0
+#endif
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark - FILE backed by a Channer
 
-#if defined(__USE_GNU)
+#if 0
 
-static ssize_t spReadR(void* iCookie, char* oDest, size_t iCount)
-	{ return sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
-
-static ssize_t spReadRPos(void* iCookie, char* oDest, size_t iCount)
-	{ return sReadMem(*static_cast<ChannerRPos_Bin*>(iCookie), oDest, iCount); }
-
-static ssize_t spWrite(void* iCookie, const char* iSource, size_t iCount)
-	{ return sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
-
-static int spSeek(void* iCookie, _IO_off64_t *ioPos, int iWhence)
-	{
-	ChannerRPos_Bin* theChannerRPos = static_cast<ChannerRPos_Bin*>(iCookie);
-	switch (iWhence)
-		{
-		case SEEK_SET:
-			{
-			sPosSet(*theChannerRPos, *ioPos);
-			return 0;
-			}
-		case SEEK_CUR:
-			{
-			*ioPos += sPos(*theChannerRPos);
-			sPosSet(*theChannerRPos, *ioPos);
-			return 0;
-			}
-		case SEEK_END:
-			{
-			*ioPos += sSize(*theChannerRPos);
-			sPosSet(*theChannerRPos, *ioPos);
-			return 0;
-			}
-		}
-	ZUnimplemented();
-	return -1;
-	}
-
-static int spCloseR(void* iCookie)
-	{
-	static_cast<ChannerR_Bin*>(iCookie)->Release();
-	return 0;
-	}
-
-static int spCloseRPos(void* iCookie)
-	{
-	static_cast<ChannerRPos_Bin*>(iCookie)->Release();
-	return 0;
-	}
-
-static int spCloseW(void* iCookie)
-	{
-	static_cast<ChannerW_Bin*>(iCookie)->Release();
-	return 0;
-	}
-
-FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
-	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadR;
-	theFunctions.write = nullptr;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseR;
-	return ::fopencookie(iChannerR.Get(), "", theFunctions);
-	}
-
-FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
-	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadRPos;
-	theFunctions.write = nullptr;
-	theFunctions.seek = spSeek;
-	theFunctions.close = spCloseRPos;
-	return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
-	}
-
-FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
-	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = nullptr;
-	theFunctions.write = spWrite;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseW;
-	return ::fopencookie(iChannerW.Get(), "", theFunctions);
-	}
-
-#elif ZCONFIG_SPI_Enabled(BSD)
+#elif ZMACRO_Use_funopen
 
 static int spReadR(void* iCookie, char* oDest, int iCount)
 	{ return sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
@@ -197,6 +121,92 @@ FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
 		return ::funopen(iChannerW.Get(), nullptr, spWrite, nullptr, spCloseW);
 		}
 	return nullptr;
+	}
+
+#elif defined(__USE_GNU)
+
+static ssize_t spReadR(void* iCookie, char* oDest, size_t iCount)
+	{ return sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
+
+static ssize_t spReadRPos(void* iCookie, char* oDest, size_t iCount)
+	{ return sReadMem(*static_cast<ChannerRPos_Bin*>(iCookie), oDest, iCount); }
+
+static ssize_t spWrite(void* iCookie, const char* iSource, size_t iCount)
+	{ return sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
+
+static int spSeek(void* iCookie, _IO_off64_t *ioPos, int iWhence)
+	{
+	ChannerRPos_Bin* theChannerRPos = static_cast<ChannerRPos_Bin*>(iCookie);
+	switch (iWhence)
+		{
+		case SEEK_SET:
+			{
+			sPosSet(*theChannerRPos, *ioPos);
+			return 0;
+			}
+		case SEEK_CUR:
+			{
+			*ioPos += sPos(*theChannerRPos);
+			sPosSet(*theChannerRPos, *ioPos);
+			return 0;
+			}
+		case SEEK_END:
+			{
+			*ioPos += sSize(*theChannerRPos);
+			sPosSet(*theChannerRPos, *ioPos);
+			return 0;
+			}
+		}
+	ZUnimplemented();
+	return -1;
+	}
+
+static int spCloseR(void* iCookie)
+	{
+	static_cast<ChannerR_Bin*>(iCookie)->Release();
+	return 0;
+	}
+
+static int spCloseRPos(void* iCookie)
+	{
+	static_cast<ChannerRPos_Bin*>(iCookie)->Release();
+	return 0;
+	}
+
+static int spCloseW(void* iCookie)
+	{
+	static_cast<ChannerW_Bin*>(iCookie)->Release();
+	return 0;
+	}
+
+FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
+	{
+	_IO_cookie_io_functions_t theFunctions;
+	theFunctions.read = spReadR;
+	theFunctions.write = nullptr;
+	theFunctions.seek = nullptr;
+	theFunctions.close = spCloseR;
+	return ::fopencookie(iChannerR.Get(), "", theFunctions);
+	}
+
+FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
+	{
+	_IO_cookie_io_functions_t theFunctions;
+	theFunctions.read = spReadRPos;
+	theFunctions.write = nullptr;
+	theFunctions.seek = spSeek;
+	theFunctions.close = spCloseRPos;
+	return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
+	}
+
+FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
+	{
+	_IO_cookie_io_functions_t theFunctions;
+	theFunctions.read = nullptr;
+	theFunctions.write = spWrite;
+	theFunctions.seek = nullptr;
+	theFunctions.close = spCloseW;
+	return ::fopencookie(iChannerW.Get(), "", theFunctions);
 	}
 
 #else
