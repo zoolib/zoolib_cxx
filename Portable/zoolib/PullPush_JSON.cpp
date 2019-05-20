@@ -49,7 +49,8 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 
-static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW)
+static bool spPull_JSON_Other_Push(
+	const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW, bool iLooseNumbers)
 	{
 	int64 asInt64;
 	double asDouble;
@@ -57,10 +58,19 @@ static bool spPull_JSON_Other_Push(const ChanRU_UTF& iChanRU, const ChanW_PPT& i
 
 	if (Util_Chan::sTryRead_SignedGenericNumber(iChanRU, asInt64, asDouble, isDouble))
 		{
-		if (isDouble)
-			sPush(asDouble, iChanW);
-		else
+		if (not isDouble)
+			{
 			sPush(asInt64, iChanW);
+			}
+		else if (iLooseNumbers && asInt64 == -1
+			&& (sTryRead_CP('l', iChanRU) || sTryRead_CP('L', iChanRU)))
+			{
+			sPush(asInt64, iChanW);
+			}
+		else
+			{
+			sPush(asDouble, iChanW);
+			}
 		return true;
 		}
 
@@ -357,7 +367,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		}
 	else
 		{
-		return spPull_JSON_Other_Push(iChanRU, iChanW);
+		return spPull_JSON_Other_Push(iChanRU, iChanW, iRO.fAllowBinary.Get());
 		}
 	}
 
@@ -405,11 +415,11 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else
 				{
-				int localIndent = sIsStartSeq(*theNotQ) ? iIndent + 1 : iIndent;
-				if (iOptions.fUseExtendedNotation.DGet(false))
+				size_t localIndent = sIsStartSeq(*theNotQ) ? iIndent + 1 : iIndent;
+				if (iOptions.fUseExtendedNotationQ.DGet(false))
 					{
 					sWriteLFIndent(localIndent, iOptions, iChanW);
-					if (iOptions.fNumberSequences.DGet(false))
+					if (iOptions.fNumberSequencesQ.DGet(false))
 						iChanW << "/*" << count << "*/";
 					spPull_PPT_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
 					iChanW << ";";
@@ -438,7 +448,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				{
 				break;
 				}
-			else if (iOptions.fUseExtendedNotation.DGet(false))
+			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
@@ -471,7 +481,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 		needsIndentation = true;
 		}
 
-	const bool useSingleQuotes = iOptions.fPreferSingleQuotes.DGet(false);
+	const bool useSingleQuotes = iOptions.fPreferSingleQuotesQ.DGet(false);
 
 	if (needsIndentation)
 		{
@@ -493,7 +503,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				{
 				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
-			else if (iOptions.fUseExtendedNotation.DGet(false))
+			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
 				sWriteLFIndent(iIndent, iOptions, iChanW);
 				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
@@ -528,7 +538,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				{
 				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
-			else if (iOptions.fUseExtendedNotation.DGet(false))
+			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";

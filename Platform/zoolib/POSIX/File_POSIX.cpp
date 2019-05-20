@@ -109,41 +109,6 @@ protected:
 // =================================================================================================
 #pragma mark - Shared implementation details
 
-static File::Error spTranslateError(int iNativeError)
-	{
-	File::Error theErr = File::errorGeneric;
-	switch (iNativeError)
-		{
-		case 0:
-			// We shouldn't call this if there's no error
-			ZUnimplemented();
-			break;
-		case EEXIST:
-			theErr = File::errorAlreadyExists;
-			break;
-		case ENAMETOOLONG:
-			theErr = File::errorIllegalFileName;
-			break;
-		case EAGAIN:
-		case EACCES:
-			theErr = File::errorNoPermission;
-			break;
-		case ENOENT:
-			theErr = File::errorDoesntExist;
-			break;
-		case ENOTDIR:
-			theErr = File::errorWrongTypeForOperation;
-			break;
-		case EISDIR:
-			theErr = File::errorWrongTypeForOperation;
-			break;
-		case EPERM:
-			theErr = File::errorNoPermission;
-			break;
-		}
-	return theErr;
-	}
-
 static int spFCntl(int iFD, int iCmd, struct flock& ioFLock)
 	{
 	for (;;)

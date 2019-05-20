@@ -96,6 +96,9 @@ bool sCoerceBool(CFTypeRef iCF)
 	return false;
 	}
 
+bool sCoerceBool(const ZRef<CFTypeRef>& iCF)
+	{ return sCoerceBool(iCF.Get()); }
+
 ZQ<__int64> sQCoerceInt(CFTypeRef iCF)
 	{
 	if (iCF && ::CFGetTypeID(iCF) == ::CFNumberGetTypeID())
@@ -131,6 +134,9 @@ __int64 sCoerceInt(CFTypeRef iCF)
 	return 0;
 	}
 
+__int64 sCoerceInt(const ZRef<CFTypeRef>& iCF)
+	{ return sCoerceInt(iCF.Get()); }
+
 ZQ<double> sQCoerceRat(CFTypeRef iCF)
 	{
 	if (CFNumberRef theNumberRef = sStaticCastIf<CFNumberRef>(::CFNumberGetTypeID(), iCF))
@@ -165,6 +171,9 @@ double sCoerceRat(CFTypeRef iCF)
 		return *qq;
 	return 0.0;
 	}
+
+double sCoerceRat(const ZRef<CFTypeRef>& iCF)
+	{ return sCoerceRat(iCF.Get()); }
 
 } // namespace ZooLib
 

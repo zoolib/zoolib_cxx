@@ -184,10 +184,10 @@ PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions& iOther)
 
 PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions_JSON& iOther)
 :	PushTextOptions(iOther)
-,	fUseExtendedNotation(iOther.fUseExtendedNotation)
-,	fBinaryAsBase64(iOther.fBinaryAsBase64)
-,	fPreferSingleQuotes(iOther.fPreferSingleQuotes)
-,	fNumberSequences(iOther.fNumberSequences)
+,	fUseExtendedNotationQ(iOther.fUseExtendedNotationQ)
+,	fBinaryAsBase64Q(iOther.fBinaryAsBase64Q)
+,	fPreferSingleQuotesQ(iOther.fPreferSingleQuotesQ)
+,	fNumberSequencesQ(iOther.fNumberSequencesQ)
 	{}
 
 // =================================================================================================
@@ -291,7 +291,7 @@ void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, co
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		if (iOptions.fUseExtendedNotation.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
+		if (iOptions.fUseExtendedNotationQ.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
 			sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
 		else
 			w << *theQ;
@@ -338,7 +338,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		chunkSize = sRawChunkSize(iOptions);
 		}
 
-	if (iOptions.fBinaryAsBase64.DGet(false))
+	if (iOptions.fBinaryAsBase64Q.DGet(false))
 		{
 		w << "<";
 		w << "=";
