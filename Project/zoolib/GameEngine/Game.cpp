@@ -247,9 +247,8 @@ void Game::pUpdateTouches()
 		{
 		sInsertMust(fTouchesActive, theTouch);
 
-		// Find any listeners that care about this touch, ordered near to far,
-		// so we walk the list backwards.
-		// We'll want to take account of Z-axis at some point.
+		// Find any listeners that care about this touch. They've been ordered
+		// near to far by spSortTLs.
 		set<ZRef<TouchListener> > interested;
 		ZRef<TouchListener> exclusive;
 
