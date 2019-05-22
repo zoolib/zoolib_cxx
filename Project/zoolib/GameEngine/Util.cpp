@@ -213,14 +213,25 @@ Map_Any sReadTextData(const FileSpec& iFS)
 		const string theName = iter.CurrentName();
 		if (false)
 			{}
-		else if (ZQ<string8,false> theQ = sQWithoutSuffix(".txt", theName))
+		else if (iFS.Name().empty() || ispunct(iFS.Name().at(0)))
 			{}
-		else if (ZRef<ChannerR_Bin> channerR = iter.Current().OpenR())
+		else
 			{
-			// To handle multiple maps in a single file, sQReadMap_Any needs to be
-			// refactored so we use the *same* buffer between invocations
-			if (ZQ<Map_Any> theQ = sQReadMap_Any(*channerR, theName))
-				theMap = sAugmented(theMap, *theQ);
+			ZQ<string8> theQ = sQWithoutSuffix(".txt", theName);
+
+			if (not theQ)
+				theQ = sQWithoutSuffix(".vals", theName);
+
+			if (theQ)
+				{
+				if (ZRef<ChannerR_Bin> channerR = iter.Current().OpenR())
+					{
+					// To handle multiple maps in a single file, sQReadMap_Any needs to be
+					// refactored so we use the *same* buffer between invocations
+					if (ZQ<Map_Any> theQ = sQReadMap_Any(*channerR, theName))
+						theMap = sAugmented(theMap, *theQ);
+					}
+				}
 			}
 		}
 	return theMap;
