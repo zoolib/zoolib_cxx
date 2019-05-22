@@ -54,7 +54,7 @@ using GameEngine::CVec3;
 		if (erasing)
 			sEraseMust(ioTouchMap, theUITouch);
 
-		const GPoint locationInView = sPoint<GPoint>([theUITouch locationInView:self]);
+		const GPoint locationInView = sPoint<GPoint>([theUITouch locationInView:self]) * self.contentScaleFactor;
 		const GPoint pixelSize = sPoint<GPoint>(fBackingWidth, fBackingHeight);
 		theTouch->fPos = sHomogenous(GameEngine::sPixelToGame(pixelSize, iGameSize, locationInView));
 		}
@@ -64,6 +64,10 @@ using GameEngine::CVec3;
 -(id)initWithFrame:(CGRect)frame
 	{
 	[super initWithFrame:frame];
+
+	// Opt in to the physical scaling on retina screens.
+	self.contentScaleFactor = [[UIScreen mainScreen] scale];
+
 	[self setMultipleTouchEnabled:YES];
 
 	[self initGLES];
