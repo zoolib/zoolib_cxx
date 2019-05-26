@@ -536,14 +536,16 @@ sLength(const Point_p& iPoint)
 #pragma mark - sIsEmpty
 
 template <class Rect_p>
-bool sIsEmpty(const Rect_p& iRect)
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+sIsEmpty(const Rect_p& iRect)
 	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
 
 // =================================================================================================
 #pragma mark - sNotEmpty
 
 template <class Rect_p>
-bool sNotEmpty(const Rect_p& iRect)
+typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+sNotEmpty(const Rect_p& iRect)
 	{ return not sIsEmpty(iRect); }
 
 // =================================================================================================
