@@ -53,13 +53,13 @@ Standard2Gray_t sStandard2Gray[] =
 
 #if ZCONFIG(Endian, Big)
 
-	{ EFormatStandard::GA_16, 0xFF00, 0x00FF, 16, true },
-	{ EFormatStandard::AG_16, 0x00FF, 0xFF00, 16, true }
+	{ EFormatStandard::LA_16, 0xFF00, 0x00FF, 16, true },
+	{ EFormatStandard::AL_16, 0x00FF, 0xFF00, 16, true }
 
 #else
 
-	{ EFormatStandard::GA_16, 0x00FF, 0xFF00, 16, false },
-	{ EFormatStandard::AG_16, 0xFF00, 0x00FF, 16, false }
+	{ EFormatStandard::LA_16, 0x00FF, 0xFF00, 16, false },
+	{ EFormatStandard::AL_16, 0xFF00, 0x00FF, 16, false }
 
 #endif
 	};

@@ -65,8 +65,8 @@ enum class EFormatStandard
 	Alpha_1,
 	Alpha_8,
 
-	GA_16,
-	AG_16,
+	LA_16,
+	AL_16,
 
 	xRGB_16_BE,
 	ARGB_16_BE,
