@@ -1,16 +1,26 @@
 #if defined(__ANDROID__)
 
+#include "zoolib/Log.h"
 #include "zoolib/Time.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Debug.h"
 #include "zoolib/Util_STL_map.h"
 
+#include "zoolib/GameEngine/DebugFlags.h"
 #include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/Game_Render.h"
 #include "zoolib/GameEngine/Types.h"
 #include "zoolib/GameEngine/Util.h"
 
 #include "zoolib/JNI/JNI.h"
+
+#include "zoolib/Zip/File_Zip.h"
+
+using std::map;
+using std::vector;
+
+using namespace ZooLib;
+using namespace GameEngine;
 
 // =================================================================================================
 // MARK: -
@@ -50,14 +60,6 @@ typedef map<int64,ZRef<Touch> > TouchMap;
 
 static jclass spClass_Activity;
 
-static bool spCreateContext(jint majorVersion, jint minorVersion)
-	{
-	JNIEnv* env = JNI::Env::sGet();
-	jmethodID mid = env->GetStaticMethodID(spClass_Activity, "createGLContext", "(II)Z");
-
-	return env->CallStaticBooleanMethod(spClass_Activity, mid, majorVersion, minorVersion);
-	}
-
 static void spSwapWindow()
 	{
 	JNIEnv* env = JNI::Env::sGet();
@@ -75,7 +77,6 @@ static void spSetTitle(const char *title)
 	}
 
 // =================================================================================================
-// MARK: - Library load and unload
 
 extern "C"
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -92,20 +93,14 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 	{}
 
 // =================================================================================================
-// MARK: - SDLActivity native methods
 
-bool spKeepRunning = true;
-
-void sRun(const string8& iAPK);
+static ZRef<GameEngine::Game> spGame;
 
 extern "C"
-void Java_org_zoolib_SDLActivity_sRun
+void Java_org_zoolib_SDLActivity_sInit
 	(JNIEnv* env, jclass cls,
 	jstring iAPK)
-	{
-	spKeepRunning = true;
-	JNI::Env theEnv(env);
-
+    {
 	spClass_Activity = (jclass)env->NewGlobalRef(cls);
 
 	string8 theString;
@@ -116,15 +111,114 @@ void Java_org_zoolib_SDLActivity_sRun
 		env->ReleaseStringChars(iAPK, theJString);
 		}
 
-	spCreateContext(2, 0);
+    FileSpec resourceFS = sFileSpec_Zip(theString).Child("assets");
+    spGame = GameEngine::sMakeGame(resourceFS, false);
+    }
 
-	sRun(theString);
+// =================================================================================================
 
-//	exit(0);
+static void spUpdateTouches(
+	const GPoint& iPixelSize, const GPoint& iGameSize,
+	TouchMap& ioAll,
+	TouchSet& ioDown,
+	TouchSet& ioMove,
+	TouchSet& ioUp)
+	{
+	using namespace Util_STL;
+
+	ZAcqMtx acq(sMtx);
+	foreachv (const TouchInfo& theTI, sTouches)
+		{
+		ZRef<Touch> theTouch;
+		if (ZQ<ZRef<Touch> > theQ = sQGet(ioAll, theTI.fPointerId))
+			{
+			theTouch = *theQ;
+			}
+		else
+			{
+			theTouch = new Touch;
+			theTouch->fFingerID = theTI.fPointerId;
+			sInsertMust(ioAll, theTI.fPointerId, theTouch);
+			}
+
+		theTouch->fPos = sHomogenous(GameEngine::sPixelToGame(
+			iPixelSize, iGameSize, sGPoint(theTI.fX, theTI.fY)));
+
+        enum
+            {
+            ACTION_DOWN = 0,
+            ACTION_UP = 1,
+            ACTION_MOVE = 2,
+            ACTION_CANCEL = 3,
+            ACTION_OUTSIDE = 4,
+            ACTION_POINTER_DOWN = 5,
+            ACTION_POINTER_UP = 6,
+            };
+
+        switch (theTI.fAction)
+        	{
+            case ACTION_DOWN:
+            case ACTION_POINTER_DOWN:
+            	{
+				sInsertMust(ioDown, theTouch);
+				break;
+				}
+            case ACTION_UP:
+            case ACTION_POINTER_UP:
+            case ACTION_CANCEL:
+            	{
+            	sInsertMust(ioUp, theTouch);
+				sEraseMust(ioAll, theTI.fPointerId);
+				break;
+				}
+            case ACTION_MOVE:
+            case ACTION_OUTSIDE:
+            	{
+            	// The same touch may well have multiple moves reported, so we don't sInsertMust here.
+            	sQInsert(ioMove, theTouch);
+				break;
+				}
+			}
+		}
+	sTouches.clear();
+	}
+
+static TouchMap spTouchesAll;
+
+bool spKeepRunning = true;
+
+extern "C"
+void Java_org_zoolib_SDLActivity_sRunLoop
+	(JNIEnv* env, jclass cls)
+	{
+	spKeepRunning = true;
+	JNI::Env theEnv(env);
+
+ 	for (;;)
+ 		{
+        const GPoint backingSize = spWinSize;
+
+        const double loopStart = Time::sSystem();
+
+        spGame->Draw(loopStart, backingSize, spCallable_SwapWindow);
+
+        TouchSet theTouchesDown;
+        TouchSet theTouchesMove;
+        TouchSet theTouchesUp;
+
+        spUpdateTouches(backingSize, spGame->GetGameSize(),
+            spTouchesAll,
+            theTouchesDown, theTouchesMove, theTouchesUp);
+
+        spGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
+
+        if (not spKeepRunning)
+            break;
+ 		}
 	}
 
 extern "C"
-void Java_org_zoolib_SDLActivity_sQuit
+void Java_org_zoolib_SDLActivity_sQuitLoop
 	(JNIEnv* env, jclass cls)
 	{
 	ZLOGTRACE(eDebug);
@@ -203,97 +297,6 @@ void Java_org_zoolib_SDLActivity_sOnAccel
 	jfloat x, jfloat y, jfloat z)
 	{
 	JNI::Env theEnv(env);
-	}
-
-// =================================================================================================
-
-static void spUpdateTouches(
-	const GPoint& iPixelSize, const GPoint& iGameSize,
-	TouchMap& ioAll,
-	TouchSet& ioDown,
-	TouchSet& ioMove,
-	TouchSet& ioUp)
-	{
-	using namespace Util_STL;
-
-	ZAcqMtx acq(sMtx);
-	foreachv (const TouchInfo& theTI, sTouches)
-		{
-		ZRef<Touch> theTouch;
-		if (ZQ<ZRef<Touch> > theQ = sQGet(ioAll, theTI.fPointerId))
-			{
-			theTouch = *theQ;
-			}
-		else
-			{
-			theTouch = new Touch;
-			theTouch->fFingerID = theTI.fPointerId;
-			sInsertMust(ioAll, theTI.fPointerId, theTouch);
-			}
-
-		theTouch->fPos = sHomogenous(GameEngine::sPixelToGame(
-			iPixelSize, iGameSize, sGPoint(theTI.fX, theTI.fY)));
-
-        enum
-            {
-            ACTION_DOWN = 0,
-            ACTION_UP = 1,
-            ACTION_MOVE = 2,
-            ACTION_CANCEL = 3,
-            ACTION_OUTSIDE = 4,
-            ACTION_POINTER_DOWN = 5,
-            ACTION_POINTER_UP = 6,
-            };
-
-        switch (theTI.fAction)
-        	{
-            case ACTION_DOWN:
-            case ACTION_POINTER_DOWN:
-            	{
-				sInsertMust(ioDown, theTouch);
-				break;
-				}
-            case ACTION_UP:
-            case ACTION_POINTER_UP:
-            case ACTION_CANCEL:
-            	{
-            	sInsertMust(ioUp, theTouch);
-				sEraseMust(ioAll, theTI.fPointerId);
-				break;
-				}
-            case ACTION_MOVE:
-            case ACTION_OUTSIDE:
-            	{
-            	// The same touch may well have multiple moves reported, so we don't sInsertMust here.
-            	sQInsert(ioMove, theTouch);
-				break;
-				}
-			}
-		}
-	sTouches.clear();
-	}
-
-static TouchMap spTouchesAll;
-
-bool ZooLib_RunOnce(const ZRef<Game>& iGame)
-	{
-	const GPoint backingSize = spWinSize;
-
-	const double loopStart = Time::sSystem();
-
-	iGame->Draw(loopStart, backingSize, spCallable_SwapWindow);
-
-	TouchSet theTouchesDown;
-	TouchSet theTouchesMove;
-	TouchSet theTouchesUp;
-
-	spUpdateTouches(backingSize, iGame->GetGameSize(),
-		spTouchesAll,
-		theTouchesDown, theTouchesMove, theTouchesUp);
-
-	iGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
-
-	return spKeepRunning;
 	}
 
 #endif // defined(__ANDROID__)

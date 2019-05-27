@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -81,6 +77,9 @@ extends Activity
 		setContentView(spSurface);
 		SurfaceHolder holder = spSurface.getHolder();
 		holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+
+		String theString = this.getApplicationInfo().sourceDir;
+		sInit(theString);
 		}
 
 	public void onWindowFocusChanged(boolean hasFocus)
@@ -126,12 +125,6 @@ extends Activity
 		commandHandler.sendMessage(msg);
 		}
 
-	// Java functions called from C
-	public static boolean createGLContext(int majorVersion, int minorVersion)
-		{
-		return spSurface.initEGL(majorVersion, minorVersion);
-		}
-
 	public static void flipBuffers()
 		{
 		spSurface.flipEGL();
@@ -143,8 +136,11 @@ extends Activity
 		spSingleton.sendCommand(COMMAND_CHANGE_TITLE, title);
 		}
 
-	public static native void sRun(String iAPK);
-	public static native void sQuit();
+	public static native void sInit(String iAPK);
+
+	public static native void sRunLoop();
+	public static native void sQuitLoop();
+
 	public static native void sOnPause();
 	public static native void sOnResume();
 	public static native void sOnResize(int x, int y, int format);
@@ -156,48 +152,23 @@ extends Activity
 	} // class SDLActivity
 
 // =================================================================================================
-
-class SDLMain implements Runnable
-	{
-	final String fAPKPath;
-	final EGLContext fContext;
-
-	SDLMain(String iAPKPath, EGLContext iContext)
-		{
-		fAPKPath = iAPKPath;
-		fContext = iContext;
-		}
-
-	public void run()
-		{
-		SDLActivity.sRun(fAPKPath);
-		}
-	}
-
-// =================================================================================================
-
 //	SDLSurface. This is what we draw on, so we need to know when it's created
 //	in order to do anything useful. 
 //	Because of this, that's where we set up the SDL thread
 
 class SDLSurface
 extends SurfaceView
-implements SurfaceHolder.Callback
-,	View.OnKeyListener
-,	View.OnTouchListener
-,	SensorEventListener
+implements SurfaceHolder.Callback, Runnable, View.OnKeyListener, View.OnTouchListener
 	{
 	// This is what SDL runs in. It invokes SDL_main(), eventually
 	private Thread mSDLThread;
 	
 	// EGL private objects
 	Context fContext;
-	private EGLContext mEGLContext;
-	private EGLSurface mEGLSurface;
 	private EGLDisplay mEGLDisplay;
-
-	// Sensors
-	private static SensorManager mSensorManager;
+	private EGLContext mEGLContext;
+	EGLConfig mFuckingConfig;
+	private EGLSurface mEGLSurface;
 
 	// Startup
 	public SDLSurface(Context context)
@@ -212,7 +183,28 @@ implements SurfaceHolder.Callback
 		setOnKeyListener(this); 
 		setOnTouchListener(this); 
 
-		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+		EGL10 egl = (EGL10)EGLContext.getEGL();
+
+		mEGLDisplay = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
+
+		egl.eglInitialize(mEGLDisplay, new int[2]);
+
+		int[] configSpec =
+			{
+			EGL10.EGL_NONE
+			};
+
+		EGLConfig[] configs = new EGLConfig[1];
+		int[] num_config = new int[1];
+		boolean bChoose = egl.eglChooseConfig(mEGLDisplay, configSpec, configs, 1, num_config);
+
+		boolean bConfig0 = num_config[0] == 0;
+
+		mFuckingConfig = configs[0];
+
+		int[] attrib_list = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
+
+		mEGLContext = egl.eglCreateContext(mEGLDisplay, mFuckingConfig, EGL10.EGL_NO_CONTEXT, attrib_list);
 		}
 
 	// Called when we have a valid drawing surface
@@ -220,16 +212,17 @@ implements SurfaceHolder.Callback
 		{
 		Log.v("SDL", "surfaceCreated()");
 
-		enableSensor(Sensor.TYPE_ACCELEROMETER, true);
+		this.updateEGL();
 		}
 
 	// Called when we lose the surface
 	public void surfaceDestroyed(SurfaceHolder holder)
 		{
 		Log.v("SDL", "surfaceDestroyed()");
+		mEGLSurface = null;
 
 		// Send a quit message to the application
-		SDLActivity.sQuit();
+		SDLActivity.sQuitLoop();
 
 		// Now wait for the SDL thread to quit
 		if (mSDLThread != null)
@@ -246,8 +239,6 @@ implements SurfaceHolder.Callback
 
 			Log.v("SDL", "Finished waiting for SDL thread");
 			}
-
-		enableSensor(Sensor.TYPE_ACCELEROMETER, false);
 		}
 
 	// Called when the surface is resized
@@ -304,20 +295,20 @@ implements SurfaceHolder.Callback
 		// Now start up the C app thread
 		if (mSDLThread == null)
 			{
-			String theString = null;
-			try
-				{
-				theString = fContext.getApplicationInfo().sourceDir;
-//				ApplicationInfo appInfo = fContext.getApplicationInfo();
-//				theString = appInfo.sourceDir;
-				}
-			catch (Exception e)
-				{
-				Log.v("SDL", "caught exception " + e);
-				}
-			mSDLThread = new Thread(new SDLMain(theString, mEGLContext), "SDLThread");
+			mSDLThread = new Thread(this, "SDLRenderThread");
 			mSDLThread.start(); 
 			}
+		}
+
+	public void run()
+		{
+		EGL10 egl = (EGL10)EGLContext.getEGL();
+		if (!egl.eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext))
+			{
+			Log.e("SDL", "Couldn't make context current");
+			}
+
+		SDLActivity.sRunLoop();
 		}
 
 	// unused
@@ -326,101 +317,18 @@ implements SurfaceHolder.Callback
 
 
 	// EGL functions
-	public boolean initEGL(int majorVersion, int minorVersion)
+	public void updateEGL()
 		{
 		EGL10 egl = (EGL10)EGLContext.getEGL();
 
-		if (mEGLContext != null)
-		{
-			if (!egl.eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext))
-				{
-				Log.e("SDL", "Couldn't make context current");
-				return false;
-				}
-			return true;
-		}
-
-		Log.v("SDL", "Starting up OpenGL ES " + majorVersion + "." + minorVersion);
-
-		try
+		EGLSurface surface = egl.eglCreateWindowSurface(mEGLDisplay, mFuckingConfig , this, null);
+		if (surface == EGL10.EGL_NO_SURFACE)
 			{
-
-			EGLDisplay dpy = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
-			if (dpy == null)
-				Log.v("SDL", "dpy == null");
-
-			int[] version = new int[2];
-			egl.eglInitialize(dpy, version);
-
-			int EGL_OPENGL_ES_BIT = 1;
-			int EGL_OPENGL_ES2_BIT = 4;
-			int renderableType = 0;
-			if (majorVersion == 2)
-				{
-				Log.v("SDL", "majorVersion == 2");
-				renderableType = EGL_OPENGL_ES2_BIT;
-				}
-			else if (majorVersion == 1)
-				{
-				Log.v("SDL", "majorVersion == 1");
-				renderableType = EGL_OPENGL_ES_BIT;
-				}
-
-			int[] configSpec =
-				{
-				EGL10.EGL_NONE
-				};
-
-			EGLConfig[] configs = new EGLConfig[1];
-			int[] num_config = new int[1];
-			if (!egl.eglChooseConfig(dpy, configSpec, configs, 1, num_config))
-				{
-				Log.e("SDL", "eglChooseConfig failed");
-				return false;
-				}
-
-			if (num_config[0] == 0)
-				{
-				Log.e("SDL", "num_config[0] == 0");
-				return false;
-				}
-			EGLConfig config = configs[0];
-
-			int[] attrib_list = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
-			EGLContext ctx = egl.eglCreateContext(dpy, config, EGL10.EGL_NO_CONTEXT, attrib_list);
-			if (ctx == EGL10.EGL_NO_CONTEXT)
-				{
-				Log.e("SDL", "Couldn't create context");
-				return false;
-				}
-
-			EGLSurface surface = egl.eglCreateWindowSurface(dpy, config, this, null);
-			if (surface == EGL10.EGL_NO_SURFACE)
-				{
-				Log.e("SDL", "Couldn't create surface");
-				return false;
-				}
-
-			if (!egl.eglMakeCurrent(dpy, surface, surface, ctx))
-				{
-				Log.e("SDL", "Couldn't make context current");
-				return false;
-				}
-
-			mEGLContext = ctx;
-			mEGLDisplay = dpy;
-			mEGLSurface = surface;
-			}
-		catch (Exception e)
-			{
-			Log.v("SDL", e + "");
-			for (StackTraceElement s : e.getStackTrace())
-				{
-				Log.v("SDL", s.toString());
-				}
+			Log.e("SDL", "Couldn't create surface");
+			return;
 			}
 
-		return true;
+		mEGLSurface = surface;
 		}
 
 	// EGL buffer flip
@@ -506,38 +414,4 @@ implements SurfaceHolder.Callback
 	        }
 		return true;
 		}
-
-	// Sensor events
-	public void enableSensor(int sensortype, boolean enabled)
-		{
-		// TODO: This uses getDefaultSensor - what if we have >1 accels?
-		if (enabled)
-			{
-			mSensorManager.registerListener(this, 
-							mSensorManager.getDefaultSensor(sensortype), 
-							SensorManager.SENSOR_DELAY_GAME, null);
-			}
-		else
-			{
-			mSensorManager.unregisterListener(this, 
-							mSensorManager.getDefaultSensor(sensortype));
-			}
-		}
-	
-	public void onAccuracyChanged(Sensor sensor, int accuracy)
-		{
-		// TODO
-		}
-
-	public void onSensorChanged(SensorEvent event)
-		{
-		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-			{
-			SDLActivity.sOnAccel
-				(event.values[0],
-				event.values[1],
-				event.values[2]);
-			}
-		}
-
 	} // class SDLSurface
