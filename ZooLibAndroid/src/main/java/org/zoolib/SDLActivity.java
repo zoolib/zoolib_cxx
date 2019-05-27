@@ -160,10 +160,12 @@ extends Activity
 class SDLMain implements Runnable
 	{
 	final String fAPKPath;
+	final EGLContext fContext;
 
-	SDLMain(String iAPKPath)
+	SDLMain(String iAPKPath, EGLContext iContext)
 		{
 		fAPKPath = iAPKPath;
+		fContext = iContext;
 		}
 
 	public void run()
@@ -216,7 +218,7 @@ implements SurfaceHolder.Callback
 	// Called when we have a valid drawing surface
 	public void surfaceCreated(SurfaceHolder holder)
 		{
-		//Log.v("SDL", "surfaceCreated()");
+		Log.v("SDL", "surfaceCreated()");
 
 		enableSensor(Sensor.TYPE_ACCELEROMETER, true);
 		}
@@ -224,7 +226,7 @@ implements SurfaceHolder.Callback
 	// Called when we lose the surface
 	public void surfaceDestroyed(SurfaceHolder holder)
 		{
-		//Log.v("SDL", "surfaceDestroyed()");
+		Log.v("SDL", "surfaceDestroyed()");
 
 		// Send a quit message to the application
 		SDLActivity.sQuit();
@@ -242,7 +244,7 @@ implements SurfaceHolder.Callback
 				}
 			mSDLThread = null;
 
-			//Log.v("SDL", "Finished waiting for SDL thread");
+			Log.v("SDL", "Finished waiting for SDL thread");
 			}
 
 		enableSensor(Sensor.TYPE_ACCELEROMETER, false);
@@ -313,7 +315,7 @@ implements SurfaceHolder.Callback
 				{
 				Log.v("SDL", "caught exception " + e);
 				}
-			mSDLThread = new Thread(new SDLMain(theString), "SDLThread"); 
+			mSDLThread = new Thread(new SDLMain(theString, mEGLContext), "SDLThread");
 			mSDLThread.start(); 
 			}
 		}
@@ -326,11 +328,22 @@ implements SurfaceHolder.Callback
 	// EGL functions
 	public boolean initEGL(int majorVersion, int minorVersion)
 		{
+		EGL10 egl = (EGL10)EGLContext.getEGL();
+
+		if (mEGLContext != null)
+		{
+			if (!egl.eglMakeCurrent(mEGLDisplay, mEGLSurface, mEGLSurface, mEGLContext))
+				{
+				Log.e("SDL", "Couldn't make context current");
+				return false;
+				}
+			return true;
+		}
+
 		Log.v("SDL", "Starting up OpenGL ES " + majorVersion + "." + minorVersion);
 
 		try
 			{
-			EGL10 egl = (EGL10)EGLContext.getEGL();
 
 			EGLDisplay dpy = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
 			if (dpy == null)
@@ -375,7 +388,6 @@ implements SurfaceHolder.Callback
 
 			int[] attrib_list = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
 			EGLContext ctx = egl.eglCreateContext(dpy, config, EGL10.EGL_NO_CONTEXT, attrib_list);
-//			EGLContext ctx = egl.eglCreateContext(dpy, config, EGL10.EGL_NO_CONTEXT, null);
 			if (ctx == EGL10.EGL_NO_CONTEXT)
 				{
 				Log.e("SDL", "Couldn't create context");

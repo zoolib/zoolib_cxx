@@ -21,7 +21,7 @@ using std::vector;
 using namespace ZooLib;
 using namespace ZooLib::GameEngine;
 
-const double kUpdateRate = 30.0;
+//const double kUpdateRate = 30.0;
 
 static GPoint spWinSize = sPoint<GPoint>(480, 320);
 
@@ -94,6 +94,8 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 // =================================================================================================
 // MARK: - SDLActivity native methods
 
+bool spKeepRunning = true;
+
 void sRun(const string8& iAPK);
 
 extern "C"
@@ -101,6 +103,7 @@ void Java_org_zoolib_SDLActivity_sRun
 	(JNIEnv* env, jclass cls,
 	jstring iAPK)
 	{
+	spKeepRunning = true;
 	JNI::Env theEnv(env);
 
 	spClass_Activity = (jclass)env->NewGlobalRef(cls);
@@ -117,10 +120,8 @@ void Java_org_zoolib_SDLActivity_sRun
 
 	sRun(theString);
 
-	exit(0);
+//	exit(0);
 	}
-
-bool spKeepRunning = true;
 
 extern "C"
 void Java_org_zoolib_SDLActivity_sQuit
@@ -132,8 +133,7 @@ void Java_org_zoolib_SDLActivity_sQuit
 
 extern "C"
 void Java_org_zoolib_SDLActivity_sOnPause
-	(JNIEnv* env, jclass jcls,
-	jint keycode)
+	(JNIEnv* env, jclass jcls)
 	{
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
@@ -141,8 +141,7 @@ void Java_org_zoolib_SDLActivity_sOnPause
 
 extern "C"
 void Java_org_zoolib_SDLActivity_sOnResume
-	(JNIEnv* env, jclass jcls,
-	jint keycode)
+	(JNIEnv* env, jclass jcls)
 	{
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
