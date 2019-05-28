@@ -37,6 +37,10 @@ public:
 	virtual void Initialize();
 
 // Our protocol
+	virtual void Resume() = 0;
+	virtual void Pause() = 0;
+	virtual void TearDown() = 0;
+
 	virtual GPoint GetGameSize() = 0;
 
 	void Purge();

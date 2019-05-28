@@ -164,6 +164,8 @@ FileSpec spResourceFS()
 
 	fGame = sMakeGame(spResourceFS(), false);
 
+	fGame->Resume();
+
 	fDisplayLink =
 		sAdopt& [[UIScreen mainScreen] displayLinkWithTarget:self selector:@selector(pDrawView)];
 
