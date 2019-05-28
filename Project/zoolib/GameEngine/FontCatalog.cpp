@@ -7,8 +7,17 @@
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_STL_map.h"
 
-#define STB_TRUETYPE_IMPLEMENTATION // force following include to generate implementation
-#include "stb_truetype.h"
+// ----------
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcomma"
+
+	#define STB_TRUETYPE_IMPLEMENTATION // force following include to generate implementation
+	#include "stb_truetype.h"
+
+#pragma clang diagnostic pop
+
+// ----------
 
 namespace ZooLib {
 namespace GameEngine {
