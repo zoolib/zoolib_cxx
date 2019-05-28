@@ -39,8 +39,8 @@ enum class EFormatEfficient
 	{
 	Invalid,
 
-	Gray_1,
-	Gray_8,
+	L_1, Gray_1 = L_1,
+	L_8, Gray_8 = L_8,
 
 	Color_16,
 	Color_24,
@@ -57,16 +57,16 @@ enum class EFormatStandard
 	{
 	Invalid,
 
-	Gray_1,
-	Gray_2,
-	Gray_4,
-	Gray_8,
+	L_1, Gray_1 = L_1,
+	L_2, Gray_2 = L_2,
+	L_4, Gray_4 = L_4,
+	L_8, Gray_8 = L_8,
 
-	Alpha_1,
-	Alpha_8,
+	A_1, Alpha_1 = A_1,
+	A_8, Alpha_8 = A_8,
 
-	LA_16,
-	AL_16,
+	LA_16, GA_16 = LA_16,
+	AL_16, AG_16 = AL_16,
 
 	xRGB_16_BE,
 	ARGB_16_BE,
