@@ -602,7 +602,6 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 					theRendered->Accept_Rendered(*this);
 
 				::glFlush();
-
 				}} // ssr_ViewPort
 			}} // ssr_BindFramebuffer
 
