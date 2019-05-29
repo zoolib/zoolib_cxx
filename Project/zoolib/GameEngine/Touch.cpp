@@ -40,14 +40,14 @@ const Mat& TouchListener::GetMat()
 	return *fMatQ;
 	}
 
-//void TouchListener::Munge(const Mat& iMat, const Mat& iInverseMat)
-//	{
-//	if (fMatQ)
-//		*fMatQ = *fMatQ * iMat;
-//
-//	if (fInverseMatQ)
-//		*fInverseMatQ = iInverseMat * *fInverseMatQ;
-//	}
+void TouchListener::Munge(const Mat& iMat, const Mat& iInverseMat)
+	{
+	if (fMatQ)
+		*fMatQ = *fMatQ * iMat;
+
+	if (fInverseMatQ)
+		*fInverseMatQ = iInverseMat * *fInverseMatQ;
+	}
 
 // =================================================================================================
 #pragma mark -

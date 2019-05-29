@@ -37,7 +37,7 @@ public:
 	const Mat& GetInverseMat();
 	const Mat& GetMat();
 
-//	void Munge(const Mat& iMat, const Mat& iInverseMat);
+	void Munge(const Mat& iMat, const Mat& iInverseMat);
 
 	const bool fExclusive;
 
