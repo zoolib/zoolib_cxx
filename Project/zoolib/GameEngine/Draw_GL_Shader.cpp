@@ -336,10 +336,13 @@ public:
 		GLint fUniform_AlphaOnly_Modulation;
 	};
 
+static ZRef<Context> spContextObject;
+
 ZRef<Context> spContext()
 	{
-	static ZRef<Context> spContext = new Context;
-	return spContext;
+	if (not spContextObject)
+		spContextObject = new Context;
+	return spContextObject;
 	}
 
 void spSetUniform_RGBA(GLint uniform, RGBA iRGBA)
@@ -535,6 +538,11 @@ void spDrawTriangle(const Blush& iBlush,
 	}
 
 } // anonymous namespace
+
+void sKillContext()
+	{
+	spContextObject.Clear();
+	}
 
 // =================================================================================================
 #pragma mark - Visitor_Draw_GL_Shader

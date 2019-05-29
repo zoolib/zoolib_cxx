@@ -11,6 +11,8 @@
 namespace ZooLib {
 namespace GameEngine {
 
+void sKillContext();
+
 // =================================================================================================
 #pragma mark -
 

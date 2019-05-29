@@ -28,8 +28,14 @@ static int spNextPowerOfTwo(int input)
 // =================================================================================================
 #pragma mark - Texture_GL
 
+int64 Texture_GL::spTextureEpoch = 0;
+
+void Texture_GL::sOrphanAll()
+	{ ++spTextureEpoch; }
+
 Texture_GL::Texture_GL(PointPOD iDrawnSize)
 :	fDrawnSize(iDrawnSize)
+,	fTextureEpoch(spTextureEpoch)
 ,	fTextureID(0)
 ,	fIsAlphaOnly(false)
 	{}
@@ -37,6 +43,7 @@ Texture_GL::Texture_GL(PointPOD iDrawnSize)
 Texture_GL::Texture_GL(PointPOD iTextureSize, TextureID iTextureID, bool iIsAlphaOnly)
 :	fTextureSize(iTextureSize)
 ,	fDrawnSize(iTextureSize)
+,	fTextureEpoch(spTextureEpoch)
 ,	fTextureID(iTextureID)
 ,	fIsAlphaOnly(iIsAlphaOnly)
 	{}
@@ -87,41 +94,43 @@ Texture_GL::Texture_GL(const Pixmap& iPixmap)
 
 Texture_GL::~Texture_GL()
 	{
-	if (fTextureID)
+	if (fTextureEpoch == spTextureEpoch && fTextureID)
 		::glDeleteTextures(1, &fTextureID.Get());
 	}
 
 PointPOD Texture_GL::GetDrawnSize()
 	{ return fDrawnSize; }
 
+void Texture_GL::Orphan()
+	{ --fTextureEpoch; }
+
 void Texture_GL::Get(TextureID& oTextureID, PointPOD& oTextureSize)
 	{
-	if (not fTextureID)
-		this->pMakeTexture();
+	this->pEnsureTexture();
 	oTextureID = fTextureID;
 	oTextureSize = fTextureSize;
 	}
 
 TextureID Texture_GL::GetTextureID()
 	{
-	if (not fTextureID)
-		this->pMakeTexture();
+	this->pEnsureTexture();
 	return fTextureID;
 	}
 
 PointPOD Texture_GL::GetTextureSize()
 	{
-	if (not fTextureID)
-		this->pMakeTexture();
+	this->pEnsureTexture();
 	return fTextureSize;
 	}
 
 bool Texture_GL::GetIsAlphaOnly()
 	{ return fIsAlphaOnly; }
 
-void Texture_GL::pMakeTexture()
+void Texture_GL::pEnsureTexture()
 	{
-	ZAssert(not fTextureID);
+	if (fTextureEpoch == spTextureEpoch && fTextureID)
+		return;
+	fTextureEpoch = spTextureEpoch;
 
 	SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 
@@ -186,7 +195,11 @@ void Texture_GL::pMakeTexture()
 
 	fPixelCount = X(fTextureSize) * Y(fTextureSize);
 	fTextureID = theTextureID;
-	fPixmap = null;
+
+	// Don't destroy the pixmap for the moment. If it's *not* sourced from the AssetCatalog
+	// then this texture object will not get reloaded, and the pixmap is the only source of
+	// data for the actual texture (need to rev FontCatalog).
+//##	fPixmap = null;
 	}
 
 static ZRef<Texture> spTextureFromPixmap(const Pixmap& iPixmap)

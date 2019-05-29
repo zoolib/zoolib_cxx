@@ -2,36 +2,46 @@
 
 package org.zoolib;
 
-import android.app.Activity;
-import android.app.Application;import android.content.Context;
-import android.opengl.GLES20;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import android.util.Log;
+//import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 // =================================================================================================
 
 public class Activity_Game
 	extends AppCompatActivity
 	{
-	ViewModel_Game fViewModel;
-//	static
-//		{
-//		System.loadLibrary("ZooLibGame");
-//		}
+	static
+		{
+		System.loadLibrary("ZooLibGame");
+		}
 
+	ViewModel_Game fViewModel;
+
+// From Activity
 	protected void onCreate(Bundle savedInstanceState)
 		{
 		super.onCreate(savedInstanceState);
+
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		getWindow().setFlags
+			(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+			WindowManager.LayoutParams.FLAG_FULLSCREEN);  
+
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		this.hideSystemUI();
 
 		fViewModel = ViewModelProviders.of(this).get(ViewModel_Game.class);
 
@@ -40,6 +50,26 @@ public class Activity_Game
 		setContentView(theView);
 		}
 
+	protected void onPause()
+		{
+		fViewModel.sPauseGameLoop();
+		super.onPause();
+		}
+
+	protected void onResume()
+		{
+		super.onResume();
+		fViewModel.sResumeGameLoop();
+		}
+
+	public void onWindowFocusChanged(boolean hasFocus)
+		{
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus)
+			this.hideSystemUI();
+		}
+
+// Our protocol
 	private void hideSystemUI()
 		{
 		// Set the IMMERSIVE flag.
@@ -57,89 +87,13 @@ public class Activity_Game
 //		getActionBar().hide();
 		}
 
-	public void onWindowFocusChanged(boolean hasFocus)
-		{
-		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus)
-			this.hideSystemUI();
-		}
-	}
-
-// =================================================================================================
-class ViewModel_Game extends ViewModel
-	implements GLSurfaceView.Renderer
-	{
-	private final String TAG = "ViewModel_Game";
-	private int fWidth;
-	private int fHeight;
-
-	public ViewModel_Game()
-		{
-		Log.v(TAG, "ctor");
-
-		String theString = spGetApplicationUsingReflection().getApplicationInfo().sourceDir;
-		sInit(theString);
-		}
-
-// From ViewModel
-	protected void onCleared()
-		{
-		Log.v(TAG, "onCleared");
-		sTearDown();
-		sStart();
-		}
-
-// From GLSurfaceView.Renderer
-	public void onSurfaceCreated(GL10 gl, EGLConfig config)
-	{
-		// We have a new GLContext.
-		sSurfaceAndContextCreated();
-	}
-
-	public void onDrawFrame(GL10 gl)
-	{
-		// Redraw background color
-		// GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-		sDraw(fWidth, fHeight);
-	}
-
-	public void onSurfaceChanged(GL10 gl, int width, int height)
-	{
-//		   GLES20.glViewport(0, 0, width, height);
-		fWidth = width;
-		fHeight = height;
-	}
-
-	// Helper
-	private static Application spGetApplicationUsingReflection()
-		{
-		try
-			{
-			return (Application) Class.forName("android.app.AppGlobals")
-				.getMethod("getInitialApplication").invoke(null, (Object[]) null);
-			}
-		catch ()
-			{}
-		return null;
-		}
-
-// JNI
-	public static native void sInit(String iAPKPath);
-	public static native void sSurfaceAndContextCreated();
-
-	public static native void sPauseGameLoop();
-	public static native void sResumeGameLoop();
-	public static native void sTearDown();
-
-	public static native void sOnTouch(int pointerId, int action, float x, float y, float p);
-
-	public static native void sDraw(int iWidth, int iHeight);
 	}
 
 // =================================================================================================
 
 class GLSurfaceView_Game extends GLSurfaceView
-{
+	implements View.OnTouchListener
+	{
 	private final ViewModel_Game fViewModel;
 
 	private static final int GL_RED_SIZE = 8;
@@ -152,8 +106,14 @@ class GLSurfaceView_Game extends GLSurfaceView
 	private static final int GL_VERSION = 2;
 
 	public GLSurfaceView_Game(Context context, ViewModel_Game iViewModel)
-	{
+		{
 		super(context);
+
+		setOnTouchListener(this);
+
+//		setFocusable(true);
+//		setFocusableInTouchMode(true);
+//		requestFocus();
 
 		setEGLConfigChooser(GL_RED_SIZE, GL_GREEN_SIZE, GL_BLUE_SIZE, GL_ALPHA_SIZE, GL_DEPTH_SIZE, GL_STENCIL_SIZE);
 		setEGLContextClientVersion(GL_VERSION);
@@ -166,5 +126,50 @@ class GLSurfaceView_Game extends GLSurfaceView
 	    // Could instead be RENDERMODE_WHEN_DIRTY, in which case we
 	    // do this.requestRender to trigger a callback.
 	    setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+	    }
+
+
+// From View.OnTouchListener
+   	public boolean onTouch(View v, MotionEvent event)
+		{
+        int pointerIndex = event.getActionIndex();
+        int pointerId = event.getPointerId(pointerIndex);
+        int maskedAction = event.getActionMasked();
+
+        switch (maskedAction)
+        	{
+			case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_POINTER_DOWN:
+				{
+				fViewModel.sOnTouch(pointerId, MotionEvent.ACTION_DOWN,
+					event.getX(pointerIndex),
+					event.getY(pointerIndex),
+					event.getPressure(pointerIndex));
+	            break;
+	            }
+	        case MotionEvent.ACTION_MOVE:
+    	    	{
+        		// a pointer was moved
+				for (int size = event.getPointerCount(), ii = 0; ii < size; ++ii)
+					{
+					fViewModel.sOnTouch(event.getPointerId(ii), MotionEvent.ACTION_MOVE,
+						event.getX(ii),
+						event.getY(ii),
+						event.getPressure(ii));
+					}
+				break;
+				}
+			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_POINTER_UP:
+			case MotionEvent.ACTION_CANCEL:
+				{
+				fViewModel.sOnTouch(pointerId, MotionEvent.ACTION_UP,
+					event.getX(pointerIndex),
+					event.getY(pointerIndex),
+					event.getPressure(pointerIndex));
+	            break;
+				}
+	        }
+		return true;
+		}
 	}
-}

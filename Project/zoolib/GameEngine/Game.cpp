@@ -8,8 +8,10 @@
 
 #include "zoolib/GameEngine/Cog.h"
 #include "zoolib/GameEngine/DebugFlags.h"
+#include "zoolib/GameEngine/Draw_GL_Shader.h"
 #include "zoolib/GameEngine/DrawPreprocess.h"
 #include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/GameEngine/Util.h"
 #include "zoolib/GameEngine/Util_Allocator.h"
 #include "zoolib/GameEngine/Util_AssetCatalog.h"
@@ -135,6 +137,13 @@ Game::~Game()
 
 void Game::Initialize()
 	{ ZCounted::Initialize(); }
+
+void Game::ExternalPurgeHasOccurred()
+	{
+	fAssetCatalog->ExternalPurgeHasOccurred();
+	Texture_GL::sOrphanAll();
+	sKillContext();
+	}
 
 void Game::Purge()
 	{ fAssetCatalog->Purge(); }

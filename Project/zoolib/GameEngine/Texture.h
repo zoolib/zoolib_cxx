@@ -22,6 +22,8 @@ public:
 	virtual ~Texture();
 
 	virtual Pixels::PointPOD GetDrawnSize() = 0;
+
+	virtual void Orphan() = 0;
 	
 	size_t fPixelCount;
 	};

@@ -43,6 +43,8 @@ public:
 
 	virtual GPoint GetGameSize() = 0;
 
+	void ExternalPurgeHasOccurred();
+
 	void Purge();
 
 	ZRef<NookScope> GetNookScope();

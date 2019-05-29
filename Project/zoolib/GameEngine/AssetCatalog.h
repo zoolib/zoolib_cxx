@@ -41,6 +41,8 @@ public:
 	size_t FrameCount(const Name& iName);
 	void Get(const NameFrame& iNameFrame, std::vector<Texture_BoundsQ_Mat>& ioResult);
 
+	void ExternalPurgeHasOccurred();
+
 	void Purge();
 
 	void InstallSheet(const Name& iName, const ZRef<Callable_TextureMaker>& iTM);

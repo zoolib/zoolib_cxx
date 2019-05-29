@@ -31,10 +31,6 @@ using std::vector;
 using namespace ZooLib;
 using namespace ZooLib::GameEngine;
 
-//const double kUpdateRate = 30.0;
-
-static GPoint spWinSize = sPoint<GPoint>(480, 320);
-
 // =================================================================================================
 // MARK: -
 
@@ -58,26 +54,6 @@ typedef map<int64,ZRef<Touch> > TouchMap;
 
 // =================================================================================================
 
-static jclass spClass_Activity;
-
-static void spSwapWindow()
-	{
-	JNIEnv* env = JNI::Env::sGet();
-	jmethodID mid = env->GetStaticMethodID(spClass_Activity, "flipBuffers", "()V");
-	env->CallStaticVoidMethod(spClass_Activity, mid);
-	}
-
-static ZRef<Callable_Void> spCallable_SwapWindow = sCallable(spSwapWindow);
-
-static void spSetTitle(const char *title)
-	{
-	JNIEnv* env = JNI::Env::sGet();
-	if (jmethodID mid = env->GetStaticMethodID(spClass_Activity, "setActivityTitle", "(Ljava/lang/String;)V"))
-		env->CallStaticVoidMethod(spClass_Activity, mid, env->NewStringUTF(title));
-	}
-
-// =================================================================================================
-
 extern "C"
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
@@ -97,25 +73,76 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 static ZRef<GameEngine::Game> spGame;
 
 extern "C"
-void Java_org_zoolib_SDLActivity_sInit
-	(JNIEnv* env, jclass cls,
-	jstring iAPK)
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sInit(JNIEnv *env, jclass type, jstring iAPKPath_)
     {
-	spClass_Activity = (jclass)env->NewGlobalRef(cls);
+    const char *iAPKPath = env->GetStringUTFChars(iAPKPath_, 0);
 
-	string8 theString;
-	if (const jchar* theJString = env->GetStringChars(iAPK, nullptr))
-		{
-		if (jsize theLength = env->GetStringLength(iAPK))
-			theString = Unicode::sAsUTF8((const UTF16*)theJString, theLength);
-		env->ReleaseStringChars(iAPK, theJString);
-		}
-
-    FileSpec resourceFS = sFileSpec_Zip(theString).Child("assets");
+    FileSpec resourceFS = sFileSpec_Zip(iAPKPath).Child("assets");
     spGame = GameEngine::sMakeGame(resourceFS, false);
+
+    env->ReleaseStringUTFChars(iAPKPath_, iAPKPath);
     }
 
-// =================================================================================================
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sPauseGameLoop(JNIEnv *env, jclass type)
+    {
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+	spGame->Pause();
+    }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sResumeGameLoop(JNIEnv *env, jclass type)
+    {
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+	spGame->Resume();
+    }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sTearDown(JNIEnv *env, jclass type)
+    {
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+    }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sSurfaceAndContextIsFresh(JNIEnv *env, jclass type)
+    {
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+	spGame->ExternalPurgeHasOccurred();
+    }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sOnTouch(
+    JNIEnv *env, jclass type,
+    jint pointerId, jint action,
+    jfloat x, jfloat y, jfloat p)
+    {
+	JNI::Env theEnv(env);
+
+	if (ZLOGF(w, eErr))
+		w << "pointerId: " << pointerId << ", action: " << action << ", x: " << x << ", y: " << y << ", p: " << p;
+
+	ZAcqMtx axq(sMtx);
+	TouchInfo theTI;
+
+	theTI.fPointerId= pointerId;
+	theTI.fAction = action;
+	theTI.fX = x;
+	theTI.fY = y;
+
+	sTouches.push_back(theTI);
+    }
+
+static TouchMap spTouchesAll;
 
 static void spUpdateTouches(
 	const GPoint& iPixelSize, const GPoint& iGameSize,
@@ -183,120 +210,29 @@ static void spUpdateTouches(
 	sTouches.clear();
 	}
 
-static TouchMap spTouchesAll;
-
-bool spKeepRunning = true;
-
 extern "C"
-void Java_org_zoolib_SDLActivity_sRunLoop
-	(JNIEnv* env, jclass cls)
-	{
-	spKeepRunning = true;
+JNIEXPORT void JNICALL
+Java_org_zoolib_ViewModel_1Game_sDraw(
+    JNIEnv *env, jclass type,
+    jint width, jint height)
+    {
 	JNI::Env theEnv(env);
 
- 	for (;;)
- 		{
-        const GPoint backingSize = spWinSize;
+    const double loopStart = Time::sSystem();
 
-        const double loopStart = Time::sSystem();
+    const GPoint backingSize = sGPoint(width, height);
 
-        spGame->Draw(loopStart, backingSize, spCallable_SwapWindow);
+    spGame->Draw(loopStart, backingSize, null);
 
-        TouchSet theTouchesDown;
-        TouchSet theTouchesMove;
-        TouchSet theTouchesUp;
+    TouchSet theTouchesDown;
+    TouchSet theTouchesMove;
+    TouchSet theTouchesUp;
 
-        spUpdateTouches(backingSize, spGame->GetGameSize(),
-            spTouchesAll,
-            theTouchesDown, theTouchesMove, theTouchesUp);
+    spUpdateTouches(backingSize, spGame->GetGameSize(),
+        spTouchesAll,
+        theTouchesDown, theTouchesMove, theTouchesUp);
 
-        spGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
-
-        if (not spKeepRunning)
-            break;
- 		}
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sQuitLoop
-	(JNIEnv* env, jclass cls)
-	{
-	ZLOGTRACE(eDebug);
-	spKeepRunning = false;
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnPause
-	(JNIEnv* env, jclass jcls)
-	{
-	JNI::Env theEnv(env);
-	ZLOGTRACE(eDebug);
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnResume
-	(JNIEnv* env, jclass jcls)
-	{
-	JNI::Env theEnv(env);
-	ZLOGTRACE(eDebug);
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnResize
-	(JNIEnv* env, jclass jcls,
-	jint width, jint height, jint format)
-	{
-	JNI::Env theEnv(env);
-	if (ZLOGF(w, eErr))
-		w << "width: " << width << ", height:" << height << ", format:" << format;
-
-	X(spWinSize) = width;
-	Y(spWinSize) = height;
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnKeyDown
-	(JNIEnv* env, jclass jcls,
-	jint keycode)
-	{
-	JNI::Env theEnv(env);
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnKeyUp
-	(JNIEnv* env, jclass jcls,
-	jint keycode)
-	{
-	JNI::Env theEnv(env);
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnTouch
-	(JNIEnv* env, jclass jcls,
-	jint pointerId, jint action, jfloat x, jfloat y, jfloat p)
-	{
-	JNI::Env theEnv(env);
-
-	if (ZLOGF(w, eErr))
-		w << "pointerId: " << pointerId << ", action: " << action << ", x: " << x << ", y: " << y << ", p: " << p;
-
-	ZAcqMtx axq(sMtx);
-	TouchInfo theTI;
-
-	theTI.fPointerId= pointerId;
-	theTI.fAction = action;
-	theTI.fX = x;
-	theTI.fY = y;
-
-	sTouches.push_back(theTI);
-	}
-
-extern "C"
-void Java_org_zoolib_SDLActivity_sOnAccel
-	(JNIEnv* env, jclass jcls,
-	jfloat x, jfloat y, jfloat z)
-	{
-	JNI::Env theEnv(env);
-	}
+    spGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
+    }
 
 #endif // defined(__ANDROID__)

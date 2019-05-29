@@ -30,21 +30,27 @@ public:
 
 // From Texture
 	virtual PointPOD GetDrawnSize();
-	
+	virtual void Orphan();
+
 // Our protocol
 	void Get(TextureID& oTextureID, PointPOD& oTextureSize);
 	TextureID GetTextureID();
 	PointPOD GetTextureSize();
 	bool GetIsAlphaOnly();
 
+	static void sOrphanAll();
+
 private:
-	void pMakeTexture();
+	void pEnsureTexture();
 
 	Pixmap fPixmap;
 	PointPOD fTextureSize;
 	const PointPOD fDrawnSize;
+	int64 fTextureEpoch;
 	TextureID fTextureID;
 	bool fIsAlphaOnly;
+
+	static int64 spTextureEpoch;
 	};
 
 ZRef<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL();

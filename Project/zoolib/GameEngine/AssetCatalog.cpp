@@ -91,6 +91,30 @@ public:
 		sStartOnNewThread(sCallable(sRef(this), &SheetCatalog::pLoad));
 		}
 
+	void ExternalPurgeHasOccurred()
+		{
+		ZAcqMtx acq(fMtx);
+		ZLOGTRACE(eDebug);
+
+		// On Android, the EGLContext can get whacked. It tosses all the textures, so we now have
+		// a bunch of stale references. Drop the references, and get active sheets back on the
+		// load thread.
+
+		for (DListEraser<Sheet,DLink_Sheet_Load> iter = fSheets_Load; iter; iter.Advance())
+			{ iter.Current()->fTexture->Orphan(); }
+
+		for (DListEraser<Sheet,DLink_Sheet_Cached> iter = fSheets_Cached; iter; iter.Advance())
+			{ iter.Current()->fTexture->Orphan(); }
+
+		for (DListIterator<Sheet,DLink_Sheet_Active> iter = fSheets_Active; iter; iter.Advance())
+			{
+			iter.Current()->fTexture->Orphan();
+			sQInsertBack(fSheets_Load, iter.Current());
+			}
+
+		fCnd_Load.Broadcast();
+		}
+
 	void Purge()
 		{
 		ZAcqMtx acq(fMtx);
@@ -164,7 +188,7 @@ public:
 
 	void pLoad()
 		{
-		ZThread::sSetName("Load");
+		ZThread::sSetName("SheetCatalog");
 
 		for (;;)
 			{
@@ -333,6 +357,9 @@ void AssetCatalog::InstallSheet(const Name& iName, const ZRef<Callable_TextureMa
 
 void AssetCatalog::Set_Processed(const Map_Any& iMap)
 	{ fMap = iMap; }
+
+void AssetCatalog::ExternalPurgeHasOccurred()
+	{ fSheetCatalog->ExternalPurgeHasOccurred(); }
 
 void AssetCatalog::Purge()
 	{ fSheetCatalog->Purge(); }
