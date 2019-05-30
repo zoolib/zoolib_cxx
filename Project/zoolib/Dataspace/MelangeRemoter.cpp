@@ -720,12 +720,23 @@ void Melange_Client::Start(ZRef<Starter> iStarter)
 	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
 	}
 
+bool Melange_Client::Kill()
+	{
+	ZAcqMtx acq(fMtx);
+	fJob.first.Clear();
+	fJob.second.Clear();
+	if (fChanner)
+		sAbort(*fChanner);
+	fCnd.Broadcast();
+	return true;
+	}
+
 void Melange_Client::pRead()
 	{
 	ZThread::sSetName("MCR");
 
 	ZAcqMtx acq(fMtx);
-	for (;;)
+	while (fJob.first)
 		{
 		try
 			{
@@ -736,7 +747,6 @@ void Melange_Client::pRead()
 
 			Map_Any theMap;
 			{
-
 			ZRelMtx rel(fMtx);
 			if (::getenv("ZOOLIB_DONT_ABORT_ON_SLOW_READ"))
 				theMap = spReadMessage(*theChanner, null);
@@ -759,7 +769,7 @@ void Melange_Client::pWrite()
 	ZThread::sSetName("MCW");
 
 	ZAcqMtx acq(fMtx);
-	for (;;)
+	while (fJob.first)
 		{
 		if (sIsEmpty(fQueue_ToWrite))
 			{
@@ -794,7 +804,10 @@ void Melange_Client::pWrite()
 	}
 
 void Melange_Client::pWake()
-	{ sNextStartIn(0, fJob); }
+	{
+	if (fJob.first)
+		sNextStartIn(0, fJob);
+	}
 
 void Melange_Client::pWork()
 	{

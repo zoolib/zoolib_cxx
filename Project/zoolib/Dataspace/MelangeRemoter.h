@@ -138,6 +138,8 @@ public:
 // Our protocol
 	void Start(ZRef<Starter> iStarter);
 
+	bool Kill();
+
 private:
 	class Registration;
 	friend class Registration;
