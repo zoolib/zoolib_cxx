@@ -14,7 +14,7 @@ namespace GameEngine {
 
 Cog sCog_Replicate(CVec3 iSpacing, size_t iCount, Cog iCog)
 	{
-	PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Each, std::list<Cog> > theAcc;
+	PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Plus, std::list<Cog> > theAcc;
 
 	for (size_t ii = 0; ii < iCount; ++ii)
 		{
