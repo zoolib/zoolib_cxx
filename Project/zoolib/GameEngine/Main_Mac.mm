@@ -1,6 +1,7 @@
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Starter_ThreadLoop.h"
+#include "zoolib/StartOnNewThread.h"
 #include "zoolib/StdIO.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF_Operators_string.h"
@@ -88,6 +89,14 @@ static FileSpec spResourceFS()
 @end // interface NSOpenGLView_ZooLibGame
 
 @implementation NSOpenGLView_ZooLibGame
+
+-(void)kill
+	{
+	ZLOGTRACE(eDebug);
+	::CVDisplayLinkStop(fDisplayLink);
+	fGame->TearDown();
+	sStartOnNewThread_ProcessIsAboutToExit();
+	}
 
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat*)format;
 	{
@@ -309,6 +318,13 @@ static CVReturn spDisplayLinkCallback(
 	ZRef<NSOpenGLView_ZooLibGame> theView = sAdopt& [[NSOpenGLView_ZooLibGame alloc] init];
 	[fWindow setContentView:theView];
 	[fWindow makeKeyAndOrderFront:self];
+	}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+	{
+	NSOpenGLView_ZooLibGame* theView = (NSOpenGLView_ZooLibGame*)[fWindow contentView];
+	[theView kill];
+	return NSTerminateNow;
 	}
 
 @end // implementation NSApplicationDelegate_ZooLibGame
