@@ -88,6 +88,7 @@ public:
 	virtual void Initialize()
 		{
 		ZCounted::Initialize();
+		fKeepRunning = true;
 		sStartOnNewThread(sCallable(sRef(this), &SheetCatalog::pLoad));
 		}
 
@@ -186,15 +187,20 @@ public:
 		return result;
 		}
 
+	void Kill()
+		{
+		ZAcqMtx acq(fMtx);
+		fKeepRunning = false;
+		fCnd_Load.Broadcast();
+		}
+
 	void pLoad()
 		{
 		ZThread::sSetName("SheetCatalog");
 
-		for (;;)
+		ZAcqMtx acq(fMtx);
+		while (fKeepRunning)
 			{
-			ZRef<Sheet> theSheet;
-			ZAcqMtx acq(fMtx);
-
 			int highestPriority = 10000;
 			Sheet* highestSheet = nullptr;
 			for (DListIterator<Sheet,DLink_Sheet_Load> iter = fSheets_Load; iter; iter.Advance())
@@ -213,7 +219,7 @@ public:
 				continue;
 				}
 
-			theSheet = highestSheet;
+			ZRef<Sheet> theSheet = highestSheet;
 
 			ZRef<Texture> theTexture;
 			{
@@ -248,6 +254,8 @@ public:
 	ZMtx fMtx;
 	ZCnd fCnd_Load;
 	ZCnd fCnd_Get;
+
+	bool fKeepRunning;
 
 	map<Name,Sheet*> fSheets;
 
@@ -363,6 +371,9 @@ void AssetCatalog::ExternalPurgeHasOccurred()
 
 void AssetCatalog::Purge()
 	{ fSheetCatalog->Purge(); }
+
+void AssetCatalog::Kill()
+	{ fSheetCatalog->Kill(); }
 
 bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 	vector<Texture_BoundsQ_Mat>* ioResult)

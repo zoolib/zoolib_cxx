@@ -45,6 +45,8 @@ public:
 
 	void Purge();
 
+	void Kill();
+
 	void InstallSheet(const Name& iName, const ZRef<Callable_TextureMaker>& iTM);
 	void Set_Processed(const Map_Any& iMap);
 
