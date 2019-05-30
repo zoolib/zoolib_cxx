@@ -43,6 +43,8 @@ public:
 
 	virtual GPoint GetGameSize() = 0;
 
+	void WakeToBeKilled();
+
 	void ExternalPurgeHasOccurred();
 
 	void Purge();

@@ -217,6 +217,14 @@ void Game::Draw(
 		}
 	}
 
+void Game::WakeToBeKilled()
+	{
+	ZAcqMtx acq(fMtx_Game);
+	fTimestamp_LatestDrawn = 0;
+	fCnd_Game.Broadcast();
+	fAssetCatalog->Kill();
+	}
+
 void Game::RunOnce()
 	{
 	double interval;
