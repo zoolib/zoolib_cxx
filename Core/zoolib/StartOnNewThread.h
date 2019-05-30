@@ -31,6 +31,8 @@ namespace ZooLib {
 
 void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable);
 
+void sStartOnNewThread_ProcessIsAboutToExit();
+
 } // namespace ZooLib
 
 #endif // __ZooLib_StartOnNewThread_h__

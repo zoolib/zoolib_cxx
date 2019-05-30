@@ -39,6 +39,7 @@ public:
 	:	fIdleThreads(0)
 	,	fActiveThreads(0)
 	,	fKeepRunning(true)
+	,	fExpireAfter(10)
 		{}
 
 	~StartOnNewThreadHandler()
@@ -92,10 +93,19 @@ public:
 			}
 		}
 
+	void ProcessIsAboutToExit()
+		{
+		ZAcqMtx acq(fMtx);
+		fExpireAfter = 0;
+		fCnd.Broadcast();
+		while (fActiveThreads)
+			fCnd.WaitFor(fMtx, 1);
+		}
+
 	void RunLoop()
 		{
 		ZAcqMtx acq(fMtx);
-		double expires = Time::sSystem() + 10;
+		const double start = fExpireAfter;
 		for (;;)
 			{
 			if (fQueue.empty())
@@ -106,7 +116,7 @@ public:
 					fCnd.Broadcast();
 					break;
 					}
-				else if (Time::sSystem() > expires)
+				else if (Time::sSystem() - start >= fExpireAfter)
 					{
 					break;
 					}
@@ -144,6 +154,7 @@ public:
 	size_t fIdleThreads;
 	size_t fActiveThreads;
 	bool fKeepRunning;
+	double fExpireAfter;
 	std::list<ZRef<Callable<void()>>> fQueue;
 	};
 
@@ -154,5 +165,8 @@ void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable)
 	if (iCallable)
 		sSingleton<StartOnNewThreadHandler>().Start(iCallable);
 	}
+
+void sStartOnNewThread_ProcessIsAboutToExit()
+	{ sSingleton<StartOnNewThreadHandler>().ProcessIsAboutToExit(); }
 
 } // namespace ZooLib
