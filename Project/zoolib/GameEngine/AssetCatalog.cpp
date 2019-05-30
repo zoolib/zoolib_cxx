@@ -198,9 +198,15 @@ public:
 		{
 		ZThread::sSetName("SheetCatalog");
 
-		ZAcqMtx acq(fMtx);
-		while (fKeepRunning)
+		for (;;)
 			{
+			// theSheet must go out of scope while we're not holding fMtx. Else
+			// we'll try to recursively acquire fMtx.
+			ZRef<Sheet> theSheet;
+			ZAcqMtx acq(fMtx);
+			if (not fKeepRunning)
+				break;
+
 			int highestPriority = 10000;
 			Sheet* highestSheet = nullptr;
 			for (DListIterator<Sheet,DLink_Sheet_Load> iter = fSheets_Load; iter; iter.Advance())
@@ -219,7 +225,7 @@ public:
 				continue;
 				}
 
-			ZRef<Sheet> theSheet = highestSheet;
+			theSheet = highestSheet;
 
 			ZRef<Texture> theTexture;
 			{
