@@ -89,32 +89,34 @@ private:
 		else
 			ZThread::sSetName("STL");
 
-		{ // Scope, so we don't delete fMtx out from under the acq. 
-		ZAcqMtx acq(fMtx);
-
+		fMtx.Acquire();
 		while (fKeepRunning)
 			{
 			if (fStartables.empty())
-				{ fCnd.Wait(fMtx); }
-			else
 				{
-				ZRef<ZCounted> self_ref = this;
-
-				vector<ZRef<Startable> > toStart;
-
-				fStartables.swap(toStart);
-
-				ZRelMtx rel(fMtx);
-
-				for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
-					iter != toStart.end(); ++iter)
-					{
-					try { (*iter)->Call(); }
-					catch (...) {}
-					}
+				fCnd.Wait(fMtx);
+				continue;
 				}
+
+			// Ensure we stick around while we're processing something.
+			this->Retain();
+
+			vector<ZRef<Startable> > toStart;
+
+			fStartables.swap(toStart);
+
+			fMtx.Release();
+
+			for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
+				iter != toStart.end(); ++iter)
+				{
+				try { (*iter)->Call(); }
+				catch (...) {}
+				}
+			this->Release();
+			fMtx.Acquire();
 			}
-		}
+		fMtx.Release();
 		delete this;
 		}
 
