@@ -365,18 +365,6 @@ struct Cel
 	};
 
 // =================================================================================================
-#pragma mark - FontSpec
-
-struct FontSpec
-	{
-	FontSpec();
-	FontSpec(const Name& iName, Rat iSize);
-
-	Name fName;
-	Rat fSize;
-	};
-
-// =================================================================================================
 #pragma mark - Map Get
 
 ZQ<Val> sQGetNamed(const Map& iMap, const Name& iName0);
