@@ -24,11 +24,15 @@ namespace GameEngine {
 
 struct InChannel
 	{
-	InChannel(const ZRef<NookScope>& iNookScope);
+	InChannel(const std::vector<int>* iKeyDowns, const ZRef<NookScope>& iNookScope);
 
 	InChannel(const InChannel& iParent, const ZRef<NookScope>& iNookScope);
 
 	InChannel(const InChannel& iParent, const Mat& iMat);
+
+	const InChannel* GetPrior() const;
+
+	const std::vector<int>* GetKeyDowns() const;
 
 	const ZRef<NookScope>& GetActiveNookScope() const;
 
@@ -36,10 +40,9 @@ struct InChannel
 
 	const Mat& GetMat() const;
 
-	const InChannel* GetPrior() const;
-
 private:
 	const InChannel* fPrior;
+	const std::vector<int>* fKeyDowns;
 	ZRef<NookScope> fNookScope;
 	Mat fMat;
 	};

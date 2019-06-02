@@ -151,6 +151,12 @@ void Game::Purge()
 ZRef<NookScope> Game::GetNookScope()
 	{ return fNookScope; }
 
+void Game::UpdateKeyDowns(int iKey)
+	{
+	ZAcqMtx acq(fMtx_Game);
+	fKeyDowns.push_back(iKey);
+	}
+
 void Game::UpdateTouches(const TouchSet* iDown, const TouchSet* iMove, const TouchSet* iUp)
 	{
 	ZAcqMtx acq(fMtx_Game);
@@ -220,7 +226,7 @@ void Game::Draw(
 void Game::WakeToBeKilled()
 	{
 	ZAcqMtx acq(fMtx_Game);
-	fTimestamp_LatestDrawn = 0;
+	fTimestamp_LatestDrawn = -1;
 	fCnd_Game.Broadcast();
 	fAssetCatalog->Kill();
 	}
@@ -231,21 +237,27 @@ void Game::RunOnce()
 
 	GPoint theGameSize = this->GetGameSize();
 
+	std::vector<int> theKeyDowns;
+
 	{
 	ZAcqMtx acq(fMtx_Game);
 	while (fTimestamp_ToDraw <= fTimestamp_LatestDrawn)
 		fCnd_Game.Wait(fMtx_Game);
+
+	if (fTimestamp_LatestDrawn < 0)
+		return;
 
 	interval = fTimestamp_ToDraw - fTimestamp_LatestDrawn;
 
 	fTimestamp_LatestDrawn = fTimestamp_ToDraw;
 
 	this->pUpdateTouches();
+	theKeyDowns.swap(fKeyDowns);
 	}
 
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
-	ZRef<Rendered> theRendered = this->pCrank(interval);
+	ZRef<Rendered> theRendered = this->pCrank(interval, &theKeyDowns);
 
 	theRendered = sDrawPreprocess(
 		theRendered,
@@ -350,9 +362,9 @@ void Game::pUpdateTouches()
 	fPendingTouchesUp.clear();
 	}
 
-ZRef<Rendered> Game::pCrank(double iInterval)
+ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 	{
-	InChannel theInChannel(fNookScope);
+	InChannel theInChannel(iKeyDowns, fNookScope);
 	fNookScope->NewEra();
 
 	OutChannel theOutChannel(fRootMap, fAssetCatalog, fFontCatalog, fSoundMeister);

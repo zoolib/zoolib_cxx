@@ -17,7 +17,6 @@
 
 #include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/Game_Render.h"
-#include "zoolib/GameEngine/Nook_Keys.h"
 #include "zoolib/GameEngine/Sound_CoreAudio.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
@@ -79,11 +78,8 @@ static FileSpec spResourceFS()
 	GPoint fWH;
 
 	ZRef<Game> fGame;
-	ZRef<Nook_Keys> fNook_Keys;
 
 	ZRef<Touch> fCurrentTouch;
-	ZMtx fMtx;
-	vector<int> fKeys;
 	}
 
 @end // interface NSOpenGLView_ZooLibGame
@@ -113,8 +109,6 @@ static FileSpec spResourceFS()
 	self = [super initWithFrame:frameRect pixelFormat:pf];
 
 	fGame = sMakeGame(spResourceFS(), false);
-
-	fNook_Keys = new Nook_Keys(fGame->GetNookScope());
 
 	fGame->Resume();
 
@@ -149,10 +143,6 @@ static FileSpec spResourceFS()
 		theTimestamp,
 		fWH,
 		sCallable<void()>(self, @selector(pFlipBuffers)));
-
-	ZAcqMtx acq(fMtx);
-	swap(fKeys, fNook_Keys->fKeys);
-	fKeys.clear();
 	}
 
 static CVReturn spDisplayLinkCallback(
@@ -220,9 +210,8 @@ static CVReturn spDisplayLinkCallback(
 			{
 			if ([theString length])
 				{
-				ZAcqMtx acq(fMtx);
 				const unichar theChar = [theString characterAtIndex:0];
-				fKeys.push_back(theChar);
+				fGame->UpdateKeyDowns(theChar);
 				}
 			}
 		}
@@ -302,13 +291,17 @@ static CVReturn spDisplayLinkCallback(
 	return self;
 	}
 
+const Rat kWidth = 576;
+const Rat kHeight = 1024;
+
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-	const NSRect iBounds = sRect<NSRect>(960, 540) + sPoint<NSPoint>(0, 44);
-	
+//	const NSRect theBounds = sRect<NSRect>(960, 540) + sPoint<NSPoint>(0, 44);
+	const NSRect theBounds = sRect<NSRect>(kWidth, kHeight) + sPoint<NSPoint>(0, 44);
+
 	fWindow = sAdopt& [[NSWindow alloc]
-		initWithContentRect:sFlippedY(iBounds, H(screenRect))
+		initWithContentRect:sFlippedY(theBounds, H(screenRect))
 		styleMask:NSTitledWindowMask
 		backing:NSBackingStoreBuffered
 		defer:NO];

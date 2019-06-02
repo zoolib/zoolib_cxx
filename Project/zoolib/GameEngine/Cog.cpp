@@ -21,22 +21,32 @@ using std::vector;
 // =================================================================================================
 #pragma mark - InChannel
 
-InChannel::InChannel(const ZRef<NookScope>& iNookScope)
+InChannel::InChannel(const std::vector<int>* iKeyDowns, const ZRef<NookScope>& iNookScope)
 :	fPrior(nullptr)
+,	fKeyDowns(iKeyDowns)
 ,	fNookScope(iNookScope)
 ,	fMat(1)
 	{}
 
 InChannel::InChannel(const InChannel& iParent, const ZRef<NookScope>& iNookScope)
 :	fPrior(&iParent)
+,	fKeyDowns(iParent.fKeyDowns)
 ,	fNookScope(iNookScope)
 ,	fMat(iParent.fMat)
 	{}
 
 InChannel::InChannel(const InChannel& iParent, const Mat& iMat)
 :	fPrior(&iParent)
+,	fKeyDowns(iParent.fKeyDowns)
 ,	fMat(iParent.fMat * iMat)
 	{}
+
+
+const InChannel* InChannel::GetPrior() const
+	{ return fPrior; }
+
+const std::vector<int>* InChannel::GetKeyDowns() const
+	{ return fKeyDowns; }
 
 const ZRef<NookScope>& InChannel::GetActiveNookScope() const
 	{
@@ -53,9 +63,6 @@ const ZRef<NookScope>& InChannel::GetOwnNookScope() const
 
 const Mat& InChannel::GetMat() const
 	{ return fMat; }
-
-const InChannel* InChannel::GetPrior() const
-	{ return fPrior; }
 
 // =================================================================================================
 #pragma mark -

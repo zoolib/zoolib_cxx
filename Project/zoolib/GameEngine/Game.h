@@ -51,6 +51,8 @@ public:
 
 	ZRef<NookScope> GetNookScope();
 
+	void UpdateKeyDowns(int iKey);
+
 	void UpdateTouches(const TouchSet* iDown, const TouchSet* iMove, const TouchSet* iUp);
 
 	void Draw(
@@ -63,7 +65,7 @@ public:
 private:
 	void pUpdateTouches();
 
-	ZRef<Rendered> pCrank(double iInterval);
+	ZRef<Rendered> pCrank(double iInterval, const std::vector<int>* iKeyDowns);
 
 	ZRef<Rendered> fRendered;
 	ZRef<Rendered> fRendered_Prior;
@@ -83,6 +85,8 @@ private:
 	ZRef<FontCatalog> fFontCatalog;
 
 	ZRef<SoundMeister> fSoundMeister;
+
+	std::vector<int> fKeyDowns;
 
 	std::vector<ZRef<TouchListener> > fTLs;
 	std::map<ZRef<Touch>,ZRef<TouchListener> > fExclusiveTouches;
