@@ -39,7 +39,7 @@ public:
 	:	fIdleThreads(0)
 	,	fActiveThreads(0)
 	,	fKeepRunning(true)
-	,	fExpireAfter(10)
+	,	fExpireAfter(3600)
 		{}
 
 	~StartOnNewThreadHandler()
