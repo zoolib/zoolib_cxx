@@ -105,7 +105,7 @@ public:
 	void RunLoop()
 		{
 		ZAcqMtx acq(fMtx);
-		const double start = fExpireAfter;
+		const double start = Time::sSystem();
 		for (;;)
 			{
 			if (fQueue.empty())
