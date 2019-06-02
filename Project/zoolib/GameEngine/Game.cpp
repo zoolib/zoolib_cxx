@@ -52,34 +52,6 @@ Rat sGetGameRate()
 	{ return spGameRate; }
 
 // =================================================================================================
-#pragma mark - spSortTLs
-
-namespace { // anonymous 
-
-vector<ZRef<TouchListener> > spSortTLs(const vector<ZRef<TouchListener> >& iTLs)
-	{
-	typedef std::multimap<Rat,ZRef<TouchListener>, std::less<Rat>,
-		TTAllocator<std::pair<const Rat, ZRef<TouchListener> > > > MapRatTL;
-
-	RealAllocator theRealAllocator;
-	MapRatTL theMap(std::less<Rat>(), theRealAllocator);
-
-	foreachv (const ZRef<TouchListener>& theTL, iTLs)
-		{
-		const Rat theZ = (theTL->GetInverseMat() * CVec3())[2];
-		theMap.insert(std::make_pair(theZ, theTL));
-		}
-
-	vector<ZRef<TouchListener> > result;
-	foreacha (entry, theMap)
-		result.push_back(entry.second);
-
-	return result;	
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
 #pragma mark - Game
 
 static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
@@ -276,34 +248,44 @@ void Game::pUpdateTouches()
 		{
 		sInsertMust(fTouchesActive, theTouch);
 
-		// Find any listeners that care about this touch. They've been ordered
-		// near to far by spSortTLs.
 		set<ZRef<TouchListener> > interested;
-		ZRef<TouchListener> exclusive;
+		Rat nearestInterested;
 
-		for (auto riter = fTLs.rbegin(), end = fTLs.rend();
-			riter != end; ++riter)
+		ZRef<TouchListener> exclusive;
+		Rat nearestExclusive;
+
+		foreacha (theTL, fTLs)
 			{
-			const ZRef<TouchListener> theListener = *riter;
-			const CVec3 localPos = theListener->GetMat() * theTouch->fPos;
-			if (sContains(theListener->fBounds, localPos))
+			if (theTL->Contains(theTouch->fPos))
 				{
-				if (theListener->fExclusive)
+				const Rat theZ = (theTL->GetInverseMat() * CVec3())[2];
+				if (sIsEmpty(interested))
 					{
-					if (interested.empty())
-						{
-						exclusive = theListener;
-						break;
-						}
+					nearestInterested = theZ;
 					}
-				else
+				else if (nearestInterested < theZ)
 					{
-					interested.insert(theListener);
+					nearestInterested = theZ;
+					}
+				interested.insert(theTL);
+
+				if (theTL->fExclusive)
+					{
+					if (not exclusive)
+						{
+						nearestExclusive = theZ;
+						exclusive = theTL;
+						}
+					else if (nearestExclusive < theZ)
+						{
+						nearestExclusive = theZ;
+						exclusive = theTL;
+						}
 					}
 				}
 			}
 
-		if (exclusive)
+		if (exclusive and (sIsEmpty(interested) || nearestExclusive <= nearestInterested))
 			{
 			sInsertMust(fExclusiveTouches, theTouch, exclusive);
 			if (exclusive->fActive.size() < exclusive->fMaxTouches)
@@ -312,12 +294,12 @@ void Game::pUpdateTouches()
 				sInsertMust(exclusive->fDowns, theTouch);
 				}
 			}
-		else foreachv (const ZRef<TouchListener>& theListener, interested)
+		else foreachv (const ZRef<TouchListener>& theTL, interested)
 			{
-			if (theListener->fActive.size() < theListener->fMaxTouches)
+			if (theTL->fActive.size() < theTL->fMaxTouches)
 				{
-				sInsertMust(theListener->fActive, theTouch);
-				sInsertMust(theListener->fDowns, theTouch);
+				sInsertMust(theTL->fActive, theTouch);
+				sInsertMust(theTL->fDowns, theTouch);
 				}
 			}				
 		}
@@ -329,12 +311,12 @@ void Game::pUpdateTouches()
 		if (ZQ<ZRef<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theListener, fTLs)
+		foreachv (ZRef<TouchListener> theTL, fTLs)
 			{
-			if (not exclusive || theListener == exclusive)
+			if (not exclusive || theTL == exclusive)
 				{
-				if (sContains(theListener->fActive, theTouch))
-					theListener->fMoves.insert(theTouch);
+				if (sContains(theTL->fActive, theTouch))
+					theTL->fMoves.insert(theTouch);
 				}
 			}
 		}
@@ -350,12 +332,12 @@ void Game::pUpdateTouches()
 		if (ZQ<ZRef<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theListener, fTLs)
+		foreachv (ZRef<TouchListener> theTL, fTLs)
 			{
-			if (not exclusive || theListener == exclusive)
+			if (not exclusive || theTL == exclusive)
 				{
-				if (sContains(theListener->fActive, theTouch))
-					sInsertMust(theListener->fUps, theTouch);
+				if (sContains(theTL->fActive, theTouch))
+					sInsertMust(theTL->fUps, theTouch);
 				}
 			}
 		}
@@ -391,30 +373,29 @@ ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 			}
 		}
 
-	std::vector<ZRef<TouchListener> > priorTLs = fTLs;
-	fTLs = spSortTLs(theOutChannel.GetTLs());
-
 	foreachv (const ZRef<Touch>& theTouch, fTouchesUp)
 		{
 		ZRef<TouchListener> exclusive;
 		if (ZQ<ZRef<TouchListener> > theQ = sQGetErase(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theListener, priorTLs)
+		foreachv (ZRef<TouchListener> theTL, fTLs)
 			{
-			if (not exclusive || theListener == exclusive)
-				sErase(theListener->fActive, theTouch);
+			if (not exclusive || theTL == exclusive)
+				sErase(theTL->fActive, theTouch);
 			}
 		}
 
 	fTouchesUp.clear();
 
-	foreachv (ZRef<TouchListener> theListener, priorTLs)
+	foreachv (ZRef<TouchListener> theTL, fTLs)
 		{
-		theListener->fDowns.clear();
-		theListener->fMoves.clear();
-		theListener->fUps.clear();
+		theTL->fDowns.clear();
+		theTL->fMoves.clear();
+		theTL->fUps.clear();
 		}
+
+	fTLs = theOutChannel.GetTLs();
 
 	return theGroup;
 	}

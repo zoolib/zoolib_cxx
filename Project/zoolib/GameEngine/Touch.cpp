@@ -14,6 +14,18 @@ TouchListener::TouchListener(bool iExclusive)
 TouchListener::~TouchListener()
 	{}
 
+bool TouchListener::Contains(CVec3 iPos)
+	{
+	const CVec3 localPos = this->GetMat() * iPos;
+	return sContains(fBounds, localPos);
+	}
+
+void TouchListener::SetBounds(const GRect& iBounds)
+	{ fBounds = iBounds; }
+
+GRect TouchListener::GetBoundsForDebug()
+	{ return fBounds; }
+
 void TouchListener::SetInverseMat(const Mat& iInverseMat)
 	{
 	fInverseMatQ = iInverseMat;
@@ -61,8 +73,7 @@ bool sTouchIn(const ZRef<TouchListener>& iTouchListener)
 		return false;
 
 	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
-	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-	if (sContains(iTouchListener->fBounds, localPos))
+	if (iTouchListener->Contains(theTouch->fPos))
 		return true;
 
 	return false;
@@ -74,8 +85,7 @@ bool sTouchOut(const ZRef<TouchListener>& iTouchListener)
 		return false;
 
 	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
-	const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-	if (sContains(iTouchListener->fBounds, localPos))
+	if (iTouchListener->Contains(theTouch->fPos))
 		return false;
 
 	return true;
@@ -86,8 +96,7 @@ bool sTouchUp(const ZRef<TouchListener>& iTouchListener)
 	if (iTouchListener->fUps.size())
 		{
 		ZRef<Touch> theTouch = *iTouchListener->fUps.begin();
-		const CVec3 localPos = iTouchListener->GetMat() * theTouch->fPos;
-		if (sContains(iTouchListener->fBounds, localPos))
+		if (iTouchListener->Contains(theTouch->fPos))
 			return true;
 		}
 	return false;

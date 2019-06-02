@@ -31,6 +31,11 @@ public:
 	TouchListener(bool iExclusive);
 	virtual ~TouchListener();
 	
+	bool Contains(CVec3 iPos);
+
+	void SetBounds(const GRect& iBounds);
+	GRect GetBoundsForDebug();
+
 	void SetInverseMat(const Mat& iInverseMat);
 	void SetMat(const Mat& iMat);
 
@@ -43,14 +48,14 @@ public:
 
 	size_t fMaxTouches;
 
-	GRect fBounds;
-
 	std::set<ZRef<Touch> > fActive;
 	std::set<ZRef<Touch> > fDowns;
 	std::set<ZRef<Touch> > fMoves;
 	std::set<ZRef<Touch> > fUps;
 
 private:
+	GRect fBounds;
+
 	ZQ<Mat> fMatQ;
 	ZQ<Mat> fInverseMatQ;
 	};
