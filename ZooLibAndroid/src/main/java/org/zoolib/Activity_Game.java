@@ -39,7 +39,8 @@ public class Activity_Game
 			(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 			WindowManager.LayoutParams.FLAG_FULLSCREEN);  
 
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		this.hideSystemUI();
 
@@ -76,12 +77,12 @@ public class Activity_Game
 		// Set the content to appear under the system bars so that the content
 		// doesn't resize when the system bars hide and show.
 		getWindow().getDecorView().setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-						| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-						| View.SYSTEM_UI_FLAG_IMMERSIVE);
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+			| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+			| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+			| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+			| View.SYSTEM_UI_FLAG_IMMERSIVE);
 
 //		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 //		getActionBar().hide();
@@ -124,7 +125,7 @@ class GLSurfaceView_Game extends GLSurfaceView
 		setRenderer(iViewModel);
 
 	    // Could instead be RENDERMODE_WHEN_DIRTY, in which case we
-	    // do this.requestRender to trigger a callback.
+	    // do `this.requestRender`to trigger a callback.
 	    setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	    }
 
