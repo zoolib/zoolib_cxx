@@ -310,7 +310,7 @@ ZRef<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
 	if (ZRef<FontStrike> theStrike = sGet(fStrikes, iScale))
 		return theStrike;
 
-	Pixmap thePixmap = sPixmap(sPointPOD(512,512), Pixels::EFormatStandard::Alpha_8, sRGBA(0,0));
+	Pixmap thePixmap = sPixmap(sPointPOD(1024,1024), Pixels::EFormatStandard::Alpha_8, sRGBA(0,0));
 
 	const UTF32 firstCP = 32;
 	const UTF32 lastCP = 127;
