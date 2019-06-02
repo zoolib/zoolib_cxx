@@ -80,7 +80,7 @@ public:
 		bool iShowBounds, bool iShowOrigin,
 		const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	:	Visitor_Rendered_AccumulateMat(iMat)
-	,	Visitor_Draw_GL_Shader(iShowBounds, iShowOrigin)
+	,	Visitor_Draw_GL_Shader(iShowBounds, iShowBounds, iShowOrigin)
 	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
 		{}
 
@@ -162,7 +162,8 @@ void sGame_Render(const ZRef<Rendered>& iRendered,
 	iListenerR = X(theMat * sCVec3(iListenerR,0,0));
 
 	iRendered->Accept(Visitor_Shader(
-		theMat, iShowBounds, iShowOrigin,
+		theMat,
+		iShowBounds, iShowOrigin,
 		iSoundMeister, iListenerL, iListenerR, iListenerD / X(iPixelSize)));
 	}
 

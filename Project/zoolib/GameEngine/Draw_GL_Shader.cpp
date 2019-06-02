@@ -547,8 +547,10 @@ void sKillContext()
 // =================================================================================================
 #pragma mark - Visitor_Draw_GL_Shader
 
-Visitor_Draw_GL_Shader::Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigin)
+Visitor_Draw_GL_Shader::Visitor_Draw_GL_Shader(
+	bool iShowBounds, bool iShowBounds_AlphaOnly, bool iShowOrigin)
 :	fShowBounds(iShowBounds)
+,	fShowBounds_AlphaOnly(iShowBounds_AlphaOnly)
 ,	fShowOrigin(iShowOrigin)
 	{
 	#if not ZMACRO_IOS and not defined(ANDROID)
@@ -639,42 +641,48 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 		TextureID theTextureID;
 		PointPOD theTextureSize;
 		theTexture_GL->Get(theTextureID, theTextureSize);
+
+		bool showBounds;
 		if (theTexture_GL->GetIsAlphaOnly())
 			{
 			spDrawTexture_AlphaOnly(fBlush, fMat,
 				theTextureID, sPoint<GPoint>(theTextureSize),
 				iRendered_Texture->GetBounds());
+			showBounds = fShowBounds_AlphaOnly;
 			}
 		else
 			{
 			spDrawTexture(fBlush, fMat,
 				theTextureID, sPoint<GPoint>(theTextureSize),
 				iRendered_Texture->GetBounds());
+			showBounds = fShowBounds;
+			}
 
-			if (fShowBounds)
-				{
-				const GRect theBounds = sAlignedLT(iRendered_Texture->GetBounds(), 0, 0);
+		if (showBounds)
+			{
+			SaveRestore<Blush> srBlush(fBlush);
 
-				// Red = left/top
-				// Green = right/bottom
-				// Blue = Horizontal
+			const GRect theBounds = sAlignedLT(iRendered_Texture->GetBounds(), 0, 0);
 
-				// Left/Port/Izquierda
-				sRef(sRendered_Line(sRGBA(1,0,0,1), LT(theBounds), LB(theBounds), 1.0))
-					->Accept(*this);
+			// Red = left/top
+			// Green = right/bottom
+			// Blue = if horizontal
 
-				// Right/Starboard/Derecha
-				sRef(sRendered_Line(sRGBA(0,1,0,1), RT(theBounds), RB(theBounds), 1.0))
-					->Accept(*this);
+			// Left/Port/Izquierda
+			fBlush = sRGBA(1,0,0,1);
+			sAccept(sRendered_Line(LT(theBounds), LB(theBounds), 1.0), *this);
 
-				// Top/Above/Aloft/Arriba/Apex
-				sRef(sRendered_Line(sRGBA(1,0,1,1), LT(theBounds), RT(theBounds), 1.0))
-					->Accept(*this);
+			// Right/Starboard/Derecha
+			fBlush = sRGBA(0,1,0,1);
+			sAccept(sRendered_Line(RT(theBounds), RB(theBounds), 1.0), *this);
 
-				// Bottom/Below/Beneath/Abajo/Base
-				sRef(sRendered_Line(sRGBA(0,1,1,1), LB(theBounds), RB(theBounds), 1.0))
-					->Accept(*this);
-				}
+			// Top/Above/Aloft/Arriba/Apex
+			fBlush = sRGBA(1,0,1,1);
+			sAccept(sRendered_Line(LT(theBounds), RT(theBounds), 1.0), *this);
+
+			// Bottom/Below/Beneath/Abajo/Base
+			fBlush = sRGBA(0,1,1,1);
+			sAccept(sRendered_Line(LB(theBounds), RB(theBounds), 1.0), *this);
 			}
 		}
 	}

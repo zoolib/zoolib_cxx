@@ -21,7 +21,7 @@ class Visitor_Draw_GL_Shader
 ,	public virtual Visitor_Rendered_AccumulateMat
 	{
 public:
-	Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowOrigin);
+	Visitor_Draw_GL_Shader(bool iShowBounds, bool iShowBounds_AlphaOnly, bool iShowOrigin);
 
 	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
 
@@ -36,6 +36,7 @@ public:
 
 private:
 	bool fShowBounds;
+	bool fShowBounds_AlphaOnly;
 	bool fShowOrigin;
 	};
 
