@@ -16,7 +16,7 @@
 #include "zoolib/Apple/ZRef_NS.h"
 
 #include "zoolib/GameEngine/Game.h"
-#include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/RenderGame.h" // For GameEngine::sPixelToGame
 #include "zoolib/GameEngine/Sound_CoreAudio.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"

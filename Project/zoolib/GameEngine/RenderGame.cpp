@@ -1,4 +1,4 @@
-#include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/RenderGame.h"
 
 #include "zoolib/Util_STL_vector.h"
 
@@ -132,7 +132,7 @@ static Mat spAdditionalMat(const GPoint& p, const GPoint& g)
 	return additional;
 	}
 
-void sGame_Render(const ZRef<Rendered>& iRendered,
+void sRenderGame(const ZRef<Rendered>& iRendered,
 	const GPoint& iPixelSize,
 	const GPoint& iGameSize,
 	bool iShowBounds, bool iShowOrigin,

@@ -4,7 +4,7 @@
 #include "zoolib/Apple/Cartesian_CG.h"
 #include "zoolib/Apple/Val_NS.h"
 
-#include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/RenderGame.h" // For GameEngine::sPixelToGame
 #include "zoolib/GameEngine/Types.h"
 #include "zoolib/GameEngine/UIView_Game.h"
 

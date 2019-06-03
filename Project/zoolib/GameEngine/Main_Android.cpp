@@ -8,7 +8,7 @@
 
 #include "zoolib/GameEngine/DebugFlags.h"
 #include "zoolib/GameEngine/Game.h"
-#include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/RenderGame.h" // For GameEngine::sPixelToGame
 #include "zoolib/GameEngine/Types.h"
 #include "zoolib/GameEngine/Util.h"
 
