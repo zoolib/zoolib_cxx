@@ -114,6 +114,8 @@ ZRef<Tween<BlushGainMat> > sTween_BlushGainMat(const Map& iMap)
 
 	if (ZQ<Val> theQ = sQGetNamed(iMap, "Blush", "B"))
 		theTweenBlush = sTween_Blush(sTween<Rat>(theQ));
+	else if (ZQ<Val> theQ = sQGetNamed(iMap, "Alpha", "A"))
+		theTweenBlush = sTween_Blush(sTween<Rat>(theQ));
 
 	// ---------------------------------------------------------------------------------------------
 
