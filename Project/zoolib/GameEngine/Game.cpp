@@ -10,7 +10,7 @@
 #include "zoolib/GameEngine/DebugFlags.h"
 #include "zoolib/GameEngine/Draw_GL_Shader.h"
 #include "zoolib/GameEngine/DrawPreprocess.h"
-#include "zoolib/GameEngine/Game_Render.h"
+#include "zoolib/GameEngine/RenderGame.h"
 #include "zoolib/GameEngine/Texture_GL.h"
 #include "zoolib/GameEngine/Util.h"
 #include "zoolib/GameEngine/Util_Allocator.h"
@@ -172,7 +172,7 @@ void Game::Draw(
 
 		theRendered = Util::sFinderHider(theRendered, iBackingSize, theGameSize);
 
-		sGame_Render(
+		sRenderGame(
 			theRendered,
 			iBackingSize,
 			theGameSize,
@@ -346,7 +346,7 @@ void Game::pUpdateTouches()
 
 ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 	{
-	InChannel theInChannel(iKeyDowns, fNookScope);
+	InChannel theInChannel(this->GetGameSize(), iKeyDowns, fNookScope);
 	fNookScope->NewEra();
 
 	OutChannel theOutChannel(fRootMap, fAssetCatalog, fFontCatalog, fSoundMeister);
