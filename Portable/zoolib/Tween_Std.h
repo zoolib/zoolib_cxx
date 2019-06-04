@@ -197,6 +197,17 @@ ZRef<Tween<Val> > sTween_Erf()
 	{ return new Tween_Fun<Val,spTweenFun_Erf>; }
 
 // =================================================================================================
+#pragma mark - sTween_Sqrt
+
+template <class Val>
+Val spTweenFun_Sqrt(double iPlace)
+	{ return iPlace < 0.0 ? 0.0 : iPlace > 1.0 ? 1.0 : sqrt(iPlace); }
+
+template <class Val>
+ZRef<Tween<Val> > sTween_Sqrt()
+	{ return new Tween_Fun<Val,spTweenFun_Sqrt>; }
+
+// =================================================================================================
 #pragma mark - sTween_QuadIn
 
 template <class Val>

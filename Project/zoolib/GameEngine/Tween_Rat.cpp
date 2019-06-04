@@ -114,6 +114,7 @@ ZMACRO_RatRegistration(Triangle);
 ZMACRO_RatRegistration(Square);
 ZMACRO_RatRegistration(Sin);
 ZMACRO_RatRegistration(Cos);
+ZMACRO_RatRegistration(Sqrt);
 ZMACRO_RatRegistration(QuadIn);
 ZMACRO_RatRegistration(QuadOut);
 ZMACRO_RatRegistration(CubicIn);
