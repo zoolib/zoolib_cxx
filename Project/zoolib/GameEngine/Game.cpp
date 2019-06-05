@@ -147,8 +147,6 @@ void Game::Draw(
 	{
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
-	GPoint theGameSize = this->GetGameSize();
-
 	ZRef<Rendered> theRendered;
 	{
 	ZAcqMtx acq(fMtx_Game);
@@ -156,7 +154,7 @@ void Game::Draw(
 	fTimestamp_ToDraw = iNewTimestamp;
 	fCnd_Game.Broadcast();
 
-	if (fRendered_Prior != fRendered)
+    if (not iCallable_FlipBuffers || fRendered_Prior != fRendered)
 		{
 		fRendered_Prior = fRendered;
 		theRendered = fRendered;
@@ -165,6 +163,8 @@ void Game::Draw(
 
 	if (theRendered)
 		{
+    	GPoint theGameSize = this->GetGameSize();
+
 		double start = Time::sSystem();
 		const Rat listenerL = X(theGameSize) / 3;
 		const Rat listenerR = 2 * X(theGameSize) / 3;
@@ -206,9 +206,6 @@ void Game::WakeToBeKilled()
 void Game::RunOnce()
 	{
 	double interval;
-
-	GPoint theGameSize = this->GetGameSize();
-
 	std::vector<int> theKeyDowns;
 
 	{
@@ -230,6 +227,8 @@ void Game::RunOnce()
 	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	ZRef<Rendered> theRendered = this->pCrank(interval, &theKeyDowns);
+
+	const GPoint theGameSize = this->GetGameSize();
 
 	theRendered = sDrawPreprocess(
 		theRendered,
@@ -285,7 +284,7 @@ void Game::pUpdateTouches()
 				}
 			}
 
-		if (exclusive and (sIsEmpty(interested) || nearestExclusive <= nearestInterested))
+		if (exclusive and (sIsEmpty(interested) || nearestInterested > nearestExclusive))
 			{
 			sInsertMust(fExclusiveTouches, theTouch, exclusive);
 			if (exclusive->fActive.size() < exclusive->fMaxTouches)
