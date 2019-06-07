@@ -72,6 +72,10 @@ ZRef<SubProcess_POSIX> sLaunchSubProcess(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs);
 
+ZRef<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
+	const std::string& iProgram,
+	const std::vector<std::string>& iArgs);
+
 } // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
