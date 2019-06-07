@@ -42,13 +42,9 @@ public:
 
 	typedef RelsWatcher::Callable_Register Callable_Register;
 
-	typedef Callable<
-		void(const PseudoMap* iOld, const PseudoMap* iNew)
-		> Callable_Row;
+	typedef Callable<void(const PseudoMap* iOld, const PseudoMap* iNew)> Callable_Row;
 
-	typedef Callable<
-		ZRef<Callable_Row>(const PseudoMap&)
-		> Callable_Make_Callable_Row;
+	typedef Callable<ZRef<Callable_Row>(const PseudoMap&)> Callable_Make_Callable_Row;
 
 	RowBoat(const ZRef<Callable_Register>& iCallable_Register,
 		const ZRef<Expr_Rel>& iRel,
