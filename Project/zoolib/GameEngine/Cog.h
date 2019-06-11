@@ -142,13 +142,13 @@ std::vector<ZRef<Nook_p> > sGetAllNooks(const Param& iParam)
 	}
 
 template <class Nook_p>
-ZRef<Nook_p> sUpdateOneNook(const Param& iParam, ZWeakRef<Nook_p>& ioWR)
+ZRef<Nook_p> sUpdateOneNook(const Param& iParam, WP<Nook_p>& ioWP)
 	{
-	ZRef<Nook_p> theNook = ioWR;
+	ZRef<Nook_p> theNook = ioWP;
 	if (not theNook)
 		{
 		theNook = sGetOneNook<Nook_p>(iParam);
-		ioWR = theNook;
+		ioWP = theNook;
 		}
 	return theNook;
 	}

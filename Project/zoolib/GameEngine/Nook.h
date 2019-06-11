@@ -67,7 +67,7 @@ public:
 
 private:
 	friend class NookScope;
-	const ZWeakRef<NookScope> fNookScope;
+	const WP<NookScope> fNookScopeWP;
 	// Used by NookScope
 	Name fName;
 	};
@@ -82,13 +82,13 @@ public:
 	NookSet()
 		{}
 
-	std::set<ZWeakRef<Nook_p> > fWRNooks;
+	std::set<WP<Nook_p> > fNookWPs;
 
 	std::vector<ZRef<Nook_p> > Get()
 		{
 		std::vector<ZRef<Nook_p> > result;
-		for (ZMACRO_auto_(ii, fWRNooks.begin());
-			ii != fWRNooks.end(); /*no inc*/)
+		for (ZMACRO_auto_(ii, fNookWPs.begin());
+			ii != fNookWPs.end(); /*no inc*/)
 			{
 			if (ZRef<Nook> theNook = *ii)
 				{
@@ -97,7 +97,7 @@ public:
 				}
 			else
 				{
-				ii = Util_STL::sEraseInc(fWRNooks, ii);
+				ii = Util_STL::sEraseInc(fNookWPs, ii);
 				}
 			}
 		return result;

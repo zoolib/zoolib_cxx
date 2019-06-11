@@ -246,6 +246,27 @@ ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
 	}
 
 // =================================================================================================
+#pragma mark - WP
+
+template <class T> using WP = ZWeakRef<T>;
+
+template <class T>
+WP<T> sWP(T* iP)
+	{
+	if (iP)
+		return WP<T>(iP->GetWeakRefProxy());
+	return null;
+	}
+
+template <class T,bool Sense>
+WP<T> sWP(ZRef<T,Sense> iP)
+	{
+	if (iP)
+		return WP<T>(iP->GetWeakRefProxy());
+	return null;
+	}
+
+// =================================================================================================
 #pragma mark - ZRef_Counted
 
 // Useful in situations where we want the default ctor of a ZRef<X> to default create an X.

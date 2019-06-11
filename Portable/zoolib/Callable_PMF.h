@@ -48,10 +48,10 @@ template <class T> struct Traits<ZRef<T> >
 	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
 	};
 
-template <class T> struct Traits<ZWeakRef<T> >
+template <class T> struct Traits<WP<T> >
 	{
 	typedef ZRef<T> Temp_t;
-	static ZRef<T> sGetTemp(const ZWeakRef<T>& iObject) { return iObject; }
+	static ZRef<T> sGetTemp(const WP<T>& iObject) { return iObject; }
 	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
 	};
 

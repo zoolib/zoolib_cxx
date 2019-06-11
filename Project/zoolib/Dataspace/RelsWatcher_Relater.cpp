@@ -65,7 +65,7 @@ public:
 
 	int64 fRefcon;
 
-	const ZWeakRef<RelsWatcher_Relater> fWeakRef_RWR;
+	const WP<RelsWatcher_Relater> fWeakRef_RWR;
 	const ZRef<RelsWatcher::Callable_Changed> fCallable;
 	const ZRef<Expr_Rel> fRel;
 

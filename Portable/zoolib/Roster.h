@@ -94,7 +94,7 @@ public:
 	virtual void Finalize();
 
 private:
-	ZWeakRef<Roster> fRoster;
+	WP<Roster> fRoster;
 
 	const ZRef<Callable_Void> fCallable_Broadcast;
 	const ZRef<Callable_Void> fCallable_Gone;

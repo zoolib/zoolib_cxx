@@ -346,7 +346,7 @@ public:
 		}
 
 protected:
-	ZWeakRef<SafeSetRep<T> > fRep;
+	WP<SafeSetRep<T> > fRep;
 
 private:
 	typename SafeSetRep<T>::EntryList::iterator fNextEntry;

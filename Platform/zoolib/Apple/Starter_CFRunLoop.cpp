@@ -93,7 +93,7 @@ void Starter_CFRunLoop::spCallback(
 	CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
 	{
 	if (ZRef<Starter_CFRunLoop> theStarter =
-		ZWeakRef<Starter_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
+		WP<Starter_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
 		{ theStarter->pInvokeClearQueue(); }
 	}
 

@@ -99,14 +99,14 @@ void NookScope::pFinalize(Nook* iNook)
 #pragma mark - Nook
 
 Nook::Nook(const ZRef<NookScope>& iNookScope)
-:	fNookScope(iNookScope)
+:	fNookScopeWP(iNookScope)
 	{}
 
 void Nook::Initialize()
 	{
 	fName = typeid(*this).name();
 
-	if (ZRef<NookScope> theNM = fNookScope)
+	if (ZRef<NookScope> theNM = fNookScopeWP)
 		theNM->pInitialize(this);
 	else
 		ZCounted::Initialize();
@@ -114,7 +114,7 @@ void Nook::Initialize()
 
 void Nook::Finalize()
 	{
-	if (ZRef<NookScope> theNM = fNookScope)
+	if (ZRef<NookScope> theNM = fNookScopeWP)
 		theNM->pFinalize(this);
 	else
 		ZCounted::Finalize();
@@ -122,13 +122,13 @@ void Nook::Finalize()
 
 bool Nook::IsFullCycle()
 	{
-	if (ZRef<NookScope> theNM = fNookScope)
+	if (ZRef<NookScope> theNM = fNookScopeWP)
 		return theNM->pIsFullCycle(this);
 	return false;
 	}
 
 ZRef<NookScope> Nook::GetNookScope()
-	{ return fNookScope; }
+	{ return fNookScopeWP; }
 
 } // namespace GameEngine
 } // namespace ZooLib
