@@ -83,11 +83,22 @@ private:
 
 	double fTimeOfLastRead;
 	double fTimeOfLastWrite;
+
+	int64 fClientCounterReceived;
+	int64 fServerCounterSent;
+
+int64 fLastClientChangeCount;
+
 	const double fTimeout;
 	const double fConnectionTimeout;
 
 	std::map<int64,RefReg> fMap_Refcon2Reg;
-	std::map<int64,ZRef<Result>> fMap_Refcon2Result;
+	struct ResultCC
+		{
+		ZRef<Result> fResult;
+		int64 fCC;
+		};
+	std::map<int64,ResultCC> fMap_Refcon2ResultCC;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
 	};
 
@@ -170,6 +181,9 @@ private:
 	vector<Map_Any> fQueue_ToWrite;
 	bool fReadSinceWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
+
+	int64 fClientCounterSent;
+	int64 fServerCounterReceived;
 
 	int64 fNextRefcon;
 	std::set<ZRef<Registration> > fPending_Registrations;

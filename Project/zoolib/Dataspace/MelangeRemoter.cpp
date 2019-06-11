@@ -389,6 +389,7 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 ,	fDescriptionQ(iDescriptionQ)
 ,	fTimeOfLastRead(0)
 ,	fTimeOfLastWrite(0)
+,	fLastClientChangeCount(0)
 ,	fTimeout(10)
 ,	fConnectionTimeout(30)
 	{}
@@ -458,7 +459,7 @@ void MelangeServer::pWrite()
 	ZRef<ChannerW_Bin> theChannerW = fChannerW;
 
 	ZAcqMtx acq(fMtx);
-	if (sIsEmpty(fMap_Refcon2Result))
+	if (sIsEmpty(fMap_Refcon2ResultCC))
 		{
 		if (fTrueOnce_SendAnEmptyMessage())
 			{
@@ -469,19 +470,20 @@ void MelangeServer::pWrite()
 			fTimeOfLastWrite = Time::sSystem();
 			}
 		}
-	else while (not sIsEmpty(fMap_Refcon2Result))
+	else while (not sIsEmpty(fMap_Refcon2ResultCC))
 		{
 		fTrueOnce_SendAnEmptyMessage.Reset();
 		vector<Map_Any> theMessages;
-		foreacha (entry, fMap_Refcon2Result)
+		foreacha (entry, fMap_Refcon2ResultCC)
 			{
 			Map_Any theMap;
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", entry.first);
-			theMap.Set("Result", spAsVal(entry.second));
+			theMap.Set("Result", spAsVal(entry.second.fResult));
+			theMap.Set("ChangeCount", entry.second.fCC);
 			sPushBack(theMessages, theMap);
 			}
-		sClear(fMap_Refcon2Result);
+		sClear(fMap_Refcon2ResultCC);
 
 		foreacha (entry, theMessages)
 			{
@@ -521,6 +523,9 @@ void MelangeServer::pWork()
 	// Act on messages
 	foreachv (Map_Any theMessage, theMessages)
 		{
+		const int64 theCC = sCoerceInt(theMessage.Get("ChangeCount"));
+		fLastClientChangeCount = std::max(fLastClientChangeCount, theCC);
+
 		foreacha (entry, theMessage.Get<Seq_Any>("Registrations"))
 			{
 			if (ZQ<Map_Any> theMapQ = entry.Get<Map_Any>())
@@ -559,7 +564,7 @@ void MelangeServer::pWork()
 				else
 					{
 					// Also toss any result for the refcon.
-					sErase(fMap_Refcon2Result, *theRefconQ);
+					sErase(fMap_Refcon2ResultCC, *theRefconQ);
 					}
 				}
 			}
@@ -603,7 +608,7 @@ void MelangeServer::pWork()
 			}
 		}
 
-	if (sNotEmpty(fMap_Refcon2Result) || fTimeOfLastWrite + fTimeout < Time::sSystem())
+	if (sNotEmpty(fMap_Refcon2ResultCC) || fTimeOfLastWrite + fTimeout < Time::sSystem())
 		{
 		fTimeOfLastWrite = Time::sSystem();
 		if (fTrueOnce_WriteNeedsStart())
@@ -624,7 +629,8 @@ void MelangeServer::pChanged(
 	{
 	ZAcqMtx acq(fMtx);
 
-	sSet(fMap_Refcon2Result, sGetMust(fMap_Reg2Refcon, iRegistration), iResult);
+	sSet(fMap_Refcon2ResultCC, sGetMust(fMap_Reg2Refcon, iRegistration),
+		ResultCC({iResult, fLastClientChangeCount}));
 
 	this->pWake();
 	}
@@ -663,6 +669,7 @@ Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
 ,	fGettingChanner(false)
 ,	fReadSinceWrite(false)
 ,	fNextRefcon(1)
+,	fSentChangeCount(1)
 	{}
 
 ZQ<ZRef<ZCounted> > Melange_Client::QCall(
@@ -892,6 +899,7 @@ void Melange_Client::pWork()
 
 	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
 		{
+		theMessage.Set("ChangeCount", ++fSentChangeCount);
 		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
 		}
