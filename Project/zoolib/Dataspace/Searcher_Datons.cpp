@@ -822,13 +822,14 @@ PP* spAllOnesPointer()
 	{ return reinterpret_cast<PP*>((char*)(0)-1); }
 } // anonymous namespace
 
-void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
+void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oChangeCount)
 	{
 	Searcher::pCollectResultsCalled();
 
 	ZAcqMtx acq(fMtx);
 
 	oChanged.clear();
+	oChangeCount = fChangeCount;
 
 	for (DListEraser<PSearch,DLink_PSearch_NeedsWork> eraser = fPSearch_NeedsWork;
 		eraser; eraser.Advance())

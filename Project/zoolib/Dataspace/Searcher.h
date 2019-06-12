@@ -117,7 +117,7 @@ public:
 		const AddedSearch* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount) = 0;
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged) = 0;
+	virtual void CollectResults(std::vector<SearchResult>& oChanged, int64& oChangeCount) = 0;
 
 	typedef Callable<void(ZRef<Searcher>)> Callable_SearcherResultsAvailable;
 	void SetCallable_SearcherResultsAvailable(ZRef<Callable_SearcherResultsAvailable> iCallable);

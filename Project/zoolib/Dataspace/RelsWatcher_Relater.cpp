@@ -146,9 +146,9 @@ void RelsWatcher_Relater::Update()
 	}
 
 	// Pick up any results
-	int64 theChangeCount;
+	int64 theChangeCount = -1;
 	vector<QueryResult> theQueryResults;
-	fRelater->CollectResults(theQueryResults);
+	fRelater->CollectResults(theQueryResults, theChangeCount);
 
 	if (sNotEmpty(theQueryResults))
 		{

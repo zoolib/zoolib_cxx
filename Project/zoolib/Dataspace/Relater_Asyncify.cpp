@@ -94,7 +94,7 @@ void Relater_Asyncify::ModifyRegistrations(
 	this->pTrigger_Update();
 	}
 
-void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
+void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged, int64& oChangeCount)
 	{
 	ZAcqMtx acq(fMtx);
 	Relater::pCalled_RelaterCollectResults();
@@ -106,6 +106,8 @@ void Relater_Asyncify::CollectResults(vector<QueryResult>& oChanged)
 		oChanged.push_back(entry.second);
 		}
 	fPendingResults.clear();
+
+	oChangeCount = 0xDEADBEEF;
 	}
 
 void Relater_Asyncify::CrankIt()
@@ -163,8 +165,9 @@ void Relater_Asyncify::pUpdate()
 			fNeeds_RelaterCollectResults = false;
 			ZRelMtx rel(fMtx);
 
+			int64 theChangeCount;
 			vector<QueryResult> changes;
-			fRelater->CollectResults(changes);
+			fRelater->CollectResults(changes, theChangeCount);
 
 			if (changes.size())
 				{

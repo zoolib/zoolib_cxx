@@ -92,7 +92,7 @@ public:
 		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount) = 0;
 
-	virtual void CollectResults(std::vector<QueryResult>& oChanged) = 0;
+	virtual void CollectResults(std::vector<QueryResult>& oChanged, int64& oChangeCount) = 0;
 
 	typedef Callable<void(ZRef<Relater>)> Callable_RelaterResultsAvailable;
 	void SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable);

@@ -865,9 +865,11 @@ void Relater_Union::ModifyRegistrations(
 	Relater::pTrigger_RelaterResultsAvailable();
 	}
 
-void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
+void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChangeCount)
 	{
 	Relater::pCalled_RelaterCollectResults();
+
+	oChangeCount = 0xDEADBEEF2;
 
 	ZAcqMtx acq(fMtx);
 
@@ -917,7 +919,8 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged)
 		vector<QueryResult> theQueryResults;
 		{
 		ZRelMtx rel(fMtx);
-		theRelater->CollectResults(theQueryResults);
+		int64 theCC;
+		theRelater->CollectResults(theQueryResults, theCC);
 		}
 
 		// It's feasible that thePRelater got whacked while we were unlocked. Not sure what to do about it.

@@ -52,7 +52,7 @@ public:
 		const AddedQuery* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<QueryResult>& oChanged);
+	virtual void CollectResults(std::vector<QueryResult>& oChanged, int64& oChangeCount);
 
 // Our protocol
 	void ForceUpdate();
@@ -65,6 +65,8 @@ protected:
 	ZCnd fCnd;
 
 	ZRef<Searcher> fSearcher;
+
+	int64 fChangeCount;
 
 	class PQuery;
 

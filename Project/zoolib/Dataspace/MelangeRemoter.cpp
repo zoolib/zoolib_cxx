@@ -389,6 +389,7 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 ,	fDescriptionQ(iDescriptionQ)
 ,	fTimeOfLastRead(0)
 ,	fTimeOfLastWrite(0)
+,	fLastClientChangeCount(0)
 ,	fTimeout(10)
 ,	fConnectionTimeout(30)
 	{}
@@ -589,6 +590,9 @@ void MelangeServer::pWork()
 			}
 		}
 
+	// We're not handling the potential asynchrony here -- we're using the client's change count
+	// when communicating back. What about the one we get from our melange?
+
 	if (sNotEmpty(fMap_Refcon2ResultCC) || fTimeOfLastWrite + fTimeout < Time::sSystem())
 		{
 		fTimeOfLastWrite = Time::sSystem();
@@ -695,7 +699,7 @@ ZQ<int64> Melange_Client::QCall(
 		}
 
 	this->pWake();
-	return fChangeCount;
+	return ++fChangeCount;
 	}
 
 bool Melange_Client::pTrigger()
@@ -783,6 +787,7 @@ void Melange_Client::pWrite()
 		try
 			{
 			ZRelMtx rel(fMtx);
+			ZThread::sSleep(3);
 			foreacha (entry, theMessages)
 				spWriteMessage(*theChannerW, entry, null);
 			}
@@ -884,7 +889,7 @@ void Melange_Client::pWork()
 
 	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
 		{
-//		theMessage.Set("ChangeCount", ++fSentChangeCount);
+		theMessage.Set("ChangeCount", fChangeCount);
 		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
 		}

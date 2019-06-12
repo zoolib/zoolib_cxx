@@ -375,6 +375,7 @@ ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRe
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)
 ,	fNextRefcon(1)
+,	fChangeCount(0)
 	{}
 
 Relater_Searcher::~Relater_Searcher()
@@ -493,13 +494,15 @@ void Relater_Searcher::ModifyRegistrations(
 
 // =================================================================================================
 
-void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged)
+void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oChangeCount)
 	{
 	Relater::pCalled_RelaterCollectResults();
 
 	this->pCollectResultsFromSearcher();
 
 	ZAcqMtx acq(fMtx);
+
+	oChangeCount = fChangeCount;
 
 	for (DListEraser<PQuery,DLink_PQuery_NeedsWork> eraser = fPQuery_NeedsWork;
 		eraser; eraser.Advance())
@@ -568,9 +571,12 @@ void Relater_Searcher::ForceUpdate()
 bool Relater_Searcher::pCollectResultsFromSearcher()
 	{
 	vector<SearchResult> theSearchResults;
-	fSearcher->CollectResults(theSearchResults);
+	int64 theChangeCount;
+	fSearcher->CollectResults(theSearchResults, theChangeCount);
 
 	ZAcqMtx acq(fMtx);
+	ZAssert(fChangeCount <= theChangeCount);
+	fChangeCount = theChangeCount;
 	for (vector<SearchResult>::const_iterator ii = theSearchResults.begin();
 		ii != theSearchResults.end(); ++ii)
 		{

@@ -53,7 +53,7 @@ public:
 		const AddedSearch* iAdded, size_t iAddedCount,
 		const int64* iRemoved, size_t iRemovedCount);
 
-	virtual void CollectResults(std::vector<SearchResult>& oChanged);
+	virtual void CollectResults(std::vector<SearchResult>& oChanged, int64& oChangeCount);
 
 // Our protocol
 	int64 MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
