@@ -388,6 +388,7 @@ public:
 #pragma mark - Searcher_Datons
 
 Searcher_Datons::Searcher_Datons(const vector<IndexSpec>& iIndexSpecs)
+:	fChangeCount(0)
 	{
 	foreacha (entry, iIndexSpecs)
 		fIndexes.push_back(new Index(entry));
@@ -958,13 +959,10 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged)
 		}
 	}
 
-void Searcher_Datons::MakeChanges(
+int64 Searcher_Datons::MakeChanges(
 	const Daton* iAsserted, size_t iAssertedCount,
 	const Daton* iRetracted, size_t iRetractedCount)
 	{
-	if (not iAssertedCount and not iRetractedCount)
-		return;
-
 	ZAcqMtx acq(fMtx);
 
 	while (iAssertedCount--)
@@ -1003,11 +1001,15 @@ void Searcher_Datons::MakeChanges(
 			}
 		}
 
+	int64 theChangeCount = ++fChangeCount;
+
 	if (sNotEmpty(fClientSearch_NeedsWork) || sNotEmpty(fPSearch_NeedsWork))
 		{
 		ZRelMtx rel(fMtx);
 		Searcher::pTriggerSearcherResultsAvailable();
 		}
+
+	return theChangeCount;
 	}
 
 void Searcher_Datons::pInvalidateSearchIfAppropriate(PSearch* iPSearch, const Key& iKey)

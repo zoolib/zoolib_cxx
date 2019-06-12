@@ -389,7 +389,6 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 ,	fDescriptionQ(iDescriptionQ)
 ,	fTimeOfLastRead(0)
 ,	fTimeOfLastWrite(0)
-,	fLastClientChangeCount(0)
 ,	fTimeout(10)
 ,	fConnectionTimeout(30)
 	{}
@@ -582,24 +581,6 @@ void MelangeServer::pWork()
 				sPushBack(toErase, *theDataQ);
 			}
 
-		// Handle old message
-		foreacha (entry, theMessage.Get<Seq_Any>("Updates"))
-			{
-			if (ZQ<Map_Any> theMapQ = entry.Get<Map_Any>())
-				{
-				if (ZQ<bool> theBoolQ = sQCoerceBool(theMapQ->Get("True")))
-					{
-					if (ZQ<Data_Any> theDataQ = theMapQ->QGet<Data_Any>("Daton"))
-						{
-						if (*theBoolQ)
-							sPushBack(toInsert, *theDataQ);
-						else
-							sPushBack(toErase, *theDataQ);
-						}
-					}
-				}
-			}
-
 		if (toInsert.size() || toErase.size())
 			{
 			ZRelMtx rel(fMtx);
@@ -620,11 +601,14 @@ void MelangeServer::pWork()
 			fCnd.Broadcast();
 			}
 		}
+
+	// Should this be Time::System() + fTimeout?
 	sNextStartAt(fTimeOfLastWrite + fTimeout, fJob);
 	}
 
 void MelangeServer::pChanged(
 	const RefReg& iRegistration,
+	int64 iChangeCount,
 	const ZRef<Result>& iResult)
 	{
 	ZAcqMtx acq(fMtx);
@@ -668,8 +652,8 @@ Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
 ,	fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
 ,	fReadSinceWrite(false)
+,	fChangeCount(1)
 ,	fNextRefcon(1)
-,	fSentChangeCount(1)
 	{}
 
 ZQ<ZRef<ZCounted> > Melange_Client::QCall(
@@ -690,7 +674,7 @@ ZQ<ZRef<ZCounted> > Melange_Client::QCall(
 	return theRegistration;
 	}
 
-ZQ<void> Melange_Client::QCall(
+ZQ<int64> Melange_Client::QCall(
 	const Daton* iAsserted, size_t iAssertedCount,
 	const Daton* iRetracted, size_t iRetractedCount)
 	{
@@ -711,7 +695,7 @@ ZQ<void> Melange_Client::QCall(
 		}
 
 	this->pWake();
-	return notnull;
+	return fChangeCount;
 	}
 
 bool Melange_Client::pTrigger()
@@ -839,8 +823,9 @@ void Melange_Client::pWork()
 			// Get the registration and call its callable
 			if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
 				{
+				const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
 				if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
-					sCall(theReg->fCallable_Changed, theReg, theResult);
+					sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult);
 				}
 			}
 		}
@@ -899,7 +884,7 @@ void Melange_Client::pWork()
 
 	if (not theMessage.IsEmpty() || (fReadSinceWrite && sIsEmpty(fQueue_ToWrite)))
 		{
-		theMessage.Set("ChangeCount", ++fSentChangeCount);
+//		theMessage.Set("ChangeCount", ++fSentChangeCount);
 		fReadSinceWrite = false;
 		sPushBack(fQueue_ToWrite, theMessage);
 		}

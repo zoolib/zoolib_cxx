@@ -49,7 +49,6 @@ public:
 	,	fWeakRef_RWR(iRWR)
 	,	fCallable(iCallable)
 	,	fRel(iRel)
-	,	fHadResultPrior(false)
 		{}
 
 	virtual ~Registration()
@@ -68,8 +67,6 @@ public:
 	const WP<RelsWatcher_Relater> fWeakRef_RWR;
 	const ZRef<RelsWatcher::Callable_Changed> fCallable;
 	const ZRef<Expr_Rel> fRel;
-
-	bool fHadResultPrior;
 
 	ZRef<QueryEngine::Result> fResult;
 	};
@@ -149,6 +146,7 @@ void RelsWatcher_Relater::Update()
 	}
 
 	// Pick up any results
+	int64 theChangeCount;
 	vector<QueryResult> theQueryResults;
 	fRelater->CollectResults(theQueryResults);
 
@@ -167,13 +165,12 @@ void RelsWatcher_Relater::Update()
 				continue;
 
 			ZRef<Registration> theRegistration = iterRegistration->second;
-			theRegistration->fHadResultPrior = bool(theRegistration->fResult);
 			theRegistration->fResult = entry.GetResult();
 			changes.push_back(theRegistration);
 			}
 		ZRelMtx rel(fMtx);
 		foreacha (rr, changes)
-			{ sCall(rr->fCallable, rr, rr->fResult); }
+			{ sCall(rr->fCallable, rr, theChangeCount, rr->fResult); }
 		}
 	}
 

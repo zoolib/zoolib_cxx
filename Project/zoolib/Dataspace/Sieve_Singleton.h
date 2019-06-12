@@ -68,6 +68,7 @@ public:
 
 private:
 	void pChanged(const ZRef<ZCounted>& iRegistration,
+		int64 iChangeCount,
 		const ZRef<QueryEngine::Result>& iResult);
 
 	ZRef<RelsWatcher::Callable_Register> const fCallable_Register;

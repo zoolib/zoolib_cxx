@@ -64,6 +64,7 @@ public:
 private:
 	void pChanged(
 		const ZRef<ZCounted>& iRegistration,
+		int64 iChangeCount,
 		const ZRef<Result>& iResult);
 
 	const ZRef<Callable_Register> fCallable_Register;

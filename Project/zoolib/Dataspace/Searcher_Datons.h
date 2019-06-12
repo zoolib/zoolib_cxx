@@ -56,7 +56,7 @@ public:
 	virtual void CollectResults(std::vector<SearchResult>& oChanged);
 
 // Our protocol
-	void MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
+	int64 MakeChanges(const Daton* iAsserted, size_t iAssertedCount,
 		const Daton* iRetracted, size_t iRetractedCount);
 
 private:
@@ -131,6 +131,8 @@ private:
 	DListHead<DLink_PSearch_NeedsWork> fPSearch_NeedsWork;
 
 	void pSetupPSearch(PSearch* ioPSearch);
+
+	int64 fChangeCount;
 	};
 
 } // namespace Dataspace

@@ -65,6 +65,7 @@ private:
 
 	void pChanged(
 		const RefReg& iRegistration,
+		int64 iChangeCount,
 		const ZRef<Result>& iResult);
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
 
@@ -76,7 +77,6 @@ private:
 	const ZRef<ChannerR_Bin> fChannerR;
 	const ZRef<ChannerW_Bin> fChannerW;
 	const int64 fClientVersion;
-
 	const ZQ<string> fDescriptionQ;
 
 	vector<Map_Any> fQueue_Read;
@@ -86,10 +86,7 @@ private:
 	double fTimeOfLastRead;
 	double fTimeOfLastWrite;
 
-	int64 fClientCounterReceived;
-	int64 fServerCounterSent;
-
-int64 fLastClientChangeCount;
+	int64 fLastClientChangeCount;
 
 	const double fTimeout;
 	const double fConnectionTimeout;
@@ -141,7 +138,7 @@ public:
 		const ZRef<Expr_Rel>& iRel);
 
 // From Callable via Callable_DatonUpdate
-	virtual ZQ<void> QCall(
+	virtual ZQ<int64> QCall(
 		const Daton* iAsserted, size_t iAssertedCount,
 		const Daton* iRetracted, size_t iRetractedCount);
 
@@ -184,8 +181,7 @@ private:
 	bool fReadSinceWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 
-	int64 fClientCounterSent;
-	int64 fServerCounterReceived;
+	int64 fChangeCount;
 
 	int64 fNextRefcon;
 	std::set<ZRef<Registration> > fPending_Registrations;

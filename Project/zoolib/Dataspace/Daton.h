@@ -53,7 +53,7 @@ private:
 	Data_Any fData;
 	};
 
-typedef Callable<void(const Daton* iAsserted, size_t iAssertedCount,
+typedef Callable<int64(const Daton* iAsserted, size_t iAssertedCount,
 	const Daton* iRetracted, size_t iRetractedCount)> Callable_DatonUpdate;
 
 } // namespace Dataspace
