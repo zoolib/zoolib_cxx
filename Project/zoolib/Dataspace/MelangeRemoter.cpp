@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/ChanR_XX_AbortOnSlowRead.h"
 #include "zoolib/Chan_XX_Buffered.h"
+#include "zoolib/Chan_XX_Count.h"
 #include "zoolib/Log.h"
 #include "zoolib/Promise.h"
 #include "zoolib/StartOnNewThread.h"
@@ -154,13 +155,15 @@ public:
 
 static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescriptionQ)
 	{
+	ChanR_XX_Count<ChanR_Bin> theChanR(iChanR);
+
 	// This ReadFilter handles both the JSONB-->PPT and the PPT->Any translations for
 	// Result, Daton and for AbsentOptional_t
 	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
-	sPull_JSONB_Push_PPT(iChanR, theReadFilter, ChanW_XX_Buffered<ChanW_PPT>(*thePair.first, kBufSize));
+	sPull_JSONB_Push_PPT(theChanR, theReadFilter, ChanW_XX_Buffered<ChanW_PPT>(*thePair.first, kBufSize));
 	sDisconnectWrite(*thePair.first);
 
 	ZQ<Any> theQ = theDelivery->QGet();
@@ -170,6 +173,8 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 	const Map_Any theMessage = theQ->Get<Map_Any>();
 	if (ZLOGF(w, eDebug + 1))
 		{
+		w << theChanR.GetCount() << " bytes, ";
+
 		if (iDescriptionQ)
 			{
 			w << *iDescriptionQ;
@@ -178,6 +183,7 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 			}
 		if (not theMessage.IsEmpty())
 			w << "\n";
+
 		Util_Any_JSON::sWrite(false, Any(theMessage), w);
 		}
 
@@ -281,6 +287,8 @@ static ZAtomic_t spSentMessageCounter;
 
 static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<string>& iDescriptionQ)
 	{
+	ChanW_XX_Count<ChanW_Bin> theChanW(iChanW);
+
 	const ZRef<WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter> >();
 
 	const double start = Time::sSystem();
@@ -292,17 +300,21 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 		Any(iMessage),
 		theWriteFilter,
 		sGetClear(thePair.first)));
-	sPull_PPT_Push_JSONB(ChanR_XX_Buffered<ChanR_PPT>(*thePair.second, kBufSize), theWriteFilter, iChanW);
+	sPull_PPT_Push_JSONB(ChanR_XX_Buffered<ChanR_PPT>(*thePair.second, kBufSize), theWriteFilter, theChanW);
 
-	sFlush(iChanW);
+	sFlush(theChanW);
 
 	const double finish = Time::sSystem();
 
 	if (ZLOGF(w, eDebug + 1))
 		{
+		w << theChanW.GetCount() << " bytes, ";
+
 		if (iDescriptionQ)
 			w << *iDescriptionQ << ", ";
+
 		w << 1e3 * (finish - start) << "ms";
+
 		if (iMessage.IsEmpty())
 			w << ", ";
 		else
@@ -585,7 +597,8 @@ void MelangeServer::pWork()
 		if (toInsert.size() || toErase.size())
 			{
 			ZRelMtx rel(fMtx);
-			sCall(fMelange.f1, sFirstOrNil(toInsert), toInsert.size(),
+			int64 unusedChangeCount = sCall(fMelange.f1,
+				sFirstOrNil(toInsert), toInsert.size(),
 				sFirstOrNil(toErase), toErase.size());
 			}
 		}

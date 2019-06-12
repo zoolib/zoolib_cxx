@@ -76,6 +76,7 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	{
 	fRefcon = iOther.fRefcon;
 	fResult = iOther.fResult;
+	fResultDeltas = iOther.fResultDeltas;
 	return *this;
 	}
 
@@ -84,11 +85,23 @@ QueryResult::QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult
 ,	fResult(iResult)
 	{}
 
+QueryResult::QueryResult(int64 iRefcon,
+	const ZRef<QueryEngine::Result>& iResult,
+	const ZRef<ResultDeltas>& iResultDeltas)
+:	fRefcon(iRefcon)
+,	fResult(iResult)
+,	fResultDeltas(iResultDeltas)
+	{}
+
+
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
 ZRef<QueryEngine::Result> QueryResult::GetResult() const
 	{ return fResult; }
+
+ZRef<ResultDeltas> QueryResult::GetResultDeltas() const
+	{ return fResultDeltas; }
 
 // =================================================================================================
 #pragma mark - Relater

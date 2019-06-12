@@ -15,7 +15,7 @@ using std::vector;
 
 Cog sCog_Distribute(CVec3 iSpacing, const vector<Cog>& iCogs)
 	{
-	PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Each, std::list<Cog> > theAcc;
+	PairwiseCombiner_T<Cog, CogAccumulatorCombiner_Plus, std::list<Cog> > theAcc;
 
 	for (size_t ii = 0; ii < iCogs.size(); ++ii)
 		{

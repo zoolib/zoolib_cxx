@@ -291,8 +291,9 @@ static CVReturn spDisplayLinkCallback(
 	return self;
 	}
 
-const Rat kWidth = 576;
 const Rat kHeight = 1024;
+//const Rat kHeight = 768-44;;
+const Rat kWidth = kHeight * 9.0/16.0;
 
 - (void) awakeFromNib
 	{
@@ -330,7 +331,7 @@ int main(int argc, const char *argv[])
 	Util_Debug::sInstall();
 
 	if (ZCONFIG_Debug)
-		Util_Debug::sSetLogPriority(Log::eDebug + 0);
+		Util_Debug::sSetLogPriority(Log::eDebug + 1);
 	else
 		Util_Debug::sSetLogPriority(Log::eWarning);
 

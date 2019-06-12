@@ -105,6 +105,7 @@ public:
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PRegSearch*> fPRegSearch_Used;
 	ZRef<QE::Result> fResult;
+	ZRef<ResultDeltas> fResultDeltas;
 	};
 
 // =================================================================================================
@@ -374,8 +375,8 @@ ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRe
 
 Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
 :	fSearcher(iSearcher)
-,	fNextRefcon(1)
 ,	fChangeCount(0)
+,	fNextRefcon(1)
 	{}
 
 Relater_Searcher::~Relater_Searcher()
@@ -516,6 +517,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
 		const double start = Time::sSystem();
+		ZRef<Result> priorResult = thePQuery->fResult;
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
 		const double elapsed = Time::sSystem() - start;
 
@@ -527,6 +529,29 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 				w << thePQuery->fRel << "\n";
 				sToStrim(thePQuery->fResult, w);
 				sDumpWalkers(theWalker, w);
+				}
+			}
+
+		thePQuery->fResultDeltas.Clear();
+		if (priorResult)
+			{
+			ZAssert(priorResult->GetRelHead() == thePQuery->fResult->GetRelHead());
+			if (priorResult->Count() == thePQuery->fResult->Count())
+				{
+				ZRef<ResultDeltas> theDeltas = new ResultDeltas;
+				std::map<size_t,Val_Any>& theMap = theDeltas->Mut();
+
+				const Val_Any* priorVals = priorResult->GetValsAt(0);
+				const Val_Any* currVals = thePQuery->fResult->GetValsAt(0);
+
+				const size_t theCount = priorResult->Count() * thePQuery->fResult->GetRelHead().size();
+
+				for (size_t xx = 0; xx < theCount; ++xx)
+					{
+					if (priorVals[xx] != currVals[xx])
+						theMap[xx] = currVals[xx];
+					}
+				thePQuery->fResultDeltas = theDeltas;
 				}
 			}
 		}
@@ -543,7 +568,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 		{
 		ClientQuery* theClientQuery = eraser.Current();
 		PQuery* thePQuery = theClientQuery->fPQuery;
-		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult));
+		oChanged.push_back(QueryResult(theClientQuery->fRefcon, thePQuery->fResult, thePQuery->fResultDeltas));
 		}
 
 	// Remove any unused PRegSearches

@@ -68,6 +68,7 @@ public:
 	const ZRef<RelsWatcher::Callable_Changed> fCallable;
 	const ZRef<Expr_Rel> fRel;
 
+	ZRef<Dataspace::ResultDeltas> fResultDeltas;
 	ZRef<QueryEngine::Result> fResult;
 	};
 
@@ -165,12 +166,16 @@ void RelsWatcher_Relater::Update()
 				continue;
 
 			ZRef<Registration> theRegistration = iterRegistration->second;
+			theRegistration->fResultDeltas = entry.GetResultDeltas();
 			theRegistration->fResult = entry.GetResult();
 			changes.push_back(theRegistration);
 			}
+
 		ZRelMtx rel(fMtx);
 		foreacha (rr, changes)
-			{ sCall(rr->fCallable, rr, theChangeCount, rr->fResult); }
+			{
+			sCall(rr->fCallable, rr, theChangeCount, rr->fResult);
+			}
 		}
 	}
 
