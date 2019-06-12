@@ -787,7 +787,6 @@ void Melange_Client::pWrite()
 		try
 			{
 			ZRelMtx rel(fMtx);
-			ZThread::sSleep(3);
 			foreacha (entry, theMessages)
 				spWriteMessage(*theChannerW, entry, null);
 			}
