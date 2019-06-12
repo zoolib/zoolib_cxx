@@ -44,7 +44,9 @@ class MelangeServer
 	{
 public:
 	MelangeServer(const Melange_t& iMelange,
-		const ZRef<ChannerRW_Bin>& iChannerRW, int64 iClientVersion, const ZQ<string>& iDescriptionQ);
+		const ZRef<ChannerRW_Bin>& iChannerRW,
+		int64 iClientVersion,
+		const ZQ<string>& iDescriptionQ);
 
 	virtual ~MelangeServer();
 
