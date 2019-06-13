@@ -35,6 +35,7 @@ namespace ZooLib {
 namespace DataspaceTypes {
 
 using QueryEngine::Result;
+using QueryEngine::ResultDeltas;
 
 using RelationalAlgebra::Expr_Rel;
 

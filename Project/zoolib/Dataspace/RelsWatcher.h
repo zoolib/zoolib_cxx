@@ -34,7 +34,8 @@ namespace RelsWatcher {
 typedef Callable<void(
 		const ZRef<ZCounted>& iRegistration,
 		int64 iChangeCount,
-		const ZRef<Result>& iResult)>
+		const ZRef<Result>& iResult,
+		const ZRef<ResultDeltas>& iResultDeltas)>
 	Callable_Changed;
 
 typedef Callable<ZRef<ZCounted>(

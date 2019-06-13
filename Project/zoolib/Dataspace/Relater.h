@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Dataspace/Types.h"
 
-#include <map>
 #include <set>
 #include <vector>
 
@@ -58,7 +57,6 @@ private:
 // =================================================================================================
 #pragma mark - QueryResult
 
-typedef CountedVal<std::map<size_t,Val_Any>> ResultDeltas;
 
 class QueryResult
 	{
@@ -68,17 +66,19 @@ public:
 	~QueryResult();
 	QueryResult& operator=(const QueryResult& iOther);
 
-	QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult);
+	QueryResult(int64 iRefcon, const ZRef<Result>& iResult);
 
-	QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult, const ZRef<ResultDeltas>& iResultDeltas);
+	QueryResult(int64 iRefcon,
+		const ZRef<Result>& iResult,
+		const ZRef<ResultDeltas>& iResultDeltas);
 
 	int64 GetRefcon() const;
-	ZRef<QueryEngine::Result> GetResult() const;
+	ZRef<Result> GetResult() const;
 	ZRef<ResultDeltas> GetResultDeltas() const;
 
 private:
 	int64 fRefcon;
-	ZRef<QueryEngine::Result> fResult;
+	ZRef<Result> fResult;
 	ZRef<ResultDeltas> fResultDeltas;
 	};
 

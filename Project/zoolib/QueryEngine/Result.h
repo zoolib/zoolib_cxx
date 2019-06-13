@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
+#include <map>
 #include <set>
 #include <vector>
 
@@ -63,6 +64,11 @@ private:
 	RelationalAlgebra::RelHead fRelHead;
 	std::vector<Val_Any> fPackedRows;
 	};
+
+// =================================================================================================
+#pragma mark - ResultDeltas
+
+typedef CountedVal<std::map<size_t,Val_Any>> ResultDeltas;
 
 // =================================================================================================
 #pragma mark - ResultDiffer

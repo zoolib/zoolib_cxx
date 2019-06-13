@@ -67,6 +67,7 @@ QueryResult::QueryResult()
 QueryResult::QueryResult(const QueryResult& iOther)
 :	fRefcon(iOther.fRefcon)
 ,	fResult(iOther.fResult)
+,	fResultDeltas(iOther.fResultDeltas)
 	{}
 
 QueryResult::~QueryResult()
@@ -80,13 +81,13 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	return *this;
 	}
 
-QueryResult::QueryResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
+QueryResult::QueryResult(int64 iRefcon, const ZRef<Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 	{}
 
 QueryResult::QueryResult(int64 iRefcon,
-	const ZRef<QueryEngine::Result>& iResult,
+	const ZRef<Result>& iResult,
 	const ZRef<ResultDeltas>& iResultDeltas)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
@@ -97,7 +98,7 @@ QueryResult::QueryResult(int64 iRefcon,
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<QueryEngine::Result> QueryResult::GetResult() const
+ZRef<Result> QueryResult::GetResult() const
 	{ return fResult; }
 
 ZRef<ResultDeltas> QueryResult::GetResultDeltas() const

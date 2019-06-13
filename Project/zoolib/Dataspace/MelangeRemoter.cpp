@@ -626,7 +626,8 @@ void MelangeServer::pWork()
 void MelangeServer::pChanged(
 	const RefReg& iRegistration,
 	int64 iChangeCount,
-	const ZRef<Result>& iResult)
+	const ZRef<Result>& iResult,
+	const ZRef<ResultDeltas>& iResultDeltas)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -837,12 +838,13 @@ void Melange_Client::pWork()
 		{
 		if (ZQ<int64> theRefconQ = sQCoerceInt(theMessage.Get("Refcon")))
 			{
+			const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
+
 			// Get the registration and call its callable
 			if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
 				{
-				const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
 				if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
-					sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult);
+					sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult, null); //##
 				}
 			}
 		}

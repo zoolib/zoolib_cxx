@@ -512,7 +512,6 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 
 		{
 		ZRelMtx rel(fMtx);
-		ZAssert(not thePQuery->fResult);
 
 		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
@@ -611,7 +610,7 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 			foreacha (thePQuery, thePRS->fPQuery_Using)
 				{
 				sQInsertBack(fPQuery_NeedsWork, thePQuery);
-				thePQuery->fResult.Clear();
+//##				thePQuery->fResult.Clear();
 				}
 			}
 		}

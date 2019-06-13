@@ -173,9 +173,7 @@ void RelsWatcher_Relater::Update()
 
 		ZRelMtx rel(fMtx);
 		foreacha (rr, changes)
-			{
-			sCall(rr->fCallable, rr, theChangeCount, rr->fResult);
-			}
+			sCall(rr->fCallable, rr, theChangeCount, rr->fResult, rr->fResultDeltas);
 		}
 	}
 

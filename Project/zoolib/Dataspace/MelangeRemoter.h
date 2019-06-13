@@ -66,7 +66,8 @@ private:
 	void pChanged(
 		const RefReg& iRegistration,
 		int64 iChangeCount,
-		const ZRef<Result>& iResult);
+		const ZRef<Result>& iResult,
+		const ZRef<ResultDeltas>& iResultDeltas);
 	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
 
 	const Melange_t fMelange;

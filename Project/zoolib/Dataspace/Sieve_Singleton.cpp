@@ -164,7 +164,8 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 
 void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration,
 	int64 iChangeCount,
-	const ZRef<QueryEngine::Result>& iResult)
+	const ZRef<Result>& iResult,
+	const ZRef<ResultDeltas>& iResultDeltas)
 	{
 	const bool wasLoaded = fRegistration && fResult;
 	fMapQ.Clear();

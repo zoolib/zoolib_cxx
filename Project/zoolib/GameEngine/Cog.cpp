@@ -392,13 +392,10 @@ static
 Cog spCogFun_DisableTouches(const Cog& iSelf, const Param& iParam,
 	const Cog& iChild)
 	{
-	vector<ZRef<TouchListener> > dummy;
-	iParam.fOutChannel.GetTLs().swap(dummy);
+	SaveSetRestore<vector<ZRef<TouchListener>>> sR(iParam.fOutChannel.GetTLs(), sDefault());
 
 	Cog newChild = iChild;
 	const bool unchanged = sCallUpdate_Cog_Unchanged(newChild, iParam);
-
-	iParam.fOutChannel.GetTLs().swap(dummy);
 
 	if (unchanged)
 		return iSelf;
