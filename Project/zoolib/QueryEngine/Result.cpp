@@ -53,6 +53,11 @@ namespace QueryEngine {
 
 using RelationalAlgebra::RelHead;
 
+Result::Result(const Result& iOther)
+:	fRelHead(iOther.fRelHead)
+,	fPackedRows(iOther.fPackedRows)
+	{}
+
 Result::Result(RelHead* ioRelHead,
 	vector<Val_Any>* ioPackedRows)
 	{
@@ -103,6 +108,22 @@ int Result::Compare(const Result& iOther) const
 		return compare;
 	return sCompare_T(fPackedRows, iOther.fPackedRows);
 	}
+
+ZRef<Result> Result::Fresh()
+	{
+	if (this->IsShared())
+		return new Result(*this);
+	return this;
+	}
+
+// =================================================================================================
+#pragma mark - ResultDeltas
+
+ResultDeltas::ResultDeltas()
+	{}
+
+ResultDeltas::~ResultDeltas()
+	{}
 
 // =================================================================================================
 #pragma mark - Comparer_t (anonymous)
@@ -168,11 +189,40 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 // insert everything in oAdded, and then apply changes in oChanged after both.
 
 void ResultDiffer::Apply(const ZRef<Result>& iResult,
-	ZRef<Result>* oPrior,
+	ZRef<Result>* oPriorResult,
+	const ZRef<ResultDeltas>& iResultDeltas,
+	ZRef<Result>* oCurResult,
 	vector<size_t>* oRemoved,
 	vector<pair<size_t,size_t> >* oAdded,
 	vector<Multi3<size_t,size_t,size_t> >* oChanged)
 	{
+	if (iResultDeltas)
+		{
+		ZAssert(fResult_Prior && oCurResult);
+		if (oPriorResult)
+			*oPriorResult = fResult_Prior;
+
+		fResult_Prior = fResult_Prior->Fresh();
+		*oCurResult = fResult_Prior;
+
+		const size_t theColCount = fResult_Prior->GetRelHead().size();
+		for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
+			{
+			const size_t target = iResultDeltas->fMapping[xx];
+
+			std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
+				theColCount,
+				&fResult_Prior->fPackedRows[target * theColCount]);
+
+			oChanged->push_back(
+				Multi3<size_t,size_t,size_t>(
+					target, target, target));
+			}
+		return;
+		}
+
+	ZAssert(iResult);
+
 	if (iResult == fResult_Prior)
 		return;
 
@@ -333,8 +383,8 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 			}
 		}
 
-	if (oPrior)
-		*oPrior = fResult_Prior;
+	if (oPriorResult)
+		*oPriorResult = fResult_Prior;
 
 	fResult_Prior = iResult;
 

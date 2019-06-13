@@ -42,6 +42,8 @@ namespace QueryEngine {
 
 class Result : public ZCounted
 	{
+	Result(const Result& iOther);
+
 public:
 	Result(RelationalAlgebra::RelHead* ioRelHead,
 		std::vector<Val_Any>* ioPackedRows);
@@ -60,7 +62,9 @@ public:
 
 	int Compare(const Result& iOther) const;
 
-private:
+	ZRef<Result> Fresh();
+
+public:
 	RelationalAlgebra::RelHead fRelHead;
 	std::vector<Val_Any> fPackedRows;
 	};
@@ -68,7 +72,17 @@ private:
 // =================================================================================================
 #pragma mark - ResultDeltas
 
-typedef CountedVal<std::map<size_t,Val_Any>> ResultDeltas;
+class ResultDeltas : public ZCounted
+	{
+public:
+	ResultDeltas();
+
+	virtual ~ResultDeltas();
+
+public:
+	std::vector<size_t> fMapping;
+	std::vector<Val_Any> fPackedRows;
+	};
 
 // =================================================================================================
 #pragma mark - ResultDiffer
@@ -81,7 +95,9 @@ public:
 		bool iEmitDummyChanges = false);
 
 	void Apply(const ZRef<Result>& iResult,
-		ZRef<Result>* oPrior,
+		ZRef<Result>* oPriorResult,
+		const ZRef<ResultDeltas>& iResultDeltas,
+		ZRef<Result>* oCurResult,
 		std::vector<size_t>* oRemoved,
 		std::vector<std::pair<size_t,size_t> >* oAdded,
 		std::vector<Multi3<size_t,size_t,size_t> >* oChanged);

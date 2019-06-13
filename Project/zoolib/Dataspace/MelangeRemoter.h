@@ -95,11 +95,13 @@ private:
 	std::map<int64,RefReg> fMap_Refcon2Reg;
 	struct ResultCC
 		{
-		ZRef<Result> fResult;
 		int64 fCC;
+		ZRef<Result> fResult;
+		ZRef<ResultDeltas> fResultDeltas;
 		};
 	std::map<int64,ResultCC> fMap_Refcon2ResultCC;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
+	std::set<int64> fSet_NewRefcons;
 	};
 
 // =================================================================================================

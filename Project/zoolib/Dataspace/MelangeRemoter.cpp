@@ -346,15 +346,17 @@ Val_Any spAsVal(ZRef<Expr_Rel> iRel)
 	return theString;
 	}
 
+// -----
+
 ZRef<Result> spAsResult(const Val_Any& iVal)
 	{
 	RelHead theRH;
-	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("RelHead"))
+	foreachv (Val_Any theVal, iVal["RelHead"].Get<Seq_Any>())
 		sInsert(theRH, theVal.Get<string8>());
 
 	std::vector<Val_Any> thePackedRows;
 
-	foreachv (Val_Any theVal, iVal.Get<Map_Any>().Get<Seq_Any>("Vals"))
+	foreachv (Val_Any theVal, iVal["Vals"].Get<Seq_Any>())
 		sPushBack(thePackedRows, theVal);
 
 	return new Result(&theRH, &thePackedRows);
@@ -385,6 +387,32 @@ Val_Any spAsVal(ZRef<Result> iResult)
 	return result;
 	}
 
+// -----
+
+ZRef<ResultDeltas> spAsResultDeltas(const Val_Any& iVal)
+	{
+	ZRef<ResultDeltas> theResultDeltas = new ResultDeltas;
+
+	foreachv (Val_Any theVal, iVal["Vals"].Get<Seq_Any>())
+		sPushBack(theResultDeltas->fPackedRows, theVal);
+
+	foreachv (Val_Any theVal, iVal["Mapping"].Get<Seq_Any>())
+		sPushBack(theResultDeltas->fMapping, sCoerceInt(theVal));
+
+	return theResultDeltas;
+	}
+
+Val_Any spAsVal(ZRef<ResultDeltas> iResultDeltas)
+	{
+	Map_Any theMap;
+
+	theMap["Mapping"] = Seq_Any(iResultDeltas->fMapping.begin(), iResultDeltas->fMapping.end());
+
+	theMap["Vals"] = Seq_Any(iResultDeltas->fPackedRows);
+
+	return theMap;
+	}
+
 } // anonymous namespace
 
 // =================================================================================================
@@ -408,7 +436,7 @@ MelangeServer::MelangeServer(const Melange_t& iMelange,
 
 MelangeServer::~MelangeServer()
 	{
-	if (ZLOGF(w, eInfo))
+	if (ZLOGF(w, eNotice))
 		{
 		if (fDescriptionQ)
 			w << *fDescriptionQ;
@@ -491,7 +519,10 @@ void MelangeServer::pWrite()
 			Map_Any theMap;
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", entry.first);
-			theMap.Set("Result", spAsVal(entry.second.fResult));
+			if (sQErase(fSet_NewRefcons, entry.first) || fClientVersion < 2 || not entry.second.fResultDeltas)
+				theMap.Set("Result", spAsVal(entry.second.fResult));
+			else
+				theMap.Set("Deltas", spAsVal(entry.second.fResultDeltas));
 			theMap.Set("ChangeCount", entry.second.fCC);
 			sPushBack(theMessages, theMap);
 			}
@@ -549,6 +580,7 @@ void MelangeServer::pWork()
 						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
 						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
 						sInsertMust(fMap_Reg2Refcon, theReg, *theRefconQ);
+						sInsertMust(fSet_NewRefcons, *theRefconQ);
 						}
 					}
 				}
@@ -632,7 +664,7 @@ void MelangeServer::pChanged(
 	ZAcqMtx acq(fMtx);
 
 	sSet(fMap_Refcon2ResultCC, sGetMust(fMap_Reg2Refcon, iRegistration),
-		ResultCC({iResult, fLastClientChangeCount}));
+		ResultCC({fLastClientChangeCount, iResult, iResultDeltas}));
 
 	this->pWake();
 	}
@@ -840,12 +872,16 @@ void Melange_Client::pWork()
 			{
 			const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
 
-			// Get the registration and call its callable
-			if (ZRef<Result> theResult = spAsResult(theMessage.Get("Result")))
-				{
-				if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
-					sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult, null); //##
-				}
+			ZRef<ResultDeltas> theResultDeltas;
+			if (const Val_Any* theP = theMessage.PGet("Deltas"))
+				theResultDeltas = spAsResultDeltas(*theP);
+
+			ZRef<Result> theResult;
+			if (const Val_Any* theP = theMessage.PGet("Result"))
+				theResult = spAsResult(*theP);
+
+			if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
+				sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult, theResultDeltas);
 			}
 		}
 

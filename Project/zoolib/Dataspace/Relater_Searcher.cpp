@@ -538,17 +538,23 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 			if (priorResult->Count() == thePQuery->fResult->Count())
 				{
 				ZRef<ResultDeltas> theDeltas = new ResultDeltas;
-				std::map<size_t,Val_Any>& theMap = theDeltas->Mut();
+				const size_t rowCount = priorResult->Count();
+				const size_t colCount = priorResult->GetRelHead().size();
 
-				const Val_Any* priorVals = priorResult->GetValsAt(0);
-				const Val_Any* currVals = thePQuery->fResult->GetValsAt(0);
-
-				const size_t theCount = priorResult->Count() * thePQuery->fResult->GetRelHead().size();
-
-				for (size_t xx = 0; xx < theCount; ++xx)
+				for (size_t rr = 0; rr < rowCount; ++rr)
 					{
-					if (priorVals[xx] != currVals[xx])
-						theMap[xx] = currVals[xx];
+					const Val_Any* priorVals = priorResult->GetValsAt(rr);
+					const Val_Any* currVals = thePQuery->fResult->GetValsAt(rr);
+					for (size_t cc = 0; cc < colCount; ++cc)
+						{
+						if (priorVals[cc] != currVals[cc])
+							{
+							for (size_t cc = 0; cc < colCount; ++cc)
+								theDeltas->fPackedRows.push_back(currVals[cc]);
+							theDeltas->fMapping.push_back(rr);
+							break;
+							}
+						}
 					}
 				thePQuery->fResultDeltas = theDeltas;
 				}

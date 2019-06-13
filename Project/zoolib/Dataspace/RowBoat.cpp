@@ -77,8 +77,16 @@ void RowBoat::pChanged(
 	vector<std::pair<size_t,size_t> > theAdded;
 	vector<Multi3<size_t,size_t,size_t> > theChanged;
 
-	fResultDiffer.Apply(iResult, &priorResult,
-		&theRemoved, &theAdded, &theChanged);
+	ZRef<Result> curResult;
+	if (iResultDeltas)
+		{
+		fResultDiffer.Apply(null, &priorResult, iResultDeltas, &curResult, &theRemoved, &theAdded, &theChanged);
+		}
+	else
+		{
+		fResultDiffer.Apply(iResult, &priorResult, null, nullptr, &theRemoved, &theAdded, &theChanged);
+		curResult = iResult;
+		}
 
 	if (priorResult)
 		{
@@ -86,13 +94,13 @@ void RowBoat::pChanged(
 		ZAssert(sNotEmpty(fBindings));
 
 		// RelHeads can't and mustn't change from one result to another.
-		ZAssert(priorResult->GetRelHead() == iResult->GetRelHead());
+		ZAssert(priorResult->GetRelHead() == curResult->GetRelHead());
 		}
 	else
 		{
 		ZAssert(sIsEmpty(fBindings));
 		// Build fBindings the first time we get a result.
-		sBuildBindings(iResult, fBindings);
+		sBuildBindings(curResult, fBindings);
 		}
 
 	// Note that we're doing a reverse scan here...
@@ -113,7 +121,7 @@ void RowBoat::pChanged(
 	foreacha (yy, theAdded)
 		{
 		ZAssert(yy.first <= fRows.size());
-		const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(yy.second));
+		const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.second));
 		ZRef<Callable_Row> theRow = fCallable->Call(thePM_New);
 		fRows.insert(fRows.begin() + yy.first, theRow);
 		if (theRow)
@@ -125,7 +133,7 @@ void RowBoat::pChanged(
 		if (ZRef<Callable_Row> theRow = fRows[yy.f0])
 			{
 			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy.f1));
-			const PseudoMap thePM_New(&fBindings, iResult->GetValsAt(yy.f2));
+			const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.f2));
 			theRow->Call(&thePM_Prior, &thePM_New);
 			}
 		}
