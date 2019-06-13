@@ -35,7 +35,7 @@ public:
 		const GPoint& iGameSize)
 	:	Visitor_Rendered_CelToTextures(iAssetCatalog, iShowNameFrame)
 	,	Visitor_Rendered_StringToTextures(iFontCatalog)
-	,	fScreenBounds(sRect<GRect>(iGameSize))
+	,	fScreenBounds(sRect<>(iGameSize))
 	,	fMap(std::less<Rat>(), fRealAllocator)
 		{}
 

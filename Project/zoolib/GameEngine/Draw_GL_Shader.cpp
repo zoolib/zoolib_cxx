@@ -610,8 +610,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 		::glDeleteFramebuffers(1, &fbo);
 		}} // ssr_ActiveTexture
 
-	ZRef<Rendered> theRendered = sRendered_Texture(theTexture_GL,
-		sRect<GRect>(X(theTextureSize), Y(theTextureSize)));
+	ZRef<Rendered> theRendered = sRendered_Texture(theTexture_GL, sRect<GRect>(theTextureSize));
 
 	theRendered->Accept(*this);
 
