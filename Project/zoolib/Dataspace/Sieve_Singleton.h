@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Dataspace/Daton_Val.h"
 #include "zoolib/Dataspace/Melange.h" // For Callable_DatonUpdate et al
-#include "zoolib/Dataspace/RelsWatcher.h"
+#include "zoolib/Dataspace/ResultHandler.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -67,10 +67,7 @@ public:
 	void Set(const Map_Any& iMap);
 
 private:
-	void pChanged(const ZRef<ZCounted>& iRegistration,
-		int64 iChangeCount,
-		const ZRef<Result>& iResult,
-		const ZRef<ResultDeltas>& iResultDeltas);
+	void pChanged(const ZRef<ZCounted>& iRegistration, const ZRef<Result>& iResult);
 
 	ZRef<RelsWatcher::Callable_Register> const fCallable_Register;
 	ZRef<Callable_DatonUpdate> const fCallable_DatonUpdate;
@@ -80,6 +77,7 @@ private:
 	RelHead const fEditableRelHead;
 
 	ZRef<ZCounted> fRegistration;
+	ZRef<ResultHandler> fResultHandler;
 	ZRef<QueryEngine::Result> fResult;
 
 	ZQ<Map_Any> fMapQ;
