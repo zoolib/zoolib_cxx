@@ -291,15 +291,12 @@ static CVReturn spDisplayLinkCallback(
 	return self;
 	}
 
-const Rat kHeight = 1024;
-//const Rat kHeight = 768-44;;
-const Rat kWidth = kHeight * 9.0/16.0;
-
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-//	const NSRect theBounds = sRect<NSRect>(960, 540) + sPoint<NSPoint>(0, 44);
-	const NSRect theBounds = sRect<NSRect>(kWidth, kHeight) + sPoint<NSPoint>(0, 44);
+	Rat theHeight = sMin(1024.0, H(screenRect) - 44);
+	Rat theWidth = theHeight * 9.0/16.0;
+	const NSRect theBounds = sRect<NSRect>(theWidth, theHeight) + sPoint<NSPoint>(0, 44);
 
 	fWindow = sAdopt& [[NSWindow alloc]
 		initWithContentRect:sFlippedY(theBounds, H(screenRect))
@@ -331,7 +328,7 @@ int main(int argc, const char *argv[])
 	Util_Debug::sInstall();
 
 	if (ZCONFIG_Debug)
-		Util_Debug::sSetLogPriority(Log::eDebug + 1);
+		Util_Debug::sSetLogPriority(Log::eDebug);
 	else
 		Util_Debug::sSetLogPriority(Log::eWarning);
 
