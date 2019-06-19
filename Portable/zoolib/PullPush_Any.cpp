@@ -103,9 +103,6 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 
 	// Handle standard stuff.
 
-	if (false)
-		{}
-
 	if (const string* theString = sPGet<string>(iPPT))
 		{
 		oAny = *theString;
