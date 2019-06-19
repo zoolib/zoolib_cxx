@@ -81,6 +81,8 @@ struct PushTextOptions_JSON : PushTextOptions
 // =================================================================================================
 #pragma mark -
 
+void sWriteLF(const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
+
 void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
 
 void sWriteLFIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);

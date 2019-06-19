@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
-ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO)
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
@@ -54,12 +53,15 @@ ZQ<Any> sQRead(const ChanRU_UTF& iChanRU,
 	}
 
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU)
-	{ return sQRead(iChanRU, Util_Chan_JSON::sPullTextOptions_Extended()); }
+	{ return sQRead(iChanRU, sPullTextOptions_Extended()); }
 
 // -----
 
 void sWrite(const Any& iVal, const ChanW_UTF& iChanW)
-	{ sWrite(false, iVal, iChanW); }
+	{ sWrite(iVal, false, iChanW); }
+
+void sWrite(const Any& iVal, bool iPrettyPrint, const ChanW_UTF& iChanW)
+	{ sWrite(iVal, 0, PushTextOptions_JSON(iPrettyPrint), iChanW); }
 
 static void spFromAny_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
 	{
@@ -67,11 +69,11 @@ static void spFromAny_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iCh
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW)
+void sWrite(const Any& iVal, size_t iInitialIndent, const PushTextOptions_JSON& iOptions, const ChanW_UTF& iChanW)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT), iVal, sGetClear(thePair.first)));
-	sPull_PPT_Push_JSON(*thePair.second, 0, PushTextOptions(iPrettyPrint), iChanW);
+	sPull_PPT_Push_JSON(*thePair.second, iInitialIndent, iOptions, iChanW);
 	}
 
 string8 sAsJSON(const Any& iVal)

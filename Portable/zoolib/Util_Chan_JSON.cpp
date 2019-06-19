@@ -193,6 +193,11 @@ PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions_JSON& iOther)
 // =================================================================================================
 #pragma mark -
 
+void sWriteLF(const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
+	{
+	iChanW << sEOLString(iOptions);
+	}
+
 void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
 	{
 	while (iCount--)

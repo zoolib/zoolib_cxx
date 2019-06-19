@@ -33,12 +33,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace Util_Any_JSON {
 
+using namespace Util_Chan_JSON;
+
 ZQ<Any> sQRead(const ChanRU_UTF& iChanRU);
-ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const Util_Chan_JSON::PullTextOptions_JSON& iRO);
+ZQ<Any> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO);
 
 void sWrite(const Any& iVal, const ChanW_UTF& iChanW);
-
-void sWrite(bool iPrettyPrint, const Any& iVal, const ChanW_UTF& iChanW);
+void sWrite(const Any& iVal, bool iPrettyPrint, const ChanW_UTF& iChanW);
+void sWrite(const Any& iVal, size_t iInitialIndent, const PushTextOptions_JSON& iOptions, const ChanW_UTF& iChanW);
 
 string8 sAsJSON(const Any& iVal);
 
