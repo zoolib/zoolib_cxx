@@ -450,7 +450,9 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
-				if (not isFirst && sBreakStrings(iOptions))
+				if (iIndent == 0)
+					sWriteLFIndent(0, iOptions, iChanW);
+				else if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
 				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 				iChanW << ";";
