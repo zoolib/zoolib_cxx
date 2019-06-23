@@ -59,7 +59,7 @@ struct Analysis
 	RelHead fRelHead_Physical;
 	Rename fRename;
 	Rename fRename_Inverse;
-	ZRef<ZExpr_Bool> fCondition;
+	ZP<ZExpr_Bool> fCondition;
 	};
 
 } // anonymous namespace
@@ -82,15 +82,15 @@ class Analyzer
 public:
 	Analyzer(const map<string8,RelHead>& iTables);
 
-	virtual void Visit(const ZRef<ZVisitee>& iRep);
+	virtual void Visit(const ZP<ZVisitee>& iRep);
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Dee(const ZP<Expr_Rel_Dee>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZP<Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr);
 
 	const map<string8,RelHead>& fTables;
 	map<string8,int> fTablesUsed;
@@ -100,10 +100,10 @@ Analyzer::Analyzer(const map<string8,RelHead>& iTables)
 :	fTables(iTables)
 	{}
 
-void Analyzer::Visit(const ZRef<ZVisitee>& iRep)
+void Analyzer::Visit(const ZP<ZVisitee>& iRep)
 	{ ZUnimplemented(); }
 
-void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Analyzer::Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr)
 	{
 	// Identify the table.
 	RelHead theRH_Required;
@@ -171,7 +171,7 @@ void Analyzer::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
 	this->pSetResult(resultAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+void Analyzer::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	{
 	Analysis theAnalysis;
 	theAnalysis.fCondition = sTrue();
@@ -179,14 +179,14 @@ void Analyzer::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
 	this->pSetResult(theAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+void Analyzer::Visit_Expr_Rel_Dee(const ZP<Expr_Rel_Dee>& iExpr)
 	{
 	Analysis theAnalysis;
 	theAnalysis.fCondition = sTrue();
 	this->pSetResult(theAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+void Analyzer::Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr)
 	{
 	Analysis analysis0 = this->Do(iExpr->GetOp0());
 	const Analysis analysis1 = this->Do(iExpr->GetOp1());
@@ -205,7 +205,7 @@ void Analyzer::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
 	this->pSetResult(analysis0);
 	}
 
-void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
+void Analyzer::Visit_Expr_Rel_Project(const ZP<Expr_Rel_Project>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const RelHead& theRH = iExpr->GetProjectRelHead();
@@ -221,14 +221,14 @@ void Analyzer::Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
 	this->pSetResult(theAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Analyzer::Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	theAnalysis.fCondition &= Util_Expr_Bool::sRenamed(theAnalysis.fRename, iExpr->GetExpr_Bool());
 	this->pSetResult(theAnalysis);
 	}
 
-void Analyzer::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Analyzer::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 	{
 	Analysis theAnalysis = this->Do(iExpr->GetOp0());
 	const ColName& oldName = iExpr->GetOld();
@@ -270,34 +270,34 @@ class ToStrim_SQL
 ,	public virtual ZVisitor_Expr_Bool_ValPred
 	{
 public:
-	virtual void Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep);
-	virtual void Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep);
-	virtual void Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep);
-	virtual void Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep);
-	virtual void Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep);
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep);
+	virtual void Visit_Expr_Bool_True(const ZP<ZExpr_Bool_True>& iRep);
+	virtual void Visit_Expr_Bool_False(const ZP<ZExpr_Bool_False>& iRep);
+	virtual void Visit_Expr_Bool_Not(const ZP<ZExpr_Bool_Not>& iRep);
+	virtual void Visit_Expr_Bool_And(const ZP<ZExpr_Bool_And>& iRep);
+	virtual void Visit_Expr_Bool_Or(const ZP<ZExpr_Bool_Or>& iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<ZExpr_Bool_ValPred>& iRep);
 	};
 
-void ToStrim_SQL::Visit_Expr_Bool_True(const ZRef<ZExpr_Bool_True>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_True(const ZP<ZExpr_Bool_True>& iRep)
 	{ pStrimW() << "1"; }
 
-void ToStrim_SQL::Visit_Expr_Bool_False(const ZRef<ZExpr_Bool_False>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_False(const ZP<ZExpr_Bool_False>& iRep)
 	{ pStrimW() << "0"; }
 
-void ToStrim_SQL::Visit_Expr_Bool_Not(const ZRef<ZExpr_Bool_Not>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Not(const ZP<ZExpr_Bool_Not>& iRep)
 	{
 	pStrimW() << " NOT (";
 	this->pToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_And(const ZP<ZExpr_Bool_And>& iRep)
 	{
-	ZRef<ZExpr_Bool> theFalse = sFalse();
-	ZRef<ZExpr_Bool> theTrue = sTrue();
+	ZP<ZExpr_Bool> theFalse = sFalse();
+	ZP<ZExpr_Bool> theTrue = sTrue();
 
-	ZRef<ZExpr_Bool> theOp0 = iRep->GetOp0();
-	ZRef<ZExpr_Bool> theOp1 = iRep->GetOp1();
+	ZP<ZExpr_Bool> theOp0 = iRep->GetOp0();
+	ZP<ZExpr_Bool> theOp1 = iRep->GetOp1();
 	if (theOp0 == theFalse || theOp1 == theFalse)
 		{
 		this->pToStrim(theFalse);
@@ -320,13 +320,13 @@ void ToStrim_SQL::Visit_Expr_Bool_And(const ZRef<ZExpr_Bool_And>& iRep)
 		}
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_Or(const ZRef<ZExpr_Bool_Or>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_Or(const ZP<ZExpr_Bool_Or>& iRep)
 	{
-	ZRef<ZExpr_Bool> theFalse = sFalse();
-	ZRef<ZExpr_Bool> theTrue = sTrue();
+	ZP<ZExpr_Bool> theFalse = sFalse();
+	ZP<ZExpr_Bool> theTrue = sTrue();
 
-	ZRef<ZExpr_Bool> theOp0 = iRep->GetOp0();
-	ZRef<ZExpr_Bool> theOp1 = iRep->GetOp1();
+	ZP<ZExpr_Bool> theOp0 = iRep->GetOp0();
+	ZP<ZExpr_Bool> theOp1 = iRep->GetOp1();
 	if (theOp0 == theTrue || theOp1 == theTrue)
 		{
 		this->pToStrim(theTrue);
@@ -398,17 +398,17 @@ static void spToStrim_SimpleValue(const ChanW_UTF& s, const Any& iAny)
 static void spWrite_PropName(const string8& iName, const ChanW_UTF& s)
 	{ s << iName; }
 
-static void spToStrim(const ZRef<ZValComparand>& iComparand, const ChanW_UTF& s)
+static void spToStrim(const ZP<ZValComparand>& iComparand, const ChanW_UTF& s)
 	{
 	if (not iComparand)
 		{
 		s << "/*Null Comparand*/";
 		}
-	else if (ZRef<ZValComparand_Name> asName = iComparand.DynamicCast<ZValComparand_Name>())
+	else if (ZP<ZValComparand_Name> asName = iComparand.DynamicCast<ZValComparand_Name>())
 		{
 		spWrite_PropName(asName->GetName(), s);
 		}
-	else if (ZRef<ZValComparand_Const_Any> asConst =
+	else if (ZP<ZValComparand_Const_Any> asConst =
 		iComparand.DynamicCast<ZValComparand_Const_Any>())
 		{
 		spToStrim_SimpleValue(s, asConst->GetVal());
@@ -421,7 +421,7 @@ static void spToStrim(const ZRef<ZValComparand>& iComparand, const ChanW_UTF& s)
 
 void spToStrim(const ZValPred& iValPred, const ChanW_UTF& s)
 	{
-	if (ZRef<ZValComparator_Simple> asSimple =
+	if (ZP<ZValComparator_Simple> asSimple =
 		iValPred.GetComparator().DynamicCast<ZValComparator_Simple>())
 		{
 		spToStrim(iValPred.GetLHS(), s);
@@ -460,12 +460,12 @@ void spToStrim(const ZValPred& iValPred, const ChanW_UTF& s)
 			}
 		spToStrim(iValPred.GetRHS(), s);
 		}
-	else if (ZRef<ZValComparator_StringContains> asStringContains =
+	else if (ZP<ZValComparator_StringContains> asStringContains =
 		iValPred.GetComparator().DynamicCast<ZValComparator_StringContains>())
 		{
-		if (ZRef<ZValComparand_Name> asName = iValPred.GetLHS().DynamicCast<ZValComparand_Name>())
+		if (ZP<ZValComparand_Name> asName = iValPred.GetLHS().DynamicCast<ZValComparand_Name>())
 			{
-			if (ZRef<ZValComparand_Const_Any> asConst =
+			if (ZP<ZValComparand_Const_Any> asConst =
 				iValPred.GetRHS().DynamicCast<ZValComparand_Const_Any>())
 				{
 				if (const string8* asString = asConst->GetVal().PGet<string8>())
@@ -490,7 +490,7 @@ void spToStrim(const ZValPred& iValPred, const ChanW_UTF& s)
 		}
 	}
 
-void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
+void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZP<ZExpr_Bool_ValPred>& iRep)
 	{ spToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // anonymous namespace
@@ -498,7 +498,7 @@ void ToStrim_SQL::Visit_Expr_Bool_ValPred(const ZRef<ZExpr_Bool_ValPred>& iRep)
 // =================================================================================================
 #pragma mark - RelationalAlgebra::sWriteAsSQL
 
-bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ZStrimW& s)
+bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZP<Expr_Rel> iRel, const ZStrimW& s)
 	{
 	try
 		{

@@ -30,9 +30,9 @@ public:
 
 	void NewEra();
 
-	ZRef<Nook> GetOne(const Name& iName);
+	ZP<Nook> GetOne(const Name& iName);
 
-	std::vector<ZRef<Nook> > GetAll(const Name& iName);
+	std::vector<ZP<Nook> > GetAll(const Name& iName);
 
 private:
 	bool pIsFullCycle(Nook* iNook);
@@ -55,7 +55,7 @@ class Nook
 :	public ZCounted
 	{
 public:
-	Nook(const ZRef<NookScope>& iNookScope);
+	Nook(const ZP<NookScope>& iNookScope);
 	
 // From ZCounted
 	virtual void Initialize();
@@ -63,7 +63,7 @@ public:
 
 	bool IsFullCycle();
 
-	ZRef<NookScope> GetNookScope();
+	ZP<NookScope> GetNookScope();
 
 private:
 	friend class NookScope;
@@ -84,13 +84,13 @@ public:
 
 	std::set<WP<Nook_p> > fNookWPs;
 
-	std::vector<ZRef<Nook_p> > Get()
+	std::vector<ZP<Nook_p> > Get()
 		{
-		std::vector<ZRef<Nook_p> > result;
+		std::vector<ZP<Nook_p> > result;
 		for (ZMACRO_auto_(ii, fNookWPs.begin());
 			ii != fNookWPs.end(); /*no inc*/)
 			{
-			if (ZRef<Nook> theNook = *ii)
+			if (ZP<Nook> theNook = *ii)
 				{
 				result.push_back(theNook.StaticCast<Nook_p>());
 				++ii;

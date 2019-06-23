@@ -56,9 +56,9 @@ using std::map;
 // =================================================================================================
 #pragma mark - Expr_Rel_Calc
 
-Expr_Rel_Calc::Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
+Expr_Rel_Calc::Expr_Rel_Calc(const ZP<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Callable_t>& iCallable)
+	const ZP<Callable_t>& iCallable)
 :	inherited(iOp0)
 ,	fColName(iColName)
 ,	fCallable(iCallable)
@@ -83,10 +83,10 @@ void Expr_Rel_Calc::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Calc::Self()
+ZP<Expr_Rel> Expr_Rel_Calc::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Calc::Clone(const ZRef<Expr_Rel>& iOp0)
+ZP<Expr_Rel> Expr_Rel_Calc::Clone(const ZP<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Calc(iOp0, fColName, fCallable); }
 
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
@@ -95,21 +95,21 @@ void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 const ColName& Expr_Rel_Calc::GetColName() const
 	{ return fColName; }
 
-const ZRef<Expr_Rel_Calc::Callable_t>& Expr_Rel_Calc::GetCallable() const
+const ZP<Expr_Rel_Calc::Callable_t>& Expr_Rel_Calc::GetCallable() const
 	{ return fCallable; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Calc
 
-void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+void Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
+ZP<Expr_Rel> sCalc(const ZP<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Expr_Rel_Calc::Callable_t>& iCallable)
+	const ZP<Expr_Rel_Calc::Callable_t>& iCallable)
 	{
 	return new Expr_Rel_Calc(iOp0, iColName, iCallable);
 	}

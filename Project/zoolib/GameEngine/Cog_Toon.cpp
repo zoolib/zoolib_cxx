@@ -10,20 +10,20 @@ class Callable_Cog_Toon
 :	public Cog::Callable
 	{
 public:
-	const ZRef<Toon> fToon;
+	const ZP<Toon> fToon;
 
-	Callable_Cog_Toon(const ZRef<Toon>& iToon)
+	Callable_Cog_Toon(const ZP<Toon>& iToon)
 	:	fToon(iToon)
 		{}
 
 	virtual ZQ<Cog> QCall(const Cog& iSelf, const Param& iParam)
 		{
-		ZRef<AssetCatalog> theAssetCatalog = iParam.fOutChannel.fAssetCatalog;
+		ZP<AssetCatalog> theAssetCatalog = iParam.fOutChannel.fAssetCatalog;
 		if (NotQ<CelStack> theCelStackQ = fToon->QValAt(iParam.fElapsed))
 			{ return true; }
 		else
 			{
-			const ZRef<Rendered_Group>& theGroup = iParam.fOutChannel.GetGroup();
+			const ZP<Rendered_Group>& theGroup = iParam.fOutChannel.GetGroup();
 			foreachv (const Cel& theCel, (*theCelStackQ)->Get())
 				{
 				theAssetCatalog->Load(theCel.fNameFrame, 0);
@@ -41,7 +41,7 @@ public:
 		}
 	};
 
-Cog sCog_Toon_NoEpoch(const ZRef<Toon>& iToon)
+Cog sCog_Toon_NoEpoch(const ZP<Toon>& iToon)
 	{
 	if (not iToon)
 		return null;
@@ -49,7 +49,7 @@ Cog sCog_Toon_NoEpoch(const ZRef<Toon>& iToon)
 	return new Callable_Cog_Toon(iToon);
 	}
 
-Cog sCog_Toon(const ZRef<Toon>& iToon)
+Cog sCog_Toon(const ZP<Toon>& iToon)
 	{ return sCog_NewEpoch(sCog_Toon_NoEpoch(iToon)); }
 
 // =================================================================================================
@@ -58,7 +58,7 @@ Cog sCog_Toon(const ZRef<Toon>& iToon)
 static
 Cog spCogCtor_Toon(const Map& iMap)
 	{
-	ZRef<Toon> theToon = sToon(sQGetNamed(iMap, "Toon"));
+	ZP<Toon> theToon = sToon(sQGetNamed(iMap, "Toon"));
 	if (not theToon)
 		theToon = sToon(iMap);
 	

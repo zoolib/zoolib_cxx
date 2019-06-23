@@ -42,7 +42,7 @@ void Walker_Dee::Rewind()
 	fExhausted = false;
 	}
 
-ZRef<Walker> Walker_Dee::Prime(
+ZP<Walker> Walker_Dee::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

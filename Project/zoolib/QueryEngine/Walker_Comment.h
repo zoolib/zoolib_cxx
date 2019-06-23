@@ -35,14 +35,14 @@ namespace QueryEngine {
 class Walker_Comment : public Walker_Unary
 	{
 public:
-	Walker_Comment(const ZRef<Walker>& iWalker,
+	Walker_Comment(const ZP<Walker>& iWalker,
 		const string8& iComment,
-		const ZRef<Callable_Void>& iCallable);
+		const ZP<Callable_Void>& iCallable);
 
 	virtual ~Walker_Comment();
 
 // From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -54,7 +54,7 @@ public:
 
 private:
 	const string8 fComment;
-	const ZRef<Callable_Void> fCallable;
+	const ZP<Callable_Void> fCallable;
 	};
 
 } // namespace QueryEngine

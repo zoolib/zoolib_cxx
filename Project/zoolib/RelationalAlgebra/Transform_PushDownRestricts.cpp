@@ -38,37 +38,37 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Transform_PushDownRestricts
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr)
 	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(this->Do(iExpr->GetOp0()))); }
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr)
 	{ this->pHandleIt(sRelHead(iExpr->GetConcreteHead()), iExpr); }
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	{ this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr); }
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr)
 	{
 	// I think this needs to work in a fashion akin to product, because we may have a restrict
 	// in op1 that refers to a name from op0.
 
-	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	ZP<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
-	ZRef<Expr_Rel> newOp1 = iExpr->GetOp1();
+	ZP<Expr_Rel> newOp1 = iExpr->GetOp1();
 
 	this->pHandleIt(sRelHead(iExpr->GetColName()), iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr)
 	{
 	RelHead priorRelHead = fRelHead;
 
-	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	ZP<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 	const RelHead leftRelHead = fRelHead;
 
 	fRelHead = priorRelHead;
 
-	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	ZP<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	const RelHead rightRelHead = fRelHead;
 
 	const RelHead combined = leftRelHead | rightRelHead;
@@ -79,7 +79,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 		ZAssert(false);
 		}
 
-	ZRef<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
+	ZP<Expr_Rel> result = iExpr->SelfOrClone(newOp0, newOp1);
 
 	// Examine restricts, see which were touched
 	foreachv (Restrict* theRestrictPtr, fRestricts)
@@ -117,7 +117,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Pro
 	fRelHead = combined;
 	}
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 	{
 	const ColName& oldName = iExpr->GetOld();
 	const ColName& newName = iExpr->GetNew();
@@ -125,7 +125,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename new2Old;
 	new2Old[newName] = oldName;
 
-	vector<ZRef<Expr_Bool>> priorRestrictions;
+	vector<ZP<Expr_Bool>> priorRestrictions;
 	vector<RelHead> priorNames;
 
 	foreacha (theRestrictPtr, fRestricts)
@@ -153,7 +153,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 	Rename old2New;
 	old2New[oldName] = newName;
 
-	vector<ZRef<Expr_Bool>>::const_iterator iterPriorRestrictions = priorRestrictions.begin();
+	vector<ZP<Expr_Bool>>::const_iterator iterPriorRestrictions = priorRestrictions.begin();
 	vector<RelHead>::const_iterator iterPriorNames = priorNames.begin();
 	foreacha (entry, fRestricts)
 		{
@@ -165,7 +165,7 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rena
 		fRelHead |= newName;
 	}
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr)
 	{
 	Restrict theRestrict;
 	theRestrict.fExpr_Bool = iExpr->GetExpr_Bool();
@@ -174,8 +174,8 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Re
 	theRestrict.fCountSubsuming = 0;
 	fRestricts.push_back(&theRestrict);
 
-	ZRef<Expr_Rel> oldOp0 = iExpr->GetOp0();
-	ZRef<Expr_Rel> newOp0 = this->Do(oldOp0);
+	ZP<Expr_Rel> oldOp0 = iExpr->GetOp0();
+	ZP<Expr_Rel> newOp0 = this->Do(oldOp0);
 
 	ZAssertStop(1, fRestricts.back() == &theRestrict);
 	fRestricts.pop_back();
@@ -201,16 +201,16 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Re
 		}
 	}
 
-void Transform_PushDownRestricts::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
+void Transform_PushDownRestricts::Visit_Expr_Rel_Union(const ZP<Expr_Rel_Union>& iExpr)
 	{
 	const RelHead priorRelHead = fRelHead;
 
-	ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	ZP<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 	const RelHead leftRelHead = fRelHead;
 
 	fRelHead = priorRelHead;
 
-	ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	ZP<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 	const RelHead rightRelHead = fRelHead;
 
 	ZAssert(leftRelHead == rightRelHead);
@@ -218,10 +218,10 @@ void Transform_PushDownRestricts::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union
 	this->pSetResult(iExpr->SelfOrClone(newOp0, newOp1));
 	}
 
-void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iExpr)
+void Transform_PushDownRestricts::pHandleIt(const RelHead& iRH, const ZP<Expr_Rel>& iExpr)
 	{
 	fRelHead |= iRH;
-	ZRef<Expr_Rel> result = iExpr;
+	ZP<Expr_Rel> result = iExpr;
 	foreacha (entryPtr, fRestricts)
 		{
 		Restrict& theRestrict = *entryPtr;

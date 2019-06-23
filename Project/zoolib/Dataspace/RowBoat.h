@@ -44,14 +44,14 @@ public:
 
 	typedef Callable<void(const PseudoMap* iOld, const PseudoMap* iNew)> Callable_Row;
 
-	typedef Callable<ZRef<Callable_Row>(const PseudoMap&)> Callable_Make_Callable_Row;
+	typedef Callable<ZP<Callable_Row>(const PseudoMap&)> Callable_Make_Callable_Row;
 
-	RowBoat(const ZRef<Callable_Register>& iCallable_Register,
-		const ZRef<Expr_Rel>& iRel,
+	RowBoat(const ZP<Callable_Register>& iCallable_Register,
+		const ZP<Expr_Rel>& iRel,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
 		bool iEmitDummyChanges,
-		const ZRef<Callable_Make_Callable_Row>& iCallable);
+		const ZP<Callable_Make_Callable_Row>& iCallable);
 
 	virtual ~RowBoat();
 
@@ -59,22 +59,22 @@ public:
 	virtual void Initialize();
 
 // Our protocol
-	const std::vector<ZRef<Callable_Row> >& GetRows();
+	const std::vector<ZP<Callable_Row> >& GetRows();
 
 private:
 	void pChanged(
-		const ZRef<ZCounted>& iRegistration,
+		const ZP<ZCounted>& iRegistration,
 		int64 iChangeCount,
-		const ZRef<Result>& iResult,
-		const ZRef<ResultDeltas>& iResultDeltas);
+		const ZP<Result>& iResult,
+		const ZP<ResultDeltas>& iResultDeltas);
 
-	const ZRef<Callable_Register> fCallable_Register;
-	const ZRef<Expr_Rel> fRel;
+	const ZP<Callable_Register> fCallable_Register;
+	const ZP<Expr_Rel> fRel;
 	QueryEngine::ResultDiffer fResultDiffer;
-	const ZRef<Callable_Make_Callable_Row> fCallable;
+	const ZP<Callable_Make_Callable_Row> fCallable;
 
-	ZRef<ZCounted> fRegistration;
-	std::vector<ZRef<Callable_Row> > fRows;
+	ZP<ZCounted> fRegistration;
+	std::vector<ZP<Callable_Row> > fRows;
 	std::map<string8,size_t> fBindings;
 	};
 

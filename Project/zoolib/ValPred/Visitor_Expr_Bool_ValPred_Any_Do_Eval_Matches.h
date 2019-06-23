@@ -43,13 +43,13 @@ public:
 	Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const Val_Any& iVal);
 
 // From Visitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr);
 
 private:
 	const Val_Any& fVal;
 	};
 
-bool sMatches(const ZRef<Expr_Bool>& iExpr, const Val_Any& iVal);
+bool sMatches(const ZP<Expr_Bool>& iExpr, const Val_Any& iVal);
 
 } // namespace ZooLib
 

@@ -12,47 +12,47 @@ namespace GameEngine {
 
 typedef Tween<Blush> Tween_Blush;
 
-ZRef<Tween_Blush> sTween_Blush(const ZRef<Tween_Rat>& iTween_Rat);
+ZP<Tween_Blush> sTween_Blush(const ZP<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
 #pragma mark - Tween_Gain
 
 typedef Tween<Gain> Tween_Gain;
 
-ZRef<Tween_Gain> sTween_Gain(const ZRef<Tween_Rat>& iTween_Rat);
+ZP<Tween_Gain> sTween_Gain(const ZP<Tween_Rat>& iTween_Rat);
 
 // =================================================================================================
 #pragma mark - Tween_Mat
 
 typedef Tween<Mat> Tween_Mat;
 
-ZRef<Tween_Mat> sTween_Mat_Identity();
+ZP<Tween_Mat> sTween_Mat_Identity();
 
 // =================================================================================================
 #pragma mark - BlushMat
 
 typedef Tween<BlushGainMat> Tween_BlushGainMat;
 
-ZRef<Tween<BlushGainMat> > sTween_BlushGainMat(const Map& iMap);
+ZP<Tween<BlushGainMat> > sTween_BlushGainMat(const Map& iMap);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const BlushGainMat& iBlushGainMat);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const BlushGainMat& iBlushGainMat);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(Blush iBlush);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(Blush iBlush);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const Gain& iGain);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const Gain& iGain);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const Mat& iMat);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const Mat& iMat);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(
-	const ZRef<Tween_Blush>& iTween_Blush,
-	const ZRef<Tween_Gain>& iTween_Gain,
-	const ZRef<Tween_Mat>& iTween_Mat);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(
+	const ZP<Tween_Blush>& iTween_Blush,
+	const ZP<Tween_Gain>& iTween_Gain,
+	const ZP<Tween_Mat>& iTween_Mat);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Blush>& iTween_Blush);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const ZP<Tween_Blush>& iTween_Blush);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Gain>& iTween_Gain);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const ZP<Tween_Gain>& iTween_Gain);
 
-ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Mat>& iTween_Mat);
+ZP<Tween_BlushGainMat> sTween_BlushGainMat(const ZP<Tween_Mat>& iTween_Mat);
 
 // =================================================================================================
 #pragma mark - BlushGainMatRegistration
@@ -60,11 +60,11 @@ ZRef<Tween_BlushGainMat> sTween_BlushGainMat(const ZRef<Tween_Mat>& iTween_Mat);
 class BlushGainMatRegistration
 	{
 public:
-	typedef ZRef<Tween_BlushGainMat>(*Fun)(const Map& iMap);
+	typedef ZP<Tween_BlushGainMat>(*Fun)(const Map& iMap);
 
 	BlushGainMatRegistration(const string8& iCtorName, Fun iFun);
 
-	static ZRef<Tween_BlushGainMat> sCtor(const string8& iCtorName, const Map& iMap);
+	static ZP<Tween_BlushGainMat> sCtor(const string8& iCtorName, const Map& iMap);
 	};
 
 } // namespace GameEngine

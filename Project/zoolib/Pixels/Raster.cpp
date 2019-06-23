@@ -70,13 +70,13 @@ Raster_Static::~Raster_Static()
 // =================================================================================================
 #pragma mark - Raster Operations
 
-Pixval sGetPixval(const ZRef<Raster>& iRaster, int iH, int iV)
+Pixval sGetPixval(const ZP<Raster>& iRaster, int iH, int iV)
 	{ return sGetPixval(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iH, iV); }
 
-void sSetPixval(const ZRef<Raster>& iRaster, int iH, int iV, Pixval iPixval)
+void sSetPixval(const ZP<Raster>& iRaster, int iH, int iV, Pixval iPixval)
 	{ sSetPixval(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iH, iV, iPixval); }
 
-void sFill(const ZRef<Raster>& iRaster, Pixval iPixval)
+void sFill(const ZP<Raster>& iRaster, Pixval iPixval)
 	{ return sFill(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iPixval); }
 
 } // namespace Pixels

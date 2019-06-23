@@ -37,12 +37,12 @@ struct Tombstone_t {};
 // =================================================================================================
 #pragma mark - Link
 
-Link::Link(const ZRef<CountedName>& iProtoName, const Map_Any& iMap)
+Link::Link(const ZP<CountedName>& iProtoName, const Map_Any& iMap)
 :	fProtoName(iProtoName)
 ,	fMap(iMap)
 	{}
 
-Link::Link(const ZRef<Link>& iParent, const Map_Any& iMap)
+Link::Link(const ZP<Link>& iParent, const Map_Any& iMap)
 :	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
 ,	fMap(iMap)
@@ -50,14 +50,14 @@ Link::Link(const ZRef<Link>& iParent, const Map_Any& iMap)
 
 ZQ<Val> Link::QReadAt(const Name& iName)
 	{
-	if (ZRef<Link> theLink = sGet(fChildren, iName))
+	if (ZP<Link> theLink = sGet(fChildren, iName))
 		return Map(theLink);//??
 
 	if (const Val_Any* theVal = sPGet(fMap, iName))
 		{
 		if (const Map_Any* theMap = theVal->PGet<Map_Any>())
 			{
-			ZRef<Link> theLink = new Link(this, *theMap);
+			ZP<Link> theLink = new Link(this, *theMap);
 			sInsertMust(fChildren, iName, theLink);
 			return Map(theLink);
 			}
@@ -83,12 +83,12 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 				size_t index = 0;
 				const Trail theTrail = Trail(theTrailString).Normalized();
 
-				ZRef<Link> cur = this;
+				ZP<Link> cur = this;
 
 				if (theTrailString[0] == '/')
 					{
 					// Walk up to the root.
-					for (ZRef<Link> next = null; (next = cur->fParent); cur = next)
+					for (ZP<Link> next = null; (next = cur->fParent); cur = next)
 						{}
 					}
 				else
@@ -127,16 +127,16 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 	return null;
 	}
 
-ZRef<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZRef<Link>& iRootAugment)
+ZP<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZP<Link>& iRootAugment)
 	{
 	if (fParent)
 		{
-		ZRef<Link> newParent = fParent->WithRootAugment(iRootAugmentName, iRootAugment);
-		ZRef<Link> newSelf = new Link(newParent, fMap);
+		ZP<Link> newParent = fParent->WithRootAugment(iRootAugmentName, iRootAugment);
+		ZP<Link> newSelf = new Link(newParent, fMap);
 		return newSelf;
 		}
 
-	ZRef<Link> newSelf = new Link(fProtoName, fMap);
+	ZP<Link> newSelf = new Link(fProtoName, fMap);
 	sInsertMust(newSelf->fChildren, iRootAugmentName, iRootAugment);
 	return newSelf;
 	}
@@ -171,7 +171,7 @@ Seq& Seq::operator=(const Seq& iOther)
 	return *this;
 	}
 
-Seq::Seq(const ZRef<Link>& iLink, const Seq_Any& iSeq)
+Seq::Seq(const ZP<Link>& iLink, const Seq_Any& iSeq)
 :	fLink(iLink)
 ,	fSeq(iSeq)
 	{}
@@ -305,7 +305,7 @@ Map& Map::operator=(const Map& iOther)
 	return *this;
 	}
 
-Map::Map(const ZRef<Link>& iLink)
+Map::Map(const ZP<Link>& iLink)
 :	fLink(iLink)
 	{}
 
@@ -433,7 +433,7 @@ const Val& Map::operator[](const Name_t& iName) const
 	return sDefault<Val>();
 	}
 
-ZRef<Link> Map::GetLink() const
+ZP<Link> Map::GetLink() const
 	{ return fLink; }
 
 Map_Any Map::GetMap() const

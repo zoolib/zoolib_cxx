@@ -59,7 +59,7 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	ZQ<Map_Any> theMapQ;
 	if (iPreferBinaryData)
 		{
-		if (ZRef<ChannerR_Bin,false> theChannerR = iFS.Child("data.bin").OpenR())
+		if (ZP<ChannerR_Bin,false> theChannerR = iFS.Child("data.bin").OpenR())
 			{
 			if (ZLOGF(w, eNotice))
 				w << "Binary data preferred, missing 'data.bin'";
@@ -77,9 +77,9 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	}
 
 Game::Game(const FileSpec& iFS,
-	const ZRef<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
+	const ZP<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
 	bool iPreferProcessedArt, bool iPreferSmallArt,
-	const ZRef<SoundMeister>& iSoundMeister)
+	const ZP<SoundMeister>& iSoundMeister)
 :	fTimestamp_LatestDrawn(0)
 ,	fTimestamp_ToDraw(0)
 ,	fNookScope(new NookScope)
@@ -96,7 +96,7 @@ Game::Game(const FileSpec& iFS,
 
 	fFontCatalog = sMakeFontCatalog(iFS.Child("fonts"));
 
-	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
+	ThreadVal<ZP<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
 	if (ZCONFIG_Debug)
 		fCog = sCog(fRootMap["StartDebug"]);
@@ -120,7 +120,7 @@ void Game::ExternalPurgeHasOccurred()
 void Game::Purge()
 	{ fAssetCatalog->Purge(); }
 
-ZRef<NookScope> Game::GetNookScope()
+ZP<NookScope> Game::GetNookScope()
 	{ return fNookScope; }
 
 void Game::UpdateKeyDowns(int iKey)
@@ -143,11 +143,11 @@ void Game::UpdateTouches(const TouchSet* iDown, const TouchSet* iMove, const Tou
 void Game::Draw(
 	double iNewTimestamp,
 	GPoint iBackingSize,
-	const ZRef<Callable_Void>& iCallable_FlipBuffers)
+	const ZP<Callable_Void>& iCallable_FlipBuffers)
 	{
-	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
+	ThreadVal<ZP<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
-	ZRef<Rendered> theRendered;
+	ZP<Rendered> theRendered;
 	{
 	ZAcqMtx acq(fMtx_Game);
 
@@ -224,9 +224,9 @@ void Game::RunOnce()
 	theKeyDowns.swap(fKeyDowns);
 	}
 
-	ThreadVal<ZRef<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
+	ThreadVal<ZP<AssetCatalog>> theTV_AssetCatalog(fAssetCatalog);
 
-	ZRef<Rendered> theRendered = this->pCrank(interval, &theKeyDowns);
+	ZP<Rendered> theRendered = this->pCrank(interval, &theKeyDowns);
 
 	const GPoint theGameSize = this->GetGameSize();
 
@@ -243,14 +243,14 @@ void Game::RunOnce()
 void Game::pUpdateTouches()
 	{
 	// Go through touch downs and assign touches to listeners.
-	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesDown)
+	foreachv (const ZP<Touch>& theTouch, fPendingTouchesDown)
 		{
 		sInsertMust(fTouchesActive, theTouch);
 
-		set<ZRef<TouchListener> > interested;
+		set<ZP<TouchListener> > interested;
 		Rat nearestInterested;
 
-		ZRef<TouchListener> exclusive;
+		ZP<TouchListener> exclusive;
 		Rat nearestExclusive;
 
 		foreacha (theTL, fTLs)
@@ -293,7 +293,7 @@ void Game::pUpdateTouches()
 				sInsertMust(exclusive->fDowns, theTouch);
 				}
 			}
-		else foreachv (const ZRef<TouchListener>& theTL, interested)
+		else foreachv (const ZP<TouchListener>& theTL, interested)
 			{
 			if (theTL->fActive.size() < theTL->fMaxTouches)
 				{
@@ -304,13 +304,13 @@ void Game::pUpdateTouches()
 		}
 	fPendingTouchesDown.clear();
 
-	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesMove)
+	foreachv (const ZP<Touch>& theTouch, fPendingTouchesMove)
 		{
-		ZRef<TouchListener> exclusive;
-		if (ZQ<ZRef<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
+		ZP<TouchListener> exclusive;
+		if (ZQ<ZP<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theTL, fTLs)
+		foreachv (ZP<TouchListener> theTL, fTLs)
 			{
 			if (not exclusive || theTL == exclusive)
 				{
@@ -321,17 +321,17 @@ void Game::pUpdateTouches()
 		}
 	fPendingTouchesMove.clear();
 
-	foreachv (const ZRef<Touch>& theTouch, fPendingTouchesUp)
+	foreachv (const ZP<Touch>& theTouch, fPendingTouchesUp)
 		{
 		sEraseMust(fTouchesActive, theTouch);
 
 		sInsertMust(fTouchesUp, theTouch);
 
-		ZRef<TouchListener> exclusive;
-		if (ZQ<ZRef<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
+		ZP<TouchListener> exclusive;
+		if (ZQ<ZP<TouchListener> > theQ = sQGet(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theTL, fTLs)
+		foreachv (ZP<TouchListener> theTL, fTLs)
 			{
 			if (not exclusive || theTL == exclusive)
 				{
@@ -343,7 +343,7 @@ void Game::pUpdateTouches()
 	fPendingTouchesUp.clear();
 	}
 
-ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
+ZP<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 	{
 	InChannel theInChannel(this->GetGameSize(), iKeyDowns, fNookScope);
 	fNookScope->NewEra();
@@ -359,26 +359,26 @@ ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 
 	fCog = sCallCog(fCog, theParam);
 
-	ZRef<Rendered_Group> theGroup = theOutChannel.GetGroup();
+	ZP<Rendered_Group> theGroup = theOutChannel.GetGroup();
 
 	if (DebugFlags::sTouches)
 		{
 		const RGBA theRGBA = sRGBA(0.0, 1.0, 0.0, 0.5);
 		const GRect theBounds = sGRect(-30,-30,30,30);
-		foreachv (ZRef<Touch> theTouch, fTouchesActive)
+		foreachv (ZP<Touch> theTouch, fTouchesActive)
 			{
 			const GRect theRect = theBounds + sCVec2(theTouch->fPos[0], theTouch->fPos[1]);
 			theGroup->Append(sFrontmost(sRendered_Rect(theRGBA, theRect)));
 			}
 		}
 
-	foreachv (const ZRef<Touch>& theTouch, fTouchesUp)
+	foreachv (const ZP<Touch>& theTouch, fTouchesUp)
 		{
-		ZRef<TouchListener> exclusive;
-		if (ZQ<ZRef<TouchListener> > theQ = sQGetErase(fExclusiveTouches, theTouch))
+		ZP<TouchListener> exclusive;
+		if (ZQ<ZP<TouchListener> > theQ = sQGetErase(fExclusiveTouches, theTouch))
 			exclusive = *theQ;
 
-		foreachv (ZRef<TouchListener> theTL, fTLs)
+		foreachv (ZP<TouchListener> theTL, fTLs)
 			{
 			if (not exclusive || theTL == exclusive)
 				sErase(theTL->fActive, theTouch);
@@ -387,7 +387,7 @@ ZRef<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 
 	fTouchesUp.clear();
 
-	foreachv (ZRef<TouchListener> theTL, fTLs)
+	foreachv (ZP<TouchListener> theTL, fTLs)
 		{
 		theTL->fDowns.clear();
 		theTL->fMoves.clear();

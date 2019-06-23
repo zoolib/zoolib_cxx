@@ -493,8 +493,8 @@ private:
 	virtual void Finalize();
 
 // Our protocol
-	static ZRef<Rep> sMake();
-	static ZRef<Rep> sMake(const Map_t& iMap);
+	static ZRef<Rep> spMake();
+	static ZRef<Rep> spMake(const Map_t& iMap);
 
 	Map_t fMap;
 	friend class Map_Any;

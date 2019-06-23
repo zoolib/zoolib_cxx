@@ -27,9 +27,9 @@ public:
 	SoundMeister_CoreAudio(const FileSpec& iFS);
 	virtual ~SoundMeister_CoreAudio();
 
-	virtual void SetSounds(const ZRef<Sound>* iSounds, size_t iCount);
+	virtual void SetSounds(const ZP<Sound>* iSounds, size_t iCount);
 
-	virtual ZRef<Sound> MakeSound(const string8& iName);
+	virtual ZP<Sound> MakeSound(const string8& iName);
 
 // Our protocol
 	void SetPaused(bool iPaused);
@@ -52,7 +52,7 @@ private:
 	const FileSpec fFS;
 
 	class PSound;
-	std::set<ZRef<PSound> > fPSounds;
+	std::set<ZP<PSound> > fPSounds;
 	std::vector<char> fBuffer;
 
 	bool fPaused;

@@ -51,8 +51,8 @@ public:
 // From Expr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone();
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Dum(Visitor_Expr_Rel_Dum& iVisitor);
@@ -65,13 +65,13 @@ class Visitor_Expr_Rel_Dum
 :	public virtual Visitor_Expr_Op0_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Dum(const ZRef<Expr_Rel_Dum>& iExpr);
+	virtual void Visit_Expr_Rel_Dum(const ZP<Expr_Rel_Dum>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sDum();
+ZP<Expr_Rel> sDum();
 
 } // namespace RelationalAlgebra
 

@@ -90,7 +90,7 @@ void sMunge(
 	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc,
 	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
-	const ZRef<PDRep> thePDRep = iPixelDesc.GetRep();
+	const ZP<PDRep> thePDRep = iPixelDesc.GetRep();
 	if (PDRep_Color* thePDRep_Color =
 		thePDRep.DynamicCast<PDRep_Color>())
 		{
@@ -198,9 +198,9 @@ void sBlit(
 
 	PointPOD sourceStart = LT(iSourceB);
 
-	ZRef<PDRep> sourcePDRep = iSourcePD.GetRep();
-	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> sourcePDRep = iSourcePD.GetRep();
+	ZP<PDRep> mattePDRep = iMattePD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 
 	if (PDRep_Color* sourcePDRep_Color = sourcePDRep.DynamicCast<PDRep_Color>())
 		{
@@ -243,9 +243,9 @@ void sBlit(
 	PointPOD sourceStart = LT(iSourceB);
 	PointPOD matteStart = LT(iMatteB);
 
-	ZRef<PDRep> sourcePDRep = iSourcePD.GetRep();
-	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> sourcePDRep = iSourcePD.GetRep();
+	ZP<PDRep> mattePDRep = iMattePD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 
 	if (PDRep_Color* sourcePDRep_Color = sourcePDRep.DynamicCast<PDRep_Color>())
 		{
@@ -274,7 +274,7 @@ void sColor(
 	const RGBA& iColor,
 	EOp iOp)
 	{
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sColor_T(iDestRD, oDest, iDestB, *destPDRep_Color, iColor, iOp);
@@ -305,8 +305,8 @@ void sColor(
 
 	PointPOD matteStart = LT(iMatteB);
 
-	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> mattePDRep = iMattePD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 
 	if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 		{
@@ -360,7 +360,7 @@ void sColor(
 void sInvert(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD)
 	{
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sInvert_T(iDestRD, oDest, iDestB, *destPDRep_Color);
@@ -382,7 +382,7 @@ void sInvert(
 void sOpaque(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sOpaque_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
@@ -404,7 +404,7 @@ void sOpaque(
 void sDarken(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sDarken_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
@@ -426,7 +426,7 @@ void sDarken(
 void sFade(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
 	{
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
 		sFade_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
@@ -457,8 +457,8 @@ void sApplyMatte(
 
 	PointPOD matteStart = LT(iMatteB);
 
-	ZRef<PDRep> mattePDRep = iMattePD.GetRep();
-	ZRef<PDRep> destPDRep = iDestPD.GetRep();
+	ZP<PDRep> mattePDRep = iMattePD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
 
 	if (PDRep_Color* mattePDRep_Color = mattePDRep.DynamicCast<PDRep_Color>())
 		{

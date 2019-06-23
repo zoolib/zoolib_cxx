@@ -40,7 +40,7 @@ class Expr_Rel_Restrict
 	{
 	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool);
+	Expr_Rel_Restrict(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Bool>& iExpr_Bool);
 	virtual ~Expr_Rel_Restrict();
 
 // From Visitee
@@ -49,16 +49,16 @@ public:
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor);
 
-	const ZRef<Expr_Bool>& GetExpr_Bool() const;
+	const ZP<Expr_Bool>& GetExpr_Bool() const;
 
 private:
-	const ZRef<Expr_Bool> fExpr_Bool;
+	const ZP<Expr_Bool> fExpr_Bool;
 	};
 
 // =================================================================================================
@@ -68,22 +68,22 @@ class Visitor_Expr_Rel_Restrict
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Restrict> sRestrict(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
+ZP<Expr_Rel_Restrict> sRestrict(
+	const ZP<Expr_Rel>& iExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool);
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Rel>& iExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool);
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel);
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Bool>& iExpr_Bool, const ZP<Expr_Rel>& iExpr_Rel);
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool);
+ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool);
 
 } // namespace RelationalAlgebra
 

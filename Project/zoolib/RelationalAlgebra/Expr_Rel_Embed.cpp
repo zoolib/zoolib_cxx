@@ -51,8 +51,8 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Embed
 
-Expr_Rel_Embed::Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
-	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
+Expr_Rel_Embed::Expr_Rel_Embed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
+	const ColName& iColName, const ZP<Expr_Rel>& iEmbedee)
 :	inherited(iOp0, iEmbedee)
 ,	fBoundNames(iBoundNames)
 ,	fColName(iColName)
@@ -74,10 +74,10 @@ void Expr_Rel_Embed::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Embed::Self()
+ZP<Expr_Rel> Expr_Rel_Embed::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Embed::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+ZP<Expr_Rel> Expr_Rel_Embed::Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Embed(iOp0, fBoundNames, fColName, iOp1); }
 
 void Expr_Rel_Embed::Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor)
@@ -92,14 +92,14 @@ const ColName& Expr_Rel_Embed::GetColName() const
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Embed
 
-void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
+void Visitor_Expr_Rel_Embed::Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
-	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee)
+ZP<Expr_Rel> sEmbed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
+	const ColName& iColName, const ZP<Expr_Rel>& iEmbedee)
 	{ return new Expr_Rel_Embed(iOp0, iBoundNames, iColName, iEmbedee); }
 
 } // namespace RelationalAlgebra

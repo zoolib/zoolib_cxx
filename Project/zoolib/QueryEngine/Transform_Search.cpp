@@ -105,25 +105,25 @@ public:
 	:	fNames(iNames)
 		{}
 // From Visitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr)
 		{ this->pSetResult(sAnalyze(iExpr->GetValPred())); }
 
 // From Visitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 // From Visitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 private:
-	Analysis_t sAnalyze(const ZRef<ValComparand>& iComparand)
+	Analysis_t sAnalyze(const ZP<ValComparand>& iComparand)
 		{
 		Analysis_t result;
 		if (iComparand.DynamicCast<ValComparand_Const_Any>())
 			result.fAnyIsConst = true;
 
-		if (ZRef<ValComparand_Name> theComparand_Name = iComparand.DynamicCast<ValComparand_Name>())
+		if (ZP<ValComparand_Name> theComparand_Name = iComparand.DynamicCast<ValComparand_Name>())
 			{
 			if (not sContains(fNames, theComparand_Name->GetName()))
 				result.fAnyNameUnknown = true;
@@ -174,15 +174,15 @@ public:
 	,	fProjection(UniSet<ColName>::sUniversal())
 		{}
 
-	virtual void Visit(const ZRef<Visitee>& iRep)
+	virtual void Visit(const ZP<Visitee>& iRep)
 		{ ZUnimplemented(); }
 
-	virtual void Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
+	virtual void Visit_Expr_Rel_Calc(const ZP<RA::Expr_Rel_Calc>& iExpr)
 		{
 		const ColName& theName = RA::sRenamed(fRename_LeafToRoot, iExpr->GetColName());
 
 		// The restriction may reference the name we introduce, so don't pass it down the tree.
-		const ZRef<Expr_Bool> priorRestriction = fRestriction;
+		const ZP<Expr_Bool> priorRestriction = fRestriction;
 		fRestriction = sTrue();
 
 		// Similarly with projection -- we don't know what names we'll be
@@ -190,14 +190,14 @@ public:
 		const UniSet<ColName> priorProjection = fProjection;
 		fProjection = UniSet<ColName>::sUniversal();
 
-		ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
-		ZRef<RA::Expr_Rel> newCalc = sCalc(newOp0, theName, iExpr->GetCallable());
+		ZP<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZP<RA::Expr_Rel> newCalc = sCalc(newOp0, theName, iExpr->GetCallable());
 
 		this->pSetResultWithRestrictProjectRename(
 			newCalc, priorRestriction, priorProjection, Rename(), null);
 		}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr)
 		{
 		// fRestriction by now is written in terms used by the concrete itself,
 		// and fRename_LeafToRoot maps from the concrete's terms to those used at the top of
@@ -242,15 +242,15 @@ public:
 
 		Visitor_Analyze theVisitor(theRH_InnerAndBound);
 
-		ZRef<Expr_Bool> conjunctionRestrict, conjunctionSearch;
+		ZP<Expr_Bool> conjunctionRestrict, conjunctionSearch;
 
 		foreacha (clause, Util_Expr_Bool::sAsCNF(fRestriction))
 			{
 			bool referencesInnerAndBoundOnly = true;
 
-			ZRef<Expr_Bool> newClause;
+			ZP<Expr_Bool> newClause;
 
-			foreachv (const ZRef<Expr_Bool>& disjunction, clause)
+			foreachv (const ZP<Expr_Bool>& disjunction, clause)
 				{
 				newClause |= disjunction;
 				const Analysis_t theAn = theVisitor.Do(disjunction);
@@ -274,7 +274,7 @@ public:
 				}
 			}
 
-		ZRef<Expr_Rel> theRel = new Expr_Rel_Search(fBoundNames,
+		ZP<Expr_Rel> theRel = new Expr_Rel_Search(fBoundNames,
 			newRename, theRH_Optional, conjunctionSearch);
 
 		if (conjunctionRestrict)
@@ -283,39 +283,39 @@ public:
 		this->pSetResult(theRel);
 		}
 
-	virtual void Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
+	virtual void Visit_Expr_Rel_Const(const ZP<RA::Expr_Rel_Const>& iExpr)
 		{
 		fLikelySizeQ = 1;
 		this->pSetResultWithRestrictProjectRename(iExpr, iExpr->GetColName());
 		}
 
-	virtual void Visit_Expr_Rel_Dee(const ZRef<RA::Expr_Rel_Dee>& iExpr)
+	virtual void Visit_Expr_Rel_Dee(const ZP<RA::Expr_Rel_Dee>& iExpr)
 		{
 		fLikelySizeQ = 1;
 		this->pSetResultWithRestrictProjectRename(iExpr, null);
 		}
 
-	virtual void Visit_Expr_Rel_Dum(const ZRef<RA::Expr_Rel_Dum>& iExpr)
+	virtual void Visit_Expr_Rel_Dum(const ZP<RA::Expr_Rel_Dum>& iExpr)
 		{
 		fLikelySizeQ = 0;
 		this->pSetResultWithRestrictProjectRename(iExpr, null);
 		}
 
-	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
+	virtual void Visit_Expr_Rel_Embed(const ZP<RA::Expr_Rel_Embed>& iExpr)
 		{
-		const ZRef<Expr_Bool> priorRestriction = fRestriction;
+		const ZP<Expr_Bool> priorRestriction = fRestriction;
 		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename_LeafToRoot = fRename_LeafToRoot;
 
 		fRestriction = sTrue();
 		fProjection = UniSet<ColName>::sUniversal();
-		ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZP<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 		fRestriction = sTrue();
 		fProjection = UniSet<ColName>::sUniversal();
 		fRename_LeafToRoot.clear();
 		fBoundNames = iExpr->GetBoundNames();
-		ZRef<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+		ZP<Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 		// Restore this stuff -- we don't want anything from the embedee itself to leak up to here.
 		fRestriction = priorRestriction;
@@ -325,15 +325,15 @@ public:
 		const RelHead& theBoundNames = RA::sRenamed(priorRename_LeafToRoot, iExpr->GetBoundNames());
 		const ColName& theName = RA::sRenamed(priorRename_LeafToRoot, iExpr->GetColName());
 
-		ZRef<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
+		ZP<RA::Expr_Rel> newEmbed = sEmbed(newOp0, theBoundNames, theName, newOp1);
 
 		this->pSetResultWithRestrictProjectRename(newEmbed, null);
 		}
 
-	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
+	virtual void Visit_Expr_Rel_Product(const ZP<RA::Expr_Rel_Product>& iExpr)
 		{
 		// Remember current state, to use and to restore
-		const ZRef<Expr_Bool> priorRestriction = fRestriction;
+		const ZP<Expr_Bool> priorRestriction = fRestriction;
 		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename_LeafToRoot = fRename_LeafToRoot;
 
@@ -344,7 +344,7 @@ public:
 		fProjection = UniSet<ColName>::sUniversal();
 
 		// Process the left branch.
-		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
+		ZP<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
 		const double leftLikelySize = fLikelySizeQ.Get();
 		fLikelySizeQ.Clear();
 		const RelHead namesOnLeft = RA::sNamesTo(fRename_LeafToRoot);
@@ -359,7 +359,7 @@ public:
 
 		// Process the right branch.
 		fBoundNames = namesOnLeft;
-		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
+		ZP<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
 		const double rightLikelySize = fLikelySizeQ.Get();
 
 		fLikelySizeQ = leftLikelySize * rightLikelySize;
@@ -376,13 +376,13 @@ public:
 			}
 		}
 
-	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
+	virtual void Visit_Expr_Rel_Project(const ZP<RA::Expr_Rel_Project>& iExpr)
 		{
 		SaveSetRestore<UniSet<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	virtual void Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
+	virtual void Visit_Expr_Rel_Rename(const ZP<RA::Expr_Rel_Rename>& iExpr)
 		{
 		const ColName& oldName = iExpr->GetOld();
 		ColName newName = iExpr->GetNew();
@@ -400,14 +400,14 @@ public:
 
 		sInsertMust(fRename_LeafToRoot, oldName, newName);
 
-		ZRef<Expr_Rel> result = this->Do(iExpr->GetOp0());
+		ZP<Expr_Rel> result = this->Do(iExpr->GetOp0());
 
 		this->pSetResult(result);
 		}
 
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
+	virtual void Visit_Expr_Rel_Restrict(const ZP<RA::Expr_Rel_Restrict>& iExpr)
 		{
-		ZRef<Expr_Bool> theRestriction = iExpr->GetExpr_Bool();
+		ZP<Expr_Bool> theRestriction = iExpr->GetExpr_Bool();
 		if (theRestriction != sTrue())
 			{
 			if (fRestriction != sTrue())
@@ -419,53 +419,53 @@ public:
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 
-	virtual void Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
+	virtual void Visit_Expr_Rel_Union(const ZP<RA::Expr_Rel_Union>& iExpr)
 		{
-		const ZRef<Expr_Bool> priorRestriction = fRestriction;
+		const ZP<Expr_Bool> priorRestriction = fRestriction;
 		const UniSet<ColName> priorProjection = fProjection;
 		const Rename priorRename_LeafToRoot = fRename_LeafToRoot;
 
 		// Process the left branch.
-		ZRef<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
+		ZP<RA::Expr_Rel> op0 = this->Do(iExpr->GetOp0());
 
 		// Restore state and then process the right
 		fRestriction = priorRestriction;
 		fProjection = priorProjection;
 		fRename_LeafToRoot = priorRename_LeafToRoot;
 
-		ZRef<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
+		ZP<RA::Expr_Rel> op1 = this->Do(iExpr->GetOp1());
 
 //		this->pSetResultWithRestrictProjectRename(
 //			sUnion(op0, op1), priorRestriction, priorProjection, null);
 		this->pSetResult(sUnion(op0, op1));
 		}
 
-	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel, const ZQ<ColName>& iNameQ)
+	void pSetResultWithRestrictProjectRename(const ZP<Expr_Rel>& iRel, const ZQ<ColName>& iNameQ)
 		{
-		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
+		ZP<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
 			iRel, fRestriction, fProjection, fRename_LeafToRoot, iNameQ);
 		this->pSetResult(theResult);
 		}
 
-	void pSetResultWithRestrictProjectRename(const ZRef<Expr_Rel>& iRel,
-		const ZRef<Expr_Bool>& iRestriction,
+	void pSetResultWithRestrictProjectRename(const ZP<Expr_Rel>& iRel,
+		const ZP<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
 		const Rename& iRename_LeafToRoot,
 		const ZQ<ColName>& iNameQ)
 		{
-		ZRef<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
+		ZP<Expr_Rel> theResult = spGetResultWithRestrictProjectRename(
 			iRel, iRestriction, iProjection, iRename_LeafToRoot, iNameQ);
 		this->pSetResult(theResult);
 		}
 
-	static ZRef<Expr_Rel> spGetResultWithRestrictProjectRename(
-		const ZRef<Expr_Rel>& iRel,
-		const ZRef<Expr_Bool>& iRestriction,
+	static ZP<Expr_Rel> spGetResultWithRestrictProjectRename(
+		const ZP<Expr_Rel>& iRel,
+		const ZP<Expr_Bool>& iRestriction,
 		const UniSet<ColName>& iProjection,
 		const Rename& iRename_LeafToRoot,
 		const ZQ<ColName>& iNameQ)
 		{
-		ZRef<Expr_Rel> theRel = iRel;
+		ZP<Expr_Rel> theRel = iRel;
 
 		// Apply any restriction that remains.
 		if (iRestriction != sTrue())
@@ -509,7 +509,7 @@ public:
 		}
 
 	RelHead fBoundNames;
-	ZRef<Expr_Bool> fRestriction;
+	ZP<Expr_Bool> fRestriction;
 	UniSet<ColName> fProjection;
 	Rename fRename_LeafToRoot;
 	ZQ<double> fLikelySizeQ;
@@ -517,9 +517,9 @@ public:
 
 } // anonymous namespace
 
-ZRef<RA::Expr_Rel> sTransform_Search(const ZRef<RA::Expr_Rel>& iExpr)
+ZP<RA::Expr_Rel> sTransform_Search(const ZP<RA::Expr_Rel>& iExpr)
 	{
-	if (ZRef<RA::Expr_Rel> result = Transform_Search().Do(iExpr))
+	if (ZP<RA::Expr_Rel> result = Transform_Search().Do(iExpr))
 		return result;
 
 	return iExpr;

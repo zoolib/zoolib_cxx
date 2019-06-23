@@ -31,7 +31,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Walker_Product
 
-Walker_Product::Walker_Product(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
+Walker_Product::Walker_Product(const ZP<Walker>& iWalker_Left, const ZP<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)
 ,	fWalker_Right(iWalker_Right)
 ,	fNeedLoadLeft(true)
@@ -47,7 +47,7 @@ void Walker_Product::Rewind()
 	fNeedLoadLeft = true;
 	}
 
-ZRef<Walker> Walker_Product::Prime(
+ZP<Walker> Walker_Product::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

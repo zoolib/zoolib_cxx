@@ -34,15 +34,15 @@ namespace QueryEngine {
 class Walker_Embed : public Walker
 	{
 public:
-	Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelationalAlgebra::RelHead& iBoundNames,
-		const string8& iColName, const ZRef<Walker>& iWalker_Embedee);
+	Walker_Embed(const ZP<Walker>& iWalker_Parent, const RelationalAlgebra::RelHead& iBoundNames,
+		const string8& iColName, const ZP<Walker>& iWalker_Embedee);
 
 	virtual ~Walker_Embed();
 
 // From QueryEngine::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -50,17 +50,17 @@ public:
 	virtual bool QReadInc(Val_Any* ioResults);
 
 // Our protocol
-	ZRef<Walker> GetParent()
+	ZP<Walker> GetParent()
 		{ return fWalker_Parent; }
 
-	ZRef<Walker> GetEmbedee()
+	ZP<Walker> GetEmbedee()
 		{ return fWalker_Embedee; }
 
 private:
-	ZRef<Walker> fWalker_Parent;
+	ZP<Walker> fWalker_Parent;
 	const RelationalAlgebra::RelHead fBoundNames;
 	const string8 fColName;
-	ZRef<Walker> fWalker_Embedee;
+	ZP<Walker> fWalker_Embedee;
 
 	size_t fOutputOffset;
 	RelationalAlgebra::RelHead fEmbedeeRelHead;

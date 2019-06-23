@@ -11,8 +11,8 @@ namespace Util {
 // =================================================================================================
 #pragma mark - sFinderHider
 
-ZRef<Rendered> sFinderHider(
-	const ZRef<Rendered>& iRendered,
+ZP<Rendered> sFinderHider(
+	const ZP<Rendered>& iRendered,
 	GPoint iBackingSize,
 	GPoint iGameSize);
 

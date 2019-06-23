@@ -45,10 +45,10 @@ public:
 	~PixelDesc();
 	PixelDesc& operator=(const PixelDesc& iOther);
 
-	PixelDesc(const ZRef<PixelDescRep>& iPixelDescRep);
-	PixelDesc& operator=(const ZRef<PixelDescRep>& iPixelDescRep);
+	PixelDesc(const ZP<PixelDescRep>& iPixelDescRep);
+	PixelDesc& operator=(const ZP<PixelDescRep>& iPixelDescRep);
 
-	ZRef<PixelDescRep> GetRep() const;
+	ZP<PixelDescRep> GetRep() const;
 
 	bool HasAlpha() const;
 	PixelDesc WithoutAlpha() const;
@@ -62,7 +62,7 @@ public:
 	void AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) const;
 
 private:
-	ZRef<PixelDescRep> fRep;
+	ZP<PixelDescRep> fRep;
 	};
 
 // =================================================================================================
@@ -80,7 +80,7 @@ public:
 	virtual ~PixelDescRep() {}
 
 	virtual bool HasAlpha() = 0;
-	virtual ZRef<PixelDescRep> WithoutAlpha() = 0;
+	virtual ZP<PixelDescRep> WithoutAlpha() = 0;
 
 	virtual RGBA Imp_AsRGBA(Pixval iPixval) const = 0;
 	virtual void Imp_AsRGBAs(const Pixval* iPixvals, size_t iCount, RGBA* oColors) const = 0;
@@ -113,7 +113,7 @@ public:
 
 // From PixelDescRep
 	virtual bool HasAlpha();
-	virtual ZRef<PixelDescRep> WithoutAlpha();
+	virtual ZP<PixelDescRep> WithoutAlpha();
 
 	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Indexed::AsRGBA(iPixval); }
@@ -155,7 +155,7 @@ public:
 
 // From PixelDescRep
 	virtual bool HasAlpha();
-	virtual ZRef<PixelDescRep> WithoutAlpha();
+	virtual ZP<PixelDescRep> WithoutAlpha();
 
 	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Gray::AsRGBA(iPixval); }
@@ -191,7 +191,7 @@ public:
 
 // From PixelDescRep
 	virtual bool HasAlpha();
-	virtual ZRef<PixelDescRep> WithoutAlpha();
+	virtual ZP<PixelDescRep> WithoutAlpha();
 
 	virtual RGBA Imp_AsRGBA(Pixval iPixval) const
 		{ return Pixval2RGBA_Color::AsRGBA(iPixval); }

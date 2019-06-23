@@ -44,7 +44,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Product
 
-Expr_Rel_Product::Expr_Rel_Product(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+Expr_Rel_Product::Expr_Rel_Product(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -64,10 +64,10 @@ void Expr_Rel_Product::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Product::Self()
+ZP<Expr_Rel> Expr_Rel_Product::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Product::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+ZP<Expr_Rel> Expr_Rel_Product::Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Product(iOp0, iOp1); }
 
 void Expr_Rel_Product::Accept_Expr_Rel_Product(Visitor_Expr_Rel_Product& iVisitor)
@@ -76,13 +76,13 @@ void Expr_Rel_Product::Accept_Expr_Rel_Product(Visitor_Expr_Rel_Product& iVisito
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Product
 
-void Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr)
+void Visitor_Expr_Rel_Product::Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sProduct(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel> sProduct(const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{
 	if (iLHS && iRHS)
 		return new Expr_Rel_Product(iLHS, iRHS);
@@ -90,10 +90,10 @@ ZRef<Expr_Rel> sProduct(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	return null;
 	}
 
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{ return sProduct(iLHS, iRHS); }
 
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioLHS, const ZP<Expr_Rel>& iRHS)
 	{ return ioLHS = ioLHS * iRHS; }
 
 } // namespace RelationalAlgebra

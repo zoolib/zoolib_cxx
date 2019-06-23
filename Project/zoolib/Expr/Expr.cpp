@@ -46,7 +46,7 @@ std::string Expr::DebugDescription()
 // =================================================================================================
 #pragma mark - Visitor_Expr
 
-void Visitor_Expr::Visit_Expr(const ZRef<Expr>& iExpr)
+void Visitor_Expr::Visit_Expr(const ZP<Expr>& iExpr)
 	{ this->Visit(iExpr); }
 
 } // namespace ZooLib

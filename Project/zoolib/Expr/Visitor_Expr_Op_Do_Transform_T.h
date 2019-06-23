@@ -33,33 +33,33 @@ namespace ZooLib {
 
 template <class T>
 class Visitor_Expr_Op_Do_Transform_T
-:	public virtual Visitor_Do_T<ZRef<T> >
+:	public virtual Visitor_Do_T<ZP<T> >
 ,	public virtual Visitor_Expr_Op0_T<T>
 ,	public virtual Visitor_Expr_Op1_T<T>
 ,	public virtual Visitor_Expr_Op2_T<T>
 	{
 public:
 // From Visitor
-	virtual void Visit(const ZRef<Visitee>& iRep)
+	virtual void Visit(const ZP<Visitee>& iRep)
 		{ ZUnimplemented(); }
 
 // From Visitor_Expr_Op0_T
-	virtual void Visit_Expr_Op0(const ZRef<Expr_Op0_T<T> >& iExpr)
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<T> >& iExpr)
 		{ this->pSetResult(iExpr->SelfOrClone()); }
 
 // From Visitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<T> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<T> >& iExpr)
 		{
-		if (ZQ<ZRef<T> > theQ0 = this->QDo(iExpr->GetOp0()))
+		if (ZQ<ZP<T> > theQ0 = this->QDo(iExpr->GetOp0()))
 			this->pSetResult(iExpr->SelfOrClone(*theQ0));
 		}
 
 // From Visitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<T> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<T> >& iExpr)
 		{
-		if (ZQ<ZRef<T> > theQ0 = this->QDo(iExpr->GetOp0()))
+		if (ZQ<ZP<T> > theQ0 = this->QDo(iExpr->GetOp0()))
 			{
-			if (ZQ<ZRef<T> > theQ1 = this->QDo(iExpr->GetOp1()))
+			if (ZQ<ZP<T> > theQ1 = this->QDo(iExpr->GetOp1()))
 				this->pSetResult(iExpr->SelfOrClone(*theQ0, *theQ1));
 			}
 		}

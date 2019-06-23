@@ -11,9 +11,9 @@ namespace GameEngine {
 #pragma mark -
 
 void sPopulate(
-	const ZRef<AssetCatalog>& iAC,
+	const ZP<AssetCatalog>& iAC,
 	const FileSpec& iRoot,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
+	const ZP<Callable_TextureFromPixmap>& iTFP,
 	bool iPreferProcessedArt, bool iPreferSmallArt);
 
 } // namespace GameEngine

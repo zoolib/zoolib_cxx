@@ -53,7 +53,7 @@ using namespace RelationalAlgebra;
 // =================================================================================================
 #pragma mark -
 
-static void spToChan(ZRef<Expr_Rel> iRel, const ChanW_UTF& iChanW)
+static void spToChan(ZP<Expr_Rel> iRel, const ChanW_UTF& iChanW)
 	{
 	RA::Util_Strim_Rel::sToStrim_Parseable(iRel, iChanW);
 	}
@@ -62,12 +62,12 @@ template <typename T>
 T sParseFromChan(const ChanRU_UTF& iChanRU);
 
 template <>
-ZRef<Expr_Rel> sParseFromChan(const ChanRU_UTF& iChanRU)
+ZP<Expr_Rel> sParseFromChan(const ChanRU_UTF& iChanRU)
 	{
 	return RelationalAlgebra::Util_Strim_Rel::sQFromStrim(iChanRU);
 	}
 
-static bool spCheckRoundTripThroughChan(const ZRef<Expr_Rel>& iRel)
+static bool spCheckRoundTripThroughChan(const ZP<Expr_Rel>& iRel)
 	{
 	bool success = true;
 
@@ -77,7 +77,7 @@ static bool spCheckRoundTripThroughChan(const ZRef<Expr_Rel>& iRel)
 	string string1;
 	spToChan(iRel, ChanW_UTF_string8(&string1));
 
-	ZRef<Expr_Rel> newRel = sParseFromChan<ZRef<Expr_Rel>>(ChanRU_UTF_string8(string1));
+	ZP<Expr_Rel> newRel = sParseFromChan<ZP<Expr_Rel>>(ChanRU_UTF_string8(string1));
 	string string2;
 	spToChan(newRel, ChanW_UTF_string8(&string2));
 
@@ -92,9 +92,9 @@ static bool spCheckRoundTripThroughChan(const ZRef<Expr_Rel>& iRel)
 
 #if 0
 
-static void spTestRel(ZRef<Expr_Rel> iRel)
+static void spTestRel(ZP<Expr_Rel> iRel)
 	{
-	ZRef<Expr_Rel> theRel;
+	ZP<Expr_Rel> theRel;
 
 	theRel = iRel;
 	theRel = QE::sTransform_Search(theRel);
@@ -109,17 +109,17 @@ static void spTestRel(ZRef<Expr_Rel> iRel)
 	ZLOGTRACE(eDebug);
 	}
 
-static ZRef<Expr_Rel> spGetRel(const string& iName)
+static ZP<Expr_Rel> spGetRel(const string& iName)
 	{
-	const ZRef<Expr_Rel> fRel_DaemonInstance = sRel_DaemonInstance("Skate");
+	const ZP<Expr_Rel> fRel_DaemonInstance = sRel_DaemonInstance("Skate");
 
-	ZRef<Expr_Bool> theSpec = sTrue();
+	ZP<Expr_Bool> theSpec = sTrue();
 	theSpec &= CName("Type") == CConst("Runner");
 	theSpec &= CName("SubType") == CConst("NovationLaunchpad");
 
 	const RelHead theRH_Required = sRelHead("DaemonInstance", "Type", "SubType", "Device", "Name", "VarName");
 
-	ZRef<Expr_Rel> theRel = sConcrete(theRH_Required);
+	ZP<Expr_Rel> theRel = sConcrete(theRH_Required);
 	theRel = theRel & theSpec;
 
 	theRel = sApplyRel_DaemonInstance(theRel, fRel_DaemonInstance);
@@ -129,11 +129,11 @@ static ZRef<Expr_Rel> spGetRel(const string& iName)
 
 static string spGetQuery();
 
-static ZRef<Expr_Rel> spGetRel2(const string& iName)
+static ZP<Expr_Rel> spGetRel2(const string& iName)
 	{
 	// ---
 	{
-	ZRef<Expr_Rel> rel_Group = sConcrete(sRelHead("Type", "SubType", "Name"));
+	ZP<Expr_Rel> rel_Group = sConcrete(sRelHead("Type", "SubType", "Name"));
 	rel_Group &= CName("Type") == CConst("UI");
 	rel_Group &= CName("SubType") == CConst("Group");
 	rel_Group &= CName("Name") == CConst(iName);
@@ -144,7 +144,7 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 
 	// --
 
-	ZRef<Expr_Rel> rel_Links = sConcrete(sRelHead("Type", "Group", "Member", "Index"));
+	ZP<Expr_Rel> rel_Links = sConcrete(sRelHead("Type", "Group", "Member", "Index"));
 	rel_Links &= CName("Type") == CConst("Link");
 	rel_Links &= CName("Group") == CConst(iName);
 
@@ -155,7 +155,7 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 
 	// --
 
-	ZRef<Expr_Rel> rel_UIMember = sConcrete(
+	ZP<Expr_Rel> rel_UIMember = sConcrete(
 		sRelHead("Type", "SubType", "Name"),
 		sRelHead("Var", "Editable", "Name_Display", "Choices"));
 	rel_UIMember &= CName("Type") == CConst("UI");
@@ -170,12 +170,12 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 
 	// --
 
-	ZRef<Expr_Rel> rel_Var_Outer = sConcrete(sRelHead("Type", "Name"));
+	ZP<Expr_Rel> rel_Var_Outer = sConcrete(sRelHead("Type", "Name"));
 	rel_Var_Outer &= (CName("Type") == CConst("Var"));
 	rel_Var_Outer = sRename(rel_Var_Outer, "Var_Outer.Type", "Type");
 	rel_Var_Outer = sRename(rel_Var_Outer, "Var_Outer.Name", "Name");
 
-	ZRef<Expr_Rel> rel_Var_Inner = sConcrete(sRelHead("Type", "Name", ""));
+	ZP<Expr_Rel> rel_Var_Inner = sConcrete(sRelHead("Type", "Name", ""));
 	rel_Var_Inner &= (CName("Type") == CConst("Var"));
 	rel_Var_Inner &= (CName("Name") == CName("Var_Outer.Name"));
 
@@ -184,7 +184,7 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 	// Append a variable called "***Dummy***", to be used so that a group's (member * var) is never
 	// empty. Alternatively, we *could* embed the var in the member -- not sure how I feel about
 	// the double embedding.
-	ZRef<Expr_Rel> rel_Dummy = sDee()
+	ZP<Expr_Rel> rel_Dummy = sDee()
 		* NameVal("Var_Outer.Type", "Var")
 		* NameVal("Var_Outer.Name", "***Dummy***")
 		* NameVal("Var_Instances", AbsentOptional_t());
@@ -192,7 +192,7 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 	rel_Var_Outer = rel_Var_Outer | rel_Dummy;
 	// --
 
-	ZRef<Expr_Rel> rel_UIMember_Var = rel_UIMember * rel_Var_Outer;
+	ZP<Expr_Rel> rel_UIMember_Var = rel_UIMember * rel_Var_Outer;
 
 	rel_UIMember_Var &=
 		(((CName("UIMember.SubType") == CConst("Button")) | (CName("UIMember.SubType") == CConst("Group")))
@@ -202,9 +202,9 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 		| CName("UIMember.Var") == CName("Var_Outer.Name"));
 
 	// This line is *much* slower
-	// ZRef<Expr_Rel> theRel = rel_Links * (rel_Group * rel_UIMember_Var);
+	// ZP<Expr_Rel> theRel = rel_Links * (rel_Group * rel_UIMember_Var);
 
-	ZRef<Expr_Rel> theRel = rel_Group * (rel_Links * rel_UIMember_Var);
+	ZP<Expr_Rel> theRel = rel_Group * (rel_Links * rel_UIMember_Var);
 	theRel &= (CName("Link.Group") == CName("Group.Name"));
 	theRel &= (CName("Link.Member") == CName("UIMember.Name"));
 
@@ -225,10 +225,10 @@ static ZRef<Expr_Rel> spGetRel2(const string& iName)
 
 void RunTests()
 	{
-	ZRef<Expr_Rel> theRel = sParseFromChan<ZRef<Expr_Rel>>(ChanRU_UTF_string8(spGetQuery()));
+	ZP<Expr_Rel> theRel = sParseFromChan<ZP<Expr_Rel>>(ChanRU_UTF_string8(spGetQuery()));
 	spCheckRoundTripThroughChan(theRel);
 
-//	ZRef<Expr_Rel> relcons = sTransform_ConsolidateRenames(theRel);
+//	ZP<Expr_Rel> relcons = sTransform_ConsolidateRenames(theRel);
 
 	theRel = QE::sTransform_Search(theRel);
 	theRel = RA::Transform_DecomposeRestricts().Do(theRel);
@@ -237,9 +237,9 @@ void RunTests()
 
 // ----------------
 
-static ZRef<Expr_Rel> spGetQuerySimplified2(const std::string iName)
+static ZP<Expr_Rel> spGetQuerySimplified2(const std::string iName)
 	{
-	ZRef<Expr_Rel> theRel = sConcrete(
+	ZP<Expr_Rel> theRel = sConcrete(
 		sRelHead("Type", "SubType", "Name"),
 		sRelHead("Name_Display"));
 

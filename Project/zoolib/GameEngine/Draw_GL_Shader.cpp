@@ -336,9 +336,9 @@ public:
 		GLint fUniform_AlphaOnly_Modulation;
 	};
 
-static ZRef<Context> spContextObject;
+static ZP<Context> spContextObject;
 
-ZRef<Context> spContext()
+ZP<Context> spContext()
 	{
 	if (not spContextObject)
 		spContextObject = new Context;
@@ -357,7 +357,7 @@ void spSetUniform_RGBA(GLint uniform, RGBA iRGBA)
 
 void spDrawRect(const Blush& iBlush, const Mat& iMat, const GRect& iRect)
 	{
-	ZRef<Context> theContext = spContext();
+	ZP<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
@@ -387,7 +387,7 @@ void spDrawRect(const Blush& iBlush, const Mat& iMat, const GRect& iRect)
 void spDrawRightAngleSegment(const Blush& iBlush, const Mat& iMat,
 	const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave)
 	{
-	ZRef<Context> theContext = spContext();
+	ZP<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
@@ -419,7 +419,7 @@ void spDrawTexture_AlphaOnly(const Blush& iBlush, const Mat& iMat,
 	TextureID iTextureID, GPoint iTextureSize,
 	const GRect& iBounds)
 	{
-	ZRef<Context> theContext = spContext();
+	ZP<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
@@ -465,7 +465,7 @@ void spDrawTexture(const Blush& iBlush, const Mat& iMat,
 	TextureID iTextureID, GPoint iTextureSize,
 	const GRect& iBounds)
 	{
-	ZRef<Context> theContext = spContext();
+	ZP<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
@@ -511,7 +511,7 @@ void spDrawTriangle(const Blush& iBlush,
 	const Mat& iMat,
 	const GPoint& iP0, const GPoint& iP1, const GPoint& iP2)
 	{
-	ZRef<Context> theContext = spContext();
+	ZP<Context> theContext = spContext();
 
 	SaveSetRestore_Enable ssr_Enable_BLEND(GL_BLEND, true);
 	SaveSetRestore_BlendEquation ssr_BlendEquation(GL_FUNC_ADD);
@@ -558,7 +558,7 @@ Visitor_Draw_GL_Shader::Visitor_Draw_GL_Shader(
 	#endif
 	}
 
-void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
+void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZP<Rendered_Buffer>& iRendered_Buffer)
 	{
 	// See also GameEngine_Game_Render.cpp/sGame_Render and
 	// Visitor_Draw_GL_Fixed::Visit_Rendered_Buffer.
@@ -566,7 +566,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 	const PointPOD theTextureSize =
 		sPointPOD(iRendered_Buffer->GetWidth(), iRendered_Buffer->GetHeight());
 
-	ZRef<Texture_GL> theTexture_GL = new Texture_GL(theTextureSize);
+	ZP<Texture_GL> theTexture_GL = new Texture_GL(theTextureSize);
 
 	{SaveSetRestore_ActiveTexture ssr_ActiveTexture(GL_TEXTURE0);
 		{
@@ -600,7 +600,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 				theMat *= sTranslate3<Rat>(-X(theTextureSize)/2, -Y(theTextureSize)/2, 0);
 
 				SaveSetRestore<Mat> theSSR(fMat, theMat);
-				if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
+				if (ZP<Rendered> theRendered = iRendered_Buffer->GetRendered())
 					theRendered->Accept_Rendered(*this);
 
 				::glFlush();
@@ -610,14 +610,14 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& 
 		::glDeleteFramebuffers(1, &fbo);
 		}} // ssr_ActiveTexture
 
-	ZRef<Rendered> theRendered = sRendered_Texture(theTexture_GL, sRect<GRect>(theTextureSize));
+	ZP<Rendered> theRendered = sRendered_Texture(theTexture_GL, sRect<GRect>(theTextureSize));
 
 	theRendered->Accept(*this);
 
 	::glFlush();
 	}
 
-void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect)
+void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZP<Rendered_Rect>& iRendered_Rect)
 	{
 	GRect theRect;
 	iRendered_Rect->Get(theRect);
@@ -625,16 +625,16 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRen
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_RightAngleSegment(
-	const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment)
+	const ZP<Rendered_RightAngleSegment>& iRendered_RightAngleSegment)
 	{
 	RGBA theRGBA_Convex, theRGBA_Concave;
 	iRendered_RightAngleSegment->Get(theRGBA_Convex, theRGBA_Concave);
 	spDrawRightAngleSegment(fBlush, fMat, theRGBA_Convex, theRGBA_Concave);
 	}
 
-void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
+void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZP<Rendered_Texture>& iRendered_Texture)
 	{
-	if (const ZRef<Texture_GL>& theTexture_GL =
+	if (const ZP<Texture_GL>& theTexture_GL =
 		iRendered_Texture->GetTexture().DynamicCast<Texture_GL>())
 		{
 		TextureID theTextureID;
@@ -687,7 +687,7 @@ void Visitor_Draw_GL_Shader::Visit_Rendered_Texture(const ZRef<Rendered_Texture>
 	}
 
 void Visitor_Draw_GL_Shader::Visit_Rendered_Triangle(
-	const ZRef<Rendered_Triangle>& iRendered_Triangle)
+	const ZP<Rendered_Triangle>& iRendered_Triangle)
 	{
 	GPoint theP0, theP1, theP2;
 	iRendered_Triangle->Get(theP0, theP1, theP2);

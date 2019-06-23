@@ -47,7 +47,7 @@ public:
 	,	fIndent(0)
 		{}
 
-	virtual void Visit_Walker(const ZRef<Walker>& iWalker)
+	virtual void Visit_Walker(const ZP<Walker>& iWalker)
 		{
 		fW << "\n";
 
@@ -62,24 +62,24 @@ public:
 
 		if (false)
 			{}
-		else if (ZRef<Walker_Embed> theW = iWalker.DynamicCast<Walker_Embed>())
+		else if (ZP<Walker_Embed> theW = iWalker.DynamicCast<Walker_Embed>())
 			{
 			theW->GetParent()->Accept(*this);
 			theW->GetEmbedee()->Accept(*this);
 			}
-		else if (ZRef<Walker_Product> theW = iWalker.DynamicCast<Walker_Product>())
+		else if (ZP<Walker_Product> theW = iWalker.DynamicCast<Walker_Product>())
 			{
 			theW->GetLeft()->Accept(*this);
 			theW->GetRight()->Accept(*this);
 			}
-		else if (ZRef<Walker_Union> theW = iWalker.DynamicCast<Walker_Union>())
+		else if (ZP<Walker_Union> theW = iWalker.DynamicCast<Walker_Union>())
 			{
 			theW->GetLeft()->Accept(*this);
 			theW->GetRight()->Accept(*this);
 			}
-		else if (ZRef<Walker_Unary> theW = iWalker.DynamicCast<Walker_Unary>())
+		else if (ZP<Walker_Unary> theW = iWalker.DynamicCast<Walker_Unary>())
 			{
-			if (ZRef<Walker_Comment> theWalker_Comment = iWalker.DynamicCast<Walker_Comment>())
+			if (ZP<Walker_Comment> theWalker_Comment = iWalker.DynamicCast<Walker_Comment>())
 				{
 				fW << " ";
 				Util_Chan_JSON::sWriteString(theWalker_Comment->GetComment(), false, fW);
@@ -94,7 +94,7 @@ public:
 	size_t fIndent;
 	};
 
-void sDumpWalkers(ZRef<Walker> iWalker, const ChanW_UTF& w)
+void sDumpWalkers(ZP<Walker> iWalker, const ChanW_UTF& w)
 	{ iWalker->Accept(DumpWalkers(w)); }
 
 } // namespace QueryEngine
@@ -107,7 +107,7 @@ void sDumpWalkers(ZRef<Walker> iWalker, const ChanW_UTF& w)
 
 using namespace ZooLib;
 
-ZMACRO_pdesc(const ZRef<QueryEngine::Walker>& iWalker)
+ZMACRO_pdesc(const ZP<QueryEngine::Walker>& iWalker)
 	{
 	ZooLib::QueryEngine::sDumpWalkers(iWalker, StdIO::sChan_UTF_Err);
 	}

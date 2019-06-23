@@ -26,15 +26,15 @@ namespace Dataspace {
 // =================================================================================================
 #pragma mark - ResultHandler
 
-ResultHandler::ResultHandler(const ZRef<Callable_t>& iCallable)
+ResultHandler::ResultHandler(const ZP<Callable_t>& iCallable)
 :	fCallable(iCallable)
 	{}
 
 ZQ<void> ResultHandler::QCall(
-	const ZRef<ZCounted>& iRegistration,
+	const ZP<ZCounted>& iRegistration,
 	int64 iChangeCount,
-	const ZRef<Result>& iResult,
-	const ZRef<ResultDeltas>& iResultDeltas)
+	const ZP<Result>& iResult,
+	const ZP<ResultDeltas>& iResultDeltas)
 	{
 	if (iResult)
 		{

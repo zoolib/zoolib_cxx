@@ -40,7 +40,7 @@ void Walker_Dum::Rewind()
 	this->Called_Rewind();
 	}
 
-ZRef<Walker> Walker_Dum::Prime(
+ZP<Walker> Walker_Dum::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

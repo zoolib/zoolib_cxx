@@ -24,9 +24,9 @@ namespace GameEngine {
 
 struct InChannel
 	{
-	InChannel(GPoint iGameSize, const std::vector<int>* iKeyDowns, const ZRef<NookScope>& iNookScope);
+	InChannel(GPoint iGameSize, const std::vector<int>* iKeyDowns, const ZP<NookScope>& iNookScope);
 
-	InChannel(const InChannel& iParent, const ZRef<NookScope>& iNookScope);
+	InChannel(const InChannel& iParent, const ZP<NookScope>& iNookScope);
 
 	InChannel(const InChannel& iParent, const Mat& iMat);
 
@@ -36,9 +36,9 @@ struct InChannel
 
 	const std::vector<int>* GetKeyDowns() const;
 
-	const ZRef<NookScope>& GetActiveNookScope() const;
+	const ZP<NookScope>& GetActiveNookScope() const;
 
-	const ZRef<NookScope>& GetOwnNookScope() const;
+	const ZP<NookScope>& GetOwnNookScope() const;
 
 	const Mat& GetMat() const;
 
@@ -46,7 +46,7 @@ private:
 	const InChannel* fPrior;
 	const GPoint fGameSize;
 	const std::vector<int>* fKeyDowns;
-	ZRef<NookScope> fNookScope;
+	ZP<NookScope> fNookScope;
 	Mat fMat;
 	};
 
@@ -59,25 +59,25 @@ class OutChannel
 public:
 	OutChannel(
 		const Map& iRootMap,
-		const ZRef<AssetCatalog>& iAssetCatalog,
-		const ZRef<FontCatalog>& iFontCatalog,
-		const ZRef<SoundMeister>& iSoundMeister);
+		const ZP<AssetCatalog>& iAssetCatalog,
+		const ZP<FontCatalog>& iFontCatalog,
+		const ZP<SoundMeister>& iSoundMeister);
 
 	~OutChannel();
 
-	std::vector<ZRef<TouchListener> >& GetTLs() const;
-	ZRef<Rendered_Group>& GetGroup() const;
+	std::vector<ZP<TouchListener> >& GetTLs() const;
+	ZP<Rendered_Group>& GetGroup() const;
 
-	void RegisterTouchListener(ZRef<TouchListener> iListener) const;
+	void RegisterTouchListener(ZP<TouchListener> iListener) const;
 
 	const Map fRootMap;
-	const ZRef<AssetCatalog> fAssetCatalog;
-	const ZRef<FontCatalog> fFontCatalog;
-	const ZRef<SoundMeister> fSoundMeister;
+	const ZP<AssetCatalog> fAssetCatalog;
+	const ZP<FontCatalog> fFontCatalog;
+	const ZP<SoundMeister> fSoundMeister;
 
 private:
-	mutable std::vector<ZRef<TouchListener> > fTLs;
-	mutable ZRef<Rendered_Group> fGroup;
+	mutable std::vector<ZP<TouchListener> > fTLs;
+	mutable ZP<Rendered_Group> fGroup;
 	};
 
 // =================================================================================================
@@ -121,30 +121,30 @@ typedef ZooLib::Cog<const Param&> Cog;
 // =================================================================================================
 #pragma mark - Nooks
 
-ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName);
+ZP<Nook> sGetOneNook(const Param& iParam, const Name& iName);
 
-std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const Name& iName);
+std::vector<ZP<Nook> > sGetAllNooks(const Param& iParam, const Name& iName);
 
 template <class Nook_p>
-ZRef<Nook_p> sGetOneNook(const Param& iParam)
+ZP<Nook_p> sGetOneNook(const Param& iParam)
 	{ return sGetOneNook(iParam, typeid(Nook_p).name()).DynamicCast<Nook_p>(); }
 
 template <class Nook_p>
-std::vector<ZRef<Nook_p> > sGetAllNooks(const Param& iParam)
+std::vector<ZP<Nook_p> > sGetAllNooks(const Param& iParam)
 	{
-	std::vector<ZRef<Nook_p> > result;
+	std::vector<ZP<Nook_p> > result;
 	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
-		if (ZRef<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
+		if (ZP<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
 			result.push_back(theNook);
 		}
 	return result;
 	}
 
 template <class Nook_p>
-ZRef<Nook_p> sUpdateOneNook(const Param& iParam, WP<Nook_p>& ioWP)
+ZP<Nook_p> sUpdateOneNook(const Param& iParam, WP<Nook_p>& ioWP)
 	{
-	ZRef<Nook_p> theNook = ioWP;
+	ZP<Nook_p> theNook = ioWP;
 	if (not theNook)
 		{
 		theNook = sGetOneNook<Nook_p>(iParam);
@@ -159,7 +159,7 @@ void sUpdateNookSet(const Param& iParam, NookSet<Nook_p>& ioNookSet)
 	ioNookSet.fWRNooks.clear();
 	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
-		if (ZRef<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
+		if (ZP<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
 			ioNookSet.fWRNooks.insert(sWeakRef(theNook));
 		}
 	}
@@ -192,9 +192,9 @@ Cog sCog_Noop();
 // =================================================================================================
 #pragma mark - Touches
 
-Cog sCog_UpdateTouchListener(const ZRef<TouchListener>& iTouchListener);
-Cog sCog_TouchNothing(const ZRef<TouchListener>& iTouchListener);
-Cog sCog_TouchDown(const ZRef<TouchListener>& iTouchListener);
+Cog sCog_UpdateTouchListener(const ZP<TouchListener>& iTouchListener);
+Cog sCog_TouchNothing(const ZP<TouchListener>& iTouchListener);
+Cog sCog_TouchDown(const ZP<TouchListener>& iTouchListener);
 
 Cog sCog_DisableTouches(const Cog& iCog);
 

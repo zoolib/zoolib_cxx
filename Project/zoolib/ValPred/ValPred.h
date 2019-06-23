@@ -105,18 +105,18 @@ public:
 	ValPred& operator=(const ValPred& iOther);
 
 	ValPred(
-		const ZRef<ValComparand>& iLHS,
-		const ZRef<ValComparator>& iComparator,
-		const ZRef<ValComparand>& iRHS);
+		const ZP<ValComparand>& iLHS,
+		const ZP<ValComparator>& iComparator,
+		const ZP<ValComparand>& iRHS);
 
-	const ZRef<ValComparand>& GetLHS() const;
-	const ZRef<ValComparator>& GetComparator() const;
-	const ZRef<ValComparand>& GetRHS() const;
+	const ZP<ValComparand>& GetLHS() const;
+	const ZP<ValComparator>& GetComparator() const;
+	const ZP<ValComparand>& GetRHS() const;
 
 private:
-	ZRef<ValComparand> fLHS;
-	ZRef<ValComparator> fComparator;
-	ZRef<ValComparand> fRHS;
+	ZP<ValComparand> fLHS;
+	ZP<ValComparator> fComparator;
+	ZP<ValComparand> fRHS;
 	};
 
 template <>
@@ -127,19 +127,19 @@ bool operator<(const ValPred& iL, const ValPred& iR);
 // =================================================================================================
 #pragma mark - ValComparandPseudo
 
-// This subclass of ZRef<ValComparand> is returned by the C-prefixed pseudo constructor
+// This subclass of ZP<ValComparand> is returned by the C-prefixed pseudo constructor
 // functions so we can more easily use overloaded operators to construct a ValPred.
 
 class ValComparandPseudo
-:	public ZRef<ValComparand>
+:	public ZP<ValComparand>
 	{
-	typedef ZRef<ValComparand> inherited;
+	typedef ZP<ValComparand> inherited;
 public:
 	ValComparandPseudo(ValComparand* iRep)
 	:	inherited(iRep)
 		{}
 
-	ValComparandPseudo(const ZRef<ValComparand>& iOther)
+	ValComparandPseudo(const ZP<ValComparand>& iOther)
 	:	inherited(iOther)
 		{}
 
@@ -156,55 +156,55 @@ ValComparandPseudo CName(const std::string& iName);
 // =================================================================================================
 #pragma mark - Comparison operators taking comparands and returning a condition
 
-inline ValPred operator<(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator<(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLT), iRHS); }
 
-inline ValPred operator<(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator<(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLT), iRHS); }
 
 inline ValPred operator<(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLT), iRHS); }
 
-inline ValPred operator<=(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator<=(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLE), iRHS); }
 
-inline ValPred operator<=(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator<=(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLE), iRHS); }
 
 inline ValPred operator<=(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eLE), iRHS); }
 
-inline ValPred operator==(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator==(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eEQ), iRHS); }
 
-inline ValPred operator==(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator==(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eEQ), iRHS); }
 
 inline ValPred operator==(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eEQ), iRHS); }
 
-inline ValPred operator!=(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator!=(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eNE), iRHS); }
 
-inline ValPred operator!=(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator!=(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eNE), iRHS); }
 
 inline ValPred operator!=(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eNE), iRHS); }
 
-inline ValPred operator>(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator>(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eGT), iRHS); }
 
-inline ValPred operator>(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator>(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eGT), iRHS); }
 
 inline ValPred operator>(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eGT), iRHS); }
 
-inline ValPred operator>=(const ZRef<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
+inline ValPred operator>=(const ZP<ValComparand>& iLHS, const ValComparandPseudo& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eGE), iRHS); }
 
-inline ValPred operator>=(const ValComparandPseudo& iLHS, const ZRef<ValComparand>& iRHS)
+inline ValPred operator>=(const ValComparandPseudo& iLHS, const ZP<ValComparand>& iRHS)
 	{ return ValPred(iLHS, new ValComparator_Simple(ValComparator_Simple::eGE), iRHS); }
 
 inline ValPred operator>=(const ValComparandPseudo& iLHS, const ValComparandPseudo& iRHS)

@@ -52,7 +52,7 @@ namespace QueryEngine {
 Expr_Rel_Search::Expr_Rel_Search(const RelationalAlgebra::RelHead& iRelHead_Bound,
 	const RelationalAlgebra::Rename& iRename,
 	const RelationalAlgebra::RelHead& iRelHead_Optional,
-	const ZRef<Expr_Bool>& iExpr_Bool)
+	const ZP<Expr_Bool>& iExpr_Bool)
 :	fRelHead_Bound(iRelHead_Bound)
 ,	fRename(iRename)
 ,	fRelHead_Optional(iRelHead_Optional)
@@ -75,10 +75,10 @@ void Expr_Rel_Search::Accept_Expr_Op0(Visitor_Expr_Op0_T<RelationalAlgebra::Expr
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Self()
+ZP<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Self()
 	{ return this; }
 
-ZRef<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Clone()
+ZP<RelationalAlgebra::Expr_Rel> Expr_Rel_Search::Clone()
 	{ return this; }
 
 void Expr_Rel_Search::Accept_Expr_Rel_Search(Visitor_Expr_Rel_Search& iVisitor)
@@ -93,14 +93,14 @@ const RelationalAlgebra::Rename& Expr_Rel_Search::GetRename() const
 const RelationalAlgebra::RelHead& Expr_Rel_Search::GetRelHead_Optional() const
 	{ return fRelHead_Optional; }
 
-const ZRef<Expr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
+const ZP<Expr_Bool>& Expr_Rel_Search::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Search
 
 void Visitor_Expr_Rel_Search::Visit_Expr_Rel_Search(
-	const ZRef<Expr_Rel_Search>& iExpr)
+	const ZP<Expr_Rel_Search>& iExpr)
 	{ this->Visit_Expr(iExpr); }
 
 } // namespace QueryEngine

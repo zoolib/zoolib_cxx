@@ -44,7 +44,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Union
 
-Expr_Rel_Union::Expr_Rel_Union(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+Expr_Rel_Union::Expr_Rel_Union(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{
 	ZAssert(iOp0 and iOp1);
@@ -58,10 +58,10 @@ void Expr_Rel_Union::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Union::Self()
+ZP<Expr_Rel> Expr_Rel_Union::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Union::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+ZP<Expr_Rel> Expr_Rel_Union::Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Union(iOp0, iOp1); }
 
 void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
@@ -70,19 +70,19 @@ void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Union
 
-void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr)
+void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(const ZP<Expr_Rel_Union>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Union> sUnion(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel_Union> sUnion(const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Union(iLHS, iRHS); }
 
-ZRef<Expr_Rel> operator|(const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel> operator|(const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{ return sUnion(iLHS, iRHS); }
 
-ZRef<Expr_Rel>& operator|=(ZRef<Expr_Rel>& ioLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel>& operator|=(ZP<Expr_Rel>& ioLHS, const ZP<Expr_Rel>& iRHS)
 	{ return ioLHS = ioLHS | iRHS; }
 
 } // namespace RelationalAlgebra

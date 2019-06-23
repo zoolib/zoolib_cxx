@@ -30,9 +30,9 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Walker_Calc
 
-Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
+Walker_Calc::Walker_Calc(const ZP<Walker>& iWalker,
 	const string8& iColName,
-	const ZRef<Callable_t>& iCallable)
+	const ZP<Callable_t>& iCallable)
 :	Walker_Unary(iWalker)
 ,	fColName(iColName)
 ,	fCallable(iCallable)
@@ -41,7 +41,7 @@ Walker_Calc::Walker_Calc(const ZRef<Walker>& iWalker,
 Walker_Calc::~Walker_Calc()
 	{}
 
-ZRef<Walker> Walker_Calc::Prime(
+ZP<Walker> Walker_Calc::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

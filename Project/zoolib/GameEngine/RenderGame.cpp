@@ -26,7 +26,7 @@ class Visitor_GatherSound
 	{
 public:
 	Visitor_GatherSound(
-		const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
+		const ZP<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	:	fSoundMeister(iSoundMeister)
 	,	fListenerL(iListenerL)
 	,	fListenerR(iListenerR)
@@ -39,9 +39,9 @@ public:
 			fSoundMeister->SetSounds(Util_STL::sFirstOrNil(fSounds), fSounds.size());
 		}
 
-	virtual void Visit_Rendered_Sound(const ZRef<Rendered_Sound>& iRendered_Sound)
+	virtual void Visit_Rendered_Sound(const ZP<Rendered_Sound>& iRendered_Sound)
 		{
-		if (ZRef<Sound> theSound = iRendered_Sound->GetSound())
+		if (ZP<Sound> theSound = iRendered_Sound->GetSound())
 			{
 			const Rat thePos = X(fMat * CVec3());
 			
@@ -58,11 +58,11 @@ public:
 		}
 
 private:
-	const ZRef<SoundMeister> fSoundMeister;
+	const ZP<SoundMeister> fSoundMeister;
 	const Rat fListenerL;
 	const Rat fListenerR;
 	const Rat fListenerDSquared;
-	std::vector<ZRef<Sound> > fSounds;
+	std::vector<ZP<Sound> > fSounds;
 	};
 
 // =================================================================================================
@@ -78,17 +78,17 @@ class Visitor_Shader
 public:
 	Visitor_Shader(const Mat& iMat,
 		bool iShowBounds, bool iShowOrigin,
-		const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
+		const ZP<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	:	Visitor_Rendered_AccumulateMat(iMat)
 	,	Visitor_Draw_GL_Shader(iShowBounds, iShowBounds, iShowOrigin)
 	,	Visitor_GatherSound(iSoundMeister, iListenerL, iListenerR, iListenerD)
 		{}
 
 	// Cels and Strings must have been processed into Textures before now.
-	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
+	virtual void Visit_Rendered_Cel(const ZP<Rendered_Cel>& iRendered_Cel)
 		{ ZUnimplemented(); }
 
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String)
+	virtual void Visit_Rendered_String(const ZP<Rendered_String>& iRendered_String)
 		{ ZUnimplemented(); }
 	};
 
@@ -132,11 +132,11 @@ static Mat spAdditionalMat(const GPoint& p, const GPoint& g)
 	return additional;
 	}
 
-void sRenderGame(const ZRef<Rendered>& iRendered,
+void sRenderGame(const ZP<Rendered>& iRendered,
 	const GPoint& iPixelSize,
 	const GPoint& iGameSize,
 	bool iShowBounds, bool iShowOrigin,
-	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
+	const ZP<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD)
 	{
 	// See also Visitor_Draw_GL_Shader's Visit_Rendered_Buffer.
 

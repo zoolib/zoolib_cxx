@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,36 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_QueryEngine_Walker_Dum_h__
-#define __ZooLib_QueryEngine_Walker_Dum_h__ 1
+#ifndef __ZooLib_ZP_h__
+#define __ZooLib_ZP_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/QueryEngine/Walker.h"
+#include "zoolib/ZRef.h"
 
-namespace ZooLib {
-namespace QueryEngine {
-
-// =================================================================================================
-#pragma mark - Walker_Dum
-
-class Walker_Dum : public Walker
-	{
-public:
-	Walker_Dum();
-	virtual ~Walker_Dum();
-
-// From QueryEngine::Walker
-	virtual void Rewind();
-
-	virtual ZP<Walker> Prime(
-		const std::map<string8,size_t>& iOffsets,
-		std::map<string8,size_t>& oOffsets,
-		size_t& ioBaseOffset);
-
-	virtual bool QReadInc(Val_Any* ioResults);
-	};
-
-} // namespace QueryEngine
-} // namespace ZooLib
-
-#endif // __ZooLib_QueryEngine_Walker_Dum_h__
+#endif // __ZooLib_ZP_h__

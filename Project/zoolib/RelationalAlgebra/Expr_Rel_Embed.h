@@ -39,8 +39,8 @@ class Expr_Rel_Embed
 	{
 	typedef Expr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Embed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
-		const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
+	Expr_Rel_Embed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
+		const ColName& iColName, const ZP<Expr_Rel>& iEmbedee);
 
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
@@ -48,8 +48,8 @@ public:
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Embed(Visitor_Expr_Rel_Embed& iVisitor);
@@ -69,14 +69,14 @@ class Visitor_Expr_Rel_Embed
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sEmbed(const ZRef<Expr_Rel>& iOp0, const RelHead& iBoundNames,
-	const ColName& iColName, const ZRef<Expr_Rel>& iEmbedee);
+ZP<Expr_Rel> sEmbed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
+	const ColName& iColName, const ZP<Expr_Rel>& iEmbedee);
 
 } // namespace RelationalAlgebra
 

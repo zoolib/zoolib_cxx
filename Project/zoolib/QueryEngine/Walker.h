@@ -52,7 +52,7 @@ public:
 
 	virtual void Rewind() = 0;
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset) = 0;
@@ -76,7 +76,7 @@ class Visitor_Walker
 	{
 public:
 // Our protocol
-	virtual void Visit_Walker(const ZRef<Walker>& iWalker);
+	virtual void Visit_Walker(const ZP<Walker>& iWalker);
 	};
 
 // =================================================================================================
@@ -85,7 +85,7 @@ public:
 class Walker_Unary : public Walker
 	{
 protected:
-	Walker_Unary(const ZRef<Walker>& iWalker);
+	Walker_Unary(const ZP<Walker>& iWalker);
 
 public:
 	virtual ~Walker_Unary();
@@ -94,11 +94,11 @@ public:
 	virtual void Rewind();
 
 // Our protocol
-	ZRef<Walker> GetChild()
+	ZP<Walker> GetChild()
 		{ return fWalker; }
 
 protected:
-	ZRef<Walker> fWalker;
+	ZP<Walker> fWalker;
 	};
 
 } // namespace QueryEngine

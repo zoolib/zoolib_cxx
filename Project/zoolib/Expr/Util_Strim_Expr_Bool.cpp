@@ -32,14 +32,14 @@ using namespace Util_Chan;
 
 namespace { // anonymous
 
-ZRef<Expr_Bool> spExpression(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spExpression(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU);
 
 // -----
 
-ZRef<Expr_Bool> spParenthable(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spParenthable(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
 	if (sTryRead_String("TRUE", iChanRU))
@@ -48,17 +48,17 @@ ZRef<Expr_Bool> spParenthable(
 	if (sTryRead_String("FALSE", iChanRU))
 		return sFalse();
 
-	if (ZRef<Expr_Bool> child = sCall(iCallable_Terminal, iChanRU))
+	if (ZP<Expr_Bool> child = sCall(iCallable_Terminal, iChanRU))
 		return child;
 
-	if (ZRef<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU))
+	if (ZP<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU))
 		return child;
 
 	throw ParseException("Expected expression or terminal");
 	}
 
-ZRef<Expr_Bool> spNotable(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spNotable(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -67,7 +67,7 @@ ZRef<Expr_Bool> spNotable(
 		{
 		return spParenthable(iCallable_Terminal, iChanRU);
 		}
-	else if (ZRef<Expr_Bool,false> child = spExpression(iCallable_Terminal, iChanRU))
+	else if (NotP<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU))
 		{
 		throw ParseException("Expected expression or terminal");
 		}
@@ -82,8 +82,8 @@ ZRef<Expr_Bool> spNotable(
 		}
 	}
 
-ZRef<Expr_Bool> spAndable(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spAndable(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
 	bool isNotted = false;
@@ -97,7 +97,7 @@ ZRef<Expr_Bool> spAndable(
 		isNotted = ~isNotted;
 		}
 
-	if (ZRef<Expr_Bool,false> child = spNotable(iCallable_Terminal, iChanRU))
+	if (NotP<Expr_Bool> child = spNotable(iCallable_Terminal, iChanRU))
 		throw ParseException("Expected notable");
 	else if (isNotted)
 		return sNot(child);
@@ -105,11 +105,11 @@ ZRef<Expr_Bool> spAndable(
 		return child;
 	}
 
-ZRef<Expr_Bool> spOrable(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spOrable(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
-	if (ZRef<Expr_Bool,false> exprL = spAndable(iCallable_Terminal, iChanRU))
+	if (NotP<Expr_Bool> exprL = spAndable(iCallable_Terminal, iChanRU))
 		{ return null; }
 	else for (;;)
 		{
@@ -118,18 +118,18 @@ ZRef<Expr_Bool> spOrable(
 		if (not sTryRead_CP('&', iChanRU))
 			return exprL;
 
-		if (ZRef<Expr_Bool,false> exprR = spAndable(iCallable_Terminal, iChanRU))
+		if (NotP<Expr_Bool> exprR = spAndable(iCallable_Terminal, iChanRU))
 			throw ParseException("Expected operand after '&'");
 		else
 			exprL = sAnd(exprL, exprR);
 		}
 	}
 
-ZRef<Expr_Bool> spExpression(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> spExpression(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
-	if (ZRef<Expr_Bool,false> exprL = spOrable(iCallable_Terminal, iChanRU))
+	if (NotP<Expr_Bool> exprL = spOrable(iCallable_Terminal, iChanRU))
 		{ return null; }
 	else for (;;)
 		{
@@ -138,7 +138,7 @@ ZRef<Expr_Bool> spExpression(
 		if (not sTryRead_CP('|', iChanRU))
 			return exprL;
 
-		if (ZRef<Expr_Bool,false> exprR = spOrable(iCallable_Terminal, iChanRU))
+		if (NotP<Expr_Bool> exprR = spOrable(iCallable_Terminal, iChanRU))
 			throw ParseException("Expected operand after '|'");
 		else
 			exprL = sOr(exprL, exprR);
@@ -150,8 +150,8 @@ ZRef<Expr_Bool> spExpression(
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool
 
-ZRef<Expr_Bool> sQFromStrim(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> sQFromStrim(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
 	return spExpression(iCallable_Terminal, iChanRU);

@@ -35,11 +35,11 @@ namespace Util_Strim_Expr_Bool {
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool
 
-typedef Callable<ZRef<Expr_Bool>(const ChanRU_UTF& iChanRU)>
+typedef Callable<ZP<Expr_Bool>(const ChanRU_UTF& iChanRU)>
 	Callable_Terminal;
 
-ZRef<Expr_Bool> sQFromStrim(
-	const ZRef<Callable_Terminal>& iCallable_Terminal,
+ZP<Expr_Bool> sQFromStrim(
+	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_Expr_Bool

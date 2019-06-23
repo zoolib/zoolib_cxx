@@ -50,31 +50,31 @@ class Visitor_GetRelHead
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 	{
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
-	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr)
+	virtual void Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetColName()); }
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr)
 		{ this->pSetResult(sRelHead(iExpr->GetConcreteHead())); }
 
-	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+	virtual void Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 		{ this->pSetResult(sRelHead(iExpr->GetColName())); }
 
-	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
+	virtual void Visit_Expr_Rel_Difference(const ZP<Expr_Rel_Difference>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr)
+	virtual void Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | iExpr->GetColName()); }
 
-	virtual void Visit_Expr_Rel_Project(const ZRef<Expr_Rel_Project>& iExpr)
+	virtual void Visit_Expr_Rel_Project(const ZP<Expr_Rel_Project>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) & iExpr->GetProjectRelHead()); }
 
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 		{
 		RelHead result = this->Do(iExpr->GetOp0());
 		if (sQErase(result, iExpr->GetOld()))
@@ -88,7 +88,7 @@ class Visitor_GetRelHead
 // =================================================================================================
 #pragma mark - sGetRelHead
 
-RelHead sGetRelHead(const ZRef<Expr_Rel>& iRel)
+RelHead sGetRelHead(const ZP<Expr_Rel>& iRel)
 	{ return Visitor_GetRelHead().Do(iRel); }
 
 } // namespace RelationalAlgebra

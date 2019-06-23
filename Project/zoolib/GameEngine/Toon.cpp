@@ -78,7 +78,7 @@ namespace GameEngine {
 #pragma mark - spToon_NameFrame
 
 namespace { // anonymous
-ZRef<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCount)
+ZP<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCount)
 	{
 	class Toon_NameFrame
 	:	public Toon
@@ -118,7 +118,7 @@ ZRef<Toon> spToon_NameFrame(const Name& iName, double iWeight, size_t iFrameCoun
 #pragma mark - sTween<CelStack>
 
 template <>
-ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
+ZP<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 	{
 	if (not iValQ)
 		{
@@ -145,7 +145,7 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 		
 		if (ZQ<Val> theCQ = sQGetNamed(*theMapQ, "Content", "C"))
 			{
-			ZRef<Toon> theToon;
+			ZP<Toon> theToon;
 			if (const string8* theNameP = theCQ->PGet<string8>())
 				{
 				const Name theName = *theNameP;
@@ -174,10 +174,10 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 				{
 				if (ZQ<Val> theAMQ = sQGetNamed(*theMapQ, "BlushGainMat", "BGM"))
 					{
-					if (ZRef<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(theAMQ))
+					if (ZP<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(theAMQ))
 						theToon *= theAM;
 					}
-				else if (ZRef<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(iValQ))
+				else if (ZP<Tween_BlushGainMat> theAM = sTween<BlushGainMat>(iValQ))
 					{
 					theToon *= theAM;
 					}
@@ -195,7 +195,7 @@ ZRef<Toon> sTween<CelStack>(const ZQ<Val>& iValQ)
 // =================================================================================================
 #pragma mark - sToon
 
-ZRef<Toon> sToon(const ZQ<Val>& iValQ)
+ZP<Toon> sToon(const ZQ<Val>& iValQ)
 	{ return sTween<CelStack>(iValQ); }
 
 // =================================================================================================
@@ -204,7 +204,7 @@ ZRef<Toon> sToon(const ZQ<Val>& iValQ)
 ToonRegistration::ToonRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }
 
-ZRef<Toon> ToonRegistration::sCtor(const string8& iCtorName, const Map& iMap)
+ZP<Toon> ToonRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 	{
 	ZQ<Fun> theFun = Util_STL::sQGet(sSingleton<map<string8,Fun> >(), iCtorName);
 

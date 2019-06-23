@@ -54,21 +54,21 @@ class Transform_PushDownRestricts
 	{
 public:
 // From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Embed(const ZRef<Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<Expr_Rel_Union>& iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZP<Expr_Rel_Union>& iExpr);
 
 protected:
-	void pHandleIt(const RelHead& iRH, const ZRef<Expr_Rel>& iRel);
+	void pHandleIt(const RelHead& iRH, const ZP<Expr_Rel>& iRel);
 
 	struct Restrict
 		{
-		ZRef<Expr_Bool> fExpr_Bool;
+		ZP<Expr_Bool> fExpr_Bool;
 		RelHead fNames;
 		size_t fCountTouching;
 		size_t fCountSubsuming;

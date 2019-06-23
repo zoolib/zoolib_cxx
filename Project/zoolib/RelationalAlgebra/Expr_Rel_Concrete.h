@@ -50,8 +50,8 @@ public:
 // From Expr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone();
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
@@ -69,15 +69,15 @@ class Visitor_Expr_Rel_Concrete
 :	public virtual Visitor_Expr_Op0_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead);
-ZRef<Expr_Rel> sConcrete(const RelHead& iRequired, const RelHead& iOptional);
-ZRef<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead);
+ZP<Expr_Rel> sConcrete(const RelHead& iRelHead);
+ZP<Expr_Rel> sConcrete(const RelHead& iRequired, const RelHead& iOptional);
+ZP<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead);
 
 } // namespace RelationalAlgebra
 

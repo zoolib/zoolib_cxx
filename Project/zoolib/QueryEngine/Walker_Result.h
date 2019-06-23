@@ -34,20 +34,20 @@ namespace QueryEngine {
 class Walker_Result : public Walker
 	{
 public:
-	Walker_Result(ZRef<Result> iResult);
+	Walker_Result(ZP<Result> iResult);
 	virtual ~Walker_Result();
 
 // From QueryEngine::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
 	virtual bool QReadInc(Val_Any* oResults);
 
-	ZRef<Result> fResult;
+	ZP<Result> fResult;
 	size_t fIndex;
 	size_t fBaseOffset;
 	};

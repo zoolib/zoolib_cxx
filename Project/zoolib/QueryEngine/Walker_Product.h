@@ -33,13 +33,13 @@ namespace QueryEngine {
 class Walker_Product : public Walker
 	{
 public:
-	Walker_Product(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right);
+	Walker_Product(const ZP<Walker>& iWalker_Left, const ZP<Walker>& iWalker_Right);
 	virtual ~Walker_Product();
 
 // From QueryEngine::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -47,17 +47,17 @@ public:
 	virtual bool QReadInc(Val_Any* ioResults);
 
 // Our protocol
-	ZRef<Walker> GetLeft()
+	ZP<Walker> GetLeft()
 		{ return fWalker_Left; }
 
-	ZRef<Walker> GetRight()
+	ZP<Walker> GetRight()
 		{ return fWalker_Right; }
 
 private:
-	ZRef<Walker> fWalker_Left;
+	ZP<Walker> fWalker_Left;
 	std::vector<Val_Any> fResults_Left;
 
-	ZRef<Walker> fWalker_Right;
+	ZP<Walker> fWalker_Right;
 	size_t fBaseOffset;
 	bool fNeedLoadLeft;
 	};

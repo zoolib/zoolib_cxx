@@ -36,13 +36,13 @@ class Sieve_Singleton
 :	public ZCounted
 	{
 public:
-	typedef Callable<void(ZRef<Sieve_Singleton> iSieve, bool iWasLoad)> Callable_Changed;
+	typedef Callable<void(ZP<Sieve_Singleton> iSieve, bool iWasLoad)> Callable_Changed;
 	typedef Callable_Changed::Signature Signature;
 
-	Sieve_Singleton(ZRef<Callable_Register> iCallable_Register,
-		const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate,
-		const ZRef<Callable_Changed>& iCallable_Changed,
-		const ZRef<Expr_Rel>& iRel,
+	Sieve_Singleton(ZP<Callable_Register> iCallable_Register,
+		const ZP<Callable_DatonUpdate>& iCallable_DatonUpdate,
+		const ZP<Callable_Changed>& iCallable_Changed,
+		const ZP<Expr_Rel>& iRel,
 		const ColName& iDatonColName,
 		const RelHead& iEditableRelHead);
 
@@ -67,18 +67,18 @@ public:
 	void Set(const Map_Any& iMap);
 
 private:
-	void pChanged(const ZRef<ZCounted>& iRegistration, const ZRef<Result>& iResult);
+	void pChanged(const ZP<ZCounted>& iRegistration, const ZP<Result>& iResult);
 
-	ZRef<RelsWatcher::Callable_Register> const fCallable_Register;
-	ZRef<Callable_DatonUpdate> const fCallable_DatonUpdate;
-	ZRef<Callable_Changed> const fCallable_Changed;
-	ZRef<Expr_Rel> const fRel;
+	ZP<RelsWatcher::Callable_Register> const fCallable_Register;
+	ZP<Callable_DatonUpdate> const fCallable_DatonUpdate;
+	ZP<Callable_Changed> const fCallable_Changed;
+	ZP<Expr_Rel> const fRel;
 	ColName const fDatonColName;
 	RelHead const fEditableRelHead;
 
-	ZRef<ZCounted> fRegistration;
-	ZRef<ResultHandler> fResultHandler;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<ZCounted> fRegistration;
+	ZP<ResultHandler> fResultHandler;
+	ZP<QueryEngine::Result> fResult;
 
 	ZQ<Map_Any> fMapQ;
 	Map_Any fMapInDaton;

@@ -46,17 +46,17 @@ public:
 	SearchSpec operator=(const SearchSpec& iOther);
 
 	SearchSpec(const ConcreteHead& iConcreteHead,
-		const ZRef<Expr_Bool>& iRestriction);
+		const ZP<Expr_Bool>& iRestriction);
 
 	bool operator==(const SearchSpec& iOther) const;
 	bool operator<(const SearchSpec& iOther) const;
 
 	const ConcreteHead& GetConcreteHead() const;
-	const ZRef<Expr_Bool>& GetRestriction() const;
+	const ZP<Expr_Bool>& GetRestriction() const;
 
 private:
 	ConcreteHead fConcreteHead;
-	ZRef<Expr_Bool> fRestriction;
+	ZP<Expr_Bool> fRestriction;
 	};
 
 // =================================================================================================
@@ -91,14 +91,14 @@ public:
 	~SearchResult();
 	SearchResult& operator=(const SearchResult& iOther);
 
-	SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult);
+	SearchResult(int64 iRefcon, const ZP<QueryEngine::Result>& iResult);
 
 	int64 GetRefcon() const;
-	ZRef<QueryEngine::Result> GetResult() const;
+	ZP<QueryEngine::Result> GetResult() const;
 
 private:
 	int64 fRefcon;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
@@ -119,8 +119,8 @@ public:
 
 	virtual void CollectResults(std::vector<SearchResult>& oChanged, int64& oChangeCount) = 0;
 
-	typedef Callable<void(ZRef<Searcher>)> Callable_SearcherResultsAvailable;
-	void SetCallable_SearcherResultsAvailable(ZRef<Callable_SearcherResultsAvailable> iCallable);
+	typedef Callable<void(ZP<Searcher>)> Callable_SearcherResultsAvailable;
+	void SetCallable_SearcherResultsAvailable(ZP<Callable_SearcherResultsAvailable> iCallable);
 
 protected:
 	void pCollectResultsCalled();
@@ -129,7 +129,7 @@ protected:
 private:
 	ZMtx fMtx;
 	FalseOnce fCalled_SearcherResultsAvailable;
-	ZRef<Callable_SearcherResultsAvailable> fCallable_SearcherResultsAvailable;
+	ZP<Callable_SearcherResultsAvailable> fCallable_SearcherResultsAvailable;
 	};
 
 } // namespace Dataspace

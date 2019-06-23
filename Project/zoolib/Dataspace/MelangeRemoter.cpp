@@ -64,7 +64,7 @@ static size_t kBufSize = 16;
 struct Start_Result : PullPush::Start
 	{};
 
-const PPT kStart_Result = ZRef<PullPush::Start>(new Start_Result);
+const PPT kStart_Result = ZP<PullPush::Start>(new Start_Result);
 
 static string8 spStringFromChan(const ChanR_Bin& r)
 	{ return sReadCountPrefixedString(r); }
@@ -77,7 +77,7 @@ public:
 // From Callable_Any_ReadFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, Any& oAny)
 		{
-		if (const ZRef<PullPush::Start> theRef = sGet<ZRef<PullPush::Start>>(iPPT))
+		if (const ZP<PullPush::Start> theRef = sGet<ZP<PullPush::Start>>(iPPT))
 			{
 			if (not theRef.DynamicCast<Start_Result>())
 				return false;
@@ -159,10 +159,10 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 
 	// This ReadFilter handles both the JSONB-->PPT and the PPT->Any translations for
 	// Result, Daton and for AbsentOptional_t
-	const ZRef<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
+	const ZP<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
 
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
+	ZP<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
 	sPull_JSONB_Push_PPT(theChanR, theReadFilter, ChanW_XX_Buffered<ChanW_PPT>(*thePair.first, kBufSize));
 	sDisconnectWrite(*thePair.first);
 
@@ -184,7 +184,7 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 		if (not theMessage.IsEmpty())
 			w << "\n";
 
-		Util_Any_JSON::sWrite(false, Any(theMessage), w);
+		Util_Any_JSON::sWrite(Any(theMessage), false, w);
 		}
 
 	return theMessage;
@@ -201,9 +201,9 @@ public:
 // From Callable_Any_WriteFilter
 	virtual ZQ<bool> QCall(const Any& iAny, const ChanW_PPT& iChanW)
 		{
-		if (const ZRef<Result>* theResultP = iAny.PGet<ZRef<Result> >())
+		if (const ZP<Result>* theResultP = iAny.PGet<ZP<Result> >())
 			{
-			ZRef<Result> theResult = *theResultP;
+			ZP<Result> theResult = *theResultP;
 
 			sPush(kStart_Result, iChanW);
 
@@ -228,7 +228,7 @@ public:
 // From Callable_JSONB_WriteFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_Bin& iChanW)
 		{
-		if (const ZRef<PullPush::Start> theRef = sGet<ZRef<PullPush::Start>>(iPPT))
+		if (const ZP<PullPush::Start> theRef = sGet<ZP<PullPush::Start>>(iPPT))
 			{
 			if (not theRef.DynamicCast<Start_Result>())
 				return false;
@@ -276,8 +276,8 @@ public:
 	};
 
 static void spFromAny_Push_PPT(const Any& iAny,
-	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
-	const ZRef<ChannerWCon_PPT>& iChannerWCon)
+	const ZP<Callable_Any_WriteFilter>& iWriteFilter,
+	const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
 	sFromAny_Push_PPT(iAny, iWriteFilter, ChanW_XX_Buffered<ChanW_PPT>(*iChannerWCon, kBufSize));
 	sDisconnectWrite(*iChannerWCon);
@@ -289,7 +289,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 	{
 	ChanW_XX_Count<ChanW_Bin> theChanW(iChanW);
 
-	const ZRef<WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter> >();
+	const ZP<WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter> >();
 
 	const double start = Time::sSystem();
 
@@ -319,7 +319,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 			w << ", ";
 		else
 			w << "\n";
-		Util_Any_JSON::sWrite(false, Any(iMessage), w);
+		Util_Any_JSON::sWrite(Any(iMessage), false, w);
 		}
 	}
 
@@ -327,7 +327,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 
 namespace { // anonymous
 
-ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
+ZP<Expr_Rel> spAsRel(const Val_Any& iVal)
 	{
 	if (NotQ<string8> theStringQ = iVal.QGet<string8>())
 		{
@@ -339,7 +339,7 @@ ZRef<Expr_Rel> spAsRel(const Val_Any& iVal)
 		}
 	}
 
-Val_Any spAsVal(ZRef<Expr_Rel> iRel)
+Val_Any spAsVal(ZP<Expr_Rel> iRel)
 	{
 	string8 theString;
 	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(iRel, ChanW_UTF_string8(&theString));
@@ -348,7 +348,7 @@ Val_Any spAsVal(ZRef<Expr_Rel> iRel)
 
 // -----
 
-ZRef<Result> spAsResult(const Val_Any& iVal)
+ZP<Result> spAsResult(const Val_Any& iVal)
 	{
 	RelHead theRH;
 	foreachv (Val_Any theVal, iVal["RelHead"].Get<Seq_Any>())
@@ -362,7 +362,7 @@ ZRef<Result> spAsResult(const Val_Any& iVal)
 	return new Result(&theRH, &thePackedRows);
 	}
 
-Val_Any spAsVal(ZRef<Result> iResult)
+Val_Any spAsVal(ZP<Result> iResult)
 	{
 	Map_Any result;
 
@@ -389,9 +389,9 @@ Val_Any spAsVal(ZRef<Result> iResult)
 
 // -----
 
-ZRef<ResultDeltas> spAsResultDeltas(const Val_Any& iVal)
+ZP<ResultDeltas> spAsResultDeltas(const Val_Any& iVal)
 	{
-	ZRef<ResultDeltas> theResultDeltas = new ResultDeltas;
+	ZP<ResultDeltas> theResultDeltas = new ResultDeltas;
 
 	foreachv (Val_Any theVal, iVal["Vals"].Get<Seq_Any>())
 		sPushBack(theResultDeltas->fPackedRows, theVal);
@@ -402,7 +402,7 @@ ZRef<ResultDeltas> spAsResultDeltas(const Val_Any& iVal)
 	return theResultDeltas;
 	}
 
-Val_Any spAsVal(ZRef<ResultDeltas> iResultDeltas)
+Val_Any spAsVal(ZP<ResultDeltas> iResultDeltas)
 	{
 	Map_Any theMap;
 
@@ -419,7 +419,7 @@ Val_Any spAsVal(ZRef<ResultDeltas> iResultDeltas)
 #pragma mark - MelangeServer
 
 MelangeServer::MelangeServer(const Melange_t& iMelange,
-	const ZRef<ChannerRW_Bin>& iChannerRW,
+	const ZP<ChannerRW_Bin>& iChannerRW,
 	int64 iClientVersion,
 	const ZQ<string>& iDescriptionQ)
 :	fMelange(iMelange)
@@ -472,7 +472,7 @@ void MelangeServer::pRead()
 	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
-		ZRef<ChannerR_Bin> theChannerR = fChannerR;
+		ZP<ChannerR_Bin> theChannerR = fChannerR;
 
 		Map_Any theMap;
 		{
@@ -496,7 +496,7 @@ void MelangeServer::pWrite()
 	else
 		ZThread::sSetName("MSW");
 
-	ZRef<ChannerW_Bin> theChannerW = fChannerW;
+	ZP<ChannerW_Bin> theChannerW = fChannerW;
 
 	ZAcqMtx acq(fMtx);
 	if (sIsEmpty(fMap_Refcon2ResultCC))
@@ -575,7 +575,7 @@ void MelangeServer::pWork()
 				{
 				if (ZQ<int64> theRefconQ = sQCoerceInt(theMapQ->Get("Refcon")))
 					{
-					if (ZRef<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
+					if (ZP<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
 						{
 						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
 						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
@@ -629,7 +629,7 @@ void MelangeServer::pWork()
 		if (toInsert.size() || toErase.size())
 			{
 			ZRelMtx rel(fMtx);
-			int64 unusedChangeCount = sCall(fMelange.f1,
+			/*int64 unusedChangeCount = */sCall(fMelange.f1,
 				sFirstOrNil(toInsert), toInsert.size(),
 				sFirstOrNil(toErase), toErase.size());
 			}
@@ -658,8 +658,8 @@ void MelangeServer::pWork()
 void MelangeServer::pChanged(
 	const RefReg& iRegistration,
 	int64 iChangeCount,
-	const ZRef<Result>& iResult,
-	const ZRef<ResultDeltas>& iResultDeltas)
+	const ZP<Result>& iResult,
+	const ZP<ResultDeltas>& iResultDeltas)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -676,9 +676,9 @@ class Melange_Client::Registration
 :	public ZCounted
 	{
 public:
-	Registration(ZRef<Melange_Client> iClient,
-		ZRef<RelsWatcher::Callable_Changed> iCallable_Changed,
-		const ZRef<Expr_Rel>& iRel)
+	Registration(ZP<Melange_Client> iClient,
+		ZP<RelsWatcher::Callable_Changed> iCallable_Changed,
+		const ZP<Expr_Rel>& iRel)
 	:	fClient(iClient)
 	,	fCallable_Changed(iCallable_Changed)
 	,	fRel(iRel)
@@ -688,16 +688,16 @@ public:
 	virtual void Finalize()
 		{ fClient->pFinalize(this); }
 
-	ZRef<Melange_Client> fClient;
-	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
-	ZRef<Expr_Rel> fRel;
+	ZP<Melange_Client> fClient;
+	ZP<RelsWatcher::Callable_Changed> fCallable_Changed;
+	ZP<Expr_Rel> fRel;
 	};
 
 // =================================================================================================
 #pragma mark - Melange_Client
 
-Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
-	const ZRef<Callable_Status>& iCallable_Status)
+Melange_Client::Melange_Client(const ZP<Factory_Channer>& iFactory,
+	const ZP<Callable_Status>& iCallable_Status)
 :	fFactory(iFactory)
 ,	fCallable_Status(iCallable_Status)
 ,	fGettingChanner(false)
@@ -706,16 +706,16 @@ Melange_Client::Melange_Client(const ZRef<Factory_Channer>& iFactory,
 ,	fNextRefcon(1)
 	{}
 
-ZQ<ZRef<ZCounted> > Melange_Client::QCall(
-	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
-	const ZRef<Expr_Rel>& iRel)
+ZQ<ZP<ZCounted> > Melange_Client::QCall(
+	const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
+	const ZP<Expr_Rel>& iRel)
 	{
 	// We're probably on our own starter.
 	// Shove it into data structure, and wake the starter, which will itself wake the writer.
 
 	ZAcqMtx acq(fMtx);
 
-	ZRef<Registration> theRegistration = new Registration(this, iCallable_Changed, iRel);
+	ZP<Registration> theRegistration = new Registration(this, iCallable_Changed, iRel);
 
 	sInsertMust(fPending_Registrations, theRegistration);
 
@@ -754,7 +754,7 @@ bool Melange_Client::pTrigger()
 	return true;
 	}
 
-void Melange_Client::Start(ZRef<Starter> iStarter)
+void Melange_Client::Start(ZP<Starter> iStarter)
 	{
 	fJob = StartScheduler::Job(iStarter, sCallable(sWeakRef(this), &Melange_Client::pWork));
 
@@ -781,7 +781,7 @@ void Melange_Client::pRead()
 		{
 		try
 			{
-			ZRef<ChannerForRead> theChanner = this->pEnsureChannerR();
+			ZP<ChannerForRead> theChanner = this->pEnsureChannerR();
 
 			if (not theChanner)
 				continue;
@@ -823,7 +823,7 @@ void Melange_Client::pWrite()
 				}
 			}
 
-		ZRef<ChannerW_Bin> theChannerW = this->pEnsureChannerW();
+		ZP<ChannerW_Bin> theChannerW = this->pEnsureChannerW();
 		if (not theChannerW)
 			break;
 
@@ -855,7 +855,7 @@ void Melange_Client::pWork()
 	// Handle everything that's in fQueue_Read -- mainly doing change notifications
 
 	// Any regs that are to be tossed will end up in here. Individually out of the scope of fMtx.
-	std::set<ZRef<Registration>> localRegistrations;
+	std::set<ZP<Registration>> localRegistrations;
 
 	ZAcqMtx acq(fMtx);
 
@@ -872,15 +872,15 @@ void Melange_Client::pWork()
 			{
 			const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
 
-			ZRef<ResultDeltas> theResultDeltas;
+			ZP<ResultDeltas> theResultDeltas;
 			if (const Val_Any* theP = theMessage.PGet("Deltas"))
 				theResultDeltas = spAsResultDeltas(*theP);
 
-			ZRef<Result> theResult;
+			ZP<Result> theResult;
 			if (const Val_Any* theP = theMessage.PGet("Result"))
 				theResult = spAsResult(*theP);
 
-			if (ZRef<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
+			if (ZP<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))
 				sCall(theReg->fCallable_Changed, theReg, theChangeCount, theResult, theResultDeltas);
 			}
 		}
@@ -900,7 +900,7 @@ void Melange_Client::pWork()
 	if (sNotEmpty(fPending_Registrations))
 		{
 		Seq_Any& theSeq = theMessage.Mut<Seq_Any>("Registrations");
-		foreachv (ZRef<Registration> theReg, fPending_Registrations)
+		foreachv (ZP<Registration> theReg, fPending_Registrations)
 			{
 			Map_Any theMap;
 			const int64 theRefcon = fNextRefcon++;
@@ -953,13 +953,13 @@ void Melange_Client::pWork()
 		}
 	}
 
-ZRef<Melange_Client::ChannerForRead> Melange_Client::pEnsureChannerR()
+ZP<Melange_Client::ChannerForRead> Melange_Client::pEnsureChannerR()
 	{ return this->pEnsureChanner(); }
 
-ZRef<ChannerW_Bin> Melange_Client::pEnsureChannerW()
+ZP<ChannerW_Bin> Melange_Client::pEnsureChannerW()
 	{ return this->pEnsureChanner(); }
 
-ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner()
+ZP<Melange_Client::Channer_t> Melange_Client::pEnsureChanner()
 	{
 	while (fGettingChanner)
 		fCnd.WaitFor(fMtx, 5);
@@ -986,7 +986,7 @@ ZRef<Melange_Client::Channer_t> Melange_Client::pEnsureChanner()
 
 		SaveSetRestore<bool> theSSR(fGettingChanner, true);
 
-		ZRef<Channer_t> theChanner;
+		ZP<Channer_t> theChanner;
 		{
 		ZRelMtx rel(fMtx);
 

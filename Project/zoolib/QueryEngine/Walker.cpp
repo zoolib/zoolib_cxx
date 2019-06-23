@@ -59,13 +59,13 @@ void Walker::Called_QReadInc()
 // =================================================================================================
 #pragma mark - Visitor_Walker
 
-void Visitor_Walker::Visit_Walker(const ZRef<Walker>& iWalker)
+void Visitor_Walker::Visit_Walker(const ZP<Walker>& iWalker)
 	{ this->Visit(iWalker); }
 
 // =================================================================================================
 #pragma mark - Walker_Unary
 
-Walker_Unary::Walker_Unary(const ZRef<Walker>& iWalker)
+Walker_Unary::Walker_Unary(const ZP<Walker>& iWalker)
 :	fWalker(iWalker)
 	{}
 

@@ -35,7 +35,7 @@ using RelationalAlgebra::RelHead;
 // =================================================================================================
 #pragma mark - sQuery
 
-ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker)
+ZP<Result> sResultFromWalker(ZP<Walker> iWalker)
 	{
 	map<string8,size_t> offsets;
 	size_t baseOffset = 0;

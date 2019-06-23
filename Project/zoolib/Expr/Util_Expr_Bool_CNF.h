@@ -38,12 +38,12 @@ namespace Util_Expr_Bool {
 // DClause is a disjunction of literals (an OR of terms).
 // Term is a literal or the negation of a literal.
 
-typedef TagVal<ZRef<Expr_Bool>,struct Tag_Clause> Term;
+typedef TagVal<ZP<Expr_Bool>,struct Tag_Clause> Term;
 typedef std::set<Term> DClause;
 typedef std::set<DClause> CNF;
 
-ZRef<Expr_Bool> sFromCNF(const CNF& iCNF);
-CNF sAsCNF(const ZRef<Expr_Bool>& iExpr);
+ZP<Expr_Bool> sFromCNF(const CNF& iCNF);
+CNF sAsCNF(const ZP<Expr_Bool>& iExpr);
 
 } // namespace Util_Expr_Bool
 } // namespace ZooLib

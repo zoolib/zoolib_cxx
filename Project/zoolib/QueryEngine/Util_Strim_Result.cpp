@@ -40,7 +40,7 @@ using RelationalAlgebra::RelHead;
 // =================================================================================================
 #pragma mark - sToStrim
 
-void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
+void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& w)
 	{
 	const size_t theCount = iResult->Count();
 
@@ -59,14 +59,14 @@ void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& w)
 			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
 				w << "!absent!";
 			else
-				Util_Any_JSON::sWrite(false, theRow[xx], w);
+				Util_Any_JSON::sWrite(theRow[xx], false, w);
 			}
 		}
 	}
 
 } // namespace QueryEngine
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>& iResult)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZP<QueryEngine::Result>& iResult)
 	{
 	QueryEngine::sToStrim(iResult, w);
 	return w;
@@ -81,7 +81,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>&
 
 using namespace ZooLib;
 
-ZMACRO_pdesc(const ZRef<QueryEngine::Result>& iResult)
+ZMACRO_pdesc(const ZP<QueryEngine::Result>& iResult)
 	{
 	StdIO::sChan_UTF_Err << iResult << "\n";
 	}

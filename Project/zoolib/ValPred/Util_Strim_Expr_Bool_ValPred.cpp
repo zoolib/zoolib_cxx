@@ -33,14 +33,14 @@ namespace Util_Strim_Expr_Bool_ValPred {
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool_ValPred
 
-static ZRef<Expr_Bool> spQReadValPred(const ChanRU_UTF& iChanRU)
+static ZP<Expr_Bool> spQReadValPred(const ChanRU_UTF& iChanRU)
 	{
 	if (ZQ<ValPred> theQ = Util_Strim_ValPred_Any::sQFromStrim(iChanRU))
 		return sExpr_Bool(*theQ);
 	return null;
 	}
 
-ZRef<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU)
+ZP<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU)
 	{
 	return Util_Strim_Expr_Bool::sQFromStrim(sCallable(spQReadValPred), iChanRU);
 	}

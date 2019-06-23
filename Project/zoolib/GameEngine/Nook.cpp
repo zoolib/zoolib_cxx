@@ -28,7 +28,7 @@ void NookScope::NewEra()
 	fNooks_Adding.clear();	
 	}
 
-ZRef<Nook> NookScope::GetOne(const Name& iName)
+ZP<Nook> NookScope::GetOne(const Name& iName)
 	{
 	ZAcqMtx acq(fMtx);
 	const NameNook theNN(iName, nullptr);
@@ -44,10 +44,10 @@ ZRef<Nook> NookScope::GetOne(const Name& iName)
 	return null;
 	}
 
-vector<ZRef<Nook> > NookScope::GetAll(const Name& iName)
+vector<ZP<Nook> > NookScope::GetAll(const Name& iName)
 	{
 	ZAcqMtx acq(fMtx);
-	vector<ZRef<Nook> > result;
+	vector<ZP<Nook> > result;
 
 	const NameNook theNN(iName, nullptr);
 
@@ -98,7 +98,7 @@ void NookScope::pFinalize(Nook* iNook)
 // =================================================================================================
 #pragma mark - Nook
 
-Nook::Nook(const ZRef<NookScope>& iNookScope)
+Nook::Nook(const ZP<NookScope>& iNookScope)
 :	fNookScopeWP(iNookScope)
 	{}
 
@@ -106,7 +106,7 @@ void Nook::Initialize()
 	{
 	fName = typeid(*this).name();
 
-	if (ZRef<NookScope> theNM = fNookScopeWP)
+	if (ZP<NookScope> theNM = fNookScopeWP)
 		theNM->pInitialize(this);
 	else
 		ZCounted::Initialize();
@@ -114,7 +114,7 @@ void Nook::Initialize()
 
 void Nook::Finalize()
 	{
-	if (ZRef<NookScope> theNM = fNookScopeWP)
+	if (ZP<NookScope> theNM = fNookScopeWP)
 		theNM->pFinalize(this);
 	else
 		ZCounted::Finalize();
@@ -122,12 +122,12 @@ void Nook::Finalize()
 
 bool Nook::IsFullCycle()
 	{
-	if (ZRef<NookScope> theNM = fNookScopeWP)
+	if (ZP<NookScope> theNM = fNookScopeWP)
 		return theNM->pIsFullCycle(this);
 	return false;
 	}
 
-ZRef<NookScope> Nook::GetNookScope()
+ZP<NookScope> Nook::GetNookScope()
 	{ return fNookScopeWP; }
 
 } // namespace GameEngine

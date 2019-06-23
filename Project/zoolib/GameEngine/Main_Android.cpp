@@ -48,7 +48,7 @@ struct TouchInfo
 
 vector<TouchInfo> sTouches;
 
-typedef map<int64,ZRef<Touch> > TouchMap;
+typedef map<int64,ZP<Touch> > TouchMap;
 
 } // anonymous namespace
 
@@ -70,7 +70,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 
 // =================================================================================================
 
-static ZRef<GameEngine::Game> spGame;
+static ZP<GameEngine::Game> spGame;
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -156,8 +156,8 @@ static void spUpdateTouches(
 	ZAcqMtx acq(sMtx);
 	foreachv (const TouchInfo& theTI, sTouches)
 		{
-		ZRef<Touch> theTouch;
-		if (ZQ<ZRef<Touch> > theQ = sQGet(ioAll, theTI.fPointerId))
+		ZP<Touch> theTouch;
+		if (ZQ<ZP<Touch> > theQ = sQGet(ioAll, theTI.fPointerId))
 			{
 			theTouch = *theQ;
 			}

@@ -59,7 +59,7 @@ protected:
 	void* fBaseAddress;
 	};
 
-void sFresh(ZRef<Raster>& ioRaster);
+void sFresh(ZP<Raster>& ioRaster);
 
 // =================================================================================================
 #pragma mark - Raster_Simple
@@ -89,9 +89,9 @@ public:
 // =================================================================================================
 #pragma mark - Raster Operations
 
-Pixval sGetPixval(const ZRef<Raster>& iRaster, int iH, int iV);
-void sSetPixval(const ZRef<Raster>& iRaster, int iH, int iV, Pixval iPixval);
-void sFill(const ZRef<Raster>& iRaster, Pixval iPixval);
+Pixval sGetPixval(const ZP<Raster>& iRaster, int iH, int iV);
+void sSetPixval(const ZP<Raster>& iRaster, int iH, int iV, Pixval iPixval);
+void sFill(const ZP<Raster>& iRaster, Pixval iPixval);
 
 } // namespace Pixels
 } // namespace ZooLib

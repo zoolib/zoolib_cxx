@@ -41,35 +41,35 @@ class Transform_ConsolidateRenames
 	typedef Visitor_Expr_Op_Do_Transform_T<Expr_Rel> inherited;
 public:
 // From Visitor_Expr_OpX_T via Visitor_Expr_Op_DoTransform_T
-	virtual void Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr);
 
 // From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr);
 
 	Rename fRename_LeafToRoot;
 	};
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op0(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op1(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op2(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 	{
 	string8 newName = iExpr->GetNew();
 
@@ -91,7 +91,7 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 		// Map oldName to newName.
 		sInsertMust(fRename_LeafToRoot, oldName, newName);
 
-		ZRef<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+		ZP<Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 		if (ZQ<string8> theQ = sQGetErase(fRename_LeafToRoot, oldName))
 			{
@@ -105,7 +105,7 @@ void Transform_ConsolidateRenames::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Ren
 
 // =================================================================================================
 #pragma mark - RelationalAlgebra::sTransform_ConsolidateRenames
-ZRef<Expr_Rel> sTransform_ConsolidateRenames(const ZRef<Expr_Rel>& iRel)
+ZP<Expr_Rel> sTransform_ConsolidateRenames(const ZP<Expr_Rel>& iRel)
 	{
 	return Transform_ConsolidateRenames().Do(iRel);
 	}

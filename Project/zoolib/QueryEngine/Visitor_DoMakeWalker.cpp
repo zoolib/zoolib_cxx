@@ -44,7 +44,7 @@ namespace RA = RelationalAlgebra;
 // =================================================================================================
 #pragma mark - Visitor_DoMakeWalker
 
-void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
+void Visitor_DoMakeWalker::Visit(const ZP<Visitee>& iRep)
 	{
 	if (ZLOGPF(w, eErr))
 		{
@@ -55,73 +55,73 @@ void Visitor_DoMakeWalker::Visit(const ZRef<Visitee>& iRep)
 	ZUnimplemented();
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Calc(const ZP<RA::Expr_Rel_Calc>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Calc(op0, iExpr->GetColName(), iExpr->GetCallable()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Comment(const ZRef<RA::Expr_Rel_Comment>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Comment(const ZP<RA::Expr_Rel_Comment>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Comment(op0, iExpr->GetComment(), iExpr->GetCallable()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Const(const ZP<RA::Expr_Rel_Const>& iExpr)
 	{ this->pSetResult(new Walker_Const(iExpr->GetColName(), iExpr->GetVal())); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZRef<RA::Expr_Rel_Dee>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dee(const ZP<RA::Expr_Rel_Dee>& iExpr)
 	{ this->pSetResult(new Walker_Dee); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Dum(const ZRef<RA::Expr_Rel_Dum>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Dum(const ZP<RA::Expr_Rel_Dum>& iExpr)
 	{ this->pSetResult(new Walker_Dum); }
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Embed(const ZP<RA::Expr_Rel_Embed>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+		if (ZP<Walker> op1 = this->Do(iExpr->GetOp1()))
 			this->pSetResult(new Walker_Embed(op0, iExpr->GetBoundNames(), iExpr->GetColName(), op1));
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Product(const ZP<RA::Expr_Rel_Product>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+		if (ZP<Walker> op1 = this->Do(iExpr->GetOp1()))
 			this->pSetResult(new Walker_Product(op0, op1));
 		}
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Project(const ZP<RA::Expr_Rel_Project>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Project(op0, iExpr->GetProjectRelHead()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Rename(const ZP<RA::Expr_Rel_Rename>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Rename(op0, iExpr->GetNew(), iExpr->GetOld()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Restrict(const ZP<RA::Expr_Rel_Restrict>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		this->pSetResult(new Walker_Restrict(op0, iExpr->GetExpr_Bool()));
 	}
 
-void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
+void Visitor_DoMakeWalker::Visit_Expr_Rel_Union(const ZP<RA::Expr_Rel_Union>& iExpr)
 	{
-	if (ZRef<Walker> op0 = this->Do(iExpr->GetOp0()))
+	if (ZP<Walker> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+		if (ZP<Walker> op1 = this->Do(iExpr->GetOp1()))
 			this->pSetResult(new Walker_Union(op0, op1));
 		else
 			this->pSetResult(op0);
 		}
-	else if (ZRef<Walker> op1 = this->Do(iExpr->GetOp1()))
+	else if (ZP<Walker> op1 = this->Do(iExpr->GetOp1()))
 		this->pSetResult(op1);
 	}
 

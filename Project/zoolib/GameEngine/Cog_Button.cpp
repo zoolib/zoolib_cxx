@@ -9,11 +9,11 @@ namespace GameEngine {
 
 static
 Cog spCogFun_TouchIn(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{ return sTouchIn(iTouchListener); }
 
 static
-Cog spCog_TouchIn(const ZRef<TouchListener>& iTouchListener)
+Cog spCog_TouchIn(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_TouchIn);	
 	return sBindR(spCallable, iTouchListener);
@@ -21,11 +21,11 @@ Cog spCog_TouchIn(const ZRef<TouchListener>& iTouchListener)
 
 static
 Cog spCogFun_TouchOut(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{ return sTouchOut(iTouchListener); }
 
 static
-Cog spCog_TouchOut(const ZRef<TouchListener>& iTouchListener)
+Cog spCog_TouchOut(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_TouchOut);	
 	return sBindR(spCallable, iTouchListener);
@@ -33,11 +33,11 @@ Cog spCog_TouchOut(const ZRef<TouchListener>& iTouchListener)
 
 static
 Cog spCogFun_TouchUp(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{ return sTouchUp(iTouchListener); }
 
 static
-Cog spCog_TouchUp(const ZRef<TouchListener>& iTouchListener)
+Cog spCog_TouchUp(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_TouchUp);	
 	return sBindR(spCallable, iTouchListener);
@@ -47,7 +47,7 @@ Cog spCog_TouchUp(const ZRef<TouchListener>& iTouchListener)
 #pragma mark -
 
 Cog sCog_Button(
-	const ZRef<TouchListener>& iTouchListener,
+	const ZP<TouchListener>& iTouchListener,
 	const Cog& iCog_UpOut,
 	const Cog& iCog_DownIn,
 	const Cog& iCog_DownOut,
@@ -84,7 +84,7 @@ Cog spCogCtor_Button(const Map& iMap)
 // There is currently no "UpIn" behavior in a touch interface. To handle mouse-style cursor
 // highlighting we'll need a concept of a 'non-touching' touch of some sort.
 
-	ZRef<TouchListener> theTouchListener = new TouchListener(true);
+	ZP<TouchListener> theTouchListener = new TouchListener(true);
 	theTouchListener->SetBounds(sDGet(sGRect(10,10), sQGRect(iMap["HotRect"])));
 
 	const Cog theCog_Pushed = sCog_Pitch(iMap.Get<Map>("Pushed"));

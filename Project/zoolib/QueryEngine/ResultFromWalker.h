@@ -31,7 +31,7 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark - sQuery
 
-ZRef<Result> sResultFromWalker(ZRef<Walker> iWalker);
+ZP<Result> sResultFromWalker(ZP<Walker> iWalker);
 
 } // namespace QueryEngine
 } // namespace ZooLib

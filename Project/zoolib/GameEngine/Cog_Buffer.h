@@ -9,7 +9,7 @@ namespace GameEngine {
 
 Cog sCog_Buffer(int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild);
 
-Cog sCog_Buffer_Continue(const ZRef<Tween_BlushGainMat>& iTween,
+Cog sCog_Buffer_Continue(const ZP<Tween_BlushGainMat>& iTween,
 	int iWidth, int iHeight, const RGBA& iFill, const Cog& iChild);
 
 } // namespace GameEngine

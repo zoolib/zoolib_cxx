@@ -40,11 +40,11 @@ int sCompare_T<QueryEngine::Result>(
 ZMACRO_CompareRegistration_T(QueryEngine::Result)
 
 template <>
-int sCompare_T<ZRef<QueryEngine::Result> >(
-	const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR)
+int sCompare_T<ZP<QueryEngine::Result> >(
+	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
-ZMACRO_CompareRegistration_T(ZRef<QueryEngine::Result>)
+ZMACRO_CompareRegistration_T(ZP<QueryEngine::Result>)
 
 // =================================================================================================
 #pragma mark - QueryEngine::Result
@@ -72,7 +72,7 @@ Result::Result(const RelHead& iRelHead,
 	ioPackedRows->swap(fPackedRows);
 	}
 
-Result::Result(const ZRef<Result>& iOther, size_t iRow)
+Result::Result(const ZP<Result>& iOther, size_t iRow)
 :	fRelHead(iOther->GetRelHead())
 	{
 	if (iRow < iOther->Count())
@@ -109,7 +109,7 @@ int Result::Compare(const Result& iOther) const
 	return sCompare_T(fPackedRows, iOther.fPackedRows);
 	}
 
-ZRef<Result> Result::Fresh()
+ZP<Result> Result::Fresh()
 	{
 	if (this->IsShared())
 		return new Result(*this);
@@ -145,7 +145,7 @@ pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
 
 struct Comparer_t
 	{
-	Comparer_t(const vector<size_t>& iOffsets, const ZRef<Result>& iResult)
+	Comparer_t(const vector<size_t>& iOffsets, const ZP<Result>& iResult)
 	:	fOffsets(iOffsets)
 	,	fResult(iResult)
 		{}
@@ -158,7 +158,7 @@ struct Comparer_t
 		}
 
 	const vector<size_t>& fOffsets;
-	ZRef<Result> fResult;
+	ZP<Result> fResult;
 	};
 
 } // anonymous namespace
@@ -188,10 +188,10 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 // To mutate an external list you would erase every position in oRemoved,
 // insert everything in oAdded, and then apply changes in oChanged after both.
 
-void ResultDiffer::Apply(const ZRef<Result>& iResult,
-	ZRef<Result>* oPriorResult,
-	const ZRef<ResultDeltas>& iResultDeltas,
-	ZRef<Result>* oCurResult,
+void ResultDiffer::Apply(const ZP<Result>& iResult,
+	ZP<Result>* oPriorResult,
+	const ZP<ResultDeltas>& iResultDeltas,
+	ZP<Result>* oCurResult,
 	vector<size_t>* oRemoved,
 	vector<pair<size_t,size_t> >* oAdded,
 	vector<Multi3<size_t,size_t,size_t> >* oChanged)
@@ -394,7 +394,7 @@ void ResultDiffer::Apply(const ZRef<Result>& iResult,
 // =================================================================================================
 #pragma mark - ResultDiffer
 
-void sBuildBindings(ZRef<Result> iResult, map<string8,size_t>& oResult)
+void sBuildBindings(ZP<Result> iResult, map<string8,size_t>& oResult)
 	{
 	const RelHead& theRH = iResult->GetRelHead();
 	size_t index = 0;

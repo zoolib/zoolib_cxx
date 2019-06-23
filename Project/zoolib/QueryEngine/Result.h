@@ -51,7 +51,7 @@ public:
 	Result(const RelationalAlgebra::RelHead& iRelHead,
 		std::vector<Val_Any>* ioPackedRows);
 
-	Result(const ZRef<Result>& iOther, size_t iRow);
+	Result(const ZP<Result>& iOther, size_t iRow);
 
 	virtual ~Result();
 
@@ -62,7 +62,7 @@ public:
 
 	int Compare(const Result& iOther) const;
 
-	ZRef<Result> Fresh();
+	ZP<Result> Fresh();
 
 public:
 	RelationalAlgebra::RelHead fRelHead;
@@ -94,10 +94,10 @@ public:
 		const RelationalAlgebra::RelHead& iSignificant,
 		bool iEmitDummyChanges = false);
 
-	void Apply(const ZRef<Result>& iResult,
-		ZRef<Result>* oPriorResult,
-		const ZRef<ResultDeltas>& iResultDeltas,
-		ZRef<Result>* oCurResult,
+	void Apply(const ZP<Result>& iResult,
+		ZP<Result>* oPriorResult,
+		const ZP<ResultDeltas>& iResultDeltas,
+		ZP<Result>* oCurResult,
 		std::vector<size_t>* oRemoved,
 		std::vector<std::pair<size_t,size_t> >* oAdded,
 		std::vector<Multi3<size_t,size_t,size_t> >* oChanged);
@@ -107,7 +107,7 @@ private:
 	const RelationalAlgebra::RelHead fSignificant;
 	const bool fEmitDummyChanges;
 
-	ZRef<Result> fResult_Prior;
+	ZP<Result> fResult_Prior;
 	std::vector<size_t> fSort_Prior;
 
 	std::vector<size_t> fPermute;
@@ -116,7 +116,7 @@ private:
 // =================================================================================================
 #pragma mark - sBuildBindings
 
-void sBuildBindings(ZRef<Result> iResult, std::map<string8,size_t>& oResult);
+void sBuildBindings(ZP<Result> iResult, std::map<string8,size_t>& oResult);
 
 } // namespace QueryEngine
 
@@ -128,8 +128,8 @@ int sCompare_T<QueryEngine::Result>(
 	const QueryEngine::Result& iL, const QueryEngine::Result& iR);
 
 template <>
-int sCompare_T<ZRef<QueryEngine::Result> >(
-	const ZRef<QueryEngine::Result>& iL, const ZRef<QueryEngine::Result>& iR);
+int sCompare_T<ZP<QueryEngine::Result> >(
+	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR);
 
 } // namespace ZooLib
 

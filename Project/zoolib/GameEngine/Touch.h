@@ -19,7 +19,7 @@ public:
 	CVec3 fPos;
 	};
 
-typedef std::set<ZRef<Touch> > TouchSet;
+typedef std::set<ZP<Touch> > TouchSet;
 
 // =================================================================================================
 #pragma mark - TouchListener
@@ -48,10 +48,10 @@ public:
 
 	size_t fMaxTouches;
 
-	std::set<ZRef<Touch> > fActive;
-	std::set<ZRef<Touch> > fDowns;
-	std::set<ZRef<Touch> > fMoves;
-	std::set<ZRef<Touch> > fUps;
+	std::set<ZP<Touch> > fActive;
+	std::set<ZP<Touch> > fDowns;
+	std::set<ZP<Touch> > fMoves;
+	std::set<ZP<Touch> > fUps;
 
 private:
 	GRect fBounds;
@@ -63,9 +63,9 @@ private:
 // =================================================================================================
 #pragma mark -
 
-bool sTouchIn(const ZRef<TouchListener>& iTouchListener);
-bool sTouchOut(const ZRef<TouchListener>& iTouchListener);
-bool sTouchUp(const ZRef<TouchListener>& iTouchListener);
+bool sTouchIn(const ZP<TouchListener>& iTouchListener);
+bool sTouchOut(const ZP<TouchListener>& iTouchListener);
+bool sTouchUp(const ZP<TouchListener>& iTouchListener);
 
 } // namespace GameEngine
 } // namespace ZooLib

@@ -72,10 +72,10 @@ public:
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<T>& iVisitor)
 		{ iVisitor.Visit_Expr_Op0(this); }
 
-	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone() = 0;
+	virtual ZP<T> Self() = 0;
+	virtual ZP<T> Clone() = 0;
 
-	ZRef<T> SelfOrClone()
+	ZP<T> SelfOrClone()
 		{ return this->Self(); }
 	};
 
@@ -88,7 +88,7 @@ class Visitor_Expr_Op0_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op0(const ZRef<Expr_Op0_T<T> >& iExpr)
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -103,7 +103,7 @@ class Expr_Op1_T
 :	public virtual Expr
 	{
 protected:
-	Expr_Op1_T(const ZRef<T>& iOp0)
+	Expr_Op1_T(const ZP<T>& iOp0)
 	:	fOp0(iOp0)
 		{
 		ZAssert(fOp0);
@@ -135,21 +135,21 @@ public:
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<T>& iVisitor)
 		{ iVisitor.Visit_Expr_Op1(this); }
 
-	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone(const ZRef<T>& iOp0) = 0;
+	virtual ZP<T> Self() = 0;
+	virtual ZP<T> Clone(const ZP<T>& iOp0) = 0;
 
-	ZRef<T> SelfOrClone(const ZRef<T>& iOp0)
+	ZP<T> SelfOrClone(const ZP<T>& iOp0)
 		{
 		if (iOp0 == fOp0)
 			return this->Self();
 		return this->Clone(iOp0);
 		}
 
-	const ZRef<T>& GetOp0() const
+	const ZP<T>& GetOp0() const
 		{ return fOp0; }
 
 private:
-	const ZRef<T> fOp0;
+	const ZP<T> fOp0;
 	};
 
 // =================================================================================================
@@ -161,7 +161,7 @@ class Visitor_Expr_Op1_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<T> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -176,7 +176,7 @@ class Expr_Op2_T
 :	public virtual Expr
 	{
 protected:
-	Expr_Op2_T(const ZRef<T>& iOp0, const ZRef<T>& iOp1)
+	Expr_Op2_T(const ZP<T>& iOp0, const ZP<T>& iOp1)
 	:	fOp0(iOp0)
 	,	fOp1(iOp1)
 		{
@@ -209,25 +209,25 @@ public:
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<T>& iVisitor)
 		{ iVisitor.Visit_Expr_Op2(this); }
 
-	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone(const ZRef<T>& iOp0, const ZRef<T>& iOp1) = 0;
+	virtual ZP<T> Self() = 0;
+	virtual ZP<T> Clone(const ZP<T>& iOp0, const ZP<T>& iOp1) = 0;
 
-	ZRef<T> SelfOrClone(const ZRef<T>& iOp0, const ZRef<T>& iOp1)
+	ZP<T> SelfOrClone(const ZP<T>& iOp0, const ZP<T>& iOp1)
 		{
 		if (iOp0 == fOp0 && iOp1 == fOp1)
 			return this->Self();
 		return this->Clone(iOp0, iOp1);
 		}
 
-	const ZRef<T>& GetOp0() const
+	const ZP<T>& GetOp0() const
 		{ return fOp0; }
 
-	const ZRef<T>& GetOp1() const
+	const ZP<T>& GetOp1() const
 		{ return fOp1; }
 
 private:
-	const ZRef<T> fOp0;
-	const ZRef<T> fOp1;
+	const ZP<T> fOp0;
+	const ZP<T> fOp1;
 	};
 
 // =================================================================================================
@@ -239,7 +239,7 @@ class Visitor_Expr_Op2_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<T> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -254,7 +254,7 @@ class Expr_OpN_T
 :	public virtual Expr
 	{
 protected:
-	Expr_OpN_T(const std::vector<ZRef<T> >& iOps)
+	Expr_OpN_T(const std::vector<ZP<T> >& iOps)
 	:	fOps(iOps)
 		{}
 
@@ -284,21 +284,21 @@ public:
 	virtual void Accept_Expr_OpN(Visitor_Expr_OpN_T<T>& iVisitor)
 		{ iVisitor.Visit_Expr_OpN(this); }
 
-	virtual ZRef<T> Self() = 0;
-	virtual ZRef<T> Clone(const std::vector<ZRef<T> >& iOps) = 0;
+	virtual ZP<T> Self() = 0;
+	virtual ZP<T> Clone(const std::vector<ZP<T> >& iOps) = 0;
 
-	ZRef<T> SelfOrClone(const std::vector<ZRef<T> >& iOps)
+	ZP<T> SelfOrClone(const std::vector<ZP<T> >& iOps)
 		{
 		if (iOps == fOps)
 			return this->Self();
 		return this->Clone(iOps);
 		}
 
-	const std::vector<ZRef<T> >& GetOps() const
+	const std::vector<ZP<T> >& GetOps() const
 		{ return fOps; }
 
 private:
-	std::vector<ZRef<T> > fOps;
+	std::vector<ZP<T> > fOps;
 	};
 
 // =================================================================================================
@@ -310,7 +310,7 @@ class Visitor_Expr_OpN_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_OpN(const ZRef<Expr_OpN_T<T> >& iExpr)
+	virtual void Visit_Expr_OpN(const ZP<Expr_OpN_T<T> >& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 

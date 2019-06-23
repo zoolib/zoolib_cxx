@@ -13,11 +13,11 @@ namespace GameEngine {
 
 GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iPoint);
 
-void sRenderGame(const ZRef<Rendered>& iRendered,
+void sRenderGame(const ZP<Rendered>& iRendered,
 	const GPoint& iPixelSize,
 	const GPoint& iGameSize,
 	bool iShowBounds, bool iShowOrigin,
-	const ZRef<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD);
+	const ZP<SoundMeister>& iSoundMeister, Rat iListenerL, Rat iListenerR, Rat iListenerD);
 
 } // namespace GameEngine
 } // namespace ZooLib {

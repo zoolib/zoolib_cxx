@@ -17,12 +17,12 @@
 // =================================================================================================
 #pragma mark -
 
-using ZooLib::ZRef;
+using ZooLib::ZP;
 using ZooLib::GameEngine::GPoint;
 using ZooLib::GameEngine::Touch;
 using ZooLib::GameEngine::TouchSet;
 
-typedef std::map<UITouch*,ZRef<Touch> > TouchMap;
+typedef std::map<UITouch*,ZP<Touch> > TouchMap;
 
 namespace ZooLib {
 namespace GameEngine {
@@ -39,7 +39,7 @@ namespace GameEngine {
 	GLint fBackingWidth;
 	GLint fBackingHeight;
 
-	ZooLib::ZRef<EAGLContext> fContext;
+	ZooLib::ZP<EAGLContext> fContext;
 	GLuint fViewRenderbuffer;
 	GLuint fViewFramebuffer;
 	}

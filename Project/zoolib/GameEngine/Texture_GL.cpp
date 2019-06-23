@@ -54,7 +54,7 @@ Texture_GL::Texture_GL(const Pixmap& iPixmap)
 ,	fIsAlphaOnly(false)
 	{
 	// For the momemnt, insist on RGBA (LE)
-	if (ZRef<PixelDescRep_Color> thePDRep =
+	if (ZP<PixelDescRep_Color> thePDRep =
 		fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Color>())
 		{
 		ZooLib::uint32 theR, theG, theB, theA;
@@ -76,7 +76,7 @@ Texture_GL::Texture_GL(const Pixmap& iPixmap)
 			ZAssert(theR == 0x000000FF);
 			}
 		}
-	else if (ZRef<PixelDescRep_Gray> thePDRep =
+	else if (ZP<PixelDescRep_Gray> thePDRep =
 		fPixmap.GetPixelDesc().GetRep().DynamicCast<PixelDescRep_Gray>())
 		{
 		uint32 maskL, maskA;
@@ -202,14 +202,14 @@ void Texture_GL::pEnsureTexture()
 //##	fPixmap = null;
 	}
 
-static ZRef<Texture> spTextureFromPixmap(const Pixmap& iPixmap)
+static ZP<Texture> spTextureFromPixmap(const Pixmap& iPixmap)
 	{
 	if (iPixmap.GetRep())
 		return new Texture_GL(iPixmap);
 	return null;
 	}
 
-ZRef<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL()
+ZP<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL()
 	{
 	GEMACRO_Callable(spCallable, spTextureFromPixmap);
 	return spCallable;

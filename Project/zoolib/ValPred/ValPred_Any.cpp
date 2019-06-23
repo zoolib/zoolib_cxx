@@ -46,11 +46,11 @@ ZMACRO_CompareRegistration_T(ValComparand_Const_Any)
 // =================================================================================================
 #pragma mark - ValComparator_Callable_Any
 
-ValComparator_Callable_Any::ValComparator_Callable_Any(ZRef<Callable_t> iCallable)
+ValComparator_Callable_Any::ValComparator_Callable_Any(ZP<Callable_t> iCallable)
 :	fCallable(iCallable)
 	{}
 
-const ZRef<ValComparator_Callable_Any::Callable_t>& ValComparator_Callable_Any::GetCallable() const
+const ZP<ValComparator_Callable_Any::Callable_t>& ValComparator_Callable_Any::GetCallable() const
 	{ return fCallable; }
 
 template <>
@@ -86,14 +86,14 @@ ValComparandPseudo CConst(const Val_Any& iVal)
 
 namespace { // anonymous
 
-Val_Any spGetVal(const ZRef<ValComparand>& iComparand, const Val_Any& iVal)
+Val_Any spGetVal(const ZP<ValComparand>& iComparand, const Val_Any& iVal)
 	{
-	if (ZRef<ValComparand_Name> asName =
+	if (ZP<ValComparand_Name> asName =
 		iComparand.DynamicCast<ValComparand_Name>())
 		{
 		return iVal.Get<Map_Any>().Get(asName->GetName());
 		}
-	else if (ZRef<ValComparand_Const_Any> asConst =
+	else if (ZP<ValComparand_Const_Any> asConst =
 		iComparand.DynamicCast<ValComparand_Const_Any>())
 		{
 		return asConst->GetVal();
@@ -101,9 +101,9 @@ Val_Any spGetVal(const ZRef<ValComparand>& iComparand, const Val_Any& iVal)
 	return null;
 	}
 
-bool spDoCompare(const Val_Any& iL, const ZRef<ValComparator>& iComparator, const Val_Any& iR)
+bool spDoCompare(const Val_Any& iL, const ZP<ValComparator>& iComparator, const Val_Any& iR)
 	{
-	if (ZRef<ValComparator_Simple> asSimple =
+	if (ZP<ValComparator_Simple> asSimple =
 		iComparator.DynamicCast<ValComparator_Simple>())
 		{
 		const int compare = sCompare_T(iL, iR);
@@ -117,12 +117,12 @@ bool spDoCompare(const Val_Any& iL, const ZRef<ValComparator>& iComparator, cons
 			case ValComparator_Simple::eGT: return compare > 0;
 			}
 		}
-	else if (ZRef<ValComparator_Callable_Any> asCallable =
+	else if (ZP<ValComparator_Callable_Any> asCallable =
 		iComparator.DynamicCast<ValComparator_Callable_Any>())
 		{
 		return asCallable->GetCallable()->Call(iL, iR);
 		}
-	else if (ZRef<ValComparator_StringContains> asStringContains =
+	else if (ZP<ValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ValComparator_StringContains>())
 		{
 //##		if (const string8* target = iL.PGet<string8>())

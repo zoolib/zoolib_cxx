@@ -55,13 +55,13 @@ class ValComparator_Callable_Any : public ValComparator
 public:
 	typedef Callable<bool(const Val_Any& iLHS, const Val_Any& iRHS)> Callable_t;
 
-	ValComparator_Callable_Any(ZRef<Callable_t> iCallable);
+	ValComparator_Callable_Any(ZP<Callable_t> iCallable);
 
 // Our protocol
-	const ZRef<Callable_t>& GetCallable() const;
+	const ZP<Callable_t>& GetCallable() const;
 
 private:
-	ZRef<Callable_t> fCallable;
+	ZP<Callable_t> fCallable;
 	};
 
 template <>

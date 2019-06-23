@@ -31,11 +31,11 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark -
 
-void sToStrim(const ZRef<Result>& iResult, const ChanW_UTF& iStrimW);
+void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& iStrimW);
 
 } // namespace QueryEngine
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZRef<QueryEngine::Result>& iResult);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZP<QueryEngine::Result>& iResult);
 
 } // namespace ZooLib
 

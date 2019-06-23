@@ -74,7 +74,7 @@ public:
 	InsertPrefix(const string8& iPrefix);
 
 // From RA::Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr);
 
 private:
 	const string8 fPrefix;
@@ -84,13 +84,13 @@ InsertPrefix::InsertPrefix(const string8& iPrefix)
 :	fPrefix(iPrefix)
 	{}
 
-void InsertPrefix::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+void InsertPrefix::Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr)
 	{
 	const RelHead& theRelHead = RA::sRelHead(iExpr->GetConcreteHead());
 
 	if (const ZQ<RelHead> theQ = RA::sQPrefixErased(fPrefix, theRelHead))
 		{
-		ZRef<RA::Expr_Rel> theRel = RA::sConcrete(*theQ);
+		ZP<RA::Expr_Rel> theRel = RA::sConcrete(*theQ);
 		foreacha (entry, *theQ)
 			theRel = sRename(theRel, RA::sPrefixInserted(fPrefix, entry), entry);
 
@@ -125,7 +125,7 @@ public:
 	bool fNeedsAdd;
 	bool fWasAdded;
 	int64 fRefcon;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
@@ -151,14 +151,14 @@ public:
 // From Expr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<RA::Expr_Rel> Self();
-	virtual ZRef<RA::Expr_Rel> Clone();
+	virtual ZP<RA::Expr_Rel> Self();
+	virtual ZP<RA::Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Proxy(Visitor_Proxy& iVisitor);
 
 	Relater_Union* const fRelater;
-	ZRef<RA::Expr_Rel> fRel;
+	ZP<RA::Expr_Rel> fRel;
 	RA::RelHead fResultRelHead;
 	set<PQuery*> fDependentPQueries;
 
@@ -173,7 +173,7 @@ class Relater_Union::Visitor_Proxy
 :	public virtual Visitor_Expr_Op0_T<RA::Expr_Rel>
 	{
 public:
-	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
+	virtual void Visit_Proxy(const ZP<Proxy>& iExpr)
 		{ this->Visit_Expr_Op0(iExpr); }
 	};
 
@@ -210,10 +210,10 @@ void Relater_Union::Proxy::Accept_Expr_Op0(Visitor_Expr_Op0_T<RA::Expr_Rel>& iVi
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<RA::Expr_Rel> Relater_Union::Proxy::Self()
+ZP<RA::Expr_Rel> Relater_Union::Proxy::Self()
 	{ return this; }
 
-ZRef<RA::Expr_Rel> Relater_Union::Proxy::Clone()
+ZP<RA::Expr_Rel> Relater_Union::Proxy::Clone()
 	{ return this; }
 
 void Relater_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
@@ -225,7 +225,7 @@ void Relater_Union::Proxy::Accept_Proxy(Visitor_Proxy& iVisitor)
 class Relater_Union::Walker_Proxy : public QueryEngine::Walker
 	{
 public:
-	Walker_Proxy(ZRef<Relater_Union> iRelater, ZRef<Proxy> iProxy)
+	Walker_Proxy(ZP<Relater_Union> iRelater, ZP<Proxy> iProxy)
 	:	fRelater(iRelater)
 	,	fProxy(iProxy)
 	,	fIter_PIP(iProxy->fPIP_InProxy)
@@ -240,7 +240,7 @@ public:
 		fRelater->pRewind(this);
 		}
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
@@ -255,12 +255,12 @@ public:
 		return fRelater->pReadInc(this, ioResults);
 		}
 
-	ZRef<Relater_Union> const fRelater;
-	ZRef<Proxy> const fProxy;
+	ZP<Relater_Union> const fRelater;
+	ZP<Proxy> const fProxy;
 	size_t fBaseOffset;
 
 	DListIterator<PIP, DLink_PIP_InProxy> fIter_PIP;
-	ZRef<QueryEngine::Result> fCurrentResult;
+	ZP<QueryEngine::Result> fCurrentResult;
 	size_t fCurrentIndex;
 	};
 
@@ -300,15 +300,15 @@ class Relater_Union::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
-	PQuery(const ZRef<RA::Expr_Rel>& iRel)
+	PQuery(const ZP<RA::Expr_Rel>& iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<RA::Expr_Rel> const fRel;
-	ZRef<RA::Expr_Rel> fRel_Analyzed;
-	set<ZRef<Proxy> > fProxiesDependedUpon;
+	ZP<RA::Expr_Rel> const fRel;
+	ZP<RA::Expr_Rel> fRel_Analyzed;
+	set<ZP<Proxy> > fProxiesDependedUpon;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
@@ -320,11 +320,11 @@ class Relater_Union::Visitor_DoMakeWalker
 ,	public virtual Visitor_Proxy
 	{
 public:
-	Visitor_DoMakeWalker(ZRef<Relater_Union> iRelater)
+	Visitor_DoMakeWalker(ZP<Relater_Union> iRelater)
 	:	fRelater(iRelater)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr)
 		{
 		// We'll never see a Concrete -- we're called only an a Rel that's been
 		// analyzed and where any concrete or expression incorporating a concrete
@@ -332,11 +332,11 @@ public:
 		ZUnimplemented();
 		}
 
-	virtual void Visit_Proxy(const ZRef<Proxy>& iExpr)
+	virtual void Visit_Proxy(const ZP<Proxy>& iExpr)
 		{ this->pSetResult(fRelater->pMakeWalker(iExpr)); }
 
 private:
-	ZRef<Relater_Union> const fRelater;
+	ZP<Relater_Union> const fRelater;
 	};
 
 // =================================================================================================
@@ -358,18 +358,18 @@ public:
 	Analyze(Relater_Union* iRelater_Union, PQuery* iPQuery);
 
 // From RA::Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr);
-	virtual void Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZP<RA::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZP<RA::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZP<RA::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZP<RA::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZP<RA::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<RA::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZP<RA::Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZP<RA::Expr_Rel_Union>& iExpr);
 
 // Our protocol
-	ZRef<RA::Expr_Rel> TopLevelDo(ZRef<RA::Expr_Rel> iRel);
+	ZP<RA::Expr_Rel> TopLevelDo(ZP<RA::Expr_Rel> iRel);
 
 private:
 	Relater_Union* fRelater_Union;
@@ -383,14 +383,14 @@ Relater_Union::Analyze::Analyze(Relater_Union* iRelater_Union, PQuery* iPQuery)
 ,	fPQuery(iPQuery)
 	{}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Calc(const ZRef<RA::Expr_Rel_Calc>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Calc(const ZP<RA::Expr_Rel_Calc>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Calc::Visit_Expr_Rel_Calc(iExpr);
 
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr)
 	{
 	ZAssertStop(kDebug, fResultRelHead.empty());
 
@@ -409,16 +409,16 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Con
 		{ this->pSetResult(fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, iExpr)); }
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Const(const ZRef<RA::Expr_Rel_Const>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Const(const ZP<RA::Expr_Rel_Const>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(iExpr);
 	fResultRelHead |= iExpr->GetColName();
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZP<RA::Expr_Rel_Embed>& iExpr)
 	{
 	// Visit parent
-	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZP<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PRelaters it touches.
 	set<PRelater*> leftPRelaters = fPRelaters;
@@ -428,7 +428,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit embedee
-	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZP<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PRelaters.
 	set<PRelater*> rightPRelaters;
@@ -451,14 +451,14 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>
 			{
 			// With the addition of our right branch we *now* reference multiple Relaters.
 			// We register a proxy for the left branch.
-			ZRef<RA::Expr_Rel> proxy0 =
+			ZP<RA::Expr_Rel> proxy0 =
 				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
 			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet. Will
 				// only happen if there's no restrict on the right branch.
-				ZRef<RA::Expr_Rel> proxy1 =
+				ZP<RA::Expr_Rel> proxy1 =
 					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -474,7 +474,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>
 		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<RA::Expr_Rel> proxy1 =
+			ZP<RA::Expr_Rel> proxy1 =
 				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -485,10 +485,10 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Embed(const ZRef<RA::Expr_Rel_Embed>
 		}
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Product>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZP<RA::Expr_Rel_Product>& iExpr)
 	{
 	// Visit left branch
-	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZP<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PRelaters it touches.
 	set<PRelater*> leftPRelaters;
@@ -499,7 +499,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Prod
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit right branch
-	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZP<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PRelaters.
 	set<PRelater*> rightPRelaters;
@@ -522,13 +522,13 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Prod
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple Relaters. We register a proxy for the left branch.
-			ZRef<RA::Expr_Rel> proxy0 =
+			ZP<RA::Expr_Rel> proxy0 =
 				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
 			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<RA::Expr_Rel> proxy1 =
+				ZP<RA::Expr_Rel> proxy1 =
 					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -544,7 +544,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Prod
 		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<RA::Expr_Rel> proxy1 =
+			ZP<RA::Expr_Rel> proxy1 =
 				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -555,14 +555,14 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Product(const ZRef<RA::Expr_Rel_Prod
 		}
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Project(const ZRef<RA::Expr_Rel_Project>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Project(const ZP<RA::Expr_Rel_Project>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(iExpr);
 
 	fResultRelHead &= iExpr->GetProjectRelHead();
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Rename>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Rename(const ZP<RA::Expr_Rel_Rename>& iExpr)
 	{
 	RA::Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(iExpr);
 
@@ -570,12 +570,12 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Rename(const ZRef<RA::Expr_Rel_Renam
 		fResultRelHead |= iExpr->GetNew();
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Restrict>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Restrict(const ZP<RA::Expr_Rel_Restrict>& iExpr)
 	{
 	// If fPRelaters is not empty, then we're in an embed. Remember it.
 	set<PRelater*> priorPRelaters = fPRelaters;
 
-	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZP<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	if (fPRelaters.size() > 1)
 		{
@@ -591,7 +591,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Res
 			{
 			// We're complex with the addition of our prior Relaters.
 			// Create a proxy for the child.
-			ZRef<RA::Expr_Rel> proxy0 =
+			ZP<RA::Expr_Rel> proxy0 =
 				fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, newOp0);
 			this->pSetResult(iExpr->Clone(proxy0));
 			}
@@ -604,10 +604,10 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Restrict(const ZRef<RA::Expr_Rel_Res
 		}
 	}
 
-void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>& iExpr)
+void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZP<RA::Expr_Rel_Union>& iExpr)
 	{
 	// Visit left branch
-	const ZRef<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
+	const ZP<RA::Expr_Rel> newOp0 = this->Do(iExpr->GetOp0());
 
 	// Remember which PRelaters it touches.
 	set<PRelater*> leftPRelaters;
@@ -618,7 +618,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 	leftRelHead.swap(fResultRelHead);
 
 	// Visit right branch
-	const ZRef<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
+	const ZP<RA::Expr_Rel> newOp1 = this->Do(iExpr->GetOp1());
 
 	// Remember its PRelaters.
 	set<PRelater*> rightPRelaters;
@@ -660,13 +660,13 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 			{
 			// This is the interesting scenario. With the addition of our right branch
 			// we *now* reference multiple Relaters. We register a proxy for the left branch.
-			ZRef<RA::Expr_Rel> proxy0 =
+			ZP<RA::Expr_Rel> proxy0 =
 				fRelater_Union->pGetProxy(fPQuery, leftPRelaters, leftRelHead, newOp0);
 
 			if (rightPRelaters.size() <= 1)
 				{
 				// Right branch is simple, and thus won't have registered a proxy yet.
-				ZRef<RA::Expr_Rel> proxy1 =
+				ZP<RA::Expr_Rel> proxy1 =
 					fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 				this->pSetResult(iExpr->Clone(proxy0, proxy1));
 				}
@@ -682,7 +682,7 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 		if (rightPRelaters.size() <= 1)
 			{
 			// Right branch is simple, and thus won't have registered a proxy yet.
-			ZRef<RA::Expr_Rel> proxy1 =
+			ZP<RA::Expr_Rel> proxy1 =
 				fRelater_Union->pGetProxy(fPQuery, rightPRelaters, rightRelHead, newOp1);
 			this->pSetResult(iExpr->Clone(newOp0, proxy1));
 			}
@@ -693,9 +693,9 @@ void Relater_Union::Analyze::Visit_Expr_Rel_Union(const ZRef<RA::Expr_Rel_Union>
 		}
 	}
 
-ZRef<RA::Expr_Rel> Relater_Union::Analyze::TopLevelDo(ZRef<RA::Expr_Rel> iRel)
+ZP<RA::Expr_Rel> Relater_Union::Analyze::TopLevelDo(ZP<RA::Expr_Rel> iRel)
 	{
-	ZRef<RA::Expr_Rel> result = this->Do(iRel);
+	ZP<RA::Expr_Rel> result = this->Do(iRel);
 	if (fPRelaters.size() <= 1)
 		return fRelater_Union->pGetProxy(fPQuery, fPRelaters, fResultRelHead, result);
 	return result;
@@ -717,12 +717,12 @@ class Relater_Union::PRelater
 ,	public DLink_PRelater_CollectFrom
 	{
 public:
-	PRelater(ZRef<Relater> iRelater, const string8& iPrefix);
+	PRelater(ZP<Relater> iRelater, const string8& iPrefix);
 
 	bool Intersects(const RelHead& iRelHead);
-	ZRef<RA::Expr_Rel> UsableRel(ZRef<RA::Expr_Rel> iRel);
+	ZP<RA::Expr_Rel> UsableRel(ZP<RA::Expr_Rel> iRel);
 
-	ZRef<Relater> fRelater;
+	ZP<Relater> fRelater;
 	int64 fNextRefcon;
 
 	Map_Refcon_PIP fMap_Refcon_PIP;
@@ -732,7 +732,7 @@ private:
 	const string8 fPrefix;
 	};
 
-Relater_Union::PRelater::PRelater(ZRef<Relater> iRelater, const string8& iPrefix)
+Relater_Union::PRelater::PRelater(ZP<Relater> iRelater, const string8& iPrefix)
 :	fRelater(iRelater)
 ,	fNextRefcon(1)
 ,	fPrefix(iPrefix)
@@ -748,7 +748,7 @@ bool Relater_Union::PRelater::Intersects(const RelHead& iRelHead)
 	return false;
 	}
 
-ZRef<RA::Expr_Rel> Relater_Union::PRelater::UsableRel(ZRef<RA::Expr_Rel> iRel)
+ZP<RA::Expr_Rel> Relater_Union::PRelater::UsableRel(ZP<RA::Expr_Rel> iRel)
 	{
 	if (fPrefix.empty())
 		return iRel;
@@ -837,7 +837,7 @@ void Relater_Union::ModifyRegistrations(
 	// Add any Queries
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
+		ZP<RA::Expr_Rel> theRel = iAdded->GetRel();
 
 		pair<Map_Rel_PQuery::iterator,bool> inPQuery =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -890,7 +890,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 				{
 				if (sGetSet(thePIP->fNeedsAdd, false))
 					{
-					if (ZRef<Expr_Rel> theUsableRel = thePRelater->UsableRel(thePIP->fProxy->fRel))
+					if (ZP<Expr_Rel> theUsableRel = thePRelater->UsableRel(thePIP->fProxy->fRel))
 						{
 						theAddedQueries.push_back(AddedQuery(thePIP->fRefcon, theUsableRel));
 						thePIP->fWasAdded = true;
@@ -902,7 +902,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 				theRemoves.push_back(thePIP->fRefcon);
 				}
 			}
-		ZRef<Relater> theRelater = thePRelater->fRelater;
+		ZP<Relater> theRelater = thePRelater->fRelater;
 		ZRelMtx rel(fMtx);
 
 		theRelater->ModifyRegistrations(
@@ -915,7 +915,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 	while (sNotEmpty(fPRelater_CollectFrom))
 		{
 		PRelater* thePRelater = sGetEraseFront<PRelater>(fPRelater_CollectFrom);
-		ZRef<Relater> theRelater = thePRelater->fRelater;
+		ZP<Relater> theRelater = thePRelater->fRelater;
 		vector<QueryResult> theQueryResults;
 		{
 		ZRelMtx rel(fMtx);
@@ -945,10 +945,10 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 			{
 			PQuery* thePQuery = eraserPQuery.Current();
 			bool allOK = true;
-			for (set<ZRef<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
+			for (set<ZP<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
 				allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
 				{
-				ZRef<Proxy> theProxy = *iterProxy;
+				ZP<Proxy> theProxy = *iterProxy;
 				for (DListIterator<PIP, DLink_PIP_InProxy> iterPIP = theProxy->fPIP_InProxy;
 					allOK && iterPIP; iterPIP.Advance())
 					{
@@ -964,7 +964,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 				fReadCount = 0;
 				fStepCount = 0;
 
-				ZRef<QueryEngine::Walker> theWalker =
+				ZP<QueryEngine::Walker> theWalker =
 					Relater_Union::Visitor_DoMakeWalker(this).Do(thePQuery->fRel_Analyzed);
 
 				thePQuery->fResult = QueryEngine::sResultFromWalker(theWalker);
@@ -986,7 +986,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 		}
 	}
 
-void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix)
+void Relater_Union::InsertRelater(ZP<Relater> iRelater, const string8& iPrefix)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -998,7 +998,7 @@ void Relater_Union::InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix
 	iRelater->SetCallable_RelaterResultsAvailable(fCallable_RelaterResultsAvailable);
 	}
 
-void Relater_Union::EraseRelater(ZRef<Relater> iRelater)
+void Relater_Union::EraseRelater(ZP<Relater> iRelater)
 	{
 	ZAcqMtx acq(fMtx);
 	Map_Relater_PRelater::iterator iterRelater = fMap_Relater_PRelater.find(iRelater);
@@ -1036,13 +1036,13 @@ set<Relater_Union::PRelater*> Relater_Union::pIdentifyPRelaters(const RelHead& i
 	return result;
 	}
 
-ZRef<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
-	const set<PRelater*>& iPRelaters, const RelHead& iRelHead, ZRef<RA::Expr_Rel> iRel)
+ZP<RA::Expr_Rel> Relater_Union::pGetProxy(PQuery* iPQuery,
+	const set<PRelater*>& iPRelaters, const RelHead& iRelHead, ZP<RA::Expr_Rel> iRel)
 	{
 	if (iPRelaters.empty())
 		return iRel;
 
-	ZRef<Proxy> theProxyRef;
+	ZP<Proxy> theProxyRef;
 	if (ZQ<Proxy*> theQ = sQGet(fMap_Rel_ProxyX, iRel))
 		{
 		theProxyRef = *theQ;
@@ -1092,19 +1092,19 @@ void Relater_Union::pFinalizeProxy(Proxy* iProxy)
 	delete iProxy;
 	}
 
-ZRef<Relater_Union::Walker_Proxy> Relater_Union::pMakeWalker(ZRef<Proxy> iProxy)
+ZP<Relater_Union::Walker_Proxy> Relater_Union::pMakeWalker(ZP<Proxy> iProxy)
 	{
 	++fWalkerCount;
 	return new Walker_Proxy(this, iProxy);
 	}
 
-void Relater_Union::pRewind(ZRef<Walker_Proxy> iWalker)
+void Relater_Union::pRewind(ZP<Walker_Proxy> iWalker)
 	{
 	iWalker->fIter_PIP = iWalker->fProxy->fPIP_InProxy;
 	iWalker->fCurrentResult.Clear();
 	}
 
-void Relater_Union::pPrime(ZRef<Walker_Proxy> iWalker,
+void Relater_Union::pPrime(ZP<Walker_Proxy> iWalker,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -1114,7 +1114,7 @@ void Relater_Union::pPrime(ZRef<Walker_Proxy> iWalker,
 		oOffsets[entry] = ioBaseOffset++;
 	}
 
-bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
+bool Relater_Union::pReadInc(ZP<Walker_Proxy> iWalker, Val_Any* ioResults)
 	{
 	++fReadCount;
 	for (;;)
@@ -1157,7 +1157,7 @@ bool Relater_Union::pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults)
 		}
 	}
 
-void Relater_Union::pResultsAvailable(ZRef<Relater> iRelater)
+void Relater_Union::pResultsAvailable(ZP<Relater> iRelater)
 	{
 	{
 	ZAcqMtx acq(fMtx);

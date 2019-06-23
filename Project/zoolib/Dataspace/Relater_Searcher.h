@@ -39,7 +39,7 @@ class Relater_Searcher
 public:
 	enum { kDebug = 1 };
 
-	Relater_Searcher(ZRef<Searcher> iSearcher);
+	Relater_Searcher(ZP<Searcher> iSearcher);
 	virtual ~Relater_Searcher();
 
 // From ZCounted via Relater
@@ -59,12 +59,12 @@ public:
 
 protected:
 	bool pCollectResultsFromSearcher();
-	void pSearcherResultsAvailable(ZRef<Searcher>);
+	void pSearcherResultsAvailable(ZP<Searcher>);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	ZRef<Searcher> fSearcher;
+	ZP<Searcher> fSearcher;
 
 	int64 fChangeCount;
 
@@ -77,21 +77,21 @@ protected:
 
 	void pFinalize(Walker_Bingo* iWalker_Bingo);
 
-	void pRewind(ZRef<Walker_Bingo> iWalker_Bingo);
+	void pRewind(ZP<Walker_Bingo> iWalker_Bingo);
 
-	ZRef<QueryEngine::Walker> pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
+	ZP<QueryEngine::Walker> pPrime(ZP<Walker_Bingo> iWalker_Bingo,
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pQReadInc(ZRef<Walker_Bingo> iWalker, Val_Any* ioResults);
+	bool pQReadInc(ZP<Walker_Bingo> iWalker, Val_Any* ioResults);
 
 	// -----
 
 	class Visitor_DoMakeWalker;
 	friend class Visitor_DoMakeWalker;
 
-	ZRef<QueryEngine::Walker> pMakeWalker(PQuery* iPQuery,
+	ZP<QueryEngine::Walker> pMakeWalker(PQuery* iPQuery,
 		const RelHead& iRelHead_Bound,
 		const SearchSpec& iSearchSpec);
 
@@ -107,9 +107,9 @@ protected:
 
 	class DLink_PQuery_NeedsWork;
 	typedef std::map<
-			ZRef<RelationalAlgebra::Expr_Rel>,
+			ZP<RelationalAlgebra::Expr_Rel>,
 			PQuery,
-			Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
+			Less_Compare_T<ZP<RelationalAlgebra::Expr_Rel> > >
 		Map_Rel_PQuery;
 
 	Map_Rel_PQuery fMap_Rel_PQuery;
@@ -134,7 +134,7 @@ protected:
 // =================================================================================================
 #pragma mark - sTransform_PushDownRestricts_IntoSearch
 
-ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel);
+ZP<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZP<Expr_Rel>& iRel);
 
 } // namespace Dataspace
 } // namespace ZooLib

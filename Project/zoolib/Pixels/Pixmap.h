@@ -38,7 +38,7 @@ class PixmapRep
 :	public ZCounted
 	{
 public:
-	PixmapRep(const ZRef<Raster>& iRaster, const RectPOD& iBounds, const PixelDesc& iPixelDesc);
+	PixmapRep(const ZP<Raster>& iRaster, const RectPOD& iBounds, const PixelDesc& iPixelDesc);
 
 	PointPOD GetSize();
 
@@ -46,17 +46,17 @@ public:
 
 	const PixelDesc& GetPixelDesc();
 
-	const ZRef<Raster>& GetRaster();
+	const ZP<Raster>& GetRaster();
 
-	ZRef<PixmapRep> Touch();
+	ZP<PixmapRep> Touch();
 
 protected:
-	ZRef<Raster> fRaster;
+	ZP<Raster> fRaster;
 	RectPOD fBounds;
 	PixelDesc fPixelDesc;
 	};
 
-ZRef<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
+ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
 	const PointPOD& iSize,
 	const PixelDesc& iPixelDesc);
 
@@ -71,8 +71,8 @@ public:
 	~Pixmap();
 	Pixmap& operator=(const Pixmap& iOther);
 
-	Pixmap(const ZRef<PixmapRep>& iRep);
-	Pixmap& operator=(const ZRef<PixmapRep>& iOther);
+	Pixmap(const ZP<PixmapRep>& iRep);
+	Pixmap& operator=(const ZP<PixmapRep>& iOther);
 
 	Pixmap(const null_t&);
 	Pixmap& operator=(const null_t&);
@@ -86,9 +86,9 @@ public:
 
 	void Touch();
 
-	const ZRef<PixmapRep>& GetRep() const;
+	const ZP<PixmapRep>& GetRep() const;
 
-	const ZRef<Raster>& GetRaster() const;
+	const ZP<Raster>& GetRaster() const;
 	const RasterDesc& GetRasterDesc() const;
 	const void* GetBaseAddress() const;
 	void* GetBaseAddress();
@@ -96,7 +96,7 @@ public:
 	const PixelDesc& GetPixelDesc() const;
 
 protected:
-	ZRef<PixmapRep> fRep;
+	ZP<PixmapRep> fRep;
 	};
 
 Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& iPixelDesc);

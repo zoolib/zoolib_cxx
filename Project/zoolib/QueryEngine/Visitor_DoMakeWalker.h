@@ -45,7 +45,7 @@ namespace QueryEngine {
 #pragma mark - Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
-:	public virtual Visitor_Do_T<ZRef<Walker> >
+:	public virtual Visitor_Do_T<ZP<Walker> >
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Comment
@@ -60,20 +60,20 @@ class Visitor_DoMakeWalker
 	{
 public:
 // From Visitor
-	virtual void Visit(const ZRef<Visitee>& iRep);
+	virtual void Visit(const ZP<Visitee>& iRep);
 
 // From Visitor_Expr_Rel_XXX
-	virtual void Visit_Expr_Rel_Calc(const ZRef<RelationalAlgebra::Expr_Rel_Calc>& iExpr);
-	virtual void Visit_Expr_Rel_Comment(const ZRef<RelationalAlgebra::Expr_Rel_Comment>& iExpr);
-	virtual void Visit_Expr_Rel_Const(const ZRef<RelationalAlgebra::Expr_Rel_Const>& iExpr);
-	virtual void Visit_Expr_Rel_Dee(const ZRef<RelationalAlgebra::Expr_Rel_Dee>& iExpr);
-	virtual void Visit_Expr_Rel_Dum(const ZRef<RelationalAlgebra::Expr_Rel_Dum>& iExpr);
-	virtual void Visit_Expr_Rel_Embed(const ZRef<RelationalAlgebra::Expr_Rel_Embed>& iExpr);
-	virtual void Visit_Expr_Rel_Product(const ZRef<RelationalAlgebra::Expr_Rel_Product>& iExpr);
-	virtual void Visit_Expr_Rel_Project(const ZRef<RelationalAlgebra::Expr_Rel_Project>& iExpr);
-	virtual void Visit_Expr_Rel_Rename(const ZRef<RelationalAlgebra::Expr_Rel_Rename>& iExpr);
-	virtual void Visit_Expr_Rel_Restrict(const ZRef<RelationalAlgebra::Expr_Rel_Restrict>& iExpr);
-	virtual void Visit_Expr_Rel_Union(const ZRef<RelationalAlgebra::Expr_Rel_Union>& iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZP<RelationalAlgebra::Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Comment(const ZP<RelationalAlgebra::Expr_Rel_Comment>& iExpr);
+	virtual void Visit_Expr_Rel_Const(const ZP<RelationalAlgebra::Expr_Rel_Const>& iExpr);
+	virtual void Visit_Expr_Rel_Dee(const ZP<RelationalAlgebra::Expr_Rel_Dee>& iExpr);
+	virtual void Visit_Expr_Rel_Dum(const ZP<RelationalAlgebra::Expr_Rel_Dum>& iExpr);
+	virtual void Visit_Expr_Rel_Embed(const ZP<RelationalAlgebra::Expr_Rel_Embed>& iExpr);
+	virtual void Visit_Expr_Rel_Product(const ZP<RelationalAlgebra::Expr_Rel_Product>& iExpr);
+	virtual void Visit_Expr_Rel_Project(const ZP<RelationalAlgebra::Expr_Rel_Project>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<RelationalAlgebra::Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Restrict(const ZP<RelationalAlgebra::Expr_Rel_Restrict>& iExpr);
+	virtual void Visit_Expr_Rel_Union(const ZP<RelationalAlgebra::Expr_Rel_Union>& iExpr);
 	};
 
 } // namespace QueryEngine

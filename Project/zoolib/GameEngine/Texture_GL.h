@@ -53,7 +53,7 @@ private:
 	static int64 spTextureEpoch;
 	};
 
-ZRef<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL();
+ZP<Callable_TextureFromPixmap> sCallable_TextureFromPixmap_GL();
 
 } // namespace GameEngine
 } // namespace ZooLib

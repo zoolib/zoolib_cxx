@@ -38,14 +38,14 @@ public:
 	typedef RelationalAlgebra::Expr_Rel_Calc::Callable_t Callable_t;
 	typedef RelationalAlgebra::Expr_Rel_Calc::PseudoMap PseudoMap;
 
-	Walker_Calc(const ZRef<Walker>& iWalker,
+	Walker_Calc(const ZP<Walker>& iWalker,
 		const string8& iColName,
-		const ZRef<Callable_t>& iCallable);
+		const ZP<Callable_t>& iCallable);
 
 	virtual ~Walker_Calc();
 
 // From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -54,7 +54,7 @@ public:
 
 private:
 	const string8 fColName;
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	size_t fOutputOffset;
 	std::map<string8,size_t> fBindings;
 	};

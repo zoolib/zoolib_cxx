@@ -42,9 +42,9 @@ class RelsWatcher_Relater::Registration
 	{
 public:
 	Registration(
-		const ZRef<RelsWatcher_Relater>& iRWR,
-		const ZRef<RelsWatcher::Callable_Changed>& iCallable,
-		const ZRef<Expr_Rel>& iRel)
+		const ZP<RelsWatcher_Relater>& iRWR,
+		const ZP<RelsWatcher::Callable_Changed>& iCallable,
+		const ZP<Expr_Rel>& iRel)
 	:	fRefcon(0)
 	,	fWeakRef_RWR(iRWR)
 	,	fCallable(iCallable)
@@ -56,7 +56,7 @@ public:
 
 	void Finalize()
 		{
-		if (ZRef<RelsWatcher_Relater> theRWR = fWeakRef_RWR)
+		if (ZP<RelsWatcher_Relater> theRWR = fWeakRef_RWR)
 			theRWR->pFinalize(this);
 		else
 			ZCounted::Finalize();
@@ -65,18 +65,18 @@ public:
 	int64 fRefcon;
 
 	const WP<RelsWatcher_Relater> fWeakRef_RWR;
-	const ZRef<RelsWatcher::Callable_Changed> fCallable;
-	const ZRef<Expr_Rel> fRel;
+	const ZP<RelsWatcher::Callable_Changed> fCallable;
+	const ZP<Expr_Rel> fRel;
 
-	ZRef<Dataspace::ResultDeltas> fResultDeltas;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<Dataspace::ResultDeltas> fResultDeltas;
+	ZP<QueryEngine::Result> fResult;
 	};
 
 // =================================================================================================
 #pragma mark - RelsWatcher_Relater
 
-RelsWatcher_Relater::RelsWatcher_Relater(const ZRef<Relater>& iRelater,
-	const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
+RelsWatcher_Relater::RelsWatcher_Relater(const ZP<Relater>& iRelater,
+	const ZP<Callable_NeedsUpdate>& iCallable_NeedsUpdate)
 :	fRelater(iRelater)
 ,	fCallable_NeedsUpdate(iCallable_NeedsUpdate)
 ,	fNextRefcon(1000)
@@ -99,11 +99,11 @@ void RelsWatcher_Relater::Finalize()
 	inherited::Finalize();
 	}
 
-ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
-	const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
-	const ZRef<Expr_Rel>& iRel)
+ZQ<ZP<ZCounted> > RelsWatcher_Relater::QCall(
+	const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
+	const ZP<Expr_Rel>& iRel)
 	{
-	ZRef<Registration> theR = new Registration(this, iCallable_Changed, iRel);
+	ZP<Registration> theR = new Registration(this, iCallable_Changed, iRel);
 
 	ZAcqMtx acq(fMtx);
 
@@ -115,7 +115,7 @@ ZQ<ZRef<ZCounted> > RelsWatcher_Relater::QCall(
 		sCall(fCallable_NeedsUpdate);
 		}
 
-	return ZRef<ZCounted>(theR);
+	return ZP<ZCounted>(theR);
 	}
 
 void RelsWatcher_Relater::Update()
@@ -155,7 +155,7 @@ void RelsWatcher_Relater::Update()
 		{
 		// This vector must be outside the mutex acq, so any reg that goes out of scope
 		// does not finalize and attempt to double-acquire the mutex. 
-		vector<ZRef<Registration> > changes;
+		vector<ZP<Registration> > changes;
 		ZAcqMtx acq(fMtx);
 		foreacha (entry, theQueryResults)
 			{
@@ -165,7 +165,7 @@ void RelsWatcher_Relater::Update()
 			if (fMap_RefconToRegistrationX.end() == iterRegistration)
 				continue;
 
-			ZRef<Registration> theRegistration = iterRegistration->second;
+			ZP<Registration> theRegistration = iterRegistration->second;
 			theRegistration->fResultDeltas = entry.GetResultDeltas();
 			theRegistration->fResult = entry.GetResult();
 			changes.push_back(theRegistration);
@@ -177,7 +177,7 @@ void RelsWatcher_Relater::Update()
 		}
 	}
 
-void RelsWatcher_Relater::pCallback_Relater(ZRef<Relater> iRelater)
+void RelsWatcher_Relater::pCallback_Relater(ZP<Relater> iRelater)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not fCalled_NeedsUpdate())

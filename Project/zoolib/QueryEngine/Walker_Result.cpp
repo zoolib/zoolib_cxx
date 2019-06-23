@@ -31,7 +31,7 @@ using std::set;
 // =================================================================================================
 #pragma mark - Walker_Result
 
-Walker_Result::Walker_Result(ZRef<Result> iResult)
+Walker_Result::Walker_Result(ZP<Result> iResult)
 :	fResult(iResult)
 ,	fIndex(0)
 	{}
@@ -45,7 +45,7 @@ void Walker_Result::Rewind()
 	fIndex = 0;
 	}
 
-ZRef<Walker> Walker_Result::Prime(
+ZP<Walker> Walker_Result::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

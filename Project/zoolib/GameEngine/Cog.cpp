@@ -21,7 +21,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark - InChannel
 
-InChannel::InChannel(GPoint iGameSize, const std::vector<int>* iKeyDowns, const ZRef<NookScope>& iNookScope)
+InChannel::InChannel(GPoint iGameSize, const std::vector<int>* iKeyDowns, const ZP<NookScope>& iNookScope)
 :	fPrior(nullptr)
 ,	fGameSize(iGameSize)
 ,	fKeyDowns(iKeyDowns)
@@ -29,7 +29,7 @@ InChannel::InChannel(GPoint iGameSize, const std::vector<int>* iKeyDowns, const 
 ,	fMat(1)
 	{}
 
-InChannel::InChannel(const InChannel& iParent, const ZRef<NookScope>& iNookScope)
+InChannel::InChannel(const InChannel& iParent, const ZP<NookScope>& iNookScope)
 :	fPrior(&iParent)
 ,	fGameSize(iParent.fGameSize)
 ,	fKeyDowns(iParent.fKeyDowns)
@@ -53,7 +53,7 @@ GPoint InChannel::GetGameSize() const
 const std::vector<int>* InChannel::GetKeyDowns() const
 	{ return fKeyDowns; }
 
-const ZRef<NookScope>& InChannel::GetActiveNookScope() const
+const ZP<NookScope>& InChannel::GetActiveNookScope() const
 	{
 	if (fNookScope)
 		return fNookScope;
@@ -63,7 +63,7 @@ const ZRef<NookScope>& InChannel::GetActiveNookScope() const
 		return sDefault();
 	}
 
-const ZRef<NookScope>& InChannel::GetOwnNookScope() const
+const ZP<NookScope>& InChannel::GetOwnNookScope() const
 	{ return fNookScope; }
 
 const Mat& InChannel::GetMat() const
@@ -74,9 +74,9 @@ const Mat& InChannel::GetMat() const
 
 OutChannel::OutChannel(
 	const Map& iRootMap,
-	const ZRef<AssetCatalog>& iAssetCatalog,
-	const ZRef<FontCatalog>& iFontCatalog,
-	const ZRef<SoundMeister>& iSoundMeister)
+	const ZP<AssetCatalog>& iAssetCatalog,
+	const ZP<FontCatalog>& iFontCatalog,
+	const ZP<SoundMeister>& iSoundMeister)
 :	fRootMap(iRootMap)
 ,	fAssetCatalog(iAssetCatalog)
 ,	fFontCatalog(iFontCatalog)
@@ -87,13 +87,13 @@ OutChannel::OutChannel(
 OutChannel::~OutChannel()
 	{}
 
-vector<ZRef<TouchListener> >& OutChannel::GetTLs() const
+vector<ZP<TouchListener> >& OutChannel::GetTLs() const
 	{ return fTLs; }
 
-ZRef<Rendered_Group>& OutChannel::GetGroup() const
+ZP<Rendered_Group>& OutChannel::GetGroup() const
 	{ return fGroup; }
 
-void OutChannel::RegisterTouchListener(ZRef<TouchListener> iListener) const
+void OutChannel::RegisterTouchListener(ZP<TouchListener> iListener) const
 	{
 	ZAssert(iListener);
 	ZAssert(not Util_STL::sContains(fTLs, iListener));
@@ -106,27 +106,27 @@ void OutChannel::RegisterTouchListener(ZRef<TouchListener> iListener) const
 // =================================================================================================
 #pragma mark -
 
-ZRef<Nook> sGetOneNook(const Param& iParam, const Name& iName)
+ZP<Nook> sGetOneNook(const Param& iParam, const Name& iName)
 	{
 	for (const InChannel* cur = &iParam.fInChannel; cur; cur = cur->GetPrior())
 		{
-		if (const ZRef<NookScope>& theNS = cur->GetOwnNookScope())
+		if (const ZP<NookScope>& theNS = cur->GetOwnNookScope())
 			{
-			if (ZRef<Nook> theNook = theNS->GetOne(iName))
+			if (ZP<Nook> theNook = theNS->GetOne(iName))
 				return theNook;
 			}
 		}
 	return null;
 	}
 
-std::vector<ZRef<Nook> > sGetAllNooks(const Param& iParam, const Name& iName)
+std::vector<ZP<Nook> > sGetAllNooks(const Param& iParam, const Name& iName)
 	{
-	std::vector<ZRef<Nook> > result;
+	std::vector<ZP<Nook> > result;
 	for (const InChannel* cur = &iParam.fInChannel; cur; cur = cur->GetPrior())
 		{
-		if (const ZRef<NookScope>& theNS = cur->GetOwnNookScope())
+		if (const ZP<NookScope>& theNS = cur->GetOwnNookScope())
 			{
-			std::vector<ZRef<Nook> > temp = theNS->GetAll(iName);
+			std::vector<ZP<Nook> > temp = theNS->GetAll(iName);
 			if (sNotEmpty(temp))
 				result.insert(result.end(), temp.begin(), temp.end());
 			}
@@ -351,7 +351,7 @@ Cog sCog_NewEpoch(const Cog& iChild)
 
 static
 Cog spCogFun_UpdateTouchListener(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{
 	iTouchListener->SetInverseMat(iParam.fInChannel.GetMat());
 	
@@ -360,7 +360,7 @@ Cog spCogFun_UpdateTouchListener(const Cog& iSelf, const Param& iParam,
 	return true;
 	}
 
-Cog sCog_UpdateTouchListener(const ZRef<TouchListener>& iTouchListener)
+Cog sCog_UpdateTouchListener(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_UpdateTouchListener);
 	return sBindR(spCallable, iTouchListener);
@@ -368,10 +368,10 @@ Cog sCog_UpdateTouchListener(const ZRef<TouchListener>& iTouchListener)
 
 static
 Cog spCogFun_TouchNothing(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{ return iTouchListener->fDowns.empty(); }
 
-Cog sCog_TouchNothing(const ZRef<TouchListener>& iTouchListener)
+Cog sCog_TouchNothing(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_TouchNothing);
 	return sBindR(spCallable, iTouchListener);
@@ -379,10 +379,10 @@ Cog sCog_TouchNothing(const ZRef<TouchListener>& iTouchListener)
 
 static
 Cog spCogFun_TouchDown(const Cog& iSelf, const Param& iParam,
-	const ZRef<TouchListener>& iTouchListener)
+	const ZP<TouchListener>& iTouchListener)
 	{ return not iTouchListener->fDowns.empty(); }
 
-Cog sCog_TouchDown(const ZRef<TouchListener>& iTouchListener)
+Cog sCog_TouchDown(const ZP<TouchListener>& iTouchListener)
 	{
 	GEMACRO_Callable(spCallable, spCogFun_TouchDown);
 	return sBindR(spCallable, iTouchListener);
@@ -392,7 +392,7 @@ static
 Cog spCogFun_DisableTouches(const Cog& iSelf, const Param& iParam,
 	const Cog& iChild)
 	{
-	SaveSetRestore<vector<ZRef<TouchListener>>> sR(iParam.fOutChannel.GetTLs(), sDefault());
+	SaveSetRestore<vector<ZP<TouchListener>>> sR(iParam.fOutChannel.GetTLs(), sDefault());
 
 	Cog newChild = iChild;
 	const bool unchanged = sCallUpdate_Cog_Unchanged(newChild, iParam);

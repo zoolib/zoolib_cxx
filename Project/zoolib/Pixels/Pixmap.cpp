@@ -29,11 +29,11 @@ namespace Pixels {
 // =================================================================================================
 #pragma mark -
 
-static void spBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
-	const ZRef<PixmapRep>& ioDest, PointPOD iDestLoc)
+static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceBounds,
+	const ZP<PixmapRep>& ioDest, PointPOD iDestLoc)
 	{
-	ZRef<Raster> sourceRaster = iSource->GetRaster();
-	ZRef<Raster> destRaster = ioDest->GetRaster();
+	ZP<Raster> sourceRaster = iSource->GetRaster();
+	ZP<Raster> destRaster = ioDest->GetRaster();
 	ZAssert(destRaster->GetMutable());
 
 	const RectPOD theDestBounds = iSourceBounds - LT(iSourceBounds) + iDestLoc;
@@ -50,7 +50,7 @@ static void spBlit(const ZRef<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 #pragma mark - PixmapRep
 
 PixmapRep::PixmapRep(
-	const ZRef<Raster>& iRaster,const RectPOD& iBounds, const PixelDesc& iPixelDesc)
+	const ZP<Raster>& iRaster,const RectPOD& iBounds, const PixelDesc& iPixelDesc)
 :	fRaster(iRaster)
 ,	fBounds(iBounds)
 ,	fPixelDesc(iPixelDesc)
@@ -65,10 +65,10 @@ const RectPOD& PixmapRep::GetBounds()
 const PixelDesc& PixmapRep::GetPixelDesc()
 	{ return fPixelDesc; }
 
-const ZRef<Raster>& PixmapRep::GetRaster()
+const ZP<Raster>& PixmapRep::GetRaster()
 	{ return fRaster; }
 
-ZRef<PixmapRep> PixmapRep::Touch()
+ZP<PixmapRep> PixmapRep::Touch()
 	{
 	if (this->IsShared() || fRaster->IsShared() || not fRaster->GetMutable())
 		{
@@ -76,7 +76,7 @@ ZRef<PixmapRep> PixmapRep::Touch()
 		newRasterDesc.fRowBytes = sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
 		newRasterDesc.fRowCount = H(fBounds);
 
-		ZRef<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
+		ZP<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
 
 		spBlit(this, fBounds, newRep, sPointPOD(0,0));
 
@@ -85,11 +85,11 @@ ZRef<PixmapRep> PixmapRep::Touch()
 	return this;
 	}
 
-ZRef<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
+ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
 	const PointPOD& iSize,
 	const PixelDesc& iPixelDesc)
 	{
-	ZRef<Raster> theRaster = new Raster_Simple(iRasterDesc);
+	ZP<Raster> theRaster = new Raster_Simple(iRasterDesc);
 	return new PixmapRep(theRaster, sRect<RectPOD>(iSize), iPixelDesc);
 	}
 
@@ -112,11 +112,11 @@ Pixmap& Pixmap::operator=(const Pixmap& iOther)
 	return *this;
 	}
 
-Pixmap::Pixmap(const ZRef<PixmapRep>& iRep)
+Pixmap::Pixmap(const ZP<PixmapRep>& iRep)
 :	fRep(iRep)
 	{}
 
-Pixmap& Pixmap::operator=(const ZRef<PixmapRep>& iOther)
+Pixmap& Pixmap::operator=(const ZP<PixmapRep>& iOther)
 	{
 	fRep = iOther;
 	return *this;
@@ -146,10 +146,10 @@ void Pixmap::Touch()
 		fRep = fRep->Touch();
 	}
 
-const ZRef<PixmapRep>& Pixmap::GetRep() const
+const ZP<PixmapRep>& Pixmap::GetRep() const
 	{ return fRep; }
 
-const ZRef<Raster>& Pixmap::GetRaster() const
+const ZP<Raster>& Pixmap::GetRaster() const
 	{ return fRep->GetRaster(); }
 
 const RasterDesc& Pixmap::GetRasterDesc() const

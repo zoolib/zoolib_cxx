@@ -33,10 +33,10 @@ Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(const Val_Any& iVal)
 	{}
 
 void Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches::Visit_Expr_Bool_ValPred(
-	const ZRef<Expr_Bool_ValPred>& iExpr)
+	const ZP<Expr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(sMatches(iExpr->GetValPred(), fVal)); }
 
-bool sMatches(const ZRef<Expr_Bool>& iExpr, const Val_Any& iVal)
+bool sMatches(const ZP<Expr_Bool>& iExpr, const Val_Any& iVal)
 	{ return Visitor_Expr_Bool_ValPred_Any_Do_Eval_Matches(iVal).Do(iExpr); }
 
 } // namespace ZooLib

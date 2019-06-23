@@ -44,7 +44,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Difference
 
-Expr_Rel_Difference::Expr_Rel_Difference(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+Expr_Rel_Difference::Expr_Rel_Difference(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -57,10 +57,10 @@ void Expr_Rel_Difference::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor
 		{ inherited::Accept_Expr_Op2(iVisitor); }
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Difference::Self()
+ZP<Expr_Rel> Expr_Rel_Difference::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Difference::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+ZP<Expr_Rel> Expr_Rel_Difference::Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Difference(iOp0, iOp1); }
 
 void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference& iVisitor)
@@ -69,7 +69,7 @@ void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Difference
 
-void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr)
+void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(const ZP<Expr_Rel_Difference>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 } // namespace RelationalAlgebra

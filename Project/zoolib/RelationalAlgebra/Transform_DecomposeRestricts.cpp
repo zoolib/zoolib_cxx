@@ -32,13 +32,13 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Transform_DecomposeRestricts
 
-void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Transform_DecomposeRestricts::Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr)
 	{
-	ZRef<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
+	ZP<Expr_Rel> theRel = this->Do(iExpr->GetOp0());
 
 	foreacha (entry, Util_Expr_Bool::sAsCNF(iExpr->GetExpr_Bool()))
 		{
-		ZRef<Expr_Bool> newBool;
+		ZP<Expr_Bool> newBool;
 		foreacha (entryj, entry)
 			newBool |= entryj.Get();
 		theRel &= newBool;

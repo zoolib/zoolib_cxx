@@ -30,10 +30,10 @@ using std::string;
 
 using namespace Util_STL;
 
-ZRef<ValComparand> sRenamed(const map<string,string>& iRename,
-	const ZRef<ValComparand>& iVal)
+ZP<ValComparand> sRenamed(const map<string,string>& iRename,
+	const ZP<ValComparand>& iVal)
 	{
-	if (ZRef<ValComparand_Name> asName = iVal.DynamicCast<ValComparand_Name>())
+	if (ZP<ValComparand_Name> asName = iVal.DynamicCast<ValComparand_Name>())
 		{
 		if (ZQ<string> theQ = sQGet(iRename, asName->GetName()))
 			return new ValComparand_Name(*theQ);

@@ -38,9 +38,9 @@ namespace Dataspace {
 using RelsWatcher::Callable_Register;
 
 typedef Multi3<
-	ZRef<Callable_Register>,
-	ZRef<Callable_DatonUpdate>,
-	ZRef<Starter>
+	ZP<Callable_Register>,
+	ZP<Callable_DatonUpdate>,
+	ZP<Starter>
 	> Melange_t;
 
 typedef Factory<Melange_t> Factory_Melange;

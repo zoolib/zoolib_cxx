@@ -162,13 +162,13 @@ SoundMeister_CoreAudio::~SoundMeister_CoreAudio()
 		}
 	}
 
-void SoundMeister_CoreAudio::SetSounds(const ZRef<Sound>* iSounds, size_t iCount)
+void SoundMeister_CoreAudio::SetSounds(const ZP<Sound>* iSounds, size_t iCount)
 	{
-	set<ZRef<PSound> > newPSounds;
+	set<ZP<PSound> > newPSounds;
 
 	while (iCount--)
 		{
-		if (ZRef<PSound> thePSound = (*iSounds++).DynamicCast<PSound>())
+		if (ZP<PSound> thePSound = (*iSounds++).DynamicCast<PSound>())
 			newPSounds.insert(thePSound);
 		}
 
@@ -177,13 +177,13 @@ void SoundMeister_CoreAudio::SetSounds(const ZRef<Sound>* iSounds, size_t iCount
 	swap(fPSounds, newPSounds);
 	}
 
-ZRef<Sound> SoundMeister_CoreAudio::MakeSound(const string8& iName)
+ZP<Sound> SoundMeister_CoreAudio::MakeSound(const string8& iName)
 	{
 	const FileSpec theFS = fFS.Child(iName);
 	if (theFS.IsFile())
 		{
 		const string8 asString = theFS.AsString();
-		if (ZRef<CFURLRef> theURL = sAdopt& ::CFURLCreateFromFileSystemRepresentation(0,
+		if (ZP<CFURLRef> theURL = sAdopt& ::CFURLCreateFromFileSystemRepresentation(0,
 			(const UInt8*)(&asString[0]), asString.length(), false))
 			{
 			ExtAudioFileRef theEAFR;
@@ -217,7 +217,7 @@ void SoundMeister_CoreAudio::SetPaused(bool iPaused)
 void SoundMeister_CoreAudio::pCallback(void* ioDest, size_t iCount)
 	{
 	ZAcqMtx acq(fMtx);
-	vector<ZRef<PSound> > vec(fPSounds.begin(), fPSounds.end());
+	vector<ZP<PSound> > vec(fPSounds.begin(), fPSounds.end());
 
 	ZRelMtx rel(fMtx);
 
@@ -231,7 +231,7 @@ void SoundMeister_CoreAudio::pCallback(void* ioDest, size_t iCount)
 
 	void* buf = &fBuffer[0];
 	const size_t frameCount = iCount / 4;
-	foreachv (ZRef<PSound> thePSound, vec)
+	foreachv (ZP<PSound> thePSound, vec)
 		{
 		if (thePSound && thePSound->Callback(buf, iCount))
 			{

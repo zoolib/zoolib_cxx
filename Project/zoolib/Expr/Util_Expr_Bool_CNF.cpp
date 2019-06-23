@@ -100,7 +100,7 @@ public:
 	:	fNegating(false)
 		{}
 
-	virtual void Visit_Expr_Op0(const ZRef<Expr_Op0_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Bool> >& iExpr)
 		{
 		DClause theDClause;
 		if (fNegating)
@@ -113,7 +113,7 @@ public:
 		this->pSetResult(result);
 		}
 
-	virtual void Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
+	virtual void Visit_Expr_Bool_True(const ZP<Expr_Bool_True>& iRep)
 		{
 		if (fNegating)
 			this->pSetResult(spFalse());
@@ -121,7 +121,7 @@ public:
 			this->pSetResult(spTrue());
 		}
 
-	virtual void Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iRep)
+	virtual void Visit_Expr_Bool_False(const ZP<Expr_Bool_False>& iRep)
 		{
 		if (fNegating)
 			this->pSetResult(spTrue());
@@ -129,14 +129,14 @@ public:
 			this->pSetResult(spFalse());
 		}
 
-	virtual void Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iRep)
+	virtual void Visit_Expr_Bool_Not(const ZP<Expr_Bool_Not>& iRep)
 		{
 		fNegating = !fNegating;
 		Visitor_Expr_Bool_Not::Visit_Expr_Bool_Not(iRep);
 		fNegating = !fNegating;
 		}
 
-	virtual void Visit_Expr_Bool_And(const ZRef<Expr_Bool_And>& iRep)
+	virtual void Visit_Expr_Bool_And(const ZP<Expr_Bool_And>& iRep)
 		{
 		const CNF theCNF0 = this->Do(iRep->GetOp0());
 		CNF theCNF1 = this->Do(iRep->GetOp1());
@@ -167,7 +167,7 @@ public:
 			}
 		}
 
-	virtual void Visit_Expr_Bool_Or(const ZRef<Expr_Bool_Or>& iRep)
+	virtual void Visit_Expr_Bool_Or(const ZP<Expr_Bool_Or>& iRep)
 		{
 		const CNF theCNF0 = this->Do(iRep->GetOp0());
 		CNF theCNF1 = this->Do(iRep->GetOp1());
@@ -207,15 +207,15 @@ protected:
 // =================================================================================================
 #pragma mark - Util_Expr_Bool
 
-static ZRef<Expr_Bool> spFromDClause(
+static ZP<Expr_Bool> spFromDClause(
 	const DClause& iDClause,
-	const ZRef<Expr_Bool>& iTrue,
-	const ZRef<Expr_Bool>& iFalse)
+	const ZP<Expr_Bool>& iTrue,
+	const ZP<Expr_Bool>& iFalse)
 	{
-	ZRef<Expr_Bool> result = iFalse;
+	ZP<Expr_Bool> result = iFalse;
 	foreacha (entry, iDClause)
 		{
-		ZRef<Expr_Bool> theExpr = entry.Get();
+		ZP<Expr_Bool> theExpr = entry.Get();
 		if (theExpr == iTrue)
 			{
 			return iTrue;
@@ -231,14 +231,14 @@ static ZRef<Expr_Bool> spFromDClause(
 	return result;
 	}
 
-ZRef<Expr_Bool> sFromCNF(const CNF& iCNF)
+ZP<Expr_Bool> sFromCNF(const CNF& iCNF)
 	{
-	const ZRef<Expr_Bool> theTrue = sTrue();
-	const ZRef<Expr_Bool> theFalse = sFalse();
-	ZRef<Expr_Bool> result = theTrue;
+	const ZP<Expr_Bool> theTrue = sTrue();
+	const ZP<Expr_Bool> theFalse = sFalse();
+	ZP<Expr_Bool> result = theTrue;
 	foreacha (entry, iCNF)
 		{
-		ZRef<Expr_Bool> theExpr = spFromDClause(entry, theTrue, theFalse);
+		ZP<Expr_Bool> theExpr = spFromDClause(entry, theTrue, theFalse);
 		if (not theExpr || theExpr == theFalse)
 			return theFalse;
 		else if (result == theTrue)
@@ -249,7 +249,7 @@ ZRef<Expr_Bool> sFromCNF(const CNF& iCNF)
 	return result;
 	}
 
-CNF sAsCNF(const ZRef<Expr_Bool>& iExpr)
+CNF sAsCNF(const ZP<Expr_Bool>& iExpr)
 	{ return Visitor_AsCNF().Do(iExpr); }
 
 } // namespace Util_Expr_Bool

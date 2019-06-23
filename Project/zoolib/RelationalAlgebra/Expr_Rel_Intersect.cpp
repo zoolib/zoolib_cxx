@@ -44,7 +44,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Intersect
 
-Expr_Rel_Intersect::Expr_Rel_Intersect(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+Expr_Rel_Intersect::Expr_Rel_Intersect(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -56,10 +56,10 @@ void Expr_Rel_Intersect::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Intersect::Self()
+ZP<Expr_Rel> Expr_Rel_Intersect::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Intersect::Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1)
+ZP<Expr_Rel> Expr_Rel_Intersect::Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1)
 	{ return new Expr_Rel_Intersect(iOp0, iOp1); }
 
 void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor)
@@ -68,14 +68,14 @@ void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& i
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Intersect
 
-void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr)
+void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(const ZP<Expr_Rel_Intersect>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Intersect> sIntersect(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel_Intersect> sIntersect(
+	const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{
 	if (iLHS && iRHS)
 		return new Expr_Rel_Intersect(iLHS, iRHS);
@@ -83,8 +83,8 @@ ZRef<Expr_Rel_Intersect> sIntersect(
 	return null;
 	}
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS)
 	{ return sIntersect(iLHS, iRHS); }
 
 } // namespace RelationalAlgebra

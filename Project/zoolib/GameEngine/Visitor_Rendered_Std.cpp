@@ -19,11 +19,11 @@ Visitor_Rendered_AccumulateBlush::Visitor_Rendered_AccumulateBlush()
 	{}
 
 void Visitor_Rendered_AccumulateBlush::Visit_Rendered_Blush(
-	const ZRef<Rendered_Blush>& iRendered_Blush)
+	const ZP<Rendered_Blush>& iRendered_Blush)
 	{
 	SaveSetRestore<Blush> theSSR(fBlush, fBlush * iRendered_Blush->GetBlush());
 
-	if (ZRef<Rendered> theRendered = iRendered_Blush->GetRendered())
+	if (ZP<Rendered> theRendered = iRendered_Blush->GetRendered())
 		theRendered->Accept_Rendered(*this);
 	}
 
@@ -35,11 +35,11 @@ Visitor_Rendered_AccumulateGain::Visitor_Rendered_AccumulateGain()
 	{}
 
 void Visitor_Rendered_AccumulateGain::Visit_Rendered_Gain(
-	const ZRef<Rendered_Gain>& iRendered_Gain)
+	const ZP<Rendered_Gain>& iRendered_Gain)
 	{
 	SaveSetRestore<Gain> theSSR(fGain, fGain * iRendered_Gain->GetGain());
 
-	if (ZRef<Rendered> theRendered = iRendered_Gain->GetRendered())
+	if (ZP<Rendered> theRendered = iRendered_Gain->GetRendered())
 		theRendered->Accept_Rendered(*this);
 	}
 
@@ -54,11 +54,11 @@ Visitor_Rendered_AccumulateMat::Visitor_Rendered_AccumulateMat(const Mat& iMat)
 :	fMat(iMat)
 	{}
 
-void Visitor_Rendered_AccumulateMat::Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat)
+void Visitor_Rendered_AccumulateMat::Visit_Rendered_Mat(const ZP<Rendered_Mat>& iRendered_Mat)
 	{
 	SaveSetRestore<Mat> theSSR(fMat, fMat * iRendered_Mat->GetMat());
 
-	if (ZRef<Rendered> theRendered = iRendered_Mat->GetRendered())
+	if (ZP<Rendered> theRendered = iRendered_Mat->GetRendered())
 		theRendered->Accept_Rendered(*this);
 	}
 
@@ -66,12 +66,12 @@ void Visitor_Rendered_AccumulateMat::Visit_Rendered_Mat(const ZRef<Rendered_Mat>
 #pragma mark - Visitor_Rendered_CelToTextures
 
 Visitor_Rendered_CelToTextures::Visitor_Rendered_CelToTextures(
-	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame)
+	const ZP<AssetCatalog>& iAssetCatalog, bool iShowNameFrame)
 :	fAssetCatalog(iAssetCatalog)
 ,	fShowNameFrame(iShowNameFrame)
 	{}
 
-void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel)
+void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZP<Rendered_Cel>& iRendered_Cel)
 	{
 	const Cel& theCel = iRendered_Cel->GetCel();
 
@@ -79,7 +79,7 @@ void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>
 	
 	fAssetCatalog->Get(theCel.fNameFrame, theTBMs);
 
-	ZRef<Rendered_Group> theGroup = sRendered_Group();
+	ZP<Rendered_Group> theGroup = sRendered_Group();
 	foreachv (const Texture_BoundsQ_Mat& theTBM, theTBMs)
 		{
 		GRect theBounds;
@@ -93,7 +93,7 @@ void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>
 		theGroup->Append(sRendered_Mat(theTBM.fMat, sRendered_Texture(theTBM.fTexture, theBounds)));
 		}
 
-	ZRef<Rendered> theRendered =
+	ZP<Rendered> theRendered =
 		sRendered_Blush(theCel.fBlushMat.fBlush,
 			sRendered_Mat(theCel.fBlushMat.fMat, theGroup));
 
@@ -116,7 +116,7 @@ void Visitor_Rendered_CelToTextures::Visit_Rendered_Cel(const ZRef<Rendered_Cel>
 #pragma mark - Visitor_Rendered_DecomposeGroup
 
 void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
-	const ZRef<Rendered_Group>& iRendered_Group)
+	const ZP<Rendered_Group>& iRendered_Group)
 	{
 	foreacha (entry, iRendered_Group->GetChildren())
 		sAccept(entry, *this);
@@ -125,7 +125,7 @@ void Visitor_Rendered_DecomposeGroup::Visit_Rendered_Group(
 // =================================================================================================
 #pragma mark - Visitor_Rendered_LineToRect
 
-void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line)
+void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZP<Rendered_Line>& iRendered_Line)
 	{
 	GPoint theP0, theP1;
 	Rat theWidth;
@@ -166,16 +166,16 @@ void Visitor_Rendered_LineToRect::Visit_Rendered_Line(const ZRef<Rendered_Line>&
 #pragma mark - Visitor_Rendered_StringToTextures
 
 Visitor_Rendered_StringToTextures::Visitor_Rendered_StringToTextures(
-	const ZRef<FontCatalog>& iFontCatalog)
+	const ZP<FontCatalog>& iFontCatalog)
 :	fFontCatalog(iFontCatalog)
 	{}
 
 void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
-	const ZRef<Rendered_String>& iRendered_String)
+	const ZP<Rendered_String>& iRendered_String)
 	{
-	if (ZRef<FontStrike> theStrike = iRendered_String->GetFontStrike())
+	if (ZP<FontStrike> theStrike = iRendered_String->GetFontStrike())
 		{
-		ZRef<Rendered_Group> theGroup = sRendered_Group();
+		ZP<Rendered_Group> theGroup = sRendered_Group();
 
 		const string8& theString = iRendered_String->GetString();
 
@@ -190,7 +190,7 @@ void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 			GRect glyphBounds;
 			GPoint glyphOffset;
 			Rat xAdvance;
-			if (ZRef<Texture> theTexture = theStrike->GetGlyphTexture(theCP,
+			if (ZP<Texture> theTexture = theStrike->GetGlyphTexture(theCP,
 				glyphBounds, glyphOffset, xAdvance))
 				{
 				theGroup->Append(

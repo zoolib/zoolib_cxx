@@ -4,7 +4,7 @@ namespace ZooLib {
 namespace GameEngine {
 
 Cog sCog_Button(
-	const ZRef<TouchListener>& iTouchListener,
+	const ZP<TouchListener>& iTouchListener,
 	const Cog& iCog_UpOut,
 	const Cog& iCog_DownIn,
 	const Cog& iCog_DownOut,

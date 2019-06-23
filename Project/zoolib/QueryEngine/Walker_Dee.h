@@ -39,7 +39,7 @@ public:
 // From QueryEngine::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);

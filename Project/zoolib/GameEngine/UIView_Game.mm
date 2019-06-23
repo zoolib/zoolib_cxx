@@ -38,8 +38,8 @@ using GameEngine::CVec3;
 		if (theUITouch.view != self)
 			continue;
 
-		ZRef<Touch> theTouch;
-		if (ZQ<ZRef<Touch> > theQ = sQGet(ioTouchMap, theUITouch))
+		ZP<Touch> theTouch;
+		if (ZQ<ZP<Touch> > theQ = sQGet(ioTouchMap, theUITouch))
 			{
 			theTouch = *theQ;
 			}

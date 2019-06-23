@@ -39,9 +39,9 @@ class Expr_Rel_Comment
 	{
 	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Comment(const ZRef<Expr_Rel>& iOp0,
+	Expr_Rel_Comment(const ZP<Expr_Rel>& iOp0,
 		const std::string& iComment,
-		const ZRef<Callable_Void>& iCallable);
+		const ZP<Callable_Void>& iCallable);
 
 	virtual ~Expr_Rel_Comment();
 
@@ -51,19 +51,19 @@ public:
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Comment(Visitor_Expr_Rel_Comment& iVisitor);
 
 	const std::string& GetComment() const;
 
-	ZRef<Callable_Void> GetCallable() const;
+	ZP<Callable_Void> GetCallable() const;
 
 private:
 	const std::string fComment;
-	const ZRef<Callable_Void> fCallable;
+	const ZP<Callable_Void> fCallable;
 	};
 
 // =================================================================================================
@@ -73,17 +73,17 @@ class Visitor_Expr_Rel_Comment
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Comment(const ZRef<Expr_Rel_Comment>& iExpr);
+	virtual void Visit_Expr_Rel_Comment(const ZP<Expr_Rel_Comment>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel, const std::string& iComment);
+ZP<Expr_Rel_Comment> sComment(const ZP<Expr_Rel>& iExpr_Rel, const std::string& iComment);
 
-ZRef<Expr_Rel_Comment> sComment(const ZRef<Expr_Rel>& iExpr_Rel,
+ZP<Expr_Rel_Comment> sComment(const ZP<Expr_Rel>& iExpr_Rel,
 	const std::string& iComment,
-	const ZRef<Callable_Void>& iCallable);
+	const ZP<Callable_Void>& iCallable);
 
 } // namespace RelationalAlgebra
 

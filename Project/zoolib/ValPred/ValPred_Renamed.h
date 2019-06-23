@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZRef<ValComparand> sRenamed(const std::map<std::string,std::string>& iRename,
-	const ZRef<ValComparand>& iVal);
+ZP<ValComparand> sRenamed(const std::map<std::string,std::string>& iRename,
+	const ZP<ValComparand>& iVal);
 
 ValPred sRenamed(const std::map<std::string,std::string>& iRename,
 	const ValPred& iValPred);

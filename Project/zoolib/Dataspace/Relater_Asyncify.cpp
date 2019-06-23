@@ -41,7 +41,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Relater_Asyncify
 
-Relater_Asyncify::Relater_Asyncify(ZRef<Relater> iRelater)
+Relater_Asyncify::Relater_Asyncify(ZP<Relater> iRelater)
 :	fRelater(iRelater)
 ,	fTriggered_Update(false)
 ,	fNeeds_RelaterCollectResults(false)
@@ -190,7 +190,7 @@ void Relater_Asyncify::pUpdate()
 	fCnd.Broadcast();
 	}
 
-void Relater_Asyncify::pResultsAvailable(ZRef<Relater> iRelater)
+void Relater_Asyncify::pResultsAvailable(ZP<Relater> iRelater)
 	{
 	ZAcqMtx acq(fMtx);
 	fNeeds_RelaterCollectResults = true;

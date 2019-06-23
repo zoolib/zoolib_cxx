@@ -10,10 +10,10 @@ class Callable_Cog_NookScope
 :	public Cog::Callable
 	{
 public:
-	const ZRef<NookScope> fNookScope;
+	const ZP<NookScope> fNookScope;
 	const Cog fChild;
 
-	Callable_Cog_NookScope(const ZRef<NookScope>& iNookScope, const Cog& iChild)
+	Callable_Cog_NookScope(const ZP<NookScope>& iNookScope, const Cog& iChild)
 	:	fNookScope(iNookScope)
 	,	fChild(iChild)
 		{}
@@ -37,7 +37,7 @@ public:
 		}
 	};
 
-Cog sCog_NookScope(const ZRef<NookScope>& iNookScope, const Cog& iChild)
+Cog sCog_NookScope(const ZP<NookScope>& iNookScope, const Cog& iChild)
 	{
 	if (sIsPending(iChild))
 		return new Callable_Cog_NookScope(iNookScope, iChild);

@@ -39,8 +39,8 @@ using RelationalAlgebra::RelHead;
 // =================================================================================================
 #pragma mark - Walker_Embed
 
-Walker_Embed::Walker_Embed(const ZRef<Walker>& iWalker_Parent, const RelHead& iBoundNames,
-	const string8& iColName, const ZRef<Walker>& iWalker_Embedee)
+Walker_Embed::Walker_Embed(const ZP<Walker>& iWalker_Parent, const RelHead& iBoundNames,
+	const string8& iColName, const ZP<Walker>& iWalker_Embedee)
 :	fWalker_Parent(iWalker_Parent)
 ,	fBoundNames(iBoundNames)
 ,	fColName(iColName)
@@ -56,7 +56,7 @@ void Walker_Embed::Rewind()
 	fWalker_Parent->Rewind();
 	}
 
-ZRef<Walker> Walker_Embed::Prime(
+ZP<Walker> Walker_Embed::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -101,7 +101,7 @@ bool Walker_Embed::QReadInc(Val_Any* ioResults)
 				thePackedRows.push_back(ioResults[entry]);
 			}
 
-		ZRef<Result> theResult = new Result(fEmbedeeRelHead, &thePackedRows);
+		ZP<Result> theResult = new Result(fEmbedeeRelHead, &thePackedRows);
 		ioResults[fOutputOffset] = theResult;
 		}
 

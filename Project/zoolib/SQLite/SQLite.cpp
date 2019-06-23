@@ -61,7 +61,7 @@ sqlite3* DB::GetDB()
 // fPosition == 1 still references the first result, but sqlite3_step
 // has been called, and fHasValue tells us if we've got a value.
 
-Iter::Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition)
+Iter::Iter(ZP<DB> iDB, const string8& iSQL, uint64 iPosition)
 :	fDB(iDB)
 ,	fSQL(iSQL)
 ,	fStmt(nullptr)
@@ -83,7 +83,7 @@ Iter::Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition)
 		}
 	}
 
-Iter::Iter(ZRef<DB> iDB, const string8& iSQL)
+Iter::Iter(ZP<DB> iDB, const string8& iSQL)
 :	fDB(iDB)
 ,	fSQL(iSQL)
 ,	fStmt(nullptr)
@@ -97,7 +97,7 @@ Iter::~Iter()
 		::sqlite3_finalize(fStmt);
 	}
 
-ZRef<Iter> Iter::Clone(bool iRewound)
+ZP<Iter> Iter::Clone(bool iRewound)
 	{
 	if (fStmt)
 		{

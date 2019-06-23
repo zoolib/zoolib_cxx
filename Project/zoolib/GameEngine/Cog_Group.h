@@ -12,11 +12,11 @@ Cog sCog_Group_WithState(const SharedState& iState, const Cog& iChild);
 
 Cog sCog_Group_WithBlushGainMat(const BlushGainMat& iBlushGainMat, const Cog& iChild);
 
-Cog sCog_Group_Loop(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
-Cog sCog_Group_Terminate(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
-Cog sCog_Group_Continue(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild);
+Cog sCog_Group_Loop(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild);
+Cog sCog_Group_Terminate(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild);
+Cog sCog_Group_Continue(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild);
 
-ZRef<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZRef<Rendered> iRendered);
+ZP<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZP<Rendered> iRendered);
 
 } // namespace GameEngine
 } // namespace ZooLib

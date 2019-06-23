@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark - Visitor_Expr_Bool_ValPred_ToStrim
 
 void Visitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
-	const ZRef<Expr_Bool_ValPred>& iRep)
+	const ZP<Expr_Bool_ValPred>& iRep)
 	{ Util_Strim_ValPred_Any::sToStrim(iRep->GetValPred(), pStrimW()); }
 
 } // namespace ZooLib
@@ -45,7 +45,7 @@ void Visitor_Expr_Bool_ValPred_Any_ToStrim::Visit_Expr_Bool_ValPred(
 
 using namespace ZooLib;
 
-ZMACRO_pdesc(const ZRef<Expr_Bool>& iExpr)
+ZMACRO_pdesc(const ZP<Expr_Bool>& iExpr)
 	{
 	Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(sDefault(), StdIO::sChan_UTF_Err, iExpr);
 	}

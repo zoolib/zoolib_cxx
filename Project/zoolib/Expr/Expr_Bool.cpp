@@ -36,12 +36,12 @@ Expr_Bool::Expr_Bool()
 Expr_Bool_True::Expr_Bool_True()
 	{}
 
-ZRef<Expr_Bool> Expr_Bool_True::sTrue()
+ZP<Expr_Bool> Expr_Bool_True::sTrue()
 	{
-	static ZRef<Expr_Bool_True> spTrue = new Expr_Bool_True;
+	static ZP<Expr_Bool_True> spTrue = new Expr_Bool_True;
 	return spTrue;
 	}
-//	{ return sSingleton<ZRef<Expr_Bool_True> >(); } ???
+//	{ return sSingleton<ZP<Expr_Bool_True> >(); } ???
 
 void Expr_Bool_True::Accept(const Visitor& iVisitor)
 	{
@@ -59,10 +59,10 @@ void Expr_Bool_True::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<Expr_Bool> Expr_Bool_True::Self()
+ZP<Expr_Bool> Expr_Bool_True::Self()
 	{ return this; }
 
-ZRef<Expr_Bool> Expr_Bool_True::Clone()
+ZP<Expr_Bool> Expr_Bool_True::Clone()
 	{ return this; }
 
 void Expr_Bool_True::Accept_Expr_Bool_True(Visitor_Expr_Bool_True& iVisitor)
@@ -77,7 +77,7 @@ ZMACRO_CompareRegistration_T(Expr_Bool_True)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_True
 
-void Visitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iExpr)
+void Visitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZP<Expr_Bool_True>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
@@ -86,9 +86,9 @@ void Visitor_Expr_Bool_True::Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iE
 Expr_Bool_False::Expr_Bool_False()
 	{}
 
-ZRef<Expr_Bool> Expr_Bool_False::sFalse()
+ZP<Expr_Bool> Expr_Bool_False::sFalse()
 	{
-	static ZRef<Expr_Bool> spFalse = new Expr_Bool_False;
+	static ZP<Expr_Bool> spFalse = new Expr_Bool_False;
 	return spFalse;
 	}
 
@@ -108,10 +108,10 @@ void Expr_Bool_False::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<Expr_Bool> Expr_Bool_False::Self()
+ZP<Expr_Bool> Expr_Bool_False::Self()
 	{ return this; }
 
-ZRef<Expr_Bool> Expr_Bool_False::Clone()
+ZP<Expr_Bool> Expr_Bool_False::Clone()
 	{ return this; }
 
 void Expr_Bool_False::Accept_Expr_Bool_False(Visitor_Expr_Bool_False& iVisitor)
@@ -126,13 +126,13 @@ ZMACRO_CompareRegistration_T(Expr_Bool_False)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_False
 
-void Visitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iExpr)
+void Visitor_Expr_Bool_False::Visit_Expr_Bool_False(const ZP<Expr_Bool_False>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark - Expr_Bool_Not
 
-Expr_Bool_Not::Expr_Bool_Not(const ZRef<Expr_Bool>& iOp0)
+Expr_Bool_Not::Expr_Bool_Not(const ZP<Expr_Bool>& iOp0)
 :	inherited(iOp0)
 	{}
 
@@ -152,10 +152,10 @@ void Expr_Bool_Not::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
-ZRef<Expr_Bool> Expr_Bool_Not::Self()
+ZP<Expr_Bool> Expr_Bool_Not::Self()
 	{ return this; }
 
-ZRef<Expr_Bool> Expr_Bool_Not::Clone(const ZRef<Expr_Bool>& iOp0)
+ZP<Expr_Bool> Expr_Bool_Not::Clone(const ZP<Expr_Bool>& iOp0)
 	{ return new Expr_Bool_Not(iOp0); }
 
 void Expr_Bool_Not::Accept_Expr_Bool_Not(Visitor_Expr_Bool_Not& iVisitor)
@@ -170,13 +170,13 @@ ZMACRO_CompareRegistration_T(Expr_Bool_Not)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Not
 
-void Visitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iExpr)
+void Visitor_Expr_Bool_Not::Visit_Expr_Bool_Not(const ZP<Expr_Bool_Not>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark - Expr_Bool_And
 
-Expr_Bool_And::Expr_Bool_And(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
+Expr_Bool_And::Expr_Bool_And(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -196,10 +196,10 @@ void Expr_Bool_And::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Bool> Expr_Bool_And::Self()
+ZP<Expr_Bool> Expr_Bool_And::Self()
 	{ return this; }
 
-ZRef<Expr_Bool> Expr_Bool_And::Clone(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
+ZP<Expr_Bool> Expr_Bool_And::Clone(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool>& iOp1)
 	{ return new Expr_Bool_And(iOp0, iOp1); }
 
 void Expr_Bool_And::Accept_Expr_Bool_And(Visitor_Expr_Bool_And& iVisitor)
@@ -218,13 +218,13 @@ ZMACRO_CompareRegistration_T(Expr_Bool_And)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_And
 
-void Visitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZRef<Expr_Bool_And>& iExpr)
+void Visitor_Expr_Bool_And::Visit_Expr_Bool_And(const ZP<Expr_Bool_And>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Expr_Bool_Or
 
-Expr_Bool_Or::Expr_Bool_Or(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
+Expr_Bool_Or::Expr_Bool_Or(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool>& iOp1)
 :	inherited(iOp0, iOp1)
 	{}
 
@@ -244,10 +244,10 @@ void Expr_Bool_Or::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op2(iVisitor);
 	}
 
-ZRef<Expr_Bool> Expr_Bool_Or::Self()
+ZP<Expr_Bool> Expr_Bool_Or::Self()
 	{ return this; }
 
-ZRef<Expr_Bool> Expr_Bool_Or::Clone(const ZRef<Expr_Bool>& iOp0, const ZRef<Expr_Bool>& iOp1)
+ZP<Expr_Bool> Expr_Bool_Or::Clone(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool>& iOp1)
 	{ return new Expr_Bool_Or(iOp0, iOp1); }
 
 void Expr_Bool_Or::Accept_Expr_Bool_Or(Visitor_Expr_Bool_Or& iVisitor)
@@ -266,72 +266,72 @@ ZMACRO_CompareRegistration_T(Expr_Bool_Or)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Or
 
-void Visitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZRef<Expr_Bool_Or>& iExpr)
+void Visitor_Expr_Bool_Or::Visit_Expr_Bool_Or(const ZP<Expr_Bool_Or>& iExpr)
 	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark - Operators
 
-ZRef<Expr_Bool> sTrue()
+ZP<Expr_Bool> sTrue()
 	{ return Expr_Bool_True::sTrue(); }
 
-ZRef<Expr_Bool> sFalse()
+ZP<Expr_Bool> sFalse()
 	{ return Expr_Bool_False::sFalse(); }
 
-ZRef<Expr_Bool> operator~(const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Bool> operator~(const ZP<Expr_Bool>& iExpr_Bool)
 	{ return new Expr_Bool_Not(iExpr_Bool); }
 
-ZRef<Expr_Bool> sNot(const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Bool> sNot(const ZP<Expr_Bool>& iExpr_Bool)
 	{ return new Expr_Bool_Not(iExpr_Bool); }
 
-ZRef<Expr_Bool> sAnd(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool> sAnd(const ZP<Expr_Bool>& iLHS, const ZP<Expr_Bool>& iRHS)
 	{ return iLHS & iRHS; }
 
-ZRef<Expr_Bool> sOr(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool> sOr(const ZP<Expr_Bool>& iLHS, const ZP<Expr_Bool>& iRHS)
 	{ return iLHS | iRHS; }
 
 // =================================================================================================
 #pragma mark - Operators
 
-ZRef<Expr_Bool> operator&(bool iBool, const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Bool> operator&(bool iBool, const ZP<Expr_Bool>& iExpr_Bool)
 	{
 	if (iBool)
 		return iExpr_Bool;
 	return sFalse();
 	}
 
-ZRef<Expr_Bool> operator&(const ZRef<Expr_Bool>& iExpr_Bool, bool iBool)
+ZP<Expr_Bool> operator&(const ZP<Expr_Bool>& iExpr_Bool, bool iBool)
 	{
 	if (iBool)
 		return iExpr_Bool;
 	return sFalse();
 	}
 
-ZRef<Expr_Bool> operator|(bool iBool, const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Bool> operator|(bool iBool, const ZP<Expr_Bool>& iExpr_Bool)
 	{
 	if (iBool)
 		return sTrue();
 	return iExpr_Bool;
 	}
 
-ZRef<Expr_Bool> operator|(const ZRef<Expr_Bool>& iExpr_Bool, bool iBool)
+ZP<Expr_Bool> operator|(const ZP<Expr_Bool>& iExpr_Bool, bool iBool)
 	{
 	if (iBool)
 		return sTrue();
 	return iExpr_Bool;
 	}
 
-ZRef<Expr_Bool> operator&(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool> operator&(const ZP<Expr_Bool>& iLHS, const ZP<Expr_Bool>& iRHS)
 	{
 	if (iLHS && iRHS)
 		return new Expr_Bool_And(iLHS, iRHS);
 	return sFalse();
 	}
 
-ZRef<Expr_Bool>& operator&=(ZRef<Expr_Bool>& ioLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool>& operator&=(ZP<Expr_Bool>& ioLHS, const ZP<Expr_Bool>& iRHS)
 	{ return ioLHS = ioLHS & iRHS; }
 
-ZRef<Expr_Bool> operator|(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool> operator|(const ZP<Expr_Bool>& iLHS, const ZP<Expr_Bool>& iRHS)
 	{
 	if (iLHS)
 		{
@@ -342,7 +342,7 @@ ZRef<Expr_Bool> operator|(const ZRef<Expr_Bool>& iLHS, const ZRef<Expr_Bool>& iR
 	return iRHS;
 	}
 
-ZRef<Expr_Bool>& operator|=(ZRef<Expr_Bool>& ioLHS, const ZRef<Expr_Bool>& iRHS)
+ZP<Expr_Bool>& operator|=(ZP<Expr_Bool>& ioLHS, const ZP<Expr_Bool>& iRHS)
 	{ return ioLHS = ioLHS | iRHS; }
 
 } // namespace ZooLib

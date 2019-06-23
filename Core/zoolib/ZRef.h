@@ -670,7 +670,13 @@ inline
 void swap(ZRef<T,Sense_p>& a, ZRef<T,not Sense_p>& b)
 	{ a.swap(b); }
 
+// =================================================================================================
+#pragma mark - NotRef and ZP
+
 template <class T> using NotRef = ZRef<T,false>;
+
+template <class T> using ZP = ZRef<T,true>;
+template <class T> using NotP = ZRef<T,false>;
 
 } // namespace ZooLib
 

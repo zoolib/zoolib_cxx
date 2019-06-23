@@ -34,13 +34,13 @@ namespace QueryEngine {
 class Walker_Union : public Walker
 	{
 public:
-	Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right);
+	Walker_Union(const ZP<Walker>& iWalker_Left, const ZP<Walker>& iWalker_Right);
 	virtual ~Walker_Union();
 
 // From QueryEngine::Walker
 	virtual void Rewind();
 
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -48,19 +48,19 @@ public:
 	virtual bool QReadInc(Val_Any* ioResults);
 
 // Our protocol
-	ZRef<Walker> GetLeft()
+	ZP<Walker> GetLeft()
 		{ return fWalker_Left; }
 
-	ZRef<Walker> GetRight()
+	ZP<Walker> GetRight()
 		{ return fWalker_Right; }
 
 private:
-	ZRef<Walker> fWalker_Left;
+	ZP<Walker> fWalker_Left;
 	bool fExhaustedLeft;
 	std::set<std::vector<Val_Any> > fPriors;
 	std::vector<size_t> fMapping_Left;
 
-	ZRef<Walker> fWalker_Right;
+	ZP<Walker> fWalker_Right;
 	std::vector<size_t> fMapping_Right;
 	};
 

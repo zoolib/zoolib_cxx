@@ -34,20 +34,20 @@ Pixmap spPixmap_PNG(const FileSpec& iFileSpec)
 	return null;
 	}
 
-ZRef<Callable<Pixmap(const FileSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
+ZP<Callable<Pixmap(const FileSpec&)> > spCallable_Pixmap_PNG = sCallable(spPixmap_PNG);
 
-bool spPopulateBin(const ZRef<AssetCatalog>& iAC,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
+bool spPopulateBin(const ZP<AssetCatalog>& iAC,
+	const ZP<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iProcessed, const FileSpec& iSheets)
 	{
-	if (ZRef<ChannerR_Bin> channer = iProcessed.OpenR()) // Could use sOpenR_Buffered
+	if (ZP<ChannerR_Bin> channer = iProcessed.OpenR()) // Could use sOpenR_Buffered
 		{
 		for (FileIter iter = iSheets; iter; iter.Advance())
 			{
 			string theFileName = iter.CurrentName();
 			if (ZQ<string8> theNameQ = sQWithoutSuffix(".png", theFileName))
 				{
-				ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
+				ZP<AssetCatalog::Callable_TextureMaker> theCallable =
 					sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iter.Current()));
 				iAC->InstallSheet(*theNameQ, theCallable);
 				}
@@ -72,7 +72,7 @@ bool spReadAnim(const FileSpec& iParentAsFS,
 
 	if (not oFiles.empty())
 		{
-		if (ZRef<ChannerR_Bin> theChanner = iParentAsFS.Child("meta.txt").OpenR())
+		if (ZP<ChannerR_Bin> theChanner = iParentAsFS.Child("meta.txt").OpenR())
 			oMap = sGet(sQReadMap_Any(*theChanner, "meta.txt"));
 		return true;
 		}
@@ -80,8 +80,8 @@ bool spReadAnim(const FileSpec& iParentAsFS,
 	}
 
 void spInstall_Anim(
-	const ZRef<AssetCatalog>& iAC,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
+	const ZP<AssetCatalog>& iAC,
+	const ZP<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iFS,
 	Map_Any& ioMap)
 	{
@@ -105,7 +105,7 @@ void spInstall_Anim(
 		{
 		const string8 theSheetName = prefix + sStringf("_%03d", frameNumber++);
 
-		ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
+		ZP<AssetCatalog::Callable_TextureMaker> theCallable =
 			sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, entry.second));
 
 		iAC->InstallSheet(theSheetName, theCallable);
@@ -116,8 +116,8 @@ void spInstall_Anim(
 	}
 
 void spInstall_Art(
-	const ZRef<AssetCatalog>& iAC,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
+	const ZP<AssetCatalog>& iAC,
+	const ZP<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iFS,
 	Map_Any& ioMap)
 	{
@@ -136,13 +136,13 @@ void spInstall_Art(
 			const string8 theMeta = woSuffix + ".txt";
 
 			Map_Any entry;
-			if (ZRef<ChannerR_Bin> theChanner = iFS.Sibling(theMeta).OpenR())
+			if (ZP<ChannerR_Bin> theChanner = iFS.Sibling(theMeta).OpenR())
 				entry = sGet(sQReadMap_Any(*theChanner, theMeta));
 
 			Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
 
 			const string8 theSheetName = woSuffix;
-			ZRef<AssetCatalog::Callable_TextureMaker> theCallable =
+			ZP<AssetCatalog::Callable_TextureMaker> theCallable =
 				sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iFS));
 			iAC->InstallSheet(theSheetName, theCallable);
 			Map_Any theFrame;
@@ -162,9 +162,9 @@ void spInstall_Art(
 #pragma mark -
 
 void sPopulate(
-	const ZRef<AssetCatalog>& iAC,
+	const ZP<AssetCatalog>& iAC,
 	const FileSpec& iRoot,
-	const ZRef<Callable_TextureFromPixmap>& iTFP,
+	const ZP<Callable_TextureFromPixmap>& iTFP,
 	bool iPreferProcessedArt, bool iPreferSmallArt)
 	{
 	const double startTime = Time::sSystem();

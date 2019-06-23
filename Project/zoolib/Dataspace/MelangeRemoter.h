@@ -44,7 +44,7 @@ class MelangeServer
 	{
 public:
 	MelangeServer(const Melange_t& iMelange,
-		const ZRef<ChannerRW_Bin>& iChannerRW,
+		const ZP<ChannerRW_Bin>& iChannerRW,
 		int64 iClientVersion,
 		const ZQ<string>& iDescriptionQ);
 
@@ -54,7 +54,7 @@ public:
 	virtual void Initialize();
 
 private:
-	typedef ZRef<ZCounted> RefReg;
+	typedef ZP<ZCounted> RefReg;
 
 	void pRead();
 	void pWrite();
@@ -66,17 +66,17 @@ private:
 	void pChanged(
 		const RefReg& iRegistration,
 		int64 iChangeCount,
-		const ZRef<Result>& iResult,
-		const ZRef<ResultDeltas>& iResultDeltas);
-	ZRef<RelsWatcher::Callable_Changed> fCallable_Changed;
+		const ZP<Result>& iResult,
+		const ZP<ResultDeltas>& iResultDeltas);
+	ZP<RelsWatcher::Callable_Changed> fCallable_Changed;
 
 	const Melange_t fMelange;
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	const ZRef<ChannerR_Bin> fChannerR;
-	const ZRef<ChannerW_Bin> fChannerW;
+	const ZP<ChannerR_Bin> fChannerR;
+	const ZP<ChannerW_Bin> fChannerW;
 	const int64 fClientVersion;
 	const ZQ<string> fDescriptionQ;
 
@@ -96,8 +96,8 @@ private:
 	struct ResultCC
 		{
 		int64 fCC;
-		ZRef<Result> fResult;
-		ZRef<ResultDeltas> fResultDeltas;
+		ZP<Result> fResult;
+		ZP<ResultDeltas> fResultDeltas;
 		};
 	std::map<int64,ResultCC> fMap_Refcon2ResultCC;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
@@ -121,7 +121,7 @@ public:
 
 	using Channer_t = Channer<Chan_t>;
 
-	using Factory_Channer = Factory<ZRef<Channer_t>>;
+	using Factory_Channer = Factory<ZP<Channer_t>>;
 
 	using ChanForRead = DeriveFrom<
 		ChanAspect_Abort,
@@ -132,13 +132,13 @@ public:
 
 	typedef Callable<void(bool)> Callable_Status;
 
-	Melange_Client(const ZRef<Factory_Channer>& iFactory,
-		const ZRef<Callable_Status>& iCallable_Status);
+	Melange_Client(const ZP<Factory_Channer>& iFactory,
+		const ZP<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
-	virtual ZQ<ZRef<ZCounted> > QCall(
-		const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
-		const ZRef<Expr_Rel>& iRel);
+	virtual ZQ<ZP<ZCounted> > QCall(
+		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
+		const ZP<Expr_Rel>& iRel);
 
 // From Callable via Callable_DatonUpdate
 	virtual ZQ<int64> QCall(
@@ -149,7 +149,7 @@ public:
 	virtual bool pTrigger();
 
 // Our protocol
-	void Start(ZRef<Starter> iStarter);
+	void Start(ZP<Starter> iStarter);
 
 	bool Kill();
 
@@ -164,20 +164,20 @@ private:
 	void pWork();
 	StartScheduler::Job fJob;
 
-	ZRef<ChannerForRead> pEnsureChannerR();
-	ZRef<ChannerW_Bin> pEnsureChannerW();
-	ZRef<Channer_t> pEnsureChanner();
+	ZP<ChannerForRead> pEnsureChannerR();
+	ZP<ChannerW_Bin> pEnsureChannerW();
+	ZP<Channer_t> pEnsureChanner();
 
 	void pFinalize(Registration* iRegistration);
 
-	const ZRef<Factory_Channer> fFactory;
-	const ZRef<Callable_Status> fCallable_Status;
+	const ZP<Factory_Channer> fFactory;
+	const ZP<Callable_Status> fCallable_Status;
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
 	bool fGettingChanner;
-	ZRef<Channer_t> fChanner;
+	ZP<Channer_t> fChanner;
 
 	vector<Map_Any> fQueue_Read;
 	vector<Map_Any> fQueue_ToWrite;
@@ -187,7 +187,7 @@ private:
 	int64 fChangeCount;
 
 	int64 fNextRefcon;
-	std::set<ZRef<Registration> > fPending_Registrations;
+	std::set<ZP<Registration> > fPending_Registrations;
 	std::set<int64> fPending_Unregistrations;
 	std::set<Daton> fPending_Asserts;
 	std::set<Daton> fPending_Retracts;

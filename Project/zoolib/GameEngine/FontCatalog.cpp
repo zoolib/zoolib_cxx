@@ -38,7 +38,7 @@ namespace { // anonymous
 
 } // anonymous namespace
 
-GRect sMeasure(const ZRef<FontInfo>& iFontInfo, Rat iScale, const string8& iString)
+GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString)
 	{
 	GRect theBounds;
 	Rat accumulatedX = 0;
@@ -127,24 +127,24 @@ class FontStrike_TT
 :	public FontStrike
 	{
 public:
-	FontStrike_TT(const ZRef<FontInfo_TT>& iFontInfo, Rat iScale,
-		ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar);
+	FontStrike_TT(const ZP<FontInfo_TT>& iFontInfo, Rat iScale,
+		ZP<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar);
 
-	virtual ZRef<Texture> GetGlyphTexture(UTF32 iCP,
+	virtual ZP<Texture> GetGlyphTexture(UTF32 iCP,
 		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance);
 
 	virtual GRect Measure(UTF32 iCP);
 	virtual void VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading);
 
-	const ZRef<FontInfo_TT> fFontInfo;
+	const ZP<FontInfo_TT> fFontInfo;
 	const Rat fScale;
-	const ZRef<Texture> fTexture;
+	const ZP<Texture> fTexture;
 	const map<UTF32,stbtt_bakedchar> fBakedChar;
 	};
 
-GRect sMeasure(const ZRef<FontStrike>& iFontStrike, const string8& iString)
+GRect sMeasure(const ZP<FontStrike>& iFontStrike, const string8& iString)
 	{
-	ZRef<FontStrike_TT> theFS = iFontStrike.StaticCast<FontStrike_TT>();
+	ZP<FontStrike_TT> theFS = iFontStrike.StaticCast<FontStrike_TT>();
 	return sMeasure(theFS->fFontInfo, theFS->fScale, iString);
 	}
 
@@ -160,7 +160,7 @@ public:
 
 	virtual Rat GetScaleForEmHeight(Rat iEmHeight);
 	virtual Rat GetScaleForPixelHeight(Rat iPixelHeight);
-	virtual ZRef<FontStrike> GetStrikeForScale(Rat iScale);
+	virtual ZP<FontStrike> GetStrikeForScale(Rat iScale);
 
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance);
 	virtual void VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading);
@@ -169,7 +169,7 @@ public:
 	unsigned char* fTTPtr;
 
 	stbtt_fontinfo f_fontinfo;
-	map<Rat,ZRef<FontStrike_TT>> fStrikes;
+	map<Rat,ZP<FontStrike_TT>> fStrikes;
 	};
 
 // =================================================================================================
@@ -182,24 +182,24 @@ public:
 	FontCatalog_TT(const FileSpec& iFileSpec);
 	virtual ~FontCatalog_TT();
 
-	virtual ZRef<FontInfo> GetFontInfo(const string8& iName);
+	virtual ZP<FontInfo> GetFontInfo(const string8& iName);
 
 	FileSpec fFileSpec;
-	map<string8,ZRef<FontInfo_TT>> fInfos;
+	map<string8,ZP<FontInfo_TT>> fInfos;
 	};
 
 // =================================================================================================
 #pragma mark - FontStrike_TT definition
 
-FontStrike_TT::FontStrike_TT(const ZRef<FontInfo_TT>& iFontInfo, Rat iScale,
-	ZRef<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar)
+FontStrike_TT::FontStrike_TT(const ZP<FontInfo_TT>& iFontInfo, Rat iScale,
+	ZP<Texture> iTexture, const map<UTF32,stbtt_bakedchar>& iBakedChar)
 :	fFontInfo(iFontInfo)
 ,	fScale(iScale)
 ,	fTexture(iTexture)
 ,	fBakedChar(iBakedChar)
 	{}
 
-ZRef<Texture> FontStrike_TT::GetGlyphTexture(UTF32 iCP,
+ZP<Texture> FontStrike_TT::GetGlyphTexture(UTF32 iCP,
 	GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance)
 	{
 	if (const stbtt_bakedchar* theP = sPGet(fBakedChar, iCP))
@@ -305,9 +305,9 @@ Rat FontInfo_TT::GetScaleForEmHeight(Rat iEmHeight)
 Rat FontInfo_TT::GetScaleForPixelHeight(Rat iPixelHeight)
 	{ return stbtt_ScaleForPixelHeight(&f_fontinfo, iPixelHeight); }
 
-ZRef<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
+ZP<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
 	{
-	if (ZRef<FontStrike> theStrike = sGet(fStrikes, iScale))
+	if (ZP<FontStrike> theStrike = sGet(fStrikes, iScale))
 		return theStrike;
 
 	Pixmap thePixmap = sPixmap(sPointPOD(1024,1024), Pixels::EFormatStandard::Alpha_8, sRGBA(0,0));
@@ -322,9 +322,9 @@ ZRef<FontStrike> FontInfo_TT::GetStrikeForScale(Rat iScale)
 		firstCP, lastCP - firstCP + 1,
 		theMap);
 
-	ZRef<Texture> theTexture = new Texture_GL(thePixmap);
+	ZP<Texture> theTexture = new Texture_GL(thePixmap);
 
-	ZRef<FontStrike_TT> theStrike = new FontStrike_TT(this, iScale, theTexture, theMap);
+	ZP<FontStrike_TT> theStrike = new FontStrike_TT(this, iScale, theTexture, theMap);
 	fStrikes[iScale] = theStrike;
 	return theStrike;
 	}
@@ -362,15 +362,15 @@ FontCatalog_TT::FontCatalog_TT(const FileSpec& iFileSpec)
 FontCatalog_TT::~FontCatalog_TT()
 	{}
 
-ZRef<FontInfo> FontCatalog_TT::GetFontInfo(const string8& iName)
+ZP<FontInfo> FontCatalog_TT::GetFontInfo(const string8& iName)
 	{
-	if (ZRef<FontInfo_TT> theInfo = sGet(fInfos, iName))
+	if (ZP<FontInfo_TT> theInfo = sGet(fInfos, iName))
 		return theInfo;
 
-	if (ZRef<ChannerR_Bin> theChannerR = fFileSpec.Child(iName).OpenR())
+	if (ZP<ChannerR_Bin> theChannerR = fFileSpec.Child(iName).OpenR())
 		{
 		Data_Any theTTData = sReadAll_T<Data_Any>(*theChannerR);
-		ZRef<FontInfo_TT> theFontInfo = new FontInfo_TT(theTTData);
+		ZP<FontInfo_TT> theFontInfo = new FontInfo_TT(theTTData);
 		fInfos[iName] = theFontInfo;
 		return theFontInfo;
 		}
@@ -380,7 +380,7 @@ ZRef<FontInfo> FontCatalog_TT::GetFontInfo(const string8& iName)
 // =================================================================================================
 #pragma mark - FontCatalog
 
-ZRef<FontCatalog> sMakeFontCatalog(const FileSpec& iFileSpec)
+ZP<FontCatalog> sMakeFontCatalog(const FileSpec& iFileSpec)
 	{ return new FontCatalog_TT(iFileSpec); }
 
 } // namespace GameEngine

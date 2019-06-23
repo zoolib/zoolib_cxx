@@ -69,10 +69,10 @@ void Expr_Rel_Const::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Const::Self()
+ZP<Expr_Rel> Expr_Rel_Const::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Const::Clone()
+ZP<Expr_Rel> Expr_Rel_Const::Clone()
 	{ return this; }
 
 void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
@@ -87,13 +87,13 @@ const Val_Any& Expr_Rel_Const::GetVal() const
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Const
 
-void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZRef<Expr_Rel_Const>& iExpr)
+void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal)
+ZP<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal)
 	{ return new Expr_Rel_Const(iColName, iVal); }
 
 } // namespace RelationalAlgebra

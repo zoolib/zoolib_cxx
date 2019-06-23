@@ -97,15 +97,15 @@ class Relater_Searcher::PQuery
 :	public DLink_PQuery_NeedsWork
 	{
 public:
-	PQuery(ZRef<RA::Expr_Rel> iRel)
+	PQuery(ZP<RA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	const ZRef<RA::Expr_Rel> fRel;
+	const ZP<RA::Expr_Rel> fRel;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQuery_InPQuery;
 	set<PRegSearch*> fPRegSearch_Used;
-	ZRef<QE::Result> fResult;
-	ZRef<ResultDeltas> fResultDeltas;
+	ZP<QE::Result> fResult;
+	ZP<ResultDeltas> fResultDeltas;
 	};
 
 // =================================================================================================
@@ -124,7 +124,7 @@ public:
 	int64 fRefconInSearcher;
 	SearchSpec fSearchSpec;
 	set<PQuery*> fPQuery_Using;
-	ZRef<QE::Result> fResult;
+	ZP<QE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -145,9 +145,9 @@ public:
 	,	fVals(iVals)
 		{}
 
-	ZRef<ValComparand> pUpdated(const ZRef<ValComparand>& iVC)
+	ZP<ValComparand> pUpdated(const ZP<ValComparand>& iVC)
 		{
-		if (ZRef<ValComparand_Name> asName = iVC.DynamicCast<ValComparand_Name>())
+		if (ZP<ValComparand_Name> asName = iVC.DynamicCast<ValComparand_Name>())
 			{
 			// We could have a different kind of ValComparand, which holds the name's offset
 			// and for which we sub a value without needing to do the lookup every time.
@@ -157,20 +157,20 @@ public:
 		return null;
 		}
 
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr)
 		{
 		const ValPred& theVP = iExpr->GetValPred();
 
-		ZRef<Expr_Bool> theResult;
+		ZP<Expr_Bool> theResult;
 
-		if (ZRef<ValComparand> newLHS = pUpdated(theVP.GetLHS()))
+		if (ZP<ValComparand> newLHS = pUpdated(theVP.GetLHS()))
 			{
-			if (ZRef<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
+			if (ZP<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
 				theResult = new Expr_Bool_ValPred(ValPred(newLHS, theVP.GetComparator(), newRHS));
 			else
 				theResult = new Expr_Bool_ValPred(ValPred(newLHS, theVP.GetComparator(), theVP.GetRHS()));
 			}
-		else if (ZRef<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
+		else if (ZP<ValComparand> newRHS = pUpdated(theVP.GetRHS()))
 			{
 			theResult = new Expr_Bool_ValPred(ValPred(theVP.GetLHS(), theVP.GetComparator(), newRHS));
 			}
@@ -197,11 +197,11 @@ class Relater_Searcher::Walker_Bingo
 :	public QE::Walker
 	{
 public:
-	Walker_Bingo(ZRef<Relater_Searcher> iRelater,
+	Walker_Bingo(ZP<Relater_Searcher> iRelater,
 		PQuery* iPQuery,
 		const RelHead& iBoundNames,
 		const ConcreteHead& iConcreteHead,
-		ZRef<Expr_Bool> iRestriction)
+		ZP<Expr_Bool> iRestriction)
 	:	fRelater(iRelater)
 	,	fPQuery(iPQuery)
 	,	fPRegSearch(nullptr)
@@ -225,7 +225,7 @@ public:
 		fRelater->pRewind(this);
 		}
 
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+	virtual ZP<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{ return fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset); }
@@ -236,14 +236,14 @@ public:
 		return fRelater->pQReadInc(this, ioResults);
 		}
 
-	const ZRef<Relater_Searcher> fRelater;
+	const ZP<Relater_Searcher> fRelater;
 	PQuery* fPQuery;
 	PRegSearch* fPRegSearch;
 	size_t fNextRow;
 
 	const vector<ColName> fBoundNames;
 	ConcreteHead fConcreteHead;
-	ZRef<Expr_Bool> fRestriction;
+	ZP<Expr_Bool> fRestriction;
 	size_t fBaseOffset;
 	vector<size_t> fBoundOffsets;
 	};
@@ -257,22 +257,22 @@ class Relater_Searcher::Visitor_DoMakeWalker
 ,	public virtual QE::Visitor_Expr_Rel_Search
 	{
 public:
-	Visitor_DoMakeWalker(ZRef<Relater_Searcher> iSearcher, PQuery* iPQuery)
+	Visitor_DoMakeWalker(ZP<Relater_Searcher> iSearcher, PQuery* iPQuery)
 	:	fSearcher(iSearcher)
 	,	fPQuery(iPQuery)
 		{}
 
-	virtual void Visit_Expr_Rel_Concrete(const ZRef<RA::Expr_Rel_Concrete>& iExpr)
+	virtual void Visit_Expr_Rel_Concrete(const ZP<RA::Expr_Rel_Concrete>& iExpr)
 		{
 		// Do we need to do something with embed here as well? To gather the bound names
 		// that will be passed off?
-		ZRef<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
+		ZP<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			RelHead(), SearchSpec(iExpr->GetConcreteHead(), null));
 
 		this->pSetResult(theWalker);
 		}
 
-	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
+	virtual void Visit_Expr_Rel_Search(const ZP<QE::Expr_Rel_Search>& iExpr)
 		{
 		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
 		vector<pair<string8,string8> > finalRename;
@@ -286,7 +286,7 @@ public:
 			theConcreteHead[source] = not sContains(iExpr->GetRelHead_Optional(), source);
 			}
 
-		ZRef<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
+		ZP<QE::Walker> theWalker = fSearcher->pMakeWalker(fPQuery,
 			iExpr->GetRelHead_Bound(),
 			SearchSpec(theConcreteHead, iExpr->GetExpr_Bool()));
 
@@ -296,7 +296,7 @@ public:
 		this->pSetResult(theWalker);
 		}
 
-	ZRef<Relater_Searcher> const fSearcher;
+	ZP<Relater_Searcher> const fSearcher;
 	PQuery* const fPQuery;
 	};
 
@@ -310,7 +310,7 @@ class Transform_PushDownRestricts_IntoSearch
 ,	public virtual QE::Visitor_Expr_Rel_Search
 	{
 public:
-	virtual void Visit_Expr_Rel_Search(const ZRef<QE::Expr_Rel_Search>& iExpr)
+	virtual void Visit_Expr_Rel_Search(const ZP<QE::Expr_Rel_Search>& iExpr)
 		{
 		const RA::Rename theRename = iExpr->GetRename();
 		const RA::Rename theRenameInverted = RA::sInverted(theRename);
@@ -324,7 +324,7 @@ public:
 		const RelHead boundFrom = RA::sRenamed(theRenameInverted, boundTo);
 
 		// Start with the extant search expression.
-		ZRef<Expr_Bool> result = iExpr->GetExpr_Bool();
+		ZP<Expr_Bool> result = iExpr->GetExpr_Bool();
 
 		const RelHead available = fRelHead | boundTo | generatedTo;
 
@@ -355,7 +355,7 @@ public:
 
 		fRelHead |= generatedTo;
 
-		ZRef<QE::Expr_Rel_Search> theSearch = new QE::Expr_Rel_Search(
+		ZP<QE::Expr_Rel_Search> theSearch = new QE::Expr_Rel_Search(
 			newBound | boundTo,
 			iExpr->GetRename(),
 			iExpr->GetRelHead_Optional(),
@@ -367,13 +367,13 @@ public:
 
 } // anonymous namespace
 
-ZRef<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZRef<Expr_Rel>& iRel)
+ZP<Expr_Rel> sTransform_PushDownRestricts_IntoSearch(const ZP<Expr_Rel>& iRel)
 	{ return Transform_PushDownRestricts_IntoSearch().Do(iRel); }
 
 // =================================================================================================
 #pragma mark - Relater_Searcher
 
-Relater_Searcher::Relater_Searcher(ZRef<Searcher> iSearcher)
+Relater_Searcher::Relater_Searcher(ZP<Searcher> iSearcher)
 :	fSearcher(iSearcher)
 ,	fChangeCount(0)
 ,	fNextRefcon(1)
@@ -408,7 +408,7 @@ void Relater_Searcher::ModifyRegistrations(
 
 	for (/*no init*/; iAddedCount--; ++iAdded)
 		{
-		ZRef<Expr_Rel> theRel = iAdded->GetRel();
+		ZP<Expr_Rel> theRel = iAdded->GetRel();
 
 		if (true)
 			{
@@ -513,10 +513,10 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 		{
 		ZRelMtx rel(fMtx);
 
-		ZRef<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
+		ZP<QE::Walker> theWalker = Visitor_DoMakeWalker(this, thePQuery).Do(thePQuery->fRel);
 
 		const double start = Time::sSystem();
-		ZRef<Result> priorResult = thePQuery->fResult;
+		ZP<Result> priorResult = thePQuery->fResult;
 		thePQuery->fResult = QE::sResultFromWalker(theWalker);
 		const double elapsed = Time::sSystem() - start;
 
@@ -537,7 +537,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 			ZAssert(priorResult->GetRelHead() == thePQuery->fResult->GetRelHead());
 			if (priorResult->Count() == thePQuery->fResult->Count())
 				{
-				ZRef<ResultDeltas> theDeltas = new ResultDeltas;
+				ZP<ResultDeltas> theDeltas = new ResultDeltas;
 				const size_t rowCount = priorResult->Count();
 				const size_t colCount = priorResult->GetRelHead().size();
 
@@ -624,7 +624,7 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 	return sNotEmpty(theSearchResults);
 	}
 
-void Relater_Searcher::pSearcherResultsAvailable(ZRef<Searcher>)
+void Relater_Searcher::pSearcherResultsAvailable(ZP<Searcher>)
 	{
 	Relater::pTrigger_RelaterResultsAvailable();
 	ZAcqMtx acq(fMtx);
@@ -637,13 +637,13 @@ void Relater_Searcher::pFinalize(Walker_Bingo* iWalker_Bingo)
 		delete iWalker_Bingo;
 	}
 
-void Relater_Searcher::pRewind(ZRef<Walker_Bingo> iWalker_Bingo)
+void Relater_Searcher::pRewind(ZP<Walker_Bingo> iWalker_Bingo)
 	{
 	iWalker_Bingo->fPRegSearch = nullptr;
 	iWalker_Bingo->fNextRow = 0;
 	}
 
-ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
+ZP<QE::Walker> Relater_Searcher::pPrime(ZP<Walker_Bingo> iWalker_Bingo,
 	const std::map<string8,size_t>& iOffsets,
 	std::map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -662,12 +662,12 @@ ZRef<QE::Walker> Relater_Searcher::pPrime(ZRef<Walker_Bingo> iWalker_Bingo,
 	return iWalker_Bingo;
 	}
 
-bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
+bool Relater_Searcher::pQReadInc(ZP<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not iWalker_Bingo->fPRegSearch)
 		{
-		ZRef<Expr_Bool> theRestriction = iWalker_Bingo->fRestriction;
+		ZP<Expr_Bool> theRestriction = iWalker_Bingo->fRestriction;
 
 		if (sNotEmpty(iWalker_Bingo->fBoundNames))
 			{
@@ -731,7 +731,7 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 		ZAssert(thePRegSearchStar->fResult);
 		}
 
-	ZRef<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;
+	ZP<Result> theResult = iWalker_Bingo->fPRegSearch->fResult;
 
 	ZAssert(theResult->GetRelHead() == sRelHead(iWalker_Bingo->fConcreteHead));
 
@@ -752,12 +752,12 @@ bool Relater_Searcher::pQReadInc(ZRef<Walker_Bingo> iWalker_Bingo, Val_Any* ioRe
 	return true;
 	}
 
-ZRef<QE::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
+ZP<QE::Walker> Relater_Searcher::pMakeWalker(PQuery* iPQuery,
 	const RelHead& iRelHead_Bound,
 	const SearchSpec& iSearchSpec)
 	{
 	ZAcqMtx acq(fMtx);
-	ZRef<Walker_Bingo> theWalker = new Walker_Bingo(this,
+	ZP<Walker_Bingo> theWalker = new Walker_Bingo(this,
 		iPQuery, iRelHead_Bound, iSearchSpec.GetConcreteHead(), iSearchSpec.GetRestriction());
 	return theWalker;
 	}

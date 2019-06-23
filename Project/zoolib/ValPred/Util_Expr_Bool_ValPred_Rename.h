@@ -33,8 +33,8 @@ namespace Util_Expr_Bool {
 // =================================================================================================
 #pragma mark - Util_Expr_Bool
 
-ZRef<Expr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
-	const ZRef<Expr_Bool>& iExpr);
+ZP<Expr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
+	const ZP<Expr_Bool>& iExpr);
 
 } // namespace Util_Expr_Bool
 } // namespace ZooLib

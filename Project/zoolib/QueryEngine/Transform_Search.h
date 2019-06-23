@@ -30,7 +30,7 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark - sTransform_Search
 
-ZRef<RelationalAlgebra::Expr_Rel> sTransform_Search(const ZRef<RelationalAlgebra::Expr_Rel>& iExpr);
+ZP<RelationalAlgebra::Expr_Rel> sTransform_Search(const ZP<RelationalAlgebra::Expr_Rel>& iExpr);
 
 } // namespace QueryEngine
 } // namespace ZooLib

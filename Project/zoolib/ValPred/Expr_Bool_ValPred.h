@@ -47,8 +47,8 @@ public:
 // From Expr_Op0
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor);
 
-	virtual ZRef<Expr_Bool> Self();
-	virtual ZRef<Expr_Bool> Clone();
+	virtual ZP<Expr_Bool> Self();
+	virtual ZP<Expr_Bool> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Bool_ValPred(Visitor_Expr_Bool_ValPred& iVisitor);
@@ -69,39 +69,39 @@ class Visitor_Expr_Bool_ValPred
 :	public virtual Visitor_Expr_Op0_T<Expr_Bool>
 	{
 public:
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred >& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred >& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Operators
 
-ZRef<Expr_Bool> sExpr_Bool(const ValPred& iValPred);
+ZP<Expr_Bool> sExpr_Bool(const ValPred& iValPred);
 
-ZRef<Expr_Bool> operator~(const ValPred& iValPred);
+ZP<Expr_Bool> operator~(const ValPred& iValPred);
 
-ZRef<Expr_Bool> operator&(bool iBool, const ValPred& iValPred);
+ZP<Expr_Bool> operator&(bool iBool, const ValPred& iValPred);
 
-ZRef<Expr_Bool> operator&(const ValPred& iValPred, bool iBool);
+ZP<Expr_Bool> operator&(const ValPred& iValPred, bool iBool);
 
-ZRef<Expr_Bool> operator|(bool iBool, const ValPred& iValPred);
+ZP<Expr_Bool> operator|(bool iBool, const ValPred& iValPred);
 
-ZRef<Expr_Bool> operator|(const ValPred& iValPred, bool iBool);
+ZP<Expr_Bool> operator|(const ValPred& iValPred, bool iBool);
 
-ZRef<Expr_Bool> operator&(const ValPred& iLHS, const ValPred& iRHS);
+ZP<Expr_Bool> operator&(const ValPred& iLHS, const ValPred& iRHS);
 
-ZRef<Expr_Bool> operator&(const ValPred& iLHS, const ZRef<Expr_Bool>& iRHS);
+ZP<Expr_Bool> operator&(const ValPred& iLHS, const ZP<Expr_Bool>& iRHS);
 
-ZRef<Expr_Bool> operator&(const ZRef<Expr_Bool>& iLHS, const ValPred& iRHS);
+ZP<Expr_Bool> operator&(const ZP<Expr_Bool>& iLHS, const ValPred& iRHS);
 
-ZRef<Expr_Bool>& operator&=(ZRef<Expr_Bool>& ioLHS, const ValPred& iRHS);
+ZP<Expr_Bool>& operator&=(ZP<Expr_Bool>& ioLHS, const ValPred& iRHS);
 
-ZRef<Expr_Bool> operator|(const ValPred& iLHS, const ValPred& iRHS);
+ZP<Expr_Bool> operator|(const ValPred& iLHS, const ValPred& iRHS);
 
-ZRef<Expr_Bool> operator|(const ValPred& iLHS, const ZRef<Expr_Bool>& iRHS);
+ZP<Expr_Bool> operator|(const ValPred& iLHS, const ZP<Expr_Bool>& iRHS);
 
-ZRef<Expr_Bool> operator|(const ZRef<Expr_Bool>& iLHS, const ValPred& iRHS);
+ZP<Expr_Bool> operator|(const ZP<Expr_Bool>& iLHS, const ValPred& iRHS);
 
-ZRef<Expr_Bool>& operator|=(ZRef<Expr_Bool>& ioLHS, const ValPred& iRHS);
+ZP<Expr_Bool>& operator|=(ZP<Expr_Bool>& ioLHS, const ValPred& iRHS);
 
 } // namespace ZooLib
 

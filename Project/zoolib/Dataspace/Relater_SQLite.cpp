@@ -71,11 +71,11 @@ public:
 class Relater_SQLite::PQuery
 	{
 public:
-	PQuery(ZRef<RA::Expr_Rel> iRel)
+	PQuery(ZP<RA::Expr_Rel> iRel)
 	:	fRel(iRel)
 		{}
 
-	ZRef<RA::Expr_Rel> fRel;
+	ZP<RA::Expr_Rel> fRel;
 	RelHead fRelHead;
 	string8 fSQL;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
@@ -84,16 +84,16 @@ public:
 // =================================================================================================
 #pragma mark - Relater_SQLite
 
-Relater_SQLite::Relater_SQLite(ZRef<SQLite::DB> iDB)
+Relater_SQLite::Relater_SQLite(ZP<SQLite::DB> iDB)
 :	fDB(iDB)
 	{
-	for (ZRef<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
+	for (ZP<Iter> iterTables = new Iter(fDB, "select name from sqlite_master;");
 		iterTables->HasValue(); iterTables->Advance())
 		{
 		const string8 theTableName = iterTables->Get(0).Get<string8>();
 		ZAssert(sNotEmpty(theTableName));
 		RelHead theRelHead;
-		for (ZRef<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
+		for (ZP<Iter> iterTable = new Iter(fDB, "pragma table_info(" + theTableName + ");");
 			iterTable->HasValue(); iterTable->Advance())
 			{ theRelHead |= iterTable->Get(1).Get<string8>(); }
 		theRelHead |= RA::ColName("oid");
@@ -124,7 +124,7 @@ void Relater_SQLite::ModifyRegistrations(
 
 	while (iAddedCount--)
 		{
-		ZRef<RA::Expr_Rel> theRel = iAdded->GetRel();
+		ZP<RA::Expr_Rel> theRel = iAdded->GetRel();
 
 		pair<Map_Rel_PQuery::iterator,bool> iterPQueryPair =
 			fMap_Rel_PQuery.insert(make_pair(theRel, PQuery(theRel)));
@@ -178,7 +178,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 		{
 		const PQuery* thePQuery = &entry.second;
 		vector<Val_Any> thePackedRows;
-		for (ZRef<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
+		for (ZP<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
 			{
 			const size_t theCount = theIter->Count();
@@ -186,7 +186,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 				thePackedRows.push_back(theIter->Get(xx));
 			}
 
-		ZRef<QueryEngine::Result> theResult =
+		ZP<QueryEngine::Result> theResult =
 			new QueryEngine::Result(thePQuery->fRelHead, &thePackedRows);
 
 		for (DListIterator<ClientQuery, DLink_ClientQuery_InPQuery>

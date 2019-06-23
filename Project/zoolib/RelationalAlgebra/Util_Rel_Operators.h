@@ -42,21 +42,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
-ZRef<Expr_Rel> sConst(const NameVal& iNameVal);
+ZP<Expr_Rel> sConst(const NameVal& iNameVal);
 
-ZRef<Expr_Rel> operator*(const NameVal& iNameVal, const ZRef<Expr_Rel>& iRel);
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const NameVal& iNameVal);
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const NameVal& iNameVal);
+ZP<Expr_Rel> operator*(const NameVal& iNameVal, const ZP<Expr_Rel>& iRel);
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const NameVal& iNameVal);
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const NameVal& iNameVal);
 
-ZRef<Expr_Rel> sConst(const Map_Any& iMap);
+ZP<Expr_Rel> sConst(const Map_Any& iMap);
 
-ZRef<Expr_Rel> operator*(const Map_Any& iMap, const ZRef<Expr_Rel>& iRel);
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const Map_Any& iMap);
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const Map_Any& iMap);
+ZP<Expr_Rel> operator*(const Map_Any& iMap, const ZP<Expr_Rel>& iRel);
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_Any& iMap);
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_Any& iMap);
 
-ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ValPred& iValPred);
-ZRef<Expr_Rel> operator&(const ValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel);
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred);
+ZP<Expr_Rel> operator&(const ZP<Expr_Rel>& iExpr_Rel, const ValPred& iValPred);
+ZP<Expr_Rel> operator&(const ValPred& iValPred, const ZP<Expr_Rel>& iExpr_Rel);
+ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred);
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

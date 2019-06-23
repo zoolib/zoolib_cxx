@@ -9,7 +9,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Nook_Catcher
 
-Nook_Catcher::Nook_Catcher(const ZRef<NookScope>& iNookScope, const Name& iName)
+Nook_Catcher::Nook_Catcher(const ZP<NookScope>& iNookScope, const Name& iName)
 :	Nook(iNookScope)
 ,	fEra(0)
 ,	fName(iName)
@@ -44,7 +44,7 @@ const set<string8> Nook_Catcher::GetStringPitches(uint64 iEra)
 
 void sPitch(const Param& iParam, const Name& iName, const Val& iVal)
 	{
-	foreachv (const ZRef<Nook_Catcher>& theNook, sGetAllNooks<Nook_Catcher>(iParam))
+	foreachv (const ZP<Nook_Catcher>& theNook, sGetAllNooks<Nook_Catcher>(iParam))
 		{
 		if (iName.IsEmpty() || iName == theNook->GetName())
 			theNook->Catch(iVal);
@@ -53,7 +53,7 @@ void sPitch(const Param& iParam, const Name& iName, const Val& iVal)
 
 const vector<Val>& sGetPitches(const Param& iParam, const Name& iName)
 	{
-	foreachv (const ZRef<Nook_Catcher>& theNook, sGetAllNooks<Nook_Catcher>(iParam))
+	foreachv (const ZP<Nook_Catcher>& theNook, sGetAllNooks<Nook_Catcher>(iParam))
 		{
 		if (iName.IsEmpty() || iName == theNook->GetName())
 			return theNook->GetPitches(iParam.GetEra());

@@ -45,23 +45,23 @@ class Link
 	{
 public:
 // ctor that establishes a tree
-	Link(const ZRef<CountedName>& iProtoName, const Map_Any& iMap);
+	Link(const ZP<CountedName>& iProtoName, const Map_Any& iMap);
 
 // ctor used as we walk down a tree.
-	Link(const ZRef<Link>& iParent, const Map_Any& iMap);
+	Link(const ZP<Link>& iParent, const Map_Any& iMap);
 
 	ZQ<Val> QReadAt(const Name& iName);
 
-	ZRef<Link> WithRootAugment(const std::string& iRootAugmentName, const ZRef<Link>& iRootAugment);
+	ZP<Link> WithRootAugment(const std::string& iRootAugmentName, const ZP<Link>& iRootAugment);
 
 private:
-	const ZRef<CountedName> fProtoName;
-	const ZRef<Link> fParent;
+	const ZP<CountedName> fProtoName;
+	const ZP<Link> fParent;
 	const Map_Any fMap;
 
-	std::map<std::string,ZRef<Link>> fChildren;
+	std::map<std::string,ZP<Link>> fChildren;
 	FalseOnce fCheckedProto;
-	ZRef<Link> fProto;
+	ZP<Link> fProto;
 	};
 
 // =================================================================================================
@@ -77,7 +77,7 @@ public:
 	~Seq();
 	Seq& operator=(const Seq& iOther);
 
-	Seq(const ZRef<Link>& iLink, const Seq_Any& iSeq);
+	Seq(const ZP<Link>& iLink, const Seq_Any& iSeq);
 
 // ZSeq protocol
 	size_t Size() const;
@@ -154,7 +154,7 @@ public:
 private:
 	void pGenSeq();
 
-	ZRef<Link> fLink;
+	ZP<Link> fLink;
 	mutable Seq_Any fSeq;
 	};
 
@@ -172,7 +172,7 @@ public:
 	~Map();
 	Map& operator=(const Map& iOther);
 
-	explicit Map(const ZRef<Link>& iLink);
+	explicit Map(const ZP<Link>& iLink);
 
 	explicit Map(const Map& iParent, const Map_Any& iMap);
 
@@ -242,11 +242,11 @@ public:
 	Val& operator[](const Name_t& iName);
 	const Val& operator[](const Name_t& iName) const;
 
-	ZRef<Link> GetLink() const;
+	ZP<Link> GetLink() const;
 	Map_Any GetMap() const;
 
 private:
-	ZRef<Link> fLink;
+	ZP<Link> fLink;
 	mutable Map_Any fMap;
 	};
 

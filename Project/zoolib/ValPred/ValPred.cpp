@@ -100,21 +100,21 @@ ValPred& ValPred::operator=(const ValPred& iOther)
 	}
 
 ValPred::ValPred(
-	const ZRef<ValComparand>& iLHS,
-	const ZRef<ValComparator>& iComparator,
-	const ZRef<ValComparand>& iRHS)
+	const ZP<ValComparand>& iLHS,
+	const ZP<ValComparator>& iComparator,
+	const ZP<ValComparand>& iRHS)
 :	fLHS(iLHS)
 ,	fComparator(iComparator)
 ,	fRHS(iRHS)
 	{}
 
-const ZRef<ValComparand>& ValPred::GetLHS() const
+const ZP<ValComparand>& ValPred::GetLHS() const
 	{ return fLHS; }
 
-const ZRef<ValComparator>& ValPred::GetComparator() const
+const ZP<ValComparator>& ValPred::GetComparator() const
 	{ return fComparator; }
 
-const ZRef<ValComparand>& ValPred::GetRHS() const
+const ZP<ValComparand>& ValPred::GetRHS() const
 	{ return fRHS; }
 
 // =================================================================================================

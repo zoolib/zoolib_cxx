@@ -39,13 +39,13 @@ class Expr_Rel_Intersect
 	{
 	typedef Expr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Intersect(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
+	Expr_Rel_Intersect(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor);
@@ -58,17 +58,17 @@ class Visitor_Expr_Rel_Intersect
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Intersect(const ZRef<Expr_Rel_Intersect>& iExpr);
+	virtual void Visit_Expr_Rel_Intersect(const ZP<Expr_Rel_Intersect>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Intersect> sIntersect(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZP<Expr_Rel_Intersect> sIntersect(
+	const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS);
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS);
 
 } // namespace RelationalAlgebra
 

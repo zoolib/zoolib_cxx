@@ -14,7 +14,7 @@ class Nook_Catcher
 :	public Nook
 	{
 public:
-	Nook_Catcher(const ZRef<NookScope>& iNookScope, const Name& iName);
+	Nook_Catcher(const ZP<NookScope>& iNookScope, const Name& iName);
 
 // Our protocol
 	const Name& GetName();

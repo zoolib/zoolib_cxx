@@ -12,7 +12,7 @@ typedef Callable_Indirect<Cog::Signature> Callable_Indirect_Cog;
 
 void sSetIndirect(const Cog& iLHS, const Cog& iRHS)
 	{
-	if (ZRef<Callable_Indirect_Cog> theIndirect = iLHS.DynamicCast<Callable_Indirect_Cog>())
+	if (ZP<Callable_Indirect_Cog> theIndirect = iLHS.DynamicCast<Callable_Indirect_Cog>())
 		theIndirect->Set(iRHS);
 	else
 		ZAssert(not iLHS);
@@ -35,7 +35,7 @@ Cog spCogFun_KillIndirects(const Cog& iSelf, const Param& iParam,
 	Seq theSeq = ioState.Get<Seq>(iName);
 	for (size_t x = 0, count = theSeq.Count(); x < count; ++x)
 		{
-		if (ZRef<Callable_Indirect_Cog> theCallable =
+		if (ZP<Callable_Indirect_Cog> theCallable =
 			theSeq.Get<Cog>(x).DynamicCast<Callable_Indirect<Cog::Signature> >())
 			{ theCallable->Set(null); }
 		}

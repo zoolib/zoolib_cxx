@@ -29,9 +29,9 @@ using std::set;
 // =================================================================================================
 #pragma mark - Walker_Comment
 
-Walker_Comment::Walker_Comment(const ZRef<Walker>& iWalker,
+Walker_Comment::Walker_Comment(const ZP<Walker>& iWalker,
 	const string8& iComment,
-	const ZRef<Callable_Void>& iCallable)
+	const ZP<Callable_Void>& iCallable)
 :	Walker_Unary(iWalker)
 ,	fComment(iComment)
 ,	fCallable(iCallable)
@@ -40,7 +40,7 @@ Walker_Comment::Walker_Comment(const ZRef<Walker>& iWalker,
 Walker_Comment::~Walker_Comment()
 	{}
 
-ZRef<Walker> Walker_Comment::Prime(
+ZP<Walker> Walker_Comment::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

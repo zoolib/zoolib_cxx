@@ -34,11 +34,11 @@ namespace QueryEngine {
 class Walker_Restrict : public Walker_Unary
 	{
 public:
-	Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool);
+	Walker_Restrict(ZP<Walker> iWalker, ZP<Expr_Bool> iExpr_Bool);
 	virtual ~Walker_Restrict();
 
 // From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
@@ -48,7 +48,7 @@ public:
 	class Exec;
 
 private:
-	const ZRef<Expr_Bool> fExpr_Bool;
+	const ZP<Expr_Bool> fExpr_Bool;
 	std::map<string8,size_t> fCombinedOffsets;
 
 	std::vector<Val_Any> fConsts;

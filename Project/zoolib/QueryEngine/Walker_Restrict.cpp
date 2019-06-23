@@ -204,14 +204,14 @@ struct Functor_Callable
 	{
 	typedef ValComparator_Callable_Any::Callable_t Callable_t;
 
-	Functor_Callable(ZRef<Callable_t> iCallable)
+	Functor_Callable(ZP<Callable_t> iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	bool operator()(const Val_Any& l, const Val_Any& r) const
 		{ return fCallable->Call(l, r); }
 
-	ZRef<Callable_t> fCallable;
+	ZP<Callable_t> fCallable;
 	};
 
 struct Functor_StringContains
@@ -258,23 +258,23 @@ public:
 		{}
 
 // From Visitor_Expr_Bool_XXX
-	virtual void Visit_Expr_Bool_True(const ZRef<Expr_Bool_True>& iRep)
+	virtual void Visit_Expr_Bool_True(const ZP<Expr_Bool_True>& iRep)
 		{ this->pSetResult(new Exec_True); }
 
-	virtual void Visit_Expr_Bool_False(const ZRef<Expr_Bool_False>& iRep)
+	virtual void Visit_Expr_Bool_False(const ZP<Expr_Bool_False>& iRep)
 		{ this->pSetResult(new Exec_False); }
 
-	virtual void Visit_Expr_Bool_Not(const ZRef<Expr_Bool_Not>& iRep)
+	virtual void Visit_Expr_Bool_Not(const ZP<Expr_Bool_Not>& iRep)
 		{ this->pSetResult(new Exec_Not(this->Do(iRep->GetOp0()))); }
 
-	virtual void Visit_Expr_Bool_And(const ZRef<Expr_Bool_And>& iRep)
+	virtual void Visit_Expr_Bool_And(const ZP<Expr_Bool_And>& iRep)
 		{ this->pSetResult(new Exec_And(this->Do(iRep->GetOp0()), this->Do(iRep->GetOp1()))); }
 
-	virtual void Visit_Expr_Bool_Or(const ZRef<Expr_Bool_Or>& iRep)
+	virtual void Visit_Expr_Bool_Or(const ZP<Expr_Bool_Or>& iRep)
 		{ this->pSetResult(new Exec_Or(this->Do(iRep->GetOp0()), this->Do(iRep->GetOp1()))); }
 
 // From Visitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr);
 
 // Our protocol
 	Walker_Restrict::Exec* pMakeExec(const ValPred& iValPred);
@@ -282,31 +282,31 @@ public:
 	template <class Functor_p>
 	Walker_Restrict::Exec* pMakeExec_T(
 		const Functor_p& iFunctor,
-		const ZRef<ValComparand>& iLHS, const ZRef<ValComparand>& iRHS);
+		const ZP<ValComparand>& iLHS, const ZP<ValComparand>& iRHS);
 
 	const map<string8,size_t>& fVars;
 	vector<Val_Any>& fConsts;
 	};
 
-void AsExec::Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+void AsExec::Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr)
 	{ this->pSetResult(this->pMakeExec(iExpr->GetValPred())); }
 
 template <class Functor_p>
 Walker_Restrict::Exec* AsExec::pMakeExec_T(
 	const Functor_p& iFunctor,
-	const ZRef<ValComparand>& iLHS, const ZRef<ValComparand>& iRHS)
+	const ZP<ValComparand>& iLHS, const ZP<ValComparand>& iRHS)
 	{
-	if (ZRef<ValComparand_Name> asNameL =
+	if (ZP<ValComparand_Name> asNameL =
 		iLHS.DynamicCast<ValComparand_Name>())
 		{
 		const size_t theOffsetL = sGetMust(fVars, asNameL->GetName());
-		if (ZRef<ValComparand_Name> asNameR =
+		if (ZP<ValComparand_Name> asNameR =
 			iRHS.DynamicCast<ValComparand_Name>())
 			{
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, true, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZRef<ValComparand_Const_Any> asConstR =
+		else if (ZP<ValComparand_Const_Any> asConstR =
 			iRHS.DynamicCast<ValComparand_Const_Any>())
 			{
 			const size_t theOffsetR = fConsts.size();
@@ -314,18 +314,18 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			return new Exec_Functor<Functor_p, true, false>(iFunctor, theOffsetL, theOffsetR);
 			}
 		}
-	else if (ZRef<ValComparand_Const_Any> asConstL =
+	else if (ZP<ValComparand_Const_Any> asConstL =
 		iLHS.DynamicCast<ValComparand_Const_Any>())
 		{
 		const size_t theOffsetL = fConsts.size();
 		fConsts.push_back(asConstL->GetVal());
-		if (ZRef<ValComparand_Name> asNameR =
+		if (ZP<ValComparand_Name> asNameR =
 			iRHS.DynamicCast<ValComparand_Name>())
 			{
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, false, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZRef<ValComparand_Const_Any> asConstR =
+		else if (ZP<ValComparand_Const_Any> asConstR =
 			iRHS.DynamicCast<ValComparand_Const_Any>())
 			{
 			const size_t theOffsetR = fConsts.size();
@@ -338,9 +338,9 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 
 Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 	{
-	const ZRef<ValComparator>& theComparator = iValPred.GetComparator();
+	const ZP<ValComparator>& theComparator = iValPred.GetComparator();
 
-	if (ZRef<ValComparator_Simple> asSimple =
+	if (ZP<ValComparator_Simple> asSimple =
 		theComparator.DynamicCast<ValComparator_Simple>())
 		{
 		switch (asSimple->GetEComparator())
@@ -383,14 +383,14 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 				}
 			}
 		}
-	else if (ZRef<ValComparator_Callable_Any> asCallable =
+	else if (ZP<ValComparator_Callable_Any> asCallable =
 		theComparator.DynamicCast<ValComparator_Callable_Any>())
 		{
 		return pMakeExec_T<>(
 			Functor_Callable(asCallable->GetCallable()),
 			iValPred.GetLHS(), iValPred.GetRHS());
 		}
-	else if (ZRef<ValComparator_StringContains> asStringContains =
+	else if (ZP<ValComparator_StringContains> asStringContains =
 		theComparator.DynamicCast<ValComparator_StringContains>())
 		{
 		return pMakeExec_T<>(
@@ -406,7 +406,7 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 // =================================================================================================
 #pragma mark - Walker_Restrict
 
-Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Bool)
+Walker_Restrict::Walker_Restrict(ZP<Walker> iWalker, ZP<Expr_Bool> iExpr_Bool)
 :	Walker_Unary(iWalker)
 ,	fExpr_Bool(iExpr_Bool)
 ,	fExec(nullptr)
@@ -415,7 +415,7 @@ Walker_Restrict::Walker_Restrict(ZRef<Walker> iWalker, ZRef<Expr_Bool> iExpr_Boo
 Walker_Restrict::~Walker_Restrict()
 	{ delete fExec; }
 
-ZRef<Walker> Walker_Restrict::Prime(
+ZP<Walker> Walker_Restrict::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

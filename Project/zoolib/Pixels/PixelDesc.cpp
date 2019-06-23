@@ -135,17 +135,17 @@ PixelDesc& PixelDesc::operator=(const PixelDesc& iOther)
 	return *this;
 	}
 
-PixelDesc::PixelDesc(const ZRef<PixelDescRep>& iPixelDescRep)
+PixelDesc::PixelDesc(const ZP<PixelDescRep>& iPixelDescRep)
 :	fRep(iPixelDescRep)
 	{}
 
-PixelDesc& PixelDesc::operator=(const ZRef<PixelDescRep>& iPixelDescRep)
+PixelDesc& PixelDesc::operator=(const ZP<PixelDescRep>& iPixelDescRep)
 	{
 	fRep = iPixelDescRep;
 	return *this;
 	}
 
-ZRef<PixelDescRep> PixelDesc::GetRep() const
+ZP<PixelDescRep> PixelDesc::GetRep() const
 	{ return fRep; }
 
 bool PixelDesc::HasAlpha() const
@@ -342,7 +342,7 @@ bool PixelDescRep_Indexed::HasAlpha()
 	return fHasAlpha;
 	}
 
-ZRef<PixelDescRep> PixelDescRep_Indexed::WithoutAlpha()
+ZP<PixelDescRep> PixelDescRep_Indexed::WithoutAlpha()
 	{
 	if (fCheckedAlpha && !fHasAlpha)
 		return this;
@@ -388,7 +388,7 @@ PixelDescRep_Gray::PixelDescRep_Gray(uint32 iMaskL, uint32 iMaskA)
 bool PixelDescRep_Gray::HasAlpha()
 	{ return fMaskA; }
 
-ZRef<PixelDescRep> PixelDescRep_Gray::WithoutAlpha()
+ZP<PixelDescRep> PixelDescRep_Gray::WithoutAlpha()
 	{
 	if (not fMaskA)
 		return this;
@@ -440,7 +440,7 @@ PixelDescRep_Color::PixelDescRep_Color(
 bool PixelDescRep_Color::HasAlpha()
 	{ return fMaskA; }
 
-ZRef<PixelDescRep> PixelDescRep_Color::WithoutAlpha()
+ZP<PixelDescRep> PixelDescRep_Color::WithoutAlpha()
 	{
 	if (not fMaskA)
 		return this;

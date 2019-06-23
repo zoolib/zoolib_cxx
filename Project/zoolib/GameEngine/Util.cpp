@@ -121,12 +121,12 @@ ZQ<GRect> sQGRect(const Val_Any& iVal_Any)
 // =================================================================================================
 #pragma mark -
 
-static ZRef<ChannerR_Bin> spChanner_Buffered(const ZRef<ChannerR_Bin>& iChanner)
+static ZP<ChannerR_Bin> spChanner_Buffered(const ZP<ChannerR_Bin>& iChanner)
 	{ return sChannerR_Buffered(iChanner, 4096); }
 
-ZRef<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS)
+ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS)
 	{
-	if (ZRef<ChannerWPos_Bin> theChannerWPos = iFS.CreateWPos(true, true))
+	if (ZP<ChannerWPos_Bin> theChannerWPos = iFS.CreateWPos(true, true))
 		{
 		sSizeSet(*theChannerWPos, 0);
 		sPosSet(*theChannerWPos, 0);
@@ -135,9 +135,9 @@ ZRef<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS)
 	return null;
 	}
 
-ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
+ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 	{
-	if (ZRef<ChannerR_Bin> theChannerR = iFS.OpenR())
+	if (ZP<ChannerR_Bin> theChannerR = iFS.OpenR())
 		return spChanner_Buffered(theChannerR);
 	return null;
 	}
@@ -198,7 +198,7 @@ ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
 	if (Util_string::sQWithoutSuffix(".zootext", iFS.Name())
 		|| Util_string::sQWithoutSuffix(".txt", iFS.Name()))
 		{
-		if (ZRef<ChannerR_Bin> channerR = iFS.OpenR())
+		if (ZP<ChannerR_Bin> channerR = iFS.OpenR())
 			return sQReadMap_Any(*channerR, iFS.Name());
 		}
 	return null;
@@ -224,7 +224,7 @@ Map_Any sReadTextData(const FileSpec& iFS)
 
 			if (theQ)
 				{
-				if (ZRef<ChannerR_Bin> channerR = iter.Current().OpenR())
+				if (ZP<ChannerR_Bin> channerR = iter.Current().OpenR())
 					{
 					// To handle multiple maps in a single file, sQReadMap_Any needs to be
 					// refactored so we use the *same* buffer between invocations
@@ -290,13 +290,13 @@ static bool spPremultiply(Ord iH, Ord iV, RGBA& ioColor, void* iRefcon)
 	}
 #endif
 
-Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR)
+Pixmap sPixmap_PNG(const ZP<ChannerR_Bin>& iChannerR)
 	{
 	#if ZMACRO_IOS
 
-		if (ZRef<CGDataProviderRef> theProvider_File = CGData_Channer::sProvider(iChannerR))
+		if (ZP<CGDataProviderRef> theProvider_File = CGData_Channer::sProvider(iChannerR))
 			{
-			if (ZRef<CGImageRef> theImageRef = sAdopt& ::CGImageCreateWithPNGDataProvider(
+			if (ZP<CGImageRef> theImageRef = sAdopt& ::CGImageCreateWithPNGDataProvider(
 				theProvider_File, nullptr, true, kCGRenderingIntentDefault))
 				{
 				//CGImageAlphaInfo theInfo = ::CGImageGetAlphaInfo(theImageRef);

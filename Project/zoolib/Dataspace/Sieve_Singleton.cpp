@@ -40,10 +40,10 @@ using namespace ZooLib::RelationalAlgebra;
 // =================================================================================================
 #pragma mark - Sieve_Singleton
 
-Sieve_Singleton::Sieve_Singleton(ZRef<RelsWatcher::Callable_Register> iCallable_Register,
-	const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate,
-	const ZRef<Callable_Changed>& iCallable_Changed,
-	const ZRef<Expr_Rel>& iRel,
+Sieve_Singleton::Sieve_Singleton(ZP<RelsWatcher::Callable_Register> iCallable_Register,
+	const ZP<Callable_DatonUpdate>& iCallable_DatonUpdate,
+	const ZP<Callable_Changed>& iCallable_Changed,
+	const ZP<Expr_Rel>& iRel,
 	const ColName& iDatonColName,
 	const RelHead& iEditableRelHead)
 :	fCallable_Register(iCallable_Register)
@@ -160,7 +160,7 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 	fCallable_Changed->Call(this, false);
 	}
 
-void Sieve_Singleton::pChanged(const ZRef<ZCounted>& iRegistration, const ZRef<Result>& iResult)
+void Sieve_Singleton::pChanged(const ZP<ZCounted>& iRegistration, const ZP<Result>& iResult)
 	{
 	const bool wasLoaded = fRegistration && fResult;
 	fMapQ.Clear();

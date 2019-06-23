@@ -40,33 +40,33 @@ class RelsWatcher_Relater
 public:
 	typedef Callable_Void Callable_NeedsUpdate;
 
-	RelsWatcher_Relater(const ZRef<Relater>& iRelater,
-		const ZRef<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
+	RelsWatcher_Relater(const ZP<Relater>& iRelater,
+		const ZP<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
 // From ZCounted via Callable_Register
 	virtual void Initialize();
 	virtual void Finalize();
 
 // From Callable via Callable_Register
-	ZQ<ZRef<ZCounted> > QCall(
-		const ZRef<RelsWatcher::Callable_Changed>& iCallable_Changed,
-		const ZRef<Expr_Rel>& iRel);
+	ZQ<ZP<ZCounted> > QCall(
+		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
+		const ZP<Expr_Rel>& iRel);
 
 // Our protocol
 	void Update();
 
 private:
-	void pCallback_Relater(ZRef<Relater> iRelater);
+	void pCallback_Relater(ZP<Relater> iRelater);
 
 	class Registration;
 	void pFinalize(Registration* iRegistration);
 
 	ZMtx fMtx;
 
-	ZRef<Relater> fRelater;
+	ZP<Relater> fRelater;
 
 	FalseOnce fCalled_NeedsUpdate;
-	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
+	ZP<Callable_NeedsUpdate> fCallable_NeedsUpdate;
 
 	int64 fNextRefcon;
 

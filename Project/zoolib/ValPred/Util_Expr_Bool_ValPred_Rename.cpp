@@ -45,7 +45,7 @@ public:
 	:	fRename(iRename)
 		{}
 
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr)
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr)
 		{ this->pSetResult(new Expr_Bool_ValPred(sRenamed(fRename, iExpr->GetValPred()))); }
 
 private:
@@ -57,8 +57,8 @@ private:
 // =================================================================================================
 #pragma mark - Util_Expr_Bool
 
-ZRef<Expr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
-	const ZRef<Expr_Bool>& iExpr)
+ZP<Expr_Bool> sRenamed(const std::map<std::string,std::string>& iRename,
+	const ZP<Expr_Bool>& iExpr)
 	{ return DoRename(iRename).Do(iExpr); }
 
 } // namespace Util_Expr_Bool

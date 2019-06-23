@@ -52,7 +52,7 @@ SearchSpec SearchSpec::operator=(const SearchSpec& iOther)
 	}
 
 SearchSpec::SearchSpec(const ConcreteHead& iConcreteHead,
-	const ZRef<Expr_Bool>& iRestriction)
+	const ZP<Expr_Bool>& iRestriction)
 :	fConcreteHead(iConcreteHead)
 ,	fRestriction(iRestriction)
 	{}
@@ -77,7 +77,7 @@ bool SearchSpec::operator<(const SearchSpec& iOther) const
 const ConcreteHead& SearchSpec::GetConcreteHead() const
 	{ return fConcreteHead; }
 
-const ZRef<Expr_Bool>& SearchSpec::GetRestriction() const
+const ZP<Expr_Bool>& SearchSpec::GetRestriction() const
 	{ return fRestriction; }
 
 // =================================================================================================
@@ -134,7 +134,7 @@ SearchResult& SearchResult::operator=(const SearchResult& iOther)
 	return *this;
 	}
 
-SearchResult::SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResult)
+SearchResult::SearchResult(int64 iRefcon, const ZP<QueryEngine::Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 	{}
@@ -142,7 +142,7 @@ SearchResult::SearchResult(int64 iRefcon, const ZRef<QueryEngine::Result>& iResu
 int64 SearchResult::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<QueryEngine::Result> SearchResult::GetResult() const
+ZP<QueryEngine::Result> SearchResult::GetResult() const
 	{ return fResult; }
 
 // =================================================================================================
@@ -155,7 +155,7 @@ Searcher::~Searcher()
 	{}
 
 void Searcher::SetCallable_SearcherResultsAvailable(
-	ZRef<Callable_SearcherResultsAvailable> iCallable)
+	ZP<Callable_SearcherResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	fCalled_SearcherResultsAvailable.Reset();
@@ -173,7 +173,7 @@ void Searcher::pTriggerSearcherResultsAvailable()
 	ZAcqMtx acq(fMtx);
 	if (not fCalled_SearcherResultsAvailable())
 		{
-		if (ZRef<Callable_SearcherResultsAvailable> theCallable =
+		if (ZP<Callable_SearcherResultsAvailable> theCallable =
 			fCallable_SearcherResultsAvailable)
 			{
 			ZRelMtx rel(fMtx);

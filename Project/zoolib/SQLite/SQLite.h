@@ -55,13 +55,13 @@ private:
 
 class Iter : public ZCounted
 	{
-	Iter(ZRef<DB> iDB, const string8& iSQL, uint64 iPosition);
+	Iter(ZP<DB> iDB, const string8& iSQL, uint64 iPosition);
 
 public:
-	Iter(ZRef<DB> iDB, const string8& iSQL);
+	Iter(ZP<DB> iDB, const string8& iSQL);
 	virtual ~Iter();
 
-	ZRef<Iter> Clone(bool iRewound);
+	ZP<Iter> Clone(bool iRewound);
 	void Rewind();
 	bool HasValue();
 	void Advance();
@@ -73,7 +73,7 @@ public:
 private:
 	void pAdvance();
 
-	ZRef<DB> fDB;
+	ZP<DB> fDB;
 	const string8 fSQL;
 	sqlite3_stmt* fStmt;
 	bool fHasValue;

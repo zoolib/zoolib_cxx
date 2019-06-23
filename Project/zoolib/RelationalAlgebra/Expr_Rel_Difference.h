@@ -39,13 +39,13 @@ class Expr_Rel_Difference
 	{
 	typedef Expr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Difference(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
+	Expr_Rel_Difference(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Rel>& iOp1);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference& iVisitor);
@@ -58,7 +58,7 @@ class Visitor_Expr_Rel_Difference
 :	public virtual Visitor_Expr_Op2_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Difference(const ZRef<Expr_Rel_Difference>& iExpr);
+	virtual void Visit_Expr_Rel_Difference(const ZP<Expr_Rel_Difference>& iExpr);
 	};
 
 } // namespace RelationalAlgebra

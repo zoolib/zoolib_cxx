@@ -51,7 +51,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Rename
 
-Expr_Rel_Rename::Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0,
+Expr_Rel_Rename::Expr_Rel_Rename(const ZP<Expr_Rel>& iOp0,
 	const ColName& iNew, const ColName& iOld)
 :	inherited(iOp0)
 ,	fNew(iNew)
@@ -77,10 +77,10 @@ void Expr_Rel_Rename::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Rename::Self()
+ZP<Expr_Rel> Expr_Rel_Rename::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Rename::Clone(const ZRef<Expr_Rel>& iOp0)
+ZP<Expr_Rel> Expr_Rel_Rename::Clone(const ZP<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Rename(iOp0, fNew, fOld); }
 
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
@@ -95,13 +95,13 @@ const ColName& Expr_Rel_Rename::GetOld() const
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Rename
 
-void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr)
+void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
+ZP<Expr_Rel> sRename(const ZP<Expr_Rel>& iExpr,
 	const ColName& iNewPropName, const ColName& iOldPropName)
 	{
 	if (iExpr)

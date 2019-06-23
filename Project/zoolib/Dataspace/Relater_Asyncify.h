@@ -37,7 +37,7 @@ namespace Dataspace {
 class Relater_Asyncify : public Relater
 	{
 public:
-	Relater_Asyncify(ZRef<Relater> iRelater);
+	Relater_Asyncify(ZP<Relater> iRelater);
 	virtual ~Relater_Asyncify();
 
 // From ZCounted via Relater
@@ -61,16 +61,16 @@ private:
 	void pTrigger_Update();
 	void pUpdate();
 
-	void pResultsAvailable(ZRef<Relater> iRelater);
+	void pResultsAvailable(ZP<Relater> iRelater);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	ZRef<Relater> fRelater;
+	ZP<Relater> fRelater;
 
 	bool fTriggered_Update;
 	bool fNeeds_RelaterCollectResults;
 
-	std::map<int64,ZRef<RelationalAlgebra::Expr_Rel> > fPendingAdds;
+	std::map<int64,ZP<RelationalAlgebra::Expr_Rel> > fPendingAdds;
 	std::set<int64> fPendingRemoves;
 	std::map<int64,QueryResult> fPendingResults;
 	};

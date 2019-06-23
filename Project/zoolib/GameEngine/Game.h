@@ -27,9 +27,9 @@ class Game
 	{
 public:
 	Game(const FileSpec& iFS,
-		const ZRef<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
+		const ZP<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
 		bool iPreferProcessedArt, bool iPreferSmallArt,
-		const ZRef<SoundMeister>& iSoundMeister);
+		const ZP<SoundMeister>& iSoundMeister);
 
 	virtual ~Game();
 
@@ -49,7 +49,7 @@ public:
 
 	void Purge();
 
-	ZRef<NookScope> GetNookScope();
+	ZP<NookScope> GetNookScope();
 
 	void UpdateKeyDowns(int iKey);
 
@@ -58,17 +58,17 @@ public:
 	void Draw(
 		double iNewTimestamp,
 		GPoint iBackingSize,
-		const ZRef<Callable_Void>& iCallable_FlipBuffers);
+		const ZP<Callable_Void>& iCallable_FlipBuffers);
 
 	void RunOnce();
 
 private:
 	void pUpdateTouches();
 
-	ZRef<Rendered> pCrank(double iInterval, const std::vector<int>* iKeyDowns);
+	ZP<Rendered> pCrank(double iInterval, const std::vector<int>* iKeyDowns);
 
-	ZRef<Rendered> fRendered;
-	ZRef<Rendered> fRendered_Prior;
+	ZP<Rendered> fRendered;
+	ZP<Rendered> fRendered_Prior;
 
 	ZMtx fMtx_Game;
 	ZCnd fCnd_Game;
@@ -76,20 +76,20 @@ private:
 	double fTimestamp_LatestDrawn;
 	double fTimestamp_ToDraw;
 
-	ZRef<NookScope> fNookScope;
+	ZP<NookScope> fNookScope;
 
 	Map fRootMap;
 
-	ZRef<AssetCatalog> fAssetCatalog;
+	ZP<AssetCatalog> fAssetCatalog;
 
-	ZRef<FontCatalog> fFontCatalog;
+	ZP<FontCatalog> fFontCatalog;
 
-	ZRef<SoundMeister> fSoundMeister;
+	ZP<SoundMeister> fSoundMeister;
 
 	std::vector<int> fKeyDowns;
 
-	std::vector<ZRef<TouchListener> > fTLs;
-	std::map<ZRef<Touch>,ZRef<TouchListener> > fExclusiveTouches;
+	std::vector<ZP<TouchListener> > fTLs;
+	std::map<ZP<Touch>,ZP<TouchListener> > fExclusiveTouches;
 
 	TouchSet fTouchesActive;
 	TouchSet fTouchesUp;
@@ -103,7 +103,7 @@ private:
 	Cog fCog;
 	};
 
-ZRef<Game> sMakeGame(const FileSpec& iResourceFS, bool iPreferSmallArt);
+ZP<Game> sMakeGame(const FileSpec& iResourceFS, bool iPreferSmallArt);
 
 } // namespace GameEngine
 } // namespace ZooLib

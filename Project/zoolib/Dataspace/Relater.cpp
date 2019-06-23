@@ -46,7 +46,7 @@ AddedQuery& AddedQuery::operator=(const AddedQuery& iOther)
 	return *this;
 	}
 
-AddedQuery::AddedQuery(int64 iRefcon, const ZRef<RelationalAlgebra::Expr_Rel>& iRel)
+AddedQuery::AddedQuery(int64 iRefcon, const ZP<RelationalAlgebra::Expr_Rel>& iRel)
 :	fRefcon(iRefcon)
 ,	fRel(iRel)
 	{}
@@ -54,7 +54,7 @@ AddedQuery::AddedQuery(int64 iRefcon, const ZRef<RelationalAlgebra::Expr_Rel>& i
 int64 AddedQuery::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<RelationalAlgebra::Expr_Rel> AddedQuery::GetRel() const
+ZP<RelationalAlgebra::Expr_Rel> AddedQuery::GetRel() const
 	{ return fRel; }
 
 // =================================================================================================
@@ -81,14 +81,14 @@ QueryResult& QueryResult::operator=(const QueryResult& iOther)
 	return *this;
 	}
 
-QueryResult::QueryResult(int64 iRefcon, const ZRef<Result>& iResult)
+QueryResult::QueryResult(int64 iRefcon, const ZP<Result>& iResult)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 	{}
 
 QueryResult::QueryResult(int64 iRefcon,
-	const ZRef<Result>& iResult,
-	const ZRef<ResultDeltas>& iResultDeltas)
+	const ZP<Result>& iResult,
+	const ZP<ResultDeltas>& iResultDeltas)
 :	fRefcon(iRefcon)
 ,	fResult(iResult)
 ,	fResultDeltas(iResultDeltas)
@@ -98,10 +98,10 @@ QueryResult::QueryResult(int64 iRefcon,
 int64 QueryResult::GetRefcon() const
 	{ return fRefcon; }
 
-ZRef<Result> QueryResult::GetResult() const
+ZP<Result> QueryResult::GetResult() const
 	{ return fResult; }
 
-ZRef<ResultDeltas> QueryResult::GetResultDeltas() const
+ZP<ResultDeltas> QueryResult::GetResultDeltas() const
 	{ return fResultDeltas; }
 
 // =================================================================================================
@@ -113,7 +113,7 @@ Relater::Relater()
 Relater::~Relater()
 	{}
 
-void Relater::SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable)
+void Relater::SetCallable_RelaterResultsAvailable(ZP<Callable_RelaterResultsAvailable> iCallable)
 	{
 	ZAcqMtx acq(fMtx);
 	fCalled_RelaterResultsAvailable.Reset();
@@ -131,7 +131,7 @@ void Relater::pTrigger_RelaterResultsAvailable()
 	ZAcqMtx acq(fMtx);
 	if (not fCalled_RelaterResultsAvailable())
 		{
-		if (ZRef<Callable_RelaterResultsAvailable> theCallable = fCallable_RelaterResultsAvailable)
+		if (ZP<Callable_RelaterResultsAvailable> theCallable = fCallable_RelaterResultsAvailable)
 			{
 			ZRelMtx rel(fMtx);
 			theCallable->Call(this);

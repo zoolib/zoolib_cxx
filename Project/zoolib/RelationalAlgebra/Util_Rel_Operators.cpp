@@ -23,26 +23,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace RelationalAlgebra {
 
-ZRef<Expr_Rel> sConst(const NameVal& iNameVal)
+ZP<Expr_Rel> sConst(const NameVal& iNameVal)
 	{ return sConst(iNameVal.first, iNameVal.second); }
 
-ZRef<Expr_Rel> operator*(const NameVal& iNameVal, const ZRef<Expr_Rel>& iRel)
+ZP<Expr_Rel> operator*(const NameVal& iNameVal, const ZP<Expr_Rel>& iRel)
 	{ return sConst(iNameVal) * iRel; }
 
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const NameVal& iNameVal)
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const NameVal& iNameVal)
 	{ return iRel * sConst(iNameVal); }
 
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const NameVal& iNameVal)
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const NameVal& iNameVal)
 	{ return ioRel *= sConst(iNameVal); }
 
 // -----
 
-static ZRef<Expr_Rel> spConst(const Map_Any& iMap)
+static ZP<Expr_Rel> spConst(const Map_Any& iMap)
 	{
-	ZRef<Expr_Rel> result;
+	ZP<Expr_Rel> result;
 	for (Map_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		ZRef<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
+		ZP<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
 		if (not result)
 			result = cur;
 		else
@@ -51,44 +51,44 @@ static ZRef<Expr_Rel> spConst(const Map_Any& iMap)
 	return result;
 	}
 
-ZRef<Expr_Rel> sConst(const Map_Any& iMap)
+ZP<Expr_Rel> sConst(const Map_Any& iMap)
 	{
-	if (ZRef<Expr_Rel> result = spConst(iMap))
+	if (ZP<Expr_Rel> result = spConst(iMap))
 		return result;
 
 	return sDee();
 	}
 
-ZRef<Expr_Rel> operator*(const Map_Any& iMap, const ZRef<Expr_Rel>& iRel)
+ZP<Expr_Rel> operator*(const Map_Any& iMap, const ZP<Expr_Rel>& iRel)
 	{
-	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		return asRel * iRel;
 	return iRel;
 	}
 
-ZRef<Expr_Rel> operator*(const ZRef<Expr_Rel>& iRel, const Map_Any& iMap)
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_Any& iMap)
 	{
-	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		return iRel * asRel;
 	return iRel;
 	}
 
-ZRef<Expr_Rel>& operator*=(ZRef<Expr_Rel>& ioRel, const Map_Any& iMap)
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_Any& iMap)
 	{
-	if (ZRef<Expr_Rel> asRel = spConst(iMap))
+	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		ioRel = ioRel * asRel;
 	return ioRel;
 	}
 
 // -----
 
-ZRef<Expr_Rel> operator&(const ZRef<Expr_Rel>& iExpr_Rel, const ValPred& iValPred)
+ZP<Expr_Rel> operator&(const ZP<Expr_Rel>& iExpr_Rel, const ValPred& iValPred)
 	{ return new Expr_Rel_Restrict(iExpr_Rel, new Expr_Bool_ValPred(iValPred)); }
 
-ZRef<Expr_Rel> operator&(const ValPred& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+ZP<Expr_Rel> operator&(const ValPred& iValPred, const ZP<Expr_Rel>& iExpr_Rel)
 	{ return new Expr_Rel_Restrict(iExpr_Rel, new Expr_Bool_ValPred(iValPred)); }
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred)
+ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ValPred& iValPred)
 	{ return ioExpr_Rel = ioExpr_Rel & iValPred; }
 
 } // namespace RelationalAlgebra

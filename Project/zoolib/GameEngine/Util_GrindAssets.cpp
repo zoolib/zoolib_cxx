@@ -169,7 +169,7 @@ public:
 				fGrowHorizontal = not fGrowHorizontal;
 				if (fGrowHorizontal && newCapX <= X(fPixmap.Size()))
 					{
-					ZRef<Node> newRoot = new Node;
+					ZP<Node> newRoot = new Node;
 					newRoot->fVertical = true;
 					newRoot->fPos = fCapX;
 					newRoot->f0 = fRoot;
@@ -179,7 +179,7 @@ public:
 					}
 				else if (newCapY <= Y(fPixmap.Size()))
 					{
-					ZRef<Node> newRoot = new Node;
+					ZP<Node> newRoot = new Node;
 					newRoot->fVertical = false;
 					newRoot->fPos = fCapY;
 					newRoot->f0 = fRoot;
@@ -208,13 +208,13 @@ private:
 		
 		int fPos;
 		bool fVertical;
-		ZRef<Node> f0, f1;
+		ZP<Node> f0, f1;
 		};
 
 	ZDCPixmap fPixmap;
 	const int fPaddingX;
 	const int fPaddingY;
-	ZRef<Node> fRoot;
+	ZP<Node> fRoot;
 	bool fGrowHorizontal;
 	int fCapX;
 	int fCapY;
@@ -225,7 +225,7 @@ private:
 
 	static
 	bool spInsert(
-		const ZRef<Node>& iNode,
+		const ZP<Node>& iNode,
 		const int iCapW, const int iCapH,
 		const int iDesW, const int iDesH,
 		const int iX, const int iY,
@@ -378,7 +378,7 @@ static void spDecompose(
 static
 ZDCPixmap spRescale(const ZDCPixmap& iPixmap, Rat iScale)
 	{
-	ZRef<CGColorSpaceRef> theColorSpace = sAdopt& ::CGColorSpaceCreateDeviceRGB();
+	ZP<CGColorSpaceRef> theColorSpace = sAdopt& ::CGColorSpaceCreateDeviceRGB();
 
 	const ZPointPOD sourceSize = iPixmap.Size();
 
@@ -387,10 +387,10 @@ ZDCPixmap spRescale(const ZDCPixmap& iPixmap, Rat iScale)
 	const int theDepth = theRD.fPixvalDesc.fDepth;
 	ZAssert(theDepth == 24 || theDepth == 32);
 
-	ZRef<CGDataProviderRef> theSourceProvider = sAdopt& ::CGDataProviderCreateWithData(
+	ZP<CGDataProviderRef> theSourceProvider = sAdopt& ::CGDataProviderCreateWithData(
 		nullptr, iPixmap.GetBaseAddress(), theDepth/8 * X(sourceSize), nullptr);
 
-	ZRef<CGImageRef> theSourceImageRef = sAdopt& ::CGImageCreate(
+	ZP<CGImageRef> theSourceImageRef = sAdopt& ::CGImageCreate(
 		X(sourceSize), Y(sourceSize),
 		8, theDepth,
 		iPixmap.GetRasterDesc().fRowBytes,
@@ -403,7 +403,7 @@ ZDCPixmap spRescale(const ZDCPixmap& iPixmap, Rat iScale)
 	const ZPointPOD targetSize = sourceSize * iScale;
 	ZDCPixmap target(targetSize, ZDCPixmapNS::eFormatStandard_RGBA_32, ZRGBA(0,0,0,0));
 
-	ZRef<CGContextRef> targetCG = sAdopt& ::CGBitmapContextCreate(
+	ZP<CGContextRef> targetCG = sAdopt& ::CGBitmapContextCreate(
 		target.GetBaseAddress(),
 		X(targetSize), Y(targetSize),
 		8,
@@ -441,7 +441,7 @@ void spGrindArt(
 			if (ZLOGF(w, eDebug))
 				w << "Processing file: " << current.Name();
 
-			if (ZRef<ZStreamerR> theStreamerR = current.OpenR())
+			if (ZP<ZStreamerR> theStreamerR = current.OpenR())
 				{
 				ZDCPixmap thePM = sPixmap_PNG(theStreamerR);
 					
@@ -530,7 +530,7 @@ void spGrindArt(
 				break;
 				}
 
-			if (ZRef<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
+			if (ZP<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
 				ZDCPixmapEncoder_PNG::sWritePixmap(*theSW, theTiler.GetPixmap());
 
 			if (failed.empty())
@@ -603,7 +603,7 @@ void spGrindAnim(
 	size_t frameNumber = 0;
 	foreacha (entry, theFiles)
 		{
-		if (ZRef<ZStreamerR> theStreamerR = entry.second.OpenR())
+		if (ZP<ZStreamerR> theStreamerR = entry.second.OpenR())
 			{
 			ZDCPixmap thePM = ZDCPixmapDecoder_PNG::sReadPixmap(*theStreamerR);
 
@@ -668,7 +668,7 @@ void spGrindAnim(
 				break;
 				}
 
-			if (ZRef<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
+			if (ZP<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
 				ZDCPixmapEncoder_PNG::sWritePixmap(*theSW, theTiler.GetPixmap());
 
 			if (failed.empty())

@@ -33,11 +33,11 @@ namespace QueryEngine {
 class Walker_Rename : public Walker_Unary
 	{
 public:
-	Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld);
+	Walker_Rename(const ZP<Walker>& iWalker, const string8& iNew, const string8& iOld);
 	virtual ~Walker_Rename();
 
 // From QueryEngine::Walker
-	virtual ZRef<Walker> Prime(
+	virtual ZP<Walker> Prime(
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);

@@ -44,17 +44,17 @@ void spWrite_PropName(const string& iName, const ChanW_UTF& iChanW)
 	Util_Chan_JSON::sWrite_PropName(iName, iChanW);
 	}
 
-void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& iChanW)
+void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 	{
 	if (not iComparand)
 		{
 		iChanW << "/*Null Comparand*/";
 		}
-	else if (ZRef<ValComparand_Name> cmprnd = iComparand.DynamicCast<ValComparand_Name>())
+	else if (ZP<ValComparand_Name> cmprnd = iComparand.DynamicCast<ValComparand_Name>())
 		{
 		spWrite_PropName(cmprnd->GetName(), iChanW);
 		}
-	else if (ZRef<ValComparand_Const_Any> cmprnd = iComparand.DynamicCast<ValComparand_Const_Any>())
+	else if (ZP<ValComparand_Const_Any> cmprnd = iComparand.DynamicCast<ValComparand_Const_Any>())
 		{
 		Util_Any_JSON::sWrite(cmprnd->GetVal(), iChanW);
 		}
@@ -64,13 +64,13 @@ void spToStrim(const ZRef<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		}
 	}
 
-void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& iChanW)
+void spToStrim(const ZP<ValComparator>& iComparator, const ChanW_UTF& iChanW)
 	{
 	if (not iComparator)
 		{
 		iChanW << "/*Null Comparator*/";
 		}
-	else if (ZRef<ValComparator_Simple> asSimple =
+	else if (ZP<ValComparator_Simple> asSimple =
 		iComparator.DynamicCast<ValComparator_Simple>())
 		{
 		switch (asSimple->GetEComparator())
@@ -112,7 +112,7 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& iChanW)
 				}
 			}
 		}
-	else if (ZRef<ValComparator_StringContains> asStringContains =
+	else if (ZP<ValComparator_StringContains> asStringContains =
 		iComparator.DynamicCast<ValComparator_StringContains>())
 		{
 		iChanW << " contains ";
@@ -123,7 +123,7 @@ void spToStrim(const ZRef<ValComparator>& iComparator, const ChanW_UTF& iChanW)
 		}
 	}
 
-ZRef<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
+ZP<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 	if (sTryRead_CP('@', iChanRU))
@@ -139,7 +139,7 @@ ZRef<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 	return null;
 	}
 
-ZRef<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
+ZP<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
 	{
 	using Util_Chan::sTryRead_CP;
 
@@ -190,21 +190,21 @@ ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (ZRef<ValComparand,false> theComparandL = spQRead_ValComparand(iChanRU))
+	if (NotP<ValComparand> theComparandL = spQRead_ValComparand(iChanRU))
 		{
 		return null;
 		}
 	else
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (ZRef<ValComparator,false> theComparator = spQRead_ValComparator(iChanRU))
+		if (NotP<ValComparator> theComparator = spQRead_ValComparator(iChanRU))
 			{
 			throw ParseException("Expected Comparator after Comparand");
 			}
 		else
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
-			if (ZRef<ValComparand,false> theComparandR = spQRead_ValComparand(iChanRU))
+			if (NotP<ValComparand> theComparandR = spQRead_ValComparand(iChanRU))
 				{
 				throw ParseException("Expected Comparand after Comparator");
 				}

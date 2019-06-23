@@ -37,7 +37,7 @@ class Visitor_Expr_Bool_ValPred_Any_ToStrim
 	{
 public:
 // From Visitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iRep);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iRep);
 	};
 
 } // namespace ZooLib

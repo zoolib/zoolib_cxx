@@ -30,7 +30,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Walker_Union
 
-Walker_Union::Walker_Union(const ZRef<Walker>& iWalker_Left, const ZRef<Walker>& iWalker_Right)
+Walker_Union::Walker_Union(const ZP<Walker>& iWalker_Left, const ZP<Walker>& iWalker_Right)
 :	fWalker_Left(iWalker_Left)
 ,	fExhaustedLeft(false)
 ,	fWalker_Right(iWalker_Right)
@@ -48,7 +48,7 @@ void Walker_Union::Rewind()
 	fPriors.clear();
 	}
 
-ZRef<Walker> Walker_Union::Prime(
+ZP<Walker> Walker_Union::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

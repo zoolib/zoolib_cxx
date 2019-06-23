@@ -48,9 +48,9 @@ public:
 
 	typedef Callable<Val_Any(const PseudoMap&)> Callable_t;
 
-	Expr_Rel_Calc(const ZRef<Expr_Rel>& iOp0,
+	Expr_Rel_Calc(const ZP<Expr_Rel>& iOp0,
 		const ColName& iColName,
-		const ZRef<Callable_t>& iCallable);
+		const ZP<Callable_t>& iCallable);
 
 	virtual ~Expr_Rel_Calc();
 
@@ -60,18 +60,18 @@ public:
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
 	const ColName& GetColName() const;
-	const ZRef<Callable_t>& GetCallable() const;
+	const ZP<Callable_t>& GetCallable() const;
 
 private:
 	const ColName fColName;
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -81,15 +81,15 @@ class Visitor_Expr_Rel_Calc
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Calc(const ZRef<Expr_Rel_Calc>& iExpr);
+	virtual void Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sCalc(const ZRef<Expr_Rel>& iOp0,
+ZP<Expr_Rel> sCalc(const ZP<Expr_Rel>& iOp0,
 	const ColName& iColName,
-	const ZRef<Expr_Rel_Calc::Callable_t>& iCallable);
+	const ZP<Expr_Rel_Calc::Callable_t>& iCallable);
 
 } // namespace RelationalAlgebra
 

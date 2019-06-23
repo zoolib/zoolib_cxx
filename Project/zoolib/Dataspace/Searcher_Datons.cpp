@@ -223,7 +223,7 @@ class Searcher_Datons::Walker_Map
 :	public QE::Walker
 	{
 public:
-	Walker_Map(ZRef<Searcher_Datons> iSearcher, const ConcreteHead& iConcreteHead)
+	Walker_Map(ZP<Searcher_Datons> iSearcher, const ConcreteHead& iConcreteHead)
 	:	fSearcher(iSearcher)
 	,	fConcreteHead(iConcreteHead)
 		{}
@@ -238,7 +238,7 @@ public:
 		fSearcher->pRewind(this);
 		}
 
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+	virtual ZP<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
@@ -252,7 +252,7 @@ public:
 		return fSearcher->pReadInc(this, ioResults);
 		}
 
-	const ZRef<Searcher_Datons> fSearcher;
+	const ZP<Searcher_Datons> fSearcher;
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Thing::const_iterator fCurrent;
@@ -266,7 +266,7 @@ class Searcher_Datons::Walker_Index
 :	public QE::Walker
 	{
 public:
-	Walker_Index(ZRef<Searcher_Datons> iSearcher, Index* iIndex,
+	Walker_Index(ZP<Searcher_Datons> iSearcher, Index* iIndex,
 		size_t iUsableIndexNames,
 		const ConcreteHead& iConcreteHead,
 		Index::Set::const_iterator iBegin, Index::Set::const_iterator iEnd)
@@ -289,7 +289,7 @@ public:
 		fSearcher->pRewind(this);
 		}
 
-	virtual ZRef<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
+	virtual ZP<QE::Walker> Prime(const map<string8,size_t>& iOffsets,
 		map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset)
 		{
@@ -303,7 +303,7 @@ public:
 		return fSearcher->pReadInc(this, ioResults);
 		}
 
-	const ZRef<Searcher_Datons> fSearcher;
+	const ZP<Searcher_Datons> fSearcher;
 	Index* const fIndex;
 	const size_t fUsableIndexNames;
 	typedef pair<Name,bool> NameBool;
@@ -377,11 +377,11 @@ public:
 	vector<Val_Any> fValsEqual;
 	Bound_t fRangeLo;
 	Bound_t fRangeHi;
-	ZRef<Expr_Bool> fRestrictionRemainder;
+	ZP<Expr_Bool> fRestrictionRemainder;
 
 	DListHead<DLink_ClientSearch_InPSearch> fClientSearch_InPSearch;
 
-	ZRef<QE::Result> fResult;
+	ZP<QE::Result> fResult;
 	};
 
 // =================================================================================================
@@ -512,19 +512,19 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 					++iterTerms)
 					{
 					bool termIsRelevant = false;
-					if (ZRef<Expr_Bool_ValPred> theExpr = iterTerms->Get().DynamicCast<Expr_Bool_ValPred>())
+					if (ZP<Expr_Bool_ValPred> theExpr = iterTerms->Get().DynamicCast<Expr_Bool_ValPred>())
 						{
 						const ValPred& theValPred = theExpr->GetValPred();
 
-						if (ZRef<ValComparator_Simple> theValComparator =
+						if (ZP<ValComparator_Simple> theValComparator =
 							theValPred.GetComparator().DynamicCast<ValComparator_Simple>())
 							{
 							EComparator theEComparator = theValComparator->GetEComparator();
 
-							ZRef<ValComparand_Const_Any> theComparand_Const =
+							ZP<ValComparand_Const_Any> theComparand_Const =
 								theValPred.GetRHS().DynamicCast<ValComparand_Const_Any>();
 
-							ZRef<ValComparand_Name> theComparand_Name =
+							ZP<ValComparand_Name> theComparand_Name =
 								theValPred.GetLHS().DynamicCast<ValComparand_Name>();
 
 							if (not theComparand_Const || not theComparand_Name)
@@ -840,7 +840,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oCha
 			{
 			const SearchSpec& theSearchSpec = thePSearch->fSearchSpec;
 
-			ZRef<QE::Walker> theWalker;
+			ZP<QE::Walker> theWalker;
 
 			if (thePSearch->fIndex)
 				{
@@ -910,7 +910,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oCha
 				{
 				theWalker = new Walker_Map(this, thePSearch->fConcreteHead);
 
-				const ZRef<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
+				const ZP<Expr_Bool>& theRestriction = theSearchSpec.GetRestriction();
 				if (theRestriction && theRestriction != sTrue())
 					theWalker = new QE::Walker_Restrict(theWalker, theRestriction);
 				}
@@ -1101,12 +1101,12 @@ void Searcher_Datons::pIndexErase(const Map_Thing::value_type* iMapEntryP)
 		}
 	}
 
-void Searcher_Datons::pRewind(ZRef<Walker_Map> iWalker_Map)
+void Searcher_Datons::pRewind(ZP<Walker_Map> iWalker_Map)
 	{
 	iWalker_Map->fCurrent = fMap_Thing.begin();
 	}
 
-void Searcher_Datons::pPrime(ZRef<Walker_Map> iWalker_Map,
+void Searcher_Datons::pPrime(ZP<Walker_Map> iWalker_Map,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -1117,7 +1117,7 @@ void Searcher_Datons::pPrime(ZRef<Walker_Map> iWalker_Map,
 		oOffsets[entry.first] = ioBaseOffset++;
 	}
 
-bool Searcher_Datons::pReadInc(ZRef<Walker_Map> iWalker_Map, Val_Any* ioResults)
+bool Searcher_Datons::pReadInc(ZP<Walker_Map> iWalker_Map, Val_Any* ioResults)
 	{
 	const ConcreteHead& theConcreteHead = iWalker_Map->fConcreteHead;
 
@@ -1170,10 +1170,10 @@ bool Searcher_Datons::pReadInc(ZRef<Walker_Map> iWalker_Map, Val_Any* ioResults)
 	return false;
 	}
 
-void Searcher_Datons::pRewind(ZRef<Walker_Index> iWalker_Index)
+void Searcher_Datons::pRewind(ZP<Walker_Index> iWalker_Index)
 	{ iWalker_Index->fCurrent = iWalker_Index->fBegin; }
 
-void Searcher_Datons::pPrime(ZRef<Walker_Index> iWalker_Index,
+void Searcher_Datons::pPrime(ZP<Walker_Index> iWalker_Index,
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)
@@ -1190,7 +1190,7 @@ void Searcher_Datons::pPrime(ZRef<Walker_Index> iWalker_Index,
 
 static const Val_Any spVal_AbsentOptional = AbsentOptional_t();
 
-bool Searcher_Datons::pReadInc(ZRef<Walker_Index> iWalker_Index, Val_Any* ioResults)
+bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_Any* ioResults)
 	{
 	const size_t theCount_Indexed = iWalker_Index->fUsableIndexNames;
 	const auto& theNBV = iWalker_Index->fNameBoolVector;

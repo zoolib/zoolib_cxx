@@ -59,10 +59,10 @@ void Expr_Rel_Concrete::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Concrete::Self()
+ZP<Expr_Rel> Expr_Rel_Concrete::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
+ZP<Expr_Rel> Expr_Rel_Concrete::Clone()
 	{ return this; }
 
 void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
@@ -74,19 +74,19 @@ const ConcreteHead& Expr_Rel_Concrete::GetConcreteHead() const
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Concrete
 
-void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZRef<Expr_Rel_Concrete>& iExpr)
+void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark - sConcrete
 
-ZRef<Expr_Rel> sConcrete(const RelHead& iRelHead)
+ZP<Expr_Rel> sConcrete(const RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete(sConcreteHead(iRelHead)); }
 
-ZRef<Expr_Rel> sConcrete(const RelHead& iRequired, const RelHead& iOptional)
+ZP<Expr_Rel> sConcrete(const RelHead& iRequired, const RelHead& iOptional)
 	{ return new Expr_Rel_Concrete(sConcreteHead(iRequired, iOptional)); }
 
-ZRef<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead)
+ZP<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead)
 	{ return new Expr_Rel_Concrete(iConcreteHead); }
 
 } // namespace RelationalAlgebra

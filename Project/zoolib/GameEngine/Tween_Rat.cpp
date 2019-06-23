@@ -34,7 +34,7 @@ using std::map;
 // =================================================================================================
 #pragma mark - sTween<Rat>
 
-static ZRef<Tween_Rat> spAugment(const Map& iMap, ZRef<Tween_Rat> lTween_Rat)
+static ZP<Tween_Rat> spAugment(const Map& iMap, ZP<Tween_Rat> lTween_Rat)
 	{
 	if (lTween_Rat)
 		{
@@ -54,7 +54,7 @@ static ZRef<Tween_Rat> spAugment(const Map& iMap, ZRef<Tween_Rat> lTween_Rat)
 	}
 
 template <>
-ZRef<Tween_Rat> sTween<Rat>(const ZQ<Val>& iValQ)
+ZP<Tween_Rat> sTween<Rat>(const ZQ<Val>& iValQ)
 	{
 	if (not iValQ)
 		{
@@ -96,7 +96,7 @@ ZRef<Tween_Rat> sTween<Rat>(const ZQ<Val>& iValQ)
 // =================================================================================================
 #pragma mark - Const
 
-static ZRef<Tween_Rat> spRatCtor_Const(const Map& iMap)
+static ZP<Tween_Rat> spRatCtor_Const(const Map& iMap)
 	{ return sTween_Const(sDRat(0, iMap.QGet("Val"))); }
 
 ZMACRO_RatRegister(Const);
@@ -105,7 +105,7 @@ ZMACRO_RatRegister(Const);
 #pragma mark -
 
 #define ZMACRO_RatRegistration(a)\
-static ZRef<Tween_Rat> spRatCtor_##a(const Map&) \
+static ZP<Tween_Rat> spRatCtor_##a(const Map&) \
 	{ static const ZMACRO_auto(spTween, sTween_##a<Rat>()); return spTween; } \
 ZMACRO_RatRegister(a)
 
@@ -138,7 +138,7 @@ ZMACRO_RatRegistration(BounceOut);
 // =================================================================================================
 #pragma mark - BackIn
 
-static ZRef<Tween_Rat> spRatCtor_BackIn(const Map& iMap)
+static ZP<Tween_Rat> spRatCtor_BackIn(const Map& iMap)
 	{ return sTween_BackIn(sDRat(1.70158, iMap.QGet("Factor"))); }
 
 ZMACRO_RatRegister(BackIn);
@@ -146,7 +146,7 @@ ZMACRO_RatRegister(BackIn);
 // =================================================================================================
 #pragma mark - BackOut
 
-static ZRef<Tween_Rat> spRatCtor_BackOut(const Map& iMap)
+static ZP<Tween_Rat> spRatCtor_BackOut(const Map& iMap)
 	{ return sTween_BackOut(sDRat(1.70158, iMap.QGet("Factor"))); }
 
 ZMACRO_RatRegister(BackOut);
@@ -157,7 +157,7 @@ ZMACRO_RatRegister(BackOut);
 RatRegistration::RatRegistration(const string8& iCtorName, Fun iFun)
 	{ sSingleton<map<string8,Fun> >()[iCtorName] = iFun; }
 
-ZRef<Tween_Rat> RatRegistration::sCtor(const string8& iCtorName, const Map& iMap)
+ZP<Tween_Rat> RatRegistration::sCtor(const string8& iCtorName, const Map& iMap)
 	{
 	ZQ<Fun> theFun = Util_STL::sQGet(sSingleton<map<string8,Fun> >(), iCtorName);
 

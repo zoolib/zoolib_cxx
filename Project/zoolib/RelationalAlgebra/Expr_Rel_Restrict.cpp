@@ -44,7 +44,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Restrict
 
-Expr_Rel_Restrict::Expr_Rel_Restrict(const ZRef<Expr_Rel>& iOp0, const ZRef<Expr_Bool>& iExpr_Bool)
+Expr_Rel_Restrict::Expr_Rel_Restrict(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Bool>& iExpr_Bool)
 :	inherited(iOp0)
 ,	fExpr_Bool(iExpr_Bool)
 	{}
@@ -68,34 +68,34 @@ void Expr_Rel_Restrict::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op1(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Restrict::Self()
+ZP<Expr_Rel> Expr_Rel_Restrict::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Restrict::Clone(const ZRef<Expr_Rel>& iOp0)
+ZP<Expr_Rel> Expr_Rel_Restrict::Clone(const ZP<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Restrict(iOp0, fExpr_Bool); }
 
 void Expr_Rel_Restrict::Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
-const ZRef<Expr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
+const ZP<Expr_Bool>& Expr_Rel_Restrict::GetExpr_Bool() const
 	{ return fExpr_Bool; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Restrict
 
-void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZRef<Expr_Rel_Restrict>& iExpr)
+void Visitor_Expr_Rel_Restrict::Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr)
 	{
 	this->Visit_Expr_Op1(iExpr);
 
-	if (const ZRef<Expr_Bool>& theExpr_Bool = iExpr->GetExpr_Bool())
+	if (const ZP<Expr_Bool>& theExpr_Bool = iExpr->GetExpr_Bool())
 		theExpr_Bool->Accept(*this);
 	}
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel_Restrict> sRestrict(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Rel_Restrict> sRestrict(
+	const ZP<Expr_Rel>& iExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool)
 	{
 	if (iExpr_Rel && iExpr_Bool)
 		return new Expr_Rel_Restrict(iExpr_Rel, iExpr_Bool);
@@ -103,15 +103,15 @@ ZRef<Expr_Rel_Restrict> sRestrict(
 	return null;
 	}
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Rel>& iExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Bool>& iExpr_Bool, const ZRef<Expr_Rel>& iExpr_Rel)
+ZP<Expr_Rel> operator&(
+	const ZP<Expr_Bool>& iExpr_Bool, const ZP<Expr_Rel>& iExpr_Rel)
 	{ return sRestrict(iExpr_Rel, iExpr_Bool); }
 
-ZRef<Expr_Rel>& operator&=(ZRef<Expr_Rel>& ioExpr_Rel, const ZRef<Expr_Bool>& iExpr_Bool)
+ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool)
 	{ return ioExpr_Rel = ioExpr_Rel & iExpr_Bool; }
 
 } // namespace RelationalAlgebra

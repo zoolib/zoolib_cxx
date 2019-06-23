@@ -7,9 +7,9 @@
 namespace ZooLib {
 namespace GameEngine {
 
-Cog sCog_Toon_NoEpoch(const ZRef<Toon>& iToon);
+Cog sCog_Toon_NoEpoch(const ZP<Toon>& iToon);
 
-Cog sCog_Toon(const ZRef<Toon>& iToon);
+Cog sCog_Toon(const ZP<Toon>& iToon);
 
 } // namespace GameEngine
 } // namespace ZooLib

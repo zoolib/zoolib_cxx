@@ -17,19 +17,19 @@ namespace GameEngine {
 // You need to provide an implementation of this template function for each Tween specialization.
 
 template <class T>
-ZRef<Tween<T> > sTween(const ZQ<Val>& iValQ);
+ZP<Tween<T> > sTween(const ZQ<Val>& iValQ);
 
 // =================================================================================================
 
 template <class TweenAccumulatorCombiner>
-ZRef<Tween<typename TweenAccumulatorCombiner::Val> >
+ZP<Tween<typename TweenAccumulatorCombiner::Val> >
 spCombineTweens(size_t iStart, const Seq& iSeq)
 	{
 	typedef typename TweenAccumulatorCombiner::Val Val;
 
-	PairwiseCombiner_T<ZRef<Tween<Val> >,
+	PairwiseCombiner_T<ZP<Tween<Val> >,
 		TweenAccumulatorCombiner,
-		std::list<ZRef<Tween<Val> > > > theAcc;
+		std::list<ZP<Tween<Val> > > > theAcc;
 
 	for (size_t index = iStart, count = iSeq.Size(); index < count; ++index)
 		theAcc.Include(sTween<Val>(iSeq.QGet(index)));
@@ -38,11 +38,11 @@ spCombineTweens(size_t iStart, const Seq& iSeq)
 	}
 
 template <class Val>
-ZRef<Tween<Val> > spTweens(size_t iStart, const Seq& iSeq)
+ZP<Tween<Val> > spTweens(size_t iStart, const Seq& iSeq)
 	{ return spCombineTweens<TweenAccumulatorCombiner_Each<Val> >(iStart, iSeq); }
 
 template <class Val>
-ZRef<Tween<Val> > sTweens(const Seq& iSeq)
+ZP<Tween<Val> > sTweens(const Seq& iSeq)
 	{
 	if (ZQ<string8> theQ = iSeq.QGet<string8>(0))
 		{
@@ -110,7 +110,7 @@ class Tween_Callable
 public:
 	typedef Val(Signature)(double);
 
-	Tween_Callable(const ZRef<Callable<Signature> >& iCallable)
+	Tween_Callable(const ZP<Callable<Signature> >& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -122,11 +122,11 @@ public:
 		}
 
 private:
-	const ZRef<Callable<Signature> > fCallable;
+	const ZP<Callable<Signature> > fCallable;
 	};
 
 template <class Val>
-Tween<Val> sTween_Callable(const ZRef<Callable<Val(double)> >& iCallable)
+Tween<Val> sTween_Callable(const ZP<Callable<Val(double)> >& iCallable)
 	{
 	if (iCallable)
 		return new Tween_Callable<Val>(iCallable);
@@ -144,7 +144,7 @@ public:
 	typedef Val(Signature)(Param);
 
 	Tween_Filter_Callable(
-		const ZRef<Tween<Param> >& iTween, const ZRef<Callable<Signature> >& iCallable)
+		const ZP<Tween<Param> >& iTween, const ZP<Callable<Signature> >& iCallable)
 	:	fTween(iTween)
 	,	fCallable(iCallable)
 		{}
@@ -160,13 +160,13 @@ public:
 		{ return fTween->Weight(); }
 
 private:
-	const ZRef<Tween<Param> > fTween;
-	const ZRef<Callable<Signature> > fCallable;
+	const ZP<Tween<Param> > fTween;
+	const ZP<Callable<Signature> > fCallable;
 	};
 
 template <class Val, class Param>
 Tween<Val> sTween_Filter_Callable(
-	const ZRef<Tween<Param> >& iTween, const ZRef<Callable<Val(Param)> >& iCallable)
+	const ZP<Tween<Param> >& iTween, const ZP<Callable<Val(Param)> >& iCallable)
 	{
 	if (iTween && iCallable)
 		return new Tween_Filter_Callable<Val, Param>(iTween, iCallable);

@@ -297,7 +297,7 @@ void Map_Any::Rep::Finalize()
 	spSafePtrStack_Map_Any_Rep.Push(this);
 	}
 
-ZRef<Map_Any::Rep> Map_Any::Rep::sMake()
+ZRef<Map_Any::Rep> Map_Any::Rep::spMake()
 	{
 	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		return result;
@@ -305,7 +305,7 @@ ZRef<Map_Any::Rep> Map_Any::Rep::sMake()
 	return new Rep;
 	}
 
-ZRef<Map_Any::Rep> Map_Any::Rep::sMake(const Map_t& iMap)
+ZRef<Map_Any::Rep> Map_Any::Rep::spMake(const Map_t& iMap)
 	{
 	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		{
@@ -340,12 +340,12 @@ Map_Any& Map_Any::operator=(const Map_Any& iOther)
 	}
 
 Map_Any::Map_Any(const Map_t& iOther)
-:	fRep(Rep::sMake(iOther))
+:	fRep(Rep::spMake(iOther))
 	{}
 
 Map_Any& Map_Any::operator=(Map_t& iOther)
 	{
-	fRep = Rep::sMake(iOther);
+	fRep = Rep::spMake(iOther);
 	return *this;
 	}
 
@@ -669,11 +669,11 @@ void Map_Any::pTouch()
 	{
 	if (not fRep)
 		{
-		fRep = Rep::sMake();
+		fRep = Rep::spMake();
 		}
 	else if (fRep->IsShared())
 		{
-		fRep = Rep::sMake(fRep->fMap);
+		fRep = Rep::spMake(fRep->fMap);
 		}
 	}
 
@@ -686,7 +686,7 @@ Map_Any::Map_t::iterator Map_Any::pTouch(const Index_t& iIndex)
 	else if (fRep->IsShared())
 		{
 		const Name_t theName = iIndex->first;
-		fRep = Rep::sMake(fRep->fMap);
+		fRep = Rep::spMake(fRep->fMap);
 		return fRep->fMap.find(theName);
 		}
 	else

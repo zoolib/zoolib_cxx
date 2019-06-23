@@ -42,11 +42,11 @@ using std::vector;
 // =================================================================================================
 #pragma mark - RowBoat
 
-RowBoat::RowBoat(const ZRef<Callable_Register>& iCallable_Register,
-	const ZRef<Expr_Rel>& iRel,
+RowBoat::RowBoat(const ZP<Callable_Register>& iCallable_Register,
+	const ZP<Expr_Rel>& iRel,
 	const RelHead& iIdentity, const RelHead& iSignificant,
 	bool iEmitDummyChanges,
-	const ZRef<Callable_Make_Callable_Row>& iCallable)
+	const ZP<Callable_Make_Callable_Row>& iCallable)
 :	fCallable_Register(iCallable_Register)
 ,	fRel(iRel)
 ,	fResultDiffer(iIdentity, iSignificant, iEmitDummyChanges)
@@ -62,22 +62,22 @@ void RowBoat::Initialize()
 	fRegistration = fCallable_Register->Call(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
 	}
 
-const vector<ZRef<RowBoat::Callable_Row> >& RowBoat::GetRows()
+const vector<ZP<RowBoat::Callable_Row> >& RowBoat::GetRows()
 	{ return fRows; }
 
 void RowBoat::pChanged(
-	const ZRef<ZCounted>& iRegistration,
+	const ZP<ZCounted>& iRegistration,
 	int64 iChangeCount,
-	const ZRef<Result>& iResult,
-	const ZRef<ResultDeltas>& iResultDeltas)
+	const ZP<Result>& iResult,
+	const ZP<ResultDeltas>& iResultDeltas)
 	{
-	ZRef<Result> priorResult;
+	ZP<Result> priorResult;
 
 	vector<size_t> theRemoved;
 	vector<std::pair<size_t,size_t> > theAdded;
 	vector<Multi3<size_t,size_t,size_t> > theChanged;
 
-	ZRef<Result> curResult;
+	ZP<Result> curResult;
 	if (iResultDeltas)
 		{
 		fResultDiffer.Apply(null, &priorResult, iResultDeltas, &curResult, &theRemoved, &theAdded, &theChanged);
@@ -109,7 +109,7 @@ void RowBoat::pChanged(
 		{
 		size_t yy = *riter;
 		ZAssert(yy < fRows.size());
-		if (ZRef<Callable_Row> theRow = fRows[yy])
+		if (ZP<Callable_Row> theRow = fRows[yy])
 			{
 			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy));
 			theRow->Call(&thePM_Prior, nullptr);
@@ -122,7 +122,7 @@ void RowBoat::pChanged(
 		{
 		ZAssert(yy.first <= fRows.size());
 		const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.second));
-		ZRef<Callable_Row> theRow = fCallable->Call(thePM_New);
+		ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
 		fRows.insert(fRows.begin() + yy.first, theRow);
 		if (theRow)
 			theRow->Call(nullptr, &thePM_New);
@@ -130,7 +130,7 @@ void RowBoat::pChanged(
 
 	foreacha (yy, theChanged)
 		{
-		if (ZRef<Callable_Row> theRow = fRows[yy.f0])
+		if (ZP<Callable_Row> theRow = fRows[yy.f0])
 			{
 			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy.f1));
 			const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.f2));

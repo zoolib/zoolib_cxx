@@ -48,7 +48,7 @@ class Rendered_Blush
 ,	public SafePtrStackLink_Rendered_Blush
 	{
 protected:
-	Rendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered);
+	Rendered_Blush(const Blush& iBlush, const ZP<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -59,17 +59,17 @@ public:
 
 // Our protocol
 	const Blush& GetBlush();
-	const ZRef<Rendered>& GetRendered();
+	const ZP<Rendered>& GetRendered();
 
 	static
-	ZRef<Rendered_Blush> spMake(const Blush& iBlush, const ZRef<Rendered>& iRendered);
+	ZP<Rendered_Blush> spMake(const Blush& iBlush, const ZP<Rendered>& iRendered);
 
 private:
 	Blush fBlush;
-	ZRef<Rendered> fRendered;
+	ZP<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_Blush(const Blush& iBlush, const ZRef<Rendered>& iRendered);
+ZP<Rendered> sRendered_Blush(const Blush& iBlush, const ZP<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Buffer
@@ -78,7 +78,7 @@ class Rendered_Buffer
 :	public Rendered
 	{
 public:
-	Rendered_Buffer(int iWidth, int iHeight, const RGBA& iFill, const ZRef<Rendered>& iRendered);
+	Rendered_Buffer(int iWidth, int iHeight, const RGBA& iFill, const ZP<Rendered>& iRendered);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
@@ -87,17 +87,17 @@ public:
 	int GetWidth();
 	int GetHeight();
 	RGBA GetFill();
-	const ZRef<Rendered>& GetRendered();
+	const ZP<Rendered>& GetRendered();
 
 private:
 	const int fWidth;
 	const int fHeight;
 	const RGBA fFill;
-	const ZRef<Rendered> fRendered;
+	const ZP<Rendered> fRendered;
 	};
 
-ZRef<Rendered_Buffer> sRendered_Buffer(int iWidth, int iHeight, const RGBA& iFill,
-	const ZRef<Rendered>& iRendered);
+ZP<Rendered_Buffer> sRendered_Buffer(int iWidth, int iHeight, const RGBA& iFill,
+	const ZP<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Cel
@@ -118,7 +118,7 @@ private:
 	const Cel fCel;
 	};
 
-ZRef<Rendered_Cel> sRendered_Cel(const Cel& iCel);
+ZP<Rendered_Cel> sRendered_Cel(const Cel& iCel);
 
 // =================================================================================================
 #pragma mark - Rendered_Gain
@@ -134,7 +134,7 @@ class Rendered_Gain
 ,	public SafePtrStackLink_Rendered_Gain
 	{
 protected:
-	Rendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered);
+	Rendered_Gain(const Gain& iGain, const ZP<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -145,17 +145,17 @@ public:
 
 // Our protocol
 	const Gain& GetGain();
-	const ZRef<Rendered>& GetRendered();
+	const ZP<Rendered>& GetRendered();
 
 	static
-	ZRef<Rendered_Gain> spMake(const Gain& iGain, const ZRef<Rendered>& iRendered);
+	ZP<Rendered_Gain> spMake(const Gain& iGain, const ZP<Rendered>& iRendered);
 
 private:
 	Gain fGain;
-	ZRef<Rendered> fRendered;
+	ZP<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_Gain(const Gain& iGain, const ZRef<Rendered>& iRendered);
+ZP<Rendered> sRendered_Gain(const Gain& iGain, const ZP<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Group
@@ -181,16 +181,16 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const std::vector<ZRef<Rendered> >& GetChildren();
-	void Append(const ZRef<Rendered>& iRendered);
+	const std::vector<ZP<Rendered> >& GetChildren();
+	void Append(const ZP<Rendered>& iRendered);
 
-	static ZRef<Rendered_Group> spMake();
+	static ZP<Rendered_Group> spMake();
 
 private:
-	std::vector<ZRef<Rendered> > fChildren;
+	std::vector<ZP<Rendered> > fChildren;
 	};
 
-ZRef<Rendered_Group> sRendered_Group();
+ZP<Rendered_Group> sRendered_Group();
 
 // =================================================================================================
 #pragma mark - Rendered_Line
@@ -213,9 +213,9 @@ private:
 	Rat fWidth;
 	};
 
-ZRef<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth);
+ZP<Rendered> sRendered_Line(const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 
-ZRef<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
+ZP<Rendered> sRendered_Line(const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, Rat iWidth);
 
 // =================================================================================================
 #pragma mark - Rendered_Mat
@@ -231,7 +231,7 @@ class Rendered_Mat
 ,	public SafePtrStackLink_Rendered_Mat
 	{
 protected:
-	Rendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered);
+	Rendered_Mat(const Mat& iMat, const ZP<Rendered>& iRendered);
 
 public:
 // From ZCounted
@@ -242,19 +242,19 @@ public:
 
 // Our protocol
 	const Mat& GetMat();
-	const ZRef<Rendered>& GetRendered();
+	const ZP<Rendered>& GetRendered();
 
 	BlushMat GetBlushMat();
 
 	static
-	ZRef<Rendered_Mat> spMake(const Mat& iMat, const ZRef<Rendered>& iRendered);
+	ZP<Rendered_Mat> spMake(const Mat& iMat, const ZP<Rendered>& iRendered);
 
 private:
 	Mat fMat;
-	ZRef<Rendered> fRendered;
+	ZP<Rendered> fRendered;
 	};
 
-ZRef<Rendered> sRendered_Mat(const Mat& iMat, const ZRef<Rendered>& iRendered);
+ZP<Rendered> sRendered_Mat(const Mat& iMat, const ZP<Rendered>& iRendered);
 
 // =================================================================================================
 #pragma mark - Rendered_Rect
@@ -275,9 +275,9 @@ private:
 	const GRect fBounds;
 	};
 
-ZRef<Rendered> sRendered_Rect(const GRect& iBounds);
+ZP<Rendered> sRendered_Rect(const GRect& iBounds);
 
-ZRef<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds);
+ZP<Rendered> sRendered_Rect(const RGBA& iRGBA, const GRect& iBounds);
 
 // =================================================================================================
 #pragma mark - Rendered_RightAngleSegment
@@ -299,7 +299,7 @@ private:
 	const RGBA fRGBA_Concave;
 	};
 
-ZRef<Rendered> sRendered_RightAngleSegment(const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
+ZP<Rendered> sRendered_RightAngleSegment(const RGBA& iRGBA_Convex, const RGBA& iRGBA_Concave);
 
 // =================================================================================================
 #pragma mark - Rendered_Sound
@@ -308,15 +308,15 @@ class Rendered_Sound
 :	public Rendered
 	{
 public:
-	Rendered_Sound(const ZRef<Sound>& iSound);
+	Rendered_Sound(const ZP<Sound>& iSound);
 	
-	const ZRef<Sound>& GetSound();
+	const ZP<Sound>& GetSound();
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 private:
-	const ZRef<Sound> fSound;
+	const ZP<Sound> fSound;
 	};
 
 // =================================================================================================
@@ -326,24 +326,24 @@ class Rendered_String
 :	public Rendered
 	{
 public:
-	Rendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString);
+	Rendered_String(const ZP<FontStrike>& iFontStrike, const string8& iString);
 
 // From Rendered
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const ZRef<FontStrike>& GetFontStrike();
+	const ZP<FontStrike>& GetFontStrike();
 	const string8& GetString();
 
 private:
-	const ZRef<FontStrike> fFontStrike;
+	const ZP<FontStrike> fFontStrike;
 	const string8 fString;
 	};
 
-ZRef<Rendered> sRendered_String(const ZRef<FontStrike>& iFontStrike, const string8& iString);
+ZP<Rendered> sRendered_String(const ZP<FontStrike>& iFontStrike, const string8& iString);
 
-ZRef<Rendered> sRendered_String(const RGBA& iRGBA,
-	const ZRef<FontStrike>& iFontStrike, const string8& iString);
+ZP<Rendered> sRendered_String(const RGBA& iRGBA,
+	const ZP<FontStrike>& iFontStrike, const string8& iString);
 
 // =================================================================================================
 #pragma mark - Rendered_Texture
@@ -359,7 +359,7 @@ class Rendered_Texture
 ,	public SafePtrStackLink_Rendered_Texture
 	{
 public:
-	Rendered_Texture(const ZRef<Texture>& iTexture, const GRect& iBounds);
+	Rendered_Texture(const ZP<Texture>& iTexture, const GRect& iBounds);
 
 // From ZCounted
 	virtual void Finalize();
@@ -368,19 +368,19 @@ public:
 	virtual void Accept_Rendered(Visitor_Rendered& iVisitor);
 
 // Our protocol
-	const ZRef<Texture>& GetTexture();
+	const ZP<Texture>& GetTexture();
 	const GRect& GetBounds();
 
 	static
-	ZRef<Rendered_Texture> spMake(
-		const ZRef<Texture>& iTexture, const GRect& iBounds);
+	ZP<Rendered_Texture> spMake(
+		const ZP<Texture>& iTexture, const GRect& iBounds);
 
 private:
-	ZRef<Texture> fTexture;
+	ZP<Texture> fTexture;
 	GRect fBounds;
 	};
 
-ZRef<Rendered_Texture> sRendered_Texture(const ZRef<Texture>& iTexture, const GRect& iBounds);
+ZP<Rendered_Texture> sRendered_Texture(const ZP<Texture>& iTexture, const GRect& iBounds);
 
 // =================================================================================================
 #pragma mark - Rendered_Triangle
@@ -403,9 +403,9 @@ private:
 	const GPoint fP2;
 	};
 
-ZRef<Rendered> sRendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
+ZP<Rendered> sRendered_Triangle(const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
-ZRef<Rendered> sRendered_Triangle(
+ZP<Rendered> sRendered_Triangle(
 	const RGBA& iRGBA, const GPoint& iP0, const GPoint& iP1, const GPoint& iP2);
 
 // =================================================================================================
@@ -415,28 +415,28 @@ class Visitor_Rendered
 :	public virtual Visitor
 	{
 public:
-	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered);
+	virtual void Visit_Rendered(const ZP<Rendered>& iRendered);
 
-	virtual void Visit_Rendered_Blush(const ZRef<Rendered_Blush>& iRendered_Blush) = 0;
-	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer);
-	virtual void Visit_Rendered_Cel(const ZRef<Rendered_Cel>& iRendered_Cel);
-	virtual void Visit_Rendered_Gain(const ZRef<Rendered_Gain>& iRendered_Gain) = 0;
-	virtual void Visit_Rendered_Group(const ZRef<Rendered_Group>& iRendered_Group);
-	virtual void Visit_Rendered_Line(const ZRef<Rendered_Line>& iRendered_Line);
-	virtual void Visit_Rendered_Mat(const ZRef<Rendered_Mat>& iRendered_Mat) = 0;
-	virtual void Visit_Rendered_Rect(const ZRef<Rendered_Rect>& iRendered_Rect);
+	virtual void Visit_Rendered_Blush(const ZP<Rendered_Blush>& iRendered_Blush) = 0;
+	virtual void Visit_Rendered_Buffer(const ZP<Rendered_Buffer>& iRendered_Buffer);
+	virtual void Visit_Rendered_Cel(const ZP<Rendered_Cel>& iRendered_Cel);
+	virtual void Visit_Rendered_Gain(const ZP<Rendered_Gain>& iRendered_Gain) = 0;
+	virtual void Visit_Rendered_Group(const ZP<Rendered_Group>& iRendered_Group);
+	virtual void Visit_Rendered_Line(const ZP<Rendered_Line>& iRendered_Line);
+	virtual void Visit_Rendered_Mat(const ZP<Rendered_Mat>& iRendered_Mat) = 0;
+	virtual void Visit_Rendered_Rect(const ZP<Rendered_Rect>& iRendered_Rect);
 	virtual void Visit_Rendered_RightAngleSegment(
-		const ZRef<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);
-	virtual void Visit_Rendered_Sound(const ZRef<Rendered_Sound>& iRendered_Sound);
-	virtual void Visit_Rendered_String(const ZRef<Rendered_String>& iRendered_String);
-	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture);
-	virtual void Visit_Rendered_Triangle(const ZRef<Rendered_Triangle>& iRendered_Triangle);
+		const ZP<Rendered_RightAngleSegment>& iRendered_RightAngleSegment);
+	virtual void Visit_Rendered_Sound(const ZP<Rendered_Sound>& iRendered_Sound);
+	virtual void Visit_Rendered_String(const ZP<Rendered_String>& iRendered_String);
+	virtual void Visit_Rendered_Texture(const ZP<Rendered_Texture>& iRendered_Texture);
+	virtual void Visit_Rendered_Triangle(const ZP<Rendered_Triangle>& iRendered_Triangle);
 	};
 
 // =================================================================================================
 #pragma mark -
 
-ZRef<Rendered> sFrontmost(const ZRef<Rendered>& iRendered);
+ZP<Rendered> sFrontmost(const ZP<Rendered>& iRendered);
 
 } // namespace GameEngine
 } // namespace ZooLib

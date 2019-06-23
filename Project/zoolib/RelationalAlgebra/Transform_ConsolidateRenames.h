@@ -29,7 +29,7 @@ namespace RelationalAlgebra {
 
 // =================================================================================================
 #pragma mark - RelationalAlgebra::sTransform_ConsolidateRenames
-ZRef<Expr_Rel> sTransform_ConsolidateRenames(const ZRef<Expr_Rel>& iRel);
+ZP<Expr_Rel> sTransform_ConsolidateRenames(const ZP<Expr_Rel>& iRel);
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

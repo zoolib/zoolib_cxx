@@ -36,7 +36,7 @@ class Relater_SQLite : public Relater
 public:
 	enum { kDebug = 1 };
 
-	Relater_SQLite(ZRef<SQLite::DB> iDB);
+	Relater_SQLite(ZP<SQLite::DB> iDB);
 	virtual ~Relater_SQLite();
 
 	virtual bool Intersects(const RelHead& iRelHead);
@@ -48,7 +48,7 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged);
 
 private:
-	ZRef<SQLite::DB> fDB;
+	ZP<SQLite::DB> fDB;
 	std::map<string8, RelHead> fMap_Tables;
 
 	class DLink_ClientQuery_InPQuery;
@@ -56,7 +56,7 @@ private:
 	class PQuery;
 	std::map<int64, ClientQuery> fMap_RefconToClientQuery;
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
+	typedef std::map<ZP<RelationalAlgebra::Expr_Rel>, PQuery, Less_Compare_T<ZP<RelationalAlgebra::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 	};

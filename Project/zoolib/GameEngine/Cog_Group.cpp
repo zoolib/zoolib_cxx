@@ -6,7 +6,7 @@
 namespace ZooLib {
 namespace GameEngine {
 
-ZRef<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZRef<Rendered> iRendered)
+ZP<Rendered> sRendered_BlushGainMat(const BlushGainMat& iBGM, ZP<Rendered> iRendered)
 	{
 	iRendered = sRendered_Blush(iBGM.fBlush, iRendered);
 	iRendered = sRendered_Gain(iBGM.fGain, iRendered);
@@ -37,7 +37,7 @@ public:
 		if (fState.Get<bool>("Flipped"))
 			priorMat *= sScale3X<Rat>(-1);
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
+		SaveSetRestore<ZP<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const ZQ<Cog> newChildQ = 
@@ -96,13 +96,13 @@ Cog spCogCtor_Group(const Map& iMap)
 
 	if (theCog)
 		{
-		ZRef<Tween<BlushGainMat> > theBGM =
+		ZP<Tween<BlushGainMat> > theBGM =
 			sTween<BlushGainMat>(sQGetNamed(iMap, "BlushGainMat", "BGM"));
 
 		if (not theBGM)
 			theBGM = sTween_BlushGainMat(iMap);
 
-		ZRef<Tween<Mat> > theScale = sTween_Const<Mat>(sScale3Z<Rat>(0.5));
+		ZP<Tween<Mat> > theScale = sTween_Const<Mat>(sScale3Z<Rat>(0.5));
 		if (theBGM)
 			theBGM *= theScale;
 		else
@@ -145,7 +145,7 @@ public:
 		{
 		ZAssert(sIsPending(fChild));
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
+		SaveSetRestore<ZP<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const ZQ<Cog> newChildQ = 
@@ -179,11 +179,11 @@ class Callable_Cog_Group_Loop
 :	public Cog::Callable
 	{
 public:
-	const ZRef<Tween_BlushGainMat> fTween;
+	const ZP<Tween_BlushGainMat> fTween;
 	const Cog fChild;
 	const double fStartTime;
 
-	Callable_Cog_Group_Loop(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
+	Callable_Cog_Group_Loop(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
 	:	fTween(iTween)
 	,	fChild(iChild)
 	,	fStartTime(iStartTime)
@@ -193,7 +193,7 @@ public:
 		{
 		ZAssert(sIsPending(fChild));
 
-		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
+		SaveSetRestore<ZP<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		const BlushGainMat theBGM = fTween->ValAtWrapped(iParam.fElapsed - fStartTime);
@@ -223,10 +223,10 @@ class Callable_Cog_Group_Loop_Init
 :	public Cog::Callable
 	{
 public:
-	const ZRef<Tween_BlushGainMat> fTween;
+	const ZP<Tween_BlushGainMat> fTween;
 	const Cog fChild;
 
-	Callable_Cog_Group_Loop_Init(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+	Callable_Cog_Group_Loop_Init(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	:	fTween(iTween)
 	,	fChild(iChild)
 		{}
@@ -238,7 +238,7 @@ public:
 		}
 	};
 
-Cog sCog_Group_Loop(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+Cog sCog_Group_Loop(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	{
 	if (sIsFinished(iChild) || not iTween)
 		return iChild;
@@ -252,10 +252,10 @@ Cog sCog_Group_Loop(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
 namespace { // anonymous
 
 Cog spCog_Group_Terminate(
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime);
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime);
 
 Cog spCogFun_Group_Terminate(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
 	{
 	ZAssert(sIsPending(iChild));
 
@@ -265,7 +265,7 @@ Cog spCogFun_Group_Terminate(const Cog& iSelf, const Param& iParam,
 		}
 	else
 		{
-		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
+		SaveSetRestore<ZP<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		Cog newChild = iChild;
@@ -287,7 +287,7 @@ Cog spCogFun_Group_Terminate(const Cog& iSelf, const Param& iParam,
 GEMACRO_Callable(spCallable_Group_Terminate, spCogFun_Group_Terminate);
 
 Cog spCog_Group_Terminate(
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
 	{
 	ZAssert(sIsPending(iChild) && iTween);
 
@@ -295,14 +295,14 @@ Cog spCog_Group_Terminate(
 	}
 
 Cog spCogFun_Group_Terminate_Init(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	{ return sCallCog(spCog_Group_Terminate(iTween, iChild, iParam.fElapsed), iParam); }
 
 GEMACRO_Callable(spCallable_Group_Terminate_Init, spCogFun_Group_Terminate_Init);
 
 } // anonymous namespace
 
-Cog sCog_Group_Terminate(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+Cog sCog_Group_Terminate(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	{
 	if (sIsFinished(iChild) || not iTween)
 		return true;
@@ -316,10 +316,10 @@ Cog sCog_Group_Terminate(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChi
 namespace { // anonymous
 
 Cog spCog_Group_Continue(
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime);
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime);
 
 Cog spCogFun_Group_Continue(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
 	{
 	ZAssert(sIsPending(iChild));
 
@@ -329,7 +329,7 @@ Cog spCogFun_Group_Continue(const Cog& iSelf, const Param& iParam,
 		}
 	else
 		{
-		SaveSetRestore<ZRef<Rendered_Group> > theSSR(
+		SaveSetRestore<ZP<Rendered_Group> > theSSR(
 			iParam.fOutChannel.GetGroup(), sRendered_Group());
 
 		Cog newChild = iChild;
@@ -351,7 +351,7 @@ Cog spCogFun_Group_Continue(const Cog& iSelf, const Param& iParam,
 GEMACRO_Callable(spCallable_Group_Continue, spCogFun_Group_Continue);
 
 Cog spCog_Group_Continue(
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild, double iStartTime)
 	{
 	ZAssert(sIsPending(iChild) && iTween);
 
@@ -359,14 +359,14 @@ Cog spCog_Group_Continue(
 	}
 
 Cog spCogFun_Group_Continue_Init(const Cog& iSelf, const Param& iParam,
-	const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+	const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	{ return sCallCog(spCog_Group_Continue(iTween, iChild, iParam.fElapsed), iParam); }
 
 GEMACRO_Callable(spCallable_Group_Continue_Init, spCogFun_Group_Continue_Init);
 
 } // anonymous namespace
 
-Cog sCog_Group_Continue(const ZRef<Tween_BlushGainMat>& iTween, const Cog& iChild)
+Cog sCog_Group_Continue(const ZP<Tween_BlushGainMat>& iTween, const Cog& iChild)
 	{
 	if (sIsFinished(iChild) || not iTween)
 		return iChild;

@@ -44,14 +44,14 @@ public:
 	~AddedQuery();
 	AddedQuery& operator=(const AddedQuery& iOther);
 
-	AddedQuery(int64 iRefcon, const ZRef<RelationalAlgebra::Expr_Rel>& iRel);
+	AddedQuery(int64 iRefcon, const ZP<RelationalAlgebra::Expr_Rel>& iRel);
 
 	int64 GetRefcon() const;
-	ZRef<RelationalAlgebra::Expr_Rel> GetRel() const;
+	ZP<RelationalAlgebra::Expr_Rel> GetRel() const;
 
 private:
 	int64 fRefcon;
-	ZRef<RelationalAlgebra::Expr_Rel> fRel;
+	ZP<RelationalAlgebra::Expr_Rel> fRel;
 	};
 
 // =================================================================================================
@@ -66,20 +66,20 @@ public:
 	~QueryResult();
 	QueryResult& operator=(const QueryResult& iOther);
 
-	QueryResult(int64 iRefcon, const ZRef<Result>& iResult);
+	QueryResult(int64 iRefcon, const ZP<Result>& iResult);
 
 	QueryResult(int64 iRefcon,
-		const ZRef<Result>& iResult,
-		const ZRef<ResultDeltas>& iResultDeltas);
+		const ZP<Result>& iResult,
+		const ZP<ResultDeltas>& iResultDeltas);
 
 	int64 GetRefcon() const;
-	ZRef<Result> GetResult() const;
-	ZRef<ResultDeltas> GetResultDeltas() const;
+	ZP<Result> GetResult() const;
+	ZP<ResultDeltas> GetResultDeltas() const;
 
 private:
 	int64 fRefcon;
-	ZRef<Result> fResult;
-	ZRef<ResultDeltas> fResultDeltas;
+	ZP<Result> fResult;
+	ZP<ResultDeltas> fResultDeltas;
 	};
 
 // =================================================================================================
@@ -101,8 +101,8 @@ public:
 
 	virtual void CollectResults(std::vector<QueryResult>& oChanged, int64& oChangeCount) = 0;
 
-	typedef Callable<void(ZRef<Relater>)> Callable_RelaterResultsAvailable;
-	void SetCallable_RelaterResultsAvailable(ZRef<Callable_RelaterResultsAvailable> iCallable);
+	typedef Callable<void(ZP<Relater>)> Callable_RelaterResultsAvailable;
+	void SetCallable_RelaterResultsAvailable(ZP<Callable_RelaterResultsAvailable> iCallable);
 
 protected:
 	void pCalled_RelaterCollectResults();
@@ -111,7 +111,7 @@ protected:
 private:
 	ZMtx fMtx;
 	FalseOnce fCalled_RelaterResultsAvailable;
-	ZRef<Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
+	ZP<Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
 	};
 
 } // namespace Dataspace

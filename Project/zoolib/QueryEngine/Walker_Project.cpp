@@ -34,7 +34,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Walker_Project
 
-Walker_Project::Walker_Project(const ZRef<Walker>& iWalker, const RelationalAlgebra::RelHead& iRelHead)
+Walker_Project::Walker_Project(const ZP<Walker>& iWalker, const RelationalAlgebra::RelHead& iRelHead)
 :	Walker_Unary(iWalker)
 ,	fRelHead(iRelHead)
 	{}
@@ -48,7 +48,7 @@ void Walker_Project::Rewind()
 	fPriors.clear();
 	}
 
-ZRef<Walker> Walker_Project::Prime(
+ZP<Walker> Walker_Project::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

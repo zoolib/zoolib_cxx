@@ -9,13 +9,13 @@ namespace Util {
 // =================================================================================================
 #pragma mark - sFinderHider
 
-ZRef<Rendered> sFinderHider(
-	const ZRef<Rendered>& iRendered,
+ZP<Rendered> sFinderHider(
+	const ZP<Rendered>& iRendered,
 	GPoint iBackingSize,
 	GPoint iGameSize)
 	{
 	// Rectangles to mask off extraneous crud.
-	ZRef<Rendered_Group> finderHider = sRendered_Group();
+	ZP<Rendered_Group> finderHider = sRendered_Group();
 
 	const Rat iWidth = X(iGameSize);
 	const Rat iHeight = Y(iGameSize);
@@ -34,7 +34,7 @@ ZRef<Rendered> sFinderHider(
 
 	const RGBA theColor = DebugFlags::sTouches ? sRGBA(0.25,1) : sRGBA(0, 1);
 
-	ZRef<Rendered_Group> result = sRendered_Group();
+	ZP<Rendered_Group> result = sRendered_Group();
 
 	// include what we were passed
 	result->Append(iRendered);

@@ -35,7 +35,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark -
 
-bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZRef<Expr_Rel> iRel, const ChanW_UTF& w);
+bool sWriteAsSQL(const std::map<string8,RelHead>& iTables, ZP<Expr_Rel> iRel, const ChanW_UTF& w);
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

@@ -32,15 +32,15 @@ namespace Dataspace {
 namespace RelsWatcher {
 
 typedef Callable<void(
-		const ZRef<ZCounted>& iRegistration,
+		const ZP<ZCounted>& iRegistration,
 		int64 iChangeCount,
-		const ZRef<Result>& iResult,
-		const ZRef<ResultDeltas>& iResultDeltas)>
+		const ZP<Result>& iResult,
+		const ZP<ResultDeltas>& iResultDeltas)>
 	Callable_Changed;
 
-typedef Callable<ZRef<ZCounted>(
-		const ZRef<Callable_Changed>& iCallable_Changed,
-		const ZRef<Expr_Rel>& iRel)>
+typedef Callable<ZP<ZCounted>(
+		const ZP<Callable_Changed>& iCallable_Changed,
+		const ZP<Expr_Rel>& iRel)>
 	Callable_Register;
 
 } // namespace RelsWatcher

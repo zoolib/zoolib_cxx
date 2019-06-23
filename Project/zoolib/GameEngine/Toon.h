@@ -12,14 +12,14 @@ namespace GameEngine {
 // =================================================================================================
 #pragma mark - Toon
 
-typedef ZRef<CountedVal<std::vector<Cel> > > CelStack;
+typedef ZP<CountedVal<std::vector<Cel> > > CelStack;
 
 typedef Tween<CelStack> Toon;
 
 // =================================================================================================
 #pragma mark - sToon aka sTween<CelStack>
 
-ZRef<Toon> sToon(const ZQ<Val>& iValQ);
+ZP<Toon> sToon(const ZQ<Val>& iValQ);
 
 // =================================================================================================
 #pragma mark - ToonRegistration
@@ -27,11 +27,11 @@ ZRef<Toon> sToon(const ZQ<Val>& iValQ);
 class ToonRegistration
 	{
 public:
-	typedef ZRef<Toon>(*Fun)(const Map& iMap);
+	typedef ZP<Toon>(*Fun)(const Map& iMap);
 
 	ToonRegistration(const string8& iCtorName, Fun iFun);
 
-	static ZRef<Toon> sCtor(const string8& iCtorName, const Map& iMap);
+	static ZP<Toon> sCtor(const string8& iCtorName, const Map& iMap);
 	};
 
 } // namespace GameEngine

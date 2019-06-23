@@ -41,7 +41,7 @@ static const int kUpdateRate_Draw = 2;
 namespace {
 
 
-ZQ<FileSpec> spQAsFileSpec(const ZRef<CFURLRef>& iURLRef)
+ZQ<FileSpec> spQAsFileSpec(const ZP<CFURLRef>& iURLRef)
 	{
 	vector<UInt8> theBuf(1024);
 	if (::CFURLGetFileSystemRepresentation(iURLRef, true, &theBuf[0], theBuf.size()))
@@ -67,11 +67,11 @@ FileSpec spResourceFS()
 @interface UIViewController_ZooLibGame : UIViewController
 	{
 @public
-	ZRef<UIView> fView_Outer;
-	ZRef<UIView_Game> fUIView_Game;
-	ZRef<CADisplayLink> fDisplayLink;
+	ZP<UIView> fView_Outer;
+	ZP<UIView_Game> fUIView_Game;
+	ZP<CADisplayLink> fDisplayLink;
 
-	ZRef<Game> fGame;
+	ZP<Game> fGame;
 
 	TouchMap fTouchMap;
 	}
@@ -194,7 +194,7 @@ FileSpec spResourceFS()
 
 @interface UIApplicationDelegate_ZooLibGame : UIResponder <UIApplicationDelegate>
 	{
-	ZRef<UIViewController_ZooLibGame> fUIViewController_ZooLibGame;
+	ZP<UIViewController_ZooLibGame> fUIViewController_ZooLibGame;
 	}
 
 @property (strong, nonatomic) UIWindow *window;

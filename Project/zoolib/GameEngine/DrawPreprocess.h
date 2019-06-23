@@ -9,9 +9,9 @@
 namespace ZooLib {
 namespace GameEngine {
 
-ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
-	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
-	const ZRef<FontCatalog>& iFontCatalog,
+ZP<Rendered> sDrawPreprocess(const ZP<Rendered>& iRendered,
+	const ZP<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
+	const ZP<FontCatalog>& iFontCatalog,
 	const GPoint& iGameSize);
 
 } // namespace GameEngine

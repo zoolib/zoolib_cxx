@@ -33,8 +33,8 @@ ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS);
 
 Map_Any sReadTextData(const FileSpec& iFS);
 
-ZRef<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
-ZRef<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
+ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
+ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w);
 Val_Any sReadBin(const ChanR_Bin& iChanR);
@@ -47,7 +47,7 @@ void sDump(const Any& iAny);
 
 uint64 sNextID();
 
-Pixmap sPixmap_PNG(const ZRef<ChannerR_Bin>& iChannerR);
+Pixmap sPixmap_PNG(const ZP<ChannerR_Bin>& iChannerR);
 
 } // namespace GameEngine
 } // namespace ZooLib

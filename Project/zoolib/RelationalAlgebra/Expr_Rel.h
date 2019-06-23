@@ -57,13 +57,13 @@ public:
 
 typedef Callable<void(const string8& iMessage)> Callable_SemanticError;
 
-extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
-extern const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw;
-extern Safe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default;
+extern const ZP<Callable_SemanticError> sCallable_SemanticError_Ignore;
+extern const ZP<Callable_SemanticError> sCallable_SemanticError_Throw;
+extern Safe<ZP<Callable_SemanticError> > sCallable_SemanticError_Default;
 
 void sSemanticError(const string8& iMessage);
 
-typedef ThreadVal<ZRef<Callable_SemanticError> > ThreadVal_SemanticError;
+typedef ThreadVal<ZP<Callable_SemanticError> > ThreadVal_SemanticError;
 
 } // namespace RelationalAlgebra
 } // namespace ZooLib

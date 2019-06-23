@@ -40,16 +40,16 @@ class Visitor_Expr_Bool_ValPred_Do_GetNames
 	{
 public:
 // From Visitor_Expr_Bool_ValPred
-	virtual void Visit_Expr_Bool_ValPred(const ZRef<Expr_Bool_ValPred>& iExpr);
+	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr);
 
 // From Visitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZRef<Expr_Op1_T<Expr_Bool> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool> >& iExpr);
 
 // From Visitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZRef<Expr_Op2_T<Expr_Bool> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool> >& iExpr);
 	};
 
-std::set<std::string> sGetNames(const ZRef<Expr_Bool>& iExpr);
+std::set<std::string> sGetNames(const ZP<Expr_Bool>& iExpr);
 
 } // namespace ZooLib
 

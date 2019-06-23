@@ -33,7 +33,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Walker_Rename
 
-Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, const string8& iOld)
+Walker_Rename::Walker_Rename(const ZP<Walker>& iWalker, const string8& iNew, const string8& iOld)
 :	Walker_Unary(iWalker)
 ,	fNew(iNew)
 ,	fOld(iOld)
@@ -42,7 +42,7 @@ Walker_Rename::Walker_Rename(const ZRef<Walker>& iWalker, const string8& iNew, c
 Walker_Rename::~Walker_Rename()
 	{}
 
-ZRef<Walker> Walker_Rename::Prime(
+ZP<Walker> Walker_Rename::Prime(
 	const map<string8,size_t>& iOffsets,
 	map<string8,size_t>& oOffsets,
 	size_t& ioBaseOffset)

@@ -40,9 +40,9 @@ public:
 	SoundMeister();
 	virtual ~SoundMeister();
 
-	virtual void SetSounds(const ZRef<Sound>* iSounds, size_t iCount) = 0;
+	virtual void SetSounds(const ZP<Sound>* iSounds, size_t iCount) = 0;
 
-	virtual ZRef<Sound> MakeSound(const string8& iName) = 0;
+	virtual ZP<Sound> MakeSound(const string8& iName) = 0;
 	};
 
 } // namespace GameEngine

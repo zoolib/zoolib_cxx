@@ -64,7 +64,7 @@ void TouchListener::Munge(const Mat& iMat, const Mat& iInverseMat)
 // =================================================================================================
 #pragma mark -
 
-bool sTouchIn(const ZRef<TouchListener>& iTouchListener)
+bool sTouchIn(const ZP<TouchListener>& iTouchListener)
 	{
 	if (iTouchListener->fActive.empty())
 		return false;
@@ -72,30 +72,30 @@ bool sTouchIn(const ZRef<TouchListener>& iTouchListener)
 	if (iTouchListener->fUps.size())
 		return false;
 
-	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
+	ZP<Touch> theTouch = *iTouchListener->fActive.begin();
 	if (iTouchListener->Contains(theTouch->fPos))
 		return true;
 
 	return false;
 	}
 
-bool sTouchOut(const ZRef<TouchListener>& iTouchListener)
+bool sTouchOut(const ZP<TouchListener>& iTouchListener)
 	{
 	if (iTouchListener->fActive.empty())
 		return false;
 
-	ZRef<Touch> theTouch = *iTouchListener->fActive.begin();
+	ZP<Touch> theTouch = *iTouchListener->fActive.begin();
 	if (iTouchListener->Contains(theTouch->fPos))
 		return false;
 
 	return true;
 	}
 
-bool sTouchUp(const ZRef<TouchListener>& iTouchListener)
+bool sTouchUp(const ZP<TouchListener>& iTouchListener)
 	{
 	if (iTouchListener->fUps.size())
 		{
-		ZRef<Touch> theTouch = *iTouchListener->fUps.begin();
+		ZP<Touch> theTouch = *iTouchListener->fUps.begin();
 		if (iTouchListener->Contains(theTouch->fPos))
 			return true;
 		}

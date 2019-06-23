@@ -31,12 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T<ZRef<RelationalAlgebra::Expr_Rel> >(
-	const ZRef<RelationalAlgebra::Expr_Rel>& iL,
-	const ZRef<RelationalAlgebra::Expr_Rel>& iR)
+int sCompare_T<ZP<RelationalAlgebra::Expr_Rel> >(
+	const ZP<RelationalAlgebra::Expr_Rel>& iL,
+	const ZP<RelationalAlgebra::Expr_Rel>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
-ZMACRO_CompareRegistration_T(ZRef<RelationalAlgebra::Expr_Rel>)
+ZMACRO_CompareRegistration_T(ZP<RelationalAlgebra::Expr_Rel>)
 
 } // namespace ZooLib
 
@@ -71,16 +71,16 @@ static void spLog(const string8& iMessage)
 // =================================================================================================
 #pragma mark - SemanticError, global and per-thread handlers
 
-const ZRef<Callable_SemanticError> sCallable_SemanticError_Ignore;
-const ZRef<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);
+const ZP<Callable_SemanticError> sCallable_SemanticError_Ignore;
+const ZP<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);
 
-Safe<ZRef<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
+Safe<ZP<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
 
 void sSemanticError(const string8& iMessage)
 	{
-	if (ZRef<Callable_SemanticError> theCallable = ThreadVal_SemanticError::sGet())
+	if (ZP<Callable_SemanticError> theCallable = ThreadVal_SemanticError::sGet())
 		theCallable->Call(iMessage);
-	else if (ZRef<Callable_SemanticError> theCallable = sCallable_SemanticError_Default)
+	else if (ZP<Callable_SemanticError> theCallable = sCallable_SemanticError_Default)
 		theCallable->Call(iMessage);
 	}
 

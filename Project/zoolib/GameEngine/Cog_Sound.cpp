@@ -11,7 +11,7 @@ namespace GameEngine {
 
 static
 Cog spCogFun_Sound(const Cog& iSelf, const Param& iParam,
-	const ZRef<Sound>& iSound)
+	const ZP<Sound>& iSound)
 	{
 	if (iParam.fInterval > 0)
 		{
@@ -29,9 +29,9 @@ Cog spCogFun_Init(const Cog& iSelf, const Param& iParam,
 	if (ZLOGF(w, eDebug+1))
 		w << iName << ":" << iDetached;
 
-	if (ZRef<SoundMeister> theSM = iParam.fOutChannel.fSoundMeister)
+	if (ZP<SoundMeister> theSM = iParam.fOutChannel.fSoundMeister)
 		{
-		if (ZRef<Sound> theSound = theSM->MakeSound(iName))
+		if (ZP<Sound> theSound = theSM->MakeSound(iName))
 			{
 			theSound->fDetached = iDetached;
 			theSound->fScope = iScope;

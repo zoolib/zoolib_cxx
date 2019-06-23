@@ -49,7 +49,7 @@ using namespace GameEngine;
 
 namespace {
 
-ZQ<FileSpec> spQAsFileSpec(const ZRef<CFURLRef>& iURLRef)
+ZQ<FileSpec> spQAsFileSpec(const ZP<CFURLRef>& iURLRef)
 	{
 	vector<UInt8> theBuf(1024);
 	if (::CFURLGetFileSystemRepresentation(iURLRef, true, &theBuf[0], theBuf.size()))
@@ -77,9 +77,9 @@ static FileSpec spResourceFS()
 
 	GPoint fWH;
 
-	ZRef<Game> fGame;
+	ZP<Game> fGame;
 
-	ZRef<Touch> fCurrentTouch;
+	ZP<Touch> fCurrentTouch;
 	}
 
 @end // interface NSOpenGLView_ZooLibGame
@@ -103,7 +103,7 @@ static FileSpec spResourceFS()
 		0
 		};
 
-	ZRef<NSOpenGLPixelFormat> pf =
+	ZP<NSOpenGLPixelFormat> pf =
 		sAdopt& [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
 	self = [super initWithFrame:frameRect pixelFormat:pf];
@@ -153,7 +153,7 @@ static CVReturn spDisplayLinkCallback(
 	CVOptionFlags* flagsOut,
 	void* iRefcon)
 	{
-	ZRef<NSAutoreleasePool> pool = sAdopt& [[NSAutoreleasePool alloc] init];
+	ZP<NSAutoreleasePool> pool = sAdopt& [[NSAutoreleasePool alloc] init];
 	Nanoseconds theTime = ::AbsoluteToNanoseconds(*((AbsoluteTime*)&outputTime->hostTime));
 	double asDouble = (*((uint64*)&theTime))/ 1e9;
 
@@ -206,7 +206,7 @@ static CVReturn spDisplayLinkCallback(
 	{
 	if (not [iEvent isARepeat])
 		{
-		if (ZRef<NSString> theString = [iEvent charactersIgnoringModifiers])
+		if (ZP<NSString> theString = [iEvent charactersIgnoringModifiers])
 			{
 			if ([theString length])
 				{
@@ -278,7 +278,7 @@ static CVReturn spDisplayLinkCallback(
 @interface NSApplicationDelegate_ZooLibGame : NSObject
 	{
 @public
-	ZRef<NSWindow> fWindow;
+	ZP<NSWindow> fWindow;
 	}
 
 @end // interface NSApplicationDelegate_ZooLibGame
@@ -306,7 +306,7 @@ static CVReturn spDisplayLinkCallback(
 
 	[fWindow setAcceptsMouseMovedEvents:YES];
 
-	ZRef<NSOpenGLView_ZooLibGame> theView = sAdopt& [[NSOpenGLView_ZooLibGame alloc] init];
+	ZP<NSOpenGLView_ZooLibGame> theView = sAdopt& [[NSOpenGLView_ZooLibGame alloc] init];
 	[fWindow setContentView:theView];
 	[fWindow makeKeyAndOrderFront:self];
 	}

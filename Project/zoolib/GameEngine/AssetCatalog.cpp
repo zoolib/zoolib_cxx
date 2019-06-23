@@ -51,9 +51,9 @@ class Sheet
 	{
 public:
 	Sheet(
-		const ZRef<AssetCatalog::SheetCatalog>& iSC,
+		const ZP<AssetCatalog::SheetCatalog>& iSC,
 		const Name& iName,
-		const ZRef<AssetCatalog::Callable_TextureMaker>& iTextureMaker);
+		const ZP<AssetCatalog::Callable_TextureMaker>& iTextureMaker);
 
 	virtual ~Sheet();
 
@@ -61,13 +61,13 @@ public:
 	virtual void Finalize();
 
 // Our protocol
-	ZRef<Texture> GetTexture();
+	ZP<Texture> GetTexture();
 
-	ZRef<AssetCatalog::SheetCatalog> fSC;
+	ZP<AssetCatalog::SheetCatalog> fSC;
 	int fPriority;
 	const Name fName;
-	const ZRef<AssetCatalog::Callable_TextureMaker> fTextureMaker;
-	ZRef<Texture> fTexture;
+	const ZP<AssetCatalog::Callable_TextureMaker> fTextureMaker;
+	ZP<Texture> fTexture;
 	};
 
 } // anonymous namespace
@@ -126,7 +126,7 @@ public:
 		for (DListIterator<Sheet,DLink_Sheet_Cached> iter = fSheets_Cached; iter; iter.Advance())
 			{
 			Sheet* theSheet = iter.Current();
-			if (const ZRef<Texture>& theTexture = theSheet->fTexture)
+			if (const ZP<Texture>& theTexture = theSheet->fTexture)
 				pixelCount_Total += theTexture->fPixelCount;
 			}
 
@@ -137,7 +137,7 @@ public:
 		while (fSheets_Cached.Size() && pixelCount_Purged < pixelCount_ToPurge)
 			{
 			Sheet* theSheet = sGetEraseBackMust<Sheet>(fSheets_Cached);
-			if (const ZRef<Texture>& theTexture = theSheet->fTexture)
+			if (const ZP<Texture>& theTexture = theSheet->fTexture)
 				pixelCount_Purged += theTexture->fPixelCount;
 			sEraseMust(fSheets, theSheet->fName);			
 			sQErase(fSheets_Load, theSheet);
@@ -148,11 +148,11 @@ public:
 			w << "Total: " << pixelCount_Total << ", Purged: " << pixelCount_Purged;
 		}
 
-	ZRef<Sheet> Get(const Name& iName, int iPriority)
+	ZP<Sheet> Get(const Name& iName, int iPriority)
 		{
 		ZAcqMtx acq(fMtx);
 
-		ZRef<Sheet> result;
+		ZP<Sheet> result;
 
 		if (ZQ<Sheet*> theQ = sQGet(fSheets, iName))
 			{
@@ -163,7 +163,7 @@ public:
 			ZAssert(fSheets.size() == fSheets_Cached.Size() + fSheets_Active.Size());
 			result = theSheet;
 			}
-		else if (ZQ<ZRef<Callable_TextureMaker> > theTM = sQGet(fTextureMakers, iName))
+		else if (ZQ<ZP<Callable_TextureMaker> > theTM = sQGet(fTextureMakers, iName))
 			{
 			Sheet* theSheet = new Sheet(this, iName, *theTM);
 			sInsertMust(fSheets, iName, theSheet);
@@ -202,7 +202,7 @@ public:
 			{
 			// theSheet must go out of scope while we're not holding fMtx. Else
 			// we'll try to recursively acquire fMtx.
-			ZRef<Sheet> theSheet;
+			ZP<Sheet> theSheet;
 			ZAcqMtx acq(fMtx);
 			if (not fKeepRunning)
 				break;
@@ -227,7 +227,7 @@ public:
 
 			theSheet = highestSheet;
 
-			ZRef<Texture> theTexture;
+			ZP<Texture> theTexture;
 			{
 			ZRelMtx rel(fMtx);
 			theTexture = sCall(theSheet->fTextureMaker);
@@ -255,7 +255,7 @@ public:
 		iSheet->FinishFinalize();
 		}
 
-	const ZRef<Callable_TextureMaker> fTextureMaker;
+	const ZP<Callable_TextureMaker> fTextureMaker;
 
 	ZMtx fMtx;
 	ZCnd fCnd_Load;
@@ -269,16 +269,16 @@ public:
 	DListHead<DLink_Sheet_Cached> fSheets_Cached;
 	DListHead<DLink_Sheet_Load> fSheets_Load;
 
-	map<Name,ZRef<Callable_TextureMaker> > fTextureMakers;
+	map<Name,ZP<Callable_TextureMaker> > fTextureMakers;
 	};
 
 // =================================================================================================
 #pragma mark - Sheet
 
 Sheet::Sheet(
-	const ZRef<AssetCatalog::SheetCatalog>& iSC,
+	const ZP<AssetCatalog::SheetCatalog>& iSC,
 	const Name& iName,
-	const ZRef<AssetCatalog::Callable_TextureMaker>& iTextureMaker)
+	const ZP<AssetCatalog::Callable_TextureMaker>& iTextureMaker)
 :	fSC(iSC)
 ,	fPriority(9999)
 ,	fName(iName)
@@ -290,15 +290,15 @@ Sheet::~Sheet()
 
 void Sheet::Finalize()
 	{
-	if (const ZRef<AssetCatalog::SheetCatalog>& theSC = fSC)
+	if (const ZP<AssetCatalog::SheetCatalog>& theSC = fSC)
 		theSC->pFinalize(this);
 	else
 		ZCounted::Finalize();
 	}
 
-ZRef<Texture> Sheet::GetTexture()
+ZP<Texture> Sheet::GetTexture()
 	{
-	if (const ZRef<AssetCatalog::SheetCatalog>& theSC = fSC)
+	if (const ZP<AssetCatalog::SheetCatalog>& theSC = fSC)
 		{
 		ZAcqMtx acq(theSC->fMtx);
 		if (not fTexture && not DebugFlags::sTextureBounds)
@@ -366,7 +366,7 @@ void AssetCatalog::Get(const NameFrame& iNameFrame, vector<Texture_BoundsQ_Mat>&
 		}
 	}
 
-void AssetCatalog::InstallSheet(const Name& iName, const ZRef<Callable_TextureMaker>& iTM)
+void AssetCatalog::InstallSheet(const Name& iName, const ZP<Callable_TextureMaker>& iTM)
 	{ fSheetCatalog->fTextureMakers[iName] = iTM; }
 
 void AssetCatalog::Set_Processed(const Map_Any& iMap)
@@ -444,7 +444,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 			const string8 theSheetName =
 				theTBM.DGet<string8>(theEntry.fDefaultSheetName, "SheetName");
 			
-			if (ZRef<Sheet> theSheet = fSheetCatalog->Get(theSheetName, iPriority))
+			if (ZP<Sheet> theSheet = fSheetCatalog->Get(theSheetName, iPriority))
 				{
 				Sheet_BoundsQ_Mat& theSheet_BoundsQ_Mat = theFrame.fSheet_BoundsQ_Mats[theTBMIndex];
 				theSheet_BoundsQ_Mat.fSheetName = theSheetName;
@@ -469,7 +469,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 
 				if (ioResult)
 					{
-					if (ZRef<Texture> theTexture = theSheet->GetTexture())
+					if (ZP<Texture> theTexture = theSheet->GetTexture())
 						{
 						Texture_BoundsQ_Mat& theTBM = (*ioResult)[usedIndex];
 						theTBM.fTexture = theTexture;
@@ -498,12 +498,12 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 
 		foreachv (const Sheet_BoundsQ_Mat& theSheet_BoundsQ_Mat, theFrame.fSheet_BoundsQ_Mats)
 			{
-			if (ZRef<Sheet> theSheet =
+			if (ZP<Sheet> theSheet =
 				fSheetCatalog->Get(theSheet_BoundsQ_Mat.fSheetName, iPriority))
 				{
 				if (ioResult)
 					{
-					if (ZRef<Texture> theTexture = theSheet->GetTexture())
+					if (ZP<Texture> theTexture = theSheet->GetTexture())
 						{
 						Texture_BoundsQ_Mat& theTBM = (*ioResult)[usedIndex];
 						theTBM.fTexture = theSheet->GetTexture();
@@ -532,7 +532,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 
 size_t sToonFrameCount(const Name& iName)
 	{
-	return sThreadVal<ZRef<AssetCatalog>>()->FrameCount(iName);
+	return sThreadVal<ZP<AssetCatalog>>()->FrameCount(iName);
 	}
 
 } // namespace GameEngine

@@ -28,7 +28,7 @@ public:
 	size_t fPixelCount;
 	};
 
-typedef Callable<ZRef<Texture>(const Pixels::Pixmap&)> Callable_TextureFromPixmap;
+typedef Callable<ZP<Texture>(const Pixels::Pixmap&)> Callable_TextureFromPixmap;
 
 } // namespace GameEngine
 } // namespace ZooLib

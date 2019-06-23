@@ -41,7 +41,7 @@ class Expr_Rel_Rename
 	{
 	typedef Expr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Rename(const ZRef<Expr_Rel>& iOp0, const ColName& iNew, const ColName& iOld);
+	Expr_Rel_Rename(const ZP<Expr_Rel>& iOp0, const ColName& iNew, const ColName& iOld);
 	virtual ~Expr_Rel_Rename();
 
 // From Visitee
@@ -50,8 +50,8 @@ public:
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(const ZRef<Expr_Rel>& iOp0);
+	virtual ZP<Expr_Rel> Self();
+	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
@@ -71,13 +71,13 @@ class Visitor_Expr_Rel_Rename
 :	public virtual Visitor_Expr_Op1_T<Expr_Rel>
 	{
 public:
-	virtual void Visit_Expr_Rel_Rename(const ZRef<Expr_Rel_Rename>& iExpr);
+	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr);
 	};
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sRename(const ZRef<Expr_Rel>& iExpr,
+ZP<Expr_Rel> sRename(const ZP<Expr_Rel>& iExpr,
 	const ColName& iNewPropName, const ColName& iOldPropName);
 
 } // namespace RelationalAlgebra

@@ -32,7 +32,7 @@ namespace Util_Strim_Expr_Bool_ValPred {
 // =================================================================================================
 #pragma mark - Util_Strim_Expr_Bool_ValPred
 
-ZRef<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU);
+ZP<Expr_Bool> sQFromStrim(const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_Expr_Bool_ValPred
 } // namespace ZooLib

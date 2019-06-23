@@ -61,10 +61,10 @@ void Expr_Rel_Dee::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
-ZRef<Expr_Rel> Expr_Rel_Dee::Self()
+ZP<Expr_Rel> Expr_Rel_Dee::Self()
 	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Dee::Clone()
+ZP<Expr_Rel> Expr_Rel_Dee::Clone()
 	{ return this; }
 
 void Expr_Rel_Dee::Accept_Expr_Rel_Dee(Visitor_Expr_Rel_Dee& iVisitor)
@@ -73,13 +73,13 @@ void Expr_Rel_Dee::Accept_Expr_Rel_Dee(Visitor_Expr_Rel_Dee& iVisitor)
 // =================================================================================================
 #pragma mark - Visitor_Expr_Rel_Dee
 
-void Visitor_Expr_Rel_Dee::Visit_Expr_Rel_Dee(const ZRef<Expr_Rel_Dee>& iExpr)
+void Visitor_Expr_Rel_Dee::Visit_Expr_Rel_Dee(const ZP<Expr_Rel_Dee>& iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZRef<Expr_Rel> sDee()
+ZP<Expr_Rel> sDee()
 	{ return new Expr_Rel_Dee; }
 
 } // namespace RelationalAlgebra

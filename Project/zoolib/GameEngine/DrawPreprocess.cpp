@@ -30,8 +30,8 @@ class Visitor_Preprocess
 ,	public virtual Visitor_Rendered_StringToTextures
 	{
 public:
-	Visitor_Preprocess(const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
-		const ZRef<FontCatalog>& iFontCatalog,
+	Visitor_Preprocess(const ZP<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
+		const ZP<FontCatalog>& iFontCatalog,
 		const GPoint& iGameSize)
 	:	Visitor_Rendered_CelToTextures(iAssetCatalog, iShowNameFrame)
 	,	Visitor_Rendered_StringToTextures(iFontCatalog)
@@ -40,17 +40,17 @@ public:
 		{}
 
 // From Visitor_Rendered
-	virtual void Visit_Rendered(const ZRef<Rendered>& iRendered)
+	virtual void Visit_Rendered(const ZP<Rendered>& iRendered)
 		{
 		// Dispatch the default behavior.
 		this->pInsertIntoMap(iRendered);
 		}
 
-	virtual void Visit_Rendered_Buffer(const ZRef<Rendered_Buffer>& iRendered_Buffer)
+	virtual void Visit_Rendered_Buffer(const ZP<Rendered_Buffer>& iRendered_Buffer)
 		{
 		// It's a buffer. We flatten the buffer's contents, but maintain the fact that
 		// they *are* children of the buffer.
-		if (ZRef<Rendered> theRendered = iRendered_Buffer->GetRendered())
+		if (ZP<Rendered> theRendered = iRendered_Buffer->GetRendered())
 			{
 			const int theWidth = iRendered_Buffer->GetWidth();
 			const int theHeight = iRendered_Buffer->GetHeight();
@@ -65,7 +65,7 @@ public:
 			}
 		}
 
-	virtual void Visit_Rendered_Texture(const ZRef<Rendered_Texture>& iRendered_Texture)
+	virtual void Visit_Rendered_Texture(const ZP<Rendered_Texture>& iRendered_Texture)
 		{
 		// We discard textures if they would not intersect the destination rectangle. This
 		// is an optimization at the resource-management level. Drawing the texture wouldn't
@@ -89,17 +89,17 @@ public:
 		}
 
 // Our protocol
-	ZRef<Rendered_Group> Do(const ZRef<Rendered>& iRendered)
+	ZP<Rendered_Group> Do(const ZP<Rendered>& iRendered)
 		{
 		iRendered->Accept_Rendered(*this);
 
-		ZRef<Rendered_Group> theGroup = sRendered_Group();
+		ZP<Rendered_Group> theGroup = sRendered_Group();
 		foreacha (entry, fMap)
 			theGroup->Append(entry.second);
 		return theGroup;
 		}
 
-	void pInsertIntoMap(ZRef<Rendered> iRendered)
+	void pInsertIntoMap(ZP<Rendered> iRendered)
 		{
 		// We're passed a pointer, so there's one less refcount manipulation happening.
 		// We could/should use std::move.
@@ -119,8 +119,8 @@ public:
 private:
 	RealAllocator fRealAllocator;
 
-	typedef std::multimap<Rat,ZRef<Rendered>, std::less<Rat>,
-		TTAllocator<std::pair<const Rat, ZRef<Rendered> > > > MultiMap_Rat2Rendered;
+	typedef std::multimap<Rat,ZP<Rendered>, std::less<Rat>,
+		TTAllocator<std::pair<const Rat, ZP<Rendered> > > > MultiMap_Rat2Rendered;
 
 	const GRect fScreenBounds;
 	MultiMap_Rat2Rendered fMap;
@@ -131,9 +131,9 @@ private:
 // =================================================================================================
 #pragma mark - sDrawPreprocess
 
-ZRef<Rendered> sDrawPreprocess(const ZRef<Rendered>& iRendered,
-	const ZRef<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
-	const ZRef<FontCatalog>& iFontCatalog,
+ZP<Rendered> sDrawPreprocess(const ZP<Rendered>& iRendered,
+	const ZP<AssetCatalog>& iAssetCatalog, bool iShowNameFrame,
+	const ZP<FontCatalog>& iFontCatalog,
 	const GPoint& iGameSize)
 	{
 	return Visitor_Preprocess(iAssetCatalog, iShowNameFrame, iFontCatalog, iGameSize).Do(iRendered);

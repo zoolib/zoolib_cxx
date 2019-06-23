@@ -55,8 +55,8 @@ public:
 	virtual void CollectResults(std::vector<QueryResult>& oChanged, int64& oChangeCount);
 
 // Our protocol
-	void InsertRelater(ZRef<Relater> iRelater, const string8& iPrefix);
-	void EraseRelater(ZRef<Relater> iRelater);
+	void InsertRelater(ZP<Relater> iRelater, const string8& iPrefix);
+	void EraseRelater(ZP<Relater> iRelater);
 
 private:
 	ZMtx fMtx;
@@ -76,30 +76,30 @@ private:
 	class Proxy;
 	class Visitor_Proxy;
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>,Proxy*> Map_Rel_ProxyX;
+	typedef std::map<ZP<RelationalAlgebra::Expr_Rel>,Proxy*> Map_Rel_ProxyX;
 	Map_Rel_ProxyX fMap_Rel_ProxyX;
 
 	std::set<PRelater*> pIdentifyPRelaters(const RelHead& iRelHead);
-	ZRef<RelationalAlgebra::Expr_Rel> pGetProxy(PQuery* iPQuery,
+	ZP<RelationalAlgebra::Expr_Rel> pGetProxy(PQuery* iPQuery,
 		const std::set<PRelater*>& iPRelaters,
 		const RelHead& iRelHead,
-		ZRef<RelationalAlgebra::Expr_Rel> iRel);
+		ZP<RelationalAlgebra::Expr_Rel> iRel);
 	void pFinalizeProxy(Proxy* iProxy);
 
 	// -----
 
 	class Walker_Proxy;
 
-	ZRef<Walker_Proxy> pMakeWalker(ZRef<Proxy> iProxy);
+	ZP<Walker_Proxy> pMakeWalker(ZP<Proxy> iProxy);
 
-	void pRewind(ZRef<Walker_Proxy> iWalker);
+	void pRewind(ZP<Walker_Proxy> iWalker);
 
-	void pPrime(ZRef<Walker_Proxy> iWalker,
+	void pPrime(ZP<Walker_Proxy> iWalker,
 		const std::map<string8,size_t>& iOffsets,
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZRef<Walker_Proxy> iWalker, Val_Any* ioResults);
+	bool pReadInc(ZP<Walker_Proxy> iWalker, Val_Any* ioResults);
 
 	size_t fWalkerCount;
 	size_t fReadCount;
@@ -121,8 +121,8 @@ private:
 	class DLink_PQuery_NeedsWork;
 	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
 
-	typedef std::map<ZRef<RelationalAlgebra::Expr_Rel>, PQuery,
-		Less_Compare_T<ZRef<RelationalAlgebra::Expr_Rel> > >
+	typedef std::map<ZP<RelationalAlgebra::Expr_Rel>, PQuery,
+		Less_Compare_T<ZP<RelationalAlgebra::Expr_Rel> > >
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 
@@ -142,15 +142,15 @@ private:
 	DListHead<DLink_PRelater_CollectFrom> fPRelater_CollectFrom;
 	DListHead<DLink_PRelater_NeedsWork> fPRelater_NeedsWork;
 
-	typedef std::map<ZRef<Relater>, PRelater> Map_Relater_PRelater;
+	typedef std::map<ZP<Relater>, PRelater> Map_Relater_PRelater;
 	Map_Relater_PRelater fMap_Relater_PRelater;
 
 	// -----
 
-	ZRef<Relater::Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
+	ZP<Relater::Callable_RelaterResultsAvailable> fCallable_RelaterResultsAvailable;
 
 	void pCollectFrom(PRelater* iPRelater);
-	void pResultsAvailable(ZRef<Relater> iRelater);
+	void pResultsAvailable(ZP<Relater> iRelater);
 	};
 
 } // namespace Dataspace

@@ -17,7 +17,7 @@ class FontStrike
 :	public ZCounted
 	{
 public:
-	virtual ZRef<Texture> GetGlyphTexture(UTF32 iCP,
+	virtual ZP<Texture> GetGlyphTexture(UTF32 iCP,
 		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance) = 0;
 
 	virtual GRect Measure(UTF32 iCP) = 0;
@@ -29,7 +29,7 @@ public:
 	Rat Leading();
 	};
 
-GRect sMeasure(const ZRef<FontStrike>& iFontStrike, const string8& iString);
+GRect sMeasure(const ZP<FontStrike>& iFontStrike, const string8& iString);
 
 // =================================================================================================
 #pragma mark - FontInfo
@@ -40,7 +40,7 @@ class FontInfo
 public:
 	virtual Rat GetScaleForEmHeight(Rat iEmHeight) = 0;
 	virtual Rat GetScaleForPixelHeight(Rat iPixelHeight) = 0;
-	virtual ZRef<FontStrike> GetStrikeForScale(Rat iScale) = 0;
+	virtual ZP<FontStrike> GetStrikeForScale(Rat iScale) = 0;
 
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance) = 0;
 
@@ -51,7 +51,7 @@ public:
 	Rat Leading(Rat iScale);
 	};
 
-GRect sMeasure(const ZRef<FontInfo>& iFontInfo, Rat iScale, const string8& iString);
+GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString);
 
 // =================================================================================================
 #pragma mark - FontCatalog
@@ -60,10 +60,10 @@ class FontCatalog
 :	public ZCounted
 	{
 public:
-	virtual ZRef<FontInfo> GetFontInfo(const string8& iName) = 0;
+	virtual ZP<FontInfo> GetFontInfo(const string8& iName) = 0;
 	};
 
-ZRef<FontCatalog> sMakeFontCatalog(const FileSpec& iFileSpec);
+ZP<FontCatalog> sMakeFontCatalog(const FileSpec& iFileSpec);
 
 } // namespace GameEngine
 } // namespace ZooLib

@@ -16,11 +16,11 @@ typedef Tween<Rat> Tween_Rat;
 class RatRegistration
 	{
 public:
-	typedef ZRef<Tween_Rat>(*Fun)(const Map& iMap);
+	typedef ZP<Tween_Rat>(*Fun)(const Map& iMap);
 
 	RatRegistration(const string8& iCtorName, Fun iFun);
 
-	static ZRef<Tween_Rat> sCtor(const string8& iCtorName, const Map& iMap);
+	static ZP<Tween_Rat> sCtor(const string8& iCtorName, const Map& iMap);
 	};
 
 } // namespace GameEngine

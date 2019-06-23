@@ -34,9 +34,9 @@ using namespace Util_STL;
 
 namespace { // anonymous
 
-set<string> spGetNames(const ZRef<ValComparand>& iComparand)
+set<string> spGetNames(const ZP<ValComparand>& iComparand)
 	{
-	if (ZRef<ValComparand_Name> asName = iComparand.DynamicCast<ValComparand_Name>())
+	if (ZP<ValComparand_Name> asName = iComparand.DynamicCast<ValComparand_Name>())
 		{
 		const string& theName = asName->GetName();
 		return set<string>(&theName, &theName + 1);

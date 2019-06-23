@@ -18,7 +18,7 @@ namespace GameEngine {
 
 struct Texture_BoundsQ_Mat
 	{
-	ZRef<Texture> fTexture;
+	ZP<Texture> fTexture;
 	ZQ<GRect> fBoundsQ;
 	GRect fInset;
 	Mat fMat;
@@ -34,7 +34,7 @@ public:
 	AssetCatalog();
 	virtual ~AssetCatalog();
 
-	typedef Callable<ZRef<Texture>()> Callable_TextureMaker;
+	typedef Callable<ZP<Texture>()> Callable_TextureMaker;
 
 	void Load(const NameFrame& iNameFrame, int iPriority);
 
@@ -47,7 +47,7 @@ public:
 
 	void Kill();
 
-	void InstallSheet(const Name& iName, const ZRef<Callable_TextureMaker>& iTM);
+	void InstallSheet(const Name& iName, const ZP<Callable_TextureMaker>& iTM);
 	void Set_Processed(const Map_Any& iMap);
 
 	class SheetCatalog;
@@ -56,7 +56,7 @@ private:
 	bool pGet(const Name& iName, size_t iFrame, int iPriority,
 		std::vector<Texture_BoundsQ_Mat>* ioResult);
 
-	ZRef<SheetCatalog> fSheetCatalog;
+	ZP<SheetCatalog> fSheetCatalog;
 
 	Map_Any fMap;
 
