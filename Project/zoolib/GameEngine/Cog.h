@@ -156,11 +156,11 @@ ZP<Nook_p> sUpdateOneNook(const Param& iParam, WP<Nook_p>& ioWP)
 template <class Nook_p>
 void sUpdateNookSet(const Param& iParam, NookSet<Nook_p>& ioNookSet)
 	{
-	ioNookSet.fWRNooks.clear();
+	ioNookSet.fNookWPs.clear();
 	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
 		if (ZP<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
-			ioNookSet.fWRNooks.insert(sWeakRef(theNook));
+			ioNookSet.fNookWPs.insert(sWeakRef(theNook));
 		}
 	}
 
