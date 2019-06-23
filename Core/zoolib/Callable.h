@@ -30,6 +30,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
+#pragma mark - QTraits
+
+template <class T> struct QTraits { typedef ZQ<T> Type_t; };
+
+template <> struct QTraits<void> { typedef bool Type_t; };
+
+template <class T> struct QTraits<ZP<T>> { typedef ZP<T> Type_t; };
+
+template <class T> using QRet = typename QTraits<T>::Type_t;
+
+// =================================================================================================
 #pragma mark - Callable
 
 template <class Signature_p> class Callable;
@@ -45,13 +56,30 @@ public:
 	typedef R_p R;
 	typedef R (Signature)(void);
 
-	virtual ZQ<R> QCall() = 0;
+	virtual QRet<R> QCall() = 0;
 
 	inline R DCall(const R& iDefault)
 		{ return this->QCall().DGet(iDefault); }
 	
 	inline R Call()
 		{ return this->QCall().Get(); }
+	};
+
+// =================================================================================================
+#pragma mark - Callable (specialization for 0 params, ZP return)
+
+template <class T>
+class Callable<ZP<T>(void)>
+:	public ZCounted
+	{
+public:
+	typedef ZP<T> R;
+	typedef ZP<T>(Signature)(void);
+
+	virtual ZP<T> QCall() = 0;
+
+	inline ZP<T> Call()
+		{ return this->QCall(); }
 	};
 
 // =================================================================================================
@@ -64,8 +92,9 @@ class Callable<void(void)>
 public:
 	typedef void R;
 	typedef void(Signature)(void);
+	typedef void A_t;
 
-	virtual ZQ<void> QCall() = 0;
+	virtual bool QCall() = 0;
 
 	inline void Call()
 		{ this->QCall(); }
@@ -84,14 +113,31 @@ public: \
 	typedef R_p R; \
 	ZMACRO_Callable_typedef_##X; \
 	typedef R (Signature)(ZMACRO_Callable_P##X); \
+	typedef ZMACRO_Callable_P##X A_t; \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_P##X) = 0; \
+	virtual QRet<R> QCall(ZMACRO_Callable_P##X) = 0; \
 \
 	inline R DCall(const R& iDefault, ZMACRO_Callable_VT##X) \
 		{ return this->QCall(ZMACRO_Callable_i##X).DGet(iDefault); } \
 \
 	inline R Call(ZMACRO_Callable_VT##X) \
 		{ return this->QCall(ZMACRO_Callable_i##X).Get(); } \
+	}; \
+\
+template <class T, ZMACRO_Callable_Class_P##X> \
+class Callable<ZP<T>(ZMACRO_Callable_P##X)> \
+:	public ZCounted \
+	{ \
+public: \
+	typedef void R; \
+	ZMACRO_Callable_typedef_##X; \
+	typedef void(Signature)(ZMACRO_Callable_P##X); \
+	typedef ZMACRO_Callable_P##X A_t; \
+\
+	virtual ZP<T> QCall(ZMACRO_Callable_P##X) = 0; \
+\
+	inline ZP<T> Call(ZMACRO_Callable_VT##X) \
+		{ return this->QCall(ZMACRO_Callable_i##X); } \
 	}; \
 \
 template <ZMACRO_Callable_Class_P##X> \
@@ -102,8 +148,9 @@ public: \
 	typedef void R; \
 	ZMACRO_Callable_typedef_##X; \
 	typedef void(Signature)(ZMACRO_Callable_P##X); \
+	typedef ZMACRO_Callable_P##X A_t; \
 \
-	virtual ZQ<void> QCall(ZMACRO_Callable_P##X) = 0; \
+	virtual QRet<void> QCall(ZMACRO_Callable_P##X) = 0; \
 \
 	inline void Call(ZMACRO_Callable_VT##X) \
 		{ this->QCall(ZMACRO_Callable_i##X); } \
@@ -131,88 +178,151 @@ ZMACRO_Callable_Callable(F)
 // =================================================================================================
 #pragma mark - sCall variants (specialization for 0 params)
 
-template <class Type_p>
-ZQ<typename Type_p::Type_t::R> sQCall(
-	const Type_p& iCallable)
+template <typename R_p, typename... A_p>
+R_p sCallImp(const ZP<Callable<R_p(A_p...)>>& iCallable, A_p... iParams)
 	{
 	if (iCallable)
-		return iCallable->QCall();
-	return null;
+		return iCallable->Call(std::forward(iParams...));
+	return R_p();
 	}
 
-template <class Type_p>
-typename Type_p::Type_t::R sDCall(
-	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
-	const Type_p& iCallable)
+
+template <typename... A_p>
+void sCallImp(const ZP<Callable<void(A_p...)>>& iCallable, A_p... iParams)
 	{
 	if (iCallable)
-		return iCallable->QCall().DGet(iDefault);
-	return iDefault;
+		iCallable->Call(std::forward(iParams...));
 	}
 
-template <class Type_p>
-typename Type_p::Type_t::R sCall(
-	const Type_p& iCallable)
-	{
-	if (iCallable)
-		return iCallable->QCall().Get();
-	return sDefault<typename Type_p::Type_t::R>();
-	}
+template <typename Type_p, typename R=typename Type_p::Type_t::R, typename A_p=typename Type_p::Type_t::A_t>
+R sCall(const Type_P& iCallable, A_p... iParams)
+	{ return sCallImp<R,A_p>(iCallable, std::forward(iParams...)); }
 
-// =================================================================================================
-#pragma mark - sCall variants
 
-#define ZMACRO_Callable_Call(X) \
-\
-template <class Type_p, ZMACRO_Callable_Class_P##X> \
-ZQ<typename Type_p::Type_t::R> sQCall( \
-	const Type_p& iCallable, \
-	ZMACRO_Callable_ConstRef_Pi##X) \
-	{ \
-	if (iCallable) \
-		return iCallable->QCall(ZMACRO_Callable_i##X); \
-	return null; \
-	} \
-\
-template <class Type_p, ZMACRO_Callable_Class_P##X> \
-typename Type_p::Type_t::R sDCall( \
-	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
-	const Type_p& iCallable, \
-	ZMACRO_Callable_ConstRef_Pi##X) \
-	{ \
-	if (iCallable) \
-		return iCallable->QCall(ZMACRO_Callable_i##X).DGet(iDefault); \
-	return iDefault; \
-	} \
-\
-template <class Type_p, ZMACRO_Callable_Class_P##X> \
-typename Type_p::Type_t::R sCall( \
-	const Type_p& iCallable, \
-	ZMACRO_Callable_ConstRef_Pi##X) \
-	{ \
-	if (iCallable) \
-		return iCallable->QCall(ZMACRO_Callable_i##X).Get(); \
-	return sDefault<typename Type_p::Type_t::R>(); \
-	}
+//template <typename R_p, typename... A_p>
+//R_p sCall(const ZP<Callable<R_p(A_p...)>>& iCallable, A_p... iParams)
+//	{
+//	if (iCallable)
+//		return iCallable->Call(iParams...);
+//	return R_p();
+//	}
 
-ZMACRO_Callable_Call(0)
-ZMACRO_Callable_Call(1)
-ZMACRO_Callable_Call(2)
-ZMACRO_Callable_Call(3)
-ZMACRO_Callable_Call(4)
-ZMACRO_Callable_Call(5)
-ZMACRO_Callable_Call(6)
-ZMACRO_Callable_Call(7)
-ZMACRO_Callable_Call(8)
-ZMACRO_Callable_Call(9)
-ZMACRO_Callable_Call(A)
-ZMACRO_Callable_Call(B)
-ZMACRO_Callable_Call(C)
-ZMACRO_Callable_Call(D)
-ZMACRO_Callable_Call(E)
-ZMACRO_Callable_Call(F)
+//template <typename R_p, typename... A_p>
+//R_p sDCall(const ZP<Callable<R_p(A_p...)>>& iCallable, const R_p& iDefault, A_p... iParams)
+//	{
+//	if (iCallable)
+//		return iCallable->DCall(iDefault, iParams...);
+//	return iDefault;
+//	}
+//
+//template <typename R_p, typename... A_p>
+//QRet<R_p> sQCall(const ZP<Callable<R_p(A_p...)>>& iCallable, A_p... iParams)
+//	{
+//	if (iCallable)
+//		return iCallable->QCall(iParams...);
+//	return QRet<R_p>();
+//	}
+//
+//template <typename... A_p>
+//void sCall(const ZP<Callable<void(A_p...)>>& iCallable, A_p... iParams)
+//	{
+//	if (iCallable)
+//		iCallable->Call(iParams...);
+//	}
+//
+//template <typename... A_p>
+//bool sQCall(const ZP<Callable<void(A_p...)>>& iCallable, A_p... iParams)
+//	{
+//	if (iCallable)
+//		return iCallable->QCall(iParams...);
+//	return false;
+//	}
 
-#undef ZMACRO_Callable_Call
+//// =================================================================================================
+//#pragma mark - sCall variants (specialization for 0 params)
+//
+//template <class Type_p>
+//QRet<typename Type_p::Type_t::R> sQCall(
+//	const Type_p& iCallable)
+//	{
+//	if (iCallable)
+//		return iCallable->QCall();
+//	return QRet<typename Type_p::Type_t::R>();
+//	}
+//
+//template <class Type_p>
+//typename Type_p::Type_t::R sDCall(
+//	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
+//	const Type_p& iCallable)
+//	{
+//	if (iCallable)
+//		return iCallable->DCall()(iDefault);
+//	return iDefault;
+//	}
+//
+//template <class Type_p>
+//typename Type_p::Type_t::R sCall(
+//	const Type_p& iCallable)
+//	{
+//	if (iCallable)
+//		return iCallable->Call();
+//	return sDefault<typename Type_p::Type_t::R>();
+//	}
+//
+//// =================================================================================================
+//#pragma mark - sCall variants
+//
+//#define ZMACRO_Callable_Call(X) \
+//\
+//template <class Type_p, ZMACRO_Callable_Class_P##X> \
+//QRet<typename Type_p::Type_t::R> sQCall( \
+//	const Type_p& iCallable, \
+//	ZMACRO_Callable_ConstRef_Pi##X) \
+//	{ \
+//	if (iCallable) \
+//		return iCallable->QCall(ZMACRO_Callable_i##X); \
+//	return QRet<typename Type_p::Type_t::R>(); \
+//	} \
+//\
+//template <class Type_p, ZMACRO_Callable_Class_P##X> \
+//typename Type_p::Type_t::R sDCall( \
+//	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
+//	const Type_p& iCallable, \
+//	ZMACRO_Callable_ConstRef_Pi##X) \
+//	{ \
+//	if (iCallable) \
+//		return iCallable->DCall(iDefault, ZMACRO_Callable_i##X); \
+//	return iDefault; \
+//	} \
+//\
+//template <class Type_p, ZMACRO_Callable_Class_P##X> \
+//typename Type_p::Type_t::R sCall( \
+//	const Type_p& iCallable, \
+//	ZMACRO_Callable_ConstRef_Pi##X) \
+//	{ \
+//	if (iCallable) \
+//		return iCallable->Call(ZMACRO_Callable_i##X); \
+//	return sDefault<typename Type_p::Type_t::R>(); \
+//	}
+//
+//ZMACRO_Callable_Call(0)
+//ZMACRO_Callable_Call(1)
+//ZMACRO_Callable_Call(2)
+//ZMACRO_Callable_Call(3)
+//ZMACRO_Callable_Call(4)
+//ZMACRO_Callable_Call(5)
+//ZMACRO_Callable_Call(6)
+//ZMACRO_Callable_Call(7)
+//ZMACRO_Callable_Call(8)
+//ZMACRO_Callable_Call(9)
+//ZMACRO_Callable_Call(A)
+//ZMACRO_Callable_Call(B)
+//ZMACRO_Callable_Call(C)
+//ZMACRO_Callable_Call(D)
+//ZMACRO_Callable_Call(E)
+//ZMACRO_Callable_Call(F)
+//
+//#undef ZMACRO_Callable_Call
 
 // =================================================================================================
 #pragma mark - sCallable
@@ -251,11 +361,8 @@ class Callable_Null
 	{
 public:
 // From Callable
-	virtual ZQ<void> QCall()
-		{
-		// Ironically we return notnull.
-		return notnull;
-		}
+	virtual bool QCall()
+		{ return true; }
 	};
 
 } // namespace ZooLib
