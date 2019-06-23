@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
@@ -47,7 +47,7 @@ public:
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 private:
-	ZRef<CFStringRef> fStringRef;
+	ZP<CFStringRef> fStringRef;
 	size_t fPosition;
 	};
 
@@ -64,7 +64,7 @@ public:
 	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
 
 private:
-	ZRef<CFMutableStringRef> fStringRef;
+	ZP<CFMutableStringRef> fStringRef;
 	};
 
 } // namespace ZooLib

@@ -29,7 +29,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sStartOnNewThread
 
-void sStartOnNewThread(const ZRef<Callable<void()> >& iCallable);
+void sStartOnNewThread(const ZP<Callable<void()> >& iCallable);
 
 void sStartOnNewThread_ProcessIsAboutToExit();
 

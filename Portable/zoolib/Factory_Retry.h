@@ -37,7 +37,7 @@ class Factory_Retry
 public:
 	typedef T Result_t;
 
-	Factory_Retry(const ZRef<Factory<T>>& iFactory, size_t iCount, double iInterval)
+	Factory_Retry(const ZP<Factory<T>>& iFactory, size_t iCount, double iInterval)
 	:	fFactory(iFactory)
 	,	fCount(iCount)
 	,	fInterval(iInterval)
@@ -51,7 +51,7 @@ public:
 		{
 		for (size_t attempt = 1; /*no test*/; ++attempt)
 			{
-			ZRef<Factory<T>> theFactory = fFactory;
+			ZP<Factory<T>> theFactory = fFactory;
 			if (not theFactory)
 				{
 				if (ZLOG(w, eInfo, "Factory_Retry"))
@@ -89,7 +89,7 @@ public:
 		}
 
 protected:
-	ZRef<Factory<T>> fFactory;
+	ZP<Factory<T>> fFactory;
 	size_t fCount;
 	double fInterval;
 	};

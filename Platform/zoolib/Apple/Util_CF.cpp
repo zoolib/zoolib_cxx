@@ -35,10 +35,10 @@ namespace Util_CF {
 
 static CFStringRef spEmptyCFString = CFSTR("");
 
-ZRef<CFStringRef> sString()
+ZP<CFStringRef> sString()
 	{ return spEmptyCFString; }
 
-ZRef<CFStringRef> sString(const string8& iString8)
+ZP<CFStringRef> sString(const string8& iString8)
 	{
 	if (CFIndex sourceSize = iString8.size())
 		{
@@ -50,7 +50,7 @@ ZRef<CFStringRef> sString(const string8& iString8)
 	return spEmptyCFString;
 	}
 
-ZRef<CFStringRef> sString(const string16& iString16)
+ZP<CFStringRef> sString(const string16& iString16)
 	{
 	if (CFIndex sourceSize = iString16.size())
 		{
@@ -61,62 +61,62 @@ ZRef<CFStringRef> sString(const string16& iString16)
 	return spEmptyCFString;
 	}
 
-ZRef<CFMutableStringRef> sStringMutable()
+ZP<CFMutableStringRef> sStringMutable()
 	{ return sAdopt& ::CFStringCreateMutable(nullptr, 0); }
 
-ZRef<CFMutableStringRef> sStringMutable(const string8& iString8)
+ZP<CFMutableStringRef> sStringMutable(const string8& iString8)
 	{ return sStringMutable(sString(iString8)); }
 
-ZRef<CFMutableStringRef> sStringMutable(const string16& iString16)
+ZP<CFMutableStringRef> sStringMutable(const string16& iString16)
 	{ return sStringMutable(sString(iString16)); }
 
-ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString)
+ZP<CFMutableStringRef> sStringMutable(CFStringRef iCFString)
 	{ return sAdopt& ::CFStringCreateMutableCopy(nullptr, 0, iCFString); }
 
-ZRef<CFDictionaryRef> sDictionary()
+ZP<CFDictionaryRef> sDictionary()
 	{
 	return sAdopt& ::CFDictionaryCreate(nullptr, nullptr, nullptr, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
-ZRef<CFMutableDictionaryRef> sDictionaryMutable()
+ZP<CFMutableDictionaryRef> sDictionaryMutable()
 	{
 	return sAdopt& ::CFDictionaryCreateMutable(nullptr, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	}
 
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary)
+ZP<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary)
 	{
 	return sAdopt& ::CFDictionaryCreateMutableCopy(nullptr,
 		::CFDictionaryGetCount(iCFDictionary), iCFDictionary);
 	}
 
-ZRef<CFArrayRef> sArray()
+ZP<CFArrayRef> sArray()
 	{ return sAdopt& ::CFArrayCreate(nullptr, nullptr, 0, &kCFTypeArrayCallBacks); }
 
-ZRef<CFMutableArrayRef> sArrayMutable()
+ZP<CFMutableArrayRef> sArrayMutable()
 	{ return sAdopt& ::CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks); }
 
-ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray)
+ZP<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray)
 	{ return sAdopt& ::CFArrayCreateMutableCopy(nullptr, ::CFArrayGetCount(iCFArray), iCFArray); }
 
-ZRef<CFDataRef> sData()
+ZP<CFDataRef> sData()
 	{ return sAdopt& ::CFDataCreate(nullptr, 0, 0); }
 
-ZRef<CFDataRef> sData(const void* iSource, size_t iSize)
+ZP<CFDataRef> sData(const void* iSource, size_t iSize)
 	{ return sAdopt& ::CFDataCreate(nullptr, static_cast<const UInt8*>(iSource), iSize); }
 
-ZRef<CFMutableDataRef> sDataMutable()
+ZP<CFMutableDataRef> sDataMutable()
 	{ return sAdopt& ::CFDataCreateMutable(nullptr, 0); }
 
-ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
+ZP<CFMutableDataRef> sDataMutable(size_t iSize)
 	{
-	ZRef<CFMutableDataRef> theData = sAdopt& ::CFDataCreateMutable(nullptr, 0);
+	ZP<CFMutableDataRef> theData = sAdopt& ::CFDataCreateMutable(nullptr, 0);
 	::CFDataSetLength(theData, iSize);
 	return theData;
 	}
 
-ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData)
+ZP<CFMutableDataRef> sDataMutable(CFDataRef iCFData)
 	{ return sAdopt& ::CFDataCreateMutableCopy(nullptr, 0, iCFData); }
 
 // =================================================================================================

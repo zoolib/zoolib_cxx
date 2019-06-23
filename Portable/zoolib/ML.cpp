@@ -47,7 +47,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Static helper functions
 
-static string spReadReference(const ZooLib::ChanRU_UTF& iChanRU, ZRef<Callable_Entity> iCallable)
+static string spReadReference(const ZooLib::ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable)
 	{
 	string result;
 
@@ -199,7 +199,7 @@ static bool spReadMLAttributeName(const ZooLib::ChanRU_UTF& iChanRU, string& oNa
 
 static bool spReadMLAttributeValue(
 	const ZooLib::ChanRU_UTF& iChanRU,
-	bool iRecognizeEntities, ZRef<Callable_Entity> iCallable,
+	bool iRecognizeEntities, ZP<Callable_Entity> iCallable,
 	string& oValue)
 	{
 	oValue.resize(0);
@@ -248,7 +248,7 @@ ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU)
 	{}
 
 ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
-	bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable)
+	bool iRecognizeEntitiesInAttributeValues, ZP<Callable_Entity> iCallable)
 :	fChanRU(iChanRU)
 ,	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
 ,	fCallable(iCallable)
@@ -565,7 +565,7 @@ void ChanRU::pAdvance()
 		}
 	}
 
-ZRef<ChannerRU> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner)
+ZP<ChannerRU> sChanner(const ZP<ZooLib::ChannerRU<UTF32>>& iChanner)
 	{ return sChanner_Channer_T<ChanRU>(iChanner); }
 
 // =================================================================================================

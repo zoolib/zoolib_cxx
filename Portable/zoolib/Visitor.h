@@ -39,7 +39,7 @@ public:
 	virtual void Accept(const Visitor& iVisitor) = 0;
 	};
 
-void sAccept(const ZRef<Visitee>& iVisitee, const Visitor& iVisitor);
+void sAccept(const ZP<Visitee>& iVisitee, const Visitor& iVisitor);
 
 // =================================================================================================
 #pragma mark - Visitor
@@ -48,7 +48,7 @@ class Visitor
 	{
 public:
 	virtual ~Visitor();
-	virtual void Visit(const ZRef<Visitee>& iRep);
+	virtual void Visit(const ZP<Visitee>& iRep);
 	};
 
 } // namespace ZooLib

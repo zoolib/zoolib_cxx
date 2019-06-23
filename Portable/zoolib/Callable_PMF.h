@@ -41,18 +41,18 @@ template <class T> struct Traits<T*>
 	static T* sGetPtr(T* iTemp) { return iTemp; }
 	};
 
-template <class T> struct Traits<ZRef<T> >
+template <class T> struct Traits<ZP<T> >
 	{
-	typedef const ZRef<T>& Temp_t;
-	static const ZRef<T>& sGetTemp(const ZRef<T>& iObject) { return iObject; }
-	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
+	typedef const ZP<T>& Temp_t;
+	static const ZP<T>& sGetTemp(const ZP<T>& iObject) { return iObject; }
+	static T* sGetPtr(const ZP<T>& iTemp) { return iTemp.Get(); }
 	};
 
 template <class T> struct Traits<WP<T> >
 	{
-	typedef ZRef<T> Temp_t;
-	static ZRef<T> sGetTemp(const WP<T>& iObject) { return iObject; }
-	static T* sGetPtr(const ZRef<T>& iTemp) { return iTemp.Get(); }
+	typedef ZP<T> Temp_t;
+	static ZP<T> sGetTemp(const WP<T>& iObject) { return iObject; }
+	static T* sGetPtr(const ZP<T>& iTemp) { return iTemp.Get(); }
 	};
 
 } // namespace Callable_PMF_Util
@@ -207,7 +207,7 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class Class_p, class Object_p, class R>
-ZRef<Callable<R()> >
+ZP<Callable<R()> >
 sCallable(
 	const Object_p& iObject,
 	R (Class_p::*iMethod)())
@@ -216,7 +216,7 @@ sCallable(
 #define ZMACRO_Callable_sCallable(X) \
 \
 template <class Class_p, class Object_p, class R, ZMACRO_Callable_Class_P##X> \
-ZRef<Callable<R(ZMACRO_Callable_P##X)> > \
+ZP<Callable<R(ZMACRO_Callable_P##X)> > \
 sCallable( \
 	const Object_p& iObject, \
 	R (Class_p::*iMethod)(ZMACRO_Callable_P##X)) \

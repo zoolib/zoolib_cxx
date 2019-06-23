@@ -34,14 +34,14 @@ namespace ZooLib {
 #pragma mark - CFNotification
 
 CFNotification::CFNotification(
-	void* iObject, const std::string& iName, ZRef<Callable_t> iCallable)
+	void* iObject, const std::string& iName, ZP<Callable_t> iCallable)
 :	fObject(iObject)
 ,	fName_String(iName)
 ,	fCallable(iCallable)
 	{}
 
 CFNotification::CFNotification(
-	void* iObject, CFStringRef iName, ZRef<Callable_t> iCallable)
+	void* iObject, CFStringRef iName, ZP<Callable_t> iCallable)
 :	fObject(iObject)
 ,	fName_CFStringRef(iName)
 ,	fCallable(iCallable)
@@ -90,7 +90,7 @@ CFStringRef CFNotification::GetName_CFStringRef()
 void CFNotification::spCallback(CFNotificationCenterRef center,
 	void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 	{
-	ZRef<CFNotification> theObserver = static_cast<CFNotification*>(observer);
+	ZP<CFNotification> theObserver = static_cast<CFNotification*>(observer);
 	sCall(theObserver->fCallable, theObserver, userInfo);
 	}
 

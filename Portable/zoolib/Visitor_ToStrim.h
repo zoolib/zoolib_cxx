@@ -47,13 +47,13 @@ public:
 	Visitor_ToStrim();
 
 // From Visitor
-	virtual void Visit(const ZRef<Visitee>& iRep);
+	virtual void Visit(const ZP<Visitee>& iRep);
 
 // Our protocol
-	void ToStrim(const Options& iOptions, const ChanW_UTF& iStrimW, const ZRef<Visitee>& iRep);
+	void ToStrim(const Options& iOptions, const ChanW_UTF& iStrimW, const ZP<Visitee>& iRep);
 
 protected:
-	void pToStrim(const ZRef<Visitee>& iRep);
+	void pToStrim(const ZP<Visitee>& iRep);
 
 	const Options& pOptions();
 	const ChanW_UTF& pStrimW();

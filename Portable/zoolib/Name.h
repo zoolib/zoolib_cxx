@@ -68,7 +68,7 @@ public:
 	:	fString(iString)
 		{}
 
-	Name(const ZRef<CountedString>& iRefCountedString)
+	Name(const ZP<CountedString>& iRefCountedString)
 	:	fString(sGet(iRefCountedString))
 		{}
 
@@ -105,7 +105,7 @@ class Name
 	{
 public:
 	typedef CountedVal<string8> CountedString;
-	typedef ZRef<CountedString> RefCountedString;
+	typedef ZP<CountedString> RefCountedString;
 
 	inline
 	Name()

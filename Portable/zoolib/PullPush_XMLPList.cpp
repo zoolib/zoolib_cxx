@@ -222,7 +222,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("string");
 		}
 
-	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
+	else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
 		s.Begin("string");
 			sECopyAll(*theChanner, s);
@@ -237,7 +237,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("data");
 		}
 
-	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
+	else if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
 		s.Begin("data");
 			sECopyAll(*theChanner, ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)));

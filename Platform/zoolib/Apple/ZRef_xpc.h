@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Apple_Ref_xpc_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 #ifndef ZCONFIG_SPI_Avail__xpc
 	#if (defined(MAC_OS_X_VERSION_MIN_REQUIRED) \

@@ -42,7 +42,7 @@ public:
 	Factory_Fallback()
 		{}
 
-	Factory_Fallback(const ZRef<Factory_Fallback<T>>* iFactories, size_t iCount)
+	Factory_Fallback(const ZP<Factory_Fallback<T>>* iFactories, size_t iCount)
 	:	fFactories(iFactories, iFactories + iCount)
 		{}
 
@@ -61,17 +61,17 @@ public:
 		}
 
 // Our protocol
-	void Add(ZRef<Factory_Fallback<T>> iFactory)
+	void Add(ZP<Factory_Fallback<T>> iFactory)
 		{ fFactories.push_back(iFactory); }
 
-	void Add(const ZRef<Factory_Fallback<T>>* iFactories, size_t iCount)
+	void Add(const ZP<Factory_Fallback<T>>* iFactories, size_t iCount)
 		{
 		if (iFactories && iCount)
 			fFactories.insert(fFactories.end(), iFactories, iFactories + iCount);
 		}
 
 protected:
-	std::vector<ZRef<Factory_Fallback<T>> > fFactories;
+	std::vector<ZP<Factory_Fallback<T>> > fFactories;
 	};
 
 } // namespace ZooLib

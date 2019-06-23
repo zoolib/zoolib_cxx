@@ -157,7 +157,7 @@ public:
 private:
 	void pTouch();
 
-	ZRef<Rep> fRep;
+	ZP<Rep> fRep;
 	};
 
 template <> struct RelopsTraits_HasEQ<Seq_Any> : public RelopsTraits_Has {};
@@ -393,7 +393,7 @@ private:
 	void pTouch();
 	Map_t::iterator pTouch(const Index_t& iIndex);
 
-	ZRef<Rep> fRep;
+	ZP<Rep> fRep;
 	};
 
 template <> struct RelopsTraits_HasEQ<Map_Any> : public RelopsTraits_Has {};
@@ -492,8 +492,8 @@ private:
 	virtual void Finalize();
 
 // Our protocol
-	static ZRef<Rep> spMake();
-	static ZRef<Rep> spMake(const Map_t& iMap);
+	static ZP<Rep> spMake();
+	static ZP<Rep> spMake(const Map_t& iMap);
 
 	Map_t fMap;
 	friend class Map_Any;

@@ -25,8 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Any.h"
 #include "zoolib/Compare_T.h"
 #include "zoolib/Util_Relops.h"
-
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 namespace ZooLib {
 
@@ -65,7 +64,7 @@ public:
 private:
 	void pTouch();
 
-	ZRef<Rep> fRep;
+	ZP<Rep> fRep;
 	};
 
 template <> struct RelopsTraits_HasEQ<Data_Any> : public RelopsTraits_Has {};

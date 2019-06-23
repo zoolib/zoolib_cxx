@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Apple/Compat_NSObject.h"
 
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 // =================================================================================================
 #pragma mark - id and NSObject, sRetain and sRelease

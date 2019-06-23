@@ -33,7 +33,7 @@ class Raster_CGImage : public Raster
 	{
 public:
 	Raster_CGImage(const RasterDesc& iRasterDesc,
-		const ZRef<CGImageRef>& iImageRef, const ZRef<CFDataRef>& iDataRef)
+		const ZP<CGImageRef>& iImageRef, const ZP<CFDataRef>& iDataRef)
 	:	Raster(iRasterDesc)
 	,	fImageRef(iImageRef)
 	,	fDataRef(iDataRef)
@@ -43,14 +43,14 @@ public:
 		{ fBaseAddress = nullptr; }
 
 private:
-	ZRef<CGImageRef> fImageRef;
-	ZRef<CFDataRef> fDataRef;
+	ZP<CGImageRef> fImageRef;
+	ZP<CFDataRef> fDataRef;
 	};
 
 // =================================================================================================
 #pragma mark - sPixmap
 
-Pixmap sPixmap(ZRef<CGImageRef> iImageRef)
+Pixmap sPixmap(ZP<CGImageRef> iImageRef)
 	{
 	if (not iImageRef)
 		{}
@@ -69,7 +69,7 @@ Pixmap sPixmap(ZRef<CGImageRef> iImageRef)
 			::CGImageGetHeight(iImageRef),
 			false);
 
-		ZRef<Raster> theRaster = new Raster_CGImage(theRasterDesc, iImageRef, theDataRef);
+		ZP<Raster> theRaster = new Raster_CGImage(theRasterDesc, iImageRef, theDataRef);
 
 		// Figure out mask
 		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);

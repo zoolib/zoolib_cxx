@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 #include "zoolib/ZThread.h" // For ZMtx
 
 namespace ZooLib {
@@ -51,7 +51,7 @@ public:
 	bool IsReferenced() const;
 
 	class WPProxy;
-	ZRef<WPProxy> GetWPProxy();
+	ZP<WPProxy> GetWPProxy();
 
 protected:
 	int pCOMAddRef();
@@ -59,7 +59,7 @@ protected:
 
 private:
 	ZAtomic_t fRefCount;
-	ZRef<WPProxy> fWPProxy;
+	ZP<WPProxy> fWPProxy;
 	};
 
 // =================================================================================================
@@ -90,7 +90,7 @@ private:
 	WPProxy(CountedBase* iCountedBase);
 	virtual ~WPProxy();
 
-	ZRef<CountedBase> pGetCountedBase();
+	ZP<CountedBase> pGetCountedBase();
 	void pClear();
 
 	ZMtx fMtx;
@@ -113,16 +113,16 @@ protected:
 	WPBase(const WPBase& iOther);
 	WPBase& operator=(const WPBase& iOther);
 
-	WPBase(const ZRef<WPProxy>& iWPProxy);
+	WPBase(const ZP<WPProxy>& iWPProxy);
 
-	void pAssign(const ZRef<WPProxy>& iWPProxy);
+	void pAssign(const ZP<WPProxy>& iWPProxy);
 	void pClear();
 
-	ZRef<CountedBase> pGet() const;
-	ZRef<WPProxy> pGetWPProxy() const;
+	ZP<CountedBase> pGet() const;
+	ZP<WPProxy> pGetWPProxy() const;
 
 private:
-	ZRef<WPProxy> fWPProxy;
+	ZP<WPProxy> fWPProxy;
 	};
 
 // =================================================================================================
@@ -164,11 +164,11 @@ public:
 		return *this;
 		}
 
-	WP(const ZRef<WPProxy>& iWPProxy)
+	WP(const ZP<WPProxy>& iWPProxy)
 	:	WPBase(iWPProxy)
 		{}
 
-	WP& operator=(const ZRef<WPProxy>& iWPProxy)
+	WP& operator=(const ZP<WPProxy>& iWPProxy)
 		{
 		WPBase::pAssign(iWPProxy);
 		return *this;
@@ -203,10 +203,10 @@ public:
 	void Clear()
 		{ WPBase::pClear(); }
 
-	ZRef<WPProxy> GetWPProxy() const
+	ZP<WPProxy> GetWPProxy() const
 		{ return WPBase::pGetWPProxy(); }
 
-	ZRef<T> Get() const
+	ZP<T> Get() const
 		{ return WPBase::pGet().template DynamicCast<T>(); }
 
 	template <class O, bool Sense>
@@ -269,14 +269,14 @@ WP<T> sWeakRef(ZRef<T,Sense> iP)
 // =================================================================================================
 #pragma mark - ZP_Counted
 
-// Useful in situations where we want the default ctor of a ZRef<X> to default create an X.
+// Useful in situations where we want the default ctor of a ZP<X> to default-ctor an X.
 // e.g. sStarter_EachOnNewThread and its use of sSingleton/ZP_Counted
 
 template <class Counted_p>
 class ZP_Counted
-:	public ZRef<Counted_p>
+:	public ZP<Counted_p>
 	{
-	typedef ZRef<Counted_p> inherited;
+	typedef ZP<Counted_p> inherited;
 public:
 	typedef Counted_p Counted_t;
 

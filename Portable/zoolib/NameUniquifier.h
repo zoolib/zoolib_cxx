@@ -33,7 +33,7 @@ namespace ZooLib {
 
 typedef CountedVal<string8> CountedString;
 
-typedef ZRef<CountedString> ZRefCountedString;
+typedef ZP<CountedString> ZRefCountedString;
 
 struct Compare_RefCountedString
 	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r) const; };

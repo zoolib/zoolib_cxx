@@ -40,10 +40,10 @@ class CFNotification
 :	public Counted
 	{
 public:
-	typedef Callable<void(ZRef<CFNotification>, CFDictionaryRef)> Callable_t;
+	typedef Callable<void(ZP<CFNotification>, CFDictionaryRef)> Callable_t;
 
-	CFNotification(void* iObject, const std::string& iName, ZRef<Callable_t> iCallable);
-	CFNotification(void* iObject, CFStringRef iName, ZRef<Callable_t> iCallable);
+	CFNotification(void* iObject, const std::string& iName, ZP<Callable_t> iCallable);
+	CFNotification(void* iObject, CFStringRef iName, ZP<Callable_t> iCallable);
 
 	virtual ~CFNotification();
 
@@ -63,8 +63,8 @@ private:
 
 	void* fObject;
 	ZQ<std::string> fName_String;
-	ZRef<CFStringRef> fName_CFStringRef;
-	ZRef<Callable_t> fCallable;
+	ZP<CFStringRef> fName_CFStringRef;
+	ZP<Callable_t> fCallable;
 	};
 
 } // namespace ZooLib

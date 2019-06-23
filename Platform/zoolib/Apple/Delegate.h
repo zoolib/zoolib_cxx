@@ -56,7 +56,7 @@ public:
 	#ifdef __OBJC__
 
 	template <class Callable>
-	void Set(SEL iSEL, const ZRef<Callable>& iCallable);
+	void Set(SEL iSEL, const ZP<Callable>& iCallable);
 
 	operator id();
 
@@ -71,7 +71,7 @@ private:
 	class Wrapper;
 
 	ZooLib_Delegate_Proxy* fProxy;
-	std::map<SEL, ZRef<Wrapper> > fWrappers;
+	std::map<SEL, ZP<Wrapper> > fWrappers;
 
 	#ifdef __OBJC__
 
@@ -124,7 +124,7 @@ protected:
 		const char* P0, const char* P1, const char* P2, const char* P3,
 		const char* P4, const char* P5, const char* P6, const char* P7);
 
-	ZRef<NSMethodSignature> fNSMethodSignature;
+	ZP<NSMethodSignature> fNSMethodSignature;
 	};
 
 // =================================================================================================
@@ -138,7 +138,7 @@ class Delegate::Wrapper_T<R()>
 
 	typedef Callable<R()> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R));
@@ -150,7 +150,7 @@ class Delegate::Wrapper_T<R()>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -164,7 +164,7 @@ class Delegate::Wrapper_T<void()>
 
 	typedef Callable<void()> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void));
@@ -175,7 +175,7 @@ class Delegate::Wrapper_T<void()>
 		fCallable->Call();
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -190,7 +190,7 @@ class Delegate::Wrapper_T<R(P0)>
 
 	typedef Callable<R(P0)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -206,7 +206,7 @@ class Delegate::Wrapper_T<R(P0)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -220,7 +220,7 @@ class Delegate::Wrapper_T<void(P0)>
 
 	typedef Callable<void(P0)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -235,7 +235,7 @@ class Delegate::Wrapper_T<void(P0)>
 		fCallable->Call(p0);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -250,7 +250,7 @@ class Delegate::Wrapper_T<R(P0,P1)>
 
 	typedef Callable<R(P0,P1)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -268,7 +268,7 @@ class Delegate::Wrapper_T<R(P0,P1)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -282,7 +282,7 @@ class Delegate::Wrapper_T<void(P0,P1)>
 
 	typedef Callable<void(P0,P1)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -299,7 +299,7 @@ class Delegate::Wrapper_T<void(P0,P1)>
 		fCallable->Call(p0, p1);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -314,7 +314,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2)>
 
 	typedef Callable<R(P0,P1,P2)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -334,7 +334,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -348,7 +348,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2)>
 
 	typedef Callable<void(P0,P1,P2)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -367,7 +367,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2)>
 		fCallable->Call(p0, p1, p2);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -382,7 +382,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3)>
 
 	typedef Callable<R(P0,P1,P2,P3)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -404,7 +404,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -418,7 +418,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3)>
 
 	typedef Callable<void(P0,P1,P2,P3)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -439,7 +439,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3)>
 		fCallable->Call(p0, p1, p2, p3);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -454,7 +454,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4)>
 
 	typedef Callable<R(P0,P1,P2,P3,P4)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -479,7 +479,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -493,7 +493,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
 
 	typedef Callable<void(P0,P1,P2,P3,P4)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -517,7 +517,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4)>
 		fCallable->Call(p0, p1, p2, p3, p4);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -532,7 +532,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>
 
 	typedef Callable<R(P0,P1,P2,P3,P4,P5)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -559,7 +559,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -573,7 +573,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
 
 	typedef Callable<void(P0,P1,P2,P3,P4,P5)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -599,7 +599,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -614,7 +614,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>
 
 	typedef Callable<R(P0,P1,P2,P3,P4,P5,P6)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -643,7 +643,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -657,7 +657,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
 
 	typedef Callable<void(P0,P1,P2,P3,P4,P5,P6)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -685,7 +685,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5, p6);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -700,7 +700,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 
 	typedef Callable<R(P0,P1,P2,P3,P4,P5,P6,P7)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(R),
@@ -731,7 +731,7 @@ class Delegate::Wrapper_T<R(P0,P1,P2,P3,P4,P5,P6,P7)>
 		[anInvocation setReturnValue:&result];
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
@@ -745,7 +745,7 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 
 	typedef Callable<void(P0,P1,P2,P3,P4,P5,P6,P7)> Callable_t;
 
-	Wrapper_T(const ZRef<Callable_t>& iCallable)
+	Wrapper_T(const ZP<Callable_t>& iCallable)
 	:	fCallable(iCallable)
 		{
 		this->pSetSignature(@encode(void),
@@ -775,14 +775,14 @@ class Delegate::Wrapper_T<void(P0,P1,P2,P3,P4,P5,P6,P7)>
 		fCallable->Call(p0, p1, p2, p3, p4, p5, p6, p7);
 		}
 
-	const ZRef<Callable_t> fCallable;
+	const ZP<Callable_t> fCallable;
 	};
 
 // =================================================================================================
 #pragma mark - Delegate::Set
 
 template <class Callable_p>
-void Delegate::Set(SEL iSEL, const ZRef<Callable_p>& iCallable)
+void Delegate::Set(SEL iSEL, const ZP<Callable_p>& iCallable)
 	{
 	if (iCallable)
 		fWrappers[iSEL] = new Wrapper_T<typename Callable_p::Signature>(iCallable);

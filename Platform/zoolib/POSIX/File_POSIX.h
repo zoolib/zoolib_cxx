@@ -48,9 +48,9 @@ namespace ZooLib {
 class FileLoc_POSIX : public FileLoc
 	{
 public:
-	static ZRef<FileLoc_POSIX> sGet_CWD();
-	static ZRef<FileLoc_POSIX> sGet_Root();
-	static ZRef<FileLoc_POSIX> sGet_App();
+	static ZP<FileLoc_POSIX> sGet_CWD();
+	static ZP<FileLoc_POSIX> sGet_Root();
+	static ZP<FileLoc_POSIX> sGet_App();
 
 	FileLoc_POSIX(bool iIsAtRoot);
 	FileLoc_POSIX(bool iIsAtRoot, const std::vector<std::string>& iComps);
@@ -59,18 +59,18 @@ public:
 	virtual ~FileLoc_POSIX();
 
 // From FileLoc
-	virtual ZRef<FileIterRep> CreateIterRep();
+	virtual ZP<FileIterRep> CreateIterRep();
 
 	virtual std::string GetName() const;
-	virtual ZQ<Trail> TrailTo(ZRef<FileLoc> oDest) const;
+	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const;
 
-	virtual ZRef<FileLoc> GetParent();
-	virtual ZRef<FileLoc> GetDescendant(
+	virtual ZP<FileLoc> GetParent();
+	virtual ZP<FileLoc> GetDescendant(
 		const std::string* iComps, size_t iCount);
 
 	virtual bool IsRoot();
 
-	virtual ZRef<FileLoc> Follow();
+	virtual ZP<FileLoc> Follow();
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
 	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
@@ -80,17 +80,17 @@ public:
 	virtual double TimeCreated();
 	virtual double TimeModified();
 
-	virtual ZRef<FileLoc> CreateDir();
+	virtual ZP<FileLoc> CreateDir();
 
-	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest);
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
 	virtual bool Delete();
 
-	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
-	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
-	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	virtual ZP<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
+	virtual ZP<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
 
-	virtual ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
-	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
 
 	std::string pGetPath();
 

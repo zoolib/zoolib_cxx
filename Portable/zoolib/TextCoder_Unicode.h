@@ -29,9 +29,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName);
+ZP<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName);
 
-ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName);
+ZP<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName);
 
 // =================================================================================================
 #pragma mark - TextDecoder_Unicode_AutoDetect

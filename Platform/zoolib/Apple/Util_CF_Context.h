@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 namespace ZooLib {
 namespace Util_CF {
@@ -68,12 +68,12 @@ public:
 		}
 
 	template <class O>
-	Context(const ZRef<O>& iRef)
+	Context(const ZP<O>& iRef)
 	:	fT(T())
 		{
 		fT.info = iRef.Get();
-		fT.retain = (CFAllocatorRetainCallBack)&ZRef<O>::sCFAllocatorRetain;
-		fT.release = (CFAllocatorReleaseCallBack)&ZRef<O>::sCFAllocatorRelease;
+		fT.retain = (CFAllocatorRetainCallBack)&ZP<O>::sCFAllocatorRetain;
+		fT.release = (CFAllocatorReleaseCallBack)&ZP<O>::sCFAllocatorRelease;
 		fT.retain(fT.info);
 		}
 

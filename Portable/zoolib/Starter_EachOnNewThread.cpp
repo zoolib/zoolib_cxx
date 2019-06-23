@@ -32,7 +32,7 @@ class Starter_EachOnNewThread
 	{
 public:
 // From Starter
-	virtual bool QStart(const ZRef<Startable>& iStartable)
+	virtual bool QStart(const ZP<Startable>& iStartable)
 		{
 		if (iStartable)
 			{
@@ -51,7 +51,7 @@ public:
 // =================================================================================================
 #pragma mark - sStarter_EachOnNewThread
 
-ZRef<Starter> sStarter_EachOnNewThread()
+ZP<Starter> sStarter_EachOnNewThread()
 	{ return sSingleton<ZP_Counted<Starter_EachOnNewThread> >(); }
 
 } // namespace ZooLib

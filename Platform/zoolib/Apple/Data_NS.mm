@@ -161,7 +161,7 @@ NSData* Data_NS::pData() const
 
 NSMutableData* Data_NS::pTouch()
 	{
-	ZRef<NSMutableData> theMutableData;
+	ZP<NSMutableData> theMutableData;
 	if (NSData* theData = this->pData())
 		{
 		if (not fMutable || sRetainCount(theData) > 1)

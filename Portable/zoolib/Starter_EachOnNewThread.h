@@ -29,7 +29,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sStarter_EachOnNewThread
 
-ZRef<Starter> sStarter_EachOnNewThread();
+ZP<Starter> sStarter_EachOnNewThread();
 
 } // namespace ZooLib
 

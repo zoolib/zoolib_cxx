@@ -36,7 +36,7 @@ typedef
 	Callable<bool(const Any& iAny, const ChanW_PPT& iChanW)> Callable_Any_WriteFilter;
 
 void sFromAny_Push_PPT(const Any& iAny,
-	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
+	const ZP<Callable_Any_WriteFilter>& iWriteFilter,
 	const ChanW_PPT& iChanW);
 
 void sFromAny_Push_PPT(const Any& iAny,
@@ -49,11 +49,11 @@ typedef
 
 void sPull_PPT_AsAny(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny);
 
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny);
 
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
@@ -64,10 +64,10 @@ Any sAsAny(const ChanR_PPT& iChanR);
 
 // --
 
-ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR);
+ZP<Delivery<Any>> sStartAsync_AsAny(const ZP<ChannerR_PPT>& iChannerR);
 
-ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter);
+ZP<Delivery<Any>> sStartAsync_AsAny(const ZP<ChannerR_PPT>& iChannerR,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter);
 
 } // namespace ZooLib
 

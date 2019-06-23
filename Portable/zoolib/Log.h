@@ -159,8 +159,8 @@ public:
 		size_t iDepth, const std::string& iMessage) = 0;
 	};
 
-extern ZRef<LogMeister> sLogMeister;
-//extern Safe<ZRef<LogMeister> > sLogMeister;
+extern ZP<LogMeister> sLogMeister;
+//extern Safe<ZP<LogMeister> > sLogMeister;
 
 void sLogIt(EPriority iPriority, const std::string& iName,
 	size_t iDepth, const std::string& iMessage);

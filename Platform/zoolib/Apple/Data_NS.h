@@ -37,9 +37,9 @@ namespace ZooLib {
 #pragma mark - Data_NS
 
 class Data_NS
-:	public ZRef<NSData>
+:	public ZP<NSData>
 	{
-	typedef ZRef<NSData> inherited;
+	typedef ZP<NSData> inherited;
 public:
 	Data_NS();
 	Data_NS(const Data_NS& iOther);

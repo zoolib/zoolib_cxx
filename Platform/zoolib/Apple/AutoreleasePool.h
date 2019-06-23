@@ -35,8 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-struct AutoreleasePool : public ZRef<NSAutoreleasePool>
-	{ AutoreleasePool() : ZRef<NSAutoreleasePool>(sAdopt& [[NSAutoreleasePool alloc] init]) {}; };
+struct AutoreleasePool : public ZP<NSAutoreleasePool>
+	{ AutoreleasePool() : ZP<NSAutoreleasePool>(sAdopt& [[NSAutoreleasePool alloc] init]) {}; };
 
 } // namespace ZooLib
 

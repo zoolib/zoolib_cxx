@@ -31,8 +31,8 @@ using std::string;
 namespace ZooLib {
 namespace Log {
 
-ZRef<LogMeister> sLogMeister;
-//ZSafe<ZRef<LogMeister> > sLogMeister;
+ZP<LogMeister> sLogMeister;
+//ZSafe<ZP<LogMeister> > sLogMeister;
 
 // =================================================================================================
 #pragma mark - Log::CallDepth
@@ -140,7 +140,7 @@ size_t ChanW::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 
 ChanW::operator operator_bool() const
 	{
-	if (ZRef<LogMeister> theLM = sLogMeister)
+	if (ZP<LogMeister> theLM = sLogMeister)
 		{
 		if (fName_StringQ)
 			{
@@ -192,7 +192,7 @@ bool LogMeister::Enabled(EPriority iPriority, const char* iName)
 
 void sLogIt(EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
 	{
-	if (ZRef<LogMeister> theLM = sLogMeister)
+	if (ZP<LogMeister> theLM = sLogMeister)
 		{
 		try
 			{

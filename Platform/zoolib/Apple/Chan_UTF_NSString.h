@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
@@ -46,7 +46,7 @@ public:
 	virtual size_t Read(UTF32* oDest, size_t iCount);
 
 private:
-	ZRef<NSString> fString;
+	ZP<NSString> fString;
 	size_t fPosition;
 	};
 
@@ -63,7 +63,7 @@ public:
 	virtual size_t WriteUTF16(const UTF16* iSource, size_t iCountCU);
 
 private:
-	ZRef<NSMutableString> fString;
+	ZP<NSMutableString> fString;
 	};
 
 } // namespace ZooLib

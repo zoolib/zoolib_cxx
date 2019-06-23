@@ -32,21 +32,21 @@ namespace ZooLib {
 
 namespace PullPush {
 
-const PPT kStart_Map = ZRef<Start>(new Start_Map);
-const PPT kStart_Seq = ZRef<Start>(new Start_Seq);
+const PPT kStart_Map = ZP<Start>(new Start_Map);
+const PPT kStart_Seq = ZP<Start>(new Start_Seq);
 
 const PPT kEnd = End();
 
 bool sIsStart(const PPT& iPPT)
 	{
-	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
 		return true;
 	return false;
 	}
 
 bool sIsStartMap(const PPT& iPPT)
 	{
-	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
 		{
 		if (theRef.DynamicCast<Start_Map>())
 			return true;
@@ -56,7 +56,7 @@ bool sIsStartMap(const PPT& iPPT)
 
 bool sIsStartSeq(const PPT& iPPT)
 	{
-	if (const ZRef<Start> theRef = sGet<ZRef<Start>>(iPPT))
+	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
 		{
 		if (theRef.DynamicCast<Start_Seq>())
 			return true;

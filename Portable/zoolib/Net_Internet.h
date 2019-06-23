@@ -82,7 +82,7 @@ public:
 	NetAddress_IP4(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort);
 
 // From NetAddress
-	virtual ZRef<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWClose_Bin> Connect();
 
 // Our protocol
 	ip4_addr GetAddr();
@@ -109,7 +109,7 @@ public:
 	NetAddress_IP6(ip_port iPort, ip6_addr iAddr);
 
 // From NetAddress
-	virtual ZRef<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWClose_Bin> Connect();
 
 // Our protocol
 	ip6_addr GetAddr();
@@ -135,7 +135,7 @@ public:
 
 // From NetName
 	virtual std::string AsString();
-	virtual ZRef<NetNameLookup> MakeLookup(size_t iMaxAddresses);
+	virtual ZP<NetNameLookup> MakeLookup(size_t iMaxAddresses);
 
 // Our protocol
 	std::string GetName() const;
@@ -156,15 +156,15 @@ public:
 	virtual ip_port GetPort() = 0;
 	};
 
-ZRef<NetListener_TCP> sNetListener_TCP(ip_port iPort);
-ZRef<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort);
-ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
+ZP<NetListener_TCP> sNetListener_TCP(ip_port iPort);
+ZP<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort);
+ZP<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
 
 // =================================================================================================
 #pragma mark - sQConnect_TCP
 
-ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
-ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
 
 } // namespace ZooLib
 

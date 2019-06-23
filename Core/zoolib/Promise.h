@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/CountedWithoutFinalize.h"
 
+#include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZRef.h"
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -135,11 +135,11 @@ public:
 		return true;
 		}
 
-	ZRef<Delivery<T> > GetDelivery()
+	ZP<Delivery<T> > GetDelivery()
 		{ return fDelivery; }
 
 private:
-	ZRef<Delivery<T> > fDelivery;
+	ZP<Delivery<T> > fDelivery;
 	};
 
 // =================================================================================================
@@ -183,31 +183,31 @@ public:
 		return true;
 		}
 
-	ZRef<Delivery<void> > GetDelivery()
+	ZP<Delivery<void> > GetDelivery()
 		{ return fDelivery; }
 
 private:
-	ZRef<Delivery<void> > fDelivery;
+	ZP<Delivery<void> > fDelivery;
 	};
 
 // =================================================================================================
 #pragma mark - sPromise
 
 inline
-ZRef<Promise<void> > sPromise()
+ZP<Promise<void> > sPromise()
 	{ return new Promise<void>; }
 
 template <class T>
-ZRef<Promise<T> > sPromise()
+ZP<Promise<T> > sPromise()
 	{ return new Promise<T>; }
 
 // =================================================================================================
 #pragma mark - sGetDeliveryClearPromise
 
 template <class T>
-ZRef<Delivery<T> > sGetDeliveryClearPromise(ZRef<Promise<T> >& ioPromise)
+ZP<Delivery<T> > sGetDeliveryClearPromise(ZP<Promise<T> >& ioPromise)
 	{
-	ZRef<Delivery<T> > theDelivery = ioPromise->GetDelivery();
+	ZP<Delivery<T> > theDelivery = ioPromise->GetDelivery();
 	ioPromise.Clear();
 	return theDelivery;
 	}

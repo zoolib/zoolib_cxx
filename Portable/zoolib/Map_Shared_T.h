@@ -127,7 +127,7 @@ public:
 		{ return this->Get(iName); }
 
 protected:
-	ZRef<CountedVal<Map_t> > fRep;
+	ZP<CountedVal<Map_t> > fRep;
 	};
 
 // =================================================================================================

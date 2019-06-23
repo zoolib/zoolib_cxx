@@ -33,22 +33,22 @@ namespace HTTP {
 
 // -----
 
-bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
-	ZRef<Callable_Connect> iCallable_Connect,
+bool sQRequest(ZP<ChannerRWClose_Bin>& ioConnection,
+	ZP<Callable_Connect> iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
 	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
 // -----
 
-ZRef<ChannerRWClose_Bin> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZP<ChannerRWClose_Bin> sPOST_Send(ZP<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ);
 
-ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
+ZP<ChannerRWClose_Bin> sPOST_Receive(ZP<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 
-ZRef<ChannerRWClose_Bin> sPOST(ZRef<Callable_Connect> iCallable_Connect,
+ZP<ChannerRWClose_Bin> sPOST(ZP<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader);
 

@@ -34,7 +34,7 @@ class Factory_WithFirstProduct
 :	public Factory<T>
 	{
 public:
-	Factory_WithFirstProduct(const ZRef<T>& iFactory, const T& iFirstProduct)
+	Factory_WithFirstProduct(const ZP<T>& iFactory, const T& iFirstProduct)
 	:	fFirstProductQ(iFirstProduct)
 		{}
 
@@ -47,7 +47,7 @@ public:
 		}
 
 private:
-	const ZRef<T> fFactory;
+	const ZP<T> fFactory;
 	ZQ<T> fFirstProductQ;
 	};
 

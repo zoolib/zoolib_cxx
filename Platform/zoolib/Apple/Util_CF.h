@@ -35,37 +35,37 @@ namespace Util_CF {
 // =================================================================================================
 #pragma mark - Util_CF
 
-ZRef<CFStringRef> sString();
-ZRef<CFStringRef> sString(const string8& iString8);
-ZRef<CFStringRef> sString(const string16& iString16);
+ZP<CFStringRef> sString();
+ZP<CFStringRef> sString(const string8& iString8);
+ZP<CFStringRef> sString(const string16& iString16);
 
-ZRef<CFMutableStringRef> sStringMutable();
-ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
-ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);
-ZRef<CFMutableStringRef> sStringMutable(CFStringRef iCFString);
-
-// -----------------
-
-ZRef<CFDictionaryRef> sDictionary();
-
-ZRef<CFMutableDictionaryRef> sDictionaryMutable();
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary);
+ZP<CFMutableStringRef> sStringMutable();
+ZP<CFMutableStringRef> sStringMutable(const string8& iString8);
+ZP<CFMutableStringRef> sStringMutable(const string16& iString16);
+ZP<CFMutableStringRef> sStringMutable(CFStringRef iCFString);
 
 // -----------------
 
-ZRef<CFArrayRef> sArray();
+ZP<CFDictionaryRef> sDictionary();
 
-ZRef<CFMutableArrayRef> sArrayMutable();
-ZRef<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray);
+ZP<CFMutableDictionaryRef> sDictionaryMutable();
+ZP<CFMutableDictionaryRef> sDictionaryMutable(CFDictionaryRef iCFDictionary);
 
 // -----------------
 
-ZRef<CFDataRef> sData();
-ZRef<CFDataRef> sData(const void* iSource, size_t iSize);
+ZP<CFArrayRef> sArray();
 
-ZRef<CFMutableDataRef> sDataMutable();
-ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
-ZRef<CFMutableDataRef> sDataMutable(CFDataRef iCFData);
+ZP<CFMutableArrayRef> sArrayMutable();
+ZP<CFMutableArrayRef> sArrayMutable(CFArrayRef iCFArray);
+
+// -----------------
+
+ZP<CFDataRef> sData();
+ZP<CFDataRef> sData(const void* iSource, size_t iSize);
+
+ZP<CFMutableDataRef> sDataMutable();
+ZP<CFMutableDataRef> sDataMutable(size_t iSize);
+ZP<CFMutableDataRef> sDataMutable(CFDataRef iCFData);
 
 // -----------------
 

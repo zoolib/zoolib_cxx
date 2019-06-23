@@ -41,7 +41,7 @@ class Callable_StarterAsync<void()>
 public:
 	typedef void (Signature)();
 
-	Callable_StarterAsync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable)
+	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable)
 	:	fStarter(iStarter)
 	,	fCallable(iCallable)
 		{}
@@ -56,8 +56,8 @@ public:
 		}
 
 private:
-	const ZRef<Starter> fStarter;
-	const ZRef<Callable<Signature> > fCallable;
+	const ZP<Starter> fStarter;
+	const ZP<Callable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -72,7 +72,7 @@ class Callable_StarterAsync<void(ZMACRO_Callable_P##X)> \
 public: \
 	typedef void (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable_StarterAsync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable) \
+	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable) \
 	:	fStarter(iStarter) \
 	,	fCallable(iCallable) \
 		{} \
@@ -85,8 +85,8 @@ public: \
 		} \
 \
 private:\
-	const ZRef<Starter> fStarter; \
-	const ZRef<Callable<Signature> > fCallable;\
+	const ZP<Starter> fStarter; \
+	const ZP<Callable<Signature> > fCallable;\
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -114,17 +114,17 @@ ZMACRO_Callable_Callable(F)
 #if ZCONFIG_CPP >= 2011
 
 template <typename... A_p>
-ZRef<Callable<void(A_p...)>>
+ZP<Callable<void(A_p...)>>
 sCallable_StarterAsync(
-	const ZRef<Starter>& iStarter, const ZRef<Callable<void(A_p...)>>& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable<void(A_p...)>>& iCallable)
 	{ return new Callable_StarterAsync<void(A_p...)>(iStarter, iCallable); }
 
 #else
 
 template <class Signature_p>
-ZRef<Callable<Signature_p> >
+ZP<Callable<Signature_p> >
 sCallable_StarterAsync(
-	const ZRef<Starter>& iStarter, const ZRef<Callable<Signature_p> >& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable<Signature_p> >& iCallable)
 	{ return new Callable_StarterAsync<Signature_p>(iStarter, iCallable); }
 
 #endif // ZCONFIG_CPP >= 2011

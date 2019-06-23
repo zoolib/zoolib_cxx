@@ -41,7 +41,7 @@ class Callable_Fallback<R()>
 public:
 	typedef Callable<R()> Callable;
 
-	Callable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
+	Callable_Fallback(const ZP<Callable>& iCallable0, const ZP<Callable>& iCallable1)
 	:	fCallable0(iCallable0)
 	,	fCallable1(iCallable1)
 		{}
@@ -55,8 +55,8 @@ public:
 		}
 
 private:
-	const ZRef<Callable> fCallable0;
-	const ZRef<Callable> fCallable1;
+	const ZP<Callable> fCallable0;
+	const ZP<Callable> fCallable1;
 	};
 
 // =================================================================================================
@@ -71,7 +71,7 @@ class Callable_Fallback<R(ZMACRO_Callable_P##X)> \
 public: \
 	typedef Callable<R(ZMACRO_Callable_P##X)> Callable; \
 \
-	Callable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1) \
+	Callable_Fallback(const ZP<Callable>& iCallable0, const ZP<Callable>& iCallable1) \
 	:	fCallable0(iCallable0) \
 	,	fCallable1(iCallable1) \
 		{} \
@@ -84,8 +84,8 @@ public: \
 		} \
 \
 private: \
-	const ZRef<Callable> fCallable0; \
-	const ZRef<Callable> fCallable1; \
+	const ZP<Callable> fCallable0; \
+	const ZP<Callable> fCallable1; \
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -111,8 +111,8 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable_Fallback
 
 template <class Sig>
-ZRef<Callable<Sig> > sCallable_Fallback(
-	const ZRef<Callable<Sig> >& iCallable0, const ZRef<Callable<Sig> >& iCallable1)
+ZP<Callable<Sig> > sCallable_Fallback(
+	const ZP<Callable<Sig> >& iCallable0, const ZP<Callable<Sig> >& iCallable1)
 	{
 	if (iCallable0)
 		{

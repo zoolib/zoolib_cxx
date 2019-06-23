@@ -39,9 +39,9 @@ class Map_CF;
 #pragma mark - Val_CF
 
 class Val_CF
-:	public ZRef<CFTypeRef>
+:	public ZP<CFTypeRef>
 	{
-	typedef ZRef<CFTypeRef> inherited;
+	typedef ZP<CFTypeRef> inherited;
 public:
 	Val_CF();
 	Val_CF(const Val_CF& iOther);
@@ -49,7 +49,7 @@ public:
 	Val_CF& operator=(const Val_CF& iOther);
 
 	Val_CF(CFTypeRef iVal) : inherited(iVal) {}
-	template <class S> Val_CF(const ZRef<S>& iVal) : inherited(iVal) {}
+	template <class S> Val_CF(const ZP<S>& iVal) : inherited(iVal) {}
 	template <class S> Val_CF(const Adopt_T<S>& iVal) : inherited(iVal) {}
 
 	Val_CF(char iVal);
@@ -84,7 +84,7 @@ public:
 	Val_CF& operator=(CFTypeRef iVal);
 
 	template <class S>
-	Val_CF& operator=(const ZRef<S>& iVal)
+	Val_CF& operator=(const ZP<S>& iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
@@ -132,9 +132,9 @@ public:
 #pragma mark - Seq_CF
 
 class Seq_CF
-:	public ZRef<CFArrayRef>
+:	public ZP<CFArrayRef>
 	{
-	typedef ZRef<CFArrayRef> inherited;
+	typedef ZP<CFArrayRef> inherited;
 
 public:
 	typedef Val_CF Val;
@@ -196,9 +196,9 @@ private:
 #pragma mark - Map_CF
 
 class Map_CF
-:	public ZRef<CFDictionaryRef>
+:	public ZP<CFDictionaryRef>
 	{
-	typedef ZRef<CFDictionaryRef> inherited;
+	typedef ZP<CFDictionaryRef> inherited;
 
 public:
 	typedef Val_CF Val;

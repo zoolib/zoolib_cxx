@@ -29,20 +29,20 @@ class Cancellable_Callable
 :	public Cancellable
 	{
 public:
-	Cancellable_Callable(const ZRef<Callable_Void>& iCallable)
+	Cancellable_Callable(const ZP<Callable_Void>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
 	virtual void Cancel()
 		{ sCall(fCallable); }
 
-	const ZRef<Callable_Void> fCallable;
+	const ZP<Callable_Void> fCallable;
 	};
 
 // =================================================================================================
 #pragma mark - sCancellable
 
-ZRef<Cancellable> sCancellable(const ZRef<Callable_Void>& iCallable)
+ZP<Cancellable> sCancellable(const ZP<Callable_Void>& iCallable)
 	{
 	if (iCallable)
 		return new Cancellable_Callable(iCallable);

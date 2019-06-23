@@ -261,22 +261,22 @@ ZMACRO_Callable_Call(F)
 #pragma mark - sCallable
 
 template <class Signature_p>
-const ZRef<Callable<Signature_p> >& sCallable(const ZRef<Callable<Signature_p> >& iCallable)
+const ZP<Callable<Signature_p> >& sCallable(const ZP<Callable<Signature_p> >& iCallable)
 	{ return iCallable; }
 
 template <class ZRef_p>
-const ZRef<Callable<typename ZRef_p::Type_t::Signature> >& sCallable(const ZRef_p& iCandidate)
-	{ return (const ZRef<Callable<typename ZRef_p::Type_t::Signature> >&)(iCandidate); }
+const ZP<Callable<typename ZRef_p::Type_t::Signature> >& sCallable(const ZRef_p& iCandidate)
+	{ return (const ZP<Callable<typename ZRef_p::Type_t::Signature> >&)(iCandidate); }
 
 template <class Callable_p>
-ZRef<Callable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
-	{ return ZRef<Callable<typename Callable_p::Signature> >(iCandidate); }
+ZP<Callable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
+	{ return ZP<Callable<typename Callable_p::Signature> >(iCandidate); }
 
 // =================================================================================================
 #pragma mark - sCallVoid
 
 template <class T>
-void sCallVoid(ZRef<Callable<T()> > iCallable)
+void sCallVoid(ZP<Callable<T()> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================

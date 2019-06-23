@@ -30,10 +30,10 @@ namespace ZooLib {
 // and takes a callable of that type plus an additional templated param. So you can call it, passing
 // itself as the first param and get back exactly the same object, or more usefully a different one.
 // Syntactically it would look something like:
-//   template <class Param> using Cog = ZRef<Callable<Cog<Param>(const Cog<Param>&,Param)>>;
+//   template <class Param> using Cog = ZP<Callable<Cog<Param>(const Cog<Param>&,Param)>>;
 // but this is explicitly disallowed in the standard, at least as of C++17.
 
-// The closest approximation is to have Cog derived from a ZRef<Callable<...>>, and to use CRTP to
+// The closest approximation is to have Cog derived from a ZP<Callable<...>>, and to use CRTP to
 // get Cog itself into the callable's signature.
 
 // It actually works quite well in practice, but it does require that some functions take the base
@@ -44,13 +44,13 @@ namespace ZooLib {
 
 template <class Param_p>
 class Cog
-:	public ZRef<Callable<Cog<Param_p>(const Cog<Param_p>&,Param_p)> >
+:	public ZP<Callable<Cog<Param_p>(const Cog<Param_p>&,Param_p)> >
 	{
 public:
 	typedef Param_p Param;
 	typedef Cog(Signature)(const Cog& iSelf, Param iParam);
 	typedef Callable<Signature> Callable;
-	typedef ZRef<Callable> inherited;
+	typedef ZP<Callable> inherited;
 
 //--
 
@@ -100,11 +100,11 @@ public:
 
 //--
 
-	Cog(const ZRef<Callable>& iOther)
+	Cog(const ZP<Callable>& iOther)
 	:	inherited(iOther)
 		{}
 	
-	Cog& operator=(const ZRef<Callable>& iOther)
+	Cog& operator=(const ZP<Callable>& iOther)
 		{
 		inherited::operator=(iOther);
 		return *this;
@@ -112,11 +112,11 @@ public:
 
 #if ZCONFIG_CPP >= 2011
 
-	Cog(ZRef<Callable>&& iOther)
+	Cog(ZP<Callable>&& iOther)
 	:	inherited(std::move(iOther))
 		{}
 
-	Cog& operator=(ZRef<Callable>&& iOther)
+	Cog& operator=(ZP<Callable>&& iOther)
 		{
 		inherited::operator=(std::move(iOther));
 		return *this;
@@ -178,7 +178,7 @@ Cog<Param_p>& Cog<Param_p>::operator=(const bool iBool)
 // This requires too much inference:
 //   template <class Param> using RefCallableCog = typename Cog<Param>::inherited;
 
-template <class Param> using RefCallableCog = ZRef<Callable<Cog<Param>(const Cog<Param>&,Param)>>;
+template <class Param> using RefCallableCog = ZP<Callable<Cog<Param>(const Cog<Param>&,Param)>>;
 
 // =================================================================================================
 #pragma mark -
@@ -518,7 +518,7 @@ Cog<Param> sCog_Repeat(const RefCallableCog<Param>& iCallable)
 	return new Callable_Cog_Repeat<Param>(iCallable, iCallable);
 	}
 
-// Prefix * is already heavily used in other contexts (ZRef, ZQ etc). Enabling it here is confusing.
+// Prefix * is already heavily used in other contexts (ZP, ZQ etc). Enabling it here is confusing.
 //template <class Param>
 //Cog<Param> operator*(const RefCallableCog<Param>& iCallable)
 //	{ return sCog_Repeat<Param>(iCallable); }

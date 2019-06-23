@@ -386,7 +386,7 @@ static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 // =================================================================================================
 #pragma mark - Factory functions
 
-ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
+ZP<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
 	{
 	if (iSourceName == "utf-8" || iSourceName == "utf8")
 		return sCallable(spDecodeUTF8);
@@ -431,7 +431,7 @@ ZRef<TextDecoder> sMake_TextDecoder_Unicode(const std::string& iSourceName)
 	return null;
 	}
 
-ZRef<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName)
+ZP<TextEncoder> sMake_TextEncoder_Unicode(const std::string& iDestName)
 	{
 	if (iDestName == "utf-8" || iDestName == "utf8")
 		return sCallable(spEncodeUTF8);

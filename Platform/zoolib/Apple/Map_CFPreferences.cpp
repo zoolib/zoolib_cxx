@@ -59,7 +59,7 @@ const ZQ<Val_CF> Map_CFPreferences::QGet(const string8& iName) const
 
 const ZQ<Val_CF> Map_CFPreferences::QGet(CFStringRef iName) const
 	{
-	if (ZRef<CFPropertyListRef> theVal = sAdopt& ::CFPreferencesCopyAppValue(iName, fApplicationID))
+	if (ZP<CFPropertyListRef> theVal = sAdopt& ::CFPreferencesCopyAppValue(iName, fApplicationID))
 		return theVal;
 	return null;
 	}

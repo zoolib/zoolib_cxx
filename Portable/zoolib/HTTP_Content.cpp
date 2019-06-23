@@ -204,8 +204,8 @@ void ChanW_Bin_Chunked::pFlush()
 // =================================================================================================
 #pragma mark - HTTP::sMakeContentChanner
 
-static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
-	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)
+static ZP<ChannerR_Bin> spMakeChanner_Transfer(
+	const Map& iHeader, const ZP<ChannerR_Bin>& iChannerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
@@ -220,7 +220,7 @@ static ZRef<ChannerR_Bin> spMakeChanner_Transfer(
 	return iChannerR;
 	}
 
-ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iChannerR)
+ZP<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZP<ChannerR_Bin> iChannerR)
 	{
 	iChannerR = spMakeChanner_Transfer(iHeader, iChannerR);
 
@@ -229,9 +229,9 @@ ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iC
 	return iChannerR;
 	}
 
-ZRef<ChannerR_Bin> sMakeContentChanner(
+ZP<ChannerR_Bin> sMakeContentChanner(
 	const std::string& iMethod, int iResponseCode,
-	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR)
+	const Map& iHeader, const ZP<ChannerR_Bin>& iChannerR)
 	{
 	if (iMethod == "HEAD")
 		{

@@ -59,7 +59,7 @@ namespace ZooLib {
 namespace { // anonymous
 
 class Make_FileLoc
-:	public FunctionChain<ZRef<FileLoc>, FileLoc::ELoc>
+:	public FunctionChain<ZP<FileLoc>, FileLoc::ELoc>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -121,7 +121,7 @@ static int spFCntl(int iFD, int iCmd, struct flock& ioFLock)
 		}
 	}
 
-static ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters)
+static ZP<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 
@@ -165,7 +165,7 @@ static ZRef<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPrev
 	return null;
 	}
 
-static ZRef<FDHolder> spOpen(const std::string& iPath,
+static ZP<FDHolder> spOpen(const std::string& iPath,
 	bool iRead, bool iWrite, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
@@ -189,7 +189,7 @@ static ZRef<FDHolder> spOpen(const std::string& iPath,
 	return spLockOrClose(theFD, iRead, iWrite, iPreventWriters);
 	}
 
-static ZRef<FDHolder> spCreate(const std::string& iPath,
+static ZP<FDHolder> spCreate(const std::string& iPath,
 	bool iOpenExisting, bool iAllowRead, bool iPreventWriters)
 	{
 	#if defined(linux) || defined(__linux__)
@@ -279,7 +279,7 @@ namespace { // anonymous
 class RealRep_POSIX : public FileIterRep_Std::RealRep
 	{
 public:
-	RealRep_POSIX(ZRef<FileLoc_POSIX> iFileLoc);
+	RealRep_POSIX(ZP<FileLoc_POSIX> iFileLoc);
 	virtual ~RealRep_POSIX();
 
 // From FileIterRep_Std::RealRep
@@ -289,12 +289,12 @@ public:
 
 private:
 	ZMtx fMtx;
-	ZRef<FileLoc_POSIX> fFileLoc;
+	ZP<FileLoc_POSIX> fFileLoc;
 	DIR* fDIR;
 	vector<string> fNames;
 	};
 
-RealRep_POSIX::RealRep_POSIX(ZRef<FileLoc_POSIX> iFileLoc)
+RealRep_POSIX::RealRep_POSIX(ZP<FileLoc_POSIX> iFileLoc)
 :	fFileLoc(iFileLoc)
 	{
 	if (fFileLoc)
@@ -375,15 +375,15 @@ string RealRep_POSIX::GetName(size_t iIndex)
 // =================================================================================================
 #pragma mark - FileLoc_POSIX
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_CWD()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_CWD()
 	{ return new FileLoc_POSIX(false); }
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_Root()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_Root()
 	{ return new FileLoc_POSIX(true); }
 
 #if ZCONFIG_SPI_Enabled(Linux)
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
 		{
@@ -405,7 +405,7 @@ ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 
 // From <http://www.oroboro.com/rafael/docserv.php/article/news/entry/52/num_entries/1>
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 	{
 	// Prior to 10.4 _NSGetExecutablePath took a pointer to
 	// unsigned long, later headers specify a uint32_t.
@@ -430,14 +430,14 @@ ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 
 #elif ZCONFIG_SPI_Enabled(iPhone)
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 	{ return null; }
 
 #else
 
 // This will require that we're built as part of a real application.
 
-ZRef<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
+ZP<FileLoc_POSIX> FileLoc_POSIX::sGet_App()
 	{
 	if (ZMainNS::sArgC > 0)
 		{
@@ -534,7 +534,7 @@ FileLoc_POSIX::FileLoc_POSIX(bool iIsAtRoot, vector<string>* ioComps, const IKno
 FileLoc_POSIX::~FileLoc_POSIX()
 	{}
 
-ZRef<FileIterRep> FileLoc_POSIX::CreateIterRep()
+ZP<FileIterRep> FileLoc_POSIX::CreateIterRep()
 	{ return new FileIterRep_Std(new RealRep_POSIX(this), 0); }
 
 string FileLoc_POSIX::GetName() const
@@ -544,7 +544,7 @@ string FileLoc_POSIX::GetName() const
 	return string();
 	}
 
-ZQ<Trail> FileLoc_POSIX::TrailTo(ZRef<FileLoc> oDest) const
+ZQ<Trail> FileLoc_POSIX::TrailTo(ZP<FileLoc> oDest) const
 	{
 	if (FileLoc_POSIX* dest = oDest.DynamicCast<FileLoc_POSIX>())
 		{
@@ -566,7 +566,7 @@ ZQ<Trail> FileLoc_POSIX::TrailTo(ZRef<FileLoc> oDest) const
 	return null;
 	}
 
-ZRef<FileLoc> FileLoc_POSIX::GetParent()
+ZP<FileLoc> FileLoc_POSIX::GetParent()
 	{
 	if (fComps.size())
 		{
@@ -599,7 +599,7 @@ ZRef<FileLoc> FileLoc_POSIX::GetParent()
 		}
 	}
 
-ZRef<FileLoc> FileLoc_POSIX::GetDescendant(
+ZP<FileLoc> FileLoc_POSIX::GetDescendant(
 	const string* iComps, size_t iCount)
 	{
 	if (not iCount)
@@ -613,7 +613,7 @@ ZRef<FileLoc> FileLoc_POSIX::GetDescendant(
 bool FileLoc_POSIX::IsRoot()
 	{ return fIsAtRoot && fComps.empty(); }
 
-ZRef<FileLoc> FileLoc_POSIX::Follow()
+ZP<FileLoc> FileLoc_POSIX::Follow()
 	{
 	struct stat theStat;
 	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
@@ -745,14 +745,14 @@ double FileLoc_POSIX::TimeModified()
 	#endif
 	}
 
-ZRef<FileLoc> FileLoc_POSIX::CreateDir()
+ZP<FileLoc> FileLoc_POSIX::CreateDir()
 	{
 	if (0 > ::mkdir(this->pGetPath().c_str(), 0777))
 		return null;
 	return this;
 	}
 
-ZRef<FileLoc> FileLoc_POSIX::MoveTo(ZRef<FileLoc> oDest)
+ZP<FileLoc> FileLoc_POSIX::MoveTo(ZP<FileLoc> oDest)
 	{
 	FileLoc_POSIX* other = oDest.DynamicCast<FileLoc_POSIX>();
 	if (not other)
@@ -780,30 +780,30 @@ bool FileLoc_POSIX::Delete()
 	return true;
 	}
 
-ZRef<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
+ZP<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters))
 		return sChanner_T<ChanRPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
-ZRef<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
+ZP<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters))
 		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
-ZRef<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
+ZP<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters))
 		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
-ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
+ZP<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
+	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
 		iOpenExisting, false, iPreventWriters))
 		{
 		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
@@ -811,9 +811,9 @@ ZRef<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreven
 	return null;
 	}
 
-ZRef<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
+ZP<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZRef<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
+	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
 		iOpenExisting, true, iPreventWriters))
 		{
 		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);

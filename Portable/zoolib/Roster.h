@@ -41,8 +41,8 @@ public:
 
 	Roster();
 
-	Roster(const ZRef<Callable_Void>& iCallable_Change,
-		const ZRef<Callable_Void>& iCallable_Gone);
+	Roster(const ZP<Callable_Void>& iCallable_Change,
+		const ZP<Callable_Void>& iCallable_Gone);
 
 	virtual ~Roster();
 
@@ -50,10 +50,10 @@ public:
 	virtual void Finalize();
 
 // Our protocol
-	ZRef<Entry> MakeEntry();
+	ZP<Entry> MakeEntry();
 
-	ZRef<Entry> MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
-		const ZRef<Callable_Void>& iCallable_Gone);
+	ZP<Entry> MakeEntry(const ZP<Callable_Void>& iCallable_Broadcast,
+		const ZP<Callable_Void>& iCallable_Gone);
 	
 	void Broadcast();
 
@@ -63,13 +63,13 @@ public:
 	bool WaitUntil(double iDeadline, size_t iCount);
 
 private:
-	void pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone);
+	void pFinalizeEntry(Entry* iEntry, const ZP<Callable_Void>& iCallable_Gone);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 	std::set<Entry*> fEntries;
-	const ZRef<Callable_Void> fCallable_Change;
-	const ZRef<Callable_Void> fCallable_Gone;
+	const ZP<Callable_Void> fCallable_Change;
+	const ZP<Callable_Void> fCallable_Gone;
 
 	friend class Entry;
 	};
@@ -83,9 +83,9 @@ class Roster::Entry
 	{
 private:
 	Entry(
-		const ZRef<Roster>& iRoster,
-		const ZRef<Callable_Void>& iCallable_Broadcast,
-		const ZRef<Callable_Void>& iCallable_Gone);
+		const ZP<Roster>& iRoster,
+		const ZP<Callable_Void>& iCallable_Broadcast,
+		const ZP<Callable_Void>& iCallable_Gone);
 
 public:
 	virtual ~Entry();
@@ -96,8 +96,8 @@ public:
 private:
 	WP<Roster> fRoster;
 
-	const ZRef<Callable_Void> fCallable_Broadcast;
-	const ZRef<Callable_Void> fCallable_Gone;
+	const ZP<Callable_Void> fCallable_Broadcast;
+	const ZP<Callable_Void> fCallable_Gone;
 
 	friend class Roster;
 	};

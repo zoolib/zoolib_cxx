@@ -73,7 +73,7 @@ protected:
 	};
 
 template <class Channer_p>
-ZRef<Channer_p> sChannerR_Limited(const ZRef<Channer_p>& iChanner, size_t iLimit)
+ZP<Channer_p> sChannerR_Limited(const ZP<Channer_p>& iChanner, size_t iLimit)
 	{ return sChanner_Channer_T<ChanR_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
 
 // =================================================================================================
@@ -109,7 +109,7 @@ protected:
 	};
 
 template <class Channer_p>
-ZRef<Channer_p> sChannerW_Limited(const ZRef<Channer_p>& iChanner, size_t iLimit)
+ZP<Channer_p> sChannerW_Limited(const ZP<Channer_p>& iChanner, size_t iLimit)
 	{ return sChanner_Channer_T<ChanW_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
 
 } // namespace ZooLib

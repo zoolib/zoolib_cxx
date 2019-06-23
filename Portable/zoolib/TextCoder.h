@@ -40,15 +40,15 @@ typedef Callable<bool(
 
 bool sDecode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	const ZRef<TextDecoder>& iTextDecoder,
+	const ZP<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
 void sDecode(
 	const ChanR_Bin& iChanR,
-	const ZRef<TextDecoder>& iTextDecoder,
+	const ZP<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
-ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecoder);
+ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZP<TextDecoder>& iTextDecoder);
 
 // =================================================================================================
 #pragma mark - TextEncoder
@@ -60,15 +60,15 @@ typedef Callable<void(
 
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	const ZRef<TextEncoder>& iTextEncoder,
+	const ZP<TextEncoder>& iTextEncoder,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes);
 
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	const ZRef<TextEncoder>& iTextEncoder,
+	const ZP<TextEncoder>& iTextEncoder,
 	const ChanW_Bin& iChanW);
 
-bool sEncode(UTF32 iCP, const ZRef<TextEncoder>& iTextEncoder, const ChanW_Bin& iChanW);
+bool sEncode(UTF32 iCP, const ZP<TextEncoder>& iTextEncoder, const ChanW_Bin& iChanW);
 
 } // namespace ZooLib
 

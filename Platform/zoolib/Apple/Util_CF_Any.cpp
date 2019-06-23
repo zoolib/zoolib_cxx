@@ -190,10 +190,10 @@ Any sAsAny(CFTypeRef iVal)
 // =================================================================================================
 #pragma mark - Util_CF
 
-static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
+static ZP<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return sAdopt& ::CFNumberCreate(nullptr, iType, iVal); }
 
-ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
+ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 	{
 	if (false)
 		{}
@@ -226,14 +226,14 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 		}
 	else if (const Seq_Any* theValue = iVal.PGet<Seq_Any>())
 		{
-		ZRef<CFMutableArrayRef> theArray;
+		ZP<CFMutableArrayRef> theArray;
 		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
 			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(xx)));
 		return theArray;
 		}
 	else if (const Map_Any* theValue = iVal.PGet<Map_Any>())
 		{
-		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
+		ZP<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
 		for (Map_Any::Index_t ii = theValue->Begin(), end = theValue->End();
 			ii != end; ++ii)
 			{
@@ -321,7 +321,7 @@ ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 	return iDefault;
 	}
 
-ZRef<CFTypeRef> sAsCFType(const Any& iVal)
+ZP<CFTypeRef> sAsCFType(const Any& iVal)
 	{ return sDAsCFType(nullptr, iVal); }
 
 } // namespace Util_CF

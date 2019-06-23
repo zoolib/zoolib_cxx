@@ -45,11 +45,11 @@ using std::vector;
 #pragma mark -
 
 static void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW);
 
 bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW)
 	{
 	if (NotQ<uint8> theTypeQ = sQRead(iChanR))
@@ -64,7 +64,7 @@ bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
 	}
 
 void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW)
 	{
 	if (iReadFilter && sCall(iReadFilter, iType, iChanR, iChanW))
@@ -186,7 +186,7 @@ static void spWriteString(const ChanW_Bin& iChanW, const string& iString)
 	}
 
 bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
-	const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+	const ZP<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW)
 	{
 	ZQ<PPT> thePPTQ = sQRead(iChanR);
@@ -209,7 +209,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(thePPT))
+	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE8);
 		spWriteString(iChanW, sReadAllUTF8(*theChanner));
@@ -224,7 +224,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(thePPT))
+	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE7);
 		const size_t chunkSize = 64 * 1024;

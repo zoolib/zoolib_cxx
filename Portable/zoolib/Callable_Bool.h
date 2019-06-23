@@ -29,57 +29,57 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - Ctors
 
-ZRef<Callable_Bool> sCallable_True();
-ZRef<Callable_Bool> sCallable_False();
-ZRef<Callable_Bool> sCallable_Not(const ZRef<Callable_Bool>& iCallable);
-ZRef<Callable_Bool> sCallable_And(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1);
-ZRef<Callable_Bool> sCallable_Or(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1);
-ZRef<Callable_Bool> sCallable_Xor(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1);
+ZP<Callable_Bool> sCallable_True();
+ZP<Callable_Bool> sCallable_False();
+ZP<Callable_Bool> sCallable_Not(const ZP<Callable_Bool>& iCallable);
+ZP<Callable_Bool> sCallable_And(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1);
+ZP<Callable_Bool> sCallable_Or(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1);
+ZP<Callable_Bool> sCallable_Xor(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1);
 
 // =================================================================================================
 #pragma mark - Concise Ctors
 
-inline ZRef<Callable_Bool> sNot(const ZRef<Callable_Bool>& iCallable)
+inline ZP<Callable_Bool> sNot(const ZP<Callable_Bool>& iCallable)
 	{ return sCallable_Not(iCallable); }
 
-inline ZRef<Callable_Bool> sAnd(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+inline ZP<Callable_Bool> sAnd(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_And(i0, i1); }
 
-inline ZRef<Callable_Bool> sOr(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+inline ZP<Callable_Bool> sOr(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_Or(i0, i1); }
 
-inline ZRef<Callable_Bool> sXor(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+inline ZP<Callable_Bool> sXor(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_Xor(i0, i1); }
 
 // =================================================================================================
 #pragma mark - Infix notation
 
 inline
-ZRef<Callable_Bool> operator~(const ZRef<Callable_Bool>& iCallable)
+ZP<Callable_Bool> operator~(const ZP<Callable_Bool>& iCallable)
 	{ return sCallable_Not(iCallable); }
 
 inline
-ZRef<Callable_Bool> operator&(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> operator&(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_And(i0, i1); }
 
 inline
-ZRef<Callable_Bool>& operator&=(ZRef<Callable_Bool>& io0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool>& operator&=(ZP<Callable_Bool>& io0, const ZP<Callable_Bool>& i1)
 	{ return io0 = sCallable_And(io0, i1); }
 
 inline
-ZRef<Callable_Bool> operator|(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> operator|(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_Or(i0, i1); }
 
 inline
-ZRef<Callable_Bool>& operator|=(ZRef<Callable_Bool>& io0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool>& operator|=(ZP<Callable_Bool>& io0, const ZP<Callable_Bool>& i1)
 	{ return io0 = sCallable_Or(io0, i1); }
 
 inline
-ZRef<Callable_Bool> operator^(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> operator^(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{ return sCallable_Xor(i0, i1); }
 
 inline
-ZRef<Callable_Bool>& operator^=(ZRef<Callable_Bool>& io0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool>& operator^=(ZP<Callable_Bool>& io0, const ZP<Callable_Bool>& i1)
 	{ return io0 = sCallable_Xor(io0, i1); }
 
 } // namespace ZooLib

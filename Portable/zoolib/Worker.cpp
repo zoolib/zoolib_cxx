@@ -43,9 +43,9 @@ static const double kDistantFuture = 1000 * Time::kYear;
 typedef StartScheduler::Job Job;
 
 Worker::Worker(
-	const ZRef<Callable_Attached>& iCallable_Attached,
-	const ZRef<Callable_Work>& iCallable_Work,
-	const ZRef<Callable_Detached>& iCallable_Detached)
+	const ZP<Callable_Attached>& iCallable_Attached,
+	const ZP<Callable_Work>& iCallable_Work,
+	const ZP<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
@@ -55,8 +55,8 @@ Worker::Worker(
 	}
 
 Worker::Worker(
-	const ZRef<Callable_Attached>& iCallable_Attached,
-	const ZRef<Callable_Work>& iCallable_Work)
+	const ZP<Callable_Attached>& iCallable_Attached,
+	const ZP<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
@@ -65,8 +65,8 @@ Worker::Worker(
 	}
 
 Worker::Worker(
-	const ZRef<Callable_Work>& iCallable_Work,
-	const ZRef<Callable_Detached>& iCallable_Detached)
+	const ZP<Callable_Work>& iCallable_Work,
+	const ZP<Callable_Detached>& iCallable_Detached)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
@@ -74,7 +74,7 @@ Worker::Worker(
 	ZAssert(fCallable_Work);
 	}
 
-Worker::Worker(const ZRef<Callable_Work>& iCallable_Work)
+Worker::Worker(const ZP<Callable_Work>& iCallable_Work)
 :	fWorking(0)
 ,	fCallable_Work(iCallable_Work)
 	{
@@ -138,7 +138,7 @@ void Worker::WakeAt(double iSystemTime)
 bool Worker::IsWorking()
 	{ return ZThread::sID() == fWorking; }
 
-bool Worker::Attach(ZRef<Starter> iStarter)
+bool Worker::Attach(ZP<Starter> iStarter)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not fStarter)

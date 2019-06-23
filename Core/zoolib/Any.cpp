@@ -47,12 +47,12 @@ const AnyBase::InPlace& AnyBase::pAsInPlace() const
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-ZRef<AnyBase::Reffed>& AnyBase::pAsReffed()
-	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
+ZP<AnyBase::Reffed>& AnyBase::pAsReffed()
+	{ return *sFetch_T<ZP<Reffed> >(&fPayload); }
 
 inline
-const ZRef<AnyBase::Reffed>& AnyBase::pAsReffed() const
-	{ return *sFetch_T<ZRef<Reffed> >(&fPayload); }
+const ZP<AnyBase::Reffed>& AnyBase::pAsReffed() const
+	{ return *sFetch_T<ZP<Reffed> >(&fPayload); }
 
 const std::type_info& AnyBase::Type() const
 	{
@@ -69,7 +69,7 @@ const std::type_info* AnyBase::TypeIfNotVoid() const
 			return spPODTypeInfo(fDistinguisher);
 		return &pAsInPlace().Type();
 		}
-	else if (const ZRef<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<Reffed>& theReffed = pAsReffed())
 		{
 		return &theReffed->Type();
 		}
@@ -87,7 +87,7 @@ void* AnyBase::MutableVoidStar()
 			return &fPayload;
 		return pAsInPlace().MutableVoidStar();
 		}
-	else if (ZRef<Reffed>& theReffed = pAsReffed())
+	else if (ZP<Reffed>& theReffed = pAsReffed())
 		{
 		return theReffed->FreshMutableVoidStar(theReffed);
 		}
@@ -105,7 +105,7 @@ const void* AnyBase::ConstVoidStar() const
 			return &fPayload;
 		return pAsInPlace().ConstVoidStar();
 		}
-	else if (const ZRef<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<Reffed>& theReffed = pAsReffed())
 		{
 		return theReffed->ConstVoidStar();
 		}
@@ -143,7 +143,7 @@ void AnyBase::Clear()
 		}
 	else
 		{
-		sDtor_T<ZRef<Reffed> >(&fPayload);
+		sDtor_T<ZP<Reffed> >(&fPayload);
 		}
 	fPayload.fAsPtr = 0;
 	}
@@ -162,7 +162,7 @@ const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 			return pAsInPlace().ConstVoidStarIf(iTypeInfo);
 			}
 		}
-	else if (const ZRef<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<Reffed>& theReffed = pAsReffed())
 		{
 		return theReffed->ConstVoidStarIf(iTypeInfo);
 		}
@@ -184,7 +184,7 @@ void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 			return pAsInPlace().MutableVoidStarIf(iTypeInfo);
 			}
 		}
-	else if (ZRef<Reffed>& theReffed = pAsReffed())
+	else if (ZP<Reffed>& theReffed = pAsReffed())
 		{
 		return theReffed->FreshMutableVoidStarIf(theReffed, iTypeInfo);
 		}
@@ -201,7 +201,7 @@ void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
 	else
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Reffed> >(&fPayload, iOther.pAsReffed());
+		sCtor_T<ZP<Reffed> >(&fPayload, iOther.pAsReffed());
 		}
 	}
 
@@ -210,7 +210,7 @@ void AnyBase::pDtor_NonPOD()
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);
 	else
-		sDtor_T<ZRef<Reffed> >(&fPayload);
+		sDtor_T<ZP<Reffed> >(&fPayload);
 	}
 
 } // namespace ZooLib

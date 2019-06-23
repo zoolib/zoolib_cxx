@@ -55,8 +55,8 @@ public:
 	void Stop();
 	void WaitTillStopped();
 
-	ZRef<ChannerRAbort_Bin> GetChannerRAbort();
-	ZRef<ChannerWAbort_Bin> GetChannerWAbort();
+	ZP<ChannerRAbort_Bin> GetChannerRAbort();
+	ZP<ChannerWAbort_Bin> GetChannerWAbort();
 
 protected:
 	void pWaitTillStopped();
@@ -64,15 +64,15 @@ protected:
 	const std::string fProgram;
 	const std::vector<std::string> fArgs;
 	pid_t fPid;
-	ZRef<ChannerRAbort_Bin> fChannerRAbort;
-	ZRef<ChannerWAbort_Bin> fChannerWAbort;
+	ZP<ChannerRAbort_Bin> fChannerRAbort;
+	ZP<ChannerWAbort_Bin> fChannerWAbort;
 	};
 
-ZRef<SubProcess_POSIX> sLaunchSubProcess(
+ZP<SubProcess_POSIX> sLaunchSubProcess(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs);
 
-ZRef<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
+ZP<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs);
 

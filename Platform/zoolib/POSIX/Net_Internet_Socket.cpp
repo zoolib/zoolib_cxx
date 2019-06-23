@@ -175,7 +175,7 @@ static int spConnect6(ip6_addr iRemoteHost, ip_port iRemotePort)
 namespace { // anonymous
 
 class Make_NameLookup
-:	public FunctionChain<ZRef<NetNameLookup>, NetName_Internet::LookupParam_t>
+:	public FunctionChain<ZP<NetNameLookup>, NetName_Internet::LookupParam_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -185,7 +185,7 @@ class Make_NameLookup
 	} sMaker0;
 
 class Make_Listener4
-:	public FunctionChain<ZRef<NetListener_TCP>, MakeParam4_t>
+:	public FunctionChain<ZP<NetListener_TCP>, MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -195,7 +195,7 @@ class Make_Listener4
 	} sMaker1;
 
 class Make_Listener6
-:	public FunctionChain<ZRef<NetListener_TCP>, MakeParam6_t>
+:	public FunctionChain<ZP<NetListener_TCP>, MakeParam6_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -205,26 +205,26 @@ class Make_Listener6
 	} sMaker2;
 
 class Make_Endpoint4
-:	public FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam4_t>
+:	public FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		const int theSocketFD = spConnect4(0, 0, iParam.f0, iParam.f1);
 		spSetSocketOptions(theSocketFD);
-		ZRef<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
+		ZP<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
 		oResult = theEP;
 		return true;
 		}
 	} sMaker3;
 
 class Make_Endpoint6
-:	public FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam6_t>
+:	public FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam6_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		const int theSocketFD = spConnect6(iParam.f0, iParam.f1);
 		spSetSocketOptions(theSocketFD);
-		ZRef<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
+		ZP<NetEndpoint_Socket> theEP = new NetEndpoint_Socket(theSocketFD);
 		oResult = theEP;
 		return true;
 		}
@@ -235,7 +235,7 @@ class Make_Endpoint6
 // =================================================================================================
 #pragma mark - Helpers
 
-static ZRef<NetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
+static ZP<NetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
 	{
 	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
 
@@ -372,7 +372,7 @@ void NetNameLookup_Internet_Socket::Start()
 		iterAI && fAddresses.size() < fCountAddressesToReturn;
 		iterAI = iterAI->ai_next)
 		{
-		if (ZRef<NetAddress_Internet> theNA = spAsNetAddress((sockaddr*)iterAI->ai_addr, fPort))
+		if (ZP<NetAddress_Internet> theNA = spAsNetAddress((sockaddr*)iterAI->ai_addr, fPort))
 			fAddresses.push_back(theNA);
 		}
 
@@ -394,7 +394,7 @@ void NetNameLookup_Internet_Socket::Advance()
 		++fCurrentIndex;
 	}
 
-ZRef<NetAddress> NetNameLookup_Internet_Socket::CurrentAddress()
+ZP<NetAddress> NetNameLookup_Internet_Socket::CurrentAddress()
 	{
 	if (fCurrentIndex < fAddresses.size())
 		return fAddresses[fCurrentIndex];
@@ -402,7 +402,7 @@ ZRef<NetAddress> NetNameLookup_Internet_Socket::CurrentAddress()
 	return null;
 	}
 
-ZRef<NetName> NetNameLookup_Internet_Socket::CurrentName()
+ZP<NetName> NetNameLookup_Internet_Socket::CurrentName()
 	{ return new NetName_Internet(fName, fPort); }
 
 // =================================================================================================
@@ -459,7 +459,7 @@ ip_port NetListener_TCP_Socket::GetPort()
 	return 0;
 	}
 
-ZRef<NetAddress> NetListener_TCP_Socket::GetAddress()
+ZP<NetAddress> NetListener_TCP_Socket::GetAddress()
 	{
 	uint8 buffer[SOCK_MAXADDRLEN];
 	if (0 <= ::getsockname(this->GetSocketFD(), (sockaddr*)buffer, sMutablePtr(socklen_t(sizeof(buffer)))))

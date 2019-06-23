@@ -51,7 +51,7 @@ public:
 	const string fName;
 	};
 
-typedef map<string8, ZRef<Node> > MapNameNode;
+typedef map<string8, ZP<Node> > MapNameNode;
 
 class Node_Directory
 :	public Node
@@ -87,7 +87,7 @@ struct ZipHolder
 :	public Counted
 	{
 	static
-	void spStuff(size_t iEntryNum, const ZRef<Node_Directory>& ioParent,
+	void spStuff(size_t iEntryNum, const ZP<Node_Directory>& ioParent,
 		const Trail& iTrail, size_t iIndex)
 		{
 		const string theName = iTrail.At(iIndex);
@@ -99,7 +99,7 @@ struct ZipHolder
 			return;
 			}
 
-		ZRef<Node_Directory> theNode = ioParent->fChildren[theName].StaticCast<Node_Directory>();
+		ZP<Node_Directory> theNode = ioParent->fChildren[theName].StaticCast<Node_Directory>();
 		if (not theNode)
 			{
 			theNode = new Node_Directory(ioParent.Get(), theName);
@@ -133,7 +133,7 @@ struct ZipHolder
 	struct zip* f_zip;
 	bool fOwned;
 
-	ZRef<Node_Directory> fRoot;
+	ZP<Node_Directory> fRoot;
 	};
 
 } // anonymous namespace
@@ -144,10 +144,10 @@ struct ZipHolder
 struct ChannerR_Bin_Zip
 :	public ChannerR_Bin
 	{
-	ZRef<ZipHolder> fZipHolder;
+	ZP<ZipHolder> fZipHolder;
 	zip_file* f_zip_file;
 
-	ChannerR_Bin_Zip(const ZRef<ZipHolder>& iZipHolder, size_t iEntryNum)
+	ChannerR_Bin_Zip(const ZP<ZipHolder>& iZipHolder, size_t iEntryNum)
 	:	fZipHolder(iZipHolder)
 	,	f_zip_file(::zip_fopen_index(fZipHolder->f_zip, iEntryNum, 0))
 		{}
@@ -170,11 +170,11 @@ class FileIterRep_Zip
 :	public FileIterRep
 	{
 public:
-	const ZRef<ZipHolder> fZipHolder;
+	const ZP<ZipHolder> fZipHolder;
 	MapNameNode::const_iterator fIter;
 	const MapNameNode::const_iterator fEnd;
 
-	FileIterRep_Zip(const ZRef<ZipHolder>& iZipHolder,
+	FileIterRep_Zip(const ZP<ZipHolder>& iZipHolder,
 		MapNameNode::const_iterator iIter,
 		MapNameNode::const_iterator iEnd)
 	:	fZipHolder(iZipHolder)
@@ -199,7 +199,7 @@ public:
 	virtual std::string CurrentName() const
 		{ return fIter->first; }
 
-	virtual ZRef<FileIterRep> Clone()
+	virtual ZP<FileIterRep> Clone()
 		{ return new FileIterRep_Zip(fZipHolder, fIter, fEnd); }
 	};
 
@@ -209,7 +209,7 @@ public:
 class FileLoc_Zip : public FileLoc
 	{
 public:
-	FileLoc_Zip(const ZRef<ZipHolder>& iZipHolder, const ZRef<Node>& iNode)
+	FileLoc_Zip(const ZP<ZipHolder>& iZipHolder, const ZP<Node>& iNode)
 	:	fZipHolder(iZipHolder)
 	,	fNode(iNode)
 		{}
@@ -218,9 +218,9 @@ public:
 		{}
 
 // From FileLoc
-	virtual ZRef<FileIterRep> CreateIterRep()
+	virtual ZP<FileIterRep> CreateIterRep()
 		{
-		if (ZRef<Node_Directory> theDir = fNode.DynamicCast<Node_Directory>())
+		if (ZP<Node_Directory> theDir = fNode.DynamicCast<Node_Directory>())
 			{
 			return new FileIterRep_Zip(fZipHolder,
 				theDir->fChildren.begin(), theDir->fChildren.end());
@@ -235,19 +235,19 @@ public:
 		return string();
 		}
 
-	virtual ZQ<Trail> TrailTo(ZRef<FileLoc> oDest) const
+	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const
 		{ return null; }
 
-	virtual ZRef<FileLoc> GetParent()
+	virtual ZP<FileLoc> GetParent()
 		{
 		if (fNode && fNode->fParent)
 			return new FileLoc_Zip(fZipHolder, fNode->fParent);
 		return null;
 		}
 
-	virtual ZRef<FileLoc> GetDescendant(const std::string* iComps, size_t iCount)
+	virtual ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount)
 		{
-		ZRef<Node> theNode = fNode;
+		ZP<Node> theNode = fNode;
 		for (;;)
 			{
 			if (not iCount--)
@@ -257,7 +257,7 @@ public:
 				return null;
 				}
 
-			if (ZRef<Node_Directory> theDir = theNode.DynamicCast<Node_Directory>())
+			if (ZP<Node_Directory> theDir = theNode.DynamicCast<Node_Directory>())
 				theNode = sGet(theDir->fChildren, *iComps++);
 			else
 				return null;
@@ -267,7 +267,7 @@ public:
 	virtual bool IsRoot()
 		{ return not fNode->fParent; }
 
-	virtual ZRef<FileLoc> Follow()
+	virtual ZP<FileLoc> Follow()
 		{ return this; }
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount)
@@ -306,18 +306,18 @@ public:
 	virtual double TimeModified()
 		{ return 0; }
 
-	virtual ZRef<FileLoc> CreateDir()
+	virtual ZP<FileLoc> CreateDir()
 		{ return null; }
 
-	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest)
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest)
 		{ return null; }
 
 	virtual bool Delete()
 		{ return false; }
 
-	virtual ZRef<ChannerR_Bin> OpenR(bool iPreventWriters)
+	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters)
 		{
-		if (ZRef<Node_File> theNode = fNode.DynamicCast<Node_File>())
+		if (ZP<Node_File> theNode = fNode.DynamicCast<Node_File>())
 			return new ChannerR_Bin_Zip(fZipHolder, theNode->fEntryNum);
 		return null;
 		}
@@ -325,14 +325,14 @@ public:
 	std::string pGetPath()
 		{
 		string result;
-		for (ZRef<Node> theNode = fNode; theNode; theNode = theNode->fParent)
+		for (ZP<Node> theNode = fNode; theNode; theNode = theNode->fParent)
 			result = "/" + theNode->fName + result;
 		return result;
 		}
 
 private:
-	ZRef<ZipHolder> fZipHolder;
-	ZRef<Node> fNode;
+	ZP<ZipHolder> fZipHolder;
+	ZP<Node> fNode;
 	};
 
 FileSpec FileIterRep_Zip::Current()
@@ -350,7 +350,7 @@ FileSpec sFileSpec_Zip(const std::string& iZipFilePath)
 	{
 	if (zip* the_zip = ::zip_open(iZipFilePath.c_str(), 0, nullptr))
 		{
-		ZRef<ZipHolder> theZipHolder = new ZipHolder(the_zip, true);
+		ZP<ZipHolder> theZipHolder = new ZipHolder(the_zip, true);
 		return new FileLoc_Zip(theZipHolder, theZipHolder->fRoot);
 		}
 	return FileSpec();

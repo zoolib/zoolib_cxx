@@ -96,7 +96,7 @@ bool sCoerceBool(CFTypeRef iCF)
 	return false;
 	}
 
-bool sCoerceBool(const ZRef<CFTypeRef>& iCF)
+bool sCoerceBool(const ZP<CFTypeRef>& iCF)
 	{ return sCoerceBool(iCF.Get()); }
 
 ZQ<__int64> sQCoerceInt(CFTypeRef iCF)
@@ -134,7 +134,7 @@ __int64 sCoerceInt(CFTypeRef iCF)
 	return 0;
 	}
 
-__int64 sCoerceInt(const ZRef<CFTypeRef>& iCF)
+__int64 sCoerceInt(const ZP<CFTypeRef>& iCF)
 	{ return sCoerceInt(iCF.Get()); }
 
 ZQ<double> sQCoerceRat(CFTypeRef iCF)
@@ -172,7 +172,7 @@ double sCoerceRat(CFTypeRef iCF)
 	return 0.0;
 	}
 
-double sCoerceRat(const ZRef<CFTypeRef>& iCF)
+double sCoerceRat(const ZP<CFTypeRef>& iCF)
 	{ return sCoerceRat(iCF.Get()); }
 
 } // namespace ZooLib

@@ -36,8 +36,8 @@ class Server
 :	public Counted
 	{
 public:
-	typedef ZRef<Roster::Entry> ZRef_Roster_Entry; // CW7
-	typedef Callable<void(ZRef_Roster_Entry,ZRef<ChannerRW<byte> >)> Callable_Connection;
+	typedef ZP<Roster::Entry> ZRef_Roster_Entry; // CW7
+	typedef Callable<void(ZRef_Roster_Entry,ZP<ChannerRW<byte> >)> Callable_Connection;
 
 	Server();
 	virtual ~Server();
@@ -48,10 +48,10 @@ public:
 // Our protocol
 	bool IsStarted();
 
-	void Start(ZRef<Starter> iStarter,
-		ZRef<Factory_ChannerRW_Bin> iFactory,
-		ZRef<Cancellable> iCancellable,
-		ZRef<Callable_Connection> iCallable_Connection);
+	void Start(ZP<Starter> iStarter,
+		ZP<Factory_ChannerRW_Bin> iFactory,
+		ZP<Cancellable> iCancellable,
+		ZP<Callable_Connection> iCallable_Connection);
 
 	void Stop();
 	void StopWait();
@@ -59,23 +59,23 @@ public:
 	void KillConnections();
 	void KillConnectionsWait();
 
-	ZRef<Factory_ChannerRW_Bin> GetFactory();
+	ZP<Factory_ChannerRW_Bin> GetFactory();
 
-	ZRef<Callable_Connection> GetCallable_Connection();
+	ZP<Callable_Connection> GetCallable_Connection();
 
 private:
-	bool pWork(ZRef<Worker> iWorker);
-	void pWorkDetached(ZRef<Worker> iWorker);
+	bool pWork(ZP<Worker> iWorker);
+	void pWorkDetached(ZP<Worker> iWorker);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
-	ZRef<Factory_ChannerRW_Bin> fFactory;
-	ZRef<Callable_Connection> fCallable_Connection;
-	ZRef<Cancellable> fCancellable;
-	ZRef<Roster> fRoster;
+	ZP<Factory_ChannerRW_Bin> fFactory;
+	ZP<Callable_Connection> fCallable_Connection;
+	ZP<Cancellable> fCancellable;
+	ZP<Roster> fRoster;
 
-	ZRef<Worker> fWorker;
+	ZP<Worker> fWorker;
 	};
 
 } // namespace ZooLib

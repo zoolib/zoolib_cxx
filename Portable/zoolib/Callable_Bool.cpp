@@ -27,33 +27,33 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - Ctors
 
-ZRef<Callable_Bool> sCallable_True()
+ZP<Callable_Bool> sCallable_True()
 	{ return sCallable_Const(true); }
 
-ZRef<Callable_Bool> sCallable_False()
+ZP<Callable_Bool> sCallable_False()
 	{ return sCallable_Const(false); }
 
-ZRef<Callable_Bool> sCallable_Not(const ZRef<Callable_Bool>& iCallable)
+ZP<Callable_Bool> sCallable_Not(const ZP<Callable_Bool>& iCallable)
 	{
 	struct Callable : public Callable_Bool
 		{
-		Callable(const ZRef<Callable_Bool>& iCallable) : fCallable(iCallable) {}
+		Callable(const ZP<Callable_Bool>& iCallable) : fCallable(iCallable) {}
 		virtual ZQ<bool> QCall()
 			{
 			if (const ZQ<bool> theQ = sQCall(fCallable))
 				return not *theQ;
 			return null;
 			}
-		const ZRef<Callable_Bool> fCallable;
+		const ZP<Callable_Bool> fCallable;
 		};
 	return new Callable(iCallable);
 	}
 
-ZRef<Callable_Bool> sCallable_And(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> sCallable_And(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{
 	struct Callable : public Callable_Bool
 		{
-		Callable(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1) : f0(i0), f1(i1) {}
+		Callable(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
 			if (const ZQ<bool> theQ0 = sQCall(f0))
@@ -64,16 +64,16 @@ ZRef<Callable_Bool> sCallable_And(const ZRef<Callable_Bool>& i0, const ZRef<Call
 				}
 			return null;
 			}
-		const ZRef<Callable_Bool> f0, f1;
+		const ZP<Callable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<Callable_Bool> sCallable_Or(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> sCallable_Or(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{
 	struct Callable : public Callable_Bool
 		{
-		Callable(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1) : f0(i0), f1(i1) {}
+		Callable(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
 			if (const ZQ<bool> theQ0 = sQCall(f0))
@@ -83,16 +83,16 @@ ZRef<Callable_Bool> sCallable_Or(const ZRef<Callable_Bool>& i0, const ZRef<Calla
 				}
 			return sQCall(f1);
 			}
-		const ZRef<Callable_Bool> f0, f1;
+		const ZP<Callable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}
 
-ZRef<Callable_Bool> sCallable_Xor(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1)
+ZP<Callable_Bool> sCallable_Xor(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1)
 	{
 	struct Callable : public Callable_Bool
 		{
-		Callable(const ZRef<Callable_Bool>& i0, const ZRef<Callable_Bool>& i1) : f0(i0), f1(i1) {}
+		Callable(const ZP<Callable_Bool>& i0, const ZP<Callable_Bool>& i1) : f0(i0), f1(i1) {}
 		virtual ZQ<bool> QCall()
 			{
 			if (const ZQ<bool> theQ0 = sQCall(f0))
@@ -102,7 +102,7 @@ ZRef<Callable_Bool> sCallable_Xor(const ZRef<Callable_Bool>& i0, const ZRef<Call
 				}
 			return null;
 			}
-		const ZRef<Callable_Bool> f0, f1;
+		const ZP<Callable_Bool> f0, f1;
 		};
 	return new Callable(i0, i1);
 	}

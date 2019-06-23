@@ -39,7 +39,7 @@ public:
 // =================================================================================================
 #pragma mark - sCancellable
 
-ZRef<Cancellable> sCancellable(const ZRef<Callable_Void>& iCallable);
+ZP<Cancellable> sCancellable(const ZP<Callable_Void>& iCallable);
 
 } // namespace ZooLib
 

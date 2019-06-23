@@ -30,10 +30,10 @@ namespace HTTP {
 // =================================================================================================
 #pragma mark - HTTP
 
-typedef Callable<ZRef<ChannerRWClose_Bin>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
+typedef Callable<ZP<ChannerRWClose_Bin>(const std::string& iHost, uint16 iPort, bool iUseSSL)>
 	Callable_Connect;
 
-ZRef<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
+ZP<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL);
 
 } // namespace HTTP
 } // namespace ZooLib

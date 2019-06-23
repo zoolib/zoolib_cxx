@@ -46,9 +46,9 @@ class Map_NS;
 #pragma mark - Val_NS
 
 class Val_NS
-:	public ZRef<NSObject>
+:	public ZP<NSObject>
 	{
-	typedef ZRef<NSObject> inherited;
+	typedef ZP<NSObject> inherited;
 public:
 	Val_NS();
 	Val_NS(const Val_NS& iOther);
@@ -60,7 +60,7 @@ public:
 		{}
 
 	template <class S>
-	Val_NS(const ZRef<S>& iVal)
+	Val_NS(const ZP<S>& iVal)
 	:	inherited(iVal)
 		{}
 
@@ -97,7 +97,7 @@ public:
 		}
 
 	template <class S>
-	Val_NS& operator=(const ZRef<S>& iVal)
+	Val_NS& operator=(const ZP<S>& iVal)
 		{
 		inherited::operator=(iVal);
 		return *this;
@@ -162,9 +162,9 @@ const ZQ<S> Val_NS::QGet() const
 #pragma mark - Seq_NS
 
 class Seq_NS
-:	public ZRef<NSArray>
+:	public ZP<NSArray>
 	{
-	typedef ZRef<NSArray> inherited;
+	typedef ZP<NSArray> inherited;
 
 public:
 	Seq_NS();
@@ -224,9 +224,9 @@ private:
 #pragma mark - Map_NS
 
 class Map_NS
-:	public ZRef<NSDictionary>
+:	public ZP<NSDictionary>
 	{
-	typedef ZRef<NSDictionary> inherited;
+	typedef ZP<NSDictionary> inherited;
 
 public:
 	Map_NS();

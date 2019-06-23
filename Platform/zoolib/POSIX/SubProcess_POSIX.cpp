@@ -130,10 +130,10 @@ void SubProcess_POSIX::Stop()
 void SubProcess_POSIX::WaitTillStopped()
 	{ this->pWaitTillStopped(); }
 
-ZRef<ChannerRAbort_Bin> SubProcess_POSIX::GetChannerRAbort()
+ZP<ChannerRAbort_Bin> SubProcess_POSIX::GetChannerRAbort()
 	{ return fChannerRAbort; }
 
-ZRef<ChannerWAbort_Bin> SubProcess_POSIX::GetChannerWAbort()
+ZP<ChannerWAbort_Bin> SubProcess_POSIX::GetChannerWAbort()
 	{ return fChannerWAbort; }
 
 void SubProcess_POSIX::pWaitTillStopped()
@@ -147,7 +147,7 @@ void SubProcess_POSIX::pWaitTillStopped()
 
 // ----------
 
-ZRef<SubProcess_POSIX> sLaunchSubProcess(
+ZP<SubProcess_POSIX> sLaunchSubProcess(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs)
 	{
@@ -161,7 +161,7 @@ ZRef<SubProcess_POSIX> sLaunchSubProcess(
 		}
 	}
 
-ZRef<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
+ZP<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
 	const std::string& iProgram,
 	const std::vector<std::string>& iArgs)
 	{

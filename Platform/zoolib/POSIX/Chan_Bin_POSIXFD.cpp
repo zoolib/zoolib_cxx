@@ -66,7 +66,7 @@ int FDHolder_CloseOnDestroy::GetFD()
 // =================================================================================================
 #pragma mark - ChanR_Bin_POSIXFD
 
-ChanR_Bin_POSIXFD::ChanR_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanR_Bin_POSIXFD::ChanR_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -82,7 +82,7 @@ size_t ChanR_Bin_POSIXFD::Readable()
 // =================================================================================================
 #pragma mark - ChanW_Bin_POSIXFD
 
-ChanW_Bin_POSIXFD::ChanW_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanW_Bin_POSIXFD::ChanW_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -95,7 +95,7 @@ size_t ChanW_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 // =================================================================================================
 #pragma mark - ChanRPos_Bin_POSIXFD
 
-ChanRPos_Bin_POSIXFD::ChanRPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanRPos_Bin_POSIXFD::ChanRPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -123,7 +123,7 @@ size_t ChanRPos_Bin_POSIXFD::Unread(const byte* iSource, size_t iCount)
 // =================================================================================================
 #pragma mark - ChanWPos_Bin_POSIXFD
 
-ChanWPos_Bin_POSIXFD::ChanWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanWPos_Bin_POSIXFD::ChanWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -148,7 +148,7 @@ size_t ChanWPos_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 // =================================================================================================
 #pragma mark - ChanRWPos_Bin_POSIXFD
 
-ChanRWPos_Bin_POSIXFD::ChanRWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanRWPos_Bin_POSIXFD::ChanRWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -182,7 +182,7 @@ size_t ChanRWPos_Bin_POSIXFD::Unread(const byte* iSource, size_t iCount)
 // =================================================================================================
 #pragma mark - ChanRAbort_Bin_POSIXFD
 
-ChanRAbort_Bin_POSIXFD::ChanRAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanRAbort_Bin_POSIXFD::ChanRAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -204,7 +204,7 @@ bool ChanRAbort_Bin_POSIXFD::WaitReadable(double iTimeout)
 // =================================================================================================
 #pragma mark - ChanWAbort_Bin_POSIXFD
 
-ChanWAbort_Bin_POSIXFD::ChanWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanWAbort_Bin_POSIXFD::ChanWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 
@@ -220,7 +220,7 @@ size_t ChanWAbort_Bin_POSIXFD::Write(const byte* iSource, size_t iCount)
 // =================================================================================================
 #pragma mark - ChanRWAbort_Bin_POSIXFD
 
-ChanRWAbort_Bin_POSIXFD::ChanRWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder)
+ChanRWAbort_Bin_POSIXFD::ChanRWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder)
 :	fFDHolder(iFDHolder)
 	{}
 

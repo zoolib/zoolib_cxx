@@ -214,7 +214,7 @@ class ChanR_PipePair
 :	public ChanR<EE>
 	{
 public:
-	ChanR_PipePair(const ZRef<ImpPipePair<EE>>& iPipePair)
+	ChanR_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
 	:	fPipePair(iPipePair)
 		{}
 
@@ -231,7 +231,7 @@ public:
 	virtual size_t Readable()
 		{ return fPipePair->Readable(); }
 
-	ZRef<ImpPipePair<EE>> fPipePair;
+	ZP<ImpPipePair<EE>> fPipePair;
 	};
 
 // ----------
@@ -241,7 +241,7 @@ class ChanWCon_PipePair
 :	public ChanWCon<EE>
 	{
 public:
-	ChanWCon_PipePair(const ZRef<ImpPipePair<EE>>& iPipePair)
+	ChanWCon_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
 	:	fPipePair(iPipePair)
 		{}
 
@@ -260,7 +260,7 @@ public:
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{ return fPipePair->Write(iSource, iCount); }
 
-	ZRef<ImpPipePair<EE>> fPipePair;
+	ZP<ImpPipePair<EE>> fPipePair;
 	};
 
 } // namespace ZooLib

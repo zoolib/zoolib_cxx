@@ -23,15 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Compare.h"
-
-#include "zoolib/ZRef.h"
+#include "zoolib/ZP.h"
 
 #include <string.h> // For strcmp
 
 namespace ZooLib {
 
 template <class T>
-int sCompare_Ref_T(const ZRef<T>& iL, const ZRef<T>& iR)
+int sCompare_Ref_T(const ZP<T>& iL, const ZP<T>& iR)
 	{
 	if (const T* l = iL.Get())
 		{
@@ -55,7 +54,7 @@ int sCompare_Ref_T(const ZRef<T>& iL, const ZRef<T>& iR)
 	}
 
 template <class T>
-int sCompare_T(const ZRef<T>& iL, const ZRef<T>& iR)
+int sCompare_T(const ZP<T>& iL, const ZP<T>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
 } // namespace ZooLib

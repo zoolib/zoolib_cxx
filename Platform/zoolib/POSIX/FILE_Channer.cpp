@@ -93,7 +93,7 @@ static int spCloseW(void* iCookie)
 	return 0;
 	}
 
-FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
+FILE* sFILE_R(ZP<ChannerR_Bin> iChannerR)
 	{
 	if (iChannerR)
 		{
@@ -103,7 +103,7 @@ FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
 	return nullptr;
 	}
 
-FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
+FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 	{
 	if (iChannerRPos)
 		{
@@ -113,7 +113,7 @@ FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
 	return nullptr;
 	}
 
-FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
+FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{
 	if (iChannerW)
 		{
@@ -179,7 +179,7 @@ static int spCloseW(void* iCookie)
 	return 0;
 	}
 
-FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
+FILE* sFILE_R(ZP<ChannerR_Bin> iChannerR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = spReadR;
@@ -189,7 +189,7 @@ FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
 	return ::fopencookie(iChannerR.Get(), "", theFunctions);
 	}
 
-FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
+FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = spReadRPos;
@@ -199,7 +199,7 @@ FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
 	return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
 	}
 
-FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
+FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = nullptr;
@@ -211,13 +211,13 @@ FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
 
 #else
 
-FILE* sFILE_R(ZRef<ChannerR_Bin> iChannerR)
+FILE* sFILE_R(ZP<ChannerR_Bin> iChannerR)
 	{ return nullptr; }
 
-FILE* sFILE_RPos(ZRef<ChannerRPos_Bin> iChannerRPos)
+FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 	{ return nullptr; }
 
-FILE* sFILE_W(ZRef<ChannerW_Bin> iChannerW)
+FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{ return nullptr; }
 
 #endif

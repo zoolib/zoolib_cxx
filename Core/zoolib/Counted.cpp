@@ -61,7 +61,7 @@ bool CountedBase::FinishFinalize()
 	// Our weak proxy may be a way to get resurrected, so kill it before we
 	// check our refcount, so we can be sure that value is valid.
 
-	if (ZRef<WPProxy> theWPProxy = fWPProxy)
+	if (ZP<WPProxy> theWPProxy = fWPProxy)
 		{
 		if (fWPProxy.AtomicCAS(theWPProxy.Get(), nullptr))
 			theWPProxy->pClear();
@@ -101,14 +101,14 @@ bool CountedBase::IsShared() const
 bool CountedBase::IsReferenced() const
 	{ return sAtomic_Get(&fRefCount) > 0; }
 
-ZRef<CountedBase::WPProxy> CountedBase::GetWPProxy()
+ZP<CountedBase::WPProxy> CountedBase::GetWPProxy()
 	{
 	// It is not legal to take a weak reference from an un-initialized object.
 	ZAssert(sAtomic_Get(&fRefCount));
 
 	if (not fWPProxy)
 		{
-		ZRef<WPProxy> theWPProxy = new WPProxy(this);
+		ZP<WPProxy> theWPProxy = new WPProxy(this);
 		if (not fWPProxy.AtomicCAS(nullptr, theWPProxy.Get()))
 			{
 			// We lost the race, so clear theWPProxy's reference
@@ -156,7 +156,7 @@ CountedBase::WPProxy::WPProxy(CountedBase* iCountedBase)
 CountedBase::WPProxy::~WPProxy()
 	{ ZAssertStop(1, not fCountedBase); }
 
-ZRef<CountedBase> CountedBase::WPProxy::pGetCountedBase()
+ZP<CountedBase> CountedBase::WPProxy::pGetCountedBase()
 	{
 	// This looks pretty innocuous, but we are incrementing the refcount
 	// of fCountedBase under the protection of fMtx.
@@ -191,24 +191,24 @@ WPBase& WPBase::operator=(const WPBase& iOther)
 	return *this;
 	}
 
-WPBase::WPBase(const ZRef<CountedBase::WPProxy>& iWPProxy)
+WPBase::WPBase(const ZP<CountedBase::WPProxy>& iWPProxy)
 :	fWPProxy(iWPProxy)
 	{}
 
-void WPBase::pAssign(const ZRef<CountedBase::WPProxy>& iWPProxy)
+void WPBase::pAssign(const ZP<CountedBase::WPProxy>& iWPProxy)
 	{ fWPProxy = iWPProxy; }
 
 void WPBase::pClear()
 	{ fWPProxy.Clear(); }
 
-ZRef<CountedBase> WPBase::pGet() const
+ZP<CountedBase> WPBase::pGet() const
 	{
 	if (fWPProxy)
 		return fWPProxy->pGetCountedBase();
 	return null;
 	}
 
-ZRef<CountedBase::WPProxy> WPBase::pGetWPProxy() const
+ZP<CountedBase::WPProxy> WPBase::pGetWPProxy() const
 	{ return fWPProxy; }
 
 } // namespace ZooLib

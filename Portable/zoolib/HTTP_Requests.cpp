@@ -69,7 +69,7 @@ pair<uint16,bool> spGetPortAndSSL(const string& iScheme, const string& iHost, ui
 	return pair<uint16,bool>(thePort, useSSL);
 	}
 
-ZRef<ChannerRWClose_Bin> spConnect(ZRef<Callable_Connect> iCallable_Connect,
+ZP<ChannerRWClose_Bin> spConnect(ZP<Callable_Connect> iCallable_Connect,
 	const string& iScheme, const string& iHost, uint16 iPort)
 	{
 	const pair<uint16,bool> thePortAndSSL = spGetPortAndSSL(iScheme, iHost, iPort);
@@ -114,8 +114,8 @@ static bool spQRequest(const ChanR_Bin& iChanR, const ChanW_Bin& iChanW,
 		}
 	}
 
-bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
-	ZRef<Callable_Connect> iCallable_Connect,
+bool sQRequest(ZP<ChannerRWClose_Bin>& ioConnection,
+	ZP<Callable_Connect> iCallable_Connect,
 	const string& iMethod, const string& iURL, const Map* iHeader,
 	bool iConnectionClose,
 	string* oURL, int32* oResponseCode, Map* oHeader, Data* oRawHeader)
@@ -202,7 +202,7 @@ bool sQRequest(ZRef<ChannerRWClose_Bin>& ioConnection,
 					{
 					theURL = sAbsoluteURI(theURL, sGetString0(theResponseHeader.Get("location")));
 					// Read and discard the body
-					if (ZRef<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
+					if (ZP<ChannerR_Bin> theChannerR_Content = sMakeContentChanner(
 						iMethod, theResponseCode, theResponseHeader,
 						ioConnection))
 						{ sSkipAll(*theChannerR_Content); }
@@ -244,7 +244,7 @@ static void spPOST_Prefix(const ChanW_Bin& w,
 		sWrite_Header(*iHeader, w);
 	}
 
-ZRef<ChannerRWClose_Bin> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
+ZP<ChannerRWClose_Bin> sPOST_Send(ZP<Callable_Connect> iCallable_Connect,
 	const string& iMethod,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ)
 	{
@@ -254,7 +254,7 @@ ZRef<ChannerRWClose_Bin> sPOST_Send(ZRef<Callable_Connect> iCallable_Connect,
 	string thePath;
 	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		if (ZRef<ChannerRWClose_Bin> theConn = spConnect(iCallable_Connect, theScheme, theHost, thePort))
+		if (ZP<ChannerRWClose_Bin> theConn = spConnect(iCallable_Connect, theScheme, theHost, thePort))
 			{
 			const ChanW_Bin& theChanW = *theConn;
 
@@ -294,7 +294,7 @@ static bool spQPOST_Suffix(const ChanR_Bin& iChanR,
 		}
 	}
 
-ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
+ZP<ChannerRWClose_Bin> sPOST_Receive(ZP<ChannerRWClose_Bin> iConn,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (iConn)
@@ -312,7 +312,7 @@ ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 				if (oHeader)
 					*oHeader = theResponseHeader;
 
-				if (ZRef<ChannerR_Bin> theChanner =
+				if (ZP<ChannerR_Bin> theChanner =
 					sMakeContentChanner(theResponseHeader, iConn))
 					{
 					return sChanner_Wrapper<byte>(theChanner, iConn, iConn);
@@ -325,11 +325,11 @@ ZRef<ChannerRWClose_Bin> sPOST_Receive(ZRef<ChannerRWClose_Bin> iConn,
 	return null;
 	}
 
-ZRef<ChannerRWClose_Bin> sPOST(ZRef<Callable_Connect> iCallable_Connect,
+ZP<ChannerRWClose_Bin> sPOST(ZP<Callable_Connect> iCallable_Connect,
 	const string& iURL, const Map* iHeader, const ChanR_Bin& iBody, ZQ<uint64> iBodyCountQ,
 	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
-	if (ZRef<ChannerRWClose_Bin> theConn = sPOST_Send(iCallable_Connect,
+	if (ZP<ChannerRWClose_Bin> theConn = sPOST_Send(iCallable_Connect,
 		"POST", iURL, iHeader, iBody, iBodyCountQ))
 		{
 		return sPOST_Receive(theConn, oResponseCode, oHeader, oRawHeader);

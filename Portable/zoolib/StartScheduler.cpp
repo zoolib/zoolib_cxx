@@ -114,8 +114,8 @@ void StartScheduler::pRun()
 				}
 			else
 				{
-				ZRef<Starter> theStarter = begin->second.first;
-				ZRef<Callable_Void> theCallable = begin->second.second;
+				ZP<Starter> theStarter = begin->second.first;
+				ZP<Callable_Void> theCallable = begin->second.second;
 
 				sEraseMust(fJobTimes, JobTime(begin->second, begin->first));
 				fTimeJobs.erase(begin);
@@ -150,15 +150,15 @@ void sNextStartIn(double iInterval, const StartScheduler::Job& iJob)
 
 // -----
 
-bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+bool sCancel(const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable)
 	{ return sCancel(StartScheduler::Job(iStarter, iCallable)); }
 
 void sNextStartAt(double iSystemTime,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable)
 	{ sNextStartAt(iSystemTime, StartScheduler::Job(iStarter, iCallable)); }
 
 void sNextStartIn(double iInterval,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable)
 	{ sNextStartIn(iInterval, StartScheduler::Job(iStarter, iCallable)); }
 
 } // namespace ZooLib

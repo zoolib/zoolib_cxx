@@ -64,7 +64,7 @@ protected:
 	virtual ~NetListener_Socket();
 
 // From NetListener
-	virtual ZRef<ChannerRWClose_Bin> Listen();
+	virtual ZP<ChannerRWClose_Bin> Listen();
 
 // From Cancellable via NetListener
 	virtual void Cancel();
@@ -81,7 +81,7 @@ protected:
 	ZThread::ID fThreadID_Listening;
 	};
 
-ZRef<NetListener_Socket> sNetListener_Socket(int iFD);
+ZP<NetListener_Socket> sNetListener_Socket(int iFD);
 
 // =================================================================================================
 #pragma mark - NetEndpoint_Socket

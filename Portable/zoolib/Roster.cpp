@@ -37,8 +37,8 @@ using namespace Util_STL;
 Roster::Roster()
 	{}
 
-Roster::Roster(const ZRef<Callable_Void>& iCallable_Change,
-	const ZRef<Callable_Void>& iCallable_Gone)
+Roster::Roster(const ZP<Callable_Void>& iCallable_Change,
+	const ZP<Callable_Void>& iCallable_Gone)
 :	fCallable_Change(iCallable_Change)
 ,	fCallable_Gone(iCallable_Gone)
 	{}
@@ -48,7 +48,7 @@ Roster::~Roster()
 
 void Roster::Finalize()
 	{
-	ZRef<Callable_Void> theCallable;
+	ZP<Callable_Void> theCallable;
 
 	{
 	ZAcqMtx acq(fMtx);
@@ -68,13 +68,13 @@ void Roster::Finalize()
 	sCall(theCallable);
 	}
 
-ZRef<Roster::Entry> Roster::MakeEntry()
+ZP<Roster::Entry> Roster::MakeEntry()
 	{ return this->MakeEntry(null, null); }
 
-ZRef<Roster::Entry> Roster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broadcast,
-	const ZRef<Callable_Void>& iCallable_Gone)
+ZP<Roster::Entry> Roster::MakeEntry(const ZP<Callable_Void>& iCallable_Broadcast,
+	const ZP<Callable_Void>& iCallable_Gone)
 	{
-	ZRef<Entry> theEntry = new Entry(this, iCallable_Broadcast, iCallable_Gone);
+	ZP<Entry> theEntry = new Entry(this, iCallable_Broadcast, iCallable_Gone);
 
 	{
 	ZAcqMtx acq(fMtx);
@@ -90,11 +90,11 @@ ZRef<Roster::Entry> Roster::MakeEntry(const ZRef<Callable_Void>& iCallable_Broad
 void Roster::Broadcast()
 	{
 	ZAcqMtx acq(fMtx);
-	vector<ZRef<Entry> > local(fEntries.begin(), fEntries.end());
+	vector<ZP<Entry> > local(fEntries.begin(), fEntries.end());
 
 	ZRelMtx rel(fMtx);
 
-	for (vector<ZRef<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
+	for (vector<ZP<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
 		sCall((*ii)->fCallable_Broadcast);
 	}
 
@@ -127,7 +127,7 @@ bool Roster::WaitUntil(double iDeadline, size_t iCount)
 	return fEntries.size() != iCount;
 	}
 
-void Roster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_Gone)
+void Roster::pFinalizeEntry(Entry* iEntry, const ZP<Callable_Void>& iCallable_Gone)
 	{
 	{
 	ZAcqMtx acq(fMtx);
@@ -148,9 +148,9 @@ void Roster::pFinalizeEntry(Entry* iEntry, const ZRef<Callable_Void>& iCallable_
 #pragma mark - Roster::Entry
 
 Roster::Entry::Entry(
-	const ZRef<Roster>& iRoster,
-	const ZRef<Callable_Void>& iCallable_Broadcast,
-	const ZRef<Callable_Void>& iCallable_Gone)
+	const ZP<Roster>& iRoster,
+	const ZP<Callable_Void>& iCallable_Broadcast,
+	const ZP<Callable_Void>& iCallable_Gone)
 :	fRoster(iRoster)
 ,	fCallable_Broadcast(iCallable_Broadcast)
 ,	fCallable_Gone(iCallable_Gone)
@@ -161,9 +161,9 @@ Roster::Entry::~Entry()
 
 void Roster::Entry::Finalize()
 	{
-	ZRef<Callable_Void> theCallable = fCallable_Gone;
+	ZP<Callable_Void> theCallable = fCallable_Gone;
 
-	if (ZRef<Roster> theRoster = fRoster)
+	if (ZP<Roster> theRoster = fRoster)
 		{
 		theRoster->pFinalizeEntry(this, theCallable);
 		}

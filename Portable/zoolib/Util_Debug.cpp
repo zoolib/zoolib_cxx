@@ -205,7 +205,7 @@ public:
 		if (iPriority > this->pGetLogPriority())
 			return;
 
-		ZRef<ChannerW_UTF> theChannerW = fChannerW;
+		ZP<ChannerW_UTF> theChannerW = fChannerW;
 		if (not theChannerW)
 			return;
 
@@ -266,14 +266,14 @@ public:
 		}
 
 // Our protocol
-	void SetChanner(ZRef<ChannerW_UTF> iChannerW)
+	void SetChanner(ZP<ChannerW_UTF> iChannerW)
 		{
 		ZAcqMtx acq(fMtx);
 		fChannerW = iChannerW;
 		}
 
 private:
-	ZRef<ChannerW_UTF> fChannerW;
+	ZP<ChannerW_UTF> fChannerW;
 	size_t fExtraSpace;
 	};
 
@@ -292,11 +292,11 @@ void sInstall()
 	#if defined(__ANDROID__)
 		Log::sLogMeister = new LogMeister_Android;
 	#else
-		ZRef<LogMeister_Default> theLM = new LogMeister_Default;
+		ZP<LogMeister_Default> theLM = new LogMeister_Default;
 
 		FILE* theStdOut = stdout; // Workaround for VC++
-		ZRef<Channer<ChanW_Bin> > asChannerW_Bin = sChanner_T<ChanW_Bin_FILE>(theStdOut);
-		ZRef<Channer<ChanW_UTF> > theChannerW_UTF = sChanner_Channer_T<ChanW_UTF_Chan_Bin_UTF8>(asChannerW_Bin);
+		ZP<Channer<ChanW_Bin> > asChannerW_Bin = sChanner_T<ChanW_Bin_FILE>(theStdOut);
+		ZP<Channer<ChanW_UTF> > theChannerW_UTF = sChanner_Channer_T<ChanW_UTF_Chan_Bin_UTF8>(asChannerW_Bin);
 
 		theLM->SetChanner(theChannerW_UTF);
 
@@ -304,29 +304,29 @@ void sInstall()
 	#endif
 	}
 
-void sSetChanner(ZRef<ChannerW_UTF> iChannerW)
+void sSetChanner(ZP<ChannerW_UTF> iChannerW)
 	{
-	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
+	if (ZP<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister_Default> theLM = theLM1.DynamicCast<LogMeister_Default>())
+		if (ZP<LogMeister_Default> theLM = theLM1.DynamicCast<LogMeister_Default>())
 			theLM->SetChanner(iChannerW);
 		}
 	}
 
 void sSetLogPriority(Log::EPriority iLogPriority)
 	{
-	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
+	if (ZP<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
+		if (ZP<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
 			theLM->SetLogPriority(iLogPriority);
 		}
 	}
 
 Log::EPriority sGetLogPriority()
 	{
-	if (ZRef<Log::LogMeister> theLM1 = Log::sLogMeister)
+	if (ZP<Log::LogMeister> theLM1 = Log::sLogMeister)
 		{
-		if (ZRef<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
+		if (ZP<LogMeister_Base> theLM = theLM1.DynamicCast<LogMeister_Base>())
 			return theLM->GetLogPriority();
 		}
 	return 0xFF;

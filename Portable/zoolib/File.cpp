@@ -65,12 +65,12 @@ FileSpec::FileSpec(FileLoc* iLoc)
 	{}
 
 /// Construct a file spec representing the file location \a iLoc.
-FileSpec::FileSpec(const ZRef<FileLoc>& iLoc)
+FileSpec::FileSpec(const ZP<FileLoc>& iLoc)
 :	fLoc(iLoc)
 	{}
 
 /// Construct a file spec representing the immediate child of \a iLoc named \a iComp.
-FileSpec::FileSpec(const ZRef<FileLoc>& iLoc, const string& iComp)
+FileSpec::FileSpec(const ZP<FileLoc>& iLoc, const string& iComp)
 :	fLoc(iLoc),
 	fComps(1, iComp)
 	{}
@@ -106,16 +106,16 @@ what it considers to be the current working directory.
 */
 FileSpec FileSpec::sCWD()
 	{
-	ZRef<FileLoc> theLoc =
-		FunctionChain<ZRef<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_CWD);
+	ZP<FileLoc> theLoc =
+		FunctionChain<ZP<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_CWD);
 	return FileSpec(theLoc);
 	}
 
 /// Returns a file spec representing the root of the file system tree.
 FileSpec FileSpec::sRoot()
 	{
-	ZRef<FileLoc> theLoc =
-		FunctionChain<ZRef<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_Root);
+	ZP<FileLoc> theLoc =
+		FunctionChain<ZP<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_Root);
 	return FileSpec(theLoc);
 	}
 
@@ -127,8 +127,8 @@ of the application that's hosting the plugin.
 */
 FileSpec FileSpec::sApp()
 	{
-	ZRef<FileLoc> theLoc =
-		FunctionChain<ZRef<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_App);
+	ZP<FileLoc> theLoc =
+		FunctionChain<ZP<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_App);
 	return FileSpec(theLoc);
 	}
 
@@ -208,7 +208,7 @@ FileSpec FileSpec::Follow(const Trail& iTrail) const
 		vector<string> realComps;
 		size_t bounces = sNormalize_ReturnLeadingBounces(originalComps, realComps);
 
-		if (ZRef<FileLoc> ancestorLoc = fLoc->GetAncestor(bounces))
+		if (ZP<FileLoc> ancestorLoc = fLoc->GetAncestor(bounces))
 			{
 			if (realComps.size())
 				return FileSpec(ancestorLoc, realComps.begin(), realComps.end());
@@ -224,7 +224,7 @@ FileSpec FileSpec::Ancestor(size_t iCount) const
 		{
 		if (iCount >= fComps.size())
 			{
-			ZRef<FileLoc> newLoc = fLoc->GetAncestor(iCount - fComps.size());
+			ZP<FileLoc> newLoc = fLoc->GetAncestor(iCount - fComps.size());
 			return FileSpec(newLoc);
 			}
 		return FileSpec(fLoc, fComps.begin(), fComps.end() - iCount);
@@ -251,7 +251,7 @@ FileSpec FileSpec::Descendant(const std::string* iComps, size_t iCount) const
 
 FileSpec FileSpec::Follow() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return FileSpec(realLoc->Follow());
 	return FileSpec();
 	}
@@ -290,9 +290,9 @@ string FileSpec::AsString_Native() const
 /// Return a Trail representing the steps to get from this file spec to \a oDest.
 ZQ<Trail> FileSpec::TrailTo(const FileSpec& oDest) const
 	{
-	if (ZRef<FileLoc> myRealLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 		{
-		if (ZRef<FileLoc> destRealLoc = oDest.pPhysicalLoc())
+		if (ZP<FileLoc> destRealLoc = oDest.pPhysicalLoc())
 			return myRealLoc->TrailTo(destRealLoc);
 		}
 
@@ -302,9 +302,9 @@ ZQ<Trail> FileSpec::TrailTo(const FileSpec& oDest) const
 /// Return a Trail representing the steps to get from \a iSource to this file spec.
 ZQ<Trail> FileSpec::TrailFrom(const FileSpec& iSource) const
 	{
-	if (ZRef<FileLoc> myRealLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 		{
-		if (ZRef<FileLoc> sourceRealLoc = iSource.pPhysicalLoc())
+		if (ZP<FileLoc> sourceRealLoc = iSource.pPhysicalLoc())
 			return sourceRealLoc->TrailTo(myRealLoc);
 		}
 
@@ -321,7 +321,7 @@ it may be inaccessible. The precise nature of the fault will be placed in this p
 */
 File::Kind FileSpec::Kind() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->Kind();
 
 	return File::kindNone;
@@ -330,7 +330,7 @@ File::Kind FileSpec::Kind() const
 /// Returns true if the spec references the root of the file system.
 bool FileSpec::IsRoot() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->IsRoot();
 
 	return false;
@@ -339,7 +339,7 @@ bool FileSpec::IsRoot() const
 /// Returns true if the spec references an extant accessible file.
 bool FileSpec::IsFile() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return File::kindFile == realLoc->Kind();
 
 	return false;
@@ -348,7 +348,7 @@ bool FileSpec::IsFile() const
 /// Returns true if the spec references an extant accessible directory.
 bool FileSpec::IsDir() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return File::kindDir == realLoc->Kind();
 
 	return false;
@@ -357,7 +357,7 @@ bool FileSpec::IsDir() const
 /// Returns true if the spec references an extant accessible symlink.
 bool FileSpec::IsSymLink() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return File::kindLink == realLoc->Kind();
 
 	return false;
@@ -366,7 +366,7 @@ bool FileSpec::IsSymLink() const
 /// Returns true if the spec references an extant accessible entity.
 bool FileSpec::Exists() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return File::kindNone != realLoc->Kind();
 
 	return false;
@@ -374,7 +374,7 @@ bool FileSpec::Exists() const
 
 uint64 FileSpec::Size() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->Size();
 
 	return 0;
@@ -382,7 +382,7 @@ uint64 FileSpec::Size() const
 
 double FileSpec::TimeCreated() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->TimeCreated();
 
 	return 0;
@@ -390,7 +390,7 @@ double FileSpec::TimeCreated() const
 
 double FileSpec::TimeModified() const
 	{
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->TimeModified();
 
 	return 0;
@@ -402,7 +402,7 @@ bool FileSpec::SetCreatorAndType(uint32 iCreator, uint32 iType) const
 	if (not fLoc)
 		return false;
 
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->SetCreatorAndType(iCreator, iType);
 
 	return false;
@@ -413,7 +413,7 @@ FileSpec FileSpec::CreateDir() const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->CreateDir();
 		}
 	return FileSpec();
@@ -425,9 +425,9 @@ FileSpec FileSpec::MoveTo(const FileSpec& oDest) const
 	{
 	if (fLoc && oDest.fLoc)
 		{
-		if (ZRef<FileLoc> myRealLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 			{
-			if (ZRef<FileLoc> destRealLoc = oDest.pPhysicalLoc())
+			if (ZP<FileLoc> destRealLoc = oDest.pPhysicalLoc())
 				return myRealLoc->MoveTo(destRealLoc);
 			}
 		}
@@ -441,61 +441,61 @@ bool FileSpec::Delete() const
 	if (not fLoc)
 		return false;
 
-	if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->Delete();
 	return false;
 	}
 
 /// Return a new ChannerR backed by the contents of the file referenced by the file spec.
-ZRef<ChannerR_Bin> FileSpec::OpenR(bool iPreventWriters) const
+ZP<ChannerR_Bin> FileSpec::OpenR(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->OpenR(iPreventWriters);
 		}
 	return null;
 	}
 
 /// Return a new ChannerRPos backed by the contents of the file referenced by the file spec.
-ZRef<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
+ZP<ChannerRPos_Bin> FileSpec::OpenRPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->OpenRPos(iPreventWriters);
 		}
 	return null;
 	}
 
 /// Return a new ChannerW backed by the contents of the file referenced by the file spec.
-ZRef<ChannerW_Bin> FileSpec::OpenW(bool iPreventWriters) const
+ZP<ChannerW_Bin> FileSpec::OpenW(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->OpenW(iPreventWriters);
 		}
 	return null;
 	}
 
 /// Return a new ChannerWPos backed by the contents of the file referenced by the file spec.
-ZRef<ChannerWPos_Bin> FileSpec::OpenWPos(bool iPreventWriters) const
+ZP<ChannerWPos_Bin> FileSpec::OpenWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->OpenWPos(iPreventWriters);
 		}
 	return null;
 	}
 
 /// Return a new ChannerRWPos backed by the contents of the file referenced by the file spec.
-ZRef<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
+ZP<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->OpenRWPos(iPreventWriters);
 		}
 	return null;
@@ -507,32 +507,32 @@ ZRef<ChannerRWPos_Bin> FileSpec::OpenRWPos(bool iPreventWriters) const
 be opened (if it is accessible). If the file already exists and \a iOpenExisiting is false
 then an invalid ChannerWPos is returned.
 */
-ZRef<ChannerWPos_Bin> FileSpec::CreateWPos(
+ZP<ChannerWPos_Bin> FileSpec::CreateWPos(
 	bool iOpenExisting, bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->CreateWPos(iOpenExisting, iPreventWriters);
 		}
 	return null;
 	}
 
-ZRef<ChannerRWPos_Bin> FileSpec::CreateRWPos(
+ZP<ChannerRWPos_Bin> FileSpec::CreateRWPos(
 	bool iOpenExisting, bool iPreventWriters) const
 	{
 	if (fLoc)
 		{
-		if (ZRef<FileLoc> realLoc = this->pPhysicalLoc())
+		if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 			return realLoc->CreateRWPos(iOpenExisting, iPreventWriters);
 		}
 	return null;
 	}
 
-ZRef<FileLoc> FileSpec::GetFileLoc() const
+ZP<FileLoc> FileSpec::GetFileLoc() const
 	{ return this->pPhysicalLoc(); }
 
-ZRef<FileLoc> FileSpec::pPhysicalLoc() const
+ZP<FileLoc> FileSpec::pPhysicalLoc() const
 	{
 	if (fLoc)
 		{
@@ -565,7 +565,7 @@ If iRoot does not reference an accessible directory then the FileIter will be in
 */
 FileIter::FileIter(const FileSpec& iRoot)
 	{
-	if (ZRef<FileLoc> theLoc = iRoot.GetFileLoc())
+	if (ZP<FileLoc> theLoc = iRoot.GetFileLoc())
 		fRep = theLoc->CreateIterRep();
 	}
 
@@ -712,42 +712,42 @@ FileLoc::FileLoc()
 FileLoc::~FileLoc()
 	{}
 
-ZRef<FileIterRep> FileLoc::CreateIterRep()
+ZP<FileIterRep> FileLoc::CreateIterRep()
 	{ return null; }
 
-ZRef<FileLoc> FileLoc::GetAncestor(size_t iCount)
+ZP<FileLoc> FileLoc::GetAncestor(size_t iCount)
 	{
-	ZRef<FileLoc> theLoc = this;
+	ZP<FileLoc> theLoc = this;
 	while (theLoc && iCount--)
 		theLoc = theLoc->GetParent();
 	return theLoc;
 	}
 
-ZRef<FileLoc> FileLoc::Follow()
+ZP<FileLoc> FileLoc::Follow()
 	{ return this; }
 
 bool FileLoc::SetCreatorAndType(uint32 iCreator, uint32 iType)
 	{ return false; }
 
-ZRef<ChannerR_Bin> FileLoc::OpenR(bool iPreventWriters)
+ZP<ChannerR_Bin> FileLoc::OpenR(bool iPreventWriters)
 	{ return this->OpenRPos(iPreventWriters); }
 
-ZRef<ChannerRPos_Bin> FileLoc::OpenRPos(bool iPreventWriters)
+ZP<ChannerRPos_Bin> FileLoc::OpenRPos(bool iPreventWriters)
 	{ return null; }
 
-ZRef<ChannerW_Bin> FileLoc::OpenW(bool iPreventWriters)
+ZP<ChannerW_Bin> FileLoc::OpenW(bool iPreventWriters)
 	{ return this->OpenWPos(iPreventWriters); }
 
-ZRef<ChannerWPos_Bin> FileLoc::OpenWPos(bool iPreventWriters)
+ZP<ChannerWPos_Bin> FileLoc::OpenWPos(bool iPreventWriters)
 	{ return null; }
 
-ZRef<ChannerRWPos_Bin> FileLoc::OpenRWPos(bool iPreventWriters)
+ZP<ChannerRWPos_Bin> FileLoc::OpenRWPos(bool iPreventWriters)
 	{ return null; }
 
-ZRef<ChannerWPos_Bin> FileLoc::CreateWPos(bool iOpenExisting, bool iPreventWriters)
+ZP<ChannerWPos_Bin> FileLoc::CreateWPos(bool iOpenExisting, bool iPreventWriters)
 	{ return null; }
 
-ZRef<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
+ZP<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{ return null; }
 
 // =================================================================================================
@@ -768,7 +768,7 @@ FileIterRep::~FileIterRep()
 /** \class FileIterRep_Std
 */
 
-FileIterRep_Std::FileIterRep_Std(ZRef<RealRep> iRealRep, size_t iIndex)
+FileIterRep_Std::FileIterRep_Std(ZP<RealRep> iRealRep, size_t iIndex)
 :	fRealRep(iRealRep),
 	fIndex(iIndex)
 	{}
@@ -788,7 +788,7 @@ FileSpec FileIterRep_Std::Current()
 string FileIterRep_Std::CurrentName() const
 	{ return fRealRep->GetName(fIndex); }
 
-ZRef<FileIterRep> FileIterRep_Std::Clone()
+ZP<FileIterRep> FileIterRep_Std::Clone()
 	{ return new FileIterRep_Std(fRealRep, fIndex); }
 
 } // namespace ZooLib

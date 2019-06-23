@@ -42,7 +42,7 @@ class Callable_Indirect<R()>
 public:
 	typedef Callable<R()> Callable_t;
 
-	Callable_Indirect(const ZRef<Callable_t>& iCallable)
+	Callable_Indirect(const ZP<Callable_t>& iCallable)
 	:	fSafeCallable(iCallable)
 		{}
 
@@ -51,17 +51,17 @@ public:
 		{ return sQCall(fSafeCallable.Get()); }
 
 // Our protocol
-	ZRef<Callable_t> Get()
+	ZP<Callable_t> Get()
 		{ return fSafeCallable.Get(); }
 
-	void Set(const ZRef<Callable_t>& iCallable)
+	void Set(const ZP<Callable_t>& iCallable)
 		{ fSafeCallable.Set(iCallable); }
 
-	bool CAS(const ZRef<Callable_t>& iPrior, const ZRef<Callable_t>& iNew)
+	bool CAS(const ZP<Callable_t>& iPrior, const ZP<Callable_t>& iNew)
 		{ return fSafeCallable.CAS(iPrior, iNew); }
 
 private:
-	Safe<ZRef<Callable_t> > fSafeCallable;
+	Safe<ZP<Callable_t> > fSafeCallable;
 	};
 
 // =================================================================================================
@@ -76,24 +76,24 @@ class Callable_Indirect<R(ZMACRO_Callable_P##X)> \
 public: \
 	typedef Callable<R(ZMACRO_Callable_P##X)> Callable_t; \
 \
-	Callable_Indirect(const ZRef<Callable_t>& iCallable) \
+	Callable_Indirect(const ZP<Callable_t>& iCallable) \
 	:	fSafeCallable(iCallable) \
 		{} \
 \
 	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ return sQCall(fSafeCallable.Get(), ZMACRO_Callable_i##X); } \
 \
-	ZRef<Callable_t> Get() \
+	ZP<Callable_t> Get() \
 		{ return fSafeCallable.Get(); } \
 \
-	void Set(const ZRef<Callable_t>& iCallable) \
+	void Set(const ZP<Callable_t>& iCallable) \
 		{ fSafeCallable.Set(iCallable); } \
 \
-	bool CAS(const ZRef<Callable_t>& iPrior, const ZRef<Callable_t>& iNew) \
+	bool CAS(const ZP<Callable_t>& iPrior, const ZP<Callable_t>& iNew) \
 		{ return fSafeCallable.CAS(iPrior, iNew); } \
 \
 private: \
-	Safe<ZRef<Callable_t> > fSafeCallable; \
+	Safe<ZP<Callable_t> > fSafeCallable; \
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -119,11 +119,11 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable_Indirect
 
 template <class Sig>
-ZRef<Callable_Indirect<Sig> > sCallable_Indirect(const ZRef<Callable<Sig> >& iCallable)
+ZP<Callable_Indirect<Sig> > sCallable_Indirect(const ZP<Callable<Sig> >& iCallable)
 	{ return new Callable_Indirect<Sig>(iCallable); }
 
 template <class Sig>
-ZRef<Callable_Indirect<Sig> > sCallable_Indirect()
+ZP<Callable_Indirect<Sig> > sCallable_Indirect()
 	{ return new Callable_Indirect<Sig>(null); }
 
 } // namespace ZooLib

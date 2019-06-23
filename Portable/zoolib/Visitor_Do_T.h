@@ -42,7 +42,7 @@ public:
 		{}
 
 // Our protocol
-	virtual ZQ<Result_t> QDo(const ZRef<Visitee>& iRep)
+	virtual ZQ<Result_t> QDo(const ZP<Visitee>& iRep)
 		{
 		if (iRep)
 			{
@@ -53,10 +53,10 @@ public:
 		return null;
 		}
 
-	Result_t DDo(const Result_t& iDefault, const ZRef<Visitee>& iRep)
+	Result_t DDo(const Result_t& iDefault, const ZP<Visitee>& iRep)
 		{ return sDGet(iDefault, this->QDo(iRep)); }
 
-	Result_t Do(const ZRef<Visitee>& iRep)
+	Result_t Do(const ZP<Visitee>& iRep)
 		{ return sGet(this->QDo(iRep)); }
 
 protected:

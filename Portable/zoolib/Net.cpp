@@ -41,12 +41,12 @@ NetAddress::~NetAddress()
 
 ZP<ChannerRWClose_Bin> NetAddress::QCall()
 	{
-	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
+	if (ZP<ChannerRWClose_Bin> theChanner = this->Connect())
 		return theChanner;
 	return null;
 	}
 
-ZRef<NetAddressLookup> NetAddress::MakeLookup(size_t iMaxNames)
+ZP<NetAddressLookup> NetAddress::MakeLookup(size_t iMaxNames)
 	{ return null; }
 
 // =================================================================================================
@@ -69,19 +69,19 @@ NetName::~NetName()
 
 ZP<ChannerRWClose_Bin> NetName::QCall()
 	{
-	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
+	if (ZP<ChannerRWClose_Bin> theChanner = this->Connect())
 		return theChanner;
 	return null;
 	}
 
-ZRef<ChannerRWClose_Bin> NetName::Connect()
+ZP<ChannerRWClose_Bin> NetName::Connect()
 	{
-	if (ZRef<NetNameLookup> theLookup = this->MakeLookup(10))
+	if (ZP<NetNameLookup> theLookup = this->MakeLookup(10))
 		{
 		theLookup->Start();
 		while (not theLookup->Finished())
 			{
-			if (ZRef<ChannerRWClose_Bin> theConnection = theLookup->CurrentAddress()->Connect())
+			if (ZP<ChannerRWClose_Bin> theConnection = theLookup->CurrentAddress()->Connect())
 				return theConnection;
 			theLookup->Advance();
 			}
@@ -109,12 +109,12 @@ NetListener::~NetListener()
 
 ZP<ChannerRWClose_Bin> NetListener::QCall()
 	{
-	if (ZRef<ChannerRWClose_Bin> theChanner = this->Listen())
+	if (ZP<ChannerRWClose_Bin> theChanner = this->Listen())
 		return theChanner;
 	return null;
 	}
 
-ZRef<NetAddress> NetListener::GetAddress()
+ZP<NetAddress> NetListener::GetAddress()
 	{ return null; }
 
 } // namespace ZooLib

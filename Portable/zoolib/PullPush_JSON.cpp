@@ -601,7 +601,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 		Util_Chan_JSON::sWriteString(*theString, false, iChanW);
 		}
 
-	else if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
+	else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
 		}
@@ -612,7 +612,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 			iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}
 
-	else if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
+	else if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
 		}

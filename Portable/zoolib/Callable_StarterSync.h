@@ -41,7 +41,7 @@ class Callable_StarterSync<R()>
 public:
 	typedef R (Signature)();
 
-	Callable_StarterSync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable)
+	Callable_StarterSync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable)
 	:	fStarter(iStarter)
 	,	fCallable(iCallable)
 		{}
@@ -51,8 +51,8 @@ public:
 		{ return sQCallByStarter(fStarter, fCallable)->QGet().Get(); }
 
 private:
-	const ZRef<Starter> fStarter;
-	const ZRef<Callable<Signature> > fCallable;
+	const ZP<Starter> fStarter;
+	const ZP<Callable<Signature> > fCallable;
 	};
 
 // =================================================================================================
@@ -67,7 +67,7 @@ class Callable_StarterSync<R(ZMACRO_Callable_P##X)> \
 public: \
 	typedef R (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable_StarterSync(const ZRef<Starter>& iStarter, const ZRef<Callable<Signature> >& iCallable) \
+	Callable_StarterSync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable) \
 	:	fStarter(iStarter) \
 	,	fCallable(iCallable) \
 		{} \
@@ -79,8 +79,8 @@ public: \
 		} \
 \
 private:\
-	const ZRef<Starter> fStarter; \
-	const ZRef<Callable<Signature> > fCallable;\
+	const ZP<Starter> fStarter; \
+	const ZP<Callable<Signature> > fCallable;\
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -106,9 +106,9 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable_StarterSync
 
 template <class Signature_p>
-ZRef<Callable<Signature_p> >
+ZP<Callable<Signature_p> >
 sCallable_StarterSync(
-	const ZRef<Starter>& iStarter, const ZRef<Callable<Signature_p> >& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable<Signature_p> >& iCallable)
 	{ return new Callable_StarterSync<Signature_p>(iStarter, iCallable); }
 
 } // namespace ZooLib

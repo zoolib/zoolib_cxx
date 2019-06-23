@@ -40,8 +40,8 @@ ZQ<Any> sQAsAny(CFTypeRef iVal);
 Any sDAsAny(const Any& iDefault, CFTypeRef iVal);
 Any sAsAny(CFTypeRef iVal);
 
-ZRef<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal);
-ZRef<CFTypeRef> sAsCFType(const Any& iVal);
+ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal);
+ZP<CFTypeRef> sAsCFType(const Any& iVal);
 
 Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray);
 Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary);

@@ -505,7 +505,7 @@ NSArray* Seq_NS::pArray() const
 
 NSMutableArray* Seq_NS::pTouch()
 	{
-	ZRef<NSMutableArray> theMutableArray;
+	ZP<NSMutableArray> theMutableArray;
 	if (NSArray* theArray = this->pArray())
 		{
 		if (not fMutable || sRetainCount(theArray) > 1)
@@ -676,7 +676,7 @@ NSDictionary* Map_NS::pDictionary() const
 
 NSMutableDictionary* Map_NS::pTouch()
 	{
-	ZRef<NSMutableDictionary> theMutableDictionary;
+	ZP<NSMutableDictionary> theMutableDictionary;
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
 		if (not fMutable || sRetainCount(theDictionary) > 1)

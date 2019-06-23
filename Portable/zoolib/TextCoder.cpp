@@ -94,7 +94,7 @@ TextDecoder_Unicode_AutoDetect does this, in order to more cleanly handle the sk
 
 bool sDecode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	const ZRef<TextDecoder>& iTextDecoder,
+	const ZP<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	return sCall(iTextDecoder,
@@ -121,7 +121,7 @@ TextDecoder::Decode has to nibble away at the chan in order not to over-read it.
 */
 void sDecode(
 	const ChanR_Bin& iChanR,
-	const ZRef<TextDecoder>& iTextDecoder,
+	const ZP<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	uint8 buffer[kBufSize];
@@ -174,7 +174,7 @@ void sDecode(
 \return A ZQ containing the CP. It will be empty if no CP could be read from iChanR, because
 				the stream was empty, or contained only malformed data.
 */
-ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZRef<TextDecoder>& iTextDecoder)
+ZQ<UTF32> sQDecode(const ChanR_Bin& iChanR, const ZP<TextDecoder>& iTextDecoder)
 	{
 	UTF32 theCP;
 	size_t destCU;
@@ -225,7 +225,7 @@ do this, but others might need to.
 */
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	const ZRef<TextEncoder>& iTextEncoder,
+	const ZP<TextEncoder>& iTextEncoder,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	sCall(iTextEncoder,
@@ -242,7 +242,7 @@ void sEncode(
 */
 void sEncode(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	const ZRef<TextEncoder>& iTextEncoder,
+	const ZP<TextEncoder>& iTextEncoder,
 	const ChanW_Bin& iChanW)
 	{
 	uint8 buffer[kBufSize];
@@ -278,7 +278,7 @@ void sEncode(
 \param iStreamW The stream to which encoded data is to be written.
 \param iCP The code point to write.
 */
-bool sEncode(UTF32 iCP, const ZRef<TextEncoder>& iTextEncoder, const ChanW_Bin& iChanW)
+bool sEncode(UTF32 iCP, const ZP<TextEncoder>& iTextEncoder, const ChanW_Bin& iChanW)
 	{
 	size_t countConsumed;
 	sEncode(&iCP, 1, &countConsumed, iTextEncoder, iChanW);

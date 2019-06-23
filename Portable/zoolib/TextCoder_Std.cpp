@@ -520,7 +520,7 @@ static void spTextEncode_CP850(
 // =================================================================================================
 #pragma mark - 
 
-ZRef<TextDecoder> sMake_TextDecoder_Std(const std::string& iSourceName)
+ZP<TextDecoder> sMake_TextDecoder_Std(const std::string& iSourceName)
 	{
 	if (iSourceName == "ascii")
 		return sCallable(spTextDecode_ASCII);
@@ -540,7 +540,7 @@ ZRef<TextDecoder> sMake_TextDecoder_Std(const std::string& iSourceName)
 	return null;
 	}
 
-ZRef<TextEncoder> sMake_TextEncoder_Std(const std::string& iDestName)
+ZP<TextEncoder> sMake_TextEncoder_Std(const std::string& iDestName)
 	{
 	if (iDestName == "ascii")
 		return sCallable(spTextEncode_ASCII);

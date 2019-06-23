@@ -35,8 +35,8 @@ class ChannerRW_Wrapper
 	{
 public:
 	ChannerRW_Wrapper(
-		const ZRef<Channer<ChanR<EE> > >& iChannerR,
-		const ZRef<Channer<ChanW<EE> > >& iChannerW)
+		const ZP<Channer<ChanR<EE> > >& iChannerR,
+		const ZP<Channer<ChanW<EE> > >& iChannerW)
 	:	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
 		{}
@@ -54,14 +54,14 @@ public:
 		{ sFlush(*fChannerW); }
 
 private:
-	const ZRef<Channer<ChanR<EE> > > fChannerR;
-	const ZRef<Channer<ChanW<EE> > > fChannerW;
+	const ZP<Channer<ChanR<EE> > > fChannerR;
+	const ZP<Channer<ChanW<EE> > > fChannerW;
 	};
 
 template <class EE>
-ZRef<ChannerRW<EE> > sChanner_Wrapper(
-	const ZRef<Channer<ChanR<EE> > >& iChannerR,
-	const ZRef<Channer<ChanW<EE> > >& iChannerW)
+ZP<ChannerRW<EE> > sChanner_Wrapper(
+	const ZP<Channer<ChanR<EE> > >& iChannerR,
+	const ZP<Channer<ChanW<EE> > >& iChannerW)
 	{ return new ChannerRW_Wrapper<EE>(iChannerR, iChannerW); }
 
 // =================================================================================================
@@ -73,9 +73,9 @@ class ChannerRWClose_Wrapper
 	{
 public:
 	ChannerRWClose_Wrapper(
-		const ZRef<Channer<ChanR<EE> > >& iChannerR,
-		const ZRef<Channer<ChanW<EE> > >& iChannerW,
-		const ZRef<ChannerClose>& iChannerClose)
+		const ZP<Channer<ChanR<EE> > >& iChannerR,
+		const ZP<Channer<ChanW<EE> > >& iChannerW,
+		const ZP<ChannerClose>& iChannerClose)
 	:	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
 	,	fChannerClose(iChannerClose)
@@ -103,16 +103,16 @@ public:
 		{ return sDisconnectWrite(*fChannerClose); }
 
 private:
-	const ZRef<Channer<ChanR<EE> > > fChannerR;
-	const ZRef<Channer<ChanW<EE> > > fChannerW;
-	const ZRef<ChannerClose> fChannerClose;
+	const ZP<Channer<ChanR<EE> > > fChannerR;
+	const ZP<Channer<ChanW<EE> > > fChannerW;
+	const ZP<ChannerClose> fChannerClose;
 	};
 
 template <class EE>
-ZRef<ChannerRWClose<EE> > sChanner_Wrapper(
-	const ZRef<Channer<ChanR<EE> > >& iChannerR,
-	const ZRef<Channer<ChanW<EE> > >& iChannerW,
-	const ZRef<ChannerClose>& iChannerClose)
+ZP<ChannerRWClose<EE> > sChanner_Wrapper(
+	const ZP<Channer<ChanR<EE> > >& iChannerR,
+	const ZP<Channer<ChanW<EE> > >& iChannerW,
+	const ZP<ChannerClose>& iChannerClose)
 	{ return new ChannerRWClose_Wrapper<EE>(iChannerR, iChannerW, iChannerClose); }
 
 } // namespace ZooLib

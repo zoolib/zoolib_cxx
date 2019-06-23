@@ -39,9 +39,9 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW);
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_PPT_AsCF(const ChanR_PPT& iChanR, ZRef<CFTypeRef>& oCFTypeRef);
+bool sPull_PPT_AsCF(const ChanR_PPT& iChanR, ZP<CFTypeRef>& oCFTypeRef);
 
-ZRef<CFTypeRef> sAsCF(const ChanR_PPT& iChanR);
+ZP<CFTypeRef> sAsCF(const ChanR_PPT& iChanR);
 
 } // namespace ZooLib
 

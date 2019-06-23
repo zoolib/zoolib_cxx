@@ -39,7 +39,7 @@ using std::string;
 #pragma mark - 
 
 void sFromAny_Push_PPT(const Any& iAny,
-	const ZRef<Callable_Any_WriteFilter>& iWriteFilter,
+	const ZP<Callable_Any_WriteFilter>& iWriteFilter,
 	const ChanW_PPT& iChanW)
 	{
 	if (const Seq_Any* theSeq = sPGet<Seq_Any>(iAny))
@@ -88,7 +88,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 
 void sPull_PPT_AsAny(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny)
 	{
 	// Handle the filter *first*, in case we may have Start derivatives in the chan.
@@ -109,7 +109,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 		return;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
+	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
 		oAny = sReadAllUTF8(*theChanner);
 		return;
@@ -121,7 +121,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 		return;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
+	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
 		oAny = sReadAll_T<Data_Any>(*theChanner);
 		return;
@@ -176,7 +176,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 	}
 
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter,
 	Any& oAny)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
@@ -212,9 +212,9 @@ Any sAsAny(const ChanR_PPT& iChanR)
 	return Any();
 	}
 
-static void spAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter,
-	const ZRef<Promise<Any>>& iPromise)
+static void spAsync_AsAny(const ZP<ChannerR_PPT>& iChannerR,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter,
+	const ZP<Promise<Any>>& iPromise)
 	{
 	ZThread::sSetName("spAsync_AsAny");
 	Any result;
@@ -222,13 +222,13 @@ static void spAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
 		iPromise->Deliver(result);
 	}
 
-ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR)
+ZP<Delivery<Any>> sStartAsync_AsAny(const ZP<ChannerR_PPT>& iChannerR)
 	{ return sStartAsync_AsAny(iChannerR, null); }
 
-ZRef<Delivery<Any>> sStartAsync_AsAny(const ZRef<ChannerR_PPT>& iChannerR,
-	const ZRef<Callable_Any_ReadFilter>& iReadFilter)
+ZP<Delivery<Any>> sStartAsync_AsAny(const ZP<ChannerR_PPT>& iChannerR,
+	const ZP<Callable_Any_ReadFilter>& iReadFilter)
 	{
-	ZRef<Promise<Any>> thePromise = sPromise<Any>();
+	ZP<Promise<Any>> thePromise = sPromise<Any>();
 	sStartOnNewThread(sBindR(sCallable(spAsync_AsAny), iChannerR, iReadFilter, thePromise));
 	return thePromise->GetDelivery();
 	}

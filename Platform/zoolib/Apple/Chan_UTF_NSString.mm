@@ -81,7 +81,7 @@ size_t ChanW_UTF_NSString::WriteUTF16(const UTF16* iSource, size_t iCountCU)
 	{
 	if (iCountCU)
 		{
-		ZRef<NSString> asString = sAdopt&
+		ZP<NSString> asString = sAdopt&
 			[[NSString alloc] initWithCharacters:(unichar*)iSource length:iCountCU];
 		[fString appendString:asString];
 		}

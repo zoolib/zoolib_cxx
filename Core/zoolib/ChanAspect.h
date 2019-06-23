@@ -216,7 +216,7 @@ public:
 		{ return false; }
 
 // Placeholder -- don't yet know what the Sig should be for the Callable.
-//	virtual bool CallWhenReadable(const ZRef<Callable>& iCallable)
+//	virtual bool CallWhenReadable(const ZP<Callable>& iCallable)
 //		{ return false; }
 	};
 

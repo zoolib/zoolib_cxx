@@ -35,26 +35,26 @@ class Worker
 :	public Callable_Void
 	{
 public:
-	typedef ZRef<Worker> ZRef_Worker; // CW7 workaround
+	typedef ZP<Worker> ZRef_Worker; // CW7 workaround
 
 	typedef Callable<void(ZRef_Worker)> Callable_Attached;
 	typedef Callable<bool(ZRef_Worker)> Callable_Work;
 	typedef Callable<void(ZRef_Worker)> Callable_Detached;
 
 	Worker(
-		const ZRef<Callable_Attached>& iCallable_Attached,
-		const ZRef<Callable_Work>& iCallable_Work,
-		const ZRef<Callable_Detached>& iCallable_Detached);
+		const ZP<Callable_Attached>& iCallable_Attached,
+		const ZP<Callable_Work>& iCallable_Work,
+		const ZP<Callable_Detached>& iCallable_Detached);
 
 	Worker(
-		const ZRef<Callable_Attached>& iCallable_Attached,
-		const ZRef<Callable_Work>& iCallable_Work);
+		const ZP<Callable_Attached>& iCallable_Attached,
+		const ZP<Callable_Work>& iCallable_Work);
 
 	Worker(
-		const ZRef<Callable_Work>& iCallable_Work,
-		const ZRef<Callable_Detached>& iCallable_Detached);
+		const ZP<Callable_Work>& iCallable_Work,
+		const ZP<Callable_Detached>& iCallable_Detached);
 
-	Worker(const ZRef<Callable_Work>& iCallable_Work);
+	Worker(const ZP<Callable_Work>& iCallable_Work);
 
 	Worker();
 
@@ -68,7 +68,7 @@ public:
 
 	bool IsWorking();
 
-	bool Attach(ZRef<Starter> iStarter);
+	bool Attach(ZP<Starter> iStarter);
 	bool IsAttached();
 
 private:
@@ -76,13 +76,13 @@ private:
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	ZRef<Starter> fStarter;
+	ZP<Starter> fStarter;
 	ZThread::ID fWorking;
 	double fNextWake;
 
-	const ZRef<Callable_Attached> fCallable_Attached;
-	const ZRef<Callable_Work> fCallable_Work;
-	const ZRef<Callable_Detached> fCallable_Detached;
+	const ZP<Callable_Attached> fCallable_Attached;
+	const ZP<Callable_Work> fCallable_Work;
+	const ZP<Callable_Detached> fCallable_Detached;
 	};
 
 } // namespace ZooLib

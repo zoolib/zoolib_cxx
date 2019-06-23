@@ -35,7 +35,7 @@ namespace Util_Any_JSONB {
 ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	ZRef<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
+	ZP<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second));
 	sPull_JSONB_Push_PPT(iChanR, null, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
@@ -44,7 +44,7 @@ ZQ<Any> sQRead(const ChanR_Bin& iChanR)
 
 // -----
 
-static void spFromAny_Push_PPT(const Any& iAny, const ZRef<ChannerWCon_PPT>& iChannerWCon)
+static void spFromAny_Push_PPT(const Any& iAny, const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
 	sFromAny_Push_PPT(iAny, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);

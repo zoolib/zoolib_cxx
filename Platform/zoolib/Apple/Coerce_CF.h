@@ -37,19 +37,19 @@ ZQ<bool> sQCoerceBool(CFTypeRef iCF);
 bool sQCoerceBool(CFTypeRef iCF, bool& oVal);
 bool sDCoerceBool(bool iDefault, CFTypeRef iCF);
 bool sCoerceBool(CFTypeRef iCF);
-bool sCoerceBool(const ZRef<CFTypeRef>& iCF);
+bool sCoerceBool(const ZP<CFTypeRef>& iCF);
 
 ZQ<__int64> sQCoerceInt(CFTypeRef iCF);
 bool sQCoerceInt(CFTypeRef iCF, __int64& oVal);
 __int64 sDCoerceInt(__int64 iDefault, CFTypeRef iCF);
 __int64 sCoerceInt(CFTypeRef iCF);
-__int64 sCoerceInt(const ZRef<CFTypeRef>& iCF);
+__int64 sCoerceInt(const ZP<CFTypeRef>& iCF);
 
 ZQ<double> sQCoerceRat(CFTypeRef iCF);
 bool sQCoerceRat(CFTypeRef iCF, double& oVal);
 double sDCoerceRat(double iDefault, CFTypeRef iCF);
 double sCoerceRat(CFTypeRef iCF);
-double sCoerceRat(const ZRef<CFTypeRef>& iCF);
+double sCoerceRat(const ZP<CFTypeRef>& iCF);
 
 } // namespace ZooLib
 

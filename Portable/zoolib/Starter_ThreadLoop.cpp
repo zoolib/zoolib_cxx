@@ -69,7 +69,7 @@ public:
 		}
 
 // From Starter
-	virtual bool QStart(const ZRef<Startable>& iStartable)
+	virtual bool QStart(const ZP<Startable>& iStartable)
 		{
 		if (iStartable)
 			{
@@ -101,13 +101,13 @@ private:
 			// Ensure we stick around while we're processing something.
 			this->Retain();
 
-			vector<ZRef<Startable> > toStart;
+			vector<ZP<Startable> > toStart;
 
 			fStartables.swap(toStart);
 
 			fMtx.Release();
 
-			for (vector<ZRef<Startable> >::iterator iter = toStart.begin();
+			for (vector<ZP<Startable> >::iterator iter = toStart.begin();
 				iter != toStart.end(); ++iter)
 				{
 				try { (*iter)->Call(); }
@@ -126,17 +126,17 @@ private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fKeepRunning;
-	std::vector<ZRef<Startable> > fStartables;
+	std::vector<ZP<Startable> > fStartables;
 	const ZQ<string> fNameQ;
 	};
 
 // =================================================================================================
 #pragma mark - sStarter_ThreadLoop
 
-ZRef<Starter> sStarter_ThreadLoop(const string& iName)
+ZP<Starter> sStarter_ThreadLoop(const string& iName)
 	{ return new Starter_ThreadLoop(iName); }
 
-ZRef<Starter> sStarter_ThreadLoop()
+ZP<Starter> sStarter_ThreadLoop()
 	{ return new Starter_ThreadLoop(null); }
 
 } // namespace ZooLib

@@ -80,17 +80,17 @@ public:
 	FileSpec();
 	FileSpec(const FileSpec& iSpec);
 	FileSpec(FileLoc* iLoc);
-	FileSpec(const ZRef<FileLoc>& iLoc);
-	FileSpec(const ZRef<FileLoc>& iLoc, const std::string& iComp);
+	FileSpec(const ZP<FileLoc>& iLoc);
+	FileSpec(const ZP<FileLoc>& iLoc, const std::string& iComp);
 
 	template <class I>
-	FileSpec(const ZRef<FileLoc>& iLoc, const I& iBegin, const I& iEnd)
+	FileSpec(const ZP<FileLoc>& iLoc, const I& iBegin, const I& iEnd)
 	:	fLoc(iLoc),
 		fComps(iBegin, iEnd)
 		{}
 
 	template <class I>
-	FileSpec(const ZRef<FileLoc>& iLoc,
+	FileSpec(const ZP<FileLoc>& iLoc,
 		const I& iBegin, const I& iEnd, const std::string& iAdditional)
 	:	fLoc(iLoc),
 		fComps(iBegin, iEnd)
@@ -140,25 +140,25 @@ public:
 	bool Delete() const;
 
 	// Open/create with stream API (stateful).
-	ZRef<ChannerR_Bin> OpenR(bool iPreventWriters = false) const;
-	ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters = false) const;
-	ZRef<ChannerW_Bin> OpenW(bool iPreventWriters = true) const;
-	ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters = true) const;
-	ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters = true) const;
+	ZP<ChannerR_Bin> OpenR(bool iPreventWriters = false) const;
+	ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters = false) const;
+	ZP<ChannerW_Bin> OpenW(bool iPreventWriters = true) const;
+	ZP<ChannerWPos_Bin> OpenWPos(bool iPreventWriters = true) const;
+	ZP<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters = true) const;
 
-	ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters = true) const;
-	ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters = true) const;
+	ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters = true) const;
+	ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters = true) const;
 
 	// As ever, do not abuse...
-	ZRef<FileLoc> GetFileLoc() const;
+	ZP<FileLoc> GetFileLoc() const;
 
 private:
 	// It's not generally possible to relate FileSpecs to one another. Disable it.
 	void operator<(const FileSpec& iOther);
 
-	ZRef<FileLoc> pPhysicalLoc() const;
+	ZP<FileLoc> pPhysicalLoc() const;
 
-	ZRef<FileLoc> fLoc;
+	ZP<FileLoc> fLoc;
 	std::vector<std::string> fComps;
 	};
 
@@ -186,7 +186,7 @@ public:
 	std::string CurrentName() const;
 
 private:
-	ZRef<FileIterRep> fRep;
+	ZP<FileIterRep> fRep;
 	};
 
 // =================================================================================================
@@ -226,18 +226,18 @@ public:
 
 	virtual ~FileLoc();
 
-	virtual ZRef<FileIterRep> CreateIterRep();
+	virtual ZP<FileIterRep> CreateIterRep();
 
 	virtual std::string GetName() const = 0;
-	virtual ZQ<Trail> TrailTo(ZRef<FileLoc> oDest) const = 0;
+	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const = 0;
 
-	virtual ZRef<FileLoc> GetAncestor(size_t iCount);
-	virtual ZRef<FileLoc> GetParent() = 0;
-	virtual ZRef<FileLoc> GetDescendant(
+	virtual ZP<FileLoc> GetAncestor(size_t iCount);
+	virtual ZP<FileLoc> GetParent() = 0;
+	virtual ZP<FileLoc> GetDescendant(
 		const std::string* iComps, size_t iCount) = 0;
 	virtual bool IsRoot() = 0;
 
-	virtual ZRef<FileLoc> Follow();
+	virtual ZP<FileLoc> Follow();
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount) = 0;
 	virtual std::string AsString_Native(const std::string* iComps, size_t iCount) = 0;
@@ -249,19 +249,19 @@ public:
 
 	virtual bool SetCreatorAndType(uint32 iCreator, uint32 iType);
 
-	virtual ZRef<FileLoc> CreateDir() = 0;
+	virtual ZP<FileLoc> CreateDir() = 0;
 
-	virtual ZRef<FileLoc> MoveTo(ZRef<FileLoc> oDest) = 0;
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest) = 0;
 	virtual bool Delete() = 0;
 
-	virtual ZRef<ChannerR_Bin> OpenR(bool iPreventWriters);
-	virtual ZRef<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
-	virtual ZRef<ChannerW_Bin> OpenW(bool iPreventWriters);
-	virtual ZRef<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
-	virtual ZRef<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters);
+	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	virtual ZP<ChannerW_Bin> OpenW(bool iPreventWriters);
+	virtual ZP<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
+	virtual ZP<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
 
-	virtual ZRef<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
-	virtual ZRef<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
+	virtual ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
 	};
 
 // =================================================================================================
@@ -280,7 +280,7 @@ public:
 	virtual FileSpec Current() = 0;
 	virtual std::string CurrentName() const = 0;
 
-	virtual ZRef<FileIterRep> Clone() = 0;
+	virtual ZP<FileIterRep> Clone() = 0;
 	};
 
 // =================================================================================================
@@ -291,7 +291,7 @@ class FileIterRep_Std : public FileIterRep
 public:
 	class RealRep;
 
-	FileIterRep_Std(ZRef<RealRep> iRealRep, size_t iIndex);
+	FileIterRep_Std(ZP<RealRep> iRealRep, size_t iIndex);
 	virtual ~FileIterRep_Std();
 
 // From FileIterRep
@@ -300,10 +300,10 @@ public:
 	virtual FileSpec Current();
 	virtual std::string CurrentName() const;
 
-	virtual ZRef<FileIterRep> Clone();
+	virtual ZP<FileIterRep> Clone();
 
 private:
-	ZRef<RealRep> fRealRep;
+	ZP<RealRep> fRealRep;
 	size_t fIndex;
 	};
 

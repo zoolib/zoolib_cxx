@@ -111,7 +111,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 // =================================================================================================
 #pragma mark - 
 
-static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
+static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZP<CFTypeRef>& oCFTypeRef)
 	{
 	if (const string* theString = sPGet<string>(iPPT))
 		{
@@ -119,15 +119,15 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 		return true;
 		}
 
-	if (ZRef<ChannerR_UTF> theChanner = sGet<ZRef<ChannerR_UTF>>(iPPT))
+	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
-		ZRef<CFMutableStringRef> theStringRef = sStringMutable();
+		ZP<CFMutableStringRef> theStringRef = sStringMutable();
 		sCopyAll(*theChanner, ChanW_UTF_CFString(theStringRef));
 		oCFTypeRef = theStringRef;
 		return true;
 		}
 
-	if (ZRef<ChannerR_Bin> theChanner = sGet<ZRef<ChannerR_Bin>>(iPPT))
+	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
 		oCFTypeRef = sReadAll_T<Data_CF>(*theChanner);
 		return true;
@@ -144,7 +144,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 				}
 			else
 				{
-				ZRef<CFTypeRef> theCFTypeRef;
+				ZP<CFTypeRef> theCFTypeRef;
 				if (not sPull_PPT_AsCF(iChanR, theCFTypeRef))
 					return false;
 				theMap.Set(*theNameQ, theCFTypeRef);
@@ -164,7 +164,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 				return false;
 			if (sIsEnd(*theQ))
 				break;
-			ZRef<CFTypeRef> theCFTypeRef;
+			ZP<CFTypeRef> theCFTypeRef;
 			if (not sPull_PPT_AsCF(*theQ, iChanR, theCFTypeRef))
 				return false;
 			theSeq.Append(theCFTypeRef);
@@ -178,7 +178,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZRef<CFType
 	return true;
 	}
 
-bool sPull_PPT_AsCF(const ChanR_PPT& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
+bool sPull_PPT_AsCF(const ChanR_PPT& iChanR, ZP<CFTypeRef>& oCFTypeRef)
 	{
 	ZQ<PPT> theQ = sQRead(iChanR);
 	if (not theQ)
@@ -186,11 +186,11 @@ bool sPull_PPT_AsCF(const ChanR_PPT& iChanR, ZRef<CFTypeRef>& oCFTypeRef)
 	return sPull_PPT_AsCF(*theQ, iChanR, oCFTypeRef);
 	}
 
-ZRef<CFTypeRef> sAsCF(const ChanR_PPT& iChanR)
+ZP<CFTypeRef> sAsCF(const ChanR_PPT& iChanR)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		ZRef<CFTypeRef> theCFTypeRef;
+		ZP<CFTypeRef> theCFTypeRef;
 		if (sPull_PPT_AsCF(*theQ, iChanR, theCFTypeRef))
 			return theCFTypeRef;
 		}

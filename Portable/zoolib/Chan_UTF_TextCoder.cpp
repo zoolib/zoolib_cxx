@@ -26,7 +26,7 @@ namespace ZooLib {
 #pragma mark - ChanR_UTF_TextDecoder
 
 ChanR_UTF_TextDecoder::ChanR_UTF_TextDecoder(
-	const ZRef<TextDecoder>& iTextDecoder, const ChanR_Bin& iChan)
+	const ZP<TextDecoder>& iTextDecoder, const ChanR_Bin& iChan)
 :	fTextDecoder(iTextDecoder)
 ,	fChan(iChan)
 	{}
@@ -45,7 +45,7 @@ size_t ChanR_UTF_TextDecoder::Read(UTF32* oDest, size_t iCountCU)
 #pragma mark - ChanW_UTF_TextEncoder
 
 ChanW_UTF_TextEncoder::ChanW_UTF_TextEncoder(
-	const ZRef<TextEncoder>& iTextEncoder, const ChanW_Bin& iChan)
+	const ZP<TextEncoder>& iTextEncoder, const ChanW_Bin& iChan)
 :	fTextEncoder(iTextEncoder)
 ,	fChan(iChan)
 	{}

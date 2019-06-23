@@ -93,7 +93,7 @@ public:
 	Map_CFPreferences& Erase(CFStringRef iName);
 
 private:
-	ZRef<CFStringRef> fApplicationID;
+	ZP<CFStringRef> fApplicationID;
 	};
 
 } // namespace ZooLib

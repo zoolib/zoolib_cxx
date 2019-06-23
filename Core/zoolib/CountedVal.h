@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/CountedWithoutFinalize.h"
 #include "zoolib/TagVal.h"
 
+#include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZRef.h"
 
 namespace ZooLib {
 
@@ -60,10 +60,10 @@ public:
 	:	inherited(i0, i1)
 		{}
 
-	ZRef<CountedVal> Clone()
+	ZP<CountedVal> Clone()
 		{ return new CountedVal(*this); }
 
-	ZRef<CountedVal> Fresh()
+	ZP<CountedVal> Fresh()
 		{
 		if (this->IsShared())
 			return this->Clone();
@@ -75,22 +75,22 @@ public:
 #pragma mark - sCountedVal
 
 template <class T>
-ZRef<CountedVal<T> > sCountedVal()
+ZP<CountedVal<T> > sCountedVal()
 	{ return new CountedVal<T>; }
 
 template <class P0, class T = P0>
-ZRef<CountedVal<T> > sCountedVal(const P0& i0)
+ZP<CountedVal<T> > sCountedVal(const P0& i0)
 	{ return new CountedVal<T>(i0); }
 
 template <class T, class P0, class P1>
-ZRef<CountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
+ZP<CountedVal<T> > sCountedVal(const P0& i0, const P1& i1)
 	{ return new CountedVal<T>(i0, i1); }
 
 // =================================================================================================
 #pragma mark - Accessors
 
 template <class Type_p, class Tag_p>
-const Type_p* sPGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
+const Type_p* sPGet(const ZP<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	{
 	if (iCountedVal)
 		return &iCountedVal->Get();
@@ -98,7 +98,7 @@ const Type_p* sPGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	}
 
 template <class Type_p, class Tag_p>
-const ZQ<Type_p> sQGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
+const ZQ<Type_p> sQGet(const ZP<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	{
 	if (const Type_p* theVal = sPGet(iCountedVal))
 		return *theVal;
@@ -106,7 +106,7 @@ const ZQ<Type_p> sQGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	}
 
 template <class Type_p, class Tag_p>
-const Type_p& sDGet(const Type_p& iDefault, const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
+const Type_p& sDGet(const Type_p& iDefault, const ZP<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	{
 	if (const Type_p* theVal = sPGet(iCountedVal))
 		return *theVal;
@@ -114,7 +114,7 @@ const Type_p& sDGet(const Type_p& iDefault, const ZRef<CountedVal<Type_p,Tag_p> 
 	}
 
 template <class Type_p, class Tag_p>
-const Type_p& sGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
+const Type_p& sGet(const ZP<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	{
 	if (const Type_p* theVal = sPGet(iCountedVal))
 		return *theVal;
@@ -122,7 +122,7 @@ const Type_p& sGet(const ZRef<CountedVal<Type_p,Tag_p> >& iCountedVal)
 	}
 
 template <class Type_p, class Tag_p>
-Type_p* sPMut(const ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
+Type_p* sPMut(const ZP<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	{
 	if (ioCountedVal)
 		return &ioCountedVal->Mut();
@@ -130,7 +130,7 @@ Type_p* sPMut(const ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	}
 
 template <class Type_p, class Tag_p>
-Type_p& sDMut(const Type_p& iDefault, ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
+Type_p& sDMut(const Type_p& iDefault, ZP<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	{
 	if (not ioCountedVal)
 		ioCountedVal = new CountedVal<Type_p,Tag_p>(iDefault);
@@ -138,7 +138,7 @@ Type_p& sDMut(const Type_p& iDefault, ZRef<CountedVal<Type_p,Tag_p> >& ioCounted
 	}
 
 template <class Type_p, class Tag_p>
-Type_p& sMut(ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
+Type_p& sMut(ZP<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	{
 	if (not ioCountedVal)
 		ioCountedVal = new CountedVal<Type_p,Tag_p>;
@@ -146,7 +146,7 @@ Type_p& sMut(ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	}
 
 template <class Type_p, class Tag_p>
-Type_p& sFresh(ZRef<CountedVal<Type_p,Tag_p> >& ioCountedVal)
+Type_p& sFresh(ZP<CountedVal<Type_p,Tag_p> >& ioCountedVal)
 	{
 	if (not ioCountedVal)
 		ioCountedVal = new CountedVal<Type_p,Tag_p>;

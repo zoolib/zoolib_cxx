@@ -56,7 +56,7 @@ NetAddress_IP4::NetAddress_IP4(
 ,	fAddr(sAddr(iAddr0, iAddr1, iAddr2, iAddr3))
 	{}
 
-ZRef<ChannerRWClose_Bin> NetAddress_IP4::Connect()
+ZP<ChannerRWClose_Bin> NetAddress_IP4::Connect()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip4_addr NetAddress_IP4::GetAddr()
@@ -90,7 +90,7 @@ NetAddress_IP6::NetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 ,	fAddr(iAddr)
 	{}
 
-ZRef<ChannerRWClose_Bin> NetAddress_IP6::Connect()
+ZP<ChannerRWClose_Bin> NetAddress_IP6::Connect()
 	{ return sQConnect_TCP(fAddr, fPort); }
 
 ip6_addr NetAddress_IP6::GetAddr()
@@ -116,9 +116,9 @@ NetName_Internet::~NetName_Internet()
 std::string NetName_Internet::AsString()
 	{ return fName + sStringf(":%d", fPort); }
 
-ZRef<NetNameLookup> NetName_Internet::MakeLookup(size_t iMaxAddresses)
+ZP<NetNameLookup> NetName_Internet::MakeLookup(size_t iMaxAddresses)
 	{
-	return FunctionChain<ZRef<NetNameLookup>, LookupParam_t>
+	return FunctionChain<ZP<NetNameLookup>, LookupParam_t>
 		::sInvoke(LookupParam_t(fName, fPort, iMaxAddresses));
 	}
 
@@ -131,36 +131,36 @@ ip_port NetName_Internet::GetPort() const
 // =================================================================================================
 #pragma mark - NetListener_TCP
 
-ZRef<NetListener_TCP> sNetListener_TCP(ip_port iPort)
+ZP<NetListener_TCP> sNetListener_TCP(ip_port iPort)
 	{
-	return FunctionChain<ZRef<NetListener_TCP>, MakeParam_t>
+	return FunctionChain<ZP<NetListener_TCP>, MakeParam_t>
 		::sInvoke(MakeParam_t(iPort));
 	}
 
-ZRef<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort)
+ZP<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort)
 	{
-	return FunctionChain<ZRef<NetListener_TCP>, MakeParam4_t>
+	return FunctionChain<ZP<NetListener_TCP>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iAddress, iPort));
 	}
 
-ZRef<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort)
+ZP<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort)
 	{
-	return FunctionChain<ZRef<NetListener_TCP>, MakeParam6_t>
+	return FunctionChain<ZP<NetListener_TCP>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iAddress, iPort));
 	}
 
 // =================================================================================================
 #pragma mark - NetEndpoint_TCP
 
-ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
+ZP<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam4_t>
+	return FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
 	}
 
-ZRef<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
+ZP<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
 	{
-	return FunctionChain<ZRef<ChannerRWClose_Bin>, MakeParam6_t>
+	return FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));
 	}
 

@@ -28,7 +28,7 @@ namespace ZooLib {
 void Visitee::Accept(const Visitor& iVisitor)
 	{ const_cast<Visitor&>(iVisitor).Visit(this); }
 
-void sAccept(const ZRef<Visitee>& iVisitee, const Visitor& iVisitor)
+void sAccept(const ZP<Visitee>& iVisitee, const Visitor& iVisitor)
 	{ iVisitee->Accept(iVisitor); }
 
 // =================================================================================================
@@ -37,7 +37,7 @@ void sAccept(const ZRef<Visitee>& iVisitee, const Visitor& iVisitor)
 Visitor::~Visitor()
 	{}
 
-void Visitor::Visit(const ZRef<Visitee>& iRep)
+void Visitor::Visit(const ZP<Visitee>& iRep)
 	{}
 
 } // namespace ZooLib

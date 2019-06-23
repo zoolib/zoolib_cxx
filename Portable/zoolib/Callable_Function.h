@@ -145,7 +145,7 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class R>
-ZRef<Callable<R()> >
+ZP<Callable<R()> >
 sCallable(R (*iFunctionPtr)())
 	{
 	if (not iFunctionPtr)
@@ -156,7 +156,7 @@ sCallable(R (*iFunctionPtr)())
 #define ZMACRO_Callable_sCallable(X) \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-ZRef<Callable<R(ZMACRO_Callable_P##X)> > \
+ZP<Callable<R(ZMACRO_Callable_P##X)> > \
 sCallable(R (*iFunctionPtr)(ZMACRO_Callable_P##X)) \
 	{ \
 	if (not iFunctionPtr) \

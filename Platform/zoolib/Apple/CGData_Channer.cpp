@@ -49,7 +49,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerR_Bin> iChanner)
+ZP<CGDataProviderRef> CGData_Channer::sProvider(ZP<ChannerR_Bin> iChanner)
 	{
 	if (iChanner)
 		{
@@ -72,7 +72,7 @@ static CGDataProviderCallbacks spCallbacks_R =
 	spReleaseProvider_R
 	};
 
-ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerR_Bin> iChanner)
+ZP<CGDataProviderRef> CGData_Channer::sProvider(ZP<ChannerR_Bin> iChanner)
 	{
 	if (iChanner)
 		{
@@ -110,7 +110,7 @@ static CGDataProviderSequentialCallbacks spCallbacksSequential_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerRPos_Bin> iChanner)
+ZP<CGDataProviderRef> CGData_Channer::sProvider(ZP<ChannerRPos_Bin> iChanner)
 	{
 	if (iChanner)
 		{
@@ -133,7 +133,7 @@ static CGDataProviderCallbacks spCallbacks_RPos =
 	spReleaseProvider_RPos
 	};
 
-ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerRPos_Bin> iChanner)
+ZP<CGDataProviderRef> CGData_Channer::sProvider(ZP<ChannerRPos_Bin> iChanner)
 	{
 	if (iChanner)
 		{
@@ -151,7 +151,7 @@ ZRef<CGDataProviderRef> CGData_Channer::sProvider(ZRef<ChannerRPos_Bin> iChanner
 namespace { // anonymous
 
 size_t spPutBytes_W(void* iInfo, const void* iBuffer, size_t iCount)
-	{ return sWriteMem(*static_cast<ZRef<ChannerW_Bin>*>(iInfo)[0], iBuffer, iCount); }
+	{ return sWriteMem(*static_cast<ZP<ChannerW_Bin>*>(iInfo)[0], iBuffer, iCount); }
 
 void spReleaseConsumer_W(void* iInfo)
 	{ static_cast<ChannerW_Bin*>(iInfo)->Release(); }
@@ -164,7 +164,7 @@ CGDataConsumerCallbacks spCallbacks_W =
 
 } // anonymous namespace
 
-ZRef<CGDataConsumerRef> CGData_Channer::sConsumer(ZRef<ChannerW_Bin> iChanner)
+ZP<CGDataConsumerRef> CGData_Channer::sConsumer(ZP<ChannerW_Bin> iChanner)
 	{
 	if (iChanner)
 		{

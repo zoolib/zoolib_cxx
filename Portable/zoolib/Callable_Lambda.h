@@ -124,7 +124,7 @@ private:
 	};
 
 template <typename Lambda_p>
-ZRef<Callable
+ZP<Callable
 	<typename Callable_Lambda_Util::RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type>
 	>
 sCallable(const Lambda_p& iLambda)

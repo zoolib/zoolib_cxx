@@ -35,9 +35,9 @@ namespace ZooLib {
 #pragma mark - Data_CF
 
 class Data_CF
-:	public ZRef<CFDataRef>
+:	public ZP<CFDataRef>
 	{
-	typedef ZRef<CFDataRef> inherited;
+	typedef ZP<CFDataRef> inherited;
 public:
 	Data_CF();
 	Data_CF(const Data_CF& iOther);

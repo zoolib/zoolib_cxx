@@ -43,15 +43,15 @@ using Util_CF::sDictionaryMutable;
 // Not usable till I figure out compare for CFTypeRef
 template <>
 int sCompare_T(const Val_CF& iL, const Val_CF& iR)
-	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+	{ return sCompare_T(ZP<CFTypeRef>(iL), ZP<CFTypeRef>(iR)); }
 
 template <>
 int sCompare_T(const Seq_CF& iL, const Seq_CF& iR)
-	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+	{ return sCompare_T(ZP<CFTypeRef>(iL), ZP<CFTypeRef>(iR)); }
 
 template <>
 int sCompare_T(const Map_CF& iL, const Map_CF& iR)
-	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+	{ return sCompare_T(ZP<CFTypeRef>(iL), ZP<CFTypeRef>(iR)); }
 #endif
 
 // =================================================================================================
@@ -76,7 +76,7 @@ ZQ<S> spQGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType)
 	}
 
 template <class S>
-ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
+ZP<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal)); }
 
 } // anonymous namespace
@@ -364,7 +364,7 @@ const ZQ<string8> Val_CF::QGet<string8>() const
 	}
 
 template <>
-const ZQ<ZRef<CFStringRef> > Val_CF::QGet<ZRef<CFStringRef> >() const
+const ZQ<ZP<CFStringRef> > Val_CF::QGet<ZP<CFStringRef> >() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		return this->StaticCast<CFStringRef>();
@@ -428,7 +428,7 @@ void Val_CF::Set<string8>(const string8& iVal)
 	{ inherited::operator=(sString(iVal)); }
 
 template <>
-void Val_CF::Set<ZRef<CFStringRef> >(const ZRef<CFStringRef>& iVal)
+void Val_CF::Set<ZP<CFStringRef> >(const ZP<CFStringRef>& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
@@ -590,7 +590,7 @@ CFArrayRef Seq_CF::pArray() const
 
 CFMutableArrayRef Seq_CF::pTouch()
 	{
-	ZRef<CFMutableArrayRef> theMutableArray;
+	ZP<CFMutableArrayRef> theMutableArray;
 	if (CFArrayRef theArray = this->pArray())
 		{
 		if (not fMutable || ::CFGetRetainCount(theArray) > 1)
@@ -752,7 +752,7 @@ CFDictionaryRef Map_CF::pDictionary() const
 
 CFMutableDictionaryRef Map_CF::pTouch()
 	{
-	ZRef<CFMutableDictionaryRef> theMutableDictionary;
+	ZP<CFMutableDictionaryRef> theMutableDictionary;
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
 		if (not fMutable || ::CFGetRetainCount(theDictionary) > 1)

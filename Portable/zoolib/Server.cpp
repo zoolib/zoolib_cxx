@@ -54,17 +54,17 @@ bool Server::IsStarted()
 	return fFactory;
 	}
 
-void Server::Start(ZRef<Starter> iStarter,
-		ZRef<Factory_ChannerRW_Bin> iFactory,
-		ZRef<Cancellable> iCancellable,
-		ZRef<Callable_Connection> iCallable_Connection)
+void Server::Start(ZP<Starter> iStarter,
+		ZP<Factory_ChannerRW_Bin> iFactory,
+		ZP<Cancellable> iCancellable,
+		ZP<Callable_Connection> iCallable_Connection)
 	{
 	ZAssert(iStarter);
 	ZAssert(iFactory);
 
 	// Declared before the acq, so it goes out of scope after it, and any
 	// callable on the roster is invoked with our mutex released.
-	ZRef<Roster> priorRoster;
+	ZP<Roster> priorRoster;
 
 	ZAcqMtx acq(fMtx);
 
@@ -91,7 +91,7 @@ void Server::Start(ZRef<Starter> iStarter,
 void Server::Stop()
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
+	if (ZP<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
 		if (fCancellable)
@@ -106,7 +106,7 @@ void Server::StopWait()
 	{
 	ZAcqMtx acq(fMtx);
 
-	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
+	if (ZP<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		fFactory.Clear();
 		if (fCancellable)
@@ -125,7 +125,7 @@ void Server::StopWait()
 void Server::KillConnections()
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<Roster> theRoster = fRoster)
+	if (ZP<Roster> theRoster = fRoster)
 		{
 		ZRelMtx rel(fMtx);
 		theRoster->Broadcast();
@@ -135,7 +135,7 @@ void Server::KillConnections()
 void Server::KillConnectionsWait()
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<Roster> theRoster = fRoster)
+	if (ZP<Roster> theRoster = fRoster)
 		{
 		ZRelMtx rel(fMtx);
 		theRoster->Broadcast();
@@ -149,39 +149,39 @@ void Server::KillConnectionsWait()
 		}
 	}
 
-ZRef<Factory_ChannerRW_Bin> Server::GetFactory()
+ZP<Factory_ChannerRW_Bin> Server::GetFactory()
 	{
 	ZAcqMtx acq(fMtx);
 	return fFactory;
 	}
 
-ZRef<Server::Callable_Connection> Server::GetCallable_Connection()
+ZP<Server::Callable_Connection> Server::GetCallable_Connection()
 	{
 	ZAcqMtx acq(fMtx);
 	return fCallable_Connection;
 	}
 
-static void spKill(ZRef<ChannerAbort> iChannerAbort)
+static void spKill(ZP<ChannerAbort> iChannerAbort)
 	{
 	if (iChannerAbort)
 		sAbort(*iChannerAbort);
 	}
 
-bool Server::pWork(ZRef<Worker> iWorker)
+bool Server::pWork(ZP<Worker> iWorker)
 	{
 	ZAcqMtx acq(fMtx);
-	if (ZRef<Factory_ChannerRW_Bin> theFactory = fFactory)
+	if (ZP<Factory_ChannerRW_Bin> theFactory = fFactory)
 		{
 		ZRelMtx rel(fMtx);
-		if (ZRef<ChannerRW_Bin> theChanner = sCall(theFactory))
+		if (ZP<ChannerRW_Bin> theChanner = sCall(theFactory))
 			{
 			ZAcqMtx acq(fMtx);
-			if (ZRef<Callable_Connection> theCallable = fCallable_Connection)
+			if (ZP<Callable_Connection> theCallable = fCallable_Connection)
 				{
 				ZRelMtx rel(fMtx);
 				try
 					{
-					ZRef<Callable_Void> theCallable_Kill =
+					ZP<Callable_Void> theCallable_Kill =
 						sBindR(sCallable(spKill), sRef(theChanner.DynamicCast<ChannerAbort>()));
 					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theChanner);
 					}
@@ -195,7 +195,7 @@ bool Server::pWork(ZRef<Worker> iWorker)
 	return false;
 	}
 
-void Server::pWorkDetached(ZRef<Worker> iWorker)
+void Server::pWorkDetached(ZP<Worker> iWorker)
 	{
 	ZAcqMtx acq(fMtx);
 	fWorker.Clear();

@@ -74,11 +74,11 @@ private:
 // =================================================================================================
 #pragma mark - sMakeContentChanner
 
-ZRef<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZRef<ChannerR_Bin> iChannerR);
+ZP<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZP<ChannerR_Bin> iChannerR);
 
-ZRef<ChannerR_Bin> sMakeContentChanner(
+ZP<ChannerR_Bin> sMakeContentChanner(
 	const std::string& iMethod, int responseCode,
-	const Map& iHeader, const ZRef<ChannerR_Bin>& iChannerR);
+	const Map& iHeader, const ZP<ChannerR_Bin>& iChannerR);
 
 } // namespace HTTP
 } // namespace ZooLib

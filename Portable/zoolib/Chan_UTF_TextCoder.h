@@ -37,14 +37,14 @@ class ChanR_UTF_TextDecoder
 :	public ChanR_UTF
 	{
 public:
-	ChanR_UTF_TextDecoder(const ZRef<TextDecoder>& iTextDecoder, const ChanR_Bin& iChan);
+	ChanR_UTF_TextDecoder(const ZP<TextDecoder>& iTextDecoder, const ChanR_Bin& iChan);
 	~ChanR_UTF_TextDecoder();
 
 // From ChanR_UTF
 	virtual size_t Read(UTF32* oDest, size_t iCountCU);
 
 protected:
-	const ZRef<TextDecoder> fTextDecoder;
+	const ZP<TextDecoder> fTextDecoder;
 	const ChanR_Bin& fChan;
 	};
 
@@ -55,14 +55,14 @@ class ChanW_UTF_TextEncoder
 :	public ChanW_UTF_Native32
 	{
 public:
-	ChanW_UTF_TextEncoder(const ZRef<TextEncoder>& iTextEncoder, const ChanW_Bin& iChan);
+	ChanW_UTF_TextEncoder(const ZP<TextEncoder>& iTextEncoder, const ChanW_Bin& iChan);
 	~ChanW_UTF_TextEncoder();
 
 // From ChanW_UTF_Native32
 	virtual size_t Write(const UTF32* iSource, size_t iCountCU);
 
 private:
-	const ZRef<TextEncoder> fTextEncoder;
+	const ZP<TextEncoder> fTextEncoder;
 	const ChanW_Bin& fChan;
 	};
 

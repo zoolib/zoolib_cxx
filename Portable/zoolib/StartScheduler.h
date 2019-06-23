@@ -40,7 +40,7 @@ class StartScheduler
 public:
 	StartScheduler();
 
-	typedef std::pair<ZRef<Starter>,ZRef<Callable_Void> > Job;
+	typedef std::pair<ZP<Starter>,ZP<Callable_Void> > Job;
 
 	bool Cancel(const Job& iJob);
 
@@ -76,13 +76,13 @@ void sNextStartIn(double iInterval, const StartScheduler::Job& iJob);
 
 // -----
 
-bool sCancel(const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
+bool sCancel(const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable);
 
 void sNextStartAt(double iSystemTime,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
+	const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable);
 
 void sNextStartIn(double iInterval,
-	const ZRef<Starter>& iStarter, const ZRef<Callable_Void>& iCallable);
+	const ZP<Starter>& iStarter, const ZP<Callable_Void>& iCallable);
 
 } // namespace ZooLib
 

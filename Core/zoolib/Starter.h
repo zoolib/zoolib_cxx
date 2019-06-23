@@ -35,7 +35,7 @@ class Starter
 :	public Counted
 	{
 public:
-	virtual bool QStart(const ZRef<Startable>& iStartable) = 0;
+	virtual bool QStart(const ZP<Startable>& iStartable) = 0;
 	};
 
 // =================================================================================================
@@ -46,11 +46,11 @@ class Starter_Trivial
 	{
 public:
 // From Starter
-	virtual bool QStart(const ZRef<Callable_Void>& iCallable)
+	virtual bool QStart(const ZP<Callable_Void>& iCallable)
 		{ return sQCall(iCallable); }
 	};
 
-inline bool sQStart(ZRef<Starter> iStarter, const ZRef<Startable>& iStartable)
+inline bool sQStart(ZP<Starter> iStarter, const ZP<Startable>& iStartable)
 	{
 	if (iStarter && iStartable)
 		return iStarter->QStart(iStartable);

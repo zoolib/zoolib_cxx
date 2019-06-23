@@ -74,8 +74,8 @@ public:
 	virtual bool Finished();
 	virtual void Advance();
 
-	virtual ZRef<NetAddress> CurrentAddress();
-	virtual ZRef<NetName> CurrentName();
+	virtual ZP<NetAddress> CurrentAddress();
+	virtual ZP<NetName> CurrentName();
 
 protected:
 	const std::string fName;
@@ -83,7 +83,7 @@ protected:
 	const size_t fCountAddressesToReturn;
 	bool fStarted;
 	size_t fCurrentIndex;
-	std::vector<ZRef<NetAddress_Internet> > fAddresses;
+	std::vector<ZP<NetAddress_Internet> > fAddresses;
 	};
 
 // =================================================================================================
@@ -102,7 +102,7 @@ public:
 	virtual ~NetListener_TCP_Socket();
 
 // From NetListener via NetListener_TCP
-	virtual ZRef<NetAddress> GetAddress();
+	virtual ZP<NetAddress> GetAddress();
 
 // From NetListener_TCP
 	virtual ip_port GetPort();

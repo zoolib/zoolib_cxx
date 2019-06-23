@@ -127,7 +127,7 @@ private:
 
 // -----
 
-ZRef<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName)
+ZP<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName)
 	{
 	if (iconv_t theConverter = spOpenDecoder(iSourceName))
 		return new TextDecoder_iconv(theConverter);
@@ -256,7 +256,7 @@ private:
 
 // -----
 
-ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName)
+ZP<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName)
 	{
 	if (iconv_t theConverter = spOpenEncoder(iDestName))
 		return new TextEncoder_iconv(theConverter);

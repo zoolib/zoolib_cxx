@@ -38,7 +38,7 @@ void sWriteBacktrace(const ChanW_UTF& iChanW);
 
 void sInstall();
 
-void sSetChanner(ZRef<ChannerW_UTF> iChannerW);
+void sSetChanner(ZP<ChannerW_UTF> iChannerW);
 
 void sSetLogPriority(Log::EPriority iLogPriority);
 

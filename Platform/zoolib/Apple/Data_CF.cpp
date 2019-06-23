@@ -167,7 +167,7 @@ CFDataRef Data_CF::pData() const
 
 CFMutableDataRef Data_CF::pTouch()
 	{
-	ZRef<CFMutableDataRef> theMutableData;
+	ZP<CFMutableDataRef> theMutableData;
 	if (CFDataRef theData = this->pData())
 		{
 		if (not fMutable || ::CFGetRetainCount(theData) > 1)

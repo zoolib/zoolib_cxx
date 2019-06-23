@@ -86,7 +86,7 @@ protected:
 class ChanR_Bin_POSIXFD
 :	public ChanR<byte>
 	{
-	ChanR_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanR_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanR_Bin_POSIXFD();
 
 // From ChanAspect_Read<byte>
@@ -94,7 +94,7 @@ class ChanR_Bin_POSIXFD
 	virtual size_t Readable();
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -104,14 +104,14 @@ class ChanW_Bin_POSIXFD
 :	public ChanW_Bin
 	{
 public:
-	ChanW_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanW_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanW_Bin_POSIXFD();
 
 // From ChanAspect_Write<byte>
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -121,7 +121,7 @@ class ChanRPos_Bin_POSIXFD
 :	public ChanRPos<byte>
 	{
 public:
-	ChanRPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanRPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanRPos_Bin_POSIXFD();
 
 // From Aspect Pos
@@ -139,7 +139,7 @@ public:
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -149,7 +149,7 @@ class ChanWPos_Bin_POSIXFD
 :	public ChanWPos<byte>
 	{
 public:
-	ChanWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanWPos_Bin_POSIXFD();
 
 // From Aspect Pos
@@ -166,7 +166,7 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -176,7 +176,7 @@ class ChanRWPos_Bin_POSIXFD
 :	public ChanRWPos<byte>
 	{
 public:
-	ChanRWPos_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanRWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanRWPos_Bin_POSIXFD();
 
 // From Aspect Pos
@@ -200,7 +200,7 @@ public:
 	virtual size_t Unread(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -210,7 +210,7 @@ class ChanRAbort_Bin_POSIXFD
 :	public ChanRAbort<byte>
 	{
 public:
-	ChanRAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanRAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanRAbort_Bin_POSIXFD();
 
 // From ChanAspect_Abort
@@ -224,7 +224,7 @@ public:
 	virtual bool WaitReadable(double iTimeout);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -234,7 +234,7 @@ class ChanWAbort_Bin_POSIXFD
 :	public ChanWAbort<byte>
 	{
 public:
-	ChanWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanWAbort_Bin_POSIXFD();
 
 // From ChanAspect_Abort
@@ -244,7 +244,7 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 // =================================================================================================
@@ -254,7 +254,7 @@ class ChanRWAbort_Bin_POSIXFD
 :	public ChanRWAbort<byte>
 	{
 public:
-	ChanRWAbort_Bin_POSIXFD(const ZRef<FDHolder>& iFDHolder);
+	ChanRWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanRWAbort_Bin_POSIXFD();
 
 // From ChanAspect_Abort
@@ -271,7 +271,7 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
-	const ZRef<FDHolder> fFDHolder;
+	const ZP<FDHolder> fFDHolder;
 	};
 
 } // namespace ZooLib

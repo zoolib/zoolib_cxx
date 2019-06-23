@@ -31,16 +31,16 @@ namespace HTTP {
 // =================================================================================================
 #pragma mark - HTTP::sQConnect
 
-ZRef<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
+ZP<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
-	if (ZRef<ChannerRWClose_Bin> theSR = sCall(sRef(new NetName_Internet(iHost, iPort))))
+	if (ZP<ChannerRWClose_Bin> theSR = sCall(sRef(new NetName_Internet(iHost, iPort))))
 		{
 //##		theComboQ->SetW(new ChanW_XX_Buffered<byte>(theComboQ->GetW()))
 
 		if (not iUseSSL)
 			return theSR;
 
-//##		if (ZRef<ZStreamerRWCon> wrapped = sStreamerRWCon_SSL(theEP, theSW))
+//##		if (ZP<ZStreamerRWCon> wrapped = sStreamerRWCon_SSL(theEP, theSW))
 //##			return Connection_t(wrapped, wrapped, new ChannerClose_RWCon(wrapped));
 		}
 	return null;

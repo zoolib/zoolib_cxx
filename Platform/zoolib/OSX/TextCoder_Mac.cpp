@@ -385,14 +385,14 @@ bool TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSou
 // =================================================================================================
 #pragma mark - 
 
-ZRef<TextDecoder> sMake_TextDecoder_Mac(const std::string& iSourceName)
+ZP<TextDecoder> sMake_TextDecoder_Mac(const std::string& iSourceName)
 	{
 	if (TextEncoding theTextEncoding = spLookupName(iSourceName))
 		return new TextDecoder_Mac(theTextEncoding);
 	return null;
 	}
 
-ZRef<TextEncoder> sMake_TextEncoder_Mac(const std::string& iDestName)
+ZP<TextEncoder> sMake_TextEncoder_Mac(const std::string& iDestName)
 	{
 	if (TextEncoding theTextEncoding = spLookupName(iDestName))
 		return new TextEncoder_Mac(theTextEncoding);

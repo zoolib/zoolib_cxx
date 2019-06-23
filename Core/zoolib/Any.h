@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compat_type_traits.h" // For is_pod
 #include "zoolib/CountedWithoutFinalize.h"
 
+#include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZRef.h"
 
 #include <typeinfo> // For std::type_info
 
@@ -265,9 +265,9 @@ private:
 
 		virtual const void* ConstVoidStarIf(const std::type_info& iTI) = 0;
 
-		virtual void* FreshMutableVoidStar(ZRef<Reffed>& ioReffed) = 0;
+		virtual void* FreshMutableVoidStar(ZP<Reffed>& ioReffed) = 0;
 
-		virtual void* FreshMutableVoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI) = 0;
+		virtual void* FreshMutableVoidStarIf(ZP<Reffed>& ioReffed, const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -296,7 +296,7 @@ private:
 			return 0;
 			}
 
-		virtual void* FreshMutableVoidStar(ZRef<Reffed>& ioReffed)
+		virtual void* FreshMutableVoidStar(ZP<Reffed>& ioReffed)
 			{
 			if (this->IsShared())
 				{
@@ -307,7 +307,7 @@ private:
 			return &fValue;
 			}
 
-		virtual void* FreshMutableVoidStarIf(ZRef<Reffed>& ioReffed, const std::type_info& iTI)
+		virtual void* FreshMutableVoidStarIf(ZP<Reffed>& ioReffed, const std::type_info& iTI)
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				{
@@ -330,8 +330,8 @@ private:
 	InPlace& pAsInPlace();
 	const InPlace& pAsInPlace() const;
 
-	ZRef<Reffed>& pAsReffed();
-	const ZRef<Reffed>& pAsReffed() const;
+	ZP<Reffed>& pAsReffed();
+	const ZP<Reffed>& pAsReffed() const;
 
 // -----------------
 
@@ -379,7 +379,7 @@ private:
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>());
+			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>());
 			}
 		}
 
@@ -387,7 +387,7 @@ private:
 	void pCtor_Counted_T()
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>());
+		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>());
 		}
 
 // -----
@@ -414,7 +414,7 @@ private:
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
+			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
 			}
 		}
 
@@ -422,7 +422,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
+		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
 		}
 
 // -----
@@ -437,7 +437,7 @@ private:
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
 			}
 		}
 
@@ -445,7 +445,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZRef<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
 		}
 
 // -----------------
@@ -473,7 +473,7 @@ private:
 			{
 			fDistinguisher = 0;
 			Reffed_T<S>* theReffed = new Reffed_T<S>(iP0);
-			sCtor_T<ZRef<Reffed> >(&fPayload, theReffed);
+			sCtor_T<ZP<Reffed> >(&fPayload, theReffed);
 			return theReffed->fValue;
 			}
 		}
@@ -501,7 +501,7 @@ private:
 			{
 			fDistinguisher = 0;
 			Reffed_T<S>* theReffed = new Reffed_T<S>;
-			sCtor_T<ZRef<Reffed> >(&fPayload, theReffed);
+			sCtor_T<ZP<Reffed> >(&fPayload, theReffed);
 			return theReffed->fValue;
 			}
 		}

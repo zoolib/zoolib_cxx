@@ -49,7 +49,7 @@ public:
 	virtual size_t CountReadable();
 
 private:
-	ZRef<CFReadStreamRef> fCFStream;
+	ZP<CFReadStreamRef> fCFStream;
 	};
 
 // =================================================================================================
@@ -66,7 +66,7 @@ public:
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 private:
-	ZRef<CFWriteStreamRef> fCFStream;
+	ZP<CFWriteStreamRef> fCFStream;
 	};
 
 } // namespace ZooLib

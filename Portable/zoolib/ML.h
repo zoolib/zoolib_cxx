@@ -67,7 +67,7 @@ public:
 	explicit ChanRU(const ZooLib::ChanRU_UTF& iChanRU);
 
 	ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
-		bool iRecognizeEntitiesInAttributeValues, ZRef<Callable_Entity> iCallable);
+		bool iRecognizeEntitiesInAttributeValues, ZP<Callable_Entity> iCallable);
 	~ChanRU();
 
 // From ChanR_UTF
@@ -95,7 +95,7 @@ private:
 
 	bool fRecognizeEntitiesInAttributeValues;
 
-	ZRef<Callable_Entity> fCallable;
+	ZP<Callable_Entity> fCallable;
 
 	string32 fBuffer;
 	size_t fBufferStart;
@@ -111,7 +111,7 @@ private:
 
 typedef Channer_T<ChanRU> ChannerRU;
 
-ZRef<ChannerRU> sChanner(const ZRef<ZooLib::ChannerRU<UTF32>>& iChanner);
+ZP<ChannerRU> sChanner(const ZP<ZooLib::ChannerRU<UTF32>>& iChanner);
 
 // =================================================================================================
 #pragma mark - ML parsing support

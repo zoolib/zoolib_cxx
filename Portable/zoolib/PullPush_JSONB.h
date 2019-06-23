@@ -36,14 +36,14 @@ typedef Callable<bool(uint8 iType, const ChanR_Bin& iChanR, const ChanW_PPT& iCh
 	Callable_JSONB_ReadFilter;
 
 bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
-	const ZRef<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW);
 
 typedef Callable<bool(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_Bin& iChanW)>
 	Callable_JSONB_WriteFilter;
 
 bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
-	const ZRef<Callable_JSONB_WriteFilter>& iWriteFilter,
+	const ZP<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW);
 
 } // namespace ZooLib

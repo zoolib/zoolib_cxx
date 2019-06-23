@@ -94,7 +94,7 @@ template <class T>
 void sPush(const T& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
 
-// Special-case NotZP -- we generally want them on the chan as ZRef.
+// Special-case NotZP -- we generally want them on the chan as ZP.
 template <class T>
 void sPush(const NotZP<T>& iVal, const ChanW_PPT& iChanW)
 	{ sPush(sZP(iVal), iChanW); }
@@ -137,14 +137,14 @@ ZQ<Name> sQEReadNameOrEnd(const ChanR<PPT>& iChanR);
 // ----------
 
 template <class EE>
-using PullPushPair = std::pair<ZRef<ChannerWCon<EE>>,ZRef<ChannerR<EE>>>;
+using PullPushPair = std::pair<ZP<ChannerWCon<EE>>,ZP<ChannerR<EE>>>;
 
 // ----------
 
 template <class EE>
-void sMakePullPushPair(ZRef<ChannerWCon<EE>>& oChannerW, ZRef<ChannerR<EE>>& oChannerR)
+void sMakePullPushPair(ZP<ChannerWCon<EE>>& oChannerW, ZP<ChannerR<EE>>& oChannerR)
 	{
-	ZRef<ImpPipePair<EE>> theImp = new ImpPipePair<EE>;
+	ZP<ImpPipePair<EE>> theImp = new ImpPipePair<EE>;
 	oChannerW = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
 	oChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
 	}
@@ -161,9 +161,9 @@ PullPushPair<EE> sMakePullPushPair()
 
 template <class Pull_p, class Push_p>
 void sRunPullPush_ChanPtr(
-	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
 	const ChanR<Pull_p>* iChanR,
-	const ZRef<ChannerWCon<Push_p>>& iChannerWCon)
+	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
 	{
 	try
 		{
@@ -175,8 +175,8 @@ void sRunPullPush_ChanPtr(
 	}
 
 template <class Pull_p, class Push_p>
-ZRef<ChannerR<Push_p>> sStartPullPush(
-	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+ZP<ChannerR<Push_p>> sStartPullPush(
+	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
 	const ChanR<Pull_p>* iChanR)
 	{
 	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
@@ -195,9 +195,9 @@ ZRef<ChannerR<Push_p>> sStartPullPush(
 
 template <class Pull_p, class Push_p>
 void sRunPullPush_Channer(
-	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
-	const ZRef<ChannerR<Pull_p>>& iChannerR,
-	const ZRef<ChannerWCon<Push_p>>& iChannerWCon)
+	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerR<Pull_p>>& iChannerR,
+	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
 	{
 	try
 		{
@@ -209,9 +209,9 @@ void sRunPullPush_Channer(
 	}
 
 template <class Pull_p, class Push_p>
-ZRef<ChannerR<Push_p>> sStartPullPush(
-	const ZRef<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
-	const ZRef<ChannerR<Pull_p>>& iChannerR)
+ZP<ChannerR<Push_p>> sStartPullPush(
+	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerR<Pull_p>>& iChannerR)
 	{
 	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
 	sStartOnNewThread

@@ -41,7 +41,7 @@ public:
 	virtual ~Starter_EventLoopBase();
 
 // From Starter
-	virtual bool QStart(const ZRef<Startable>& iStartable);
+	virtual bool QStart(const ZP<Startable>& iStartable);
 
 protected:
 // Called by concrete subclass
@@ -55,7 +55,7 @@ protected:
 private:
 	ZMtx fMtx;
 	bool fTriggered;
-	std::vector<ZRef<Startable> > fStartables;
+	std::vector<ZP<Startable> > fStartables;
 	};
 
 } // namespace ZooLib

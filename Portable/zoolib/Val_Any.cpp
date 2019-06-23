@@ -297,7 +297,7 @@ void Map_Any::Rep::Finalize()
 	spSafePtrStack_Map_Any_Rep.Push(this);
 	}
 
-ZRef<Map_Any::Rep> Map_Any::Rep::spMake()
+ZP<Map_Any::Rep> Map_Any::Rep::spMake()
 	{
 	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		return result;
@@ -305,7 +305,7 @@ ZRef<Map_Any::Rep> Map_Any::Rep::spMake()
 	return new Rep;
 	}
 
-ZRef<Map_Any::Rep> Map_Any::Rep::spMake(const Map_t& iMap)
+ZP<Map_Any::Rep> Map_Any::Rep::spMake(const Map_t& iMap)
 	{
 	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
 		{

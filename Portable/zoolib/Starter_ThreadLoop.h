@@ -31,9 +31,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sStarter_ThreadLoop
 
-ZRef<Starter> sStarter_ThreadLoop(const std::string& iName);
+ZP<Starter> sStarter_ThreadLoop(const std::string& iName);
 
-ZRef<Starter> sStarter_ThreadLoop();
+ZP<Starter> sStarter_ThreadLoop();
 
 } // namespace ZooLib
 

@@ -85,9 +85,9 @@ public:
 	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
-	virtual ZRef<ChannerRWClose_Bin> Connect() = 0;
+	virtual ZP<ChannerRWClose_Bin> Connect() = 0;
 
-	virtual ZRef<NetAddressLookup> MakeLookup(size_t iMaxNames);
+	virtual ZP<NetAddressLookup> MakeLookup(size_t iMaxNames);
 	};
 
 // =================================================================================================
@@ -109,7 +109,7 @@ public:
 	virtual bool Finished() = 0;
 	virtual void Advance() = 0;
 
-	virtual ZRef<NetName> CurrentName() = 0;
+	virtual ZP<NetName> CurrentName() = 0;
 	};
 
 // =================================================================================================
@@ -129,11 +129,11 @@ public:
 	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
-	virtual ZRef<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWClose_Bin> Connect();
 
 	virtual std::string AsString() = 0;
 
-	virtual ZRef<NetNameLookup> MakeLookup(size_t iMaxAddresses) = 0;
+	virtual ZP<NetNameLookup> MakeLookup(size_t iMaxAddresses) = 0;
 	};
 
 // =================================================================================================
@@ -155,8 +155,8 @@ public:
 	virtual bool Finished() = 0;
 	virtual void Advance() = 0;
 
-	virtual ZRef<NetAddress> CurrentAddress() = 0;
-	virtual ZRef<NetName> CurrentName() = 0;
+	virtual ZP<NetAddress> CurrentAddress() = 0;
+	virtual ZP<NetName> CurrentName() = 0;
 	};
 
 // =================================================================================================
@@ -177,9 +177,9 @@ public:
 	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
-	virtual ZRef<ChannerRWClose_Bin> Listen() = 0;
+	virtual ZP<ChannerRWClose_Bin> Listen() = 0;
 
-	virtual ZRef<NetAddress> GetAddress();
+	virtual ZP<NetAddress> GetAddress();
 	};
 
 } // namespace ZooLib

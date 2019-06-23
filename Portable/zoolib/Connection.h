@@ -31,7 +31,7 @@ namespace ZooLib {
 
 typedef ChannerConnection<byte> ChannerConnection_Bin;
 
-typedef Callable<ZRef<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
+typedef Callable<ZP<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
 
 // Workaround for now.
 typedef ChannerConnection_Bin ChannerRWClose_Bin;
@@ -41,7 +41,7 @@ typedef Factory_ChannerConnection_Bin Factory_ChannerRWClose_Bin;
 
 typedef ChannerRW<byte> ChannerRW_Bin;
 
-typedef Callable<ZRef<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
+typedef Callable<ZP<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
 
 } // namespace ZooLib
 

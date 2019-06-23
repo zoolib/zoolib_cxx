@@ -235,7 +235,7 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class Signature>
-ZRef<Callable<Signature> >
+ZP<Callable<Signature> >
 sCallable(id iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)
@@ -244,11 +244,11 @@ sCallable(id iObj, SEL iSEL)
 	}
 
 template <class Signature,class T>
-ZRef<Callable<Signature> >
-sCallable(const ZRef<T>& iObj, SEL iSEL)
+ZP<Callable<Signature> >
+sCallable(const ZP<T>& iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)
-		return new Callable_ObjC<ZRef<NSObject>,Signature>(iObj, iSEL);
+		return new Callable_ObjC<ZP<NSObject>,Signature>(iObj, iSEL);
 	return null;
 	}
 

@@ -38,7 +38,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sPixmap
 
-Pixels::Pixmap sPixmap(ZRef<CGImageRef> iImageRef);
+Pixels::Pixmap sPixmap(ZP<CGImageRef> iImageRef);
 
 } // namespace ZooLib
 

@@ -47,7 +47,7 @@ Visitor_ToStrim::Visitor_ToStrim()
 ,	fIndent(0)
 	{}
 
-void Visitor_ToStrim::Visit(const ZRef<Visitee>& iRep)
+void Visitor_ToStrim::Visit(const ZP<Visitee>& iRep)
 	{
 	if (iRep)
 		{
@@ -69,7 +69,7 @@ void Visitor_ToStrim::Visit(const ZRef<Visitee>& iRep)
 	}
 
 void Visitor_ToStrim::ToStrim(
-	const Options& iOptions, const ChanW_UTF& iStrimW, const ZRef<Visitee>& iRep)
+	const Options& iOptions, const ChanW_UTF& iStrimW, const ZP<Visitee>& iRep)
 	{
 	SaveSetRestore<const Options*> ssr1(fOptions, &iOptions);
 	SaveSetRestore<const ChanW_UTF*> ssr2(fStrimW, &iStrimW);
@@ -78,7 +78,7 @@ void Visitor_ToStrim::ToStrim(
 	this->pToStrim(iRep);
 	}
 
-void Visitor_ToStrim::pToStrim(const ZRef<Visitee>& iRep)
+void Visitor_ToStrim::pToStrim(const ZP<Visitee>& iRep)
 	{
 	ZAssert(fOptions && fStrimW);
 	if (iRep)

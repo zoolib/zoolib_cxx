@@ -170,7 +170,7 @@ private:
 		fCnd.Broadcast();
 		}
 
-	void pInit(ZRef<SafeSetRep> iSelf,
+	void pInit(ZP<SafeSetRep> iSelf,
 		SafeSetIterConst<T>& ioIter)
 		{
 		ZAcqMtx acq(fMtx);
@@ -182,7 +182,7 @@ private:
 			}
 		}
 
-	void pInitFrom(ZRef<SafeSetRep> iSelf,
+	void pInitFrom(ZP<SafeSetRep> iSelf,
 		SafeSetIterConst<T>& ioIter, const SafeSetIterConst<T>& iOther)
 		{
 		ZAcqMtx acq(fMtx);
@@ -266,11 +266,11 @@ public:
 	bool WaitUntil(double iDeadline, size_t iCount)
 		{ return fRep->pWaitUntil(iDeadline, iCount); }
 
-	ZRef<SafeSetRep<T> > GetRep() const
+	ZP<SafeSetRep<T> > GetRep() const
 		{ return fRep; }
 
 private:
-	ZRef<SafeSetRep<T> > fRep;
+	ZP<SafeSetRep<T> > fRep;
 	};
 
 // =================================================================================================
@@ -285,19 +285,19 @@ public:
 
 	SafeSetIterConst(const SafeSet<T>& iSafeSet)
 		{
-		if (ZRef<SafeSetRep<T> > theRep = iSafeSet.GetRep())
+		if (ZP<SafeSetRep<T> > theRep = iSafeSet.GetRep())
 			theRep->pInit(theRep, *this);
 		}
 
 	SafeSetIterConst(const SafeSetIterConst& iOther)
 		{
-		if (ZRef<SafeSetRep<T> > theRep = iOther.fRep)
+		if (ZP<SafeSetRep<T> > theRep = iOther.fRep)
 			theRep->pInitFrom(theRep, *this, iOther);
 		}
 
 	~SafeSetIterConst()
 		{
-		if (ZRef<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T> > theRep = fRep)
 			theRep->pDestroy(*this);
 		}
 
@@ -305,10 +305,10 @@ public:
 		{
 		if (this != &iOther)
 			{
-			if (ZRef<SafeSetRep<T> > theRep = fRep)
+			if (ZP<SafeSetRep<T> > theRep = fRep)
 				theRep->pDestroy(*this);
 
-			if (ZRef<SafeSetRep<T> > theRep = iOther.fRep)
+			if (ZP<SafeSetRep<T> > theRep = iOther.fRep)
 				theRep->pInitFrom(theRep, *this, iOther);
 			}
 		return *this;
@@ -316,23 +316,23 @@ public:
 
 	SafeSetIterConst& operator=(const SafeSet<T>& iSafeSet)
 		{
-		if (ZRef<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T> > theRep = fRep)
 			theRep->pDestroy(*this);
 
-		if (ZRef<SafeSetRep<T> > theRep = iSafeSet.GetRep())
+		if (ZP<SafeSetRep<T> > theRep = iSafeSet.GetRep())
 			theRep->pInit(theRep, *this);
 		}
 
 	bool QReadInc(T& oValue)
 		{
-		if (ZRef<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this, oValue);
 		return false;
 		}
 
 	ZQ<T> QReadInc()
 		{
-		if (ZRef<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this);
 		return null;
 		}
@@ -379,14 +379,14 @@ public:
 
 	bool QReadErase(T& oValue)
 		{
-		if (ZRef<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
+		if (ZP<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this, oValue);
 		return false;
 		}
 
 	ZQ<T> QReadErase()
 		{
-		if (ZRef<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
+		if (ZP<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this);
 		return null;
 		}

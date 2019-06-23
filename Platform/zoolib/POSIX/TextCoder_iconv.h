@@ -47,9 +47,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-ZRef<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName);
+ZP<TextDecoder> sMake_TextDecoder_iconv(const std::string& iSourceName);
 
-ZRef<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName);
+ZP<TextEncoder> sMake_TextEncoder_iconv(const std::string& iDestName);
 
 } // namespace ZooLib
 
