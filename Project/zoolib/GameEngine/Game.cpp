@@ -170,7 +170,8 @@ void Game::Draw(
 		const Rat listenerR = 2 * X(theGameSize) / 3;
 		const Rat listenerDistance = 5.0 * X(theGameSize) / 12;
 
-		theRendered = Util::sFinderHider(theRendered, iBackingSize, theGameSize);
+		if (not DebugFlags::sTextureBounds)
+			theRendered = Util::sFinderHider(theRendered, iBackingSize, theGameSize);
 
 		sRenderGame(
 			theRendered,
