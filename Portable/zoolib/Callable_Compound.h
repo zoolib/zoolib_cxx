@@ -35,11 +35,11 @@ namespace ZooLib {
 
 template <class R0, class P0, class R1>
 class Callable_Apply_0
-:	public Callable<R0(void)>
+:	public Callable<R0()>
 	{
 public:
 	Callable_Apply_0(
-		const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1(void)> >& iCallable)
+		const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1()> >& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -54,12 +54,12 @@ public:
 
 private:
 	const ZRef<Callable<R0(P0)> > fApply;
-	const ZRef<Callable<R1(void)> > fCallable;
+	const ZRef<Callable<R1()> > fCallable;
 	};
 
 template <class R0, class P0, class R1>
 ZRef<Callable<R0()> >
-sCallable_Apply(const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1(void)> >& iCallable)
+sCallable_Apply(const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1()> >& iCallable)
 	{ return new Callable_Apply_0<R0,P0,R1>(iApply, iCallable); }
 
 // =================================================================================================
@@ -99,10 +99,10 @@ sCallable_Apply(const ZRef<Callable<R0(P0)> >& iApply, const ZRef<Callable<R1(P1
 
 template <class R0, class R1>
 class Callable_Seq
-:	public Callable<R1(void)>
+:	public Callable<R1()>
 	{
 public:
-	Callable_Seq(const ZRef<Callable<R0(void)> >& i0, const ZRef<Callable<R1(void)> >& i1)
+	Callable_Seq(const ZRef<Callable<R0()> >& i0, const ZRef<Callable<R1()> >& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
@@ -115,13 +115,13 @@ public:
 		}
 
 private:
-	const ZRef<Callable<R0(void)> > f0;
-	const ZRef<Callable<R1(void)> > f1;
+	const ZRef<Callable<R0()> > f0;
+	const ZRef<Callable<R1()> > f1;
 	};
 
 template <class R0, class R1>
-ZRef<Callable<R1(void)> >
-sCallable_Seq(const ZRef<Callable<R0(void)> >& i0, const ZRef<Callable<R1(void)> >& i1)
+ZRef<Callable<R1()> >
+sCallable_Seq(const ZRef<Callable<R0()> >& i0, const ZRef<Callable<R1()> >& i1)
 	{ return new Callable_Seq<R0,R1>(i0, i1); }
 
 // =================================================================================================
@@ -132,9 +132,9 @@ class Callable_For
 :	public Callable_Void
 	{
 public:
-	Callable_For(const ZRef<Callable<R_Init(void)> >& iInit,
+	Callable_For(const ZRef<Callable<R_Init()> >& iInit,
 		const ZRef<Callable_Bool>& iCondition,
-		const ZRef<Callable<R_Inc(void)> >& iInc)
+		const ZRef<Callable<R_Inc()> >& iInc)
 	:	fInit(iInit)
 	,	fCondition(iCondition)
 	,	fInc(iInc)
@@ -149,15 +149,15 @@ public:
 		}
 
 private:
-	const ZRef<Callable<R_Init(void)> > fInit;
+	const ZRef<Callable<R_Init()> > fInit;
 	const ZRef<Callable_Bool>& fCondition;
-	const ZRef<Callable<R_Inc(void)> >& fInc;
+	const ZRef<Callable<R_Inc()> >& fInc;
 	};
 
 template <class R_Init, class R_Inc>
-ZRef<Callable_Void> sCallable_For(const ZRef<Callable<R_Init(void)> >& iInit,
+ZRef<Callable_Void> sCallable_For(const ZRef<Callable<R_Init()> >& iInit,
 	const ZRef<Callable_Bool>& iCondition,
-	const ZRef<Callable<R_Inc(void)> >& iInc)
+	const ZRef<Callable<R_Inc()> >& iInc)
 	{ return new Callable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
 
 // =================================================================================================
@@ -165,11 +165,11 @@ ZRef<Callable_Void> sCallable_For(const ZRef<Callable<R_Init(void)> >& iInit,
 
 template <class R>
 class Callable_If
-:	public Callable<R(void)>
+:	public Callable<R()>
 	{
 public:
 	Callable_If(const ZRef<Callable_Bool>& iCondition,
-		const ZRef<Callable<R(void)> >& i0, const ZRef<Callable<R(void)> >& i1)
+		const ZRef<Callable<R()> >& i0, const ZRef<Callable<R()> >& i1)
 	:	fCondition(iCondition)
 	,	f0(i0)
 	,	f1(i1)
@@ -190,13 +190,13 @@ public:
 
 private:
 	const ZRef<Callable_Bool> fCondition;
-	const ZRef<Callable<R(void)> > f0;
-	const ZRef<Callable<R(void)> > f1;
+	const ZRef<Callable<R()> > f0;
+	const ZRef<Callable<R()> > f1;
 	};
 
 template <class R>
-ZRef<Callable<R(void)> > sCallable_If(const ZRef<Callable_Bool>& iCondition,
-	const ZRef<Callable<R(void)> >& i0, const ZRef<Callable<R(void)> >& i1)
+ZRef<Callable<R()> > sCallable_If(const ZRef<Callable_Bool>& iCondition,
+	const ZRef<Callable<R()> >& i0, const ZRef<Callable<R()> >& i1)
 	{ return new Callable_If<R>(iCondition, i0, i1); }
 
 // =================================================================================================
@@ -207,7 +207,7 @@ class Callable_Repeat
 :	public Callable_Void
 	{
 public:
-	Callable_Repeat(size_t iCount, const ZRef<Callable<R(void)> >& iCallable)
+	Callable_Repeat(size_t iCount, const ZRef<Callable<R()> >& iCallable)
 	:	fCount(iCount)
 	,	fCallable(iCallable)
 		{}
@@ -226,11 +226,11 @@ public:
 
 private:
 	const size_t fCount;
-	const ZRef<Callable<R(void)> > fCallable;
+	const ZRef<Callable<R()> > fCallable;
 	};
 
 template <class R>
-ZRef<Callable_Void> sCallable_Repeat(size_t iCount, const ZRef<Callable<R(void)> >& iCallable)
+ZRef<Callable_Void> sCallable_Repeat(size_t iCount, const ZRef<Callable<R()> >& iCallable)
 	{ return new Callable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
@@ -242,7 +242,7 @@ class Callable_While
 	{
 public:
 	Callable_While(
-		const ZRef<Callable_Bool>& iCondition, const ZRef<Callable<R(void)> >& iCallable)
+		const ZRef<Callable_Bool>& iCondition, const ZRef<Callable<R()> >& iCallable)
 	:	fCondition(iCondition)
 	,	fCallable(iCallable)
 		{}
@@ -257,12 +257,12 @@ public:
 
 private:
 	const ZRef<Callable_Bool> fCondition;
-	const ZRef<Callable<R(void)> > fCallable;
+	const ZRef<Callable<R()> > fCallable;
 	};
 
 template <class R>
 ZRef<Callable_Void> sCallable_While(
-	const ZRef<Callable_Bool>& iCondition, const ZRef<Callable<R(void)> >& iCallable)
+	const ZRef<Callable_Bool>& iCondition, const ZRef<Callable<R()> >& iCallable)
 	{ return new Callable_While<R>(iCondition, iCallable); }
 
 inline

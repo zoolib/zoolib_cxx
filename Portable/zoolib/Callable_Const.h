@@ -31,7 +31,7 @@ namespace ZooLib {
 
 template <class R>
 class Callable_Const
-:	public Callable<R(void)>
+:	public Callable<R()>
 	{
 public:
 	Callable_Const(typename CallableUtil::VT<R>::Param iR)
@@ -50,7 +50,7 @@ private:
 #pragma mark - sCallable_Const
 
 template <class R>
-ZRef<Callable<R(void)> > sCallable_Const(R iR)
+ZRef<Callable<R()> > sCallable_Const(R iR)
 	{ return new Callable_Const<R>(iR); }
 
 } // namespace ZooLib

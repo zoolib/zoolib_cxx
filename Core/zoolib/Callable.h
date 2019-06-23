@@ -49,12 +49,12 @@ template <class Signature_p> class Callable;
 #pragma mark - Callable (specialization for 0 params)
 
 template <class R_p>
-class Callable<R_p(void)>
+class Callable<R_p()>
 :	public Counted
 	{
 public:
 	typedef R_p R;
-	typedef R (Signature)(void);
+	typedef R (Signature)();
 
 	virtual QRet<R> QCall() = 0;
 
@@ -69,12 +69,12 @@ public:
 #pragma mark - Callable (specialization for 0 params, ZP return)
 
 template <class T>
-class Callable<ZP<T>(void)>
+class Callable<ZP<T>()>
 :	public Counted
 	{
 public:
 	typedef ZP<T> R;
-	typedef ZP<T>(Signature)(void);
+	typedef ZP<T>(Signature)();
 
 	virtual ZP<T> QCall() = 0;
 
@@ -86,12 +86,12 @@ public:
 #pragma mark - Callable (specialization for 0 params, void return)
 
 template <>
-class Callable<void(void)>
+class Callable<void()>
 :	public Counted
 	{
 public:
 	typedef void R;
-	typedef void(Signature)(void);
+	typedef void(Signature)();
 
 	virtual bool QCall() = 0;
 
@@ -276,15 +276,15 @@ ZRef<Callable<typename Callable_p::Signature> > sCallable(Callable_p iCandidate)
 #pragma mark - sCallVoid
 
 template <class T>
-void sCallVoid(ZRef<Callable<T(void)> > iCallable)
+void sCallVoid(ZRef<Callable<T()> > iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
 #pragma mark - Useful typedefs
 
-typedef Callable<void(void)> Callable_Void;
+typedef Callable<void()> Callable_Void;
 
-typedef Callable<bool(void)> Callable_Bool;
+typedef Callable<bool()> Callable_Bool;
 
 // =================================================================================================
 #pragma mark - Callable_Null

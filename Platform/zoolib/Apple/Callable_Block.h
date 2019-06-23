@@ -40,8 +40,8 @@ template <class Signature> class Callable_Block;
 // This is the only variant usable before Clang 2.0.
 
 template <>
-class Callable_Block<void(void)>
-:	public Callable<void(void)>
+class Callable_Block<void()>
+:	public Callable<void()>
 	{
 public:
 	typedef void (^BlockPtr_t)();
@@ -70,8 +70,8 @@ private:
 #pragma mark - Callable (specialization for 0 params)
 
 template <class R>
-class Callable_Block<R(void)>
-:	public Callable<R(void)>
+class Callable_Block<R()>
+:	public Callable<R()>
 	{
 public:
 	typedef R (^BlockPtr_t)();
@@ -140,11 +140,11 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class R>
-ZRef<Callable<R(void)> >
+ZRef<Callable<R()> >
 sCallable(R(^iBlockPtr)())
 	{
 	if (iBlockPtr)
-		return new Callable_Block<R(void)>(iBlockPtr);
+		return new Callable_Block<R()>(iBlockPtr);
 	return null;
 	}
 

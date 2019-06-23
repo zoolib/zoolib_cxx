@@ -131,12 +131,12 @@ protected:
 #pragma mark - Delegate::Wrapper_T (specialized for 0 params)
 
 template <class R>
-class Delegate::Wrapper_T<R(void)>
+class Delegate::Wrapper_T<R()>
 :	public Delegate::Wrapper
 	{
 	friend class Delegate;
 
-	typedef Callable<R(void)> Callable_t;
+	typedef Callable<R()> Callable_t;
 
 	Wrapper_T(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)
@@ -157,12 +157,12 @@ class Delegate::Wrapper_T<R(void)>
 #pragma mark - Delegate::Wrapper_T (specialized for 0 params, void return)
 
 template <>
-class Delegate::Wrapper_T<void(void)>
+class Delegate::Wrapper_T<void()>
 :	public Delegate::Wrapper
 	{
 	friend class Delegate;
 
-	typedef Callable<void(void)> Callable_t;
+	typedef Callable<void()> Callable_t;
 
 	Wrapper_T(const ZRef<Callable_t>& iCallable)
 	:	fCallable(iCallable)

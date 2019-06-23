@@ -66,8 +66,8 @@ template <class Class_p, class Object_p, class Signature> class Callable_PMF;
 #pragma mark - Callable (specialization for 0 params)
 
 template <class Class_p, class Object_p, class R>
-class Callable_PMF<Class_p,Object_p,R(void)>
-:	public Callable<R(void)>
+class Callable_PMF<Class_p,Object_p,R()>
+:	public Callable<R()>
 	{
 public:
 	typedef R (Class_p::*Method_t)();
@@ -95,8 +95,8 @@ private:
 #pragma mark - Callable (specialization for 0 params, void return)
 
 template <class Class_p, class Object_p>
-class Callable_PMF<Class_p,Object_p,void(void)>
-:	public Callable<void(void)>
+class Callable_PMF<Class_p,Object_p,void()>
+:	public Callable<void()>
 	{
 public:
 	typedef void (Class_p::*Method_t)();
@@ -207,11 +207,11 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class Class_p, class Object_p, class R>
-ZRef<Callable<R(void)> >
+ZRef<Callable<R()> >
 sCallable(
 	const Object_p& iObject,
 	R (Class_p::*iMethod)())
-	{ return new Callable_PMF<Class_p,Object_p,R(void)>(iObject, iMethod); }
+	{ return new Callable_PMF<Class_p,Object_p,R()>(iObject, iMethod); }
 
 #define ZMACRO_Callable_sCallable(X) \
 \

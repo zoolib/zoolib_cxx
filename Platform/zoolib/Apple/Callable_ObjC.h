@@ -125,8 +125,8 @@ template <class Obj, class Signature> class Callable_ObjC;
 
 template <class Obj,
 	class R>
-class Callable_ObjC<Obj,R(void)>
-:	public Callable<R(void)>
+class Callable_ObjC<Obj,R()>
+:	public Callable<R()>
 	{
 public:
 	typedef R (*FunctionPtr_t)(id,SEL);
@@ -146,8 +146,8 @@ private:
 #pragma mark - Callable (specialization for 0 params, void return)
 
 template <class Obj>
-class Callable_ObjC<Obj,void(void)>
-:	public Callable<void(void)>
+class Callable_ObjC<Obj,void()>
+:	public Callable<void()>
 	{
 public:
 	typedef void (*FunctionPtr_t)(id,SEL);

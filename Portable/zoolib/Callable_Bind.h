@@ -44,7 +44,7 @@ struct STReturn;
 #pragma mark - Signature Traits (specialized for 0 params)
 
 template <class R_p>
-struct ST_T<R_p(void)>
+struct ST_T<R_p()>
 	{
 	typedef R_p R;
 
@@ -84,7 +84,7 @@ struct ST_T<R_p(void)>
 	};
 
 template <class R, class Ignore>
-struct STReturn<R,Ignore(void)>
+struct STReturn<R,Ignore()>
 	{
 	typedef R (Signature)();
 	};

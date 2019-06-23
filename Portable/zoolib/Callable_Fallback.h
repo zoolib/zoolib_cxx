@@ -35,11 +35,11 @@ template <class Signature> class Callable_Fallback;
 #pragma mark - Callable_Fallback (specialization for 0 params)
 
 template <class R>
-class Callable_Fallback<R(void)>
-:	public Callable<R(void)>
+class Callable_Fallback<R()>
+:	public Callable<R()>
 	{
 public:
-	typedef Callable<R(void)> Callable;
+	typedef Callable<R()> Callable;
 
 	Callable_Fallback(const ZRef<Callable>& iCallable0, const ZRef<Callable>& iCallable1)
 	:	fCallable0(iCallable0)

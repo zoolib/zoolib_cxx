@@ -36,11 +36,11 @@ template <class Signature> class Callable_Indirect;
 #pragma mark - Callable_Indirect (specialization for 0 params)
 
 template <class R>
-class Callable_Indirect<R(void)>
-:	public Callable<R(void)>
+class Callable_Indirect<R()>
+:	public Callable<R()>
 	{
 public:
-	typedef Callable<R(void)> Callable_t;
+	typedef Callable<R()> Callable_t;
 
 	Callable_Indirect(const ZRef<Callable_t>& iCallable)
 	:	fSafeCallable(iCallable)

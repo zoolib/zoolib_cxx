@@ -36,12 +36,12 @@ template <class Signature> class Callable_Set;
 #pragma mark - Callable_Set (specialization for 0 params)
 
 template <>
-class Callable_Set<void(void)>
-:	public Callable<void(void)>
-,	public SafeSet<ZRef<Callable<void(void)> > >
+class Callable_Set<void()>
+:	public Callable<void()>
+,	public SafeSet<ZRef<Callable<void()> > >
 	{
 public:
-	typedef Callable<void(void)> Callable_t;
+	typedef Callable<void()> Callable_t;
 
 // From Callable
 	bool QCall()

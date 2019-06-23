@@ -35,8 +35,8 @@ template <class Signature> class Callable_Function;
 #pragma mark - Callable (specialization for 0 params)
 
 template <class R>
-class Callable_Function<R(void)>
-:	public Callable<R(void)>
+class Callable_Function<R()>
+:	public Callable<R()>
 	{
 public:
 	typedef R (*FunctionPtr_t)();
@@ -57,8 +57,8 @@ private:
 #pragma mark - Callable (specialization for 0 params, void return)
 
 template <>
-class Callable_Function<void(void)>
-:	public Callable<void(void)>
+class Callable_Function<void()>
+:	public Callable<void()>
 	{
 public:
 	typedef void (*FunctionPtr_t)();
@@ -145,12 +145,12 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class R>
-ZRef<Callable<R(void)> >
+ZRef<Callable<R()> >
 sCallable(R (*iFunctionPtr)())
 	{
 	if (not iFunctionPtr)
 		return null;
-	return new Callable_Function<R(void)>(iFunctionPtr);
+	return new Callable_Function<R()>(iFunctionPtr);
 	}
 
 #define ZMACRO_Callable_sCallable(X) \
