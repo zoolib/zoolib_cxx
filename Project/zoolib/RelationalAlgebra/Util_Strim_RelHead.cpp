@@ -104,7 +104,7 @@ ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU)
 	return result;
 	}
 
-ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(const ChanRU_UTF& iChanRU)
+ZQ<std::pair<ColName,ColName>> sQFromStrim_Rename(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 

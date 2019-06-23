@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark - Visitor_Expr_Bool_ValPred_Do_GetNames
 
 class Visitor_Expr_Bool_ValPred_Do_GetNames
-:	public virtual Visitor_Do_T<std::set<std::string> >
+:	public virtual Visitor_Do_T<std::set<std::string>>
 ,	public virtual Visitor_Expr_Bool_ValPred
 ,	public virtual Visitor_Expr_Op1_T<Expr_Bool>
 ,	public virtual Visitor_Expr_Op2_T<Expr_Bool>
@@ -43,10 +43,10 @@ public:
 	virtual void Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr);
 
 // From Visitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool> >& iExpr);
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool>>& iExpr);
 
 // From Visitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool> >& iExpr);
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool>>& iExpr);
 	};
 
 std::set<std::string> sGetNames(const ZP<Expr_Bool>& iExpr);

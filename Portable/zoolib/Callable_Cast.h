@@ -36,7 +36,7 @@ class Callable_Cast
 :	public Callable<R0(A_p...)>
 	{
 public:
-	Callable_Cast(const ZP<Callable<R1(A_p...)> >& iCallable)
+	Callable_Cast(const ZP<Callable<R1(A_p...)>>& iCallable)
 	:	fCallable(iCallable)
 		{}
 
@@ -49,7 +49,7 @@ public:
 		}
 
 private:
-	const ZP<Callable<R1(A_p...)> > fCallable;
+	const ZP<Callable<R1(A_p...)>> fCallable;
 	};
 
 template <class R0, class R1, typename... A_p>

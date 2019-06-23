@@ -374,12 +374,12 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<InPlace_T<S> >(&fDistinguisher);
+			sCtor_T<InPlace_T<S>>(&fDistinguisher);
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>());
+			sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>());
 			}
 		}
 
@@ -387,7 +387,7 @@ private:
 	void pCtor_Counted_T()
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>());
+		sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>());
 		}
 
 // -----
@@ -406,13 +406,13 @@ private:
 				}
 			else
 				{
-				sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0);
+				sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0);
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
+			sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>(iP0));
 			}
 		}
 
@@ -420,7 +420,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0));
+		sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>(iP0));
 		}
 
 // -----
@@ -430,12 +430,12 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0, iP1);
+			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0, iP1);
 			}
 		else
 			{
 			fDistinguisher = 0;
-			sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+			sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>(iP0, iP1));
 			}
 		}
 
@@ -443,7 +443,7 @@ private:
 	void pCtor_Counted_T(const P0& iP0, const P1& iP1)
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZP<Reffed> >(&fPayload, new Reffed_T<S>(iP0, iP1));
+		sCtor_T<ZP<Reffed>>(&fPayload, new Reffed_T<S>(iP0, iP1));
 		}
 
 // -----------------
@@ -462,14 +462,14 @@ private:
 				}
 			else
 				{
-				return sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0)->fValue;
+				return sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0)->fValue;
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
 			Reffed_T<S>* theReffed = new Reffed_T<S>(iP0);
-			sCtor_T<ZP<Reffed> >(&fPayload, theReffed);
+			sCtor_T<ZP<Reffed>>(&fPayload, theReffed);
 			return theReffed->fValue;
 			}
 		}
@@ -488,14 +488,14 @@ private:
 				}
 			else
 				{
-				return sCtor_T<InPlace_T<S> >(&fDistinguisher)->fValue;
+				return sCtor_T<InPlace_T<S>>(&fDistinguisher)->fValue;
 				}
 			}
 		else
 			{
 			fDistinguisher = 0;
 			Reffed_T<S>* theReffed = new Reffed_T<S>;
-			sCtor_T<ZP<Reffed> >(&fPayload, theReffed);
+			sCtor_T<ZP<Reffed>>(&fPayload, theReffed);
 			return theReffed->fValue;
 			}
 		}

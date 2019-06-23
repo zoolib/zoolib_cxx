@@ -275,7 +275,7 @@ public:
 	virtual void Visit_Expr_Rel_Search(const ZP<QE::Expr_Rel_Search>& iExpr)
 		{
 		// Get rename and optional into a ConcreteHead, and if needed a stack of Renames.
-		vector<pair<string8,string8> > finalRename;
+		vector<pair<string8,string8>> finalRename;
 		ConcreteHead theConcreteHead;
 		foreacha (entry, iExpr->GetRename())
 			{

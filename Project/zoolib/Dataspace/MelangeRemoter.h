@@ -187,7 +187,7 @@ private:
 	int64 fChangeCount;
 
 	int64 fNextRefcon;
-	std::set<ZP<Registration> > fPending_Registrations;
+	std::set<ZP<Registration>> fPending_Registrations;
 	std::set<int64> fPending_Unregistrations;
 	std::set<Daton> fPending_Asserts;
 	std::set<Daton> fPending_Retracts;

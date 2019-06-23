@@ -160,7 +160,7 @@ public:
 	};
 
 extern ZP<LogMeister> sLogMeister;
-//extern Safe<ZP<LogMeister> > sLogMeister;
+//extern Safe<ZP<LogMeister>> sLogMeister;
 
 void sLogIt(EPriority iPriority, const std::string& iName,
 	size_t iDepth, const std::string& iMessage);

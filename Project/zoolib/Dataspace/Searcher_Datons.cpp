@@ -256,7 +256,7 @@ public:
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Thing::const_iterator fCurrent;
-	std::set<std::vector<Val_Any> > fPriors;
+	std::set<std::vector<Val_Any>> fPriors;
 	};
 
 // =================================================================================================
@@ -346,7 +346,7 @@ public:
 // =================================================================================================
 #pragma mark - Searcher_Datons::PSearch
 
-typedef ZQ<pair<Val_Any,bool> > Bound_t; // Value, inclusive
+typedef ZQ<pair<Val_Any,bool>> Bound_t; // Value, inclusive
 
 class Searcher_Datons::DLink_PSearch_InIndex
 :	public DListLink<PSearch, DLink_PSearch_InIndex, kDebug>

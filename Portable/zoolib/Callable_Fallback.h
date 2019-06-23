@@ -111,8 +111,8 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable_Fallback
 
 template <class Sig>
-ZP<Callable<Sig> > sCallable_Fallback(
-	const ZP<Callable<Sig> >& iCallable0, const ZP<Callable<Sig> >& iCallable1)
+ZP<Callable<Sig>> sCallable_Fallback(
+	const ZP<Callable<Sig>>& iCallable0, const ZP<Callable<Sig>>& iCallable1)
 	{
 	if (iCallable0)
 		{

@@ -370,10 +370,10 @@ bool operator<(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
 	}
 
 template <class T, bool Sense>
-struct RelopsTraits_HasEQ<ZQ<T,Sense> > : public RelopsTraits_Has {};
+struct RelopsTraits_HasEQ<ZQ<T,Sense>> : public RelopsTraits_Has {};
 
 template <class T, bool Sense>
-struct RelopsTraits_HasLT<ZQ<T,Sense> > : public RelopsTraits_Has {};
+struct RelopsTraits_HasLT<ZQ<T,Sense>> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark - ZQ (specialized for void)

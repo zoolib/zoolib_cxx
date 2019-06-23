@@ -39,7 +39,7 @@ template <class T> class SafeSetIterConst;
 
 template <class T>
 class DLink_SafeSetIterConst
-:	public DListLink<SafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+:	public DListLink<SafeSetIterConst<T>, DLink_SafeSetIterConst<T>>
 	{};
 
 // =================================================================================================
@@ -57,7 +57,7 @@ private:
 			{}
 
 		T fT;
-		DListHead<DLink_SafeSetIterConst<T> > fIters;
+		DListHead<DLink_SafeSetIterConst<T>> fIters;
 		};
 
 	typedef std::list<Entry> EntryList;
@@ -94,7 +94,7 @@ private:
 		for (typename EntryList::iterator listIter = fList.begin();
 			listIter != fList.end(); ++listIter)
 			{
-			for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+			for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T>>
 				ii = listIter->fIters; ii; ii.Advance())
 				{
 				SafeSetIterConst<T>* theIter = ii.Current();
@@ -158,7 +158,7 @@ private:
 		for (typename EntryList::iterator listIter = fList.begin();
 			listIter != fList.end(); ++listIter)
 			{
-			for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+			for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T>>
 				ii = listIter->fIters; ii; ii.Advance())
 				{
 				SafeSetIterConst<T>* theIter = ii.Current();
@@ -266,11 +266,11 @@ public:
 	bool WaitUntil(double iDeadline, size_t iCount)
 		{ return fRep->pWaitUntil(iDeadline, iCount); }
 
-	ZP<SafeSetRep<T> > GetRep() const
+	ZP<SafeSetRep<T>> GetRep() const
 		{ return fRep; }
 
 private:
-	ZP<SafeSetRep<T> > fRep;
+	ZP<SafeSetRep<T>> fRep;
 	};
 
 // =================================================================================================
@@ -285,19 +285,19 @@ public:
 
 	SafeSetIterConst(const SafeSet<T>& iSafeSet)
 		{
-		if (ZP<SafeSetRep<T> > theRep = iSafeSet.GetRep())
+		if (ZP<SafeSetRep<T>> theRep = iSafeSet.GetRep())
 			theRep->pInit(theRep, *this);
 		}
 
 	SafeSetIterConst(const SafeSetIterConst& iOther)
 		{
-		if (ZP<SafeSetRep<T> > theRep = iOther.fRep)
+		if (ZP<SafeSetRep<T>> theRep = iOther.fRep)
 			theRep->pInitFrom(theRep, *this, iOther);
 		}
 
 	~SafeSetIterConst()
 		{
-		if (ZP<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T>> theRep = fRep)
 			theRep->pDestroy(*this);
 		}
 
@@ -305,10 +305,10 @@ public:
 		{
 		if (this != &iOther)
 			{
-			if (ZP<SafeSetRep<T> > theRep = fRep)
+			if (ZP<SafeSetRep<T>> theRep = fRep)
 				theRep->pDestroy(*this);
 
-			if (ZP<SafeSetRep<T> > theRep = iOther.fRep)
+			if (ZP<SafeSetRep<T>> theRep = iOther.fRep)
 				theRep->pInitFrom(theRep, *this, iOther);
 			}
 		return *this;
@@ -316,23 +316,23 @@ public:
 
 	SafeSetIterConst& operator=(const SafeSet<T>& iSafeSet)
 		{
-		if (ZP<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T>> theRep = fRep)
 			theRep->pDestroy(*this);
 
-		if (ZP<SafeSetRep<T> > theRep = iSafeSet.GetRep())
+		if (ZP<SafeSetRep<T>> theRep = iSafeSet.GetRep())
 			theRep->pInit(theRep, *this);
 		}
 
 	bool QReadInc(T& oValue)
 		{
-		if (ZP<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T>> theRep = fRep)
 			return theRep->pReadInc(*this, oValue);
 		return false;
 		}
 
 	ZQ<T> QReadInc()
 		{
-		if (ZP<SafeSetRep<T> > theRep = fRep)
+		if (ZP<SafeSetRep<T>> theRep = fRep)
 			return theRep->pReadInc(*this);
 		return null;
 		}
@@ -346,7 +346,7 @@ public:
 		}
 
 protected:
-	WP<SafeSetRep<T> > fRep;
+	WP<SafeSetRep<T>> fRep;
 
 private:
 	typename SafeSetRep<T>::EntryList::iterator fNextEntry;
@@ -379,14 +379,14 @@ public:
 
 	bool QReadErase(T& oValue)
 		{
-		if (ZP<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
+		if (ZP<SafeSetRep<T>> theRep = SafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this, oValue);
 		return false;
 		}
 
 	ZQ<T> QReadErase()
 		{
-		if (ZP<SafeSetRep<T> > theRep = SafeSetIterConst<T>::fRep)
+		if (ZP<SafeSetRep<T>> theRep = SafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this);
 		return null;
 		}
@@ -465,7 +465,7 @@ ZQ<T> SafeSetRep<T>::pReadErase(SafeSetIter<T>& ioIter)
 
 		result = ioIter.fNextEntry->fT;
 
-		for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+		for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T>>
 			ii = ioIter.fNextEntry->fIters; ii; ii.Advance())
 			{
 			SafeSetIterConst<T>* theIter = ii.Current();
@@ -498,7 +498,7 @@ bool SafeSetRep<T>::pErase(const T& iT)
 		return false;
 
 	typename EntryList::iterator& listIter = mapIter->second;
-	for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+	for (DListEraser<SafeSetIterConst<T>, DLink_SafeSetIterConst<T>>
 		ii = listIter->fIters; ii; ii.Advance())
 		{
 		SafeSetIterConst<T>* theIter = ii.Current();

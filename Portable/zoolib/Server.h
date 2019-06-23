@@ -37,7 +37,7 @@ class Server
 	{
 public:
 	typedef ZP<Roster::Entry> ZRef_Roster_Entry; // CW7
-	typedef Callable<void(ZRef_Roster_Entry,ZP<ChannerRW<byte> >)> Callable_Connection;
+	typedef Callable<void(ZRef_Roster_Entry,ZP<ChannerRW<byte>>)> Callable_Connection;
 
 	Server();
 	virtual ~Server();

@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 template <>
-int sCompare_T<ZP<RelationalAlgebra::Expr_Rel> >(
+int sCompare_T<ZP<RelationalAlgebra::Expr_Rel>>(
 	const ZP<RelationalAlgebra::Expr_Rel>& iL,
 	const ZP<RelationalAlgebra::Expr_Rel>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
@@ -74,7 +74,7 @@ static void spLog(const string8& iMessage)
 const ZP<Callable_SemanticError> sCallable_SemanticError_Ignore;
 const ZP<Callable_SemanticError> sCallable_SemanticError_Throw = sCallable(&spThrow);
 
-Safe<ZP<Callable_SemanticError> > sCallable_SemanticError_Default = sCallable(&spLog);
+Safe<ZP<Callable_SemanticError>> sCallable_SemanticError_Default = sCallable(&spLog);
 
 void sSemanticError(const string8& iMessage)
 	{

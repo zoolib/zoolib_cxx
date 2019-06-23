@@ -69,7 +69,7 @@ public:
 	};
 
 template <class P0_p>
-class RelopsTraits_HasLT<Multi1<P0_p> > : public RelopsTraits_Has {};
+class RelopsTraits_HasLT<Multi1<P0_p>> : public RelopsTraits_Has {};
 
 template <class P0_p>
 Multi1<P0_p> sMulti(typename CallableUtil::VT<P0_p>::P i0)
@@ -126,7 +126,7 @@ public: \
 	}; \
 \
 template <ZMACRO_Callable_Class_P##X_1> \
-class RelopsTraits_HasLT<Multi##X<ZMACRO_Callable_P##X_1> > : public RelopsTraits_Has {}; \
+class RelopsTraits_HasLT<Multi##X<ZMACRO_Callable_P##X_1>> : public RelopsTraits_Has {}; \
 \
 template <ZMACRO_Callable_Class_P##X_1> \
 Multi##X<ZMACRO_Callable_P##X_1> sMulti(ZMACRO_Callable_VT##X_1) \

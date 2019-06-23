@@ -53,7 +53,7 @@ class Tween_Filter_Fun
 :	public Tween<Val>
 	{
 public:
-	Tween_Filter_Fun(const ZP<Tween<Param> >& iTween)
+	Tween_Filter_Fun(const ZP<Tween<Param>>& iTween)
 	:	fTween(iTween)
 		{}
 
@@ -68,7 +68,7 @@ public:
 		{ return fTween->Weight(); }
 
 private:
-	const ZP<Tween<Param> > fTween;
+	const ZP<Tween<Param>> fTween;
 	};
 
 // =================================================================================================
@@ -79,7 +79,7 @@ class Tween_Filter_Coerce
 :	public Tween<Val>
 	{
 public:
-	Tween_Filter_Coerce(const ZP<Tween<Param> >& iTween)
+	Tween_Filter_Coerce(const ZP<Tween<Param>>& iTween)
 	:	fTween(iTween)
 		{}
 
@@ -94,11 +94,11 @@ public:
 		{ return fTween->Weight(); }
 
 private:
-	const ZP<Tween<Param> > fTween;
+	const ZP<Tween<Param>> fTween;
 	};
 
 template <class Val, class Param>
-ZP<Tween<Val> > sTween_Filter_Coerce(const ZP<Tween<Param> >& iTween)
+ZP<Tween<Val>> sTween_Filter_Coerce(const ZP<Tween<Param>>& iTween)
 	{
 	if (iTween)
 		return new Tween_Filter_Coerce<Val,Param>(iTween);
@@ -113,7 +113,7 @@ Val spTweenFun_OneMinus(Val iVal)
 	{ return 1 - iVal; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_OneMinus(const ZP<Tween<Val> >& iTween)
+ZP<Tween<Val>> sTween_OneMinus(const ZP<Tween<Val>>& iTween)
 	{
 	if (iTween)
 		return new Tween_Filter_Fun<Val,Val,spTweenFun_OneMinus>(iTween);
@@ -128,15 +128,15 @@ Val spTweenFun_Linear(double iPlace)
 	{ return iPlace; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Linear()
+ZP<Tween<Val>> sTween_Linear()
 	{ return new Tween_Fun<Val,spTweenFun_Linear>; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal)
+ZP<Tween<Val>> sTween_Linear(Val iZeroVal, Val iOneVal)
 	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_Linear<Val>()); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Linear(Val iZeroVal, Val iOneVal, double iWeight)
+ZP<Tween<Val>> sTween_Linear(Val iZeroVal, Val iOneVal, double iWeight)
 	{ return sTween_ValRange(iZeroVal, iOneVal, sTween_WeightScale(iWeight, sTween_Linear<Val>())); }
 
 // =================================================================================================
@@ -147,7 +147,7 @@ Val spTweenFun_Triangle(double iPlace)
 	{ return 1 - fabs(iPlace * 2 - 1); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Triangle()
+ZP<Tween<Val>> sTween_Triangle()
 	{ return new Tween_Fun<Val,spTweenFun_Triangle>; }
 
 // =================================================================================================
@@ -158,7 +158,7 @@ Val spTweenFun_Square(double iPlace)
 	{ return iPlace < 0.5 ? 0.0 : 1.0; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Square()
+ZP<Tween<Val>> sTween_Square()
 	{ return new Tween_Fun<Val,spTweenFun_Square>; }
 
 // =================================================================================================
@@ -169,7 +169,7 @@ Val spTweenFun_Sin(double iPlace)
 	{ return sin(2 * M_PI * iPlace); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Sin()
+ZP<Tween<Val>> sTween_Sin()
 	{ return new Tween_Fun<Val,spTweenFun_Sin>; }
 
 // =================================================================================================
@@ -180,7 +180,7 @@ Val spTweenFun_Cos(double iPlace)
 	{ return cos(2 * M_PI * iPlace); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Cos()
+ZP<Tween<Val>> sTween_Cos()
 	{ return new Tween_Fun<Val,spTweenFun_Cos>; }
 
 // =================================================================================================
@@ -193,7 +193,7 @@ Val spTweenFun_Erf(double iPlace)
 	{ return erf(2 * iPlace); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Erf()
+ZP<Tween<Val>> sTween_Erf()
 	{ return new Tween_Fun<Val,spTweenFun_Erf>; }
 
 // =================================================================================================
@@ -204,7 +204,7 @@ Val spTweenFun_Sqrt(double iPlace)
 	{ return iPlace < 0.0 ? 0.0 : iPlace > 1.0 ? 1.0 : sqrt(iPlace); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_Sqrt()
+ZP<Tween<Val>> sTween_Sqrt()
 	{ return new Tween_Fun<Val,spTweenFun_Sqrt>; }
 
 // =================================================================================================
@@ -215,7 +215,7 @@ Val spTweenFun_QuadIn(double iPlace)
 	{ return iPlace * iPlace; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuadIn()
+ZP<Tween<Val>> sTween_QuadIn()
 	{ return new Tween_Fun<Val,spTweenFun_QuadIn>; }
 
 // =================================================================================================
@@ -226,7 +226,7 @@ Val spTweenFun_QuadOut(double iPlace)
 	{ return -iPlace * (iPlace - 2); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuadOut()
+ZP<Tween<Val>> sTween_QuadOut()
 	{ return new Tween_Fun<Val,spTweenFun_QuadOut>; }
 
 // =================================================================================================
@@ -237,7 +237,7 @@ Val spTweenFun_CubicIn(double iPlace)
 	{ return iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_CubicIn()
+ZP<Tween<Val>> sTween_CubicIn()
 	{ return new Tween_Fun<Val,spTweenFun_CubicIn>; }
 
 // =================================================================================================
@@ -251,7 +251,7 @@ Val spTweenFun_CubicOut(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_CubicOut()
+ZP<Tween<Val>> sTween_CubicOut()
 	{ return new Tween_Fun<Val,spTweenFun_CubicOut>; }
 
 // =================================================================================================
@@ -262,7 +262,7 @@ Val spTweenFun_QuartIn(double iPlace)
 	{ return iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuartIn()
+ZP<Tween<Val>> sTween_QuartIn()
 	{ return new Tween_Fun<Val,spTweenFun_QuartIn>; }
 
 // =================================================================================================
@@ -276,7 +276,7 @@ Val spTweenFun_QuartOut(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuartOut()
+ZP<Tween<Val>> sTween_QuartOut()
 	{ return new Tween_Fun<Val,spTweenFun_QuartOut>; }
 
 // =================================================================================================
@@ -287,7 +287,7 @@ Val spTweenFun_QuintIn(double iPlace)
 	{ return iPlace * iPlace * iPlace * iPlace * iPlace; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuintIn()
+ZP<Tween<Val>> sTween_QuintIn()
 	{ return new Tween_Fun<Val,spTweenFun_QuintIn>; }
 
 // =================================================================================================
@@ -301,7 +301,7 @@ Val spTweenFun_QuintOut(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_QuintOut()
+ZP<Tween<Val>> sTween_QuintOut()
 	{ return new Tween_Fun<Val,spTweenFun_QuintOut>; }
 
 // =================================================================================================
@@ -312,7 +312,7 @@ Val spTweenFun_SinIn(double iPlace)
 	{ return -1 * cos(iPlace * M_PI / 2) + 1; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_SinIn()
+ZP<Tween<Val>> sTween_SinIn()
 	{ return new Tween_Fun<Val,spTweenFun_SinIn>; }
 
 // =================================================================================================
@@ -323,7 +323,7 @@ Val spTweenFun_SinOut(double iPlace)
 	{ return sin(iPlace * M_PI / 2); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_SinOut()
+ZP<Tween<Val>> sTween_SinOut()
 	{ return new Tween_Fun<Val,spTweenFun_SinOut>; }
 
 // =================================================================================================
@@ -334,7 +334,7 @@ Val spTweenFun_ExpoIn(double iPlace)
 	{ return iPlace <= 0 ? 0 : pow(2, 10 * (iPlace - 1)); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_ExpoIn()
+ZP<Tween<Val>> sTween_ExpoIn()
 	{ return new Tween_Fun<Val,spTweenFun_ExpoIn>; }
 
 // =================================================================================================
@@ -345,7 +345,7 @@ Val spTweenFun_ExpoOut(double iPlace)
 	{ return iPlace >= 1 ? 1 : (-pow(2, -10 * iPlace) + 1); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_ExpoOut()
+ZP<Tween<Val>> sTween_ExpoOut()
 	{ return new Tween_Fun<Val,spTweenFun_ExpoOut>; }
 
 // =================================================================================================
@@ -356,7 +356,7 @@ Val spTweenFun_CircIn(double iPlace)
 	{ return -1 * (sqrt(1 - iPlace * iPlace) - 1); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_CircIn()
+ZP<Tween<Val>> sTween_CircIn()
 	{ return new Tween_Fun<Val,spTweenFun_CircIn>; }
 
 // =================================================================================================
@@ -370,7 +370,7 @@ Val spTweenFun_CircOut(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_CircOut()
+ZP<Tween<Val>> sTween_CircOut()
 	{ return new Tween_Fun<Val,spTweenFun_CircOut>; }
 
 // =================================================================================================
@@ -384,7 +384,7 @@ Val spTweenFun_ElasticIn(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_ElasticIn()
+ZP<Tween<Val>> sTween_ElasticIn()
 	{ return new Tween_Fun<Val,spTweenFun_ElasticIn>; }
 
 // =================================================================================================
@@ -395,7 +395,7 @@ Val spTweenFun_ElasticOut(double iPlace)
 	{ return pow(2, -10*iPlace) * sin((iPlace-0.3)*2*M_PI/0.3) + 1; }
 
 template <class Val>
-ZP<Tween<Val> > sTween_ElasticOut()
+ZP<Tween<Val>> sTween_ElasticOut()
 	{ return new Tween_Fun<Val,spTweenFun_ElasticOut>; }
 
 // =================================================================================================
@@ -423,11 +423,11 @@ private:
 	};
 
 template <class Val>
-ZP<Tween<Val> > sTween_BackIn()
+ZP<Tween<Val>> sTween_BackIn()
 	{ return new Tween_Fun_BackIn<Val>(1.70158); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_BackIn(Val iFactor)
+ZP<Tween<Val>> sTween_BackIn(Val iFactor)
 	{ return new Tween_Fun_BackIn<Val>(iFactor); }
 
 // =================================================================================================
@@ -456,11 +456,11 @@ private:
 	};
 
 template <class Val>
-ZP<Tween<Val> > sTween_BackOut()
+ZP<Tween<Val>> sTween_BackOut()
 	{ return new Tween_Fun_BackOut<Val>(1.70158); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_BackOut(Val iFactor)
+ZP<Tween<Val>> sTween_BackOut(Val iFactor)
 	{ return new Tween_Fun_BackOut<Val>(iFactor); }
 
 // =================================================================================================
@@ -491,7 +491,7 @@ Val spTweenFun_BounceIn(double iPlace)
 	}
 
 template <class Val>
-ZP<Tween<Val> > sTween_BounceIn()
+ZP<Tween<Val>> sTween_BounceIn()
 	{ return new Tween_Fun<Val,spTweenFun_BounceIn>; }
 
 // =================================================================================================
@@ -502,7 +502,7 @@ Val spTweenFun_BounceOut(double iPlace)
 	{ return spTweenFun_BounceIn<Val>(1 - iPlace); }
 
 template <class Val>
-ZP<Tween<Val> > sTween_BounceOut()
+ZP<Tween<Val>> sTween_BounceOut()
 	{ return new Tween_Fun<Val,spTweenFun_BounceOut>; }
 
 } // namespace ZooLib

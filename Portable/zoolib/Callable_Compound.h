@@ -39,7 +39,7 @@ class Callable_Apply_0
 	{
 public:
 	Callable_Apply_0(
-		const ZP<Callable<R0(P0)> >& iApply, const ZP<Callable<R1()> >& iCallable)
+		const ZP<Callable<R0(P0)>>& iApply, const ZP<Callable<R1()>>& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -53,13 +53,13 @@ public:
 		}
 
 private:
-	const ZP<Callable<R0(P0)> > fApply;
-	const ZP<Callable<R1()> > fCallable;
+	const ZP<Callable<R0(P0)>> fApply;
+	const ZP<Callable<R1()>> fCallable;
 	};
 
 template <class R0, class P0, class R1>
-ZP<Callable<R0()> >
-sCallable_Apply(const ZP<Callable<R0(P0)> >& iApply, const ZP<Callable<R1()> >& iCallable)
+ZP<Callable<R0()>>
+sCallable_Apply(const ZP<Callable<R0(P0)>>& iApply, const ZP<Callable<R1()>>& iCallable)
 	{ return new Callable_Apply_0<R0,P0,R1>(iApply, iCallable); }
 
 // =================================================================================================
@@ -71,7 +71,7 @@ class Callable_Apply_1
 	{
 public:
 	Callable_Apply_1(
-		const ZP<Callable<R0(P0)> >& iApply, const ZP<Callable<R1(P1)> >& iCallable)
+		const ZP<Callable<R0(P0)>>& iApply, const ZP<Callable<R1(P1)>>& iCallable)
 	:	fApply(iApply)
 	,	fCallable(iCallable)
 		{}
@@ -85,13 +85,13 @@ public:
 		}
 
 private:
-	const ZP<Callable<R0(P0)> > fApply;
-	const ZP<Callable<R1(P1)> > fCallable;
+	const ZP<Callable<R0(P0)>> fApply;
+	const ZP<Callable<R1(P1)>> fCallable;
 	};
 
 template <class R0, class P0, class R1, class P1>
-ZP<Callable<R0(P1)> >
-sCallable_Apply(const ZP<Callable<R0(P0)> >& iApply, const ZP<Callable<R1(P1)> >& iCallable)
+ZP<Callable<R0(P1)>>
+sCallable_Apply(const ZP<Callable<R0(P0)>>& iApply, const ZP<Callable<R1(P1)>>& iCallable)
 	{ return new Callable_Apply_1<R0,P0,R1,P1>(iApply, iCallable); }
 
 // =================================================================================================
@@ -102,7 +102,7 @@ class Callable_Seq
 :	public Callable<R1()>
 	{
 public:
-	Callable_Seq(const ZP<Callable<R0()> >& i0, const ZP<Callable<R1()> >& i1)
+	Callable_Seq(const ZP<Callable<R0()>>& i0, const ZP<Callable<R1()>>& i1)
 	:	f0(i0)
 	,	f1(i1)
 		{}
@@ -115,13 +115,13 @@ public:
 		}
 
 private:
-	const ZP<Callable<R0()> > f0;
-	const ZP<Callable<R1()> > f1;
+	const ZP<Callable<R0()>> f0;
+	const ZP<Callable<R1()>> f1;
 	};
 
 template <class R0, class R1>
-ZP<Callable<R1()> >
-sCallable_Seq(const ZP<Callable<R0()> >& i0, const ZP<Callable<R1()> >& i1)
+ZP<Callable<R1()>>
+sCallable_Seq(const ZP<Callable<R0()>>& i0, const ZP<Callable<R1()>>& i1)
 	{ return new Callable_Seq<R0,R1>(i0, i1); }
 
 // =================================================================================================
@@ -132,9 +132,9 @@ class Callable_For
 :	public Callable_Void
 	{
 public:
-	Callable_For(const ZP<Callable<R_Init()> >& iInit,
+	Callable_For(const ZP<Callable<R_Init()>>& iInit,
 		const ZP<Callable_Bool>& iCondition,
-		const ZP<Callable<R_Inc()> >& iInc)
+		const ZP<Callable<R_Inc()>>& iInc)
 	:	fInit(iInit)
 	,	fCondition(iCondition)
 	,	fInc(iInc)
@@ -149,15 +149,15 @@ public:
 		}
 
 private:
-	const ZP<Callable<R_Init()> > fInit;
+	const ZP<Callable<R_Init()>> fInit;
 	const ZP<Callable_Bool>& fCondition;
-	const ZP<Callable<R_Inc()> >& fInc;
+	const ZP<Callable<R_Inc()>>& fInc;
 	};
 
 template <class R_Init, class R_Inc>
-ZP<Callable_Void> sCallable_For(const ZP<Callable<R_Init()> >& iInit,
+ZP<Callable_Void> sCallable_For(const ZP<Callable<R_Init()>>& iInit,
 	const ZP<Callable_Bool>& iCondition,
-	const ZP<Callable<R_Inc()> >& iInc)
+	const ZP<Callable<R_Inc()>>& iInc)
 	{ return new Callable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
 
 // =================================================================================================
@@ -169,7 +169,7 @@ class Callable_If
 	{
 public:
 	Callable_If(const ZP<Callable_Bool>& iCondition,
-		const ZP<Callable<R()> >& i0, const ZP<Callable<R()> >& i1)
+		const ZP<Callable<R()>>& i0, const ZP<Callable<R()>>& i1)
 	:	fCondition(iCondition)
 	,	f0(i0)
 	,	f1(i1)
@@ -190,13 +190,13 @@ public:
 
 private:
 	const ZP<Callable_Bool> fCondition;
-	const ZP<Callable<R()> > f0;
-	const ZP<Callable<R()> > f1;
+	const ZP<Callable<R()>> f0;
+	const ZP<Callable<R()>> f1;
 	};
 
 template <class R>
-ZP<Callable<R()> > sCallable_If(const ZP<Callable_Bool>& iCondition,
-	const ZP<Callable<R()> >& i0, const ZP<Callable<R()> >& i1)
+ZP<Callable<R()>> sCallable_If(const ZP<Callable_Bool>& iCondition,
+	const ZP<Callable<R()>>& i0, const ZP<Callable<R()>>& i1)
 	{ return new Callable_If<R>(iCondition, i0, i1); }
 
 // =================================================================================================
@@ -207,7 +207,7 @@ class Callable_Repeat
 :	public Callable_Void
 	{
 public:
-	Callable_Repeat(size_t iCount, const ZP<Callable<R()> >& iCallable)
+	Callable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCallable)
 	:	fCount(iCount)
 	,	fCallable(iCallable)
 		{}
@@ -226,11 +226,11 @@ public:
 
 private:
 	const size_t fCount;
-	const ZP<Callable<R()> > fCallable;
+	const ZP<Callable<R()>> fCallable;
 	};
 
 template <class R>
-ZP<Callable_Void> sCallable_Repeat(size_t iCount, const ZP<Callable<R()> >& iCallable)
+ZP<Callable_Void> sCallable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCallable)
 	{ return new Callable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
@@ -242,7 +242,7 @@ class Callable_While
 	{
 public:
 	Callable_While(
-		const ZP<Callable_Bool>& iCondition, const ZP<Callable<R()> >& iCallable)
+		const ZP<Callable_Bool>& iCondition, const ZP<Callable<R()>>& iCallable)
 	:	fCondition(iCondition)
 	,	fCallable(iCallable)
 		{}
@@ -257,12 +257,12 @@ public:
 
 private:
 	const ZP<Callable_Bool> fCondition;
-	const ZP<Callable<R()> > fCallable;
+	const ZP<Callable<R()>> fCallable;
 	};
 
 template <class R>
 ZP<Callable_Void> sCallable_While(
-	const ZP<Callable_Bool>& iCondition, const ZP<Callable<R()> >& iCallable)
+	const ZP<Callable_Bool>& iCondition, const ZP<Callable<R()>>& iCallable)
 	{ return new Callable_While<R>(iCondition, iCallable); }
 
 inline

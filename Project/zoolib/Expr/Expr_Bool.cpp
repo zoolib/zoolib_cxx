@@ -41,7 +41,7 @@ ZP<Expr_Bool> Expr_Bool_True::sTrue()
 	static ZP<Expr_Bool_True> spTrue = new Expr_Bool_True;
 	return spTrue;
 	}
-//	{ return sSingleton<ZP<Expr_Bool_True> >(); } ???
+//	{ return sSingleton<ZP<Expr_Bool_True>>(); } ???
 
 void Expr_Bool_True::Accept(const Visitor& iVisitor)
 	{

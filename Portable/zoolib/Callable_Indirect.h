@@ -61,7 +61,7 @@ public:
 		{ return fSafeCallable.CAS(iPrior, iNew); }
 
 private:
-	Safe<ZP<Callable_t> > fSafeCallable;
+	Safe<ZP<Callable_t>> fSafeCallable;
 	};
 
 // =================================================================================================
@@ -93,7 +93,7 @@ public: \
 		{ return fSafeCallable.CAS(iPrior, iNew); } \
 \
 private: \
-	Safe<ZP<Callable_t> > fSafeCallable; \
+	Safe<ZP<Callable_t>> fSafeCallable; \
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -119,11 +119,11 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable_Indirect
 
 template <class Sig>
-ZP<Callable_Indirect<Sig> > sCallable_Indirect(const ZP<Callable<Sig> >& iCallable)
+ZP<Callable_Indirect<Sig>> sCallable_Indirect(const ZP<Callable<Sig>>& iCallable)
 	{ return new Callable_Indirect<Sig>(iCallable); }
 
 template <class Sig>
-ZP<Callable_Indirect<Sig> > sCallable_Indirect()
+ZP<Callable_Indirect<Sig>> sCallable_Indirect()
 	{ return new Callable_Indirect<Sig>(null); }
 
 } // namespace ZooLib

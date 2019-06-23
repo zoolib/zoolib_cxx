@@ -50,7 +50,7 @@ public:
 private:
 	const RelationalAlgebra::RelHead fRelHead;
 	std::vector<size_t> fChildMapping;
-	std::set<std::vector<Val_Any> > fPriors;
+	std::set<std::vector<Val_Any>> fPriors;
 	};
 
 } // namespace QueryEngine

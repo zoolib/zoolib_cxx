@@ -108,13 +108,13 @@ BOOL Delegate::pRespondsToSelector(SEL aSelector)
 
 void Delegate::pForwardInvocation(NSInvocation* anInvocation)
 	{
-	if (ZQ<ZP<Wrapper> > theQ = sQGet(fWrappers, [anInvocation selector]))
+	if (ZQ<ZP<Wrapper>> theQ = sQGet(fWrappers, [anInvocation selector]))
 		(*theQ)->ForwardInvocation(anInvocation);
 	}
 
 NSMethodSignature* Delegate::pMethodSignatureForSelector(SEL aSelector)
 	{
-	if (ZQ<ZP<Wrapper> > theQ = sQGet(fWrappers, aSelector))
+	if (ZQ<ZP<Wrapper>> theQ = sQGet(fWrappers, aSelector))
 		return (*theQ)->fNSMethodSignature;
 	return nil;
 	}

@@ -57,7 +57,7 @@ public:
 private:
 	ZP<Walker> fWalker_Left;
 	bool fExhaustedLeft;
-	std::set<std::vector<Val_Any> > fPriors;
+	std::set<std::vector<Val_Any>> fPriors;
 	std::vector<size_t> fMapping_Left;
 
 	ZP<Walker> fWalker_Right;

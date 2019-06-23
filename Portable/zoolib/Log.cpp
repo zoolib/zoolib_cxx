@@ -32,7 +32,7 @@ namespace ZooLib {
 namespace Log {
 
 ZP<LogMeister> sLogMeister;
-//ZSafe<ZP<LogMeister> > sLogMeister;
+//ZSafe<ZP<LogMeister>> sLogMeister;
 
 // =================================================================================================
 #pragma mark - Log::CallDepth

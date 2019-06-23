@@ -60,7 +60,7 @@ public:
 			}
 		else if (fFactories.size())
 			{
-			ZP<Promise<T > > thePromise = sPromise<T>();
+			ZP<Promise<T >> thePromise = sPromise<T>();
 			foreacha (factory, fFactories)
 				{
 				sStartOnNewThread(
@@ -70,7 +70,7 @@ public:
 					break;
 				}
 
-			ZP<Delivery<T> > theDelivery = sGetDeliveryClearPromise(thePromise);
+			ZP<Delivery<T>> theDelivery = sGetDeliveryClearPromise(thePromise);
 
 			if (not fTimeoutQ || theDelivery->WaitFor(*fTimeoutQ))
 				{
@@ -82,13 +82,13 @@ public:
 		}
 
 // Our protocol
-	void Add(const ZP<Factory<T> >& iFactory)
+	void Add(const ZP<Factory<T>>& iFactory)
 		{
 		fFactories.push_back(iFactory);
 		}
 
 private:
-	static void spCallAndQDeliver(const ZP<Factory<T>>& iFactory, const ZP<Promise<T> >& iPromise)
+	static void spCallAndQDeliver(const ZP<Factory<T>>& iFactory, const ZP<Promise<T>>& iPromise)
 		{
 		if (ZQ<T> theT = sQCall(iFactory))
 			{
@@ -97,7 +97,7 @@ private:
 			}
 		}
 
-	std::vector<ZP<Factory<T> > > fFactories;
+	std::vector<ZP<Factory<T>>> fFactories;
 	ZQ<double> fTimeoutQ;
 	};
 

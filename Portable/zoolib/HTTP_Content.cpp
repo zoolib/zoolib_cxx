@@ -215,7 +215,7 @@ static ZP<ChannerR_Bin> spMakeChanner_Transfer(
 		return sChanner_Channer_T<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))
-		return sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin> >(iChannerR, *contentLength);
+		return sChanner_Channer_T<ChanR_XX_Limited<ChanR_Bin>>(iChannerR, *contentLength);
 
 	return iChannerR;
 	}
@@ -235,7 +235,7 @@ ZP<ChannerR_Bin> sMakeContentChanner(
 	{
 	if (iMethod == "HEAD")
 		{
-		return sChanner_T<ChanR_XX_Null<byte> >();
+		return sChanner_T<ChanR_XX_Null<byte>>();
 		}
 
 	if (iMethod == "GET" && iResponseCode == 304)
@@ -243,7 +243,7 @@ ZP<ChannerR_Bin> sMakeContentChanner(
 		// RFC 2616, section 10.3.5. 
 		// "The 304 response MUST NOT contain a message-body, and thus is
 		// always terminated by the first empty line after the header fields."
-		return sChanner_T<ChanR_XX_Null<byte> >();
+		return sChanner_T<ChanR_XX_Null<byte>>();
 		}
 
 	return sMakeContentChanner(iHeader, iChannerR);

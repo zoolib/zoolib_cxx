@@ -59,7 +59,7 @@ public:
 	virtual void Initialize();
 
 // Our protocol
-	const std::vector<ZP<Callable_Row> >& GetRows();
+	const std::vector<ZP<Callable_Row>>& GetRows();
 
 private:
 	void pChanged(
@@ -74,7 +74,7 @@ private:
 	const ZP<Callable_Make_Callable_Row> fCallable;
 
 	ZP<Counted> fRegistration;
-	std::vector<ZP<Callable_Row> > fRows;
+	std::vector<ZP<Callable_Row>> fRows;
 	std::map<string8,size_t> fBindings;
 	};
 

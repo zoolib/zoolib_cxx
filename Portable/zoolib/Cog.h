@@ -44,7 +44,7 @@ namespace ZooLib {
 
 template <class Param_p>
 class Cog
-:	public ZP<Callable<Cog<Param_p>(const Cog<Param_p>&,Param_p)> >
+:	public ZP<Callable<Cog<Param_p>(const Cog<Param_p>&,Param_p)>>
 	{
 public:
 	typedef Param_p Param;
@@ -233,7 +233,7 @@ Cog<Param> sCallCog(const RefCallableCog<Param>& iCallable, Param iParam)
 	if (sIsFinished(iCallable))
 		return iCallable;
 
-	if (ZQ<Cog<Param> > theQ = iCallable->QCall(iCallable, iParam))
+	if (ZQ<Cog<Param>> theQ = iCallable->QCall(iCallable, iParam))
 		return *theQ;
 
 	return null;
@@ -340,9 +340,9 @@ public:
 	:	fCog(iCallable)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param>> newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -390,9 +390,9 @@ public:
 	:	fCog(iCallable)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param>> newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -433,9 +433,9 @@ public:
 	:	fCog(iCallable)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param>> newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -478,9 +478,9 @@ public:
 	,	fCog(iCallable)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newCogQ = fCog->QCall(fCog, iParam))
+		if (ZQ<Cog<Param>> newCogQ = fCog->QCall(fCog, iParam))
 			{
 			const Cog<Param>& newCog = *newCogQ;
 			if (newCog == fCog)
@@ -540,11 +540,11 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
@@ -603,9 +603,9 @@ public:
 	,	fCog(iCallable)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
+		if (ZQ<Cog<Param>> newConditionQ = fCondition->QCall(fCondition, iParam))
 			{
 			const Cog<Param>& newCondition = *newConditionQ;
 			if (newCondition == fCondition)
@@ -676,11 +676,11 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && not sIsTrue(fCog1));
 	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
@@ -688,7 +688,7 @@ public:
 				if (sIsFalse(fCog1))
 					return false;
 		
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (newCog1 == fCog1)
@@ -720,7 +720,7 @@ public:
 				if (sIsFalse(fCog1))
 					return false;
 		
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 
@@ -792,11 +792,11 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && not sIsFalse(fCog1));
 	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
@@ -804,7 +804,7 @@ public:
 				if (sIsTrue(fCog1))
 					return true;
 		
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (newCog1 == fCog1)
@@ -836,7 +836,7 @@ public:
 				if (sIsTrue(fCog1))
 					return true;
 		
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (sIsTrue(newCog1))
@@ -904,16 +904,16 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (newCog1 == fCog1)
@@ -928,7 +928,7 @@ public:
 				}
 			else if (sIsPending(newCog0))
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 			
@@ -992,16 +992,16 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (newCog1 == fCog1)
@@ -1016,7 +1016,7 @@ public:
 				}
 			else if (sIsPending(newCog0))
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (sIsFinished(newCog1))
@@ -1083,16 +1083,16 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
 		ZAssert(sIsPending(fCog0) && sIsPending(fCog1));
 	
-		if (ZQ<Cog<Param> > newCog0Q = fCog0->QCall(fCog0, iParam))
+		if (ZQ<Cog<Param>> newCog0Q = fCog0->QCall(fCog0, iParam))
 			{
 			const Cog<Param>& newCog0 = *newCog0Q;
 			if (newCog0 == fCog0)
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (newCog1 == fCog1)
@@ -1107,7 +1107,7 @@ public:
 				}
 			else if (sIsPending(newCog0))
 				{
-				if (ZQ<Cog<Param> > newCog1Q = fCog1->QCall(fCog1, iParam))
+				if (ZQ<Cog<Param>> newCog1Q = fCog1->QCall(fCog1, iParam))
 					{
 					const Cog<Param>& newCog1 = *newCog1Q;
 					if (sIsFinished(newCog1))
@@ -1185,9 +1185,9 @@ public:
 	,	fCog1(iCallable1)
 		{}
 
-	virtual ZQ<Cog<Param> > QCall(const Cog<Param>& iSelf, Param iParam)
+	virtual ZQ<Cog<Param>> QCall(const Cog<Param>& iSelf, Param iParam)
 		{
-		if (ZQ<Cog<Param> > newConditionQ = fCondition->QCall(fCondition, iParam))
+		if (ZQ<Cog<Param>> newConditionQ = fCondition->QCall(fCondition, iParam))
 			{
 			const Cog<Param>& newCondition = *newConditionQ;
 			if (newCondition == fCondition)

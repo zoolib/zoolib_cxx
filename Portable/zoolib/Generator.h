@@ -191,7 +191,7 @@ class Callable_Gen
 :	public Callable<T0(T1)>
 	{
 public:
-	Callable_Gen(const ZP<ShelfPair<T0,T1> >& iShelfPair)
+	Callable_Gen(const ZP<ShelfPair<T0,T1>>& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -215,7 +215,7 @@ public:
 		}
 
 private:
-	ZP<ShelfPair<T0,T1> > fShelfPair;
+	ZP<ShelfPair<T0,T1>> fShelfPair;
 	};
 
 // =================================================================================================
@@ -226,7 +226,7 @@ class Callable_Gen<T,void>
 :	public Callable<T()>
 	{
 public:
-	Callable_Gen(const ZP<ShelfPair<T,void> >& iShelfPair)
+	Callable_Gen(const ZP<ShelfPair<T,void>>& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -250,7 +250,7 @@ public:
 		}
 
 private:
-	ZP<ShelfPair<T,void> > fShelfPair;
+	ZP<ShelfPair<T,void>> fShelfPair;
 	};
 
 // =================================================================================================
@@ -261,7 +261,7 @@ class Callable_Yield
 :	public Callable<T1(T0)>
 	{
 public:
-	Callable_Yield(const ZP<ShelfPair<T0,T1> >& iShelfPair)
+	Callable_Yield(const ZP<ShelfPair<T0,T1>>& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -288,7 +288,7 @@ public:
 		}
 
 private:
-	ZP<ShelfPair<T0,T1> > fShelfPair;
+	ZP<ShelfPair<T0,T1>> fShelfPair;
 	};
 
 // =================================================================================================
@@ -299,7 +299,7 @@ class Callable_Yield<void,T>
 :	public Callable<T()>
 	{
 public:
-	Callable_Yield(const ZP<ShelfPair<void,T> >& iShelfPair)
+	Callable_Yield(const ZP<ShelfPair<void,T>>& iShelfPair)
 	:	fShelfPair(iShelfPair)
 		{}
 
@@ -326,7 +326,7 @@ public:
 		}
 
 private:
-	ZP<ShelfPair<void,T> > fShelfPair;
+	ZP<ShelfPair<void,T>> fShelfPair;
 	};
 
 // =================================================================================================
@@ -358,7 +358,7 @@ sCallablePair(
 	ZP<typename AsSig<T0,T1>::Callable_t>& oCallable_Gen,
 	ZP<typename AsSig<T1,T0>::Callable_t>& oCallable_Yield)
 	{
-	ZP<ShelfPair<T0,T1> > theShelfPair = new ShelfPair<T0,T1>;
+	ZP<ShelfPair<T0,T1>> theShelfPair = new ShelfPair<T0,T1>;
 	oCallable_Gen = new Callable_Gen<T0,T1>(theShelfPair);
 	oCallable_Yield = new Callable_Yield<T0,T1>(theShelfPair);
 	}
@@ -368,7 +368,7 @@ sCallablePair(
 
 template <class T0, class T1>
 ZP<typename AsSig<T0,T1>::Callable_t>
-sGenerator(const ZP<Callable<void(const ZP<typename AsSig<T1,T0>::Callable_t>&)> >& iCallable)
+sGenerator(const ZP<Callable<void(const ZP<typename AsSig<T1,T0>::Callable_t>&)>>& iCallable)
 	{
 	ZP<typename AsSig<T0,T1>::Callable_t> theCallable_Gen;
 	ZP<typename AsSig<T1,T0>::Callable_t> theCallable_Yield;
@@ -381,13 +381,13 @@ sGenerator(const ZP<Callable<void(const ZP<typename AsSig<T1,T0>::Callable_t>&)>
 	}
 
 template <class T>
-ZP<Callable<T()> >
-sGenerator(const ZP<Callable<void(const ZP<Callable<void(T)> >&)> >& iCallable)
+ZP<Callable<T()>>
+sGenerator(const ZP<Callable<void(const ZP<Callable<void(T)>>&)>>& iCallable)
 	{ return sGenerator<T,void>(iCallable); }
 
 template <class T>
-ZP<Callable<void(T)> >
-sGenerator(const ZP<Callable<void(const ZP<Callable<T()> >&)> >& iCallable)
+ZP<Callable<void(T)>>
+sGenerator(const ZP<Callable<void(const ZP<Callable<T()>>&)>>& iCallable)
 	{ return sGenerator<void,T>(iCallable); }
 
 // =================================================================================================
@@ -416,7 +416,7 @@ sYield(P iP)
 
 template <class T0, class T1>
 void
-sInstallYieldCall(const ZP<Callable<void(T0*,T1*)> >& iCallable,
+sInstallYieldCall(const ZP<Callable<void(T0*,T1*)>>& iCallable,
 	const ZP<typename AsSig<T1,T0>::Callable_t>& iCallable_Yield)
 	{
 	ThreadVal_Callable_Yield theTV(iCallable_Yield);
@@ -425,7 +425,7 @@ sInstallYieldCall(const ZP<Callable<void(T0*,T1*)> >& iCallable,
 
 template <class T0, class T1>
 ZP<typename AsSig<T0,T1>::Callable_t>
-sGenerator(const ZP<Callable<void(T0*,T1*)> >& iCallable)
+sGenerator(const ZP<Callable<void(T0*,T1*)>>& iCallable)
 	{
 	ZP<typename AsSig<T0,T1>::Callable_t> theCallable_Gen;
 	ZP<typename AsSig<T1,T0>::Callable_t> theCallable_Yield;

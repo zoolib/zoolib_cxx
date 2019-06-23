@@ -38,7 +38,7 @@ template <class Signature> class Callable_Set;
 template <>
 class Callable_Set<void()>
 :	public Callable<void()>
-,	public SafeSet<ZP<Callable<void()> > >
+,	public SafeSet<ZP<Callable<void()>>>
 	{
 public:
 	typedef Callable<void()> Callable_t;
@@ -46,9 +46,9 @@ public:
 // From Callable
 	bool QCall()
 		{
-		for (SafeSetIterConst<ZP<Callable_t> > iter = *this; /*no test*/; /*no inc*/)
+		for (SafeSetIterConst<ZP<Callable_t>> iter = *this; /*no test*/; /*no inc*/)
 			{
-			if (ZQ<ZP<Callable_t> > theQ = iter.QReadInc())
+			if (ZQ<ZP<Callable_t>> theQ = iter.QReadInc())
 				sCall(*theQ);
 			else
 				return true;
@@ -56,7 +56,7 @@ public:
 		}
 
 // Our protocol
-	SafeSet<ZP<Callable_t> >& GetCallables()
+	SafeSet<ZP<Callable_t>>& GetCallables()
 		{ return *this; }
 	};
 
@@ -68,23 +68,23 @@ public:
 template <ZMACRO_Callable_Class_P##X> \
 class Callable_Set<void(ZMACRO_Callable_P##X)> \
 :	public Callable<void(ZMACRO_Callable_P##X)> \
-,	public SafeSet<ZP<Callable<void(ZMACRO_Callable_P##X)> > > \
+,	public SafeSet<ZP<Callable<void(ZMACRO_Callable_P##X)>>> \
 	{ \
 public: \
 	typedef Callable<void(ZMACRO_Callable_P##X)> Callable_t; \
 \
 	bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		for (SafeSetIterConst<ZP<Callable_t> > iter = *this; /*no test*/; /*no inc*/) \
+		for (SafeSetIterConst<ZP<Callable_t>> iter = *this; /*no test*/; /*no inc*/) \
 			{ \
-			if (ZQ<ZP<Callable_t> > theQ = iter.QReadInc()) \
+			if (ZQ<ZP<Callable_t>> theQ = iter.QReadInc()) \
 				sCall(*theQ, ZMACRO_Callable_i##X); \
 			else \
 				return true; \
 			} \
 		} \
 \
-	SafeSet<ZP<Callable_t> >& GetCallables() \
+	SafeSet<ZP<Callable_t>>& GetCallables() \
 		{ return *this; } \
 	};
 

@@ -155,7 +155,7 @@ void RelsWatcher_Relater::Update()
 		{
 		// This vector must be outside the mutex acq, so any reg that goes out of scope
 		// does not finalize and attempt to double-acquire the mutex. 
-		vector<ZP<Registration> > changes;
+		vector<ZP<Registration>> changes;
 		ZAcqMtx acq(fMtx);
 		foreacha (entry, theQueryResults)
 			{

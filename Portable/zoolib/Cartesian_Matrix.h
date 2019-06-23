@@ -29,11 +29,11 @@ namespace ZooLib {
 namespace Cartesian {
 
 // =================================================================================================
-#pragma mark - PointTraits<Matrix<Ord_p,1,2> > (point)
+#pragma mark - PointTraits<Matrix<Ord_p,1,2>> (point)
 
 template <class Ord_p>
-struct PointTraits<Matrix<Ord_p,1,2> >
-:	public PointTraits_Std<Ord_p,Matrix<Ord_p,1,2>,MatrixArray<Ord_p,1,2,2> >
+struct PointTraits<Matrix<Ord_p,1,2>>
+:	public PointTraits_Std<Ord_p,Matrix<Ord_p,1,2>,MatrixArray<Ord_p,1,2,2>>
 	{
 	typedef Ord_p Ord_t;
 	typedef Matrix<Ord_p,1,2> Point_t;
@@ -61,11 +61,11 @@ struct PointTraits<Matrix<Ord_p,1,2> >
 	};
 
 // =================================================================================================
-#pragma mark - PointTraits<Matrix<Ord_p,1,3> > (CVec3 used as a 2D point)
+#pragma mark - PointTraits<Matrix<Ord_p,1,3>> (CVec3 used as a 2D point)
 
 template <class Ord_p>
-struct PointTraits<Matrix<Ord_p,1,3> >
-:	public PointTraits_Std<Ord_p,Matrix<Ord_p,1,3>,MatrixArray<Ord_p,1,2,2> >
+struct PointTraits<Matrix<Ord_p,1,3>>
+:	public PointTraits_Std<Ord_p,Matrix<Ord_p,1,3>,MatrixArray<Ord_p,1,2,2>>
 	{
 	typedef Ord_p Ord_t;
 	typedef Matrix<Ord_p,1,3> Point_t;
@@ -93,11 +93,11 @@ struct PointTraits<Matrix<Ord_p,1,3> >
 	};
 
 // =================================================================================================
-#pragma mark - RectTraits<MatrixArray<Ord,1,2,2> > (rectangle)
+#pragma mark - RectTraits<MatrixArray<Ord,1,2,2>> (rectangle)
 
 template <class Ord_p>
-struct RectTraits<MatrixArray<Ord_p,1,2,2> >
-:	public RectTraits_Std<Ord_p,Matrix<Ord_p,1,2>,MatrixArray<Ord_p,1,2,2> >
+struct RectTraits<MatrixArray<Ord_p,1,2,2>>
+:	public RectTraits_Std<Ord_p,Matrix<Ord_p,1,2>,MatrixArray<Ord_p,1,2,2>>
 	{
 	typedef Ord_p Ord_t;
 	typedef Matrix<Ord_p,1,2> Point_t;

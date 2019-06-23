@@ -65,7 +65,7 @@ public:
 
 private:
 	bool fIsVersion11;
-	std::vector<std::pair<string, string> > fHeaders;
+	std::vector<std::pair<string, string>> fHeaders;
 	int fResult;
 	string fMessage;
 	};
@@ -74,7 +74,7 @@ private:
 #pragma mark - Higher level parsing
 
 bool sOrganizeRanges(int64 iSourceSize,
-	const Val& iRangeParam, std::vector<std::pair<int64,int64> >& oRanges);
+	const Val& iRangeParam, std::vector<std::pair<int64,int64>>& oRanges);
 
 bool sQReadRequest(
 	const ChanR_Bin& iChanR, string* oMethod, string* oURL, string* oErrorString);

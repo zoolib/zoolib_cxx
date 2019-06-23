@@ -71,7 +71,7 @@ private:
 	class Wrapper;
 
 	ZooLib_Delegate_Proxy* fProxy;
-	std::map<SEL, ZP<Wrapper> > fWrappers;
+	std::map<SEL, ZP<Wrapper>> fWrappers;
 
 	#ifdef __OBJC__
 

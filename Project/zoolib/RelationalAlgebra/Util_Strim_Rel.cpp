@@ -182,7 +182,7 @@ void Visitor::Visit_Expr_Rel_Search(const ZP<QueryEngine::Expr_Rel_Search>& iExp
 	}
 
 void Visitor::pWriteBinary(
-	const string& iFunctionName, const ZP<Expr_Op2_T<Expr_Rel> >& iExpr)
+	const string& iFunctionName, const ZP<Expr_Op2_T<Expr_Rel>>& iExpr)
 	{
 	const ChanW_UTF& w = pStrimW();
 	w << iFunctionName << "(";
@@ -230,7 +230,7 @@ ZP<Expr_Rel> sQFromStrim(const ChanRU_UTF& iChanRU)
 using namespace Util_Chan;
 using std::pair;
 
-typedef pair<ZP<Expr_Rel>,ZP<Expr_Rel> > RelPair;
+typedef pair<ZP<Expr_Rel>,ZP<Expr_Rel>> RelPair;
 
 static void spRead_WSComma(const ChanRU_UTF& iChanRU, const string8& iMessage)
 	{
@@ -387,7 +387,7 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Rename"))
 			{
-			if (NotQ<pair<ColName,ColName> > theRenameQ = Util_Strim_RelHead::sQFromStrim_Rename(iChanRU))
+			if (NotQ<pair<ColName,ColName>> theRenameQ = Util_Strim_RelHead::sQFromStrim_Rename(iChanRU))
 				{ throw ParseException("Expected Rename param to Rename"); }
 			else
 				{

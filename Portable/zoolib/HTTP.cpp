@@ -187,7 +187,7 @@ void Response::Send(const ChanW_Bin& iChanW) const
 
 	sEWrite(iChanW, "\r\n");
 
-	for (vector<pair<string, string> >::const_iterator ii = fHeaders.begin();
+	for (vector<pair<string, string>>::const_iterator ii = fHeaders.begin();
 		ii != fHeaders.end(); ++ii)
 		{ sWrite_HeaderLine(ii->first, ii->second, iChanW); }
 
@@ -201,7 +201,7 @@ void Response::Send(const ChanW_Bin& iChanW) const
 // and turn them into a list of ascending, non overlapping start/finish
 // pairs in oRanges.
 bool sOrganizeRanges(int64 iSourceSize, const Val& iRangeParam,
-	vector<pair<int64,int64> >& oRanges)
+	vector<pair<int64,int64>>& oRanges)
 	{
 	const Map asMap = iRangeParam.Get<Map>();
 	if (ZQ<int64> reqBeginQ = sQCoerceInt(asMap.Get("begin")))

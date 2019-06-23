@@ -30,7 +30,7 @@ namespace ZooLib {
 template <int size>
 void sByteSwap(void* ioBuf);
 
-// Ideally we'd conditionalize this on enable_if<is_number<T> > or something.
+// Ideally we'd conditionalize this on enable_if<is_number<T>> or something.
 
 template <class T>
 T sByteSwapped(T iT)

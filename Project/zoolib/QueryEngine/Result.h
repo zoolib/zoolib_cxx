@@ -98,8 +98,8 @@ public:
 		const ZP<ResultDeltas>& iResultDeltas,
 		ZP<Result>* oCurResult,
 		std::vector<size_t>* oRemoved,
-		std::vector<std::pair<size_t,size_t> >* oAdded,
-		std::vector<Multi3<size_t,size_t,size_t> >* oChanged);
+		std::vector<std::pair<size_t,size_t>>* oAdded,
+		std::vector<Multi3<size_t,size_t,size_t>>* oChanged);
 
 private:
 	const RelationalAlgebra::RelHead fIdentity;
@@ -127,7 +127,7 @@ int sCompare_T<QueryEngine::Result>(
 	const QueryEngine::Result& iL, const QueryEngine::Result& iR);
 
 template <>
-int sCompare_T<ZP<QueryEngine::Result> >(
+int sCompare_T<ZP<QueryEngine::Result>>(
 	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR);
 
 } // namespace ZooLib

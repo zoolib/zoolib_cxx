@@ -2465,13 +2465,13 @@ private:
 #pragma mark - sBindL
 
 template <class Callable_p>
-ZP<Callable<typename Callable_p::Signature> >
+ZP<Callable<typename Callable_p::Signature>>
 sBindL(
 	const ZP<Callable_p>& iCallable)
 	{ return iCallable; }
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL01> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL01>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	const ZP<Callable_p>& iCallable)
@@ -2484,7 +2484,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL02> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL02>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2498,7 +2498,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL03> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL03>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2513,7 +2513,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL04> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL04>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2529,7 +2529,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL05> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL05>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2546,7 +2546,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL06> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL06>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2564,7 +2564,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL07> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL07>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2583,7 +2583,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL08> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL08>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2603,7 +2603,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL09> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL09>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2624,7 +2624,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL10> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL10>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2646,7 +2646,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL11> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL11>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2669,7 +2669,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL12> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL12>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2693,7 +2693,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL13> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL13>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2718,7 +2718,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL14> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL14>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2744,7 +2744,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL15> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL15>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -2771,7 +2771,7 @@ sBindL(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL16> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SL16>>
 sBindL(
 	typename VT<typename ST_T<typename Callable_p::Signature>::L0>::P i0,
 	typename VT<typename ST_T<typename Callable_p::Signature>::L1>::P i1,
@@ -4006,13 +4006,13 @@ private:
 #pragma mark - sBindR
 
 template <class Callable_p>
-ZP<Callable<typename Callable_p::Signature> >
+ZP<Callable<typename Callable_p::Signature>>
 sBindR(
 	const ZP<Callable_p>& iCallable)
 	{ return iCallable; }
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR01> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR01>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R0>::P i0)
@@ -4025,7 +4025,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR02> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR02>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R1>::P i0,
@@ -4039,7 +4039,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR03> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR03>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R2>::P i0,
@@ -4054,7 +4054,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR04> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR04>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R3>::P i0,
@@ -4070,7 +4070,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR05> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR05>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R4>::P i0,
@@ -4087,7 +4087,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR06> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR06>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R5>::P i0,
@@ -4105,7 +4105,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR07> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR07>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R6>::P i0,
@@ -4124,7 +4124,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR08> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR08>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R7>::P i0,
@@ -4144,7 +4144,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR09> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR09>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R8>::P i0,
@@ -4165,7 +4165,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR10> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR10>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::R9>::P i0,
@@ -4187,7 +4187,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR11> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR11>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RA>::P i0,
@@ -4210,7 +4210,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR12> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR12>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RB>::P i0,
@@ -4234,7 +4234,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR13> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR13>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RC>::P i0,
@@ -4259,7 +4259,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR14> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR14>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RD>::P i0,
@@ -4285,7 +4285,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR15> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR15>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RE>::P i0,
@@ -4312,7 +4312,7 @@ sBindR(
 	}
 
 template <class Callable_p>
-ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR16> >
+ZP<Callable<typename ST_T<typename Callable_p::Signature>::SR16>>
 sBindR(
 	const ZP<Callable_p>& iCallable,
 	typename VT<typename ST_T<typename Callable_p::Signature>::RF>::P i0,
@@ -4764,7 +4764,7 @@ private:
 #pragma mark - sBind_Return
 
 template <class R, class Callable_p>
-ZP<Callable<typename STReturn<R, typename Callable_p::Signature>::Signature> >
+ZP<Callable<typename STReturn<R, typename Callable_p::Signature>::Signature>>
 sBind_Return(R iR, const ZP<Callable_p>& iCallable)
 	{
 	if (not iCallable)
@@ -4773,7 +4773,7 @@ sBind_Return(R iR, const ZP<Callable_p>& iCallable)
 	}
 
 template <class Callable_p>
-ZP<Callable<typename STReturn<void, typename Callable_p::Signature>::Signature> >
+ZP<Callable<typename STReturn<void, typename Callable_p::Signature>::Signature>>
 sBind_ReturnVoid(const ZP<Callable_p>& iCallable)
 	{
 	if (not iCallable)

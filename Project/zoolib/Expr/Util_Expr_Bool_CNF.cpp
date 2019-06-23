@@ -100,7 +100,7 @@ public:
 	:	fNegating(false)
 		{}
 
-	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Bool>>& iExpr)
 		{
 		DClause theDClause;
 		if (fNegating)

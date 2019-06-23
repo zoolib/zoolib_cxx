@@ -50,10 +50,10 @@ class Visitor_GetRelHead
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Rename
 	{
-	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel>>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
-	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel>>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 	virtual void Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr)

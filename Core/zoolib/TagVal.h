@@ -103,10 +103,10 @@ protected:
 	};
 
 template <class Type_p, class Tag_p>
-struct RelopsTraits_HasEQ<TagVal<Type_p,Tag_p> > : public RelopsTraits_Has {};
+struct RelopsTraits_HasEQ<TagVal<Type_p,Tag_p>> : public RelopsTraits_Has {};
 
 template <class Type_p, class Tag_p>
-struct RelopsTraits_HasLT<TagVal<Type_p,Tag_p> > : public RelopsTraits_Has {};
+struct RelopsTraits_HasLT<TagVal<Type_p,Tag_p>> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark - 

@@ -50,7 +50,7 @@ bool Starter_EventLoopBase::QStart(const ZP<Startable>& iStartable)
 
 void Starter_EventLoopBase::pInvokeClearQueue()
 	{
-	vector<ZP<Startable> > toStart;
+	vector<ZP<Startable>> toStart;
 
 	{
 	ZAcqMtx acq(fMtx);
@@ -58,7 +58,7 @@ void Starter_EventLoopBase::pInvokeClearQueue()
 	fStartables.swap(toStart);
 	}
 
-	for (vector<ZP<Startable> >::iterator iter = toStart.begin();
+	for (vector<ZP<Startable>>::iterator iter = toStart.begin();
 		iter != toStart.end(); ++iter)
 		{
 		try { (*iter)->Call(); }

@@ -85,26 +85,26 @@ protected:
 
 template <class EE>
 class Channer_XX_FlushOnRead
-:	public Channer<ChanRW<EE> >
+:	public Channer<ChanRW<EE>>
 ,	public Chan_XX_FlushOnRead<EE>
 	{
 public:
-	Channer_XX_FlushOnRead(const ZP<Channer<ChanR<EE> > >& iChannerR,
-		const ZP<Channer<ChanW<EE> > >& iChannerW)
+	Channer_XX_FlushOnRead(const ZP<Channer<ChanR<EE>>>& iChannerR,
+		const ZP<Channer<ChanW<EE>>>& iChannerW)
 	:	Chan_XX_FlushOnRead<EE>(*iChannerR, *iChannerW)
 	,	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
 		{}
 
 private:
-	const ZP<Channer<ChanR<EE> > > fChannerR;
-	const ZP<Channer<ChanW<EE> > > fChannerW;
+	const ZP<Channer<ChanR<EE>>> fChannerR;
+	const ZP<Channer<ChanW<EE>>> fChannerW;
 	};
 
 template <class EE>
-ZP<Channer_XX_FlushOnRead<EE> > sChanner_XX_FlushOnRead(
-	const ZP<Channer<ChanR<EE> > >& iChannerR,
-	const ZP<Channer<ChanW<EE> > >& iChannerW)
+ZP<Channer_XX_FlushOnRead<EE>> sChanner_XX_FlushOnRead(
+	const ZP<Channer<ChanR<EE>>>& iChannerR,
+	const ZP<Channer<ChanW<EE>>>& iChannerW)
 	{ return new Channer_XX_FlushOnRead<EE>(iChannerR, iChannerW); }
 
 } // namespace ZooLib

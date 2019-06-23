@@ -46,7 +46,7 @@ public:
 		{
 		if (iRep)
 			{
-			SaveSetRestore<ZQ<Result_t> > ssr(fResultQ, null);
+			SaveSetRestore<ZQ<Result_t>> ssr(fResultQ, null);
 			iRep->Accept(*this);
 			return fResultQ;
 			}

@@ -41,9 +41,9 @@ class Transform_ConsolidateRenames
 	typedef Visitor_Expr_Op_Do_Transform_T<Expr_Rel> inherited;
 public:
 // From Visitor_Expr_OpX_T via Visitor_Expr_Op_DoTransform_T
-	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr);
-	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr);
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel>>& iExpr);
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel>>& iExpr);
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel>>& iExpr);
 
 // From Visitor_Expr_Rel_XXX
 	virtual void Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr);
@@ -51,19 +51,19 @@ public:
 	Rename fRename_LeafToRoot;
 	};
 
-void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op0(const ZP<Expr_Op0_T<Expr_Rel>>& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op0(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Rel>>& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op1(iExpr);
 	}
 
-void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel> >& iExpr)
+void Transform_ConsolidateRenames::Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Rel>>& iExpr)
 	{
 	SaveSetRestore<Rename> ssr(fRename_LeafToRoot, Rename());
 	inherited::Visit_Expr_Op2(iExpr);

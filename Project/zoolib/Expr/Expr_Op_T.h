@@ -49,7 +49,7 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor)
 		{
-		if (Visitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op0_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op0_T<T>>(&iVisitor))
 			this->Accept_Expr_Op0(*theVisitor);
 		else
 			Expr::Accept(iVisitor);
@@ -58,7 +58,7 @@ public:
 // From Expr
 	virtual void Accept_Expr(Visitor_Expr& iVisitor)
 		{
-		if (Visitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op0_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op0_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op0_T<T>>(&iVisitor))
 			{
 			this->Accept_Expr_Op0(*theVisitor);
 			}
@@ -88,7 +88,7 @@ class Visitor_Expr_Op0_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<T> >& iExpr)
+	virtual void Visit_Expr_Op0(const ZP<Expr_Op0_T<T>>& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -116,7 +116,7 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor)
 		{
-		if (Visitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op1_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op1_T<T>>(&iVisitor))
 			this->Accept_Expr_Op1(*theVisitor);
 		else
 			Expr::Accept(iVisitor);
@@ -125,7 +125,7 @@ public:
 // From Expr
 	virtual void Accept_Expr(Visitor_Expr& iVisitor)
 		{
-		if (Visitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op1_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op1_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op1_T<T>>(&iVisitor))
 			this->Accept_Expr_Op1(*theVisitor);
 		else
 			Expr::Accept_Expr(iVisitor);
@@ -161,7 +161,7 @@ class Visitor_Expr_Op1_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<T> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<T>>& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -190,7 +190,7 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor)
 		{
-		if (Visitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op2_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op2_T<T>>(&iVisitor))
 			this->Accept_Expr_Op2(*theVisitor);
 		else
 			Expr::Accept(iVisitor);
@@ -199,7 +199,7 @@ public:
 // From Expr
 	virtual void Accept_Expr(Visitor_Expr& iVisitor)
 		{
-		if (Visitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op2_T<T> >(&iVisitor))
+		if (Visitor_Expr_Op2_T<T>* theVisitor = sDynNonConst<Visitor_Expr_Op2_T<T>>(&iVisitor))
 			this->Accept_Expr_Op2(*theVisitor);
 		else
 			Expr::Accept_Expr(iVisitor);
@@ -239,7 +239,7 @@ class Visitor_Expr_Op2_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<T> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<T>>& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 
@@ -254,7 +254,7 @@ class Expr_OpN_T
 :	public virtual Expr
 	{
 protected:
-	Expr_OpN_T(const std::vector<ZP<T> >& iOps)
+	Expr_OpN_T(const std::vector<ZP<T>>& iOps)
 	:	fOps(iOps)
 		{}
 
@@ -265,7 +265,7 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor)
 		{
-		if (Visitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<Visitor_Expr_OpN_T<T> >(&iVisitor))
+		if (Visitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<Visitor_Expr_OpN_T<T>>(&iVisitor))
 			this->Accept_Expr_OpN(*theVisitor);
 		else
 			Expr::Accept(iVisitor);
@@ -274,7 +274,7 @@ public:
 // From Expr
 	virtual void Accept_Expr(Visitor_Expr& iVisitor)
 		{
-		if (Visitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<Visitor_Expr_OpN_T<T> >(&iVisitor))
+		if (Visitor_Expr_OpN_T<T>* theVisitor = sDynNonConst<Visitor_Expr_OpN_T<T>>(&iVisitor))
 			this->Accept_Expr_OpN(*theVisitor);
 		else
 			Expr::Accept_Expr(iVisitor);
@@ -285,20 +285,20 @@ public:
 		{ iVisitor.Visit_Expr_OpN(this); }
 
 	virtual ZP<T> Self() = 0;
-	virtual ZP<T> Clone(const std::vector<ZP<T> >& iOps) = 0;
+	virtual ZP<T> Clone(const std::vector<ZP<T>>& iOps) = 0;
 
-	ZP<T> SelfOrClone(const std::vector<ZP<T> >& iOps)
+	ZP<T> SelfOrClone(const std::vector<ZP<T>>& iOps)
 		{
 		if (iOps == fOps)
 			return this->Self();
 		return this->Clone(iOps);
 		}
 
-	const std::vector<ZP<T> >& GetOps() const
+	const std::vector<ZP<T>>& GetOps() const
 		{ return fOps; }
 
 private:
-	std::vector<ZP<T> > fOps;
+	std::vector<ZP<T>> fOps;
 	};
 
 // =================================================================================================
@@ -310,7 +310,7 @@ class Visitor_Expr_OpN_T
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr_OpN(const ZP<Expr_OpN_T<T> >& iExpr)
+	virtual void Visit_Expr_OpN(const ZP<Expr_OpN_T<T>>& iExpr)
 		{ this->Visit_Expr(iExpr); }
 	};
 

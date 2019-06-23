@@ -50,7 +50,7 @@ private:
 #pragma mark - sCallable_Const
 
 template <class R>
-ZP<Callable<R()> > sCallable_Const(R iR)
+ZP<Callable<R()>> sCallable_Const(R iR)
 	{ return new Callable_Const<R>(iR); }
 
 } // namespace ZooLib

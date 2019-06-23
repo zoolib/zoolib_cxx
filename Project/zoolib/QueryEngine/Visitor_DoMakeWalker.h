@@ -45,7 +45,7 @@ namespace QueryEngine {
 #pragma mark - Visitor_DoMakeWalker
 
 class Visitor_DoMakeWalker
-:	public virtual Visitor_Do_T<ZP<Walker> >
+:	public virtual Visitor_Do_T<ZP<Walker>>
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Calc
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Const
 ,	public virtual RelationalAlgebra::Visitor_Expr_Rel_Comment

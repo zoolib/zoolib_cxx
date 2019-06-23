@@ -48,11 +48,11 @@ const AnyBase::InPlace& AnyBase::pAsInPlace() const
 
 inline
 ZP<AnyBase::Reffed>& AnyBase::pAsReffed()
-	{ return *sFetch_T<ZP<Reffed> >(&fPayload); }
+	{ return *sFetch_T<ZP<Reffed>>(&fPayload); }
 
 inline
 const ZP<AnyBase::Reffed>& AnyBase::pAsReffed() const
-	{ return *sFetch_T<ZP<Reffed> >(&fPayload); }
+	{ return *sFetch_T<ZP<Reffed>>(&fPayload); }
 
 const std::type_info& AnyBase::Type() const
 	{
@@ -143,7 +143,7 @@ void AnyBase::Clear()
 		}
 	else
 		{
-		sDtor_T<ZP<Reffed> >(&fPayload);
+		sDtor_T<ZP<Reffed>>(&fPayload);
 		}
 	fPayload.fAsPtr = 0;
 	}
@@ -201,7 +201,7 @@ void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
 	else
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZP<Reffed> >(&fPayload, iOther.pAsReffed());
+		sCtor_T<ZP<Reffed>>(&fPayload, iOther.pAsReffed());
 		}
 	}
 
@@ -210,7 +210,7 @@ void AnyBase::pDtor_NonPOD()
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);
 	else
-		sDtor_T<ZP<Reffed> >(&fPayload);
+		sDtor_T<ZP<Reffed>>(&fPayload);
 	}
 
 } // namespace ZooLib

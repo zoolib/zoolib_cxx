@@ -40,7 +40,7 @@ class StartScheduler
 public:
 	StartScheduler();
 
-	typedef std::pair<ZP<Starter>,ZP<Callable_Void> > Job;
+	typedef std::pair<ZP<Starter>,ZP<Callable_Void>> Job;
 
 	bool Cancel(const Job& iJob);
 

@@ -70,7 +70,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 		{
 		return sString(*theValue);
 		}
-	else if (const vector<char>* theValue = iVal.PGet<vector<char> >())
+	else if (const vector<char>* theValue = iVal.PGet<vector<char>>())
 		{
 		if (size_t theSize = theValue->size())
 			return sData(&(*theValue)[0], theSize);

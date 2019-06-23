@@ -40,7 +40,7 @@ class SocketWatcher
 public:
 	SocketWatcher();
 
-	typedef std::pair<int,ZP<Callable_Void> > Pair_t;
+	typedef std::pair<int,ZP<Callable_Void>> Pair_t;
 
 // -----
 

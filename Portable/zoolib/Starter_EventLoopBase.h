@@ -55,7 +55,7 @@ protected:
 private:
 	ZMtx fMtx;
 	bool fTriggered;
-	std::vector<ZP<Startable> > fStartables;
+	std::vector<ZP<Startable>> fStartables;
 	};
 
 } // namespace ZooLib

@@ -90,11 +90,11 @@ ZP<Roster::Entry> Roster::MakeEntry(const ZP<Callable_Void>& iCallable_Broadcast
 void Roster::Broadcast()
 	{
 	ZAcqMtx acq(fMtx);
-	vector<ZP<Entry> > local(fEntries.begin(), fEntries.end());
+	vector<ZP<Entry>> local(fEntries.begin(), fEntries.end());
 
 	ZRelMtx rel(fMtx);
 
-	for (vector<ZP<Entry> >::const_iterator ii = local.begin(); ii != local.end(); ++ii)
+	for (vector<ZP<Entry>>::const_iterator ii = local.begin(); ii != local.end(); ++ii)
 		sCall((*ii)->fCallable_Broadcast);
 	}
 

@@ -83,7 +83,7 @@ protected:
 	const size_t fCountAddressesToReturn;
 	bool fStarted;
 	size_t fCurrentIndex;
-	std::vector<ZP<NetAddress_Internet> > fAddresses;
+	std::vector<ZP<NetAddress_Internet>> fAddresses;
 	};
 
 // =================================================================================================

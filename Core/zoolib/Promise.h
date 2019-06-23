@@ -135,11 +135,11 @@ public:
 		return true;
 		}
 
-	ZP<Delivery<T> > GetDelivery()
+	ZP<Delivery<T>> GetDelivery()
 		{ return fDelivery; }
 
 private:
-	ZP<Delivery<T> > fDelivery;
+	ZP<Delivery<T>> fDelivery;
 	};
 
 // =================================================================================================
@@ -183,31 +183,31 @@ public:
 		return true;
 		}
 
-	ZP<Delivery<void> > GetDelivery()
+	ZP<Delivery<void>> GetDelivery()
 		{ return fDelivery; }
 
 private:
-	ZP<Delivery<void> > fDelivery;
+	ZP<Delivery<void>> fDelivery;
 	};
 
 // =================================================================================================
 #pragma mark - sPromise
 
 inline
-ZP<Promise<void> > sPromise()
+ZP<Promise<void>> sPromise()
 	{ return new Promise<void>; }
 
 template <class T>
-ZP<Promise<T> > sPromise()
+ZP<Promise<T>> sPromise()
 	{ return new Promise<T>; }
 
 // =================================================================================================
 #pragma mark - sGetDeliveryClearPromise
 
 template <class T>
-ZP<Delivery<T> > sGetDeliveryClearPromise(ZP<Promise<T> >& ioPromise)
+ZP<Delivery<T>> sGetDeliveryClearPromise(ZP<Promise<T>>& ioPromise)
 	{
-	ZP<Delivery<T> > theDelivery = ioPromise->GetDelivery();
+	ZP<Delivery<T>> theDelivery = ioPromise->GetDelivery();
 	ioPromise.Clear();
 	return theDelivery;
 	}

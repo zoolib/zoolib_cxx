@@ -109,11 +109,11 @@ public:
 		{ this->pSetResult(sAnalyze(iExpr->GetValPred())); }
 
 // From Visitor_Expr_Op1_T
-	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op1(const ZP<Expr_Op1_T<Expr_Bool>>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 // From Visitor_Expr_Op2_T
-	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool> >& iExpr)
+	virtual void Visit_Expr_Op2(const ZP<Expr_Op2_T<Expr_Bool>>& iExpr)
 		{ this->pSetResult(this->Do(iExpr->GetOp0()) | this->Do(iExpr->GetOp1())); }
 
 private:
@@ -378,7 +378,7 @@ public:
 
 	virtual void Visit_Expr_Rel_Project(const ZP<RA::Expr_Rel_Project>& iExpr)
 		{
-		SaveSetRestore<UniSet<ColName> > ssr(fProjection, iExpr->GetProjectRelHead());
+		SaveSetRestore<UniSet<ColName>> ssr(fProjection, iExpr->GetProjectRelHead());
 		this->pSetResult(this->Do(iExpr->GetOp0()));
 		}
 

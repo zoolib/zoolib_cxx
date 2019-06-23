@@ -42,7 +42,7 @@ ZQ<ColName> sQRead_PropName(const ChanRU_UTF& iChanRU);
 
 ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU);
 
-ZQ<std::pair<ColName,ColName> > sQFromStrim_Rename(const ChanRU_UTF& iChanRU);
+ZQ<std::pair<ColName,ColName>> sQFromStrim_Rename(const ChanRU_UTF& iChanRU);
 
 ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU);
 

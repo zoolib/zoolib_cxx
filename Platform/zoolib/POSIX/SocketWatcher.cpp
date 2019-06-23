@@ -127,7 +127,7 @@ void SocketWatcher::pRun()
 				}
 
 			// Gather the callables
-			set<ZP<Callable_Void> > toCall;
+			set<ZP<Callable_Void>> toCall;
 
 			for (int fd = 1; fd <= largest; ++fd)
 				{

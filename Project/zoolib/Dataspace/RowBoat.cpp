@@ -62,7 +62,7 @@ void RowBoat::Initialize()
 	fRegistration = fCallable_Register->Call(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
 	}
 
-const vector<ZP<RowBoat::Callable_Row> >& RowBoat::GetRows()
+const vector<ZP<RowBoat::Callable_Row>>& RowBoat::GetRows()
 	{ return fRows; }
 
 void RowBoat::pChanged(
@@ -74,8 +74,8 @@ void RowBoat::pChanged(
 	ZP<Result> priorResult;
 
 	vector<size_t> theRemoved;
-	vector<std::pair<size_t,size_t> > theAdded;
-	vector<Multi3<size_t,size_t,size_t> > theChanged;
+	vector<std::pair<size_t,size_t>> theAdded;
+	vector<Multi3<size_t,size_t,size_t>> theChanged;
 
 	ZP<Result> curResult;
 	if (iResultDeltas)

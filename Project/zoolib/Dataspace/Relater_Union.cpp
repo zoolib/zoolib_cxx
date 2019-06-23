@@ -306,7 +306,7 @@ public:
 
 	ZP<RA::Expr_Rel> const fRel;
 	ZP<RA::Expr_Rel> fRel_Analyzed;
-	set<ZP<Proxy> > fProxiesDependedUpon;
+	set<ZP<Proxy>> fProxiesDependedUpon;
 	DListHead<DLink_ClientQuery_InPQuery> fClientQueries;
 	ZP<QueryEngine::Result> fResult;
 	};
@@ -945,7 +945,7 @@ void Relater_Union::CollectResults(vector<QueryResult>& oChanged, int64& oChange
 			{
 			PQuery* thePQuery = eraserPQuery.Current();
 			bool allOK = true;
-			for (set<ZP<Proxy> >::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
+			for (set<ZP<Proxy>>::iterator iterProxy = thePQuery->fProxiesDependedUpon.begin();
 				allOK && iterProxy != thePQuery->fProxiesDependedUpon.end(); ++iterProxy)
 				{
 				ZP<Proxy> theProxy = *iterProxy;

@@ -364,7 +364,7 @@ const ZQ<string8> Val_CF::QGet<string8>() const
 	}
 
 template <>
-const ZQ<ZP<CFStringRef> > Val_CF::QGet<ZP<CFStringRef> >() const
+const ZQ<ZP<CFStringRef>> Val_CF::QGet<ZP<CFStringRef>>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		return this->StaticCast<CFStringRef>();
@@ -428,7 +428,7 @@ void Val_CF::Set<string8>(const string8& iVal)
 	{ inherited::operator=(sString(iVal)); }
 
 template <>
-void Val_CF::Set<ZP<CFStringRef> >(const ZP<CFStringRef>& iVal)
+void Val_CF::Set<ZP<CFStringRef>>(const ZP<CFStringRef>& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>

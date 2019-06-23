@@ -159,7 +159,7 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 
 	// This ReadFilter handles both the JSONB-->PPT and the PPT->Any translations for
 	// Result, Daton and for AbsentOptional_t
-	const ZP<ReadFilter> theReadFilter = sDefault<ZP_Counted<ReadFilter> >();
+	const ZP<ReadFilter> theReadFilter = sDefault<ZP_Counted<ReadFilter>>();
 
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZP<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
@@ -201,7 +201,7 @@ public:
 // From Callable_Any_WriteFilter
 	virtual ZQ<bool> QCall(const Any& iAny, const ChanW_PPT& iChanW)
 		{
-		if (const ZP<Result>* theResultP = iAny.PGet<ZP<Result> >())
+		if (const ZP<Result>* theResultP = iAny.PGet<ZP<Result>>())
 			{
 			ZP<Result> theResult = *theResultP;
 
@@ -289,7 +289,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 	{
 	ChanW_XX_Count<ChanW_Bin> theChanW(iChanW);
 
-	const ZP<WriteFilter> theWriteFilter = sDefault<ZP_Counted<WriteFilter> >();
+	const ZP<WriteFilter> theWriteFilter = sDefault<ZP_Counted<WriteFilter>>();
 
 	const double start = Time::sSystem();
 

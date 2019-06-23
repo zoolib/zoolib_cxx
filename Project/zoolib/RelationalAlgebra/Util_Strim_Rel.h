@@ -88,7 +88,7 @@ public:
 	virtual void Visit_Expr_Rel_Search(const ZP<QueryEngine::Expr_Rel_Search>& iExpr);
 
 private:
-	void pWriteBinary(const std::string& iFunctionName, const ZP<Expr_Op2_T<Expr_Rel> >& iExpr);
+	void pWriteBinary(const std::string& iFunctionName, const ZP<Expr_Op2_T<Expr_Rel>>& iExpr);
 	};
 
 typedef Visitor::Options Options;

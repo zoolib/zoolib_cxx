@@ -101,13 +101,13 @@ private:
 			// Ensure we stick around while we're processing something.
 			this->Retain();
 
-			vector<ZP<Startable> > toStart;
+			vector<ZP<Startable>> toStart;
 
 			fStartables.swap(toStart);
 
 			fMtx.Release();
 
-			for (vector<ZP<Startable> >::iterator iter = toStart.begin();
+			for (vector<ZP<Startable>>::iterator iter = toStart.begin();
 				iter != toStart.end(); ++iter)
 				{
 				try { (*iter)->Call(); }
@@ -126,7 +126,7 @@ private:
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fKeepRunning;
-	std::vector<ZP<Startable> > fStartables;
+	std::vector<ZP<Startable>> fStartables;
 	const ZQ<string> fNameQ;
 	};
 

@@ -70,7 +70,7 @@ private:
 	bool fTriggered_Update;
 	bool fNeeds_RelaterCollectResults;
 
-	std::map<int64,ZP<RelationalAlgebra::Expr_Rel> > fPendingAdds;
+	std::map<int64,ZP<RelationalAlgebra::Expr_Rel>> fPendingAdds;
 	std::set<int64> fPendingRemoves;
 	std::map<int64,QueryResult> fPendingResults;
 	};

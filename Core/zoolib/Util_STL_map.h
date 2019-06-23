@@ -200,7 +200,7 @@ Value sGetErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
 // -----
 
 template <typename KBase, typename Value, typename Comparator>
-ZQ<std::pair<KBase,Value> > sQPopFront(std::map<KBase,Value,Comparator>& ioMap)
+ZQ<std::pair<KBase,Value>> sQPopFront(std::map<KBase,Value,Comparator>& ioMap)
 	{
 	if (ioMap.empty())
 		return null;

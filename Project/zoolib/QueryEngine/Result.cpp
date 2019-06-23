@@ -40,7 +40,7 @@ int sCompare_T<QueryEngine::Result>(
 ZMACRO_CompareRegistration_T(QueryEngine::Result)
 
 template <>
-int sCompare_T<ZP<QueryEngine::Result> >(
+int sCompare_T<ZP<QueryEngine::Result>>(
 	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
@@ -193,8 +193,8 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 	const ZP<ResultDeltas>& iResultDeltas,
 	ZP<Result>* oCurResult,
 	vector<size_t>* oRemoved,
-	vector<pair<size_t,size_t> >* oAdded,
-	vector<Multi3<size_t,size_t,size_t> >* oChanged)
+	vector<pair<size_t,size_t>>* oAdded,
+	vector<Multi3<size_t,size_t,size_t>>* oChanged)
 	{
 	if (iResultDeltas)
 		{

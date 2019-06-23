@@ -233,7 +233,7 @@ ZMACRO_Callable_Callable(F)
 #pragma mark - sCallable
 
 template <class Signature>
-ZP<Callable<Signature> >
+ZP<Callable<Signature>>
 sCallable(id iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)
@@ -242,7 +242,7 @@ sCallable(id iObj, SEL iSEL)
 	}
 
 template <class Signature,class T>
-ZP<Callable<Signature> >
+ZP<Callable<Signature>>
 sCallable(const ZP<T>& iObj, SEL iSEL)
 	{
 	if (iObj && iSEL)

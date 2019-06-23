@@ -41,7 +41,7 @@ class Callable_StarterAsync<void()>
 public:
 	typedef void (Signature)();
 
-	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable)
+	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature>>& iCallable)
 	:	fStarter(iStarter)
 	,	fCallable(iCallable)
 		{}
@@ -52,7 +52,7 @@ public:
 
 private:
 	const ZP<Starter> fStarter;
-	const ZP<Callable<Signature> > fCallable;
+	const ZP<Callable<Signature>> fCallable;
 	};
 
 // =================================================================================================
@@ -67,7 +67,7 @@ class Callable_StarterAsync<void(ZMACRO_Callable_P##X)> \
 public: \
 	typedef void (Signature)(ZMACRO_Callable_P##X); \
 \
-	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature> >& iCallable) \
+	Callable_StarterAsync(const ZP<Starter>& iStarter, const ZP<Callable<Signature>>& iCallable) \
 	:	fStarter(iStarter) \
 	,	fCallable(iCallable) \
 		{} \
@@ -77,7 +77,7 @@ public: \
 \
 private:\
 	const ZP<Starter> fStarter; \
-	const ZP<Callable<Signature> > fCallable;\
+	const ZP<Callable<Signature>> fCallable;\
 	};
 
 ZMACRO_Callable_Callable(0)
@@ -113,9 +113,9 @@ sCallable_StarterAsync(
 #else
 
 template <class Signature_p>
-ZP<Callable<Signature_p> >
+ZP<Callable<Signature_p>>
 sCallable_StarterAsync(
-	const ZP<Starter>& iStarter, const ZP<Callable<Signature_p> >& iCallable)
+	const ZP<Starter>& iStarter, const ZP<Callable<Signature_p>>& iCallable)
 	{ return new Callable_StarterAsync<Signature_p>(iStarter, iCallable); }
 
 #endif // ZCONFIG_CPP >= 2011

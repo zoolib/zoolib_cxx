@@ -295,8 +295,8 @@ void sInstall()
 		ZP<LogMeister_Default> theLM = new LogMeister_Default;
 
 		FILE* theStdOut = stdout; // Workaround for VC++
-		ZP<Channer<ChanW_Bin> > asChannerW_Bin = sChanner_T<ChanW_Bin_FILE>(theStdOut);
-		ZP<Channer<ChanW_UTF> > theChannerW_UTF = sChanner_Channer_T<ChanW_UTF_Chan_Bin_UTF8>(asChannerW_Bin);
+		ZP<Channer<ChanW_Bin>> asChannerW_Bin = sChanner_T<ChanW_Bin_FILE>(theStdOut);
+		ZP<Channer<ChanW_UTF>> theChannerW_UTF = sChanner_Channer_T<ChanW_UTF_Chan_Bin_UTF8>(asChannerW_Bin);
 
 		theLM->SetChanner(theChannerW_UTF);
 

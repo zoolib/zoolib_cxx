@@ -72,7 +72,7 @@ public:
 
 	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
 		namespace { \
-			class CLASS : public ComparerRegistration_T<t, ComparerRegistrationFunctor_T<t> > \
+			class CLASS : public ComparerRegistration_T<t, ComparerRegistrationFunctor_T<t>> \
 				{} INST; \
 			}
 #else
@@ -89,7 +89,7 @@ public:
 		};
 
 	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
-		namespace { class CLASS : public ComparerRegistration_T<t, sCompare_T<t> > {} INST; }
+		namespace { class CLASS : public ComparerRegistration_T<t, sCompare_T<t>> {} INST; }
 
 #endif
 

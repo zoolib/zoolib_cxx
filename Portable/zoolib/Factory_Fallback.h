@@ -71,7 +71,7 @@ public:
 		}
 
 protected:
-	std::vector<ZP<Factory_Fallback<T>> > fFactories;
+	std::vector<ZP<Factory_Fallback<T>>> fFactories;
 	};
 
 } // namespace ZooLib

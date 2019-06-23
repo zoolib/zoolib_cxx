@@ -160,7 +160,7 @@ public:
 
 // ----------
 
-void sStartOnNewThread(const ZP<Callable<void()> >& iCallable)
+void sStartOnNewThread(const ZP<Callable<void()>>& iCallable)
 	{
 	if (iCallable)
 		sSingleton<StartOnNewThreadHandler>().Start(iCallable);
