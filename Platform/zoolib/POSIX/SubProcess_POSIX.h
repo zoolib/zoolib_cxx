@@ -39,7 +39,7 @@ namespace ZooLib {
 #pragma mark - SubProcess_POSIX
 
 class SubProcess_POSIX
-:	public ZCounted
+:	public Counted
 	{
 public:
 	SubProcess_POSIX(const std::string& iProgram,
@@ -47,7 +47,7 @@ public:
 
 	virtual ~SubProcess_POSIX();
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 	virtual void Finalize();
 

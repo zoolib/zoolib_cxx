@@ -31,7 +31,7 @@ ResultHandler::ResultHandler(const ZP<Callable_t>& iCallable)
 	{}
 
 bool ResultHandler::QCall(
-	const ZP<ZCounted>& iRegistration,
+	const ZP<Counted>& iRegistration,
 	int64 iChangeCount,
 	const ZP<Result>& iResult,
 	const ZP<ResultDeltas>& iResultDeltas)

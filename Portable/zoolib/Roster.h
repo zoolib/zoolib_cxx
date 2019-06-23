@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark - Roster
 
 class Roster
-:	public ZCounted
+:	public Counted
 ,	NonCopyable
 	{
 public:
@@ -46,7 +46,7 @@ public:
 
 	virtual ~Roster();
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // Our protocol
@@ -78,7 +78,7 @@ private:
 #pragma mark - Roster::Entry
 
 class Roster::Entry
-:	public ZCounted
+:	public Counted
 ,	NonCopyable
 	{
 private:
@@ -90,7 +90,7 @@ private:
 public:
 	virtual ~Entry();
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 private:

@@ -52,7 +52,7 @@ CFNotification::~CFNotification()
 
 void CFNotification::Initialize()
 	{
-	ZCounted::Initialize();
+	Counted::Initialize();
 
 	::CFNotificationCenterAddObserver(
 		::CFNotificationCenterGetLocalCenter(),
@@ -67,7 +67,7 @@ void CFNotification::Finalize()
 	{
 	::CFNotificationCenterRemoveEveryObserver(::CFNotificationCenterGetLocalCenter(), this);
 
-	ZCounted::Finalize();
+	Counted::Finalize();
 	}
 
 void* CFNotification::GetObject()

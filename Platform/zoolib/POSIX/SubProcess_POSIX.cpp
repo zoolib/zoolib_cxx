@@ -50,7 +50,7 @@ SubProcess_POSIX::~SubProcess_POSIX()
 
 void SubProcess_POSIX::Initialize()
 	{
-	ZCounted::Initialize();
+	Counted::Initialize();
 
 	vector<const char*> theArgs;
 	theArgs.push_back(fProgram.c_str());
@@ -118,7 +118,7 @@ void SubProcess_POSIX::Initialize()
 void SubProcess_POSIX::Finalize()
 	{
 	this->pWaitTillStopped();
-	ZCounted::Finalize();
+	Counted::Finalize();
 	}
 
 void SubProcess_POSIX::Stop()

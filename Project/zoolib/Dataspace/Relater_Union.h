@@ -42,7 +42,7 @@ public:
 	Relater_Union();
 	virtual ~Relater_Union();
 
-// From ZCounted via Relater
+// From Counted via Relater
 	virtual void Initialize();
 
 // From Relater

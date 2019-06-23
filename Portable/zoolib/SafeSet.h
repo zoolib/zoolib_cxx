@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_SafeSet_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Counted.h"
 #include "zoolib/DList.h"
 
-#include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
 #include "zoolib/ZThread.h"
 
@@ -47,7 +47,7 @@ class DLink_SafeSetIterConst
 
 template <class T>
 class SafeSetRep
-:	public ZCounted
+:	public Counted
 	{
 private:
 	struct Entry
@@ -81,7 +81,7 @@ private:
 	virtual ~SafeSetRep()
 		{}
 
-// From ZCounted
+// From Counted
 	virtual void Finalize()
 		{
 		{ // Scope for guard

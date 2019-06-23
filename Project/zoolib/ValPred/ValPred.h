@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
-
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 #include <string>
 
@@ -33,7 +32,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ValComparator
 
-class ValComparator : public ZCounted
+class ValComparator : public Counted
 	{
 protected:
 	ValComparator();
@@ -65,7 +64,7 @@ int sCompare_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR);
 // =================================================================================================
 #pragma mark - ValComparand
 
-class ValComparand : public ZCounted
+class ValComparand : public Counted
 	{
 protected:
 	ValComparand();

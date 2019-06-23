@@ -86,7 +86,7 @@ private:
 #pragma mark - Delegate::Wrapper
 
 class Delegate::Wrapper
-:	public ZCounted
+:	public Counted
 	{
 	friend class Delegate;
 

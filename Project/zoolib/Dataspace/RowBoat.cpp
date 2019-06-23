@@ -58,7 +58,7 @@ RowBoat::~RowBoat()
 
 void RowBoat::Initialize()
 	{
-	ZCounted::Initialize();
+	Counted::Initialize();
 	fRegistration = fCallable_Register->Call(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
 	}
 
@@ -66,7 +66,7 @@ const vector<ZP<RowBoat::Callable_Row> >& RowBoat::GetRows()
 	{ return fRows; }
 
 void RowBoat::pChanged(
-	const ZP<ZCounted>& iRegistration,
+	const ZP<Counted>& iRegistration,
 	int64 iChangeCount,
 	const ZP<Result>& iResult,
 	const ZP<ResultDeltas>& iResultDeltas)

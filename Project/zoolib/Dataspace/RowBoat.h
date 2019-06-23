@@ -33,7 +33,7 @@ namespace Dataspace {
 #pragma mark - RowBoat
 
 class RowBoat
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef RelationalAlgebra::PseudoMap PseudoMap;
@@ -55,7 +55,7 @@ public:
 
 	virtual ~RowBoat();
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 
 // Our protocol
@@ -63,7 +63,7 @@ public:
 
 private:
 	void pChanged(
-		const ZP<ZCounted>& iRegistration,
+		const ZP<Counted>& iRegistration,
 		int64 iChangeCount,
 		const ZP<Result>& iResult,
 		const ZP<ResultDeltas>& iResultDeltas);
@@ -73,7 +73,7 @@ private:
 	QueryEngine::ResultDiffer fResultDiffer;
 	const ZP<Callable_Make_Callable_Row> fCallable;
 
-	ZP<ZCounted> fRegistration;
+	ZP<Counted> fRegistration;
 	std::vector<ZP<Callable_Row> > fRows;
 	std::map<string8,size_t> fBindings;
 	};

@@ -42,7 +42,7 @@ public:
 	Relater_Searcher(ZP<Searcher> iSearcher);
 	virtual ~Relater_Searcher();
 
-// From ZCounted via Relater
+// From Counted via Relater
 	virtual void Initialize();
 
 // From Relater

@@ -612,31 +612,19 @@ const struct
 
 	template <class T, bool Sense_p>
 	ZRef<T,true> operator&(const ZRef<T,Sense_p>& iRef) const { return ZRef<T,true>(iRef); }
-	} sRef = {};
+	} sZP = {}, sRef = {};
 
-// =================================================================================================
-#pragma mark - sTempRef
-
-const struct
-	{
-	template <class T>
-	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-
-	template <class T>
-	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-	} sTempRef = {};
-
-// =================================================================================================
-#pragma mark - sTempPtrRef
-
-const struct
-	{
-	template <class T>
-	ZRef<T*,true> operator&(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
-
-	template <class T>
-	ZRef<T*,true> operator()(T* iP) const { return ZRef<T*,true>(Adopt_T<T*>(iP)); }
-	} sTempPtrRef = {};
+//// =================================================================================================
+//#pragma mark - sTempRef
+//
+//const struct
+//	{
+//	template <class T>
+//	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
+//
+//	template <class T>
+//	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
+//	} sTempZP = {}, sTempRef = {};
 
 // =================================================================================================
 #pragma mark - sClear
@@ -676,7 +664,7 @@ void swap(ZRef<T,Sense_p>& a, ZRef<T,not Sense_p>& b)
 template <class T> using NotRef = ZRef<T,false>;
 
 template <class T> using ZP = ZRef<T,true>;
-template <class T> using NotP = ZRef<T,false>;
+template <class T> using NotZP = ZRef<T,false>;
 
 } // namespace ZooLib
 

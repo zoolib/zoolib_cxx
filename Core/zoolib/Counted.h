@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCounted_h__
-#define __ZCounted_h__ 1
+#ifndef __ZooLib_Counted_h__
+#define __ZooLib_Counted_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/CountedWithoutFinalize.h"
@@ -32,13 +32,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ZCountedBase
+#pragma mark - CountedBase
 
-class ZCountedBase
+class CountedBase
 	{
 public:
-	ZCountedBase();
-	virtual ~ZCountedBase();
+	CountedBase();
+	virtual ~CountedBase();
 
 	virtual void Initialize();
 	virtual void Finalize();
@@ -50,8 +50,8 @@ public:
 	bool IsShared() const;
 	bool IsReferenced() const;
 
-	class WeakRefProxy;
-	ZRef<WeakRefProxy> GetWeakRefProxy();
+	class WPProxy;
+	ZRef<WPProxy> GetWPProxy();
 
 protected:
 	int pCOMAddRef();
@@ -59,202 +59,183 @@ protected:
 
 private:
 	ZAtomic_t fRefCount;
-	ZRef<WeakRefProxy> fWeakRefProxy;
+	ZRef<WPProxy> fWPProxy;
 	};
 
 // =================================================================================================
-#pragma mark - sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
+#pragma mark - sRetain/sRelase for CountedBase derivatives (ie Counted)
 
-inline void sRetain(ZCountedBase& iObject)
+inline void sRetain(CountedBase& iObject)
 	{ iObject.Retain(); }
 
-inline void sRelease(ZCountedBase& iObject)
+inline void sRelease(CountedBase& iObject)
 	{ iObject.Release(); }
 
-inline void sCheck(ZCountedBase* iP)
+inline void sCheck(CountedBase* iP)
 	{ ZAssertStop(1, iP); }
 
 // =================================================================================================
-#pragma mark - ZCounted
+#pragma mark - Counted
 
-class ZCounted : public virtual ZCountedBase
+class Counted : public virtual CountedBase
 	{};
 
 // =================================================================================================
-#pragma mark - ZCountedBase::WeakRefProxy
+#pragma mark - CountedBase::WPProxy
 
-class ZCountedBase::WeakRefProxy
+class CountedBase::WPProxy
 :	public CountedWithoutFinalize
 	{
 private:
-	WeakRefProxy(ZCountedBase* iCountedBase);
-	virtual ~WeakRefProxy();
+	WPProxy(CountedBase* iCountedBase);
+	virtual ~WPProxy();
 
-	ZRef<ZCountedBase> pGetCountedBase();
+	ZRef<CountedBase> pGetCountedBase();
 	void pClear();
 
 	ZMtx fMtx;
-	ZCountedBase* fCountedBase;
+	CountedBase* fCountedBase;
 
-	friend class ZCountedBase;
-	friend class ZWeakRefBase;
+	friend class CountedBase;
+	friend class WPBase;
 	};
 
 // =================================================================================================
-#pragma mark - ZWeakRefBase
+#pragma mark - WPBase
 
-class ZWeakRefBase
+class WPBase
 	{
 protected:
-	typedef ZCountedBase::WeakRefProxy WeakRefProxy;
+	typedef CountedBase::WPProxy WPProxy;
 
-	ZWeakRefBase();
-	~ZWeakRefBase();
-	ZWeakRefBase(const ZWeakRefBase& iOther);
-	ZWeakRefBase& operator=(const ZWeakRefBase& iOther);
+	WPBase();
+	~WPBase();
+	WPBase(const WPBase& iOther);
+	WPBase& operator=(const WPBase& iOther);
 
-	ZWeakRefBase(const ZRef<WeakRefProxy>& iWeakRefProxy);
+	WPBase(const ZRef<WPProxy>& iWPProxy);
 
-	void pAssign(const ZRef<WeakRefProxy>& iWeakRefProxy);
+	void pAssign(const ZRef<WPProxy>& iWPProxy);
 	void pClear();
 
-	ZRef<ZCountedBase> pGet() const;
-	ZRef<WeakRefProxy> pGetWeakRefProxy() const;
+	ZRef<CountedBase> pGet() const;
+	ZRef<WPProxy> pGetWPProxy() const;
 
 private:
-	ZRef<WeakRefProxy> fWeakRefProxy;
+	ZRef<WPProxy> fWPProxy;
 	};
 
 // =================================================================================================
-#pragma mark - ZWeakRef
+#pragma mark - WP
 
 template <class T>
-class ZWeakRef
-:	protected ZWeakRefBase
+class WP
+:	protected WPBase
 	{
 public:
-	ZWeakRef()
+	WP()
 		{}
 
-	~ZWeakRef()
+	~WP()
 		{}
 
-	ZWeakRef(const ZWeakRef& iOther)
-	:	ZWeakRefBase(iOther)
+	WP(const WP& iOther)
+	:	WPBase(iOther)
 		{}
 
-	ZWeakRef& operator=(const ZWeakRef& iOther)
+	WP& operator=(const WP& iOther)
 		{
-		ZWeakRefBase::operator=(iOther);
+		WPBase::operator=(iOther);
 		return *this;
 		}
 
-	ZWeakRef(const null_t&)
+	WP(const null_t&)
 		{}
 
 	template <class O>
-	ZWeakRef(const ZWeakRef<O>& iOther)
-	:	ZWeakRefBase(iOther)
+	WP(const WP<O>& iOther)
+	:	WPBase(iOther)
 		{ (void)static_cast<T*>(static_cast<O*>(0)); }
 
 	template <class O>
-	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
+	WP& operator=(const WP<O>& iOther)
 		{
-		ZWeakRefBase::operator=(iOther);
+		WPBase::operator=(iOther);
 		return *this;
 		}
 
-	ZWeakRef(const ZRef<WeakRefProxy>& iWeakRefProxy)
-	:	ZWeakRefBase(iWeakRefProxy)
+	WP(const ZRef<WPProxy>& iWPProxy)
+	:	WPBase(iWPProxy)
 		{}
 
-	ZWeakRef& operator=(const ZRef<WeakRefProxy>& iWeakRefProxy)
+	WP& operator=(const ZRef<WPProxy>& iWPProxy)
 		{
-		ZWeakRefBase::pAssign(iWeakRefProxy);
+		WPBase::pAssign(iWPProxy);
 		return *this;
 		}
 
-	ZWeakRef(WeakRefProxy* iWeakRefProxy)
-	:	ZWeakRefBase(iWeakRefProxy)
+	WP(WPProxy* iWPProxy)
+	:	WPBase(iWPProxy)
 		{}
 
-	ZWeakRef& operator=(WeakRefProxy* iWeakRefProxy)
+	WP& operator=(WPProxy* iWPProxy)
 		{
-		ZWeakRefBase::pAssign(iWeakRefProxy);
+		WPBase::pAssign(iWPProxy);
 		return *this;
 		}
 
 	template <class O,bool Sense>
-	ZWeakRef(const ZRef<O,Sense>& iRef)
-	:	ZWeakRefBase(iRef ? iRef->GetWeakRefProxy() : null)
+	WP(const ZRef<O,Sense>& iRef)
+	:	WPBase(iRef ? iRef->GetWPProxy() : null)
 		{
 		// Ensures that O* converts to T*
 		(void)static_cast<T*>(static_cast<O*>(0));
 		}
 
 	template <class O,bool Sense>
-	ZWeakRef& operator=(const ZRef<O,Sense>& iRef)
+	WP& operator=(const ZRef<O,Sense>& iRef)
 		{
 		(void)static_cast<T*>(static_cast<O*>(0));
-		ZWeakRefBase::pAssign(iRef ? iRef->GetWeakRefProxy() : null);
+		WPBase::pAssign(iRef ? iRef->GetWPProxy() : null);
 		return *this;
 		}
 
 	void Clear()
-		{ ZWeakRefBase::pClear(); }
+		{ WPBase::pClear(); }
 
-	ZRef<WeakRefProxy> GetWeakRefProxy() const
-		{ return ZWeakRefBase::pGetWeakRefProxy(); }
+	ZRef<WPProxy> GetWPProxy() const
+		{ return WPBase::pGetWPProxy(); }
 
 	ZRef<T> Get() const
-		{ return ZWeakRefBase::pGet().template DynamicCast<T>(); }
+		{ return WPBase::pGet().template DynamicCast<T>(); }
 
 	template <class O, bool Sense>
 	operator ZRef<O,Sense>() const
 		{
 		(void)static_cast<T*>(static_cast<O*>(0));
-		return ZWeakRefBase::pGet().template DynamicCast<O>();
+		return WPBase::pGet().template DynamicCast<O>();
 		}
 
-	bool operator==(const ZWeakRef& iOther) const
-		{ return this->GetWeakRefProxy() == iOther.GetWeakRefProxy(); }
+	bool operator==(const WP& iOther) const
+		{ return this->GetWPProxy() == iOther.GetWPProxy(); }
 
-	bool operator!=(const ZWeakRef& iOther) const
-		{ return this->GetWeakRefProxy() != iOther.GetWeakRefProxy(); }
+	bool operator!=(const WP& iOther) const
+		{ return this->GetWPProxy() != iOther.GetWPProxy(); }
 
-	bool operator<(const ZWeakRef& iOther) const
-		{ return this->GetWeakRefProxy() < iOther.GetWeakRefProxy(); }
+	bool operator<(const WP& iOther) const
+		{ return this->GetWPProxy() < iOther.GetWPProxy(); }
 	};
 
-// =================================================================================================
-#pragma mark - sWeakRef
-
-template <class T>
-ZWeakRef<T> sWeakRef(T* iP)
-	{
-	if (iP)
-		return ZWeakRef<T>(iP->GetWeakRefProxy());
-	return null;
-	}
-
-template <class T,bool Sense>
-ZWeakRef<T> sWeakRef(ZRef<T,Sense> iP)
-	{
-	if (iP)
-		return ZWeakRef<T>(iP->GetWeakRefProxy());
-	return null;
-	}
+template <class T> using ZWeakRef = WP<T>;
 
 // =================================================================================================
 #pragma mark - WP
-
-template <class T> using WP = ZWeakRef<T>;
 
 template <class T>
 WP<T> sWP(T* iP)
 	{
 	if (iP)
-		return WP<T>(iP->GetWeakRefProxy());
+		return WP<T>(iP->GetWPProxy());
 	return null;
 	}
 
@@ -262,46 +243,65 @@ template <class T,bool Sense>
 WP<T> sWP(ZRef<T,Sense> iP)
 	{
 	if (iP)
-		return WP<T>(iP->GetWeakRefProxy());
+		return WP<T>(iP->GetWPProxy());
 	return null;
 	}
 
 // =================================================================================================
-#pragma mark - ZRef_Counted
+#pragma mark - sWeakRef
+
+template <class T>
+WP<T> sWeakRef(T* iP)
+	{
+	if (iP)
+		return WP<T>(iP->GetWPProxy());
+	return null;
+	}
+
+template <class T,bool Sense>
+WP<T> sWeakRef(ZRef<T,Sense> iP)
+	{
+	if (iP)
+		return WP<T>(iP->GetWPProxy());
+	return null;
+	}
+
+// =================================================================================================
+#pragma mark - ZP_Counted
 
 // Useful in situations where we want the default ctor of a ZRef<X> to default create an X.
-// e.g. sStarter_EachOnNewThread and its use of sSingleton/ZRef_Counted
+// e.g. sStarter_EachOnNewThread and its use of sSingleton/ZP_Counted
 
 template <class Counted_p>
-class ZRef_Counted
+class ZP_Counted
 :	public ZRef<Counted_p>
 	{
 	typedef ZRef<Counted_p> inherited;
 public:
 	typedef Counted_p Counted_t;
 
-	ZRef_Counted()
+	ZP_Counted()
 	:	inherited(new Counted_p)
 		{}
 
-	ZRef_Counted(const ZRef_Counted& iOther)
+	ZP_Counted(const ZP_Counted& iOther)
 	:	inherited(iOther)
 		{}
 
-	~ZRef_Counted()
+	~ZP_Counted()
 		{}
 
-	ZRef_Counted& operator=(const ZRef_Counted& iOther)
+	ZP_Counted& operator=(const ZP_Counted& iOther)
 		{
 		inherited::operator=(iOther);
 		return *this;
 		}
 
-	ZRef_Counted(const inherited& iOther)
+	ZP_Counted(const inherited& iOther)
 	:	inherited(iOther)
 		{}
 
-	ZRef_Counted& operator=(const inherited& iOther)
+	ZP_Counted& operator=(const inherited& iOther)
 		{
 		inherited::operator=(iOther);
 		return *this;
@@ -310,4 +310,4 @@ public:
 
 } // namespace ZooLib
 
-#endif // __ZCounted_h__
+#endif // __ZooLib_Counted_h__

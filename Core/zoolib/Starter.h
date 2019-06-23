@@ -32,7 +32,7 @@ typedef Callable<void()> Startable;
 #pragma mark - Starter
 
 class Starter
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual bool QStart(const ZRef<Startable>& iStartable) = 0;

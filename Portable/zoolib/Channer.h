@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 namespace ZooLib {
 
@@ -33,7 +33,7 @@ namespace ZooLib {
 template <class DF> using Channer
 	= typename AsDeriveFrom<
 		typename TypeListPrefixed<
-			ZCounted,
+			Counted,
 			typename DF::AsTypeList_t
 			>::Result_t
 		>::Result_t;
@@ -127,19 +127,19 @@ ZRef<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
 
 template <class Chan_p>
 class Channer_Channer_T
-:	private ZRef<ZCounted>
+:	private ZRef<Counted>
 ,	public Channer_T<Chan_p>
 	{
 public:
 	template <class ChannerOther_p, bool Sense_p>
 	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
-	:	ZRef<ZCounted>(iOther)
+	:	ZRef<Counted>(iOther)
 	,	Channer_T<Chan_p>(*iOther)
 		{}
 
 	template <class ChannerOther_p, bool Sense_p, typename... Args_p>
 	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
-	:	ZRef<ZCounted>(iOther)
+	:	ZRef<Counted>(iOther)
 	,	Channer_T<Chan_p>(*iOther, std::forward<Args_p>(args)...)
 		{}
 	};

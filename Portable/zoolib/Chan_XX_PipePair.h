@@ -23,8 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
+#include "zoolib/Counted.h"
 #include "zoolib/Time.h"
-#include "zoolib/ZCounted.h"
+
 #include "zoolib/ZThread.h"
 
 namespace ZooLib {
@@ -34,7 +35,7 @@ namespace ZooLib {
 
 template <class EE>
 class ImpPipePair
-:	public ZCounted
+:	public Counted
 	{
 public:
 	ImpPipePair()

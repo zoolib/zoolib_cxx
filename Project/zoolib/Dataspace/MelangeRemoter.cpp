@@ -159,7 +159,7 @@ static Map_Any spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescrip
 
 	// This ReadFilter handles both the JSONB-->PPT and the PPT->Any translations for
 	// Result, Daton and for AbsentOptional_t
-	const ZP<ReadFilter> theReadFilter = sDefault<ZRef_Counted<ReadFilter> >();
+	const ZP<ReadFilter> theReadFilter = sDefault<ZP_Counted<ReadFilter> >();
 
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZP<Delivery<Any>> theDelivery = sStartAsync_AsAny(sGetClear(thePair.second), theReadFilter);
@@ -289,7 +289,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_Any iMessage, const ZQ<s
 	{
 	ChanW_XX_Count<ChanW_Bin> theChanW(iChanW);
 
-	const ZP<WriteFilter> theWriteFilter = sDefault<ZRef_Counted<WriteFilter> >();
+	const ZP<WriteFilter> theWriteFilter = sDefault<ZP_Counted<WriteFilter> >();
 
 	const double start = Time::sSystem();
 
@@ -445,7 +445,7 @@ MelangeServer::~MelangeServer()
 
 void MelangeServer::Initialize()
 	{
-	ZCounted::Initialize();
+	Counted::Initialize();
 
 	fJob = StartScheduler::Job(fMelange.f2, sCallable(sWeakRef(this), &MelangeServer::pWork));
 
@@ -577,7 +577,8 @@ void MelangeServer::pWork()
 					{
 					if (ZP<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
 						{
-						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
+						RefReg theReg = fMelange.f0->Call(fCallable_Changed, theRel);
+//@@						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
 						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
 						sInsertMust(fMap_Reg2Refcon, theReg, *theRefconQ);
 						sInsertMust(fSet_NewRefcons, *theRefconQ);
@@ -629,7 +630,7 @@ void MelangeServer::pWork()
 		if (toInsert.size() || toErase.size())
 			{
 			ZRelMtx rel(fMtx);
-			/*int64 unusedChangeCount = */sCall(fMelange.f1,
+			int64 unusedChangeCount ZMACRO_Attribute_Unused = sCall(fMelange.f1,
 				sFirstOrNil(toInsert), toInsert.size(),
 				sFirstOrNil(toErase), toErase.size());
 			}
@@ -673,7 +674,7 @@ void MelangeServer::pChanged(
 #pragma mark - Melange_Client::Registration
 
 class Melange_Client::Registration
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Registration(ZP<Melange_Client> iClient,
@@ -684,7 +685,7 @@ public:
 	,	fRel(iRel)
 		{}
 
-// From ZCounted
+// From Counted
 	virtual void Finalize()
 		{ fClient->pFinalize(this); }
 
@@ -706,7 +707,7 @@ Melange_Client::Melange_Client(const ZP<Factory_Channer>& iFactory,
 ,	fNextRefcon(1)
 	{}
 
-ZQ<ZP<ZCounted> > Melange_Client::QCall(
+ZP<Counted> Melange_Client::QCall(
 	const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZP<Expr_Rel>& iRel)
 	{

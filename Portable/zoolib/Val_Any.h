@@ -23,14 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Compat_unordered_map.h"
+#include "zoolib/Counted.h"
 #include "zoolib/Data_Any.h"
 #include "zoolib/Name.h"
 #include "zoolib/SafePtrStack.h"
 #include "zoolib/Util_Relops.h"
 #include "zoolib/Val.h"
 #include "zoolib/Val_T.h"
-
-#include "zoolib/ZCounted.h"
 
 #include <map>
 #include <vector>
@@ -478,7 +477,7 @@ class SafePtrStackLink_Map_Any_Rep
 	{};
 
 class Map_Any::Rep
-:	public ZCounted
+:	public Counted
 ,	public SafePtrStackLink_Map_Any_Rep
 	{
 public:
@@ -489,7 +488,7 @@ private:
 
 	Rep(const Map_t& iMap);
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // Our protocol

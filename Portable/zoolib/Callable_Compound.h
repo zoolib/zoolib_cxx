@@ -45,11 +45,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R0> QCall()
+	virtual QRet<R0> QCall()
 		{
-		if (const ZQ<R1> theR1 = sQCall(fCallable))
+		if (const QRet<R1> theR1 = sQCall(fCallable))
 			return sQCall(fApply, *theR1);
-		return null;
+		return QRet<R0>();
 		}
 
 private:
@@ -77,11 +77,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R0> QCall(P1 iP1)
+	virtual QRet<R0> QCall(P1 iP1)
 		{
-		if (const ZQ<R1> theR1 = sQCall(fCallable, iP1))
+		if (const QRet<R1> theR1 = sQCall(fCallable, iP1))
 			return sQCall(fApply, *theR1);
-		return null;
+		return QRet<R0>();
 		}
 
 private:
@@ -108,7 +108,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R1> QCall()
+	virtual QRet<R1> QCall()
 		{
 		sCall(f0);
 		return sQCall(f1);
@@ -176,16 +176,16 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{
-		if (const ZQ<bool> theQ = sQCall(fCondition))
+		if (const QRet<bool> theQ = sQCall(fCondition))
 			{
 			if (*theQ)
 				return sQCall(f0);
 			else
 				return sQCall(f1);
 			}
-		return null;
+		return QRet<R>();
 		}
 
 private:

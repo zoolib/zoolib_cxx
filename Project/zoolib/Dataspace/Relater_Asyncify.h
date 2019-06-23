@@ -40,7 +40,7 @@ public:
 	Relater_Asyncify(ZP<Relater> iRelater);
 	virtual ~Relater_Asyncify();
 
-// From ZCounted via Relater
+// From Counted via Relater
 	virtual void Initialize();
 	virtual void Finalize();
 

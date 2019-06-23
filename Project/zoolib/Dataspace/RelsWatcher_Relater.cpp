@@ -38,7 +38,7 @@ using std::vector;
 #pragma mark - Registration
 
 class RelsWatcher_Relater::Registration
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Registration(
@@ -59,7 +59,7 @@ public:
 		if (ZP<RelsWatcher_Relater> theRWR = fWeakRef_RWR)
 			theRWR->pFinalize(this);
 		else
-			ZCounted::Finalize();
+			Counted::Finalize();
 		}
 
 	int64 fRefcon;
@@ -99,7 +99,7 @@ void RelsWatcher_Relater::Finalize()
 	inherited::Finalize();
 	}
 
-ZP<ZCounted> RelsWatcher_Relater::QCall(
+ZP<Counted> RelsWatcher_Relater::QCall(
 	const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZP<Expr_Rel>& iRel)
 	{

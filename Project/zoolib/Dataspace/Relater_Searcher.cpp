@@ -214,7 +214,7 @@ public:
 	virtual ~Walker_Bingo()
 		{}
 
-// From ZCounted via QE::Walker
+// From Counted via QE::Walker
 	virtual void Finalize()
 		{ fRelater->pFinalize(this); }
 

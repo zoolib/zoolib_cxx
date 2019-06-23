@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Pixels_PixelDesc_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 #include "zoolib/Pixels/Pixval2RGBA.h"
 #include "zoolib/Pixels/RGBA2Pixval.h"

@@ -2,11 +2,10 @@
 #define __ZooLib_GameEngine_Sound_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/GameEngine/Types.h"
-
+#include "zoolib/Counted.h"
 #include "zoolib/UnicodeString8.h"
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/GameEngine/Types.h"
 
 namespace ZooLib {
 namespace GameEngine {

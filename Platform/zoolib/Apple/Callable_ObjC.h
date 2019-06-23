@@ -200,11 +200,11 @@ public: \
 \
 	Callable_ObjC(Obj iObj, SEL iSEL) : fObj(iObj), fSEL(iSEL) {} \
 \
-	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+	virtual bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		Callable_ObjC_Util::MsgSend<void, FunctionPtr_t>::sMsgSend() \
 			(fObj, fSEL, ZMACRO_Callable_i##X); \
-		return notnull; \
+		return true; \
 		} \
 \
 private: \

@@ -1,7 +1,7 @@
 #ifndef __ZooLib_GameEngine_Nook_h__
 #define __ZooLib_GameEngine_Nook_h__ 1
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 #include "zoolib/Name.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/ZMACRO_auto.h"

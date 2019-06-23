@@ -139,7 +139,7 @@ class Relater_Union::Proxy
 public:
 	Proxy(Relater_Union* iRelater);
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Visitee

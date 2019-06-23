@@ -35,7 +35,7 @@ namespace SQLite {
 // =================================================================================================
 #pragma mark - SQLite
 
-class DB : public ZCounted
+class DB : public Counted
 	{
 public:
 	DB(const string8& iPath);
@@ -53,7 +53,7 @@ private:
 // =================================================================================================
 #pragma mark - Iter
 
-class Iter : public ZCounted
+class Iter : public Counted
 	{
 	Iter(ZP<DB> iDB, const string8& iSQL, uint64 iPosition);
 

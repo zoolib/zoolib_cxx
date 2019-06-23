@@ -97,7 +97,7 @@ public:
 /// NetAddress::MakeLookup is called. It's an iterator that returns zero or
 /// more names that are considered to map to the address in question.
 class NetAddressLookup
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	NetAddressLookup();
@@ -143,7 +143,7 @@ public:
 /// NetName::MakeLookup is called. It's an iterator that returns zero or
 /// more addresses that the name maps to.
 class NetNameLookup
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	NetNameLookup();

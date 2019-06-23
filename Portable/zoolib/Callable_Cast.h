@@ -44,7 +44,7 @@ public:
 	virtual QRet<R0> QCall(A_p... iParams)
 		{
 		if (QRet<R1> theQ = sQCall(fCallable, iParams...))
-			return static_cast<QRet<R1>>(theQ);
+			return static_cast<QRet<R0>>(theQ);
 		return QRet<R0>();
 		}
 

@@ -54,12 +54,12 @@ class Starter_CFRunLoop
 :	public Starter_EventLoopBase
 	{
 public:
-	static ZRef<Starter_CFRunLoop> sMain();
+	static ZP<Starter_CFRunLoop> sMain();
 
 	Starter_CFRunLoop(CFRunLoopRef iRunLoopRef);
 	virtual ~Starter_CFRunLoop();
 
-// From ZCounted via Starter_EventLoopBase
+// From Counted via Starter_EventLoopBase
 	virtual void Initialize();
 	virtual void Finalize();
 
@@ -73,8 +73,8 @@ protected:
 private:
 	static void spCallback(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info);
 
-	ZRef<CFRunLoopRef> fRunLoop;
-	ZRef<CFRunLoopObserverRef> fObserver;
+	ZP<CFRunLoopRef> fRunLoop;
+	ZP<CFRunLoopObserverRef> fObserver;
 	};
 
 } // namespace ZooLib

@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Compat_operator_bool.h"
+#include "zoolib/Counted.h"
 #include "zoolib/Safe.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
 
 #if ZCONFIG(Compiler, GCC)
@@ -150,7 +150,7 @@ typedef ChanW S;
 #pragma mark - Log::LogMeister
 
 class LogMeister
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);

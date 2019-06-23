@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Visitor_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 namespace ZooLib {
 
@@ -32,7 +32,7 @@ namespace ZooLib {
 class Visitor;
 
 class Visitee
-:	public virtual ZCounted
+:	public virtual Counted
 	{
 public:
 // Our protocol

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanW_Bin.h"
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
@@ -36,7 +36,7 @@ namespace ZooLib {
 #pragma mark - FDHolder
 
 class FDHolder
-:	public ZCounted
+:	public Counted
 	{
 public:
 	FDHolder();

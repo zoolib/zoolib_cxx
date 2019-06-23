@@ -45,7 +45,7 @@ void Server::Finalize()
 	fCallable_Connection.Clear();
 	}
 
-	ZCounted::Finalize();
+	Counted::Finalize();
 	}
 
 bool Server::IsStarted()

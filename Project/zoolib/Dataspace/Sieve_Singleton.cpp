@@ -63,7 +63,7 @@ Sieve_Singleton::Sieve_Singleton(ZP<RelsWatcher::Callable_Register> iCallable_Re
 
 void Sieve_Singleton::Initialize()
 	{
-	ZCounted::Initialize();
+	Counted::Initialize();
 	fResultHandler = new ResultHandler(sCallable(sWeakRef(this), &Sieve_Singleton::pChanged));
 	this->Activate();
 	}
@@ -160,7 +160,7 @@ void Sieve_Singleton::Set(const Map_Any& iMap)
 	fCallable_Changed->Call(this, false);
 	}
 
-void Sieve_Singleton::pChanged(const ZP<ZCounted>& iRegistration, const ZP<Result>& iResult)
+void Sieve_Singleton::pChanged(const ZP<Counted>& iRegistration, const ZP<Result>& iResult)
 	{
 	const bool wasLoaded = fRegistration && fResult;
 	fMapQ.Clear();

@@ -43,12 +43,12 @@ public:
 	RelsWatcher_Relater(const ZP<Relater>& iRelater,
 		const ZP<Callable_NeedsUpdate>& iCallable_NeedsUpdate);
 
-// From ZCounted via Callable_Register
+// From Counted via Callable_Register
 	virtual void Initialize();
 	virtual void Finalize();
 
 // From Callable via Callable_Register
-	ZP<ZCounted> QCall(
+	ZP<Counted> QCall(
 		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZP<Expr_Rel>& iRel);
 

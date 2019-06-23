@@ -37,7 +37,7 @@ namespace ZooLib {
 #pragma mark - CFNotification
 
 class CFNotification
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef Callable<void(ZRef<CFNotification>, CFDictionaryRef)> Callable_t;
@@ -47,7 +47,7 @@ public:
 
 	virtual ~CFNotification();
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 	virtual void Finalize();
 

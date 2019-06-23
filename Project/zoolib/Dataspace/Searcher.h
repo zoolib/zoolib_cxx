@@ -105,7 +105,7 @@ private:
 #pragma mark - Searcher
 
 class Searcher
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Searcher();

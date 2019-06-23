@@ -44,10 +44,10 @@ public:
 	virtual ~Starter_ThreadLoop()
 		{}
 
-// From ZCounted via Starter
+// From Counted via Starter
 	virtual void Initialize()
 		{
-		ZCounted::Initialize();
+		Counted::Initialize();
 		ZAcqMtx acq(fMtx);
 
 		ZAssert(not fKeepRunning);

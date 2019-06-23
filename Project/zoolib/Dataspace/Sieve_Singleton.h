@@ -33,7 +33,7 @@ namespace Dataspace {
 #pragma mark - Sieve_Singleton
 
 class Sieve_Singleton
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef Callable<void(ZP<Sieve_Singleton> iSieve, bool iWasLoad)> Callable_Changed;
@@ -46,7 +46,7 @@ public:
 		const ColName& iDatonColName,
 		const RelHead& iEditableRelHead);
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 
 // Our protocol
@@ -67,7 +67,7 @@ public:
 	void Set(const Map_Any& iMap);
 
 private:
-	void pChanged(const ZP<ZCounted>& iRegistration, const ZP<Result>& iResult);
+	void pChanged(const ZP<Counted>& iRegistration, const ZP<Result>& iResult);
 
 	ZP<RelsWatcher::Callable_Register> const fCallable_Register;
 	ZP<Callable_DatonUpdate> const fCallable_DatonUpdate;
@@ -76,7 +76,7 @@ private:
 	ColName const fDatonColName;
 	RelHead const fEditableRelHead;
 
-	ZP<ZCounted> fRegistration;
+	ZP<Counted> fRegistration;
 	ZP<ResultHandler> fResultHandler;
 	ZP<QueryEngine::Result> fResult;
 

@@ -30,7 +30,7 @@ namespace ZooLib {
 #pragma mark - Cancellable
 
 class Cancellable
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual void Cancel() = 0;

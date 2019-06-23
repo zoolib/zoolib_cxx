@@ -52,6 +52,6 @@ public:
 #pragma mark - sStarter_EachOnNewThread
 
 ZRef<Starter> sStarter_EachOnNewThread()
-	{ return sSingleton<ZRef_Counted<Starter_EachOnNewThread> >(); }
+	{ return sSingleton<ZP_Counted<Starter_EachOnNewThread> >(); }
 
 } // namespace ZooLib

@@ -33,7 +33,7 @@ namespace ZooLib {
 #pragma mark - Server
 
 class Server
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef ZRef<Roster::Entry> ZRef_Roster_Entry; // CW7
@@ -42,7 +42,7 @@ public:
 	Server();
 	virtual ~Server();
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // Our protocol

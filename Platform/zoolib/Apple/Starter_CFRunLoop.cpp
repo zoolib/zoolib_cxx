@@ -34,15 +34,15 @@ namespace ZooLib {
 	static CFRunLoopRef spRunLoopMain = ::CFRunLoopGetCurrent();
 #endif
 
-ZRef<Starter_CFRunLoop> Starter_CFRunLoop::sMain()
+ZP<Starter_CFRunLoop> Starter_CFRunLoop::sMain()
 	{
-	static ZRef<Starter_CFRunLoop> spStarter;
+	static ZP<Starter_CFRunLoop> spStarter;
 	if (not spStarter)
 		{
 		#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
-			ZRef<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(spRunLoopMain);
+			ZP<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(spRunLoopMain);
 		#else
-			ZRef<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(::CFRunLoopGetMain());
+			ZP<Starter_CFRunLoop> theStarter = new Starter_CFRunLoop(::CFRunLoopGetMain());
 		#endif
 		spStarter.AtomicCAS(nullptr, theStarter.Get());
 		}
@@ -66,7 +66,7 @@ void Starter_CFRunLoop::Initialize()
 		true, // repeats
 		0, // order
 		spCallback,
-		Util_CF::Context<CFRunLoopObserverContext>(this->GetWeakRefProxy()));
+		Util_CF::Context<CFRunLoopObserverContext>(this->GetWPProxy()));
 
 	::CFRunLoopAddObserver(fRunLoop, fObserver, kCFRunLoopCommonModes);
 	}
@@ -92,8 +92,8 @@ bool Starter_CFRunLoop::pTrigger()
 void Starter_CFRunLoop::spCallback(
 	CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info)
 	{
-	if (ZRef<Starter_CFRunLoop> theStarter =
-		WP<Starter_CFRunLoop>(static_cast<WeakRefProxy*>(info)))
+	if (ZP<Starter_CFRunLoop> theStarter =
+		WP<Starter_CFRunLoop>(static_cast<WPProxy*>(info)))
 		{ theStarter->pInvokeClearQueue(); }
 	}
 

@@ -246,7 +246,7 @@ void sDump(const ChanW_UTF& w, const Val& iVal)
 	else
 		{
 		w << "\n";
-		Util_Any_JSON::sWrite(true, iVal, w);
+		Util_Any_JSON::sWrite(iVal, true, w);
 		}
 	}
 
@@ -259,7 +259,7 @@ void sDump(const Val& iVal)
 void sDump(const ChanW_UTF& w, const Any& iAny)
 	{
 	w << "\n";
-	Util_Any_JSON::sWrite(true, iAny, w);
+	Util_Any_JSON::sWrite(iAny, true, w);
 	}
 
 void sDump(const Any& iAny)

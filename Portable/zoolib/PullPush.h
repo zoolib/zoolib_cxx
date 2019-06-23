@@ -94,10 +94,10 @@ template <class T>
 void sPush(const T& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
 
-// Special-case NotRef -- we generally want them on the chan as ZRef.
+// Special-case NotZP -- we generally want them on the chan as ZRef.
 template <class T>
-void sPush(const ZRef<T,false>& iVal, const ChanW_PPT& iChanW)
-	{ sPush(sRef(iVal), iChanW); }
+void sPush(const NotZP<T>& iVal, const ChanW_PPT& iChanW)
+	{ sPush(sZP(iVal), iChanW); }
 
 template <class T>
 void sPush(const Name& iName, const T& iVal, const ChanW_PPT& iChanW)

@@ -40,7 +40,7 @@ using std::vector;
 #pragma mark - MelangeServer
 
 class MelangeServer
-:	public ZCounted
+:	public Counted
 	{
 public:
 	MelangeServer(const Melange_t& iMelange,
@@ -50,11 +50,11 @@ public:
 
 	virtual ~MelangeServer();
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 
 private:
-	typedef ZP<ZCounted> RefReg;
+	typedef ZP<Counted> RefReg;
 
 	void pRead();
 	void pWrite();
@@ -136,7 +136,7 @@ public:
 		const ZP<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
-	virtual ZP<ZCounted> QCall(
+	virtual ZP<Counted> QCall(
 		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZP<Expr_Rel>& iRel);
 

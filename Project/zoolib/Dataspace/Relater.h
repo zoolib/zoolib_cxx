@@ -85,7 +85,7 @@ private:
 // =================================================================================================
 #pragma mark - Relater
 
-class Relater : public ZCounted
+class Relater : public Counted
 	{
 protected:
 	Relater();

@@ -33,13 +33,13 @@ namespace Dataspace {
 class ResultHandler : public RelsWatcher::Callable_Changed
 	{
 public:
-	typedef Callable<void(const ZP<ZCounted>& iRegistration, const ZP<Result>& iResult)>
+	typedef Callable<void(const ZP<Counted>& iRegistration, const ZP<Result>& iResult)>
 		Callable_t;
 
 	ResultHandler(const ZP<Callable_t>& iCallable);
 
 	virtual bool QCall(
-		const ZP<ZCounted>& iRegistration,
+		const ZP<Counted>& iRegistration,
 		int64 iChangeCount,
 		const ZP<Result>& iResult,
 		const ZP<ResultDeltas>& iResultDeltas);

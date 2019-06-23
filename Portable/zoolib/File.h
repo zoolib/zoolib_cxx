@@ -216,7 +216,7 @@ private:
 // =================================================================================================
 #pragma mark - FileLoc
 
-class FileLoc : public ZCounted
+class FileLoc : public Counted
 	{
 protected:
 	FileLoc();
@@ -267,7 +267,7 @@ public:
 // =================================================================================================
 #pragma mark - FileIterRep
 
-class FileIterRep : public ZCounted
+class FileIterRep : public Counted
 	{
 protected:
 	FileIterRep();
@@ -310,7 +310,7 @@ private:
 // =================================================================================================
 #pragma mark - FileIterRep_Std::RealRep
 
-class FileIterRep_Std::RealRep : public ZCounted
+class FileIterRep_Std::RealRep : public Counted
 	{
 protected:
 	RealRep() {};

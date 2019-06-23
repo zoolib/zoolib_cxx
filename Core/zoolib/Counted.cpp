@@ -18,20 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCounted.h"
+#include "zoolib/Counted.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ZCountedBase
+#pragma mark - CountedBase
 
-ZCountedBase::ZCountedBase()
+CountedBase::CountedBase()
 :	fRefCount(0)
 	{}
 
-ZCountedBase::~ZCountedBase()
+CountedBase::~CountedBase()
 	{
-	ZAssertStop(1, not fWeakRefProxy);
+	ZAssertStop(1, not fWPProxy);
 	if (ZCONFIG_Debug >= 1)
 		{
 		const int old = sAtomic_Get(&fRefCount);
@@ -40,7 +40,7 @@ ZCountedBase::~ZCountedBase()
 		}
 	}
 
-void ZCountedBase::Initialize()
+void CountedBase::Initialize()
 	{
 	if (ZCONFIG_Debug >= 1)
 		{
@@ -50,36 +50,36 @@ void ZCountedBase::Initialize()
 		}
 	}
 
-void ZCountedBase::Finalize()
+void CountedBase::Finalize()
 	{
 	if (this->FinishFinalize())
 		delete this;
 	}
 
-bool ZCountedBase::FinishFinalize()
+bool CountedBase::FinishFinalize()
 	{
 	// Our weak proxy may be a way to get resurrected, so kill it before we
 	// check our refcount, so we can be sure that value is valid.
 
-	if (ZRef<WeakRefProxy> theWeakRefProxy = fWeakRefProxy)
+	if (ZRef<WPProxy> theWPProxy = fWPProxy)
 		{
-		if (fWeakRefProxy.AtomicCAS(theWeakRefProxy.Get(), nullptr))
-			theWeakRefProxy->pClear();
+		if (fWPProxy.AtomicCAS(theWPProxy.Get(), nullptr))
+			theWPProxy->pClear();
 		}
 
 	return sAtomic_DecAndTest(&fRefCount);
 	}
 
-void ZCountedBase::Retain()
+void CountedBase::Retain()
 	{
 	if (0 == sAtomic_Add(&fRefCount, 1))
 		{
-		ZAssertStop(1, not fWeakRefProxy);
+		ZAssertStop(1, not fWPProxy);
 		this->Initialize();
 		}
 	}
 
-void ZCountedBase::Release()
+void CountedBase::Release()
 	{
 	for (;;)
 		{
@@ -95,31 +95,31 @@ void ZCountedBase::Release()
 		}
 	}
 
-bool ZCountedBase::IsShared() const
+bool CountedBase::IsShared() const
 	{ return sAtomic_Get(&fRefCount) > 1; }
 
-bool ZCountedBase::IsReferenced() const
+bool CountedBase::IsReferenced() const
 	{ return sAtomic_Get(&fRefCount) > 0; }
 
-ZRef<ZCountedBase::WeakRefProxy> ZCountedBase::GetWeakRefProxy()
+ZRef<CountedBase::WPProxy> CountedBase::GetWPProxy()
 	{
 	// It is not legal to take a weak reference from an un-initialized object.
 	ZAssert(sAtomic_Get(&fRefCount));
 
-	if (not fWeakRefProxy)
+	if (not fWPProxy)
 		{
-		ZRef<WeakRefProxy> theWeakRefProxy = new WeakRefProxy(this);
-		if (not fWeakRefProxy.AtomicCAS(nullptr, theWeakRefProxy.Get()))
+		ZRef<WPProxy> theWPProxy = new WPProxy(this);
+		if (not fWPProxy.AtomicCAS(nullptr, theWPProxy.Get()))
 			{
-			// We lost the race, so clear theWeakRefProxy's reference
-			// to us, or we'll trip an asssertion in WeakRefProxy::~WeakRefProxy.
-			theWeakRefProxy->pClear();
+			// We lost the race, so clear theWPProxy's reference
+			// to us, or we'll trip an asssertion in WPProxy::~WPProxy.
+			theWPProxy->pClear();
 			}
 		}
-	return fWeakRefProxy;
+	return fWPProxy;
 	}
 
-int ZCountedBase::pCOMAddRef()
+int CountedBase::pCOMAddRef()
 	{
 	const int oldRefCount = sAtomic_Add(&fRefCount, 1);
 	if (oldRefCount == 0)
@@ -127,7 +127,7 @@ int ZCountedBase::pCOMAddRef()
 	return oldRefCount + 1;
 	}
 
-int ZCountedBase::pCOMRelease()
+int CountedBase::pCOMRelease()
 	{
 	for (;;)
 		{
@@ -147,16 +147,16 @@ int ZCountedBase::pCOMRelease()
 	}
 
 // =================================================================================================
-#pragma mark - ZCountedBase::WeakRefProxy
+#pragma mark - CountedBase::WPProxy
 
-ZCountedBase::WeakRefProxy::WeakRefProxy(ZCountedBase* iCountedBase)
+CountedBase::WPProxy::WPProxy(CountedBase* iCountedBase)
 :	fCountedBase(iCountedBase)
 	{}
 
-ZCountedBase::WeakRefProxy::~WeakRefProxy()
+CountedBase::WPProxy::~WPProxy()
 	{ ZAssertStop(1, not fCountedBase); }
 
-ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
+ZRef<CountedBase> CountedBase::WPProxy::pGetCountedBase()
 	{
 	// This looks pretty innocuous, but we are incrementing the refcount
 	// of fCountedBase under the protection of fMtx.
@@ -164,7 +164,7 @@ ZRef<ZCountedBase> ZCountedBase::WeakRefProxy::pGetCountedBase()
 	return fCountedBase;
 	}
 
-void ZCountedBase::WeakRefProxy::pClear()
+void CountedBase::WPProxy::pClear()
 	{
 	// And here we're clearing it, but are locked out until
 	// any call to pGetCountedBase has returned.
@@ -173,42 +173,42 @@ void ZCountedBase::WeakRefProxy::pClear()
 	}
 
 // =================================================================================================
-#pragma mark - ZWeakRefBase
+#pragma mark - WPBase
 
-ZWeakRefBase::ZWeakRefBase()
+WPBase::WPBase()
 	{}
 
-ZWeakRefBase::~ZWeakRefBase()
+WPBase::~WPBase()
 	{}
 
-ZWeakRefBase::ZWeakRefBase(const ZWeakRefBase& iOther)
-:	fWeakRefProxy(iOther.fWeakRefProxy)
+WPBase::WPBase(const WPBase& iOther)
+:	fWPProxy(iOther.fWPProxy)
 	{}
 
-ZWeakRefBase& ZWeakRefBase::operator=(const ZWeakRefBase& iOther)
+WPBase& WPBase::operator=(const WPBase& iOther)
 	{
-	fWeakRefProxy = iOther.fWeakRefProxy;
+	fWPProxy = iOther.fWPProxy;
 	return *this;
 	}
 
-ZWeakRefBase::ZWeakRefBase(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
-:	fWeakRefProxy(iWeakRefProxy)
+WPBase::WPBase(const ZRef<CountedBase::WPProxy>& iWPProxy)
+:	fWPProxy(iWPProxy)
 	{}
 
-void ZWeakRefBase::pAssign(const ZRef<ZCountedBase::WeakRefProxy>& iWeakRefProxy)
-	{ fWeakRefProxy = iWeakRefProxy; }
+void WPBase::pAssign(const ZRef<CountedBase::WPProxy>& iWPProxy)
+	{ fWPProxy = iWPProxy; }
 
-void ZWeakRefBase::pClear()
-	{ fWeakRefProxy.Clear(); }
+void WPBase::pClear()
+	{ fWPProxy.Clear(); }
 
-ZRef<ZCountedBase> ZWeakRefBase::pGet() const
+ZRef<CountedBase> WPBase::pGet() const
 	{
-	if (fWeakRefProxy)
-		return fWeakRefProxy->pGetCountedBase();
+	if (fWPProxy)
+		return fWPProxy->pGetCountedBase();
 	return null;
 	}
 
-ZRef<ZCountedBase::WeakRefProxy> ZWeakRefBase::pGetWeakRefProxy() const
-	{ return fWeakRefProxy; }
+ZRef<CountedBase::WPProxy> WPBase::pGetWPProxy() const
+	{ return fWPProxy; }
 
 } // namespace ZooLib

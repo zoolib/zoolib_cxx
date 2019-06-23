@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable_Macros.h"
+#include "zoolib/Counted.h"
 
-#include "zoolib/ZCounted.h"
 #include "zoolib/ZQ.h"
 
 namespace ZooLib {
@@ -50,7 +50,7 @@ template <class Signature_p> class Callable;
 
 template <class R_p>
 class Callable<R_p(void)>
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef R_p R;
@@ -70,7 +70,7 @@ public:
 
 template <class T>
 class Callable<ZP<T>(void)>
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef ZP<T> R;
@@ -87,7 +87,7 @@ public:
 
 template <>
 class Callable<void(void)>
-:	public ZCounted
+:	public Counted
 	{
 public:
 	typedef void R;
@@ -106,7 +106,7 @@ public:
 \
 template <class R_p, ZMACRO_Callable_Class_P##X> \
 class Callable<R_p(ZMACRO_Callable_P##X)> \
-:	public ZCounted \
+:	public Counted \
 	{ \
 public: \
 	typedef R_p R; \
@@ -124,12 +124,12 @@ public: \
 \
 template <class T, ZMACRO_Callable_Class_P##X> \
 class Callable<ZP<T>(ZMACRO_Callable_P##X)> \
-:	public ZCounted \
+:	public Counted \
 	{ \
 public: \
-	typedef void R; \
+	typedef ZP<T> R; \
 	ZMACRO_Callable_typedef_##X; \
-	typedef void(Signature)(ZMACRO_Callable_P##X); \
+	typedef ZP<T> (Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual ZP<T> QCall(ZMACRO_Callable_P##X) = 0; \
 \
@@ -139,14 +139,14 @@ public: \
 \
 template <ZMACRO_Callable_Class_P##X> \
 class Callable<void(ZMACRO_Callable_P##X)> \
-:	public ZCounted \
+:	public Counted \
 	{ \
 public: \
 	typedef void R; \
 	ZMACRO_Callable_typedef_##X; \
 	typedef void(Signature)(ZMACRO_Callable_P##X); \
 \
-	virtual QRet<void> QCall(ZMACRO_Callable_P##X) = 0; \
+	virtual bool QCall(ZMACRO_Callable_P##X) = 0; \
 \
 	inline void Call(ZMACRO_Callable_VT##X) \
 		{ this->QCall(ZMACRO_Callable_i##X); } \

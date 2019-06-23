@@ -148,7 +148,7 @@ public:
 			}		
 		}
 
-	ZQ<void> QTake()
+	bool QTake()
 		{
 		ZAcqMtx acq(fMtx);
 		for (;;)
@@ -157,11 +157,11 @@ public:
 				{
 				fGotVal = false;
 				fCnd.Broadcast();
-				return notnull;
+				return true;
 				}
 
 			if (not fPutLive)
-				return null;
+				return false;
 
 			fCnd.Wait(fMtx);
 			}
@@ -195,7 +195,7 @@ public:
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via Callable
+// From Counted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -230,7 +230,7 @@ public:
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via Callable
+// From Counted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -265,7 +265,7 @@ public:
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via Callable
+// From Counted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -303,7 +303,7 @@ public:
 	:	fShelfPair(iShelfPair)
 		{}
 
-// From ZCounted via Callable
+// From Counted via Callable
 	virtual void Finalize()
 		{
 		if (this->FinishFinalize())
@@ -397,7 +397,7 @@ sGenerator(const ZRef<Callable<void(const ZRef<Callable<T()> >&)> >& iCallable)
 // is void(T0*, T1*) -- two null pointers are passed, they're just there to
 // distinguish it from the generator that is passed a yield callable.
 
-typedef ThreadVal<ZRef<ZCounted>, struct Tag_Callable_Yield> ThreadVal_Callable_Yield;
+typedef ThreadVal<ZRef<Counted>, struct Tag_Callable_Yield> ThreadVal_Callable_Yield;
 
 template <class R, class P>
 ZQ<R>

@@ -23,10 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
+#include "zoolib/Counted.h"
 #include "zoolib/Multi.h"
 #include "zoolib/Val_Any.h"
-
-#include "zoolib/ZCounted.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -40,7 +39,7 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark - Result
 
-class Result : public ZCounted
+class Result : public Counted
 	{
 	Result(const Result& iOther);
 
@@ -72,7 +71,7 @@ public:
 // =================================================================================================
 #pragma mark - ResultDeltas
 
-class ResultDeltas : public ZCounted
+class ResultDeltas : public Counted
 	{
 public:
 	ResultDeltas();
