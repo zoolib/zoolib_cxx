@@ -186,7 +186,7 @@ bool spLinkAndCheckProgram(ProgramID iProgram)
 #pragma mark - Context
 
 class Context
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Context()
@@ -203,7 +203,7 @@ public:
 
 	virtual void Initialize()
 		{
-		ZCounted::Initialize();
+		Counted::Initialize();
 		
 		{
 		VertexShaderID theVS_Constant =

@@ -44,7 +44,7 @@ class DLink_Sheet_Load
 	{};
 
 class Sheet
-:	public ZCounted
+:	public Counted
 ,	public DLink_Sheet_Active
 ,	public DLink_Sheet_Cached
 ,	public DLink_Sheet_Load
@@ -57,7 +57,7 @@ public:
 
 	virtual ~Sheet();
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // Our protocol
@@ -76,7 +76,7 @@ public:
 #pragma mark - AssetCatalog::SheetCatalog
 
 class AssetCatalog::SheetCatalog
-:	public ZCounted
+:	public Counted
 	{
 public:
 	SheetCatalog()
@@ -87,7 +87,7 @@ public:
 
 	virtual void Initialize()
 		{
-		ZCounted::Initialize();
+		Counted::Initialize();
 		fKeepRunning = true;
 		sStartOnNewThread(sCallable(sRef(this), &SheetCatalog::pLoad));
 		}
@@ -293,7 +293,7 @@ void Sheet::Finalize()
 	if (const ZP<AssetCatalog::SheetCatalog>& theSC = fSC)
 		theSC->pFinalize(this);
 	else
-		ZCounted::Finalize();
+		Counted::Finalize();
 	}
 
 ZP<Texture> Sheet::GetTexture()

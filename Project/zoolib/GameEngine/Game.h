@@ -23,7 +23,7 @@ Rat sGetGameRate();
 #pragma mark -
 
 class Game
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Game(const FileSpec& iFS,
@@ -33,7 +33,7 @@ public:
 
 	virtual ~Game();
 
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 
 // Our protocol

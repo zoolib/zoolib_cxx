@@ -22,7 +22,7 @@ class Nook;
 #pragma mark -
 
 class NookScope
-:	public ZCounted
+:	public Counted
 	{
 public:
 	NookScope();
@@ -52,12 +52,12 @@ private:
 #pragma mark - Nook
 
 class Nook
-:	public ZCounted
+:	public Counted
 	{
 public:
 	Nook(const ZP<NookScope>& iNookScope);
 	
-// From ZCounted
+// From Counted
 	virtual void Initialize();
 	virtual void Finalize();
 

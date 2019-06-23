@@ -35,8 +35,8 @@ template <class Signature> class Callable_StarterSync;
 #pragma mark - Callable_StarterSync (specialization for 0 params)
 
 template <class R>
-class Callable_StarterSync<R(void)>
-:	public Callable<R(void)>
+class Callable_StarterSync<R()>
+:	public Callable<R()>
 	{
 public:
 	typedef R (Signature)();

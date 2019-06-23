@@ -35,7 +35,7 @@ namespace Pixels {
 #pragma mark - PixmapRep
 
 class PixmapRep
-:	public ZCounted
+:	public Counted
 	{
 public:
 	PixmapRep(const ZP<Raster>& iRaster, const RectPOD& iBounds, const PixelDesc& iPixelDesc);

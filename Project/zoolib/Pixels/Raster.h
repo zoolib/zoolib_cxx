@@ -36,7 +36,7 @@ namespace Pixels {
 #pragma mark - Raster
 
 class Raster
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	Raster(const RasterDesc& iRasterDesc);

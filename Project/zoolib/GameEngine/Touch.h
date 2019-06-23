@@ -12,7 +12,7 @@ namespace GameEngine {
 #pragma mark - Touch
 
 class Touch
-:	public ZCounted
+:	public Counted
 	{
 public:
 	int64 fFingerID;
@@ -25,7 +25,7 @@ typedef std::set<ZP<Touch> > TouchSet;
 #pragma mark - TouchListener
 
 class TouchListener
-:	public ZCounted
+:	public Counted
 	{
 public:
 	TouchListener(bool iExclusive);

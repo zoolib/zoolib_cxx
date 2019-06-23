@@ -35,13 +35,13 @@ namespace ZooLib {
 template <class R>
 void spQCallWithPromise_T(
 	const ZRef<Promise<ZQ<R> > >& iPromise,
-	const ZRef<Callable<R(void)> >& iCallable)
+	const ZRef<Callable<R()> >& iCallable)
 	{ iPromise->Deliver(iCallable->QCall()); }
 
 template <class R>
 ZRef<Delivery<ZQ<R> > > sQCallByStarter(
 	const ZRef<Starter>& iStarter,
-	const ZRef<Callable<R(void)> >& iCallable)
+	const ZRef<Callable<R()> >& iCallable)
 	{
 	ZRef<Promise<ZQ<R> > > thePromise = sPromise<ZQ<R> >();
 	if (iStarter && iCallable)

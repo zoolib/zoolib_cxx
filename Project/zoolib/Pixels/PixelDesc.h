@@ -69,7 +69,7 @@ private:
 #pragma mark - PixelDescRep
 
 class PixelDescRep
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	PixelDescRep() {}

@@ -28,7 +28,7 @@ struct Texture_BoundsQ_Mat
 #pragma mark - AssetCatalog
 
 class AssetCatalog
-:	public ZCounted
+:	public Counted
 	{
 public:
 	AssetCatalog();

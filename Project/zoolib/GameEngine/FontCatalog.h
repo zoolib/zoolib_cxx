@@ -14,7 +14,7 @@ namespace GameEngine {
 #pragma mark - FontStrike
 
 class FontStrike
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual ZP<Texture> GetGlyphTexture(UTF32 iCP,
@@ -35,7 +35,7 @@ GRect sMeasure(const ZP<FontStrike>& iFontStrike, const string8& iString);
 #pragma mark - FontInfo
 
 class FontInfo
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual Rat GetScaleForEmHeight(Rat iEmHeight) = 0;
@@ -57,7 +57,7 @@ GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString
 #pragma mark - FontCatalog
 
 class FontCatalog
-:	public ZCounted
+:	public Counted
 	{
 public:
 	virtual ZP<FontInfo> GetFontInfo(const string8& iName) = 0;

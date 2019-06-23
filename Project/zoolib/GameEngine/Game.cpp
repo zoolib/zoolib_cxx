@@ -108,7 +108,7 @@ Game::~Game()
 	{}
 
 void Game::Initialize()
-	{ ZCounted::Initialize(); }
+	{ Counted::Initialize(); }
 
 void Game::ExternalPurgeHasOccurred()
 	{

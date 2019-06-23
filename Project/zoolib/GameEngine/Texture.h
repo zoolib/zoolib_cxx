@@ -13,7 +13,7 @@ namespace GameEngine {
 #pragma mark - Texture
 
 class Texture
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	Texture();

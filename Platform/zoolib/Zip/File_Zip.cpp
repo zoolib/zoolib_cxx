@@ -84,7 +84,7 @@ public:
 namespace { // anonymous
 
 struct ZipHolder
-:	public ZCounted
+:	public Counted
 	{
 	static
 	void spStuff(size_t iEntryNum, const ZRef<Node_Directory>& ioParent,

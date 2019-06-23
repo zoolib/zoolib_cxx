@@ -51,7 +51,7 @@ protected:
 	Rendered_Blush(const Blush& iBlush, const ZP<Rendered>& iRendered);
 
 public:
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Rendered
@@ -137,7 +137,7 @@ protected:
 	Rendered_Gain(const Gain& iGain, const ZP<Rendered>& iRendered);
 
 public:
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Rendered
@@ -174,7 +174,7 @@ protected:
 	Rendered_Group();
 
 public:
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Rendered
@@ -234,7 +234,7 @@ protected:
 	Rendered_Mat(const Mat& iMat, const ZP<Rendered>& iRendered);
 
 public:
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Rendered
@@ -361,7 +361,7 @@ class Rendered_Texture
 public:
 	Rendered_Texture(const ZP<Texture>& iTexture, const GRect& iBounds);
 
-// From ZCounted
+// From Counted
 	virtual void Finalize();
 
 // From Rendered

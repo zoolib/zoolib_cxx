@@ -14,7 +14,7 @@ namespace GameEngine {
 #pragma mark - Sound
 
 class Sound
-:	public ZCounted
+:	public Counted
 	{
 protected:
 	Sound();
@@ -33,7 +33,7 @@ public:
 #pragma mark - SoundMeister
 
 class SoundMeister
-:	public ZCounted
+:	public Counted
 	{
 public:
 	SoundMeister();

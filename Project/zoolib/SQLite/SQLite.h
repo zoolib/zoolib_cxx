@@ -23,9 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Any.h"
+#include "zoolib/Counted.h"
 #include "zoolib/UnicodeString.h"
-
-#include "zoolib/ZCounted.h"
 
 #include <sqlite3.h>
 

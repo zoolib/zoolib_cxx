@@ -109,7 +109,7 @@ void Nook::Initialize()
 	if (ZP<NookScope> theNM = fNookScopeWP)
 		theNM->pInitialize(this);
 	else
-		ZCounted::Initialize();
+		Counted::Initialize();
 	}
 
 void Nook::Finalize()
@@ -117,7 +117,7 @@ void Nook::Finalize()
 	if (ZP<NookScope> theNM = fNookScopeWP)
 		theNM->pFinalize(this);
 	else
-		ZCounted::Finalize();
+		Counted::Finalize();
 	}
 
 bool Nook::IsFullCycle()

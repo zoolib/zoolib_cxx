@@ -41,7 +41,7 @@ typedef Val_T<Map,Seq> Val;
 #pragma mark - Link
 
 class Link
-:	public ZCounted
+:	public Counted
 	{
 public:
 // ctor that establishes a tree
