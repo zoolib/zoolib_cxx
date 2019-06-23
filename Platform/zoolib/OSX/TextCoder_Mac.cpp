@@ -271,7 +271,7 @@ public:
 	TextEncoder_Mac(TextEncoding iDestEncoding);
 	virtual ~TextEncoder_Mac();
 
-	virtual ZQ<void> QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+	virtual bool QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 					void* oDest, size_t iDestBytes, size_t* oDestBytes);
 private:
 	UnicodeToTextInfo fInfo;
@@ -316,7 +316,7 @@ TextEncoder_Mac::~TextEncoder_Mac()
 	::DisposeUnicodeToTextInfo(&fInfo);
 	}
 
-ZQ<void> TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+bool TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	// utf16Buffer is the source for calls to ConvertFromUnicodeToText, we use
@@ -379,7 +379,7 @@ ZQ<void> TextEncoder_Mac::QCall(const UTF32* iSource, size_t iSourceCU, size_t* 
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 
-	return notnull;
+	return true;
 	}
 
 // =================================================================================================

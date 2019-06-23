@@ -42,7 +42,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{
 		const double systemTime = Time::sSystem() + fInterval;
 		for (;;)
@@ -78,7 +78,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{
 		for (;;)
 			{

@@ -44,14 +44,14 @@ public:
 	typedef Callable<void(void)> Callable_t;
 
 // From Callable
-	ZQ<void> QCall()
+	bool QCall()
 		{
 		for (SafeSetIterConst<ZRef<Callable_t> > iter = *this; /*no test*/; /*no inc*/)
 			{
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc())
 				sCall(*theQ);
 			else
-				return notnull;
+				return true;
 			}
 		}
 
@@ -73,14 +73,14 @@ class Callable_Set<void(ZMACRO_Callable_P##X)> \
 public: \
 	typedef Callable<void(ZMACRO_Callable_P##X)> Callable_t; \
 \
-	ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+	bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		for (SafeSetIterConst<ZRef<Callable_t> > iter = *this; /*no test*/; /*no inc*/) \
 			{ \
 			if (ZQ<ZRef<Callable_t> > theQ = iter.QReadInc()) \
 				sCall(*theQ, ZMACRO_Callable_i##X); \
 			else \
-				return notnull; \
+				return true; \
 			} \
 		} \
 \

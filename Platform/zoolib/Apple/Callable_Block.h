@@ -54,10 +54,10 @@ public:
 		{ Block_release(fBlockPtr); }
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		fBlockPtr();
-		return notnull;
+		return true;
 		}
 
 private:

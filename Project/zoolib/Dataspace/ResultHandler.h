@@ -38,7 +38,7 @@ public:
 
 	ResultHandler(const ZP<Callable_t>& iCallable);
 
-	virtual ZQ<void> QCall(
+	virtual bool QCall(
 		const ZP<ZCounted>& iRegistration,
 		int64 iChangeCount,
 		const ZP<Result>& iResult,

@@ -78,7 +78,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
@@ -107,15 +107,15 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
 			{
 			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)();
-			return notnull;
+			return true;
 			}
-		return null;
+		return false;
 		}
 
 private:
@@ -140,7 +140,7 @@ public: \
 	,	fMethod(iMethod) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = \
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
@@ -168,15 +168,15 @@ public: \
 	,	fMethod(iMethod) \
 		{} \
 \
-	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+	virtual bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp = \
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject)) \
 			{ \
 			(Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(ZMACRO_Callable_i##X); \
-			return notnull; \
+			return true; \
 			} \
-		return null; \
+		return false; \
 		} \
 \
 private: \

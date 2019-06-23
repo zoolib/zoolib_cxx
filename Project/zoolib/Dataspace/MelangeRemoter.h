@@ -136,7 +136,7 @@ public:
 		const ZP<Callable_Status>& iCallable_Status);
 
 // From Callable via Callable_Register
-	virtual ZQ<ZP<ZCounted> > QCall(
+	virtual ZP<ZCounted> QCall(
 		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZP<Expr_Rel>& iRel);
 

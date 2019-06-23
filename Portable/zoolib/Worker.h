@@ -59,7 +59,7 @@ public:
 	Worker();
 
 // From Callable_Void
-	ZQ<void> QCall();
+	virtual bool QCall();
 
 // Our protocol
 	void Wake();

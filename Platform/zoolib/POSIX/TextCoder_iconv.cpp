@@ -243,7 +243,7 @@ public:
 	virtual ~TextEncoder_iconv();
 
 	// From TextEncoder (Callable)
-	virtual ZQ<void> QCall(
+	virtual bool QCall(
 		const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 		void* oDest, size_t iDestBytes, size_t* oDestBytes);
 
@@ -274,7 +274,7 @@ TextEncoder_iconv::~TextEncoder_iconv()
 	::iconv_close(fConverter);
 	}
 
-ZQ<void> TextEncoder_iconv::QCall(
+bool TextEncoder_iconv::QCall(
 	const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
@@ -318,7 +318,7 @@ ZQ<void> TextEncoder_iconv::QCall(
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<char*>(oDest);
 
-	return notnull;
+	return true;
 	}
 
 void TextEncoder_iconv::Reset()

@@ -48,7 +48,7 @@ public:
 	virtual void Finalize();
 
 // From Callable via Callable_Register
-	ZQ<ZP<ZCounted> > QCall(
+	ZP<ZCounted> QCall(
 		const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 		const ZP<Expr_Rel>& iRel);
 

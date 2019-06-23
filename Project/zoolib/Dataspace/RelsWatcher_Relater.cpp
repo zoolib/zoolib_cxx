@@ -99,7 +99,7 @@ void RelsWatcher_Relater::Finalize()
 	inherited::Finalize();
 	}
 
-ZQ<ZP<ZCounted> > RelsWatcher_Relater::QCall(
+ZP<ZCounted> RelsWatcher_Relater::QCall(
 	const ZP<RelsWatcher::Callable_Changed>& iCallable_Changed,
 	const ZP<Expr_Rel>& iRel)
 	{
@@ -115,7 +115,7 @@ ZQ<ZP<ZCounted> > RelsWatcher_Relater::QCall(
 		sCall(fCallable_NeedsUpdate);
 		}
 
-	return ZP<ZCounted>(theR);
+	return theR;
 	}
 
 void RelsWatcher_Relater::Update()

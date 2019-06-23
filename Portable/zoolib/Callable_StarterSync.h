@@ -47,7 +47,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{ return sQCallByStarter(fStarter, fCallable)->QGet().Get(); }
 
 private:
@@ -72,7 +72,7 @@ public: \
 	,	fCallable(iCallable) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		return sQCallByStarter<R,ZMACRO_Callable_P##X>(fStarter, fCallable, \
 			ZMACRO_Callable_i##X)->QGet().Get(); \

@@ -141,11 +141,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		for (sCall(fInit); sCall(fCondition); sCall(fInc))
 			{}
-		return notnull;
+		return true;
 		}
 
 private:
@@ -213,15 +213,15 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		if (fCallable)
 			{
 			for (size_t theCount = fCount; theCount--; /*no inc*/)
 				fCallable->Call();
-			return notnull;
+			return true;
 			}
-		return null;
+		return false;
 		}
 
 private:
@@ -248,11 +248,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		while (sCall(fCondition))
 			sCall(fCallable);
-		return notnull;
+		return true;
 		}
 
 private:

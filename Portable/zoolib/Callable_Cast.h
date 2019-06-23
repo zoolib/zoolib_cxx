@@ -41,11 +41,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R0> QCall(A_p... iParams)
+	virtual QRet<R0> QCall(A_p... iParams)
 		{
-		if (ZQ<R1> theQ = sQCall(fCallable, iParams...))
-			return static_cast<R0>(*theQ);
-		return null;
+		if (QRet<R1> theQ = sQCall(fCallable, iParams...))
+			return static_cast<QRet<R1>>(theQ);
+		return QRet<R0>();
 		}
 
 private:

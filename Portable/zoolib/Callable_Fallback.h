@@ -47,7 +47,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{
 		if (const ZQ<R>& theQ = fCallable0->QCall())
 			return theQ;
@@ -76,9 +76,9 @@ public: \
 	,	fCallable1(iCallable1) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ \
-		if (const ZQ<R>& theQ = fCallable0->QCall(ZMACRO_Callable_i##X)) \
+		if (const QRet<R>& theQ = fCallable0->QCall(ZMACRO_Callable_i##X)) \
 			return theQ; \
 		return fCallable1->QCall(ZMACRO_Callable_i##X); \
 		} \

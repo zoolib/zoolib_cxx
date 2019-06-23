@@ -47,11 +47,11 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		if (sQStart(fStarter, fCallable))
-			return notnull;
-		return null;
+			return true;
+		return false;
 
 		}
 
@@ -77,11 +77,11 @@ public: \
 	,	fCallable(iCallable) \
 		{} \
 \
-	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+	virtual bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		if (sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X))) \
-			return notnull; \
-		return null; \
+			return true; \
+		return false; \
 		} \
 \
 private:\

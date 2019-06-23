@@ -47,7 +47,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{ return sQCall(fSafeCallable.Get()); }
 
 // Our protocol
@@ -80,7 +80,7 @@ public: \
 	:	fSafeCallable(iCallable) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ return sQCall(fSafeCallable.Get(), ZMACRO_Callable_i##X); } \
 \
 	ZRef<Callable_t> Get() \

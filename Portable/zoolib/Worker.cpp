@@ -85,7 +85,7 @@ Worker::Worker()
 :	fWorking(0)
 	{}
 
-ZQ<void> Worker::QCall()
+bool Worker::QCall()
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -111,7 +111,7 @@ ZQ<void> Worker::QCall()
 					continue;
 				sNextStartAt(fNextWake, Job(fStarter, this));
 				}
-			return notnull;
+			return true;
 			}
 
 		fStarter.Clear();
@@ -119,10 +119,10 @@ ZQ<void> Worker::QCall()
 
 		ZRelMtx rel2(fMtx);
 
-		try { sCall(fCallable_Detached, this); }
+		try { sCall(fCallable_Detached, sRef(this)); }
 		catch (...) {}
 
-		return null;
+		return false;
 		}
 	}
 

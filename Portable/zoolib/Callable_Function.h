@@ -46,7 +46,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R> QCall()
+	virtual QRet<R> QCall()
 		{ return fFunctionPtr(); }
 
 private:
@@ -68,10 +68,10 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall()
+	virtual bool QCall()
 		{
 		fFunctionPtr();
-		return notnull;
+		return true;
 		}
 
 private:
@@ -94,7 +94,7 @@ public: \
 	:	fFunctionPtr(iFunctionPtr) \
 		{} \
 \
-	virtual ZQ<R> QCall(ZMACRO_Callable_Pi##X) \
+	virtual QRet<R> QCall(ZMACRO_Callable_Pi##X) \
 		{ return fFunctionPtr(ZMACRO_Callable_i##X); } \
 \
 private: \
@@ -112,10 +112,10 @@ public: \
 	:	fFunctionPtr(iFunctionPtr) \
 		{} \
 \
-	virtual ZQ<void> QCall(ZMACRO_Callable_Pi##X) \
+	virtual bool QCall(ZMACRO_Callable_Pi##X) \
 		{ \
 		fFunctionPtr(ZMACRO_Callable_i##X); \
-		return notnull; \
+		return true; \
 		} \
 \
 private: \

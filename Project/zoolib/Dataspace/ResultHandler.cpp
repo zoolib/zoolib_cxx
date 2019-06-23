@@ -30,7 +30,7 @@ ResultHandler::ResultHandler(const ZP<Callable_t>& iCallable)
 :	fCallable(iCallable)
 	{}
 
-ZQ<void> ResultHandler::QCall(
+bool ResultHandler::QCall(
 	const ZP<ZCounted>& iRegistration,
 	int64 iChangeCount,
 	const ZP<Result>& iResult,
@@ -58,7 +58,7 @@ ZQ<void> ResultHandler::QCall(
 		}
 	sCall(fCallable, iRegistration, fResult);
 
-	return notnull;
+	return true;
 	}
 
 } // namespace Dataspace

@@ -52,7 +52,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<T> QCall()
+	virtual QRet<T> QCall()
 		{
 		if (not fTimeoutQ && fFactories.size() == 1)
 			{
@@ -73,9 +73,12 @@ public:
 			ZRef<Delivery<T> > theDelivery = sGetDeliveryClearPromise(thePromise);
 
 			if (not fTimeoutQ || theDelivery->WaitFor(*fTimeoutQ))
-				return theDelivery->QGet();
+				{
+				if (ZQ<T> theQ = theDelivery->QGet())
+					return *theQ;
+				}
 			}
-		return null;
+		return QRet<T>();
 		}
 
 // Our protocol

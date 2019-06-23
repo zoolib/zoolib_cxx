@@ -96,7 +96,7 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<R_p> QCall(A_p... iParams)
+	virtual QRet<R_p> QCall(A_p... iParams)
 		{ return fLambda(iParams...); }
 
 private:
@@ -113,10 +113,10 @@ public:
 		{}
 
 // From Callable
-	virtual ZQ<void> QCall(A_p... iParams)
+	virtual bool QCall(A_p... iParams)
 		{
 		fLambda(iParams...);
-		return notnull;
+		return true;
 		}
 
 private:

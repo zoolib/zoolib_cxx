@@ -82,7 +82,7 @@ public:
 	virtual ~NetAddress();
 
 // From Factory_ChannerRWClose_Bin
-	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
 	virtual ZRef<ChannerRWClose_Bin> Connect() = 0;
@@ -126,7 +126,7 @@ public:
 	virtual ~NetName();
 
 // From Factory_ChannerRWClose_Bin
-	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
 	virtual ZRef<ChannerRWClose_Bin> Connect();
@@ -174,7 +174,7 @@ public:
 	virtual ~NetListener();
 
 // From Factory_ChannerRWClose_Bin
-	virtual ZQ<ZRef<ChannerRWClose_Bin> > QCall();
+	virtual ZP<ChannerRWClose_Bin> QCall();
 
 // Our protocol
 	virtual ZRef<ChannerRWClose_Bin> Listen() = 0;

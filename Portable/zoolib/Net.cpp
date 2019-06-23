@@ -39,7 +39,7 @@ NetAddress::NetAddress()
 NetAddress::~NetAddress()
 	{}
 
-ZQ<ZRef<ChannerRWClose_Bin> > NetAddress::QCall()
+ZP<ChannerRWClose_Bin> NetAddress::QCall()
 	{
 	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
 		return theChanner;
@@ -67,7 +67,7 @@ NetName::NetName()
 NetName::~NetName()
 	{}
 
-ZQ<ZRef<ChannerRWClose_Bin> > NetName::QCall()
+ZP<ChannerRWClose_Bin> NetName::QCall()
 	{
 	if (ZRef<ChannerRWClose_Bin> theChanner = this->Connect())
 		return theChanner;
@@ -107,7 +107,7 @@ NetListener::NetListener()
 NetListener::~NetListener()
 	{}
 
-ZQ<ZRef<ChannerRWClose_Bin> > NetListener::QCall()
+ZP<ChannerRWClose_Bin> NetListener::QCall()
 	{
 	if (ZRef<ChannerRWClose_Bin> theChanner = this->Listen())
 		return theChanner;
