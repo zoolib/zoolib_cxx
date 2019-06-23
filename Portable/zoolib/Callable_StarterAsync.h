@@ -48,12 +48,7 @@ public:
 
 // From Callable
 	virtual bool QCall()
-		{
-		if (sQStart(fStarter, fCallable))
-			return true;
-		return false;
-
-		}
+		{ return sQStart(fStarter, fCallable); }
 
 private:
 	const ZP<Starter> fStarter;
@@ -78,11 +73,7 @@ public: \
 		{} \
 \
 	virtual bool QCall(ZMACRO_Callable_Pi##X) \
-		{ \
-		if (sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X))) \
-			return true; \
-		return false; \
-		} \
+		{ return sQStart(fStarter, sBindR(fCallable, ZMACRO_Callable_i##X)); } \
 \
 private:\
 	const ZP<Starter> fStarter; \

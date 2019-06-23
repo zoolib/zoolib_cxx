@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Any_h__
 #include "zconfig.h"
 
-#include "zoolib/Compat_type_traits.h" // For is_pod
 #include "zoolib/CountedWithoutFinalize.h"
 
 #include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
 
 #include <typeinfo> // For std::type_info
+#include <type_traits> // For std::is_pod
 
 namespace ZooLib {
 
@@ -399,13 +399,11 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG_SPI_Enabled(type_traits)
-			else if (is_pod<S>::value)
+			else if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				sCtor_T<S>(&fPayload, iP0);
 				}
-			#endif
 			else
 				{
 				sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0);
@@ -457,13 +455,11 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG_SPI_Enabled(type_traits)
-			else if (is_pod<S>::value)
+			else if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload, iP0);
 				}
-			#endif
 			else
 				{
 				return sCtor_T<InPlace_T<S> >(&fDistinguisher, iP0)->fValue;
@@ -485,13 +481,11 @@ private:
 			{
 			if (false)
 				{}
-			#if ZCONFIG_SPI_Enabled(type_traits)
-			else if (is_pod<S>::value)
+			else if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload);
 				}
-			#endif
 			else
 				{
 				return sCtor_T<InPlace_T<S> >(&fDistinguisher)->fValue;

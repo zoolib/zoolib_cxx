@@ -32,63 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define foreacha(varname, container) for (auto&& varname : container)
 #endif
 
-#else // ZCONFIG_CPP >= 2011
-
-#include "zoolib/Compat_type_traits.h" // For remove_const and remove_reference
-
-#include "zoolib/ZMACRO_auto.h"
-#include "zoolib/ZMACRO_decltype.h"
-
-#if ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto) && defined(ZMACRO_decltype)
-
-// =================================================================================================
-#pragma mark -
-
-namespace ZooLib {
-
-template <typename ContainerRef>
-struct ForEachWrapper_Forward_T
-	{
-	typedef typename remove_const<typename remove_reference<ContainerRef>::type>::type Container;
-
-	inline ForEachWrapper_Forward_T(const Container& iContainer)
-	:	fIter(iContainer.begin())
-	,	fEnd(iContainer.end())
-		{}
-
-	typename Container::const_iterator fIter;
-	const typename Container::const_iterator fEnd;
-	};
-
-// This macro sets up __FEBreak used in each nested loop. It also takes a const
-// reference to container, placing it in __CR, thus keeping container in scope.
-#define ZMACRO_foreach_prefix(container) \
-	for (int __FEBreak = 0; not __FEBreak; ++__FEBreak) \
-		for (typename ZooLib::add_lvalue_reference \
-			<typename ZooLib::add_const \
-			<ZMACRO_decltype(container)>::type>::type \
-			__CR = container; not __FEBreak; ++__FEBreak) \
-			for (ZooLib::ForEachWrapper_Forward_T<ZMACRO_decltype(__CR)> __FEW(__CR); \
-				not __FEBreak && __FEW.fIter != __FEW.fEnd; \
-				++__FEW.fIter, ++__FEBreak)
-
-} // namespace ZooLib
-
-// =================================================================================================
-#pragma mark - foreachv and foreacha
-
-#ifndef foreachv
-	#define foreachv(vardecl, container) \
-		ZMACRO_foreach_prefix(container) \
-		for (vardecl = *__FEW.fIter; not __FEBreak; --__FEBreak)
-#endif
-
-#ifndef foreacha
-	#define foreacha(varname, container) \
-		ZMACRO_foreach_prefix(container) \
-		for (ZMACRO_auto(varname, *__FEW.fIter); not __FEBreak; --__FEBreak)
-#endif
-
-#endif // ZCONFIG_SPI_Enabled(type_traits) && defined(ZMACRO_auto) && defined(ZMACRO_decltype)
 #endif // ZCONFIG_CPP >= 2011
+
 #endif // __ZMACRO_foreach_h__

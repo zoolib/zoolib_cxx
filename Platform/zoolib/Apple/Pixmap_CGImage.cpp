@@ -54,9 +54,9 @@ Pixmap sPixmap(ZP<CGImageRef> iImageRef)
 	{
 	if (not iImageRef)
 		{}
-	else if (NotZP<CGDataProviderRef> theProvider = ::CGImageGetDataProvider(iImageRef))
+	else if (NotP<CGDataProviderRef> theProvider = ::CGImageGetDataProvider(iImageRef))
 		{}
-	else if (NotZP<CFDataRef> theDataRef = sAdopt& ::CGDataProviderCopyData(theProvider))
+	else if (NotP<CFDataRef> theDataRef = sAdopt& ::CGDataProviderCopyData(theProvider))
 		{}
 	else
 		{

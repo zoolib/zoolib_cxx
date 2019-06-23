@@ -190,21 +190,21 @@ ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (NotZP<ValComparand> theComparandL = spQRead_ValComparand(iChanRU))
+	if (NotP<ValComparand> theComparandL = spQRead_ValComparand(iChanRU))
 		{
 		return null;
 		}
 	else
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (NotZP<ValComparator> theComparator = spQRead_ValComparator(iChanRU))
+		if (NotP<ValComparator> theComparator = spQRead_ValComparator(iChanRU))
 			{
 			throw ParseException("Expected Comparator after Comparand");
 			}
 		else
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
-			if (NotZP<ValComparand> theComparandR = spQRead_ValComparand(iChanRU))
+			if (NotP<ValComparand> theComparandR = spQRead_ValComparand(iChanRU))
 				{
 				throw ParseException("Expected Comparand after Comparator");
 				}

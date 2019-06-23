@@ -48,10 +48,7 @@ struct Tag_PPT;
 typedef Any_T<Tag_PPT> PPT;
 
 struct Start : CountedWithoutFinalize
-	{
-	// Something needs to be virtual so it has a vtbl.
-	virtual ~Start() {}
-	};
+	{};
 
 struct Start_Map : Start {};
 
@@ -94,9 +91,9 @@ template <class T>
 void sPush(const T& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
 
-// Special-case NotZP -- we generally want them on the chan as ZP.
+// Special-case NotP -- we generally want them on the chan as ZP.
 template <class T>
-void sPush(const NotZP<T>& iVal, const ChanW_PPT& iChanW)
+void sPush(const NotP<T>& iVal, const ChanW_PPT& iChanW)
 	{ sPush(sZP(iVal), iChanW); }
 
 template <class T>

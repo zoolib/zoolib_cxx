@@ -24,9 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 
-#include "zoolib/ZCompat_type_traits.h" // For std::remove_reference
-
-#if ZCONFIG_SPI_Enabled(type_traits) && ZCONFIG_CPP >= 2011
+#include <type_traits> // For std::remove_reference
 
 // =================================================================================================
 #pragma mark - Callable_Lambda
@@ -125,18 +123,16 @@ private:
 
 template <typename Lambda_p>
 ZP<Callable
-	<typename Callable_Lambda_Util::RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type>
+	<typename Callable_Lambda_Util::RemoveClass_T<decltype(&std::remove_reference<Lambda_p>::type::operator())>::type>
 	>
 sCallable(const Lambda_p& iLambda)
 	{
-	typedef typename Callable_Lambda_Util::RemoveClass_T<decltype(&remove_reference<Lambda_p>::type::operator())>::type
+	typedef typename Callable_Lambda_Util::RemoveClass_T<decltype(&std::remove_reference<Lambda_p>::type::operator())>::type
 		Signature;
 
 	return new Callable<Lambda_p,Signature>(iLambda);
 	}
 
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(type_traits) && ZCONFIG_CPP >= 2011
 
 #endif // __ZooLib_Callable_Lambda_h__

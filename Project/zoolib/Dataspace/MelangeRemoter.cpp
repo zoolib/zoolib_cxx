@@ -577,8 +577,7 @@ void MelangeServer::pWork()
 					{
 					if (ZP<Expr_Rel> theRel = spAsRel(theMapQ->Get("Rel")))
 						{
-						RefReg theReg = fMelange.f0->Call(fCallable_Changed, theRel);
-//@@						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
+						RefReg theReg = sCall(fMelange.f0, fCallable_Changed, theRel);
 						sInsertMust(fMap_Refcon2Reg, *theRefconQ, theReg);
 						sInsertMust(fMap_Reg2Refcon, theReg, *theRefconQ);
 						sInsertMust(fSet_NewRefcons, *theRefconQ);

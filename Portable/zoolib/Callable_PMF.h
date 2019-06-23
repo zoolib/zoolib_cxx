@@ -83,7 +83,7 @@ public:
 		if (typename Callable_PMF_Util::Traits<Object_p>::Temp_t temp =
 			Callable_PMF_Util::Traits<Object_p>::sGetTemp(fObject))
 			{ return (Callable_PMF_Util::Traits<Object_p>::sGetPtr(temp)->*fMethod)(); }
-		return null;
+		return QRet<R>();
 		}
 
 private:

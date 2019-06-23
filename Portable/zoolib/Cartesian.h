@@ -533,15 +533,12 @@ sLength(const Point_p& iPoint)
 	{ return sqrt(sManhattanLength(iPoint * iPoint)); }
 
 // =================================================================================================
-#pragma mark - sIsEmpty
+#pragma mark - sIsEmpty and sNotEmpty
 
 template <class Rect_p>
 typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
 sIsEmpty(const Rect_p& iRect)
 	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
-
-// =================================================================================================
-#pragma mark - sNotEmpty
 
 template <class Rect_p>
 typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
@@ -1212,13 +1209,15 @@ struct RectTraits_Std_LeftTopRightBottom
 	static B_t sB(Rect_p& ioRect) { return ioRect.bottom; }
 	};
 
-#if not defined(ZMACRO_Cartesian_SuppressOperators) || not ZMACRO_Cartesian_SuppressOperators
+#if not defined(ZMACRO_Cartesian_Operators_Suppress) || not ZMACRO_Cartesian_Operators_Suppress
 	using namespace Operators;
 #endif
 
 } // namespace Cartesian
 
-using namespace Cartesian;
+#if not defined(ZMACRO_Cartesian_Suppress) || not ZMACRO_Cartesian_Suppress
+	using namespace Cartesian;
+#endif
 
 } // namespace ZooLib
 
