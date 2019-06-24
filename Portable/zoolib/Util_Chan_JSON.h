@@ -72,10 +72,14 @@ struct PushTextOptions_JSON : PushTextOptions
 	PushTextOptions_JSON(const PushTextOptions& iOther);
 	PushTextOptions_JSON(const PushTextOptions_JSON& iOther);
 
+	PushTextOptions_JSON& operator=(const PushTextOptions& iOther);
+
 	ZQ<bool> fUseExtendedNotationQ;
 	ZQ<bool> fBinaryAsBase64Q;
 	ZQ<bool> fPreferSingleQuotesQ;
 	ZQ<bool> fNumberSequencesQ;
+	ZQ<bool> fLowercaseHexQ;
+	ZQ<bool> fIntegersAsHexQ;
 	};
 
 // =================================================================================================

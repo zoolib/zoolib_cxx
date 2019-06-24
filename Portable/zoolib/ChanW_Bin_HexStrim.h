@@ -34,7 +34,7 @@ class ChanW_Bin_HexStrim_Real
 :	public ChanW_Bin
 	{
 public:
-	ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF);
+	ChanW_Bin_HexStrim_Real(bool iLowercaseHex, const ChanW_UTF& iChanW_UTF);
 
 // From ChanW_Bin
 	virtual size_t Write(const byte* iSource, size_t iCount);
@@ -53,11 +53,13 @@ class ChanW_Bin_HexStrim
 	{
 public:
 	ChanW_Bin_HexStrim(const std::string& iByteSeparator,
-		const std::string& iChunkSeparator, size_t iChunkSize, const ChanW_UTF& iChanW_UTF);
+		const std::string& iChunkSeparator, size_t iChunkSize,
+		bool iLowercaseHex,
+		const ChanW_UTF& iChanW_UTF);
 
 	ChanW_Bin_HexStrim(const std::string& iByteSeparator,
 		const std::string& iChunkSeparator, size_t iChunkSize,
-		bool iUseUnderscore, const ChanW_UTF& iStrimSink);
+		const ChanW_UTF& iStrimSink);
 
 // From ChanW_Bin
 	virtual size_t Write(const byte* iSource, size_t iCount);

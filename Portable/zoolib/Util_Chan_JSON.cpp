@@ -188,7 +188,15 @@ PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions_JSON& iOther)
 ,	fBinaryAsBase64Q(iOther.fBinaryAsBase64Q)
 ,	fPreferSingleQuotesQ(iOther.fPreferSingleQuotesQ)
 ,	fNumberSequencesQ(iOther.fNumberSequencesQ)
+,	fLowercaseHexQ(iOther.fLowercaseHexQ)
+,	fIntegersAsHexQ(iOther.fIntegersAsHexQ)
 	{}
+
+PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOther)
+	{
+	PushTextOptions::operator=(iOther);
+	return *this;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -296,10 +304,17 @@ void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, co
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
-		if (iOptions.fUseExtendedNotationQ.DGet(false) and (*theQ >= 1000000 || *theQ <= -1000000))
-			sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
+		if (iOptions.fIntegersAsHexQ.Get())
+			{
+			if (iOptions.fLowercaseHexQ.Get())
+				sEWritef(w, "0x%016llx", (unsigned long long)*theQ);
+			else
+				sEWritef(w, "0x%016llx", (unsigned long long)*theQ);
+			}
 		else
+			{
 			w << *theQ;
+			}
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
@@ -370,7 +385,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 			for (;;)
 				{
 				const size_t countCopied = sWriteMemFully(
-					ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, w),
+					ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, iOptions.fLowercaseHexQ.Get(), w),
 					&buffer[0], countRead);
 
 				countRead = sReadMem(iChanR, &nextBuffer[0], chunkSize);
@@ -429,7 +444,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		w << "<";
 
 		sCopyAll(iChanR,
-			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, w));
+			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, iOptions.fLowercaseHexQ.Get(), w));
 
 		w << ">";
 

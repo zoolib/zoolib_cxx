@@ -23,16 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 static const UTF8 spHexDigits[] = "0123456789ABCDEF";
-static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
+static const UTF8 spHexDigitsLowercase[] = "0123456789abcdef";
 
 // =================================================================================================
 #pragma mark - ChanW_Bin_HexStrim_Real
 
-ChanW_Bin_HexStrim_Real::ChanW_Bin_HexStrim_Real(bool iUseUnderscore, const ChanW_UTF& iChanW_UTF)
+ChanW_Bin_HexStrim_Real::ChanW_Bin_HexStrim_Real(bool iLowercaseHex, const ChanW_UTF& iChanW_UTF)
 :	fChanW_UTF(iChanW_UTF)
 	{
-	if (iUseUnderscore)
-		fHexDigits = spHexDigitsWithUnderscore;
+	if (iLowercaseHex)
+		fHexDigits = spHexDigitsLowercase;
 	else
 		fHexDigits = spHexDigits;
 	}
@@ -78,9 +78,10 @@ spSpacings(const std::string& iByteSeparator, const std::string& iChunkSeparator
 ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(
 	const std::string& iByteSeparator,
 	const std::string& iChunkSeparator, size_t iChunkSize,
+	bool iLowercaseHex,
 	const ChanW_UTF& iChanW_UTF)
 :	fChanW_UTF(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iChanW_UTF)
-,	fChanW_Bin(false, fChanW_UTF)
+,	fChanW_Bin(iLowercaseHex, fChanW_UTF)
 	{}
 
 size_t ChanW_Bin_HexStrim::Write(const byte* iSource, size_t iCount)
