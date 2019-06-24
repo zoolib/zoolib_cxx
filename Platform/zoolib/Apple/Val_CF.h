@@ -117,7 +117,7 @@ public:
 		{
 		if (ZQ<S> theQ = this->QGet<S>())
 			return *theQ;
-		return S();
+		return sDefault<S>();
 		}
 
 	template <class S>

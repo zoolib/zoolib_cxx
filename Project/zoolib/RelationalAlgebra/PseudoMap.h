@@ -71,7 +71,7 @@ public:
 		{
 		if (const S* theVal = this->PGet<S>(iName))
 			return *theVal;
-		return S();
+		return sDefault<S>();
 		}
 
 	Map_Any AsMap() const;
