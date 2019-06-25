@@ -49,17 +49,19 @@ double sDouble(const string& iString);
 
 // -----
 
+bool sContains(const string& iTarget, const string& iPattern);
+bool sContainsi(const string& iTarget, const string& iPattern);
+
 int sComparei(const string& iLeft, const string& iRight);
 bool sEquali(const string& iLeft, const string& iRight);
-bool sContainsi(const string& iPattern, const string& iTarget);
 
 // -----
 
-ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget);
-ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget);
+ZQ<string> sQWithoutPrefix(const string& iTarget, const string& iPrefix);
+ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix);
 
-bool sStartsWith(const string& iPattern, const string& iTarget);
-bool sEndsWith(const string& iPattern, const string& iTarget);
+bool sStartsWith(const string& iTarget, const string& iPattern);
+bool sEndsWith(const string& iTarget, const string& iPattern);
 
 // -----
 

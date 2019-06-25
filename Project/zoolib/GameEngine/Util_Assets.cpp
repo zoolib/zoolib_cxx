@@ -20,7 +20,7 @@ bool sReadAnim(const FileSpec& iFS, map<string8,FileSpec>& oFiles, Map_Any& oMap
 	for (FileIter iter = iFS; iter; iter.Advance())
 		{
 		const FileSpec current = iter.Current();
-		if (ZQ<string8> woSuffix = sQWithoutSuffix(".png", current.Name()))
+		if (ZQ<string8> woSuffix = sQWithoutSuffix(current.Name(), ".png"))
 			oFiles[current.Name()] = current;
 		}
 

@@ -211,7 +211,7 @@ static ZP<ChannerR_Bin> spMakeChanner_Transfer(
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 
-	if (Util_string::sContainsi("chunked", sGetString0(iHeader.Get("transfer-encoding"))))
+	if (Util_string::sContainsi(sGetString0(iHeader.Get("transfer-encoding")), "chunked"))
 		return sChanner_Channer_T<ChanR_Bin_Chunked>(iChannerR);
 
 	if (ZQ<int64> contentLength = iHeader.QGet<int64>("content-length"))

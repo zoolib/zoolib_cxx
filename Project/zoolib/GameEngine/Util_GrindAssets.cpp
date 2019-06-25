@@ -434,7 +434,7 @@ void spGrindArt(
 	for (FileIter iter = iFS; iter; iter.Advance())
 		{
 		const FileSpec current = iter.Current();
-		if (ZQ<string8> theNameQ = sQWithoutSuffix(".png", current.Name()))
+		if (ZQ<string8> theNameQ = sQWithoutSuffix(current.Name(), ".png"))
 			{
 			const string8 theName = *theNameQ;
 

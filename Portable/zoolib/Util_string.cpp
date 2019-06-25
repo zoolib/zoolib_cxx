@@ -117,6 +117,12 @@ double sDouble(const string& iString)
 
 // =================================================================================================
 
+bool sContains(const string& iTarget, const string& iPattern)
+	{ return string::npos != iTarget.find(iPattern); }
+
+bool sContainsi(const string& iTarget, const string& iPattern)
+	{ return sContains(Unicode::sToLower(iTarget), Unicode::sToLower(iPattern)); }
+
 int sComparei(const string& iLeft, const string& iRight)
 	{
 	if (const size_t sizeLeft = iLeft.size())
@@ -165,21 +171,16 @@ bool sEquali(const string& iLeft, const string& iRight)
 		}
 	}
 
-bool sContainsi(const string& iPattern, const string& iTarget)
+ZQ<string> sQWithoutPrefix(const string& iTarget, const string& iPrefix)
 	{
-	return string::npos != Unicode::sToLower(iTarget).find(Unicode::sToLower(iPattern));
-	}
-
-ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget)
-	{
-	if (size_t patternLength = iPattern.length())
+	if (size_t prefixLength = iPrefix.length())
 		{
 		if (size_t targetLength = iTarget.length())
 			{
-			if (patternLength <= targetLength)
+			if (prefixLength <= targetLength)
 				{
-				if (iTarget.substr(0, patternLength) == iPattern)
-					return iTarget.substr(patternLength);
+				if (iTarget.substr(0, prefixLength) == iPrefix)
+					return iTarget.substr(prefixLength);
 				}
 			}
 		return null;
@@ -187,16 +188,16 @@ ZQ<string> sQWithoutPrefix(const string& iPattern, const string& iTarget)
 	return iTarget;
 	}
 
-ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget)
+ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix)
 	{
-	if (size_t patternLength = iPattern.length())
+	if (size_t suffixLength = iSuffix.length())
 		{
 		if (size_t targetLength = iTarget.length())
 			{
-			if (patternLength <= targetLength)
+			if (suffixLength <= targetLength)
 				{
-				if (iTarget.substr(targetLength - patternLength) == iPattern)
-					return iTarget.substr(0, targetLength - patternLength);
+				if (iTarget.substr(targetLength - suffixLength) == iSuffix)
+					return iTarget.substr(0, targetLength - suffixLength);
 				}
 			}
 		return null;
@@ -204,11 +205,11 @@ ZQ<string> sQWithoutSuffix(const string& iPattern, const string& iTarget)
 	return iTarget;
 	}
 
-bool sStartsWith(const string& iPattern, const string& iTarget)
-	{ return sQWithoutPrefix(iPattern, iTarget); }
+bool sStartsWith(const string& iTarget, const string& iPattern)
+	{ return sQWithoutPrefix(iTarget, iPattern); }
 
-bool sEndsWith(const string& iPattern, const string& iTarget)
-	{ return sQWithoutSuffix(iPattern, iTarget); }
+bool sEndsWith(const string& iTarget, const string& iPattern)
+	{ return sQWithoutSuffix(iTarget, iPattern); }
 
 // =================================================================================================
 
