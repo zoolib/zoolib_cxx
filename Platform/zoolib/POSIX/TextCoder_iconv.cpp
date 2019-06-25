@@ -34,6 +34,9 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
+#pragma clang diagnostic ignored "-Wunreachable-code"
+#pragma clang diagnostic ignored "-Wunused-function"
+
 namespace ZooLib {
 
 // =================================================================================================
