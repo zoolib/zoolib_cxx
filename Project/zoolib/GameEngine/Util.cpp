@@ -195,12 +195,8 @@ ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName)
 
 ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
 	{
-	if (Util_string::sQWithoutSuffix(".zootext", iFS.Name())
-		|| Util_string::sQWithoutSuffix(".txt", iFS.Name()))
-		{
-		if (ZP<ChannerR_Bin> channerR = iFS.OpenR())
-			return sQReadMap_Any(*channerR, iFS.Name());
-		}
+	if (ZP<ChannerR_Bin> channerR = iFS.OpenR())
+		return sQReadMap_Any(*channerR, iFS.Name());
 	return null;
 	}
 
@@ -217,10 +213,10 @@ Map_Any sReadTextData(const FileSpec& iFS)
 			{}
 		else
 			{
-			ZQ<string8> theQ = sQWithoutSuffix(".txt", theName);
+			ZQ<string8> theQ = sQWithoutSuffix(theName, ".txt");
 
 			if (not theQ)
-				theQ = sQWithoutSuffix(".vals", theName);
+				theQ = sQWithoutSuffix(theName, ".vals");
 
 			if (theQ)
 				{

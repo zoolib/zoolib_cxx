@@ -45,7 +45,7 @@ bool spPopulateBin(const ZP<AssetCatalog>& iAC,
 		for (FileIter iter = iSheets; iter; iter.Advance())
 			{
 			string theFileName = iter.CurrentName();
-			if (ZQ<string8> theNameQ = sQWithoutSuffix(".png", theFileName))
+			if (ZQ<string8> theNameQ = sQWithoutSuffix(theFileName, ".png"))
 				{
 				ZP<AssetCatalog::Callable_TextureMaker> theCallable =
 					sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iter.Current()));
@@ -66,7 +66,7 @@ bool spReadAnim(const FileSpec& iParentAsFS,
 		{
 		const string8 theName = iter.CurrentName();
 
-		if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
+		if (ZQ<string8> theQ = sQWithoutSuffix(theName, ".png"))
 			oFiles[theName] = iter.Current();
 		}
 
@@ -130,7 +130,7 @@ void spInstall_Art(
 		{
 		const string8 theName = iFS.Name();
 
-		if (ZQ<string8> theQ = sQWithoutSuffix(".png", theName))
+		if (ZQ<string8> theQ = sQWithoutSuffix(theName, ".png"))
 			{
 			const string8 woSuffix = *theQ;
 			const string8 theMeta = woSuffix + ".txt";
