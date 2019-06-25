@@ -58,18 +58,18 @@ static bool spPull_JSON_Other_Push(
 
 	if (Util_Chan::sTryRead_SignedGenericNumber(iChanRU, asInt64, asDouble, isDouble))
 		{
-		if (not isDouble)
+		if (isDouble)
 			{
-			sPush(asInt64, iChanW);
-			}
-		else if (iLooseNumbers && asInt64 == -1
-			&& (sTryRead_CP('l', iChanRU) || sTryRead_CP('L', iChanRU)))
-			{
-			sPush(asInt64, iChanW);
+			sPush(asDouble, iChanW);
 			}
 		else
 			{
-			sPush(asDouble, iChanW);
+			if (iLooseNumbers && asInt64 == -1)
+				{
+				// Read and discard an L suffix (that python puts on things sometimes)
+				sTryRead_CP('l', iChanRU) || sTryRead_CP('L', iChanRU);
+				}
+			sPush(asInt64, iChanW);
 			}
 		return true;
 		}
