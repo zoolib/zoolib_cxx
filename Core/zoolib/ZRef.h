@@ -40,7 +40,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ZRef
 
-template <class T, bool Sense_p = true>
+template <class T, bool Sense_p>
 class ZRef
 	{
 	#if defined(__APPLE__)
@@ -614,18 +614,6 @@ const struct
 	ZRef<T,true> operator&(const ZRef<T,Sense_p>& iRef) const { return ZRef<T,true>(iRef); }
 	} sZP = {}, sRef = {};
 
-//// =================================================================================================
-//#pragma mark - sTempRef
-//
-//const struct
-//	{
-//	template <class T>
-//	ZRef<T,true> operator&(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-//
-//	template <class T>
-//	ZRef<T,true> operator()(T* iP) const { return ZRef<T,true>(Adopt_T<T>(iP)); }
-//	} sTempZP = {}, sTempRef = {};
-
 // =================================================================================================
 #pragma mark - sClear
 
@@ -636,9 +624,9 @@ void sClear(ZRef<T,Sense_p>& ioRef)
 
 template <class T, bool Sense_p>
 inline
-ZRef<T> sGetClear(ZRef<T,Sense_p>& ioRef)
+ZRef<T,Sense_p> sGetClear(ZRef<T,Sense_p>& ioRef)
 	{
-	const ZRef<T> result = ioRef;
+	const ZRef<T,Sense_p> result = ioRef;
 	sClear(ioRef);
 	return result;
 	}
@@ -660,8 +648,6 @@ void swap(ZRef<T,Sense_p>& a, ZRef<T,not Sense_p>& b)
 
 // =================================================================================================
 #pragma mark - NotRef and ZP
-
-template <class T> using NotRef = ZRef<T,false>;
 
 template <class T> using ZP = ZRef<T,true>;
 template <class T> using NotP = ZRef<T,false>;
