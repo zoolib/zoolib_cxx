@@ -60,8 +60,8 @@ template <> struct IfSmall<false> { enum { value = eUse_stret }; };
 	// On Arm void, integer, float, and enum (natural types) use objc_msgSend.
 	// By inspection, objc_msgSend is also used for structures <= 4 bytes in size.
 	template <class T,
-		bool = is_void<T>::value || is_integral<T>::value
-		|| is_floating_point<T>::value || is_enum<T>::value>
+		bool = std::is_void<T>::value || std::is_integral<T>::value
+		|| std::is_floating_point<T>::value || std::is_enum<T>::value>
 	struct Selector { enum { value = eUse_normal }; };
 
 	template <class T> struct Selector<T, false>
