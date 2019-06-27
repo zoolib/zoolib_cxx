@@ -35,10 +35,10 @@ typedef CountedVal<string8> CountedString;
 
 typedef ZP<CountedString> ZP_CountedString;
 
-struct Compare_RefCountedString
+struct Compare_ZP_CountedString
 	{ bool operator()(const ZP_CountedString& l, const ZP_CountedString& r) const; };
 
-typedef Uniquifier<ZP_CountedString,Compare_RefCountedString> CountedStringUniquifier;
+typedef Uniquifier<ZP_CountedString,Compare_ZP_CountedString> CountedStringUniquifier;
 
 // =================================================================================================
 #pragma mark - ThreadVal_NameUniquifier

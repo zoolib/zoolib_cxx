@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - Compare_RefCountedString
+#pragma mark - Compare_ZP_CountedString
 
-bool Compare_RefCountedString::operator()(const ZP_CountedString& l, const ZP_CountedString& r) const
+bool Compare_ZP_CountedString::operator()(const ZP_CountedString& l, const ZP_CountedString& r) const
 	{ return l->Get() < r->Get(); }
 
 // =================================================================================================
