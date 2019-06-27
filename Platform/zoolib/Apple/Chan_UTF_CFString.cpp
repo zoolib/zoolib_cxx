@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/Apple/ZRef_CF.h"
+#include "zoolib/Apple/ZP_CF.h"
 
 using std::min;
 using std::max;

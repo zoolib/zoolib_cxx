@@ -131,31 +131,31 @@ class Channer_Channer_T
 ,	public Channer_T<Chan_p>
 	{
 public:
-	template <class ChannerOther_p, bool Sense_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
+	template <class ChannerOther_p>
+	Channer_Channer_T(const ZP<ChannerOther_p>& iOther)
 	:	ZP<Counted>(iOther)
 	,	Channer_T<Chan_p>(*iOther)
 		{}
 
-	template <class ChannerOther_p, bool Sense_p, typename... Args_p>
-	Channer_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
+	template <class ChannerOther_p, typename... Args_p>
+	Channer_Channer_T(const ZP<ChannerOther_p>& iOther, Args_p&&... args)
 	:	ZP<Counted>(iOther)
 	,	Channer_T<Chan_p>(*iOther, std::forward<Args_p>(args)...)
 		{}
 	};
 
-template <class Chan_p, class ChannerOther_p, bool Sense_p>
+template <class Chan_p, class ChannerOther_p>
 ZP<Channer_T<Chan_p>>
-sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther)
+sChanner_Channer_T(const ZP<ChannerOther_p>& iOther)
 	{
 	if (ZP<ChannerOther_p> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(theOther);
 	return null;
 	}
 
-template <class Chan_p, class ChannerOther_p, bool Sense_p, typename... Args_p>
+template <class Chan_p, class ChannerOther_p, typename... Args_p>
 ZP<Channer_T<Chan_p>>
-sChanner_Channer_T(const ZRef<ChannerOther_p,Sense_p>& iOther, Args_p&&... args)
+sChanner_Channer_T(const ZP<ChannerOther_p>& iOther, Args_p&&... args)
 	{
 	if (ZP<ChannerOther_p> theOther = iOther)
 		return new Channer_Channer_T<Chan_p>(iOther, std::forward<Args_p>(args)...);

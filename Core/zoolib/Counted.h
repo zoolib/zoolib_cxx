@@ -184,16 +184,16 @@ public:
 		return *this;
 		}
 
-	template <class O,bool Sense>
-	WP(const ZRef<O,Sense>& iRef)
+	template <class O>
+	WP(const ZP<O>& iRef)
 	:	WPBase(iRef ? iRef->GetWPProxy() : null)
 		{
 		// Ensures that O* converts to T*
 		(void)static_cast<T*>(static_cast<O*>(0));
 		}
 
-	template <class O,bool Sense>
-	WP& operator=(const ZRef<O,Sense>& iRef)
+	template <class O>
+	WP& operator=(const ZP<O>& iRef)
 		{
 		(void)static_cast<T*>(static_cast<O*>(0));
 		WPBase::pAssign(iRef ? iRef->GetWPProxy() : null);
@@ -209,8 +209,8 @@ public:
 	ZP<T> Get() const
 		{ return WPBase::pGet().template DynamicCast<T>(); }
 
-	template <class O, bool Sense>
-	operator ZRef<O,Sense>() const
+	template <class O>
+	operator ZP<O>() const
 		{
 		(void)static_cast<T*>(static_cast<O*>(0));
 		return WPBase::pGet().template DynamicCast<O>();
@@ -226,8 +226,6 @@ public:
 		{ return this->GetWPProxy() < iOther.GetWPProxy(); }
 	};
 
-template <class T> using ZWeakRef = WP<T>;
-
 // =================================================================================================
 #pragma mark - WP
 
@@ -239,27 +237,8 @@ WP<T> sWP(T* iP)
 	return null;
 	}
 
-template <class T,bool Sense>
-WP<T> sWP(ZRef<T,Sense> iP)
-	{
-	if (iP)
-		return WP<T>(iP->GetWPProxy());
-	return null;
-	}
-
-// =================================================================================================
-#pragma mark - sWeakRef
-
 template <class T>
-WP<T> sWeakRef(T* iP)
-	{
-	if (iP)
-		return WP<T>(iP->GetWPProxy());
-	return null;
-	}
-
-template <class T,bool Sense>
-WP<T> sWeakRef(ZRef<T,Sense> iP)
+WP<T> sWP(ZP<T> iP)
 	{
 	if (iP)
 		return WP<T>(iP->GetWPProxy());

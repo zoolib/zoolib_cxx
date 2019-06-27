@@ -35,11 +35,11 @@ class Worker
 :	public Callable_Void
 	{
 public:
-	typedef ZP<Worker> ZRef_Worker; // CW7 workaround
+	typedef ZP<Worker> ZP_Worker; // CW7 workaround
 
-	typedef Callable<void(ZRef_Worker)> Callable_Attached;
-	typedef Callable<bool(ZRef_Worker)> Callable_Work;
-	typedef Callable<void(ZRef_Worker)> Callable_Detached;
+	typedef Callable<void(ZP_Worker)> Callable_Attached;
+	typedef Callable<bool(ZP_Worker)> Callable_Work;
+	typedef Callable<void(ZP_Worker)> Callable_Detached;
 
 	Worker(
 		const ZP<Callable_Attached>& iCallable_Attached,

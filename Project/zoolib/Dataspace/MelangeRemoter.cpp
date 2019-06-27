@@ -447,9 +447,9 @@ void MelangeServer::Initialize()
 	{
 	Counted::Initialize();
 
-	fJob = StartScheduler::Job(fMelange.f2, sCallable(sWeakRef(this), &MelangeServer::pWork));
+	fJob = StartScheduler::Job(fMelange.f2, sCallable(sWP(this), &MelangeServer::pWork));
 
-	fCallable_Changed = sCallable(sWeakRef(this), &MelangeServer::pChanged);
+	fCallable_Changed = sCallable(sWP(this), &MelangeServer::pChanged);
 
 	sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pRead));
 	}
@@ -756,7 +756,7 @@ bool Melange_Client::pTrigger()
 
 void Melange_Client::Start(ZP<Starter> iStarter)
 	{
-	fJob = StartScheduler::Job(iStarter, sCallable(sWeakRef(this), &Melange_Client::pWork));
+	fJob = StartScheduler::Job(iStarter, sCallable(sWP(this), &Melange_Client::pWork));
 
 	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
 	}

@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/UnicodeString.h"
 
 #include "zoolib/Apple/Data_NS.h"
-#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/ZP_NS.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>

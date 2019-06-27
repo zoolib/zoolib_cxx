@@ -264,9 +264,9 @@ template <class Signature_p>
 const ZP<Callable<Signature_p>>& sCallable(const ZP<Callable<Signature_p>>& iCallable)
 	{ return iCallable; }
 
-template <class ZRef_p>
-const ZP<Callable<typename ZRef_p::Type_t::Signature>>& sCallable(const ZRef_p& iCandidate)
-	{ return (const ZP<Callable<typename ZRef_p::Type_t::Signature>>&)(iCandidate); }
+template <class ZP_p>
+const ZP<Callable<typename ZP_p::Type_t::Signature>>& sCallable(const ZP_p& iCandidate)
+	{ return (const ZP<Callable<typename ZP_p::Type_t::Signature>>&)(iCandidate); }
 
 template <class Callable_p>
 ZP<Callable<typename Callable_p::Signature>> sCallable(Callable_p iCandidate)

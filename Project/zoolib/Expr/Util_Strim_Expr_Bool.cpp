@@ -100,7 +100,7 @@ ZP<Expr_Bool> spAndable(
 	if (NotP<Expr_Bool> child = spNotable(iCallable_Terminal, iChanRU))
 		throw ParseException("Expected notable");
 	else if (isNotted)
-		return sNot(child);
+		return new Expr_Bool_Not(child);
 	else
 		return child;
 	}

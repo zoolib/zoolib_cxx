@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2012 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,33 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Apple_Ref_CF_h__
-#define __ZooLib_Apple_Ref_CF_h__ 1
+#ifndef __ZooLib_Apple_ZP_xpc_h__
+#define __ZooLib_Apple_ZP_xpc_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
-
 #include "zoolib/ZP.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
+#ifndef ZCONFIG_SPI_Avail__xpc
+	#if (defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+		#define ZCONFIG_SPI_Avail__xpc 1
+	#endif
+#endif
 
-typedef unsigned long CFTypeID;
+#ifndef ZCONFIG_SPI_Avail__xpc
+	#if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) \
+			&& __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0)
+		#define ZCONFIG_SPI_Avail__xpc 1
+	#endif
+#endif
 
-typedef const void * CFTypeRef;
+#ifndef ZCONFIG_SPI_Avail__xpc
+	#define ZCONFIG_SPI_Avail__xpc 0
+#endif
 
-typedef const struct __CFNull * CFNullRef;
+#ifndef ZCONFIG_SPI_Desired__xpc
+	#define ZCONFIG_SPI_Desired__xpc 1
+#endif
 
-typedef const struct __CFArray * CFArrayRef;
-typedef struct __CFArray * CFMutableArrayRef;
+#if ZCONFIG_SPI_Enabled(xpc)
 
-typedef const struct __CFData * CFDataRef;
-typedef struct __CFData * CFMutableDataRef;
+#include <xpc/xpc.h>
 
-typedef const struct __CFDictionary * CFDictionaryRef;
-typedef struct __CFDictionary * CFMutableDictionaryRef;
+// =================================================================================================
+#pragma mark -
 
-typedef const struct __CFString * CFStringRef;
-typedef struct __CFString * CFMutableStringRef;
+namespace ZooLib {
 
-#endif // ZCONFIG_SPI_Enabled(CFType)
+template <>
+inline void sRetain_T(xpc_object_t& ioRef)
+	{ ioRef = ::xpc_retain(ioRef); }
 
-#endif // __ZooLib_Apple_Ref_CF_h__
+template <>
+inline void sRelease_T(xpc_object_t iRef)
+	{ ::xpc_release(iRef); }
+
+} // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(xpc)
+
+#endif // __ZooLib_Apple_ZP_xpc_h__

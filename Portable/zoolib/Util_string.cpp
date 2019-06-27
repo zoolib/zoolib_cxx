@@ -205,11 +205,11 @@ ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix)
 	return iTarget;
 	}
 
-bool sStartsWith(const string& iTarget, const string& iPattern)
-	{ return sQWithoutPrefix(iTarget, iPattern); }
+bool sStartsWith(const string& iTarget, const string& iPossiblePrefix)
+	{ return sQWithoutPrefix(iTarget, iPossiblePrefix); }
 
-bool sEndsWith(const string& iTarget, const string& iPattern)
-	{ return sQWithoutSuffix(iTarget, iPattern); }
+bool sEndsWith(const string& iTarget, const string& iPossibleSuffix)
+	{ return sQWithoutSuffix(iTarget, iPossibleSuffix); }
 
 // =================================================================================================
 

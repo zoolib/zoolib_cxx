@@ -33,12 +33,12 @@ namespace ZooLib {
 
 typedef CountedVal<string8> CountedString;
 
-typedef ZP<CountedString> ZRefCountedString;
+typedef ZP<CountedString> ZP_CountedString;
 
 struct Compare_RefCountedString
-	{ bool operator()(const ZRefCountedString& l, const ZRefCountedString& r) const; };
+	{ bool operator()(const ZP_CountedString& l, const ZP_CountedString& r) const; };
 
-typedef Uniquifier<ZRefCountedString,Compare_RefCountedString> CountedStringUniquifier;
+typedef Uniquifier<ZP_CountedString,Compare_RefCountedString> CountedStringUniquifier;
 
 // =================================================================================================
 #pragma mark - ThreadVal_NameUniquifier
@@ -53,7 +53,7 @@ inline Name sName(const char* iConstCharStar)
 
 Name sName(const string8& iString);
 
-Name sName(const ZRefCountedString& iCountedString);
+Name sName(const ZP_CountedString& iCountedString);
 
 } // namespace ZooLib
 

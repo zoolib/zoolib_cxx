@@ -173,7 +173,7 @@ const struct
 	} sMutablePtr = {};
 
 // =================================================================================================
-// Adopt_T<type> or Adopt_T<type*> indicates to a ZRef (mainly) that it should
+// Adopt_T<type> or Adopt_T<type*> indicates to a ZP (mainly) that it should
 // take ownership of the pointed-to refcounted entity.
 
 template <class T>

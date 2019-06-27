@@ -59,7 +59,7 @@ RowBoat::~RowBoat()
 void RowBoat::Initialize()
 	{
 	Counted::Initialize();
-	fRegistration = fCallable_Register->Call(sCallable(sWeakRef(this), &RowBoat::pChanged), fRel);
+	fRegistration = fCallable_Register->Call(sCallable(sWP(this), &RowBoat::pChanged), fRel);
 	}
 
 const vector<ZP<RowBoat::Callable_Row>>& RowBoat::GetRows()

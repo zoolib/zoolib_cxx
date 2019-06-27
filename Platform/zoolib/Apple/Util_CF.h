@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/UnicodeString.h"
 
-#include "zoolib/Apple/ZRef_CF.h"
+#include "zoolib/Apple/ZP_CF.h"
 
 namespace ZooLib {
 namespace Util_CF {

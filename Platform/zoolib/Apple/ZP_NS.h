@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2012 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,53 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Apple_Ref_xpc_h__
-#define __ZooLib_Apple_Ref_xpc_h__ 1
+#ifndef __ZooLib_Apple_ZP_NS_h__
+#define __ZooLib_Apple_ZP_NS_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
+
+#include "zoolib/Apple/Compat_NSObject.h"
+
 #include "zoolib/ZP.h"
 
-#ifndef ZCONFIG_SPI_Avail__xpc
-	#if (defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
-		#define ZCONFIG_SPI_Avail__xpc 1
-	#endif
-#endif
-
-#ifndef ZCONFIG_SPI_Avail__xpc
-	#if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) \
-			&& __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0)
-		#define ZCONFIG_SPI_Avail__xpc 1
-	#endif
-#endif
-
-#ifndef ZCONFIG_SPI_Avail__xpc
-	#define ZCONFIG_SPI_Avail__xpc 0
-#endif
-
-#ifndef ZCONFIG_SPI_Desired__xpc
-	#define ZCONFIG_SPI_Desired__xpc 1
-#endif
-
-#if ZCONFIG_SPI_Enabled(xpc)
-
-#include <xpc/xpc.h>
-
 // =================================================================================================
-#pragma mark -
+#pragma mark - id and NSObject, sRetain and sRelease
 
-namespace ZooLib {
+void sRetain(struct objc_object& iOb);
+void sRetain(NSObject& iNSObject);
 
-template <>
-inline void sRetain_T(xpc_object_t& ioRef)
-	{ ioRef = ::xpc_retain(ioRef); }
+void sRelease(struct objc_object& iOb);
+void sRelease(NSObject& iNSObject);
 
-template <>
-inline void sRelease_T(xpc_object_t iRef)
-	{ ::xpc_release(iRef); }
+void sCheck(struct objc_object*);
+void sCheck(NSObject*);
 
-} // namespace ZooLib
+int sRetainCount(struct objc_object*);
+int sRetainCount(NSObject*);
 
-#endif // ZCONFIG_SPI_Enabled(xpc)
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZooLib_Apple_Ref_xpc_h__
+#endif // __ZooLib_Apple_ZP_NS_h__

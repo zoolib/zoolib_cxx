@@ -25,7 +25,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - Compare_RefCountedString
 
-bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRefCountedString& r) const
+bool Compare_RefCountedString::operator()(const ZP_CountedString& l, const ZP_CountedString& r) const
 	{ return l->Get() < r->Get(); }
 
 // =================================================================================================
@@ -34,7 +34,7 @@ bool Compare_RefCountedString::operator()(const ZRefCountedString& l, const ZRef
 Name sName(const string8& iString)
 	{ return sName(sCountedVal<string8>(iString)); }
 
-Name sName(const ZRefCountedString& iCountedString)
+Name sName(const ZP_CountedString& iCountedString)
 	{
 	if (ThreadVal_NameUniquifier::Type_t* theUniquifier = ThreadVal_NameUniquifier::sPMut())
 		return Name(theUniquifier->Get(iCountedString));

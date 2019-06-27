@@ -34,7 +34,7 @@ public:
 	Not() {}
 
 	Not(const Not& iOther)
-	:	fT(iOther)
+	:	fT(iOther.fT)
 		{}
 
 	~Not() {}
@@ -42,6 +42,18 @@ public:
 	Not& operator=(const Not& iOther)
 		{
 		fT = iOther.fT;
+		return *this;
+		}
+
+// -----------------
+
+	Not(const T& iT)
+	:	fT(iT)
+		{}
+
+	Not& operator=(const T& iT)
+		{
+		fT = iT;
 		return *this;
 		}
 
@@ -77,11 +89,27 @@ public:
 
 // -----------------
 
-//	__typeof__(*(T()))	operator*()
-//		{ return *fT; }
+	decltype(*(*(T*)0)) operator*()
+		{ return *fT; }
 
-//	__typeof__(*(T()))	operator*() const
-//		{ return *fT; }
+	decltype(*(*(const T*)0)) operator*() const
+		{ return *fT; }
+
+// -----------------
+
+	T& operator->()
+		{ return fT; }
+
+	const T& operator->() const
+		{ return fT; }
+
+// -----------------
+
+	T& Get()
+		{ return fT; }
+
+	const T& Get() const
+		{ return fT; }
 
 // -----------------
 
@@ -95,6 +123,10 @@ private:
 template <class T>
 Not<T> sNot()
 	{ return Not<T>(); }
+
+template <class T>
+const T& sNot(const Not<T>& iNot)
+	{ return iNot; }
 
 template <class T>
 Not<T> sNot(const T& iT)

@@ -64,7 +64,7 @@ Sieve_Singleton::Sieve_Singleton(ZP<RelsWatcher::Callable_Register> iCallable_Re
 void Sieve_Singleton::Initialize()
 	{
 	Counted::Initialize();
-	fResultHandler = new ResultHandler(sCallable(sWeakRef(this), &Sieve_Singleton::pChanged));
+	fResultHandler = new ResultHandler(sCallable(sWP(this), &Sieve_Singleton::pChanged));
 	this->Activate();
 	}
 

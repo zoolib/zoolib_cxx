@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <CoreFoundation/CFStream.h>
 
-#include "zoolib/Apple/ZRef_CF.h"
+#include "zoolib/Apple/ZP_CF.h"
 
 namespace ZooLib {
 

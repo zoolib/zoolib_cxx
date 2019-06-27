@@ -18,14 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQ_h__
-#define __ZQ_h__
+#ifndef __ZooLib_ZQ_h__
+#define __ZooLib_ZQ_h__
 #include "zconfig.h"
 
 #include "zoolib/Compat_operator_bool.h"
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/CtorDtor.h" // For placement ctor/copy/dtor/assign
 #include "zoolib/Default.h"
+#include "zoolib/Not.h"
 #include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZDebug.h"
@@ -41,12 +42,11 @@ namespace ZooLib {
 
 // c.f. boost::optional, Haskell's 'Data.Maybe', Scala's 'Option'.
 
-template <class T, bool Sense = true>
+template <class T>
 class ZQ
 	{
-	template <bool SenseNoValue, bool SenseHasValue>
 	static
-	void spSwap(ZQ<T,SenseNoValue>& ioNoValue, ZQ<T,SenseHasValue>& ioHasValue)
+	void spSwap(ZQ<T>& ioNoValue, ZQ<T>& ioHasValue)
 		{
 		sCtorFromVoidStar_T<T>(ioNoValue.fBytes, ioHasValue.fBytes);
 		ioNoValue.fHasValue = true;
@@ -55,9 +55,8 @@ class ZQ
 		}
 
 public:
-	template <bool OtherSense>
 	ZMACRO_Attribute_NoThrow
-	void swap(ZQ<T,OtherSense>& ioOther)
+	void swap(ZQ<T>& ioOther)
 		{
 		if (fHasValue)
 			{
@@ -120,8 +119,8 @@ public:
 
 // -----------------
 
-	template <class OtherT, bool OtherSense>
-	ZQ(const ZQ<OtherT,OtherSense>& iOther)
+	template <class OtherT>
+	ZQ(const ZQ<OtherT>& iOther)
 		{
 		if (const OtherT* theOther = iOther.PGet())
 			{
@@ -134,8 +133,8 @@ public:
 			}
 		}
 
-	template <class OtherT, bool OtherSense>
-	ZQ& operator=(const ZQ<OtherT,OtherSense>& iOther)
+	template <class OtherT>
+	ZQ& operator=(const ZQ<OtherT>& iOther)
 		{
 		if (fHasValue)
 			{
@@ -205,7 +204,7 @@ public:
 // -----------------
 
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
-		{ return operator_bool_gen::translate(fHasValue == Sense); }
+		{ return operator_bool_gen::translate(fHasValue); }
 
 	bool HasValue() const
 		{ return fHasValue; }
@@ -340,13 +339,12 @@ private:
 		char fBytes[sizeof(T)] ZMACRO_Attribute_Aligned;
 	#endif
 
+protected:
 	bool fHasValue;
-
-	friend class ZQ<T,not Sense>;
 	};
 
-template <class T, bool SenseL, bool SenseR>
-bool operator==(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
+template <class T>
+bool operator==(const ZQ<T>& iL, const ZQ<T>& iR)
 	{
 	if (const T* ll = iL.PGet())
 		{
@@ -357,8 +355,8 @@ bool operator==(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
 	return not iR.HasValue();
 	}
 
-template <class T, bool SenseL, bool SenseR>
-bool operator<(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
+template <class T>
+bool operator<(const ZQ<T>& iL, const ZQ<T>& iR)
 	{
 	if (const T* ll = iL.PGet())
 		{
@@ -369,21 +367,21 @@ bool operator<(const ZQ<T,SenseL>& iL, const ZQ<T,SenseR>& iR)
 	return iR.HasValue();
 	}
 
-template <class T, bool Sense>
-struct RelopsTraits_HasEQ<ZQ<T,Sense>> : public RelopsTraits_Has {};
+template <class T>
+struct RelopsTraits_HasEQ<ZQ<T>> : public RelopsTraits_Has {};
 
-template <class T, bool Sense>
-struct RelopsTraits_HasLT<ZQ<T,Sense>> : public RelopsTraits_Has {};
+template <class T>
+struct RelopsTraits_HasLT<ZQ<T>> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark - ZQ (specialized for void)
 
-template <bool Sense>
-class ZQ<void,Sense>
+template <>
+class ZQ<void>
 	{
 public:
 	void swap(ZQ& iOther)
-		{ swap(fHasValue, iOther.fHasValue); }
+		{ std::swap(fHasValue, iOther.fHasValue); }
 
 // -----------------
 
@@ -391,26 +389,14 @@ public:
 	:	fHasValue(false)
 		{}
 
-	ZQ(const ZQ& iOther)
+	ZQ(const ZQ<void>& iOther)
 	:	fHasValue(iOther.fHasValue)
 		{}
 
 	~ZQ()
 		{}
 
-	ZQ& operator=(const ZQ& iOther)
-		{
-		fHasValue = iOther.fHasValue;
-		return *this;
-		}
-
-// -----------------
-
-	ZQ(const ZQ<void,!Sense>& iOther)
-	:	fHasValue(iOther.fHasValue)
-		{}
-
-	ZQ& operator=(const ZQ<void,!Sense>& iOther)
+	ZQ& operator=(const ZQ<void>& iOther)
 		{
 		fHasValue = iOther.fHasValue;
 		return *this;
@@ -443,7 +429,10 @@ public:
 // -----------------
 
 	ZMACRO_operator_bool_T(ZQ, operator_bool) const
-		{ return operator_bool_gen::translate(fHasValue == Sense); }
+		{ return operator_bool_gen::translate(fHasValue); }
+
+	bool HasValue() const
+		{ return fHasValue; }
 
 	void operator*() const
 		{ ZAssert(fHasValue); }
@@ -465,105 +454,26 @@ public:
 		return true;
 		}
 
-private:
+protected:
 	bool fHasValue;
-
-	friend class ZQ<void, not Sense>;
 	};
 
-template <bool SenseL, bool SenseR>
-bool operator==(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
+inline
+bool operator==(const ZQ<void>& iL, const ZQ<void>& iR)
 	{
 	if (iL.HasValue())
 		return iR.HasValue();
 	return not iR.HasValue();
 	}
 
-template <bool SenseL, bool SenseR>
-bool operator<(const ZQ<void,SenseL>& iL, const ZQ<void,SenseR>& iR)
+inline
+bool operator<(const ZQ<void>& iL, const ZQ<void>& iR)
 	{ return not iL.HasValue() && iR.HasValue(); }
 
 // =================================================================================================
 #pragma mark - NotQ
 
-#if ZCONFIG_CPP >= 2011
-
-template <class T> using NotQ = ZQ<T,false>;
-
-#else // ZCONFIG_CPP >= 2011
-
-template <class T>
-class NotQ : public ZQ<T,false>
-	{
-	typedef ZQ<T,false> inherited;
-public:
-	NotQ()
-		{}
-
-	NotQ(const NotQ& iOther)
-	:	inherited((const inherited&)iOther)
-		{}
-
-	~NotQ()
-		{}
-
-	NotQ& operator=(const NotQ& iOther)
-		{
-		inherited::operator=(iOther);
-		return *this;
-		}
-
-// -----------------
-
-	template <class OtherT, bool OtherSense>
-	NotQ(const ZQ<OtherT,OtherSense>& iOther)
-	:	inherited(iOther)
-		{}
-
-	template <class OtherT, bool OtherSense>
-	NotQ& operator=(const ZQ<OtherT,OtherSense>& iOther)
-		{
-		inherited::operator=(iOther);
-		return *this;
-		}
-
-// -----------------
-
-	NotQ(const null_t& iNull)
-	:	inherited(iNull)
-		{}
-
-	NotQ& operator=(const null_t& iNull)
-		{
-		inherited::operator=(iNull);
-		return *this;
-		}
-
-// -----------------
-
-	template <class P0>
-	NotQ(const P0& i0)
-	:	inherited(i0)
-		{}
-
-	template <class P0>
-	NotQ& operator=(const P0& iValue)
-		{
-		inherited::operator=(iValue);
-		return *this;
-		}
-
-// -----------------
-
-	template <class P0, class P1>
-	NotQ(const P0& i0, const P1& i1)
-	:	inherited(i0, i1)
-		{}
-
-// -----------------
-	};
-
-#endif // ZCONFIG_CPP >= 2011
+template <class T> using NotQ = Not<ZQ<T>>;
 
 // =================================================================================================
 #pragma mark - Pseudo-ctor
@@ -587,51 +497,51 @@ ZQ<T> sQ(const P0& i0, const P1& i1)
 // =================================================================================================
 #pragma mark - Accessor functions
 
-template <class T, bool Sense>
-const T* sPGet(const ZQ<T,Sense>& iQ)
+template <class T>
+const T* sPGet(const ZQ<T>& iQ)
 	{ return iQ.PGet(); }
 
-template <class T, bool Sense>
-const T& sDGet(const T& iDefault, const ZQ<T,Sense>& iQ)
+template <class T>
+const T& sDGet(const T& iDefault, const ZQ<T>& iQ)
 	{ return iQ.DGet(iDefault); }
 
-template <class T, bool Sense>
-const T& sGet(const ZQ<T,Sense>& iQ)
+template <class T>
+const T& sGet(const ZQ<T>& iQ)
 	{ return iQ.Get(); }
 
-template <class T, bool Sense>
-T* sPMut(ZQ<T,Sense>& ioQ)
+template <class T>
+T* sPMut(ZQ<T>& ioQ)
 	{ return ioQ.PMut(); }
 
-template <class T, bool Sense>
-T& sDMut(const T& iDefault, ZQ<T,Sense>& ioQ)
+template <class T>
+T& sDMut(const T& iDefault, ZQ<T>& ioQ)
 	{ return ioQ.DMut(iDefault); }
 
-template <class T, bool Sense>
-T& sMut(ZQ<T,Sense>& ioQ)
+template <class T>
+T& sMut(ZQ<T>& ioQ)
 	{ return ioQ.Mut(); }
 
-template <class T, bool Sense>
-T& sSet(ZQ<T,Sense>& ioQ, const T& iVal)
+template <class T>
+T& sSet(ZQ<T>& ioQ, const T& iVal)
 	{ return ioQ.Set(iVal); }
 
 // =================================================================================================
 #pragma mark -
 
-template <class T, bool Sense>
-void sClear(ZQ<T,Sense>& ioQ)
+template <class T>
+void sClear(ZQ<T>& ioQ)
 	{ ioQ.Clear(); }
 
-template <class T, bool Sense>
-T sGetClear(ZQ<T,Sense>& ioQ)
+template <class T>
+T sGetClear(ZQ<T>& ioQ)
 	{
 	const T result = ioQ.Get();
 	ioQ.Clear();
 	return result;
 	}
 
-template <class T, bool Sense>
-ZQ<T> sQGetClear(ZQ<T,Sense>& ioQ)
+template <class T>
+ZQ<T> sQGetClear(ZQ<T>& ioQ)
 	{
 	if (ioQ)
 		{
@@ -645,14 +555,10 @@ ZQ<T> sQGetClear(ZQ<T,Sense>& ioQ)
 // =================================================================================================
 #pragma mark - swap
 
-template <class T, bool Sense>
-void swap(ZQ<T,Sense>& a, ZQ<T,Sense>& b)
-	{ a.swap(b); }
-
-template <class T, bool Sense>
-void swap(ZQ<T,Sense>& a, ZQ<T,not Sense>& b)
+template <class T>
+void swap(ZQ<T>& a, ZQ<T>& b)
 	{ a.swap(b); }
 
 } // namespace ZooLib
 
-#endif // __ZQ_h__
+#endif // __ZooLib_ZQ_h__

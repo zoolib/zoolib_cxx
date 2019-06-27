@@ -60,8 +60,8 @@ bool sEquali(const string& iLeft, const string& iRight);
 ZQ<string> sQWithoutPrefix(const string& iTarget, const string& iPrefix);
 ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix);
 
-bool sStartsWith(const string& iTarget, const string& iPattern);
-bool sEndsWith(const string& iTarget, const string& iPattern);
+bool sStartsWith(const string& iTarget, const string& iPossiblePrefix);
+bool sEndsWith(const string& iTarget, const string& iPossibleSuffix);
 
 // -----
 

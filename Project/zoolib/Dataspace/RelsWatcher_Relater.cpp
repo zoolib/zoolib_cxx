@@ -46,7 +46,7 @@ public:
 		const ZP<RelsWatcher::Callable_Changed>& iCallable,
 		const ZP<Expr_Rel>& iRel)
 	:	fRefcon(0)
-	,	fWeakRef_RWR(iRWR)
+	,	fRWRWP(iRWR)
 	,	fCallable(iCallable)
 	,	fRel(iRel)
 		{}
@@ -56,7 +56,7 @@ public:
 
 	void Finalize()
 		{
-		if (ZP<RelsWatcher_Relater> theRWR = fWeakRef_RWR)
+		if (ZP<RelsWatcher_Relater> theRWR = fRWRWP)
 			theRWR->pFinalize(this);
 		else
 			Counted::Finalize();
@@ -64,7 +64,7 @@ public:
 
 	int64 fRefcon;
 
-	const WP<RelsWatcher_Relater> fWeakRef_RWR;
+	const WP<RelsWatcher_Relater> fRWRWP;
 	const ZP<RelsWatcher::Callable_Changed> fCallable;
 	const ZP<Expr_Rel> fRel;
 
@@ -87,7 +87,7 @@ void RelsWatcher_Relater::Initialize()
 	inherited::Initialize();
 
 	fRelater->SetCallable_RelaterResultsAvailable(
-		sCallable(sWeakRef(this), &RelsWatcher_Relater::pCallback_Relater));
+		sCallable(sWP(this), &RelsWatcher_Relater::pCallback_Relater));
 	}
 
 void RelsWatcher_Relater::Finalize()

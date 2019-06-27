@@ -160,7 +160,7 @@ void sUpdateNookSet(const Param& iParam, NookSet<Nook_p>& ioNookSet)
 	foreacha (entry, sGetAllNooks(iParam, Name(typeid(Nook_p).name())))
 		{
 		if (ZP<Nook_p> theNook = entry.template DynamicCast<Nook_p>())
-			ioNookSet.fNookWPs.insert(sWeakRef(theNook));
+			ioNookSet.fNookWPs.insert(sWP(theNook));
 		}
 	}
 

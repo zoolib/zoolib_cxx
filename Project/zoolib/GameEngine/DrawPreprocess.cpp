@@ -82,9 +82,7 @@ public:
 			sMax(X(newLT), X(newRB)),
 			sMax(Y(newLT), Y(newRB)));
 
-		const GRect intersection = visibleBounds & fScreenBounds;
-
-		if (sNotEmpty(intersection))
+		if (sNotEmpty(visibleBounds & fScreenBounds))
 			this->pInsertIntoMap(iRendered_Texture);
 		}
 

@@ -768,7 +768,7 @@ Relater_Union::~Relater_Union()
 void Relater_Union::Initialize()
 	{
 	Relater::Initialize();
-	fCallable_RelaterResultsAvailable = sCallable(sWeakRef(this), &Relater_Union::pResultsAvailable);
+	fCallable_RelaterResultsAvailable = sCallable(sWP(this), &Relater_Union::pResultsAvailable);
 	}
 
 bool Relater_Union::Intersects(const RelHead& iRelHead)

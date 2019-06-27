@@ -102,6 +102,8 @@ Game::Game(const FileSpec& iFS,
 		fCog = sCog(fRootMap["StartDebug"]);
 	else
 		fCog = sCog(fRootMap["Start"]);
+
+	ZAssert(fCog);
 	}
 
 Game::~Game()

@@ -80,8 +80,8 @@ void Server::Start(ZP<Starter> iStarter,
 	fCancellable = iCancellable;
 
 	fWorker = new Worker(
-		sCallable(sWeakRef(this), &Server::pWork),
-		sCallable(sWeakRef(this), &Server::pWorkDetached));
+		sCallable(sWP(this), &Server::pWork),
+		sCallable(sWP(this), &Server::pWorkDetached));
 
 	fWorker->Attach(iStarter);
 

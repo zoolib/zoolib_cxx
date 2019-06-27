@@ -394,7 +394,7 @@ void Relater_Searcher::Initialize()
 	{
 	Relater::Initialize();
 	fSearcher->SetCallable_SearcherResultsAvailable(
-		sCallable(sWeakRef(this), &Relater_Searcher::pSearcherResultsAvailable));
+		sCallable(sWP(this), &Relater_Searcher::pSearcherResultsAvailable));
 	}
 
 bool Relater_Searcher::Intersects(const RelHead& iRelHead)

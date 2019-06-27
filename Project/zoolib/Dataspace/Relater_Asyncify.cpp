@@ -54,7 +54,7 @@ void Relater_Asyncify::Initialize()
 	{
 	Relater::Initialize();
 	fRelater->SetCallable_RelaterResultsAvailable(
-		sCallable(sWeakRef(this), &Relater_Asyncify::pResultsAvailable));
+		sCallable(sWP(this), &Relater_Asyncify::pResultsAvailable));
 	}
 
 void Relater_Asyncify::Finalize()

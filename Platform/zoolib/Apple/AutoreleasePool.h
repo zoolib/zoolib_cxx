@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Cocoa)
 #if __OBJC__ && __cplusplus
 
-#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/ZP_NS.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 
