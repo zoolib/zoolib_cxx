@@ -13,7 +13,7 @@
 #include "zoolib/Apple/Map_CFPreferences.h"
 #include "zoolib/Apple/Util_CF_Any.h"
 #include "zoolib/Apple/Util_NS.h"
-#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/ZP_NS.h"
 
 #include "zoolib/GameEngine/Game.h"
 #include "zoolib/GameEngine/RenderGame.h" // For GameEngine::sPixelToGame

@@ -33,7 +33,7 @@ namespace HTTP {
 
 ZP<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
 	{
-	if (ZP<ChannerRWClose_Bin> theSR = sCall(sRef(new NetName_Internet(iHost, iPort))))
+	if (ZP<ChannerRWClose_Bin> theSR = sCall(sZP(new NetName_Internet(iHost, iPort))))
 		{
 //##		theComboQ->SetW(new ChanW_XX_Buffered<byte>(theComboQ->GetW()))
 

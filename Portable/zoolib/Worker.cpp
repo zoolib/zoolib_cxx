@@ -119,7 +119,7 @@ bool Worker::QCall()
 
 		ZRelMtx rel2(fMtx);
 
-		try { sCall(fCallable_Detached, sRef(this)); }
+		try { sCall(fCallable_Detached, sZP(this)); }
 		catch (...) {}
 
 		return false;

@@ -130,7 +130,7 @@ void Relater_Asyncify::pTrigger_Update()
 	if (sGetSet(fTriggered_Update, true))
 		return;
 
-	sStartOnNewThread(sCallable(sRef(this), &Relater_Asyncify::pUpdate));
+	sStartOnNewThread(sCallable(sZP(this), &Relater_Asyncify::pUpdate));
 	}
 
 void Relater_Asyncify::pUpdate()

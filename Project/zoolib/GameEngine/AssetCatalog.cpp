@@ -89,7 +89,7 @@ public:
 		{
 		Counted::Initialize();
 		fKeepRunning = true;
-		sStartOnNewThread(sCallable(sRef(this), &SheetCatalog::pLoad));
+		sStartOnNewThread(sCallable(sZP(this), &SheetCatalog::pLoad));
 		}
 
 	void ExternalPurgeHasOccurred()

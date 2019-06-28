@@ -45,7 +45,7 @@ public:
 		return *this;
 		}
 
-// -----------------
+// --
 
 	Not(const T& iT)
 	:	fT(iT)
@@ -57,7 +57,7 @@ public:
 		return *this;
 		}
 
-// -----------------
+// --
 
 	template <class P0>
 	Not(const P0& i0)
@@ -71,7 +71,7 @@ public:
 		return *this;
 		}
 
-// -----------------
+// --
 
 	explicit operator bool()
 		{ return not (true && fT); }
@@ -79,7 +79,7 @@ public:
 	explicit operator bool() const
 		{ return not (true && fT); }
 
-// -----------------
+// --
 
 	operator T&()
 		{ return fT; }
@@ -87,7 +87,7 @@ public:
 	operator const T&() const
 		{ return fT; }
 
-// -----------------
+// --
 
 	decltype(*(*(T*)0)) operator*()
 		{ return *fT; }
@@ -95,7 +95,7 @@ public:
 	decltype(*(*(const T*)0)) operator*() const
 		{ return *fT; }
 
-// -----------------
+// --
 
 	T& operator->()
 		{ return fT; }
@@ -103,7 +103,7 @@ public:
 	const T& operator->() const
 		{ return fT; }
 
-// -----------------
+// --
 
 	T& Get()
 		{ return fT; }
@@ -111,7 +111,7 @@ public:
 	const T& Get() const
 		{ return fT; }
 
-// -----------------
+// --
 
 private:
 	T fT;

@@ -182,7 +182,7 @@ bool Server::pWork(ZP<Worker> iWorker)
 				try
 					{
 					ZP<Callable_Void> theCallable_Kill =
-						sBindR(sCallable(spKill), sRef(theChanner.DynamicCast<ChannerAbort>()));
+						sBindR(sCallable(spKill), sZP(theChanner.DynamicCast<ChannerAbort>()));
 					theCallable->Call(fRoster->MakeEntry(theCallable_Kill, null), theChanner);
 					}
 				catch (...)

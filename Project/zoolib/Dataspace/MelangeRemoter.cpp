@@ -95,7 +95,7 @@ public:
 				sPull_PPT_AsAny(thePPT, iChanR, this, munged);
 				sPushBack(theVals, munged);
 				}
-			oAny = sRef(new Result(&theRelHead, &theVals));
+			oAny = sZP(new Result(&theRelHead, &theVals));
 
 			sEPull_End(iChanR);
 			return true;
@@ -451,7 +451,7 @@ void MelangeServer::Initialize()
 
 	fCallable_Changed = sCallable(sWP(this), &MelangeServer::pChanged);
 
-	sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pRead));
+	sStartOnNewThread(sCallable(sZP(this), &MelangeServer::pRead));
 	}
 
 void MelangeServer::pRead()
@@ -643,7 +643,7 @@ void MelangeServer::pWork()
 		fTimeOfLastWrite = Time::sSystem();
 		if (fTrueOnce_WriteNeedsStart())
 			{
-			sStartOnNewThread(sCallable(sRef(this), &MelangeServer::pWrite));
+			sStartOnNewThread(sCallable(sZP(this), &MelangeServer::pWrite));
 			}
 		else
 			{
@@ -758,7 +758,7 @@ void Melange_Client::Start(ZP<Starter> iStarter)
 	{
 	fJob = StartScheduler::Job(iStarter, sCallable(sWP(this), &Melange_Client::pWork));
 
-	sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pRead));
+	sStartOnNewThread(sCallable(sZP(this), &Melange_Client::pRead));
 	}
 
 bool Melange_Client::Kill()
@@ -947,7 +947,7 @@ void Melange_Client::pWork()
 	if (sNotEmpty(fQueue_ToWrite))
 		{
 		if (fTrueOnce_WriteNeedsStart())
-			sStartOnNewThread(sCallable(sRef(this), &Melange_Client::pWrite));
+			sStartOnNewThread(sCallable(sZP(this), &Melange_Client::pWrite));
 		else
 			fCnd.Broadcast();
 		}
