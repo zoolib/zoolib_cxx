@@ -27,14 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include "zoolib/Compat_algorithm.h" // For std::swap
-#include "zoolib/Not.h" // For std::swap
+#include "zoolib/Not.h"
 
 #include "zoolib/ZAtomic.h" // For sAtomic_CASPtr
 #include "zoolib/ZTypes.h" // For Adopt_T
-
-#ifndef ZMACRO_Attribute_NoThrow_ZP
-	#define ZMACRO_Attribute_NoThrow_ZP ZMACRO_Attribute_NoThrow
-#endif
 
 namespace ZooLib {
 
@@ -51,11 +47,9 @@ class ZP
 	#endif
 
 	inline
-	ZMACRO_Attribute_NoThrow_ZP
 	static void spRetain(TPtr iPtr) { if (iPtr) sRetain(*iPtr); }
 
 	inline
-	ZMACRO_Attribute_NoThrow_ZP
 	static void spRelease(TPtr iPtr) { if (iPtr) sRelease(*iPtr); }
 
 public:
@@ -80,7 +74,6 @@ public:
 		}
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	void swap(ZP<O>& ioOther)
 		{
@@ -91,15 +84,13 @@ public:
 	typedef T Type_t;
 	typedef TPtr Ptr_t;
 
-//--
+// --
 
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	ZP()
 	:	fPtr(0)
 		{}
 
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	ZP(const ZP& iOther)
 	:	fPtr(iOther.Copy())
@@ -121,8 +112,6 @@ public:
 
 // --
 
-#if ZCONFIG_CPP >= 2011
-
 	inline
 	ZP(ZP&& iOther)
 	:	fPtr(iOther.Orphan())
@@ -136,11 +125,8 @@ public:
 		return *this;
 		}
 
-#endif // ZCONFIG_CPP >= 2011
+// --
 
-//--
-
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	ZP(const null_t&)
 	:	fPtr(0)
@@ -161,10 +147,9 @@ public:
 		return *this;
 		}
 
-//--
+// --
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	ZP(const ZP<O>& iOther)
 	:	fPtr(iOther.Copy())
@@ -183,8 +168,6 @@ public:
 
 // --
 
-#if ZCONFIG_CPP >= 2011
-
 	template <class O>
 	inline
 	ZP(ZP<O>&& iOther)
@@ -202,12 +185,9 @@ public:
 		return *this;
 		}
 
-#endif // ZCONFIG_CPP >= 2011
-
-//--
+// --
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	ZP(const Adopt_T<O>& iAdopt)
 	:	fPtr(iAdopt.Get())
@@ -224,39 +204,33 @@ public:
 		return *this;
 		}
 
-//--
+// --
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	bool operator==(O* iPtr) const
 		{ return fPtr == iPtr; }
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	bool operator!=(O* iPtr) const
 		{ return fPtr != iPtr; }
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	bool operator==(const ZP<O>& iOther) const
 		{ return fPtr == iOther.Get(); }
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	bool operator!=(const ZP<O>& iOther) const
 		{ return fPtr != iOther.Get(); }
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	bool operator<(const ZP<O>& iOther) const
 		{ return fPtr < iOther.Get(); }
 
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	TPtr operator->() const
 		{
@@ -264,7 +238,6 @@ public:
 		return fPtr;
 		}
 
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	TPtr Get() const
 		{ return fPtr; }
@@ -276,7 +249,6 @@ public:
 		return fPtr;
 		}
 
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	TPtr Orphan()
 		{
@@ -296,13 +268,11 @@ public:
 		}
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	O* DynamicCast() const
 		{ return dynamic_cast<O*>(fPtr); }
 
 	template <class O>
-	ZMACRO_Attribute_NoThrow_ZP
 	inline
 	O* StaticCast() const
 		{ return static_cast<O*>(fPtr); }
@@ -369,7 +339,7 @@ template <class T>
 class ZP<T*>
 	{
 public:
-	operator bool() const { return !!fPtr; }
+	operator bool() const { return true && fPtr; }
 	operator T*() const { return fPtr; }
 
 	template <class O>
@@ -382,7 +352,7 @@ public:
 	typedef T* Type_t;
 	typedef T* Ptr_t;
 
-//--
+// --
 
 	ZP()
 	:	fPtr(0)
@@ -404,9 +374,7 @@ public:
 		return *this;
 		}
 
-//--
-
-#if ZCONFIG_CPP >= 2011
+// --
 
 	ZP(ZP&& iOther)
 	:	fPtr(iOther.Orphan())
@@ -421,9 +389,7 @@ public:
 		return *this;
 		}
 
-#endif // ZCONFIG_CPP >= 2011
-
-//--
+// --
 
 	ZP(const null_t&)
 	:	fPtr(0)
@@ -442,7 +408,7 @@ public:
 		return *this;
 		}
 
-//--
+// --
 
 	template <class O>
 	ZP(const ZP<O*>& iOther)
@@ -459,9 +425,7 @@ public:
 		return *this;
 		}
 
-//--
-
-#if ZCONFIG_CPP >= 2011
+// --
 
 	template <class O>
 	ZP(ZP<O*>&& iOther)
@@ -478,9 +442,7 @@ public:
 		return *this;
 		}
 
-#endif // ZCONFIG_CPP >= 2011
-
-//--
+// --
 
 	template <class O>
 	ZP(const Adopt_T<O*>& iAdopt)
@@ -497,7 +459,7 @@ public:
 		return *this;
 		}
 
-//--
+// --
 
 	template <class O>
 	bool operator==(O* iPtr) const
@@ -594,31 +556,24 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - NotRef and ZP
+#pragma mark - NotP
 
 template <class T> using NotP = Not<ZP<T>>;
 
 // =================================================================================================
-#pragma mark - sRef
+#pragma mark - Pseudo-ctor
 
-const struct
-	{
-	template <class T>
-	ZP<T> operator()(T* iPtr) const { return ZP<T>(iPtr); }
+template <class T>
+ZP<T> sZP(T* iPtr)
+	{ return ZP<T>(iPtr); }
 
-	template <class T>
-	ZP<T> operator()(const ZP<T>& iP) const { return ZP<T>(iP); }
+template <class T>
+ZP<T> sZP(const ZP<T>& iP)
+	{ return ZP<T>(iP); }
 
-	template <class T>
-	ZP<T> operator()(const NotP<T>& iP) const { return ZP<T>(iP); }
-
-	template <class T>
-	ZP<T> operator&(T* iPtr) const { return ZP<T>(iPtr); }
-
-	template <class T>
-	ZP<T> operator&(const ZP<T>& iP) const { return ZP<T>(iP); }
-
-	} sZP = {}, sRef = {};
+template <class T>
+ZP<T> sZP(const NotP<T>& iP)
+	{ return ZP<T>(iP); }
 
 // =================================================================================================
 #pragma mark - sClear
@@ -641,7 +596,6 @@ ZP<T> sGetClear(ZP<T>& ioRef)
 #pragma mark - swap
 
 template <class T>
-ZMACRO_Attribute_NoThrow
 inline
 void swap(ZP<T>& a, ZP<T>& b)
 	{ a.swap(b); }
