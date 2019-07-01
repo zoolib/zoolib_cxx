@@ -172,19 +172,6 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 // =================================================================================================
 #pragma mark -
 
-static void spWriteString(const ChanW_Bin& iChanW, const string& iString)
-	{
-	if (size_t theCount = iString.size())
-		{
-		sEWriteCount(iChanW, theCount);
-		sEWriteMem(iChanW, iString.data(), theCount);
-		}
-	else
-		{
-		sEWriteCount(iChanW, 0);
-		}
-	}
-
 bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	const ZP<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW)
@@ -205,14 +192,14 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	if (const string* theString = sPGet<string>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE8);
-		spWriteString(iChanW, *theString);
+		sEWriteCountPrefixedString(iChanW, *theString);
 		return true;
 		}
 
 	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE8);
-		spWriteString(iChanW, sReadAllUTF8(*theChanner));
+		sEWriteCountPrefixedString(iChanW, sReadAllUTF8(*theChanner));
 		return true;
 		}
 
@@ -253,7 +240,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 				}
 			else
 				{
-				spWriteString(iChanW, *theNameQ);
+				sEWriteCountPrefixedString(iChanW, *theNameQ);
 				if (not sPull_PPT_Push_JSONB(iChanR, iWriteFilter, iChanW))
 					sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
