@@ -50,7 +50,11 @@ static size_t spRead(FILE* iFILE, byte* oDest, size_t iCount)
 			{
 			size_t countRead = fread(localDest, 1, iCount, iFILE);
 			if (countRead == 0)
-				break;
+				{
+				if (errno != EINTR)
+					break;
+				clearerr(iFILE);
+				}
 			iCount -= countRead;
 			localDest += countRead;
 			}
@@ -67,7 +71,11 @@ static size_t spWrite(FILE* iFILE, const byte* iSource, size_t iCount)
 			{
 			size_t countWritten = fwrite(localSource, 1, iCount, iFILE);
 			if (countWritten == 0)
-				break;
+				{
+				if (errno != EINTR)
+					break;
+				clearerr(iFILE);
+				}
 			iCount -= countWritten;
 			localSource += countWritten;
 			}
