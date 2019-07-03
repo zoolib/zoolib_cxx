@@ -59,6 +59,7 @@ bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
 	Any& oAny);
 
+Any sAsAny(const PPT& iPPT, const ChanR_PPT& iChanR);
 ZQ<Any> sQAsAny(const ChanR_PPT& iChanR);
 Any sAsAny(const ChanR_PPT& iChanR);
 

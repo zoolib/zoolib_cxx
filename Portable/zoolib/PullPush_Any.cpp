@@ -190,14 +190,17 @@ bool sPull_PPT_AsAny(const ChanR_PPT& iChanR,
 bool sPull_PPT_AsAny(const ChanR_PPT& iChanR, Any& oAny)
 	{ return sPull_PPT_AsAny(iChanR, null, oAny); }
 
+Any sAsAny(const PPT& iPPT, const ChanR_PPT& iChanR)
+	{
+	Any theAny;
+	sPull_PPT_AsAny(iPPT, iChanR, null, theAny);
+	return theAny;
+	}
+
 ZQ<Any> sQAsAny(const ChanR_PPT& iChanR)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
-		{
-		Any theAny;
-		sPull_PPT_AsAny(*theQ, iChanR, null, theAny);
-		return theAny;
-		}
+		return sAsAny(*theQ, iChanR);
 	return null;
 	}
 

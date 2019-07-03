@@ -35,8 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Name.h"
 #include "zoolib/StartOnNewThread.h"
 
-#include <string>
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -156,39 +154,6 @@ PullPushPair<EE> sMakePullPushPair()
 
 // ----------
 
-template <class Pull_p, class Push_p>
-void sRunPullPush_ChanPtr(
-	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
-	const ChanR<Pull_p>* iChanR,
-	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
-	{
-	try
-		{
-		sCall(iCallable, *iChanR, *iChannerWCon);
-		}
-	catch (std::exception& ex)
-		{}
-	sDisconnectWrite(*iChannerWCon);
-	}
-
-template <class Pull_p, class Push_p>
-ZP<ChannerR<Push_p>> sStartPullPush(
-	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
-	const ChanR<Pull_p>* iChanR)
-	{
-	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
-	sStartOnNewThread
-		(
-		sBindR
-			(
-			sCallable(sRunPullPush_ChanPtr<Pull_p,Push_p>),
-			iCallable,
-			iChanR,
-			sGetClear(thePullPushPair.first)
-			)
-		);
-	return thePullPushPair.second;
-	}
 
 template <class Pull_p, class Push_p>
 void sRunPullPush_Channer(
