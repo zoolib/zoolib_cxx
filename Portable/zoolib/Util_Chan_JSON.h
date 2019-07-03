@@ -102,7 +102,7 @@ void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UT
 void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w);
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
-	size_t iLevel, const PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iLevel, const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& w);
 
 ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU);

@@ -344,12 +344,12 @@ void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, co
 	}
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
-	size_t iLevel, const PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iLevel, const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& w)
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
-	if (sDoIndentation(iOptions))
+	if (sDoIndentation(iOptions) && not iOptions.fIndentOnlySequencesQ.Get())
 		{
 		chunkSeparator = sEOLString(iOptions);
 		for (size_t xx = 0; xx < iLevel; ++xx)

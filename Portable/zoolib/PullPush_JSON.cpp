@@ -37,14 +37,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_STL_vector.h"
+#include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 
 using namespace PullPush;
+using namespace Util_STL;
 using Util_Chan::sSkip_WSAndCPlusPlusComments;
 using Util_Chan::sTryRead_CP;
 using std::min;
 using std::string;
+using std::vector;
+
+
+namespace {
+
+enum class EParent
+	{
+	Other,
+	Map,
+	Seq
+	};
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -372,42 +388,47 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	}
 
 // =================================================================================================
-#pragma mark - 
+#pragma mark -
 
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iBaseIndent, vector<EParent>& ioParents,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW);
 
 static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
-	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iBaseIndent, vector<EParent>& ioParents,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
-	bool needsIndentation = false;
-	if (sDoIndentation(iOptions))
+	ioParents.push_back(EParent::Seq);
+
+	bool doIndentation = sDoIndentation(iOptions);
+	if (iOptions.fIndentOnlySequencesQ.Get())
 		{
-		// We're supposed to be indenting if we're complex, ie if any element is:
-		// 1. A non-empty vector.
-		// 2. A non-empty tuple.
-		// or if iOptions.fBreakStrings is true, any element is a string with embedded
-		// line breaks or more than iOptions.fStringLineLength characters.
-		//##needsIndentation = not iYadSeqR->IsSimple(iOptions);
-		needsIndentation = true;
+		foreacha (aa, ioParents)
+			{
+			if (aa != EParent::Seq)
+				{
+				doIndentation = false;
+				break;
+				}
+			}
 		}
 
-	if (needsIndentation)
+	if (doIndentation)
 		{
-		// We need to indent.
-		if (iMayNeedInitialLF)
-			{
-			// We were invoked by a tuple which has already issued the property
-			// name and equals sign, so we need to start a fresh line.
-			sWriteLFIndent(iIndent, iOptions, iChanW);
-			}
+		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
+		const size_t childIndentation = theIndentation+1;
 
-		uint64 count = 0;
+		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
+
+		if (immediateParentIsMap)
+			sWriteLFIndent(theIndentation, iOptions, iChanW);
+
 		iChanW << "[";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
+		uint64 count = 0;
+		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
 			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
 				{
@@ -415,26 +436,25 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else
 				{
-				size_t localIndent = sIsStartSeq(*theNotQ) ? iIndent + 1 : iIndent;
 				if (iOptions.fUseExtendedNotationQ.DGet(false))
 					{
-					sWriteLFIndent(localIndent, iOptions, iChanW);
+					sWriteLFIndent(childIndentation, iOptions, iChanW);
 					if (iOptions.fNumberSequencesQ.DGet(false))
 						iChanW << "/*" << count << "*/";
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 					iChanW << ";";
 					}
 				else
 					{
 					if (not isFirst)
 						iChanW << ",";
-					sWriteLFIndent(localIndent, iOptions, iChanW);
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, localIndent, iOptions, false, iChanW);
+					sWriteLFIndent(childIndentation, iOptions, iChanW);
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 					}
 				}
 			++count;
 			}
-		sWriteLFIndent(iIndent, iOptions, iChanW);
+		sWriteLFIndent(theIndentation, iOptions, iChanW);
 		iChanW << "]";
 		}
 	else
@@ -442,7 +462,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
 		iChanW << "[";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
+		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
 			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
 				{
@@ -450,11 +470,9 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
-				if (iIndent == 0)
-					sWriteLFIndent(0, iOptions, iChanW);
-				else if (not isFirst && sBreakStrings(iOptions))
+				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				iChanW << ";";
 				}
 			else
@@ -465,37 +483,37 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 					if (sBreakStrings(iOptions))
 						iChanW << " ";
 					}
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				}
 			}
 		iChanW << "]";
 		}
+
+	ioParents.pop_back();
 	}
 
 static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
-	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iBaseIndent, vector<EParent>& ioParents,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
-	bool needsIndentation = false;
-	if (sDoIndentation(iOptions))
-		{
-		//##needsIndentation = not iYadMapR->IsSimple(iOptions);
-		needsIndentation = true;
-		}
-
 	const bool useSingleQuotes = iOptions.fPreferSingleQuotesQ.DGet(false);
 
-	if (needsIndentation)
+	ioParents.push_back(EParent::Map);
+
+	bool doIndentation = sDoIndentation(iOptions) && not iOptions.fIndentOnlySequencesQ.Get();
+
+	if (doIndentation)
 		{
-		if (iMayNeedInitialLF)
-			{
-			// We're going to be indenting, but need to start
-			// a fresh line to have our { and contents line up.
-			sWriteLFIndent(iIndent, iOptions, iChanW);
-			}
+		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
+
+		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
+
+		if (immediateParentIsMap)
+			sWriteLFIndent(theIndentation, iOptions, iChanW);
 
 		iChanW << "{";
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
+		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
 			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
 				{
@@ -507,30 +525,30 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				}
 			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
-				sWriteLFIndent(iIndent, iOptions, iChanW);
+				sWriteLFIndent(theIndentation, iOptions, iChanW);
 				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << " = ";
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				iChanW << ";";
 				}
 			else
 				{
 				if (not isFirst)
 					iChanW << ",";
-				sWriteLFIndent(iIndent, iOptions, iChanW);
+				sWriteLFIndent(theIndentation, iOptions, iChanW);
 				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
 				iChanW << ": ";
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				}
 			}
-		sWriteLFIndent(iIndent, iOptions, iChanW);
+		sWriteLFIndent(theIndentation, iOptions, iChanW);
 		iChanW << "}";
 		}
 	else
 		{
 		iChanW << "{";
 		bool wroteAny = false;
-		for (bool isFirst = true; /*no test*/ ; isFirst = false)
+		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
 			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
 				{
@@ -551,7 +569,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				else
 					iChanW << "=";
 
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 
 				iChanW << ";";
 				}
@@ -566,7 +584,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
 
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iIndent + 1, iOptions, true, iChanW);
+				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				}
 			wroteAny = true;
 			}
@@ -574,6 +592,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 			iChanW << " ";
 		iChanW << "}";
 		}
+	ioParents.pop_back();
 	}
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
@@ -585,7 +604,8 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
-		spPull_PPT_Push_JSON(*theQ, iChanR, iInitialIndent, iOptions, false, iChanW);
+		vector<EParent> parents;
+		spPull_PPT_Push_JSON(*theQ, iChanR, iInitialIndent, parents, iOptions, iChanW);
 		return true;
 		}
 	return false;
@@ -593,7 +613,8 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	size_t iIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions, bool iMayNeedInitialLF,
+	size_t iBaseIndent, vector<EParent>& ioParents,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
 	if (const string* theString = sPGet<string>(iPPT))
@@ -608,23 +629,26 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 
 	else if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
 		{
+		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
 		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_Any>(*theData),
-			iIndent, iOptions, iMayNeedInitialLF, iChanW);
+			theIndentation, iOptions, iChanW);
 		}
 
 	else if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
-		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		const size_t theIndentation = iBaseIndent + ioParents.size();
+		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner,
+			theIndentation, iOptions, iChanW);
 		}
 
 	else if (sIsStartMap(iPPT))
 		{
-		spPull_PPT_Push_JSON_Map(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		spPull_PPT_Push_JSON_Map(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 		}
 
 	else if (sIsStartSeq(iPPT))
 		{
-		spPull_PPT_Push_JSON_Seq(iChanR, iIndent, iOptions, iMayNeedInitialLF, iChanW);
+		spPull_PPT_Push_JSON_Seq(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 		}
 
 	else

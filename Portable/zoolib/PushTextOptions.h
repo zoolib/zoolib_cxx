@@ -38,6 +38,7 @@ struct PushTextOptions
 
 	ZQ<std::string> fEOLStringQ;
 	ZQ<std::string> fIndentStringQ;
+	ZQ<bool> fIndentOnlySequencesQ;
 
 	ZQ<size_t> fRawChunkSizeQ;
 	ZQ<std::string> fRawByteSeparatorQ;
