@@ -51,10 +51,10 @@ public:
 			fCnd.WaitFor(fMtx, 7);
 		}
 
-	void Start(const ZP<Callable<void()>>& iCallable)
+	void Start(const ZP<Startable>& iStartable)
 		{
 		ZAcqMtx acq(fMtx);
-		fQueue.push_back(iCallable);
+		fQueue.push_back(iStartable);
 		if (fIdleThreads < fQueue.size())
 			{
 			++fActiveThreads;
@@ -127,7 +127,7 @@ public:
 			else
 				{
 				ZThread::sSetName("SONT call");
-				ZP<Callable<void()>> theCallable = fQueue.front();
+				ZP<Startable> theCallable = fQueue.front();
 				fQueue.pop_front();
 
 				try
@@ -155,15 +155,15 @@ public:
 	size_t fActiveThreads;
 	bool fKeepRunning;
 	double fExpireAfter;
-	std::list<ZP<Callable<void()>>> fQueue;
+	std::list<ZP<Startable>> fQueue;
 	};
 
 // ----------
 
-void sStartOnNewThread(const ZP<Callable<void()>>& iCallable)
+void sStartOnNewThread(const ZP<Startable>& iStartable)
 	{
-	if (iCallable)
-		sSingleton<StartOnNewThreadHandler>().Start(iCallable);
+	if (iStartable)
+		sSingleton<StartOnNewThreadHandler>().Start(iStartable);
 	}
 
 void sStartOnNewThread_ProcessIsAboutToExit()

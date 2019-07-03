@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2019 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,43 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Starter_h__
-#define __ZooLib_Starter_h__ 1
+#ifndef __ZooLib_Startable_h__
+#define __ZooLib_Startable_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Startable.h"
+#include "zoolib/Callable.h"
 
 namespace ZooLib {
 
-// =================================================================================================
-#pragma mark - Starter
-
-class Starter
-:	public Counted
-	{
-public:
-	virtual bool QStart(const ZP<Startable>& iStartable) = 0;
-	};
-
-// =================================================================================================
-#pragma mark - Starter_Trivial
-
-class Starter_Trivial
-:	public Starter
-	{
-public:
-// From Starter
-	virtual bool QStart(const ZP<Startable>& iStartable)
-		{ return sQCall(iStartable); }
-	};
-
-inline bool sQStart(ZP<Starter> iStarter, const ZP<Startable>& iStartable)
-	{
-	if (iStarter && iStartable)
-		return iStarter->QStart(iStartable);
-	return false;
-	}
+typedef Callable<void()> Startable;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_Starter_h__
+#endif // __ZooLib_Startable_h__
