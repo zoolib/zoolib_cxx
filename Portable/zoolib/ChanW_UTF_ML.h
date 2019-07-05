@@ -6,6 +6,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanRU_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/ML.h"
 
 #include <vector>

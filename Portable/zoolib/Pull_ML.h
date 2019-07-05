@@ -6,6 +6,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanRU_UTF.h"
+#include "zoolib/ML.h"
 #include "zoolib/PullPush.h"
 
 #include <utility> // For std::pair
@@ -14,10 +15,9 @@
 namespace ZooLib {
 namespace Pull_ML {
 
-// =================================================================================================
+using ML::Attrs_t;
 
-typedef std::pair<Name, std::string> Attr_t;
-typedef std::vector<Attr_t> Attrs_t;
+// =================================================================================================
 
 struct Marker_Attrs
 :	virtual PullPush::Marker

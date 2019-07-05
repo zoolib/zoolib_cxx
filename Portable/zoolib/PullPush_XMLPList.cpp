@@ -37,7 +37,7 @@ namespace ZooLib {
 using namespace PullPush;
 using std::string;
 
-static void spSkipThenEndOrThrow(ML::ChanRU& r, const string& iTagName)
+static void spSkipThenEndOrThrow(ChanRU_UTF_ML& r, const string& iTagName)
 	{
 	sSkipText(r);
 	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
@@ -58,7 +58,7 @@ static void spPull_Base64_Push_PPT(const ZooLib::ChanRU_UTF& iChanRU, const Chan
 // =================================================================================================
 #pragma mark -
 
-void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU, const ChanW_PPT& iChanW)
+void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 	{
 	sSkipText(iChanRU);
 	if (iChanRU.Current() == ML::eToken_TagEmpty)

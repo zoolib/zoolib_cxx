@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Pull_XMLAttr_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ML.h"
+#include "zoolib/ChanRU_UTF_ML.h"
 #include "zoolib/PullPush.h"
 
 namespace ZooLib {
@@ -30,7 +30,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - 
 
-bool sPull_XMLAttr_Push_PPT(ML::ChanRU& ioChanRU, const ChanW_PPT& iChanW);
+bool sPull_XMLAttr_Push_PPT(ChanRU_UTF_ML& ioChanRU, const ChanW_PPT& iChanW);
 
 } // namespace ZooLib
 

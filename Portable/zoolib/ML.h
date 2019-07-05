@@ -23,10 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/Compat_NonCopyable.h"
-
 #include "zoolib/ChanRU_UTF.h"
-#include "zoolib/Channer_UTF.h"
+#include "zoolib/Name.h"
 
 #include <vector>
 
@@ -35,10 +33,6 @@ namespace ML {
 
 // =================================================================================================
 #pragma mark - ML
-
-using std::pair;
-using std::string;
-using std::vector;
 
 enum EToken
 	{
@@ -50,82 +44,21 @@ enum EToken
 	eToken_Text
 	};
 
-typedef pair<string, string> Attr_t;
-typedef vector<Attr_t> Attrs_t;
+typedef std::pair<Name, std::string> Attr_t;
+typedef std::vector<Attr_t> Attrs_t;
 
-typedef Callable<string(string)> Callable_Entity;
-
-// =================================================================================================
-#pragma mark - ML::ChanRU
-
-/// Tokenizes the ML from a source strim.
-
-class ChanRU
-:	public ZooLib::ChanRU_UTF
-	{
-public:
-	explicit ChanRU(const ZooLib::ChanRU_UTF& iChanRU);
-
-	ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
-		bool iRecognizeEntitiesInAttributeValues, ZP<Callable_Entity> iCallable);
-	~ChanRU();
-
-// From ChanR_UTF
-	virtual size_t Read(UTF32* oDest, size_t iCount);
-
-// From ChanU_UTF
-	virtual size_t Unread(const UTF32* iSource, size_t iCount);
-
-// Our protocol
-//	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
-	EToken Current() const;
-	ChanRU& Advance();
-
-	const string& Name() const;
-	Attrs_t Attrs() const;
-
-	ZQ<string> QAttr(const string& iAttrName) const;
-	string Attr(const string& iAttrName) const;
-
-private:
-	void pAdvance() const;
-	void pAdvance();
-
-	const ZooLib::ChanRU_UTF& fChanRU;
-
-	bool fRecognizeEntitiesInAttributeValues;
-
-	ZP<Callable_Entity> fCallable;
-
-	string32 fBuffer;
-	size_t fBufferStart;
-
-	EToken fToken;
-
-	string fTagName;
-	Attrs_t fTagAttributes;
-	};
+typedef Callable<std::string(std::string)> Callable_Entity;
 
 // =================================================================================================
-#pragma mark - ML::ChannerRU
+#pragma mark - ML
 
-typedef Channer_T<ChanRU> ChannerRU;
-
-ZP<ChannerRU> sChanner(const ZP<ZooLib::ChannerRU<UTF32>>& iChanner);
-
-// =================================================================================================
-#pragma mark - ML parsing support
-
-void sSkipText(ChanRU& r);
-
-bool sSkip(ChanRU& r, const string& iTagName);
-bool sSkip(ChanRU& r, vector<string>& ioTags);
-
-bool sTryRead_Begin(ChanRU& r, const string& iTagName);
-
-bool sTryRead_Empty(ChanRU& r, const string& iTagName);
-
-bool sTryRead_End(ChanRU& r, const string& iTagName);
+std::string sReadReference(const ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable);
+bool sReadMLIdentifier(const ChanRU_UTF& iChanRU, std::string& oText);
+bool sReadMLAttributeName(const ChanRU_UTF& iChanRU, std::string& oName);
+bool sReadMLAttributeValue(
+	const ChanRU_UTF& iChanRU,
+	bool iRecognizeEntities, ZP<Callable_Entity> iCallable,
+	std::string& oValue);
 
 } // namespace ML
 } // namespace ZooLib

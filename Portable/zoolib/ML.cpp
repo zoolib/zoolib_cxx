@@ -47,7 +47,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Static helper functions
 
-static string spReadReference(const ZooLib::ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable)
+string sReadReference(const ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable)
 	{
 	string result;
 
@@ -110,7 +110,7 @@ static string spReadReference(const ZooLib::ChanRU_UTF& iChanRU, ZP<Callable_Ent
 	return result;
 	}
 
-static bool spReadMLIdentifier(const ZooLib::ChanRU_UTF& iChanRU, string& oText)
+bool sReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
 	{
 	oText.resize(0);
 
@@ -147,7 +147,7 @@ static bool spReadMLIdentifier(const ZooLib::ChanRU_UTF& iChanRU, string& oText)
 	return true;
 	}
 
-static bool spReadUntil(const ZooLib::ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
+static bool spReadUntil(const ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
@@ -162,7 +162,7 @@ static bool spReadUntil(const ZooLib::ChanRU_UTF& iChanRU, UTF32 iTerminator, st
 		}
 	}
 
-static bool spReadMLAttributeName(const ZooLib::ChanRU_UTF& iChanRU, string& oName)
+bool sReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
 	{
 	oName.resize(0);
 
@@ -197,8 +197,8 @@ static bool spReadMLAttributeName(const ZooLib::ChanRU_UTF& iChanRU, string& oNa
 		}
 	}
 
-static bool spReadMLAttributeValue(
-	const ZooLib::ChanRU_UTF& iChanRU,
+bool sReadMLAttributeValue(
+	const ChanRU_UTF& iChanRU,
 	bool iRecognizeEntities, ZP<Callable_Entity> iCallable,
 	string& oValue)
 	{
@@ -228,7 +228,7 @@ static bool spReadMLAttributeValue(
 			else if (Unicode::sIsWhitespace(*theCPQ))
 				{ break; }
 			else if (*theCPQ == '&' && iRecognizeEntities)
-				{ oValue += spReadReference(iChanRU, iCallable); }
+				{ oValue += sReadReference(iChanRU, iCallable); }
 			else
 				{ oValue += *theCPQ; }
 			}
@@ -236,410 +236,6 @@ static bool spReadMLAttributeValue(
 
 	return true;
 	}
-
-// =================================================================================================
-#pragma mark - ML::ChanRU
-
-ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU)
-:	fChanRU(iChanRU)
-,	fRecognizeEntitiesInAttributeValues(false)
-,	fBufferStart(0)
-,	fToken(eToken_Fresh)
-	{}
-
-ChanRU::ChanRU(const ZooLib::ChanRU_UTF& iChanRU,
-	bool iRecognizeEntitiesInAttributeValues, ZP<Callable_Entity> iCallable)
-:	fChanRU(iChanRU)
-,	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
-,	fCallable(iCallable)
-,	fBufferStart(0)
-,	fToken(eToken_Fresh)
-	{}
-
-ChanRU::~ChanRU()
-	{}
-
-size_t ChanRU::Read(UTF32* oDest, size_t iCount)
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	UTF32* localDest = oDest;
-	if (fToken == eToken_Text)
-		{
-		while (iCount)
-			{
-			if (fBuffer.size())
-				{
-				size_t countToCopy = min(iCount, fBuffer.size() - fBufferStart);
-				fBuffer.copy(localDest, countToCopy, fBufferStart);
-				localDest += countToCopy;
-				iCount -= countToCopy;
-				fBufferStart += countToCopy;
-				if (fBufferStart >= fBuffer.size())
-					{
-					// We've read everything in the buffer, so we can toss it.
-					fBufferStart = 0;
-					fBuffer.resize(0);
-					}
-				}
-			else if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
-				{
-				fToken = eToken_Exhausted;
-				break;
-				}
-			else if (*theCPQ == '<')
-				{
-				sUnread(fChanRU, *theCPQ);
-				break;
-				}
-			else if (*theCPQ == '&')
-				{
-				fBufferStart = 0;
-				fBuffer = Unicode::sAsUTF32(spReadReference(fChanRU, fCallable));
-				}
-			else
-				{
-				*localDest++ = *theCPQ;
-				--iCount;
-				}
-			}
-		}
-
-	return localDest - oDest;
-	}
-
-size_t ChanRU::Unread(const UTF32* iSource, size_t iCount)
-	{
-	ZAssert(fToken == eToken_Text);
-
-	if (fBufferStart > iCount)
-		{
-		fBufferStart -= iCount;
-		}
-	else
-		{
-		// iCount >= fBufferStart
-		const string32 toInsert(iSource + fBufferStart, iSource + iCount);
-		fBuffer.insert(fBuffer.begin(), toInsert.rbegin(), toInsert.rend());
-		fBufferStart = 0;
-		}
-	return iCount;
-	}
-
-EToken ChanRU::Current() const
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	return fToken;
-	}
-
-ChanRU& ChanRU::Advance()
-	{
-	if (fToken == eToken_Fresh)
-		{
-		this->pAdvance();
-		}
-	else
-		{
-		// If we're on a text token, this will skip it. Otherwise it's a no-op.
-		sSkipAll(*this);
-
-		fToken = eToken_Fresh;
-		}
-	return *this;
-	}
-
-const string& ChanRU::Name() const
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
-		return fTagName;
-
-	return sDefault<string>();
-	}
-
-Attrs_t ChanRU::Attrs() const
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
-		return fTagAttributes;
-
-	return Attrs_t();
-	}
-
-ZQ<string> ChanRU::QAttr(const string& iAttrName) const
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
-		{
-		for (Attrs_t::const_iterator ii = fTagAttributes.begin(); ii != fTagAttributes.end(); ++ii)
-			{
-			if (ii->first == iAttrName)
-				return ii->second;
-			}
-		}
-	return null;
-	}
-
-string ChanRU::Attr(const string& iAttrName) const
-	{
-	if (ZQ<string> theAttr = this->QAttr(iAttrName))
-		return *theAttr;
-	return string();
-	}
-
-// The semantics of this do not precisely match those of other sTryRead_XXX methods.
-// We will consume code points from \a s up to and including the failing code point.
-static bool spTryRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
-	{
-	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
-		/*no test*/; /*no inc*/)
-		{
-		UTF32 patternCP;
-		if (not Unicode::sReadInc(iter, iterEnd, patternCP))
-			{
-			// Exhausted the pattern, we've matched everything.
-			return true;
-			}
-
-		if (NotQ<UTF32> targetCPQ = sQRead(iChanR))
-			{
-			// Exhausted the target before seeing the pattern.
-			return false;
-			}
-		else if (*targetCPQ != patternCP)
-			{
-			// Mismatch.
-			return false;
-			}
-		}
-	}
-
-void ChanRU::pAdvance() const
-	{ const_cast<ChanRU*>(this)->pAdvance(); }
-
-void ChanRU::pAdvance()
-	{
-	fTagAttributes.clear();
-
-	for	(;;)
-		{
-		if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
-			{
-			fToken = eToken_Exhausted;
-			return;
-			}
-		else if (*theCPQ != '<')
-			{
-			sUnread(fChanRU, *theCPQ);
-			fToken = eToken_Text;
-			return;
-			}
-
-		sSkip_WS(fChanRU);
-
-		if (NotQ<UTF32> theCPQ = sQRead(fChanRU))
-			{
-			fToken = eToken_Exhausted;
-			return;
-			}
-		else switch (*theCPQ)
-			{
-			case'/':
-				{
-				sSkip_WS(fChanRU);
-
-				if (not spReadMLIdentifier(fChanRU, fTagName))
-					{
-					fToken = eToken_Exhausted;
-					return;
-					}
-
-				sSkip_WS(fChanRU);
-
-				if (not sTryRead_CP('>', fChanRU))
-					{
-					fToken = eToken_Exhausted;
-					return;
-					}
-
-				fToken = eToken_TagEnd;
-				return;
-				}
-			case '?':
-				{
-				// PI
-				sSkip_Until(fChanRU, "?>");
-				break;
-				}
-			case '!':
-				{
-				if (sTryRead_CP('-', fChanRU))
-					{
-					if (sTryRead_CP('-', fChanRU))
-						{
-						// A comment.
-						sSkip_Until(fChanRU, "-->");
-						}
-					else
-						{
-						// Not a comment, but not an entity definition. Just skip
-						// till we hit a '>'
-						sSkip_Until(fChanRU, ">");
-						}
-					}
-				else if (spTryRead_String("[CDATA[", fChanRU))
-					{
-					// CDATA
-					sSkip_Until(fChanRU, "]]>");
-					}
-				else
-					{
-					// An entity definition
-					sSkip_Until(fChanRU, ">");
-					}
-				break;
-				}
-			default:
-				{
-				sUnread(fChanRU, *theCPQ);
-
-				if (not spReadMLIdentifier(fChanRU, fTagName))
-					{
-					fToken = eToken_Exhausted;
-					return;
-					}
-
-				for (;;)
-					{
-					sSkip_WS(fChanRU);
-
-					string attributeName;
-					attributeName.reserve(8);
-					if (not spReadMLAttributeName(fChanRU, attributeName))
-						break;
-
-					sSkip_WS(fChanRU);
-
-					if (sTryRead_CP('=', fChanRU))
-						{
-						sSkip_WS(fChanRU);
-						string attributeValue;
-						attributeValue.reserve(8);
-						if (not spReadMLAttributeValue(fChanRU,
-							fRecognizeEntitiesInAttributeValues, fCallable,
-							attributeValue))
-							{
-							fToken = eToken_Exhausted;
-							return;
-							}
-						fTagAttributes.push_back(Attr_t(attributeName, attributeValue));
-						}
-					else
-						{
-						fTagAttributes.push_back(Attr_t(attributeName, string()));
-						}
-					}
-
-				sSkip_WS(fChanRU);
-
-				if (sTryRead_CP('/', fChanRU))
-					fToken = eToken_TagEmpty;
-				else
-					fToken = eToken_TagBegin;
-
-				if (not sTryRead_CP('>', fChanRU))
-					fToken = eToken_Exhausted;
-
-				return;
-				}
-			}
-		}
-	}
-
-ZP<ChannerRU> sChanner(const ZP<ZooLib::ChannerRU<UTF32>>& iChanner)
-	{ return sChanner_Channer_T<ChanRU>(iChanner); }
-
-// =================================================================================================
-#pragma mark - ML parsing support
-
-void sSkipText(ChanRU& r)
-	{
-	while (r.Current() == eToken_Text)
-		r.Advance();
-	}
-
-bool sSkip(ChanRU& r, const string& iTagName)
-	{
-	vector<string> theTags(1, iTagName);
-	return sSkip(r, theTags);
-	}
-
-bool sSkip(ChanRU& r, vector<string>& ioTags)
-	{
-	while (not ioTags.empty())
-		{
-		switch (r.Current())
-			{
-			case eToken_TagBegin:
-				{
-				ioTags.push_back(r.Name());
-				break;
-				}
-			case eToken_TagEnd:
-				{
-				if (r.Name() != ioTags.back())
-					return false;
-				ioTags.pop_back();
-				break;
-				}
-			case eToken_Exhausted:
-				{
-				return false;
-				}
-			default:
-				break;
-			}
-		r.Advance();
-		}
-	return true;
-	}
-
-bool sTryRead_Begin(ChanRU& r, const string& iTagName)
-	{
-	if (r.Current() != eToken_TagBegin || r.Name() != iTagName)
-		return false;
-
-	r.Advance();
-	return true;
-	}
-
-bool sTryRead_Empty(ChanRU& r, const string& iTagName)
-	{
-	if (r.Current() != eToken_TagEmpty || r.Name() != iTagName)
-		return false;
-
-	r.Advance();
-	return true;
-	}
-
-bool sTryRead_End(ChanRU& r, const string& iTagName)
-	{
-	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
-		return false;
-
-	r.Advance();
-	return true;
-	}
-
 
 } // namespace ML
 } // namespace ZooLib
