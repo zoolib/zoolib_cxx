@@ -127,7 +127,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 		return;
 		}
 
-	if (sIsStartMap(iPPT))
+	if (sIsStart_Map(iPPT))
 		{
 		Map_Any theMap;
 		for (;;)
@@ -152,7 +152,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 		}
 
 	// This could be just Start, to generically handle Start derivatives
-	if (sIsStartSeq(iPPT))
+	if (sIsStart_Seq(iPPT))
 		{
 		Seq_Any theSeq;
 		for (;;)

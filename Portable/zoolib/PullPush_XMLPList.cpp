@@ -208,9 +208,9 @@ void sPull_XMLPList_Push_PPT(ML::ChanRU& iChanRU, const ChanW_PPT& iChanW)
 // =================================================================================================
 #pragma mark -
 
-static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, const ML::StrimW& iChanW)
+static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_UTF_ML& iChanW)
 	{
-	const ML::StrimW& s = iChanW;
+	const ChanW_UTF_ML& s = iChanW;
 
 	if (false)
 		{}
@@ -244,7 +244,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("data");
 		}
 
-	else if (sIsStartMap(iPPT))
+	else if (sIsStart_Map(iPPT))
 		{
 		s.Begin("dict");
 			for (;;)
@@ -272,7 +272,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("dict");
 		}
 
-	else if (sIsStartSeq(iPPT))
+	else if (sIsStart_Seq(iPPT))
 		{
 		s.Begin("array");
 			for (;;)
@@ -296,13 +296,13 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		else
 			s.Empty("false");
 		}
-	else if (ZQ<int64> asIntQ = sQCoerceInt(iPPT.As<Any>()))
+	else if (ZQ<int64> asIntQ = sQCoerceInt(iPPT))
 		{
 		s.Begin("integer");
 			sEWritef(s, "%lld", *asIntQ);
 		s.End("integer");
 		}
-	else if (ZQ<double> asDoubleQ = sQCoerceRat(iPPT.As<Any>()))
+	else if (ZQ<double> asDoubleQ = sQCoerceRat(iPPT))
 		{
 		s.Begin("real");
 			Util_Chan::sWriteExact(s, *asDoubleQ);
@@ -322,7 +322,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		}
 	}
 
-bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ML::StrimW& iChanW)
+bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ChanW_UTF_ML& iChanW)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
@@ -332,7 +332,7 @@ bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ML::StrimW& iChanW)
 	return false;
 	}
 
-void sWriteXMLPListPreamble(const ML::StrimW& s)
+void sWriteXMLPListPreamble(const ChanW_UTF_ML& s)
 	{
 	s.PI("xml");
 		s.Attr("version", "1.0");
@@ -348,7 +348,7 @@ void sWriteXMLPListPreamble(const ML::StrimW& s)
 		s.Attr("version", "1.0");
 	}
 
-void sWriteXMLPListPostamble(const ML::StrimW& s)
+void sWriteXMLPListPostamble(const ChanW_UTF_ML& s)
 	{
 	s.End("plist");
 	}

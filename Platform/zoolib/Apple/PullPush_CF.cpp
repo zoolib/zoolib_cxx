@@ -133,7 +133,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZP<CFTypeRe
 		return true;
 		}
 
-	if (sIsStartMap(iPPT))
+	if (sIsStart_Map(iPPT))
 		{
 		Map_CF theMap;
 		for (;;)
@@ -154,7 +154,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZP<CFTypeRe
 		return true;
 		}
 
-	if (sIsStartSeq(iPPT))
+	if (sIsStart_Seq(iPPT))
 		{
 		Seq_CF theSeq;
 		for (;;)

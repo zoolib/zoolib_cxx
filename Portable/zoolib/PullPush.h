@@ -45,22 +45,20 @@ namespace PullPush {
 struct Tag_PPT;
 typedef Any_T<Tag_PPT> PPT;
 
-struct Start : CountedWithoutFinalize
-	{};
-
+struct Marker : virtual CountedWithoutFinalize {};
+struct Start : virtual Marker {};
 struct Start_Map : Start {};
-
 struct Start_Seq : Start {};
+struct End  : virtual Marker {};
 
 extern const PPT kStart_Map;
 extern const PPT kStart_Seq;
-
-struct End {};
 extern const PPT kEnd;
 
+bool sIsMarker(const PPT& iPPT);
 bool sIsStart(const PPT& iPPT);
-bool sIsStartMap(const PPT& iPPT);
-bool sIsStartSeq(const PPT& iPPT);
+bool sIsStart_Map(const PPT& iPPT);
+bool sIsStart_Seq(const PPT& iPPT);
 bool sIsEnd(const PPT& iPPT);
 
 } // namespace PullPush
@@ -82,6 +80,8 @@ using ChannerWCon_PPT = Channer<ChanWCon_PPT>;
 void sPush_Start_Map(const ChanW_PPT& iChanW);
 void sPush_Start_Seq(const ChanW_PPT& iChanW);
 void sPush_End(const ChanW_PPT& iChanW);
+
+void sPush_Marker(const ZP<PullPush::Marker>& iMarker, const ChanW_PPT& iChanW);
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW);
 

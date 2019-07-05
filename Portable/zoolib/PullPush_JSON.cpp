@@ -641,12 +641,12 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 			theIndentation, iOptions, iChanW);
 		}
 
-	else if (sIsStartMap(iPPT))
+	else if (sIsStart_Map(iPPT))
 		{
 		spPull_PPT_Push_JSON_Map(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 		}
 
-	else if (sIsStartSeq(iPPT))
+	else if (sIsStart_Seq(iPPT))
 		{
 		spPull_PPT_Push_JSON_Seq(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 		}

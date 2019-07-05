@@ -227,7 +227,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (sIsStartMap(thePPT))
+	if (sIsStart_Map(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xED);
 		for (;;)
@@ -250,7 +250,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (sIsStartSeq(thePPT))
+	if (sIsStart_Seq(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xEA);
 		for (;;)
@@ -277,14 +277,14 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (ZQ<int64> theQ = sQCoerceInt(thePPT.As<Any>()))
+	if (ZQ<int64> theQ = sQCoerceInt(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE4);
 		sEWriteBE<int64>(iChanW, *theQ);
 		return true;
 		}
 
-	if (ZQ<double> theQ = sQCoerceRat(thePPT.As<Any>()))
+	if (ZQ<double> theQ = sQCoerceRat(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE5);
 		sEWriteBE<double>(iChanW, *theQ);

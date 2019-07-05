@@ -32,21 +32,31 @@ namespace ZooLib {
 
 namespace PullPush {
 
-const PPT kStart_Map = ZP<Start>(new Start_Map);
-const PPT kStart_Seq = ZP<Start>(new Start_Seq);
+const PPT kStart_Map = ZP<Marker>(new Start_Map);
+const PPT kStart_Seq = ZP<Marker>(new Start_Seq);
 
-const PPT kEnd = End();
+const PPT kEnd = ZP<Marker>(new End);
 
-bool sIsStart(const PPT& iPPT)
+bool sIsMarker(const PPT& iPPT)
 	{
-	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
+	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
 		return true;
 	return false;
 	}
 
-bool sIsStartMap(const PPT& iPPT)
+bool sIsStart(const PPT& iPPT)
 	{
-	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
+	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theRef.DynamicCast<Start>())
+			return true;
+		}
+	return false;
+	}
+
+bool sIsStart_Map(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
 		{
 		if (theRef.DynamicCast<Start_Map>())
 			return true;
@@ -54,9 +64,9 @@ bool sIsStartMap(const PPT& iPPT)
 	return false;
 	}
 
-bool sIsStartSeq(const PPT& iPPT)
+bool sIsStart_Seq(const PPT& iPPT)
 	{
-	if (const ZP<Start> theRef = sGet<ZP<Start>>(iPPT))
+	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
 		{
 		if (theRef.DynamicCast<Start_Seq>())
 			return true;
@@ -66,8 +76,11 @@ bool sIsStartSeq(const PPT& iPPT)
 
 bool sIsEnd(const PPT& iPPT)
 	{
-	if (const End* theP = sPGet<End>(iPPT))
-		return true;
+	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theRef.DynamicCast<End>())
+			return true;
+		}
 	return false;
 	}
 
@@ -83,7 +96,10 @@ void sPush_Start_Seq(const ChanW_PPT& iChanW)
 	{ sPush(PullPush::kStart_Seq, iChanW); }
 
 void sPush_End(const ChanW_PPT& iChanW)
-	{ sPush(PullPush::End(), iChanW); }
+	{ sPush(PullPush::kEnd, iChanW); }
+
+void sPush_Marker(const ZP<PullPush::Marker>& iMarker, const ChanW_PPT& iChanW)
+	{ sPush(PPT(iMarker), iChanW); }
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, iVal); }
@@ -161,7 +177,7 @@ bool sTryPull_Start_Map(const ChanRU<PPT>& iChanRU)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
-		if (sIsStartMap(*theQ))
+		if (sIsStart_Map(*theQ))
 			return true;
 		sUnread(iChanRU, *theQ);
 		}
@@ -172,7 +188,7 @@ bool sTryPull_Start_Seq(const ChanRU<PPT>& iChanRU)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanRU))
 		{
-		if (sIsStartSeq(*theQ))
+		if (sIsStart_Seq(*theQ))
 			return true;
 		sUnread(iChanRU, *theQ);
 		}
