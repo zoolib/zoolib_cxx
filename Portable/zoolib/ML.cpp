@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ML.h"
 
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Memory.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Unicode.h"
@@ -47,7 +48,7 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark - Static helper functions
 
-string sReadReference(const ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable)
+string sReadReference(const ChanRU_UTF& iChanRU, const ZP<Callable_Entity>& iCallable)
 	{
 	string result;
 
@@ -110,7 +111,7 @@ string sReadReference(const ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable)
 	return result;
 	}
 
-bool sReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
+bool sReadIdentifier(const ChanRU_UTF& iChanRU, string& oText)
 	{
 	oText.resize(0);
 
@@ -148,21 +149,9 @@ bool sReadMLIdentifier(const ChanRU_UTF& iChanRU, string& oText)
 	}
 
 static bool spReadUntil(const ChanRU_UTF& iChanRU, UTF32 iTerminator, string& oText)
-	{
-	oText.resize(0);
+	{ return sCopy_Until(iChanRU, iTerminator, ChanW_UTF_string8(&oText)); }
 
-	for (;;)
-		{
-		if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
-			return false;
-		else if (*theCPQ == iTerminator)
-			return true;
-		else
-			oText += *theCPQ;
-		}
-	}
-
-bool sReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
+bool sReadAttributeName(const ChanRU_UTF& iChanRU, string& oName)
 	{
 	oName.resize(0);
 
@@ -197,9 +186,9 @@ bool sReadMLAttributeName(const ChanRU_UTF& iChanRU, string& oName)
 		}
 	}
 
-bool sReadMLAttributeValue(
+bool sReadAttributeValue(
 	const ChanRU_UTF& iChanRU,
-	bool iRecognizeEntities, ZP<Callable_Entity> iCallable,
+	bool iRecognizeEntities, const ZP<Callable_Entity>& iCallable,
 	string& oValue)
 	{
 	oValue.resize(0);

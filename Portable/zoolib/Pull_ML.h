@@ -9,64 +9,95 @@
 #include "zoolib/ML.h"
 #include "zoolib/PullPush.h"
 
-#include <utility> // For std::pair
-#include <vector>
-
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark - Pull_ML
+
 namespace Pull_ML {
 
 using ML::Attrs_t;
 
-// =================================================================================================
-
-struct Marker_Attrs
-:	virtual PullPush::Marker
+class Marker_Attrs
+:	public virtual PullPush::Marker
 	{
+protected:
 	Marker_Attrs(const Attrs_t& iAttrs) : fAttrs(iAttrs) {}
 	Marker_Attrs() {}
 	Attrs_t fAttrs;
-	};
 
-struct Marker_Named
-:	virtual PullPush::Marker
-	{
-	Marker_Named(const Name& iName) : fName(iName) {}
-	Name fName;
+public:
+	static PPT sPPT(const Attrs_t& iAttrs);
+
+	static bool sIs(const PPT& iPPT);
 	};
 
 // --
 
-struct TagBegin
-:	PullPush::Start_Seq
-,	Marker_Named
-,	Marker_Attrs
+class Marker_Named
+:	public virtual PullPush::Marker
 	{
+protected:
+	Marker_Named(const Name& iName) : fName(iName) {}
+	Name fName;
+
+public:
+	static PPT sPPT(const Name& iName);
+
+	static bool sIs(const PPT& iPPT);
+	};
+
+// --
+
+class TagBegin
+:	public PullPush::Start_Seq
+,	public Marker_Named
+,	public Marker_Attrs
+	{
+protected:
 	TagBegin(const Name& iName, const Attrs_t& iAttrs)
 	:	Marker_Named(iName)
 	,	Marker_Attrs(iAttrs)
 		{}
 
 	TagBegin(const Name& iName) : Marker_Named(iName) {}
+
+public:
+	static PPT sPPT(const Name& iName, const Attrs_t& iAttrs);
+	static PPT sPPT(const Name& iName);
+
+	static bool sIs(const PPT& iPPT);
 	};
 
-struct TagEmpty
-:	Marker_Named
-,	Marker_Attrs
+class TagEmpty
+:	public Marker_Named
+,	public Marker_Attrs
 	{
+protected:
 	TagEmpty(const Name& iName, const Attrs_t& iAttrs)
 	:	Marker_Named(iName)
 	,	Marker_Attrs(iAttrs)
 		{}
 
 	TagEmpty(const Name& iName) : Marker_Named(iName) {}
+
+public:
+	static PPT sPPT(const Name& iName, const Attrs_t& iAttrs);
+	static PPT sPPT(const Name& iName);
+
+	static bool sIs(const PPT& iPPT);
 	};
 
-
-struct TagEnd
-:	PullPush::End
-,	Marker_Named
+class TagEnd
+:	public PullPush::End
+,	public Marker_Named
 	{
+protected:
 	TagEnd(const Name& iName) : Marker_Named(iName) {}
+
+public:
+	static PPT sPPT(const Name& iName);
+	static bool sIs(const PPT& iPPT);
 	};
 
 // =================================================================================================
@@ -82,16 +113,19 @@ void sPush_TagEmpty(const Name& iName, const Attrs_t& iAttrs, const ChanW_PPT& i
 
 void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW);
 
-bool sIsTagBegin(const PPT& iPPT);
-bool sIsTagEmpty(const PPT& iPPT);
-bool sIsTagEnd(const PPT& iPPT);
-
-// =================================================================================================
-#pragma mark - 
-
-bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW);
+//bool sIsTagBegin(const PPT& iPPT);
+//bool sIsTagEmpty(const PPT& iPPT);
+//bool sIsTagEnd(const PPT& iPPT);
 
 } // namespace Pull_ML
+
+// =================================================================================================
+#pragma mark -
+
+bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
+	bool iRecognizeEntitiesInAttributeValues, const ZP<ML::Callable_Entity>& iCallable_Entity,
+	const ChanW_PPT& iChanW);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Pull_ML_h__

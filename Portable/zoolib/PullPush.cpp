@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan.h" // For sCopyFully
 
+#include "zoolib/Log.h"
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -32,57 +34,80 @@ namespace ZooLib {
 
 namespace PullPush {
 
-const PPT kStart_Map = ZP<Marker>(new Start_Map);
-const PPT kStart_Seq = ZP<Marker>(new Start_Seq);
+const PPT Start::sPPT = ZP<Marker>(new Start);
 
-const PPT kEnd = ZP<Marker>(new End);
-
-bool sIsMarker(const PPT& iPPT)
+bool Start::sIs(const PPT& iPPT)
 	{
-	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
-		return true;
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theMarker.DynamicCast<Start>())
+			return true;
+		}
 	return false;
 	}
+
+// -------------------------------------------------------------------------------------------------
+
+const PPT Start_Map::sPPT = ZP<Marker>(new Start_Map);
+
+bool Start_Map::sIs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theMarker.DynamicCast<Start_Map>())
+			return true;
+		}
+	return false;
+	}
+
+// -------------------------------------------------------------------------------------------------
+
+const PPT Start_Seq::sPPT = ZP<Marker>(new Start_Seq);
+
+bool Start_Seq::sIs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theMarker.DynamicCast<Start_Seq>())
+			return true;
+		}
+	return false;
+	}
+
+// -------------------------------------------------------------------------------------------------
+
+const PPT End::sPPT = ZP<Marker>(new End);
+
+bool End::sIs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theMarker.DynamicCast<End>())
+			return true;
+		}
+	return false;
+	}
+
+// -------------------------------------------------------------------------------------------------
+
+//bool sIsMarker(const PPT& iPPT)
+//	{
+//	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
+//		return true;
+//	return false;
+//	}
 
 bool sIsStart(const PPT& iPPT)
-	{
-	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
-		{
-		if (theRef.DynamicCast<Start>())
-			return true;
-		}
-	return false;
-	}
+	{ return Start::sIs(iPPT); }
 
 bool sIsStart_Map(const PPT& iPPT)
-	{
-	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
-		{
-		if (theRef.DynamicCast<Start_Map>())
-			return true;
-		}
-	return false;
-	}
+	{ return Start_Map::sIs(iPPT); }
 
 bool sIsStart_Seq(const PPT& iPPT)
-	{
-	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
-		{
-		if (theRef.DynamicCast<Start_Seq>())
-			return true;
-		}
-	return false;
-	}
+	{ return Start_Seq::sIs(iPPT); }
 
 bool sIsEnd(const PPT& iPPT)
-	{
-	if (const ZP<Marker> theRef = sGet<ZP<Marker>>(iPPT))
-		{
-		if (theRef.DynamicCast<End>())
-			return true;
-		}
-	return false;
-	}
+	{ return End::sIs(iPPT); }
 
 } // namespace PullPush
 
@@ -90,13 +115,13 @@ bool sIsEnd(const PPT& iPPT)
 #pragma mark -
 
 void sPush_Start_Map(const ChanW_PPT& iChanW)
-	{ sPush(PullPush::kStart_Map, iChanW); }
+	{ sPush(PullPush::Start_Map::sPPT, iChanW); }
 
 void sPush_Start_Seq(const ChanW_PPT& iChanW)
-	{ sPush(PullPush::kStart_Seq, iChanW); }
+	{ sPush(PullPush::Start_Seq::sPPT, iChanW); }
 
 void sPush_End(const ChanW_PPT& iChanW)
-	{ sPush(PullPush::kEnd, iChanW); }
+	{ sPush(PullPush::End::sPPT, iChanW); }
 
 void sPush_Marker(const ZP<PullPush::Marker>& iMarker, const ChanW_PPT& iChanW)
 	{ sPush(PPT(iMarker), iChanW); }

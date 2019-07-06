@@ -47,9 +47,13 @@ ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU);
 
 // -----------------
 
-bool sTryRead_String(const string8& iTarget, const ChanRU_UTF& iChanRU);
+bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR);
 
-bool sTryRead_CaselessString(const string8& iTarget, const ChanRU_UTF& iChanRU);
+// -----------------
+
+bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU);
+
+bool sTryRead_CaselessString(const string8& iPattern, const ChanRU_UTF& iChanRU);
 
 bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative);
 

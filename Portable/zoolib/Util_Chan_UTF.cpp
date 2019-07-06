@@ -60,7 +60,10 @@ static bool spIsWhitespace(UTF32 iCP)
 		return true;
 
 	if (iCP == 0xFEFF)
+		{
+		// BOM -- treat it as whitespace.
 		return true;
+		}
 
 	return false;
 	}
@@ -127,16 +130,42 @@ ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU)
 
 // -----------------
 
-bool sTryRead_String(const string8& iTarget, const ChanRU_UTF& iChanRU)
+bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 	{
-	string8::const_iterator targetIter = iTarget.begin();
-	string8::const_iterator targetEnd = iTarget.end();
+	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
+		/*no test*/; /*no inc*/)
+		{
+		UTF32 patternCP;
+		if (not Unicode::sReadInc(iter, iterEnd, patternCP))
+			{
+			// Exhausted the pattern, we've matched everything.
+			return true;
+			}
 
+		if (NotQ<UTF32> targetCPQ = sQRead(iChanR))
+			{
+			// Exhausted the target before seeing the pattern.
+			return false;
+			}
+		else if (*targetCPQ != patternCP)
+			{
+			// Mismatch.
+			return false;
+			}
+		}
+	}
+
+// -----------------
+
+bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU)
+	{
 	std::vector<UTF32> stack;
-	for (;;)
+
+	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
+		/*no test*/; /*no inc*/)
 		{
 		UTF32 targetCP;
-		if (not Unicode::sReadInc(targetIter, targetEnd, targetCP))
+		if (not Unicode::sReadInc(iter, iterEnd, targetCP))
 			{
 			// Exhausted target, and thus successful.
 			return true;
@@ -168,16 +197,15 @@ bool sTryRead_String(const string8& iTarget, const ChanRU_UTF& iChanRU)
 
 // -----------------
 
-bool sTryRead_CaselessString(const string8& iTarget, const ChanRU_UTF& iChanRU)
+bool sTryRead_CaselessString(const string8& iPattern, const ChanRU_UTF& iChanRU)
 	{
-	string8::const_iterator targetIter = iTarget.begin();
-	string8::const_iterator targetEnd = iTarget.end();
-
 	std::vector<UTF32> stack;
-	for (;;)
+
+	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
+		/*no test*/; /*no inc*/)
 		{
 		UTF32 targetCP;
-		if (not Unicode::sReadInc(targetIter, targetEnd, targetCP))
+		if (not Unicode::sReadInc(iter, iterEnd, targetCP))
 			{
 			// Exhausted target, and thus successful.
 			return true;

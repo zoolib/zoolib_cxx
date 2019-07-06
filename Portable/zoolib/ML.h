@@ -31,19 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ML {
 
-// =================================================================================================
-#pragma mark - ML
-
-enum EToken
-	{
-	eToken_Exhausted = -1,
-	eToken_Fresh = 0,
-	eToken_TagBegin,
-	eToken_TagEnd,
-	eToken_TagEmpty,
-	eToken_Text
-	};
-
 typedef std::pair<Name, std::string> Attr_t;
 typedef std::vector<Attr_t> Attrs_t;
 
@@ -52,12 +39,15 @@ typedef Callable<std::string(std::string)> Callable_Entity;
 // =================================================================================================
 #pragma mark - ML
 
-std::string sReadReference(const ChanRU_UTF& iChanRU, ZP<Callable_Entity> iCallable);
-bool sReadMLIdentifier(const ChanRU_UTF& iChanRU, std::string& oText);
-bool sReadMLAttributeName(const ChanRU_UTF& iChanRU, std::string& oName);
-bool sReadMLAttributeValue(
+std::string sReadReference(const ChanRU_UTF& iChanRU, const ZP<Callable_Entity>& iCallable);
+
+bool sReadIdentifier(const ChanRU_UTF& iChanRU, std::string& oText);
+
+bool sReadAttributeName(const ChanRU_UTF& iChanRU, std::string& oName);
+
+bool sReadAttributeValue(
 	const ChanRU_UTF& iChanRU,
-	bool iRecognizeEntities, ZP<Callable_Entity> iCallable,
+	bool iRecognizeEntities, const ZP<Callable_Entity>& iCallable,
 	std::string& oValue);
 
 } // namespace ML

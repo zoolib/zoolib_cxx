@@ -47,7 +47,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 		sPush_Start_Seq(iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
 			sFromAny_Push_PPT(theSeq->Get(xx), iWriteFilter, iChanW);
-		sPush(PullPush::kEnd, iChanW);
+		sPush_End(iChanW);
 		}
 
 	else if (const Map_Any* theMap = sPGet<Map_Any>(iAny))
@@ -59,7 +59,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 			sPush(sName(iter->first), iChanW);
 			sFromAny_Push_PPT(iter->second, iWriteFilter, iChanW);
 			}
-		sPush(PullPush::kEnd, iChanW);
+		sPush_End(iChanW);
 		}
 
 	else if (const string* theString = sPGet<string>(iAny))

@@ -20,20 +20,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanRU_UTF_ML.h"
 
-#include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_vector.h"
-#include "zoolib/Util_string.h"
-#include "zoolib/Util_Time.h"
+//#include "zoolib/Util_string.h"
 
 namespace ZooLib {
 
 #define kDebug_StrimW_ML 1
 
 using std::min;
-using std::pair;
+//using std::pair;
 using std::string;
 using std::vector;
 
@@ -200,33 +198,6 @@ string ChanRU_UTF_ML::Attr(const string& iAttrName) const
 	return string();
 	}
 
-// The semantics of this do not precisely match those of other sTryRead_XXX methods.
-// We will consume code points from \a s up to and including the failing code point.
-static bool spTryRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
-	{
-	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
-		/*no test*/; /*no inc*/)
-		{
-		UTF32 patternCP;
-		if (not Unicode::sReadInc(iter, iterEnd, patternCP))
-			{
-			// Exhausted the pattern, we've matched everything.
-			return true;
-			}
-
-		if (NotQ<UTF32> targetCPQ = sQRead(iChanR))
-			{
-			// Exhausted the target before seeing the pattern.
-			return false;
-			}
-		else if (*targetCPQ != patternCP)
-			{
-			// Mismatch.
-			return false;
-			}
-		}
-	}
-
 void ChanRU_UTF_ML::pAdvance() const
 	{ sNonConst(this)->pAdvance(); }
 
@@ -261,7 +232,7 @@ void ChanRU_UTF_ML::pAdvance()
 				{
 				sSkip_WS(fChanRU);
 
-				if (not sReadMLIdentifier(fChanRU, fTagName))
+				if (not sReadIdentifier(fChanRU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -300,7 +271,7 @@ void ChanRU_UTF_ML::pAdvance()
 						sSkip_Until(fChanRU, ">");
 						}
 					}
-				else if (spTryRead_String("[CDATA[", fChanRU))
+				else if (sRead_String("[CDATA[", fChanRU))
 					{
 					// CDATA
 					sSkip_Until(fChanRU, "]]>");
@@ -316,7 +287,7 @@ void ChanRU_UTF_ML::pAdvance()
 				{
 				sUnread(fChanRU, *theCPQ);
 
-				if (not sReadMLIdentifier(fChanRU, fTagName))
+				if (not sReadIdentifier(fChanRU, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -328,7 +299,7 @@ void ChanRU_UTF_ML::pAdvance()
 
 					string attributeName;
 					attributeName.reserve(8);
-					if (not sReadMLAttributeName(fChanRU, attributeName))
+					if (not sReadAttributeName(fChanRU, attributeName))
 						break;
 
 					sSkip_WS(fChanRU);
@@ -338,7 +309,7 @@ void ChanRU_UTF_ML::pAdvance()
 						sSkip_WS(fChanRU);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (not sReadMLAttributeValue(fChanRU,
+						if (not sReadAttributeValue(fChanRU,
 							fRecognizeEntitiesInAttributeValues, fCallable,
 							attributeValue))
 							{

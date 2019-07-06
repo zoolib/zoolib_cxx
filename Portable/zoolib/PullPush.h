@@ -45,17 +45,58 @@ namespace PullPush {
 struct Tag_PPT;
 typedef Any_T<Tag_PPT> PPT;
 
-struct Marker : virtual CountedWithoutFinalize {};
-struct Start : virtual Marker {};
-struct Start_Map : Start {};
-struct Start_Seq : Start {};
-struct End  : virtual Marker {};
+class Marker : public CountedWithoutFinalize {};
 
-extern const PPT kStart_Map;
-extern const PPT kStart_Seq;
-extern const PPT kEnd;
+// -----
 
-bool sIsMarker(const PPT& iPPT);
+class Start : public virtual Marker
+	{
+protected:
+	Start() {}
+
+public:
+	static const PPT sPPT;
+	static bool sIs(const PPT& iPPT);
+	};
+
+// -----
+
+class Start_Map : public Start
+	{
+protected:
+	Start_Map() {}
+
+public:
+	static const PPT sPPT;
+	static bool sIs(const PPT& iPPT);
+	};
+
+// -----
+
+class Start_Seq : public Start
+	{
+protected:
+	Start_Seq() {}
+
+public:
+	static const PPT sPPT;
+	static bool sIs(const PPT& iPPT);
+	};
+
+// -----
+
+class End : public virtual Marker
+	{
+protected:
+	End() {}
+
+public:
+	static const PPT sPPT;
+	static bool sIs(const PPT& iPPT);
+	};
+
+// -----
+
 bool sIsStart(const PPT& iPPT);
 bool sIsStart_Map(const PPT& iPPT);
 bool sIsStart_Seq(const PPT& iPPT);

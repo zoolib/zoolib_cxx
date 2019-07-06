@@ -61,10 +61,30 @@ static size_t kBufSize = 16;
 // =================================================================================================
 #pragma mark -
 
-struct Start_Result : PullPush::Start
-	{};
+class Start_Result : public PullPush::Start
+	{
+protected:
+	Start_Result() {}
 
-const PPT kStart_Result = ZP<PullPush::Start>(new Start_Result);
+public:
+	static const PPT sPPT;
+	static bool sIs(const PPT& iPPT);
+	};
+
+const PPT Start_Result::sPPT = ZP<Marker>(new Start_Result);
+
+bool Start_Result::sIs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		{
+		if (theMarker.DynamicCast<Start_Result>())
+			return true;
+		}
+	return false;
+	}
+
+// =================================================================================================
+#pragma mark -
 
 static string8 spStringFromChan(const ChanR_Bin& r)
 	{ return sReadCountPrefixedString(r); }
@@ -77,11 +97,8 @@ public:
 // From Callable_Any_ReadFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, Any& oAny)
 		{
-		if (const ZP<PullPush::Start> theRef = sGet<ZP<PullPush::Start>>(iPPT))
+		if (Start_Result::sIs(iPPT))
 			{
-			if (not theRef.DynamicCast<Start_Result>())
-				return false;
-
 			PPT theRHPPT = sERead(iChanR);
 			RelHead& theRelHead = sMut<RelHead>(theRHPPT);
 			const size_t theRowCount = size_t(sCoerceInt(sERead(iChanR).As<Any>()));
@@ -115,7 +132,7 @@ public:
 					{
 					case 100:
 						{
-						sPush(kStart_Result, iChanW);
+						sPush(Start_Result::sPPT, iChanW);
 
 							// We're at the beginning of a QE::Result. So copy the RelHead to start with.
 							PPT thePPT = sAnyCounted<RelHead,PullPush::Tag_PPT>();
@@ -131,7 +148,7 @@ public:
 							for (uint64 xx = theCount * theRH.size(); xx; --xx)
 								sPull_JSONB_Push_PPT(iChanR, this, iChanW);
 
-						sPush(PullPush::End(), iChanW);
+						sPush_End(iChanW);
 
 						return true;
 						}
@@ -205,7 +222,7 @@ public:
 			{
 			ZP<Result> theResult = *theResultP;
 
-			sPush(kStart_Result, iChanW);
+			sPush(Start_Result::sPPT, iChanW);
 
 				const RelHead& theRH = theResult->GetRelHead();
 				sPush(theRH, iChanW);
@@ -219,7 +236,7 @@ public:
 					for (size_t xx = 0; xx < theRHCount; ++xx)
 						sFromAny_Push_PPT(theRow[xx], this, iChanW);
 					}
-			sPush(PullPush::End(), iChanW);
+			sPush_End(iChanW);
 			return true;
 			}
 		return false;
@@ -228,11 +245,8 @@ public:
 // From Callable_JSONB_WriteFilter
 	virtual ZQ<bool> QCall(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_Bin& iChanW)
 		{
-		if (const ZP<PullPush::Start> theRef = sGet<ZP<PullPush::Start>>(iPPT))
+		if (Start_Result::sIs(iPPT))
 			{
-			if (not theRef.DynamicCast<Start_Result>())
-				return false;
-
 			sEWriteBE<uint8>(iChanW, 254);
 			sEWriteBE<uint8>(iChanW, 100);
 

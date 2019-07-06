@@ -87,7 +87,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 			if (not sFromCF_Push_PPT(::CFArrayGetValueAtIndex(theCFArrayRef, xx), iChanW))
 				return false;
 			}
-		sPush(PullPush::kEnd, iChanW);
+		sPush_End(iChanW);
 		return true;
 		}
 
@@ -95,7 +95,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 		{
 		sPush_Start_Map(iChanW);
 		::CFDictionaryApplyFunction((CFDictionaryRef)iCFTypeRef, spGatherContents, (void*)&iChanW);
-		sPush(PullPush::kEnd, iChanW);
+		sPush_End(iChanW);
 		return true;
 		}
 
