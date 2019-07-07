@@ -22,10 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
+#include "zoolib/Chan_UTF_Chan_Bin.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanRU_UTF.h"
+#include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Data_Any.h"
+#include "zoolib/Pull_ML.h"
 #include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_UTF.h"
@@ -35,28 +39,204 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 using namespace PullPush;
+using namespace Pull_ML;
 using std::string;
 
-static void spSkipThenEndOrThrow(ChanRU_UTF_ML& r, const string& iTagName)
-	{
-	sSkipText(r);
-	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
-	}
-
-static void spPull_Base64_Push_PPT(const ZooLib::ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW)
+static void spPull_Base64_Push_PPT(const ZooLib::ChanR_UTF& iChanR, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 	sPush(sGetClear(thePullPushPair.second), iChanW);
 	sFlush(iChanW);
 
-	ChanR_Bin_ASCIIStrim theStreamR_ASCIIStrim(iChanRU);
+	ChanR_Bin_ASCIIStrim theStreamR_ASCIIStrim(iChanR);
 	ChanR_Bin_Base64Decode theStreamR_Base64Decode(theStreamR_ASCIIStrim);
 	sECopyAll(theStreamR_Base64Decode, *thePullPushPair.first);
 	sDisconnectWrite(*thePullPushPair.first);
 	}
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sPull_XMLPList_Push_PPT (from ChanR_PPT)
+
+static void spHandleSimple(const Name& iTagName, const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW)
+	{
+	if (iTagName == "data")
+		{
+		spPull_Base64_Push_PPT(iChanRU, iChanW);
+		}
+	else if (iTagName == "integer")
+		{
+		int64 theInt64;
+		if (not Util_Chan::sTryRead_SignedDecimalInteger(iChanRU, theInt64))
+			sThrow_ParseException("Expected valid integer");
+		sPush(theInt64, iChanW);
+		}
+	else if (iTagName == "real")
+		{
+		int64 theInt64;
+		double theDouble;
+		bool isDouble;
+		if (not Util_Chan::sTryRead_SignedGenericNumber(iChanRU, theInt64, theDouble, isDouble))
+			sThrow_ParseException("Expected valid real");
+
+		if (isDouble)
+			sPush(theDouble, iChanW);
+		else
+			sPush(theInt64, iChanW);
+		}
+	else
+		{
+		sThrow_ParseException("Unhandled begin tag '" + string(iTagName) + "'");
+		}
+	}
+
+static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
+	{
+	if (ZP<TagEmpty> theP = TagEmpty::sAs(iPPT))
+		{
+		const string theName = theP->GetName();
+		if (theName == "dict")
+			{
+			sPush_Start_Map(iChanW);
+			sPush_End(iChanW);
+			}
+		else if (theName == "array")
+			{
+			sPush_Start_Seq(iChanW);
+			sPush_End(iChanW);
+			}
+		else if (theName == "string")
+			{
+			sPush(string(), iChanW);
+			}
+		else if (theName == "data")
+			{
+			sPush(Data_Any(), iChanW);
+			}
+		else if (theName == "true")
+			{
+			sPush(true, iChanW);
+			}
+		else if (theName == "false")
+			{
+			sPush(false, iChanW);
+			}
+		else if (theName == "nil")
+			{
+			sPush(null, iChanW);
+			}
+		else
+			{
+			sThrow_ParseException("Unhandled empty tag " + theName);
+			}
+		}
+	else if (ZP<TagBegin> theP = TagBegin::sAs(iPPT))
+		{
+		const string theName = theP->GetName();
+		if (theName == "plist")
+			{
+			sPull_XMLPList_Push_PPT(iChanR, iChanW);
+			sESkipText_ReadEnd(iChanR, "plist");
+			}
+		else if (theName == "dict")
+			{
+			sPush_Start_Map(iChanW);
+			for (;;)
+				{
+				const PPT thePPT = sESkipText_Read(iChanR);
+				if (ZP<TagEnd> theTagEnd = TagEnd::sAs(thePPT))
+					{
+					if (theTagEnd->GetName() != Name("dict"))
+						sThrow_ParseException("Read end tag '" + string(theTagEnd->GetName()) + "', should have been 'dict'");
+					sPush_End(iChanW);
+					break;
+					}
+				else if (NotP<TagBegin> theTagBegin = TagBegin::sAs(thePPT))
+					{
+					sThrow_ParseException("Expected begin tag ('key')");
+					}
+				else if (theTagBegin->GetName() != Name("key"))
+					{
+					sThrow_ParseException("Expected begin tag 'key'");
+					}
+				else if (NotQ<PPT> theQ = sQRead(iChanR))
+					{
+					sThrow_ExhaustedR();
+					}
+				else
+					{
+					if (NotQ<string> theStringQ = sQAsString(*theQ))
+						sThrow_ParseException("Expected text in 'key' tag");
+					else
+						sPush(Name(*theStringQ), iChanW);
+					sESkipText_ReadEnd(iChanR, "key");
+					}
+				sPull_XMLPList_Push_PPT(iChanR, iChanW);
+				}
+			}
+		else if (theName == "array")
+			{
+			sPush_Start_Seq(iChanW);
+			for (;;)
+				{
+				const PPT thePPT = sESkipText_Read(iChanR);
+				if (ZP<TagEnd> theTagEnd = TagEnd::sAs(thePPT))
+					{
+					if (theTagEnd->GetName() != Name("array"))
+						sThrow_ParseException("Read end tag '" + string(theTagEnd->GetName()) + "', should have been 'array'");
+					sPush_End(iChanW);
+					break;
+					}
+				spPull_XMLPList_Push_PPT(thePPT, iChanR, iChanW);
+				}
+			}
+		else
+			{
+			const PPT thePPT = sERead(iChanR);
+
+			const string* asStringP = sPGet<string>(thePPT);
+			ZP<ChannerR_UTF> asChanner = sGet<ZP<ChannerR_UTF>>(thePPT);
+
+			if (not asStringP && not asChanner)
+				sThrow_ParseException("Expected text");
+
+			if (theName == "string")
+				{
+				sPush(thePPT, iChanW);
+				}
+			else if (theName == "date")
+				{
+				const string asString = asStringP ? *asStringP : sReadAllUTF8(*asChanner);
+				UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(asString);
+				sPush(theUTCDateTime, iChanW);
+				}
+			else if (asStringP)
+				spHandleSimple(theName, ChanRU_UTF_string8(*asStringP), iChanW);
+			else
+				spHandleSimple(theName, ChanRU_XX_Unreader<UTF32>(*asChanner), iChanW);
+
+			sESkipText_ReadEnd(iChanR, theName);
+			}
+		}
+	else
+		{
+		sThrow_ParseException("Unhandled PPT, type: " + string(iPPT.Type().name()));
+		}
+	}
+
+void sPull_XMLPList_Push_PPT(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
+	{
+	const PPT thePPT = sESkipText_Read(iChanR);
+	spPull_XMLPList_Push_PPT(thePPT, iChanR, iChanW);
+	}
+
+// =================================================================================================
+#pragma mark - sPull_XMLPList_Push_PPT (From ChanRU_UTF_ML)
+
+static void sESkipText_ReadEnd(ChanRU_UTF_ML& r, const string& iTagName)
+	{
+	sSkipText(r);
+	sTryRead_End(r, iTagName) || sThrow_ParseException("Expected end tag '" + iTagName + "'");
+	}
 
 void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 	{
@@ -112,7 +292,7 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 			{
 			iChanRU.Advance();
 			sPull_XMLPList_Push_PPT(iChanRU, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "plist");
+			sESkipText_ReadEnd(iChanRU, "plist");
 			}
 		else if (iChanRU.Name() == "dict")
 			{
@@ -134,7 +314,7 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 
 				sPush(theName, iChanW);
 
-				spSkipThenEndOrThrow(iChanRU, "key");
+				sESkipText_ReadEnd(iChanRU, "key");
 
 				sPull_XMLPList_Push_PPT(iChanRU, iChanW);
 				}
@@ -159,13 +339,13 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 			{
 			iChanRU.Advance();
 			sPull_UTF_Push_PPT(iChanRU, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "string");
+			sESkipText_ReadEnd(iChanRU, "string");
 			}
 		else if (iChanRU.Name() == "data")
 			{
 			iChanRU.Advance();
 			spPull_Base64_Push_PPT(iChanRU, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "data");
+			sESkipText_ReadEnd(iChanRU, "data");
 			}
 		else if (iChanRU.Name() == "integer")
 			{
@@ -174,7 +354,7 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 			if (not Util_Chan::sTryRead_SignedDecimalInteger(iChanRU, theInt64))
 				sThrow_ParseException("Expected valid integer");
 			sPush(theInt64, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "integer");
+			sESkipText_ReadEnd(iChanRU, "integer");
 			}
 		else if (iChanRU.Name() == "real")
 			{
@@ -189,14 +369,14 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 				sPush(theDouble, iChanW);
 			else
 				sPush(theInt64, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "real");
+			sESkipText_ReadEnd(iChanRU, "real");
 			}
 		else if (iChanRU.Name() == "date")
 			{
 			iChanRU.Advance();
 			UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(sReadAllUTF8(iChanRU));
 			sPush(theUTCDateTime, iChanW);
-			spSkipThenEndOrThrow(iChanRU, "date");
+			sESkipText_ReadEnd(iChanRU, "date");
 			}
 		else
 			{

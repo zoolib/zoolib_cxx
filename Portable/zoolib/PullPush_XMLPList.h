@@ -33,6 +33,8 @@ namespace ZooLib {
 
 void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW);
 
+void sPull_XMLPList_Push_PPT(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW);
+
 bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ChanW_UTF_ML& iChanW);
 
 void sWriteXMLPListPreamble(const ChanW_UTF_ML& s);

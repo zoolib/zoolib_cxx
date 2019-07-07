@@ -1,5 +1,4 @@
-// Copyright (c) 2019 Andrew Green
-// http://www.zoolib.org
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Pull_ML_h__
 #define __ZooLib_Pull_ML_h__ 1
@@ -24,9 +23,12 @@ class Marker_Attrs
 protected:
 	Marker_Attrs(const Attrs_t& iAttrs) : fAttrs(iAttrs) {}
 	Marker_Attrs() {}
+
 	Attrs_t fAttrs;
 
 public:
+	const Attrs_t& GetAttrs_t() { return fAttrs; }
+
 	static PPT sPPT(const Attrs_t& iAttrs);
 
 	static bool sIs(const PPT& iPPT);
@@ -39,9 +41,12 @@ class Marker_Named
 	{
 protected:
 	Marker_Named(const Name& iName) : fName(iName) {}
-	Name fName;
+
+	const Name fName;
 
 public:
+	const Name& GetName() { return fName; }
+
 	static PPT sPPT(const Name& iName);
 
 	static bool sIs(const PPT& iPPT);
@@ -67,6 +72,7 @@ public:
 	static PPT sPPT(const Name& iName);
 
 	static bool sIs(const PPT& iPPT);
+	static ZP<TagBegin> sAs(const PPT& iPPT);
 	};
 
 class TagEmpty
@@ -86,6 +92,7 @@ public:
 	static PPT sPPT(const Name& iName);
 
 	static bool sIs(const PPT& iPPT);
+	static ZP<TagEmpty> sAs(const PPT& iPPT);
 	};
 
 class TagEnd
@@ -98,6 +105,7 @@ protected:
 public:
 	static PPT sPPT(const Name& iName);
 	static bool sIs(const PPT& iPPT);
+	static ZP<TagEnd> sAs(const PPT& iPPT);
 	};
 
 // =================================================================================================
@@ -113,9 +121,11 @@ void sPush_TagEmpty(const Name& iName, const Attrs_t& iAttrs, const ChanW_PPT& i
 
 void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW);
 
-//bool sIsTagBegin(const PPT& iPPT);
-//bool sIsTagEmpty(const PPT& iPPT);
-//bool sIsTagEnd(const PPT& iPPT);
+PPT sESkipText_Read(const ChanR_PPT& iChanR);
+
+void sESkipThenEnd(const ChanR_PPT& iChanR, const Name& iTagName);
+
+ZQ<std::string> sQAsString(const PPT& iPPT);
 
 } // namespace Pull_ML
 

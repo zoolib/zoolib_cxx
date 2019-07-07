@@ -1,14 +1,10 @@
-// Copyright (c) 2019 Andrew Green
-// http://www.zoolib.org
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Pull_ML.h"
+
+#include "zoolib/Channer_UTF.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"
-
-//#include "zoolib/Log.h"
-//#include "zoolib/NameUniquifier.h" // For sName
-//#include "zoolib/ParseException.h"
-//#include "zoolib/ZMACRO_foreach.h"
 
 namespace ZooLib {
 
@@ -68,6 +64,13 @@ bool TagBegin::sIs(const PPT& iPPT)
 	return false;
 	}
 
+ZP<TagBegin> TagBegin::sAs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		return theMarker.DynamicCast<TagBegin>();
+	return null;
+	}
+
 // -------------------------------------------------------------------------------------------------
 
 PPT TagEmpty::sPPT(const Name& iName, const Attrs_t& iAttrs)
@@ -86,6 +89,13 @@ bool TagEmpty::sIs(const PPT& iPPT)
 	return false;
 	}
 
+ZP<TagEmpty> TagEmpty::sAs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		return theMarker.DynamicCast<TagEmpty>();
+	return null;
+	}
+
 // -------------------------------------------------------------------------------------------------
 
 PPT TagEnd::sPPT(const Name& iName)
@@ -99,6 +109,13 @@ bool TagEnd::sIs(const PPT& iPPT)
 			return true;
 		}
 	return false;
+	}
+
+ZP<TagEnd> TagEnd::sAs(const PPT& iPPT)
+	{
+	if (const ZP<Marker> theMarker = sGet<ZP<Marker>>(iPPT))
+		return theMarker.DynamicCast<TagEnd>();
+	return null;
 	}
 
 // -------------------------------------------------------------------------------------------------
@@ -117,6 +134,43 @@ void sPush_TagEmpty(const Name& iName, const Attrs_t& iAttrs, const ChanW_PPT& i
 
 void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW)
 	{ sPush(TagEnd::sPPT(iName), iChanW); }
+
+PPT sESkipText_Read(const ChanR_PPT& iChanR)
+	{
+	for (;;)
+		{
+		if (NotQ<PPT> theQ = sQRead(iChanR))
+			sThrow_ExhaustedR();
+		else if (sPGet<string>(*theQ))
+			{}
+		else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(*theQ))
+			sSkipAll(*theChanner);
+		else
+			return *theQ;
+		}
+	}
+
+void sESkipText_ReadEnd(const ChanR_PPT& iChanR, const Name& iTagName)
+	{
+	PPT thePPT = sESkipText_Read(iChanR);
+	if (NotP<TagEnd> theP = TagEnd::sAs(thePPT))
+		{
+		sThrow_ParseException("Expected end tag '" + string(iTagName));
+		}
+	else if (theP->GetName() != iTagName)
+		{
+		sThrow_ParseException("Expected end tag '" + string(iTagName) + "', read '" + string(theP->GetName()));
+		}
+	}
+
+ZQ<string> sQAsString(const PPT& iPPT)
+	{
+	if (const string* theStringP = sPGet<string>(iPPT))
+	 	return *theStringP;
+	if (ZP<ChannerR_UTF> asChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
+		return sReadAllUTF8(*asChanner);
+	return null;
+	}
 
 } // namespace Pull_ML
 
@@ -143,18 +197,19 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			for (;;)
 				{
-				if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
-					{
+				if (*theCPQ == '&')
+					sEWrite(*thePullPushPair.first, sReadReference(iChanRU, iCallable_Entity));
+				else
+					sEWrite(*thePullPushPair.first, *theCPQ);
+
+				theCPQ = sQRead(iChanRU);
+				if (not theCPQ)
 					break;
-					}
-				else if (*theCPQ == '<')
+
+				if (*theCPQ == '<')
 					{
 					sUnread(iChanRU, *theCPQ);
 					break;
-					}
-				else if (*theCPQ == '&')
-					{
-					sEWrite(*thePullPushPair.first, sReadReference(iChanRU, iCallable_Entity));
 					}
 				}
 			sDisconnectWrite(*thePullPushPair.first);
