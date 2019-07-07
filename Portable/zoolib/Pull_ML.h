@@ -123,7 +123,7 @@ void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW);
 
 PPT sESkipText_Read(const ChanR_PPT& iChanR);
 
-void sESkipThenEnd(const ChanR_PPT& iChanR, const Name& iTagName);
+void sESkipText_ReadEnd(const ChanR_PPT& iChanR, const Name& iTagName);
 
 ZQ<std::string> sQAsString(const PPT& iPPT);
 
