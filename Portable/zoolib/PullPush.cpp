@@ -283,7 +283,7 @@ ZQ<Name> sQEReadNameOrEnd(const ChanR<PPT>& iChanR)
 		}
 	else
 		{
-		return null;
+		sThrow_ParseException("Expected Name");
 		}
 	}
 
