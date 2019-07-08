@@ -232,14 +232,16 @@ Seq_Any::iterator Seq_Any::begin()
 	{
 	if (fRep)
 		return fRep->fVector.begin();
-	return const_cast<Vector_t&>(sDefault<Vector_t>()).begin();
+	// This is slightly sketchy in that the sDefault instance must remain unchanged. However
+	// already illegal to write to this iterator, because it's from an empty vector.
+	return sNonConst(sDefault<Vector_t>()).begin();
 	}
 
 Seq_Any::iterator Seq_Any::end()
 	{
 	if (fRep)
 		return fRep->fVector.end();
-	return const_cast<Vector_t&>(sDefault<Vector_t>()).end();
+	return sNonConst(sDefault<Vector_t>()).end();
 	}
 
 Seq_Any::const_iterator Seq_Any::begin() const

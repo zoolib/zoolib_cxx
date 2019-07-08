@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Data_Any.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/Pull_ML.h"
 #include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Chan.h"

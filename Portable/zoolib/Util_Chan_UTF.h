@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan.h"
 
 namespace ZooLib {

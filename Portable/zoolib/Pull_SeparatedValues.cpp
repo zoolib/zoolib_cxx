@@ -43,29 +43,30 @@ static bool spReadValues(const ChanR_UTF& iChanR, UTF32 iSeparator_Value, UTF32 
 	string8 curValue;
 	for (;;)
 		{
-		UTF32 theCP;
-		if (not sQRead(iChanR, theCP))
+		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 			{
 			oValues.push_back(curValue);
 			break;
-			}
-
-		gotAny = true;
-
-		if (theCP == iSeparator_Line)
-			{
-			oValues.push_back(curValue);
-			break;
-			}
-
-		if (theCP == iSeparator_Value)
-			{
-			oValues.push_back(curValue);
-			curValue.clear();
 			}
 		else
 			{
-			curValue += theCP;
+			gotAny = true;
+
+			if (*theCPQ == iSeparator_Line)
+				{
+				oValues.push_back(curValue);
+				break;
+				}
+
+			if (*theCPQ == iSeparator_Value)
+				{
+				oValues.push_back(curValue);
+				curValue.clear();
+				}
+			else
+				{
+				curValue += *theCPQ;
+				}
 			}
 		}
 	return gotAny;

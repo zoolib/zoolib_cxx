@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Chan_UTF_Escaped.h"
 
+#include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_UTF.h"
@@ -47,9 +48,11 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 	UTF32* localDestEnd = oDest + iCountCU;
 	while (localDestEnd > localDest)
 		{
-		UTF32 theCP;
-		if (not sQRead(fChanRU, theCP))
+		const ZQ<UTF32> theCPQ = sQRead(fChanRU);
+		if (not theCPQ)
 			sThrow_ParseException("Unexpected end of strim whilst parsing a string");
+
+		UTF32 theCP = *theCPQ;
 
 		if (theCP == fDelimiter)
 			{
@@ -65,8 +68,11 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 
 		if (theCP == '\\')
 			{
-			if (not sQRead(fChanRU, theCP))
-				sThrow_ParseException("Unexpected end of strim whilst parsing a string");
+			const ZQ<UTF32> theCPQ = sQRead(fChanRU);
+			if (not theCPQ)
+				sThrow_ParseException("Unexpected end of strim after parsing escape");
+
+			theCP = *theCPQ;
 
 			switch (theCP)
 				{

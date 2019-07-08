@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
+#include "zoolib/Pull_ML.h"
 #include "zoolib/ZMACRO_foreach.h"
 
 /*
@@ -95,8 +96,12 @@ for (;;)
 	}
 */
 
-static void sPull_XMLAttr_Push_PPT(const string& iOuterName,
-	ChanRU_UTF_ML& ioChanRU,
+// =================================================================================================
+#pragma mark - sPull_XMLAttr_Push_PPT (from ChanR_PPT)
+#if 0
+
+static void spPull_XMLAttr_Push_PPT(const string& iOuterName,
+	const ChanR_PPT& iChanR,
 	const ChanW_PPT& iChanW)
 	{
 	for (;;)
@@ -180,6 +185,107 @@ static void sPull_XMLAttr_Push_PPT(const string& iOuterName,
 		}
 	}
 
+bool sPull_XMLAttr_Push_PPT(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
+	{
+	sSkipText(ioChanRU);
+	if (ioChanRU.Current() == ML::eToken_Exhausted)
+		return false;
+
+	sPush_Start_Map(iChanW);
+		spPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
+	sPush_End(iChanW);
+	return true;
+	}
+#endif // 0
+
+// =================================================================================================
+#pragma mark - sPull_XMLAttr_Push_PPT (from ChanRU_UTF_ML)
+
+static void spPull_XMLAttr_Push_PPT(const string& iOuterName,
+	ChanRU_UTF_ML& ioChanRU,
+	const ChanW_PPT& iChanW)
+	{
+	for (;;)
+		{
+		sSkipText(ioChanRU);
+
+		if (ioChanRU.Current() == ML::eToken_Exhausted)
+			{
+			if (not iOuterName.empty())
+				sThrow_ParseException("Unexpected end of source");
+			break;
+			}
+		else if (ioChanRU.Current() == ML::eToken_TagEnd)
+			{
+			if (iOuterName != ioChanRU.Name())
+				{
+				sThrow_ParseException("Expected end tag '"
+					+ iOuterName + "', got '" + ioChanRU.Name() + "'");
+				}
+			ioChanRU.Advance();
+			break;
+			}
+		else if (ioChanRU.Current() == ML::eToken_TagEmpty)
+			{
+			sPush(sName(ioChanRU.Name()), iChanW);
+			sPush_Start_Map(iChanW);
+				spPush_Attrs(ioChanRU.Attrs(), iChanW);
+			sPush_End(iChanW);
+			ioChanRU.Advance();
+			}
+		else
+			{
+			ZAssert(ioChanRU.Current() == ML::eToken_TagBegin);
+
+			const string theName = ioChanRU.Name();
+			sPush(sName(theName), iChanW);
+			const ML::Attrs_t theAttrs = ioChanRU.Attrs();
+			ioChanRU.Advance();
+
+			const string theText = sReadAllUTF8(ioChanRU);
+			sSkipText(ioChanRU); // Won't have text to skip, but will advance to next token.
+
+			if (ioChanRU.Current() == ML::eToken_TagEnd)
+				{
+				if (ioChanRU.Name() != theName)
+					{
+					sThrow_ParseException("Expected end tag '"
+						+ theName + "', got '" + ioChanRU.Name() + "'");
+					}
+
+				ioChanRU.Advance();
+
+				if (theAttrs.empty())
+					{
+					sPush(theText, iChanW);
+					}
+				else
+					{
+					sPush_Start_Map(iChanW);
+						spPush_Attrs(ioChanRU.Attrs(), iChanW);
+						sPush("!text", theText, iChanW);
+					sPush_End(iChanW);
+					}
+				}
+			else if (ioChanRU.Current() == ML::eToken_TagBegin
+				|| ioChanRU.Current() == ML::eToken_TagEmpty)
+				{
+				sPush_Start_Map(iChanW);
+					spPush_Attrs(theAttrs, iChanW);
+					if (theText.size())
+						sPush("!text", theText, iChanW);
+					spPull_XMLAttr_Push_PPT(theName, ioChanRU, iChanW);
+				sPush_End(iChanW);
+				}
+			else
+				{
+				ZAssert(ioChanRU.Current() == ML::eToken_Exhausted);
+				sThrow_ParseException("Unexpected end of source");
+				}
+			}
+		}
+	}
+
 bool sPull_XMLAttr_Push_PPT(ChanRU_UTF_ML& ioChanRU, const ChanW_PPT& iChanW)
 	{
 	sSkipText(ioChanRU);
@@ -187,7 +293,7 @@ bool sPull_XMLAttr_Push_PPT(ChanRU_UTF_ML& ioChanRU, const ChanW_PPT& iChanW)
 		return false;
 
 	sPush_Start_Map(iChanW);
-		sPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
+		spPull_XMLAttr_Push_PPT(string(), ioChanRU, iChanW);
 	sPush_End(iChanW);
 	return true;
 	}

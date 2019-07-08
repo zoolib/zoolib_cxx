@@ -186,7 +186,7 @@ public:
 	Val_t& Mut(const Name_t& iName)
 		{
 		if (not fRep)
-			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			sNonConst(this)->fRep = sCountedVal<Map_t>();
 		return sMut(fRep).Mut(iName);
 		}
 
@@ -202,14 +202,14 @@ public:
 	S& Mut(const Name_t& iName)
 		{
 		if (not fRep)
-			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			sNonConst(this)->fRep = sCountedVal<Map_t>();
 		return sMut(fRep).template Mut<S>(iName);
 		}
 
 	Map_Shared_Mutable_T& Set(const Name_t& iName, const Val_t& iVal)
 		{
 		if (not fRep)
-			const_cast<Map_Shared_Mutable_T*>(this)->fRep = sCountedVal<Map_t>();
+			sNonConst(this)->fRep = sCountedVal<Map_t>();
 		sMut(fRep).Set(iName, iVal);
 		return *this;
 		}

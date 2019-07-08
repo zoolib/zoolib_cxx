@@ -44,6 +44,10 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Utility stuff
 
+static
+bool sQRead(const ChanR<byte>& iChanR, byte& oElmt)
+	{ return 1 == sRead(iChanR, &oElmt, 1); }
+
 static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{ ioFields.Set(iName, Seq(ioFields.Get<Seq>(iName)).Append(iValue)); }
 

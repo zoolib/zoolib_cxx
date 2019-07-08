@@ -50,11 +50,6 @@ ZQ<EE> sQRead(const ChanR<EE>& iChanR)
 	return buf;
 	}
 
-// This is still used in HTTP and Util_Chan_UTF
-template <class EE>
-bool sQRead(const ChanR<EE>& iChanR, EE& oElmt)
-	{ return 1 == sRead(iChanR, &oElmt, 1); }
-
 template <class EE>
 EE sERead(const ChanR<EE>& iChanR)
 	{

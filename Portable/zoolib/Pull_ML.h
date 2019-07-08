@@ -17,6 +17,9 @@ namespace Pull_ML {
 
 using ML::Attrs_t;
 
+// =================================================================================================
+#pragma mark - Marker_Attrs
+
 class Marker_Attrs
 :	public virtual PullPush::Marker
 	{
@@ -34,7 +37,8 @@ public:
 	static bool sIs(const PPT& iPPT);
 	};
 
-// --
+// =================================================================================================
+#pragma mark - Marker_Named
 
 class Marker_Named
 :	public virtual PullPush::Marker
@@ -52,17 +56,18 @@ public:
 	static bool sIs(const PPT& iPPT);
 	};
 
-// --
+// =================================================================================================
+#pragma mark - TagBegin
 
 class TagBegin
 :	public PullPush::Start_Seq
-,	public Marker_Named
 ,	public Marker_Attrs
+,	public Marker_Named
 	{
 protected:
 	TagBegin(const Name& iName, const Attrs_t& iAttrs)
-	:	Marker_Named(iName)
-	,	Marker_Attrs(iAttrs)
+	:	Marker_Attrs(iAttrs)
+	,	Marker_Named(iName)
 		{}
 
 	TagBegin(const Name& iName) : Marker_Named(iName) {}
@@ -75,14 +80,17 @@ public:
 	static ZP<TagBegin> sAs(const PPT& iPPT);
 	};
 
+// =================================================================================================
+#pragma mark - TagEmpty
+
 class TagEmpty
-:	public Marker_Named
-,	public Marker_Attrs
+:	public Marker_Attrs
+,	public Marker_Named
 	{
 protected:
 	TagEmpty(const Name& iName, const Attrs_t& iAttrs)
-	:	Marker_Named(iName)
-	,	Marker_Attrs(iAttrs)
+	:	Marker_Attrs(iAttrs)
+	,	Marker_Named(iName)
 		{}
 
 	TagEmpty(const Name& iName) : Marker_Named(iName) {}
@@ -94,6 +102,9 @@ public:
 	static bool sIs(const PPT& iPPT);
 	static ZP<TagEmpty> sAs(const PPT& iPPT);
 	};
+
+// =================================================================================================
+#pragma mark - TagEnd
 
 class TagEnd
 :	public PullPush::End
@@ -120,6 +131,9 @@ void sPush_TagEmpty(const Name& iName, const ChanW_PPT& iChanW);
 void sPush_TagEmpty(const Name& iName, const Attrs_t& iAttrs, const ChanW_PPT& iChanW);
 
 void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW);
+
+// =================================================================================================
+#pragma mark -
 
 PPT sESkipText_Read(const ChanR_PPT& iChanR);
 

@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_cmath.h" // For fmod
+#include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Chan_UTF.h"

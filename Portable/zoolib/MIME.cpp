@@ -74,42 +74,48 @@ size_t ChanR_Bin_Header::Read(byte* oDest, size_t iCount)
 				break;
 			}
 
-		if (not sQRead(fChanR, fX))
-			break;
-
-		if (fX == CR)
-			continue;
-
-		switch (fState)
+		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
 			{
-			case eInitial:
+			break;
+			}
+		else
+			{
+			fX = *theCPQ;
+
+			if (fX == CR)
+				continue;
+
+			switch (fState)
 				{
-				if (fX == LF)
-					fState = eSeen_LF_LF;
-				else
-					fState = eReturn_X;
-				break;
+				case eInitial:
+					{
+					if (fX == LF)
+						fState = eSeen_LF_LF;
+					else
+						fState = eReturn_X;
+					break;
+					}
+				case eNormal:
+					{
+					if (fX == LF)
+						fState = eSeen_LF;
+					else
+						fState = eReturn_X;
+					break;
+					}
+				case eSeen_LF:
+					{
+					if (fX == LF)
+						fState = eSeen_LF_LF;
+					else if (sIs_LWS(fX)) // Unfolding
+						fState = eReturn_X;
+					else
+						fState = eReturn_LF_X;
+					break;
+					}
+				default:
+					ZUnimplemented();
 				}
-			case eNormal:
-				{
-				if (fX == LF)
-					fState = eSeen_LF;
-				else
-					fState = eReturn_X;
-				break;
-				}
-			case eSeen_LF:
-				{
-				if (fX == LF)
-					fState = eSeen_LF_LF;
-				else if (sIs_LWS(fX)) // Unfolding
-					fState = eReturn_X;
-				else
-					fState = eReturn_LF_X;
-				break;
-				}
-			default:
-				ZUnimplemented();
 			}
 		}
 
@@ -143,8 +149,10 @@ size_t ChanR_Bin_Line::Read(byte* oDest, size_t iCount)
 			continue;
 			}
 
-		if (not sQRead(fChanR, fX))
+		if (NotQ<UTF32> theCPQ = sQRead(fChanR))
 			break;
+		else
+			fX = *theCPQ;
 
 		if (fState == eNormal)
 			{

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Chan_UTF_string.h" // For ChanW_UTF_string8
 #include "zoolib/ChanR_XX_Boundary.h"
+#include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h" // For Unicode::sIsEOL
 
 #include <vector>
@@ -399,14 +400,12 @@ bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
 	bool hadSign = sTryRead_Sign(iChanRU, isNegative);
 	if (sTryRead_CP('0', iChanRU))
 		{
-		UTF32 theCP;
-		if (not sQRead(iChanRU, theCP))
+		if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 			{
 			oInt64 = 0;
 			return true;
 			}
-
-		if (theCP == 'X' || theCP == 'x')
+		else if (*theCPQ == 'X' || *theCPQ == 'x')
 			{
 			if (spTryRead_HexInteger(iChanRU, oInt64))
 				{
@@ -416,16 +415,18 @@ bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
 				}
 			sThrow_ParseException("Expected a valid hex integer after '0x' prefix");
 			}
-
-		sUnread(iChanRU, theCP);
-
-		if (theCP != '.' and not Unicode::sIsDigit(theCP))
+		else
 			{
-			oInt64 = 0;
-			return true;
-			}
+			sUnread(iChanRU, *theCPQ);
 
-		sUnread(iChanRU, UTF32('0'));
+			if (*theCPQ != '.' and not Unicode::sIsDigit(*theCPQ))
+				{
+				oInt64 = 0;
+				return true;
+				}
+
+			sUnread(iChanRU, UTF32('0'));
+			}
 		}
 
 	if (spTryRead_DecimalNumber(iChanRU, oInt64, oDouble, oIsDouble))

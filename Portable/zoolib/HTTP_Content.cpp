@@ -48,26 +48,26 @@ static uint64 spReadChunkSize(const ChanR_Bin& iChanR)
 	uint64 result = 0;
 	for (;;)
 		{
-		byte theChar;
-		if (not sQRead(iChanR, theChar))
+		ZQ<byte> theQ = sQRead(iChanR);
+		if (not theQ)
 			return 0;
 
 		int theXDigit = 0;
-		if (theChar >= '0' && theChar <= '9')
+		if (*theQ >= '0' && *theQ <= '9')
 			{
-			theXDigit = theChar - '0';
+			theXDigit = *theQ - '0';
 			}
-		else if (theChar >= 'a' && theChar <= 'f')
+		else if (*theQ >= 'a' && *theQ <= 'f')
 			{
-			theXDigit = theChar - 'a' + 10;
+			theXDigit = *theQ - 'a' + 10;
 			}
-		else if (theChar >= 'A' && theChar <= 'F')
+		else if (*theQ >= 'A' && *theQ <= 'F')
 			{
-			theXDigit = theChar - 'A' + 10;
+			theXDigit = *theQ - 'A' + 10;
 			}
 		else
 			{
-			if (theChar != '\n')
+			if (*theQ != '\n')
 				{
 				// Skip everything till we hit a LF
 				sSkip_Until<byte>(iChanR, byte('\n'));
