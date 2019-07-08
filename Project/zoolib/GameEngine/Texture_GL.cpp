@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Texture_GL.h"
 
 #include "zoolib/Callable_Function.h"

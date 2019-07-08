@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 

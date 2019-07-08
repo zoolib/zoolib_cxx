@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Expr/Util_Strim_Expr_Bool.h"
 
+#include "zoolib/ParseException.h"
 #include "zoolib/Util_Chan_UTF.h"
 
 namespace ZooLib {

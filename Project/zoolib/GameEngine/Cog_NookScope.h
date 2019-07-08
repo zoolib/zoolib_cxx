@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #ifndef __ZooLib_GameEngine_Cog_NookScope_h__
 #define __ZooLib_GameEngine_Cog_NookScope_h__ 1
 

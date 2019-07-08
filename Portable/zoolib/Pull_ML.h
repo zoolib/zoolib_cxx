@@ -135,9 +135,13 @@ void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW);
 // =================================================================================================
 #pragma mark -
 
+ZQ<PPT> sQSkipText_Read(const ChanR_PPT& iChanR);
+
 PPT sESkipText_Read(const ChanR_PPT& iChanR);
 
 void sESkipText_ReadEnd(const ChanR_PPT& iChanR, const Name& iTagName);
+
+bool sIsText(const PPT& iPPT);
 
 ZQ<std::string> sQAsString(const PPT& iPPT);
 

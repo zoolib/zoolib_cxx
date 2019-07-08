@@ -1,3 +1,5 @@
+// Copyright (c) 2014 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/StdIO.h"
 
 #include "zoolib/Chan_Bin_FILE.h"

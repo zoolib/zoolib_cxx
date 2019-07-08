@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #ifndef __GameEngine_Tween_BlushGainMat_h__
 #define __GameEngine_Tween_BlushGainMat_h__ 1
 #include "zconfig.h"

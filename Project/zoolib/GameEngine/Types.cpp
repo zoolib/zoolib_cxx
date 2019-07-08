@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Types.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/Coerce_Any.h" // For sQCoerceRat and sQCoerceInt

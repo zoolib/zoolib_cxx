@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Draw_GL_Shader.h"
 
 #if ZMACRO_CanUseShader

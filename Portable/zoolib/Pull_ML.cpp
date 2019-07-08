@@ -144,6 +144,21 @@ void sPush_TagEnd(const Name& iName, const ChanW_PPT& iChanW)
 // =================================================================================================
 #pragma mark -
 
+ZQ<PPT> sQSkipText_Read(const ChanR_PPT& iChanR)
+	{
+	for (;;)
+		{
+		if (NotQ<PPT> theQ = sQRead(iChanR))
+			return null;
+		else if (sPGet<string>(*theQ))
+			{}
+		else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(*theQ))
+			sSkipAll(*theChanner);
+		else
+			return *theQ;
+		}
+	}
+
 PPT sESkipText_Read(const ChanR_PPT& iChanR)
 	{
 	for (;;)
@@ -171,6 +186,9 @@ void sESkipText_ReadEnd(const ChanR_PPT& iChanR, const Name& iTagName)
 		sThrow_ParseException("Expected end tag '" + string(iTagName) + "', read '" + string(theP->GetName()));
 		}
 	}
+
+bool sIsText(const PPT& iPPT)
+	{ return sPGet<string>(iPPT) || sGet<ZP<ChannerR_UTF>>(iPPT); }
 
 ZQ<string> sQAsString(const PPT& iPPT)
 	{

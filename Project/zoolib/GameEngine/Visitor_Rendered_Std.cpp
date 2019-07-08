@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Visitor_Rendered_Std.h"
 
 #include "zoolib/Chan_UTF_string.h"

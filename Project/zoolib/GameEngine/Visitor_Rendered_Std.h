@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #ifndef __GameEngine_Visitor_Rendered_Std_h__
 #define __GameEngine_Visitor_Rendered_Std_h__ 1
 #include "zconfig.h"

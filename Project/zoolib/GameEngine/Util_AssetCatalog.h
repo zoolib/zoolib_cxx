@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #ifndef __GameEngine_Util_AssetCatalog_h__
 #define __GameEngine_Util_AssetCatalog_h__ 1
 #include "zconfig.h"

@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #if defined(__ANDROID__)
 
 #include "zoolib/Log.h"

@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Tween_BlushGainMat.h"
 
 #include "zoolib/Singleton.h"

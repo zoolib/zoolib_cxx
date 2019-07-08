@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/Starter_ThreadLoop.h"
 #include "zoolib/StdIO.h"
 #include "zoolib/Util_Debug.h"

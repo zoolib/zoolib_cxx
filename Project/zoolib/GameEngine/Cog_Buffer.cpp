@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
+
 #include "zoolib/GameEngine/Cog_Buffer.h"
 
 #include "zoolib/Compat_algorithm.h" // SaveSetRestore
