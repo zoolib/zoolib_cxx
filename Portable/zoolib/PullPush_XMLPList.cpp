@@ -192,28 +192,32 @@ static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, c
 			}
 		else
 			{
-			const PPT thePPT = sERead(iChanR);
-
-			const string* asStringP = sPGet<string>(thePPT);
-			ZP<ChannerR_UTF> asChanner = sGet<ZP<ChannerR_UTF>>(thePPT);
-
-			if (not asStringP && not asChanner)
-				sThrow_ParseException("Expected text");
-
-			if (theName == "string")
+			// Scope for thePPT and asChanner, so we don't hold it while blocking
+			// on sESkipText_ReadEnd.
 				{
-				sPush(thePPT, iChanW);
+				const PPT thePPT = sERead(iChanR);
+
+				const string* asStringP = sPGet<string>(thePPT);
+				ZP<ChannerR_UTF> asChanner = sGet<ZP<ChannerR_UTF>>(thePPT);
+
+				if (not asStringP && not asChanner)
+					sThrow_ParseException("Expected text");
+
+				if (theName == "string")
+					{
+					sPush(thePPT, iChanW);
+					}
+				else if (theName == "date")
+					{
+					const string asString = asStringP ? *asStringP : sReadAllUTF8(*asChanner);
+					UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(asString);
+					sPush(theUTCDateTime, iChanW);
+					}
+				else if (asStringP)
+					spHandleSimple(theName, ChanRU_UTF_string8(*asStringP), iChanW);
+				else
+					spHandleSimple(theName, ChanRU_XX_Unreader<UTF32>(*asChanner), iChanW);
 				}
-			else if (theName == "date")
-				{
-				const string asString = asStringP ? *asStringP : sReadAllUTF8(*asChanner);
-				UTCDateTime theUTCDateTime = Util_Time::sFromString_ISO8601(asString);
-				sPush(theUTCDateTime, iChanW);
-				}
-			else if (asStringP)
-				spHandleSimple(theName, ChanRU_UTF_string8(*asStringP), iChanW);
-			else
-				spHandleSimple(theName, ChanRU_XX_Unreader<UTF32>(*asChanner), iChanW);
 
 			sESkipText_ReadEnd(iChanR, theName);
 			}
