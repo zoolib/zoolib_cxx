@@ -157,7 +157,7 @@ bool ZCndBase_pthread::pWaitFor(ZMtx_pthread& iMtx, double iTimeout)
 	if (iTimeout <= 0)
 		return false;
 
-	#if defined(__APPLE__) || (defined(__ANDROID__) and (HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE))
+	#if defined(__APPLE__) || (defined(__ANDROID__) && (HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE))
 		const timespec the_timespec = { time_t(iTimeout), long(1e9 * fmod(iTimeout, 1.0)) };
 		return 0 == ::pthread_cond_timedwait_relative_np(
 			&f_pthread_cond_t, &iMtx.f_pthread_mutex_t, &the_timespec);
