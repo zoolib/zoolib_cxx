@@ -40,10 +40,16 @@ struct AnyTraits<string8>
 // =================================================================================================
 #pragma mark - Val_T
 
+//struct Tag_Val;
+
 template <class Map_p, class Seq_p>
 class Val_T
 :	public Any
+//:	public Any_T<Tag_Val>
 	{
+	typedef Any inherited;
+//	typedef Any_T<Tag_Val> inherited;
+
 // private and unimplemented, to catch the common mistake of passing a ZQ.
 	template <class S> Val_T(const ZQ<S>&);
 	template <class S> Val_T& operator=(const ZQ<S>&);
@@ -51,17 +57,17 @@ class Val_T
 public:
 	typedef Name Name_t;
 
-	const Any& AsAny() const
-		{ return (const Any&)*this; }
-
-	Any& AsAny()
-		{ return (Any&)*this; }
+//	const Any& AsAny() const
+//		{ return (const Any&)*this; }
+//
+//	Any& AsAny()
+//		{ return (Any&)*this; }
 
 	Val_T()
 		{}
 
 	Val_T(const Val_T& iOther)
-	:	Any((const Any&)iOther)
+	:	inherited((const inherited&)iOther)
 		{}
 
 	~Val_T()
@@ -69,73 +75,73 @@ public:
 
 	Val_T& operator=(const Val_T& iOther)
 		{
-		Any::operator=((const Any&)iOther);
+		inherited::operator=((const inherited&)iOther);
 		return *this;
 		}
 
 // Overload, so we don't pack a Any inside a Any
-	Val_T(const Any& iOther)
-	:	Any(iOther)
+	Val_T(const inherited& iOther)
+	:	inherited(iOther)
 		{}
 
-	Val_T& operator=(const Any& rhs)
+	Val_T& operator=(const inherited& rhs)
 		{
-		Any::operator=(rhs);
+		inherited::operator=(rhs);
 		return *this;
 		}
 
 // Overload, so a null becomes a Val_T
 	Val_T(const null_t&)
-	:	Any()
+	:	inherited()
 		{}
 
 	Val_T& operator=(const null_t&)
 		{
-		Any::Clear();
+		inherited::Clear();
 		return *this;
 		}
 
 // Overload, so we can init/assign from a string constant
 	Val_T(const UTF8* iVal)
-	:	Any(sAny<string8>(iVal))
+	:	inherited(sAny<string8,const UTF8*,inherited::Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF8* iVal)
 		{
-		Any::operator=(sAny<string8>(iVal));
+		inherited::operator=(sAny<string8,const UTF8*,inherited::Tag_T>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF16* iVal)
-	:	Any(sAny<string16>(iVal))
+	:	inherited(sAny<string16,const UTF16*,inherited::Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF16* iVal)
 		{
-		Any::operator=(sAny<string16>(iVal));
+		inherited::operator=(sAny<string16,const UTF16*,inherited::Tag_T>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF32* iVal)
-	:	Any(string32(iVal))
+	:	inherited(sAny<string32,const UTF32*,inherited::Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF32* iVal)
 		{
-		Any::operator=(sAny<string32>(iVal));
+		inherited::operator=(sAny<string32,const UTF32*,inherited::Tag_T>(iVal));
 		return *this;
 		}
 
 // Overload, as Any's templated constructor is explicit.
 	template <class S>
 	Val_T(const S& iVal)
-	:	Any(iVal)
+	:	inherited(iVal)
 		{}
 
 	template <class S>
 	Val_T& operator=(const S& iVal)
 		{
-		Any::operator=(iVal);
+		inherited::operator=(iVal);
 		return *this;
 		}
 
@@ -147,13 +153,13 @@ public:
 		return Comparer::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
 		}
 	
-	using Any::PGet;
-	using Any::QGet;
-	using Any::DGet;
-	using Any::PMut;
-	using Any::Mut;
-	using Any::Get;
-	using Any::Set;
+	using inherited::PGet;
+	using inherited::QGet;
+	using inherited::DGet;
+	using inherited::PMut;
+	using inherited::Mut;
+	using inherited::Get;
+	using inherited::Set;
 
 // Shortcut access to values in an enclosed Seq.
 	const Val_T* PGet(size_t iIndex) const
