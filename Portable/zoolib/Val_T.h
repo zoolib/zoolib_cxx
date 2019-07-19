@@ -57,12 +57,6 @@ class Val_T
 public:
 	typedef Name Name_t;
 
-//	const Any& AsAny() const
-//		{ return (const Any&)*this; }
-//
-//	Any& AsAny()
-//		{ return (Any&)*this; }
-
 	Val_T()
 		{}
 

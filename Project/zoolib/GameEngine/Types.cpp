@@ -97,7 +97,7 @@ Rat sRat(const Any& iAny)
 ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQRat(iValQ->AsAny());
+		return sQRat(static_cast<const Any&>(*iValQ));
 	return null;
 	}
 
@@ -200,21 +200,21 @@ CVec3 sCVec3(Rat iIdentity, const Any& iVal)
 ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQCVec3(iIdentity, iValQ->AsAny());
+		return sQCVec3(iIdentity, static_cast<const Any&>(*iValQ));
 	return null;
 	}
 
 CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sDCVec3(iDefault, iIdentity, iValQ->AsAny());
+		return sDCVec3(iDefault, iIdentity, static_cast<const Any&>(*iValQ));
 	return iDefault;
 	}
 
 CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sCVec3(iIdentity, iValQ->AsAny());
+		return sCVec3(iIdentity, static_cast<const Any&>(*iValQ));
 	return sCVec3(iIdentity);
 	}
 
@@ -270,7 +270,7 @@ ZQ<RGBA> sQRGBA(const Any& iVal)
 ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQRGBA(iValQ->AsAny());
+		return sQRGBA(static_cast<const Any&>(*iValQ));
 	return null;
 	}
 
