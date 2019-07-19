@@ -34,6 +34,12 @@ using namespace Util_STL;
 
 struct Tombstone_t {};
 
+static const Val_Any& spCoerce_Val_Any(const Val& iVal)
+	{ return static_cast<const Val_Any&>(static_cast<const Any&>(iVal)); }
+
+static const Val& spCoerce_Val(const Val_Any& iVal_Any)
+	{ return static_cast<const Val&>(static_cast<const Any&>(iVal_Any)); }
+
 // =================================================================================================
 #pragma mark - Link
 
@@ -53,21 +59,21 @@ ZQ<Val> Link::QReadAt(const Name& iName)
 	if (ZP<Link> theLink = sGet(fChildren, iName))
 		return Map(theLink);//??
 
-	if (const Val_Any* theVal = sPGet(fMap, iName))
+	if (const Val_Any* theVal_AnyP = sPGet(fMap, iName))
 		{
-		if (const Map_Any* theMap = theVal->PGet<Map_Any>())
+		if (const Map_Any* theMap = theVal_AnyP->PGet<Map_Any>())
 			{
 			ZP<Link> theLink = new Link(this, *theMap);
 			sInsertMust(fChildren, iName, theLink);
 			return Map(theLink);
 			}
-		else if (const Seq_Any* theSeq_Any = theVal->PGet<Seq_Any>())
+		else if (const Seq_Any* theSeq_Any = theVal_AnyP->PGet<Seq_Any>())
 			{
 			return Seq(this, *theSeq_Any);
 			}
 		else
 			{
-			return Val(theVal->AsAny());
+			return spCoerce_Val(*theVal_AnyP);
 			}
 		}
 
@@ -145,10 +151,12 @@ ZP<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZP<Link>& i
 #pragma mark - spCoerceValPtr
 
 static const Val* spCoerceValPtr(const Any* iAny)
-	{ return static_cast<const Val*>(static_cast<const Any*>(iAny)); }
+	{ return static_cast<const Val*>(iAny); }
+//##	{ return static_cast<const Val*>(static_cast<const Any*>(iAny)); }
 
 static Val* spCoerceValPtr(Any* iAny)
-	{ return static_cast<Val*>(static_cast<Any*>(iAny)); }
+	{ return static_cast<Val*>(iAny); }
+//##	{ return static_cast<Val*>(static_cast<Any*>(iAny)); }
 
 // =================================================================================================
 #pragma mark - Seq
@@ -187,17 +195,17 @@ void Seq::Clear()
 
 const Val* Seq::PGet(size_t iIndex) const
 	{
-	if (Val_Any* theValP = fSeq.PMut(iIndex))
+	if (Any* theAnyP = fSeq.PMut(iIndex))
 		{
-		if (const Map_Any* theMap_Any = theValP->PGet<Map_Any>())
+		if (const Map_Any* theMap_Any = theAnyP->PGet<Map_Any>())
 			{
-			*theValP = Map(new Link(fLink, *theMap_Any));
+			*theAnyP = Map(new Link(fLink, *theMap_Any));
 			}
-		else if (const Seq_Any* theSeq_Any = theValP->PGet<Seq_Any>())
+		else if (const Seq_Any* theSeq_Any = theAnyP->PGet<Seq_Any>())
 			{
-			*theValP = Seq(fLink, *theSeq_Any);
+			*theAnyP = Seq(fLink, *theSeq_Any);
 			}
-		return spCoerceValPtr(theValP);
+		return spCoerceValPtr(theAnyP);
 		}
 	return nullptr;
 	}
@@ -225,17 +233,17 @@ const Val& Seq::Get(size_t iIndex) const
 
 Val* Seq::PMut(size_t iIndex)
 	{
-	if (Val_Any* theValP = fSeq.PMut(iIndex))
+	if (Any* theAnyP = fSeq.PMut(iIndex))
 		{
-		if (Map_Any* theMap_Any = theValP->PMut<Map_Any>())
+		if (Map_Any* theMap_Any = theAnyP->PMut<Map_Any>())
 			{
-			*theValP = Map(new Link(fLink, *theMap_Any));
+			*theAnyP = Map(new Link(fLink, *theMap_Any));
 			}
-		else if (Seq_Any* theSeq_Any = theValP->PMut<Seq_Any>())
+		else if (Seq_Any* theSeq_Any = theAnyP->PMut<Seq_Any>())
 			{
-			*theValP = Seq(fLink, *theSeq_Any);
+			*theAnyP = Seq(fLink, *theSeq_Any);
 			}
-		return spCoerceValPtr(theValP);
+		return spCoerceValPtr(theAnyP);
 		}
 	return nullptr;
 	}
@@ -249,7 +257,7 @@ Val& Seq::Mut(size_t iIndex)
 
 Seq& Seq::Set(size_t iIndex, const Val& iVal)
 	{
-	fSeq.Set(iIndex, iVal.AsAny());
+	fSeq.Set(iIndex, spCoerce_Val_Any(iVal));
 	return *this;
 	}
 
@@ -261,13 +269,13 @@ Seq& Seq::Erase(size_t iIndex)
 
 Seq& Seq::Insert(size_t iIndex, const Val& iVal)
 	{
-	fSeq.Insert(iIndex, iVal.AsAny());
+	fSeq.Insert(iIndex, spCoerce_Val_Any(iVal));
 	return *this;
 	}
 
 Seq& Seq::Append(const Val& iVal)
 	{
-	fSeq.Append(iVal.AsAny());
+	fSeq.Append(spCoerce_Val_Any(iVal));
 	return *this;
 	}
 
@@ -336,7 +344,7 @@ const Val* Map::PGet(const Name_t& iName) const
 		{
 		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
 			{
-			fMap.Set(iName, theValQ->AsAny());
+			fMap.Set(iName, spCoerce_Val_Any(*theValQ));
 			return spCoerceValPtr(fMap.PGet(iName));
 			}
 		}
@@ -383,7 +391,7 @@ Val* Map::PMut(const Name_t& iName)
 		{
 		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
 			{
-			fMap.Set(iName, theValQ->AsAny());
+			fMap.Set(iName, spCoerce_Val_Any(*theValQ));
 			return spCoerceValPtr(fMap.PMut(iName));
 			}
 		}
@@ -405,7 +413,7 @@ Val& Map::Mut(const Name_t& iName)
 	if (fLink)
 		{
 		if (ZQ<Val> theValQ = fLink->QReadAt(iName))
-			theMutable = theValQ->AsAny();
+			theMutable = static_cast<Any&>(*theValQ);
 		}
 
 	return static_cast<Val&>(theMutable);
@@ -413,7 +421,7 @@ Val& Map::Mut(const Name_t& iName)
 
 Map& Map::Set(const Name_t& iName, const Val& iVal)
 	{
-	fMap.Set(iName, iVal.AsAny());
+	fMap.Set(iName, spCoerce_Val_Any(iVal));
 	return *this;
 	}
 
