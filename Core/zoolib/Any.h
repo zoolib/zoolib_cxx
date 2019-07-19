@@ -547,7 +547,7 @@ public:
 		{}
 
 	Any_T(const Any_T& iOther)
-	:	AnyBase(iOther)
+	:	AnyBase((const AnyBase&)iOther)
 		{}
 
 	~Any_T()
@@ -555,7 +555,7 @@ public:
 
 	Any_T& operator=(const Any_T& iOther)
 		{
-		AnyBase::operator=(iOther);
+		AnyBase::operator=((const AnyBase&)iOther);
 		return *this;
 		}
 
