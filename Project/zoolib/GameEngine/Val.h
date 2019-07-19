@@ -37,32 +37,7 @@ class Map;
 
 typedef Val_T<Map,Seq> Val;
 
-// =================================================================================================
-#pragma mark - Link
-
-class Link
-:	public Counted
-	{
-public:
-// ctor that establishes a tree
-	Link(const ZP<CountedName>& iProtoName, const Map_Any& iMap);
-
-// ctor used as we walk down a tree.
-	Link(const ZP<Link>& iParent, const Map_Any& iMap);
-
-	ZQ<Val> QReadAt(const Name& iName);
-
-	ZP<Link> WithRootAugment(const std::string& iRootAugmentName, const ZP<Link>& iRootAugment);
-
-private:
-	const ZP<CountedName> fProtoName;
-	const ZP<Link> fParent;
-	const Map_Any fMap;
-
-	std::map<std::string,ZP<Link>> fChildren;
-	FalseOnce fCheckedProto;
-	ZP<Link> fProto;
-	};
+class Link;
 
 // =================================================================================================
 #pragma mark - Seq
@@ -149,13 +124,11 @@ public:
 	Val& operator[](size_t iIndex);
 	const Val& operator[](size_t iIndex) const;
 
-	Seq_Any GetSeq() const;
-
 private:
 	void pGenSeq();
 
 	ZP<Link> fLink;
-	mutable Seq_Any fSeq;
+	mutable Seq_Any fSeq_Any;
 	};
 
 // =================================================================================================
@@ -243,11 +216,10 @@ public:
 	const Val& operator[](const Name_t& iName) const;
 
 	ZP<Link> GetLink() const;
-	Map_Any GetMap() const;
 
 private:
 	ZP<Link> fLink;
-	mutable Map_Any fMap;
+	mutable Map_Any fMap_Any;
 	};
 
 // =================================================================================================
