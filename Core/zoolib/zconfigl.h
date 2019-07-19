@@ -299,7 +299,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#define ZMACRO_Has_tr1_early 1
 	#endif
 #elif defined(__GNUC__)
-	#if __GNUC__ == 4 and __GNUC_MINOR__ >= 6 \
+
+	#if __GNUC__ >= 5
+		#define ZMACRO_namespace_tr1_prefix std
+		#define ZMACRO_namespace_tr1_begin namespace std {
+		#define ZMACRO_namespace_tr1_end }
+		#define ZMACRO_tr1_header(a) <a>
+		#define ZMACRO_Has_tr1 1
+
+	#elif __GNUC__ == 4 and __GNUC_MINOR__ >= 6 \
 			and (defined(__GXX_EXPERIMENTAL_CXX0X__) or (__cplusplus >= 201103L))
 		#define ZMACRO_namespace_tr1_prefix std
 		#define ZMACRO_namespace_tr1_begin namespace std {
