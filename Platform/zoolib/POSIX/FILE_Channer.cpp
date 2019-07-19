@@ -134,7 +134,7 @@ static ssize_t spReadRPos(void* iCookie, char* oDest, size_t iCount)
 static ssize_t spWrite(void* iCookie, const char* iSource, size_t iCount)
 	{ return sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
 
-static int spSeek(void* iCookie, _IO_off64_t *ioPos, int iWhence)
+static int spSeek(void* iCookie, off64_t *ioPos, int iWhence)
 	{
 	ChannerRPos_Bin* theChannerRPos = static_cast<ChannerRPos_Bin*>(iCookie);
 	switch (iWhence)
