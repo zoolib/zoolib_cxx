@@ -25,13 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZMACRO_MSVCStaticLib_cpp(Net_Internet_Socket)
 
 #include "zoolib/Compat_cmath.h" // For fmod
+#include "zoolib/POSIX/Compat_fcntl.h"
 #include "zoolib/Memory.h"
 
 #include "zoolib/POSIX/Util_POSIXFD.h"
 
 #include <arpa/inet.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -125,7 +125,7 @@ static int spConnect4(ip4_addr iLocalHost, ip_port iLocalPort, ip4_addr iRemoteH
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
 
-	::fcntl(socketFD, F_SETFL, ::fcntl(socketFD, F_GETFL, 0) | O_NONBLOCK);
+	Util_POSIXFD::sSetNonBlocking(socketFD);
 
 	int result = ::connect(socketFD, (sockaddr*)&remoteSockAddr, sizeof(remoteSockAddr));
 	if (result == 0)

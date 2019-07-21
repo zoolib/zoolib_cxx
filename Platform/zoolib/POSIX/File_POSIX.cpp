@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(File_POSIX)
 
 #include "zoolib/POSIX/Chan_Bin_POSIXFD.h"
+#include "zoolib/POSIX/Compat_fcntl.h"
 
 #include <cstring>
 #include <vector>
@@ -30,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define kDebug_File_POSIX 2
 
 #include <dirent.h>
-#include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
 

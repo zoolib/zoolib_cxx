@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Memory.h"
 
 #include <errno.h>
-#include <fcntl.h>
 #include <signal.h>
 #include <unistd.h>
 
@@ -59,8 +58,7 @@ namespace ZooLib {
 
 static void spSetSocketOptions(int iSocket)
 	{
-	// Set the socket to be non blocking
-	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL,0) | O_NONBLOCK);
+	Util_POSIXFD::sSetNonBlocking(iSocket);
 
 	// Enable keep alive
 	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE,
@@ -86,8 +84,7 @@ ssize_t Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 
 static void spSetSocketOptions(int iSocket)
 	{
-	// Set the socket to be non blocking
-	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL, 0) | O_NONBLOCK);
+	Util_POSIXFD::sSetNonBlocking(iSocket);
 
 	// Enable keep alive
 	::setsockopt(iSocket, SOL_SOCKET, SO_KEEPALIVE,
@@ -188,7 +185,7 @@ NetListener_Socket::NetListener_Socket(int iSocketFD)
 		throw NetEx(Net_Socket::sTranslateError(err));
 		}
 
-	::fcntl(fSocketFD, F_SETFL, ::fcntl(fSocketFD, F_GETFL,0) | O_NONBLOCK);
+	Util_POSIXFD::sSetNonBlocking(iSocketFD);
 
 	fThreadID_Listening = 0;
 	}
