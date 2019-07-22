@@ -39,7 +39,8 @@ public:
 	:	fIdleThreads(0)
 	,	fActiveThreads(0)
 	,	fKeepRunning(true)
-	,	fExpireAfter(3600)
+	,	fExpireAfter(600)
+	,	fIdleFor(10)
 		{}
 
 	~StartOnNewThreadHandler()
@@ -106,6 +107,7 @@ public:
 		{
 		ZAcqMtx acq(fMtx);
 		const double start = Time::sSystem();
+		double lastActive = start;
 		for (;;)
 			{
 			if (fQueue.empty())
@@ -116,9 +118,17 @@ public:
 					fCnd.Broadcast();
 					break;
 					}
-				else if (Time::sSystem() - start >= fExpireAfter)
+				else
 					{
-					break;
+					const double now = Time::sSystem();
+					if (now - start >= fExpireAfter)
+						{
+						break;
+						}
+					else if (now - lastActive >= fIdleFor)
+						{
+						break;
+						}
 					}
 				++fIdleThreads;
 				fCnd.WaitFor(fMtx, 5);
@@ -137,6 +147,7 @@ public:
 					}
 				catch (...)
 					{}
+				lastActive = Time::sSystem();
 				}
 			}
 		--fActiveThreads;
@@ -155,6 +166,7 @@ public:
 	size_t fActiveThreads;
 	bool fKeepRunning;
 	double fExpireAfter;
+	double fIdleFor;
 	std::list<ZP<Startable>> fQueue;
 	};
 
