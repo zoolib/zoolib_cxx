@@ -18,12 +18,6 @@
 
 #include "zoolib/Zip/File_Zip.h"
 
-using std::map;
-using std::vector;
-
-using namespace ZooLib;
-using namespace GameEngine;
-
 // =================================================================================================
 // MARK: -
 
