@@ -11,11 +11,11 @@
 #if ZCONFIG_SPI_Enabled(POSIX)
 
 #include <fcntl.h>
-#if defined(__linux__)
 
-__asm__(".symver fcntl,fcntl@GLIBC_2.4");
-
-#endif // defined(__linux__)
+#if defined(__linux__) && not defined(__ANDROID__)
+    __asm__(".symver fcntl,fcntl@GLIBC_2.4");
+#endif
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
+
 #endif // __ZooLib_POSIX_Compat_fcntl_h__
