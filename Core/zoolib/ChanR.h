@@ -86,7 +86,7 @@ uint64 sSkipFully(const ChanR<EE>& iChanR, uint64 iCount)
 	// We need the 64->32 bit clamping stuff here
 	while (countRemaining)
 		{
-		if (const size_t countSkipped = sSkip(iChanR, countRemaining))
+		if (const uint64 countSkipped = sSkip(iChanR, countRemaining))
 			countRemaining -= countSkipped;
 		else
 			break;

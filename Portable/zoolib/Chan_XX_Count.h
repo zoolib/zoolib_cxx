@@ -51,7 +51,7 @@ public:
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countSkipped = sSkip(inherited::pGetChan(), iCount);
+		const uint64 countSkipped = sSkip(inherited::pGetChan(), iCount);
 		fCount += countSkipped;
 		return countSkipped;
 		}

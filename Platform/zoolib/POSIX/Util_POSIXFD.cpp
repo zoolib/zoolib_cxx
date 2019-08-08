@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
+#include "zoolib/ChanAspect.h" // For sClamped
 #include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/Compat_algorithm.h" // For sMin
 
@@ -259,7 +260,7 @@ size_t sUnread(int iFD, const byte* iSource, size_t iCount)
 	if (pos <= iCount)
 		{
 		sPosSet(iFD, 0);
-		return pos;
+		return sClamped(pos);
 		}
 	sPosSet(iFD, pos - iCount);
 	return iCount;
@@ -268,7 +269,7 @@ size_t sUnread(int iFD, const byte* iSource, size_t iCount)
 size_t sUnreadableLimit(int iFD)
 	{
 	// Unreadable limit is whatever our position is.
-	return sPos(iFD);
+	return sClamped(sPos(iFD));
 	}
 
 size_t sWrite(int iFD, const byte* iSource, size_t iCount)
