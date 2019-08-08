@@ -253,10 +253,10 @@ void Game::pUpdateTouches()
 		sInsertMust(fTouchesActive, theTouch);
 
 		set<ZP<TouchListener> > interested;
-		Rat nearestInterested;
+		Rat nearestInterested = std::numeric_limits<Rat>::max();
 
 		ZP<TouchListener> exclusive;
-		Rat nearestExclusive;
+		Rat nearestExclusive = std::numeric_limits<Rat>::max();
 
 		foreacha (theTL, fTLs)
 			{
