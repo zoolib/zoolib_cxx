@@ -26,6 +26,8 @@ public:
 
 	virtual void VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading) = 0;
 
+	virtual ZQ<Rat> QKern(UTF32 iCP, UTF32 iCPNext);
+
 	Rat Ascent();
 	Rat Decent();
 	Rat Leading();
@@ -47,6 +49,8 @@ public:
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance) = 0;
 
 	virtual void VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading) = 0;
+
+	virtual ZQ<Rat> QKern(Rat iScale, UTF32 iCP, UTF32 iCPNext);
 
 	Rat Ascent(Rat iScale);
 	Rat Decent(Rat iScale);

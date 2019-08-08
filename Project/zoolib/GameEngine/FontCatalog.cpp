@@ -44,6 +44,7 @@ GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString
 	{
 	GRect theBounds;
 	Rat accumulatedX = 0;
+	UTF32 priorCP;
 	bool isFirst = true;
 	for (string8::const_iterator iter = iString.begin(), end = iString.end();
 		/*no test*/; /*no inc*/)
@@ -64,8 +65,11 @@ GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString
 				}
 			else
 				{
+				if (ZQ<Rat> theKernQ = iFontInfo->QKern(iScale, priorCP, theCP))
+					accumulatedX += *theKernQ;
 				theBounds |= sOffsettedX(theRect, accumulatedX);
 				}
+			priorCP = theCP;
 			}
 		accumulatedX += xAdvance;
 		}
@@ -96,6 +100,9 @@ Rat FontStrike::Leading()
 	return theLeading;
 	}
 
+ZQ<Rat> FontStrike::QKern(UTF32 iCP, UTF32 iCPNext)
+	{ return null; }
+
 // =================================================================================================
 #pragma mark - FontInfo
 
@@ -120,6 +127,9 @@ Rat FontInfo::Leading(Rat iScale)
 	return theLeading;
 	}
 
+ZQ<Rat> FontInfo::QKern(Rat iScale, UTF32 iCP, UTF32 iCPNext)
+	{ return null; }
+
 // =================================================================================================
 #pragma mark - FontStrike_TT declaration
 
@@ -136,7 +146,10 @@ public:
 		GRect& oGlyphBoundsInTexture, GPoint& oOffset, Rat& oXAdvance);
 
 	virtual GRect Measure(UTF32 iCP);
+
 	virtual void VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading);
+
+	virtual ZQ<Rat> QKern(UTF32 iCP, UTF32 iCPNext);
 
 	const ZP<FontInfo_TT> fFontInfo;
 	const Rat fScale;
@@ -165,10 +178,13 @@ public:
 	virtual ZP<FontStrike> GetStrikeForScale(Rat iScale);
 
 	virtual void Measure(Rat iScale, UTF32 iCP, GRect& oBounds, Rat& oXAdvance);
+
 	virtual void VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeading);
 
+	virtual ZQ<Rat> QKern(Rat iScale, UTF32 iCP, UTF32 iCPNext);
+
 	const Data_Any fTTData;
-	unsigned char* fTTPtr;
+	const unsigned char* fTTPtr;
 
 	stbtt_fontinfo f_fontinfo;
 	map<Rat,ZP<FontStrike_TT>> fStrikes;
@@ -232,6 +248,9 @@ GRect FontStrike_TT::Measure(UTF32 iCP)
 void FontStrike_TT::VMetrics(Rat& oAscent, Rat& oDescent, Rat& oLeading)
 	{ fFontInfo->VMetrics(fScale, oAscent, oDescent, oLeading); }
 
+ZQ<Rat> FontStrike_TT::QKern(UTF32 iCP, UTF32 iCPNext)
+	{ return fFontInfo->QKern(fScale, iCP, iCPNext); }
+
 // =================================================================================================
 #pragma mark - FontInfo_TT definition
 
@@ -293,9 +312,9 @@ static int spBakeForScale(stbtt_fontinfo& f,
 
 FontInfo_TT::FontInfo_TT(const Data_Any& iTTData)
 :	fTTData(iTTData)
-,	fTTPtr((unsigned char*)fTTData.GetPtr())
+,	fTTPtr((const unsigned char*)fTTData.GetPtr())
 	{
-	stbtt_InitFont(&f_fontinfo, fTTPtr, stbtt_GetFontOffsetForIndex(fTTPtr,0));
+	stbtt_InitFont(&f_fontinfo, fTTPtr, stbtt_GetFontOffsetForIndex(fTTPtr, 0));
 	}
 
 FontInfo_TT::~FontInfo_TT()
@@ -352,6 +371,12 @@ void FontInfo_TT::VMetrics(Rat iScale, Rat& oAscent, Rat& oDescent, Rat& oLeadin
 	oAscent = ascent * iScale;
 	oDescent = descent * iScale;
 	oLeading = linegap * iScale;
+	}
+
+ZQ<Rat> FontInfo_TT::QKern(Rat iScale, UTF32 iCP, UTF32 iCPNext)
+	{
+	int kern = stbtt_GetCodepointKernAdvance(&f_fontinfo, iCP, iCPNext);
+	return kern * iScale;
 	}
 
 // =================================================================================================

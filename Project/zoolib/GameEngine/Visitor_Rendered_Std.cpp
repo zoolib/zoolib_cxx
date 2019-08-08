@@ -182,6 +182,7 @@ void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 		const string8& theString = iRendered_String->GetString();
 
 		Mat theMat(1);
+		ZQ<UTF32> priorCPQ;
 		for (string8::const_iterator iter = theString.begin(), end = theString.end();
 			/*no test*/; /*no inc*/)
 			{
@@ -195,11 +196,18 @@ void Visitor_Rendered_StringToTextures::Visit_Rendered_String(
 			if (ZP<Texture> theTexture = theStrike->GetGlyphTexture(theCP,
 				glyphBounds, glyphOffset, xAdvance))
 				{
+				if (priorCPQ)
+					{
+					if (ZQ<Rat> theKernQ = theStrike->QKern(*priorCPQ, theCP))
+						theMat = sTranslate3X(*theKernQ) * theMat;
+					}
 				theGroup->Append(
-					sRendered_Mat(sTranslate3XY(X(glyphOffset), Y(glyphOffset)) * theMat,
+					sRendered_Mat(
+						sTranslate3XY(X(glyphOffset), Y(glyphOffset)) * theMat,
 						sRendered_Texture(theTexture, glyphBounds)));
 
 				theMat = sTranslate3X(xAdvance) * theMat;
+				priorCPQ = theCP;
 				}
 			}
 
