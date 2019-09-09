@@ -48,6 +48,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 // =================================================================================================
 
 class GameIntermediary
+:	public Counted
 	{
 	ZMtx fMtx;
 
@@ -170,56 +171,58 @@ public:
 
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
 
-#define JNIDEF(aa) extern "C" JNIEXPORT aa JNICALL
+#define JNIFUNCTION(aa) extern "C" JNIEXPORT aa JNICALL
 
-JNIDEF(jlong)
+JNIFUNCTION(jlong)
 Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath)
 	{
 	JNI::Env theEnv(env);
-	return reinterpret_cast<jlong>(new GameIntermediary(JNI::sAsString(iAPKPath)));
+	ZP<GameIntermediary> theGI = new GameIntermediary(JNI::sAsString(iAPKPath));
+	theGI.Retain();
+	return reinterpret_cast<jlong>(theGI.Get());
 	}
 
-JNIDEF(void)
-Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
-	jlong iNative)
-	{
-	JNI::Env theEnv(env);
-	ZLOGTRACE(eDebug);
-	if (GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative))
-		theGI->fGame->Pause();
-	}
-
-JNIDEF(void)
-Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
-	jlong iNative)
-	{
-	JNI::Env theEnv(env);
-	ZLOGTRACE(eDebug);
-	if (GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative))
-		theGI->fGame->Resume();
-	}
-
-JNIDEF(void)
+JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npTearDown(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
-	if (GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative))
-		delete theGI;
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
+		theGI->Release();
 	}
 
-JNIDEF(void)
+JNIFUNCTION(void)
+Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
+	jlong iNative)
+	{
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
+		theGI->fGame->Pause();
+	}
+
+JNIFUNCTION(void)
+Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
+	jlong iNative)
+	{
+	JNI::Env theEnv(env);
+	ZLOGTRACE(eDebug);
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
+		theGI->fGame->Resume();
+	}
+
+JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npSurfaceAndContextIsFresh(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
-	if (GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative))
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->fGame->ExternalPurgeHasOccurred();
 	}
 
-JNIDEF(void)
+JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npOnTouch(
 	JNIEnv *env, jobject ob,
 	jlong iNative,
@@ -228,11 +231,11 @@ Java_org_zoolib_ViewModel_1Game_npOnTouch(
 	{
 	JNI::Env theEnv(env);
 
-	GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative);
-	theGI->OnTouch(pointerId, action, x, y, p);
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
+		theGI->OnTouch(pointerId, action, x, y, p);
 	}
 
-JNIDEF(void)
+JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npDraw(
 	JNIEnv *env, jobject ob,
 	jlong iNative,
@@ -240,14 +243,15 @@ Java_org_zoolib_ViewModel_1Game_npDraw(
 	{
 	JNI::Env theEnv(env);
 
-	GameIntermediary* theGI = reinterpret_cast<GameIntermediary*>(iNative);
+	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
+		{
+		const double loopStart = Time::sSystem();
 
-	const double loopStart = Time::sSystem();
+		const GPoint backingSize = sGPoint(width, height);
 
-	const GPoint backingSize = sGPoint(width, height);
-
-	theGI->fGame->Draw(loopStart, backingSize, null);
-	theGI->UpdateTouches(backingSize);
+		theGI->fGame->Draw(loopStart, backingSize, null);
+		theGI->UpdateTouches(backingSize);
+		}
 	}
 
 #endif // defined(__ANDROID__)
