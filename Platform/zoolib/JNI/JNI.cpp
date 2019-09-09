@@ -72,5 +72,47 @@ EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
 		fJavaVM->DetachCurrentThread();
 	}
 
+// =================================================================================================
+#pragma mark - PushPopLocalFrame
+
+PushPopLocalFrame::PushPopLocalFrame()
+:	fEnv(EnvTV::sGet())
+	{
+	assert(fEnv);
+	fEnv->PushLocalFrame(50);
+	}
+
+PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv)
+:	fEnv(iEnv)
+	{
+	assert(fEnv);
+	fEnv->PushLocalFrame(50);
+	}
+
+PushPopLocalFrame::~PushPopLocalFrame()
+	{
+	fEnv->PopLocalFrame(nullptr);
+	}
+
+// =================================================================================================
+#pragma mark - sAsString
+
+std::string sAsString(jstring s)
+	{ return sAsString(EnvTV::sGet(), s); }
+
+std::string sAsString(JNIEnv *env, jstring s)
+	{
+	std::string result;
+	if (env && s)
+		{
+		if (const char* charP = env->GetStringUTFChars(s, 0))
+			{
+			result = charP;
+			env->ReleaseStringUTFChars(s, charP);
+			}
+		}
+	return result;
+	}
+
 } // namespace JNI
 } // namespace ZooLib

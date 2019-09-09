@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <jni.h>
 
+#include <string>
+
 namespace ZooLib {
 namespace JNI {
 
@@ -33,6 +35,7 @@ namespace JNI {
 #pragma mark - JNI::Env
 
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
+typedef Env EnvTV;
 
 // =================================================================================================
 #pragma mark - JNI::EnsureAttachedToCurrentThread
@@ -48,6 +51,27 @@ private:
 	bool fNeedsDetach;
 	Env fEnv;
 	};
+
+// =================================================================================================
+#pragma mark - JNI::PushPopLocalFrame
+
+class PushPopLocalFrame
+	{
+public:
+	PushPopLocalFrame();
+	PushPopLocalFrame(JNIEnv* iEnv);
+	~PushPopLocalFrame();
+
+private:
+	JNIEnv* fEnv;
+	};
+
+// =================================================================================================
+#pragma mark - JNI::sAsString
+
+std::string sAsString(jstring s);
+
+std::string sAsString(JNIEnv *env, jstring s);
 
 } // namespace JNI
 } // namespace ZooLib
