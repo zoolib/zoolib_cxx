@@ -78,11 +78,13 @@ OutChannel::OutChannel(
 	const Map& iRootMap,
 	const ZP<AssetCatalog>& iAssetCatalog,
 	const ZP<FontCatalog>& iFontCatalog,
-	const ZP<SoundMeister>& iSoundMeister)
+	const ZP<SoundMeister>& iSoundMeister,
+	const ZP<Callable_Void>& iHaptic)
 :	fRootMap(iRootMap)
 ,	fAssetCatalog(iAssetCatalog)
 ,	fFontCatalog(iFontCatalog)
 ,	fSoundMeister(iSoundMeister)
+,	fHaptic(iHaptic)
 ,	fGroup(sRendered_Group())
 	{}
 

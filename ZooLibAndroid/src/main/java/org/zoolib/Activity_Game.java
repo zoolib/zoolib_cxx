@@ -45,6 +45,7 @@ public class Activity_Game
 		this.hideSystemUI();
 
 		fViewModel = ViewModelProviders.of(this).get(ViewModel_Game.class);
+		fViewModel.attachActivity(this);
 
 		GLSurfaceView_Game theView = new GLSurfaceView_Game(this, fViewModel);
 
@@ -53,14 +54,14 @@ public class Activity_Game
 
 	protected void onPause()
 		{
-		fViewModel.sPauseGameLoop();
+		fViewModel.pauseGameLoop();
 		super.onPause();
 		}
 
 	protected void onResume()
 		{
 		super.onResume();
-		fViewModel.sResumeGameLoop();
+		fViewModel.resumeGameLoop();
 		}
 
 	public void onWindowFocusChanged(boolean hasFocus)
@@ -83,9 +84,6 @@ public class Activity_Game
 			| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
 			| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 			| View.SYSTEM_UI_FLAG_IMMERSIVE);
-
-//		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-//		getActionBar().hide();
 		}
 
 	}
@@ -93,7 +91,6 @@ public class Activity_Game
 // =================================================================================================
 
 class GLSurfaceView_Game extends GLSurfaceView
-	implements View.OnTouchListener
 	{
 	private final ViewModel_Game fViewModel;
 
@@ -110,12 +107,6 @@ class GLSurfaceView_Game extends GLSurfaceView
 		{
 		super(context);
 
-		setOnTouchListener(this);
-
-//		setFocusable(true);
-//		setFocusableInTouchMode(true);
-//		requestFocus();
-
 		setEGLConfigChooser(GL_RED_SIZE, GL_GREEN_SIZE, GL_BLUE_SIZE, GL_ALPHA_SIZE, GL_DEPTH_SIZE, GL_STENCIL_SIZE);
 		setEGLContextClientVersion(GL_VERSION);
 		setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
@@ -129,9 +120,8 @@ class GLSurfaceView_Game extends GLSurfaceView
 	    setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	    }
 
-
-// From View.OnTouchListener
-   	public boolean onTouch(View v, MotionEvent event)
+	@Override // From View
+    public boolean onTouchEvent(MotionEvent event)
 		{
         int pointerIndex = event.getActionIndex();
         int pointerId = event.getPointerId(pointerIndex);
@@ -142,7 +132,7 @@ class GLSurfaceView_Game extends GLSurfaceView
 			case MotionEvent.ACTION_DOWN:
 			case MotionEvent.ACTION_POINTER_DOWN:
 				{
-				fViewModel.sOnTouch(pointerId, MotionEvent.ACTION_DOWN,
+				fViewModel.onTouch(pointerId, MotionEvent.ACTION_DOWN,
 					event.getX(pointerIndex),
 					event.getY(pointerIndex),
 					event.getPressure(pointerIndex));
@@ -153,7 +143,7 @@ class GLSurfaceView_Game extends GLSurfaceView
         		// a pointer was moved
 				for (int size = event.getPointerCount(), ii = 0; ii < size; ++ii)
 					{
-					fViewModel.sOnTouch(event.getPointerId(ii), MotionEvent.ACTION_MOVE,
+					fViewModel.onTouch(event.getPointerId(ii), MotionEvent.ACTION_MOVE,
 						event.getX(ii),
 						event.getY(ii),
 						event.getPressure(ii));
@@ -164,7 +154,7 @@ class GLSurfaceView_Game extends GLSurfaceView
 			case MotionEvent.ACTION_POINTER_UP:
 			case MotionEvent.ACTION_CANCEL:
 				{
-				fViewModel.sOnTouch(pointerId, MotionEvent.ACTION_UP,
+				fViewModel.onTouch(pointerId, MotionEvent.ACTION_UP,
 					event.getX(pointerIndex),
 					event.getY(pointerIndex),
 					event.getPressure(pointerIndex));

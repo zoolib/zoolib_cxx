@@ -2,6 +2,7 @@
 
 package org.zoolib;
 
+import android.os.Vibrator;
 import android.app.Application;
 import android.util.Log;
 import android.opengl.GLSurfaceView;
@@ -18,33 +19,38 @@ public class ViewModel_Game extends ViewModel
 	private final String TAG = "ViewModel_Game";
 	private int fWidth;
 	private int fHeight;
+	private final long fNative;
 
 	public ViewModel_Game()
 		{
 		Log.v(TAG, "ctor");
 
-		String theString = spGetApplicationUsingReflection().getApplicationInfo().sourceDir;
-		sInit(theString);
+		Application theApplication = spGetApplicationUsingReflection();
+		String theString = theApplication.getApplicationInfo().sourceDir;
+
+		fNative = nspInit(theString);
 		}
 
-// From ViewModel
+	@Override // From ViewModel
 	protected void onCleared()
 		{
 		Log.v(TAG, "onCleared");
-		sTearDown();
+		npTearDown(fNative);
 		}
 
-// From GLSurfaceView.Renderer
+	@Override  // From GLSurfaceView.Renderer
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 		{
-		sSurfaceAndContextIsFresh();
+		npSurfaceAndContextIsFresh(fNative);
 		}
 
+	@Override
 	public void onDrawFrame(GL10 gl)
 		{
-		sDraw(fWidth, fHeight);
+		npDraw(fNative, fWidth, fHeight);
 		}
 	
+	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height)
 		{
 		fWidth = width;
@@ -64,17 +70,28 @@ public class ViewModel_Game extends ViewModel
 		return null;
 		}
 
+
+	public void attachActivity(Activity_Game iActivity)
+		{
+		}
+
 // JNI
-	public static native void sInit(String iAPKPath);
-	public static native void sSurfaceAndContextIsFresh();
+	private static native long nspInit(String iAPKPath);
+	private native void npTearDown(long iNative);
 
-	public static native void sPauseGameLoop();
-	public static native void sResumeGameLoop();
-	public static native void sTearDown();
+	private native void npSurfaceAndContextIsFresh(long iNative);
 
-	public static native void sOnTouch(int pointerId, int action, float x, float y, float p);
+	private native void npPauseGameLoop(long iNative);
+	public void pauseGameLoop() { this.npPauseGameLoop(fNative); }
 
-	public static native void sDraw(int iWidth, int iHeight);
+	private native void npResumeGameLoop(long iNative);
+	public void resumeGameLoop() { this.npResumeGameLoop(fNative); }
+
+	private native void npOnTouch(long iNative,int pointerId, int action, float x, float y, float p);
+	public void onTouch(int pointerId, int action, float x, float y, float p)
+		{ this.npOnTouch(fNative, pointerId, action, x, y, p); }
+
+	private native void npDraw(long iNative, int iWidth, int iHeight);
 	}
 
 // =================================================================================================

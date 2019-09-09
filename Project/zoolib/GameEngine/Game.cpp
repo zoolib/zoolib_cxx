@@ -81,11 +81,13 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 Game::Game(const FileSpec& iFS,
 	const ZP<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
 	bool iPreferProcessedArt, bool iPreferSmallArt,
-	const ZP<SoundMeister>& iSoundMeister)
+	const ZP<SoundMeister>& iSoundMeister,
+	const ZP<Callable_Void>& iHaptic)
 :	fTimestamp_LatestDrawn(0)
 ,	fTimestamp_ToDraw(0)
 ,	fNookScope(new NookScope)
 ,	fSoundMeister(iSoundMeister)
+,	fHaptic(iHaptic)
 ,	fNextEra(1)
 ,	fAccumulated(0)
 	{
@@ -353,7 +355,7 @@ ZP<Rendered> Game::pCrank(double iInterval, const vector<int>* iKeyDowns)
 	InChannel theInChannel(this->GetGameSize(), iKeyDowns, fNookScope);
 	fNookScope->NewEra();
 
-	OutChannel theOutChannel(fRootMap, fAssetCatalog, fFontCatalog, fSoundMeister);
+	OutChannel theOutChannel(fRootMap, fAssetCatalog, fFontCatalog, fSoundMeister, fHaptic);
 
 	iInterval *= spGameRate;
 	fAccumulated += iInterval;

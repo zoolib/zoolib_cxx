@@ -63,7 +63,8 @@ public:
 		const Map& iRootMap,
 		const ZP<AssetCatalog>& iAssetCatalog,
 		const ZP<FontCatalog>& iFontCatalog,
-		const ZP<SoundMeister>& iSoundMeister);
+		const ZP<SoundMeister>& iSoundMeister,
+		const ZP<Callable_Void>& iHaptic);
 
 	~OutChannel();
 
@@ -76,6 +77,7 @@ public:
 	const ZP<AssetCatalog> fAssetCatalog;
 	const ZP<FontCatalog> fFontCatalog;
 	const ZP<SoundMeister> fSoundMeister;
+	const ZP<Callable_Void> fHaptic;
 
 private:
 	mutable std::vector<ZP<TouchListener> > fTLs;

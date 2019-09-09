@@ -31,7 +31,8 @@ public:
 	Game(const FileSpec& iFS,
 		const ZP<Callable_TextureFromPixmap>& iCallable_TextureFromPixmap,
 		bool iPreferProcessedArt, bool iPreferSmallArt,
-		const ZP<SoundMeister>& iSoundMeister);
+		const ZP<SoundMeister>& iSoundMeister,
+		const ZP<Callable_Void>& iHaptic);
 
 	virtual ~Game();
 
@@ -88,6 +89,8 @@ private:
 
 	ZP<SoundMeister> fSoundMeister;
 
+	ZP<Callable_Void> fHaptic;
+
 	std::vector<int> fKeyDowns;
 
 	std::vector<ZP<TouchListener> > fTLs;
@@ -105,7 +108,9 @@ private:
 	Cog fCog;
 	};
 
-ZP<Game> sMakeGame(const FileSpec& iResourceFS, bool iPreferSmallArt);
+ZP<Game> sMakeGame(const FileSpec& iResourceFS, bool iPreferSmallArt,
+	const ZP<SoundMeister>& iSoundMeister,
+	const ZP<Callable_Void>& iHaptic);
 
 } // namespace GameEngine
 } // namespace ZooLib
