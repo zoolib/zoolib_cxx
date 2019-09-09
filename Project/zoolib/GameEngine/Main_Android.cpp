@@ -66,63 +66,74 @@ void JNI_OnUnload(JavaVM* vm, void* reserved)
 
 // =================================================================================================
 
-static ZP<GameEngine::Game> spGame;
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sInit(JNIEnv *env, jclass type, jstring iAPKPath_)
+#define JNIDEF(aa) extern "C" JNIEXPORT aa JNICALL
+
+JNIDEF(jlong)
+Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath)
     {
-    const char *iAPKPath = env->GetStringUTFChars(iAPKPath_, 0);
+	JNI::Env theEnv(env);
 
-    FileSpec resourceFS = sFileSpec_Zip(iAPKPath).Child("assets");
-    spGame = GameEngine::sMakeGame(resourceFS, false);
+	ZP<Callable_Void> theHaptic;
 
-    env->ReleaseStringUTFChars(iAPKPath_, iAPKPath);
+    FileSpec resourceFS = sFileSpec_Zip(JNI::sAsString(iAPKPath)).Child("assets");
+
+    ZP<GameEngine::Game> theGame = GameEngine::sMakeGame(resourceFS, false, null, theHaptic);
+    theGame->Retain();
+	return reinterpret_cast<jlong>(theGame.Get());
     }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sPauseGameLoop(JNIEnv *env, jclass type)
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
+	jlong iNative)
     {
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
-	spGame->Pause();
+	if (ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative))
+		theGame->Pause();
     }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sResumeGameLoop(JNIEnv *env, jclass type)
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
+	jlong iNative)
     {
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
-	spGame->Resume();
+	if (ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative))
+		theGame->Resume();
     }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sTearDown(JNIEnv *env, jclass type)
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npTearDown(JNIEnv *env, jobject ob,
+	jlong iNative)
     {
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
+	if (ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative))
+		theGame->Release();
     }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sSurfaceAndContextIsFresh(JNIEnv *env, jclass type)
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npSurfaceAndContextIsFresh(JNIEnv *env, jobject ob,
+	jlong iNative)
     {
 	JNI::Env theEnv(env);
 	ZLOGTRACE(eDebug);
-	spGame->ExternalPurgeHasOccurred();
+	if (ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative))
+		theGame->ExternalPurgeHasOccurred();
     }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sOnTouch(
-    JNIEnv *env, jclass type,
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npOnTouch(
+    JNIEnv *env, jobject ob,
+    jlong iNative,
     jint pointerId, jint action,
     jfloat x, jfloat y, jfloat p)
     {
 	JNI::Env theEnv(env);
+
+// 	if (ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative))
 
 	if (ZLOGF(w, eErr))
 		w << "pointerId: " << pointerId << ", action: " << action << ", x: " << x << ", y: " << y << ", p: " << p;
@@ -206,29 +217,31 @@ static void spUpdateTouches(
 	sTouches.clear();
 	}
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_org_zoolib_ViewModel_1Game_sDraw(
-    JNIEnv *env, jclass type,
+JNIDEF(void)
+Java_org_zoolib_ViewModel_1Game_npDraw(
+    JNIEnv *env, jobject ob,
+    jlong iNative,
     jint width, jint height)
     {
 	JNI::Env theEnv(env);
+
+	ZP<GameEngine::Game> theGame = reinterpret_cast<GameEngine::Game*>(iNative);
 
     const double loopStart = Time::sSystem();
 
     const GPoint backingSize = sGPoint(width, height);
 
-    spGame->Draw(loopStart, backingSize, null);
+    theGame->Draw(loopStart, backingSize, null);
 
     TouchSet theTouchesDown;
     TouchSet theTouchesMove;
     TouchSet theTouchesUp;
 
-    spUpdateTouches(backingSize, spGame->GetGameSize(),
+    spUpdateTouches(backingSize, theGame->GetGameSize(),
         spTouchesAll,
         theTouchesDown, theTouchesMove, theTouchesUp);
 
-    spGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
+    theGame->UpdateTouches(&theTouchesDown, &theTouchesMove, &theTouchesUp);
     }
 
 #endif // defined(__ANDROID__)
