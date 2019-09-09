@@ -14,7 +14,7 @@ namespace Pixels {
 #pragma mark -
 
 class Pixval2RGBA_Indexed
-	{             
+	{
 protected:
 	Pixval2RGBA_Indexed() {}
 	Pixval2RGBA_Indexed(const Pixval2RGBA_Indexed&) {}
