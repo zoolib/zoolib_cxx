@@ -44,8 +44,7 @@ GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString
 	{
 	GRect theBounds;
 	Rat accumulatedX = 0;
-	UTF32 priorCP;
-	bool isFirst = true;
+	ZQ<UTF32> priorCPQ;
 	for (string8::const_iterator iter = iString.begin(), end = iString.end();
 		/*no test*/; /*no inc*/)
 		{
@@ -58,18 +57,17 @@ GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString
 		iFontInfo->Measure(iScale, theCP, theRect, xAdvance);
 		if (not sIsEmpty(theRect))
 			{
-			if (isFirst)
+			if (not priorCPQ)
 				{
-				isFirst = false;
 				theBounds = sOffsettedX(theRect, accumulatedX);
 				}
 			else
 				{
-				if (ZQ<Rat> theKernQ = iFontInfo->QKern(iScale, priorCP, theCP))
+				if (ZQ<Rat> theKernQ = iFontInfo->QKern(iScale, *priorCPQ, theCP))
 					accumulatedX += *theKernQ;
 				theBounds |= sOffsettedX(theRect, accumulatedX);
 				}
-			priorCP = theCP;
+			priorCPQ = theCP;
 			}
 		accumulatedX += xAdvance;
 		}
