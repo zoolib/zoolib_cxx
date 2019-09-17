@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2011 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,33 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/HTTP_Connect.h"
+#ifndef __ZooLib_Server_h__
+#define __ZooLib_Server_h__ 1
+#include "zconfig.h"
 
-#include "zoolib/Chan_XX_Buffered.h"
-#include "zoolib/Net_Internet.h"
+#include "zoolib/Cancellable.h"
+#include "zoolib/Connection.h"
 
-//###include "zoolib/ZStreamerRWCon_SSL.h"
+#include "zoolib/Server/Roster.h"
+#include "zoolib/Server/Worker.h"
 
 namespace ZooLib {
-namespace HTTP {
 
 // =================================================================================================
-#pragma mark - HTTP::sQConnect
+#pragma mark - Server
 
-ZP<ChannerRWClose_Bin> sConnect(const std::string& iHost, uint16 iPort, bool iUseSSL)
+class Server
+:	public Counted
 	{
-	if (ZP<ChannerRWClose_Bin> theSR = sCall(sZP(new NetName_Internet(iHost, iPort))))
-		{
-//##		theComboQ->SetW(new ChanW_XX_Buffered<byte>(theComboQ->GetW()))
+public:
+	typedef ZP<Roster::Entry> ZP_Roster_Entry; // CW7
+	typedef Callable<void(ZP_Roster_Entry,ZP<ChannerRW<byte>>)> Callable_Connection;
 
-		if (not iUseSSL)
-			return theSR;
+	Server();
+	virtual ~Server();
 
-//##		if (ZP<ZStreamerRWCon> wrapped = sStreamerRWCon_SSL(theEP, theSW))
-//##			return Connection_t(wrapped, wrapped, new ChannerClose_RWCon(wrapped));
-		}
-	return null;
-	}
+// From Counted
+	virtual void Finalize();
 
-} // namespace HTTP
+// Our protocol
+	bool IsStarted();
+
+	void Start(ZP<Starter> iStarter,
+		ZP<Factory_ChannerRW_Bin> iFactory,
+		ZP<Cancellable> iCancellable,
+		ZP<Callable_Connection> iCallable_Connection);
+
+	void Stop();
+	void StopWait();
+
+	void KillConnections();
+	void KillConnectionsWait();
+
+	ZP<Factory_ChannerRW_Bin> GetFactory();
+
+	ZP<Callable_Connection> GetCallable_Connection();
+
+private:
+	bool pWork(ZP<Worker> iWorker);
+	void pWorkDetached(ZP<Worker> iWorker);
+
+	ZMtx fMtx;
+	ZCnd fCnd;
+
+	ZP<Factory_ChannerRW_Bin> fFactory;
+	ZP<Callable_Connection> fCallable_Connection;
+	ZP<Cancellable> fCancellable;
+	ZP<Roster> fRoster;
+
+	ZP<Worker> fWorker;
+	};
+
 } // namespace ZooLib
+
+#endif // __ZooLib_Server_h__

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
+Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,69 +18,89 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_HTTP_Content_h__
-#define __ZooLib_HTTP_Content_h__ 1
+#ifndef __ZooLib_HTTP_MIME_h__
+#define __ZooLib_HTTP_MIME_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Channer_Bin.h"
-#include "zoolib/HTTP.h"
+#include "zoolib/ChanR_Bin.h"
 
 namespace ZooLib {
-namespace HTTP {
+namespace MIME {
+
+// Character classification.
+bool sIs_LWS(char iChar);
 
 // =================================================================================================
-#pragma mark - ChanR_Bin_Chunked
+#pragma mark - MIME::ChanR_Bin_Header
 
-class ChanR_Bin_Chunked
+/** 
+Takes a source stream and reads until it sees an LFLF sequence, at which
+point it appears to be empty.
+RFC822 mandates the use of CRLF as the line terminating sequence and allows
+bare LF and CR sequences within lines. However I'm unclear on how useful or important this is.
+So this class completely strips CRs from the source stream. It also unfolds LF LWS sequences,
+replacing them with LWS */
+
+class ChanR_Bin_Header
 :	public ChanR_Bin
 	{
 public:
-	ChanR_Bin_Chunked(const ChanR_Bin& iChanR);
-	virtual ~ChanR_Bin_Chunked();
+	ChanR_Bin_Header(const ChanR_Bin& iChanR);
 
 // From ChanR_Bin
 	virtual size_t Read(byte* oDest, size_t iCount);
-	virtual size_t Readable();
+
+// Our protocol
+	void Reset();
 
 private:
 	const ChanR_Bin& fChanR;
-	uint64 fChunkSize;
-	bool fHitEnd;
+	enum EState
+		{
+		eInitial,
+		eReturn_LF_X,
+		eReturn_X,
+		eNormal,
+		eSeen_LF,
+		eSeen_LF_LF
+		};
+	EState fState;
+	byte fX;
 	};
 
 // =================================================================================================
-#pragma mark - ChanW_Bin_Chunked
+#pragma mark - ZMIME::ChanR_Bin_Line
 
-class ChanW_Bin_Chunked
-:	public ChanW_Bin
+/// Returns bytes from the real stream until an end of line is detected.
+
+class ChanR_Bin_Line
+:	public ChanR_Bin
 	{
 public:
-	ChanW_Bin_Chunked(size_t iBufferSize, const ChanW_Bin& iChanW);
-	ChanW_Bin_Chunked(const ChanW_Bin& iChanW);
-	virtual ~ChanW_Bin_Chunked();
+	ChanR_Bin_Line(const ChanR_Bin& iChanR);
 
-// From ChanW_Bin
-	virtual size_t Write(const byte* iSource, size_t iCount);
-	virtual void Flush();
+// From ChanR_Bin
+	virtual size_t Read(byte* oDest, size_t iCount);
+
+// Our protocol
+	void Reset();
+	bool HitLF() const;
+	bool WasEmpty() const;
 
 private:
-	void pFlush();
-
-	const ChanW_Bin& fChanW;
-	std::vector<byte> fBuffer;
-	size_t fBufferUsed;
+	const ChanR_Bin& fChanR;
+	enum EState
+		{
+		eReturn_X,
+		eNormal,
+		eSeen_LF
+		};
+	bool fEmpty;
+	EState fState;
+	byte fX;
 	};
 
-// =================================================================================================
-#pragma mark - sMakeContentChanner
-
-ZP<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZP<ChannerR_Bin> iChannerR);
-
-ZP<ChannerR_Bin> sMakeContentChanner(
-	const std::string& iMethod, int responseCode,
-	const Map& iHeader, const ZP<ChannerR_Bin>& iChannerR);
-
-} // namespace HTTP
+} // namespace ZMIME
 } // namespace ZooLib
 
-#endif // __ZooLib_HTTP_Requests_h__
+#endif // __ZooLib_HTTP_MIME_h__

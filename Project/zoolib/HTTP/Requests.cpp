@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/HTTP_Requests.h"
+#include "zoolib/HTTP/Requests.h"
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/ChanW_Bin_More.h"

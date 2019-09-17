@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
+Copyright (c) 2014 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,90 +18,70 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZooLib_Roster_h__
-#define __ZooLib_Roster_h__ 1
+#ifndef __ZooLib_HTTP_Content_h__
+#define __ZooLib_HTTP_Content_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
-#include "zoolib/Compat_NonCopyable.h"
+#include "zoolib/Channer_Bin.h"
 
-#include <set>
+#include "zoolib/HTTP/HTTP.h"
 
 namespace ZooLib {
+namespace HTTP {
 
 // =================================================================================================
-#pragma mark - Roster
+#pragma mark - ChanR_Bin_Chunked
 
-class Roster
-:	public Counted
-,	NonCopyable
+class ChanR_Bin_Chunked
+:	public ChanR_Bin
 	{
 public:
-	class Entry;
+	ChanR_Bin_Chunked(const ChanR_Bin& iChanR);
+	virtual ~ChanR_Bin_Chunked();
 
-	Roster();
-
-	Roster(const ZP<Callable_Void>& iCallable_Change,
-		const ZP<Callable_Void>& iCallable_Gone);
-
-	virtual ~Roster();
-
-// From Counted
-	virtual void Finalize();
-
-// Our protocol
-	ZP<Entry> MakeEntry();
-
-	ZP<Entry> MakeEntry(const ZP<Callable_Void>& iCallable_Broadcast,
-		const ZP<Callable_Void>& iCallable_Gone);
-	
-	void Broadcast();
-
-	size_t Count();
-	void Wait(size_t iCount);
-	bool WaitFor(double iTimeout, size_t iCount);
-	bool WaitUntil(double iDeadline, size_t iCount);
+// From ChanR_Bin
+	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual size_t Readable();
 
 private:
-	void pFinalizeEntry(Entry* iEntry, const ZP<Callable_Void>& iCallable_Gone);
-
-	ZMtx fMtx;
-	ZCnd fCnd;
-	std::set<Entry*> fEntries;
-	const ZP<Callable_Void> fCallable_Change;
-	const ZP<Callable_Void> fCallable_Gone;
-
-	friend class Entry;
+	const ChanR_Bin& fChanR;
+	uint64 fChunkSize;
+	bool fHitEnd;
 	};
 
 // =================================================================================================
-#pragma mark - Roster::Entry
+#pragma mark - ChanW_Bin_Chunked
 
-class Roster::Entry
-:	public Counted
-,	NonCopyable
+class ChanW_Bin_Chunked
+:	public ChanW_Bin
 	{
-private:
-	Entry(
-		const ZP<Roster>& iRoster,
-		const ZP<Callable_Void>& iCallable_Broadcast,
-		const ZP<Callable_Void>& iCallable_Gone);
-
 public:
-	virtual ~Entry();
+	ChanW_Bin_Chunked(size_t iBufferSize, const ChanW_Bin& iChanW);
+	ChanW_Bin_Chunked(const ChanW_Bin& iChanW);
+	virtual ~ChanW_Bin_Chunked();
 
-// From Counted
-	virtual void Finalize();
+// From ChanW_Bin
+	virtual size_t Write(const byte* iSource, size_t iCount);
+	virtual void Flush();
 
 private:
-	WP<Roster> fRoster;
+	void pFlush();
 
-	const ZP<Callable_Void> fCallable_Broadcast;
-	const ZP<Callable_Void> fCallable_Gone;
-
-	friend class Roster;
+	const ChanW_Bin& fChanW;
+	std::vector<byte> fBuffer;
+	size_t fBufferUsed;
 	};
 
+// =================================================================================================
+#pragma mark - sMakeContentChanner
+
+ZP<ChannerR_Bin> sMakeContentChanner(const Map& iHeader, ZP<ChannerR_Bin> iChannerR);
+
+ZP<ChannerR_Bin> sMakeContentChanner(
+	const std::string& iMethod, int responseCode,
+	const Map& iHeader, const ZP<ChannerR_Bin>& iChannerR);
+
+} // namespace HTTP
 } // namespace ZooLib
 
-#endif // __ZooLib_Roster_h__
+#endif // __ZooLib_HTTP_Requests_h__
