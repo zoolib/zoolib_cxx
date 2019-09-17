@@ -273,7 +273,7 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 
 #include <android/api-level.h>
 
-#if __ANDROID_API__ >= 21
+#if 1 // __ANDROID_API__ >= 21
 
 #include <stdatomic.h>
 
@@ -415,7 +415,7 @@ void sAtomic_Dec(ZAtomic_t* iAtomic)
 #define DEFINED_sAtomicPtr_CAS 1
 
 bool sAtomicPtr_CAS(void* iPtrAddress, void* iOldValue, void* iNewValue)
-	{ return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (int)iOldValue, (int)iNewValue); }
+	{ return sAtomic_CAS((ZAtomic_t*)iPtrAddress, (intptr_t)iOldValue, (intptr_t)iNewValue); }
 
 #endif
 // -----------------------------------------------
