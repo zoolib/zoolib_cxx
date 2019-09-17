@@ -484,7 +484,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 	else if (ZQ<int64> asIntQ = sQCoerceInt(iPPT))
 		{
 		s.Begin("integer");
-			sEWritef(s, "%lld", *asIntQ);
+			sEWritef(s, "%lld", (long long)*asIntQ);
 		s.End("integer");
 		}
 	else if (ZQ<double> asDoubleQ = sQCoerceRat(iPPT))
