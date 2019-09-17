@@ -98,7 +98,7 @@ static void spSetSocketOptions(int iSocket)
 static bool spCanUse_MSG_NOSIGNAL = false;
 static bool spChecked_MSG_NOSIGNAL = false;
 
-int Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
+ssize_t Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{
 	if (spCanUse_MSG_NOSIGNAL)
 		{
@@ -125,7 +125,7 @@ int Net_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 		}
 	}
 
-int Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
+ssize_t Net_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 	{
 	if (spCanUse_MSG_NOSIGNAL)
 		{
