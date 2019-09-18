@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZStdInt.h"
 
+#include <memory> // For std::pair
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -85,6 +87,24 @@ const struct null_t
 // private ctors that would otherwise be identical.
 
 const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
+
+// =================================================================================================
+// Assuming 'type* ptr;' sConst(ptr) is a terser form of (type*)ptr.
+
+template <class T>
+const T* sConst(const T* iT) { return iT; }
+
+template <class T>
+const T* sConst(T* iT) { return iT; }
+
+// =================================================================================================
+// Assuming 'type& ref;' sConst(ref) is a terser form of (type&)(ref).
+
+template <class T>
+const T& sConst(const T& iT) { return iT; }
+
+template <class T>
+const T& sConst(T& iT) { return iT; }
 
 // =================================================================================================
 // Assuming 'const type* ptr;' sNonConst(ptr) is a terser form of const_cast<type*>(ptr).
@@ -214,6 +234,11 @@ const struct
 template <bool B, class T = void> struct EnableIfC {};
 
 template <class T> struct EnableIfC<true, T> { typedef T type; };
+
+// =================================================================================================
+#pragma mark - PaC (PointerAndCount)
+
+template <class P> using PaC = std::pair<P*,size_t>;
 
 } // namespace ZooLib
 
