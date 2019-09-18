@@ -73,6 +73,102 @@ std::string sAsString(jstring s);
 
 std::string sAsString(JNIEnv *env, jstring s);
 
+jstring sAsJString(const std::string& iString);
+
+jstring sAsJString(JNIEnv *env, const std::string& iString);
+
+// =================================================================================================
+#pragma mark -
+
+template <class Array_p>
+struct ArrayAccessors;
+
+#define MACRO_ArrayAccessors(jtype, jname) \
+\
+template <> \
+struct ArrayAccessors<jtype##Array> \
+	{ \
+	typedef jtype jtype_t; \
+	typedef jtype##Array jArray_t; \
+\
+	static jtype_t* sGetElements(JNIEnv* env, jArray_t array) \
+		{ return env->Get##jname##ArrayElements(array, nullptr); } \
+\
+	static const jtype_t* sGetConstElements(JNIEnv* env, jArray_t array) \
+		{ return env->Get##jname##ArrayElements(array, nullptr); } \
+\
+	static void sRelease(JNIEnv* env, jArray_t array, jtype_t* ptr) \
+		{ env->Release##jname##ArrayElements(array, ptr, JNI_COMMIT); } \
+\
+	static void sRelease(JNIEnv* env, jArray_t array, const jtype_t* ptr) \
+		{ env->Release##jname##ArrayElements(array, sNonConst(ptr), JNI_ABORT); } \
+	};
+
+MACRO_ArrayAccessors(jboolean, Boolean)
+MACRO_ArrayAccessors(jbyte, Byte)
+MACRO_ArrayAccessors(jchar, Char)
+MACRO_ArrayAccessors(jshort, Short)
+MACRO_ArrayAccessors(jint, Int)
+MACRO_ArrayAccessors(jlong, Long)
+MACRO_ArrayAccessors(jfloat, Float)
+MACRO_ArrayAccessors(jdouble, Double)
+
+template <class Array_p>
+class JArray : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
+	{
+	typedef ArrayAccessors<Array_p> AA;
+	typedef PaC<typename AA::jtype_t> PaC_t;
+
+	Array_p fArray;
+
+	static PaC_t spGetPaC(JNIEnv* env, Array_p iArray)
+		{
+		if (iArray)
+			return PaC_t(AA::sGetElements(env, iArray), env->GetArrayLength(iArray));
+		return PaC_t(nullptr, 0);
+		}
+
+public:
+	JArray(Array_p iArray)
+	:	PaC_t(spGetPaC(EnvTV::sGet(), iArray))
+	,	fArray(iArray)
+		{}
+
+	~JArray()
+		{
+		if (fArray)
+			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
+		}
+	};
+
+template <class Array_p>
+class JConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
+	{
+	typedef ArrayAccessors<Array_p> AA;
+	typedef PaC<const typename AA::jtype_t> PaC_t;
+
+	Array_p fArray;
+
+	static PaC_t spGetPaC(JNIEnv* env, Array_p iArray)
+		{
+		if (iArray)
+			return PaC_t(sConst(AA::sGetElements(env, iArray)), env->GetArrayLength(iArray));
+		return PaC_t(nullptr, 0);
+		}
+
+public:
+	JConstArray(Array_p iArray)
+	:	PaC_t(spGetPaC(EnvTV::sGet(), iArray))
+	,	fArray(iArray)
+		{}
+
+	~JConstArray()
+		{
+		if (fArray)
+			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
+		}
+	};
+
 } // namespace JNI
 } // namespace ZooLib
 

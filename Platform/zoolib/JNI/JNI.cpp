@@ -114,5 +114,11 @@ std::string sAsString(JNIEnv *env, jstring s)
 	return result;
 	}
 
+jstring sAsJString(const std::string& iString)
+	{ return sAsJString(EnvTV::sGet(), iString); }
+
+jstring sAsJString(JNIEnv *env, const std::string& iString)
+	{ return env->NewStringUTF(iString.data()); }
+
 } // namespace JNI
 } // namespace ZooLib
