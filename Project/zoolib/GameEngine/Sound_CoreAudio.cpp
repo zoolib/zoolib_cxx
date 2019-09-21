@@ -9,7 +9,6 @@
 #include "zoolib/Util_STL_map.h"
 
 #include "zoolib/ZMACRO_foreach.h"
-#include "zoolib/ZThread_pthread_more.h"
 
 #include <AudioToolbox/AudioToolbox.h>
 
