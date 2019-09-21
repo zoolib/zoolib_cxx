@@ -60,14 +60,14 @@ void sWaitTillAllThreadsExit()
 		}
 	}
 
-static ZAtomic_t spInitCount;
+static int spInitCount;
 
 InitHelper::InitHelper()
-	{ sAtomic_Inc(&spInitCount); }
+	{ ++spInitCount; }
 
 InitHelper::~InitHelper()
 	{
-	if (sAtomic_DecAndTest(&spInitCount) && spDontTearDown)
+	if (0 == --spInitCount && spDontTearDown)
 		sWaitTillAllThreadsExit();
 	}
 
