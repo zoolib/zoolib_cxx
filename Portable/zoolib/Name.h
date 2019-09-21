@@ -169,7 +169,7 @@ template <> struct RelopsTraits_HasEQ<Name> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Name> : public RelopsTraits_Has {};
 
 template <>
-inlin int sCompare_T(const Name& iL, const Name& iR)
+inline int sCompare_T(const Name& iL, const Name& iR)
 	{ return iL.Compare(iR); }
 
 inline bool sIsEmpty(const Name& iName)
