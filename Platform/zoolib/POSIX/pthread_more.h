@@ -18,48 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThread_pthread_more_h__
-#define __ZThread_pthread_more_h__
+#ifndef __ZooLib_POSIX_pthread_more_h__
+#define __ZooLib_POSIX_pthread_more_h__
 #include "zconfig.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(POSIX)
+
 #include "zoolib/ZThread_pthread.h"
-
-#if ZCONFIG_API_Enabled(Thread_pthread)
-
 #include "zoolib/ZQ.h"
 
 #include <string>
 
 namespace ZooLib {
-namespace ZThread_pthread {
+namespace POSIX {
 
 // =================================================================================================
 #pragma mark - sQGetName
 
-ZQ<std::string> sQGetName();
+ZQ<std::string> sQGetThreadName();
 
 // =================================================================================================
-#pragma mark - SaveSetRestoreName
+#pragma mark - SaveSetRestoreThreadName
 
-class SaveSetRestoreName
+class SaveSetRestoreThreadName
 	{
 public:
-	SaveSetRestoreName(const std::string& iName);
-	SaveSetRestoreName(const char* iName);
-	~SaveSetRestoreName();
+	SaveSetRestoreThreadName(const std::string& iName);
+	SaveSetRestoreThreadName(const char* iName);
+	~SaveSetRestoreThreadName();
 
 private:
 	const ZQ<std::string> fQPrior;
 	};
 
 // =================================================================================================
-#pragma mark - SaveSetRestorePriority
+#pragma mark - SaveSetRestoreThreadPriority
 
-class SaveSetRestorePriority
+class SaveSetRestoreThreadPriority
 	{
 public:
-	SaveSetRestorePriority(int iPriority);
-	~SaveSetRestorePriority();
+	SaveSetRestoreThreadPriority(int iPriority);
+	~SaveSetRestoreThreadPriority();
 
 private:
 	struct sched_param fSchedPrior;
@@ -67,18 +68,18 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - SaveSetRestorePriority_Max
+#pragma mark - SaveSetRestoreThreadPriority_Max
 
-class SaveSetRestorePriority_Max
-:	public SaveSetRestorePriority
+class SaveSetRestoreThreadPriority_Max
+:	public SaveSetRestoreThreadPriority
 	{
 public:
-	SaveSetRestorePriority_Max();
+	SaveSetRestoreThreadPriority_Max();
 	};
 
-} // namespace ZThread_pthread
+} // namespace POSIX
 } // namespace ZooLib
 
-#endif // ZCONFIG_API_Enabled(Thread_pthread)
+#endif // ZCONFIG_SPI_Enabled(POSIX)
 
-#endif // __ZThread_pthread_more_h__
+#endif // __ZooLib_POSIX_pthread_more_h__

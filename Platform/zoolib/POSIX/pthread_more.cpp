@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZThread_pthread_more.h"
+#include "zoolib/POSIX/pthread_more.h"
 
-#if ZCONFIG_API_Enabled(Thread_pthread)
+#if ZCONFIG_SPI_Enabled(POSIX)
 
 #include "zoolib/Memory.h" // For sMemZero
 
 namespace ZooLib {
-namespace ZThread_pthread {
+namespace POSIX {
 
 // =================================================================================================
-#pragma mark - sQGetName
+#pragma mark - sQGetThreadName
 
-ZQ<std::string> sQGetName()
+ZQ<std::string> sQGetThreadName()
 	{
 	#if not defined(__ANDROID_API__)
 		char buffer[256];
@@ -41,32 +41,32 @@ ZQ<std::string> sQGetName()
 	}
 
 // =================================================================================================
-#pragma mark - SaveSetRestoreName
+#pragma mark - SaveSetRestoreThreadName
 
-SaveSetRestoreName::SaveSetRestoreName(const std::string& iName)
-:	fQPrior(sQGetName())
+SaveSetRestoreThreadName::SaveSetRestoreThreadName(const std::string& iName)
+:	fQPrior(sQGetThreadName())
 	{
 	if (fQPrior)
-		sSetName(iName.c_str());
+		ZThread_pthread::sSetName(iName.c_str());
 	}
 
-SaveSetRestoreName::SaveSetRestoreName(const char* iName)
-:	fQPrior(sQGetName())
+SaveSetRestoreThreadName::SaveSetRestoreThreadName(const char* iName)
+:	fQPrior(sQGetThreadName())
 	{
 	if (fQPrior)
-		sSetName(iName);
+		ZThread_pthread::sSetName(iName);
 	}
 
-SaveSetRestoreName::~SaveSetRestoreName()
+SaveSetRestoreThreadName::~SaveSetRestoreThreadName()
 	{
 	if (fQPrior)
-		sSetName(fQPrior->c_str());
+		ZThread_pthread::sSetName(fQPrior->c_str());
 	}
 
 // =================================================================================================
-#pragma mark - SaveSetRestorePriority
+#pragma mark - SaveSetRestoreThreadPriority
 
-SaveSetRestorePriority::SaveSetRestorePriority(int iPriority)
+SaveSetRestoreThreadPriority::SaveSetRestoreThreadPriority(int iPriority)
 	{
 	pthread_getschedparam(pthread_self(), &fPolicyPrior, &fSchedPrior);
 
@@ -78,19 +78,19 @@ SaveSetRestorePriority::SaveSetRestorePriority(int iPriority)
 	pthread_setschedparam(pthread_self(), SCHED_RR, &schedNew);
 	}
 
-SaveSetRestorePriority::~SaveSetRestorePriority()
+SaveSetRestoreThreadPriority::~SaveSetRestoreThreadPriority()
 	{
 	pthread_setschedparam(pthread_self(), fPolicyPrior, &fSchedPrior);
 	}
 
 // =================================================================================================
-#pragma mark - SaveSetRestorePriority_Max
+#pragma mark - SaveSetRestoreThreadPriority_Max
 
-SaveSetRestorePriority_Max::SaveSetRestorePriority_Max()
-:	SaveSetRestorePriority(sched_get_priority_max(SCHED_RR))
+SaveSetRestoreThreadPriority_Max::SaveSetRestoreThreadPriority_Max()
+:	SaveSetRestoreThreadPriority(sched_get_priority_max(SCHED_RR))
 	{}
 
-} // namespace ZThread_pthread
+} // namespace POSIX
 } // namespace ZooLib
 
-#endif // ZCONFIG_API_Enabled(Thread_pthread)
+#endif // ZCONFIG_SPI_Enabled(POSIX)

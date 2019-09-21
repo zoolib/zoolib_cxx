@@ -18,7 +18,6 @@ set (CppFiles
 	${ZDIR}/zoolib/ZDebug.cpp
 	${ZDIR}/zoolib/ZThread.cpp
 	${ZDIR}/zoolib/ZThread_pthread.cpp
-	${ZDIR}/zoolib/ZThread_pthread_more.cpp
 	${ZDIR}/zoolib/ZThread_Win.cpp
 )
 
