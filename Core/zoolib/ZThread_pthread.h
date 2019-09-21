@@ -86,7 +86,7 @@ void sSetName(const char* iName);
 namespace ZTSS_pthread {
 
 typedef pthread_key_t Key;
-typedef const void* Value;
+typedef void* Value;
 
 Key sCreate();
 void sFree(Key iKey);

@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Time.h"
 
+#include "zoolib/Atomic.h"
 #include "zoolib/Compare.h"
 
-#include "zoolib/ZAtomic.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For countof
 
@@ -117,7 +117,7 @@ double sSystem()
 	{
 #if 0
 #elif defined(__MACH__)
-	static bool sInited;
+	static std::atomic<bool> sInited;
 	static double sRatio;
 	if (not sInited)
 		{
@@ -125,7 +125,6 @@ double sSystem()
 		::mach_timebase_info(&theTBI);
 		sRatio = double(theTBI.numer) / double(theTBI.denom) / 1e9;
 		sInited = true;
-		sAtomic_Barrier();
 		}
 
 	return double(::mach_absolute_time()) * sRatio;

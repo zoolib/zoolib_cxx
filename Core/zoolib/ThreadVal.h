@@ -40,12 +40,12 @@ class ThreadVal
 public:
 	ThreadVal()
 	:	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), this); }
+		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
 
 	ThreadVal(const ThreadVal& iOther)
 	:	inherited(iOther)
 	,	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), this); }
+		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
 
 	~ThreadVal()
 		{ ZTSS::sSet(spKey(), fPrior); }
@@ -59,7 +59,7 @@ public:
 	ThreadVal(const Type_p& iVal)
 	:	inherited(iVal)
 	,	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), this); }
+		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
 
 	ThreadVal& operator=(const Type_p& iVal)
 		{
@@ -113,11 +113,11 @@ public:
 
 private:
 	static ThreadVal* spGet()
-		{ return ((ThreadVal*)(ZTSS::sGet(spKey()))); }
+		{ return static_cast<ThreadVal*>(ZTSS::sGet(spKey())); }
 
 	static ZTSS::Key spKey()
 		{
-		static ZAtomicPtr_t spKey;
+		static std::atomic<ZTSS::Key> spKey;
 		return ZTSS::sKey(spKey);
 		}
 

@@ -8,10 +8,10 @@
 	#include "zoolib/Compat_operator_bool.h"
 #endif
 
+#include "zoolib/Atomic.h" // For sAtomicPtr_CAS
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/Not.h"
 
-#include "zoolib/ZAtomic.h" // For sAtomic_CASPtr
 #include "zoolib/ZTypes.h" // For Adopt_T
 
 namespace ZooLib {
@@ -495,7 +495,7 @@ public:
 
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
-		if (not sAtomic_CASPtr(&fPtr, iPrior, iNew))
+		if (not sAtomicPtr_Cas(&fPtr, iPrior, iNew))
 			return false;
 		spRetain(fPtr);
 		spRelease(iPrior);

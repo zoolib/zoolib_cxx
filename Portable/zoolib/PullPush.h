@@ -195,7 +195,6 @@ PullPushPair<EE> sMakePullPushPair()
 
 // ----------
 
-
 template <class Pull_p, class Push_p>
 void sRunPullPush_Channer(
 	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,

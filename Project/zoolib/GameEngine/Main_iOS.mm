@@ -164,7 +164,7 @@ FileSpec spResourceFS()
 
 	self.view = fView_Outer;
 
-	fGame = sMakeGame(spResourceFS(), false);
+	fGame = sMakeGame(spResourceFS(), false, null, null);
 
 	fGame->Resume();
 

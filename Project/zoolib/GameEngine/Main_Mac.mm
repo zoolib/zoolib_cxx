@@ -110,7 +110,7 @@ static FileSpec spResourceFS()
 
 	self = [super initWithFrame:frameRect pixelFormat:pf];
 
-	fGame = sMakeGame(spResourceFS(), false);
+	fGame = sMakeGame(spResourceFS(), false, null, null);
 
 	fGame->Resume();
 

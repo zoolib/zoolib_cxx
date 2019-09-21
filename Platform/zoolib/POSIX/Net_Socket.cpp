@@ -361,7 +361,8 @@ bool NetEndpoint_Socket::DisconnectRead(double iTimeout)
 	{
 	for (;;)
 		{
-		const ssize_t result = Net_Socket::sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
+		char buf[sStackBufferSize];
+		const ssize_t result = Net_Socket::sReceive(fSocketFD, buf, sizeof(buf));
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.

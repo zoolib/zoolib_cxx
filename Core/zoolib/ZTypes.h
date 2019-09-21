@@ -32,18 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 // =================================================================================================
-// There are several places where we need a buffer for some other code
-// to dump data into, the content of which we don't care about. Rather
-// than having multiple static buffers, or requiring wasteful use of
-// stack space (a problem on MacOS 9) we instead have a shared garbage
-// buffer. The key thing to remember in using it is that it must never
-// be read from -- there's no way to know what other code is also using it.
-
-extern char sGarbageBuffer[4096];
-
-// =================================================================================================
 // In many places we need a stack-based buffer. Ideally they'd be quite large
-// but on MacOS 9 we don't want to blow the 24K - 32K that's normally available.
+// but on MacClassic we don't want to blow the 24K - 32K that's normally available.
 // This constant is 4096 on most platforms, 256 on MacOS 9.
 
 #if ZCONFIG_SPI_Enabled(MacClassic)

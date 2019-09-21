@@ -22,10 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Singleton_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Atomic.h"
 #include "zoolib/Deleter.h"
-
-#include "zoolib/ZAtomic.h"
-#include "zoolib/ZDebug.h"
 
 namespace ZooLib {
 
@@ -35,19 +33,22 @@ namespace ZooLib {
 template <class Type_p, class Tag_p>
 Type_p& sSingleton()
 	{
-	static Type_p* spType_p;
+	static std::atomic<Type_p*> spType_p;
 	if (not spType_p)
 		{
-		Type_p* theType_p = new Type_p();
-		// The parens after Type_p are *essential*. If Type_p is POD then *theType_p will still
-		// be properly default initialized -- without the parens that does not happen.
-		// And yes, I've seen it happen in real life.
-		if (not sAtomicPtr_CAS(&spType_p, nullptr, theType_p))
-			delete theType_p;
+		Type_p* expected = nullptr;
+		Type_p* newValue = new Type_p();
+		if (not std::atomic_compare_exchange_strong_explicit(
+			&spType_p, &expected, newValue,
+			std::memory_order_relaxed, std::memory_order_relaxed))
+			{
+			delete newValue;
+			}
 		else
-			static Deleter<Type_p> deleter(spType_p);
+			{
+			static Deleter<Type_p> deleter(*(Type_p**)&spType_p);
+			}
 		}
-	ZAssert(spType_p);
 	return *spType_p;
 	}
 

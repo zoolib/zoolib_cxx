@@ -108,17 +108,17 @@ void sStartVoid(ProcVoid_t iProcVoid)
 
 namespace ZTSS {
 
-ZTSS::Key sKey(ZAtomicPtr_t& ioStorage)
+Key sKey(std::atomic<Key>& ioStorage)
 	{
-	ZAssertCompile(sizeof(ZAtomicPtr_t) >= sizeof(ZTSS::Key));
-
-	if (not ZAtomicPtr_Get(&ioStorage))
-		sAtomicPtr_CAS(&ioStorage, 0, (void*)(intptr_t)(ZTSS::sCreate()));
-	return static_cast<ZTSS::Key>(reinterpret_cast<intptr_t>(ZAtomicPtr_Get(&ioStorage)));
+	if (not ioStorage)
+		{
+		Key expected = 0;
+		std::atomic_compare_exchange_strong_explicit(&ioStorage, &expected, ZTSS::sCreate(),
+			std::memory_order_relaxed, std::memory_order_relaxed);
+		}
+	return ioStorage;
 	}
 
 } // namespace ZTSS
-
-ZTSS::Key sKey(ZAtomicPtr_t& ioKey);
 
 } // namespace ZooLib

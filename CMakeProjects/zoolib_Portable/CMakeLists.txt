@@ -81,7 +81,7 @@ add_library(
 	# Specifies the name of the library.
 	ZooLib_Portable
 
-	# Sets the library as a shared library.
+	# STATIC or SHARED
 	STATIC
 
 	${CppFiles}

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_CountedWithoutFinalize_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ThreadSafe.h"
+#include "zoolib/Atomic.h"
 
 namespace ZooLib {
 
@@ -35,13 +35,13 @@ public:
 	CountedWithoutFinalize();
 	virtual ~CountedWithoutFinalize();
 
-	void Retain() { ZMACRO_ThreadSafe_Inc(fRefCount); }
+	void Retain() { sAtomic_Inc(&fRefCount); }
 	void Release();
 	bool IsShared() const;
 	bool IsReferenced() const;
 
 private:
-	ThreadSafe_t fRefCount;
+	ZAtomic_t fRefCount;
 	};
 
 // =================================================================================================

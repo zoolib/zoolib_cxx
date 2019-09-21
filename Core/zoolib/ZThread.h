@@ -51,16 +51,6 @@ namespace ZooLib {
 		typedef ZSemNoTimeout_pthread ZSemNoTimeout;
 	#endif
 
-#elif ZCONFIG_API_Enabled(Thread_MacMP)
-
-	namespace ZThread { using namespace ZThread_MacMP; }
-	namespace ZTSS { using namespace ZTSS_MacMP; }
-
-	typedef ZCnd_MacMP ZCnd;
-	typedef ZMtx_MacMP ZMtx;
-
-	typedef ZSem_MacMP ZSem;
-
 #elif ZCONFIG_API_Enabled(Thread_Win)
 
 	namespace ZThread { using namespace ZThread_Win; }
@@ -72,15 +62,6 @@ namespace ZooLib {
 	typedef ZSem_Win ZSem;
 	typedef ZSem_Win ZSemNoTimeout;
 
-#elif ZCONFIG_API_Enabled(Thread_boost)
-
-	namespace ZThread {}
-	namespace ZTSS {}
-
-	typedef ZCnd_boost ZCnd;
-	typedef ZMtx_boost ZMtx;
-	typedef ZSem_boost ZSem;
-
 #endif
 
 // =================================================================================================
@@ -88,7 +69,7 @@ namespace ZooLib {
 
 namespace ZTSS {
 
-ZTSS::Key sKey(ZAtomicPtr_t& ioStorage);
+Key sKey(std::atomic<Key>& ioStorage);
 
 } // namespace ZTSS
 

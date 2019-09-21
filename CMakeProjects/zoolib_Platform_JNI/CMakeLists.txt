@@ -12,7 +12,7 @@ add_library(
 	# Specifies the name of the library.
 	ZooLib_Platform_JNI
 
-	# Sets the library as a shared library.
+	# STATIC or SHARED
 	STATIC
 
 	${CppFiles}

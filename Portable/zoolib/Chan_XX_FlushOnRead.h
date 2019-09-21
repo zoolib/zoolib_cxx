@@ -22,10 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Chan_XX_FlushOnRead_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Atomic.h"
 #include "zoolib/Channer.h"
-//#include "zoolib/ChanR.h"
-//#include "zoolib/ChanW.h"
-#include "zoolib/ThreadSafe.h"
 
 #include "zoolib/ZThread.h"
 
@@ -47,7 +45,7 @@ public:
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		if (ZMACRO_ThreadSafe_Swap(fLastWasWrite, 0))
+		if (sAtomic_Swap(&fLastWasWrite, 0))
 			{
 			ZAcqMtx acq(fMutex);
 			sFlush(fChanW);
@@ -57,7 +55,7 @@ public:
 
 	virtual size_t Readable()
 		{
-		if (ZMACRO_ThreadSafe_Swap(fLastWasWrite, 0))
+		if (sAtomic_Swap(&fLastWasWrite, 0))
 			{
 			ZAcqMtx acq(fMutex);
 			sFlush(fChanW);
@@ -68,13 +66,13 @@ public:
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		ZMACRO_ThreadSafe_Set(fLastWasWrite, 1);
+		sAtomic_Set(&fLastWasWrite, 1);
 		ZAcqMtx acq(fMutex);
 		return sWrite(fChanW, iSource, iCount);
 		}
 
 protected:
-	ThreadSafe_t fLastWasWrite;
+	ZAtomic_t fLastWasWrite;
 	ZMtx fMutex;
 	const ChanR<EE>& fChanR;
 	const ChanW<EE>& fChanW;

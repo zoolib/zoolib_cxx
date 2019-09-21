@@ -39,7 +39,7 @@ ZP<LogMeister> sLogMeister;
 
 static ZTSS::Key spKey()
 	{
-	static ZAtomicPtr_t spKey;
+	static std::atomic<ZTSS::Key> spKey;
 	return ZTSS::sKey(spKey);
 	}
 

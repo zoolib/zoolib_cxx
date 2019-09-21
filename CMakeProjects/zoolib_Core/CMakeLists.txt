@@ -16,21 +16,19 @@ set (CppFiles
 	${ZDIR}/zoolib/Stringf.cpp
 	${ZDIR}/zoolib/Time.cpp
 	${ZDIR}/zoolib/Unicode.cpp
-	${ZDIR}/zoolib/ZAtomic.cpp
 	${ZDIR}/zoolib/ZByteSwap.cpp
 	${ZDIR}/zoolib/ZDebug.cpp
 	${ZDIR}/zoolib/ZThread.cpp
 	${ZDIR}/zoolib/ZThread_pthread.cpp
 	${ZDIR}/zoolib/ZThread_pthread_more.cpp
 	${ZDIR}/zoolib/ZThread_Win.cpp
-	${ZDIR}/zoolib/ZTypes.cpp
 )
 
 add_library(
 	# Specifies the name of the library.
 	ZooLib_Core
 
-	# Sets the library as a shared library.
+	# STATIC or SHARED
 	STATIC
 
 	${CppFiles}

@@ -33,20 +33,20 @@ CountedWithoutFinalize::CountedWithoutFinalize()
 
 CountedWithoutFinalize::~CountedWithoutFinalize()
 	{
-	ZAssertStopf(1, ZMACRO_ThreadSafe_Get(fRefCount) == 0,
-		"Non-zero refcount at destruction, it is %d", ZMACRO_ThreadSafe_Get(fRefCount));
+	ZAssertStopf(1, sAtomic_Get(&fRefCount) == 0,
+		"Non-zero refcount at destruction, it is %d", sAtomic_Get(&fRefCount));
 	}
 
 void CountedWithoutFinalize::Release()
 	{
-	if (ZMACRO_ThreadSafe_DecAndTest(fRefCount))
+	if (sAtomic_DecAndTest(&fRefCount))
 		delete this;
 	}
 
 bool CountedWithoutFinalize::IsShared() const
-	{ return ZMACRO_ThreadSafe_Get(fRefCount) > 1; }
+	{ return sAtomic_Get(&fRefCount) > 1; }
 
 bool CountedWithoutFinalize::IsReferenced() const
-	{ return ZMACRO_ThreadSafe_Get(fRefCount) > 0; }
+	{ return sAtomic_Get(&fRefCount) > 0; }
 
 } // namespace ZooLib
