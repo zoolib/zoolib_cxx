@@ -115,19 +115,9 @@ protected:
 	};
 
 // =================================================================================================
-#pragma mark - ZCndBase_Win
-
-typedef ZCndBase_T<ZMtx_Win, ZSem_Win> ZCndBase_Win;
-
-// =================================================================================================
-#pragma mark - ZMtxR_Win
-
-typedef ZMtxR_T<ZMtx_Win, ZCndBase_Win, ZThread_Win::ID, ZThread_Win::sID> ZMtxR_Win;
-
-// =================================================================================================
 #pragma mark - ZCnd_Win
 
-typedef ZCndR_T<ZMtxR_Win, ZCndBase_Win> ZCnd_Win;
+typedef ZCndBase_T<ZMtx_Win, ZSem_Win> ZCnd_Win;
 
 // =================================================================================================
 #pragma mark - ZSem_Win
