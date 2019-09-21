@@ -38,12 +38,13 @@ namespace ZooLib {
 	namespace ZThread { using namespace ZThread_pthread; }
 	namespace ZTSS { using namespace ZTSS_pthread; }
 
-	typedef ZCnd_pthread ZCnd;
-	typedef ZMtxChecked_pthread ZMtx;
-
-// If lighterweight implementation is desired:
-//	typedef ZCndBase_pthread ZCnd
-//	typedef ZMtx_pthread ZMtx;
+	#if ZCONFIG_pthread_Debug
+		typedef ZCnd_pthread ZCnd;
+		typedef ZMtxChecked_pthread ZMtx;
+	#else
+		typedef ZCndBase_pthread ZCnd
+		typedef ZMtx_pthread ZMtx;
+	#endif
 
 	typedef ZSem_pthread ZSem;
 
