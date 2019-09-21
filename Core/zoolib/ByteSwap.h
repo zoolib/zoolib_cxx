@@ -136,7 +136,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 
-template <class T, size_t size_p = sizeof(T)>
+template <class T, int size_p = sizeof(T)>
 struct ByteSwapped_t
 	{ static T sSwapped(const T& iT); };
 
