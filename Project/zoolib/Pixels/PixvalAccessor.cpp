@@ -2,9 +2,37 @@
 
 #include "zoolib/Pixels/PixvalAccessor.h"
 
+#include "zoolib/ByteSwap.h"
 #include "zoolib/Memory.h"
-#include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
+
+// =================================================================================================
+
+namespace ZooLib {
+namespace { // anonymous
+
+int16 ZByteSwap_Read16(const void* iValueAddress)
+	{ return sByteSwapped(*static_cast<const int16*>(iValueAddress)); }
+
+int32 ZByteSwap_Read32(const void* iValueAddress)
+	{ return sByteSwapped(*static_cast<const int32*>(iValueAddress)); }
+
+int64 ZByteSwap_Read64(const void* iValueAddress)
+	{ return sByteSwapped(*static_cast<const int64*>(iValueAddress)); }
+
+void ZByteSwap_Write16(void* oValueAddress, int16 iValue)
+	{ *static_cast<int16*>(oValueAddress) = sByteSwapped(iValue); }
+
+void ZByteSwap_Write32(void* oValueAddress, int32 iValue)
+	{ *static_cast<int32*>(oValueAddress) = sByteSwapped(iValue); }
+
+void ZByteSwap_Write64(void* oValueAddress, int64 iValue)
+	{ *static_cast<int64*>(oValueAddress) = sByteSwapped(iValue); }
+
+} // anonymous namespace
+} // namespace ZooLib
+
+// =================================================================================================
 
 namespace ZooLib {
 namespace Pixels {

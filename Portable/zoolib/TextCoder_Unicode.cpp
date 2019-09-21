@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/TextCoder_Unicode.h"
 
+#include "zoolib/ByteSwap.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Memory.h"
 #include "zoolib/Unicode.h"
 
-#include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
 
 #include <string>
@@ -63,7 +63,7 @@ static void spEncodeUTF32Swapped(const UTF32* iSource, size_t iSourceCU, size_t*
 	const UTF32* localSource = iSource;
 	UTF32* localDest = static_cast<UTF32*>(oDest);
 	while (countToCopy--)
-		*localDest++ = ZByteSwap_Read32(localSource++);
+		*localDest++ = sByteSwapped(*localSource++);
 	}
 
 static bool spDecodeUTF32(
@@ -154,7 +154,7 @@ static bool spDecodeUTF32Swapped(
 			size_t skipped = 0;
 			while (countToCopy--)
 				{
-				UTF32 theCP = ZByteSwap_Read32(localSource++);
+				UTF32 theCP = sByteSwapped(*localSource++);
 				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				else
@@ -166,7 +166,7 @@ static bool spDecodeUTF32Swapped(
 			{
 			while (countToCopy--)
 				{
-				UTF32 theCP = ZByteSwap_Read32(localSource++);
+				UTF32 theCP = sByteSwapped(*localSource++);
 				if (Unicode::sIsValid(theCP))
 					*localDest++ = theCP;
 				}
@@ -259,7 +259,7 @@ static bool spDecodeUTF16Swapped(
 				UTF16* copyDest = buffer;
 				size_t countToMove = min(localSourceCU, kBufSize);
 				while (countToMove--)
-					*copyDest++ = ZByteSwap_Read16(copySource++);
+					*copyDest++ = sByteSwapped(*copySource++);
 
 				size_t countConsumed;
 				size_t countSkipped;
@@ -291,7 +291,7 @@ static bool spDecodeUTF16Swapped(
 				UTF16* copyDest = buffer;
 				size_t countToMove = min(localSourceCU, kBufSize);
 				while (countToMove--)
-					*copyDest++ = ZByteSwap_Read16(copySource++);
+					*copyDest++ = sByteSwapped(*copySource++);
 
 				size_t countConsumed;
 				size_t countGenerated;
@@ -356,7 +356,7 @@ static void spEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t*
 	UTF16* swapDest = static_cast<UTF16*>(oDest);
 	while (countGenerated--)
 		{
-		*swapDest = ZByteSwap_Read16(swapDest);
+		*swapDest = sByteSwapped(*swapDest);
 		++swapDest;
 		}
 	}

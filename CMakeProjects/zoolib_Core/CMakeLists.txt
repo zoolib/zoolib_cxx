@@ -6,7 +6,6 @@ set(ZDIR ${ZOOLIB_CXX}/Core)
 
 set (CppFiles
 	${ZDIR}/zoolib/Any.cpp
-	${ZDIR}/zoolib/ByteSwap.cpp
 	${ZDIR}/zoolib/ChanR_UTF.cpp
 	${ZDIR}/zoolib/ChanW_UTF.cpp
 	${ZDIR}/zoolib/Compare.cpp
@@ -16,7 +15,6 @@ set (CppFiles
 	${ZDIR}/zoolib/Stringf.cpp
 	${ZDIR}/zoolib/Time.cpp
 	${ZDIR}/zoolib/Unicode.cpp
-	${ZDIR}/zoolib/ZByteSwap.cpp
 	${ZDIR}/zoolib/ZDebug.cpp
 	${ZDIR}/zoolib/ZThread.cpp
 	${ZDIR}/zoolib/ZThread_pthread.cpp
