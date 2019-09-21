@@ -41,14 +41,9 @@ class Name
 public:
 	typedef CountedVal<string8> CountedString;
 
-	inline
-	Name()
-		{}
+	inline Name() {}
 
-	inline
-	Name(const Name& iOther)
-	:	fString(iOther.fString)
-		{}
+	inline Name(const Name& iOther) : fString(iOther.fString) {}
 
 	Name& operator=(const Name& iOther)
 		{
@@ -56,17 +51,11 @@ public:
 		return *this;
 		}
 
-	inline
-	~Name()
-		{}
+	inline ~Name() {}
 
-	Name(const char* iStatic)
-	:	fString(iStatic)
-		{}
+	Name(const char* iStatic) : fString(iStatic) {}
 
-	Name(const string8& iString)
-	:	fString(iString)
-		{}
+	Name(const string8& iString) : fString(iString) {}
 
 	Name(const ZP<CountedString>& iRefCountedString)
 	:	fString(sGet(iRefCountedString))
@@ -77,12 +66,10 @@ public:
 
 //	operator RefCountedString() const;
 
-	inline
-	bool operator<(const Name& iOther) const
+	inline bool operator<(const Name& iOther) const
 		{ return fString < iOther.fString; }
 
-	inline
-	bool operator==(const Name& iOther) const
+	inline bool operator==(const Name& iOther) const
 		{ return fString == iOther.fString; }
 
 	int Compare(const Name& iOther) const
@@ -100,23 +87,22 @@ private:
 	string8 fString;
 	};
 
-#else
+#elif not ZMACRO_NameUsesString
+
 class Name
 	{
 public:
 	typedef CountedVal<string8> CountedString;
 	typedef ZP<CountedString> RefCountedString;
 
-	inline
-	Name()
+	inline Name()
 	:	fIntPtr(0)
 	#if not ZCONFIG_Is64Bit
 	,	fIsCounted(false)
 	#endif
 		{}
 
-	inline
-	Name(const Name& iOther)
+	inline Name(const Name& iOther)
 	:	fIntPtr(iOther.fIntPtr)
 	#if not ZCONFIG_Is64Bit
 	,	fIsCounted(iOther.fIsCounted)
@@ -128,8 +114,7 @@ public:
 
 	Name& operator=(const Name& iOther);
 
-	inline
-	~Name()
+	inline ~Name()
 		{
 		if (CountedString* theCounted = this->pGetIfCounted())
 			spRelease(theCounted);
@@ -148,12 +133,10 @@ public:
 	operator string8() const;
 	operator RefCountedString() const;
 
-	inline
-	bool operator<(const Name& iOther) const
+	inline bool operator<(const Name& iOther) const
 		{ return this->Compare(iOther) < 0; }
 
-	inline
-	bool operator==(const Name& iOther) const
+	inline bool operator==(const Name& iOther) const
 		{ return this->Compare(iOther) == 0; }
 
 	int Compare(const Name& iOther) const;
@@ -170,10 +153,8 @@ private:
 
 	const char* pAsCharStar() const;
 
-	ZMACRO_Attribute_NoThrow
 	static void spRetain(const CountedString* iCounted);
 
-	ZMACRO_Attribute_NoThrow
 	static void spRelease(const CountedString* iCounted);
 
 	intptr_t fIntPtr;
@@ -188,16 +169,13 @@ template <> struct RelopsTraits_HasEQ<Name> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Name> : public RelopsTraits_Has {};
 
 template <>
-inline
-int sCompare_T(const Name& iL, const Name& iR)
+inlin int sCompare_T(const Name& iL, const Name& iR)
 	{ return iL.Compare(iR); }
 
-inline
-bool sIsEmpty(const Name& iName)
+inline bool sIsEmpty(const Name& iName)
 	{ return iName.IsEmpty(); }
 
-inline
-bool sNotEmpty(const Name& iName)
+inline bool sNotEmpty(const Name& iName)
 	{ return not sIsEmpty(iName); }
 
 } // namespace ZooLib

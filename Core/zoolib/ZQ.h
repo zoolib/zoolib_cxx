@@ -55,7 +55,6 @@ class ZQ
 		}
 
 public:
-	ZMACRO_Attribute_NoThrow
 	void swap(ZQ<T>& ioOther)
 		{
 		if (fHasValue)

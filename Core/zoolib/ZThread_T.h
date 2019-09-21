@@ -36,17 +36,11 @@ template <class Mtx>
 class ZAcquirer_T : NonCopyable
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZAcquirer_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
+	inline ZAcquirer_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZAcquirer_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
+	inline ZAcquirer_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZAcquirer_T() { fMtx.Release(); }
+	inline ~ZAcquirer_T() { fMtx.Release(); }
 
 private:
 	Mtx& fMtx;
@@ -59,17 +53,11 @@ template <class Mtx>
 class ZReleaser_T : NonCopyable
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZReleaser_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
+	inline ZReleaser_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZReleaser_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Release(); }
+	inline ZReleaser_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Release(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZReleaser_T() { fMtx.Acquire(); }
+	inline ~ZReleaser_T() { fMtx.Acquire(); }
 
 private:
 	Mtx& fMtx;
@@ -92,17 +80,11 @@ template <class Mtx, class Sem>
 class ZCndBase_T : NonCopyable
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZCndBase_T() : fWaitingThreads(0) {}
+	inline ZCndBase_T() : fWaitingThreads(0) {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZCndBase_T() {}
+	inline ~ZCndBase_T() {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Wait(Mtx& iMtx)
+	inline void Wait(Mtx& iMtx)
 		{
 		sAtomic_Inc(&fWaitingThreads);
 
@@ -111,9 +93,7 @@ public:
 		fSem.Procure();
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool WaitFor(Mtx& iMtx, double iTimeout)
+	inline bool WaitFor(Mtx& iMtx, double iTimeout)
 		{
 		sAtomic_Inc(&fWaitingThreads);
 
@@ -126,9 +106,7 @@ public:
 		return false;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool WaitUntil(Mtx& iMtx, double iDeadline)
+	inline bool WaitUntil(Mtx& iMtx, double iDeadline)
 		{
 		sAtomic_Inc(&fWaitingThreads);
 
@@ -141,9 +119,7 @@ public:
 		return false;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Signal()
+	inline void Signal()
 		{
 		for (;;)
 			{
@@ -158,9 +134,7 @@ public:
 			}
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Broadcast()
+	inline void Broadcast()
 		{
 		for (;;)
 			{
@@ -188,19 +162,13 @@ template <class MtxChecked, class Cnd>
 class ZCndChecked_T : public Cnd
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Wait(MtxChecked& iChecked)
+	inline void Wait(MtxChecked& iChecked)
 		{ iChecked.pWait(*this); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool WaitFor(MtxChecked& iChecked, double iTimeout)
+	inline bool WaitFor(MtxChecked& iChecked, double iTimeout)
 		{ return iChecked.pWaitFor(*this, iTimeout); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool WaitUntil(MtxChecked& iChecked, double iDeadline)
+	inline bool WaitUntil(MtxChecked& iChecked, double iDeadline)
 		{ return iChecked.pWaitUntil(*this, iDeadline); }
 
 	using Cnd::Wait;
@@ -217,21 +185,13 @@ template <class Sem>
 class ZMtx_T : NonCopyable
 	{
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZMtx_T(const char* iName = nullptr) { fSem.Signal(); }
+	inline ZMtx_T(const char* iName = nullptr) { fSem.Signal(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZMtx_T() {}
+	inline ~ZMtx_T() {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Acquire() { fSem.Procure(); }
+	inline void Acquire() { fSem.Procure(); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Release() { fSem.Vacate(); }
+	inline void Release() { fSem.Vacate(); }
 
 private:
 	Sem fSem;
@@ -246,17 +206,11 @@ class ZMtxChecked_T : NonCopyable
 public:
 	friend class ZCndChecked_T<ZMtxChecked_T, Cnd>;
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZMtxChecked_T() : fOwner(0) {}
+	inline ZMtxChecked_T() : fOwner(0) {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZMtxChecked_T() {}
+	inline ~ZMtxChecked_T() {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Acquire()
+	inline void Acquire()
 		{
 		const ThreadID current = GetThreadIDProc();
 		ZAssert(fOwner != current);
@@ -264,9 +218,7 @@ public:
 		fOwner = current;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Release()
+	inline void Release()
 		{
 		ZAssert(fOwner == GetThreadIDProc());
 		fOwner = 0;
@@ -286,9 +238,7 @@ private:
 			}
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void pWait(Cnd& iCnd)
+	inline void pWait(Cnd& iCnd)
 		{
 		const ThreadID current = GetThreadIDProc();
 		this->pAssertOwned(current);
@@ -297,9 +247,7 @@ private:
 		fOwner = current;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool pWaitFor(Cnd& iCnd, double iTimeout)
+	inline bool pWaitFor(Cnd& iCnd, double iTimeout)
 		{
 		const ThreadID current = GetThreadIDProc();
 		this->pAssertOwned(current);
@@ -309,9 +257,7 @@ private:
 		return result;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool pWaitUntil(Cnd& iCnd, double iDeadline)
+	inline bool pWaitUntil(Cnd& iCnd, double iDeadline)
 		{
 		const ThreadID current = GetThreadIDProc();
 		this->pAssertOwned(current);
@@ -348,43 +294,27 @@ private:
 	:	public DLink_Waiter
 		{
 	public:
-		ZMACRO_Attribute_NoThrow
-		inline
-		Waiter(int iCount) : fCount(iCount) {}
+		inline Waiter(int iCount) : fCount(iCount) {}
 		int fCount;
 		};
 
 public:
-	ZMACRO_Attribute_NoThrow
-	inline
-	ZSem_T() : fAvailable(0) {}
+	inline ZSem_T() : fAvailable(0) {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	~ZSem_T() {}
+	inline ~ZSem_T() {}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Procure()
+	inline void Procure()
 		{ this->pProcure(1); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool TryProcureFor(double iTimeout)
+	inline bool TryProcureFor(double iTimeout)
 		{ return this->pTryProcureUntil(1, Time::sSystem() + iTimeout); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool TryProcureUntil(double iDeadline)
+	inline bool TryProcureUntil(double iDeadline)
 		{ return this->pTryProcureUntil(1, iDeadline); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void Vacate() { this->pVacate(1); }
+	inline void Vacate() { this->pVacate(1); }
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void pProcure(int iCount)
+	inline void pProcure(int iCount)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
@@ -403,9 +333,7 @@ public:
 		sEraseMust(fWaiters, &theWaiter);
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	bool pTryProcureUntil(int iCount, double iDeadline)
+	inline bool pTryProcureUntil(int iCount, double iDeadline)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
@@ -432,9 +360,7 @@ public:
 		return true;
 		}
 
-	ZMACRO_Attribute_NoThrow
-	inline
-	void pVacate(int iCount)
+	inline void pVacate(int iCount)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
