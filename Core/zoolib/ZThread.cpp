@@ -111,11 +111,7 @@ namespace ZTSS {
 Key sKey(std::atomic<Key>& ioStorage)
 	{
 	if (not ioStorage)
-		{
-		Key expected = 0;
-		std::atomic_compare_exchange_strong_explicit(&ioStorage, &expected, ZTSS::sCreate(),
-			std::memory_order_relaxed, std::memory_order_relaxed);
-		}
+		sAtomic_CAS(&ioStorage, Key(0), ZTSS::sCreate());
 	return ioStorage;
 	}
 

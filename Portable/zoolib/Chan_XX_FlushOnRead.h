@@ -45,7 +45,7 @@ public:
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		if (sAtomic_Swap(&fLastWasWrite, 0))
+		if (sAtomic_GetSet(&fLastWasWrite, 0))
 			{
 			ZAcqMtx acq(fMutex);
 			sFlush(fChanW);
@@ -55,7 +55,7 @@ public:
 
 	virtual size_t Readable()
 		{
-		if (sAtomic_Swap(&fLastWasWrite, 0))
+		if (sAtomic_GetSet(&fLastWasWrite, 0))
 			{
 			ZAcqMtx acq(fMutex);
 			sFlush(fChanW);

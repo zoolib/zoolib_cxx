@@ -495,7 +495,7 @@ public:
 
 	bool AtomicCAS(T* iPrior, T* iNew)
 		{
-		if (not sAtomicPtr_Cas(&fPtr, iPrior, iNew))
+		if (not sAtomicPtr_CAS(&fPtr, iPrior, iNew))
 			return false;
 		spRetain(fPtr);
 		spRelease(iPrior);

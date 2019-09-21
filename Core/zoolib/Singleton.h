@@ -36,11 +36,8 @@ Type_p& sSingleton()
 	static std::atomic<Type_p*> spType_p;
 	if (not spType_p)
 		{
-		Type_p* expected = nullptr;
 		Type_p* newValue = new Type_p();
-		if (not std::atomic_compare_exchange_strong_explicit(
-			&spType_p, &expected, newValue,
-			std::memory_order_relaxed, std::memory_order_relaxed))
+		if (not sAtomic_CAS<Type_p*>(&spType_p, nullptr, newValue))
 			{
 			delete newValue;
 			}
