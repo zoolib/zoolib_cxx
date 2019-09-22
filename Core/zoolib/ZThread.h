@@ -42,7 +42,7 @@ namespace ZooLib {
 		typedef ZCnd_pthread ZCnd;
 		typedef ZMtxChecked_pthread ZMtx;
 	#else
-		typedef ZCndBase_pthread ZCnd
+		typedef ZCndBase_pthread ZCnd;
 		typedef ZMtx_pthread ZMtx;
 	#endif
 
