@@ -590,35 +590,37 @@ public:
 		return *static_cast<const Any_T<typename OtherAny::Tag_T>*>(thisBase);
 		}
 
-// Special purpose constructors, called by sAny and sAnyCounted
+// Special purpose constructors, called by sAny and sAnyCounted.
+// Passing a single IKnowWhatIAmDoing_t indicates that the type of the pointed-to first
+// param is the type to be default-constructed.
 	template <class S>
 	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, IKWIAD)
 		{}
 
 	template <class S, class P0>
 	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, iP0, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, iP0, IKWIAD)
 		{}
 
 	template <class S, class P0, class P1>
 	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, iP0, iP1, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, iP0, iP1, IKWIAD)
 		{}
 
 	template <class S>
 	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, IKWIAD, IKWIAD)
 		{}
 
 	template <class S, class P0>
 	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, iP0, IKWIAD, IKWIAD)
 		{}
 
 	template <class S, class P0, class P1>
 	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
-	:	AnyBase(dummy, iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing)
+	:	AnyBase(dummy, iP0, iP1, IKWIAD, IKWIAD)
 		{}
 	};
 
@@ -671,27 +673,27 @@ inline void swap(Any_T<Tag_p>& a, Any_T<Tag_p>& b)
 
 template <class S, class Tag_p=void>
 Any sAny()
-	{ return Any(static_cast<S*>(0), IKnowWhatIAmDoing); }
+	{ return Any(static_cast<S*>(0), IKWIAD); }
 
 template <class S, class P0, class Tag_p=void>
 Any_T<Tag_p> sAny(const P0& iP0)
-	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKnowWhatIAmDoing); }
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKWIAD); }
 
 template <class S, class P0, class P1, class Tag_p=void>
 Any_T<Tag_p> sAny(const P0& iP0, const P1& iP1)
-	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing); }
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKWIAD); }
 
 template <class S, class Tag_p=void>
 Any_T<Tag_p> sAnyCounted()
-	{ return Any_T<Tag_p>(static_cast<S*>(0), IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+	{ return Any_T<Tag_p>(static_cast<S*>(0), IKWIAD, IKWIAD); }
 
 template <class S, class P0, class Tag_p=void>
 Any_T<Tag_p> sAnyCounted(const P0& iP0)
-	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, IKWIAD, IKWIAD); }
 
 template <class S, class P0, class P1, class Tag_p=void>
 Any_T<Tag_p> sAnyCounted(const P0& iP0, const P1& iP1)
-	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKnowWhatIAmDoing, IKnowWhatIAmDoing); }
+	{ return Any_T<Tag_p>(static_cast<S*>(0), iP0, iP1, IKWIAD, IKWIAD); }
 
 } // namespace ZooLib
 
