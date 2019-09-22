@@ -29,8 +29,6 @@ namespace ZooLib {
 
 namespace ZThread {
 
-ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
-
 static ZAtomic_t spThreadCount;
 
 void sStarted()
@@ -69,36 +67,6 @@ InitHelper::~InitHelper()
 	{
 	if (0 == --spInitCount && spDontTearDown)
 		sWaitTillAllThreadsExit();
-	}
-
-static ProcResult_t
-#if ZCONFIG_API_Enabled(ThreadImp_Win)
-	__stdcall
-#endif
-spEntryVoid(ProcVoid_t iProc)
-	{
-	sStarted();
-	try
-		{
-		iProc();
-		}
-	catch (...)
-		{}
-	sFinished();
-	return 0;
-	}
-
-void sStartVoid(ProcVoid_t iProcVoid)
-	{
-	union
-		{
-		ProcVoid_t fAsProc;
-		void* fAsPointer;
-		} theConverter;
-
-	theConverter.fAsProc = iProcVoid;
-
-	sStartRaw(0, (ProcRaw_t)spEntryVoid, theConverter.fAsPointer);
 	}
 
 } // namespace ZThread

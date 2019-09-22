@@ -167,9 +167,6 @@ template <class T>
 void sStart_T(typename Starter_T<T>::Proc iProc, T iParam)
 	{ Starter_T<T>::sStart(iProc, iParam); }
 
-typedef void (*ProcVoid_t)();
-void sStartVoid(ProcVoid_t iProcVoid);
-
 } // namespace ZThread
 
 } // namespace ZooLib
