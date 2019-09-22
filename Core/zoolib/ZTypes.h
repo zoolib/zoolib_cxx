@@ -65,18 +65,18 @@ namespace ZooLib {
 // null is a marker value, used in places where we're wanting to be explicit about returning an
 // empty value of some sort, but where we don't want to have to manually create the value each time.
 
-const class notnull_t {} notnull = {};
+const class notnull_t {} notnull;
 
 const struct null_t
 	{
 	const notnull_t operator!() const { return notnull; }
-	} null = {};
+	} null;
 
 // =================================================================================================
 // IKnowWhatIAmDoing is also a marker value, used in a few places generally to distinguish
 // private ctors that would otherwise be identical.
 
-const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing = {};
+const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing, IKWIAD;
 
 // =================================================================================================
 // Assuming 'type* ptr;' sConst(ptr) is a terser form of (type*)ptr.
@@ -155,7 +155,7 @@ const struct
 	template <class T>
 	Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
 
-	} sConstPtr = {};
+	} sConstPtr;
 
 // =================================================================================================
 // 'sMutablePtr(rvalue)' or 'sMutablePtr& rvalue' is useful when working with socket APIs.
@@ -180,7 +180,7 @@ const struct
 	template <class T>
 	Holder<T> operator&(const T& iT) const { return Holder<T>(iT); }
 
-	} sMutablePtr = {};
+	} sMutablePtr;
 
 // =================================================================================================
 // Adopt_T<type> or Adopt_T<type*> indicates to a ZP (mainly) that it should
@@ -216,7 +216,7 @@ const struct
 
 	template <class T>
 	Adopt_T<T> operator&(T iT) const { return Adopt_T<T>(iT); }
-	} sAdopt = {};
+	} sAdopt;
 
 // =================================================================================================
 // Availability of tr1 is still a bit patchy, use our own enable templates for now.
