@@ -61,7 +61,7 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	ZQ<Map_Any> theMapQ;
 	if (iPreferBinaryData)
 		{
-		if (NotP<ChannerR_Bin> theChannerR = iFS.Child("data.bin").OpenR())
+		ifc (ZP<ChannerR_Bin> theChannerR = iFS.Child("data.bin").OpenR(), not theChannerR)
 			{
 			if (ZLOGF(w, eNotice))
 				w << "Binary data preferred, missing 'data.bin'";

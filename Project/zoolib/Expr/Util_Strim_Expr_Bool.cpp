@@ -65,22 +65,18 @@ ZP<Expr_Bool> spNotable(
 	sSkip_WSAndCPlusPlusComments(iChanRU);
 
 	if (not sTryRead_CP('(', iChanRU))
-		{
 		return spParenthable(iCallable_Terminal, iChanRU);
-		}
-	else if (NotP<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU))
-		{
+
+	ZP<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU);
+	if (not child)
 		throw ParseException("Expected expression or terminal");
-		}
-	else
-		{
-		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_CP(')', iChanRU))
-			throw ParseException("Expected close paren");
+	sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		return child;
-		}
+	if (not sTryRead_CP(')', iChanRU))
+		throw ParseException("Expected close paren");
+
+	return child;
 	}
 
 ZP<Expr_Bool> spAndable(
@@ -98,31 +94,34 @@ ZP<Expr_Bool> spAndable(
 		isNotted = ~isNotted;
 		}
 
-	if (NotP<Expr_Bool> child = spNotable(iCallable_Terminal, iChanRU))
+	ZP<Expr_Bool> child = spNotable(iCallable_Terminal, iChanRU);
+	if (not child)
 		throw ParseException("Expected notable");
-	else if (isNotted)
+
+	if (isNotted)
 		return new Expr_Bool_Not(child);
-	else
-		return child;
+	return child;
 	}
 
 ZP<Expr_Bool> spOrable(
 	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
-	if (NotP<Expr_Bool> exprL = spAndable(iCallable_Terminal, iChanRU))
-		{ return null; }
-	else for (;;)
+	ZP<Expr_Bool> exprL = spAndable(iCallable_Terminal, iChanRU);
+	if (not exprL)
+		return null;
+	for (;;)
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
 		if (not sTryRead_CP('&', iChanRU))
 			return exprL;
 
-		if (NotP<Expr_Bool> exprR = spAndable(iCallable_Terminal, iChanRU))
+		ZP<Expr_Bool> exprR = spAndable(iCallable_Terminal, iChanRU);
+		if (not exprR)
 			throw ParseException("Expected operand after '&'");
-		else
-			exprL = sAnd(exprL, exprR);
+
+		exprL = sAnd(exprL, exprR);
 		}
 	}
 
@@ -130,19 +129,22 @@ ZP<Expr_Bool> spExpression(
 	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
-	if (NotP<Expr_Bool> exprL = spOrable(iCallable_Terminal, iChanRU))
-		{ return null; }
-	else for (;;)
+	ZP<Expr_Bool> exprL = spOrable(iCallable_Terminal, iChanRU);
+	if (not exprL)
+		return null;
+
+	for (;;)
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
 		if (not sTryRead_CP('|', iChanRU))
 			return exprL;
 
-		if (NotP<Expr_Bool> exprR = spOrable(iCallable_Terminal, iChanRU))
+		ZP<Expr_Bool> exprR = spOrable(iCallable_Terminal, iChanRU);
+		if (not exprR)
 			throw ParseException("Expected operand after '|'");
-		else
-			exprL = sOr(exprL, exprR);
+
+		exprL = sOr(exprL, exprR);
 		}
 	}
 
