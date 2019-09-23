@@ -40,13 +40,13 @@ namespace ZooLib {
 #elif ZMACRO_Use_funopen
 
 static int spReadR(void* iCookie, char* oDest, int iCount)
-	{ return sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
+	{ return (int)sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
 
 static int spReadRPos(void* iCookie, char* oDest, int iCount)
-	{ return sReadMem(*static_cast<ChannerRPos_Bin*>(iCookie), oDest, iCount); }
+	{ return (int)sReadMem(*static_cast<ChannerRPos_Bin*>(iCookie), oDest, iCount); }
 
 static int spWrite(void* iCookie, const char* iSource, int iCount)
-	{ return sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
+	{ return (int)sWriteMem(*static_cast<ChannerW_Bin*>(iCookie), iSource, iCount); }
 
 static fpos_t spSeek(void* iCookie, fpos_t iPos, int iWhence)
 	{
