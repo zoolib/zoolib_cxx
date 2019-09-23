@@ -237,13 +237,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_CPP
 	#if defined(__clang__)
-		#if __cplusplus >= 201103L
+		#if __cplusplus >= 201703L
+			#define ZCONFIG_CPP 2017
+		#elif __cplusplus >= 201103L
 			#define ZCONFIG_CPP 2011
 		#else
 			#define ZCONFIG_CPP 2003
 		#endif
 	#elif defined(__GNUC__)
-		#if __cplusplus >= 201103L
+		#if __cplusplus >= 201703L
+			#define ZCONFIG_CPP 2017
+		#elif __cplusplus >= 201103L
 			#define ZCONFIG_CPP 2011
 		#elif __cplusplus >= 199711L // Go figure.
 			#define ZCONFIG_CPP 2003
@@ -571,6 +575,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define whilenot(cond) for (;;) if (cond) { break; } else
 #define until whilenot
+
+#if ZCONFIG_CPP >= 2017
+	#define ifc(statement, condition) if (statement; (condition))
+#else
+	#define ifc(statement, condition) \
+		for (int _iffbreaker = 0; not _iffbreaker;) \
+		for (statement;not _iffbreaker; ++_iffbreaker) \
+		if (condition)
+#endif
 
 // =================================================================================================
 
