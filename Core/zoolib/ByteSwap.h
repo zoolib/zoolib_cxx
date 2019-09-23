@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if defined(__linux__) || defined(__CYGWIN__)
+
 #	include <endian.h>
 
 #elif defined(__APPLE__)
