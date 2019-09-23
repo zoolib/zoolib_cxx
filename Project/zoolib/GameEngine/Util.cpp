@@ -15,7 +15,6 @@
 #include "zoolib/Util_string.h"
 
 #include "zoolib/ZMACRO_auto.h"
-#include "zoolib/ZMACRO_foreach.h"
 
 #include "zoolib/Apple/CGData_Channer.h"
 #include "zoolib/Apple/Pixmap_CGImage.h"
