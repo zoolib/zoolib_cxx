@@ -562,15 +562,29 @@ ZP<T> sZP(const NotP<T>& iP)
 
 template <class T>
 inline
-void sClear(ZP<T>& ioRef)
-	{ ioRef.Clear(); }
+void sClear(ZP<T>& ioP)
+	{ ioP.Clear(); }
 
 template <class T>
 inline
-ZP<T> sGetClear(ZP<T>& ioRef)
+void sClear(NotP<T>& ioNotP)
+	{ ioNotP.Mut().Clear(); }
+
+template <class T>
+inline
+ZP<T> sGetClear(ZP<T>& ioP)
 	{
-	const ZP<T> result = ioRef;
-	sClear(ioRef);
+	const ZP<T> result = ioP;
+	sClear(ioP);
+	return result;
+	}
+
+template <class T>
+inline
+ZP<T> sGetClear(NotP<T>& ioNotP)
+	{
+	const ZP<T> result = ioNotP;
+	sClear(ioNotP);
 	return result;
 	}
 

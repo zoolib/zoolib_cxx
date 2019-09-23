@@ -532,10 +532,22 @@ void sClear(ZQ<T>& ioQ)
 	{ ioQ.Clear(); }
 
 template <class T>
+void sClear(Not<ZQ<T>>& ioNotQ)
+	{ ioNotQ.Mut().Clear(); }
+
+template <class T>
 T sGetClear(ZQ<T>& ioQ)
 	{
-	const T result = ioQ.Get();
+	const T result = ioQ.Get().Get();
 	ioQ.Clear();
+	return result;
+	}
+
+template <class T>
+T sGetClear(Not<ZQ<T>>& ioNotQ)
+	{
+	const T result = ioNotQ.Get().Get();
+	ioNotQ.Mut().Clear();
 	return result;
 	}
 
