@@ -130,11 +130,6 @@ template <class T>
 void sPush(const T& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
 
-// Special-case NotP -- we generally want them on the chan as ZP.
-template <class T>
-void sPush(const NotP<T>& iVal, const ChanW_PPT& iChanW)
-	{ sPush(sZP(iVal), iChanW); }
-
 template <class T>
 void sPush(const Name& iName, const T& iVal, const ChanW_PPT& iChanW)
 	{

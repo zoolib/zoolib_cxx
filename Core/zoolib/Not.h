@@ -105,11 +105,6 @@ public:
 
 // --
 
-	T& Mut()
-		{ return fT; }
-
-	const T& Get() const
-		{ return fT; }
 
 // --
 

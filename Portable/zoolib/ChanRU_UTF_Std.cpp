@@ -47,25 +47,22 @@ size_t ChanRU_UTF_Std::Read(UTF32* oDest, size_t iCount)
 			*localDest++ = fStack.back();
 			fStack.pop_back();
 			}
+		else ifc (ZQ<UTF32> theQ = sQRead(fChanR_CRLFRemove), not theQ)
+			{ break; }
 		else
 			{
-			if (NotQ<UTF32> theQ = sQRead(fChanR_CRLFRemove))
-				{ break; }
+			++fPos;
+
+			if (Unicode::sIsEOL(*theQ))
+				{
+				++fLine;
+				fColumn = 0;
+				}
 			else
 				{
-				++fPos;
-
-				if (Unicode::sIsEOL(*theQ))
-					{
-					++fLine;
-					fColumn = 0;
-					}
-				else
-					{
-					++fColumn;
-					}
-				*localDest++ = *theQ;
+				++fColumn;
 				}
+			*localDest++ = *theQ;
 			}
 		}
 	return localDest - oDest;

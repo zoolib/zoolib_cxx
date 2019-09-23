@@ -126,7 +126,7 @@ static void spPull_XMLAttr_Push_PPT(const Name& iOuterName,
 				spPush_Attrs(theTagEmpty->GetAttrs_t(), iChanW);
 			sPush_End(iChanW);
 			}
-		else if (NotP<TagBegin> theTagBegin = TagBegin::sAs(*thePPTQ))
+		else ifc (ZP<TagBegin> theTagBegin = TagBegin::sAs(*thePPTQ), not theTagBegin)
 			{
 			sThrow_ParseException("Expected begin tag");
 			}

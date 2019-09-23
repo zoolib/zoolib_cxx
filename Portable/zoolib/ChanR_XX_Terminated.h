@@ -46,7 +46,7 @@ public:
 		size_t countRemaining = iCount;
 		while (not fHitTerminator && countRemaining)
 			{
-			if (NotQ<EE> theQ = sQRead(fChanR))
+			ifc (ZQ<EE> theQ = sQRead(fChanR), not theQ)
 				{
 				break;
 				}

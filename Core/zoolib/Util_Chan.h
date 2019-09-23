@@ -140,15 +140,13 @@ bool sSkip_Until(const ChanR<EE>& iChanR, const EE& iTerminator)
 template <class EE>
 bool sTryRead(EE iEE, const ChanRU<EE>& iChanRU)
 	{
-	if (NotQ<EE> theElement = sQRead(iChanRU))
-		{ return false; }
-	else if (*theElement == iEE)
-		{ return true; }
-	else
+	if (ZQ<EE> theElement = sQRead(iChanRU))
 		{
+		if (*theElement == iEE)
+			return true;
 		sUnread(iChanRU, *theElement);
-		return false;
-		}	
+		}
+	return false;
 	}
 
 } // namespace ZooLib

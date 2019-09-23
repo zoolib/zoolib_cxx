@@ -85,16 +85,7 @@ bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU)
 	// Ensure that we only try to read a valid CP, one that
 	// can actually be returned by ReadCP.
 	ZAssertStop(2, Unicode::sIsValid(iCP));
-
-	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
-		{ return false; }
-	else if (*theCPQ == iCP)
-		{ return true; }
-	else
-		{
-		sUnread(iChanRU, *theCPQ);
-		return false;
-		}
+	return sTryRead(iCP, iChanRU);
 	}
 
 // -----------------

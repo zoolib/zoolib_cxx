@@ -538,11 +538,6 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - NotP
-
-template <class T> using NotP = Not<ZP<T>>;
-
-// =================================================================================================
 #pragma mark - Pseudo-ctor
 
 template <class T>
@@ -551,10 +546,6 @@ ZP<T> sZP(T* iPtr)
 
 template <class T>
 ZP<T> sZP(const ZP<T>& iP)
-	{ return ZP<T>(iP); }
-
-template <class T>
-ZP<T> sZP(const NotP<T>& iP)
 	{ return ZP<T>(iP); }
 
 // =================================================================================================
@@ -567,24 +558,10 @@ void sClear(ZP<T>& ioP)
 
 template <class T>
 inline
-void sClear(NotP<T>& ioNotP)
-	{ ioNotP.Mut().Clear(); }
-
-template <class T>
-inline
 ZP<T> sGetClear(ZP<T>& ioP)
 	{
 	const ZP<T> result = ioP;
 	sClear(ioP);
-	return result;
-	}
-
-template <class T>
-inline
-ZP<T> sGetClear(NotP<T>& ioNotP)
-	{
-	const ZP<T> result = ioNotP;
-	sClear(ioNotP);
 	return result;
 	}
 

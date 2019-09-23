@@ -151,7 +151,7 @@ static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, c
 					sPush_End(iChanW);
 					break;
 					}
-				else if (NotP<TagBegin> theTagBegin = TagBegin::sAs(thePPT))
+				else ifc (ZP<TagBegin> theTagBegin = TagBegin::sAs(thePPT), not theTagBegin)
 					{
 					sThrow_ParseException("Expected begin tag ('key')");
 					}

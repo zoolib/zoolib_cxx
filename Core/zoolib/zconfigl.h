@@ -576,6 +576,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define whilenot(cond) for (;;) if (cond) { break; } else
 #define until whilenot
 
+// =================================================================================================
+
 #if ZCONFIG_CPP >= 2017
 	#define ifc(statement, condition) if (statement; (condition))
 #else
