@@ -10,7 +10,6 @@
 
 #include "zoolib/Atomic.h" // For sAtomicPtr_CAS
 #include "zoolib/Compat_algorithm.h" // For std::swap
-#include "zoolib/Not.h"
 
 #include "zoolib/ZTypes.h" // For Adopt_T
 
