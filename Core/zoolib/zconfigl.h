@@ -582,8 +582,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ifc(statement, condition) if (statement; (condition))
 #else
 	#define ifc(statement, condition) \
-		for (int _iffbreaker = 0; not _iffbreaker;) \
-		for (statement;not _iffbreaker; ++_iffbreaker) \
+		for (int _ifcbreaker = 0; not _ifcbreaker;) \
+		for (statement; not _ifcbreaker; ++_ifcbreaker) \
 		if (condition)
 #endif
 
