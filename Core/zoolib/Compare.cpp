@@ -2,7 +2,6 @@
 // MIT License. http://www.zoolib.org/
 
 #include "zoolib/Compare.h"
-#include "zoolib/Compat_string.h"
 #include "zoolib/Singleton.h"
 #include "zoolib/Util_STL_unordered_map.h"
 
