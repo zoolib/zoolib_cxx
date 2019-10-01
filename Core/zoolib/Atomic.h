@@ -27,7 +27,7 @@ inline bool sAtomicPtr_CAS(T** iPtrAddress, T* iOldValue, T* iNewValue)
 
 template <class T>
 inline T sAtomic_GetSet(std::atomic<T>* ioAtomic, T iOther)
-	{ return std::atomic_exchange(&ioAtomic, iOther); }
+	{ return std::atomic_exchange(ioAtomic, iOther); }
 
 typedef std::atomic<int> ZAtomic_t;
 
