@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
+#include "zoolib/ChanW.h" // For sThrow_ExhaustedW
 
 namespace ZooLib {
 
@@ -34,6 +35,12 @@ class ChanRPos_XX_Memory
 :	public ChanRPos<EE>
 	{
 public:
+	ChanRPos_XX_Memory(const PaC<const EE>& iPaC)
+	:	fAddress(iPaC.first)
+	,	fSize(iPaC.second)
+	,	fPosition(0)
+		{}
+
 	ChanRPos_XX_Memory(const void* iAddress, size_t iSize)
 	:	fAddress(static_cast<const EE*>(iAddress))
 	,	fSize(iSize)
@@ -50,7 +57,7 @@ public:
 		return countToCopy;
 		}
 
-	virtual size_t Skip(uint64 iCount)
+	virtual uint64 Skip(uint64 iCount)
 		{
 		const size_t countToCopy = std::min<size_t>(sClamped(iCount),
 			fSize > fPosition ? fSize - fPosition : 0);
@@ -111,6 +118,13 @@ class ChanRWPos_XX_Memory
 :	public ChanRWPos<EE>
 	{
 public:
+	ChanRWPos_XX_Memory(const PaC<EE>& iPaC)
+	:	fAddress(iPaC.first)
+	,	fSize(iPaC.second)
+	,	fCapacity(iPaC.second)
+	,	fPosition(0)
+		{}
+
 	ChanRWPos_XX_Memory(void* iAddress, size_t iSize, size_t iCapacity)
 	:	fAddress(static_cast<EE*>(iAddress))
 	,	fSize(iSize)
