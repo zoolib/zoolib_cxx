@@ -151,25 +151,29 @@ static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, c
 					sPush_End(iChanW);
 					break;
 					}
-				else ifc (ZP<TagBegin> theTagBegin = TagBegin::sAs(thePPT), not theTagBegin)
-					{
-					sThrow_ParseException("Expected begin tag ('key')");
-					}
-				else if (theTagBegin->GetName() != Name("key"))
-					{
-					sThrow_ParseException("Expected begin tag 'key'");
-					}
-				else if (NotQ<PPT> theQ = sQRead(iChanR))
-					{
-					sThrow_ExhaustedR();
-					}
 				else
 					{
-					if (NotQ<string> theStringQ = sQAsString(*theQ))
-						sThrow_ParseException("Expected text in 'key' tag");
+					ZP<TagBegin> theTagBegin = TagBegin::sAs(thePPT);
+					if (not theTagBegin)
+						{
+						sThrow_ParseException("Expected begin tag ('key')");
+						}
+					else if (theTagBegin->GetName() != Name("key"))
+						{
+						sThrow_ParseException("Expected begin tag 'key'");
+						}
+					else if (NotQ<PPT> theQ = sQRead(iChanR))
+						{
+						sThrow_ExhaustedR();
+						}
 					else
-						sPush(Name(*theStringQ), iChanW);
-					sESkipText_ReadEnd(iChanR, "key");
+						{
+						if (NotQ<string> theStringQ = sQAsString(*theQ))
+							sThrow_ParseException("Expected text in 'key' tag");
+						else
+							sPush(Name(*theStringQ), iChanW);
+						sESkipText_ReadEnd(iChanR, "key");
+						}
 					}
 				sPull_XMLPList_Push_PPT(iChanR, iChanW);
 				}

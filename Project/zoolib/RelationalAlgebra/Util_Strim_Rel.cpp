@@ -286,7 +286,8 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				{
 				spRead_WSComma(iChanRU, " after string in Comment");
 
-				ifc (ZP<Expr_Rel> childRel = sFromStrim(iChanRU), not childRel)
+				ZP<Expr_Rel> childRel = sFromStrim(iChanRU);
+				if (not childRel)
 					throw ParseException("Expected Rel as second param in Comment");
 				else
 					result = sComment(childRel, theComment);
@@ -327,7 +328,8 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 		else if (sEquali(*theNameQ, "Embed"))
 			{
-			ifc (ZP<Expr_Rel> outerRel = sFromStrim(iChanRU), not outerRel)
+			ZP<Expr_Rel> outerRel = sFromStrim(iChanRU);
+			if (not outerRel)
 				throw ParseException("Expected Rel as first param in Embed");
 			else
 				{
@@ -354,7 +356,8 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 
-					ifc (ZP<Expr_Rel> innerRel = sFromStrim(iChanRU), not innerRel)
+					ZP<Expr_Rel> innerRel = sFromStrim(iChanRU);
+					if (not innerRel)
 						throw ParseException("Expected Rel as second param in Embed");
 					else
 						result = sEmbed(outerRel, sGet(theBoundNamesQ), *theColNameQ, innerRel);
@@ -380,7 +383,8 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				{
 				spRead_WSComma(iChanRU, " after RelHead in Project");
 
-				ifc (ZP<Expr_Rel> childRel = sFromStrim(iChanRU), not childRel)
+				ZP<Expr_Rel> childRel = sFromStrim(iChanRU);
+				if (not childRel)
 					throw ParseException("Expected Rel as second param in Project");
 				else
 					result = sProject(childRel, *theRelHeadQ);
@@ -394,7 +398,8 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				{
 				spRead_WSComma(iChanRU, " after Rename in Rename");
 
-				ifc (ZP<Expr_Rel> childRel = sFromStrim(iChanRU), not childRel)
+				ZP<Expr_Rel> childRel = sFromStrim(iChanRU);
+				if (not childRel)
 					throw ParseException("Expected Rel as second param in Rename");
 				else
 					result = sRename(childRel, theRenameQ->first, theRenameQ->second);
@@ -403,13 +408,15 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 		else if (sEquali(*theNameQ, "Restrict"))
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
-			ifc (ZP<Expr_Bool> theExpr = Util_Strim_Expr_Bool_ValPred::sQFromStrim(iChanRU), not theExpr)
+			ZP<Expr_Bool> theExpr = Util_Strim_Expr_Bool_ValPred::sQFromStrim(iChanRU);
+			if (not theExpr)
 				{ throw ParseException("Expected Expr_Bool param to Restrict"); }
 			else
 				{
 				spRead_WSComma(iChanRU, " after ValPred in Restrict");
 
-				ifc (ZP<Expr_Rel> childRel = sFromStrim(iChanRU), not childRel)
+				ZP<Expr_Rel> childRel = sFromStrim(iChanRU);
+				if (not childRel)
 					throw ParseException("Expected Rel as second param in Restrict");
 				else
 					result = sRestrict(childRel, theExpr);

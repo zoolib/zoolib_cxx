@@ -126,12 +126,12 @@ static void spPull_XMLAttr_Push_PPT(const Name& iOuterName,
 				spPush_Attrs(theTagEmpty->GetAttrs_t(), iChanW);
 			sPush_End(iChanW);
 			}
-		else ifc (ZP<TagBegin> theTagBegin = TagBegin::sAs(*thePPTQ), not theTagBegin)
-			{
-			sThrow_ParseException("Expected begin tag");
-			}
 		else
 			{
+			ZP<TagBegin> theTagBegin = TagBegin::sAs(*thePPTQ)
+			if (not theTagBegin)
+				sThrow_ParseException("Expected begin tag");
+
 			const Name theName = theTagBegin->GetName();
 			sPush(theName, iChanW);
 

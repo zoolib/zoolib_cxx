@@ -177,7 +177,8 @@ PPT sESkipText_Read(const ChanR_PPT& iChanR)
 void sESkipText_ReadEnd(const ChanR_PPT& iChanR, const Name& iTagName)
 	{
 	PPT thePPT = sESkipText_Read(iChanR);
-	ifc (ZP<TagEnd> theP = TagEnd::sAs(thePPT), not theP)
+	ZP<TagEnd> theP = TagEnd::sAs(thePPT);
+	if (not theP)
 		{
 		sThrow_ParseException("Expected end tag '" + string(iTagName));
 		}

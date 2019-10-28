@@ -46,20 +46,17 @@ public:
 		size_t countRemaining = iCount;
 		while (not fHitTerminator && countRemaining)
 			{
-			ifc (ZQ<EE> theQ = sQRead(fChanR), not theQ)
+			ZQ<EE> theQ = sQRead(fChanR);
+			if (not theQ)
+				break;
+
+			if (*theQ == fTerminator)
 				{
+				fHitTerminator = true;
 				break;
 				}
-			else
-				{
-				if (*theQ == fTerminator)
-					{
-					fHitTerminator = true;
-					break;
-					}
-				*oDest++ = *theQ;
-				--countRemaining;
-				}
+			*oDest++ = *theQ;
+			--countRemaining;
 			}
 		return iCount - countRemaining;
 		}
