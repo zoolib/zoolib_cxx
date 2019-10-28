@@ -229,6 +229,8 @@ template <class T> struct EnableIfC<true, T> { typedef T type; };
 #pragma mark - PaC (PointerAndCount)
 
 template <class P> using PaC = std::pair<P*,size_t>;
+template <class P> P* sPointer(const PaC<P>& iPac) { return iPac.first; }
+template <class P> size_t sCount(const PaC<P>& iPac) { return iPac.second; }
 
 } // namespace ZooLib
 
