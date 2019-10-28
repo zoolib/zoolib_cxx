@@ -578,15 +578,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#if ZCONFIG_CPP >= 2017
-	#define ifc(statement, condition) if (statement; (condition))
-#else
-	#define ifc(statement, condition) \
-		for (int _ifcbreaker = 0; not _ifcbreaker;) \
-		for (statement; not _ifcbreaker; ++_ifcbreaker) \
-		if (condition)
-#endif
-
-// =================================================================================================
-
 #endif // __zconfigl_h__
