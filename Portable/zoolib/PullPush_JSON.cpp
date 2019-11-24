@@ -253,7 +253,7 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 	}
 
 // =================================================================================================
-#pragma mark - sPull
+#pragma mark -
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
@@ -276,18 +276,35 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
-			sSkip_WSAndCPlusPlusComments(iChanRU);
-
-			if (sTryRead_CP(',', iChanRU))
-				{}
-			else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
-				{}
-			else if (iRO.fLooseSeparators.DGet(false))
-				{}
-			else if (iRO.fAllowSemiColons.DGet(false))
-				sThrow_ParseException("Require ',' or ';' to separate array elements");
+			if (iRO.fLooseSeparators.DGet(false))
+				{
+				// We allow zero or more separators
+				for (;;)
+					{
+					sSkip_WSAndCPlusPlusComments(iChanRU);
+					if (sTryRead_CP(',', iChanRU))
+						{}
+					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
+						{}
+					else
+						break;
+					}
+				}
 			else
-				sThrow_ParseException("Require ',' to separate array elements");
+				{
+				sSkip_WSAndCPlusPlusComments(iChanRU);
+				if (sTryRead_CP(',', iChanRU))
+					{}
+				else if (iRO.fAllowSemiColons.DGet(false))
+					{
+					if (not sTryRead_CP(';', iChanRU))
+						sThrow_ParseException("Require ',' or ';' to separate array elements");
+					}
+				else
+					{
+					sThrow_ParseException("Require ',' to separate array elements");
+					}
+				}
 			}
 		}
 	else if (sTryRead_CP('{', iChanRU))
@@ -344,14 +361,15 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 				if (sTryRead_CP(',', iChanRU))
 					{}
-				else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
-					{}
-				else if (iRO.fLooseSeparators.DGet(false))
-					{}
 				else if (iRO.fAllowSemiColons.DGet(false))
-					sThrow_ParseException("Require ',' or ';' to separate object elements");
+					{
+					if (not sTryRead_CP(';', iChanRU))
+						sThrow_ParseException("Require ',' or ';' to separate object elements");
+					}
 				else
+					{
 					sThrow_ParseException("Require ',' to separate object elements");
+					}
 				}
 			}
 		}
