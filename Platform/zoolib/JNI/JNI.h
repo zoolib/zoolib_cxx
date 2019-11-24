@@ -94,9 +94,6 @@ struct ArrayAccessors<jtype##Array> \
 	static jtype_t* sGetElements(JNIEnv* env, jArray_t array) \
 		{ return env->Get##jname##ArrayElements(array, nullptr); } \
 \
-	static const jtype_t* sGetConstElements(JNIEnv* env, jArray_t array) \
-		{ return env->Get##jname##ArrayElements(array, nullptr); } \
-\
 	static void sRelease(JNIEnv* env, jArray_t array, jtype_t* ptr) \
 		{ env->Release##jname##ArrayElements(array, ptr, JNI_COMMIT); } \
 \
@@ -114,7 +111,7 @@ MACRO_ArrayAccessors(jfloat, Float)
 MACRO_ArrayAccessors(jdouble, Double)
 
 template <class Array_p>
-class JArray : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
+class PaC_Array : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
 	{
 	typedef ArrayAccessors<Array_p> AA;
 	typedef PaC<typename AA::jtype_t> PaC_t;
@@ -129,12 +126,12 @@ class JArray : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
 		}
 
 public:
-	JArray(Array_p iArray)
+	PaC_Array(Array_p iArray)
 	:	PaC_t(spGetPaC(EnvTV::sGet(), iArray))
 	,	fArray(iArray)
 		{}
 
-	~JArray()
+	~PaC_Array()
 		{
 		if (fArray)
 			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
@@ -142,7 +139,7 @@ public:
 	};
 
 template <class Array_p>
-class JConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
+class PaC_ConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
 	{
 	typedef ArrayAccessors<Array_p> AA;
 	typedef PaC<const typename AA::jtype_t> PaC_t;
@@ -157,12 +154,12 @@ class JConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
 		}
 
 public:
-	JConstArray(Array_p iArray)
+	PaC_ConstArray(Array_p iArray)
 	:	PaC_t(spGetPaC(EnvTV::sGet(), iArray))
 	,	fArray(iArray)
 		{}
 
-	~JConstArray()
+	~PaC_ConstArray()
 		{
 		if (fArray)
 			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
