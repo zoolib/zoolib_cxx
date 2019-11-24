@@ -52,54 +52,54 @@ private:
 
 Pixmap sPixmap(ZP<CGImageRef> iImageRef)
 	{
-	if (not iImageRef)
-		{}
-	else ifc (ZP<CGDataProviderRef> theProvider = ::CGImageGetDataProvider(iImageRef), not theProvider)
-		{}
-	else ifc (ZP<CFDataRef> theDataRef = sAdopt& ::CGDataProviderCopyData(theProvider), not theDataRef)
-		{}
-	else
+	if (iImageRef)
 		{
-		const PixvalDesc thePixvalDesc(
-			::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
-
-		const RasterDesc theRasterDesc(
-			thePixvalDesc,
-			::CGImageGetBytesPerRow(iImageRef),
-			::CGImageGetHeight(iImageRef),
-			false);
-
-		ZP<Raster> theRaster = new Raster_CGImage(theRasterDesc, iImageRef, theDataRef);
-
-		// Figure out mask
-		const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
-
-		const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
-
-		const uint32 theMask = (1 << theBPC) - 1;
-		uint32 theStart = theMask;
-		uint32 theA;
-		if (theAI & 1)
+		if (ZP<CGDataProviderRef> theProvider = ::CGImageGetDataProvider(iImageRef))
 			{
-			theA = theMask;
-			theStart = theMask << theBPC;
-			}
-		else if (0 == (theAI & 6) || 6 == (theAI & 6))
-			{
-			theA = 0;
-			}
-		else
-			{
-			theA = theMask << (theBPC * 3);
-			}
+			if (ZP<CFDataRef> theDataRef = sAdopt& ::CGDataProviderCopyData(theProvider))
+				{
+				const PixvalDesc thePixvalDesc(
+					::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
 
-		const uint32 theB = theStart;
-		const uint32 theG = theB << theBPC;
-		const uint32 theR = theG << theBPC;
+				const RasterDesc theRasterDesc(
+					thePixvalDesc,
+					::CGImageGetBytesPerRow(iImageRef),
+					::CGImageGetHeight(iImageRef),
+					false);
 
-		return Pixmap(new PixmapRep(theRaster,
-			sRectPOD(::CGImageGetWidth(iImageRef), theRaster->GetRasterDesc().fRowCount),
-			sPixelDesc(theR, theG, theB, theA)));
+				ZP<Raster> theRaster = new Raster_CGImage(theRasterDesc, iImageRef, theDataRef);
+
+				// Figure out mask
+				const size_t theBPC = ::CGImageGetBitsPerComponent(iImageRef);
+
+				const CGImageAlphaInfo theAI = ::CGImageGetAlphaInfo(iImageRef);
+
+				const uint32 theMask = (1 << theBPC) - 1;
+				uint32 theStart = theMask;
+				uint32 theA;
+				if (theAI & 1)
+					{
+					theA = theMask;
+					theStart = theMask << theBPC;
+					}
+				else if (0 == (theAI & 6) || 6 == (theAI & 6))
+					{
+					theA = 0;
+					}
+				else
+					{
+					theA = theMask << (theBPC * 3);
+					}
+
+				const uint32 theB = theStart;
+				const uint32 theG = theB << theBPC;
+				const uint32 theR = theG << theBPC;
+
+				return Pixmap(new PixmapRep(theRaster,
+					sRectPOD(::CGImageGetWidth(iImageRef), theRaster->GetRasterDesc().fRowCount),
+					sPixelDesc(theR, theG, theB, theA)));
+				}
+			}
 		}
 
 	return Pixmap();
