@@ -95,7 +95,7 @@ namespace Operators_Any_JSON {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Val_Any& iVal)
 	{
-	Util_Any_JSON::sWrite(iVal, iChanW);
+	Util_Any_JSON::sWrite(iVal.As<Any>(), iChanW);
 	return iChanW;
 	}
 
@@ -127,7 +127,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const Val_Any& iVal)
 	{
-	Util_Any_JSON::sWrite(iVal, StdIO::sChan_UTF_Err);
+	Util_Any_JSON::sWrite(iVal.As<Any>(), StdIO::sChan_UTF_Err);
 	StdIO::sChan_UTF_Err << "\n";
 	}
 

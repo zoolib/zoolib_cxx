@@ -88,7 +88,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t xx = 0, count = theValue->Size(); xx < count; ++xx)
-			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
+			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx).As<Any>())];
 		return theArray;
 		}
 	else if (const Map_Any* theValue = iVal.PGet<Map_Any>())
@@ -97,7 +97,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 		for (Map_Any::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
 			{
 			[theDictionary
-				setObject:sDAsNSObject(iDefault, theValue->Get(ii))
+				setObject:sDAsNSObject(iDefault, theValue->Get(ii).As<Any>())
 				forKey:sString(theValue->NameOf(ii))];
 			}
 		return theDictionary;
@@ -214,7 +214,7 @@ NSObject* sAsNSObject(const Any& iVal)
 		{
 		const string8 theName = Util_NS::sAsUTF8((NSString*)theKey);
 		const Any theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
-		result.Set(theName, theVal);
+		result.Set(theName, theVal.As<Val_Any>());
 		}
 	return Any(result);
 	}
@@ -232,7 +232,7 @@ NSObject* sAsNSObject(const Any& iVal)
 	{
 	Seq_Any result;
 	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
-		result.Append([theValue asAnyWithDefault:iDefault]);
+		result.Append([theValue asAnyWithDefault:iDefault].As<Val_Any>());
 	return Any(result);
 	}
 

@@ -110,7 +110,7 @@ public:
 				PPT thePPT = sERead(iChanR);
 				Any munged;
 				sPull_PPT_AsAny(thePPT, iChanR, this, munged);
-				sPushBack(theVals, munged);
+				sPushBack(theVals, munged.As<Val_Any>());
 				}
 			oAny = sZP(new Result(&theRelHead, &theVals));
 
@@ -234,7 +234,7 @@ public:
 					{
 					const Val_Any* theRow = theResult->GetValsAt(yy);
 					for (size_t xx = 0; xx < theRHCount; ++xx)
-						sFromAny_Push_PPT(theRow[xx], this, iChanW);
+						sFromAny_Push_PPT(theRow[xx].As<Any>(), this, iChanW);
 					}
 			sPush_End(iChanW);
 			return true;

@@ -46,7 +46,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 		{
 		sPush_Start_Seq(iChanW);
 		for (size_t xx = 0; xx < theSeq->Count(); ++xx)
-			sFromAny_Push_PPT(theSeq->Get(xx), iWriteFilter, iChanW);
+			sFromAny_Push_PPT(theSeq->Get(xx).As<Any>(), iWriteFilter, iChanW);
 		sPush_End(iChanW);
 		}
 
@@ -57,7 +57,7 @@ void sFromAny_Push_PPT(const Any& iAny,
 			iter != end; ++iter)
 			{
 			sPush(sName(iter->first), iChanW);
-			sFromAny_Push_PPT(iter->second, iWriteFilter, iChanW);
+			sFromAny_Push_PPT(iter->second.As<Any>(), iWriteFilter, iChanW);
 			}
 		sPush_End(iChanW);
 		}
@@ -144,7 +144,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 				{
 				Any theAny;
 				sPull_PPT_AsAny(*thePPTQ, iChanR, iReadFilter, theAny);
-				theMap.Set(*theNameQ, theAny);
+				theMap.Set(*theNameQ, theAny.As<Val_Any>());
 				}
 			}
 		oAny = theMap;
@@ -165,7 +165,7 @@ void sPull_PPT_AsAny(const PPT& iPPT,
 				{
 				Any theAny;
 				sPull_PPT_AsAny(*thePPTQ, iChanR, iReadFilter, theAny);
-				theSeq.Append(theAny);
+				theSeq.Append(theAny.As<Val_Any>());
 				}
 			}
 		oAny = theSeq;

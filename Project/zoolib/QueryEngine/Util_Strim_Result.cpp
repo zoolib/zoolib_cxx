@@ -59,7 +59,7 @@ void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& w)
 			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
 				w << "!absent!";
 			else
-				Util_Any_JSON::sWrite(theRow[xx], false, w);
+				Util_Any_JSON::sWrite(theRow[xx].As<Any>(), false, w);
 			}
 		}
 	}

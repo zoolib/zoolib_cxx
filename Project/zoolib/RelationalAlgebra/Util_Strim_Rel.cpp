@@ -88,7 +88,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
-	Util_Any_JSON::sWrite(iExpr->GetVal(), w);
+	Util_Any_JSON::sWrite(iExpr->GetVal().As<Any>(), w);
 	w << ")";
 	}
 
@@ -311,7 +311,7 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				if (NotQ<Any> theValQ = Util_Any_JSON::sQRead(iChanRU))
 					throw ParseException("Expected value as second param in Const");
 				else
-					result = sConst(*theColNameQ, *theValQ);
+					result = sConst(*theColNameQ, theValQ->As<Val_Any>());
 				}
 			}
 		else if (sEquali(*theNameQ, "Dee"))

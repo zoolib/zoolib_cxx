@@ -68,7 +68,7 @@ namespace RA = RelationalAlgebra;
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
 	{
-	Util_Any_JSON::sWrite(iVal, w);
+	Util_Any_JSON::sWrite(iVal.As<Any>(), w);
 	return w;
 	}
 

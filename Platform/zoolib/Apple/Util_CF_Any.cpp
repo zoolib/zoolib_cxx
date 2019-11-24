@@ -120,7 +120,7 @@ Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray)
 	Seq_Any theSeq;
 
 	for (size_t xx = 0, theCount = ::CFArrayGetCount(iCFArray); xx < theCount; ++xx)
-		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, xx)));
+		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, xx)).As<Val_Any>());
 
 	return theSeq;
 	}
@@ -133,7 +133,7 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	pair<const Any*,Map_Any*>* thePair =
 		static_cast<pair<const Any*,Map_Any*>*>(iRefcon);
 
-	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue));
+	thePair->second->Set(sAsUTF8(theKey), sDAsAny(*thePair->first, theValue).As<Val_Any>());
 	}
 
 Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary)
@@ -228,7 +228,7 @@ ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 		{
 		ZP<CFMutableArrayRef> theArray;
 		for (size_t xx = 0, count = theValue->Count(); xx < count; ++xx)
-			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(xx)));
+			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(xx).As<Any>()));
 		return theArray;
 		}
 	else if (const Map_Any* theValue = iVal.PGet<Map_Any>())
@@ -238,7 +238,7 @@ ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal)
 			ii != end; ++ii)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString(theValue->NameOf(ii)), sDAsCFType(iDefault, theValue->Get(ii)));
+				sString(theValue->NameOf(ii)), sDAsCFType(iDefault, theValue->Get(ii).As<Any>()));
 			}
 		return theDictionary;
 		}

@@ -37,10 +37,11 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 	{
 	try
 		{
-		return Util_Any_JSON::sQRead(
+		if (ZQ<Any> theAnyQ = Util_Any_JSON::sQRead(
 			ChanRU_XX_Unreader<UTF32>(
 				ChanR_UTF_Chan_Bin_UTF8(
-					ChanRPos_Bin_Data<Data_Any>(iData))));
+					ChanRPos_Bin_Data<Data_Any>(iData)))))
+			{ return theAnyQ->As<Val_Any>(); }
 		}
 	catch (...) {}
 	return null;
@@ -57,7 +58,7 @@ Val_Any sAsVal(const Daton& iDaton)
 Daton sAsDaton(const Val_Any& iVal)
 	{
 	Data_Any theData;
-	Util_Any_JSON::sWrite(iVal, ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_Any>(&theData)));
+	Util_Any_JSON::sWrite(iVal.As<Any>(), ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_Any>(&theData)));
 	return theData;
 	}
 

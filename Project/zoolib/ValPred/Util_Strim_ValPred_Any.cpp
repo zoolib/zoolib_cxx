@@ -58,7 +58,7 @@ void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		}
 	else if (ZP<ValComparand_Const_Any> cmprnd = iComparand.DynamicCast<ValComparand_Const_Any>())
 		{
-		Util_Any_JSON::sWrite(cmprnd->GetVal(), iChanW);
+		Util_Any_JSON::sWrite(cmprnd->GetVal().As<Any>(), iChanW);
 		}
 	else
 		{
@@ -136,7 +136,7 @@ ZP<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 		}
 
 	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU))
-		return new ValComparand_Const_Any(*theQ);
+		return new ValComparand_Const_Any(theQ->As<Val_Any>());
 
 	return null;
 	}
