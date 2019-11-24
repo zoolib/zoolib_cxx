@@ -40,15 +40,18 @@ struct AnyTraits<string8>
 // =================================================================================================
 #pragma mark - Val_T
 
-//struct Tag_Val;
+// Val_T is a derivative of Any_T<void>, which is the same as Any.
+//typedef void Tag_Val_t;
+
+// This has Val_T be a derivative of Any_T<Tag_Val_t> and thus not
+// transparently convertible with Any.
+typedef struct Tag_Val Tag_Val_t;
 
 template <class Map_p, class Seq_p>
 class Val_T
-:	public Any
-//:	public Any_T<Tag_Val>
+:	public Any_T<Tag_Val_t>
 	{
-	typedef Any inherited;
-//	typedef Any_T<Tag_Val> inherited;
+	typedef Any_T<Tag_Val_t> inherited;
 
 // private and unimplemented, to catch the common mistake of passing a ZQ.
 	template <class S> Val_T(const ZQ<S>&);

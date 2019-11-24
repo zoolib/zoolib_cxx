@@ -534,11 +534,13 @@ private:
 template <class Tag_p>
 class Any_T : public AnyBase
 	{
-	template <class OtherTag>
-	Any_T(const Any_T<OtherTag>&);
+// Disallow construction from and implicit conversion to Any_Ts with different tags.
+	template <class OtherTag> Any_T(const Any_T<OtherTag>&);
+	template <class OtherTag> Any_T& operator=(const Any_T<OtherTag>&);
+	template <class OtherTag> operator const Any_T<OtherTag>&() const;
+	template <class OtherTag> operator Any_T<OtherTag>&();
 
-	template <class OtherTag>
-	Any_T& operator=(const Any_T<OtherTag>&);
+// Disallow
 
 public:
 	typedef Tag_p Tag_T;
