@@ -115,12 +115,12 @@ const void* AnyBase::ConstVoidStar() const
 		}
 	}
 
-void AnyBase::pSwap(AnyBase& ioOther)
+void AnyBase::swap(AnyBase& ioOther)
 	{
 	if (fDistinguisher || ioOther.fDistinguisher)
 		{
 		// Trivial implementation for now
-		const Any temp = *this;
+		const AnyBase temp = *this;
 		*this = ioOther;
 		ioOther = temp;
 		}
@@ -159,12 +159,12 @@ const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 			}
 		else
 			{
-			return pAsInPlace().ConstVoidStarIf(iTypeInfo);
+			return pAsInPlace().ConstVoidStarIfTypeMatch(iTypeInfo);
 			}
 		}
 	else if (const ZP<Reffed>& theReffed = pAsReffed())
 		{
-		return theReffed->ConstVoidStarIf(iTypeInfo);
+		return theReffed->ConstVoidStarIfTypeMatch(iTypeInfo);
 		}
 
 	return 0;
@@ -181,12 +181,12 @@ void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 			}
 		else
 			{
-			return pAsInPlace().MutableVoidStarIf(iTypeInfo);
+			return pAsInPlace().MutableVoidStarIfTypeMatch(iTypeInfo);
 			}
 		}
 	else if (ZP<Reffed>& theReffed = pAsReffed())
 		{
-		return theReffed->FreshMutableVoidStarIf(theReffed, iTypeInfo);
+		return theReffed->FreshMutableVoidStarIfTypeMatch(theReffed, iTypeInfo);
 		}
 
 	return 0;

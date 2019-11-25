@@ -144,13 +144,13 @@ ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 	}
 
 void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w)
-	{ Util_Any_JSONB::sWrite(iVal, w); }
+	{ Util_Any_JSONB::sWrite(iVal.As<Any>(), w); }
 
 Val_Any sReadBin(const ChanR_Bin& iChanR)
 	{
 	ThreadVal_NameUniquifier theNU;
 	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(iChanR))
-		return *theQ;
+		return theQ->As<Val_Any>();
 	return Val_Any();
 	}
 
@@ -243,7 +243,7 @@ void sDump(const ChanW_UTF& w, const Val& iVal)
 	else
 		{
 		w << "\n";
-		Util_Any_JSON::sWrite(iVal, true, w);
+		Util_Any_JSON::sWrite(iVal.As<Any>(), true, w);
 		}
 	}
 

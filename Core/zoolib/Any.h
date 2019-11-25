@@ -120,6 +120,8 @@ public:
 	bool Is() const
 		{ return this->PGet<S>(); }
 
+	void swap(AnyBase& ioOther);
+
 protected:
 	AnyBase()
 		{
@@ -154,8 +156,6 @@ protected:
 		pCtor_T<S>(iVal);
 		return *this;
 		}
-
-	void pSwap(AnyBase& ioOther);
 
 // Special purpose constructors, called by sAny and sAnyCounted
 	template <class S>
@@ -208,11 +208,11 @@ private:
 
 		virtual const void* ConstVoidStar() const = 0;
 
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const = 0;
+		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) const = 0;
 
 		virtual void* MutableVoidStar() = 0;
 
-		virtual void* MutableVoidStarIf(const std::type_info& iTI) = 0;
+		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -235,7 +235,7 @@ private:
 
 		virtual const void* ConstVoidStar() const { return &fValue; }
 
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI) const
+		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) const
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
@@ -244,7 +244,7 @@ private:
 
 		virtual void* MutableVoidStar() { return &fValue; }
 
-		virtual void* MutableVoidStarIf(const std::type_info& iTI)
+		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI)
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
@@ -263,11 +263,11 @@ private:
 
 		virtual const void* ConstVoidStar() = 0;
 
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI) = 0;
+		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
 
 		virtual void* FreshMutableVoidStar(ZP<Reffed>& ioReffed) = 0;
 
-		virtual void* FreshMutableVoidStarIf(ZP<Reffed>& ioReffed, const std::type_info& iTI) = 0;
+		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<Reffed>& ioReffed, const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -289,7 +289,7 @@ private:
 		virtual const void* ConstVoidStar()
 			{ return &fValue; }
 
-		virtual const void* ConstVoidStarIf(const std::type_info& iTI)
+		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI)
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
@@ -307,7 +307,7 @@ private:
 			return &fValue;
 			}
 
-		virtual void* FreshMutableVoidStarIf(ZP<Reffed>& ioReffed, const std::type_info& iTI)
+		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<Reffed>& ioReffed, const std::type_info& iTI)
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				{
@@ -534,14 +534,6 @@ private:
 template <class Tag_p>
 class Any_T : public AnyBase
 	{
-// Disallow construction from and implicit conversion to Any_Ts with different tags.
-	template <class OtherTag> Any_T(const Any_T<OtherTag>&);
-	template <class OtherTag> Any_T& operator=(const Any_T<OtherTag>&);
-	template <class OtherTag> operator const Any_T<OtherTag>&() const;
-	template <class OtherTag> operator Any_T<OtherTag>&();
-
-// Disallow
-
 public:
 	typedef Tag_p Tag_T;
 
@@ -570,27 +562,30 @@ public:
 		return *this;
 		}
 
-	template <class S>
+// Disallow construction and assignment from AnyBase derivatives with a different Tag.
+    template <typename S,
+    	typename EnableIfC<not std::is_base_of<AnyBase,S>::value, int>::type = 0>
 	Any_T(const S& iVal)
 	:	AnyBase(iVal)
 		{}
 
-	template <class S>
+    template <typename S,
+    	typename EnableIfC<not std::is_base_of<AnyBase,S>::value, int>::type = 0>
 	Any_T& operator=(const S& iVal)
 		{
 		AnyBase::operator=(iVal);
 		return *this;
 		}
 
-	void swap(Any_T& ioOther)
-		{ AnyBase::pSwap(ioOther); }
+	template <class OtherAny>
+	typename EnableIfC<std::is_base_of<AnyBase,OtherAny>::value,const OtherAny&>::type
+	As() const
+		{ return *static_cast<const OtherAny*>(static_cast<const AnyBase*>(this)); }
 
 	template <class OtherAny>
-	const Any_T<typename OtherAny::Tag_T>& As() const
-		{
-		const AnyBase* thisBase = this;
-		return *static_cast<const Any_T<typename OtherAny::Tag_T>*>(thisBase);
-		}
+	typename EnableIfC<std::is_base_of<AnyBase,OtherAny>::value,OtherAny&>::type
+	As()
+		{ return *static_cast<OtherAny*>(static_cast<AnyBase*>(this)); }
 
 // Special purpose constructors, called by sAny and sAnyCounted.
 // Passing a single IKnowWhatIAmDoing_t indicates that the type of the pointed-to first
@@ -627,51 +622,44 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - Any
-
-typedef Any_T<void> Any;
-
-// =================================================================================================
 #pragma mark - Accessor functions
 
-template <class S, class Tag_p>
-const S* sPGet(const Any_T<Tag_p>& iAny)
+template <class S>
+const S* sPGet(const AnyBase& iAny)
 	{ return iAny.template PGet<S>(); }
 
-template <class S, class Tag_p>
-const ZQ<S> sQGet(const Any_T<Tag_p>& iAny)
+template <class S>
+const ZQ<S> sQGet(const AnyBase& iAny)
 	{ return iAny.template QGet<S>(); }
 
-template <class S, class Tag_p>
-const S& sDGet(const S& iDefault, const Any_T<Tag_p>& iAny)
+template <class S>
+const S& sDGet(const S& iDefault, const AnyBase& iAny)
 	{ return iAny.template DGet<S>(iDefault); }
 
-template <class S, class Tag_p>
-const S& sGet(const Any_T<Tag_p>& iAny)
+template <class S>
+const S& sGet(const AnyBase& iAny)
 	{ return iAny.template Get<S>(); }
 
-template <class S, class Tag_p>
-S* sPMut(Any_T<Tag_p>& ioAny)
+template <class S>
+S* sPMut(AnyBase& ioAny)
 	{ return ioAny.template PMut<S>(); }
 
-template <class S, class Tag_p>
-S& sDMut(const S& iDefault, Any_T<Tag_p>& ioAny)
+template <class S>
+S& sDMut(const S& iDefault, AnyBase& ioAny)
 	{ return ioAny.template DMut<S>(iDefault); }
 
-template <class S, class Tag_p>
-S& sMut(Any_T<Tag_p>& ioAny)
+template <class S>
+S& sMut(AnyBase& ioAny)
 	{ return ioAny.template Mut<S>(); }
 
-template <class S, class Tag_p>
-S& sSet(Any_T<Tag_p>& ioAny, const S& iVal)
+template <class S>
+S& sSet(AnyBase& ioAny, const S& iVal)
 	{ return ioAny.template Set<S>(iVal); }
 
 // =================================================================================================
-#pragma mark - Any, swap and pseudo-constructors
+#pragma mark - Any
 
-template <class Tag_p>
-inline void swap(Any_T<Tag_p>& a, Any_T<Tag_p>& b)
-	{ a.swap(b); }
+typedef Any_T<void> Any;
 
 template <class S, class Tag_p=void>
 Any sAny()

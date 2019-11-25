@@ -43,8 +43,7 @@ struct AnyTraits<string8>
 // Val_T is a derivative of Any_T<void>, which is the same as Any.
 //typedef void Tag_Val_t;
 
-// This has Val_T be a derivative of Any_T<Tag_Val_t> and thus not
-// transparently convertible with Any.
+// Val_T is independent of Any_T, and thus conversion between must be done explicitly.
 typedef struct Tag_Val Tag_Val_t;
 
 template <class Map_p, class Seq_p>
@@ -73,17 +72,6 @@ public:
 	Val_T& operator=(const Val_T& iOther)
 		{
 		inherited::operator=((const inherited&)iOther);
-		return *this;
-		}
-
-// Overload, so we don't pack a Any inside a Any
-	Val_T(const inherited& iOther)
-	:	inherited(iOther)
-		{}
-
-	Val_T& operator=(const inherited& rhs)
-		{
-		inherited::operator=(rhs);
 		return *this;
 		}
 

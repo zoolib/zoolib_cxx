@@ -19,14 +19,14 @@ struct Tombstone_t {};
 // =================================================================================================
 #pragma mark - spCoerceXXX
 
-static const Val* spCoerceValPtr(const Any* iAny)
-	{ return static_cast<const Val*>(iAny); }
+static const Val* spCoerceValPtr(const Val_Any* iAny)
+	{ return static_cast<const Val*>(static_cast<const AnyBase*>(iAny)); }
 
-static Val* spCoerceValPtr(Any* iAny)
-	{ return static_cast<Val*>(iAny); }
+static Val* spCoerceValPtr(Val_Any* iAny)
+	{ return static_cast<Val*>(static_cast<AnyBase*>(iAny)); }
 
 static const Val_Any& spCoerce_Val_Any(const Val& iVal)
-	{ return static_cast<const Val_Any&>(static_cast<const Any&>(iVal)); }
+	{ return static_cast<const Val_Any&>(static_cast<const AnyBase&>(iVal)); }
 
 // =================================================================================================
 #pragma mark - Link, declaration
@@ -41,7 +41,7 @@ public:
 // ctor used as we walk down a tree.
 	Link(const ZP<Link>& iParent, const Map_Any& iMap);
 
-	ZQ<Any> QReadAt(const Name& iName);
+	ZQ<Val_Any> QReadAt(const Name& iName);
 
 	ZP<Link> WithRootAugment(const std::string& iRootAugmentName, const ZP<Link>& iRootAugment);
 
@@ -69,12 +69,12 @@ Link::Link(const ZP<Link>& iParent, const Map_Any& iMap)
 ,	fMap(iMap)
 	{}
 
-ZQ<Any> Link::QReadAt(const Name& iName)
+ZQ<Val_Any> Link::QReadAt(const Name& iName)
 	{
 	if (ZP<Link> theLink = sGet(fChildren, iName))
 		return Map(theLink);//??
 
-	if (const Any* theAnyP = sPGet(fMap, iName))
+	if (const Val_Any* theAnyP = sPGet(fMap, iName))
 		{
 		if (const Map_Any* theMap = theAnyP->PGet<Map_Any>())
 			{
@@ -128,7 +128,7 @@ ZQ<Any> Link::QReadAt(const Name& iName)
 						fProto = cur;
 						break;
 						}
-					else if (ZQ<Any> theAnyQ = cur->QReadAt(theTrail.At(index)))
+					else if (ZQ<Val_Any> theAnyQ = cur->QReadAt(theTrail.At(index)))
 						{
 						if (const Map* theMapP = theAnyQ->PGet<Map>())
 							{
@@ -199,7 +199,7 @@ void Seq::Clear()
 
 const Val* Seq::PGet(size_t iIndex) const
 	{
-	if (Any* theAnyP = fSeq_Any.PMut(iIndex))
+	if (Val_Any* theAnyP = fSeq_Any.PMut(iIndex))
 		{
 		if (const Map_Any* theMap_AnyP = theAnyP->PGet<Map_Any>())
 			{
@@ -237,7 +237,7 @@ const Val& Seq::Get(size_t iIndex) const
 
 Val* Seq::PMut(size_t iIndex)
 	{
-	if (Any* theAnyP = fSeq_Any.PMut(iIndex))
+	if (Val_Any* theAnyP = fSeq_Any.PMut(iIndex))
 		{
 		if (Map_Any* theMap_AnyP = theAnyP->PMut<Map_Any>())
 			{
@@ -333,7 +333,7 @@ const Val* Map::PGet(const Name_t& iName) const
 	Map_Any::Index_t theIndex = fMap_Any.IndexOf(iName);
 	if (theIndex != fMap_Any.End())
 		{
-		if (const Any* theAny = fMap_Any.PGet(theIndex))
+		if (const Val_Any* theAny = fMap_Any.PGet(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -343,7 +343,7 @@ const Val* Map::PGet(const Name_t& iName) const
 
 	if (fLink)
 		{
-		if (ZQ<Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
 			{
 			fMap_Any.Set(iName, *theAnyQ);
 			return spCoerceValPtr(fMap_Any.PGet(iName));
@@ -380,7 +380,7 @@ Val* Map::PMut(const Name_t& iName)
 	Map_Any::Index_t theIndex = fMap_Any.IndexOf(iName);
 	if (theIndex != fMap_Any.End())
 		{
-		if (Any* theAny = fMap_Any.PMut(theIndex))
+		if (Val_Any* theAny = fMap_Any.PMut(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -390,7 +390,7 @@ Val* Map::PMut(const Name_t& iName)
 
 	if (fLink)
 		{
-		if (ZQ<Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
 			{
 			fMap_Any.Set(iName, *theAnyQ);
 			return spCoerceValPtr(fMap_Any.PMut(iName));
@@ -403,21 +403,21 @@ Val* Map::PMut(const Name_t& iName)
 
 Val& Map::Mut(const Name_t& iName)
 	{
-	if (Any* theP = fMap_Any.PMut(iName))
+	if (Val_Any* theP = fMap_Any.PMut(iName))
 		{
 		if (theP->PGet<Tombstone_t>())
-			*theP = Any();
+			theP->Clear();
 		return *spCoerceValPtr(theP);
 		}
 
-	Any& theMutable = fMap_Any.Mut(iName);
+	Val_Any& theMutable = fMap_Any.Mut(iName);
 	if (fLink)
 		{
-		if (ZQ<Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
 			theMutable = *theAnyQ;
 		}
 
-	return static_cast<Val&>(theMutable);
+	return static_cast<Val&>(static_cast<AnyBase&>(theMutable));
 	}
 
 Map& Map::Set(const Name_t& iName, const Val& iVal)

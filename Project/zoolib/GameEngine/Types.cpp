@@ -68,25 +68,25 @@ Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1)
 // =================================================================================================
 #pragma mark - Rat, from Any
 
-ZQ<Rat> sQRat(const Any& iAny)
+ZQ<Rat> sQRat(const AnyBase& iAnyBase)
 	{
-	if (ZQ<double> theQ = sQCoerceRat(iAny))
+	if (ZQ<double> theQ = sQCoerceRat(iAnyBase))
 		return *theQ;
-	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
+	else if (ZQ<int64> theQ = sQCoerceInt(iAnyBase))
 		return *theQ;
 	return null;
 	}
 
-Rat sDRat(Rat iDefault, const Any& iAny)
+Rat sDRat(Rat iDefault, const AnyBase& iAnyBase)
 	{
-	if (ZQ<Rat> theQ = sQRat(iAny))
+	if (ZQ<Rat> theQ = sQRat(iAnyBase))
 		return *theQ;
 	return iDefault;
 	}
 
-Rat sRat(const Any& iAny)
+Rat sRat(const AnyBase& iAnyBase)
 	{
-	if (ZQ<Rat> theQ = sQRat(iAny))
+	if (ZQ<Rat> theQ = sQRat(iAnyBase))
 		return *theQ;
 	return 0;
 	}
@@ -97,7 +97,7 @@ Rat sRat(const Any& iAny)
 ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQRat(static_cast<const Any&>(*iValQ));
+		return sQRat(*iValQ);
 	return null;
 	}
 
@@ -118,12 +118,12 @@ Rat sRat(const ZQ<Val>& iValQ)
 // =================================================================================================
 #pragma mark - Coerce, CVec
 
-ZQ<CVec3> sQCVec3(Rat iIdentity, const Any& iVal)
+ZQ<CVec3> sQCVec3(Rat iIdentity, const AnyBase& iAnyBase)
 	{
-	if (const CVec3* theCVecP = iVal.PGet<CVec3>())
+	if (const CVec3* theCVecP = iAnyBase.PGet<CVec3>())
 		return *theCVecP;
 
-	if (const Seq* theSeqP = iVal.PGet<Seq>())
+	if (const Seq* theSeqP = iAnyBase.PGet<Seq>())
 		{
 		CVec3 result = sCVec3<>(iIdentity);
 		if (theSeqP->Count() > 0)
@@ -150,7 +150,7 @@ ZQ<CVec3> sQCVec3(Rat iIdentity, const Any& iVal)
 		return result;
 		}
 
-	if (const Seq_Any* theSeqP = iVal.PGet<Seq_Any>())
+	if (const Seq_Any* theSeqP = iAnyBase.PGet<Seq_Any>())
 		{
 		CVec3 result(iIdentity);
 		if (theSeqP->Count() > 0)
@@ -177,22 +177,22 @@ ZQ<CVec3> sQCVec3(Rat iIdentity, const Any& iVal)
 		return result;
 		}
 
-	if (ZQ<Rat> theQ = sQRat(iVal))
+	if (ZQ<Rat> theQ = sQRat(iAnyBase))
 		return sCVec3<Rat>(*theQ, iIdentity, iIdentity);
 
 	return null;
 	}
 
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const Any& iVal)
+CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const AnyBase& iAnyBase)
 	{
-	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iVal))
+	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iAnyBase))
 		return *theQ;
 	return iDefault;
 	}
 
-CVec3 sCVec3(Rat iIdentity, const Any& iVal)
+CVec3 sCVec3(Rat iIdentity, const AnyBase& iAnyBase)
 	{
-	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iVal))
+	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iAnyBase))
 		return *theQ;
 	return CVec3(iIdentity);
 	}
@@ -200,21 +200,21 @@ CVec3 sCVec3(Rat iIdentity, const Any& iVal)
 ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQCVec3(iIdentity, static_cast<const Any&>(*iValQ));
+		return sQCVec3(iIdentity, *iValQ);
 	return null;
 	}
 
 CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sDCVec3(iDefault, iIdentity, static_cast<const Any&>(*iValQ));
+		return sDCVec3(iDefault, iIdentity, *iValQ);
 	return iDefault;
 	}
 
 CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sCVec3(iIdentity, static_cast<const Any&>(*iValQ));
+		return sCVec3(iIdentity, *iValQ);
 	return sCVec3(iIdentity);
 	}
 
@@ -256,12 +256,12 @@ ZQ<RGBA> sQRGBA(const string8& iString)
 	return null;
 	}
 
-ZQ<RGBA> sQRGBA(const Any& iVal)
+ZQ<RGBA> sQRGBA(const AnyBase& iAnyBase)
 	{
-	if (const RGBA* theRGBAP = iVal.PGet<RGBA>())
+	if (const RGBA* theRGBAP = sPGet<RGBA>(iAnyBase))
 		return *theRGBAP;
 
-	if (const string8* theStringP = iVal.PGet<string8>())
+	if (const string8* theStringP = sPGet<string8>(iAnyBase))
 		return sQRGBA(*theStringP);
 
 	return null;
@@ -270,7 +270,7 @@ ZQ<RGBA> sQRGBA(const Any& iVal)
 ZQ<RGBA> sQRGBA(const ZQ<Val>& iValQ)
 	{
 	if (iValQ)
-		return sQRGBA(static_cast<const Any&>(*iValQ));
+		return sQRGBA(*iValQ);
 	return null;
 	}
 
