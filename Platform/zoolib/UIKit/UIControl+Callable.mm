@@ -30,7 +30,7 @@ using namespace ZooLib;
 @interface ZooLib_UIControl_Callable_Proxy : NSObject
 	{
 @public
-	ZRef<Callable_Void> fCallable;
+	ZP<Callable_Void> fCallable;
 	};
 @end // interface ZooLib_UIControl_Callable_Proxy
 
@@ -46,7 +46,7 @@ using namespace ZooLib;
 
 @implementation UIControl (Callable)
 
-- (void)addCallable:(ZRef<Callable_Void>)callable forControlEvents:(UIControlEvents)controlEvents
+- (void)addCallable:(ZP<Callable_Void>)callable forControlEvents:(UIControlEvents)controlEvents
 	{ sAddCallable(self, callable, controlEvents); }
 
 @end // implementation UIControl (Callable)
@@ -57,7 +57,7 @@ using namespace ZooLib;
 namespace ZooLib {
 
 void sAddCallable(UIControl* iUIControl,
-	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents)
+	ZP<Callable_Void> iCallable, UIControlEvents iControlEvents)
 	{
 	if (not iCallable)
 		return;

@@ -87,7 +87,7 @@ class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 	{
 public:
 	typedef ZooLib::Dataspace::Callable_DatonUpdate Callable_DatonUpdate;
-	typedef Callable<ZRef<UITableViewCell>(UITableView*,Map_Any)> Callable_GetCellForMap;
+	typedef Callable<ZP<UITableViewCell>(UITableView*,Map_Any)> Callable_GetCellForMap;
 	typedef Callable<bool(Map_Any)> Callable_CanSelectForMap;
 	typedef Callable<void()> Callable_NeedsUpdate;
 	typedef Map_Any Entry;
@@ -118,7 +118,7 @@ public:
 
 // -----
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+	virtual ZP<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual ZQ<bool> QShouldIndentWhileEditing(size_t iRowIndex);
@@ -127,47 +127,50 @@ public:
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
 // Our protocol
-	void SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+	void SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 		const ZQ<std::vector<SortSpec> > iSortSpecsQ);
 
-	void SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+	void SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 		const ZQ<std::vector<SortSpec> > iSortSpecsQ,
 		const RelHead& iIdentity);
 
-	void SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+	void SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 		const ZQ<std::vector<SortSpec> > iSortSpecsQ,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant);
 
-	void SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+	void SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 		const ZQ<std::vector<SortSpec> > iSortSpecsQ,
 		const RelHead& iIdentity,
 		const RelHead& iSignificant,
 		const ZQ<ColName>& iDatonColNameQ,
-		const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate);
+		const ZP<Callable_DatonUpdate>& iCallable_DatonUpdate);
 
 	ZQ<Map_Any> QGet(size_t iRowIndex);
 
 	void pGetSieveCorrectlySetup();
 
-	void pChanged(const ZRef<ZCounted>& iRegistration,
-		const ZRef<QueryEngine::Result>& iResult);
+	void pChanged(
+		const ZP<Counted>& iRegistration,
+		int64 iChangeCount,
+		const ZP<QueryEngine::Result>& iResult,
+		const ZP<QueryEngine::ResultDeltas>& iResultDeltas);
 
 //##	ZTextCollator fTextCollators[4];
-	ZRef<Callable_GetCellForMap> fCallable_GetCellForMap;
-	ZRef<Callable_CanSelectForMap> fCallable_CanSelectForMap;
-	ZRef<Callable_NeedsUpdate> fCallable_NeedsUpdate;
-	ZRef<Callable_PostProcess> fCallable_PostProcess;
+	ZP<Callable_GetCellForMap> fCallable_GetCellForMap;
+	ZP<Callable_CanSelectForMap> fCallable_CanSelectForMap;
+	ZP<Callable_NeedsUpdate> fCallable_NeedsUpdate;
+	ZP<Callable_PostProcess> fCallable_PostProcess;
 
-	ZRef<Expr_Rel> fRel;
-	ZRef<Callable_Register> fCallable_Register;
-	ZRef<ZCounted> fRegistration;
-	ZRef<QueryEngine::Result> fResult;
+	ZP<Expr_Rel> fRel;
+	ZP<Callable_Register> fCallable_Register;
+	ZP<Counted> fRegistration;
+	ZP<QueryEngine::Result> fResult;
 	std::vector<SortSpec> fSortSpecs;
 	RelHead fIdentity;
 	RelHead fSignificant;
 	ZQ<ColName> fDatonColNameQ;
-	ZRef<Callable_DatonUpdate> fCallable_DatonUpdate;
+	ZP<Callable_DatonUpdate> fCallable_DatonUpdate;
 
 	bool fNeedsUpdate;
 	std::vector<Entry> fRows;

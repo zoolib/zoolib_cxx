@@ -36,9 +36,9 @@ using namespace ZooLib;
 namespace ZooLib {
 namespace UIKit {
 
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty)
+ZP<Section> sMakeSection(ZP<SectionBody> iBody, bool iHideWhenEmpty)
 	{
-	ZRef<Section> theSection = new Section(iBody);
+	ZP<Section> theSection = new Section(iBody);
 	theSection->fHideWhenEmpty = iHideWhenEmpty;
 	if (iHideWhenEmpty)
 		{
@@ -48,14 +48,14 @@ ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty)
 	return theSection;
 	}
 
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody)
+ZP<Section> sMakeSection(ZP<SectionBody> iBody)
 	{ return sMakeSection(iBody, false); }
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
-	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected,
-	ZRef<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped)
+ZP<SectionBody_SingleRow> sMakeSingleRow(ZP<SectionBody_Multi> iParent,
+	ZP<SectionBody::Callable_RowSelected> iCallable_RowSelected,
+	ZP<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped)
 	{
-	ZRef<SectionBody_SingleRow> theSB = new SectionBody_SingleRow(null);
+	ZP<SectionBody_SingleRow> theSB = new SectionBody_SingleRow(null);
 	if (iParent)
 		iParent->fBodies_Pending.push_back(theSB);
 	theSB->fShouldIndentWhileEditingQ = false;
@@ -67,7 +67,7 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 	return theSB;
 	}
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
+ZP<SectionBody_SingleRow> sMakeSingleRow(ZP<SectionBody_Multi> iParent,
 	id iDelegate, SEL iSEL)
 	{
 	return sMakeSingleRow(iParent,
@@ -75,9 +75,9 @@ ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
 		null);
 	}
 
-ZRef<UILabel> sMakeUILabel()
+ZP<UILabel> sMakeUILabel()
 	{
-	ZRef<UILabel> theLabel = sAdopt& [[UILabel alloc] initWithFrame:CGRectZero];
+	ZP<UILabel> theLabel = sAdopt& [[UILabel alloc] initWithFrame:CGRectZero];
 	[theLabel setHighlightedTextColor:[UIColor whiteColor]];
 	[theLabel setBackgroundColor:[UIColor clearColor]];
 	[theLabel setOpaque:NO];

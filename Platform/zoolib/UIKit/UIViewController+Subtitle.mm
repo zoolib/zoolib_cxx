@@ -1,7 +1,7 @@
 #include "UIViewController+Subtitle.h"
 
 #include "zoolib/Apple/Cartesian_CG.h"
-#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/ZP_NS.h"
 
 #import <Foundation/NSInvocation.h>
 #import <UIKit/UIKit.h>
@@ -10,7 +10,7 @@ using namespace ZooLib;
 
 namespace { // anonymous
 
-ZRef<UILabel> spMakeUILabel()
+ZP<UILabel> spMakeUILabel()
 	{
 	UILabel* label = [[UILabel alloc] initWithFrame:CGRectZero];
 	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -35,9 +35,9 @@ ZRef<UILabel> spMakeUILabel()
 
 struct Views_t
 	{
-	ZRef<UIView> fWrapper;
-	ZRef<UILabel> fTitle;
-	ZRef<UILabel> fSubtitle;
+	ZP<UIView> fWrapper;
+	ZP<UILabel> fTitle;
+	ZP<UILabel> fSubtitle;
 	};
 
 } // anonymous namespace
@@ -92,16 +92,16 @@ struct Views_t
 		}
 
 	const CGRect frame = sRect<CGRect>(4000, 44);
-	ZRef<UIView> theTitleWrapper = sAdopt& [[UIView alloc] initWithFrame:frame];
+	ZP<UIView> theTitleWrapper = sAdopt& [[UIView alloc] initWithFrame:frame];
 	[theTitleWrapper setBackgroundColor:[UIColor clearColor]];
 	[theTitleWrapper setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
 
-	ZRef<UILabel> theLabel_Title = spMakeUILabel();
+	ZP<UILabel> theLabel_Title = spMakeUILabel();
 	[theLabel_Title setText:[self title]];
 	[theLabel_Title setFont:[UIFont boldSystemFontOfSize:20]];
 	[theTitleWrapper addSubview:theLabel_Title];
 
-	ZRef<UILabel> theLabel_Subtitle = spMakeUILabel();
+	ZP<UILabel> theLabel_Subtitle = spMakeUILabel();
 	[theLabel_Subtitle setFont:[UIFont boldSystemFontOfSize:13]];
 	[theTitleWrapper addSubview:theLabel_Subtitle];
 

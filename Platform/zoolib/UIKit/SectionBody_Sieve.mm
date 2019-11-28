@@ -42,19 +42,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/UIKit/TVCell.h"
 
 // =================================================================================================
-#pragma mark - sCompare_T specialized for ZRef<SectionBody_Sieve::Callable_GetCellForMap>
+#pragma mark - sCompare_T specialized for ZP<SectionBody_Sieve::Callable_GetCellForMap>
 
 namespace ZooLib {
 
 using UIKit::SectionBody_Sieve;
 
 template <>
-int sCompare_T<ZRef<SectionBody_Sieve::Callable_GetCellForMap> >
-	(const ZRef<SectionBody_Sieve::Callable_GetCellForMap>& iL,
-	const ZRef<SectionBody_Sieve::Callable_GetCellForMap>& iR)
+int sCompare_T<ZP<SectionBody_Sieve::Callable_GetCellForMap> >
+	(const ZP<SectionBody_Sieve::Callable_GetCellForMap>& iL,
+	const ZP<SectionBody_Sieve::Callable_GetCellForMap>& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-ZMACRO_CompareRegistration_T(ZRef<SectionBody_Sieve::Callable_GetCellForMap>);
+ZMACRO_CompareRegistration_T(ZP<SectionBody_Sieve::Callable_GetCellForMap>);
 
 } // namespace ZooLib
 
@@ -62,6 +62,7 @@ namespace ZooLib {
 namespace UIKit {
 
 using QueryEngine::Result;
+using QueryEngine::ResultDeltas;
 
 using std::pair;
 using std::vector;
@@ -177,7 +178,7 @@ void SectionBody_Sieve::Initialize()
 	const SEL willEnterForegroundNotificationSEL = sel_registerName("willEnterForegroundNotification");
 
 	fDelegate.Set(willEnterForegroundNotificationSEL,
-		sCallable(sWeakRef(this), &SectionBody_Sieve::pWillEnterForegroundNotification));
+		sCallable(sWP(this), &SectionBody_Sieve::pWillEnterForegroundNotification));
 
 	[[NSNotificationCenter defaultCenter]
 		addObserver:fDelegate
@@ -188,7 +189,7 @@ void SectionBody_Sieve::Initialize()
 	const SEL didEnterBackgroundNotificationSEL = sel_registerName("didEnterBackgroundNotification");
 
 	fDelegate.Set(didEnterBackgroundNotificationSEL,
-		sCallable(sWeakRef(this), &SectionBody_Sieve::pDidEnterBackgroundNotification));
+		sCallable(sWP(this), &SectionBody_Sieve::pDidEnterBackgroundNotification));
 
 	[[NSNotificationCenter defaultCenter]
 		addObserver:fDelegate
@@ -214,7 +215,7 @@ void SectionBody_Sieve::PreUpdate()
 	if (fRegistration)
 		{
 		vector<Entry> theRows;
-		if (ZRef<Result> theResult = fResult)
+		if (ZP<Result> theResult = fResult)
 			{
 			fIsLoading = false;
 			const RelHead& theRelHead = theResult->GetRelHead();
@@ -425,19 +426,19 @@ void SectionBody_Sieve::ViewDidDisappear(UITableView* iTV)
 	this->pGetSieveCorrectlySetup();
 	}
 
-ZRef<UITableViewCell> SectionBody_Sieve::UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+ZP<UITableViewCell> SectionBody_Sieve::UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 	bool& ioIsPreceded, bool& ioIsSucceeded)
 	{
 	if (fShowLoading && fIsLoading)
 		{
 		ZAssertStop(0, iRowIndex == 0);
-		ZRef<UITableViewCell> theCell = sGetCell_Simple(iView, Util_NS::sString("Loading..."), false);
+		ZP<UITableViewCell> theCell = sGetCell_Simple(iView, Util_NS::sString("Loading..."), false);
 //##		[theCell->fUILabel_Left setTextColor:sColor_Text_Gray()];
 		return theCell;
 		}
 	else if (fCallable_GetCellForMap)
 		{
-		if (ZRef<UITableViewCell> theCell =
+		if (ZP<UITableViewCell> theCell =
 			fCallable_GetCellForMap->Call(iView, fRows[iRowIndex]))
 			{
 			if (fApplyAccessory)
@@ -498,30 +499,30 @@ ZQ<bool> SectionBody_Sieve::CanSelect(bool iEditing, size_t iRowIndex)
 	return SectionBody_Concrete::CanSelect(iEditing, iRowIndex);
 	}
 
-void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+void SectionBody_Sieve::SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 	const ZQ<vector<SortSpec> > iSortSpecsQ)
 	{
 	const RelHead theRH = sGetRelHead(iRel);
 	this->SetRel(iRel, iCallable_Register, iSortSpecsQ, theRH, theRH, null, null);
 	}
 
-void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+void SectionBody_Sieve::SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 	const ZQ<vector<SortSpec> > iSortSpecsQ,
 	const RelHead& iIdentity)
 	{ this->SetRel(iRel, iCallable_Register, iSortSpecsQ, iIdentity, sGetRelHead(iRel), null, null); }
 
-void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+void SectionBody_Sieve::SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 	const ZQ<vector<SortSpec> > iSortSpecsQ,
 	const RelHead& iIdentity,
 	const RelHead& iSignificant)
 	{ this->SetRel(iRel, iCallable_Register, iSortSpecsQ, iIdentity, iSignificant, null, null); }
 
-void SectionBody_Sieve::SetRel(ZRef<Expr_Rel> iRel, ZRef<Callable_Register> iCallable_Register,
+void SectionBody_Sieve::SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallable_Register,
 	const ZQ<vector<SortSpec> > iSortSpecsQ,
 	const RelHead& iIdentity,
 	const RelHead& iSignificant,
 	const ZQ<ColName>& iDatonColNameQ,
-	const ZRef<Callable_DatonUpdate>& iCallable_DatonUpdate)
+	const ZP<Callable_DatonUpdate>& iCallable_DatonUpdate)
 	{
 	if (fRel == iRel)
 		return;
@@ -563,7 +564,7 @@ void SectionBody_Sieve::pGetSieveCorrectlySetup()
 		if (fRel and not fRegistration)
 			{
 			fRegistration = sCall(fCallable_Register,
-				sCallable(sWeakRef(this), &SectionBody_Sieve::pChanged), fRel);
+				sCallable(sWP(this), &SectionBody_Sieve::pChanged), fRel);
 			}
 		}
 	else
@@ -575,8 +576,11 @@ void SectionBody_Sieve::pGetSieveCorrectlySetup()
 		fCallable_NeedsUpdate->Call();
 	}
 
-void SectionBody_Sieve::pChanged(const ZRef<ZCounted>& iRegistration,
-	const ZRef<QueryEngine::Result>& iResult)
+void SectionBody_Sieve::pChanged(
+	const ZP<Counted>& iRegistration,
+	int64 iChangeCount,
+	const ZP<Result>& iResult,
+	const ZP<ResultDeltas>& iResultDeltas)
 	{
 	fResult = iResult;
 	if (not sGetSet(fNeedsUpdate, true))
@@ -590,7 +594,7 @@ void SectionBody_Sieve::pWillEnterForegroundNotification()
 	// this event loop, and in any case, after the application considers itself to be out of
 	// the background.
 	//
-	Starter_CFRunLoop::sMain()->QStart(sCallable(sWeakRef(this), &SectionBody_Sieve::pGetSieveCorrectlySetup));
+	Starter_CFRunLoop::sMain()->QStart(sCallable(sWP(this), &SectionBody_Sieve::pGetSieveCorrectlySetup));
 	}
 
 void SectionBody_Sieve::pDidEnterBackgroundNotification()

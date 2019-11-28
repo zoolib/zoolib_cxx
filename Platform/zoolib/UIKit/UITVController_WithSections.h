@@ -49,12 +49,12 @@ class SectionBody;
 // =================================================================================================
 #pragma mark - Section
 
-class Section : public ZCounted
+class Section : public Counted
 	{
 public:
-	Section(ZRef<SectionBody> iBody);
+	Section(ZP<SectionBody> iBody);
 
-	ZRef<SectionBody> GetBody();
+	ZP<SectionBody> GetBody();
 
 	bool fHideWhenEmpty;
 	virtual bool HideWhenEmpty();
@@ -71,11 +71,11 @@ public:
 	ZQ<string8> fFooterTitleQ;
 	virtual ZQ<string8> QFooterTitle();
 
-	ZRef<UIView> fHeaderViewQ;
-	virtual ZRef<UIView> QHeaderView();
+	ZP<UIView> fHeaderViewQ;
+	virtual ZP<UIView> QHeaderView();
 
-	ZRef<UIView> fFooterViewQ;
-	virtual ZRef<UIView> QFooterView();
+	ZP<UIView> fFooterViewQ;
+	virtual ZP<UIView> QFooterView();
 
 	ZQ<UITableViewRowAnimation> fSectionAnimation_InsertQ;
 	virtual ZQ<UITableViewRowAnimation> QSectionAnimation_Insert();
@@ -93,13 +93,13 @@ public:
 	UITableViewRowAnimation SectionAnimation_Reload();
 
 private:
-	ZRef<SectionBody> fBody;
+	ZP<SectionBody> fBody;
 	};
 
 // =================================================================================================
 #pragma mark - SectionBody
 
-class SectionBody : public ZCounted
+class SectionBody : public Counted
 	{
 public:
 	class RowMeta;
@@ -120,7 +120,7 @@ public:
 
 // -----
 
-	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow) = 0;
+	virtual bool FindSectionBody(ZP<SectionBody> iSB, size_t& ioRow) = 0;
 
 // -----
 
@@ -131,7 +131,7 @@ public:
 
 // -----
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+	virtual ZP<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded) = 0;
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex) = 0;
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex) = 0;
@@ -146,11 +146,11 @@ public:
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex) = 0;
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex) = 0;
 
-	typedef Callable<ZRef<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
+	typedef Callable<ZP<UITableViewCell>(UITableView*,size_t)> Callable_GetCell;
 
-	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_ButtonTapped;
+	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZP<SectionBody>,size_t)> Callable_ButtonTapped;
 
-	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZRef<SectionBody>,size_t)> Callable_RowSelected;
+	typedef Callable<bool(UITVHandler_WithSections*,UITableView*,NSIndexPath*,ZP<SectionBody>,size_t)> Callable_RowSelected;
 	};
 
 // =================================================================================================
@@ -193,7 +193,7 @@ public:
 	SectionBody_Concrete();
 
 // From SectionBody
-	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow);
+	virtual bool FindSectionBody(ZP<SectionBody> iSB, size_t& ioRow);
 
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
@@ -209,18 +209,18 @@ public:
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
 // Our protocol
-	void ApplyAccessory(size_t iRowIndex, ZRef<UITableViewCell> ioCell);
+	void ApplyAccessory(size_t iRowIndex, ZP<UITableViewCell> ioCell);
 
 	ZQ<UITableViewCellEditingStyle> fEditingStyleQ;
 	ZQ<bool> fShouldIndentWhileEditingQ;
 	ZQ<CGFloat> fRowHeightQ;
 	ZQ<NSInteger> fIndentationLevelQ;
 
-	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped;
-	ZRef<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
+	ZP<Callable_ButtonTapped> fCallable_ButtonTapped;
+	ZP<Callable_ButtonTapped> fCallable_ButtonTapped_Editing;
 
-	ZRef<Callable_RowSelected> fCallable_RowSelected;
-	ZRef<Callable_RowSelected> fCallable_RowSelected_Editing;
+	ZP<Callable_RowSelected> fCallable_RowSelected;
+	ZP<Callable_RowSelected> fCallable_RowSelected_Editing;
 
 // Our protocol
 	virtual UITableViewRowAnimation RowAnimation_Insert();
@@ -240,7 +240,7 @@ public:
 class SectionBody_SingleRow : public SectionBody_Concrete
 	{
 public:
-	SectionBody_SingleRow(ZRef<UITableViewCell> iCell);
+	SectionBody_SingleRow(ZP<UITableViewCell> iCell);
 
 	virtual size_t NumberOfRows();
 
@@ -253,18 +253,18 @@ public:
 	virtual void Update_Delete(RowMeta& ioRowMeta_Old, RowUpdate& ioRowUpdate_Old);
 	virtual void FinishUpdate();
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+	virtual ZP<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded);
 
 // Our protocol
-	ZRef<UITableViewCell> GetCurrent()
+	ZP<UITableViewCell> GetCurrent()
 		{ return fCell_Current; }
 
-	ZRef<UITableViewCell> fCell_Pending;
+	ZP<UITableViewCell> fCell_Pending;
 
 private:
-	ZRef<UITableViewCell> fCell_New;
-	ZRef<UITableViewCell> fCell_Current;
+	ZP<UITableViewCell> fCell_New;
+	ZP<UITableViewCell> fCell_Current;
 	};
 
 // =================================================================================================
@@ -273,7 +273,7 @@ private:
 class SectionBody_Multi : public SectionBody
 	{
 public:
-	virtual bool FindSectionBody(ZRef<SectionBody> iSB, size_t& ioRow);
+	virtual bool FindSectionBody(ZP<SectionBody> iSB, size_t& ioRow);
 
 	virtual size_t NumberOfRows();
 
@@ -295,7 +295,7 @@ public:
 
 // -----
 
-	virtual ZRef<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
+	virtual ZP<UITableViewCell> UITableViewCellForRow(UITableView* iView, size_t iRowIndex,
 		bool& ioIsPreceded, bool& ioIsSucceeded);
 	virtual ZQ<UITableViewCellEditingStyle> QEditingStyle(size_t iRowIndex);
 	virtual bool CommitEditingStyle(UITableViewCellEditingStyle iStyle, size_t iRowIndex);
@@ -310,12 +310,12 @@ public:
 		UITableView* iTableView, NSIndexPath* iIndexPath, size_t iRowIndex);
 	virtual ZQ<bool> CanSelect(bool iEditing, size_t iRowIndex);
 
-	std::vector<ZRef<SectionBody> > fBodies_Pending;
+	std::vector<ZP<SectionBody> > fBodies_Pending;
 
 private:
-	ZRef<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex);
-	ZRef<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex, bool* oIsSucceeded);
-	std::vector<ZRef<SectionBody> > fBodies;
+	ZP<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex);
+	ZP<SectionBody> pGetBodyAndRowIndex(size_t iIndex, size_t& oIndex, bool* oIsSucceeded);
+	std::vector<ZP<SectionBody> > fBodies;
 	};
 
 } // namespace UIKit
@@ -326,8 +326,8 @@ private:
 
 @interface UITVHandler_WithSections : NSObject <UITableViewDelegate, UITableViewDataSource>
 	{
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_Shown;
-	std::set<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_ToIgnore;
+	std::vector<ZooLib::ZP<ZooLib::UIKit::Section> > fSections_Shown;
+	std::set<ZooLib::ZP<ZooLib::UIKit::Section> > fSections_ToIgnore;
 	bool fTouchState;
 	bool fNeedsUpdate;
 	bool fUpdateInFlight;
@@ -337,7 +337,7 @@ private:
 
 @public
 	// Public so appendSection and others can manipulate it.
-	std::vector<ZooLib::ZRef<ZooLib::UIKit::Section> > fSections_All;
+	std::vector<ZooLib::ZP<ZooLib::UIKit::Section> > fSections_All;
 	}
 
 // From UITableViewDataSource
@@ -364,7 +364,7 @@ private:
 // Our protocol
 - (void)doUpdateIfPossible:(UITableView*)tableView;
 - (void)needsUpdate:(UITableView*)tableView;
-- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB;
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZP<ZooLib::UIKit::SectionBody>)iSB;
 
 - (void)tableViewWillAppear:(UITableView*)tableView;
 - (void)tableViewDidAppear:(UITableView*)tableView;
@@ -392,14 +392,14 @@ private:
 @interface UITableView_WithSections : UITableView
 	{
 @public
-	ZooLib::ZRef<ZooLib::Callable<void()> > fCallable_NeedsUpdate;
-	ZooLib::ZRef<UITVHandler_WithSections> fHandler;
+	ZooLib::ZP<ZooLib::Callable<void()> > fCallable_NeedsUpdate;
+	ZooLib::ZP<UITVHandler_WithSections> fHandler;
 	};
 
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style variableRowHeight:(BOOL)variableRowHeight;
 - (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
-- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZRef<ZooLib::UIKit::SectionBody>)iSB;
-- (void)appendSection:(ZooLib::ZRef<ZooLib::UIKit::Section>) iSection;
+- (NSIndexPath*)indexPathForSectionBody:(ZooLib::ZP<ZooLib::UIKit::SectionBody>)iSB;
+- (void)appendSection:(ZooLib::ZP<ZooLib::UIKit::Section>) iSection;
 - (void)doUpdateIfPossible;
 - (void)needsUpdate;
 - (void)deselect;

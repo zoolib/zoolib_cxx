@@ -32,17 +32,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace UIKit {
 
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody, bool iHideWhenEmpty);
-ZRef<Section> sMakeSection(ZRef<SectionBody> iBody);
+ZP<Section> sMakeSection(ZP<SectionBody> iBody, bool iHideWhenEmpty);
+ZP<Section> sMakeSection(ZP<SectionBody> iBody);
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
-	ZRef<SectionBody::Callable_RowSelected> iCallable_RowSelected = null,
-	ZRef<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped = null);
+ZP<SectionBody_SingleRow> sMakeSingleRow(ZP<SectionBody_Multi> iParent,
+	ZP<SectionBody::Callable_RowSelected> iCallable_RowSelected = null,
+	ZP<SectionBody::Callable_ButtonTapped> iCallable_ButtonTapped = null);
 
-ZRef<SectionBody_SingleRow> sMakeSingleRow(ZRef<SectionBody_Multi> iParent,
+ZP<SectionBody_SingleRow> sMakeSingleRow(ZP<SectionBody_Multi> iParent,
 	id iDelegate, SEL iSEL);
 
-ZRef<UILabel> sMakeUILabel();
+ZP<UILabel> sMakeUILabel();
 
 } // namespace UIKit
 } // namespace ZooLib

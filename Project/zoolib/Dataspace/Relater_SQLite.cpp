@@ -183,7 +183,7 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 			{
 			const size_t theCount = theIter->Count();
 			for (size_t xx = 0; xx < theCount; ++xx)
-				thePackedRows.push_back(theIter->Get(xx));
+				thePackedRows.push_back(theIter->Get(xx).As<Val_Any>());
 			}
 
 		ZP<QueryEngine::Result> theResult =

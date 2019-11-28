@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @interface UIControl (Callable)
 
-- (void)addCallable:(ZooLib::ZRef<ZooLib::Callable_Void>)callable
+- (void)addCallable:(ZooLib::ZP<ZooLib::Callable_Void>)callable
 	forControlEvents:(UIControlEvents)controlEvents;
 
 @end // interface UIControl (Callable)
@@ -42,7 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 
 void sAddCallable(UIControl* iUIControl,
-	ZRef<Callable_Void> iCallable, UIControlEvents iControlEvents);
+	ZP<Callable_Void> iCallable, UIControlEvents iControlEvents);
 
 } // namespace ZooLib
 

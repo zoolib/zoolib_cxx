@@ -4,7 +4,7 @@
 
 #import <UIKit/UITableView.h>
 
-#include "zoolib/Apple/ZRef_NS.h"
+#include "zoolib/Apple/ZP_NS.h"
 
 // =================================================================================================
 #pragma mark -
@@ -13,9 +13,9 @@ namespace ZooLib {
 namespace UIKit {
 
 template <class CellClass_t>
-ZRef<CellClass_t> sGetCell_T(UITableView* iView, bool iReusable)
+ZP<CellClass_t> sGetCell_T(UITableView* iView, bool iReusable)
 	{
-	ZRef<CellClass_t> theCell;
+	ZP<CellClass_t> theCell;
 	NSString* theReuseIdentifier = nil;
 
 	if (iReusable)
@@ -40,7 +40,7 @@ ZRef<CellClass_t> sGetCell_T(UITableView* iView, bool iReusable)
 	return theCell;
 	}
 
-ZRef<UITableViewCell> sGetCell_Simple(UITableView* iView, NSString* iText, bool iReusable = true);
+ZP<UITableViewCell> sGetCell_Simple(UITableView* iView, NSString* iText, bool iReusable = true);
 
 } // namespace UIKit
 } // namespace ZooLib

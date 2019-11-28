@@ -7,9 +7,9 @@
 namespace ZooLib {
 namespace UIKit {
 
-ZRef<UITableViewCell> sGetCell_Simple(UITableView* iView, NSString* iText, bool iReusable)
+ZP<UITableViewCell> sGetCell_Simple(UITableView* iView, NSString* iText, bool iReusable)
 	{
-	ZRef<UITableViewCell> theCell = sGetCell_T<UITableViewCell>(iView, iReusable);
+	ZP<UITableViewCell> theCell = sGetCell_T<UITableViewCell>(iView, iReusable);
 	[theCell textLabel].text = iText;
 	return theCell;
 	}
