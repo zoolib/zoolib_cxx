@@ -59,14 +59,14 @@ Result::Result(const Result& iOther)
 	{}
 
 Result::Result(RelHead* ioRelHead,
-	vector<Val_Any>* ioPackedRows)
+	vector<Val_DB>* ioPackedRows)
 	{
 	ioRelHead->swap(fRelHead);
 	ioPackedRows->swap(fPackedRows);
 	}
 
 Result::Result(const RelHead& iRelHead,
-	vector<Val_Any>* ioPackedRows)
+	vector<Val_DB>* ioPackedRows)
 :	fRelHead(iRelHead)
 	{
 	ioPackedRows->swap(fPackedRows);
@@ -77,7 +77,7 @@ Result::Result(const ZP<Result>& iOther, size_t iRow)
 	{
 	if (iRow < iOther->Count())
 		{
-		const Val_Any* theVals = iOther->GetValsAt(iRow);
+		const Val_DB* theVals = iOther->GetValsAt(iRow);
 		fPackedRows.insert(fPackedRows.end(), theVals, theVals + fRelHead.size());
 		}
 	}
@@ -95,7 +95,7 @@ size_t Result::Count()
 	return 0;
 	}
 
-const Val_Any* Result::GetValsAt(size_t iIndex)
+const Val_DB* Result::GetValsAt(size_t iIndex)
 	{
 	const size_t theOffset = fRelHead.size() * iIndex;
 	ZAssert(theOffset < fPackedRows.size() + fRelHead.size());
@@ -131,7 +131,7 @@ ResultDeltas::~ResultDeltas()
 namespace { // anonymous
 
 pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
-	const Val_Any* iVals_Left, const Val_Any* iVals_Right)
+	const Val_DB* iVals_Left, const Val_DB* iVals_Right)
 	{
 	const size_t offsetsCount = iOffsets.size();
 	for (size_t yy = 0; yy < offsetsCount; ++yy)

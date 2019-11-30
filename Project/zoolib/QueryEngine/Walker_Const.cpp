@@ -29,7 +29,7 @@ using std::set;
 // =================================================================================================
 #pragma mark - Walker_Const
 
-Walker_Const::Walker_Const(const string8& iColName, const Val_Any& iVal)
+Walker_Const::Walker_Const(const string8& iColName, const Val_DB& iVal)
 :	fExhausted(false)
 ,	fColName(iColName)
 ,	fVal(iVal)
@@ -54,7 +54,7 @@ ZP<Walker> Walker_Const::Prime(
 	return this;
 	}
 
-bool Walker_Const::QReadInc(Val_Any* ioResults)
+bool Walker_Const::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 

@@ -40,9 +40,6 @@ struct AnyTraits<string8>
 // =================================================================================================
 #pragma mark - Val_T
 
-// Val_T is a derivative of Any_T<void>, which is the same as Any.
-//typedef void Tag_Val_t;
-
 // Val_T is independent of Any_T, and thus conversion between must be done explicitly.
 typedef struct Tag_Val Tag_Val_t;
 

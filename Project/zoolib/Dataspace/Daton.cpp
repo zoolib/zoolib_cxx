@@ -57,7 +57,7 @@ Daton& Daton::operator=(const Daton& iOther)
 	return *this;
 	}
 
-Daton::Daton(Data_Any iData)
+Daton::Daton(Data_ZZ iData)
 :	fData(iData)
 	{}
 
@@ -67,7 +67,7 @@ bool Daton::operator==(const Daton& iOther) const
 bool Daton::operator<(const Daton& iOther) const
 	{ return fData < iOther.fData; }
 
-Data_Any Daton::GetData() const
+Data_ZZ Daton::GetData() const
 	{ return fData; }
 
 } // namespace Dataspace

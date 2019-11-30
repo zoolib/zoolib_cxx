@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #import <Foundation/NSObject.h>
 
@@ -35,11 +35,11 @@ namespace Util_NS {
 // =================================================================================================
 #pragma mark - Util_NS
 
-Any sDAsAny(const Any& iDefault, NSObject* iVal);
-Any sAsAny(NSObject* iVal);
+Val_ZZ sDAsZZ(const Val_ZZ& iDefault, NSObject* iVal);
+Val_ZZ sAsZZ(NSObject* iVal);
 
-NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal);
-NSObject* sAsNSObject(const Any& iVal);
+NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal);
+NSObject* sAsNSObject(const Val_ZZ& iVal);
 
 } // namespace Util_NS
 } // namespace ZooLib
@@ -48,7 +48,7 @@ NSObject* sAsNSObject(const Any& iVal);
 #pragma mark - asAnyWithDefault
 
 @interface NSObject (ZooLib_Any_Additions)
--(ZooLib::Any)asAnyWithDefault:(const ZooLib::Any&)iDefault;
+-(ZooLib::Val_ZZ)asZZWithDefault:(const ZooLib::Val_ZZ&)iDefault;
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)

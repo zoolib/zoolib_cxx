@@ -41,8 +41,8 @@ ZP<Result> sResultFromWalker(ZP<Walker> iWalker)
 	size_t baseOffset = 0;
 	iWalker = iWalker->Prime(sDefault(), offsets, baseOffset);
 
-	vector<Val_Any> thePackedRows;
-	vector<Val_Any> theRow(baseOffset);
+	vector<Val_DB> thePackedRows;
+	vector<Val_DB> theRow(baseOffset);
 	for (;;)
 		{
 		if (not iWalker->QReadInc(&theRow[0]))

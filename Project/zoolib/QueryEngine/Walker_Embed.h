@@ -47,7 +47,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(Val_Any* ioResults);
+	virtual bool QReadInc(Val_DB* ioResults);
 
 // Our protocol
 	ZP<Walker> GetParent()

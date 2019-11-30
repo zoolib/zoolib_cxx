@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
@@ -41,13 +41,13 @@ namespace Util_NS {
 // =================================================================================================
 #pragma mark - Util_NS
 
-Any sDAsAny(const Any& iDefault, NSObject* iVal)
+Val_ZZ sDAsZZ(const Val_ZZ& iDefault, NSObject* iVal)
 	{
 	if (iVal)
 		{
 		@try
 			{
-			return [iVal asAnyWithDefault:iDefault];
+			return [iVal asZZWithDefault:iDefault];
 			}
 		@catch (id ex)
 			{}
@@ -55,10 +55,10 @@ Any sDAsAny(const Any& iDefault, NSObject* iVal)
 	return iDefault;
 	}
 
-Any sAsAny(NSObject* iVal)
-	{ return sDAsAny(Any(), iVal); }
+Val_ZZ sAsZZ(NSObject* iVal)
+	{ return sDAsZZ(Val_ZZ(), iVal); }
 
-NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
+NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal)
 	{
 	if (false)
 		{}
@@ -77,27 +77,27 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 		else
 			return sData();
 		}
-	else if (const Data_Any* theValue = iVal.PGet<Data_Any>())
+	else if (const Data_ZZ* theValue = iVal.PGet<Data_ZZ>())
 		{
 		if (size_t theSize = theValue->GetSize())
 			return sData(theValue->GetPtr(), theSize);
 		else
 			return sData();
 		}
-	else if (const Seq_Any* theValue = iVal.PGet<Seq_Any>())
+	else if (const Seq_ZZ* theValue = iVal.PGet<Seq_ZZ>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t xx = 0, count = theValue->Size(); xx < count; ++xx)
-			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx).As<Any>())];
+			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
 		return theArray;
 		}
-	else if (const Map_Any* theValue = iVal.PGet<Map_Any>())
+	else if (const Map_ZZ* theValue = iVal.PGet<Map_ZZ>())
 		{
 		NSMutableDictionary* theDictionary = sDictionaryMutable();
-		for (Map_Any::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
+		for (Map_ZZ::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
 			{
 			[theDictionary
-				setObject:sDAsNSObject(iDefault, theValue->Get(ii).As<Any>())
+				setObject:sDAsNSObject(iDefault, theValue->Get(ii))
 				forKey:sString(theValue->NameOf(ii))];
 			}
 		return theDictionary;
@@ -170,7 +170,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Any& iVal)
 	return iDefault;
 	}
 
-NSObject* sAsNSObject(const Any& iVal)
+NSObject* sAsNSObject(const Val_ZZ& iVal)
 	{ return sDAsNSObject([NSNull null], iVal); }
 
 } // namespace Util_NS
@@ -179,10 +179,10 @@ NSObject* sAsNSObject(const Any& iVal)
 // =================================================================================================
 @implementation NSObject (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
 	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZooLib_Any_Additions) asAnyWithDefault called"));
+	ZDebugLogf(0, ("NSObject (ZooLib_Any_Additions) asZZWithDefault called"));
 	return iDefault;
 	}
 
@@ -190,99 +190,99 @@ NSObject* sAsNSObject(const Any& iVal)
 
 // =================================================================================================
 @interface NSNull (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSNull (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
-	{ return Any(); }
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+	{ return Val_ZZ(); }
 
 @end
 
 // =================================================================================================
 @interface NSDictionary (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSDictionary (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
-	Map_Any result;
+	Map_ZZ result;
 	for (id theKey, ii = [self keyEnumerator]; (theKey = [ii nextObject]); /*no inc*/)
 		{
 		const string8 theName = Util_NS::sAsUTF8((NSString*)theKey);
-		const Any theVal = [[self objectForKey:theKey] asAnyWithDefault:iDefault];
-		result.Set(theName, theVal.As<Val_Any>());
+		const Val_ZZ theVal = [[self objectForKey:theKey] asZZWithDefault:iDefault];
+		result.Set(theName, theVal);
 		}
-	return Any(result);
+	return result;
 	}
 
 @end
 
 // =================================================================================================
 @interface NSArray (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSArray (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
-	Seq_Any result;
+	Seq_ZZ result;
 	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
-		result.Append([theValue asAnyWithDefault:iDefault].As<Val_Any>());
-	return Any(result);
+		result.Append([theValue asZZWithDefault:iDefault].As<Val_ZZ>());
+	return result;
 	}
 
 @end
 
 // =================================================================================================
 @interface NSData (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSData (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
-	{ return Any(Data_Any([self bytes], [self length])); }
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+	{ return Data_ZZ([self bytes], [self length]); }
 
 @end
 
 // =================================================================================================
 @interface NSString (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSString (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
-	{ return Any(string8([self UTF8String])); }
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+	{ return string8([self UTF8String]); }
 
 @end
 
 // =================================================================================================
 @interface NSNumber (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSNumber (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
-	{ return Any(int64([self longLongValue])); }
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+	{ return int64([self longLongValue]); }
 
 @end
 
-//// =================================================================================================
+// =================================================================================================
 @interface NSDate (ZooLib_Any_Additions)
--(Any)asAnyWithDefault:(const Any&)iDefault;
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
 @implementation NSDate (ZooLib_Any_Additions)
 
--(Any)asAnyWithDefault:(const Any&)iDefault
-	{ return Any(ZooLib::UTCDateTime([self timeIntervalSince1970])); }
+-(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+	{ return ZooLib::UTCDateTime([self timeIntervalSince1970]); }
 
 @end
 

@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare.h"
 #include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
-#include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
+#include "zoolib/Util_ZZ_JSON.h"
 
 #include "zoolib/ZMACRO_foreach.h"
 
@@ -46,14 +46,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
-#include "zoolib/ValPred/ValPred_Any.h"
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
+#include "zoolib/ValPred/ValPred_DB.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_DB_ToStrim.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
 namespace Dataspace {
 
-using namespace Operators_Any_JSON;
+using namespace Operators_ZZ_JSON;
 using namespace Util_STL;
 
 using std::make_pair;
@@ -65,10 +65,10 @@ using std::vector;
 namespace QE = QueryEngine;
 namespace RA = RelationalAlgebra;
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_Any& iVal)
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_DB& iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_DB& iVal)
 	{
-	Util_Any_JSON::sWrite(iVal.As<Any>(), w);
+	Util_ZZ_JSON::sWrite(iVal.As<Val_ZZ>(), w);
 	return w;
 	}
 
@@ -79,7 +79,7 @@ struct Searcher_Datons::Key
 	{
 	static const size_t kMaxCols = 4;
 	const Searcher_Datons::Map_Thing::value_type* fMapEntryP;
-	const Val_Any* fValues[kMaxCols];
+	const Val_DB* fValues[kMaxCols];
 	};
 
 class Searcher_Datons::Index
@@ -111,10 +111,10 @@ public:
 
 			for (size_t xx = 0; xx < fCount; ++xx)
 				{
-				const Val_Any* valL = iLeft.fValues[xx];
+				const Val_DB* valL = iLeft.fValues[xx];
 				if (not valL)
 					return false;
-				const Val_Any* valR = iRight.fValues[xx];
+				const Val_DB* valR = iRight.fValues[xx];
 				if (not valR)
 					return false;
 
@@ -152,14 +152,14 @@ public:
 
 	bool pAsKey(const Map_Thing::value_type* iMapEntryP, Key& oKey)
 		{
-		const Map_Any* asMap = iMapEntryP->second.PGet<Map_Any>();
+		const Map_ZZ* asMap = iMapEntryP->second.PGet<Map_ZZ>();
 		if (not asMap)
 			{
 			// iValPtr is not a map, can't index.
 			return false;
 			}
 
-		const Val_Any* firstVal = asMap->PGet(fColNames[0]);
+		const Val_DB* firstVal = asMap->PGet(fColNames[0]);
 		if (not firstVal)
 			{
 			// The map does not have our first property, which we treat as a null. So it's
@@ -168,12 +168,12 @@ public:
 			return false;
 			}
 
-		const Val_Any* emptyValPtr = &sDefault<Val_Any>();
+		const Val_DB* emptyValPtr = &sDefault<Val_DB>();
 
 		oKey.fValues[0] = firstVal;
 		for (size_t xx = 1; xx < fCount; ++xx)
 			{
-			if (const Val_Any* theVal = asMap->PGet(fColNames[xx]))
+			if (const Val_DB* theVal = asMap->PGet(fColNames[xx]))
 				oKey.fValues[xx] = theVal;
 			else
 				oKey.fValues[xx] = emptyValPtr;
@@ -246,7 +246,7 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(Val_Any* ioResults)
+	virtual bool QReadInc(Val_DB* ioResults)
 		{
 		this->Called_QReadInc();
 		return fSearcher->pReadInc(this, ioResults);
@@ -256,7 +256,7 @@ public:
 	const ConcreteHead fConcreteHead;
 	size_t fBaseOffset;
 	Map_Thing::const_iterator fCurrent;
-	std::set<std::vector<Val_Any>> fPriors;
+	std::set<std::vector<Val_DB>> fPriors;
 	};
 
 // =================================================================================================
@@ -297,7 +297,7 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(Val_Any* ioResults)
+	virtual bool QReadInc(Val_DB* ioResults)
 		{
 		this->Called_QReadInc();
 		return fSearcher->pReadInc(this, ioResults);
@@ -315,7 +315,7 @@ public:
 	const Index::Set::const_iterator fEnd;
 
 	Index::Set::const_iterator fCurrent;
-	std::vector<Val_Any> fPrior;
+	std::vector<Val_DB> fPrior;
 	};
 
 // =================================================================================================
@@ -346,7 +346,7 @@ public:
 // =================================================================================================
 #pragma mark - Searcher_Datons::PSearch
 
-typedef ZQ<pair<Val_Any,bool>> Bound_t; // Value, inclusive
+typedef ZQ<pair<Val_DB,bool>> Bound_t; // Value, inclusive
 
 class Searcher_Datons::DLink_PSearch_InIndex
 :	public DListLink<PSearch, DLink_PSearch_InIndex, kDebug>
@@ -374,7 +374,7 @@ public:
 
 	Index* fIndex;
 
-	vector<Val_Any> fValsEqual;
+	vector<Val_DB> fValsEqual;
 	Bound_t fRangeLo;
 	Bound_t fRangeHi;
 	ZP<Expr_Bool> fRestrictionRemainder;
@@ -430,7 +430,7 @@ static EComparator spFlipped(EComparator iEComparator)
 
 static void spDump(const ChanW_UTF& w,
 	Searcher_Datons::Index* bestIndex,
-	const vector<Val_Any>& bestValsEqual, const Bound_t& bestLo, const Bound_t& bestHi)
+	const vector<Val_DB>& bestValsEqual, const Bound_t& bestLo, const Bound_t& bestHi)
 	{
 	w << "\n" << bestIndex << " ";
 	if (size_t count = bestValsEqual.size())
@@ -481,14 +481,14 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 
 	CNF bestDClauses;
 	Index* bestIndex = nullptr;
-	vector<Val_Any> bestValsEqual;
+	vector<Val_DB> bestValsEqual;
 	Bound_t bestLo, bestHi;
 
 	foreachv (Index* curIndex, fIndexes)
 		{
 		CNF curDClauses = theCNF;
 
-		vector<Val_Any> valsEqual;
+		vector<Val_DB> valsEqual;
 
 		Bound_t finalLo, finalHi;
 
@@ -521,15 +521,15 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 							{
 							EComparator theEComparator = theValComparator->GetEComparator();
 
-							ZP<ValComparand_Const_Any> theComparand_Const =
-								theValPred.GetRHS().DynamicCast<ValComparand_Const_Any>();
+							ZP<ValComparand_Const_DB> theComparand_Const =
+								theValPred.GetRHS().DynamicCast<ValComparand_Const_DB>();
 
 							ZP<ValComparand_Name> theComparand_Name =
 								theValPred.GetLHS().DynamicCast<ValComparand_Name>();
 
 							if (not theComparand_Const || not theComparand_Name)
 								{
-								theComparand_Const = theValPred.GetLHS().DynamicCast<ValComparand_Const_Any>();
+								theComparand_Const = theValPred.GetLHS().DynamicCast<ValComparand_Const_DB>();
 								theComparand_Name = theValPred.GetRHS().DynamicCast<ValComparand_Name>();
 								theEComparator = spFlipped(theEComparator);
 								}
@@ -540,7 +540,7 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 								{
 								termIsRelevant = true;
 
-								const Val_Any& theVal = theComparand_Const->GetVal();
+								const Val_DB& theVal = theComparand_Const->GetVal();
 
 								switch (theEComparator)
 									{
@@ -726,7 +726,7 @@ static void spDump(const ChanW_UTF& w,
 	{
 	w << "\n" << "ConcreteHead: " << theSearchSpec.GetConcreteHead();
 	w << "\n" << "Restriction: ";
-	Visitor_Expr_Bool_ValPred_Any_ToStrim().ToStrim(
+	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(
 		sDefault(), w, theSearchSpec.GetRestriction());
 
 	foreacha (anIndex, fIndexes)
@@ -929,12 +929,12 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oCha
 				if (ZLOGPF(w, eDebug))
 					{
 					w << "\nSlow PSearch " << elapsed * 1e3 << "ms: ";
-					Visitor_Expr_Bool_ValPred_Any_ToStrim()
+					Visitor_Expr_Bool_ValPred_DB_ToStrim()
 						.ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
 					if (thePSearch->fRestrictionRemainder)
 						{
 						w << "\nRestrictionRemainder: ";
-						Visitor_Expr_Bool_ValPred_Any_ToStrim()
+						Visitor_Expr_Bool_ValPred_DB_ToStrim()
 							.ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
 						}
 
@@ -1117,16 +1117,16 @@ void Searcher_Datons::pPrime(ZP<Walker_Map> iWalker_Map,
 		oOffsets[entry.first] = ioBaseOffset++;
 	}
 
-bool Searcher_Datons::pReadInc(ZP<Walker_Map> iWalker_Map, Val_Any* ioResults)
+bool Searcher_Datons::pReadInc(ZP<Walker_Map> iWalker_Map, Val_DB* ioResults)
 	{
 	const ConcreteHead& theConcreteHead = iWalker_Map->fConcreteHead;
 
 	while (iWalker_Map->fCurrent != fMap_Thing.end())
 		{
-		if (const Map_Any* theMap = iWalker_Map->fCurrent->second.PGet<Map_Any>())
+		if (const Map_ZZ* theMap = iWalker_Map->fCurrent->second.PGet<Map_ZZ>())
 			{
 			bool gotAll = true;
-			vector<Val_Any> subset;
+			vector<Val_DB> subset;
 			subset.reserve(theConcreteHead.size());
 			size_t offset = iWalker_Map->fBaseOffset;
 			for (ConcreteHead::const_iterator
@@ -1137,11 +1137,11 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Map> iWalker_Map, Val_Any* ioResults)
 				if (theName.empty())
 					{
 					// Empty name indicates that we want the Daton itself.
-					const Val_Any& theVal = iWalker_Map->fCurrent->first;
+					const Val_DB& theVal = iWalker_Map->fCurrent->first;
 					ioResults[offset] = theVal;
 					subset.push_back(theVal);
 					}
-				else if (const Val_Any* theVal = sPGet(*theMap, theName))
+				else if (const Val_DB* theVal = sPGet(*theMap, theName))
 					{
 					ioResults[offset] = *theVal;
 					subset.push_back(*theVal);
@@ -1188,22 +1188,22 @@ void Searcher_Datons::pPrime(ZP<Walker_Index> iWalker_Index,
 		oOffsets[entry.first] = ioBaseOffset++;
 	}
 
-static const Val_Any spVal_AbsentOptional = AbsentOptional_t();
+static const Val_DB spVal_AbsentOptional = AbsentOptional_t();
 
-bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_Any* ioResults)
+bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_DB* ioResults)
 	{
 	const size_t theCount_Indexed = iWalker_Index->fUsableIndexNames;
 	const auto& theNBV = iWalker_Index->fNameBoolVector;
 	const size_t theCount_NBV = theNBV.size();
-	vector<const Val_Any*> theValPtrs(theCount_Indexed + theCount_NBV);
+	vector<const Val_DB*> theValPtrs(theCount_Indexed + theCount_NBV);
 
-	Val_Any theVal_Daton;
+	Val_DB theVal_Daton;
 
 	while (iWalker_Index->fCurrent != iWalker_Index->fEnd)
 		{
 		const Map_Thing::value_type* theTarget = iWalker_Index->fCurrent->fMapEntryP;
 
-		if (const Map_Any* theMap = theTarget->second.PGet<Map_Any>())
+		if (const Map_ZZ* theMap = theTarget->second.PGet<Map_ZZ>())
 			{
 			// It's a map, and thus usable.
 
@@ -1222,7 +1222,7 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_Any* ioResult
 					theVal_Daton = theTarget->first;
 					theValPtrs[theCount_Indexed + xx] = &theVal_Daton;
 					}
-				else if (const Val_Any* theValPtr = sPGet(*theMap, theName))
+				else if (const Val_DB* theValPtr = sPGet(*theMap, theName))
 					{
 					theValPtrs[theCount_Indexed + xx] = theValPtr;
 					}
@@ -1241,8 +1241,8 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_Any* ioResult
 				{
 				bool allMatch = true;
 				const size_t theCount = theValPtrs.size();
-				const Val_Any* iterPrior = &iWalker_Index->fPrior[theCount-1];
-				const Val_Any** iterCurr = &theValPtrs[theCount-1];
+				const Val_DB* iterPrior = &iWalker_Index->fPrior[theCount-1];
+				const Val_DB** iterCurr = &theValPtrs[theCount-1];
 				for (size_t count = theCount + 1; --count; /*no inc*/)
 					{
 					if (*iterPrior-- != **iterCurr--)
@@ -1256,7 +1256,7 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_Any* ioResult
 					{
 					for (size_t xx = 0; xx < theCount; ++xx)
 						{
-						const Val_Any* theValPtr = theValPtrs[xx];
+						const Val_DB* theValPtr = theValPtrs[xx];
 						ioResults[iWalker_Index->fBaseOffset + xx] = *theValPtr;
 						iWalker_Index->fPrior[xx] = *theValPtr;
 						}

@@ -58,7 +58,7 @@ Rat sGetGameRate()
 
 static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 	{
-	ZQ<Map_Any> theMapQ;
+	ZQ<Map_ZZ> theMapQ;
 	if (iPreferBinaryData)
 		{
 		ZP<ChannerR_Bin> theChannerR = iFS.Child("data.bin").OpenR();
@@ -69,7 +69,7 @@ static Map spLoadData(const FileSpec& iFS, bool iPreferBinaryData)
 			}
 		else
 			{
-			theMapQ = sReadBin(*theChannerR).QGet<Map_Any>();
+			theMapQ = sReadBin(*theChannerR).QGet<Map_ZZ>();
 			}
 		}
 

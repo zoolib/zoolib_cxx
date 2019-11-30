@@ -48,7 +48,7 @@ ZP<Walker> Walker_Dee::Prime(
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dee::QReadInc(Val_Any* ioResults)
+bool Walker_Dee::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 	return not sGetSet(fExhausted, true);

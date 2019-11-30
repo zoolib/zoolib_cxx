@@ -45,7 +45,7 @@ namespace RelationalAlgebra {
 // =================================================================================================
 #pragma mark - Expr_Rel_Const
 
-Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const Val_Any& iVal)
+Expr_Rel_Const::Expr_Rel_Const(const ColName& iColName, const Val_DB& iVal)
 :	fColName(iColName)
 ,	fVal(iVal)
 	{}
@@ -81,7 +81,7 @@ void Expr_Rel_Const::Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor)
 const ColName& Expr_Rel_Const::GetColName() const
 	{ return fColName; }
 
-const Val_Any& Expr_Rel_Const::GetVal() const
+const Val_DB& Expr_Rel_Const::GetVal() const
 	{ return fVal; }
 
 // =================================================================================================
@@ -93,7 +93,7 @@ void Visitor_Expr_Rel_Const::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExp
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZP<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal)
+ZP<Expr_Rel> sConst(const ColName& iColName, const Val_DB& iVal)
 	{ return new Expr_Rel_Const(iColName, iVal); }
 
 } // namespace RelationalAlgebra

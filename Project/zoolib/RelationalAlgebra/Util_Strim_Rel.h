@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanRU_UTF.h"
 
-#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Any_ToStrim.h"
+#include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_DB_ToStrim.h"
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 
@@ -51,7 +51,7 @@ namespace Util_Strim_Rel {
 #pragma mark - RelationalAlgebra::Util_Strim_Rel::Visitor
 
 class Visitor
-:	public virtual Visitor_Expr_Bool_ValPred_Any_ToStrim
+:	public virtual Visitor_Expr_Bool_ValPred_DB_ToStrim
 ,	public virtual Visitor_Expr_Rel_Calc
 ,	public virtual Visitor_Expr_Rel_Comment
 ,	public virtual Visitor_Expr_Rel_Concrete

@@ -55,7 +55,7 @@ namespace { // anonymous
 
 struct Analysis
 	{
-	Map_Any fConstValues;
+	Map_ZZ fConstValues;
 	RelHead fRelHead_Physical;
 	Rename fRename;
 	Rename fRename_Inverse;
@@ -191,7 +191,7 @@ void Analyzer::Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr)
 	Analysis analysis0 = this->Do(iExpr->GetOp0());
 	const Analysis analysis1 = this->Do(iExpr->GetOp1());
 
-	for (Map_Any::Index_t i = analysis1.fConstValues.Begin();
+	for (Map_ZZ::Index_t i = analysis1.fConstValues.Begin();
 		i != analysis1.fConstValues.End(); ++i)
 		{
 		analysis0.fConstValues.Set(analysis1.fConstValues.NameOf(i), analysis1.fConstValues.Get(i));
@@ -243,9 +243,9 @@ void Analyzer::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 		}
 	else
 		{
-		Map_Any::Index_t theIndex = theAnalysis.fConstValues.IndexOf(oldName);
+		Map_ZZ::Index_t theIndex = theAnalysis.fConstValues.IndexOf(oldName);
 		ZAssert(theIndex != theAnalysis.fConstValues.End());
-		const Val_Any theVal = theAnalysis.fConstValues.Get(theIndex);
+		const Val_ZZ theVal = theAnalysis.fConstValues.Get(theIndex);
 		theAnalysis.fConstValues.Erase(theIndex);
 		theAnalysis.fConstValues.Set(newName, theVal);
 		}
@@ -512,7 +512,7 @@ bool sWriteAsSQL(const map<string8,RelHead>& iTables, ZP<Expr_Rel> iRel, const Z
 		foreachi (ii, theAnalysis.fRelHead_Physical)
 			theRHLogical |= sGetMust(theAnalysis.fRename_Inverse, *ii);
 
-		for (Map_Any::Index_t ii = theAnalysis.fConstValues.Begin();
+		for (Map_ZZ::Index_t ii = theAnalysis.fConstValues.Begin();
 			ii != theAnalysis.fConstValues.End(); ++ii)
 			{
 			theRHLogical |= ColName(theAnalysis.fConstValues.NameOf(ii));

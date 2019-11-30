@@ -168,7 +168,7 @@ class FontInfo_TT
 :	public FontInfo
 	{
 public:
-	FontInfo_TT(const Data_Any& iTTData);
+	FontInfo_TT(const Data_ZZ& iTTData);
 	virtual ~FontInfo_TT();
 
 	virtual Rat GetScaleForEmHeight(Rat iEmHeight);
@@ -181,7 +181,7 @@ public:
 
 	virtual ZQ<Rat> QKern(Rat iScale, UTF32 iCP, UTF32 iCPNext);
 
-	const Data_Any fTTData;
+	const Data_ZZ fTTData;
 	const unsigned char* fTTPtr;
 
 	stbtt_fontinfo f_fontinfo;
@@ -308,7 +308,7 @@ static int spBakeForScale(stbtt_fontinfo& f,
 	return bottom_y;
 	}
 
-FontInfo_TT::FontInfo_TT(const Data_Any& iTTData)
+FontInfo_TT::FontInfo_TT(const Data_ZZ& iTTData)
 :	fTTData(iTTData)
 ,	fTTPtr((const unsigned char*)fTTData.GetPtr())
 	{
@@ -394,7 +394,7 @@ ZP<FontInfo> FontCatalog_TT::GetFontInfo(const string8& iName)
 
 	if (ZP<ChannerR_Bin> theChannerR = fFileSpec.Child(iName).OpenR())
 		{
-		Data_Any theTTData = sReadAll_T<Data_Any>(*theChannerR);
+		Data_ZZ theTTData = sReadAll_T<Data_ZZ>(*theChannerR);
 		ZP<FontInfo_TT> theFontInfo = new FontInfo_TT(theTTData);
 		fInfos[iName] = theFontInfo;
 		return theFontInfo;

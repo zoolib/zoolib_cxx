@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //###include "zoolib/ZTextCollator.h"
 
 #include "zoolib/Trail.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #include "zoolib/Apple/Val_NS.h"
 
@@ -87,10 +87,10 @@ class SectionBody_Sieve : public UIKit::SectionBody_Concrete
 	{
 public:
 	typedef ZooLib::Dataspace::Callable_DatonUpdate Callable_DatonUpdate;
-	typedef Callable<ZP<UITableViewCell>(UITableView*,Map_Any)> Callable_GetCellForMap;
-	typedef Callable<bool(Map_Any)> Callable_CanSelectForMap;
+	typedef Callable<ZP<UITableViewCell>(UITableView*,Map_ZZ)> Callable_GetCellForMap;
+	typedef Callable<bool(Map_ZZ)> Callable_CanSelectForMap;
 	typedef Callable<void()> Callable_NeedsUpdate;
-	typedef Map_Any Entry;
+	typedef Map_ZZ Entry;
 	typedef Callable<void(std::vector<Entry> &)> Callable_PostProcess;
 
 	SectionBody_Sieve();
@@ -146,7 +146,7 @@ public:
 		const ZQ<ColName>& iDatonColNameQ,
 		const ZP<Callable_DatonUpdate>& iCallable_DatonUpdate);
 
-	ZQ<Map_Any> QGet(size_t iRowIndex);
+	ZQ<Map_ZZ> QGet(size_t iRowIndex);
 
 	void pGetSieveCorrectlySetup();
 

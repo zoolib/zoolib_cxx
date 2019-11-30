@@ -60,7 +60,7 @@ ZP<Walker> Walker_Rename::Prime(
 	return this;
 	}
 
-bool Walker_Rename::QReadInc(Val_Any* ioResults)
+bool Walker_Rename::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 	return fWalker->QReadInc(ioResults);

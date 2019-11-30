@@ -33,7 +33,7 @@ ZP<Walker> Walker_Comment::Prime(
 	return this;
 	}
 
-bool Walker_Comment::QReadInc(Val_Any* ioResults)
+bool Walker_Comment::QReadInc(Val_DB* ioResults)
 	{
 	if (fCallable)
 		sCall(fCallable);

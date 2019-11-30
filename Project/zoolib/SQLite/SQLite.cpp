@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/SQLite/SQLite.h"
 
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 
 #include <stdexcept>
 
@@ -180,7 +180,7 @@ Any Iter::Get(size_t iIndex)
 				case SQLITE_BLOB:
 					{
 					const void* theData = ::sqlite3_column_blob(fStmt, iIndex);
-					return sAny<Data_Any>(theData, ::sqlite3_column_bytes(fStmt, iIndex));
+					return sAny<Data_ZZ>(theData, ::sqlite3_column_bytes(fStmt, iIndex));
 					}
 				}
 			}

@@ -1,36 +1,18 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
-http://www.zoolib.org
+// Copyright (c) 2010-2019 Andrew Green. MIT License. http://www.zoolib.org
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
-
-#include "zoolib/ValPred/Util_Strim_ValPred_Any.h"
+#include "zoolib/ValPred/Util_Strim_ValPred_DB.h"
 
 #include "zoolib/Not.h"
 #include "zoolib/ParseException.h"
-#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_ZZ_JSON.h"
 #include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include "zoolib/ValPred/ValPred_Any.h"
+#include "zoolib/ValPred/ValPred_DB.h"
 
 namespace ZooLib {
-namespace Util_Strim_ValPred_Any {
+namespace Util_Strim_ValPred_DB {
 
 using std::set;
 using std::string;
@@ -56,9 +38,9 @@ void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		{
 		spWrite_PropName(cmprnd->GetName(), iChanW);
 		}
-	else if (ZP<ValComparand_Const_Any> cmprnd = iComparand.DynamicCast<ValComparand_Const_Any>())
+	else if (ZP<ValComparand_Const_DB> cmprnd = iComparand.DynamicCast<ValComparand_Const_DB>())
 		{
-		Util_Any_JSON::sWrite(cmprnd->GetVal().As<Any>(), iChanW);
+		Util_ZZ_JSON::sWrite(cmprnd->GetVal().As<Val_ZZ>(), iChanW);
 		}
 	else
 		{
@@ -135,8 +117,8 @@ ZP<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 		throw ParseException("Expected Name after @");
 		}
 
-	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU))
-		return new ValComparand_Const_Any(theQ->As<Val_Any>());
+	if (ZQ<Val_ZZ> theQ = Util_ZZ_JSON::sQRead(iChanRU))
+		return new ValComparand_Const_DB(theQ->As<Val_DB>());
 
 	return null;
 	}
@@ -179,7 +161,7 @@ ZP<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark - Util_Strim_ValPred_Any
+#pragma mark - Util_Strim_ValPred_DB
 
 void sToStrim(const ValPred& iValPred, const ChanW_UTF& iChanW)
 	{
@@ -211,11 +193,11 @@ ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
 	return ValPred(theComparandL, theComparator, theComparandR);
 	}
 
-} // namespace Util_Strim_ValPred_Any
+} // namespace Util_Strim_ValPred_DB
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ValPred& iValPred)
 	{
-	Util_Strim_ValPred_Any::sToStrim(iValPred, iChanW);
+	Util_Strim_ValPred_DB::sToStrim(iValPred, iChanW);
 	return iChanW;
 	}
 

@@ -45,7 +45,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(Val_Any* oResults);
+	virtual bool QReadInc(Val_DB* oResults);
 
 	ZP<Result> fResult;
 	size_t fIndex;

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/Val_Any.h"
+#include "zoolib/Any.h"
 
 #include "zoolib/Apple/ZP_CF.h"
 
@@ -36,15 +36,6 @@ namespace Util_CF {
 #pragma mark - Util_CF
 
 ZQ<Any> sQSimpleAsAny(CFTypeID iTypeID, CFTypeRef iVal);
-ZQ<Any> sQAsAny(CFTypeRef iVal);
-Any sDAsAny(const Any& iDefault, CFTypeRef iVal);
-Any sAsAny(CFTypeRef iVal);
-
-ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Any& iVal);
-ZP<CFTypeRef> sAsCFType(const Any& iVal);
-
-Seq_Any sAsSeq_Any(const Any& iDefault, CFArrayRef iCFArray);
-Map_Any sAsMap_Any(const Any& iDefault, CFDictionaryRef iCFDictionary);
 
 } // namespace Util_CF
 } // namespace ZooLib

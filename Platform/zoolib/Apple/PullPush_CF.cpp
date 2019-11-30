@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Apple/Data_CF.h"
 #include "zoolib/Apple/Util_CF.h"
 #include "zoolib/Apple/Util_CF_Any.h"
+#include "zoolib/Apple/Util_CF_ZZ.h"
 #include "zoolib/Apple/Val_CF.h"
 
 #include "zoolib/Channer_Bin.h"
@@ -173,7 +174,7 @@ static bool sPull_PPT_AsCF(const PPT& iPPT, const ChanR_PPT& iChanR, ZP<CFTypeRe
 		return true;
 		}
 
-	oCFTypeRef = sAsCFType(iPPT.As<Any>());
+	oCFTypeRef = sAsCFType(iPPT.As<Val_ZZ>());
 
 	return true;
 	}

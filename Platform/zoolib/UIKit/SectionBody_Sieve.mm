@@ -84,13 +84,13 @@ struct CompareEntries
 	ZTextCollator* fTextCollators;
 	const vector<SortSpec>& fSort;
 
-	typedef Map_Any first_argument_type;
-	typedef Map_Any second_argument_type;
+	typedef Map_ZZ first_argument_type;
+	typedef Map_ZZ second_argument_type;
 	typedef bool result_type;
 	};
 
 int spCompare(int iStrength, ZTextCollator* ioTextCollators,
-	const Val_Any& iLeft, const Val_Any& iRight)
+	const Val_ZZ& iLeft, const Val_ZZ& iRight)
 	{
 //	if (iStrength != 0)
 //		{
@@ -119,17 +119,17 @@ CompareEntries::CompareEntries(ZTextCollator* ioTextCollators, const vector<Sort
 ,	fSort(iSort)
 	{}
 
-const Val_Any* spPGet(const Trail& iTrail, const Map_Any& iMap)
+const Val_ZZ* spPGet(const Trail& iTrail, const Map_ZZ& iMap)
 	{
-	const Map_Any* theMap = &iMap;
+	const Map_ZZ* theMap = &iMap;
 	for (size_t xx = 0, count = iTrail.Count(); xx < count && theMap; ++xx)
 		{
-		const Val_Any* theVal = theMap->PGet(iTrail.At(xx));
+		const Val_ZZ* theVal = theMap->PGet(iTrail.At(xx));
 		if (xx == count - 1)
 			return theVal;
 		if (not theVal)
 			break;
-		theMap = theVal->PGet<Map_Any>();
+		theMap = theVal->PGet<Map_ZZ>();
 		}
 	return nullptr;
 	}
@@ -139,9 +139,9 @@ inline bool CompareEntries::operator()(
 	{
 	for (size_t xx = 0, count = fSort.size(); xx < count; ++xx)
 		{
-		if (const Val_Any* l = spPGet(fSort[xx].fPropTrail, iLeft))
+		if (const Val_ZZ* l = spPGet(fSort[xx].fPropTrail, iLeft))
 			{
-			if (const Val_Any* r = spPGet(fSort[xx].fPropTrail, iRight))
+			if (const Val_ZZ* r = spPGet(fSort[xx].fPropTrail, iRight))
 				{
 				if (int compare = spCompare(fSort[xx].fStrength, fTextCollators, *l, *r))
 					return fSort[xx].fAscending == (compare < 0);
@@ -265,7 +265,7 @@ static size_t spFind(const RelHead& iIdentity, const SectionBody_Sieve::Entry& i
 	return iEnd;
 	}
 
-static bool spSame(const Map_Any& l, const RelHead& iRelHead, const Map_Any& r)
+static bool spSame(const Map_ZZ& l, const RelHead& iRelHead, const Map_ZZ& r)
 	{
 	if (iRelHead.empty())
 		return false;
@@ -549,7 +549,7 @@ void SectionBody_Sieve::SetRel(ZP<Expr_Rel> iRel, ZP<Callable_Register> iCallabl
 	this->pGetSieveCorrectlySetup();
 	}
 
-ZQ<Map_Any> SectionBody_Sieve::QGet(size_t iRowIndex)
+ZQ<Map_ZZ> SectionBody_Sieve::QGet(size_t iRowIndex)
 	{
 	if (iRowIndex < fRows.size())
 		return fRows[iRowIndex];

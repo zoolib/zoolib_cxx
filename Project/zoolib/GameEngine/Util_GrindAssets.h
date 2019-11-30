@@ -15,11 +15,11 @@ namespace Util {
 
 void sGrindArt(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap);
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap);
 
 void sGrindAnim(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap);
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap);
 
 } // namespace Util
 } // namespace GameEngine

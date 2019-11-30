@@ -37,10 +37,10 @@ ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const NameVal& iNameVal)
 
 // -----
 
-static ZP<Expr_Rel> spConst(const Map_Any& iMap)
+static ZP<Expr_Rel> spConst(const Map_ZZ& iMap)
 	{
 	ZP<Expr_Rel> result;
-	for (Map_Any::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
+	for (Map_ZZ::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
 		ZP<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
 		if (not result)
@@ -51,7 +51,7 @@ static ZP<Expr_Rel> spConst(const Map_Any& iMap)
 	return result;
 	}
 
-ZP<Expr_Rel> sConst(const Map_Any& iMap)
+ZP<Expr_Rel> sConst(const Map_ZZ& iMap)
 	{
 	if (ZP<Expr_Rel> result = spConst(iMap))
 		return result;
@@ -59,21 +59,21 @@ ZP<Expr_Rel> sConst(const Map_Any& iMap)
 	return sDee();
 	}
 
-ZP<Expr_Rel> operator*(const Map_Any& iMap, const ZP<Expr_Rel>& iRel)
+ZP<Expr_Rel> operator*(const Map_ZZ& iMap, const ZP<Expr_Rel>& iRel)
 	{
 	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		return asRel * iRel;
 	return iRel;
 	}
 
-ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_Any& iMap)
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_ZZ& iMap)
 	{
 	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		return iRel * asRel;
 	return iRel;
 	}
 
-ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_Any& iMap)
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_ZZ& iMap)
 	{
 	if (ZP<Expr_Rel> asRel = spConst(iMap))
 		ioRel = ioRel * asRel;

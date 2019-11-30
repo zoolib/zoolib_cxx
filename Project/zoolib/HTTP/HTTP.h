@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanRU_Bin.h"
 #include "zoolib/ChanW_Bin.h"
 #include "zoolib/Trail.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #include <vector>
 
@@ -37,10 +37,10 @@ namespace HTTP {
 
 using std::string;
 
-typedef Data_Any Data;
-typedef Val_Any Val;
-typedef Seq_Any Seq;
-typedef Map_Any Map;
+typedef Data_ZZ Data;
+typedef Val_ZZ Val;
+typedef Seq_ZZ Seq;
+typedef Map_ZZ Map;
 
 // =================================================================================================
 #pragma mark - Response

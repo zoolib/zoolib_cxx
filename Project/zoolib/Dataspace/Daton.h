@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 #include "zoolib/Util_Relops.h"
 
 namespace ZooLib {
@@ -42,15 +42,15 @@ public:
 	~Daton();
 	Daton& operator=(const Daton& iOther);
 
-	Daton(Data_Any iData);
+	Daton(Data_ZZ iData);
 
 	bool operator==(const Daton& iOther) const;
 	bool operator<(const Daton& iOther) const;
 
-	Data_Any GetData() const;
+	Data_ZZ GetData() const;
 
 private:
-	Data_Any fData;
+	Data_ZZ fData;
 	};
 
 typedef Callable<int64(const Daton* iAsserted, size_t iAssertedCount,

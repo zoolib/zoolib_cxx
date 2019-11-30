@@ -43,7 +43,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(Val_Any* ioResults);
+	virtual bool QReadInc(Val_DB* ioResults);
 
 	class Exec;
 
@@ -51,7 +51,7 @@ private:
 	const ZP<Expr_Bool> fExpr_Bool;
 	std::map<string8,size_t> fCombinedOffsets;
 
-	std::vector<Val_Any> fConsts;
+	std::vector<Val_DB> fConsts;
 	Exec* fExec;
 	};
 

@@ -50,7 +50,7 @@ public:
 	void Kill();
 
 	void InstallSheet(const Name& iName, const ZP<Callable_TextureMaker>& iTM);
-	void Set_Processed(const Map_Any& iMap);
+	void Set_Processed(const Map_ZZ& iMap);
 
 	class SheetCatalog;
 
@@ -60,7 +60,7 @@ private:
 
 	ZP<SheetCatalog> fSheetCatalog;
 
-	Map_Any fMap;
+	Map_ZZ fMap;
 
 	struct Sheet_BoundsQ_Mat
 		{
@@ -85,7 +85,7 @@ private:
 		GRect fBaseInset;
 		
 		std::vector<Frame> fFramesVec;
-		Seq_Any fFramesSeq;
+		Seq_ZZ fFramesSeq;
 		};
 
 	#if 0 && ZCONFIG_SPI_Enabled(unordered_map)

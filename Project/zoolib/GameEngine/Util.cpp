@@ -9,10 +9,10 @@
 #include "zoolib/ChanRU_UTF_Std.h"
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For ThreadVal_NameUniquifier
-#include "zoolib/Util_Any_JSON.h"
-#include "zoolib/Util_Any_JSONB.h"
 #include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_string.h"
+#include "zoolib/Util_ZZ_JSON.h"
+#include "zoolib/Util_ZZ_JSONB.h"
 
 #include "zoolib/ZMACRO_auto.h"
 
@@ -47,14 +47,14 @@ ZQ<GPoint> sQGPoint(const Val& iVal)
 	return null;
 	}
 
-ZQ<GPoint> sQGPoint(const ZQ<Val_Any>& iVal_AnyQ)
+ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iVal_AnyQ)
 	{
 	if (iVal_AnyQ)
 		return sQGPoint(*iVal_AnyQ);
 	return null;
 	}
 
-ZQ<GPoint> sQGPoint(const Val_Any& iVal_Any)
+ZQ<GPoint> sQGPoint(const Val_ZZ& iVal_Any)
 	{
 	if (ZQ<CVec3> theCVecQ = sQCVec3(1, iVal_Any))
 		return sCartesian(*theCVecQ);
@@ -94,7 +94,7 @@ ZQ<GRect> sQGRect(const ZQ<Val>& iValQ)
 	return null;
 	}
 
-ZQ<GRect> sQGRect(const ZQ<Val_Any>& iVal_AnyQ)
+ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iVal_AnyQ)
 	{
 	if (iVal_AnyQ)
 		return sQGRect(*iVal_AnyQ);
@@ -105,16 +105,16 @@ ZQ<GRect> sQGRect(const Val& iVal)
 	{
 	if (ZMACRO_auto_(theSeqQ, iVal.QGet<Seq>()))
 		return spQGRect_T<GRect>(*theSeqQ);
-	else if (ZMACRO_auto_(theSeqQ, iVal.QGet<Seq_Any>()))
+	else if (ZMACRO_auto_(theSeqQ, iVal.QGet<Seq_ZZ>()))
 		return spQGRect_T<GRect>(*theSeqQ);
 	return null;
 	}
 
-ZQ<GRect> sQGRect(const Val_Any& iVal_Any)
+ZQ<GRect> sQGRect(const Val_ZZ& iVal_Any)
 	{
 	if (ZMACRO_auto_(theSeqQ, iVal_Any.QGet<Seq>()))
 		return spQGRect_T<GRect>(*theSeqQ);
-	else if (ZMACRO_auto_(theSeqQ, iVal_Any.QGet<Seq_Any>()))
+	else if (ZMACRO_auto_(theSeqQ, iVal_Any.QGet<Seq_ZZ>()))
 		return spQGRect_T<GRect>(*theSeqQ);
 	return null;
 	}
@@ -143,18 +143,18 @@ ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 	return null;
 	}
 
-void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w)
-	{ Util_Any_JSONB::sWrite(iVal.As<Any>(), w); }
+void sWriteBin(const Val_ZZ& iVal, const ChanW_Bin& w)
+	{ Util_ZZ_JSONB::sWrite(iVal, w); }
 
-Val_Any sReadBin(const ChanR_Bin& iChanR)
+Val_ZZ sReadBin(const ChanR_Bin& iChanR)
 	{
 	ThreadVal_NameUniquifier theNU;
-	if (ZQ<Any> theQ = Util_Any_JSONB::sQRead(iChanR))
-		return theQ->As<Val_Any>();
-	return Val_Any();
+	if (ZQ<Val_ZZ> theQ = Util_ZZ_JSONB::sQRead(iChanR))
+		return *theQ;
+	return Val_ZZ();
 	}
 
-static ZQ<Map_Any> spQReadMap(const ChanRU_UTF& iChanRU)
+static ZQ<Map_ZZ> spQReadMap(const ChanRU_UTF& iChanRU)
 	{
 	Util_Chan_JSON::PullTextOptions_JSON theOptions;
 	theOptions.fAllowUnquotedPropertyNames = true;
@@ -162,13 +162,13 @@ static ZQ<Map_Any> spQReadMap(const ChanRU_UTF& iChanRU)
 	theOptions.fAllowSemiColons = true;
 	theOptions.fAllowTerminators = true;
 	theOptions.fLooseSeparators = true;
-	if (ZQ<Any> theQ = Util_Any_JSON::sQRead(iChanRU, theOptions))
-		return theQ->QGet<Map_Any>();
+	if (ZQ<Val_ZZ> theQ = Util_ZZ_JSON::sQRead(iChanRU, theOptions))
+		return theQ->QGet<Map_ZZ>();
 
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
+ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
 	{
 	ThreadVal_NameUniquifier theNU;
 
@@ -191,20 +191,20 @@ ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
 	return null;
 	}
 
-ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName)
+ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName)
 	{ return sQReadMap_Any(iChanR, &iName); }
 
-ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS)
+ZQ<Map_ZZ> sQReadMap_Any(const FileSpec& iFS)
 	{
 	if (ZP<ChannerR_Bin> channerR = iFS.OpenR())
 		return sQReadMap_Any(*channerR, iFS.Name());
 	return null;
 	}
 
-Map_Any sReadTextData(const FileSpec& iFS)
+Map_ZZ sReadTextData(const FileSpec& iFS)
 	{
 	// For now we trust FileIter to return files in alpha order. Important if we have overrides.
-	Map_Any theMap;
+	Map_ZZ theMap;
 	for (FileIter iter = iFS; iter; iter.Advance())
 		{
 		const string theName = iter.CurrentName();
@@ -225,7 +225,7 @@ Map_Any sReadTextData(const FileSpec& iFS)
 					{
 					// To handle multiple maps in a single file, sQReadMap_Any needs to be
 					// refactored so we use the *same* buffer between invocations
-					if (ZQ<Map_Any> theQ = sQReadMap_Any(*channerR, theName))
+					if (ZQ<Map_ZZ> theQ = sQReadMap_Any(*channerR, theName))
 						theMap = sAugmented(theMap, *theQ);
 					}
 				}
@@ -235,34 +235,21 @@ Map_Any sReadTextData(const FileSpec& iFS)
 	}
 
 void sDump(const ChanW_UTF& w, const Val& iVal)
-	{
-	if (iVal.IsNull())
-		{
-		w << "NULL";
-		}
-	else
-		{
-		w << "\n";
-		Util_Any_JSON::sWrite(iVal.As<Any>(), true, w);
-		}
-	}
+	{ sDump(w, iVal.As<Val_ZZ>()); }
 
 void sDump(const Val& iVal)
+	{ sDump(iVal.As<Val_ZZ>()); }
+
+void sDump(const ChanW_UTF& w, const Val_ZZ& iVal)
+	{
+	w << "\n";
+	Util_ZZ_JSON::sWrite(iVal, true, w);
+	}
+
+void sDump(const Val_ZZ& iVal)
 	{
 	if (ZLOGF(w, eDebug-1))
 		sDump(w, iVal);
-	}
-
-void sDump(const ChanW_UTF& w, const Any& iAny)
-	{
-	w << "\n";
-	Util_Any_JSON::sWrite(iAny, true, w);
-	}
-
-void sDump(const Any& iAny)
-	{
-	if (ZLOGF(w, eDebug-1))
-		sDump(w, iAny);
 	}
 
 // =================================================================================================

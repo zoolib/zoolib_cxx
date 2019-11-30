@@ -80,7 +80,7 @@ private:
 	const int64 fClientVersion;
 	const ZQ<string> fDescriptionQ;
 
-	vector<Map_Any> fQueue_Read;
+	vector<Map_ZZ> fQueue_Read;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 	TrueOnce fTrueOnce_SendAnEmptyMessage;
 
@@ -179,8 +179,8 @@ private:
 	bool fGettingChanner;
 	ZP<Channer_t> fChanner;
 
-	vector<Map_Any> fQueue_Read;
-	vector<Map_Any> fQueue_ToWrite;
+	vector<Map_ZZ> fQueue_Read;
+	vector<Map_ZZ> fQueue_ToWrite;
 	bool fReadSinceWrite;
 	TrueOnce fTrueOnce_WriteNeedsStart;
 

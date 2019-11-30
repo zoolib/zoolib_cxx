@@ -62,7 +62,7 @@ public:
 private:
 	ZMtx fMtx;
 
-	typedef std::map<Daton,Val_Any> Map_Thing;
+	typedef std::map<Daton,Val_DB> Map_Thing;
 
 	// -----
 
@@ -86,7 +86,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZP<Walker_Map> iWalker, Val_Any* ioResults);
+	bool pReadInc(ZP<Walker_Map> iWalker, Val_DB* ioResults);
 
 	// -----
 
@@ -100,7 +100,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZP<Walker_Index> iWalker, Val_Any* ioResults);
+	bool pReadInc(ZP<Walker_Index> iWalker, Val_DB* ioResults);
 
 	// -----
 

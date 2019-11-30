@@ -54,7 +54,7 @@ bool spPopulateBin(const ZP<AssetCatalog>& iAC,
 				iAC->InstallSheet(*theNameQ, theCallable);
 				}
 			}
-		iAC->Set_Processed(sReadBin(*channer).Get<Map_Any>());
+		iAC->Set_Processed(sReadBin(*channer).Get<Map_ZZ>());
 		return true;
 		}
 	return false;
@@ -62,7 +62,7 @@ bool spPopulateBin(const ZP<AssetCatalog>& iAC,
 
 // std::map is used for oFiles to keep them sorted by name.
 bool spReadAnim(const FileSpec& iParentAsFS,
-	map<string8,FileSpec>& oFiles, Map_Any& oMap)
+	map<string8,FileSpec>& oFiles, Map_ZZ& oMap)
 	{
 	for (FileIter iter = iParentAsFS; iter; iter.Advance())
 		{
@@ -85,10 +85,10 @@ void spInstall_Anim(
 	const ZP<AssetCatalog>& iAC,
 	const ZP<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iFS,
-	Map_Any& ioMap)
+	Map_ZZ& ioMap)
 	{
 	map<string8,FileSpec> theFiles;
-	Map_Any theMap;
+	Map_ZZ theMap;
 	if (not spReadAnim(iFS, theFiles, theMap))
 		return;
 
@@ -97,10 +97,10 @@ void spInstall_Anim(
 	if (ZLOGF(w, eDebug))
 		w << "Installing anim: " << prefix;
 
-	Map_Any& entry = sMut<Map_Any>(ioMap[prefix]);
+	Map_ZZ& entry = sMut<Map_ZZ>(ioMap[prefix]);
 	entry = theMap;
 
-	Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
+	Seq_ZZ& theFrames = sMut<Seq_ZZ>(entry["Frames"]);
 
 	int frameNumber = 0;
 	foreacha (entry, theFiles)
@@ -111,7 +111,7 @@ void spInstall_Anim(
 			sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, entry.second));
 
 		iAC->InstallSheet(theSheetName, theCallable);
-		Map_Any theFrame;
+		Map_ZZ theFrame;
 		theFrame["SheetName"] = theSheetName;
 		theFrames.Append(theFrame);
 		}
@@ -121,7 +121,7 @@ void spInstall_Art(
 	const ZP<AssetCatalog>& iAC,
 	const ZP<Callable_TextureFromPixmap>& iTFP,
 	const FileSpec& iFS,
-	Map_Any& ioMap)
+	Map_ZZ& ioMap)
 	{
 	if (iFS.IsDir())
 		{
@@ -137,17 +137,17 @@ void spInstall_Art(
 			const string8 woSuffix = *theQ;
 			const string8 theMeta = woSuffix + ".txt";
 
-			Map_Any entry;
+			Map_ZZ entry;
 			if (ZP<ChannerR_Bin> theChanner = iFS.Sibling(theMeta).OpenR())
 				entry = sGet(sQReadMap_Any(*theChanner, theMeta));
 
-			Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
+			Seq_ZZ& theFrames = sMut<Seq_ZZ>(entry["Frames"]);
 
 			const string8 theSheetName = woSuffix;
 			ZP<AssetCatalog::Callable_TextureMaker> theCallable =
 				sCallable_Apply(iTFP, sBindR(spCallable_Pixmap_PNG, iFS));
 			iAC->InstallSheet(theSheetName, theCallable);
-			Map_Any theFrame;
+			Map_ZZ theFrame;
 			theFrame["SheetName"] = theSheetName;
 			theFrames.Append(theFrame);
 
@@ -184,7 +184,7 @@ void sPopulate(
 
 	if (not gotArt)
 		{
-		Map_Any theMap;
+		Map_ZZ theMap;
 
 		const FileSpec theFS_Anim = iRoot.Child("anim");
 		if (not theFS_Anim.IsDir())

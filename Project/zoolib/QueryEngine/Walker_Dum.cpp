@@ -46,7 +46,7 @@ ZP<Walker> Walker_Dum::Prime(
 	size_t& ioBaseOffset)
 	{ return this; }
 
-bool Walker_Dum::QReadInc(Val_Any* ioResults)
+bool Walker_Dum::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 	return false;

@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
 #include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/ValPred_Any.h"
+#include "zoolib/ValPred/ValPred_DB.h"
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
@@ -120,7 +120,7 @@ private:
 	Analysis_t sAnalyze(const ZP<ValComparand>& iComparand)
 		{
 		Analysis_t result;
-		if (iComparand.DynamicCast<ValComparand_Const_Any>())
+		if (iComparand.DynamicCast<ValComparand_Const_DB>())
 			result.fAnyIsConst = true;
 
 		if (ZP<ValComparand_Name> theComparand_Name = iComparand.DynamicCast<ValComparand_Name>())

@@ -339,9 +339,9 @@ void AssetCatalog::Load(const NameFrame& iNameFrame, int iPriority)
 
 size_t AssetCatalog::FrameCount(const Name& iName)
 	{
-	if (ZQ<Map_Any> theAnimQ = fMap.QGet<Map_Any>(iName))
+	if (ZQ<Map_ZZ> theAnimQ = fMap.QGet<Map_ZZ>(iName))
 		{
-		if (const ZQ<Seq_Any> theFramesQ = theAnimQ->QGet<Seq_Any>("Frames"))
+		if (const ZQ<Seq_ZZ> theFramesQ = theAnimQ->QGet<Seq_ZZ>("Frames"))
 			return theFramesQ->Size();
 		}
 	return 0;
@@ -371,7 +371,7 @@ void AssetCatalog::Get(const NameFrame& iNameFrame, vector<Texture_BoundsQ_Mat>&
 void AssetCatalog::InstallSheet(const Name& iName, const ZP<Callable_TextureMaker>& iTM)
 	{ fSheetCatalog->fTextureMakers[iName] = iTM; }
 
-void AssetCatalog::Set_Processed(const Map_Any& iMap)
+void AssetCatalog::Set_Processed(const Map_ZZ& iMap)
 	{ fMap = iMap; }
 
 void AssetCatalog::ExternalPurgeHasOccurred()
@@ -389,13 +389,13 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 	ZMACRO_auto_(iterNameEntry, fMap_NameEntry.find(iName));
 	if (iterNameEntry == fMap_NameEntry.end())
 		{
-		const Map_Any* theAnimP = fMap.PGet<Map_Any>(iName);
+		const Map_ZZ* theAnimP = fMap.PGet<Map_ZZ>(iName);
 		if (not theAnimP)
 			return false;
 		
-		const Map_Any& theAnim = *theAnimP;
+		const Map_ZZ& theAnim = *theAnimP;
 
-		const Seq_Any theFramesSeq = theAnim.Get<Seq_Any>("Frames");
+		const Seq_ZZ theFramesSeq = theAnim.Get<Seq_ZZ>("Frames");
 		if (not theFramesSeq.Size())
 			return false;
 
@@ -419,17 +419,17 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 	Frame& theFrame = theEntry.fFramesVec[iFrame];
 	if (not theFrame.fLoaded)
 		{
-		Seq_Any& theFramesSeq = theEntry.fFramesSeq;
+		Seq_ZZ& theFramesSeq = theEntry.fFramesSeq;
 
 		// TBM = Texture Bounds Mat
 
-		Seq_Any* theTBMsSeqP = theFramesSeq.PMut<Seq_Any>(iFrame);
+		Seq_ZZ* theTBMsSeqP = theFramesSeq.PMut<Seq_ZZ>(iFrame);
 		if (not theTBMsSeqP)
 			{
-			theFramesSeq[iFrame] = Seq_Any().Append(theFramesSeq.Get<Map_Any>(iFrame));
-			theTBMsSeqP = theFramesSeq.PMut<Seq_Any>(iFrame);
+			theFramesSeq[iFrame] = Seq_ZZ().Append(theFramesSeq.Get<Map_ZZ>(iFrame));
+			theTBMsSeqP = theFramesSeq.PMut<Seq_ZZ>(iFrame);
 			}
-		Seq_Any& theTBMsSeq = *theTBMsSeqP;
+		Seq_ZZ& theTBMsSeq = *theTBMsSeqP;
 
 		theFrame.fSheet_BoundsQ_Mats.resize(theTBMsSeq.Size());
 		if (ioResult)
@@ -441,7 +441,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 			{
 			theFrame.fLoaded.Set();
 
-			const Map_Any& theTBM = theTBMsSeq.Get<Map_Any>(theTBMIndex);
+			const Map_ZZ& theTBM = theTBMsSeq.Get<Map_ZZ>(theTBMIndex);
 
 			const string8 theSheetName =
 				theTBM.DGet<string8>(theEntry.fDefaultSheetName, "SheetName");

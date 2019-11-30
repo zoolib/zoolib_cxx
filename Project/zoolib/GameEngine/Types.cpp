@@ -150,7 +150,7 @@ ZQ<CVec3> sQCVec3(Rat iIdentity, const AnyBase& iAnyBase)
 		return result;
 		}
 
-	if (const Seq_Any* theSeqP = iAnyBase.PGet<Seq_Any>())
+	if (const Seq_ZZ* theSeqP = iAnyBase.PGet<Seq_ZZ>())
 		{
 		CVec3 result(iIdentity);
 		if (theSeqP->Count() > 0)

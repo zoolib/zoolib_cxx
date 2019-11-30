@@ -19,14 +19,14 @@ struct Tombstone_t {};
 // =================================================================================================
 #pragma mark - spCoerceXXX
 
-static const Val* spCoerceValPtr(const Val_Any* iAny)
+static const Val* spCoerceValPtr(const Val_ZZ* iAny)
 	{ return static_cast<const Val*>(static_cast<const AnyBase*>(iAny)); }
 
-static Val* spCoerceValPtr(Val_Any* iAny)
+static Val* spCoerceValPtr(Val_ZZ* iAny)
 	{ return static_cast<Val*>(static_cast<AnyBase*>(iAny)); }
 
-static const Val_Any& spCoerce_Val_Any(const Val& iVal)
-	{ return static_cast<const Val_Any&>(static_cast<const AnyBase&>(iVal)); }
+static const Val_ZZ& spCoerce_Val_ZZ(const Val& iVal)
+	{ return static_cast<const Val_ZZ&>(static_cast<const AnyBase&>(iVal)); }
 
 // =================================================================================================
 #pragma mark - Link, declaration
@@ -36,19 +36,19 @@ class Link
 	{
 public:
 // ctor that establishes a tree
-	Link(const ZP<CountedName>& iProtoName, const Map_Any& iMap);
+	Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap);
 
 // ctor used as we walk down a tree.
-	Link(const ZP<Link>& iParent, const Map_Any& iMap);
+	Link(const ZP<Link>& iParent, const Map_ZZ& iMap);
 
-	ZQ<Val_Any> QReadAt(const Name& iName);
+	ZQ<Val_ZZ> QReadAt(const Name& iName);
 
 	ZP<Link> WithRootAugment(const std::string& iRootAugmentName, const ZP<Link>& iRootAugment);
 
 private:
 	const ZP<CountedName> fProtoName;
 	const ZP<Link> fParent;
-	const Map_Any fMap;
+	const Map_ZZ fMap;
 
 	std::map<std::string,ZP<Link>> fChildren;
 	FalseOnce fCheckedProto;
@@ -58,37 +58,37 @@ private:
 // =================================================================================================
 #pragma mark - Link, definition
 
-Link::Link(const ZP<CountedName>& iProtoName, const Map_Any& iMap)
+Link::Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap)
 :	fProtoName(iProtoName)
 ,	fMap(iMap)
 	{}
 
-Link::Link(const ZP<Link>& iParent, const Map_Any& iMap)
+Link::Link(const ZP<Link>& iParent, const Map_ZZ& iMap)
 :	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
 ,	fMap(iMap)
 	{}
 
-ZQ<Val_Any> Link::QReadAt(const Name& iName)
+ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 	{
 	if (ZP<Link> theLink = sGet(fChildren, iName))
 		return Map(theLink);//??
 
-	if (const Val_Any* theAnyP = sPGet(fMap, iName))
+	if (const Val_ZZ* theP = sPGet(fMap, iName))
 		{
-		if (const Map_Any* theMap = theAnyP->PGet<Map_Any>())
+		if (const Map_ZZ* theMap = theP->PGet<Map_ZZ>())
 			{
 			ZP<Link> theLink = new Link(this, *theMap);
 			sInsertMust(fChildren, iName, theLink);
 			return Map(theLink);
 			}
-		else if (const Seq_Any* theSeq_AnyP = theAnyP->PGet<Seq_Any>())
+		else if (const Seq_ZZ* theSeq_AnyP = theP->PGet<Seq_ZZ>())
 			{
 			return Seq(this, *theSeq_AnyP);
 			}
 		else
 			{
-			return *theAnyP;
+			return *theP;
 			}
 		}
 
@@ -128,7 +128,7 @@ ZQ<Val_Any> Link::QReadAt(const Name& iName)
 						fProto = cur;
 						break;
 						}
-					else if (ZQ<Val_Any> theAnyQ = cur->QReadAt(theTrail.At(index)))
+					else if (ZQ<Val_ZZ> theAnyQ = cur->QReadAt(theTrail.At(index)))
 						{
 						if (const Map* theMapP = theAnyQ->PGet<Map>())
 							{
@@ -170,7 +170,7 @@ Seq::Seq()
 
 Seq::Seq(const Seq& iOther)
 :	fLink(iOther.fLink)
-,	fSeq_Any(iOther.fSeq_Any)
+,	fSeq_ZZ(iOther.fSeq_ZZ)
 	{}
 
 Seq::~Seq()
@@ -179,37 +179,37 @@ Seq::~Seq()
 Seq& Seq::operator=(const Seq& iOther)
 	{
 	fLink = iOther.fLink;
-	fSeq_Any = iOther.fSeq_Any;
+	fSeq_ZZ = iOther.fSeq_ZZ;
 	return *this;
 	}
 
-Seq::Seq(const ZP<Link>& iLink, const Seq_Any& iSeq)
+Seq::Seq(const ZP<Link>& iLink, const Seq_ZZ& iSeq)
 :	fLink(iLink)
-,	fSeq_Any(iSeq)
+,	fSeq_ZZ(iSeq)
 	{}
 
 size_t Seq::Size() const
-	{ return fSeq_Any.Count(); }
+	{ return fSeq_ZZ.Count(); }
 
 void Seq::Clear()
 	{
 	fLink.Clear();
-	fSeq_Any.Clear();
+	fSeq_ZZ.Clear();
 	}
 
 const Val* Seq::PGet(size_t iIndex) const
 	{
-	if (Val_Any* theAnyP = fSeq_Any.PMut(iIndex))
+	if (Val_ZZ* theP = fSeq_ZZ.PMut(iIndex))
 		{
-		if (const Map_Any* theMap_AnyP = theAnyP->PGet<Map_Any>())
+		if (const Map_ZZ* theMap_ZZP = theP->PGet<Map_ZZ>())
 			{
-			*theAnyP = Map(new Link(fLink, *theMap_AnyP));
+			*theP = Map(new Link(fLink, *theMap_ZZP));
 			}
-		else if (const Seq_Any* theSeq_AnyP = theAnyP->PGet<Seq_Any>())
+		else if (const Seq_ZZ* theSeq_AnyP = theP->PGet<Seq_ZZ>())
 			{
-			*theAnyP = Seq(fLink, *theSeq_AnyP);
+			*theP = Seq(fLink, *theSeq_AnyP);
 			}
-		return spCoerceValPtr(theAnyP);
+		return spCoerceValPtr(theP);
 		}
 	return nullptr;
 	}
@@ -237,17 +237,17 @@ const Val& Seq::Get(size_t iIndex) const
 
 Val* Seq::PMut(size_t iIndex)
 	{
-	if (Val_Any* theAnyP = fSeq_Any.PMut(iIndex))
+	if (Val_ZZ* theP = fSeq_ZZ.PMut(iIndex))
 		{
-		if (Map_Any* theMap_AnyP = theAnyP->PMut<Map_Any>())
+		if (Map_ZZ* theMap_ZZP = theP->PMut<Map_ZZ>())
 			{
-			*theAnyP = Map(new Link(fLink, *theMap_AnyP));
+			*theP = Map(new Link(fLink, *theMap_ZZP));
 			}
-		else if (Seq_Any* theSeq_AnyP = theAnyP->PMut<Seq_Any>())
+		else if (Seq_ZZ* theSeq_AnyP = theP->PMut<Seq_ZZ>())
 			{
-			*theAnyP = Seq(fLink, *theSeq_AnyP);
+			*theP = Seq(fLink, *theSeq_AnyP);
 			}
-		return spCoerceValPtr(theAnyP);
+		return spCoerceValPtr(theP);
 		}
 	return nullptr;
 	}
@@ -261,25 +261,25 @@ Val& Seq::Mut(size_t iIndex)
 
 Seq& Seq::Set(size_t iIndex, const Val& iVal)
 	{
-	fSeq_Any.Set(iIndex, spCoerce_Val_Any(iVal));
+	fSeq_ZZ.Set(iIndex, spCoerce_Val_ZZ(iVal));
 	return *this;
 	}
 
 Seq& Seq::Erase(size_t iIndex)
 	{
-	fSeq_Any.Erase(iIndex);
+	fSeq_ZZ.Erase(iIndex);
 	return *this;
 	}
 
 Seq& Seq::Insert(size_t iIndex, const Val& iVal)
 	{
-	fSeq_Any.Insert(iIndex, spCoerce_Val_Any(iVal));
+	fSeq_ZZ.Insert(iIndex, spCoerce_Val_ZZ(iVal));
 	return *this;
 	}
 
 Seq& Seq::Append(const Val& iVal)
 	{
-	fSeq_Any.Append(spCoerce_Val_Any(iVal));
+	fSeq_ZZ.Append(spCoerce_Val_ZZ(iVal));
 	return *this;
 	}
 
@@ -301,7 +301,7 @@ Map::Map()
 
 Map::Map(const Map& iOther)
 :	fLink(iOther.fLink)
-,	fMap_Any(iOther.fMap_Any)
+,	fMap_ZZ(iOther.fMap_ZZ)
 	{}
 
 Map::~Map()
@@ -310,7 +310,7 @@ Map::~Map()
 Map& Map::operator=(const Map& iOther)
 	{
 	fLink = iOther.fLink;
-	fMap_Any = iOther.fMap_Any;
+	fMap_ZZ = iOther.fMap_ZZ;
 	return *this;
 	}
 
@@ -318,22 +318,22 @@ Map::Map(const ZP<Link>& iLink)
 :	fLink(iLink)
 	{}
 
-Map::Map(const Map& iParent, const Map_Any& iMap)
+Map::Map(const Map& iParent, const Map_ZZ& iMap)
 :	fLink(new Link(iParent.GetLink(), iMap))
 	{}
 
 void Map::Clear()
 	{
 	fLink.Clear();
-	fMap_Any.Clear();
+	fMap_ZZ.Clear();
 	}
 
 const Val* Map::PGet(const Name_t& iName) const
 	{
-	Map_Any::Index_t theIndex = fMap_Any.IndexOf(iName);
-	if (theIndex != fMap_Any.End())
+	Map_ZZ::Index_t theIndex = fMap_ZZ.IndexOf(iName);
+	if (theIndex != fMap_ZZ.End())
 		{
-		if (const Val_Any* theAny = fMap_Any.PGet(theIndex))
+		if (const Val_ZZ* theAny = fMap_ZZ.PGet(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -343,14 +343,14 @@ const Val* Map::PGet(const Name_t& iName) const
 
 	if (fLink)
 		{
-		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
 			{
-			fMap_Any.Set(iName, *theAnyQ);
-			return spCoerceValPtr(fMap_Any.PGet(iName));
+			fMap_ZZ.Set(iName, *theAnyQ);
+			return spCoerceValPtr(fMap_ZZ.PGet(iName));
 			}
 		}
 
-	fMap_Any.Set(iName, Tombstone_t());
+	fMap_ZZ.Set(iName, Tombstone_t());
 	return nullptr;
 	}
 
@@ -377,10 +377,10 @@ const Val& Map::Get(const Name_t& iName) const
 
 Val* Map::PMut(const Name_t& iName)
 	{
-	Map_Any::Index_t theIndex = fMap_Any.IndexOf(iName);
-	if (theIndex != fMap_Any.End())
+	Map_ZZ::Index_t theIndex = fMap_ZZ.IndexOf(iName);
+	if (theIndex != fMap_ZZ.End())
 		{
-		if (Val_Any* theAny = fMap_Any.PMut(theIndex))
+		if (Val_ZZ* theAny = fMap_ZZ.PMut(theIndex))
 			{
 			if (theAny->PGet<Tombstone_t>())
 				return nullptr;
@@ -390,30 +390,30 @@ Val* Map::PMut(const Name_t& iName)
 
 	if (fLink)
 		{
-		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
 			{
-			fMap_Any.Set(iName, *theAnyQ);
-			return spCoerceValPtr(fMap_Any.PMut(iName));
+			fMap_ZZ.Set(iName, *theAnyQ);
+			return spCoerceValPtr(fMap_ZZ.PMut(iName));
 			}
 		}
 
-	fMap_Any.Set(iName, Tombstone_t());
+	fMap_ZZ.Set(iName, Tombstone_t());
 	return nullptr;
 	}
 
 Val& Map::Mut(const Name_t& iName)
 	{
-	if (Val_Any* theP = fMap_Any.PMut(iName))
+	if (Val_ZZ* theP = fMap_ZZ.PMut(iName))
 		{
 		if (theP->PGet<Tombstone_t>())
 			theP->Clear();
 		return *spCoerceValPtr(theP);
 		}
 
-	Val_Any& theMutable = fMap_Any.Mut(iName);
+	Val_ZZ& theMutable = fMap_ZZ.Mut(iName);
 	if (fLink)
 		{
-		if (ZQ<Val_Any> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
 			theMutable = *theAnyQ;
 		}
 
@@ -422,13 +422,13 @@ Val& Map::Mut(const Name_t& iName)
 
 Map& Map::Set(const Name_t& iName, const Val& iVal)
 	{
-	fMap_Any.Set(iName, spCoerce_Val_Any(iVal));
+	fMap_ZZ.Set(iName, spCoerce_Val_ZZ(iVal));
 	return *this;
 	}
 
 Map& Map::Erase(const Name_t& iName)
 	{
-	fMap_Any.Set(iName, Tombstone_t());
+	fMap_ZZ.Set(iName, Tombstone_t());
 	return *this;
 	}
 
@@ -445,14 +445,14 @@ const Val& Map::operator[](const Name_t& iName) const
 ZP<Link> Map::GetLink() const
 	{ return fLink; }
 
-//Map_Any Map::GetMap() const
+//Map_ZZ Map::GetMap() const
 //	{ return fMap; }
 
 // =================================================================================================
 #pragma mark -
 
-Map sYadTree(const Map_Any& iMap_Any, const std::string& iProtoName)
-	{ return Map(new Link(new CountedName(iProtoName), iMap_Any)); }
+Map sYadTree(const Map_ZZ& iMap_ZZ, const std::string& iProtoName)
+	{ return Map(new Link(new CountedName(iProtoName), iMap_ZZ)); }
 
 Map sParameterizedYadTree(const Map& iBase,
 	const std::string& iRootAugmentName, const Map& iRootAugment)

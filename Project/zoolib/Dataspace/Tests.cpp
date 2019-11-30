@@ -19,7 +19,7 @@
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
 #include "zoolib/ValPred/Util_Strim_Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/ValPred_Any.h" // For CConst
+#include "zoolib/ValPred/ValPred_DB.h" // For CConst
 
 namespace ZooLib {
 namespace Dataspace {

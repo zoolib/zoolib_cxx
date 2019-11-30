@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Coerce_Any.h"
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Pull_ML.h"
 #include "zoolib/UTCDateTime.h"
@@ -111,7 +111,7 @@ static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, c
 			}
 		else if (theName == "data")
 			{
-			sPush(Data_Any(), iChanW);
+			sPush(Data_ZZ(), iChanW);
 			}
 		else if (theName == "true")
 			{
@@ -273,7 +273,7 @@ void sPull_XMLPList_Push_PPT(ChanRU_UTF_ML& iChanRU, const ChanW_PPT& iChanW)
 		else if (theName == "data")
 			{
 			iChanRU.Advance();
-			sPush(Data_Any(), iChanW);
+			sPush(Data_ZZ(), iChanW);
 			}
 		else if (iChanRU.Name() == "true")
 			{
@@ -418,7 +418,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		s.End("string");
 		}
 
-	else if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
+	else if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
 		{
 		s.Begin("data");
 			sEWriteMem(ChanW_Bin_Base64Encode(ChanW_Bin_ASCIIStrim(s)),

@@ -249,7 +249,7 @@ public:
 		return this;
 		}
 
-	virtual bool QReadInc(Val_Any* ioResults)
+	virtual bool QReadInc(Val_DB* ioResults)
 		{
 		this->Called_QReadInc();
 		return fRelater->pReadInc(this, ioResults);
@@ -1114,7 +1114,7 @@ void Relater_Union::pPrime(ZP<Walker_Proxy> iWalker,
 		oOffsets[entry] = ioBaseOffset++;
 	}
 
-bool Relater_Union::pReadInc(ZP<Walker_Proxy> iWalker, Val_Any* ioResults)
+bool Relater_Union::pReadInc(ZP<Walker_Proxy> iWalker, Val_DB* ioResults)
 	{
 	++fReadCount;
 	for (;;)
@@ -1148,7 +1148,7 @@ bool Relater_Union::pReadInc(ZP<Walker_Proxy> iWalker, Val_Any* ioResults)
 			ZUnimplemented();
 			}
 		size_t theOffset = iWalker->fBaseOffset;
-		const Val_Any* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
+		const Val_DB* theVals = iWalker->fCurrentResult->GetValsAt(iWalker->fCurrentIndex);
 
 		for (size_t xx = 0, count = theRH.size(); xx < count; ++xx)
 			ioResults[theOffset++] = *theVals++;

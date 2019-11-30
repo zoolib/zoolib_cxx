@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_PseudoMap_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_DB.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -35,17 +35,17 @@ namespace RelationalAlgebra {
 class PseudoMap
 	{
 public:
-	PseudoMap(const std::map<string8,size_t>* iBindings, const Val_Any* iVals);
+	PseudoMap(const std::map<string8,size_t>* iBindings, const Val_DB* iVals);
 
-	const Val_Any* PGet(const string8& iName) const;
-	const ZQ<Val_Any> QGet(const string8& iName) const;
-	const Val_Any& DGet(const Val_Any& iDefault, const string8& iName) const;
-	const Val_Any& Get(const string8& iName) const;
+	const Val_DB* PGet(const string8& iName) const;
+	const ZQ<Val_DB> QGet(const string8& iName) const;
+	const Val_DB& DGet(const Val_DB& iDefault, const string8& iName) const;
+	const Val_DB& Get(const string8& iName) const;
 
 	template <class S>
 	const S* PGet(const string8& iName) const
 		{
-		if (const Val_Any* theVal = this->PGet(iName))
+		if (const Val_DB* theVal = this->PGet(iName))
 			return theVal->PGet<S>();
 		return nullptr;
 		}
@@ -53,7 +53,7 @@ public:
 	template <class S>
 	ZQ<S> QGet(const string8& iName) const
 		{
-		if (const Val_Any* theVal = this->PGet(iName))
+		if (const Val_DB* theVal = this->PGet(iName))
 			return theVal->QGet<S>();
 		return null;
 		}
@@ -74,25 +74,25 @@ public:
 		return sDefault<S>();
 		}
 
-	Map_Any AsMap() const;
+	Map_ZZ AsMap() const;
 
 protected:
 	const std::map<string8,size_t>* fBindings;
-	const Val_Any* fVals;
+	const Val_DB* fVals;
 	};
 
 // -----
 
-inline const Val_Any* sPGet(const PseudoMap& iMap, const string8& iName)
+inline const Val_DB* sPGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.PGet(iName); }
 
-inline const ZQ<Val_Any> sQGet(const PseudoMap& iMap, const string8& iName)
+inline const ZQ<Val_DB> sQGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.QGet(iName); }
 
-inline const Val_Any& sDGet(const Val_Any& iDefault, const PseudoMap& iMap, const string8& iName)
+inline const Val_DB& sDGet(const Val_DB& iDefault, const PseudoMap& iMap, const string8& iName)
 	{ return iMap.DGet(iDefault, iName); }
 
-inline const Val_Any& sGet(const PseudoMap& iMap, const string8& iName)
+inline const Val_DB& sGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.Get(iName); }
 
 // =================================================================================================
@@ -102,7 +102,7 @@ class PseudoMap_RelHead
 :	public PseudoMap
 	{
 public:
-	PseudoMap_RelHead(const RelHead& iRH, const Val_Any* iVals);
+	PseudoMap_RelHead(const RelHead& iRH, const Val_DB* iVals);
 
 private:
 	std::map<string8,size_t> fBindings_Storage;

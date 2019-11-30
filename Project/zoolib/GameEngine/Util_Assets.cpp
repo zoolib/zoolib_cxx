@@ -14,7 +14,7 @@ using namespace Util_string;
 // =================================================================================================
 #pragma mark -
 
-bool sReadAnim(const FileSpec& iFS, map<string8,FileSpec>& oFiles, Map_Any& oMap)
+bool sReadAnim(const FileSpec& iFS, map<string8,FileSpec>& oFiles, Map_ZZ& oMap)
 	{
 	if (not iFS.IsDir())
 		return false;

@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/File.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #include <map>
 
@@ -15,7 +15,7 @@ namespace GameEngine {
 // =================================================================================================
 #pragma mark -
 
-bool sReadAnim(const FileSpec& iFS, std::map<string8,FileSpec>& oFiles, Map_Any& oMap);
+bool sReadAnim(const FileSpec& iFS, std::map<string8,FileSpec>& oFiles, Map_ZZ& oMap);
 
 } // namespace GameEngine
 } // namespace ZooLib

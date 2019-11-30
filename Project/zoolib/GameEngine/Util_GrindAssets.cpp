@@ -87,9 +87,9 @@ ZBigRegion spRegion(const ZDCPixmap& iPM)
 	}
 
 static
-Val_Any spAsVal(const CVec3& iCVec3)
+Val_ZZ spAsVal(const CVec3& iCVec3)
 	{
-	Seq_Any theSeq;
+	Seq_ZZ theSeq;
 	theSeq.Append(iCVec3[0]);
 	theSeq.Append(iCVec3[1]);
 	theSeq.Append(iCVec3[2]);
@@ -97,9 +97,9 @@ Val_Any spAsVal(const CVec3& iCVec3)
 	}
 
 static
-Val_Any spAsVal(const GRect& iRect)
+Val_ZZ spAsVal(const GRect& iRect)
 	{
-	Seq_Any theSeq;
+	Seq_ZZ theSeq;
 	theSeq.Append(L(iRect));
 	theSeq.Append(T(iRect));
 	theSeq.Append(R(iRect));
@@ -108,18 +108,18 @@ Val_Any spAsVal(const GRect& iRect)
 	}
 
 static
-Val_Any spAsVal(const ZPointPOD& iPoint)
+Val_ZZ spAsVal(const ZPointPOD& iPoint)
 	{
-	Seq_Any theSeq;
+	Seq_ZZ theSeq;
 	theSeq.Append(X(iPoint));
 	theSeq.Append(Y(iPoint));
 	return theSeq;
 	}
 
 static
-Val_Any spAsVal(const ZRectPOD& iRect)
+Val_ZZ spAsVal(const ZRectPOD& iRect)
 	{
-	Seq_Any theSeq;
+	Seq_ZZ theSeq;
 	theSeq.Append(spAsVal(LT(iRect)));
 	theSeq.Append(spAsVal(WH(iRect)));
 	return theSeq;
@@ -421,7 +421,7 @@ ZDCPixmap spRescale(const ZDCPixmap& iPixmap, Rat iScale)
 static
 void spGrindArt(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap)
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap)
 	{
 	const int maxSheetDim = iBaseDim << iDoublings;
 
@@ -429,7 +429,7 @@ void spGrindArt(
 	if (ZLOGF(w, eDebug))
 		w << "Processing Art: " << prefix;
 
-	map<string8,Map_Any> theName2Stuff;
+	map<string8,Map_ZZ> theName2Stuff;
 	
 	vector<PixmapRegName> thePRNs;
 
@@ -452,7 +452,7 @@ void spGrindArt(
 
 				thePRNs.push_back(PixmapRegName(thePM, sPointPOD(0), theName));
 
-				Map_Any theStuff = sGet(sQReadMap_Any(current.Sibling(theName + ".txt")));
+				Map_ZZ theStuff = sGet(sQReadMap_Any(current.Sibling(theName + ".txt")));
 				if (iScale != 1.0)
 					{
 					const CVec3 baseReg = sCVec3(0, theStuff["Reg"]);
@@ -507,10 +507,10 @@ void spGrindArt(
 				{
 				if (ZQ<ZRectPOD> theBounds = theTiler.Insert(entry.f0))
 					{
-					Seq_Any& thing1 = theName2Stuff[entry.f2]["Frames"].Mut<Seq_Any>();
-					Seq_Any& thing2 = thing1[0].Mut<Seq_Any>();
+					Seq_ZZ& thing1 = theName2Stuff[entry.f2]["Frames"].Mut<Seq_ZZ>();
+					Seq_ZZ& thing2 = thing1[0].Mut<Seq_ZZ>();
 					
-					Map_Any theMeta;
+					Map_ZZ theMeta;
 					theMeta["Bounds"] = spAsVal(*theBounds);
 					theMeta["Reg"] = spAsVal(entry.f1);
 					theMeta["SheetName"] = theSheetName;
@@ -551,9 +551,9 @@ void spGrindArt(
 
 void sGrindArt(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap)
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap)
 	{
-	Map_Any theMap;
+	Map_ZZ theMap;
 	// First do the top level
 	spGrindArt(iScale, iBaseDim, iDoublings, iFS, iFS_Sheets, ioMap);
 
@@ -571,12 +571,12 @@ void sGrindArt(
 static
 void spGrindAnim(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap)
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap)
 	{
 	const int maxSheetDim = iBaseDim << iDoublings;
 
 	map<string8,FileSpec> theFiles;
-	Map_Any entry;
+	Map_ZZ entry;
 	if (not sReadAnim(iFS, theFiles, entry))
 		return;
 
@@ -633,7 +633,7 @@ void spGrindAnim(
 
 	if (thePOFs.size())
 		{
-		Seq_Any& theFrames = sMut<Seq_Any>(entry["Frames"]);
+		Seq_ZZ& theFrames = sMut<Seq_ZZ>(entry["Frames"]);
 		for (int theSheetNumber = 0; /*no test*/; ++theSheetNumber)
 			{
 			vector<PixmapOffsetFrame> failed;
@@ -650,7 +650,7 @@ void spGrindAnim(
 				{
 				if (ZQ<ZRectPOD> theBounds = theTiler.Insert(entry.f0.f0))
 					{
-					Map_Any theFrame;
+					Map_ZZ theFrame;
 					theFrame["SheetName"] = theSheetName;
 					theFrame["Bounds"] = spAsVal(*theBounds);
 					theFrame["Reg"] = spAsVal(-sPoint<CVec3>(entry.f0.f1));
@@ -688,7 +688,7 @@ void spGrindAnim(
 
 void sGrindAnim(
 	Rat iScale, int iBaseDim, int iDoublings,
-	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_Any& ioMap)
+	const FileSpec& iFS, const FileSpec& iFS_Sheets, Map_ZZ& ioMap)
 	{
 	for (FileIter iter = iFS; iter; iter.Advance())
 		spGrindAnim(iScale, iBaseDim, iDoublings, iter.Current(), iFS_Sheets, ioMap);

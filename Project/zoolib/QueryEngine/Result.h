@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Compare_T.h"
 #include "zoolib/Counted.h"
 #include "zoolib/Multi.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_DB.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
@@ -45,10 +45,10 @@ class Result : public Counted
 
 public:
 	Result(RelationalAlgebra::RelHead* ioRelHead,
-		std::vector<Val_Any>* ioPackedRows);
+		std::vector<Val_DB>* ioPackedRows);
 
 	Result(const RelationalAlgebra::RelHead& iRelHead,
-		std::vector<Val_Any>* ioPackedRows);
+		std::vector<Val_DB>* ioPackedRows);
 
 	Result(const ZP<Result>& iOther, size_t iRow);
 
@@ -57,7 +57,7 @@ public:
 	const RelationalAlgebra::RelHead& GetRelHead();
 
 	size_t Count();
-	const Val_Any* GetValsAt(size_t iIndex);
+	const Val_DB* GetValsAt(size_t iIndex);
 
 	int Compare(const Result& iOther) const;
 
@@ -65,7 +65,7 @@ public:
 
 public:
 	RelationalAlgebra::RelHead fRelHead;
-	std::vector<Val_Any> fPackedRows;
+	std::vector<Val_DB> fPackedRows;
 	};
 
 // =================================================================================================
@@ -80,7 +80,7 @@ public:
 
 public:
 	std::vector<size_t> fMapping;
-	std::vector<Val_Any> fPackedRows;
+	std::vector<Val_DB> fPackedRows;
 	};
 
 // =================================================================================================

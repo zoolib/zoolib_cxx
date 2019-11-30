@@ -20,32 +20,32 @@ using Pixels::Pixmap;
 ZQ<GPoint> sQGPoint(const ZQ<Val>& iValQ);
 ZQ<GPoint> sQGPoint(const Val& iVal);
 
-ZQ<GPoint> sQGPoint(const ZQ<Val_Any>& iVal_AnyQ);
-ZQ<GPoint> sQGPoint(const Val_Any& iVal_Any);
+ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iVal_AnyQ);
+ZQ<GPoint> sQGPoint(const Val_ZZ& iVal_Any);
 
 ZQ<GRect> sQGRect(const ZQ<Val>& iValQ);
 ZQ<GRect> sQGRect(const Val& iVal);
 
-ZQ<GRect> sQGRect(const ZQ<Val_Any>& iVal_AnyQ);
-ZQ<GRect> sQGRect(const Val_Any& iVal_Any);
+ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iVal_AnyQ);
+ZQ<GRect> sQGRect(const Val_ZZ& iVal_Any);
 
-ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName = nullptr);
-ZQ<Map_Any> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName);
-ZQ<Map_Any> sQReadMap_Any(const FileSpec& iFS);
+ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName = nullptr);
+ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName);
+ZQ<Map_ZZ> sQReadMap_Any(const FileSpec& iFS);
 
-Map_Any sReadTextData(const FileSpec& iFS);
+Map_ZZ sReadTextData(const FileSpec& iFS);
 
 ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
 ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 
-void sWriteBin(const Val_Any& iVal, const ChanW_Bin& w);
-Val_Any sReadBin(const ChanR_Bin& iChanR);
+void sWriteBin(const Val_ZZ& iVal, const ChanW_Bin& w);
+Val_ZZ sReadBin(const ChanR_Bin& iChanR);
 
 void sDump(const ChanW_UTF& w, const Val& iVal);
 void sDump(const Val& iVal);
 
-void sDump(const ChanW_UTF& w, const Any& iAny);
-void sDump(const Any& iAny);
+void sDump(const ChanW_UTF& w, const Val_ZZ& iVal);
+void sDump(const Val_ZZ& iVal);
 
 uint64 sNextID();
 

@@ -59,12 +59,12 @@ public:
 
 	bool IsLoaded();
 
-	ZQ<Map_Any> QGetMap();
-	Map_Any GetMap();
-	Val_Any Get(const string8& iName);
+	ZQ<Map_ZZ> QGetMap();
+	Map_ZZ GetMap();
+	Val_DB Get(const string8& iName);
 
-	void Set(const string8& iName, const Val_Any& iVal);
-	void Set(const Map_Any& iMap);
+	void Set(const string8& iName, const Val_DB& iVal);
+	void Set(const Map_ZZ& iMap);
 
 private:
 	void pChanged(const ZP<Counted>& iRegistration, const ZP<Result>& iResult);
@@ -80,8 +80,8 @@ private:
 	ZP<ResultHandler> fResultHandler;
 	ZP<QueryEngine::Result> fResult;
 
-	ZQ<Map_Any> fMapQ;
-	Map_Any fMapInDaton;
+	ZQ<Map_ZZ> fMapQ;
+	Map_ZZ fMapInDaton;
 	Daton fDaton;
 	};
 

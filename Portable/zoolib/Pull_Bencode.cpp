@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanR_Bin_More.h"
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
@@ -128,7 +128,7 @@ void spReadStringish(const ChanRU_Bin& s, const ChanW_PPT& iChanW)
 		}
 	else
 		{
-		sPush(Data_Any(theString.data(), theLength), iChanW);
+		sPush(Data_ZZ(theString.data(), theLength), iChanW);
 		}
 	}
 

@@ -29,7 +29,7 @@ set (CppFiles
 	${ZDIR}/zoolib/Compare_Integer.cpp
 	${ZDIR}/zoolib/Compare_Rational.cpp
 	${ZDIR}/zoolib/Compare_string.cpp
-	${ZDIR}/zoolib/Data_Any.cpp
+	${ZDIR}/zoolib/Data_ZZ.cpp
 	${ZDIR}/zoolib/File.cpp
 	${ZDIR}/zoolib/Log.cpp
 	${ZDIR}/zoolib/ML.cpp
@@ -40,10 +40,10 @@ set (CppFiles
 	${ZDIR}/zoolib/Net.cpp
 	${ZDIR}/zoolib/Net_Internet.cpp
 	${ZDIR}/zoolib/PullPush.cpp
-	${ZDIR}/zoolib/PullPush_Any.cpp
 	${ZDIR}/zoolib/PullPush_JSON.cpp
 	${ZDIR}/zoolib/PullPush_JSONB.cpp
 	${ZDIR}/zoolib/PullPush_XMLPList.cpp
+	${ZDIR}/zoolib/PullPush_ZZ.cpp
 	${ZDIR}/zoolib/Pull_Basic.cpp
 	${ZDIR}/zoolib/Pull_Bencode.cpp
 	${ZDIR}/zoolib/Pull_ML.cpp
@@ -72,7 +72,7 @@ set (CppFiles
 	${ZDIR}/zoolib/Util_Time.cpp
 	${ZDIR}/zoolib/Util_string.cpp
 	${ZDIR}/zoolib/Val.cpp
-	${ZDIR}/zoolib/Val_Any.cpp
+	${ZDIR}/zoolib/Val_ZZ.cpp
 	${ZDIR}/zoolib/Visitor.cpp
 	${ZDIR}/zoolib/Visitor_ToStrim.cpp
 )

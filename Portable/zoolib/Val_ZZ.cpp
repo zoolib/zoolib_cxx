@@ -1,24 +1,6 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
-http://www.zoolib.org
+// Copyright (c) 2009-2019 Andrew Green. MIT License. http://www.zoolib.org
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
-
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #include "zoolib/Compare.h"
 #include "zoolib/Compare_T.h"
@@ -32,19 +14,19 @@ using std::vector;
 
 namespace ZooLib {
 
-static const Val_Any& spVal_Null()
-	{ return sDefault<Val_Any>(); }
+static const Val_ZZ& spVal_Null()
+	{ return sDefault<Val_ZZ>(); }
 
 template <>
-int sCompare_T(const Val_Any& iL, const Val_Any& iR)
+int sCompare_T(const Val_ZZ& iL, const Val_ZZ& iR)
 	{ return iL.Compare(iR); }
 
 template <>
-int sCompare_T(const Seq_Any& iL, const Seq_Any& iR)
+int sCompare_T(const Seq_ZZ& iL, const Seq_ZZ& iR)
 	{ return iL.Compare(iR); }
 
 template <>
-int sCompare_T(const Map_Any& iL, const Map_Any& iR)
+int sCompare_T(const Map_ZZ& iL, const Map_ZZ& iR)
 	{ return iL.Compare(iR); }
 
 template <>
@@ -55,55 +37,55 @@ int sCompare_T(const NameVal& iL, const NameVal& iR)
 	return sCompare_T(iL.second, iR.second);
 	}
 
-ZMACRO_CompareRegistration_T(Val_Any)
-ZMACRO_CompareRegistration_T(Seq_Any)
-ZMACRO_CompareRegistration_T(Map_Any)
+ZMACRO_CompareRegistration_T(Val_ZZ)
+ZMACRO_CompareRegistration_T(Seq_ZZ)
+ZMACRO_CompareRegistration_T(Map_ZZ)
 
 // =================================================================================================
-#pragma mark - Seq_Any::Rep
+#pragma mark - Seq_ZZ::Rep
 
-Seq_Any::Rep::Rep()
+Seq_ZZ::Rep::Rep()
 	{
 	fVector.reserve(8);
 	}
 
-Seq_Any::Rep::~Rep()
+Seq_ZZ::Rep::~Rep()
 	{}
 
-Seq_Any::Rep::Rep(const Vector_t& iVector)
+Seq_ZZ::Rep::Rep(const Vector_t& iVector)
 :	fVector(iVector)
 	{}
 
 // =================================================================================================
-#pragma mark - Seq_Any
+#pragma mark - Seq_ZZ
 
-Seq_Any::Seq_Any()
+Seq_ZZ::Seq_ZZ()
 	{}
 
-Seq_Any::Seq_Any(const Seq_Any& iOther)
+Seq_ZZ::Seq_ZZ(const Seq_ZZ& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-Seq_Any::~Seq_Any()
+Seq_ZZ::~Seq_ZZ()
 	{}
 
-Seq_Any& Seq_Any::operator=(const Seq_Any& iOther)
+Seq_ZZ& Seq_ZZ::operator=(const Seq_ZZ& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-Seq_Any::Seq_Any(const Vector_t& iOther)
+Seq_ZZ::Seq_ZZ(const Vector_t& iOther)
 :	fRep(new Rep(iOther))
 	{}
 
-Seq_Any& Seq_Any::operator=(const Vector_t& iOther)
+Seq_ZZ& Seq_ZZ::operator=(const Vector_t& iOther)
 	{
 	fRep = new Rep(iOther);
 	return *this;
 	}
 
-int Seq_Any::Compare(const Seq_Any& iOther) const
+int Seq_ZZ::Compare(const Seq_ZZ& iOther) const
 	{
 	if (fRep)
 		{
@@ -126,45 +108,45 @@ int Seq_Any::Compare(const Seq_Any& iOther) const
 		}
 	}
 
-size_t Seq_Any::Size() const
+size_t Seq_ZZ::Size() const
 	{
 	if (fRep)
 		return fRep->fVector.size();
 	return 0;
 	}
 
-void Seq_Any::Clear()
+void Seq_ZZ::Clear()
 	{ fRep.Clear(); }
 
-const Val_Any* Seq_Any::PGet(size_t iIndex) const
+const Val_ZZ* Seq_ZZ::PGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return &fRep->fVector[iIndex];
 	return nullptr;
 	}
 
-const ZQ<Val_Any> Seq_Any::QGet(size_t iIndex) const
+const ZQ<Val_ZZ> Seq_ZZ::QGet(size_t iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return null;
 	}
 
-const Val_Any Seq_Any::DGet(const Val_Any& iDefault, size_t iIndex) const
+const Val_ZZ Seq_ZZ::DGet(const Val_ZZ& iDefault, size_t iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return iDefault;
 	}
 
-const Val_Any& Seq_Any::Get(size_t iIndex) const
+const Val_ZZ& Seq_ZZ::Get(size_t iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return spVal_Null();
 	}
 
-Val_Any* Seq_Any::PMut(size_t iIndex)
+Val_ZZ* Seq_ZZ::PMut(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -174,7 +156,7 @@ Val_Any* Seq_Any::PMut(size_t iIndex)
 	return nullptr;
 	}
 
-Seq_Any& Seq_Any::Set(size_t iIndex, const Val_Any& iVal)
+Seq_ZZ& Seq_ZZ::Set(size_t iIndex, const Val_ZZ& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -184,7 +166,7 @@ Seq_Any& Seq_Any::Set(size_t iIndex, const Val_Any& iVal)
 	return *this;
 	}
 
-Seq_Any& Seq_Any::Erase(size_t iIndex)
+Seq_ZZ& Seq_ZZ::Erase(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -194,7 +176,7 @@ Seq_Any& Seq_Any::Erase(size_t iIndex)
 	return *this;
 	}
 
-Seq_Any& Seq_Any::Insert(size_t iIndex, const Val_Any& iVal)
+Seq_ZZ& Seq_ZZ::Insert(size_t iIndex, const Val_ZZ& iVal)
 	{
 	this->pTouch();
 	if (iIndex <= fRep->fVector.size())
@@ -202,14 +184,14 @@ Seq_Any& Seq_Any::Insert(size_t iIndex, const Val_Any& iVal)
 	return *this;
 	}
 
-Seq_Any& Seq_Any::Append(const Val_Any& iVal)
+Seq_ZZ& Seq_ZZ::Append(const Val_ZZ& iVal)
 	{
 	this->pTouch();
 	fRep->fVector.push_back(iVal);
 	return *this;
 	}
 
-Val_Any& Seq_Any::Mut(size_t iIndex)
+Val_ZZ& Seq_ZZ::Mut(size_t iIndex)
 	{
 	this->pTouch();
 	if (iIndex >= fRep->fVector.size())
@@ -217,7 +199,7 @@ Val_Any& Seq_Any::Mut(size_t iIndex)
 	return fRep->fVector[iIndex];
 	}
 
-Val_Any& Seq_Any::operator[](size_t iIndex)
+Val_ZZ& Seq_ZZ::operator[](size_t iIndex)
 	{
 	this->pTouch();
 	if (iIndex >= fRep->fVector.size())
@@ -225,10 +207,10 @@ Val_Any& Seq_Any::operator[](size_t iIndex)
 	return fRep->fVector[iIndex];
 	}
 
-const Val_Any& Seq_Any::operator[](size_t iIndex) const
+const Val_ZZ& Seq_ZZ::operator[](size_t iIndex) const
 	{ return this->Get(iIndex); }
 
-Seq_Any::iterator Seq_Any::begin()
+Seq_ZZ::iterator Seq_ZZ::begin()
 	{
 	if (fRep)
 		return fRep->fVector.begin();
@@ -237,28 +219,28 @@ Seq_Any::iterator Seq_Any::begin()
 	return sNonConst(sDefault<Vector_t>()).begin();
 	}
 
-Seq_Any::iterator Seq_Any::end()
+Seq_ZZ::iterator Seq_ZZ::end()
 	{
 	if (fRep)
 		return fRep->fVector.end();
 	return sNonConst(sDefault<Vector_t>()).end();
 	}
 
-Seq_Any::const_iterator Seq_Any::begin() const
+Seq_ZZ::const_iterator Seq_ZZ::begin() const
 	{
 	if (fRep)
 		return fRep->fVector.begin();
 	return sDefault<Vector_t>().begin();
 	}
 
-Seq_Any::const_iterator Seq_Any::end() const
+Seq_ZZ::const_iterator Seq_ZZ::end() const
 	{
 	if (fRep)
 		return fRep->fVector.end();
 	return sDefault<Vector_t>().end();
 	}
 
-void Seq_Any::pTouch()
+void Seq_ZZ::pTouch()
 	{
 	if (not fRep)
 		{
@@ -271,45 +253,45 @@ void Seq_Any::pTouch()
 	}
 
 // =================================================================================================
-#pragma mark - Map_Any::Rep
+#pragma mark - Map_ZZ::Rep
 
 namespace {
 
-SafePtrStack_WithDestroyer<Map_Any::Rep,SafePtrStackLink_Map_Any_Rep> spSafePtrStack_Map_Any_Rep;
+SafePtrStack_WithDestroyer<Map_ZZ::Rep,SafePtrStackLink_Map_ZZ_Rep> spSafePtrStack_Map_ZZ_Rep;
 
 } // anonymous namespace
 
-Map_Any::Rep::Rep()
+Map_ZZ::Rep::Rep()
 	{}
 
-Map_Any::Rep::~Rep()
+Map_ZZ::Rep::~Rep()
 	{}
 
-Map_Any::Rep::Rep(const Map_t& iMap)
+Map_ZZ::Rep::Rep(const Map_t& iMap)
 :	fMap(iMap)
 	{}
 
-void Map_Any::Rep::Finalize()
+void Map_ZZ::Rep::Finalize()
 	{
 	bool finalized = this->FinishFinalize();
 	ZAssert(finalized);
 	ZAssert(not this->IsReferenced());
 	fMap.clear();
 
-	spSafePtrStack_Map_Any_Rep.Push(this);
+	spSafePtrStack_Map_ZZ_Rep.Push(this);
 	}
 
-ZP<Map_Any::Rep> Map_Any::Rep::spMake()
+ZP<Map_ZZ::Rep> Map_ZZ::Rep::spMake()
 	{
-	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+	if (Rep* result = spSafePtrStack_Map_ZZ_Rep.PopIfNotEmpty<Rep>())
 		return result;
 
 	return new Rep;
 	}
 
-ZP<Map_Any::Rep> Map_Any::Rep::spMake(const Map_t& iMap)
+ZP<Map_ZZ::Rep> Map_ZZ::Rep::spMake(const Map_t& iMap)
 	{
-	if (Rep* result = spSafePtrStack_Map_Any_Rep.PopIfNotEmpty<Rep>())
+	if (Rep* result = spSafePtrStack_Map_ZZ_Rep.PopIfNotEmpty<Rep>())
 		{
 		result->fMap = iMap;
 		return result;
@@ -319,50 +301,50 @@ ZP<Map_Any::Rep> Map_Any::Rep::spMake(const Map_t& iMap)
 	}
 
 // =================================================================================================
-#pragma mark - Map_Any
+#pragma mark - Map_ZZ
 
-static Map_Any::Name_t spEmptyString;
+static Map_ZZ::Name_t spEmptyString;
 
-static Map_Any::Map_t spEmptyMap;
+static Map_ZZ::Map_t spEmptyMap;
 
-Map_Any::Map_Any()
+Map_ZZ::Map_ZZ()
 	{}
 
-Map_Any::Map_Any(const Map_Any& iOther)
+Map_ZZ::Map_ZZ(const Map_ZZ& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-Map_Any::~Map_Any()
+Map_ZZ::~Map_ZZ()
 	{}
 
-Map_Any& Map_Any::operator=(const Map_Any& iOther)
+Map_ZZ& Map_ZZ::operator=(const Map_ZZ& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-Map_Any::Map_Any(const Map_t& iOther)
+Map_ZZ::Map_ZZ(const Map_t& iOther)
 :	fRep(Rep::spMake(iOther))
 	{}
 
-Map_Any& Map_Any::operator=(Map_t& iOther)
+Map_ZZ& Map_ZZ::operator=(Map_t& iOther)
 	{
 	fRep = Rep::spMake(iOther);
 	return *this;
 	}
 
-Map_Any::Map_Any(const NameVal& iNV)
+Map_ZZ::Map_ZZ(const NameVal& iNV)
 	{
 	this->Set(iNV);
 	}
 
-Map_Any::Map_Any(const char* iName, const char* iVal)
+Map_ZZ::Map_ZZ(const char* iName, const char* iVal)
 	{ this->Set(iName, iVal); }
 
-Map_Any::Map_Any(const Name_t& iName, const Val_Any& iVal)
+Map_ZZ::Map_ZZ(const Name_t& iName, const Val_ZZ& iVal)
 	{ this->Set(iName, iVal); }
 
-int Map_Any::Compare(const Map_Any& iOther) const
+int Map_ZZ::Compare(const Map_ZZ& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		{
@@ -417,7 +399,7 @@ int Map_Any::Compare(const Map_Any& iOther) const
 					// The names are different.
 					return compare;
 					}
-				if (int compare = sCompare_T<Val_Any>(iterThis->second, iterOther->second))
+				if (int compare = sCompare_T<Val_ZZ>(iterThis->second, iterOther->second))
 					{
 					// The values are different.
 					return compare;
@@ -448,13 +430,13 @@ int Map_Any::Compare(const Map_Any& iOther) const
 		}
 	}
 
-bool Map_Any::IsEmpty() const
+bool Map_ZZ::IsEmpty() const
 	{ return not fRep || fRep->fMap.empty(); }
 
-void Map_Any::Clear()
+void Map_ZZ::Clear()
 	{ fRep.Clear(); }
 
-const Val_Any* Map_Any::PGet(const Name_t& iName) const
+const Val_ZZ* Map_ZZ::PGet(const Name_t& iName) const
 	{
 	if (fRep)
 		{
@@ -465,56 +447,56 @@ const Val_Any* Map_Any::PGet(const Name_t& iName) const
 	return nullptr;
 	}
 
-const Val_Any* Map_Any::PGet(const Index_t& iIndex) const
+const Val_ZZ* Map_ZZ::PGet(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
 		return &iIndex->second;
 	return nullptr;
 	}
 
-const ZQ<Val_Any> Map_Any::QGet(const Name_t& iName) const
+const ZQ<Val_ZZ> Map_ZZ::QGet(const Name_t& iName) const
 	{
-	if (const Val_Any* theVal = this->PGet(iName))
+	if (const Val_ZZ* theVal = this->PGet(iName))
 		return *theVal;
 	return null;
 	}
 
-const ZQ<Val_Any> Map_Any::QGet(const Index_t& iIndex) const
+const ZQ<Val_ZZ> Map_ZZ::QGet(const Index_t& iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return null;
 	}
 
-const Val_Any& Map_Any::DGet(const Val_Any& iDefault, const Name_t& iName) const
+const Val_ZZ& Map_ZZ::DGet(const Val_ZZ& iDefault, const Name_t& iName) const
 	{
-	if (const Val_Any* theVal = this->PGet(iName))
+	if (const Val_ZZ* theVal = this->PGet(iName))
 		return *theVal;
 	return iDefault;
 	}
 
-const Val_Any& Map_Any::DGet(const Val_Any& iDefault, const Index_t& iIndex) const
+const Val_ZZ& Map_ZZ::DGet(const Val_ZZ& iDefault, const Index_t& iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return iDefault;
 	}
 
-const Val_Any& Map_Any::Get(const Name_t& iName) const
+const Val_ZZ& Map_ZZ::Get(const Name_t& iName) const
 	{
-	if (const Val_Any* theVal = this->PGet(iName))
+	if (const Val_ZZ* theVal = this->PGet(iName))
 		return *theVal;
 	return spVal_Null();
 	}
 
-const Val_Any& Map_Any::Get(const Index_t& iIndex) const
+const Val_ZZ& Map_ZZ::Get(const Index_t& iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return spVal_Null();
 	}
 
-Val_Any* Map_Any::PMut(const Name_t& iName)
+Val_ZZ* Map_ZZ::PMut(const Name_t& iName)
 	{
 	if (fRep)
 		{
@@ -526,7 +508,7 @@ Val_Any* Map_Any::PMut(const Name_t& iName)
 	return nullptr;
 	}
 
-Val_Any* Map_Any::PMut(const Index_t& iIndex)
+Val_ZZ* Map_ZZ::PMut(const Index_t& iIndex)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
@@ -534,20 +516,20 @@ Val_Any* Map_Any::PMut(const Index_t& iIndex)
 	return nullptr;
 	}
 
-Val_Any& Map_Any::Mut(const Name_t& iName)
+Val_ZZ& Map_ZZ::Mut(const Name_t& iName)
 	{
 	this->pTouch();
 	return fRep->fMap[iName];
 	}
 
-Map_Any& Map_Any::Set(const Name_t& iName, const Val_Any& iVal)
+Map_ZZ& Map_ZZ::Set(const Name_t& iName, const Val_ZZ& iVal)
 	{
 	this->pTouch();
 	fRep->fMap[iName] = iVal;
 	return *this;
 	}
 
-Map_Any& Map_Any::Set(const Index_t& iIndex, const Val_Any& iVal)
+Map_ZZ& Map_ZZ::Set(const Index_t& iIndex, const Val_ZZ& iVal)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
@@ -555,7 +537,7 @@ Map_Any& Map_Any::Set(const Index_t& iIndex, const Val_Any& iVal)
 	return *this;
 	}
 
-Map_Any& Map_Any::Erase(const Name_t& iName)
+Map_ZZ& Map_ZZ::Erase(const Name_t& iName)
 	{
 	if (fRep)
 		{
@@ -565,7 +547,7 @@ Map_Any& Map_Any::Erase(const Name_t& iName)
 	return *this;
 	}
 
-Map_Any& Map_Any::Erase(const Index_t& iIndex)
+Map_ZZ& Map_ZZ::Erase(const Index_t& iIndex)
 	{
 	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
@@ -573,85 +555,85 @@ Map_Any& Map_Any::Erase(const Index_t& iIndex)
 	return *this;
 	}
 
-Map_Any::Index_t Map_Any::Begin() const
+Map_ZZ::Index_t Map_ZZ::Begin() const
 	{
 	if (fRep)
 		return fRep->fMap.begin();
 	return spEmptyMap.begin();
 	}
 
-Map_Any::Index_t Map_Any::End() const
+Map_ZZ::Index_t Map_ZZ::End() const
 	{
 	if (fRep)
 		return fRep->fMap.end();
 	return spEmptyMap.end();
 	}
 
-Map_Any::iterator Map_Any::begin()
+Map_ZZ::iterator Map_ZZ::begin()
 	{
 	if (fRep)
 		return fRep->fMap.begin();
 	return spEmptyMap.begin();
 	}
 
-Map_Any::iterator Map_Any::end()
+Map_ZZ::iterator Map_ZZ::end()
 	{
 	if (fRep)
 		return fRep->fMap.end();
 	return spEmptyMap.end();
 	}
 
-Map_Any::const_iterator Map_Any::begin() const
+Map_ZZ::const_iterator Map_ZZ::begin() const
 	{
 	if (fRep)
 		return fRep->fMap.begin();
 	return spEmptyMap.begin();
 	}
 
-Map_Any::const_iterator Map_Any::end() const
+Map_ZZ::const_iterator Map_ZZ::end() const
 	{
 	if (fRep)
 		return fRep->fMap.end();
 	return spEmptyMap.end();
 	}
 
-const Map_Any::Name_t& Map_Any::NameOf(const Index_t& iIndex) const
+const Map_ZZ::Name_t& Map_ZZ::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
 		return iIndex->first;
 	return spEmptyString;
 	}
 
-Map_Any::Index_t Map_Any::IndexOf(const Name_t& iName) const
+Map_ZZ::Index_t Map_ZZ::IndexOf(const Name_t& iName) const
 	{
 	if (fRep)
 		return fRep->fMap.find(iName);
 	return spEmptyMap.end();
 	}
 
-Map_Any::Index_t Map_Any::IndexOf(const Map_Any& iOther, const Index_t& iOtherIndex) const
+Map_ZZ::Index_t Map_ZZ::IndexOf(const Map_ZZ& iOther, const Index_t& iOtherIndex) const
 	{
 	if (this == &iOther)
 		return iOtherIndex;
 	return this->IndexOf(iOther.NameOf(iOtherIndex));
 	}
 
-Map_Any& Map_Any::Set(const NameVal& iNV)
+Map_ZZ& Map_ZZ::Set(const NameVal& iNV)
 	{ return this->Set(iNV.first, iNV.second); }
 
-Val_Any& Map_Any::operator[](const Name_t& iName)
+Val_ZZ& Map_ZZ::operator[](const Name_t& iName)
 	{ return this->Mut(iName); }
 
-const Val_Any& Map_Any::operator[](const Name_t& iName) const
+const Val_ZZ& Map_ZZ::operator[](const Name_t& iName) const
 	{
-	if (const Val_Any* theVal = this->PGet(iName))
+	if (const Val_ZZ* theVal = this->PGet(iName))
 		return *theVal;
 	return spVal_Null();
 	}
 
-Val_Any& Map_Any::operator[](const Index_t& iIndex)
+Val_ZZ& Map_ZZ::operator[](const Index_t& iIndex)
 	{
-	if (Val_Any* theVal = this->PMut(iIndex))
+	if (Val_ZZ* theVal = this->PMut(iIndex))
 		{ return *theVal; }
 	else
 		{
@@ -660,14 +642,14 @@ Val_Any& Map_Any::operator[](const Index_t& iIndex)
 		}
 	}
 
-const Val_Any& Map_Any::operator[](const Index_t& iIndex) const
+const Val_ZZ& Map_ZZ::operator[](const Index_t& iIndex) const
 	{
-	if (const Val_Any* theVal = this->PGet(iIndex))
+	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return spVal_Null();
 	}
 
-void Map_Any::pTouch()
+void Map_ZZ::pTouch()
 	{
 	if (not fRep)
 		{
@@ -679,7 +661,7 @@ void Map_Any::pTouch()
 		}
 	}
 
-Map_Any::Map_t::iterator Map_Any::pTouch(const Index_t& iIndex)
+Map_ZZ::Map_t::iterator Map_ZZ::pTouch(const Index_t& iIndex)
 	{
 	if (not fRep)
 		{
@@ -697,53 +679,53 @@ Map_Any::Map_t::iterator Map_Any::pTouch(const Index_t& iIndex)
 		}
 	}
 
-Map_Any operator*(const NameVal& iNV0, const NameVal& iNV1)
+Map_ZZ operator*(const NameVal& iNV0, const NameVal& iNV1)
 	{
-	Map_Any result;
+	Map_ZZ result;
 	result.Set(iNV0);
 	result.Set(iNV1);
 	return result;
 	}
 
-Map_Any& operator*=(Map_Any& ioMap, const NameVal& iNV)
+Map_ZZ& operator*=(Map_ZZ& ioMap, const NameVal& iNV)
 	{ return ioMap.Set(iNV); }
 
-Map_Any operator*(const Map_Any& iMap, const NameVal& iNV)
-	{ return Map_Any(iMap).Set(iNV); }
+Map_ZZ operator*(const Map_ZZ& iMap, const NameVal& iNV)
+	{ return Map_ZZ(iMap).Set(iNV); }
 
-Map_Any operator*(const NameVal& iNV, const Map_Any& iMap)
-	{ return Map_Any(iMap).Set(iNV); }
+Map_ZZ operator*(const NameVal& iNV, const Map_ZZ& iMap)
+	{ return Map_ZZ(iMap).Set(iNV); }
 
-Map_Any& operator*=(Map_Any& ioMap0, const Map_Any& iMap1)
+Map_ZZ& operator*=(Map_ZZ& ioMap0, const Map_ZZ& iMap1)
 	{
-	for (Map_Any::Index_t ii = iMap1.Begin(), end = iMap1.End(); ii != end; ++ii)
+	for (Map_ZZ::Index_t ii = iMap1.Begin(), end = iMap1.End(); ii != end; ++ii)
 		ioMap0.Set(iMap1.NameOf(ii), iMap1.Get(ii));
 	return ioMap0;
 	}
 
-Map_Any operator*(const Map_Any& iMap0, const Map_Any& iMap1)
+Map_ZZ operator*(const Map_ZZ& iMap0, const Map_ZZ& iMap1)
 	{
-	Map_Any result = iMap0;
+	Map_ZZ result = iMap0;
 	return result *= iMap1;
 	}
 
 // =================================================================================================
 #pragma mark -
 
-Map_Any sAugmented(const Map_Any& iUnder, const Map_Any& iOver)
+Map_ZZ sAugmented(const Map_ZZ& iUnder, const Map_ZZ& iOver)
 	{
-	Map_Any result = iUnder;
-	for (Map_Any::Index_t ii = iOver.Begin(); ii != iOver.End(); ++ii)
+	Map_ZZ result = iUnder;
+	for (Map_ZZ::Index_t ii = iOver.Begin(); ii != iOver.End(); ++ii)
 		{
-		const Map_Any::Name_t& theName = iOver.NameOf(ii);
-		const Val_Any& theOverVal = iOver.Get(ii);
-		if (Val_Any* theResultVal = result.PMut(theName))
+		const Map_ZZ::Name_t& theName = iOver.NameOf(ii);
+		const Val_ZZ& theOverVal = iOver.Get(ii);
+		if (Val_ZZ* theResultVal = result.PMut(theName))
 			{
 			// Already have a val in result
-			if (const Map_Any* theOverMap = theOverVal.PGet<Map_Any>())
+			if (const Map_ZZ* theOverMap = theOverVal.PGet<Map_ZZ>())
 				{
 				// Over is a map
-				if (Map_Any* theResultMap = theResultVal->PMut<Map_Any>())
+				if (Map_ZZ* theResultMap = theResultVal->PMut<Map_ZZ>())
 					{
 					// And result is a map, so we augment, and continue so as to skip
 					// the default replacement operation below.

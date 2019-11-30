@@ -99,7 +99,7 @@ private:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pReadInc(ZP<Walker_Proxy> iWalker, Val_Any* ioResults);
+	bool pReadInc(ZP<Walker_Proxy> iWalker, Val_DB* ioResults);
 
 	size_t fWalkerCount;
 	size_t fReadCount;

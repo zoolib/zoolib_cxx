@@ -56,14 +56,14 @@ ZP<Walker> Walker_Result::Prime(
 	return this;
 	}
 
-bool Walker_Result::QReadInc(Val_Any* oResults)
+bool Walker_Result::QReadInc(Val_DB* oResults)
 	{
 	this->Called_QReadInc();
 
 	if (fIndex >= fResult->Count())
 		return false;
 
-	const Val_Any* theVals = fResult->GetValsAt(fIndex);
+	const Val_DB* theVals = fResult->GetValsAt(fIndex);
 	std::copy_n(theVals, fResult->GetRelHead().size(), oResults + fBaseOffset);
 
 	++fIndex;

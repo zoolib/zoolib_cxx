@@ -45,7 +45,7 @@ public:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	virtual bool QReadInc(Val_Any* ioResults);
+	virtual bool QReadInc(Val_DB* ioResults);
 
 // Our protocol
 	ZP<Walker> GetLeft()
@@ -57,7 +57,7 @@ public:
 private:
 	ZP<Walker> fWalker_Left;
 	bool fExhaustedLeft;
-	std::set<std::vector<Val_Any>> fPriors;
+	std::set<std::vector<Val_DB>> fPriors;
 	std::vector<size_t> fMapping_Left;
 
 	ZP<Walker> fWalker_Right;

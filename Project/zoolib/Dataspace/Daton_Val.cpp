@@ -1,29 +1,11 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2014 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2014-2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Dataspace/Daton_Val.h"
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
-#include "zoolib/Util_Any_JSON.h"
+#include "zoolib/Util_ZZ_JSON.h"
 
 namespace ZooLib {
 namespace Dataspace {
@@ -33,15 +15,15 @@ namespace Dataspace {
 
 namespace { // anonymous
 
-ZQ<Val_Any> spQAsVal(const Data_Any& iData)
+ZQ<Val_DB> spQAsVal(const Data_ZZ& iData)
 	{
 	try
 		{
-		if (ZQ<Any> theAnyQ = Util_Any_JSON::sQRead(
+		if (ZQ<Val_ZZ> theValQ = Util_ZZ_JSON::sQRead(
 			ChanRU_XX_Unreader<UTF32>(
 				ChanR_UTF_Chan_Bin_UTF8(
-					ChanRPos_Bin_Data<Data_Any>(iData)))))
-			{ return theAnyQ->As<Val_Any>(); }
+					ChanRPos_Bin_Data<Data_ZZ>(iData)))))
+			{ return theValQ->As<Val_DB>(); }
 		}
 	catch (...) {}
 	return null;
@@ -52,13 +34,13 @@ ZQ<Val_Any> spQAsVal(const Data_Any& iData)
 // =================================================================================================
 #pragma mark - Daton/Val conversion.
 
-Val_Any sAsVal(const Daton& iDaton)
+Val_DB sAsVal(const Daton& iDaton)
 	{ return spQAsVal(iDaton.GetData()).Get(); }
 
-Daton sAsDaton(const Val_Any& iVal)
+Daton sAsDaton(const Val_DB& iVal)
 	{
-	Data_Any theData;
-	Util_Any_JSON::sWrite(iVal.As<Any>(), ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_Any>(&theData)));
+	Data_ZZ theData;
+	Util_ZZ_JSON::sWrite(iVal.As<Val_ZZ>(), ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_ZZ>(&theData)));
 	return theData;
 	}
 

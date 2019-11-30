@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_Win.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZData_Any.h"
+#include "zoolib/ZData_ZZ.h"
 #include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
@@ -50,7 +50,7 @@ using namespace std;
 typedef TagVal<string16, struct Tag_Env> String_Env;
 typedef TagVal<string16, struct Tag_Link> String_Link;
 typedef vector<string16> StringList;
-typedef ZData_Any Data;
+typedef ZData_ZZ Data;
 class KeyRef;
 
 // =================================================================================================

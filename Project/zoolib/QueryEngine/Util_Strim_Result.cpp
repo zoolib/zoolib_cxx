@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/QueryEngine/Util_Strim_Result.h"
 
-#include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_ZZ_JSON.h"
 
 #include "zoolib/Dataspace/Types.h" // For AbsentOptional_t
 
@@ -51,7 +51,7 @@ void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& w)
 	for (size_t yy = 0; yy < theCount; ++yy)
 		{
 		w << "\n";
-		const Val_Any* theRow = iResult->GetValsAt(yy);
+		const Val_DB* theRow = iResult->GetValsAt(yy);
 		for (size_t xx = 0; xx < theRH.size(); ++xx)
 			{
 			if (xx)
@@ -59,7 +59,7 @@ void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& w)
 			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
 				w << "!absent!";
 			else
-				Util_Any_JSON::sWrite(theRow[xx].As<Any>(), false, w);
+				Util_ZZ_JSON::sWrite(theRow[xx].As<Val_ZZ>(), false, w);
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/CountedVal.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 #include "zoolib/Val_T.h"
 #include "zoolib/ValueOnce.h"
 
@@ -34,7 +34,7 @@ public:
 	~Seq();
 	Seq& operator=(const Seq& iOther);
 
-	Seq(const ZP<Link>& iLink, const Seq_Any& iSeq);
+	Seq(const ZP<Link>& iLink, const Seq_ZZ& iSeq);
 
 // ZSeq protocol
 	size_t Size() const;
@@ -110,7 +110,7 @@ private:
 	void pGenSeq();
 
 	ZP<Link> fLink;
-	mutable Seq_Any fSeq_Any;
+	mutable Seq_ZZ fSeq_ZZ;
 	};
 
 // =================================================================================================
@@ -120,7 +120,7 @@ class Map
 	{
 public:
 	typedef Val Val_t;
-	typedef Map_Any::Name_t Name_t;
+	typedef Map_ZZ::Name_t Name_t;
 
 	Map();
 	Map(const Map& iOther);
@@ -129,7 +129,7 @@ public:
 
 	explicit Map(const ZP<Link>& iLink);
 
-	explicit Map(const Map& iParent, const Map_Any& iMap);
+	explicit Map(const Map& iParent, const Map_ZZ& iMap);
 
 // ZMap protocol
 	void Clear();
@@ -201,13 +201,13 @@ public:
 
 private:
 	ZP<Link> fLink;
-	mutable Map_Any fMap_Any;
+	mutable Map_ZZ fMap_ZZ;
 	};
 
 // =================================================================================================
 #pragma mark - Map
 
-Map sYadTree(const Map_Any& iMap_Any, const std::string& iProtoName);
+Map sYadTree(const Map_ZZ& iMap_Any, const std::string& iProtoName);
 
 Map sParameterizedYadTree(const Map& iBase,
 	const std::string& iRootAugmentName, const Map& iRootAugment);

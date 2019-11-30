@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_DB.h"
 
 #include "zoolib/Expr/Expr_Op_T.h"
 
@@ -46,7 +46,7 @@ class Expr_Rel_Calc
 public:
 	typedef RelationalAlgebra::PseudoMap PseudoMap;
 
-	typedef Callable<Val_Any(const PseudoMap&)> Callable_t;
+	typedef Callable<Val_DB(const PseudoMap&)> Callable_t;
 
 	Expr_Rel_Calc(const ZP<Expr_Rel>& iOp0,
 		const ColName& iColName,

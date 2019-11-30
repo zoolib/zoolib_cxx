@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/ValPred_Any.h" // For ValComparand_Const_Any
+#include "zoolib/ValPred/ValPred_DB.h" // For ValComparand_Const_Any
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {
@@ -139,7 +139,7 @@ class DoReplaceBoundNames
 public:
 	DoReplaceBoundNames(const vector<ColName>& iBoundNames,
 		const size_t* iBoundOffsets,
-		const Val_Any* iVals)
+		const Val_DB* iVals)
 	:	fBoundNames(iBoundNames)
 	,	fBoundOffsets(iBoundOffsets)
 	,	fVals(iVals)
@@ -152,7 +152,7 @@ public:
 			// We could have a different kind of ValComparand, which holds the name's offset
 			// and for which we sub a value without needing to do the lookup every time.
 			if (ZQ<size_t> offset = sQFindSorted(fBoundNames, asName->GetName()))
-				return new ValComparand_Const_Any(fVals[fBoundOffsets[*offset]]);
+				return new ValComparand_Const_DB(fVals[fBoundOffsets[*offset]]);
 			}
 		return null;
 		}
@@ -185,7 +185,7 @@ public:
 private:
 	const vector<ColName>& fBoundNames;
 	const size_t* fBoundOffsets;
-	const Val_Any* fVals;
+	const Val_DB* fVals;
 	};
 
 } // anonymous namespace
@@ -230,7 +230,7 @@ public:
 		size_t& ioBaseOffset)
 		{ return fRelater->pPrime(this, iOffsets, oOffsets, ioBaseOffset); }
 
-	virtual bool QReadInc(Val_Any* ioResults)
+	virtual bool QReadInc(Val_DB* ioResults)
 		{
 		this->Called_QReadInc();
 		return fRelater->pQReadInc(this, ioResults);
@@ -543,8 +543,8 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 
 				for (size_t rr = 0; rr < rowCount; ++rr)
 					{
-					const Val_Any* priorVals = priorResult->GetValsAt(rr);
-					const Val_Any* currVals = thePQuery->fResult->GetValsAt(rr);
+					const Val_DB* priorVals = priorResult->GetValsAt(rr);
+					const Val_DB* currVals = thePQuery->fResult->GetValsAt(rr);
 					for (size_t cc = 0; cc < colCount; ++cc)
 						{
 						if (priorVals[cc] != currVals[cc])
@@ -662,7 +662,7 @@ ZP<QE::Walker> Relater_Searcher::pPrime(ZP<Walker_Bingo> iWalker_Bingo,
 	return iWalker_Bingo;
 	}
 
-bool Relater_Searcher::pQReadInc(ZP<Walker_Bingo> iWalker_Bingo, Val_Any* ioResults)
+bool Relater_Searcher::pQReadInc(ZP<Walker_Bingo> iWalker_Bingo, Val_DB* ioResults)
 	{
 	ZAcqMtx acq(fMtx);
 	if (not iWalker_Bingo->fPRegSearch)
@@ -738,7 +738,7 @@ bool Relater_Searcher::pQReadInc(ZP<Walker_Bingo> iWalker_Bingo, Val_Any* ioResu
 	if (iWalker_Bingo->fNextRow >= theResult->Count())
 		return false;
 
-	const Val_Any* theRows = theResult->GetValsAt(iWalker_Bingo->fNextRow++);
+	const Val_DB* theRows = theResult->GetValsAt(iWalker_Bingo->fNextRow++);
 
 	for (size_t xx = 0,
 			colCount = iWalker_Bingo->fConcreteHead.size(),

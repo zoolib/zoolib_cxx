@@ -177,13 +177,13 @@ void Relater_SQLite::CollectResults(std::vector<QueryResult>& oChanged)
 	foreacha (entry, fMap_Rel_PQuery)
 		{
 		const PQuery* thePQuery = &entry.second;
-		vector<Val_Any> thePackedRows;
+		vector<Val_ZZ> thePackedRows;
 		for (ZP<Iter> theIter = new Iter(fDB, thePQuery->fSQL);
 			theIter->HasValue(); theIter->Advance())
 			{
 			const size_t theCount = theIter->Count();
 			for (size_t xx = 0; xx < theCount; ++xx)
-				thePackedRows.push_back(theIter->Get(xx).As<Val_Any>());
+				thePackedRows.push_back(theIter->Get(xx).As<Val_ZZ>());
 			}
 
 		ZP<QueryEngine::Result> theResult =

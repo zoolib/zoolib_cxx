@@ -48,11 +48,11 @@ ZP<Expr_Rel> operator*(const NameVal& iNameVal, const ZP<Expr_Rel>& iRel);
 ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const NameVal& iNameVal);
 ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const NameVal& iNameVal);
 
-ZP<Expr_Rel> sConst(const Map_Any& iMap);
+ZP<Expr_Rel> sConst(const Map_ZZ& iMap);
 
-ZP<Expr_Rel> operator*(const Map_Any& iMap, const ZP<Expr_Rel>& iRel);
-ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_Any& iMap);
-ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_Any& iMap);
+ZP<Expr_Rel> operator*(const Map_ZZ& iMap, const ZP<Expr_Rel>& iRel);
+ZP<Expr_Rel> operator*(const ZP<Expr_Rel>& iRel, const Map_ZZ& iMap);
+ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioRel, const Map_ZZ& iMap);
 
 ZP<Expr_Rel> operator&(const ZP<Expr_Rel>& iExpr_Rel, const ValPred& iValPred);
 ZP<Expr_Rel> operator&(const ValPred& iValPred, const ZP<Expr_Rel>& iExpr_Rel);

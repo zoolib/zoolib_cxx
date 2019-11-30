@@ -93,7 +93,7 @@ bool Sieve_Singleton::IsLoadedAndExists()
 bool Sieve_Singleton::IsLoaded()
 	{ return fRegistration && fResult; }
 
-ZQ<Map_Any> Sieve_Singleton::QGetMap()
+ZQ<Map_ZZ> Sieve_Singleton::QGetMap()
 	{
 	if (not fMapQ)
 		{
@@ -103,10 +103,10 @@ ZQ<Map_Any> Sieve_Singleton::QGetMap()
 			fMapQ = fMapInDaton;
 			// Put anything that's in our Result under what's in fMapInDaton.
 			const RelHead theRelHead = fResult->GetRelHead();
-			const Val_Any* theVals = fResult->GetValsAt(0);
+			const Val_DB* theVals = fResult->GetValsAt(0);
 			foreachv (const string8& theName, theRelHead)
 				{
-				const Val_Any& theVal = *theVals++;
+				const Val_DB& theVal = *theVals++;
 				if (not fMapQ->PGet(theName))
 					fMapQ->Set(theName, theVal);
 				}
@@ -116,29 +116,29 @@ ZQ<Map_Any> Sieve_Singleton::QGetMap()
 	return fMapQ;
 	}
 
-Map_Any Sieve_Singleton::GetMap()
+Map_ZZ Sieve_Singleton::GetMap()
 	{
 	ZAssert(this->IsLoadedAndExists());
 	return *this->QGetMap();
 	}
 
-Val_Any Sieve_Singleton::Get(const string8& iName)
+Val_DB Sieve_Singleton::Get(const string8& iName)
 	{ return this->GetMap().Get(iName); }
 
-void Sieve_Singleton::Set(const string8& iName, const Val_Any& iVal)
+void Sieve_Singleton::Set(const string8& iName, const Val_DB& iVal)
 	{ this->Set(NameVal(iName, iVal)); }
 
-void Sieve_Singleton::Set(const Map_Any& iMap)
+void Sieve_Singleton::Set(const Map_ZZ& iMap)
 	{
 	ZAssert(this->IsLoadedAndExists());
 
 	bool anyChange = false;
-	for (Map_Any::Index_t iter = iMap.Begin(); iter != iMap.End(); ++iter)
+	for (Map_ZZ::Index_t iter = iMap.Begin(); iter != iMap.End(); ++iter)
 		{
 		const string8& theName = iMap.NameOf(iter);
 		if (sContains(fEditableRelHead, theName))
 			{
-			const Val_Any& theVal = iMap.Get(iter);
+			const Val_DB& theVal = iMap.Get(iter);
 			fMapInDaton.Set(theName, theVal);
 			anyChange = true;
 			}
@@ -177,7 +177,7 @@ void Sieve_Singleton::pChanged(const ZP<Counted>& iRegistration, const ZP<Result
 				w << "fDatonColName: " << fDatonColName << "\n" << fRel;
 			ZUnimplemented();
 			}
-		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<Map_Any>();
+		fMapInDaton = *Dataspace::sAsVal(fDaton).QGet<Map_ZZ>();
 		}
 	fCallable_Changed->Call(this, not wasLoaded);
 	}

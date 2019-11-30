@@ -89,7 +89,7 @@ ZP<Walker> Walker_Union::Prime(
 	return this;
 	}
 
-bool Walker_Union::QReadInc(Val_Any* ioResults)
+bool Walker_Union::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 
@@ -97,7 +97,7 @@ bool Walker_Union::QReadInc(Val_Any* ioResults)
 
 	for (;;)
 		{
-		vector<Val_Any> subset;
+		vector<Val_DB> subset;
 		subset.reserve(count);
 		if (not fExhaustedLeft)
 			{

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Expr/Expr_Bool.h"
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
-#include "zoolib/ValPred/ValPred_Any.h"
+#include "zoolib/ValPred/ValPred_DB.h"
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -50,7 +50,7 @@ public:
 	Exec() {};
 	virtual ~Exec() {}
 
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts) = 0;
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts) = 0;
 	};
 
 // =================================================================================================
@@ -61,14 +61,14 @@ namespace { // anonymous
 class Exec_False : public Walker_Restrict::Exec
 	{
 public:
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{ return false; }
 	};
 
 class Exec_True : public Walker_Restrict::Exec
 	{
 public:
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{ return true; }
 	};
 
@@ -82,7 +82,7 @@ public:
 	virtual ~Exec_Not()
 		{ delete fExec; }
 
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{ return not fExec->Call(iVars, iConsts); }
 
 	Exec* fExec;
@@ -102,7 +102,7 @@ public:
 		delete fRight;
 		}
 
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{ return fLeft->Call(iVars, iConsts) && fRight->Call(iVars, iConsts); }
 
 	Exec* fLeft;
@@ -123,7 +123,7 @@ public:
 		delete fRight;
 		}
 
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{ return fLeft->Call(iVars, iConsts) || fRight->Call(iVars, iConsts); }
 
 	Exec* fLeft;
@@ -140,7 +140,7 @@ public:
 	,	fOffsetRight(iOffsetRight)
 		{}
 
-	virtual bool Call(const Val_Any* iVars, const Val_Any* iConsts)
+	virtual bool Call(const Val_DB* iVars, const Val_DB* iConsts)
 		{
 		if (UseLeftVar_p)
 			{
@@ -172,43 +172,43 @@ namespace { // anonymous
 
 struct Functor_LT
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) < 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) < 0; }
 	};
 
 struct Functor_LE
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) <= 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) <= 0; }
 	};
 
 struct Functor_EQ
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) == 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) == 0; }
 	};
 
 struct Functor_NE
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) != 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) != 0; }
 	};
 
 struct Functor_GE
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) >= 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) >= 0; }
 	};
 
 struct Functor_GT
 	{
-	bool operator()(const Val_Any& l, const Val_Any& r) const { return sCompare_T(l, r) > 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) > 0; }
 	};
 
 struct Functor_Callable
 	{
-	typedef ValComparator_Callable_Any::Callable_t Callable_t;
+	typedef ValComparator_Callable_DB::Callable_t Callable_t;
 
 	Functor_Callable(ZP<Callable_t> iCallable)
 	:	fCallable(iCallable)
 		{}
 
-	bool operator()(const Val_Any& l, const Val_Any& r) const
+	bool operator()(const Val_DB& l, const Val_DB& r) const
 		{ return fCallable->Call(l, r); }
 
 	ZP<Callable_t> fCallable;
@@ -222,7 +222,7 @@ struct Functor_StringContains
 		ZUnimplemented();
 		}
 
-	bool operator()(const Val_Any& l, const Val_Any& r) const
+	bool operator()(const Val_DB& l, const Val_DB& r) const
 		{
 //##		if (const string8* target = l.PGet<string8>())
 //##			{
@@ -252,7 +252,7 @@ class AsExec
 ,	public virtual Visitor_Expr_Bool_ValPred
 	{
 public:
-	AsExec(const map<string8,size_t>& iVars, vector<Val_Any>& ioConsts)
+	AsExec(const map<string8,size_t>& iVars, vector<Val_DB>& ioConsts)
 	:	fVars(iVars)
 	,	fConsts(ioConsts)
 		{}
@@ -285,7 +285,7 @@ public:
 		const ZP<ValComparand>& iLHS, const ZP<ValComparand>& iRHS);
 
 	const map<string8,size_t>& fVars;
-	vector<Val_Any>& fConsts;
+	vector<Val_DB>& fConsts;
 	};
 
 void AsExec::Visit_Expr_Bool_ValPred(const ZP<Expr_Bool_ValPred>& iExpr)
@@ -306,16 +306,16 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, true, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZP<ValComparand_Const_Any> asConstR =
-			iRHS.DynamicCast<ValComparand_Const_Any>())
+		else if (ZP<ValComparand_Const_DB> asConstR =
+			iRHS.DynamicCast<ValComparand_Const_DB>())
 			{
 			const size_t theOffsetR = fConsts.size();
 			fConsts.push_back(asConstR->GetVal());
 			return new Exec_Functor<Functor_p, true, false>(iFunctor, theOffsetL, theOffsetR);
 			}
 		}
-	else if (ZP<ValComparand_Const_Any> asConstL =
-		iLHS.DynamicCast<ValComparand_Const_Any>())
+	else if (ZP<ValComparand_Const_DB> asConstL =
+		iLHS.DynamicCast<ValComparand_Const_DB>())
 		{
 		const size_t theOffsetL = fConsts.size();
 		fConsts.push_back(asConstL->GetVal());
@@ -325,8 +325,8 @@ Walker_Restrict::Exec* AsExec::pMakeExec_T(
 			const size_t theOffsetR = sGetMust(fVars, asNameR->GetName());
 			return new Exec_Functor<Functor_p, false, true>(iFunctor, theOffsetL, theOffsetR);
 			}
-		else if (ZP<ValComparand_Const_Any> asConstR =
-			iRHS.DynamicCast<ValComparand_Const_Any>())
+		else if (ZP<ValComparand_Const_DB> asConstR =
+			iRHS.DynamicCast<ValComparand_Const_DB>())
 			{
 			const size_t theOffsetR = fConsts.size();
 			fConsts.push_back(asConstR->GetVal());
@@ -383,8 +383,8 @@ Walker_Restrict::Exec* AsExec::pMakeExec(const ValPred& iValPred)
 				}
 			}
 		}
-	else if (ZP<ValComparator_Callable_Any> asCallable =
-		theComparator.DynamicCast<ValComparator_Callable_Any>())
+	else if (ZP<ValComparator_Callable_DB> asCallable =
+		theComparator.DynamicCast<ValComparator_Callable_DB>())
 		{
 		return pMakeExec_T<>(
 			Functor_Callable(asCallable->GetCallable()),
@@ -438,11 +438,11 @@ ZP<Walker> Walker_Restrict::Prime(
 	return this;
 	}
 
-bool Walker_Restrict::QReadInc(Val_Any* ioResults)
+bool Walker_Restrict::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 
-	const Val_Any* theConsts = sFirstOrNil(fConsts);
+	const Val_DB* theConsts = sFirstOrNil(fConsts);
 
 	for (;;)
 		{

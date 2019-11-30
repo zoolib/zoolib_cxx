@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Coerce_Any.h"
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h"
 #include "zoolib/ParseException.h"
@@ -203,7 +203,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		return true;
 		}
 
-	if (const Data_Any* theData = sPGet<Data_Any>(thePPT))
+	if (const Data_ZZ* theData = sPGet<Data_ZZ>(thePPT))
 		{
 		sEWriteBE<byte>(iChanW, 0xE7);
 		sEWriteCount(iChanW, theData->GetSize());

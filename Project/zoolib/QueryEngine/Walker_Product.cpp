@@ -74,7 +74,7 @@ ZP<Walker> Walker_Product::Prime(
 	return this;
 	}
 
-bool Walker_Product::QReadInc(Val_Any* ioResults)
+bool Walker_Product::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 

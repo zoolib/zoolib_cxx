@@ -126,7 +126,7 @@ do appropriate marshalling at the Map and Seq level.
 
 There is one more set of ZooLib types that are conceptually part of the Val API. Data_XXX is
 equivalent to a CFData or NSData -- it's simply a block of bytes. ZData_CF and ZData_NS wrap
-CFData and NSData respectively, and Data_Any is signature compatible with them both and is
+CFData and NSData respectively, and Data_ZZ is signature compatible with them both and is
 implemented as a vector<char>.
 */
 

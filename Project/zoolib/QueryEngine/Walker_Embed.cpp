@@ -80,7 +80,7 @@ ZP<Walker> Walker_Embed::Prime(
 	return this;
 	}
 
-bool Walker_Embed::QReadInc(Val_Any* ioResults)
+bool Walker_Embed::QReadInc(Val_DB* ioResults)
 	{
 	this->Called_QReadInc();
 
@@ -91,7 +91,7 @@ bool Walker_Embed::QReadInc(Val_Any* ioResults)
 		{
 		fWalker_Embedee->Rewind();
 
-		vector<Val_Any> thePackedRows;
+		vector<Val_DB> thePackedRows;
 		for (;;)
 			{
 			if (not fWalker_Embedee->QReadInc(ioResults))

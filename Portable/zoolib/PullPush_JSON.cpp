@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_UTF_Escaped.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
-#include "zoolib/Data_Any.h"
+#include "zoolib/Data_ZZ.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
@@ -645,10 +645,10 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
 		}
 
-	else if (const Data_Any* theData = sPGet<Data_Any>(iPPT))
+	else if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
 		{
 		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
-		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_Any>(*theData),
+		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_ZZ>(*theData),
 			theIndentation, iOptions, iChanW);
 		}
 

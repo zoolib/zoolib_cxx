@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 #include "zoolib/Unicode.h"
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_ZZ.h"
 
 #import <Foundation/NSString.h>
 

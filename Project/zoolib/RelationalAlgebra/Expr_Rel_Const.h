@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Const_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Val_Any.h"
+#include "zoolib/Val_DB.h"
 
 #include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
@@ -41,7 +41,7 @@ class Expr_Rel_Const
 	{
 	typedef Expr_Op0_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Const(const ColName& iColName, const Val_Any& iVal);
+	Expr_Rel_Const(const ColName& iColName, const Val_DB& iVal);
 
 	virtual ~Expr_Rel_Const();
 
@@ -58,11 +58,11 @@ public:
 	virtual void Accept_Expr_Rel_Const(Visitor_Expr_Rel_Const& iVisitor);
 
 	const ColName& GetColName() const;
-	const Val_Any& GetVal() const;
+	const Val_DB& GetVal() const;
 
 private:
 	const ColName fColName;
-	const Val_Any fVal;
+	const Val_DB fVal;
 	};
 
 // =================================================================================================
@@ -78,7 +78,7 @@ public:
 // =================================================================================================
 #pragma mark - Relational operators
 
-ZP<Expr_Rel> sConst(const ColName& iColName, const Val_Any& iVal);
+ZP<Expr_Rel> sConst(const ColName& iColName, const Val_DB& iVal);
 
 } // namespace RelationalAlgebra
 

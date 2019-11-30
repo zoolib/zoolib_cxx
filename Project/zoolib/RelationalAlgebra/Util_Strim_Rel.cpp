@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ParseException.h"
-#include "zoolib/Util_Any_JSON.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_STL_set.h"
 #include "zoolib/Util_string.h"
+#include "zoolib/Util_ZZ_JSON.h"
 
 #include "zoolib/RelationalAlgebra/GetRelHead.h"
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
@@ -88,7 +88,7 @@ void Visitor::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	w << "Const(";
 	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
 	w << ",";
-	Util_Any_JSON::sWrite(iExpr->GetVal().As<Any>(), w);
+	Util_ZZ_JSON::sWrite(iExpr->GetVal().As<Val_ZZ>(), w);
 	w << ")";
 	}
 
@@ -308,10 +308,10 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 				{
 				spRead_WSComma(iChanRU, " after ColName in Const");
 
-				if (NotQ<Any> theValQ = Util_Any_JSON::sQRead(iChanRU))
+				if (NotQ<Val_ZZ> theValQ = Util_ZZ_JSON::sQRead(iChanRU))
 					throw ParseException("Expected value as second param in Const");
 				else
-					result = sConst(*theColNameQ, theValQ->As<Val_Any>());
+					result = sConst(*theColNameQ, theValQ->As<Val_DB>());
 				}
 			}
 		else if (sEquali(*theNameQ, "Dee"))
