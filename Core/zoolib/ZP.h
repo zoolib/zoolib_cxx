@@ -10,6 +10,7 @@
 
 #include "zoolib/Atomic.h" // For sAtomicPtr_CAS
 #include "zoolib/Compat_algorithm.h" // For std::swap
+#include "zoolib/Util_Relops.h"
 
 #include "zoolib/ZTypes.h" // For Adopt_T
 
@@ -189,31 +190,6 @@ public:
 		}
 
 // --
-
-	template <class O>
-	inline
-	bool operator==(O* iPtr) const
-		{ return fPtr == iPtr; }
-
-	template <class O>
-	inline
-	bool operator!=(O* iPtr) const
-		{ return fPtr != iPtr; }
-
-	template <class O>
-	inline
-	bool operator==(const ZP<O>& iOther) const
-		{ return fPtr == iOther.Get(); }
-
-	template <class O>
-	inline
-	bool operator!=(const ZP<O>& iOther) const
-		{ return fPtr != iOther.Get(); }
-
-	template <class O>
-	inline
-	bool operator<(const ZP<O>& iOther) const
-		{ return fPtr < iOther.Get(); }
 
 	inline
 	TPtr operator->() const
@@ -448,26 +424,6 @@ public:
 
 // --
 
-	template <class O>
-	bool operator==(O* iPtr) const
-		{ return fPtr == iPtr; }
-
-	template <class O>
-	bool operator!=(O* iPtr) const
-		{ return fPtr != iPtr; }
-
-	template <class O>
-	bool operator==(const ZP<O*>& iOther) const
-		{ return fPtr == iOther.Get(); }
-
-	template <class O>
-	bool operator!=(const ZP<O*>& iOther) const
-		{ return fPtr != iOther.Get(); }
-
-	template <class O>
-	bool operator<(const ZP<O*>& iOther) const
-		{ return fPtr < iOther.Get(); }
-
 	T* Get() const
 		{ return fPtr; }
 
@@ -536,6 +492,28 @@ public:
 	void Release()
 		{ spRelease(fPtr); }
 	};
+
+// =================================================================================================
+#pragma mark - Pseudo-ctor
+
+template <class T, class O>
+bool operator==(const ZP<T>& iZP, O* iPtr)
+	{ return iZP.Get() == iPtr; }
+
+template <class T, class O>
+bool operator!=(const ZP<T>& iZP, O* iPtr)
+	{ return iZP.Get() != iPtr; }
+
+template <class T, class O>
+bool operator==(const ZP<T>& iL, const ZP<O>& iR)
+	{ return iL.Get() == iR.Get(); }
+
+template <class T, class O>
+bool operator<(const ZP<T>& iL, const ZP<O>& iR)
+	{ return iL.Get() < iR.Get(); }
+
+template <class T> struct RelopsTraits_HasEQ<ZP<T>> : public RelopsTraits_Has {};
+template <class T> struct RelopsTraits_HasLT<ZP<T>> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark - Pseudo-ctor
