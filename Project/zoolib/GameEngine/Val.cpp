@@ -20,13 +20,13 @@ struct Tombstone_t {};
 #pragma mark - spCoerceXXX
 
 static const Val* spCoerceValPtr(const Val_ZZ* iVal)
-	{ return static_cast<const Val*>(static_cast<const AnyBase*>(iVal)); }
+	{ return &iVal->As<Val>(); }
 
 static Val* spCoerceValPtr(Val_ZZ* iVal)
-	{ return static_cast<Val*>(static_cast<AnyBase*>(iVal)); }
+	{ return &iVal->As<Val>(); }
 
 static const Val_ZZ& spCoerce_Val_ZZ(const Val& iVal)
-	{ return static_cast<const Val_ZZ&>(static_cast<const AnyBase&>(iVal)); }
+	{ return iVal.As<Val_ZZ>(); }
 
 // =================================================================================================
 #pragma mark - Link, declaration
@@ -72,7 +72,7 @@ Link::Link(const ZP<Link>& iParent, const Map_ZZ& iMap)
 ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 	{
 	if (ZP<Link> theLink = sGet(fChildren, iName))
-		return Map(theLink);//??
+		return Map(theLink);
 
 	if (const Val_ZZ* theP = sPGet(fMap, iName))
 		{
@@ -417,7 +417,7 @@ Val& Map::Mut(const Name_t& iName)
 			theMutable = *theZZQ;
 		}
 
-	return static_cast<Val&>(static_cast<AnyBase&>(theMutable));
+	return theMutable.As<Val>();
 	}
 
 Map& Map::Set(const Name_t& iName, const Val& iVal)
@@ -444,9 +444,6 @@ const Val& Map::operator[](const Name_t& iName) const
 
 ZP<Link> Map::GetLink() const
 	{ return fLink; }
-
-//Map_ZZ Map::GetMap() const
-//	{ return fMap; }
 
 // =================================================================================================
 #pragma mark -
