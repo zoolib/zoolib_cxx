@@ -1,7 +1,7 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/GameEngine/Util_Assets.h"
-#include "zoolib/GameEngine/Util.h" // For sQReadMap_Any
+#include "zoolib/GameEngine/Util.h" // For sQReadMap_ZZ
 
 #include "zoolib/Util_string.h"
 
@@ -29,7 +29,7 @@ bool sReadAnim(const FileSpec& iFS, map<string8,FileSpec>& oFiles, Map_ZZ& oMap)
 	if (oFiles.empty())
 		return false;
 
-	oMap = sGet(sQReadMap_Any(iFS.Child("meta.txt")));
+	oMap = sGet(sQReadMap_ZZ(iFS.Child("meta.txt")));
 
 	return true;
 	}
