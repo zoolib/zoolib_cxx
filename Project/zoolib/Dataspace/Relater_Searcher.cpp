@@ -614,10 +614,7 @@ bool Relater_Searcher::pCollectResultsFromSearcher()
 			{
 			thePRS->fResult = ii->GetResult();
 			foreacha (thePQuery, thePRS->fPQuery_Using)
-				{
 				sQInsertBack(fPQuery_NeedsWork, thePQuery);
-//##				thePQuery->fResult.Clear();
-				}
 			}
 		}
 	fCnd.Broadcast();

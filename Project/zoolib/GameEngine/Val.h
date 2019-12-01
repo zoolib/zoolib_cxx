@@ -5,8 +5,8 @@
 #include "zconfig.h"
 
 #include "zoolib/CountedVal.h"
-#include "zoolib/Val_ZZ.h"
 #include "zoolib/Val_T.h"
+#include "zoolib/Val_ZZ.h"
 #include "zoolib/ValueOnce.h"
 
 namespace ZooLib {
