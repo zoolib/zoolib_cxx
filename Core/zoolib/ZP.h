@@ -21,11 +21,14 @@ namespace ZooLib {
 template <class T>
 class ZP
 	{
+private:
 	#if defined(__APPLE__)
 		typedef __unsafe_unretained T* TPtr;
 	#else
 		typedef T* TPtr;
 	#endif
+
+	TPtr fPtr;
 
 	inline
 	static void spRetain(TPtr iPtr) { if (iPtr) sRetain(*iPtr); }
@@ -42,6 +45,17 @@ public:
 			{ return operator_bool_gen::translate(true && fPtr); }
 	#endif
 
+	template <class O>
+	inline
+	void swap(ZP<O>& ioOther)
+		{
+		using std::swap;
+		swap(fPtr, ioOther.fPtr);
+		}
+
+	typedef T Type_t;
+	typedef TPtr Ptr_t;
+
 	T& operator *()
 		{
 		sCheck(fPtr);
@@ -53,17 +67,6 @@ public:
 		sCheck(fPtr);
 		return *fPtr;
 		}
-
-	template <class O>
-	inline
-	void swap(ZP<O>& ioOther)
-		{
-		using std::swap;
-		swap(fPtr, ioOther.fPtr);
-		}
-
-	typedef T Type_t;
-	typedef TPtr Ptr_t;
 
 // --
 
@@ -297,9 +300,6 @@ public:
 	inline
 	void Release()
 		{ spRelease(fPtr); }
-
-private:
-	TPtr fPtr;
 	};
 
 template <class T>
@@ -319,6 +319,12 @@ template <class T> void sRelease_T(T* iPtr);
 template <class T>
 class ZP<T*>
 	{
+private:
+
+	static void spRetain(T*& ioPtr) { if (ioPtr) sRetain_T(ioPtr); }
+	static void spRelease(T* iPtr) { if (iPtr) sRelease_T(iPtr); }
+	T* fPtr;
+
 public:
 	operator bool() const { return true && fPtr; }
 	operator T*() const { return fPtr; }
@@ -529,11 +535,6 @@ public:
 	inline
 	void Release()
 		{ spRelease(fPtr); }
-
-private:
-	static void spRetain(T*& ioPtr) { if (ioPtr) sRetain_T(ioPtr); }
-	static void spRelease(T* iPtr) { if (iPtr) sRelease_T(iPtr); }
-	T* fPtr;
 	};
 
 // =================================================================================================
