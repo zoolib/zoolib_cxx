@@ -296,10 +296,10 @@ template <class T>
 class ZP<T*>
 	{
 private:
+	T* fPtr;
 
 	static void spRetain(T*& ioPtr) { if (ioPtr) sRetain_T(ioPtr); }
 	static void spRelease(T* iPtr) { if (iPtr) sRelease_T(iPtr); }
-	T* fPtr;
 
 public:
 	operator bool() const { return true && fPtr; }
