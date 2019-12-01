@@ -80,13 +80,13 @@ typename EnableIfC
 operator!=(const T& l, const T& r)
 	{ return l < r || r < l; }
 
-//template <class T>
-//typename EnableIfC
-//	<  RelopsTraits_HasLT<T>::No
-//	&& RelopsTraits_HasGT<T>::Yes
-//	,bool>::type
-//operator<(const T& l, const T& r)
-//	{ return r > l; }
+template <class T>
+typename EnableIfC
+	<  RelopsTraits_HasLT<T>::No
+	&& RelopsTraits_HasGT<T>::Yes
+	,bool>::type
+operator<(const T& l, const T& r)
+	{ return r > l; }
 
 template <class T>
 typename EnableIfC
