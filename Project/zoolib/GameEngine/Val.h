@@ -207,7 +207,7 @@ private:
 // =================================================================================================
 #pragma mark - Map
 
-Map sYadTree(const Map_ZZ& iMap_Any, const std::string& iProtoName);
+Map sYadTree(const Map_ZZ& iMap_ZZ, const std::string& iProtoName);
 
 Map sParameterizedYadTree(const Map& iBase,
 	const std::string& iRootAugmentName, const Map& iRootAugment);

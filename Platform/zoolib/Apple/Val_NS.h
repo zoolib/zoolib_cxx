@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
 #include "zoolib/UnicodeString.h"
+#include "zoolib/ZQ.h"
 
 #include "zoolib/Apple/Data_NS.h"
 #include "zoolib/Apple/ZP_NS.h"

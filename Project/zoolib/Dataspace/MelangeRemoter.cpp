@@ -102,7 +102,6 @@ public:
 			PPT theRHPPT = sERead(iChanR);
 			RelHead& theRelHead = sMut<RelHead>(theRHPPT);
 			const size_t theRowCount = size_t(sCoerceInt(sERead(iChanR)));
-//			const size_t theRowCount = size_t(sCoerceInt(sERead(iChanR).As<Val_ZZ>()));
 			size_t theCount = theRowCount * theRelHead.size();
 			vector<Val_DB> theVals;
 			theVals.reserve(theCount);

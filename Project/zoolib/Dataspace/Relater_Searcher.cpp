@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
 #include "zoolib/ValPred/Util_Expr_Bool_ValPred_Rename.h"
-#include "zoolib/ValPred/ValPred_DB.h" // For ValComparand_Const_Any
+#include "zoolib/ValPred/ValPred_DB.h" // For ValComparand_Const_DB
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_Do_GetNames.h"
 
 namespace ZooLib {

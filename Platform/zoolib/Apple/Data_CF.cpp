@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/Data_ZZ.h"
+#include "zoolib/ZDebug.h" // For ZAssert
 
 #include "zoolib/Apple/Util_CF.h"
 

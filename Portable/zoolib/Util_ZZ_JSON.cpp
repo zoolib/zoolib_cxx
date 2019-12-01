@@ -45,7 +45,7 @@ void sWrite(const Val_ZZ& iVal, const ChanW_UTF& iChanW)
 void sWrite(const Val_ZZ& iVal, bool iPrettyPrint, const ChanW_UTF& iChanW)
 	{ sWrite(iVal, 0, PushTextOptions_JSON(iPrettyPrint), iChanW); }
 
-static void spFromAny_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
+static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
 	sFromZZ_Push_PPT(iVal, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
@@ -54,7 +54,7 @@ static void spFromAny_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iC
 void sWrite(const Val_ZZ& iVal, size_t iInitialIndent, const PushTextOptions_JSON& iOptions, const ChanW_UTF& iChanW)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFromAny_Push_PPT), iVal, sGetClear(thePair.first)));
+	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));
 	sPull_PPT_Push_JSON(*thePair.second, iInitialIndent, iOptions, iChanW);
 	}
 

@@ -19,11 +19,11 @@ struct Tombstone_t {};
 // =================================================================================================
 #pragma mark - spCoerceXXX
 
-static const Val* spCoerceValPtr(const Val_ZZ* iAny)
-	{ return static_cast<const Val*>(static_cast<const AnyBase*>(iAny)); }
+static const Val* spCoerceValPtr(const Val_ZZ* iVal)
+	{ return static_cast<const Val*>(static_cast<const AnyBase*>(iVal)); }
 
-static Val* spCoerceValPtr(Val_ZZ* iAny)
-	{ return static_cast<Val*>(static_cast<AnyBase*>(iAny)); }
+static Val* spCoerceValPtr(Val_ZZ* iVal)
+	{ return static_cast<Val*>(static_cast<AnyBase*>(iVal)); }
 
 static const Val_ZZ& spCoerce_Val_ZZ(const Val& iVal)
 	{ return static_cast<const Val_ZZ&>(static_cast<const AnyBase&>(iVal)); }
@@ -82,9 +82,9 @@ ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 			sInsertMust(fChildren, iName, theLink);
 			return Map(theLink);
 			}
-		else if (const Seq_ZZ* theSeq_AnyP = theP->PGet<Seq_ZZ>())
+		else if (const Seq_ZZ* theSeq_ZZP = theP->PGet<Seq_ZZ>())
 			{
-			return Seq(this, *theSeq_AnyP);
+			return Seq(this, *theSeq_ZZP);
 			}
 		else
 			{
@@ -128,9 +128,9 @@ ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 						fProto = cur;
 						break;
 						}
-					else if (ZQ<Val_ZZ> theAnyQ = cur->QReadAt(theTrail.At(index)))
+					else if (ZQ<Val_ZZ> theZZQ = cur->QReadAt(theTrail.At(index)))
 						{
-						if (const Map* theMapP = theAnyQ->PGet<Map>())
+						if (const Map* theMapP = theZZQ->PGet<Map>())
 							{
 							cur = theMapP->GetLink();
 							continue;
@@ -205,9 +205,9 @@ const Val* Seq::PGet(size_t iIndex) const
 			{
 			*theP = Map(new Link(fLink, *theMap_ZZP));
 			}
-		else if (const Seq_ZZ* theSeq_AnyP = theP->PGet<Seq_ZZ>())
+		else if (const Seq_ZZ* theSeq_ZZP = theP->PGet<Seq_ZZ>())
 			{
-			*theP = Seq(fLink, *theSeq_AnyP);
+			*theP = Seq(fLink, *theSeq_ZZP);
 			}
 		return spCoerceValPtr(theP);
 		}
@@ -243,9 +243,9 @@ Val* Seq::PMut(size_t iIndex)
 			{
 			*theP = Map(new Link(fLink, *theMap_ZZP));
 			}
-		else if (Seq_ZZ* theSeq_AnyP = theP->PMut<Seq_ZZ>())
+		else if (Seq_ZZ* theSeq_ZZP = theP->PMut<Seq_ZZ>())
 			{
-			*theP = Seq(fLink, *theSeq_AnyP);
+			*theP = Seq(fLink, *theSeq_ZZP);
 			}
 		return spCoerceValPtr(theP);
 		}
@@ -333,19 +333,19 @@ const Val* Map::PGet(const Name_t& iName) const
 	Map_ZZ::Index_t theIndex = fMap_ZZ.IndexOf(iName);
 	if (theIndex != fMap_ZZ.End())
 		{
-		if (const Val_ZZ* theAny = fMap_ZZ.PGet(theIndex))
+		if (const Val_ZZ* theZZ = fMap_ZZ.PGet(theIndex))
 			{
-			if (theAny->PGet<Tombstone_t>())
+			if (theZZ->PGet<Tombstone_t>())
 				return nullptr;
-			return spCoerceValPtr(theAny);
+			return spCoerceValPtr(theZZ);
 			}
 		}
 
 	if (fLink)
 		{
-		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_ZZ> theZZQ = fLink->QReadAt(iName))
 			{
-			fMap_ZZ.Set(iName, *theAnyQ);
+			fMap_ZZ.Set(iName, *theZZQ);
 			return spCoerceValPtr(fMap_ZZ.PGet(iName));
 			}
 		}
@@ -380,19 +380,19 @@ Val* Map::PMut(const Name_t& iName)
 	Map_ZZ::Index_t theIndex = fMap_ZZ.IndexOf(iName);
 	if (theIndex != fMap_ZZ.End())
 		{
-		if (Val_ZZ* theAny = fMap_ZZ.PMut(theIndex))
+		if (Val_ZZ* theZZ = fMap_ZZ.PMut(theIndex))
 			{
-			if (theAny->PGet<Tombstone_t>())
+			if (theZZ->PGet<Tombstone_t>())
 				return nullptr;
-			return spCoerceValPtr(theAny);
+			return spCoerceValPtr(theZZ);
 			}
 		}
 
 	if (fLink)
 		{
-		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
+		if (ZQ<Val_ZZ> theZZQ = fLink->QReadAt(iName))
 			{
-			fMap_ZZ.Set(iName, *theAnyQ);
+			fMap_ZZ.Set(iName, *theZZQ);
 			return spCoerceValPtr(fMap_ZZ.PMut(iName));
 			}
 		}
@@ -413,8 +413,8 @@ Val& Map::Mut(const Name_t& iName)
 	Val_ZZ& theMutable = fMap_ZZ.Mut(iName);
 	if (fLink)
 		{
-		if (ZQ<Val_ZZ> theAnyQ = fLink->QReadAt(iName))
-			theMutable = *theAnyQ;
+		if (ZQ<Val_ZZ> theZZQ = fLink->QReadAt(iName))
+			theMutable = *theZZQ;
 		}
 
 	return static_cast<Val&>(static_cast<AnyBase&>(theMutable));

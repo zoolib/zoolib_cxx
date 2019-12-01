@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#include "zoolib/ZDebug.h" // For ZAssert
+
 namespace ZooLib {
 
 using Util_NS::sDataMutable;

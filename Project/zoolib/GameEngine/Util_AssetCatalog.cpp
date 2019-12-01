@@ -75,7 +75,7 @@ bool spReadAnim(const FileSpec& iParentAsFS,
 	if (not oFiles.empty())
 		{
 		if (ZP<ChannerR_Bin> theChanner = iParentAsFS.Child("meta.txt").OpenR())
-			oMap = sGet(sQReadMap_Any(*theChanner, "meta.txt"));
+			oMap = sGet(sQReadMap_ZZ(*theChanner, "meta.txt"));
 		return true;
 		}
 	return false;
@@ -139,7 +139,7 @@ void spInstall_Art(
 
 			Map_ZZ entry;
 			if (ZP<ChannerR_Bin> theChanner = iFS.Sibling(theMeta).OpenR())
-				entry = sGet(sQReadMap_Any(*theChanner, theMeta));
+				entry = sGet(sQReadMap_ZZ(*theChanner, theMeta));
 
 			Seq_ZZ& theFrames = sMut<Seq_ZZ>(entry["Frames"]);
 

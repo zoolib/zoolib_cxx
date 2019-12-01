@@ -4,7 +4,6 @@
 #define __ZooLib_Data_ZZ_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Any.h"
 #include "zoolib/Compare_T.h"
 #include "zoolib/Util_Relops.h"
 #include "zoolib/ZP.h"

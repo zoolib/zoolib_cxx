@@ -47,16 +47,16 @@ ZQ<GPoint> sQGPoint(const Val& iVal)
 	return null;
 	}
 
-ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iVal_AnyQ)
+ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iValQ)
 	{
-	if (iVal_AnyQ)
-		return sQGPoint(*iVal_AnyQ);
+	if (iValQ)
+		return sQGPoint(*iValQ);
 	return null;
 	}
 
-ZQ<GPoint> sQGPoint(const Val_ZZ& iVal_Any)
+ZQ<GPoint> sQGPoint(const Val_ZZ& iVal)
 	{
-	if (ZQ<CVec3> theCVecQ = sQCVec3(1, iVal_Any))
+	if (ZQ<CVec3> theCVecQ = sQCVec3(1, iVal))
 		return sCartesian(*theCVecQ);
 	return null;
 	}
@@ -94,10 +94,10 @@ ZQ<GRect> sQGRect(const ZQ<Val>& iValQ)
 	return null;
 	}
 
-ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iVal_AnyQ)
+ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iValQ)
 	{
-	if (iVal_AnyQ)
-		return sQGRect(*iVal_AnyQ);
+	if (iValQ)
+		return sQGRect(*iValQ);
 	return null;
 	}
 
@@ -110,11 +110,11 @@ ZQ<GRect> sQGRect(const Val& iVal)
 	return null;
 	}
 
-ZQ<GRect> sQGRect(const Val_ZZ& iVal_Any)
+ZQ<GRect> sQGRect(const Val_ZZ& iVal)
 	{
-	if (ZMACRO_auto_(theSeqQ, iVal_Any.QGet<Seq>()))
+	if (ZMACRO_auto_(theSeqQ, iVal.QGet<Seq>()))
 		return spQGRect_T<GRect>(*theSeqQ);
-	else if (ZMACRO_auto_(theSeqQ, iVal_Any.QGet<Seq_ZZ>()))
+	else if (ZMACRO_auto_(theSeqQ, iVal.QGet<Seq_ZZ>()))
 		return spQGRect_T<GRect>(*theSeqQ);
 	return null;
 	}
@@ -168,7 +168,7 @@ static ZQ<Map_ZZ> spQReadMap(const ChanRU_UTF& iChanRU)
 	return null;
 	}
 
-ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
+ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8* iName)
 	{
 	ThreadVal_NameUniquifier theNU;
 
@@ -191,13 +191,13 @@ ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName)
 	return null;
 	}
 
-ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName)
-	{ return sQReadMap_Any(iChanR, &iName); }
+ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8& iName)
+	{ return sQReadMap_ZZ(iChanR, &iName); }
 
-ZQ<Map_ZZ> sQReadMap_Any(const FileSpec& iFS)
+ZQ<Map_ZZ> sQReadMap_ZZ(const FileSpec& iFS)
 	{
 	if (ZP<ChannerR_Bin> channerR = iFS.OpenR())
-		return sQReadMap_Any(*channerR, iFS.Name());
+		return sQReadMap_ZZ(*channerR, iFS.Name());
 	return null;
 	}
 
@@ -223,9 +223,9 @@ Map_ZZ sReadTextData(const FileSpec& iFS)
 				{
 				if (ZP<ChannerR_Bin> channerR = iter.Current().OpenR())
 					{
-					// To handle multiple maps in a single file, sQReadMap_Any needs to be
+					// To handle multiple maps in a single file, sQReadMap_ZZ needs to be
 					// refactored so we use the *same* buffer between invocations
-					if (ZQ<Map_ZZ> theQ = sQReadMap_Any(*channerR, theName))
+					if (ZQ<Map_ZZ> theQ = sQReadMap_ZZ(*channerR, theName))
 						theMap = sAugmented(theMap, *theQ);
 					}
 				}

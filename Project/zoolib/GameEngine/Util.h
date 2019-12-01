@@ -20,18 +20,18 @@ using Pixels::Pixmap;
 ZQ<GPoint> sQGPoint(const ZQ<Val>& iValQ);
 ZQ<GPoint> sQGPoint(const Val& iVal);
 
-ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iVal_AnyQ);
-ZQ<GPoint> sQGPoint(const Val_ZZ& iVal_Any);
+ZQ<GPoint> sQGPoint(const ZQ<Val_ZZ>& iValQ);
+ZQ<GPoint> sQGPoint(const Val_ZZ& iVal);
 
 ZQ<GRect> sQGRect(const ZQ<Val>& iValQ);
 ZQ<GRect> sQGRect(const Val& iVal);
 
-ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iVal_AnyQ);
-ZQ<GRect> sQGRect(const Val_ZZ& iVal_Any);
+ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iValQ);
+ZQ<GRect> sQGRect(const Val_ZZ& iVal);
 
-ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8* iName = nullptr);
-ZQ<Map_ZZ> sQReadMap_Any(const ChanR_Bin& iChanR, const string8& iName);
-ZQ<Map_ZZ> sQReadMap_Any(const FileSpec& iFS);
+ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8* iName = nullptr);
+ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8& iName);
+ZQ<Map_ZZ> sQReadMap_ZZ(const FileSpec& iFS);
 
 Map_ZZ sReadTextData(const FileSpec& iFS);
 
