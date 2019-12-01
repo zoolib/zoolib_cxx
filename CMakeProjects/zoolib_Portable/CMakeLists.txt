@@ -61,8 +61,6 @@ set (CppFiles
 	${ZDIR}/zoolib/TextCoder_Std.cpp
 	${ZDIR}/zoolib/TextCoder_Unicode.cpp
 	${ZDIR}/zoolib/Trail.cpp
-	${ZDIR}/zoolib/Util_ZZ_JSON.cpp
-	${ZDIR}/zoolib/Util_ZZ_JSONB.cpp
 	${ZDIR}/zoolib/Util_Chan_Bin_Operators.cpp
 	${ZDIR}/zoolib/Util_Chan_JSON.cpp
 	${ZDIR}/zoolib/Util_Chan_UTF.cpp
@@ -71,6 +69,8 @@ set (CppFiles
 	${ZDIR}/zoolib/Util_File.cpp
 	${ZDIR}/zoolib/Util_Time.cpp
 	${ZDIR}/zoolib/Util_string.cpp
+	${ZDIR}/zoolib/Util_ZZ_JSON.cpp
+	${ZDIR}/zoolib/Util_ZZ_JSONB.cpp
 	${ZDIR}/zoolib/Val.cpp
 	${ZDIR}/zoolib/Val_ZZ.cpp
 	${ZDIR}/zoolib/Visitor.cpp

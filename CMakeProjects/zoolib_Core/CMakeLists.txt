@@ -16,9 +16,9 @@ set (CppFiles
 	${ZDIR}/zoolib/Time.cpp
 	${ZDIR}/zoolib/Unicode.cpp
 	${ZDIR}/zoolib/ZDebug.cpp
-	${ZDIR}/zoolib/ZThread.cpp
 	${ZDIR}/zoolib/ZThread_pthread.cpp
 	${ZDIR}/zoolib/ZThread_Win.cpp
+	${ZDIR}/zoolib/ZThread.cpp
 )
 
 add_library(
