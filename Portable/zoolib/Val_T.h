@@ -40,14 +40,11 @@ struct AnyTraits<string8>
 // =================================================================================================
 #pragma mark - Val_T
 
-// Val_T is independent of Any_T, and thus conversion between must be done explicitly.
-typedef struct Tag_Val Tag_Val_t;
-
 template <class Map_p, class Seq_p>
 class Val_T
-:	public Any_T<Tag_Val_t>
+:	public Any_T<std::pair<Map_p,Seq_p>>
 	{
-	typedef Any_T<Tag_Val_t> inherited;
+	typedef Any_T<std::pair<Map_p,Seq_p>> inherited;
 
 // private and unimplemented, to catch the common mistake of passing a ZQ.
 	template <class S> Val_T(const ZQ<S>&);
@@ -85,7 +82,7 @@ public:
 
 // Overload, so we can init/assign from a string constant
 	Val_T(const UTF8* iVal)
-	:	inherited(sAny<string8,const UTF8*,inherited::Tag_T>(iVal))
+	:	inherited(sAny<string8,const UTF8*,typename inherited::Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF8* iVal)
