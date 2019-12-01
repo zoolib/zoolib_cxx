@@ -46,9 +46,8 @@ public:
 			{ return operator_bool_gen::translate(true && fPtr); }
 	#endif
 
-	template <class O>
 	inline
-	void swap(ZP<O>& ioOther)
+	void swap(ZP& ioOther)
 		{
 		using std::swap;
 		swap(fPtr, ioOther.fPtr);
@@ -305,8 +304,7 @@ public:
 	operator bool() const { return true && fPtr; }
 	operator T*() const { return fPtr; }
 
-	template <class O>
-	void swap(ZP<O>& ioOther)
+	void swap(ZP& ioOther)
 		{
 		using std::swap;
 		swap(fPtr, ioOther.fPtr);
