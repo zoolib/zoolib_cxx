@@ -507,11 +507,16 @@ bool operator==(const ZP<T>& iL, const ZP<O>& iR)
 	{ return iL.Get() == iR.Get(); }
 
 template <class T, class O>
+bool operator!=(const ZP<T>& iL, const ZP<O>& iR)
+	{ return iL.Get() != iR.Get(); }
+
+template <class T, class O>
 bool operator<(const ZP<T>& iL, const ZP<O>& iR)
 	{ return iL.Get() < iR.Get(); }
 
 template <class T> struct RelopsTraits_HasEQ<ZP<T>> : public RelopsTraits_Has {};
 template <class T> struct RelopsTraits_HasLT<ZP<T>> : public RelopsTraits_Has {};
+template <class T> struct RelopsTraits_HasNE<ZP<T>> : public RelopsTraits_Has {};
 
 // =================================================================================================
 #pragma mark - Pseudo-ctor
