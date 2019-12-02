@@ -108,7 +108,7 @@ ZQ<Map_ZZ> Sieve_Singleton::QGetMap()
 				{
 				const Val_DB& theVal = *theVals++;
 				if (not fMapQ->PGet(theName))
-					fMapQ->Set(theName, theVal);
+					fMapQ->Set(theName, theVal.As<Val_ZZ>());
 				}
 			}
 		}
@@ -122,10 +122,10 @@ Map_ZZ Sieve_Singleton::GetMap()
 	return *this->QGetMap();
 	}
 
-Val_DB Sieve_Singleton::Get(const string8& iName)
-	{ return this->GetMap().Get(iName); }
+Val_ZZ Sieve_Singleton::Get(const string8& iName)
+	{ return this->GetMap().Get(iName).As<Val_ZZ>(); }
 
-void Sieve_Singleton::Set(const string8& iName, const Val_DB& iVal)
+void Sieve_Singleton::Set(const string8& iName, const Val_ZZ& iVal)
 	{ this->Set(NameVal(iName, iVal)); }
 
 void Sieve_Singleton::Set(const Map_ZZ& iMap)
@@ -138,7 +138,7 @@ void Sieve_Singleton::Set(const Map_ZZ& iMap)
 		const string8& theName = iMap.NameOf(iter);
 		if (sContains(fEditableRelHead, theName))
 			{
-			const Val_DB& theVal = iMap.Get(iter);
+			const Val_ZZ& theVal = iMap.Get(iter);
 			fMapInDaton.Set(theName, theVal);
 			anyChange = true;
 			}

@@ -341,7 +341,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<st
 
 namespace { // anonymous
 
-ZP<Expr_Rel> spAsRel(const Val_DB& iVal)
+ZP<Expr_Rel> spAsRel(const Val_ZZ& iVal)
 	{
 	if (NotQ<string8> theStringQ = iVal.QGet<string8>())
 		{
@@ -353,7 +353,7 @@ ZP<Expr_Rel> spAsRel(const Val_DB& iVal)
 		}
 	}
 
-Val_DB spAsVal(ZP<Expr_Rel> iRel)
+Val_ZZ spAsVal(ZP<Expr_Rel> iRel)
 	{
 	string8 theString;
 	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(iRel, ChanW_UTF_string8(&theString));
@@ -362,21 +362,21 @@ Val_DB spAsVal(ZP<Expr_Rel> iRel)
 
 // -----
 
-ZP<Result> spAsResult(const Val_DB& iVal)
+ZP<Result> spAsResult(const Val_ZZ& iVal)
 	{
 	RelHead theRH;
-	foreachv (Val_DB theVal, iVal["RelHead"].Get<Seq_ZZ>())
+	foreachv (Val_ZZ theVal, iVal["RelHead"].Get<Seq_ZZ>())
 		sInsert(theRH, theVal.Get<string8>());
 
 	std::vector<Val_DB> thePackedRows;
 
-	foreachv (Val_DB theVal, iVal["Vals"].Get<Seq_ZZ>())
-		sPushBack(thePackedRows, theVal);
+	foreachv (Val_ZZ theVal, iVal["Vals"].Get<Seq_ZZ>())
+		sPushBack(thePackedRows, theVal.As<Val_DB>());
 
 	return new Result(&theRH, &thePackedRows);
 	}
 
-Val_DB spAsVal(ZP<Result> iResult)
+Val_ZZ spAsVal(ZP<Result> iResult)
 	{
 	Map_ZZ result;
 
@@ -395,7 +395,7 @@ Val_DB spAsVal(ZP<Result> iResult)
 		{
 		const Val_DB* theRow = iResult->GetValsAt(yy);
 		for (size_t xx = 0; xx < theRH.size(); ++xx)
-			theSeq_Vals.Append(theRow[xx]);
+			theSeq_Vals.Append(theRow[xx].As<Val_ZZ>());
 		}
 
 	return result;
@@ -403,26 +403,28 @@ Val_DB spAsVal(ZP<Result> iResult)
 
 // -----
 
-ZP<ResultDeltas> spAsResultDeltas(const Val_DB& iVal)
+ZP<ResultDeltas> spAsResultDeltas(const Val_ZZ& iVal)
 	{
 	ZP<ResultDeltas> theResultDeltas = new ResultDeltas;
 
-	foreachv (Val_DB theVal, iVal["Vals"].Get<Seq_ZZ>())
-		sPushBack(theResultDeltas->fPackedRows, theVal);
+	foreachv (Val_ZZ theVal, iVal["Vals"].Get<Seq_ZZ>())
+		sPushBack(theResultDeltas->fPackedRows, theVal.As<Val_DB>());
 
-	foreachv (Val_DB theVal, iVal["Mapping"].Get<Seq_ZZ>())
+	foreachv (Val_ZZ theVal, iVal["Mapping"].Get<Seq_ZZ>())
 		sPushBack(theResultDeltas->fMapping, sCoerceInt(theVal));
 
 	return theResultDeltas;
 	}
 
-Val_DB spAsVal(ZP<ResultDeltas> iResultDeltas)
+Val_ZZ spAsVal(ZP<ResultDeltas> iResultDeltas)
 	{
 	Map_ZZ theMap;
 
 	theMap["Mapping"] = Seq_ZZ(iResultDeltas->fMapping.begin(), iResultDeltas->fMapping.end());
 
-	theMap["Vals"] = Seq_ZZ(iResultDeltas->fPackedRows);
+	Seq_ZZ& theSeq = theMap.Mut<Seq_ZZ>("Vals");
+	foreacha (vv, iResultDeltas->fPackedRows)
+	  	theSeq.Append(vv.As<Val_ZZ>());
 
 	return theMap;
 	}
@@ -887,11 +889,11 @@ void Melange_Client::pWork()
 			const int64 theChangeCount = sCoerceInt(theMessage.Get("ChangeCount"));
 
 			ZP<ResultDeltas> theResultDeltas;
-			if (const Val_DB* theP = theMessage.PGet("Deltas"))
+			if (const Val_ZZ* theP = theMessage.PGet("Deltas"))
 				theResultDeltas = spAsResultDeltas(*theP);
 
 			ZP<Result> theResult;
-			if (const Val_DB* theP = theMessage.PGet("Result"))
+			if (const Val_ZZ* theP = theMessage.PGet("Result"))
 				theResult = spAsResult(*theP);
 
 			if (ZP<Registration> theReg = sGet(fMap_Refcon2Reg, *theRefconQ))

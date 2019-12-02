@@ -67,7 +67,7 @@ Map_ZZ PseudoMap::AsMap() const
 	Map_ZZ result;
 	for (std::map<string8,size_t>::const_iterator ii = fBindings->begin(), end = fBindings->end();
 		ii != end; ++ii)
-		{ result.Set(ii->first, fVals[ii->second]); }
+		{ result.Set(ii->first, fVals[ii->second].As<Val_ZZ>()); }
 
 	return result;
 	}

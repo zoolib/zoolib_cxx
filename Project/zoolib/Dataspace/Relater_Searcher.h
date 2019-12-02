@@ -84,7 +84,7 @@ protected:
 		std::map<string8,size_t>& oOffsets,
 		size_t& ioBaseOffset);
 
-	bool pQReadInc(ZP<Walker_Bingo> iWalker, Val_ZZ* ioResults);
+	bool pQReadInc(ZP<Walker_Bingo> iWalker, Val_DB* ioResults);
 
 	// -----
 

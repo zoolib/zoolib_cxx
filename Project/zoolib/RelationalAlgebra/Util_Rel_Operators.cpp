@@ -24,7 +24,7 @@ namespace ZooLib {
 namespace RelationalAlgebra {
 
 ZP<Expr_Rel> sConst(const NameVal& iNameVal)
-	{ return sConst(iNameVal.first, iNameVal.second); }
+	{ return sConst(iNameVal.first, iNameVal.second.As<Val_DB>()); }
 
 ZP<Expr_Rel> operator*(const NameVal& iNameVal, const ZP<Expr_Rel>& iRel)
 	{ return sConst(iNameVal) * iRel; }
@@ -42,7 +42,7 @@ static ZP<Expr_Rel> spConst(const Map_ZZ& iMap)
 	ZP<Expr_Rel> result;
 	for (Map_ZZ::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		ZP<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i));
+		ZP<Expr_Rel> cur = sConst(iMap.NameOf(i), iMap.Get(i).As<Val_DB>());
 		if (not result)
 			result = cur;
 		else

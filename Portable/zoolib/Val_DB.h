@@ -5,12 +5,32 @@
 
 #include "zconfig.h"
 
-#include "zoolib/Val_ZZ.h"
+#if 1
 
-namespace ZooLib {
+	#include "zoolib/Val_T.h"
+	#include <map>
+	#include <vector>
 
-typedef Val_ZZ Val_DB;
+	namespace ZooLib {
 
-} // namespace ZooLib
+	typedef Any_T<struct Tag_Val_DB> Val_DB;
+
+	bool operator<(const Val_DB& l, const Val_DB& r);
+	bool operator!=(const Val_DB& l, const Val_DB& r);
+
+	} // namespace ZooLib
+
+#else
+
+	#include "zoolib/Val_ZZ.h"
+
+	namespace ZooLib {
+
+
+	typedef Val_ZZ Val_DB;
+
+	} // namespace ZooLib
+
+#endif
 
 #endif // __ZooLib_Val_ZZ_h__

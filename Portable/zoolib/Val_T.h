@@ -45,6 +45,7 @@ class Val_T
 :	public Any_T<std::pair<Map_p,Seq_p>>
 	{
 	typedef Any_T<std::pair<Map_p,Seq_p>> inherited;
+	typedef typename inherited::Tag_T Tag_T;
 
 // private and unimplemented, to catch the common mistake of passing a ZQ.
 	template <class S> Val_T(const ZQ<S>&);
@@ -82,32 +83,32 @@ public:
 
 // Overload, so we can init/assign from a string constant
 	Val_T(const UTF8* iVal)
-	:	inherited(sAny<string8,const UTF8*,typename inherited::Tag_T>(iVal))
+	:	inherited(sAny<string8,const UTF8*,Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF8* iVal)
 		{
-		inherited::operator=(sAny<string8,const UTF8*,inherited::Tag_T>(iVal));
+		inherited::operator=(sAny<string8,const UTF8*,Tag_T>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF16* iVal)
-	:	inherited(sAny<string16,const UTF16*,inherited::Tag_T>(iVal))
+	:	inherited(sAny<string16,const UTF16*,Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF16* iVal)
 		{
-		inherited::operator=(sAny<string16,const UTF16*,inherited::Tag_T>(iVal));
+		inherited::operator=(sAny<string16,const UTF16*,Tag_T>(iVal));
 		return *this;
 		}
 
 	Val_T(const UTF32* iVal)
-	:	inherited(sAny<string32,const UTF32*,inherited::Tag_T>(iVal))
+	:	inherited(sAny<string32,const UTF32*,Tag_T>(iVal))
 		{}
 
 	Val_T& operator=(const UTF32* iVal)
 		{
-		inherited::operator=(sAny<string32,const UTF32*,inherited::Tag_T>(iVal));
+		inherited::operator=(sAny<string32,const UTF32*,Tag_T>(iVal));
 		return *this;
 		}
 

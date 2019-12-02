@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Dataspace_Sieve_Singleton_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Val_ZZ.h"
+
 #include "zoolib/Dataspace/Daton_Val.h"
 #include "zoolib/Dataspace/Melange.h" // For Callable_DatonUpdate et al
 #include "zoolib/Dataspace/ResultHandler.h"
@@ -61,9 +63,9 @@ public:
 
 	ZQ<Map_ZZ> QGetMap();
 	Map_ZZ GetMap();
-	Val_DB Get(const string8& iName);
+	Val_ZZ Get(const string8& iName);
 
-	void Set(const string8& iName, const Val_DB& iVal);
+	void Set(const string8& iName, const Val_ZZ& iVal);
 	void Set(const Map_ZZ& iMap);
 
 private:
