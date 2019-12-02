@@ -101,8 +101,15 @@ SoundMeister_CoreAudio::SoundMeister_CoreAudio(const FileSpec& iFS)
 	#if ZMACRO_IOS
 	#else
 	AudioDeviceID theAudioDeviceID = 0;
-	::AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
-		sMutablePtr(UInt32(sizeof theAudioDeviceID)), &theAudioDeviceID);
+
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+		::AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
+			sMutablePtr(UInt32(sizeof theAudioDeviceID)), &theAudioDeviceID);
+
+	#pragma clang diagnostic pop
+
 	#endif
 
 	AudioComponentDescription desc = {};
