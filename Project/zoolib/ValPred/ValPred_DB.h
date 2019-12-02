@@ -71,8 +71,9 @@ int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_Strin
 #pragma mark - Comparand pseudo constructors
 
 ValComparandPseudo CConst(const Val_DB& iVal);
-ValComparandPseudo CConst(const char* iVal);
-ValComparandPseudo CConst(const string8* iVal);
+
+// Explicit, for when Val_DB is not a Val_ZZ and doesn't have the special case stuff therein.
+ValComparandPseudo CConst(const UTF8* iVal);
 
 // =================================================================================================
 #pragma mark -

@@ -63,6 +63,9 @@ ZMACRO_CompareRegistration_T(ValComparator_StringContains)
 ValComparandPseudo CConst(const Val_DB& iVal)
 	{ return new ValComparand_Const_DB(iVal); }
 
+ValComparandPseudo CConst(const UTF8* iVal)
+	{ return new ValComparand_Const_DB(sAny<string8,const UTF8*>(iVal).As<Val_DB>()); }
+
 // =================================================================================================
 #pragma mark -
 
