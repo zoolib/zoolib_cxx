@@ -5,7 +5,7 @@ set(ZOOLIB_CXX ../..)
 set(ZDIR ${ZOOLIB_CXX}/Core)
 
 set (CppFiles
-	${ZDIR}/zoolib/Any.cpp
+	${ZDIR}/zoolib/AnyBase.cpp
 	${ZDIR}/zoolib/ChanR_UTF.cpp
 	${ZDIR}/zoolib/ChanW_UTF.cpp
 	${ZDIR}/zoolib/Compare.cpp

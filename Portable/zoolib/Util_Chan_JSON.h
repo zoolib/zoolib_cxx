@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_Chan_JSON_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Any.h"
+#include "zoolib/AnyBase.h"
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
@@ -99,7 +99,7 @@ bool sContainsProblemChars(const string& iString);
 
 void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w);
 
-void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w);
+void sWriteSimpleValue(const AnyBase& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w);
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	size_t iLevel, const PushTextOptions_JSON& iOptions,

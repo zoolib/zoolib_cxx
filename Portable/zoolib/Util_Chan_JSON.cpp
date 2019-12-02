@@ -288,7 +288,7 @@ void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UT
 		w << iString;
 	}
 
-void sWriteSimpleValue(const Any& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w)
+void sWriteSimpleValue(const AnyBase& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w)
 	{
 	if (false)
 		{}

@@ -1,24 +1,6 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
-http://www.zoolib.org
+// Copyright (c) 2009-2019 Andrew Green. MIT License. http://www.zoolib.org
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
-
-#include "zoolib/Any.h"
+#include "zoolib/AnyBase.h"
 
 namespace ZooLib {
 
@@ -47,12 +29,12 @@ const AnyBase::InPlace& AnyBase::pAsInPlace() const
 	{ return *sFetch_T<InPlace>(&fDistinguisher); }
 
 inline
-ZP<AnyBase::Reffed>& AnyBase::pAsReffed()
-	{ return *sFetch_T<ZP<Reffed>>(&fPayload); }
+ZP<AnyBase::OnHeap>& AnyBase::pAsOnHeap()
+	{ return *sFetch_T<ZP<OnHeap>>(&fPayload); }
 
 inline
-const ZP<AnyBase::Reffed>& AnyBase::pAsReffed() const
-	{ return *sFetch_T<ZP<Reffed>>(&fPayload); }
+const ZP<AnyBase::OnHeap>& AnyBase::pAsOnHeap() const
+	{ return *sFetch_T<ZP<OnHeap>>(&fPayload); }
 
 const std::type_info& AnyBase::Type() const
 	{
@@ -69,9 +51,9 @@ const std::type_info* AnyBase::TypeIfNotVoid() const
 			return spPODTypeInfo(fDistinguisher);
 		return &pAsInPlace().Type();
 		}
-	else if (const ZP<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return &theReffed->Type();
+		return &theOnHeap->Type();
 		}
 	else
 		{
@@ -87,9 +69,9 @@ void* AnyBase::MutableVoidStar()
 			return &fPayload;
 		return pAsInPlace().MutableVoidStar();
 		}
-	else if (ZP<Reffed>& theReffed = pAsReffed())
+	else if (ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return theReffed->FreshMutableVoidStar(theReffed);
+		return theOnHeap->FreshMutableVoidStar(theOnHeap);
 		}
 	else
 		{
@@ -105,9 +87,9 @@ const void* AnyBase::ConstVoidStar() const
 			return &fPayload;
 		return pAsInPlace().ConstVoidStar();
 		}
-	else if (const ZP<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return theReffed->ConstVoidStar();
+		return theOnHeap->ConstVoidStar();
 		}
 	else
 		{
@@ -126,7 +108,7 @@ void AnyBase::swap(AnyBase& ioOther)
 		}
 	else
 		{
-		pAsReffed().swap(ioOther.pAsReffed());
+		pAsOnHeap().swap(ioOther.pAsOnHeap());
 		}
 	}
 
@@ -143,7 +125,7 @@ void AnyBase::Clear()
 		}
 	else
 		{
-		sDtor_T<ZP<Reffed>>(&fPayload);
+		sDtor_T<ZP<OnHeap>>(&fPayload);
 		}
 	fPayload.fAsPtr = 0;
 	}
@@ -162,9 +144,9 @@ const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 			return pAsInPlace().ConstVoidStarIfTypeMatch(iTypeInfo);
 			}
 		}
-	else if (const ZP<Reffed>& theReffed = pAsReffed())
+	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return theReffed->ConstVoidStarIfTypeMatch(iTypeInfo);
+		return theOnHeap->ConstVoidStarIfTypeMatch(iTypeInfo);
 		}
 
 	return 0;
@@ -184,9 +166,9 @@ void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 			return pAsInPlace().MutableVoidStarIfTypeMatch(iTypeInfo);
 			}
 		}
-	else if (ZP<Reffed>& theReffed = pAsReffed())
+	else if (ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return theReffed->FreshMutableVoidStarIfTypeMatch(theReffed, iTypeInfo);
+		return theOnHeap->FreshMutableVoidStarIfTypeMatch(theOnHeap, iTypeInfo);
 		}
 
 	return 0;
@@ -201,7 +183,7 @@ void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
 	else
 		{
 		fDistinguisher = 0;
-		sCtor_T<ZP<Reffed>>(&fPayload, iOther.pAsReffed());
+		sCtor_T<ZP<OnHeap>>(&fPayload, iOther.pAsOnHeap());
 		}
 	}
 
@@ -210,7 +192,7 @@ void AnyBase::pDtor_NonPOD()
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);
 	else
-		sDtor_T<ZP<Reffed>>(&fPayload);
+		sDtor_T<ZP<OnHeap>>(&fPayload);
 	}
 
 } // namespace ZooLib
