@@ -72,32 +72,32 @@ public:
 // param is the type to be default-constructed. Passing a second IKnowWhatIAmDoing_t
 // indicates that the value is always to be counted rather than in-place.
 	template <class S>
-	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const IKWIAD_t&)
 	:	AnyBase(dummy, IKWIAD)
 		{}
 
 	template <class S, class P0>
-	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const P0& iP0, const IKWIAD_t&)
 	:	AnyBase(dummy, iP0, IKWIAD)
 		{}
 
 	template <class S, class P0, class P1>
-	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKWIAD_t&)
 	:	AnyBase(dummy, iP0, iP1, IKWIAD)
 		{}
 
 	template <class S>
-	Any_T(const S* dummy, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const IKWIAD_t&, const IKWIAD_t&)
 	:	AnyBase(dummy, IKWIAD, IKWIAD)
 		{}
 
 	template <class S, class P0>
-	Any_T(const S* dummy, const P0& iP0, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const P0& iP0, const IKWIAD_t&, const IKWIAD_t&)
 	:	AnyBase(dummy, iP0, IKWIAD, IKWIAD)
 		{}
 
 	template <class S, class P0, class P1>
-	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+	Any_T(const S* dummy, const P0& iP0, const P1& iP1, const IKWIAD_t&, const IKWIAD_t&)
 	:	AnyBase(dummy, iP0, iP1, IKWIAD, IKWIAD)
 		{}
 	};

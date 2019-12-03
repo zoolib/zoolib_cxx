@@ -139,39 +139,42 @@ protected:
 		return *this;
 		}
 
-// Special purpose constructors, called by sAny and sAnyCounted
+protected:
+// Special purpose constructors, called by derived classes.
+	typedef IKnowWhatIAmDoing_t IKWIAD_t;
+
 	template <class S>
 	AnyBase(const S* dummy,
-		const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&)
 		{ this->pCtor_T<S>(); }
 
 	template <class S, class P0>
 	AnyBase(const S* dummy,
 		const P0& iP0,
-		const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&)
 		{ this->pCtor_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
 	AnyBase(const S* dummy,
 		const P0& iP0, const P1& iP1,
-		const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&)
 		{ this->pCtor_T<S>(iP0, iP1); }
 
 	template <class S>
 	AnyBase(const S* dummy,
-		const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&, const IKWIAD_t&)
 		{ this->pCtor_Counted_T<S>(); }
 
 	template <class S, class P0>
 	AnyBase(const S* dummy,
 		const P0& iP0,
-		const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&, const IKWIAD_t&)
 		{ this->pCtor_Counted_T<S>(iP0); }
 
 	template <class S, class P0, class P1>
 	AnyBase(const S* dummy,
 		const P0& iP0, const P1& iP1,
-		const IKnowWhatIAmDoing_t&, const IKnowWhatIAmDoing_t&)
+		const IKWIAD_t&, const IKWIAD_t&)
 		{ this->pCtor_Counted_T<S>(iP0, iP1); }
 
 private:
