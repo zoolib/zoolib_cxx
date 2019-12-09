@@ -244,10 +244,10 @@ static const char* spTruncateFileName(const char* iFilename)
 	{
 	#if ZCONFIG_SPI_Enabled(Win)
 		if (const char* truncatedFilename = strrchr(iFilename, '\\'))
-		return truncatedFilename + 1;
+			return truncatedFilename + 1;
 	#else
 		if (const char* truncatedFilename = strrchr(iFilename, '/'))
-		return truncatedFilename + 1;
+			return truncatedFilename + 1;
 	#endif
 
 	return iFilename;
@@ -256,7 +256,11 @@ static const char* spTruncateFileName(const char* iFilename)
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName)
 	{
 	if (const S& s = S(iPriority, "ZLOGTRACE"))
-		s << spTruncateFileName(iFile) << ":" << sStringf("%d", iLine) << ", in " << iFunctionName;
+		{
+		s << spTruncateFileName(iFile) << ":" << sStringf("%d", iLine);
+		if (iFunctionName && *iFunctionName)
+		 	s << ", in " << iFunctionName;
+		}
 	}
 
 } // namespace Log
