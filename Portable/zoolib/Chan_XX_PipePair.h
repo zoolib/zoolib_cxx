@@ -52,7 +52,7 @@ public:
 	~ImpPipePair()
 		{
 		ZAcqMtx acq(fMutex);
-		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
+		ZAssert(fSource == nullptr && fDest == nullptr);
 		}
 
 // For ChanAspect_Abort
@@ -110,12 +110,16 @@ public:
 				fCondition_Write.Broadcast();
 				break;
 				}
+			else if (fDest)
+				{
+				// Someone else has registered as wanting data.
+				fCondition_Read.Wait(fMutex);
+				}
 			else
 				{
 				// Register ourselves as waiting for data.
 				if (fClosed)
 					break;
-				ZAssertStop(2, fDest == nullptr && fDestCount == 0);
 				fDest = localDest;
 				fDestCount = localEnd - localDest;
 				fCondition_Write.Broadcast();
@@ -176,10 +180,14 @@ public:
 				fCondition_Read.Broadcast();
 				break;
 				}
+			else if (fSource)
+				{
+				// Someone else has registered as having data to provide.
+				fCondition_Write.Wait(fMutex);
+				}
 			else
 				{
 				// Register ourselves as having data to provide.
-				ZAssertStop(2, fSource == nullptr && fSourceEnd == nullptr);
 				fSource = localSource;
 				fSourceEnd = localEnd;
 				fCondition_Read.Broadcast();
