@@ -226,10 +226,12 @@ public:
 
 				const RelHead& theRH = theResult->GetRelHead();
 				sPush(theRH, iChanW);
-				const size_t theRHCount = theRH.size();
 
 				const size_t theRowCount = theResult->Count();
 				sPush(theRowCount, iChanW);
+
+				const size_t theRHCount = theRH.size();
+
 				for (size_t yy = 0; yy < theRowCount; ++yy)
 					{
 					const Val_DB* theRow = theResult->GetValsAt(yy);
