@@ -2,9 +2,9 @@
 
 package org.zoolib;
 
-import android.content.Context;
+import android.app.UiModeManager;import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.opengl.GLSurfaceView;
+import android.content.res.Configuration;import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,7 +39,14 @@ public class Activity_Game
 			(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 			WindowManager.LayoutParams.FLAG_FULLSCREEN);  
 
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+		if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION)
+			{}
+		else
+			{
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			}
+
 //		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		this.hideSystemUI();
