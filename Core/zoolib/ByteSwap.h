@@ -145,8 +145,8 @@ template <class T>
 struct ByteSwapped_t<T,1>
 	{ static T sSwapped(const T& iT) { return iT; }; };
 
-#define ZMACRO_Swapper(function, value) \
-	union { T asT; decltype(function(0)) asInt; } conv; \
+#define ZMACRO_Swapper(function, inttype, value) \
+	union { T asT; inttype asInt; } conv; \
 	conv.asT = value; \
 	conv.asInt = function(conv.asInt); \
 	return conv.asT
@@ -155,29 +155,29 @@ struct ByteSwapped_t<T,1>
 
 	template <class T>
 	struct ByteSwapped_t<T,2>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe16, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe16, int16_t, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,4>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe32, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe32, int32_t, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,8>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe64, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe64, int64_t, iT); }; };
 
 #else
 
 	template <class T>
 	struct ByteSwapped_t<T,2>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole16, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole16, int16_t, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,4>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole32, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole32, int32_t, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,8>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole64, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole64, int64_t, iT); }; };
 
 #endif
 
