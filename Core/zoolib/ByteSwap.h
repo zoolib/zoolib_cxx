@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_ByteSwap_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStdInt.h"
+
 // From https://gist.github.com/panzi/6856583
 
 #if (defined(_WIN16) || defined(_WIN32) || defined(_WIN64)) && !defined(__WINDOWS__)
@@ -155,29 +157,29 @@ struct ByteSwapped_t<T,1>
 
 	template <class T>
 	struct ByteSwapped_t<T,2>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe16, int16_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe16, int16, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,4>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe32, int32_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe32, int32, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,8>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe64, int64_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htobe64, int64, iT); }; };
 
 #else
 
 	template <class T>
 	struct ByteSwapped_t<T,2>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole16, int16_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole16, int16, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,4>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole32, int32_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole32, int32, iT); }; };
 
 	template <class T>
 	struct ByteSwapped_t<T,8>
-		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole64, int64_t, iT); }; };
+		{ static T sSwapped(const T& iT) { ZMACRO_Swapper(htole64, int64, iT); }; };
 
 #endif
 
