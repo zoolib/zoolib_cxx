@@ -425,8 +425,8 @@ Val_ZZ spAsVal(ZP<ResultDeltas> iResultDeltas)
 	theMap["Mapping"] = Seq_ZZ(iResultDeltas->fMapping.begin(), iResultDeltas->fMapping.end());
 
 	Seq_ZZ& theSeq = theMap.Mut<Seq_ZZ>("Vals");
-	foreacha (vv, iResultDeltas->fPackedRows)
-	  	theSeq.Append(vv.As<Val_ZZ>());
+	foreacha (aa, iResultDeltas->fPackedRows)
+	  	theSeq.Append(aa.As<Val_ZZ>());
 
 	return theMap;
 	}
