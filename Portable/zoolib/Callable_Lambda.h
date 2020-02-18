@@ -130,7 +130,7 @@ sCallable(const Lambda_p& iLambda)
 	typedef typename Callable_Lambda_Util::RemoveClass_T<decltype(&std::remove_reference<Lambda_p>::type::operator())>::type
 		Signature;
 
-	return new Callable<Lambda_p,Signature>(iLambda);
+	return new Callable_Lambda<Lambda_p,Signature>(iLambda);
 	}
 
 } // namespace ZooLib
