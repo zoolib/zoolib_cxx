@@ -73,7 +73,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{ ::pthread_setname_np(iName); }
 
-#elif not defined(__ANDROID_API__)
+#elif ! defined(__ANDROID_API__) || __ANDROID_API__ >= 16
 
 	void ZooLib::ZThread_pthread::sSetName(const char* iName)
 		{
