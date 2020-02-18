@@ -19,7 +19,7 @@ set (CppFiles
 	${ZDIR}/zoolib/ZThread_pthread.cpp
 	${ZDIR}/zoolib/ZThread_Win.cpp
 	${ZDIR}/zoolib/ZThread.cpp
-)
+	)
 
 add_library(
 	# Specifies the name of the library.
