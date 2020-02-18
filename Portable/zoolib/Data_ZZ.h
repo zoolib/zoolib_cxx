@@ -54,6 +54,10 @@ template <> struct RelopsTraits_HasLT<Data_ZZ> : public RelopsTraits_Has {};
 template <> inline int sCompare_T(const Data_ZZ& iL, const Data_ZZ& iR)
 	{ return iL.Compare(iR); }
 
+template <class T>
+Data_ZZ sData_ZZ(const PaC<T>& iPaC)
+	{ return Data_ZZ(sPointer(iPaC), sizeof(T) * sCount(iPaC)); }
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Data_ZZ_h__

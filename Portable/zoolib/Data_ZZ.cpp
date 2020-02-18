@@ -22,23 +22,16 @@ ZMACRO_CompareRegistration_T(Data_ZZ)
 class Data_ZZ::Rep : public CountedWithoutFinalize
 	{
 public:
-	Rep();
-	Rep(size_t iSize);
-	Rep(const vector<char>& iVector);
+	Rep() {}
+
+	Rep(size_t iSize) : fVector(iSize, 0) {}
+
+	Rep(const char* iSource, size_t iSize) : fVector(iSource, iSource + iSize) {}
+
+	Rep(const vector<char>& iVector) : fVector(iVector) {}
 
 	vector<char> fVector;
 	};
-
-Data_ZZ::Rep::Rep()
-	{}
-
-Data_ZZ::Rep::Rep(size_t iSize)
-:	fVector(iSize, 0)
-	{}
-
-Data_ZZ::Rep::Rep(const vector<char>& iVector)
-:	fVector(iVector)
-	{}
 
 // =================================================================================================
 #pragma mark - Data_ZZ
@@ -65,11 +58,8 @@ Data_ZZ::Data_ZZ(size_t iSize)
 	{}
 
 Data_ZZ::Data_ZZ(const void* iSource, size_t iSize)
-:	fRep(new Rep)
-	{
-	const char* source = static_cast<const char*>(iSource);
-	fRep->fVector.insert(fRep->fVector.begin(), source, source + iSize);
-	}
+:	fRep(iSize ? new Rep(static_cast<const char*>(iSource), iSize) : new Rep)
+	{}
 
 int Data_ZZ::Compare(const Data_ZZ& iOther) const
 	{
