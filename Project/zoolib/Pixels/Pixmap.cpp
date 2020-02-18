@@ -140,7 +140,7 @@ const RasterDesc& Pixmap::GetRasterDesc() const
 const void* Pixmap::GetBaseAddress() const
 	{ return fRep->GetRaster()->GetBaseAddress(); }
 
-void* Pixmap::GetBaseAddress()
+void* Pixmap::MutBaseAddress()
 	{
 	this->Touch(); //¿ Should we do this ?
 	return fRep->GetRaster()->GetBaseAddress();
@@ -160,8 +160,7 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
 	{
-	ioPixmap.Touch();
-	sMunge(ioPixmap.GetBaseAddress(),
+	sMunge(ioPixmap.MutBaseAddress(),
 		ioPixmap.GetRasterDesc(),
 		ioPixmap.GetPixelDesc(),
 		ioPixmap.GetBounds(),

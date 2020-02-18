@@ -73,7 +73,7 @@ public:
 	const ZP<Raster>& GetRaster() const;
 	const RasterDesc& GetRasterDesc() const;
 	const void* GetBaseAddress() const;
-	void* GetBaseAddress();
+	void* MutBaseAddress();
 	const RectPOD& GetBounds() const;
 	const PixelDesc& GetPixelDesc() const;
 
