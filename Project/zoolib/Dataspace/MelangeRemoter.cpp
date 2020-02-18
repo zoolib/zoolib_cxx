@@ -33,7 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Chan_XX_Buffered.h"
 #include "zoolib/Chan_XX_Count.h"
 #include "zoolib/Log.h"
-#include "zoolib/Promise.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/PullPush_JSONB.h"

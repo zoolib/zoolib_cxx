@@ -7,7 +7,6 @@
 #include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/Chan_UTF_string.h"
-#include "zoolib/Promise.h"
 #include "zoolib/PullPush_JSON.h"
 #include "zoolib/PullPush_ZZ.h"
 #include "zoolib/StartOnNewThread.h"
