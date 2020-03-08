@@ -32,10 +32,9 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
-#pragma mark - JNI::Env
+#pragma mark - JNI::EnvTV
 
-typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> Env;
-typedef Env EnvTV;
+typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> EnvTV;
 
 // =================================================================================================
 #pragma mark - JNI::EnsureAttachedToCurrentThread
@@ -49,7 +48,7 @@ public:
 private:
 	JavaVM* fJavaVM;
 	bool fNeedsDetach;
-	Env fEnv;
+	EnvTV fEnvTV;
 	};
 
 // =================================================================================================

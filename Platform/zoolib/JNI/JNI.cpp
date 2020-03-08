@@ -62,8 +62,8 @@ EnsureAttachedToCurrentThread::EnsureAttachedToCurrentThread(JavaVM* iJavaVM)
 		}
 
 	// If we get to here, then env holds the env for the current thread, whether it was
-	// because we created it, or because it already existed. So shove it into our fEnv.
-	fEnv.Set(env);
+	// because we created it, or because it already existed. So shove it into our fEnvTV.
+	fEnvTV.Set(env);
 	}
 
 EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
