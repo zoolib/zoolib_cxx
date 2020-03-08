@@ -95,6 +95,22 @@ PushPopLocalFrame::~PushPopLocalFrame()
 	}
 
 // =================================================================================================
+#pragma mark - sMakeInteger, sMakeFloat
+jobject sMakeInteger(JNIEnv* env, int iInt)
+	{
+	jclass cls = env->FindClass("java/lang/Integer");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(I)V");
+	return env->NewObject(cls, midInit, iInt);
+	}
+
+jobject sMakeFloat(JNIEnv* env, float iFloat)
+	{
+	jclass cls = env->FindClass("java/lang/Float");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(F)V");
+	return env->NewObject(cls, midInit, iFloat);
+	}
+
+// =================================================================================================
 #pragma mark - sAsString
 
 std::string sAsString(jstring s)

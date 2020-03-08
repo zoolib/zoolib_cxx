@@ -77,6 +77,13 @@ jstring sAsJString(const std::string& iString);
 jstring sAsJString(JNIEnv *env, const std::string& iString);
 
 // =================================================================================================
+#pragma mark - sMakeInteger, sMakeFloat
+
+jobject sMakeInteger(JNIEnv* env, int iInt);
+
+jobject sMakeFloat(JNIEnv* env, float iFloat);
+
+// =================================================================================================
 #pragma mark -
 
 template <class Array_p>
