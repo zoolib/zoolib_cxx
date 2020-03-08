@@ -5,6 +5,7 @@ set(ZOOLIB_CXX ../..)
 set(ZDIR ${ZOOLIB_CXX}/Platform)
 
 set (CppFiles	
+	${ZDIR}/zoolib/JNI/Chan_JavaInputStream.cpp
 	${ZDIR}/zoolib/JNI/JNI.cpp
 )
 
