@@ -135,7 +135,7 @@ size_t sReadable(const ChanAspect_Read<EE>& iAspect)
 	{ return sNonConst(iAspect).Readable(); }
 
 // =================================================================================================
-#pragma mark - ChanAspect_Size
+#pragma mark - ChanAspect_ReadAt
 
 template <class LL, class EE>
 class ChanAspect_ReadAt
