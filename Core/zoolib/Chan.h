@@ -56,6 +56,9 @@ using ChanWaitReadable = DeriveFrom<ChanAspect_WaitReadable>;
 template <typename EE>
 using ChanW = DeriveFrom<ChanAspect_Write<EE>>;
 
+template <typename LL, typename EE>
+using ChanWriteAt = DeriveFrom<ChanAspect_WriteAt<LL,EE>>;
+
 // ---
 
 template <typename EE>
