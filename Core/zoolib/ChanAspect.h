@@ -239,6 +239,22 @@ template <class EE>
 inline void sFlush(const ChanAspect_Write<EE>& iAspect)
 	{ sNonConst(iAspect).Flush(); }
 
+// =================================================================================================
+#pragma mark - ChanAspect_WriteAt
+
+template <class LL, class EE>
+class ChanAspect_WriteAt
+:	public virtual UserOfElement<EE>
+	{
+public:
+	virtual size_t WriteAt(const LL& iLoc, const EE* iSource, size_t iCount) = 0;
+	};
+
+template <class LL, class EE>
+size_t sWriteAt(const ChanAspect_WriteAt<LL,EE>& iAspect,
+	const LL& iLoc, const EE* iSource, size_t iCount)
+	{ return sNonConst(iAspect).WriteAt(iLoc, iSource, iCount); }
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ChanAspect_h__
