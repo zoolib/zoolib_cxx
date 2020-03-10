@@ -123,7 +123,7 @@ public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
 
 	virtual size_t ReadAt(const LL& iLoc, EE* oDest, size_t iCount)
-		{ return sReadAt(iLoc, oDest, iCount); }
+		{ return sReadAt(DerivedFrom_p::pGetChan(), iLoc, oDest, iCount); }
 	};
 
 // =================================================================================================
@@ -197,6 +197,20 @@ public:
 
 	virtual void Flush()
 		{ sFlush(DerivedFrom_p::pGetChan()); }
+	};
+
+// =================================================================================================
+#pragma mark - AspectCallForwarder, ChanAspect_WriteAt
+
+template <class Chan_p, class DerivedFrom_p, class LL, class EE>
+class AspectCallForwarder<ChanAspect_WriteAt<LL,EE>,Chan_p,DerivedFrom_p>
+:	public DerivedFrom_p
+	{
+public:
+	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
+
+	virtual size_t WriteAt(const LL& iLoc, const EE* iSource, size_t iCount)
+		{ return sWriteAt(DerivedFrom_p::pGetChan(), iLoc, iSource, iCount); }
 	};
 
 // =================================================================================================
