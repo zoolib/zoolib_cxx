@@ -101,7 +101,7 @@ struct ArrayAccessors<jtype##Array> \
 		{ return env->Get##jname##ArrayElements(array, nullptr); } \
 \
 	static void sRelease(JNIEnv* env, jArray_t array, jtype_t* ptr) \
-		{ env->Release##jname##ArrayElements(array, ptr, JNI_COMMIT); } \
+		{ env->Release##jname##ArrayElements(array, ptr, 0); } \
 \
 	static void sRelease(JNIEnv* env, jArray_t array, const jtype_t* ptr) \
 		{ env->Release##jname##ArrayElements(array, sNonConst(ptr), JNI_ABORT); } \
@@ -132,6 +132,8 @@ class PaC_Array : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
 		}
 
 public:
+	Array_p GetArray() const { return fArray; }
+
 	PaC_Array(Array_p iArray)
 	:	PaC_t(spGetPaC(EnvTV::sGet(), iArray))
 	,	fArray(iArray)
@@ -143,6 +145,10 @@ public:
 			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
 		}
 	};
+
+// This accessor makes it reasonable to do PaC_Array aa(env->NewxxxArray());
+template <class Array_p>
+Array_p sArray(const PaC_Array<Array_p>& iPaC_Array) { return iPaC_Array.GetArray(); }
 
 template <class Array_p>
 class PaC_ConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
@@ -171,6 +177,10 @@ public:
 			AA::sRelease(EnvTV::sGet(), fArray, PaC_t::first);
 		}
 	};
+
+// No sArray accessor for PaC_ConstArray, emphasizing that the array will have come from
+// elsewhere, preloaded with read-only data, and if you need the Java array you
+// can get it from the same place that the PaC_ConstArray ctor did.
 
 } // namespace JNI
 } // namespace ZooLib
