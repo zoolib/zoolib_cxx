@@ -102,6 +102,11 @@ public:
 		{}
 	};
 
+template <class Tag_p>
+inline
+void swap(Any_T<Tag_p>& a, Any_T<Tag_p>& b)
+	{ a.Swap(b); }
+
 // =================================================================================================
 #pragma mark - Pseudo-ctors
 

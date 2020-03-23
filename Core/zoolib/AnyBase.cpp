@@ -97,18 +97,18 @@ const void* AnyBase::ConstVoidStar() const
 		}
 	}
 
-void AnyBase::swap(AnyBase& ioOther)
+void AnyBase::Swap(AnyBase& ioOther)
 	{
 	if (fDistinguisher || ioOther.fDistinguisher)
 		{
 		// Trivial implementation for now
-		const AnyBase temp = *this;
-		*this = ioOther;
-		ioOther = temp;
+		AnyBase temp = std::move(*this);
+		*this = std::move(ioOther);
+		ioOther = std::move(temp);
 		}
 	else
 		{
-		pAsOnHeap().swap(ioOther.pAsOnHeap());
+		swap(pAsOnHeap(), ioOther.pAsOnHeap());
 		}
 	}
 

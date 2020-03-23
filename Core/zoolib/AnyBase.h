@@ -102,7 +102,7 @@ public:
 	bool Is() const
 		{ return this->PGet<S>(); }
 
-	void swap(AnyBase& ioOther);
+	void Swap(AnyBase& ioOther);
 
 protected:
 	AnyBase()

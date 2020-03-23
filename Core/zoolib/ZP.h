@@ -492,7 +492,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - Pseudo-ctor
+#pragma mark - Relops
 
 template <class T, class O>
 bool operator==(const ZP<T>& iZP, O* iPtr)
