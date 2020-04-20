@@ -176,7 +176,7 @@ public:
 JNIFUNCTION(jlong)
 Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 	ZP<GameIntermediary> theGI = new GameIntermediary(JNI::sAsString(iAPKPath));
 	theGI.Retain();
 	return reinterpret_cast<jlong>(theGI.Get());
@@ -186,7 +186,7 @@ JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npTearDown(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->Release();
@@ -196,7 +196,7 @@ JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->fGame->Pause();
@@ -206,7 +206,7 @@ JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->fGame->Resume();
@@ -216,7 +216,7 @@ JNIFUNCTION(void)
 Java_org_zoolib_ViewModel_1Game_npSurfaceAndContextIsFresh(JNIEnv *env, jobject ob,
 	jlong iNative)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->fGame->ExternalPurgeHasOccurred();
@@ -229,7 +229,7 @@ Java_org_zoolib_ViewModel_1Game_npOnTouch(
 	jint pointerId, jint action,
 	jfloat x, jfloat y, jfloat p)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		theGI->OnTouch(pointerId, action, x, y, p);
@@ -241,7 +241,7 @@ Java_org_zoolib_ViewModel_1Game_npDraw(
 	jlong iNative,
 	jint width, jint height)
 	{
-	JNI::Env theEnv(env);
+	JNI::EnvTV theEnv(env);
 
 	if (ZP<GameIntermediary> theGI = reinterpret_cast<GameIntermediary*>(iNative))
 		{
