@@ -25,28 +25,28 @@ inline RGBA sRGBA(Comp iGray, Comp iAlpha)
 inline RGBA sRGBA(Comp iGray)
 	{ return sRGBA(iGray, iGray, iGray, 1.0); }
 
-inline float& sRed(RGBA& iRGBA)
+inline Comp& sRed(RGBA& iRGBA)
 	{ return iRGBA[0]; }
 
-inline float sRed(const RGBA& iRGBA)
+inline Comp sRed(const RGBA& iRGBA)
 	{ return iRGBA[0]; }
 
-inline float& sGreen(RGBA& iRGBA)
+inline Comp& sGreen(RGBA& iRGBA)
 	{ return iRGBA[1]; }
 
-inline float sGreen(const RGBA& iRGBA)
+inline Comp sGreen(const RGBA& iRGBA)
 	{ return iRGBA[1]; }
 
-inline float& sBlue(RGBA& iRGBA)
+inline Comp& sBlue(RGBA& iRGBA)
 	{ return iRGBA[2]; }
 
-inline float sBlue(const RGBA& iRGBA)
+inline Comp sBlue(const RGBA& iRGBA)
 	{ return iRGBA[2]; }
 
-inline float& sAlpha(RGBA& iRGBA)
+inline Comp& sAlpha(RGBA& iRGBA)
 	{ return iRGBA[3]; }
 
-inline float sAlpha(const RGBA& iRGBA)
+inline Comp sAlpha(const RGBA& iRGBA)
 	{ return iRGBA[3]; }
 
 } // namespace Pixels
