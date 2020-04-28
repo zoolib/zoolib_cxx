@@ -285,7 +285,7 @@ static void spPull_XMLAttr_Push_PPT(const string& iOuterName,
 				else
 					{
 					sPush_Start_Map(iChanW);
-						spPush_Attrs(ioChanRU.Attrs(), iChanW);
+						spPush_Attrs(theAttrs, iChanW);
 						sPush("!text", theText, iChanW);
 					sPush_End(iChanW);
 					}
