@@ -20,8 +20,6 @@ using namespace ZooLib::OpenGL;
 using std::string;
 using std::vector;
 
-GLuint GetStuff(const string& iString, vector<GPoint>& oTexCoords, vector<GPoint>& oVertices);
-
 namespace { // anonymous
 
 // -----
