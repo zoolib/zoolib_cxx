@@ -27,8 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Compat_unordered_map.h"
 
-#if ZCONFIG_SPI_Enabled(unordered_map)
-
 namespace ZooLib {
 namespace Util_STL {
 
@@ -264,7 +262,5 @@ Value sGetEraseMust(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
 
 } // namespace Util_STL
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(unordered_map)
 
 #endif // __ZooLib_Util_STL_unordered_map_h__
