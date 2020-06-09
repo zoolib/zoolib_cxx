@@ -630,8 +630,8 @@ sOffsetted(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 
 template <class Rect_p, class OtherL_p, class OtherT_p, class OtherR_p, class OtherB_p>
 typename RectTraits<Rect_p>::Rect_t
-sOffsetted(const OtherL_p& iL, const OtherT_p& iT, const OtherR_p& iR, const OtherB_p& iB,
-	const Rect_p& iRect)
+sOffsetted(const Rect_p& iRect,
+	const OtherL_p& iL, const OtherT_p& iT, const OtherR_p& iR, const OtherB_p& iB)
 	{
 	return sRect<Rect_p>(
 		L(iRect) + iL, T(iRect) + iT,
