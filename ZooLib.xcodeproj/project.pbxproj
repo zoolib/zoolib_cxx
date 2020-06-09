@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C010A6322486F79B004B2011 /* Util_CF_ZZ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C010A6302486F79A004B2011 /* Util_CF_ZZ.cpp */; };
+		C010A6332486F79B004B2011 /* Util_CF_ZZ.h in Headers */ = {isa = PBXBuildFile; fileRef = C010A6312486F79B004B2011 /* Util_CF_ZZ.h */; };
 		C0354BC322CD2ED100B3FA37 /* Startable.h in Headers */ = {isa = PBXBuildFile; fileRef = C0354BC222CD2ED100B3FA37 /* Startable.h */; };
 		C0354BC522CD2F2100B3FA37 /* Startable_SetName.h in Headers */ = {isa = PBXBuildFile; fileRef = C0354BC422CD2F2000B3FA37 /* Startable_SetName.h */; };
 		C0354BC722CD2F6500B3FA37 /* Startable_SetName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0354BC622CD2F6400B3FA37 /* Startable_SetName.cpp */; };
@@ -151,6 +153,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C010A6302486F79A004B2011 /* Util_CF_ZZ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util_CF_ZZ.cpp; sourceTree = "<group>"; };
+		C010A6312486F79B004B2011 /* Util_CF_ZZ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_CF_ZZ.h; sourceTree = "<group>"; };
 		C0354BC222CD2ED100B3FA37 /* Startable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Startable.h; sourceTree = "<group>"; };
 		C0354BC422CD2F2000B3FA37 /* Startable_SetName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Startable_SetName.h; sourceTree = "<group>"; };
 		C0354BC622CD2F6400B3FA37 /* Startable_SetName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Startable_SetName.cpp; sourceTree = "<group>"; };
@@ -639,6 +643,8 @@
 				C0CB2BC82231767600D8E1E5 /* Util_CF_Any.cpp */,
 				C0CB2BB72231767600D8E1E5 /* Util_CF_Any.h */,
 				C0CB2BD72231767600D8E1E5 /* Util_CF_Context.h */,
+				C010A6302486F79A004B2011 /* Util_CF_ZZ.cpp */,
+				C010A6312486F79B004B2011 /* Util_CF_ZZ.h */,
 				C0CB2BC32231767600D8E1E5 /* Util_CF.cpp */,
 				C0CB2BD12231767600D8E1E5 /* Util_CF.h */,
 				C0CB2BC62231767600D8E1E5 /* Util_NS_Any.h */,
@@ -661,19 +667,19 @@
 		C0CB2BE32231767600D8E1E5 /* POSIX */ = {
 			isa = PBXGroup;
 			children = (
+				C0CB2BEA2231767600D8E1E5 /* Chan_Bin_POSIXFD.cpp */,
+				C0CB2BEB2231767600D8E1E5 /* Chan_Bin_POSIXFD.h */,
 				C0A4F52123386A2C00B7E5C5 /* Compat_fcntl.h */,
 				C0A4F52023386A2C00B7E5C5 /* FILE_Channer.cpp */,
 				C0A4F51D23386A2B00B7E5C5 /* FILE_Channer.h */,
-				C0A4F51F23386A2B00B7E5C5 /* pthread_more.cpp */,
-				C0A4F51E23386A2B00B7E5C5 /* pthread_more.h */,
-				C0CB2BEA2231767600D8E1E5 /* Chan_Bin_POSIXFD.cpp */,
-				C0CB2BEB2231767600D8E1E5 /* Chan_Bin_POSIXFD.h */,
 				C0CB2BF02231767600D8E1E5 /* File_POSIX.cpp */,
 				C0CB2BEC2231767600D8E1E5 /* File_POSIX.h */,
 				C0CB2BF22231767600D8E1E5 /* Net_Internet_Socket.cpp */,
 				C0CB2BE42231767600D8E1E5 /* Net_Internet_Socket.h */,
 				C0CB2BE92231767600D8E1E5 /* Net_Socket.cpp */,
 				C0CB2BE82231767600D8E1E5 /* Net_Socket.h */,
+				C0A4F51F23386A2B00B7E5C5 /* pthread_more.cpp */,
+				C0A4F51E23386A2B00B7E5C5 /* pthread_more.h */,
 				C0CB2BF42231767600D8E1E5 /* SocketWatcher.cpp */,
 				C0CB2BF52231767600D8E1E5 /* SocketWatcher.h */,
 				C0CB2BE62231767600D8E1E5 /* SubProcess_POSIX.cpp */,
@@ -712,10 +718,10 @@
 			isa = PBXGroup;
 			children = (
 				C0965B502458AB3C00508137 /* Any_T.h */,
+				C0CB2C612231767600D8E1E5 /* Any.h */,
 				C0965B4F2458AB3C00508137 /* AnyBase.cpp */,
 				C0965B4E2458AB3C00508137 /* AnyBase.h */,
 				C0A4F51B23386A1300B7E5C5 /* Atomic.h */,
-				C0CB2C612231767600D8E1E5 /* Any.h */,
 				C0CB2C3A2231767600D8E1E5 /* ByteSwap.h */,
 				C0CB2C4C2231767600D8E1E5 /* Callable_Macros.h */,
 				C0CB2C302231767600D8E1E5 /* Callable.h */,
@@ -1100,6 +1106,7 @@
 				C0965B642458AB5C00508137 /* Data_ZZ.h in Headers */,
 				C0965B652458AB5C00508137 /* Util_ZZ_JSONB.h in Headers */,
 				C0965B632458AB5C00508137 /* Util_ZZ_JSON.h in Headers */,
+				C010A6332486F79B004B2011 /* Util_CF_ZZ.h in Headers */,
 				C091B90422C130760001DBB0 /* Counted.h in Headers */,
 				C0354BC522CD2F2100B3FA37 /* Startable_SetName.h in Headers */,
 				C0A4F52623386A2C00B7E5C5 /* Compat_fcntl.h in Headers */,
@@ -1188,6 +1195,7 @@
 				C05AB8622272666D0012E997 /* Util_Chan_UTF_Operators.cpp in Sources */,
 				C05AB775227266560012E997 /* Starter_CFRunLoop.cpp in Sources */,
 				C05AB7B02272666D0012E997 /* Cancellable.cpp in Sources */,
+				C010A6322486F79B004B2011 /* Util_CF_ZZ.cpp in Sources */,
 				C05AB7F42272666D0012E997 /* Compare_Rational.cpp in Sources */,
 				C0965B672458AB5C00508137 /* Val_ZZ.cpp in Sources */,
 				C05AB77F227266560012E997 /* Util_NS.mm in Sources */,
