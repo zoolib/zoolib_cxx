@@ -23,7 +23,6 @@ inline size_t sClamped(uint64 iVal)
 		return size_t(iVal);
 	}
 
-
 // =================================================================================================
 #pragma mark - UserOfElement
 
