@@ -422,6 +422,12 @@ public:
 
 // --
 
+	T* operator->() const
+		{
+		// sCheck(fPtr);
+		return fPtr;
+		}
+
 	T* Get() const
 		{ return fPtr; }
 
