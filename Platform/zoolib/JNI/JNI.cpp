@@ -96,6 +96,14 @@ PushPopLocalFrame::~PushPopLocalFrame()
 
 // =================================================================================================
 #pragma mark - sMakeInteger, sMakeFloat
+
+jobject sMakeBoolean(JNIEnv* env, bool iBool)
+	{
+	jclass cls = env->FindClass("java/lang/Boolean");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(Z)V");
+	return env->NewObject(cls, midInit, iBool);
+	}
+
 jobject sMakeInteger(JNIEnv* env, int iInt)
 	{
 	jclass cls = env->FindClass("java/lang/Integer");

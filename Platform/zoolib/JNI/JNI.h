@@ -79,6 +79,8 @@ jstring sAsJString(JNIEnv *env, const std::string& iString);
 // =================================================================================================
 #pragma mark - sMakeInteger, sMakeFloat
 
+jobject sMakeBoolean(JNIEnv* env, bool iBool);
+
 jobject sMakeInteger(JNIEnv* env, int iInt);
 
 jobject sMakeFloat(JNIEnv* env, float iFloat);
@@ -89,7 +91,7 @@ jobject sMakeFloat(JNIEnv* env, float iFloat);
 template <class Array_p>
 struct ArrayAccessors;
 
-#define MACRO_ArrayAccessors(jtype, jname) \
+#define ZMACRO_ArrayAccessors(jtype, jname) \
 \
 template <> \
 struct ArrayAccessors<jtype##Array> \
@@ -107,14 +109,19 @@ struct ArrayAccessors<jtype##Array> \
 		{ env->Release##jname##ArrayElements(array, sNonConst(ptr), JNI_ABORT); } \
 	};
 
-MACRO_ArrayAccessors(jboolean, Boolean)
-MACRO_ArrayAccessors(jbyte, Byte)
-MACRO_ArrayAccessors(jchar, Char)
-MACRO_ArrayAccessors(jshort, Short)
-MACRO_ArrayAccessors(jint, Int)
-MACRO_ArrayAccessors(jlong, Long)
-MACRO_ArrayAccessors(jfloat, Float)
-MACRO_ArrayAccessors(jdouble, Double)
+ZMACRO_ArrayAccessors(jboolean, Boolean)
+ZMACRO_ArrayAccessors(jbyte, Byte)
+ZMACRO_ArrayAccessors(jchar, Char)
+ZMACRO_ArrayAccessors(jshort, Short)
+ZMACRO_ArrayAccessors(jint, Int)
+ZMACRO_ArrayAccessors(jlong, Long)
+ZMACRO_ArrayAccessors(jfloat, Float)
+ZMACRO_ArrayAccessors(jdouble, Double)
+
+#undef ZMACRO_ArrayAccessors
+
+// =================================================================================================
+#pragma mark - PaC_Array
 
 template <class Array_p>
 class PaC_Array : public PaC<typename ArrayAccessors<Array_p>::jtype_t>
@@ -146,9 +153,12 @@ public:
 		}
 	};
 
-// This accessor makes it reasonable to do PaC_Array aa(env->NewxxxArray());
+// This accessor makes it reasonable to do PaC_Array<xx> aa(env->NewxxxArray());
 template <class Array_p>
 Array_p sArray(const PaC_Array<Array_p>& iPaC_Array) { return iPaC_Array.GetArray(); }
+
+// =================================================================================================
+#pragma mark - PaC_ConstArray
 
 template <class Array_p>
 class PaC_ConstArray : public PaC<const typename ArrayAccessors<Array_p>::jtype_t>
