@@ -1,31 +1,31 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2002 Andrew Green and Learning in Motion, Inc.
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2002-2020 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_h__
 #define __ZooLib_Util_STL_h__ 1
 #include "zconfig.h"
 
+#include <type_traits> // For enable_if, is_member_function_pointer
+
+#include "zoolib/ZTypes.h" // For EnableIf_t
+
 namespace ZooLib {
 namespace Util_STL {
 
-// ==================================================
+using std::is_member_function_pointer;
+
+// =================================================================================================
+
+template <typename T> struct IsAType { enum {value=1}; };
+
+template <typename T, typename... Other> struct AreTypes { enum {value=1}; };
+
+// =================================================================================================
+
+template <typename T, typename S> struct AreSameType {};
+
+template <typename T> struct AreSameType<T,T> { enum {value=1}; };
+
+// =================================================================================================
 
 /** Invoke delete on all elements between begin and end. */
 template <class ForwardIterator>
@@ -35,7 +35,61 @@ void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 		delete *begin++;
 	}
 
-// ==================================================
+// =================================================================================================
+
+template <typename T>
+EnableIf_t<is_member_function_pointer<decltype(&T::empty)>::value,
+	bool>
+sIsEmpty(const T& iT)
+	{ return iT.empty(); }
+
+// =================================================================================================
+
+template <typename T>
+EnableIf_t<is_member_function_pointer<decltype(&T::empty)>::value,
+	bool>
+sNotEmpty(const T& iT)
+	{ return not iT.empty(); }
+
+// =================================================================================================
+
+template <typename T>
+EnableIf_t<is_member_function_pointer<decltype(&T::clear)>::value,
+	void>
+sClear(T& ioT)
+	{ ioT.clear(); }
+
+// =================================================================================================
+
+//template <typename Container>
+//	EnableIf_t<IsAType<typename Container::key_type>::value,
+//		EnableIf_t<AreSameType<size_t,decltype(((Container*)nullptr)->erase(*(const typename Container::key_type*)nullptr))>::value,
+//			bool>>
+//sQErase2(Container& ioContainer, const typename Container::key_type& iKey)
+//	{ return ioContainer.erase(iKey); }
+
+// =================================================================================================
+
+template <typename Container>
+	EnableIf_t<IsAType<typename Container::key_type>::value,
+		void>
+sErase(Container& ioContainer, const typename Container::key_type& iKey)
+	{ ioContainer.erase(iKey); }
+
+// =================================================================================================
+
+//template <typename Container>
+//EnableIf_t<is_member_function_pointer<decltype(&Container::end)>::value,
+//	EnableIf_t<is_member_function_pointer<decltype(&Container::erase)>::value,
+//		EnableIf_t<IsAType<typename Container::iterator>::value,
+//			typename Container::Iterator>>>
+//sEraseInc(Container& ioContainer, typename Container::iterator iter)
+//	{
+//	ZAssert(ioContainer.end() != iter);
+//	return ioContainer.erase(iter);
+//	}
+
+// =================================================================================================
 
 } // namespace Util_STL
 } // namespace ZooLib

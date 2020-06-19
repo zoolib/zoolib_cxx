@@ -1,22 +1,6 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2000-2007 Andrew Green and Learning in Motion, Inc.
+// Copyright (c) 2008-2020 Andrew Green.
+// MIT License. http://www.zoolib.org
 
 #ifndef __zconfigl_h__
 #define __zconfigl_h__ 1
@@ -33,8 +17,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Compiler
 	#if 0
-	#elif defined(__MWERKS__)
-		#define ZCONFIG_Compiler ZCONFIG_Compiler_CodeWarrior
 	#elif defined(__clang__)
 		#define ZCONFIG_Compiler ZCONFIG_Compiler_Clang
 	#elif defined(__GNUC__)
@@ -53,15 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Processor
 	#if 0
-	#elif defined(__MWERKS__)
-		#if 0
-		#elif __POWERPC__
-			#define ZCONFIG_Processor ZCONFIG_Processor_PPC
-		#elif __MC68K__
-			#define ZCONFIG_Processor ZCONFIG_Processor_68K
-		#elif __INTEL__
-			#define ZCONFIG_Processor ZCONFIG_Processor_x86
-		#endif
 	#elif defined(__GNUC__) || defined(__clang__)
 		#if 0
 		#elif defined(__i386__)
@@ -178,14 +151,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			#define ZCONFIG_Debug 0
 		#endif
 
-	#elif defined(__MWERKS__)
-
-		#if __option(sym)
-			#define ZCONFIG_Debug ZCONFIG_DebugLevel
-		#else
-			#define ZCONFIG_Debug 0
-		#endif
-
 	#elif defined(_MSC_VER)
 
 		#if defined(DEBUG) || defined(_DEBUG)
@@ -268,114 +233,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
-// TR1
-
-#if defined(__clang__)
-	#include <cstddef> // To see if _LIBCPP_VERSION gets defined
-	#ifdef _LIBCPP_VERSION
-		#define ZMACRO_namespace_tr1_prefix std
-		#define ZMACRO_namespace_tr1_begin namespace std {
-		#define ZMACRO_namespace_tr1_end }
-		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_tr1 1
-	#else
-		#define ZMACRO_namespace_tr1_prefix std::tr1
-		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
-		#define ZMACRO_namespace_tr1_end } }
-		#define ZMACRO_tr1_header(a) <tr1/a>
-		#define ZMACRO_Has_tr1 1
-		#define ZMACRO_Has_tr1_early 1
-	#endif
-#elif defined(_MSC_VER)
-	#include <yvals.h> // For _HAS_TR1
-	#if _MSC_VER >= 1600
-		#define ZMACRO_namespace_tr1_prefix std
-		#define ZMACRO_namespace_tr1_begin namespace std {
-		#define ZMACRO_namespace_tr1_end }
-		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_tr1 1
-	#elif _MSC_VER >= 1500 && defined(_HAS_TR1) && (_HAS_TR1+0)
-		#define ZMACRO_namespace_tr1_prefix std::tr1
-		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
-		#define ZMACRO_namespace_tr1_end } }
-		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_tr1 1
-		#define ZMACRO_Has_tr1_early 1
-	#endif
-#elif defined(__GNUC__)
-
-	#if __GNUC__ >= 5
-		#define ZMACRO_namespace_tr1_prefix std
-		#define ZMACRO_namespace_tr1_begin namespace std {
-		#define ZMACRO_namespace_tr1_end }
-		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_tr1 1
-
-	#elif __GNUC__ == 4 and __GNUC_MINOR__ >= 6 \
-			and (defined(__GXX_EXPERIMENTAL_CXX0X__) or (__cplusplus >= 201103L))
-		#define ZMACRO_namespace_tr1_prefix std
-		#define ZMACRO_namespace_tr1_begin namespace std {
-		#define ZMACRO_namespace_tr1_end }
-		#define ZMACRO_tr1_header(a) <a>
-		#define ZMACRO_Has_tr1 1
-	#else
-		#define ZMACRO_namespace_tr1_prefix std::tr1
-		#define ZMACRO_namespace_tr1_begin namespace std { namespace tr1 {
-		#define ZMACRO_namespace_tr1_end } }
-		#define ZMACRO_tr1_header(a) <tr1/a>
-		#define ZMACRO_Has_tr1 1
-		#define ZMACRO_Has_tr1_early 1
-	#endif
-#endif
-
-#ifndef ZMACRO_Has_tr1
-	#define ZMACRO_Has_tr1 0
-#endif
-
-#ifndef ZMACRO_Has_tr1_early
-	#define ZMACRO_Has_tr1_early 0
-#endif
-
-// =================================================================================================
-// Some extra bits to patch up some CodeWarrior issues.
-
-#if defined(__MWERKS__)
-
-	#if __option(precompile)
-		#error "Don't precompile zconfig"
-// because settings on individual files will not necessarily match claimed configuration settings.
-	#endif
-
-// This definition causes some problematic math-related stuff to drop out. Seems to
-// be only a CW/10.3.9 problem.
-	#define __NOEXTENSIONS__
-
-	#ifndef NEWMODE
-		#define NEWMODE NEWMODE_MALLOC
-	#endif
-
-	#define MSL_USE_PRECOMPILED_HEADERS 0
-
-	#if ZCONFIG_Debug
-		// Switch off (v. nice) collapse of T* to void* in containers, so we can
-		// actually work with the contents when debugging.
-		#define _Inhibit_Container_Optimization
-		// Switch off the placement of Red/Black flag as a single bit in the parent pointer.
-		#define _Inhibit_Optimize_RB_bit
-		// Enable debugging checks. This doesn't work for me yet, so I'm leaving it off.
-//		#define _MSL_DEBUG
-	#endif
-
-	// Apple's headers on 10.3 define SCHAR_MAX and CHAR_BIT in terms of __SCHAR_MAX__
-	// and __CHAR_BIT__, which are compiler-provided by gcc 3.3. There's a fixup for
-	// SHRT, INT, LONG and LONG_LONG in /usr/include/gcc/darwin/3.3/machine/limit.h,
-	// but not for these two. So we'll do it ourselves for now.
-	#define __SCHAR_MAX__ 127
-	#define __CHAR_BIT__ 8
-
-#endif
-
-// =================================================================================================
 // Some extra bits to patch up some MSVC issues.
 
 #if defined(_MSC_VER)
@@ -445,41 +302,27 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Has_nullptr
 
-	#if defined(__MWERKS__)
-
-		class nullptr_t
-			{
-			void operator&() const;
-		public:
-			template <class T> operator T*() const { return 0; }
-			};
-		#define nullptr nullptr_t()
-
-	#else
-
-		const class nullptr_t
-			{
-			void operator&() const;
-		public:
-			template <class T> operator T*() const { return 0; }
-			template <class C, class T> operator T C::*() const { return 0; }
-			} nullptr = {};
-
-	#endif
+	const class nullptr_t
+		{
+		void operator&() const;
+	public:
+		template <class T> operator T*() const { return 0; }
+		template <class C, class T> operator T C::*() const { return 0; }
+		} nullptr = {};
 
 	#define ZCONFIG_Has_nullptr 1
 
+#endif
+
+#ifndef ZCONFIG_Has_nullptr
+	#define ZCONFIG_Has_nullptr 0
 #endif
 
 // =================================================================================================
 
 #if __MACH__
 	#define ZMACINCLUDE2(a,b) <a/b>
-	#if __MWERKS__
-		#define ZMACINCLUDE3(a,b,c) <b/c>
-	#else
-		#define ZMACINCLUDE3(a,b,c) <a/../Frameworks/b.framework/Headers/c>
-	#endif
+	#define ZMACINCLUDE3(a,b,c) <a/../Frameworks/b.framework/Headers/c>
 #else
 	#define ZMACINCLUDE2(a,b) <b>
 	#define ZMACINCLUDE3(a,b,c) <c>

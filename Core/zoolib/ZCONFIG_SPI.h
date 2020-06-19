@@ -528,8 +528,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_SPI_Avail__Win
 	#if defined(WIN32) || defined(_WIN32) || defined(WINDOWS)
 		#define ZCONFIG_SPI_Avail__Win 1
-	#elif __MWERKS__ && __INTEL__
-		#define ZCONFIG_SPI_Avail__Win 1
 	#endif
 #endif
 
