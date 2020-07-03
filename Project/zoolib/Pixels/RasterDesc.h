@@ -4,6 +4,7 @@
 #define __ZooLib_Pixels_RasterDesc_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/size_t.h"
 #include "zoolib/Pixels/PixvalDesc.h"
 
 namespace ZooLib {
