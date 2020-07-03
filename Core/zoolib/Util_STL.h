@@ -61,15 +61,6 @@ sClear(T& ioT)
 
 // =================================================================================================
 
-//template <typename Container>
-//	EnableIf_t<IsAType<typename Container::key_type>::value,
-//		EnableIf_t<AreSameType<size_t,decltype(((Container*)nullptr)->erase(*(const typename Container::key_type*)nullptr))>::value,
-//			bool>>
-//sQErase2(Container& ioContainer, const typename Container::key_type& iKey)
-//	{ return ioContainer.erase(iKey); }
-
-// =================================================================================================
-
 template <typename Container>
 	EnableIf_t<IsAType<typename Container::key_type>::value,
 		void>
