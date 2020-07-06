@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Compat_algorithm.h" // find
-#include "zoolib/Util_STL.h"
+#include "zoolib/Util_STL_Seq_Base.h"
 
 #include "zoolib/ZDebug.h"
 
