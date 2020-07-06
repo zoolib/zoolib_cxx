@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Compat_algorithm.h" // find
-#include "zoolib/Util_STL_Seq_Base.h"
+#include "zoolib/Util_STL_Base_Seq.h"
 
 #include "zoolib/ZDebug.h"
 
@@ -48,17 +48,6 @@ bool sQPushBack(std::deque<Base>& ioCont, const Derived& iElement)
 	return true;
 	}
 
-template <typename Base>
-ZQ<Base> sQPopBack(std::deque<Base>& ioCont)
-	{
-	if (ioCont.empty())
-		return null;
-
-	const Base result = ioCont.back();
-	ioCont.pop_back();
-	return result;
-	}
-
 // -----
 
 template <typename Base, typename Derived>
@@ -68,17 +57,6 @@ bool sQPushFront(std::deque<Base>& ioCont, const Derived& iElement)
 		return false;
 	ioCont.push_back(iElement);
 	return true;
-	}
-
-template <typename Base>
-ZQ<Base> sQPopFront(std::deque<Base>& ioCont)
-	{
-	if (ioCont.empty())
-		return null;
-
-	const Base result = ioCont.front();
-	ioCont.pop_front();
-	return result;
 	}
 
 // =================================================================================================

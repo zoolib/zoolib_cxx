@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Compat_algorithm.h" // find
-#include "zoolib/Util_STL_Seq_Base.h"
+#include "zoolib/Util_STL_Base_Seq.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
@@ -14,6 +14,19 @@
 
 namespace ZooLib {
 namespace Util_STL {
+
+// Having an issue with this:
+//template <typename PP>
+//auto sFirstOrNil(PP iParam) -> decltype(sFrontOrNullPtr(iParam))
+//	{ return sFrontOrNullPtr(iParam); }
+
+template <class T>
+T* sFirstOrNil(std::vector<T>& ioVec)
+	{ return sFrontOrNullPtr(ioVec); }
+
+template <class T>
+const T* sFirstOrNil(const std::vector<T>& iVec)
+	{ return sFrontOrNullPtr(iVec); }
 
 // =================================================================================================
 #pragma mark - Util_STL, unsorted vectors
@@ -47,17 +60,6 @@ bool sQPushBack(std::vector<Base>& ioVec, const Derived& iElement)
 		return false;
 	ioVec.push_back(iElement);
 	return true;
-	}
-
-template <typename Base>
-ZQ<Base> sQPopBack(std::vector<Base>& ioVec)
-	{
-	if (ioVec.empty())
-		return null;
-
-	const Base result = ioVec.back();
-	ioVec.pop_back();
-	return result;
 	}
 
 // =================================================================================================

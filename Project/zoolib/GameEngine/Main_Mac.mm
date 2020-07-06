@@ -9,6 +9,8 @@
 #include "zoolib/Util_Chan_UTF_Operators_string.h"
 #include "zoolib/Util_Debug.h"
 #include "zoolib/Util_STL_map.h"
+#include "zoolib/Util_STL_set.h"
+#include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/Apple/Callable_ObjC.h"
 #include "zoolib/Apple/Cartesian_NS.h"
@@ -325,8 +327,43 @@ static CVReturn spDisplayLinkCallback(
 // =================================================================================================
 #pragma mark - main
 
+using namespace Util_STL;
+
+template <bool B, class T> using EnableIfNot_t = typename EnableIfC<! B,T>::type;
+
+template <typename CC>
+	EnableIfNot_t<IsMFP<decltype(static_cast<typename CC::value_type&(CC::*)()>
+		(&CC::front))>::value,
+		EnableIfNot_t<IsMFP<decltype(static_cast<void(CC::*)()>
+			(&CC::pop_front))>::value,
+ZQ<typename CC::value_type>>>
+sQPopFront2(CC& ioContainer)
+	{
+	if (ioContainer.empty())
+		return null;
+
+	const typename CC::value_type result = std::move(*ioContainer.begin());
+	ioContainer.erase(ioContainer.begin());
+	return result;
+	}
+
+
+void Function();
+void Function()
+	{
+	std::set<int> theSet;
+
+	ZQ<int> theQ = sQPopFront2(theSet);
+
+
+	vector<int> theVector;
+	ZQ<int> theQ2 = sQPopBack(theVector);
+	}
+
 int main(int argc, const char *argv[])
 	{
+	Function();
+
 	Util_Debug::sInstall();
 
 	if (ZCONFIG_Debug)

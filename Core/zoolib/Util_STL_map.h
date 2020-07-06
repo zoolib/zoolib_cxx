@@ -4,7 +4,7 @@
 #define __ZooLib_Util_STL_map_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Util_STL.h"
+#include "zoolib/Util_STL_Base_Map.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
@@ -16,44 +16,6 @@ namespace Util_STL {
 
 // =================================================================================================
 #pragma mark - Util_STL
-
-//template <typename KBase, typename Value, typename Comparator, typename KDerived>
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value* sPGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	typename std::map<KBase,Value,Comparator>::const_iterator ii = iMap.find(iKey);
-	if (iMap.end() == ii)
-		return nullptr;
-	return &ii->second;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sDGet(
-	const Value& iDefault, const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	if (const Value* theP = sPGet(iMap, iKey))
-		return *theP;
-	return iDefault;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const ZQ<Value> sQGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	if (const Value* theP = sPGet(iMap, iKey))
-		return *theP;
-	return null;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-const Value& sGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	if (const Value* theP = sPGet(iMap, iKey))
-		return *theP;
-	return sDefault<Value>();
-	}
-
-// -----
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 Value* sPMut(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
