@@ -4,30 +4,38 @@
 #define __ZooLib_Util_STL_h__ 1
 #include "zconfig.h"
 
-#include <type_traits> // For enable_if, is_member_function_pointer
+#include <type_traits> // For is_member_function_pointer, is_same etc.
 
 #include "zoolib/ZTypes.h" // For EnableIf_t
 
 namespace ZooLib {
 namespace Util_STL {
 
-using std::is_member_function_pointer;
+// =================================================================================================
+
+template <typename T> struct IsAType : std::true_type {};
+
+template <typename T, typename... Other> struct AreTypes : std::true_type {};
 
 // =================================================================================================
 
-template <typename T> struct IsAType { enum {value=1}; };
-
-template <typename T, typename... Other> struct AreTypes { enum {value=1}; };
+template <typename T, typename S> using AreSameType = std::is_same<T,S>;
 
 // =================================================================================================
 
-template <typename T, typename S> struct AreSameType {};
-
-template <typename T> struct AreSameType<T,T> { enum {value=1}; };
+template <class mfp> using IsMFP = std::is_member_function_pointer<mfp>;
 
 // =================================================================================================
 
-/** Invoke delete on all elements between begin and end. */
+template <class mfp,class mfptype>
+struct IsMFPWithSig
+	{
+	enum {value = IsMFP<mfp>::value * AreSameType<mfp,mfptype>::value};
+	};
+
+// =================================================================================================
+// sDeleteAll
+
 template <class ForwardIterator>
 void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 	{
@@ -36,51 +44,178 @@ void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 	}
 
 // =================================================================================================
+// sEmpty
 
 template <typename T>
-EnableIf_t<is_member_function_pointer<decltype(&T::empty)>::value,
-	bool>
+	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
+		(&T::empty))>::value,
+bool>
 sIsEmpty(const T& iT)
 	{ return iT.empty(); }
 
+template <typename T>
+	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
+		(&T::IsEmpty))>::value,
+bool>
+sIsEmpty(const T& iT)
+	{ return iT.IsEmpty(); }
+
 // =================================================================================================
+// sNotEmpty
 
 template <typename T>
-EnableIf_t<is_member_function_pointer<decltype(&T::empty)>::value,
-	bool>
+	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
+		(&T::empty))>::value,
+bool>
 sNotEmpty(const T& iT)
 	{ return not iT.empty(); }
 
+template <typename T>
+	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
+		(&T::IsEmpty))>::value,
+bool>
+sNotEmpty(const T& iT)
+	{ return not iT.IsEmpty(); }
+
 // =================================================================================================
+// sClear
 
 template <typename T>
-EnableIf_t<is_member_function_pointer<decltype(&T::clear)>::value,
-	void>
+	EnableIf_t<IsMFP<decltype(static_cast<void(T::*)()>
+		(&T::clear))>::value,
+void>
 sClear(T& ioT)
 	{ ioT.clear(); }
 
-// =================================================================================================
+template <typename T>
+	EnableIf_t<IsMFP<decltype(static_cast<void(T::*)()>
+		(&T::Clear))>::value,
+void>
+sClear(T& ioT)
+	{ ioT.Clear(); }
 
-template <typename Container>
-	EnableIf_t<IsAType<typename Container::key_type>::value,
-		void>
-sErase(Container& ioContainer, const typename Container::key_type& iKey)
+// =================================================================================================
+// sContains
+
+template <typename CC, typename KK>
+	EnableIf_t<IsMFP<decltype(static_cast<
+		typename CC::const_iterator(CC::*)(const typename CC::key_type&) const>
+		(&CC::find))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<
+			typename CC::const_iterator(CC::*)() const>
+			(&CC::end))>::value,
+bool>>
+sContains(const CC& iContainer, KK iKey)
+	{ return iContainer.end() != iContainer.find(iKey); }
+
+template <typename CC, typename KK>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(const typename CC::key_type&)>
+		(&CC::find))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
+		(&CC::end))>::value,
+bool>>
+sContains(CC& ioContainer, KK iKey)
+	{ return ioContainer.end() != ioContainer.find(iKey); }
+
+// =================================================================================================
+// sQErase(key)
+
+template <typename CC, typename KK>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
+		(&CC::erase))>::value,
+bool>
+sQErase(CC& ioContainer, KK iKey)
+	{ return ioContainer.erase(iKey); }
+
+// =================================================================================================
+// sErase(key)
+
+template <typename CC, typename KK>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
+		(&CC::erase))>::value,
+void>
+sErase(CC& ioContainer, KK iKey)
 	{ ioContainer.erase(iKey); }
 
 // =================================================================================================
+// sQErase(iterator)
 
-//template <typename Container>
-//EnableIf_t<is_member_function_pointer<decltype(&Container::end)>::value,
-//	EnableIf_t<is_member_function_pointer<decltype(&Container::erase)>::value,
-//		EnableIf_t<IsAType<typename Container::iterator>::value,
-//			typename Container::Iterator>>>
-//sEraseInc(Container& ioContainer, typename Container::iterator iter)
-//	{
-//	ZAssert(ioContainer.end() != iter);
-//	return ioContainer.erase(iter);
-//	}
+template <typename CC, typename II>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
+		(&CC::erase))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+		(&CC::end))>::value,
+bool>>
+sErase(CC& ioContainer, II iter)
+	{
+	if (ioContainer.end() == iter)
+		return false;
+	ioContainer.erase(iter);
+	return true;
+	}
 
 // =================================================================================================
+// sErase(iterator)
+
+template <typename CC, typename II>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
+		(&CC::erase))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+		(&CC::end))>::value,
+void>>
+sErase(CC& ioContainer, II iter)
+	{
+	ZAssert(ioContainer.end() != iter);
+	ioContainer.erase(iter);
+	}
+
+// =================================================================================================
+// sEraseInc
+
+template <typename CC, typename II>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
+		(&CC::erase))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+			(&CC::end))>::value,
+typename CC::iterator>>
+sEraseInc(CC& ioContainer, II iter)
+	{
+	ZAssert(ioContainer.end() != iter);
+	return ioContainer.erase(iter);
+	}
+
+// =================================================================================================
+// sFrontOrNullPtr
+
+template <typename CC>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::reference(CC::*)()>
+		(&CC::front))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<bool(CC::*)() const>
+			(&CC::empty))>::value,
+typename CC::pointer>>
+sFrontOrNullPtr(CC& ioContainer)
+	{
+	if (ioContainer.empty())
+		return nullptr;
+	return &ioContainer.front();
+	}
+
+template <typename CC>
+	EnableIf_t<IsMFP<decltype(static_cast<typename CC::const_reference(CC::*)() const>
+		(&CC::front))>::value,
+		EnableIf_t<IsMFP<decltype(static_cast<bool(CC::*)() const>
+			(&CC::empty))>::value,
+typename CC::const_pointer>>
+sFrontOrNullPtr(const CC& iContainer)
+	{
+	if (iContainer.empty())
+		return nullptr;
+	return &iContainer.front();
+	}
+
+template <typename PP>
+auto sFirstOrNil(PP iParam) -> decltype(sFrontOrNullPtr(iParam))
+	{ return sFrontOrNullPtr(iParam); }
 
 } // namespace Util_STL
 } // namespace ZooLib

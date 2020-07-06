@@ -1,26 +1,10 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2011-2020 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_map_h__
 #define __ZooLib_Util_STL_map_h__ 1
 #include "zconfig.h"
+
+#include "zoolib/Util_STL.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
@@ -33,45 +17,7 @@ namespace Util_STL {
 // =================================================================================================
 #pragma mark - Util_STL
 
-template <typename KBase, typename Value, typename Comparator>
-bool sIsEmpty(const std::map<KBase,Value,Comparator>& iMap)
-	{ return iMap.empty(); }
-
-template <typename KBase, typename Value, typename Comparator>
-bool sNotEmpty(const std::map<KBase,Value,Comparator>& iMap)
-	{ return not sIsEmpty(iMap); }
-
-template <typename KBase, typename Value, typename Comparator>
-void
-sClear(std::map<KBase,Value,Comparator>& ioMap)
-	{ ioMap.clear(); }
-
-// -----
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-bool sContains(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{ return iMap.end() != iMap.find(iKey); }
-
-// -----
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-bool sQErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{ return ioMap.erase(iKey); }
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-void sErase(std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{ ioMap.erase(iKey); }
-
-template <typename KBase, typename Value, typename Comparator>
-typename std::map<KBase,Value,Comparator>::iterator
-sEraseInc(std::map<KBase,Value,Comparator>& ioMap,
-	typename std::map<KBase,Value,Comparator>::iterator iter)
-	{
-	ZAssert(ioMap.end() != iter);
-	return ioMap.erase(iter);
-	}
-
-// -----
+//template <typename KBase, typename Value, typename Comparator, typename KDerived>
 
 template <typename KBase, typename Value, typename Comparator, typename KDerived>
 const Value* sPGet(const std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)

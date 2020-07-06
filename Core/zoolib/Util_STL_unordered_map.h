@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_Util_STL_unordered_map_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_STL.h"
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 
@@ -33,29 +35,9 @@ namespace Util_STL {
 // =================================================================================================
 #pragma mark - Util_STL
 
-template <typename KBase, typename Value>
-bool sIsEmpty(const unordered_map<KBase,Value>& iMap)
-	{ return iMap.empty(); }
-
-template <typename KBase, typename Value>
-bool sNotEmpty(const unordered_map<KBase,Value>& iMap)
-	{ return not sIsEmpty(iMap); }
-
-// -----
-
 template <typename KBase, typename Value, typename KDerived>
 bool sContains(const unordered_map<KBase,Value>& iMap, const KDerived& iKey)
 	{ return iMap.end() != iMap.find(iKey); }
-
-// -----
-
-template <typename KBase, typename Value, typename KDerived>
-bool sQErase(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
-	{ return ioMap.erase(iKey); }
-
-template <typename KBase, typename Value, typename KDerived>
-void sErase(unordered_map<KBase,Value>& ioMap, const KDerived& iKey)
-	{ ioMap.erase(iKey); }
 
 // -----
 
