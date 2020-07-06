@@ -38,12 +38,12 @@ const ZP<AnyBase::OnHeap>& AnyBase::pAsOnHeap() const
 
 const std::type_info& AnyBase::Type() const
 	{
-	if (const std::type_info* theType = this->TypeIfNotVoid())
+	if (const std::type_info* theType = this->PType())
 		return *theType;
 	return typeid(void);
 	}
 
-const std::type_info* AnyBase::TypeIfNotVoid() const
+const std::type_info* AnyBase::PType() const
 	{
 	if (fDistinguisher)
 		{
