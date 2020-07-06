@@ -100,8 +100,8 @@ BigRegion BigRegion::sRects(const RectPOD* iRects, size_t iCount, bool iAlreadyS
 			resultRgn.fNumRects = iCount;
 
 			RectPOD bounds;
-			bounds.top = bounds.left = numeric_limits<int32>::max();
-			bounds.right = bounds.bottom = numeric_limits<int32>::min();
+			bounds.top = bounds.left = numeric_limits<Ord>::max();
+			bounds.right = bounds.bottom = numeric_limits<Ord>::min();
 
 			RectPOD* currentDest = resultRgn.fRects;
 			while (iCount--)
@@ -212,9 +212,9 @@ BigRegion& BigRegion::operator=(const RectPOD& iBounds)
 
 static void spCompress(BigRegion& ioRegion,
 	BigRegion& ioTempRegion1, BigRegion& ioTempRegion2,
-	int32 delta, bool iHorizontal, bool iGrow)
+	Ord delta, bool iHorizontal, bool iGrow)
 	{
-	int32 shift = 1;
+	Ord shift = 1;
 	ioTempRegion1 = ioRegion;
 	while (delta)
 		{
@@ -250,7 +250,7 @@ static void spCompress(BigRegion& ioRegion,
 		}
 	}
 
-void BigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
+void BigRegion::MakeInset(Ord iInsetH, Ord iInsetV)
 	{
 	if (fNumRects == 0)
 		return;
@@ -300,7 +300,7 @@ bool BigRegion::Contains(const PointPOD& iPoint) const
 	return false;
 	}
 
-bool BigRegion::Contains(int32 iH, int32 iV) const
+bool BigRegion::Contains(Ord iH, Ord iV) const
 	{
 	if (fNumRects == 0)
 		return false;
@@ -345,9 +345,9 @@ void BigRegion::Decompose(vector<RectPOD >& oRects) const
 		oRects.push_back(fRects[xx]);
 	}
 
-int32 BigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
+Ord BigRegion::Decompose(DecomposeProc iProc, void* iRefcon) const
 	{
-	int32 callbacksMade = 0;
+	Ord callbacksMade = 0;
 	for (size_t xx = 0; xx < fNumRects; ++xx)
 		{
 		++callbacksMade;
@@ -543,7 +543,7 @@ void BigRegion::sUnion(const BigRegion& iSource1, const BigRegion& iSource2,
 	}
 
 void BigRegion::spUnionNonOverlapping(BigRegion& ioRegion,
-	RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2)
+	RectPOD* r, RectPOD* rEnd, Ord y1, Ord y2)
 	{
 	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
@@ -568,7 +568,7 @@ void BigRegion::spUnionNonOverlapping(BigRegion& ioRegion,
 void BigRegion::spUnionOverlapping(BigRegion& ioRegion,
 	RectPOD* r1, RectPOD* r1End,
 	RectPOD* r2, RectPOD* r2End,
-	int32 y1, int32 y2)
+	Ord y1, Ord y2)
 	{
 	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
@@ -659,14 +659,14 @@ void BigRegion::sIntersection(const BigRegion& iSource1, const BigRegion& iSourc
 void BigRegion::spIntersectionOverlapping(BigRegion& ioRegion,
 	RectPOD* r1, RectPOD* r1End,
 	RectPOD* r2, RectPOD* r2End,
-	int32 y1, int32 y2)
+	Ord y1, Ord y2)
 	{
 	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
 	while ((r1 != r1End) && (r2 != r2End))
 		{
-		int32 x1 = max(r1->left,r2->left);
-		int32 x2 = min(r1->right,r2->right);
+		Ord x1 = max(r1->left,r2->left);
+		Ord x2 = min(r1->right,r2->right);
 
 		// If there's any overlap between the two rectangles, add that
 		// overlap to the new region.
@@ -736,7 +736,7 @@ void BigRegion::sDifference(const BigRegion& iSource1, const BigRegion& iSource2
 
 void BigRegion::spDifferenceNonOverlapping(BigRegion& ioRegion,
 	RectPOD* r, RectPOD* rEnd,
-	int32 y1, int32 y2)
+	Ord y1, Ord y2)
 	{
 	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
 
@@ -762,9 +762,9 @@ void BigRegion::spDifferenceNonOverlapping(BigRegion& ioRegion,
 void BigRegion::spDifferenceOverlapping(BigRegion& ioRegion,
 	RectPOD* r1, RectPOD* r1End,
 	RectPOD* r2, RectPOD* r2End,
-	int32 y1, int32 y2)
+	Ord y1, Ord y2)
 	{
-	int32 x1 = r1->left;
+	Ord x1 = r1->left;
 
 	ZAssertStop(kDebug_BigRegion, y1<y2);
 	RectPOD* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
@@ -921,7 +921,7 @@ void BigRegion::spRegionOp(BigRegion& ioNewRegion,
 	// the top of the rectangles of both regions and ybot clips the bottoms.
 
 	// Bottom of intersection
-	int32 ybot = min(iRegion1.fExtent.top, iRegion2.fExtent.top);
+	Ord ybot = min(iRegion1.fExtent.top, iRegion2.fExtent.top);
 
 	// prevBand serves to mark the start of the previous band so rectangles
 	// can be coalesced into larger rectangles. qv. miCoalesce, above.
@@ -957,9 +957,9 @@ void BigRegion::spRegionOp(BigRegion& ioNewRegion,
 		// bands between the current position and the next place it overlaps
 		// the other, this entire loop will be passed through n times.
 
-		int32 ytop;
-		int32 top;
-		int32 bot;
+		Ord ytop;
+		Ord top;
+		Ord bot;
 		if (r1->top < r2->top)
 			{
 			top = max(r1->top,ybot);
@@ -1069,18 +1069,18 @@ void BigRegion::spRegionOp(BigRegion& ioNewRegion,
 	delete[] oldRects;
 	}
 
-int32 BigRegion::spCoalesce(BigRegion& ioRegion, int32 prevStart, int32 curStart)
+Ord BigRegion::spCoalesce(BigRegion& ioRegion, Ord prevStart, Ord curStart)
 	{
 	RectPOD* pRegEnd = &ioRegion.fRects[ioRegion.fNumRects];
 	RectPOD* pPrevBox = &ioRegion.fRects[prevStart];
-	int32 prevNumRects = curStart - prevStart;
+	Ord prevNumRects = curStart - prevStart;
 
 	// Figure out how many rectangles are in the current band. Have to do
 	// this because multiple bands could have been added in spRegionOp
 	// at the end when one region has been exhausted.
 	RectPOD* pCurBox = &ioRegion.fRects[curStart];
-	int32 bandY1 = pCurBox->top;
-	int32 curNumRects;
+	Ord bandY1 = pCurBox->top;
+	Ord curNumRects;
 	for (curNumRects = 0; (pCurBox != pRegEnd) && (pCurBox->top == bandY1); ++curNumRects)
 		++pCurBox;
 

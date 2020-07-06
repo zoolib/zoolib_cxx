@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZooLib_PushTextOptions_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/StdInt.h"
 #include "zoolib/ZQ.h"
-#include "zoolib/ZStdInt.h"
 
 #include <string>
 

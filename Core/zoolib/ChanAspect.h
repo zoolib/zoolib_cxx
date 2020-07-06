@@ -5,9 +5,9 @@
 #include "zconfig.h"
 
 #include "zoolib/Compat_algorithm.h"
+#include "zoolib/StdInt.h" // For uint64
 #include "zoolib/Time.h" // For Time::kDay
 
-#include "zoolib/ZStdInt.h" // For uint64
 #include "zoolib/ZTypes.h" // For sNonConst
 
 namespace ZooLib {

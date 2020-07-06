@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Callable.h"
 #include "zoolib/Data_ZZ.h"
+#include "zoolib/StdInt.h"
 #include "zoolib/Util_Relops.h"
 
 namespace ZooLib {

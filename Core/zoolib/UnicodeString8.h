@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/UnicodeCU8.h"
+#include "zoolib/Util_STL.h"
 
 #include <string>
 
@@ -32,13 +33,13 @@ namespace ZooLib {
 It is almost certainly same type as std::string. */
 typedef std::basic_string<UTF8> string8;
 
-template <class Char_p>
-bool sIsEmpty(const std::basic_string<Char_p>& iString)
-	{ return iString.empty(); }
-
-template <class Char_p>
-bool sNotEmpty(const std::basic_string<Char_p>& iString)
-	{ return not sIsEmpty(iString); }
+//template <class Char_p>
+//bool sIsEmpty(const std::basic_string<Char_p>& iString)
+//	{ return iString.empty(); }
+//
+//template <class Char_p>
+//bool sNotEmpty(const std::basic_string<Char_p>& iString)
+//	{ return not sIsEmpty(iString); }
 
 } // namespace ZooLib
 

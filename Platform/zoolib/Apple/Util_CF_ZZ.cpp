@@ -4,6 +4,7 @@
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/StdInt.h"
 #include "zoolib/UTCDateTime.h"
 
 #include "zoolib/Apple/Util_CF.h"

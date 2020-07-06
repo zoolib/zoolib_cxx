@@ -101,7 +101,7 @@ public:
 
 	BigRegion Inset(const PointPOD& iInset) const
 		{ return this->Inset(iInset.h, iInset.v); }
-	BigRegion Inset(int32 iInsetH, int32 iInsetV) const
+	BigRegion Inset(Ord iInsetH, Ord iInsetV) const
 		{
 		BigRegion tempRgn(*this);
 		tempRgn.MakeInset(iInsetH, iInsetV);
@@ -110,10 +110,10 @@ public:
 
 	void MakeInset(const PointPOD& iInset)
 		{ this->MakeInset(iInset.h, iInset.v); }
-	void MakeInset(int32 iInsetH, int32 iInsetV);
+	void MakeInset(Ord iInsetH, Ord iInsetV);
 
 	bool Contains(const PointPOD& iPoint) const;
-	bool Contains(int32 iH, int32 iV) const;
+	bool Contains(Ord iH, Ord iV) const;
 
 	void MakeEmpty();
 	bool IsEmpty() const;
@@ -123,7 +123,7 @@ public:
 
 	void Decompose(std::vector<RectPOD>& oRects) const;
 	typedef bool (*DecomposeProc)(const RectPOD& iRect, void* iRefcon);
-	int32 Decompose(DecomposeProc iProc, void* iRefcon) const;
+	Ord Decompose(DecomposeProc iProc, void* iRefcon) const;
 
 	bool operator==(const BigRegion& iOther) const;
 	bool operator!=(const BigRegion& iOther) const
@@ -191,34 +191,34 @@ protected:
 	static void spSetExtents(BigRegion& ioRegion);
 
 	static void spUnionNonOverlapping(BigRegion& ioRegion,
-		RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2);
+		RectPOD* r, RectPOD* rEnd, Ord y1, Ord y2);
 
 	static void spUnionOverlapping(BigRegion& ioRegion,
 		RectPOD* r1, RectPOD* r1End,
 		RectPOD* r2, RectPOD* r2End,
-		int32 y1, int32 y2);
+		Ord y1, Ord y2);
 
 	static void spIntersectionOverlapping(BigRegion& ioRegion,
 		RectPOD* r1, RectPOD* r1End,
 		RectPOD* r2, RectPOD* r2End,
-		int32 y1, int32 y2);
+		Ord y1, Ord y2);
 
 	static void spDifferenceNonOverlapping(BigRegion& ioRegion,
 		RectPOD* r, RectPOD* rEnd,
-		int32 y1, int32 y2);
+		Ord y1, Ord y2);
 
 	static void spDifferenceOverlapping(BigRegion& ioRegion,
 		RectPOD* r1, RectPOD* r1End,
 		RectPOD* r2, RectPOD* r2End,
-		int32 y1, int32 y2);
+		Ord y1, Ord y2);
 
 	typedef void (*NonOverlappingFuncPtr)(BigRegion& ioRegion,
-		RectPOD* r, RectPOD* rEnd, int32 y1, int32 y2);
+		RectPOD* r, RectPOD* rEnd, Ord y1, Ord y2);
 
 	typedef void (*OverlappingFuncPtr)(BigRegion& ioRegion,
 		RectPOD* r1, RectPOD* r1End,
 		RectPOD* r2, RectPOD* r2End,
-		int32 y1, int32 y2);
+		Ord y1, Ord y2);
 
 	static void spRegionOp(BigRegion& ioNewRegion,
 		const BigRegion& iRegion1, const BigRegion& iRegion2,
@@ -226,7 +226,7 @@ protected:
 		NonOverlappingFuncPtr iNonOverlapFunc1,
 		NonOverlappingFuncPtr iNonOverlapFunc2);
 
-	static int32 spCoalesce(BigRegion& ioRegion, int32 prevStart, int32 curStart);
+	static Ord spCoalesce(BigRegion& ioRegion, Ord prevStart, Ord curStart);
 
 	RectPOD* fRects;
 	size_t fNumRectsAllocated;

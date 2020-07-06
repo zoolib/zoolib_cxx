@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZooLib_PairwiseCombiner_T_h__
 #define __ZooLib_PairwiseCombiner_T_h__ 1
 #include "zconfig.h"
-#include "zoolib/ZStdInt.h" // For uint32
 
 namespace ZooLib {
 
@@ -60,7 +59,7 @@ public:
 		{
 		fStack.push_back(iT);
 
-		uint32 changedBits = (fCount + 1) ^ fCount;
+		unsigned changedBits = (fCount + 1) ^ fCount;
 		++fCount;
 		while ((changedBits = (changedBits >> 1)))
 			{
@@ -81,7 +80,7 @@ public:
 private:
 	C fCombiner;
 	S fStack;
-	uint32 fCount;
+	unsigned fCount;
 	};
 
 // =================================================================================================

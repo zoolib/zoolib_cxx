@@ -4,7 +4,7 @@
 #define __ZooLib_Pixels_Pixval_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStdInt.h" // For uint32
+#include "zoolib/StdInt.h" // For uint32
 
 namespace ZooLib {
 namespace Pixels {

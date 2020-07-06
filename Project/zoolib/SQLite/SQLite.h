@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/Any.h"
 #include "zoolib/Counted.h"
+#include "zoolib/StdInt.h"
 #include "zoolib/UnicodeString.h"
 
 #include <sqlite3.h>

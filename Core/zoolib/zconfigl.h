@@ -202,23 +202,7 @@
 
 #ifndef ZCONFIG_CPP
 	#if defined(__clang__)
-		#if __cplusplus >= 201703L
-			#define ZCONFIG_CPP 2017
-		#elif __cplusplus >= 201103L
-			#define ZCONFIG_CPP 2011
-		#else
-			#define ZCONFIG_CPP 2003
-		#endif
 	#elif defined(__GNUC__)
-		#if __cplusplus >= 201703L
-			#define ZCONFIG_CPP 2017
-		#elif __cplusplus >= 201103L
-			#define ZCONFIG_CPP 2011
-		#elif __cplusplus >= 199711L // Go figure.
-			#define ZCONFIG_CPP 2003
-		#else
-			#define ZCONFIG_CPP 1998
-		#endif
 	#elif defined(_MSC_VER)
 		#if _MSC_VER >= 1600
 			#define ZCONFIG_CPP 2011
@@ -229,7 +213,19 @@
 #endif
 
 #ifndef ZCONFIG_CPP
-	#define ZCONFIG_CPP 1998
+	#if __cplusplus >= 202002L
+		#define ZCONFIG_CPP 2020
+	#elif __cplusplus >= 201703L
+		#define ZCONFIG_CPP 2017
+	#elif __cplusplus >= 201402L
+		#define ZCONFIG_CPP 2014
+	#elif __cplusplus >= 201103L
+		#define ZCONFIG_CPP 2011
+	#elif __cplusplus >= 199711L // can indicate c++98 or c++03.
+		#define ZCONFIG_CPP 2003
+	#else
+		#define ZCONFIG_CPP 1998
+	#endif
 #endif
 
 // =================================================================================================

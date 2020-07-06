@@ -4,7 +4,6 @@
 #define __ZooLib_Pixels_Geom_h__ 1
 #include "zconfig.h"
 
-
 namespace ZooLib {
 namespace Pixels {
 

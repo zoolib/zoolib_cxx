@@ -5,7 +5,7 @@
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZStdInt.h"
+#include "zoolib/StdInt.h"
 
 #ifndef ZCONFIG_Hashing_SHA1_UseOpenSSL
 	#if ZCONFIG_SPI_Enabled(openssl)

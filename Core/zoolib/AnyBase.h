@@ -27,7 +27,7 @@ class AnyBase
 	{
 public:
 	const std::type_info& Type() const;
-	const std::type_info* TypeIfNotVoid() const;
+	const std::type_info* PType() const;
 
 	void* MutableVoidStar();
 	const void* ConstVoidStar() const;
@@ -507,7 +507,7 @@ private:
 		short fAsShort;
 		int fAsInt;
 		long fAsLong;
-		int64 fAsLongLong;
+		__int64 fAsLongLong;
 		float fAsFloat;
 		double fAsDouble;
 		} fPayload;

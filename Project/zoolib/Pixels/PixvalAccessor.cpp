@@ -539,17 +539,9 @@ void PixvalAccessor::GetPixvals(const void* iRowAddress, int iStartH, size_t iCo
 					{
 					localCount -= 4;
 
-					// AG 2002-04-27. We run out of registers when compiling this
-					// with CW Mach, hence the use of spByteSwap_Read32.
-					#if __MWERKS__ && __MACH__
-					c1a0b0c0 = spByteSwap_Read32(localSource32++);
-					b2c2a1b1 = spByteSwap_Read32(localSource32++);
-					a3b3c3a2 = spByteSwap_Read32(localSource32++);
-					#else
 					c1a0b0c0 = ZByteSwap_Read32(localSource32++);
 					b2c2a1b1 = ZByteSwap_Read32(localSource32++);
 					a3b3c3a2 = ZByteSwap_Read32(localSource32++);
-					#endif
 
 					oPixvals[0] = c1a0b0c0 & 0x00FFFFFF;
 					oPixvals[1] = (c1a0b0c0 >> 24) | ((b2c2a1b1 & 0x0000FFFF) << 8);
@@ -1061,15 +1053,9 @@ void PixvalAccessor::SetPixvals(void* iRowAddress, int iStartH, size_t iCount,
 					a2b2c2 = iPixvals[2] & 0x00FFFFFF;
 					a3b3c3 = iPixvals[3] & 0x00FFFFFF;
 					iPixvals += 4;
-					#if __MWERKS__ && __MACH__
-					spByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
-					spByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
-					spByteSwap_Write32(localDest32++, (a2b2c2 >> 16) | (a3b3c3 << 8));
-					#else
 					ZByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
 					ZByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
 					ZByteSwap_Write32(localDest32++, (a2b2c2 >> 16) | (a3b3c3 << 8));
-					#endif
 					}
 				localDest8 = reinterpret_cast<uint8*>(localDest32);
 				}
