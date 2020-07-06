@@ -1,32 +1,12 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2000-2007 Andrew Green and Learning in Motion, Inc.
+// Copyright (c) 2008-2020 Andrew Green.
+// MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Compat_algorithm_h__
 #define __ZooLib_Compat_algorithm_h__ 1
 #include "zconfig.h"
 
-#if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
-	#include <algorithm.h>
-#else
-	#include <algorithm> // For std::min, std::max and std::swap
-#endif
+#include <algorithm> // For std::min, std::max and std::swap
 
 namespace ZooLib {
 
@@ -143,16 +123,5 @@ struct SaveRestore : public SaveSetRestore<T>
 	{ SaveRestore(T& ioRef) : SaveSetRestore<T>(ioRef) {} };
 
 } // namespace ZooLib
-
-#if ZCONFIG_CPP < 2011 && (!defined(__GLIBCXX__) || __GLIBCXX__ < 20121127)
-	namespace std {
-
-	template <class _InputIterator, class _Size, class _OutputIterator>
-	_OutputIterator copy_n(_InputIterator __first, _Size __n, _OutputIterator __result)
-		{ return std::copy(__first, __first + __n, __result); }
-
-	} // namespace std
-
-#endif
 
 #endif // __ZooLib_Compat_algorithm_h__
