@@ -146,7 +146,7 @@ template <typename CC, typename II>
 		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
 		(&CC::end))>::value,
 bool>>
-sErase(CC& ioContainer, II iter)
+sQErase(CC& ioContainer, II iter)
 	{
 	if (ioContainer.end() == iter)
 		return false;
@@ -216,6 +216,27 @@ sFrontOrNullPtr(const CC& iContainer)
 template <typename PP>
 auto sFirstOrNil(PP iParam) -> decltype(sFrontOrNullPtr(iParam))
 	{ return sFrontOrNullPtr(iParam); }
+
+// =================================================================================================
+// sPushBack
+
+template <typename CC, typename VV>
+	EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)(const typename CC::value_type&)>
+		(&CC::push_back))>::value,
+void>
+sPushBack(CC& ioContainer, const VV& iValue)
+	{ ioContainer.push_back(iValue); }
+
+// =================================================================================================
+// sPushFront
+
+template <typename CC, typename VV>
+	EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)(const typename CC::value_type&)>
+		(&CC::push_front))>::value,
+void>
+sPushFront(CC& ioContainer, const VV& iValue)
+	{ ioContainer.push_front(iValue); }
+
 
 } // namespace Util_STL
 } // namespace ZooLib

@@ -37,19 +37,7 @@ template <typename Base, typename Derived>
 void sErase(std::deque<Base>& ioCont, const Derived& iElement)
 	{ sQErase(ioCont, iElement); }
 
-//template <typename Base>
-//typename std::deque<Base>::iterator
-//sEraseInc(std::deque<Base>& ioCont, typename std::deque<Base>::iterator iter)
-//	{
-//	ZAssert(ioCont.end() != iter);
-//	return ioCont.erase(iter);
-//	}
-
 // -----
-
-template <typename Base, typename Derived>
-void sPushBack(std::deque<Base>& ioCont, const Derived& iElement)
-	{ ioCont.push_back(iElement); }
 
 template <typename Base, typename Derived>
 bool sQPushBack(std::deque<Base>& ioCont, const Derived& iElement)
@@ -72,10 +60,6 @@ ZQ<Base> sQPopBack(std::deque<Base>& ioCont)
 	}
 
 // -----
-
-template <typename Base, typename Derived>
-void sPushFront(std::deque<Base>& ioCont, const Derived& iElement)
-	{ ioCont.push_front(iElement); }
 
 template <typename Base, typename Derived>
 bool sQPushFront(std::deque<Base>& ioCont, const Derived& iElement)

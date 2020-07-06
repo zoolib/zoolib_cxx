@@ -1,27 +1,10 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2010 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2010-2020 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_set_h__
 #define __ZooLib_Util_STL_set_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Util_STL.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 
@@ -34,44 +17,41 @@ namespace Util_STL {
 // =================================================================================================
 #pragma mark - Util_STL
 
-template <typename T, typename Comparator>
-bool
-sIsEmpty(const std::set<T,Comparator>& iSet)
-	{ return iSet.empty(); }
-
-template <typename T, typename Comparator>
-bool
-sNotEmpty(const std::set<T,Comparator>& iSet)
-	{ return not iSet.empty(); }
-
-template <typename T, typename Comparator>
-void
-sClear(std::set<T,Comparator>& ioSet)
-	{ ioSet.clear(); }
-
-// -----
-
-template <typename Base, typename Comparator, typename Derived>
-bool sContains(const std::set<Base,Comparator>& iSet, const Derived& iElement)
-	{ return iSet.end() != iSet.find(iElement); }
+//template <typename T, typename Comparator>
+//bool
+//sIsEmpty(const std::set<T,Comparator>& iSet)
+//	{ return iSet.empty(); }
+//
+//template <typename T, typename Comparator>
+//bool
+//sNotEmpty(const std::set<T,Comparator>& iSet)
+//	{ return not iSet.empty(); }
+//
+//template <typename T, typename Comparator>
+//void
+//sClear(std::set<T,Comparator>& ioSet)
+//	{ ioSet.clear(); }
 
 // -----
 
-template <typename Base, typename Comparator, typename Derived>
-bool sQErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ return ioSet.erase(iElement); }
 
-template <typename Base, typename Comparator, typename Derived>
-void sErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ ioSet.erase(iElement); }
+// -----
 
-template <typename T, typename Comparator>
-typename std::set<T,Comparator>::iterator
-sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterator iter)
-	{
-	ZAssert(ioSet.end() != iter);
-	return ioSet.erase(iter);
-	}
+//template <typename Base, typename Comparator, typename Derived>
+//bool sQErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+//	{ return ioSet.erase(iElement); }
+//
+//template <typename Base, typename Comparator, typename Derived>
+//void sErase(std::set<Base,Comparator>& ioSet, const Derived& iElement)
+//	{ ioSet.erase(iElement); }
+//
+//template <typename T, typename Comparator>
+//typename std::set<T,Comparator>::iterator
+//sEraseInc(std::set<T,Comparator>& ioSet, typename std::set<T,Comparator>::iterator iter)
+//	{
+//	ZAssert(ioSet.end() != iter);
+//	return ioSet.erase(iter);
+//	}
 
 // -----
 

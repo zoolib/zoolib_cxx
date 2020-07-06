@@ -22,6 +22,8 @@ template <typename Base, typename Derived>
 bool sContains(const std::vector<Base>& iVec, const Derived& iElement)
 	{ return iVec.end() != std::find(iVec.begin(), iVec.end(), iElement); }
 
+// -----
+
 template <typename Base, typename Derived>
 bool sQErase(std::vector<Base>& ioVec, const Derived& iElement)
 	{
@@ -36,6 +38,8 @@ template <typename Base, typename Derived>
 void sErase(std::vector<Base>& ioVec, const Derived& iElement)
 	{ sQErase(ioVec, iElement); }
 
+// -----
+
 template <typename Base, typename Derived>
 bool sQPushBack(std::vector<Base>& ioVec, const Derived& iElement)
 	{
@@ -44,10 +48,6 @@ bool sQPushBack(std::vector<Base>& ioVec, const Derived& iElement)
 	ioVec.push_back(iElement);
 	return true;
 	}
-
-template <typename Base, typename Derived>
-void sPushBack(std::vector<Base>& ioVec, const Derived& iElement)
-	{ ioVec.push_back(iElement); }
 
 template <typename Base>
 ZQ<Base> sQPopBack(std::vector<Base>& ioVec)
