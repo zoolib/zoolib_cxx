@@ -1,22 +1,4 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2013 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2013-2020 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Generator_h__
 #define __ZooLib_Generator_h__ 1
@@ -26,6 +8,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/Callable_Function.h"
 #include "zoolib/StartOnNewThread.h"
 #include "zoolib/ThreadVal.h"
+
+/*
+In the most common scenario, calls to the Generator take no parameter. So the yielding code
+could yield an item and immediately move on to produce the next, thus its execution could
+actually be parallel with the consumer's.
+This code doesn't do that because part of the design is that the producer can know that what
+it produced was consumed. This is not necessary in most scenarios, but any enhancements to
+this code should respect the contract and use an alternate interface to make clear what's happening.
+In reality, I've used PullPush everywhere a Generator might otherwise make sense, and there
+the protocol follows stream semantics.
+*/
 
 namespace ZooLib {
 namespace Generator {
@@ -95,11 +88,16 @@ public:
 
 	ZQ<T> QTake()
 		{
+		// We're not doing std::move here because fPtr references the actual storage of
+		// the item passed to QPut. That could be something that we don't want to clear.
+		// With some rework of ZQ, and a change to QPut to distinguish rvalue refs, we
+		// could std::move from there to the result.
 		ZAcqMtx acq(fMtx);
 		for (;;)
 			{
 			if (fPtr)
 				{
+				//
 				const T result = *fPtr;
 				fPtr = nullptr;
 				fCnd.Broadcast();
