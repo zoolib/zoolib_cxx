@@ -28,7 +28,8 @@ namespace ZooLib {
 
 // =================================================================================================
 // countof
-#if 1
+#if 0
+	// This doesn't handle zero-length arrays:
 	template <typename T, size_t N> constexpr size_t countof(T(&arr)[N]) noexcept { return N; }
 #else
 	// For a discussion of the implementation of countof See section 14.3 of
