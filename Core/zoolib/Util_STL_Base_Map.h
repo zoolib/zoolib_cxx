@@ -84,6 +84,56 @@ sGet(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	return sDefault<typename Map_p::mapped_type>();
 	}
 
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type*>
+sPMut(Map_p& iMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = iMap.find(iKey);
+	if (iMap.end() == ii)
+		return nullptr;
+	return &ii->second;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type&>
+sDMut(const typename Map_p::mapped_type&& iDefault,
+	Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	std::pair<typename Map_p::iterator, bool> ii =
+		ioMap.insert(typename Map_p::value_type(iKey, std::move(iDefault)));
+	return ii.first->second;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type&>
+sDMut(const typename Map_p::mapped_type& iDefault,
+	Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	std::pair<typename Map_p::iterator, bool> ii =
+		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
+	return ii.first->second;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type&>
+sMut(Map_p& iMap, const typename Map_p::key_type& iKey)
+	{ return iMap[iKey]; }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sSet(Map_p& ioMap, const typename Map_p::key_type& iKey, const typename Map_p::mapped_type&& iValue)
+	{ ioMap[iKey] = std::move(iValue); }
+
+// -----
 
 } // namespace Util_STL
 } // namespace ZooLib

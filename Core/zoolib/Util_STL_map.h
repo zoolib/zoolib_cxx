@@ -17,38 +17,6 @@ namespace Util_STL {
 // =================================================================================================
 #pragma mark - Util_STL
 
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value* sPMut(std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{
-	typename std::map<KBase,Value,Comparator>::iterator ii = iMap.find(iKey);
-	if (iMap.end() == ii)
-		return nullptr;
-	return &ii->second;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value& sDMut(
-	const Value& iDefault, std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey)
-	{
-	typename std::map<KBase,Value,Comparator>::iterator ii =
-		ioMap.insert(typename std::map<KBase,Value,Comparator>::value_type(iKey, iDefault));
-	return ii->first.second;
-	}
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived>
-Value& sMut(
-	std::map<KBase,Value,Comparator>& iMap, const KDerived& iKey)
-	{ return iMap[iKey]; }
-
-// -----
-
-template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
-void sSet(
-	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
-	{ ioMap[iKey] = iValue; }
-
-// -----
-
 template <typename KBase, typename Value, typename Comparator, typename KDerived, typename VDerived>
 bool sQInsert(
 	std::map<KBase,Value,Comparator>& ioMap, const KDerived& iKey, const VDerived& iValue)
