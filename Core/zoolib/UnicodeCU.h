@@ -11,7 +11,6 @@ namespace ZooLib {
 typedef char32_t UTF32;
 typedef char16_t UTF16;
 
-
 } // namespace ZooLib
 
 #endif // __ZooLib_UnicodeCU_h__

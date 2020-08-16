@@ -5,7 +5,6 @@
 #include "zconfig.h"
 
 #include "zoolib/UnicodeCU8.h"
-#include "zoolib/Util_STL.h"
 
 #include <string>
 
