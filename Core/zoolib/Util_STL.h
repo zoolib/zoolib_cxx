@@ -44,7 +44,7 @@ void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 	}
 
 // =================================================================================================
-// sEmpty
+// sIsEmpty
 
 template <typename T>
 	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
