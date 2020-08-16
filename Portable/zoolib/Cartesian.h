@@ -366,32 +366,38 @@ operator/=(Point_p& ioL, const Other& iRHS)
 namespace Operators {
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator==(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) == LT(iRHS) && RB(iLHS) == RB(iRHS); }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator!=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS == iRHS); }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator<(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return LT(iLHS) < LT(iRHS) || (LT(iLHS) == LT(iRHS) && RB(iLHS) < RB(iRHS)); }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator>(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return iRHS < iLHS; }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator<=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iRHS < iLHS); }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 operator>=(const Rect_p& iLHS, const Rect_p& iRHS)
 	{ return not (iLHS < iRHS); }
 
@@ -517,12 +523,14 @@ sLength(const Point_p& iPoint)
 #pragma mark - sIsEmpty and sNotEmpty
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 sIsEmpty(const Rect_p& iRect)
 	{ return L(iRect) >= R(iRect) || T(iRect) >= B(iRect); }
 
 template <class Rect_p>
-typename EnableIfC<RectTraits<Rect_p>::value,bool>::type
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
 sNotEmpty(const Rect_p& iRect)
 	{ return not sIsEmpty(iRect); }
 
@@ -568,22 +576,30 @@ RC(const Rect_p& iRect)
 #pragma mark - sContains
 
 template <class Rect_p, class OtherX_p>
-bool sContainsX(const Rect_p& iRect, const OtherX_p& iX)
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
+sContainsX(const Rect_p& iRect, const OtherX_p& iX)
 	{ return X(iX) >= L(iRect) && X(iX) < R(iRect); }
 
 template <class Rect_p, class OtherY_p>
-bool sContainsY(const Rect_p& iRect, const OtherY_p& iY)
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
+sContainsY(const Rect_p& iRect, const OtherY_p& iY)
 	{ return Y(iY) >= T(iRect) && Y(iY) < B(iRect); }
 
 template <class Rect_p, class OtherX_p, class OtherY_p>
-bool sContains(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
+sContains(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 	{
 	return X(iX) >= L(iRect) && X(iX) < R(iRect)
 		&& Y(iY) >= T(iRect) && Y(iY) < B(iRect);
 	}
 
 template <class Rect_p, class Other>
-bool sContains(const Rect_p& iRect, const Other& iOther)
+	EnableIf_t<RectTraits<Rect_p>::value,
+bool>
+sContains(const Rect_p& iRect, const Other& iOther)
 	{
 	return X(iOther) >= L(iRect) && X(iOther) < R(iRect)
 		&& Y(iOther) >= T(iRect) && Y(iOther) < B(iRect);
