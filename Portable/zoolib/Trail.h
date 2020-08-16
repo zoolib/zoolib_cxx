@@ -1,3 +1,5 @@
+// Copyright (c) 2004-2020 Andrew Green. MIT License. http://www.zoolib.org
+
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2004 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
@@ -29,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 namespace ZooLib {
+
+//typedef std::vector<Name> Trail;
 
 // =================================================================================================
 #pragma mark - Trail
