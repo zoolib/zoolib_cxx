@@ -97,15 +97,15 @@ public:
 // --
 
 	inline
-	ZP(ZP&& iOther)
-	:	fPtr(iOther.Orphan())
+	ZP(ZP&& rOther)
+	:	fPtr(rOther.Orphan())
 		{}
 
 	inline
-	ZP& operator=(ZP&& iOther)
+	ZP& operator=(ZP&& rOther)
 		{
 		using std::swap;
-		swap(iOther.fPtr, fPtr);
+		swap(rOther.fPtr, fPtr);
 		return *this;
 		}
 
@@ -337,14 +337,14 @@ public:
 
 // --
 
-	ZP(ZP&& iOther)
-	:	fPtr(iOther.Orphan())
+	ZP(ZP&& rOther)
+	:	fPtr(rOther.Orphan())
 		{}
 
-	ZP& operator=(ZP&& iOther)
+	ZP& operator=(ZP&& rOther)
 		{
 		using std::swap;
-		T* otherP = iOther.Orphan();
+		T* otherP = rOther.Orphan();
 		swap(otherP, fPtr);
 		spRelease(otherP);
 		return *this;

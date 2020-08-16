@@ -74,13 +74,13 @@ public:
 
 #if ZCONFIG_CPP >= 2011
 
-	Cog(Cog&& iOther)
-	:	inherited(std::move(iOther))
+	Cog(Cog&& rOther)
+	:	inherited(std::move(rOther))
 		{}
 
-	Cog& operator=(Cog&& iOther)
+	Cog& operator=(Cog&& rOther)
 		{
-		inherited::operator=(std::move(iOther));
+		inherited::operator=(std::move(rOther));
 		return *this;
 		}
 
