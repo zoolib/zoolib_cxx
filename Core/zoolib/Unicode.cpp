@@ -72,9 +72,9 @@ is an important building block in support of such work.
 
 ZooLib::Unicode defines three integer types used to hold code units:
 	- \c UTF32. A 32 bit integer. On platforms where \c wchar_t is 32 bits in size, \c UTF32 \e is
-a \c wchar_t, otherwise it is a \c uint32.
+a \c wchar_t, otherwise it is a \c uint32 or char32_t.
 	- \c UTF16. A 16 bit integer. On platforms where \c wchar_t is 16 bits in size, \c UTF16 \e is
-a \c wchar_t, otherwise it is a \c uint16.
+a \c wchar_t, otherwise it is a \c uint16 or a char16_t.
 	- \c UTF8. An 8 bit integer. It is a typedef of \c char.
 
 and three corresponding string types:
