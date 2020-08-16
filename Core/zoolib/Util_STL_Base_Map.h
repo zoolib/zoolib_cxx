@@ -56,12 +56,12 @@ sDGet(const typename Map_p::mapped_type& iDefault,
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
 typename Map_p::mapped_type>
-sDGet(const typename Map_p::mapped_type&& iDefault,
+sDGet(typename Map_p::mapped_type&& rDefault,
 	const Map_p& iMap, const typename Map_p::key_type& iKey)
 	{
 	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
 		return *theP;
-	return std::move(iDefault);
+	return std::move(rDefault);
 	}
 
 template <class Map_p>
@@ -100,22 +100,22 @@ sPMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
 typename Map_p::mapped_type&>
-sDMut(const typename Map_p::mapped_type&& iDefault,
+sDMut(const typename Map_p::mapped_type& iDefault,
 	Map_p& ioMap, const typename Map_p::key_type& iKey)
 	{
 	std::pair<typename Map_p::iterator, bool> ii =
-		ioMap.insert(typename Map_p::value_type(iKey, std::move(iDefault)));
+		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
 	return ii.first->second;
 	}
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
 typename Map_p::mapped_type&>
-sDMut(const typename Map_p::mapped_type& iDefault,
+sDMut(typename Map_p::mapped_type&& rDefault,
 	Map_p& ioMap, const typename Map_p::key_type& iKey)
 	{
 	std::pair<typename Map_p::iterator, bool> ii =
-		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
+		ioMap.insert(typename Map_p::value_type(iKey, std::move(rDefault)));
 	return ii.first->second;
 	}
 
@@ -130,10 +130,315 @@ sMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
 void>
-sSet(Map_p& ioMap, const typename Map_p::key_type& iKey, const typename Map_p::mapped_type&& iValue)
-	{ ioMap[iKey] = std::move(iValue); }
+sSet(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{ ioMap[iKey] = iValue; }
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sSet(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{ ioMap[iKey] = std::move(rValue); }
 
 // -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQInsert(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{
+	std::pair<typename Map_p::iterator, bool> ii =
+		ioMap.insert(typename Map_p::value_type(iKey, iValue));
+	return ii.second;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQInsert(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{
+	std::pair<typename Map_p::iterator, bool> ii =
+		ioMap.insert(typename Map_p::value_type(iKey, std::move(rValue)));
+	return ii.second;
+	}
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplace(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return false;
+	ii->second = iValue;
+	return true;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplace(Map_p& ioMap, const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return false;
+	ii->second = std::move(rValue);
+	return true;
+	}
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+ZQ<typename Map_p::mapped_type>>
+sQGetErase(Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return null;
+	const typename Map_p::mapped_type result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sDGetErase(const typename Map_p::mapped_type& iDefault,
+Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return iDefault;
+	const typename Map_p::mapped_type result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sDGetErase(typename Map_p::mapped_type&& rDefault,
+Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return std::move(rDefault);
+	const typename Map_p::mapped_type result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sGetErase(Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	if (ioMap.end() == ii)
+		return sDefault<Map_p::mapped_type>();
+	const typename Map_p::mapped_type result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+ZQ<typename Map_p::value_type>>
+sQPopFront(Map_p& ioMap)
+	{
+	if (ioMap.empty())
+		return false;
+	const typename Map_p::mapped_type result = *ioMap.begin();
+	ioMap.erase(ioMap.begin());
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark - sXXXMust
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sEraseMust(const int iDebugLevel, Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	const bool result = sQErase(ioMap, iKey);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sEraseMust(Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{ sEraseMust(1, ioMap, iKey); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sGetMust(const int iDebugLevel,
+	const Map_p& iMap, const typename Map_p::key_type& iKey)
+	{
+	const typename Map_p::mapped_type* theP = sPGet(iMap, iKey);
+	ZAssertStop(iDebugLevel, theP);
+	return *theP;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sGetMust(const Map_p& iMap, const typename Map_p::key_type& iKey)
+	{ return sGetMust(1, iMap, iKey); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(const int iDebugLevel,
+	Map_p& ioMap, const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{
+	const bool result = sQInsert(ioMap, iKey, iValue);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{ sInsertMust(1, ioMap, iKey, iValue); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(const int iDebugLevel,
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{
+	const bool result = sQInsert(ioMap, iKey, std::move(rValue));
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{ sInsertMust(1, ioMap, iKey, std::move(rValue)); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(const int iDebugLevel,
+	Map_p& ioMap,
+	const typename Map_p::iterator& iIter,
+	const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{
+	const typename Map_p::iterator result =
+		ioMap.insert(iIter, typename Map_p::value_type(iKey, iValue));
+
+	ZAssertStop(iDebugLevel, result->second == iValue); // ??? Not sure about this
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+void>
+sInsertMust(
+	Map_p& ioMap,
+	const typename Map_p::iterator& iIter,
+	const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{ sInsertMust(1, ioMap, iIter, iKey, iValue); }
+
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplaceMust(const int iDebugLevel,
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{
+	const bool result = sQReplace(ioMap, iKey, iValue);
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplaceMust(
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	const typename Map_p::mapped_type& iValue)
+	{ sQReplaceMust(ioMap, iKey, iValue); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplaceMust(const int iDebugLevel,
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{
+	const bool result = sQReplace(ioMap, iKey, std::move(rValue));
+	ZAssertStop(iDebugLevel, result);
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+bool>
+sQReplaceMust(
+	Map_p& ioMap,
+	const typename Map_p::key_type& iKey,
+	typename Map_p::mapped_type&& rValue)
+	{ sQReplaceMust(ioMap, iKey, std::move(rValue)); }
+
+// -----
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sGetEraseMust(const int iDebugLevel,
+	Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{
+	typename Map_p::iterator ii = ioMap.find(iKey);
+	ZAssertStop(iDebugLevel, ioMap.end() != ii);
+	const typename Map_p::mapped_type result = ii->second;
+	ioMap.erase(ii);
+	return result;
+	}
+
+template <class Map_p>
+	EnableIf_t<IsAMap<Map_p>::value,
+typename Map_p::mapped_type>
+sGetEraseMust(Map_p& ioMap, const typename Map_p::key_type& iKey)
+	{ return sGetEraseMust(1, ioMap, iKey); }
 
 } // namespace Util_STL
 } // namespace ZooLib
