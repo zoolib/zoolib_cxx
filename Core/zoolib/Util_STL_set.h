@@ -7,63 +7,12 @@
 #include "zoolib/Util_STL_Base_Set.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZQ.h"
 
 #include <iterator> // For inserter
 #include <set>
 
 namespace ZooLib {
 namespace Util_STL {
-
-// =================================================================================================
-#pragma mark - Util_STL
-
-template <typename Base, typename Comparator, typename Derived>
-bool sQInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ return ioSet.insert(iElement).second; }
-
-template <typename Base, typename Comparator, typename Derived>
-void sInsert(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ ioSet.insert(iElement); }
-
-// -----
-
-template <typename Base, typename Comparator>
-ZQ<Base> sQPopFront(std::set<Base,Comparator>& ioSet)
-	{
-	if (ioSet.empty())
-		return null;
-	const Base result = *ioSet.begin();
-	ioSet.erase(ioSet.begin());
-	return result;
-	}
-
-// =================================================================================================
-#pragma mark - sXXXMust
-
-template <typename Base, typename Comparator, typename Derived>
-void sInsertMust(const int iDebugLevel, std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{
-	const bool result = sQInsert(ioSet, iElement);
-	ZAssertStop(iDebugLevel, result);
-	}
-
-template <typename Base, typename Comparator, typename Derived>
-void sInsertMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ sInsertMust(1, ioSet, iElement); }
-
-// -----
-
-template <typename Base, typename Comparator, typename Derived>
-void sEraseMust(const int iDebugLevel, std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{
-	const bool result = sQErase(ioSet, iElement);
-	ZAssertStop(iDebugLevel, result);
-	}
-
-template <typename Base, typename Comparator, typename Derived>
-void sEraseMust(std::set<Base,Comparator>& ioSet, const Derived& iElement)
-	{ sEraseMust(1, ioSet, iElement); }
 
 // =================================================================================================
 #pragma mark - Intersection

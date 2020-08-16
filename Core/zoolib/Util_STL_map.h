@@ -6,8 +6,6 @@
 
 #include "zoolib/Util_STL_Base_Map.h"
 
-#include "zoolib/ZDebug.h"
-
 #include <map>
 
 #endif // __ZooLib_Util_STL_map_h__

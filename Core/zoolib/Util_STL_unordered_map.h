@@ -6,8 +6,6 @@
 
 #include "zoolib/Util_STL_Base_Map.h"
 
-#include "zoolib/ZDebug.h"
-
 #include "zoolib/Compat_unordered_map.h"
 
 #endif // __ZooLib_Util_STL_unordered_map_h__

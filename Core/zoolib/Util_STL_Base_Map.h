@@ -6,6 +6,9 @@
 
 #include "zoolib/Default.h"
 #include "zoolib/Util_STL.h"
+#include "zoolib/Util_STL_Base_MapOrSet.h"
+
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZQ.h"
 
 namespace ZooLib {
@@ -29,7 +32,7 @@ struct IsAMap<Map_p,
 	typename Map_p::value_type> : std::true_type
 	{};
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -84,7 +87,7 @@ sGet(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	return sDefault<typename Map_p::mapped_type>();
 	}
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -125,7 +128,7 @@ typename Map_p::mapped_type&>
 sMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 	{ return iMap[iKey]; }
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -141,7 +144,7 @@ sSet(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	typename Map_p::mapped_type&& rValue)
 	{ ioMap[iKey] = std::move(rValue); }
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -165,7 +168,7 @@ sQInsert(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	return ii.second;
 	}
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -193,7 +196,7 @@ sQReplace(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	return true;
 	}
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -249,7 +252,7 @@ sGetErase(Map_p& ioMap, const typename Map_p::key_type& iKey)
 	return result;
 	}
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -268,23 +271,6 @@ sQPopFront(Map_p& ioMap)
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
-void>
-sEraseMust(const int iDebugLevel, Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{
-	const bool result = sQErase(ioMap, iKey);
-	ZAssertStop(iDebugLevel, result);
-	}
-
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-void>
-sEraseMust(Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{ sEraseMust(1, ioMap, iKey); }
-
-// -----
-
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
 typename Map_p::mapped_type>
 sGetMust(const int iDebugLevel,
 	const Map_p& iMap, const typename Map_p::key_type& iKey)
@@ -300,7 +286,7 @@ typename Map_p::mapped_type>
 sGetMust(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	{ return sGetMust(1, iMap, iKey); }
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -372,8 +358,7 @@ sInsertMust(
 	const typename Map_p::mapped_type& iValue)
 	{ sInsertMust(1, ioMap, iIter, iKey, iValue); }
 
-
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -419,7 +404,7 @@ sQReplaceMust(
 	typename Map_p::mapped_type&& rValue)
 	{ sQReplaceMust(ioMap, iKey, std::move(rValue)); }
 
-// -----
+// -------------------------------------------------------------------------------------------------
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
