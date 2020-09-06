@@ -260,8 +260,8 @@ ZQ<typename Map_p::value_type>>
 sQPopFront(Map_p& ioMap)
 	{
 	if (ioMap.empty())
-		return false;
-	const typename Map_p::mapped_type result = *ioMap.begin();
+		return null;
+	const typename Map_p::value_type result = *ioMap.begin();
 	ioMap.erase(ioMap.begin());
 	return result;
 	}
