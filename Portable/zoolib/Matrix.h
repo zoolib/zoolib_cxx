@@ -1,4 +1,3 @@
-
 // Copyright (c) 2011 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __Zoolib_Matrix_h__
