@@ -4,11 +4,11 @@
 #define __ZooLib_ARM_Compat_arm_h__ 1
 #include "zconfig.h"
 
-#if 1 // __arm__
+#if __arm__
 	#if defined (__ANDROID__)
 		#include <machine/cpu-features.h>
-	#else
-		#include <arm/arch.h>
+//	#else
+//		#include <arm/arch.h>
 	#endif
 #endif
 
