@@ -519,9 +519,11 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 			ZAssert(priorResult->GetRelHead() == thePQuery->fResult->GetRelHead());
 			if (priorResult->Count() == thePQuery->fResult->Count())
 				{
-				ZP<ResultDeltas> theDeltas = new ResultDeltas;
 				const size_t rowCount = priorResult->Count();
 				const size_t colCount = priorResult->GetRelHead().size();
+
+				ZP<ResultDeltas> theDeltas = new ResultDeltas;
+				theDeltas->fPackedRows.reserve(colCount * rowCount / 4);
 
 				for (size_t rr = 0; rr < rowCount; ++rr)
 					{
