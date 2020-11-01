@@ -75,12 +75,7 @@ private:
 	const double fConnectionTimeout;
 
 	std::map<int64,RefReg> fMap_Refcon2Reg;
-	struct ResultCC
-		{
-		int64 fCC;
-		ZP<Result> fResult;
-		ZP<ResultDeltas> fResultDeltas;
-		};
+	struct ResultCC;
 	std::map<int64,ResultCC> fMap_Refcon2ResultCC;
 	std::map<RefReg,int64> fMap_Reg2Refcon;
 	std::set<int64> fSet_NewRefcons;

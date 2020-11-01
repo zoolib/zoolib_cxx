@@ -417,6 +417,14 @@ Val_ZZ spAsVal(ZP<ResultDeltas> iResultDeltas)
 // =================================================================================================
 #pragma mark - MelangeServer
 
+struct MelangeServer::ResultCC
+	{
+	int64 fCC;
+	ZP<Result> fResult;
+	ZP<ResultDeltas> fResultDeltas;
+	bool fExpectFailure;
+	};
+
 MelangeServer::MelangeServer(const Melange_t& iMelange,
 	const ZP<ChannerRW_Bin>& iChannerRW,
 	int64 iClientVersion,
@@ -519,9 +527,15 @@ void MelangeServer::pWrite()
 			theMap.Set("What", "Change");
 			theMap.Set("Refcon", entry.first);
 			if (sQErase(fSet_NewRefcons, entry.first) || fClientVersion < 2 || not entry.second.fResultDeltas)
+				{
 				theMap.Set("Result", spAsVal(entry.second.fResult));
+				}
 			else
+				{
 				theMap.Set("Deltas", spAsVal(entry.second.fResultDeltas));
+//				if (entry.second.fExpectFailure)
+//					theMap.Set("AA", "********");
+				}
 			theMap.Set("ChangeCount", entry.second.fCC);
 			sPushBack(theMessages, theMap);
 			}
@@ -662,8 +676,26 @@ void MelangeServer::pChanged(
 	{
 	ZAcqMtx acq(fMtx);
 
-	sSet(fMap_Refcon2ResultCC, sGetMust(fMap_Reg2Refcon, iRegistration),
-		ResultCC({fLastClientChangeCount, iResult, iResultDeltas}));
+	const int64 theRefCon = sGetMust(fMap_Reg2Refcon, iRegistration);
+	ResultCC* theResultCC = sPMut(fMap_Refcon2ResultCC, theRefCon);
+	if (theResultCC && theResultCC->fResultDeltas)
+		{
+		if (ZLOGF(w, eErr))
+			{
+			if (fDescriptionQ)
+				w << *fDescriptionQ << " ";
+			w << "Already had an entry for registration " << theRefCon;
+			}
+		theResultCC->fResult = iResult;
+//		theResultCC->fResultDeltas = iResultDeltas;
+//		sClear(theResultCC->fResultDeltas);
+//		theResultCC->fExpectFailure = true;
+		}
+	else
+		{
+		sSet(fMap_Refcon2ResultCC, theRefCon,
+			ResultCC({fLastClientChangeCount, iResult, iResultDeltas, false}));
+		}
 
 	this->pWake();
 	}
