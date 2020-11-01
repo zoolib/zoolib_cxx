@@ -178,19 +178,6 @@ public:
 	};
 
 const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_Datons::Index::Key& iKey);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_Datons::Index::Key& iKey)
-	{
-	w << sStringf("%p", iKey.fMapEntryP) << ": ";
-	for (size_t xx = 0; xx < countof(iKey.fValues); ++xx)
-		{
-		if (not iKey.fValues[xx])
-			break;
-		if (xx)
-			w << ", ";
-		w << *iKey.fValues[xx];
-		}
-	return w;
-	}
 
 void Searcher_Datons::Index::Comparer::spDump(bool iResult, const Key& iLeft, const Key& iRight)
 	{
@@ -1257,6 +1244,23 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_DB* ioResults
 		}
 
 	return false;
+	}
+
+// =================================================================================================
+#pragma mark - XCode function popup chokes if this is earlier
+
+const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_Datons::Index::Key& iKey)
+	{
+	w << sStringf("%p", iKey.fMapEntryP) << ": ";
+	for (size_t xx = 0; xx < countof(iKey.fValues); ++xx)
+		{
+		if (not iKey.fValues[xx])
+			break;
+		if (xx)
+			w << ", ";
+		w << *iKey.fValues[xx];
+		}
+	return w;
 	}
 
 } // namespace Dataspace
