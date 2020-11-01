@@ -667,6 +667,59 @@ void MelangeServer::pWork()
 	sNextStartAt(fTimeOfLastWrite + fTimeout, fJob);
 	}
 
+static ZP<ResultDeltas> spUnderOver(const ZP<ResultDeltas>& iUnder, const ZP<ResultDeltas>& iOver)
+	{
+	const size_t countU = iUnder ? iUnder->fMapping.size() : 0;
+	if (countU == 0)
+		return iOver;
+
+	const size_t countO = iOver ? iOver->fMapping.size() : 0;
+	if (countO == 0)
+		return iUnder;
+
+	const size_t colCount = iUnder->fPackedRows.size() / countU;
+
+	ZP<ResultDeltas> result = new ResultDeltas;
+	result->fPackedRows.reserve(colCount * (countU + countO) / 4);
+
+	size_t iterU = 0, iterO = 0;
+	for (;;)
+		{
+		if (iterU >= countU)
+			{
+			if (iterO >= countO)
+				{
+				break;
+				}
+
+			// Take/inc O
+			}
+		else if (iterO >= countO)
+			{
+			// Take/inc U
+			}
+		else
+			{
+			size_t mappingU = iUnder->fMapping[iterU];
+			size_t mappingO = iOver->fMapping[iterO];
+			if (mappingU < mappingO)
+				{
+				// Take/inc U
+				}
+			else if (mappingU > mappingO)
+				{
+				// Take/inc O
+				}
+			else
+				{
+				// inc U
+				// Take/inc O
+				}
+			}
+		}
+	return result;
+	}
+
 void MelangeServer::pChanged(
 	const RefReg& iRegistration,
 	int64 iChangeCount,
@@ -686,6 +739,9 @@ void MelangeServer::pChanged(
 			w << "Already had an entry for registration " << theRefCon;
 			}
 		theResultCC->fResult = iResult;
+		theResultCC->fResultDeltas.Clear();
+
+//		theResultCC->fResultDeltas = spUnderOver(theResultCC->fResultDeltas, iResultDelta);
 		}
 	else
 		{
