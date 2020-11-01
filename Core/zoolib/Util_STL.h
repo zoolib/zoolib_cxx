@@ -143,7 +143,7 @@ sErase(CC& ioContainer, KK iKey)
 template <typename CC, typename II>
 	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
 		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
 		(&CC::end))>::value,
 bool>>
 sQErase(CC& ioContainer, II iter)
@@ -160,7 +160,7 @@ sQErase(CC& ioContainer, II iter)
 template <typename CC, typename II>
 	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
 		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
 		(&CC::end))>::value,
 void>>
 sErase(CC& ioContainer, II iter)
@@ -175,7 +175,7 @@ sErase(CC& ioContainer, II iter)
 template <typename CC, typename II>
 	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
 		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)()>
+		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
 			(&CC::end))>::value,
 typename CC::iterator>>
 sEraseInc(CC& ioContainer, II iter)
