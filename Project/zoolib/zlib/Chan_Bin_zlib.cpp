@@ -89,6 +89,11 @@ size_t ChanR_Bin_zlib::Readable()
 // =================================================================================================
 #pragma mark - ChanW_Bin_zlib
 
+// Consider having a ChanW_Bin_zlib variant to properly handle gzip so we get the trailer
+// written by calling ::deflate(Z_FINISH) when a Close class is made?
+
+// ChanWCloseable_Bin_zlib?? ChanAspect_DisconnectWrite and ChanAspect_Abort.
+
 ChanW_Bin_zlib::ChanW_Bin_zlib(const ChanW_Bin& iChanW)
 :	ChanW_Bin_zlib(zlib::eFormatW_Raw, 5, 1024, iChanW)
 	{}
