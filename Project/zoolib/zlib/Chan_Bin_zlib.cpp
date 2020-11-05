@@ -10,6 +10,9 @@ namespace ZooLib {
 using Util_STL::sIsEmpty;
 using Util_STL::sNotEmpty;
 
+using std::max;
+using std::min;
+
 // =================================================================================================
 #pragma mark - ChanR_Bin_zlib
 
@@ -19,7 +22,7 @@ ChanR_Bin_zlib::ChanR_Bin_zlib(bool iRaw, const ChanR_Bin& iChanR)
 
 ChanR_Bin_zlib::ChanR_Bin_zlib(zlib::EFormatR iFormatR, size_t iBufferSize, const ChanR_Bin& iChanR)
 :	fChanR(iChanR)
-,	fBuffer(std::max<size_t>(1024, iBufferSize))
+,	fBuffer(max<size_t>(1024, iBufferSize))
 	{
 	fState.zalloc = nullptr;
 	fState.zfree = nullptr;
@@ -65,10 +68,7 @@ size_t ChanR_Bin_zlib::Read(byte* oDest, size_t iCount)
 			{
 			// Top up our input buffer
 			size_t countReadable = sReadable(fChanR);
-			if (countReadable == 0)
-				countReadable = 1;
-
-			size_t countToRead = std::min(countReadable, fBuffer.size());
+			size_t countToRead = min(max(size_t(1), countReadable), fBuffer.size());
 
 			size_t countRead = sRead(fChanR, &fBuffer[0], countToRead);
 
@@ -89,11 +89,6 @@ size_t ChanR_Bin_zlib::Readable()
 // =================================================================================================
 #pragma mark - ChanW_Bin_zlib
 
-// Consider having a ChanW_Bin_zlib variant to properly handle gzip so we get the trailer
-// written by calling ::deflate(Z_FINISH) when a Close class is made?
-
-// ChanWCloseable_Bin_zlib?? ChanAspect_DisconnectWrite and ChanAspect_Abort.
-
 ChanW_Bin_zlib::ChanW_Bin_zlib(const ChanW_Bin& iChanW)
 :	ChanW_Bin_zlib(zlib::eFormatW_Raw, 5, 1024, iChanW)
 	{}
@@ -101,7 +96,7 @@ ChanW_Bin_zlib::ChanW_Bin_zlib(const ChanW_Bin& iChanW)
 ChanW_Bin_zlib::ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 	const ChanW_Bin& iChanW)
 :	fChanW(iChanW)
-,	fBuffer(std::max<size_t>(1024, iBufferSize))
+,	fBuffer(max<size_t>(1024, iBufferSize))
 	{
 	fState.zalloc = nullptr;
 	fState.zfree = nullptr;
@@ -134,7 +129,7 @@ ChanW_Bin_zlib::~ChanW_Bin_zlib()
 		{
 		try
 			{
-			this->pDeflate(true);
+			this->pDeflate(Z_FINISH);
 			sFlush(fChanW);
 			}
 		catch (...)
@@ -152,22 +147,23 @@ size_t ChanW_Bin_zlib::Write(const byte* iSource, size_t iCount)
 	fState.avail_in = iCount;
 	fState.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(iSource));
 
-	pDeflate(false);
+	pDeflate(Z_NO_FLUSH);
 
 	return iCount - fState.avail_in;
 	}
 
 void ChanW_Bin_zlib::Flush()
 	{
-	this->pDeflate(true);
+	if (sIsEmpty(fBuffer))
+		this->pDeflate(Z_PARTIAL_FLUSH);
 	sFlush(fChanW);
 	}
 
-void ChanW_Bin_zlib::pDeflate(boolean iFlush)
+void ChanW_Bin_zlib::pDeflate(int iFlushType)
 	{
 	for (;;)
 		{
-		::deflate(&fState, iFlush ? Z_SYNC_FLUSH : Z_NO_FLUSH);
+		::deflate(&fState, iFlushType);
 		if (size_t countToWrite = fBuffer.size() - fState.avail_out)
 			{
 			if (countToWrite != sWriteFully(fChanW, &fBuffer[0], countToWrite))
@@ -184,6 +180,5 @@ void ChanW_Bin_zlib::pDeflate(boolean iFlush)
 			}
 		}
 	}
-
 
 } // namespace ZooLib

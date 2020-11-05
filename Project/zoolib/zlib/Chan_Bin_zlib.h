@@ -72,7 +72,7 @@ public:
 	virtual void Flush();
 
 protected:
-	void pDeflate(boolean iFlush);
+	void pDeflate(int iFlushType);
 
 	const ChanW_Bin& fChanW;
 	z_stream fState;
