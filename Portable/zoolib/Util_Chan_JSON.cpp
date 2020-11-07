@@ -292,7 +292,7 @@ void sWriteSimpleValue(const AnyBase& iAny, const PushTextOptions_JSON& iOptions
 			if (iOptions.fLowercaseHexQ.Get())
 				sEWritef(w, "0x%016llx", (unsigned long long)*theQ);
 			else
-				sEWritef(w, "0x%016llx", (unsigned long long)*theQ);
+				sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
 			}
 		else
 			{
