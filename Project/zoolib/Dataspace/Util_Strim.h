@@ -14,7 +14,7 @@ namespace Dataspace {
 // =================================================================================================
 #pragma mark -
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const std::set<RelationalAlgebra::RelHead>& iSet);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const std::set<RelationalAlgebra::RelHead>& iSet);
 
 } // namespace Dataspace
 } // namespace ZooLib

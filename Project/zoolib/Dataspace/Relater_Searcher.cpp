@@ -504,12 +504,12 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 
 		if (elapsed > 0.1)
 			{
-			if (ZLOGPF(w, eDebug))
+			if (ZLOGPF(ww, eDebug))
 				{
-				w << "\nSlow Query " << elapsed * 1e3 << "ms: ";
-				w << thePQuery->fRel << "\n";
-				sToStrim(thePQuery->fResult, w);
-				sDumpWalkers(theWalker, w);
+				ww << "\nSlow Query " << elapsed * 1e3 << "ms: ";
+				ww << thePQuery->fRel << "\n";
+				sToStrim(ww, thePQuery->fResult);
+				sDumpWalkers(ww, theWalker);
 				}
 			}
 

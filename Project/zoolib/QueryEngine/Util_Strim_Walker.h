@@ -13,7 +13,7 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark - sDumpWalkers
 
-void sDumpWalkers(ZP<QueryEngine::Walker> iWalker, const ChanW_UTF& w);
+void sDumpWalkers(const ChanW_UTF& ww, ZP<QueryEngine::Walker> iWalker);
 
 } // namespace QueryEngine
 } // namespace ZooLib

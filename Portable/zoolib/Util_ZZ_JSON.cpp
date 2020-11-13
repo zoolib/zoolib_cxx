@@ -38,11 +38,11 @@ ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU)
 
 // -----
 
-void sWrite(const Val_ZZ& iVal, const ChanW_UTF& iChanW)
-	{ sWrite(iVal, false, iChanW); }
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal)
+	{ sWrite(iChanW, iVal, false); }
 
-void sWrite(const Val_ZZ& iVal, bool iPrettyPrint, const ChanW_UTF& iChanW)
-	{ sWrite(iVal, 0, PushTextOptions_JSON(iPrettyPrint), iChanW); }
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint)
+	{ sWrite(iChanW, iVal, 0, PushTextOptions_JSON(iPrettyPrint)); }
 
 static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
@@ -50,7 +50,8 @@ static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iCh
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const Val_ZZ& iVal, size_t iInitialIndent, const PushTextOptions_JSON& iOptions, const ChanW_UTF& iChanW)
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal,
+	size_t iInitialIndent, const PushTextOptions_JSON& iOptions)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));
@@ -60,7 +61,7 @@ void sWrite(const Val_ZZ& iVal, size_t iInitialIndent, const PushTextOptions_JSO
 string8 sAsJSON(const Val_ZZ& iVal)
 	{
 	string8 result;
-	sWrite(iVal, ChanW_UTF_string8(&result));
+	sWrite(ChanW_UTF_string8(&result), iVal);
 	return result;
 	}
 
@@ -76,25 +77,25 @@ namespace Operators_ZZ_JSON {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Val_ZZ& iVal)
 	{
-	Util_ZZ_JSON::sWrite(iVal, iChanW);
+	Util_ZZ_JSON::sWrite(iChanW, iVal);
 	return iChanW;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Map_ZZ& iMap)
 	{
-	Util_ZZ_JSON::sWrite(iMap, iChanW);
+	Util_ZZ_JSON::sWrite(iChanW, iMap);
 	return iChanW;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Seq_ZZ& iSeq)
 	{
-	Util_ZZ_JSON::sWrite(iSeq, iChanW);
+	Util_ZZ_JSON::sWrite(iChanW, iSeq);
 	return iChanW;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Data_ZZ& iData)
 	{
-	Util_ZZ_JSON::sWrite(iData, iChanW);
+	Util_ZZ_JSON::sWrite(iChanW, iData);
 	return iChanW;
 	}
 
@@ -108,25 +109,25 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const Val_ZZ& iVal)
 	{
-	Util_ZZ_JSON::sWrite(iVal, StdIO::sChan_UTF_Err);
+	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iVal);
 	StdIO::sChan_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Map_ZZ& iMap)
 	{
-	Util_ZZ_JSON::sWrite(iMap, StdIO::sChan_UTF_Err);
+	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iMap);
 	StdIO::sChan_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Seq_ZZ& iSeq)
 	{
-	Util_ZZ_JSON::sWrite(iSeq, StdIO::sChan_UTF_Err);
+	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iSeq);
 	StdIO::sChan_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Data_ZZ& iData)
 	{
-	Util_ZZ_JSON::sWrite(iData, StdIO::sChan_UTF_Err);
+	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iData);
 	StdIO::sChan_UTF_Err << "\n";
 	}
 

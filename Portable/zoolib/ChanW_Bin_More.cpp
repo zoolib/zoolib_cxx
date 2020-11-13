@@ -92,29 +92,29 @@ const ChanW_Bin& operator<<(const ChanW_Bin& iChanW, const std::string& iString)
 // =================================================================================================
 #pragma mark -
 
-bool sQWriteCount(const ChanW_Bin& w, uint64 iValue)
+bool sQWriteCount(const ChanW_Bin& ww, uint64 iValue)
 	{
 	if (iValue < 253)
-		return sQWriteBE<uint8>(w, iValue);
+		return sQWriteBE<uint8>(ww, iValue);
 
 	if (iValue <= 0xFFFFU)
-		return sQWriteBE<uint8>(w, 253) && sQWriteBE<uint16>(w, uint16(iValue));
+		return sQWriteBE<uint8>(ww, 253) && sQWriteBE<uint16>(ww, uint16(iValue));
 
 	if (iValue <= 0xFFFFFFFFU)
-		return sQWriteBE<uint8>(w, 254) && sQWriteBE<uint32>(w, uint32(iValue));
+		return sQWriteBE<uint8>(ww, 254) && sQWriteBE<uint32>(ww, uint32(iValue));
 
-	return sQWriteBE<uint8>(w, 255) && sQWriteBE<uint64>(w, iValue);
+	return sQWriteBE<uint8>(ww, 255) && sQWriteBE<uint64>(ww, iValue);
 	}
 
-void sEWriteCount(const ChanW_Bin& w, uint64 iValue)
-	{ sQWriteCount(w, iValue) || sThrow_ExhaustedW(); }
+void sEWriteCount(const ChanW_Bin& ww, uint64 iValue)
+	{ sQWriteCount(ww, iValue) || sThrow_ExhaustedW(); }
 
-void sEWriteCountPrefixedString(const ChanW_Bin& w, const std::string& iString)
+void sEWriteCountPrefixedString(const ChanW_Bin& ww, const std::string& iString)
 	{
 	const size_t theLength = iString.length();
-	sEWriteCount(w, theLength);
+	sEWriteCount(ww, theLength);
 	if (theLength)
-		sEWriteMem(w, iString.data(), theLength);
+		sEWriteMem(ww, iString.data(), theLength);
 	}
 
 } // namespace ZooLib

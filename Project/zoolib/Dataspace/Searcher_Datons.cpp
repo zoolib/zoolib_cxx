@@ -47,11 +47,11 @@ using std::vector;
 namespace QE = QueryEngine;
 namespace RA = RelationalAlgebra;
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_DB& iVal);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Val_DB& iVal)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Val_DB& iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Val_DB& iVal)
 	{
-	Util_ZZ_JSON::sWrite(iVal.As<Val_ZZ>(), w);
-	return w;
+	Util_ZZ_JSON::sWrite(ww, iVal.As<Val_ZZ>());
+	return ww;
 	}
 
 // =================================================================================================
@@ -177,7 +177,7 @@ public:
 	DListHead<DLink_PSearch_InIndex> fPSearch_InIndex;
 	};
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_Datons::Index::Key& iKey);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Searcher_Datons::Index::Key& iKey);
 
 void Searcher_Datons::Index::Comparer::spDump(bool iResult, const Key& iLeft, const Key& iRight)
 	{
@@ -397,46 +397,46 @@ static EComparator spFlipped(EComparator iEComparator)
 
 // -----
 
-static void spDump(const ChanW_UTF& w,
+static void spDump(const ChanW_UTF& ww,
 	Searcher_Datons::Index* bestIndex,
 	const vector<Val_DB>& bestValsEqual, const Bound_t& bestLo, const Bound_t& bestHi)
 	{
-	w << "\n" << bestIndex << " ";
+	ww << "\n" << bestIndex << " ";
 	if (size_t count = bestValsEqual.size())
 		{
-		w << "(";
+		ww << "(";
 		for (size_t xx = 0; xx < count; ++xx)
 			{
 			if (xx)
-				w << " && ";
-			w << bestIndex->fColNames[xx] << " == " << bestValsEqual[xx];
+				ww << " && ";
+			ww << bestIndex->fColNames[xx] << " == " << bestValsEqual[xx];
 			}
-		w << ")";
+		ww << ")";
 		}
 
 	if (bestLo || bestHi)
 		{
-		w << " Range(";
+		ww << " Range(";
 		if (bestLo)
 			{
-			w << bestLo->first;
+			ww << bestLo->first;
 			if (bestLo->second)
-				w << " <= ";
+				ww << " <= ";
 			else
-				w << " < ";
+				ww << " < ";
 			}
 
-		w << bestIndex->fColNames[bestValsEqual.size()];
+		ww << bestIndex->fColNames[bestValsEqual.size()];
 
 		if (bestHi)
 			{
 			if (bestHi->second)
-				w << " <= ";
+				ww << " <= ";
 			else
-				w << " < ";
-			w << bestHi->first;
+				ww << " < ";
+			ww << bestHi->first;
 			}
-		w << ")";
+		ww << ")";
 		}
 	}
 
@@ -689,27 +689,27 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 		}
 	}
 
-static void spDump(const ChanW_UTF& w,
+static void spDump(const ChanW_UTF& ww,
 	const SearchSpec& theSearchSpec,
 	const vector<Searcher_Datons::Index*>& fIndexes)
 	{
-	w << "\n" << "ConcreteHead: " << theSearchSpec.GetConcreteHead();
-	w << "\n" << "Restriction: ";
-	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(
-		sDefault(), w, theSearchSpec.GetRestriction());
+	ww << "\n" << "ConcreteHead: " << theSearchSpec.GetConcreteHead();
+	ww << "\n" << "Restriction: ";
+	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(ww,
+		sDefault(), theSearchSpec.GetRestriction());
 
 	foreacha (anIndex, fIndexes)
 		{
-		w << "\n" << anIndex->fSet.size() << " entries, indexed on: ";
+		ww << "\n" << anIndex->fSet.size() << " entries, indexed on: ";
 		for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-			w << anIndex->fColNames[xx] << " ";
+			ww << anIndex->fColNames[xx] << " ";
 
 		foreacha (entry, anIndex->fSet)
 			{
-			w << "\n";
+			ww << "\n";
 			for (size_t xx = 0; xx < anIndex->fCount; ++xx)
-				w << *(entry.fValues[xx]) << " ";
-			w << "--> " << entry.fMapEntryP->second;
+				ww << *(entry.fValues[xx]) << " ";
+			ww << "--> " << entry.fMapEntryP->second;
 			}
 		}
 	}
@@ -895,22 +895,22 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oCha
 
 			if (elapsed > 50e-3)
 				{
-				if (ZLOGPF(w, eDebug))
+				if (ZLOGPF(ww, eDebug))
 					{
-					w << "\nSlow PSearch " << elapsed * 1e3 << "ms: ";
+					ww << "\nSlow PSearch " << elapsed * 1e3 << "ms: ";
 					Visitor_Expr_Bool_ValPred_DB_ToStrim()
-						.ToStrim(sDefault(), w, theSearchSpec.GetRestriction());
+						.ToStrim(ww, sDefault(), theSearchSpec.GetRestriction());
 					if (thePSearch->fRestrictionRemainder)
 						{
-						w << "\nRestrictionRemainder: ";
+						ww << "\nRestrictionRemainder: ";
 						Visitor_Expr_Bool_ValPred_DB_ToStrim()
-							.ToStrim(sDefault(), w, thePSearch->fRestrictionRemainder);
+							.ToStrim(ww, sDefault(), thePSearch->fRestrictionRemainder);
 						}
 
-					w << "\n";
-					sToStrim(thePSearch->fResult, w);
+					ww << "\n";
+					sToStrim(ww, thePSearch->fResult);
 
-					sDumpWalkers(theWalker, w);
+					sDumpWalkers(ww, theWalker);
 					}
 				}
 
@@ -1249,18 +1249,18 @@ bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_DB* ioResults
 // =================================================================================================
 #pragma mark - XCode function popup chokes if this is earlier
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Searcher_Datons::Index::Key& iKey)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Searcher_Datons::Index::Key& iKey)
 	{
-	w << sStringf("%p", iKey.fMapEntryP) << ": ";
+	ww << sStringf("%p", iKey.fMapEntryP) << ": ";
 	for (size_t xx = 0; xx < countof(iKey.fValues); ++xx)
 		{
 		if (not iKey.fValues[xx])
 			break;
 		if (xx)
-			w << ", ";
-		w << *iKey.fValues[xx];
+			ww << ", ";
+		ww << *iKey.fValues[xx];
 		}
-	return w;
+	return ww;
 	}
 
 } // namespace Dataspace

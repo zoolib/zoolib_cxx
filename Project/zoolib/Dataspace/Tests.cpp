@@ -35,9 +35,9 @@ using namespace RelationalAlgebra;
 // =================================================================================================
 #pragma mark -
 
-static void spToChan(ZP<Expr_Rel> iRel, const ChanW_UTF& iChanW)
+static void spToChan(const ChanW_UTF& iChanW, ZP<Expr_Rel> iRel)
 	{
-	RA::Util_Strim_Rel::sToStrim_Parseable(iRel, iChanW);
+	RA::Util_Strim_Rel::sToStrim_Parseable(iChanW, iRel);
 	}
 
 template <typename T>
@@ -57,11 +57,11 @@ static bool spCheckRoundTripThroughChan(const ZP<Expr_Rel>& iRel)
 		success = false;
 
 	string string1;
-	spToChan(iRel, ChanW_UTF_string8(&string1));
+	spToChan(ChanW_UTF_string8(&string1), iRel);
 
 	ZP<Expr_Rel> newRel = sParseFromChan<ZP<Expr_Rel>>(ChanRU_UTF_string8(string1));
 	string string2;
-	spToChan(newRel, ChanW_UTF_string8(&string2));
+	spToChan(ChanW_UTF_string8(&string2), newRel);
 
 	if (string1 != string2)
 		success = false;

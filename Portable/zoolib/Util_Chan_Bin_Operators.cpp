@@ -10,28 +10,28 @@
 namespace ZooLib {
 namespace Util_Chan_Bin_Operators {
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const char* iString)
 	{
-	sEWriteMem(w, iString, strlen(iString));
-	return w;
+	sEWriteMem(ww, iString, strlen(iString));
+	return ww;
 	}
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, char* iString)
 	{
-	sEWriteMem(w, iString, strlen(iString));
-	return w;
+	sEWriteMem(ww, iString, strlen(iString));
+	return ww;
 	}
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString)
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const std::string& iString)
 	{
-	sEWriteMem(w, iString.c_str(), iString.length());
-	return w;
+	sEWriteMem(ww, iString.c_str(), iString.length());
+	return ww;
 	}
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const ChanR_Bin& r)
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const ChanR_Bin& r)
 	{
-	sCopyAll<byte>(r, w);
-	return w;
+	sCopyAll<byte>(r, ww);
+	return ww;
 	}
 
 } // namespace Util_Chan_Bin_Operators

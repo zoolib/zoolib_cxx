@@ -40,7 +40,9 @@ Val_DB sAsVal(const Daton& iDaton)
 Daton sAsDaton(const Val_DB& iVal)
 	{
 	Data_ZZ theData;
-	Util_ZZ_JSON::sWrite(iVal.As<Val_ZZ>(), ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_ZZ>(&theData)));
+	Util_ZZ_JSON::sWrite(
+		ChanW_UTF_Chan_Bin_UTF8(ChanRWPos_Bin_Data<Data_ZZ>(&theData)),
+		iVal.As<Val_ZZ>());
 	return theData;
 	}
 

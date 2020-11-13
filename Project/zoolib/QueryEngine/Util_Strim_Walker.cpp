@@ -64,7 +64,7 @@ public:
 			if (ZP<Walker_Comment> theWalker_Comment = iWalker.DynamicCast<Walker_Comment>())
 				{
 				fW << " ";
-				Util_Chan_JSON::sWriteString(theWalker_Comment->GetComment(), false, fW);
+				Util_Chan_JSON::sWriteString(fW, theWalker_Comment->GetComment(), false);
 				}
 			theW->GetChild()->Accept(*this);
 			}
@@ -76,8 +76,8 @@ public:
 	size_t fIndent;
 	};
 
-void sDumpWalkers(ZP<Walker> iWalker, const ChanW_UTF& w)
-	{ iWalker->Accept(DumpWalkers(w)); }
+void sDumpWalkers(const ChanW_UTF& ww, ZP<Walker> iWalker)
+	{ iWalker->Accept(DumpWalkers(ww)); }
 
 } // namespace QueryEngine
 } // namespace ZooLib
@@ -91,7 +91,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<QueryEngine::Walker>& iWalker)
 	{
-	ZooLib::QueryEngine::sDumpWalkers(iWalker, StdIO::sChan_UTF_Err);
+	ZooLib::QueryEngine::sDumpWalkers(StdIO::sChan_UTF_Err, iWalker);
 	}
 
 #endif // defined(ZMACRO_pdesc)

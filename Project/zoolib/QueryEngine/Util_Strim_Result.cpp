@@ -22,36 +22,36 @@ using RelationalAlgebra::RelHead;
 // =================================================================================================
 #pragma mark - sToStrim
 
-void sToStrim(const ZP<Result>& iResult, const ChanW_UTF& w)
+void sToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
 	{
 	const size_t theCount = iResult->Count();
 
 	const RelHead& theRH = iResult->GetRelHead();
 
-	w << "Count: " << theCount << ", RelHead: " << theRH;
+	ww << "Count: " << theCount << ", RelHead: " << theRH;
 
 	for (size_t yy = 0; yy < theCount; ++yy)
 		{
-		w << "\n";
+		ww << "\n";
 		const Val_DB* theRow = iResult->GetValsAt(yy);
 		for (size_t xx = 0; xx < theRH.size(); ++xx)
 			{
 			if (xx)
-				w << ", ";
+				ww << ", ";
 			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
-				w << "!absent!";
+				ww << "!absent!";
 			else
-				Util_ZZ_JSON::sWrite(theRow[xx].As<Val_ZZ>(), false, w);
+				Util_ZZ_JSON::sWrite(ww, theRow[xx].As<Val_ZZ>(), false);
 			}
 		}
 	}
 
 } // namespace QueryEngine
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZP<QueryEngine::Result>& iResult)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ZP<QueryEngine::Result>& iResult)
 	{
-	QueryEngine::sToStrim(iResult, w);
-	return w;
+	QueryEngine::sToStrim(ww, iResult);
+	return ww;
 	}
 
 } // namespace ZooLib

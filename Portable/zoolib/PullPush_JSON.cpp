@@ -424,7 +424,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
 
 		if (immediateParentIsMap)
-			sWriteLFIndent(theIndentation, iOptions, iChanW);
+			sWriteLFIndent(iChanW, theIndentation, iOptions);
 
 		iChanW << "[";
 		uint64 count = 0;
@@ -438,7 +438,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				{
 				if (iOptions.fUseExtendedNotationQ.DGet(false))
 					{
-					sWriteLFIndent(childIndentation, iOptions, iChanW);
+					sWriteLFIndent(iChanW, childIndentation, iOptions);
 					if (iOptions.fNumberSequencesQ.DGet(false))
 						iChanW << "/*" << count << "*/";
 					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
@@ -448,13 +448,13 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 					{
 					if (not isFirst)
 						iChanW << ",";
-					sWriteLFIndent(childIndentation, iOptions, iChanW);
+					sWriteLFIndent(iChanW, childIndentation, iOptions);
 					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 					}
 				}
 			++count;
 			}
-		sWriteLFIndent(theIndentation, iOptions, iChanW);
+		sWriteLFIndent(iChanW, theIndentation, iOptions);
 		iChanW << "]";
 		}
 	else
@@ -510,7 +510,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
 
 		if (immediateParentIsMap)
-			sWriteLFIndent(theIndentation, iOptions, iChanW);
+			sWriteLFIndent(iChanW, theIndentation, iOptions);
 
 		iChanW << "{";
 		for (bool isFirst = true; /*no test*/; isFirst = false)
@@ -525,8 +525,8 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				}
 			else if (iOptions.fUseExtendedNotationQ.DGet(false))
 				{
-				sWriteLFIndent(theIndentation, iOptions, iChanW);
-				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
+				sWriteLFIndent(iChanW, theIndentation, iOptions);
+				Util_Chan_JSON::sWritePropName(iChanW, *theNameQ, useSingleQuotes);
 				iChanW << " = ";
 				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				iChanW << ";";
@@ -535,13 +535,13 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				{
 				if (not isFirst)
 					iChanW << ",";
-				sWriteLFIndent(theIndentation, iOptions, iChanW);
-				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
+				sWriteLFIndent(iChanW, theIndentation, iOptions);
+				Util_Chan_JSON::sWriteString(iChanW, *theNameQ, useSingleQuotes);
 				iChanW << ": ";
 				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 				}
 			}
-		sWriteLFIndent(theIndentation, iOptions, iChanW);
+		sWriteLFIndent(iChanW, theIndentation, iOptions);
 		iChanW << "}";
 		}
 	else
@@ -563,7 +563,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
 
-				Util_Chan_JSON::sWritePropName(*theNameQ, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWritePropName(iChanW, *theNameQ, useSingleQuotes);
 				if (sBreakStrings(iOptions))
 					iChanW << " = ";
 				else
@@ -579,7 +579,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 					iChanW << ",";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
-				Util_Chan_JSON::sWriteString(*theNameQ, useSingleQuotes, iChanW);
+				Util_Chan_JSON::sWriteString(iChanW, *theNameQ, useSingleQuotes);
 				iChanW << ":";
 				if (sBreakStrings(iOptions))
 					iChanW << " ";
@@ -619,12 +619,12 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	{
 	if (const string* theString = sPGet<string>(iPPT))
 		{
-		Util_Chan_JSON::sWriteString(*theString, false, iChanW);
+		Util_Chan_JSON::sWriteString(iChanW, *theString, false);
 		}
 
 	else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
-		Util_Chan_JSON::sWriteString(*theChanner, iChanW);
+		Util_Chan_JSON::sWriteString(iChanW, *theChanner);
 		}
 
 	else if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
@@ -653,7 +653,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 
 	else
 		{
-		Util_Chan_JSON::sWriteSimpleValue(iPPT.As<Any>(), iOptions, iChanW);
+		Util_Chan_JSON::sWriteSimpleValue(iChanW, iPPT.As<Any>(), iOptions);
 		}
 	}
 

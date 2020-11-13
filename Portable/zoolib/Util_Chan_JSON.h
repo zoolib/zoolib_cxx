@@ -67,29 +67,29 @@ struct PushTextOptions_JSON : PushTextOptions
 // =================================================================================================
 #pragma mark -
 
-void sWriteLF(const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
+void sWriteLF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions);
 
-void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
+void sWriteIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions);
 
-void sWriteLFIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW);
+void sWriteLFIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions);
 
-void sWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW);
+void sWriteString(const ChanW_UTF& iChanW, const string& iString, bool iPreferSingleQuotes);
 
-void sWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW);
+void sWriteString(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR);
 
 bool sContainsProblemChars(const string& iString);
 
-void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w);
+void sWritePropName(const ChanW_UTF& iChanW, const string& iString, bool iUseSingleQuotes);
 
-void sWriteSimpleValue(const AnyBase& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w);
+void sWriteSimpleValue(const ChanW_UTF& iChanW, const AnyBase& iAny, const PushTextOptions_JSON& iOptions);
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	size_t iLevel, const PushTextOptions_JSON& iOptions,
-	const ChanW_UTF& w);
+	const ChanW_UTF& ww);
 
 ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU);
 
-void sWrite_PropName(const string8& iPropName, const ChanW_UTF& w);
+void sWrite_PropName(const ChanW_UTF& iChanW, const string8& iPropName);
 
 } // namespace Util_Chan_JSON
 } // namespace ZooLib

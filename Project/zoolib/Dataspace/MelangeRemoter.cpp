@@ -169,20 +169,20 @@ static Map_ZZ spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescript
 		sThrow_ExhaustedR();
 
 	const Map_ZZ theMessage = theQ->Get<Map_ZZ>();
-	if (ZLOGF(w, eDebug + 1))
+	if (ZLOGF(ww, eDebug + 1))
 		{
-		w << theChanR.GetCount() << " bytes, ";
+		ww << theChanR.GetCount() << " bytes, ";
 
 		if (iDescriptionQ)
 			{
-			w << *iDescriptionQ;
+			ww << *iDescriptionQ;
 			if (theMessage.IsEmpty())
-				w << ", ";
+				ww << ", ";
 			}
 		if (not theMessage.IsEmpty())
-			w << "\n";
+			ww << "\n";
 
-		Util_ZZ_JSON::sWrite(theMessage, false, w);
+		Util_ZZ_JSON::sWrite(ww, theMessage, false);
 		}
 
 	return theMessage;
@@ -303,20 +303,20 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<st
 
 	const double finish = Time::sSystem();
 
-	if (ZLOGF(w, eDebug + 1))
+	if (ZLOGF(ww, eDebug + 1))
 		{
-		w << theChanW.GetCount() << " bytes, ";
+		ww << theChanW.GetCount() << " bytes, ";
 
 		if (iDescriptionQ)
-			w << *iDescriptionQ << ", ";
+			ww << *iDescriptionQ << ", ";
 
-		w << 1e3 * (finish - start) << "ms";
+		ww << 1e3 * (finish - start) << "ms";
 
 		if (iMessage.IsEmpty())
-			w << ", ";
+			ww << ", ";
 		else
-			w << "\n";
-		Util_ZZ_JSON::sWrite(iMessage, false, w);
+			ww << "\n";
+		Util_ZZ_JSON::sWrite(ww, iMessage, false);
 		}
 	}
 
@@ -339,7 +339,7 @@ ZP<Expr_Rel> spAsRel(const Val_ZZ& iVal)
 Val_ZZ spAsVal(ZP<Expr_Rel> iRel)
 	{
 	string8 theString;
-	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(iRel, ChanW_UTF_string8(&theString));
+	RelationalAlgebra::Util_Strim_Rel::sToStrim_Parseable(ChanW_UTF_string8(&theString), iRel);
 	return theString;
 	}
 

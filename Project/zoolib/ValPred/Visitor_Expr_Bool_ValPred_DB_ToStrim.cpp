@@ -16,7 +16,7 @@ namespace ZooLib {
 
 void Visitor_Expr_Bool_ValPred_DB_ToStrim::Visit_Expr_Bool_ValPred(
 	const ZP<Expr_Bool_ValPred>& iRep)
-	{ Util_Strim_ValPred_DB::sToStrim(iRep->GetValPred(), pStrimW()); }
+	{ Util_Strim_ValPred_DB::sToStrim(pStrimW(), iRep->GetValPred()); }
 
 } // namespace ZooLib
 
@@ -29,7 +29,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<Expr_Bool>& iExpr)
 	{
-	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(sDefault(), StdIO::sChan_UTF_Err, iExpr);
+	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(StdIO::sChan_UTF_Err, sDefault(), iExpr);
 	}
 
 #endif // defined(ZMACRO_pdesc)

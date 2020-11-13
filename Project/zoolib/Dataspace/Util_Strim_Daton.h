@@ -12,7 +12,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Dataspace::Daton& iDaton);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Dataspace::Daton& iDaton);
 
 } // namespace ZooLib
 

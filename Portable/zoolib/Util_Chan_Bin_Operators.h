@@ -15,13 +15,13 @@
 namespace ZooLib {
 namespace Util_Chan_Bin_Operators {
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const char* iString);
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, char* iString);
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const std::string& iString);
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const ChanR_Bin& r);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const ChanR_Bin& r);
 
 } // namespace Util_Chan_Bin_Operators
 

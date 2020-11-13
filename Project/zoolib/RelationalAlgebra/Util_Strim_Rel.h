@@ -75,11 +75,11 @@ private:
 
 typedef Visitor::Options Options;
 
-void sToStrim(const ZP<Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
+void sToStrim(const ChanW_UTF& iStrimW, const ZP<Expr_Rel>& iRel);
 
-void sToStrim_Parseable(const ZP<Expr_Rel>& iRel, const ChanW_UTF& iStrimW);
+void sToStrim_Parseable(const ChanW_UTF& iStrimW, const ZP<Expr_Rel>& iRel);
 
-void sToStrim(const ZP<Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW);
+void sToStrim(const ChanW_UTF& iStrimW, const ZP<Expr_Rel>& iRel, const Options& iOptions);
 
 ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU);
 
@@ -88,7 +88,7 @@ ZP<Expr_Rel> sQFromStrim(const ChanRU_UTF& iChanRU);
 } // namespace Util_Strim_Rel
 } // namespace RelationalAlgebra
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZP<RelationalAlgebra::Expr_Rel>& iRel);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ZP<RelationalAlgebra::Expr_Rel>& iRel);
 
 } // namespace ZooLib
 

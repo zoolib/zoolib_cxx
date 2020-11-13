@@ -50,8 +50,8 @@ void Visitor_ToStrim::Visit(const ZP<Visitee>& iRep)
 		}
 	}
 
-void Visitor_ToStrim::ToStrim(
-	const Options& iOptions, const ChanW_UTF& iStrimW, const ZP<Visitee>& iRep)
+void Visitor_ToStrim::ToStrim(const ChanW_UTF& iStrimW,
+	const Options& iOptions, const ZP<Visitee>& iRep)
 	{
 	SaveSetRestore<const Options*> ssr1(fOptions, &iOptions);
 	SaveSetRestore<const ChanW_UTF*> ssr2(fStrimW, &iStrimW);

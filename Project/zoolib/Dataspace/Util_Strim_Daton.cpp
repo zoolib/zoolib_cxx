@@ -7,11 +7,13 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Dataspace::Daton& iDaton)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Dataspace::Daton& iDaton)
 	{
 	const Data_ZZ& theData = iDaton.GetData();
-	sWrite(w, (const UTF8*)theData.GetPtr(), theData.GetSize(), nullptr, theData.GetSize(), nullptr);
-	return w;
+	sWrite(ww, (const UTF8*)theData.GetPtr(),
+		theData.GetSize(), nullptr,
+		theData.GetSize(), nullptr);
+	return ww;
 	}
 
 } // namespace ZooLib

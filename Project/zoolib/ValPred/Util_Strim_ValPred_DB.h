@@ -18,13 +18,13 @@ namespace Util_Strim_ValPred_DB {
 // =================================================================================================
 #pragma mark - Util_Strim_ValPred_DB
 
-void sToStrim(const ValPred& iValPred, const ChanW_UTF& iStrimW);
+void sToStrim(const ChanW_UTF& iStrimW, const ValPred& iValPred);
 
 ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU);
 
 } // namespace Util_Strim_ValPred_DB
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ValPred& iValPred);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ValPred& iValPred);
 
 } // namespace ZooLib
 

@@ -26,13 +26,13 @@ namespace Util_Strim_RelHead {
 using namespace Util_STL;
 using std::set;
 
-void sWrite_PropName(const string8& iName, const ChanW_UTF& s)
+void sWrite_PropName(const ChanW_UTF& s, const string8& iName)
 	{
 	s << "@";
-	Util_Chan_JSON::sWrite_PropName(iName, s);
+	Util_Chan_JSON::sWrite_PropName(s, iName);
 	}
 
-void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
+void sWrite_RelHead(const ChanW_UTF& s, const RelHead& iRelHead)
 	{
 	s << "[";
 
@@ -41,7 +41,7 @@ void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s)
 		{
 		if (needsSeparator())
 			s << ", ";
-		sWrite_PropName(entry, s);
+		sWrite_PropName(s, entry);
 		}
 	s << "]";
 	}
@@ -150,26 +150,26 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU)
 	}
 
 void sWrite_RenameWithOptional(
-	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional,
-	const ChanW_UTF& w)
+	const ChanW_UTF& ww,
+	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional)
 	{
-	w << "[";
+	ww << "[";
 	ValueOnce<std::string> separator("", ", ");
 	foreacha (entry, iRename)
 		{
-		w << separator();
+		ww << separator();
 		if (sContains(iOptional, entry.first))
-			w << "?";
+			ww << "?";
 		else
-			w << "@";
-		Util_Chan_JSON::sWrite_PropName(entry.second, w);
+			ww << "@";
+		Util_Chan_JSON::sWrite_PropName(ww, entry.second);
 		if (entry.first != entry.second)
 			{
-			w << "<--";
-			Util_Chan_JSON::sWrite_PropName(entry.first, w);
+			ww << "<--";
+			Util_Chan_JSON::sWrite_PropName(ww, entry.first);
 			}
 		}
-	w << "]";
+	ww << "]";
 	}
 
 } // namespace Util_Strim_RelHead
@@ -177,36 +177,36 @@ void sWrite_RenameWithOptional(
 
 using namespace RelationalAlgebra;
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelHead& iRH)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const RelHead& iRH)
 	{
-	Util_Strim_RelHead::sWrite_RelHead(iRH, w);
-	return w;
+	Util_Strim_RelHead::sWrite_RelHead(ww, iRH);
+	return ww;
 	}
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Rename& iRename)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Rename& iRename)
 	{
-	Util_Strim_RelHead::sWrite_RenameWithOptional(iRename, sDefault(), w);
-	return w;
+	Util_Strim_RelHead::sWrite_RenameWithOptional(ww, iRename, sDefault());
+	return ww;
 	}
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ConcreteHead& iCH)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ConcreteHead& iCH)
 	{
-	w << "[";
+	ww << "[";
 
 	ValueOnce<std::string> separator("", ", ");
 	foreacha (entry, iCH)
 		{
-		w << separator();
+		ww << separator();
 		if (entry.second)
-			w << "@";
+			ww << "@";
 		else
-			w << "?";
-		Util_Chan_JSON::sWrite_PropName(entry.first, w);
+			ww << "?";
+		Util_Chan_JSON::sWrite_PropName(ww, entry.first);
 		}
 
-	w << "]";
+	ww << "]";
 
-	return w;
+	return ww;
 	}
 
 } // namespace ZooLib

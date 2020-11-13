@@ -10,50 +10,50 @@
 namespace ZooLib {
 
 template <class E, size_t R>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,1,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Matrix<E,1,R>& mat)
 	{
-	w << "C[";
-	for (size_t r = 0; r < R; ++r)
+	ww << "C[";
+	for (size_t rr = 0; rr < R; ++rr)
 		{
-		if (r)
-			w << ", ";
-		w << mat.fE[0][r];
+		if (rr)
+			ww << ", ";
+		w << mat.fE[0][rr];
 		}
-	w << "]";
-	return w;
+	ww << "]";
+	return ww;
 	}
 
 template <class E, size_t C>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,C,1>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Matrix<E,C,1>& mat)
 	{
-	w << "R[";
-	for (size_t c = 0; c < C; ++c)
+	ww << "R[";
+	for (size_t cc = 0; cc < C; ++cc)
 		{
-		if (c)
-			w << ", ";
-		w << mat.fE[c][0];
+		if (cc)
+			ww << ", ";
+		ww << mat.fE[cc][0];
 		}
-	w << "]";
-	return w;
+	ww << "]";
+	return ww;
 	}
 
 template <class E, size_t C, size_t R>
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const Matrix<E,C,R>& mat)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Matrix<E,C,R>& mat)
 	{
-	w << "[";
-	for (size_t r = 0; r < R; ++r)
+	ww << "[";
+	for (size_t rr = 0; rr < R; ++rr)
 		{
-		w << "[";
-		for (size_t c = 0; c < C; ++c)
+		ww << "[";
+		for (size_t cc = 0; cc < C; ++cc)
 			{
-			if (c)
-				w << ", ";
-			w << mat.fE[c][r];
+			if (cc)
+				ww << ", ";
+			w << mat.fE[cc][rr];
 			}
-		w << "]";
+		ww << "]";
 		}
-	w << "]";
-	return w;
+	ww << "]";
+	return ww;
 	}
 
 } // namespace ZooLib

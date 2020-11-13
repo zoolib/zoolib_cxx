@@ -22,13 +22,13 @@ using std::string;
 
 namespace { // anonymous
 
-void spWrite_PropName(const string& iName, const ChanW_UTF& iChanW)
+void spWrite_PropName(const ChanW_UTF& iChanW, const string& iName)
 	{
 	iChanW << "@";
-	Util_Chan_JSON::sWrite_PropName(iName, iChanW);
+	Util_Chan_JSON::sWrite_PropName(iChanW, iName);
 	}
 
-void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
+void spToStrim(const ChanW_UTF& iChanW, const ZP<ValComparand>& iComparand)
 	{
 	if (not iComparand)
 		{
@@ -36,11 +36,11 @@ void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		}
 	else if (ZP<ValComparand_Name> cmprnd = iComparand.DynamicCast<ValComparand_Name>())
 		{
-		spWrite_PropName(cmprnd->GetName(), iChanW);
+		spWrite_PropName(iChanW, cmprnd->GetName());
 		}
 	else if (ZP<ValComparand_Const_DB> cmprnd = iComparand.DynamicCast<ValComparand_Const_DB>())
 		{
-		Util_ZZ_JSON::sWrite(cmprnd->GetVal().As<Val_ZZ>(), iChanW);
+		Util_ZZ_JSON::sWrite(iChanW, cmprnd->GetVal().As<Val_ZZ>());
 		}
 	else
 		{
@@ -48,7 +48,7 @@ void spToStrim(const ZP<ValComparand>& iComparand, const ChanW_UTF& iChanW)
 		}
 	}
 
-void spToStrim(const ZP<ValComparator>& iComparator, const ChanW_UTF& iChanW)
+void spToStrim(const ChanW_UTF& iChanW, const ZP<ValComparator>& iComparator)
 	{
 	if (not iComparator)
 		{
@@ -163,11 +163,11 @@ ZP<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
 // =================================================================================================
 #pragma mark - Util_Strim_ValPred_DB
 
-void sToStrim(const ValPred& iValPred, const ChanW_UTF& iChanW)
+void sToStrim(const ChanW_UTF& iChanW, const ValPred& iValPred)
 	{
-	spToStrim(iValPred.GetLHS(), iChanW);
-	spToStrim(iValPred.GetComparator(), iChanW);
-	spToStrim(iValPred.GetRHS(), iChanW);
+	spToStrim(iChanW, iValPred.GetLHS());
+	spToStrim(iChanW, iValPred.GetComparator());
+	spToStrim(iChanW, iValPred.GetRHS());
 	}
 
 ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
@@ -197,7 +197,7 @@ ZQ<ValPred> sQFromStrim(const ChanRU_UTF& iChanRU)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ValPred& iValPred)
 	{
-	Util_Strim_ValPred_DB::sToStrim(iValPred, iChanW);
+	Util_Strim_ValPred_DB::sToStrim(iChanW, iValPred);
 	return iChanW;
 	}
 

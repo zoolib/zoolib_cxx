@@ -16,7 +16,7 @@ namespace Util_ZZ_JSONB {
 
 ZQ<Val_ZZ> sQRead(const ChanR_Bin& iChanR);
 
-void sWrite(const Val_ZZ& iVal, const ChanW_Bin& iChanW);
+void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal);
 
 } // namespace Util_ZZ_JSONB
 } // namespace ZooLib

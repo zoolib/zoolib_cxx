@@ -31,47 +31,47 @@ using std::string;
 
 void Visitor::Visit_Expr(const ZP<Expr>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << iExpr->DebugDescription();
+	const ChanW_UTF& ww = pStrimW();
+	ww << iExpr->DebugDescription();
 	}
 
 void Visitor::Visit_Expr_Rel_Calc(const ZP<Expr_Rel_Calc>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Calc(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
-	w << " = /*Some function of*/";
-	w << ",";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Calc(";
+	Util_Strim_RelHead::sWrite_PropName(ww, iExpr->GetColName());
+	ww << " = /*Some function of*/";
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Comment(const ZP<Expr_Rel_Comment>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Comment(";
-	Util_Chan_JSON::sWriteString(iExpr->GetComment(), false, w);
-	w << ",";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Comment(";
+	Util_Chan_JSON::sWriteString(ww, iExpr->GetComment(), false);
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Concrete(const ZP<Expr_Rel_Concrete>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Concrete(" << iExpr->GetConcreteHead() << ")";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Concrete(" << iExpr->GetConcreteHead() << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Const(const ZP<Expr_Rel_Const>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Const(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
-	w << ",";
-	Util_ZZ_JSON::sWrite(iExpr->GetVal().As<Val_ZZ>(), w);
-	w << ")";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Const(";
+	Util_Strim_RelHead::sWrite_PropName(ww, iExpr->GetColName());
+	ww << ",";
+	Util_ZZ_JSON::sWrite(ww, iExpr->GetVal().As<Val_ZZ>());
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Dee(const ZP<Expr_Rel_Dee>& iExpr)
@@ -85,26 +85,26 @@ void Visitor::Visit_Expr_Rel_Dum(const ZP<Expr_Rel_Dum>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Embed(const ZP<Expr_Rel_Embed>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Embed(";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Embed(";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ",";
+	ww << ",";
 	this->pWriteLFIndent();
 	const RelHead theBoundNames = iExpr->GetBoundNames();
 	if (sNotEmpty(theBoundNames))
 		{
-		w << theBoundNames;
-		w << ",";
+		ww << theBoundNames;
+		ww << ",";
 		this->pWriteLFIndent();
 		}
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetColName(), w);
-	w << " = ";
+	Util_Strim_RelHead::sWrite_PropName(ww, iExpr->GetColName());
+	ww << " = ";
 	++fIndent;
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp1());
 	--fIndent;
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Intersect(const ZP<Expr_Rel_Intersect>& iExpr)
@@ -115,35 +115,35 @@ void Visitor::Visit_Expr_Rel_Product(const ZP<Expr_Rel_Product>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Project(const ZP<Expr_Rel_Project>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Project(" << iExpr->GetProjectRelHead() << ",";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Project(" << iExpr->GetProjectRelHead() << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Rename(const ZP<Expr_Rel_Rename>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Rename(";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetNew(), w);
-	w << "<--";
-	Util_Strim_RelHead::sWrite_PropName(iExpr->GetOld(), w);
-	w << ",";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Rename(";
+	Util_Strim_RelHead::sWrite_PropName(ww, iExpr->GetNew());
+	ww << "<--";
+	Util_Strim_RelHead::sWrite_PropName(ww, iExpr->GetOld());
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Restrict(const ZP<Expr_Rel_Restrict>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Restrict(";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Restrict(";
 	this->pToStrim(iExpr->GetExpr_Bool());
-	w << ",";
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::Visit_Expr_Rel_Union(const ZP<Expr_Rel_Union>& iExpr)
@@ -151,54 +151,54 @@ void Visitor::Visit_Expr_Rel_Union(const ZP<Expr_Rel_Union>& iExpr)
 
 void Visitor::Visit_Expr_Rel_Search(const ZP<QueryEngine::Expr_Rel_Search>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << "Search(";
-	w << iExpr->GetRelHead_Bound();
-	w << ",";
+	const ChanW_UTF& ww = pStrimW();
+	ww << "Search(";
+	ww << iExpr->GetRelHead_Bound();
+	ww << ",";
 	this->pWriteLFIndent();
-	Util_Strim_RelHead::sWrite_RenameWithOptional(
-	iExpr->GetRename(), iExpr->GetRelHead_Optional(), w);
-	w << ",";
+	Util_Strim_RelHead::sWrite_RenameWithOptional(ww,
+		iExpr->GetRename(), iExpr->GetRelHead_Optional());
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetExpr_Bool());
-	w << ")";
+	ww << ")";
 	}
 
 void Visitor::pWriteBinary(
 	const string& iFunctionName, const ZP<Expr_Op2_T<Expr_Rel>>& iExpr)
 	{
-	const ChanW_UTF& w = pStrimW();
-	w << iFunctionName << "(";
+	const ChanW_UTF& ww = pStrimW();
+	ww << iFunctionName << "(";
 
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
-	w << ",";
+	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp1());
-	w << ")";
+	ww << ")";
 	}
 
 // =================================================================================================
 #pragma mark - RelationalAlgebra::Util_Strim_Rel::sToStrim
 
-void sToStrim(const ZP<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
+void sToStrim(const ChanW_UTF& iStrimW, const ZP<RelationalAlgebra::Expr_Rel>& iRel)
 	{
 	Options theOptions;
 //	theOptions.fEOLString = "\n";
 //	theOptions.fIndentString = "|\t";
-	sToStrim(iRel, theOptions, iStrimW);
+	sToStrim(iStrimW, iRel, theOptions);
 	}
 
-void sToStrim_Parseable(const ZP<RelationalAlgebra::Expr_Rel>& iRel, const ChanW_UTF& iStrimW)
+void sToStrim_Parseable(const ChanW_UTF& iStrimW, const ZP<RelationalAlgebra::Expr_Rel>& iRel)
 	{
 	Options theOptions;
 	theOptions.fEOLString = "";
 	theOptions.fIndentString = "";
-	sToStrim(iRel, theOptions, iStrimW);
+	sToStrim(iStrimW, iRel, theOptions);
 	}
 
-void sToStrim(const ZP<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions, const ChanW_UTF& iStrimW)
-	{ Visitor().ToStrim(iOptions, iStrimW, iRel); }
+void sToStrim(const ChanW_UTF& iStrimW, const ZP<RelationalAlgebra::Expr_Rel>& iRel, const Options& iOptions)
+	{ Visitor().ToStrim(iStrimW, iOptions, iRel); }
 
 // =================================================================================================
 #pragma mark - RelationalAlgebra::Util_Strim_Rel::sFromStrim
@@ -431,10 +431,10 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 } // namespace Util_Strim_Rel
 } // namespace RelationalAlgebra
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const ZP<RelationalAlgebra::Expr_Rel>& iRel)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ZP<RelationalAlgebra::Expr_Rel>& iRel)
 	{
-	RelationalAlgebra::Util_Strim_Rel::sToStrim(iRel, w);
-	return w;
+	RelationalAlgebra::Util_Strim_Rel::sToStrim(ww, iRel);
+	return ww;
 	}
 
 } // namespace ZooLib

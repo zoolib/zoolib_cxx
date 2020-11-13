@@ -11,13 +11,13 @@ namespace ZooLib {
 
 template <class Point_p>
 typename EnableIfC<Cartesian::PointTraits<Point_p>::value,const ChanW_UTF&>::type
-operator<<(const ChanW_UTF& w, const Point_p& iPoint)
-	{ return w << "(" << X(iPoint) << "," << Y(iPoint) << ")"; }
+operator<<(const ChanW_UTF& ww, const Point_p& iPoint)
+	{ return ww << "(" << X(iPoint) << "," << Y(iPoint) << ")"; }
 
 template <class Rect_p>
 typename EnableIfC<Cartesian::RectTraits<Rect_p>::value,const ChanW_UTF&>::type
-operator<<(const ChanW_UTF& w, const Rect_p& iRect)
-	{ return w << "(" << L(iRect) << "," << T(iRect) << "," << R(iRect) << "," << B(iRect) << ")"; }
+operator<<(const ChanW_UTF& ww, const Rect_p& iRect)
+	{ return ww << "(" << L(iRect) << "," << T(iRect) << "," << R(iRect) << "," << B(iRect) << ")"; }
 
 } // namespace ZooLib
 

@@ -54,17 +54,17 @@ void sEWritef(const ChanW_Bin& iChanW, const char* iString, ...);
 // =================================================================================================
 #pragma mark -
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const char* iString);
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, char* iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, char* iString);
 
-const ChanW_Bin& operator<<(const ChanW_Bin& w, const std::string& iString);
+const ChanW_Bin& operator<<(const ChanW_Bin& ww, const std::string& iString);
 
-bool sQWriteCount(const ChanW_Bin& w, uint64 iValue);
+bool sQWriteCount(const ChanW_Bin& ww, uint64 iValue);
 
-void sEWriteCount(const ChanW_Bin& w, uint64 iValue);
+void sEWriteCount(const ChanW_Bin& ww, uint64 iValue);
 
-void sEWriteCountPrefixedString(const ChanW_Bin& w, const std::string& iString);
+void sEWriteCountPrefixedString(const ChanW_Bin& ww, const std::string& iString);
 
 } // namespace ZooLib
 

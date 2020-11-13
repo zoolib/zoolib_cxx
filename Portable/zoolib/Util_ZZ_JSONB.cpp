@@ -32,7 +32,7 @@ static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iCh
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const Val_ZZ& iVal, const ChanW_Bin& iChanW)
+void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));

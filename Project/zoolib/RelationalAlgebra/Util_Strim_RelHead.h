@@ -17,8 +17,8 @@ namespace Util_Strim_RelHead {
 // =================================================================================================
 #pragma mark - Util_Strim_RelHead
 
-void sWrite_PropName(const string8& iName, const ChanW_UTF& s);
-void sWrite_RelHead(const RelHead& iRelHead, const ChanW_UTF& s);
+void sWrite_PropName(const ChanW_UTF& s, const string8& iName);
+void sWrite_RelHead(const ChanW_UTF& s, const RelHead& iRelHead);
 
 ZQ<ColName> sQRead_PropName(const ChanRU_UTF& iChanRU);
 
@@ -29,15 +29,15 @@ ZQ<std::pair<ColName,ColName>> sQFromStrim_Rename(const ChanRU_UTF& iChanRU);
 ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU);
 
 void sWrite_RenameWithOptional(
-	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional,
-	const ChanW_UTF& w);
+	const ChanW_UTF& ww,
+	const RelationalAlgebra::Rename& iRename, const RelationalAlgebra::RelHead& iOptional);
 
 } // namespace Util_Strim_RelHead
 } // namespace RelationalAlgebra
 
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::RelHead& iRH);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::Rename& iRename);
-const ChanW_UTF& operator<<(const ChanW_UTF& w, const RelationalAlgebra::ConcreteHead& iRH);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const RelationalAlgebra::RelHead& iRH);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const RelationalAlgebra::Rename& iRename);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, const RelationalAlgebra::ConcreteHead& iRH);
 
 } // namespace ZooLib
 

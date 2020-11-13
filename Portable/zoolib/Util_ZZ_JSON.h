@@ -20,9 +20,10 @@ using namespace Util_Chan_JSON;
 ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU);
 ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO);
 
-void sWrite(const Val_ZZ& iVal, const ChanW_UTF& iChanW);
-void sWrite(const Val_ZZ& iVal, bool iPrettyPrint, const ChanW_UTF& iChanW);
-void sWrite(const Val_ZZ& iVal, size_t iInitialIndent, const PushTextOptions_JSON& iOptions, const ChanW_UTF& iChanW);
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal);
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint);
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal,
+	size_t iInitialIndent, const PushTextOptions_JSON& iOptions);
 
 string8 sAsJSON(const Val_ZZ& iVal);
 

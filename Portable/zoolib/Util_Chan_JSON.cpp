@@ -184,24 +184,24 @@ PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOt
 // =================================================================================================
 #pragma mark -
 
-void sWriteLF(const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
+void sWriteLF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions)
 	{
 	iChanW << sEOLString(iOptions);
 	}
 
-void sWriteIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
+void sWriteIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
 
-void sWriteLFIndent(size_t iCount, const PushTextOptions& iOptions, const ChanW_UTF& iChanW)
+void sWriteLFIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
 	iChanW << sEOLString(iOptions);
-	sWriteIndent(iCount, iOptions, iChanW);
+	sWriteIndent(iChanW, iCount, iOptions);
 	}
 
-void sWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_UTF& iChanW)
+void sWriteString(const ChanW_UTF& iChanW, const string& iString, bool iPreferSingleQuotes)
 	{
 	ChanW_UTF_Escaped::Options theOptions;
 	theOptions.fEscapeHighUnicode = false;
@@ -228,7 +228,7 @@ void sWriteString(const string& iString, bool iPreferSingleQuotes, const ChanW_U
 		}
 	}
 
-void sWriteString(const ChanR_UTF& iChanR, const ChanW_UTF& iChanW)
+void sWriteString(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR)
 	{
 	iChanW << "\"";
 
@@ -262,73 +262,73 @@ bool sContainsProblemChars(const string& iString)
 	return false;
 	}
 
-void sWritePropName(const string& iString, bool iUseSingleQuotes, const ChanW_UTF& w)
+void sWritePropName(const ChanW_UTF& ww, const string& iString, bool iUseSingleQuotes)
 	{
 	if (sContainsProblemChars(iString))
-		sWriteString(iString, iUseSingleQuotes, w);
+		sWriteString(ww, iString, iUseSingleQuotes);
 	else
-		w << iString;
+		ww << iString;
 	}
 
-void sWriteSimpleValue(const AnyBase& iAny, const PushTextOptions_JSON& iOptions, const ChanW_UTF& w)
+void sWriteSimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushTextOptions_JSON& iOptions)
 	{
 	if (false)
 		{}
 	else if (iAny.IsNull())
 		{
-		w << "null";
+		ww << "null";
 		}
 	else if (const bool* theValue = iAny.PGet<bool>())
 		{
 		if (*theValue)
-			w << "true";
+			ww << "true";
 		else
-			w << "false";
+			ww << "false";
 		}
 	else if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		{
 		if (iOptions.fIntegersAsHexQ.Get())
 			{
 			if (iOptions.fLowercaseHexQ.Get())
-				sEWritef(w, "0x%016llx", (unsigned long long)*theQ);
+				sEWritef(ww, "0x%016llx", (unsigned long long)*theQ);
 			else
-				sEWritef(w, "0x%016llX", (unsigned long long)*theQ);
+				sEWritef(ww, "0x%016llX", (unsigned long long)*theQ);
 			}
 		else
 			{
-			w << *theQ;
+			ww << *theQ;
 			}
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		Util_Chan::sWriteExact(w, *asFloat);
+		Util_Chan::sWriteExact(ww, *asFloat);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		Util_Chan::sWriteExact(w, *asDouble);
+		Util_Chan::sWriteExact(ww, *asDouble);
 		if (not fmod(*asDouble, 1.0))
 			{
 			// There's no fractional part, so we'll have written a sequence of digits with no
 			// decimal point. So the number would likely be subsequently interpreted as an
 			// integer, so we append a ".0".
-			w << ".0";
+			ww << ".0";
 			}
 		}
 	else if (const UTCDateTime* asTime = iAny.PGet<UTCDateTime>())
 		{
-		Util_Chan::sWriteExact(w, sGet(*asTime));
+		Util_Chan::sWriteExact(ww, sGet(*asTime));
 		if (sTimesHaveUserLegibleComment(iOptions))
-			w << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
+			ww << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
 		}
 	else
 		{
-		w << "NULL" << " /*!! Unhandled: " << sPrettyName(iAny.Type()) << " !!*/";
+		ww << "NULL" << " /*!! Unhandled: " << sPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
 void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	size_t iLevel, const PushTextOptions_JSON& iOptions,
-	const ChanW_UTF& w)
+	const ChanW_UTF& ww)
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
@@ -343,32 +343,32 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 
 	if (iOptions.fBinaryAsBase64Q.DGet(false))
 		{
-		w << "<";
-		w << "=";
+		ww << "<";
+		ww << "=";
 
 		sCopyAll(iChanR,
 			ChanW_Bin_Base64Encode(
 				Base64::sEncode_Normal(),
-				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, w))
+				ChanW_Bin_ASCIIStrim(ChanW_UTF_InsertSeparator(chunkSize * 3, chunkSeparator, ww))
 				)
 			);
 
-		w << ">";
+		ww << ">";
 		}
 	else if (sRawAsASCII(iOptions) && chunkSize)
 		{
 		std::vector<char> buffer(chunkSize, 0);
 		if (size_t countRead = sReadMem(iChanR, &buffer[0], chunkSize))
 			{
-			w << "<";
+			ww << "<";
 			if (countRead == chunkSize)
-				sWriteLFIndent(iLevel, iOptions, w);
+				sWriteLFIndent(ww, iLevel, iOptions);
 
 			std::vector<char> nextBuffer(chunkSize, 0);
 			for (;;)
 				{
 				const size_t countCopied = sWriteMemFully(
-					ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, iOptions.fLowercaseHexQ.Get(), w),
+					ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), "", 0, iOptions.fLowercaseHexQ.Get(), ww),
 					&buffer[0], countRead);
 
 				countRead = sReadMem(iChanR, &nextBuffer[0], chunkSize);
@@ -379,57 +379,57 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 					if (countRead == 0)
 						{
 						// And it was the end. Emit the close and a space (matching a pair of nibbles).
-						w << sRawByteSeparator(iOptions);
-						w << "> ";
+						ww << sRawByteSeparator(iOptions);
+						ww << "> ";
 						--extraSpaces;
 						}
 
 					while (extraSpaces--)
 						{
 						// Separator sequence
-						w << sRawByteSeparator(iOptions);
+						ww << sRawByteSeparator(iOptions);
 						// Two spaces for the two nibbles
-						w << "  ";
+						ww << "  ";
 						}
-					w << " /* ";
+					ww << " /* ";
 					}
 				else if (countRead == 0)
 					{
 					// We'd exactly consumed the data. Emit a close tight up against the data.
-					w << ">/* ";
+					ww << ">/* ";
 					}
 				else
 					{
-					w << " /* ";
+					ww << " /* ";
 					}
 				for (size_t xx = 0; xx < countCopied; ++xx)
 					{
 					char theChar = buffer[xx];
 					if (theChar < 0x20 || theChar > 0x7E)
-						w << ".";
+						ww << ".";
 					else
-						w << theChar;
+						ww << theChar;
 					}
-				w << " */ ";
+				ww << " */ ";
 				if (countRead == 0)
 					break;
-				sWriteLFIndent(iLevel, iOptions, w);
+				sWriteLFIndent(ww, iLevel, iOptions);
 				swap(buffer, nextBuffer);
 				}
 			}
 		else
 			{
-			w << "<>";
+			ww << "<>";
 			}
 		}
 	else
 		{
-		w << "<";
+		ww << "<";
 
 		sCopyAll(iChanR,
-			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, iOptions.fLowercaseHexQ.Get(), w));
+			ChanW_Bin_HexStrim(sRawByteSeparator(iOptions), chunkSeparator, chunkSize, iOptions.fLowercaseHexQ.Get(), ww));
 
-		w << ">";
+		ww << ">";
 
 		}
 	}
@@ -442,17 +442,17 @@ ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU)
 	return theString8;
 	}
 
-void sWrite_PropName(const string& iPropName, const ChanW_UTF& w)
+void sWrite_PropName(const ChanW_UTF& ww, const string& iPropName)
 	{
 	if (sContainsProblemChars(iPropName))
 		{
-		w << "\"";
-		ChanW_UTF_Escaped(w) << iPropName;
-		w << "\"";
+		ww << "\"";
+		ChanW_UTF_Escaped(ww) << iPropName;
+		ww << "\"";
 		}
 	else
 		{
-		w << iPropName;
+		ww << iPropName;
 		}
 	}
 

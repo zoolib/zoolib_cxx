@@ -32,7 +32,7 @@ public:
 	virtual void Visit(const ZP<Visitee>& iRep);
 
 // Our protocol
-	void ToStrim(const Options& iOptions, const ChanW_UTF& iStrimW, const ZP<Visitee>& iRep);
+	void ToStrim(const ChanW_UTF& iStrimW, const Options& iOptions, const ZP<Visitee>& iRep);
 
 protected:
 	void pToStrim(const ZP<Visitee>& iRep);
