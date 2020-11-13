@@ -65,7 +65,8 @@ public:
 					}
 				else
 					{
-					// Shuffle existing stuff to beginning of buffer.
+					// Shuffle existing stuff to beginning of buffer (could be handled in
+					// a more efficient manner.)
 					std::copy_n(&fBuffer[fEnd], boundaryCount - fEnd, &fBuffer[0]);
 
 					// Top up the tail.
@@ -76,7 +77,8 @@ public:
 						// The source stream has gone empty without our having already seen the
 						// boundary. Shuffle the data we do have so the last byte aligns with
 						// the end of the buffer.
-						std::copy_n(&fBuffer[0], boundaryCount - (fEnd - countRead), &fBuffer[fEnd - countRead]);
+						std::copy_n(&fBuffer[0],
+							boundaryCount - (fEnd - countRead), &fBuffer[fEnd - countRead]);
 
 						// The first returnable byte is at fBegin, and the last is at
 						// the end of the buffer.
@@ -93,7 +95,9 @@ public:
 						{
 						// Do Boyer-Moore search on the full buffer.
 						int xx;
-						for (xx = int(boundaryCount) - 1; xx >= 0 && fBuffer[xx] == fBoundary[xx]; --xx)
+						for (xx = int(boundaryCount) - 1;
+							xx >= 0 && fBuffer[xx] == fBoundary[xx];
+							--xx)
 							{}
 
 						if (xx < 0)
