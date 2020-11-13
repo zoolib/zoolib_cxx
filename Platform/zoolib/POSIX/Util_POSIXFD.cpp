@@ -103,6 +103,11 @@ bool sWaitWriteable(int iFD, double iTimeout)
 
 #endif
 
+void sClose(int iFD)
+	{
+	::close(iFD);
+	}
+
 void sAbort(int iFD)
 	{
 	if (iFD >= 0)

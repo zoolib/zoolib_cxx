@@ -24,6 +24,8 @@ void sSetup(fd_set& oSet, int iFD);
 bool sWaitReadable(int iFD, double iTimeout);
 bool sWaitWriteable(int iFD, double iTimeout);
 
+void sClose(int iFD);
+
 void sAbort(int iFD);
 uint64 sPos(int iFD);
 void sPosSet(int iFD, uint64 iPos);
