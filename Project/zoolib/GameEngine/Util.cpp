@@ -143,8 +143,8 @@ ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS)
 	return null;
 	}
 
-void sWriteBin(const Val_ZZ& iVal, const ChanW_Bin& w)
-	{ Util_ZZ_JSONB::sWrite(iVal, w); }
+void sWriteBin(const ChanW_Bin& ww, const Val_ZZ& iVal)
+	{ Util_ZZ_JSONB::sWrite(ww, iVal); }
 
 Val_ZZ sReadBin(const ChanR_Bin& iChanR)
 	{
@@ -234,16 +234,16 @@ Map_ZZ sReadTextData(const FileSpec& iFS)
 	return theMap;
 	}
 
-void sDump(const ChanW_UTF& w, const Val& iVal)
-	{ sDump(w, iVal.As<Val_ZZ>()); }
+void sDump(const ChanW_UTF& ww, const Val& iVal)
+	{ sDump(ww, iVal.As<Val_ZZ>()); }
 
 void sDump(const Val& iVal)
 	{ sDump(iVal.As<Val_ZZ>()); }
 
-void sDump(const ChanW_UTF& w, const Val_ZZ& iVal)
+void sDump(const ChanW_UTF& ww, const Val_ZZ& iVal)
 	{
-	w << "\n";
-	Util_ZZ_JSON::sWrite(iVal, true, w);
+	ww << "\n";
+	Util_ZZ_JSON::sWrite(ww, iVal, true);
 	}
 
 void sDump(const Val_ZZ& iVal)

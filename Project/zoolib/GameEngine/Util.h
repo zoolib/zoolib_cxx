@@ -38,13 +38,13 @@ Map_ZZ sReadTextData(const FileSpec& iFS);
 ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
 ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 
-void sWriteBin(const Val_ZZ& iVal, const ChanW_Bin& w);
+void sWriteBin(const ChanW_Bin& ww, const Val_ZZ& iVal);
 Val_ZZ sReadBin(const ChanR_Bin& iChanR);
 
-void sDump(const ChanW_UTF& w, const Val& iVal);
+void sDump(const ChanW_UTF& ww, const Val& iVal);
 void sDump(const Val& iVal);
 
-void sDump(const ChanW_UTF& w, const Val_ZZ& iVal);
+void sDump(const ChanW_UTF& ww, const Val_ZZ& iVal);
 void sDump(const Val_ZZ& iVal);
 
 uint64 sNextID();
