@@ -732,7 +732,7 @@ void MelangeServer::pChanged(
 	ResultCC* theResultCC = sPMut(fMap_Refcon2ResultCC, theRefCon);
 	if (theResultCC && theResultCC->fResultDeltas)
 		{
-		if (ZLOGF(w, eErr))
+		if (ZLOGF(w, eInfo))
 			{
 			if (fDescriptionQ)
 				w << *fDescriptionQ << " ";
