@@ -6,7 +6,7 @@
 
 #if __arm__
 	#if defined (__ANDROID__)
-		#include <machine/cpu-features.h>
+//		#include <machine/cpu-features.h>
 //	#else
 //		#include <arm/arch.h>
 	#endif
