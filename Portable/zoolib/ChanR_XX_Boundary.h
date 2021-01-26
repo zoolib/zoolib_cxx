@@ -113,7 +113,7 @@ public:
 							// of 'bytes' at the start of the buffer that *cannot* match the boundary,
 							// which are 'bytes' that can be returned as our output.
 							fBegin = 0;
-							fEnd = fDistance[fBuffer[boundaryCount - 1]];
+							fEnd = fDistance[uint8(fBuffer[boundaryCount - 1])];
 							}
 						}
 					}
