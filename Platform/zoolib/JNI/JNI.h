@@ -83,6 +83,8 @@ jobject sMakeBoolean(JNIEnv* env, bool iBool);
 
 jobject sMakeInteger(JNIEnv* env, int iInt);
 
+jobject sMakeLong(JNIEnv* env, jlong iLong);
+
 jobject sMakeFloat(JNIEnv* env, float iFloat);
 
 // =================================================================================================

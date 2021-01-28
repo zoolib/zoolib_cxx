@@ -111,6 +111,13 @@ jobject sMakeInteger(JNIEnv* env, int iInt)
 	return env->NewObject(cls, midInit, iInt);
 	}
 
+jobject sMakeLong(JNIEnv* env, jlong iLong)
+	{
+	jclass cls = env->FindClass("java/lang/Long");
+	jmethodID midInit = env->GetMethodID(cls, "<init>", "(J)V");
+	return env->NewObject(cls, midInit, iLong);
+	}
+
 jobject sMakeFloat(JNIEnv* env, float iFloat)
 	{
 	jclass cls = env->FindClass("java/lang/Float");
