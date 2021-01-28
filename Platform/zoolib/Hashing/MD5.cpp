@@ -1,27 +1,31 @@
-// Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
-// MIT License. http://www.zoolib.org
+// Copyright (c) 2002-2021 Andrew Green. MIT License. http://www.zoolib.org
 
-/*
-The algorithm is due to Ron Rivest, the actual implementation of the
-MD5 message-digest algorithm used here was written by Colin Plumb
-in 1993, for which no copyright is claimed.
-*/
-
-#include "zoolib/Memory.h"
-
-#include "zoolib/ZByteSwap.h"
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZStream_MD5.h"
+#include "zoolib/Hashing/MD5.h"
 
 #include <string.h> // Needed for memcpy and memset
 
-using std::min;
-
 namespace ZooLib {
+namespace Hashing {
+
+// =================================================================================================
+#pragma mark - OpenSSL
+
+#if ZCONFIG_Hashing_MD5_UseOpenSSL
+
+void MD5::sInit(MD5::Context& oContext)
+	{ ::MD5_Init(&oContext); }
+
+void MD5::sUpdate(MD5::Context& ioContext, const void* iData, size_t iCount)
+	{ ::MD5_Update(&ioContext, iData, iCount); }
+
+void MD5::sFinal(MD5::Context& ioContext, uint8 oDigest[20])
+	{ ::MD5_Final(&oDigest[0], &ioContext); }
+
+#endif // ZCONFIG_Hashing_MD5_UseOpenSSL
 
 // =================================================================================================
 
-#if !ZCONFIG_StreamMD5_UseOpenSSL
+#if not ZCONFIG_Hashing_MD5_UseOpenSSL
 
 /* little-endian word access macros */
 #define GET_32BIT_LSB_FIRST(cp) \
@@ -38,31 +42,33 @@ namespace ZooLib {
 	(cp)[3] = ((value) >> 24) & 0xFF; \
     } while(0)
 
-static void MD5Transform(uint32 buf[4], const unsigned char inext[64], ZStream_MD5::Context *ctx);
+static void MD5Transform(uint32 buf[4], const unsigned char inext[64], MD5::Context *ctx);
 
 /*
  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
  * initialization constants.
  */
-static void MD5_Init(ZStream_MD5::Context *ctx)
+void MD5::sInit(MD5::Context& oContext)
 {
-    ctx->buf[0] = 0x67452301;
-    ctx->buf[1] = 0xefcdab89;
-    ctx->buf[2] = 0x98badcfe;
-    ctx->buf[3] = 0x10325476;
+    oContext.buf[0] = 0x67452301;
+    oContext.buf[1] = 0xefcdab89;
+    oContext.buf[2] = 0x98badcfe;
+    oContext.buf[3] = 0x10325476;
 
-    ctx->bits[0] = 0;
-    ctx->bits[1] = 0;
+    oContext.bits[0] = 0;
+    oContext.bits[1] = 0;
 
-	memset(ctx->in, 0, 64);
+	memset(oContext.in, 0, 64);
 }
 
 /*
  * Update context to reflect the concatenation of another buffer full
  * of bytes.
  */
-static void MD5_Update(ZStream_MD5::Context *ctx, unsigned char const *buf, uint32 len)
+void MD5::sUpdate(Context& ioContext, const void* (iData), size_t len)
 {
+	Context* ctx = &ioContext;
+	const char* buf = static_cast<const char*>(iData);
     uint32 t;
 
     /* Update bitcount */
@@ -107,8 +113,9 @@ static void MD5_Update(ZStream_MD5::Context *ctx, unsigned char const *buf, uint
  * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
-static void MD5_Final(unsigned char digest[16], ZStream_MD5::Context *ctx)
+void MD5::sFinal(MD5::Context& ioContext, uint8 digest[16])
 {
+	Context* ctx = &ioContext;
     unsigned count;
     unsigned char *p;
 
@@ -174,9 +181,9 @@ static void MD5_Final(unsigned char digest[16], ZStream_MD5::Context *ctx)
  * reflect the addition of 16 longwords of new data.  MD5Update blocks
  * the data and converts bytes into longwords for this routine.
  */
-static void MD5Transform(uint32 buf[4], const unsigned char inext[64], ZStream_MD5::Context *ctx)
+static void MD5Transform(uint32 buf[4], const unsigned char inext[64], MD5::Context *ctx)
 {
-    register uint32 a, b, c, d, i;
+    uint32 a, b, c, d, i;
     uint32 in[16];
 
     for (i = 0; i < 16; i++)
@@ -262,132 +269,7 @@ static void MD5Transform(uint32 buf[4], const unsigned char inext[64], ZStream_M
     buf[3] += d;
 }
 
-#endif // !ZCONFIG_StreamMD5_UseOpenSSL
+#endif // not ZCONFIG_Hashing_MD5_UseOpenSSL
 
-// =================================================================================================
-#pragma mark - ZStream_MD5
-
-void ZStream_MD5::sInit(Context& oContext)
-	{ MD5_Init(&oContext); }
-
-void ZStream_MD5::sUpdate(Context& ioContext, const void* iData, size_t iCount)
-	{ MD5_Update(&ioContext, static_cast<const unsigned char*>(iData), iCount); }
-
-void ZStream_MD5::sFinal(Context& ioContext, uint8 oDigest[16])
-	{ MD5_Final(&oDigest[0], &ioContext); }
-
-// =================================================================================================
-#pragma mark - ZStreamR_MD5
-
-ZStreamR_MD5::ZStreamR_MD5(const ZStreamR& iStreamSource)
-:	ZStreamR_Filter(iStreamSource),
-	fStreamSource(iStreamSource),
-	fDigest(nullptr)
-	{
-	ZStream_MD5::sInit(fContext);
-	}
-
-/// Constructor for use inline.
-/**
-This constructor remembers the address of \a oDigest, and when destroyed will place
-the digest in that array. This constructor is useful when a ZStreamR is
-already being used to read some data, but for which we would like to gather
-a digest. e.g. going from this:
-\code
-sourceStream.Read(dest, destSize);
-\endcode
-to this:
-\code
-uint8 theDigest[16];
-ZStreamR_MD5(theDigest, sourceStream).Read(dest, destSize);
-\endcode
-*/
-ZStreamR_MD5::ZStreamR_MD5(uint8 oDigest[16], const ZStreamR& iStreamSource)
-:	ZStreamR_Filter(iStreamSource),
-	fStreamSource(iStreamSource),
-	fDigest(oDigest)
-	{ ZStream_MD5::sInit(fContext); }
-
-ZStreamR_MD5::~ZStreamR_MD5()
-	{
-	if (fDigest)
-		ZStream_MD5::sFinal(fContext, fDigest);
-	}
-
-void ZStreamR_MD5::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
-	{
-	size_t countRead;
-	fStreamSource.Read(oDest, iCount, &countRead);
-	if (countRead)
-		ZStream_MD5::sUpdate(fContext, oDest, countRead);
-	if (oCountRead)
-		*oCountRead = countRead;
-	}
-
-void ZStreamR_MD5::GetDigest(uint8 oDigest[16])
-	{
-	ZStream_MD5::Context tempContext = fContext;
-	ZStream_MD5::sFinal(tempContext, oDigest);
-	}
-
-// =================================================================================================
-#pragma mark - ZStreamW_MD5
-
-ZStreamW_MD5::ZStreamW_MD5(const ZStreamW& iStreamSink)
-:	fStreamSink(iStreamSink),
-	fDigest(nullptr)
-	{ ZStream_MD5::sInit(fContext); }
-
-/// Constructor for use inline.
-/**
-This constructor remembers the address of \a oDigest, and when destroyed will place
-the digest in that array. This constructor is useful when a ZStreamW is
-already being used to write some data, but for which we would like to gather
-a digest. e.g. going from this:
-\code
-destStream.Write(source, sourceSize);
-\endcode
-to this:
-\code
-uint8 theDigest[16];
-ZStreamW_MD5(theDigest, destStream).Write(source, sourceSize);
-\endcode
-
-It can also be used to simply digest a block of data in memory, by passing a temporary
-ZStreamW_Null as the destination stream:
-\code
-uint8 theDigest[16];
-ZStreamW_MD5(theDigest, ZStreamW_Null()).Write(source, sourceSize);
-\endcode
-*/
-ZStreamW_MD5::ZStreamW_MD5(uint8 oDigest[16], const ZStreamW& iStreamSink)
-:	fStreamSink(iStreamSink),
-	fDigest(oDigest)
-	{ ZStream_MD5::sInit(fContext); }
-
-ZStreamW_MD5::~ZStreamW_MD5()
-	{
-	if (fDigest)
-		ZStream_MD5::sFinal(fContext, fDigest);
-	}
-
-void ZStreamW_MD5::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{
-	size_t countWritten;
-	fStreamSink.Write(iSource, iCount, &countWritten);
-	if (countWritten)
-		ZStream_MD5::sUpdate(fContext, iSource, countWritten);
-	if (oCountWritten)
-		*oCountWritten = countWritten;
-	}
-
-void ZStreamW_MD5::Imp_Flush()
-	{ fStreamSink.Flush(); }
-
-void ZStreamW_MD5::GetDigest(uint8 oDigest[16])
-	{
-	ZStream_MD5::Context tempContext = fContext;
-	ZStream_MD5::sFinal(tempContext, oDigest);
-	}
-
+} // namespace Hashing
 } // namespace ZooLib
