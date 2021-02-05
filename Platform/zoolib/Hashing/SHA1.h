@@ -26,6 +26,8 @@ namespace SHA1 {
 // =================================================================================================
 #pragma mark -
 
+constexpr size_t kHashSize = 20;
+
 #if ZCONFIG_Hashing_SHA1_UseOpenSSL
 
 typedef SHA_CTX Context;
@@ -48,7 +50,7 @@ struct Context
 
 void sInit(Context& oContext);
 void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-void sFinal(Context& ioContext, uint8 oDigest[20]);
+void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
 
 // =================================================================================================
 
@@ -56,4 +58,4 @@ void sFinal(Context& ioContext, uint8 oDigest[20]);
 } // namespace Hashing
 } // namespace ZooLib
 
-#endif // __ZStream_SHA1_h__
+#endif // __ZooLib_Hashing_SHA1_h__

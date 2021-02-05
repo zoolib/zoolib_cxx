@@ -26,6 +26,8 @@ namespace MD5 {
 // =================================================================================================
 #pragma mark -
 
+constexpr size_t kHashSize = 16;
+
 #if ZCONFIG_Hashing_MD5_UseOpenSSL
 
 typedef MD5_CTX Context;
@@ -43,7 +45,7 @@ struct Context
 
 void sInit(Context& oContext);
 void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-void sFinal(Context& ioContext, uint8 oDigest[16]);
+void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
 
 // =================================================================================================
 
@@ -51,4 +53,4 @@ void sFinal(Context& ioContext, uint8 oDigest[16]);
 } // namespace Hashing
 } // namespace ZooLib
 
-#endif // __ZStream_MD5_h__
+#endif // __ZooLib_Hashing_MD5_h__
