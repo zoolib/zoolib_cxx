@@ -2,17 +2,25 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(ZOOLIB_CXX ../..)
 
-set(ZDIR ${ZOOLIB_CXX}/Platform)
+set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/POSIX)
 
-set (CppFiles	
-	${ZDIR}/zoolib/POSIX/Chan_Bin_POSIXFD.cpp
-	${ZDIR}/zoolib/POSIX/FILE_Channer.cpp
-	${ZDIR}/zoolib/POSIX/File_POSIX.cpp
-	${ZDIR}/zoolib/POSIX/Net_Internet_Socket.cpp
-	${ZDIR}/zoolib/POSIX/Net_Socket.cpp
-	${ZDIR}/zoolib/POSIX/SubProcess_POSIX.cpp
-	${ZDIR}/zoolib/POSIX/Util_POSIX.cpp
-	${ZDIR}/zoolib/POSIX/Util_POSIXFD.cpp
+set (SourceFiles	
+	${SourceDir}/Chan_Bin_POSIXFD.cpp
+	${SourceDir}/Chan_Bin_POSIXFD.h
+	${SourceDir}/FILE_Channer.cpp
+	${SourceDir}/FILE_Channer.h
+	${SourceDir}/File_POSIX.cpp
+	${SourceDir}/File_POSIX.h
+	${SourceDir}/Net_Internet_Socket.cpp
+	${SourceDir}/Net_Internet_Socket.h
+	${SourceDir}/Net_Socket.cpp
+	${SourceDir}/Net_Socket.h
+	${SourceDir}/SubProcess_POSIX.cpp
+	${SourceDir}/SubProcess_POSIX.h
+	${SourceDir}/Util_POSIX.cpp
+	${SourceDir}/Util_POSIX.h
+	${SourceDir}/Util_POSIXFD.cpp
+	${SourceDir}/Util_POSIXFD.h
 )
 
 add_library(
@@ -22,8 +30,10 @@ add_library(
 	# STATIC or SHARED
 	STATIC
 
-	${CppFiles}
+	${SourceFiles}
 	)
 
-# Specifies a path to native header files.
-include_directories(${ZDIR} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/default_config)
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable)
+
+# Put source files in a single IDE group
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

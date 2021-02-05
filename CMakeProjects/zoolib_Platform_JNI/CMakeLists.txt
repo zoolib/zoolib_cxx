@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(ZOOLIB_CXX ../..)
 
-set(ZDIR ${ZOOLIB_CXX}/Platform)
+set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/JNI)
 
-set (CppFiles	
-	${ZDIR}/zoolib/JNI/Chan_JavaInputStream.cpp
-	${ZDIR}/zoolib/JNI/JNI.cpp
+set (SourceFiles	
+	${SourceDir}/Chan_JavaInputStream.cpp
+	${SourceDir}/Chan_JavaInputStream.h
+	${SourceDir}/JNI.cpp
+	${SourceDir}/JNI.h
 )
 
 add_library(
@@ -16,8 +18,10 @@ add_library(
 	# STATIC or SHARED
 	STATIC
 
-	${CppFiles}
+	${SourceFiles}
 	)
 
-# Specifies a path to native header files.
-include_directories(${ZDIR} ${ZOOLIB_CXX}/core ${ZOOLIB_CXX}/default_config)
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable)
+
+# Put source files in a single IDE group
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

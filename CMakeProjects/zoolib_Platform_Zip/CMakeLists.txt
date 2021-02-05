@@ -2,19 +2,15 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(ZOOLIB_CXX ../..)
 
-set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/ARM)
+set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/Zip)
 
 set (SourceFiles	
-	${SourceDir}/Compat_arm.h
-	${SourceDir}/Matrix_armv6.cpp
-	${SourceDir}/Matrix_armv6.h
-	${SourceDir}/Matrix_armv7.cpp
-	${SourceDir}/Matrix_armv7.h
+	${SourceDir}/File_Zip.cpp
 )
 
 add_library(
 	# Specifies the name of the library.
-	ZooLib_Platform_ARM
+	ZooLib_Platform_Zip
 
 	# STATIC or SHARED
 	STATIC
