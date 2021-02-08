@@ -3,6 +3,8 @@
 
 #include "zoolib/Pixels/PixmapCoder_PNG.h"
 
+#include "zoolib/Pixels/Blit.h"
+#include "zoolib/Pixels/Cartesian_Geom.h"
 #include "zoolib/Pixels/Formats.h"
 
 #include <vector>
@@ -18,35 +20,7 @@ namespace ZooLib {
 namespace Pixels {
 
 // =================================================================================================
-#pragma mark - Static functions
-
-//static void spThrowToStream()
-//	{
-//	throw runtime_error("ZDCPixmapCoder_PNG, to stream");
-//	}
-
-//static void spPNG_Write(png_structp png_ptr, png_bytep iSource, png_size_t iSize)
-//	{
-//	try
-//		{
-//		sEWrite(*static_cast<ChanW_Bin*>(png_get_io_ptr(png_ptr)), iSource, iSize);
-//		return;
-//		}
-//	catch (...)
-//		{}
-//
-//	longjmp(png_jmpbuf(png_ptr), 1);
-//	}
-//
-//static void spPNG_Write_Flush(png_structp png_ptr)
-//	{
-//	static_cast<ChanW_Bin*>(png_get_io_ptr(png_ptr))->Flush();
-//	}
-//
-static void spThrowFromStream()
-	{
-	throw runtime_error("ZDCPixmapCoder_PNG, from stream");
-	}
+#pragma mark - sReadPixmap_PNG
 
 static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
 	{
@@ -61,10 +35,7 @@ static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t i
 	longjmp(png_jmpbuf(png_ptr), 1);
 	}
 
-// =================================================================================================
-#pragma mark - sReadPixmap_PNG
-
-Pixmap sReadPixmap_PNG(const ChanR_Bin& iStream)
+Pixmap sReadPixmap_PNG(const ChanR_Bin& iChanR)
 	{
 	Pixmap thePixmap;
 
@@ -75,10 +46,10 @@ Pixmap sReadPixmap_PNG(const ChanR_Bin& iStream)
 	try
 		{
 		info_ptr = ::png_create_info_struct(read_ptr);
-		::png_set_read_fn(read_ptr, &const_cast<ChanR_Bin&>(iStream), spPNG_Read);
+		::png_set_read_fn(read_ptr, &const_cast<ChanR_Bin&>(iChanR), spPNG_Read);
 
 		if (setjmp(png_jmpbuf(read_ptr)))
-			spThrowFromStream();
+			sThrow_ExhaustedR();
 
 		::png_read_info(read_ptr, info_ptr);
 
@@ -183,11 +154,11 @@ Pixmap sReadPixmap_PNG(const ChanR_Bin& iStream)
 			theRowPointers[y] = sCalcRowAddress(theRasterDesc, baseAddress, y);
 
 		if (setjmp(png_jmpbuf(read_ptr)))
-			spThrowFromStream();
+			sThrow_ExhaustedR();
 		::png_read_image(read_ptr, reinterpret_cast<png_byte**>(&theRowPointers[0]));
 
 		if (setjmp(png_jmpbuf(read_ptr)))
-			spThrowFromStream();
+			sThrow_ExhaustedR();
 		::png_read_end(read_ptr, info_ptr);
 		}
 	catch (...)
@@ -202,6 +173,175 @@ Pixmap sReadPixmap_PNG(const ChanR_Bin& iStream)
 
 	return thePixmap;
 	}
+
+// =================================================================================================
+#pragma mark - sWritePixmap_PNG
+
+static void spPNG_Write(png_structp png_ptr, png_bytep iSource, png_size_t iSize)
+	{
+	try
+		{
+		sEWrite(*static_cast<ChanW_Bin*>(png_get_io_ptr(png_ptr)), iSource, iSize);
+		return;
+		}
+	catch (...)
+		{}
+
+	longjmp(png_jmpbuf(png_ptr), 1);
+	}
+
+static void spPNG_Write_Flush(png_structp png_ptr)
+	{
+	sFlush(*static_cast<ChanW_Bin*>(png_get_io_ptr(png_ptr)));
+	}
+
+void sWritePixmap_PNG(
+	const void* iBaseAddress,
+	const RasterDesc& iRasterDesc,
+	const PixelDesc& iPixelDesc,
+	const RectPOD& iBounds,
+	const ChanW_Bin& iChanW)
+	{
+	png_structp write_ptr =
+		::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_infop info_ptr = nullptr;
+
+	vector<uint8> theRowBufferVector;
+
+	try
+		{
+		info_ptr = ::png_create_info_struct(write_ptr);
+		::png_set_write_fn(write_ptr,
+			&const_cast<ChanW_Bin&>(iChanW), spPNG_Write, spPNG_Write_Flush);
+
+		// const PixvalDesc sourcePixvalDesc = iRasterDesc.fPixvalDesc;
+
+		PixvalDesc destPixvalDesc;
+		PixelDesc destPixelDesc;
+
+		// This vector has to persist until png_write_info is called.
+		vector<png_color> thePNGPaletteVector;
+
+		ZP<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
+
+		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
+			thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
+			{
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
+				PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
+
+			const RGBA* sourceColors;
+			size_t sourceColorCount;
+			thePixelDescRep_Indexed->GetColors(sourceColors, sourceColorCount);
+
+			thePNGPaletteVector.resize(sourceColorCount);
+			for (size_t x = 0; x < sourceColorCount; ++x)
+				{
+				thePNGPaletteVector[x].red = 0.5 + 255 * sRed(sourceColors[x]);
+				thePNGPaletteVector[x].green = 0.5 + 255 * sGreen(sourceColors[x]);
+				thePNGPaletteVector[x].blue = 0.5 + 255 * sBlue(sourceColors[x]);
+				}
+			::png_set_PLTE(write_ptr, info_ptr, &thePNGPaletteVector[0], sourceColorCount);
+
+			destPixelDesc = iPixelDesc;
+			destPixvalDesc.fDepth = 8;
+			destPixvalDesc.fBigEndian = true;
+			}
+		else if (thePixelDescRep.DynamicCast<PixelDescRep_Color>())
+			{
+			int colorType;
+			if (thePixelDescRep->HasAlpha())
+				{
+				colorType = PNG_COLOR_TYPE_RGB_ALPHA;
+				destPixelDesc = sPixelDesc(EFormatStandard::RGBA_32);
+				destPixvalDesc = sPixvalDesc(EFormatStandard::RGBA_32);
+				}
+			else
+				{
+				colorType = PNG_COLOR_TYPE_RGB;
+				destPixelDesc = sPixelDesc(EFormatStandard::RGB_24);
+				destPixvalDesc = sPixvalDesc(EFormatStandard::RGB_24);
+				}
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+			}
+		else if (thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
+			{
+			int colorType;
+			if (thePixelDescRep->HasAlpha())
+				{
+				colorType = PNG_COLOR_TYPE_GRAY_ALPHA;
+				destPixelDesc = sPixelDesc(EFormatStandard::GA_16);
+				destPixvalDesc = sPixvalDesc(EFormatStandard::GA_16);
+				}
+			else
+				{
+				colorType = PNG_COLOR_TYPE_GRAY;
+				destPixelDesc = sPixelDesc(EFormatStandard::Gray_8);
+				destPixvalDesc = sPixvalDesc(EFormatStandard::Gray_8);
+				}
+			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+			}
+		else
+			{
+			ZUnimplemented();
+			}
+
+		theRowBufferVector.resize(W(iBounds) * (destPixvalDesc.fDepth / 8));
+
+		RasterDesc destRD(destPixvalDesc, theRowBufferVector.size(), 1, false);
+		const RectPOD destBounds = sRectPOD(0, 0, W(iBounds), 1);
+
+		const RectPOD sourceSingleRowBounds = sRectPOD(iBounds.left, 0, iBounds.right, 1);
+
+		if (setjmp(png_jmpbuf(write_ptr)))
+			sThrow_ExhaustedW();
+		::png_write_info(write_ptr, info_ptr);
+
+		uint8* theRowBuffer = &theRowBufferVector[0];
+		int numberOfPasses = ::png_set_interlace_handling(write_ptr);
+		for (int currentPass = 0; currentPass < numberOfPasses; ++currentPass)
+			{
+			for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
+				{
+				const void* sourceRowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, y);
+
+				sBlit(iRasterDesc, sourceRowAddress, sourceSingleRowBounds, iPixelDesc,
+					destRD, theRowBuffer, destBounds, destPixelDesc,
+					eOp_Copy);
+
+				if (setjmp(png_jmpbuf(write_ptr)))
+					sThrow_ExhaustedW();
+				::png_write_row(write_ptr, theRowBuffer);
+				}
+			}
+		if (setjmp(png_jmpbuf(write_ptr)))
+			sThrow_ExhaustedW();
+		::png_write_end(write_ptr, info_ptr);
+		}
+	catch (...)
+		{
+		if (write_ptr)
+			::png_destroy_write_struct(&write_ptr, &info_ptr);
+		throw;
+		}
+
+	if (write_ptr)
+		::png_destroy_write_struct(&write_ptr, &info_ptr);
+	}
+
+void sWritePixmap_PNG(const Pixmap& iPixmap, const ChanW_Bin& iChanW)
+	{
+	sWritePixmap_PNG(
+		iPixmap.GetBaseAddress(),
+		iPixmap.GetRasterDesc(),
+		iPixmap.GetPixelDesc(),
+		iPixmap.GetBounds(),
+		iChanW);
+	}
+
 
 } // namespace Pixels
 } // namespace ZooLib

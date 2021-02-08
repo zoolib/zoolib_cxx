@@ -63,7 +63,6 @@ static void spMaskToShiftsAndMultiplier(uint32 iMask,
 
 static uint8* spBuildReverseLookup(const RGBA* iColors, size_t iCount)
 	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 	uint8* lookupTable = new uint8[4096];
 	for (int red = 0; red < 16; ++red)
 		{
@@ -157,8 +156,6 @@ void PixelDesc::AsPixvals(const RGBA* iColors, size_t iCount, Pixval* oPixvals) 
 PixelDescRep_Indexed::PixelDescRep_Indexed(const RGBA* iColors, size_t iCount)
 :	fCheckedAlpha(false)
 	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
 	Pixval2RGBA_Indexed::fPixvals = nullptr;
 	RGBA2Pixval_Indexed::fPixvals = nullptr;
 	fReverseLookup = nullptr;
@@ -173,8 +170,6 @@ PixelDescRep_Indexed::PixelDescRep_Indexed(const RGBA* iColors,
 :	fCheckedAlpha(true),
 	fHasAlpha(false)
 	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
 	ZAssertStopf(1, iStripAlpha, "This constructor is only used when stripping alpha");
 
 	Pixval2RGBA_Indexed::fPixvals = nullptr;
@@ -194,8 +189,6 @@ PixelDescRep_Indexed::PixelDescRep_Indexed(const RGBA* iColors,
 	uint32* iPixvals, size_t iCount)
 :	fCheckedAlpha(false)
 	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
 	Pixval2RGBA_Indexed::fPixvals = nullptr;
 	RGBA2Pixval_Indexed::fPixvals = nullptr;
 	fReverseLookup = nullptr;
@@ -235,8 +228,6 @@ PixelDescRep_Indexed::PixelDescRep_Indexed(const RGBA* iColors,
 :	fCheckedAlpha(true),
 	fHasAlpha(false)
 	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
 	ZAssertStopf(1, iStripAlpha, ("This constructor is only used when stripping alpha"));
 
 	Pixval2RGBA_Indexed::fPixvals = nullptr;

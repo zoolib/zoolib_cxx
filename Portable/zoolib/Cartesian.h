@@ -795,6 +795,15 @@ Rect_p sInsetted(const Rect_p& iRect, const OtherX_p& iX, const OtherY_p& iY)
 		R(iRect) - X(iX), B(iRect) - Y(iY));
 	}
 
+template <class Rect_p, class OtherL_p, class OtherT_p, class OtherR_p, class OtherB_p>
+Rect_p sInsetted(const Rect_p& iRect,
+	const OtherL_p& iL, const OtherT_p& iT, const OtherR_p& iR, const OtherB_p& iB)
+	{
+	return sRect<Rect_p>(
+		L(iRect) + iL, T(iRect) + iT,
+		R(iRect) - iR, B(iRect) - iB);
+	}
+
 template <class Rect_p, class Other>
 Rect_p sInsetted(const Rect_p& iRect, const Other& iOther)
 	{
