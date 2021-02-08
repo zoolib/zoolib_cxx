@@ -91,6 +91,9 @@ FileSpec FileSpec::sCWD()
 	{
 	ZP<FileLoc> theLoc =
 		FunctionChain<ZP<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_CWD);
+
+	ZAssert(theLoc);
+
 	return FileSpec(theLoc);
 	}
 
@@ -99,6 +102,9 @@ FileSpec FileSpec::sRoot()
 	{
 	ZP<FileLoc> theLoc =
 		FunctionChain<ZP<FileLoc>, FileLoc::ELoc>::sInvoke(FileLoc::eLoc_Root);
+
+	ZAssert(theLoc);
+
 	return FileSpec(theLoc);
 	}
 
