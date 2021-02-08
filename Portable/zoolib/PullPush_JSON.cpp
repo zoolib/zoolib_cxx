@@ -256,7 +256,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				}
 
 			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
-				sThrow_ParseException("Expected value");
+				sThrow_ParseException("Expected value or ']'");
 
 			if (iRO.fLooseSeparators.DGet(false))
 				{
@@ -304,7 +304,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			string theName;
 			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanRU,
 				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
-				{ sThrow_ParseException("Expected a member name"); }
+				{ sThrow_ParseException("Expected a member name or '}'"); }
 
 			sPush(sName(theName), iChanW);
 

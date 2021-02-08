@@ -96,7 +96,7 @@ bool sQCopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
 
 template <class EE>
 void sECopyAll(const ChanR<EE>& iChanR, const ChanW<EE>& iChanW)
-	{ sQCopyAll(iChanR, iChanW) ||sThrow_ExhaustedW(); }
+	{ sQCopyAll(iChanR, iChanW) || sThrow_ExhaustedW(); }
 
 // Not sure about the XX_Until name -- it made sense in ZUtil_Strim, maybe not so much elsewhere.
 template <class EE>
