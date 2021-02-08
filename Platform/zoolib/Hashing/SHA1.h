@@ -21,12 +21,14 @@
 
 namespace ZooLib {
 namespace Hashing {
-namespace SHA1 {
 
 // =================================================================================================
 #pragma mark -
 
-constexpr size_t kHashSize = 20;
+struct SHA1 {
+
+static constexpr size_t kHashSize = 20;
+static constexpr char kName[] = "SHA1";
 
 #if ZCONFIG_Hashing_SHA1_UseOpenSSL
 
@@ -48,13 +50,14 @@ struct Context
 
 #endif // ZCONFIG_Hashing_SHA1_UseOpenSSL
 
-void sInit(Context& oContext);
-void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+static void sInit(Context& oContext);
+static void sUpdate(Context& ioContext, const void* iData, size_t iCount);
+static void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+
+}; // struct SHA1
 
 // =================================================================================================
 
-} // namespace SHA1
 } // namespace Hashing
 } // namespace ZooLib
 

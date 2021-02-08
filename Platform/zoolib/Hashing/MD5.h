@@ -21,12 +21,14 @@
 
 namespace ZooLib {
 namespace Hashing {
-namespace MD5 {
 
 // =================================================================================================
 #pragma mark -
 
-constexpr size_t kHashSize = 16;
+struct MD5 {
+
+static constexpr size_t kHashSize = 16;
+static constexpr char kName[] = "MD5";
 
 #if ZCONFIG_Hashing_MD5_UseOpenSSL
 
@@ -43,13 +45,14 @@ struct Context
 
 #endif // ZCONFIG_Hashing_MD5_UseOpenSSL
 
-void sInit(Context& oContext);
-void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+static void sInit(Context& oContext);
+static void sUpdate(Context& ioContext, const void* iData, size_t iCount);
+static void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+
+}; // struct MD5
 
 // =================================================================================================
 
-} // namespace MD5
 } // namespace Hashing
 } // namespace ZooLib
 

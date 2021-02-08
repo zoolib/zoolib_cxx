@@ -5,6 +5,7 @@ set(ZOOLIB_CXX ../..)
 set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/Hashing)
 
 set (SourceFiles	
+	${SourceDir}/ChanW_Bin_Hash.h
 	${SourceDir}/MD5.cpp
 	${SourceDir}/MD5.h
 	${SourceDir}/SHA1.cpp

@@ -7,20 +7,19 @@
 
 namespace ZooLib {
 namespace Hashing {
-namespace SHA256 {
 
 // =================================================================================================
 #pragma mark - OpenSSL
 
 #if ZCONFIG_Hashing_SHA256_UseOpenSSL
 
-void sInit(Context& oContext)
+void SHA256::sInit(Context& oContext)
 	{ ::SHA256_Init(&oContext); }
 
-void sUpdate(Context& ioContext, const void* iData, size_t iCount)
+void SHA256::sUpdate(Context& ioContext, const void* iData, size_t iCount)
 	{ ::SHA256_Update(&ioContext, iData, iCount); }
 
-void sFinal(Context& ioContext, uint8 oDigest[kHashSize])
+void SHA256::sFinal(Context& ioContext, uint8 oDigest[kHashSize])
 	{ ::SHA256_Final(&oDigest[0], &ioContext); }
 
 #endif // ZCONFIG_Hashing_SHA256_UseOpenSSL
@@ -30,7 +29,9 @@ void sFinal(Context& ioContext, uint8 oDigest[kHashSize])
 
 #if not ZCONFIG_Hashing_SHA256_UseOpenSSL
 
-typedef Context SHA256_CTX;
+typedef uint8 BYTE;
+typedef uint32 WORD;
+typedef SHA256::Context SHA256_CTX;
 
 /*********************************************************************
 * Filename:   sha256.c
@@ -187,23 +188,22 @@ static void sha256_final(SHA256_CTX *ctx, BYTE hash[])
 	}
 }
 
-void sInit(Context& oContext)
+void SHA256::sInit(Context& oContext)
 	{
 	sha256_init(&oContext);
 	}
 
-void sUpdate(Context& ioContext, const void* iData, size_t iCount)
+void SHA256::sUpdate(Context& ioContext, const void* iData, size_t iCount)
 	{
 	sha256_update(&ioContext, static_cast<const BYTE*>(iData), iCount);
 	}
 
-void sFinal(Context& ioContext, uint8 oDigest[kHashSize])
+void SHA256::sFinal(Context& ioContext, uint8 oDigest[kHashSize])
 	{
 	sha256_final(&ioContext, oDigest);
 	}
 
 #endif // not ZCONFIG_Hashing_SHA256_UseOpenSSL
 
-} // namespace SHA256
 } // namespace Hashing
 } // namespace ZooLib
