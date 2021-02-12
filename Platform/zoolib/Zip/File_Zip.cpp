@@ -1,108 +1,49 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Zip/File_Zip.h"
+#include "zoolib/File_Archive.h"
 
 #include "zoolib/Util_STL_map.h"
 
 #include "zip.h"
 
+// This is implemented in zip_open.c
+extern "C" struct zip * zip_open_FILE(FILE* fp, int flags);
+
 namespace ZooLib {
-
-using namespace Util_STL;
-using std::map;
-using std::string;
-using std::vector;
-
-// =================================================================================================
-#pragma mark - Node (anonymous)
 
 namespace { // anonymous
 
-class Node_Directory;
+// =================================================================================================
+#pragma mark - ArchiveToken_EntryNum (anonymous)
 
-class Node
-:	public CountedWithoutFinalize
+class ArchiveToken_EntryNum
+:	public ArchiveToken
 	{
 public:
-	Node(Node_Directory* iParent, const string& iName)
-	:	fParent(iParent)
-	,	fName(iName)
-		{}
-
-	Node_Directory* fParent;
-	const string fName;
-	};
-
-typedef map<string8, ZP<Node> > MapNameNode;
-
-class Node_Directory
-:	public Node
-	{
-public:
-	Node_Directory(Node_Directory* iParent, const string& iName)
-	:	Node(iParent, iName)
-		{}
-
-	MapNameNode fChildren;
-	};
-
-class Node_File
-:	public Node
-	{
-public:
-	Node_File(Node_Directory* iParent, const string& iName, size_t iEntryNum)
-	:	Node(iParent, iName)
-	,	fEntryNum(iEntryNum)
+	ArchiveToken_EntryNum(size_t iEntryNum)
+	:	fEntryNum(iEntryNum)
 		{}
 
 	const size_t fEntryNum;
 	};
 
-} // anonymous namespace
-
 // =================================================================================================
 #pragma mark - ZipHolder (anonymous)
 
-namespace { // anonymous
-
-struct ZipHolder
-:	public Counted
+class ZipHolder
+:	public Archive
 	{
-	static
-	void spStuff(size_t iEntryNum, const ZP<Node_Directory>& ioParent,
-		const Trail& iTrail, size_t iIndex)
-		{
-		const string theName = iTrail.At(iIndex);
-
-		if (iIndex == iTrail.Count() - 1)
-			{
-			// We've hit the file
-			ioParent->fChildren[theName] = new Node_File(ioParent.Get(), theName, iEntryNum);
-			return;
-			}
-
-		ZP<Node_Directory> theNode = ioParent->fChildren[theName].StaticCast<Node_Directory>();
-		if (not theNode)
-			{
-			theNode = new Node_Directory(ioParent.Get(), theName);
-			ioParent->fChildren[theName] = theNode;
-			}
-
-		spStuff(iEntryNum, theNode, iTrail, iIndex + 1);
-		}
-
+public:
 	ZipHolder(zip* i_zip, bool iAdopt)
 	:	f_zip(i_zip)
 	,	fOwned(iAdopt)
-	,	fRoot(new Node_Directory(nullptr, string()))
+	,	fRoot(new ArchiveNode_Directory(nullptr, string8()))
 		{
-		if (not f_zip)
-			throw std::runtime_error("Couldn't open zip");
-
 		for (size_t xx = 0, count = ::zip_get_num_files(f_zip); xx < count; ++xx)
 			{
-			const string theName = ::zip_get_name(f_zip, xx, 0);
-			spStuff(xx, fRoot, Trail(theName), 0);
+			const string8 theName = ::zip_get_name(f_zip, xx, 0);
+			sGrowArchiveDirectoryTree(new ArchiveToken_EntryNum(xx), fRoot, Trail(theName), 0);
 			}
 		}
 
@@ -112,16 +53,20 @@ struct ZipHolder
 			::zip_close(f_zip);
 		}
 
+// From Archive
+	virtual ZP<ArchiveNode> GetRoot()
+		{ return fRoot; }
+
+	virtual ZP<ChannerR_Bin> OpenR(const ZP<ArchiveNode_File>& iArchiveNode);
+
 	struct zip* f_zip;
 	bool fOwned;
 
-	ZP<Node_Directory> fRoot;
+	ZP<ArchiveNode_Directory> fRoot;
 	};
 
-} // anonymous namespace
-
 // =================================================================================================
-#pragma mark - ChannerR_Bin_Zip
+#pragma mark - ChannerR_Bin_Zip (anonymous)
 
 struct ChannerR_Bin_Zip
 :	public ChannerR_Bin
@@ -145,185 +90,17 @@ struct ChannerR_Bin_Zip
 		}
 	};
 
-// =================================================================================================
-#pragma mark - FileIterRep_Zip
-
-class FileIterRep_Zip
-:	public FileIterRep
+ZP<ChannerR_Bin> ZipHolder::OpenR(const ZP<ArchiveNode_File>& iArchiveNode)
 	{
-public:
-	const ZP<ZipHolder> fZipHolder;
-	MapNameNode::const_iterator fIter;
-	const MapNameNode::const_iterator fEnd;
-
-	FileIterRep_Zip(const ZP<ZipHolder>& iZipHolder,
-		MapNameNode::const_iterator iIter,
-		MapNameNode::const_iterator iEnd)
-	:	fZipHolder(iZipHolder)
-	,	fIter(iIter)
-	,	fEnd(iEnd)
-		{}
-
-	virtual ~FileIterRep_Zip()
-		{}
-
-	virtual bool HasValue()
-		{ return fIter != fEnd; }
-
-	virtual void Advance()
+	if (ZP<ArchiveToken_EntryNum> theATEN =
+		iArchiveNode->GetToken().DynamicCast<ArchiveToken_EntryNum>())
 		{
-		if (fIter != fEnd)
-			++fIter;
+		return new ChannerR_Bin_Zip(this, theATEN->fEntryNum);
 		}
-
-	virtual FileSpec Current();
-
-	virtual std::string CurrentName() const
-		{ return fIter->first; }
-
-	virtual ZP<FileIterRep> Clone()
-		{ return new FileIterRep_Zip(fZipHolder, fIter, fEnd); }
-	};
-
-// =================================================================================================
-#pragma mark - FileLoc_Zip
-
-class FileLoc_Zip : public FileLoc
-	{
-public:
-	FileLoc_Zip(const ZP<ZipHolder>& iZipHolder, const ZP<Node>& iNode)
-	:	fZipHolder(iZipHolder)
-	,	fNode(iNode)
-		{}
-
-	virtual ~FileLoc_Zip()
-		{}
-
-// From FileLoc
-	virtual ZP<FileIterRep> CreateIterRep()
-		{
-		if (ZP<Node_Directory> theDir = fNode.DynamicCast<Node_Directory>())
-			{
-			return new FileIterRep_Zip(fZipHolder,
-				theDir->fChildren.begin(), theDir->fChildren.end());
-			}
-		return null;
-		}
-
-	virtual std::string GetName() const
-		{
-		if (fNode)
-			return fNode->fName;
-		return string();
-		}
-
-	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const
-		{ return null; }
-
-	virtual ZP<FileLoc> GetParent()
-		{
-		if (fNode && fNode->fParent)
-			return new FileLoc_Zip(fZipHolder, fNode->fParent);
-		return null;
-		}
-
-	virtual ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount)
-		{
-		ZP<Node> theNode = fNode;
-		for (;;)
-			{
-			if (not iCount--)
-				{
-				if (theNode)
-					return new FileLoc_Zip(fZipHolder, theNode);
-				return null;
-				}
-
-			if (ZP<Node_Directory> theDir = theNode.DynamicCast<Node_Directory>())
-				theNode = sGet(theDir->fChildren, *iComps++);
-			else
-				return null;
-			}
-		}
-
-	virtual bool IsRoot()
-		{ return not fNode->fParent; }
-
-	virtual ZP<FileLoc> Follow()
-		{ return this; }
-
-	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount)
-		{
-		string result = this->pGetPath();
-		for (size_t xx = 0; xx < iCount; ++xx)
-			{
-			result += "/";
-			result += iComps[xx];
-			}
-		return result;
-		}
-
-	virtual std::string AsString_Native(const std::string* iComps, size_t iCount)
-		{ return this->AsString_POSIX(iComps, iCount); }
-
-	virtual File::Kind Kind()
-		{
-		if (not fNode)
-			return File::kindNone;
-
-		if (fNode.DynamicCast<Node_Directory>())
-			return File::kindDir;
-
-		return File::kindFile;
-		}
-
-	virtual uint64 Size()
-		{
-		ZUnimplemented();
-		}
-
-	virtual double TimeCreated()
-		{ return 0; }
-
-	virtual double TimeModified()
-		{ return 0; }
-
-	virtual ZP<FileLoc> CreateDir()
-		{ return null; }
-
-	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest)
-		{ return null; }
-
-	virtual bool Delete()
-		{ return false; }
-
-	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters)
-		{
-		if (ZP<Node_File> theNode = fNode.DynamicCast<Node_File>())
-			return new ChannerR_Bin_Zip(fZipHolder, theNode->fEntryNum);
-		return null;
-		}
-
-	std::string pGetPath()
-		{
-		string result;
-		for (ZP<Node> theNode = fNode; theNode; theNode = theNode->fParent)
-			result = "/" + theNode->fName + result;
-		return result;
-		}
-
-private:
-	ZP<ZipHolder> fZipHolder;
-	ZP<Node> fNode;
-	};
-
-FileSpec FileIterRep_Zip::Current()
-	{
-	if (fIter != fEnd)
-		return new FileLoc_Zip(fZipHolder, fIter->second);
-
-	return FileSpec();
+	return null;
 	}
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark - sFileLoc_Zip
@@ -331,10 +108,14 @@ FileSpec FileIterRep_Zip::Current()
 FileSpec sFileSpec_Zip(const std::string& iZipFilePath)
 	{
 	if (zip* the_zip = ::zip_open(iZipFilePath.c_str(), 0, nullptr))
-		{
-		ZP<ZipHolder> theZipHolder = new ZipHolder(the_zip, true);
-		return new FileLoc_Zip(theZipHolder, theZipHolder->fRoot);
-		}
+		return sFileSpec_Archive(new ZipHolder(the_zip, true));
+	return FileSpec();
+	}
+
+FileSpec sFileSpec_Zip(FILE* iFILE)
+	{
+	if (zip* the_zip = ::zip_open_FILE(iFILE, 0))
+		return sFileSpec_Archive(new ZipHolder(the_zip, true));
 	return FileSpec();
 	}
 

@@ -8,7 +8,9 @@
 
 namespace ZooLib {
 
-FileSpec sFileSpec_Zip(const std::string& iZipFilePath);
+FileSpec sFileSpec_Zip(const string8& iZipFilePath);
+
+FileSpec sFileSpec_Zip(FILE* iFILE);
 
 } // namespace ZooLib
 
