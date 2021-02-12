@@ -8,8 +8,6 @@
 #include "zoolib/Memory.h"
 #include "zoolib/Util_STL_vector.h"
 
-#include <vector>
-
 namespace ZooLib {
 
 using std::vector;
@@ -28,9 +26,11 @@ public:
 
 	Rep(const char* iSource, size_t iSize) : fVector(iSource, iSource + iSize) {}
 
-	Rep(const vector<char>& iVector) : fVector(iVector) {}
+	Rep(const vector<byte>& iVector) : fVector(iVector) {}
 
-	vector<char> fVector;
+	Rep(vector<byte>&& rVector) : fVector(std::move(rVector)) {}
+
+	vector<byte> fVector;
 	};
 
 // =================================================================================================
@@ -59,6 +59,10 @@ Data_ZZ::Data_ZZ(size_t iSize)
 
 Data_ZZ::Data_ZZ(const void* iSource, size_t iSize)
 :	fRep(iSize ? new Rep(static_cast<const char*>(iSource), iSize) : new Rep)
+	{}
+
+Data_ZZ::Data_ZZ(vector<byte>&& rVector)
+:	fRep(new Rep(std::move(rVector)))
 	{}
 
 int Data_ZZ::Compare(const Data_ZZ& iOther) const

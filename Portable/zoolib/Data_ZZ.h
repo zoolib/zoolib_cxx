@@ -6,7 +6,10 @@
 
 #include "zoolib/Compare_T.h"
 #include "zoolib/Util_Relops.h"
+#include "zoolib/StdInt.h" // For byte
 #include "zoolib/ZP.h"
+
+#include <vector>
 
 namespace ZooLib {
 
@@ -25,6 +28,8 @@ public:
 
 	Data_ZZ(size_t iSize);
 	Data_ZZ(const void* iSourceData, size_t iSize);
+
+	Data_ZZ(std::vector<byte>&& rVector);
 
 	int Compare(const Data_ZZ& iOther) const;
 	bool operator<(const Data_ZZ& iOther) const;
