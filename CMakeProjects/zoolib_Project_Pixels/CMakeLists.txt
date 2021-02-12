@@ -37,19 +37,16 @@ set (SourceFiles
 	${SourceDir}/RasterOperations.h
 	${SourceDir}/RGBA.h
 	${SourceDir}/RGBA2Pixval.cpp
-	${SourceDir}/RGBA2Pixval.h)
+	${SourceDir}/RGBA2Pixval.h
+	)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
 
 add_library(
-	# Specifies the name of the library.
-	ZooLib_Platform_Pixels
-
-	# STATIC or SHARED
-	STATIC
+	ZooLib_Project_Pixels # Name of library
+	STATIC # vs shared
 
 	${SourceFiles}
 	)
-
-include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable)
-
-# Put source files in a single IDE group
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

@@ -110,6 +110,8 @@ set (SourceFiles
 	${SourceDir}/Factory.h
 	${SourceDir}/File.cpp
 	${SourceDir}/File.h
+	${SourceDir}/File_Archive.cpp
+	${SourceDir}/File_Archive.h
 	${SourceDir}/Generator.h
 	${SourceDir}/Log.cpp
 	${SourceDir}/Log.h
@@ -219,19 +221,17 @@ set (SourceFiles
 	${SourceDir}/Visitor_ToStrim.cpp
 	${SourceDir}/Visitor_ToStrim.h
 	${SourceDir}/Visitor.cpp
-	${SourceDir}/Visitor.h)
+	${SourceDir}/Visitor.h
+	)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+
+# Also include Platform, so that Matrix.cpp can see the ARM-specific headers.
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
 add_library(
-	# Specifies the name of the library.
-	ZooLib_Portable
-
-	# STATIC or SHARED
-	STATIC
+	ZooLib_Portable # Name of library
+	STATIC # vs shared
 
 	${SourceFiles}
 	)
-
-include_directories(${SourceDir}/.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Platform)
-
-# Put source files in a single IDE group
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

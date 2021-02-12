@@ -111,19 +111,16 @@ set (SourceFiles
 	${SourceDir}/ZThread_Win.h
 	${SourceDir}/ZThread.cpp
 	${SourceDir}/ZThread.h
-	${SourceDir}/ZTypes.h	)
+	${SourceDir}/ZTypes.h
+	)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
 
 add_library(
-	# Specifies the name of the library.
-	ZooLib_Core
-
-	# STATIC or SHARED
-	STATIC
+	ZooLib_Core # Name of library
+	STATIC # vs shared
 
 	${SourceFiles}
 	)
 
 include_directories(${SourceDir}/..)
-
-# Put source files in a single IDE group
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

@@ -21,19 +21,15 @@ set (SourceFiles
 	${SourceDir}/Util_POSIX.h
 	${SourceDir}/Util_POSIXFD.cpp
 	${SourceDir}/Util_POSIXFD.h
-)
+	)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
 add_library(
-	# Specifies the name of the library.
-	ZooLib_Platform_POSIX
-
-	# STATIC or SHARED
-	STATIC
+	ZooLib_Platform_POSIX # Name of library
+	STATIC # vs shared
 
 	${SourceFiles}
 	)
-
-include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable)
-
-# Put source files in a single IDE group
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
