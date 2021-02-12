@@ -184,7 +184,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 static bool spPull_JSON_String_Push(const ChanRU_UTF& iChanRU,
 	UTF32 iTerminator, const ChanW_PPT& iChanW)
 	{
-#if 1
+#if 0
 	string theString;
 	bool result = spPull_JSON_String_Push_UTF(iChanRU,
 		iTerminator, ChanW_UTF_string<UTF8>(&theString));
