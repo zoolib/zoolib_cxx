@@ -7,7 +7,6 @@
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_STL.h"
 #include "zoolib/Util_STL_vector.h"
-//#include "zoolib/Util_string.h"
 
 namespace ZooLib {
 
@@ -249,8 +248,7 @@ void ChanRU_UTF_ML::pAdvance()
 						}
 					else
 						{
-						// Not a comment, but not an entity definition. Just skip
-						// till we hit a '>'
+						// Not a comment, but not an entity definition. Just skip till we hit a '>'.
 						sSkip_Until(fChanRU, ">");
 						}
 					}

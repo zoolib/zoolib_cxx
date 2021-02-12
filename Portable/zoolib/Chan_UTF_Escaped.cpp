@@ -32,7 +32,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 		{
 		const ZQ<UTF32> theCPQ = sQRead(fChanRU);
 		if (not theCPQ)
-			sThrow_ParseException("Unexpected end of strim whilst parsing a string");
+			sThrow_ParseException("Unexpected end of chan whilst parsing a string");
 
 		UTF32 theCP = *theCPQ;
 
@@ -52,7 +52,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 			{
 			const ZQ<UTF32> theCPQ = sQRead(fChanRU);
 			if (not theCPQ)
-				sThrow_ParseException("Unexpected end of strim after parsing escape");
+				sThrow_ParseException("Unexpected end of chan after parsing escape");
 
 			theCP = *theCPQ;
 
