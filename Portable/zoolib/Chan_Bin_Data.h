@@ -79,6 +79,17 @@ class ChanRWPos_Bin_Data
 public:
 	typedef Data_p Data;
 
+	ChanRWPos_Bin_Data()
+	:	fDataPtr(&fDataMaybe)
+	,	fPosition(0)
+		{}
+
+	ChanRWPos_Bin_Data(const Data& iData)
+	:	fDataMaybe(iData)
+	,	fDataPtr(&fDataMaybe)
+	,	fPosition(0)
+		{}
+
 	ChanRWPos_Bin_Data(Data* ioData)
 	:	fDataPtr(ioData)
 	,	fPosition(0)
@@ -146,7 +157,15 @@ public:
 		fDataPtr->SetSize(actualSize);
 		}
 
+// Our protocol
+	Data GetData() const
+		{ return *fDataPtr; }
+
+	Data& MutData()
+		{ return *fDataPtr; }
+
 private:
+	Data fDataMaybe;
 	Data* fDataPtr;
 	size_t fPosition;
 	};
@@ -178,6 +197,7 @@ public:
 
 		return iCount;
 		}
+
 private:
 	Data* fDataPtr;
 	};
