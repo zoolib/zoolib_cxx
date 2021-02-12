@@ -97,7 +97,16 @@ protected:
 
 template <class Channer_p>
 ZP<Channer_p> sChannerR_Buffered(const ZP<Channer_p>& iChanner, size_t iBufferSize)
-	{ return sChanner_Channer_T<ChanR_XX_Buffered<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
+	{
+	if (ZP<Counted> asCounted = iChanner)
+		{
+		typedef ChanOfChanner<Channer_p> Chan_p;
+		return sChanner_Holder_T<ChanR_XX_Buffered<Chan_p>>
+			(asCounted, *iChanner, iBufferSize);
+		}
+	return null;
+
+	}
 
 // =================================================================================================
 #pragma mark - ChanW_XX_Buffered
@@ -134,7 +143,7 @@ public:
 			{
 			if (fOffset == 0 && fBuffer.size() <= iCount)
 				{
-				// We have an empty buffer *and* we have more data to send than would fit in the buffer.
+				// We have an empty buffer *and* we have more data to send than would fit in it.
 				const size_t countWritten = sWrite(inherited::pGetChan(), localSource, iCount);
 				if (countWritten == 0)
 					break;
@@ -183,7 +192,14 @@ protected:
 
 template <class Channer_p>
 ZP<Channer_p> sChannerW_Buffered(const ZP<Channer_p>& iChanner, size_t iBufferSize)
-	{ return sChanner_Channer_T<ChanW_XX_Buffered<ChanOfChanner<Channer_p>>>(iChanner, iBufferSize); }
+	{
+	if (ZP<Counted> asCounted = iChanner)
+		{
+		return sChanner_Holder_T<ZP<Counted>,ChanW_XX_Buffered<ChanOfChanner<Channer_p>>>
+			(std::move(asCounted), *iChanner, iBufferSize);
+		}
+	return null;
+	}
 
 } // namespace ZooLib
 

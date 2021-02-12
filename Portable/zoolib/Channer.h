@@ -67,12 +67,12 @@ template <class EE> using ChannerRWClose = ChannerRWCon<EE>;
 // =================================================================================================
 #pragma mark - sChanner_Chan
 
-// Get the channer from a chan
-
+// If iChan is actually a Channer, return a ZP to that channer.
 template <class Chan_p>
 ZP<Channer<Chan_p>> sChanner_Chan(const Chan_p& iChan)
 	{ return dynamic_cast<Channer<Chan_p>*>(sNonConst(&iChan)); }
 
+// Assert that Chan be a Channer and return it.
 template <class Chan_p>
 ZP<Channer<Chan_p>> sAChanner_Chan(const Chan_p& iChan)
 	{
@@ -105,42 +105,52 @@ ZP<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
 	{ return new Channer_T<Chan_p>(std::forward<Args_p>(args)...); }
 
 // =================================================================================================
-#pragma mark - Channer_Channer_T
+#pragma mark - Channer_Holder_T
 
-template <class Chan_p>
-class Channer_Channer_T
-:	private ZP<Counted>
+template <class Holder_p, class Chan_p>
+class Channer_Holder_T
+:	private Holder_p
 ,	public Channer_T<Chan_p>
 	{
 public:
-	template <class ChannerOther_p>
-	Channer_Channer_T(const ZP<ChannerOther_p>& iOther)
-	:	ZP<Counted>(iOther)
-	,	Channer_T<Chan_p>(*iOther)
+	template <typename... Args_p>
+	Channer_Holder_T(Holder_p&& holder, Args_p&&... args)
+	:	Holder_p(std::move(holder))
+	,	Channer_T<Chan_p>(std::forward<Args_p>(args)...)
 		{}
 
-	template <class ChannerOther_p, typename... Args_p>
-	Channer_Channer_T(const ZP<ChannerOther_p>& iOther, Args_p&&... args)
-	:	ZP<Counted>(iOther)
-	,	Channer_T<Chan_p>(*iOther, std::forward<Args_p>(args)...)
+	template <typename... Args_p>
+	Channer_Holder_T(const Holder_p& holder, Args_p&&... args)
+	:	Holder_p(holder)
+	,	Channer_T<Chan_p>(std::forward<Args_p>(args)...)
 		{}
 	};
+
+template <class Holder_p, class Chan_p, typename... Args_p>
+ZP<Channer_T<Chan_p>> sChanner_Holder_T(Holder_p&& holder, Args_p&&... args)
+	{
+	return new Channer_Holder_T<Holder_p,Chan_p>(
+		std::move(holder),
+		std::forward<Args_p>(args)...);
+	}
+
+template <class Holder_p, class Chan_p, typename... Args_p>
+ZP<Channer_T<Chan_p>> sChanner_Holder_T(const Holder_p& holder, Args_p&&... args)
+	{
+	return new Channer_Holder_T<Holder_p,Chan_p>(
+		holder,
+		std::forward<Args_p>(args)...);
+	}
+
+// =================================================================================================
+#pragma mark - sChanner_Channer_T
 
 template <class Chan_p, class ChannerOther_p>
 ZP<Channer_T<Chan_p>>
 sChanner_Channer_T(const ZP<ChannerOther_p>& iOther)
 	{
-	if (ZP<ChannerOther_p> theOther = iOther)
-		return new Channer_Channer_T<Chan_p>(theOther);
-	return null;
-	}
-
-template <class Chan_p, class ChannerOther_p, typename... Args_p>
-ZP<Channer_T<Chan_p>>
-sChanner_Channer_T(const ZP<ChannerOther_p>& iOther, Args_p&&... args)
-	{
-	if (ZP<ChannerOther_p> theOther = iOther)
-		return new Channer_Channer_T<Chan_p>(iOther, std::forward<Args_p>(args)...);
+	if (ZP<Counted> asCounted = iOther)
+		return sChanner_Holder_T<ZP<Counted>,Chan_p>(asCounted, *iOther);
 	return null;
 	}
 

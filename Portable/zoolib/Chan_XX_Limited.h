@@ -34,7 +34,8 @@ public:
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countRead = sRead(inherited::pGetChan(), oDest, std::min(sClamped(fLimit), iCount));
+		const size_t countRead = sRead(inherited::pGetChan(),
+			oDest, std::min(sClamped(fLimit), iCount));
 		fLimit -= countRead;
 		return countRead;
 		}
@@ -56,7 +57,15 @@ protected:
 
 template <class Channer_p>
 ZP<Channer_p> sChannerR_Limited(const ZP<Channer_p>& iChanner, size_t iLimit)
-	{ return sChanner_Channer_T<ChanR_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
+	{
+	if (ZP<Counted> asCounted = iChanner)
+		{
+		typedef ChanOfChanner<Channer_p> Chan_p;
+		return sChanner_Holder_T<ZP<Counted>,ChanR_XX_Limited<Chan_p>>
+			(asCounted, *iChanner, iLimit);
+		}
+	return null;
+	}
 
 // =================================================================================================
 #pragma mark - ChanW_XX_Limited
@@ -81,7 +90,8 @@ public:
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		const size_t countWritten = sWrite(inherited::pGetChan(), iSource, std::min<uint64>(fLimit, iCount));
+		const size_t countWritten = sWrite(inherited::pGetChan(),
+			iSource, std::min<uint64>(fLimit, iCount));
 		fLimit -= countWritten;
 		return countWritten;
 		}
@@ -92,7 +102,14 @@ protected:
 
 template <class Channer_p>
 ZP<Channer_p> sChannerW_Limited(const ZP<Channer_p>& iChanner, size_t iLimit)
-	{ return sChanner_Channer_T<ChanW_XX_Limited<ChanOfChanner<Channer_p>>>(iChanner, iLimit); }
+	{
+	if (ZP<Counted> asCounted = iChanner)
+		{
+		return sChanner_Holder_T<ZP<Counted>,ChanW_XX_Limited<ChanOfChanner<Channer_p>>>
+			(asCounted, *iChanner, iLimit);
+		}
+	return null;
+	}
 
 } // namespace ZooLib
 
