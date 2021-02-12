@@ -66,6 +66,13 @@ ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(
 ,	fChanW_Bin(iLowercaseHex, fChanW_UTF)
 	{}
 
+ChanW_Bin_HexStrim::ChanW_Bin_HexStrim(const std::string& iByteSeparator,
+	const std::string& iChunkSeparator, size_t iChunkSize,
+	const ChanW_UTF& iChanW_UTF)
+:	fChanW_UTF(spSpacings(iByteSeparator, iChunkSeparator, iChunkSize), iChanW_UTF)
+,	fChanW_Bin(false, fChanW_UTF)
+	{}
+
 size_t ChanW_Bin_HexStrim::Write(const byte* iSource, size_t iCount)
 	{ return sWrite(fChanW_Bin, iSource, iCount); }
 

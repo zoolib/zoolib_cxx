@@ -41,7 +41,7 @@ public:
 
 	ChanW_Bin_HexStrim(const std::string& iByteSeparator,
 		const std::string& iChunkSeparator, size_t iChunkSize,
-		const ChanW_UTF& iStrimSink);
+		const ChanW_UTF& iChanW_UTF);
 
 // From ChanW_Bin
 	virtual size_t Write(const byte* iSource, size_t iCount);
