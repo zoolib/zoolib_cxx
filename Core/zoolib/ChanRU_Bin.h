@@ -16,4 +16,4 @@ typedef ChanRU<byte> ChanRU_Bin;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_Bin_h__
+#endif // __ZooLib_ChanRU_Bin_h__

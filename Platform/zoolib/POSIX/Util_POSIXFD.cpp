@@ -148,6 +148,20 @@ void sPosSet(int iFD, uint64 iPos)
 	#endif
 	}
 
+uint64 sSkip(int iFD, uint64 iDelta)
+	{
+	if (not iDelta)
+		return 0;
+
+	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+		uint64 curPos = ::lseek64(iFD, 0, SEEK_CUR);
+		return ::lseek64(iFD, iDelta, SEEK_CUR) - curPos;
+	#else
+		uint64 curPos = ::lseek(iFD, 0, SEEK_CUR);
+		return ::lseek(iFD, iDelta, SEEK_CUR) - curPos;
+	#endif
+	}
+
 size_t sRead(int iFD, byte* oDest, size_t iCount)
 	{
 	byte* localDest = oDest;

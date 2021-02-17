@@ -5,6 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanRPos_Bin.h"
 #include "zoolib/ChanW_Bin.h"
 #include "zoolib/Channer.h"
 

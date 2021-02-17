@@ -22,6 +22,8 @@ class ChanR_Bin_ASCIIStrim
 	{
 public:
 	ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR);
+
+// From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:
@@ -38,6 +40,8 @@ class ChanW_Bin_ASCIIStrim
 	{
 public:
 	ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW);
+
+// From ChanAspect_Write
 	virtual size_t Write(const byte* iSource, size_t iCount);
 
 private:

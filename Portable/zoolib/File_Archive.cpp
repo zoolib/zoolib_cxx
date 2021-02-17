@@ -11,6 +11,105 @@ using std::map;
 using std::string;
 using std::vector;
 
+class ArchiveNode_Directory;
+class ArchiveNode_File;
+
+// =================================================================================================
+#pragma mark - ArchiveNode
+
+class ArchiveNode
+:	public CountedWithoutFinalize
+	{
+public:
+	ArchiveNode(ArchiveNode_Directory* iParent, const string8& iName)
+	:	fParent(iParent)
+	,	fName(iName)
+		{}
+
+	ArchiveNode_Directory* fParent;
+	const string8 fName;
+	};
+
+class ArchiveNode_Directory
+:	public ArchiveNode
+	{
+public:
+	ArchiveNode_Directory(ArchiveNode_Directory* iParent, const string8& iName)
+	:	ArchiveNode(iParent, iName)
+		{}
+
+	typedef std::map<string8, ZP<ArchiveNode> > MapNameNode;
+	MapNameNode fChildren;
+	};
+
+class ArchiveNode_File
+:	public ArchiveNode
+	{
+public:
+	ArchiveNode_File(ArchiveNode_Directory* iParent, const string8& iName, size_t iIndex)
+	:	ArchiveNode(iParent, iName)
+	,	fIndex(iIndex)
+		{}
+
+	const size_t fIndex;
+	};
+
+// =================================================================================================
+#pragma mark - FileLoc_Archive
+
+class FileLoc_Archive : public FileLoc
+	{
+public:
+	FileLoc_Archive(const ZP<Archive>& iArchive);
+
+	FileLoc_Archive(const ZP<Archive>& iArchive, const ZP<ArchiveNode>& iNode);
+
+	virtual ~FileLoc_Archive();
+
+// From FileLoc
+	virtual ZP<FileIterRep> CreateIterRep();
+
+	virtual std::string GetName() const;
+
+	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const;
+
+	virtual ZP<FileLoc> GetParent();
+
+	virtual ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount);
+
+	virtual bool IsRoot();
+
+	virtual ZP<FileLoc> Follow();
+
+	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
+
+	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
+
+	virtual File::Kind Kind();
+
+	virtual uint64 Size();
+
+	virtual double TimeCreated();
+
+	virtual double TimeModified();
+
+	virtual ZP<FileLoc> CreateDir();
+
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
+
+	virtual bool Delete();
+
+	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters);
+
+	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+
+	std::string pGetPath();
+
+private:
+	ZP<Archive> fArchive;
+	ZP<ArchiveNode> fArchiveNode;
+	};
+
 // =================================================================================================
 #pragma mark - FileIterRep_Archive
 
@@ -61,11 +160,6 @@ public:
 
 // =================================================================================================
 #pragma mark - FileLoc_Archive
-
-FileLoc_Archive::FileLoc_Archive(const ZP<Archive>& iArchive)
-:	fArchive(iArchive)
-,	fArchiveNode(iArchive->GetRoot())
-	{}
 
 FileLoc_Archive::FileLoc_Archive(const ZP<Archive>& iArchive, const ZP<ArchiveNode>& iArchiveNode)
 :	fArchive(iArchive)
@@ -168,14 +262,14 @@ bool FileLoc_Archive::Delete()
 ZP<ChannerR_Bin> FileLoc_Archive::OpenR(bool iPreventWriters)
 	{
 	if (ZP<ArchiveNode_File> theNode = fArchiveNode.DynamicCast<ArchiveNode_File>())
-		return fArchive->OpenR(theNode);
+		return fArchive->OpenR(theNode->fIndex);
 	return null;
 	}
 
 ZP<ChannerRPos_Bin> FileLoc_Archive::OpenRPos(bool iPreventWriters)
 	{
 	if (ZP<ArchiveNode_File> theNode = fArchiveNode.DynamicCast<ArchiveNode_File>())
-		return fArchive->OpenRPos(theNode);
+		return fArchive->OpenRPos(theNode->fIndex);
 	return null;
 	}
 
@@ -193,7 +287,8 @@ std::string FileLoc_Archive::pGetPath()
 // =================================================================================================
 #pragma mark -
 
-void sGrowArchiveDirectoryTree(const ZP<ArchiveToken>& iArchiveToken,
+static
+void spGrowArchiveDirectoryTree(size_t iIndex,
 	const ZP<ArchiveNode_Directory>& ioParent,
 	const Trail& iTrail, size_t iDepth)
 	{
@@ -203,7 +298,7 @@ void sGrowArchiveDirectoryTree(const ZP<ArchiveToken>& iArchiveToken,
 		{
 		// We've hit the file
 		ioParent->fChildren[theName] =
-			new ArchiveNode_File(ioParent.Get(), theName, iArchiveToken);
+			new ArchiveNode_File(ioParent.Get(), theName, iIndex);
 		}
 	else
 		{
@@ -216,7 +311,7 @@ void sGrowArchiveDirectoryTree(const ZP<ArchiveToken>& iArchiveToken,
 			ioParent->fChildren[theName] = theNode_Directory;
 			}
 
-		sGrowArchiveDirectoryTree(iArchiveToken, theNode_Directory, iTrail, iDepth + 1);
+		spGrowArchiveDirectoryTree(iIndex, theNode_Directory, iTrail, iDepth + 1);
 		}
 	}
 
@@ -224,7 +319,19 @@ void sGrowArchiveDirectoryTree(const ZP<ArchiveToken>& iArchiveToken,
 FileSpec sFileSpec_Archive(const ZP<Archive>& iArchive)
 	{
 	if (iArchive)
-		return new FileLoc_Archive(iArchive);
+		{
+		ZP<ArchiveNode_Directory> theRoot = new ArchiveNode_Directory(nullptr, string8());
+		for (size_t xx = 0, count = iArchive->Count(); xx < count; ++xx)
+			{
+			if (iArchive->IsFile(xx))
+				{
+				const string8 theName = iArchive->Name(xx);
+				spGrowArchiveDirectoryTree(xx, theRoot, Trail(theName), 0);
+				}
+			}
+		
+		return new FileLoc_Archive(iArchive, theRoot);
+		}
 	return FileSpec();
 	}
 

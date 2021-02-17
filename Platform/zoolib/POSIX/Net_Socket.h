@@ -75,17 +75,21 @@ public:
 	NetEndpoint_Socket(int iSocketFD);
 	virtual ~NetEndpoint_Socket();
 
+// From ChanAspect_Abort
+	virtual void Abort();
+
+// From ChanAspect_DisconnectRead
+	virtual bool DisconnectRead(double iTimeout);
+
+// From ChanAspect_DisconnectWrite
+	virtual void DisconnectWrite();
+
 // From ChanR_Bin
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
 
 // From ChanW_Bin
 	virtual size_t Write(const byte* iSource, size_t iCount);
-
-// From ChanClose
-	virtual void Abort();
-	virtual bool DisconnectRead(double iTimeout);
-	virtual void DisconnectWrite();
 
 // From ChanAspect_WaitReadable
 	virtual bool WaitReadable(double iTimeout);

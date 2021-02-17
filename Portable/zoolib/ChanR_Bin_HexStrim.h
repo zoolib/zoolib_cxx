@@ -22,6 +22,7 @@ public:
 	ChanR_Bin_HexStrim(bool iAllowUnderscore, const ChanRU_UTF& iChanRU);
 	~ChanR_Bin_HexStrim();
 
+// From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount);
 
 private:

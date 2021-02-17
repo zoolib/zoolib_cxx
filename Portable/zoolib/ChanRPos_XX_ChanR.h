@@ -21,6 +21,28 @@ public:
 	,	fBuffer(iBuffer)
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{
+		// ZAssertStop(2, not fCommitted);
+		return sPos(fBuffer);
+		}
+
+	virtual void PosSet(uint64 iPos)
+		{
+		// ZAssertStop(2, not fCommitted);
+		uint64 curSize = sSize(fBuffer);
+		if (iPos > curSize)
+			{
+			// Position the buffer at its end
+			sPosSet(fBuffer, curSize);
+
+			// And suck in enough data from fSource so its size (and position) is iPosition bytes
+			sECopyFully(fSource, fBuffer, iPos - curSize);
+			}
+		sPosSet(fBuffer, iPos);
+		}
+
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
@@ -63,28 +85,6 @@ public:
 		if (size_t theReadable = sReadable(fBuffer))
 			return theReadable;
 		return sReadable(fSource);
-		}
-
-// From ChanPos
-	virtual uint64 Pos()
-		{
-		// ZAssertStop(2, not fCommitted);
-		return sPos(fBuffer);
-		}
-
-	virtual void PosSet(uint64 iPos)
-		{
-		// ZAssertStop(2, not fCommitted);
-		uint64 curSize = sSize(fBuffer);
-		if (iPos > curSize)
-			{
-			// Position the buffer at its end
-			sPosSet(fBuffer, curSize);
-
-			// And suck in enough data from fSource so its size (and position) is iPosition bytes
-			sECopyFully(fSource, fBuffer, iPos - curSize);
-			}
-		sPosSet(fBuffer, iPos);
 		}
 
 // From ChanSize

@@ -28,6 +28,13 @@ public:
 	~ChanRWPos_XX_RAM()
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void PosSet(uint64 iPos)
+		{ fPosition = iPos; }
+
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
@@ -51,6 +58,22 @@ public:
 	virtual size_t Readable()
 		{ return pReadable(); }
 
+// From ChanSize
+	virtual uint64 Size()
+		{ return fDeque.size(); }
+
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
+		{ fDeque.resize(iSize); }
+
+// From ChanU
+	virtual size_t Unread(const EE* iSource, size_t iCount)
+		{
+		const size_t count = sMin(fPosition, iCount);
+		fPosition -= count;
+		return count;
+		}
+
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
@@ -72,29 +95,6 @@ public:
 			}
 		return iCount;
 		}
-
-// From ChanPos
-	virtual uint64 Pos()
-		{ return fPosition; }
-
-	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
-
-// From ChanSize
-	virtual uint64 Size()
-		{ return fDeque.size(); }
-
-// From ChanU
-	virtual size_t Unread(const EE* iSource, size_t iCount)
-		{
-		const size_t count = sMin(fPosition, iCount);
-		fPosition -= count;
-		return count;
-		}
-
-// From ChanSizeSet
-	virtual void SizeSet(uint64 iSize)
-		{ fDeque.resize(iSize); }
 
 protected:
 	size_t pReadable()

@@ -262,6 +262,51 @@ NetEndpoint_Socket::NetEndpoint_Socket(int iSocketFD)
 NetEndpoint_Socket::~NetEndpoint_Socket()
 	{ ::close(fSocketFD); }
 
+void NetEndpoint_Socket::Abort()
+	{
+	// Cause a RST to be sent when we close().
+	// See UNIX Network Programming, 2nd Ed, Stevens, page 423
+
+	struct linger theLinger;
+	theLinger.l_onoff = 1;
+	theLinger.l_linger = 0;
+
+	::setsockopt(fSocketFD, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
+	::shutdown(fSocketFD, SHUT_RDWR);
+	}
+
+bool NetEndpoint_Socket::DisconnectRead(double iTimeout)
+	{
+	for (;;)
+		{
+		char buf[sStackBufferSize];
+		const ssize_t result = Net_Socket::sReceive(fSocketFD, buf, sizeof(buf));
+		if (result == 0)
+			{
+			// result is zero, indicating that the other end has sent FIN.
+			::shutdown(fSocketFD, SHUT_RD);
+			return true;
+			}
+		else if (result < 0)
+			{
+			const int err = errno;
+			if (err == EAGAIN)
+				{
+				Util_POSIXFD::sWaitReadable(fSocketFD, 60);
+				}
+			else
+				{
+				return false;
+				}
+			}
+		}
+	}
+
+void NetEndpoint_Socket::DisconnectWrite()
+	{
+	::shutdown(fSocketFD, SHUT_WR);
+	}
+
 size_t NetEndpoint_Socket::Read(byte* oDest, size_t iCount)
 	{
 	char* localDest = (char*)oDest;
@@ -324,51 +369,6 @@ size_t NetEndpoint_Socket::Write(const byte* iSource, size_t iCount)
 			}
 		}
 	return localSource - (const char*)iSource;
-	}
-
-void NetEndpoint_Socket::Abort()
-	{
-	// Cause a RST to be sent when we close().
-	// See UNIX Network Programming, 2nd Ed, Stevens, page 423
-
-	struct linger theLinger;
-	theLinger.l_onoff = 1;
-	theLinger.l_linger = 0;
-
-	::setsockopt(fSocketFD, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
-	::shutdown(fSocketFD, SHUT_RDWR);
-	}
-
-bool NetEndpoint_Socket::DisconnectRead(double iTimeout)
-	{
-	for (;;)
-		{
-		char buf[sStackBufferSize];
-		const ssize_t result = Net_Socket::sReceive(fSocketFD, buf, sizeof(buf));
-		if (result == 0)
-			{
-			// result is zero, indicating that the other end has sent FIN.
-			::shutdown(fSocketFD, SHUT_RD);
-			return true;
-			}
-		else if (result < 0)
-			{
-			const int err = errno;
-			if (err == EAGAIN)
-				{
-				Util_POSIXFD::sWaitReadable(fSocketFD, 60);
-				}
-			else
-				{
-				return false;
-				}
-			}
-		}
-	}
-
-void NetEndpoint_Socket::DisconnectWrite()
-	{
-	::shutdown(fSocketFD, SHUT_WR);
 	}
 
 bool NetEndpoint_Socket::WaitReadable(double iTimeout)

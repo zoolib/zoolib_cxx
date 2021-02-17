@@ -25,6 +25,13 @@ public:
 	,	fPosition(0)
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void PosSet(uint64 iPos)
+		{ fPosition = sClamped(iPos); }
+
 // From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount)
 		{
@@ -45,13 +52,6 @@ public:
 // From ChanSize
 	virtual uint64 Size()
 		{ return fData.GetSize(); }
-
-// From ChanPos
-	virtual uint64 Pos()
-		{ return fPosition; }
-
-	virtual void PosSet(uint64 iPos)
-		{ fPosition = sClamped(iPos); }
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount)

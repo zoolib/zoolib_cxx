@@ -23,12 +23,14 @@ public:
 	,	fChannerW(iChannerW)
 		{}
 
+// From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount)
 		{ return sRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(*fChannerR, iCount); }
 
+// From ChanAspect_Write
 	virtual size_t Write(const byte* iSource, size_t iCount)
 		{ return sWrite(*fChannerW, iSource, iCount); }
 
@@ -63,26 +65,31 @@ public:
 	,	fChannerClose(iChannerClose)
 		{}
 
+// From ChanAspect_Abort
+	virtual void Abort()
+		{ return sAbort(*fChannerClose); }
+
+// From ChanAspect_DisconnectRead
+	virtual bool DisconnectRead(double iTimeout)
+		{ return sDisconnectRead(*fChannerClose, iTimeout); }
+
+// From ChanAspect_DisconnectWrite
+	virtual void DisconnectWrite()
+		{ return sDisconnectWrite(*fChannerClose); }
+
+// From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount)
 		{ return sRead(*fChannerR, oDest, iCount); }
 
 	virtual uint64 Skip(uint64 iCount)
 		{ return sSkip(*fChannerR, iCount); }
 
+// From ChanAspect_Write
 	virtual size_t Write(const byte* iSource, size_t iCount)
 		{ return sWrite(*fChannerW, iSource, iCount); }
 
 	virtual void Flush()
 		{ sFlush(*fChannerW); }
-
-	virtual void Abort()
-		{ return sAbort(*fChannerClose); }
-
-	virtual bool DisconnectRead(double iTimeout)
-		{ return sDisconnectRead(*fChannerClose, iTimeout); }
-
-	virtual void DisconnectWrite()
-		{ return sDisconnectWrite(*fChannerClose); }
 
 private:
 	const ZP<Channer<ChanR<EE>>> fChannerR;

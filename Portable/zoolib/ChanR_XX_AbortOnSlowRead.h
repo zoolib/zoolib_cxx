@@ -27,6 +27,7 @@ public:
 	,	fTimeout(iTimeout)
 		{}
 
+// From ChanAspect_Read
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		if (not sWaitReadable(fChan, fTimeout))

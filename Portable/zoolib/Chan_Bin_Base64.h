@@ -48,7 +48,7 @@ public:
 	ChanR_Bin_Base64Decode(const Base64::Decode& iDecode, const ChanR_Bin& iChanR);
 	~ChanR_Bin_Base64Decode();
 
-// From ChanR_Bin
+// From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount);
 
 protected:
@@ -72,7 +72,7 @@ public:
 	ChanW_Bin_Base64Encode(const Base64::Encode& iEncode, const ChanW_Bin& iChanW);
 	~ChanW_Bin_Base64Encode();
 
-// From ZStreamW
+// From ChanAspect_Write
 	virtual size_t Write(const byte* iSource, size_t iCount);
 	virtual void Flush();
 

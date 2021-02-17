@@ -112,6 +112,7 @@ public:
 
 // From ChanAspect_Read<byte>
 	virtual size_t Read(byte* oDest, size_t iCount);
+	virtual uint64 Skip(uint64 iCount);
 	virtual size_t Readable();
 
 // From ChanAspect_Size

@@ -29,6 +29,7 @@ void sClose(int iFD);
 void sAbort(int iFD);
 uint64 sPos(int iFD);
 void sPosSet(int iFD, uint64 iPos);
+uint64 sSkip(int iFD, uint64 iDelta);
 size_t sRead(int iFD, byte* oDest, size_t iCount);
 size_t sReadCon(int iFD, byte* oDest, size_t iCount);
 size_t sReadable(int iFD);

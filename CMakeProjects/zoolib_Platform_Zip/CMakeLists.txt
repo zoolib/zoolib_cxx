@@ -5,10 +5,10 @@ set(ZOOLIB_CXX ../..)
 set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/Zip)
 
 set (SourceFiles	
-	${SourceDir}/File_Zip.cpp
-	${SourceDir}/File_Zip.h
-	${SourceDir}/File_Zip_More.cpp
-	${SourceDir}/File_Zip_More.h
+	${SourceDir}/Archive_Zip.cpp
+	${SourceDir}/Archive_Zip.h
+	${SourceDir}/Archive_Zip_More.cpp
+	${SourceDir}/Archive_Zip_More.h
 	)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})

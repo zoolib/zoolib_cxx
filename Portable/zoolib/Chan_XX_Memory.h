@@ -29,6 +29,13 @@ public:
 	,	fPosition(0)
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void PosSet(uint64 iPos)
+		{ fPosition = iPos; }
+
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
@@ -49,13 +56,6 @@ public:
 
 	virtual size_t Readable()
 		{ return fSize >= fPosition ? fSize - fPosition : 0; }
-
-// From ChanPos
-	virtual uint64 Pos()
-		{ return fPosition; }
-
-	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
 
 // From ChanSize
 	virtual uint64 Size()
@@ -114,6 +114,13 @@ public:
 	,	fPosition(0)
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void PosSet(uint64 iPos)
+		{ fPosition = iPos; }
+
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
@@ -135,12 +142,17 @@ public:
 	virtual size_t Readable()
 		{ return fSize >= fPosition ? fSize - fPosition : 0; }
 
-// From ChanPos
-	virtual uint64 Pos()
-		{ return fPosition; }
+// From ChanSize
+	virtual uint64 Size()
+		{ return fSize; }
 
-	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
+		{
+		if (fCapacity < iSize)
+			sThrow_ExhaustedW();
+		fSize = iSize;
+		}
 
 // From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)
@@ -171,18 +183,6 @@ public:
 		fPosition += countToCopy;
 
 		return countToCopy;
-		}
-
-// From ChanSize
-	virtual uint64 Size()
-		{ return fSize; }
-
-// From ChanSizeSet
-	virtual void SizeSet(uint64 iSize)
-		{
-		if (fCapacity < iSize)
-			sThrow_ExhaustedW();
-		fSize = iSize;
 		}
 
 protected:

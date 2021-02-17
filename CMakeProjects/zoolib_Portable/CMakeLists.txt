@@ -5,6 +5,8 @@ set(ZOOLIB_CXX ../..)
 set(SourceDir ${ZOOLIB_CXX}/Portable/zoolib)
 
 set (SourceFiles
+	${SourceDir}/Archive.cpp
+	${SourceDir}/Archive.h
 	${SourceDir}/Callable_Bind.h
 	${SourceDir}/Callable_Bool.cpp
 	${SourceDir}/Callable_Bool.h

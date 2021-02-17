@@ -93,6 +93,9 @@ void ChanRPos_Bin_POSIXFD::PosSet(uint64 iPos)
 size_t ChanRPos_Bin_POSIXFD::Read(byte* oDest, size_t iCount)
 	{ return Util_POSIXFD::sRead(fFDHolder->GetFD(), oDest, iCount); }
 
+uint64 ChanRPos_Bin_POSIXFD::Skip(uint64 iCount)
+	{ return Util_POSIXFD::sSkip(fFDHolder->GetFD(), iCount); }
+
 size_t ChanRPos_Bin_POSIXFD::Readable()
 	{ return Util_POSIXFD::sReadable(fFDHolder->GetFD()); }
 

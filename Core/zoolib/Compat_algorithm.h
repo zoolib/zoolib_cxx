@@ -1,5 +1,5 @@
 // Copyright (c) 2000-2007 Andrew Green and Learning in Motion, Inc.
-// Copyright (c) 2008-2020 Andrew Green.
+// Copyright (c) 2008-2021 Andrew Green.
 // MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Compat_algorithm_h__
@@ -15,18 +15,23 @@ namespace ZooLib {
 
 template <class T>
 inline
-const T sMin(const T& i0, const T& i1)
-	{ return std::min<T>(i0, i1); }
+const T sMin(const T& ll, const T& rr)
+	{ return std::min<T>(ll, rr); }
 
 template <class T>
 inline
-const T sMax(const T& i0, const T& i1)
-	{ return std::max<T>(i0, i1); }
+const T sMax(const T& ll, const T& rr)
+	{ return std::max<T>(ll, rr); }
 
 template <class T>
 inline
 const T sMinMax(const T& iMin, const T& iVal, const T& iMax)
 	{ return iVal < iMin ? iMin : iMax < iVal ? iMax : iVal; }
+
+template <class T>
+inline
+const T sMedian(const T& aa, const T& bb, const T& cc)
+	{ return std::max(std::min(aa,bb), std::min(std::max(aa,bb), cc)); }
 
 // =================================================================================================
 #pragma mark - sGetSet

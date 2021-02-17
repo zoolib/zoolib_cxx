@@ -33,14 +33,13 @@ class ChanRPos_Bin_string
 public:
 	ChanRPos_Bin_string(const std::string& iString);
 
+// From ChanPos
+	virtual uint64 Pos();
+	virtual void PosSet(uint64 iPos);
+
 // From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
-
-// From ChanPos
-	virtual uint64 Pos();
-
-	virtual void PosSet(uint64 iPos);
 
 // From ChanSize
 	virtual uint64 Size();
@@ -62,14 +61,13 @@ class ChanRWPos_Bin_string
 public:
 	ChanRWPos_Bin_string(std::string* ioStringPtr);
 
+// From ChanPos
+	virtual uint64 Pos();
+	virtual void PosSet(uint64 iPos);
+
 // From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount);
 	virtual size_t Readable();
-
-// From ChanPos
-	virtual uint64 Pos();
-
-	virtual void PosSet(uint64 iPos);
 
 // From ChanSize
 	virtual uint64 Size();

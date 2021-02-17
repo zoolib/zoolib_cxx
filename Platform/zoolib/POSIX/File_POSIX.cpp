@@ -765,42 +765,36 @@ bool FileLoc_POSIX::Delete()
 
 ZP<ChannerRPos_Bin> FileLoc_POSIX::OpenRPos(bool iPreventWriters)
 	{
-	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath(), true, false, iPreventWriters))
 		return sChanner_T<ChanRPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
 ZP<ChannerWPos_Bin> FileLoc_POSIX::OpenWPos(bool iPreventWriters)
 	{
-	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath(), false, true, iPreventWriters))
 		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
 ZP<ChannerRWPos_Bin> FileLoc_POSIX::OpenRWPos(bool iPreventWriters)
 	{
-	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters))
+	if (ZP<FDHolder> theFDHolder = spOpen(this->pGetPath(), true, true, iPreventWriters))
 		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
 	return null;
 	}
 
 ZP<ChannerWPos_Bin> FileLoc_POSIX::CreateWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
-		iOpenExisting, false, iPreventWriters))
-		{
+	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters))
 		return sChanner_T<ChanWPos_Bin_POSIXFD>(theFDHolder);
-		}
 	return null;
 	}
 
 ZP<ChannerRWPos_Bin> FileLoc_POSIX::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{
-	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath().c_str(),
-		iOpenExisting, true, iPreventWriters))
-		{
+	if (ZP<FDHolder> theFDHolder = spCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters))
 		return sChanner_T<ChanRWPos_Bin_POSIXFD>(theFDHolder);
-		}
 	return null;
 	}
 
