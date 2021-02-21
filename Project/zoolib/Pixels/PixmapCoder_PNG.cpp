@@ -304,7 +304,7 @@ void sWritePixmap_PNG(
 		int numberOfPasses = ::png_set_interlace_handling(write_ptr);
 		for (int currentPass = 0; currentPass < numberOfPasses; ++currentPass)
 			{
-			for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
+			for (Ord y = iBounds.top; y < iBounds.bottom; ++y)
 				{
 				const void* sourceRowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, y);
 
@@ -341,7 +341,6 @@ void sWritePixmap_PNG(const Pixmap& iPixmap, const ChanW_Bin& iChanW)
 		iPixmap.GetBounds(),
 		iChanW);
 	}
-
 
 } // namespace Pixels
 } // namespace ZooLib
