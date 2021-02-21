@@ -2,6 +2,8 @@
 
 #if defined(__ANDROID__)
 
+#include "zoolib/Archive.h"
+#include "zoolib/File_Archive.h"
 #include "zoolib/Log.h"
 #include "zoolib/Time.h"
 #include "zoolib/Unicode.h"
@@ -16,7 +18,7 @@
 
 #include "zoolib/JNI/JNI.h"
 
-#include "zoolib/Zip/File_Zip.h"
+#include "zoolib/Zip/Archive_Zip.h"
 
 // =================================================================================================
 // MARK: -
@@ -74,7 +76,7 @@ public:
 		ZP<SoundMeister> theSoundMeister;
 		ZP<Callable_Void> theHaptic;
 
-		FileSpec resourceFS = sFileSpec_Zip(iAPK).Child("assets");
+		FileSpec resourceFS = sFileSpec_Archive(sArchive_Zip(iAPK)).Child("assets");
 
 		fGame = GameEngine::sMakeGame(resourceFS, false, theSoundMeister, theHaptic);
 		}
