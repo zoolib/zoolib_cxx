@@ -24,10 +24,11 @@ void sWrite(const ChanW_UTF& iChanW,
 		*oCountCP = countWritten;
 	}
 
-void sWrite(const ChanW_UTF& iChanW,
+bool sWrite(const ChanW_UTF& iChanW,
 	const UTF16* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	bool complete = true;
 	const UTF16* localSource = iSource;
 	size_t localCountCP = iCountCP;
 	while (iCountCU)
@@ -45,6 +46,7 @@ void sWrite(const ChanW_UTF& iChanW,
 			if (utf16Consumed == 0)
 				{
 				// In fact there was no valid UTF16 in localSource at all, so we'll just bail.
+				complete = false;
 				break;
 				}
 			}
@@ -66,12 +68,15 @@ void sWrite(const ChanW_UTF& iChanW,
 		*oCountCU = localSource - iSource;
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
+
+	return complete;
 	}
 
-void sWrite(const ChanW_UTF& iChanW,
+bool sWrite(const ChanW_UTF& iChanW,
 	const UTF8* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	bool complete = true;
 	const UTF8* localSource = iSource;
 	size_t localCountCP = iCountCP;
 	while (iCountCU)
@@ -89,6 +94,7 @@ void sWrite(const ChanW_UTF& iChanW,
 			if (utf8Consumed == 0)
 				{
 				// In fact there was no valid UTF8 in localSource at all, so we'll just bail.
+				complete = false;
 				break;
 				}
 			}
@@ -110,6 +116,8 @@ void sWrite(const ChanW_UTF& iChanW,
 		*oCountCU = localSource - iSource;
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
+
+	return complete;
 	}
 
 // =================================================================================================
@@ -126,14 +134,16 @@ void sWrite(const ChanW_UTF& iChanW,
 size_t sWrite(const ChanW_UTF& iChanW, const UTF16* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
+	if (not sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr))
+		return iCountCU;
 	return countWritten;
 	}
 
 size_t sWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
+	if (not sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr))
+		return iCountCU;
 	return countWritten;
 	}
 
@@ -144,14 +154,16 @@ bool sQWrite(const ChanW_UTF& iChanW, const UTF16* iSource, size_t iCountCU)
 	{
 	// We need WriteFully variant of some sort.
 	size_t countWritten;
-	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
+	if (not sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr))
+		return true;
 	return countWritten == iCountCU;
 	}
 
 bool sQWrite(const ChanW_UTF& iChanW, const UTF8* iSource, size_t iCountCU)
 	{
 	size_t countWritten;
-	sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr);
+	if (not sWrite(iChanW, iSource, iCountCU, &countWritten, iCountCU, nullptr))
+		return true;
 	return countWritten == iCountCU;
 	}
 
@@ -238,9 +250,9 @@ void sEWritef(const ChanW_UTF& iChanW,
 	va_list args;
 	va_start(args, iString);
 	size_t countCU_Produced, count_CUWritten;
-	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, args);
+	bool complete = sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, args);
 	va_end(args);
-	if (count_CUWritten != countCU_Produced)
+	if (complete && count_CUWritten != countCU_Produced)
 		sThrow_ExhaustedW();
 	}
 
@@ -249,25 +261,26 @@ substitution is applied to the string before writing. The number of UTF-8 code u
 is returned in \a oCount_CUProduced. The number of UTF-8 code units successfully written is
 returned in \a oCount_CUWritten.
 */
-void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+bool sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	sWritev(iChanW, oCount_CUProduced, oCount_CUWritten, iString, args);
+	bool complete = sWritev(iChanW, oCount_CUProduced, oCount_CUWritten, iString, args);
 	va_end(args);
+	return complete;
 	}
 
 void sEWritev(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs)
 	{
 	size_t countCU_Produced, count_CUWritten;
-	sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, iArgs);
-	if (count_CUWritten != countCU_Produced)
+	bool complete = sWritev(iChanW, &countCU_Produced, &count_CUWritten, iString, iArgs);
+	if (complete && count_CUWritten != countCU_Produced)
 		sThrow_ExhaustedW();
 	}
 
-void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+bool sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, va_list iArgs)
 	{
 	const std::string theString = sStringv(iString, iArgs);
@@ -278,14 +291,16 @@ void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_
 	if (theCount)
 		{
 		size_t countWritten;
-		sWrite(iChanW, theString.data(), theCount, &countWritten, theCount, nullptr);
+		bool complete = sWrite(iChanW, theString.data(), theCount, &countWritten, theCount, nullptr);
 		if (oCount_CUWritten)
-			*oCount_CUWritten = countWritten;
+			*oCount_CUWritten = theCount;
+		return complete;
 		}
 	else
 		{
 		if (oCount_CUWritten)
 			*oCount_CUWritten = 0;
+		return true;
 		}
 	}
 

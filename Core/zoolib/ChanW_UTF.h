@@ -21,15 +21,18 @@ typedef ChanW<UTF32> ChanW_UTF;
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{
+
 void sWrite(const ChanW_UTF& iChanW,
 	const UTF32* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sWrite(const ChanW_UTF& iChanW,
+// Returns false if the source ends with an incomplete CU sequence
+bool sWrite(const ChanW_UTF& iChanW,
 	const UTF16* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-void sWrite(const ChanW_UTF& iChanW,
+// Returns false if the source ends with an incomplete CU sequence
+bool sWrite(const ChanW_UTF& iChanW,
 	const UTF8* iSource,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 //@}
@@ -89,14 +92,14 @@ void sEWritef(const ChanW_UTF& iChanW,
 	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(2,3);
 
-void sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+bool sWritef(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, ...)
 	ZMACRO_Attribute_Format_Printf(4,5);
 
 void sEWritev(const ChanW_UTF& iChanW,
 	const UTF8* iString, va_list iArgs);
 
-void sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
+bool sWritev(const ChanW_UTF& iChanW, size_t* oCount_CUProduced, size_t* oCount_CUWritten,
 	const UTF8* iString, va_list iArgs);
 //@}
 
