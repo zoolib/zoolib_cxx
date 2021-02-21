@@ -101,7 +101,7 @@ ZP<Channer_p> sChannerR_Buffered(const ZP<Channer_p>& iChanner, size_t iBufferSi
 	if (ZP<Counted> asCounted = iChanner)
 		{
 		typedef ChanOfChanner<Channer_p> Chan_p;
-		return sChanner_Holder_T<ChanR_XX_Buffered<Chan_p>>
+		return sChanner_Holder_T<ZP<Counted>,ChanR_XX_Buffered<Chan_p>>
 			(asCounted, *iChanner, iBufferSize);
 		}
 	return null;
