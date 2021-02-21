@@ -4,6 +4,8 @@
 
 #include "zoolib/NameUniquifier.h" // For sName
 
+#include "zoolib/Unicode.h" // For operator+=
+
 #include "zoolib/ZMACRO_foreach.h"
 
 #include <vector>
@@ -77,7 +79,7 @@ bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 		return false;
 		}
 
-	sPush_Start_Map(iChanW);
+	sPush_Start_Seq(iChanW);
 	for (;;)
 		{
 		vector<string8> theValues;
@@ -88,8 +90,10 @@ bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 			return true;
 			}
 
+		sPush_Start_Map(iChanW);
 		for (size_t xx = 0; xx < theNames.size() && xx < theValues.size(); ++xx)
 			sPush(theNames[xx], theValues[xx], iChanW);
+		sPush_End(iChanW);
 		}
 	}
 
