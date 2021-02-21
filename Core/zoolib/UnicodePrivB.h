@@ -1216,14 +1216,28 @@ bool Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent, I iEnd, UTF32& oCP)
 			{
 			// It's a continuation or illegal, ignore it.
 			}
-		else
+		else if (ioCurrent + sequenceLength - 1 > iEnd)
 			{
-			if (ioCurrent + sequenceLength - 1 > iEnd)
+			I checker = ioCurrent;
+			bool okay = true;
+			while (checker < iEnd)
+				{
+				if (not sIsContinuation(*checker))
+					{
+					okay = false;
+					break;
+					}
+				++checker;
+				}
+			if (okay)
 				{
 				--ioCurrent;
 				return false;
-				}
-
+				};
+			ioCurrent = checker;
+			}
+		else
+			{
 			uint32 result = firstByte & sUTF8StartByteMask[sequenceLength];
 			bool okay = true;
 			while (--sequenceLength)
@@ -1270,14 +1284,28 @@ bool Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent, I iEnd, UTF32& oCP, size_
 			// It's a continuation or illegal, ignore it.
 			++ioCountSkipped;
 			}
-		else
+		else if (ioCurrent + sequenceLength - 1 > iEnd)
 			{
-			if (ioCurrent + sequenceLength - 1 > iEnd)
+			I checker = ioCurrent;
+			bool okay = true;
+			while (checker < iEnd)
+				{
+				if (not sIsContinuation(*checker))
+					{
+					okay = false;
+					break;
+					}
+				++checker;
+				}
+			if (okay)
 				{
 				--ioCurrent;
 				return false;
-				}
-
+				};
+			ioCurrent = checker;
+			}
+		else
+			{
 			uint32 result = firstByte & sUTF8StartByteMask[sequenceLength];
 			bool okay = true;
 			for (size_t countConsumed = 1; countConsumed < sequenceLength; ++countConsumed)
