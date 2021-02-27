@@ -195,6 +195,37 @@ bool sEndsWith(const string& iTarget, const string& iPossibleSuffix)
 
 // =================================================================================================
 
+const char* const sStandardWSCharacters = " \t\n\r\f\v";
+
+string sTrimmedL(const string& iString, const char* iWS)
+	{
+	const size_t start = iString.find_first_not_of(iWS);
+	if (start == string::npos)
+		return string();
+	return iString.substr(start);
+	}
+
+string sTrimmedR(const string& iString, const char* iWS)
+	{
+	const size_t end = iString.find_last_not_of(iWS);
+	if (end == string::npos)
+		return string();
+	return iString.substr(0, end + 1);
+	}
+
+string sTrimmed(const string& iString, const char* iWS)
+	{
+	const size_t first = iString.find_first_not_of(iWS);
+	if (first == string::npos)
+		return string();
+
+	// end cannot be npos, because we already found a not_of.
+	const size_t last = iString.find_last_not_of(iWS);
+	return iString.substr(first, last + 1 - first);
+	}
+
+// =================================================================================================
+
 string sFromPString(const unsigned char* inPString)
 	{ return string((const char*)(&(inPString[1])), (size_t)inPString[0]); }
 

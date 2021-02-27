@@ -47,6 +47,14 @@ bool sEndsWith(const string& iTarget, const string& iPossibleSuffix);
 
 // -----
 
+extern const char* const sStandardWSCharacters;
+
+string sTrimmedL(const string& iString, const char* iWS = sStandardWSCharacters);
+string sTrimmedR(const string& iString, const char* iWS = sStandardWSCharacters);
+string sTrimmed(const string& iString, const char* iWS = sStandardWSCharacters);
+
+// -----
+
 string sFromPString(const unsigned char* iPString);
 void sToPString(const string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
