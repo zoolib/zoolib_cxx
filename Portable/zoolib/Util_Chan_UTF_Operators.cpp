@@ -170,19 +170,19 @@ const ChanW_UTF& operator<<(const ChanW_UTF& ww, char32_t iVal)
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, float iVal)
 	{
-	Util_Chan::sWriteExact(ww, iVal);
+	Util_Chan::sWrite_Exact(ww, iVal);
 	return ww;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, double iVal)
 	{
-	Util_Chan::sWriteExact(ww, iVal);
+	Util_Chan::sWrite_Exact(ww, iVal);
 	return ww;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, long double iVal)
 	{
-	Util_Chan::sWriteExact(ww, iVal);
+	Util_Chan::sWrite_Exact(ww, iVal);
 	return ww;
 	}
 

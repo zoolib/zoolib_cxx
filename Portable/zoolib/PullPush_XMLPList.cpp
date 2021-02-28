@@ -476,7 +476,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 	else if (ZQ<double> asDoubleQ = sQCoerceRat(iPPT))
 		{
 		s.Begin("real");
-			Util_Chan::sWriteExact(s, *asDoubleQ);
+			Util_Chan::sWrite_Exact(s, *asDoubleQ);
 		s.End("real");
 		}
 	else if (const UTCDateTime* theValue = iPPT.PGet<UTCDateTime>())

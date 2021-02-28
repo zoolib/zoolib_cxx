@@ -5,6 +5,7 @@
 #include "zoolib/Chan_Bin_ASCIIStrim.h"
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/Chan_UTF_Escaped.h"
+#include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_cmath.h" // For fmod
@@ -67,17 +68,28 @@ bool sTryRead_Identifier(const ChanRU_UTF& iChanRU,
 	if (oStringLC)
 		oStringLC->reserve(32);
 
-	bool gotAny = false;
-	for (;;)
+	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		const ZQ<UTF32> theCPQ = sQRead(iChanRU);
 		if (not theCPQ)
-			break;
+			return gotAny;
+
 		const UTF32 theCP = *theCPQ;
-		if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
+		if (gotAny)
 			{
-			sUnread(iChanRU, theCP);
-			break;
+			if (not Unicode::sIsAlphaDigit(theCP) && theCP != '_')
+				{
+				sUnread(iChanRU, theCP);
+				return gotAny;
+				}
+			}
+		else
+			{
+			if (not Unicode::sIsAlpha(theCP) && theCP != '_')
+				{
+				sUnread(iChanRU, theCP);
+				return gotAny;
+				}
 			}
 
 		gotAny = true;
@@ -87,7 +99,6 @@ bool sTryRead_Identifier(const ChanRU_UTF& iChanRU,
 		if (oStringExact)
 			*oStringExact += theCP;
 		}
-	return gotAny;
 	}
 
 bool sTryRead_PropertyName(const ChanRU_UTF& iChanRU,
@@ -184,24 +195,24 @@ PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOt
 // =================================================================================================
 #pragma mark -
 
-void sWriteLF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions)
+void sWrite_LF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions)
 	{
 	iChanW << sEOLString(iOptions);
 	}
 
-void sWriteIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
+void sWrite_Indent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
 
-void sWriteLFIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
+void sWrite_LFIndent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
 	iChanW << sEOLString(iOptions);
-	sWriteIndent(iChanW, iCount, iOptions);
+	sWrite_Indent(iChanW, iCount, iOptions);
 	}
 
-void sWriteString(const ChanW_UTF& iChanW, const string& iString, bool iPreferSingleQuotes)
+void sWrite_String(const ChanW_UTF& iChanW, const string& iString, bool iPreferSingleQuotes)
 	{
 	ChanW_UTF_Escaped::Options theOptions;
 	theOptions.fEscapeHighUnicode = false;
@@ -228,7 +239,7 @@ void sWriteString(const ChanW_UTF& iChanW, const string& iString, bool iPreferSi
 		}
 	}
 
-void sWriteString(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR)
+void sWrite_String(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR)
 	{
 	iChanW << "\"";
 
@@ -243,34 +254,21 @@ void sWriteString(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR)
 
 bool sContainsProblemChars(const string& iString)
 	{
-	if (iString.empty())
-		{
-		// An empty string can't be distinguished from no string at all, so
-		// we treat it as if it has problem chars so that it will be wrapped in quotes.
-		return true;
-		}
+	if (sTryRead_Identifier(ChanRU_UTF_string8(iString), nullptr, nullptr))
+		return false;
 
-	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
-		{
-		UTF32 theCP;
-		if (not Unicode::sReadInc(ii, end, theCP))
-			break;
-		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
-			return true;
-		}
-
-	return false;
+	return true;
 	}
 
-void sWritePropName(const ChanW_UTF& ww, const string& iString, bool iUseSingleQuotes)
+void sWrite_PropName(const ChanW_UTF& ww, const string& iString, bool iUseSingleQuotes)
 	{
 	if (sContainsProblemChars(iString))
-		sWriteString(ww, iString, iUseSingleQuotes);
+		sWrite_String(ww, iString, iUseSingleQuotes);
 	else
 		ww << iString;
 	}
 
-void sWriteSimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushTextOptions_JSON& iOptions)
+void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushTextOptions_JSON& iOptions)
 	{
 	if (false)
 		{}
@@ -301,11 +299,11 @@ void sWriteSimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushTextO
 		}
 	else if (const float* asFloat = iAny.PGet<float>())
 		{
-		Util_Chan::sWriteExact(ww, *asFloat);
+		Util_Chan::sWrite_Exact(ww, *asFloat);
 		}
 	else if (const double* asDouble = iAny.PGet<double>())
 		{
-		Util_Chan::sWriteExact(ww, *asDouble);
+		Util_Chan::sWrite_Exact(ww, *asDouble);
 		if (not fmod(*asDouble, 1.0))
 			{
 			// There's no fractional part, so we'll have written a sequence of digits with no
@@ -316,7 +314,7 @@ void sWriteSimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushTextO
 		}
 	else if (const UTCDateTime* asTime = iAny.PGet<UTCDateTime>())
 		{
-		Util_Chan::sWriteExact(ww, sGet(*asTime));
+		Util_Chan::sWrite_Exact(ww, sGet(*asTime));
 		if (sTimesHaveUserLegibleComment(iOptions))
 			ww << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
 		}
@@ -362,7 +360,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 			{
 			ww << "<";
 			if (countRead == chunkSize)
-				sWriteLFIndent(ww, iLevel, iOptions);
+				sWrite_LFIndent(ww, iLevel, iOptions);
 
 			std::vector<char> nextBuffer(chunkSize, 0);
 			for (;;)
@@ -413,7 +411,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 				ww << " */ ";
 				if (countRead == 0)
 					break;
-				sWriteLFIndent(ww, iLevel, iOptions);
+				sWrite_LFIndent(ww, iLevel, iOptions);
 				swap(buffer, nextBuffer);
 				}
 			}
@@ -440,20 +438,6 @@ ZQ<string8> sQRead_PropName(const ChanRU_UTF& iChanRU)
 	if (not sTryRead_PropertyName(iChanRU, theString8, true))
 		return null;
 	return theString8;
-	}
-
-void sWrite_PropName(const ChanW_UTF& ww, const string& iPropName)
-	{
-	if (sContainsProblemChars(iPropName))
-		{
-		ww << "\"";
-		ChanW_UTF_Escaped(ww) << iPropName;
-		ww << "\"";
-		}
-	else
-		{
-		ww << iPropName;
-		}
 	}
 
 } // namespace Util_Chan_JSON

@@ -19,41 +19,35 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Static parsing functions
 
-static bool spReadValues(const ChanR_UTF& iChanR, UTF32 iSeparator_Value, UTF32 iSeparator_Line,
-	vector<string8>& oValues)
+static
+vector<string8> spReadValues(const ChanR_UTF& iChanR,UTF32 iSeparator_Value, UTF32 iSeparator_Line)
 	{
-	bool gotAny = false;
-	oValues.clear();
+	vector<string8> result;
 	string8 curValue;
-	for (;;)
+	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
 		if (NotQ<UTF32> theCPQ = sQRead(iChanR))
 			{
-			oValues.push_back(curValue);
+			if (gotAny)
+				result.push_back(curValue);
 			break;
+			}
+		else if (*theCPQ == iSeparator_Line)
+			{
+			result.push_back(curValue);
+			break;
+			}
+		else if (*theCPQ == iSeparator_Value)
+			{
+			result.push_back(curValue);
+			curValue.clear();
 			}
 		else
 			{
-			gotAny = true;
-
-			if (*theCPQ == iSeparator_Line)
-				{
-				oValues.push_back(curValue);
-				break;
-				}
-
-			if (*theCPQ == iSeparator_Value)
-				{
-				oValues.push_back(curValue);
-				curValue.clear();
-				}
-			else
-				{
-				curValue += *theCPQ;
-				}
+			curValue += *theCPQ;
 			}
 		}
-	return gotAny;
+	return result;
 	}
 
 // =================================================================================================
@@ -72,27 +66,27 @@ bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 	const Pull_SeparatedValues_Options& iOptions,
 	const ChanW_PPT& iChanW)
 	{
-	vector<string8> theNames;
-	if (not spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line,
-		theNames))
-		{
+	const vector<string8> theNames =
+		spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line);
+
+	if (theNames.empty())
 		return false;
-		}
 
 	sPush_Start_Seq(iChanW);
 	for (;;)
 		{
-		vector<string8> theValues;
-		if (not spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line,
-		 	theValues))
+		const vector<string8> theValues =
+			spReadValues(iChanR, iOptions.fSeparator_Value, iOptions.fSeparator_Line);
+
+		if (theValues.empty())
 			{
 			sPush_End(iChanW);
 			return true;
 			}
 
 		sPush_Start_Map(iChanW);
-		for (size_t xx = 0; xx < theNames.size() && xx < theValues.size(); ++xx)
-			sPush(theNames[xx], theValues[xx], iChanW);
+			for (size_t xx = 0; xx < theNames.size() && xx < theValues.size(); ++xx)
+				sPush(theNames[xx], theValues[xx], iChanW);
 		sPush_End(iChanW);
 		}
 	}
