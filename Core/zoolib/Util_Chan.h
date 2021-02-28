@@ -10,11 +10,31 @@
 
 namespace ZooLib {
 
-inline void sTruncate(const ChanSizeSet& iChanSizeSet, const ChanPos& iChanPos)
+// =================================================================================================
+#pragma mark -
+
+inline void sClear(const DeriveFrom<ChanAspect_Pos,ChanAspect_SizeSet>& iChan)
 	{
-	sSizeSet(iChanSizeSet, 0);
-	sPosSet(iChanPos, 0);
+	sPosSet(iChan, 0);
+	sSizeSet(iChan, 0);
 	}
+
+// =================================================================================================
+#pragma mark -
+
+class SaveSetRestorePos
+	{
+	const ChanPos& fChanPos;
+	const uint64 fPriorPos;
+public:
+	SaveSetRestorePos(const ChanPos& iChanPos, uint64 iPos)
+	:	fChanPos(iChanPos)
+	,	fPriorPos(sPos(iChanPos))
+		{ sPosSet(iChanPos, iPos); }
+
+	~SaveSetRestorePos()
+		{ sPosSet(fChanPos, fPriorPos); }
+	};
 
 // =================================================================================================
 #pragma mark -
