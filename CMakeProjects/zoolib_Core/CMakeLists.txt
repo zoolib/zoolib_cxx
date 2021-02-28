@@ -19,6 +19,7 @@ set (SourceFiles
 	${SourceDir}/ChanR_UTF.cpp
 	${SourceDir}/ChanR_UTF.h
 	${SourceDir}/ChanR.h
+	${SourceDir}/ChanRPos_Bin.h
 	${SourceDir}/ChanRU_Bin.h
 	${SourceDir}/ChanRU_UTF.h
 	${SourceDir}/ChanU_Bin.h
