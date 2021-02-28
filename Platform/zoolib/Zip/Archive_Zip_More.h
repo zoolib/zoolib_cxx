@@ -13,8 +13,6 @@ namespace ZooLib {
 
 ZP<Archive_Zip> sArchive_Zip(ZP<ChannerRPos_Bin> iChannerRPos);
 
-ZP<Archive_Zip> sArchive_Zip(ZP<ChannerR_Bin> iChannerR, ZP<ChannerRWPos_Bin> iBuffer);
-
 ZP<Archive_Zip> sArchive_Zip(ZP<ChannerR_Bin> iChannerR);
 
 } // namespace ZooLib
