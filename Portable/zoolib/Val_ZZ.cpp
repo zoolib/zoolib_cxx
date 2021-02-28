@@ -255,7 +255,7 @@ void Seq_ZZ::pTouch()
 // =================================================================================================
 #pragma mark - Map_ZZ::Rep
 
-namespace {
+namespace { // Anonymous
 
 SafePtrStack_WithDestroyer<Map_ZZ::Rep,SafePtrStackLink_Map_ZZ_Rep> spSafePtrStack_Map_ZZ_Rep;
 

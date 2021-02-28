@@ -13,6 +13,9 @@
 
 namespace ZooLib {
 
+// =================================================================================================
+#pragma mark -
+
 ZMACRO_NoReturn_Pre
 inline bool sThrow_ExhaustedW();
 ZMACRO_NoReturn_Post
