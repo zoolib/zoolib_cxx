@@ -579,7 +579,7 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 // =================================================================================================
 #pragma mark -
 
-void sWriteExact(const ChanW_UTF& iChanW, float iVal)
+void sWrite_Exact(const ChanW_UTF& iChanW, float iVal)
 	{
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
@@ -587,13 +587,13 @@ void sWriteExact(const ChanW_UTF& iChanW, float iVal)
 	sEWritef(iChanW, "%.9g", iVal);
 	}
 
-void sWriteExact(const ChanW_UTF& iChanW, double iVal)
+void sWrite_Exact(const ChanW_UTF& iChanW, double iVal)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
 	sEWritef(iChanW, "%.17g", iVal);
 	}
 
-void sWriteExact(const ChanW_UTF& iChanW, long double iVal)
+void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal)
 	{
 	// This is a guess for now.
 	sEWritef(iChanW, "%.34Lg", iVal);
