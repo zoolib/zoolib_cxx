@@ -64,7 +64,7 @@ public:
 			if (ZP<Walker_Comment> theWalker_Comment = iWalker.DynamicCast<Walker_Comment>())
 				{
 				fW << " ";
-				Util_Chan_JSON::sWriteString(fW, theWalker_Comment->GetComment(), false);
+				Util_Chan_JSON::sWrite_String(fW, theWalker_Comment->GetComment(), false);
 				}
 			theW->GetChild()->Accept(*this);
 			}

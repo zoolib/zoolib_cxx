@@ -51,7 +51,7 @@ void Visitor::Visit_Expr_Rel_Comment(const ZP<Expr_Rel_Comment>& iExpr)
 	{
 	const ChanW_UTF& ww = pStrimW();
 	ww << "Comment(";
-	Util_Chan_JSON::sWriteString(ww, iExpr->GetComment(), false);
+	Util_Chan_JSON::sWrite_String(ww, iExpr->GetComment(), false);
 	ww << ",";
 	this->pWriteLFIndent();
 	this->pToStrim(iExpr->GetOp0());
