@@ -29,6 +29,8 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	ZAssert(iCountCU >= 2);
+
 	UTF32 utf32Buffer[kBufSize];
 	UTF16* localDest = oDest;
 	size_t localCountCP = iCountCP;
@@ -37,7 +39,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 2 && localCountCP)
 		{
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU) / 2));
 
 		if (utf32Read == 0)
 			break;
@@ -68,6 +70,8 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	ZAssert(iCountCU >= 6);
+
 	UTF32 utf32Buffer[kBufSize];
 	UTF8* localDest = oDest;
 	size_t localCountCP = iCountCP;
@@ -76,7 +80,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 6 && localCountCP)
 		{
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU) / 6));
 
 		if (utf32Read == 0)
 			break;
@@ -193,14 +197,15 @@ string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 
 string8 sReadAllUTF8(const ChanR_UTF& iChanR)
 	{
+	static const size_t kGrowthSize = 1024;
 	string8 result;
 	size_t destGenerated = 0;
 	for (;;)
 		{
-		result.resize(destGenerated + 1024);
+		result.resize(destGenerated + kGrowthSize);
 		size_t cuRead;
 		sRead(iChanR, sNonConst(result.data()) + destGenerated,
-			1024, &cuRead, 1024, nullptr);
+			kGrowthSize, &cuRead, kGrowthSize, nullptr);
 
 		if (cuRead == 0)
 			break;
