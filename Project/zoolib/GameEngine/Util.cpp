@@ -9,6 +9,7 @@
 #include "zoolib/ChanRU_UTF_Std.h"
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For ThreadVal_NameUniquifier
+#include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_string.h"
 #include "zoolib/Util_ZZ_JSON.h"
@@ -125,12 +126,11 @@ ZQ<GRect> sQGRect(const Val_ZZ& iVal)
 static ZP<ChannerR_Bin> spChanner_Buffered(const ZP<ChannerR_Bin>& iChanner)
 	{ return sChannerR_Buffered(iChanner, 4096); }
 
-ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS)
+ZP<ChannerW_Bin> sCreateW_Clear(const FileSpec& iFS)
 	{
 	if (ZP<ChannerWPos_Bin> theChannerWPos = iFS.CreateWPos(true, true))
 		{
-		sSizeSet(*theChannerWPos, 0);
-		sPosSet(*theChannerWPos, 0);
+		sClear(*theChannerWPos);
 		return theChannerWPos;
 		}
 	return null;

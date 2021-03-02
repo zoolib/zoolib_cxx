@@ -35,7 +35,7 @@ ZQ<Map_ZZ> sQReadMap_ZZ(const FileSpec& iFS);
 
 Map_ZZ sReadTextData(const FileSpec& iFS);
 
-ZP<ChannerW_Bin> sCreateW_Truncate(const FileSpec& iFS);
+ZP<ChannerW_Bin> sCreateW_Clear(const FileSpec& iFS);
 ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 
 void sWriteBin(const ChanW_Bin& ww, const Val_ZZ& iVal);

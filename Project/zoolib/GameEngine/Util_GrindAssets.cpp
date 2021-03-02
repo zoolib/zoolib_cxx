@@ -532,7 +532,7 @@ void spGrindArt(
 				break;
 				}
 
-			if (ZP<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
+			if (ZP<ZStreamerW> theSW = sCreateW_Clear(iFS_Sheets.Child(theSheetName + ".png")))
 				ZDCPixmapEncoder_PNG::sWritePixmap(*theSW, theTiler.GetPixmap());
 
 			if (failed.empty())
@@ -670,7 +670,7 @@ void spGrindAnim(
 				break;
 				}
 
-			if (ZP<ZStreamerW> theSW = sCreateW_Truncate(iFS_Sheets.Child(theSheetName + ".png")))
+			if (ZP<ZStreamerW> theSW = sCreateW_Clear(iFS_Sheets.Child(theSheetName + ".png")))
 				ZDCPixmapEncoder_PNG::sWritePixmap(*theSW, theTiler.GetPixmap());
 
 			if (failed.empty())
