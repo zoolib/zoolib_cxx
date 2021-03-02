@@ -79,7 +79,7 @@ void sWrite_String(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR);
 
 bool sContainsProblemChars(const string& iString);
 
-void sWrite_PropName(const ChanW_UTF& iChanW, const string& iString, bool iUseSingleQuotes);
+void sWrite_PropName(const ChanW_UTF& iChanW, const string& iString, bool iUseSingleQuotes = false);
 
 void sWrite_SimpleValue(const ChanW_UTF& iChanW, const AnyBase& iAny, const PushTextOptions_JSON& iOptions);
 
