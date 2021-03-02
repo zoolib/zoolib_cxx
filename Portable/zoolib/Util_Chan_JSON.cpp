@@ -254,10 +254,23 @@ void sWrite_String(const ChanW_UTF& iChanW, const ChanR_UTF& iChanR)
 
 bool sContainsProblemChars(const string& iString)
 	{
-	if (sTryRead_Identifier(ChanRU_UTF_string8(iString), nullptr, nullptr))
-		return false;
+	if (iString.empty())
+		{
+		// An empty string can't be distinguished from no string at all, so
+		// we treat it as if it has problem chars so that it will be wrapped in quotes.
+		return true;
+		}
 
-	return true;
+	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
+		{
+		UTF32 theCP;
+		if (not Unicode::sReadInc(ii, end, theCP))
+			break;
+		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
+			return true;
+		}
+
+	return false;
 	}
 
 void sWrite_PropName(const ChanW_UTF& ww, const string& iString, bool iUseSingleQuotes)
