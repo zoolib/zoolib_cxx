@@ -327,6 +327,8 @@ void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushText
 		}
 	else if (const UTCDateTime* asTime = iAny.PGet<UTCDateTime>())
 		{
+		// TODO: See http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html
+		// which has a syntax that handles dates, for when fUseExtendedNotationQ is true.
 		Util_Chan::sWrite_Exact(ww, sGet(*asTime));
 		if (sTimesHaveUserLegibleComment(iOptions))
 			ww << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
