@@ -29,7 +29,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<Expr_Bool>& iExpr)
 	{
-	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(StdIO::sChan_UTF_Err, sDefault(), iExpr);
+	Visitor_Expr_Bool_ValPred_DB_ToStrim().ToStrim(StdIO::sChanW_UTF_Err, sDefault(), iExpr);
 	}
 
 #endif // defined(ZMACRO_pdesc)

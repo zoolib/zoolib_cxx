@@ -220,17 +220,17 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const RelationalAlgebra::RelHead& iRH)
 	{
-	StdIO::sChan_UTF_Err << iRH << "\n";
+	StdIO::sChanW_UTF_Err << iRH << "\n";
 	}
 
 ZMACRO_pdesc(const RelationalAlgebra::Rename& iRename)
 	{
-	StdIO::sChan_UTF_Err << iRename << "\n";
+	StdIO::sChanW_UTF_Err << iRename << "\n";
 	}
 
 ZMACRO_pdesc(const RelationalAlgebra::ConcreteHead& iConcreteHead)
 	{
-	StdIO::sChan_UTF_Err << iConcreteHead << "\n";
+	StdIO::sChanW_UTF_Err << iConcreteHead << "\n";
 	}
 
 #endif // defined(ZMACRO_pdesc)

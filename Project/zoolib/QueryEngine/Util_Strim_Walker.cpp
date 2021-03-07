@@ -91,7 +91,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<QueryEngine::Walker>& iWalker)
 	{
-	ZooLib::QueryEngine::sDumpWalkers(StdIO::sChan_UTF_Err, iWalker);
+	ZooLib::QueryEngine::sDumpWalkers(StdIO::sChanW_UTF_Err, iWalker);
 	}
 
 #endif // defined(ZMACRO_pdesc)

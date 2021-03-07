@@ -65,7 +65,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<QueryEngine::Result>& iResult)
 	{
-	StdIO::sChan_UTF_Err << iResult << "\n";
+	StdIO::sChanW_UTF_Err << iResult << "\n";
 	}
 
 #endif // defined(ZMACRO_pdesc)

@@ -448,7 +448,7 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<RelationalAlgebra::Expr_Rel>& iRel)
 	{
-	StdIO::sChan_UTF_Err << iRel << "\n";
+	StdIO::sChanW_UTF_Err << iRel << "\n";
 	}
 
 #endif // defined(ZMACRO_pdesc)

@@ -109,26 +109,26 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const Val_ZZ& iVal)
 	{
-	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iVal);
-	StdIO::sChan_UTF_Err << "\n";
+	Util_ZZ_JSON::sWrite(StdIO::sChanW_UTF_Err, iVal);
+	StdIO::sChanW_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Map_ZZ& iMap)
 	{
-	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iMap);
-	StdIO::sChan_UTF_Err << "\n";
+	Util_ZZ_JSON::sWrite(StdIO::sChanW_UTF_Err, iMap);
+	StdIO::sChanW_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Seq_ZZ& iSeq)
 	{
-	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iSeq);
-	StdIO::sChan_UTF_Err << "\n";
+	Util_ZZ_JSON::sWrite(StdIO::sChanW_UTF_Err, iSeq);
+	StdIO::sChanW_UTF_Err << "\n";
 	}
 
 ZMACRO_pdesc(const Data_ZZ& iData)
 	{
-	Util_ZZ_JSON::sWrite(StdIO::sChan_UTF_Err, iData);
-	StdIO::sChan_UTF_Err << "\n";
+	Util_ZZ_JSON::sWrite(StdIO::sChanW_UTF_Err, iData);
+	StdIO::sChanW_UTF_Err << "\n";
 	}
 
 #endif // defined(ZMACRO_pdesc)
