@@ -78,6 +78,10 @@ size_t ChanR_Bin_zlib::Read(byte* oDest, size_t iCount)
 			fState.avail_in = countRead;
 			fState.next_in = &fBuffer[0];
 			}
+		else
+			{
+			break;
+			}
 		}
 
 	return iCount - fState.avail_out;
@@ -105,7 +109,7 @@ ChanW_Bin_zlib::ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, s
 	fState.next_in = nullptr;
 	fState.avail_in = 0;
 
-	fState.next_in = &fBuffer[0];
+	fState.next_out = &fBuffer[0];
 	fState.avail_out = fBuffer.size();
 
 	int windowBits;
@@ -142,7 +146,10 @@ ChanW_Bin_zlib::~ChanW_Bin_zlib()
 size_t ChanW_Bin_zlib::Write(const byte* iSource, size_t iCount)
 	{
 	if (sIsEmpty(fBuffer))
+		{
+		// Downstream chan had failed previously.
 		return 0;
+		}
 
 	fState.avail_in = iCount;
 	fState.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(iSource));
@@ -154,8 +161,7 @@ size_t ChanW_Bin_zlib::Write(const byte* iSource, size_t iCount)
 
 void ChanW_Bin_zlib::Flush()
 	{
-	if (sIsEmpty(fBuffer))
-		this->pDeflate(Z_PARTIAL_FLUSH);
+	this->pDeflate(Z_SYNC_FLUSH);
 	sFlush(fChanW);
 	}
 
@@ -174,7 +180,7 @@ void ChanW_Bin_zlib::pDeflate(int iFlushType)
 			fState.next_out = &fBuffer[0];
 			fState.avail_out = fBuffer.size();
 			}
-		else
+		else if (fState.avail_in == 0)
 			{
 			break;
 			}
