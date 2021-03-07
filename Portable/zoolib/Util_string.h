@@ -63,6 +63,18 @@ void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength)
 
 std::vector<string> sSplit(char iChar, const string& iString);
 
+// -----
+
+inline PaC<const char> sPaC(const std::string& iString)
+	{
+	return PaC<const char>(iString.size() ? iString.data() : nullptr, iString.size());
+	}
+
+inline PaC<char> sPaC(std::string& ioString)
+	{
+	return PaC<char>(ioString.size() ? const_cast<char*>(ioString.data()) : nullptr, ioString.size());
+	}
+
 } // namespace Util_string
 } // namespace ZooLib
 
