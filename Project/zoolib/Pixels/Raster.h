@@ -41,8 +41,6 @@ protected:
 	void* fBaseAddress;
 	};
 
-void sFresh(ZP<Raster>& ioRaster);
-
 // =================================================================================================
 #pragma mark - Raster_Simple
 
