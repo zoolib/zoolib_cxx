@@ -218,9 +218,19 @@ template <bool B, class T> using EnableIf_t = typename EnableIfC<B,T>::type;
 // =================================================================================================
 #pragma mark - PaC (PointerAndCount)
 
-template <class P> using PaC = std::pair<P*,size_t>;
-template <class P> P* sPointer(const PaC<P>& iPac) { return iPac.first; }
-template <class P> size_t sCount(const PaC<P>& iPac) { return iPac.second; }
+template <class EE> using PaC = std::pair<EE*,size_t>;
+template <class EE> EE* sPointer(const PaC<EE>& iPac) { return iPac.first; }
+template <class EE> size_t sCount(const PaC<EE>& iPac) { return iPac.second; }
+template <class EE> PaC<EE> sPaC(EE* iPointer, size_t iCount) { return PaC<EE>(iPointer, iCount); }
+template <class EE> PaC<EE> sPaC() { return PaC<EE>(); }
+
+template <class EE>
+PaC<EE> sPaC(PaC<void> iPaC)
+	{ return sPaC<EE>(static_cast<EE*>(sPointer(iPaC)), sCount(iPaC) / sizeof(EE)); }
+
+template <class EE>
+PaC<const EE> sPaC(PaC<const void> iPaC)
+	{ return sPaC<const EE>(static_cast<const EE*>(sPointer(iPaC)), sCount(iPaC) / sizeof(EE)); }
 
 } // namespace ZooLib
 
