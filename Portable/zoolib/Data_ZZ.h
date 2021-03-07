@@ -63,6 +63,22 @@ template <class T>
 Data_ZZ sData_ZZ(const PaC<T>& iPaC)
 	{ return Data_ZZ(sPointer(iPaC), sizeof(T) * sCount(iPaC)); }
 
+template <class T>
+PaC<T> sPaC(Data_ZZ& iData)
+	{ return sPaC<T>(static_cast<T*>(iData.GetPtrMutable()), iData.GetSize() / sizeof(T)); }
+
+template <class T>
+PaC<const T> sPaC(const Data_ZZ& iData)
+	{ return sPaC<const T>(static_cast<const T*>(iData.GetPtr()), iData.GetSize() / sizeof(T)); }
+
+//template <>
+inline PaC<void> sPaC(Data_ZZ& iData)
+	{ return sPaC<void>(iData.GetPtrMutable(), iData.GetSize()); }
+
+//template <>
+inline PaC<const void> sPaC(const Data_ZZ& iData)
+	{ return sPaC<const void>(iData.GetPtr(), iData.GetSize()); }
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Data_ZZ_h__
