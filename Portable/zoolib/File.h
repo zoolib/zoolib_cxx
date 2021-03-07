@@ -159,9 +159,11 @@ class FileIter
 public:
 	FileIter();
 	FileIter(const FileIter& iOther);
-	FileIter(const FileSpec& iRoot);
 	~FileIter();
 	FileIter& operator=(const FileIter& iOther);
+
+	FileIter(const FileSpec& iRoot);
+	FileIter(const ZP<FileIterRep>& iRep);
 
 	ZMACRO_operator_bool(FileIter, operator_bool) const;
 	FileIter& Advance();

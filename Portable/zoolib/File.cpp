@@ -548,6 +548,15 @@ FileIter::FileIter(const FileIter& iOther)
 :	fRep(iOther.fRep)
 	{}
 
+FileIter::~FileIter()
+	{}
+
+FileIter& FileIter::operator=(const FileIter& iOther)
+	{
+	fRep = iOther.fRep;
+	return *this;
+	}
+
 /// Construct a file iterator referencing the children of the specification \a iRoot.
 /**
 If iRoot does not reference an accessible directory then the FileIter will be invalid.
@@ -558,14 +567,9 @@ FileIter::FileIter(const FileSpec& iRoot)
 		fRep = theLoc->CreateIterRep();
 	}
 
-FileIter::~FileIter()
+FileIter::FileIter(const ZP<FileIterRep>& iRep)
+:	fRep(iRep)
 	{}
-
-FileIter& FileIter::operator=(const FileIter& iOther)
-	{
-	fRep = iOther.fRep;
-	return *this;
-	}
 
 /**
 Returns true if the iterator references a file spec. It will
