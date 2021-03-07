@@ -108,11 +108,21 @@ static ZP<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreven
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 
+	ZP<FDHolder> theHolder = new FDHolder_CloseOnDestroy(iFD);
+
 	if (ZCONFIG_SPI_Enabled(BeOS))
 		{
 		// Doesn't look like BeOS supports advisory locks.
-		return new FDHolder_CloseOnDestroy(iFD);
+		return theHolder;
 		}
+
+	// Ensure it's not a directory.
+	struct stat buf;
+	if (0 != fstat(iFD, &buf) != 0)
+		return null;
+
+	if (S_ISDIR(buf.st_mode))
+		return null;
 
 	// We always respect advisory locks, and we may apply a lock ourselves.
 	struct flock theFLock = {0};
@@ -128,23 +138,21 @@ static ZP<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreven
 	if (iPreventWriters)
 		{
 		if (0 == spFCntl(iFD, F_SETLK, theFLock))
-			return new FDHolder_UnlockOnDestroy(iFD);
+			return theHolder;
 		}
-	else
-		{
-		int err = spFCntl(iFD, F_GETLK, theFLock);
 
-		if (err == ENOLCK || err == EACCES || err == ENOTSUP || err == EINVAL)
-			{
-			// Assume that we're hitting an NFS-based file. Allow the access to happen.
-			return new FDHolder_CloseOnDestroy(iFD);
-			}
-		else if (err == 0 && theFLock.l_type == F_UNLCK)
-			{
-			return new FDHolder_CloseOnDestroy(iFD);
-			}
+	int err = spFCntl(iFD, F_GETLK, theFLock);
+
+	if (err == ENOLCK || err == EACCES || err == ENOTSUP || err == EINVAL)
+		{
+		// Assume that we're hitting an NFS-based file. Allow the access to happen.
+		return theHolder;
 		}
-	::close(iFD);
+	else if (err == 0 && theFLock.l_type == F_UNLCK)
+		{
+		return theHolder;
+		}
+
 	return null;
 	}
 
