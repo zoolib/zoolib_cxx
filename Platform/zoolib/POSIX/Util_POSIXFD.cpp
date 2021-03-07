@@ -267,11 +267,11 @@ size_t sUnread(int iFD, const byte* iSource, size_t iCount)
 	return iCount;
 	}
 
-size_t sUnreadableLimit(int iFD)
-	{
-	// Unreadable limit is whatever our position is.
-	return sClamped(sPos(iFD));
-	}
+//size_t sUnreadableLimit(int iFD)
+//	{
+//	// Unreadable limit is whatever our position is.
+//	return sClamped(sPos(iFD));
+//	}
 
 size_t sWrite(int iFD, const byte* iSource, size_t iCount)
 	{

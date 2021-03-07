@@ -36,7 +36,7 @@ size_t sReadable(int iFD);
 uint64 sSize(int iFD);
 void sSizeSet(int iFD, uint64 iSize);
 size_t sUnread(int iFD, const byte* iSource, size_t iCount);
-size_t sUnreadableLimit(int iFD);
+// size_t sUnreadableLimit(int iFD);
 size_t sWrite(int iFD, const byte* iSource, size_t iCount);
 size_t sWriteCon(int iFD, const byte* iSource, size_t iCount);
 
