@@ -51,7 +51,8 @@ static bool spIsWhitespace(UTF32 iCP)
 	return false;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 	{
@@ -60,7 +61,8 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 	return result;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU)
 	{
@@ -70,7 +72,8 @@ bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU)
 	return sTryRead(iCP, iChanRU);
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 ZQ<int> sQRead_Digit(const ChanRU_UTF& iChanRU)
 	{
@@ -102,7 +105,8 @@ ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU)
 		}
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 	{
@@ -129,7 +133,8 @@ bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 		}
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU)
 	{
@@ -169,7 +174,8 @@ bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU)
 	return false;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sTryRead_CaselessString(const string8& iPattern, const ChanRU_UTF& iChanRU)
 	{
@@ -209,7 +215,8 @@ bool sTryRead_CaselessString(const string8& iPattern, const ChanRU_UTF& iChanRU)
 	return false;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative)
 	{
@@ -424,7 +431,8 @@ bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
 	return false;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sSkip_WS(const ChanRU_UTF& iChanRU)
 	{
@@ -441,7 +449,8 @@ bool sSkip_WS(const ChanRU_UTF& iChanRU)
 	return readAny;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sCopy_Line(const ChanR_UTF& iSource, const ChanW_UTF& oDest)
 	{
@@ -467,7 +476,8 @@ ZQ<string8> sQRead_Line(const ChanR_UTF& iSource)
 	return null;
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
@@ -512,7 +522,8 @@ bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU,
 bool sSkip_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU)
 	{ return sCopy_WSAndCPlusPlusComments(iChanRU, ChanW_XX_Discard<UTF32>()); }
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 static bool spCopy_Until(const ChanR_UTF& iChanR, const string32& iTerminator,
 	const ChanW_UTF& oDest)
@@ -536,7 +547,8 @@ bool sRead_Until(const ChanR_UTF& iChanR, const string8& iTerminator,
 	return sCopy_Until(iChanR, iTerminator, ChanW_UTF_string8(&oString));
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 void sCopy_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
@@ -550,7 +562,8 @@ void sRead_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU,
 	sCopy_EscapedString(iTerminator, iChanRU, ChanW_UTF_string8(&oString));
 	}
 
-// -----------------
+// =================================================================================================
+#pragma mark -
 
 bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
@@ -573,8 +586,6 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 	oString.resize(0);
 	return sTryCopy_EscapedString(iDelimiter, iChanRU, ChanW_UTF_string8(&oString));
 	}
-
-// -----------------
 
 // =================================================================================================
 #pragma mark -
