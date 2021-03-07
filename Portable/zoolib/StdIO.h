@@ -12,13 +12,13 @@
 namespace ZooLib {
 namespace StdIO {
 
-extern const ChanR_Bin& sChan_Bin_In;
-extern const ChanW_Bin& sChan_Bin_Out;
-extern const ChanW_Bin& sChan_Bin_Err;
+extern const ChanR_Bin& sChanR_Bin_In;
+extern const ChanW_Bin& sChanW_Bin_Out;
+extern const ChanW_Bin& sChanW_Bin_Err;
 
-extern const ChanR_UTF& sChan_UTF_In;
-extern const ChanW_UTF& sChan_UTF_Out;
-extern const ChanW_UTF& sChan_UTF_Err;
+extern const ChanR_UTF& sChanR_UTF_In;
+extern const ChanW_UTF& sChanW_UTF_Out;
+extern const ChanW_UTF& sChanW_UTF_Err;
 
 } // namespace ZStdIO
 } // namespace ZooLib

@@ -17,13 +17,13 @@ static ChanW_UTF_Chan_Bin_UTF8 spChanW_UTF_Err(spChanW_Bin_Err);
 
 namespace StdIO {
 
-const ChanR_Bin& sChan_Bin_In = spChanR_Bin_In;
-const ChanW_Bin& sChan_Bin_Out = spChanW_Bin_Out;
-const ChanW_Bin& sChan_Bin_Err = spChanW_Bin_Err;
+const ChanR_Bin& sChanR_Bin_In = spChanR_Bin_In;
+const ChanW_Bin& sChanW_Bin_Out = spChanW_Bin_Out;
+const ChanW_Bin& sChanW_Bin_Err = spChanW_Bin_Err;
 
-const ChanR_UTF& sChan_UTF_In = spChanR_UTF_In;
-const ChanW_UTF& sChan_UTF_Out = spChanW_UTF_Out;
-const ChanW_UTF& sChan_UTF_Err = spChanW_UTF_Err;
+const ChanR_UTF& sChanR_UTF_In = spChanR_UTF_In;
+const ChanW_UTF& sChanW_UTF_Out = spChanW_UTF_Out;
+const ChanW_UTF& sChanW_UTF_Err = spChanW_UTF_Err;
 
 } // namespace StdIO
 
