@@ -27,7 +27,6 @@ class AnyBase
 	{
 public:
 	const std::type_info& Type() const;
-	const std::type_info* PType() const;
 
 	const void* ConstVoidStar() const; // Used for sCompare_T implementation.
 
@@ -364,9 +363,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (false)
-				{}
-			else if (std::is_pod<S>::value)
+			if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				sCtor_T<S>(&fPayload, iP0);
@@ -420,9 +417,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (false)
-				{}
-			else if (std::is_pod<S>::value)
+			if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload, iP0);
@@ -446,9 +441,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (false)
-				{}
-			else if (std::is_pod<S>::value)
+			if (std::is_pod<S>::value)
 				{
 				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
 				return *sCtor_T<S>(&fPayload);

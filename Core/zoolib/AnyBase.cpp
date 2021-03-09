@@ -38,26 +38,19 @@ const ZP<AnyBase::OnHeap>& AnyBase::pAsOnHeap() const
 
 const std::type_info& AnyBase::Type() const
 	{
-	if (const std::type_info* theType = this->PType())
-		return *theType;
-	return typeid(void);
-	}
-
-const std::type_info* AnyBase::PType() const
-	{
 	if (fDistinguisher)
 		{
 		if (spIsPOD(fDistinguisher))
-			return spPODTypeInfo(fDistinguisher);
-		return &pAsInPlace().Type();
+			return *spPODTypeInfo(fDistinguisher);
+		return pAsInPlace().Type();
 		}
 	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
-		return &theOnHeap->Type();
+		return theOnHeap->Type();
 		}
 	else
 		{
-		return nullptr;
+		return typeid(void);
 		}
 	}
 
