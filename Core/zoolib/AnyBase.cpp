@@ -75,7 +75,7 @@ const void* AnyBase::ConstVoidStar() const
 		}
 	else
 		{
-		return 0;
+		return nullptr;
 		}
 	}
 
@@ -131,7 +131,7 @@ const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 		return theOnHeap->ConstVoidStarIfTypeMatch(iTypeInfo);
 		}
 
-	return 0;
+	return nullptr;
 	}
 
 void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
@@ -153,7 +153,7 @@ void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 		return theOnHeap->FreshMutableVoidStarIfTypeMatch(theOnHeap, iTypeInfo);
 		}
 
-	return 0;
+	return nullptr;
 	}
 
 void AnyBase::pCtor_NonPOD(const AnyBase& iOther)

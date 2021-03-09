@@ -29,7 +29,7 @@ public:
 	const std::type_info& Type() const;
 	const std::type_info* PType() const;
 
-	const void* ConstVoidStar() const;
+	const void* ConstVoidStar() const; // Used for sCompare_T implementation.
 
 // ZVal protocol, generally for use by ZVal derivatives
 
@@ -221,14 +221,14 @@ private:
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
-			return 0;
+			return nullptr;
 			}
 
 		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI)
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
-			return 0;
+			return nullptr;
 			}
 
 		S fValue;
@@ -244,8 +244,6 @@ private:
 		virtual const void* ConstVoidStar() = 0;
 
 		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
-
-		virtual void* FreshMutableVoidStar(ZP<OnHeap>& ioOnHeap) = 0;
 
 		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<OnHeap>& ioOnHeap, const std::type_info& iTI) = 0;
 		};
@@ -273,18 +271,7 @@ private:
 			{
 			if (spTypesMatch(iTI, typeid(S)))
 				return &fValue;
-			return 0;
-			}
-
-		virtual void* FreshMutableVoidStar(ZP<OnHeap>& ioOnHeap)
-			{
-			if (this->IsShared())
-				{
-				OnHeap_T* theOnHeap = new OnHeap_T(fValue);
-				ioOnHeap = theOnHeap;
-				return &theOnHeap->fValue;
-				}
-			return &fValue;
+			return nullptr;
 			}
 
 		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<OnHeap>& ioOnHeap, const std::type_info& iTI)
@@ -299,7 +286,7 @@ private:
 					}
 				return &fValue;
 				}
-			return 0;
+			return nullptr;
 			}
 
 		S fValue;
