@@ -29,7 +29,6 @@ public:
 	const std::type_info& Type() const;
 	const std::type_info* PType() const;
 
-	void* MutableVoidStar();
 	const void* ConstVoidStar() const;
 
 // ZVal protocol, generally for use by ZVal derivatives
@@ -195,8 +194,6 @@ private:
 
 		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) const = 0;
 
-		virtual void* MutableVoidStar() = 0;
-
 		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
 		};
 
@@ -226,8 +223,6 @@ private:
 				return &fValue;
 			return 0;
 			}
-
-		virtual void* MutableVoidStar() { return &fValue; }
 
 		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI)
 			{

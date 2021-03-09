@@ -61,24 +61,6 @@ const std::type_info* AnyBase::PType() const
 		}
 	}
 
-void* AnyBase::MutableVoidStar()
-	{
-	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			return &fPayload;
-		return pAsInPlace().MutableVoidStar();
-		}
-	else if (ZP<OnHeap>& theOnHeap = pAsOnHeap())
-		{
-		return theOnHeap->FreshMutableVoidStar(theOnHeap);
-		}
-	else
-		{
-		return 0;
-		}
-	}
-
 const void* AnyBase::ConstVoidStar() const
 	{
 	if (fDistinguisher)
