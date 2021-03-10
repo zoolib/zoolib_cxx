@@ -4,7 +4,7 @@
 #define __ZooLib_RelationalAlgebra_RelHead_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compare.h"
+#include "zoolib/Compare_T.h"
 #include "zoolib/Util_STL_set.h"
 
 #include "zoolib/RelationalAlgebra/ColName.h"
@@ -154,13 +154,13 @@ void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& o
 #pragma mark - sCompare_T declarations.
 
 template <>
-int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);
+int sCompareNew_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);
 
 template <>
-int sCompare_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR);
+int sCompareNew_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR);
 
 template <>
-int sCompare_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR);
+int sCompareNew_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR);
 
 } // namespace ZooLib
 

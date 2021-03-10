@@ -42,7 +42,7 @@ private:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR);
+int sCompareNew_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_ValPred

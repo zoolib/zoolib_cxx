@@ -61,6 +61,10 @@ public:
 	};
 
 } // namespace QueryEngine
+
+template <>
+int sCompareNew_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_QueryEngine_Expr_Rel_Search_h__

@@ -145,6 +145,10 @@ private:
 template <> struct RelopsTraits_HasEQ<Seq_ZZ> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Seq_ZZ> : public RelopsTraits_Has {};
 
+template <>
+inline int sCompareNew_T(const Seq_ZZ& iL, const Seq_ZZ& iR)
+	{ return iL.Compare(iR); }
+
 // =================================================================================================
 #pragma mark - Seq_ZZ::Rep
 
@@ -380,6 +384,10 @@ private:
 
 template <> struct RelopsTraits_HasEQ<Map_ZZ> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Map_ZZ> : public RelopsTraits_Has {};
+
+template <>
+inline int sCompareNew_T(const Map_ZZ& iL, const Map_ZZ& iR)
+	{ return iL.Compare(iR); }
 
 Map_ZZ operator*(const NameVal& iNV0, const NameVal& iNV1);
 

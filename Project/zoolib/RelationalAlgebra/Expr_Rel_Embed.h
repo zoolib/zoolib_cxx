@@ -63,7 +63,7 @@ ZP<Expr_Rel> sEmbed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Embed& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Embed& iL,
 	const RelationalAlgebra::Expr_Rel_Embed& iR);
 
 } // namespace ZooLib

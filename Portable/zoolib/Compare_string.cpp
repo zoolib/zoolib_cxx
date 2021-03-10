@@ -6,11 +6,7 @@
 #include "zoolib/Memory.h" // For sMemCompare
 #include "zoolib/size_t.h" // For size_t
 
-ZMACRO_MSVCStaticLib_cpp(Compare_string)
-
 namespace ZooLib {
-
-ZMACRO_CompareRegistration_T(std::string)
 
 bool FastComparator_String::operator()(const std::string& iLeft, const std::string& iRight) const
 	{

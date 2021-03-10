@@ -56,7 +56,7 @@ private:
 template <> struct RelopsTraits_HasEQ<Data_ZZ> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Data_ZZ> : public RelopsTraits_Has {};
 
-template <> inline int sCompare_T(const Data_ZZ& iL, const Data_ZZ& iR)
+template <> inline int sCompareNew_T(const Data_ZZ& iL, const Data_ZZ& iR)
 	{ return iL.Compare(iR); }
 
 template <class T>

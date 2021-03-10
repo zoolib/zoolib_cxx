@@ -6,31 +6,6 @@
 #include "zoolib/Compare_string.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - sCompare_T
-
-template <>
-int sCompare_T(
-	const RelationalAlgebra::Expr_Rel_Calc& iL, const RelationalAlgebra::Expr_Rel_Calc& iR)
-	{
-	if (int compare = sCompare_T(iL.GetColName(), iR.GetColName()))
-		return compare;
-
-	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
-		return compare;
-
-	if (iL.GetCallable() < iR.GetCallable())
-		return -1;
-
-	if (iR.GetCallable() < iL.GetCallable())
-		return 1;
-
-	return 0;
-	}
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Calc)
-
 namespace RelationalAlgebra {
 
 using std::map;
@@ -70,6 +45,26 @@ ZP<Expr_Rel> Expr_Rel_Calc::Self()
 
 ZP<Expr_Rel> Expr_Rel_Calc::Clone(const ZP<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Calc(iOp0, fColName, fCallable); }
+
+int Expr_Rel_Calc::Compare(const ZP<Expr_Rel>& iOther)
+	{
+	if (ZP<Expr_Rel_Calc> other = iOther.DynamicCast<Expr_Rel_Calc
+	const Expr_Rel_Calc& other = static_cast<const Expr_Rel_Calc&>(iOther);
+
+	if (int compare = sCompareNew_T(this->GetColName(), iOther->GetColName()))
+		return compare;
+
+	if (int compare = sCompareNew_T(this->GetOp0(), iOther->GetOp0()))
+		return compare;
+
+	if (this->GetCallable() < iOther->GetCallable())
+		return -1;
+
+	if (iOther->GetCallable() < this->GetCallable())
+		return 1;
+
+	return 0;
+	}
 
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }

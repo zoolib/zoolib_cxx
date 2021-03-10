@@ -5,8 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Any_T.h"
-#include "zoolib/Compare.h"
-#include "zoolib/Compat_string.h" // For strcmp
+#include "zoolib/Compare_T.h"
 #include "zoolib/Name.h"
 #include "zoolib/UnicodeString.h" // For string8 etc.
 #include "zoolib/Util_Relops.h"
@@ -108,13 +107,7 @@ public:
 		}
 
 	int Compare(const Val_T& iOther) const
-		{
-		return AnyBase::pCompare(iOther);
-//		const char* typeName = this->Type().name();
-//		if (int compare = strcmp(typeName, iOther.Type().name()))
-//			return compare;
-//		return Comparer::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
-		}
+		{ return AnyBase::pCompare(iOther); }
 	
 	using inherited::PGet;
 	using inherited::QGet;
@@ -252,6 +245,10 @@ struct RelopsTraits_HasEQ<Val_T<Map_p,Seq_p>> : public RelopsTraits_Has {};
 
 template <class Map_p, class Seq_p>
 struct RelopsTraits_HasLT<Val_T<Map_p,Seq_p>> : public RelopsTraits_Has {};
+
+template <class Map_p, class Seq_p>
+int sCompareNew_T(const Val_T<Map_p,Seq_p>& iL, const Val_T<Map_p,Seq_p>& iR)
+	{ return iL.Compare(iR); }
 
 } // namespace ZooLib
 

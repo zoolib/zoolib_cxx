@@ -7,14 +7,12 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Dee& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Dee& iL,
 	const RelationalAlgebra::Expr_Rel_Dee& iR)
 	{ return 0; }
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Dee)
 
 namespace RelationalAlgebra {
 

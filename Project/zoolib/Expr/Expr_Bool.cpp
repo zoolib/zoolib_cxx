@@ -51,10 +51,8 @@ void Expr_Bool_True::Accept_Expr_Bool_True(Visitor_Expr_Bool_True& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_True(this); }
 
 template <>
-int sCompare_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR)
+int sCompareNew_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR)
 	{ return 0; }
-
-ZMACRO_CompareRegistration_T(Expr_Bool_True)
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_True
@@ -100,10 +98,8 @@ void Expr_Bool_False::Accept_Expr_Bool_False(Visitor_Expr_Bool_False& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_False(this); }
 
 template <>
-int sCompare_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR)
+int sCompareNew_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR)
 	{ return 0; }
-
-ZMACRO_CompareRegistration_T(Expr_Bool_False)
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_False
@@ -144,10 +140,8 @@ void Expr_Bool_Not::Accept_Expr_Bool_Not(Visitor_Expr_Bool_Not& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_Not(this); }
 
 template <>
-int sCompare_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR)
-	{ return sCompare_T(iL.GetOp0(), iR.GetOp0()); }
-
-ZMACRO_CompareRegistration_T(Expr_Bool_Not)
+int sCompareNew_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR)
+	{ return sCompareNew_T(iL.GetOp0(), iR.GetOp0()); }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Not
@@ -188,14 +182,12 @@ void Expr_Bool_And::Accept_Expr_Bool_And(Visitor_Expr_Bool_And& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_And(this); }
 
 template <>
-int sCompare_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR)
+int sCompareNew_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR)
 	{
-	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
+	if (int compare = sCompareNew_T(iL.GetOp0(), iR.GetOp0()))
 		return compare;
-	return sCompare_T(iL.GetOp1(), iR.GetOp1());
+	return sCompareNew_T(iL.GetOp1(), iR.GetOp1());
 	}
-
-ZMACRO_CompareRegistration_T(Expr_Bool_And)
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_And
@@ -236,14 +228,12 @@ void Expr_Bool_Or::Accept_Expr_Bool_Or(Visitor_Expr_Bool_Or& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_Or(this); }
 
 template <>
-int sCompare_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR)
+int sCompareNew_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR)
 	{
-	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
+	if (int compare = sCompareNew_T(iL.GetOp0(), iR.GetOp0()))
 		return compare;
-	return sCompare_T(iL.GetOp1(), iR.GetOp1());
+	return sCompareNew_T(iL.GetOp1(), iR.GetOp1());
 	}
-
-ZMACRO_CompareRegistration_T(Expr_Bool_Or)
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Or

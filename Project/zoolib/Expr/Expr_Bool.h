@@ -50,7 +50,7 @@ public:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR);
+int sCompareNew_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_True
@@ -93,7 +93,7 @@ public:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR);
+int sCompareNew_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_False
@@ -132,7 +132,7 @@ public:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR);
+int sCompareNew_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Not
@@ -171,7 +171,7 @@ public:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR);
+int sCompareNew_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_And
@@ -210,7 +210,7 @@ public:
 	};
 
 template <>
-int sCompare_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR);
+int sCompareNew_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Or

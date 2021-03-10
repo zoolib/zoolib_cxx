@@ -7,24 +7,22 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 template <>
-int sCompare_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR)
+int sCompareNew_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR)
 	{
-	if (int compare = sCompare_T(iL.GetRelHead_Bound(), iR.GetRelHead_Bound()))
+	if (int compare = sCompareNew_T(iL.GetRelHead_Bound(), iR.GetRelHead_Bound()))
 		return compare;
 
-	if (int compare = sCompare_T(iL.GetRename(), iR.GetRename()))
+	if (int compare = sCompareNew_T(iL.GetRename(), iR.GetRename()))
 		return compare;
 
-	if (int compare = sCompare_T(iL.GetRelHead_Optional(), iR.GetRelHead_Optional()))
+	if (int compare = sCompareNew_T(iL.GetRelHead_Optional(), iR.GetRelHead_Optional()))
 		return compare;
 
-	return sCompare_T(iL.GetExpr_Bool(), iR.GetExpr_Bool());
+	return sCompareNew_T(iL.GetExpr_Bool(), iR.GetExpr_Bool());
 	}
-
-ZMACRO_CompareRegistration_T(QueryEngine::Expr_Rel_Search)
 
 namespace QueryEngine {
 

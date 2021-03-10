@@ -41,7 +41,8 @@ using namespace DataspaceTypes;
 } // namespace Dataspace
 
 template <>
-inline int sCompareNew_T(const DataspaceTypes::AbsentOptional_t&, const DataspaceTypes::AbsentOptional_t&)
+inline int sCompareNew_T(const DataspaceTypes::AbsentOptional_t&,
+	const DataspaceTypes::AbsentOptional_t&)
 	{ return 0; }
 
 } // namespace ZooLib

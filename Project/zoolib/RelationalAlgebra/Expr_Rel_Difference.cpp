@@ -7,19 +7,17 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Difference& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Difference& iL,
 	const RelationalAlgebra::Expr_Rel_Difference& iR)
 	{
-	if (int compare = sCompare_T(iL.GetOp0(), iR.GetOp0()))
+	if (int compare = sCompareNew_T(iL.GetOp0(), iR.GetOp0()))
 		return compare;
 
-	return sCompare_T(iL.GetOp1(), iR.GetOp1());
+	return sCompareNew_T(iL.GetOp1(), iR.GetOp1());
 	}
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Difference)
 
 namespace RelationalAlgebra {
 

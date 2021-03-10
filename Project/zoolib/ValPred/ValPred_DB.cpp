@@ -19,12 +19,6 @@ ValComparand_Const_DB::ValComparand_Const_DB(const Val_DB& iVal)
 const Val_DB& ValComparand_Const_DB::GetVal() const
 	{ return fVal; }
 
-template <>
-int sCompare_T(const ValComparand_Const_DB& iL, const ValComparand_Const_DB& iR)
-	{ return sCompare_T(iL.GetVal(), iR.GetVal()); }
-
-ZMACRO_CompareRegistration_T(ValComparand_Const_DB)
-
 // =================================================================================================
 #pragma mark - ValComparator_Callable_DB
 
@@ -35,12 +29,6 @@ ValComparator_Callable_DB::ValComparator_Callable_DB(ZP<Callable_t> iCallable)
 const ZP<ValComparator_Callable_DB::Callable_t>& ValComparator_Callable_DB::GetCallable() const
 	{ return fCallable; }
 
-template <>
-int sCompare_T(const ValComparator_Callable_DB& iL, const ValComparator_Callable_DB& iR)
-	{ return sCompare_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get()); }
-
-ZMACRO_CompareRegistration_T(ValComparator_Callable_DB)
-
 // =================================================================================================
 #pragma mark - ValComparator_StringContains
 
@@ -50,12 +38,6 @@ ValComparator_StringContains::ValComparator_StringContains(int iStrength)
 
 int ValComparator_StringContains::GetStrength() const
 	{ return fStrength; }
-
-template <>
-int sCompare_T(const ValComparator_StringContains& iL, const ValComparator_StringContains& iR)
-	{ return sCompare_T(iL.GetStrength(), iR.GetStrength()); }
-
-ZMACRO_CompareRegistration_T(ValComparator_StringContains)
 
 // =================================================================================================
 #pragma mark - Comparand pseudo constructors
@@ -91,7 +73,7 @@ bool spDoCompare(const Val_DB& iL, const ZP<ValComparator>& iComparator, const V
 	if (ZP<ValComparator_Simple> asSimple =
 		iComparator.DynamicCast<ValComparator_Simple>())
 		{
-		const int compare = sCompare_T(iL, iR);
+		const int compare = sCompareNew_T(iL, iR);
 		switch (asSimple->GetEComparator())
 			{
 			case ValComparator_Simple::eLT: return compare < 0;

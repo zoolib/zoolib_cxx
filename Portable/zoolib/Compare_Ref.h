@@ -4,25 +4,22 @@
 #define __ZooLib_Compare_Ref_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compare.h"
+#include "zoolib/Compare_T.h"
 #include "zoolib/ZP.h"
-
-#include <string.h> // For strcmp
 
 namespace ZooLib {
 
 template <class T>
 int sCompare_Ref_T(const ZP<T>& iL, const ZP<T>& iR)
 	{
-	if (const T* l = iL.Get())
+	if (const T* ll = iL.Get())
 		{
-		if (const T* r = iR.Get())
+		if (const T* rr = iR.Get())
 			{
-			const char* typeName = typeid(*l).name();
-			if (int compare = strcmp(typeName, typeid(*r).name()))
+			if (int compare = strcmp(typeid(*ll).name(), typeid(*rr).name()))
 				return compare;
 
-			return Comparer::sCompare(typeName, l, r);
+			return sCompareNew_T(*ll, *rr);
 			}
 		else
 			{
@@ -36,7 +33,7 @@ int sCompare_Ref_T(const ZP<T>& iL, const ZP<T>& iR)
 	}
 
 template <class T>
-int sCompare_T(const ZP<T>& iL, const ZP<T>& iR)
+int sCompareNew_T(const ZP<T>& iL, const ZP<T>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
 
 } // namespace ZooLib

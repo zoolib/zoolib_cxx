@@ -70,7 +70,7 @@ ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ZP<Expr_Bool>& iExpr_Bo
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
 	const RelationalAlgebra::Expr_Rel_Restrict& iR);
 
 } // namespace ZooLib

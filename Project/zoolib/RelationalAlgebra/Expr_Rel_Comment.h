@@ -70,7 +70,7 @@ ZP<Expr_Rel_Comment> sComment(const ZP<Expr_Rel>& iExpr_Rel,
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Comment& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Comment& iL,
 	const RelationalAlgebra::Expr_Rel_Comment& iR);
 
 } // namespace ZooLib

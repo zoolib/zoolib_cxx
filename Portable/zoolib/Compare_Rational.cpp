@@ -2,10 +2,7 @@
 
 #include "zoolib/Compare_Rational.h"
 
-#include "zoolib/Compare.h"
 #include "zoolib/Compat_cmath.h"
-
-ZMACRO_MSVCStaticLib_cpp(Compare_Rational)
 
 namespace ZooLib {
 
@@ -13,7 +10,7 @@ namespace ZooLib {
 // arbitrarily say that a nan is less than any non-nan value.
 
 template <>
-int sCompare_T(const float& iL, const float& iR)
+int sCompareNew_T(const float& iL, const float& iR)
 	{
 	if (isnan(iL))
 		{
@@ -29,11 +26,9 @@ int sCompare_T(const float& iL, const float& iR)
 		return 1;
 	return 0;
 	}
-
-ZMACRO_CompareRegistration_T(float)
 
 template <>
-int sCompare_T(const double& iL, const double& iR)
+int sCompareNew_T(const double& iL, const double& iR)
 	{
 	if (isnan(iL))
 		{
@@ -49,11 +44,9 @@ int sCompare_T(const double& iL, const double& iR)
 		return 1;
 	return 0;
 	}
-
-ZMACRO_CompareRegistration_T(double)
 
 template <>
-int sCompare_T(const long double& iL, const long double& iR)
+int sCompareNew_T(const long double& iL, const long double& iR)
 	{
 	if (isnan(iL))
 		{
@@ -69,7 +62,5 @@ int sCompare_T(const long double& iL, const long double& iR)
 		return 1;
 	return 0;
 	}
-
-ZMACRO_CompareRegistration_T(long double)
 
 } // namespace ZooLib

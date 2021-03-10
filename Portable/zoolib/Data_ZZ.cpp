@@ -12,8 +12,6 @@ namespace ZooLib {
 
 using std::vector;
 
-ZMACRO_CompareRegistration_T(Data_ZZ)
-
 // =================================================================================================
 #pragma mark - Data_ZZ::Rep
 

@@ -8,7 +8,6 @@
 #include "zoolib/ZTypes.h" // For EnableIfC
 
 #include <functional> // For std::binary_function
-// #include <memory> // For std::pair
 
 namespace ZooLib {
 
@@ -68,42 +67,37 @@ inline int sCompareNew_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
 // =================================================================================================
-#pragma mark - sCompare_T
-
-template <class T> int sCompare_T(const T& iL, const T& iR);
-
-// =================================================================================================
-#pragma mark - sCompare_T specialized for void pointers
+#pragma mark - sCompareNew_T specialized for void pointers
 
 typedef void* VoidStar_t;
 
-template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
+template <> inline int sCompareNew_T(const VoidStar_t& iL, const VoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 typedef const void* ConstVoidStar_t;
 
-template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
+template <> inline int sCompareNew_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 // =================================================================================================
-#pragma mark - sCompare_T specialized for std::pair
+#pragma mark - sCompareNew_T specialized for std::pair
 
 template <class S, class T>
-inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
+inline int sCompareNew_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	{
-	if (int compare = sCompare_T(iLeft.first, iRight.first))
+	if (int compare = sCompareNew_T(iLeft.first, iRight.first))
 		return compare;
-	return sCompare_T(iLeft.second, iRight.second);
+	return sCompareNew_T(iLeft.second, iRight.second);
 	}
 
 // =================================================================================================
-#pragma mark - Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
+#pragma mark - Less_Compare_T, less<>-style functor implemented in terms of sCompareNew_T
 
 template <class T>
 struct Less_Compare_T : public std::binary_function<T,T,bool>
 	{
 	bool operator()(const T& iLeft, const T& iRight) const
-		{ return sCompare_T(iLeft, iRight) < 0; }
+		{ return sCompareNew_T(iLeft, iRight) < 0; }
 	};
 
 // =================================================================================================
@@ -122,7 +116,7 @@ inline int sCompareIterators_T(
 			if (rightIter != rightEnd)
 				{
 				// Right is not exhausted either, so we compare their current values.
-				if (int compare = sCompare_T(*leftIter, *rightIter))
+				if (int compare = sCompareNew_T(*leftIter, *rightIter))
 					{
 					// The current values of left and right
 					// are different, so we have a result.

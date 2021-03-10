@@ -12,21 +12,17 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 template <>
-int sCompare_T<QueryEngine::Result>(
+int sCompareNew_T<QueryEngine::Result>(
 	const QueryEngine::Result& iL, const QueryEngine::Result& iR)
 	{ return iL.Compare(iR); }
 
-ZMACRO_CompareRegistration_T(QueryEngine::Result)
-
 template <>
-int sCompare_T<ZP<QueryEngine::Result>>(
+int sCompareNew_T<ZP<QueryEngine::Result>>(
 	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
 	{ return sCompare_Ref_T(iL, iR); }
-
-ZMACRO_CompareRegistration_T(ZP<QueryEngine::Result>)
 
 // =================================================================================================
 #pragma mark - QueryEngine::Result
@@ -86,9 +82,9 @@ const Val_DB* Result::GetValsAt(size_t iIndex)
 
 int Result::Compare(const Result& iOther) const
 	{
-	if (int compare = sCompare_T(fRelHead, iOther.fRelHead))
+	if (int compare = sCompareNew_T(fRelHead, iOther.fRelHead))
 		return compare;
-	return sCompare_T(fPackedRows, iOther.fPackedRows);
+	return sCompareNew_T(fPackedRows, iOther.fPackedRows);
 	}
 
 ZP<Result> Result::Fresh()
@@ -119,7 +115,7 @@ pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
 	for (size_t yy = 0; yy < offsetsCount; ++yy)
 		{
 		const size_t theCol = iOffsets[yy];
-		if (int compare = sCompare_T(iVals_Left[theCol], iVals_Right[theCol]))
+		if (int compare = sCompareNew_T(iVals_Left[theCol], iVals_Right[theCol]))
 			return pair<int,size_t>(compare, yy);
 		}
 	return pair<int,size_t>(0, offsetsCount);

@@ -64,7 +64,7 @@ ZP<Expr_Rel> sConcrete(const ConcreteHead& iConcreteHead);
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Concrete& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Concrete& iL,
 	const RelationalAlgebra::Expr_Rel_Concrete& iR);
 
 } // namespace ZooLib

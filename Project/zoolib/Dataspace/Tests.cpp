@@ -53,7 +53,7 @@ static bool spCheckRoundTripThroughChan(const ZP<Expr_Rel>& iRel)
 	{
 	bool success = true;
 
-	if (0 != sCompare_T(iRel, iRel))
+	if (0 != sCompareNew_T(iRel, iRel))
 		success = false;
 
 	string string1;
@@ -66,7 +66,7 @@ static bool spCheckRoundTripThroughChan(const ZP<Expr_Rel>& iRel)
 	if (string1 != string2)
 		success = false;
 
-	if (0 != sCompare_T(iRel, newRel))
+	if (0 != sCompareNew_T(iRel, newRel))
 		success = false;
 
 	return success;

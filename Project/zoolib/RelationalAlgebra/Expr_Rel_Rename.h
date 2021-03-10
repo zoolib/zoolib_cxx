@@ -65,7 +65,7 @@ ZP<Expr_Rel> sRename(const ZP<Expr_Rel>& iExpr,
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Rename& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Rename& iL,
 	const RelationalAlgebra::Expr_Rel_Rename& iR);
 
 } // namespace ZooLib

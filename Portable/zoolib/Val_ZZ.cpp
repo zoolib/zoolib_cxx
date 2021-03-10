@@ -2,8 +2,6 @@
 
 #include "zoolib/Val_ZZ.h"
 
-#include "zoolib/Compare.h"
-#include "zoolib/Compare_T.h"
 #include "zoolib/Compare_vector.h"
 #include "zoolib/Singleton.h"
 
@@ -16,30 +14,6 @@ namespace ZooLib {
 
 static const Val_ZZ& spVal_Null()
 	{ return sDefault<Val_ZZ>(); }
-
-template <>
-int sCompare_T(const Val_ZZ& iL, const Val_ZZ& iR)
-	{ return iL.Compare(iR); }
-
-template <>
-int sCompare_T(const Seq_ZZ& iL, const Seq_ZZ& iR)
-	{ return iL.Compare(iR); }
-
-template <>
-int sCompare_T(const Map_ZZ& iL, const Map_ZZ& iR)
-	{ return iL.Compare(iR); }
-
-template <>
-int sCompare_T(const NameVal& iL, const NameVal& iR)
-	{
-	if (int compare = sCompare_T(iL.first, iR.first))
-		return compare;
-	return sCompare_T(iL.second, iR.second);
-	}
-
-ZMACRO_CompareRegistration_T(Val_ZZ)
-ZMACRO_CompareRegistration_T(Seq_ZZ)
-ZMACRO_CompareRegistration_T(Map_ZZ)
 
 // =================================================================================================
 #pragma mark - Seq_ZZ::Rep
@@ -91,7 +65,7 @@ int Seq_ZZ::Compare(const Seq_ZZ& iOther) const
 		{
 		if (iOther.fRep)
 			{
-			return sCompare_T(fRep->fVector, iOther.fRep->fVector);
+			return sCompareNew_T(fRep->fVector, iOther.fRep->fVector);
 			}
 		else
 			{
@@ -394,12 +368,12 @@ int Map_ZZ::Compare(const Map_ZZ& iOther) const
 			if (iterOther != endOther)
 				{
 				// Other is not exhausted either, so we compare their current values.
-				if (int compare = sCompare_T(iterThis->first, iterOther->first))
+				if (int compare = sCompareNew_T(iterThis->first, iterOther->first))
 					{
 					// The names are different.
 					return compare;
 					}
-				if (int compare = sCompare_T<Val_ZZ>(iterThis->second, iterOther->second))
+				if (int compare = sCompareNew_T<Val_ZZ>(iterThis->second, iterOther->second))
 					{
 					// The values are different.
 					return compare;

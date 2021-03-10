@@ -28,10 +28,8 @@ ValComparator_Simple::EComparator ValComparator_Simple::GetEComparator() const
 	{ return fEComparator; }
 
 template <>
-int sCompare_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR)
-	{ return sCompare_T(int(iL.GetEComparator()), int(iR.GetEComparator())); }
-
-ZMACRO_CompareRegistration_T(ValComparator_Simple)
+int sCompareNew_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR)
+	{ return sCompareNew_T(int(iL.GetEComparator()), int(iR.GetEComparator())); }
 
 // =================================================================================================
 #pragma mark - ValComparand
@@ -53,10 +51,8 @@ const std::string& ValComparand_Name::GetName() const
 	{ return fName; }
 
 template <>
-int sCompare_T(const ValComparand_Name& iL, const ValComparand_Name& iR)
-	{ return sCompare_T(iL.GetName(), iR.GetName()); }
-
-ZMACRO_CompareRegistration_T(ValComparand_Name)
+int sCompareNew_T(const ValComparand_Name& iL, const ValComparand_Name& iR)
+	{ return sCompareNew_T(iL.GetName(), iR.GetName()); }
 
 // =================================================================================================
 #pragma mark - ValPred
@@ -100,22 +96,22 @@ const ZP<ValComparand>& ValPred::GetRHS() const
 	{ return fRHS; }
 
 // =================================================================================================
-#pragma mark - ValPred, sCompare_T
+#pragma mark - ValPred, sCompareNew_T
 
 template <>
-int sCompare_T(const ValPred& iL, const ValPred& iR)
+int sCompareNew_T(const ValPred& iL, const ValPred& iR)
 	{
-	if (int compare = sCompare_T(iL.GetLHS(), iR.GetLHS()))
+	if (int compare = sCompareNew_T(iL.GetLHS(), iR.GetLHS()))
 		return compare;
 
-	if (int compare = sCompare_T(iL.GetComparator(), iR.GetComparator()))
+	if (int compare = sCompareNew_T(iL.GetComparator(), iR.GetComparator()))
 		return compare;
 
-	return sCompare_T(iL.GetRHS(), iR.GetRHS());
+	return sCompareNew_T(iL.GetRHS(), iR.GetRHS());
 	}
 
 bool operator<(const ValPred& iL, const ValPred& iR)
-	{ return sCompare_T(iL, iR) < 0; }
+	{ return sCompareNew_T(iL, iR) < 0; }
 
 // =================================================================================================
 #pragma mark - Comparand pseudo constructors

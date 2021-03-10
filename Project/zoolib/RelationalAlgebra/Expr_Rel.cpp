@@ -8,17 +8,20 @@
 #include "zoolib/ZThread.h"
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 namespace ZooLib {
 
 template <>
-int sCompare_T<ZP<RelationalAlgebra::Expr_Rel>>(
+int sCompareNew_T<ZP<RelationalAlgebra::Expr_Rel>>(
 	const ZP<RelationalAlgebra::Expr_Rel>& iL,
 	const ZP<RelationalAlgebra::Expr_Rel>& iR)
-	{ return sCompare_Ref_T(iL, iR); }
+	{
+	if (int compare = strcmp(typeid(*ll).name(), typeid(*rr).name()))
+		return compare;
 
-ZMACRO_CompareRegistration_T(ZP<RelationalAlgebra::Expr_Rel>)
+	return iL->Compare(iR);
+	}
 
 } // namespace ZooLib
 

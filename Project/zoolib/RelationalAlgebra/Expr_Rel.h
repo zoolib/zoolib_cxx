@@ -26,6 +26,8 @@ class Expr_Rel
 	{
 protected:
 	Expr_Rel();
+
+	virtual int Compare(const Expr_Rel& iOther) = 0;
 	};
 
 // =================================================================================================
@@ -48,6 +50,12 @@ void sSemanticError(const string8& iMessage);
 typedef ThreadVal<ZP<Callable_SemanticError>> ThreadVal_SemanticError;
 
 } // namespace RelationalAlgebra
+
+template <>
+int sCompareNew_T<ZP<RelationalAlgebra::Expr_Rel>>(
+	const ZP<RelationalAlgebra::Expr_Rel>& iL,
+	const ZP<RelationalAlgebra::Expr_Rel>& iR);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__

@@ -58,7 +58,7 @@ ZP<Expr_Rel>& operator*=(ZP<Expr_Rel>& ioLHS, const ZP<Expr_Rel>& iRHS);
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Product& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Product& iL,
 	const RelationalAlgebra::Expr_Rel_Product& iR);
 
 } // namespace ZooLib

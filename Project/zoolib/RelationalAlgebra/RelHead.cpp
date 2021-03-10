@@ -12,22 +12,16 @@ namespace ZooLib {
 #pragma mark - sCompare
 
 template <>
-int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR)
+int sCompareNew_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR)
 	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::RelHead)
 
 template <>
-int sCompare_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR)
+int sCompareNew_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR)
 	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::Rename)
 
 template <>
-int sCompare_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR)
+int sCompareNew_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR)
 	{ return sCompareIterators_T(iL.begin(), iL.end(), iR.begin(), iR.end()); }
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::ConcreteHead)
 
 } // namespace ZooLib
 

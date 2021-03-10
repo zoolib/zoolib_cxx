@@ -105,11 +105,11 @@ void sBuildBindings(ZP<Result> iResult, std::map<string8,size_t>& oResult);
 #pragma mark - sCompare_T
 
 template <>
-int sCompare_T<QueryEngine::Result>(
+int sCompareNew_T<QueryEngine::Result>(
 	const QueryEngine::Result& iL, const QueryEngine::Result& iR);
 
 template <>
-int sCompare_T<ZP<QueryEngine::Result>>(
+int sCompareNew_T<ZP<QueryEngine::Result>>(
 	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR);
 
 } // namespace ZooLib

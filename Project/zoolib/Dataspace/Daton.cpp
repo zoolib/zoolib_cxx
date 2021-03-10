@@ -5,15 +5,13 @@
 #include "zoolib/Compare.h"
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 namespace ZooLib {
 
 template <>
-int sCompare_T<Dataspace::Daton>(const Dataspace::Daton& iL, const Dataspace::Daton& iR)
-	{ return sCompare_T(iL.GetData(), iR.GetData()); }
-
-ZMACRO_CompareRegistration_T(Dataspace::Daton)
+int sCompareNew_T<Dataspace::Daton>(const Dataspace::Daton& iL, const Dataspace::Daton& iR)
+	{ return sCompareNew_T(iL.GetData(), iR.GetData()); }
 
 } // namespace ZooLib
 

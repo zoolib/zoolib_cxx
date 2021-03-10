@@ -58,7 +58,7 @@ ZP<Expr_Rel> sDum();
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Dum& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Dum& iL,
 	const RelationalAlgebra::Expr_Rel_Dum& iR);
 
 } // namespace ZooLib

@@ -9,12 +9,10 @@
 
 #include <string>
 
-ZMACRO_MSVCStaticLib_Reference(Compare_string)
-
 namespace ZooLib {
 
 template <>
-inline int sCompare_T(const std::string& iL, const std::string& iR)
+inline int sCompareNew_T(const std::string& iL, const std::string& iR)
 	{ return iL.compare(iR); }
 
 // =================================================================================================

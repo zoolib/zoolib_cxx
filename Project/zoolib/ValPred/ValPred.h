@@ -41,7 +41,7 @@ private:
 	};
 
 template <>
-int sCompare_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR);
+int sCompareNew_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR);
 
 // =================================================================================================
 #pragma mark - ValComparand
@@ -71,7 +71,7 @@ private:
 	};
 
 template <>
-int sCompare_T(const ValComparand_Name& iL, const ValComparand_Name& iR);
+int sCompareNew_T(const ValComparand_Name& iL, const ValComparand_Name& iR);
 
 // =================================================================================================
 #pragma mark - ValPred
@@ -101,7 +101,7 @@ private:
 	};
 
 template <>
-int sCompare_T(const ValPred& iL, const ValPred& iR);
+int sCompareNew_T(const ValPred& iL, const ValPred& iR);
 
 bool operator<(const ValPred& iL, const ValPred& iR);
 

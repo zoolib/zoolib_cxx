@@ -56,7 +56,7 @@ ZP<Expr_Rel> sDee();
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Dee& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Dee& iL,
 	const RelationalAlgebra::Expr_Rel_Dee& iR);
 
 } // namespace ZooLib

@@ -45,6 +45,9 @@ public:
 	virtual ZP<Expr_Rel> Self();
 	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
 
+// From Expr_Rel
+	virtual int Compare(const Expr_Rel& iOther);
+
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);
 
@@ -74,11 +77,6 @@ ZP<Expr_Rel> sCalc(const ZP<Expr_Rel>& iOp0,
 	const ZP<Expr_Rel_Calc::Callable_t>& iCallable);
 
 } // namespace RelationalAlgebra
-
-template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Calc& iL,
-	const RelationalAlgebra::Expr_Rel_Calc& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_Calc_h__

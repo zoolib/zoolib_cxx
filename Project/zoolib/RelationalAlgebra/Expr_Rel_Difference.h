@@ -46,7 +46,7 @@ public:
 } // namespace RelationalAlgebra
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Difference& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Difference& iL,
 	const RelationalAlgebra::Expr_Rel_Difference& iR);
 
 } // namespace ZooLib

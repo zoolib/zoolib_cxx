@@ -45,10 +45,8 @@ const ValPred& Expr_Bool_ValPred::GetValPred() const
 	{ return fValPred; }
 
 template <>
-int sCompare_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR)
-	{ return sCompare_T(iL.GetValPred(), iR.GetValPred()); }
-
-ZMACRO_CompareRegistration_T(Expr_Bool_ValPred)
+int sCompareNew_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR)
+	{ return sCompareNew_T(iL.GetValPred(), iR.GetValPred()); }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_ValPred

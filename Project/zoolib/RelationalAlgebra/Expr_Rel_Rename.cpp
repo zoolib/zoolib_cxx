@@ -11,22 +11,20 @@ using std::string;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompare_T
+#pragma mark - sCompareNew_T
 
 template <>
-int sCompare_T(const RelationalAlgebra::Expr_Rel_Rename& iL,
+int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Rename& iL,
 	const RelationalAlgebra::Expr_Rel_Rename& iR)
 	{
-	if (int compare = sCompare_T(iL.GetOld(), iR.GetOld()))
+	if (int compare = sCompareNew_T(iL.GetOld(), iR.GetOld()))
 		return compare;
 
-	if (int compare = sCompare_T(iL.GetNew(), iR.GetNew()))
+	if (int compare = sCompareNew_T(iL.GetNew(), iR.GetNew()))
 		return compare;
 
-	return sCompare_T(iL.GetOp0(), iR.GetOp0());
+	return sCompareNew_T(iL.GetOp0(), iR.GetOp0());
 	}
-
-ZMACRO_CompareRegistration_T(RelationalAlgebra::Expr_Rel_Rename)
 
 namespace RelationalAlgebra {
 
