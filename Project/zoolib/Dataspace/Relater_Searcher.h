@@ -95,7 +95,7 @@ protected:
 		bool operator()(const ZP<RelationalAlgebra::Expr_Rel>& iLeft,
 			const ZP<RelationalAlgebra::Expr_Rel>& iRight) const
 			{
-			return iLeft->Compare(iRight);
+			return iLeft->Compare(iRight) < 0;
 			}
 		};
 
