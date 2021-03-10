@@ -109,10 +109,11 @@ public:
 
 	int Compare(const Val_T& iOther) const
 		{
-		const char* typeName = this->Type().name();
-		if (int compare = strcmp(typeName, iOther.Type().name()))
-			return compare;
-		return Comparer::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
+		return AnyBase::pCompare(iOther);
+//		const char* typeName = this->Type().name();
+//		if (int compare = strcmp(typeName, iOther.Type().name()))
+//			return compare;
+//		return Comparer::sCompare(typeName, this->ConstVoidStar(), iOther.ConstVoidStar());
 		}
 	
 	using inherited::PGet;

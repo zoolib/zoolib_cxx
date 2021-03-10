@@ -39,38 +39,55 @@ const ZP<AnyBase::OnHeap>& AnyBase::pAsOnHeap() const
 const std::type_info& AnyBase::Type() const
 	{
 	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			return *spPODTypeInfo(fDistinguisher);
 		return pAsInPlace().Type();
-		}
-	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
-		{
+
+	if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		return theOnHeap->Type();
-		}
-	else
-		{
-		return typeid(void);
-		}
+
+	return typeid(void);
 	}
 
 const void* AnyBase::ConstVoidStar() const
 	{
 	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			return &fPayload;
 		return pAsInPlace().ConstVoidStar();
-		}
-	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
-		{
+
+	if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		return theOnHeap->ConstVoidStar();
-		}
-	else
-		{
-		return nullptr;
-		}
+
+	return nullptr;
 	}
+
+int AnyBase::pCompare(const AnyBase& iOther) const
+	{
+	if (fDistinguisher)
+		{
+		if (iOther.fDistinguisher)
+			return pAsInPlace().Compare(iOther.pAsInPlace());
+
+		if (const ZP<OnHeap>& otherOnHeap = iOther.pAsOnHeap())
+			return pAsInPlace().Compare(*otherOnHeap.Get());
+
+		return 1;
+		}
+
+	if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
+		{
+		if (iOther.fDistinguisher)
+			theOnHeap->Compare(iOther.pAsInPlace());
+
+		if (const ZP<OnHeap>& otherOnHeap = iOther.pAsOnHeap())
+			theOnHeap->Compare(*otherOnHeap.Get());
+
+		return 1;
+		}
+
+	if (iOther.fDistinguisher || iOther.pAsOnHeap())
+		return -1;
+
+	return 0;
+	}
+
 
 void AnyBase::Swap(AnyBase& ioOther)
 	{
@@ -94,8 +111,7 @@ void AnyBase::Clear()
 	{
 	if (fDistinguisher)
 		{
-		if (spNotPOD(fDistinguisher))
-			sDtor_T<InPlace>(&fDistinguisher);
+		sDtor_T<InPlace>(&fDistinguisher);
 		fDistinguisher = 0;
 		}
 	else
@@ -108,21 +124,10 @@ void AnyBase::Clear()
 const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 	{
 	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			{
-			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
-				return &fPayload;
-			}
-		else
-			{
-			return pAsInPlace().ConstVoidStarIfTypeMatch(iTypeInfo);
-			}
-		}
-	else if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
-		{
+		return pAsInPlace().ConstVoidStarIfTypeMatch(iTypeInfo);
+
+	if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		return theOnHeap->ConstVoidStarIfTypeMatch(iTypeInfo);
-		}
 
 	return nullptr;
 	}
@@ -130,21 +135,10 @@ const void* AnyBase::pFetchConst(const std::type_info& iTypeInfo) const
 void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 	{
 	if (fDistinguisher)
-		{
-		if (spIsPOD(fDistinguisher))
-			{
-			if (iTypeInfo == *spPODTypeInfo(fDistinguisher))
-				return &fPayload;
-			}
-		else
-			{
-			return pAsInPlace().MutableVoidStarIfTypeMatch(iTypeInfo);
-			}
-		}
-	else if (ZP<OnHeap>& theOnHeap = pAsOnHeap())
-		{
+		return pAsInPlace().MutableVoidStarIfTypeMatch(iTypeInfo);
+
+	if (ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		return theOnHeap->FreshMutableVoidStarIfTypeMatch(theOnHeap, iTypeInfo);
-		}
 
 	return nullptr;
 	}

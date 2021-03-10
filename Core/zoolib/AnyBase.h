@@ -5,12 +5,13 @@
 #include "zconfig.h"
 
 #include "zoolib/CountedWithoutFinalize.h"
+#include "zoolib/Compare_T.h"
 
 #include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
 
 #include <typeinfo> // For std::type_info
-#include <type_traits> // For std::is_pod
+// #include <type_traits> // For std::is_pod
 
 namespace ZooLib {
 
@@ -26,9 +27,10 @@ struct AnyTraits
 class AnyBase
 	{
 public:
-	// These two are used only for Val_T::Compare implementation.
 	const std::type_info& Type() const;
 	const void* ConstVoidStar() const;
+
+	int pCompare(const AnyBase& iOther) const;
 
 // ZVal protocol, generally for use by ZVal derivatives
 
@@ -180,10 +182,20 @@ private:
 
 	static bool spTypesMatch(const std::type_info& a, const std::type_info& b);
 
+	typedef std::pair<const char*, const void*> InfoPair;
+
+	class OnHeap;
+
 	class InPlace
 		{
 	public:
 		virtual ~InPlace() {}
+
+		virtual InfoPair GetInfoPair() const = 0;
+
+		virtual int Compare(const InPlace& iOther) const = 0;
+
+		virtual int Compare(const OnHeap& iOther) const = 0;
 
 		virtual void CtorInto(void* iOther) const = 0;
 
@@ -194,6 +206,26 @@ private:
 		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) const = 0;
 
 		virtual void* MutableVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
+		};
+
+// -----------------
+
+	class OnHeap : public CountedWithoutFinalize
+		{
+	public:
+		virtual InfoPair GetInfoPair() const = 0;
+
+		virtual int Compare(const InPlace& iOther) const = 0;
+
+		virtual int Compare(const OnHeap& iOther) const = 0;
+
+		virtual const std::type_info& Type() const = 0;
+
+		virtual const void* ConstVoidStar() = 0;
+
+		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
+
+		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<OnHeap>& ioOnHeap, const std::type_info& iTI) = 0;
 		};
 
 // -----------------
@@ -209,6 +241,27 @@ private:
 
 		template <class P0, class P1>
 		InPlace_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
+
+		virtual InfoPair GetInfoPair() const
+			{ return InfoPair(typeid(S).name(), &fValue); }
+
+		virtual int Compare(const InPlace& iOther) const
+			{
+			InfoPair otherInfo = iOther.GetInfoPair();
+			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
+				return compare;
+
+			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			}
+
+		virtual int Compare(const OnHeap& iOther) const
+			{
+			InfoPair otherInfo = iOther.GetInfoPair();
+			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
+				return compare;
+
+			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			}
 
 		virtual void CtorInto(void* iOther) const { sCtor_T<InPlace_T>(iOther, fValue); }
 
@@ -235,20 +288,6 @@ private:
 
 // -----------------
 
-	class OnHeap : public CountedWithoutFinalize
-		{
-	public:
-		virtual const std::type_info& Type() const = 0;
-
-		virtual const void* ConstVoidStar() = 0;
-
-		virtual const void* ConstVoidStarIfTypeMatch(const std::type_info& iTI) = 0;
-
-		virtual void* FreshMutableVoidStarIfTypeMatch(ZP<OnHeap>& ioOnHeap, const std::type_info& iTI) = 0;
-		};
-
-// -----------------
-
 	template <typename S>
 	class OnHeap_T : public OnHeap
 		{
@@ -260,6 +299,27 @@ private:
 
 		template <class P0, class P1>
 		OnHeap_T(const P0& iP0, const P1& iP1) : fValue(iP0, iP1) {}
+
+		virtual InfoPair GetInfoPair() const
+			{ return InfoPair(typeid(S).name(), &fValue); }
+
+		virtual int Compare(const InPlace& iOther) const
+			{
+			InfoPair otherInfo = iOther.GetInfoPair();
+			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
+				return compare;
+
+			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			}
+
+		virtual int Compare(const OnHeap& iOther) const
+			{
+			InfoPair otherInfo = iOther.GetInfoPair();
+			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
+				return compare;
+
+			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			}
 
 		virtual const std::type_info& Type() const { return typeid(S); }
 
@@ -306,32 +366,17 @@ private:
 
 	void pCtor(const AnyBase& iOther)
 		{
-		if (spNotPOD(iOther.fDistinguisher))
-			{
-			pCtor_NonPOD(iOther);
-			}
-		else
-			{
-			fDistinguisher = iOther.fDistinguisher;
-			fPayload = iOther.fPayload;
-			}
+		pCtor_NonPOD(iOther);
 		}
 
 	void pCtor_NonPOD(const AnyBase& iOther);
 
 	void pDtor()
 		{
-		if (spNotPOD(fDistinguisher))
-			pDtor_NonPOD();
+		pDtor_NonPOD();
 		}
 
 	void pDtor_NonPOD();
-
-	static bool spIsPOD(const void* iPtr)
-		{ return ((intptr_t)iPtr) & 1; }
-
-	static bool spNotPOD(const void* iPtr)
-		{ return not spIsPOD(iPtr); }
 
 // -----------------
 
@@ -363,15 +408,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (std::is_pod<S>::value)
-				{
-				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
-				sCtor_T<S>(&fPayload, iP0);
-				}
-			else
-				{
-				sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0);
-				}
+			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0);
 			}
 		else
 			{
@@ -417,15 +454,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (std::is_pod<S>::value)
-				{
-				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
-				return *sCtor_T<S>(&fPayload, iP0);
-				}
-			else
-				{
-				return sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0)->fValue;
-				}
+			return sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0)->fValue;
 			}
 		else
 			{
@@ -441,15 +470,7 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			if (std::is_pod<S>::value)
-				{
-				fDistinguisher = (void*)(((intptr_t)&typeid(S)) | 1);
-				return *sCtor_T<S>(&fPayload);
-				}
-			else
-				{
-				return sCtor_T<InPlace_T<S>>(&fDistinguisher)->fValue;
-				}
+			return sCtor_T<InPlace_T<S>>(&fDistinguisher)->fValue;
 			}
 		else
 			{
