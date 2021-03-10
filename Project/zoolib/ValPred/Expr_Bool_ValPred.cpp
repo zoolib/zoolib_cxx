@@ -32,6 +32,14 @@ void Expr_Bool_ValPred::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 		inherited::Accept_Expr_Op0(iVisitor);
 	}
 
+int Expr_Bool_ValPred::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_ValPred> other = iOther.DynamicCast<Expr_Bool_ValPred>())
+		return sCompareNew_T(this->GetValPred(), other->GetValPred());
+
+	return Expr::Compare(iOther);
+	}
+
 ZP<Expr_Bool> Expr_Bool_ValPred::Self()
 	{ return this; }
 
@@ -43,10 +51,6 @@ void Expr_Bool_ValPred::Accept_Expr_Bool_ValPred(Visitor_Expr_Bool_ValPred& iVis
 
 const ValPred& Expr_Bool_ValPred::GetValPred() const
 	{ return fValPred; }
-
-template <>
-int sCompareNew_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR)
-	{ return sCompareNew_T(iL.GetValPred(), iR.GetValPred()); }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_ValPred

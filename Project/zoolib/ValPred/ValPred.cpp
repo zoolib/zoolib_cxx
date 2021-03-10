@@ -17,6 +17,13 @@ ValComparator::ValComparator()
 ValComparator::~ValComparator()
 	{}
 
+int ValComparator::Compare(const ZP<ValComparator>& iOther)
+	{
+	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+		return compare;
+	return 0;
+	}
+
 // =================================================================================================
 #pragma mark - ValComparator_Simple
 
@@ -24,12 +31,16 @@ ValComparator_Simple::ValComparator_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
 	{}
 
+int ValComparator_Simple::Compare(const ZP<ValComparator>& iOther)
+	{
+	if (ZP<ValComparator_Simple> other = iOther.DynamicCast<ValComparator_Simple>())
+		return sCompareNew_T(int(this->GetEComparator()), int(other->GetEComparator()));
+
+	return ValComparator::Compare(iOther);
+	}
+
 ValComparator_Simple::EComparator ValComparator_Simple::GetEComparator() const
 	{ return fEComparator; }
-
-template <>
-int sCompareNew_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR)
-	{ return sCompareNew_T(int(iL.GetEComparator()), int(iR.GetEComparator())); }
 
 // =================================================================================================
 #pragma mark - ValComparand
@@ -39,6 +50,13 @@ ValComparand::ValComparand()
 
 ValComparand::~ValComparand()
 	{}
+
+int ValComparand::Compare(const ZP<ValComparand>& iOther)
+	{
+	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+		return compare;
+	return 0;
+	}
 
 // =================================================================================================
 #pragma mark - ValComparand_Name
@@ -50,9 +68,13 @@ ValComparand_Name::ValComparand_Name(const std::string& iName)
 const std::string& ValComparand_Name::GetName() const
 	{ return fName; }
 
-template <>
-int sCompareNew_T(const ValComparand_Name& iL, const ValComparand_Name& iR)
-	{ return sCompareNew_T(iL.GetName(), iR.GetName()); }
+int ValComparand_Name::Compare(const ZP<ValComparand>& iOther)
+	{
+	if (ZP<ValComparand_Name> other = iOther.DynamicCast<ValComparand_Name>())
+		return sCompareNew_T(this->GetName(), other->GetName());
+
+	return ValComparand::Compare(iOther);
+	}
 
 // =================================================================================================
 #pragma mark - ValPred

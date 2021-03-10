@@ -42,7 +42,7 @@ SearchSpec::SearchSpec(const ConcreteHead& iConcreteHead,
 bool SearchSpec::operator==(const SearchSpec& iOther) const
 	{
 	return fConcreteHead == iOther.fConcreteHead
-		&& 0 == sCompare_Ref_T(fRestriction, iOther.fRestriction);
+		&& 0 == fRestriction->Compare(iOther.fRestriction);
 	}
 
 bool SearchSpec::operator<(const SearchSpec& iOther) const
@@ -53,7 +53,7 @@ bool SearchSpec::operator<(const SearchSpec& iOther) const
 	if (iOther.fConcreteHead < fConcreteHead)
 		return false;
 
-	return sCompare_Ref_T(fRestriction, iOther.fRestriction) < 0;
+	return fRestriction->Compare(iOther.fRestriction) < 0;
 	}
 
 const ConcreteHead& SearchSpec::GetConcreteHead() const

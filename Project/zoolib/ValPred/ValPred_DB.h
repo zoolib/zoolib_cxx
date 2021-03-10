@@ -19,6 +19,9 @@ class ValComparand_Const_DB : public ValComparand
 public:
 	ValComparand_Const_DB(const Val_DB& iVal);
 
+// From ValComparand
+	virtual int Compare(const ZP<ValComparand>& iOther);
+
 // Our protocol
 	const Val_DB& GetVal() const;
 
@@ -40,6 +43,9 @@ public:
 
 	ValComparator_Callable_DB(ZP<Callable_t> iCallable);
 
+// From ValComparator
+	virtual int Compare(const ZP<ValComparator>& iOther);
+
 // Our protocol
 	const ZP<Callable_t>& GetCallable() const;
 
@@ -58,6 +64,9 @@ class ValComparator_StringContains : public ValComparator
 	{
 public:
 	ValComparator_StringContains(int iStrength);
+
+// From ValComparator
+	virtual int Compare(const ZP<ValComparator>& iOther);
 
 // Our protocol
 	int GetStrength() const;

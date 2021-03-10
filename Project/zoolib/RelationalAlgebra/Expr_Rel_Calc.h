@@ -39,14 +39,14 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
 	virtual ZP<Expr_Rel> Self();
 	virtual ZP<Expr_Rel> Clone(const ZP<Expr_Rel>& iOp0);
-
-// From Expr_Rel
-	virtual int Compare(const Expr_Rel& iOther);
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor);

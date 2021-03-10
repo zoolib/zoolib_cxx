@@ -39,6 +39,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op0_T
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor);
 
@@ -48,9 +51,6 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_True(Visitor_Expr_Bool_True& iVisitor);
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_True
@@ -82,6 +82,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op0_T
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor);
 
@@ -91,9 +94,6 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_False(Visitor_Expr_Bool_False& iVisitor);
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_False
@@ -121,6 +121,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op1_T
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Bool>& iVisitor);
 
@@ -130,9 +133,6 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_Not(Visitor_Expr_Bool_Not& iVisitor);
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Not
@@ -160,6 +160,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor);
 
@@ -169,9 +172,6 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_And(Visitor_Expr_Bool_And& iVisitor);
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_And
@@ -199,6 +199,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor);
 
@@ -208,9 +211,6 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Bool_Or(Visitor_Expr_Bool_Or& iVisitor);
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Or

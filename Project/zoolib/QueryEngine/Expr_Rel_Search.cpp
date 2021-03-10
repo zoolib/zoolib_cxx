@@ -5,25 +5,6 @@
 #include "zoolib/Compare_Ref.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - sCompareNew_T
-
-template <>
-int sCompareNew_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetRelHead_Bound(), iR.GetRelHead_Bound()))
-		return compare;
-
-	if (int compare = sCompareNew_T(iL.GetRename(), iR.GetRename()))
-		return compare;
-
-	if (int compare = sCompareNew_T(iL.GetRelHead_Optional(), iR.GetRelHead_Optional()))
-		return compare;
-
-	return sCompareNew_T(iL.GetExpr_Bool(), iR.GetExpr_Bool());
-	}
-
 namespace QueryEngine {
 
 // =================================================================================================
@@ -45,6 +26,25 @@ void Expr_Rel_Search::Accept(const Visitor& iVisitor)
 		this->Accept_Expr_Rel_Search(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
+	}
+
+int Expr_Rel_Search::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Rel_Search> other = iOther.DynamicCast<Expr_Rel_Search>())
+		{
+		if (int compare = sCompareNew_T(this->GetRelHead_Bound(), other->GetRelHead_Bound()))
+			return compare;
+
+		if (int compare = sCompareNew_T(this->GetRename(), other->GetRename()))
+			return compare;
+
+		if (int compare = sCompareNew_T(this->GetRelHead_Optional(), other->GetRelHead_Optional()))
+			return compare;
+
+		return this->GetExpr_Bool()->Compare(other->GetExpr_Bool());
+		}
+
+	return Expr::Compare(iOther);
 	}
 
 void Expr_Rel_Search::Accept_Expr_Op0(Visitor_Expr_Op0_T<RelationalAlgebra::Expr_Rel>& iVisitor)

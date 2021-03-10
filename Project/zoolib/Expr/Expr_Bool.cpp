@@ -33,6 +33,13 @@ void Expr_Bool_True::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Bool_True::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_True> other = iOther.DynamicCast<Expr_Bool_True>())
+		return 0;
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Bool_True::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 	{
 	if (Visitor_Expr_Bool_True* theVisitor = sDynNonConst<Visitor_Expr_Bool_True>(&iVisitor))
@@ -49,10 +56,6 @@ ZP<Expr_Bool> Expr_Bool_True::Clone()
 
 void Expr_Bool_True::Accept_Expr_Bool_True(Visitor_Expr_Bool_True& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_True(this); }
-
-template <>
-int sCompareNew_T(const Expr_Bool_True& iL, const Expr_Bool_True& iR)
-	{ return 0; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_True
@@ -80,6 +83,13 @@ void Expr_Bool_False::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Bool_False::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_False> other = iOther.DynamicCast<Expr_Bool_False>())
+		return 0;
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Bool_False::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 	{
 	if (Visitor_Expr_Bool_False* theVisitor = sDynNonConst<Visitor_Expr_Bool_False>(&iVisitor))
@@ -96,10 +106,6 @@ ZP<Expr_Bool> Expr_Bool_False::Clone()
 
 void Expr_Bool_False::Accept_Expr_Bool_False(Visitor_Expr_Bool_False& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_False(this); }
-
-template <>
-int sCompareNew_T(const Expr_Bool_False& iL, const Expr_Bool_False& iR)
-	{ return 0; }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_False
@@ -122,6 +128,13 @@ void Expr_Bool_Not::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Bool_Not::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_Not> other = iOther.DynamicCast<Expr_Bool_Not>())
+		return this->GetOp0()->Compare(other->GetOp0());
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Bool_Not::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Bool>& iVisitor)
 	{
 	if (Visitor_Expr_Bool_Not* theVisitor = sDynNonConst<Visitor_Expr_Bool_Not>(&iVisitor))
@@ -138,10 +151,6 @@ ZP<Expr_Bool> Expr_Bool_Not::Clone(const ZP<Expr_Bool>& iOp0)
 
 void Expr_Bool_Not::Accept_Expr_Bool_Not(Visitor_Expr_Bool_Not& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_Not(this); }
-
-template <>
-int sCompareNew_T(const Expr_Bool_Not& iL, const Expr_Bool_Not& iR)
-	{ return sCompareNew_T(iL.GetOp0(), iR.GetOp0()); }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Not
@@ -164,6 +173,17 @@ void Expr_Bool_And::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Bool_And::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_And> other = iOther.DynamicCast<Expr_Bool_And>())
+		{
+		if (int compare = this->GetOp0()->Compare(other->GetOp0()))
+			return compare;
+		return this->GetOp1()->Compare(other->GetOp1());
+		}
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Bool_And::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor)
 	{
 	if (Visitor_Expr_Bool_And* theVisitor = sDynNonConst<Visitor_Expr_Bool_And>(&iVisitor))
@@ -180,14 +200,6 @@ ZP<Expr_Bool> Expr_Bool_And::Clone(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool
 
 void Expr_Bool_And::Accept_Expr_Bool_And(Visitor_Expr_Bool_And& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_And(this); }
-
-template <>
-int sCompareNew_T(const Expr_Bool_And& iL, const Expr_Bool_And& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetOp0(), iR.GetOp0()))
-		return compare;
-	return sCompareNew_T(iL.GetOp1(), iR.GetOp1());
-	}
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_And
@@ -210,6 +222,17 @@ void Expr_Bool_Or::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Bool_Or::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Bool_Or> other = iOther.DynamicCast<Expr_Bool_Or>())
+		{
+		if (int compare = this->GetOp0()->Compare(other->GetOp0()))
+			return compare;
+		return this->GetOp1()->Compare(other->GetOp1());
+		}
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Bool_Or::Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Bool>& iVisitor)
 	{
 	if (Visitor_Expr_Bool_Or* theVisitor = sDynNonConst<Visitor_Expr_Bool_Or>(&iVisitor))
@@ -226,14 +249,6 @@ ZP<Expr_Bool> Expr_Bool_Or::Clone(const ZP<Expr_Bool>& iOp0, const ZP<Expr_Bool>
 
 void Expr_Bool_Or::Accept_Expr_Bool_Or(Visitor_Expr_Bool_Or& iVisitor)
 	{ iVisitor.Visit_Expr_Bool_Or(this); }
-
-template <>
-int sCompareNew_T(const Expr_Bool_Or& iL, const Expr_Bool_Or& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetOp0(), iR.GetOp0()))
-		return compare;
-	return sCompareNew_T(iL.GetOp1(), iR.GetOp1());
-	}
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_Or

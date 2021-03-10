@@ -5,20 +5,6 @@
 #include "zoolib/Compare_Ref.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - sCompareNew_T
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Project& iL,
-	const RelationalAlgebra::Expr_Rel_Project& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetProjectRelHead(), iR.GetProjectRelHead()))
-		return compare;
-
-	return sCompareNew_T(iL.GetOp0(), iR.GetOp0());
-	}
-
 namespace RelationalAlgebra {
 
 // =================================================================================================
@@ -38,6 +24,18 @@ void Expr_Rel_Project::Accept(const Visitor& iVisitor)
 		this->Accept_Expr_Rel_Project(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
+	}
+
+int Expr_Rel_Project::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Rel_Project> other = iOther.DynamicCast<Expr_Rel_Project>())
+		{
+		if (int compare = sCompareNew_T(this->GetProjectRelHead(), other->GetProjectRelHead()))
+			return compare;
+		return this->GetOp0()->Compare(other->GetOp0());
+		}
+
+	return Expr::Compare(iOther);
 	}
 
 void Expr_Rel_Project::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)

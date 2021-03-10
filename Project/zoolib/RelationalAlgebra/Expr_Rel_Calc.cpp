@@ -32,6 +32,28 @@ void Expr_Rel_Calc::Accept(const Visitor& iVisitor)
 		inherited::Accept(iVisitor);
 	}
 
+int Expr_Rel_Calc::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Rel_Calc> other = iOther.DynamicCast<Expr_Rel_Calc>())
+		{
+		if (int compare = sCompareNew_T(this->GetColName(), other->GetColName()))
+			return compare;
+
+		if (int compare = this->GetOp0()->Compare(other->GetOp0()))
+			return compare;
+
+		if (this->GetCallable() < other->GetCallable())
+			return -1;
+
+		if (other->GetCallable() < this->GetCallable())
+			return 1;
+
+		return 0;
+		}
+
+	return Expr::Compare(iOther);
+	}
+
 void Expr_Rel_Calc::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Calc* theVisitor = sDynNonConst<Visitor_Expr_Rel_Calc>(&iVisitor))
@@ -45,26 +67,6 @@ ZP<Expr_Rel> Expr_Rel_Calc::Self()
 
 ZP<Expr_Rel> Expr_Rel_Calc::Clone(const ZP<Expr_Rel>& iOp0)
 	{ return new Expr_Rel_Calc(iOp0, fColName, fCallable); }
-
-int Expr_Rel_Calc::Compare(const ZP<Expr_Rel>& iOther)
-	{
-	if (ZP<Expr_Rel_Calc> other = iOther.DynamicCast<Expr_Rel_Calc
-	const Expr_Rel_Calc& other = static_cast<const Expr_Rel_Calc&>(iOther);
-
-	if (int compare = sCompareNew_T(this->GetColName(), iOther->GetColName()))
-		return compare;
-
-	if (int compare = sCompareNew_T(this->GetOp0(), iOther->GetOp0()))
-		return compare;
-
-	if (this->GetCallable() < iOther->GetCallable())
-		return -1;
-
-	if (iOther->GetCallable() < this->GetCallable())
-		return 1;
-
-	return 0;
-	}
 
 void Expr_Rel_Calc::Accept_Expr_Rel_Calc(Visitor_Expr_Rel_Calc& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Calc(this); }

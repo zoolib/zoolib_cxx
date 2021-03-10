@@ -86,12 +86,24 @@ protected:
 	DListHead<DLink_ClientQuery_NeedsWork> fClientQuery_NeedsWork;
 
 	// -----
+	struct Less_Rel
+	:	public std::binary_function<ZP<RelationalAlgebra::Expr_Rel>,
+		ZP<RelationalAlgebra::Expr_Rel>,
+		bool>
+		{
+		inline
+		bool operator()(const ZP<RelationalAlgebra::Expr_Rel>& iLeft,
+			const ZP<RelationalAlgebra::Expr_Rel>& iRight) const
+			{
+			return iLeft->Compare(iRight);
+			}
+		};
 
 	class DLink_PQuery_NeedsWork;
 	typedef std::map<
 			ZP<RelationalAlgebra::Expr_Rel>,
 			PQuery,
-			Less_Compare_T<ZP<RelationalAlgebra::Expr_Rel>>>
+			Less_Rel>
 		Map_Rel_PQuery;
 
 	Map_Rel_PQuery fMap_Rel_PQuery;

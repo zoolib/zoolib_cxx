@@ -9,23 +9,6 @@
 using std::string;
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - sCompareNew_T
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Rename& iL,
-	const RelationalAlgebra::Expr_Rel_Rename& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetOld(), iR.GetOld()))
-		return compare;
-
-	if (int compare = sCompareNew_T(iL.GetNew(), iR.GetNew()))
-		return compare;
-
-	return sCompareNew_T(iL.GetOp0(), iR.GetOp0());
-	}
-
 namespace RelationalAlgebra {
 
 // =================================================================================================
@@ -47,6 +30,22 @@ void Expr_Rel_Rename::Accept(const Visitor& iVisitor)
 		this->Accept_Expr_Rel_Rename(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
+	}
+
+int Expr_Rel_Rename::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Rel_Rename> other = iOther.DynamicCast<Expr_Rel_Rename>())
+		{
+		if (int compare = sCompareNew_T(this->GetOld(), other->GetOld()))
+			return compare;
+
+		if (int compare = sCompareNew_T(this->GetNew(), other->GetNew()))
+			return compare;
+
+		return this->GetOp0()->Compare(other->GetOp0());
+		}
+
+	return Expr::Compare(iOther);
 	}
 
 void Expr_Rel_Rename::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)

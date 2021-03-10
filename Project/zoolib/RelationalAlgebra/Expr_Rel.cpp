@@ -7,24 +7,6 @@
 #include "zoolib/Log.h"
 #include "zoolib/ZThread.h"
 
-// =================================================================================================
-#pragma mark - sCompareNew_T
-
-namespace ZooLib {
-
-template <>
-int sCompareNew_T<ZP<RelationalAlgebra::Expr_Rel>>(
-	const ZP<RelationalAlgebra::Expr_Rel>& iL,
-	const ZP<RelationalAlgebra::Expr_Rel>& iR)
-	{
-	if (int compare = strcmp(typeid(*ll).name(), typeid(*rr).name()))
-		return compare;
-
-	return iL->Compare(iR);
-	}
-
-} // namespace ZooLib
-
 namespace ZooLib {
 namespace RelationalAlgebra {
 

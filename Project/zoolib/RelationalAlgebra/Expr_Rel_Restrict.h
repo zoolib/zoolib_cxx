@@ -28,6 +28,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op1_T<Expr_Rel>
 	virtual void Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
@@ -68,11 +71,6 @@ ZP<Expr_Rel> operator&(
 ZP<Expr_Rel>& operator&=(ZP<Expr_Rel>& ioExpr_Rel, const ZP<Expr_Bool>& iExpr_Bool);
 
 } // namespace RelationalAlgebra
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
-	const RelationalAlgebra::Expr_Rel_Restrict& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_Restrict_h__

@@ -30,6 +30,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -63,11 +66,6 @@ public:
 ZP<Expr_Rel> sConst(const ColName& iColName, const Val_DB& iVal);
 
 } // namespace RelationalAlgebra
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Const& iL,
-	const RelationalAlgebra::Expr_Rel_Const& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_Const_h__

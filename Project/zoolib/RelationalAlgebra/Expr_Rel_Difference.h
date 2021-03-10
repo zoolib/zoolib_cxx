@@ -23,6 +23,9 @@ class Expr_Rel_Difference
 public:
 	Expr_Rel_Difference(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
@@ -44,11 +47,6 @@ public:
 	};
 
 } // namespace RelationalAlgebra
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Difference& iL,
-	const RelationalAlgebra::Expr_Rel_Difference& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__

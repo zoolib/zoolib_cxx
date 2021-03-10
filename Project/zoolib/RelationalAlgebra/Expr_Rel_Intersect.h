@@ -23,6 +23,9 @@ class Expr_Rel_Intersect
 public:
 	Expr_Rel_Intersect(const ZP<Expr_Rel>& iOp0, const ZP<Expr_Rel>& iOp1);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op2_T
 	virtual void Accept_Expr_Op2(Visitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
@@ -53,11 +56,6 @@ ZP<Expr_Rel> operator&(
 	const ZP<Expr_Rel>& iLHS, const ZP<Expr_Rel>& iRHS);
 
 } // namespace RelationalAlgebra
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Intersect& iL,
-	const RelationalAlgebra::Expr_Rel_Intersect& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__

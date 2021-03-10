@@ -26,6 +26,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op0
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor);
 
@@ -40,9 +43,6 @@ public:
 private:
 	const ValPred fValPred;
 	};
-
-template <>
-int sCompareNew_T(const Expr_Bool_ValPred& iL, const Expr_Bool_ValPred& iR);
 
 // =================================================================================================
 #pragma mark - Visitor_Expr_Bool_ValPred

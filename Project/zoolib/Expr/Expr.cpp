@@ -22,6 +22,13 @@ void Expr::Accept(const Visitor& iVisitor)
 void Expr::Accept_Expr(Visitor_Expr& iVisitor)
 	{ iVisitor.Visit_Expr(this); }
 
+int Expr::Compare(const ZP<Expr>& iOther)
+	{
+	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+		return compare;
+	return 0;
+	}
+
 std::string Expr::DebugDescription()
 	{ return sStringf("%p/", this) + typeid(*this).name(); }
 

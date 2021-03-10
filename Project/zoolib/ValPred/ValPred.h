@@ -21,6 +21,8 @@ protected:
 
 public:
 	virtual ~ValComparator();
+
+	virtual int Compare(const ZP<ValComparator>& iOther);
 	};
 
 // =================================================================================================
@@ -33,15 +35,15 @@ public:
 
 	ValComparator_Simple(EComparator iEComparator);
 
+// From ValComparator
+	virtual int Compare(const ZP<ValComparator>& iOther);
+
 // Our protocol
 	EComparator GetEComparator() const;
 
 private:
 	const EComparator fEComparator;
 	};
-
-template <>
-int sCompareNew_T(const ValComparator_Simple& iL, const ValComparator_Simple& iR);
 
 // =================================================================================================
 #pragma mark - ValComparand
@@ -53,6 +55,8 @@ protected:
 
 public:
 	virtual ~ValComparand();
+
+	virtual int Compare(const ZP<ValComparand>& iOther);
 	};
 
 // =================================================================================================
@@ -63,15 +67,14 @@ class ValComparand_Name : public ValComparand
 public:
 	ValComparand_Name(const std::string& iName);
 
+	virtual int Compare(const ZP<ValComparand>& iOther);
+
 // Our protocol
 	const std::string& GetName() const;
 
 private:
 	const std::string fName;
 	};
-
-template <>
-int sCompareNew_T(const ValComparand_Name& iL, const ValComparand_Name& iR);
 
 // =================================================================================================
 #pragma mark - ValPred

@@ -67,19 +67,6 @@ inline int sCompareNew_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
 // =================================================================================================
-#pragma mark - sCompareNew_T specialized for void pointers
-
-typedef void* VoidStar_t;
-
-template <> inline int sCompareNew_T(const VoidStar_t& iL, const VoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-typedef const void* ConstVoidStar_t;
-
-template <> inline int sCompareNew_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
-// =================================================================================================
 #pragma mark - sCompareNew_T specialized for std::pair
 
 template <class S, class T>

@@ -12,19 +12,6 @@ using std::vector;
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - sCompareNew_T
-
-template <>
-int sCompareNew_T<QueryEngine::Result>(
-	const QueryEngine::Result& iL, const QueryEngine::Result& iR)
-	{ return iL.Compare(iR); }
-
-template <>
-int sCompareNew_T<ZP<QueryEngine::Result>>(
-	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
-	{ return sCompare_Ref_T(iL, iR); }
-
-// =================================================================================================
 #pragma mark - QueryEngine::Result
 
 namespace QueryEngine {
@@ -80,12 +67,12 @@ const Val_DB* Result::GetValsAt(size_t iIndex)
 	return &fPackedRows[theOffset];
 	}
 
-int Result::Compare(const Result& iOther) const
-	{
-	if (int compare = sCompareNew_T(fRelHead, iOther.fRelHead))
-		return compare;
-	return sCompareNew_T(fPackedRows, iOther.fPackedRows);
-	}
+//int Result::Compare(const Result& iOther) const
+//	{
+//	if (int compare = sCompareNew_T(fRelHead, iOther.fRelHead))
+//		return compare;
+//	return sCompareNew_T(fPackedRows, iOther.fPackedRows);
+//	}
 
 ZP<Result> Result::Fresh()
 	{

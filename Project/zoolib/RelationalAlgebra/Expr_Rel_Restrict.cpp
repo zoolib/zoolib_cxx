@@ -5,20 +5,6 @@
 #include "zoolib/Compare_Ref.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - sCompareNew_T
-
-template <>
-int sCompareNew_T(const RelationalAlgebra::Expr_Rel_Restrict& iL,
-	const RelationalAlgebra::Expr_Rel_Restrict& iR)
-	{
-	if (int compare = sCompareNew_T(iL.GetExpr_Bool(), iR.GetExpr_Bool()))
-		return compare;
-
-	return sCompareNew_T(iL.GetOp0(), iR.GetOp0());
-	}
-
 namespace RelationalAlgebra {
 
 // =================================================================================================
@@ -38,6 +24,19 @@ void Expr_Rel_Restrict::Accept(const Visitor& iVisitor)
 		this->Accept_Expr_Rel_Restrict(*theVisitor);
 	else
 		inherited::Accept(iVisitor);
+	}
+
+int Expr_Rel_Restrict::Compare(const ZP<Expr>& iOther)
+	{
+	if (ZP<Expr_Rel_Restrict> other = iOther.DynamicCast<Expr_Rel_Restrict>())
+		{
+		if (int compare = this->GetExpr_Bool()->Compare(other->GetExpr_Bool()))
+			return compare;
+
+		return this->GetOp0()->Compare(other->GetOp0());
+		}
+
+	return Expr::Compare(iOther);
 	}
 
 void Expr_Rel_Restrict::Accept_Expr_Op1(Visitor_Expr_Op1_T<Expr_Rel>& iVisitor)

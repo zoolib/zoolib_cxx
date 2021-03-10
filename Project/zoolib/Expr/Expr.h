@@ -24,6 +24,8 @@ public:
 // Our protocol
 	virtual void Accept_Expr(Visitor_Expr& iVisitor);
 
+	virtual int Compare(const ZP<Expr>& iOther);
+
 	virtual std::string DebugDescription();
 	};
 

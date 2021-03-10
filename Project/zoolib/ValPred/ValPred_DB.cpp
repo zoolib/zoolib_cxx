@@ -16,6 +16,14 @@ ValComparand_Const_DB::ValComparand_Const_DB(const Val_DB& iVal)
 :	fVal(iVal)
 	{}
 
+int ValComparand_Const_DB::Compare(const ZP<ValComparand>& iOther)
+	{
+	if (ZP<ValComparand_Const_DB> other = iOther.DynamicCast<ValComparand_Const_DB>())
+		return sCompareNew_T(this->GetVal(), other->GetVal());
+
+	return ValComparand::Compare(iOther);
+	}
+
 const Val_DB& ValComparand_Const_DB::GetVal() const
 	{ return fVal; }
 
@@ -26,6 +34,14 @@ ValComparator_Callable_DB::ValComparator_Callable_DB(ZP<Callable_t> iCallable)
 :	fCallable(iCallable)
 	{}
 
+int ValComparator_Callable_DB::Compare(const ZP<ValComparator>& iOther)
+	{
+	if (ZP<ValComparator_Callable_DB> other = iOther.DynamicCast<ValComparator_Callable_DB>())
+		return sCompareNew_T(this->GetCallable(), other->GetCallable());
+
+	return ValComparator::Compare(iOther);
+	}
+
 const ZP<ValComparator_Callable_DB::Callable_t>& ValComparator_Callable_DB::GetCallable() const
 	{ return fCallable; }
 
@@ -35,6 +51,14 @@ const ZP<ValComparator_Callable_DB::Callable_t>& ValComparator_Callable_DB::GetC
 ValComparator_StringContains::ValComparator_StringContains(int iStrength)
 :	fStrength(iStrength)
 	{}
+
+int ValComparator_StringContains::Compare(const ZP<ValComparator>& iOther)
+	{
+	if (ZP<ValComparator_StringContains> other = iOther.DynamicCast<ValComparator_StringContains>())
+		return sCompareNew_T(this->GetStrength(), other->GetStrength());
+
+	return ValComparator::Compare(iOther);
+	}
 
 int ValComparator_StringContains::GetStrength() const
 	{ return fStrength; }

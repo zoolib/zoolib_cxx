@@ -29,6 +29,9 @@ public:
 // From Visitee
 	virtual void Accept(const Visitor& iVisitor);
 
+// From Expr
+	virtual int Compare(const ZP<Expr>& iOther);
+
 // From Expr_Op0_T<Expr_Rel>
 	virtual void Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
@@ -61,10 +64,6 @@ public:
 	};
 
 } // namespace QueryEngine
-
-template <>
-int sCompareNew_T(const QueryEngine::Expr_Rel_Search& iL, const QueryEngine::Expr_Rel_Search& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_QueryEngine_Expr_Rel_Search_h__

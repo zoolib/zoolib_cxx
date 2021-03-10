@@ -41,7 +41,7 @@ public:
 	size_t Count();
 	const Val_DB* GetValsAt(size_t iIndex);
 
-	int Compare(const Result& iOther) const;
+	//##int Compare(const Result& iOther) const;
 
 	ZP<Result> Fresh();
 
@@ -100,18 +100,6 @@ private:
 void sBuildBindings(ZP<Result> iResult, std::map<string8,size_t>& oResult);
 
 } // namespace QueryEngine
-
-// =================================================================================================
-#pragma mark - sCompare_T
-
-template <>
-int sCompareNew_T<QueryEngine::Result>(
-	const QueryEngine::Result& iL, const QueryEngine::Result& iR);
-
-template <>
-int sCompareNew_T<ZP<QueryEngine::Result>>(
-	const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR);
-
 } // namespace ZooLib
 
 #endif // __ZooLib_QueryEngine_Result_h__
