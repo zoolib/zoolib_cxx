@@ -2,8 +2,6 @@
 
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 
-#include "zoolib/Compare_Ref.h"
-
 namespace ZooLib {
 namespace QueryEngine {
 

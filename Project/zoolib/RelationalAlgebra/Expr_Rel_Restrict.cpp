@@ -2,8 +2,6 @@
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Restrict.h"
 
-#include "zoolib/Compare_Ref.h"
-
 namespace ZooLib {
 namespace RelationalAlgebra {
 

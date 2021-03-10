@@ -2,7 +2,6 @@
 
 #include "zoolib/RelationalAlgebra/RelHead.h"
 
-#include "zoolib/Compare_Integer.h" // For sCompare_T<bool>
 #include "zoolib/Compare_string.h"
 #include "zoolib/ZMACRO_foreach.h"
 

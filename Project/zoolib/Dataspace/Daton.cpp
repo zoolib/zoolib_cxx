@@ -2,8 +2,6 @@
 
 #include "zoolib/Dataspace/Daton.h"
 
-#include "zoolib/Compare.h"
-
 // =================================================================================================
 #pragma mark - sCompareNew_T
 

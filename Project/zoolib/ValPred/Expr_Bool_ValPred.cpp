@@ -2,8 +2,6 @@
 
 #include "zoolib/ValPred/Expr_Bool_ValPred.h"
 
-#include "zoolib/Compare.h"
-
 namespace ZooLib {
 
 // =================================================================================================

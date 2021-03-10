@@ -2,7 +2,6 @@
 
 #include "zoolib/Data_ZZ.h"
 
-#include "zoolib/Compare.h"
 #include "zoolib/Compare_vector.h"
 #include "zoolib/CountedWithoutFinalize.h"
 #include "zoolib/Memory.h"

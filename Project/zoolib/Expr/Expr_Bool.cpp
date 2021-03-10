@@ -2,8 +2,6 @@
 
 #include "zoolib/Expr/Expr_Bool.h"
 
-#include "zoolib/Compare_Ref.h"
-
 namespace ZooLib {
 
 // =================================================================================================

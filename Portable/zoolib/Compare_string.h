@@ -5,7 +5,6 @@
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
-#include "zoolib/Compat_MSVCStaticLib.h"
 
 #include <string>
 

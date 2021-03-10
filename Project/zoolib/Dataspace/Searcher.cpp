@@ -2,7 +2,6 @@
 
 #include "zoolib/Dataspace/Searcher.h"
 
-#include "zoolib/Compare_Ref.h"
 #include "zoolib/Log.h"
 
 #include "zoolib/ZMACRO_foreach.h"

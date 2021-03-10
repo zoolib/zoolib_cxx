@@ -2,7 +2,6 @@
 
 #include "zoolib/RelationalAlgebra/Expr_Rel_Comment.h"
 
-#include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_string.h"
 
 namespace ZooLib {

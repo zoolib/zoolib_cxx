@@ -4,7 +4,6 @@
 #include "zoolib/Time.h"
 
 #include "zoolib/Atomic.h"
-#include "zoolib/Compare.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For countof

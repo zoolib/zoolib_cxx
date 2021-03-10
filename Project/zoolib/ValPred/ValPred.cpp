@@ -2,8 +2,6 @@
 
 #include "zoolib/ValPred/ValPred.h"
 
-#include "zoolib/Compare_Integer.h"
-#include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_string.h"
 
 namespace ZooLib {

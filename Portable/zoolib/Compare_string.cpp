@@ -2,7 +2,6 @@
 
 #include "zoolib/Compare_string.h"
 
-#include "zoolib/Compare.h"
 #include "zoolib/Memory.h" // For sMemCompare
 #include "zoolib/size_t.h" // For size_t
 

@@ -2,9 +2,6 @@
 
 #include "zoolib/ValPred/ValPred_DB.h"
 
-#include "zoolib/Compare.h"
-#include "zoolib/Compare_Integer.h"
-
 //###include "zoolib/ZTextCollator.h"
 
 namespace ZooLib {

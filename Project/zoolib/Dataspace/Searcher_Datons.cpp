@@ -3,7 +3,6 @@
 #include "zoolib/Dataspace/Searcher_Datons.h"
 
 #include "zoolib/Callable_PMF.h"
-#include "zoolib/Compare.h"
 #include "zoolib/Log.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_STL.h"

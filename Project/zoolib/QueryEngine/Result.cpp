@@ -2,7 +2,6 @@
 
 #include "zoolib/QueryEngine/Result.h"
 
-#include "zoolib/Compare_Ref.h"
 #include "zoolib/Compare_vector.h"
 
 using std::map;

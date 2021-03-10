@@ -3,7 +3,6 @@
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
 #include "zoolib/Callable_Function.h"
-#include "zoolib/Compare_Ref.h"
 #include "zoolib/Log.h"
 #include "zoolib/ZThread.h"
 
