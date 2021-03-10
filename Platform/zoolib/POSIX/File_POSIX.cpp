@@ -125,7 +125,7 @@ static ZP<FDHolder> spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreven
 		return null;
 
 	// We always respect advisory locks, and we may apply a lock ourselves.
-	struct flock theFLock = {0};
+	struct flock theFLock = {};
 	theFLock.l_whence = SEEK_SET;
 	theFLock.l_start = 0;
 	theFLock.l_len = 0;
