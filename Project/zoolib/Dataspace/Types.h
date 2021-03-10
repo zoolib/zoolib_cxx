@@ -3,6 +3,7 @@
 #ifndef __ZooLib_Dataspace_Types_h__
 #define __ZooLib_Dataspace_Types_h__ 1
 #include "zconfig.h"
+#include "zoolib/Compare_T.h"
 
 #include "zoolib/QueryEngine/Result.h"
 
@@ -38,6 +39,10 @@ namespace Dataspace {
 using namespace DataspaceTypes;
 
 } // namespace Dataspace
+
+template <>
+inline int sCompareNew_T(const DataspaceTypes::AbsentOptional_t&, const DataspaceTypes::AbsentOptional_t&)
+	{ return 0; }
 
 } // namespace ZooLib
 

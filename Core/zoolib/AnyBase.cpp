@@ -74,10 +74,10 @@ int AnyBase::pCompare(const AnyBase& iOther) const
 	if (const ZP<OnHeap>& theOnHeap = pAsOnHeap())
 		{
 		if (iOther.fDistinguisher)
-			theOnHeap->Compare(iOther.pAsInPlace());
+			return theOnHeap->Compare(iOther.pAsInPlace());
 
 		if (const ZP<OnHeap>& otherOnHeap = iOther.pAsOnHeap())
-			theOnHeap->Compare(*otherOnHeap.Get());
+			return theOnHeap->Compare(*otherOnHeap.Get());
 
 		return 1;
 		}
