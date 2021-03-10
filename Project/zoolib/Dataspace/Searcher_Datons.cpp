@@ -1158,8 +1158,12 @@ void Searcher_Datons::pPrime(ZP<Walker_Index> iWalker_Index,
 
 static const Val_DB spVal_AbsentOptional = AbsentOptional_t();
 
+static long long countOfPReadIncs;
+
 bool Searcher_Datons::pReadInc(ZP<Walker_Index> iWalker_Index, Val_DB* ioResults)
 	{
+	++countOfPReadIncs;
+
 	const size_t theCount_Indexed = iWalker_Index->fUsableIndexNames;
 	const auto& theNBV = iWalker_Index->fNameBoolVector;
 	const size_t theCount_NBV = theNBV.size();

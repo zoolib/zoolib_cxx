@@ -6,6 +6,7 @@
 
 #include "zoolib/Compare_T.h"
 
+#include <cstring> // For strcmp
 #include <string>
 
 namespace ZooLib {

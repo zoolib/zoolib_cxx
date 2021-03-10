@@ -10,8 +10,8 @@
 #include "zoolib/ZP.h"
 #include "zoolib/ZQ.h"
 
+#include <cstring> // For strcmp
 #include <typeinfo> // For std::type_info
-// #include <type_traits> // For std::is_pod
 
 namespace ZooLib {
 
@@ -379,16 +379,28 @@ private:
 	void pDtor_NonPOD();
 
 // -----------------
+	static long long countOfPod;
+	static long long countOfNonPod;
+	static long long countInPlace;
+	static long long countOnHeap;
+
 
 	template <class S>
 	void pCtor_T()
 		{
+		if (std::is_pod<S>::value)
+			++countOfPod;
+		else
+			++countOfNonPod;
+
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
+			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher);
 			}
 		else
 			{
+			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>());
 			}
@@ -406,12 +418,19 @@ private:
 	template <class S, class P0>
 	void pCtor_T(const P0& iP0)
 		{
+		if (std::is_pod<S>::value)
+			++countOfPod;
+		else
+			++countOfNonPod;
+
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
+			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0);
 			}
 		else
 			{
+			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>(iP0));
 			}
@@ -429,12 +448,19 @@ private:
 	template <class S, class P0, class P1>
 	void pCtor_T(const P0& iP0, const P1& iP1)
 		{
+		if (std::is_pod<S>::value)
+			++countOfPod;
+		else
+			++countOfNonPod;
+
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
+			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0, iP1);
 			}
 		else
 			{
+			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>(iP0, iP1));
 			}
@@ -452,12 +478,19 @@ private:
 	template <class S, class P0>
 	S& pCtorRet_T(const P0& iP0)
 		{
+		if (std::is_pod<S>::value)
+			++countOfPod;
+		else
+			++countOfNonPod;
+
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
+			++countInPlace;
 			return sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0)->fValue;
 			}
 		else
 			{
+			++countOnHeap;
 			fDistinguisher = 0;
 			OnHeap_T<S>* theOnHeap = new OnHeap_T<S>(iP0);
 			sCtor_T<ZP<OnHeap>>(&fPayload, theOnHeap);
@@ -470,10 +503,12 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
+			++countInPlace;
 			return sCtor_T<InPlace_T<S>>(&fDistinguisher)->fValue;
 			}
 		else
 			{
+			++countOnHeap;
 			fDistinguisher = 0;
 			OnHeap_T<S>* theOnHeap = new OnHeap_T<S>;
 			sCtor_T<ZP<OnHeap>>(&fPayload, theOnHeap);

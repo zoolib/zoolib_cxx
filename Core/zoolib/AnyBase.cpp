@@ -7,9 +7,10 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - AnyBase
 
-static inline 
-const std::type_info* spPODTypeInfo(const void* iPtr)
-	{ return (const std::type_info*)(((intptr_t)iPtr) ^ 1); }
+long long AnyBase::countOfPod;
+long long AnyBase::countOfNonPod;
+long long AnyBase::countInPlace;
+long long AnyBase::countOnHeap;
 
 bool AnyBase::spTypesMatch(const std::type_info& a, const std::type_info& b)
 	{
@@ -87,7 +88,6 @@ int AnyBase::pCompare(const AnyBase& iOther) const
 
 	return 0;
 	}
-
 
 void AnyBase::Swap(AnyBase& ioOther)
 	{

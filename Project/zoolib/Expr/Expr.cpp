@@ -4,6 +4,7 @@
 
 #include "zoolib/Stringf.h"
 
+#include <cstring> // For strcmp
 #include <typeinfo>
 
 namespace ZooLib {

@@ -128,10 +128,14 @@ void RelsWatcher_Relater::Update()
 		}
 	}
 
+	const double start = Time::sSystem();
+
 	// Pick up any results
 	int64 theChangeCount = -1;
 	vector<QueryResult> theQueryResults;
 	fRelater->CollectResults(theQueryResults, theChangeCount);
+
+	const double elapsed = Time::sSystem() - start;
 
 	if (sNotEmpty(theQueryResults))
 		{
