@@ -26,9 +26,9 @@ struct AnyTraits
 class AnyBase
 	{
 public:
+	// These two are used only for Val_T::Compare implementation.
 	const std::type_info& Type() const;
-
-	const void* ConstVoidStar() const; // Used for sCompare_T implementation.
+	const void* ConstVoidStar() const;
 
 // ZVal protocol, generally for use by ZVal derivatives
 
