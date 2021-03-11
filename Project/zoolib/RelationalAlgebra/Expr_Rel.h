@@ -29,6 +29,22 @@ protected:
 	};
 
 // =================================================================================================
+#pragma mark - Less_Rel
+
+struct Less_Rel
+:	public std::binary_function<ZP<RelationalAlgebra::Expr_Rel>,
+	ZP<RelationalAlgebra::Expr_Rel>,
+	bool>
+	{
+	inline
+	bool operator()(const ZP<RelationalAlgebra::Expr_Rel>& iLeft,
+		const ZP<RelationalAlgebra::Expr_Rel>& iRight) const
+		{
+		return iLeft->Compare(iRight) < 0;
+		}
+	};
+
+// =================================================================================================
 #pragma mark - SemanticError
 
 class SemanticError : public std::runtime_error

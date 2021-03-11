@@ -128,9 +128,6 @@ public:
 	virtual void Accept(const Visitor& iVisitor);
 
 // From Expr
-	virtual int Compare(const ZP<Expr>& iOther);
-
-// From Expr
 	virtual std::string DebugDescription();
 
 // From Expr_Op0_T<Expr_Rel>

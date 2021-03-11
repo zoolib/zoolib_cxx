@@ -103,8 +103,10 @@ private:
 	class DLink_PQuery_NeedsWork;
 	DListHead<DLink_PQuery_NeedsWork> fPQuery_NeedsWork;
 
-	typedef std::map<ZP<RelationalAlgebra::Expr_Rel>, PQuery,
-		Less_Compare_T<ZP<RelationalAlgebra::Expr_Rel>>>
+	typedef std::map<
+			ZP<RelationalAlgebra::Expr_Rel>,
+			PQuery,
+			Less_Rel>
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 
