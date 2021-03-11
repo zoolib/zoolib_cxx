@@ -141,6 +141,7 @@ protected:
 
 protected:
 // Special purpose constructors, called by derived classes.
+// To be replaced with rvalue refs/std::move
 	typedef IKnowWhatIAmDoing_t IKWIAD_t;
 
 	template <class S>
@@ -364,43 +365,19 @@ private:
 	const void* pFetchConst(const std::type_info& iTypeInfo) const;
 	void* pFetchMutable(const std::type_info& iTypeInfo);
 
-	void pCtor(const AnyBase& iOther)
-		{
-		pCtor_NonPOD(iOther);
-		}
-
-	void pCtor_NonPOD(const AnyBase& iOther);
-
-	void pDtor()
-		{
-		pDtor_NonPOD();
-		}
-
-	void pDtor_NonPOD();
+	void pCtor(const AnyBase& iOther);
+	void pDtor();
 
 // -----------------
-	static long long countOfPod;
-	static long long countOfNonPod;
-	static long long countInPlace;
-	static long long countOnHeap;
-
-
 	template <class S>
 	void pCtor_T()
 		{
-		if (std::is_pod<S>::value)
-			++countOfPod;
-		else
-			++countOfNonPod;
-
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher);
 			}
 		else
 			{
-			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>());
 			}
@@ -418,19 +395,12 @@ private:
 	template <class S, class P0>
 	void pCtor_T(const P0& iP0)
 		{
-		if (std::is_pod<S>::value)
-			++countOfPod;
-		else
-			++countOfNonPod;
-
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0);
 			}
 		else
 			{
-			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>(iP0));
 			}
@@ -448,19 +418,12 @@ private:
 	template <class S, class P0, class P1>
 	void pCtor_T(const P0& iP0, const P1& iP1)
 		{
-		if (std::is_pod<S>::value)
-			++countOfPod;
-		else
-			++countOfNonPod;
-
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			++countInPlace;
 			sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0, iP1);
 			}
 		else
 			{
-			++countOnHeap;
 			fDistinguisher = 0;
 			sCtor_T<ZP<OnHeap>>(&fPayload, new OnHeap_T<S>(iP0, iP1));
 			}
@@ -478,19 +441,12 @@ private:
 	template <class S, class P0>
 	S& pCtorRet_T(const P0& iP0)
 		{
-		if (std::is_pod<S>::value)
-			++countOfPod;
-		else
-			++countOfNonPod;
-
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			++countInPlace;
 			return sCtor_T<InPlace_T<S>>(&fDistinguisher, iP0)->fValue;
 			}
 		else
 			{
-			++countOnHeap;
 			fDistinguisher = 0;
 			OnHeap_T<S>* theOnHeap = new OnHeap_T<S>(iP0);
 			sCtor_T<ZP<OnHeap>>(&fPayload, theOnHeap);
@@ -503,12 +459,10 @@ private:
 		{
 		if (AnyTraits<S>::eAllowInPlace && sizeof(S) <= sizeof(fPayload))
 			{
-			++countInPlace;
 			return sCtor_T<InPlace_T<S>>(&fDistinguisher)->fValue;
 			}
 		else
 			{
-			++countOnHeap;
 			fDistinguisher = 0;
 			OnHeap_T<S>* theOnHeap = new OnHeap_T<S>;
 			sCtor_T<ZP<OnHeap>>(&fPayload, theOnHeap);
@@ -517,11 +471,10 @@ private:
 		}
 
 // -----------------
-	// There are three situations indicated by the value in fDistinguisher.
+	// There are two situations indicated by the value in fDistinguisher.
 	// 1. It's zero. fPayload.fAsPtr points to an instance of an OnHeap subclass. If
 	//    fPayload.fAsPtr is also null then the AnyBase is itself a null object.
-	// 2. LSB is one. It points one byte past a typeid, and fPayload holds a POD value.
-	// 3. LSB is zero. It's the vptr of an InPlace, the fields of the object itself
+	// 2. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
 	
 	void* fDistinguisher;

@@ -7,11 +7,6 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - AnyBase
 
-long long AnyBase::countOfPod;
-long long AnyBase::countOfNonPod;
-long long AnyBase::countInPlace;
-long long AnyBase::countOnHeap;
-
 bool AnyBase::spTypesMatch(const std::type_info& a, const std::type_info& b)
 	{
 	#if defined(ZCONFIG_typeinfo_comparison_broken)
@@ -143,7 +138,7 @@ void* AnyBase::pFetchMutable(const std::type_info& iTypeInfo)
 	return nullptr;
 	}
 
-void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
+void AnyBase::pCtor(const AnyBase& iOther)
 	{
 	if (iOther.fDistinguisher)
 		{
@@ -156,7 +151,7 @@ void AnyBase::pCtor_NonPOD(const AnyBase& iOther)
 		}
 	}
 
-void AnyBase::pDtor_NonPOD()
+void AnyBase::pDtor()
 	{
 	if (fDistinguisher)
 		sDtor_T<InPlace>(&fDistinguisher);
