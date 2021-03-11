@@ -66,12 +66,12 @@ const Val_DB* Result::GetValsAt(size_t iIndex)
 	return &fPackedRows[theOffset];
 	}
 
-//int Result::Compare(const Result& iOther) const
-//	{
-//	if (int compare = sCompareNew_T(fRelHead, iOther.fRelHead))
-//		return compare;
-//	return sCompareNew_T(fPackedRows, iOther.fPackedRows);
-//	}
+int Result::Compare(const ZP<Result>& iOther) const
+	{
+	if (int compare = sCompareNew_T(fRelHead, iOther->fRelHead))
+		return compare;
+	return sCompareNew_T(fPackedRows, iOther->fPackedRows);
+	}
 
 ZP<Result> Result::Fresh()
 	{
