@@ -137,6 +137,12 @@ void RelsWatcher_Relater::Update()
 
 	const double elapsed = Time::sSystem() - start;
 
+	if (elapsed > 1)
+		{
+		if (ZLOGPF(ww, eDebug))
+			ww << "\nSlow CollectResults " << elapsed * 1e3 << "ms: ";
+		}
+
 	if (sNotEmpty(theQueryResults))
 		{
 		// This vector must be outside the mutex acq, so any reg that goes out of scope

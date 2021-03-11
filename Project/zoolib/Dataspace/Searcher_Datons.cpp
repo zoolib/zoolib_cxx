@@ -892,7 +892,7 @@ void Searcher_Datons::CollectResults(vector<SearchResult>& oChanged, int64& oCha
 
 			const double elapsed = Time::sSystem() - start;
 
-			if (elapsed > 50e-3)
+			if (elapsed > 10e-3)
 				{
 				if (ZLOGPF(ww, eDebug))
 					{
