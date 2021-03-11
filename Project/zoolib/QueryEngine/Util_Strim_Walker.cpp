@@ -2,6 +2,7 @@
 
 #include "zoolib/QueryEngine/Util_Strim_Walker.h"
 
+#include "zoolib/TypeIdName.h"
 #include "zoolib/Util_Chan_JSON.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
@@ -37,8 +38,7 @@ public:
 			fW << "\t";
 
 		fW << iWalker->fCalled_Rewind << "\t" << iWalker->fCalled_QReadInc;
-		Walker* asPointer = iWalker.Get();
-		fW << " " << typeid(*asPointer).name();
+		fW << " " << sTypeIdName(*iWalker.Get());
 
 		++fIndent;
 

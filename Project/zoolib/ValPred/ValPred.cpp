@@ -3,6 +3,7 @@
 #include "zoolib/ValPred/ValPred.h"
 
 #include "zoolib/Compare_string.h"
+#include "zoolib/TypeIdName.h"
 
 namespace ZooLib {
 
@@ -17,7 +18,7 @@ ValComparator::~ValComparator()
 
 int ValComparator::Compare(const ZP<ValComparator>& iOther)
 	{
-	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+	if (int compare = strcmp(sTypeIdName(*this), sTypeIdName(*iOther.Get())))
 		return compare;
 	return 0;
 	}
@@ -51,7 +52,7 @@ ValComparand::~ValComparand()
 
 int ValComparand::Compare(const ZP<ValComparand>& iOther)
 	{
-	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+	if (int compare = strcmp(sTypeIdName(*this), sTypeIdName(*iOther.Get())))
 		return compare;
 	return 0;
 	}

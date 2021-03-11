@@ -3,9 +3,9 @@
 #include "zoolib/Expr/Expr.h"
 
 #include "zoolib/Stringf.h"
+#include "zoolib/TypeIdName.h"
 
 #include <cstring> // For strcmp
-#include <typeinfo>
 
 namespace ZooLib {
 
@@ -25,13 +25,13 @@ void Expr::Accept_Expr(Visitor_Expr& iVisitor)
 
 int Expr::Compare(const ZP<Expr>& iOther)
 	{
-	if (int compare = strcmp(typeid(*this).name(), typeid(*iOther.Get()).name()))
+	if (int compare = strcmp(sTypeIdName(*this), sTypeIdName(*iOther.Get())))
 		return compare;
 	return 0;
 	}
 
 std::string Expr::DebugDescription()
-	{ return sStringf("%p/", this) + typeid(*this).name(); }
+	{ return sStringf("%p/", this) + sTypeIdName(*this); }
 
 // =================================================================================================
 #pragma mark - Visitor_Expr

@@ -3,6 +3,7 @@
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 
 #include "zoolib/Log.h"
+#include "zoolib/TypeIdName.h"
 
 #include "zoolib/QueryEngine/Walker_Calc.h"
 #include "zoolib/QueryEngine/Walker_Comment.h"
@@ -29,10 +30,7 @@ namespace RA = RelationalAlgebra;
 void Visitor_DoMakeWalker::Visit(const ZP<Visitee>& iRep)
 	{
 	if (ZLOGPF(w, eErr))
-		{
-		Visitee* asPointer = iRep.Get();
-		w << "Unimplemented for visitee: " << typeid(*asPointer).name();
-		}
+		w << "Unimplemented for visitee: " << sTypeIdName(*iRep.Get());
 
 	ZUnimplemented();
 	}

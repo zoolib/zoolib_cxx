@@ -33,7 +33,7 @@ void Visitor_ToStrim::Visit(const ZP<Visitee>& iRep)
 	{
 	if (iRep)
 		{
-		// We put the pointer into a local var to elide clang's warning:
+		// Putting the pointer into a local var elides clang's warning:
 		// `expression with side effects will be evaluated despite
 		// being used as an operand to 'typeid'"`
 		Visitee* asPointer = iRep.Get();
