@@ -121,13 +121,13 @@ const ZP<ValComparand>& ValPred::GetRHS() const
 template <>
 int sCompareNew_T(const ValPred& iL, const ValPred& iR)
 	{
-	if (int compare = sCompareNew_T(iL.GetLHS(), iR.GetLHS()))
+	if (int compare = iL.GetLHS()->Compare(iR.GetLHS()))
 		return compare;
 
-	if (int compare = sCompareNew_T(iL.GetComparator(), iR.GetComparator()))
+	if (int compare = iL.GetComparator()->Compare(iR.GetComparator()))
 		return compare;
 
-	return sCompareNew_T(iL.GetRHS(), iR.GetRHS());
+	return iL.GetRHS()->Compare(iR.GetRHS());
 	}
 
 bool operator<(const ValPred& iL, const ValPred& iR)

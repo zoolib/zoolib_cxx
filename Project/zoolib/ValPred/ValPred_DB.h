@@ -29,10 +29,6 @@ protected:
 	Val_DB fVal;
 	};
 
-template <>
-inline int sCompareNew_T(const ValComparand_Const_DB& iL, const ValComparand_Const_DB& iR)
-	{ return sCompareNew_T(iL.GetVal(), iR.GetVal()); }
-
 // =================================================================================================
 #pragma mark - ValComparator_Callable_DB
 
@@ -53,10 +49,6 @@ private:
 	ZP<Callable_t> fCallable;
 	};
 
-template <>
-inline int sCompareNew_T(const ValComparator_Callable_DB& iL, const ValComparator_Callable_DB& iR)
-	{ return sCompareNew_T((void*)iL.GetCallable().Get(), (void*)iR.GetCallable().Get()); }
-
 // =================================================================================================
 #pragma mark - ValComparator_StringContains
 
@@ -74,10 +66,6 @@ public:
 private:
 	int fStrength;
 	};
-
-template <>
-inline int sCompareNew_T(const ValComparator_StringContains& iL, const ValComparator_StringContains& iR)
-	{ return sCompareNew_T(iL.GetStrength(), iR.GetStrength()); }
 
 // =================================================================================================
 #pragma mark - Comparand pseudo constructors
