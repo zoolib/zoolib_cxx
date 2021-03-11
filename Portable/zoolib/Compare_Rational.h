@@ -9,13 +9,13 @@
 namespace ZooLib {
 
 template <>
-int sCompareNew_T(const float& iL, const float& iR);
+int sCompare_T(const float& iL, const float& iR);
 
 template <>
-int sCompareNew_T(const double& iL, const double& iR);
+int sCompare_T(const double& iL, const double& iR);
 
 template <>
-int sCompareNew_T(const long double& iL, const long double& iR);
+int sCompare_T(const long double& iL, const long double& iR);
 
 } // namespace ZooLib
 

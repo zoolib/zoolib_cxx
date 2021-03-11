@@ -3,13 +3,13 @@
 #include "zoolib/Dataspace/Daton.h"
 
 // =================================================================================================
-#pragma mark - sCompareNew_T
+#pragma mark - sCompare_T
 
 namespace ZooLib {
 
 template <>
-int sCompareNew_T<Dataspace::Daton>(const Dataspace::Daton& iL, const Dataspace::Daton& iR)
-	{ return sCompareNew_T(iL.GetData(), iR.GetData()); }
+int sCompare_T<Dataspace::Daton>(const Dataspace::Daton& iL, const Dataspace::Daton& iR)
+	{ return sCompare_T(iL.GetData(), iR.GetData()); }
 
 } // namespace ZooLib
 

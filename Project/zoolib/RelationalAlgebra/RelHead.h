@@ -154,13 +154,13 @@ void sRelHeads(const ConcreteHead& iConcreteHead, RelHead& oRequired, RelHead& o
 #pragma mark - sCompare_T declarations.
 
 template <>
-int sCompareNew_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);
+int sCompare_T(const RelationalAlgebra::RelHead& iL, const RelationalAlgebra::RelHead& iR);
 
 template <>
-int sCompareNew_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR);
+int sCompare_T(const RelationalAlgebra::Rename& iL, const RelationalAlgebra::Rename& iR);
 
 template <>
-int sCompareNew_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR);
+int sCompare_T(const RelationalAlgebra::ConcreteHead& iL, const RelationalAlgebra::ConcreteHead& iR);
 
 } // namespace ZooLib
 

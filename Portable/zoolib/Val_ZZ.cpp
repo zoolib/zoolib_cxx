@@ -65,7 +65,7 @@ int Seq_ZZ::Compare(const Seq_ZZ& iOther) const
 		{
 		if (iOther.fRep)
 			{
-			return sCompareNew_T(fRep->fVector, iOther.fRep->fVector);
+			return sCompare_T(fRep->fVector, iOther.fRep->fVector);
 			}
 		else
 			{
@@ -368,12 +368,12 @@ int Map_ZZ::Compare(const Map_ZZ& iOther) const
 			if (iterOther != endOther)
 				{
 				// Other is not exhausted either, so we compare their current values.
-				if (int compare = sCompareNew_T(iterThis->first, iterOther->first))
+				if (int compare = sCompare_T(iterThis->first, iterOther->first))
 					{
 					// The names are different.
 					return compare;
 					}
-				if (int compare = sCompareNew_T<Val_ZZ>(iterThis->second, iterOther->second))
+				if (int compare = sCompare_T<Val_ZZ>(iterThis->second, iterOther->second))
 					{
 					// The values are different.
 					return compare;

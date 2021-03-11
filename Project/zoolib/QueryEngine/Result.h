@@ -102,7 +102,7 @@ void sBuildBindings(ZP<Result> iResult, std::map<string8,size_t>& oResult);
 } // namespace QueryEngine
 
 template <>
-inline int sCompareNew_T(const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
+inline int sCompare_T(const ZP<QueryEngine::Result>& iL, const ZP<QueryEngine::Result>& iR)
 	{ return iL->Compare(iR); }
 
 } // namespace ZooLib

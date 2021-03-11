@@ -68,9 +68,9 @@ const Val_DB* Result::GetValsAt(size_t iIndex)
 
 int Result::Compare(const ZP<Result>& iOther) const
 	{
-	if (int compare = sCompareNew_T(fRelHead, iOther->fRelHead))
+	if (int compare = sCompare_T(fRelHead, iOther->fRelHead))
 		return compare;
-	return sCompareNew_T(fPackedRows, iOther->fPackedRows);
+	return sCompare_T(fPackedRows, iOther->fPackedRows);
 	}
 
 ZP<Result> Result::Fresh()
@@ -101,7 +101,7 @@ pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
 	for (size_t yy = 0; yy < offsetsCount; ++yy)
 		{
 		const size_t theCol = iOffsets[yy];
-		if (int compare = sCompareNew_T(iVals_Left[theCol], iVals_Right[theCol]))
+		if (int compare = sCompare_T(iVals_Left[theCol], iVals_Right[theCol]))
 			return pair<int,size_t>(compare, yy);
 		}
 	return pair<int,size_t>(0, offsetsCount);

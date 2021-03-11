@@ -33,7 +33,7 @@ int Expr_Rel_Comment::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Comment> other = iOther.DynamicCast<Expr_Rel_Comment>())
 		{
-		if (int compare = sCompareNew_T(this->GetComment(), other->GetComment()))
+		if (int compare = sCompare_T(this->GetComment(), other->GetComment()))
 			return compare;
 
 		return this->GetOp0()->Compare(other->GetOp0());

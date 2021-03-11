@@ -29,10 +29,10 @@ int Expr_Rel_Embed::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Embed> other = iOther.DynamicCast<Expr_Rel_Embed>())
 		{
-		if (int compare = sCompareNew_T(this->GetBoundNames(), other->GetBoundNames()))
+		if (int compare = sCompare_T(this->GetBoundNames(), other->GetBoundNames()))
 			return compare;
 
-		if (int compare = sCompareNew_T(this->GetColName(), other->GetColName()))
+		if (int compare = sCompare_T(this->GetColName(), other->GetColName()))
 			return compare;
 
 		if (int compare = this->GetOp0()->Compare(other->GetOp0()))

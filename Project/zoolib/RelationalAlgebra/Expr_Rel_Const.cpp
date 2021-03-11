@@ -30,10 +30,10 @@ int Expr_Rel_Const::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Const> other = iOther.DynamicCast<Expr_Rel_Const>())
 		{
-		if (int compare = sCompareNew_T(this->GetColName(), other->GetColName()))
+		if (int compare = sCompare_T(this->GetColName(), other->GetColName()))
 			return compare;
 
-		return sCompareNew_T(this->GetVal(), other->GetVal());
+		return sCompare_T(this->GetVal(), other->GetVal());
 		}
 
 	return Expr::Compare(iOther);

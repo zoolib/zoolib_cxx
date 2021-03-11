@@ -30,13 +30,13 @@ int Expr_Rel_Search::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Search> other = iOther.DynamicCast<Expr_Rel_Search>())
 		{
-		if (int compare = sCompareNew_T(this->GetRelHead_Bound(), other->GetRelHead_Bound()))
+		if (int compare = sCompare_T(this->GetRelHead_Bound(), other->GetRelHead_Bound()))
 			return compare;
 
-		if (int compare = sCompareNew_T(this->GetRename(), other->GetRename()))
+		if (int compare = sCompare_T(this->GetRename(), other->GetRename()))
 			return compare;
 
-		if (int compare = sCompareNew_T(this->GetRelHead_Optional(), other->GetRelHead_Optional()))
+		if (int compare = sCompare_T(this->GetRelHead_Optional(), other->GetRelHead_Optional()))
 			return compare;
 
 		return this->GetExpr_Bool()->Compare(other->GetExpr_Bool());

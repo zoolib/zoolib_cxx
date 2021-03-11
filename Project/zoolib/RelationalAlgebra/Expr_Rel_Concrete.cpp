@@ -23,7 +23,7 @@ void Expr_Rel_Concrete::Accept(const Visitor& iVisitor)
 int Expr_Rel_Concrete::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Concrete> other = iOther.DynamicCast<Expr_Rel_Concrete>())
-		return sCompareNew_T(this->GetConcreteHead(), other->GetConcreteHead());
+		return sCompare_T(this->GetConcreteHead(), other->GetConcreteHead());
 
 	return Expr::Compare(iOther);
 	}

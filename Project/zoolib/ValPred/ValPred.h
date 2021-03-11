@@ -104,7 +104,7 @@ private:
 	};
 
 template <>
-int sCompareNew_T(const ValPred& iL, const ValPred& iR);
+int sCompare_T(const ValPred& iL, const ValPred& iR);
 
 bool operator<(const ValPred& iL, const ValPred& iR);
 

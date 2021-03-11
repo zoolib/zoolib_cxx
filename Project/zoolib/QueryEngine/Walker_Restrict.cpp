@@ -154,32 +154,32 @@ namespace { // anonymous
 
 struct Functor_LT
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) < 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) < 0; }
 	};
 
 struct Functor_LE
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) <= 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) <= 0; }
 	};
 
 struct Functor_EQ
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) == 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) == 0; }
 	};
 
 struct Functor_NE
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) != 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) != 0; }
 	};
 
 struct Functor_GE
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) >= 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) >= 0; }
 	};
 
 struct Functor_GT
 	{
-	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompareNew_T(l, r) > 0; }
+	bool operator()(const Val_DB& l, const Val_DB& r) const { return sCompare_T(l, r) > 0; }
 	};
 
 struct Functor_Callable

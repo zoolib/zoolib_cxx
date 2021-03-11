@@ -247,7 +247,7 @@ template <class Map_p, class Seq_p>
 struct RelopsTraits_HasLT<Val_T<Map_p,Seq_p>> : public RelopsTraits_Has {};
 
 template <class Map_p, class Seq_p>
-int sCompareNew_T(const Val_T<Map_p,Seq_p>& iL, const Val_T<Map_p,Seq_p>& iR)
+int sCompare_T(const Val_T<Map_p,Seq_p>& iL, const Val_T<Map_p,Seq_p>& iR)
 	{ return iL.Compare(iR); }
 
 } // namespace ZooLib

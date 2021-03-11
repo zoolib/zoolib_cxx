@@ -35,10 +35,10 @@ int Expr_Rel_Rename::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Rename> other = iOther.DynamicCast<Expr_Rel_Rename>())
 		{
-		if (int compare = sCompareNew_T(this->GetOld(), other->GetOld()))
+		if (int compare = sCompare_T(this->GetOld(), other->GetOld()))
 			return compare;
 
-		if (int compare = sCompareNew_T(this->GetNew(), other->GetNew()))
+		if (int compare = sCompare_T(this->GetNew(), other->GetNew()))
 			return compare;
 
 		return this->GetOp0()->Compare(other->GetOp0());

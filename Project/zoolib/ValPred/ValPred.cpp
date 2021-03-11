@@ -32,7 +32,7 @@ ValComparator_Simple::ValComparator_Simple(EComparator iEComparator)
 int ValComparator_Simple::Compare(const ZP<ValComparator>& iOther)
 	{
 	if (ZP<ValComparator_Simple> other = iOther.DynamicCast<ValComparator_Simple>())
-		return sCompareNew_T(int(this->GetEComparator()), int(other->GetEComparator()));
+		return sCompare_T(int(this->GetEComparator()), int(other->GetEComparator()));
 
 	return ValComparator::Compare(iOther);
 	}
@@ -69,7 +69,7 @@ const std::string& ValComparand_Name::GetName() const
 int ValComparand_Name::Compare(const ZP<ValComparand>& iOther)
 	{
 	if (ZP<ValComparand_Name> other = iOther.DynamicCast<ValComparand_Name>())
-		return sCompareNew_T(this->GetName(), other->GetName());
+		return sCompare_T(this->GetName(), other->GetName());
 
 	return ValComparand::Compare(iOther);
 	}
@@ -116,10 +116,10 @@ const ZP<ValComparand>& ValPred::GetRHS() const
 	{ return fRHS; }
 
 // =================================================================================================
-#pragma mark - ValPred, sCompareNew_T
+#pragma mark - ValPred, sCompare_T
 
 template <>
-int sCompareNew_T(const ValPred& iL, const ValPred& iR)
+int sCompare_T(const ValPred& iL, const ValPred& iR)
 	{
 	if (int compare = iL.GetLHS()->Compare(iR.GetLHS()))
 		return compare;
@@ -131,7 +131,7 @@ int sCompareNew_T(const ValPred& iL, const ValPred& iR)
 	}
 
 bool operator<(const ValPred& iL, const ValPred& iR)
-	{ return sCompareNew_T(iL, iR) < 0; }
+	{ return sCompare_T(iL, iR) < 0; }
 
 // =================================================================================================
 #pragma mark - Comparand pseudo constructors

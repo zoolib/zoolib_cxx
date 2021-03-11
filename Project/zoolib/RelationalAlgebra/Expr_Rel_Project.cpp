@@ -28,7 +28,7 @@ int Expr_Rel_Project::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Project> other = iOther.DynamicCast<Expr_Rel_Project>())
 		{
-		if (int compare = sCompareNew_T(this->GetProjectRelHead(), other->GetProjectRelHead()))
+		if (int compare = sCompare_T(this->GetProjectRelHead(), other->GetProjectRelHead()))
 			return compare;
 		return this->GetOp0()->Compare(other->GetOp0());
 		}

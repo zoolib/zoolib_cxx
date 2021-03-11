@@ -251,7 +251,7 @@ private:
 			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
 				return compare;
 
-			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			return sCompare_T(fValue, *static_cast<const S*>(otherInfo.second));
 			}
 
 		virtual int Compare(const OnHeap& iOther) const
@@ -260,7 +260,7 @@ private:
 			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
 				return compare;
 
-			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			return sCompare_T(fValue, *static_cast<const S*>(otherInfo.second));
 			}
 
 		virtual void CtorInto(void* iOther) const { sCtor_T<InPlace_T>(iOther, fValue); }
@@ -309,7 +309,7 @@ private:
 			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
 				return compare;
 
-			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			return sCompare_T(fValue, *static_cast<const S*>(otherInfo.second));
 			}
 
 		virtual int Compare(const OnHeap& iOther) const
@@ -318,7 +318,7 @@ private:
 			if (int compare = strcmp(typeid(S).name(), otherInfo.first))
 				return compare;
 
-			return sCompareNew_T(fValue, *static_cast<const S*>(otherInfo.second));
+			return sCompare_T(fValue, *static_cast<const S*>(otherInfo.second));
 			}
 
 		virtual const std::type_info& Type() const { return typeid(S); }

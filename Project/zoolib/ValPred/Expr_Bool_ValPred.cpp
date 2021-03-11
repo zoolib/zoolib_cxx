@@ -33,7 +33,7 @@ void Expr_Bool_ValPred::Accept_Expr_Op0(Visitor_Expr_Op0_T<Expr_Bool>& iVisitor)
 int Expr_Bool_ValPred::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Bool_ValPred> other = iOther.DynamicCast<Expr_Bool_ValPred>())
-		return sCompareNew_T(this->GetValPred(), other->GetValPred());
+		return sCompare_T(this->GetValPred(), other->GetValPred());
 
 	return Expr::Compare(iOther);
 	}

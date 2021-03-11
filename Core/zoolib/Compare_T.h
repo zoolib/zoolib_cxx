@@ -30,61 +30,61 @@ template <class T, class Other_p = T>
 struct has_operator_less : has_operator_less_impl<T, Other_p>::type {};
 
 // =================================================================================================
-#pragma mark - sCompareNew_T declaration and default implementation
+#pragma mark - sCompare_T declaration and default implementation
 
 template <class TT>
 typename EnableIfC<has_operator_less<TT>::value,int>::type
-sCompareNew_T(const TT& iL, const TT& iR)
+sCompare_T(const TT& iL, const TT& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 // =================================================================================================
-#pragma mark - sCompareNew_T default implementation for types without non operator<
+#pragma mark - sCompare_T default implementation for types without non operator<
 
 template <class TT>
 typename EnableIfC<not has_operator_less<TT>::value,int>::type
-sCompareNew_T(const TT& iL, const TT& iR)
+sCompare_T(const TT& iL, const TT& iR)
 	{
 	ZUnimplemented();
 	}
 
 // =================================================================================================
-#pragma mark - sCompareNew_T specialized for small integers
+#pragma mark - sCompare_T specialized for small integers
 
 template <>
-inline int sCompareNew_T(const bool& iL, const bool& iR)
+inline int sCompare_T(const bool& iL, const bool& iR)
 	{ return int(iL) - int(iR); }
 
 template <>
-inline int sCompareNew_T(const char& iL, const char& iR)
+inline int sCompare_T(const char& iL, const char& iR)
 	{ return iL - iR; }
 
 template <>
-inline int sCompareNew_T(const unsigned char& iL, const unsigned char& iR)
+inline int sCompare_T(const unsigned char& iL, const unsigned char& iR)
 	{ return int(iL) - int(iR); }
 
 template <>
-inline int sCompareNew_T(const signed char& iL, const signed char& iR)
+inline int sCompare_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
 // =================================================================================================
-#pragma mark - sCompareNew_T specialized for std::pair
+#pragma mark - sCompare_T specialized for std::pair
 
 template <class S, class T>
-inline int sCompareNew_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
+inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 	{
-	if (int compare = sCompareNew_T(iLeft.first, iRight.first))
+	if (int compare = sCompare_T(iLeft.first, iRight.first))
 		return compare;
-	return sCompareNew_T(iLeft.second, iRight.second);
+	return sCompare_T(iLeft.second, iRight.second);
 	}
 
 // =================================================================================================
-#pragma mark - Less_Compare_T, less<>-style functor implemented in terms of sCompareNew_T
+#pragma mark - Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
 
 template <class T>
 struct Less_Compare_T : public std::binary_function<T,T,bool>
 	{
 	bool operator()(const T& iLeft, const T& iRight) const
-		{ return sCompareNew_T(iLeft, iRight) < 0; }
+		{ return sCompare_T(iLeft, iRight) < 0; }
 	};
 
 // =================================================================================================
@@ -103,7 +103,7 @@ inline int sCompareIterators_T(
 			if (rightIter != rightEnd)
 				{
 				// Right is not exhausted either, so we compare their current values.
-				if (int compare = sCompareNew_T(*leftIter, *rightIter))
+				if (int compare = sCompare_T(*leftIter, *rightIter))
 					{
 					// The current values of left and right
 					// are different, so we have a result.

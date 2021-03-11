@@ -35,7 +35,7 @@ int Expr_Rel_Calc::Compare(const ZP<Expr>& iOther)
 	{
 	if (ZP<Expr_Rel_Calc> other = iOther.DynamicCast<Expr_Rel_Calc>())
 		{
-		if (int compare = sCompareNew_T(this->GetColName(), other->GetColName()))
+		if (int compare = sCompare_T(this->GetColName(), other->GetColName()))
 			return compare;
 
 		if (int compare = this->GetOp0()->Compare(other->GetOp0()))
