@@ -38,7 +38,7 @@ sCompare_T(const TT& iL, const TT& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 // =================================================================================================
-#pragma mark - sCompare_T default implementation for types without non operator<
+#pragma mark - sCompare_T default implementation for types without an accesible operator<
 
 template <class TT>
 typename EnableIfC<not has_operator_less<TT>::value,int>::type
