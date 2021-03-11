@@ -121,6 +121,8 @@ public:
 
 	typedef std::set<Key,Comparer> Set;
 
+	static const Val_DB* const spEmptyValPtr;
+
 	// -----
 
 	Index(const IndexSpec& iIndexSpec)
@@ -149,15 +151,13 @@ public:
 			return false;
 			}
 
-		const Val_DB* emptyValPtr = &sDefault<Val_DB>();
-
 		oKey.fValues[0] = firstVal;
 		for (size_t xx = 1; xx < fCount; ++xx)
 			{
 			if (const Val_DB* theVal = asMap->PGet(fColNames[xx]))
 				oKey.fValues[xx] = theVal;
 			else
-				oKey.fValues[xx] = emptyValPtr;
+				oKey.fValues[xx] = spEmptyValPtr;
 			}
 
 		for (size_t xx = fCount; xx < Key::kMaxCols; ++xx)
@@ -175,6 +175,8 @@ public:
 
 	DListHead<DLink_PSearch_InIndex> fPSearch_InIndex;
 	};
+
+const Val_DB* const Searcher_Datons::Index::spEmptyValPtr = &sDefault<Val_DB>();
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Searcher_Datons::Index::Key& iKey);
 
