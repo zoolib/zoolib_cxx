@@ -618,7 +618,8 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 				} // iterDClauses
 
 			if (clausesLo && clausesHi
-				&& clausesLo->second and clausesHi->second
+				&& clausesLo->second // we're checking bools, both must be inclusive values.
+				&& clausesHi->second
 				&& clausesLo->first == clausesHi->first)
 				{
 				// It's an equality.
