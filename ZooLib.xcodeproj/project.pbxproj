@@ -117,6 +117,13 @@
 		C06E378222CEE504007BD4FB /* Pull_ML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C06E377E22CD9ED5007BD4FB /* Pull_ML.cpp */; };
 		C06E378522CFA429007BD4FB /* ChanW_UTF_ML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C06E378322CFA428007BD4FB /* ChanW_UTF_ML.cpp */; };
 		C06E378622CFA429007BD4FB /* ChanW_UTF_ML.h in Headers */ = {isa = PBXBuildFile; fileRef = C06E378422CFA428007BD4FB /* ChanW_UTF_ML.h */; };
+		C083604F25BFA723001E70BC /* Util_STL_unordered_set.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604925BFA722001E70BC /* Util_STL_unordered_set.h */; };
+		C083605025BFA723001E70BC /* Util_STL_Base_Map.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604A25BFA722001E70BC /* Util_STL_Base_Map.h */; };
+		C083605125BFA723001E70BC /* Util_STL_Base_MapOrSet.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604B25BFA722001E70BC /* Util_STL_Base_MapOrSet.h */; };
+		C083605225BFA723001E70BC /* StdInt.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604C25BFA722001E70BC /* StdInt.h */; };
+		C083605325BFA723001E70BC /* Util_STL_Base_Seq.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604D25BFA722001E70BC /* Util_STL_Base_Seq.h */; };
+		C083605425BFA723001E70BC /* Util_STL_Base_Set.h in Headers */ = {isa = PBXBuildFile; fileRef = C083604E25BFA723001E70BC /* Util_STL_Base_Set.h */; };
+		C083605625BFA745001E70BC /* Compat_sys_socket.h in Headers */ = {isa = PBXBuildFile; fileRef = C083605525BFA744001E70BC /* Compat_sys_socket.h */; };
 		C091B90322C130760001DBB0 /* ZP.h in Headers */ = {isa = PBXBuildFile; fileRef = C091B90022C130750001DBB0 /* ZP.h */; };
 		C091B90422C130760001DBB0 /* Counted.h in Headers */ = {isa = PBXBuildFile; fileRef = C091B90122C130750001DBB0 /* Counted.h */; };
 		C091B90522C130760001DBB0 /* Counted.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C091B90222C130760001DBB0 /* Counted.cpp */; };
@@ -142,6 +149,7 @@
 		C0A4F52623386A2C00B7E5C5 /* Compat_fcntl.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4F52123386A2C00B7E5C5 /* Compat_fcntl.h */; };
 		C0A4F52923386A5500B7E5C5 /* StartOnNewThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A4F52723386A5500B7E5C5 /* StartOnNewThread.cpp */; };
 		C0A4F52A23386A5500B7E5C5 /* StartOnNewThread.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4F52823386A5500B7E5C5 /* StartOnNewThread.h */; };
+		C0BF293F25D3120A0006ECEB /* ChanRPos_XX_ChanR.h in Headers */ = {isa = PBXBuildFile; fileRef = C0BF293E25D3120A0006ECEB /* ChanRPos_XX_ChanR.h */; };
 		C0D2ED8522CAB664004A09FD /* ZP_NS.mm in Sources */ = {isa = PBXBuildFile; fileRef = C0D2ED7E22CAB663004A09FD /* ZP_NS.mm */; };
 		C0D2ED8622CAB664004A09FD /* ZP_CF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0D2ED7F22CAB664004A09FD /* ZP_CF.cpp */; };
 		C0D2ED8722CAB664004A09FD /* Pixmap_CGImage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0D2ED8022CAB664004A09FD /* Pixmap_CGImage.h */; };
@@ -163,6 +171,13 @@
 		C06E377F22CD9ED5007BD4FB /* Pull_ML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pull_ML.h; sourceTree = "<group>"; };
 		C06E378322CFA428007BD4FB /* ChanW_UTF_ML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChanW_UTF_ML.cpp; sourceTree = "<group>"; };
 		C06E378422CFA428007BD4FB /* ChanW_UTF_ML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChanW_UTF_ML.h; sourceTree = "<group>"; };
+		C083604925BFA722001E70BC /* Util_STL_unordered_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_STL_unordered_set.h; sourceTree = "<group>"; };
+		C083604A25BFA722001E70BC /* Util_STL_Base_Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_STL_Base_Map.h; sourceTree = "<group>"; };
+		C083604B25BFA722001E70BC /* Util_STL_Base_MapOrSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_STL_Base_MapOrSet.h; sourceTree = "<group>"; };
+		C083604C25BFA722001E70BC /* StdInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdInt.h; sourceTree = "<group>"; };
+		C083604D25BFA722001E70BC /* Util_STL_Base_Seq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_STL_Base_Seq.h; sourceTree = "<group>"; };
+		C083604E25BFA723001E70BC /* Util_STL_Base_Set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_STL_Base_Set.h; sourceTree = "<group>"; };
+		C083605525BFA744001E70BC /* Compat_sys_socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Compat_sys_socket.h; sourceTree = "<group>"; };
 		C091B90022C130750001DBB0 /* ZP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZP.h; sourceTree = "<group>"; };
 		C091B90122C130750001DBB0 /* Counted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Counted.h; sourceTree = "<group>"; };
 		C091B90222C130760001DBB0 /* Counted.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Counted.cpp; sourceTree = "<group>"; };
@@ -190,6 +205,7 @@
 		C0A4F52823386A5500B7E5C5 /* StartOnNewThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartOnNewThread.h; sourceTree = "<group>"; };
 		C0B604DA22528772006CAF27 /* PushTextOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushTextOptions.h; sourceTree = "<group>"; };
 		C0B604DB22528773006CAF27 /* PullTextOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullTextOptions.h; sourceTree = "<group>"; };
+		C0BF293E25D3120A0006ECEB /* ChanRPos_XX_ChanR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChanRPos_XX_ChanR.h; sourceTree = "<group>"; };
 		C0CB2BB22231767600D8E1E5 /* PullPush_CF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PullPush_CF.cpp; sourceTree = "<group>"; };
 		C0CB2BB32231767600D8E1E5 /* Data_NS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data_NS.h; sourceTree = "<group>"; };
 		C0CB2BB52231767600D8E1E5 /* Delegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Delegate.h; sourceTree = "<group>"; };
@@ -670,6 +686,7 @@
 				C0CB2BEA2231767600D8E1E5 /* Chan_Bin_POSIXFD.cpp */,
 				C0CB2BEB2231767600D8E1E5 /* Chan_Bin_POSIXFD.h */,
 				C0A4F52123386A2C00B7E5C5 /* Compat_fcntl.h */,
+				C083605525BFA744001E70BC /* Compat_sys_socket.h */,
 				C0A4F52023386A2C00B7E5C5 /* FILE_Channer.cpp */,
 				C0A4F51D23386A2B00B7E5C5 /* FILE_Channer.h */,
 				C0CB2BF02231767600D8E1E5 /* File_POSIX.cpp */,
@@ -772,6 +789,7 @@
 				C0CB2C562231767600D8E1E5 /* size_t.h */,
 				C0354BC222CD2ED100B3FA37 /* Startable.h */,
 				C0CB2C322231767600D8E1E5 /* Starter.h */,
+				C083604C25BFA722001E70BC /* StdInt.h */,
 				C0CB2C262231767600D8E1E5 /* Stringf.cpp */,
 				C0CB2C682231767600D8E1E5 /* Stringf.h */,
 				C0CB2C4E2231767600D8E1E5 /* TagVal.h */,
@@ -789,10 +807,15 @@
 				C0CB2C342231767600D8E1E5 /* UnicodeString8.h */,
 				C0CB2C522231767600D8E1E5 /* Util_Chan.h */,
 				C0CB2C152231767600D8E1E5 /* Util_Relops.h */,
+				C083604A25BFA722001E70BC /* Util_STL_Base_Map.h */,
+				C083604B25BFA722001E70BC /* Util_STL_Base_MapOrSet.h */,
+				C083604D25BFA722001E70BC /* Util_STL_Base_Seq.h */,
+				C083604E25BFA723001E70BC /* Util_STL_Base_Set.h */,
 				C0CB2C102231767600D8E1E5 /* Util_STL_deque.h */,
 				C0CB2C462231767600D8E1E5 /* Util_STL_map.h */,
 				C0CB2C2A2231767600D8E1E5 /* Util_STL_set.h */,
 				C0CB2BFF2231767600D8E1E5 /* Util_STL_unordered_map.h */,
+				C083604925BFA722001E70BC /* Util_STL_unordered_set.h */,
 				C0CB2C4F2231767600D8E1E5 /* Util_STL_vector.h */,
 				C0CB2C602231767600D8E1E5 /* Util_STL.h */,
 				C0CB2C0D2231767600D8E1E5 /* ValueOnce.h */,
@@ -899,6 +922,7 @@
 				C0CB2C762231767600D8E1E5 /* ChanR_XX_Boundary.h */,
 				C0CB2D432231767600D8E1E5 /* ChanR_XX_SkipAllOnDestroy.h */,
 				C0CB2D3C2231767600D8E1E5 /* ChanR_XX_Terminated.h */,
+				C0BF293E25D3120A0006ECEB /* ChanRPos_XX_ChanR.h */,
 				C0CB2CEC2231767600D8E1E5 /* ChanRPos_XX_PageBuffered.h */,
 				C0EFDB4E22CFB17E009429D3 /* ChanRU_UTF_ML.cpp */,
 				C0EFDB4F22CFB17E009429D3 /* ChanRU_UTF_ML.h */,
@@ -1096,22 +1120,30 @@
 				C0354BC322CD2ED100B3FA37 /* Startable.h in Headers */,
 				C0A4F52223386A2C00B7E5C5 /* FILE_Channer.h in Headers */,
 				C0D2ED8722CAB664004A09FD /* Pixmap_CGImage.h in Headers */,
+				C083605425BFA723001E70BC /* Util_STL_Base_Set.h in Headers */,
 				C0A4F52A23386A5500B7E5C5 /* StartOnNewThread.h in Headers */,
 				C06E378122CD9ED5007BD4FB /* Pull_ML.h in Headers */,
+				C083605025BFA723001E70BC /* Util_STL_Base_Map.h in Headers */,
 				C0D2ED8922CAB664004A09FD /* ZP_xpc.h in Headers */,
 				C0965B602458AB5C00508137 /* PullPush_ZZ.h in Headers */,
 				C0D2ED8B22CAB664004A09FD /* ZP_CF.h in Headers */,
 				C0D2ED8A22CAB664004A09FD /* ZP_NS.h in Headers */,
 				C0A4F51C23386A1300B7E5C5 /* Atomic.h in Headers */,
 				C0965B642458AB5C00508137 /* Data_ZZ.h in Headers */,
+				C083605625BFA745001E70BC /* Compat_sys_socket.h in Headers */,
+				C083605125BFA723001E70BC /* Util_STL_Base_MapOrSet.h in Headers */,
 				C0965B652458AB5C00508137 /* Util_ZZ_JSONB.h in Headers */,
 				C0965B632458AB5C00508137 /* Util_ZZ_JSON.h in Headers */,
 				C010A6332486F79B004B2011 /* Util_CF_ZZ.h in Headers */,
+				C083604F25BFA723001E70BC /* Util_STL_unordered_set.h in Headers */,
+				C083605325BFA723001E70BC /* Util_STL_Base_Seq.h in Headers */,
 				C091B90422C130760001DBB0 /* Counted.h in Headers */,
 				C0354BC522CD2F2100B3FA37 /* Startable_SetName.h in Headers */,
 				C0A4F52623386A2C00B7E5C5 /* Compat_fcntl.h in Headers */,
 				C0EFDB5122CFB17F009429D3 /* ChanRU_UTF_ML.h in Headers */,
 				C06E378622CFA429007BD4FB /* ChanW_UTF_ML.h in Headers */,
+				C0BF293F25D3120A0006ECEB /* ChanRPos_XX_ChanR.h in Headers */,
+				C083605225BFA723001E70BC /* StdInt.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
