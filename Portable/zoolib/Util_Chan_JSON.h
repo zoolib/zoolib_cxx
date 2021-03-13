@@ -51,6 +51,7 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 struct PushTextOptions_JSON : PushTextOptions
 	{
 	PushTextOptions_JSON();
+	PushTextOptions_JSON(bool iPrettyPrint);
 	PushTextOptions_JSON(const PushTextOptions& iOther);
 	PushTextOptions_JSON(const PushTextOptions_JSON& iOther);
 
@@ -62,6 +63,7 @@ struct PushTextOptions_JSON : PushTextOptions
 	ZQ<bool> fNumberSequencesQ;
 	ZQ<bool> fLowercaseHexQ;
 	ZQ<bool> fIntegersAsHexQ;
+	ZQ<bool> fAnnotateUnhandledQ;
 	};
 
 // =================================================================================================

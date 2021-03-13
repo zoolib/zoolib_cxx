@@ -38,7 +38,7 @@ PullTextOptions_JSON sPullTextOptions_Extended()
 	theOptions.fAllowTerminators = true;
 	theOptions.fLooseSeparators = true;
 	theOptions.fAllowBinary = true;
-
+	
 	return theOptions;
 	}
 
@@ -170,6 +170,11 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 
 PushTextOptions_JSON::PushTextOptions_JSON()
 :	PushTextOptions()
+	{}
+
+PushTextOptions_JSON::PushTextOptions_JSON(bool iPrettyPrint)
+:	PushTextOptions(iPrettyPrint)
+,	fAnnotateUnhandledQ(iPrettyPrint)
 	{}
 
 PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions& iOther)
@@ -335,7 +340,9 @@ void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushText
 		}
 	else
 		{
-		ww << "NULL" << " /*!! Unhandled: " << sPrettyName(iAny.Type()) << " !!*/";
+		ww << "NULL";
+		if (iOptions.fAnnotateUnhandledQ.Get())
+			ww << " /*!! Unhandled: " << sPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 
