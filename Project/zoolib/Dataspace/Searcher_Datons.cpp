@@ -619,19 +619,24 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 					} // not everyTermIsRelevant
 				} // iterDClauses
 
-			if (clausesLo && clausesHi
-				&& clausesLo->second // we're checking bools, both must be inclusive values.
-				&& clausesHi->second
-				&& clausesLo->first == clausesHi->first)
+			if (clausesLo && clausesHi // We have lo and hi
+				&& clausesLo->second && clausesHi->second // they're both inclusive
+				&& clausesLo->first == clausesHi->first) // with the same value
 				{
 				// It's an equality.
 				valsEqual.push_back(clausesLo->first);
 				}
 			else
 				{
-				finalLo = clausesLo;
-				finalHi = clausesHi;
-				break;
+				// We can only use one relative clause. Use first we encounter, later
+				// we'd want the one with the best discrimination, although that's
+				// harder to arrange. We could do it by holding *all* of the relative clauses
+				// and picking the one that has the smallest result set. That's harder to arrange.
+				if (not finalLo and not finalHi)
+					{
+					finalLo = clausesLo;
+					finalHi = clausesHi;
+					}
 				}
 			} // xxColName
 
@@ -639,9 +644,12 @@ void Searcher_Datons::pSetupPSearch(PSearch* ioPSearch)
 			{
 			// We were able to remove at least one clause.
 
-			if (not bestIndex || curDClauses.size() < bestDClauses.size())
+			if (not bestIndex
+				|| curDClauses.size() < bestDClauses.size()
+				|| (not bestLo && finalLo) || (not bestHi && finalHi))
 				{
-				// This is the first usable index, or we've removed more clauses than the prior best index.
+				// This is the first usable index, we've removed more clauses than the prior best
+				// index, or this is the first index to satisfy a rel clause.
 				bestIndex = curIndex;
 				bestValsEqual = valsEqual;
 				bestLo = finalLo;
