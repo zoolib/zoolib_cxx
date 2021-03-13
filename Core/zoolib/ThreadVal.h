@@ -38,6 +38,9 @@ class ThreadVal
 	{
 	typedef TagVal<Type_p,Tag_p> inherited;
 public:
+	typedef Type_p Type_t;
+	typedef Tag_p Tag_t;
+
 	ThreadVal()
 	:	fPrior(spGet())
 		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
