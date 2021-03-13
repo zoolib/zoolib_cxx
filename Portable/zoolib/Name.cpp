@@ -167,16 +167,18 @@ void Name::Clear()
 
 size_t Name::Hash() const
 	{
-	size_t result = 0;
-	if (const char* i = this->pAsCharStar())
-		{
-		for (size_t xx = sizeof(size_t); --xx && *i; ++i)
-			{
-			result <<= 8;
-			result |= *i;
-			}
-		}
-	return result;
+	if (const CountedString* theCountedString = this->pGetIfCounted())
+		{ return std::hash<string8>()(theCountedString->Get()); }
+
+	const char* thePtr = (const char*)fIntPtr;
+
+	#if defined(_LIBCPP_STRING)
+		return std::__do_string_hash(thePtr, thePtr + strlen(thePtr));
+	#elif defined(_BASIC_STRING_H)
+		return std::_Hash_impl::hash(thePtr, strlen(thePtr))
+	#else
+		ZUnimplemented();
+	#endif
 	}
 
 const char* Name::pAsCharStar() const

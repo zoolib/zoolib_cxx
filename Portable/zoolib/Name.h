@@ -9,12 +9,23 @@
 #include "zoolib/UnicodeString.h" // For string8
 #include "zoolib/Util_Relops.h"
 
+#include <utility> // For hash
+
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark - Name
 
-#define ZMACRO_NameUsesString 1
+#ifndef ZMACRO_NameUsesString
+	// We have access to the hash functions we need when using libc++ or libstdc++ (clang/gcc)
+	#if defined(_LIBCPP_STRING) || defined(_BASIC_STRING_H)
+		#define ZMACRO_NameUsesString 0
+	#endif
+#endif
+
+#ifndef ZMACRO_NameUsesString
+	#define ZMACRO_NameUsesString 1
+#endif
 
 #if ZMACRO_NameUsesString
 
@@ -22,6 +33,7 @@ class Name
 	{
 public:
 	typedef CountedVal<string8> CountedString;
+	typedef ZP<CountedString> RefCountedString;
 
 	inline Name() {}
 
@@ -39,7 +51,7 @@ public:
 
 	Name(const string8& iString) : fString(iString) {}
 
-	Name(const ZP<CountedString>& iRefCountedString)
+	Name(const RefCountedString& iRefCountedString)
 	:	fString(sGet(iRefCountedString))
 		{}
 
@@ -63,7 +75,8 @@ public:
 	void Clear()
 		{ fString.clear(); }
 
-//	size_t Hash() const;
+	size_t Hash() const;
+		{ return std::hash<string8>()(theCountedString->Get()); }
 
 private:
 	string8 fString;
@@ -161,5 +174,16 @@ inline bool sNotEmpty(const Name& iName)
 	{ return not sIsEmpty(iName); }
 
 } // namespace ZooLib
+
+namespace std {
+
+template <>
+struct hash<ZooLib::Name>
+	{
+	std::size_t operator()(const ZooLib::Name& iName) const noexcept
+		{ return iName.Hash(); }
+	};
+
+} // namespace std
 
 #endif // __ZooLib_Name_h__
