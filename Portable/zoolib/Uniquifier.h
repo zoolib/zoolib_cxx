@@ -15,20 +15,13 @@ template <class Type_p, class Compare_p = typename std::set<Type_p>::key_compare
 class Uniquifier
 	{
 public:
-	const Type_p& Get(const Type_p& iValue)
-		{
-		typename std::set<Type_p, Compare_p>::iterator iter = fSet.lower_bound(iValue);
-		if (iter != fSet.end()
-			&& not fSet.key_comp()(*iter, iValue)
-			&& not fSet.key_comp()(iValue, *iter))
-			{
-			return *iter;
-			}
-		return *fSet.insert(iter, iValue);
-		}
+	typedef std::set<Type_p, Compare_p> Set_t;
+
+	const Type_p& Get(const Type_p& iValue) { return *fSet.insert(iValue).first; }
+	Set_t& GetStorage() { return fSet; }
 
 private:
-	std::set<Type_p, Compare_p> fSet;
+	Set_t fSet;
 	};
 
 } // namespace ZooLib
