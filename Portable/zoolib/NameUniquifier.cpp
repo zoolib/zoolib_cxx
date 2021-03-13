@@ -24,11 +24,7 @@ Name sName(const string8& iString)
 Name sName(const ZP_CountedString& iCountedString)
 	{
 	if (ThreadVal_NameUniquifier::Type_t* theUniquifier = ThreadVal_NameUniquifier::sPMut())
-		{
-		ZP_CountedString theCS = theUniquifier->Get(iCountedString);
-		int theCount = theCS->RefCount();
-		return Name(theCS);
-		}
+		return Name(theUniquifier->Get(iCountedString));
 	return Name(iCountedString);
 	}
 
