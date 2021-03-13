@@ -350,6 +350,9 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 	if (oPriorResult)
 		*oPriorResult = fResult_Prior;
 
+	if (oCurResult)
+		*oCurResult = iResult;
+
 	fResult_Prior = iResult;
 
 	swap(fSort_Prior, theSort_New);
