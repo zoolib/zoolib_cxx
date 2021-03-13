@@ -4,6 +4,8 @@
 #define __ZooLib_Dataspace_Searcher_Datons_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/NameUniquifier.h"
+
 #include "zoolib/Dataspace/Daton.h"
 #include "zoolib/Dataspace/Searcher.h"
 
@@ -93,6 +95,8 @@ private:
 	std::vector<Index*> fIndexes;
 
 	Map_Thing fMap_Thing;
+
+	ThreadVal_NameUniquifier::Type_t::Set_t fUniquifiedNames;
 
 	// -----
 

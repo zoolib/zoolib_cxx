@@ -937,6 +937,9 @@ int64 Searcher_Datons::MakeChanges(
 	{
 	ZAcqMtx acq(fMtx);
 
+	ThreadVal_NameUniquifier theTVNU;
+	theTVNU.Mut().GetStorage().swap(fUniquifiedNames);
+
 	while (iAssertedCount--)
 		{
 		const Daton theDaton = *iAsserted++;
@@ -980,6 +983,8 @@ int64 Searcher_Datons::MakeChanges(
 		ZRelMtx rel(fMtx);
 		Searcher::pTriggerSearcherResultsAvailable();
 		}
+
+	theTVNU.Mut().GetStorage().swap(fUniquifiedNames);
 
 	return theChangeCount;
 	}
