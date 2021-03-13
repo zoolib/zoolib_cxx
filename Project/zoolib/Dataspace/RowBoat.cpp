@@ -99,7 +99,7 @@ void RowBoat::pChanged(
 		fRows.erase(fRows.begin() + yy);
 		}
 
-	// ...and a forward scan here.
+	// ...and forward scans here...
 	foreacha (yy, theAdded)
 		{
 		ZAssert(yy.first <= fRows.size());
@@ -110,6 +110,7 @@ void RowBoat::pChanged(
 			theRow->Call(nullptr, &thePM_New);
 		}
 
+	// ...and here...
 	foreacha (yy, theChanged)
 		{
 		if (ZP<Callable_Row> theRow = fRows[yy.f0])
