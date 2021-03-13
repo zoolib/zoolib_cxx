@@ -106,7 +106,7 @@ private:
 	typedef std::map<
 			ZP<RelationalAlgebra::Expr_Rel>,
 			PQuery,
-			Less_Rel>
+			RelationalAlgebra::Less_Rel>
 		Map_Rel_PQuery;
 	Map_Rel_PQuery fMap_Rel_PQuery;
 
