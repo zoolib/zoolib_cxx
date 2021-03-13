@@ -33,7 +33,7 @@ class Name
 	{
 public:
 	typedef CountedVal<string8> CountedString;
-	typedef ZP<CountedString> RefCountedString;
+	typedef ZP<CountedString> ZPCountedString;
 
 	inline Name() {}
 
@@ -51,14 +51,12 @@ public:
 
 	Name(const string8& iString) : fString(iString) {}
 
-	Name(const RefCountedString& iRefCountedString)
-	:	fString(sGet(iRefCountedString))
+	Name(const ZPCountedString& iZPCountedString)
+	:	fString(sGet(iZPCountedString))
 		{}
 
 	operator string8() const
 		{ return fString; }
-
-//	operator RefCountedString() const;
 
 	inline bool operator<(const Name& iOther) const
 		{ return fString < iOther.fString; }
@@ -88,7 +86,7 @@ class Name
 	{
 public:
 	typedef CountedVal<string8> CountedString;
-	typedef ZP<CountedString> RefCountedString;
+	typedef ZP<CountedString> ZPCountedString;
 
 	inline Name()
 	:	fIntPtr(0)
@@ -123,10 +121,10 @@ public:
 		{}
 
 	Name(const string8& iString);
-	Name(const RefCountedString& iRefCountedString);
+	Name(const ZPCountedString& iZPCountedString);
 	
 	operator string8() const;
-	operator RefCountedString() const;
+	operator ZPCountedString() const;
 
 	inline bool operator<(const Name& iOther) const
 		{ return this->Compare(iOther) < 0; }

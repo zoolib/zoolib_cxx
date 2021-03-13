@@ -59,9 +59,9 @@ Name::Name(const string8& iString)
 	}
 #endif
 
-Name::Name(const RefCountedString& iRefCountedString)
+Name::Name(const ZPCountedString& iZPCountedString)
 	{
-	CountedString* theCountedString = iRefCountedString.Get();
+	CountedString* theCountedString = iZPCountedString.Get();
 	#if ZCONFIG_Is64Bit
 		if (theCountedString)
 			{
@@ -103,7 +103,7 @@ Name::operator string8() const
 	return sDefault<string8>();
 	}
 
-Name::operator RefCountedString() const
+Name::operator ZPCountedString() const
 	{
 	#if ZCONFIG_Is64Bit
 		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
