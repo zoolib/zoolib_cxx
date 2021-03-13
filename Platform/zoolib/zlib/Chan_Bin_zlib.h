@@ -62,7 +62,7 @@ class ChanW_Bin_zlib
 :	public ChanW_Bin
 	{
 public:
-	ChanW_Bin_zlib(const ChanW_Bin& iChanW);
+	ChanW_Bin_zlib(bool iRaw, const ChanW_Bin& iChanW);
 	ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
 		const ChanW_Bin& iChanW);
 	~ChanW_Bin_zlib();

@@ -93,8 +93,8 @@ size_t ChanR_Bin_zlib::Readable()
 // =================================================================================================
 #pragma mark - ChanW_Bin_zlib
 
-ChanW_Bin_zlib::ChanW_Bin_zlib(const ChanW_Bin& iChanW)
-:	ChanW_Bin_zlib(zlib::eFormatW_Raw, 5, 1024, iChanW)
+ChanW_Bin_zlib::ChanW_Bin_zlib(bool iRaw, const ChanW_Bin& iChanW)
+:	ChanW_Bin_zlib(iRaw ? zlib::eFormatW_Raw : zlib::eFormatW_ZLib, 5, 1024, iChanW)
 	{}
 
 ChanW_Bin_zlib::ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
