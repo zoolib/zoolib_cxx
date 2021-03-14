@@ -8,6 +8,7 @@
 #include "zoolib/Util_ZZ_JSON.h"
 
 #include "zoolib/Dataspace/Types.h" // For AbsentOptional_t
+#include "zoolib/Dataspace/Util_Strim_Daton.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_RelHead.h"
 
@@ -25,30 +26,34 @@ using Util_Chan_JSON::PushTextOptions_JSON;
 // =================================================================================================
 #pragma mark - sToStrim
 
-static void spToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
+static void spToStrim(const ChanW_UTF& iChanW, const ZP<Result>& iResult)
 	{
-	const size_t theCount = iResult->Count();
+	const size_t theIndent = ThreadVal_PushTextIndent::sGet()+1;
+	ThreadVal_PushTextIndent tv_NewIndent(theIndent);
+	const PushTextOptions_JSON& theOptions = ThreadVal<PushTextOptions_JSON>::sGet();
 
+	const bool doIndentation = sDoIndentation(theOptions);
+
+	const size_t theCount = iResult->Count();
 	const RelHead& theRH = iResult->GetRelHead();
 
-	ww << "Count: " << theCount << ", RelHead: " << theRH;
+	iChanW << "⫷Count: " << theCount << ", RelHead: " << theRH;
 
 	for (size_t yy = 0; yy < theCount; ++yy)
 		{
-		ww << "\n";
+		if (doIndentation && theCount > 1)
+			Util_Chan_JSON::sWrite_LFIndent(iChanW, theIndent, theOptions);
+
 		const Val_DB* theRow = iResult->GetValsAt(yy);
 		for (size_t xx = 0; xx < theRH.size(); ++xx)
 			{
 			if (xx)
-				ww << ", ";
+				iChanW << ", ";
 
-			// Forceably disable pretty print for the row -- too verbose.
-			ThreadVal<PushTextOptions_JSON> tv_Options(ThreadVal<PushTextOptions_JSON>::sGet());
-			tv_Options.Mut().fIndentStringQ.Clear();
-
-			Util_ZZ_JSON::sWrite(ww, theRow[xx].As<Val_ZZ>());
+			Util_ZZ_JSON::sWrite(iChanW, theRow[xx].As<Val_ZZ>());
 			}
 		}
+	iChanW << "⫸";
 	}
 
 static bool spWriteFilter(
@@ -58,6 +63,12 @@ static bool spWriteFilter(
 	if (auto theP = sPGet<DataspaceTypes::AbsentOptional_t>(iPPT))
 		{
 		iChanW << "!absent!";
+		return true;
+		}
+
+	if (auto theP = sPGet<Dataspace::Daton>(iPPT))
+		{
+		iChanW << *theP;
 		return true;
 		}
 
@@ -76,20 +87,25 @@ static bool spWriteFilter(
 	return false;
 	}
 
-void sToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
+ZP<Callable_JSON_WriteFilter> sCallable_JSON_Write_Filter()
 	{
 	auto priorFilter = ThreadVal<ZP<Callable_JSON_WriteFilter>>::sGet();
-	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(sBindR(sCallable(spWriteFilter), priorFilter));
+	return sBindR(sCallable(spWriteFilter), priorFilter);
+	}
 
-	spToStrim(ww, iResult);
+void sToStrim(const ChanW_UTF& iChanW, const ZP<Result>& iResult)
+	{
+	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(sCallable_JSON_Write_Filter());
+
+	spToStrim(iChanW, iResult);
 	}
 
 } // namespace QueryEngine
 
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ZP<QueryEngine::Result>& iResult)
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZP<QueryEngine::Result>& iResult)
 	{
-	QueryEngine::sToStrim(ww, iResult);
-	return ww;
+	QueryEngine::sToStrim(iChanW, iResult);
+	return iChanW;
 	}
 
 } // namespace ZooLib
@@ -103,7 +119,11 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<QueryEngine::Result>& iResult)
 	{
-	StdIO::sChanW_UTF_Err << iResult << "\n";
+//	ThreadVal_PushTextIndent tv_PushTextIndent(0);
+	ThreadVal<Util_Chan_JSON::PushTextOptions_JSON> tv_Options(true);
+
+	sToStrim(StdIO::sChanW_UTF_Err, iResult);
+	StdIO::sChanW_UTF_Err << "\n";
 	}
 
 #endif // defined(ZMACRO_pdesc)

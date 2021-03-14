@@ -5,7 +5,9 @@
 #include "zconfig.h"
 
 #include "zoolib/QueryEngine/Result.h"
+
 #include "zoolib/ChanW_UTF.h"
+#include "zoolib/PullPush_JSON.h" // For Callable_JSON_WriteFilter
 
 namespace ZooLib {
 namespace QueryEngine {
@@ -13,11 +15,13 @@ namespace QueryEngine {
 // =================================================================================================
 #pragma mark -
 
-void sToStrim(const ChanW_UTF& iStrimW, const ZP<Result>& iResult);
+ZP<Callable_JSON_WriteFilter> sCallable_JSON_Write_Filter();
+
+void sToStrim(const ChanW_UTF& iChanW, const ZP<Result>& iResult);
 
 } // namespace QueryEngine
 
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, const ZP<QueryEngine::Result>& iResult);
+const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const ZP<QueryEngine::Result>& iResult);
 
 } // namespace ZooLib
 

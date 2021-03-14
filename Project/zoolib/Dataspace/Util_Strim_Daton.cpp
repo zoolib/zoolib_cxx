@@ -9,10 +9,12 @@ namespace ZooLib {
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Dataspace::Daton& iDaton)
 	{
+	sEWrite(ww, "⨴");
 	const Data_ZZ& theData = iDaton.GetData();
 	sWrite(ww, (const UTF8*)theData.GetPtr(),
 		theData.GetSize(), nullptr,
 		theData.GetSize(), nullptr);
+	sEWrite(ww, "⨵");
 	return ww;
 	}
 

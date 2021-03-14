@@ -24,6 +24,7 @@
 #include "zoolib/Util_STL_vector.h"
 
 #include "zoolib/QueryEngine/Result.h"
+#include "zoolib/QueryEngine/Util_Strim_Result.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 
@@ -316,7 +317,10 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<st
 			ww << ", ";
 		else
 			ww << "\n";
-		Util_ZZ_JSON::sWrite(ww, iMessage, false);
+
+		ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(QueryEngine::sCallable_JSON_Write_Filter());
+
+		Util_ZZ_JSON::sWrite(ww, iMessage);
 		}
 	}
 

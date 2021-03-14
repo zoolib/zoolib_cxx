@@ -83,7 +83,7 @@ ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU)
 		}
 
 	if (not sTryRead_CP(']', iChanRU))
-			throw ParseException("Expected ']'");
+		throw ParseException("Expected ']'");
 	return result;
 	}
 
