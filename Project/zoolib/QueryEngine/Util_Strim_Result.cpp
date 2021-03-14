@@ -2,6 +2,8 @@
 
 #include "zoolib/QueryEngine/Util_Strim_Result.h"
 
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_ZZ_JSON.h"
 
@@ -18,11 +20,12 @@ namespace ZooLib {
 namespace QueryEngine {
 
 using RelationalAlgebra::RelHead;
+using Util_Chan_JSON::PushTextOptions_JSON;
 
 // =================================================================================================
 #pragma mark - sToStrim
 
-void sToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
+static void spToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
 	{
 	const size_t theCount = iResult->Count();
 
@@ -38,12 +41,47 @@ void sToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
 			{
 			if (xx)
 				ww << ", ";
-			if (theRow[xx].PGet<DataspaceTypes::AbsentOptional_t>())
-				ww << "!absent!";
-			else
-				Util_ZZ_JSON::sWrite(ww, theRow[xx].As<Val_ZZ>(), false);
+
+			// Forceably disable pretty print for the row -- too verbose.
+			ThreadVal<PushTextOptions_JSON> tv_Options(ThreadVal<PushTextOptions_JSON>::sGet());
+			tv_Options.Mut().fIndentStringQ.Clear();
+
+			Util_ZZ_JSON::sWrite(ww, theRow[xx].As<Val_ZZ>());
 			}
 		}
+	}
+
+static bool spWriteFilter(
+	const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_UTF& iChanW,
+	const ZP<Callable_JSON_WriteFilter>& iPrior)
+	{
+	if (auto theP = sPGet<DataspaceTypes::AbsentOptional_t>(iPPT))
+		{
+		iChanW << "!absent!";
+		return true;
+		}
+
+	if (auto theP = sPGet<ZP<Result>>(iPPT))
+		{
+		spToStrim(iChanW, *theP);
+		return true;
+		}
+
+	if (iPrior)
+		{
+		if (sCall(iPrior, iPPT, iChanR, iChanW))
+			return true;
+		}
+
+	return false;
+	}
+
+void sToStrim(const ChanW_UTF& ww, const ZP<Result>& iResult)
+	{
+	auto priorFilter = ThreadVal<ZP<Callable_JSON_WriteFilter>>::sGet();
+	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(sBindR(sCallable(spWriteFilter), priorFilter));
+
+	spToStrim(ww, iResult);
 	}
 
 } // namespace QueryEngine

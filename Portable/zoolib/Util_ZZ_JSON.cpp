@@ -38,24 +38,34 @@ ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU)
 
 // -----
 
-void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal)
-	{ sWrite(iChanW, iVal, false); }
-
-void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint)
-	{ sWrite(iChanW, iVal, 0, PushTextOptions_JSON(iPrettyPrint)); }
-
 static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
 	sFromZZ_Push_PPT(iVal, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
-void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal,
-	size_t iInitialIndent, const PushTextOptions_JSON& iOptions)
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));
-	sPull_PPT_Push_JSON(*thePair.second, iInitialIndent, iOptions, iChanW);
+	sPull_PPT_Push_JSON(*thePair.second, iChanW);
+	}
+
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint)
+	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(0);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iPrettyPrint);
+
+	sWrite(iChanW, iVal);
+	}
+
+void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal,
+	size_t iInitialIndent, const PushTextOptions_JSON& iOptions)
+	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(iInitialIndent);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+
+	sWrite(iChanW, iVal);
 	}
 
 string8 sAsJSON(const Val_ZZ& iVal)
