@@ -167,7 +167,6 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 			*oPriorResult = fResult_Prior;
 
 		fResult_Prior = fResult_Prior->Fresh();
-		*oCurResult = fResult_Prior;
 
 		const size_t theColCount = fResult_Prior->GetRelHead().size();
 		for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
@@ -182,6 +181,7 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 				Multi3<size_t,size_t,size_t>(
 					target, target, target));
 			}
+		*oCurResult = fResult_Prior;
 		return;
 		}
 
