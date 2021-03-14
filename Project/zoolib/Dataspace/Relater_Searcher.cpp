@@ -538,7 +538,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 							{
 							for (size_t cc = 0; cc < colCount; ++cc)
 								packedRows.push_back(currVals[cc]);
-							theDeltas->fMapping.push_back(rr);
+							mapping.push_back(rr);
 							break;
 							}
 						}
