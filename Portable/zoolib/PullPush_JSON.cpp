@@ -34,7 +34,7 @@ using std::vector;
 
 using Util_Chan_JSON::PushTextOptions_JSON;
 
-namespace {
+namespace { // anonymous
 
 enum class EParent
 	{
