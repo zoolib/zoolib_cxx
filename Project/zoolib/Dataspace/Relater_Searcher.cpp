@@ -523,7 +523,10 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 				const size_t colCount = priorResult->GetRelHead().size();
 
 				ZP<ResultDeltas> theDeltas = new ResultDeltas;
-				theDeltas->fPackedRows.reserve(colCount * rowCount / 4);
+				vector<Val_DB>& packedRows = theDeltas->fPackedRows;
+				vector<size_t>& mapping = theDeltas->fMapping;
+
+				packedRows.reserve(colCount * rowCount / 4);
 
 				for (size_t rr = 0; rr < rowCount; ++rr)
 					{
@@ -534,7 +537,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 						if (priorVals[cc] != currVals[cc])
 							{
 							for (size_t cc = 0; cc < colCount; ++cc)
-								theDeltas->fPackedRows.push_back(currVals[cc]);
+								packedRows.push_back(currVals[cc]);
 							theDeltas->fMapping.push_back(rr);
 							break;
 							}
