@@ -145,8 +145,8 @@ ResultDiffer::ResultDiffer(const RelHead& iIdentity,
 // * oRemoved indices are relative to the prior list.
 // * oAdded pairs have the index at which the entry should be inserted, and the corresponding
 //   index of the value in iResult.
-// * oChanged triples have the index in the new list as the first field, the second field is
-//   the index into the prior result (so the prior value is available) and the third field
+// * oChanged triples have f0 as the index in the new list, f1 is
+//   the index into the prior result (so the prior value is available) and f2
 //   is the index into iResult for the new value.
 
 // To mutate an external list you would erase every position in oRemoved,
@@ -176,6 +176,10 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 			std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
 				theColCount,
 				&fResult_Prior->fPackedRows[target * theColCount]);
+
+			// This is obviously wrong. It works only for the way VarStew uses it -- simple
+			// overwriting of the destination. The f0 and f1 field values are simply bogus.
+			// RowBoat may be vulnerable because it's trusting the f1 value.
 
 			oChanged->push_back(
 				Multi3<size_t,size_t,size_t>(

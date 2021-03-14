@@ -236,7 +236,7 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 	}
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sPull_JSON_Push_PPT public API
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
@@ -599,44 +599,6 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 	ioParents.pop_back();
 	}
 
-bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
-	{
-	if (ZQ<PPT> theQ = sQRead(iChanR))
-		{
-		vector<EParent> parents;
-		spPull_PPT_Push_JSON(*theQ, iChanR,
-			ThreadVal_PushTextIndent::sGet(),
-			parents,
-			ThreadVal<PushTextOptions_JSON>::sGet(),
-			iChanW);
-		return true;
-		}
-	return false;
-	}
-
-bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iIndent,
-	const PushTextOptions_JSON& iOptions,
-	const ChanW_UTF& iChanW)
-	{
-	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
-	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
-	return sPull_PPT_Push_JSON(iChanR, iChanW);
-	}
-
-bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iIndent,
-	const PushTextOptions_JSON& iOptions,
-	const ZP<Callable_JSON_WriteFilter>& iWriteFilter,
-	const ChanW_UTF& iChanW)
-	{
-	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
-	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
-	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(iWriteFilter);
-
-	return sPull_PPT_Push_JSON(iChanR, iChanW);
-	}
-
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
 	size_t iIndent,
@@ -690,6 +652,47 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 		}
 
 	Util_Chan_JSON::sWrite_SimpleValue(iChanW, iPPT.As<Any>(), iOptions);
+	}
+
+// =================================================================================================
+#pragma mark - sPull_PPT_Push_JSON public API
+
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
+	{
+	if (ZQ<PPT> theQ = sQRead(iChanR))
+		{
+		vector<EParent> parents;
+		spPull_PPT_Push_JSON(*theQ, iChanR,
+			ThreadVal_PushTextIndent::sGet(),
+			parents,
+			ThreadVal<PushTextOptions_JSON>::sGet(),
+			iChanW);
+		return true;
+		}
+	return false;
+	}
+
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
+	size_t iIndent,
+	const PushTextOptions_JSON& iOptions,
+	const ChanW_UTF& iChanW)
+	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+	return sPull_PPT_Push_JSON(iChanR, iChanW);
+	}
+
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
+	size_t iIndent,
+	const PushTextOptions_JSON& iOptions,
+	const ZP<Callable_JSON_WriteFilter>& iWriteFilter,
+	const ChanW_UTF& iChanW)
+	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(iWriteFilter);
+
+	return sPull_PPT_Push_JSON(iChanR, iChanW);
 	}
 
 } // namespace ZooLib
