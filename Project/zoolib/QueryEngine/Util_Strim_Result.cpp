@@ -119,7 +119,6 @@ using namespace ZooLib;
 
 ZMACRO_pdesc(const ZP<QueryEngine::Result>& iResult)
 	{
-//	ThreadVal_PushTextIndent tv_PushTextIndent(0);
 	ThreadVal<Util_Chan_JSON::PushTextOptions_JSON> tv_Options(true);
 
 	sToStrim(StdIO::sChanW_UTF_Err, iResult);
