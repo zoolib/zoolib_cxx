@@ -32,6 +32,7 @@ using std::min;
 using std::string;
 using std::vector;
 
+using Util_Chan_JSON::PushTextOptions_JSON;
 
 namespace {
 
@@ -45,7 +46,7 @@ enum class EParent
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sPull_JSON_Push_PPT
 
 static bool spPull_JSON_Other_Push(
 	const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW, bool iLooseNumbers)
@@ -388,17 +389,19 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	}
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sPull_PPT_Push_JSON
 
 static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	const ChanR_PPT& iChanR,
-	size_t iBaseIndent, vector<EParent>& ioParents,
-	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	size_t iBaseIndent,
+	vector<EParent>& ioParents,
+	const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW);
 
 static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
-	size_t iBaseIndent, vector<EParent>& ioParents,
-	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	size_t iBaseIndent,
+	vector<EParent>& ioParents,
+	const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
 	ioParents.push_back(EParent::Seq);
@@ -493,8 +496,9 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 	}
 
 static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
-	size_t iBaseIndent, vector<EParent>& ioParents,
-	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	size_t iBaseIndent,
+	vector<EParent>& ioParents,
+	const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
 	const bool useSingleQuotes = iOptions.fPreferSingleQuotesQ.DGet(false);
@@ -596,65 +600,96 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 	}
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)
-	{ return sPull_PPT_Push_JSON(iChanR, 0, Util_Chan_JSON::PushTextOptions_JSON(), iChanW); }
-
-bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iInitialIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
-	const ChanW_UTF& iChanW)
 	{
 	if (ZQ<PPT> theQ = sQRead(iChanR))
 		{
 		vector<EParent> parents;
-		spPull_PPT_Push_JSON(*theQ, iChanR, iInitialIndent, parents, iOptions, iChanW);
+		spPull_PPT_Push_JSON(*theQ, iChanR,
+			ThreadVal_PushTextIndent::sGet(),
+			parents,
+			ThreadVal<PushTextOptions_JSON>::sGet(),
+			iChanW);
 		return true;
 		}
 	return false;
 	}
 
-static void spPull_PPT_Push_JSON(const PPT& iPPT,
-	const ChanR_PPT& iChanR,
-	size_t iBaseIndent, vector<EParent>& ioParents,
-	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
+	size_t iIndent,
+	const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+	return sPull_PPT_Push_JSON(iChanR, iChanW);
+	}
+
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
+	size_t iIndent,
+	const PushTextOptions_JSON& iOptions,
+	const ZP<Callable_JSON_WriteFilter>& iWriteFilter,
+	const ChanW_UTF& iChanW)
+	{
+	ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
+	ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(iWriteFilter);
+
+	return sPull_PPT_Push_JSON(iChanR, iChanW);
+	}
+
+static void spPull_PPT_Push_JSON(const PPT& iPPT,
+	const ChanR_PPT& iChanR,
+	size_t iIndent,
+	vector<EParent>& ioParents,
+	const PushTextOptions_JSON& iOptions,
+	const ChanW_UTF& iChanW)
+	{
+	if (ZP<Callable_JSON_WriteFilter> theFilter = ThreadVal<ZP<Callable_JSON_WriteFilter>>::sGet())
+		{
+		ThreadVal_PushTextIndent tv_PushTextIndent(iIndent);
+		ThreadVal<PushTextOptions_JSON> tv_Options(iOptions);
+		if (sCall(theFilter, iPPT, iChanR, iChanW))
+			return;
+		}
 	if (const string* theString = sPGet<string>(iPPT))
 		{
 		Util_Chan_JSON::sWrite_String(iChanW, *theString, false);
+		return;
 		}
 
-	else if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
+	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(iPPT))
 		{
 		Util_Chan_JSON::sWrite_String(iChanW, *theChanner);
+		return;
 		}
 
-	else if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
+	if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
 		{
-		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
 		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_ZZ>(*theData),
-			theIndentation, iOptions, iChanW);
+			iIndent + ioParents.size() - 1, iOptions, iChanW);
+		return;
 		}
 
-	else if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
+	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
-		const size_t theIndentation = iBaseIndent + ioParents.size();
 		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner,
-			theIndentation, iOptions, iChanW);
+			iIndent + ioParents.size(), iOptions, iChanW);
+		return;
 		}
 
-	else if (sIsStart_Map(iPPT))
+	if (sIsStart_Map(iPPT))
 		{
-		spPull_PPT_Push_JSON_Map(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+		spPull_PPT_Push_JSON_Map(iChanR, iIndent, ioParents, iOptions, iChanW);
+		return;
 		}
 
-	else if (sIsStart_Seq(iPPT))
+	if (sIsStart_Seq(iPPT))
 		{
-		spPull_PPT_Push_JSON_Seq(iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+		spPull_PPT_Push_JSON_Seq(iChanR, iIndent, ioParents, iOptions, iChanW);
+		return;
 		}
 
-	else
-		{
-		Util_Chan_JSON::sWrite_SimpleValue(iChanW, iPPT.As<Any>(), iOptions);
-		}
+	Util_Chan_JSON::sWrite_SimpleValue(iChanW, iPPT.As<Any>(), iOptions);
 	}
 
 } // namespace ZooLib

@@ -11,16 +11,29 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - 
+#pragma mark - sPull_JSON_Push_PPT
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
 	const ChanW_PPT& iChanW);
 
+// =================================================================================================
+#pragma mark - sPull_PPT_Push_JSON
+
+typedef Callable<bool(const PPT& iPPT, const ChanR_PPT& iChanR, const ChanW_UTF& iChanW)>
+	Callable_JSON_WriteFilter;
+
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR, const ChanW_UTF& iChanW);
 
 bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
-	size_t iInitialIndent, const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	size_t iIndent,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	const ChanW_UTF& iChanW);
+
+bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
+	size_t iIndent,
+	const Util_Chan_JSON::PushTextOptions_JSON& iOptions,
+	const ZP<Callable_JSON_WriteFilter>& iWriteFilter,
 	const ChanW_UTF& iChanW);
 
 } // namespace ZooLib
