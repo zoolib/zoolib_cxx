@@ -183,7 +183,9 @@ static Map_ZZ spReadMessage(const ChanR_Bin& iChanR, const ZQ<string>& iDescript
 		if (not theMessage.IsEmpty())
 			ww << "\n";
 
-		Util_ZZ_JSON::sWrite(ww, theMessage, false);
+		ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(QueryEngine::sCallable_JSON_Write_Filter());
+
+		Util_ZZ_JSON::sWrite(ww, theMessage);
 		}
 
 	return theMessage;
