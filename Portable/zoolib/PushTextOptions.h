@@ -5,6 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/StdInt.h"
+#include "zoolib/ThreadVal.h"
 #include "zoolib/ZQ.h"
 
 #include <string>
@@ -13,6 +14,8 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark - PushTextOptions
+
+typedef ThreadVal<size_t, struct PushTextIndent> ThreadVal_PushTextIndent;
 
 struct PushTextOptions
 	{
