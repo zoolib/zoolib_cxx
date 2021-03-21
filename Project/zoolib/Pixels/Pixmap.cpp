@@ -158,6 +158,9 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 // =================================================================================================
 #pragma mark - Pixmap
 
+Pixmap sPixmap(const Pixmap& iSource, RectPOD iBounds)
+	{ return Pixmap(new PixmapRep(iSource.GetRaster(), iBounds, iSource.GetPixelDesc())); }
+
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
 	{
 	sMunge(ioPixmap.MutBaseAddress(),

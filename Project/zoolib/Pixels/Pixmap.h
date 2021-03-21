@@ -86,6 +86,8 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 // =================================================================================================
 #pragma mark - Pixmap
 
+Pixmap sPixmap(const Pixmap& iSource, RectPOD iBounds);
+
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon);
 
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
