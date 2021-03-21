@@ -36,7 +36,8 @@ ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO)
 ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU)
 	{ return sQRead(iChanRU, sPullTextOptions_Extended()); }
 
-// -----
+// =================================================================================================
+#pragma mark -
 
 static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
@@ -67,6 +68,9 @@ void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal,
 
 	sWrite(iChanW, iVal);
 	}
+
+// =================================================================================================
+#pragma mark -
 
 string8 sAsJSON(const Val_ZZ& iVal)
 	{

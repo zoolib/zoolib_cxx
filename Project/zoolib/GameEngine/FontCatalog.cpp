@@ -35,11 +35,6 @@ using namespace Util_STL;
 // =================================================================================================
 #pragma mark -
 
-namespace { // anonymous
-
-
-} // anonymous namespace
-
 GRect sMeasure(const ZP<FontInfo>& iFontInfo, Rat iScale, const string8& iString)
 	{
 	GRect theBounds;

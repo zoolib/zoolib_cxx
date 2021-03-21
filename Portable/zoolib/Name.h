@@ -80,7 +80,7 @@ private:
 	string8 fString;
 	};
 
-#elif not ZMACRO_NameUsesString
+#else // ZMACRO_NameUsesString
 
 class Name
 	{
@@ -156,7 +156,7 @@ private:
 	#endif
 	};
 
-#endif
+#endif // ZMACRO_NameUsesString
 
 template <> struct RelopsTraits_HasEQ<Name> : public RelopsTraits_Has {};
 template <> struct RelopsTraits_HasLT<Name> : public RelopsTraits_Has {};

@@ -33,6 +33,7 @@ struct IsAMap<Map_p,
 	{};
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - Get
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -88,6 +89,7 @@ sGet(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	}
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - Mut
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -129,6 +131,7 @@ sMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 	{ return iMap[iKey]; }
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - Set
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -145,6 +148,7 @@ sSet(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	{ ioMap[iKey] = std::move(rValue); }
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - QInsert
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -169,6 +173,7 @@ sQInsert(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	}
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - QReplace
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -197,6 +202,7 @@ sQReplace(Map_p& ioMap, const typename Map_p::key_type& iKey,
 	}
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - GetErase
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
@@ -253,6 +259,7 @@ sGetErase(Map_p& ioMap, const typename Map_p::key_type& iKey)
 	}
 
 // -------------------------------------------------------------------------------------------------
+#pragma mark - QPopFront
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,

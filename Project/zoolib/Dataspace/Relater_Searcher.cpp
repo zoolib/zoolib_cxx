@@ -514,6 +514,7 @@ void Relater_Searcher::CollectResults(vector<QueryResult>& oChanged, int64& oCha
 			}
 
 		thePQuery->fResultDeltas.Clear();
+
 		if (priorResult)
 			{
 			ZAssert(priorResult->GetRelHead() == thePQuery->fResult->GetRelHead());

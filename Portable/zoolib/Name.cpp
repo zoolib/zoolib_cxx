@@ -11,7 +11,9 @@
 
 namespace ZooLib {
 
-#if ! ZMACRO_NameUsesString
+#if ZMACRO_NameUsesString
+
+#else // ZMACRO_NameUsesString
 
 // =================================================================================================
 #pragma mark -
@@ -208,6 +210,6 @@ Name::CountedString* Name::pGetIfCounted()
 	return nullptr;
 	}
 
-#endif // ! ZMACRO_NameUsesString
+#endif // ZMACRO_NameUsesString
 
 } // namespace ZooLib

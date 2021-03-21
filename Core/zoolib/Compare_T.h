@@ -29,8 +29,11 @@ struct has_operator_less_impl
 template <class T, class Other_p = T>
 struct has_operator_less : has_operator_less_impl<T, Other_p>::type {};
 
+// If the operator< exists and is accessible, then we produce a true result, even
+// if it can't actually be instantiated. Hopefully something better is possible.
+
 // =================================================================================================
-#pragma mark - sCompare_T declaration and default implementation
+#pragma mark - sCompare_T for types with accessible operator<
 
 template <class TT>
 typename EnableIfC<has_operator_less<TT>::value,int>::type
@@ -38,14 +41,12 @@ sCompare_T(const TT& iL, const TT& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 // =================================================================================================
-#pragma mark - sCompare_T default implementation for types without an accesible operator<
+#pragma mark - sCompare_T for types *without* accessible operator<
 
 template <class TT>
 typename EnableIfC<not has_operator_less<TT>::value,int>::type
 sCompare_T(const TT& iL, const TT& iR)
-	{
-	ZUnimplemented();
-	}
+	{ ZUnimplemented(); }
 
 // =================================================================================================
 #pragma mark - sCompare_T specialized for small integers

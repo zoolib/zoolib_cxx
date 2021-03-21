@@ -8,12 +8,7 @@ namespace ZooLib {
 #pragma mark - Compare_ZP_CountedString
 
 bool Compare_ZP_CountedString::operator()(const ZP_CountedString& ll, const ZP_CountedString& rr) const
-	{
-	const string8& ls = ll->Get();
-	const string8& rs = rr->Get();
-	return ls < rs;
-//	return l->Get() < r->Get();
-	}
+	{ return ll->Get() < rr->Get(); }
 
 // =================================================================================================
 #pragma mark - sName

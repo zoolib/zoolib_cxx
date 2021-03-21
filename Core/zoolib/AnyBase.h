@@ -476,6 +476,12 @@ private:
 	//    fPayload.fAsPtr is also null then the AnyBase is itself a null object.
 	// 2. It's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
+
+	// For future use, in situation 2 the bottom 2 bits are pretty much open for use.
+	// And on a 64 bit machine the bottom 3 bits are likely to be available, and the top 16
+	// can also be repurposed -- no 64 bit architecture uses more than 48 bits at this point.
+	// Remember that sign-extension requires that the top two bytes are all ones or all zeroes
+	// when they're actually used -- replicate them from bit 47.
 	
 	void* fDistinguisher;
 

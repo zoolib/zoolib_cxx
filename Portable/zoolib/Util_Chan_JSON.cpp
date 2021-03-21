@@ -38,7 +38,7 @@ PullTextOptions_JSON sPullTextOptions_Extended()
 	theOptions.fAllowTerminators = true;
 	theOptions.fLooseSeparators = true;
 	theOptions.fAllowBinary = true;
-	
+
 	return theOptions;
 	}
 

@@ -38,7 +38,7 @@ Name sName(const string8& iString);
 inline Name sName(const Name& iName)
 	{ return iName; }
 
-inline Name sName(const ZP_CountedString& iCountedString);
+Name sName(const ZP_CountedString& iCountedString);
 
 } // namespace ZooLib
 
