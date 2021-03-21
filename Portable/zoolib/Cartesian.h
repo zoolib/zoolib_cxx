@@ -639,7 +639,16 @@ template <class Rect_p, class Other>
 Rect_p sOffsetted(const Rect_p& iRect, const Other& iOther)
 	{
 	return sRect<Rect_p>(
-		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) + X(iOther), B(iRect) + Y(iOther));
+		L(iRect) + X(iOther), T(iRect) + Y(iOther),
+		R(iRect) + X(iOther), B(iRect) + Y(iOther));
+	}
+
+template <class Rect_p>
+Rect_p sOffsetted(const Rect_p& iRect, const Rect_p& iOther)
+	{
+	return sRect<Rect_p>(
+		L(iRect) + L(iOther), T(iRect) + T(iOther),
+		R(iRect) + R(iOther), B(iRect) + B(iOther));
 	}
 
 // =================================================================================================
@@ -808,7 +817,16 @@ template <class Rect_p, class Other>
 Rect_p sInsetted(const Rect_p& iRect, const Other& iOther)
 	{
 	return sRect<Rect_p>(
-		L(iRect) + X(iOther), T(iRect) + Y(iOther), R(iRect) - X(iOther), B(iRect) - Y(iOther));
+		L(iRect) + X(iOther), T(iRect) + Y(iOther),
+		R(iRect) - X(iOther), B(iRect) - Y(iOther));
+	}
+
+template <class Rect_p>
+Rect_p sInsetted(const Rect_p& iRect, const Rect_p& iOther)
+	{
+	return sRect<Rect_p>(
+		L(iRect) + L(iOther), T(iRect) + T(iOther),
+		R(iRect) - R(iOther), B(iRect) - B(iOther));
 	}
 
 // =================================================================================================
