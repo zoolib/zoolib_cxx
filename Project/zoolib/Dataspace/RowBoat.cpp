@@ -60,15 +60,7 @@ void RowBoat::pChanged(
 	vector<Multi3<size_t,size_t,size_t>> theChanged;
 
 	ZP<Result> curResult;
-	if (iResultDeltas)
-		{
-		fResultDiffer.Apply(null, &priorResult, iResultDeltas, &curResult, &theRemoved, &theAdded, &theChanged);
-		}
-	else
-		{
-		fResultDiffer.Apply(iResult, &priorResult, null, nullptr, &theRemoved, &theAdded, &theChanged);
-		curResult = iResult;
-		}
+	fResultDiffer.Apply(iResult, &priorResult, curResult, &curResult, &theRemoved, &theAdded, &theChanged);
 
 	if (priorResult)
 		{
