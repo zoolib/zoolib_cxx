@@ -83,7 +83,7 @@ public:
 		std::vector<std::pair<size_t,size_t>>* oAdded,
 		std::vector<Multi3<size_t,size_t,size_t>>* oChanged);
 
-private:
+public:
 	const RelationalAlgebra::RelHead fIdentity;
 	const RelationalAlgebra::RelHead fSignificant;
 	const bool fEmitDummyChanges;
@@ -93,6 +93,42 @@ private:
 
 	std::vector<size_t> fPermute;
 	};
+
+// =================================================================================================
+#pragma mark - ResultMonger
+
+//class ResultMonger
+//	{
+//public:
+//	typedef RelationalAlgebra::RelHead RelHead;
+//
+//	ResultMonger(const RelHead& iIdentity,
+//		const RelHead& iSignificant,
+//		const RelHead& iActual);
+//
+//	const std::vector<size_t>& Sort(const ZP<Result>& iResult);
+//
+//	const std::vector<size_t> GetPermute()
+//		{ return fPermute; }
+//
+//	int Compare(const
+//
+//public:
+//	const RelationalAlgebra::RelHead fIdentity;
+//	const RelationalAlgebra::RelHead fSignificant;
+//
+//	std::vector<size_t> fPermute;
+//	};
+//
+//const std::vector<size_t> CalcPermute(const RelHead& iIdentity,
+//		const RelHead& iSignificant,
+//		const RelHead& iActual);
+//
+//const std::vector<size_t> CalcSort(const RelHead& iIdentity, const RelHead& iSignificant,
+//		ZP<Result> iResult);
+//
+//int Compare(const RelHead& iIdentity, const RelHead& iSignificant,
+//		ZP<Result> iResult);
 
 // =================================================================================================
 #pragma mark - sBuildBindings
