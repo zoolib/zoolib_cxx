@@ -42,6 +42,10 @@ public:
 
 int sCalcRowBytes(int iWidth, int iDepth, int iByteRound);
 
+const void* sCalcPixvalAddress(const RasterDesc& iRD, const void* iBaseAddress, int iColumn, int iRow);
+
+void* sCalcPixvalAddress(const RasterDesc& iRD, void* iBaseAddress, int iColumn, int iRow);
+
 const void* sCalcRowAddress(const RasterDesc& iRD, const void* iBaseAddress, int iRow);
 
 void* sCalcRowAddress(const RasterDesc& iRD, void* iBaseAddress, int iRow);

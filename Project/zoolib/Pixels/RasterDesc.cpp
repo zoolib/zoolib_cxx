@@ -14,18 +14,32 @@ int sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 	return ((iWidth * iDepth + bitRound - 1) / bitRound) * iByteRound;
 	}
 
+const void* sCalcPixvalAddress(const RasterDesc& iRD, const void* iBaseAddress, int iColumn, int iRow)
+	{
+	return static_cast<const char*>(iBaseAddress)
+		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow)
+		+ iColumn * ((iRD.fPixvalDesc.fDepth + 7) / 8);
+	}
+	
+void* sCalcPixvalAddress(const RasterDesc& iRD, void* iBaseAddress, int iColumn, int iRow)
+	{
+	return static_cast<char*>(iBaseAddress)
+		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow)
+		+ iColumn * ((iRD.fPixvalDesc.fDepth + 7) / 8);
+	}
+
 const void* sCalcRowAddress(const RasterDesc& iRD, const void* iBaseAddress, int iRow)
 	{
 	return static_cast<const char*>(iBaseAddress)
 		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow);
 	}
-	
+
 void* sCalcRowAddress(const RasterDesc& iRD, void* iBaseAddress, int iRow)
 	{
 	return static_cast<char*>(iBaseAddress)
 		+ iRD.fRowBytes * (iRD.fFlipped ? iRD.fRowCount - iRow - 1 : iRow);
 	}
-	
+
 } // namespace Pixels
 } // namespace ZooLib
 
