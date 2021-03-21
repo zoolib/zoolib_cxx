@@ -177,164 +177,165 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 
 	ZAssert(theResult);
 
-	if (theResult == fResult_Prior)
-		return;
-
-	const RelHead& theRH = theResult->GetRelHead();
-
-	ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
-
-	if (not fResult_Prior)
+	if (theResult != fResult_Prior)
 		{
-		// This is the first time we get to see a query's relhead. Initialize fPermute so we
-		// know in which order to examine columns when we sort and compare result rows.
+		const RelHead& theRH = theResult->GetRelHead();
 
-		RelHead::const_iterator iter_Identity = fIdentity.begin();
-		size_t index_Identity = 0;
+		ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
 
-		RelHead::const_iterator iter_Significant = fSignificant.begin();
-		size_t index_Significant = 0;
-
-		RelHead::const_iterator iter_RH = theRH.begin();
-		size_t index_Other = 0;
-
-		size_t index_RH = 0;
-
-		fPermute.resize(theRH.size());
-
-		for (const RelHead::const_iterator end_RH = theRH.end();
-			iter_RH != end_RH;
-			++iter_RH, ++index_RH)
+		if (not fResult_Prior)
 			{
-			if (iter_Identity != fIdentity.end() && *iter_Identity == *iter_RH)
+			// This is the first time we get to see a query's relhead. Initialize fPermute so we
+			// know in which order to examine columns when we sort and compare result rows.
+
+			RelHead::const_iterator iter_Identity = fIdentity.begin();
+			size_t index_Identity = 0;
+
+			RelHead::const_iterator iter_Significant = fSignificant.begin();
+			size_t index_Significant = 0;
+
+			RelHead::const_iterator iter_RH = theRH.begin();
+			size_t index_Other = 0;
+
+			size_t index_RH = 0;
+
+			fPermute.resize(theRH.size());
+
+			for (const RelHead::const_iterator end_RH = theRH.end();
+				iter_RH != end_RH;
+				++iter_RH, ++index_RH)
 				{
-				fPermute[index_Identity] = index_RH;
-				++index_Identity;
-				++iter_Identity;
-				}
-			else if (iter_Significant != fSignificant.end() && *iter_Significant == *iter_RH)
-				{
-				fPermute[fIdentity.size() + index_Significant] = index_RH;
-				++index_Significant;
-				++iter_Significant;
-				}
-			else
-				{
-				fPermute[fIdentity.size() + fSignificant.size() + index_Other] = index_RH;
-				++index_Other;
-				}
-			}
-
-		// We must have consumed the entirety of our identity relhead
-		ZAssert(iter_Identity == fIdentity.end());
-		ZAssert(index_Identity == fIdentity.size());
-
-		// And significant
-		ZAssert(iter_Significant == fSignificant.end());
-		ZAssert(index_Significant == fSignificant.size());
-		}
-
-	const size_t theCount = theResult->Count();
-
-	vector<size_t> theSort_New;
-	theSort_New.reserve(theCount);
-	for (size_t xx = 0; xx < theCount; ++xx)
-		theSort_New.push_back(xx);
-
-	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, theResult));
-
-	if (not fResult_Prior)
-		{
-		// This is our first result, everything is an add.
-		if (oAdded)
-			{
-			for (size_t yy = 0; yy < theSort_New.size(); ++yy)
-				oAdded->push_back(pair<size_t, size_t>(yy, theSort_New[yy]));
-			}
-		}
-	else
-		{
-		// We have a prior result, do the diff.
-
-		size_t theIndex_Prior = 0;
-		const size_t theCount_Prior = fSort_Prior.size();
-
-		size_t theIndex_New = 0;
-		const size_t theCount_New = theSort_New.size();
-
-		for (;;)
-			{
-			if (theIndex_New >= theCount_New)
-				{
-				// Anything remaining in prior when new is exhausted is a removal.
-				if (oRemoved)
+				if (iter_Identity != fIdentity.end() && *iter_Identity == *iter_RH)
 					{
-					oRemoved->reserve(oRemoved->size() + theCount_Prior - theIndex_Prior);
-					while (theCount_Prior > theIndex_Prior)
-						oRemoved->push_back(theIndex_Prior++);
+					fPermute[index_Identity] = index_RH;
+					++index_Identity;
+					++iter_Identity;
 					}
-				break;
-				}
-
-			if (theIndex_Prior >= theCount_Prior)
-				{
-				// Anything remaining in new when prior is exhausted is an addition.
-				if (oAdded)
+				else if (iter_Significant != fSignificant.end() && *iter_Significant == *iter_RH)
 					{
-					oAdded->reserve(oAdded->size() + theCount_New - theIndex_New);
-					while (theCount_New > theIndex_New)
-						{
-						oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
-						++theIndex_New;
-						}
-					}
-				break;
-				}
-
-			// Match current prior against current new
-			const pair<int,size_t> result = spCompare(fPermute,
-				fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]),
-				theResult->GetValsAt(theSort_New[theIndex_New]));
-
-			if (result.second < fIdentity.size())
-				{
-				// Comparison was terminated in the 'identity' portion of the values,
-				// and so the values can't be equal.
-				ZAssert(result.first != 0);
-
-				if (result.first < 0)
-					{
-					// Prior is less than new, so prior is not in new, and this is a removal.
-					if (oRemoved)
-						oRemoved->push_back(theIndex_Prior);
-					++theIndex_Prior;
+					fPermute[fIdentity.size() + index_Significant] = index_RH;
+					++index_Significant;
+					++iter_Significant;
 					}
 				else
 					{
-					// Contrariwise.
-					if (oAdded)
-						oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
-					++theIndex_New;
+					fPermute[fIdentity.size() + fSignificant.size() + index_Other] = index_RH;
+					++index_Other;
 					}
 				}
-			else
+
+			// We must have consumed the entirety of our identity relhead
+			ZAssert(iter_Identity == fIdentity.end());
+			ZAssert(index_Identity == fIdentity.size());
+
+			// And significant
+			ZAssert(iter_Significant == fSignificant.end());
+			ZAssert(index_Significant == fSignificant.size());
+			}
+
+		const size_t theCount = theResult->Count();
+
+		vector<size_t> theSort_New;
+		theSort_New.reserve(theCount);
+		for (size_t xx = 0; xx < theCount; ++xx)
+			theSort_New.push_back(xx);
+
+		sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, theResult));
+
+		if (not fResult_Prior)
+			{
+			// This is our first result, everything is an add.
+			if (oAdded)
 				{
-				if (oChanged
-					&& (fEmitDummyChanges
-						|| (result.second < fIdentity.size() + fSignificant.size())))
-					{
-					// We care about changes, and comparison was terminated in the 'significant'
-					// portion of the values. So they matched in the identity portion, and thus
-					// reference the same entity, but differ in the significant portion, thus
-					// this is a change.
-					oChanged->push_back(
-						Multi3<size_t,size_t,size_t>(
-							theIndex_New, fSort_Prior[theIndex_Prior], theSort_New[theIndex_New]));
-					}
-				++theIndex_New;
-				++theIndex_Prior;
+				for (size_t yy = 0; yy < theSort_New.size(); ++yy)
+					oAdded->push_back(pair<size_t, size_t>(yy, theSort_New[yy]));
 				}
 			}
+		else
+			{
+			// We have a prior result, do the diff.
+
+			size_t theIndex_Prior = 0;
+			const size_t theCount_Prior = fSort_Prior.size();
+
+			size_t theIndex_New = 0;
+			const size_t theCount_New = theSort_New.size();
+
+			for (;;)
+				{
+				if (theIndex_New >= theCount_New)
+					{
+					// Anything remaining in prior when new is exhausted is a removal.
+					if (oRemoved)
+						{
+						oRemoved->reserve(oRemoved->size() + theCount_Prior - theIndex_Prior);
+						while (theCount_Prior > theIndex_Prior)
+							oRemoved->push_back(fSort_Prior[theIndex_Prior++]);
+						}
+					break;
+					}
+
+				if (theIndex_Prior >= theCount_Prior)
+					{
+					// Anything remaining in new when prior is exhausted is an addition.
+					if (oAdded)
+						{
+						oAdded->reserve(oAdded->size() + theCount_New - theIndex_New);
+						while (theCount_New > theIndex_New)
+							{
+							oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
+							++theIndex_New;
+							}
+						}
+					break;
+					}
+
+				// Match current prior against current new
+				const pair<int,size_t> result = spCompare(fPermute,
+					fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]),
+					theResult->GetValsAt(theSort_New[theIndex_New]));
+
+				if (result.second < fIdentity.size())
+					{
+					// Comparison was terminated in the 'identity' portion of the values,
+					// and so the values can't be equal.
+					ZAssert(result.first != 0);
+
+					if (result.first < 0)
+						{
+						// Prior is less than new, so prior is not in new, and this is a removal.
+						if (oRemoved)
+							oRemoved->push_back(fSort_Prior[theIndex_Prior]);
+						++theIndex_Prior;
+						}
+					else
+						{
+						// Contrariwise.
+						if (oAdded)
+							oAdded->push_back(pair<size_t,size_t>(theIndex_New, theSort_New[theIndex_New]));
+						++theIndex_New;
+						}
+					}
+				else
+					{
+					if (oChanged
+						&& (fEmitDummyChanges
+							|| (result.second < fIdentity.size() + fSignificant.size())))
+						{
+						// We care about changes, and comparison was terminated in the 'significant'
+						// portion of the values. So they matched in the identity portion, and thus
+						// reference the same entity, but differ in the significant portion, thus
+						// this is a change.
+						oChanged->push_back(
+							Multi3<size_t,size_t,size_t>(
+								theIndex_New, fSort_Prior[theIndex_Prior], theSort_New[theIndex_New]));
+						}
+					++theIndex_New;
+					++theIndex_Prior;
+					}
+				}
+			}
+		swap(fSort_Prior, theSort_New);
 		}
 
 	if (oPriorResult)
@@ -344,8 +345,6 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 		*oCurResult = theResult;
 
 	fResult_Prior = theResult;
-
-	swap(fSort_Prior, theSort_New);
 	}
 
 // =================================================================================================
