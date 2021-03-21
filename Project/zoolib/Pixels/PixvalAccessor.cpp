@@ -17,6 +17,7 @@ int16 ZByteSwap_Read16(const void* iValueAddress)
 int32 ZByteSwap_Read32(const void* iValueAddress)
 	{ return sByteSwapped(*static_cast<const int32*>(iValueAddress)); }
 
+[[maybe_unused]]
 int64 ZByteSwap_Read64(const void* iValueAddress)
 	{ return sByteSwapped(*static_cast<const int64*>(iValueAddress)); }
 
@@ -26,6 +27,7 @@ void ZByteSwap_Write16(void* oValueAddress, int16 iValue)
 void ZByteSwap_Write32(void* oValueAddress, int32 iValue)
 	{ *static_cast<int32*>(oValueAddress) = sByteSwapped(iValue); }
 
+[[maybe_unused]]
 void ZByteSwap_Write64(void* oValueAddress, int64 iValue)
 	{ *static_cast<int64*>(oValueAddress) = sByteSwapped(iValue); }
 
