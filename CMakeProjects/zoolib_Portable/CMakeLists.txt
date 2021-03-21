@@ -94,11 +94,8 @@ set (SourceFiles
 	${SourceDir}/Coerce_Any.h
 	${SourceDir}/Cog.h
 	${SourceDir}/Compare_Cartesian.h
-	${SourceDir}/Compare_Integer.cpp
-	${SourceDir}/Compare_Integer.h
 	${SourceDir}/Compare_Rational.cpp
 	${SourceDir}/Compare_Rational.h
-	${SourceDir}/Compare_Ref.h
 	${SourceDir}/Compare_string.cpp
 	${SourceDir}/Compare_string.h
 	${SourceDir}/Compare_vector.h

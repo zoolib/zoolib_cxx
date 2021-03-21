@@ -30,8 +30,6 @@ set (SourceFiles
 	${SourceDir}/ChanW_UTF.h
 	${SourceDir}/ChanW.h
 	${SourceDir}/Compare_T.h
-	${SourceDir}/Compare.cpp
-	${SourceDir}/Compare.h
 	${SourceDir}/Compat_algorithm.h
 	${SourceDir}/Compat_cmath.h
 	${SourceDir}/Compat_MSVCStaticLib.h
