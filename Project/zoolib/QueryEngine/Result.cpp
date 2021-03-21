@@ -74,11 +74,7 @@ int Result::Compare(const ZP<Result>& iOther) const
 	}
 
 ZP<Result> Result::Fresh()
-	{
-	if (this->IsShared())
-		return new Result(*this);
-	return this;
-	}
+	{ return new Result(*this); }
 
 // =================================================================================================
 #pragma mark - ResultDeltas
@@ -160,41 +156,31 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 	vector<pair<size_t,size_t>>* oAdded,
 	vector<Multi3<size_t,size_t,size_t>>* oChanged)
 	{
+	ZP<Result> theResult = iResult;
+
 	if (iResultDeltas)
 		{
-		ZAssert(fResult_Prior && oCurResult);
-		if (oPriorResult)
-			*oPriorResult = fResult_Prior;
+		ZAssert(fResult_Prior);
 
-		fResult_Prior = fResult_Prior->Fresh();
+		theResult = fResult_Prior->Fresh();
 
-		const size_t theColCount = fResult_Prior->GetRelHead().size();
+		const size_t theColCount = theResult->GetRelHead().size();
 		for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
 			{
 			const size_t target = iResultDeltas->fMapping[xx];
 
 			std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
 				theColCount,
-				&fResult_Prior->fPackedRows[target * theColCount]);
-
-			// This is obviously wrong. It works only for the way VarStew uses it -- simple
-			// overwriting of the destination. The f0 and f1 field values are simply bogus.
-			// RowBoat may be vulnerable because it's trusting the f1 value.
-
-			oChanged->push_back(
-				Multi3<size_t,size_t,size_t>(
-					target, target, target));
+				&theResult->fPackedRows[target * theColCount]);
 			}
-		*oCurResult = fResult_Prior;
-		return;
 		}
 
-	ZAssert(iResult);
+	ZAssert(theResult);
 
-	if (iResult == fResult_Prior)
+	if (theResult == fResult_Prior)
 		return;
 
-	const RelHead& theRH = iResult->GetRelHead();
+	const RelHead& theRH = theResult->GetRelHead();
 
 	ZAssert(not fResult_Prior || fResult_Prior->GetRelHead() == theRH);
 
@@ -248,14 +234,14 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 		ZAssert(index_Significant == fSignificant.size());
 		}
 
-	const size_t theCount = iResult->Count();
+	const size_t theCount = theResult->Count();
 
 	vector<size_t> theSort_New;
 	theSort_New.reserve(theCount);
 	for (size_t xx = 0; xx < theCount; ++xx)
 		theSort_New.push_back(xx);
 
-	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, iResult));
+	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, theResult));
 
 	if (not fResult_Prior)
 		{
@@ -308,7 +294,7 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 			// Match current prior against current new
 			const pair<int,size_t> result = spCompare(fPermute,
 				fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]),
-				iResult->GetValsAt(theSort_New[theIndex_New]));
+				theResult->GetValsAt(theSort_New[theIndex_New]));
 
 			if (result.second < fIdentity.size())
 				{
@@ -355,9 +341,9 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 		*oPriorResult = fResult_Prior;
 
 	if (oCurResult)
-		*oCurResult = iResult;
+		*oCurResult = theResult;
 
-	fResult_Prior = iResult;
+	fResult_Prior = theResult;
 
 	swap(fSort_Prior, theSort_New);
 	}
