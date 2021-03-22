@@ -5,6 +5,8 @@
 #include "zoolib/Compare_string.h"
 #include "zoolib/TypeIdName.h"
 
+#include <cstring> // For strcmp
+
 namespace ZooLib {
 
 // =================================================================================================
