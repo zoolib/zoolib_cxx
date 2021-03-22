@@ -60,9 +60,17 @@ Map_ZZ PseudoMap::AsMap() const
 PseudoMap_RelHead::PseudoMap_RelHead(const RelHead& iRH, const Val_DB* iVals)
 :	PseudoMap(&fBindings_Storage, iVals)
 	{
+	sBuildBindings(iRH, fBindings_Storage);
+	}
+
+// =================================================================================================
+#pragma mark - sBuildBindings
+
+void sBuildBindings(const RelHead& iRH, std::map<string8,size_t>& oResult)
+	{
 	size_t index = 0;
 	for (RelHead::const_iterator ii = iRH.begin(), end = iRH.end(); ii != end; ++ii, ++index)
-		fBindings_Storage.insert(std::pair<string8,size_t>(*ii, index));
+		oResult.insert(std::pair<string8,size_t>(*ii, index));
 	}
 
 } // namespace RelationalAlgebra

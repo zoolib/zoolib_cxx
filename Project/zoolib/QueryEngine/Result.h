@@ -26,6 +26,8 @@ class Result : public Counted
 	Result(const Result& iOther);
 
 public:
+	Result(const RelationalAlgebra::RelHead& iRelHead);
+
 	Result(RelationalAlgebra::RelHead* ioRelHead,
 		std::vector<Val_DB>* ioPackedRows);
 
@@ -66,79 +68,9 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sApplyDeltas
 
 ZP<Result> sApplyDeltas(ZP<Result> iResult, ZP<ResultDeltas> iResultDeltas);
-
-// =================================================================================================
-#pragma mark - ResultDiffer
-
-class ResultDiffer
-	{
-public:
-	ResultDiffer(const RelationalAlgebra::RelHead& iIdentity,
-		const RelationalAlgebra::RelHead& iSignificant,
-		bool iEmitDummyChanges = false);
-
-	void Apply(const ZP<Result>& iResult,
-		ZP<Result>* oPriorResult,
-		const ZP<ResultDeltas>& iResultDeltas,
-		ZP<Result>* oCurResult,
-		std::vector<size_t>* oRemoved,
-		std::vector<std::pair<size_t,size_t>>* oAdded,
-		std::vector<Multi3<size_t,size_t,size_t>>* oChanged);
-
-public:
-	const RelationalAlgebra::RelHead fIdentity;
-	const RelationalAlgebra::RelHead fSignificant;
-	const bool fEmitDummyChanges;
-
-	ZP<Result> fResult_Prior;
-	std::vector<size_t> fSort_Prior;
-
-	std::vector<size_t> fPermute;
-	};
-
-// =================================================================================================
-#pragma mark - ResultMonger
-
-//class ResultMonger
-//	{
-//public:
-//	typedef RelationalAlgebra::RelHead RelHead;
-//
-//	ResultMonger(const RelHead& iIdentity,
-//		const RelHead& iSignificant,
-//		const RelHead& iActual);
-//
-//	const std::vector<size_t>& Sort(const ZP<Result>& iResult);
-//
-//	const std::vector<size_t> GetPermute()
-//		{ return fPermute; }
-//
-//	int Compare(const
-//
-//public:
-//	const RelationalAlgebra::RelHead fIdentity;
-//	const RelationalAlgebra::RelHead fSignificant;
-//
-//	std::vector<size_t> fPermute;
-//	};
-//
-//const std::vector<size_t> CalcPermute(const RelHead& iIdentity,
-//		const RelHead& iSignificant,
-//		const RelHead& iActual);
-//
-//const std::vector<size_t> CalcSort(const RelHead& iIdentity, const RelHead& iSignificant,
-//		ZP<Result> iResult);
-//
-//int Compare(const RelHead& iIdentity, const RelHead& iSignificant,
-//		ZP<Result> iResult);
-
-// =================================================================================================
-#pragma mark - sBuildBindings
-
-void sBuildBindings(ZP<Result> iResult, std::map<string8,size_t>& oResult);
 
 } // namespace QueryEngine
 

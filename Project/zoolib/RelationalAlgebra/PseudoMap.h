@@ -91,6 +91,11 @@ private:
 	std::map<string8,size_t> fBindings_Storage;
 	};
 
+// =================================================================================================
+#pragma mark - sBuildBindings
+
+void sBuildBindings(const RelHead& iRH, std::map<string8,size_t>& oResult);
+
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 

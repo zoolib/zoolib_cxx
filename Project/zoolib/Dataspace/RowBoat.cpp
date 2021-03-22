@@ -19,7 +19,46 @@ namespace Dataspace {
 
 using namespace Util_STL;
 
+using std::pair;
 using std::vector;
+
+// =================================================================================================
+#pragma mark - Comparer_t (anonymous)
+
+namespace { // anonymous
+
+pair<int,size_t> spCompare(const vector<size_t>& iOffsets,
+	const Val_DB* iVals_Left, const Val_DB* iVals_Right)
+	{
+	const size_t offsetsCount = iOffsets.size();
+	for (size_t yy = 0; yy < offsetsCount; ++yy)
+		{
+		const size_t theCol = iOffsets[yy];
+		if (int compare = sCompare_T(iVals_Left[theCol], iVals_Right[theCol]))
+			return pair<int,size_t>(compare, yy);
+		}
+	return pair<int,size_t>(0, offsetsCount);
+	}
+
+struct Comparer_t
+	{
+	Comparer_t(const vector<size_t>& iOffsets, const ZP<Result>& iResult)
+	:	fOffsets(iOffsets)
+	,	fResult(iResult)
+		{}
+
+	bool operator()(const size_t& iLeft, const size_t& iRight) const
+		{
+		return 0 > spCompare(fOffsets,
+			fResult->GetValsAt(iLeft),
+			fResult->GetValsAt(iRight)).first;
+		}
+
+	const vector<size_t>& fOffsets;
+	ZP<Result> fResult;
+	};
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark - RowBoat
@@ -31,7 +70,8 @@ RowBoat::RowBoat(const ZP<Callable_Register>& iCallable_Register,
 	const ZP<Callable_Make_Callable_Row>& iCallable)
 :	fCallable_Register(iCallable_Register)
 ,	fRel(iRel)
-,	fResultDiffer(iIdentity, iSignificant, iEmitDummyChanges)
+,	fIdentity(iIdentity)
+,	fEmitDummyChanges(iEmitDummyChanges)
 ,	fCallable(iCallable)
 	{}
 
@@ -53,65 +93,159 @@ void RowBoat::pChanged(
 	const ZP<Result>& iResult,
 	const ZP<ResultDeltas>& iResultDeltas)
 	{
-	ZP<Result> priorResult;
+	ZP<Result> theResult_New = iResult;
+	if (iResultDeltas)
+		theResult_New = sApplyDeltas(fResult_Prior, iResultDeltas);
 
-	vector<size_t> theRemoved;
-	vector<std::pair<size_t,size_t>> theAdded;
-	vector<Multi3<size_t,size_t,size_t>> theChanged;
+	const RelHead& theRH = theResult_New->GetRelHead();
 
-	ZP<Result> curResult;
-	fResultDiffer.Apply(iResult, &priorResult, null, &curResult, &theRemoved, &theAdded, &theChanged);
-
-	if (priorResult)
+	if (fResult_Prior)
 		{
 		// We generate bindings the first time we're called, so they must be non-empty at this point.
 		ZAssert(sNotEmpty(fBindings));
 
 		// RelHeads can't and mustn't change from one result to another.
-		ZAssert(priorResult->GetRelHead() == curResult->GetRelHead());
+		ZAssert(fResult_Prior->GetRelHead() == theRH);
 		}
 	else
 		{
+		// This is the first time we get to see a query's relhead
+
 		ZAssert(sIsEmpty(fBindings));
-		// Build fBindings the first time we get a result.
-		sBuildBindings(curResult, fBindings);
-		}
+		RelationalAlgebra::sBuildBindings(theRH, fBindings);
 
-	// Note that we're doing a reverse scan here...
-	for (vector<size_t>::reverse_iterator riter = theRemoved.rbegin();
-		riter != theRemoved.rend(); ++riter)
-		{
-		size_t yy = *riter;
-		ZAssert(yy < fRows.size());
-		if (ZP<Callable_Row> theRow = fRows[yy])
+		// Initialize fPermute so we know in which order to examine
+		// columns when we sort and compare result rows.
+
+		RelHead::const_iterator iter_Identity = fIdentity.begin();
+		size_t index_Identity = 0;
+
+		RelHead::const_iterator iter_RH = theRH.begin();
+		size_t index_Other = 0;
+
+		size_t index_RH = 0;
+
+		fPermute.resize(theRH.size());
+
+		for (const RelHead::const_iterator end_RH = theRH.end();
+			iter_RH != end_RH;
+			++iter_RH, ++index_RH)
 			{
-			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy));
-			theRow->Call(&thePM_Prior, nullptr);
+			if (iter_Identity != fIdentity.end() && *iter_Identity == *iter_RH)
+				{
+				fPermute[index_Identity] = index_RH;
+				++index_Identity;
+				++iter_Identity;
+				}
+			else
+				{
+				fPermute[fIdentity.size() + index_Other] = index_RH;
+				++index_Other;
+				}
 			}
-		fRows.erase(fRows.begin() + yy);
+
+		// We must have consumed the entirety of our identity relhead
+		ZAssert(iter_Identity == fIdentity.end());
+		ZAssert(index_Identity == fIdentity.size());
+
+		// Dummy fResult_Prior
+		fResult_Prior = new Result(theRH);
 		}
 
-	// ...and forward scans here...
-	foreacha (yy, theAdded)
-		{
-		ZAssert(yy.first <= fRows.size());
-		const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.second));
-		ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
-		fRows.insert(fRows.begin() + yy.first, theRow);
-		if (theRow)
-			theRow->Call(nullptr, &thePM_New);
-		}
+	size_t theIndex_Prior = 0;
+	const size_t theCount_Prior = fSort_Prior.size();
 
-	// ...and here...
-	foreacha (yy, theChanged)
+	size_t theIndex_New = 0;
+	const size_t theCount_New = theResult_New->Count();
+
+	vector<size_t> theSort_New;
+	theSort_New.reserve(theCount_New);
+	for (size_t xx = 0; xx < theCount_New; ++xx)
+		theSort_New.push_back(xx);
+
+	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, theResult_New));
+
+	std::vector<ZP<Callable_Row>> theRows_New(theCount_New);
+	for (;;)
 		{
-		if (ZP<Callable_Row> theRow = fRows[yy.f0])
+		// We're copying/updating, dropping or inserting.
+
+		if (theIndex_New >= theCount_New)
 			{
-			const PseudoMap thePM_Prior(&fBindings, priorResult->GetValsAt(yy.f1));
-			const PseudoMap thePM_New(&fBindings, curResult->GetValsAt(yy.f2));
-			theRow->Call(&thePM_Prior, &thePM_New);
+			// Anything remaining in prior when new is exhausted is a removal.
+			while (theCount_Prior > theIndex_Prior)
+				{
+				const size_t arr = fSort_Prior[theIndex_Prior];
+				const PseudoMap thePM_Prior(&fBindings, fResult_Prior->GetValsAt(arr));
+				fRows[arr]->Call(&thePM_Prior, nullptr);
+				++theIndex_Prior;
+				}
+			break;
+			}
+
+		if (theIndex_Prior >= theCount_Prior)
+			{
+			// Anything remaining in new when prior is exhausted is an addition.
+			while (theCount_New > theIndex_New)
+				{
+				const size_t arr = theSort_New[theIndex_New];
+				const PseudoMap thePM_New(&fBindings, theResult_New->GetValsAt(arr));
+				ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
+				theRows_New[arr] = theRow;
+				theRow->Call(nullptr, &thePM_New);
+				++theIndex_New;
+				}
+			break;
+			}
+
+		const size_t arr_Prior = fSort_Prior[theIndex_Prior];
+		const size_t arr_New = theSort_New[theIndex_New];
+
+		const Val_DB* vals_Prior = fResult_Prior->GetValsAt(arr_Prior);
+		const Val_DB* vals_New = theResult_New->GetValsAt(arr_New);
+
+		const pair<int,size_t> result = spCompare(fPermute, vals_Prior, vals_New);
+
+		if (result.second < fIdentity.size())
+			{
+			// Comparison was terminated in the 'identity' portion of the values,
+			// and so the values can't be equal.
+			ZAssert(result.first != 0);
+
+			if (result.first < 0)
+				{
+				// Prior is less than new, so prior is not in new, and this is a removal.
+				const PseudoMap thePM_Prior(&fBindings, vals_Prior);
+				fRows[arr_Prior]->Call(&thePM_Prior, nullptr);
+				++theIndex_Prior;
+				}
+			else
+				{
+				// Contrariwise.
+				const PseudoMap thePM_New(&fBindings, vals_New);
+				ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
+				theRows_New[arr_New] = theRow;
+				theRow->Call(nullptr, &thePM_New);
+				++theIndex_New;
+				}
+			}
+		else
+			{
+			if (fEmitDummyChanges || result.first)
+				{
+				const PseudoMap thePM_Prior(&fBindings, vals_Prior);
+				const PseudoMap thePM_New(&fBindings, vals_New);
+				ZP<Callable_Row> theRow = fRows[arr_Prior];
+				theRows_New[arr_New] = theRow;
+				theRow->Call(&thePM_Prior, &thePM_New);
+				}
+			++theIndex_New;
+			++theIndex_Prior;
 			}
 		}
+	swap(fRows, theRows_New);
+	swap(fSort_Prior, theSort_New);
+	swap(fResult_Prior, theResult_New);
 	}
 
 } // namespace Dataspace

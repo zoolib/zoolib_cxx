@@ -52,10 +52,16 @@ private:
 
 	const ZP<Callable_Register> fCallable_Register;
 	const ZP<Expr_Rel> fRel;
-	QueryEngine::ResultDiffer fResultDiffer;
+	const RelationalAlgebra::RelHead fIdentity;
+	bool fEmitDummyChanges;
 	const ZP<Callable_Make_Callable_Row> fCallable;
 
 	ZP<Counted> fRegistration;
+
+	ZP<Result> fResult_Prior;
+	std::vector<size_t> fSort_Prior;
+	std::vector<size_t> fPermute;
+
 	std::vector<ZP<Callable_Row>> fRows;
 	std::map<string8,size_t> fBindings;
 	};
