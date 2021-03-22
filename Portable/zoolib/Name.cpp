@@ -177,7 +177,7 @@ size_t Name::Hash() const
 	#if defined(_LIBCPP_STRING)
 		return std::__do_string_hash(thePtr, thePtr + strlen(thePtr));
 	#elif defined(_BASIC_STRING_H)
-		return std::_Hash_impl::hash(thePtr, strlen(thePtr))
+		return std::_Hash_impl::hash(thePtr, strlen(thePtr));
 	#else
 		ZUnimplemented();
 	#endif
