@@ -25,18 +25,7 @@ bool ResultHandler::QCall(
 	else
 		{
 		ZAssert(iResultDeltas && fResult);
-
-		fResult = fResult->Fresh();
-
-		const size_t theColCount = fResult->GetRelHead().size();
-		for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
-			{
-			const size_t target = iResultDeltas->fMapping[xx];
-
-			std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
-				theColCount,
-				&fResult->fPackedRows[target * theColCount]);
-			}
+		fResult = sApplyDeltas(fResult, iResultDeltas);
 		}
 	sCall(fCallable, iRegistration, fResult);
 

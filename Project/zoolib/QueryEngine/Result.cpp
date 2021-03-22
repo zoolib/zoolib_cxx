@@ -86,6 +86,29 @@ ResultDeltas::~ResultDeltas()
 	{}
 
 // =================================================================================================
+#pragma mark -
+
+ZP<Result> sApplyDeltas(ZP<Result> iResult, ZP<ResultDeltas> iResultDeltas)
+	{
+	if (not iResult || not iResultDeltas || not iResultDeltas->fMapping.size())
+		return iResult;
+
+	ZP<Result> result = iResult->Fresh();
+
+	const size_t theColCount = result->GetRelHead().size();
+	for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
+		{
+		const size_t target = iResultDeltas->fMapping[xx];
+
+		std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
+			theColCount,
+			&result->fPackedRows[target * theColCount]);
+		}
+
+	return result;
+	}
+
+// =================================================================================================
 #pragma mark - Comparer_t (anonymous)
 
 namespace { // anonymous
@@ -161,18 +184,7 @@ void ResultDiffer::Apply(const ZP<Result>& iResult,
 	if (iResultDeltas)
 		{
 		ZAssert(fResult_Prior);
-
-		theResult = fResult_Prior->Fresh();
-
-		const size_t theColCount = theResult->GetRelHead().size();
-		for (size_t xx = 0; xx < iResultDeltas->fMapping.size(); ++xx)
-			{
-			const size_t target = iResultDeltas->fMapping[xx];
-
-			std::copy_n(&iResultDeltas->fPackedRows[xx * theColCount],
-				theColCount,
-				&theResult->fPackedRows[target * theColCount]);
-			}
+		theResult = sApplyDeltas(fResult_Prior, iResultDeltas);
 		}
 
 	ZAssert(theResult);

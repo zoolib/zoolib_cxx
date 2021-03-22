@@ -66,6 +66,11 @@ public:
 	};
 
 // =================================================================================================
+#pragma mark -
+
+ZP<Result> sApplyDeltas(ZP<Result> iResult, ZP<ResultDeltas> iResultDeltas);
+
+// =================================================================================================
 #pragma mark - ResultDiffer
 
 class ResultDiffer
