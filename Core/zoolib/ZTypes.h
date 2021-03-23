@@ -23,7 +23,7 @@ namespace ZooLib {
 #if ZCONFIG_SPI_Enabled(MacClassic)
 	static const size_t sStackBufferSize = 256;
 #else
-	static const size_t sStackBufferSize = 4096;
+	constexpr size_t sStackBufferSize = 4096;
 #endif
 
 // =================================================================================================
