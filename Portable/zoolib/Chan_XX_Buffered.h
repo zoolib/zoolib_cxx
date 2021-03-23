@@ -13,6 +13,8 @@
 
 namespace ZooLib {
 
+constexpr size_t kStandardBufferCount = sStackBufferSize;
+
 // =================================================================================================
 #pragma mark - ChanR_XX_Buffered
 
@@ -23,6 +25,10 @@ class ChanR_XX_Buffered
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;
 public:
+	ChanR_XX_Buffered(const Chan_p& iChan)
+	:	ChanR_XX_Buffered(iChan, kStandardBufferCount)
+		{}
+
 	ChanR_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
 	:	inherited(iChan)
 	,	fBuffer(iBufferSize, EE())
@@ -105,8 +111,11 @@ ZP<Channer_p> sChannerR_Buffered(const ZP<Channer_p>& iChanner, size_t iBufferSi
 			(asCounted, *iChanner, iBufferSize);
 		}
 	return null;
-
 	}
+
+template <class Channer_p>
+ZP<Channer_p> sChannerR_Buffered(const ZP<Channer_p>& iChanner)
+	{ return sChannerR_Buffered(iChanner, kStandardBufferCount); }
 
 // =================================================================================================
 #pragma mark - ChanW_XX_Buffered
@@ -118,6 +127,10 @@ class ChanW_XX_Buffered
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;
 public:
+	ChanW_XX_Buffered(const Chan_p& iChan)
+	:	ChanW_XX_Buffered(iChan, kStandardBufferCount)
+		{}
+
 	ChanW_XX_Buffered(const Chan_p& iChan, size_t iBufferSize)
 	:	inherited(iChan)
 	,	fBuffer(iBufferSize, EE())
@@ -200,6 +213,10 @@ ZP<Channer_p> sChannerW_Buffered(const ZP<Channer_p>& iChanner, size_t iBufferSi
 		}
 	return null;
 	}
+
+template <class Channer_p>
+ZP<Channer_p> sChannerW_Buffered(const ZP<Channer_p>& iChanner)
+	{ return sChannerW_Buffered(iChanner, kStandardBufferCount); }
 
 } // namespace ZooLib
 
