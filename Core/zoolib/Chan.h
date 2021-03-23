@@ -10,6 +10,13 @@
 namespace ZooLib {
 
 // =================================================================================================
+#pragma mark - ChanOfChan
+
+// Gets the DeriveFrom of t
+template <class Chan_p> using ChanOfChan =
+	typename ZooLib::AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t;
+
+// =================================================================================================
 #pragma mark - Composites
 
 using ChanAbort = DeriveFrom<ChanAspect_Abort>;
