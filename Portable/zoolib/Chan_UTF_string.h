@@ -97,9 +97,21 @@ class ChanW_UTF_string<UTF8>
 :	public ChanW_UTF_Native8
 	{
 public:
+	ChanW_UTF_string()
+	:	fStringPtr(new string8)
+	,	fAdopted(true)
+		{}
+
 	ChanW_UTF_string(string8* ioString)
 	:	fStringPtr(ioString)
+	,	fAdopted(false)
 		{}
+
+	~ChanW_UTF_string()
+		{
+		if (fAdopted)
+			delete fStringPtr;
+		}
 
 // From ChanW_UTF_Native8
 	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU)
@@ -108,8 +120,16 @@ public:
 		return iCountCU;
 		}
 
+// Our protocol
+	const string8& GetString() const
+		{ return *fStringPtr; }
+
+	string8& MutString()
+		{ return *fStringPtr; }
+
 protected:
 	string8* fStringPtr;
+	const bool fAdopted;
 	};
 
 typedef ChanW_UTF_string<UTF8> ChanW_UTF_string8;
