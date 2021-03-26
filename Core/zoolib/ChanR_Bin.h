@@ -10,9 +10,10 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ChanR_Bin
+#pragma mark - ChanR_Bin & ChanRU_Bin
 
 typedef ChanR<byte> ChanR_Bin;
+typedef ChanRU<byte> ChanRU_Bin;
 
 // =================================================================================================
 #pragma mark -
@@ -30,6 +31,10 @@ size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ sERead(iChan, static_cast<byte*>(oDest), iCount); }
+
+inline
+void sUnreadMem(const ChanRU_Bin& iChan, const void* iSource, size_t iCount)
+	{ sUnread(iChan, static_cast<const byte*>(iSource), iCount); }
 
 // =================================================================================================
 #pragma mark -
