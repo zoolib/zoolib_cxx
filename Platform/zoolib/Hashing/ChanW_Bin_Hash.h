@@ -17,6 +17,7 @@ class ChanW_Bin_Hash
 	{
 public:
 	typedef uint8 Hash_t[Hash_p::kHashSize];
+	typedef std::array<byte,Hash_p::kHashSize> Array_t;
 
 	ChanW_Bin_Hash()
 		{
@@ -33,6 +34,14 @@ public:
 		{
 		typename Hash_p::Context tempContext = fContext;
 		Hash_p::sFinal(tempContext, oHash);
+		}
+
+	Array_t GetHash() const
+		{
+		Array_t result;
+		typename Hash_p::Context tempContext = fContext;
+		Hash_p::sFinal(tempContext, &result[0]);
+		return result;
 		}
 
 protected:
