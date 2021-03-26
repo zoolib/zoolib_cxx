@@ -24,6 +24,7 @@ public:
 	virtual bool IsFile(size_t iIndex) = 0;
 	virtual string8 Name(size_t iIndex) = 0;
 	virtual uint64 Size(size_t iIndex) = 0;
+	virtual ZQ<uint32> QCRC(size_t iIndex);
 
 	virtual ZP<ChannerR_Bin> OpenR(size_t iIndex);
 	virtual ZP<ChannerRPos_Bin> OpenRPos(size_t iIndex);

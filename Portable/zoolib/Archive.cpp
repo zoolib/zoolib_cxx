@@ -7,6 +7,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - Archive
 
+ZQ<uint32> Archive::QCRC(size_t iIndex)
+	{ return null; }
+
 ZP<ChannerR_Bin> Archive::OpenR(size_t iIndex)
 	{ return this->OpenRPos(iIndex); }
 

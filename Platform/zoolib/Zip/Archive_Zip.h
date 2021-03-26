@@ -25,6 +25,7 @@ public:
 	bool IsFile(size_t iIndex) override;
 	string8 Name(size_t iIndex) override;
 	uint64 Size(size_t iIndex) override;
+	ZQ<uint32> QCRC(size_t iIndex) override;
 
 	ZP<ChannerR_Bin> OpenR(size_t iIndex) override;
 

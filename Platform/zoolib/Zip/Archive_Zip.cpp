@@ -82,6 +82,15 @@ uint64 Archive_Zip::Size(size_t iIndex)
 	return st.size;
 	}
 
+ZQ<uint32> Archive_Zip::QCRC(size_t iIndex)
+	{
+	struct zip_stat st;
+	if (0 != zip_stat_index(f_zip, iIndex, 0, &st))
+		return null;
+
+	return st.crc;
+	}
+
 ZP<ChannerR_Bin> Archive_Zip::OpenR(size_t iIndex)
 	{
 	if (spIsFile(f_zip, iIndex))
@@ -117,7 +126,8 @@ static const uint8 kSig[] = {0x50, 0x4B, 0x03, 0x04};
 bool sIsZip(const ChanR_Bin& iChanR)
 	{
 	uint8 sig[sizeof(kSig)];
-	sEReadMem(iChanR, sig, sizeof(sig));
+	if (sizeof(sig) != sReadMemFully(iChanR, sig, sizeof(sig)))
+		return false;
 	return 0 == memcmp(sig, kSig, sizeof(sig));
 	}
 
