@@ -69,7 +69,7 @@ const struct null_t
 const struct IKnowWhatIAmDoing_t {} IKnowWhatIAmDoing, IKWIAD;
 
 // =================================================================================================
-// Assuming 'type* ptr;' sConst(ptr) is a terser form of (type*)ptr.
+// Assuming 'type* ptr;' sConst(ptr) is a terser form of static_cast<const type*>(ptr).
 
 template <class T>
 const T* sConst(const T* iT) { return iT; }
@@ -78,7 +78,7 @@ template <class T>
 const T* sConst(T* iT) { return iT; }
 
 // =================================================================================================
-// Assuming 'type& ref;' sConst(ref) is a terser form of (type&)(ref).
+// Assuming 'type& ref;' sConst(ref) is a terser form of static_cast<const type&>(ptr).
 
 template <class T>
 const T& sConst(const T& iT) { return iT; }
@@ -130,6 +130,7 @@ const struct
 		{
 	public:
 		Holder(const T& iT) : fT(iT) {}
+		Holder(T&& iT) : fT(std::move(iT)) {}
 
 		operator const T*() const { return &fT; }
 
@@ -157,6 +158,7 @@ const struct
 		{
 	public:
 		Holder(const T& iT) : fT(iT) {}
+		Holder(T&& iT) : fT(std::move(iT)) {}
 
 		operator T*() const { return &fT; }
 
