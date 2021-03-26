@@ -241,6 +241,10 @@ Map_ZZ::Rep::Rep()
 Map_ZZ::Rep::~Rep()
 	{}
 
+Map_ZZ::Rep::Rep(const std::initializer_list<NameVal>& iNameVals)
+:	fMap(std::begin(iNameVals), std::end(iNameVals))
+	{}
+
 Map_ZZ::Rep::Rep(const Map_t& iMap)
 :	fMap(iMap)
 	{}
@@ -317,6 +321,10 @@ Map_ZZ::Map_ZZ(const char* iName, const char* iVal)
 
 Map_ZZ::Map_ZZ(const Name_t& iName, const Val_ZZ& iVal)
 	{ this->Set(iName, iVal); }
+
+Map_ZZ::Map_ZZ(const std::initializer_list<NameVal>& iNameVals)
+:	fRep(new Rep(iNameVals))
+	{}
 
 int Map_ZZ::Compare(const Map_ZZ& iOther) const
 	{

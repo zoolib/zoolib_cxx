@@ -213,6 +213,8 @@ public:
 	Map_ZZ(const char* iName, const char* iVal);
 	Map_ZZ(const Name_t& iName, const Val_ZZ& iVal);
 
+	Map_ZZ(const std::initializer_list<NameVal>& iNameVals);
+
 	int Compare(const Map_ZZ& iOther) const;
 
 // ZMap protocol
@@ -477,6 +479,8 @@ private:
 	Rep();
 
 	Rep(const Map_t& iMap);
+
+	Rep(const std::initializer_list<NameVal>& iNameVals);
 
 // From Counted
 	virtual void Finalize();
