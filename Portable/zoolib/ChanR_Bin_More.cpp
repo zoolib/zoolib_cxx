@@ -10,7 +10,7 @@ namespace ZooLib {
 ZQ<std::string> sQReadString(const ChanR_Bin& iChanR, size_t iCount)
 	{
 	std::string theString(iCount, 0);
-	if (iCount and iCount != sReadMemFully(iChanR, const_cast<char*>(theString.data()), iCount))
+	if (iCount && iCount != sReadMemFully(iChanR, const_cast<char*>(theString.data()), iCount))
 		return null;
 	return theString;
 	}
@@ -20,6 +20,25 @@ std::string sReadString(const ChanR_Bin& iChanR, size_t iCount)
 	if (const ZQ<std::string> theQ = sQReadString(iChanR, iCount))
 		return *theQ;
 	sThrow_ExhaustedR();
+	}
+
+bool sRead_String(const ChanR_Bin& iChanR, const std::string& iPattern)
+	{
+	if (ZQ<std::string> theQ = sQReadString(iChanR, iPattern.length()))
+		return *theQ == iPattern;
+	return false;
+	}
+
+bool sTryRead_String(const ChanRU_Bin& iChanRU, const std::string& iPattern)
+	{
+	const size_t requiredLength = iPattern.length();
+	std::string readString(requiredLength, 0);
+	const size_t countRead =
+		sReadMemFully(iChanRU, const_cast<char*>(readString.data()), requiredLength);
+	if (countRead == requiredLength && iPattern == readString)
+		return true;
+	sUnreadMem(iChanRU, readString.data(), countRead);
+	return false;
 	}
 
 // -----
