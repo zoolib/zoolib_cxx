@@ -197,7 +197,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		{
 		sEWriteBE<uint8>(iChanW, 0xE7);
 		const size_t chunkSize = 64 * 1024;
-		vector<uint8> buffer(chunkSize);
+		byte buffer[chunkSize];
 		for (;;)
 			{
 			const size_t countRead = sReadFully(*theChanner, &buffer[0], chunkSize);
