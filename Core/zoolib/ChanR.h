@@ -93,6 +93,10 @@ template <class EE>
 void sERead(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	{ iCount == sReadFully<EE>(iChanR, oDest, iCount) || sThrow_ExhaustedR(); }
 
+template <class EE>
+void sESkip(const ChanR<EE>& iChanR, uint64 iCount)
+	{ iCount == sSkipFully<EE>(iChanR, iCount) || sThrow_ExhaustedR(); }
+
 // =================================================================================================
 #pragma mark - ChanR_XX_Null
 
