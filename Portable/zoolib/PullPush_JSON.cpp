@@ -73,19 +73,19 @@ static bool spPull_JSON_Other_Push(
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("null", iChanRU))
+	if (Util_Chan::sTryRead_CaselessString(iChanRU, "null"))
 		{
 		sPush(PPT(null), iChanW);
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("false", iChanRU))
+	if (Util_Chan::sTryRead_CaselessString(iChanRU, "false"))
 		{
 		sPush(false, iChanW);
 		return true;
 		}
 
-	if (Util_Chan::sTryRead_CaselessString("true", iChanRU))
+	if (Util_Chan::sTryRead_CaselessString(iChanRU, "true"))
 		{
 		sPush(true, iChanW);
 		return true;

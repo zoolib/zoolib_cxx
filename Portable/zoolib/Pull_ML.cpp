@@ -291,7 +291,7 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 						sThrow_ParseException("Failed to read '>' while parsing a '!-' tag");
 					}
 				}
-			else if (sRead_String("[CDATA[", iChanRU))
+			else if (sRead_String(iChanRU, "[CDATA["))
 				{
 				// CDATA
 				// Can we emit the body as a binary channer?

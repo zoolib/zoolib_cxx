@@ -252,7 +252,7 @@ void ChanRU_UTF_ML::pAdvance()
 						sSkip_Until(fChanRU, ">");
 						}
 					}
-				else if (sRead_String("[CDATA[", fChanRU))
+				else if (sRead_String(fChanRU, "[CDATA["))
 					{
 					// CDATA
 					sSkip_Until(fChanRU, "]]>");

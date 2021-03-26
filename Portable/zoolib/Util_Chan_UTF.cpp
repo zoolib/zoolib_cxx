@@ -108,7 +108,7 @@ ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU)
 // =================================================================================================
 #pragma mark -
 
-bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
+bool sRead_String(const ChanR_UTF& iChanR, const string8& iPattern)
 	{
 	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
 		/*no test*/; /*no inc*/)
@@ -136,7 +136,7 @@ bool sRead_String(const string8& iPattern, const ChanR_UTF& iChanR)
 // =================================================================================================
 #pragma mark -
 
-bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU)
+bool sTryRead_String(const ChanRU_UTF& iChanRU, const string8& iPattern)
 	{
 	std::vector<UTF32> stack;
 
@@ -177,7 +177,7 @@ bool sTryRead_String(const string8& iPattern, const ChanRU_UTF& iChanRU)
 // =================================================================================================
 #pragma mark -
 
-bool sTryRead_CaselessString(const string8& iPattern, const ChanRU_UTF& iChanRU)
+bool sTryRead_CaselessString(const ChanRU_UTF& iChanRU, const string8& iPattern)
 	{
 	std::vector<UTF32> stack;
 
@@ -325,14 +325,14 @@ static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 	{
 	using namespace Util_Chan;
 
-	if (sTryRead_CaselessString("nan", iChanRU))
+	if (sTryRead_CaselessString(iChanRU, "nan"))
 		{
 		oIsDouble = true;
 		oDouble = NAN;
 		return true;
 		}
 
-	if (sTryRead_CaselessString("inf", iChanRU))
+	if (sTryRead_CaselessString(iChanRU, "inf"))
 		{
 		oIsDouble = true;
 		oDouble = INFINITY;
