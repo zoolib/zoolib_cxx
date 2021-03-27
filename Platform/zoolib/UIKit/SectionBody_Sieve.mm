@@ -36,8 +36,6 @@ int sCompare_T<ZP<SectionBody_Sieve::Callable_GetCellForMap> >
 	const ZP<SectionBody_Sieve::Callable_GetCellForMap>& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-ZMACRO_CompareRegistration_T(ZP<SectionBody_Sieve::Callable_GetCellForMap>);
-
 } // namespace ZooLib
 
 namespace ZooLib {
