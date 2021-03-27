@@ -97,7 +97,7 @@ ZQ<std::pair<ColName,ColName>> sQFromStrim_Rename(const ChanRU_UTF& iChanRU)
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_String("<--", iChanRU))
+		if (not sTryRead_String(iChanRU, "<--"))
 			throw ParseException("Expected <-- after first PropName");
 
 		sSkip_WSAndCPlusPlusComments(iChanRU);

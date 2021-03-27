@@ -25,10 +25,10 @@ ZP<Expr_Bool> spParenthable(
 	const ZP<Callable_Terminal>& iCallable_Terminal,
 	const ChanRU_UTF& iChanRU)
 	{
-	if (sTryRead_String("TRUE", iChanRU))
+	if (sTryRead_String(iChanRU, "TRUE"))
 		return sTrue();
 
-	if (sTryRead_String("FALSE", iChanRU))
+	if (sTryRead_String(iChanRU, "FALSE"))
 		return sFalse();
 
 	if (ZP<Expr_Bool> child = sCall(iCallable_Terminal, iChanRU))
@@ -73,7 +73,7 @@ ZP<Expr_Bool> spAndable(
 		if (not sTryRead_CP('~', iChanRU))
 			break;
 
-		isNotted = ~isNotted;
+		isNotted = not isNotted;
 		}
 
 	ZP<Expr_Bool> child = spNotable(iCallable_Terminal, iChanRU);
