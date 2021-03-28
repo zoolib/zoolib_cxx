@@ -18,7 +18,6 @@ class Archive
 :	public Counted
 	{
 public:
-
 // Our protocol
 	virtual size_t Count() = 0;
 	virtual bool IsFile(size_t iIndex) = 0;
