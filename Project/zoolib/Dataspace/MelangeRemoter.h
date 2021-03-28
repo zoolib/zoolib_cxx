@@ -100,13 +100,6 @@ public:
 
 	using Factory_Channer = Factory<ZP<Channer_t>>;
 
-	using ChanForRead = DeriveFrom<
-		ChanAspect_Abort,
-		ChanAspect_Read<byte>,
-		ChanAspect_WaitReadable>;
-
-	using ChannerForRead = Channer<ChanForRead>;
-
 	typedef Callable<void(bool)> Callable_Status;
 
 	Melange_Client(const ZP<Factory_Channer>& iFactory,
@@ -140,6 +133,13 @@ private:
 	void pWake();
 	void pWork();
 	StartScheduler::Job fJob;
+
+	using ChanForRead = DeriveFrom<
+		ChanAspect_Abort,
+		ChanAspect_Read<byte>,
+		ChanAspect_WaitReadable>;
+
+	using ChannerForRead = Channer<ChanForRead>;
 
 	ZP<ChannerForRead> pEnsureChannerR();
 	ZP<ChannerW_Bin> pEnsureChannerW();
