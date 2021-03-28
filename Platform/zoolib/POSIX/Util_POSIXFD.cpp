@@ -126,10 +126,6 @@ void sAbort(int iFD)
 		}
 	}
 
-bool spDisconnectRead(int iFD, double iTimeout);
-
-void spDisconnectWrite(int iFD);
-
 uint64 sPos(int iFD)
 	{
 	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
