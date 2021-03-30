@@ -13,7 +13,13 @@ CountedBase::CountedBase()
 
 CountedBase::~CountedBase()
 	{
-	ZAssertStop(1, not fWPProxy);
+	if (ZP<WPProxy> theWPProxy = fWPProxy)
+		{
+		if (fWPProxy.AtomicCAS(theWPProxy.Get(), nullptr))
+			theWPProxy->pClear();
+		}
+
+//	ZAssertStop(1, not fWPProxy);
 	if (ZCONFIG_Debug >= 1)
 		{
 		const int old = sAtomic_Get(&fRefCount);
@@ -56,7 +62,7 @@ void CountedBase::Retain()
 	{
 	if (0 == sAtomic_Add(&fRefCount, 1))
 		{
-		ZAssertStop(1, not fWPProxy);
+		// ZAssertStop(1, not fWPProxy);
 		this->Initialize();
 		}
 	}
@@ -86,7 +92,7 @@ bool CountedBase::IsReferenced() const
 ZP<CountedBase::WPProxy> CountedBase::GetWPProxy()
 	{
 	// It is not legal to take a weak reference from an un-initialized object.
-	ZAssert(sAtomic_Get(&fRefCount));
+	// ZAssert(sAtomic_Get(&fRefCount));
 
 	if (not fWPProxy)
 		{
