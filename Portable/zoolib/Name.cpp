@@ -61,9 +61,9 @@ Name::Name(const string8& iString)
 	}
 #endif
 
-Name::Name(const ZPCountedString& iZPCountedString)
+Name::Name(const ZP<CountedString>& iCountedString)
 	{
-	CountedString* theCountedString = iZPCountedString.Get();
+	CountedString* theCountedString = iCountedString.Get();
 	#if ZCONFIG_Is64Bit
 		if (theCountedString)
 			{
@@ -103,22 +103,6 @@ Name::operator string8() const
 		return (const char*)(fIntPtr);
 
 	return sDefault<string8>();
-	}
-
-Name::operator ZPCountedString() const
-	{
-	#if ZCONFIG_Is64Bit
-		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
-			return (CountedString*)(fIntPtr ^ 1ULL<<63);
-	#else
-		if (fIsCounted)
-			return (CountedString*)fIntPtr;
-	#endif
-
-	if (fIntPtr)
-		return new CountedString((const char*)fIntPtr);
-
-	return null;
 	}
 
 int Name::Compare(const Name& iOther) const
@@ -195,10 +179,10 @@ const char* Name::pAsCharStar() const
 	return (const char*)fIntPtr;
 	}
 
-const Name::CountedString* Name::pGetIfCounted() const
+const CountedString* Name::pGetIfCounted() const
 	{ return const_cast<Name*>(this)->pGetIfCounted(); }
 
-Name::CountedString* Name::pGetIfCounted()
+CountedString* Name::pGetIfCounted()
 	{
 	#if ZCONFIG_Is64Bit
 		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))

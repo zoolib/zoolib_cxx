@@ -13,10 +13,6 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - CountedStringUniquifier
 
-typedef CountedVal<string8> CountedString;
-
-typedef ZP<CountedString> ZP_CountedString;
-
 struct Compare_ZP_CountedString
 	{ bool operator()(const ZP_CountedString& ll, const ZP_CountedString& rr) const; };
 

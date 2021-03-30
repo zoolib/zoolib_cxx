@@ -13,12 +13,17 @@
 
 namespace ZooLib {
 
+typedef CountedVal<string8> CountedString;
+
+typedef ZP<CountedString> ZP_CountedString;
+
 // =================================================================================================
 #pragma mark - Name
 
 #ifndef ZMACRO_NameUsesString
-	// We have access to the hash functions we need when using libc++ or libstdc++ (clang/gcc)
 	#if defined(_LIBCPP_STRING) || defined(_BASIC_STRING_H)
+		// when using clang/libc++ or gcc/libstdc++ we have access to their hash functions
+		// and can thus use the non-string Name implementation.
 		#define ZMACRO_NameUsesString 0
 	#endif
 #endif
@@ -32,9 +37,6 @@ namespace ZooLib {
 class Name
 	{
 public:
-	typedef CountedVal<string8> CountedString;
-	typedef ZP<CountedString> ZPCountedString;
-
 	inline Name() {}
 
 	inline Name(const Name& iOther) : fString(iOther.fString) {}
@@ -51,8 +53,8 @@ public:
 
 	Name(const string8& iString) : fString(iString) {}
 
-	Name(const ZPCountedString& iZPCountedString)
-	:	fString(sGet(iZPCountedString))
+	Name(const ZP<CountedString>& iCountedString)
+	:	fString(sGet(iCountedString))
 		{}
 
 	operator string8() const
@@ -73,8 +75,8 @@ public:
 	void Clear()
 		{ fString.clear(); }
 
-	size_t Hash() const;
-		{ return std::hash<string8>()(theCountedString->Get()); }
+	size_t Hash() const
+		{ return std::hash<string8>()(fString); }
 
 private:
 	string8 fString;
@@ -85,9 +87,6 @@ private:
 class Name
 	{
 public:
-	typedef CountedVal<string8> CountedString;
-	typedef ZP<CountedString> ZPCountedString;
-
 	inline Name()
 	:	fIntPtr(0)
 	#if not ZCONFIG_Is64Bit
@@ -121,10 +120,10 @@ public:
 		{}
 
 	Name(const string8& iString);
-	Name(const ZPCountedString& iZPCountedString);
+
+	Name(const ZP<CountedString>& iCountedString);
 	
 	operator string8() const;
-	operator ZPCountedString() const;
 
 	inline bool operator<(const Name& iOther) const
 		{ return this->Compare(iOther) < 0; }
