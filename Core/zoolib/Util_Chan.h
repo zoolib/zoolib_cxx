@@ -5,7 +5,6 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
-#include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {

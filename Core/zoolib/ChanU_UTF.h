@@ -4,7 +4,7 @@
 #define __ZooLib_ChanU_UTF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanU.h"
+#include "zoolib/Chan.h"
 #include "zoolib/UnicodeCU.h"
 
 namespace ZooLib {

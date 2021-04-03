@@ -156,6 +156,24 @@ using ChanRWCon = DeriveFrom
 template <typename EE>
 using ChanConnection = ChanRWCon<EE>;
 
+// =================================================================================================
+#pragma mark - ChanU extras
+
+template <class EE>
+bool sUnread(const ChanU<EE>& iChanU, const EE& iElmt)
+	{ return 1 == sUnread(iChanU, &iElmt, 1); }
+
+// =================================================================================================
+#pragma mark -
+
+inline
+uint64 sAvailable(const DeriveFrom<ChanAspect_Pos,ChanAspect_Size>& iChan)
+	{
+	const uint64 thePos = sPos(iChan);
+	const uint64 theSize = sSize(iChan);
+	return theSize >= thePos ? theSize - thePos : 0;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__

@@ -4,7 +4,7 @@
 #define __ZooLib_ChanU_Bin_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanU.h"
+#include "zoolib/Chan.h"
 
 namespace ZooLib {
 
