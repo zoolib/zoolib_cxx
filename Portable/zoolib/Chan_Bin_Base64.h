@@ -54,7 +54,7 @@ public:
 protected:
 	const Base64::Decode fDecode;
 	const ChanR_Bin& fChanR;
-	uint8 fSinkBuf[3];
+	byte fSinkBuf[3];
 	size_t fSinkCount;
 	};
 
@@ -79,7 +79,7 @@ public:
 protected:
 	const Base64::Encode fEncode;
 	const ChanW_Bin& fChanW;
-	uint8 fSourceBuf[3];
+	byte fSourceBuf[3];
 	size_t fSourceCount;
 	};
 

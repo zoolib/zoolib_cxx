@@ -12,7 +12,7 @@ namespace Base64 {
 namespace { // anonymous
 
 static void spEncode(
-	const Encode& iEncode, const uint8* iSource, size_t iSourceCount, uint8* oDest)
+	const Encode& iEncode, const byte* iSource, size_t iSourceCount, byte* oDest)
 	{
 	switch (iSourceCount)
 		{
@@ -179,9 +179,9 @@ size_t ChanR_Bin_Base64Decode::Read(byte* oDest, size_t iCount)
 				break;
 				}
 
-			fSinkBuf[0] = uint8(source >> 16);
-			fSinkBuf[1] = uint8(source >> 8);
-			fSinkBuf[2] = uint8(source);
+			fSinkBuf[0] = byte(source >> 16);
+			fSinkBuf[1] = byte(source >> 8);
+			fSinkBuf[2] = byte(source);
 			fSinkCount = 0;
 			}
 		}
@@ -208,7 +208,7 @@ ChanW_Bin_Base64Encode::~ChanW_Bin_Base64Encode()
 	{
 	if (fSourceCount > 0)
 		{
-		uint8 sinkBuf[4];
+		byte sinkBuf[4];
 		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
 		sWriteMemFully(fChanW, sinkBuf, 4);
 		fSourceCount = 0;
@@ -230,7 +230,7 @@ size_t ChanW_Bin_Base64Encode::Write(const byte* iSource, size_t iCount)
 
 		if (fSourceCount == 3)
 			{
-			uint8 sinkBuf[4];
+			byte sinkBuf[4];
 			Base64::spEncode(fEncode, fSourceBuf, 3, sinkBuf);
 			sWriteMemFully(fChanW, sinkBuf, 4);
 			fSourceCount = 0;
@@ -243,7 +243,7 @@ void ChanW_Bin_Base64Encode::Flush()
 	{
 	if (fSourceCount > 0)
 		{
-		uint8 sinkBuf[4];
+		byte sinkBuf[4];
 		Base64::spEncode(fEncode, fSourceBuf, fSourceCount, sinkBuf);
 		sWriteMemFully(fChanW, sinkBuf, 4);
 		fSourceCount = 0;
