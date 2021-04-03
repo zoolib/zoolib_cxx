@@ -15,16 +15,12 @@ set (SourceFiles
 	${SourceDir}/Callable.h
 	${SourceDir}/Chan.h
 	${SourceDir}/ChanAspect.h
+	${SourceDir}/Chan_Bin.h
 	${SourceDir}/ChanR_Bin.h
 	${SourceDir}/ChanR_UTF.cpp
 	${SourceDir}/ChanR_UTF.h
 	${SourceDir}/ChanR.h
-	${SourceDir}/ChanRPos_Bin.h
-	${SourceDir}/ChanRU_Bin.h
-	${SourceDir}/ChanRU_UTF.h
-	${SourceDir}/ChanU_Bin.h
-	${SourceDir}/ChanU_UTF.h
-	${SourceDir}/ChanU.h
+	${SourceDir}/Chan_UTF.h
 	${SourceDir}/ChanW_Bin.h
 	${SourceDir}/ChanW_UTF.cpp
 	${SourceDir}/ChanW_UTF.h

@@ -214,8 +214,6 @@ set (SourceFiles
 	${SourceDir}/Val_T.h
 	${SourceDir}/Val_ZZ.cpp
 	${SourceDir}/Val_ZZ.h
-	${SourceDir}/Val.cpp
-	${SourceDir}/Val.h
 	${SourceDir}/Visitor_Do_T.h
 	${SourceDir}/Visitor_ToStrim.cpp
 	${SourceDir}/Visitor_ToStrim.h
