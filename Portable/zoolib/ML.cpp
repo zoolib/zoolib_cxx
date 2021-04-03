@@ -35,17 +35,17 @@ string sReadReference(const ChanRU_UTF& iChanRU, const ZP<Callable_Entity>& iCal
 	{
 	string result;
 
-	if (sTryRead_CP('#', iChanRU))
+	if (sTryRead_CP(iChanRU, '#'))
 		{
 		// It's a character reference.
 		int64 theInt;
 		bool gotIt = false;
-		if (sTryRead_CP('x', iChanRU) || sTryRead_CP('X', iChanRU))
+		if (sTryRead_CP(iChanRU, 'x') || sTryRead_CP(iChanRU, 'X'))
 			gotIt = sTryRead_HexInteger(iChanRU, theInt);
 		else
 			gotIt = sTryRead_DecimalInteger(iChanRU, theInt);
 
-		if (gotIt && sTryRead_CP(';', iChanRU))
+		if (gotIt && sTryRead_CP(iChanRU, ';'))
 			result += UTF32(theInt);
 		}
 	else

@@ -261,7 +261,7 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			sSkip_WS(iChanRU);
 
-			if (not sTryRead_CP('>', iChanRU))
+			if (not sTryRead_CP(iChanRU, '>'))
 				sThrow_ParseException("Failed to read '>' while parsing an ML end tag");
 
 			Pull_ML::sPush_TagEnd(tagName, iChanW);
@@ -277,9 +277,9 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 
 		if (*theCPQ == '!')
 			{
-			if (sTryRead_CP('-', iChanRU))
+			if (sTryRead_CP(iChanRU, '-'))
 				{
-				if (sTryRead_CP('-', iChanRU))
+				if (sTryRead_CP(iChanRU, '-'))
 					{
 					// A comment. Could copy this to a comment channer or something.
 					if (not sSkip_Until(iChanRU, "-->"))
@@ -328,7 +328,7 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			sSkip_WS(iChanRU);
 
-			if (not sTryRead_CP('=', iChanRU))
+			if (not sTryRead_CP(iChanRU, '='))
 				{
 				attributes.push_back({attributeName, string()});
 				}
@@ -349,16 +349,16 @@ bool sPull_ML_Push_PPT(const ChanRU_UTF& iChanRU,
 
 		sSkip_WS(iChanRU);
 
-		if (sTryRead_CP('/', iChanRU))
+		if (sTryRead_CP(iChanRU, '/'))
 			{
-			if (not sTryRead_CP('>', iChanRU))
+			if (not sTryRead_CP(iChanRU, '>'))
 				sThrow_ParseException("Failed to read '>' while parsing an empty tag");
 			Pull_ML::sPush_TagEmpty(tagName, attributes, iChanW);
 			continue;
 			}
 		else
 			{
-			if (not sTryRead_CP('>', iChanRU))
+			if (not sTryRead_CP(iChanRU, '>'))
 				sThrow_ParseException("Failed to read '>' while parsing a begin tag");
 			Pull_ML::sPush_TagBegin(tagName, attributes, iChanW);
 			continue;

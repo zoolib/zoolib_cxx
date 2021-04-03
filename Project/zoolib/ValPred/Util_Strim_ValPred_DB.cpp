@@ -110,7 +110,7 @@ void spToStrim(const ChanW_UTF& iChanW, const ZP<ValComparator>& iComparator)
 ZP<ValComparand> spQRead_ValComparand(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
-	if (sTryRead_CP('@', iChanRU))
+	if (sTryRead_CP(iChanRU, '@'))
 		{
 		if (ZQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 			return new ValComparand_Name(*theQ);
@@ -133,21 +133,21 @@ ZP<ValComparator> spQRead_ValComparator(const ChanRU_UTF& iChanRU)
 		}
 	else if (*theQ == '<')
 		{
-		if (sTryRead_CP('=', iChanRU))
+		if (sTryRead_CP(iChanRU, '='))
 			return new ValComparator_Simple(ValComparator_Simple::eLE);
 		return new ValComparator_Simple(ValComparator_Simple::eLT);
 		}
 	else if (*theQ == '>')
 		{
-		if (sTryRead_CP('=', iChanRU))
+		if (sTryRead_CP(iChanRU, '='))
 			return new ValComparator_Simple(ValComparator_Simple::eGE);
 		return new ValComparator_Simple(ValComparator_Simple::eGT);
 		}
-	else if (*theQ == '=' && sTryRead_CP('=', iChanRU))
+	else if (*theQ == '=' && sTryRead_CP(iChanRU, '='))
 		{
 		return new ValComparator_Simple(ValComparator_Simple::eEQ);
 		}
-	else if (*theQ == '!' && sTryRead_CP('=', iChanRU))
+	else if (*theQ == '!' && sTryRead_CP(iChanRU, '='))
 		{
 		return new ValComparator_Simple(ValComparator_Simple::eNE);
 		}

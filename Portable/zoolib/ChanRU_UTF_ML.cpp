@@ -222,7 +222,7 @@ void ChanRU_UTF_ML::pAdvance()
 
 				sSkip_WS(fChanRU);
 
-				if (not sTryRead_CP('>', fChanRU))
+				if (not sTryRead_CP(fChanRU, '>'))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -239,9 +239,9 @@ void ChanRU_UTF_ML::pAdvance()
 				}
 			case '!':
 				{
-				if (sTryRead_CP('-', fChanRU))
+				if (sTryRead_CP(fChanRU, '-'))
 					{
-					if (sTryRead_CP('-', fChanRU))
+					if (sTryRead_CP(fChanRU, '-'))
 						{
 						// A comment.
 						sSkip_Until(fChanRU, "-->");
@@ -285,7 +285,7 @@ void ChanRU_UTF_ML::pAdvance()
 
 					sSkip_WS(fChanRU);
 
-					if (sTryRead_CP('=', fChanRU))
+					if (sTryRead_CP(fChanRU, '='))
 						{
 						sSkip_WS(fChanRU);
 						string attributeValue;
@@ -307,12 +307,12 @@ void ChanRU_UTF_ML::pAdvance()
 
 				sSkip_WS(fChanRU);
 
-				if (sTryRead_CP('/', fChanRU))
+				if (sTryRead_CP(fChanRU, '/'))
 					fToken = eToken_TagEmpty;
 				else
 					fToken = eToken_TagBegin;
 
-				if (not sTryRead_CP('>', fChanRU))
+				if (not sTryRead_CP(fChanRU, '>'))
 					fToken = eToken_Exhausted;
 
 				return;

@@ -50,7 +50,7 @@ ZQ<ColName> sQRead_PropName(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('@', iChanRU))
+	if (not sTryRead_CP(iChanRU, '@'))
 		return null;
 
 	if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
@@ -63,7 +63,7 @@ ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('[', iChanRU))
+	if (not sTryRead_CP(iChanRU, '['))
 		return null;
 
 	RelHead result;
@@ -78,11 +78,11 @@ ZQ<RelHead> sQFromStrim_RelHead(const ChanRU_UTF& iChanRU)
 			result |= *theQ;
 
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (not sTryRead_CP(',', iChanRU))
+		if (not sTryRead_CP(iChanRU, ','))
 			break;
 		}
 
-	if (not sTryRead_CP(']', iChanRU))
+	if (not sTryRead_CP(iChanRU, ']'))
 		throw ParseException("Expected ']'");
 	return result;
 	}
@@ -113,7 +113,7 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU)
 	{
 	using namespace Util_Chan;
 
-	if (not sTryRead_CP('[', iChanRU))
+	if (not sTryRead_CP(iChanRU, '['))
 		return null;
 
 	ConcreteHead result;
@@ -121,14 +121,14 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU)
 	for (;;)
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (sTryRead_CP('@', iChanRU))
+		if (sTryRead_CP(iChanRU, '@'))
 			{
 			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 				throw ParseException("Expected PropName after '@'");
 			else
 				result[*theQ] = true;
 			}
-		else if (sTryRead_CP('?', iChanRU))
+		else if (sTryRead_CP(iChanRU, '?'))
 			{
 			if (NotQ<string8> theQ = Util_Chan_JSON::sQRead_PropName(iChanRU))
 				throw ParseException("Expected PropName after '?'");
@@ -140,11 +140,11 @@ ZQ<ConcreteHead> sQFromStrim_ConcreteHead(const ChanRU_UTF& iChanRU)
 			throw ParseException("Expected PropName");
 			}
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (not sTryRead_CP(',', iChanRU))
+		if (not sTryRead_CP(iChanRU, ','))
 			break;
 		}
 
-	if (not sTryRead_CP(']', iChanRU))
+	if (not sTryRead_CP(iChanRU, ']'))
 			throw ParseException("Expected ']'");
 	return result;
 	}

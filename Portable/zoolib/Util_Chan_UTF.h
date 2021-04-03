@@ -18,7 +18,7 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator);
 
 // -----------------
 
-bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU);
+bool sTryRead_CP(const ChanRU_UTF& iChanRU, UTF32 iCP);
 
 // -----------------
 

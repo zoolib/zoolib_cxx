@@ -123,7 +123,7 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 	{
 	using namespace Util_Chan;
 
-	if (sTryRead_CP('"', iChanRU))
+	if (sTryRead_CP(iChanRU, '"'))
 		{
 		// We've got a string, delimited by ".
 		for (;;)
@@ -131,18 +131,18 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 			string tempString;
 			sRead_EscapedString('"', iChanRU, tempString);
 
-			if (not sTryRead_CP('"', iChanRU))
+			if (not sTryRead_CP(iChanRU, '"'))
 				sThrow_ParseException("Expected '\"' to close a string");
 
 			oString += tempString;
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP('"', iChanRU))
+			if (not sTryRead_CP(iChanRU, '"'))
 				return true;
 			}
 		}
-	else if (sTryRead_CP('\'', iChanRU))
+	else if (sTryRead_CP(iChanRU, '\''))
 		{
 		// We've got a string, delimited by '.
 		for (;;)
@@ -150,14 +150,14 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 			string tempString;
 			sRead_EscapedString('\'', iChanRU, tempString);
 
-			if (not sTryRead_CP('\'', iChanRU))
+			if (not sTryRead_CP(iChanRU, '\''))
 				sThrow_ParseException("Expected \"'\" to close a string");
 
 			oString += tempString;
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP('\'', iChanRU))
+			if (not sTryRead_CP(iChanRU, '\''))
 				return true;
 			}
 		}

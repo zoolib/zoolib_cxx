@@ -46,7 +46,7 @@ ZP<Expr_Bool> spNotable(
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
 
-	if (not sTryRead_CP('(', iChanRU))
+	if (not sTryRead_CP(iChanRU, '('))
 		return spParenthable(iCallable_Terminal, iChanRU);
 
 	ZP<Expr_Bool> child = spExpression(iCallable_Terminal, iChanRU);
@@ -55,7 +55,7 @@ ZP<Expr_Bool> spNotable(
 
 	sSkip_WSAndCPlusPlusComments(iChanRU);
 
-	if (not sTryRead_CP(')', iChanRU))
+	if (not sTryRead_CP(iChanRU, ')'))
 		throw ParseException("Expected close paren");
 
 	return child;
@@ -70,7 +70,7 @@ ZP<Expr_Bool> spAndable(
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_CP('~', iChanRU))
+		if (not sTryRead_CP(iChanRU, '~'))
 			break;
 
 		isNotted = not isNotted;
@@ -96,7 +96,7 @@ ZP<Expr_Bool> spOrable(
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_CP('&', iChanRU))
+		if (not sTryRead_CP(iChanRU, '&'))
 			return exprL;
 
 		ZP<Expr_Bool> exprR = spAndable(iCallable_Terminal, iChanRU);
@@ -119,7 +119,7 @@ ZP<Expr_Bool> spExpression(
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
-		if (not sTryRead_CP('|', iChanRU))
+		if (not sTryRead_CP(iChanRU, '|'))
 			return exprL;
 
 		ZP<Expr_Bool> exprR = spOrable(iCallable_Terminal, iChanRU);

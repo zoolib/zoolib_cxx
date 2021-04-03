@@ -66,7 +66,7 @@ static bool spPull_JSON_Other_Push(
 			if (iLooseNumbers && asInt64 == -1)
 				{
 				// Read and discard an L suffix (that python puts on things sometimes)
-				sTryRead_CP('l', iChanRU) || sTryRead_CP('L', iChanRU);
+				sTryRead_CP(iChanRU, 'l') || sTryRead_CP(iChanRU, 'L');
 				}
 			sPush(asInt64, iChanW);
 			}
@@ -112,7 +112,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 				{
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 
-				if (sTryRead_CP(iTerminator, iChanRU))
+				if (sTryRead_CP(iChanRU, iTerminator))
 					quotesSeen = 1;
 				else
 					return true;
@@ -120,7 +120,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 				}
 			case 1:
 				{
-				if (sTryRead_CP(iTerminator, iChanRU))
+				if (sTryRead_CP(iChanRU, iTerminator))
 					{
 					// We have two quotes in a row.
 					quotesSeen = 2;
@@ -130,7 +130,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 					const std::pair<int64,int64> result =
 						sCopyAll(ChanR_UTF_Escaped(iTerminator, iChanRU), iChanW);
 
-					if (sTryRead_CP(iTerminator, iChanRU))
+					if (sTryRead_CP(iChanRU, iTerminator))
 						quotesSeen = 0;
 					else if (result.first == 0)
 						sThrow_ParseException(string("Expected ") + iTerminator + " to close a string");
@@ -139,7 +139,7 @@ static bool spPull_JSON_String_Push_UTF(const ChanRU_UTF& iChanRU,
 				}
 			case 2:
 				{
-				if (sTryRead_CP(iTerminator, iChanRU))
+				if (sTryRead_CP(iChanRU, iTerminator))
 					{
 					// We have three quotes in a row.
 					quotesSeen = 3;
@@ -230,7 +230,7 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 	std::pair<int64,int64> counts = sCopyAll(ChanR_Bin_HexStrim(iChanRU), iChanW);
 	if (counts.first != counts.second)
 		return false;
-	if (not sTryRead_CP('>', iChanRU))
+	if (not sTryRead_CP(iChanRU, '>'))
 		sThrow_ParseException("Expected '>' to close a hex data");
 	return true;
 	}
@@ -244,13 +244,13 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
 
-	if (sTryRead_CP('[', iChanRU))
+	if (sTryRead_CP(iChanRU, '['))
 		{
 		sPush_Start_Seq(iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
-			if (sTryRead_CP(']', iChanRU))
+			if (sTryRead_CP(iChanRU, ']'))
 				{
 				sPush_End(iChanW);
 				return true;
@@ -265,9 +265,9 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				for (;;)
 					{
 					sSkip_WSAndCPlusPlusComments(iChanRU);
-					if (sTryRead_CP(',', iChanRU))
+					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
+					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -276,11 +276,11 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			else
 				{
 				sSkip_WSAndCPlusPlusComments(iChanRU);
-				if (sTryRead_CP(',', iChanRU))
+				if (sTryRead_CP(iChanRU, ','))
 					{}
 				else if (iRO.fAllowSemiColons.DGet(false))
 					{
-					if (not sTryRead_CP(';', iChanRU))
+					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate array elements");
 					}
 				else
@@ -290,13 +290,13 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				}
 			}
 		}
-	else if (sTryRead_CP('{', iChanRU))
+	else if (sTryRead_CP(iChanRU, '{'))
 		{
 		sPush_Start_Map(iChanW);
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(iChanRU);
-			if (sTryRead_CP('}', iChanRU))
+			if (sTryRead_CP(iChanRU, '}'))
 				{
 				sPush_End(iChanW);
 				return true;
@@ -311,12 +311,12 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sTryRead_CP(':', iChanRU))
+			if (not sTryRead_CP(iChanRU, ':'))
 				{
 				if (not iRO.fAllowEquals.DGet(false))
 					sThrow_ParseException("Expected ':' after a member name");
 
-				if (not sTryRead_CP('=', iChanRU))
+				if (not sTryRead_CP(iChanRU, '='))
 					sThrow_ParseException("Expected ':' or '=' after a member name");
 				}
 
@@ -331,9 +331,9 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				for (;;)
 					{
 					sSkip_WSAndCPlusPlusComments(iChanRU);
-					if (sTryRead_CP(',', iChanRU))
+					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(';', iChanRU))
+					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -342,11 +342,11 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			else
 				{
 				sSkip_WSAndCPlusPlusComments(iChanRU);
-				if (sTryRead_CP(',', iChanRU))
+				if (sTryRead_CP(iChanRU, ','))
 					{}
 				else if (iRO.fAllowSemiColons.DGet(false))
 					{
-					if (not sTryRead_CP(';', iChanRU))
+					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate object elements");
 					}
 				else
@@ -356,15 +356,15 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				}
 			}
 		}
-	else if (sTryRead_CP('"', iChanRU))
+	else if (sTryRead_CP(iChanRU, '"'))
 		{
 		return spPull_JSON_String_Push(iChanRU, '"', iChanW);
 		}
-	else if (sTryRead_CP('\'', iChanRU))
+	else if (sTryRead_CP(iChanRU, '\''))
 		{
 		return spPull_JSON_String_Push(iChanRU, '\'', iChanW);
 		}
-	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP('<', iChanRU))
+	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP(iChanRU, '<'))
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
@@ -373,7 +373,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		sFlush(iChanW);
 
 		bool result;
-		if (sTryRead_CP('=', iChanRU))
+		if (sTryRead_CP(iChanRU, '='))
 			result = spPull_Base64_Push_Bin(iChanRU, *thePullPushPair.first);
 		else
 			result = spPull_Hex_Push_Bin(iChanRU, *thePullPushPair.first);

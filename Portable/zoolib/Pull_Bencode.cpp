@@ -22,12 +22,12 @@ using std::string;
 
 namespace { // anonymous
 
-bool spTryRead_Byte(const ChanRU_Bin& iChanRU, uint8 iByte)
-	{ return sTryRead<uint8>(iByte, iChanRU); }
+bool spTryRead_Byte(const ChanRU_Bin& iChanRU, byte iByte)
+	{ return sTryRead<byte>(iChanRU, iByte); }
 
 bool spTryRead_Digit(const ChanRU_Bin& s, int& oDigit)
 	{
-	uint8 theByte;
+	byte theByte;
 	if (1 != sRead(s, &theByte, 1))
 		return false;
 
@@ -116,7 +116,7 @@ void spReadStringish(const ChanRU_Bin& s, const ChanW_PPT& iChanW)
 
 void spRead(const ChanRU_Bin& iChanRU, const ChanW_PPT& iChanW)
 	{
-	uint8 theType = sEReadBE<uint8>(iChanRU);
+	byte theType = sERead(iChanRU);
 	switch (theType)
 		{
 		case 'd':

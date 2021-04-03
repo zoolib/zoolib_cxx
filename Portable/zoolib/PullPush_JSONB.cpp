@@ -26,7 +26,7 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 
-static void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
+static void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW);
 
@@ -34,7 +34,7 @@ bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
 	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW)
 	{
-	if (NotQ<uint8> theTypeQ = sQRead(iChanR))
+	if (NotQ<byte> theTypeQ = sQRead(iChanR))
 		{
 		return false;
 		}
@@ -45,7 +45,7 @@ bool sPull_JSONB_Push_PPT(const ChanR_Bin& iChanR,
 		}
 	}
 
-void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
+void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW)
 	{
@@ -104,7 +104,7 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 			sPush_Start_Seq(iChanW);
 			for (;;)
 				{
-				if (NotQ<uint8> theTypeQ = sQRead(iChanR))
+				if (NotQ<byte> theTypeQ = sQRead(iChanR))
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
@@ -126,7 +126,7 @@ void spPull_JSONB_Push_PPT(uint8 iType, const ChanR_Bin& iChanR,
 			for (;;)
 				{
 				string theName = sReadCountPrefixedString(iChanR);
-				if (NotQ<uint8> theTypeQ = sQRead(iChanR))
+				if (NotQ<byte> theTypeQ = sQRead(iChanR))
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
@@ -173,21 +173,21 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	if (const string* theString = sPGet<string>(thePPT))
 		{
-		sEWriteBE<byte>(iChanW, 0xE8);
+		sEWriteBE<uint8>(iChanW, 0xE8);
 		sEWriteCountPrefixedString(iChanW, *theString);
 		return true;
 		}
 
 	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(thePPT))
 		{
-		sEWriteBE<byte>(iChanW, 0xE8);
+		sEWriteBE<uint8>(iChanW, 0xE8);
 		sEWriteCountPrefixedString(iChanW, sReadAllUTF8(*theChanner));
 		return true;
 		}
 
 	if (const Data_ZZ* theData = sPGet<Data_ZZ>(thePPT))
 		{
-		sEWriteBE<byte>(iChanW, 0xE7);
+		sEWriteBE<uint8>(iChanW, 0xE7);
 		sEWriteCount(iChanW, theData->GetSize());
 		sEWriteMem(iChanW, theData->GetPtr(), theData->GetSize());
 		return true;

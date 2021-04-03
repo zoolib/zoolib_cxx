@@ -154,7 +154,7 @@ bool sSkip_Until(const ChanR<EE>& iChanR, const EE& iTerminator)
 #pragma mark -
 
 template <class EE>
-bool sTryRead(EE iEE, const ChanRU<EE>& iChanRU)
+bool sTryRead(const ChanRU<EE>& iChanRU, EE iEE)
 	{
 	if (ZQ<EE> theElement = sQRead(iChanRU))
 		{

@@ -218,7 +218,7 @@ typedef pair<ZP<Expr_Rel>,ZP<Expr_Rel>> RelPair;
 static void spRead_WSComma(const ChanRU_UTF& iChanRU, const string8& iMessage)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
-	if (not sTryRead_CP(',', iChanRU))
+	if (not sTryRead_CP(iChanRU, ','))
 		throw ParseException("Expected ','" + iMessage);
 	}
 
@@ -242,7 +242,7 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 	else
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (not sTryRead_CP('(', iChanRU))
+		if (not sTryRead_CP(iChanRU, '('))
 			throw ParseException("Expected '(' after " + *theNameQ);
 
 		sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -333,7 +333,7 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 					{
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 
-					if (not sTryRead_CP('=', iChanRU))
+					if (not sTryRead_CP(iChanRU, '='))
 						throw ParseException("Expected '='");
 
 					sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -421,7 +421,7 @@ ZP<Expr_Rel> sFromStrim(const ChanRU_UTF& iChanRU)
 			}
 
 		sSkip_WSAndCPlusPlusComments(iChanRU);
-		if (not sTryRead_CP(')', iChanRU))
+		if (not sTryRead_CP(iChanRU, ')'))
 			throw ParseException("Expected ')' after " + *theNameQ);
 		return result;
 		}

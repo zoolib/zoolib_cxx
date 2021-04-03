@@ -64,12 +64,12 @@ string8 sRead_Until(const ChanR_UTF& iSource, UTF32 iTerminator)
 // =================================================================================================
 #pragma mark -
 
-bool sTryRead_CP(UTF32 iCP, const ChanRU_UTF& iChanRU)
+bool sTryRead_CP(const ChanRU_UTF& iChanRU, UTF32 iCP)
 	{
 	// Ensure that we only try to read a valid CP, one that
 	// can actually be returned by ReadCP.
 	ZAssertStop(2, Unicode::sIsValid(iCP));
-	return sTryRead(iCP, iChanRU);
+	return sTryRead(iChanRU, iCP);
 	}
 
 // =================================================================================================
@@ -220,12 +220,12 @@ bool sTryRead_CaselessString(const ChanRU_UTF& iChanRU, const string8& iPattern)
 
 bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative)
 	{
-	if (sTryRead_CP('-', iChanRU))
+	if (sTryRead_CP(iChanRU, '-'))
 		{
 		oIsNegative = true;
 		return true;
 		}
-	else if (sTryRead_CP('+', iChanRU))
+	else if (sTryRead_CP(iChanRU, '+'))
 		{
 		oIsNegative = false;
 		return true;
@@ -342,7 +342,7 @@ static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 	if (not spTryRead_Mantissa(iChanRU, oInt64, oDouble, oIsDouble))
 		return false;
 
-	if (sTryRead_CP('.', iChanRU))
+	if (sTryRead_CP(iChanRU, '.'))
 		{
 		oIsDouble = true;
 		double fracPart = 0.0;
@@ -360,7 +360,7 @@ static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 		oDouble += fracPart / divisor;
 		}
 
-	if (sTryRead_CP('e', iChanRU) || sTryRead_CP('E', iChanRU))
+	if (sTryRead_CP(iChanRU, 'e') || sTryRead_CP(iChanRU, 'E'))
 		{
 		oIsDouble = true;
 		int64 exponent;
@@ -378,7 +378,7 @@ bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
 	oIsDouble = false;
 	bool isNegative = false;
 	bool hadSign = sTryRead_Sign(iChanRU, isNegative);
-	if (sTryRead_CP('0', iChanRU))
+	if (sTryRead_CP(iChanRU, '0'))
 		{
 		if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 			{
@@ -497,13 +497,13 @@ bool sCopy_WSAndCPlusPlusComments(const ChanRU_UTF& iChanRU,
 				}
 			else if (*firstCPQ == '/')
 				{
-				if (sTryRead_CP('/', iChanRU))
+				if (sTryRead_CP(iChanRU, '/'))
 					{
 					sEWrite(oDest, "//");
 					sCopy_Line(iChanRU, oDest);
 					continue;
 					}
-				else if (sTryRead_CP('*', iChanRU))
+				else if (sTryRead_CP(iChanRU, '*'))
 					{
 					sEWrite(oDest, "/*");
 					if (not sCopy_Until(iChanRU, "*/", oDest))
@@ -568,12 +568,12 @@ void sRead_EscapedString(UTF32 iTerminator, const ChanRU_UTF& iChanRU,
 bool sTryCopy_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU,
 	const ChanW_UTF& oDest)
 	{
-	if (not sTryRead_CP(iDelimiter, iChanRU))
+	if (not sTryRead_CP(iChanRU, iDelimiter))
 		return false;
 
 	sCopy_EscapedString(iDelimiter, iChanRU, oDest);
 
-	if (not sTryRead_CP(iDelimiter, iChanRU))
+	if (not sTryRead_CP(iChanRU, iDelimiter))
 		sThrow_ParseException("Missing string delimiter");
 
 	return true;

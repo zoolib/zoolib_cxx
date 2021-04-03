@@ -36,7 +36,7 @@ size_t ChanR_Bin_HexStrim::Read(byte* oDest, size_t iCount)
 		ZQ<int> firstDigitQ = sQRead_HexDigit(fChanRU);
 		if (not firstDigitQ)
 			{
-			if (not fAllowUnderscore || not sTryRead_CP('_', fChanRU))
+			if (not fAllowUnderscore || not sTryRead_CP(fChanRU, '_'))
 				break;
 			firstDigitQ = 0;
 			}
@@ -46,12 +46,12 @@ size_t ChanR_Bin_HexStrim::Read(byte* oDest, size_t iCount)
 		ZQ<int> secondDigitQ = sQRead_HexDigit(fChanRU);
 		if (not secondDigitQ)
 			{
-			if (not fAllowUnderscore || not sTryRead_CP('_', fChanRU))
+			if (not fAllowUnderscore || not sTryRead_CP(fChanRU, '_'))
 				sThrow_ParseException("Could not read second nibble of byte");
 			secondDigitQ = 0;
 			}
 
-		*localDest++ = *firstDigitQ * 16 + *secondDigitQ;
+		*localDest++ = byte(*firstDigitQ * 16 + *secondDigitQ);
 		--iCount;
 		}
 
