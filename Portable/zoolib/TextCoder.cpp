@@ -107,7 +107,7 @@ void sDecode(
 	const ZP<TextDecoder>& iTextDecoder,
 	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
-	uint8 buffer[kBufSize];
+	byte buffer[kBufSize];
 
 	UTF32* localDest = oDest;
 	size_t bufferUsed = 0;
@@ -228,7 +228,7 @@ void sEncode(
 	const ZP<TextEncoder>& iTextEncoder,
 	const ChanW_Bin& iChanW)
 	{
-	uint8 buffer[kBufSize];
+	byte buffer[kBufSize];
 	const UTF32* localSource = iSource;
 	while (iSourceCU)
 		{

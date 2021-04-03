@@ -45,7 +45,7 @@ bool sTryRead_String(const ChanRU_Bin& iChanRU, const std::string& iPattern)
 
 ZQ<uint64> sQReadCount(const ChanR_Bin& r)
 	{
-	ZQ<uint8> theQ = sQRead<uint8>(r);
+	ZQ<uint8> theQ = sQReadBE<uint8>(r);
 	if (not theQ)
 		return null;
 

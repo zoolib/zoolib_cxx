@@ -21,7 +21,7 @@ size_t ChanR_Bin_CFStream::Read(byte* oDest, size_t iCount)
 	{
 	if (fCFStream)
 		{
-		CFIndex result = ::CFReadStreamRead(fCFStream, (byte*)oDest, iCount);
+		CFIndex result = ::CFReadStreamRead(fCFStream, (UInt8*)oDest, iCount);
 		if (result > 0)
 			return result;
 		}
@@ -49,7 +49,7 @@ size_t ChanW_Bin_CFStream::Write(const byte* iSource, size_t iCount)
 	{
 	if (fCFStream)
 		{
-		CFIndex result = ::CFWriteStreamWrite(fCFStream, (byte*)iSource, iCount);
+		CFIndex result = ::CFWriteStreamWrite(fCFStream, (const UInt8*)iSource, iCount);
 		if (result > 0)
 			return result;
 		}

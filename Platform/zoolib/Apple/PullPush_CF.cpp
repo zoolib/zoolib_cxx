@@ -55,7 +55,7 @@ bool sFromCF_Push_PPT(CFTypeRef iCFTypeRef, const ChanW_PPT& iChanW)
 		sFlush(iChanW);
 
 		if (size_t theLength = ::CFDataGetLength((CFDataRef)iCFTypeRef))
-			sWriteFully(*thePullPushPair.first, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
+			sWriteMemFully(*thePullPushPair.first, ::CFDataGetBytePtr((CFDataRef)iCFTypeRef), theLength);
 
 		sDisconnectWrite(*thePullPushPair.first);
 		return true;

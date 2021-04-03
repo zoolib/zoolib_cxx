@@ -19,9 +19,11 @@ class Data_ZZ::Rep : public CountedWithoutFinalize
 public:
 	Rep() {}
 
-	Rep(size_t iSize) : fVector(iSize, 0) {}
+	Rep(size_t iSize) : fVector(iSize, byte(0)) {}
 
-	Rep(const char* iSource, size_t iSize) : fVector(iSource, iSource + iSize) {}
+	Rep(const void* iSource, size_t iSize)
+	:	fVector(static_cast<const byte*>(iSource), static_cast<const byte*>(iSource) + iSize)
+		{}
 
 	Rep(const vector<byte>& iVector) : fVector(iVector) {}
 
@@ -126,7 +128,7 @@ void Data_ZZ::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	if (iCount == 0)
 		return;
 	this->pTouch();
-	std::copy_n(static_cast<const char*>(iSource), iCount, fRep->fVector.begin() + iOffset);
+	std::copy_n(static_cast<const byte*>(iSource), iCount, fRep->fVector.begin() + iOffset);
 	}
 
 void Data_ZZ::CopyFrom(const void* iSource, size_t iCount)
@@ -137,7 +139,7 @@ void Data_ZZ::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	ZAssertStop(2, iCount + iOffset <= this->GetSize());
 	if (iCount == 0)
 		return;
-	std::copy_n(fRep->fVector.begin() + iOffset, iCount, static_cast<char*>(oDest));
+	std::copy_n(fRep->fVector.begin() + iOffset, iCount, static_cast<byte*>(oDest));
 	}
 
 void Data_ZZ::CopyTo(void* oDest, size_t iCount) const

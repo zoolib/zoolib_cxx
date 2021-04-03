@@ -108,7 +108,7 @@ public:
 		{
 		if (iType == 254)
 			{
-			if (ZQ<uint8> theTypeQ = sQRead(iChanR))
+			if (ZQ<byte> theTypeQ = sQRead(iChanR))
 				{
 				switch (*theTypeQ)
 					{
