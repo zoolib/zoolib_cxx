@@ -7,6 +7,8 @@
 
 #include "zoolib/size_t.h" // Brings ::size_t and/or std::size_t into namespace ZooLib
 
+#include <cstddef> // For std::byte (when desired)
+
 // Macros for 64 bit integer constants
 #if ZCONFIG(Compiler, MSVC)
 	#define ZINT64_C(v) (v##i64)
@@ -54,7 +56,11 @@
 
 namespace ZooLib {
 
-typedef unsigned char byte;
+#if 0 && ZCONFIG_CPP >= 2017
+	using std::byte;
+#else
+	typedef unsigned char byte;
+#endif
 
 // Pull the ZStdInt names into namespace ZooLib. If you'd like to use
 // these names unadorned, you can do 'using namespace ZooLib' or
