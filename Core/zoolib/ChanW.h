@@ -6,8 +6,6 @@
 
 #include "zoolib/Chan.h"
 
-#include "zoolib/ZTypes.h" // For sNonConst
-
 #include <stdexcept> // For range_error
 #include <string> // because range_error may require it
 
