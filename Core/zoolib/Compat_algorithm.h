@@ -124,8 +124,7 @@ protected:
 	};
 
 template <class T>
-struct SaveRestore : public SaveSetRestore<T>
-	{ SaveRestore(T& ioRef) : SaveSetRestore<T>(ioRef) {} };
+using SaveRestore = SaveSetRestore<T>;
 
 } // namespace ZooLib
 
