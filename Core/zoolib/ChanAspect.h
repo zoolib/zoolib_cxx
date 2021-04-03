@@ -4,7 +4,8 @@
 #define __ZooLib_ChanAspect_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compat_algorithm.h"
+#include <algorithm> // For std::min
+
 #include "zoolib/StdInt.h" // For uint64
 #include "zoolib/Time.h" // For Time::kDay
 
