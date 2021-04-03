@@ -16,8 +16,8 @@ class ChanW_Bin_Hash
 :	public ChanW_Bin
 	{
 public:
-	typedef uint8 Hash_t[Hash_p::kHashSize];
-	typedef std::array<byte,Hash_p::kHashSize> Array_t;
+	typedef uint8 Digest_t[Hash_p::kDigestSize];
+	typedef std::array<byte,Hash_p::kDigestSize> Array_t;
 
 	ChanW_Bin_Hash()
 		{
@@ -30,13 +30,13 @@ public:
 		return iCount;
 		}
 
-	void GetHash(Hash_t oHash) const
+	void GetDigest(Digest_t oDigest) const
 		{
 		typename Hash_p::Context tempContext = fContext;
-		Hash_p::sFinal(tempContext, oHash);
+		Hash_p::sFinal(tempContext, oDigest);
 		}
 
-	Array_t GetHash() const
+	Array_t GetDigest() const
 		{
 		Array_t result;
 		typename Hash_p::Context tempContext = fContext;

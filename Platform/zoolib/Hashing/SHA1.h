@@ -27,7 +27,7 @@ namespace Hashing {
 
 struct SHA1 {
 
-static constexpr size_t kHashSize = 20;
+static constexpr size_t kDigestSize = 20;
 static constexpr char kName[] = "SHA1";
 
 #if ZCONFIG_Hashing_SHA1_UseOpenSSL
@@ -52,7 +52,7 @@ struct Context
 
 static void sInit(Context& oContext);
 static void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-static void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+static void sFinal(Context& ioContext, uint8 oDigest[kDigestSize]);
 
 }; // struct SHA1
 

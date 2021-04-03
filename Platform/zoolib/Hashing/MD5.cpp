@@ -18,7 +18,7 @@ void MD5::sInit(MD5::Context& oContext)
 void MD5::sUpdate(MD5::Context& ioContext, const void* iData, size_t iCount)
 	{ ::MD5_Update(&ioContext, iData, iCount); }
 
-void MD5::sFinal(MD5::Context& ioContext, uint8 oDigest[kHashSize])
+void MD5::sFinal(MD5::Context& ioContext, uint8 oDigest[kDigestSize])
 	{ ::MD5_Final(&oDigest[0], &ioContext); }
 
 #endif // ZCONFIG_Hashing_MD5_UseOpenSSL
@@ -113,7 +113,7 @@ void MD5::sUpdate(Context& ioContext, const void* (iData), size_t len)
  * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
-void MD5::sFinal(MD5::Context& ioContext, uint8 digest[kHashSize])
+void MD5::sFinal(MD5::Context& ioContext, uint8 digest[kDigestSize])
 {
 	Context* ctx = &ioContext;
     unsigned count;

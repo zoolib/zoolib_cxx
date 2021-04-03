@@ -19,7 +19,7 @@ void SHA256::sInit(Context& oContext)
 void SHA256::sUpdate(Context& ioContext, const void* iData, size_t iCount)
 	{ ::SHA256_Update(&ioContext, iData, iCount); }
 
-void SHA256::sFinal(Context& ioContext, uint8 oDigest[kHashSize])
+void SHA256::sFinal(Context& ioContext, uint8 oDigest[kDigestSize])
 	{ ::SHA256_Final(&oDigest[0], &ioContext); }
 
 #endif // ZCONFIG_Hashing_SHA256_UseOpenSSL
@@ -198,7 +198,7 @@ void SHA256::sUpdate(Context& ioContext, const void* iData, size_t iCount)
 	sha256_update(&ioContext, static_cast<const BYTE*>(iData), iCount);
 	}
 
-void SHA256::sFinal(Context& ioContext, uint8 oDigest[kHashSize])
+void SHA256::sFinal(Context& ioContext, uint8 oDigest[kDigestSize])
 	{
 	sha256_final(&ioContext, oDigest);
 	}

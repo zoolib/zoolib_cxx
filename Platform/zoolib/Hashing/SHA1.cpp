@@ -36,7 +36,7 @@ void SHA1::sInit(SHA1::Context& oContext)
 void SHA1::sUpdate(SHA1::Context& ioContext, const void* iData, size_t iCount)
 	{ ::SHA1_Update(&ioContext, iData, iCount); }
 
-void SHA1::sFinal(SHA1::Context& ioContext, uint8 oDigest[kHashSize])
+void SHA1::sFinal(SHA1::Context& ioContext, uint8 oDigest[kDigestSize])
 	{ ::SHA1_Final(&oDigest[0], &ioContext); }
 
 #endif // ZCONFIG_Hashing_SHA1_UseOpenSSL
@@ -173,7 +173,7 @@ void SHA1::sUpdate(SHA1::Context& ioContext, const void* iData, size_t iCount)
 		}
 	}
 
-void SHA1::sFinal(SHA1::Context& ioContext, uint8 oDigest[kHashSize])
+void SHA1::sFinal(SHA1::Context& ioContext, uint8 oDigest[kDigestSize])
 	{
 	// Remember the bit count.
 	const uint64 finalBitCountBE =

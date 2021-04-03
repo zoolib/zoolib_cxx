@@ -28,7 +28,7 @@ namespace Hashing {
 
 struct SHA256 {
 
-static constexpr size_t kHashSize = 32;
+static constexpr size_t kDigestSize = 32;
 static constexpr char kName[] = "SHA256";
 
 #if ZCONFIG_Hashing_SHA256_UseOpenSSL
@@ -56,7 +56,7 @@ struct Context
 
 static void sInit(Context& oContext);
 static void sUpdate(Context& ioContext, const void* iData, size_t iCount);
-static void sFinal(Context& ioContext, uint8 oDigest[kHashSize]);
+static void sFinal(Context& ioContext, uint8 oDigest[kDigestSize]);
 
 }; // struct SHA256
 
