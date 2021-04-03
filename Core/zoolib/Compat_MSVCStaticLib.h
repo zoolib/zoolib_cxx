@@ -52,8 +52,8 @@ ZFile_Win.cpp, ZGRgnRep_HRGN.cpp, ZNet_Internet_WinSock.cpp, ZStreamRWCon_SSL_Wi
 ZTextCoder_Win.cpp and ZUnicode_Normalize_Win.cpp.
 
 We \#include ZCompat_MSVCStaticLib.h in the corresponding header files, and put in each a
-\c ZMACRO_MSVCStaticLib_Reference(ModifiedFileName). In the cpp files we put a
-\c ZMACRO_MSVCStaticLib_cpp(ModifiedFileName). The ModifiedFileName is generally the
+\c ZMACRO_MSVCStaticLib_Reference(ModifiedFilename). In the cpp files we put a
+\c ZMACRO_MSVCStaticLib_cpp(ModifiedFilename). The ModifiedFilename is generally the
 filename with the leading Z and file extension removed, the same style as
 used in \c ZCONFIG_API_XXX macros.
 
