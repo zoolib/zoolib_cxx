@@ -4,8 +4,7 @@
 #define __ZooLib_Channer_UTF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanW_UTF.h"
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/Channer.h"
 
 namespace ZooLib {

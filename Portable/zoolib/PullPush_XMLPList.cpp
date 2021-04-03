@@ -6,7 +6,6 @@
 #include "zoolib/Chan_Bin_Base64.h"
 #include "zoolib/Chan_UTF_Chan_Bin.h"
 #include "zoolib/Chan_UTF_string.h"
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanRU_XX_Unreader.h"
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Coerce_Any.h"

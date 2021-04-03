@@ -5,9 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/ChanW_UTF.h"
-#include "zoolib/ZQ.h"
+#include "zoolib/Chan_UTF.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
 

@@ -5,7 +5,6 @@
 #include "zconfig.h"
 
 #include "zoolib/Chan_UTF_CRLF.h"
-#include "zoolib/ChanU_UTF.h"
 
 #include <vector>
 

@@ -6,7 +6,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/ChanRU_UTF.h"
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/Name.h"
 
 #include <vector>

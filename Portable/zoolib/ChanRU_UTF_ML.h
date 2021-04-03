@@ -6,7 +6,6 @@
 #include "zconfig.h"
 
 #include "zoolib/Callable.h"
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/ML.h"
 

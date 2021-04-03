@@ -5,14 +5,10 @@
 #include "zconfig.h"
 
 #include "zoolib/ByteSwap.h"
+#include "zoolib/Chan_Bin.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - ChanW_Bin
-
-typedef ChanW<byte> ChanW_Bin;
 
 // =================================================================================================
 #pragma mark -

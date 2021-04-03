@@ -5,7 +5,6 @@
 #define __ZooLib_ChanW_UTF_ML_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/ML.h"
 

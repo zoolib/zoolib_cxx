@@ -6,6 +6,7 @@
 
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/UnicodeString8.h"
+#include "zoolib/ZQ.h"
 
 #include <map>
 

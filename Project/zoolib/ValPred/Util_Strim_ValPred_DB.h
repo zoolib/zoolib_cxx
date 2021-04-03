@@ -4,8 +4,7 @@
 #define __ZooLib_ValPred_Util_Strim_ValPred_DB_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/ChanW_UTF.h"
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/ZQ.h"
 
 #include "zoolib/ValPred/ValPred.h"

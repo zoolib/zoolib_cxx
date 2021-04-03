@@ -2,6 +2,7 @@
 
 #include "zoolib/ChanRU_UTF_Std.h"
 
+#include "zoolib/ChanR.h"
 #include "zoolib/Unicode.h"
 
 namespace ZooLib {

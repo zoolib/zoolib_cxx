@@ -3,6 +3,7 @@
 #include "zoolib/Pull_ML.h"
 
 #include "zoolib/Channer_UTF.h"
+#include "zoolib/ChanW_UTF.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/Util_Chan_UTF.h"

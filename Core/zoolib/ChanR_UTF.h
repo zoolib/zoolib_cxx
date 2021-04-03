@@ -4,15 +4,11 @@
 #define __ZooLib_ChanR_UTF_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/ChanR.h"
 #include "zoolib/UnicodeString.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - ChanR_UTF
-
-typedef ChanR<UTF32> ChanR_UTF;
 
 // =================================================================================================
 #pragma mark -

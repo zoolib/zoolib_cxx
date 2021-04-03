@@ -4,7 +4,7 @@
 #define __ZooLib_RelationalAlgebra_Util_Strim_Rel_h__
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
+#include "zoolib/Chan_UTF.h"
 
 #include "zoolib/ValPred/Visitor_Expr_Bool_ValPred_DB_ToStrim.h"
 

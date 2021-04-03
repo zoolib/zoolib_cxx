@@ -4,8 +4,7 @@
 #define __ZooLib_RelationalAlgebra_Util_Strim_RelHead_h__
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/ChanW_UTF.h"
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/ZQ.h"
 
 #include "zoolib/RelationalAlgebra/RelHead.h"

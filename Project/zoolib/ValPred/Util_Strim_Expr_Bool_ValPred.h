@@ -4,7 +4,7 @@
 #define __ZooLib_ValPred_Util_Strim_Expr_Bool_ValPred_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
+#include "zoolib/Chan_UTF.h"
 
 #include "zoolib/Expr/Expr_Bool.h"
 

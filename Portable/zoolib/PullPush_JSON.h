@@ -4,7 +4,6 @@
 #define __ZooLib_PullPush_JSON_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/PullPush.h"
 #include "zoolib/Util_Chan_JSON.h" // For TextOptions etc.
 

@@ -6,7 +6,6 @@
 
 #include "zoolib/AnyBase.h"
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/PullTextOptions.h"
 #include "zoolib/PushTextOptions.h"

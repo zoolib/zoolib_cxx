@@ -4,9 +4,7 @@
 #define __ZooLib_Channer_Bin_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanRPos_Bin.h"
-#include "zoolib/ChanW_Bin.h"
+#include "zoolib/Chan_Bin.h"
 #include "zoolib/Channer.h"
 
 namespace ZooLib {

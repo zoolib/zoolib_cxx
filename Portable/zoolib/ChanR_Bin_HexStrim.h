@@ -4,8 +4,8 @@
 #define __ZooLib_ChanR_Bin_HexStrim_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanRU_UTF.h"
+#include "zoolib/Chan_Bin.h"
+#include "zoolib/Chan_UTF.h"
 
 namespace ZooLib {
 

@@ -4,9 +4,9 @@
 #define __ZooLib_Util_Chan_UTF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
-#include "zoolib/ChanW_UTF.h"
+#include "zoolib/Chan_UTF.h"
 #include "zoolib/Util_Chan.h"
+#include "zoolib/UnicodeString8.h"
 
 namespace ZooLib {
 namespace Util_Chan {

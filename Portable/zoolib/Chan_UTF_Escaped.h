@@ -4,7 +4,6 @@
 #define __ZooLib_Chan_UTF_Escaped_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanRU_UTF.h"
 #include "zoolib/ChanW_UTF.h"
 
 namespace ZooLib {

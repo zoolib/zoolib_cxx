@@ -5,7 +5,7 @@
 #define __ZooLib_Chan_UTF_CRLF_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ChanR_UTF.h"
+#include "zoolib/Chan_UTF.h"
 
 namespace ZooLib {
 

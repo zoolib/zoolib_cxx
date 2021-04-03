@@ -12,7 +12,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ChanOfChan
 
-// Gets the DeriveFrom of t
+// Gets the DeriveFrom of Chan_p
 template <class Chan_p> using ChanOfChan =
 	typename ZooLib::AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t;
 
@@ -155,24 +155,6 @@ using ChanRWCon = DeriveFrom
 
 template <typename EE>
 using ChanConnection = ChanRWCon<EE>;
-
-// =================================================================================================
-#pragma mark - ChanU extras
-
-template <class EE>
-bool sUnread(const ChanU<EE>& iChanU, const EE& iElmt)
-	{ return 1 == sUnread(iChanU, &iElmt, 1); }
-
-// =================================================================================================
-#pragma mark -
-
-inline
-uint64 sAvailable(const DeriveFrom<ChanAspect_Pos,ChanAspect_Size>& iChan)
-	{
-	const uint64 thePos = sPos(iChan);
-	const uint64 theSize = sSize(iChan);
-	return theSize >= thePos ? theSize - thePos : 0;
-	}
 
 } // namespace ZooLib
 

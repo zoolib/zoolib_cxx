@@ -3,6 +3,9 @@
 
 #include "zoolib/POSIX/FILE_Channer.h"
 
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(BSD) || (defined(__ANDROID__) && defined(__USE_BSD))

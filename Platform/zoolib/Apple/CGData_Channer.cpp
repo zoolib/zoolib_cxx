@@ -3,6 +3,9 @@
 
 #include "zoolib/Apple/CGData_Channer.h"
 
+#include "zoolib/ChanR_Bin.h"
+#include "zoolib/ChanW_Bin.h"
+
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
 #include "zoolib/ZDebug.h"
