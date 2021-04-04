@@ -15,7 +15,7 @@ namespace ZooLib {
 
 template <class Data_p>
 class ChanRPos_Bin_Data
-:	public ChanRPos<byte>
+:	public ChanRPos_Bin
 	{
 public:
 	typedef Data_p Data;
