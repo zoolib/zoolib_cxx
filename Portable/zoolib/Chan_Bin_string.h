@@ -18,7 +18,7 @@ class ChanW_Bin_string
 public:
 	ChanW_Bin_string(std::string* ioString);
 
-	virtual size_t Write(const byte* iSource, size_t iCountCU);
+	virtual size_t Write(const byte* iSource, size_t iCount);
 
 protected:
 	std::string* fStringPtr;
@@ -28,7 +28,7 @@ protected:
 #pragma mark - ChanRPos_Bin_string
 
 class ChanRPos_Bin_string
-:	public ChanRPos<byte>
+:	public ChanRPos_Bin
 	{
 public:
 	ChanRPos_Bin_string(const std::string& iString);

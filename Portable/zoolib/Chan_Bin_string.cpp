@@ -11,10 +11,10 @@ ChanW_Bin_string::ChanW_Bin_string(std::string* ioString)
 :	fStringPtr(ioString)
 	{}
 
-size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCountCU)
+size_t ChanW_Bin_string::Write(const byte* iSource, size_t iCount)
 	{
-	fStringPtr->append((char*)iSource, iCountCU);
-	return iCountCU;
+	fStringPtr->append((char*)iSource, iCount);
+	return iCount;
 	}
 
 // =================================================================================================
