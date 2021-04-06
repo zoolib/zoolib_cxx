@@ -2,6 +2,7 @@
 
 #ifndef __ZooLib_Cog_h__
 #define __ZooLib_Cog_h__ 1
+#include "zconfig.h"
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"

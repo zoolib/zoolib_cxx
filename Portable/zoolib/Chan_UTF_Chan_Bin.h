@@ -3,6 +3,7 @@
 
 #ifndef __ZooLib_Chan_UTF_Chan_Bin_h__
 #define __ZooLib_Chan_UTF_Chan_Bin_h__ 1
+#include "zconfig.h"
 
 #include "zoolib/ChanR_Bin.h"
 #include "zoolib/ChanR_UTF.h"

@@ -2,7 +2,6 @@
 
 #ifndef __ZooLib_Val_DB_h__
 #define __ZooLib_Val_DB_h__ 1
-
 #include "zconfig.h"
 
 #if 0

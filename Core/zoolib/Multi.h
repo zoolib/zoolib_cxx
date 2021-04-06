@@ -2,6 +2,7 @@
 
 #ifndef __ZooLib_Multi_h__
 #define __ZooLib_Multi_h__ 1
+#include "zconfig.h"
 
 #include "zoolib/Callable_Macros.h"
 #include "zoolib/Util_Relops.h"
