@@ -277,42 +277,8 @@
 #endif
 
 // =================================================================================================
-// Previously we've used 'nil' for the null pointer. With our increasing use of
-// Objective C we're switching to use the soon-to-be standardized nullptr.
 
-#if ZCONFIG_CPP >= 2011
-	// nullptr is naturally available
-	#define ZCONFIG_Has_nullptr 1
-
-#elif defined(__clang__)
-	#if __has_extension(cxx_nullptr)
-		// nullptr is naturally available
-		#define ZCONFIG_Has_nullptr 1
-	#elif defined nullptr
-		// It's being faked out by stuff in cstddef.
-		#define ZCONFIG_Has_nullptr 1
-	#endif
-#elif defined(__GXX_EXPERIMENTAL_CXX0X__)
-		#define ZCONFIG_Has_nullptr 1
-#endif
-
-#ifndef ZCONFIG_Has_nullptr
-
-	const class nullptr_t
-		{
-		void operator&() const;
-	public:
-		template <class T> operator T*() const { return 0; }
-		template <class C, class T> operator T C::*() const { return 0; }
-		} nullptr = {};
-
-	#define ZCONFIG_Has_nullptr 1
-
-#endif
-
-#ifndef ZCONFIG_Has_nullptr
-	#define ZCONFIG_Has_nullptr 0
-#endif
+#define ZCONFIG_Has_nullptr 1
 
 // =================================================================================================
 
@@ -401,13 +367,8 @@
 	// Even today wchar_t can still be an oddball, certainly on MSVC where __wchar_t is the
 	// canonical type and wchar_t can be a typedef of an int. We define __wchar_t elsewhere
 	// so we've got a type we can depend on interpreting correctly.
+	// https://devblogs.microsoft.com/oldnewthing/20161201-00/?p=94836
 	typedef wchar_t __wchar_t;
-
-	// Similarly for 64 bit ints.
-	typedef long long __int64;
-	typedef unsigned long long __uint64;
-#else
-	typedef unsigned __int64 __uint64;
 #endif
 
 // =================================================================================================

@@ -38,13 +38,11 @@ const ChanW_UTF& operator<<(const ChanW_UTF& ww, int iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, unsigned int iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, long iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, unsigned long iVal);
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, __int64 iVal);
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, __uint64 iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, long long iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, unsigned long long iVal);
 
-#if ZCONFIG_CPP >= 2011
-	const ChanW_UTF& operator<<(const ChanW_UTF& ww, char16_t iVal);
-	const ChanW_UTF& operator<<(const ChanW_UTF& ww, char32_t iVal);
-#endif
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, char16_t iVal);
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, char32_t iVal);
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, float iVal);
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, double iVal);

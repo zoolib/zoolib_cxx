@@ -2,7 +2,7 @@
 
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-#include <inttypes.h> // For PRIuLEAST16 and PRIuLEAST32
+#include <inttypes.h>
 
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll
@@ -140,33 +140,30 @@ const ChanW_UTF& operator<<(const ChanW_UTF& ww, unsigned long iVal)
 	return ww;
 	}
 
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, __int64 iVal)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, long long iVal)
 	{
 	sEWritef(ww, "%lld", iVal);
 	return ww;
 	}
 
-const ChanW_UTF& operator<<(const ChanW_UTF& ww, __uint64 iVal)
+const ChanW_UTF& operator<<(const ChanW_UTF& ww, unsigned long long iVal)
 	{
 	sEWritef(ww, "%llu", iVal);
 	return ww;
 	}
 
-#if ZCONFIG_CPP >= 2011
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, char16_t iVal)
 	{
-	// Would like to use PRIuLEAST16, but the compiler complains.
-	sEWritef(ww, "%u", iVal);
+	// clang on mac warns without the cast.
+	sEWritef(ww, "%" PRIuLEAST16, std::uint_least16_t(iVal));
 	return ww;
 	}
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, char32_t iVal)
 	{
-	sEWritef(ww, "%u", iVal);
-// 	sEWritef(ww, "%" PRIuLEAST32, iVal);
+ 	sEWritef(ww, "%" PRIuLEAST32, iVal);
 	return ww;
 	}
-#endif // ZCONFIG_CPP >= 2011
 
 const ChanW_UTF& operator<<(const ChanW_UTF& ww, float iVal)
 	{

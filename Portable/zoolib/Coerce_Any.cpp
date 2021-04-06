@@ -16,7 +16,7 @@ ZQ<bool> sQCoerceBool(const AnyBase& iAny)
 	if (const bool* pBool = iAny.PGet<bool>())
 		return *pBool;
 
-	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+	if (ZQ<int64> qq = sQCoerceInt(iAny))
 		return *qq;
 
 	if (ZQ<double> qq = sQCoerceRat(iAny))
@@ -30,7 +30,7 @@ ZQ<bool> sQCoerceBool(const AnyBase& iAny)
 		if (ZQ<double> qq = Util_string::sQDouble(*pString))
 			return *qq;
 
-		if (ZQ<__int64> qq = Util_string::sQInt64(*pString))
+		if (ZQ<int64> qq = Util_string::sQInt64(*pString))
 			return *qq;
 
 		if (Util_string::sEquali(*pString, "t") || Util_string::sEquali(*pString, "true"))
@@ -66,7 +66,7 @@ bool sCoerceBool(const AnyBase& iAny)
 	return false;
 	}
 
-ZQ<__int64> sQCoerceInt(const AnyBase& iAny)
+ZQ<int64> sQCoerceInt(const AnyBase& iAny)
 	{
 	if (false)
 		{}
@@ -90,17 +90,17 @@ ZQ<__int64> sQCoerceInt(const AnyBase& iAny)
 		return *pp;
 	else if (const unsigned long* pp = iAny.PGet<unsigned long>())
 		return *pp;
-	else if (const __int64* pp = iAny.PGet<__int64>())
+	else if (const long long* pp = iAny.PGet<long long>())
 		return *pp;
-	else if (const __uint64* pp = iAny.PGet<__uint64>())
+	else if (const unsigned long long* pp = iAny.PGet<unsigned long long>())
 		return *pp;
 
 	return null;
 	}
 
-bool sQCoerceInt(const AnyBase& iAny, __int64& oVal)
+bool sQCoerceInt(const AnyBase& iAny, int64& oVal)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+	if (ZQ<int64> qq = sQCoerceInt(iAny))
 		{
 		oVal = *qq;
 		return true;
@@ -108,16 +108,16 @@ bool sQCoerceInt(const AnyBase& iAny, __int64& oVal)
 	return false;
 	}
 
-__int64 sDCoerceInt(__int64 iDefault, const AnyBase& iAny)
+int64 sDCoerceInt(int64 iDefault, const AnyBase& iAny)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+	if (ZQ<int64> qq = sQCoerceInt(iAny))
 		return *qq;
 	return iDefault;
 	}
 
-__int64 sCoerceInt(const AnyBase& iAny)
+int64 sCoerceInt(const AnyBase& iAny)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iAny))
+	if (ZQ<int64> qq = sQCoerceInt(iAny))
 		return *qq;
 	return 0;
 	}
@@ -160,9 +160,9 @@ double sCoerceRat(const AnyBase& iAny)
 	return 0.0;
 	}
 
-ZQ<__int64> sQCoerceNumberAsInt(const AnyBase& iAny)
+ZQ<int64> sQCoerceNumberAsInt(const AnyBase& iAny)
 	{
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
+	if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		return *theQ;
 	if (ZQ<double> theQ = sQCoerceRat(iAny))
 		return *theQ;
@@ -173,7 +173,7 @@ ZQ<__int64> sQCoerceNumberAsInt(const AnyBase& iAny)
 
 ZQ<double> sQCoerceNumberAsRat(const AnyBase& iAny)
 	{
-	if (ZQ<__int64> theQ = sQCoerceInt(iAny))
+	if (ZQ<int64> theQ = sQCoerceInt(iAny))
 		return *theQ;
 	if (ZQ<double> theQ = sQCoerceRat(iAny))
 		return *theQ;

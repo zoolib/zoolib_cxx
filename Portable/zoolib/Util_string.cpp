@@ -22,52 +22,52 @@ using std::vector;
 // =================================================================================================
 #pragma mark - Util_string
 
-ZQ<__int64> sQInt64(const string& iString)
+ZQ<int64> sQInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		__int64 result;
+		long long result;
 		if (sscanf(iString.c_str(), "%lld", &result) > 0)
 			return result;
 		}
 	return null;
 	}
 
-__int64 sDInt64(__int64 iDefault, const string& iString)
+int64 sDInt64(int64 iDefault, const string& iString)
 	{
-	if (ZQ<__int64> qInt64 = sQInt64(iString))
+	if (ZQ<int64> qInt64 = sQInt64(iString))
 		return qInt64.Get();
 	return iDefault;
 	}
 
-__int64 sInt64(const string& iString)
+int64 sInt64(const string& iString)
 	{
-	if (ZQ<__int64> qInt64 = sQInt64(iString))
+	if (ZQ<int64> qInt64 = sQInt64(iString))
 		return qInt64.Get();
 	return 0;
 	}
 
-ZQ<__uint64> sQUInt64(const string& iString)
+ZQ<uint64> sQUInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		__uint64 result;
+		unsigned long long result;
 		if (sscanf(iString.c_str(), "%llu", &result) > 0)
 			return result;
 		}
 	return null;
 	}
 
-__uint64 sDUInt64(__uint64 iDefault, const string& iString)
+uint64 sDUInt64(uint64 iDefault, const string& iString)
 	{
-	if (ZQ<__uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
 		return qUInt64.Get();
 	return iDefault;
 	}
 
-__uint64 sUInt64(const string& iString)
+uint64 sUInt64(const string& iString)
 	{
-	if (ZQ<__uint64> qUInt64 = sQUInt64(iString))
+	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
 		return qUInt64.Get();
 	return 0;
 	}

@@ -79,12 +79,12 @@ typename PointTraits<Type_p>::Y_t Y(Type_p& iT) { return PointTraits<Type_p>::sY
 		inline static Y_t sY(Ord_t& ioT) { return ioT; } \
 		};
 
-ZMACRO_Cartesian(char)
+ZMACRO_Cartesian(char) // If char is unsigned, this really shouldn't be here.
 ZMACRO_Cartesian(signed char)
 ZMACRO_Cartesian(short)
 ZMACRO_Cartesian(int)
 ZMACRO_Cartesian(long)
-ZMACRO_Cartesian(__int64)
+ZMACRO_Cartesian(long long)
 ZMACRO_Cartesian(float)
 ZMACRO_Cartesian(double)
 ZMACRO_Cartesian(long double)

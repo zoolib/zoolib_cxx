@@ -2,12 +2,16 @@
 
 #ifndef __ZooLib_StdInt_h__
 #define __ZooLib_StdInt_h__ 1
-
 #include "zconfig.h"
+
+#include <cstddef> // For std::byte (when desired)
+#include <cstdint>
 
 #include "zoolib/size_t.h" // Brings ::size_t and/or std::size_t into namespace ZooLib
 
-#include <cstddef> // For std::byte (when desired)
+#if defined(ZMACRO_ProjectHeader_StdInt)
+	#error ZMACRO_ProjectHeader_StdInt is not currently supported
+#endif
 
 // Macros for 64 bit integer constants
 #if ZCONFIG(Compiler, MSVC)
@@ -18,61 +22,29 @@
 	#define ZUINT64_C(v) (v##ULL)
 #endif
 
-// =================================================================================================
-#pragma mark - Standard integers
-// Get the names int8, uint8, int16, uint16, int32, uint32,
-// int64 and uint64 into namespace ZStdInt. if you provide
-// a project-specific header, it must achieve the same result.
-
-#if defined(ZMACRO_ProjectHeader_StdInt)
-
-	// zconfig.h has defined the name of a project-specific header
-	// providing definitions of our standard integer types.
-
-	#include ZMACRO_ProjectHeader_StdInt
-
-#else // defined(ZMACRO_ProjectHeader_StdInt)
-
-	#include <stdint.h>
-
-	namespace ZStdInt
-		{
-		typedef int8_t int8;
-		typedef uint8_t uint8;
-
-		typedef int16_t int16;
-		typedef uint16_t uint16;
-
-		typedef int32_t int32;
-		typedef uint32_t uint32;
-
-		typedef int64_t int64;
-		typedef uint64_t uint64;
-		} // namespace ZStdInt
-
-#endif // defined(ZMACRO_ProjectHeader_StdInt)
-
-// =================================================================================================
-
 namespace ZooLib {
 
+// =================================================================================================
+#pragma mark - Standard integers
+
 #if 0 && ZCONFIG_CPP >= 2017
+	// We're not ready to do this yet.
 	using std::byte;
 #else
 	typedef unsigned char byte;
 #endif
 
-// Pull the ZStdInt names into namespace ZooLib. If you'd like to use
-// these names unadorned, you can do 'using namespace ZooLib' or
-// 'using namespace ZStdInt', or indeed use the same explicit injection.
-using ZStdInt::int8;
-using ZStdInt::uint8;
-using ZStdInt::int16;
-using ZStdInt::uint16;
-using ZStdInt::int32;
-using ZStdInt::uint32;
-using ZStdInt::int64;
-using ZStdInt::uint64;
+typedef int8_t int8;
+typedef uint8_t uint8;
+
+typedef int16_t int16;
+typedef uint16_t uint16;
+
+typedef int32_t int32;
+typedef uint32_t uint32;
+
+typedef int64_t int64;
+typedef uint64_t uint64;
 
 template <int size> struct ZIntTrait_T;
 

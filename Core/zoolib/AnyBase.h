@@ -497,7 +497,7 @@ private:
 		short fAsShort;
 		int fAsInt;
 		long fAsLong;
-		__int64 fAsLongLong;
+		long long fAsLongLong;
 		float fAsFloat;
 		double fAsDouble;
 		} fPayload;

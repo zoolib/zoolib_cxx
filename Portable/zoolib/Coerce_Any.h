@@ -5,6 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/AnyBase.h"
+#include "zoolib/StdInt.h" // For int64
 
 // =================================================================================================
 #pragma mark - Any coercion
@@ -16,17 +17,17 @@ bool sQCoerceBool(const AnyBase& iAny, bool& oVal);
 bool sDCoerceBool(bool iDefault, const AnyBase& iAny);
 bool sCoerceBool(const AnyBase& iAny);
 
-ZQ<__int64> sQCoerceInt(const AnyBase& iAny);
-bool sQCoerceInt(const AnyBase& iAny, __int64& oVal);
-__int64 sDCoerceInt(__int64 iDefault, const AnyBase& iAny);
-__int64 sCoerceInt(const AnyBase& iAny);
+ZQ<int64> sQCoerceInt(const AnyBase& iAny);
+bool sQCoerceInt(const AnyBase& iAny, int64& oVal);
+int64 sDCoerceInt(int64 iDefault, const AnyBase& iAny);
+int64 sCoerceInt(const AnyBase& iAny);
 
 ZQ<double> sQCoerceRat(const AnyBase& iAny);
 bool sQCoerceRat(const AnyBase& iAny, double& oVal);
 double sDCoerceRat(double iDefault, const AnyBase& iAny);
 double sCoerceRat(const AnyBase& iAny);
 
-ZQ<__int64> sQCoerceNumberAsInt(const AnyBase& iAny);
+ZQ<int64> sQCoerceNumberAsInt(const AnyBase& iAny);
 ZQ<double> sQCoerceNumberAsRat(const AnyBase& iAny);
 
 } // namespace ZooLib

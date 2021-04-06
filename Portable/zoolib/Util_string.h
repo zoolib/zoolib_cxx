@@ -4,6 +4,7 @@
 #define __ZooLib_Util_string_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/StdInt.h" // For int64
 #include "zoolib/ZQ.h"
 
 #include <string>
@@ -17,13 +18,13 @@ using std::string;
 // =================================================================================================
 #pragma mark - Util_string
 
-ZQ<__int64> sQInt64(const string& iString);
-__int64 sDInt64(__int64 iDefault, const string& iString);
-__int64 sInt64(const string& iString);
+ZQ<int64> sQInt64(const string& iString);
+int64 sDInt64(int64 iDefault, const string& iString);
+int64 sInt64(const string& iString);
 
-ZQ<__uint64> sQUInt64(const string& iString);
-__uint64 sDUInt64(__uint64 iDefault, const string& iString);
-__uint64 sUInt64(const string& iString);
+ZQ<uint64> sQUInt64(const string& iString);
+uint64 sDUInt64(uint64 iDefault, const string& iString);
+uint64 sUInt64(const string& iString);
 
 ZQ<double> sQDouble(const string& iString);
 double sDDouble(double iDefault, const string& iString);
