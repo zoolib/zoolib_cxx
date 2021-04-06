@@ -5,6 +5,7 @@
 #include "zoolib/Compat_cmath.h" // For fmod
 #include "zoolib/Stringf.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZDebug.h"
 
 #include <stdio.h>
