@@ -170,7 +170,6 @@ private:
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName);
 
 } // namespace Log
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Log_h__
