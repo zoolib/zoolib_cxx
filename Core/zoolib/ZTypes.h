@@ -221,18 +221,38 @@ template <bool B, class T> using EnableIf_t = typename EnableIfC<B,T>::type;
 #pragma mark - PaC (PointerAndCount)
 
 template <class EE> using PaC = std::pair<EE*,size_t>;
-template <class EE> EE* sPointer(const PaC<EE>& iPac) { return iPac.first; }
+
+// Accessors
+template <class EE> EE* sPtr(const PaC<EE>& iPac) { return iPac.first; }
 template <class EE> size_t sCount(const PaC<EE>& iPac) { return iPac.second; }
-template <class EE> PaC<EE> sPaC(EE* iPointer, size_t iCount) { return PaC<EE>(iPointer, iCount); }
+
+// Pseudo-ctor
+template <class EE> PaC<EE> sPaC(EE* iPtr, size_t iCount) { return PaC<EE>(iPtr, iCount); }
 template <class EE> PaC<EE> sPaC() { return PaC<EE>(); }
 
+// Pseudo-ctor from PaC<void> to PaC<EE>, adjusting the count in the process
 template <class EE>
 PaC<EE> sPaC(PaC<void> iPaC)
-	{ return sPaC<EE>(static_cast<EE*>(sPointer(iPaC)), sCount(iPaC) / sizeof(EE)); }
+	{ return sPaC<EE>(static_cast<EE*>(sPtr(iPaC)), sCount(iPaC) / sizeof(EE)); }
 
 template <class EE>
 PaC<const EE> sPaC(PaC<const void> iPaC)
-	{ return sPaC<const EE>(static_cast<const EE*>(sPointer(iPaC)), sCount(iPaC) / sizeof(EE)); }
+	{ return sPaC<const EE>(static_cast<const EE*>(sPtr(iPaC)), sCount(iPaC) / sizeof(EE)); }
+
+// Casting from PaC<EE> to PaC<RR>, provided their sizes match
+template <class RR, class EE>
+typename EnableIfC<sizeof(RR)==sizeof(EE),PaC<RR>>::type
+sCastPaC(PaC<EE> iPaC)
+	{ return sPaC(static_cast<RR*>(static_cast<void*>(sPtr(iPaC))), sCount(iPaC)); }
+
+// Same, but for const pointers
+template <class ConstRR, class EE>
+typename EnableIfC<sizeof(ConstRR)==sizeof(EE),PaC<ConstRR>>::type
+sCastPaC(PaC<const EE> iPaC)
+	{ return sPaC(static_cast<ConstRR*>(static_cast<const void*>(sPtr(iPaC))), sCount(iPaC)); }
+
+// Will be deprecated
+template <class EE> EE* sPointer(const PaC<EE>& iPac) { return iPac.first; }
 
 } // namespace ZooLib
 
