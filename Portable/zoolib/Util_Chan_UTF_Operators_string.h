@@ -9,11 +9,11 @@
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
-// =================================================================================================
-#pragma mark - Util_Chan_UTF_Operators
-
 namespace ZooLib {
 namespace Util_Chan_UTF_Operators {
+
+// =================================================================================================
+#pragma mark - Util_Chan_UTF_Operators
 
 // These are not efficient -- syntactically and performance-wise they're very
 // like the standard operator+
@@ -40,6 +40,30 @@ string8 operator<<(const string8& iString, const Val_p& iVal)
 	string8 result = iString;
 	ChanW_UTF_string<UTF8>(&result) << iVal;
 	return result;
+	}
+
+// =================================================================================================
+#pragma mark - Util_Chan_UTF_Operators
+
+template <class Val_p>
+string32& operator<<(string32& ioString, const Val_p& iVal)
+	{
+	ChanW_UTF_string<UTF32>(&ioString) << iVal;
+	return ioString;
+	}
+
+template <class Val_p>
+string16& operator<<(string16& ioString, const Val_p& iVal)
+	{
+	ChanW_UTF_string<UTF16>(&ioString) << iVal;
+	return ioString;
+	}
+
+template <class Val_p>
+string8& operator<<(string8& ioString, const Val_p& iVal)
+	{
+	ChanW_UTF_string<UTF8>(&ioString) << iVal;
+	return ioString;
 	}
 
 } // namespace Util_Chan_UTF_Operators
