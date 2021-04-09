@@ -32,6 +32,16 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
+#pragma mark - JNIDEF
+
+#define JNIDEF(ReturnType) extern "C" JNIEXPORT ReturnType JNICALL
+
+// Declare and define in one go.
+#define JNIFUNC(ReturnType, remainder) \
+	extern "C" JNIEXPORT ReturnType JNICALL remainder; \
+	extern "C" JNIEXPORT ReturnType JNICALL remainder \
+
+// =================================================================================================
 #pragma mark - JNI::EnvTV
 
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> EnvTV;
@@ -77,7 +87,7 @@ jstring sAsJString(const std::string& iString);
 jstring sAsJString(JNIEnv *env, const std::string& iString);
 
 // =================================================================================================
-#pragma mark - sMakeInteger, sMakeFloat
+#pragma mark - sMakeBoolean, sMakeInteger, sMakeLong, sMakeFloat
 
 jobject sMakeBoolean(JNIEnv* env, bool iBool);
 
