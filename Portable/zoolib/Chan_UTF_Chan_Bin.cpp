@@ -7,8 +7,76 @@
 
 namespace ZooLib {
 
+using namespace Unicode;
+
 // =================================================================================================
-#pragma mark - Static helpers
+#pragma mark - spReadUTF32_UTF16
+
+static size_t spReadUTF32_UTF16(UTF32* oDest, const size_t iCount,
+	const ChanR_Bin& iChanR_Bin)
+	{
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
+
+	uint16 theCU;
+	bool gotCU = false;
+	while (localDest < localDestEnd)
+		{
+		if (not gotCU)
+			{
+			ZQ<uint16> theQ = sQReadLE<uint16>(iChanR_Bin);
+			if (not theQ)
+				break;
+			theCU = *theQ;
+			gotCU = true;
+			}
+
+		if (sIsSmallNormal(theCU))
+			{
+			*oDest++ = theCU;
+			}
+		else if (sIsSmallNormalOrHighSurrogate(theCU))
+			{
+			// Must be a high surrogate as it's not a small normal.
+			ZQ<uint16> theQ2 = sQReadLE<uint16>(iChanR_Bin);
+			if (not theQ2)
+				break;
+			const uint16 theCU2 = *theQ2;
+			if (sIsLowSurrogate(theCU2))
+				{
+				*localDest++ = sUTF32FromSurrogates(theCU, theCU2);
+				gotCU = false;
+				}
+			else
+				{
+				// Not a low surrogate, discard theCU and go round again with this is the first CU.
+				theCU = theCU2;
+				}
+			}
+		else if (sIsBigNormalOrBeyond(theCU))
+			{
+			*localDest++ = theCU;
+			}
+		else
+			{
+			// Must be an out of order low surrogate.
+			}
+		}
+	return localDest - oDest;
+	}
+
+// =================================================================================================
+#pragma mark - ChanR_UTF_Chan_Bin_UTF16
+
+ChanR_UTF_Chan_Bin_UTF16::ChanR_UTF_Chan_Bin_UTF16(const ChanR_Bin& iChanR_Bin)
+:	fChanR_Bin(iChanR_Bin)
+	{}
+
+size_t ChanR_UTF_Chan_Bin_UTF16::Read(UTF32* oDest, size_t iCount)
+	{ return spReadUTF32_UTF16(oDest, iCount, fChanR_Bin); }
+
+// =================================================================================================
+#pragma mark - spReadUTF32_UTF8
 
 static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 	const ChanR_Bin& iChanR_Bin)
@@ -30,7 +98,7 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 
 		gotByte = false;
 
-		size_t sequenceLength = Unicode::sUTF8SequenceLength[curByte];
+		size_t sequenceLength = sUTF8SequenceLength[curByte];
 		if (sequenceLength == 0)
 			{
 			// It's a continuation or illegal, ignore it.
@@ -41,7 +109,7 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 			}
 		else
 			{
-			UTF32 theCP = curByte & Unicode::sUTF8StartByteMask[sequenceLength];
+			UTF32 theCP = curByte & sUTF8StartByteMask[sequenceLength];
 			gotByte = false;
 			while (--sequenceLength)
 				{
@@ -67,7 +135,7 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 	}
 
 // =================================================================================================
-#pragma mark - ZStrimR_StreamUTF8
+#pragma mark - ChanR_UTF_Chan_Bin_UTF8
 
 ChanR_UTF_Chan_Bin_UTF8::ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin)
 :	fChanR_Bin(iChanR_Bin)

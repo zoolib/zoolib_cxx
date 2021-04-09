@@ -13,6 +13,24 @@
 namespace ZooLib {
 
 // =================================================================================================
+#pragma mark - ChanR_UTF_Chan_Bin_UTF16
+
+/// A read strim that sources text by reading UTF-16 code units from a ChanR_Bin.
+
+class ChanR_UTF_Chan_Bin_UTF16
+:	public ChanR_UTF
+	{
+public:
+	ChanR_UTF_Chan_Bin_UTF16(const ChanR_Bin& iChanR_Bin);
+
+// From ChanR_UTF
+	virtual size_t Read(UTF32* oDest, size_t iCount);
+
+private:
+	const ChanR_Bin& fChanR_Bin;
+	};
+
+// =================================================================================================
 #pragma mark - ChanR_UTF_Chan_Bin_UTF8
 
 /// A read strim that sources text by reading UTF-8 code units from a ChanR_Bin.
