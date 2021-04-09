@@ -4,6 +4,7 @@
 #define __ZooLib_Util_Channer_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/Channer.h"
 #include "zoolib/ChanRPos_XX_ChanR.h"
 
 // =================================================================================================
