@@ -17,19 +17,19 @@ namespace ZooLib {
 
 namespace zlib {
 
-enum EFormatR
+enum class EFormatR
 	{
-	eFormatR_Raw,
-	eFormatR_ZLib,
-	eFormatR_GZip,
-	eFormatR_Auto
+	Raw,
+	ZLib,
+	GZip,
+	Auto
 	};
 
-enum EFormatW
+enum class EFormatW
 	{
-	eFormatW_Raw,
-	eFormatW_ZLib,
-	eFormatW_GZip
+	Raw,
+	ZLib,
+	GZip
 	};
 
 } // namespace zlib

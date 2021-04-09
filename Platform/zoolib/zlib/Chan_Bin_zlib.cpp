@@ -17,7 +17,7 @@ using std::min;
 #pragma mark - ChanR_Bin_zlib
 
 ChanR_Bin_zlib::ChanR_Bin_zlib(bool iRaw, const ChanR_Bin& iChanR)
-:	ChanR_Bin_zlib(iRaw ? zlib::eFormatR_Raw : zlib::eFormatR_Auto, 1024, iChanR)
+:	ChanR_Bin_zlib(iRaw ? zlib::EFormatR::Raw : zlib::EFormatR::Auto, 1024, iChanR)
 	{}
 
 ChanR_Bin_zlib::ChanR_Bin_zlib(zlib::EFormatR iFormatR, size_t iBufferSize, const ChanR_Bin& iChanR)
@@ -37,10 +37,10 @@ ChanR_Bin_zlib::ChanR_Bin_zlib(zlib::EFormatR iFormatR, size_t iBufferSize, cons
 	int windowBits;
 	switch (iFormatR)
 		{
-		case zlib::eFormatR_GZip: windowBits = 16 | 15; break;
-		case zlib::eFormatR_ZLib: windowBits = 15; break;
-		case zlib::eFormatR_Raw: windowBits = -15; break;
-		case zlib::eFormatR_Auto: windowBits = 32 | 15; break;
+		case zlib::EFormatR::GZip: windowBits = 16 | 15; break;
+		case zlib::EFormatR::ZLib: windowBits = 15; break;
+		case zlib::EFormatR::Raw: windowBits = -15; break;
+		case zlib::EFormatR::Auto: windowBits = 32 | 15; break;
 		}
 
 	if (Z_OK != ::inflateInit2(&fState, windowBits))
@@ -94,7 +94,7 @@ size_t ChanR_Bin_zlib::Readable()
 #pragma mark - ChanW_Bin_zlib
 
 ChanW_Bin_zlib::ChanW_Bin_zlib(bool iRaw, const ChanW_Bin& iChanW)
-:	ChanW_Bin_zlib(iRaw ? zlib::eFormatW_Raw : zlib::eFormatW_ZLib, 5, 1024, iChanW)
+:	ChanW_Bin_zlib(iRaw ? zlib::EFormatW::Raw : zlib::EFormatW::ZLib, 5, 1024, iChanW)
 	{}
 
 ChanW_Bin_zlib::ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
@@ -115,9 +115,9 @@ ChanW_Bin_zlib::ChanW_Bin_zlib(zlib::EFormatW iFormatW, int iCompressionLevel, s
 	int windowBits;
 	switch (iFormatW)
 		{
-		case zlib::eFormatW_GZip: windowBits = 16 | 15; break;
-		case zlib::eFormatW_ZLib: windowBits = 15; break;
-		case zlib::eFormatW_Raw: windowBits = -15; break;
+		case zlib::EFormatW::GZip: windowBits = 16 | 15; break;
+		case zlib::EFormatW::ZLib: windowBits = 15; break;
+		case zlib::EFormatW::Raw: windowBits = -15; break;
 		}
 
 	if (Z_OK != ::deflateInit2(&fState,
