@@ -424,12 +424,6 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
 		const size_t childIndentation = theIndentation+1;
 
-		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
-
-		if (immediateParentIsMap)
-			sWrite_LFIndent(iChanW, theIndentation, iOptions);
-
-		iChanW << "[";
 		uint64 count = 0;
 		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
@@ -439,6 +433,16 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			else
 				{
+				if (isFirst)
+					{
+					if (ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
+						{
+						// Immediate parent is a map.
+						sWrite_LFIndent(iChanW, theIndentation, iOptions);
+						}
+					iChanW << "[";
+					}
+
 				if (iOptions.fUseExtendedNotationQ.DGet(false))
 					{
 					sWrite_LFIndent(iChanW, childIndentation, iOptions);
@@ -457,8 +461,16 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				}
 			++count;
 			}
-		sWrite_LFIndent(iChanW, theIndentation, iOptions);
-		iChanW << "]";
+
+		if (count)
+			{
+			sWrite_LFIndent(iChanW, theIndentation, iOptions);
+			iChanW << "]";
+			}
+		else
+			{
+			iChanW << "[]";
+			}
 		}
 	else
 		{
@@ -511,12 +523,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 		{
 		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
 
-		const bool immediateParentIsMap = ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map;
-
-		if (immediateParentIsMap)
-			sWrite_LFIndent(iChanW, theIndentation, iOptions);
-
-		iChanW << "{";
+		uint64 count = 0;
 		for (bool isFirst = true; /*no test*/; isFirst = false)
 			{
 			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
@@ -527,26 +534,47 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				{
 				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
-			else if (iOptions.fUseExtendedNotationQ.DGet(false))
-				{
-				sWrite_LFIndent(iChanW, theIndentation, iOptions);
-				Util_Chan_JSON::sWrite_PropName(iChanW, *theNameQ, useSingleQuotes);
-				iChanW << " = ";
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
-				iChanW << ";";
-				}
 			else
 				{
-				if (not isFirst)
-					iChanW << ",";
-				sWrite_LFIndent(iChanW, theIndentation, iOptions);
-				Util_Chan_JSON::sWrite_String(iChanW, *theNameQ, useSingleQuotes);
-				iChanW << ": ";
-				spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+				if (isFirst)
+					{
+					if (ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
+						{
+						// Immediate parent is a map.
+						sWrite_LFIndent(iChanW, theIndentation, iOptions);
+						}
+					iChanW << "{";
+					}
+
+				if (iOptions.fUseExtendedNotationQ.DGet(false))
+					{
+					sWrite_LFIndent(iChanW, theIndentation, iOptions);
+					Util_Chan_JSON::sWrite_PropName(iChanW, *theNameQ, useSingleQuotes);
+					iChanW << " = ";
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					iChanW << ";";
+					}
+				else
+					{
+					if (not isFirst)
+						iChanW << ",";
+					sWrite_LFIndent(iChanW, theIndentation, iOptions);
+					Util_Chan_JSON::sWrite_String(iChanW, *theNameQ, useSingleQuotes);
+					iChanW << ": ";
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					}
 				}
+			++count;
 			}
-		sWrite_LFIndent(iChanW, theIndentation, iOptions);
-		iChanW << "}";
+		if (count)
+			{
+			sWrite_LFIndent(iChanW, theIndentation, iOptions);
+			iChanW << "}";
+			}
+		else
+			{
+			iChanW << "{}";
+			}
 		}
 	else
 		{
