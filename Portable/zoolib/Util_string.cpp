@@ -170,6 +170,23 @@ ZQ<string> sQWithoutPrefix(const string& iTarget, const string& iPrefix)
 	return iTarget;
 	}
 
+ZQ<string> sQWithoutPrefixi(const string& iTarget, const string& iPrefix)
+	{
+	if (size_t prefixLength = iPrefix.length())
+		{
+		if (size_t targetLength = iTarget.length())
+			{
+			if (prefixLength <= targetLength)
+				{
+				if (sEquali(iPrefix, iTarget.substr(0, prefixLength)))
+					return iTarget.substr(prefixLength);
+				}
+			}
+		return null;
+		}
+	return iTarget;
+	}
+
 ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix)
 	{
 	if (size_t suffixLength = iSuffix.length())
@@ -179,6 +196,23 @@ ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix)
 			if (suffixLength <= targetLength)
 				{
 				if (iTarget.substr(targetLength - suffixLength) == iSuffix)
+					return iTarget.substr(0, targetLength - suffixLength);
+				}
+			}
+		return null;
+		}
+	return iTarget;
+	}
+
+ZQ<string> sQWithoutSuffixi(const string& iTarget, const string& iSuffix)
+	{
+	if (size_t suffixLength = iSuffix.length())
+		{
+		if (size_t targetLength = iTarget.length())
+			{
+			if (suffixLength <= targetLength)
+				{
+				if (sEquali(iSuffix, iTarget.substr(targetLength - suffixLength)))
 					return iTarget.substr(0, targetLength - suffixLength);
 				}
 			}

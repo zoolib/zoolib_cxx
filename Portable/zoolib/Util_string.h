@@ -41,7 +41,10 @@ bool sEquali(const string& iLeft, const string& iRight);
 // -----
 
 ZQ<string> sQWithoutPrefix(const string& iTarget, const string& iPrefix);
+ZQ<string> sQWithoutPrefixi(const string& iTarget, const string& iPrefix);
+
 ZQ<string> sQWithoutSuffix(const string& iTarget, const string& iSuffix);
+ZQ<string> sQWithoutSuffixi(const string& iTarget, const string& iSuffix);
 
 bool sStartsWith(const string& iTarget, const string& iPossiblePrefix);
 bool sEndsWith(const string& iTarget, const string& iPossibleSuffix);
