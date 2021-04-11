@@ -44,7 +44,7 @@ ZQ<bool> sQCoerceBool(CFTypeRef iCF)
 	if (CFBooleanRef theBooleanRef = sStaticCastIf<CFBooleanRef>(::CFBooleanGetTypeID(), iCF))
 		return CFBooleanGetValue(theBooleanRef);
 
-	if (ZQ<__int64> qq = sQCoerceInt(iCF))
+	if (ZQ<int64> qq = sQCoerceInt(iCF))
 		return *qq;
 
 	if (ZQ<double> qq = sQCoerceRat(iCF))
@@ -60,7 +60,7 @@ ZQ<bool> sQCoerceBool(CFTypeRef iCF)
 		if (ZQ<double> qq = Util_string::sQDouble(asString))
 			return *qq;
 
-		if (ZQ<__int64> qq = Util_string::sQInt64(asString))
+		if (ZQ<int64> qq = Util_string::sQInt64(asString))
 			return *qq;
 
 		if (Util_string::sEquali(asString, "t") || Util_string::sEquali(asString, "true"))
@@ -99,20 +99,20 @@ bool sCoerceBool(CFTypeRef iCF)
 bool sCoerceBool(const ZP<CFTypeRef>& iCF)
 	{ return sCoerceBool(iCF.Get()); }
 
-ZQ<__int64> sQCoerceInt(CFTypeRef iCF)
+ZQ<int64> sQCoerceInt(CFTypeRef iCF)
 	{
 	if (iCF && ::CFGetTypeID(iCF) == ::CFNumberGetTypeID())
 		{
-		__int64 result;
+		int64 result;
 		::CFNumberGetValue((CFNumberRef)iCF, kCFNumberSInt64Type, &result);
 		return result;
 		}
 	return null;
 	}
 
-bool sQCoerceInt(CFTypeRef iCF, __int64& oVal)
+bool sQCoerceInt(CFTypeRef iCF, int64& oVal)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iCF))
+	if (ZQ<int64> qq = sQCoerceInt(iCF))
 		{
 		oVal = *qq;
 		return true;
@@ -120,21 +120,21 @@ bool sQCoerceInt(CFTypeRef iCF, __int64& oVal)
 	return false;
 	}
 
-__int64 sDCoerceInt(__int64 iDefault, CFTypeRef iCF)
+int64 sDCoerceInt(int64 iDefault, CFTypeRef iCF)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iCF))
+	if (ZQ<int64> qq = sQCoerceInt(iCF))
 		return *qq;
 	return iDefault;
 	}
 
-__int64 sCoerceInt(CFTypeRef iCF)
+int64 sCoerceInt(CFTypeRef iCF)
 	{
-	if (ZQ<__int64> qq = sQCoerceInt(iCF))
+	if (ZQ<int64> qq = sQCoerceInt(iCF))
 		return *qq;
 	return 0;
 	}
 
-__int64 sCoerceInt(const ZP<CFTypeRef>& iCF)
+int64 sCoerceInt(const ZP<CFTypeRef>& iCF)
 	{ return sCoerceInt(iCF.Get()); }
 
 ZQ<double> sQCoerceRat(CFTypeRef iCF)

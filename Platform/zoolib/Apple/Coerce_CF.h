@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/StdInt.h" // For int64
 #include "zoolib/ZQ.h"
 #include "zoolib/Apple/ZP_CF.h"
 
@@ -39,11 +40,11 @@ bool sDCoerceBool(bool iDefault, CFTypeRef iCF);
 bool sCoerceBool(CFTypeRef iCF);
 bool sCoerceBool(const ZP<CFTypeRef>& iCF);
 
-ZQ<__int64> sQCoerceInt(CFTypeRef iCF);
-bool sQCoerceInt(CFTypeRef iCF, __int64& oVal);
-__int64 sDCoerceInt(__int64 iDefault, CFTypeRef iCF);
-__int64 sCoerceInt(CFTypeRef iCF);
-__int64 sCoerceInt(const ZP<CFTypeRef>& iCF);
+ZQ<int64> sQCoerceInt(CFTypeRef iCF);
+bool sQCoerceInt(CFTypeRef iCF, int64& oVal);
+int64 sDCoerceInt(int64 iDefault, CFTypeRef iCF);
+int64 sCoerceInt(CFTypeRef iCF);
+int64 sCoerceInt(const ZP<CFTypeRef>& iCF);
 
 ZQ<double> sQCoerceRat(CFTypeRef iCF);
 bool sQCoerceRat(CFTypeRef iCF, double& oVal);
