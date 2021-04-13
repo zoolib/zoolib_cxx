@@ -9,6 +9,12 @@
 
 #include <cstring>
 
+#include "zoolib/pdesc.h"
+#if defined(ZMACRO_pdesc)
+	#include "zoolib/ChanW_UTF.h"
+	#include "zoolib/StdIO.h"
+#endif
+
 namespace ZooLib {
 
 #if ZMACRO_NameUsesString
@@ -195,5 +201,20 @@ CountedString* Name::pGetIfCounted()
 	}
 
 #endif // ZMACRO_NameUsesString
+
+// =================================================================================================
+#pragma mark - pdesc
+
+#if defined(ZMACRO_pdesc)
+
+using namespace ZooLib;
+
+ZMACRO_pdesc(const Name& iName)
+	{
+	sQWrite(StdIO::sChanW_UTF_Err, iName.AsString8());
+	sQWrite(StdIO::sChanW_UTF_Err, "\n");
+	}
+
+#endif // defined(ZMACRO_pdesc)
 
 } // namespace ZooLib

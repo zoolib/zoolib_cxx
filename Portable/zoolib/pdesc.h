@@ -13,9 +13,11 @@ struct ZooLib_MarkAsUsed
 #define ZMACRO_UniqueMarkAsUsed(aa) \
 	static ZooLib_MarkAsUsed ZMACRO_Concat(UniqueMarkAsUsed, __COUNTER__)(aa)
 
-#define ZMACRO_pdesc(param) \
-	void pdesc(param); \
-	ZMACRO_UniqueMarkAsUsed(static_cast<void(&)(param)>(pdesc)); \
-	void pdesc(param)
+#if ZCONFIG_Debug
+	#define ZMACRO_pdesc(param) \
+		void pdesc(param); \
+		ZMACRO_UniqueMarkAsUsed(static_cast<void(&)(param)>(pdesc)); \
+		void pdesc(param)
+#endif
 
 #endif // __ZooLib_pdesc_h__
