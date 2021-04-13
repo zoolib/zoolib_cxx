@@ -36,6 +36,8 @@ string32 sEReadUTF32(const ChanR_UTF& iChanR, size_t iCountCP);
 string16 sEReadUTF16(const ChanR_UTF& iChanR, size_t iCountCP);
 string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP);
 
+string32 sReadAllUTF32(const ChanR_UTF& iChanR);
+string16 sReadAllUTF16(const ChanR_UTF& iChanR);
 string8 sReadAllUTF8(const ChanR_UTF& iChanR);
 
 // =================================================================================================

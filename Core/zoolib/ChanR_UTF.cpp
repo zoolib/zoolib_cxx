@@ -195,6 +195,46 @@ string8 sEReadUTF8(const ChanR_UTF& iChanR, size_t iCountCP)
 
 // -----
 
+string32 sReadAllUTF32(const ChanR_UTF& iChanR)
+	{
+	static const size_t kGrowthSize = 1024;
+	string32 result;
+	size_t destGenerated = 0;
+	for (;;)
+		{
+		result.resize(destGenerated + kGrowthSize);
+		size_t cuRead;
+		sRead(iChanR, sNonConst(result.data()) + destGenerated,
+			kGrowthSize, &cuRead, kGrowthSize, nullptr);
+
+		if (cuRead == 0)
+			break;
+		destGenerated += cuRead;
+		}
+	result.resize(destGenerated);
+	return result;
+	}
+
+string16 sReadAllUTF16(const ChanR_UTF& iChanR)
+	{
+	static const size_t kGrowthSize = 1024;
+	string16 result;
+	size_t destGenerated = 0;
+	for (;;)
+		{
+		result.resize(destGenerated + kGrowthSize);
+		size_t cuRead;
+		sRead(iChanR, sNonConst(result.data()) + destGenerated,
+			kGrowthSize, &cuRead, kGrowthSize, nullptr);
+
+		if (cuRead == 0)
+			break;
+		destGenerated += cuRead;
+		}
+	result.resize(destGenerated);
+	return result;
+	}
+
 string8 sReadAllUTF8(const ChanR_UTF& iChanR)
 	{
 	static const size_t kGrowthSize = 1024;
