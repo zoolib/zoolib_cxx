@@ -7,7 +7,6 @@
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/ChanR_UTF.h"
-#include "zoolib/ChanR_UTF.h"
 #include "zoolib/NameUniquifier.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/StartOnNewThread.h"

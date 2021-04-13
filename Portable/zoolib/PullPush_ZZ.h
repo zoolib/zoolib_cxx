@@ -24,7 +24,8 @@ void sFromZZ_Push_PPT(const Val_ZZ& iVal,
 void sFromZZ_Push_PPT(const Val_ZZ& iVal,
 	const ChanW_PPT& iChanW);
 
-// --
+// =================================================================================================
+#pragma mark -
 
 typedef
 	Callable<bool(const PPT& iPPT, const ChanR_PPT& iChanR, Val_ZZ& oVal)> Callable_ZZ_ReadFilter;
@@ -45,7 +46,8 @@ Val_ZZ sAsZZ(const PPT& iPPT, const ChanR_PPT& iChanR);
 ZQ<Val_ZZ> sQAsZZ(const ChanR_PPT& iChanR);
 Val_ZZ sAsZZ(const ChanR_PPT& iChanR);
 
-// --
+// =================================================================================================
+#pragma mark -
 
 ZP<Delivery<Val_ZZ>> sStartAsync_AsZZ(const ZP<ChannerR_PPT>& iChannerR);
 

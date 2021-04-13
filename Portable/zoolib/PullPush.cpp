@@ -168,12 +168,13 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 		if (sIsStart(thePPT))
 			++depth;
 
-		if (sIsEnd(thePPT))
+		else if (sIsEnd(thePPT))
 			--depth;
 
 		if (depth == 0)
 			break;
 		}
+
 	return depth == 0;
 	}
 
