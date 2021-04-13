@@ -1,28 +1,11 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2012 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,Publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2012-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_JNI_JNI_h__
 #define __ZooLib_JNI_JNI_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/ThreadVal.h"
+#include "zoolib/UnicodeString.h"
 
 #include <jni.h>
 
@@ -30,6 +13,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 namespace JNI {
+
+// =================================================================================================
+#pragma mark - LoadHandler
+
+class LoadHandler
+	{
+public:
+	// To be called as part of your system's JNI_onLoad.
+	static void sOnLoad(JavaVM* iJavaVM);
+	static void sOnUnload();
+
+	LoadHandler();
+	~LoadHandler();
+
+	virtual void OnLoad(JavaVM* iJavaVM);
+	virtual void OnLoad(JNIEnv* iEnv);
+	virtual void OnUnload();
+
+private:
+	static LoadHandler* spHead;
+	LoadHandler* fNext;
+	};
 
 // =================================================================================================
 #pragma mark - JNIDEF
@@ -64,6 +69,8 @@ private:
 // =================================================================================================
 #pragma mark - JNI::PushPopLocalFrame
 
+constexpr size_t kLocalFrameSlots = 8;
+
 class PushPopLocalFrame
 	{
 public:
@@ -71,31 +78,63 @@ public:
 	PushPopLocalFrame(JNIEnv* iEnv);
 	~PushPopLocalFrame();
 
+	jobject PopReturn(jobject);
+
 private:
 	JNIEnv* fEnv;
 	};
 
 // =================================================================================================
-#pragma mark - JNI::sAsString
+#pragma mark - sMakeBoolean, sMakeInteger, etc
 
-std::string sAsString(jstring s);
+jstring sMakeString(JNIEnv* env, const string8& iVal);
+jstring sMakeString(const string8& iVal);
 
-std::string sAsString(JNIEnv *env, jstring s);
+jstring sMakeString(JNIEnv* env, const string16& iVal);
+jstring sMakeString(const string16& iVal);
 
-jstring sAsJString(const std::string& iString);
+jobject sMakeBoolean(JNIEnv* env, bool iVal);
+jobject sMakeBoolean(bool iVal);
 
-jstring sAsJString(JNIEnv *env, const std::string& iString);
+jobject sMakeCharacter(JNIEnv* env, UTF16 iVal);
+jobject sMakeCharacter(UTF16 iVal);
+
+jobject sMakeByte(JNIEnv* env, jbyte iVal);
+jobject sMakeByte(jbyte iVal);
+
+jobject sMakeShort(JNIEnv* env, jshort iVal);
+jobject sMakeShort(jshort iVal);
+
+jobject sMakeInteger(JNIEnv* env, jint iVal);
+jobject sMakeInteger(jint iVal);
+
+jobject sMakeLong(JNIEnv* env, jlong iVal);
+jobject sMakeLong(jlong iVal);
+
+jobject sMakeFloat(JNIEnv* env, jfloat iVal);
+jobject sMakeFloat(jfloat iVal);
+
+jobject sMakeDouble(JNIEnv* env, jdouble iVal);
+jobject sMakeDouble(jdouble iVal);
 
 // =================================================================================================
-#pragma mark - sMakeBoolean, sMakeInteger, sMakeLong, sMakeFloat
+#pragma mark - sAsStringXX
 
-jobject sMakeBoolean(JNIEnv* env, bool iBool);
+string8 sAsString8(JNIEnv* env, jstring ss);
+string8 sAsString8(jstring ss);
 
-jobject sMakeInteger(JNIEnv* env, int iInt);
+string16 sAsString16(JNIEnv* env, jstring ss);
+string16 sAsString16(jstring ss);
 
-jobject sMakeLong(JNIEnv* env, jlong iLong);
-
-jobject sMakeFloat(JNIEnv* env, float iFloat);
+// Older API
+//inline std::string sAsString(JNIEnv* env, jstring ss)
+//	{ return sAsString8(env, ss); }
+//
+//inline std::string sAsString(jstring ss)
+//	{ return sAsString8(ss); }
+//
+//inline jstring sAsJString(const std::string& iString)
+//	{ return sMakeString(iString); }
 
 // =================================================================================================
 #pragma mark -
@@ -122,8 +161,9 @@ struct ArrayAccessors<jtype##Array> \
 	};
 
 ZMACRO_ArrayAccessors(jboolean, Boolean)
-ZMACRO_ArrayAccessors(jbyte, Byte)
 ZMACRO_ArrayAccessors(jchar, Char)
+
+ZMACRO_ArrayAccessors(jbyte, Byte)
 ZMACRO_ArrayAccessors(jshort, Short)
 ZMACRO_ArrayAccessors(jint, Int)
 ZMACRO_ArrayAccessors(jlong, Long)
