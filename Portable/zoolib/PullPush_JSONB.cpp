@@ -188,8 +188,12 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	if (const Data_ZZ* theData = sPGet<Data_ZZ>(thePPT))
 		{
 		sEWriteBE<uint8>(iChanW, 0xE7);
-		sEWriteCount(iChanW, theData->GetSize());
-		sEWriteMem(iChanW, theData->GetPtr(), theData->GetSize());
+		if (size_t theSize = theData->GetSize())
+			{
+			sEWriteCount(iChanW, theSize);
+			sEWriteMem(iChanW, theData->GetPtr(), theData->GetSize());
+			}
+		sEWriteCount(iChanW, 0);
 		return true;
 		}
 
