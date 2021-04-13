@@ -34,6 +34,28 @@ struct IsASet<Set_p,
 template <class Set_p>
 	EnableIf_t<IsASet<Set_p>::value,
 ZQ<typename Set_p::key_type>>
+sQFront(const Set_p& iSet)
+	{
+	if (iSet.empty())
+		return null;
+	return *iSet.begin();
+	}
+// -------------------------------------------------------------------------------------------------
+
+template <class Set_p>
+	EnableIf_t<IsASet<Set_p>::value,
+ZQ<typename Set_p::key_type>>
+sQBack(const Set_p& iSet)
+	{
+	if (iSet.empty())
+		return null;
+	return *--iSet.end();
+	}
+// -------------------------------------------------------------------------------------------------
+
+template <class Set_p>
+	EnableIf_t<IsASet<Set_p>::value,
+ZQ<typename Set_p::key_type>>
 sQPopFront(Set_p& ioSet)
 	{
 	if (ioSet.empty())
