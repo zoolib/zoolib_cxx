@@ -9,7 +9,7 @@
 #include "zoolib/Chan_UTF_string.h"
 #include "zoolib/PullPush_JSON.h"
 #include "zoolib/PullPush_ZZ.h"
-#include "zoolib/StartOnNewThread.h"
+//#include "zoolib/StartOnNewThread.h"
 
 #include "zoolib/pdesc.h"
 #if defined(ZMACRO_pdesc)
@@ -39,18 +39,8 @@ ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU)
 // =================================================================================================
 #pragma mark -
 
-static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
-	{
-	sFromZZ_Push_PPT(iVal, *iChannerWCon);
-	sDisconnectWrite(*iChannerWCon);
-	}
-
 void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal)
-	{
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));
-	sPull_PPT_Push_JSON(*thePair.second, iChanW);
-	}
+	{ sPull_PPT_Push_JSON(*sChannerR_PPT(iVal), iChanW); }
 
 void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint)
 	{
@@ -116,6 +106,9 @@ const ChanW_UTF& operator<<(const ChanW_UTF& iChanW, const Data_ZZ& iData)
 } // namespace Operators_ZZ_JSON
 
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark - pdesc
 
 #if defined(ZMACRO_pdesc)
 

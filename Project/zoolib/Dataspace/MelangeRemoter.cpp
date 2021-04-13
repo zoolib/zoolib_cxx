@@ -275,14 +275,6 @@ public:
 		}
 	};
 
-static void spFromZZ_Push_PPT(const Val_ZZ& iVal,
-	const ZP<Callable_ZZ_WriteFilter>& iWriteFilter,
-	const ZP<ChannerWCon_PPT>& iChannerWCon)
-	{
-	sFromZZ_Push_PPT(iVal, iWriteFilter, ChanW_XX_Buffered<ChanW_PPT>(*iChannerWCon, kBufSize));
-	sDisconnectWrite(*iChannerWCon);
-	}
-
 static ZAtomic_t spSentMessageCounter;
 
 static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<string>& iDescriptionQ)
@@ -295,12 +287,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<st
 
 	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT),
-		Val_ZZ(iMessage),
-		theWriteFilter,
-		sGetClear(thePair.first)));
-	sPull_PPT_Push_JSONB(ChanR_XX_Buffered<ChanR_PPT>(*thePair.second, kBufSize), theWriteFilter, theChanW);
+	sPull_PPT_Push_JSONB(*sChannerR_PPT(iMessage), theWriteFilter, iChanW);
 
 	sFlush(theChanW);
 

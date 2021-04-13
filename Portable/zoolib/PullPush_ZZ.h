@@ -24,6 +24,11 @@ void sFromZZ_Push_PPT(const Val_ZZ& iVal,
 void sFromZZ_Push_PPT(const Val_ZZ& iVal,
 	const ChanW_PPT& iChanW);
 
+ZP<ChannerR_PPT> sChannerR_PPT(const Val_ZZ& iVal,
+	const ZP<Callable_ZZ_WriteFilter>& iWriteFilter);
+
+ZP<ChannerR_PPT> sChannerR_PPT(const Val_ZZ& iVal);
+
 // =================================================================================================
 #pragma mark -
 

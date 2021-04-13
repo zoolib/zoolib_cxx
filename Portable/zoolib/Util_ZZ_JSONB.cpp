@@ -26,18 +26,8 @@ ZQ<Val_ZZ> sQRead(const ChanR_Bin& iChanR)
 
 // -----
 
-static void spFromZZ_Push_PPT(const Val_ZZ& iVal, const ZP<ChannerWCon_PPT>& iChannerWCon)
-	{
-	sFromZZ_Push_PPT(iVal, *iChannerWCon);
-	sDisconnectWrite(*iChannerWCon);
-	}
-
 void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal)
-	{
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spFromZZ_Push_PPT), iVal, sGetClear(thePair.first)));
-	sPull_PPT_Push_JSONB(*thePair.second, null, iChanW);
-	}
+	{ sPull_PPT_Push_JSONB(*sChannerR_PPT(iVal), null, iChanW); }
 
 } // namespace Util_ZZ_JSONB
 } // namespace ZooLib

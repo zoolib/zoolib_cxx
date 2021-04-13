@@ -67,6 +67,29 @@ void sFromZZ_Push_PPT(const Val_ZZ& iVal,
 	const ChanW_PPT& iChanW)
 	{ sFromZZ_Push_PPT(iVal, null, iChanW); }
 
+static void spFromZZ_Push_PPT_Disconnect(const Val_ZZ& iVal,
+	const ZP<Callable_ZZ_WriteFilter>& iWriteFilter,
+	const ZP<ChannerWCon_PPT>& iChannerWCon)
+	{
+	sFromZZ_Push_PPT(iVal, iWriteFilter, *iChannerWCon);
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT(const Val_ZZ& iVal,
+	const ZP<Callable_ZZ_WriteFilter>& iWriteFilter)
+	{
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+
+	sStartOnNewThread(
+		sBindR(sCallable(spFromZZ_Push_PPT_Disconnect),
+			iVal, iWriteFilter, sGetClear(thePair.first)));
+
+	return thePair.second;
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT(const Val_ZZ& iVal)
+	{ return sChannerR_PPT(iVal, null); }
+
 // =================================================================================================
 #pragma mark - 
 
