@@ -100,6 +100,9 @@ set (SourceFiles
 	${SourceDir}/Compare_string.h
 	${SourceDir}/Compare_vector.h
 	${SourceDir}/Connection.h
+	${SourceDir}/CountedString.h
+	${SourceDir}/CountedStringUniquifier.cpp
+	${SourceDir}/CountedStringUniquifier.h
 	${SourceDir}/Data_ZZ.cpp
 	${SourceDir}/Data_ZZ.h
 	${SourceDir}/Factory_Fallback.h
@@ -123,7 +126,6 @@ set (SourceFiles
 	${SourceDir}/Name.cpp
 	${SourceDir}/Name.h
 	${SourceDir}/NamePriv.cpp
-	${SourceDir}/NameUniquifier.cpp
 	${SourceDir}/NameUniquifier.h
 	${SourceDir}/Net_Internet.cpp
 	${SourceDir}/Net_Internet.h

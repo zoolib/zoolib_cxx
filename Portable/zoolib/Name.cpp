@@ -89,7 +89,7 @@ Name::Name(const ZP<CountedString>& iCountedString)
 	#endif
 	}
 
-Name::operator string8() const
+const string8 Name::AsString8() const
 	{
 	#if ZCONFIG_Is64Bit
 		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))

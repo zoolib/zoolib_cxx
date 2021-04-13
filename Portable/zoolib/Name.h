@@ -5,17 +5,12 @@
 #include "zconfig.h"
 
 #include "zoolib/Compare_T.h"
-#include "zoolib/CountedVal.h"
-#include "zoolib/UnicodeString.h" // For string8
+#include "zoolib/CountedString.h"
 #include "zoolib/Util_Relops.h"
 
 #include <utility> // For hash
 
 namespace ZooLib {
-
-typedef CountedVal<string8> CountedString;
-
-typedef ZP<CountedString> ZP_CountedString;
 
 // =================================================================================================
 #pragma mark - Name
@@ -58,6 +53,9 @@ public:
 		{}
 
 	operator string8() const
+		{ return fString; }
+
+	const string8& AsString8() const
 		{ return fString; }
 
 	inline bool operator<(const Name& iOther) const
@@ -123,7 +121,10 @@ public:
 
 	Name(const ZP<CountedString>& iCountedString);
 	
-	operator string8() const;
+	operator string8() const
+		{ return this->AsString8(); }
+
+	const string8 AsString8() const;
 
 	inline bool operator<(const Name& iOther) const
 		{ return this->Compare(iOther) < 0; }

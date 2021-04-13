@@ -4,37 +4,32 @@
 #define __ZooLib_NameUniquifier_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/CountedStringUniquifier.h"
 #include "zoolib/Name.h"
-#include "zoolib/ThreadVal.h"
-#include "zoolib/Uniquifier.h"
 
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - CountedStringUniquifier
+#pragma mark - NameUniquifier
 
-struct Compare_ZP_CountedString
-	{ bool operator()(const ZP_CountedString& ll, const ZP_CountedString& rr) const; };
+typedef CountedStringUniquifier NameUniquifier;
 
-typedef Uniquifier<ZP_CountedString,Compare_ZP_CountedString> CountedStringUniquifier;
-
-// =================================================================================================
-#pragma mark - ThreadVal_NameUniquifier
-
-typedef ThreadVal<CountedStringUniquifier, struct Tag_NameUniquifier> ThreadVal_NameUniquifier;
+typedef ThreadVal_CountedStringUniquifier ThreadVal_NameUniquifier;
 
 // =================================================================================================
 #pragma mark - sName
 
-inline Name sName(const char* iConstCharStar)
-	{ return Name(iConstCharStar); }
-
-Name sName(const string8& iString);
-
 inline Name sName(const Name& iName)
 	{ return iName; }
 
-Name sName(const ZP_CountedString& iCountedString);
+inline Name sName(const ZP_CountedString& iCountedString)
+	{ return Name(sCountedString(iCountedString)); }
+
+inline Name sName(const string8& iString)
+	{ return Name(sCountedString(iString)); }
+
+inline Name sName(const char* iConstCharStar)
+	{ return Name(iConstCharStar); }
 
 } // namespace ZooLib
 
