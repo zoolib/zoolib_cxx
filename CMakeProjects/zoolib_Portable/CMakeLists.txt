@@ -101,7 +101,6 @@ set (SourceFiles
 	${SourceDir}/Compare_vector.h
 	${SourceDir}/Connection.h
 	${SourceDir}/CountedString.h
-	${SourceDir}/CountedStringUniquifier.cpp
 	${SourceDir}/CountedStringUniquifier.h
 	${SourceDir}/Data_ZZ.cpp
 	${SourceDir}/Data_ZZ.h
