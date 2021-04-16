@@ -38,7 +38,7 @@ void LoadHandler::OnLoad(JavaVM* iJavaVM)
 	JNIEnv* env;
 	const jint result = iJavaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
 
-	// Mutst be called on a thread that's already attached, ie from JNI_OnLoad.
+	// Must be called on a thread that's already attached, probably from JNI_OnLoad.
 	ZAssert(result == JNI_OK);
 	this->OnLoad(env);
 	}
@@ -125,7 +125,7 @@ EnsureAttachedToCurrentThread::EnsureAttachedToCurrentThread(JavaVM* iJavaVM)
 		{
 		case JNI_OK:
 			{
-			// Already attached, get env into our thread-local Env.
+			// Already attached.
 			break;
 			}
 		case JNI_EDETACHED:
@@ -163,14 +163,14 @@ EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
 PushPopLocalFrame::PushPopLocalFrame()
 :	fEnv(EnvTV::sGet())
 	{
-	assert(fEnv);
+	ZAssert(fEnv);
 	fEnv->PushLocalFrame(kLocalFrameSlots);
 	}
 
 PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv)
 :	fEnv(iEnv)
 	{
-	assert(fEnv);
+	ZAssert(fEnv);
 	fEnv->PushLocalFrame(kLocalFrameSlots);
 	}
 
@@ -182,12 +182,11 @@ PushPopLocalFrame::~PushPopLocalFrame()
 
 jobject PushPopLocalFrame::PopReturn(jobject iVal)
 	{
-	assert(fEnv);
+	ZAssert(fEnv);
 	jobject result = fEnv->PopLocalFrame(iVal);
 	fEnv = nullptr;
 	return result;
 	}
-
 
 // =================================================================================================
 #pragma mark - sAsString
@@ -233,7 +232,7 @@ jstring sMakeString(JNIEnv* env, const string8& iVal)
 	{
 	// We actually should be careful here -- JNI wants *modified* UTF8, which uses UTF8-encoded
 	// UTF16 surrogates for CPs outside the BMP. And our caller probably isn't making
-	// sure that's hhappening.
+	// sure that's happening.
 
 	return env->NewStringUTF(iVal.data());
 	}

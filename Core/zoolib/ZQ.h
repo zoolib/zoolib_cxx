@@ -20,7 +20,7 @@ namespace ZooLib {
 #pragma mark - ZQ
 
 // The 'Q' stands for 'Questionable' or 'Queryable'.
-// It is pronounced 'Quid', as in the latin interrogative pronoun.
+// It is pronounced 'Quid', as in the latin interrogative.
 
 // c.f. boost::optional, Haskell's 'Data.Maybe', Scala's 'Option'.
 
