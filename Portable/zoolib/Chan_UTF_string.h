@@ -39,7 +39,7 @@ private:
 template <class UTF_p> class ChanW_UTF_string;
 
 // =================================================================================================
-#pragma mark - ChanW_UTF_string<string32>
+#pragma mark - ChanW_UTF_string<UTF32>
 
 template <>
 class ChanW_UTF_string<UTF32>
@@ -64,7 +64,7 @@ protected:
 typedef ChanW_UTF_string<UTF32> ChanW_UTF_string32;
 
 // =================================================================================================
-#pragma mark - ChanW_UTF_string<string16>
+#pragma mark - ChanW_UTF_string<UTF16>
 
 template <>
 class ChanW_UTF_string<UTF16>
