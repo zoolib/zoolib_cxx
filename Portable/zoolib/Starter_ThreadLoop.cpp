@@ -1,6 +1,8 @@
-// Copyright (c) 2014 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2014-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Starter_ThreadLoop.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 
 #include "zoolib/ZThread.h"
 
@@ -18,9 +20,9 @@ class Starter_ThreadLoop
 :	public Starter
 	{
 public:
-	Starter_ThreadLoop(const ZQ<string>& iNameQ)
-	:	fKeepRunning(false)
-	,	fNameQ(iNameQ)
+	Starter_ThreadLoop(const ZP<Callable<void(bool)>>& iRunCB)
+	:	fRunCB(iRunCB)
+	,	fKeepRunning(false)
 		{}
 
 	virtual ~Starter_ThreadLoop()
@@ -66,10 +68,7 @@ public:
 private:
 	void pRun()
 		{
-		if (fNameQ)
-			ZThread::sSetName(fNameQ->c_str());
-		else
-			ZThread::sSetName("STL");
+		sCall(fRunCB, true);
 
 		fMtx.Acquire();
 		while (fKeepRunning)
@@ -99,26 +98,39 @@ private:
 			fMtx.Acquire();
 			}
 		fMtx.Release();
+
+		sCall(fRunCB, false);
+
 		delete this;
 		}
 
 	static void spRun(Starter_ThreadLoop* iStarter)
 		{ iStarter->pRun(); }
 
+	const ZP<Callable<void(bool)>> fRunCB;
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fKeepRunning;
 	std::vector<ZP<Startable>> fStartables;
-	const ZQ<string> fNameQ;
 	};
 
 // =================================================================================================
 #pragma mark - sStarter_ThreadLoop
 
-ZP<Starter> sStarter_ThreadLoop(const string& iName)
-	{ return new Starter_ThreadLoop(iName); }
+ZP<Starter> sStarter_ThreadLoop(const ZP<Callable<void(bool)>>& iRunCB)
+	{ return new Starter_ThreadLoop(iRunCB); }
+
+static void spSetThreadName(bool iStarting, const std::string& iName)
+	{
+	if (iStarting)
+		ZThread::sSetName(iName.c_str());
+	}
+
+ZP<Starter> sStarter_ThreadLoop(const std::string& iName)
+	{ return sStarter_ThreadLoop(sBindR(sCallable(spSetThreadName), iName)); }
 
 ZP<Starter> sStarter_ThreadLoop()
-	{ return new Starter_ThreadLoop(null); }
+	{ return sStarter_ThreadLoop("STL"); }
+
 
 } // namespace ZooLib
