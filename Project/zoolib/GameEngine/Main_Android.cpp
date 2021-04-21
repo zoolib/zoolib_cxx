@@ -2,7 +2,6 @@
 
 #if defined(__ANDROID__)
 
-#include "zoolib/Archive.h"
 #include "zoolib/File_Archive.h"
 #include "zoolib/Log.h"
 #include "zoolib/Time.h"
