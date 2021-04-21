@@ -64,6 +64,10 @@ size_t sReadFully(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	}
 
 template <class EE>
+size_t sReadFully(const ChanR<EE>& iChanR, const PaC<EE>& iDest)
+	{ return sReadFully(iChanR, sPtr(iDest), sCount(iDest)); }
+
+template <class EE>
 uint64 sSkipFully(const ChanR<EE>& iChanR, uint64 iCount)
 	{
 	uint64 countRemaining = iCount;
@@ -92,6 +96,10 @@ uint64 sSkipAll(const ChanR<EE>& iChanR)
 template <class EE>
 void sERead(const ChanR<EE>& iChanR, EE* oDest, size_t iCount)
 	{ iCount == sReadFully<EE>(iChanR, oDest, iCount) || sThrow_ExhaustedR(); }
+
+template <class EE>
+void sERead(const ChanR<EE>& iChanR, const PaC<EE>& iDest)
+	{ sERead(iChanR, sPtr(iDest), sCount(iDest)); }
 
 template <class EE>
 void sESkip(const ChanR<EE>& iChanR, uint64 iCount)

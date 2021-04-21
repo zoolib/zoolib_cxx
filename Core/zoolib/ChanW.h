@@ -45,8 +45,16 @@ size_t sWriteFully(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	}
 
 template <class EE>
+size_t sWriteFully(const ChanW<EE>& iChan, const PaC<const EE>& iSource)
+	{ return sWriteFully(iChan, sPtr(iSource), sCount(iSource)); }
+
+template <class EE>
 void sEWrite(const ChanW<EE>& iChan, const EE* iSource, size_t iCount)
 	{ iCount == sWriteFully<EE>(iChan, iSource, iCount) || sThrow_ExhaustedW(); }
+
+template <class EE>
+void sEWrite(const ChanW<EE>& iChan, const PaC<const EE>& iSource)
+	{ sEWrite(iChan, sPtr(iSource), sCount(iSource)); }
 
 // =================================================================================================
 #pragma mark -
