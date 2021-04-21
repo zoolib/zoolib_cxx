@@ -59,9 +59,23 @@ template <> struct RelopsTraits_HasLT<Data_ZZ> : public RelopsTraits_Has {};
 template <> inline int sCompare_T(const Data_ZZ& iL, const Data_ZZ& iR)
 	{ return iL.Compare(iR); }
 
+// =================================================================================================
+#pragma mark - Data_ZZ pseudo-ctor from PaC
+
 template <class T>
 Data_ZZ sData_ZZ(const PaC<T>& iPaC)
 	{ return Data_ZZ(sPointer(iPaC), sizeof(T) * sCount(iPaC)); }
+
+template <>
+inline Data_ZZ sData_ZZ<void>(const PaC<void>& iPaC)
+	{ return Data_ZZ(sPointer(iPaC), sCount(iPaC)); }
+
+template <>
+inline Data_ZZ sData_ZZ<const void>(const PaC<const void>& iPaC)
+	{ return Data_ZZ(sPointer(iPaC), sCount(iPaC)); }
+
+// =================================================================================================
+#pragma mark - sPac pseudo-ctor from Data_ZZ
 
 template <class T>
 PaC<T> sPaC(Data_ZZ& iData)
@@ -71,11 +85,9 @@ template <class T>
 PaC<const T> sPaC(const Data_ZZ& iData)
 	{ return sPaC<const T>(static_cast<const T*>(iData.GetPtr()), iData.GetSize() / sizeof(T)); }
 
-//template <>
 inline PaC<void> sPaC(Data_ZZ& iData)
 	{ return sPaC<void>(iData.GetPtrMutable(), iData.GetSize()); }
 
-//template <>
 inline PaC<const void> sPaC(const Data_ZZ& iData)
 	{ return sPaC<const void>(iData.GetPtr(), iData.GetSize()); }
 
