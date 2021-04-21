@@ -5,6 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
+#include "zoolib/Util_Chan.h" // For sECopyAll, sECopyFully.
 
 namespace ZooLib {
 
