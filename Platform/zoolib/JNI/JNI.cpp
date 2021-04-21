@@ -160,18 +160,18 @@ EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
 // =================================================================================================
 #pragma mark - PushPopLocalFrame
 
-PushPopLocalFrame::PushPopLocalFrame()
-:	fEnv(EnvTV::sGet())
-	{
-	ZAssert(fEnv);
-	fEnv->PushLocalFrame(kLocalFrameSlots);
-	}
-
-PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv)
+PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv, size_t iSlots)
 :	fEnv(iEnv)
 	{
 	ZAssert(fEnv);
-	fEnv->PushLocalFrame(kLocalFrameSlots);
+	fEnv->PushLocalFrame(iSlots);
+	}
+
+PushPopLocalFrame::PushPopLocalFrame(size_t iSlots)
+:	fEnv(EnvTV::sGet())
+	{
+	ZAssert(fEnv);
+	fEnv->PushLocalFrame(iSlots);
 	}
 
 PushPopLocalFrame::~PushPopLocalFrame()
@@ -182,8 +182,11 @@ PushPopLocalFrame::~PushPopLocalFrame()
 
 jobject PushPopLocalFrame::PopReturn(jobject iVal)
 	{
+	// Can only call PopReturn *once*, enforced by null-ing fEnv.
 	ZAssert(fEnv);
 	jobject result = fEnv->PopLocalFrame(iVal);
+
+	// Null fEnv so our destructor doesn't erroneously call PopLocalFrame again.
 	fEnv = nullptr;
 	return result;
 	}

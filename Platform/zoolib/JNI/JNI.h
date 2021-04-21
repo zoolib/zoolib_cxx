@@ -69,13 +69,14 @@ private:
 // =================================================================================================
 #pragma mark - JNI::PushPopLocalFrame
 
-constexpr size_t kLocalFrameSlots = 8;
+constexpr size_t kLocalFrameSlots = 16;
 
 class PushPopLocalFrame
 	{
 public:
-	PushPopLocalFrame();
-	PushPopLocalFrame(JNIEnv* iEnv);
+	PushPopLocalFrame(JNIEnv* iEnv, size_t iSlots = kLocalFrameSlots);
+	PushPopLocalFrame(size_t iSlots = kLocalFrameSlots);
+
 	~PushPopLocalFrame();
 
 	jobject PopReturn(jobject);
@@ -125,16 +126,6 @@ string8 sAsString8(jstring ss);
 
 string16 sAsString16(JNIEnv* env, jstring ss);
 string16 sAsString16(jstring ss);
-
-// Older API
-//inline std::string sAsString(JNIEnv* env, jstring ss)
-//	{ return sAsString8(env, ss); }
-//
-//inline std::string sAsString(jstring ss)
-//	{ return sAsString8(ss); }
-//
-//inline jstring sAsJString(const std::string& iString)
-//	{ return sMakeString(iString); }
 
 // =================================================================================================
 #pragma mark -
@@ -205,9 +196,9 @@ public:
 		}
 	};
 
-// This accessor makes it reasonable to do PaC_Array<xx> aa(env->NewxxxArray());
 template <class Array_p>
-Array_p sArray(const PaC_Array<Array_p>& iPaC_Array) { return iPaC_Array.GetArray(); }
+PaC_Array<Array_p> sPaC_Array(Array_p iArray)
+	{ return PaC_Array<Array_p>(iArray); }
 
 // =================================================================================================
 #pragma mark - PaC_ConstArray
@@ -240,9 +231,9 @@ public:
 		}
 	};
 
-// No sArray accessor for PaC_ConstArray, emphasizing that the array will have come from
-// elsewhere, preloaded with read-only data, and if you need the Java array you
-// can get it from the same place that the PaC_ConstArray ctor did.
+template <class Array_p>
+PaC_ConstArray<Array_p> sPaC_ConstArray(Array_p iArray)
+	{ return PaC_ConstArray<Array_p>(iArray); }
 
 } // namespace JNI
 } // namespace ZooLib
