@@ -4,6 +4,7 @@
 #define __ZooLib_Dataspace_Relater_Searcher_h__ 1
 #include "zconfig.h"
 
+#include "zoolib/DList.h"
 #include "zoolib/Dataspace/Relater.h"
 #include "zoolib/Dataspace/Searcher.h"
 
