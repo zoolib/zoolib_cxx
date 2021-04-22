@@ -3,6 +3,7 @@
 #include "zoolib/StartScheduler.h"
 
 #include "zoolib/Singleton.h"
+#include "zoolib/Time.h"
 #include "zoolib/Util_STL_set.h"
 
 namespace ZooLib {

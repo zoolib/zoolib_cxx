@@ -3,6 +3,7 @@
 #include "zoolib/Server/Worker.h"
 
 #include "zoolib/StartScheduler.h"
+#include "zoolib/Time.h"
 
 namespace ZooLib {
 
