@@ -15,8 +15,11 @@ namespace Time {
 
 typedef std::chrono::duration<double,std::ratio<1>> Duration;
 
-double sNow();
-double sSystem();
+inline double sNow()
+	{ return Duration(std::chrono::system_clock::now().time_since_epoch()).count(); }
+
+inline double sSystem()
+	{ return Duration(std::chrono::steady_clock::now().time_since_epoch()).count(); }
 
 //double sAtBoot();
 //double sSinceBoot();
