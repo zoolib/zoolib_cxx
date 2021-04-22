@@ -1,22 +1,4 @@
-/* -------------------------------------------------------------------------------------------------
-Copyright (c) 2011 Andrew Green
-http://www.zoolib.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge,Publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-------------------------------------------------------------------------------------------------- */
+// Copyright (c) 2011-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_ThreadVal_h__
 #define __ZooLib_ThreadVal_h__ 1
@@ -25,7 +7,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/TagVal.h"
 
 #include "zoolib/ZQ.h"
-#include "zoolib/ZThread.h"
+//#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -42,16 +24,16 @@ public:
 	typedef Tag_p Tag_t;
 
 	ThreadVal()
-	:	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
+	:	fPrior(spMut())
+		{ spMut() = this; }
 
 	ThreadVal(const ThreadVal& iOther)
 	:	inherited(iOther)
-	,	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
+	,	fPrior(spMut())
+		{ spMut() = this; }
 
 	~ThreadVal()
-		{ ZTSS::sSet(spKey(), fPrior); }
+		{ spMut() = fPrior; }
 
 	ThreadVal& operator=(const ThreadVal& iOther)
 		{
@@ -61,8 +43,8 @@ public:
 
 	ThreadVal(const Type_p& iVal)
 	:	inherited(iVal)
-	,	fPrior(spGet())
-		{ ZTSS::sSet(spKey(), static_cast<void*>(this)); }
+	,	fPrior(spMut())
+		{ spMut() = this; }
 
 	ThreadVal& operator=(const Type_p& iVal)
 		{
@@ -74,54 +56,51 @@ public:
 
 	static const Type_p* sPGet()
 		{
-		if (ThreadVal* theTV = spGet())
+		if (ThreadVal* theTV = spMut())
 			return &theTV->Get();
 		return nullptr;
 		}
 
 	static ZQ<Type_p> sQGet()
 		{
-		if (ThreadVal* theTV = spGet())
+		if (ThreadVal* theTV = spMut())
 			return theTV->Get();
 		return null;
 		}
 
 	static Type_p sDGet(const Type_p& iDefault)
 		{
-		if (ThreadVal* theTV = spGet())
+		if (ThreadVal* theTV = spMut())
 			return theTV->Get();
 		return iDefault;
 		}
 
 	static const Type_p& sGet()
 		{
-		if (ThreadVal* theTV = spGet())
+		if (ThreadVal* theTV = spMut())
 			return theTV->Get();
 		return sDefault<Type_p>();
 		}
 
 	static Type_p* sPMut()
 		{
-		if (ThreadVal* theTV = spGet())
+		if (ThreadVal* theTV = spMut())
 			return &theTV->Mut();
 		return nullptr;
 		}
 
 	static Type_p& sMut()
 		{
-		ThreadVal* theTV = spGet();
+		ThreadVal* theTV = spMut();
 		ZAssert(theTV);
 		return theTV->Mut();
 		}
 
 private:
-	static ThreadVal* spGet()
-		{ return static_cast<ThreadVal*>(ZTSS::sGet(spKey())); }
-
-	static ZTSS::Key spKey()
+	static ThreadVal*& spMut()
 		{
-		static std::atomic<ZTSS::Key> spKey;
-		return ZTSS::sKey(spKey);
+		static thread_local ThreadVal* spCurrent;
+		return spCurrent;
 		}
 
 	ThreadVal* fPrior;

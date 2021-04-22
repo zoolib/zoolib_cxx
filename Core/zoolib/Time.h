@@ -1,8 +1,10 @@
-// Copyright (c) 2015 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2015-21 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Time_h__
 #define __ZooLib_Time_h__ 1
 #include "zconfig.h"
+
+#include <chrono>
 
 namespace ZooLib {
 
@@ -11,11 +13,13 @@ namespace ZooLib {
 
 namespace Time {
 
+typedef std::chrono::duration<double,std::ratio<1>> Duration;
+
 double sNow();
 double sSystem();
-double sAtBoot();
 
-double sSinceBoot();
+//double sAtBoot();
+//double sSinceBoot();
 
 const long long kSecond = 1;
 const long long kMinute = 60 * kSecond;

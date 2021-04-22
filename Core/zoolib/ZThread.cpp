@@ -2,7 +2,15 @@
 
 #include "zoolib/ZThread.h"
 
-#include "zoolib/ZDebug.h"
+#if ZCONFIG_SPI_Enabled(Win)
+	#include "zoolib/ZCompat_Win.h"
+#endif
+
+#if __MACH__
+	#include <mach/mach_init.h> // For mach_thread_self
+#endif
+
+//#include "zoolib/ZDebug.h"
 
 namespace ZooLib {
 
@@ -11,60 +19,79 @@ namespace ZooLib {
 
 namespace ZThread {
 
-static ZAtomic_t spThreadCount;
+#if ZCONFIG_SPI_Enabled(Win)
+ID sID()
+	{ return ::GetCurrentThreadId(); }
 
-void sStarted()
-	{ sAtomic_Inc(&spThreadCount); }
+#else // ZCONFIG_SPI_Enabled(Win)
 
-void sFinished()
-	{ sAtomic_Dec(&spThreadCount); }
+ID sID()
+	{ return ::pthread_self(); }
 
-static bool spDontTearDown;
 
-void sDontTearDownTillAllThreadsExit()
-	{ spDontTearDown = true; }
+#endif // ZCONFIG_SPI_Enabled(Win)
 
-void sWaitTillAllThreadsExit()
-	{
-	for (;;)
+
+// =================================================================================================
+#pragma mark - ZThread_pthread::sSetName
+
+#if ZCONFIG_SPI_Enabled(MacOSX)
+	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
+		#if defined(MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_10_6 <= MAC_OS_X_VERSION_MIN_REQUIRED
+
+			void sSetName(const char* iName)
+				{
+				char buffer[256];
+				snprintf(buffer, sizeof(buffer), "%4x:%s", ((int)mach_thread_self()), iName);
+				::pthread_setname_np(buffer);
+				}
+
+		#else
+
+			extern int pthread_setname_np(const char*) __attribute__((weak_import));
+
+			void sSetName(const char* iName)
+				{
+				if (pthread_setname_np)
+					{
+					if (0 != ::pthread_setname_np(iName))
+						{
+						if (0 != pthread_setname_np("FailedToSetName"))
+							::pthread_setname_np("FTSN");
+						}
+					}
+				}
+
+		#endif
+	#endif
+
+#elif ZCONFIG_SPI_Enabled(iPhone)
+
+	void sSetName(const char* iName)
+		{ ::pthread_setname_np(iName); }
+
+#elif ! defined(__ANDROID_API__) || __ANDROID_API__ >= 16
+
+	void sSetName(const char* iName)
 		{
-		int count = sAtomic_Get(&spThreadCount);
-		// This sleep serves two purposes. First it means we're polling at
-		// intervals for the value of sThreadCount, rather than busy-waiting.
-		// Second, at least .1s will elapse between the thread count hitting
-		// zero and this code exiting, so the last thread will have
-		// had a chance to fully terminate.
-		sSleep(.1);
-		if (0 == count)
-			break;
+		if (not iName)
+			iName = "NullName";
+
+		if (0 != ::pthread_setname_np(::pthread_self(), iName))
+			{
+			if (0 != pthread_setname_np(::pthread_self(), "FailedToSetName"))
+				::pthread_setname_np(::pthread_self(), "FTSN");
+			}
 		}
-	}
 
-static int spInitCount;
+#else
 
-InitHelper::InitHelper()
-	{ ++spInitCount; }
+	void sSetName(const char* iName)
+		{ /* no-op */ }
 
-InitHelper::~InitHelper()
-	{
-	if (0 == --spInitCount && spDontTearDown)
-		sWaitTillAllThreadsExit();
-	}
+#endif
 
 } // namespace ZThread
 
-// =================================================================================================
-#pragma mark - ZTSS
-
-namespace ZTSS {
-
-Key sKey(std::atomic<Key>& ioStorage)
-	{
-	if (not ioStorage)
-		sAtomic_CAS(&ioStorage, Key(0), ZTSS::sCreate());
-	return ioStorage;
-	}
-
-} // namespace ZTSS
 
 } // namespace ZooLib

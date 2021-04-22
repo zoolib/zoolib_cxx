@@ -7,8 +7,6 @@
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_string.h"
 
-#include "zoolib/ZThread.h"
-
 using std::string;
 
 namespace ZooLib {
@@ -20,25 +18,20 @@ ZP<LogMeister> sLogMeister;
 // =================================================================================================
 #pragma mark - Log::CallDepth
 
-static ZTSS::Key spKey()
-	{
-	static std::atomic<ZTSS::Key> spKey;
-	return ZTSS::sKey(spKey);
-	}
+static thread_local const CallDepth* spCurrent;
 
 CallDepth::CallDepth(bool iActive)
 :	fActive(iActive)
-,	fPrior(((CallDepth*)(ZTSS::sGet(spKey()))))
-	{ ZTSS::sSet(spKey(), this); }
+,	fPrior(spCurrent)
+	{ spCurrent = this; }
 
 CallDepth::~CallDepth()
-	{ ZTSS::sSet(spKey(), const_cast<CallDepth*>(fPrior)); }
+	{ spCurrent = fPrior; }
 
 size_t CallDepth::sCount()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = ((CallDepth*)(ZTSS::sGet(spKey())));
-		current; current = current->fPrior)
+	for (const CallDepth* current = spCurrent; current; current = current->fPrior)
 		{ ++count; }
 	return count;
 	}
@@ -46,8 +39,7 @@ size_t CallDepth::sCount()
 size_t CallDepth::sCountActive()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = ((CallDepth*)(ZTSS::sGet(spKey())));
-		current; current = current->fPrior)
+	for (const CallDepth* current = spCurrent; current; current = current->fPrior)
 		{
 		if (current->fActive)
 			++count;

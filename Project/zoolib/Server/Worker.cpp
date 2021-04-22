@@ -28,7 +28,7 @@ Worker::Worker(
 	const ZP<Callable_Attached>& iCallable_Attached,
 	const ZP<Callable_Work>& iCallable_Work,
 	const ZP<Callable_Detached>& iCallable_Detached)
-:	fWorking(0)
+:	fWorking()
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
@@ -39,7 +39,7 @@ Worker::Worker(
 Worker::Worker(
 	const ZP<Callable_Attached>& iCallable_Attached,
 	const ZP<Callable_Work>& iCallable_Work)
-:	fWorking(0)
+:	fWorking()
 ,	fCallable_Attached(iCallable_Attached)
 ,	fCallable_Work(iCallable_Work)
 	{
@@ -49,7 +49,7 @@ Worker::Worker(
 Worker::Worker(
 	const ZP<Callable_Work>& iCallable_Work,
 	const ZP<Callable_Detached>& iCallable_Detached)
-:	fWorking(0)
+:	fWorking()
 ,	fCallable_Work(iCallable_Work)
 ,	fCallable_Detached(iCallable_Detached)
 	{
@@ -57,14 +57,14 @@ Worker::Worker(
 	}
 
 Worker::Worker(const ZP<Callable_Work>& iCallable_Work)
-:	fWorking(0)
+:	fWorking()
 ,	fCallable_Work(iCallable_Work)
 	{
 	ZAssert(fCallable_Work);
 	}
 
 Worker::Worker()
-:	fWorking(0)
+:	fWorking()
 	{}
 
 bool Worker::QCall()
@@ -83,7 +83,7 @@ bool Worker::QCall()
 		catch (...) {}
 
 		ZAcqMtx acq(fMtx);
-		fWorking = 0;
+		fWorking = ZThread::ID();
 
 		if (result && *result)
 			{
@@ -156,7 +156,7 @@ void Worker::pWakeAt(double iSystemTime)
 	ZAcqMtx acq(fMtx);
 	if (fStarter)
 		{
-		if (fWorking)
+		if (fWorking != ZThread::ID())
 			{
 			if (fNextWake > iSystemTime)
 				fNextWake = iSystemTime;

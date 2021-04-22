@@ -63,7 +63,7 @@ public:
 				{
 				try
 					{
-					ZThread::sStartRaw(0, (ZThread::ProcRaw_t)spRunLoop, this);
+					std::thread(&StartOnNewThreadHandler::RunLoop, this).detach();
 					if (xx != 0)
 						{
 						if (ZLOGF(w, eErr))
@@ -153,12 +153,8 @@ public:
 		--fActiveThreads;
 		}
 
-	static void spRunLoop(void* iRefcon)
-		{
-		ZThread::sStarted();
-		static_cast<StartOnNewThreadHandler*>(iRefcon)->RunLoop();
-		ZThread::sFinished();
-		}
+	static void spRunLoop(StartOnNewThreadHandler* iHandler)
+		{ iHandler->RunLoop(); }
 
 	ZMtx fMtx;
 	ZCnd fCnd;

@@ -1,156 +1,97 @@
-// Copyright (c) 2008 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2008-2021 Andrew Green. MIT License. http://www.zoolib.org
 
-#ifndef __ZThread_h__
-#define __ZThread_h__ 1
+#ifndef __ZooLib_ZThread_h__
+#define __ZooLib_ZThread_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZThread_T.h"
-#include "zoolib/ZThread_Win.h"
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+
+#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZThread_T.h" // For ZSem_T
 
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ZThread, ZTSS etc.
+#pragma mark - ZThread, essential types and functions
 
-#if 0
+namespace ZThread {
 
-#elif ZCONFIG_API_Enabled(Thread_pthread)
+typedef std::chrono::duration<double,std::ratio<1>> Duration;
 
-	namespace ZThread { using namespace ZThread_pthread; }
-	namespace ZTSS { using namespace ZTSS_pthread; }
+inline void sSleep(double iDuration)
+	{ std::this_thread::sleep_for(Duration(iDuration)); }
 
-	#if ZCONFIG_pthread_Debug
-		typedef ZCnd_pthread ZCnd;
-		typedef ZMtxChecked_pthread ZMtx;
-	#else
-		typedef ZCndBase_pthread ZCnd;
-		typedef ZMtx_pthread ZMtx;
-	#endif
-
-	typedef ZSem_pthread ZSem;
-
-	#if !defined(__MACH__)
-		typedef ZSemNoTimeout_pthread ZSemNoTimeout;
-	#endif
-
-#elif ZCONFIG_API_Enabled(Thread_Win)
-
-	namespace ZThread { using namespace ZThread_Win; }
-	namespace ZTSS { using namespace ZTSS_Win; }
-
-	typedef ZCnd_Win ZCnd;
-	typedef ZMtx_Win ZMtx;
-
-	typedef ZSem_Win ZSem;
-	typedef ZSem_Win ZSemNoTimeout;
-
+#if ZCONFIG_SPI_Enabled(Win)
+	typedef unsigned int ID;
+#else
+	typedef pthread_t ID;
 #endif
 
+ID sID();
+
+void sSetName(const char* iName);
+
+template <class T>
+void sStart_T(void(*iProc)(T), T&& iParam)
+	{
+	std::thread theThread(iProc, std::move(iParam));
+	theThread.detach();
+	}
+
+} // namespace ZThread
+
 // =================================================================================================
-#pragma mark - ZTSS
+#pragma mark - ZCnd
 
-namespace ZTSS {
+class ZCnd : public std::condition_variable_any
+	{
+public:
+	inline void Wait(std::mutex& iMtx)
+		{ this->wait(iMtx); }
 
-Key sKey(std::atomic<Key>& ioStorage);
+	inline bool WaitFor(std::mutex& iMtx, double iTimeout)
+		{
+		return std::cv_status::no_timeout == this->wait_for(iMtx, ZThread::Duration(iTimeout));
+		}
 
-} // namespace ZTSS
+	bool WaitUntil(std::mutex& iMtx, double iDeadline);
+//	inline bool WaitUntil(std::mutex& iMtx, double iDeadline)
+//		{
+//		return std::cv_status::no_timeout == this->wait_until(iMtx,
+//			std::chrono::time_point<Duration>(Duration(iDeadline)));
+//		}
+
+	inline void Signal() { this->notify_one(); }
+
+	inline void Broadcast() { this->notify_all(); }	
+	};
 
 // =================================================================================================
-#pragma mark - Acquirer, Releaser
+#pragma mark - ZMtx
+
+class ZMtx : public std::mutex
+	{
+public:
+	inline void Acquire() { this->lock(); }
+	inline void Release() { this->unlock(); }
+	};
+
+// =================================================================================================
+#pragma mark - ZSem
+
+typedef ZSem_T<ZMtx, ZCnd> ZSem;
+
+// =================================================================================================
+#pragma mark - ZAcqMtx, ZRelMtx
 
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
 
 typedef ZReleaser_T<ZMtx> ZRelMtx;
 
-// =================================================================================================
-#pragma mark - ZThread
-
-namespace ZThread {
-
-void sStarted();
-void sFinished();
-void sDontTearDownTillAllThreadsExit();
-void sWaitTillAllThreadsExit();
-
-class InitHelper
-	{
-public:
-	InitHelper();
-	~InitHelper();
-	};
-
-static InitHelper sInitHelper;
-
-// The Starter_T class is used to provide a scope for the Proc typedef
-// and the ProxyParam struct, without which the code is pretty impenetrable.
-
-template <class T>
-class Starter_T
-	{
-public:
-	typedef void (*Proc)(T);
-
-private:
-	struct ProxyParam
-		{
-		Proc fProc;
-		T fParam;
-
-		ProxyParam(Proc iProc, T iParam)
-		:	fProc(iProc), fParam(iParam)
-			{}
-		};
-
-	static ProcResult_t
-	#if ZCONFIG_API_Enabled(Thread_Win)
-		__stdcall
-	#endif
-	sEntry(ProxyParam* iProxyParam)
-		{
-		// Useful when debugging under GDB, which (on MacOS) doesn't always
-		// tell us what pthread_id corresponds to a thread.
-		const ZThread::ID theThreadID ZMACRO_Attribute_Unused = ZThread::sID();
-
-		#if __MACH__
-			const mach_port_t theMachThreadID ZMACRO_Attribute_Unused =
-				::pthread_mach_thread_np(::pthread_self());
-		#endif
-
-		sStarted();
-
-		try { iProxyParam->fProc(iProxyParam->fParam); }
-		catch (...) {}
-
-		delete iProxyParam;
-
-		sFinished();
-
-		return 0;
-		}
-
-public:
-	static void sStart(Proc iProc, T iParam)
-		{
-		ProxyParam* thePP = new ProxyParam(iProc, iParam);
-		try
-			{
-			sStartRaw(0, (ProcRaw_t)sEntry, thePP);
-			}
-		catch (...)
-			{
-			delete thePP;
-			throw;
-			}
-		}
-	};
-
-template <class T>
-void sStart_T(typename Starter_T<T>::Proc iProc, T iParam)
-	{ Starter_T<T>::sStart(iProc, iParam); }
-
-} // namespace ZThread
 
 } // namespace ZooLib
 
-#endif // __ZThread_h__
+#endif // __ZooLib_Thread_h__
