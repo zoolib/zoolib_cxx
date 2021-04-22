@@ -5,6 +5,7 @@
 #if ZCONFIG_SPI_Enabled(POSIX)
 
 #include "zoolib/Memory.h" // For sMemZero
+#include "zoolib/ZThread.h" // For ZThread::sSetName
 
 namespace ZooLib {
 namespace POSIX {
@@ -29,20 +30,20 @@ SaveSetRestoreThreadName::SaveSetRestoreThreadName(const std::string& iName)
 :	fQPrior(sQGetThreadName())
 	{
 	if (fQPrior)
-		ZThread_pthread::sSetName(iName.c_str());
+		ZThread::sSetName(iName.c_str());
 	}
 
 SaveSetRestoreThreadName::SaveSetRestoreThreadName(const char* iName)
 :	fQPrior(sQGetThreadName())
 	{
 	if (fQPrior)
-		ZThread_pthread::sSetName(iName);
+		ZThread::sSetName(iName);
 	}
 
 SaveSetRestoreThreadName::~SaveSetRestoreThreadName()
 	{
 	if (fQPrior)
-		ZThread_pthread::sSetName(fQPrior->c_str());
+		ZThread::sSetName(fQPrior->c_str());
 	}
 
 // =================================================================================================

@@ -9,8 +9,8 @@
 #include <mutex>
 #include <thread>
 
+#include "zoolib/Compat_NonCopyable.h"
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZThread_T.h" // For ZSem_T
 
 namespace ZooLib {
 
@@ -18,6 +18,13 @@ namespace ZooLib {
 #pragma mark - ZThread, essential types and functions
 
 namespace ZThread {
+
+template <class T>
+void sStart_T(void(*iProc)(T), T&& iParam)
+	{
+	std::thread theThread(iProc, std::move(iParam));
+	theThread.detach();
+	}
 
 typedef std::chrono::duration<double,std::ratio<1>> Duration;
 
@@ -34,13 +41,6 @@ ID sID();
 
 void sSetName(const char* iName);
 
-template <class T>
-void sStart_T(void(*iProc)(T), T&& iParam)
-	{
-	std::thread theThread(iProc, std::move(iParam));
-	theThread.detach();
-	}
-
 } // namespace ZThread
 
 // =================================================================================================
@@ -49,20 +49,18 @@ void sStart_T(void(*iProc)(T), T&& iParam)
 class ZCnd : public std::condition_variable_any
 	{
 public:
-	inline void Wait(std::mutex& iMtx)
-		{ this->wait(iMtx); }
+	typedef ZThread::Duration Duration;
+
+	inline void Wait(std::mutex& iMtx) { this->wait(iMtx); }
 
 	inline bool WaitFor(std::mutex& iMtx, double iTimeout)
-		{
-		return std::cv_status::no_timeout == this->wait_for(iMtx, ZThread::Duration(iTimeout));
-		}
+		{ return std::cv_status::no_timeout == this->wait_for(iMtx, Duration(iTimeout)); }
 
-	bool WaitUntil(std::mutex& iMtx, double iDeadline);
-//	inline bool WaitUntil(std::mutex& iMtx, double iDeadline)
-//		{
-//		return std::cv_status::no_timeout == this->wait_until(iMtx,
-//			std::chrono::time_point<Duration>(Duration(iDeadline)));
-//		}
+	inline bool WaitUntil(std::mutex& iMtx, double iDeadline)
+		{
+		return std::cv_status::no_timeout == this->wait_until(iMtx,
+			std::chrono::time_point<std::chrono::steady_clock, Duration>(Duration(iDeadline)));
+		}
 
 	inline void Signal() { this->notify_one(); }
 
@@ -80,16 +78,36 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark - ZSem
+#pragma mark - ZAcqMtx
 
-typedef ZSem_T<ZMtx, ZCnd> ZSem;
+class ZAcqMtx : NonCopyable
+	{
+public:
+	inline ZAcqMtx(ZMtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
+
+	// inline ZAcqMtx(const ZMtx& iMtx) : fMtx(const_cast<ZMtx&>(iMtx)) { fMtx.Acquire(); }
+
+	inline ~ZAcqMtx() { fMtx.Release(); }
+
+private:
+	ZMtx& fMtx;
+	};
 
 // =================================================================================================
-#pragma mark - ZAcqMtx, ZRelMtx
+#pragma mark - ZRelMtx
 
-typedef ZAcquirer_T<ZMtx> ZAcqMtx;
+class ZRelMtx : NonCopyable
+	{
+public:
+	inline ZRelMtx(ZMtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
 
-typedef ZReleaser_T<ZMtx> ZRelMtx;
+	// inline ZRelMtx(const ZMtx& iMtx) : fMtx(const_cast<ZMtx&>(iMtx)) { fMtx.Release(); }
+
+	inline ~ZRelMtx() { fMtx.Acquire(); }
+
+private:
+	ZMtx& fMtx;
+	};
 
 
 } // namespace ZooLib

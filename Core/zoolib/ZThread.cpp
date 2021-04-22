@@ -3,36 +3,32 @@
 #include "zoolib/ZThread.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
-	#include "zoolib/ZCompat_Win.h"
+	#include "zoolib/ZCompat_Win.h" // For GetCurrentThreadId
 #endif
 
 #if __MACH__
 	#include <mach/mach_init.h> // For mach_thread_self
 #endif
 
-//#include "zoolib/ZDebug.h"
-
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark - ZThread
-
 namespace ZThread {
 
+// =================================================================================================
+#pragma mark - ZThread::sID
+
 #if ZCONFIG_SPI_Enabled(Win)
-ID sID()
-	{ return ::GetCurrentThreadId(); }
+
+ID sID() { return ::GetCurrentThreadId(); }
 
 #else // ZCONFIG_SPI_Enabled(Win)
 
-ID sID()
-	{ return ::pthread_self(); }
+// Assume pthread for now
 
+ID sID() { return ::pthread_self(); }
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-
-// =================================================================================================
+// ================================================================================================
 #pragma mark - ZThread_pthread::sSetName
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
@@ -52,13 +48,11 @@ ID sID()
 
 			void sSetName(const char* iName)
 				{
-				if (pthread_setname_np)
+				if (pthread_setname_np
+					&& 0 != ::pthread_setname_np(iName)
+					&& 0 != pthread_setname_np("FailedToSetName"))
 					{
-					if (0 != ::pthread_setname_np(iName))
-						{
-						if (0 != pthread_setname_np("FailedToSetName"))
-							::pthread_setname_np("FTSN");
-						}
+					::pthread_setname_np("FTSN");
 					}
 				}
 
@@ -77,10 +71,10 @@ ID sID()
 		if (not iName)
 			iName = "NullName";
 
-		if (0 != ::pthread_setname_np(::pthread_self(), iName))
+		if (0 != ::pthread_setname_np(::pthread_self(), iName)
+			&& 0 != pthread_setname_np(::pthread_self(), "FailedToSetName"))
 			{
-			if (0 != pthread_setname_np(::pthread_self(), "FailedToSetName"))
-				::pthread_setname_np(::pthread_self(), "FTSN");
+			::pthread_setname_np(::pthread_self(), "FTSN");
 			}
 		}
 
@@ -92,6 +86,4 @@ ID sID()
 #endif
 
 } // namespace ZThread
-
-
 } // namespace ZooLib

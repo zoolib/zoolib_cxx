@@ -8,10 +8,10 @@
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-#include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZQ.h"
-
+#include <pthread.h>
 #include <string>
+
+#include "zoolib/ZQ.h"
 
 namespace ZooLib {
 namespace POSIX {
