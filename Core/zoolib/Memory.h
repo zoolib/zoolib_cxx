@@ -21,7 +21,25 @@ namespace ZooLib {
 inline int sMemCompare(const void* iLHS, const void* iRHS, size_t iCount)
 	{ return std::memcmp(iLHS, iRHS, iCount); }
 
-int sMemCompare(const void* iL, size_t iCountL, const void* iR, size_t iCountR);
+inline int sMemCompare(const void* iL, size_t iCountL, const void* iR, size_t iCountR)
+	{
+	if (iCountL < iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountL))
+			return compare;
+		return -1;
+		}
+	else if (iCountL > iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountR))
+			return compare;
+		return 1;
+		}
+	else
+		{
+		return std::memcmp(iL, iR, iCountL);
+		}
+	}
 
 inline void sMemCopy(void* oDest, const void* iSource, size_t iCount)
 	{ std::memcpy(oDest, iSource, iCount); }
