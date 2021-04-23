@@ -105,12 +105,13 @@ private:
 
 template <typename Lambda_p>
 ZP<Callable
-	<typename Callable_Lambda_Util::RemoveClass_T<decltype(&std::remove_reference<Lambda_p>::type::operator())>::type>
+	<typename Callable_Lambda_Util::RemoveClass_T<
+		decltype(&std::remove_reference<Lambda_p>::type::operator())>::type>
 	>
 sCallable(const Lambda_p& iLambda)
 	{
-	typedef typename Callable_Lambda_Util::RemoveClass_T<decltype(&std::remove_reference<Lambda_p>::type::operator())>::type
-		Signature;
+	using Signature = typename Callable_Lambda_Util::RemoveClass_T<
+		decltype(&std::remove_reference<Lambda_p>::type::operator())>::type;
 
 	return new Callable_Lambda<Lambda_p,Signature>(iLambda);
 	}
