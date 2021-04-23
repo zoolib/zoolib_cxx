@@ -20,12 +20,24 @@ size_t sReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
+bool sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return iCount == sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
+
+inline
+bool sQReadMem(const ChanR_Bin& iChan, const PaC<void>& iDest)
+	{ return sCount(iDest) == sReadFully(iChan, sPtr<byte>(iDest), sCount(iDest)); }
+
+inline
 size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ sERead(iChan, static_cast<byte*>(oDest), iCount); }
+
+inline
+void sEReadMem(const ChanR_Bin& iChan, const PaC<void>& iDest)
+	{ sERead(iChan, sPtr<byte>(iDest), sCount(iDest)); }
 
 inline
 void sUnreadMem(const ChanRU_Bin& iChan, const void* iSource, size_t iCount)
@@ -91,6 +103,22 @@ ZQ<T> sQReadSwapped(const ChanR_Bin& iChanR)
 #endif
 
 template <class T>
+T sEReadNative(const ChanR_Bin& iChanR)
+	{
+	if (ZQ<T> theQ = sQReadNative<T>(iChanR))
+		return *theQ;
+	sThrow_ExhaustedR();
+	}
+
+template <class T>
+T sEReadSwapped(const ChanR_Bin& iChanR)
+	{
+	if (ZQ<T> theQ = sQReadSwapped<T>(iChanR))
+		return *theQ;
+	sThrow_ExhaustedR();
+	}
+
+template <class T>
 T sEReadBE(const ChanR_Bin& iChanR)
 	{
 	if (ZQ<T> theQ = sQReadBE<T>(iChanR))
@@ -112,15 +140,6 @@ T sERead(bool iBE, const ChanR_Bin& iChanR)
 	if (iBE)
 		return sEReadBE<T>(iChanR);
 	return sEReadLE<T>(iChanR);
-	}
-
-template <class T>
-T sEReadNative(const ChanR_Bin& iChanR)
-	{
-	T buf;
-	if (sizeof(T) == sReadMemFully(iChanR, &buf, sizeof(T)))
-		return buf;
-	sThrow_ExhaustedR();
 	}
 
 } // namespace ZooLib

@@ -18,12 +18,24 @@ size_t sWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
+bool sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return iCount == sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
+
+inline
+bool sQWriteMem(const ChanW_Bin& iChan, const PaC<const void>& iSource)
+	{ return sCount(iSource) == sWrite<byte>(iChan, sPtr<const byte>(iSource), sCount(iSource)); }
+
+inline
 size_t sWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
 void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sEWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
+
+inline
+void sEWriteMem(const ChanW_Bin& iChan, const PaC<const void>& iSource)
+	{ return sEWrite<byte>(iChan, sPtr<const byte>(iSource), sCount(iSource)); }
 
 // =================================================================================================
 #pragma mark -
@@ -70,6 +82,10 @@ bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 template <class T>
 void sEWriteNative(const ChanW_Bin& iChanW, const T& iT)
 	{ sQWriteNative<T>(iChanW, iT) || sThrow_ExhaustedW(); }
+
+template <class T>
+void sEWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
+	{ sQWriteSwapped<T>(iChanW, iT) || sThrow_ExhaustedW(); }
 
 template <class T>
 void sEWriteBE(const ChanW_Bin& iChanW, const T& iT)
