@@ -13,29 +13,31 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark -
 
+// Analogs of sWrite that take a const void*, so a binary can can write from any pointer.
+
 inline
 size_t sWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
-
-inline
-bool sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return iCount == sWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
-
-inline
-bool sQWriteMem(const ChanW_Bin& iChan, const PaC<const void>& iSource)
-	{ return sCount(iSource) == sWrite<byte>(iChan, sPtr<const byte>(iSource), sCount(iSource)); }
 
 inline
 size_t sWriteMemFully(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
 	{ return sWriteFully<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
 
 inline
+bool sQWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
+	{ return iCount == sWriteMemFully(iChan, iSource, iCount); }
+
+inline
+bool sQWriteMem(const ChanW_Bin& iChan, const PaC<const void>& iSource)
+	{ return sQWriteMem(iChan, sPtr(iSource), sCount(iSource));}
+
+inline
 void sEWriteMem(const ChanW_Bin& iChan, const void* iSource, size_t iCount)
-	{ return sEWrite<byte>(iChan, static_cast<const byte*>(iSource), iCount); }
+	{ sQWriteMem(iChan, iSource, iCount) || sThrow_ExhaustedW(); }
 
 inline
 void sEWriteMem(const ChanW_Bin& iChan, const PaC<const void>& iSource)
-	{ return sEWrite<byte>(iChan, sPtr<const byte>(iSource), sCount(iSource)); }
+	{ sQWriteMem(iChan, iSource) || sThrow_ExhaustedW(); }
 
 // =================================================================================================
 #pragma mark -
@@ -67,6 +69,14 @@ bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
 		{ return sQWriteSwapped<T>(iChanW, iT); }
 
+	template <class T>
+	bool sQWrite(bool iBE, const ChanW_Bin& iChanW, const T& iT)
+		{
+		if (iBE)
+			return sQWriteNative<T>(iChanW, iT);
+		return sQWriteSwapped<T>(iChanW, iT);
+		}
+
 #else
 
 	template <class T>
@@ -76,6 +86,14 @@ bool sQWriteSwapped(const ChanW_Bin& iChanW, const T& iT)
 	template <class T>
 	bool sQWriteLE(const ChanW_Bin& iChanW, const T& iT)
 		{ return sQWriteNative<T>(iChanW, iT); }
+
+	template <class T>
+	bool sQWrite(bool iBE, const ChanW_Bin& iChanW, const T& iT)
+		{
+		if (iBE)
+			return sQWriteSwapped<T>(iChanW, iT);
+		return sQWriteNative<T>(iChanW, iT);
+		}
 
 #endif
 
@@ -94,6 +112,15 @@ void sEWriteBE(const ChanW_Bin& iChanW, const T& iT)
 template <class T>
 void sEWriteLE(const ChanW_Bin& iChanW, const T& iT)
 	{ sQWriteLE<T>(iChanW, iT) || sThrow_ExhaustedW(); }
+
+template <class T>
+void sEWrite(bool iBE, const ChanW_Bin& iChanW, const T& iT)
+	{
+	if (iBE)
+		sEWriteBE<T>(iChanW, iT);
+	else
+		sEWriteLE<T>(iChanW, iT);
+	}
 
 } // namespace ZooLib
 

@@ -20,24 +20,24 @@ size_t sReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sRead(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
-bool sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ return iCount == sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
-
-inline
-bool sQReadMem(const ChanR_Bin& iChan, const PaC<void>& iDest)
-	{ return sCount(iDest) == sReadFully(iChan, sPtr<byte>(iDest), sCount(iDest)); }
-
-inline
 size_t sReadMemFully(const ChanR_Bin& iChan, void* oDest, size_t iCount)
 	{ return sReadFully(iChan, static_cast<byte*>(oDest), iCount); }
 
 inline
+bool sQReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
+	{ return iCount == sReadMemFully(iChan, oDest, iCount); }
+
+inline
+bool sQReadMem(const ChanR_Bin& iChan, const PaC<void>& iDest)
+	{ return sQReadMem(iChan, sPtr(iDest), sCount(iDest)); }
+
+inline
 void sEReadMem(const ChanR_Bin& iChan, void* oDest, size_t iCount)
-	{ sERead(iChan, static_cast<byte*>(oDest), iCount); }
+	{ sQReadMem(iChan, oDest, iCount) || sThrow_ExhaustedR(); }
 
 inline
 void sEReadMem(const ChanR_Bin& iChan, const PaC<void>& iDest)
-	{ sERead(iChan, sPtr<byte>(iDest), sCount(iDest)); }
+	{ sQReadMem(iChan, iDest) || sThrow_ExhaustedR(); }
 
 inline
 void sUnreadMem(const ChanRU_Bin& iChan, const void* iSource, size_t iCount)
