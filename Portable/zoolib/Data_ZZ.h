@@ -68,11 +68,11 @@ Data_ZZ sData_ZZ(const PaC<T>& iPaC)
 
 template <>
 inline Data_ZZ sData_ZZ<void>(const PaC<void>& iPaC)
-	{ return Data_ZZ(sPointer(iPaC), sCount(iPaC)); }
+	{ return Data_ZZ(sPtr(iPaC), sCount(iPaC)); }
 
 template <>
 inline Data_ZZ sData_ZZ<const void>(const PaC<const void>& iPaC)
-	{ return Data_ZZ(sPointer(iPaC), sCount(iPaC)); }
+	{ return Data_ZZ(sPtr(iPaC), sCount(iPaC)); }
 
 // =================================================================================================
 #pragma mark - sPac pseudo-ctor from Data_ZZ
