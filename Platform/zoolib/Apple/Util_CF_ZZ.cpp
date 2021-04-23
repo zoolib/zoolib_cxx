@@ -195,28 +195,28 @@ ZP<CFTypeRef> sDAsCFType(CFTypeRef iDefault, const Val_ZZ& iVal)
 		}
 	else if (const int* theValue = iVal.PGet<int>())
 		{
-		if (ZIntIs32Bit)
+		if (kIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const unsigned int* theValue = iVal.PGet<unsigned int>())
 		{
-		if (ZIntIs32Bit)
+		if (kIntIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const long* theValue = iVal.PGet<long>())
 		{
-		if (ZLongIs32Bit)
+		if (kLongIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const unsigned long* theValue = iVal.PGet<unsigned long>())
 		{
-		if (ZLongIs32Bit)
+		if (kLongIs32Bit)
 			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
 			return spMakeNumber(kCFNumberSInt64Type, theValue);

@@ -46,18 +46,18 @@ typedef uint32_t uint32;
 typedef int64_t int64;
 typedef uint64_t uint64;
 
-template <int size> struct ZIntTrait_T;
+template <int size> struct IntTrait_T;
 
-template <> struct ZIntTrait_T<4> { enum { eIs32Bit = 1, eIs64Bit = 0 }; };
-template <> struct ZIntTrait_T<8> { enum { eIs32Bit = 0, eIs64Bit = 1 }; };
+template <> struct IntTrait_T<4> { enum { eIs32Bit = 1, eIs64Bit = 0 }; };
+template <> struct IntTrait_T<8> { enum { eIs32Bit = 0, eIs64Bit = 1 }; };
 
-enum { ZLongIs32Bit = ZIntTrait_T<sizeof(long)>::eIs32Bit };
+enum { kLongIs32Bit = IntTrait_T<sizeof(long)>::eIs32Bit };
 
-enum { ZIntIs32Bit = ZIntTrait_T<sizeof(int)>::eIs32Bit };
+enum { kIntIs32Bit = IntTrait_T<sizeof(int)>::eIs32Bit };
 
-enum { ZLongIs64Bit = ZIntTrait_T<sizeof(long)>::eIs64Bit };
+enum { kLongIs64Bit = IntTrait_T<sizeof(long)>::eIs64Bit };
 
-enum { ZIntIs64Bit = ZIntTrait_T<sizeof(int)>::eIs64Bit };
+enum { kIntIs64Bit = IntTrait_T<sizeof(int)>::eIs64Bit };
 
 } // namespace ZooLib
 
