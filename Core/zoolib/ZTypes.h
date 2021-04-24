@@ -252,12 +252,12 @@ EE* sPtr(const PaC<void>& iPac)
 // Conversion-ctor from PaC<const void> to PaC<const EE>, adjusting the count in the process
 template <class EE>
 PaC<const EE> sPaC(PaC<const void> iPaC)
-	{ return sPaC<const EE>(sPtr<const EE*>(iPaC), sCount(iPaC) / sizeof(EE)); }
+	{ return sPaC<const EE>(sPtr<const EE>(iPaC), sCount(iPaC) / sizeof(EE)); }
 
 // and for non-const
 template <class EE>
 PaC<EE> sPaC(PaC<void> iPaC)
-	{ return sPaC<EE>(sPtr<EE*>(iPaC), sCount(iPaC) / sizeof(EE)); }
+	{ return sPaC<EE>(sPtr<EE>(iPaC), sCount(iPaC) / sizeof(EE)); }
 
 // Casting from PaC<const EE> to PaC<const RR>, provided their sizes match
 

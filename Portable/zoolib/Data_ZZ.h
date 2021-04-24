@@ -64,7 +64,7 @@ template <> inline int sCompare_T(const Data_ZZ& iL, const Data_ZZ& iR)
 
 template <class T>
 Data_ZZ sData_ZZ(const PaC<T>& iPaC)
-	{ return Data_ZZ(sPointer(iPaC), sizeof(T) * sCount(iPaC)); }
+	{ return Data_ZZ(sPtr(iPaC), sizeof(T) * sCount(iPaC)); }
 
 template <>
 inline Data_ZZ sData_ZZ<void>(const PaC<void>& iPaC)
