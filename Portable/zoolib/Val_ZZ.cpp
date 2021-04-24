@@ -165,6 +165,13 @@ Seq_ZZ& Seq_ZZ::Append(const Val_ZZ& iVal)
 	return *this;
 	}
 
+Val_ZZ& Seq_ZZ::Append()
+	{
+	this->pTouch();
+	fRep->fVector.resize(fRep->fVector.size() + 1);
+	return fRep->fVector.back();
+	}
+
 Val_ZZ& Seq_ZZ::Mut(size_t iIndex)
 	{
 	this->pTouch();
@@ -212,6 +219,20 @@ Seq_ZZ::const_iterator Seq_ZZ::end() const
 	if (fRep)
 		return fRep->fVector.end();
 	return sDefault<Vector_t>().end();
+	}
+
+Seq_ZZ::const_iterator Seq_ZZ::cbegin() const
+	{
+	if (fRep)
+		return fRep->fVector.cbegin();
+	return sDefault<Vector_t>().cbegin();
+	}
+
+Seq_ZZ::const_iterator Seq_ZZ::cend() const
+	{
+	if (fRep)
+		return fRep->fVector.cend();
+	return sDefault<Vector_t>().cend();
 	}
 
 void Seq_ZZ::pTouch()
@@ -551,34 +572,6 @@ Map_ZZ::Index_t Map_ZZ::End() const
 	return spEmptyMap.end();
 	}
 
-Map_ZZ::iterator Map_ZZ::begin()
-	{
-	if (fRep)
-		return fRep->fMap.begin();
-	return spEmptyMap.begin();
-	}
-
-Map_ZZ::iterator Map_ZZ::end()
-	{
-	if (fRep)
-		return fRep->fMap.end();
-	return spEmptyMap.end();
-	}
-
-Map_ZZ::const_iterator Map_ZZ::begin() const
-	{
-	if (fRep)
-		return fRep->fMap.begin();
-	return spEmptyMap.begin();
-	}
-
-Map_ZZ::const_iterator Map_ZZ::end() const
-	{
-	if (fRep)
-		return fRep->fMap.end();
-	return spEmptyMap.end();
-	}
-
 const Map_ZZ::Name_t& Map_ZZ::NameOf(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
@@ -629,6 +622,48 @@ const Val_ZZ& Map_ZZ::operator[](const Index_t& iIndex) const
 	if (const Val_ZZ* theVal = this->PGet(iIndex))
 		return *theVal;
 	return spVal_Null();
+	}
+
+Map_ZZ::iterator Map_ZZ::begin()
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
+
+Map_ZZ::iterator Map_ZZ::end()
+	{
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
+	}
+
+Map_ZZ::const_iterator Map_ZZ::begin() const
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
+
+Map_ZZ::const_iterator Map_ZZ::end() const
+	{
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
+	}
+
+Map_ZZ::const_iterator Map_ZZ::cbegin() const
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
+
+Map_ZZ::const_iterator Map_ZZ::cend() const
+	{
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
 	}
 
 void Map_ZZ::pTouch()

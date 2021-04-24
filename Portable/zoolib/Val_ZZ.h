@@ -106,6 +106,12 @@ public:
 
 	Seq_ZZ& Append(const Val_ZZ& iVal);
 
+	Val_ZZ& Append();
+
+	template <class S>
+	S& Append()
+		{ return this->Append().Mut<S>(); }
+
 // Our protocol
 	Val_ZZ& Mut(size_t iIndex);
 
@@ -117,7 +123,7 @@ public:
 	S& DMut(const S& iDefault, size_t iIndex)
 		{ return this->Mut(iIndex).DMut(iDefault); }
 
-// Operators and STL-style
+// Operators
 	bool operator==(const Seq_ZZ& r) const
 		{ return this->Compare(r) == 0; }
 
@@ -127,6 +133,7 @@ public:
 	Val_ZZ& operator[](size_t iIndex);
 	const Val_ZZ& operator[](size_t iIndex) const;
 
+// Standard container API
 	typedef Vector_t::iterator iterator;
 	iterator begin();
 	iterator end();
@@ -134,6 +141,9 @@ public:
 	typedef Vector_t::const_iterator const_iterator;
 	const_iterator begin() const;
 	const_iterator end() const;
+
+	const_iterator cbegin() const;
+	const_iterator cend() const;
 
 private:
 	void pTouch();
@@ -349,14 +359,6 @@ public:
 	Index_t Begin() const;
 	Index_t End() const;
 
-	typedef Map_t::iterator iterator;
-	iterator begin();
-	iterator end();
-
-	typedef Map_t::const_iterator const_iterator;
-	const_iterator begin() const;
-	const_iterator end() const;
-
 	const Name_t& NameOf(const Index_t& iIndex) const;
 	Index_t IndexOf(const Name_t& iName) const;
 
@@ -364,6 +366,7 @@ public:
 
 	Map_ZZ& Set(const NameVal& iNV);
 
+// Operators
 	bool operator==(const Map_ZZ& r) const
 		{ return this->Compare(r) == 0; }
 
@@ -375,6 +378,18 @@ public:
 
 	Val_ZZ& operator[](const Index_t& iIndex);
 	const Val_ZZ& operator[](const Index_t& iIndex) const;
+
+// Standard container API
+	typedef Map_t::iterator iterator;
+	iterator begin();
+	iterator end();
+
+	typedef Map_t::const_iterator const_iterator;
+	const_iterator begin() const;
+	const_iterator end() const;
+
+	const_iterator cbegin() const;
+	const_iterator cend() const;
 
 private:
 	void pTouch();
