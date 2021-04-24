@@ -109,7 +109,6 @@ private:
 	ZMtx& fMtx;
 	};
 
-
 } // namespace ZooLib
 
-#endif // __ZooLib_Thread_h__
+#endif // __ZooLib_ZThread_h__
