@@ -19,14 +19,11 @@ namespace ZooLib {
 
 namespace ZThread {
 
+typedef std::chrono::duration<double,std::ratio<1>> Duration;
+
 template <class T>
 void sStart_T(void(*iProc)(T), T&& iParam)
-	{
-	std::thread theThread(iProc, std::move(iParam));
-	theThread.detach();
-	}
-
-typedef std::chrono::duration<double,std::ratio<1>> Duration;
+	{ std::thread(iProc, std::move(iParam)).detach(); }
 
 inline void sSleep(double iDuration)
 	{ std::this_thread::sleep_for(Duration(iDuration)); }
@@ -83,14 +80,11 @@ public:
 class ZAcqMtx : NonCopyable
 	{
 public:
-	inline ZAcqMtx(ZMtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
-
-	// inline ZAcqMtx(const ZMtx& iMtx) : fMtx(const_cast<ZMtx&>(iMtx)) { fMtx.Acquire(); }
-
-	inline ~ZAcqMtx() { fMtx.Release(); }
+	inline ZAcqMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.lock(); }
+	inline ~ZAcqMtx() { fMtx.unlock(); }
 
 private:
-	ZMtx& fMtx;
+	std::mutex& fMtx;
 	};
 
 // =================================================================================================
@@ -99,14 +93,11 @@ private:
 class ZRelMtx : NonCopyable
 	{
 public:
-	inline ZRelMtx(ZMtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
-
-	// inline ZRelMtx(const ZMtx& iMtx) : fMtx(const_cast<ZMtx&>(iMtx)) { fMtx.Release(); }
-
-	inline ~ZRelMtx() { fMtx.Acquire(); }
+	inline ZRelMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.unlock(); }
+	inline ~ZRelMtx() { fMtx.lock(); }
 
 private:
-	ZMtx& fMtx;
+	std::mutex& fMtx;
 	};
 
 } // namespace ZooLib
