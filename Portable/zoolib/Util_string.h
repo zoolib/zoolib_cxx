@@ -79,6 +79,9 @@ inline PaC<char> sPaC(std::string& ioString)
 	return PaC<char>(ioString.size() ? const_cast<char*>(ioString.data()) : nullptr, ioString.size());
 	}
 
+inline std::string sAsString(const PaC<const char>& iPaC)
+	{ return std::string(sPtr<const char>(iPaC), sCount(iPaC)); }
+
 } // namespace Util_string
 } // namespace ZooLib
 
