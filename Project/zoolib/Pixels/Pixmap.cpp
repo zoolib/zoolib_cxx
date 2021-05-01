@@ -71,6 +71,11 @@ ZP<PixmapRep> PixmapRep::Touch()
 	return this;
 	}
 
+ZP<PixmapRep> sPixmapRep(const ZP<Raster>& iRaster,
+	const RectPOD& iBounds,
+	const PixelDesc& iPixelDesc)
+	{ return new PixmapRep(iRaster, iBounds, iPixelDesc); }
+
 ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
 	const PointPOD& iSize,
 	const PixelDesc& iPixelDesc)

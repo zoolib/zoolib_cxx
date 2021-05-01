@@ -38,6 +38,10 @@ protected:
 	PixelDesc fPixelDesc;
 	};
 
+ZP<PixmapRep> sPixmapRep(const ZP<Raster>& iRaster,
+	const RectPOD& iBounds,
+	const PixelDesc& iPixelDesc);
+
 ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
 	const PointPOD& iSize,
 	const PixelDesc& iPixelDesc);
