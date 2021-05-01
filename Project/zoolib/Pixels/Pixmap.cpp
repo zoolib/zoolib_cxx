@@ -18,11 +18,15 @@ static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 	ZP<Raster> destRaster = ioDest->GetRaster();
 	ZAssert(destRaster->GetMutable());
 
-	const RectPOD theDestBounds = iSourceBounds - LT(iSourceBounds) + iDestLoc;
+	const RectPOD theSourceBounds = iSourceBounds
+		+ LT(iSource->GetBounds());
+
+	const RectPOD theDestBounds = (iSourceBounds - LT(iSourceBounds)) + iDestLoc
+		+ LT(ioDest->GetBounds());
 
 	sBlit(
 		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(),
-			iSourceBounds, iSource->GetPixelDesc(),
+			theSourceBounds, iSource->GetPixelDesc(),
 		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(),
 			theDestBounds, ioDest->GetPixelDesc(),
 		eOp_Copy);
