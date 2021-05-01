@@ -45,7 +45,6 @@ set (SourceFiles
 	${SourceDir}/DeriveFrom.h
 	${SourceDir}/DList.h
 	${SourceDir}/FunctionChain.h
-	${SourceDir}/Memory.cpp
 	${SourceDir}/Memory.h
 	${SourceDir}/Multi.h
 	${SourceDir}/Not.h
@@ -60,7 +59,6 @@ set (SourceFiles
 	${SourceDir}/Stringf.h
 	${SourceDir}/TagVal.h
 	${SourceDir}/ThreadVal.h
-	${SourceDir}/Time.cpp
 	${SourceDir}/Time.h
 	${SourceDir}/TypeList.h
 	${SourceDir}/Unicode.cpp
@@ -99,11 +97,6 @@ set (SourceFiles
 	${SourceDir}/ZMACRO_foreach.h
 	${SourceDir}/ZP.h
 	${SourceDir}/ZQ.h
-	${SourceDir}/ZThread_pthread.cpp
-	${SourceDir}/ZThread_pthread.h
-	${SourceDir}/ZThread_T.h
-	${SourceDir}/ZThread_Win.cpp
-	${SourceDir}/ZThread_Win.h
 	${SourceDir}/ZThread.cpp
 	${SourceDir}/ZThread.h
 	${SourceDir}/ZTypes.h
