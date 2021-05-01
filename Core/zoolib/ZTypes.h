@@ -240,19 +240,15 @@ template <class EE>
 size_t sCount(const PaC<EE>& iPac)
 	{ return iPac.second; }
 
-// Casting from const void* to const EE*
-template <class EE> const EE* sPtr(const PaC<const void>& iPac)
-	{ return static_cast<const EE*>(iPac.first); }
-
-// Casting from void* to EE*
-template <class EE>
-EE* sPtr(const PaC<void>& iPac)
-	{ return static_cast<EE*>(iPac.first); }
+// Cast to an arbitrary pointer type. Be careful.
+template <class RR, class EE>
+RR* sCastPtr(const PaC<EE>& iPaC)
+	{ return (RR*)sPtr(iPaC); }
 
 // Conversion-ctor from PaC<const void> to PaC<const EE>, adjusting the count in the process
 template <class EE>
 PaC<const EE> sPaC(PaC<const void> iPaC)
-	{ return sPaC<const EE>(sPtr<const EE>(iPaC), sCount(iPaC) / sizeof(EE)); }
+	{ return sPaC<const EE>(static_cast<const EE*>(sPtr(iPaC)), sCount(iPaC) / sizeof(EE)); }
 
 // and for non-const
 template <class EE>
@@ -270,7 +266,6 @@ template <class RR, class EE>
 typename EnableIfC<sizeof(RR)==sizeof(EE),PaC<RR>>::type
 sCastPaC(PaC<EE> iPaC)
 	{ return sPaC(static_cast<RR*>(static_cast<void*>(sPtr(iPaC))), sCount(iPaC)); }
-
 
 } // namespace ZooLib
 
