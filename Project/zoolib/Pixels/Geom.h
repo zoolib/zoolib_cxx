@@ -50,6 +50,9 @@ inline RectPOD sRectPOD(Ord iLeft, Ord iTop, Ord iRight, Ord iBottom)
 inline RectPOD sRectPOD(Ord iWidth, Ord iHeight)
 	{ return sRectPOD(0, 0, iWidth, iHeight); }
 
+inline RectPOD sRectPOD(PointPOD iSize)
+	{ return sRectPOD(0, 0, iSize.h, iSize.v); }
+
 } // namespace Pixels
 } // namespace ZooLib
 
