@@ -9,8 +9,6 @@
 #include "zoolib/Pixels/Pixval.h"
 #include "zoolib/Pixels/RasterDesc.h"
 
-#include <vector>
-
 namespace ZooLib {
 namespace Pixels {
 
@@ -51,8 +49,8 @@ public:
 	Raster_Simple(const RasterDesc& iRasterDesc);
 	virtual ~Raster_Simple();
 
-protected:
-	std::vector<uint8> fBuffer;
+private:
+	char* fBuffer;
 	};
 
 // =================================================================================================

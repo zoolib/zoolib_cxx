@@ -28,14 +28,17 @@ Raster::~Raster()
 
 Raster_Simple::Raster_Simple(const RasterDesc& iRasterDesc)
 :	Raster(iRasterDesc)
-,	fBuffer(fRasterDesc.fRowBytes * fRasterDesc.fRowCount + 4, 0)
+,	fBuffer(new char[fRasterDesc.fRowBytes * fRasterDesc.fRowCount + 4])
 	{
 	fMutable = true;
-	fBaseAddress = &fBuffer[0];	
+	fBaseAddress = fBuffer;
 	}
 
 Raster_Simple::~Raster_Simple()
-	{ fBaseAddress = nullptr; }
+	{
+	fBaseAddress = nullptr;
+	delete[] fBuffer;
+	}
 
 // =================================================================================================
 #pragma mark - Raster_Static
