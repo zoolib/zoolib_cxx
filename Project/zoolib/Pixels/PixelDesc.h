@@ -6,6 +6,7 @@
 
 #include "zoolib/Counted.h"
 
+#include "zoolib/Pixels/Geom.h" // For Ord
 #include "zoolib/Pixels/Pixval2RGBA.h"
 #include "zoolib/Pixels/RGBA2Pixval.h"
 
