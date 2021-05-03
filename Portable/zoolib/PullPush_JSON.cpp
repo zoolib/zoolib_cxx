@@ -656,7 +656,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 	if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
 		{
 		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_ZZ>(*theData),
-			iIndent + ioParents.size() - 1, iOptions, iChanW);
+			iIndent + ioParents.size(), iOptions, iChanW);
 		return;
 		}
 
