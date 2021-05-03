@@ -34,20 +34,31 @@ inline void sClear(const DeriveFrom<ChanAspect_Pos,ChanAspect_SizeSet>& iChan)
 	}
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - SaveRestorePos
 
-class SaveSetRestorePos
+class SaveRestorePos
 	{
 	const ChanPos& fChanPos;
 	const uint64 fPriorPos;
 public:
-	SaveSetRestorePos(const ChanPos& iChanPos, uint64 iPos)
+	SaveRestorePos(const ChanPos& iChanPos)
 	:	fChanPos(iChanPos)
 	,	fPriorPos(sPos(iChanPos))
-		{ sPosSet(iChanPos, iPos); }
+		{}
 
-	~SaveSetRestorePos()
+	~SaveRestorePos()
 		{ sPosSet(fChanPos, fPriorPos); }
+	};
+
+// =================================================================================================
+#pragma mark - SaveSetRestorePos
+
+class SaveSetRestorePos : public SaveRestorePos
+	{
+public:
+	SaveSetRestorePos(const ChanPos& iChanPos, uint64 iPos)
+	:	SaveRestorePos(iChanPos)
+		{ sPosSet(iChanPos, iPos); }
 	};
 
 // =================================================================================================
