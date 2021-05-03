@@ -37,7 +37,7 @@ static void spPull_Base64_Push_PPT(const ZooLib::ChanR_UTF& iChanR, const ChanW_
 	}
 
 // =================================================================================================
-#pragma mark - sPull_XMLPList_Push_PPT (from ChanR_PPT)
+#pragma mark - sPull_XMLPList_Push_PPT (reading from ChanR_PPT)
 
 static void spHandleSimple(const Name& iTagName, const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW)
 	{
@@ -220,7 +220,7 @@ void sPull_XMLPList_Push_PPT(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 	}
 
 // =================================================================================================
-#pragma mark - sPull_XMLPList_Push_PPT (From ChanRU_UTF_ML)
+#pragma mark - sPull_XMLPList_Push_PPT (reading from ChanRU_UTF_ML)
 
 static void sESkipText_ReadEnd(ChanRU_UTF_ML& r, const string& iTagName)
 	{
