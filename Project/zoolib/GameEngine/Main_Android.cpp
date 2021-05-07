@@ -170,22 +170,18 @@ public:
 
 // =================================================================================================
 
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-
-#define JNIFUNCTION(aa) extern "C" JNIEXPORT aa JNICALL
-
-JNIFUNCTION(jlong)
-Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath)
+JNIFUNC(jlong,
+Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath))
 	{
 	JNI::EnvTV theEnv(env);
-	ZP<GameIntermediary> theGI = new GameIntermediary(JNI::sAsString(iAPKPath));
+	ZP<GameIntermediary> theGI = new GameIntermediary(JNI::sAsString8(iAPKPath));
 	theGI.Retain();
 	return reinterpret_cast<jlong>(theGI.Get());
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npTearDown(JNIEnv *env, jobject ob,
-	jlong iNative)
+	jlong iNative))
 	{
 	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
@@ -193,9 +189,9 @@ Java_org_zoolib_ViewModel_1Game_npTearDown(JNIEnv *env, jobject ob,
 		theGI->Release();
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
-	jlong iNative)
+	jlong iNative))
 	{
 	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
@@ -203,9 +199,9 @@ Java_org_zoolib_ViewModel_1Game_npPauseGameLoop(JNIEnv *env, jobject ob,
 		theGI->fGame->Pause();
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
-	jlong iNative)
+	jlong iNative))
 	{
 	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
@@ -213,9 +209,9 @@ Java_org_zoolib_ViewModel_1Game_npResumeGameLoop(JNIEnv *env, jobject ob,
 		theGI->fGame->Resume();
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npSurfaceAndContextIsFresh(JNIEnv *env, jobject ob,
-	jlong iNative)
+	jlong iNative))
 	{
 	JNI::EnvTV theEnv(env);
 	ZLOGTRACE(eDebug);
@@ -223,12 +219,12 @@ Java_org_zoolib_ViewModel_1Game_npSurfaceAndContextIsFresh(JNIEnv *env, jobject 
 		theGI->fGame->ExternalPurgeHasOccurred();
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npOnTouch(
 	JNIEnv *env, jobject ob,
 	jlong iNative,
 	jint pointerId, jint action,
-	jfloat x, jfloat y, jfloat p)
+	jfloat x, jfloat y, jfloat p))
 	{
 	JNI::EnvTV theEnv(env);
 
@@ -236,11 +232,11 @@ Java_org_zoolib_ViewModel_1Game_npOnTouch(
 		theGI->OnTouch(pointerId, action, x, y, p);
 	}
 
-JNIFUNCTION(void)
+JNIFUNC(void,
 Java_org_zoolib_ViewModel_1Game_npDraw(
 	JNIEnv *env, jobject ob,
 	jlong iNative,
-	jint width, jint height)
+	jint width, jint height))
 	{
 	JNI::EnvTV theEnv(env);
 
