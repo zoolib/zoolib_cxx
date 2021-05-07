@@ -5,11 +5,7 @@
 #include "zconfig.h"
 
 #if __arm__
-	#if defined (__ANDROID__)
-//		#include <machine/cpu-features.h>
-//	#else
-//		#include <arm/arch.h>
-	#endif
+	#include <endian.h> // picks up arm macros, doesn't choke on android
 #endif
 
 #endif // __ZooLib_ARM_Compat_arm_h__
