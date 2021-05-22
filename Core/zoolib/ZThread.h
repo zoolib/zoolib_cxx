@@ -41,9 +41,9 @@ void sSetName(const char* iName);
 } // namespace ZThread
 
 // =================================================================================================
-#pragma mark - ZCnd
+#pragma mark - Cnd
 
-class ZCnd : public std::condition_variable_any
+class Cnd : public std::condition_variable_any
 	{
 public:
 	typedef ZThread::Duration Duration;
@@ -64,41 +64,49 @@ public:
 	inline void Broadcast() { this->notify_all(); }	
 	};
 
-// =================================================================================================
-#pragma mark - ZMtx
+typedef Cnd ZCnd;
 
-class ZMtx : public std::mutex
+// =================================================================================================
+#pragma mark - Mtx
+
+class Mtx : public std::mutex
 	{
 public:
 	inline void Acquire() { this->lock(); }
 	inline void Release() { this->unlock(); }
 	};
 
-// =================================================================================================
-#pragma mark - ZAcqMtx
+typedef Mtx ZMtx;
 
-class ZAcqMtx : NonCopyable
+// =================================================================================================
+#pragma mark - AcqMtx
+
+class AcqMtx : NonCopyable
 	{
 public:
-	inline ZAcqMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.lock(); }
-	inline ~ZAcqMtx() { fMtx.unlock(); }
+	inline AcqMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.lock(); }
+	inline ~AcqMtx() { fMtx.unlock(); }
 
 private:
 	std::mutex& fMtx;
 	};
 
-// =================================================================================================
-#pragma mark - ZRelMtx
+typedef AcqMtx ZAcqMtx;
 
-class ZRelMtx : NonCopyable
+// =================================================================================================
+#pragma mark - RelMtx
+
+class RelMtx : NonCopyable
 	{
 public:
-	inline ZRelMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.unlock(); }
-	inline ~ZRelMtx() { fMtx.lock(); }
+	inline RelMtx(std::mutex& iMtx) : fMtx(iMtx) { fMtx.unlock(); }
+	inline ~RelMtx() { fMtx.lock(); }
 
 private:
 	std::mutex& fMtx;
 	};
+
+typedef RelMtx ZRelMtx;
 
 } // namespace ZooLib
 
