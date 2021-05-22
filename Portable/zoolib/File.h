@@ -22,33 +22,32 @@ class FileLoc;
 class FileSpec;
 
 // =================================================================================================
-#pragma mark - File
+#pragma mark - EFileError (not used)
 
-namespace File {
-
-enum Error
+enum EFileError
 	{
-	errorNone,
-	errorGeneric,
-	errorDoesntExist,
-	errorAlreadyExists,
-	errorInvalidFileSpec,
-	errorIllegalFileName,
-	errorNoPermission,
-	errorWrongTypeForOperation,
-	errorReadPastEOF,
-	errorInsufficientSpace
+	None,
+	Generic,
+	DoesntExist,
+	AlreadyExists,
+	InvalidFileSpec,
+	IllegalFileName,
+	NoPermission,
+	WrongTypeForOperation,
+	ReadPastEOF,
+	InsufficientSpace
 	};
 
-enum Kind
-	{
-	kindNone,
-	kindFile,
-	kindLink,
-	kindDir
-	};
+// =================================================================================================
+#pragma mark - EFileKind
 
-} // namespace File
+enum class EFileKind
+	{
+	None,
+	File,
+	Link,
+	Dir
+	};
 
 // =================================================================================================
 #pragma mark - FileSpec
@@ -58,8 +57,6 @@ enum Kind
 class FileSpec
 	{
 public:
-	typedef File::Error Error;
-
 	FileSpec();
 	FileSpec(const FileSpec& iSpec);
 	FileSpec(FileLoc* iLoc);
@@ -68,15 +65,15 @@ public:
 
 	template <class I>
 	FileSpec(const ZP<FileLoc>& iLoc, const I& iBegin, const I& iEnd)
-	:	fLoc(iLoc),
-		fComps(iBegin, iEnd)
+	:	fLoc(iLoc)
+	,	fComps(iBegin, iEnd)
 		{}
 
 	template <class I>
 	FileSpec(const ZP<FileLoc>& iLoc,
 		const I& iBegin, const I& iEnd, const std::string& iAdditional)
-	:	fLoc(iLoc),
-		fComps(iBegin, iEnd)
+	:	fLoc(iLoc)
+	,	fComps(iBegin, iEnd)
 		{ fComps.push_back(iAdditional); }
 
 	FileSpec(const std::string& iPath);
@@ -94,28 +91,25 @@ public:
 	FileSpec Follow(const Trail& iTrail) const;
 	FileSpec Ancestor(size_t iCount) const;
 	FileSpec Descendant(const std::string* iComps, size_t iCount) const;
+	bool IsRoot() const;
 
-	FileSpec Follow() const;
+	FileSpec TraverseLink() const;
 
 	std::string AsString() const;
 	std::string AsString_Native() const;
 
-	ZQ<Trail> TrailTo(const FileSpec& oDest) const;
-	ZQ<Trail> TrailFrom(const FileSpec& iSource) const;
+	ZQ<Trail> QTrailTo(const FileSpec& oDest) const;
+	ZQ<Trail> QTrailFrom(const FileSpec& iSource) const;
 
-	File::Kind Kind() const;
-
-	bool IsRoot() const;
+	EFileKind Kind() const;
+	bool Exists() const;
 	bool IsFile() const;
 	bool IsDir() const;
 	bool IsSymLink() const;
-	bool Exists() const;
 
-	uint64 Size() const;
-	double TimeCreated() const;
-	double TimeModified() const;
-
-	bool SetCreatorAndType(uint32 iCreator, uint32 iType) const;
+	ZQ<uint64> QSize() const;
+	ZQ<double> QTimeCreated() const;
+	ZQ<double> QTimeModified() const;
 
 	FileSpec CreateDir() const;
 
@@ -213,31 +207,33 @@ public:
 
 	virtual ZP<FileIterRep> CreateIterRep();
 
-	virtual std::string GetName() const = 0;
-	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const = 0;
+	virtual std::string GetName() = 0;
+	virtual ZQ<Trail> QTrailTo(ZP<FileLoc> oDest) = 0;
 
 	virtual ZP<FileLoc> GetAncestor(size_t iCount);
 	virtual ZP<FileLoc> GetParent() = 0;
-	virtual ZP<FileLoc> GetDescendant(
-		const std::string* iComps, size_t iCount) = 0;
+	virtual ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount) = 0;
 	virtual bool IsRoot() = 0;
 
-	virtual ZP<FileLoc> Follow();
+	virtual ZP<FileLoc> TraverseLink();
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount) = 0;
 	virtual std::string AsString_Native(const std::string* iComps, size_t iCount) = 0;
 
-	virtual File::Kind Kind() = 0;
-	virtual uint64 Size() = 0;
-	virtual double TimeCreated() = 0;
-	virtual double TimeModified() = 0;
+	virtual EFileKind Kind();
+	virtual bool Exists();
+	virtual bool IsFile();
+	virtual bool IsDir();
+	virtual bool IsSymLink();
 
-	virtual bool SetCreatorAndType(uint32 iCreator, uint32 iType);
+	virtual ZQ<uint64> QSize();
+	virtual ZQ<double> QTimeCreated();
+	virtual ZQ<double> QTimeModified();
 
-	virtual ZP<FileLoc> CreateDir() = 0;
+	virtual ZP<FileLoc> CreateDir();
 
-	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest) = 0;
-	virtual bool Delete() = 0;
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
+	virtual bool Delete();
 
 	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters);
 	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
@@ -247,6 +243,23 @@ public:
 
 	virtual ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
 	virtual ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
+	};
+
+// =================================================================================================
+#pragma mark - FileLoc_Std
+
+class FileLoc_Std : public FileLoc
+	{
+public:
+	std::string GetName() override;
+	ZQ<Trail> QTrailTo(ZP<FileLoc> oDest) override;
+
+	ZP<FileLoc> GetParent() override;
+	ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount) override;
+	bool IsRoot() override;
+
+	std::string AsString_POSIX(const std::string* iComps, size_t iCount) override;
+	std::string AsString_Native(const std::string* iComps, size_t iCount) override;
 	};
 
 // =================================================================================================
@@ -263,7 +276,7 @@ public:
 	virtual bool HasValue() = 0;
 	virtual void Advance() = 0;
 	virtual FileSpec Current() = 0;
-	virtual std::string CurrentName() const = 0;
+	virtual std::string CurrentName() = 0;
 
 	virtual ZP<FileIterRep> Clone() = 0;
 	};
@@ -283,7 +296,7 @@ public:
 	virtual bool HasValue();
 	virtual void Advance();
 	virtual FileSpec Current();
-	virtual std::string CurrentName() const;
+	virtual std::string CurrentName();
 
 	virtual ZP<FileIterRep> Clone();
 

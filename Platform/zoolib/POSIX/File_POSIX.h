@@ -39,41 +39,41 @@ public:
 	FileLoc_POSIX(bool iIsAtRoot, const std::vector<std::string>& iComps);
 	FileLoc_POSIX(bool iIsAtRoot, const std::string* iComps, size_t iCount);
 	FileLoc_POSIX(bool iIsAtRoot, std::vector<std::string>* ioComps, const IKnowWhatIAmDoing_t&);
-	virtual ~FileLoc_POSIX();
+	~FileLoc_POSIX() override;
 
 // From FileLoc
-	virtual ZP<FileIterRep> CreateIterRep();
+	ZP<FileIterRep> CreateIterRep() override;
 
-	virtual std::string GetName() const;
-	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const;
+	std::string GetName() override;
+	ZQ<Trail> QTrailTo(ZP<FileLoc> oDest) override;
 
-	virtual ZP<FileLoc> GetParent();
-	virtual ZP<FileLoc> GetDescendant(
-		const std::string* iComps, size_t iCount);
+	ZP<FileLoc> GetParent() override;
+	ZP<FileLoc> GetDescendant(
+		const std::string* iComps, size_t iCount) override;
 
-	virtual bool IsRoot();
+	bool IsRoot() override;
 
-	virtual ZP<FileLoc> Follow();
+	ZP<FileLoc> TraverseLink() override;
 
-	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
-	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
+	std::string AsString_POSIX(const std::string* iComps, size_t iCount) override;
+	std::string AsString_Native(const std::string* iComps, size_t iCount) override;
 
-	virtual File::Kind Kind();
-	virtual uint64 Size();
-	virtual double TimeCreated();
-	virtual double TimeModified();
+	EFileKind Kind() override;
+	ZQ<uint64> QSize() override;
+	ZQ<double> QTimeCreated() override;
+	ZQ<double> QTimeModified() override;
 
-	virtual ZP<FileLoc> CreateDir();
+	ZP<FileLoc> CreateDir() override;
 
-	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
-	virtual bool Delete();
+	ZP<FileLoc> MoveTo(ZP<FileLoc> oDest) override;
+	bool Delete() override;
 
-	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
-	virtual ZP<ChannerWPos_Bin> OpenWPos(bool iPreventWriters);
-	virtual ZP<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters);
+	ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters) override;
+	ZP<ChannerWPos_Bin> OpenWPos(bool iPreventWriters) override;
+	ZP<ChannerRWPos_Bin> OpenRWPos(bool iPreventWriters) override;
 
-	virtual ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters);
-	virtual ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters);
+	ZP<ChannerWPos_Bin> CreateWPos(bool iOpenExisting, bool iPreventWriters) override;
+	ZP<ChannerRWPos_Bin> CreateRWPos(bool iOpenExisting, bool iPreventWriters) override;
 
 	std::string pGetPath();
 

@@ -528,14 +528,14 @@ FileLoc_POSIX::~FileLoc_POSIX()
 ZP<FileIterRep> FileLoc_POSIX::CreateIterRep()
 	{ return new FileIterRep_Std(new RealRep_POSIX(this), 0); }
 
-string FileLoc_POSIX::GetName() const
+string FileLoc_POSIX::GetName()
 	{
 	if (fComps.size())
 		return fComps.back();
 	return string();
 	}
 
-ZQ<Trail> FileLoc_POSIX::TrailTo(ZP<FileLoc> oDest) const
+ZQ<Trail> FileLoc_POSIX::QTrailTo(ZP<FileLoc> oDest)
 	{
 	if (FileLoc_POSIX* dest = oDest.DynamicCast<FileLoc_POSIX>())
 		{
@@ -590,8 +590,7 @@ ZP<FileLoc> FileLoc_POSIX::GetParent()
 		}
 	}
 
-ZP<FileLoc> FileLoc_POSIX::GetDescendant(
-	const string* iComps, size_t iCount)
+ZP<FileLoc> FileLoc_POSIX::GetDescendant(const string* iComps, size_t iCount)
 	{
 	if (not iCount)
 		return this;
@@ -604,17 +603,23 @@ ZP<FileLoc> FileLoc_POSIX::GetDescendant(
 bool FileLoc_POSIX::IsRoot()
 	{ return fIsAtRoot && fComps.empty(); }
 
-ZP<FileLoc> FileLoc_POSIX::Follow()
+ZP<FileLoc> FileLoc_POSIX::TraverseLink()
 	{
+	const string thePath = this->pGetPath();
 	struct stat theStat;
-	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
+	if (0 > ::lstat(thePath.c_str(), &theStat))
+		{
+		// TraverseLink is intended to produce a FileLoc that is closer to fully concrete, if
+		// it represents something that really exists. An error here indicates that the entry
+		// itself doesn't exist or is otherwise broken. Indicate that by returning null.
 		return null;
+		}
 
 	// Need to interpret the link content somewhat, to deal with rel-paths etc.
 	if (S_ISLNK(theStat.st_mode))
 		{
 		char buf[PATH_MAX];
-		ssize_t len = ::readlink(this->pGetPath().c_str(), &buf[0], countof(buf));
+		ssize_t len = ::readlink(thePath.c_str(), &buf[0], countof(buf));
 		if (len < 0)
 			return null;
 
@@ -669,28 +674,26 @@ string FileLoc_POSIX::AsString_Native(const string* iComps, size_t iCount)
 	return result;
 	}
 
-File::Kind FileLoc_POSIX::Kind()
+EFileKind FileLoc_POSIX::Kind()
 	{
 	struct stat theStat;
 
 	if (0 > ::lstat(this->pGetPath().c_str(), &theStat))
-		{
-		return File::kindNone;
-		}
+		return EFileKind::None;
 
 	if (S_ISREG(theStat.st_mode))
-		return File::kindFile;
+		return EFileKind::File;
 
 	if (S_ISDIR(theStat.st_mode))
-		return File::kindDir;
+		return EFileKind::Dir;
 
 	if (S_ISLNK(theStat.st_mode))
-		return File::kindLink;
+		return EFileKind::Link;
 
-	return File::kindNone;
+	return EFileKind::None;
 	}
 
-uint64 FileLoc_POSIX::Size()
+ZQ<uint64> FileLoc_POSIX::QSize()
 	{
 	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
 		struct stat64 theStat;
@@ -700,17 +703,17 @@ uint64 FileLoc_POSIX::Size()
 		int result = ::stat(this->pGetPath().c_str(), &theStat);
 	#endif
 
-	if (result < 0)
-		return 0;
+	if (0 > result)
+		return null;
 
 	return theStat.st_size;
 	}
 
-double FileLoc_POSIX::TimeCreated()
+ZQ<double> FileLoc_POSIX::QTimeCreated()
 	{
 	struct stat theStat;
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
-		return 0;
+		return null;
 
 	#if __MACH__ && !defined(_POSIX_SOURCE)
 		return double(theStat.st_ctimespec.tv_sec + (theStat.st_ctimespec.tv_nsec / 1000000000.0));
@@ -721,11 +724,11 @@ double FileLoc_POSIX::TimeCreated()
 	#endif
 	}
 
-double FileLoc_POSIX::TimeModified()
+ZQ<double> FileLoc_POSIX::QTimeModified()
 	{
 	struct stat theStat;
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
-		return 0;
+		return null;
 
 	#if __MACH__ && !defined(_POSIX_SOURCE)
 		return double(theStat.st_mtimespec.tv_sec + (theStat.st_mtimespec.tv_nsec / 1000000000.0));

@@ -4,6 +4,7 @@
 #include "zoolib/File.h"
 
 #include "zoolib/Compat_algorithm.h" // For std::find
+#include "zoolib/Util_STL_vector.h" // For sFirstOrNil
 
 using std::find;
 using std::min;
@@ -183,7 +184,7 @@ FileSpec FileSpec::Sibling(const string& iName) const
 	}
 
 /**
-Return the file spec representing the node that would be reached by traversing
+Return the file spec representing the node that would be reached by following
 the trail \a iTrail starting at the the node represented by this file spec.
 */
 FileSpec FileSpec::Follow(const Trail& iTrail) const
@@ -222,7 +223,7 @@ FileSpec FileSpec::Ancestor(size_t iCount) const
 	return FileSpec();
 	}
 
-FileSpec FileSpec::Descendant(const std::string* iComps, size_t iCount) const
+FileSpec FileSpec::Descendant(const string* iComps, size_t iCount) const
 	{
 	if (fLoc)
 		{
@@ -238,10 +239,19 @@ FileSpec FileSpec::Descendant(const std::string* iComps, size_t iCount) const
 	return FileSpec();
 	}
 
-FileSpec FileSpec::Follow() const
+/// Returns true if the spec references the root of the file system.
+bool FileSpec::IsRoot() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return FileSpec(realLoc->Follow());
+		return realLoc->IsRoot();
+
+	return false;
+	}
+
+FileSpec FileSpec::TraverseLink() const
+	{
+	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
+		return FileSpec(realLoc->TraverseLink());
 	return FileSpec();
 	}
 
@@ -250,11 +260,8 @@ that would be passed to the file system to access this node. */
 string FileSpec::AsString() const
 	{
 	if (fLoc)
-		{
-		if (fComps.empty())
-			return fLoc->AsString_POSIX(nullptr, 0);
-		return fLoc->AsString_POSIX(&fComps[0], fComps.size());
-		}
+		return fLoc->AsString_POSIX(Util_STL::sFirstOrNil(fComps), fComps.size());
+
 	return string();
 	}
 
@@ -268,33 +275,30 @@ eg <tt>C:\path\to\node</tt> on Windows,
 string FileSpec::AsString_Native() const
 	{
 	if (fLoc)
-		{
-		if (fComps.empty())
-			return fLoc->AsString_Native(nullptr, 0);
-		return fLoc->AsString_Native(&fComps[0], fComps.size());
-		}
+		return fLoc->AsString_Native(Util_STL::sFirstOrNil(fComps), fComps.size());
+
 	return string();
 	}
 
 /// Return a Trail representing the steps to get from this file spec to \a oDest.
-ZQ<Trail> FileSpec::TrailTo(const FileSpec& oDest) const
+ZQ<Trail> FileSpec::QTrailTo(const FileSpec& oDest) const
 	{
 	if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 		{
 		if (ZP<FileLoc> destRealLoc = oDest.pPhysicalLoc())
-			return myRealLoc->TrailTo(destRealLoc);
+			return myRealLoc->QTrailTo(destRealLoc);
 		}
 
 	return null;
 	}
 
 /// Return a Trail representing the steps to get from \a iSource to this file spec.
-ZQ<Trail> FileSpec::TrailFrom(const FileSpec& iSource) const
+ZQ<Trail> FileSpec::QTrailFrom(const FileSpec& iSource) const
 	{
 	if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 		{
 		if (ZP<FileLoc> sourceRealLoc = iSource.pPhysicalLoc())
-			return sourceRealLoc->TrailTo(myRealLoc);
+			return sourceRealLoc->QTrailTo(myRealLoc);
 		}
 
 	return null;
@@ -304,23 +308,23 @@ ZQ<Trail> FileSpec::TrailFrom(const FileSpec& iSource) const
 /**
 \param oError (optional output) The spec may reference an extant entity, but
 it may be inaccessible. The precise nature of the fault will be placed in this parameter.
-\return \li \c File::kindNone The entity does not exist.
-\return \li \c File::kindFile The node exists and is a file.
-\return \li \c File::kindDirectory The node exists and is a directory.
+\return \li \c EFileKind::None The entity does not exist.
+\return \li \c EFileKind::File The node exists and is a file.
+\return \li \c EFileKind::Directory The node exists and is a directory.
 */
-File::Kind FileSpec::Kind() const
+EFileKind FileSpec::Kind() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
 		return realLoc->Kind();
 
-	return File::kindNone;
+	return EFileKind::None;
 	}
 
-/// Returns true if the spec references the root of the file system.
-bool FileSpec::IsRoot() const
+/// Returns true if the spec references an extant accessible entity.
+bool FileSpec::Exists() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return realLoc->IsRoot();
+		return realLoc->Exists();
 
 	return false;
 	}
@@ -329,7 +333,7 @@ bool FileSpec::IsRoot() const
 bool FileSpec::IsFile() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return File::kindFile == realLoc->Kind();
+		return realLoc->IsFile();
 
 	return false;
 	}
@@ -338,7 +342,7 @@ bool FileSpec::IsFile() const
 bool FileSpec::IsDir() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return File::kindDir == realLoc->Kind();
+		return realLoc->IsDir();
 
 	return false;
 	}
@@ -347,54 +351,33 @@ bool FileSpec::IsDir() const
 bool FileSpec::IsSymLink() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return File::kindLink == realLoc->Kind();
+		return realLoc->IsSymLink();
 
 	return false;
 	}
 
-/// Returns true if the spec references an extant accessible entity.
-bool FileSpec::Exists() const
+ZQ<uint64> FileSpec::QSize() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return File::kindNone != realLoc->Kind();
+		return realLoc->QSize();
 
-	return false;
+	return null;
 	}
 
-uint64 FileSpec::Size() const
+ZQ<double> FileSpec::QTimeCreated() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return realLoc->Size();
+		return realLoc->QTimeCreated();
 
-	return 0;
+	return null;
 	}
 
-double FileSpec::TimeCreated() const
+ZQ<double> FileSpec::QTimeModified() const
 	{
 	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return realLoc->TimeCreated();
+		return realLoc->QTimeModified();
 
-	return 0;
-	}
-
-double FileSpec::TimeModified() const
-	{
-	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return realLoc->TimeModified();
-
-	return 0;
-	}
-
-/// On MacOS sets the creator and type appropriately. On other platforms, does nothing.
-bool FileSpec::SetCreatorAndType(uint32 iCreator, uint32 iType) const
-	{
-	if (not fLoc)
-		return false;
-
-	if (ZP<FileLoc> realLoc = this->pPhysicalLoc())
-		return realLoc->SetCreatorAndType(iCreator, iType);
-
-	return false;
+	return null;
 	}
 
 /// Create a directory at the location in the file system represented by the file spec.
@@ -677,7 +660,7 @@ FileTreeIter& FileTreeIter::Advance()
 FileSpec FileTreeIter::Current() const
 	{ return fCurrent; }
 
-std::string FileTreeIter::CurrentName() const
+string FileTreeIter::CurrentName() const
 	{ return fCurrent.Name(); }
 
 // =================================================================================================
@@ -716,10 +699,40 @@ ZP<FileLoc> FileLoc::GetAncestor(size_t iCount)
 	return theLoc;
 	}
 
-ZP<FileLoc> FileLoc::Follow()
+ZP<FileLoc> FileLoc::TraverseLink()
 	{ return this; }
 
-bool FileLoc::SetCreatorAndType(uint32 iCreator, uint32 iType)
+EFileKind FileLoc::Kind()
+	{ return EFileKind::None; }
+
+bool FileLoc::Exists()
+	{ return EFileKind::None != this->Kind(); }
+
+bool FileLoc::IsFile()
+	{ return EFileKind::File == this->Kind(); }
+
+bool FileLoc::IsDir()
+	{ return EFileKind::Dir == this->Kind(); }
+
+bool FileLoc::IsSymLink()
+	{ return EFileKind::Link == this->Kind(); }
+
+ZQ<uint64> FileLoc::QSize()
+	{ return null; }
+
+ZQ<double> FileLoc::QTimeCreated()
+	{ return null; }
+
+ZQ<double> FileLoc::QTimeModified()
+	{ return null; }
+
+ZP<FileLoc> FileLoc::CreateDir()
+	{ return null; }
+
+ZP<FileLoc> FileLoc::MoveTo(ZP<FileLoc> oDest)
+	{ return null; }
+
+bool FileLoc::Delete()
 	{ return false; }
 
 ZP<ChannerR_Bin> FileLoc::OpenR(bool iPreventWriters)
@@ -742,6 +755,30 @@ ZP<ChannerWPos_Bin> FileLoc::CreateWPos(bool iOpenExisting, bool iPreventWriters
 
 ZP<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWriters)
 	{ return null; }
+
+// =================================================================================================
+#pragma mark - FileLoc_Std
+
+string FileLoc_Std::GetName()
+	{ return string(); }
+
+ZQ<Trail> FileLoc_Std::QTrailTo(ZP<FileLoc> oDest)
+	{ return null; }
+
+ZP<FileLoc> FileLoc_Std::GetParent()
+	{ return null; }
+
+ZP<FileLoc> FileLoc_Std::GetDescendant(const string* iComps, size_t iCount)
+	{ return null; }
+
+bool FileLoc_Std::IsRoot()
+	{ return false; }
+
+string FileLoc_Std::AsString_POSIX(const string* iComps, size_t iCount)
+	{ return string(); }
+
+string FileLoc_Std::AsString_Native(const string* iComps, size_t iCount)
+	{ return this->AsString_POSIX(iComps, iCount); }
 
 // =================================================================================================
 #pragma mark - FileIterRep
@@ -778,7 +815,7 @@ void FileIterRep_Std::Advance()
 FileSpec FileIterRep_Std::Current()
 	{ return fRealRep->GetSpec(fIndex); }
 
-string FileIterRep_Std::CurrentName() const
+string FileIterRep_Std::CurrentName()
 	{ return fRealRep->GetName(fIndex); }
 
 ZP<FileIterRep> FileIterRep_Std::Clone()

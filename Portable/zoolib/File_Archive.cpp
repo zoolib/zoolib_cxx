@@ -57,7 +57,8 @@ public:
 // =================================================================================================
 #pragma mark - FileLoc_Archive
 
-class FileLoc_Archive : public FileLoc
+class FileLoc_Archive
+:	public FileLoc_Std
 	{
 public:
 	FileLoc_Archive(const ZP<Archive>& iArchive);
@@ -67,41 +68,23 @@ public:
 	virtual ~FileLoc_Archive();
 
 // From FileLoc
-	virtual ZP<FileIterRep> CreateIterRep();
+	ZP<FileIterRep> CreateIterRep() override;
 
-	virtual std::string GetName() const;
+	std::string GetName() override;
 
-	virtual ZQ<Trail> TrailTo(ZP<FileLoc> oDest) const;
+	ZP<FileLoc> GetParent() override;
 
-	virtual ZP<FileLoc> GetParent();
+	ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount) override;
 
-	virtual ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount);
+	bool IsRoot() override;
 
-	virtual bool IsRoot();
+	std::string AsString_POSIX(const std::string* iComps, size_t iCount) override;
 
-	virtual ZP<FileLoc> Follow();
+	EFileKind Kind() override;
 
-	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount);
+	ZP<ChannerR_Bin> OpenR(bool iPreventWriters) override;
 
-	virtual std::string AsString_Native(const std::string* iComps, size_t iCount);
-
-	virtual File::Kind Kind();
-
-	virtual uint64 Size();
-
-	virtual double TimeCreated();
-
-	virtual double TimeModified();
-
-	virtual ZP<FileLoc> CreateDir();
-
-	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
-
-	virtual bool Delete();
-
-	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters);
-
-	virtual ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters);
+	ZP<ChannerRPos_Bin> OpenRPos(bool iPreventWriters) override;
 
 	std::string pGetPath();
 
@@ -151,7 +134,7 @@ public:
 		return FileSpec();
 		}
 
-	virtual std::string CurrentName() const
+	virtual std::string CurrentName()
 		{ return fIter->first; }
 
 	virtual ZP<FileIterRep> Clone()
@@ -179,11 +162,8 @@ ZP<FileIterRep> FileLoc_Archive::CreateIterRep()
 	return null;
 	}
 
-std::string FileLoc_Archive::GetName() const
+std::string FileLoc_Archive::GetName()
 	{ return fArchiveNode->fName; }
-
-ZQ<Trail> FileLoc_Archive::TrailTo(ZP<FileLoc> oDest) const
-	{ return null; }
 
 ZP<FileLoc> FileLoc_Archive::GetParent()
 	{
@@ -214,9 +194,6 @@ ZP<FileLoc> FileLoc_Archive::GetDescendant(const std::string* iComps, size_t iCo
 bool FileLoc_Archive::IsRoot()
 	{ return not fArchiveNode->fParent; }
 
-ZP<FileLoc> FileLoc_Archive::Follow()
-	{ return this; }
-
 std::string FileLoc_Archive::AsString_POSIX(const std::string* iComps, size_t iCount)
 	{
 	string result = this->pGetPath();
@@ -228,36 +205,13 @@ std::string FileLoc_Archive::AsString_POSIX(const std::string* iComps, size_t iC
 	return result;
 	}
 
-std::string FileLoc_Archive::AsString_Native(const std::string* iComps, size_t iCount)
-	{ return this->AsString_POSIX(iComps, iCount); }
-
-File::Kind FileLoc_Archive::Kind()
+EFileKind FileLoc_Archive::Kind()
 	{
 	if (fArchiveNode.DynamicCast<ArchiveNode_Directory>())
-		return File::kindDir;
+		return EFileKind::Dir;
 
-	return File::kindFile;
+	return EFileKind::File;
 	}
-
-uint64 FileLoc_Archive::Size()
-	{
-	ZUnimplemented();
-	}
-
-double FileLoc_Archive::TimeCreated()
-	{ return 0; }
-
-double FileLoc_Archive::TimeModified()
-	{ return 0; }
-
-ZP<FileLoc> FileLoc_Archive::CreateDir()
-	{ return null; }
-
-ZP<FileLoc> FileLoc_Archive::MoveTo(ZP<FileLoc> oDest)
-	{ return null; }
-
-bool FileLoc_Archive::Delete()
-	{ return false; }
 
 ZP<ChannerR_Bin> FileLoc_Archive::OpenR(bool iPreventWriters)
 	{
