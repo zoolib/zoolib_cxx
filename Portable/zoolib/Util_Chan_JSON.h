@@ -49,11 +49,13 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 
 struct PushTextOptions_JSON : PushTextOptions
 	{
-	PushTextOptions_JSON();
-	PushTextOptions_JSON(bool iPrettyPrint);
-	PushTextOptions_JSON(const PushTextOptions& iOther);
-	PushTextOptions_JSON(const PushTextOptions_JSON& iOther);
+	PushTextOptions_JSON() = default;
+	PushTextOptions_JSON(const PushTextOptions_JSON& iOther) = default;
+	PushTextOptions_JSON& operator=(const PushTextOptions_JSON& iOther) = default;
 
+	PushTextOptions_JSON(bool iPrettyPrint);
+
+	PushTextOptions_JSON(const PushTextOptions& iOther);
 	PushTextOptions_JSON& operator=(const PushTextOptions& iOther);
 
 	ZQ<bool> fUseExtendedNotationQ;

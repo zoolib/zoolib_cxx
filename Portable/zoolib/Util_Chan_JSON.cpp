@@ -168,10 +168,6 @@ bool sTryRead_JSONString(const ChanRU_UTF& iChanRU,
 // =================================================================================================
 #pragma mark - PushTextOptions_JSON
 
-PushTextOptions_JSON::PushTextOptions_JSON()
-:	PushTextOptions()
-	{}
-
 PushTextOptions_JSON::PushTextOptions_JSON(bool iPrettyPrint)
 :	PushTextOptions(iPrettyPrint)
 ,	fAnnotateUnhandledQ(iPrettyPrint)
@@ -179,16 +175,6 @@ PushTextOptions_JSON::PushTextOptions_JSON(bool iPrettyPrint)
 
 PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions& iOther)
 :	PushTextOptions(iOther)
-	{}
-
-PushTextOptions_JSON::PushTextOptions_JSON(const PushTextOptions_JSON& iOther)
-:	PushTextOptions(iOther)
-,	fUseExtendedNotationQ(iOther.fUseExtendedNotationQ)
-,	fBinaryAsBase64Q(iOther.fBinaryAsBase64Q)
-,	fPreferSingleQuotesQ(iOther.fPreferSingleQuotesQ)
-,	fNumberSequencesQ(iOther.fNumberSequencesQ)
-,	fLowercaseHexQ(iOther.fLowercaseHexQ)
-,	fIntegersAsHexQ(iOther.fIntegersAsHexQ)
 	{}
 
 PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOther)
