@@ -2,6 +2,10 @@
 
 #include "zoolib/JNI/JNI.h"
 
+#include "zoolib/Log.h"
+#include "zoolib/Unicode.h"
+#include "zoolib/Util_Chan_UTF_Operators.h"
+
 #include <stdexcept> // for std::runtime_error
 
 namespace ZooLib {
@@ -24,13 +28,25 @@ LoadHandler::~LoadHandler()
 void LoadHandler::sOnLoad(JavaVM* iJavaVM)
 	{
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
+		{
+		if (ZLOGF(cc, eDebug))
+			cc << "> " << typeid(*theHandler).name();
 		theHandler->OnLoad(iJavaVM);
+		if (ZLOGF(cc, eDebug))
+			cc << "< " << typeid(*theHandler).name();
+		}
 	}
 
 void LoadHandler::sOnUnload()
 	{
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
+		{
+		if (ZLOGF(cc, eDebug))
+			cc << "> " << typeid(*theHandler).name();
 		theHandler->OnUnload();
+		if (ZLOGF(cc, eDebug))
+			cc << "< " << typeid(*theHandler).name();
+		}
 	}
 
 void LoadHandler::OnLoad(JavaVM* iJavaVM)
@@ -111,6 +127,20 @@ void LoadHandler_Core::OnLoad(JNIEnv* env)
 	}
 
 } // anonymous namespace
+
+// =================================================================================================
+#pragma mark - JNI::sHadExceptionThenClear
+
+bool sHadExceptionThenClear(JNIEnv* env)
+	{
+	if (not env->ExceptionOccurred())
+		return false;
+	env->ExceptionClear();
+	return true;
+	}
+
+bool sHadExceptionThenClear()
+	{ return sHadExceptionThenClear(EnvTV::sGet()); }
 
 // =================================================================================================
 #pragma mark - JNI::EnsureAttachedToCurrentThread
@@ -195,18 +225,7 @@ jobject PushPopLocalFrame::PopReturn(jobject iVal)
 #pragma mark - sAsString
 
 string8 sAsString8(JNIEnv* env, jstring ss)
-	{
-	std::string result;
-	if (env && ss)
-		{
-		if (const char* charP = env->GetStringUTFChars(ss, 0))
-			{
-			result = charP;
-			env->ReleaseStringUTFChars(ss, charP);
-			}
-		}
-	return result;
-	}
+	{ return Unicode::sAsUTF8(sAsString16(env, ss)); }
 
 string8 sAsString8(jstring ss)
 	{ return sAsString8(EnvTV::sGet(), ss); }
@@ -232,13 +251,7 @@ string16 sAsString16(jstring ss)
 #pragma mark - sMakeInteger, sMakeFloat
 
 jstring sMakeString(JNIEnv* env, const string8& iVal)
-	{
-	// We actually should be careful here -- JNI wants *modified* UTF8, which uses UTF8-encoded
-	// UTF16 surrogates for CPs outside the BMP. And our caller probably isn't making
-	// sure that's happening.
-
-	return env->NewStringUTF(iVal.data());
-	}
+	{ return sMakeString(env, Unicode::sAsUTF16(iVal)); }
 
 jstring sMakeString(const string8& iVal)
 	{ return sMakeString(EnvTV::sGet(), iVal); }

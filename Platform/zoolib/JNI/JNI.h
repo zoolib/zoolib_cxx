@@ -52,6 +52,12 @@ private:
 typedef ThreadVal<JNIEnv*,struct Tag_JNIEnv> EnvTV;
 
 // =================================================================================================
+#pragma mark - JNI::sHadExceptionThenClear
+
+bool sHadExceptionThenClear(JNIEnv* env);
+bool sHadExceptionThenClear();
+
+// =================================================================================================
 #pragma mark - JNI::EnsureAttachedToCurrentThread
 
 class EnsureAttachedToCurrentThread
