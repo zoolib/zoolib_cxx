@@ -144,6 +144,8 @@ set (SourceFiles
 	${SourceDir}/Pull_SeparatedValues.h
 	${SourceDir}/Pull_XMLAttr.cpp
 	${SourceDir}/Pull_XMLAttr.h
+	${SourceDir}/PullPush_bplist.cpp
+	${SourceDir}/PullPush_bplist.h
 	${SourceDir}/PullPush_JSON.cpp
 	${SourceDir}/PullPush_JSON.h
 	${SourceDir}/PullPush_JSONB.cpp

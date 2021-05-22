@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2021 Andrew Green and Mark/Space, Inc. MIT License. http://www.zoolib.org
 
 #include "zoolib/PullPush_bplist.h"
 
@@ -294,7 +294,7 @@ void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW)
 		sThrow_ParseException("Not a bplist");
 
 	const int versionMajor = sEReadBE<char>(iChanRPos);
-	const int versionMinor = sEReadBE<char>(iChanRPos);
+	/* const int versionMinor = */ sEReadBE<char>(iChanRPos);
 	if (versionMajor != 0x30 && versionMajor != 0x31)
 		sThrow_ParseException("bplist version not supported");
 

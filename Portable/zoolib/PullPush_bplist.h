@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2021 Andrew Green and Mark/Space, Inc. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_PullPush_bplist_h__
 #define __ZooLib_PullPush_bplist_h__ 1
@@ -56,10 +56,7 @@ public:
 
 void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW);
 
-bool sPull_PPT_Push_bplist(const ChanR_PPT& iChanR, const ChanW_Bin& iChanW);
-
-//void sWriteXMLPListPreamble(const ChanW_UTF_ML& s);
-//void sWriteXMLPListPostamble(const ChanW_UTF_ML& s);
+bool sPull_PPT_Push_bplist(const ChanR_PPT& iChanR, const ChanWPos_Bin& iChanWPos);
 
 } // namespace ZooLib
 
