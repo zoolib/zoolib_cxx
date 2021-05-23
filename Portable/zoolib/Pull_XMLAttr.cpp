@@ -65,7 +65,7 @@ static void spPush_Attrs(const ML::Attrs_t& iAttrs, const ChanW_PPT& iChanW)
 
 Text after an end or an empty could just be emitted as a !text, rather than only the text
 that occurs after a begin and before any other tag. I think that would then let us stream the
-content rather than having to speculatively accumulate it in case it's meaningful.?
+content rather than having to speculatively accumulate it in case it’s meaningful.?
 
 Actually no. Text after a begin has to be captured until we see an end, when we can emit the
 begin/text/end as a simple property.
