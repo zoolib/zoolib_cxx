@@ -102,7 +102,7 @@ set (SourceFiles
 	${SourceDir}/ZTypes.h
 	)
 
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+source_group("" FILES ${SourceFiles})
 
 add_library(
 	ZooLib_Core # Name of library

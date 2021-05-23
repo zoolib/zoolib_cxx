@@ -9,7 +9,7 @@ set (SourceFiles
 	${SourceDir}/Chan_Bin_zlib.h
 	)
 
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
