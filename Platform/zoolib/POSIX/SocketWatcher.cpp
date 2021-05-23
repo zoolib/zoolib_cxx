@@ -17,7 +17,7 @@
 #include <set>
 
 #ifndef FD_COPY
-	#include "zoolib/ZMemory.h"
+	#include "zoolib/Memory.h"
 	#define FD_COPY(a, b) sMemCopy(a, b, sizeof(fd_set))
 #endif
 
