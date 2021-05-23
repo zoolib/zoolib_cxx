@@ -1,7 +1,10 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Zip/Archive_Zip.h"
+
 #include "zoolib/ChanR_Bin.h"
+
+#include <string.h> // for strlen
 
 // This is implemented in zip_open.c
 extern "C" struct zip * zip_open_FILE(FILE* fp, int flags);

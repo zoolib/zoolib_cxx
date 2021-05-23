@@ -3,6 +3,7 @@
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include <inttypes.h>
+#include <string.h> // For strlen
 
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h" // For sCopyAll

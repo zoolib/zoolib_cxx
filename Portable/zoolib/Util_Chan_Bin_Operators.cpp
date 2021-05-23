@@ -4,6 +4,8 @@
 
 #include "zoolib/Util_Chan.h"
 
+#include <string.h> // For strlen
+
 // =================================================================================================
 #pragma mark - Util_Chan_Bin_Operators
 
