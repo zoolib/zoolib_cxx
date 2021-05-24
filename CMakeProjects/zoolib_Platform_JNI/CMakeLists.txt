@@ -15,9 +15,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${S
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
-add_library(
-	ZooLib_Platform_JNI # Name of library
-	STATIC # vs shared
+add_library(ZooLib_Platform_JNI STATIC
 
 	${SourceFiles}
 	)

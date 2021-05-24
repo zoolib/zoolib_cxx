@@ -18,9 +18,7 @@ source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
-add_library(
-	ZooLib_Platform_Hashing # Name of library
-	STATIC # vs shared
+add_library(ZooLib_Platform_Hashing STATIC
 
 	${SourceFiles}
 	)

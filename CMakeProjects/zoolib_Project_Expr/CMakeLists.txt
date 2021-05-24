@@ -25,9 +25,7 @@ source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
 
-add_library(
-	ZooLib_Project_Expr # Name of library
-	STATIC # vs shared
+add_library(ZooLib_Project_Expr STATIC
 
 	${SourceFiles}
 	)

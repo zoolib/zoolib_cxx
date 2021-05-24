@@ -104,9 +104,7 @@ set (SourceFiles
 
 source_group("" FILES ${SourceFiles})
 
-add_library(
-	ZooLib_Core # Name of library
-	STATIC # vs shared
+add_library(ZooLib_Core STATIC
 
 	${SourceFiles}
 	)

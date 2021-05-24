@@ -229,9 +229,7 @@ source_group("" FILES ${SourceFiles})
 # Also include Platform, so that Matrix.cpp can see the ARM-specific headers.
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
-add_library(
-	ZooLib_Portable # Name of library
-	STATIC # vs shared
+add_library(ZooLib_Portable STATIC
 
 	${SourceFiles}
 	)
