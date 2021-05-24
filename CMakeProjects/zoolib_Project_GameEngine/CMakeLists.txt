@@ -4,7 +4,7 @@ set(ZOOLIB_CXX ../..)
 
 set(SourceDir ${ZOOLIB_CXX}/Project/zoolib/GameEngine)
 
-set (SourceFiles	
+set (SourceFiles
 	${SourceDir}/AssetCatalog.cpp
 	${SourceDir}/AssetCatalog.h
 	${SourceDir}/Cog_Buffer.cpp
@@ -50,8 +50,8 @@ set (SourceFiles
 	${SourceDir}/Geometry2D.h
 	${SourceDir}/Geometry3D.h
 	${SourceDir}/Main_Android.cpp
-	${SourceDir}/Main_iOS.mm
 	${SourceDir}/Main_Mac.mm
+	${SourceDir}/Main_iOS.mm
 	${SourceDir}/Nook.cpp
 	${SourceDir}/Nook.h
 	${SourceDir}/PitchAndCatch.cpp
@@ -90,8 +90,8 @@ set (SourceFiles
 	${SourceDir}/Util_Assets.h
 	${SourceDir}/Util_FinderHider.cpp
 	${SourceDir}/Util_FinderHider.h
-	${SourceDir}/Util_GrindAssets.cpp
-	${SourceDir}/Util_GrindAssets.h
+#	${SourceDir}/Util_GrindAssets.cpp
+#	${SourceDir}/Util_GrindAssets.h
 	${SourceDir}/Util.cpp
 	${SourceDir}/Util.h
 	${SourceDir}/Val.cpp
@@ -100,13 +100,10 @@ set (SourceFiles
 	${SourceDir}/Visitor_Rendered_Std.h
 	)
 
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/${SourceDir}" PREFIX "" FILES ${SourceFiles})
+source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
 
-add_library(
-	ZooLib_Project_GameEngine # Name of library
-	STATIC # vs shared
-
+add_library(ZooLib_Project_GameEngine OBJECT
 	${SourceFiles}
 	)
