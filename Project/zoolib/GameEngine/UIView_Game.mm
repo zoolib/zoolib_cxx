@@ -1,5 +1,9 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
+#include "zoolib/GameEngine/UIView_Game.h"
+
+#if ZCONFIG_SPI_Enabled(iPhone)
+
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_set.h"
 
@@ -8,7 +12,6 @@
 
 #include "zoolib/GameEngine/RenderGame.h" // For GameEngine::sPixelToGame
 #include "zoolib/GameEngine/Types.h"
-#include "zoolib/GameEngine/UIView_Game.h"
 
 #include "zoolib/OpenGL/Compat_OpenGL.h"
 
@@ -188,3 +191,5 @@ using GameEngine::CVec3;
 	}
 
 @end // GCView implementation
+
+#endif // ZCONFIG_SPI_Enabled(iPhone)

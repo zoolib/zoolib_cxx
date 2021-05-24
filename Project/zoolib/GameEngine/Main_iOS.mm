@@ -1,5 +1,10 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(iPhone)
+
 #include "zoolib/Starter_ThreadLoop.h"
 #include "zoolib/StdIO.h"
 #include "zoolib/Util_Debug.h"
@@ -268,3 +273,5 @@ int main(int argc, char *argv[])
 		return UIApplicationMain(argc, argv, nil, NSStringFromClass([UIApplicationDelegate_ZooLibGame class]));
 		}
 	}
+
+#endif // ZCONFIG_SPI_Enabled(iPhone)

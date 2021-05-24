@@ -6,7 +6,6 @@
 #include "zoolib/Log.h"
 #include "zoolib/Time.h"
 #include "zoolib/Unicode.h"
-#include "zoolib/Util_Debug.h"
 #include "zoolib/Util_STL_map.h"
 
 #include "zoolib/GameEngine/DebugFlags.h"
@@ -20,7 +19,7 @@
 #include "zoolib/Zip/Archive_Zip.h"
 
 // =================================================================================================
-// MARK: -
+#pragma mark -
 
 using std::map;
 using std::string;
@@ -29,22 +28,6 @@ using std::vector;
 using namespace ZooLib;
 using namespace ZooLib::GameEngine;
 using namespace ZooLib::Util_STL;
-
-// =================================================================================================
-
-extern "C"
-jint JNI_OnLoad(JavaVM* vm, void* reserved)
-	{
-	Util_Debug::sInstall();
-
-	Util_Debug::sSetLogPriority(7);
-
-	return JNI_VERSION_1_4;
-	}
-
-extern "C"
-void JNI_OnUnload(JavaVM* vm, void* reserved)
-	{}
 
 // =================================================================================================
 
@@ -167,8 +150,11 @@ public:
 		}
 	};
 
-
 // =================================================================================================
+#pragma mark -
+
+extern void sTickleAndroid()
+	{}
 
 JNIFUNC(jlong,
 Java_org_zoolib_ViewModel_1Game_nspInit(JNIEnv *env, jclass iClass, jstring iAPKPath))

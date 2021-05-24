@@ -1,5 +1,10 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
+#include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(CocoaFoundation)
+
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
 #include "zoolib/Starter_ThreadLoop.h"
@@ -343,3 +348,5 @@ int main(int argc, const char *argv[])
 		return NSApplicationMain(argc, argv);
 		}
 	}
+
+#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
