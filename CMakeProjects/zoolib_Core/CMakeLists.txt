@@ -104,9 +104,9 @@ set (SourceFiles
 
 source_group("" FILES ${SourceFiles})
 
+include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core)
+
 add_library(ZooLib_Core STATIC
 
 	${SourceFiles}
 	)
-
-include_directories(${SourceDir}/..)

@@ -33,7 +33,7 @@ set (SourceFiles
 
 source_group("" FILES ${SourceFiles})
 
-include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
+include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
 
 add_library(ZooLib_Platform_POSIX STATIC
 
