@@ -40,7 +40,6 @@ private:
 	std::vector<Val_DB> fResults_Left;
 
 	ZP<Walker> fWalker_Right;
-	size_t fBaseOffset;
 	bool fNeedLoadLeft;
 	};
 
