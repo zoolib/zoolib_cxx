@@ -172,37 +172,32 @@ void RowBoat::pChanged(
 
 		if (theIndex_New >= theCount_New)
 			{
-			// Anything remaining in prior when new is exhausted is a removal.
+			// Anything remaining in prior now that new is exhausted is a removal.
 			while (theCount_Prior > theIndex_Prior)
 				{
-				const size_t arr = fSort_Prior[theIndex_Prior];
-				const PseudoMap thePM_Prior(&fBindings, fResult_Prior->GetValsAt(arr));
-				fRows[arr]->Call(&thePM_Prior, nullptr);
-				++theIndex_Prior;
+				const PseudoMap thePM_Prior(&fBindings,
+					fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]));
+				fRows[theIndex_Prior++]->Call(&thePM_Prior, nullptr);
 				}
 			break;
 			}
 
 		if (theIndex_Prior >= theCount_Prior)
 			{
-			// Anything remaining in new when prior is exhausted is an addition.
+			// Anything remaining in new now that prior is exhausted is an addition.
 			while (theCount_New > theIndex_New)
 				{
-				const size_t arr = theSort_New[theIndex_New];
-				const PseudoMap thePM_New(&fBindings, theResult_New->GetValsAt(arr));
+				const PseudoMap thePM_New(&fBindings,
+					theResult_New->GetValsAt(theSort_New[theIndex_New]));
 				ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
-				theRows_New[arr] = theRow;
+				theRows_New[theIndex_New++] = theRow;
 				theRow->Call(nullptr, &thePM_New);
-				++theIndex_New;
 				}
 			break;
 			}
 
-		const size_t arr_Prior = fSort_Prior[theIndex_Prior];
-		const size_t arr_New = theSort_New[theIndex_New];
-
-		const Val_DB* vals_Prior = fResult_Prior->GetValsAt(arr_Prior);
-		const Val_DB* vals_New = theResult_New->GetValsAt(arr_New);
+		const Val_DB* vals_Prior = fResult_Prior->GetValsAt(fSort_Prior[theIndex_Prior]);
+		const Val_DB* vals_New = theResult_New->GetValsAt(theSort_New[theIndex_New]);
 
 		const pair<int,size_t> result = spCompare(fPermute, vals_Prior, vals_New);
 
@@ -216,33 +211,37 @@ void RowBoat::pChanged(
 				{
 				// Prior is less than new, so prior is not in new, and this is a removal.
 				const PseudoMap thePM_Prior(&fBindings, vals_Prior);
-				fRows[arr_Prior]->Call(&thePM_Prior, nullptr);
-				++theIndex_Prior;
+				fRows[theIndex_Prior++]->Call(&thePM_Prior, nullptr);
 				}
 			else
 				{
 				// Contrariwise.
 				const PseudoMap thePM_New(&fBindings, vals_New);
 				ZP<Callable_Row> theRow = fCallable->Call(thePM_New);
-				theRows_New[arr_New] = theRow;
+				theRows_New[theIndex_New++] = theRow;
 				theRow->Call(nullptr, &thePM_New);
-				++theIndex_New;
 				}
 			}
 		else
 			{
+			ZP<Callable_Row> theRow = fRows[theIndex_Prior++];
+			theRows_New[theIndex_New++] = theRow;
+
 			if (fEmitDummyChanges || result.first)
 				{
 				const PseudoMap thePM_Prior(&fBindings, vals_Prior);
 				const PseudoMap thePM_New(&fBindings, vals_New);
-				ZP<Callable_Row> theRow = fRows[arr_Prior];
-				theRows_New[arr_New] = theRow;
 				theRow->Call(&thePM_Prior, &thePM_New);
 				}
-			++theIndex_New;
-			++theIndex_Prior;
 			}
 		}
+
+	for (size_t xx = 0; xx < theRows_New.size(); ++xx)
+		ZAssert(theRows_New[xx]);
+
+	ZAssert(theIndex_New == theCount_New);
+	ZAssert(theIndex_Prior == theCount_Prior);
+
 	swap(fRows, theRows_New);
 	swap(fSort_Prior, theSort_New);
 	swap(fResult_Prior, theResult_New);
