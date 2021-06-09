@@ -166,6 +166,7 @@ void RowBoat::pChanged(
 	sort(theSort_New.begin(), theSort_New.end(), Comparer_t(fPermute, theResult_New));
 
 	std::vector<ZP<Callable_Row>> theRows_New(theCount_New);
+
 	for (;;)
 		{
 		// We're copying/updating, dropping or inserting.
