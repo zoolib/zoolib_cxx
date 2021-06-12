@@ -287,7 +287,7 @@ static void spWriteMessage(const ChanW_Bin& iChanW, Map_ZZ iMessage, const ZQ<st
 
 	iMessage.Set("AAA", sAtomic_Add(&spSentMessageCounter, 1));
 
-	sPull_PPT_Push_JSONB(*sChannerR_PPT(iMessage), theWriteFilter, iChanW);
+	sPull_PPT_Push_JSONB(*sChannerR_PPT(iMessage, theWriteFilter), theWriteFilter, iChanW);
 
 	sFlush(theChanW);
 
