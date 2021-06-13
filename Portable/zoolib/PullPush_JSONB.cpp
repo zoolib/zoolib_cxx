@@ -26,6 +26,27 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 
+namespace {
+
+enum class EType : byte
+	{
+	Null = 0xE0,
+	False = 0xE2,
+	True = 0xE3,
+	Int64 = 0xE4,
+	Float64 = 0xE5,
+	Binary_Chunked = 0xE7,
+	UTF_Complete = 0xE8,
+	Seq = 0xEA,
+	Map = 0xED,
+	End = 0xFF,
+	};
+
+} // namespace
+
+// =================================================================================================
+#pragma mark -
+
 static void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
 	const ChanW_PPT& iChanW);
