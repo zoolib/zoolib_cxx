@@ -220,7 +220,7 @@ class Make_Endpoint6
 
 static ZP<NetAddress_Internet> spAsNetAddress(const sockaddr* iSockAddr, ip_port iPort)
 	{
-	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
+	const sa_family_t theFamily = iSockAddr->sa_family;
 
 	if (theFamily == AF_INET)
 		{
