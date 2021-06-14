@@ -35,14 +35,13 @@ void Roster::Finalize()
 	{
 	ZAcqMtx acq(fMtx);
 
-	if (not	this->FinishFinalize())
+	if (not this->FinishFinalize())
 		return;
 
 	for (set<Entry*>::const_iterator ii = fEntries.begin(); ii != fEntries.end(); ++ii)
 		(*ii)->fRoster.Clear();
 
 	theCallable = fCallable_Gone;
-
 	}
 
 	delete this;
