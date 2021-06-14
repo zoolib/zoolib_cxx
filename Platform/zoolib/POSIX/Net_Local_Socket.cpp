@@ -93,14 +93,8 @@ class Make_Endpoint
 
 static ZP<NetAddress_Local> spAsNetAddress(const sockaddr* iSockAddr)
 	{
-	const sa_family_t theFamily = ((sockaddr*)iSockAddr)->sa_family;
-
-	if (theFamily == AF_LOCAL)
-		{
-		const sockaddr_un* local = (const sockaddr_un*)iSockAddr;
-		if (local->sun_path)
-			return new NetAddress_Local(local->sun_path);
-		}
+	if (iSockAddr->sa_family == AF_LOCAL)
+		return new NetAddress_Local(((const sockaddr_un*)iSockAddr)->sun_path);
 
 	return null;
 	}
