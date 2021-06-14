@@ -14,6 +14,7 @@
 #include "zoolib/ParseException.h"
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_Chan.h"
+#include "zoolib/Util_Debug.h" // For sPrettyName
 
 #include <vector>
 
@@ -299,7 +300,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 		}
 
 	if (ZLOGF(w, eErr))
-		w << "Couldn't write " << thePPT.Type().name();
+		w << "Couldn't write " << Util_Debug::sPrettyName(thePPT.Type());
 
 	ZUnimplemented();
 	}

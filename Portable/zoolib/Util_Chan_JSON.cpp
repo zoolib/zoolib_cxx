@@ -14,14 +14,10 @@
 #include "zoolib/UTCDateTime.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_Debug.h" // For sPrettyName
 #include "zoolib/Util_Time.h"
 
 #include <vector>
-
-#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
-	#include <cxxabi.h>
-	#include <stdlib.h> // For free, required by __cxa_demangle
-#endif
 
 namespace ZooLib {
 namespace Util_Chan_JSON {
@@ -44,20 +40,6 @@ PullTextOptions_JSON sPullTextOptions_Extended()
 
 // =================================================================================================
 #pragma mark -
-
-string sPrettyName(const std::type_info& iTI)
-	{
-	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
-	if (char* unmangled = abi::__cxa_demangle(iTI.name(), 0, 0, 0))
-		{
-		string result = unmangled;
-		free(unmangled);
-		return result;
-		}
-	#endif
-
-	return iTI.name();
-	}
 
 bool sTryRead_Identifier(const ChanRU_UTF& iChanRU,
 	string* oStringLC, string* oStringExact)
@@ -328,7 +310,7 @@ void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushText
 		{
 		ww << "NULL";
 		if (iOptions.fAnnotateUnhandledQ.Get())
-			ww << " /*!! Unhandled: " << sPrettyName(iAny.Type()) << " !!*/";
+			ww << " /*!! Unhandled: " << Util_Debug::sPrettyName(iAny.Type()) << " !!*/";
 		}
 	}
 

@@ -29,6 +29,11 @@ Log::EPriority sGetLogPriority();
 
 typedef ThreadVal<Log::EPriority,struct Tag_LogPriorityPerThread> LogPriorityPerThread;
 
+// =================================================================================================
+#pragma mark -
+
+string8 sPrettyName(const std::type_info& iTI);
+
 } // namespace Util_Debug
 } // namespace ZooLib
 

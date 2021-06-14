@@ -16,6 +16,7 @@
 #include "zoolib/Util_Chan.h"
 #include "zoolib/Util_Chan_UTF.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
+#include "zoolib/Util_Debug.h"
 #include "zoolib/Util_Time.h"
 
 namespace ZooLib {
@@ -209,7 +210,7 @@ static void spPull_XMLPList_Push_PPT(const PPT& iPPT, const ChanR_PPT& iChanR, c
 		}
 	else
 		{
-		sThrow_ParseException("Unhandled PPT, type: " + string(iPPT.Type().name()));
+		sThrow_ParseException("Unhandled PPT, type: " + Util_Debug::sPrettyName(iPPT.Type()));
 		}
 	}
 
@@ -487,7 +488,7 @@ static void spPull_PPT_Push_XMLPList(const PPT& iPPT, const ChanR_PPT& iChanR, c
 	else
 		{
 		s.Begin("nil");
-			s.Raw() << "<!--!! Unhandled: */" << iPPT.Type().name() << " !!-->";
+			s.Raw() << "<!--!! Unhandled: */" << Util_Debug::sPrettyName(iPPT.Type()) << " !!-->";
 		s.End("nil");
 		}
 	}

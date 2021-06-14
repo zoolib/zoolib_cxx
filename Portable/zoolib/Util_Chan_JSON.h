@@ -33,8 +33,6 @@ PullTextOptions_JSON sPullTextOptions_Extended();
 // =================================================================================================
 #pragma mark -
 
-string sPrettyName(const std::type_info& iTI);
-
 bool sTryRead_Identifier(const ChanRU_UTF& iChanRU,
 	string* oStringLC, string* oStringExact);
 

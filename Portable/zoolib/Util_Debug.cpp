@@ -27,6 +27,11 @@
 	#include <android/log.h>
 #endif
 
+#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
+	#include <cxxabi.h>
+	#include <stdlib.h> // For free, required by __cxa_demangle
+#endif
+
 namespace ZooLib {
 namespace Util_Debug {
 
@@ -313,6 +318,23 @@ Log::EPriority sGetLogPriority()
 			return theLM->GetLogPriority();
 		}
 	return 0xFF;
+	}
+
+// =================================================================================================
+#pragma mark -
+
+string sPrettyName(const std::type_info& iTI)
+	{
+	#if ZCONFIG(Compiler,GCC) || ZCONFIG(Compiler,Clang)
+	if (char* unmangled = abi::__cxa_demangle(iTI.name(), 0, 0, 0))
+		{
+		string result = unmangled;
+		free(unmangled);
+		return result;
+		}
+	#endif
+
+	return iTI.name();
 	}
 
 } // namespace Util_Debug
