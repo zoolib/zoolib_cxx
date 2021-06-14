@@ -128,6 +128,8 @@ set (SourceFiles
 	${SourceDir}/NameUniquifier.h
 	${SourceDir}/Net_Internet.cpp
 	${SourceDir}/Net_Internet.h
+	${SourceDir}/Net_Local.cpp
+	${SourceDir}/Net_Local.h
 	${SourceDir}/Net.cpp
 	${SourceDir}/Net.h
 	${SourceDir}/PairwiseCombiner_T.h

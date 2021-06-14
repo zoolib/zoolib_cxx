@@ -15,6 +15,8 @@ set (SourceFiles
 	${SourceDir}/File_POSIX.h
 	${SourceDir}/Net_Internet_Socket.cpp
 	${SourceDir}/Net_Internet_Socket.h
+	${SourceDir}/Net_Local_Socket.cpp
+	${SourceDir}/Net_Local_Socket.h
 	${SourceDir}/Net_Socket.cpp
 	${SourceDir}/Net_Socket.h
 	${SourceDir}/pthread_more.cpp
