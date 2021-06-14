@@ -9,8 +9,6 @@ set (SourceFiles
 	${SourceDir}/Roster.h
 	${SourceDir}/Server.cpp
 	${SourceDir}/Server.h
-	${SourceDir}/Worker.cpp
-	${SourceDir}/Worker.h
 	)
 
 source_group("" FILES ${SourceFiles})

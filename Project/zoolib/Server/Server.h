@@ -8,7 +8,6 @@
 #include "zoolib/Connection.h"
 
 #include "zoolib/Server/Roster.h"
-#include "zoolib/Server/Worker.h"
 
 namespace ZooLib {
 
@@ -19,8 +18,7 @@ class Server
 :	public Counted
 	{
 public:
-	typedef ZP<Roster::Entry> ZP_Roster_Entry; // CW7
-	typedef Callable<void(ZP_Roster_Entry,ZP<ChannerRW<byte>>)> Callable_Connection;
+	typedef Callable<void(ZP<Roster::Entry>,ZP<ChannerRW<byte>>)> Callable_Connection;
 
 	Server();
 	virtual ~Server();
@@ -31,7 +29,7 @@ public:
 // Our protocol
 	bool IsStarted();
 
-	void Start(ZP<Starter> iStarter,
+	void Start(ZP<Counted> iStarter,
 		ZP<Factory_ChannerRW_Bin> iFactory,
 		ZP<Cancellable> iCancellable,
 		ZP<Callable_Connection> iCallable_Connection);
@@ -47,18 +45,16 @@ public:
 	ZP<Callable_Connection> GetCallable_Connection();
 
 private:
-	bool pWork(ZP<Worker> iWorker);
-	void pWorkDetached(ZP<Worker> iWorker);
+	void pRun();
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 
+	bool fIsRunning;
 	ZP<Factory_ChannerRW_Bin> fFactory;
 	ZP<Callable_Connection> fCallable_Connection;
 	ZP<Cancellable> fCancellable;
 	ZP<Roster> fRoster;
-
-	ZP<Worker> fWorker;
 	};
 
 } // namespace ZooLib
