@@ -145,10 +145,10 @@ ZP<NetListener_TCP> sNetListener_TCP(ip4_addr iAddress, ip_port iPort);
 ZP<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
 
 // =================================================================================================
-#pragma mark - sQConnect_TCP
+#pragma mark - sConnect_TCP
 
-ZP<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
-ZP<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWClose_Bin> sConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWClose_Bin> sConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
 
 } // namespace ZooLib
 

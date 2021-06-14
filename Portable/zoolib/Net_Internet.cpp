@@ -11,8 +11,6 @@
 	#include <arpa/inet.h> // For inet_addr
 #endif
 
-//using std::string;
-
 namespace ZooLib {
 
 // =================================================================================================
@@ -40,7 +38,7 @@ NetAddress_IP4::NetAddress_IP4(
 	{}
 
 ZP<ChannerRWClose_Bin> NetAddress_IP4::Connect()
-	{ return sQConnect_TCP(fAddr, fPort); }
+	{ return sConnect_TCP(fAddr, fPort); }
 
 ip4_addr NetAddress_IP4::GetAddr()
 	{ return fAddr; }
@@ -74,7 +72,7 @@ NetAddress_IP6::NetAddress_IP6(ip_port iPort, ip6_addr iAddr)
 	{}
 
 ZP<ChannerRWClose_Bin> NetAddress_IP6::Connect()
-	{ return sQConnect_TCP(fAddr, fPort); }
+	{ return sConnect_TCP(fAddr, fPort); }
 
 ip6_addr NetAddress_IP6::GetAddr()
 	{ return fAddr; }
@@ -135,13 +133,13 @@ ZP<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort)
 // =================================================================================================
 #pragma mark - NetEndpoint_TCP
 
-ZP<ChannerRWClose_Bin> sQConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
+ZP<ChannerRWClose_Bin> sConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort)
 	{
 	return FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam4_t>
 		::sInvoke(MakeParam4_t(iRemoteAddr, iRemotePort));
 	}
 
-ZP<ChannerRWClose_Bin> sQConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
+ZP<ChannerRWClose_Bin> sConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort)
 	{
 	return FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam6_t>
 		::sInvoke(MakeParam6_t(iRemoteAddr, iRemotePort));
