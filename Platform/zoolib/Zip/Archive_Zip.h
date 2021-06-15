@@ -4,9 +4,9 @@
 #define __ZooLib_Zip_Archive_Zip_h__ 1
 #include "zconfig.h"
 
-#include "zip.h"
-
 #include "zoolib/Archive.h"
+
+struct zip;
 
 namespace ZooLib {
 
@@ -17,7 +17,7 @@ class Archive_Zip
 :	public Archive
 	{
 public:
-	Archive_Zip(zip* i_zip, bool iAdopt);
+	Archive_Zip(struct zip* i_zip, bool iAdopt);
 	~Archive_Zip() override;
 
 // From Archive

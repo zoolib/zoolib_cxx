@@ -6,6 +6,8 @@
 
 #include <string.h> // for strlen
 
+#include "zip.h"
+
 // This is implemented in zip_open.c
 extern "C" struct zip * zip_open_FILE(FILE* fp, int flags);
 
