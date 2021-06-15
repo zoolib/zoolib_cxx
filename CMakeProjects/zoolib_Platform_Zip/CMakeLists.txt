@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.4.1)
-
 if(NOT DEFINED ZooLib_IncludeDir_libzip)
 	message(FATAL_ERROR "You must define ZooLib_IncludeDir_libzip")
 endif()
