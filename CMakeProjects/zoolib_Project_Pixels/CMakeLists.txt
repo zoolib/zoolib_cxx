@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.4.1)
+if(NOT DEFINED ZooLib_IncludeDir_libpng)
+	# We could instead conditionalize PixmapCoder_PNG on ZooLib_IncludeDir_libpng being available.
+	message(FATAL_ERROR "You must define ZooLib_IncludeDir_libpng")
+endif()
 
 set(ZOOLIB_CXX ../..)
 
@@ -43,6 +46,8 @@ set (SourceFiles
 source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
+
+include_directories(${ZooLib_IncludeDir_libpng})
 
 add_library(ZooLib_Project_Pixels STATIC
 
