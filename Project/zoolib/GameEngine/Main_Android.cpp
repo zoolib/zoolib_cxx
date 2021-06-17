@@ -18,6 +18,11 @@
 
 #include "zoolib/Zip/Archive_Zip.h"
 
+// To trigger static registrations
+#include "zoolib/POSIX/File_POSIX.h"
+#include "zoolib/POSIX/Net_Internet_Socket.h"
+#include "zoolib/POSIX/Net_Local_Socket.h"
+
 // =================================================================================================
 #pragma mark -
 

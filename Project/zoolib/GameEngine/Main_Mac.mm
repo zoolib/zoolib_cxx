@@ -3,7 +3,7 @@
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CocoaFoundation)
+#if ZCONFIG_SPI_Enabled(MacOSX)
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
@@ -43,6 +43,11 @@
 #import <AppKit/NSOpenGLView.h>
 #import <AppKit/NSScreen.h>
 #import <AppKit/NSWindow.h>
+
+// To trigger static registrations
+#include "zoolib/POSIX/File_POSIX.h"
+#include "zoolib/POSIX/Net_Internet_Socket.h"
+#include "zoolib/POSIX/Net_Local_Socket.h"
 
 // =================================================================================================
 #pragma mark -
@@ -349,4 +354,4 @@ int main(int argc, const char *argv[])
 		}
 	}
 
-#endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
+#endif // ZCONFIG_SPI_Enabled(MacOSX)

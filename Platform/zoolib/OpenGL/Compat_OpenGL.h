@@ -21,13 +21,19 @@
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZMACRO_IOS
-//	#include <OpenGLES/ES1/gl.h>
+
+	#define GLES_SILENCE_DEPRECATION
 	#include <OpenGLES/ES2/gl.h>
+
 #elif defined(__ANDROID__)
-//	#include <GLES/gl.h>
+
 	#include <GLES2/gl2.h>
+
 #else
+
+	#define GL_SILENCE_DEPRECATION
 	#include <OpenGL/gl.h>
+
 #endif
 
 #endif // not defined(ZProjectHeader_OpenGL)
