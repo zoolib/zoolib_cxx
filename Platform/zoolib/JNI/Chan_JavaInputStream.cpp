@@ -7,23 +7,20 @@
 
 namespace ZooLib {
 
+using namespace JNI;
+
 // =================================================================================================
 #pragma mark - ChanR_Bin_JavaInputStream
 
 ChanR_Bin_JavaInputStream::ChanR_Bin_JavaInputStream(jobject iInputStream)
-	{
-	JNIEnv* env = JNI::EnvTV::sGet();
-
-	ZAssert(iInputStream);
-
-	fInputStream = env->NewGlobalRef(iInputStream);
-	}
+:	fInputStream(EnvTV::sGet()->NewGlobalRef(iInputStream))
+	{}
 
 ChanR_Bin_JavaInputStream::~ChanR_Bin_JavaInputStream()
 	{
-	JNIEnv* env = JNI::EnvTV::sGet();
+	EnsureAttachedToCurrentThread eact(sJavaVM());
 
-	env->DeleteGlobalRef(fInputStream);
+	EnvTV::sGet()->DeleteGlobalRef(fInputStream);
 	}
 
 size_t ChanR_Bin_JavaInputStream::Read(byte* oDest, size_t iCount)

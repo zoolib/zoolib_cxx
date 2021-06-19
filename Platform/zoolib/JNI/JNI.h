@@ -15,6 +15,16 @@ namespace ZooLib {
 namespace JNI {
 
 // =================================================================================================
+#pragma mark - JNIDEF
+
+#define JNIDEF(ReturnType) extern "C" JNIEXPORT ReturnType JNICALL
+
+// Declare and define in one go.
+#define JNIFUNC(ReturnType, remainder) \
+	extern "C" JNIEXPORT ReturnType JNICALL remainder; \
+	extern "C" JNIEXPORT ReturnType JNICALL remainder
+
+// =================================================================================================
 #pragma mark - LoadHandler
 
 class LoadHandler
@@ -37,14 +47,10 @@ private:
 	};
 
 // =================================================================================================
-#pragma mark - JNIDEF
+#pragma mark - JNI::sJavaVM
 
-#define JNIDEF(ReturnType) extern "C" JNIEXPORT ReturnType JNICALL
-
-// Declare and define in one go.
-#define JNIFUNC(ReturnType, remainder) \
-	extern "C" JNIEXPORT ReturnType JNICALL remainder; \
-	extern "C" JNIEXPORT ReturnType JNICALL remainder \
+JavaVM* sJavaVM();
+JavaVM* sJavaVM(JNIEnv* iEnv);
 
 // =================================================================================================
 #pragma mark - JNI::EnvTV

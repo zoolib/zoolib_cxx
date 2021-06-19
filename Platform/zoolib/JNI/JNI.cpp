@@ -25,8 +25,12 @@ LoadHandler::LoadHandler()
 LoadHandler::~LoadHandler()
 	{}
 
+static JavaVM* spJavaVM;
+
 void LoadHandler::sOnLoad(JavaVM* iJavaVM)
 	{
+	ZAssert(not spJavaVM);
+	spJavaVM = iJavaVM;
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
 		{
 		if (ZLOGF(cc, eDebug))
@@ -39,6 +43,7 @@ void LoadHandler::sOnLoad(JavaVM* iJavaVM)
 
 void LoadHandler::sOnUnload()
 	{
+	ZAssert(spJavaVM);
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
 		{
 		if (ZLOGF(cc, eDebug))
@@ -47,6 +52,7 @@ void LoadHandler::sOnUnload()
 		if (ZLOGF(cc, eDebug))
 			cc << "< " << typeid(*theHandler).name();
 		}
+	spJavaVM = nullptr;
 	}
 
 void LoadHandler::OnLoad(JavaVM* iJavaVM)
@@ -129,6 +135,20 @@ void LoadHandler_Core::OnLoad(JNIEnv* env)
 } // anonymous namespace
 
 // =================================================================================================
+#pragma mark - JNI::sJavaVM
+
+JavaVM* sJavaVM()
+	{ return spJavaVM; }
+
+JavaVM* sJavaVM(JNIEnv* iEnv)
+	{
+	JavaVM* result;
+	if (JNI_OK == iEnv->GetJavaVM(&result))
+		return result;
+	return nullptr;
+	}
+
+// =================================================================================================
 #pragma mark - JNI::sHadExceptionThenClear
 
 bool sHadExceptionThenClear(JNIEnv* env)
@@ -149,6 +169,8 @@ EnsureAttachedToCurrentThread::EnsureAttachedToCurrentThread(JavaVM* iJavaVM)
 :	fJavaVM(iJavaVM)
 ,	fNeedsDetach(false)
 	{
+	ZAssert(fJavaVM);
+
 	JNIEnv* env;
 	const jint result = fJavaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
 	switch (result)
