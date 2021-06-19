@@ -154,7 +154,7 @@ ZP<SubProcess_POSIX> sLaunchSubProcessAndLogIt(
 			{
 			w << ", args: ";
 			for (size_t xx = 0; xx < iArgs.size(); ++xx)
-				w << (xx ? ", " : "") << iArgs[xx];
+				w << "\"" << iArgs[xx] << "\" ";
 			}
 		}
 	return sLaunchSubProcess(iProgram, iArgs);
