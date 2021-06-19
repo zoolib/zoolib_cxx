@@ -62,7 +62,8 @@ static bool spWriteFilter(
 	{
 	if (auto theP = sPGet<DataspaceTypes::AbsentOptional_t>(iPPT))
 		{
-		iChanW << "!absent!";
+		iChanW << "⨂";
+		// iChanW << "!absent¡";
 		return true;
 		}
 
