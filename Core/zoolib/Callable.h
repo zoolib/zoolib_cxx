@@ -286,6 +286,8 @@ typedef Callable<void()> Callable_Void;
 
 typedef Callable<bool()> Callable_Bool;
 
+typedef Callable<void(const ZP<Callable_Void>&)> Callable_Bookend;
+
 // =================================================================================================
 #pragma mark - Callable_Null
 

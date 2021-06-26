@@ -3,8 +3,9 @@
 #include "zoolib/Starter_ThreadLoop.h"
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
+#include "zoolib/Callable_PMF.h"
 
-#include "zoolib/ZThread.h"
+#include "zoolib/StartOnNewThread.h"
 
 #include <vector>
 
@@ -20,16 +21,18 @@ class Starter_ThreadLoop
 :	public Starter
 	{
 public:
-	Starter_ThreadLoop(const ZP<Callable<void(bool)>>& iRunCB)
-	:	fRunCB(iRunCB)
+	Starter_ThreadLoop(const ZP<Callable_Bookend>& iBookend_Loop,
+		const ZP<Callable_Bookend>& iBookend_Startable)
+	:	fBookend_Loop(iBookend_Loop)
+	,	fBookend_Startable(iBookend_Startable)
 	,	fKeepRunning(false)
 		{}
 
-	virtual ~Starter_ThreadLoop()
+	~Starter_ThreadLoop() override
 		{}
 
 // From Counted via Starter
-	virtual void Initialize()
+	void Initialize() override
 		{
 		Counted::Initialize();
 		ZAcqMtx acq(fMtx);
@@ -37,10 +40,16 @@ public:
 		ZAssert(not fKeepRunning);
 
 		fKeepRunning = true;
-		ZThread::sStart_T<Starter_ThreadLoop*>(&Starter_ThreadLoop::spRun, this);
+
+		ZP<Callable_Void> theCallable = sCallable(this, &Starter_ThreadLoop::pRun);
+
+		if (fBookend_Loop)
+			theCallable = sBindR(fBookend_Loop, theCallable);
+
+		sStartOnNewThread(theCallable);
 		}
 
-	virtual void Finalize()
+	void Finalize() override
 		{
 		ZAcqMtx acq(fMtx);
 		if (not this->FinishFinalize())
@@ -53,7 +62,7 @@ public:
 		}
 
 // From Starter
-	virtual bool QStart(const ZP<Startable>& iStartable)
+	bool QStart(const ZP<Startable>& iStartable) override
 		{
 		if (iStartable)
 			{
@@ -68,8 +77,6 @@ public:
 private:
 	void pRun()
 		{
-		sCall(fRunCB, true);
-
 		fMtx.Acquire();
 		while (fKeepRunning)
 			{
@@ -88,26 +95,29 @@ private:
 
 			fMtx.Release();
 
-			for (vector<ZP<Startable>>::iterator iter = toStart.begin();
-				iter != toStart.end(); ++iter)
+			for (ZP<Startable> theStartable: toStart)
 				{
-				try { (*iter)->Call(); }
+				try
+					{
+					if (fBookend_Startable)
+						fBookend_Startable->Call(theStartable);
+					else
+						theStartable->Call();
+					}
 				catch (...) {}
 				}
+
 			this->Release();
+
 			fMtx.Acquire();
 			}
 		fMtx.Release();
 
-		sCall(fRunCB, false);
-
 		delete this;
 		}
 
-	static void spRun(Starter_ThreadLoop* iStarter)
-		{ iStarter->pRun(); }
-
-	const ZP<Callable<void(bool)>> fRunCB;
+	const ZP<Callable_Bookend> fBookend_Loop;
+	const ZP<Callable_Bookend> fBookend_Startable;
 	ZMtx fMtx;
 	ZCnd fCnd;
 	bool fKeepRunning;
@@ -117,17 +127,20 @@ private:
 // =================================================================================================
 #pragma mark - sStarter_ThreadLoop
 
-ZP<Starter> sStarter_ThreadLoop(const ZP<Callable<void(bool)>>& iRunCB)
-	{ return new Starter_ThreadLoop(iRunCB); }
+ZP<Starter> sStarter_ThreadLoop(
+	const ZP<Callable_Bookend>& iBookend_Loop,
+	const ZP<Callable_Bookend>& iBookend_Startable)
+	{ return new Starter_ThreadLoop(iBookend_Loop, iBookend_Startable); }
 
-static void spSetThreadName(bool iStarting, const std::string& iName)
+
+static void spSetThreadName(const ZP<Startable>& iStartable, const std::string& iName)
 	{
-	if (iStarting)
-		ZThread::sSetName(iName.c_str());
+	ZThread::sSetName(iName.c_str());
+	sCall(iStartable);
 	}
 
 ZP<Starter> sStarter_ThreadLoop(const std::string& iName)
-	{ return sStarter_ThreadLoop(sBindR(sCallable(spSetThreadName), iName)); }
+	{ return sStarter_ThreadLoop(sBindR(sCallable(spSetThreadName), iName), null); }
 
 ZP<Starter> sStarter_ThreadLoop()
 	{ return sStarter_ThreadLoop("STL"); }

@@ -13,7 +13,9 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sStarter_ThreadLoop
 
-ZP<Starter> sStarter_ThreadLoop(const ZP<Callable<void(bool)>>& iRunCB);
+ZP<Starter> sStarter_ThreadLoop(
+	const ZP<Callable_Bookend>& iBookend_Loop,
+	const ZP<Callable_Bookend>& iBookend_Startable);
 
 ZP<Starter> sStarter_ThreadLoop(const std::string& iName);
 
