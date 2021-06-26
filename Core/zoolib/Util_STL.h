@@ -44,6 +44,16 @@ void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 	}
 
 // =================================================================================================
+// sCount
+
+template <typename T>
+	EnableIf_t<IsMFP<decltype(static_cast<typename T::size_type(T::*)() const>
+		(&T::size))>::value,
+typename T::size_type>
+sCount(const T& iT)
+	{ return iT.size(); }
+
+// =================================================================================================
 // sIsEmpty
 
 template <typename T>
