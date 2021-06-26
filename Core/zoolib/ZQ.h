@@ -540,6 +540,33 @@ template <class T>
 void swap(ZQ<T>& a, ZQ<T>& b)
 	{ a.swap(b); }
 
+// =================================================================================================
+#pragma mark - Chaining operator
+
+template <class TT>
+const ZQ<TT>& operator|(const ZQ<TT>& ll, const ZQ<TT>& rr)
+	{
+	if (ll)
+		return ll;
+	return rr;
+	}
+
+template <class TT>
+const TT& operator|(const ZQ<TT>& ll, const TT& rr)
+	{
+	if (ll)
+		return *ll;
+	return rr;
+	}
+
+template <class TT>
+TT operator|(const ZQ<TT>& ll, TT&& rr)
+	{
+	if (ll)
+		return *ll;
+	return rr;
+	}
+
 } // namespace ZooLib
 
 #endif // __ZooLib_ZQ_h__
