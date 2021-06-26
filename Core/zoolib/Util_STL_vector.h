@@ -13,7 +13,22 @@
 #include <vector>
 
 namespace ZooLib {
+
+// =================================================================================================
+#pragma mark - sPaC for vectors
+
+template <class EE>
+PaC<EE> sPaC(std::vector<EE>& ioVector)
+	{ return PaC<EE>(ioVector.size() ? &ioVector[0] : nullptr, ioVector.size()); }
+
+template <class EE>
+PaC<const EE> sPaC(const std::vector<EE>& iVector)
+	{ return PaC<const EE>(iVector.size() ? &iVector[0] : nullptr, iVector.size()); }
+
 namespace Util_STL {
+
+// =================================================================================================
+#pragma mark - Util_STL
 
 // Having an issue with this:
 //template <typename PP>
