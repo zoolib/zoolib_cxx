@@ -58,9 +58,6 @@ public:
 
 	virtual QRet<R> QCall() = 0;
 
-	inline R DCall(const R& iDefault)
-		{ return this->QCall().DGet(iDefault); }
-	
 	inline R Call()
 		{ return this->QCall().Get(); }
 	};
@@ -114,9 +111,6 @@ public: \
 	typedef R (Signature)(ZMACRO_Callable_P##X); \
 \
 	virtual QRet<R> QCall(ZMACRO_Callable_P##X) = 0; \
-\
-	inline R DCall(const R& iDefault, ZMACRO_Callable_VT##X) \
-		{ return this->QCall(ZMACRO_Callable_i##X).DGet(iDefault); } \
 \
 	inline R Call(ZMACRO_Callable_VT##X) \
 		{ return this->QCall(ZMACRO_Callable_i##X).Get(); } \
@@ -184,16 +178,6 @@ QRet<typename Type_p::Type_t::R> sQCall(
 	}
 
 template <class Type_p>
-typename Type_p::Type_t::R sDCall(
-	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault,
-	const Type_p& iCallable)
-	{
-	if (iCallable)
-		return iCallable->DCall()(iDefault);
-	return iDefault;
-	}
-
-template <class Type_p>
 typename Type_p::Type_t::R sCall(
 	const Type_p& iCallable)
 	{
@@ -215,17 +199,6 @@ QRet<typename Type_p::Type_t::R> sQCall( \
 	if (iCallable) \
 		return iCallable->QCall(ZMACRO_Callable_i##X); \
 	return QRet<typename Type_p::Type_t::R>(); \
-	} \
-\
-template <class Type_p, ZMACRO_Callable_Class_P##X> \
-typename Type_p::Type_t::R sDCall( \
-	typename CallableUtil::VT<typename Type_p::Type_t::R>::P iDefault, \
-	const Type_p& iCallable, \
-	ZMACRO_Callable_ConstRef_Pi##X) \
-	{ \
-	if (iCallable) \
-		return iCallable->DCall(iDefault, ZMACRO_Callable_i##X); \
-	return iDefault; \
 	} \
 \
 template <class Type_p, ZMACRO_Callable_Class_P##X> \
