@@ -104,6 +104,9 @@ ZP<ChannerR_Bin> Archive_Zip::OpenR(size_t iIndex)
 		if (zip_file* the_zip_file = ::zip_fopen_index(f_zip, iIndex, 0))
 			{
 			ZAcqMtx acq(fMtx);
+			// We could actually return a ChannerRSize -- implementing Aspect_Read and
+			// Aspect_Size. There are circumstances where its helpful know the size even
+			// if we can't random-access within.
 			return new ChannerR_Bin_Zip(this, the_zip_file);
 			}
 		}
