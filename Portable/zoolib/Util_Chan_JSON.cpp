@@ -329,7 +329,7 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 		chunkSize = sRawChunkSize(iOptions);
 		}
 
-	if (iOptions.fBinaryAsBase64Q.DGet(false))
+	if (iOptions.fBinaryAsBase64Q | false)
 		{
 		ww << "<";
 		ww << "=";

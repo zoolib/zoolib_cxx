@@ -259,7 +259,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value or ']'");
 
-			if (iRO.fLooseSeparators.DGet(false))
+			if (iRO.fLooseSeparators | false)
 				{
 				// We allow zero or more separators
 				for (;;)
@@ -267,7 +267,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(iChanRU, ';'))
+					else if ((iRO.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -278,7 +278,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 				if (sTryRead_CP(iChanRU, ','))
 					{}
-				else if (iRO.fAllowSemiColons.DGet(false))
+				else if (iRO.fAllowSemiColons | false)
 					{
 					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate array elements");
@@ -304,7 +304,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			string theName;
 			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanRU,
-				theName, iRO.fAllowUnquotedPropertyNames.DGet(false)))
+				theName, iRO.fAllowUnquotedPropertyNames | false))
 				{ sThrow_ParseException("Expected a member name or '}'"); }
 
 			sPush(sName(theName), iChanW);
@@ -313,7 +313,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			if (not sTryRead_CP(iChanRU, ':'))
 				{
-				if (not iRO.fAllowEquals.DGet(false))
+				if (not (iRO.fAllowEquals | false))
 					sThrow_ParseException("Expected ':' after a member name");
 
 				if (not sTryRead_CP(iChanRU, '='))
@@ -325,7 +325,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
 				sThrow_ParseException("Expected value");
 
-			if (iRO.fLooseSeparators.DGet(false))
+			if (iRO.fLooseSeparators | false)
 				{
 				// We allow zero or more separators
 				for (;;)
@@ -333,7 +333,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if (iRO.fAllowSemiColons.DGet(false) && sTryRead_CP(iChanRU, ';'))
+					else if ((iRO.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -344,7 +344,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 				if (sTryRead_CP(iChanRU, ','))
 					{}
-				else if (iRO.fAllowSemiColons.DGet(false))
+				else if (iRO.fAllowSemiColons | false)
 					{
 					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate object elements");
@@ -364,7 +364,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		{
 		return spPull_JSON_String_Push(iChanRU, '\'', iChanW);
 		}
-	else if (iRO.fAllowBinary.DGet(false) && sTryRead_CP(iChanRU, '<'))
+	else if ((iRO.fAllowBinary | false) && sTryRead_CP(iChanRU, '<'))
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
@@ -443,10 +443,10 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 					iChanW << "[";
 					}
 
-				if (iOptions.fUseExtendedNotationQ.DGet(false))
+				if (iOptions.fUseExtendedNotationQ | false)
 					{
 					sWrite_LFIndent(iChanW, childIndentation, iOptions);
-					if (iOptions.fNumberSequencesQ.DGet(false))
+					if (iOptions.fNumberSequencesQ | false)
 						iChanW << "/*" << count << "*/";
 					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
 					iChanW << ";";
@@ -483,7 +483,7 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 				{
 				break;
 				}
-			else if (iOptions.fUseExtendedNotationQ.DGet(false))
+			else if (iOptions.fUseExtendedNotationQ | false)
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";
@@ -513,7 +513,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 	const PushTextOptions_JSON& iOptions,
 	const ChanW_UTF& iChanW)
 	{
-	const bool useSingleQuotes = iOptions.fPreferSingleQuotesQ.DGet(false);
+	const bool useSingleQuotes = iOptions.fPreferSingleQuotesQ | false;
 
 	ioParents.push_back(EParent::Map);
 
@@ -546,7 +546,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 					iChanW << "{";
 					}
 
-				if (iOptions.fUseExtendedNotationQ.DGet(false))
+				if (iOptions.fUseExtendedNotationQ | false)
 					{
 					sWrite_LFIndent(iChanW, theIndentation, iOptions);
 					Util_Chan_JSON::sWrite_PropName(iChanW, *theNameQ, useSingleQuotes);
@@ -590,7 +590,7 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 				{
 				sThrow_ParseException("Require value after Name from ChanR_PPT");
 				}
-			else if (iOptions.fUseExtendedNotationQ.DGet(false))
+			else if (iOptions.fUseExtendedNotationQ | false)
 				{
 				if (not isFirst && sBreakStrings(iOptions))
 					iChanW << " ";

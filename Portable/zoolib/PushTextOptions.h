@@ -49,31 +49,31 @@ inline bool sDoIndentation(const PushTextOptions& iYO)
 	{ return iYO.fIndentStringQ && iYO.fIndentStringQ->size(); }
 
 inline std::string sEOLString(const PushTextOptions& iYO)
-	{ return iYO.fEOLStringQ.DGet("\n"); }
+	{ return iYO.fEOLStringQ | std::string("\n"); }
 
 inline std::string sIndentString(const PushTextOptions& iYO)
-	{ return iYO.fIndentStringQ.DGet("  "); }
+	{ return iYO.fIndentStringQ | std::string("  "); }
 
 inline size_t sRawChunkSize(const PushTextOptions& iYO)
-	{ return iYO.fRawChunkSizeQ.DGet(64); }
+	{ return iYO.fRawChunkSizeQ | size_t(64); }
 
 inline std::string sRawByteSeparator(const PushTextOptions& iYO)
-	{ return iYO.fRawByteSeparatorQ.DGet(" "); }
+	{ return iYO.fRawByteSeparatorQ | std::string(" "); }
 
 inline bool sRawAsASCII(const PushTextOptions& iYO)
-	{ return iYO.fRawAsASCIIQ.DGet(sDoIndentation(iYO)); }
+	{ return iYO.fRawAsASCIIQ | sDoIndentation(iYO); }
 
 inline bool sBreakStrings(const PushTextOptions& iYO)
-	{ return iYO.fBreakStringsQ.DGet(true); }
+	{ return iYO.fBreakStringsQ | true; }
 
 inline size_t sStringLineLength(const PushTextOptions& iYO)
-	{ return iYO.fStringLineLengthQ.DGet(80); }
+	{ return iYO.fStringLineLengthQ | size_t(80); }
 
 inline bool sIDsHaveDecimalVersionComment(const PushTextOptions& iYO)
-	{ return iYO.fIDsHaveDecimalVersionCommentQ.DGet(true); }
+	{ return iYO.fIDsHaveDecimalVersionCommentQ | true; }
 
 inline bool sTimesHaveUserLegibleComment(const PushTextOptions& iYO)
-	{ return iYO.fTimesHaveUserLegibleCommentQ.DGet(true); }
+	{ return iYO.fTimesHaveUserLegibleCommentQ | true; }
 
 } // namespace ZooLib
 
