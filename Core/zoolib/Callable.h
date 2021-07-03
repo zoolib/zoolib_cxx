@@ -253,13 +253,9 @@ void sCallVoid(ZP<Callable<T()>> iCallable)
 	{ sCall(iCallable); }
 
 // =================================================================================================
-#pragma mark - Useful typedefs
+#pragma mark - Callable_Void
 
 typedef Callable<void()> Callable_Void;
-
-typedef Callable<bool()> Callable_Bool;
-
-typedef Callable<void(const ZP<Callable_Void>&)> Callable_Bookend;
 
 // =================================================================================================
 #pragma mark - Callable_Null

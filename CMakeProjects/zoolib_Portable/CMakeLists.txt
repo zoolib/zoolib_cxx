@@ -8,6 +8,8 @@ set (SourceFiles
 	${SourceDir}/Archive.cpp
 	${SourceDir}/Archive.h
 	${SourceDir}/Callable_Bind.h
+	${SourceDir}/Callable_Bookend.cpp
+	${SourceDir}/Callable_Bookend.h
 	${SourceDir}/Callable_Bool.cpp
 	${SourceDir}/Callable_Bool.h
 	${SourceDir}/Callable_Cast.h

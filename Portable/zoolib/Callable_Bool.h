@@ -8,6 +8,8 @@
 
 namespace ZooLib {
 
+typedef Callable<bool()> Callable_Bool;
+
 // =================================================================================================
 #pragma mark - Ctors
 

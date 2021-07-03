@@ -6,6 +6,7 @@
 
 #include <string>
 
+#include "zoolib/Callable_Bookend.h"
 #include "zoolib/Starter.h"
 
 namespace ZooLib {
