@@ -4,7 +4,7 @@
 #define __ZooLib_Callable_Compound_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
+#include "zoolib/Callable_Bool.h"
 
 namespace ZooLib {
 
