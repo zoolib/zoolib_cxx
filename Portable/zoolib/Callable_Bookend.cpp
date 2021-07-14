@@ -1,48 +1,27 @@
 // Copyright (c) 2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Callable_Bookend.h"
+#include "zoolib/Callable_Bind.h"
+#include "zoolib/Callable_Function.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 
-class Callable_BookendMaker_Nested
-:	public Callable_BookendMaker
+static void spNester(const ZP<Callable_Bookend>& iBookend0, const ZP<Callable_Bookend>& iBookend1,
+	const ZP<Callable_Void>& iCallable_Void)
+	{ sCall(iBookend0, sBindR(iBookend1, iCallable_Void)); }
+
+ZP<Callable_Bookend> sNest(ZP<Callable_Bookend> iBookend0, ZP<Callable_Bookend> iBookend1)
 	{
-public:
-	Callable_BookendMaker_Nested(
-		ZP<Callable_BookendMaker> iFirst,
-		ZP<Callable_BookendMaker> iNext)
-	:	fFirst(iFirst)
-	,	fNext(iNext)
-		{}
+	if (not iBookend0)
+		return iBookend1;
 
-	ZP<Callable_Void> QCall(const ZP<Callable_Void>& iCallable) override
-		{
-		ZP<Callable_Void> result = iCallable;
-		if (result)
-			result = sCall(fFirst, result);
-		if (result)
-			result = sCall(fNext, result);
-		return result;
-		}
+	if (not iBookend1)
+		return iBookend0;
 
-	const ZP<Callable_BookendMaker> fFirst;
-	const ZP<Callable_BookendMaker> fNext;
-	};
-
-ZP<Callable_BookendMaker> sBookendMaker_Nested(
-	ZP<Callable_BookendMaker> iFirst,
-	ZP<Callable_BookendMaker> iNext)
-	{
-	if (iFirst)
-		{
-		if (iNext)
-			return new Callable_BookendMaker_Nested(iFirst, iNext);
-		return iFirst;
-		}
-	return iNext;
+	return sBindL(iBookend0, iBookend1, sCallable(spNester));
 	}
 
 } // namespace ZooLib

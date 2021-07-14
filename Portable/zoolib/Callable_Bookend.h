@@ -8,16 +8,12 @@
 
 namespace ZooLib {
 
-typedef Callable<void(const ZP<Callable_Void>&)> Callable_Bookend;
-
 // =================================================================================================
 #pragma mark -
 
-typedef Callable<ZP<Callable_Void>(const ZP<Callable_Void>&)> Callable_BookendMaker;
+typedef Callable<void(const ZP<Callable_Void>&)> Callable_Bookend;
 
-ZP<Callable_BookendMaker> sBookendMaker_Nested(
-	ZP<Callable_BookendMaker> iFirst,
-	ZP<Callable_BookendMaker> iNext);
+ZP<Callable_Bookend> sNest(ZP<Callable_Bookend> iBookend0, ZP<Callable_Bookend> iBookend1);
 
 } // namespace ZooLib
 
