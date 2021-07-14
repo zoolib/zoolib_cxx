@@ -20,11 +20,11 @@ class PixmapRep
 :	public Counted
 	{
 public:
-	PixmapRep(const ZP<Raster>& iRaster, const RectPOD& iBounds, const PixelDesc& iPixelDesc);
+	PixmapRep(const ZP<Raster>& iRaster, const RectPOD& iFrame, const PixelDesc& iPixelDesc);
 
 	PointPOD GetSize();
 
-	const RectPOD& GetBounds();
+	const RectPOD& GetFrame();
 
 	const PixelDesc& GetPixelDesc();
 
@@ -34,12 +34,12 @@ public:
 
 protected:
 	ZP<Raster> fRaster;
-	RectPOD fBounds;
+	RectPOD fFrame;
 	PixelDesc fPixelDesc;
 	};
 
 ZP<PixmapRep> sPixmapRep(const ZP<Raster>& iRaster,
-	const RectPOD& iBounds,
+	const RectPOD& iFrame,
 	const PixelDesc& iPixelDesc);
 
 ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
@@ -57,8 +57,11 @@ public:
 	~Pixmap();
 	Pixmap& operator=(const Pixmap& iOther);
 
-	Pixmap(const ZP<PixmapRep>& iRep);
+	Pixmap(const ZP<PixmapRep>& iOther);
 	Pixmap& operator=(const ZP<PixmapRep>& iOther);
+
+	Pixmap(PixmapRep* iOther);
+	Pixmap& operator=(PixmapRep* iOther);
 
 	Pixmap(const null_t&);
 	Pixmap& operator=(const null_t&);
@@ -78,7 +81,7 @@ public:
 	const RasterDesc& GetRasterDesc() const;
 	const void* GetBaseAddress() const;
 	void* MutBaseAddress();
-	const RectPOD& GetBounds() const;
+	const RectPOD& GetFrame() const;
 	const PixelDesc& GetPixelDesc() const;
 
 protected:

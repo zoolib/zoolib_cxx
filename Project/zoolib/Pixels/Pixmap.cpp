@@ -11,24 +11,20 @@ namespace Pixels {
 // =================================================================================================
 #pragma mark -
 
-static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceBounds,
+static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceFrame,
 	const ZP<PixmapRep>& ioDest, PointPOD iDestLoc)
 	{
 	ZP<Raster> sourceRaster = iSource->GetRaster();
 	ZP<Raster> destRaster = ioDest->GetRaster();
 	ZAssert(destRaster->GetMutable());
 
-	const RectPOD theSourceBounds = iSourceBounds
-		+ LT(iSource->GetBounds());
-
-	const RectPOD theDestBounds = (iSourceBounds - LT(iSourceBounds)) + iDestLoc
-		+ LT(ioDest->GetBounds());
+	const RectPOD theDestFrame = (iSourceFrame - LT(iSourceFrame)) + iDestLoc;
 
 	sBlit(
 		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(),
-			theSourceBounds, iSource->GetPixelDesc(),
+			iSourceFrame, iSource->GetPixelDesc(),
 		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(),
-			theDestBounds, ioDest->GetPixelDesc(),
+			theDestFrame, ioDest->GetPixelDesc(),
 		eOp_Copy);
 	}
 
@@ -36,17 +32,17 @@ static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceBounds,
 #pragma mark - PixmapRep
 
 PixmapRep::PixmapRep(
-	const ZP<Raster>& iRaster,const RectPOD& iBounds, const PixelDesc& iPixelDesc)
+	const ZP<Raster>& iRaster,const RectPOD& iFrame, const PixelDesc& iPixelDesc)
 :	fRaster(iRaster)
-,	fBounds(iBounds)
+,	fFrame(iFrame)
 ,	fPixelDesc(iPixelDesc)
 	{}
 
 PointPOD PixmapRep::GetSize()
-	{ return WH(fBounds); }
+	{ return WH(fFrame); }
 
-const RectPOD& PixmapRep::GetBounds()
-	{ return fBounds; }
+const RectPOD& PixmapRep::GetFrame()
+	{ return fFrame; }
 
 const PixelDesc& PixmapRep::GetPixelDesc()
 	{ return fPixelDesc; }
@@ -59,12 +55,12 @@ ZP<PixmapRep> PixmapRep::Touch()
 	if (this->IsShared() || fRaster->IsShared() || not fRaster->GetMutable())
 		{
 		RasterDesc newRasterDesc = fRaster->GetRasterDesc();
-		newRasterDesc.fRowBytes = sCalcRowBytes(W(fBounds), newRasterDesc.fPixvalDesc.fDepth, 4);
-		newRasterDesc.fRowCount = H(fBounds);
+		newRasterDesc.fRowBytes = sCalcRowBytes(W(fFrame), newRasterDesc.fPixvalDesc.fDepth, 4);
+		newRasterDesc.fRowCount = H(fFrame);
 
-		ZP<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fBounds), fPixelDesc);
+		ZP<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fFrame), fPixelDesc);
 
-		spBlit(this, fBounds, newRep, sPointPOD(0,0));
+		spBlit(this, fFrame, newRep, sPointPOD(0,0));
 
 		return newRep;
 		}
@@ -72,9 +68,9 @@ ZP<PixmapRep> PixmapRep::Touch()
 	}
 
 ZP<PixmapRep> sPixmapRep(const ZP<Raster>& iRaster,
-	const RectPOD& iBounds,
+	const RectPOD& iFrame,
 	const PixelDesc& iPixelDesc)
-	{ return new PixmapRep(iRaster, iBounds, iPixelDesc); }
+	{ return new PixmapRep(iRaster, iFrame, iPixelDesc); }
 
 ZP<PixmapRep> sPixmapRep(const RasterDesc& iRasterDesc,
 	const PointPOD& iSize,
@@ -103,11 +99,21 @@ Pixmap& Pixmap::operator=(const Pixmap& iOther)
 	return *this;
 	}
 
-Pixmap::Pixmap(const ZP<PixmapRep>& iRep)
-:	fRep(iRep)
+Pixmap::Pixmap(const ZP<PixmapRep>& iOther)
+:	fRep(iOther)
 	{}
 
 Pixmap& Pixmap::operator=(const ZP<PixmapRep>& iOther)
+	{
+	fRep = iOther;
+	return *this;
+	}
+
+Pixmap::Pixmap(PixmapRep* iOther)
+:	fRep(iOther)
+	{}
+
+Pixmap& Pixmap::operator=(PixmapRep* iOther)
 	{
 	fRep = iOther;
 	return *this;
@@ -123,13 +129,13 @@ Pixmap& Pixmap::operator=(const null_t&)
 	}
 
 PointPOD Pixmap::Size() const
-	{ return WH(fRep->GetBounds()); }
+	{ return WH(fRep->GetFrame()); }
 
 Ord Pixmap::Width() const
-	{ return W(fRep->GetBounds()); }
+	{ return W(fRep->GetFrame()); }
 
 Ord Pixmap::Height() const
-	{ return H(fRep->GetBounds()); }
+	{ return H(fRep->GetFrame()); }
 
 void Pixmap::Touch()
 	{
@@ -155,8 +161,8 @@ void* Pixmap::MutBaseAddress()
 	return fRep->GetRaster()->GetBaseAddress();
 	}
 
-const RectPOD& Pixmap::GetBounds() const
-	{ return fRep->GetBounds(); }
+const RectPOD& Pixmap::GetFrame() const
+	{ return fRep->GetFrame(); }
 
 const PixelDesc& Pixmap::GetPixelDesc() const
 	{ return fRep->GetPixelDesc(); }
@@ -168,22 +174,33 @@ Pixmap sPixmap(const RasterDesc& iRasterDesc, PointPOD iSize, const PixelDesc& i
 #pragma mark - Pixmap
 
 Pixmap sPixmap(const Pixmap& iSource, RectPOD iBounds)
-	{ return Pixmap(new PixmapRep(iSource.GetRaster(), iBounds, iSource.GetPixelDesc())); }
+	{
+	if (ZP<PixmapRep> sourceRep = iSource.GetRep())
+		{
+		return new PixmapRep(sourceRep->GetRaster(),
+			iBounds + LT(sourceRep->GetFrame()),
+			sourceRep->GetPixelDesc());
+		}
+	return Pixmap();
+	}
 
 void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon)
 	{
 	sMunge(ioPixmap.MutBaseAddress(),
 		ioPixmap.GetRasterDesc(),
 		ioPixmap.GetPixelDesc(),
-		ioPixmap.GetBounds(),
+		ioPixmap.GetFrame(),
 		iMungeProc, iRefcon);
 	}
 
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	Pixmap& ioDest, PointPOD iDestLoc)
 	{
-	ioDest.Touch();
-	spBlit(iSource.GetRep(), iSourceBounds, ioDest.GetRep(), iDestLoc);
+	if (ZP<PixmapRep> sourceRep = iSource.GetRep())
+		{
+		ioDest.Touch();
+		spBlit(sourceRep, iSourceBounds + LT(sourceRep->GetFrame()), ioDest.GetRep(), iDestLoc);
+		}
 	}
 
 } // namespace Pixels

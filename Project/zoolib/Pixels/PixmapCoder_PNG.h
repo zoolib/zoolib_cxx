@@ -23,7 +23,7 @@ void sWritePixmap_PNG(
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const RectPOD& iBounds,
+	const RectPOD& iFrame,
 	const ChanW_Bin& iChanW);
 
 } // namespace Pixels

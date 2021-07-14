@@ -199,7 +199,7 @@ void sWritePixmap_PNG(
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const RectPOD& iBounds,
+	const RectPOD& iFrame,
 	const ChanW_Bin& iChanW)
 	{
 	png_structp write_ptr =
@@ -227,7 +227,7 @@ void sWritePixmap_PNG(
 		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
 			thePixelDescRep.DynamicCast<PixelDescRep_Indexed>())
 			{
-			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iFrame), H(iFrame), 8,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
 				PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
 
@@ -263,7 +263,7 @@ void sWritePixmap_PNG(
 				destPixelDesc = sPixelDesc(EFormatStandard::RGB_24);
 				destPixvalDesc = sPixvalDesc(EFormatStandard::RGB_24);
 				}
-			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iFrame), H(iFrame), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
 		else if (thePixelDescRep.DynamicCast<PixelDescRep_Gray>())
@@ -281,7 +281,7 @@ void sWritePixmap_PNG(
 				destPixelDesc = sPixelDesc(EFormatStandard::Gray_8);
 				destPixvalDesc = sPixvalDesc(EFormatStandard::Gray_8);
 				}
-			::png_set_IHDR(write_ptr, info_ptr, W(iBounds), H(iBounds), 8,
+			::png_set_IHDR(write_ptr, info_ptr, W(iFrame), H(iFrame), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
 		else
@@ -289,12 +289,12 @@ void sWritePixmap_PNG(
 			ZUnimplemented();
 			}
 
-		theRowBufferVector.resize(W(iBounds) * (destPixvalDesc.fDepth / 8));
+		theRowBufferVector.resize(W(iFrame) * (destPixvalDesc.fDepth / 8));
 
 		RasterDesc destRD(destPixvalDesc, theRowBufferVector.size(), 1, false);
-		const RectPOD destBounds = sRectPOD(0, 0, W(iBounds), 1);
+		const RectPOD destFrame = sRectPOD(0, 0, W(iFrame), 1);
 
-		const RectPOD sourceSingleRowBounds = sRectPOD(iBounds.left, 0, iBounds.right, 1);
+		const RectPOD sourceSingleRowFrame = sRectPOD(iFrame.left, 0, iFrame.right, 1);
 
 		if (setjmp(png_jmpbuf(write_ptr)))
 			sThrow_ExhaustedW();
@@ -304,12 +304,12 @@ void sWritePixmap_PNG(
 		int numberOfPasses = ::png_set_interlace_handling(write_ptr);
 		for (int currentPass = 0; currentPass < numberOfPasses; ++currentPass)
 			{
-			for (Ord y = iBounds.top; y < iBounds.bottom; ++y)
+			for (Ord y = iFrame.top; y < iFrame.bottom; ++y)
 				{
 				const void* sourceRowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, y);
 
-				sBlit(iRasterDesc, sourceRowAddress, sourceSingleRowBounds, iPixelDesc,
-					destRD, theRowBuffer, destBounds, destPixelDesc,
+				sBlit(iRasterDesc, sourceRowAddress, sourceSingleRowFrame, iPixelDesc,
+					destRD, theRowBuffer, destFrame, destPixelDesc,
 					eOp_Copy);
 
 				if (setjmp(png_jmpbuf(write_ptr)))
@@ -338,7 +338,7 @@ void sWritePixmap_PNG(const Pixmap& iPixmap, const ChanW_Bin& iChanW)
 		iPixmap.GetBaseAddress(),
 		iPixmap.GetRasterDesc(),
 		iPixmap.GetPixelDesc(),
-		iPixmap.GetBounds(),
+		iPixmap.GetFrame(),
 		iChanW);
 	}
 

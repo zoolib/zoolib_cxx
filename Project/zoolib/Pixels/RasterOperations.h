@@ -20,7 +20,7 @@ void sSetPixval(const RasterDesc& iRD, void* oBaseAddress, int iH, int iV, Pixva
 
 void sFill(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval);
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iBounds, Pixval iPixval);
+void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval);
 
 void sBlitRowPixvals(
 	const PixvalDesc& iSourcePvD, const void* iSourceBase, int iSourceH,
@@ -28,7 +28,7 @@ void sBlitRowPixvals(
 	int iCount);
 
 void sBlitPixvals(
-	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceBounds,
+	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceFrame,
 	const RasterDesc& iDestRD, void* oDestBase, const PointPOD& iDestLocation);
 
 } // namespace Pixels

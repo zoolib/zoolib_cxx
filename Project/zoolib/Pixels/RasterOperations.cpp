@@ -140,20 +140,20 @@ void sFill(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval)
 		}
 	}
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iBounds, Pixval iPixval)
+void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval)
 	{
-	const Ord width = W(iBounds);
+	const Ord width = W(iFrame);
 
 	vector<Pixval> sourcePixvals(width, iPixval);
 
 	PixvalAccessor destAccessor(iRD.fPixvalDesc);
 
-	const Ord height = H(iBounds);
+	const Ord height = H(iFrame);
 
 	for (Ord vCurrent = 0; vCurrent < height; ++vCurrent)
 		{
-		void* rowAddress = sCalcRowAddress(iRD, oBaseAddress, T(iBounds) + vCurrent);
-		destAccessor.SetPixvals(rowAddress, L(iBounds), width, &sourcePixvals[0]);
+		void* rowAddress = sCalcRowAddress(iRD, oBaseAddress, T(iFrame) + vCurrent);
+		destAccessor.SetPixvals(rowAddress, L(iFrame), width, &sourcePixvals[0]);
 		}
 	}
 
@@ -191,23 +191,23 @@ void sBlitRowPixvals(
 	}
 
 void sBlitPixvals(
-	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceBounds,
+	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceFrame,
 	const RasterDesc& iDestRD, void* oDestBase, const PointPOD& iDestLocation)
 	{
-	Ord vCount = H(iSourceBounds);
-	Ord hCount = W(iSourceBounds);
+	Ord vCount = H(iSourceFrame);
+	Ord hCount = W(iSourceFrame);
 
 	if (iSourceRD.fPixvalDesc == iDestRD.fPixvalDesc
 		&& (iSourceRD.fPixvalDesc.fDepth >= 8
-			|| ((iSourceBounds.left | iDestLocation.h | hCount) & 0x07) == 0))
+			|| ((iSourceFrame.left | iDestLocation.h | hCount) & 0x07) == 0))
 		{
-		Ord hOffsetSource = iSourceBounds.left * iSourceRD.fPixvalDesc.fDepth / 8;
+		Ord hOffsetSource = iSourceFrame.left * iSourceRD.fPixvalDesc.fDepth / 8;
 		Ord hOffsetDest = iDestLocation.h * iSourceRD.fPixvalDesc.fDepth / 8;
 		Ord countToCopy = hCount * iSourceRD.fPixvalDesc.fDepth / 8;
 		for (Ord vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const uint8* sourceRowAddress = static_cast<const uint8*>(
-				sCalcRowAddress(iSourceRD, iSourceBase, iSourceBounds.top + vCurrent))
+				sCalcRowAddress(iSourceRD, iSourceBase, iSourceFrame.top + vCurrent))
 				+ hOffsetSource;
 
 			uint8* destRowAddress = static_cast<uint8*>(
@@ -222,7 +222,7 @@ void sBlitPixvals(
 		for (Ord vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const void* sourceRowAddress =
-				sCalcRowAddress(iSourceRD, iSourceBase, iSourceBounds.top + vCurrent);
+				sCalcRowAddress(iSourceRD, iSourceBase, iSourceFrame.top + vCurrent);
 
 			void* destRowAddress =
 				sCalcRowAddress(iDestRD, oDestBase, iDestLocation.v + vCurrent);
@@ -236,7 +236,7 @@ void sBlitPixvals(
 				const size_t count = min(size_t(hCount - hCurrent), kBufSize);
 
 				sourceAccessor.GetPixvals(sourceRowAddress,
-					hCurrent + iSourceBounds.left, count, buffer);
+					hCurrent + iSourceFrame.left, count, buffer);
 
 				destAccessor.SetPixvals(destRowAddress, hCurrent + iDestLocation.h, count, buffer);
 				hCurrent += count;
