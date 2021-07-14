@@ -53,48 +53,48 @@ template <class S, class D>
 static void sMunge_T(
 	void* iBaseAddress, const RasterDesc& iRasterDesc,
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
-	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
+	const RectPOD& iFrame, MungeProc iMungeProc, void* iRefcon)
 	{
-	int hSize = W(iBounds);
-	int vSize = H(iBounds);
+	int hSize = W(iFrame);
+	int vSize = H(iFrame);
 
 	for (int vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
-		void* rowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, iBounds.top + vCurrent);
+		void* rowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, iFrame.top + vCurrent);
 		sMungeRow_T(rowAddress, iRasterDesc.fPixvalDesc,
 				iMapPixvalToRGB, iMapRGBToPixval,
-				iBounds.left, hSize, vCurrent,
+				iFrame.left, hSize, vCurrent,
 				iMungeProc, iRefcon);
 		}
 	}
 
 void sMunge(
 	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc,
-	const RectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
+	const RectPOD& iFrame, MungeProc iMungeProc, void* iRefcon)
 	{
 	const ZP<PDRep> thePDRep = iPixelDesc.GetRep();
 	if (PDRep_Color* thePDRep_Color =
 		thePDRep.DynamicCast<PDRep_Color>())
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePDRep_Color, *thePDRep_Color, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Color, *thePDRep_Color, iFrame, iMungeProc, iRefcon);
 		}
 	else if (PDRep_Indexed* thePDRep_Indexed =
 		thePDRep.DynamicCast<PDRep_Indexed>())
 		{
 		thePDRep_Indexed->BuildReverseLookupIfNeeded();
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePDRep_Indexed, *thePDRep_Indexed, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Indexed, *thePDRep_Indexed, iFrame, iMungeProc, iRefcon);
 		}
 	else if (PDRep_Gray* thePDRep_Gray =
 		thePDRep.DynamicCast<PDRep_Gray>())
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
-			*thePDRep_Gray, *thePDRep_Gray, iBounds, iMungeProc, iRefcon);
+			*thePDRep_Gray, *thePDRep_Gray, iFrame, iMungeProc, iRefcon);
 		}
 	else
 		{
-		sMunge_T(iBaseAddress, iRasterDesc, iPixelDesc, iPixelDesc, iBounds, iMungeProc, iRefcon);
+		sMunge_T(iBaseAddress, iRasterDesc, iPixelDesc, iPixelDesc, iFrame, iMungeProc, iRefcon);
 		}
 	}
 
@@ -102,27 +102,27 @@ void sMunge(
 // MARK: - Public API
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	EOp iOp)
 	{
-	sBlit_T(iSourceRD, iSource, iSourceB, iSourcePD,
+	sBlit_T(iSourceRD, iSource, iSourceF, iSourcePD,
 		iSourceOrigin,
-		iDestRD, oDest, iDestB, iDestPD,
+		iDestRD, oDest, iDestF, iDestPD,
 		iOp);
 	}
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	EOp iOp)
 	{
-	RectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, Ord(realDest.left + W(iSourceB)));
-	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iSourceB)));
+	RectPOD realDest = iDestF;
+	realDest.right = min(realDest.right, Ord(realDest.left + W(iSourceF)));
+	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iSourceF)));
 
-	PointPOD sourceStart = LT(iSourceB);
+	PointPOD sourceStart = LT(iSourceF);
 	sBlit_T(iSourceRD, iSource, iSourcePD,
 		sourceStart,
 		iDestRD, oDest, realDest, iDestPD,
@@ -131,35 +131,35 @@ void sBlit(
 	}
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
-	sBlit_T(iSourceRD, iSource, iSourceB, iSourcePD,
+	sBlit_T(iSourceRD, iSource, iSourceF, iSourcePD,
 		iSourceOrigin,
-		iMatteRD, iMatte, iMatteB, iMattePD,
+		iMatteRD, iMatte, iMatteF, iMattePD,
 		iMatteOrigin,
-		iDestRD, oDest, iDestB, iDestPD,
+		iDestRD, oDest, iDestF, iDestPD,
 		iSourcePremultiplied, iOp);
 	}
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
-	RectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteB)));
-	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteB)));
+	RectPOD realDest = iDestF;
+	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteF)));
+	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteF)));
 
-	PointPOD matteStart = LT(iMatteB);
+	PointPOD matteStart = LT(iMatteF);
 
-	sBlit_T(iSourceRD, iSource, iSourceB, iSourcePD,
+	sBlit_T(iSourceRD, iSource, iSourceF, iSourcePD,
 		iSourceOrigin,
 		iMatteRD, iMatte, iMattePD,
 		matteStart,
@@ -168,17 +168,17 @@ void sBlit(
 	}
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
-	RectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, Ord(realDest.left + W(iSourceB)));
-	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iSourceB)));
+	RectPOD realDest = iDestF;
+	realDest.right = min(realDest.right, Ord(realDest.left + W(iSourceF)));
+	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iSourceF)));
 
-	PointPOD sourceStart = LT(iSourceB);
+	PointPOD sourceStart = LT(iSourceF);
 
 	ZP<PDRep> sourcePDRep = iSourcePD.GetRep();
 	ZP<PDRep> mattePDRep = iMattePD.GetRep();
@@ -192,7 +192,7 @@ void sBlit(
 				{
 				sBlit_T(iSourceRD, iSource, *sourcePDRep_Color,
 					sourceStart,
-					iMatteRD, iMatte, iMatteB, *mattePDRep_Color,
+					iMatteRD, iMatte, iMatteF, *mattePDRep_Color,
 					iMatteOrigin,
 					iDestRD, oDest, realDest, *destPDRep_Color,
 					iSourcePremultiplied, iOp);
@@ -203,27 +203,27 @@ void sBlit(
 
 	sBlit_T(iSourceRD, iSource, iSourcePD,
 		sourceStart,
-		iMatteRD, iMatte, iMatteB, iMattePD,
+		iMatteRD, iMatte, iMatteF, iMattePD,
 		iMatteOrigin,
 		iDestRD, oDest, realDest, iDestPD,
 		iSourcePremultiplied, iOp);
 	}
 
 void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const PD& iSourcePD,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
-	RectPOD realDest = iDestB;
-	int realWidth = min(W(iMatteB), W(iSourceB));
+	RectPOD realDest = iDestF;
+	int realWidth = min(W(iMatteF), W(iSourceF));
 	realDest.right = min(realDest.right, Ord(realDest.left + realWidth));
 
-	int realHeight = min(H(iMatteB), H(iSourceB));
+	int realHeight = min(H(iMatteF), H(iSourceF));
 	realDest.bottom = min(realDest.bottom, Ord(realDest.top + realHeight));
 
-	PointPOD sourceStart = LT(iSourceB);
-	PointPOD matteStart = LT(iMatteB);
+	PointPOD sourceStart = LT(iSourceF);
+	PointPOD matteStart = LT(iMatteF);
 
 	ZP<PDRep> sourcePDRep = iSourcePD.GetRep();
 	ZP<PDRep> mattePDRep = iMattePD.GetRep();
@@ -252,40 +252,40 @@ void sBlit(
 	}
 
 void sColor(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sColor_T(iDestRD, oDest, iDestB, *destPDRep_Color, iColor, iOp);
+		sColor_T(iDestRD, oDest, iDestF, *destPDRep_Color, iColor, iOp);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sColor_T(iDestRD, oDest, iDestB, *destPDRep_Indexed, iColor, iOp);
+		sColor_T(iDestRD, oDest, iDestF, *destPDRep_Indexed, iColor, iOp);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sColor_T(iDestRD, oDest, iDestB, *destPDRep_Gray, iColor, iOp);
+		sColor_T(iDestRD, oDest, iDestF, *destPDRep_Gray, iColor, iOp);
 		}
 	else
 		{
-		sColor_T(iDestRD, oDest, iDestB, iDestPD, iColor, iOp);
+		sColor_T(iDestRD, oDest, iDestF, iDestPD, iColor, iOp);
 		}
 	}
 
 void sColor(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
-	RectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteB)));
-	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteB)));
+	RectPOD realDest = iDestF;
+	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteF)));
+	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteF)));
 
-	PointPOD matteStart = LT(iMatteB);
+	PointPOD matteStart = LT(iMatteF);
 
 	ZP<PDRep> mattePDRep = iMattePD.GetRep();
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
@@ -323,15 +323,15 @@ void sColor(
 	}
 
 void sColor(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
-	sColorTile_T(iMatteRD, iMatte, iMatteB, iMattePD,
+	sColorTile_T(iMatteRD, iMatte, iMatteF, iMattePD,
 		iMatteOrigin,
-		iDestRD, oDest, iDestB, iDestPD,
+		iDestRD, oDest, iDestF, iDestPD,
 		iColor,
 		iOp);
 	}
@@ -340,104 +340,104 @@ void sColor(
 #pragma mark -
 
 void sInvert(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD)
 	{
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sInvert_T(iDestRD, oDest, iDestB, *destPDRep_Color);
+		sInvert_T(iDestRD, oDest, iDestF, *destPDRep_Color);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sInvert_T(iDestRD, oDest, iDestB, *destPDRep_Indexed);
+		sInvert_T(iDestRD, oDest, iDestF, *destPDRep_Indexed);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sInvert_T(iDestRD, oDest, iDestB, *destPDRep_Gray);
+		sInvert_T(iDestRD, oDest, iDestF, *destPDRep_Gray);
 		}
 	else
 		{
-		sInvert_T(iDestRD, oDest, iDestB, iDestPD);
+		sInvert_T(iDestRD, oDest, iDestF, iDestPD);
 		}
 	}
 
 void sOpaque(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount)
 	{
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sOpaque_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
+		sOpaque_T(iDestRD, oDest, iDestF, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sOpaque_T(iDestRD, oDest, iDestB, *destPDRep_Indexed, iAmount);
+		sOpaque_T(iDestRD, oDest, iDestF, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sOpaque_T(iDestRD, oDest, iDestB, *destPDRep_Gray, iAmount);
+		sOpaque_T(iDestRD, oDest, iDestF, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sOpaque_T(iDestRD, oDest, iDestB, iDestPD, iAmount);
+		sOpaque_T(iDestRD, oDest, iDestF, iDestPD, iAmount);
 		}
 	}
 
 void sDarken(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount)
 	{
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sDarken_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
+		sDarken_T(iDestRD, oDest, iDestF, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sDarken_T(iDestRD, oDest, iDestB, *destPDRep_Indexed, iAmount);
+		sDarken_T(iDestRD, oDest, iDestF, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sDarken_T(iDestRD, oDest, iDestB, *destPDRep_Gray, iAmount);
+		sDarken_T(iDestRD, oDest, iDestF, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sDarken_T(iDestRD, oDest, iDestB, iDestPD, iAmount);
+		sDarken_T(iDestRD, oDest, iDestF, iDestPD, iAmount);
 		}
 	}
 
 void sFade(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount)
 	{
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
 	if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 		{
-		sFade_T(iDestRD, oDest, iDestB, *destPDRep_Color, iAmount);
+		sFade_T(iDestRD, oDest, iDestF, *destPDRep_Color, iAmount);
 		}
 	else if (PDRep_Indexed* destPDRep_Indexed = destPDRep.DynamicCast<PDRep_Indexed>())
 		{
-		sFade_T(iDestRD, oDest, iDestB, *destPDRep_Indexed, iAmount);
+		sFade_T(iDestRD, oDest, iDestF, *destPDRep_Indexed, iAmount);
 		}
 	else if (PDRep_Gray* destPDRep_Gray = destPDRep.DynamicCast<PDRep_Gray>())
 		{
-		sFade_T(iDestRD, oDest, iDestB, *destPDRep_Gray, iAmount);
+		sFade_T(iDestRD, oDest, iDestF, *destPDRep_Gray, iAmount);
 		}
 	else
 		{
-		sFade_T(iDestRD, oDest, iDestB, iDestPD, iAmount);
+		sFade_T(iDestRD, oDest, iDestF, iDestPD, iAmount);
 		}
 	}
 
 void sApplyMatte(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const PD& iDestPD)
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD)
 	{
 	ZAssertStop(1, iMattePD.HasAlpha());
 	ZAssertStop(1, iDestPD.HasAlpha());
-	RectPOD realDest = iDestB;
-	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteB)));
-	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteB)));
+	RectPOD realDest = iDestF;
+	realDest.right = min(realDest.right, Ord(realDest.left + W(iMatteF)));
+	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iMatteF)));
 
-	PointPOD matteStart = LT(iMatteB);
+	PointPOD matteStart = LT(iMatteF);
 
 	ZP<PDRep> mattePDRep = iMattePD.GetRep();
 	ZP<PDRep> destPDRep = iDestPD.GetRep();
@@ -455,7 +455,7 @@ void sApplyMatte(
 
 	sApplyMatte_T(iMatteRD, iMatte, iMattePD,
 		matteStart,
-		iDestRD, oDest, iDestB, iDestPD);
+		iDestRD, oDest, iDestF, iDestPD);
 	}
 
 } // namespace Pixels

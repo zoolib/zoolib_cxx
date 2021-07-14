@@ -68,23 +68,23 @@ struct Compose_Plus
 
 template <class S, class D>
 void sTile_SD_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 	const void* sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
@@ -94,11 +94,11 @@ void sTile_SD_T(
 		sourceHStart,
 		iSourcePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -122,7 +122,7 @@ void sTile_SD_T(
 		if (currentDestV >= destBottom)
 			break;
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 
  		++sourceV;
 		if (sourceV >= sourceBottom)
@@ -135,24 +135,24 @@ void sTile_SD_T(
 
 template <class S, class D, class O>
 void sTile_SDO_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const O& iOp)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
@@ -163,11 +163,11 @@ void sTile_SDO_T(
 		sourceHStart,
 		iSourcePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -200,45 +200,45 @@ void sTile_SDO_T(
 		sourceRowAddress = sCalcRowAddress(iSourceRD, iSource, sourceV);
 		sourceIter.Reset(sourceRowAddress, sourceHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 template <class S, class M, class D>
 void sTile_SMD_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
 
@@ -256,11 +256,11 @@ void sTile_SMD_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -336,45 +336,45 @@ void sTile_SMD_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 template <class S, class M, class D, class O>
 void sTile_SMDO_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, const O& iOp)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
 
@@ -392,11 +392,11 @@ void sTile_SMDO_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -478,7 +478,7 @@ void sTile_SMDO_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
@@ -489,7 +489,7 @@ template <class S, class D>
 void sCopy_SD_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD)
 	{
 	PixelIterR_T<S> sourceIter(
 		iSourceRD.fPixvalDesc,
@@ -499,12 +499,12 @@ void sCopy_SD_T(
 
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -524,7 +524,7 @@ void sCopy_SD_T(
 			sCalcRowAddress(iSourceRD, iSource, iSourceStart.v + row), iSourceStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -532,7 +532,7 @@ template <class S, class D, class O>
 void sCopy_SDO_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const O& iOp)
 	{
 	PixelIterR_T<S> sourceIter(
@@ -543,12 +543,12 @@ void sCopy_SDO_T(
 
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -570,7 +570,7 @@ void sCopy_SDO_T(
 			sCalcRowAddress(iSourceRD, iSource, iSourceStart.v + row), iSourceStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -580,7 +580,7 @@ void sCopy_SMD_T(
 	PointPOD iSourceStart,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
 	PixelIterR_T<S> sourceIter(
@@ -597,12 +597,12 @@ void sCopy_SMD_T(
 
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -644,7 +644,7 @@ void sCopy_SMD_T(
 			sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -654,7 +654,7 @@ void sCopy_SMDO_T(
 	PointPOD iSourceStart,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied,
 	const O& iOp)
 	{
@@ -672,12 +672,12 @@ void sCopy_SMDO_T(
 
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -725,7 +725,7 @@ void sCopy_SMDO_T(
 			sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -734,26 +734,26 @@ void sCopy_SMDO_T(
 
 template <class S, class M, class D>
 void sTileSource_SMD_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
@@ -771,11 +771,11 @@ void sTileSource_SMD_T(
 		iMatteStart.h,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -835,33 +835,33 @@ void sTileSource_SMD_T(
 
 		matteIter.Reset(sCalcRowAddress(iMatteRD, iMatte, matteV), matteV);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 template <class S, class M, class D, class O>
 void sTileSource_SMDO_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied,
 	const O& iOp)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int sourceLeft = iSourceB.left;
-	int sourceWidth = W(iSourceB);
-	int sourceHStart = iSourceB.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
-	int sourceCountHStart = iSourceB.right - sourceHStart;
+	int sourceLeft = iSourceF.left;
+	int sourceWidth = W(iSourceF);
+	int sourceHStart = iSourceF.left + sPositiveModulus(iSourceOrigin.h, sourceWidth);
+	int sourceCountHStart = iSourceF.right - sourceHStart;
 	int sourceCountHReset = sourceWidth;
 
-	int sourceTop = iSourceB.top;
-	int sourceBottom = iSourceB.bottom;
-	int sourceHeight = H(iSourceB);
-	int sourceVStart = iSourceB.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
+	int sourceTop = iSourceF.top;
+	int sourceBottom = iSourceF.bottom;
+	int sourceHeight = H(iSourceF);
+	int sourceVStart = iSourceF.top + sPositiveModulus(iSourceOrigin.v, sourceHeight);
 
 	int sourceV = sourceVStart;
 
@@ -879,11 +879,11 @@ void sTileSource_SMDO_T(
 		iMatteStart.h,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -949,7 +949,7 @@ void sTileSource_SMDO_T(
 
 		matteIter.Reset(sCalcRowAddress(iMatteRD, iMatte, matteV), matteV);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
@@ -960,24 +960,24 @@ template <class S, class M, class D>
 void sTileMatte_SMD_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
 	PixelIterR_T<S> sourceIter(
@@ -994,11 +994,11 @@ void sTileMatte_SMD_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -1058,7 +1058,7 @@ void sTileMatte_SMD_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
@@ -1067,24 +1067,24 @@ template <class S, class M, class D, class O>
 void sTileMatte_SMDO_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, const O& iOp)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int sourceV = iSourceStart.v;
 	PixelIterR_T<S> sourceIter(
@@ -1101,11 +1101,11 @@ void sTileMatte_SMDO_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -1171,23 +1171,23 @@ void sTileMatte_SMDO_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 // =================================================================================================
 // MARK: - Fill/color variants
 
-static void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestB,
+static void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestF,
 			uint32 iPixval)
 	{
 	PixvalIterW destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left);
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1201,24 +1201,24 @@ static void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestB,
 			break;
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
 template <class D, class O>
 void sColor_DO_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor,
 	const O& iOp)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1236,7 +1236,7 @@ void sColor_DO_T(
 			break;
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -1244,7 +1244,7 @@ template <class M, class D>
 void sColor_MD_T(
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor)
 	{
 	PixelIterR_T<M> matteIter(
@@ -1255,12 +1255,12 @@ void sColor_MD_T(
 
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1280,7 +1280,7 @@ void sColor_MD_T(
 			sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -1288,7 +1288,7 @@ template <class M, class D, class O>
 void sColor_MDO_T(
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor,
 	const O& iOp)
 	{
@@ -1300,12 +1300,12 @@ void sColor_MDO_T(
 
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1327,30 +1327,30 @@ void sColor_MDO_T(
 			sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
 template <class M, class D>
 void sColorTile_MD_T(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
@@ -1360,11 +1360,11 @@ void sColorTile_MD_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -1395,30 +1395,30 @@ void sColorTile_MD_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 template <class M, class D, class O>
 void sColorTile_MDO_T(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor, const O& iOp)
 	{
-	int destWidth = W(iDestB);
-	int destBottom = iDestB.bottom;
+	int destWidth = W(iDestF);
+	int destBottom = iDestF.bottom;
 
-	int matteLeft = iMatteB.left;
-	int matteWidth = W(iMatteB);
-	int matteHStart = iMatteB.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
-	int matteCountHStart = iMatteB.right - matteHStart;
+	int matteLeft = iMatteF.left;
+	int matteWidth = W(iMatteF);
+	int matteHStart = iMatteF.left + sPositiveModulus(iMatteOrigin.h, matteWidth);
+	int matteCountHStart = iMatteF.right - matteHStart;
 	int matteCountHReset = matteWidth;
 
-	int matteTop = iMatteB.top;
-	int matteBottom = iMatteB.bottom;
-	int matteHeight = H(iMatteB);
-	int matteVStart = iMatteB.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
+	int matteTop = iMatteF.top;
+	int matteBottom = iMatteF.bottom;
+	int matteHeight = H(iMatteF);
+	int matteVStart = iMatteF.top + sPositiveModulus(iMatteOrigin.v, matteHeight);
 
 	int matteV = matteVStart;
 	const void* matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
@@ -1428,11 +1428,11 @@ void sColorTile_MDO_T(
 		matteHStart,
 		iMattePD);
 
-	int currentDestV = iDestB.top;
+	int currentDestV = iDestF.top;
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
 		sCalcRowAddress(iDestRD, oDest, currentDestV),
-		iDestB.left,
+		iDestF.left,
 		iDestPD);
 
 	for (;;)
@@ -1465,19 +1465,19 @@ void sColorTile_MDO_T(
 		matteRowAddress = sCalcRowAddress(iMatteRD, iMatte, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, currentDestV), iDestF.left);
 		}
 	}
 
 // =================================================================================================
 // MARK: - Blit dispatchers
 
-// Replicate iSourceB over iDestB, aligning iSourceOrigin with iDestB.TopLeft()
+// Replicate iSourceF over iDestF, aligning iSourceOrigin with iDestF.TopLeft()
 template <class S, class D>
 void sBlit_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	EOp iOp)
 	{
 	switch (iOp)
@@ -1486,39 +1486,39 @@ void sBlit_T(
 		case eOp_Copy:
 			{
 			sTile_SD_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iDestRD, oDest, iDestB, iDestPD);
+				iDestRD, oDest, iDestF, iDestPD);
 			break;
 			}
 		case eOp_Over:
 			{
 			sTile_SDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				Compose_Over());
 			break;
 			}
 		case eOp_Plus:
 			{
 			sTile_SDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				Compose_Plus());
 			break;
 			}
 		}
 	}
 
-// Copy source to iDestB without replication. Actual drawn rectangle will be smaller
-// than iDestB if iSourceB is smaller.
+// Copy source to iDestF without replication. Actual drawn rectangle will be smaller
+// than iDestF if iSourceF is smaller.
 template <class S, class D>
 void sBlit_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	EOp iOp)
 	{
 	switch (iOp)
@@ -1529,7 +1529,7 @@ void sBlit_T(
 			sCopy_SD_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iDestRD, oDest, iDestB, iDestPD);
+				iDestRD, oDest, iDestF, iDestPD);
 			break;
 			}
 		case eOp_Over:
@@ -1537,7 +1537,7 @@ void sBlit_T(
 			sCopy_SDO_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				Compose_Over());
 			break;
 			}
@@ -1546,21 +1546,21 @@ void sBlit_T(
 			sCopy_SDO_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				Compose_Plus());
 			break;
 			}
 		}
 	}
 
-// Replicate iSourceB masked by replicated iMatteB.
+// Replicate iSourceF masked by replicated iMatteF.
 template <class S, class M, class D>
 void sBlit_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	switch (iOp)
@@ -1569,22 +1569,22 @@ void sBlit_T(
 		case eOp_Copy:
 			{
 			sTile_SMD_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied);
 			break;
 			}
 		case eOp_Over:
 			{
 			sTile_SMDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Over());
 			break;
@@ -1592,11 +1592,11 @@ void sBlit_T(
 		case eOp_Plus:
 			{
 			sTile_SMDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Plus());
 			break;
@@ -1604,14 +1604,14 @@ void sBlit_T(
 		}
 	}
 
-// Replicate iSourceB masked by iMatteB.
+// Replicate iSourceF masked by iMatteF.
 template <class S, class M, class D>
 void sBlit_T(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceB, const S& iSourcePD,
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const S& iSourcePD,
 	PointPOD iSourceOrigin,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	switch (iOp)
@@ -1620,22 +1620,22 @@ void sBlit_T(
 		case eOp_Copy:
 			{
 			sTileSource_SMD_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied);
 			break;
 			}
 		case eOp_Over:
 			{
 			sTileSource_SMDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Over());
 			break;
@@ -1643,11 +1643,11 @@ void sBlit_T(
 		case eOp_Plus:
 			{
 			sTileSource_SMDO_T(
-				iSourceRD, iSource, iSourceB, iSourcePD,
+				iSourceRD, iSource, iSourceF, iSourcePD,
 				iSourceOrigin,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Plus());
 			break;
@@ -1655,14 +1655,14 @@ void sBlit_T(
 		}
 	}
 
-// Draw iSourceB masked by replicated iMatteB.
+// Draw iSourceF masked by replicated iMatteF.
 template <class S, class M, class D>
 void sBlit_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	switch (iOp)
@@ -1673,9 +1673,9 @@ void sBlit_T(
 			sTileMatte_SMD_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied);
 			break;
 			}
@@ -1684,9 +1684,9 @@ void sBlit_T(
 			sTileMatte_SMDO_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Over());
 			break;
@@ -1696,9 +1696,9 @@ void sBlit_T(
 			sTileMatte_SMDO_T(
 				iSourceRD, iSource, iSourcePD,
 				iSourceStart,
-				iMatteRD, iMatte, iMatteB, iMattePD,
+				iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Plus());
 			break;
@@ -1706,14 +1706,14 @@ void sBlit_T(
 		}
 	}
 
-// Draw iSourceB masked by iMatteB into iDestB.
+// Draw iSourceF masked by iMatteF into iDestF.
 template <class S, class M, class D>
 void sBlit_T(
 	const RD& iSourceRD, const void* iSource, const S& iSourcePD,
 	PointPOD iSourceStart,
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	bool iSourcePremultiplied, EOp iOp)
 	{
 	switch (iOp)
@@ -1726,7 +1726,7 @@ void sBlit_T(
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied);
 			break;
 			}
@@ -1737,7 +1737,7 @@ void sBlit_T(
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Over());
 			break;
@@ -1749,7 +1749,7 @@ void sBlit_T(
 				iSourceStart,
 				iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iSourcePremultiplied,
 				Compose_Plus());
 			break;
@@ -1757,10 +1757,10 @@ void sBlit_T(
 		}
 	}
 
-// Fill iDestB with iColor
+// Fill iDestF with iColor
 template <class D>
 void sColor_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
@@ -1769,19 +1769,19 @@ void sColor_T(
 		default:
 		case eOp_Copy:
 			{
-			sFillPixval(iDestRD, oDest, iDestB, iDestPD.AsPixval(iColor));
+			sFillPixval(iDestRD, oDest, iDestF, iDestPD.AsPixval(iColor));
 			break;
 			}
 		case eOp_Over:
 			{
-			sColor_DO_T(iDestRD, oDest, iDestB, iDestPD,
+			sColor_DO_T(iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Over());
 			break;
 			}
 		case eOp_Plus:
 			{
-			sColor_DO_T(iDestRD, oDest, iDestB, iDestPD,
+			sColor_DO_T(iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Plus());
 			break;
@@ -1789,12 +1789,12 @@ void sColor_T(
 		}
 	}
 
-// Fill iDestB matted
+// Fill iDestF matted
 template <class M, class D>
 void sColor_T(
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
@@ -1805,7 +1805,7 @@ void sColor_T(
 			{
 			sColor_MD_T(iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor);
 			break;
 			}
@@ -1813,7 +1813,7 @@ void sColor_T(
 			{
 			sColor_MDO_T(iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Over());
 			break;
@@ -1822,7 +1822,7 @@ void sColor_T(
 			{
 			sColor_MDO_T(iMatteRD, iMatte, iMattePD,
 				iMatteStart,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Plus());
 			break;
@@ -1833,9 +1833,9 @@ void sColor_T(
 // Fill iDestbounds with tiled matte
 template <class M, class D>
 void sColorTile_T(
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteB, const M& iMattePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const M& iMattePD,
 	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD,
 	const RGBA& iColor,
 	EOp iOp)
 	{
@@ -1844,26 +1844,26 @@ void sColorTile_T(
 		default:
 		case eOp_Copy:
 			{
-			sColorTile_MD_T(iMatteRD, iMatte, iMatteB, iMattePD,
+			sColorTile_MD_T(iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor);
 			break;
 			}
 		case eOp_Over:
 			{
-			sColorTile_MDO_T(iMatteRD, iMatte, iMatteB, iMattePD,
+			sColorTile_MDO_T(iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Over());
 			break;
 			}
 		case eOp_Plus:
 			{
-			sColorTile_MDO_T(iMatteRD, iMatte, iMatteB, iMattePD,
+			sColorTile_MDO_T(iMatteRD, iMatte, iMatteF, iMattePD,
 				iMatteOrigin,
-				iDestRD, oDest, iDestB, iDestPD,
+				iDestRD, oDest, iDestF, iDestPD,
 				iColor,
 				Compose_Plus());
 			break;
@@ -1873,16 +1873,16 @@ void sColorTile_T(
 
 // Invert iDestbounds
 template <class D>
-void sInvert_T(const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD)
+void sInvert_T(const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1901,23 +1901,23 @@ void sInvert_T(const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& i
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
 // Multiply r,g, b & alpha by iAmount
 template <class D>
 void sOpaque_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1933,23 +1933,23 @@ void sOpaque_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
 // Multiply r, g, b by iAmount, leaving alpha alone.
 template <class D>
 void sDarken_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -1968,23 +1968,23 @@ void sDarken_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
 // Multiply alpha by iAmount, leaving r,g,b alone
 template <class D>
 void sFade_T(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD, Comp iAmount)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD, Comp iAmount)
 	{
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -2001,7 +2001,7 @@ void sFade_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+		destIter.Reset(sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
@@ -2010,7 +2010,7 @@ template <class M, class D>
 void sApplyMatte_T(
 	const RD& iMatteRD, const void* iMatte, const M& iMattePD,
 	PointPOD iMatteStart,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestB, const D& iDestPD)
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const D& iDestPD)
 	{
 	PixelIterR_T<M> matteIter(
 		iMatteRD.fPixvalDesc,
@@ -2020,12 +2020,12 @@ void sApplyMatte_T(
 
 	PixelIterRW_T<D> destIter(
 		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestB.top),
-		iDestB.left,
+		sCalcRowAddress(iDestRD, oDest, iDestF.top),
+		iDestF.left,
 		iDestPD);
 
-	int destWidth = W(iDestB);
-	int destHeight = H(iDestB);
+	int destWidth = W(iDestF);
+	int destHeight = H(iDestF);
 	int row = 0;
 	for (;;)
 		{
@@ -2045,7 +2045,7 @@ void sApplyMatte_T(
 			sCalcRowAddress(iMatteRD, iMatte, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestB.top + row), iDestB.left);
+			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
 		}
 	}
 
