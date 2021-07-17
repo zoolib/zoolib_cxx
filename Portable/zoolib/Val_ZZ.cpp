@@ -106,13 +106,6 @@ const ZQ<Val_ZZ> Seq_ZZ::QGet(size_t iIndex) const
 	return null;
 	}
 
-//const Val_ZZ Seq_ZZ::DGet(const Val_ZZ& iDefault, size_t iIndex) const
-//	{
-//	if (const Val_ZZ* theVal = this->PGet(iIndex))
-//		return *theVal;
-//	return iDefault;
-//	}
-
 const Val_ZZ& Seq_ZZ::Get(size_t iIndex) const
 	{
 	if (const Val_ZZ* theVal = this->PGet(iIndex))
@@ -470,20 +463,6 @@ const ZQ<Val_ZZ> Map_ZZ::QGet(const Index_t& iIndex) const
 		return *theVal;
 	return null;
 	}
-
-//const Val_ZZ& Map_ZZ::DGet(const Val_ZZ& iDefault, const Name_t& iName) const
-//	{
-//	if (const Val_ZZ* theVal = this->PGet(iName))
-//		return *theVal;
-//	return iDefault;
-//	}
-
-//const Val_ZZ& Map_ZZ::DGet(const Val_ZZ& iDefault, const Index_t& iIndex) const
-//	{
-//	if (const Val_ZZ* theVal = this->PGet(iIndex))
-//		return *theVal;
-//	return iDefault;
-//	}
 
 const Val_ZZ& Map_ZZ::Get(const Name_t& iName) const
 	{

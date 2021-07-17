@@ -58,13 +58,6 @@ public:
 		return null;
 		}
 
-//	const Val_t& DGet(const Val_t& iDefault, const Name_t& iName) const
-//		{
-//		if (const Val_t* theVal = this->PGet(iName))
-//			return *theVal;
-//		return iDefault;
-//		}
-
 	const Val_t& Get(const Name_t& iName) const
 		{
 		if (const Val_t* theVal = this->PGet(iName))
@@ -87,14 +80,6 @@ public:
 			return *theVal;
 		return null;
 		}
-
-//	template <class S>
-//	const S& DGet(const S& iDefault, const Name_t& iName) const
-//		{
-//		if (const S* theVal = this->PGet<S>(iName))
-//			return *theVal;
-//		return iDefault;
-//		}
 
 	template <class S>
 	const S& Get(const Name_t& iName) const

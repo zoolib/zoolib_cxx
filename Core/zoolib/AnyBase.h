@@ -50,14 +50,6 @@ public:
 		return null;
 		}
 
-//	template <class S>
-//	const S& DGet(const S& iDefault) const
-//		{
-//		if (const S* theP = this->PGet<S>())
-//			return *theP;
-//		return iDefault;
-//		}
-
 	template <class S>
 	const S& Get() const
 		{
@@ -70,14 +62,6 @@ public:
 	S* PMut()
 		{ return static_cast<S*>(pFetchMutable(typeid(S))); }
 
-//	template <class S>
-//	S& DMut(const S& iDefault)
-//		{
-//		if (const S* theP = this->PGet<S>())
-//			return *theP;
-//		pDtor();
-//		return pCtorRet_T<S>(iDefault);
-//		}
 
 	template <class S>
 	S& Mut()
@@ -514,10 +498,6 @@ template <class S>
 const ZQ<S> sQGet(const AnyBase& iAny)
 	{ return iAny.template QGet<S>(); }
 
-//template <class S>
-//const S& sDGet(const S& iDefault, const AnyBase& iAny)
-//	{ return iAny.template DGet<S>(iDefault); }
-
 template <class S>
 const S& sGet(const AnyBase& iAny)
 	{ return iAny.template Get<S>(); }
@@ -525,10 +505,6 @@ const S& sGet(const AnyBase& iAny)
 template <class S>
 S* sPMut(AnyBase& ioAny)
 	{ return ioAny.template PMut<S>(); }
-
-//template <class S>
-//S& sDMut(const S& iDefault, AnyBase& ioAny)
-//	{ return ioAny.template DMut<S>(iDefault); }
 
 template <class S>
 S& sMut(AnyBase& ioAny)

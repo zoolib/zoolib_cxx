@@ -87,14 +87,6 @@ const ZQ<Type_p> sQGet(const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
 	return null;
 	}
 
-//template <class Type_p, class Tag_p>
-//const Type_p& sDGet(const Type_p& iDefault, const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
-//	{
-//	if (const Type_p* theVal = sPGet(iCountedVal))
-//		return *theVal;
-//	return iDefault;
-//	}
-
 template <class Type_p, class Tag_p>
 const Type_p& sGet(const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
 	{
@@ -110,14 +102,6 @@ Type_p* sPMut(const ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)
 		return &ioCountedVal->Mut();
 	return nullptr;
 	}
-
-//template <class Type_p, class Tag_p>
-//Type_p& sDMut(const Type_p& iDefault, ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)
-//	{
-//	if (not ioCountedVal)
-//		ioCountedVal = new CountedVal<Type_p,Tag_p>(iDefault);
-//	return ioCountedVal->Mut();
-//	}
 
 template <class Type_p, class Tag_p>
 Type_p& sMut(ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)

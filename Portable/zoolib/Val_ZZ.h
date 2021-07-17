@@ -55,7 +55,6 @@ public:
 	Val_ZZ* PMut(size_t iIndex);
 	const Val_ZZ* PGet(size_t iIndex) const;
 	const ZQ<Val_ZZ> QGet(size_t iIndex) const;
-//	const Val_ZZ DGet(const Val_ZZ& iDefault, size_t iIndex) const;
 	const Val_ZZ& Get(size_t iIndex) const;
 
 	template <class S>
@@ -73,14 +72,6 @@ public:
 			return theVal->QGet<S>();
 		return null;
 		}
-
-//	template <class S>
-//	const S& DGet(const S& iDefault, size_t iIndex) const
-//		{
-//		if (const S* theVal = this->PGet<S>(iIndex))
-//			return *theVal;
-//		return iDefault;
-//		}
 
 	template <class S>
 	const S& Get(size_t iIndex) const
@@ -118,10 +109,6 @@ public:
 	template <class S>
 	S& Mut(size_t iIndex)
 		{ return this->Mut(iIndex).Mut<S>(); }
-
-//	template <class S>
-//	S& DMut(const S& iDefault, size_t iIndex)
-//		{ return this->Mut(iIndex).DMut(iDefault); }
 
 // Operators
 	bool operator==(const Seq_ZZ& r) const
@@ -237,9 +224,6 @@ public:
 	const ZQ<Val_ZZ> QGet(const Name_t& iName) const;
 	const ZQ<Val_ZZ> QGet(const Index_t& iIndex) const;
 
-//	const Val_ZZ& DGet(const Val_ZZ& iDefault, const Name_t& iName) const;
-//	const Val_ZZ& DGet(const Val_ZZ& iDefault, const Index_t& iIndex) const;
-
 	const Val_ZZ& Get(const Name_t& iName) const;
 	const Val_ZZ& Get(const Index_t& iIndex) const;
 
@@ -277,22 +261,6 @@ public:
 			return theVal->QGet<S>();
 		return null;
 		}
-
-//	template <class S>
-//	const S& DGet(const S& iDefault, const Name_t& iName) const
-//		{
-//		if (const S* theVal = this->PGet<S>(iName))
-//			return *theVal;
-//		return iDefault;
-//		}
-
-//	template <class S>
-//	const S& DGet(const S& iDefault, const Index_t& iIndex) const
-//		{
-//		if (const S* theVal = this->PGet<S>(iIndex))
-//			return *theVal;
-//		return iDefault;
-//		}
 
 	template <class S>
 	const S& Get(const Name_t& iName) const
@@ -346,15 +314,6 @@ public:
 	template <class S>
 	S& Mut(const Name_t& iName)
 		{ return this->Mut(iName).Mut<S>(); }
-
-//	template <class S>
-//	S& DMut(const S& iDefault, const Name_t& iName)
-//		{
-//		if (S* theVal = this->PMut<S>(iName))
-//			return *theVal;
-//		this->Set(iName, iDefault);
-//		return *this->PMut<S>(iName);
-//		}
 
 	Index_t Begin() const;
 	Index_t End() const;
@@ -423,17 +382,11 @@ inline const Val_ZZ* sPGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 inline const ZQ<Val_ZZ> sQGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 	{ return iMap.QGet(iName); }
 
-//inline const Val_ZZ& sDGet(const Val_ZZ& iDefault, const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
-//	{ return iMap.DGet(iDefault, iName); }
-
 inline const Val_ZZ& sGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 	{ return iMap.Get(iName); }
 
 inline Val_ZZ* sPMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.PMut(iName); }
-
-//inline Val_ZZ& sDMut(const Val_ZZ& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
-//	{ return ioMap.DMut(iDefault, iName); }
 
 inline Val_ZZ& sMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.Mut(iName); }
@@ -451,10 +404,6 @@ template <class S>
 const ZQ<S> sQGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 	{ return iMap.QGet<S>(iName); }
 
-//template <class S>
-//const S& sDGet(const S& iDefault, const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
-//	{ return iMap.DGet<S>(iDefault, iName); }
-
 template <class S>
 const S& sGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 	{ return iMap.Get<S>(iName); }
@@ -462,10 +411,6 @@ const S& sGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 template <class S>
 S* sPMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.PMut<S>(iName); }
-
-//template <class S>
-//S& sDMut(const S& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
-//	{ return ioMap.DMut<S>(iDefault, iName); }
 
 template <class S>
 S& sMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)

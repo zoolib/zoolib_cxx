@@ -232,13 +232,6 @@ public:
 		return nullptr;
 		}
 
-//	const T& DGet(const T& iDefault) const
-//		{
-//		if (fHasValue)
-//			return *sFetch_T<T>(fBytes);
-//		return iDefault;
-//		}
-
 	const T& Get() const
 		{
 		if (fHasValue)
@@ -252,16 +245,6 @@ public:
 			return sFetch_T<T>(fBytes);
 		return nullptr;
 		}
-
-//	T& DMut(const T& iDefault)
-//		{
-//		if (not fHasValue)
-//			{
-//			sCtor_T<T>(fBytes, iDefault);
-//			fHasValue = true;
-//			}
-//		return *sFetch_T<T>(fBytes);
-//		}
 
 	T& Mut()
 		{
@@ -482,10 +465,6 @@ template <class T>
 const T* sPGet(const ZQ<T>& iQ)
 	{ return iQ.PGet(); }
 
-//template <class T>
-//const T& sDGet(const T& iDefault, const ZQ<T>& iQ)
-//	{ return iQ.DGet(iDefault); }
-
 template <class T>
 const T& sGet(const ZQ<T>& iQ)
 	{ return iQ.Get(); }
@@ -493,10 +472,6 @@ const T& sGet(const ZQ<T>& iQ)
 template <class T>
 T* sPMut(ZQ<T>& ioQ)
 	{ return ioQ.PMut(); }
-
-//template <class T>
-//T& sDMut(const T& iDefault, ZQ<T>& ioQ)
-//	{ return ioQ.DMut(iDefault); }
 
 template <class T>
 T& sMut(ZQ<T>& ioQ)

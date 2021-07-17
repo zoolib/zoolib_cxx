@@ -46,28 +46,6 @@ sPGet(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	return &ii->second;
 	}
 
-//template <class Map_p>
-//	EnableIf_t<IsAMap<Map_p>::value,
-//const typename Map_p::mapped_type&>
-//sDGet(const typename Map_p::mapped_type& iDefault,
-//	const Map_p& iMap, const typename Map_p::key_type& iKey)
-//	{
-//	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
-//		return *theP;
-//	return iDefault;
-//	}
-
-//template <class Map_p>
-//	EnableIf_t<IsAMap<Map_p>::value,
-//typename Map_p::mapped_type>
-//sDGet(typename Map_p::mapped_type&& rDefault,
-//	const Map_p& iMap, const typename Map_p::key_type& iKey)
-//	{
-//	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
-//		return *theP;
-//	return std::move(rDefault);
-//	}
-
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
 const ZQ<typename Map_p::mapped_type>>
@@ -101,28 +79,6 @@ sPMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 		return nullptr;
 	return &ii->second;
 	}
-
-//template <class Map_p>
-//	EnableIf_t<IsAMap<Map_p>::value,
-//typename Map_p::mapped_type&>
-//sDMut(const typename Map_p::mapped_type& iDefault,
-//	Map_p& ioMap, const typename Map_p::key_type& iKey)
-//	{
-//	std::pair<typename Map_p::iterator, bool> ii =
-//		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
-//	return ii.first->second;
-//	}
-
-//template <class Map_p>
-//	EnableIf_t<IsAMap<Map_p>::value,
-//typename Map_p::mapped_type&>
-//sDMut(typename Map_p::mapped_type&& rDefault,
-//	Map_p& ioMap, const typename Map_p::key_type& iKey)
-//	{
-//	std::pair<typename Map_p::iterator, bool> ii =
-//		ioMap.insert(typename Map_p::value_type(iKey, std::move(rDefault)));
-//	return ii.first->second;
-//	}
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
