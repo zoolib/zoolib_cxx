@@ -844,6 +844,12 @@ bool Melange_Client::Kill()
 	fJob.second.Clear();
 	if (fChanner)
 		sAbort(*fChanner);
+	// Ideally we'd propogate some kind of Cancel call through fFactory, but that's
+	// complicated at the moment -- in particular the actual connection is happening
+	// in dynmically allocated instances of NetName, so we'd need mechanism to track
+	// them, or be able to pass in our own CancelIndicated object when we call them
+	// so they can hook onto it and respond. Process shutdown will thus be delayed till
+	// the last connection attempt times out, which is about 10 seconds right now.
 	fCnd.Broadcast();
 	return true;
 	}
