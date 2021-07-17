@@ -15,6 +15,7 @@ class Starter
 :	public Counted
 	{
 public:
+// Our protocol
 	virtual bool QStart(const ZP<Startable>& iStartable) = 0;
 	};
 
@@ -29,6 +30,9 @@ public:
 	virtual bool QStart(const ZP<Startable>& iStartable)
 		{ return sQCall(iStartable); }
 	};
+
+// =================================================================================================
+#pragma mark - sQStart
 
 inline bool sQStart(ZP<Starter> iStarter, const ZP<Startable>& iStartable)
 	{
