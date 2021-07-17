@@ -30,13 +30,6 @@ const ZQ<Val_DB> PseudoMap::QGet(const string8& iName) const
 	return null;
 	}
 
-//const Val_DB& PseudoMap::DGet(const Val_DB& iDefault, const string8& iName) const
-//	{
-//	if (const Val_DB* theVal = this->PGet(iName))
-//		return *theVal;
-//	return iDefault;
-//	}
-
 const Val_DB& PseudoMap::Get(const string8& iName) const
 	{
 	if (const Val_DB* theVal = this->PGet(iName))

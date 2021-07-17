@@ -22,7 +22,6 @@ public:
 
 	const Val_DB* PGet(const string8& iName) const;
 	const ZQ<Val_DB> QGet(const string8& iName) const;
-//	const Val_DB& DGet(const Val_DB& iDefault, const string8& iName) const;
 	const Val_DB& Get(const string8& iName) const;
 
 	template <class S>
@@ -40,14 +39,6 @@ public:
 			return theVal->QGet<S>();
 		return null;
 		}
-
-//	template <class S>
-//	S DGet(const S& iDefault, const string8& iName) const
-//		{
-//		if (const S* theVal = this->PGet<S>(iName))
-//			return *theVal;
-//		return iDefault;
-//		}
 
 	template <class S>
 	S Get(const string8& iName) const
