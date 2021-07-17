@@ -111,13 +111,13 @@ Type_p* sPMut(const ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)
 	return nullptr;
 	}
 
-template <class Type_p, class Tag_p>
-Type_p& sDMut(const Type_p& iDefault, ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)
-	{
-	if (not ioCountedVal)
-		ioCountedVal = new CountedVal<Type_p,Tag_p>(iDefault);
-	return ioCountedVal->Mut();
-	}
+//template <class Type_p, class Tag_p>
+//Type_p& sDMut(const Type_p& iDefault, ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)
+//	{
+//	if (not ioCountedVal)
+//		ioCountedVal = new CountedVal<Type_p,Tag_p>(iDefault);
+//	return ioCountedVal->Mut();
+//	}
 
 template <class Type_p, class Tag_p>
 Type_p& sMut(ZP<CountedVal<Type_p,Tag_p>>& ioCountedVal)

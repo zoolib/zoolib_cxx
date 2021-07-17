@@ -102,27 +102,27 @@ sPMut(Map_p& iMap, const typename Map_p::key_type& iKey)
 	return &ii->second;
 	}
 
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-typename Map_p::mapped_type&>
-sDMut(const typename Map_p::mapped_type& iDefault,
-	Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{
-	std::pair<typename Map_p::iterator, bool> ii =
-		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
-	return ii.first->second;
-	}
+//template <class Map_p>
+//	EnableIf_t<IsAMap<Map_p>::value,
+//typename Map_p::mapped_type&>
+//sDMut(const typename Map_p::mapped_type& iDefault,
+//	Map_p& ioMap, const typename Map_p::key_type& iKey)
+//	{
+//	std::pair<typename Map_p::iterator, bool> ii =
+//		ioMap.insert(typename Map_p::value_type(iKey, iDefault));
+//	return ii.first->second;
+//	}
 
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-typename Map_p::mapped_type&>
-sDMut(typename Map_p::mapped_type&& rDefault,
-	Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{
-	std::pair<typename Map_p::iterator, bool> ii =
-		ioMap.insert(typename Map_p::value_type(iKey, std::move(rDefault)));
-	return ii.first->second;
-	}
+//template <class Map_p>
+//	EnableIf_t<IsAMap<Map_p>::value,
+//typename Map_p::mapped_type&>
+//sDMut(typename Map_p::mapped_type&& rDefault,
+//	Map_p& ioMap, const typename Map_p::key_type& iKey)
+//	{
+//	std::pair<typename Map_p::iterator, bool> ii =
+//		ioMap.insert(typename Map_p::value_type(iKey, std::move(rDefault)));
+//	return ii.first->second;
+//	}
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,

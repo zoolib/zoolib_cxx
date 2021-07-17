@@ -119,9 +119,9 @@ public:
 	S& Mut(size_t iIndex)
 		{ return this->Mut(iIndex).Mut<S>(); }
 
-	template <class S>
-	S& DMut(const S& iDefault, size_t iIndex)
-		{ return this->Mut(iIndex).DMut(iDefault); }
+//	template <class S>
+//	S& DMut(const S& iDefault, size_t iIndex)
+//		{ return this->Mut(iIndex).DMut(iDefault); }
 
 // Operators
 	bool operator==(const Seq_ZZ& r) const
@@ -347,15 +347,15 @@ public:
 	S& Mut(const Name_t& iName)
 		{ return this->Mut(iName).Mut<S>(); }
 
-	template <class S>
-	S& DMut(const S& iDefault, const Name_t& iName)
-		{
-		if (S* theVal = this->PMut<S>(iName))
-			return *theVal;
-		this->Set(iName, iDefault);
-		return *this->PMut<S>(iName);
-		}
-	
+//	template <class S>
+//	S& DMut(const S& iDefault, const Name_t& iName)
+//		{
+//		if (S* theVal = this->PMut<S>(iName))
+//			return *theVal;
+//		this->Set(iName, iDefault);
+//		return *this->PMut<S>(iName);
+//		}
+
 	Index_t Begin() const;
 	Index_t End() const;
 
@@ -432,8 +432,8 @@ inline const Val_ZZ& sGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 inline Val_ZZ* sPMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.PMut(iName); }
 
-inline Val_ZZ& sDMut(const Val_ZZ& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
-	{ return ioMap.DMut(iDefault, iName); }
+//inline Val_ZZ& sDMut(const Val_ZZ& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
+//	{ return ioMap.DMut(iDefault, iName); }
 
 inline Val_ZZ& sMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.Mut(iName); }
@@ -463,9 +463,9 @@ template <class S>
 S* sPMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
 	{ return ioMap.PMut<S>(iName); }
 
-template <class S>
-S& sDMut(const S& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
-	{ return ioMap.DMut<S>(iDefault, iName); }
+//template <class S>
+//S& sDMut(const S& iDefault, Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)
+//	{ return ioMap.DMut<S>(iDefault, iName); }
 
 template <class S>
 S& sMut(Map_ZZ& ioMap, const Map_ZZ::Name_t& iName)

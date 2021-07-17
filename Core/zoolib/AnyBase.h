@@ -70,14 +70,14 @@ public:
 	S* PMut()
 		{ return static_cast<S*>(pFetchMutable(typeid(S))); }
 
-	template <class S>
-	S& DMut(const S& iDefault)
-		{
-		if (const S* theP = this->PGet<S>())
-			return *theP;
-		pDtor();
-		return pCtorRet_T<S>(iDefault);
-		}
+//	template <class S>
+//	S& DMut(const S& iDefault)
+//		{
+//		if (const S* theP = this->PGet<S>())
+//			return *theP;
+//		pDtor();
+//		return pCtorRet_T<S>(iDefault);
+//		}
 
 	template <class S>
 	S& Mut()
@@ -526,9 +526,9 @@ template <class S>
 S* sPMut(AnyBase& ioAny)
 	{ return ioAny.template PMut<S>(); }
 
-template <class S>
-S& sDMut(const S& iDefault, AnyBase& ioAny)
-	{ return ioAny.template DMut<S>(iDefault); }
+//template <class S>
+//S& sDMut(const S& iDefault, AnyBase& ioAny)
+//	{ return ioAny.template DMut<S>(iDefault); }
 
 template <class S>
 S& sMut(AnyBase& ioAny)
