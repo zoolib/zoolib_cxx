@@ -1,4 +1,5 @@
-// Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
+// Copyright (c) 2005-2007 Andrew Green and Learning in Motion, Inc.
+// Copyright (c) 2008-2021 Andrew Green
 // MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Pixels_BlitPriv_h__
@@ -13,7 +14,7 @@ namespace ZooLib {
 namespace Pixels {
 
 // =================================================================================================
-// MARK: - Helpers
+#pragma mark - Helpers
 
 // Returns a number between 0 and iRange - 1. The effect is as if enough multiples
 // of iRange are added to or subtracted from iAmount to bring it into that range.
@@ -25,7 +26,7 @@ inline int sPositiveModulus(int iAmount, int iRange)
 	}
 
 // =================================================================================================
-// MARK: - Porter-Duff composition functors
+#pragma mark - Porter-Duff composition functors
 
 /*
 Porter-Duff operators
@@ -64,7 +65,18 @@ struct Compose_Plus
 	};
 
 // =================================================================================================
-// MARK: - Tile variants
+#pragma mark - Tile variants
+
+/*
+Template functions have a main name (eg Tile, followed by a 2-4 character code indicating
+what they're parameterized by. Conceivably one of the Fill variants could have only a single
+character code (D) but that combo's use case is handled by sFillPixval.
+
+S=Source
+M=Mask
+D=Dest
+O=Operation
+*/
 
 template <class S, class D>
 void sTile_SD_T(
@@ -483,7 +495,7 @@ void sTile_SMDO_T(
 	}
 
 // =================================================================================================
-// MARK: - Copy variants
+#pragma mark - Copy variants
 
 template <class S, class D>
 void sCopy_SD_T(
@@ -730,7 +742,7 @@ void sCopy_SMDO_T(
 	}
 
 // =================================================================================================
-// MARK: - Tile source, untiled matte
+#pragma mark - Tile source, untiled matte
 
 template <class S, class M, class D>
 void sTileSource_SMD_T(
@@ -954,7 +966,7 @@ void sTileSource_SMDO_T(
 	}
 
 // =================================================================================================
-// MARK: - Tile matte, untiled source
+#pragma mark - Tile matte, untiled source
 
 template <class S, class M, class D>
 void sTileMatte_SMD_T(
@@ -1176,7 +1188,7 @@ void sTileMatte_SMDO_T(
 	}
 
 // =================================================================================================
-// MARK: - Fill/color variants
+#pragma mark - Fill/color variants
 
 static void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestF,
 			uint32 iPixval)
@@ -1470,7 +1482,7 @@ void sColorTile_MDO_T(
 	}
 
 // =================================================================================================
-// MARK: - Blit dispatchers
+#pragma mark - Blit dispatchers
 
 // Replicate iSourceF over iDestF, aligning iSourceOrigin with iDestF.TopLeft()
 template <class S, class D>

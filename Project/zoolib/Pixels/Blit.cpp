@@ -99,7 +99,7 @@ void sMunge(
 	}
 
 // =================================================================================================
-// MARK: - Public API
+#pragma mark - Public API
 
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
