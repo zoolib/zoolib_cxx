@@ -22,7 +22,7 @@ public:
 
 	const Val_DB* PGet(const string8& iName) const;
 	const ZQ<Val_DB> QGet(const string8& iName) const;
-	const Val_DB& DGet(const Val_DB& iDefault, const string8& iName) const;
+//	const Val_DB& DGet(const Val_DB& iDefault, const string8& iName) const;
 	const Val_DB& Get(const string8& iName) const;
 
 	template <class S>
@@ -41,13 +41,13 @@ public:
 		return null;
 		}
 
-	template <class S>
-	S DGet(const S& iDefault, const string8& iName) const
-		{
-		if (const S* theVal = this->PGet<S>(iName))
-			return *theVal;
-		return iDefault;
-		}
+//	template <class S>
+//	S DGet(const S& iDefault, const string8& iName) const
+//		{
+//		if (const S* theVal = this->PGet<S>(iName))
+//			return *theVal;
+//		return iDefault;
+//		}
 
 	template <class S>
 	S Get(const string8& iName) const
@@ -72,8 +72,8 @@ inline const Val_DB* sPGet(const PseudoMap& iMap, const string8& iName)
 inline const ZQ<Val_DB> sQGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.QGet(iName); }
 
-inline const Val_DB& sDGet(const Val_DB& iDefault, const PseudoMap& iMap, const string8& iName)
-	{ return iMap.DGet(iDefault, iName); }
+//inline const Val_DB& sDGet(const Val_DB& iDefault, const PseudoMap& iMap, const string8& iName)
+//	{ return iMap.DGet(iDefault, iName); }
 
 inline const Val_DB& sGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.Get(iName); }

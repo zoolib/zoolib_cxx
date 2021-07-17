@@ -232,12 +232,12 @@ public:
 		return nullptr;
 		}
 
-	const T& DGet(const T& iDefault) const
-		{
-		if (fHasValue)
-			return *sFetch_T<T>(fBytes);
-		return iDefault;
-		}
+//	const T& DGet(const T& iDefault) const
+//		{
+//		if (fHasValue)
+//			return *sFetch_T<T>(fBytes);
+//		return iDefault;
+//		}
 
 	const T& Get() const
 		{

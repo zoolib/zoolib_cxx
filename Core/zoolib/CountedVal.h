@@ -87,13 +87,13 @@ const ZQ<Type_p> sQGet(const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
 	return null;
 	}
 
-template <class Type_p, class Tag_p>
-const Type_p& sDGet(const Type_p& iDefault, const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
-	{
-	if (const Type_p* theVal = sPGet(iCountedVal))
-		return *theVal;
-	return iDefault;
-	}
+//template <class Type_p, class Tag_p>
+//const Type_p& sDGet(const Type_p& iDefault, const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)
+//	{
+//	if (const Type_p* theVal = sPGet(iCountedVal))
+//		return *theVal;
+//	return iDefault;
+//	}
 
 template <class Type_p, class Tag_p>
 const Type_p& sGet(const ZP<CountedVal<Type_p,Tag_p>>& iCountedVal)

@@ -35,8 +35,8 @@ public:
 		return null;
 		}
 
-	Result_t DDo(const Result_t& iDefault, const ZP<Visitee>& iRep)
-		{ return sDGet(iDefault, this->QDo(iRep)); }
+//	Result_t DDo(const Result_t& iDefault, const ZP<Visitee>& iRep)
+//		{ return sDGet(iDefault, this->QDo(iRep)); }
 
 	Result_t Do(const ZP<Visitee>& iRep)
 		{ return sGet(this->QDo(iRep)); }

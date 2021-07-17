@@ -111,7 +111,7 @@ public:
 	
 	using inherited::PGet;
 	using inherited::QGet;
-	using inherited::DGet;
+//	using inherited::DGet;
 	using inherited::PMut;
 	using inherited::Mut;
 	using inherited::Get;

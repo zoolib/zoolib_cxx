@@ -50,13 +50,13 @@ public:
 		return null;
 		}
 
-	template <class S>
-	const S& DGet(const S& iDefault) const
-		{
-		if (const S* theP = this->PGet<S>())
-			return *theP;
-		return iDefault;
-		}
+//	template <class S>
+//	const S& DGet(const S& iDefault) const
+//		{
+//		if (const S* theP = this->PGet<S>())
+//			return *theP;
+//		return iDefault;
+//		}
 
 	template <class S>
 	const S& Get() const
@@ -514,9 +514,9 @@ template <class S>
 const ZQ<S> sQGet(const AnyBase& iAny)
 	{ return iAny.template QGet<S>(); }
 
-template <class S>
-const S& sDGet(const S& iDefault, const AnyBase& iAny)
-	{ return iAny.template DGet<S>(iDefault); }
+//template <class S>
+//const S& sDGet(const S& iDefault, const AnyBase& iAny)
+//	{ return iAny.template DGet<S>(iDefault); }
 
 template <class S>
 const S& sGet(const AnyBase& iAny)

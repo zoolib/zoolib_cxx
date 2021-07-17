@@ -63,12 +63,12 @@ public:
 		return null;
 		}
 
-	static Type_p sDGet(const Type_p& iDefault)
-		{
-		if (ThreadVal* theTV = spMut())
-			return theTV->Get();
-		return iDefault;
-		}
+//	static Type_p sDGet(const Type_p& iDefault)
+//		{
+//		if (ThreadVal* theTV = spMut())
+//			return theTV->Get();
+//		return iDefault;
+//		}
 
 	static const Type_p& sGet()
 		{

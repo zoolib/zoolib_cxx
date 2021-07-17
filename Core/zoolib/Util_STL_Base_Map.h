@@ -46,27 +46,27 @@ sPGet(const Map_p& iMap, const typename Map_p::key_type& iKey)
 	return &ii->second;
 	}
 
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-const typename Map_p::mapped_type&>
-sDGet(const typename Map_p::mapped_type& iDefault,
-	const Map_p& iMap, const typename Map_p::key_type& iKey)
-	{
-	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
-		return *theP;
-	return iDefault;
-	}
+//template <class Map_p>
+//	EnableIf_t<IsAMap<Map_p>::value,
+//const typename Map_p::mapped_type&>
+//sDGet(const typename Map_p::mapped_type& iDefault,
+//	const Map_p& iMap, const typename Map_p::key_type& iKey)
+//	{
+//	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
+//		return *theP;
+//	return iDefault;
+//	}
 
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-typename Map_p::mapped_type>
-sDGet(typename Map_p::mapped_type&& rDefault,
-	const Map_p& iMap, const typename Map_p::key_type& iKey)
-	{
-	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
-		return *theP;
-	return std::move(rDefault);
-	}
+//template <class Map_p>
+//	EnableIf_t<IsAMap<Map_p>::value,
+//typename Map_p::mapped_type>
+//sDGet(typename Map_p::mapped_type&& rDefault,
+//	const Map_p& iMap, const typename Map_p::key_type& iKey)
+//	{
+//	if (const typename Map_p::mapped_type* theP = sPGet(iMap, iKey))
+//		return *theP;
+//	return std::move(rDefault);
+//	}
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
