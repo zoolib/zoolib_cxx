@@ -441,15 +441,9 @@ const ZQ<Val_NS> Seq_NS::QGet(size_t iIndex) const
 	return null;
 	}
 
-const Val_NS Seq_NS::DGet(const Val_NS& iDefault, size_t iIndex) const
-	{
-	if (ZQ<Val_NS> theQ = this->QGet(iIndex))
-		return *theQ;
-	return iDefault;
-	}
 
 const Val_NS Seq_NS::Get(size_t iIndex) const
-	{ return this->DGet(Val_NS(), iIndex); }
+	{ return sGet(this->QGet(iIndex)); }
 
 Seq_NS& Seq_NS::Set(size_t iIndex, const Val_NS& iVal)
 	{
@@ -601,25 +595,13 @@ const ZQ<Val_NS> Map_NS::QGet(NSString* iName) const
 	return null;
 	}
 
-const Val_NS Map_NS::DGet(const Val_NS& iDefault, const string8& iName) const
-	{
-	if (ZQ<Val_NS> theQ = this->QGet(iName))
-		return *theQ;
-	return iDefault;
-	}
 
-const Val_NS Map_NS::DGet(const Val_NS& iDefault, NSString* iName) const
-	{
-	if (ZQ<Val_NS> theQ = this->QGet(iName))
-		return *theQ;
-	return iDefault;
-	}
 
 const Val_NS Map_NS::Get(const string8& iName) const
-	{ return this->DGet(Val_NS(), iName); }
+	{ return sGet(this->QGet(iName)); }
 
 const Val_NS Map_NS::Get(NSString* iName) const
-	{ return this->DGet(Val_NS(), iName); }
+	{ return sGet(this->QGet(iName)); }
 
 const Val_NS Map_NS::Get(CFStringRef iName) const
 	{ return this->Get((__bridge NSString*)iName); }

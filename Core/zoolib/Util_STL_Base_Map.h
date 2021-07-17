@@ -173,33 +173,6 @@ sQGetErase(Map_p& ioMap, const typename Map_p::key_type& iKey)
 	return result;
 	}
 
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-typename Map_p::mapped_type>
-sDGetErase(const typename Map_p::mapped_type& iDefault,
-Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{
-	typename Map_p::iterator ii = ioMap.find(iKey);
-	if (ioMap.end() == ii)
-		return iDefault;
-	const typename Map_p::mapped_type result = ii->second;
-	ioMap.erase(ii);
-	return result;
-	}
-
-template <class Map_p>
-	EnableIf_t<IsAMap<Map_p>::value,
-typename Map_p::mapped_type>
-sDGetErase(typename Map_p::mapped_type&& rDefault,
-Map_p& ioMap, const typename Map_p::key_type& iKey)
-	{
-	typename Map_p::iterator ii = ioMap.find(iKey);
-	if (ioMap.end() == ii)
-		return std::move(rDefault);
-	const typename Map_p::mapped_type result = ii->second;
-	ioMap.erase(ii);
-	return result;
-	}
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,

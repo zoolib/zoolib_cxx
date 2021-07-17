@@ -66,7 +66,7 @@ Cog spCogCtor_Toon(const Map& iMap)
 	
 	if (Cog theCog = sCog_Toon_NoEpoch(theToon))
 		{
-		if (iMap.DGet<bool>(true, "NewEpoch"))
+		if (true | iMap.QGet<bool>("NewEpoch"))
 			theCog = sCog_NewEpoch(theCog);
 
 		if (iMap.Get<bool>("Repeat"))

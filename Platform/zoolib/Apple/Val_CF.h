@@ -87,13 +87,6 @@ public:
 	template <class S>
 	const ZQ<S> QGet() const;
 
-	template <class S>
-	const S DGet(const S& iDefault) const
-		{
-		if (ZQ<S> theQ = this->QGet<S>())
-			return *theQ;
-		return iDefault;
-		}
 
 	template <class S>
 	const S Get() const
@@ -146,16 +139,12 @@ public:
 	using inherited::Get;
 
 	const ZQ<Val_CF> QGet(size_t iIndex) const;
-	const Val_CF DGet(const Val_CF& iDefault, size_t iIndex) const;
 	const Val_CF Get(size_t iIndex) const;
 
 	template <class S>
 	const ZQ<S> QGet(size_t iIndex) const
 		{ return this->Get(iIndex).QGet<S>(); }
 
-	template <class S>
-	const S DGet(const S& iDefault, size_t iIndex) const
-		{ return this->Get(iIndex).DGet<S>(iDefault); }
 
 	template <class S>
 	const S Get(size_t iIndex) const
@@ -210,8 +199,6 @@ public:
 	const ZQ<Val_CF> QGet(const string8& iName) const;
 	const ZQ<Val_CF> QGet(CFStringRef iName) const;
 
-	const Val_CF DGet(const Val_CF& iDefault, const string8& iName) const;
-	const Val_CF DGet(const Val_CF& iDefault, CFStringRef iName) const;
 
 	const Val_CF Get(const string8& iName) const;
 	const Val_CF Get(CFStringRef iName) const;
@@ -224,13 +211,6 @@ public:
 	const ZQ<S> QGet(CFStringRef iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
-	template <class S>
-	const S DGet(const S& iDefault, const string8& iName) const
-		{ return this->Get(iName).DGet<S>(iDefault); }
-
-	template <class S>
-	const S DGet(const S& iDefault, CFStringRef iName) const
-		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
 	const S Get(const string8& iName) const
@@ -267,9 +247,6 @@ template <class S>
 const ZQ<S> sQGet(const Val_CF& iVal)
 	{ return iVal.QGet<S>(); }
 
-template <class S>
-const S sDGet(const S& iDefault, const Val_CF& iVal)
-	{ return iVal.DGet<S>(iDefault); }
 
 template <class S>
 const S sGet(const Val_CF& iVal)

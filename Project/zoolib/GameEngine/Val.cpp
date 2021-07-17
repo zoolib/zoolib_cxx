@@ -221,12 +221,6 @@ ZQ<Val> Seq::QGet(size_t iIndex) const
 	return null;
 	}
 
-const Val& Seq::DGet(const Val& iDefault, size_t iIndex) const
-	{
-	if (const Val* theVal = this->PGet(iIndex))
-		return *theVal;
-	return iDefault;
-	}
 
 const Val& Seq::Get(size_t iIndex) const
 	{
@@ -361,12 +355,6 @@ ZQ<Val> Map::QGet(const Name_t& iName) const
 	return null;
 	}
 
-const Val& Map::DGet(const Val& iDefault, const Name_t& iName) const
-	{
-	if (const Val* theVal = this->PGet(iName))
-		return *theVal;
-	return iDefault;
-	}
 
 const Val& Map::Get(const Name_t& iName) const
 	{

@@ -526,15 +526,9 @@ const ZQ<Val_CF> Seq_CF::QGet(size_t iIndex) const
 	return null;
 	}
 
-const Val_CF Seq_CF::DGet(const Val_CF& iDefault, size_t iIndex) const
-	{
-	if (ZQ<Val_CF> theQ = this->QGet(iIndex))
-		return *theQ;
-	return iDefault;
-	}
 
 const Val_CF Seq_CF::Get(size_t iIndex) const
-	{ return this->DGet(Val_CF(), iIndex); }
+	{ return sGet(this->QGet(iIndex)); }
 
 Seq_CF& Seq_CF::Set(size_t iIndex, const Val_CF& iVal)
 	{
@@ -686,25 +680,13 @@ const ZQ<Val_CF> Map_CF::QGet(CFStringRef iName) const
 	return null;
 	}
 
-const Val_CF Map_CF::DGet(const Val_CF& iDefault, const string8& iName) const
-	{
-	if (ZQ<Val_CF> theQ = this->QGet(iName))
-		return *theQ;
-	return iDefault;
-	}
 
-const Val_CF Map_CF::DGet(const Val_CF& iDefault, CFStringRef iName) const
-	{
-	if (ZQ<Val_CF> theQ = this->QGet(iName))
-		return *theQ;
-	return iDefault;
-	}
 
 const Val_CF Map_CF::Get(const string8& iName) const
-	{ return this->DGet(Val_CF(), iName); }
+	{ return sGet(this->QGet(iName)); }
 
 const Val_CF Map_CF::Get(CFStringRef iName) const
-	{ return this->DGet(Val_CF(), iName); }
+	{ return sGet(this->QGet(iName)); }
 
 Map_CF& Map_CF::Set(const string8& iName, const Val_CF& iVal)
 	{

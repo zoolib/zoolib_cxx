@@ -46,15 +46,6 @@ const ZQ<Val_CF> Map_CFPreferences::QGet(CFStringRef iName) const
 	return null;
 	}
 
-const Val_CF Map_CFPreferences::DGet(const Val_CF& iDefault, const string8& iName) const
-	{ return this->DGet(iDefault, Util_CF::sString(iName)); }
-
-const Val_CF Map_CFPreferences::DGet(const Val_CF& iDefault, CFStringRef iName) const
-	{
-	if (ZQ<Val_CF> theQ = this->QGet(iName))
-		return *theQ;
-	return iDefault;
-	}
 
 const Val_CF Map_CFPreferences::Get(const string8& iName) const
 	{ return this->Get(Util_CF::sString(iName)); }

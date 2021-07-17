@@ -461,7 +461,7 @@ void spGrindArt(
 					const CVec3 baseScale = sCVec3(1, theStuff["Scale"]);
 					theStuff["Scale"] = spAsVal(baseScale / iScale);
 
-					const GRect baseInset = sQGRect(theStuff["Inset"]).DGet(GRect());
+					const GRect baseInset = GRect() | sQGRect(theStuff["Inset"]);
 					theStuff["Inset"] = spAsVal(baseInset * iScale);
 					}
 				theName2Stuff[theName] = theStuff;				
@@ -593,7 +593,7 @@ void spGrindAnim(
 		const CVec3 baseScale = sCVec3(1, entry["Scale"]);
 		entry["Scale"] = spAsVal(baseScale / iScale);
 
-		const GRect baseInset = sQGRect(entry["Inset"]).DGet(GRect());
+		const GRect baseInset = GRect() | sQGRect(entry["Inset"];
 		entry["Inset"] = spAsVal(baseInset * iScale);
 		}
 

@@ -30,8 +30,6 @@ public:
 	const ZQ<Val_CF> QGet(const string8& iName) const;
 	const ZQ<Val_CF> QGet(CFStringRef iName) const;
 
-	const Val_CF DGet(const Val_CF& iDefault, const string8& iName) const;
-	const Val_CF DGet(const Val_CF& iDefault, CFStringRef iName) const;
 
 	const Val_CF Get(const string8& iName) const;
 	const Val_CF Get(CFStringRef iName) const;
@@ -44,13 +42,7 @@ public:
 	const ZQ<S> QGet(CFStringRef iName) const
 		{ return this->Get(iName).QGet<S>(); }
 
-	template <class S>
-	const S DGet(const S& iDefault, const string8& iName) const
-		{ return this->Get(iName).DGet<S>(iDefault); }
 
-	template <class S>
-	const S DGet(const S& iDefault, CFStringRef iName) const
-		{ return this->Get(iName).DGet<S>(iDefault); }
 
 	template <class S>
 	const S Get(const string8& iName) const
