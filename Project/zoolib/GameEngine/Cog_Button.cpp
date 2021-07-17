@@ -87,7 +87,7 @@ Cog spCogCtor_Button(const Map& iMap)
 // highlighting we'll need a concept of a 'non-touching' touch of some sort.
 
 	ZP<TouchListener> theTouchListener = new TouchListener(true);
-	theTouchListener->SetBounds(sDGet(sGRect(10,10), sQGRect(iMap["HotRect"])));
+	theTouchListener->SetBounds(sGRect(10,10) | sQGRect(iMap["HotRect"]));
 
 	const Cog theCog_Pushed = sCog_Pitch(iMap.Get<Map>("Pushed"));
 

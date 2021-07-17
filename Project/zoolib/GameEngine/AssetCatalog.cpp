@@ -404,7 +404,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 		theEntry.fDefaultBoundsQ = sQGRect(theAnim["Bounds"]);
 		theEntry.fBaseScale = sCVec3(1, theAnim["Scale"]);
 		theEntry.fBaseReg = sCVec3(0, theAnim["Reg"]);
-		theEntry.fBaseInset = sQGRect(theAnim["Inset"]).DGet(GRect());
+		theEntry.fBaseInset = GRect() | sQGRect(theAnim["Inset"]);
 		theEntry.fFramesSeq = theFramesSeq;
 		theEntry.fFramesVec.resize(theFramesSeq.Size());
 
@@ -444,7 +444,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 			const Map_ZZ& theTBM = theTBMsSeq.Get<Map_ZZ>(theTBMIndex);
 
 			const string8 theSheetName =
-				theTBM.DGet<string8>(theEntry.fDefaultSheetName, "SheetName");
+				string8(theEntry.fDefaultSheetName) | theTBM.QGet<string8>("SheetName");
 			
 			if (ZP<Sheet> theSheet = fSheetCatalog->Get(theSheetName, iPriority))
 				{
@@ -454,7 +454,7 @@ bool AssetCatalog::pGet(const Name& iName, size_t iFrame, int iPriority,
 				const CVec3 theReg = theEntry.fBaseReg + sCVec3(0, theTBM["Reg"]);
 
 				// TODO: WTF is happening here?
-				theSheet_BoundsQ_Mat.fInset = sQGRect(theTBM["Inset"]).DGet(GRect());
+				theSheet_BoundsQ_Mat.fInset = GRect() | sQGRect(theTBM["Inset"]);
 				theSheet_BoundsQ_Mat.fInset = sRect(
 					LT(theSheet_BoundsQ_Mat.fInset) + LT(theEntry.fBaseInset),
 					RB(theSheet_BoundsQ_Mat.fInset) + RB(theEntry.fBaseInset));
