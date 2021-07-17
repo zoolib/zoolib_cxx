@@ -38,17 +38,14 @@ PixmapRep::PixmapRep(
 ,	fPixelDesc(iPixelDesc)
 	{}
 
-PointPOD PixmapRep::GetSize()
-	{ return WH(fFrame); }
+const ZP<Raster>& PixmapRep::GetRaster()
+	{ return fRaster; }
 
 const RectPOD& PixmapRep::GetFrame()
 	{ return fFrame; }
 
 const PixelDesc& PixmapRep::GetPixelDesc()
 	{ return fPixelDesc; }
-
-const ZP<Raster>& PixmapRep::GetRaster()
-	{ return fRaster; }
 
 ZP<PixmapRep> PixmapRep::Touch()
 	{
@@ -202,6 +199,25 @@ void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 		spBlit(sourceRep, iSourceBounds + LT(sourceRep->GetFrame()), ioDest.GetRep(), iDestLoc);
 		}
 	}
+
+RGBA sGetPixel(const Pixmap& iSource, Ord iX, Ord iY)
+	{
+	Pixval thePixVal = sGetPixval(iSource.GetRaster(), iX, iY);
+	return iSource.GetPixelDesc().AsRGBA(thePixVal);
+	}
+
+void sSetPixel(Pixmap& oDest, Ord iX, Ord iY, RGBA iPixel)
+	{
+	oDest.Touch();
+	Pixval thePixval = oDest.GetPixelDesc().AsPixval(iPixel);
+	sSetPixval(oDest.GetRaster(), iX, iY, thePixval);
+	}
+
+RGBA sGetPixel(const Pixmap& iSource, PointPOD iLoc)
+	{ return sGetPixel(iSource, X(iLoc), Y(iLoc)); }
+
+void sSetPixel(Pixmap& oDest, PointPOD iLoc, RGBA iPixel)
+	{ sSetPixel(oDest, X(iLoc), Y(iLoc), iPixel); }
 
 } // namespace Pixels
 } // namespace ZooLib

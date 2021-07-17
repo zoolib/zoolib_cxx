@@ -22,13 +22,11 @@ class PixmapRep
 public:
 	PixmapRep(const ZP<Raster>& iRaster, const RectPOD& iFrame, const PixelDesc& iPixelDesc);
 
-	PointPOD GetSize();
+	const ZP<Raster>& GetRaster();
 
 	const RectPOD& GetFrame();
 
 	const PixelDesc& GetPixelDesc();
-
-	const ZP<Raster>& GetRaster();
 
 	ZP<PixmapRep> Touch();
 
@@ -99,6 +97,12 @@ void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon);
 
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	Pixmap& ioDest, PointPOD iDestLoc);
+
+RGBA sGetPixel(const Pixmap& iSource, Ord iX, Ord iY);
+void sSetPixel(Pixmap& oDest, Ord iX, Ord iY, RGBA iPixel);
+
+RGBA sGetPixel(const Pixmap& iSource, PointPOD iLoc);
+void sSetPixel(Pixmap& oDest, PointPOD iLoc, RGBA iPixel);
 
 } // namespace Pixels
 } // namespace ZooLib
