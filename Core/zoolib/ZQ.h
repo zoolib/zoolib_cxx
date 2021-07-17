@@ -564,7 +564,15 @@ TT operator|(const ZQ<TT>& ll, TT&& rr)
 	{
 	if (ll)
 		return *ll;
-	return rr;
+	return std::move(rr);
+	}
+
+template <class TT>
+const TT& operator|(const TT& ll, const ZQ<TT>& rr)
+	{
+	if (rr)
+		return *rr;
+	return ll;
 	}
 
 } // namespace ZooLib
