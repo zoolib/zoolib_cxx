@@ -451,9 +451,9 @@ template <class S>
 const ZQ<S> sQGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
 	{ return iMap.QGet<S>(iName); }
 
-template <class S>
-const S& sDGet(const S& iDefault, const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
-	{ return iMap.DGet<S>(iDefault, iName); }
+//template <class S>
+//const S& sDGet(const S& iDefault, const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
+//	{ return iMap.DGet<S>(iDefault, iName); }
 
 template <class S>
 const S& sGet(const Map_ZZ& iMap, const Map_ZZ::Name_t& iName)
