@@ -25,7 +25,8 @@ template <class P0, class P1, class P2, class P3, class P4, class P5, class P6, 
 class DeriveFrom<DeriveFrom<P0, P1, P2, P3, P4, P5, P6, P7>>
 	{};
 
-// The real suite.
+// The real suite. Cost to instantiate goes as the left factorial of the number of params.
+// !1 == 1. See http://oeis.org/A007489
 template <class P0>
 class DeriveFrom<P0>
 :	public virtual P0
@@ -34,6 +35,7 @@ public:
 	typedef TypeList<P0> AsTypeList_t;
 	};
 
+// !2 == 3
 template <class P0, class P1>
 class DeriveFrom<P0, P1>
 :	public virtual DeriveFrom<    P1>
@@ -43,6 +45,7 @@ public:
 	typedef TypeList<P0, P1> AsTypeList_t;
 	};
 
+// !3 == 9
 template <class P0, class P1, class P2>
 class DeriveFrom<P0, P1, P2>
 :	public virtual DeriveFrom<    P1, P2>
@@ -53,6 +56,7 @@ public:
 	typedef TypeList<P0, P1, P2> AsTypeList_t;
 	};
 
+// !4 == 33
 template <class P0, class P1, class P2, class P3>
 class DeriveFrom<P0, P1, P2, P3>
 :	public virtual DeriveFrom<    P1, P2, P3>
@@ -64,7 +68,7 @@ public:
 	typedef TypeList<P0, P1, P2, P3> AsTypeList_t;
 	};
 
-// !5 == 153. See http://oeis.org/A007489
+// !5 == 153
 template <class P0, class P1, class P2, class P3, class P4>
 class DeriveFrom<P0, P1, P2, P3, P4>
 :	public virtual DeriveFrom<    P1, P2, P3, P4>
