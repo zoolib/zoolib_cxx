@@ -172,10 +172,11 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 			--depth;
 
 		if (depth == 0)
-			break;
+			return true;
 		}
 
-	return depth == 0;
+	// We'll never have entered the loop, so there was nothing to read at all.
+	return false;
 	}
 
 bool sSkip_Node(const ChanR_PPT& iChanR)
