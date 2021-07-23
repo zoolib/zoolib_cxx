@@ -95,6 +95,14 @@ public:
 	,	fPosition(0)
 		{}
 
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPosition; }
+
+	virtual void PosSet(uint64 iPos)
+		{ fPosition = sClamped(iPos); }
+
+// From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		const size_t theSize = fDataPtr->GetSize();
@@ -115,12 +123,14 @@ public:
 	virtual uint64 Size()
 		{ return fDataPtr->GetSize(); }
 
-// From ChanPos
-	virtual uint64 Pos()
-		{ return fPosition; }
-
-	virtual void PosSet(uint64 iPos)
-		{ fPosition = sClamped(iPos); }
+// From ChanSizeSet
+	virtual void SizeSet(uint64 iSize)
+		{
+		size_t actualSize = sClamped(iSize);
+		if (fPosition > actualSize)
+			fPosition = actualSize;
+		fDataPtr->SetSize(actualSize);
+		}
 
 // From ChanU
 	virtual size_t Unread(const byte* iSource, size_t iCount)
@@ -146,15 +156,6 @@ public:
 		fPosition = newPosition;
 
 		return iCount;
-		}
-
-// From ChanSizeSet
-	virtual void SizeSet(uint64 iSize)
-		{
-		size_t actualSize = sClamped(iSize);
-		if (fPosition > actualSize)
-			fPosition = actualSize;
-		fDataPtr->SetSize(actualSize);
 		}
 
 // Our protocol
