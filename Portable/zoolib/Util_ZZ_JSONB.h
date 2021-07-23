@@ -18,6 +18,8 @@ ZQ<Val_ZZ> sQRead(const ChanR_Bin& iChanR);
 
 void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal);
 
+Data_ZZ sAsJSONB(const Val_ZZ& iVal);
+
 } // namespace Util_ZZ_JSONB
 } // namespace ZooLib
 

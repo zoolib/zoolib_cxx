@@ -4,6 +4,7 @@
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
+#include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/Log.h"
 #include "zoolib/PullPush_JSONB.h"
 #include "zoolib/PullPush_ZZ.h"
@@ -28,6 +29,15 @@ ZQ<Val_ZZ> sQRead(const ChanR_Bin& iChanR)
 
 void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal)
 	{ sPull_PPT_Push_JSONB(*sChannerR_PPT(iVal), null, iChanW); }
+
+// -----
+
+Data_ZZ sAsJSONB(const Val_ZZ& iVal)
+	{
+	Data_ZZ result;
+	sWrite(ChanW_Bin_Data(&result), iVal);
+	return result;
+	}
 
 } // namespace Util_ZZ_JSONB
 } // namespace ZooLib
