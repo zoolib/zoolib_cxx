@@ -119,7 +119,7 @@ size_t sRead(const ChanAspect_Read<EE>& iAspect, EE* oDest, size_t iCount)
 	{ return sNonConst(iAspect).Read(oDest, iCount); }
 
 template <class EE>
-size_t sRead(const ChanAspect_Read<EE>& iAspect, const PaC<EE>& iDest)
+size_t sRead(const ChanAspect_Read<EE>& iAspect, PaC<EE> iDest)
 	{ return sNonConst(iAspect).Read(sPtr(iDest), sCount(iDest)); }
 
 template <class EE>
@@ -146,7 +146,7 @@ size_t sReadAt(const ChanAspect_ReadAt<LL,EE>& iAspect, const LL& iLoc, EE* oDes
 	{ return sNonConst(iAspect).ReadAt(iLoc, oDest, iCount); }
 
 template <class LL, class EE>
-size_t sReadAt(const ChanAspect_ReadAt<LL,EE>& iAspect, const LL& iLoc, const PaC<EE>& iDest)
+size_t sReadAt(const ChanAspect_ReadAt<LL,EE>& iAspect, const LL& iLoc, PaC<EE> iDest)
 	{ return sNonConst(iAspect).ReadAt(iLoc, sPtr(iDest), sCount(iDest)); }
 
 // =================================================================================================
@@ -189,7 +189,7 @@ inline size_t sUnread(const ChanAspect_Unread<EE>& iAspect, const EE* iSource, s
 	{ return sNonConst(iAspect).Unread(iSource, iCount); }
 
 template <class EE>
-inline size_t sUnread(const ChanAspect_Unread<EE>& iAspect, const PaC<const EE>& iSource)
+inline size_t sUnread(const ChanAspect_Unread<EE>& iAspect, PaC<const EE> iSource)
 	{ return sNonConst(iAspect).Unread(sPtr(iSource), sCount(iSource)); }
 
 // =================================================================================================
@@ -240,7 +240,7 @@ inline size_t sWrite(const ChanAspect_Write<EE>& iAspect, const EE* iSource, siz
 	{ return sNonConst(iAspect).Write(iSource, iCount); }
 
 template <class EE>
-inline size_t sWrite(const ChanAspect_Write<EE>& iAspect, const PaC<const EE>& iSource)
+inline size_t sWrite(const ChanAspect_Write<EE>& iAspect, PaC<const EE> iSource)
 	{ return sNonConst(iAspect).Write(sPtr(iSource), sCount(iSource)); }
 
 template <class EE>
@@ -265,7 +265,7 @@ size_t sWriteAt(const ChanAspect_WriteAt<LL,EE>& iAspect,
 
 template <class LL, class EE>
 size_t sWriteAt(const ChanAspect_WriteAt<LL,EE>& iAspect,
-	const LL& iLoc, const PaC<const EE>& iSource)
+	const LL& iLoc, PaC<const EE> iSource)
 	{ return sNonConst(iAspect).WriteAt(iLoc, sPtr(iSource), sCount(iSource)); }
 
 } // namespace ZooLib
