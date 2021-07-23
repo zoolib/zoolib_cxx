@@ -35,7 +35,7 @@ void sWrite(const ChanW_Bin& iChanW, const Val_ZZ& iVal)
 Data_ZZ sAsJSONB(const Val_ZZ& iVal)
 	{
 	Data_ZZ result;
-	sWrite(ChanW_Bin_Data(&result), iVal);
+	sWrite(ChanW_Bin_Data<Data_ZZ>(&result), iVal);
 	return result;
 	}
 
