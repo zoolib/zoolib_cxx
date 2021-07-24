@@ -17,6 +17,7 @@ using ChanU_Bin = ChanU<byte>;
 using ChanW_Bin = ChanW<byte>;
 
 using ChanRU_Bin = ChanRU<byte>;
+using ChanRSize_Bin = ChanRSize<byte>;
 using ChanRPos_Bin = ChanRPos<byte>;
 using ChanWPos_Bin = ChanWPos<byte>;
 using ChanRWPos_Bin = ChanRWPos<byte>;
