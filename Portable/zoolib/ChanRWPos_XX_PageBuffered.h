@@ -80,6 +80,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
+// From ChanAspect_PosSet
 	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 

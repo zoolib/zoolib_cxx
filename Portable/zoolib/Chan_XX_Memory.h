@@ -33,6 +33,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
+// From ChanPosSet
 	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
@@ -118,6 +119,7 @@ public:
 	virtual uint64 Pos()
 		{ return fPosition; }
 
+// From ChanPosSet
 	virtual void PosSet(uint64 iPos)
 		{ fPosition = iPos; }
 
