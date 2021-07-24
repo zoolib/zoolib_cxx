@@ -44,7 +44,7 @@ Cog spCogCtor_Buffer(const Map& iMap)
 	{
 	int theWidth = sRat(iMap["Width"]);
 	int theHeight = sRat(iMap["Height"]);
-	RGBA theRGBA = sRGBA(0, 0) | sQRGBA(iMap["Color"]);
+	RGBA theRGBA = sQRGBA(iMap["Color"]) | sRGBA(0, 0);
 	Cog theCog = sCog(iMap["Cog"]);
 	return sCog_Buffer(theWidth, theHeight, theRGBA, theCog);
 	}
