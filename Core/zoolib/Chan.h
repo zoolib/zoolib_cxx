@@ -50,6 +50,12 @@ using ChanWriteAt = DeriveFrom<ChanAspect_WriteAt<LL,EE>>;
 
 // ---
 
+using ChanPosAndSet = DeriveFrom
+	<
+	ChanAspect_Pos,
+	ChanAspect_PosSet
+	>;
+
 template <typename EE>
 using ChanRU = DeriveFrom
 	<
@@ -58,9 +64,18 @@ using ChanRU = DeriveFrom
 	>;
 
 template <typename EE>
+using ChanRSize = DeriveFrom
+	<
+	ChanAspect_Pos,
+	ChanAspect_Read<EE>,
+	ChanAspect_Size
+	>;
+
+template <typename EE>
 using ChanRPos = DeriveFrom
 	<
 	ChanAspect_Pos,
+	ChanAspect_PosSet,
 	ChanAspect_Read<EE>,
 	ChanAspect_Size,
 	ChanAspect_Unread<EE>
@@ -70,6 +85,7 @@ template <typename EE>
 using ChanWPos = DeriveFrom
 	<
 	ChanAspect_Pos,
+	ChanAspect_PosSet,
 	ChanAspect_Size,
 	ChanAspect_SizeSet,
 	ChanAspect_Write<EE>
@@ -79,6 +95,7 @@ template <typename EE>
 using ChanRWPos = DeriveFrom
 	<
 	ChanAspect_Pos,
+	ChanAspect_PosSet,
 	ChanAspect_Read<EE>,
 	ChanAspect_Size,
 	ChanAspect_SizeSet,

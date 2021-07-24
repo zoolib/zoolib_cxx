@@ -83,14 +83,21 @@ class ChanAspect_Pos
 	{
 public:
 	virtual uint64 Pos() = 0;
-
-	virtual void PosSet(uint64 iPos) = 0;
 	};
 
 inline uint64 sPos(const ChanAspect_Pos& iAspect)
 	{ return sNonConst(iAspect).Pos(); }
 
-inline void sPosSet(const ChanAspect_Pos& iAspect, uint64 iPos)
+// =================================================================================================
+#pragma mark - ChanAspect_PosSet
+
+class ChanAspect_PosSet
+	{
+public:
+	virtual void PosSet(uint64 iPos) = 0;
+	};
+
+inline void sPosSet(const ChanAspect_PosSet& iAspect, uint64 iPos)
 	{ sNonConst(iAspect).PosSet(iPos); }
 
 // =================================================================================================
