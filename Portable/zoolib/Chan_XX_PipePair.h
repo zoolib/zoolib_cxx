@@ -221,6 +221,7 @@ public:
 	virtual size_t Readable()
 		{ return fPipePair->Readable(); }
 
+private:
 	ZP<ImpPipePair<EE>> fPipePair;
 	};
 
@@ -250,6 +251,7 @@ public:
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{ return fPipePair->Write(iSource, iCount); }
 
+private:
 	ZP<ImpPipePair<EE>> fPipePair;
 	};
 
