@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
-#include "zoolib/Util_Chan.h" // For sECopyAll, sECopyFully.
+#include "zoolib/Util_Chan.h" // For sECopyAll, sCopyFully.
 
 namespace ZooLib {
 
@@ -28,41 +28,25 @@ public:
 
 // From ChanPosSet
 	virtual void PosSet(uint64 iPos)
-		{
-		uint64 curSize = sSize(fBuffer);
-		if (iPos > curSize)
-			{
-			// Position the buffer at its end
-			sPosSet(fBuffer, curSize);
-
-			// And suck in enough data from fSource so its size (and position) is iPosition bytes
-			sECopyFully(fSource, fBuffer, iPos - curSize);
-			}
-		sPosSet(fBuffer, iPos);
-		}
+		{ sPosSet(fBuffer, iPos); }
 
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		EE* localDest = oDest;
-		while (iCount)
+		const uint64 theBufferPos = sPos(fBuffer);
+		const uint64 theBufferSize = sSize(fBuffer);
+		if (theBufferPos >= theBufferSize)
 			{
-			if (size_t countRead = sReadFully(fBuffer, localDest, iCount))
-				{
-				localDest += countRead;
-				iCount -= countRead;
-				}
-			else
-				{
-				// Try topping up our buffer.
-				std::pair<uint64,uint64> result = sCopyFully(fSource, fBuffer, iCount);
-				if (result.second == 0)
-					break;
-				// if (result.second < result.first) ???
-				sPosSet(fBuffer, sPos(fBuffer) - result.second);
-				}
+			sPosSet(fBuffer, theBufferSize);
+			std::pair<uint64,uint64> result =
+				sCopyFully(fSource, fBuffer, theBufferPos - theBufferSize + iCount);
+			sPosSet(fBuffer, theBufferPos);
+
+			if (result.first != result.second)
+				sThrow_ExhaustedW();
 			}
-		return localDest - oDest;
+
+		return sRead(fBuffer, oDest, iCount);
 		}
 
 	virtual size_t Readable()
@@ -77,7 +61,7 @@ public:
 		{
 		// In order to know how much data is available we have
 		// to suck it all in from fSource. Another reason to avoid
-		// using GetSize if at all possible.
+		// using Size if at all possible.
 
 		uint64 curPosition = sPos(fBuffer);
 		sPosSet(fBuffer, sSize(fBuffer));
@@ -86,7 +70,7 @@ public:
 		return sSize(fBuffer);
 		}
 
-// From ChanAspect_Unread<EE>
+// From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{ return sUnread(fBuffer, iSource, iCount); }
 

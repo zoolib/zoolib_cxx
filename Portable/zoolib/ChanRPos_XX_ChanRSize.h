@@ -5,7 +5,7 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
-#include "zoolib/Util_Chan.h" // For sECopyAll, sECopyFully.
+#include "zoolib/Util_Chan.h" // For sCopyFully.
 
 namespace ZooLib {
 
@@ -40,11 +40,16 @@ public:
 			return 0;
 
 		const uint64 theBufferSize = sSize(fBuffer);
-		if (theBufferPos > theBufferSize)
+		if (theBufferPos >= theBufferSize)
 			{
 			sPosSet(fBuffer, theBufferSize);
-			sCopyFully(fSource, fBuffer, theBufferPos - theBufferSize + iCount);
+			std::pair<uint64,uint64> result =
+				sCopyFully(fSource, fBuffer,theBufferPos - theBufferSize + iCount);
 			sPosSet(fBuffer, theBufferPos);
+
+			// We absolutely depend on having copied all data into fBuffer.
+			if (result.first != result.second)
+				sThrow_ExhaustedW();
 			}
 
 		return sRead(fBuffer, oDest, iCount);
@@ -74,7 +79,7 @@ public:
 	virtual uint64 Size()
 		{ return sSize(fSource) + fOffset; }
 
-// From ChanAspect_Unread<EE>
+// From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{ return sUnread(fBuffer, iSource, iCount); }
 
