@@ -27,7 +27,7 @@ uint64 sAvailable(const DeriveFrom<ChanAspect_Pos,ChanAspect_Size>& iChan)
 	return theSize >= thePos ? theSize - thePos : 0;
 	}
 
-inline void sClear(const DeriveFrom<ChanAspect_Pos,ChanAspect_SizeSet>& iChan)
+inline void sClear(const DeriveFrom<ChanAspect_PosSet,ChanAspect_SizeSet>& iChan)
 	{
 	sPosSet(iChan, 0);
 	sSizeSet(iChan, 0);
@@ -38,16 +38,16 @@ inline void sClear(const DeriveFrom<ChanAspect_Pos,ChanAspect_SizeSet>& iChan)
 
 class SaveRestorePos
 	{
-	const ChanPos& fChanPos;
+	const ChanPosAndSet& fChan;
 	const uint64 fPriorPos;
 public:
-	SaveRestorePos(const ChanPos& iChanPos)
-	:	fChanPos(iChanPos)
-	,	fPriorPos(sPos(iChanPos))
+	SaveRestorePos(const ChanPosAndSet& iChan)
+	:	fChan(iChan)
+	,	fPriorPos(sPos(iChan))
 		{}
 
 	~SaveRestorePos()
-		{ sPosSet(fChanPos, fPriorPos); }
+		{ sPosSet(fChan, fPriorPos); }
 	};
 
 // =================================================================================================
@@ -56,9 +56,9 @@ public:
 class SaveSetRestorePos : public SaveRestorePos
 	{
 public:
-	SaveSetRestorePos(const ChanPos& iChanPos, uint64 iPos)
-	:	SaveRestorePos(iChanPos)
-		{ sPosSet(iChanPos, iPos); }
+	SaveSetRestorePos(const ChanPosAndSet& iChan, uint64 iPos)
+	:	SaveRestorePos(iChan)
+		{ sPosSet(iChan, iPos); }
 	};
 
 // =================================================================================================

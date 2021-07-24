@@ -44,6 +44,7 @@ template <class EE> using ChannerW = Channer<ChanW<EE>>;
 #pragma mark - Composite channer typedefs
 
 template <class EE> using ChannerRU = Channer<ChanRU<EE>>;
+template <class EE> using ChannerRSize = Channer<ChanRSize<EE>>;
 template <class EE> using ChannerRPos = Channer<ChanRPos<EE>>;
 template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;

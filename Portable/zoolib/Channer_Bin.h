@@ -18,6 +18,8 @@ typedef ChannerW<byte> ChannerW_Bin;
 
 typedef ChannerRU<byte> ChannerRU_Bin;
 
+typedef ChannerRSize<byte> ChannerRSize_Bin;
+
 typedef ChannerRPos<byte> ChannerRPos_Bin;
 typedef ChannerWPos<byte> ChannerWPos_Bin;
 typedef ChannerRWPos<byte> ChannerRWPos_Bin;
