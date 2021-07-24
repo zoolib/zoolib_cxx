@@ -27,6 +27,7 @@ public:
 	virtual ZQ<uint32> QCRC(size_t iIndex);
 
 	virtual ZP<ChannerR_Bin> OpenR(size_t iIndex);
+	virtual ZP<ChannerRSize_Bin> OpenRSize(size_t iIndex);
 	virtual ZP<ChannerRPos_Bin> OpenRPos(size_t iIndex);
 	};
 

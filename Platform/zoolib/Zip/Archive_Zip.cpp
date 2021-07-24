@@ -7,6 +7,7 @@
 #include <string.h> // for strlen
 
 #include "zip.h"
+#include "zipint.h" // For zip_file.bytes_left
 
 // This is implemented in zip_open.c
 extern "C" struct zip * zip_open_FILE(FILE* fp, int flags);
@@ -14,30 +15,46 @@ extern "C" struct zip * zip_open_FILE(FILE* fp, int flags);
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ChannerR_Bin_Zip
+#pragma mark - ChannerRSize_Zip
 
-class Archive_Zip::ChannerR_Bin_Zip
-:	public ChannerR_Bin
+class Archive_Zip::ChannerRSize_Bin_Zip
+:	public ChannerRSize_Bin
 	{
 public:
 	ZP<Archive_Zip> fArchive_Zip;
 	zip_file* f_zip_file;
+	uint64 fPos;
 
-	ChannerR_Bin_Zip(const ZP<Archive_Zip>& iArchive_Zip, zip_file* i_zip_file)
+	ChannerRSize_Bin_Zip(const ZP<Archive_Zip>& iArchive_Zip, zip_file* i_zip_file)
 	:	fArchive_Zip(iArchive_Zip)
 	,	f_zip_file(i_zip_file)
+	,	fPos(0)
 		{}
 
-	virtual ~ChannerR_Bin_Zip()
+	virtual ~ChannerRSize_Bin_Zip()
 		{ ::zip_fclose(f_zip_file); }
+
+// From ChanPos
+	virtual uint64 Pos()
+		{ return fPos; }
 
 // From ChanR
 	virtual size_t Read(byte* oDest, size_t iCount)
 		{
 		ZAcqMtx acq(fArchive_Zip->fMtx);
 		const ssize_t countRead = ::zip_fread(f_zip_file, oDest, iCount);
-		return countRead <= 0 ? 0 : countRead;
+		if (countRead < 0)
+			return 0;
+		fPos += countRead;
+		return countRead;
 		}
+
+	virtual size_t Readable()
+		{ return sClamped(f_zip_file->bytes_left); }
+
+// From ChanSize
+	virtual uint64 Size()
+		{ return fPos + f_zip_file->bytes_left; }
 	};
 
 // =================================================================================================
@@ -97,7 +114,7 @@ ZQ<uint32> Archive_Zip::QCRC(size_t iIndex)
 	return st.crc;
 	}
 
-ZP<ChannerR_Bin> Archive_Zip::OpenR(size_t iIndex)
+ZP<ChannerRSize_Bin> Archive_Zip::OpenRSize(size_t iIndex)
 	{
 	if (spIsFile(f_zip, iIndex))
 		{
@@ -107,7 +124,7 @@ ZP<ChannerR_Bin> Archive_Zip::OpenR(size_t iIndex)
 			// We could actually return a ChannerRSize -- implementing Aspect_Read and
 			// Aspect_Size. There are circumstances where its helpful know the size even
 			// if we can't random-access within.
-			return new ChannerR_Bin_Zip(this, the_zip_file);
+			return new ChannerRSize_Bin_Zip(this, the_zip_file);
 			}
 		}
 	return null;	

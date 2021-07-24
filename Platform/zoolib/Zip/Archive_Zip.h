@@ -27,7 +27,7 @@ public:
 	uint64 Size(size_t iIndex) override;
 	ZQ<uint32> QCRC(size_t iIndex) override;
 
-	ZP<ChannerR_Bin> OpenR(size_t iIndex) override;
+	ZP<ChannerRSize_Bin> OpenRSize(size_t iIndex) override;
 
 private:
 	ZMtx fMtx;
@@ -35,8 +35,8 @@ private:
 	struct zip* f_zip;
 	bool fOwned;
 	
-	class ChannerR_Bin_Zip;
-	friend class ChannerR_Bin_Zip;
+	class ChannerRSize_Bin_Zip;
+	friend class ChannerRSize_Bin_Zip;
 	};
 
 // =================================================================================================
