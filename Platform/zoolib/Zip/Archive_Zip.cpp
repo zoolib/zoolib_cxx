@@ -133,16 +133,18 @@ ZP<ChannerRSize_Bin> Archive_Zip::OpenRSize(size_t iIndex)
 // =================================================================================================
 #pragma mark -
 
-ZP<Archive_Zip> sArchive_Zip(const string8& iZipFilePath)
+ZP<Archive_Zip> sArchive_Zip(const string8& iZipFilePath, bool iCheckConsistency)
 	{
-	if (zip* the_zip = ::zip_open(iZipFilePath.c_str(), 0, nullptr))
+	const int flags = iCheckConsistency ? ZIP_CHECKCONS : 0;
+	if (zip* the_zip = ::zip_open(iZipFilePath.c_str(), flags, nullptr))
 		return new Archive_Zip(the_zip, true);
 	return null;
 	}
 
-ZP<Archive_Zip> sArchive_Zip(FILE* iFILE)
+ZP<Archive_Zip> sArchive_Zip(FILE* iFILE, bool iCheckConsistency)
 	{
-	if (zip* the_zip = ::zip_open_FILE(iFILE, 0))
+	const int flags = iCheckConsistency ? ZIP_CHECKCONS : 0;
+	if (zip* the_zip = ::zip_open_FILE(iFILE, flags))
 		return new Archive_Zip(the_zip, true);
 	return null;
 	}

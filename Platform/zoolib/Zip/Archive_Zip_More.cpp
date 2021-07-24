@@ -12,7 +12,7 @@ namespace ZooLib {
 #pragma mark -
 
 ZP<Archive_Zip> sArchive_Zip(ZP<ChannerRPos_Bin> iChannerRPos)
-	{ return sArchive_Zip(sFILE_RPos(iChannerRPos)); }
+	{ return sArchive_Zip(sFILE_RPos(iChannerRPos), false); }
 
 ZP<Archive_Zip> sArchive_Zip(ZP<ChannerR_Bin> iChannerR)
 	{ return sArchive_Zip(sChannerRPos_XX<byte>(iChannerR)); }

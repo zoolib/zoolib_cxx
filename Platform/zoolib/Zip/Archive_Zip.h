@@ -42,9 +42,9 @@ private:
 // =================================================================================================
 #pragma mark -
 
-ZP<Archive_Zip> sArchive_Zip(const string8& iZipFilePath);
+ZP<Archive_Zip> sArchive_Zip(const string8& iZipFilePath, bool iCheckConsistency);
 
-ZP<Archive_Zip> sArchive_Zip(FILE* iFILE);
+ZP<Archive_Zip> sArchive_Zip(FILE* iFILE, bool iCheckConsistency);
 
 bool sIsZip(const ChanR_Bin& iChanR);
 
