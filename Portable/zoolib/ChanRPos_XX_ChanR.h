@@ -24,14 +24,11 @@ public:
 
 // From ChanPos
 	virtual uint64 Pos()
-		{
-		// ZAssertStop(2, not fCommitted);
-		return sPos(fBuffer);
-		}
+		{ return sPos(fBuffer); }
 
+// From ChanPosSet
 	virtual void PosSet(uint64 iPos)
 		{
-		// ZAssertStop(2, not fCommitted);
 		uint64 curSize = sSize(fBuffer);
 		if (iPos > curSize)
 			{
@@ -57,25 +54,12 @@ public:
 				}
 			else
 				{
-				// Our buffer is empty.
-// 				if (fCommitted)
-// 					{
-// 					// We're committed, so read direct from fSource.
-// 					fSource.Read(localDest, iCount, &countRead);
-// 					if (countRead == 0)
-// 						break;
-// 					localDest += countRead;
-// 					iCount -= countRead;
-// 					}
-// 				else
-					{
-					// Try topping up our buffer.
-					std::pair<uint64,uint64> result = sCopyFully(fSource, fBuffer, iCount);
-					if (result.second == 0)
-						break;
-					// if (result.second < result.first) ???
-					sPosSet(fBuffer, sPos(fBuffer) - result.second);
-					}
+				// Try topping up our buffer.
+				std::pair<uint64,uint64> result = sCopyFully(fSource, fBuffer, iCount);
+				if (result.second == 0)
+					break;
+				// if (result.second < result.first) ???
+				sPosSet(fBuffer, sPos(fBuffer) - result.second);
 				}
 			}
 		return localDest - oDest;
@@ -94,7 +78,6 @@ public:
 		// In order to know how much data is available we have
 		// to suck it all in from fSource. Another reason to avoid
 		// using GetSize if at all possible.
-		// ZAssertStop(2, not fCommitted);
 
 		uint64 curPosition = sPos(fBuffer);
 		sPosSet(fBuffer, sSize(fBuffer));
@@ -103,11 +86,9 @@ public:
 		return sSize(fBuffer);
 		}
 
-	// From ChanAspect_Unread<EE>
+// From ChanAspect_Unread<EE>
 	virtual size_t Unread(const EE* iSource, size_t iCount)
-		{
-		return sUnread(fBuffer, iSource, iCount);
-		}
+		{ return sUnread(fBuffer, iSource, iCount); }
 
 protected:
 	const ChanR<EE>& fSource;
