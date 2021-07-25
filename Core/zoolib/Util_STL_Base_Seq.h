@@ -40,7 +40,7 @@ auto sQPopBack(CC& ioContainer)
 // sPushFront
 
 template <typename CC, typename VV>
-auto sPushBack(CC& ioContainer, VV&& rValue)
+auto sPushFront(CC& ioContainer, VV&& rValue)
 -> decltype(ioContainer.push_front(std::forward<VV>(rValue)),
 	void())
 	{ ioContainer.push_front(std::forward<VV>(rValue)); }
