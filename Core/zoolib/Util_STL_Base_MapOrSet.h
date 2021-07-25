@@ -16,8 +16,7 @@ namespace Util_STL {
 
 template <typename CC, typename KK>
 auto sEraseMust(const int iDebugLevel, CC& ioContainer, KK iKey)
--> decltype(ioContainer.erase(iKey),
-	void())
+-> decltype(void(ioContainer.erase(iKey)))
 	{
 	bool result = ioContainer.erase(iKey);
 	ZAssertStop(iDebugLevel, result);
@@ -25,8 +24,7 @@ auto sEraseMust(const int iDebugLevel, CC& ioContainer, KK iKey)
 
 template <typename CC, typename KK>
 auto sEraseMust(CC& ioContainer, KK iKey)
--> decltype(sEraseMust(1, ioContainer, iKey),
-	void())
+-> decltype(sEraseMust(1, ioContainer, iKey))
 	{ sEraseMust(1, ioContainer, iKey); }
 
 } // namespace Util_STL
