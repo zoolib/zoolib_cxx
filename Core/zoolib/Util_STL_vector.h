@@ -30,18 +30,13 @@ namespace Util_STL {
 // =================================================================================================
 #pragma mark - Util_STL
 
-// Having an issue with this:
-//template <typename PP>
-//auto sFirstOrNil(PP iParam) -> decltype(sFrontOrNullPtr(iParam))
-//	{ return sFrontOrNullPtr(iParam); }
+template <typename PP>
+auto sFirstOrNil(PP& iParam) -> decltype(sFrontOrNullPtr(iParam))
+	{ return sFrontOrNullPtr(iParam); }
 
-template <class T>
-T* sFirstOrNil(std::vector<T>& ioVec)
-	{ return sFrontOrNullPtr(ioVec); }
-
-template <class T>
-const T* sFirstOrNil(const std::vector<T>& iVec)
-	{ return sFrontOrNullPtr(iVec); }
+template <typename PP>
+auto sFirstOrNil(const PP& iParam) -> decltype(sFrontOrNullPtr(iParam))
+	{ return sFrontOrNullPtr(iParam); }
 
 // =================================================================================================
 #pragma mark - Util_STL, unsorted vectors
@@ -111,37 +106,37 @@ void sPushBackMust(std::vector<Base>& ioVec, const Derived& iElement)
 // =================================================================================================
 #pragma mark - Util_STL, vectors sorted by less<Base>
 
-template <typename Base, typename Derived>
-bool sQContainsSorted(const std::vector<Base>& iVec, const Derived& iElement)
-	{
-	typename std::vector<Base>::const_iterator ii =
-		lower_bound(iVec.begin(), iVec.end(), iElement);
-	return ii != iVec.end() && *ii == iElement;
-	}
-
-template <typename Base, typename Derived>
-bool sQEraseSorted(std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-
-	if (ii == ioVec.end() || not (*ii == iElement))
-		return false;
-
-	ioVec.erase(ii);
-	return true;
-	}
-
-template <typename Base, typename Derived>
-bool sQInsertSorted(std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
-
-	if (ii != ioVec.end() && *ii == iElement)
-		return false;
-
-	ioVec.insert(ii, iElement);
-	return true;
-	}
+//template <typename Base, typename Derived>
+//bool sQContainsSorted(const std::vector<Base>& iVec, const Derived& iElement)
+//	{
+//	typename std::vector<Base>::const_iterator ii =
+//		lower_bound(iVec.begin(), iVec.end(), iElement);
+//	return ii != iVec.end() && *ii == iElement;
+//	}
+//
+//template <typename Base, typename Derived>
+//bool sQEraseSorted(std::vector<Base>& ioVec, const Derived& iElement)
+//	{
+//	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+//
+//	if (ii == ioVec.end() || not (*ii == iElement))
+//		return false;
+//
+//	ioVec.erase(ii);
+//	return true;
+//	}
+//
+//template <typename Base, typename Derived>
+//bool sQInsertSorted(std::vector<Base>& ioVec, const Derived& iElement)
+//	{
+//	typename std::vector<Base>::iterator ii = lower_bound(ioVec.begin(), ioVec.end(), iElement);
+//
+//	if (ii != ioVec.end() && *ii == iElement)
+//		return false;
+//
+//	ioVec.insert(ii, iElement);
+//	return true;
+//	}
 
 template <typename Base, typename Derived>
 ZQ<size_t> sQFindSorted(const std::vector<Base>& iVec, const Derived& iElement)
@@ -155,33 +150,33 @@ ZQ<size_t> sQFindSorted(const std::vector<Base>& iVec, const Derived& iElement)
 // =================================================================================================
 #pragma mark - Util_STL, sXXXMust
 
-template <typename Base, typename Derived>
-void sEraseSortedMust(const int iDebugLevel,
-	std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	if (iDebugLevel > ZCONFIG_Debug)
-		sQEraseSorted(ioVec, iElement);
-	else if (not sQEraseSorted(ioVec, iElement))
-		ZDebugStop(iDebugLevel);
-	}
-
-template <typename Base, typename Derived>
-void sEraseSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
-	{ sEraseSortedMust(1, ioVec, iElement); }
-
-template <typename Base, typename Derived>
-void sInsertSortedMust(const int iDebugLevel,
-	std::vector<Base>& ioVec, const Derived& iElement)
-	{
-	if (iDebugLevel > ZCONFIG_Debug)
-		sQInsertSorted(ioVec, iElement);
-	else if (not sQInsertSorted(ioVec, iElement))
-		ZDebugStop(iDebugLevel);
-	}
-
-template <typename Base, typename Derived>
-void sInsertSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
-	{ sInsertSortedMust(1, ioVec, iElement); }
+//template <typename Base, typename Derived>
+//void sEraseSortedMust(const int iDebugLevel,
+//	std::vector<Base>& ioVec, const Derived& iElement)
+//	{
+//	if (iDebugLevel > ZCONFIG_Debug)
+//		sQEraseSorted(ioVec, iElement);
+//	else if (not sQEraseSorted(ioVec, iElement))
+//		ZDebugStop(iDebugLevel);
+//	}
+//
+//template <typename Base, typename Derived>
+//void sEraseSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
+//	{ sEraseSortedMust(1, ioVec, iElement); }
+//
+//template <typename Base, typename Derived>
+//void sInsertSortedMust(const int iDebugLevel,
+//	std::vector<Base>& ioVec, const Derived& iElement)
+//	{
+//	if (iDebugLevel > ZCONFIG_Debug)
+//		sQInsertSorted(ioVec, iElement);
+//	else if (not sQInsertSorted(ioVec, iElement))
+//		ZDebugStop(iDebugLevel);
+//	}
+//
+//template <typename Base, typename Derived>
+//void sInsertSortedMust(std::vector<Base>& ioVec, const Derived& iElement)
+//	{ sInsertSortedMust(1, ioVec, iElement); }
 
 } // namespace Util_STL
 } // namespace ZooLib

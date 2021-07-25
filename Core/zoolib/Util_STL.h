@@ -1,4 +1,4 @@
-// Copyright (c) 2002-2020 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2002-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_h__
 #define __ZooLib_Util_STL_h__ 1
@@ -47,116 +47,82 @@ void sDeleteAll(ForwardIterator begin, ForwardIterator end)
 // sCount
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<typename T::size_type(T::*)() const>
-		(&T::size))>::value,
-typename T::size_type>
-sCount(const T& iT)
+auto sCount(const T& iT)
+-> decltype(iT.size())
 	{ return iT.size(); }
 
 // =================================================================================================
 // sIsEmpty
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
-		(&T::empty))>::value,
-bool>
-sIsEmpty(const T& iT)
-	{ return iT.empty(); }
+auto sIsEmpty(const T& iT)
+-> decltype(bool(iT.empty()))
+	{ return bool(iT.empty()); }
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
-		(&T::IsEmpty))>::value,
-bool>
-sIsEmpty(const T& iT)
-	{ return iT.IsEmpty(); }
+auto sIsEmpty(const T& iT)
+-> decltype(bool(iT.IsEmpty()))
+	{ return bool(iT.IsEmpty()); }
 
 // =================================================================================================
 // sNotEmpty
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
-		(&T::empty))>::value,
-bool>
-sNotEmpty(const T& iT)
-	{ return not iT.empty(); }
+auto sNotEmpty(const T& iT)
+-> decltype(bool(iT.empty()))
+	{ return not bool(iT.empty()); }
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<bool(T::*)() const>
-		(&T::IsEmpty))>::value,
-bool>
-sNotEmpty(const T& iT)
-	{ return not iT.IsEmpty(); }
+auto sNotEmpty(const T& iT)
+-> decltype(not bool(iT.IsEmpty()))
+	{ return not bool(iT.IsEmpty()); }
 
 // =================================================================================================
 // sClear
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<void(T::*)()>
-		(&T::clear))>::value,
-void>
-sClear(T& ioT)
+auto sClear(T& ioT)
+-> decltype(ioT.clear(),
+	void())
 	{ ioT.clear(); }
 
 template <typename T>
-	EnableIf_t<IsMFP<decltype(static_cast<void(T::*)()>
-		(&T::Clear))>::value,
-void>
-sClear(T& ioT)
+auto sClear(T& ioT)
+-> decltype(ioT.Clear(),
+	void())
 	{ ioT.Clear(); }
 
 // =================================================================================================
 // sContains
 
 template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<
-		typename CC::const_iterator(CC::*)(const typename CC::key_type&) const>
-		(&CC::find))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<
-			typename CC::const_iterator(CC::*)() const>
-			(&CC::end))>::value,
-bool>>
-sContains(const CC& iContainer, KK iKey)
-	{ return iContainer.end() != iContainer.find(iKey); }
-
-template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(const typename CC::key_type&)>
-		(&CC::find))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
-		(&CC::end))>::value,
-bool>>
-sContains(CC& ioContainer, KK iKey)
-	{ return ioContainer.end() != ioContainer.find(iKey); }
+auto sContains(const CC& iContainer, KK iKey)
+-> decltype(bool(iContainer.end() != iContainer.find(iKey)))
+	{ return bool(iContainer.end() != iContainer.find(iKey)); }
 
 // =================================================================================================
 // sQErase(key)
 
 template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
-		(&CC::erase))>::value,
-bool>
-sQErase(CC& ioContainer, KK iKey)
-	{ return ioContainer.erase(iKey); }
+auto sQErase(CC& ioContainer, KK iKey)
+-> decltype(bool(ioContainer.erase(iKey)))
+	{ return bool(ioContainer.erase(iKey)); }
 
 // =================================================================================================
 // sErase(key)
 
 template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
-		(&CC::erase))>::value,
-void>
-sErase(CC& ioContainer, KK iKey)
+auto sErase(CC& ioContainer, KK iKey)
+-> decltype(void(ioContainer.erase(iKey)))
 	{ ioContainer.erase(iKey); }
 
 // =================================================================================================
 // sQErase(iterator)
 
 template <typename CC, typename II>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
-		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
-		(&CC::end))>::value,
-bool>>
-sQErase(CC& ioContainer, II iter)
+auto sQErase(CC& ioContainer, II iter)
+-> decltype(ioContainer.end() == iter, ioContainer.erase(iter),
+	bool())
 	{
 	if (ioContainer.end() == iter)
 		return false;
@@ -168,14 +134,11 @@ sQErase(CC& ioContainer, II iter)
 // sErase(iterator)
 
 template <typename CC, typename II>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
-		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
-		(&CC::end))>::value,
-void>>
-sErase(CC& ioContainer, II iter)
+auto sErase(CC& ioContainer, II iter)
+-> decltype(ioContainer.end() == iter, ioContainer.erase(iter),
+	void())
 	{
-	ZAssert(ioContainer.end() != iter);
+	ZAssert(not (ioContainer.end() == iter));
 	ioContainer.erase(iter);
 	}
 
@@ -183,14 +146,10 @@ sErase(CC& ioContainer, II iter)
 // sEraseInc
 
 template <typename CC, typename II>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)(II)>
-		(&CC::erase))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<typename CC::iterator(CC::*)() const>
-			(&CC::end))>::value,
-typename CC::iterator>>
-sEraseInc(CC& ioContainer, II iter)
+auto sEraseInc(CC& ioContainer, II iter)
+-> decltype(ioContainer.end() == iter, ioContainer.erase(iter))
 	{
-	ZAssert(ioContainer.end() != iter);
+	ZAssert(not (ioContainer.end() == iter));
 	return ioContainer.erase(iter);
 	}
 
@@ -198,29 +157,23 @@ sEraseInc(CC& ioContainer, II iter)
 // sFrontOrNullPtr
 
 template <typename CC>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::reference(CC::*)()>
-		(&CC::front))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<bool(CC::*)() const>
-			(&CC::empty))>::value,
-typename CC::pointer>>
-sFrontOrNullPtr(CC& ioContainer)
-	{
-	if (ioContainer.empty())
-		return nullptr;
-	return &ioContainer.front();
-	}
-
-template <typename CC>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::const_reference(CC::*)() const>
-		(&CC::front))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<bool(CC::*)() const>
-			(&CC::empty))>::value,
-typename CC::const_pointer>>
-sFrontOrNullPtr(const CC& iContainer)
+auto sFrontOrNullPtr(const CC& iContainer)
+-> decltype(iContainer.empty(), iContainer.front(),
+	typename CC::const_pointer())
 	{
 	if (iContainer.empty())
 		return nullptr;
 	return &iContainer.front();
+	}
+
+template <typename CC>
+auto sFrontOrNullPtr(CC& ioContainer)
+-> decltype(ioContainer.empty(), ioContainer.front(),
+	typename CC::pointer())
+	{
+	if (ioContainer.empty())
+		return nullptr;
+	return &ioContainer.front();
 	}
 
 } // namespace Util_STL

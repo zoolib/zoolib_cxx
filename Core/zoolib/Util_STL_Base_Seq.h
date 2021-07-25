@@ -15,27 +15,23 @@ namespace Util_STL {
 // sPushBack
 
 template <typename CC, typename VV>
-	EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)(const typename CC::value_type&)>
-		(&CC::push_back))>::value,
-void>
-sPushBack(CC& ioContainer, const VV& iValue)
-	{ ioContainer.push_back(iValue); }
+auto sPushBack(CC& ioContainer, VV&& rValue)
+-> decltype(ioContainer.push_back(std::forward<VV>(rValue)),
+	void())
+	{ ioContainer.push_back(std::forward<VV>(rValue)); }
 
 // =================================================================================================
 // sQPopBack
 
 template <typename CC>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::value_type&(CC::*)()>
-		(&CC::back))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)()>
-			(&CC::pop_back))>::value,
-ZQ<typename CC::value_type>>>
-sQPopBack(CC& ioContainer)
+auto sQPopBack(CC& ioContainer)
+-> decltype(ioContainer.empty(), ioContainer.back(), ioContainer.pop_back(),
+	ZQ<typename CC::value_type>())
 	{
 	if (ioContainer.empty())
 		return null;
 
-	const typename CC::value_type result = std::move(ioContainer.back());
+	const typename CC::value_type result(std::move(ioContainer.back()));
 	ioContainer.pop_back();
 	return result;
 	}
@@ -44,27 +40,23 @@ sQPopBack(CC& ioContainer)
 // sPushFront
 
 template <typename CC, typename VV>
-	EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)(const typename CC::value_type&)>
-		(&CC::push_front))>::value,
-void>
-sPushFront(CC& ioContainer, const VV& iValue)
-	{ ioContainer.push_front(iValue); }
+auto sPushBack(CC& ioContainer, VV&& rValue)
+-> decltype(ioContainer.push_front(std::forward<VV>(rValue)),
+	void())
+	{ ioContainer.push_front(std::forward<VV>(rValue)); }
 
 // =================================================================================================
 // sQPopFront
 
 template <typename CC>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::value_type&(CC::*)()>
-		(&CC::front))>::value,
-		EnableIf_t<IsMFP<decltype(static_cast<void(CC::*)()>
-			(&CC::pop_front))>::value,
-ZQ<typename CC::value_type>>>
-sQPopFront(CC& ioContainer)
+auto sQPopFront(CC& ioContainer)
+-> decltype(ioContainer.empty(), ioContainer.front(), ioContainer.pop_front(),
+	ZQ<typename CC::value_type>())
 	{
 	if (ioContainer.empty())
 		return null;
 
-	const typename CC::value_type result = std::move(ioContainer.front());
+	const typename CC::value_type result(std::move(ioContainer.front()));
 	ioContainer.pop_front();
 	return result;
 	}

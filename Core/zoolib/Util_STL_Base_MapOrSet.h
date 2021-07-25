@@ -15,20 +15,18 @@ namespace Util_STL {
 // sEraseMust(key)
 
 template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
-		(&CC::erase))>::value,
-void>
-sEraseMust(const int iDebugLevel, CC& ioContainer, KK iKey)
+auto sEraseMust(const int iDebugLevel, CC& ioContainer, KK iKey)
+-> decltype(ioContainer.erase(iKey),
+	void())
 	{
 	bool result = ioContainer.erase(iKey);
 	ZAssertStop(iDebugLevel, result);
 	}
 
 template <typename CC, typename KK>
-	EnableIf_t<IsMFP<decltype(static_cast<typename CC::size_type(CC::*)(const typename CC::key_type&)>
-		(&CC::erase))>::value,
-void>
-sEraseMust(CC& ioContainer, KK iKey)
+auto sEraseMust(CC& ioContainer, KK iKey)
+-> decltype(sEraseMust(1, ioContainer, iKey),
+	void())
 	{ sEraseMust(1, ioContainer, iKey); }
 
 } // namespace Util_STL
