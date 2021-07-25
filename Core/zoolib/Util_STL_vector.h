@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2020 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2011-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_vector_h__
 #define __ZooLib_Util_STL_vector_h__ 1

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Andrew Green. MIT License. http://www.zoolib.org
+// Copyright (c) 2020-2021 Andrew Green. MIT License. http://www.zoolib.org
 
 #ifndef __ZooLib_Util_STL_Base_MapOrSet_h__
 #define __ZooLib_Util_STL_Base_MapOrSet_h__ 1
