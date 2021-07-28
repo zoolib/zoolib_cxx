@@ -202,7 +202,7 @@ void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZP<UITableViewCell> 
 		{
 		[ioCell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
 		}
-	else if (this->CanSelect(false, iRowIndex).DGet(false))
+	else if (this->CanSelect(false, iRowIndex) | false)
 		{
 		[ioCell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 		}
@@ -217,7 +217,7 @@ void SectionBody_Concrete::ApplyAccessory(size_t iRowIndex, ZP<UITableViewCell> 
 		{
 		[ioCell setEditingAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
 		}
-	else if (this->CanSelect(true, iRowIndex).DGet(false))
+	else if (this->CanSelect(true, iRowIndex) | false)
 		{
 		[ioCell setEditingAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 		}
