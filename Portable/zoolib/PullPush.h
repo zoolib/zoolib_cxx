@@ -119,6 +119,12 @@ void sPush(const Name& iName, const T& iVal, const ChanW_PPT& iChanW)
 	sPush(iVal, iChanW);
 	}
 
+// Passing a Name as the value is unlikely to be intentional, the caller probably
+// thinks it's passing a string. If a Name followed by a Name is actually wanted
+// then that's better done explicitly with two separate pushes.
+template <>
+void sPush<Name>(const Name& iName, const Name&, const ChanW_PPT& iChanW) = delete;
+
 void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, const ChanW_PPT& iChanW);
 void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, uint64 iCount, const ChanW_PPT& iChanW);
 
