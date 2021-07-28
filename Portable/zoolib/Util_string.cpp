@@ -33,13 +33,6 @@ ZQ<int64> sQInt64(const string& iString)
 	return null;
 	}
 
-int64 sDInt64(int64 iDefault, const string& iString)
-	{
-	if (ZQ<int64> qInt64 = sQInt64(iString))
-		return qInt64.Get();
-	return iDefault;
-	}
-
 int64 sInt64(const string& iString)
 	{
 	if (ZQ<int64> qInt64 = sQInt64(iString))
@@ -58,13 +51,6 @@ ZQ<uint64> sQUInt64(const string& iString)
 	return null;
 	}
 
-uint64 sDUInt64(uint64 iDefault, const string& iString)
-	{
-	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
-		return qUInt64.Get();
-	return iDefault;
-	}
-
 uint64 sUInt64(const string& iString)
 	{
 	if (ZQ<uint64> qUInt64 = sQUInt64(iString))
@@ -81,13 +67,6 @@ ZQ<double> sQDouble(const string& iString)
 			return result;
 		}
 	return null;
-	}
-
-double sDDouble(double iDefault, const string& iString)
-	{
-	if (ZQ<double> qDouble = sQDouble(iString))
-		return qDouble.Get();
-	return iDefault;
 	}
 
 double sDouble(const string& iString)

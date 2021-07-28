@@ -19,15 +19,12 @@ using std::string;
 #pragma mark - Util_string
 
 ZQ<int64> sQInt64(const string& iString);
-int64 sDInt64(int64 iDefault, const string& iString);
 int64 sInt64(const string& iString);
 
 ZQ<uint64> sQUInt64(const string& iString);
-uint64 sDUInt64(uint64 iDefault, const string& iString);
 uint64 sUInt64(const string& iString);
 
 ZQ<double> sQDouble(const string& iString);
-double sDDouble(double iDefault, const string& iString);
 double sDouble(const string& iString);
 
 // -----

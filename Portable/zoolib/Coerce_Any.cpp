@@ -52,13 +52,6 @@ bool sQCoerceBool(const AnyBase& iAny, bool& oVal)
 	return false;
 	}
 
-bool sDCoerceBool(bool iDefault, const AnyBase& iAny)
-	{
-	if (ZQ<bool> qq = sQCoerceBool(iAny))
-		return *qq;
-	return iDefault;
-	}
-
 bool sCoerceBool(const AnyBase& iAny)
 	{
 	if (ZQ<bool> qq = sQCoerceBool(iAny))
@@ -108,13 +101,6 @@ bool sQCoerceInt(const AnyBase& iAny, int64& oVal)
 	return false;
 	}
 
-int64 sDCoerceInt(int64 iDefault, const AnyBase& iAny)
-	{
-	if (ZQ<int64> qq = sQCoerceInt(iAny))
-		return *qq;
-	return iDefault;
-	}
-
 int64 sCoerceInt(const AnyBase& iAny)
 	{
 	if (ZQ<int64> qq = sQCoerceInt(iAny))
@@ -144,13 +130,6 @@ bool sQCoerceRat(const AnyBase& iAny, double& oVal)
 		return true;
 		}
 	return false;
-	}
-
-double sDCoerceRat(double iDefault, const AnyBase& iAny)
-	{
-	if (ZQ<double> qq = sQCoerceRat(iAny))
-		return *qq;
-	return iDefault;
 	}
 
 double sCoerceRat(const AnyBase& iAny)

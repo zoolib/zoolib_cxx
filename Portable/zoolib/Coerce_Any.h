@@ -14,17 +14,14 @@ namespace ZooLib {
 
 ZQ<bool> sQCoerceBool(const AnyBase& iAny);
 bool sQCoerceBool(const AnyBase& iAny, bool& oVal);
-bool sDCoerceBool(bool iDefault, const AnyBase& iAny);
 bool sCoerceBool(const AnyBase& iAny);
 
 ZQ<int64> sQCoerceInt(const AnyBase& iAny);
 bool sQCoerceInt(const AnyBase& iAny, int64& oVal);
-int64 sDCoerceInt(int64 iDefault, const AnyBase& iAny);
 int64 sCoerceInt(const AnyBase& iAny);
 
 ZQ<double> sQCoerceRat(const AnyBase& iAny);
 bool sQCoerceRat(const AnyBase& iAny, double& oVal);
-double sDCoerceRat(double iDefault, const AnyBase& iAny);
 double sCoerceRat(const AnyBase& iAny);
 
 ZQ<int64> sQCoerceNumberAsInt(const AnyBase& iAny);
