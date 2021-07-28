@@ -40,8 +40,8 @@ static ZP<Tween_Rat> spAugment(const Map& iMap, ZP<Tween_Rat> lTween_Rat)
 	{
 	if (lTween_Rat)
 		{
-		const Rat theZero = sDRat(0, iMap.QGet("Zero"));
-		const Rat theOne = sDRat(1, iMap.QGet("One"));
+		const Rat theZero = sQRat(iMap.QGet("Zero")) | Rat(0);
+		const Rat theOne = sQRat(iMap.QGet("One")) | Rat(1);
 		if (theZero != 0.0)
 			{
 			lTween_Rat = sTween_ValRange<Rat>(theZero, theOne, lTween_Rat);
@@ -99,7 +99,7 @@ ZP<Tween_Rat> sTween<Rat>(const ZQ<Val>& iValQ)
 #pragma mark - Const
 
 static ZP<Tween_Rat> spRatCtor_Const(const Map& iMap)
-	{ return sTween_Const(sDRat(0, iMap.QGet("Val"))); }
+	{ return sTween_Const(sQRat(iMap.QGet("Val")) | Rat(0)); }
 
 ZMACRO_RatRegister(Const);
 
@@ -141,7 +141,7 @@ ZMACRO_RatRegistration(BounceOut);
 #pragma mark - BackIn
 
 static ZP<Tween_Rat> spRatCtor_BackIn(const Map& iMap)
-	{ return sTween_BackIn(sDRat(1.70158, iMap.QGet("Factor"))); }
+	{ return sTween_BackIn(sQRat(iMap.QGet("Factor")) | Rat(1.70158)); }
 
 ZMACRO_RatRegister(BackIn);
 
@@ -149,7 +149,7 @@ ZMACRO_RatRegister(BackIn);
 #pragma mark - BackOut
 
 static ZP<Tween_Rat> spRatCtor_BackOut(const Map& iMap)
-	{ return sTween_BackOut(sDRat(1.70158, iMap.QGet("Factor"))); }
+	{ return sTween_BackOut(sQRat(iMap.QGet("Factor")) | Rat(1.70158)); }
 
 ZMACRO_RatRegister(BackOut);
 

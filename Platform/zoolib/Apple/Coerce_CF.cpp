@@ -82,13 +82,6 @@ bool sQCoerceBool(CFTypeRef iCF, bool& oVal)
 	return false;
 	}
 
-bool sDCoerceBool(bool iDefault, CFTypeRef iCF)
-	{
-	if (ZQ<bool> qq = sQCoerceBool(iCF))
-		return *qq;
-	return iDefault;
-	}
-
 bool sCoerceBool(CFTypeRef iCF)
 	{
 	if (ZQ<bool> qq = sQCoerceBool(iCF))
@@ -120,13 +113,6 @@ bool sQCoerceInt(CFTypeRef iCF, int64& oVal)
 	return false;
 	}
 
-int64 sDCoerceInt(int64 iDefault, CFTypeRef iCF)
-	{
-	if (ZQ<int64> qq = sQCoerceInt(iCF))
-		return *qq;
-	return iDefault;
-	}
-
 int64 sCoerceInt(CFTypeRef iCF)
 	{
 	if (ZQ<int64> qq = sQCoerceInt(iCF))
@@ -156,13 +142,6 @@ bool sQCoerceRat(CFTypeRef iCF, double& oVal)
 		return true;
 		}
 	return false;
-	}
-
-double sDCoerceRat(double iDefault, CFTypeRef iCF)
-	{
-	if (ZQ<double> qq = sQCoerceRat(iCF))
-		return *qq;
-	return iDefault;
 	}
 
 double sCoerceRat(CFTypeRef iCF)

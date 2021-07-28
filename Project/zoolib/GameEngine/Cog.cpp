@@ -442,7 +442,7 @@ Cog sCog_Log1(int iLevel, const string8& iMessage)
 
 static
 Cog spCogCtor_Log1(const Map& iMap)
-	{ return sCog_Log1(sDRat(7, iMap.QGet("Level")), iMap.Get<string8>("Message")); }
+	{ return sCog_Log1(sQRat(iMap.QGet("Level")) | Rat(7), iMap.Get<string8>("Message")); }
 
 static
 CogRegistration spCogRegistration_Log("CogCtor_Log", spCogCtor_Log1);

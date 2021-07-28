@@ -77,13 +77,6 @@ ZQ<Rat> sQRat(const AnyBase& iAnyBase)
 	return null;
 	}
 
-Rat sDRat(Rat iDefault, const AnyBase& iAnyBase)
-	{
-	if (ZQ<Rat> theQ = sQRat(iAnyBase))
-		return *theQ;
-	return iDefault;
-	}
-
 Rat sRat(const AnyBase& iAnyBase)
 	{
 	if (ZQ<Rat> theQ = sQRat(iAnyBase))
@@ -99,13 +92,6 @@ ZQ<Rat> sQRat(const ZQ<Val>& iValQ)
 	if (iValQ)
 		return sQRat(*iValQ);
 	return null;
-	}
-
-Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ)
-	{
-	if (ZQ<Rat> theQ = sQRat(iValQ))
-		return *theQ;
-	return iDefault;
 	}
 
 Rat sRat(const ZQ<Val>& iValQ)
@@ -183,13 +169,6 @@ ZQ<CVec3> sQCVec3(Rat iIdentity, const AnyBase& iAnyBase)
 	return null;
 	}
 
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const AnyBase& iAnyBase)
-	{
-	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iAnyBase))
-		return *theQ;
-	return iDefault;
-	}
-
 CVec3 sCVec3(Rat iIdentity, const AnyBase& iAnyBase)
 	{
 	if (ZQ<CVec3> theQ = sQCVec3(iIdentity, iAnyBase))
@@ -202,13 +181,6 @@ ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ)
 	if (iValQ)
 		return sQCVec3(iIdentity, *iValQ);
 	return null;
-	}
-
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ)
-	{
-	if (iValQ)
-		return sDCVec3(iDefault, iIdentity, *iValQ);
-	return iDefault;
 	}
 
 CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ)

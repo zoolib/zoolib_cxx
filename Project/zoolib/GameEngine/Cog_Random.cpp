@@ -27,7 +27,7 @@ Cog sCog_Random(double iRatio, const Cog& iCog0, const Cog& iCog1)
 static
 Cog spCogCtor_Random(const Map& iMap)
 	{
-	double ratio = sDRat(1, iMap.Get("Ratio"));
+	double ratio = sQRat(iMap.QGet("Ratio")) | Rat(1.0);
 	Cog cog0 = sCog(iMap.Get("Cog0"));
 	Cog cog1 = sCog(iMap.Get("Cog1"));
 	return sCog_Random(ratio, cog0, cog1);

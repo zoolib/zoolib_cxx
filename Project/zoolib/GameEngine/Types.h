@@ -382,28 +382,24 @@ Val sGetNamed(const Map& iMap, const Name& iName0, const Name& iName1);
 #pragma mark - Rat, from Any
 
 ZQ<Rat> sQRat(const AnyBase& iAnyBase);
-Rat sDRat(Rat iDefault, const AnyBase& iAnyBase);
 Rat sRat(const AnyBase& iAnyBase);
 
 // =================================================================================================
 #pragma mark - Rat, from ZQ<Val>
 
 ZQ<Rat> sQRat(const ZQ<Val>& iValQ);
-Rat sDRat(Rat iDefault, const ZQ<Val>& iValQ);
 Rat sRat(const ZQ<Val>& iValQ);
 
 // =================================================================================================
 #pragma mark - CVec3, from Any
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const AnyBase& iAnyBase);
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const AnyBase& iAnyBase);
 CVec3 sCVec3(Rat iIdentity, const AnyBase& iAnyBase);
 
 // =================================================================================================
 #pragma mark - CVec3, from ZQ<Val>
 
 ZQ<CVec3> sQCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
-CVec3 sDCVec3(const CVec3& iDefault, Rat iIdentity, const ZQ<Val>& iValQ);
 CVec3 sCVec3(Rat iIdentity, const ZQ<Val>& iValQ);
 
 CVec3 sCVec3(Rat iX, Rat iY, Rat iZ);

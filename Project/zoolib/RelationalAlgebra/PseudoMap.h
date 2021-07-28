@@ -63,9 +63,6 @@ inline const Val_DB* sPGet(const PseudoMap& iMap, const string8& iName)
 inline const ZQ<Val_DB> sQGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.QGet(iName); }
 
-//inline const Val_DB& sDGet(const Val_DB& iDefault, const PseudoMap& iMap, const string8& iName)
-//	{ return iMap.DGet(iDefault, iName); }
-
 inline const Val_DB& sGet(const PseudoMap& iMap, const string8& iName)
 	{ return iMap.Get(iName); }
 
