@@ -5,6 +5,7 @@
 
 #include "zoolib/Compat_string.h"
 #include "zoolib/Stringf.h"
+#include "zoolib/ThreadVal.h"
 #include "zoolib/Util_string.h"
 
 using std::string;
@@ -18,20 +19,21 @@ ZP<LogMeister> sLogMeister;
 // =================================================================================================
 #pragma mark - Log::CallDepth
 
-static thread_local const CallDepth* spCurrent;
+static ThreadVal<const CallDepth*> spTVCurrent;
+// static thread_local const CallDepth* spCurrent;
 
 CallDepth::CallDepth(bool iActive)
 :	fActive(iActive)
-,	fPrior(spCurrent)
-	{ spCurrent = this; }
+,	fPrior(spTVCurrent)
+	{ spTVCurrent = this; }
 
 CallDepth::~CallDepth()
-	{ spCurrent = fPrior; }
+	{ spTVCurrent = fPrior; }
 
 size_t CallDepth::sCount()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = spCurrent; current; current = current->fPrior)
+	for (const CallDepth* current = spTVCurrent; current; current = current->fPrior)
 		{ ++count; }
 	return count;
 	}
@@ -39,7 +41,7 @@ size_t CallDepth::sCount()
 size_t CallDepth::sCountActive()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = spCurrent; current; current = current->fPrior)
+	for (const CallDepth* current = spTVCurrent; current; current = current->fPrior)
 		{
 		if (current->fActive)
 			++count;
