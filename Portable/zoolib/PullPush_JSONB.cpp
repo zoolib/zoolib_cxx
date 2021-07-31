@@ -74,34 +74,34 @@ void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 	if (iReadFilter && sCall(iReadFilter, iType, iChanR, iChanW))
 		return;
 
-	switch (iType)
+	switch (EType(iType))
 		{
-		case 0xE0:
+		case EType::Null:
 			{
 			sPush(PPT(), iChanW);
 			break;
 			}
-		case 0xE2:
+		case EType::False:
 			{
 			sPush(false, iChanW);
 			break;
 			}
-		case 0xE3:
+		case EType::True:
 			{
 			sPush(true, iChanW);
 			break;
 			}
-		case 0xE4:
+		case EType::Int64:
 			{
 			sPush(sEReadBE<int64>(iChanR), iChanW);
 			break;
 			}
-		case 0xE5:
+		case EType::Float64:
 			{
 			sPush(sEReadBE<double>(iChanR), iChanW);
 			break;
 			}
-		case 0xE7:
+		case EType::Binary_Chunked:
 			{
 			PullPushPair<byte> thePullPushPair = sMakePullPushPair<byte>();
 			sPush(sGetClear(thePullPushPair.second), iChanW);
@@ -116,12 +116,12 @@ void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 			sDisconnectWrite(*thePullPushPair.first);
 			break;
 			}
-		case 0xE8:
+		case EType::UTF_Complete:
 			{
 			sPush(sReadString(iChanR, size_t(sReadCount(iChanR))), iChanW);
 			break;
 			}
-		case 0xEA:
+		case EType::Seq:
 			{
 			sPush_Start_Seq(iChanW);
 			for (;;)
@@ -130,7 +130,7 @@ void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
-				else if (*theTypeQ == 0xFF)
+				else if (*theTypeQ == byte(EType::End))
 					{
 					break;
 					}
@@ -142,7 +142,7 @@ void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 			sPush_End(iChanW);
 			break;
 			}
-		case 0xED:
+		case EType::Map:
 			{
 			sPush_Start_Map(iChanW);
 			for (;;)
@@ -152,7 +152,7 @@ void spPull_JSONB_Push_PPT(byte iType, const ChanR_Bin& iChanR,
 					{
 					sThrow_ParseException("Unexpected end of ChanR_Bin");
 					}
-				else if (*theTypeQ == 0xFF)
+				else if (*theTypeQ == byte(EType::End))
 					{
 					break;
 					}
@@ -195,21 +195,21 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	if (const string* theString = sPGet<string>(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE8);
+		sEWriteBE<byte>(iChanW, byte(EType::UTF_Complete));
 		sEWriteCountPrefixedString(iChanW, *theString);
 		return true;
 		}
 
 	if (ZP<ChannerR_UTF> theChanner = sGet<ZP<ChannerR_UTF>>(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE8);
+		sEWriteBE<byte>(iChanW, byte(EType::UTF_Complete));
 		sEWriteCountPrefixedString(iChanW, sReadAllUTF8(*theChanner));
 		return true;
 		}
 
 	if (const Data_ZZ* theData = sPGet<Data_ZZ>(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE7);
+		sEWriteBE<byte>(iChanW, byte(EType::Binary_Chunked));
 		if (size_t theSize = theData->GetSize())
 			{
 			sEWriteCount(iChanW, theSize);
@@ -221,7 +221,7 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE7);
+		sEWriteBE<byte>(iChanW, byte(EType::Binary_Chunked));
 		const size_t chunkSize = 64 * 1024;
 		byte buffer[chunkSize];
 		for (;;)
@@ -237,13 +237,13 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 
 	if (sIsStart_Map(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xED);
+		sEWriteBE<byte>(iChanW, byte(EType::Map));
 		for (;;)
 			{
 			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
 				{
 				// Empty name
-				sEWriteBE<uint8>(iChanW, 0);
+				sEWriteBE<byte>(iChanW, 0);
 				break;
 				}
 			else
@@ -254,47 +254,47 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 				}
 			}
 		// Terminator
-		sEWriteBE<uint8>(iChanW, 0xFF);
+		sEWriteBE<byte>(iChanW, byte(EType::End));
 		return true;
 		}
 
 	if (sIsStart_Seq(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xEA);
+		sEWriteBE<byte>(iChanW, byte(EType::Seq));
 		for (;;)
 			{
 			if (not sPull_PPT_Push_JSONB(iChanR, iWriteFilter, iChanW))
 				break;
 			}
-		sEWriteBE<uint8>(iChanW, 0xFF);
+		sEWriteBE<byte>(iChanW, byte(EType::End));
 		return true;
 		}
 
 	if (thePPT.IsNull())
 		{
-		sEWriteBE<uint8>(iChanW, 0xE0);
+		sEWriteBE<byte>(iChanW, byte(EType::Null));
 		return true;
 		}
 
 	if (const bool* p = sPGet<bool>(thePPT))
 		{
 		if (*p)
-			sEWriteBE<uint8>(iChanW, 0xE3);
+			sEWriteBE<byte>(iChanW, byte(EType::True));
 		else
-			sEWriteBE<uint8>(iChanW, 0xE2);
+			sEWriteBE<byte>(iChanW, byte(EType::False));
 		return true;
 		}
 
 	if (ZQ<int64> theQ = sQCoerceInt(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE4);
+		sEWriteBE<byte>(iChanW, byte(EType::Int64));
 		sEWriteBE<int64>(iChanW, *theQ);
 		return true;
 		}
 
 	if (ZQ<double> theQ = sQCoerceRat(thePPT))
 		{
-		sEWriteBE<uint8>(iChanW, 0xE5);
+		sEWriteBE<byte>(iChanW, byte(EType::Float64));
 		sEWriteBE<double>(iChanW, *theQ);
 		return true;
 		}
