@@ -5,7 +5,6 @@
 
 #include "zoolib/Compat_string.h"
 #include "zoolib/Stringf.h"
-#include "zoolib/ThreadVal.h"
 #include "zoolib/Util_string.h"
 
 using std::string;
@@ -14,26 +13,30 @@ namespace ZooLib {
 namespace Log {
 
 ZP<LogMeister> sLogMeister;
-//ZSafe<ZP<LogMeister>> sLogMeister;
 
 // =================================================================================================
 #pragma mark - Log::CallDepth
 
-static ThreadVal<const CallDepth*> spTVCurrent;
-// static thread_local const CallDepth* spCurrent;
-
 CallDepth::CallDepth(bool iActive)
 :	fActive(iActive)
-,	fPrior(spTVCurrent)
-	{ spTVCurrent = this; }
+,	fPrior(sCurrent())
+,	fTV(this)
+	{}
 
 CallDepth::~CallDepth()
-	{ spTVCurrent = fPrior; }
+	{}
+
+const CallDepth* CallDepth::sCurrent()
+	{
+	if (const CallDepth* const* theCD = TVCallDepth::sPGet())
+		return *theCD;
+	return nullptr;
+	}
 
 size_t CallDepth::sCount()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = spTVCurrent; current; current = current->fPrior)
+	for (const CallDepth* current = sCurrent(); current; current = current->fPrior)
 		{ ++count; }
 	return count;
 	}
@@ -41,7 +44,7 @@ size_t CallDepth::sCount()
 size_t CallDepth::sCountActive()
 	{
 	size_t count = 0;
-	for (const CallDepth* current = spTVCurrent; current; current = current->fPrior)
+	for (const CallDepth* current = sCurrent(); current; current = current->fPrior)
 		{
 		if (current->fActive)
 			++count;

@@ -9,6 +9,7 @@
 #include "zoolib/Compat_operator_bool.h"
 #include "zoolib/Counted.h"
 #include "zoolib/Safe.h"
+#include "zoolib/ThreadVal.h"
 #include "zoolib/Util_Chan_UTF_Operators.h"
 
 #include "zoolib/ZQ.h"
@@ -58,12 +59,16 @@ public:
 	CallDepth(bool iActive = true);
 	~CallDepth();
 
+	static const CallDepth* sCurrent();
+
 	static size_t sCount();
 	static size_t sCountActive();
 
 private:
 	bool const fActive;
 	const CallDepth* const fPrior;
+	typedef ThreadVal<const CallDepth* , struct Tag_CallDepth> TVCallDepth;
+	TVCallDepth fTV;
 	};
 
 // =================================================================================================
