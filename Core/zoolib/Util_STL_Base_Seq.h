@@ -14,11 +14,27 @@ namespace Util_STL {
 // =================================================================================================
 // sPushBack
 
-template <typename CC, typename VV>
+template <typename VV, typename CC>
 auto sPushBack(CC& ioContainer, VV&& rValue)
 -> decltype(ioContainer.push_back(std::forward<VV>(rValue)),
 	void())
 	{ ioContainer.push_back(std::forward<VV>(rValue)); }
+
+template <typename CC, typename II>
+auto sPushBack(CC& ioContainer, II iBegin, II iEnd)
+-> decltype(ioContainer.insert(end(ioContainer), iBegin, iEnd),
+	void())
+	{ ioContainer.insert(ioContainer.end(), iBegin, iEnd); }
+
+template <typename CC, typename OtherCC>
+auto sPushBack(CC& ioContainer, const OtherCC& iOther)
+-> decltype(sPushBack(ioContainer, begin(iOther), end(iOther)))
+	{ sPushBack(ioContainer, begin(iOther), end(iOther)); }
+
+template <typename VV, typename CC>
+auto sPushBack(CC& ioContainer, std::initializer_list<VV> iIL)
+-> decltype(sPushBack(ioContainer, begin(iIL), end(iIL)))
+	{ sPushBack(ioContainer, begin(iIL), end(iIL)); }
 
 // =================================================================================================
 // sQPopBack
@@ -39,7 +55,7 @@ auto sQPopBack(CC& ioContainer)
 // =================================================================================================
 // sPushFront
 
-template <typename CC, typename VV>
+template <typename VV, typename CC>
 auto sPushFront(CC& ioContainer, VV&& rValue)
 -> decltype(ioContainer.push_front(std::forward<VV>(rValue)),
 	void())
