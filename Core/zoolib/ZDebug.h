@@ -100,15 +100,12 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 		ZMACRO_Assert(level, true, condition, ZMACRO_FileFunctionLine, __VA_ARGS__)
 #endif
 
-// ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
-// struct obeys necessary alignment rules). It either drops out completely or generates an
-// error, depending on whether the expression evaulates true or false.
-template <bool> struct AssertCompile {};
-template <> struct AssertCompile<true> { typedef bool IsValid; };
-
 #ifndef ZAssertCompile
-	#define ZAssertCompile(a) \
-		typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
+	#if ZCONFIG_CPP >= 2017
+		#define ZAssertCompile(a) static_assert(a)
+	#else
+		#define ZAssertCompile(a) static_assert(a, "")
+	#endif
 #endif
 
 // There are still quite a lot of places where plain old ZAssert is used.
