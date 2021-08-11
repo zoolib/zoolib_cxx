@@ -108,6 +108,16 @@ public:
 		fDelivery->fCnd.Broadcast();
 		}
 
+	void DeliverQRet(const QRet<T>& iQRet)
+		{
+		ZAcqMtx acq(fDelivery->fMtx);
+		if (iQRet)
+			fDelivery->fValQ.Set(*iQRet);
+		else
+			fDelivery->fPromiseExists = false;
+		fDelivery->fCnd.Broadcast();
+		}
+
 	bool QDeliver(const T& iVal)
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
@@ -154,6 +164,16 @@ public:
 		ZAcqMtx acq(fDelivery->fMtx);
 		fDelivery->fValQ.Set();
 		fDelivery->fCnd.Broadcast();
+		}
+
+	// Special handling to aid sQCallByStarter, so it doesn't need void-specialization.
+	void DeliverQRet(bool iSucceeded)
+		{
+		ZAcqMtx acq(fDelivery->fMtx);
+		if (iSucceeded)
+			fDelivery->fValQ.Set();
+		else
+			fDelivery->fPromiseExists = false;
 		}
 
 	bool QDeliver()

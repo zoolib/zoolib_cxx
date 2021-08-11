@@ -16,16 +16,16 @@ namespace ZooLib {
 
 template <class R>
 void spQCallWithPromise_T(
-	const ZP<Promise<ZQ<R>>>& iPromise,
+	const ZP<Promise<R>>& iPromise,
 	const ZP<Callable<R()>>& iCallable)
-	{ iPromise->Deliver(iCallable->QCall()); }
+	{ iPromise->DeliverQRet(iCallable->QCall()); }
 
 template <class R>
-ZP<Delivery<ZQ<R>>> sQCallByStarter(
+ZP<Delivery<R>> sQCallByStarter(
 	const ZP<Starter>& iStarter,
 	const ZP<Callable<R()>>& iCallable)
 	{
-	ZP<Promise<ZQ<R>>> thePromise = sPromise<ZQ<R>>();
+	ZP<Promise<R>> thePromise = sPromise<R>();
 	if (iStarter && iCallable)
 		{
 		iStarter->QStart(sBindR(
@@ -43,18 +43,18 @@ ZP<Delivery<ZQ<R>>> sQCallByStarter(
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
 void spQCallWithPromise_T( \
-	const ZP<Promise<ZQ<R>>>& iPromise, \
+	const ZP<Promise<R>>& iPromise, \
 	const ZP<Callable<R(ZMACRO_Callable_P##X)>>& iCallable, \
 	ZMACRO_Callable_Pi##X) \
-	{ iPromise->Deliver(iCallable->QCall(ZMACRO_Callable_i##X)); } \
+	{ iPromise->DeliverQRet(iCallable->QCall(ZMACRO_Callable_i##X));} \
 \
 template <class R, ZMACRO_Callable_Class_P##X> \
-ZP<Delivery<ZQ<R>>> sQCallByStarter( \
+ZP<Delivery<R>> sQCallByStarter( \
 	const ZP<Starter>& iStarter, \
 	const ZP<Callable<R(ZMACRO_Callable_P##X)>>& iCallable, \
 	ZMACRO_Callable_Pi##X) \
 	{ \
-	ZP<Promise<ZQ<R>>> thePromise = sPromise<ZQ<R>>(); \
+	ZP<Promise<R>> thePromise = sPromise<R>(); \
 	if (iStarter && iCallable) \
 		{ \
 		iStarter->QStart(sBindR( \
