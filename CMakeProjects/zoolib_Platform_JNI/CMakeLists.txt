@@ -5,8 +5,8 @@ set(ZOOLIB_CXX ../..)
 set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/JNI)
 
 set (SourceFiles	
-	${SourceDir}/Chan_JavaInputStream.cpp
-	${SourceDir}/Chan_JavaInputStream.h
+	${SourceDir}/Chan_JavaStream.cpp
+	${SourceDir}/Chan_JavaStream.h
 	${SourceDir}/JNI.cpp
 	${SourceDir}/JNI.h
 	)
