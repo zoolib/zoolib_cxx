@@ -98,7 +98,7 @@ public:
 	std::string AsString() const;
 	std::string AsString_Native() const;
 
-	ZQ<Trail> QTrailTo(const FileSpec& oDest) const;
+	ZQ<Trail> QTrailTo(const FileSpec& iDest) const;
 	ZQ<Trail> QTrailFrom(const FileSpec& iSource) const;
 
 	EFileKind Kind() const;
@@ -113,7 +113,7 @@ public:
 
 	FileSpec CreateDir() const;
 
-	FileSpec MoveTo(const FileSpec& oDest) const;
+	FileSpec MoveTo(const FileSpec& iDest) const;
 	bool Delete() const;
 
 	// Open/create with stream API (stateful).
@@ -208,7 +208,7 @@ public:
 	virtual ZP<FileIterRep> CreateIterRep();
 
 	virtual std::string GetName() = 0;
-	virtual ZQ<Trail> QTrailTo(ZP<FileLoc> oDest) = 0;
+	virtual ZQ<Trail> QTrailTo(ZP<FileLoc> iDest) = 0;
 
 	virtual ZP<FileLoc> GetAncestor(size_t iCount);
 	virtual ZP<FileLoc> GetParent() = 0;
@@ -232,7 +232,7 @@ public:
 
 	virtual ZP<FileLoc> CreateDir();
 
-	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> oDest);
+	virtual ZP<FileLoc> MoveTo(ZP<FileLoc> iDest);
 	virtual bool Delete();
 
 	virtual ZP<ChannerR_Bin> OpenR(bool iPreventWriters);
@@ -252,7 +252,7 @@ class FileLoc_Std : public FileLoc
 	{
 public:
 	std::string GetName() override;
-	ZQ<Trail> QTrailTo(ZP<FileLoc> oDest) override;
+	ZQ<Trail> QTrailTo(ZP<FileLoc> iDest) override;
 
 	ZP<FileLoc> GetParent() override;
 	ZP<FileLoc> GetDescendant(const std::string* iComps, size_t iCount) override;

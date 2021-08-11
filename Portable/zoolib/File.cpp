@@ -280,12 +280,12 @@ string FileSpec::AsString_Native() const
 	return string();
 	}
 
-/// Return a Trail representing the steps to get from this file spec to \a oDest.
-ZQ<Trail> FileSpec::QTrailTo(const FileSpec& oDest) const
+/// Return a Trail representing the steps to get from this file spec to \a iDest.
+ZQ<Trail> FileSpec::QTrailTo(const FileSpec& iDest) const
 	{
 	if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 		{
-		if (ZP<FileLoc> destRealLoc = oDest.pPhysicalLoc())
+		if (ZP<FileLoc> destRealLoc = iDest.pPhysicalLoc())
 			return myRealLoc->QTrailTo(destRealLoc);
 		}
 
@@ -392,14 +392,14 @@ FileSpec FileSpec::CreateDir() const
 	}
 
 /** \brief Move the entity in the file system referenced by
-the file spec to the location referenced by \a oDest. */
-FileSpec FileSpec::MoveTo(const FileSpec& oDest) const
+the file spec to the location referenced by \a iDest. */
+FileSpec FileSpec::MoveTo(const FileSpec& iDest) const
 	{
-	if (fLoc && oDest.fLoc)
+	if (fLoc && iDest.fLoc)
 		{
 		if (ZP<FileLoc> myRealLoc = this->pPhysicalLoc())
 			{
-			if (ZP<FileLoc> destRealLoc = oDest.pPhysicalLoc())
+			if (ZP<FileLoc> destRealLoc = iDest.pPhysicalLoc())
 				return myRealLoc->MoveTo(destRealLoc);
 			}
 		}
@@ -729,7 +729,7 @@ ZQ<double> FileLoc::QTimeModified()
 ZP<FileLoc> FileLoc::CreateDir()
 	{ return null; }
 
-ZP<FileLoc> FileLoc::MoveTo(ZP<FileLoc> oDest)
+ZP<FileLoc> FileLoc::MoveTo(ZP<FileLoc> iDest)
 	{ return null; }
 
 bool FileLoc::Delete()
@@ -762,7 +762,7 @@ ZP<ChannerRWPos_Bin> FileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWrite
 string FileLoc_Std::GetName()
 	{ return string(); }
 
-ZQ<Trail> FileLoc_Std::QTrailTo(ZP<FileLoc> oDest)
+ZQ<Trail> FileLoc_Std::QTrailTo(ZP<FileLoc> iDest)
 	{ return null; }
 
 ZP<FileLoc> FileLoc_Std::GetParent()
