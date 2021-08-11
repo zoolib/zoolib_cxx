@@ -17,7 +17,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Matrix<E,1,R>& mat)
 		{
 		if (rr)
 			ww << ", ";
-		ww << mat.fE[0][rr];
+		w << mat.fE[0][rr];
 		}
 	ww << "]";
 	return ww;
@@ -48,7 +48,7 @@ const ChanW_UTF& operator<<(const ChanW_UTF& ww, const Matrix<E,C,R>& mat)
 			{
 			if (cc)
 				ww << ", ";
-			ww << mat.fE[cc][rr];
+			w << mat.fE[cc][rr];
 			}
 		ww << "]";
 		}
