@@ -68,7 +68,6 @@ bool Start_Seq_SetUnordered::sIs(const PPT& iPPT)
 // =================================================================================================
 #pragma mark - sPull_bplist_Push_PPT
 
-
 static uint64 spEReadUnsigned(const ChanR_Bin& iChanR, uint8 iIntSize)
 	{
 	switch (iIntSize)

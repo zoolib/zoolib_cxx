@@ -56,7 +56,8 @@ public:
 
 void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW);
 
-bool sPull_PPT_Push_bplist(const ChanR_PPT& iChanR, const ChanWPos_Bin& iChanWPos);
+// Not done yet:
+// bool sPull_PPT_Push_bplist(const ChanR_PPT& iChanR, const ChanWPos_Bin& iChanWPos);
 
 } // namespace ZooLib
 
