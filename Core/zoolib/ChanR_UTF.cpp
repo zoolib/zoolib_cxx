@@ -39,7 +39,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 2 && localCountCP)
 		{
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU) / 2));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
 
 		if (utf32Read == 0)
 			break;
@@ -80,7 +80,7 @@ void sRead(const ChanR_UTF& iChanR,
 	while (iCountCU >= 6 && localCountCP)
 		{
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU) / 6));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
 
 		if (utf32Read == 0)
 			break;
