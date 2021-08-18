@@ -20,7 +20,7 @@ size_t ChanR_Bin_ASCIIStrim::Read(byte* oDest, size_t iCount)
 
 	if (iCount < 6)
 		{
-		// When reading UTF8 we must have up to six bytes available.
+		// When reading UTF8 we must be prepared to read up to six code units.
 		UTF8 buffer[6];
 		while (iCount)
 			{
