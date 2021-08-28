@@ -75,6 +75,7 @@ set (SourceFiles
 	${SourceDir}/ChanR_XX_SkipAllOnDestroy.h
 	${SourceDir}/ChanR_XX_Terminated.h
 	${SourceDir}/ChanRPos_XX_ChanR.h
+	${SourceDir}/ChanRPos_XX_ChanRSize.h
 	${SourceDir}/ChanRPos_XX_PageBuffered.h
 	${SourceDir}/ChanRU_UTF_ML.cpp
 	${SourceDir}/ChanRU_UTF_ML.h
@@ -204,6 +205,7 @@ set (SourceFiles
 	${SourceDir}/Util_Chan_UTF_Operators.h
 	${SourceDir}/Util_Chan_UTF.cpp
 	${SourceDir}/Util_Chan_UTF.h
+	${SourceDir}/Util_Channer.h
 	${SourceDir}/Util_Debug.cpp
 	${SourceDir}/Util_Debug.h
 	${SourceDir}/Util_File.cpp
