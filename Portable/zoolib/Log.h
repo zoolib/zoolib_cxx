@@ -25,18 +25,18 @@
 	#define ZMACRO_PRETTY_FUNCTION __FUNCTION__
 #endif
 
-// s == strim name
+// c == chan name
 // p == priority
-// f == facility
+// f == facility (or function)2
 
-#define ZLOGPF(s, p) const ZooLib::Log::S& s = \
-	ZooLib::Log::S(ZooLib::Log::p, ZMACRO_PRETTY_FUNCTION, __LINE__)
+#define ZLOGPF(c, p) const ZooLib::Log::ChanW& c = \
+	ZooLib::Log::ChanW(ZooLib::Log::p, ZMACRO_PRETTY_FUNCTION, __LINE__)
 
-#define ZLOGF(s, p) const ZooLib::Log::S& s = \
-	ZooLib::Log::S(ZooLib::Log::p, __FUNCTION__, __LINE__)
+#define ZLOGF(c, p) const ZooLib::Log::ChanW& c = \
+	ZooLib::Log::ChanW(ZooLib::Log::p, __FUNCTION__, __LINE__)
 
-#define ZLOG(s, p, f) const ZooLib::Log::S& s = \
-	ZooLib::Log::S(ZooLib::Log::p, f)
+#define ZLOG(c, p, f) const ZooLib::Log::ChanW& c = \
+	ZooLib::Log::ChanW(ZooLib::Log::p, f)
 
 #define ZLOGFUNCTION(p) ZooLib::Log::FunctionEntryExit \
 	ZMACRO_Concat(theLogFEE_,__LINE__)(ZooLib::Log::p, ZMACRO_PRETTY_FUNCTION)
@@ -95,11 +95,28 @@ enum
 
 typedef int EPriority;
 
-// =================================================================================================
-#pragma mark - String/integer mapping
-
 EPriority sPriorityFromName(const std::string& iString);
 std::string sNameFromPriority(EPriority iPriority);
+
+// =================================================================================================
+#pragma mark - Log::LogMeister
+
+class LogMeister
+:	public Counted
+	{
+public:
+	virtual bool Enabled(EPriority iPriority, const std::string& iName);
+	virtual bool Enabled(EPriority iPriority, const char* iName);
+	virtual void LogIt(EPriority iPriority, const std::string& iName,
+		size_t iDepth, const std::string& iMessage) = 0;
+	};
+
+extern ZP<LogMeister> sLogMeister;
+
+typedef ThreadVal<ZP<LogMeister>, struct Tag_LogMeister> ThreadVal_LogMeister;
+
+void sLogIt(EPriority iPriority, const std::string& iName,
+	size_t iDepth, const std::string& iMessage);
 
 // =================================================================================================
 #pragma mark - Log::ChanW
@@ -132,26 +149,7 @@ public:
 	mutable bool fOutdent;
 	};
 
-typedef ChanW S;
-
-// =================================================================================================
-#pragma mark - Log::LogMeister
-
-class LogMeister
-:	public Counted
-	{
-public:
-	virtual bool Enabled(EPriority iPriority, const std::string& iName);
-	virtual bool Enabled(EPriority iPriority, const char* iName);
-	virtual void LogIt(EPriority iPriority, const std::string& iName,
-		size_t iDepth, const std::string& iMessage) = 0;
-	};
-
-extern ZP<LogMeister> sLogMeister;
-//extern Safe<ZP<LogMeister>> sLogMeister;
-
-void sLogIt(EPriority iPriority, const std::string& iName,
-	size_t iDepth, const std::string& iMessage);
+typedef ChanW CC;
 
 // =================================================================================================
 #pragma mark - Log::FunctionEntryExit

@@ -7,10 +7,10 @@
 #include "zoolib/Stringf.h"
 #include "zoolib/Util_string.h"
 
-using std::string;
-
 namespace ZooLib {
 namespace Log {
+
+using std::string;
 
 ZP<LogMeister> sLogMeister;
 
@@ -89,6 +89,28 @@ string sNameFromPriority(EPriority iPriority)
 	}
 
 // =================================================================================================
+#pragma mark - Log::LogMeister
+
+bool LogMeister::Enabled(EPriority iPriority, const string& iName)
+	{ return true; }
+
+bool LogMeister::Enabled(EPriority iPriority, const char* iName)
+	{ return true; }
+
+void sLogIt(EPriority iPriority, const string& iName, size_t iDepth, const string& iMessage)
+	{
+	if (ZP<LogMeister> theLM = sLogMeister)
+		{
+		try
+			{
+			theLM->LogIt(iPriority, iName, iDepth, iMessage);
+			}
+		catch (...)
+			{}
+		}
+	}
+
+// =================================================================================================
 #pragma mark - Log::ChanW
 
 ChanW::ChanW(EPriority iPriority, const string& iName_String)
@@ -162,35 +184,13 @@ void ChanW::pEmit()
 	}
 
 // =================================================================================================
-#pragma mark - Log::LogMeister
-
-bool LogMeister::Enabled(EPriority iPriority, const string& iName)
-	{ return true; }
-
-bool LogMeister::Enabled(EPriority iPriority, const char* iName)
-	{ return true; }
-
-void sLogIt(EPriority iPriority, const std::string& iName, size_t iDepth, const std::string& iMessage)
-	{
-	if (ZP<LogMeister> theLM = sLogMeister)
-		{
-		try
-			{
-			theLM->LogIt(iPriority, iName, iDepth, iMessage);
-			}
-		catch (...)
-			{}
-		}
-	}
-
-// =================================================================================================
 #pragma mark - Log::FunctionEntryExit
 
-FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName, const std::string& iMessage)
+FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName, const string& iMessage)
 :	fPriority(iPriority)
 ,	fFunctionName(iFunctionName)
 	{
-	if (const S& s = S(fPriority, "ZLF"))
+	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
 		s << "> " << fFunctionName << iMessage;
@@ -201,7 +201,7 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 :	fPriority(iPriority)
 ,	fFunctionName(iFunctionName)
 	{
-	if (const S& s = S(fPriority, "ZLF"))
+	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
 		s << "> " << fFunctionName;
@@ -210,7 +210,7 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 
 FunctionEntryExit::~FunctionEntryExit()
 	{
-	if (const S& s = S(fPriority, "ZLF"))
+	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
 		s << "< " << fFunctionName;
@@ -235,7 +235,7 @@ static const char* spTruncateFileName(const char* iFilename)
 
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine, const char* iFunctionName)
 	{
-	if (const S& s = S(iPriority, "ZLOGTRACE"))
+	if (const ChanW& s = ChanW(iPriority, "ZLOGTRACE"))
 		{
 		s << spTruncateFileName(iFile) << ":" << sStringf("%d", iLine);
 		if (iFunctionName && *iFunctionName)
