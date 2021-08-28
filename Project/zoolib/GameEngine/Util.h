@@ -29,12 +29,6 @@ ZQ<GRect> sQGRect(const Val& iVal);
 ZQ<GRect> sQGRect(const ZQ<Val_ZZ>& iValQ);
 ZQ<GRect> sQGRect(const Val_ZZ& iVal);
 
-ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8* iName = nullptr);
-ZQ<Map_ZZ> sQReadMap_ZZ(const ChanR_Bin& iChanR, const string8& iName);
-ZQ<Map_ZZ> sQReadMap_ZZ(const FileSpec& iFS);
-
-Map_ZZ sReadTextData(const FileSpec& iFS);
-
 ZP<ChannerW_Bin> sCreateW_Clear(const FileSpec& iFS);
 ZP<ChannerR_Bin> sOpenR_Buffered(const FileSpec& iFS);
 

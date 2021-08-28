@@ -92,6 +92,8 @@ set (SourceFiles
 	${SourceDir}/Util_FinderHider.h
 #	${SourceDir}/Util_GrindAssets.cpp
 #	${SourceDir}/Util_GrindAssets.h
+	${SourceDir}/Util_TextData.cpp
+	${SourceDir}/Util_TextData.h
 	${SourceDir}/Util.cpp
 	${SourceDir}/Util.h
 	${SourceDir}/Val.cpp

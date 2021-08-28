@@ -3,6 +3,7 @@
 #include "zoolib/GameEngine/Util.h" // For sPixmap_PNG
 #include "zoolib/GameEngine/Util_AssetCatalog.h"
 #include "zoolib/GameEngine/Util_Assets.h"
+#include "zoolib/GameEngine/Util_TextData.h" // For sQReadMap_ZZ
 
 #include "zoolib/Log.h"
 #include "zoolib/Callable_Bind.h"

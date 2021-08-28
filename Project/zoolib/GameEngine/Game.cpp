@@ -18,6 +18,7 @@
 #include "zoolib/GameEngine/Util_Allocator.h"
 #include "zoolib/GameEngine/Util_AssetCatalog.h"
 #include "zoolib/GameEngine/Util_FinderHider.h"
+#include "zoolib/GameEngine/Util_TextData.h"
 #include "zoolib/GameEngine/Val.h"
 
 #include <map>

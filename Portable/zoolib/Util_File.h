@@ -17,6 +17,8 @@ ZQ<FileSpec> sQEnsureBranch(const FileSpec& iFS);
 
 bool sDeleteTree(const FileSpec& iFS);
 
+FileIter sSorted(FileIter iSource);
+
 } // namespace Util_File
 } // namespace ZooLib
 
