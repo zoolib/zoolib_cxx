@@ -97,31 +97,27 @@ bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 bool LogMeister::Enabled(EPriority iPriority, const char* iName)
 	{ return true; }
 
-void sLogIt(EPriority iPriority, const string& iName, size_t iDepth, const string& iMessage)
+ZP<LogMeister> sCurrentLogMeister()
 	{
-	if (ZP<LogMeister> theLM = sLogMeister)
-		{
-		try
-			{
-			theLM->LogIt(iPriority, iName, iDepth, iMessage);
-			}
-		catch (...)
-			{}
-		}
+	if (ZP<LogMeister> theLM = ThreadVal_LogMeister::sGet())
+		return theLM;
+	return sLogMeister;
 	}
 
 // =================================================================================================
 #pragma mark - Log::ChanW
 
 ChanW::ChanW(EPriority iPriority, const string& iName_String)
-:	fPriority(iPriority)
+:	fLM(sCurrentLogMeister())
+,	fPriority(iPriority)
 ,	fName_StringQ(iName_String)
 ,	fLine(-1)
 ,	fOutdent(false)
 	{}
 
 ChanW::ChanW(EPriority iPriority, const char* iName_CharStar, int iLine)
-:	fPriority(iPriority)
+:	fLM(sCurrentLogMeister())
+,	fPriority(iPriority)
 ,	fName_CharStarQ(iName_CharStar)
 ,	fLine(iLine)
 ,	fOutdent(false)
@@ -129,41 +125,38 @@ ChanW::ChanW(EPriority iPriority, const char* iName_CharStar, int iLine)
 
 ChanW::~ChanW()
 	{
-	if (fMessageQ && !fMessageQ->empty())
+	if (fLM && fMessageQ && not fMessageQ->empty())
 		this->pEmit();
 	}
 
 size_t ChanW::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 	{
-	if (iCountCU)
+	if (fLM && iCountCU)
 		sMut(fMessageQ).append(iSource, iCountCU);
 	return iCountCU;
 	}
 
 ChanW::operator operator_bool() const
 	{
-	if (ZP<LogMeister> theLM = sLogMeister)
+	if (not fLM)
 		{
-		if (fName_StringQ)
-			{
-			return operator_bool_gen::translate(
-				theLM->Enabled(fPriority, *fName_StringQ));
-			}
-		else
-			{
-			return operator_bool_gen::translate(
-				theLM->Enabled(fPriority, *fName_CharStarQ));
-			}
+		return operator_bool_gen::translate(false);
+		}
+	else if (fName_StringQ)
+		{
+		return operator_bool_gen::translate(
+			fLM->Enabled(fPriority, *fName_StringQ));
 		}
 	else
 		{
-		return operator_bool_gen::translate(false);
+		return operator_bool_gen::translate(
+			fLM->Enabled(fPriority, *fName_CharStarQ));
 		}
 	}
 
 void ChanW::Emit() const
 	{
-	if (fMessageQ && !fMessageQ->empty())
+	if (fLM && fMessageQ && not fMessageQ->empty())
 		{
 		const_cast<ChanW*>(this)->pEmit();
 		sMut(fMessageQ).resize(0);
@@ -172,15 +165,21 @@ void ChanW::Emit() const
 
 void ChanW::pEmit()
 	{
-	if (not fName_StringQ)
-		fName_StringQ = *fName_CharStarQ;
-	size_t theDepth = CallDepth::sCountActive();
-	if (fOutdent and theDepth > 0)
-		theDepth -= 1;
-	if (fLine <= 0)
-		sLogIt(fPriority, *fName_StringQ, theDepth, *fMessageQ);
-	else
-		sLogIt(fPriority, *fName_StringQ + sStringf(":%d", fLine), theDepth, *fMessageQ);
+	if (fLM)
+		{
+		if (not fName_StringQ)
+			fName_StringQ = *fName_CharStarQ;
+
+		size_t theDepth = CallDepth::sCountActive();
+
+		if (fOutdent and theDepth > 0)
+			theDepth -= 1;
+
+		if (fLine <= 0)
+			fLM->LogIt(fPriority, *fName_StringQ, theDepth, *fMessageQ);
+		else
+			fLM->LogIt(fPriority, *fName_StringQ + sStringf(":%d", fLine), theDepth, *fMessageQ);
+		}
 	}
 
 // =================================================================================================

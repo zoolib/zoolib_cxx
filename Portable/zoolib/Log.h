@@ -115,8 +115,7 @@ extern ZP<LogMeister> sLogMeister;
 
 typedef ThreadVal<ZP<LogMeister>, struct Tag_LogMeister> ThreadVal_LogMeister;
 
-void sLogIt(EPriority iPriority, const std::string& iName,
-	size_t iDepth, const std::string& iMessage);
+ZP<LogMeister> sCurrentLogMeister();
 
 // =================================================================================================
 #pragma mark - Log::ChanW
@@ -139,6 +138,7 @@ public:
 private:
 	void pEmit();
 
+	const ZP<LogMeister> fLM;
 	const int fPriority;
 	mutable ZQ<std::string> fName_StringQ;
 	const ZQ<const char*> fName_CharStarQ;

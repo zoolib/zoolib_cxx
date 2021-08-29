@@ -40,20 +40,6 @@ bool sCompact;
 using std::string;
 
 // =================================================================================================
-#pragma mark -
-
-void sWriteBacktrace(const ChanW_UTF& iChanW)
-	{
-	#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
-		void* callstack[128];
-		int count = backtrace(callstack, 128);
-		char** strs = backtrace_symbols(callstack, count);
-		for (int ii = 0; ii < count; ++ii)
-			iChanW << strs[ii] << "\n";
-	#endif
-	}
-
-// =================================================================================================
 #pragma mark - ZDebug and ZAssert handler (anonymous)
 
 namespace { // anonymous
@@ -63,22 +49,22 @@ static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	char theBuf[4096];
 	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
 
-	Log::S s(Log::eErr, "Util_Debug");
+	Log::ChanW cc(Log::eErr, "Util_Debug");
 	if (iParams.fStop)
-		s << "STOP: ";
+		cc << "STOP: ";
 	else
-		s << "DEBUG: ";
+		cc << "DEBUG: ";
 
-	s << theBuf;
+	cc << theBuf;
 
 	if (iParams.fUserMessage)
-		sWritev(s, nullptr, nullptr, iParams.fUserMessage, iArgs);
+		sWritev(cc, nullptr, nullptr, iParams.fUserMessage, iArgs);
 
 	if (iParams.fStop)
 		{
-		s << "\n";
-		sWriteBacktrace(s);
-		s.Emit();
+		cc << "\n";
+		sWriteBacktrace(cc);
+		cc.Emit();
 		abort();
 		}
 	}
@@ -97,47 +83,30 @@ public:
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark - LogMeister_Base (anonymous)
+#pragma mark - LogMeister_Base
 
-namespace { // anonymous
+LogMeister_Base::LogMeister_Base(Log::EPriority iPriority)
+:	fLogPriority(iPriority)
+	{}
 
-class LogMeister_Base
-:	public Log::LogMeister
+bool LogMeister_Base::Enabled(Log::EPriority iPriority, const string& iName)
+	{ return iPriority <= this->pGetLogPriority(); }
+
+bool LogMeister_Base::Enabled(Log::EPriority iPriority, const char* iName)
+	{ return iPriority <= this->pGetLogPriority(); }
+
+void LogMeister_Base::SetLogPriority(Log::EPriority iLogPriority)
+	{ fLogPriority = iLogPriority; }
+
+Log::EPriority LogMeister_Base::GetLogPriority()
+	{ return fLogPriority; }
+
+Log::EPriority LogMeister_Base::pGetLogPriority()
 	{
-public:
-	LogMeister_Base()
-	:	fLogPriority(Log::ePriority_Notice)
-		{}
-
-// From Log::LogMeister
-	virtual bool Enabled(Log::EPriority iPriority, const std::string& iName)
-		{ return iPriority <= this->pGetLogPriority(); }
-
-	virtual bool Enabled(Log::EPriority iPriority, const char* iName)
-		{ return iPriority <= this->pGetLogPriority(); }
-
-// Our protocol
-	void SetLogPriority(Log::EPriority iLogPriority)
-		{ fLogPriority = iLogPriority; }
-
-	Log::EPriority GetLogPriority()
-		{ return fLogPriority; }
-
-	Log::EPriority pGetLogPriority()
-		{
-		if (const Log::EPriority* thePriorityP = LogPriorityPerThread::sPGet())
-			return *thePriorityP;
-		return fLogPriority;
-		}
-
-protected:
-	ZMtx fMtx;
-
-private:
-	Log::EPriority fLogPriority;
-	};
-
-} // anonymous namespace
+	if (const Log::EPriority* thePriorityP = LogPriorityPerThread::sPGet())
+		return *thePriorityP;
+	return fLogPriority;
+	}
 
 // =================================================================================================
 #pragma mark - LogMeister_Android (anonymous)
@@ -151,7 +120,7 @@ class LogMeister_Android
 	{
 public:
 	virtual void LogIt(Log::EPriority iPriority,
-		const std::string& iName, size_t iDepth, const std::string& iMessage)
+		const string& iName, size_t iDepth, const string& iMessage)
 		{
 		if (iPriority > this->pGetLogPriority())
 			return;
@@ -184,73 +153,28 @@ class LogMeister_Default
 	{
 public:
 	LogMeister_Default()
-	:	fExtraSpace(20)
+	:	LogMeister_Base(Log::ePriority_Notice)
+	,	fExtraSpace(20)
 		{}
 
 	virtual void LogIt(Log::EPriority iPriority,
-		const std::string& iName, size_t iDepth, const std::string& iMessage)
+		const string& iName, size_t iDepth, const string& iMessage)
 		{
 		if (iPriority > this->pGetLogPriority())
 			return;
+
+		// We use the mutex so we don't intermingle characters from separate threads
+		ZAcqMtx acq(fMtx);
 
 		ZP<ChannerW_UTF> theChannerW = fChannerW;
 		if (not theChannerW)
 			return;
 
-		const ChanW_UTF& theStrimW = *theChannerW;
+		sWriteStandardLoggingText(*theChannerW, fExtraSpace, sCompact, iPriority, iName, iDepth, iMessage);
 
-		ZAcqMtx acq(fMtx);
+		*theChannerW << "\n";
 
-		const double now = Time::sNow();
-
-		const size_t curLength = Unicode::sCUToCP(iName.begin(), iName.end());
-		// Enabling this code will grow fExtraSpace when a long iName comes through.
-		// if (fExtraSpace < curLength)
-		//	fExtraSpace = curLength;
-
-		// extraSpace will ensure that the message text from multiple calls lines
-		// up, so long as iName is 20 CPs or less in length.
-		const string extraSpace(fExtraSpace - std::min(fExtraSpace, curLength), ' ');
-
-		if (sCompact)
-			{
-			theStrimW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now, 60));
-
-			#if __MACH__
-				theStrimW << sStringf(" %5x", ((int)::pthread_mach_thread_np(::pthread_self())));
-			#else
-				if (sizeof(ZThread::ID) > 4)
-					theStrimW << sStringf(" %016llX", (unsigned long long)ZThread::sID());
-				else
-					theStrimW << sStringf(" %08llX", (unsigned long long)ZThread::sID());
-			#endif
-			}
-		else
-			{
-			theStrimW << Util_Time::sAsString_ISO8601_us(now, false);
-
-			#if __MACH__
-				// GDB on Mac uses the mach thread ID for the systag.
-				theStrimW << sStringf(" %5x/", ((int)mach_thread_self()));
-			#else
-				theStrimW << " 0x";
-			#endif
-			if (sizeof(ZThread::ID) > 4)
-				theStrimW << sStringf("%016llX", (unsigned long long)ZThread::sID());
-			else
-				theStrimW << sStringf("%08llX", (unsigned long long)ZThread::sID());
-			}
-
-		theStrimW
-			<< " P" << sStringf("%X", iPriority)
-			<< " " << extraSpace << iName
-			<< " - " ;
-		while (iDepth--)
-			theStrimW << "    ";
-		theStrimW
-			<< iMessage << "\n";
-
-		sFlush(theStrimW);
+		sFlush(*theChannerW);
 		}
 
 // Our protocol
@@ -261,6 +185,7 @@ public:
 		}
 
 private:
+	ZMtx fMtx;
 	ZP<ChannerW_UTF> fChannerW;
 	size_t fExtraSpace;
 	};
@@ -269,6 +194,18 @@ private:
 
 // =================================================================================================
 #pragma mark - Util_Debug
+
+void sWriteBacktrace(const ChanW_UTF& iChanW)
+	{
+	#if __MACH__ || (__linux__ &&  !defined(__ANDROID__))
+		void* callstack[128];
+		int count = backtrace(callstack, 128);
+		char** strs = backtrace_symbols(callstack, count);
+		for (int ii = 0; ii < count; ++ii)
+			iChanW << strs[ii] << "\n";
+	#endif
+	}
+
 
 void sInstall()
 	{
@@ -318,6 +255,63 @@ Log::EPriority sGetLogPriority()
 			return theLM->GetLogPriority();
 		}
 	return 0xFF;
+	}
+
+// =================================================================================================
+#pragma mark -
+
+void sWriteStandardLoggingText(const ChanW_UTF& iChanW,
+	size_t iExtraSpace, bool iCompact,
+	Log::EPriority iPriority,
+	const string& iName, size_t iDepth, const string& iMessage)
+	{
+	const double now = Time::sNow();
+
+	const size_t curLength = Unicode::sCUToCP(iName.begin(), iName.end());
+
+	// extraSpace will ensure that the message text from multiple calls lines
+	// up, so long as iName is 20 CPs or less in length.
+	const string extraSpace(iExtraSpace - std::min(iExtraSpace, curLength), ' ');
+
+	if (iCompact)
+		{
+		iChanW << Util_Time::sAsStringUTC(now, "%M:") << sStringf("%07.4f", fmod(now, 60));
+
+		#if __MACH__
+			iChanW << sStringf(" %5x", ((int)::pthread_mach_thread_np(::pthread_self())));
+		#else
+			if (sizeof(ZThread::ID) > 4)
+				iChanW << sStringf(" %016llX", (unsigned long long)ZThread::sID());
+			else
+				iChanW << sStringf(" %08llX", (unsigned long long)ZThread::sID());
+		#endif
+		}
+	else
+		{
+		iChanW << Util_Time::sAsString_ISO8601_us(now, false);
+
+		#if __MACH__
+			// GDB on Mac uses the mach thread ID for the systag.
+			iChanW << sStringf(" %5x/", ((int)mach_thread_self()));
+		#else
+			iChanW << " 0x";
+		#endif
+		if (sizeof(ZThread::ID) > 4)
+			iChanW << sStringf("%016llX", (unsigned long long)ZThread::sID());
+		else
+			iChanW << sStringf("%08llX", (unsigned long long)ZThread::sID());
+		}
+
+	iChanW
+		<< " P" << sStringf("%X", iPriority)
+		<< " " << extraSpace << iName
+		<< " - " ;
+
+	while (iDepth--)
+		iChanW << "    ";
+
+	iChanW
+		<< iMessage;
 	}
 
 // =================================================================================================
