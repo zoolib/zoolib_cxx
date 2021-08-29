@@ -24,10 +24,10 @@ template <typename CC, typename II>
 auto sPushBack(CC& ioContainer, II iBegin, II iEnd)
 -> decltype(ioContainer.insert(end(ioContainer), iBegin, iEnd),
 	void())
-	{ ioContainer.insert(ioContainer.end(), iBegin, iEnd); }
+	{ ioContainer.insert(end(ioContainer), iBegin, iEnd); }
 
 template <typename CC, typename OtherCC>
-auto sPushBack(CC& ioContainer, const OtherCC& iOther)
+auto sPushBackContainer(CC& ioContainer, const OtherCC& iOther)
 -> decltype(sPushBack(ioContainer, begin(iOther), end(iOther)))
 	{ sPushBack(ioContainer, begin(iOther), end(iOther)); }
 
