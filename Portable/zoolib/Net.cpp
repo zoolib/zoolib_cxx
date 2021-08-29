@@ -22,9 +22,9 @@ NetAddress::NetAddress()
 NetAddress::~NetAddress()
 	{}
 
-ZP<ChannerRWClose_Bin> NetAddress::QCall()
+ZP<ChannerRWCon_Bin> NetAddress::QCall()
 	{
-	if (ZP<ChannerRWClose_Bin> theChanner = this->Connect())
+	if (ZP<ChannerRWCon_Bin> theChanner = this->Connect())
 		return theChanner;
 	return null;
 	}
@@ -50,21 +50,21 @@ NetName::NetName()
 NetName::~NetName()
 	{}
 
-ZP<ChannerRWClose_Bin> NetName::QCall()
+ZP<ChannerRWCon_Bin> NetName::QCall()
 	{
-	if (ZP<ChannerRWClose_Bin> theChanner = this->Connect())
+	if (ZP<ChannerRWCon_Bin> theChanner = this->Connect())
 		return theChanner;
 	return null;
 	}
 
-ZP<ChannerRWClose_Bin> NetName::Connect()
+ZP<ChannerRWCon_Bin> NetName::Connect()
 	{
 	if (ZP<NetNameLookup> theLookup = this->MakeLookup(10))
 		{
 		theLookup->Start();
 		while (not theLookup->Finished())
 			{
-			if (ZP<ChannerRWClose_Bin> theConnection = theLookup->CurrentAddress()->Connect())
+			if (ZP<ChannerRWCon_Bin> theConnection = theLookup->CurrentAddress()->Connect())
 				return theConnection;
 			theLookup->Advance();
 			}
@@ -90,9 +90,9 @@ NetListener::NetListener()
 NetListener::~NetListener()
 	{}
 
-ZP<ChannerRWClose_Bin> NetListener::QCall()
+ZP<ChannerRWCon_Bin> NetListener::QCall()
 	{
-	if (ZP<ChannerRWClose_Bin> theChanner = this->Listen())
+	if (ZP<ChannerRWCon_Bin> theChanner = this->Listen())
 		return theChanner;
 	return null;
 	}

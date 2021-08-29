@@ -188,7 +188,7 @@ class Make_Listener6
 	} sMaker2;
 
 class Make_Endpoint4
-:	public FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam4_t>
+:	public FunctionChain<ZP<ChannerRWCon_Bin>, MakeParam4_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -201,7 +201,7 @@ class Make_Endpoint4
 	} sMaker3;
 
 class Make_Endpoint6
-:	public FunctionChain<ZP<ChannerRWClose_Bin>, MakeParam6_t>
+:	public FunctionChain<ZP<ChannerRWCon_Bin>, MakeParam6_t>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

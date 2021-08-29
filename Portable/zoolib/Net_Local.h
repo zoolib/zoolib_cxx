@@ -26,7 +26,7 @@ public:
 	virtual ~NetAddress_Local();
 
 // From NetAddress
-	virtual ZP<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWCon_Bin> Connect();
 
 // Our protocol
 	const std::string& GetPath();
@@ -74,7 +74,7 @@ ZP<NetListener_Local> sNetListener_Local(const std::string& iPath);
 // =================================================================================================
 #pragma mark - sConnect_Local
 
-ZP<ChannerRWClose_Bin> sConnect_Local(const std::string& iPath);
+ZP<ChannerRWCon_Bin> sConnect_Local(const std::string& iPath);
 
 } // namespace ZooLib
 

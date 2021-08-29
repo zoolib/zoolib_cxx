@@ -175,7 +175,7 @@ NetListener_Socket::NetListener_Socket(int iSocketFD)
 NetListener_Socket::~NetListener_Socket()
 	{ ::close(fSocketFD); }
 
-ZP<ChannerRWClose_Bin> NetListener_Socket::Listen()
+ZP<ChannerRWCon_Bin> NetListener_Socket::Listen()
 	{
 	fMtx.Acquire();
 	while (fThreadID_Listening)

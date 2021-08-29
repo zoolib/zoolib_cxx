@@ -170,9 +170,6 @@ using ChanRWCon = DeriveFrom
 	ChanAspect_Write<EE>
 	>;
 
-template <typename EE>
-using ChanConnection = ChanRWCon<EE>;
-
 } // namespace ZooLib
 
 #endif // __ZooLib_Chan_h__

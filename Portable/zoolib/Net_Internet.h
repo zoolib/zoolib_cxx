@@ -66,7 +66,7 @@ public:
 	NetAddress_IP4(uint8 iAddr0, uint8 iAddr1, uint8 iAddr2, uint8 iAddr3, ip_port iPort);
 
 // From NetAddress
-	virtual ZP<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWCon_Bin> Connect();
 
 // Our protocol
 	ip4_addr GetAddr();
@@ -93,7 +93,7 @@ public:
 	NetAddress_IP6(ip_port iPort, ip6_addr iAddr);
 
 // From NetAddress
-	virtual ZP<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWCon_Bin> Connect();
 
 // Our protocol
 	ip6_addr GetAddr();
@@ -147,8 +147,8 @@ ZP<NetListener_TCP> sNetListener_TCP(ip6_addr iAddress, ip_port iPort);
 // =================================================================================================
 #pragma mark - sConnect_TCP
 
-ZP<ChannerRWClose_Bin> sConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
-ZP<ChannerRWClose_Bin> sConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWCon_Bin> sConnect_TCP(ip4_addr iRemoteAddr, ip_port iRemotePort);
+ZP<ChannerRWCon_Bin> sConnect_TCP(ip6_addr iRemoteAddr, ip_port iRemotePort);
 
 } // namespace ZooLib
 

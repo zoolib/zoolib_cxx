@@ -23,7 +23,7 @@ NetAddress_Local::NetAddress_Local(const string& iPath)
 NetAddress_Local::~NetAddress_Local()
 	{}
 
-ZP<ChannerRWClose_Bin> NetAddress_Local::Connect()
+ZP<ChannerRWCon_Bin> NetAddress_Local::Connect()
 	{ return sConnect_Local(fPath); }
 
 const string& NetAddress_Local::GetPath()
@@ -70,9 +70,9 @@ ZP<NetListener_Local> sNetListener_Local(const std::string& iPath)
 // =================================================================================================
 #pragma mark - NetEndpoint_Local
 
-ZP<ChannerRWClose_Bin> sConnect_Local(const string& iPath)
+ZP<ChannerRWCon_Bin> sConnect_Local(const string& iPath)
 	{
-	return FunctionChain<ZP<ChannerRWClose_Bin>, std::string>
+	return FunctionChain<ZP<ChannerRWCon_Bin>, std::string>
 		::sInvoke(iPath);
 	}
 

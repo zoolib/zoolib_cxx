@@ -49,14 +49,14 @@ ZP<ChannerRW<EE>> sChanner_Wrapper(
 	{ return new ChannerRW_Wrapper<EE>(iChannerR, iChannerW); }
 
 // =================================================================================================
-#pragma mark - ChannerRWClose_Wrapper
+#pragma mark - ChannerRWCon_Wrapper
 
 template <class EE>
-class ChannerRWClose_Wrapper
-:	public ChannerConnection<EE>
+class ChannerRWCon_Wrapper
+:	public ChannerRWCon<EE>
 	{
 public:
-	ChannerRWClose_Wrapper(
+	ChannerRWCon_Wrapper(
 		const ZP<Channer<ChanR<EE>>>& iChannerR,
 		const ZP<Channer<ChanW<EE>>>& iChannerW,
 		const ZP<ChannerClose>& iChannerClose)
@@ -98,11 +98,11 @@ private:
 	};
 
 template <class EE>
-ZP<ChannerRWClose<EE>> sChanner_Wrapper(
+ZP<ChannerRWCon<EE>> sChanner_Wrapper(
 	const ZP<Channer<ChanR<EE>>>& iChannerR,
 	const ZP<Channer<ChanW<EE>>>& iChannerW,
 	const ZP<ChannerClose>& iChannerClose)
-	{ return new ChannerRWClose_Wrapper<EE>(iChannerR, iChannerW, iChannerClose); }
+	{ return new ChannerRWCon_Wrapper<EE>(iChannerR, iChannerW, iChannerClose); }
 
 } // namespace ZooLib
 

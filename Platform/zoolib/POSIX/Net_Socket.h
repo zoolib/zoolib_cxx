@@ -46,7 +46,7 @@ protected:
 	virtual ~NetListener_Socket();
 
 // From NetListener
-	virtual ZP<ChannerRWClose_Bin> Listen();
+	virtual ZP<ChannerRWCon_Bin> Listen();
 
 // From Cancellable via NetListener
 	virtual void Cancel();
@@ -69,7 +69,7 @@ ZP<NetListener_Socket> sNetListener_Socket(int iFD);
 #pragma mark - NetEndpoint_Socket
 
 class NetEndpoint_Socket
-:	public ChannerConnection_Bin
+:	public ChannerRWCon_Bin
 	{
 public:
 	NetEndpoint_Socket(int iSocketFD);

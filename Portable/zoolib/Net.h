@@ -6,7 +6,7 @@
 #include "zconfig.h"
 
 #include "zoolib/Cancellable.h"
-#include "zoolib/Connection.h" // For Factory_ChannerRWClose_Bin
+#include "zoolib/Connection.h" // For Factory_ChannerRWCon_Bin
 
 #include <string>
 #include <stdexcept> // For runtime_error
@@ -56,7 +56,7 @@ private:
 
 /// Represents the physical address of a particular endpoint on a particular host.
 class NetAddress
-:	public virtual Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWCon_Bin
 	{
 protected:
 	NetAddress();
@@ -64,11 +64,11 @@ protected:
 public:
 	virtual ~NetAddress();
 
-// From Factory_ChannerRWClose_Bin
-	virtual ZP<ChannerRWClose_Bin> QCall();
+// From Factory_ChannerRWCon_Bin
+	virtual ZP<ChannerRWCon_Bin> QCall();
 
 // Our protocol
-	virtual ZP<ChannerRWClose_Bin> Connect() = 0;
+	virtual ZP<ChannerRWCon_Bin> Connect() = 0;
 
 	virtual ZP<NetAddressLookup> MakeLookup(size_t iMaxNames);
 	};
@@ -100,7 +100,7 @@ public:
 
 /// Represents the abstract name of a port or service on a host or hosts.
 class NetName
-:	public virtual Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWCon_Bin
 	{
 protected:
 	NetName();
@@ -108,11 +108,11 @@ protected:
 public:
 	virtual ~NetName();
 
-// From Factory_ChannerRWClose_Bin
-	virtual ZP<ChannerRWClose_Bin> QCall();
+// From Factory_ChannerRWCon_Bin
+	virtual ZP<ChannerRWCon_Bin> QCall();
 
 // Our protocol
-	virtual ZP<ChannerRWClose_Bin> Connect();
+	virtual ZP<ChannerRWCon_Bin> Connect();
 
 	virtual std::string AsString() = 0;
 
@@ -147,7 +147,7 @@ public:
 
 /// Subclasses of this return NetEndpoint instances as connections arrive.
 class NetListener
-:	public virtual Factory_ChannerRWClose_Bin
+:	public virtual Factory_ChannerRWCon_Bin
 ,	public virtual Cancellable
 	{
 protected:
@@ -156,11 +156,11 @@ protected:
 public:
 	virtual ~NetListener();
 
-// From Factory_ChannerRWClose_Bin
-	virtual ZP<ChannerRWClose_Bin> QCall();
+// From Factory_ChannerRWCon_Bin
+	virtual ZP<ChannerRWCon_Bin> QCall();
 
 // Our protocol
-	virtual ZP<ChannerRWClose_Bin> Listen() = 0;
+	virtual ZP<ChannerRWCon_Bin> Listen() = 0;
 
 	virtual ZP<NetAddress> GetAddress();
 	};

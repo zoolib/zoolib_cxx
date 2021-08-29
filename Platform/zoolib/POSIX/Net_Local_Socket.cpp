@@ -74,7 +74,7 @@ class Make_Listener
 	} sMaker1;
 
 class Make_Endpoint
-:	public FunctionChain<ZP<ChannerRWClose_Bin>, std::string>
+:	public FunctionChain<ZP<ChannerRWCon_Bin>, std::string>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{

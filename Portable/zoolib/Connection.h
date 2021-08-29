@@ -4,26 +4,30 @@
 #define __ZooLib_Connection_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Callable.h"
 #include "zoolib/Channer_Bin.h"
+#include "zoolib/Factory.h"
 
 namespace ZooLib {
 
 // ---
 
-typedef ChannerConnection<byte> ChannerConnection_Bin;
+typedef ChannerRWCon<byte> ChannerRWCon_Bin;
+typedef Factory<ZP<ChannerRWCon_Bin>> Factory_ChannerRWCon_Bin;
 
-typedef Callable<ZP<ChannerConnection_Bin>()> Factory_ChannerConnection_Bin;
-
-// Workaround for now.
-typedef ChannerConnection_Bin ChannerRWClose_Bin;
-typedef Factory_ChannerConnection_Bin Factory_ChannerRWClose_Bin;
+typedef ChannerRW<byte> ChannerRW_Bin;
+typedef Factory<ZP<ChannerRW_Bin>> Factory_ChannerRW_Bin;
 
 // ---
 
-typedef ChannerRW<byte> ChannerRW_Bin;
+template <typename EE>
+using ChanConnection = ChanRWCon<EE>;
 
-typedef Callable<ZP<ChannerRW_Bin>()> Factory_ChannerRW_Bin;
+template <class EE>
+using ChannerConnection = ChannerRWCon<EE>;
+
+typedef Factory_ChannerRWCon_Bin Factory_ChannerConnection_Bin;
+
+// ---
 
 } // namespace ZooLib
 
