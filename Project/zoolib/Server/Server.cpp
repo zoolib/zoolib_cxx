@@ -38,7 +38,7 @@ bool Server::IsStarted()
 	return fFactory;
 	}
 
-void Server::Start(ZP<Counted> iStarter,
+void Server::Start(
 	ZP<Factory_ChannerRW_Bin> iFactory,
 	ZP<Cancellable> iCancellable,
 	ZP<Callable_Connection> iCallable_Connection)

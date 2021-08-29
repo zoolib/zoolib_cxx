@@ -29,7 +29,7 @@ public:
 // Our protocol
 	bool IsStarted();
 
-	void Start(ZP<Counted> iStarter,
+	void Start(
 		ZP<Factory_ChannerRW_Bin> iFactory,
 		ZP<Cancellable> iCancellable,
 		ZP<Callable_Connection> iCallable_Connection);
