@@ -119,6 +119,10 @@ class LogMeister_Android
 :	public LogMeister_Base
 	{
 public:
+	LogMeister_Android()
+	:	LogMeister_Base(Log::ePriority_Notice)
+		{}
+
 	virtual void LogIt(Log::EPriority iPriority,
 		const string& iName, size_t iDepth, const string& iMessage)
 		{
