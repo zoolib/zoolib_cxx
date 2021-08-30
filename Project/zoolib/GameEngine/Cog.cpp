@@ -429,8 +429,8 @@ static
 Cog spCogFun_Log1(const Cog& iSelf, const Param& iParam,
 	int iLevel, const string8& iMessage)
 	{
-	if (const Log::S& w = Log::S(iLevel, "COG1"))
-		w << iMessage;
+	if (const Log::ChanW& cc = Log::ChanW(iLevel, "COG1"))
+		cc << iMessage;
 	return true;
 	}
 

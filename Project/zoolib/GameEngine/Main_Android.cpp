@@ -63,7 +63,7 @@ public:
 		ZP<SoundMeister> theSoundMeister;
 		ZP<Callable_Void> theHaptic;
 
-		FileSpec resourceFS = sFileSpec_Archive(sArchive_Zip(iAPK)).Child("assets");
+		FileSpec resourceFS = sFileSpec_Archive(sArchive_Zip(iAPK, false)).Child("assets");
 
 		fGame = GameEngine::sMakeGame(resourceFS, false, theSoundMeister, theHaptic);
 		}

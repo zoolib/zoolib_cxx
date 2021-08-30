@@ -1,7 +1,7 @@
 // Copyright (c) 2019 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/GameEngine/Util_Assets.h"
-#include "zoolib/GameEngine/Util.h" // For sQReadMap_ZZ
+#include "zoolib/GameEngine/Util_TextData.h" // For sQReadMap_ZZ
 
 #include "zoolib/Util_string.h"
 
