@@ -16,6 +16,7 @@
 #include "zoolib/Util_Chan_UTF_Operators.h"
 #include "zoolib/Util_Debug.h" // For sPrettyName
 #include "zoolib/Util_Time.h"
+#include "zoolib/ValueOnce.h"
 
 #include <vector>
 
@@ -234,13 +235,23 @@ bool sContainsProblemChars(const string& iString)
 		return true;
 		}
 
-	for (string::const_iterator ii = iString.begin(), end = iString.end();;)
+	TrueOnce isFirst;
+	for (string::const_iterator ii = iString.begin(), end = iString.end();/*no test*/;/*no inc*/)
 		{
 		UTF32 theCP;
 		if (not Unicode::sReadInc(ii, end, theCP))
 			break;
-		if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
-			return true;
+
+		if (isFirst())
+			{
+			if (not Unicode::sIsAlpha(theCP) && '_' != theCP)
+				return true;
+			}
+		else
+			{
+			if (not Unicode::sIsAlphaDigit(theCP) && '_' != theCP)
+				return true;
+			}
 		}
 
 	return false;
