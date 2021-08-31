@@ -35,7 +35,7 @@ void Server::Finalize()
 bool Server::IsStarted()
 	{
 	ZAcqMtx acq(fMtx);
-	return fFactory;
+	return true && fFactory;
 	}
 
 void Server::Start(

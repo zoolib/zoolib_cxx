@@ -4,7 +4,6 @@
 #define __ZooLib_ZQ_h__
 #include "zconfig.h"
 
-#include "zoolib/Compat_operator_bool.h"
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/CtorDtor.h" // For placement ctor/copy/dtor/assign
 #include "zoolib/Default.h"
@@ -184,8 +183,8 @@ public:
 
 // -----------------
 
-	ZMACRO_operator_bool_T(ZQ, operator_bool) const
-		{ return operator_bool_gen::translate(fHasValue); }
+	explicit operator bool() const
+		{ return fHasValue; }
 
 	bool HasValue() const
 		{ return fHasValue; }
@@ -392,8 +391,8 @@ public:
 
 // -----------------
 
-	ZMACRO_operator_bool_T(ZQ, operator_bool) const
-		{ return operator_bool_gen::translate(fHasValue); }
+	explicit operator bool() const
+		{ return fHasValue; }
 
 	bool HasValue() const
 		{ return fHasValue; }

@@ -7,7 +7,6 @@
 #define __ZooLib_DList_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compat_operator_bool.h"
 #include "zoolib/size_t.h" // For size_t
 
 #include "zoolib/ZDebug.h"
@@ -34,13 +33,13 @@ public:
 	DListHead(const DListHead& iOther)
 	:	fHeadL(nullptr)
 	,	fSize(0)
-		{ ZAssertStop(L::kDebug, !iOther.fHeadL && !iOther.fSize); }
+		{ ZAssertStop(L::kDebug, not iOther.fHeadL && not iOther.fSize); }
 
 	~DListHead()
-		{ ZAssertStop(L::kDebug, !fHeadL && !fSize); }
+		{ ZAssertStop(L::kDebug, not fHeadL && not fSize); }
 
-	ZMACRO_operator_bool_T(DListHead, operator_bool) const
-		{ return operator_bool_gen::translate(fHeadL); }
+	explicit operator bool() const
+		{ return true && fHeadL; }
 
 	size_t Size() const { return fSize; }
 
@@ -259,10 +258,10 @@ public:
 	DListLink(const DListLink& iOther)
 	:	fPrev(nullptr)
 	,	fNext(nullptr)
-		{ ZAssertStop(kDebug, !iOther.fPrev && !iOther.fNext); }
+		{ ZAssertStop(kDebug, not iOther.fPrev && not iOther.fNext); }
 
 	~DListLink()
-		{ ZAssertStop(kDebug, !fPrev && !fNext); }
+		{ ZAssertStop(kDebug, not fPrev && not fNext); }
 
 	L* fPrev;
 	L* fNext;
@@ -300,8 +299,8 @@ public:
 	,	fCurrent(iDListHead.fHeadL)
 		{}
 
-	ZMACRO_operator_bool_T(DListIterator, operator_bool) const
-		{ return operator_bool_gen::translate(fCurrent); }
+	explicit operator bool() const
+		{ return true && fCurrent; }
 
 	P* Current() const
 		{ return static_cast<P*>(fCurrent); }
@@ -341,7 +340,7 @@ public:
 		}
 
 	~DListEraser()
-		{ ZAssertStop(L::kDebug, !fCurrent && !fNext); }
+		{ ZAssertStop(L::kDebug, not fCurrent && not fNext); }
 
 	DListEraser& operator=(const DListEraser& iOther)
 		{
@@ -372,10 +371,10 @@ public:
 			}
 		}
 
-	ZMACRO_operator_bool_T(DListEraser, operator_bool) const
+	explicit operator bool() const
 		{
-		ZAssertStop(L::kDebug, fCurrent || !fCurrent && !fNext);
-		return operator_bool_gen::translate(fCurrent);
+		ZAssertStop(L::kDebug, fCurrent || not fCurrent && not fNext);
+		return true && fCurrent;
 		}
 
 	P* Current() const

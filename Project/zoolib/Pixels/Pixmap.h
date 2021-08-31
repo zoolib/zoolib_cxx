@@ -4,8 +4,6 @@
 #define __ZooLib_Pixels_Pixmap_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/Compat_operator_bool.h"
-
 #include "zoolib/Pixels/Geom.h"
 #include "zoolib/Pixels/PixelDesc.h"
 #include "zoolib/Pixels/Raster.h"
@@ -64,8 +62,8 @@ public:
 	Pixmap(const null_t&);
 	Pixmap& operator=(const null_t&);
 
-	ZMACRO_operator_bool(Pixmap, operator_bool) const
-		{ return operator_bool_gen::translate(!!fRep); }
+	explicit operator bool() const
+		{ return true && fRep; }
 
 	PointPOD Size() const;
 	Ord Width() const;

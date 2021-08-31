@@ -98,7 +98,7 @@ public:
 	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		return fDelivery->fValQ;
+		return true && fDelivery->fValQ;
 		}
 
 	void Deliver(const T& iVal)
@@ -156,7 +156,7 @@ public:
 	bool IsDelivered()
 		{
 		ZAcqMtx acq(fDelivery->fMtx);
-		return fDelivery->fValQ;
+		return true && fDelivery->fValQ;
 		}
 
 	void Deliver()

@@ -6,7 +6,6 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanW_UTF.h"
-#include "zoolib/Compat_operator_bool.h"
 #include "zoolib/Counted.h"
 #include "zoolib/Safe.h"
 #include "zoolib/ThreadVal.h"
@@ -131,7 +130,7 @@ public:
 	virtual size_t WriteUTF8(const UTF8* iSource, size_t iCountCU);
 
 // Our protocol
-	ZMACRO_operator_bool(ChanW, operator_bool) const;
+	explicit operator bool() const;
 
 	void Emit() const;
 

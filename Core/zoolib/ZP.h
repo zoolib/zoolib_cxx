@@ -4,10 +4,6 @@
 #define __ZooLib_ZP_h__ 1
 #include "zconfig.h"
 
-#if not defined(__OBJC__)
-	#include "zoolib/Compat_operator_bool.h"
-#endif
-
 #include "zoolib/Atomic.h" // For sAtomicPtr_CAS
 #include "zoolib/Compat_algorithm.h" // For std::swap
 #include "zoolib/Util_Relops.h"
@@ -38,12 +34,10 @@ private:
 	static void spRelease(TPtr iPtr) { if (iPtr) sRelease(*iPtr); }
 
 public:
+	explicit operator bool() const { return true && fPtr; }
+
 	#if defined(__OBJC__)
-		operator bool() const { return true && fPtr; }
 		operator TPtr() const { return fPtr; }
-	#else
-		ZMACRO_operator_bool_T(ZP, operator_bool) const
-			{ return operator_bool_gen::translate(true && fPtr); }
 	#endif
 
 	inline

@@ -136,22 +136,15 @@ size_t ChanW::WriteUTF8(const UTF8* iSource, size_t iCountCU)
 	return iCountCU;
 	}
 
-ChanW::operator operator_bool() const
+ChanW::operator bool() const
 	{
 	if (not fLM)
-		{
-		return operator_bool_gen::translate(false);
-		}
-	else if (fName_StringQ)
-		{
-		return operator_bool_gen::translate(
-			fLM->Enabled(fPriority, *fName_StringQ));
-		}
-	else
-		{
-		return operator_bool_gen::translate(
-			fLM->Enabled(fPriority, *fName_CharStarQ));
-		}
+		return false;
+
+	if (fName_StringQ)
+		return fLM->Enabled(fPriority, *fName_StringQ);
+
+	return fLM->Enabled(fPriority, *fName_CharStarQ);
 	}
 
 void ChanW::Emit() const

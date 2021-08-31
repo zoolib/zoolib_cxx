@@ -78,7 +78,7 @@ public:
 
 	FileSpec(const std::string& iPath);
 
-	ZMACRO_operator_bool(FileSpec, operator_bool) const;
+	explicit operator bool() const;
 
 	static FileSpec sCWD();
 	static FileSpec sRoot();
@@ -159,7 +159,7 @@ public:
 	FileIter(const FileSpec& iRoot);
 	FileIter(const ZP<FileIterRep>& iRep);
 
-	ZMACRO_operator_bool(FileIter, operator_bool) const;
+	explicit operator bool() const;
 	FileIter& Advance();
 	FileSpec Current() const;
 	std::string CurrentName() const;
@@ -182,7 +182,7 @@ public:
 	~FileTreeIter();
 	FileTreeIter& operator=(const FileTreeIter& iOther);
 
-	ZMACRO_operator_bool(FileTreeIter, operator_bool) const;
+	explicit operator bool() const;
 	FileTreeIter& Advance();
 	FileSpec Current() const;
 	std::string CurrentName() const;

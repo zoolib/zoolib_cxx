@@ -49,7 +49,6 @@ public:
 	virtual size_t Unread(const UTF32* iSource, size_t iCount);
 
 // Our protocol
-//	ZMACRO_operator_bool(ChanU_UTF, operator_bool) const;
 	ML::EToken Current() const;
 	ChanRU_UTF_ML& Advance();
 

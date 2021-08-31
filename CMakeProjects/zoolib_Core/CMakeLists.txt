@@ -30,7 +30,6 @@ set (SourceFiles
 	${SourceDir}/Compat_cmath.h
 	${SourceDir}/Compat_MSVCStaticLib.h
 	${SourceDir}/Compat_NonCopyable.h
-	${SourceDir}/Compat_operator_bool.h
 	${SourceDir}/Compat_string.h
 	${SourceDir}/Compat_tuple.h
 	${SourceDir}/Compat_unordered_map.h

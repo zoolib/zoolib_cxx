@@ -79,8 +79,8 @@ FileSpec::FileSpec(const string& iPath)
 
 /** \brief Returns true if the file spec is valid, that is if it represents
 an extant or potentially extant node in the file system. */
-FileSpec::operator operator_bool() const
-	{ return operator_bool_gen::translate(!!fLoc); }
+FileSpec::operator bool() const
+	{ return true && fLoc; }
 
 /// Returns a file spec representing the current working directory.
 /**
@@ -560,8 +560,8 @@ return false if the iterator was initialized with a file spec
 that is not an extant directory, or if the iterator has
 run off the end of the directory.
 */
-FileIter::operator operator_bool() const
-	{ return operator_bool_gen::translate(fRep && fRep->HasValue()); }
+FileIter::operator bool() const
+	{ return fRep && fRep->HasValue(); }
 
 /**
 Updates the iterator to point to the next child of the directory.
@@ -631,8 +631,8 @@ FileTreeIter& FileTreeIter::operator=(const FileTreeIter& iOther)
 	return *this;
 	}
 
-FileTreeIter::operator operator_bool() const
-	{ return operator_bool_gen::translate(!!fCurrent); }
+FileTreeIter::operator bool() const
+	{ return true && fCurrent; }
 
 FileTreeIter& FileTreeIter::Advance()
 	{
