@@ -424,11 +424,7 @@ protected:
 
 inline
 bool operator==(const ZQ<void>& iL, const ZQ<void>& iR)
-	{
-	if (iL.HasValue())
-		return iR.HasValue();
-	return not iR.HasValue();
-	}
+	{ return iL.HasValue() == iR.HasValue(); }
 
 inline
 bool operator<(const ZQ<void>& iL, const ZQ<void>& iR)
@@ -534,12 +530,12 @@ const TT& operator|(const ZQ<TT>& ll, const TT& rr)
 	return rr;
 	}
 
-template <class TT>
-TT operator|(const ZQ<TT>& ll, TT&& rr)
+template <class TT, class Other>
+auto operator|(const ZQ<TT>& ll, Other&& rr) -> decltype(TT(std::move(rr)))
 	{
 	if (ll)
 		return *ll;
-	return std::move(rr);
+	return TT(std::move(rr));
 	}
 
 } // namespace ZooLib
