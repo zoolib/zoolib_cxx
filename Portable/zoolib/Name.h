@@ -150,7 +150,7 @@ private:
 
 	static void spRelease(const CountedString* iCounted);
 
-	intptr_t fIntPtr;
+	uintptr_t fIntPtr;
 	#if not ZCONFIG_Is64Bit
 		bool fIsCounted;
 	#endif

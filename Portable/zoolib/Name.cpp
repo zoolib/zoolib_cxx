@@ -21,6 +21,11 @@ namespace ZooLib {
 
 #else // ZMACRO_NameUsesString
 
+#if ZCONFIG_Is64Bit
+	static constexpr uintptr_t kFlagBit = uintptr_t(1) << 55;
+	static constexpr uintptr_t kOtherBit = uintptr_t(1) << 54;
+#endif
+
 // =================================================================================================
 #pragma mark -
 
@@ -56,14 +61,14 @@ Name::Name(const string8& iString)
 	{
 	CountedString* theCountedString = new CountedString(iString);
 	spRetain(theCountedString);
-	fIntPtr = ((intptr_t)theCountedString) ^ 1ULL<<63;
+	fIntPtr = ((uintptr_t)theCountedString) ^ kFlagBit;
 	}
 #else
 :	fIsCounted(true)
 	{
 	CountedString* theCountedString = new CountedString(iString);
 	spRetain(theCountedString);
-	fIntPtr = (intptr_t)theCountedString;
+	fIntPtr = (uintptr_t)theCountedString;
 	}
 #endif
 
@@ -74,7 +79,7 @@ Name::Name(const ZP<CountedString>& iCountedString)
 		if (theCountedString)
 			{
 			spRetain(theCountedString);
-			fIntPtr = ((intptr_t)theCountedString) ^ 1ULL<<63;
+			fIntPtr = ((uintptr_t)theCountedString) ^ kFlagBit;
 			}
 		else
 			{
@@ -84,7 +89,7 @@ Name::Name(const ZP<CountedString>& iCountedString)
 		if (theCountedString)
 			{
 			spRetain(theCountedString);
-			fIntPtr = (intptr_t)theCountedString;
+			fIntPtr = (uintptr_t)theCountedString;
 			fIsCounted = true;
 			}
 		else
@@ -98,8 +103,8 @@ Name::Name(const ZP<CountedString>& iCountedString)
 const string8 Name::AsString8() const
 	{
 	#if ZCONFIG_Is64Bit
-		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
-			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get();
+		if ((bool(fIntPtr & kFlagBit)) != (bool(fIntPtr & kOtherBit)))
+			return ((const CountedString*)(fIntPtr ^ kFlagBit))->Get();
 	#else
 		if (fIsCounted)
 			return ((const CountedString*)fIntPtr)->Get();
@@ -133,8 +138,8 @@ int Name::Compare(const Name& iOther) const
 bool Name::IsEmpty() const
 	{
 	#if ZCONFIG_Is64Bit
-		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
-			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get().empty();
+		if ((bool(fIntPtr & kFlagBit)) != (bool(fIntPtr & kOtherBit)))
+			return ((const CountedString*)(fIntPtr ^ kFlagBit))->Get().empty();
 	#else
 		if (fIsCounted)
 			return ((const CountedString*)(fIntPtr))->Get().empty();
@@ -176,8 +181,8 @@ size_t Name::Hash() const
 const char* Name::pAsCharStar() const
 	{
 	#if ZCONFIG_Is64Bit
-		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
-			return ((const CountedString*)(fIntPtr ^ 1ULL<<63))->Get().c_str();
+		if ((bool(fIntPtr & kFlagBit)) != (bool(fIntPtr & kOtherBit)))
+			return ((const CountedString*)(fIntPtr ^ kFlagBit))->Get().c_str();
 	#else
 		if (fIsCounted)
 			return ((const CountedString*)(fIntPtr))->Get().c_str();
@@ -191,8 +196,8 @@ const CountedString* Name::pGetIfCounted() const
 CountedString* Name::pGetIfCounted()
 	{
 	#if ZCONFIG_Is64Bit
-		if ((bool(fIntPtr & 1ULL<<63)) != (bool(fIntPtr & 1ULL<<62)))
-			return (CountedString*)(fIntPtr ^ 1ULL<<63);
+		if ((bool(fIntPtr & kFlagBit)) != (bool(fIntPtr & kOtherBit)))
+			return (CountedString*)(fIntPtr ^ kFlagBit);
 	#else
 		if (fIsCounted)
 			return (CountedString*)fIntPtr;

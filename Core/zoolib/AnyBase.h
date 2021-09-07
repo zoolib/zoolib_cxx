@@ -455,18 +455,17 @@ private:
 		}
 
 // -----------------
-	// There are two situations indicated by the value in fDistinguisher.
-	// 1. It's zero. fPayload.fAsPtr points to an instance of an OnHeap subclass. If
+
+	// There are two scenarios differentiated by the value in fDistinguisher.
+	// 1. When zero fPayload.fAsPtr points to an instance of an OnHeap subclass. If
 	//    fPayload.fAsPtr is also null then the AnyBase is itself a null object.
-	// 2. It's the vptr of an InPlace, the fields of the object itself
+	// 2. Otherwise it's the vptr of an InPlace, the fields of the object itself
 	//    spilling over into fPayload.
 
-	// For future use, in situation 2 the bottom 2 bits are pretty much open for use.
-	// And on a 64 bit machine the bottom 3 bits are likely to be available, and the top 16
-	// can also be repurposed -- no 64 bit architecture uses more than 48 bits at this point.
-	// Remember that sign-extension requires that the top two bytes are all ones or all zeroes
-	// when they're actually used -- replicate them from bit 47.
-	
+	// For future use we have 2 low bits available in fDistinguisher in scenario 1, and in
+	// fPayload.fAsPtr in scenario 2.
+	// On 64 bit machines there may be 3, and some or all of the high 14 to 16 bits may be usable.
+
 	void* fDistinguisher;
 
 	union
