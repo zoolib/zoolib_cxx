@@ -30,6 +30,7 @@ Decode sDecode_Normal();
 Encode sEncode_Normal();
 
 Decode sDecode(uint8 i62, uint8 i63);
+Decode sDecode(uint8 i62, uint8 i63, uint8 iPadding);
 Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding);
 
 } // namespace Base64
@@ -54,8 +55,8 @@ public:
 protected:
 	const Base64::Decode fDecode;
 	const ChanR_Bin& fChanR;
-	byte fSinkBuf[3];
-	size_t fSinkCount;
+	uint8 fPending;
+	int fIndex;
 	};
 
 // =================================================================================================

@@ -11,7 +11,7 @@ namespace Base64 {
 
 namespace { // anonymous
 
-static void spEncode(
+void spEncode(
 	const Encode& iEncode, const byte* iSource, size_t iSourceCount, byte* oDest)
 	{
 	switch (iSourceCount)
@@ -49,7 +49,7 @@ static void spEncode(
 		}
 	}
 
-static const Encode spEncodeStd =
+constexpr Encode spEncodeStd =
 	{
 	{
 	 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
@@ -60,24 +60,29 @@ static const Encode spEncodeStd =
 	61
 	};
 
-static const Decode spDecodeStd =
+// Marker value for non-coding characters.
+constexpr uint8 __ =  255;
+
+constexpr Decode spDecodeStd =
 	{{
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255, 62,255,255,255, 63,
-	 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,255,255,255,  0,255,255,
-	255,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
-	 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,255,255,255,255,255,
-	255, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-	 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+
+	 __, __, __, __, __, __, __, __, __, __, __, 62, __, __, __, 63,
+	 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, __, __, __, __, __, __,
+	 __,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+	 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, __, __, __, __, __,
+	 __, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+	 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, __, __, __, __, __,
+
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
+	 __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __,
 	}};
 
 } // anonymous namespace
@@ -86,10 +91,14 @@ static const Decode spDecodeStd =
 #pragma mark -
 
 Decode sDecode(uint8 i62, uint8 i63)
+	{ return sDecode(i62, i63, '='); }
+
+Decode sDecode(uint8 i62, uint8 i63, uint8 iPadding)
 	{
 	Decode result = spDecodeStd;
 	result.fTable[62] = i62;
 	result.fTable[63] = i63;
+	result.fTable[iPadding] = 254;
 	return result;
 	}
 
@@ -103,7 +112,7 @@ Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding)
 	}
 
 Decode sDecode_Normal()
-	{ return sDecode('+', '/'); }
+	{ return sDecode('+', '/', '='); }
 
 Encode sEncode_Normal()
 	{ return sEncode('+', '/', '='); }
@@ -116,14 +125,14 @@ Encode sEncode_Normal()
 ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR)
 :	fDecode(Base64::sDecode_Normal())
 ,	fChanR(iChanR)
-,	fSinkCount(3)
+,	fIndex(0)
 	{}
 
 ChanR_Bin_Base64Decode::ChanR_Bin_Base64Decode(
 	const Base64::Decode& iDecode, const ChanR_Bin& iChanR)
 :	fDecode(iDecode)
 ,	fChanR(iChanR)
-,	fSinkCount(3)
+,	fIndex(0)
 	{}
 
 ChanR_Bin_Base64Decode::~ChanR_Bin_Base64Decode()
@@ -131,61 +140,31 @@ ChanR_Bin_Base64Decode::~ChanR_Bin_Base64Decode()
 
 size_t ChanR_Bin_Base64Decode::Read(byte* oDest, size_t iCount)
 	{
-	byte* localDest = oDest;
-	size_t countRemaining = iCount;
-	while (countRemaining)
+	byte* const localEnd = oDest + iCount;
+	while (oDest < localEnd)
 		{
-		// Transcribe our sink buffer
-		while (countRemaining && fSinkCount != 3)
+		if (NotQ<byte> curByteQ = sQRead(fChanR))
 			{
-			*localDest++ = fSinkBuf[fSinkCount];
-			--countRemaining;
-			++fSinkCount;
+			break;
 			}
-
-		if (countRemaining)
+		else switch (const uint8 dd = fDecode.fTable[*curByteQ])
 			{
-			size_t sourceCount = 0;
-			uint32 source = 0;
-			while (sourceCount < 4)
+			case 255: break; // Non-coding character, ignore
+			case 254: fIndex = 0; break; // Padding, reset state
+			default:
 				{
-				ZQ<byte> curByteQ = sQRead(fChanR);
-				if (not curByteQ)
-					break;
-
-				const uint8 c = fDecode.fTable[*curByteQ];
-				if (c == 0xFF)
+				switch (fIndex & 3)
 					{
-					// Ignore
+					case 0: fPending = dd << 2; break;
+					case 1: *oDest++ = fPending | (dd >> 4); fPending = dd << 4; break;
+					case 2: *oDest++ = fPending | (dd >> 2); fPending = dd << 6; break;
+					case 3: *oDest++ = fPending | dd; break;
 					}
-				else if (c == 0xFE)
-					{
-					// Exit.
-					break;
-					}
-				else
-					{
-					source = (source << 6) | c;
-					++sourceCount;
-					}
+				++fIndex;
 				}
-
-			if (sourceCount == 0)
-				break;
-
-			if (sourceCount != 4)
-				{
-				ZDebugLogf(1, ("ChanR_Bin_Base64Decode::Imp_Read, base64 stream was truncated"));
-				break;
-				}
-
-			fSinkBuf[0] = byte(source >> 16);
-			fSinkBuf[1] = byte(source >> 8);
-			fSinkBuf[2] = byte(source);
-			fSinkCount = 0;
 			}
 		}
-	return localDest - oDest;
+	return iCount - (localEnd - oDest);
 	}
 
 // =================================================================================================
