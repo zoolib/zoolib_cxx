@@ -89,6 +89,8 @@ public:
 		return nullptr;
 		}
 
+	Val_ZZ& Mut(size_t iIndex);
+
 	Seq_ZZ& Set(size_t iIndex, const Val_ZZ& iVal);
 
 	Seq_ZZ& Erase(size_t iIndex);
@@ -104,8 +106,6 @@ public:
 		{ return this->Append().Mut<S>(); }
 
 // Our protocol
-	Val_ZZ& Mut(size_t iIndex);
-
 	template <class S>
 	S& Mut(size_t iIndex)
 		{ return this->Mut(iIndex).Mut<S>(); }
@@ -216,6 +216,8 @@ public:
 // ZMap protocol
 	bool IsEmpty() const;
 
+	size_t Count() const;
+
 	void Clear();
 
 	const Val_ZZ* PGet(const Name_t& iName) const;
@@ -229,6 +231,8 @@ public:
 
 	Val_ZZ* PMut(const Name_t& iName);
 	Val_ZZ* PMut(const Index_t& iIndex);
+
+	Val_ZZ& Mut(const Name_t& iName);
 
 	template <class S>
 	const S* PGet(const Name_t& iName) const
@@ -309,8 +313,6 @@ public:
 	Map_ZZ& Erase(const Index_t& iIndex);
 
 // Our protocol
-	Val_ZZ& Mut(const Name_t& iName);
-
 	template <class S>
 	S& Mut(const Name_t& iName)
 		{ return this->Mut(iName).Mut<S>(); }

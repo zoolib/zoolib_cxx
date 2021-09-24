@@ -123,6 +123,14 @@ Val_ZZ* Seq_ZZ::PMut(size_t iIndex)
 	return nullptr;
 	}
 
+Val_ZZ& Seq_ZZ::Mut(size_t iIndex)
+	{
+	this->pTouch();
+	if (iIndex >= fRep->fVector.size())
+		fRep->fVector.resize(iIndex + 1);
+	return fRep->fVector[iIndex];
+	}
+
 Seq_ZZ& Seq_ZZ::Set(size_t iIndex, const Val_ZZ& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
@@ -163,14 +171,6 @@ Val_ZZ& Seq_ZZ::Append()
 	this->pTouch();
 	fRep->fVector.resize(fRep->fVector.size() + 1);
 	return fRep->fVector.back();
-	}
-
-Val_ZZ& Seq_ZZ::Mut(size_t iIndex)
-	{
-	this->pTouch();
-	if (iIndex >= fRep->fVector.size())
-		fRep->fVector.resize(iIndex + 1);
-	return fRep->fVector[iIndex];
 	}
 
 Val_ZZ& Seq_ZZ::operator[](size_t iIndex)
@@ -428,6 +428,13 @@ int Map_ZZ::Compare(const Map_ZZ& iOther) const
 
 bool Map_ZZ::IsEmpty() const
 	{ return not fRep || fRep->fMap.empty(); }
+
+size_t Map_ZZ::Count() const
+	{
+	if (fRep)
+		return fRep->fMap.size();
+	return 0;
+	}
 
 void Map_ZZ::Clear()
 	{ fRep.Clear(); }
