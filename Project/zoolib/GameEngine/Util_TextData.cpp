@@ -23,12 +23,8 @@ using namespace Util_string;
 
 static ZQ<Map_ZZ> spQReadMap(const ChanRU_UTF& iChanRU)
 	{
-	Util_Chan_JSON::PullTextOptions_JSON theOptions;
-	theOptions.fAllowUnquotedPropertyNames = true;
-	theOptions.fAllowEquals = true;
-	theOptions.fAllowSemiColons = true;
-	theOptions.fAllowTerminators = true;
-	theOptions.fLooseSeparators = true;
+	Util_Chan_JSON::PullTextOptions_JSON theOptions = Util_Chan_JSON::sPullTextOptions_Extended();
+
 	if (ZQ<Val_ZZ> theQ = Util_ZZ_JSON::sQRead(iChanRU, theOptions))
 		return theQ->QGet<Map_ZZ>();
 
