@@ -9,6 +9,8 @@
 #include "zoolib/Val_ZZ.h"
 #include "zoolib/ValueOnce.h"
 
+#include <set>
+
 namespace ZooLib {
 namespace GameEngine {
 
@@ -64,7 +66,6 @@ public:
 			return *theP;
 		return null;
 		}
-
 
 	template <class S>
 	const S Get(size_t iIndex) const
@@ -148,7 +149,6 @@ public:
 		return null;
 		}
 
-
 	template <class S>
 	const S& Get(const Name_t& iName) const
 		{
@@ -183,6 +183,8 @@ public:
 
 	ZP<Link> GetLink() const;
 
+	void InsertNames(std::set<Map::Name_t>& ioNames) const;
+
 private:
 	ZP<Link> fLink;
 	mutable Map_ZZ fMap_ZZ;
@@ -195,6 +197,10 @@ Map sYadTree(const Map_ZZ& iMap_ZZ, const std::string& iProtoName);
 
 Map sParameterizedYadTree(const Map& iBase,
 	const std::string& iRootAugmentName, const Map& iRootAugment);
+
+std::set<Map::Name_t> sAllNamesIn(Map iMap);
+
+Val_ZZ sAs_ZZ(const Val& iVal);
 
 } // namespace GameEngine
 } // namespace ZooLib

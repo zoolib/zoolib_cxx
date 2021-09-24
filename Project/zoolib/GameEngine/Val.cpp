@@ -36,21 +36,27 @@ class Link
 	{
 public:
 // ctor that establishes a tree
-	Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap);
+	Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap_ZZ);
 
 // ctor used as we walk down a tree.
-	Link(const ZP<Link>& iParent, const Map_ZZ& iMap);
+	Link(const ZP<Link>& iParent, const Map_ZZ& iMap_ZZ);
 
 	ZQ<Val_ZZ> QReadAt(const Name& iName);
 
 	ZP<Link> WithRootAugment(const std::string& iRootAugmentName, const ZP<Link>& iRootAugment);
 
+	ZP<Link> GetProto();
+
+	void InsertNames(std::set<Map::Name_t>& ioNames) const;
+
 private:
+	void pCheckProto();
+
 	const ZP<CountedName> fProtoName;
 	const ZP<Link> fParent;
-	const Map_ZZ fMap;
+	const Map_ZZ fMap_ZZ;
 
-	std::map<std::string,ZP<Link>> fChildren;
+	std::map<Name,ZP<Link>> fChildren;
 	FalseOnce fCheckedProto;
 	ZP<Link> fProto;
 	};
@@ -58,15 +64,15 @@ private:
 // =================================================================================================
 #pragma mark - Link, definition
 
-Link::Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap)
+Link::Link(const ZP<CountedName>& iProtoName, const Map_ZZ& iMap_ZZ)
 :	fProtoName(iProtoName)
-,	fMap(iMap)
+,	fMap_ZZ(iMap_ZZ)
 	{}
 
-Link::Link(const ZP<Link>& iParent, const Map_ZZ& iMap)
+Link::Link(const ZP<Link>& iParent, const Map_ZZ& iMap_ZZ)
 :	fProtoName(iParent->fProtoName)
 ,	fParent(iParent)
-,	fMap(iMap)
+,	fMap_ZZ(iMap_ZZ)
 	{}
 
 ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
@@ -74,7 +80,7 @@ ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 	if (ZP<Link> theLink = sGet(fChildren, iName))
 		return Map(theLink);
 
-	if (const Val_ZZ* theP = sPGet(fMap, iName))
+	if (const Val_ZZ* theP = sPGet(fMap_ZZ, iName))
 		{
 		if (const Map_ZZ* theMap = theP->PGet<Map_ZZ>())
 			{
@@ -92,56 +98,7 @@ ZQ<Val_ZZ> Link::QReadAt(const Name& iName)
 			}
 		}
 
-	if (not fCheckedProto())
-		{
-		if (const string8* theString = fMap.PGet<string8>(fProtoName->Get()))
-			{
-			const string& theTrailString = *theString;
-
-			if (theTrailString.size())
-				{
-				// We have a non-empty proto trail.
-				size_t index = 0;
-				const Trail theTrail = Trail(theTrailString).Normalized();
-
-				ZP<Link> cur = this;
-
-				if (theTrailString[0] == '/')
-					{
-					// Walk up to the root.
-					for (ZP<Link> next = null; (next = cur->fParent); cur = next)
-						{}
-					}
-				else
-					{
-					// Follow any leading bounces.
-					for (/*no init*/;
-						cur && index < theTrail.Count() && sIsEmpty(theTrail.At(index));
-						++index, cur = cur->fParent)
-						{}
-					}
-
-				for (;;++index)
-					{
-					if (index == theTrail.Count())
-						{
-						fProto = cur;
-						break;
-						}
-					else if (ZQ<Val_ZZ> theZZQ = cur->QReadAt(theTrail.At(index)))
-						{
-						if (const Map* theMapP = theZZQ->PGet<Map>())
-							{
-							cur = theMapP->GetLink();
-							continue;
-							}
-						}
-					break;
-					}
-				}
-			}
-		}
-
+	pCheckProto();
 	if (fProto)
 		return fProto->QReadAt(iName);
 
@@ -153,13 +110,80 @@ ZP<Link> Link::WithRootAugment(const string& iRootAugmentName, const ZP<Link>& i
 	if (fParent)
 		{
 		ZP<Link> newParent = fParent->WithRootAugment(iRootAugmentName, iRootAugment);
-		ZP<Link> newSelf = new Link(newParent, fMap);
+		ZP<Link> newSelf = new Link(newParent, fMap_ZZ);
 		return newSelf;
 		}
 
-	ZP<Link> newSelf = new Link(fProtoName, fMap);
+	ZP<Link> newSelf = new Link(fProtoName, fMap_ZZ);
 	sInsertMust(newSelf->fChildren, iRootAugmentName, iRootAugment);
 	return newSelf;
+	}
+
+ZP<Link> Link::GetProto()
+	{
+	this->pCheckProto();
+	return fProto;
+	}
+
+void Link::InsertNames(std::set<Map::Name_t>& ioNames) const
+	{
+	for (auto ii = fMap_ZZ.cbegin(); ii != fMap_ZZ.cend(); ++ii)
+		ioNames.insert(ii->first);
+	for (auto ii = fChildren.cbegin(); ii != fChildren.cend(); ++ii)
+		ioNames.insert(ii->first);
+	}
+
+void Link::pCheckProto()
+	{
+	if (fCheckedProto())
+		return;
+
+	if (const string8* theString = fMap_ZZ.PGet<string8>(fProtoName->Get()))
+		{
+		const string& theTrailString = *theString;
+
+		if (theTrailString.size())
+			{
+			// We have a non-empty proto trail.
+			size_t index = 0;
+			const Trail theTrail = Trail(theTrailString).Normalized();
+
+			ZP<Link> cur = this;
+
+			if (theTrailString[0] == '/')
+				{
+				// Walk up to the root.
+				for (ZP<Link> next = null; (next = cur->fParent); cur = next)
+					{}
+				}
+			else
+				{
+				// Follow any leading bounces.
+				for (/*no init*/;
+					cur && index < theTrail.Count() && sIsEmpty(theTrail.At(index));
+					++index, cur = cur->fParent)
+					{}
+				}
+
+			for (;;++index)
+				{
+				if (index == theTrail.Count())
+					{
+					fProto = cur;
+					break;
+					}
+				else if (ZQ<Val_ZZ> theZZQ = cur->QReadAt(theTrail.At(index)))
+					{
+					if (const Map* theMapP = theZZQ->PGet<Map>())
+						{
+						cur = theMapP->GetLink();
+						continue;
+						}
+					}
+				break;
+				}
+			}
+		}
 	}
 
 // =================================================================================================
@@ -220,7 +244,6 @@ ZQ<Val> Seq::QGet(size_t iIndex) const
 		return *theVal;
 	return null;
 	}
-
 
 const Val& Seq::Get(size_t iIndex) const
 	{
@@ -355,7 +378,6 @@ ZQ<Val> Map::QGet(const Name_t& iName) const
 	return null;
 	}
 
-
 const Val& Map::Get(const Name_t& iName) const
 	{
 	if (const Val* theVal = this->PGet(iName))
@@ -433,6 +455,20 @@ const Val& Map::operator[](const Name_t& iName) const
 ZP<Link> Map::GetLink() const
 	{ return fLink; }
 
+void Map::InsertNames(std::set<Map::Name_t>& ioNames) const
+	{
+	for (ZP<Link> cur = fLink; cur; cur = cur->GetProto())
+		cur->InsertNames(ioNames);
+
+	for (auto ii = fMap_ZZ.cbegin(); ii != fMap_ZZ.cend(); ++ii)
+		{
+		if (ii->second.PGet<Tombstone_t>())
+			ioNames.erase(ii->first);
+		else
+			ioNames.insert(ii->first);
+		}
+	}
+
 // =================================================================================================
 #pragma mark -
 
@@ -442,6 +478,35 @@ Map sYadTree(const Map_ZZ& iMap_ZZ, const std::string& iProtoName)
 Map sParameterizedYadTree(const Map& iBase,
 	const std::string& iRootAugmentName, const Map& iRootAugment)
 	{ return Map(iBase.GetLink()->WithRootAugment(iRootAugmentName, iRootAugment.GetLink())); }
+
+std::set<Map::Name_t> sAllNamesIn(Map iMap)
+	{
+	std::set<Map::Name_t> result;
+	iMap.InsertNames(result);
+	return result;
+	}
+
+Val_ZZ sAs_ZZ(const Val& iVal)
+	{
+	if (const Map* asMap = iVal.PGet<Map>())
+		{
+		Map_ZZ result;
+		for (Name theName: sAllNamesIn(*asMap))
+			result.Set(theName, sAs_ZZ(asMap->Get(theName)));
+		return result;
+		}
+	else if (const Seq* asSeq = iVal.PGet<Seq>())
+		{
+		Seq_ZZ result;
+		for (size_t xx = 0; xx < asSeq->Count(); ++xx)
+			result.Append(sAs_ZZ(asSeq->Get(xx)));
+		return result;
+		}
+	else
+		{
+		return iVal.As<Val_ZZ>();
+		}
+	}
 
 } // namespace GameEngine
 } // namespace ZooLib
