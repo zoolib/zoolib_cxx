@@ -1,9 +1,11 @@
 // Copyright (c) 2021 Andrew Green and Mark/Space, Inc. MIT License. http://www.zoolib.org
 
-#include "zoolib/PullPush_bplist.h"
+#include "zoolib/Pull_bplist.h"
 
 #include "zoolib/Chan_Bin_Data.h"
 #include "zoolib/ChanR_Bin_More.h"
+#include "zoolib/ChanW_Bin_More.h"
+#include "zoolib/Chan_XX_Count.h"
 #include "zoolib/Data_ZZ.h"
 #include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h"
@@ -212,7 +214,7 @@ static void spPull_bplist_Push_PPT(uint8 iObjectRefSize, const vector<uint64>& i
 			{
 			if (theInfo != 0x3)
 				sThrow_ParseException(sStringf("Unknown date sub-type: %d", theInfo));
-			sPush(UTCDateTime(Time::kEpochDelta_2001_To_1970 + sEReadBE<double>(iChanRPos)), iChanW);
+			sPush(UTCDateTime(sEReadBE<double>(iChanRPos) + Time::kEpochDelta_2001_To_1970), iChanW);
 			return;
 			}
 		case 4: // Data (binary)
@@ -287,7 +289,7 @@ static void spPull_bplist_Push_PPT(uint8 iObjectRefSize, const vector<uint64>& i
 	sThrow_ParseException(sStringf("Unhandled type: %d", theType));
 	}
 
-void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW)
+void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW)
 	{
 	if (not sRead_String(iChanRPos, "bplist"))
 		sThrow_ParseException("Not a bplist");
@@ -311,6 +313,31 @@ void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW)
 	vector<uint64> theOffsets = spReadOffsets(offsetSize, iChanRPos, numObjects);
 
 	spPull_bplist_Push_PPT(objectRefSize, theOffsets, topObjectIndex, iChanRPos, iChanW);
+	}
+
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+static void spChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChannerRPos,
+	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
+	{
+	ZThread::sSetName("sChannerR_PPT_bplist");
+	try
+		{
+		sPull_bplist_Push_PPT(*iChannerRPos, *iChannerWCon);
+		sDisconnectWrite(*iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{
+		ZLOGTRACE(eDebug); // In lieu of general error handling
+		}
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner)
+	{
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_bplist), iChanner, thePair.first));
+	return thePair.second;
 	}
 
 } // namespace ZooLib

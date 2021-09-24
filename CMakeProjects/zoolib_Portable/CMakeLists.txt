@@ -143,14 +143,14 @@ set (SourceFiles
 	${SourceDir}/Pull_Basic.h
 	${SourceDir}/Pull_Bencode.cpp
 	${SourceDir}/Pull_Bencode.h
+	${SourceDir}/Pull_bplist.cpp
+	${SourceDir}/Pull_bplist.h
 	${SourceDir}/Pull_ML.cpp
 	${SourceDir}/Pull_ML.h
 	${SourceDir}/Pull_SeparatedValues.cpp
 	${SourceDir}/Pull_SeparatedValues.h
 	${SourceDir}/Pull_XMLAttr.cpp
 	${SourceDir}/Pull_XMLAttr.h
-	${SourceDir}/PullPush_bplist.cpp
-	${SourceDir}/PullPush_bplist.h
 	${SourceDir}/PullPush_JSON.cpp
 	${SourceDir}/PullPush_JSON.h
 	${SourceDir}/PullPush_JSONB.cpp
@@ -161,6 +161,8 @@ set (SourceFiles
 	${SourceDir}/PullPush_ZZ.h
 	${SourceDir}/PullPush.cpp
 	${SourceDir}/PullPush.h
+	${SourceDir}/Push_bplist.cpp
+	${SourceDir}/Push_bplist.h
 	${SourceDir}/PullTextOptions.h
 	${SourceDir}/PushTextOptions.h
 	${SourceDir}/SafePtrStack.h

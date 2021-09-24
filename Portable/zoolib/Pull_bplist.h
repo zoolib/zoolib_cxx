@@ -5,7 +5,6 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR_Bin.h"
-#include "zoolib/ChanW_Bin.h"
 #include "zoolib/PullPush.h"
 #include "zoolib/TagVal.h"
 
@@ -54,10 +53,12 @@ public:
 // =================================================================================================
 #pragma mark -
 
-void sPull_bplist_Push_PPT(ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW);
+void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChanW);
 
-// Not done yet:
-// bool sPull_PPT_Push_bplist(const ChanR_PPT& iChanR, const ChanWPos_Bin& iChanWPos);
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner);
 
 } // namespace ZooLib
 
