@@ -33,6 +33,8 @@ class Val_T
 	template <class S> Val_T& operator=(const ZQ<S>&);
 
 public:
+	typedef Seq_p Seq_t;
+	typedef Map_p Map_t;
 	typedef Name Name_t;
 
 	Val_T()
@@ -116,29 +118,55 @@ public:
 	using inherited::Get;
 	using inherited::Set;
 
+// Access as the associated Seq type
+	const Seq_t* PGetSeq() const
+		{ return this->PGet<Seq_t>(); }
+
+	const ZQ<Seq_t> QGetSeq() const
+		{ return this->QGet<Seq_t>(); }
+
+	const Seq_t& GetSeq() const
+		{ return this->Get<Seq_t>(); }
+
+	Seq_t* PMutSeq()
+		{ return this->PMut<Seq_t>(); }
+
+// Access as the associated Map type
+	const Map_t* PGetMap() const
+		{ return this->PGet<Map_t>(); }
+
+	const ZQ<Map_t> QGetMap() const
+		{ return this->QGet<Map_t>(); }
+
+	const Map_t& GetMap() const
+		{ return this->Get<Map_t>(); }
+
+	Map_t* PMutMap()
+		{ return this->PMut<Map_t>(); }
+
 // Shortcut access to values in an enclosed Seq.
 	const Val_T* PGet(size_t iIndex) const
 		{
-		if (const Seq_p* asSeq = this->PGet<Seq_p>())
+		if (const Seq_t* asSeq = this->PGet<Seq_t>())
 			return asSeq->PGet(iIndex);
 		return nullptr;
 		}
 
 	const ZQ<Val_T> QGet(size_t iIndex) const
-		{ return this->Get<Seq_p>().QGet(iIndex); }
+		{ return this->Get<Seq_t>().QGet(iIndex); }
 
 	const Val_T& Get(size_t iIndex) const
-		{ return this->Get<Seq_p>().Get(iIndex); }
+		{ return this->Get<Seq_t>().Get(iIndex); }
 
 	Val_T* PMut(size_t iIndex)
 		{
-		if (Seq_p* asSeq = this->PMut<Seq_p>())
+		if (Seq_t* asSeq = this->PMut<Seq_t>())
 			return asSeq->PMut(iIndex);
 		return nullptr;
 		}
 
 	Val_T& Mut(size_t iIndex)
-		{ return this->Mut<Seq_p>().Mut(iIndex); }
+		{ return this->Mut<Seq_t>().Mut(iIndex); }
 
 	template <class S>
 	const S* PGet(size_t iIndex) const
@@ -174,26 +202,26 @@ public:
 // Shortcut access to values in an enclosed Map.
 	const Val_T* PGet(const Name_t& iName) const
 		{
-		if (const Map_p* asMap = this->PGet<Map_p>())
+		if (const Map_t* asMap = this->PGet<Map_t>())
 			return asMap->PGet(iName);
 		return nullptr;
 		}
 
 	const ZQ<Val_T> QGet(const Name_t& iName) const
-		{ return this->Get<Map_p>().QGet(iName); }
+		{ return this->Get<Map_t>().QGet(iName); }
 
 	const Val_T& Get(const Name_t& iName) const
-		{ return this->Get<Map_p>().Get(iName); }
+		{ return this->Get<Map_t>().Get(iName); }
 
 	Val_T* PMut(const Name_t& iName)
 		{
-		if (Map_p* asMap = this->PMut<Map_p>())
+		if (Map_t* asMap = this->PMut<Map_t>())
 			return asMap->PMut(iName);
 		return nullptr;
 		}
 
 	Val_T& Mut(const Name_t& iName)
-		{ return this->Mut<Map_p>().Mut(iName); }
+		{ return this->Mut<Map_t>().Mut(iName); }
 
 	template <class S>
 	const S* PGet(const Name_t& iName) const
