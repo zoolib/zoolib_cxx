@@ -28,6 +28,14 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	const ZP<Callable_JSONB_WriteFilter>& iWriteFilter,
 	const ChanW_Bin& iChanW);
 
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSONB(const ZP<Channer<ChanR_Bin>>& iChanner);
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSONB(const ZP<Channer<ChanR_Bin>>& iChanner,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_PullPush_JSONB_h__

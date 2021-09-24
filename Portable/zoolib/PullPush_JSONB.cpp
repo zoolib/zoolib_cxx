@@ -305,4 +305,34 @@ bool sPull_PPT_Push_JSONB(const ChanR_PPT& iChanR,
 	ZUnimplemented();
 	}
 
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+static void spChannerR_PPT_JSONB(const ZP<Channer<ChanR_Bin>>& iChannerR,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter,
+	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
+	{
+	ZThread::sSetName("sChannerR_PPT_JSONB");
+	try
+		{
+		sPull_JSONB_Push_PPT(*iChannerR, iReadFilter, *iChannerWCon);
+		sDisconnectWrite(*iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{
+		ZLOGTRACE(eDebug); // In lieu of general error handling
+		}
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSONB(const ZP<Channer<ChanR_Bin>>& iChanner)
+	{ return sChannerR_PPT_JSONB(iChanner, null); }
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSONB(const ZP<Channer<ChanR_Bin>>& iChanner,
+	const ZP<Callable_JSONB_ReadFilter>& iReadFilter)
+	{
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_JSONB), iChanner, iReadFilter, thePair.first));
+	return thePair.second;
+	}
+
 } // namespace ZooLib

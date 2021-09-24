@@ -22,6 +22,11 @@ bool sPull_PPT_Push_XMLPList(const ChanR_PPT& iChanR, const ChanW_UTF_ML& iChanW
 void sWriteXMLPListPreamble(const ChanW_UTF_ML& s);
 void sWriteXMLPListPostamble(const ChanW_UTF_ML& s);
 
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+ZP<ChannerR_PPT> sChannerR_PPT_XMLPList(const ZP<ChannerRU_UTF_ML>& iChanner);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_PullPush_XMLPList_h__

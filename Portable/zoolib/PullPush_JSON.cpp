@@ -14,6 +14,7 @@
 #include "zoolib/Channer_Bin.h"
 #include "zoolib/Channer_UTF.h"
 #include "zoolib/Data_ZZ.h"
+#include "zoolib/Log.h"
 #include "zoolib/NameUniquifier.h" // For sName
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
@@ -46,7 +47,7 @@ enum class EParent
 } // anonymous namespace
 
 // =================================================================================================
-#pragma mark - sPull_JSON_Push_PPT
+#pragma mark -
 
 static bool spPull_JSON_Other_Push(
 	const ChanRU_UTF& iChanRU, const ChanW_PPT& iChanW, bool iLooseNumbers)
@@ -721,6 +722,33 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	ThreadVal<ZP<Callable_JSON_WriteFilter>> tv_Filter(iWriteFilter);
 
 	return sPull_PPT_Push_JSON(iChanR, iChanW);
+	}
+
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+static void spChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChannerRU,
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
+	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
+	{
+	ZThread::sSetName("sChannerR_PPT_JSON");
+	try
+		{
+		sPull_JSON_Push_PPT(*iChannerRU, iRO, *iChannerWCon);
+		sDisconnectWrite(*iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{
+		ZLOGTRACE(eDebug); // In lieu of general error handling
+		}
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO)
+	{
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_JSON), iChanner, iRO, thePair.first));
+	return thePair.second;
 	}
 
 } // namespace ZooLib

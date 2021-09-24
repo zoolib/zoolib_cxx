@@ -524,4 +524,30 @@ void sWriteXMLPListPostamble(const ChanW_UTF_ML& s)
 	s.End("plist");
 	}
 
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+static void spChannerR_PPT_XMLPList(ZP<ChannerRU_UTF_ML> iChannerR,
+	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
+	{
+	ZThread::sSetName("sChannerR_PPT_XMLPList");
+	try
+		{
+		sPull_XMLPList_Push_PPT(*iChannerR, *iChannerWCon);
+
+		sDisconnectWrite(*iChannerWCon);
+		}
+	catch (std::exception& ex)
+		{
+		ZLOGTRACE(eDebug); // In lieu of general error handling
+		}
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT_XMLPList(const ZP<ChannerRU_UTF_ML>& iChanner)
+	{
+	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_XMLPList), iChanner, thePair.first));
+	return thePair.second;
+	}
+
 } // namespace ZooLib

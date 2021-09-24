@@ -35,6 +35,12 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	const ZP<Callable_JSON_WriteFilter>& iWriteFilter,
 	const ChanW_UTF& iChanW);
 
+// =================================================================================================
+#pragma mark - sChannerR_PPT_xx
+
+ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
+	const Util_Chan_JSON::PullTextOptions_JSON& iRO);
+
 } // namespace ZooLib
 
 #endif // __ZooLib_PullPush_JSON_h__
