@@ -70,7 +70,7 @@ public:
 		}
 
 // Our protocol
-	uint64 GetCount()
+	uint64 GetCount() const
 		{ return fCount; }
 
 protected:
