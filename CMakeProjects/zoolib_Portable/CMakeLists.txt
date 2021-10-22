@@ -147,14 +147,14 @@ set (SourceFiles
 	${SourceDir}/Pull_bplist.h
 	${SourceDir}/Pull_ML.cpp
 	${SourceDir}/Pull_ML.h
-	${SourceDir}/Pull_SeparatedValues.cpp
-	${SourceDir}/Pull_SeparatedValues.h
 	${SourceDir}/Pull_XMLAttr.cpp
 	${SourceDir}/Pull_XMLAttr.h
 	${SourceDir}/PullPush_JSON.cpp
 	${SourceDir}/PullPush_JSON.h
 	${SourceDir}/PullPush_JSONB.cpp
 	${SourceDir}/PullPush_JSONB.h
+	${SourceDir}/PullPush_SeparatedValues.cpp
+	${SourceDir}/PullPush_SeparatedValues.h
 	${SourceDir}/PullPush_XMLPList.cpp
 	${SourceDir}/PullPush_XMLPList.h
 	${SourceDir}/PullPush_ZZ.cpp
