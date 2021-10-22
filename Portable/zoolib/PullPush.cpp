@@ -155,9 +155,9 @@ void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_PPT&
 	sSkipFully(iChanR, iCount - counts.first);
 	}
 
-bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
+bool sCopy_Node(const ChanR_PPT& iChanR, size_t iStartDepth, const ChanW_PPT& iChanW)
 	{
-	size_t depth = 0;
+	size_t depth = iStartDepth;
 
 	while (ZQ<PPT> theQ = sQRead(iChanR))
 		{
@@ -180,7 +180,10 @@ bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW)
 	}
 
 bool sSkip_Node(const ChanR_PPT& iChanR)
-	{ return sCopy_Node(iChanR, ChanW_XX_Discard<PPT>()); }
+	{ return sCopy_Node(iChanR, 0, ChanW_XX_Discard<PPT>()); }
+
+bool sSkip_Node(const ChanR_PPT& iChanR, size_t iStartDepth)
+	{ return sCopy_Node(iChanR, 1, ChanW_XX_Discard<PPT>()); }
 
 bool sTryPull_Start_Map(const ChanRU<PPT>& iChanRU)
 	{

@@ -133,8 +133,10 @@ void sPull_Bin_Push_PPT(const ChanR_Bin& iChanR, uint64 iCount, const ChanW_PPT&
 
 // ----------
 
-bool sCopy_Node(const ChanR_PPT& iChanR, const ChanW_PPT& iChanW);
+bool sCopy_Node(const ChanR_PPT& iChanR, size_t iStartDepth, const ChanW_PPT& iChanW);
 bool sSkip_Node(const ChanR_PPT& iChanR);
+
+bool sSkip_Node(const ChanR_PPT& iChanR, size_t iStartDepth);
 
 // ----------
 
