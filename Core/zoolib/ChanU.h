@@ -17,4 +17,4 @@ bool sUnread(const ChanU<EE>& iChanU, const EE& iElmt)
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_h__
+#endif // __ZooLib_ChanU_h__
