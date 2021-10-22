@@ -610,22 +610,5 @@ void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal)
 	sEWritef(iChanW, "%.34Lg", iVal);
 	}
 
-// =================================================================================================
-#pragma mark -
-
-bool sUnread(const ChanU_UTF& iChanU, const string8& iString)
-	{
-	auto start = iString.cbegin();
-	auto end = iString.cend();
-	for (auto iter = end;;)
-		{
-		UTF32 theCP;
-		if (not Unicode::sDecRead(start, iter, end, theCP))
-			return true;
-		if (not sUnread(iChanU, theCP))
-			return false;
-		}
-	}
-
 } // namespace Util_Chan
 } // namespace ZooLib

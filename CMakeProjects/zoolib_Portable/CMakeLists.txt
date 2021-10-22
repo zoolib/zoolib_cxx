@@ -84,6 +84,8 @@ set (SourceFiles
 	${SourceDir}/ChanRU_XX_Unreader.h
 	${SourceDir}/ChanRWPos_XX_PageBuffered.h
 	${SourceDir}/ChanRWPos_XX_RAM.h
+	${SourceDir}/ChanU_UTF.cpp
+	${SourceDir}/ChanU_UTF.h
 	${SourceDir}/ChanW_Bin_HexStrim.cpp
 	${SourceDir}/ChanW_Bin_HexStrim.h
 	${SourceDir}/ChanW_Bin_More.cpp

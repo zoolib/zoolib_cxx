@@ -90,11 +90,6 @@ void sWrite_Exact(const ChanW_UTF& iChanW, float iFloat);
 void sWrite_Exact(const ChanW_UTF& iChanW, double iDouble);
 void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal);
 
-// =================================================================================================
-#pragma mark -
-
-bool sUnread(const ChanU_UTF& iChanU, const string8& iString);
-
 } // namespace Util_Chan
 } // namespace ZooLib
 
