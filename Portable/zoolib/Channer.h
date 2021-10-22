@@ -60,7 +60,6 @@ template <class EE> using ChannerRCon = Channer<ChanRCon<EE>>;
 template <class EE> using ChannerWCon = Channer<ChanWCon<EE>>;
 template <class EE> using ChannerRWCon = Channer<ChanRWCon<EE>>;
 
-
 // =================================================================================================
 #pragma mark - sChanner_Chan
 
@@ -83,8 +82,8 @@ ZP<Channer<Chan_p>> sAChanner_Chan(const Chan_p& iChan)
 
 template <class Chan_p>
 class Channer_T
-:	public Chan_p
-,	public Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
+:	public virtual Chan_p
+,	public virtual Channer<typename AsDeriveFrom<typename Chan_p::AsTypeList_t>::Result_t>
 	{
 public:
 	Channer_T() : Chan_p() {}
@@ -106,19 +105,21 @@ ZP<Channer_T<Chan_p>> sChanner_T(Args_p&&... args)
 
 template <class Holder_p, class Chan_p>
 class Channer_Holder_T
-:	private Holder_p
-,	public Channer_T<Chan_p>
+:	private virtual Holder_p
+,	public virtual Channer_T<Chan_p>
 	{
 public:
 	template <typename... Args_p>
 	Channer_Holder_T(Holder_p&& holder, Args_p&&... args)
 	:	Holder_p(std::move(holder))
+	,	Chan_p(std::forward<Args_p>(args)...)
 	,	Channer_T<Chan_p>(std::forward<Args_p>(args)...)
 		{}
 
 	template <typename... Args_p>
 	Channer_Holder_T(const Holder_p& holder, Args_p&&... args)
 	:	Holder_p(holder)
+	,	Chan_p(std::forward<Args_p>(args)...)
 	,	Channer_T<Chan_p>(std::forward<Args_p>(args)...)
 		{}
 	};

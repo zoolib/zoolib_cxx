@@ -14,7 +14,7 @@ namespace ZooLib {
 #pragma mark - ChanRU_UTF_Std
 
 class ChanRU_UTF_Std
-:	public ChanRU<UTF32>
+:	public virtual ChanRU<UTF32>
 	{
 public:
 	ChanRU_UTF_Std(const ChanR_UTF& iChanR);
