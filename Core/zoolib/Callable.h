@@ -250,13 +250,7 @@ ZP<Callable<typename Callable_p::Signature>> sCallable(Callable_p iCandidate)
 	{ return ZP<Callable<typename Callable_p::Signature>>(iCandidate); }
 
 // =================================================================================================
-#pragma mark - sCallVoid
 
-template <class T>
-void sCallVoid(ZP<Callable<T()>> iCallable)
-	{ static_cast<void>(sCall(iCallable)); }
-
-// =================================================================================================
 #pragma mark - Callable_Void
 
 typedef Callable<void()> Callable_Void;
