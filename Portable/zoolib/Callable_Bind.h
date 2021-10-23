@@ -4421,7 +4421,7 @@ private:
 #pragma mark - sBind_IgnoreParams
 
 template <class Callable_p>
-ZP<Callable_Void> sBind_IgnoreParams(const ZP<Callable_p>& iCallable)
+ZP<Callable_void> sBind_IgnoreParams(const ZP<Callable_p>& iCallable)
 	{
 	if (not iCallable)
 		return null;

@@ -41,7 +41,7 @@ public:
 
 		fKeepRunning = true;
 
-		ZP<Callable_Void> theCallable = sCallable(this, &Starter_ThreadLoop::pRun);
+		ZP<Callable_void> theCallable = sCallable(this, &Starter_ThreadLoop::pRun);
 
 		if (fBookend_Loop)
 			theCallable = sBindR(fBookend_Loop, theCallable);

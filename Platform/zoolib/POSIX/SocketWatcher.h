@@ -22,15 +22,15 @@ class SocketWatcher
 public:
 	SocketWatcher();
 
-	typedef std::pair<int,ZP<Callable_Void>> Pair_t;
+	typedef std::pair<int,ZP<Callable_void>> Pair_t;
 
 // -----
 
 	bool QInsert(const Pair_t& iPair);
 	bool QErase(const Pair_t& iPair);
 
-	bool QInsert(int iSocket, const ZP<Callable_Void>& iCallable);
-	bool QErase(int iSocket, const ZP<Callable_Void>& iCallable);
+	bool QInsert(int iSocket, const ZP<Callable_void>& iCallable);
+	bool QErase(int iSocket, const ZP<Callable_void>& iCallable);
 
 // -----
 

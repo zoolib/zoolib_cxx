@@ -10,8 +10,8 @@ namespace ZooLib {
 #pragma mark -
 
 static void spNester(const ZP<Callable_Bookend>& iBookend0, const ZP<Callable_Bookend>& iBookend1,
-	const ZP<Callable_Void>& iCallable_Void)
-	{ sCall(iBookend0, sBindR(iBookend1, iCallable_Void)); }
+	const ZP<Callable_void>& iCallable_void)
+	{ sCall(iBookend0, sBindR(iBookend1, iCallable_void)); }
 
 ZP<Callable_Bookend> sNest(ZP<Callable_Bookend> iBookend0, ZP<Callable_Bookend> iBookend1)
 	{
