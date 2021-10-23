@@ -31,7 +31,6 @@ set (SourceFiles
 	${SourceDir}/Compat_MSVCStaticLib.h
 	${SourceDir}/Compat_NonCopyable.h
 	${SourceDir}/Compat_string.h
-	${SourceDir}/Compat_tuple.h
 	${SourceDir}/Compat_unordered_map.h
 	${SourceDir}/Counted.cpp
 	${SourceDir}/Counted.h
