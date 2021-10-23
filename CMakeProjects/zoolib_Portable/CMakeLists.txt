@@ -114,10 +114,10 @@ set (SourceFiles
 	${SourceDir}/Factory_Retry.h
 	${SourceDir}/Factory_WithFirstProduct.h
 	${SourceDir}/Factory.h
-	${SourceDir}/File.cpp
-	${SourceDir}/File.h
 	${SourceDir}/File_Archive.cpp
 	${SourceDir}/File_Archive.h
+	${SourceDir}/File.cpp
+	${SourceDir}/File.h
 	${SourceDir}/Generator.h
 	${SourceDir}/Log.cpp
 	${SourceDir}/Log.h
@@ -163,9 +163,9 @@ set (SourceFiles
 	${SourceDir}/PullPush_ZZ.h
 	${SourceDir}/PullPush.cpp
 	${SourceDir}/PullPush.h
+	${SourceDir}/PullTextOptions.h
 	${SourceDir}/Push_bplist.cpp
 	${SourceDir}/Push_bplist.h
-	${SourceDir}/PullTextOptions.h
 	${SourceDir}/PushTextOptions.h
 	${SourceDir}/SafePtrStack.h
 	${SourceDir}/SafeSet.h
