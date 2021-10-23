@@ -56,7 +56,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sCopy
 
 template <class EE>
 std::pair<uint64,uint64> sCopyFully(

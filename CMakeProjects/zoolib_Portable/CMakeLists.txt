@@ -70,6 +70,8 @@ set (SourceFiles
 	${SourceDir}/ChanR_Bin_HexStrim.h
 	${SourceDir}/ChanR_Bin_More.cpp
 	${SourceDir}/ChanR_Bin_More.h
+	${SourceDir}/ChanR_UTF.cpp
+	${SourceDir}/ChanR_UTF.h
 	${SourceDir}/ChanR_XX_AbortOnSlowRead.h
 	${SourceDir}/ChanR_XX_Boundary.h
 	${SourceDir}/ChanR_XX_SkipAllOnDestroy.h
@@ -84,7 +86,6 @@ set (SourceFiles
 	${SourceDir}/ChanRU_XX_Unreader.h
 	${SourceDir}/ChanRWPos_XX_PageBuffered.h
 	${SourceDir}/ChanRWPos_XX_RAM.h
-	${SourceDir}/ChanU_UTF.cpp
 	${SourceDir}/ChanU_UTF.h
 	${SourceDir}/ChanW_Bin_HexStrim.cpp
 	${SourceDir}/ChanW_Bin_HexStrim.h
@@ -94,6 +95,8 @@ set (SourceFiles
 	${SourceDir}/ChanW_UTF_InsertSeparator.h
 	${SourceDir}/ChanW_UTF_ML.cpp
 	${SourceDir}/ChanW_UTF_ML.h
+	${SourceDir}/ChanW_UTF.cpp
+	${SourceDir}/ChanW_UTF.h
 	${SourceDir}/ChanW_XX_Fragmented.h
 	${SourceDir}/Coerce_Any.cpp
 	${SourceDir}/Coerce_Any.h
@@ -183,6 +186,8 @@ set (SourceFiles
 	${SourceDir}/StartScheduler.h
 	${SourceDir}/StdIO.cpp
 	${SourceDir}/StdIO.h
+	${SourceDir}/Stringf.cpp
+	${SourceDir}/Stringf.h
 	${SourceDir}/TextCoder_Std.cpp
 	${SourceDir}/TextCoder_Std.h
 	${SourceDir}/TextCoder_Unicode.cpp
