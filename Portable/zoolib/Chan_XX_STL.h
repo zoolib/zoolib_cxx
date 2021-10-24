@@ -14,19 +14,12 @@ class ContainerHolder
 	ContainerHolder& operator=(const ContainerHolder&) = delete;
 
 public:
-	using Container_t = typename std::remove_const<CC>::type;
-	using EE = typename CC::value_type;
+	using CC_wo_const = typename std::remove_const<CC>::type;
 
 	ContainerHolder()
 		{
 		fIsPtr = false;
-		new(&fContainer) Container_t();
-		}
-
-	ContainerHolder(CC& iContainer)
-		{
-		fIsPtr = false;
-		new(&fContainer) Container_t(iContainer);
+		new(&fContainer) CC_wo_const();
 		}
 
 	ContainerHolder(CC* iPtr)
@@ -35,10 +28,16 @@ public:
 		fPtr = iPtr;
 		}
 
+	ContainerHolder(CC& iContainer)
+		{
+		fIsPtr = false;
+		new(&fContainer) CC_wo_const(iContainer);
+		}
+
 	~ContainerHolder()
 		{
 		if (not fIsPtr)
-			fContainer.~Container_t();
+			fContainer.~CC_wo_const();
 		}
 
 	CC& GetContainer()
@@ -51,7 +50,7 @@ public:
 	union
 		{
 		CC* fPtr;
-		Container_t fContainer;
+		CC_wo_const fContainer;
 		};
 	bool fIsPtr;
 	};
