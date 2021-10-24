@@ -58,6 +58,7 @@ set (SourceFiles
 	${SourceDir}/Chan_XX_PipePair.h
 	${SourceDir}/Chan_XX_RateCapped.cpp
 	${SourceDir}/Chan_XX_RateCapped.h
+	${SourceDir}/Chan_XX_STL.h
 	${SourceDir}/Chan_XX_Tee.h
 	${SourceDir}/ChanConnection_XX_FIFO.h
 	${SourceDir}/ChanConnection_XX_MemoryPipe.h
