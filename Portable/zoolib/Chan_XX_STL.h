@@ -23,13 +23,13 @@ public:
 		new(&fContainer) Container_t();
 		}
 
-	ContainerHolder(Container_t& iContainer)
+	ContainerHolder(CC& iContainer)
 		{
 		fIsPtr = false;
 		new(&fContainer) Container_t(iContainer);
 		}
 
-	ContainerHolder(Container_t* iPtr)
+	ContainerHolder(CC* iPtr)
 		{
 		fIsPtr = true;
 		fPtr = iPtr;
@@ -51,7 +51,7 @@ public:
 	union
 		{
 		CC* fPtr;
-		CC fContainer;
+		Container_t fContainer;
 		};
 	bool fIsPtr;
 	};
@@ -73,7 +73,7 @@ public:
 	using EE = typename Container_t::value_type;
 
 // From ChanW
-	virtual size_t Write(const EE* iSource, size_t iCount)
+	size_t Write(const EE* iSource, size_t iCount) override
 		{
 		Container_t& theContainer = inherited::GetContainer();
 		theContainer.insert(theContainer.end(), iSource, iSource + iCount);
@@ -97,13 +97,11 @@ public:
 	using Container_t = const CC;
 	using EE = typename Container_t::value_type;
 
-//// From ChanW
-//	virtual size_t Write(const EE* iSource, size_t iCount)
-//		{
-//		Container_t& theContainer = inherited::GetContainer();
-//		theContainer.insert(theContainer.end(), iSource, iSource + iCount);
-//		return iCount;
-//		}
+// From ChanR
+	size_t Read(EE* oDest, size_t iCount) override
+		{
+		return 0;
+		}
 	};
 
 } // namespace ZooLib
