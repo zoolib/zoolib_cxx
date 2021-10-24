@@ -111,7 +111,19 @@ using ChanRW = DeriveFrom
 	ChanAspect_Write<EE>
 	>;
 
-using ChanClose = DeriveFrom
+using ChanRClose = DeriveFrom
+	<
+	ChanAspect_Abort,
+	ChanAspect_DisconnectRead
+	>;
+
+using ChanWClose = DeriveFrom
+	<
+	ChanAspect_Abort,
+	ChanAspect_DisconnectWrite
+	>;
+
+using ChanRWClose = DeriveFrom
 	<
 	ChanAspect_Abort,
 	ChanAspect_DisconnectRead,

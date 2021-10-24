@@ -50,7 +50,7 @@ template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
 template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
 
-using ChannerClose = Channer<ChanClose>;
+// using ChannerClose = Channer<ChanClose>;
 
 template <class EE> using ChannerRAbort = Channer<ChanRAbort<EE>>;
 template <class EE> using ChannerWAbort = Channer<ChanWAbort<EE>>;
