@@ -200,15 +200,15 @@ private:
 // ----------
 
 template <class EE>
-class ChanR_PipePair
+class ChanR_XX_PipePair
 :	public ChanR<EE>
 	{
 public:
-	ChanR_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
+	ChanR_XX_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
 	:	fPipePair(iPipePair)
 		{}
 
-	virtual ~ChanR_PipePair()
+	virtual ~ChanR_XX_PipePair()
 		{
 		while (not fPipePair->DisconnectRead(1 * Time::kDay))
 			{}
@@ -228,15 +228,15 @@ private:
 // ----------
 
 template <class EE>
-class ChanWCon_PipePair
+class ChanWCon_XX_PipePair
 :	public ChanWCon<EE>
 	{
 public:
-	ChanWCon_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
+	ChanWCon_XX_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
 	:	fPipePair(iPipePair)
 		{}
 
-	virtual ~ChanWCon_PipePair()
+	virtual ~ChanWCon_XX_PipePair()
 		{ fPipePair->Abort(); }
 
 // From ChanAspect_Abort

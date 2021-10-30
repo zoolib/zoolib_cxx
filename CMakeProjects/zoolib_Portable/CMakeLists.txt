@@ -65,7 +65,8 @@ set (SourceFiles
 	${SourceDir}/ChanFilter.h
 	${SourceDir}/Channer_Bin.h
 	${SourceDir}/Channer_UTF.h
-	${SourceDir}/Channer_XX_Wrapper.h
+	${SourceDir}/ChannerRW_XX_Wrapper.h
+	${SourceDir}/ChannerRWCon_XX_Wrapper.h
 	${SourceDir}/Channer.h
 	${SourceDir}/ChanR_Bin_HexStrim.cpp
 	${SourceDir}/ChanR_Bin_HexStrim.h

@@ -166,8 +166,8 @@ template <class EE>
 void sMakePullPushPair(ZP<ChannerWCon<EE>>& oChannerW, ZP<ChannerR<EE>>& oChannerR)
 	{
 	ZP<ImpPipePair<EE>> theImp = new ImpPipePair<EE>;
-	oChannerW = sChanner_T<ChanWCon_PipePair<EE>>(theImp);
-	oChannerR = sChanner_T<ChanR_PipePair<EE>>(theImp);
+	oChannerW = sChanner_T<ChanWCon_XX_PipePair<EE>>(theImp);
+	oChannerR = sChanner_T<ChanR_XX_PipePair<EE>>(theImp);
 	}
 
 template <class EE>
