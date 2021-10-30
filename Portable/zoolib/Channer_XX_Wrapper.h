@@ -57,25 +57,29 @@ class ChannerRWCon_Wrapper
 	{
 public:
 	ChannerRWCon_Wrapper(
+		const ZP<Channer<ChanAbort>>& iChannerAbort,
+		const ZP<Channer<ChanDisconnectRead>>& iChannerDisconnectRead,
+		const ZP<Channer<ChanDisconnectWrite>>& iChannerDisconnectWrite,
 		const ZP<Channer<ChanR<EE>>>& iChannerR,
-		const ZP<Channer<ChanW<EE>>>& iChannerW,
-		const ZP<ChannerClose>& iChannerClose)
-	:	fChannerR(iChannerR)
+		const ZP<Channer<ChanW<EE>>>& iChannerW)
+	:	fChannerAbort(iChannerAbort)
+	,	fChannerDisconnectRead(iChannerDisconnectRead)
+	,	fChannerDisconnectWrite(iChannerDisconnectWrite)
+	,	fChannerR(iChannerR)
 	,	fChannerW(iChannerW)
-	,	fChannerClose(iChannerClose)
 		{}
 
 // From ChanAspect_Abort
 	virtual void Abort()
-		{ return sAbort(*fChannerClose); }
+		{ return sAbort(*fChannerAbort); }
 
 // From ChanAspect_DisconnectRead
 	virtual bool DisconnectRead(double iTimeout)
-		{ return sDisconnectRead(*fChannerClose, iTimeout); }
+		{ return sDisconnectRead(*fChannerDisconnectWrite, iTimeout); }
 
 // From ChanAspect_DisconnectWrite
 	virtual void DisconnectWrite()
-		{ return sDisconnectWrite(*fChannerClose); }
+		{ return sDisconnectWrite(*fChannerDisconnectWrite); }
 
 // From ChanAspect_Read
 	virtual size_t Read(byte* oDest, size_t iCount)
@@ -92,17 +96,28 @@ public:
 		{ sFlush(*fChannerW); }
 
 private:
+	const ZP<Channer<ChanAbort>> fChannerAbort;
+	const ZP<Channer<ChanDisconnectRead>> fChannerDisconnectRead;
+	const ZP<Channer<ChanDisconnectWrite>> fChannerDisconnectWrite;
 	const ZP<Channer<ChanR<EE>>> fChannerR;
 	const ZP<Channer<ChanW<EE>>> fChannerW;
-	const ZP<ChannerClose> fChannerClose;
 	};
 
 template <class EE>
 ZP<ChannerRWCon<EE>> sChanner_Wrapper(
+	const ZP<Channer<ChanAbort>>& iChannerAbort,
+	const ZP<Channer<ChanDisconnectRead>>& iChannerDisconnectRead,
+	const ZP<Channer<ChanDisconnectWrite>>& iChannerDisconnectWrite,
 	const ZP<Channer<ChanR<EE>>>& iChannerR,
-	const ZP<Channer<ChanW<EE>>>& iChannerW,
-	const ZP<ChannerClose>& iChannerClose)
-	{ return new ChannerRWCon_Wrapper<EE>(iChannerR, iChannerW, iChannerClose); }
+	const ZP<Channer<ChanW<EE>>>& iChannerW)
+	{
+	if (iChannerAbort && iChannerDisconnectRead && iChannerDisconnectWrite && iChannerR && iChannerW)
+		{
+		return new ChannerRWCon_Wrapper<EE>(
+			iChannerAbort, iChannerDisconnectRead, iChannerDisconnectWrite, iChannerR, iChannerW);
+		}
+	return null;
+	}
 
 } // namespace ZooLib
 
