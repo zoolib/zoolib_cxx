@@ -43,7 +43,7 @@ template <class UTF_p> class ChanW_UTF_string;
 
 template <>
 class ChanW_UTF_string<UTF32>
-:	public ChanW_UTF_Native32
+:	public ChanW_UTF_Native32 // aka ChanW_UTF or ChanW<UTF32>
 	{
 public:
 	ChanW_UTF_string(string32* ioString)
