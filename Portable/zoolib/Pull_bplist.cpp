@@ -79,7 +79,7 @@ static uint64 spEReadUnsigned(const ChanR_Bin& iChanR, uint8 iIntSize)
 		case 4: return sEReadBE<uint32>(iChanR);
 		case 8: return sEReadBE<uint64>(iChanR);
 		}
-	ZUnimplemented();
+	sThrow_ParseException(sStringf("spEReadUnsigned, illegal iIntSize: %d", int(iIntSize)));
 	}
 
 static int64 spEReadInt(const ChanR_Bin& iChanR, uint8 iIntSize)
@@ -91,7 +91,7 @@ static int64 spEReadInt(const ChanR_Bin& iChanR, uint8 iIntSize)
 		case 4: return sEReadBE<int32>(iChanR);
 		case 8: return sEReadBE<int64>(iChanR);
 		}
-	ZUnimplemented();
+	sThrow_ParseException(sStringf("spEReadInt, illegal iIntSize: %d", int(iIntSize)));
 	}
 
 static uint64 spReadLength(const ChanR_Bin& iChanR, uint8 iInfo)
@@ -302,9 +302,20 @@ void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChan
 	const uint64 theSize = sSize(iChanRPos);
 
 	sPosSet(iChanRPos, theSize - 32);
-	sESkip(iChanRPos, 6); // Zero bytes
+	const uint32 zeroBytes0 = sEReadBE<uint32>(iChanRPos);
+	const uint16 zeroBytes1 = sEReadBE<uint16>(iChanRPos);
+
+	if (zeroBytes0 || zeroBytes1)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint8 offsetSize = sEReadBE<uint8>(iChanRPos);
+	if (offsetSize != 1 && offsetSize != 2 && offsetSize != 4 && offsetSize != 8)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint8 objectRefSize = sEReadBE<uint8>(iChanRPos);
+	if (objectRefSize != 1 && objectRefSize != 2 && objectRefSize != 4 && objectRefSize != 8)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint64 numObjects = sEReadBE<uint64>(iChanRPos);
 	const uint64 topObjectIndex = sEReadBE<uint64>(iChanRPos);
 	const uint64 offsetTableOffset = sEReadBE<uint64>(iChanRPos);
