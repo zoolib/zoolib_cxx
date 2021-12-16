@@ -39,6 +39,19 @@ PullTextOptions_JSON sPullTextOptions_Extended()
 	return theOptions;
 	}
 
+PullTextOptions_JSON sPullTextOptions_Conformant()
+	{
+	PullTextOptions_JSON theOptions;
+	theOptions.fAllowUnquotedPropertyNames = false;
+	theOptions.fAllowEquals = false;
+	theOptions.fAllowSemiColons = false;
+	theOptions.fAllowTerminators = false;
+	theOptions.fLooseSeparators = false;
+	theOptions.fAllowBinary = false;
+
+	return theOptions;
+	}
+
 // =================================================================================================
 #pragma mark -
 
@@ -164,6 +177,17 @@ PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOt
 	{
 	PushTextOptions::operator=(iOther);
 	return *this;
+	}
+
+PushTextOptions_JSON sPushTextOptions_Conformant()
+	{
+	return PushTextOptions_JSON();
+	}
+
+PushTextOptions_JSON sPushTextOptions_Conformant(bool iPrettyPrint)
+	{
+	PushTextOptions_JSON thePTO = PushTextOptions(iPrettyPrint);
+	return thePTO;
 	}
 
 // =================================================================================================
