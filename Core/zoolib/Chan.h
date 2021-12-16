@@ -26,6 +26,7 @@ using ChanDisconnectRead = DeriveFrom<ChanAspect_DisconnectRead>;
 using ChanDisconnectWrite = DeriveFrom<ChanAspect_DisconnectWrite>;
 
 using ChanPos = DeriveFrom<ChanAspect_Pos>;
+using ChanPosSet = DeriveFrom<ChanAspect_PosSet>;
 
 template <typename EE>
 using ChanR = DeriveFrom<ChanAspect_Read<EE>>;
