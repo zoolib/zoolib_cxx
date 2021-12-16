@@ -642,6 +642,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 		if (sCall(theFilter, iPPT, iChanR, iChanW))
 			return;
 		}
+
 	if (const string* theString = sPGet<string>(iPPT))
 		{
 		Util_Chan_JSON::sWrite_String(iChanW, *theString, false);
@@ -656,15 +657,31 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 
 	if (const Data_ZZ* theData = sPGet<Data_ZZ>(iPPT))
 		{
-		Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_ZZ>(*theData),
-			iIndent + ioParents.size(), iOptions, iChanW);
+		if (not iOptions.fBinaryAsBase64Q)
+			{
+			// We don't have a value for fBinaryAsBase64Q, so we're not emitting binary at all.
+			sWrite_SimpleValue(iChanW, Any(), iOptions);
+			}
+		else
+			{
+			Util_Chan_JSON::sPull_Bin_Push_JSON(ChanRPos_Bin_Data<Data_ZZ>(*theData),
+				iIndent + ioParents.size(), iOptions, iChanW);
+			}
 		return;
 		}
 
 	if (ZP<ChannerR_Bin> theChanner = sGet<ZP<ChannerR_Bin>>(iPPT))
 		{
-		Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner,
-			iIndent + ioParents.size(), iOptions, iChanW);
+		if (not iOptions.fBinaryAsBase64Q)
+			{
+			// We don't have a value for fBinaryAsBase64Q, so we're not emitting binary at all.
+			sWrite_SimpleValue(iChanW, Any(), iOptions);
+			}
+		else
+			{
+			Util_Chan_JSON::sPull_Bin_Push_JSON(*theChanner,
+				iIndent + ioParents.size(), iOptions, iChanW);
+			}
 		return;
 		}
 
