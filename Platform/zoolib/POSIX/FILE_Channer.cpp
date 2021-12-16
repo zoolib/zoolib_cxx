@@ -167,32 +167,50 @@ static int spCloseW(void* iCookie)
 
 FILE* sFILE_R(ZP<ChannerR_Bin> iChannerR)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadR;
-	theFunctions.write = nullptr;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseR;
-	return ::fopencookie(iChannerR.Get(), "", theFunctions);
+	if (iChannerR)
+		{
+		iChannerR->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = spReadR;
+		theFunctions.write = nullptr;
+		theFunctions.seek = nullptr;
+		theFunctions.close = spCloseR;
+		return ::fopencookie(iChannerR.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadRPos;
-	theFunctions.write = nullptr;
-	theFunctions.seek = spSeek;
-	theFunctions.close = spCloseRPos;
-	return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
+	if (iChannerRPos)
+		{
+		iChannerRPos->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = spReadRPos;
+		theFunctions.write = nullptr;
+		theFunctions.seek = spSeek;
+		theFunctions.close = spCloseRPos;
+		return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = nullptr;
-	theFunctions.write = spWrite;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseW;
-	return ::fopencookie(iChannerW.Get(), "", theFunctions);
+	if (iChannerR)
+		{
+		iChannerW->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = nullptr;
+		theFunctions.write = spWrite;
+		theFunctions.seek = nullptr;
+		theFunctions.close = spCloseW;
+		return ::fopencookie(iChannerW.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 #else
