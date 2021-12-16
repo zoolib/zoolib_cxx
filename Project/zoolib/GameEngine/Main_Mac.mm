@@ -122,6 +122,8 @@ static FileSpec spResourceFS()
 
 	self = [super initWithFrame:frameRect pixelFormat:pf];
 
+	[self setWantsBestResolutionOpenGLSurface:YES];
+
 	fGame = sMakeGame(spResourceFS(), false, null, null);
 
 	fGame->Resume();
@@ -180,7 +182,7 @@ static CVReturn spDisplayLinkCallback(
 	{
 	[super prepareOpenGL];
 	
-	fWH = sPoint<GPoint>(WH([self bounds]));
+	fWH = sPoint<GPoint>(WH([self convertRectToBacking:[self bounds]]));
 
 	NSOpenGLContext* theOpenGLContext = [self openGLContext];
 
@@ -308,7 +310,8 @@ static CVReturn spDisplayLinkCallback(
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
-	Rat theHeight = sMin(1024.0, H(screenRect) - 44);
+	Rat theHeight = sMin(4000.0, H(screenRect) - 44);
+//	Rat theHeight = sMin(1024.0, H(screenRect) - 44);
 	Rat theWidth = theHeight * 9.0/16.0;
 	const NSRect theBounds = sRect<NSRect>(theWidth, theHeight) + sPoint<NSPoint>(0, 44);
 
