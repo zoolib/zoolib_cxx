@@ -199,7 +199,7 @@ FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 
 FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{
-	if (iChannerR)
+	if (iChannerW)
 		{
 		iChannerW->Retain();
 
