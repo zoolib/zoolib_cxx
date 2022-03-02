@@ -15,7 +15,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRU_XX_Unreader
-:	public ChanRU<EE>
+:	public virtual ChanRU<EE>
 	{
 public:
 	ChanRU_XX_Unreader(const ChanR<EE>& iChanR)

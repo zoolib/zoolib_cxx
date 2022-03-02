@@ -13,7 +13,7 @@ namespace ZooLib {
 #pragma mark - ChanW_Bin_string
 
 class ChanW_Bin_string
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_string(std::string* ioString);
@@ -28,7 +28,7 @@ protected:
 #pragma mark - ChanRPos_Bin_string
 
 class ChanRPos_Bin_string
-:	public ChanRPos_Bin
+:	public virtual ChanRPos_Bin
 	{
 public:
 	ChanRPos_Bin_string(const std::string& iString);
@@ -56,7 +56,7 @@ private:
 #pragma mark - ChanRWPos_Bin_string
 
 class ChanRWPos_Bin_string
-:	public ChanRWPos<byte>
+:	public virtual ChanRWPos<byte>
 	{
 public:
 	ChanRWPos_Bin_string(std::string* ioStringPtr);

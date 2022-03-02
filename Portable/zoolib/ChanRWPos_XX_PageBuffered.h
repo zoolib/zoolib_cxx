@@ -18,7 +18,7 @@ least recently used order.
 */
 template <class EE>
 class ChanRWPos_XX_PageBuffered
-:	public ChanRWPos<EE>
+:	public virtual ChanRWPos<EE>
 	{
 public:
 	ChanRWPos_XX_PageBuffered(const ChanRWPos<EE>& iChanRWPos, size_t iBufferCount, size_t iBufferSize)

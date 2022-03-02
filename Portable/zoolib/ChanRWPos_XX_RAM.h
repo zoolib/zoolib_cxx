@@ -18,7 +18,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRWPos_XX_RAM
-:	public ChanRWPos<EE>
+:	public virtual ChanRWPos<EE>
 	{
 public:
 	ChanRWPos_XX_RAM()

@@ -14,7 +14,7 @@ namespace ZooLib {
 
 /// A read filter strim that removes CRLF sequences and replaces them with another code point.
 
-class ChanR_UTF_CRLFRemove : public ChanR_UTF
+class ChanR_UTF_CRLFRemove : public virtual ChanR_UTF
 	{
 public:
 	ChanR_UTF_CRLFRemove(const ChanR_UTF& iChanR);
@@ -56,7 +56,7 @@ private:
 //
 ///// A write filter strim that removes CRLF sequences and replaces them with another code point.
 //
-//class ChanW_CRLFRemove : public ChanW_NativeUTF32
+//class ChanW_CRLFRemove : public virtual ChanW_NativeUTF32
 //	{
 //public:
 //	ZStrimW_CRLFRemove(const ZStrimW& iStrimSink);

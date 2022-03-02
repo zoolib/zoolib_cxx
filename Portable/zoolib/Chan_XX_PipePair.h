@@ -201,7 +201,7 @@ private:
 
 template <class EE>
 class ChanR_XX_PipePair
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	ChanR_XX_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)
@@ -229,7 +229,7 @@ private:
 
 template <class EE>
 class ChanWCon_XX_PipePair
-:	public ChanWCon<EE>
+:	public virtual ChanWCon<EE>
 	{
 public:
 	ChanWCon_XX_PipePair(const ZP<ImpPipePair<EE>>& iPipePair)

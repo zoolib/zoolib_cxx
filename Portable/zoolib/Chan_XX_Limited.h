@@ -16,7 +16,7 @@ namespace ZooLib {
 
 template <class Chan_p>
 class ChanR_XX_Limited
-:	public ChanFilter<Chan_p>
+:	public virtual ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;
@@ -72,7 +72,7 @@ ZP<Channer_p> sChannerR_Limited(const ZP<Channer_p>& iChanner, size_t iLimit)
 
 template <class Chan_p>
 class ChanW_XX_Limited
-:	public ChanFilter<Chan_p>
+:	public virtual ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;

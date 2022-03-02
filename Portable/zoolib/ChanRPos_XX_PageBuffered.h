@@ -19,7 +19,7 @@ least recently used order.
 */
 template <class EE>
 class ChanRPos_XX_PageBuffered
-:	public ChanRPos<EE>
+:	public virtual ChanRPos<EE>
 	{
 public:
 	ChanRPos_XX_PageBuffered(const ChanRPos<EE>& iChanRPos, size_t iBufferCount, size_t iBufferSize)

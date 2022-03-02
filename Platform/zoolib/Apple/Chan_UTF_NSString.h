@@ -18,7 +18,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ChanR_UTF_NSString
 
-class ChanR_UTF_NSString : public ChanR_UTF
+class ChanR_UTF_NSString : public virtual ChanR_UTF
 	{
 public:
 	ChanR_UTF_NSString(NSString* iString);
@@ -35,7 +35,7 @@ private:
 // =================================================================================================
 #pragma mark - ChanW_UTF_NSString
 
-class ChanW_UTF_NSString : public ChanW_UTF_Native16
+class ChanW_UTF_NSString : public virtual ChanW_UTF_Native16
 	{
 public:
 	ChanW_UTF_NSString(NSMutableString* ioString);

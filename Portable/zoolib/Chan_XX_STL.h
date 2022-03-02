@@ -60,7 +60,7 @@ public:
 
 template <class CC>
 class ChanW_XX_STL
-:	public ChanW<typename CC::value_type>
+:	public virtual ChanW<typename CC::value_type>
 ,	public ContainerHolder<CC>
 	{
 	using inherited = ContainerHolder<CC>;
@@ -85,7 +85,7 @@ public:
 
 template <class CC>
 class ChanR_XX_STL
-:	public ChanR<typename CC::value_type>
+:	public virtual ChanR<typename CC::value_type>
 ,	public ContainerHolder<const CC>
 	{
 	using inherited = ContainerHolder<const CC>;

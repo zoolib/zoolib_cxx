@@ -13,7 +13,7 @@ namespace ZooLib {
 
 template <class Hash_p>
 class ChanW_Bin_Hash
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	typedef uint8 Digest_t[Hash_p::kDigestSize];

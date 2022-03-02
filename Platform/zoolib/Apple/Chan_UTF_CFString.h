@@ -18,7 +18,7 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - ChanR_UTF_CFString
 
-class ChanR_UTF_CFString : public ChanR_UTF_Native16
+class ChanR_UTF_CFString : public virtual ChanR_UTF_Native16
 	{
 public:
 	ChanR_UTF_CFString(CFStringRef iStringRef);
@@ -36,7 +36,7 @@ private:
 // =================================================================================================
 #pragma mark - ChanW_UTF_CFString
 
-class ChanW_UTF_CFString : public ChanW_UTF_Native16
+class ChanW_UTF_CFString : public virtual ChanW_UTF_Native16
 	{
 public:
 	ChanW_UTF_CFString(CFMutableStringRef iStringRef);

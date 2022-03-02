@@ -14,7 +14,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanR_XX_Cat
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	ChanR_XX_Cat(const ChanR<EE>& iChanR0, const ChanR<EE>& iChanR1)
@@ -60,7 +60,7 @@ protected:
 
 template <class EE>
 class ChanW_XX_Cat
-:	public ChanW<EE>
+:	public virtual ChanW<EE>
 	{
 public:
 	ChanW_XX_Cat(const ChanW<EE>& iChanW0, const ChanW<EE>& iChanW1)

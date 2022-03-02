@@ -17,7 +17,7 @@ namespace ZooLib {
 
 template <class Chan_p>
 class ChanW_XX_Fragmented
-:	public ChanFilter<Chan_p>
+:	public virtual ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;

@@ -15,7 +15,7 @@ namespace ZooLib {
 
 template <class Data_p>
 class ChanRPos_Bin_Data
-:	public ChanRPos_Bin
+:	public virtual ChanRPos_Bin
 	{
 public:
 	typedef Data_p Data;
@@ -75,7 +75,7 @@ private:
 
 template <class Data_p>
 class ChanRWPos_Bin_Data
-:	public ChanRWPos<byte>
+:	public virtual ChanRWPos<byte>
 	{
 public:
 	typedef Data_p Data;
@@ -178,7 +178,7 @@ private:
 
 template <class Data_p>
 class ChanW_Bin_Data
-:	public ChanW<byte>
+:	public virtual ChanW<byte>
 	{
 public:
 	typedef Data_p Data;

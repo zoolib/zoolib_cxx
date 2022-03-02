@@ -108,7 +108,7 @@ typedef ChanW_UTF ChanW_UTF_Native32;
 #pragma mark - ChanW_UTF_Native16
 
 class ChanW_UTF_Native16
-:	public ChanW_UTF
+:	public virtual ChanW_UTF
 	{
 public:
 // From ChanW_UTF (aka ChanW<UTF32>)
@@ -122,7 +122,7 @@ public:
 #pragma mark - ChanW_UTF_Native8
 
 class ChanW_UTF_Native8
-:	public ChanW_UTF
+:	public virtual ChanW_UTF
 	{
 public:
 // From ChanW_UTF (aka ChanW<UTF32>)

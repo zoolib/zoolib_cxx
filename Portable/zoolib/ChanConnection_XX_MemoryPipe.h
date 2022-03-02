@@ -19,7 +19,7 @@ be called from different threads. */
 
 template <class EE>
 class ChanConnection_XX_MemoryPipe
-:	public ChanConnection<EE>
+:	public virtual ChanConnection<EE>
 	{
 public:
 	ChanConnection_XX_MemoryPipe()

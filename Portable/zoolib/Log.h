@@ -119,7 +119,7 @@ ZP<LogMeister> sCurrentLogMeister();
 // =================================================================================================
 #pragma mark - Log::ChanW
 
-class ChanW : public ChanW_UTF_Native8
+class ChanW : public virtual ChanW_UTF_Native8
 	{
 public:
 	ChanW(EPriority iPriority, const std::string& iName_String);

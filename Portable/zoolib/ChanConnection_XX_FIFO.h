@@ -18,7 +18,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanConnection_XX_FIFO
-:	public ChanConnection<EE>
+:	public virtual ChanConnection<EE>
 	{
 public:
 	ChanConnection_XX_FIFO()

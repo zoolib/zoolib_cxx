@@ -14,7 +14,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRPos_XX_Memory
-:	public ChanRPos<EE>
+:	public virtual ChanRPos<EE>
 	{
 public:
 	ChanRPos_XX_Memory(const PaC<const EE>& iPaC)
@@ -98,7 +98,7 @@ protected:
 
 template <class EE>
 class ChanRWPos_XX_Memory
-:	public ChanRWPos<EE>
+:	public virtual ChanRWPos<EE>
 	{
 public:
 	ChanRWPos_XX_Memory(const PaC<EE>& iPaC)
