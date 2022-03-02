@@ -20,7 +20,7 @@ template <class ChanAspect_p, class Chan_p, class DerivedFrom_p> class AspectCal
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_Abort,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -34,7 +34,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_DisconnectRead,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -48,7 +48,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_DisconnectWrite,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -62,7 +62,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_Pos,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -79,7 +79,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p, class EE>
 class AspectCallForwarder<ChanAspect_Read<EE>,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -99,7 +99,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p, class LL, class EE>
 class AspectCallForwarder<ChanAspect_ReadAt<LL,EE>,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -113,7 +113,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_Size,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -127,7 +127,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_SizeSet,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -141,7 +141,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p, class EE>
 class AspectCallForwarder<ChanAspect_Unread<EE>,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -155,7 +155,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p>
 class AspectCallForwarder<ChanAspect_WaitReadable,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -169,7 +169,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p, class EE>
 class AspectCallForwarder<ChanAspect_Write<EE>,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -186,7 +186,7 @@ public:
 
 template <class Chan_p, class DerivedFrom_p, class LL, class EE>
 class AspectCallForwarder<ChanAspect_WriteAt<LL,EE>,Chan_p,DerivedFrom_p>
-:	public virtual DerivedFrom_p
+:	public DerivedFrom_p
 	{
 public:
 	AspectCallForwarder(const Chan_p& iChan) : DerivedFrom_p(iChan) {}
@@ -200,11 +200,8 @@ public:
 
 template <class Chan_p>
 class ChanRefHolder
-:	public virtual Chan_p
+:	public Chan_p
 	{
-protected:
-	//ChanRefHolder(): fChan(*(const Chan_p*)0) {}
-
 public:
 	ChanRefHolder(const Chan_p& iChan) : fChan(iChan) {}
 
@@ -221,96 +218,88 @@ template <class Chan_p, class DerivedFrom_p> class AspectSplitter;
 
 template <class Chan_p, class P0>
 class AspectSplitter<Chan_p,DeriveFrom<P0>>
-:	public virtual AspectCallForwarder<P0,Chan_p,ChanRefHolder<Chan_p>>
+:	public AspectCallForwarder<P0,Chan_p,ChanRefHolder<Chan_p>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,ChanRefHolder<Chan_p>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,ChanRefHolder<Chan_p>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2, class P3>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2,P3>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2, class P3, class P4>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2,P3,P4>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2, class P3, class P4, class P5>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2,P3,P4,P5>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2,P3,P4,P5,P6>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6>>>(iChan)
 		{}
 	};
 
 template <class Chan_p,
 	class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class AspectSplitter<Chan_p,DeriveFrom<P0,P1,P2,P3,P4,P5,P6,P7>>
-:	public virtual AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6,P7>>>
+:	public AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6,P7>>>
 	{
 public:
 	AspectSplitter(const Chan_p& iChan)
-	:	ChanRefHolder<Chan_p>(iChan)
-	,	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6,P7>>>(iChan)
+	:	AspectCallForwarder<P0,Chan_p,AspectSplitter<Chan_p,DeriveFrom<P1,P2,P3,P4,P5,P6,P7>>>(iChan)
 		{}
 	};
 
@@ -321,12 +310,11 @@ public:
 
 template <class DerivedFrom_p>
 class ChanFilter
-:	public virtual ChanFiltration::AspectSplitter<DerivedFrom_p,DerivedFrom_p>
+:	public ChanFiltration::AspectSplitter<DerivedFrom_p,DerivedFrom_p>
 	{
 public:
 	ChanFilter(const DerivedFrom_p& iChan)
 	:	ChanFiltration::AspectSplitter<DerivedFrom_p,DerivedFrom_p>(iChan)
-	,	DerivedFrom_p(iChan)
 		{}
 	};
 
