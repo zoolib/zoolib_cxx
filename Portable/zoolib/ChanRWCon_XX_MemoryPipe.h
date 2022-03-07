@@ -1,7 +1,7 @@
 // Copyright (c) 2008 Andrew Green. MIT License. http://www.zoolib.org
 
-#ifndef __ZooLib_ChanConnection_XX_MemoryPipe_h__
-#define __ZooLib_ChanConnection_XX_MemoryPipe_h__ 1
+#ifndef __ZooLib_ChanRWCon_XX_MemoryPipe_h__
+#define __ZooLib_ChanRWCon_XX_MemoryPipe_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
@@ -11,18 +11,18 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ChanConnection_XX_MemoryPipe
+#pragma mark - ChanRWCon_XX_MemoryPipe
 
 /** A connected RW stream that transfers data directly from a writer's source
 buffer to a reader's destination buffer. Note that read and write must therefore
 be called from different threads. */
 
 template <class EE>
-class ChanConnection_XX_MemoryPipe
-:	public virtual ChanConnection<EE>
+class ChanRWCon_XX_MemoryPipe
+:	public virtual ChanRWCon<EE>
 	{
 public:
-	ChanConnection_XX_MemoryPipe()
+	ChanRWCon_XX_MemoryPipe()
 		{
 		fClosed = false;
 
@@ -33,7 +33,7 @@ public:
 		fDestCount = 0;
 		}
 
-	~ChanConnection_XX_MemoryPipe()
+	~ChanRWCon_XX_MemoryPipe()
 		{
 		ZAcqMtx acq(fMutex);
 		ZAssertStop(2, fSource == nullptr && fDest == nullptr);
@@ -206,4 +206,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanConnection_XX_MemoryPipe_h__
+#endif // __ZooLib_ChanRWCon_XX_MemoryPipe_h__

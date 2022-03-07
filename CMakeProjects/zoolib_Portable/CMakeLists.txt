@@ -60,8 +60,6 @@ set (SourceFiles
 	${SourceDir}/Chan_XX_RateCapped.h
 	${SourceDir}/Chan_XX_STL.h
 	${SourceDir}/Chan_XX_Tee.h
-	${SourceDir}/ChanConnection_XX_FIFO.h
-	${SourceDir}/ChanConnection_XX_MemoryPipe.h
 	${SourceDir}/ChanFilter.h
 	${SourceDir}/Channer_Bin.h
 	${SourceDir}/Channer_UTF.h
@@ -86,6 +84,8 @@ set (SourceFiles
 	${SourceDir}/ChanRU_UTF_Std.cpp
 	${SourceDir}/ChanRU_UTF_Std.h
 	${SourceDir}/ChanRU_XX_Unreader.h
+	${SourceDir}/ChanRWCon_XX_FIFO.h
+	${SourceDir}/ChanRWCon_XX_MemoryPipe.h
 	${SourceDir}/ChanRWPos_XX_PageBuffered.h
 	${SourceDir}/ChanRWPos_XX_RAM.h
 	${SourceDir}/ChanU_UTF.h

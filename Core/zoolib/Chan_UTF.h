@@ -27,7 +27,6 @@ using ChanRWAbort_UTF = ChanRWAbort<UTF32>;
 using ChanRCon_UTF = ChanRCon<UTF32>;
 using ChanWCon_UTF = ChanWCon<UTF32>;
 using ChanRWCon_UTF = ChanRWCon<UTF32>;
-using ChanConnection_UTF = ChanRWCon<UTF32>;
 
 } // namespace ZooLib
 
