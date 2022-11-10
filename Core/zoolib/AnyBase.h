@@ -62,7 +62,6 @@ public:
 	S* PMut()
 		{ return static_cast<S*>(pFetchMutable(typeid(S))); }
 
-
 	template <class S>
 	S& Mut()
 		{
