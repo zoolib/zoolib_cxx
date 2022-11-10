@@ -8,8 +8,11 @@
 #include "zoolib/ChanR_XX_Boundary.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h" // For Unicode::sIsEOL
+#include "zoolib/ZThread.h"
 
 #include <vector>
+
+static char * spFormatDouble(char *b, double x);
 
 namespace ZooLib {
 namespace Util_Chan {
@@ -320,6 +323,23 @@ bool sTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
 	{ return spTryRead_SignedDecimalInteger(iChanRU, oInt64); }
 
+static void spAugmentFractional(const ChanRU_UTF& iChanRU, double& ioDouble)
+	{
+	double fracPart = 0.0;
+	double divisor = 1.0;
+
+	for (;;)
+		{
+		int curDigit;
+		if (not spTryRead_Digit(iChanRU, curDigit))
+			break;
+		divisor *= 10;
+		fracPart *= 10;
+		fracPart += curDigit;
+		}
+	ioDouble += fracPart / divisor;
+	}
+
 static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
@@ -339,25 +359,22 @@ static bool spTryRead_DecimalNumber(const ChanRU_UTF& iChanRU,
 		return true;
 		}
 
-	if (not spTryRead_Mantissa(iChanRU, oInt64, oDouble, oIsDouble))
-		return false;
-
 	if (sTryRead_CP(iChanRU, '.'))
 		{
 		oIsDouble = true;
-		double fracPart = 0.0;
-		double divisor = 1.0;
+		oDouble = 0;
 
-		for (;;)
-			{
-			int curDigit;
-			if (not spTryRead_Digit(iChanRU, curDigit))
-				break;
-			divisor *= 10;
-			fracPart *= 10;
-			fracPart += curDigit;
-			}
-		oDouble += fracPart / divisor;
+		// Should this be conditional? Is a standalone '.' a number?
+		spAugmentFractional(iChanRU, oDouble);
+		}
+	else if (not spTryRead_Mantissa(iChanRU, oInt64, oDouble, oIsDouble))
+		{
+		return false;
+		}
+	else if (sTryRead_CP(iChanRU, '.'))
+		{
+		oIsDouble = true; // ??
+		spAugmentFractional(iChanRU, oDouble);
 		}
 
 	if (sTryRead_CP(iChanRU, 'e') || sTryRead_CP(iChanRU, 'E'))
@@ -595,13 +612,17 @@ void sWrite_Exact(const ChanW_UTF& iChanW, float iVal)
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	sEWritef(iChanW, "%.9g", iVal);
+
+	char buf[32];
+	sEWrite(iChanW, spFormatDouble(buf, iVal));
 	}
 
 void sWrite_Exact(const ChanW_UTF& iChanW, double iVal)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	sEWritef(iChanW, "%.17g", iVal);
+
+	char buf[32];
+	sEWrite(iChanW, spFormatDouble(buf, iVal));
 	}
 
 void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal)
@@ -612,3 +633,120 @@ void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal)
 
 } // namespace Util_Chan
 } // namespace ZooLib
+
+// =================================================================================================
+#pragma mark -
+
+namespace { // anonymous
+
+ZooLib::Mtx mutexes[2];
+
+void ACQUIRE_DTOA_LOCK(unsigned n)
+{
+	mutexes[n].Acquire();
+}
+
+void FREE_DTOA_LOCK(unsigned n)
+{
+	mutexes[n].Release();
+}
+
+unsigned int dtoa_get_threadno()
+{
+    return 0;
+}
+
+extern "C" {
+
+#if ZCONFIG_Endian == ZCONFIG_Endian_Big
+	#define IEEE_MC68k 1
+#else
+	#define IEEE_8087 1
+#endif
+
+#define MULTIPLE_THREADS 1
+
+#undef assert
+#undef DEBUG
+
+void set_max_dtoa_threads(unsigned int n);
+////##void gethex( const char **sp, U *rvp, int rounding, int MTd);
+void freedtoa(char *s);
+char * dtoa_r(double dd, int mode, int ndigits, int *decpt, int *sign, char **rve, char *buf, size_t blen);
+
+#include "dtoa.c"
+
+} // extern "C"
+} // anonymous namespace
+
+static char * spFormatDouble(char *b, double x)
+{
+	int i, k;
+	char *s;
+	int decpt, j, sign;
+	char *b0, *s0, *se;
+
+	b0 = b;
+#ifdef IGNORE_ZERO_SIGN
+	if (!x) {
+		*b++ = '0';
+		*b = 0;
+		goto done;
+		}
+#endif
+	s = s0 = dtoa(x, 0, 0, &decpt, &sign, &se);
+	if (sign)
+		*b++ = '-';
+	if (decpt == 9999) /* Infinity or Nan */ {
+		while((*b++ = *s++));
+		goto done0;
+		}
+	if (decpt <= -4 || decpt > se - s + 5) {
+		*b++ = *s++;
+		if (*s) {
+			*b++ = '.';
+			while((*b = *s++))
+				b++;
+			}
+		*b++ = 'e';
+		/* sprintf(b, "%+.2d", decpt - 1); */
+		if (--decpt < 0) {
+			*b++ = '-';
+			decpt = -decpt;
+			}
+		else
+			*b++ = '+';
+		for(j = 2, k = 10; 10*k <= decpt; j++, k *= 10);
+		for(;;) {
+			i = decpt / k;
+			*b++ = i + '0';
+			if (--j <= 0)
+				break;
+			decpt -= i*k;
+			decpt *= 10;
+			}
+		*b = 0;
+		}
+	else if (decpt <= 0) {
+		*b++ = '0'; // Our change, so we always have a digit before the decimal point.
+		*b++ = '.';
+		for(; decpt < 0; decpt++)
+			*b++ = '0';
+		while((*b++ = *s++));
+		}
+	else {
+		while((*b = *s++)) {
+			b++;
+			if (--decpt == 0 && *s)
+				*b++ = '.';
+			}
+		for(; decpt > 0; decpt--)
+			*b++ = '0';
+		*b = 0;
+		}
+ done0:
+	freedtoa(s0);
+ done:
+	return b0;
+	}
+
