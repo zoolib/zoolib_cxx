@@ -101,6 +101,7 @@ void sMunge(
 // =================================================================================================
 #pragma mark - Public API
 
+// Replicate iSourceF over iDestF, aligning iSourceOrigin with iDestF.TopLeft()
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
@@ -113,6 +114,8 @@ void sBlit(
 		iOp);
 	}
 
+// Copy source to iDestF without replication. Actual drawn rectangle will be smaller
+// than iDestF if iSourceF is smaller.
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
@@ -123,13 +126,37 @@ void sBlit(
 	realDest.bottom = min(realDest.bottom, Ord(realDest.top + H(iSourceF)));
 
 	PointPOD sourceStart = LT(iSourceF);
-	sBlit_T(iSourceRD, iSource, iSourcePD,
-		sourceStart,
-		iDestRD, oDest, realDest, iDestPD,
-		iOp);
 
+	#define DOBLIT(spd, dpd) \
+		sBlit_T(iSourceRD, iSource, spd, \
+			sourceStart, \
+			iDestRD, oDest, realDest, dpd, \
+			iOp); \
+
+	ZP<PDRep> sourcePDRep = iSourcePD.GetRep();
+	ZP<PDRep> destPDRep = iDestPD.GetRep();
+	if (PDRep_Color* sourcePDRep_Color = sourcePDRep.DynamicCast<PDRep_Color>())
+		{
+		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
+			{
+			DOBLIT(*sourcePDRep_Color, *destPDRep_Color);
+			return;
+			}
+		}
+	else if (PDRep_Indexed* sourcePDRep_Index = sourcePDRep.DynamicCast<PDRep_Indexed>())
+		{
+		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
+			{
+			DOBLIT(*sourcePDRep_Index, *destPDRep_Color);
+			return;
+			}
+		}
+
+	DOBLIT(iSourcePD, iDestPD);
+#undef DOBLIT
 	}
 
+// Replicate iSourceF masked by replicated iMatteF.
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
@@ -146,6 +173,7 @@ void sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
+// Replicate iSourceF masked by iMatteF.
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	PointPOD iSourceOrigin,
@@ -167,6 +195,7 @@ void sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
+// Draw iSourceF masked by replicated iMatteF.
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
@@ -209,6 +238,7 @@ void sBlit(
 		iSourcePremultiplied, iOp);
 	}
 
+// Draw iSourceF masked by iMatteF into iDestF.
 void sBlit(
 	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
@@ -251,6 +281,7 @@ void sBlit(
 			iSourcePremultiplied, iOp);
 	}
 
+// Fill iDestF with iColor
 void sColor(
 	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
 	const RGBA& iColor,
@@ -275,6 +306,7 @@ void sColor(
 		}
 	}
 
+// Fill iDestF matted
 void sColor(
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
 	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
@@ -322,6 +354,7 @@ void sColor(
 		iOp);
 	}
 
+// Fill iDestbounds with tiled matte
 void sColor(
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
 	PointPOD iMatteOrigin,
