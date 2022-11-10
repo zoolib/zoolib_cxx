@@ -87,9 +87,6 @@ public:
 
 // --
 
-
-// --
-
 private:
 	T fT;
 	};
