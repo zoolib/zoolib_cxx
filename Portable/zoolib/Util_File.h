@@ -19,6 +19,8 @@ bool sDeleteTree(const FileSpec& iFS);
 
 FileIter sSorted(FileIter iSource);
 
+ZP<ChannerRPos_Bin> sForceOpenRPos(const FileSpec& iFileSpec);
+
 } // namespace Util_File
 } // namespace ZooLib
 
