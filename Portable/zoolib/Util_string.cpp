@@ -78,6 +78,9 @@ double sDouble(const string& iString)
 
 // =================================================================================================
 
+bool sContains(const string& iTarget, char iPattern)
+	{ return string::npos != iTarget.find(iPattern); }
+
 bool sContains(const string& iTarget, const string& iPattern)
 	{ return string::npos != iTarget.find(iPattern); }
 
