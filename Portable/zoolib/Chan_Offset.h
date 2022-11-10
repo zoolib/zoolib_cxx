@@ -13,7 +13,7 @@ namespace ZooLib {
 
 template <class Chan_p>
 class ChanPos_Offset
-:	public virtual ChanFilter<Chan_P>
+:	public ChanFilter<Chan_P>
 	{
 	typedef ChanFilter<Chan_P> inherited;
 public:
@@ -42,7 +42,7 @@ protected:
 
 template <class Chan_p>
 class ChanSize_Offset
-:	public virtual ChanFilter<Chan_P>
+:	public ChanFilter<Chan_P>
 	{
 	typedef ChanFilter<Chan_P> inherited;
 public:
@@ -69,7 +69,7 @@ protected:
 
 template <class Chan_p>
 class ChanSizeSet_Offset
-:	public virtual ChanFilter<Chan_P>
+:	public ChanFilter<Chan_P>
 	{
 	typedef ChanFilter<Chan_P> inherited;
 public:

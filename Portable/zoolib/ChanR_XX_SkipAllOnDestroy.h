@@ -17,7 +17,7 @@ namespace ZooLib {
 
 template <class Chan_p>
 class ChanR_XX_SkipAllOnDestroy
-:	public virtual ChanFilter<Chan_p>
+:	public ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 public:

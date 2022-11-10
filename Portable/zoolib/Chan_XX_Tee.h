@@ -15,7 +15,7 @@ namespace ZooLib {
 
 template <class Chan_p>
 class ChanR_XX_Tee
-:	public virtual ChanFilter<Chan_p>
+:	public ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;
@@ -59,7 +59,7 @@ protected:
 
 template <class Chan_p>
 class ChanW_XX_Tee
-:	public virtual ChanFilter<Chan_p>
+:	public ChanFilter<Chan_p>
 	{
 	typedef ChanFilter<Chan_p> inherited;
 	typedef typename Chan_p::Element_t EE;
