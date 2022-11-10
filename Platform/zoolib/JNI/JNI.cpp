@@ -34,10 +34,10 @@ void LoadHandler::sOnLoad(JavaVM* iJavaVM)
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
 		{
 		if (ZLOGF(cc, eDebug))
-			cc << "> " << typeid(*theHandler).name();
+			cc << "≪ " << typeid(*theHandler).name();
 		theHandler->OnLoad(iJavaVM);
 		if (ZLOGF(cc, eDebug))
-			cc << "< " << typeid(*theHandler).name();
+			cc << "≫ " << typeid(*theHandler).name();
 		}
 	}
 
@@ -47,10 +47,10 @@ void LoadHandler::sOnUnload()
 	for (LoadHandler* theHandler = spHead; theHandler; theHandler = theHandler->fNext)
 		{
 		if (ZLOGF(cc, eDebug))
-			cc << "> " << typeid(*theHandler).name();
+			cc << "≪ " << typeid(*theHandler).name();
 		theHandler->OnUnload();
 		if (ZLOGF(cc, eDebug))
-			cc << "< " << typeid(*theHandler).name();
+			cc << "≫ " << typeid(*theHandler).name();
 		}
 	spJavaVM = nullptr;
 	}
