@@ -32,13 +32,19 @@ bool Starter_EventLoopBase::QStart(const ZP<Startable>& iStartable)
 
 void Starter_EventLoopBase::pInvokeClearQueue()
 	{
-	vector<ZP<Startable>> toStart;
+	fMtx.lock();
 
-	{
-	ZAcqMtx acq(fMtx);
+	if (not fTriggered)
+		{
+		fMtx.unlock();
+		return;
+		}
+
 	fTriggered = false;
-	fStartables.swap(toStart);
-	}
+
+	vector<ZP<Startable>> toStart(std::move(fStartables));
+
+	fMtx.unlock();
 
 	for (vector<ZP<Startable>>::iterator iter = toStart.begin();
 		iter != toStart.end(); ++iter)
