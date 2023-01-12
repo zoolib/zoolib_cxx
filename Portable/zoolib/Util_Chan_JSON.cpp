@@ -200,6 +200,7 @@ void sWrite_LF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions)
 
 void sWrite_Indent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
+	ZAssert(ssize_t(iCount) >= 0);
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
@@ -355,7 +356,11 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
-	if (sDoIndentation(iOptions) && not iOptions.fIndentOnlySequencesQ.Get())
+
+	const EIndentationStyle theIndentationStyle =
+		iOptions.fIndentOnlySequencesQ.Get() ? EIndentationStyle::None : sIndentationStyle(iOptions);
+
+	if (theIndentationStyle != EIndentationStyle::None)
 		{
 		chunkSeparator = sEOLString(iOptions);
 		for (size_t xx = 0; xx < iLevel; ++xx)

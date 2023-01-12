@@ -407,73 +407,21 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 	{
 	ioParents.push_back(EParent::Seq);
 
-	bool doIndentation = sDoIndentation(iOptions);
+	EIndentationStyle theIndentationStyle = sIndentationStyle(iOptions);
+
 	if (iOptions.fIndentOnlySequencesQ.Get())
 		{
 		foreacha (aa, ioParents)
 			{
 			if (aa != EParent::Seq)
 				{
-				doIndentation = false;
+				theIndentationStyle = EIndentationStyle::None;
 				break;
 				}
 			}
 		}
 
-	if (doIndentation)
-		{
-		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
-		const size_t childIndentation = theIndentation+1;
-
-		uint64 count = 0;
-		for (bool isFirst = true; /*no test*/; isFirst = false)
-			{
-			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
-				{
-				break;
-				}
-			else
-				{
-				if (isFirst)
-					{
-					if (ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
-						{
-						// Immediate parent is a map.
-						sWrite_LFIndent(iChanW, theIndentation, iOptions);
-						}
-					iChanW << "[";
-					}
-
-				if (iOptions.fUseExtendedNotationQ | false)
-					{
-					sWrite_LFIndent(iChanW, childIndentation, iOptions);
-					if (iOptions.fNumberSequencesQ | false)
-						iChanW << "/*" << count << "*/";
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
-					iChanW << ";";
-					}
-				else
-					{
-					if (not isFirst)
-						iChanW << ",";
-					sWrite_LFIndent(iChanW, childIndentation, iOptions);
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
-					}
-				}
-			++count;
-			}
-
-		if (count)
-			{
-			sWrite_LFIndent(iChanW, theIndentation, iOptions);
-			iChanW << "]";
-			}
-		else
-			{
-			iChanW << "[]";
-			}
-		}
-	else
+	if (theIndentationStyle == EIndentationStyle::None)
 		{
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
@@ -504,6 +452,62 @@ static void spPull_PPT_Push_JSON_Seq(const ChanR_PPT& iChanR,
 			}
 		iChanW << "]";
 		}
+	else
+		{
+		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
+		const size_t childIndentation = theIndentation+1;
+
+		for (uint64 count = 0; /*no test*/; ++count)
+			{
+			if (NotQ<PPT> theNotQ = sQEReadPPTOrEnd(iChanR))
+				{
+				if (count == 0)
+					{
+					iChanW << "[]";
+					}
+				else
+					{
+					if (theIndentationStyle == EIndentationStyle::Whitesmiths)
+						sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					else
+						sWrite_LFIndent(iChanW, theIndentation, iOptions);
+					iChanW << "]";
+					}
+				break;
+				}
+			else
+				{
+				if (count == 0)
+					{
+					if (theIndentationStyle != EIndentationStyle::KR
+						&& ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
+						{ // Immediate parent is a map, has to be on new line
+						if (theIndentationStyle == EIndentationStyle::Whitesmiths)
+							sWrite_LFIndent(iChanW, childIndentation, iOptions);
+						else
+							sWrite_LFIndent(iChanW, theIndentation, iOptions);
+						}
+					iChanW << "[";
+					}
+
+				if (iOptions.fUseExtendedNotationQ | false)
+					{
+					sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					if (iOptions.fNumberSequencesQ | false)
+						iChanW << "/*" << count << "*/";
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					iChanW << ";";
+					}
+				else
+					{
+					if (count)
+						iChanW << ",";
+					sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					}
+				}
+			}
+		}
 
 	ioParents.pop_back();
 	}
@@ -518,66 +522,10 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 
 	ioParents.push_back(EParent::Map);
 
-	bool doIndentation = sDoIndentation(iOptions) && not iOptions.fIndentOnlySequencesQ.Get();
+	const EIndentationStyle theIndentationStyle =
+		iOptions.fIndentOnlySequencesQ.Get() ? EIndentationStyle::None : sIndentationStyle(iOptions);
 
-	if (doIndentation)
-		{
-		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
-
-		uint64 count = 0;
-		for (bool isFirst = true; /*no test*/; isFirst = false)
-			{
-			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
-				{
-				break;
-				}
-			else if (NotQ<PPT> theNotQ = sQRead(iChanR))
-				{
-				sThrow_ParseException("Require value after Name from ChanR_PPT");
-				}
-			else
-				{
-				if (isFirst)
-					{
-					if (ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
-						{
-						// Immediate parent is a map.
-						sWrite_LFIndent(iChanW, theIndentation, iOptions);
-						}
-					iChanW << "{";
-					}
-
-				if (iOptions.fUseExtendedNotationQ | false)
-					{
-					sWrite_LFIndent(iChanW, theIndentation, iOptions);
-					Util_Chan_JSON::sWrite_PropName(iChanW, *theNameQ, useSingleQuotes);
-					iChanW << " = ";
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
-					iChanW << ";";
-					}
-				else
-					{
-					if (not isFirst)
-						iChanW << ",";
-					sWrite_LFIndent(iChanW, theIndentation, iOptions);
-					Util_Chan_JSON::sWrite_String(iChanW, *theNameQ, useSingleQuotes);
-					iChanW << ": ";
-					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
-					}
-				}
-			++count;
-			}
-		if (count)
-			{
-			sWrite_LFIndent(iChanW, theIndentation, iOptions);
-			iChanW << "}";
-			}
-		else
-			{
-			iChanW << "{}";
-			}
-		}
-	else
+	if (theIndentationStyle == EIndentationStyle::None)
 		{
 		iChanW << "{";
 		bool wroteAny = false;
@@ -624,6 +572,68 @@ static void spPull_PPT_Push_JSON_Map(const ChanR_PPT& iChanR,
 		if (wroteAny && sBreakStrings(iOptions))
 			iChanW << " ";
 		iChanW << "}";
+		}
+	else
+		{
+		const size_t theIndentation = iBaseIndent + ioParents.size() - 1;
+		const size_t childIndentation = theIndentation+1;
+
+		for (uint64 count = 0; /*no test*/; ++count)
+			{
+			if (NotQ<Name> theNameQ = sQEReadNameOrEnd(iChanR))
+				{
+				if (count == 0)
+					{
+					iChanW << "{}";
+					}
+				else
+					{
+					if (theIndentationStyle == EIndentationStyle::Whitesmiths)
+						sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					else
+						sWrite_LFIndent(iChanW, theIndentation, iOptions);
+					iChanW << "}";
+					}
+				break;
+				}
+			else if (NotQ<PPT> theNotQ = sQRead(iChanR))
+				{
+				sThrow_ParseException("Require value after Name from ChanR_PPT");
+				}
+			else
+				{
+				if (count == 0)
+					{
+					if (theIndentationStyle != EIndentationStyle::KR
+						&& ioParents.size() >= 2 && ioParents.end()[-2] == EParent::Map)
+						{ // Immediate parent is a map, has to be on new line
+						if (theIndentationStyle == EIndentationStyle::Whitesmiths)
+							sWrite_LFIndent(iChanW, childIndentation, iOptions);
+						else
+							sWrite_LFIndent(iChanW, theIndentation, iOptions);
+						}
+					iChanW << "{";
+					}
+
+				if (iOptions.fUseExtendedNotationQ | false)
+					{
+					sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					Util_Chan_JSON::sWrite_PropName(iChanW, *theNameQ, useSingleQuotes);
+					iChanW << " = ";
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					iChanW << ";";
+					}
+				else
+					{
+					if (count)
+						iChanW << ",";
+					sWrite_LFIndent(iChanW, childIndentation, iOptions);
+					Util_Chan_JSON::sWrite_String(iChanW, *theNameQ, useSingleQuotes);
+					iChanW << ": ";
+					spPull_PPT_Push_JSON(*theNotQ, iChanR, iBaseIndent, ioParents, iOptions, iChanW);
+					}
+				}
+			}
 		}
 	ioParents.pop_back();
 	}
@@ -676,6 +686,7 @@ static void spPull_PPT_Push_JSON(const PPT& iPPT,
 			{
 			// We don't have a value for fBinaryAsBase64Q, so we're not emitting binary at all.
 			sWrite_SimpleValue(iChanW, Any(), iOptions);
+			sSkipAll(*theChanner);
 			}
 		else
 			{
