@@ -200,7 +200,7 @@ Map sParameterizedYadTree(const Map& iBase,
 
 std::set<Map::Name_t> sAllNamesIn(Map iMap);
 
-Val_ZZ sAs_ZZ(const Val& iVal);
+Val_ZZ sAsZZ(const Val& iVal);
 
 } // namespace GameEngine
 } // namespace ZooLib
