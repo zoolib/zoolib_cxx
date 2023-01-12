@@ -25,6 +25,8 @@ namespace ZooLib {
 
 #elif ZMACRO_Use_funopen
 
+// FIXME. If __ANDROID_API__>24 we have funopen64, which has fpos64_t.
+
 static int spReadR(void* iCookie, char* oDest, int iCount)
 	{ return (int)sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
 
@@ -46,15 +48,15 @@ static fpos_t spSeek(void* iCookie, fpos_t iPos, int iWhence)
 			}
 		case SEEK_CUR:
 			{
-			fpos_t newPos = sPos(*theChannerRPos) + iPos;
+			uint64 newPos = sPos(*theChannerRPos) + iPos;
 			sPosSet(*theChannerRPos, newPos);
-			return newPos;
+			return fpos_t(newPos);
 			}
 		case SEEK_END:
 			{
-			fpos_t newPos = sSize(*theChannerRPos) + iPos;
+			uint64 newPos = sSize(*theChannerRPos) + iPos;
 			sPosSet(*theChannerRPos, newPos);
-			return newPos;
+			return fpos_t(newPos);
 			}
 		}
 	ZUnimplemented();

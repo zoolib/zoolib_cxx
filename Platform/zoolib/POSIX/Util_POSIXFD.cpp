@@ -137,7 +137,7 @@ uint64 sPos(int iFD)
 
 void sPosSet(int iFD, uint64 iPos)
 	{
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+	#if (defined(linux) || defined(__linux__))
 		::lseek64(iFD, iPos, SEEK_SET);
 	#else
 		::lseek(iFD, iPos, SEEK_SET);
@@ -149,7 +149,7 @@ uint64 sSkip(int iFD, uint64 iDelta)
 	if (not iDelta)
 		return 0;
 
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+	#if (defined(linux) || defined(__linux__))
 		uint64 curPos = ::lseek64(iFD, 0, SEEK_CUR);
 		return ::lseek64(iFD, iDelta, SEEK_CUR) - curPos;
 	#else
@@ -228,7 +228,7 @@ size_t sReadable(int iFD)
 
 uint64 sSize(int iFD)
 	{
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+	#if (defined(linux) || defined(__linux__))
 		struct stat64 theStatStruct;
 		if (::fstat64(iFD, &theStatStruct))
 			return 0;
@@ -244,7 +244,7 @@ uint64 sSize(int iFD)
 void sSizeSet(int iFD, uint64 iSize)
 	{
 	// NB ftruncate is not supported on all systems
-	#if (defined(linux) || defined(__linux__)) && not defined (__ANDROID__)
+	#if (defined(linux) || defined(__linux__))
 		::ftruncate64(iFD, iSize);
 	#else
 		::ftruncate(iFD, iSize);
