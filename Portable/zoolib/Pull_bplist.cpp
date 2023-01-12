@@ -17,6 +17,12 @@
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/UUID.h"
 
+// FIXME. We need a strategy for large blists loaded into 32 bit processes.
+// Possibly we throw when we encounter >4GB elements.
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+
 namespace ZooLib {
 
 using namespace PullPush;
@@ -233,7 +239,7 @@ static void spPull_bplist_Push_PPT(uint8 iObjectRefSize, const vector<uint64>& i
 		case 8: // UID
 			{
 			const uint64 theLength = spReadLength(iChanRPos, theInfo);
-			bplist_UID theUID(theLength,0);
+			bplist_UID theUID(size_t(theLength),0);
 			sEReadMem(iChanRPos, &theUID.Mut()[0], theLength);
 			sPush(theUID, iChanW);
 			return;
@@ -352,3 +358,5 @@ ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner)
 	}
 
 } // namespace ZooLib
+
+#pragma clang diagnostic pop

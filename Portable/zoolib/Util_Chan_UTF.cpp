@@ -669,12 +669,13 @@ extern "C" {
 #undef assert
 #undef DEBUG
 
-void set_max_dtoa_threads(unsigned int n);
-////##void gethex( const char **sp, U *rvp, int rounding, int MTd);
-void freedtoa(char *s);
-char * dtoa_r(double dd, int mode, int ndigits, int *decpt, int *sign, char **rve, char *buf, size_t blen);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
 
 #include "dtoa.c"
+
+#pragma clang diagnostic pop
 
 } // extern "C"
 } // anonymous namespace
