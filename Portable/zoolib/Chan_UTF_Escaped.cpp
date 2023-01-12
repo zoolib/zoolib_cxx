@@ -27,8 +27,7 @@ size_t ChanR_UTF_Escaped::Read(UTF32* oDest, size_t iCountCU)
 	using namespace Util_Chan;
 
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCountCU;
-	while (localDestEnd > localDest)
+	for (UTF32* const localDestEnd = oDest + iCountCU; localDest < localDestEnd; /*no inc*/)
 		{
 		const ZQ<UTF32> theCPQ = sQRead(fChanRU);
 		if (not theCPQ)

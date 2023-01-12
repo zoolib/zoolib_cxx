@@ -26,8 +26,7 @@ public:
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = oDest;
-		EE* localDestEnd = oDest + iCount;
-		while (localDest < localDestEnd)
+		for (EE* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 			{
 			if (fStack.empty())
 				{
