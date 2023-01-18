@@ -24,6 +24,8 @@ bool sTryRead_CP(const ChanRU_UTF& iChanRU, UTF32 iCP);
 
 ZQ<int> sQRead_Digit(const ChanRU_UTF& iChanRU);
 
+ZQ<int> sQValueIfHex(UTF32 iCP); // Temporary home
+
 ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU);
 
 // -----------------

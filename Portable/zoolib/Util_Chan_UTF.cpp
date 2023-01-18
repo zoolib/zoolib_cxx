@@ -17,6 +17,20 @@ static char * spFormatDouble(char *b, double x);
 namespace ZooLib {
 namespace Util_Chan {
 
+ZQ<int> sQValueIfHex(UTF32 iCP)
+	{
+	if (iCP >= '0' && iCP <= '9')
+		return iCP - '0';
+
+	if (iCP >= 'a' && iCP <= 'f')
+		return iCP - 'a' + 10;
+
+	if (iCP >= 'A' && iCP <= 'F')
+		return iCP - 'A' + 10;
+
+	return null;
+	}
+
 // =================================================================================================
 #pragma mark -
 
@@ -95,12 +109,8 @@ ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU)
 	{
 	if (NotQ<UTF32> theCPQ = sQRead(iChanRU))
 		{ return null; }
-	else if (*theCPQ >= '0' && *theCPQ <= '9')
-		{ return *theCPQ - '0'; }
-	else if (*theCPQ >= 'a' && *theCPQ <= 'f')
-		{ return *theCPQ - 'a' + 10; }
-	else if (*theCPQ >= 'A' && *theCPQ <= 'F')
-		{ return *theCPQ - 'A' + 10; }
+	else if (ZQ<int> theValueQ = sQValueIfHex(*theCPQ))
+		{ return theValueQ; }
 	else
 		{
 		sUnread(iChanRU, *theCPQ);
