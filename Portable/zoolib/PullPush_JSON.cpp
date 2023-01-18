@@ -763,12 +763,12 @@ static void spChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChannerRU,
 	try
 		{
 		sPull_JSON_Push_PPT(*iChannerRU, iRO, *iChannerWCon);
-		sDisconnectWrite(*iChannerWCon);
 		}
-	catch (std::exception& ex)
+	catch (...)
 		{
-		ZLOGTRACE(eDebug); // In lieu of general error handling
+		sTryPush(std::current_exception(), *iChannerWCon);
 		}
+	sDisconnectWrite(*iChannerWCon);
 	}
 
 ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
