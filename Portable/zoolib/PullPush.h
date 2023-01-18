@@ -107,10 +107,15 @@ void sPush_End(const ChanW_PPT& iChanW);
 void sPush_Marker(const ZP<PullPush::Marker>& iMarker, const ChanW_PPT& iChanW);
 
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW);
+bool sTryPush(const PPT& iVal, const ChanW_PPT& iChanW);
 
 template <class T>
 void sPush(const T& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, PPT(iVal)); }
+
+template <class T>
+bool sTryPush(const T& iVal, const ChanW_PPT& iChanW)
+	{ return sQWrite<PPT>(iChanW, PPT(iVal)); }
 
 template <class T>
 void sPush(const Name& iName, const T& iVal, const ChanW_PPT& iChanW)
@@ -178,10 +183,11 @@ PullPushPair<EE> sMakePullPushPair()
 	return thePair;
 	}
 
-// ----------
+// =================================================================================================
+#pragma mark - sStartPullPush, and helper sRunPullPush_ChannerX
 
 template <class Pull_p, class Push_p>
-void sRunPullPush_Channer(
+void sRunPullPush_ChannerR(
 	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
 	const ZP<ChannerR<Pull_p>>& iChannerR,
 	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
@@ -190,8 +196,10 @@ void sRunPullPush_Channer(
 		{
 		sCall(iCallable, *iChannerR, *iChannerWCon);
 		}
-	catch (std::exception& ex)
-		{}
+	catch (...)
+		{
+		sTryPush(std::current_exception(), *iChannerWCon);
+		}
 	sDisconnectWrite(*iChannerWCon);
 	}
 
@@ -200,12 +208,15 @@ ZP<ChannerR<Push_p>> sStartPullPush(
 	const ZP<Callable<void(const ChanR<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
 	const ZP<ChannerR<Pull_p>>& iChannerR)
 	{
+	if (not iChannerR)
+		return null;
+
 	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
 	sStartOnNewThread
 		(
 		sBindR
 			(
-			sCallable(sRunPullPush_Channer<Pull_p,Push_p>),
+			sCallable(sRunPullPush_ChannerR<Pull_p,Push_p>),
 			iCallable,
 			iChannerR,
 			sGetClear(thePullPushPair.first)
@@ -213,6 +224,93 @@ ZP<ChannerR<Push_p>> sStartPullPush(
 		);
 	return thePullPushPair.second;
 	}
+
+// ----------
+
+template <class Pull_p, class Push_p>
+void sRunPullPush_ChannerRPos(
+	const ZP<Callable<void(const ChanRPos<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerRPos<Pull_p>>& iChannerRPos,
+	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
+	{
+	try
+		{
+		sCall(iCallable, *iChannerRPos, *iChannerWCon);
+		}
+	catch (...)
+		{
+		sTryPush(std::current_exception(), *iChannerWCon);
+		}
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+template <class Pull_p, class Push_p>
+ZP<ChannerR<Push_p>> sStartPullPush(
+	const ZP<Callable<void(const ChanRPos<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerRPos<Pull_p>>& iChannerRPos)
+	{
+	if (not iChannerRPos)
+		return null;
+
+	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
+	sStartOnNewThread
+		(
+		sBindR
+			(
+			sCallable(sRunPullPush_ChannerRPos<Pull_p,Push_p>),
+			iCallable,
+			iChannerRPos,
+			sGetClear(thePullPushPair.first)
+			)
+		);
+	return thePullPushPair.second;
+	}
+
+// ----------
+
+template <class Pull_p, class Push_p>
+void sRunPullPush_ChannerRU(
+	const ZP<Callable<void(const ChanRU<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerRU<Pull_p>>& iChannerRU,
+	const ZP<ChannerWCon<Push_p>>& iChannerWCon)
+	{
+	try
+		{
+		sCall(iCallable, *iChannerRU, *iChannerWCon);
+		}
+	catch (...)
+		{
+		sTryPush(std::current_exception(), *iChannerWCon);
+		}
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+template <class Pull_p, class Push_p>
+ZP<ChannerR<Push_p>> sStartPullPush(
+	const ZP<Callable<void(const ChanRU<Pull_p>&,const ChanW<Push_p>&)>>& iCallable,
+	const ZP<ChannerRU<Pull_p>>& iChannerRU)
+	{
+	if (not iChannerRU)
+		return null;
+
+	PullPushPair<Push_p> thePullPushPair = sMakePullPushPair<Push_p>();
+	sStartOnNewThread
+		(
+		sBindR
+			(
+			sCallable(sRunPullPush_ChannerRU<Pull_p,Push_p>),
+			iCallable,
+			iChannerRU,
+			sGetClear(thePullPushPair.first)
+			)
+		);
+	return thePullPushPair.second;
+	}
+
+// =================================================================================================
+#pragma mark - sChannerR_PPT_RethrowException
+
+ZP<ChannerR_PPT> sChannerR_PPT_RethrowException(const ZP<ChannerR_PPT>& iChanner);
 
 } // namespace ZooLib
 
