@@ -301,6 +301,14 @@ bool sTryRead_DecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
 	{ return spTryRead_DecimalInteger(iChanRU, oInt64); }
 
+ZQ<int64> sQTryRead_DecimalInteger(const ChanRU_UTF& iChanRU)
+	{
+	int64 result;
+	if (spTryRead_DecimalInteger(iChanRU, result))
+		return result;
+	return null;
+	}
+
 static bool spTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU,
 	int64& oInt64)
 	{

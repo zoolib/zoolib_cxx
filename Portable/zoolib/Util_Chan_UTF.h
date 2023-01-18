@@ -42,6 +42,8 @@ bool sTryRead_HexInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
 bool sTryRead_DecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
+ZQ<int64> sQTryRead_DecimalInteger(const ChanRU_UTF& iChanRU);
+
 bool sTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
 bool sTryRead_SignedGenericNumber(const ChanRU_UTF& iChanRU,
