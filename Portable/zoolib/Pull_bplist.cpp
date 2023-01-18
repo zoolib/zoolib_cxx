@@ -335,27 +335,8 @@ void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChan
 // =================================================================================================
 #pragma mark - sChannerR_PPT_xx
 
-static void spChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChannerRPos,
-	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
-	{
-	ZThread::sSetName("sChannerR_PPT_bplist");
-	try
-		{
-		sPull_bplist_Push_PPT(*iChannerRPos, *iChannerWCon);
-		sDisconnectWrite(*iChannerWCon);
-		}
-	catch (std::exception& ex)
-		{
-		ZLOGTRACE(eDebug); // In lieu of general error handling
-		}
-	}
-
 ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner)
-	{
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_bplist), iChanner, thePair.first));
-	return thePair.second;
-	}
+	{ sStartPullPush(sCallable(sPull_bplist_Push_PPT), iChanner); }
 
 } // namespace ZooLib
 
