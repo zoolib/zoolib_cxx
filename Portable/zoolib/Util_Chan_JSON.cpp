@@ -9,6 +9,7 @@
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_cmath.h" // For fmod
+#include "zoolib/Name.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
@@ -341,6 +342,12 @@ void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushText
 		Util_Chan::sWrite_Exact(ww, sGet(*asTime));
 		if (sTimesHaveUserLegibleComment(iOptions))
 			ww << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
+		}
+	else if (const Name* asName = iAny.PGet<Name>())
+		{
+		if (iOptions.fAnnotateUnhandledQ.Get())
+			ww << "/* Name: */ ";
+		sWrite_String(ww, asName->AsString8(), true);
 		}
 	else
 		{
