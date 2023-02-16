@@ -3,7 +3,7 @@
 # to your SHARED library or executable. This is needed so dead-stripping doesn't
 # remove the dynamically registered Cog ctors.
 
-cmake_minimum_required(VERSION 3.12) # For add_library OBJECT
+cmake_minimum_required(VERSION 3.10.2) # For add_library OBJECT
 
 set(ZOOLIB_CXX ../..)
 
