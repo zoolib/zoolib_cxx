@@ -336,7 +336,7 @@ void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChan
 #pragma mark - sChannerR_PPT_xx
 
 ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner)
-	{ sStartPullPush(sCallable(sPull_bplist_Push_PPT), iChanner); }
+	{ return sStartPullPush(sCallable(sPull_bplist_Push_PPT), iChanner); }
 
 } // namespace ZooLib
 
