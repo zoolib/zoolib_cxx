@@ -106,7 +106,7 @@ ChanW_Bin_JavaOutputStream::~ChanW_Bin_JavaOutputStream()
 
 size_t ChanW_Bin_JavaOutputStream::Write(const byte* iSource, size_t iCount)
 	{
-	if (size_t theCount = sMin(iCount, kBufferSize))
+	if (jsize theCount = sClamped<jsize>(sMin(iCount, kBufferSize)))
 		{
 		JNIEnv* env = JNI::EnvTV::sGet();
 

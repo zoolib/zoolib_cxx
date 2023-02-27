@@ -216,14 +216,14 @@ PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv, size_t iSlots)
 :	fEnv(iEnv)
 	{
 	ZAssert(fEnv);
-	fEnv->PushLocalFrame(iSlots);
+	fEnv->PushLocalFrame(sClamped<jint>(iSlots));
 	}
 
 PushPopLocalFrame::PushPopLocalFrame(size_t iSlots)
 :	fEnv(EnvTV::sGet())
 	{
 	ZAssert(fEnv);
-	fEnv->PushLocalFrame(iSlots);
+	fEnv->PushLocalFrame(sClamped<jint>(iSlots));
 	}
 
 PushPopLocalFrame::~PushPopLocalFrame()
@@ -279,7 +279,7 @@ jstring sMakeString(const string8& iVal)
 	{ return sMakeString(EnvTV::sGet(), iVal); }
 
 jstring sMakeString(JNIEnv* env, const string16& iVal)
-	{ return env->NewString((const jchar*)iVal.data(), iVal.length()); }
+	{ return env->NewString((const jchar*)iVal.data(), sClamped<jint>(iVal.length())); }
 
 jstring sMakeString(const string16& iVal)
 	{ return sMakeString(EnvTV::sGet(), iVal); }
