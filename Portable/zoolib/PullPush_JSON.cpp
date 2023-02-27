@@ -240,7 +240,7 @@ static bool spPull_Hex_Push_Bin(const ChanRU_UTF& iChanRU, const ChanW_Bin& iCha
 #pragma mark - sPull_JSON_Push_PPT public API
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
+	const Util_Chan_JSON::PullTextOptions_JSON& iOptions,
 	const ChanW_PPT& iChanW)
 	{
 	sSkip_WSAndCPlusPlusComments(iChanRU);
@@ -257,10 +257,10 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				return true;
 				}
 
-			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push_PPT(iChanRU, iOptions, iChanW))
 				sThrow_ParseException("Expected value or ']'");
 
-			if (iRO.fLooseSeparators | false)
+			if (iOptions.fLooseSeparators | false)
 				{
 				// We allow zero or more separators
 				for (;;)
@@ -268,7 +268,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if ((iRO.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
+					else if ((iOptions.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -279,7 +279,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 				if (sTryRead_CP(iChanRU, ','))
 					{}
-				else if (iRO.fAllowSemiColons | false)
+				else if (iOptions.fAllowSemiColons | false)
 					{
 					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate array elements");
@@ -305,7 +305,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			string theName;
 			if (not Util_Chan_JSON::sTryRead_PropertyName(iChanRU,
-				theName, iRO.fAllowUnquotedPropertyNames | false))
+				theName, iOptions.fAllowUnquotedPropertyNames | false))
 				{ sThrow_ParseException("Expected a member name or '}'"); }
 
 			sPush(sName(theName), iChanW);
@@ -314,7 +314,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			if (not sTryRead_CP(iChanRU, ':'))
 				{
-				if (not (iRO.fAllowEquals | false))
+				if (not (iOptions.fAllowEquals | false))
 					sThrow_ParseException("Expected ':' after a member name");
 
 				if (not sTryRead_CP(iChanRU, '='))
@@ -323,10 +323,10 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 
 			sSkip_WSAndCPlusPlusComments(iChanRU);
 
-			if (not sPull_JSON_Push_PPT(iChanRU, iRO, iChanW))
+			if (not sPull_JSON_Push_PPT(iChanRU, iOptions, iChanW))
 				sThrow_ParseException("Expected value");
 
-			if (iRO.fLooseSeparators | false)
+			if (iOptions.fLooseSeparators | false)
 				{
 				// We allow zero or more separators
 				for (;;)
@@ -334,7 +334,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 					sSkip_WSAndCPlusPlusComments(iChanRU);
 					if (sTryRead_CP(iChanRU, ','))
 						{}
-					else if ((iRO.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
+					else if ((iOptions.fAllowSemiColons | false) && sTryRead_CP(iChanRU, ';'))
 						{}
 					else
 						break;
@@ -345,7 +345,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 				sSkip_WSAndCPlusPlusComments(iChanRU);
 				if (sTryRead_CP(iChanRU, ','))
 					{}
-				else if (iRO.fAllowSemiColons | false)
+				else if (iOptions.fAllowSemiColons | false)
 					{
 					if (not sTryRead_CP(iChanRU, ';'))
 						sThrow_ParseException("Require ',' or ';' to separate object elements");
@@ -365,7 +365,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		{
 		return spPull_JSON_String_Push(iChanRU, '\'', iChanW);
 		}
-	else if ((iRO.fAllowBinary | false) && sTryRead_CP(iChanRU, '<'))
+	else if ((iOptions.fAllowBinary | false) && sTryRead_CP(iChanRU, '<'))
 		{
 		sSkip_WSAndCPlusPlusComments(iChanRU);
 
@@ -385,7 +385,7 @@ bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
 		}
 	else
 		{
-		return spPull_JSON_Other_Push(iChanRU, iChanW, iRO.fAllowBinary.Get());
+		return spPull_JSON_Other_Push(iChanRU, iChanW, iOptions.fAllowBinary.Get());
 		}
 	}
 
@@ -755,28 +755,14 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 // =================================================================================================
 #pragma mark - sChannerR_PPT_xx
 
-static void spChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChannerRU,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
-	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
-	{
-	ZThread::sSetName("sChannerR_PPT_JSON");
-	try
-		{
-		sPull_JSON_Push_PPT(*iChannerRU, iRO, *iChannerWCon);
-		}
-	catch (...)
-		{
-		sTryPush(std::current_exception(), *iChannerWCon);
-		}
-	sDisconnectWrite(*iChannerWCon);
-	}
+static void spPull_JSON_Push_PPT(
+	const Util_Chan_JSON::PullTextOptions_JSON& iOptions,
+	const ChanRU_UTF& iChanRU,
+	const ChanW_PPT& iChanW)
+	{ sPull_JSON_Push_PPT(iChanRU, iOptions, iChanW); }
 
 ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO)
-	{
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_JSON), iChanner, iRO, thePair.first));
-	return thePair.second;
-	}
+	const Util_Chan_JSON::PullTextOptions_JSON& iOptions)
+	{ return sStartPullPush(sBindL(iOptions, sCallable(spPull_JSON_Push_PPT)), iChanner); }
 
 } // namespace ZooLib

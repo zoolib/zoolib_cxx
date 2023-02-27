@@ -18,7 +18,7 @@ namespace Util_ZZ_JSON {
 using namespace Util_Chan_JSON;
 
 ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU);
-ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO);
+ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iOptions);
 
 void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal);
 void sWrite(const ChanW_UTF& iChanW, const Val_ZZ& iVal, bool iPrettyPrint);

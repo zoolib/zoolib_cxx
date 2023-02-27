@@ -13,7 +13,7 @@ namespace ZooLib {
 #pragma mark - sPull_JSON_Push_PPT
 
 bool sPull_JSON_Push_PPT(const ChanRU_UTF& iChanRU,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO,
+	const Util_Chan_JSON::PullTextOptions_JSON& iOptions,
 	const ChanW_PPT& iChanW);
 
 // =================================================================================================
@@ -39,7 +39,7 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 #pragma mark - sChannerR_PPT_xx
 
 ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
-	const Util_Chan_JSON::PullTextOptions_JSON& iRO);
+	const Util_Chan_JSON::PullTextOptions_JSON& iOptions);
 
 } // namespace ZooLib
 
