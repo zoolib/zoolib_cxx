@@ -308,7 +308,7 @@ void sWritePixmap_PNG(
 				{
 				const void* sourceRowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, y);
 
-				sBlit(iRasterDesc, sourceRowAddress, sourceSingleRowFrame, iPixelDesc,
+				sCopy(iRasterDesc, sourceRowAddress, sourceSingleRowFrame, iPixelDesc,
 					destRD, theRowBuffer, destFrame, destPixelDesc,
 					eOp_Copy);
 
