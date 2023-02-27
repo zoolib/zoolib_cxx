@@ -2715,7 +2715,7 @@ enum {	/* rounding values: same as FLT_ROUNDS */
 	Round_down = 3
 	};
 
- void
+ static void
 gethex( const char **sp, U *rvp, int rounding, int sign MTd)
 {
 	Bigint *b;
