@@ -30,14 +30,14 @@ bool Starter_EventLoopBase::QStart(const ZP<Startable>& iStartable)
 	return false;
 	}
 
-void Starter_EventLoopBase::pInvokeClearQueue()
+bool Starter_EventLoopBase::pInvokeClearQueue()
 	{
 	fMtx.lock();
 
 	if (not fTriggered)
 		{
 		fMtx.unlock();
-		return;
+		return false;
 		}
 
 	fTriggered = false;
@@ -46,19 +46,22 @@ void Starter_EventLoopBase::pInvokeClearQueue()
 
 	fMtx.unlock();
 
-	for (vector<ZP<Startable>>::iterator iter = toStart.begin();
-		iter != toStart.end(); ++iter)
+	for (auto&& entry: toStart)
 		{
-		try { (*iter)->Call(); }
+		try { sCall(entry); }
 		catch (...) {}
 		}
+
+	return not toStart.empty();
 	}
 
-void Starter_EventLoopBase::pDiscardPending()
+bool Starter_EventLoopBase::pDiscardPending()
 	{
 	ZAcqMtx acq(fMtx);
+	bool hadAny = fStartables.size();
 	fStartables.clear();
 	fTriggered = false;
+	return hadAny;
 	}
 
 } // namespace ZooLib
