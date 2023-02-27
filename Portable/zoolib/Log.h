@@ -76,19 +76,34 @@ private:
 enum
 	{
 	ePriority_Emerg = 0, ///< System on fire?
+	ePriority_Emergency = ePriority_Emerg,
+
 	ePriority_Alert = 1, ///< action must be taken immediately
+
 	ePriority_Crit = 2, ///< critical conditions
+	ePriority_Critical = ePriority_Crit,
+
 	ePriority_Err = 3, ///< error conditions
-	ePriority_Warning = 4,///< warning conditions
+	ePriority_Error = ePriority_Err,
+
+	ePriority_Warn = 4,///< warning conditions
+	ePriority_Warning = ePriority_Warn,
+
 	ePriority_Notice = 5, ///< normal but significant condition
 	ePriority_Info = 6, ///< informational
 	ePriority_Debug = 7, ///< debug-level messages
 
 // more succinct aliases
 	eErr = ePriority_Err,
-	eWarning = ePriority_Warning,
+	eError = ePriority_Err,
+
+	eWarning = ePriority_Warn,
+	eWarn = ePriority_Warn,
+
 	eNotice = ePriority_Notice,
+
 	eInfo = ePriority_Info,
+
 	eDebug = ePriority_Debug
 	};
 
