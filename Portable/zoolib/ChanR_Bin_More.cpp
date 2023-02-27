@@ -1,6 +1,8 @@
 // Copyright (c) 2014 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/ChanR_Bin_More.h"
+#include "zoolib/Chan_Bin_string.h"
+#include "zoolib/Util_Chan.h"
 
 namespace ZooLib {
 
@@ -20,6 +22,13 @@ std::string sReadString(const ChanR_Bin& iChanR, size_t iCount)
 	if (const ZQ<std::string> theQ = sQReadString(iChanR, iCount))
 		return *theQ;
 	sThrow_ExhaustedR();
+	}
+
+std::string sReadAllString(const ChanR_Bin& iChanR)
+	{
+	std::string result;
+	sECopyAll(iChanR, ChanW_Bin_string(&result));
+	return result;
 	}
 
 bool sRead_String(const ChanR_Bin& iChanR, const std::string& iPattern)

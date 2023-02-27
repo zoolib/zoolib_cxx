@@ -17,6 +17,8 @@ ZQ<std::string> sQReadString(const ChanR_Bin& iChanR, size_t iCount);
 
 std::string sReadString(const ChanR_Bin& iChanR, size_t iCount);
 
+std::string sReadAllString(const ChanR_Bin& iChanR);
+
 bool sRead_String(const ChanR_Bin& iChanR, const std::string& iPattern);
 
 bool sTryRead_String(const ChanRU_Bin& iChanRU, const std::string& iPattern);
