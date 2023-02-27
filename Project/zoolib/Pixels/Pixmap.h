@@ -26,7 +26,7 @@ public:
 
 	const PixelDesc& GetPixelDesc();
 
-	ZP<PixmapRep> Touch();
+	ZP<PixmapRep> Touched();
 
 protected:
 	ZP<Raster> fRaster;
@@ -70,6 +70,7 @@ public:
 	Ord Height() const;
 
 	void Touch();
+	Pixmap Touched() const;
 
 	const ZP<PixmapRep>& GetRep() const;
 
@@ -95,6 +96,12 @@ void sMunge(Pixmap& ioPixmap, MungeProc iMungeProc, void* iRefcon);
 
 void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 	Pixmap& ioDest, PointPOD iDestLoc);
+
+uint32 sGetPixval(const Pixmap& iSource, Ord iX, Ord iY);
+void sSetPixval(Pixmap& oDest, Ord iX, Ord iY, uint32 iPixval);
+
+uint32 sGetPixval(const Pixmap& iSource, PointPOD iLoc);
+void sSetPixval(Pixmap& oDest, PointPOD iLoc, uint32 iPixval);
 
 RGBA sGetPixel(const Pixmap& iSource, Ord iX, Ord iY);
 void sSetPixel(Pixmap& oDest, Ord iX, Ord iY, RGBA iPixel);

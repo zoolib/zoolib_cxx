@@ -20,7 +20,7 @@ static void spBlit(const ZP<PixmapRep>& iSource, const RectPOD& iSourceFrame,
 
 	const RectPOD theDestFrame = (iSourceFrame - LT(iSourceFrame)) + iDestLoc;
 
-	sBlit(
+	sCopy(
 		sourceRaster->GetRasterDesc(), sourceRaster->GetBaseAddress(),
 			iSourceFrame, iSource->GetPixelDesc(),
 		destRaster->GetRasterDesc(), destRaster->GetBaseAddress(),
@@ -47,7 +47,7 @@ const RectPOD& PixmapRep::GetFrame()
 const PixelDesc& PixmapRep::GetPixelDesc()
 	{ return fPixelDesc; }
 
-ZP<PixmapRep> PixmapRep::Touch()
+ZP<PixmapRep> PixmapRep::Touched()
 	{
 	if (this->IsShared() || fRaster->IsShared() || not fRaster->GetMutable())
 		{
@@ -56,6 +56,9 @@ ZP<PixmapRep> PixmapRep::Touch()
 		newRasterDesc.fRowCount = H(fFrame);
 
 		ZP<PixmapRep> newRep = sPixmapRep(newRasterDesc, WH(fFrame), fPixelDesc);
+
+		if (PixelDescRep_Indexed* thePDRep = fPixelDesc.GetRep().DynamicCast<PixelDescRep_Indexed>())
+			thePDRep->BuildReverseLookupIfNeeded();
 
 		spBlit(this, fFrame, newRep, sPointPOD(0,0));
 
@@ -137,7 +140,14 @@ Ord Pixmap::Height() const
 void Pixmap::Touch()
 	{
 	if (fRep)
-		fRep = fRep->Touch();
+		fRep = fRep->Touched();
+	}
+
+Pixmap Pixmap::Touched() const
+	{
+	if (fRep)
+		return Pixmap(fRep->Touched());
+	return Pixmap();
 	}
 
 const ZP<PixmapRep>& Pixmap::GetRep() const
@@ -200,17 +210,36 @@ void sBlit(const Pixmap& iSource, const RectPOD& iSourceBounds,
 		}
 	}
 
+uint32 sGetPixval(const Pixmap& iSource, Ord iX, Ord iY)
+	{
+	if (auto&& raster = iSource.GetRaster())
+		return sGetPixval(raster, iX, iY);
+	return 0;
+	}
+
+void sSetPixval(Pixmap& oDest, Ord iX, Ord iY, uint32 iPixval)
+	{
+	oDest.Touch();
+	if (auto&& raster = oDest.GetRaster())
+		sSetPixval(raster, iX, iY, iPixval);
+	}
+
+uint32 sGetPixval(const Pixmap& iSource, PointPOD iLoc)
+	{ return sGetPixval(iSource, X(iLoc), Y(iLoc)); }
+
+void sSetPixval(Pixmap& oDest, PointPOD iLoc, uint32 iPixval)
+	{ sSetPixval(oDest, X(iLoc), Y(iLoc), iPixval); }
+
 RGBA sGetPixel(const Pixmap& iSource, Ord iX, Ord iY)
 	{
-	Pixval thePixVal = sGetPixval(iSource.GetRaster(), iX, iY);
+	Pixval thePixVal = sGetPixval(iSource, iX, iY);
 	return iSource.GetPixelDesc().AsRGBA(thePixVal);
 	}
 
 void sSetPixel(Pixmap& oDest, Ord iX, Ord iY, RGBA iPixel)
 	{
-	oDest.Touch();
 	Pixval thePixval = oDest.GetPixelDesc().AsPixval(iPixel);
-	sSetPixval(oDest.GetRaster(), iX, iY, thePixval);
+	sSetPixval(oDest, iX, iY, thePixval);
 	}
 
 RGBA sGetPixel(const Pixmap& iSource, PointPOD iLoc)
