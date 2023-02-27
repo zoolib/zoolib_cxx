@@ -351,10 +351,8 @@ void PixvalAccessor::GetPixvals(const void* iRowAddress, int iStartH, size_t iCo
 		{
 		case eCase1Byte:
 			{
-			localCount = iCount + 1;
-			localSource8 = static_cast<const uint8*>(iRowAddress) + iStartH;
-			while (--localCount)
-				*oPixvals++ = *localSource8++;
+			sMemCopy(oPixvals,
+				static_cast<const uint8*>(iRowAddress) + iStartH, iCount * sizeof(uint8));
 			break;
 			}
 		case eCase1ByteWithShiftBE:
@@ -417,10 +415,8 @@ void PixvalAccessor::GetPixvals(const void* iRowAddress, int iStartH, size_t iCo
 			}
 		case eCase2Bytes:
 			{
-			localCount = iCount + 1;
-			localSource16 = static_cast<const uint16*>(iRowAddress) + iStartH;
-			while (--localCount)
-				*oPixvals++ = *localSource16++;
+			sMemCopy(oPixvals,
+				static_cast<const uint16*>(iRowAddress) + iStartH, iCount * sizeof(uint16));
 			break;
 			}
 		case eCase2BytesWithSwap:
@@ -432,49 +428,10 @@ void PixvalAccessor::GetPixvals(const void* iRowAddress, int iStartH, size_t iCo
 			break;
 			}
 		case eCase3BytesBEHostBE:
+		case eCase3BytesLEHostLE:
 			{
-			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
-			localCount = iCount;
-			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
-				{
-				--localCount;
-				value = localSource8[0] << 16;
-				value |= localSource8[1] << 8;
-				value |= localSource8[2];
-				localSource8 += 3;
-				*oPixvals++ = value;
-				}
-
-			if (localCount >= 4)
-				{
-				localSource32 = reinterpret_cast<const uint32*>(localSource8);
-				while (localCount >= 4)
-					{
-					localCount -= 4;
-					a0b0c0a1 = localSource32[0];
-					b1c1a2b2 = localSource32[1];
-					c2a3b3c3 = localSource32[2];
-					localSource32 += 3;
-
-					oPixvals[0] = a0b0c0a1 >> 8;
-					oPixvals[1] = ((a0b0c0a1 & 0x000000FF) << 16) | (b1c1a2b2 >> 16);
-					oPixvals[2] = ((b1c1a2b2 & 0x0000FFFF) << 8) | (c2a3b3c3 >> 24);
-					oPixvals[3] = c2a3b3c3 & 0x00FFFFFF;
-					oPixvals += 4;
-					}
-				localSource8 = reinterpret_cast<const uint8*>(localSource32);
-				}
-
-			while (localCount)
-				{
-				--localCount;
-				value = localSource8[0] << 16;
-				value |= localSource8[1] << 8;
-				value |= localSource8[2];
-				localSource8 += 3;
-				*oPixvals++ = value;
-				}
-			break;
+			sMemCopy(oPixvals,
+				static_cast<const uint8*>(iRowAddress) + (iStartH * 3), iCount * 3);
 			}
 		case eCase3BytesBEHostLE:
 			{
@@ -566,51 +523,6 @@ void PixvalAccessor::GetPixvals(const void* iRowAddress, int iStartH, size_t iCo
 				}
 			break;
 			}
-		case eCase3BytesLEHostLE:
-			{
-			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
-			localCount = iCount;
-			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
-				{
-				--localCount;
-				value = localSource8[0];
-				value |= localSource8[1] << 8;
-				value |= localSource8[2] << 16;
-				localSource8 += 3;
-				*oPixvals++ = value;
-				}
-
-			if (localCount >= 4)
-				{
-				localSource32 = reinterpret_cast<const uint32*>(localSource8);
-				while (localCount >= 4)
-					{
-					localCount -= 4;
-					c1a0b0c0 = localSource32[0];
-					b2c2a1b1 = localSource32[1];
-					a3b3c3a2 = localSource32[2];
-					localSource32 += 3;
-
-					oPixvals[0] = c1a0b0c0 & 0x00FFFFFF;
-					oPixvals[1] = (c1a0b0c0 >> 24) | ((b2c2a1b1 & 0x0000FFFF) << 8);
-					oPixvals[2] = (b2c2a1b1 >> 16) | ((a3b3c3a2 & 0x000000FF) << 16);
-					oPixvals[3] = a3b3c3a2 >> 8;
-					oPixvals += 4;
-					}
-				localSource8 = reinterpret_cast<const uint8*>(localSource32);
-				}
-
-			while (localCount)
-				{
-				--localCount;
-				value = localSource8[0];
-				value |= localSource8[1] << 8;
-				value |= localSource8[2] << 16;
-				localSource8 += 3;
-				*oPixvals++ = value;
-				}
-			break;
-			}
 		case eCase4Bytes:
 			{
 			sMemCopy(oPixvals,
@@ -649,10 +561,8 @@ void PixvalAccessor::SetPixvals(void* iRowAddress, int iStartH, size_t iCount,
 		{
 		case eCase1Byte:
 			{
-			localCount = iCount + 1;
-			localDest8 = static_cast<uint8*>(iRowAddress) + iStartH;
-			while (--localCount)
-				*localDest8++ = *iPixvals++;
+			sMemCopy(static_cast<uint8*>(iRowAddress) + iStartH,
+				iPixvals, iCount * sizeof(uint8));
 			break;
 			}
 		case eCase1ByteWithShiftBE:
@@ -929,10 +839,8 @@ void PixvalAccessor::SetPixvals(void* iRowAddress, int iStartH, size_t iCount,
 			}
 		case eCase2Bytes:
 			{
-			localCount = iCount + 1;
-			localDest16 = static_cast<uint16*>(iRowAddress) + iStartH;
-			while (--localCount)
-				*localDest16++ = *iPixvals++;
+			sMemCopy(static_cast<uint16*>(iRowAddress) + iStartH,
+				iPixvals, iCount * sizeof(uint16));
 			break;
 			}
 		case eCase2BytesWithSwap:
@@ -944,47 +852,10 @@ void PixvalAccessor::SetPixvals(void* iRowAddress, int iStartH, size_t iCount,
 			break;
 			}
 		case eCase3BytesBEHostBE:
+		case eCase3BytesLEHostLE:
 			{
-			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
-			localCount = iCount;
-			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
-				{
-				--localCount;
-				value = *iPixvals++;
-				localDest8[0] = value >> 16;
-				localDest8[1] = value >> 8;
-				localDest8[2] = value;
-				localDest8 += 3;
-				}
-
-			if (localCount >= 4)
-				{
-				localDest32 = reinterpret_cast<uint32*>(localDest8);
-				while (localCount >= 4)
-					{
-					localCount -= 4;
-					a0b0c0 = iPixvals[0];
-					a1b1c1 = iPixvals[1] & 0x00FFFFFF;
-					a2b2c2 = iPixvals[2] & 0x00FFFFFF;
-					a3b3c3 = iPixvals[3] & 0x00FFFFFF;
-					iPixvals += 4;
-					localDest32[0] = (a0b0c0 << 8) | (a1b1c1 >> 16);
-					localDest32[1] = (a1b1c1 << 16) | (a2b2c2 >> 8);
-					localDest32[2] = (a2b2c2 << 24) | a3b3c3;
-					localDest32 += 3;
-					}
-				localDest8 = reinterpret_cast<uint8*>(localDest32);
-				}
-
-			while (localCount)
-				{
-				--localCount;
-				value = *iPixvals++;
-				localDest8[0] = value >> 16;
-				localDest8[1] = value >> 8;
-				localDest8[2] = value;
-				localDest8 += 3;
-				}
+			sMemCopy(static_cast<uint8*>(iRowAddress) + (iStartH * 3),
+				iPixvals, iCount * 3);
 			break;
 			}
 		case eCase3BytesBEHostLE:
@@ -1058,50 +929,6 @@ void PixvalAccessor::SetPixvals(void* iRowAddress, int iStartH, size_t iCount,
 					ZByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
 					ZByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
 					ZByteSwap_Write32(localDest32++, (a2b2c2 >> 16) | (a3b3c3 << 8));
-					}
-				localDest8 = reinterpret_cast<uint8*>(localDest32);
-				}
-
-			while (localCount)
-				{
-				--localCount;
-				value = *iPixvals++;
-				localDest8[0] = value;
-				localDest8[1] = value >> 8;
-				localDest8[2] = value >> 16;
-				localDest8 += 3;
-				}
-			break;
-			}
-		case eCase3BytesLEHostLE:
-			{
-			localCount = iCount;
-			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
-			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
-				{
-				--localCount;
-				value = *iPixvals++;
-				localDest8[0] = value;
-				localDest8[1] = value >> 8;
-				localDest8[2] = value >> 16;
-				localDest8 += 3;
-				}
-
-			if (localCount >= 4)
-				{
-				uint32* localDest32 = reinterpret_cast<uint32*>(localDest8);
-				while (localCount >= 4)
-					{
-					localCount -= 4;
-					a0b0c0 = iPixvals[0] & 0x00FFFFFF;
-					a1b1c1 = iPixvals[1] & 0x00FFFFFF;
-					a2b2c2 = iPixvals[2] & 0x00FFFFFF;
-					a3b3c3 = iPixvals[3] & 0x00FFFFFF;
-					iPixvals += 4;
-					localDest32[0] = a0b0c0 | (a1b1c1 << 24);
-					localDest32[1] = (a1b1c1 >> 8) | (a2b2c2 << 16);
-					localDest32[2] = (a2b2c2 >> 16) | (a3b3c3 << 8);
-					localDest32 += 3;
 					}
 				localDest8 = reinterpret_cast<uint8*>(localDest32);
 				}
