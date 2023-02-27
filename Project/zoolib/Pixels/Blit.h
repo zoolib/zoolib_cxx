@@ -22,15 +22,6 @@ F = Frame
 typedef RasterDesc RD;
 typedef PixelDesc PD;
 
-// =================================================================================================
-#pragma mark -
-
-void sMunge(void* iBaseAddress,
-	const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc, const RectPOD& iFrame,
-	MungeProc iMungeProc, void* iRefcon);
-
-// =================================================================================================
-
 enum EOp
 	{
 	eOp_Copy,
@@ -39,51 +30,54 @@ enum EOp
 	eOp_Plus
 	};
 
-/** Replicate iSourceF over iDestF, aligning iSourceOrigin with iDestF.TopLeft(). */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	PointPOD iSourceOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	EOp iOperation);
+// =================================================================================================
+#pragma mark - FillPixval
 
-/** Copy source to iDestF without replication. The actual rectangle drawn
-will be smaller than iDestF if iSourceF is smaller. */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	EOp iOperation);
+void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestF,
+	uint32 iPixval);
 
-/** Replicate iSourceF, with replicated matte. */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	PointPOD iSourceOrigin,
+// =================================================================================================
+#pragma mark - Copy pixvals
+
+void sCopyPixval(const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF,
+	const RD& iDestRD, void* oDest, PointPOD iDestLocation);
+
+// =================================================================================================
+#pragma mark - sMunge
+
+void sMunge(void* iBaseAddress,
+	const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc, const RectPOD& iFrame,
+	MungeProc iMungeProc, void* iRefcon);
+
+// =================================================================================================
+#pragma mark - Invert, Opaque, Darken, Fade
+
+/** Invert, replacing each pixel with white minus that pixel. */
+void sInvert(const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD);
+
+/** Multiply r,g, b & alpha by iAmount. */
+void sOpaque(
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
+
+/** Multiply r, g, b by iAmount, leaving alpha alone. */
+void sDarken(
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
+
+/** Multiply alpha by iAmount, leaving r,g,b alone. */
+void sFade(
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
+
+// =================================================================================================
+#pragma mark - ApplyMatte
+
+/** Take the alpha channel of matte, store it in alpha channel of dest,
+pre-multiplying r,g,b of dest as it does so. */
+void sApplyMatte(
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
-	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	bool iSourcePremultiplied, EOp iOperation);
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD);
 
-/** Replicate iSourceF, matted. */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	PointPOD iSourceOrigin,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	bool iSourcePremultiplied, EOp iOperation);
-
-/** Draw iSourceF into iDestF, with replicated matte. */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
-	PointPOD iMatteOrigin,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	bool iSourcePremultiplied, EOp iOperation);
-
-/** Draw iSourceF masked by iMatteF into iDestF. */
-void sBlit(
-	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
-	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
-	bool iSourcePremultiplied, EOp iOperation);
+// =================================================================================================
+#pragma mark - Color
 
 /** Fill iDestF with iColor. */
 void sColor(
@@ -106,26 +100,57 @@ void sColor(
 	const RGBA& iColor,
 	EOp iOperation);
 
-/** Invert, replacing each pixel with white minus that pixel. */
-void sInvert(const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD);
+// =================================================================================================
+#pragma mark - Copy
 
-/** Multiply r,g, b & alpha by iAmount. */
-void sOpaque(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
+/** Copy source to iDestF without replication. The actual rectangle drawn
+will be smaller than iDestF if iSourceF is smaller. */
+void sCopy(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	EOp iOperation);
 
-/** Multiply r, g, b by iAmount, leaving alpha alone. */
-void sDarken(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
-
-/** Multiply alpha by iAmount, leaving r,g,b alone. */
-void sFade(
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD, Comp iAmount);
-
-/** Take the alpha channel of matte, store it in alpha channel of dest,
-pre-multiplying r,g,b of dest as it does so. */
-void sApplyMatte(
+/** Draw iSourceF masked by iMatteF into iDestF. */
+void sCopy(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
 	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
-	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD);
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	bool iSourcePremultiplied, EOp iOperation);
+
+// =================================================================================================
+#pragma mark - Tile
+
+/** Replicate iSourceF over iDestF, aligning iSourceOrigin with LT(iDestF). */
+void sTile(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	PointPOD iSourceOrigin,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	EOp iOperation);
+
+/** Replicate iSourceF, with replicated matte. */
+void sTile(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	PointPOD iSourceOrigin,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	PointPOD iMatteOrigin,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	bool iSourcePremultiplied, EOp iOperation);
+
+/** Replicate iSourceF, matted. */
+void sTileSource(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	PointPOD iSourceOrigin,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	bool iSourcePremultiplied, EOp iOperation);
+
+/** Draw iSourceF into iDestF, with replicated matte. */
+void sTileMatte(
+	const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF, const PD& iSourcePD,
+	const RD& iMatteRD, const void* iMatte, const RectPOD& iMatteF, const PD& iMattePD,
+	PointPOD iMatteOrigin,
+	const RD& iDestRD, void* oDest, const RectPOD& iDestF, const PD& iDestPD,
+	bool iSourcePremultiplied, EOp iOperation);
 
 } // namespace Pixels
 } // namespace ZooLib
