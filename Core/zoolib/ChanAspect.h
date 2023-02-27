@@ -16,12 +16,15 @@ namespace ZooLib {
 // =================================================================================================
 #pragma mark - sClamped
 
-inline size_t sClamped(uint64 iVal)
+// Assume return is size_t unless explicitly specified, and deduce P from calling site.
+
+template <class R = size_t, class P>
+inline R sClamped(P iVal)
 	{
-	if (sizeof(size_t) < sizeof(uint64))
-		return size_t(std::min(iVal, uint64(size_t(-1))));
+	if (sizeof(P) > sizeof(R))
+		return R(std::min<P>(iVal, R(-1)));
 	else
-		return size_t(iVal);
+		return R(iVal);
 	}
 
 // =================================================================================================
@@ -114,7 +117,7 @@ public:
 		{
 		// buf will have space for at least one element.
 		EE buf[(sStackBufferSize + sizeof(EE) - 1) / sizeof(EE)];
-		return this->Read(buf, std::min<size_t>(sClamped(iCount), countof(buf)));
+		return this->Read(buf, std::min(sClamped(iCount), countof(buf)));
 		}
 
 	virtual size_t Readable()
