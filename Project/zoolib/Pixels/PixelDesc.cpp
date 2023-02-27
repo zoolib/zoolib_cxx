@@ -329,7 +329,11 @@ ZP<PixelDescRep> PixelDescRep_Indexed::WithoutAlpha()
 void PixelDescRep_Indexed::BuildReverseLookupIfNeeded() const
 	{
 	if (not fReverseLookup)
-		fReverseLookup = spBuildReverseLookup(fColors, fCount);
+		{
+		uint8* reverseLookup = spBuildReverseLookup(fColors, fCount);
+		if (not sAtomicPtr_CAS(&fReverseLookup, static_cast<uint8*>(nullptr), reverseLookup))
+			delete[] reverseLookup;
+		}
 	}
 
 void PixelDescRep_Indexed::GetColors(
