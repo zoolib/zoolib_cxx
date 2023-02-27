@@ -22,23 +22,6 @@ class FileLoc;
 class FileSpec;
 
 // =================================================================================================
-#pragma mark - EFileError (not used)
-
-enum EFileError
-	{
-	None,
-	Generic,
-	DoesntExist,
-	AlreadyExists,
-	InvalidFileSpec,
-	IllegalFileName,
-	NoPermission,
-	WrongTypeForOperation,
-	ReadPastEOF,
-	InsufficientSpace
-	};
-
-// =================================================================================================
 #pragma mark - EFileKind
 
 enum class EFileKind
