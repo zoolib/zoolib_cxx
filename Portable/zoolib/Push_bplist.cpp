@@ -41,7 +41,7 @@ static void spWriteUnsigneds(const ChanW_Bin& iChanW,
 		case 4:
 			{
 			for (auto&& index: iIndices)
-				sEWriteBE<uint32>(iChanW, index);
+				sEWriteBE<uint32>(iChanW, uint32(index));
 			break;
 			}
 		case 8:
@@ -72,7 +72,7 @@ static void spWriteUnsigned(const ChanW_Bin& iChanW, uint64 iUnsigned)
 	else if (iUnsigned < (1ULL << 32))
 		{
 		sEWriteBE<uint8>(iChanW, 0x12);
-		sEWriteBE<uint32>(iChanW, iUnsigned);
+		sEWriteBE<uint32>(iChanW, uint32(iUnsigned));
 		}
 	else
 		{

@@ -13,7 +13,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanR_XX_Terminated
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	ChanR_XX_Terminated(EE iTerminator, const ChanR<EE>& iChanR)

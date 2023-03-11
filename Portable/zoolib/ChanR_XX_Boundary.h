@@ -16,7 +16,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanR_XX_Boundary
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	ChanR_XX_Boundary(const EE* iBoundary, size_t iBoundaryCount,

@@ -24,6 +24,8 @@ bool sTryRead_CP(const ChanRU_UTF& iChanRU, UTF32 iCP);
 
 ZQ<int> sQRead_Digit(const ChanRU_UTF& iChanRU);
 
+ZQ<int> sQValueIfHex(UTF32 iCP); // Temporary home
+
 ZQ<int> sQRead_HexDigit(const ChanRU_UTF& iChanRU);
 
 // -----------------
@@ -41,6 +43,8 @@ bool sTryRead_Sign(const ChanRU_UTF& iChanRU, bool& oIsNegative);
 bool sTryRead_HexInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
 bool sTryRead_DecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
+
+ZQ<int64> sQTryRead_DecimalInteger(const ChanRU_UTF& iChanRU);
 
 bool sTryRead_SignedDecimalInteger(const ChanRU_UTF& iChanRU, int64& oInt64);
 
@@ -89,11 +93,6 @@ bool sTryRead_EscapedString(UTF32 iDelimiter, const ChanRU_UTF& iChanRU, string8
 void sWrite_Exact(const ChanW_UTF& iChanW, float iFloat);
 void sWrite_Exact(const ChanW_UTF& iChanW, double iDouble);
 void sWrite_Exact(const ChanW_UTF& iChanW, long double iVal);
-
-// =================================================================================================
-#pragma mark -
-
-bool sUnread(const ChanU_UTF& iChanU, const string8& iString);
 
 } // namespace Util_Chan
 } // namespace ZooLib

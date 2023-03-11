@@ -9,6 +9,7 @@
 #include "zoolib/ChanW_Bin_HexStrim.h"
 #include "zoolib/Coerce_Any.h"
 #include "zoolib/Compat_cmath.h" // For fmod
+#include "zoolib/Name.h"
 #include "zoolib/ParseException.h"
 #include "zoolib/Unicode.h"
 #include "zoolib/UTCDateTime.h"
@@ -35,6 +36,19 @@ PullTextOptions_JSON sPullTextOptions_Extended()
 	theOptions.fAllowTerminators = true;
 	theOptions.fLooseSeparators = true;
 	theOptions.fAllowBinary = true;
+
+	return theOptions;
+	}
+
+PullTextOptions_JSON sPullTextOptions_Conformant()
+	{
+	PullTextOptions_JSON theOptions;
+	theOptions.fAllowUnquotedPropertyNames = false;
+	theOptions.fAllowEquals = false;
+	theOptions.fAllowSemiColons = false;
+	theOptions.fAllowTerminators = false;
+	theOptions.fLooseSeparators = false;
+	theOptions.fAllowBinary = false;
 
 	return theOptions;
 	}
@@ -166,6 +180,17 @@ PushTextOptions_JSON& PushTextOptions_JSON::operator=(const PushTextOptions& iOt
 	return *this;
 	}
 
+PushTextOptions_JSON sPushTextOptions_Conformant()
+	{
+	return PushTextOptions_JSON();
+	}
+
+PushTextOptions_JSON sPushTextOptions_Conformant(bool iPrettyPrint)
+	{
+	PushTextOptions_JSON thePTO = PushTextOptions(iPrettyPrint);
+	return thePTO;
+	}
+
 // =================================================================================================
 #pragma mark -
 
@@ -176,6 +201,7 @@ void sWrite_LF(const ChanW_UTF& iChanW, const PushTextOptions& iOptions)
 
 void sWrite_Indent(const ChanW_UTF& iChanW, size_t iCount, const PushTextOptions& iOptions)
 	{
+	ZAssert(ssize_t(iCount) >= 0);
 	while (iCount--)
 		iChanW << sIndentString(iOptions);
 	}
@@ -317,6 +343,12 @@ void sWrite_SimpleValue(const ChanW_UTF& ww, const AnyBase& iAny, const PushText
 		if (sTimesHaveUserLegibleComment(iOptions))
 			ww << " /* " << Util_Time::sAsString_ISO8601_us(sGet(*asTime), true) << " */ ";
 		}
+	else if (const Name* asName = iAny.PGet<Name>())
+		{
+		if (iOptions.fAnnotateUnhandledQ.Get())
+			ww << "/* Name: */ ";
+		sWrite_String(ww, asName->AsString8(), true);
+		}
 	else
 		{
 		ww << "NULL";
@@ -331,7 +363,11 @@ void sPull_Bin_Push_JSON(const ChanR_Bin& iChanR,
 	{
 	string chunkSeparator;
 	size_t chunkSize = 0;
-	if (sDoIndentation(iOptions) && not iOptions.fIndentOnlySequencesQ.Get())
+
+	const EIndentationStyle theIndentationStyle =
+		iOptions.fIndentOnlySequencesQ.Get() ? EIndentationStyle::None : sIndentationStyle(iOptions);
+
+	if (theIndentationStyle != EIndentationStyle::None)
 		{
 		chunkSeparator = sEOLString(iOptions);
 		for (size_t xx = 0; xx < iLevel; ++xx)

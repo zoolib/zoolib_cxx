@@ -29,6 +29,7 @@ struct PullTextOptions_JSON : PullTextOptions
 	};
 
 PullTextOptions_JSON sPullTextOptions_Extended();
+PullTextOptions_JSON sPullTextOptions_Conformant();
 
 // =================================================================================================
 #pragma mark -
@@ -64,6 +65,9 @@ struct PushTextOptions_JSON : PushTextOptions
 	ZQ<bool> fIntegersAsHexQ;
 	ZQ<bool> fAnnotateUnhandledQ;
 	};
+
+PushTextOptions_JSON sPushTextOptions_Conformant();
+PushTextOptions_JSON sPushTextOptions_Conformant(bool iPrettyPrint);
 
 // =================================================================================================
 #pragma mark -

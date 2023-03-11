@@ -66,7 +66,7 @@ protected:
 #pragma mark - ChanR_Bin_POSIXFD
 
 class ChanR_Bin_POSIXFD
-:	public ChanR<byte>
+:	public virtual ChanR<byte>
 	{
 	ChanR_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
 	~ChanR_Bin_POSIXFD();
@@ -83,7 +83,7 @@ protected:
 #pragma mark - ChanW_Bin_POSIXFD
 
 class ChanW_Bin_POSIXFD
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -100,7 +100,7 @@ protected:
 #pragma mark - ChanRPos_Bin_POSIXFD
 
 class ChanRPos_Bin_POSIXFD
-:	public ChanRPos<byte>
+:	public virtual ChanRPos<byte>
 	{
 public:
 	ChanRPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -129,7 +129,7 @@ protected:
 #pragma mark - ChanWPos_Bin_POSIXFD
 
 class ChanWPos_Bin_POSIXFD
-:	public ChanWPos<byte>
+:	public virtual ChanWPos<byte>
 	{
 public:
 	ChanWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -156,7 +156,7 @@ protected:
 #pragma mark - ChanRWPos_Bin_POSIXFD
 
 class ChanRWPos_Bin_POSIXFD
-:	public ChanRWPos<byte>
+:	public virtual ChanRWPos<byte>
 	{
 public:
 	ChanRWPos_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -190,7 +190,7 @@ protected:
 #pragma mark - ChanRAbort_Bin_POSIXFD
 
 class ChanRAbort_Bin_POSIXFD
-:	public ChanRAbort<byte>
+:	public virtual ChanRAbort<byte>
 	{
 public:
 	ChanRAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -214,7 +214,7 @@ protected:
 #pragma mark - ChanWAbort_Bin_POSIXFD
 
 class ChanWAbort_Bin_POSIXFD
-:	public ChanWAbort<byte>
+:	public virtual ChanWAbort<byte>
 	{
 public:
 	ChanWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);
@@ -234,7 +234,7 @@ protected:
 #pragma mark - ChanRWAbort_Bin_POSIXFD
 
 class ChanRWAbort_Bin_POSIXFD
-:	public ChanRWAbort<byte>
+:	public virtual ChanRWAbort<byte>
 	{
 public:
 	ChanRWAbort_Bin_POSIXFD(const ZP<FDHolder>& iFDHolder);

@@ -21,7 +21,7 @@ public:
 // =================================================================================================
 #pragma mark - sCancellable
 
-ZP<Cancellable> sCancellable(const ZP<Callable_Void>& iCallable);
+ZP<Cancellable> sCancellable(const ZP<Callable_void>& iCallable);
 
 } // namespace ZooLib
 

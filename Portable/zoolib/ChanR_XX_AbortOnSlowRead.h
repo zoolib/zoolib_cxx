@@ -14,7 +14,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanR_XX_AbortOnSlowRead
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	using ChanForRead = DeriveFrom<

@@ -44,7 +44,7 @@ string8 sReadAllUTF8(const ChanR_UTF& iChanR);
 #pragma mark - ChanR_UTF_Native16
 
 class ChanR_UTF_Native16
-:	public ChanR_UTF
+:	public virtual ChanR_UTF
 	{
 public:
 // From ChanR_UTF
@@ -59,7 +59,7 @@ public:
 #pragma mark - ChanR_UTF_Native8
 
 class ChanR_UTF_Native8
-:	public ChanR_UTF
+:	public virtual ChanR_UTF
 	{
 public:
 // From ChanR_UTF

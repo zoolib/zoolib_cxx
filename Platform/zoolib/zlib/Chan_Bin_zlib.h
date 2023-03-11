@@ -38,7 +38,7 @@ enum class EFormatW
 #pragma mark - ChanR_Bin_zlib
 
 class ChanR_Bin_zlib
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 	{
 public:
 	ChanR_Bin_zlib(bool iRaw, const ChanR_Bin& iChanR);
@@ -59,7 +59,7 @@ protected:
 #pragma mark - ChanW_Bin_zlib
 
 class ChanW_Bin_zlib
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_zlib(bool iRaw, const ChanW_Bin& iChanW);

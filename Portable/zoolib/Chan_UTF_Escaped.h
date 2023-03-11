@@ -12,7 +12,7 @@ namespace ZooLib {
 #pragma mark - ChanR_UTF_Escaped
 
 class ChanR_UTF_Escaped
-:	public ChanR_UTF
+:	public virtual ChanR_UTF
 	{
 public:
 	ChanR_UTF_Escaped(UTF32 iDelimiter, const ChanRU_UTF& iChan);
@@ -32,7 +32,7 @@ protected:
 /// A write filter strim that inserts C-style escape sequences.
 
 class ChanW_UTF_Escaped
-:	public ChanW_UTF_Native32
+:	public virtual ChanW_UTF_Native32
 	{
 public:
 	struct Options

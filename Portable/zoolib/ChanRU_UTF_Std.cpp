@@ -22,8 +22,7 @@ ChanRU_UTF_Std::ChanRU_UTF_Std(const ChanR_UTF& iChanR)
 size_t ChanRU_UTF_Std::Read(UTF32* oDest, size_t iCount)
 	{
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCount;
-	while (localDest < localDestEnd)
+	for (UTF32* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 		{
 		if (not fStack.empty())
 			{

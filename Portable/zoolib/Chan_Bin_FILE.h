@@ -35,7 +35,7 @@ protected:
 /// A read stream that wraps a POSIX FILE*.
 
 class ChanR_Bin_FILE
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 ,	public FILEHolder
 	{
 public:
@@ -52,7 +52,7 @@ public:
 /// A write stream that wraps a POSIX FILE*.
 
 class ChanW_Bin_FILE
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 ,	public FILEHolder
 	{
 public:

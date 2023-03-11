@@ -111,7 +111,7 @@ sCallable_Seq(const ZP<Callable<R0()>>& i0, const ZP<Callable<R1()>>& i1)
 
 template <class R_Init, class R_Inc>
 class Callable_For
-:	public Callable_Void
+:	public Callable_void
 	{
 public:
 	Callable_For(const ZP<Callable<R_Init()>>& iInit,
@@ -137,7 +137,7 @@ private:
 	};
 
 template <class R_Init, class R_Inc>
-ZP<Callable_Void> sCallable_For(const ZP<Callable<R_Init()>>& iInit,
+ZP<Callable_void> sCallable_For(const ZP<Callable<R_Init()>>& iInit,
 	const ZP<Callable_Bool>& iCondition,
 	const ZP<Callable<R_Inc()>>& iInc)
 	{ return new Callable_For<R_Init,R_Inc>(iInit, iCondition, iInc); }
@@ -186,7 +186,7 @@ ZP<Callable<R()>> sCallable_If(const ZP<Callable_Bool>& iCondition,
 
 template <class R>
 class Callable_Repeat
-:	public Callable_Void
+:	public Callable_void
 	{
 public:
 	Callable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCallable)
@@ -212,7 +212,7 @@ private:
 	};
 
 template <class R>
-ZP<Callable_Void> sCallable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCallable)
+ZP<Callable_void> sCallable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCallable)
 	{ return new Callable_Repeat<R>(iCount, iCallable); }
 
 // =================================================================================================
@@ -220,7 +220,7 @@ ZP<Callable_Void> sCallable_Repeat(size_t iCount, const ZP<Callable<R()>>& iCall
 
 template <class R>
 class Callable_While
-:	public Callable_Void
+:	public Callable_void
 	{
 public:
 	Callable_While(
@@ -243,12 +243,12 @@ private:
 	};
 
 template <class R>
-ZP<Callable_Void> sCallable_While(
+ZP<Callable_void> sCallable_While(
 	const ZP<Callable_Bool>& iCondition, const ZP<Callable<R()>>& iCallable)
 	{ return new Callable_While<R>(iCondition, iCallable); }
 
 inline
-ZP<Callable_Void> sCallable_While(const ZP<Callable_Bool>& iCallable)
+ZP<Callable_void> sCallable_While(const ZP<Callable_Bool>& iCallable)
 	{ return new Callable_While<void>(iCallable, null); }
 
 } // namespace ZooLib

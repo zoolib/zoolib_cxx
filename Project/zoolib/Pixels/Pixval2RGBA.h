@@ -26,6 +26,8 @@ public:
 		{
 		if (fPixvals)
 			return this->pAsRGBA(iPixval);
+
+		ZAssert(iPixval < fCount);
 		return fColors[iPixval];
 		}
 
@@ -33,8 +35,9 @@ public:
 		{
 		if (fPixvals)
 			return this->pAsAlpha(iPixval);
-		else
-			return sAlpha(fColors[iPixval]);
+
+		ZAssert(iPixval < fCount);
+		return sAlpha(fColors[iPixval]);
 		}
 
 	void AsRGBAs(const uint32* iPixvals, size_t iCount, RGBA* oColors) const;

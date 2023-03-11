@@ -25,6 +25,8 @@ namespace ZooLib {
 
 #elif ZMACRO_Use_funopen
 
+// FIXME. If __ANDROID_API__>24 we have funopen64, which has fpos64_t.
+
 static int spReadR(void* iCookie, char* oDest, int iCount)
 	{ return (int)sReadMem(*static_cast<ChannerR_Bin*>(iCookie), oDest, iCount); }
 
@@ -46,15 +48,15 @@ static fpos_t spSeek(void* iCookie, fpos_t iPos, int iWhence)
 			}
 		case SEEK_CUR:
 			{
-			fpos_t newPos = sPos(*theChannerRPos) + iPos;
+			uint64 newPos = sPos(*theChannerRPos) + iPos;
 			sPosSet(*theChannerRPos, newPos);
-			return newPos;
+			return fpos_t(newPos);
 			}
 		case SEEK_END:
 			{
-			fpos_t newPos = sSize(*theChannerRPos) + iPos;
+			uint64 newPos = sSize(*theChannerRPos) + iPos;
 			sPosSet(*theChannerRPos, newPos);
-			return newPos;
+			return fpos_t(newPos);
 			}
 		}
 	ZUnimplemented();
@@ -167,32 +169,50 @@ static int spCloseW(void* iCookie)
 
 FILE* sFILE_R(ZP<ChannerR_Bin> iChannerR)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadR;
-	theFunctions.write = nullptr;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseR;
-	return ::fopencookie(iChannerR.Get(), "", theFunctions);
+	if (iChannerR)
+		{
+		iChannerR->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = spReadR;
+		theFunctions.write = nullptr;
+		theFunctions.seek = nullptr;
+		theFunctions.close = spCloseR;
+		return ::fopencookie(iChannerR.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 FILE* sFILE_RPos(ZP<ChannerRPos_Bin> iChannerRPos)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = spReadRPos;
-	theFunctions.write = nullptr;
-	theFunctions.seek = spSeek;
-	theFunctions.close = spCloseRPos;
-	return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
+	if (iChannerRPos)
+		{
+		iChannerRPos->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = spReadRPos;
+		theFunctions.write = nullptr;
+		theFunctions.seek = spSeek;
+		theFunctions.close = spCloseRPos;
+		return ::fopencookie(iChannerRPos.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 FILE* sFILE_W(ZP<ChannerW_Bin> iChannerW)
 	{
-	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = nullptr;
-	theFunctions.write = spWrite;
-	theFunctions.seek = nullptr;
-	theFunctions.close = spCloseW;
-	return ::fopencookie(iChannerW.Get(), "", theFunctions);
+	if (iChannerW)
+		{
+		iChannerW->Retain();
+
+		_IO_cookie_io_functions_t theFunctions;
+		theFunctions.read = nullptr;
+		theFunctions.write = spWrite;
+		theFunctions.seek = nullptr;
+		theFunctions.close = spCloseW;
+		return ::fopencookie(iChannerW.Get(), "", theFunctions);
+		}
+	return nullptr;
 	}
 
 #else

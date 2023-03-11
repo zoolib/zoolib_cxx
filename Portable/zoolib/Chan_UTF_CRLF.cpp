@@ -39,8 +39,7 @@ size_t ChanR_UTF_CRLFRemove::Read(UTF32* oDest, size_t iCount)
 	UTF32 buffer[kBufSize];
 
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCount;
-	while (localDestEnd > localDest)
+	for (UTF32* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 		{
 		const size_t countRead = sRead(fChanR, buffer, min(size_t(localDestEnd - localDest), kBufSize));
 		if (countRead == 0)

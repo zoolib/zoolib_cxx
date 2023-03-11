@@ -233,4 +233,4 @@ typedef PairwiseCombiner_T<BigRegion, BigRegionUnioner_t, std::vector<BigRegion>
 } // namespace Pixels
 } // namespace ZooLib
 
-#endif // __BigRegion_h__
+#endif // __ZooLib_Pixels_BigRegion_h__

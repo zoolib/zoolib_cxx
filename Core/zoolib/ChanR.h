@@ -112,7 +112,7 @@ void sESkip(const ChanR<EE>& iChanR, uint64 iCount)
 
 template <class EE>
 class ChanR_XX_Null
-:	public ChanR<EE>
+:	public virtual ChanR<EE>
 	{
 public:
 	virtual size_t Read(EE* oDest, size_t iCount)

@@ -14,49 +14,48 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRPos_XX_Memory
-:	public ChanRPos<EE>
+:	public virtual ChanRPos<EE>
 	{
 public:
 	ChanRPos_XX_Memory(const PaC<const EE>& iPaC)
 	:	fAddress(iPaC.first)
 	,	fSize(iPaC.second)
-	,	fPosition(0)
+	,	fPos(0)
 		{}
 
 	ChanRPos_XX_Memory(const void* iAddress, size_t iSize)
 	:	fAddress(static_cast<const EE*>(iAddress))
 	,	fSize(iSize)
-	,	fPosition(0)
+	,	fPos(0)
 		{}
 
 // From ChanPos
 	virtual uint64 Pos()
-		{ return fPosition; }
+		{ return fPos; }
 
 // From ChanPosSet
 	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+		{ fPos = iPos; }
 
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount,
-			fSize > fPosition ? fSize - fPosition : 0);
-		std::copy_n(fAddress + fPosition, countToCopy, oDest);
-		fPosition += countToCopy;
+		const size_t countToCopy =
+			sClamped(std::min<uint64>(iCount, fSize > fPos ? fSize - fPos : 0));
+		std::copy_n(fAddress + fPos, countToCopy, oDest);
+		fPos += countToCopy;
 		return countToCopy;
 		}
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(sClamped(iCount),
-			fSize > fPosition ? fSize - fPosition : 0);
-		fPosition += countToCopy;
-		return countToCopy;
+		uint64 countToSkip = std::min<uint64>(iCount, fSize > fPos ? fSize - fPos : 0);
+		fPos += countToSkip;
+		return countToSkip;
 		}
 
 	virtual size_t Readable()
-		{ return fSize >= fPosition ? fSize - fPosition : 0; }
+		{ return sClamped(fSize >= fPos ? fSize - fPos : 0); }
 
 // From ChanSize
 	virtual uint64 Size()
@@ -65,14 +64,14 @@ public:
 // From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
+		const size_t countToCopy = sClamped(std::min<uint64>(iCount, fPos));
 
 		if (false)
 			{
 			// If this code is enabled, then we assert that what's being
 			// unread matches what was in here already.
 
-			const EE* dest = fAddress + fPosition - countToCopy;
+			const EE* dest = fAddress + fPos - countToCopy;
 
 			for (const EE* last = iSource + countToCopy; iSource != last; /*no inc*/)
 				{
@@ -82,7 +81,7 @@ public:
 				}
 			}
 
-		fPosition -= countToCopy;
+		fPos -= countToCopy;
 
 		return countToCopy;
 		}
@@ -90,7 +89,7 @@ public:
 protected:
 	const EE* fAddress;
 	const size_t fSize;
-	uint64 fPosition;
+	uint64 fPos;
 	};
 
 // =================================================================================================
@@ -98,51 +97,50 @@ protected:
 
 template <class EE>
 class ChanRWPos_XX_Memory
-:	public ChanRWPos<EE>
+:	public virtual ChanRWPos<EE>
 	{
 public:
 	ChanRWPos_XX_Memory(const PaC<EE>& iPaC)
 	:	fAddress(iPaC.first)
 	,	fSize(iPaC.second)
 	,	fCapacity(iPaC.second)
-	,	fPosition(0)
+	,	fPos(0)
 		{}
 
 	ChanRWPos_XX_Memory(void* iAddress, size_t iSize, size_t iCapacity)
 	:	fAddress(static_cast<EE*>(iAddress))
 	,	fSize(iSize)
 	,	fCapacity(iCapacity)
-	,	fPosition(0)
+	,	fPos(0)
 		{}
 
 // From ChanPos
 	virtual uint64 Pos()
-		{ return fPosition; }
+		{ return fPos; }
 
 // From ChanPosSet
 	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+		{ fPos = iPos; }
 
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(sClamped(iCount),
-			fSize > fPosition ? fSize - fPosition : 0);
-		std::copy_n(fAddress + fPosition, countToCopy, oDest);
-		fPosition += countToCopy;
+		const size_t countToCopy =
+			sClamped(std::min<uint64>(iCount, fSize > fPos ? fSize - fPos : 0));
+		std::copy_n(fAddress + fPos, countToCopy, oDest);
+		fPos += countToCopy;
 		return countToCopy;
 		}
 
-	virtual size_t Skip(uint64 iCount)
+	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount,
-			fSize > fPosition ? fSize - fPosition : 0);
-		fPosition += countToCopy;
-		return countToCopy;
+		uint64 countToSkip = std::min<uint64>(iCount, fSize > fPos ? fSize - fPos : 0);
+		fPos += countToSkip;
+		return countToSkip;
 		}
 
 	virtual size_t Readable()
-		{ return fSize >= fPosition ? fSize - fPosition : 0; }
+		{ return sClamped(fSize >= fPos ? fSize - fPos : 0); }
 
 // From ChanSize
 	virtual uint64 Size()
@@ -159,13 +157,13 @@ public:
 // From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)
 		{
-		const size_t countToCopy = std::min<size_t>(iCount, fPosition);
+		const size_t countToCopy = sClamped(std::min<uint64>(iCount, fPos));
 
-		EE* dest = fAddress + fPosition - countToCopy;
+		EE* dest = fAddress + fPos - countToCopy;
 
 		std::copy_n(iSource, countToCopy, dest);
 
-		fPosition -= countToCopy;
+		fPos -= countToCopy;
 
 		return countToCopy;
 		}
@@ -173,16 +171,14 @@ public:
 // From ChanW
 	virtual size_t Write(const EE* iSource, size_t iCount)
 		{
-		EE* dest = fAddress + fPosition;
+		fSize = std::min(fCapacity, std::max<size_t>(fSize, sClamped(fPos + iCount)));
 
-		fSize = std::min(fCapacity, std::max<size_t>(fSize, fPosition + iCount));
+		const size_t countToCopy =
+			sClamped(std::min<uint64>(iCount, fSize > fPos ? fSize - fPos : 0));
 
-		const size_t countToCopy = std::min<size_t>(iCount,
-			fSize > fPosition ? fSize - fPosition : 0);
+		std::copy_n(iSource, countToCopy, fAddress + fPos);
 
-		std::copy_n(iSource, countToCopy, dest);
-
-		fPosition += countToCopy;
+		fPos += countToCopy;
 
 		return countToCopy;
 		}
@@ -191,7 +187,7 @@ protected:
 	EE* fAddress;
 	size_t fSize;
 	const size_t fCapacity;
-	uint64 fPosition;
+	uint64 fPos;
 	};
 
 } // namespace ZooLib

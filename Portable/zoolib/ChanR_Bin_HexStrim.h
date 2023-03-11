@@ -15,7 +15,7 @@ namespace ZooLib {
 /// A read filter stream that reads byte values from a strim, where they're encoded as hex digits.
 
 class ChanR_Bin_HexStrim
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 	{
 public:
 	ChanR_Bin_HexStrim(const ChanRU_UTF& iChanRU);

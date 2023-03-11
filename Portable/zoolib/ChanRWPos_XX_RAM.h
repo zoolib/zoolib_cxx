@@ -18,7 +18,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRWPos_XX_RAM
-:	public ChanRWPos<EE>
+:	public virtual ChanRWPos<EE>
 	{
 public:
 	ChanRWPos_XX_RAM()
@@ -34,7 +34,7 @@ public:
 
 // From ChanPosSet
 	virtual void PosSet(uint64 iPos)
-		{ fPosition = iPos; }
+		{ fPosition = sClamped(iPos); }
 
 // From ChanR
 	virtual size_t Read(EE* oDest, size_t iCount)
@@ -51,7 +51,7 @@ public:
 
 	virtual uint64 Skip(uint64 iCount)
 		{
-		const size_t count = sMin<size_t>(iCount, pReadable());
+		const size_t count = sMin<size_t>(sClamped(iCount), pReadable());
 		fPosition += count;
 		return count;
 		}
@@ -65,7 +65,7 @@ public:
 
 // From ChanSizeSet
 	virtual void SizeSet(uint64 iSize)
-		{ fDeque.resize(iSize); }
+		{ fDeque.resize(sClamped(iSize)); }
 
 // From ChanU
 	virtual size_t Unread(const EE* iSource, size_t iCount)

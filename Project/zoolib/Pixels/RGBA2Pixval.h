@@ -24,8 +24,9 @@ protected:
 public:
 	uint32 AsPixval(const RGBA& iRGBA) const
 		{
-		uint8 index = fReverseLookup[
-			int(16 * sBlue(iRGBA)) + int(256 * sGreen(iRGBA)) + int(4096 * sRed(iRGBA))];
+		int colorIndex = int(16 * sBlue(iRGBA)) + int(256 * sGreen(iRGBA)) + int(4096 * sRed(iRGBA));
+		ZAssert(colorIndex >= 0 && colorIndex < 4096);
+		uint8 index = fReverseLookup[colorIndex];
 		if (fPixvals)
 			return fPixvals[index];
 		return index;

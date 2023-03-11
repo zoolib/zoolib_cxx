@@ -32,10 +32,9 @@ public:
 
 	void Push(L* iL)
 		{
+		ZAcqMtx acq(fMtx);
 		ZAssertStop(L::kDebug, iL);
 		ZAssertStop(L::kDebug, not iL->fNext);
-
-		ZAcqMtx acq(fMtx);
 		iL->fNext = fHead;
 		fHead = iL;
 		}
@@ -43,9 +42,8 @@ public:
 	template <class P>
 	P* Pop()
 		{
-		ZAssertStop(L::kDebug, fHead);
-
 		ZAcqMtx acq(fMtx);
+		ZAssertStop(L::kDebug, fHead);
 		L* result = fHead;
 		fHead = fHead->fNext;
 		result->fNext = nullptr;

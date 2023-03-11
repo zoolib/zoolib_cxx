@@ -185,7 +185,7 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
-		s << "> " << fFunctionName << iMessage;
+		s << "≪ " << fFunctionName << iMessage;
 		}
 	}
 
@@ -196,7 +196,7 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
-		s << "> " << fFunctionName;
+		s << "≪ " << fFunctionName;
 		}
 	}
 
@@ -205,7 +205,7 @@ FunctionEntryExit::~FunctionEntryExit()
 	if (const ChanW& s = ChanW(fPriority, "ZLF"))
 		{
 		s.fOutdent = true;
-		s << "< " << fFunctionName;
+		s << "≫ " << fFunctionName;
 		}
 	}
 

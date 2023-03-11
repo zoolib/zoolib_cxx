@@ -17,13 +17,9 @@ set (SourceFiles
 	${SourceDir}/ChanAspect.h
 	${SourceDir}/Chan_Bin.h
 	${SourceDir}/ChanR_Bin.h
-	${SourceDir}/ChanR_UTF.cpp
-	${SourceDir}/ChanR_UTF.h
 	${SourceDir}/ChanR.h
 	${SourceDir}/Chan_UTF.h
 	${SourceDir}/ChanW_Bin.h
-	${SourceDir}/ChanW_UTF.cpp
-	${SourceDir}/ChanW_UTF.h
 	${SourceDir}/ChanW.h
 	${SourceDir}/Compare_T.h
 	${SourceDir}/Compat_algorithm.h
@@ -31,7 +27,6 @@ set (SourceFiles
 	${SourceDir}/Compat_MSVCStaticLib.h
 	${SourceDir}/Compat_NonCopyable.h
 	${SourceDir}/Compat_string.h
-	${SourceDir}/Compat_tuple.h
 	${SourceDir}/Compat_unordered_map.h
 	${SourceDir}/Counted.cpp
 	${SourceDir}/Counted.h
@@ -54,8 +49,6 @@ set (SourceFiles
 	${SourceDir}/Startable.h
 	${SourceDir}/Starter.h
 	${SourceDir}/StdInt.h
-	${SourceDir}/Stringf.cpp
-	${SourceDir}/Stringf.h
 	${SourceDir}/TagVal.h
 	${SourceDir}/ThreadVal.h
 	${SourceDir}/Time.h

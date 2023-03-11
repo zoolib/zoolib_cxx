@@ -42,7 +42,7 @@ Encode sEncode(uint8 i62, uint8 i63, uint8 iPadding);
 the source stream into binary data on the fly.*/
 
 class ChanR_Bin_Base64Decode
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 	{
 public:
 	ChanR_Bin_Base64Decode(const ChanR_Bin& iChanR);
@@ -66,7 +66,7 @@ protected:
 equivalent of binary data written to it. */
 
 class ChanW_Bin_Base64Encode
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_Base64Encode(const ChanW_Bin& iChanW);

@@ -5,16 +5,10 @@
 #include "zconfig.h"
 
 #include "zoolib/ChanR.h"
+#include "zoolib/ChanU.h"
 #include "zoolib/ChanW.h"
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-
-template <class EE>
-bool sUnread(const ChanU<EE>& iChanU, const EE& iElmt)
-	{ return 1 == sUnread(iChanU, &iElmt, 1); }
 
 // =================================================================================================
 #pragma mark -
@@ -62,7 +56,7 @@ public:
 	};
 
 // =================================================================================================
-#pragma mark -
+#pragma mark - sCopy
 
 template <class EE>
 std::pair<uint64,uint64> sCopyFully(

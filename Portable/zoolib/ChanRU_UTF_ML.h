@@ -33,7 +33,7 @@ enum EToken
 #pragma mark - ChanRU_UTF_ML
 
 class ChanRU_UTF_ML
-:	public ChanRU_UTF
+:	public virtual ChanRU_UTF
 	{
 public:
 	explicit ChanRU_UTF_ML(const ChanRU_UTF& iChanRU);

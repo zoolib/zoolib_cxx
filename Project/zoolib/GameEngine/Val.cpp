@@ -486,20 +486,20 @@ std::set<Map::Name_t> sAllNamesIn(Map iMap)
 	return result;
 	}
 
-Val_ZZ sAs_ZZ(const Val& iVal)
+Val_ZZ sAsZZ(const Val& iVal)
 	{
 	if (const Map* asMap = iVal.PGet<Map>())
 		{
 		Map_ZZ result;
 		for (Name theName: sAllNamesIn(*asMap))
-			result.Set(theName, sAs_ZZ(asMap->Get(theName)));
+			result.Set(theName, sAsZZ(asMap->Get(theName)));
 		return result;
 		}
 	else if (const Seq* asSeq = iVal.PGet<Seq>())
 		{
 		Seq_ZZ result;
 		for (size_t xx = 0; xx < asSeq->Count(); ++xx)
-			result.Append(sAs_ZZ(asSeq->Get(xx)));
+			result.Append(sAsZZ(asSeq->Get(xx)));
 		return result;
 		}
 	else

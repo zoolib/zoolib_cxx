@@ -14,7 +14,7 @@ namespace ZooLib {
 #pragma mark - ChanW_UTF_InsertSeparator
 
 class ChanW_UTF_InsertSeparator
-:	public ChanW_UTF_Native32
+:	public virtual ChanW_UTF_Native32
 	{
 public:
 	typedef std::map<size_t,string8> Spacings;

@@ -15,7 +15,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRU_XX_Unreader
-:	public ChanRU<EE>
+:	public virtual ChanRU<EE>
 	{
 public:
 	ChanRU_XX_Unreader(const ChanR<EE>& iChanR)
@@ -26,8 +26,7 @@ public:
 	virtual size_t Read(EE* oDest, size_t iCount)
 		{
 		EE* localDest = oDest;
-		EE* localDestEnd = oDest + iCount;
-		while (localDest < localDestEnd)
+		for (EE* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 			{
 			if (fStack.empty())
 				{

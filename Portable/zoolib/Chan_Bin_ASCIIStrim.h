@@ -18,7 +18,7 @@ namespace ZooLib {
 /// A read filter stream that reads only the ASCII-range code points from a strim.
 
 class ChanR_Bin_ASCIIStrim
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 	{
 public:
 	ChanR_Bin_ASCIIStrim(const ChanR_UTF& iChanR);
@@ -36,7 +36,7 @@ private:
 /// A write filter stream that writes only the ASCII-range bytes to a strim.
 
 class ChanW_Bin_ASCIIStrim
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_ASCIIStrim(const ChanW_UTF& iChanW);

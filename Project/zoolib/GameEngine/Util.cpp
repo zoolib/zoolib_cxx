@@ -124,7 +124,7 @@ ZQ<GRect> sQGRect(const Val_ZZ& iVal)
 #pragma mark -
 
 static ZP<ChannerR_Bin> spChanner_Buffered(const ZP<ChannerR_Bin>& iChanner)
-	{ return sChannerR_Buffered(iChanner, 4096); }
+	{ return iChanner; } // sChannerR_Buffered(iChanner, 4096); }
 
 ZP<ChannerW_Bin> sCreateW_Clear(const FileSpec& iFS)
 	{

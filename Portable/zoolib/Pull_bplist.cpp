@@ -17,6 +17,12 @@
 #include "zoolib/Util_STL_vector.h"
 #include "zoolib/UUID.h"
 
+// FIXME. We need a strategy for large blists loaded into 32 bit processes.
+// Possibly we throw when we encounter >4GB elements.
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+
 namespace ZooLib {
 
 using namespace PullPush;
@@ -79,7 +85,7 @@ static uint64 spEReadUnsigned(const ChanR_Bin& iChanR, uint8 iIntSize)
 		case 4: return sEReadBE<uint32>(iChanR);
 		case 8: return sEReadBE<uint64>(iChanR);
 		}
-	ZUnimplemented();
+	sThrow_ParseException(sStringf("spEReadUnsigned, illegal iIntSize: %d", int(iIntSize)));
 	}
 
 static int64 spEReadInt(const ChanR_Bin& iChanR, uint8 iIntSize)
@@ -91,7 +97,7 @@ static int64 spEReadInt(const ChanR_Bin& iChanR, uint8 iIntSize)
 		case 4: return sEReadBE<int32>(iChanR);
 		case 8: return sEReadBE<int64>(iChanR);
 		}
-	ZUnimplemented();
+	sThrow_ParseException(sStringf("spEReadInt, illegal iIntSize: %d", int(iIntSize)));
 	}
 
 static uint64 spReadLength(const ChanR_Bin& iChanR, uint8 iInfo)
@@ -233,7 +239,7 @@ static void spPull_bplist_Push_PPT(uint8 iObjectRefSize, const vector<uint64>& i
 		case 8: // UID
 			{
 			const uint64 theLength = spReadLength(iChanRPos, theInfo);
-			bplist_UID theUID(theLength,0);
+			bplist_UID theUID(size_t(theLength),0);
 			sEReadMem(iChanRPos, &theUID.Mut()[0], theLength);
 			sPush(theUID, iChanW);
 			return;
@@ -302,9 +308,20 @@ void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChan
 	const uint64 theSize = sSize(iChanRPos);
 
 	sPosSet(iChanRPos, theSize - 32);
-	sESkip(iChanRPos, 6); // Zero bytes
+	const uint32 zeroBytes0 = sEReadBE<uint32>(iChanRPos);
+	const uint16 zeroBytes1 = sEReadBE<uint16>(iChanRPos);
+
+	if (zeroBytes0 || zeroBytes1)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint8 offsetSize = sEReadBE<uint8>(iChanRPos);
+	if (offsetSize != 1 && offsetSize != 2 && offsetSize != 4 && offsetSize != 8)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint8 objectRefSize = sEReadBE<uint8>(iChanRPos);
+	if (objectRefSize != 1 && objectRefSize != 2 && objectRefSize != 4 && objectRefSize != 8)
+		sThrow_ParseException("Malformed bplist");
+
 	const uint64 numObjects = sEReadBE<uint64>(iChanRPos);
 	const uint64 topObjectIndex = sEReadBE<uint64>(iChanRPos);
 	const uint64 offsetTableOffset = sEReadBE<uint64>(iChanRPos);
@@ -318,26 +335,9 @@ void sPull_bplist_Push_PPT(const ChanRPos_Bin& iChanRPos, const ChanW_PPT& iChan
 // =================================================================================================
 #pragma mark - sChannerR_PPT_xx
 
-static void spChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChannerRPos,
-	const ZP<Channer<ChanWCon_PPT>>& iChannerWCon)
-	{
-	ZThread::sSetName("sChannerR_PPT_bplist");
-	try
-		{
-		sPull_bplist_Push_PPT(*iChannerRPos, *iChannerWCon);
-		sDisconnectWrite(*iChannerWCon);
-		}
-	catch (std::exception& ex)
-		{
-		ZLOGTRACE(eDebug); // In lieu of general error handling
-		}
-	}
-
 ZP<ChannerR_PPT> sChannerR_PPT_bplist(const ZP<Channer<ChanRPos_Bin>>& iChanner)
-	{
-	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
-	sStartOnNewThread(sBindR(sCallable(spChannerR_PPT_bplist), iChanner, thePair.first));
-	return thePair.second;
-	}
+	{ return sStartPullPush(sCallable(sPull_bplist_Push_PPT), iChanner); }
 
 } // namespace ZooLib
+
+#pragma clang diagnostic pop

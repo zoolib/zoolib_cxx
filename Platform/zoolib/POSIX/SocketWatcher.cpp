@@ -54,10 +54,10 @@ bool SocketWatcher::QErase(const Pair_t& iPair)
 	return fSet.erase(iPair);
 	}
 
-bool SocketWatcher::QInsert(int iSocket, const ZP<Callable_Void>& iCallable)
+bool SocketWatcher::QInsert(int iSocket, const ZP<Callable_void>& iCallable)
 	{ return this->QInsert(Pair_t(iSocket, iCallable)); }
 
-bool SocketWatcher::QErase(int iSocket, const ZP<Callable_Void>& iCallable)
+bool SocketWatcher::QErase(int iSocket, const ZP<Callable_void>& iCallable)
 	{ return this->QErase(Pair_t(iSocket, iCallable)); }
 
 void SocketWatcher::pRun()
@@ -109,7 +109,7 @@ void SocketWatcher::pRun()
 				}
 
 			// Gather the callables
-			set<ZP<Callable_Void>> toCall;
+			set<ZP<Callable_void>> toCall;
 
 			for (int fd = 1; fd <= largest; ++fd)
 				{

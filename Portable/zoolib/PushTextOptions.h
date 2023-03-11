@@ -17,12 +17,18 @@ namespace ZooLib {
 
 typedef ThreadVal<size_t, struct PushTextIndent> ThreadVal_PushTextIndent;
 
+enum class EIndentationStyle { None, Whitesmiths, KR, Allman,
+	Petzold = Whitesmiths,
+	BSD = Allman };
+
 struct PushTextOptions
 	{
 	PushTextOptions(bool iDoIndentation = false);
 
 	ZQ<std::string> fEOLStringQ;
 	ZQ<std::string> fIndentStringQ;
+
+	ZQ<EIndentationStyle> fIndentationStyleQ;
 	ZQ<bool> fIndentOnlySequencesQ;
 
 	ZQ<size_t> fRawChunkSizeQ;
@@ -42,17 +48,24 @@ inline
 PushTextOptions::PushTextOptions(bool iDoIndentation)
 	{
 	if (iDoIndentation)
-		fIndentStringQ = "  ";
+		fIndentationStyleQ = EIndentationStyle::Allman;//Whitesmiths;
 	}
-
-inline bool sDoIndentation(const PushTextOptions& iYO)
-	{ return iYO.fIndentStringQ && iYO.fIndentStringQ->size(); }
 
 inline std::string sEOLString(const PushTextOptions& iYO)
 	{ return iYO.fEOLStringQ | std::string("\n"); }
 
 inline std::string sIndentString(const PushTextOptions& iYO)
 	{ return iYO.fIndentStringQ | std::string("  "); }
+
+inline EIndentationStyle sIndentationStyle(const PushTextOptions& iYO)
+	{
+	if (sIndentString(iYO).size() && iYO.fIndentationStyleQ)
+		return *iYO.fIndentationStyleQ;
+	return EIndentationStyle::None;
+	}
+
+inline bool sDoIndentation(const PushTextOptions& iYO)
+	{ return sIndentationStyle(iYO) != EIndentationStyle::None && sIndentString(iYO).size(); }
 
 inline size_t sRawChunkSize(const PushTextOptions& iYO)
 	{ return iYO.fRawChunkSizeQ | size_t(64); }

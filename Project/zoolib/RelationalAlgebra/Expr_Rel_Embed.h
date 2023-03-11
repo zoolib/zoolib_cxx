@@ -66,4 +66,4 @@ ZP<Expr_Rel> sEmbed(const ZP<Expr_Rel>& iOp0, const RelHead& iBoundNames,
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Embed_h__

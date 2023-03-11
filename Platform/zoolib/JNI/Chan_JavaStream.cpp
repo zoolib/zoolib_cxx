@@ -55,7 +55,7 @@ ChanR_Bin_JavaInputStream::ChanR_Bin_JavaInputStream(jobject iInputStream)
 
 ChanR_Bin_JavaInputStream::~ChanR_Bin_JavaInputStream()
 	{
-	EnsureAttachedToCurrentThread eact(sJavaVM());
+	EnsureAttachedToCurrentThread eatct(sJavaVM());
 
 	JNIEnv* env = JNI::EnvTV::sGet();
 
@@ -96,7 +96,7 @@ ChanW_Bin_JavaOutputStream::ChanW_Bin_JavaOutputStream(jobject iOutputStream)
 
 ChanW_Bin_JavaOutputStream::~ChanW_Bin_JavaOutputStream()
 	{
-	EnsureAttachedToCurrentThread eact(sJavaVM());
+	EnsureAttachedToCurrentThread eatct(sJavaVM());
 
 	JNIEnv* env = JNI::EnvTV::sGet();
 
@@ -106,7 +106,7 @@ ChanW_Bin_JavaOutputStream::~ChanW_Bin_JavaOutputStream()
 
 size_t ChanW_Bin_JavaOutputStream::Write(const byte* iSource, size_t iCount)
 	{
-	if (size_t theCount = sMin(iCount, kBufferSize))
+	if (jsize theCount = sClamped<jsize>(sMin(iCount, kBufferSize)))
 		{
 		JNIEnv* env = JNI::EnvTV::sGet();
 

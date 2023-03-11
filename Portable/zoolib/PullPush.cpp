@@ -111,6 +111,9 @@ void sPush_Marker(const ZP<PullPush::Marker>& iMarker, const ChanW_PPT& iChanW)
 void sPush(const PPT& iVal, const ChanW_PPT& iChanW)
 	{ sEWrite<PPT>(iChanW, iVal); }
 
+bool sTryPush(const PPT& iVal, const ChanW_PPT& iChanW)
+	{ return sQWrite<PPT>(iChanW, PPT(iVal)); }
+
 void sPull_UTF_Push_PPT(const ChanR_UTF& iChanR, const ChanW_PPT& iChanW)
 	{
 	PullPushPair<UTF32> thePullPushPair = sMakePullPushPair<UTF32>();
@@ -272,6 +275,45 @@ ZQ<Name> sQEReadNameOrEnd(const ChanR<PPT>& iChanR)
 		{
 		sThrow_ParseException("Expected Name");
 		}
+	}
+
+// =================================================================================================
+#pragma mark - RethrowException
+
+class ChannerR_PPT_RethrowException
+:	public ChannerR_PPT
+	{
+public:
+	ChannerR_PPT_RethrowException(const ZP<ChannerR_PPT>& iChanner)
+	:	fChanner(iChanner)
+		{}
+
+	// Fron ChanR<PPT> via ChannerR_PPT
+	virtual size_t Read(PPT* oDest, size_t iCount)
+		{
+		PPT* localDest = oDest;
+		for (PPT* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
+			{
+			if (ZQ<PPT> theQ = sQRead(*fChanner); not theQ)
+				break;
+			else if (const std::exception_ptr* asEx = theQ->PGet<std::exception_ptr>())
+				std::rethrow_exception(*asEx);
+			else
+				*localDest++ = *theQ;
+			}
+		return localDest - oDest;
+		}
+
+private:
+	const ZP<ChannerR_PPT> fChanner;
+	};
+
+ZP<ChannerR_PPT> sChannerR_PPT_RethrowException(const ZP<ChannerR_PPT>& iChanner)
+	{
+	if (not iChanner)
+		return null;
+
+	return new ChannerR_PPT_RethrowException(iChanner);
 	}
 
 } // namespace ZooLib

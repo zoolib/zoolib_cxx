@@ -14,7 +14,7 @@ namespace ZooLib {
 
 template <class EE>
 class ChanRPos_XX_ChanR
-:	public ChanRPos<EE>
+:	public virtual ChanRPos<EE>
 	{
 public:
 	ChanRPos_XX_ChanR(const ChanR<EE>& iSource, const ChanRWPos<EE>& iBuffer)

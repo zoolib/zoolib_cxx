@@ -26,6 +26,10 @@ bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 	const Pull_SeparatedValues_Options& iOptions,
 	const ChanW_PPT& iChanW);
 
+void sPull_SeparatedValues_Push_PPT_Alternate(const Pull_SeparatedValues_Options& iOptions,
+	const ChanR_UTF& iChanR,
+	const ChanW_PPT& iChanW);
+
 bool sPull_SeparatedValues_Push_PPT(const ChanR_UTF& iChanR,
 	UTF32 iSeparator_Value, UTF32 iSeparator_Line,
 	const ChanW_PPT& iChanW);

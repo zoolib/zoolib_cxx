@@ -58,4 +58,4 @@ ZP<Expr_Rel>& operator|=(ZP<Expr_Rel>& ioLHS, const ZP<Expr_Rel>& iRHS);
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Union_h__

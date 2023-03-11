@@ -21,7 +21,7 @@ namespace ZooLib {
 #pragma mark - ChanR_Bin_CFStream
 
 class ChanR_Bin_CFStream
-:	public ChanR_Bin
+:	public virtual ChanR_Bin
 	{
 public:
 	ChanR_Bin_CFStream(CFReadStreamRef iCFStream);
@@ -39,7 +39,7 @@ private:
 #pragma mark - ChanW_Bin_CFStream
 
 class ChanW_Bin_CFStream
-:	public ChanW_Bin
+:	public virtual ChanW_Bin
 	{
 public:
 	ChanW_Bin_CFStream(CFWriteStreamRef iCFStream);

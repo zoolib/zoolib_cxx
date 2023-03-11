@@ -34,6 +34,7 @@ using ChannerAbort = Channer<ChanAbort>;
 using ChannerDisconnectRead = Channer<ChanDisconnectRead>;
 using ChannerDisconnectWrite = Channer<ChanDisconnectWrite>;
 using ChannerPos = Channer<ChanPos>;
+using ChannerPosSet = Channer<ChanPosSet>;
 template <class EE> using ChannerR = Channer<ChanR<EE>>;
 using ChannerSize = Channer<ChanSize>;
 using ChannerSizeSet = Channer<ChanSizeSet>;
@@ -50,7 +51,7 @@ template <class EE> using ChannerWPos = Channer<ChanWPos<EE>>;
 template <class EE> using ChannerRWPos = Channer<ChanRWPos<EE>>;
 template <class EE> using ChannerRW = Channer<ChanRW<EE>>;
 
-using ChannerClose = Channer<ChanClose>;
+// using ChannerClose = Channer<ChanClose>;
 
 template <class EE> using ChannerRAbort = Channer<ChanRAbort<EE>>;
 template <class EE> using ChannerWAbort = Channer<ChanWAbort<EE>>;

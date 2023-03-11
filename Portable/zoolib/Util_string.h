@@ -29,7 +29,9 @@ double sDouble(const string& iString);
 
 // -----
 
+bool sContains(const string& iTarget, char iPattern);
 bool sContains(const string& iTarget, const string& iPattern);
+
 bool sContainsi(const string& iTarget, const string& iPattern);
 
 int sComparei(const string& iLeft, const string& iRight);

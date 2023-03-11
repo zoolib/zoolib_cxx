@@ -13,7 +13,7 @@ namespace ZooLib {
 #pragma mark - ChanRU_UTF_string8
 
 class ChanRU_UTF_string8
-:	public ChanRU<UTF32>
+:	public virtual ChanRU<UTF32>
 	{
 public:
 	ChanRU_UTF_string8(const string8& iString);
@@ -43,7 +43,7 @@ template <class UTF_p> class ChanW_UTF_string;
 
 template <>
 class ChanW_UTF_string<UTF32>
-:	public ChanW_UTF_Native32
+:	public virtual ChanW_UTF_Native32 // aka ChanW_UTF or ChanW<UTF32>
 	{
 public:
 	ChanW_UTF_string(string32* ioString)
@@ -68,7 +68,7 @@ typedef ChanW_UTF_string<UTF32> ChanW_UTF_string32;
 
 template <>
 class ChanW_UTF_string<UTF16>
-:	public ChanW_UTF_Native16
+:	public virtual ChanW_UTF_Native16
 	{
 public:
 	ChanW_UTF_string(string16* ioString)
@@ -93,7 +93,7 @@ typedef ChanW_UTF_string<UTF16> ChanW_UTF_string16;
 
 template <>
 class ChanW_UTF_string<UTF8>
-:	public ChanW_UTF_Native8
+:	public virtual ChanW_UTF_Native8
 	{
 public:
 	ChanW_UTF_string()

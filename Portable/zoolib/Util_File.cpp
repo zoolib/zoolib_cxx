@@ -1,6 +1,7 @@
 // Copyright (c) 2012 Andrew Green. MIT License. http://www.zoolib.org
 
 #include "zoolib/Util_File.h"
+#include "zoolib/Util_Channer.h" // For sChannerRPos_XX
 
 #include <map>
 #include <vector>
@@ -77,6 +78,17 @@ private:
 
 FileIter sSorted(FileIter iSource)
 	{ return FileIter(new FileIterRep_Std(new RealRep_Sorted(iSource), 0)); }
+
+ZP<ChannerRPos_Bin> sForceOpenRPos(const FileSpec& iFileSpec)
+	{
+	if (ZP<ChannerRPos_Bin> theChannerRPos = iFileSpec.OpenRPos(false))
+		return theChannerRPos;
+
+	if (ZP<ChannerR_Bin> theChannerR = iFileSpec.OpenR(false))
+		return sChannerRPos_XX<byte>(theChannerR);
+
+	return null;
+	}
 
 } // namespace Util_File
 } // namespace ZooLib

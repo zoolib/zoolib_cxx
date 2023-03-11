@@ -303,4 +303,32 @@ bool sPull_XMLAttr_Push_PPT(ChanRU_UTF_ML& ioChanRU, const ChanW_PPT& iChanW)
 	return true;
 	}
 
+// =================================================================================================
+#pragma mark -
+
+// We can't use the sStartPullPush mechanism here because we're preserving that it's
+// a ChannerRU_UTF_ML we're working with.
+
+static void spXMLAttrPullPush(const ZP<ChannerRU_UTF_ML>& iChannerRU,
+	const ZP<ChannerWCon_PPT>& iChannerWCon)
+	{
+	ZThread::sSetName("spXMLAttrPullPush");
+	try
+		{
+		sPull_XMLAttr_Push_PPT(*iChannerRU, *iChannerWCon);
+		}
+	catch (...)
+		{
+		sTryPush(std::current_exception(), *iChannerWCon);
+		}
+	sDisconnectWrite(*iChannerWCon);
+	}
+
+ZP<ChannerR_PPT> sChannerR_PPT_XMLAttr(const ZP<ChannerRU_UTF_ML>& iChannerRU)
+	{
+	auto ppp = sMakePullPushPair<PPT>();
+	sStartOnNewThread(sBindR(sCallable(spXMLAttrPullPush), iChannerRU, sGetClear(ppp.first)));
+	return ppp.second;
+	}
+
 } // namespace ZooLib

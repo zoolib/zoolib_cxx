@@ -28,7 +28,6 @@ using ChanRWAbort_Bin = ChanRWAbort<byte>;
 using ChanRCon_Bin = ChanRCon<byte>;
 using ChanWCon_Bin = ChanWCon<byte>;
 using ChanRWCon_Bin = ChanRWCon<byte>;
-using ChanConnection_Bin = ChanRWCon<byte>;
 
 } // namespace ZooLib
 

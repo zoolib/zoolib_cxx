@@ -63,7 +63,7 @@ void sEWrite(const ChanW<EE>& iChan, const PaC<const EE>& iSource)
 
 template <class EE>
 class ChanW_XX_Null
-:	public ChanW<EE>
+:	public virtual ChanW<EE>
 	{
 public:
 	virtual size_t Write(const EE* iSource, size_t iCount)
@@ -77,7 +77,7 @@ public:
 
 template <class EE>
 class ChanW_XX_Discard
-:	public ChanW<EE>
+:	public virtual ChanW<EE>
 	{
 public:
 	virtual size_t Write(const EE* iSource, size_t iCount)

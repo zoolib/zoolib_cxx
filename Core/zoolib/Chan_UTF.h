@@ -1,7 +1,7 @@
 // Copyright (c) 2014 Andrew Green. MIT License. http://www.zoolib.org
 
-#ifndef __ZooLib_ChanU_UTF_h__
-#define __ZooLib_ChanU_UTF_h__ 1
+#ifndef __ZooLib_Chan_UTF_h__
+#define __ZooLib_Chan_UTF_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
@@ -27,8 +27,7 @@ using ChanRWAbort_UTF = ChanRWAbort<UTF32>;
 using ChanRCon_UTF = ChanRCon<UTF32>;
 using ChanWCon_UTF = ChanWCon<UTF32>;
 using ChanRWCon_UTF = ChanRWCon<UTF32>;
-using ChanConnection_UTF = ChanRWCon<UTF32>;
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanR_UTF_h__
+#endif // __ZooLib_Chan_UTF_h__

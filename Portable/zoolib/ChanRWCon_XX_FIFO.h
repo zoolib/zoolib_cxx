@@ -1,7 +1,7 @@
 // Copyright (c) 2007 Andrew Green. MIT License. http://www.zoolib.org
 
-#ifndef __ZooLib_ChanConnection_XX_FIFO_h__
-#define __ZooLib_ChanConnection_XX_FIFO_h__ 1
+#ifndef __ZooLib_ChanRWCon_XX_FIFO_h__
+#define __ZooLib_ChanRWCon_XX_FIFO_h__ 1
 #include "zconfig.h"
 
 #include "zoolib/Chan.h"
@@ -12,28 +12,28 @@
 namespace ZooLib {
 
 // =================================================================================================
-#pragma mark - ChanConnection_XX_FIFO
+#pragma mark - ChanRWCon_XX_FIFO
 
 /** A RW stream that queues written data and returns it in FIFO order when read. */
 
 template <class EE>
-class ChanConnection_XX_FIFO
-:	public ChanConnection<EE>
+class ChanRWCon_XX_FIFO
+:	public virtual ChanRWCon<EE>
 	{
 public:
-	ChanConnection_XX_FIFO()
+	ChanRWCon_XX_FIFO()
 	:	fClosed(false)
 	,	fMaxSize(64)
 	,	fUserCount(0)
 		{}
 
-	ChanConnection_XX_FIFO(size_t iMaxSize)
+	ChanRWCon_XX_FIFO(size_t iMaxSize)
 	:	fClosed(false)
 	,	fMaxSize(iMaxSize)
 	,	fUserCount(0)
 		{}
 
-	~ChanConnection_XX_FIFO()
+	~ChanRWCon_XX_FIFO()
 		{
 		ZAcqMtx acq(fMutex);
 
@@ -193,4 +193,4 @@ private:
 
 } // namespace ZooLib
 
-#endif // __ZooLib_ChanConnection_XX_FIFO_h__
+#endif // __ZooLib_ChanRWCon_XX_FIFO_h__

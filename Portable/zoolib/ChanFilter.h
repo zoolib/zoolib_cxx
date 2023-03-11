@@ -200,7 +200,7 @@ public:
 
 template <class Chan_p>
 class ChanRefHolder
-:	public Chan_p
+:	public virtual Chan_p
 	{
 public:
 	ChanRefHolder(const Chan_p& iChan) : fChan(iChan) {}

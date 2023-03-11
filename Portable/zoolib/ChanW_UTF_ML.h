@@ -15,7 +15,7 @@ namespace ZooLib {
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
 class ChanW_UTF_ML
-:	public ChanW_UTF_Native8
+:	public virtual ChanW_UTF_Native8
 	{
 public:
 	class Indenter;

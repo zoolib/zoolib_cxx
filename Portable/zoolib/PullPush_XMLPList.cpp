@@ -534,13 +534,12 @@ static void spChannerR_PPT_XMLPList(ZP<ChannerRU_UTF_ML> iChannerR,
 	try
 		{
 		sPull_XMLPList_Push_PPT(*iChannerR, *iChannerWCon);
-
-		sDisconnectWrite(*iChannerWCon);
 		}
-	catch (std::exception& ex)
+	catch (...)
 		{
-		ZLOGTRACE(eDebug); // In lieu of general error handling
+		sTryPush(std::current_exception(), *iChannerWCon);
 		}
+	sDisconnectWrite(*iChannerWCon);
 	}
 
 ZP<ChannerR_PPT> sChannerR_PPT_XMLPList(const ZP<ChannerRU_UTF_ML>& iChanner)

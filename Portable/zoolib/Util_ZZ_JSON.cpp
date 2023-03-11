@@ -23,11 +23,11 @@
 namespace ZooLib {
 namespace Util_ZZ_JSON {
 
-ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iRO)
+ZQ<Val_ZZ> sQRead(const ChanRU_UTF& iChanRU, const PullTextOptions_JSON& iOptions)
 	{
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 	ZP<Delivery<Val_ZZ>> theDelivery = sStartAsync_AsZZ(sGetClear(thePair.second));
-	sPull_JSON_Push_PPT(iChanRU, iRO, *thePair.first);
+	sPull_JSON_Push_PPT(iChanRU, iOptions, *thePair.first);
 	sDisconnectWrite(*thePair.first);
 
 	return theDelivery->QGet();

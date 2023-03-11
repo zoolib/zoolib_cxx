@@ -58,4 +58,4 @@ ZP<Expr_Rel> operator&(
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Intersect_h__

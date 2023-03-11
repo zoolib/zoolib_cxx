@@ -16,11 +16,10 @@ static size_t spReadUTF32_UTF16(UTF32* oDest, const size_t iCount,
 	const ChanR_Bin& iChanR_Bin)
 	{
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCount;
 
 	uint16 theCU;
 	bool gotCU = false;
-	while (localDest < localDestEnd)
+	for (UTF32* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 		{
 		if (not gotCU)
 			{
@@ -82,11 +81,10 @@ static size_t spReadUTF32_UTF8(UTF32* oDest, const size_t iCount,
 	const ChanR_Bin& iChanR_Bin)
 	{
 	UTF32* localDest = oDest;
-	UTF32* localDestEnd = oDest + iCount;
 
 	byte curByte = 0;
 	bool gotByte = false;
-	while (localDest < localDestEnd)
+	for (UTF32* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 		{
 		if (not gotByte)
 			{

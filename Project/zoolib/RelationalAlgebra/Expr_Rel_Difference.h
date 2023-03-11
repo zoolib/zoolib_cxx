@@ -49,4 +49,4 @@ public:
 } // namespace RelationalAlgebra
 } // namespace ZooLib
 
-#endif // __ZooLib_RelationalAlgebra_Expr_Rel_h__
+#endif // __ZooLib_RelationalAlgebra_Expr_Rel_Difference_h__

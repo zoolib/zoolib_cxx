@@ -18,7 +18,7 @@ namespace ZooLib {
 /// A read strim that sources text by reading UTF-16 code units from a ChanR_Bin.
 
 class ChanR_UTF_Chan_Bin_UTF16
-:	public ChanR_UTF
+:	public virtual ChanR_UTF
 	{
 public:
 	ChanR_UTF_Chan_Bin_UTF16(const ChanR_Bin& iChanR_Bin);
@@ -36,7 +36,7 @@ private:
 /// A read strim that sources text by reading UTF-8 code units from a ChanR_Bin.
 
 class ChanR_UTF_Chan_Bin_UTF8
-:	public ChanR_UTF
+:	public virtual ChanR_UTF
 	{
 public:
 	ChanR_UTF_Chan_Bin_UTF8(const ChanR_Bin& iChanR_Bin);
@@ -54,7 +54,7 @@ private:
 /// A write strim that writes text to a ChanW_Bin in UTF-8.
 
 class ChanW_UTF_Chan_Bin_UTF8
-:	public ChanW_UTF_Native8
+:	public virtual ChanW_UTF_Native8
 	{
 public:
 	ChanW_UTF_Chan_Bin_UTF8(const ChanW_Bin& iChanW_Bin);
