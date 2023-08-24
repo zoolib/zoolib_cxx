@@ -297,8 +297,8 @@ sInsertMust(
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
-bool>
-sQReplaceMust(const int iDebugLevel,
+void>
+sReplaceMust(const int iDebugLevel,
 	Map_p& ioMap,
 	const typename Map_p::key_type& iKey,
 	const typename Map_p::mapped_type& iValue)
@@ -309,19 +309,19 @@ sQReplaceMust(const int iDebugLevel,
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
-bool>
-sQReplaceMust(
+void>
+sReplaceMust(
 	Map_p& ioMap,
 	const typename Map_p::key_type& iKey,
 	const typename Map_p::mapped_type& iValue)
-	{ sQReplaceMust(ioMap, iKey, iValue); }
+	{ sReplaceMust(1, ioMap, iKey, iValue); }
 
 // -----
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
-bool>
-sQReplaceMust(const int iDebugLevel,
+void>
+sReplaceMust(const int iDebugLevel,
 	Map_p& ioMap,
 	const typename Map_p::key_type& iKey,
 	typename Map_p::mapped_type&& rValue)
@@ -332,12 +332,12 @@ sQReplaceMust(const int iDebugLevel,
 
 template <class Map_p>
 	EnableIf_t<IsAMap<Map_p>::value,
-bool>
-sQReplaceMust(
+void>
+sReplaceMust(
 	Map_p& ioMap,
 	const typename Map_p::key_type& iKey,
 	typename Map_p::mapped_type&& rValue)
-	{ sQReplaceMust(ioMap, iKey, std::move(rValue)); }
+	{ sReplaceMust(1, ioMap, iKey, std::move(rValue)); }
 
 // -------------------------------------------------------------------------------------------------
 
