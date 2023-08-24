@@ -9,6 +9,7 @@
 #include "zoolib/Pixels/Blit.h" // For EOp and abbreviating typedefs
 #include "zoolib/Pixels/PixelIters.h"
 #include "zoolib/Pixels/Cartesian_Geom.h"
+#include "zoolib/Pixels/RasterOperations.h"
 
 namespace ZooLib {
 namespace Pixels {

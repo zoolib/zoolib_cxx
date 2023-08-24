@@ -31,18 +31,6 @@ enum EOp
 	};
 
 // =================================================================================================
-#pragma mark - FillPixval
-
-void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestF,
-	uint32 iPixval);
-
-// =================================================================================================
-#pragma mark - Copy pixvals
-
-void sCopyPixval(const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF,
-	const RD& iDestRD, void* oDest, PointPOD iDestLocation);
-
-// =================================================================================================
 #pragma mark - sMunge
 
 void sMunge(void* iBaseAddress,

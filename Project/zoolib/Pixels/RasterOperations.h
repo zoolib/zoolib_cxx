@@ -18,16 +18,16 @@ Pixval sGetPixval(const RasterDesc& iRD, const void* iBaseAddress, int iH, int i
 
 void sSetPixval(const RasterDesc& iRD, void* oBaseAddress, int iH, int iV, Pixval iPixval);
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval);
+void sFillPixval(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval);
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval);
+void sFillPixval(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval);
 
-void sBlitRowPixvals(
+void sCopyRowPixvals(
 	const PixvalDesc& iSourcePvD, const void* iSourceBase, int iSourceH,
 	const PixvalDesc& iDestPvD, void* oDestBase, int iDestH,
 	int iCount);
 
-void sBlitPixvals(
+void sCopyPixvals(
 	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceFrame,
 	const RasterDesc& iDestRD, void* oDestBase, const PointPOD& iDestLocation);
 

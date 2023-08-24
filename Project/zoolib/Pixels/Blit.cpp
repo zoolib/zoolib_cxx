@@ -21,95 +21,8 @@ typedef PixelDescRep_Indexed PDRep_Indexed;
 typedef PixelDescRep_Gray PDRep_Gray;
 typedef PixelDescRep_Color PDRep_Color;
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
-
 // =================================================================================================
-#pragma mark - FillPixval
-
-void sFillPixval(const RD& iDestRD, void* oDest, const RectPOD& iDestF,
-	uint32 iPixval)
-	{
-	PixvalIterW destIter(
-		iDestRD.fPixvalDesc,
-		sCalcRowAddress(iDestRD, oDest, iDestF.top),
-		iDestF.left);
-
-	int destWidth = W(iDestF);
-	int destHeight = H(iDestF);
-	int row = 0;
-	for (;;)
-		{
-		int destCountH = destWidth + 1;
-
-		while (--destCountH)
-			destIter.WriteInc(iPixval);
-
- 		++row;
-		if (row >= destHeight)
-			break;
-
-		destIter.Reset(
-			sCalcRowAddress(iDestRD, oDest, iDestF.top + row), iDestF.left);
-		}
-	}
-
-// =================================================================================================
-#pragma mark - Copy pixvals
-
-void sCopyPixval(const RD& iSourceRD, const void* iSource, const RectPOD& iSourceF,
-	const RD& iDestRD, void* oDest, PointPOD iDestLocation)
-	{
-	int vCount = H(iSourceF);
-	int hCount = W(iSourceF);
-
-	if (iSourceRD.fPixvalDesc == iDestRD.fPixvalDesc
-		&& (iSourceRD.fPixvalDesc.fDepth >= 8
-			|| ((iSourceF.left | iDestLocation.h | hCount) & 0x07) == 0))
-		{
-		int hOffsetSource = iSourceF.left * iSourceRD.fPixvalDesc.fDepth / 8;
-		int hOffsetDest = iDestLocation.h * iSourceRD.fPixvalDesc.fDepth / 8;
-		int countToCopy = hCount * iSourceRD.fPixvalDesc.fDepth / 8;
-		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
-			{
-			const uint8* sourceRowAddress = hOffsetSource +
-				static_cast<const uint8*>(sCalcRowAddress(iSourceRD, iSource, iSourceF.top + vCurrent));
-
-			uint8* destRowAddress = hOffsetDest +
-				static_cast<uint8*>(sCalcRowAddress(iDestRD,oDest, iDestLocation.v + vCurrent));
-
-			sMemCopy(destRowAddress, sourceRowAddress, countToCopy);
-			}
-		}
-	else
-		{
-		PixvalAccessor sourceAccessor(iSourceRD.fPixvalDesc);
-		PixvalAccessor destAccessor(iDestRD.fPixvalDesc);
-		uint32 buffer[kBufSize];
-
-		for (int vCurrent = 0; vCurrent < vCount; ++vCurrent)
-			{
-			const void* sourceRowAddress
-				= sCalcRowAddress(iSourceRD, iSource, iSourceF.top + vCurrent);
-
-			void* destRowAddress
-				= sCalcRowAddress(iDestRD, oDest, iDestLocation.v + vCurrent);
-
-			for (int hCurrent = 0; hCurrent < hCount; /*no inc*/)
-				{
-				const int count = min<int>(hCount - hCurrent, kBufSize);
-
-				sourceAccessor.GetPixvals(sourceRowAddress,
-					hCurrent + iSourceF.left, count, buffer);
-
-				destAccessor.SetPixvals(destRowAddress, hCurrent + iDestLocation.h, count, buffer);
-				hCurrent += count;
-				}
-			}
-		}
-	}
-
-// =================================================================================================
-#pragma mark - sMunge
+#pragma mark - Munge
 
 template <class S, class D>
 static void sMungeRow_T(
@@ -146,9 +59,9 @@ static void sMunge_T(
 		{
 		void* rowAddress = sCalcRowAddress(iRasterDesc, iBaseAddress, iFrame.top + vCurrent);
 		sMungeRow_T(rowAddress, iRasterDesc.fPixvalDesc,
-				iMapPixvalToRGB, iMapRGBToPixval,
-				iFrame.left, hSize, vCurrent,
-				iMungeProc, iRefcon);
+			iMapPixvalToRGB, iMapRGBToPixval,
+			iFrame.left, hSize, vCurrent,
+			iMungeProc, iRefcon);
 		}
 	}
 
@@ -432,7 +345,7 @@ void sCopy(
 		if (PDRep_Color* destPDRep_Color = destPDRep.DynamicCast<PDRep_Color>())
 			{
 			if (iOp == eOp_Copy && sourcePDRep_Color->Matches(destPDRep_Color))
-				sCopyPixval(iSourceRD, iSource, iSourceF, iDestRD, oDest, LT(realDest));
+				sCopyPixvals(iSourceRD, iSource, iSourceF, iDestRD, oDest, LT(realDest));
 			else
 				DOCOPY(*sourcePDRep_Color, *destPDRep_Color);
 			return;
@@ -443,7 +356,7 @@ void sCopy(
 		if (PDRep_Indexed* destPDRep_Index = destPDRep.DynamicCast<PDRep_Indexed>())
 			{
 			if (iOp == eOp_Copy && sourcePDRep_Index->Matches(destPDRep_Index))
-				sCopyPixval(iSourceRD, iSource, iSourceF, iDestRD, oDest, LT(realDest));
+				sCopyPixvals(iSourceRD, iSource, iSourceF, iDestRD, oDest, LT(realDest));
 			else
 				DOCOPY(*sourcePDRep_Index, *destPDRep_Index);
 			return;

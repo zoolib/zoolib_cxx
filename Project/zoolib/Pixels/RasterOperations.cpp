@@ -34,7 +34,7 @@ void sSetPixval(const RasterDesc& iRD, void* oBaseAddress, int iH, int iV, Pixva
 	PixvalAccessor(iRD.fPixvalDesc).SetPixval(rowAddress, iH, iPixval);
 	}
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval)
+void sFillPixval(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval)
 	{
 	if (iRD.fPixvalDesc.fDepth >= 17 && iRD.fPixvalDesc.fDepth <= 24)
 		{
@@ -140,7 +140,7 @@ void sFill(const RasterDesc& iRD, void* oBaseAddress, Pixval iPixval)
 		}
 	}
 
-void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval)
+void sFillPixval(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pixval iPixval)
 	{
 	const Ord width = W(iFrame);
 
@@ -157,7 +157,7 @@ void sFill(const RasterDesc& iRD, void* oBaseAddress, const RectPOD& iFrame, Pix
 		}
 	}
 
-void sBlitRowPixvals(
+void sCopyRowPixvals(
 	const PixvalDesc& iSourcePvD, const void* iSourceBase, int iSourceH,
 	const PixvalDesc& iDestPvD, void* oDestBase, int iDestH,
 	int iCount)
@@ -190,7 +190,7 @@ void sBlitRowPixvals(
 		}
 	}
 
-void sBlitPixvals(
+void sCopyPixvals(
 	const RasterDesc& iSourceRD, const void* iSourceBase, const RectPOD& iSourceFrame,
 	const RasterDesc& iDestRD, void* oDestBase, const PointPOD& iDestLocation)
 	{
@@ -219,6 +219,9 @@ void sBlitPixvals(
 		}
 	else
 		{
+		PixvalAccessor sourceAccessor(iSourceRD.fPixvalDesc);
+		PixvalAccessor destAccessor(iDestRD.fPixvalDesc);
+
 		for (Ord vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
 			const void* sourceRowAddress =
@@ -226,9 +229,6 @@ void sBlitPixvals(
 
 			void* destRowAddress =
 				sCalcRowAddress(iDestRD, oDestBase, iDestLocation.v + vCurrent);
-
-			PixvalAccessor sourceAccessor(iSourceRD.fPixvalDesc);
-			PixvalAccessor destAccessor(iDestRD.fPixvalDesc);
 
 			for (Ord hCurrent = 0; hCurrent < hCount; /*no inc*/)
 				{
