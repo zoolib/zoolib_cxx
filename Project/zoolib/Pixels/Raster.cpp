@@ -62,7 +62,7 @@ void sSetPixval(const ZP<Raster>& iRaster, int iH, int iV, Pixval iPixval)
 	{ sSetPixval(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iH, iV, iPixval); }
 
 void sFill(const ZP<Raster>& iRaster, Pixval iPixval)
-	{ return sFill(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iPixval); }
+	{ return sFillPixval(iRaster->GetRasterDesc(), iRaster->GetBaseAddress(), iPixval); }
 
 } // namespace Pixels
 } // namespace ZooLib

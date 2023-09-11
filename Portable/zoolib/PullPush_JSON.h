@@ -36,7 +36,7 @@ bool sPull_PPT_Push_JSON(const ChanR_PPT& iChanR,
 	const ChanW_UTF& iChanW);
 
 // =================================================================================================
-#pragma mark - sChannerR_PPT_xx
+#pragma mark - sChannerR_PPT_JSON
 
 ZP<ChannerR_PPT> sChannerR_PPT_JSON(const ZP<Channer<ChanRU_UTF>>& iChanner,
 	const Util_Chan_JSON::PullTextOptions_JSON& iOptions);
