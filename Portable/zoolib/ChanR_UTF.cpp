@@ -17,8 +17,10 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF32* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const size_t countRead = sRead(iChanR, oDest, std::min(iCountCU, iCountCP));
+	const size_t countRead = sRead(iChanR, oDest, min(iCountCU, iCountCP));
 
+	// UTF32 CP and CU are the same thing.
+	// This function simply provides consistency with the UTF16 and UTF8 cases.
 	if (oCountCU)
 		*oCountCU = countRead;
 	if (oCountCP)
@@ -29,17 +31,22 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	// To read even a single CP we may need space to emit up to two UTF16 CUs.
 	ZAssert(iCountCU >= 2);
 
 	UTF32 utf32Buffer[kBufSize];
 	UTF16* localDest = oDest;
+	size_t localCountCU = iCountCU;
 	size_t localCountCP = iCountCP;
-	// If we've got space for two code units we are assured of
-	// being able to read at least one code point.
-	while (iCountCU >= 2 && localCountCP)
+
+	while (localCountCU >= 2 && localCountCP)
 		{
+		// Read no more than kBufSize UTF32 CUs (that's the space we have), and no more than
+		// localCountCP UTF32 CUs (as we need at least one CU to read one CP), and no more than
+		// localCountCU/2 allow for the worst case that a legal UTF32 CU can require two UTF16
+		// CUs to represent it.
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, localCountCU / 2)));
 
 		if (utf32Read == 0)
 			break;
@@ -50,16 +57,19 @@ void sRead(const ChanR_UTF& iChanR,
 		Unicode::sUTF32ToUTF16(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
-			localDest, iCountCU,
+			localDest, localCountCU,
 			&utf16Generated,
 			localCountCP, &cpGenerated);
 
+		// It's crucial that the previous step consumed everything that got read -- we can't
+		// put it back, so we must have enough output space to put the converted data.
 		ZAssert(utf32Consumed == utf32Read);
 
 		localCountCP -= cpGenerated;
-		iCountCU -= utf16Generated;
+		localCountCU -= utf16Generated;
 		localDest += utf16Generated;
 		}
+
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
 	if (oCountCU)
@@ -70,17 +80,23 @@ void sRead(const ChanR_UTF& iChanR,
 	UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
+	// To read even a single CP we may need space to emit up to six UTF8 CUs.
 	ZAssert(iCountCU >= 6);
 
 	UTF32 utf32Buffer[kBufSize];
 	UTF8* localDest = oDest;
+	size_t localCountCU = iCountCU;
 	size_t localCountCP = iCountCP;
-	// If we've got space for six code units we are assured of
-	// being able to read at least one code point.
-	while (iCountCU >= 6 && localCountCP)
+
+	while (localCountCU >= 6 && localCountCP)
 		{
+		// Read no more than kBufSize UTF32 CUs (that's the space we have), and no more than
+		// localCountCP UTF32 CUs (as we need at least one CU to read one CP), and no more than
+		// localCountCU/6 allow for the worst case that a legal UTF32 CU can require six UTF8
+		// CUs to represent it.
+
 		const size_t utf32Read =
-			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, iCountCU)));
+			sRead(iChanR, utf32Buffer, min(kBufSize, min(localCountCP, localCountCU / 6)));
 
 		if (utf32Read == 0)
 			break;
@@ -91,16 +107,19 @@ void sRead(const ChanR_UTF& iChanR,
 		Unicode::sUTF32ToUTF8(
 			utf32Buffer, utf32Read,
 			&utf32Consumed, nullptr,
-			localDest, iCountCU,
+			localDest, localCountCU,
 			&utf8Generated,
 			localCountCP, &cpGenerated);
 
+		// It's crucial that the previous step consumed everything that got read -- we can't
+		// put it back, so we must have enough output space to put the converted data.
 		ZAssert(utf32Consumed == utf32Read);
 
 		localCountCP -= cpGenerated;
-		iCountCU -= utf8Generated;
+		localCountCU -= utf8Generated;
 		localDest += utf8Generated;
 		}
+
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
 	if (oCountCU)
@@ -340,3 +359,4 @@ size_t ChanR_UTF_Native8::Read(UTF32* oDest, size_t iCountCU)
 	}
 
 } // namespace ZooLib
+
