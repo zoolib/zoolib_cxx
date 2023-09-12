@@ -97,20 +97,22 @@ public:
 // =================================================================================================
 #pragma mark -
 
-GPoint sPixelToGame(const GPoint& p, const GPoint& g, GPoint iGPoint)
+GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iPixelPoint)
 	{
 	Rat scaleFactor;
-	if (X(p) / Y(p) < X(g) / Y(g))
-		scaleFactor = X(p) / X(g);
+	if (X(iPixelSize) / Y(iPixelSize) < X(iGameSize) / Y(iGameSize))
+		scaleFactor = X(iPixelSize) / X(iGameSize);
 	else
-		scaleFactor = Y(p) / Y(g);
+		scaleFactor = Y(iPixelSize) / Y(iGameSize);
 
-	GPoint newG = g * scaleFactor;
+	GPoint newGameSize = iGameSize * scaleFactor;
 
-	iGPoint -= (p - newG) / 2;
-	iGPoint /= scaleFactor;
+	// The game rect is centered within the pixel rect
+	GPoint gamePoint = iPixelPoint - (iPixelSize - newGameSize) / 2;
 
-	return iGPoint;
+	gamePoint /= scaleFactor;
+
+	return gamePoint;
 	}
 
 static Mat spAdditionalMat(const GPoint& p, const GPoint& g)

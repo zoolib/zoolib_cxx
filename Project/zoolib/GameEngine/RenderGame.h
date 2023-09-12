@@ -13,7 +13,7 @@ namespace GameEngine {
 // =================================================================================================
 #pragma mark -
 
-GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iPoint);
+GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iPixelPoint);
 
 void sRenderGame(const ZP<Rendered>& iRendered,
 	const GPoint& iPixelSize,
