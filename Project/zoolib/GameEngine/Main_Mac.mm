@@ -207,9 +207,17 @@ static CVReturn spDisplayLinkCallback(
 
 - (CVec3)pAsCVec3:(NSEvent*)iEvent
 	{
-	NSPoint thePoint = [self convertPoint:[iEvent locationInWindow] fromView:nil];
+	// Location in potentially scaled coords
+	NSPoint inWindow = [iEvent locationInWindow];
+
+	// The view may not be at [0,0]
+	NSPoint thePoint = [self convertPoint:inWindow fromView:nil];
+
+	// But it will be flipped
 	Y(thePoint) = H([self bounds]) - Y(thePoint);
 
+	// The game works in terms of backing pixels.
+	thePoint = [self convertPointToBacking:thePoint];
 	return sHomogenous(GameEngine::sPixelToGame(fWH, fGame->GetGameSize(), sPoint<GPoint>(thePoint)));
 	}
 
@@ -310,6 +318,7 @@ static CVReturn spDisplayLinkCallback(
 - (void) awakeFromNib
 	{
 	const NSRect screenRect = [[[NSScreen screens] objectAtIndex:0] frame];
+//	Rat theHeight = sMin(800.0, H(screenRect) - 44);
 	Rat theHeight = sMin(4000.0, H(screenRect) - 44);
 //	Rat theHeight = sMin(1024.0, H(screenRect) - 44);
 	Rat theWidth = theHeight * 9.0/16.0;
