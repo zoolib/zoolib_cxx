@@ -115,23 +115,25 @@ GPoint sPixelToGame(const GPoint& iPixelSize, const GPoint& iGameSize, GPoint iP
 	return gamePoint;
 	}
 
-static Mat spAdditionalMat(const GPoint& p, const GPoint& g)
+static Mat spAdditionalMat(const GPoint& iPixelSize, const GPoint& iGameSize)
 	{
 	Mat additional(1);
 
 	Rat scaleFactor;
-	if (X(p) / Y(p) < X(g) / Y(g))
-		scaleFactor = X(p) / X(g);
+	if (X(iPixelSize) / Y(iPixelSize) < X(iGameSize) / Y(iGameSize))
+		scaleFactor = X(iPixelSize) / X(iGameSize);
 	else
-		scaleFactor = Y(p) / Y(g);
+		scaleFactor = Y(iPixelSize) / Y(iGameSize);
 
+	// Scaled
 	additional = sScale3XY(scaleFactor, scaleFactor) * additional;
 
-	GPoint newG = g * scaleFactor;
+	GPoint newGameSize = iGameSize * scaleFactor;
 
+	// Centered
 	additional = sTranslate3XY<Rat>(
-		(X(p) - X(newG)) / 2,
-		(Y(p) - Y(newG)) / 2) * additional;
+		(X(iPixelSize) - X(newGameSize)) / 2,
+		(Y(iPixelSize) - Y(newGameSize)) / 2) * additional;
 
 	return additional;
 	}
