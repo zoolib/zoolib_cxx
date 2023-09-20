@@ -691,7 +691,7 @@ extern "C" {
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
 
-#include "dtoa.c"
+#include "dtoa.c.incl"
 
 #pragma clang diagnostic pop
 
