@@ -19,7 +19,12 @@ typedef ThreadVal<size_t, struct PushTextIndent> ThreadVal_PushTextIndent;
 
 enum class EIndentationStyle { None, Whitesmiths, KR, Allman,
 	Petzold = Whitesmiths,
-	BSD = Allman };
+
+	#ifndef BSD
+		// On iOS BSD is a preprocessor macro from <sys/param.h>. WAR for now.
+		BSD = Allman
+	#endif
+};
 
 struct PushTextOptions
 	{
