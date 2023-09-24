@@ -81,7 +81,7 @@ static bool sPull_PPT_AsNS(const PPT& iPPT, const ChanR_PPT& iChanR, NSObject*& 
 				NSObject* theNSObject;
 				if (not sPull_PPT_AsNS(iChanR, theNSObject))
 					{
-					[theDictionary release];
+					// autoreleased? [theDictionary release];
 					return false;
 					}
 				[theDictionary
@@ -101,7 +101,7 @@ static bool sPull_PPT_AsNS(const PPT& iPPT, const ChanR_PPT& iChanR, NSObject*& 
 			ZQ<PPT> theQ = sQRead(iChanR);
 			if (not theQ)
 				{
-				[theArray release];
+				// autoreleased? [theArray release];
 				return false;
 				}
 			if (sIsEnd(*theQ))
@@ -109,7 +109,7 @@ static bool sPull_PPT_AsNS(const PPT& iPPT, const ChanR_PPT& iChanR, NSObject*& 
 			NSObject* theNSObject;
 			if (not sPull_PPT_AsNS(*theQ, iChanR, theNSObject))
 				{
-				[theArray release];
+				// autoreleased? [theArray release];
 				return false;
 				}
 			[theArray addObject:theNSObject];
