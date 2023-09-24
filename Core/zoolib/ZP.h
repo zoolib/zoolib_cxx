@@ -37,6 +37,7 @@ public:
 	explicit operator bool() const { return true && fPtr; }
 
 	#if defined(__OBJC__)
+		// This lets a ZP<id> be the receiver of an Objective-C message send.
 		operator TPtr() const { return fPtr; }
 	#endif
 
@@ -280,8 +281,17 @@ void sRefCopy(void* oDest, T* iPtr)
 	}
 
 // =================================================================================================
-#pragma mark - ZP partially specialized for pointer types
+#pragma mark - ZP partially specialized for pointer types.
 
+// This specialization is provided mainly so that CoreFoundation types can be encapsulated, with their
+// CFRetain and CFRelease being reliably called.
+// The C type decay from T* -> const T*, T* -> void*, const T* -> const void* and void* -> const void*
+// is used by Apple so that, for example, an NSMutableArrayRef can safely be passed where an NSArrayRef
+// is required, and either are compatible with the base CFTypeRef.
+
+
+// Some APIs (eg Windows HANDLE, Apple's xpc) return a fresh 'pointer' for each
+// retain, so it's an IO param just in case.
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
 
