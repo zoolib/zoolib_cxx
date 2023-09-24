@@ -49,6 +49,7 @@
 
 // =================================================================================================
 #pragma mark - AppleEvent
+
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
 	#define ZCONFIG_SPI_Avail__AppleEvent \
 		(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
@@ -301,6 +302,7 @@
 
 // =================================================================================================
 #pragma mark - iconv
+
 #ifndef ZCONFIG_SPI_Avail__iconv
 	#define ZCONFIG_SPI_Avail__iconv \
 		((ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX) || ZMACRO_IOS)
