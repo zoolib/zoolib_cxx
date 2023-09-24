@@ -2,6 +2,8 @@
 
 #include "zoolib/Apple/PullPush_CF.h"
 
+#if ZCONFIG_SPI_Enabled(CFType)
+
 #include "zoolib/Apple/Chan_UTF_CFString.h"
 #include "zoolib/Apple/Data_CF.h"
 #include "zoolib/Apple/Util_CF.h"
@@ -181,3 +183,5 @@ ZP<CFTypeRef> sAsCF(const ChanR_PPT& iChanR)
 	}
 
 } // namespace ZooLib
+
+#endif // ZCONFIG_SPI_Enabled(CFType)
