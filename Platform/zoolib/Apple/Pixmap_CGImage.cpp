@@ -41,7 +41,7 @@ Pixmap sPixmap(ZP<CGImageRef> iImageRef)
 			if (ZP<CFDataRef> theDataRef = sAdopt& ::CGDataProviderCopyData(theProvider))
 				{
 				const PixvalDesc thePixvalDesc(
-					::CGImageGetBitsPerPixel(iImageRef), ZCONFIG_Endian != ZCONFIG_Endian_Big);
+					int(::CGImageGetBitsPerPixel(iImageRef)), ZCONFIG_Endian != ZCONFIG_Endian_Big);
 
 				const RasterDesc theRasterDesc(
 					thePixvalDesc,
@@ -78,7 +78,7 @@ Pixmap sPixmap(ZP<CGImageRef> iImageRef)
 				const uint32 theR = theG << theBPC;
 
 				return Pixmap(new PixmapRep(theRaster,
-					sRectPOD(::CGImageGetWidth(iImageRef), theRaster->GetRasterDesc().fRowCount),
+					sRectPOD(Ord(::CGImageGetWidth(iImageRef)), Ord(theRaster->GetRasterDesc().fRowCount)),
 					sPixelDesc(theR, theG, theB, theA)));
 				}
 			}
