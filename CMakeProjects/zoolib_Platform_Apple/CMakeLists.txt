@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.4.1)
+
 set(ZOOLIB_CXX ../..)
 
 set(SourceDir ${ZOOLIB_CXX}/Platform/zoolib/Apple)
@@ -34,6 +36,8 @@ set (SourceFiles
 	${SourceDir}/Pixmap_CGImage.h
 	${SourceDir}/PullPush_CF.cpp
 	${SourceDir}/PullPush_CF.h
+	${SourceDir}/PullPush_NS.mm
+	${SourceDir}/PullPush_NS.h
 	${SourceDir}/Starter_CFRunLoop.cpp
 	${SourceDir}/Starter_CFRunLoop.h
 	${SourceDir}/Util_CF_Any.cpp
@@ -43,8 +47,8 @@ set (SourceFiles
 	${SourceDir}/Util_CF_ZZ.h
 	${SourceDir}/Util_CF.cpp
 	${SourceDir}/Util_CF.h
-	${SourceDir}/Util_NS_Any.h
-	${SourceDir}/Util_NS_Any.mm
+	${SourceDir}/Util_NS_ZZ.h
+	${SourceDir}/Util_NS_ZZ.mm
 	${SourceDir}/Util_NS.h
 	${SourceDir}/Util_NS.mm
 	${SourceDir}/Val_CF.cpp
@@ -60,7 +64,7 @@ set (SourceFiles
 
 source_group("" FILES ${SourceFiles})
 
-include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform)
+include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Platform ${ZOOLIB_CXX}/Project)
 
 add_library(ZooLib_Platform_Apple STATIC
 
