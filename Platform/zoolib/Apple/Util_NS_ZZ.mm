@@ -1,6 +1,6 @@
 // Copyright (c) 2007 Andrew Green. MIT License. http://www.zoolib.org
 
-#include "zoolib/Apple/Util_NS_Any.h"
+#include "zoolib/Apple/Util_NS_ZZ.h"
 
 #if ZCONFIG_SPI_Enabled(CocoaFoundation)
 
@@ -159,23 +159,23 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 } // namespace ZooLib
 
 // =================================================================================================
-@implementation NSObject (ZooLib_Any_Additions)
+@implementation NSObject (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
 	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZooLib_Any_Additions) asZZWithDefault called"));
+	ZDebugLogf(0, ("NSObject (ZooLib_asZZWithDefault) asZZWithDefault called"));
 	return iDefault;
 	}
 
 @end
 
 // =================================================================================================
-@interface NSNull (ZooLib_Any_Additions)
+@interface NSNull (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSNull (ZooLib_Any_Additions)
+@implementation NSNull (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{ return Val_ZZ(); }
@@ -183,11 +183,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSDictionary (ZooLib_Any_Additions)
+@interface NSDictionary (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSDictionary (ZooLib_Any_Additions)
+@implementation NSDictionary (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
@@ -204,11 +204,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSArray (ZooLib_Any_Additions)
+@interface NSArray (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSArray (ZooLib_Any_Additions)
+@implementation NSArray (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{
@@ -221,11 +221,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSData (ZooLib_Any_Additions)
+@interface NSData (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSData (ZooLib_Any_Additions)
+@implementation NSData (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{ return Data_ZZ([self bytes], [self length]); }
@@ -233,11 +233,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSString (ZooLib_Any_Additions)
+@interface NSString (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSString (ZooLib_Any_Additions)
+@implementation NSString (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{ return string8([self UTF8String]); }
@@ -245,11 +245,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSNumber (ZooLib_Any_Additions)
+@interface NSNumber (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSNumber (ZooLib_Any_Additions)
+@implementation NSNumber (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{ return int64([self longLongValue]); }
@@ -257,11 +257,11 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSDate (ZooLib_Any_Additions)
+@interface NSDate (ZooLib_asZZWithDefault)
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
 @end
 
-@implementation NSDate (ZooLib_Any_Additions)
+@implementation NSDate (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
 	{ return ZooLib::UTCDateTime([self timeIntervalSince1970]); }

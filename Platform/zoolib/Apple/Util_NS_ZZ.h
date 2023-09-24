@@ -1,7 +1,7 @@
 // Copyright (c) 2014 Andrew Green. MIT License. http://www.zoolib.org
 
-#ifndef __ZooLib_Apple_Util_NS_Any_h__
-#define __ZooLib_Apple_Util_NS_Any_h__ 1
+#ifndef __ZooLib_Apple_Util_NS_ZZ_h__
+#define __ZooLib_Apple_Util_NS_ZZ_h__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -27,12 +27,12 @@ NSObject* sAsNSObject(const Val_ZZ& iVal);
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark - asAnyWithDefault
+#pragma mark - asZZWithDefault
 
-@interface NSObject (ZooLib_Any_Additions)
+@interface NSObject (ZooLib_asZZWithDefault)
 -(ZooLib::Val_ZZ)asZZWithDefault:(const ZooLib::Val_ZZ&)iDefault;
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
-#endif // __ZooLib_Apple_Util_NS_Any_h__
+#endif // __ZooLib_Apple_Util_NS_ZZ_h__
