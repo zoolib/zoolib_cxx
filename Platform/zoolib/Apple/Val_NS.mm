@@ -9,7 +9,6 @@
 
 namespace ZooLib {
 
-using std::type_info;
 
 using Util_NS::sAsUTF8;
 using Util_NS::sString;
