@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.12) # so target_link_libraries will work with OBJECT libraries
 
 set(ZOOLIB_CXX ../..)
 
@@ -62,7 +62,7 @@ source_group("" FILES ${SourceFiles})
 
 include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
 
-add_library(ZooLib_Project_RelationalAlgebra STATIC
+add_library(ZooLib_Project_RelationalAlgebra OBJECT
 
 	${SourceFiles}
 	)

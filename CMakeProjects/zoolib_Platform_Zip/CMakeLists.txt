@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.12) # so target_link_libraries will work with OBJECT libraries
+
 if(NOT DEFINED ZooLib_IncludeDir_libzip)
 	message(FATAL_ERROR "You must define ZooLib_IncludeDir_libzip")
 endif()
@@ -19,7 +21,7 @@ include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZO
 
 include_directories(${ZooLib_IncludeDir_libzip})
 
-add_library(ZooLib_Platform_Zip STATIC
+add_library(ZooLib_Platform_Zip OBJECT
 
 	${SourceFiles}
 	)

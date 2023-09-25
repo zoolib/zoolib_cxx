@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.12) # so target_link_libraries will work with OBJECT libraries
 
 set(ZOOLIB_CXX ../..)
 
@@ -98,7 +98,7 @@ source_group("" FILES ${SourceFiles})
 
 include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core)
 
-add_library(ZooLib_Core STATIC
+add_library(ZooLib_Core OBJECT
 
 	${SourceFiles}
 	)
