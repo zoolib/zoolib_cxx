@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.12) # so target_link_libraries will work with OBJECT libraries
-
 if(NOT DEFINED ZooLib_IncludeDir_libpng)
 	# We could instead conditionalize PixmapCoder_PNG on ZooLib_IncludeDir_libpng being available.
 	message(FATAL_ERROR "You must define ZooLib_IncludeDir_libpng")
@@ -51,7 +49,7 @@ include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable
 
 include_directories(${ZooLib_IncludeDir_libpng})
 
-add_library(ZooLib_Project_Pixels OBJECT
+add_library(ZooLib_Project_Pixels STATIC
 
 	${SourceFiles}
 	)

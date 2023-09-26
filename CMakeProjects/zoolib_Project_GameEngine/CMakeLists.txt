@@ -3,7 +3,7 @@
 # to your SHARED library or executable. This is needed so dead-stripping doesn't
 # remove the dynamically registered Cog ctors.
 
-cmake_minimum_required(VERSION 3.12) # so target_link_libraries will work with OBJECT libraries
+cmake_minimum_required(VERSION 3.10.2) # For add_library OBJECT
 
 set(ZOOLIB_CXX ../..)
 
@@ -109,7 +109,7 @@ set (SourceFiles
 
 source_group("" FILES ${SourceFiles})
 
-include_directories(${ZOOLIB_CXX} ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
+include_directories(${SourceDir}/../.. ${ZOOLIB_CXX}/Core ${ZOOLIB_CXX}/Portable ${ZOOLIB_CXX}/Project)
 
 add_library(ZooLib_Project_GameEngine OBJECT
 	${SourceFiles}
