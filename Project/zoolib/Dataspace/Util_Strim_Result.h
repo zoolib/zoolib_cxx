@@ -4,10 +4,10 @@
 #define __ZooLib_QueryEngine_Util_Strim_Result_h__ 1
 #include "zconfig.h"
 
-#include "zoolib/QueryEngine/Result.h"
-
 #include "zoolib/ChanW_UTF.h"
 #include "zoolib/PullPush_JSON.h" // For Callable_JSON_WriteFilter
+
+#include "zoolib/QueryEngine/Result.h"
 
 namespace ZooLib {
 namespace QueryEngine {

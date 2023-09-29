@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Andrew Green. MIT License. http://www.zoolib.org
 
-#include "zoolib/QueryEngine/Util_Strim_Result.h"
+#include "zoolib/Dataspace/Util_Strim_Result.h"
 
 #include "zoolib/Callable_Bind.h"
 #include "zoolib/Callable_Function.h"
