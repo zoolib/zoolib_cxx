@@ -13,8 +13,6 @@ set (SourceFiles
 	${SourceDir}/ResultFromWalker.h
 	${SourceDir}/Transform_Search.cpp
 	${SourceDir}/Transform_Search.h
-	${SourceDir}/Util_Strim_Result.cpp
-	${SourceDir}/Util_Strim_Result.h
 	${SourceDir}/Util_Strim_Walker.cpp
 	${SourceDir}/Util_Strim_Walker.h
 	${SourceDir}/Visitor_DoMakeWalker.cpp

@@ -23,8 +23,9 @@
 #include "zoolib/Util_STL_map.h"
 #include "zoolib/Util_STL_vector.h"
 
+#include "zoolib/Dataspace/Util_Strim_Result.h"
+
 #include "zoolib/QueryEngine/Result.h"
-#include "zoolib/QueryEngine/Util_Strim_Result.h"
 
 #include "zoolib/RelationalAlgebra/Util_Strim_Rel.h"
 

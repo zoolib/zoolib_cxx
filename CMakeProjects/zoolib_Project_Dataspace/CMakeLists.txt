@@ -5,6 +5,9 @@ set(ZOOLIB_CXX ../..)
 set(SourceDir ${ZOOLIB_CXX}/Project/zoolib/Dataspace)
 
 set (SourceFiles	
+	${SourceDir}/Util_Strim_Result.cpp
+	${SourceDir}/Util_Strim_Result.h
+
 	${SourceDir}/Daton_Val.cpp
 	${SourceDir}/Daton_Val.h
 	${SourceDir}/Daton.cpp

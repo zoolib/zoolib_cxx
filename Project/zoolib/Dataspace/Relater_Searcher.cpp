@@ -10,10 +10,11 @@
 
 #include "zoolib/ZMACRO_foreach.h"
 
+#include "zoolib/Dataspace/Util_Strim_Result.h"
+
 #include "zoolib/QueryEngine/Expr_Rel_Search.h"
 #include "zoolib/QueryEngine/ResultFromWalker.h"
 #include "zoolib/QueryEngine/Transform_Search.h"
-#include "zoolib/QueryEngine/Util_Strim_Result.h"
 #include "zoolib/QueryEngine/Util_Strim_Walker.h"
 #include "zoolib/QueryEngine/Visitor_DoMakeWalker.h"
 #include "zoolib/QueryEngine/Walker_Rename.h"
