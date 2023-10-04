@@ -4,8 +4,6 @@
 #define __ZooLib_RelationalAlgebra_Expr_Rel_Dum_h__ 1
 #include "zconfig.h"
 
-//#include "zoolib/Val_DB.h"
-
 #include "zoolib/Expr/Expr_Op_T.h"
 #include "zoolib/RelationalAlgebra/Expr_Rel.h"
 
