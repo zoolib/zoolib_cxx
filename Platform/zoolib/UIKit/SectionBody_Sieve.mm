@@ -28,6 +28,7 @@
 
 namespace ZooLib {
 
+using RelationalAlgebra::PseudoMap_RelHead;
 using UIKit::SectionBody_Sieve;
 
 template <>
@@ -202,8 +203,7 @@ void SectionBody_Sieve::PreUpdate()
 			for (size_t xx = 0, count = theResult->Count(); xx < count; ++xx)
 				{
 				theRows.push_back(
-					RelationalAlgebra::PseudoMap_RelHead(theRelHead, theResult->GetValsAt(xx))
-					.AsMap());
+					PseudoMap_RelHead(theRelHead, theResult->GetValsAt(xx)).AsMap());
 				}
 			}
 
