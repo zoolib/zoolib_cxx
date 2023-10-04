@@ -17,6 +17,8 @@ class Visitor_Expr_Rel_Dum;
 // =================================================================================================
 #pragma mark - Expr_Rel_Dum
 
+// No columns, no rows.
+
 class Expr_Rel_Dum
 :	public virtual Expr_Rel
 ,	public virtual Expr_Op0_T<Expr_Rel>

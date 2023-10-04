@@ -17,6 +17,8 @@ class Visitor_Expr_Rel_Const;
 // =================================================================================================
 #pragma mark - Expr_Rel_Const
 
+// Single specified column, single row with a constant value.
+
 class Expr_Rel_Const
 :	public virtual Expr_Rel
 ,	public virtual Expr_Op0_T<Expr_Rel>

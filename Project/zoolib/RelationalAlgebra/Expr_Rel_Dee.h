@@ -15,6 +15,8 @@ class Visitor_Expr_Rel_Dee;
 // =================================================================================================
 #pragma mark - Expr_Rel_Dee
 
+// No columns, single row.
+
 class Expr_Rel_Dee
 :	public virtual Expr_Rel
 ,	public virtual Expr_Op0_T<Expr_Rel>
