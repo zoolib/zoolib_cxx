@@ -11,6 +11,8 @@ set (SourceFiles
 	${SourceDir}/JavaStream_Channer_Bin.h
 	${SourceDir}/JNI.cpp
 	${SourceDir}/JNI.h
+	${SourceDir}/PullPush_JNI.cpp
+	${SourceDir}/PullPush_JNI.h
 	)
 
 source_group("" FILES ${SourceFiles})
